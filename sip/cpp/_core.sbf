@@ -1,0 +1,3 @@
+target = _core
+sources = sip_corecmodule.cpp sip_corewxRect2DDouble.cpp sip_corewxPoint2DDouble.cpp sip_corewxRealPoint.cpp sip_corewxRect.cpp sip_corewxSize.cpp sip_corewxPoint.cpp sip_corewxClassInfo.cpp sip_corewxObject.cpp sip_corewxRefCounter.cpp sip_corewxString.cpp
+headers = sipAPI_core.h
