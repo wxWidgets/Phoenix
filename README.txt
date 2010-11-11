@@ -1,0 +1,1 @@
+See http://wiki.wxpython.org/ProjectPhoenix for details about this project.
