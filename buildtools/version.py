@@ -1,5 +1,15 @@
+#----------------------------------------------------------------------
+# Name:        buildtools.version
+# Purpose:     wxPython version numbers used in the build.  This can be
+#              considered the master copy of the version digits.
+#
+# Author:      Robin Dunn
+#
+# Created:     3-Nov-2010
+# Copyright:   (c) 2010 by Total Control Software
+# Licence:     wxWindows license
+#----------------------------------------------------------------------
 
-# wxPython version numbers used in build
 
 VER_MAJOR        = 2      # The first three must match wxWidgets
 VER_MINOR        = 9

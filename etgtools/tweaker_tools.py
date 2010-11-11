@@ -1,6 +1,20 @@
+#---------------------------------------------------------------------------
+# Name:        etgtools/tweaker_tools.py
+# Author:      Robin Dunn
+#
+# Created:     3-Nov-2010
+# Copyright:   (c) 2010 by Total Control Software
+# Licence:     wxWindows license
+#---------------------------------------------------------------------------
 
+"""
+Some helpers and utility functions that can assist with the tweaker
+stage of the ETG scripts.
+"""
 
 import extractors
+
+
 
 def removeWxPrefixes(node):
     """

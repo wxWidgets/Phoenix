@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        wx/__init__.py
+# Name:        etgtools/sphinx_generator.py
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
@@ -8,4 +8,6 @@
 #---------------------------------------------------------------------------
 
 
-from _core import *
+"""
+This page is intentionally left blank, at least for now...
+"""

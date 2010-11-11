@@ -1,5 +1,15 @@
 #---------------------------------------------------------------------------
-# Just some base classes and stubs for the various generators
+# Name:        etgtools/generators.py
+# Author:      Robin Dunn
+#
+# Created:     3-Nov-2010
+# Copyright:   (c) 2010 by Total Control Software
+# Licence:     wxWindows license
+#---------------------------------------------------------------------------
+
+"""
+Just some base classes and stubs for the various generators
+"""
 
 
 class WrapperGeneratorBase(object):

@@ -1,7 +1,17 @@
+#---------------------------------------------------------------------------
+# Name:        etgtools/__init__.py
+# Author:      Robin Dunn
+#
+# Created:     3-Nov-2010
+# Copyright:   (c) 2010 by Total Control Software
+# Licence:     wxWindows license
+#---------------------------------------------------------------------------
+
 """
 Classes and tools for describing the public API of wxWidgets, parsing
 them from the Doxygen XML, and producing wrapper code from them.
 """
+
 import sys, os
 from extractors import *
 

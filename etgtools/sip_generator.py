@@ -1,3 +1,17 @@
+#---------------------------------------------------------------------------
+# Name:        etgtools/sip_generator.py
+# Author:      Robin Dunn
+#
+# Created:     3-Nov-2010
+# Copyright:   (c) 2010 by Total Control Software
+# Licence:     wxWindows license
+#---------------------------------------------------------------------------
+
+"""
+The generator class for creating SIP definition files from the data
+objects produced by the ETG scripts.
+"""
+
 import sys, os
 import extractors
 import generators

@@ -1,5 +1,16 @@
-# Functions and classes that can parse the Doxygen XML files and extract the
-# wxWidgets API info which we need from them.
+#---------------------------------------------------------------------------
+# Name:        etgtools/extractors.py
+# Author:      Robin Dunn
+#
+# Created:     3-Nov-2010
+# Copyright:   (c) 2010 by Total Control Software
+# Licence:     wxWindows license
+#---------------------------------------------------------------------------
+
+"""
+Functions and classes that can parse the Doxygen XML files and extract the
+wxWidgets API info which we need from them.
+"""
 
 import sys
 import os
