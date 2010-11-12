@@ -98,6 +98,7 @@ wxPoint operator/(const wxPoint& s, int i);
 """)
 module.insertItemAfter(c, wc)
 
+
 # wxPoint typemap
 c.convertFromPyObject = """\
    // is it just a typecheck?
@@ -105,7 +106,7 @@ c.convertFromPyObject = """\
        if (sipCanConvertToType(sipPy, sipType_wxPoint, SIP_NO_CONVERTORS))
            return 1;
 
-       if (PySequence_Check(sipPy) and PySequence_Size(sipPy) == 2) {
+       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {
            int rval = 1;
            PyObject* o1 = PySequence_ITEM(sipPy, 0);
            PyObject* o2 = PySequence_ITEM(sipPy, 1);
@@ -119,11 +120,6 @@ c.convertFromPyObject = """\
    }   
    
    // otherwise do the conversion
-   if (sipPy == Py_None) {
-       *sipCppPtr = new wxPoint(-1, -1);
-       return sipGetState(sipTransferObj);
-   }
-   
    if (PySequence_Check(sipPy)) {
        PyObject* o1 = PySequence_ITEM(sipPy, 0);
        PyObject* o2 = PySequence_ITEM(sipPy, 1);
@@ -131,12 +127,37 @@ c.convertFromPyObject = """\
        Py_DECREF(o1);
        Py_DECREF(o2);
        return sipGetState(sipTransferObj);
-    }
-    
+    }    
     *sipCppPtr = reinterpret_cast<wxPoint*>(sipConvertToType(
                 sipPy, sipType_wxPoint, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
     return 0;
 """
+
+
+# Helper to convert a Point to a tuple
+c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
+    sipRes = sipBuildResult(&sipIsErr, "(ii)", sipCpp->x, sipCpp->y);
+""", briefDoc="""\
+    Get() -> (x,y)
+    
+    Return the x and y properties as a tuple.""")
+
+# Add sequence protocol methods and other goodies
+c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
+c.addPyMethod('__repr__', '(self)',            'return "wx.Point"+str(self.Get())')
+c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
+c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+c.addPyMethod('__reduce__', '(self)',          'return (Point, self.Get())')
+c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
+c.addPyMethod('__setitem__', '(self, idx, val)',
+              """\
+              if idx == 0: self.x = val
+              elif idx == 1: self.y = val
+              else: raise IndexError
+              """) 
+c.addPyCode('Point.__safe_for_unpickling__ = True')
+              
+              
 
 
 #---------------------------------------
