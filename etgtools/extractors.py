@@ -23,9 +23,7 @@ import xml.etree.ElementTree as et
 # * Need a way to idicate that items are not available on certain platforms
 #
 # * Something for TypeHeader code for classes
-#
-# * something for associating typemap or convert to/from code for classes
-#
+
 
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
@@ -431,10 +429,19 @@ class ClassDef(BaseDef):
         self.singlton = False       # class is a singleton so don't call the dtor until the interpreter exits
         self.convertFromPyObject = None
         self.convertToPyObject = None
+        
+        # Stuff that needs to be generated after the class instead of within
+        # it. Some back-end generators need to put stuff inside the class, and
+        # others need to do it outside the class definition. The generators
+        # can move things here for later processing when they encounter those
+        # items.
+        self.generateAfterClass = [] 
+        
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
 
+            
     def extract(self, element):
         super(ClassDef, self).extract(element)
 
@@ -514,6 +521,7 @@ class ClassDef(BaseDef):
         self.items.append(md)
         return md
 
+    
     def addCppCtor(self, argsString, body, doc=None, **kw):
         """
         Add a C++ method that is a constructor.
@@ -523,11 +531,23 @@ class ClassDef(BaseDef):
         return md
         
     
-    def addPyMethod(self, ):
-        # TODO: Add the ability to inject a method implememnted in Python into
-        # a wrapped class
-        raise NotImplementedError
+    def addPyMethod(self, name, argsString, body, doc=None, **kw):
+        """
+        Add a (monkey-patched) Python method to this class.
+        """
+        pm = PyMethodDef(self, name, argsString, body, doc, **kw)
+        self.items.append(pm)
+        return pm
+
     
+    def addPyCode(self, code):
+        """
+        Add a snippet of Python code which is to be associated with this class.
+        """        
+        pc = PyCodeDef(code, klass=self, protection = 'public')
+        self.items.append(pc)
+        return pc
+
     
 #---------------------------------------------------------------------------
 
@@ -652,21 +672,47 @@ class WigCode(BaseDef):
         self.protection = 'public'
         self.__dict__.update(kw)
 
+#---------------------------------------------------------------------------
 
+class PyCodeDef(BaseDef):
+    """
+    This code held by this class will be written to a Python module
+    that wraps the import of the extension module.
+    """
+    def __init__(self, code, **kw):
+        super(PyCodeDef, self).__init__()
+        self.code = code
+        self.__dict__.update(kw)
+
+#---------------------------------------------------------------------------
+
+class PyMethodDef(BaseDef):
+    """
+    A PyMethodDef can be used to define Python functions that will then be
+    monkey-patched in to the extension module Types as if they belonged there.
+    """
+    def __init__(self, klass, name, argsString, body, doc=None, **kw):
+        super(PyMethodDef, self).__init__()
+        self.klass = klass
+        self.name = name
+        self.argsString = argsString
+        self.body = body
+        self.briefDoc = doc
+        self.protection = 'public'
+        self.__dict__.update(kw)
+    
 #---------------------------------------------------------------------------
 
 class ModuleDef(BaseDef):
     """
     This class holds all the items that will be in the generated module
     """
-    def __init__(self, package, module, name, briefDoc='', detailedDoc=None):
+    def __init__(self, package, module, name, docstring=''):
         super(ModuleDef, self).__init__()
         self.package = package
         self.module = module
         self.name = name
-        self.briefDoc = briefDoc
-        if detailedDoc:
-            self.detailedDoc = detailedDoc
+        self.docstring = docstring
         self.headerCode = []
         self.cppCode = []
         self.initializerCode = []
@@ -766,13 +812,11 @@ class ModuleDef(BaseDef):
                "imports:         %s\n"
                "headerCode:      %s\n"
                "cppCode:         %s\n"
-               "pyCode:          %s\n"
                "initializerCode: %s\n"
                ) % (_pf(self.includes, indent), 
                     _pf(self.imports, indent), 
                     _pf(self.headerCode, indent), 
                     _pf(self.cppCode, indent), 
-                    _pf(self.pyCode, indent), 
                     _pf(self.initializerCode, indent))
         _print(txt, indent, stream)
         _print('\n', indent, stream)
@@ -792,15 +836,14 @@ class ModuleDef(BaseDef):
         self.items.append(md)
         return md
 
+
     def addPyCode(self, code):
-        # TODO: Add the ability to have some python code mingled with the
-        # extension code. One way to do this is change the name of the %Module
-        # (if there are any pyCode items) to be _module, and then generate a
-        # module.py with this Python content, and have it do "from _module import *"
-        # The user code would still "import module" but would end up getting access
-        # to the combined items.
-        raise NotImplementedError
-    
+        """
+        Add a snippet of Python code to the wrapper module.
+        """        
+        pc = PyCodeDef(code)
+        self.items.append(pc)
+        return pc
     
     
 #---------------------------------------------------------------------------
