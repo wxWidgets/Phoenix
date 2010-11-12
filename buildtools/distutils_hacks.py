@@ -367,9 +367,25 @@ class etgsip_build_ext(build_ext):
                 #    cmd.append('--verbose')
                 self.spawn(cmd)
 
-            if '%Module ' in file(sipfile).read():
+            if '%Module(' in file(sipfile).read():
                 other_sources.append(sipfile)
                 
         # now call the base class version of this method
         return build_ext.swig_sources(self, other_sources, extension)
         
+    
+    def _sip_compile(self, sip_bin, source, sbf):
+        other_opts = []
+        base = os.path.basename(source)
+        if base.startswith('_'):
+            cfg = Config()
+            pycode = os.path.splitext(base[1:])[0] + '.py'
+            pycode = os.path.join(cfg.PKGDIR, pycode)
+            other_opts = ['-X', 'pycode:'+pycode]
+        self.spawn([sip_bin] + self.sip_opts +
+                   other_opts + 
+                   ["-c", self._sip_output_dir(),
+                    "-b", sbf,
+                    "-I", self._sip_sipfiles_dir(),
+                    source])
+
