@@ -50,7 +50,7 @@ class SipWrapperGenerator(generators.WrapperGeneratorBase):
 """)
         if module.name == module.module:
             stream.write("""
-%%Module(name=%s.%s, use_argument_names=True)
+%%Module(name=%s.%s, use_argument_names=True, language="C++")
 
 %%Copying
     Copyright: (c) 2010 by Total Control Software
@@ -223,7 +223,7 @@ from %s import *
             pc.klass.generateAfterClass.append(pc)
         else:
             stream.write('%Extract pycode\n')
-            stream.write(nci(pc.code, 4))
+            stream.write(nci(pc.code))
             stream.write('\n%End\n\n')
     
     
