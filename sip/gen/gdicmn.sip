@@ -4,7 +4,7 @@
 // Copyright: (c) 2010 by Total Control Software
 // Licence:   wxWindows license
 //
-// This file is included from _core.sip
+// This file will be included by _core.sip
 //
 //---------------------------------------------------------------------------
 
@@ -57,47 +57,104 @@ public:
     );
 
     int x;
-    int y;
-%ConvertToTypeCode
-   // is it just a typecheck?
-   if (!sipIsErr) {
-       if (sipCanConvertToType(sipPy, sipType_wxPoint, SIP_NO_CONVERTORS))
-           return 1;
 
-       if (PySequence_Check(sipPy) and PySequence_Size(sipPy) == 2) {
-           int rval = 1;
-           PyObject* o1 = PySequence_ITEM(sipPy, 0);
-           PyObject* o2 = PySequence_ITEM(sipPy, 1);
-           if (!PyNumber_Check(o1) || !PyNumber_Check(o2)) 
-               rval = 0;
-           Py_DECREF(o1);
-           Py_DECREF(o2);
-           return rval;
-       }
-       return 0;
-   }   
-   
-   // otherwise do the conversion
-   if (sipPy == Py_None) {
-       *sipCppPtr = new wxPoint(-1, -1);
-       return sipGetState(sipTransferObj);
-   }
-   
-   if (PySequence_Check(sipPy)) {
-       PyObject* o1 = PySequence_ITEM(sipPy, 0);
-       PyObject* o2 = PySequence_ITEM(sipPy, 1);
-       *sipCppPtr = new wxPoint(PyInt_AsLong(o1), PyInt_AsLong(o2));
-       Py_DECREF(o1);
-       Py_DECREF(o2);
-       return sipGetState(sipTransferObj);
-    }
-    
-    *sipCppPtr = reinterpret_cast<wxPoint*>(sipConvertToType(
-                sipPy, sipType_wxPoint, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return 0;
-%End
+    int y;
+
+    SIP_PYOBJECT Get();
+    %MethodCode
+        sipRes = sipBuildResult(&sipIsErr, "(ii)", sipCpp->x, sipCpp->y);
+    %End
+
+    %ConvertToTypeCode
+        // is it just a typecheck?
+        if (!sipIsErr) {
+            if (sipCanConvertToType(sipPy, sipType_wxPoint, SIP_NO_CONVERTORS))
+                return 1;
+        
+            if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {
+                int rval = 1;
+                PyObject* o1 = PySequence_ITEM(sipPy, 0);
+                PyObject* o2 = PySequence_ITEM(sipPy, 1);
+                if (!PyNumber_Check(o1) || !PyNumber_Check(o2)) 
+                    rval = 0;
+                Py_DECREF(o1);
+                Py_DECREF(o2);
+                return rval;
+            }
+            return 0;
+        }   
+        
+        // otherwise do the conversion
+        if (PySequence_Check(sipPy)) {
+            PyObject* o1 = PySequence_ITEM(sipPy, 0);
+            PyObject* o2 = PySequence_ITEM(sipPy, 1);
+            *sipCppPtr = new wxPoint(PyInt_AsLong(o1), PyInt_AsLong(o2));
+            Py_DECREF(o1);
+            Py_DECREF(o2);
+            return sipGetState(sipTransferObj);
+         }    
+         *sipCppPtr = reinterpret_cast<wxPoint*>(sipConvertToType(
+                     sipPy, sipType_wxPoint, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
+         return 0;
+    %End
 };  // end of class wxPoint
 
+
+%Extract pycode
+def _Point___str__(self):
+    return str(self.Get())
+Point.__str__ = _Point___str__
+
+%End
+
+%Extract pycode
+def _Point___repr__(self):
+    return "wx.Point"+str(self.Get())
+Point.__repr__ = _Point___repr__
+
+%End
+
+%Extract pycode
+def _Point___len__(self):
+    return len(self.Get())
+Point.__len__ = _Point___len__
+
+%End
+
+%Extract pycode
+def _Point___nonzero__(self):
+    return self.Get() != (0,0)
+Point.__nonzero__ = _Point___nonzero__
+
+%End
+
+%Extract pycode
+def _Point___reduce__(self):
+    return (Point, self.Get())
+Point.__reduce__ = _Point___reduce__
+
+%End
+
+%Extract pycode
+def _Point___getitem__(self, idx):
+    return self.Get()[idx]
+Point.__getitem__ = _Point___getitem__
+
+%End
+
+%Extract pycode
+def _Point___setitem__(self, idx, val):
+    if idx == 0: self.x = val
+    elif idx == 1: self.y = val
+    else: raise IndexError
+Point.__setitem__ = _Point___setitem__
+
+%End
+
+%Extract pycode
+Point.__safe_for_unpickling__ = True
+
+%End
 
 bool operator==(const wxPoint& p1, const wxPoint& p2);
 bool operator!=(const wxPoint& p1, const wxPoint& p2);
@@ -315,9 +372,13 @@ public:
     );
 
     int height;
+
     int width;
+
     int x;
+
     int y;
+
     bool Contains(
         int x,
         int y
@@ -433,7 +494,9 @@ public:
     );
 
     double x;
+
     double y;
+
 };  // end of class wxRealPoint
 
 

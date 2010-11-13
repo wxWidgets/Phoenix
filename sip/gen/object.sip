@@ -4,7 +4,7 @@
 // Copyright: (c) 2010 by Total Control Software
 // Licence:   wxWindows license
 //
-// This file is included from _core.sip
+// This file will be included by _core.sip
 //
 //---------------------------------------------------------------------------
 

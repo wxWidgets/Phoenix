@@ -4,7 +4,7 @@
 // Copyright: (c) 2010 by Total Control Software
 // Licence:   wxWindows license
 //
-// This file is included from _core.sip
+// This file will be included by _core.sip
 //
 //---------------------------------------------------------------------------
 
@@ -39,7 +39,9 @@ public:
     );
 
     wxDouble m_x   /PyName=x/;
+
     wxDouble m_y   /PyName=y/;
+
     void GetFloor(
         wxInt32 * x   /Out/,
         wxInt32 * y   /Out/
@@ -126,9 +128,13 @@ public:
     );
 
     wxDouble m_x   /PyName=x/;
+
     wxDouble m_y   /PyName=y/;
+
     wxDouble m_width   /PyName=width/;
+
     wxDouble m_height   /PyName=height/;
+
     wxPoint2DDouble GetPosition();
 
     wxSize GetSize();
