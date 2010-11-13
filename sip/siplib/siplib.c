@@ -6016,8 +6016,8 @@ static int add_lazy_container_attrs(sipTypeDef *td, sipContainerDef *cod,
 
             vd->vd_type = (vd_8->vd_is_static ? ClassVariable : InstanceVariable);
             vd->vd_name = vd_8->vd_name;
-            vd->vd_getter = (PyCFunction)vd_8->vd_getter;
-            vd->vd_setter = (PyCFunction)vd_8->vd_setter;
+            vd->vd_getter = (PyMethodDef *)vd_8->vd_getter;
+            vd->vd_setter = (PyMethodDef *)vd_8->vd_setter;
             vd->vd_deleter = NULL;
             vd->vd_docstring = NULL;
 
