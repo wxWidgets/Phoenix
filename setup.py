@@ -103,7 +103,9 @@ else:
 
 #----------------------------------------------------------------------
     
-extensions = [
+ext = []
+
+ext.append( 
     Extension('siplib', ['sip/siplib/apiversions.c',
                          'sip/siplib/bool.cpp',
                          'sip/siplib/descriptors.c',
@@ -119,8 +121,9 @@ extensions = [
               libraries          = cfg.libs,
               extra_compile_args = cfg.cflags,
               extra_link_args    = cfg.lflags,
-              ),
+              ))
     
+ext.append(
     Extension('_core', ['etg/_core.py',
                         'etg/object.py',
                         'etg/gdicmn.py',
@@ -132,8 +135,8 @@ extensions = [
               libraries          = cfg.libs,
               extra_compile_args = cfg.cflags,
               extra_link_args    = cfg.lflags,
-              ),
-]
+              ))
+cfg.CLEANUP.append(opj(cfg.PKGDIR, 'core.py'))
 
 
 #----------------------------------------------------------------------
@@ -155,7 +158,7 @@ if __name__ == '__main__':
           packages         = WX_PKGLIST,
           #extra_path       = EXTRA_PATH,
           ext_package      = cfg.PKGDIR,
-          ext_modules      = extensions,
+          ext_modules      = ext,
            
           options          = { 'build'     : BUILD_OPTIONS,  
                                'build_ext' : {'sip_opts' : cfg.SIPOPTS },
