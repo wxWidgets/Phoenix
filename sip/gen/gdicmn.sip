@@ -271,9 +271,104 @@ public:
     );
 
     %Property(name=width, get=GetWidth, set=SetWidth)
+
     %Property(name=height, get=GetHeight, set=SetHeight)
+
+    SIP_PYOBJECT Get();
+    %MethodCode
+        sipRes = sipBuildResult(&sipIsErr, "(ii)", sipCpp->GetWidth(), sipCpp->GetHeight());
+    %End
+
+    %ConvertToTypeCode
+        // is it just a typecheck?
+        if (!sipIsErr) {
+            if (sipCanConvertToType(sipPy, sipType_wxSize, SIP_NO_CONVERTORS))
+                return 1;
+        
+            if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {
+                int rval = 1;
+                PyObject* o1 = PySequence_ITEM(sipPy, 0);
+                PyObject* o2 = PySequence_ITEM(sipPy, 1);
+                if (!PyNumber_Check(o1) || !PyNumber_Check(o2)) 
+                    rval = 0;
+                Py_DECREF(o1);
+                Py_DECREF(o2);
+                return rval;
+            }
+            return 0;
+        }   
+        
+        // otherwise do the conversion
+        if (PySequence_Check(sipPy)) {
+            PyObject* o1 = PySequence_ITEM(sipPy, 0);
+            PyObject* o2 = PySequence_ITEM(sipPy, 1);
+            *sipCppPtr = new wxSize(PyInt_AsLong(o1), PyInt_AsLong(o2));
+            Py_DECREF(o1);
+            Py_DECREF(o2);
+            return sipGetState(sipTransferObj);
+         }    
+         *sipCppPtr = reinterpret_cast<wxSize*>(sipConvertToType(
+                     sipPy, sipType_wxSize, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
+         return 0;
+    %End
 };  // end of class wxSize
 
+
+%Extract pycode
+def _Size___str__(self):
+    return str(self.Get())
+Size.__str__ = _Size___str__
+
+%End
+
+%Extract pycode
+def _Size___repr__(self):
+    return "wx.Size"+str(self.Get())
+Size.__repr__ = _Size___repr__
+
+%End
+
+%Extract pycode
+def _Size___len__(self):
+    return len(self.Get())
+Size.__len__ = _Size___len__
+
+%End
+
+%Extract pycode
+def _Size___nonzero__(self):
+    return self.Get() != (0,0)
+Size.__nonzero__ = _Size___nonzero__
+
+%End
+
+%Extract pycode
+def _Size___reduce__(self):
+    return (Size, self.Get())
+Size.__reduce__ = _Size___reduce__
+
+%End
+
+%Extract pycode
+def _Size___getitem__(self, idx):
+    return self.Get()[idx]
+Size.__getitem__ = _Size___getitem__
+
+%End
+
+%Extract pycode
+def _Size___setitem__(self, idx, val):
+    if idx == 0: self.width = val
+    elif idx == 1: self.height = val
+    else: raise IndexError
+Size.__setitem__ = _Size___setitem__
+
+%End
+
+%Extract pycode
+Size.__safe_for_unpickling__ = True
+
+%End
 
 bool operator==(const wxSize& s1, const wxSize& s2);
 bool operator!=(const wxSize& s1, const wxSize& s2);

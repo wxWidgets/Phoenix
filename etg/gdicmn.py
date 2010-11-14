@@ -32,9 +32,9 @@ etgtools.parseDoxyXML(module, ITEMS)
 # Tweak the parsed meta objects in the module object as needed for customizing
 # the generated code and docstrings.
 
-import etgtools.tweaker_tools
-etgtools.tweaker_tools.ignoreAssignmentOperators(module)
-etgtools.tweaker_tools.removeWxPrefixes(module)
+import etgtools.tweaker_tools as tools
+tools.ignoreAssignmentOperators(module)
+tools.removeWxPrefixes(module)
 
 
 module.addHeaderCode('#include <wx/wx.h>')
@@ -73,7 +73,7 @@ c = module.find('wxPoint')
 
 # Some operators are documented within the class that shouldn't be, so just
 # ignore them all.
-etgtools.tweaker_tools.ignoreAllOperators(c)
+tools.ignoreAllOperators(c)
 
 # Undo a few of those ignores for legitimate items that were 
 # documented correctly
@@ -100,46 +100,12 @@ module.insertItemAfter(c, wc)
 
 
 # wxPoint typemap
-c.convertFromPyObject = """\
-   // is it just a typecheck?
-   if (!sipIsErr) {
-       if (sipCanConvertToType(sipPy, sipType_wxPoint, SIP_NO_CONVERTORS))
-           return 1;
+c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxPoint')
 
-       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {
-           int rval = 1;
-           PyObject* o1 = PySequence_ITEM(sipPy, 0);
-           PyObject* o2 = PySequence_ITEM(sipPy, 1);
-           if (!PyNumber_Check(o1) || !PyNumber_Check(o2)) 
-               rval = 0;
-           Py_DECREF(o1);
-           Py_DECREF(o2);
-           return rval;
-       }
-       return 0;
-   }   
-   
-   // otherwise do the conversion
-   if (PySequence_Check(sipPy)) {
-       PyObject* o1 = PySequence_ITEM(sipPy, 0);
-       PyObject* o2 = PySequence_ITEM(sipPy, 1);
-       *sipCppPtr = new wxPoint(PyInt_AsLong(o1), PyInt_AsLong(o2));
-       Py_DECREF(o1);
-       Py_DECREF(o2);
-       return sipGetState(sipTransferObj);
-    }    
-    *sipCppPtr = reinterpret_cast<wxPoint*>(sipConvertToType(
-                sipPy, sipType_wxPoint, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return 0;
-"""
-
-
-# Helper to convert a Point to a tuple
 c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
     sipRes = sipBuildResult(&sipIsErr, "(ii)", sipCpp->x, sipCpp->y);
 """, briefDoc="""\
-    Get() -> (x,y)
-    
+    Get() -> (x,y)\n    
     Return the x and y properties as a tuple.""")
 
 # Add sequence protocol methods and other goodies
@@ -168,7 +134,7 @@ c.addProperty("width GetWidth SetWidth")
 c.addProperty("height GetHeight SetHeight")
 
 # take care of the same issues as wxPoint
-etgtools.tweaker_tools.ignoreAllOperators(c)
+tools.ignoreAllOperators(c)
 for f in c.find('operator+=').all() + \
          c.find('operator-=').all() + \
          c.find('operator*=').all() + \
@@ -186,12 +152,38 @@ wxSize operator/(const wxSize& s, int i);
 module.insertItemAfter(c, wc)
 
 
+# wxSize typemap
+c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxSize')
+
+c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
+    sipRes = sipBuildResult(&sipIsErr, "(ii)", sipCpp->GetWidth(), sipCpp->GetHeight());
+""", briefDoc="""\
+    Get() -> (width, height)\n    
+    Return the width and height properties as a tuple.""")
+
+# Add sequence protocol methods and other goodies
+c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
+c.addPyMethod('__repr__', '(self)',            'return "wx.Size"+str(self.Get())')
+c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
+c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+c.addPyMethod('__reduce__', '(self)',          'return (Size, self.Get())')
+c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
+c.addPyMethod('__setitem__', '(self, idx, val)',
+              """\
+              if idx == 0: self.width = val
+              elif idx == 1: self.height = val
+              else: raise IndexError
+              """) 
+c.addPyCode('Size.__safe_for_unpickling__ = True')
+
+
+
 #---------------------------------------
 # wxRect tweaks
 c = module.find('wxRect')
 
 # take care of the same issues as wxPoint
-etgtools.tweaker_tools.ignoreAllOperators(c)
+tools.ignoreAllOperators(c)
 for f in c.find('operator+=').all() + \
          c.find('operator*=').all():
     f.ignore(False)
@@ -216,7 +208,7 @@ module.find('wxRect.Intersect').findOverload(') const').ignore()
 c = module.find('wxRealPoint')
     
 # take care of the same issues as wxPoint
-etgtools.tweaker_tools.ignoreAllOperators(c)
+tools.ignoreAllOperators(c)
 for f in c.find('operator+=').all() + \
          c.find('operator-=').all():
     f.ignore(False)

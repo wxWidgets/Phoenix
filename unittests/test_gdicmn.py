@@ -1,6 +1,9 @@
 import unittest2
 import wx
 
+
+#---------------------------------------------------------------------------
+
 class Point(unittest2.TestCase):
     
     def test_default_ctor(self):
@@ -80,8 +83,132 @@ class Point(unittest2.TestCase):
         with self.assertRaises(IndexError):
             p[2]
         
+#---------------------------------------------------------------------------
 
 
+class Size(unittest2.TestCase):
+    
+    def test_default_ctor(self):
+        s = wx.Size()
+        self.assertTrue(s == (0,0))
+         
+    def test_wh_ctor(self):
+        s = wx.Size(100,200)
+        
+    def test_copy_ctor(self):
+        s1 = wx.Size(100,200)
+        s2 = wx.Size(s1)
+        self.assertTrue(s1 is not s2)
+        self.assertTrue(s1 == s2)        
+        
+    def test_bogus_ctor(self):
+        with self.assertRaises(TypeError):
+            s = wx.Size("aa", "bb")
+            
+    def test_DecBy(self):
+        s = wx.Size(100,100)
+        s.DecBy(wx.Point(5,5))
+        self.assertTrue(s == (95,95))
+        s.DecBy(wx.Size(5,5))
+        self.assertTrue(s == (90,90))        
+        s.DecBy(5,5)
+        self.assertTrue(s == (85,85))        
+        s.DecBy(5)
+        self.assertTrue(s == (80,80))     
+        s.DecBy( (5,5) )
+        self.assertTrue(s == (75,75))     
+        
+        
+    def test_IncBy(self):
+        s = wx.Size(50,50)
+        s.IncBy(wx.Point(5,5))
+        self.assertTrue(s == (55,55))
+        s.IncBy(wx.Size(5,5))
+        self.assertTrue(s == (60,60))        
+        s.IncBy(5,5)
+        self.assertTrue(s == (65,65))        
+        s.IncBy(5)
+        self.assertTrue(s == (70,70))        
+        s.IncBy( (5,5) )
+        self.assertTrue(s == (75,75))     
+        
+    def test_DecTo(self):
+        s = wx.Size(5, 15)
+        s.DecTo( (10,10) )
+        self.assertTrue(s == (5,10))
+        
+    def test_IncTo(self):
+        s = wx.Size(5, 15)
+        s.IncTo( (10,10) )
+        self.assertTrue(s == (10,15))
+        
+    def test_properties(self):
+        s = wx.Size(23,34)
+        self.assertTrue(s.width == 23 and s.height == 34)
+        s.width += 1
+        s.height += 1
+        self.assertTrue(s == (24,35))
+        
+    def test_operators(self):
+        s1 = wx.Size(100,200)
+        s2 = wx.Size(30,40)
+        s1 += s2
+        s1 -= s2
+        s1 *= 5
+        s1 /= 5
+        s1 == s2
+        s1 != s2
+        s = s1 * 5
+        s = 5 * s1
+        s = s1 + s2
+        s = s1 - s2
+        s = s1 / 5
+        
+    def test_GetSet(self):
+        s = wx.Size(100,200)
+        t = s.Get()
+        self.assertTrue(type(t) == tuple)
+        self.assertTrue(t == (100,200))
+        s.Set(5,10)
+        self.assertTrue(s.Get() == (5,10))
+        
+    def test_SetDefaults(self):
+        s = wx.Size(50, -1)
+        s.SetDefaults( (25,25) )
+        self.assertTrue(s == (50,25))
+        
+    def test_FullySpecified(self):
+        self.assertTrue(wx.Size(40,50).IsFullySpecified())
+        self.assertTrue(not wx.Size(-1,50).IsFullySpecified())
+        self.assertTrue(not wx.Size(40,-1).IsFullySpecified())
+        
+    def test_magic(self):
+        s = wx.Size(5,6)
+        self.assertTrue(str(s) == "(5, 6)")
+        self.assertTrue(repr(s) == "wx.Size(5, 6)")
+        self.assertTrue(len(s) == 2)
+        w, h = s
+        self.assertTrue(5 == 5 and h == 6)
+        s[0] += 1  # tests both getitem and setitem
+        s[1] += 2
+        self.assertTrue(s == (6,8))
+        with self.assertRaises(IndexError):
+            s[2]
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+#---------------------------------------------------------------------------
+        
 
 if __name__ == '__main__':
     unittest2.main()

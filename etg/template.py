@@ -27,9 +27,9 @@ etgtools.parseDoxyXML(module, ITEMS)
 # Tweak the parsed meta objects in the module object as needed for customizing
 # the generated code and docstrings.
 
-import etgtools.tweaker_tools
-etgtools.tweaker_tools.ignoreAssignmentOperators(module)
-etgtools.tweaker_tools.removeWxPrefixes(module)
+import etgtools.tweaker_tools as tools
+tools.ignoreAssignmentOperators(module)
+tools.removeWxPrefixes(module)
 
 
 
