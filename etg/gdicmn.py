@@ -182,6 +182,16 @@ c.addPyCode('Size.__safe_for_unpickling__ = True')
 # wxRect tweaks
 c = module.find('wxRect')
 
+c.addProperty("left GetLeft")
+c.addProperty("top GetTop")
+c.addProperty("right GetRight")
+c.addProperty("bottom GetBottom")
+
+c.addProperty("bottomLeft GetBottomLeft")
+c.addProperty("bottomRight GetBottomRight")
+c.addProperty("topLeft GetTopLeft")
+c.addProperty("topRight GetTopRight")
+
 # take care of the same issues as wxPoint
 tools.ignoreAllOperators(c)
 for f in c.find('operator+=').all() + \
@@ -201,6 +211,34 @@ module.find('wxRect.Deflate').findOverload(') const').ignore()
 module.find('wxRect.Inflate').findOverload(') const').ignore()
 module.find('wxRect.Union').findOverload(') const').ignore()
 module.find('wxRect.Intersect').findOverload(') const').ignore()
+
+# wxRect typemap
+c.convertFromPyObject = tools.convertFourIntegersTemplate('wxRect')
+
+c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
+    sipRes = sipBuildResult(&sipIsErr, "(iiii)", 
+                            sipCpp->x, sipCpp->y, sipCpp->width, sipCpp->height);
+""", briefDoc="""\
+    Get() -> (x, y, width, height)\n    
+    Return the rectangle's properties as a tuple.""")
+
+# Add sequence protocol methods and other goodies
+c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
+c.addPyMethod('__repr__', '(self)',            'return "wx.Rect"+str(self.Get())')
+c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
+c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0,0,0)')
+c.addPyMethod('__reduce__', '(self)',          'return (Rect, self.Get())')
+c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
+c.addPyMethod('__setitem__', '(self, idx, val)',
+              """\
+              if idx == 0: self.x = val
+              elif idx == 1: self.y = val
+              elif idx == 2: self.width = val
+              elif idx == 3: self.height = val
+              else: raise IndexError
+              """) 
+c.addPyCode('Rect.__safe_for_unpickling__ = True')
+
 
 
 #---------------------------------------
@@ -223,6 +261,31 @@ wxRealPoint operator/(const wxRealPoint& s, int i);
 """)
 module.insertItemAfter(c, wc)
 
+
+# wxRealPoint typemap
+c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxRealPoint')
+
+c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
+    sipRes = sipBuildResult(&sipIsErr, "(dd)", 
+                            sipCpp->x, sipCpp->y);
+""", briefDoc="""\
+    Get() -> (x, y, width, height)\n    
+    Return the rectangle's properties as a tuple.""")
+
+# Add sequence protocol methods and other goodies
+c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
+c.addPyMethod('__repr__', '(self)',            'return "wx.RealPoint"+str(self.Get())')
+c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
+c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+c.addPyMethod('__reduce__', '(self)',          'return (Rect, self.Get())')
+c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
+c.addPyMethod('__setitem__', '(self, idx, val)',
+              """\
+              if idx == 0: self.x = val
+              elif idx == 1: self.y = val
+              else: raise IndexError
+              """) 
+c.addPyCode('RealPoint.__safe_for_unpickling__ = True')
 
 
 #---------------------------------------------------------------------------

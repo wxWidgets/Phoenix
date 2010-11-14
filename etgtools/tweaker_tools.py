@@ -90,3 +90,82 @@ def convertTwoIntegersTemplate(CLASS):
     return 0;
     """.format(**locals())
 
+
+def convertFourIntegersTemplate(CLASS):
+    return """\
+   // is it just a typecheck?
+   if (!sipIsErr) {{
+       if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
+           return 1;
+
+       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
+           int rval = 1;
+           PyObject* o1 = PySequence_ITEM(sipPy, 0);
+           PyObject* o2 = PySequence_ITEM(sipPy, 1);
+           PyObject* o3 = PySequence_ITEM(sipPy, 2);
+           PyObject* o4 = PySequence_ITEM(sipPy, 3);
+           if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4)) 
+               rval = 0;
+           Py_DECREF(o1);
+           Py_DECREF(o2);
+           Py_DECREF(o3);
+           Py_DECREF(o4);
+           return rval;
+       }}
+       return 0;
+   }}   
+   
+   // otherwise do the conversion
+   if (PySequence_Check(sipPy)) {{
+       PyObject* o1 = PySequence_ITEM(sipPy, 0);
+       PyObject* o2 = PySequence_ITEM(sipPy, 1);
+       PyObject* o3 = PySequence_ITEM(sipPy, 2);
+       PyObject* o4 = PySequence_ITEM(sipPy, 3);       
+       *sipCppPtr = new {CLASS}(PyInt_AsLong(o1), PyInt_AsLong(o2),
+                                PyInt_AsLong(o3), PyInt_AsLong(o4));
+       Py_DECREF(o1);
+       Py_DECREF(o2);
+       return sipGetState(sipTransferObj);
+    }}    
+    *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
+                sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
+    return 0;
+    """.format(**locals())
+
+
+
+def convertTwoDoublesTemplate(CLASS):
+    return """\
+   // is it just a typecheck?
+   if (!sipIsErr) {{
+       if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
+           return 1;
+
+       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
+           int rval = 1;
+           PyObject* o1 = PySequence_ITEM(sipPy, 0);
+           PyObject* o2 = PySequence_ITEM(sipPy, 1);
+           if (!PyNumber_Check(o1) || !PyNumber_Check(o2)) 
+               rval = 0;
+           Py_DECREF(o1);
+           Py_DECREF(o2);
+           return rval;
+       }}
+       return 0;
+   }}   
+   
+   // otherwise do the conversion
+   if (PySequence_Check(sipPy)) {{
+       PyObject* o1 = PySequence_ITEM(sipPy, 0);
+       PyObject* o2 = PySequence_ITEM(sipPy, 1);
+       *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2));
+       Py_DECREF(o1);
+       Py_DECREF(o2);
+       return sipGetState(sipTransferObj);
+    }}    
+    *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
+                sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
+    return 0;
+    """.format(**locals())
+
+

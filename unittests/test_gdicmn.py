@@ -164,6 +164,10 @@ class Size(unittest2.TestCase):
         s = s1 - s2
         s = s1 / 5
         
+    def test_DefaultSize(self):
+        ds = wx.DefaultSize
+        self.assertRaises(ds == (-1,-1))
+        
     def test_GetSet(self):
         s = wx.Size(100,200)
         t = s.Get()
@@ -196,14 +200,65 @@ class Size(unittest2.TestCase):
             s[2]
         
         
+#---------------------------------------------------------------------------
         
         
+class RealPoint(unittest2.TestCase):
+    
+    def test_default_ctor(self):
+        p = wx.RealPoint()
+        
+    def test_xy_ctor(self):
+        p = wx.RealPoint(12.3, 34.5)
+        
+    def test_Point_ctor(self):
+        p = wx.RealPoint(wx.Point(3,5))
+        p = wx.RealPoint( (3,5) )
+        
+    def test_copy_ctor(self):
+        p1 = wx.RealPoint(12.3, 45.6)
+        p2 = wx.RealPoint(p1)
+        
+    def test_properties(self):
+        p = wx.RealPoint(12.3, 45.6)
+        p.x += 2
+        p.y += 2
+        
+    
+    
+#---------------------------------------------------------------------------
+        
+class Rect(unittest2.TestCase):
+    
+    def test_default_ctor(self):
+        r = wx.Rect()
+        
+    def test_xywh_ctor(self):
+        r = wx.Rect(1, 2, 3, 4)
+        
+    def test_tlbr_ctor(self):
+        r = wx.Rect(wx.Point(10,10), wx.Point(100,100))
+        self.assertTrue(r.width == 91 and r.height == 91)
+        self.assertTrue(r.bottomRight == wx.Point(100,100))
+        self.assertTrue(r.topLeft == wx.Point(10,10))
+        
+    def test_possize_ctor(self):
+        # TODO: we have to use keyword args here since wx.Size has sequence
+        # protocol methods then it can also match the typemap for wxPoint and
+        # the other ctor is found first. Check if there is a way to fix or
+        # work around this.
+        r = wx.Rect(wx.Point(10,10), size=wx.Size(100,100))
+        self.assertTrue(r.width == 100 and r.height == 100)
+        self.assertTrue(r.x == 10 and r.y == 10)
+        self.assertTrue(r == wx.Rect(pos=(10,10), size=(100,100)))
+        
+    def test_size_ctor(self):
+        r = wx.Rect(wx.Size(50,100))
+        self.assertTrue(r.width == 50 and r.height == 100)
+        self.assertTrue(r.x == 0 and r.y == 0)
         
         
-        
-        
-        
-        
+    # TODO: more tests!
         
         
         
