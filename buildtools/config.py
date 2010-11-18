@@ -8,7 +8,7 @@
 #
 # Created:     3-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
-# Licence:     wxWindows license
+# License:     wxWindows License
 #----------------------------------------------------------------------
 
 import sys
@@ -26,13 +26,26 @@ from distutils.spawn     import spawn
 runSilently = False
 
 #----------------------------------------------------------------------
+# Set some defaults based on the environment or platform
+
+if os.environ.get('SIP'):
+    SIPdefault = os.environ.get('SIP')
+
+elif os.name == 'nt':
+    SIPdefault = 'c:/projects/sip/sip/sipgen/sip.exe'
+
+else:
+    SIPdefault = '/projects/sip/sip/sipgen/sip' 
+
+    
+#----------------------------------------------------------------------
 
 class Configuration(object):
     
     USE_SIP  = True
-    SIP      = '/projects/sip/sip/sipgen/sip'
+    SIP      = SIPdefault
     SIPINC   = 'sip/siplib'       # Use our local copy of sip.h
-    SIPGEN   = 'sip/gen'          # Where the generated .zip files go
+    SIPGEN   = 'sip/gen'          # Where the generated .sip files go
     SIPFILES = 'sip'              # where to find other sip files for %Include or %Import
     SIPOUT   = 'sip/cpp'          # where to put the generated C++ code
     
@@ -148,14 +161,14 @@ class Configuration(object):
                 self.VCDLL = 'vc_dll'
                 
             self.includes = ['include', 'src',
-                             opj(WXDIR, 'lib', VCDLL, 'msw'  + self.libFlag()),
-                             opj(WXDIR, 'include'),
-                             opj(WXDIR, 'contrib', 'include'),
+                             opj(self.WXDIR, 'lib', self.VCDLL, 'msw'  + self.libFlag()),
+                             opj(self.WXDIR, 'include'),
+                             opj(self.WXDIR, 'contrib', 'include'),
                              ]
         
             self.defines = [ ('WIN32', None),
                              ('_WINDOWS', None),
-                             (WXPLAT, None),
+                             (self.WXPLAT, None),
                              ('WXUSINGDLL', '1'),
                              ('ISOLATION_AWARE_ENABLED', None),
                              ('NDEBUG',),  # using a 1-tuple makes it do an undef
@@ -166,9 +179,9 @@ class Configuration(object):
             if self.MONOLITHIC:
                 self.libs += makeLibName('')
             else:
-                self.libs += [ 'wxbase' + WXDLLVER + libFlag(), 
-                               'wxbase' + WXDLLVER + libFlag() + '_net',
-                               'wxbase' + WXDLLVER + libFlag() + '_xml',
+                self.libs += [ 'wxbase' + self.WXDLLVER + self.libFlag(), 
+                               'wxbase' + self.WXDLLVER + self.libFlag() + '_net',
+                               'wxbase' + self.WXDLLVER + self.libFlag() + '_xml',
                                self.makeLibName('core')[0],
                                self.makeLibName('adv')[0],
                                self.makeLibName('html')[0],
@@ -502,3 +515,15 @@ def msg(text):
 def opj(*args):
     path = os.path.join(*args)
     return os.path.normpath(path)
+
+def posixjoin(a, *p):
+    """Join two or more pathname components, inserting sep as needed"""
+    path = a
+    for b in p:
+        if os.path.isabs(b):
+            path = b
+        elif path == '' or path[-1:] in '/\\:':
+            path = path + b
+        else:
+            path = path + '/' + b
+    return path

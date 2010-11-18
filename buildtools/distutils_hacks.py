@@ -7,7 +7,7 @@
 #
 # Created:     3-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
-# Licence:     wxWindows license
+# License:     wxWindows License
 #----------------------------------------------------------------------
 
 import sys
@@ -19,7 +19,7 @@ import distutils.command.install_headers
 import distutils.command.clean
 from distutils.dep_util  import newer
 
-from config import Config
+from config import Config, posixjoin
 
 
 
@@ -324,7 +324,7 @@ class etgsip_build_ext(build_ext):
     def etg2sip(self, etgfile):
         cfg = Config()
         sipfile = os.path.splitext(os.path.basename(etgfile))[0] + '.sip'
-        sipfile = os.path.join(cfg.SIPGEN, sipfile)
+        sipfile = posixjoin(cfg.SIPGEN, sipfile)
         return sipfile
     
         
@@ -375,12 +375,15 @@ class etgsip_build_ext(build_ext):
         
     
     def _sip_compile(self, sip_bin, source, sbf):
+        cfg = Config()
+        if not cfg.USE_SIP:
+            return
+        
         other_opts = []
         base = os.path.basename(source)
         if base.startswith('_'):
-            cfg = Config()
             pycode = os.path.splitext(base[1:])[0] + '.py'
-            pycode = os.path.join(cfg.PKGDIR, pycode)
+            pycode = posixjoin(cfg.PKGDIR, pycode)
             other_opts = ['-X', 'pycode:'+pycode]
         self.spawn([sip_bin] + self.sip_opts +
                    other_opts + 

@@ -4,10 +4,6 @@
 # Written by Giovanni Bajo <rasky at develer dot com>
 # Based on Pyrex.Distutils, written by Graham Fawcett and Darrel Gallion.
 
-# NOTE: This has been tweaked slightly to allow the folder used for the SIP
-# output to be overridden in a derived class. It is otherwise the same as the
-# module provided by sip. --Robin
-
 import distutils.command.build_ext
 from distutils.dep_util import newer, newer_group
 import os
