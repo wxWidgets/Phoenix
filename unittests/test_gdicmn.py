@@ -224,7 +224,7 @@ class RealPoint(unittest2.TestCase):
         p.x += 2
         p.y += 2
         
-    
+
     
 #---------------------------------------------------------------------------
         
@@ -236,22 +236,22 @@ class Rect(unittest2.TestCase):
     def test_xywh_ctor(self):
         r = wx.Rect(1, 2, 3, 4)
         
-    def test_tlbr_ctor(self):
-        r = wx.Rect(wx.Point(10,10), wx.Point(100,100))
-        self.assertTrue(r.width == 91 and r.height == 91)
-        self.assertTrue(r.bottomRight == wx.Point(100,100))
-        self.assertTrue(r.topLeft == wx.Point(10,10))
-        
     def test_possize_ctor(self):
-        # TODO: we have to use keyword args here since wx.Size has sequence
-        # protocol methods then it can also match the typemap for wxPoint and
-        # the other ctor is found first. Check if there is a way to fix or
-        # work around this.
-        r = wx.Rect(wx.Point(10,10), size=wx.Size(100,100))
+        r = wx.Rect(wx.Point(10,10), wx.Size(100,100))
         self.assertTrue(r.width == 100 and r.height == 100)
         self.assertTrue(r.x == 10 and r.y == 10)
         self.assertTrue(r == wx.Rect(pos=(10,10), size=(100,100)))
         
+    def test_tlbr_ctor(self):
+        # TODO: we have to use keyword args here since wx.Point has sequence
+        # protocol methods then it can also match the typemap for wxSize and
+        # the other ctor is found first. Check if there is a way to fix or
+        # work around this.
+        r = wx.Rect(topLeft=wx.Point(10,10), bottomRight=wx.Point(100,100))
+        self.assertTrue(r.width == 91 and r.height == 91)
+        self.assertTrue(r.bottomRight == wx.Point(100,100))
+        self.assertTrue(r.topLeft == wx.Point(10,10))
+
     def test_size_ctor(self):
         r = wx.Rect(wx.Size(50,100))
         self.assertTrue(r.width == 50 and r.height == 100)
