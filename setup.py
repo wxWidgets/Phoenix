@@ -1,12 +1,12 @@
 #----------------------------------------------------------------------
 # Name:        setup.py
-# Purpose:     Distutils build script for wxPython
+# Purpose:     Distutils build script for wxPython (phoenix)
 #
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
-# Licence:     wxWindows license
+# License:     wxWindows License
 #----------------------------------------------------------------------
 
 
@@ -125,10 +125,20 @@ ext.append(
     
 ext.append(
     Extension('_core', ['etg/_core.py',
+                        'etg/windowid.py',
                         'etg/object.py',
+                        
+                        'etg/kbdstate.py',
+                        'etg/mousestate.py',
+                        'etg/tracker.py',
+                        'etg/event.py',
+                        
                         'etg/gdicmn.py',
                         'etg/geometry.py',
-                        ], 
+                        ] + rc_file,
+              depends = [ 'src/string.sip',
+                          'src/clntdata.sip',
+                          ],
               include_dirs       = cfg.includes,
               define_macros      = cfg.defines,
               library_dirs       = cfg.libdirs,
