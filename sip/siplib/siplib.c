@@ -6068,13 +6068,17 @@ static PyObject *create_property(sipVariableDef *vd)
         doc = Py_None;
         Py_INCREF(doc);
     }
+#if PY_MAJOR_VERSION >= 3
+    else if ((doc = PyUnicode_FromString(vd->vd_docstring)) == NULL)
+#else
     else if ((doc = PyString_FromString(vd->vd_docstring)) == NULL)
+#endif
     {
         goto done;
     }
 
-    descr = PyObject_CallFunctionObjArgs(&PyProperty_Type, fget, fset, fdel,
-            doc, NULL);
+    descr = PyObject_CallFunctionObjArgs((PyObject *)&PyProperty_Type, fget,
+            fset, fdel, doc, NULL);
 
 done:
     Py_XDECREF(fget);
@@ -8031,9 +8035,9 @@ static int compareTypeDef(const void *key, const void *el)
         /* Find which external type it is. */
         while (etd->et_nr >= 0)
         {
-            const sipTypeDef **tdp = &module_searched->em_types[etd->et_nr];
+            const void *tdp = &module_searched->em_types[etd->et_nr];
 
-            if (tdp == (const sipTypeDef **)el)
+            if (tdp == el)
             {
                 s2 = etd->et_name;
                 break;

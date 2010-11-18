@@ -55,7 +55,7 @@ extern "C" {
  * Define the SIP version number.
  */
 #define SIP_VERSION         0x040c00
-#define SIP_VERSION_STR     "4.12-snapshot-24f170d5c2dd"
+#define SIP_VERSION_STR     "4.12-snapshot-93040d2c716c"
 
 
 /*
@@ -298,13 +298,6 @@ typedef int sip_gilstate_t;
  * Some convenient function pointers.
  */
 
- 
-/*
- * forward declare these structures
- */    
-struct _sipSimpleWrapper;
-struct _sipTypeDef;    
-
 /*
  * The operation an access function is being asked to perform.
  */
@@ -314,6 +307,9 @@ typedef enum
     GuardedPointer,     /* Return the guarded pointer, ie. 0 if it has gone. */
     ReleaseGuard        /* Release the guard, if any. */
 } AccessFuncOp;
+
+struct _sipSimpleWrapper;
+struct _sipTypeDef;
 
 typedef void *(*sipInitFunc)(struct _sipSimpleWrapper *, PyObject *,
         PyObject *, PyObject **, PyObject **, PyObject **);
