@@ -4,7 +4,7 @@
 #
 # Created:     3-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
-# Licence:     wxWindows license
+# License:     wxWindows License
 #---------------------------------------------------------------------------
 
 """
@@ -18,7 +18,10 @@ import extractors
 
 def removeWxPrefixes(node):
     """
-    Rename items with a 'wx' prefix to not have the prefix.
+    Rename items with a 'wx' prefix to not have the prefix. If the back-end
+    generator supports auto-renaming then it can ignore the pyName value for
+    those that are changed here. We'll still change them all incase the
+    pyNames are needed elsewhere.
     """
     for item in node.allItems():
         if not item.pyName \
@@ -27,9 +30,13 @@ def removeWxPrefixes(node):
            and not isinstance(item, (extractors.TypedefDef,
                                      extractors.MethodDef )):  # TODO: Any others?
                 item.pyName = item.name[2:]
+                item.wxDropped = True
+        if item.name.startswith('wxEVT_'):
+            # give these theire actual name so the auto-renamer won't touch them
+            item.pyName = item.name
             
 
-
+    
 def ignoreAssignmentOperators(node):
     """
     Set the ignored flag for all class methods that are assignment operators
@@ -167,5 +174,48 @@ def convertTwoDoublesTemplate(CLASS):
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
     return 0;
     """.format(**locals())
+
+
+def convertFourDoublesTemplate(CLASS):
+    return """\
+   // is it just a typecheck?
+   if (!sipIsErr) {{
+       if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
+           return 1;
+
+       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
+           int rval = 1;
+           PyObject* o1 = PySequence_ITEM(sipPy, 0);
+           PyObject* o2 = PySequence_ITEM(sipPy, 1);
+           PyObject* o3 = PySequence_ITEM(sipPy, 2);
+           PyObject* o4 = PySequence_ITEM(sipPy, 3);
+           if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4)) 
+               rval = 0;
+           Py_DECREF(o1);
+           Py_DECREF(o2);
+           Py_DECREF(o3);
+           Py_DECREF(o4);
+           return rval;
+       }}
+       return 0;
+   }}   
+   
+   // otherwise do the conversion
+   if (PySequence_Check(sipPy)) {{
+       PyObject* o1 = PySequence_ITEM(sipPy, 0);
+       PyObject* o2 = PySequence_ITEM(sipPy, 1);
+       PyObject* o3 = PySequence_ITEM(sipPy, 2);
+       PyObject* o4 = PySequence_ITEM(sipPy, 3);       
+       *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2),
+                                PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
+       Py_DECREF(o1);
+       Py_DECREF(o2);
+       return sipGetState(sipTransferObj);
+    }}    
+    *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
+                sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
+    return 0;
+    """.format(**locals())
+
 
 

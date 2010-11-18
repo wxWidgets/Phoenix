@@ -4,7 +4,7 @@
 #
 # Created:     3-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
-# Licence:     wxWindows license
+# License:     wxWindows License
 #---------------------------------------------------------------------------
 
 """
@@ -106,6 +106,9 @@ class BaseDef(object):
                                  (head, self.__class__.__name__, self.name))
 
         
+        
+    def addItem(self, item):
+        self.items.append(item)
         
     def insertItem(self, index, item):
         self.items.insert(index, item)
@@ -343,7 +346,8 @@ class MethodDef(FunctionDef):
     def extract(self, element, className):
         super(MethodDef, self).extract(element)
         self.isStatic = element.get('static') == 'yes'
-        self.isVirtual = element.get('virt') == 'virtual'
+        self.isVirtual = element.get('virt') in ['virtual', 'pure-virtual']
+        self.isPureVirtual = element.get('virt') == 'pure-virtual'
         self.isCtor = self.name == className
         self.isDtor = self.name == '~' + className
         self.protection = element.get('prot')
@@ -515,7 +519,10 @@ class ClassDef(BaseDef):
         
     def addCppMethod(self, type, name, argsString, body, doc=None, **kw):
         """
-        Add a new C++ method to a class.
+        Add a new C++ method to a class. This method doesn't have to actually
+        exist in the real C++ class. Instead it will be grafted on by the
+        back-end wrapper generator such that it is visible in the class in the
+        target language.
         """
         md = CppMethodDef(type, name, argsString, body, doc, **kw)
         self.items.append(md)
@@ -549,6 +556,65 @@ class ClassDef(BaseDef):
         return pc
 
     
+    def addPublic(self, code=''):
+        """
+        Adds a 'public:' protection keyword to the class, optionally followed
+        by some additional code.
+        """
+        text = 'public:'
+        if code:
+            text = text + '\n' + code
+        self.addItem(WigCode(text))
+         
+    def addProtected(self, code=''):
+        """
+        Adds a 'protected:' protection keyword to the class, optionally followed
+        by some additional code.
+        """
+        text = 'protected:'
+        if code:
+            text = text + '\n' + code
+        self.addItem(WigCode(text))
+
+        
+    def addPrivate(self, code=''):
+        """
+        Adds a 'private:' protection keyword to the class, optionally followed
+        by some additional code.
+        """
+        text = 'private:'
+        if code:
+            text = text + '\n' + code
+        self.addItem(WigCode(text))
+
+        
+    def addCopyCtor(self, prot='protected'):
+        # add declaration of a copy constructor to this class
+        wig = WigCode("""
+{PROT}:
+    {CLASS}(const {CLASS}&);   
+""".format(CLASS=self.name, PROT=prot))
+        self.addItem(wig)
+
+    def addPrivateCopyCtor(self):
+        self.addCopyCtor('private')
+        
+    def addPrivateAssignOp(self):
+        # add declaration of an assignment opperator to this class
+        wig = WigCode("""
+private:
+    {CLASS}& operator=(const {CLASS}&);
+""".format(CLASS=self.name))
+        self.addItem(wig)
+
+    def addDtor(self, prot='protected'):
+        # add declaration of a destructor to this class
+        wig = WigCode("""
+{PROT}:
+    ~{CLASS}();
+""".format(CLASS=self.name, PROT=prot))
+        self.addItem(wig)
+
 #---------------------------------------------------------------------------
 
 class EnumDef(BaseDef):
