@@ -1,3 +1,4 @@
+---------------
 Project Phoenix
 ---------------
 
@@ -10,6 +11,10 @@ Directory structure
 
 There are a lot of subfolders in this directory, here is a brief
 explanation to help a newbie find their way around.
+
+ * build            Intermediate files produced by the build process
+                    (distutils, etc.) are stored here.  This folder 
+                    should not be committed to a version repository.
 
  * buildtools  	    This is a Python package containing modules that
                     are used from setup.py and which assist with
@@ -56,3 +61,23 @@ explanation to help a newbie find their way around.
                     associated files will be put into this folder.
                     Subfolders contain pure-python subpackages of the
                     wx package, such as wx.lib, etc.
+
+
+Naming of files
+---------------
+
+To help keep things a little easier when looking for things that need to be
+worked on, the file names in the Phoenix project will mirror the names of the
+files in the wxWidgets interface headers folder. For example, if there is a
+interface/wx/FOO.h and we are processing the XML produced for that file then
+the ETG script for the classes and other items will be named etg/FOO.py and it
+will produce sip/gen/FOO.sip, unit tests will be in unittests/test_FOO.py, and
+and so on.
+
+In most cases more than one ETG/SIP file will be used to create a single
+Python extension module. In those cases there will be one ETG script used to
+bring all the others together into the single extension module (by using the
+back-end generator's include feature for example.) The names of those scripts
+will have a leading underscore, such as etg/_core.py, and all the scripts that
+are intended to be included in that extension module should specify that name
+in their MODULE variable.
