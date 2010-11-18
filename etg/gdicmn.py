@@ -4,7 +4,7 @@
 #
 # Created:     4-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
-# Licence:     wxWindows license
+# License:     wxWindows License
 #---------------------------------------------------------------------------
 
 PACKAGE   = "wx"
@@ -25,6 +25,8 @@ ITEMS  = [
 # Parse the XML file(s) building a collection of Extractor objects
 
 import etgtools
+import etgtools.tweaker_tools as tools
+
 module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
 etgtools.parseDoxyXML(module, ITEMS)
 
@@ -32,12 +34,6 @@ etgtools.parseDoxyXML(module, ITEMS)
 # Tweak the parsed meta objects in the module object as needed for customizing
 # the generated code and docstrings.
 
-import etgtools.tweaker_tools as tools
-tools.ignoreAssignmentOperators(module)
-tools.removeWxPrefixes(module)
-
-
-module.addHeaderCode('#include <wx/wx.h>')
 
 # ignore some of these enum values
 e = module.find('wxBitmapType')
@@ -45,8 +41,13 @@ for i in e:
     if i.name.endswith('_RESOURCE'):
         i.ignore()
 
-# TODO: We need an ETG way to indicate that an item is only available
-# on certain platofmrs.
+module.addCppCode("""\
+#if !defined(__WXMAC__)
+#define wxCURSOR_COPY_ARROW wxCURSOR_ARROW
+#endif
+""")
+
+# these are X11 only
 e = module.find('wxStockCursor')
 e.find('wxCURSOR_BASED_ARROW_DOWN').ignore()
 e.find('wxCURSOR_BASED_ARROW_UP').ignore()
@@ -205,6 +206,17 @@ wxRect operator*(const wxRect& r1, const wxRect& r2);
 """)
 module.insertItemAfter(c, wc)
 
+# Because of our add-ons that make wx.Point and wx.Size act like 2-element
+# sequences, and also the typecheck code that allows 2-element sequences, then
+# we end up with a bit of confusion about the (Point,Point) and the
+# (Point,Size) overloads of the wx.Rect constructor. The confusion can be
+# dealt with by using keyword args, but I think that the (Point,Size) version
+# will be used more, so reorder the overloads so it is found first.
+m = module.find('wxRect.wxRect')
+mo = m.findOverload('topLeft')
+del m.overloads[m.overloads.index(mo)]
+m.overloads.append(mo)
+
 # These methods have some overloads that will end up with the same signature
 # in Python, so we have to remove one.
 module.find('wxRect.Deflate').findOverload(') const').ignore()
@@ -288,7 +300,10 @@ c.addPyMethod('__setitem__', '(self, idx, val)',
 c.addPyCode('RealPoint.__safe_for_unpickling__ = True')
 
 
+
 #---------------------------------------------------------------------------
+tools.ignoreAssignmentOperators(module)
+tools.removeWxPrefixes(module)
 #---------------------------------------------------------------------------
 # Run the generators
 

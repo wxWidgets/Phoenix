@@ -1,20 +1,20 @@
 #---------------------------------------------------------------------------
-# Name:        
+# Name:        etg/mousestate.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     15-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
-PACKAGE   = ""   
-MODULE    = ""
-NAME      = ""   # Base name of the file to generate to for this script
+PACKAGE   = "wx"   
+MODULE    = "_core"
+NAME      = "mousestate"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ ]    
+ITEMS  = [ 'wxMouseState' ]    
     
 #---------------------------------------------------------------------------
 # Parse the XML file(s) building a collection of Extractor objects
@@ -30,8 +30,17 @@ etgtools.parseDoxyXML(module, ITEMS)
 # the generated code and docstrings.
 
 
+c = module.find('wxMouseState')
+c.find('GetPosition').findOverload('int *x').ignore()
 
-
+c.addProperty("x GetX SetX")
+c.addProperty("y GetY SetY")
+c.addProperty("leftIsDown LeftIsDown SetLeftDown")
+c.addProperty("middleIsDown MiddleIsDown SetMiddleDown")
+c.addProperty("rightIsDown RightIsDown SetRightDown")
+c.addProperty("aux1IsDown Aux1IsDown SetAux1Down")
+c.addProperty("aux2IsDown Aux2IsDown SetAux2Down")
+c.addProperty("Position GetPosition SetPosition")
 
 
 #---------------------------------------------------------------------------

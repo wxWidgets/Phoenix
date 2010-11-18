@@ -1,20 +1,20 @@
 #---------------------------------------------------------------------------
-# Name:        
+# Name:        etg/kbdstate.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     15-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
-PACKAGE   = ""   
-MODULE    = ""
-NAME      = ""   # Base name of the file to generate to for this script
+PACKAGE   = "wx"   
+MODULE    = "_core"
+NAME      = "kbdstate"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ ]    
+ITEMS  = [ 'wxKeyboardState' ]    
     
 #---------------------------------------------------------------------------
 # Parse the XML file(s) building a collection of Extractor objects
@@ -30,8 +30,13 @@ etgtools.parseDoxyXML(module, ITEMS)
 # the generated code and docstrings.
 
 
+c = module.find('wxKeyboardState')
 
-
+c.addProperty("controlDown ControlDown SetControlDown")
+c.addProperty("shiftDown   ShiftDown   SetShiftDown")
+c.addProperty("altDown     AltDown     SetAltDown")
+c.addProperty("metaDown    MetaDown    SetMetaDown")
+c.addProperty("cmdDown     CmdDown")
 
 
 #---------------------------------------------------------------------------

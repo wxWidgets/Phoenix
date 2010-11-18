@@ -1,21 +1,21 @@
 #---------------------------------------------------------------------------
-# Name:        
+# Name:        etg/windowid.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     15-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
-PACKAGE   = ""   
-MODULE    = ""
-NAME      = ""   # Base name of the file to generate to for this script
+PACKAGE   = "wx"   
+MODULE    = "_core"
+NAME      = "windowid"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ ]    
-    
+ITEMS  = [ 'wxIdManager' ]    
+
 #---------------------------------------------------------------------------
 # Parse the XML file(s) building a collection of Extractor objects
 
