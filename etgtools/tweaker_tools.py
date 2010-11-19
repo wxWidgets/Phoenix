@@ -63,6 +63,25 @@ def createPyArgsStrings(node):
     pass
 
 
+
+def fixEventClass(klass):
+    """
+    Add the extra stuff that an event class needs that are lacking from the
+    interface headers.
+    """
+    if klass.name != 'wxEvent':
+        # Clone() in wxEvent is pure virtual, so we need to let the back-end
+        # know that the other event classes have an implementation for it so
+        # it won't think that they are abstract classes too.
+        wig = extractors.WigCode("virtual wxEvent* Clone();")
+        klass.addItem(wig)
+
+    # Add a private assignment operator so the back-end (if it's watching out
+    # for this) won't try to make copies by assignment.
+    klass.addPrivateAssignOp()
+
+    
+    
 def convertTwoIntegersTemplate(CLASS):
     return """\
    // is it just a typecheck?

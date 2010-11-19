@@ -1,18 +1,18 @@
 import unittest2
 import wx
 
-
 #---------------------------------------------------------------------------
 
 class MouseState(unittest2.TestCase):
     
     def test_MouseState(self):
         ms = wx.MouseState()
+
+        # Just check that the properties exist, the getters will also be called in the process
         ms.controlDown
         ms.shiftDown
         ms.altDown
         ms.cmdDown
-        
         ms.x
         ms.y
         ms.leftIsDown

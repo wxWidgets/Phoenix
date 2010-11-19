@@ -95,7 +95,7 @@ module.insertItem(0, etgtools.WigCode("class wxCursor;  // forward declaration")
 c = module.find('wxEvtHandler')
 c.addPrivateCopyCtor()
 
-# Ignore the Connect/Disconnect and Bind/Unbind methods for now. 
+# Ignore the Connect/Disconnect and Bind/Unbind methods (and overloads) for now. 
 for item in c.allItems():
     if item.name in ['Connect', 'Disconnect', 'Bind', 'Unbind']:
         item.ignore()
@@ -116,14 +116,9 @@ c.find('SetClientData').ignore()
 #---------------------------------------
 # wxEvent
 c = module.find('wxEvent')
+assert isinstance(c, etgtools.ClassDef)
 c.abstract = True
 c.find('Clone').factory = True
-
-# Clone is not declared in the derived classes where it is implemented so we
-# need to pretend that it is not pure-virtual so the derived classes will not
-# be marked as abstract. Although perhaps it would be better to go ahead and
-# add the declaration to the derived classes?    TODO: decide this
-c.find('Clone').isPureVirtual = False   
 
 c.addProperty('EventObject GetEventObject SetEventObject')
 c.addProperty('EventType GetEventType SetEventType')
@@ -132,11 +127,9 @@ c.addProperty('Skipped GetSkipped')
 c.addProperty('Timestamp GetTimestamp SetTimestamp')
 
 
-
 #---------------------------------------
 # wxCommandEvent
 c = module.find('wxCommandEvent')
-assert isinstance(c, etgtools.ClassDef)
 
 c.find('GetClientObject').ignore()
 c.find('SetClientObject').ignore()
@@ -312,17 +305,10 @@ c.addProperty('Position GetPosition SetPosition')
 
 
 
-
-#--------------------------------------- 
-# Supress the automatic use of an assignment operator for these classes, by
-# the back-end generator, assuming they are smart enough to do that if they
-# see a private assignment operator in the class declaration.
-
+# Apply common fixups for all the event classes
 for name in [n for n in ITEMS if n.endswith('Event')]:
     c = module.find(name)
-    c.addPrivateAssignOp()
-
-
+    tools.fixEventClass(c)
 
 #---------------------------------------------------------------------------
 tools.ignoreAssignmentOperators(module)

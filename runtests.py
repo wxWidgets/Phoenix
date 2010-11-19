@@ -1,4 +1,4 @@
-import sys, os
+import sys
 
 if sys.version_info < (2,7):
     # The unittest2 package has back-ported most of the new features of the
@@ -10,3 +10,4 @@ else:
     
 args = sys.argv[:1] + 'discover -p test_*.py -s unittests -t .'.split() + sys.argv[1:]
 unittest2.main( argv=args )
+

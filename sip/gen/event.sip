@@ -136,7 +136,7 @@ public:
     );
 
     virtual
-    wxEvent * Clone()   /Factory/;
+    wxEvent * Clone() = 0   /Factory/;
 
     wxObject * GetEventObject();
 
@@ -263,6 +263,9 @@ public:
 
     %Property(name=String, get=GetString, set=SetString)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxCommandEvent& operator=(const wxCommandEvent&);
@@ -288,6 +291,9 @@ public:
 
     %Property(name=Active, get=GetActive)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxActivateEvent& operator=(const wxActivateEvent&);
@@ -311,6 +317,9 @@ public:
 
     %Property(name=Window, get=GetWindow)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxChildFocusEvent& operator=(const wxChildFocusEvent&);
@@ -330,6 +339,9 @@ public:
         wxEventType commandType = wxEVT_NULL,
         int id = 0
     );
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -367,6 +379,9 @@ public:
         bool veto = true
     );
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxCloseEvent& operator=(const wxCloseEvent&);
@@ -396,6 +411,9 @@ public:
 
     %Property(name=Position, get=GetPosition, set=SetPosition)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxContextMenuEvent& operator=(const wxContextMenuEvent&);
@@ -412,6 +430,9 @@ class wxDisplayChangedEvent : wxEvent
 
 public:
     wxDisplayChangedEvent();
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -446,6 +467,9 @@ public:
 
     %Property(name=Position, get=GetPosition)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxDropFilesEvent& operator=(const wxDropFilesEvent&);
@@ -469,6 +493,9 @@ public:
     wxDC * GetDC();
 
     %Property(name=DC, get=GetDC)
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -497,6 +524,9 @@ public:
     );
 
     %Property(name=Window, get=GetWindow, set=SetWindow)
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -539,6 +569,9 @@ public:
         const wxPoint & pt
     );
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxHelpEvent& operator=(const wxHelpEvent&);
@@ -562,6 +595,9 @@ public:
     bool IsIconized();
 
     bool Iconized();
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -594,6 +630,9 @@ public:
         wxIdleMode mode
     );
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxIdleEvent& operator=(const wxIdleEvent&);
@@ -612,6 +651,9 @@ public:
     wxInitDialogEvent(
         int id = 0
     );
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -662,6 +704,9 @@ public:
     bool IsMove();
 
     bool IsZMove();
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -714,6 +759,9 @@ public:
 
     %Property(name=UnicodeKey, get=GetUnicodeKey)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxKeyEvent& operator=(const wxKeyEvent&);
@@ -732,6 +780,9 @@ public:
     wxMaximizeEvent(
         int id = 0
     );
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -764,6 +815,9 @@ public:
 
     %Property(name=MenuId, get=GetMenuId)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxMenuEvent& operator=(const wxMenuEvent&);
@@ -788,6 +842,9 @@ public:
 
     %Property(name=CapturedWindow, get=GetCapturedWindow)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxMouseCaptureChangedEvent& operator=(const wxMouseCaptureChangedEvent&);
@@ -806,6 +863,9 @@ public:
     wxMouseCaptureLostEvent(
         wxWindowID windowId = 0
     );
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -910,6 +970,9 @@ public:
 
     %Property(name=WheelRotation, get=GetWheelRotation)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxMouseEvent& operator=(const wxMouseEvent&);
@@ -945,6 +1008,9 @@ public:
     %Property(name=Rect, get=GetRect, set=SetRect)
 
     %Property(name=Position, get=GetPosition, set=SetPosition)
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -1003,6 +1069,9 @@ public:
 
     %Property(name=Direction, get=GetDirection, set=SetDirection)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxNavigationKeyEvent& operator=(const wxNavigationKeyEvent&);
@@ -1029,6 +1098,9 @@ public:
 
     void Veto();
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxNotifyEvent& operator=(const wxNotifyEvent&);
@@ -1047,6 +1119,9 @@ public:
     wxPaintEvent(
         int id = 0
     );
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -1075,6 +1150,9 @@ public:
 
     %Property(name=ChangedWindow, get=GetChangedWindow, set=SetChangedWindow)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxPaletteChangedEvent& operator=(const wxPaletteChangedEvent&);
@@ -1101,6 +1179,9 @@ public:
     bool GetPaletteRealized();
 
     %Property(name=PaletteRealized, get=GetPaletteRealized, set=SetPaletteRealized)
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -1140,6 +1221,9 @@ public:
 
     %Property(name=Position, get=GetPosition, set=SetPosition)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxScrollEvent& operator=(const wxScrollEvent&);
@@ -1176,6 +1260,9 @@ public:
     %Property(name=Orientation, get=GetOrientation, set=SetOrientation)
 
     %Property(name=Position, get=GetPosition, set=SetPosition)
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -1215,6 +1302,9 @@ public:
 
     %Property(name=Y, get=GetY)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxSetCursorEvent& operator=(const wxSetCursorEvent&);
@@ -1244,6 +1334,9 @@ public:
     bool GetShow();
 
     %Property(name=Show, get=IsShown, set=SetShow)
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -1281,6 +1374,9 @@ public:
 
     %Property(name=Size, get=GetSize, set=SetSize)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxSizeEvent& operator=(const wxSizeEvent&);
@@ -1297,6 +1393,9 @@ class wxSysColourChangedEvent : wxEvent
 
 public:
     wxSysColourChangedEvent();
+
+    virtual wxEvent* Clone();
+
 
     
     private:
@@ -1381,6 +1480,9 @@ public:
 
     %Property(name=Text, get=GetText, set=SetText)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxUpdateUIEvent& operator=(const wxUpdateUIEvent&);
@@ -1404,6 +1506,9 @@ public:
 
     %Property(name=Window, get=GetWindow)
 
+    virtual wxEvent* Clone();
+
+
     
     private:
         wxWindowCreateEvent& operator=(const wxWindowCreateEvent&);
@@ -1426,6 +1531,9 @@ public:
     wxWindow * GetWindow();
 
     %Property(name=Window, get=GetWindow)
+
+    virtual wxEvent* Clone();
+
 
     
     private:

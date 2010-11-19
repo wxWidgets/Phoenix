@@ -12,7 +12,7 @@
 
 %ModuleHeaderCode
 
-    // A wxClientData that holds a refernece to a Python object
+    // A wxClientData that holds a reference to a Python object
     class wxPyClientData : public wxClientData 
     {
     public:
