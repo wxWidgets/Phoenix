@@ -51,7 +51,7 @@ class Configuration(object):
     
     SIPOPTS  = ' '.join(['-k',    # turn on keyword args support
                          '-o',    # turn on auto-docstrings
-                         '-e',    # turn on exceptions support
+                         #'-e',    # turn on exceptions support
                          '-T',    # turn off writing the timestamp to the generated files
                          #'-g',   # always release and reaquire the GIL
                          #'-r',   # turn on function call tracing
@@ -96,7 +96,7 @@ class Configuration(object):
     NO_SCRIPTS = False
     # Don't install the tools/script files
     
-    PKGDIR = 'wx'
+    PKGDIR = 'wxPhoenix'
     # The name of the top-level package
 
     # ---------------------------------------------------------------
@@ -145,8 +145,10 @@ class Configuration(object):
                 self.WXDIR = '..'  # assumes wxPython is subdir
             msg("WARNING: WXWIN not set in environment. Assuming '%s'" % self.WXDIR)
         
-        self.includes = ['sip/siplib']  # to get our version of sip.h
-         
+        self.includes = ['sip/siplib',  # to get our version of sip.h
+                         'src',         # for any hand-written headers
+                         ]
+        
         #---------------------------------------
         # MSW specific settings
         if os.name == 'nt' and  self.COMPILER == 'msvc':
@@ -512,9 +514,11 @@ def msg(text):
     if not runSilently:
         print text
 
+        
 def opj(*args):
     path = os.path.join(*args)
     return os.path.normpath(path)
+
 
 def posixjoin(a, *p):
     """Join two or more pathname components, inserting sep as needed"""
@@ -527,3 +531,20 @@ def posixjoin(a, *p):
         else:
             path = path + '/' + b
     return path
+
+
+def loadETG(name):
+    """
+    Execute an ETG script so we can load a namespace with its contents (such
+    as a list of dependencies, etc.) for use by setup.py
+    """
+    class _Namespace(object):
+        def __init__(self):
+            self.__dict__['__name__'] = 'namespace'
+        def nsdict(self):
+            return self.__dict__
+            
+    ns = _Namespace()
+    execfile(name, ns.nsdict())
+    return ns
+

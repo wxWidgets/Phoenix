@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/kbdstate.py
+# Name:        etg/platinfo.py
 # Author:      Robin Dunn
 #
-# Created:     15-Nov-2010
+# Created:     22-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -12,13 +12,13 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
-NAME      = "kbdstate"   # Base name of the file to generate to for this script
+NAME      = "platinfo"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxKeyboardState' ]    
-    
+ITEMS  = [ 'wxPlatformInfo' ]    
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -31,13 +31,12 @@ def run():
     # customizing the generated code and docstrings.
     
     
-    c = module.find('wxKeyboardState')
+    c = module.find('wxPlatformInfo')
+    assert isinstance(c, etgtools.ClassDef)
     
-    c.addProperty("controlDown ControlDown SetControlDown")
-    c.addProperty("shiftDown   ShiftDown   SetShiftDown")
-    c.addProperty("altDown     AltDown     SetAltDown")
-    c.addProperty("metaDown    MetaDown    SetMetaDown")
-    c.addProperty("cmdDown     CmdDown")
+    c.find('wxPlatformInfo').findOverload('()').ignore()
+    c.find('GetLinuxDistributionInfo').ignore()
+    c.find('SetLinuxDistributionInfo').ignore()
     
     
     #-----------------------------------------------------------------

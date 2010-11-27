@@ -1,5 +1,5 @@
 import unittest2
-import wx
+import wxPhoenix as wx
 
 
 #---------------------------------------------------------------------------

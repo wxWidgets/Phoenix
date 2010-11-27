@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/kbdstate.py
+# Name:        etg/display.py
 # Author:      Robin Dunn
 #
-# Created:     15-Nov-2010
+# Created:     
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -12,13 +12,13 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
-NAME      = "kbdstate"   # Base name of the file to generate to for this script
+NAME      = "display"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxKeyboardState' ]    
-    
+ITEMS  = [ 'wxDisplay', ]    
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -30,14 +30,20 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
+    module.addHeaderCode("#include <wx/display.h>")
     
-    c = module.find('wxKeyboardState')
+    c = module.find('wxDisplay')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateAssignOp()
+    c.addPrivateCopyCtor()
     
-    c.addProperty("controlDown ControlDown SetControlDown")
-    c.addProperty("shiftDown   ShiftDown   SetShiftDown")
-    c.addProperty("altDown     AltDown     SetAltDown")
-    c.addProperty("metaDown    MetaDown    SetMetaDown")
-    c.addProperty("cmdDown     CmdDown")
+    # TODO: SIP needs to know about wxArrayVideoModes before we can enable this
+    c.find('GetModes').ignore()
+    
+    c.addProperty('ClientArea GetClientArea')
+    c.addProperty('CurrentMode GetCurrentMode')
+    c.addProperty('Geometry GetGeometry')
+    c.addProperty('Name GetName')
     
     
     #-----------------------------------------------------------------

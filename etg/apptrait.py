@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/kbdstate.py
+# Name:        etg/apptrait.py
 # Author:      Robin Dunn
 #
-# Created:     15-Nov-2010
+# Created:     22-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -12,12 +12,12 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
-NAME      = "kbdstate"   # Base name of the file to generate to for this script
+NAME      = "apptrait"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxKeyboardState' ]    
+ITEMS  = [ 'wxAppTraits' ]    
     
 #---------------------------------------------------------------------------
 
@@ -31,13 +31,20 @@ def run():
     # customizing the generated code and docstrings.
     
     
-    c = module.find('wxKeyboardState')
+    c = module.find('wxAppTraits')
+    assert isinstance(c, etgtools.ClassDef)
+    c.abstract = True
     
-    c.addProperty("controlDown ControlDown SetControlDown")
-    c.addProperty("shiftDown   ShiftDown   SetShiftDown")
-    c.addProperty("altDown     AltDown     SetAltDown")
-    c.addProperty("metaDown    MetaDown    SetMetaDown")
-    c.addProperty("cmdDown     CmdDown")
+    
+    # TODO: Enable these as their return types are added
+    for name in [ 'CreateConfig',
+                  'CreateEventLoop',
+                  'CreateFontMapper',
+                  'CreateLogTarget',
+                  'CreateMessageOutput',
+                  'CreateRenderer',
+                  'GetStandardPaths' ]:
+        c.find(name).ignore()
     
     
     #-----------------------------------------------------------------

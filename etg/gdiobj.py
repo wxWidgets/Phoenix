@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/kbdstate.py
+# Name:        etg/gdiobj.py
 # Author:      Robin Dunn
 #
-# Created:     15-Nov-2010
+# Created:     
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -12,12 +12,12 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
-NAME      = "kbdstate"   # Base name of the file to generate to for this script
+NAME      = "gdiobj"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxKeyboardState' ]    
+ITEMS  = [ 'wxGDIObject' ]    
     
 #---------------------------------------------------------------------------
 
@@ -31,13 +31,8 @@ def run():
     # customizing the generated code and docstrings.
     
     
-    c = module.find('wxKeyboardState')
+    module.find('wxGDIObject').abstract = True
     
-    c.addProperty("controlDown ControlDown SetControlDown")
-    c.addProperty("shiftDown   ShiftDown   SetShiftDown")
-    c.addProperty("altDown     AltDown     SetAltDown")
-    c.addProperty("metaDown    MetaDown    SetMetaDown")
-    c.addProperty("cmdDown     CmdDown")
     
     
     #-----------------------------------------------------------------

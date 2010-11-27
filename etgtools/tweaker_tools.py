@@ -13,7 +13,7 @@ stage of the ETG scripts.
 """
 
 import extractors
-
+import os
 
 
 def removeWxPrefixes(node):
@@ -82,6 +82,48 @@ def fixEventClass(klass):
 
     
     
+def removeVirtuals(klass):
+    """
+    Sometimes methods are marked as virtual but probably don't ever need to be
+    overridden from Python. This function will unset the virtual flag for all
+    methods in a class, which can save some code-bloat in the wrapper code.
+    """
+    assert isinstance(klass, extractors.ClassDef)
+    for item in klass.allItems():
+        if isinstance(item, extractors.MethodDef):
+            item.isVirtual = item.isPureVirtual = False
+
+    
+def getEtgFiles(names):
+    """
+    Create a list of the files from the basenames in the names list that
+    corespond to files in the etg folder.
+    """
+    return getMatchingFiles(names, 'etg/%s.py')
+
+
+def getNonEtgFiles(names, template='src/%s.sip'):
+    """
+    Get the files other than the ETG scripts from the list of names that match
+    the template. By default gets the SIP files in src.
+    """
+    return getMatchingFiles(names, template)
+
+    
+def getMatchingFiles(names, template):
+    """
+    Create a list of files from the basenames in names that match the template
+    and actually exist.
+    """
+    files = list()
+    for name in names:
+        name = template % name
+        if os.path.exists(name):
+            files.append(name)
+    return files
+            
+            
+    
 def convertTwoIntegersTemplate(CLASS):
     return """\
    // is it just a typecheck?
@@ -113,7 +155,7 @@ def convertTwoIntegersTemplate(CLASS):
     }}    
     *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return 0;
+    return sipGetState(sipTransferObj);
     """.format(**locals())
 
 
@@ -155,7 +197,7 @@ def convertFourIntegersTemplate(CLASS):
     }}    
     *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return 0;
+    return sipGetState(sipTransferObj);
     """.format(**locals())
 
 
@@ -191,7 +233,7 @@ def convertTwoDoublesTemplate(CLASS):
     }}    
     *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return 0;
+    return sipGetState(sipTransferObj);
     """.format(**locals())
 
 
@@ -233,7 +275,7 @@ def convertFourDoublesTemplate(CLASS):
     }}    
     *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return 0;
+    return sipGetState(sipTransferObj);
     """.format(**locals())
 
 

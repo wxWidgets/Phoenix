@@ -17,9 +17,9 @@ import distutils.command.install
 import distutils.command.install_data
 import distutils.command.install_headers
 import distutils.command.clean
-from distutils.dep_util  import newer
+from distutils.dep_util import newer, newer_group
 
-from config import Config, posixjoin
+from config import Config, posixjoin, loadETG
 
 
 
@@ -361,7 +361,11 @@ class etgsip_build_ext(build_ext):
         for etg in etg_sources:
             sipfile = self.etg2sip(etg)
             
-            if newer(etg, sipfile):
+            deps = [etg]
+            ns = loadETG(etg)
+            if hasattr(ns, 'OTHERDEPS'):
+                deps += ns.OTHERDEPS
+            if newer_group(deps, sipfile):
                 cmd = [sys.executable, etg, '--sip']
                 #if cfg.verbose:
                 #    cmd.append('--verbose')

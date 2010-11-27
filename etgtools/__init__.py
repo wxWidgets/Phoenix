@@ -45,9 +45,9 @@ def parseDoxyXML(module, class_or_filename_list):
     Doxygen XML output folder.
     """
     
-    def _classToDoxyName(name):
+    def _classToDoxyName(name, base='class'):
         import string
-        filename = 'class'
+        filename = base
         for c in name:
             if c in string.ascii_uppercase:
                 filename += '_' + c.lower()
@@ -58,12 +58,19 @@ def parseDoxyXML(module, class_or_filename_list):
     def _includeToDoxyName(name):
         name = os.path.basename(name)
         name = name.replace('.h', '_8h')
-        return os.path.join(XMLSRC, name) + '.xml', name + '.xml'
+        pathname = os.path.join(XMLSRC, name) + '.xml'
+        if os.path.exists(pathname):
+            return pathname, name + '.xml'
+        else:
+            name = 'interface_2wx_2' + name
+            return os.path.join(XMLSRC, name) + '.xml', name + '.xml'
         
     for class_or_filename in class_or_filename_list:
         pathname = _classToDoxyName(class_or_filename)
         if not os.path.exists(pathname):
-            pathname = os.path.join(XMLSRC, class_or_filename)
+            pathname = _classToDoxyName(class_or_filename, 'struct')
+            if not os.path.exists(pathname):
+                pathname = os.path.join(XMLSRC, class_or_filename)
         if verbose():
             print "Loading %s..." % pathname
         _filesparsed.add(pathname)

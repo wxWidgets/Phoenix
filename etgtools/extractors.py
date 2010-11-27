@@ -17,12 +17,6 @@ import os
 import pprint
 import xml.etree.ElementTree as et
 
-#---------------------------------------------------------------------------
-# TODOs
-#
-# * Need a way to idicate that items are not available on certain platforms
-#
-# * Something for TypeHeader code for classes
 
 
 #---------------------------------------------------------------------------
@@ -143,6 +137,17 @@ class BaseDef(object):
                     items.extend(o.allItems())
         return items
                 
+    
+    def findAll(self, name):
+        """
+        Search recursivly for items that have the given name.
+        """
+        matches = list()
+        for item in self.allItems():
+            if item.name == name or item.pyName == name:
+                matches.append(item)
+        return matches
+    
                 
     def _findItems(self):
         # If there are more items to be searched than what is in self.items, a
@@ -240,9 +245,10 @@ class FunctionDef(BaseDef):
         self.factory = False          # a factory function that creates a new instance of the return value
         self.pyReleaseGIL = False     # release the Python GIL for this function call
         self.noCopy = False           # don't make a copy of the return value, just wrap the original
+        self.pyInt = False            # treat char types as integers
         self.transfer = False         # transfer ownership of return value to C++?
         self.transferBack = False     # transfer ownership of return value from C++ to Python?
-        self.transferThis = False     # ownership of 'this' pointer transfered to this arg 
+        self.transferThis = False     # ownership of 'this' pointer transfered to C++ 
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
@@ -338,7 +344,8 @@ class MethodDef(FunctionDef):
         self.isCtor = False
         self.isDtor = False
         self.protection = ''
-        self.defaultCtor = False           # use this ctor as the default one
+        self.defaultCtor = False      # use this ctor as the default one
+        self.noDerivedCtor = False    # don't generate a ctor in the derived class for this ctor
         self.__dict__.update(kw)        
         if element is not None:
             self.extract(element, className)
@@ -383,6 +390,7 @@ class ParamDef(BaseDef):
         self.default = ''             # default value
         self.out = False              # is it an output arg?
         self.inOut = False            # is it both input and output?
+        self.pyInt = False            # treat char types as integers
         self.array = False            # the param is to be treated as an array
         self.arraySize = False        # the param is the size of the array
         self.transfer = False         # transfer ownership of arg to C++?
@@ -422,8 +430,9 @@ class ClassDef(BaseDef):
     The information about a class that is needed to generate wrappers for it.
     """
     nameTag = 'compoundname'
-    def __init__(self, element=None, **kw):
+    def __init__(self, element=None, kind='class', **kw):
         super(ClassDef, self).__init__()
+        self.kind = kind
         self.bases = []             # base class names
         self.includes = []          # .h file for this class
         self.abstract = False       # is it an abstract base class?
@@ -431,8 +440,11 @@ class ClassDef(BaseDef):
         self.external = False       # class is in another module
         self.noDefCtor = False      # do not generate a default constructor
         self.singlton = False       # class is a singleton so don't call the dtor until the interpreter exits
-        self.convertFromPyObject = None
+        self.headerCode = []
+        self.cppCode = []
         self.convertToPyObject = None
+        self.convertFromPyObject = None
+        self.allowNone = False      # Allow the convertFrom code to handle None too.
         
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
@@ -494,6 +506,23 @@ class ClassDef(BaseDef):
             _print("\n", indent, stream)
 
             
+    def addHeaderCode(self, code):
+        if isinstance(code, list):
+            self.headerCode.extend(code)
+        else:
+            self.headerCode.append(code)
+        
+    def addCppCode(self, code):
+        if isinstance(code, list):
+            self.cppCode.extend(code)
+        else:
+            self.cppCode.append(code)
+
+            
+    def insertCppCode(self, filename):
+        self.addCppCode(file(filename).read())
+        
+        
     def addProperty(self, *args, **kw):
         """
         Add a property to a class, with a name, getter function and optionally
@@ -529,11 +558,12 @@ class ClassDef(BaseDef):
         return md
 
     
-    def addCppCtor(self, argsString, body, doc=None, **kw):
+    def addCppCtor(self, argsString, body, doc=None, noDerivedCtor=True, **kw):
         """
         Add a C++ method that is a constructor.
         """
-        md = CppMethodDef('', self.name, argsString, body, doc=doc, isCtor=True, **kw)
+        md = CppMethodDef('', self.name, argsString, body, doc=doc, 
+                          isCtor=True, noDerivedCtor=noDerivedCtor, **kw)
         self.items.append(md)
         return md
         
@@ -590,10 +620,9 @@ class ClassDef(BaseDef):
         
     def addCopyCtor(self, prot='protected'):
         # add declaration of a copy constructor to this class
-        wig = WigCode("""
+        wig = WigCode("""\
 {PROT}:
-    {CLASS}(const {CLASS}&);   
-""".format(CLASS=self.name, PROT=prot))
+    {CLASS}(const {CLASS}&);""".format(CLASS=self.name, PROT=prot))
         self.addItem(wig)
 
     def addPrivateCopyCtor(self):
@@ -601,18 +630,16 @@ class ClassDef(BaseDef):
         
     def addPrivateAssignOp(self):
         # add declaration of an assignment opperator to this class
-        wig = WigCode("""
+        wig = WigCode("""\
 private:
-    {CLASS}& operator=(const {CLASS}&);
-""".format(CLASS=self.name))
+    {CLASS}& operator=(const {CLASS}&);""".format(CLASS=self.name))
         self.addItem(wig)
 
     def addDtor(self, prot='protected'):
         # add declaration of a destructor to this class
-        wig = WigCode("""
+        wig = WigCode("""\
 {PROT}:
-    ~{CLASS}();
-""".format(CLASS=self.name, PROT=prot))
+    ~{CLASS}();""".format(CLASS=self.name, PROT=prot))
         self.addItem(wig)
 
 #---------------------------------------------------------------------------
@@ -702,14 +729,13 @@ class CppMethodDef(MethodDef):
     NOTE: This one is not automatically extracted, but can be added to
           classes in the tweaker stage
     """
-    def __init__(self, type, name, argsString, body, doc=None, isCtor=False, **kw):
+    def __init__(self, type, name, argsString, body, doc=None, **kw):
         super(CppMethodDef, self).__init__()
         self.type = type
         self.name = name
         self.argsString = argsString
         self.body = body
         self.briefDoc = doc
-        self.isCtor = isCtor
         self.protection = 'public'
         self.__dict__.update(kw)
 
@@ -745,9 +771,10 @@ class PyCodeDef(BaseDef):
     This code held by this class will be written to a Python module
     that wraps the import of the extension module.
     """
-    def __init__(self, code, **kw):
+    def __init__(self, code, order=None, **kw):
         super(PyCodeDef, self).__init__()
         self.code = code
+        self.order = order
         self.__dict__.update(kw)
 
 #---------------------------------------------------------------------------
@@ -838,6 +865,11 @@ class ModuleDef(BaseDef):
             item = ClassDef(element)
             self.items.append(item)
 
+        elif kind == 'struct':
+            extractingMsg(kind, element, ClassDef.nameTag)
+            item = ClassDef(element, kind='struct')
+            self.items.append(item)
+
         elif kind == 'function':
             extractingMsg(kind, element)
             item = FunctionDef(element)
@@ -903,13 +935,27 @@ class ModuleDef(BaseDef):
         return md
 
 
-    def addPyCode(self, code):
+    def addPyCode(self, code, order=None):
         """
         Add a snippet of Python code to the wrapper module.
         """        
-        pc = PyCodeDef(code)
+        pc = PyCodeDef(code, order)
         self.items.append(pc)
         return pc
+    
+    
+    def includePyCode(self, filename, order=None):
+        """
+        Add a snippet of Python code from a file to the wrapper module.
+        """
+        text = file(filename).read()
+        return self.addPyCode(
+            "#" + '-=' * 38 + '\n' +
+            ("# This code block was included from %s\n%s\n" % (filename, text)) + 
+            "# End of included code block\n"
+            "#" + '-=' * 38 + '\n'            ,
+            order
+            )
     
     
 #---------------------------------------------------------------------------

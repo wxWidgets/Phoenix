@@ -1,11 +1,14 @@
 #---------------------------------------------------------------------------
-# Name:        object.py
+# Name:        etg/object.py
 # Author:      Robin Dunn
 #
 # Created:     9-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
+
+import etgtools
+import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
@@ -17,45 +20,62 @@ DOCSTRING = ""
 ITEMS  = [ 
     'wxRefCounter',
     'wxObject',       
-    'wxClassInfo',
+#    'wxClassInfo',
 ]    
     
 #---------------------------------------------------------------------------
-# Parse the XML file(s) building a collection of Extractor objects
 
-import etgtools
-import etgtools.tweaker_tools as tools
+def run():
+    # Parse the XML file(s) building a collection of Extractor objects
+    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    etgtools.parseDoxyXML(module, ITEMS)
+    
+    #-----------------------------------------------------------------
+    # Tweak the parsed meta objects in the module object as needed for
+    # customizing the generated code and docstrings.
+    
+    
+    module.find('wxObject.operator delete').ignore()
+    module.find('wxObject.operator new').ignore()
+    module.find('wxCreateDynamicObject').ignore()
+    
+    
+    #module.find('wxClassInfo').abstract = True
+    #module.find('wxClassInfo.wxClassInfo').ignore()
+    
+    module.find('wxObject.GetClassInfo').ignore()
+    module.find('wxObject.IsKindOf').ignore()
+    
+    module.find('wxRefCounter.~wxRefCounter').ignore(False)
+    
+    c = module.find('wxObject')
+    assert isinstance(c, etgtools.ClassDef)
 
-module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
-etgtools.parseDoxyXML(module, ITEMS)
-
+    c.addCppMethod('const wxChar*', 'GetClassName', '()',
+        body='sipRes = sipCpp->GetClassInfo()->GetClassName();',
+        doc='Returns the class name of the C++ class using wxRTTI.')
+    
+    c.addCppMethod('void', 'Destroy', '()',
+        body='delete sipCpp;',
+        doc='Deletes the C++ object this Python object is a proxy for.',
+        transferThis=True)  # TODO: Check this
+        
+        
+    #-----------------------------------------------------------------
+    tools.ignoreAssignmentOperators(module)
+    tools.removeWxPrefixes(module)
+    #-----------------------------------------------------------------
+    # Run the generators
+    
+    # Create the code generator and make the wrapper code
+    wg = etgtools.getWrapperGenerator()
+    wg.generate(module)
+    
+    # Create a documentation generator and let it do its thing
+    dg = etgtools.getDocsGenerator()
+    dg.generate(module)
+    
 #---------------------------------------------------------------------------
-# Tweak the parsed meta objects in the module object as needed for customizing
-# the generated code and docstrings.
+if __name__ == '__main__':
+    run()
 
-
-module.find('wxObject.operator delete').ignore()
-module.find('wxObject.operator new').ignore()
-module.find('wxCreateDynamicObject').ignore()
-
-
-module.find('wxClassInfo').abstract = True
-module.find('wxClassInfo.wxClassInfo').ignore()
-
-module.find('wxRefCounter.~wxRefCounter').ignore(False)
-
-#---------------------------------------------------------------------------
-tools.ignoreAssignmentOperators(module)
-tools.removeWxPrefixes(module)
-#---------------------------------------------------------------------------
-# Run the generators
-
-# Create the code generator and make the wrapper code
-wg = etgtools.getWrapperGenerator()
-wg.generate(module)
-
-# Create a documentation generator and let it do its thing
-dg = etgtools.getDocsGenerator()
-dg.generate(module)
-
-#---------------------------------------------------------------------------
