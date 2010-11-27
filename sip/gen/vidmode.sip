@@ -11,20 +11,51 @@
 
 //---------------------------------------------------------------------------
 
-class wxTrackable   /Abstract/
+struct wxVideoMode
 {
     %TypeHeaderCode
-        #include <wx/tracker.h>
+        #include <wx/vidmode.h>
     %End
 
+    wxVideoMode(
+        int width = 0,
+        int height = 0,
+        int depth = 0,
+        int freq = 0
+    );
 
-public:
-    private:
-        ~wxTrackable();
+    int w;
+
+    int h;
+
+    int bpp;
+
+    int refresh;
+
+    bool Matches(
+        const wxVideoMode & other
+    );
+
+    int GetWidth();
+
+    int GetHeight();
+
+    int GetDepth();
+
+    bool IsOk();
+
+    bool operator==(
+        const wxVideoMode & m
+    );
+
+    bool operator!=(
+        const wxVideoMode & mode
+    );
+
+};  // end of class wxVideoMode
 
 
-};  // end of class wxTrackable
-
+const wxVideoMode wxDefaultVideoMode;
 
 
 //---------------------------------------------------------------------------

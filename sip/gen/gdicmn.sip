@@ -9,19 +9,20 @@
 //---------------------------------------------------------------------------
 
 %ModuleCode
-#if !defined(__WXMAC__)
-#define wxCURSOR_COPY_ARROW wxCURSOR_ARROW
-#endif
-
+    #if !defined(__WXMAC__)
+    #define wxCURSOR_COPY_ARROW wxCURSOR_ARROW
+    #endif
+    
 %End
 
 //---------------------------------------------------------------------------
 
 class wxPoint
 {
-%TypeHeaderCode
-    #include <wx/gdicmn.h>
-%End
+    %TypeHeaderCode
+        #include <wx/gdicmn.h>
+    %End
+
 
 public:
     wxPoint();
@@ -96,7 +97,7 @@ public:
          }    
          *sipCppPtr = reinterpret_cast<wxPoint*>(sipConvertToType(
                      sipPy, sipType_wxPoint, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-         return 0;
+         return sipGetState(sipTransferObj);
     %End
 };  // end of class wxPoint
 
@@ -105,6 +106,7 @@ public:
 def _Point___str__(self):
     return str(self.Get())
 Point.__str__ = _Point___str__
+del _Point___str__
 
 %End
 
@@ -112,6 +114,7 @@ Point.__str__ = _Point___str__
 def _Point___repr__(self):
     return "wx.Point"+str(self.Get())
 Point.__repr__ = _Point___repr__
+del _Point___repr__
 
 %End
 
@@ -119,6 +122,7 @@ Point.__repr__ = _Point___repr__
 def _Point___len__(self):
     return len(self.Get())
 Point.__len__ = _Point___len__
+del _Point___len__
 
 %End
 
@@ -126,6 +130,7 @@ Point.__len__ = _Point___len__
 def _Point___nonzero__(self):
     return self.Get() != (0,0)
 Point.__nonzero__ = _Point___nonzero__
+del _Point___nonzero__
 
 %End
 
@@ -133,6 +138,7 @@ Point.__nonzero__ = _Point___nonzero__
 def _Point___reduce__(self):
     return (Point, self.Get())
 Point.__reduce__ = _Point___reduce__
+del _Point___reduce__
 
 %End
 
@@ -140,6 +146,7 @@ Point.__reduce__ = _Point___reduce__
 def _Point___getitem__(self, idx):
     return self.Get()[idx]
 Point.__getitem__ = _Point___getitem__
+del _Point___getitem__
 
 %End
 
@@ -149,6 +156,7 @@ def _Point___setitem__(self, idx, val):
     elif idx == 1: self.y = val
     else: raise IndexError
 Point.__setitem__ = _Point___setitem__
+del _Point___setitem__
 
 %End
 
@@ -157,25 +165,26 @@ Point.__safe_for_unpickling__ = True
 
 %End
 
-bool operator==(const wxPoint& p1, const wxPoint& p2);
-bool operator!=(const wxPoint& p1, const wxPoint& p2);
-wxPoint operator+(const wxPoint& p, const wxSize& s);
-wxPoint operator+(const wxPoint& p1, const wxPoint& p2);
-wxPoint operator+(const wxSize& s, const wxPoint& p);
-wxPoint operator-(const wxPoint& p);
-wxPoint operator-(const wxPoint& p, const wxSize& s);
-wxPoint operator-(const wxPoint& p1, const wxPoint& p2);
-wxPoint operator-(const wxSize& s, const wxPoint& p);
-wxPoint operator*(const wxPoint& s, int i);
-wxPoint operator*(int i, const wxPoint& s);
-wxPoint operator/(const wxPoint& s, int i);
+    bool operator==(const wxPoint& p1, const wxPoint& p2);
+    bool operator!=(const wxPoint& p1, const wxPoint& p2);
+    wxPoint operator+(const wxPoint& p, const wxSize& s);
+    wxPoint operator+(const wxPoint& p1, const wxPoint& p2);
+    wxPoint operator+(const wxSize& s, const wxPoint& p);
+    wxPoint operator-(const wxPoint& p);
+    wxPoint operator-(const wxPoint& p, const wxSize& s);
+    wxPoint operator-(const wxPoint& p1, const wxPoint& p2);
+    wxPoint operator-(const wxSize& s, const wxPoint& p);
+    wxPoint operator*(const wxPoint& s, int i);
+    wxPoint operator*(int i, const wxPoint& s);
+    wxPoint operator/(const wxPoint& s, int i);
 
 
 class wxSize
 {
-%TypeHeaderCode
-    #include <wx/gdicmn.h>
-%End
+    %TypeHeaderCode
+        #include <wx/gdicmn.h>
+    %End
+
 
 public:
     wxSize();
@@ -310,7 +319,7 @@ public:
          }    
          *sipCppPtr = reinterpret_cast<wxSize*>(sipConvertToType(
                      sipPy, sipType_wxSize, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-         return 0;
+         return sipGetState(sipTransferObj);
     %End
 };  // end of class wxSize
 
@@ -319,6 +328,7 @@ public:
 def _Size___str__(self):
     return str(self.Get())
 Size.__str__ = _Size___str__
+del _Size___str__
 
 %End
 
@@ -326,6 +336,7 @@ Size.__str__ = _Size___str__
 def _Size___repr__(self):
     return "wx.Size"+str(self.Get())
 Size.__repr__ = _Size___repr__
+del _Size___repr__
 
 %End
 
@@ -333,6 +344,7 @@ Size.__repr__ = _Size___repr__
 def _Size___len__(self):
     return len(self.Get())
 Size.__len__ = _Size___len__
+del _Size___len__
 
 %End
 
@@ -340,6 +352,7 @@ Size.__len__ = _Size___len__
 def _Size___nonzero__(self):
     return self.Get() != (0,0)
 Size.__nonzero__ = _Size___nonzero__
+del _Size___nonzero__
 
 %End
 
@@ -347,6 +360,7 @@ Size.__nonzero__ = _Size___nonzero__
 def _Size___reduce__(self):
     return (Size, self.Get())
 Size.__reduce__ = _Size___reduce__
+del _Size___reduce__
 
 %End
 
@@ -354,6 +368,7 @@ Size.__reduce__ = _Size___reduce__
 def _Size___getitem__(self, idx):
     return self.Get()[idx]
 Size.__getitem__ = _Size___getitem__
+del _Size___getitem__
 
 %End
 
@@ -363,6 +378,7 @@ def _Size___setitem__(self, idx, val):
     elif idx == 1: self.height = val
     else: raise IndexError
 Size.__setitem__ = _Size___setitem__
+del _Size___setitem__
 
 %End
 
@@ -371,20 +387,21 @@ Size.__safe_for_unpickling__ = True
 
 %End
 
-bool operator==(const wxSize& s1, const wxSize& s2);
-bool operator!=(const wxSize& s1, const wxSize& s2);
-wxSize operator*(const wxSize& s, int i);
-wxSize operator*(int i, const wxSize& s);
-wxSize operator+(const wxSize& s1, const wxSize& s2);
-wxSize operator-(const wxSize& s1, const wxSize& s2);
-wxSize operator/(const wxSize& s, int i);
+    bool operator==(const wxSize& s1, const wxSize& s2);
+    bool operator!=(const wxSize& s1, const wxSize& s2);
+    wxSize operator*(const wxSize& s, int i);
+    wxSize operator*(int i, const wxSize& s);
+    wxSize operator+(const wxSize& s1, const wxSize& s2);
+    wxSize operator-(const wxSize& s1, const wxSize& s2);
+    wxSize operator/(const wxSize& s, int i);
 
 
 class wxRect
 {
-%TypeHeaderCode
-    #include <wx/gdicmn.h>
-%End
+    %TypeHeaderCode
+        #include <wx/gdicmn.h>
+    %End
+
 
 public:
     wxRect();
@@ -605,7 +622,7 @@ public:
          }    
          *sipCppPtr = reinterpret_cast<wxRect*>(sipConvertToType(
                      sipPy, sipType_wxRect, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-         return 0;
+         return sipGetState(sipTransferObj);
     %End
 };  // end of class wxRect
 
@@ -614,6 +631,7 @@ public:
 def _Rect___str__(self):
     return str(self.Get())
 Rect.__str__ = _Rect___str__
+del _Rect___str__
 
 %End
 
@@ -621,6 +639,7 @@ Rect.__str__ = _Rect___str__
 def _Rect___repr__(self):
     return "wx.Rect"+str(self.Get())
 Rect.__repr__ = _Rect___repr__
+del _Rect___repr__
 
 %End
 
@@ -628,6 +647,7 @@ Rect.__repr__ = _Rect___repr__
 def _Rect___len__(self):
     return len(self.Get())
 Rect.__len__ = _Rect___len__
+del _Rect___len__
 
 %End
 
@@ -635,6 +655,7 @@ Rect.__len__ = _Rect___len__
 def _Rect___nonzero__(self):
     return self.Get() != (0,0,0,0)
 Rect.__nonzero__ = _Rect___nonzero__
+del _Rect___nonzero__
 
 %End
 
@@ -642,6 +663,7 @@ Rect.__nonzero__ = _Rect___nonzero__
 def _Rect___reduce__(self):
     return (Rect, self.Get())
 Rect.__reduce__ = _Rect___reduce__
+del _Rect___reduce__
 
 %End
 
@@ -649,6 +671,7 @@ Rect.__reduce__ = _Rect___reduce__
 def _Rect___getitem__(self, idx):
     return self.Get()[idx]
 Rect.__getitem__ = _Rect___getitem__
+del _Rect___getitem__
 
 %End
 
@@ -660,6 +683,7 @@ def _Rect___setitem__(self, idx, val):
     elif idx == 3: self.height = val
     else: raise IndexError
 Rect.__setitem__ = _Rect___setitem__
+del _Rect___setitem__
 
 %End
 
@@ -668,17 +692,18 @@ Rect.__safe_for_unpickling__ = True
 
 %End
 
-bool operator==(const wxRect& r1, const wxRect& r2);
-bool operator!=(const wxRect& r1, const wxRect& r2);
-wxRect operator+(const wxRect& r1, const wxRect& r2);
-wxRect operator*(const wxRect& r1, const wxRect& r2);
+    bool operator==(const wxRect& r1, const wxRect& r2);
+    bool operator!=(const wxRect& r1, const wxRect& r2);
+    wxRect operator+(const wxRect& r1, const wxRect& r2);
+    wxRect operator*(const wxRect& r1, const wxRect& r2);
 
 
 class wxRealPoint
 {
-%TypeHeaderCode
-    #include <wx/gdicmn.h>
-%End
+    %TypeHeaderCode
+        #include <wx/gdicmn.h>
+    %End
+
 
 public:
     wxRealPoint();
@@ -748,7 +773,7 @@ public:
          }    
          *sipCppPtr = reinterpret_cast<wxRealPoint*>(sipConvertToType(
                      sipPy, sipType_wxRealPoint, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-         return 0;
+         return sipGetState(sipTransferObj);
     %End
 };  // end of class wxRealPoint
 
@@ -757,6 +782,7 @@ public:
 def _RealPoint___str__(self):
     return str(self.Get())
 RealPoint.__str__ = _RealPoint___str__
+del _RealPoint___str__
 
 %End
 
@@ -764,6 +790,7 @@ RealPoint.__str__ = _RealPoint___str__
 def _RealPoint___repr__(self):
     return "wx.RealPoint"+str(self.Get())
 RealPoint.__repr__ = _RealPoint___repr__
+del _RealPoint___repr__
 
 %End
 
@@ -771,6 +798,7 @@ RealPoint.__repr__ = _RealPoint___repr__
 def _RealPoint___len__(self):
     return len(self.Get())
 RealPoint.__len__ = _RealPoint___len__
+del _RealPoint___len__
 
 %End
 
@@ -778,6 +806,7 @@ RealPoint.__len__ = _RealPoint___len__
 def _RealPoint___nonzero__(self):
     return self.Get() != (0,0)
 RealPoint.__nonzero__ = _RealPoint___nonzero__
+del _RealPoint___nonzero__
 
 %End
 
@@ -785,6 +814,7 @@ RealPoint.__nonzero__ = _RealPoint___nonzero__
 def _RealPoint___reduce__(self):
     return (Rect, self.Get())
 RealPoint.__reduce__ = _RealPoint___reduce__
+del _RealPoint___reduce__
 
 %End
 
@@ -792,6 +822,7 @@ RealPoint.__reduce__ = _RealPoint___reduce__
 def _RealPoint___getitem__(self, idx):
     return self.Get()[idx]
 RealPoint.__getitem__ = _RealPoint___getitem__
+del _RealPoint___getitem__
 
 %End
 
@@ -801,6 +832,7 @@ def _RealPoint___setitem__(self, idx, val):
     elif idx == 1: self.y = val
     else: raise IndexError
 RealPoint.__setitem__ = _RealPoint___setitem__
+del _RealPoint___setitem__
 
 %End
 
@@ -809,13 +841,39 @@ RealPoint.__safe_for_unpickling__ = True
 
 %End
 
-bool operator==(const wxRealPoint& p1, const wxRealPoint& p2);
-bool operator!=(const wxRealPoint& p1, const wxRealPoint& p2);
-wxRealPoint operator*(const wxRealPoint& s, double i);
-wxRealPoint operator*(double i, const wxRealPoint& s);
-wxRealPoint operator+(const wxRealPoint& p1, const wxRealPoint& p2);
-wxRealPoint operator-(const wxRealPoint& p1, const wxRealPoint& p2);
-wxRealPoint operator/(const wxRealPoint& s, int i);
+    bool operator==(const wxRealPoint& p1, const wxRealPoint& p2);
+    bool operator!=(const wxRealPoint& p1, const wxRealPoint& p2);
+    wxRealPoint operator*(const wxRealPoint& s, double i);
+    wxRealPoint operator*(double i, const wxRealPoint& s);
+    wxRealPoint operator+(const wxRealPoint& p1, const wxRealPoint& p2);
+    wxRealPoint operator-(const wxRealPoint& p1, const wxRealPoint& p2);
+    wxRealPoint operator/(const wxRealPoint& s, int i);
+
+
+class wxColourDatabase
+{
+    %TypeHeaderCode
+        #include <wx/gdicmn.h>
+    %End
+
+
+public:
+    wxColourDatabase();
+
+    void AddColour(
+        const wxString & colourName,
+        const wxColour & colour
+    );
+
+    wxColour Find(
+        const wxString & colourName
+    );
+
+    wxString FindName(
+        const wxColour & colour
+    );
+
+};  // end of class wxColourDatabase
 
 
 enum wxBitmapType

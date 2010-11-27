@@ -13,9 +13,10 @@
 
 class wxRefCounter
 {
-%TypeHeaderCode
-    #include <wx/object.h>
-%End
+    %TypeHeaderCode
+        #include <wx/object.h>
+    %End
+
 
 public:
     wxRefCounter();
@@ -36,9 +37,10 @@ protected:
 
 class wxObject
 {
-%TypeHeaderCode
-    #include <wx/object.h>
-%End
+    %TypeHeaderCode
+        #include <wx/object.h>
+    %End
+
 
 public:
     wxObject();
@@ -50,14 +52,7 @@ public:
     virtual
     ~wxObject();
 
-    virtual
-    wxClassInfo * GetClassInfo();
-
     wxObjectRefData * GetRefData();
-
-    bool IsKindOf(
-        const wxClassInfo * info
-    );
 
     bool IsSameAs(
         const wxObject & obj
@@ -75,38 +70,17 @@ public:
 
     void UnShare();
 
+    const wxChar* GetClassName();
+    %MethodCode
+        sipRes = sipCpp->GetClassInfo()->GetClassName();
+    %End
+
+    void Destroy()   /TranserThis/;
+    %MethodCode
+        delete sipCpp;
+    %End
+
 };  // end of class wxObject
-
-
-class wxClassInfo   /Abstract/
-{
-%TypeHeaderCode
-    #include <wx/object.h>
-%End
-
-public:
-    wxObject * CreateObject();
-
-    const wxChar * GetBaseClassName1();
-
-    const wxChar * GetBaseClassName2();
-
-    const wxChar * GetClassName();
-
-    int GetSize();
-
-    bool IsDynamic();
-
-    bool IsKindOf(
-        const wxClassInfo * info
-    );
-
-    static
-    wxClassInfo * FindClass(
-        const wxString & className
-    );
-
-};  // end of class wxClassInfo
 
 
 typedef wxRefCounter wxObjectRefData;

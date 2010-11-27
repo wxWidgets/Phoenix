@@ -18,9 +18,10 @@
 
 class wxPoint2DDouble   /PyName=Point2D/
 {
-%TypeHeaderCode
-    #include <wx/geometry.h>
-%End
+    %TypeHeaderCode
+        #include <wx/geometry.h>
+    %End
+
 
 public:
     wxPoint2DDouble();
@@ -143,7 +144,7 @@ public:
          }    
          *sipCppPtr = reinterpret_cast<wxPoint2DDouble*>(sipConvertToType(
                      sipPy, sipType_wxPoint2DDouble, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-         return 0;
+         return sipGetState(sipTransferObj);
     %End
 };  // end of class wxPoint2DDouble
 
@@ -152,6 +153,7 @@ public:
 def _Point2D___str__(self):
     return str(self.Get())
 Point2D.__str__ = _Point2D___str__
+del _Point2D___str__
 
 %End
 
@@ -159,6 +161,7 @@ Point2D.__str__ = _Point2D___str__
 def _Point2D___repr__(self):
     return "wx.Point2D"+str(self.Get())
 Point2D.__repr__ = _Point2D___repr__
+del _Point2D___repr__
 
 %End
 
@@ -166,6 +169,7 @@ Point2D.__repr__ = _Point2D___repr__
 def _Point2D___len__(self):
     return len(self.Get())
 Point2D.__len__ = _Point2D___len__
+del _Point2D___len__
 
 %End
 
@@ -173,6 +177,7 @@ Point2D.__len__ = _Point2D___len__
 def _Point2D___nonzero__(self):
     return self.Get() != (0,0)
 Point2D.__nonzero__ = _Point2D___nonzero__
+del _Point2D___nonzero__
 
 %End
 
@@ -180,6 +185,7 @@ Point2D.__nonzero__ = _Point2D___nonzero__
 def _Point2D___reduce__(self):
     return (Point2D, self.Get())
 Point2D.__reduce__ = _Point2D___reduce__
+del _Point2D___reduce__
 
 %End
 
@@ -187,6 +193,7 @@ Point2D.__reduce__ = _Point2D___reduce__
 def _Point2D___getitem__(self, idx):
     return self.Get()[idx]
 Point2D.__getitem__ = _Point2D___getitem__
+del _Point2D___getitem__
 
 %End
 
@@ -196,6 +203,7 @@ def _Point2D___setitem__(self, idx, val):
     elif idx == 1: self.y = val
     else: raise IndexError
 Point2D.__setitem__ = _Point2D___setitem__
+del _Point2D___setitem__
 
 %End
 
@@ -206,9 +214,10 @@ Point2D.__safe_for_unpickling__ = True
 
 class wxRect2DDouble   /PyName=Rect2D/
 {
-%TypeHeaderCode
-    #include <wx/geometry.h>
-%End
+    %TypeHeaderCode
+        #include <wx/geometry.h>
+    %End
+
 
 public:
     wxRect2DDouble();
@@ -467,7 +476,7 @@ public:
          }    
          *sipCppPtr = reinterpret_cast<wxRect2DDouble*>(sipConvertToType(
                      sipPy, sipType_wxRect2DDouble, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-         return 0;
+         return sipGetState(sipTransferObj);
     %End
 };  // end of class wxRect2DDouble
 
@@ -476,6 +485,7 @@ public:
 def _Rect2D___str__(self):
     return str(self.Get())
 Rect2D.__str__ = _Rect2D___str__
+del _Rect2D___str__
 
 %End
 
@@ -483,6 +493,7 @@ Rect2D.__str__ = _Rect2D___str__
 def _Rect2D___repr__(self):
     return "wx.Rect2D"+str(self.Get())
 Rect2D.__repr__ = _Rect2D___repr__
+del _Rect2D___repr__
 
 %End
 
@@ -490,6 +501,7 @@ Rect2D.__repr__ = _Rect2D___repr__
 def _Rect2D___len__(self):
     return len(self.Get())
 Rect2D.__len__ = _Rect2D___len__
+del _Rect2D___len__
 
 %End
 
@@ -497,6 +509,7 @@ Rect2D.__len__ = _Rect2D___len__
 def _Rect2D___nonzero__(self):
     return self.Get() != (0,0,0,0)
 Rect2D.__nonzero__ = _Rect2D___nonzero__
+del _Rect2D___nonzero__
 
 %End
 
@@ -504,6 +517,7 @@ Rect2D.__nonzero__ = _Rect2D___nonzero__
 def _Rect2D___reduce__(self):
     return (Rect2D, self.Get())
 Rect2D.__reduce__ = _Rect2D___reduce__
+del _Rect2D___reduce__
 
 %End
 
@@ -511,6 +525,7 @@ Rect2D.__reduce__ = _Rect2D___reduce__
 def _Rect2D___getitem__(self, idx):
     return self.Get()[idx]
 Rect2D.__getitem__ = _Rect2D___getitem__
+del _Rect2D___getitem__
 
 %End
 
@@ -522,6 +537,7 @@ def _Rect2D___setitem__(self, idx, val):
     elif idx == 3: self.height = val
     else: raise IndexError
 Rect2D.__setitem__ = _Rect2D___setitem__
+del _Rect2D___setitem__
 
 %End
 

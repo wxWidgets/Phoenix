@@ -11,19 +11,17 @@
 
 //---------------------------------------------------------------------------
 
-class wxTrackable   /Abstract/
+class wxGDIObject : wxObject   /Abstract/
 {
     %TypeHeaderCode
-        #include <wx/tracker.h>
+        #include <wx/gdiobj.h>
     %End
 
 
 public:
-    private:
-        ~wxTrackable();
+    wxGDIObject();
 
-
-};  // end of class wxTrackable
+};  // end of class wxGDIObject
 
 
 

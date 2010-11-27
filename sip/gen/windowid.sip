@@ -13,9 +13,10 @@
 
 class wxIdManager
 {
-%TypeHeaderCode
-    #include <wx/windowid.h>
-%End
+    %TypeHeaderCode
+        #include <wx/windowid.h>
+    %End
+
 
 public:
     static

@@ -10,31 +10,20 @@
 
 %ModuleCode
 
-#if !wxUSE_HOTKEY
-#define wxEVT_HOTKEY 0
-#endif
-
+    #if !wxUSE_HOTKEY
+    #define wxEVT_HOTKEY 0
+    #endif
+    
 %End
 
 //---------------------------------------------------------------------------
 
-class wxCursor;  // forward declaration
-
-
-class wxMenu;    // forward declaration
-
-
-class wxDC;      // forward declaration
-
-
-class wxWindow;  // forward declaration
-
-
 class wxEvtHandler : wxObject, wxTrackable
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxEvtHandler();
@@ -93,7 +82,6 @@ public:
 
     bool IsUnlinked();
 
-    
     private:
         wxEvtHandler(const wxEvtHandler&);
 
@@ -103,9 +91,10 @@ public:
 
 class wxEventBlocker : wxEvtHandler
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxEventBlocker(
@@ -125,9 +114,10 @@ public:
 
 class wxEvent : wxObject   /Abstract/
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxEvent(
@@ -191,7 +181,6 @@ public:
 
     %Property(name=Timestamp, get=GetTimestamp, set=SetTimestamp)
 
-    
     private:
         wxEvent& operator=(const wxEvent&);
 
@@ -201,9 +190,10 @@ public:
 
 class wxCommandEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxCommandEvent(
@@ -266,7 +256,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxCommandEvent& operator=(const wxCommandEvent&);
 
@@ -276,9 +265,10 @@ public:
 
 class wxActivateEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxActivateEvent(
@@ -294,7 +284,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxActivateEvent& operator=(const wxActivateEvent&);
 
@@ -304,9 +293,10 @@ public:
 
 class wxChildFocusEvent : wxCommandEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxChildFocusEvent(
@@ -320,7 +310,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxChildFocusEvent& operator=(const wxChildFocusEvent&);
 
@@ -330,9 +319,10 @@ public:
 
 class wxClipboardTextEvent : wxCommandEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxClipboardTextEvent(
@@ -343,7 +333,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxClipboardTextEvent& operator=(const wxClipboardTextEvent&);
 
@@ -353,9 +342,10 @@ public:
 
 class wxCloseEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxCloseEvent(
@@ -382,7 +372,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxCloseEvent& operator=(const wxCloseEvent&);
 
@@ -392,9 +381,10 @@ public:
 
 class wxContextMenuEvent : wxCommandEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxContextMenuEvent(
@@ -414,7 +404,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxContextMenuEvent& operator=(const wxContextMenuEvent&);
 
@@ -424,9 +413,10 @@ public:
 
 class wxDisplayChangedEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxDisplayChangedEvent();
@@ -434,7 +424,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxDisplayChangedEvent& operator=(const wxDisplayChangedEvent&);
 
@@ -444,9 +433,10 @@ public:
 
 class wxDropFilesEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxDropFilesEvent(
@@ -470,7 +460,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxDropFilesEvent& operator=(const wxDropFilesEvent&);
 
@@ -480,9 +469,10 @@ public:
 
 class wxEraseEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxEraseEvent(
@@ -497,7 +487,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxEraseEvent& operator=(const wxEraseEvent&);
 
@@ -507,9 +496,10 @@ public:
 
 class wxFocusEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxFocusEvent(
@@ -528,7 +518,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxFocusEvent& operator=(const wxFocusEvent&);
 
@@ -538,9 +527,10 @@ public:
 
 class wxHelpEvent : wxCommandEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxHelpEvent(
@@ -572,7 +562,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxHelpEvent& operator=(const wxHelpEvent&);
 
@@ -582,9 +571,10 @@ public:
 
 class wxIconizeEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxIconizeEvent(
@@ -594,12 +584,11 @@ public:
 
     bool IsIconized();
 
-    bool Iconized();
+    bool Iconized()   /Deprecated/;
 
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxIconizeEvent& operator=(const wxIconizeEvent&);
 
@@ -609,9 +598,10 @@ public:
 
 class wxIdleEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxIdleEvent();
@@ -633,7 +623,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxIdleEvent& operator=(const wxIdleEvent&);
 
@@ -643,9 +632,10 @@ public:
 
 class wxInitDialogEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxInitDialogEvent(
@@ -655,7 +645,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxInitDialogEvent& operator=(const wxInitDialogEvent&);
 
@@ -665,9 +654,10 @@ public:
 
 class wxJoystickEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxJoystickEvent(
@@ -708,7 +698,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxJoystickEvent& operator=(const wxJoystickEvent&);
 
@@ -718,9 +707,10 @@ public:
 
 class wxKeyEvent : wxEvent, wxKeyboardState
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxKeyEvent(
@@ -762,7 +752,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxKeyEvent& operator=(const wxKeyEvent&);
 
@@ -772,9 +761,10 @@ public:
 
 class wxMaximizeEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxMaximizeEvent(
@@ -784,7 +774,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxMaximizeEvent& operator=(const wxMaximizeEvent&);
 
@@ -794,9 +783,10 @@ public:
 
 class wxMenuEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxMenuEvent(
@@ -818,7 +808,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxMenuEvent& operator=(const wxMenuEvent&);
 
@@ -828,9 +817,10 @@ public:
 
 class wxMouseCaptureChangedEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxMouseCaptureChangedEvent(
@@ -845,7 +835,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxMouseCaptureChangedEvent& operator=(const wxMouseCaptureChangedEvent&);
 
@@ -855,9 +844,10 @@ public:
 
 class wxMouseCaptureLostEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxMouseCaptureLostEvent(
@@ -867,7 +857,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxMouseCaptureLostEvent& operator=(const wxMouseCaptureLostEvent&);
 
@@ -877,9 +866,10 @@ public:
 
 class wxMouseEvent : wxEvent, wxMouseState
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxMouseEvent(
@@ -973,7 +963,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxMouseEvent& operator=(const wxMouseEvent&);
 
@@ -983,9 +972,10 @@ public:
 
 class wxMoveEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxMoveEvent(
@@ -1012,7 +1002,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxMoveEvent& operator=(const wxMoveEvent&);
 
@@ -1022,12 +1011,17 @@ public:
 
 class wxNavigationKeyEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxNavigationKeyEvent();
+
+    wxNavigationKeyEvent(
+        const wxNavigationKeyEvent & event
+    );
 
     enum wxNavigationKeyEventFlags
     {
@@ -1072,7 +1066,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxNavigationKeyEvent& operator=(const wxNavigationKeyEvent&);
 
@@ -1082,9 +1075,10 @@ public:
 
 class wxNotifyEvent : wxCommandEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxNotifyEvent(
@@ -1101,7 +1095,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxNotifyEvent& operator=(const wxNotifyEvent&);
 
@@ -1111,9 +1104,10 @@ public:
 
 class wxPaintEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxPaintEvent(
@@ -1123,7 +1117,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxPaintEvent& operator=(const wxPaintEvent&);
 
@@ -1133,9 +1126,10 @@ public:
 
 class wxPaletteChangedEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxPaletteChangedEvent(
@@ -1153,7 +1147,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxPaletteChangedEvent& operator=(const wxPaletteChangedEvent&);
 
@@ -1163,9 +1156,10 @@ public:
 
 class wxQueryNewPaletteEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxQueryNewPaletteEvent(
@@ -1183,7 +1177,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxQueryNewPaletteEvent& operator=(const wxQueryNewPaletteEvent&);
 
@@ -1193,9 +1186,10 @@ public:
 
 class wxScrollEvent : wxCommandEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxScrollEvent(
@@ -1224,7 +1218,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxScrollEvent& operator=(const wxScrollEvent&);
 
@@ -1234,9 +1227,10 @@ public:
 
 class wxScrollWinEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxScrollWinEvent(
@@ -1264,7 +1258,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxScrollWinEvent& operator=(const wxScrollWinEvent&);
 
@@ -1274,9 +1267,10 @@ public:
 
 class wxSetCursorEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxSetCursorEvent(
@@ -1305,7 +1299,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxSetCursorEvent& operator=(const wxSetCursorEvent&);
 
@@ -1315,9 +1308,10 @@ public:
 
 class wxShowEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxShowEvent(
@@ -1331,14 +1325,11 @@ public:
 
     bool IsShown();
 
-    bool GetShow();
-
     %Property(name=Show, get=IsShown, set=SetShow)
 
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxShowEvent& operator=(const wxShowEvent&);
 
@@ -1348,9 +1339,10 @@ public:
 
 class wxSizeEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxSizeEvent(
@@ -1377,7 +1369,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxSizeEvent& operator=(const wxSizeEvent&);
 
@@ -1387,9 +1378,10 @@ public:
 
 class wxSysColourChangedEvent : wxEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxSysColourChangedEvent();
@@ -1397,7 +1389,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxSysColourChangedEvent& operator=(const wxSysColourChangedEvent&);
 
@@ -1407,9 +1398,10 @@ public:
 
 class wxUpdateUIEvent : wxCommandEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxUpdateUIEvent(
@@ -1483,7 +1475,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxUpdateUIEvent& operator=(const wxUpdateUIEvent&);
 
@@ -1493,9 +1484,10 @@ public:
 
 class wxWindowCreateEvent : wxCommandEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxWindowCreateEvent(
@@ -1509,7 +1501,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxWindowCreateEvent& operator=(const wxWindowCreateEvent&);
 
@@ -1519,9 +1510,10 @@ public:
 
 class wxWindowDestroyEvent : wxCommandEvent
 {
-%TypeHeaderCode
-    #include <wx/event.h>
-%End
+    %TypeHeaderCode
+        #include <wx/event.h>
+    %End
+
 
 public:
     wxWindowDestroyEvent(
@@ -1535,7 +1527,6 @@ public:
     virtual wxEvent* Clone();
 
 
-    
     private:
         wxWindowDestroyEvent& operator=(const wxWindowDestroyEvent&);
 

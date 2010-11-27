@@ -11,19 +11,35 @@
 
 //---------------------------------------------------------------------------
 
-class wxTrackable   /Abstract/
+class wxAppTraits   /Abstract/
 {
     %TypeHeaderCode
-        #include <wx/tracker.h>
+        #include <wx/apptrait.h>
     %End
 
 
 public:
-    private:
-        ~wxTrackable();
+    virtual
+    wxString GetDesktopEnvironment() = 0;
 
+    virtual
+    wxPortId GetToolkitVersion(
+        int * major = NULL,
+        int * minor = NULL
+    ) = 0;
 
-};  // end of class wxTrackable
+    virtual
+    bool HasStderr() = 0;
+
+    virtual
+    bool IsUsingUniversalWidgets() = 0;
+
+    virtual
+    bool ShowAssertDialog(
+        const wxString & msg
+    ) = 0;
+
+};  // end of class wxAppTraits
 
 
 

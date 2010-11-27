@@ -13,9 +13,10 @@
 
 class wxMouseState : wxKeyboardState
 {
-%TypeHeaderCode
-    #include <wx/mousestate.h>
-%End
+    %TypeHeaderCode
+        #include <wx/mousestate.h>
+    %End
+
 
 public:
     wxMouseState();

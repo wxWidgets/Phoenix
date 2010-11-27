@@ -13,9 +13,10 @@
 
 class wxKeyboardState
 {
-%TypeHeaderCode
-    #include <wx/kbdstate.h>
-%End
+    %TypeHeaderCode
+        #include <wx/kbdstate.h>
+    %End
+
 
 public:
     wxKeyboardState(
