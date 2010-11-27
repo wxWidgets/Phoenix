@@ -55,7 +55,7 @@ extern "C" {
  * Define the SIP version number.
  */
 #define SIP_VERSION         0x040c00
-#define SIP_VERSION_STR     "4.12-snapshot-93040d2c716c"
+#define SIP_VERSION_STR     "4.12-snapshot-d92b54039599"
 
 
 /*
@@ -178,7 +178,7 @@ extern "C" {
 
 
 /* The name of the sip module. */
-#define SIP_MODULE_NAME     "wx.siplib"
+#define SIP_MODULE_NAME     "wxPhoenix.siplib"
 
 
 /*

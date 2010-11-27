@@ -1911,14 +1911,29 @@ static PyObject *buildObject(PyObject *obj, const char *fmt, va_list va)
 
             break;
 
-        case 'd':
-        case 'f':
-            el = PyFloat_FromDouble(va_arg(va,double));
+        case 'd': // double
+        case 'f': // float
+            el = PyFloat_FromDouble(va_arg(va, double));
             break;
 
         case 'e':
-        case 'h':
         case 'i':
+#if PY_MAJOR_VERSION >= 3
+            el = PyLong_FromLong(va_arg(va, int));
+#else
+            el = PyInt_FromLong(va_arg(va, int));
+#endif
+            break;
+
+        case 'L':
+#if PY_MAJOR_VERSION >= 3
+            el = PyLong_FromLong(va_arg(va, int));
+#else
+            el = PyInt_FromLong(va_arg(va, int));
+#endif
+            break;
+
+        case 'h':
 #if PY_MAJOR_VERSION >= 3
             el = PyLong_FromLong(va_arg(va, int));
 #else
@@ -2006,8 +2021,9 @@ static PyObject *buildObject(PyObject *obj, const char *fmt, va_list va)
 
             break;
 
-        case 't':
-        case 'u':
+        case 'u':  /* unsigned */
+        case 'M':  /* unsigned char */
+        case 't':  /* unsigned short */
             el = PyLong_FromUnsignedLong(va_arg(va, unsigned));
             break;
 
@@ -2129,6 +2145,7 @@ static int sip_api_parse_result(int *isErr, PyObject *method, PyObject *res,
     {
         char ch;
         const char *cp = ++fmt;
+        int sub_format = FALSE;
 
         tupsz = 0;
 
@@ -2142,12 +2159,18 @@ static int sip_api_parse_result(int *isErr, PyObject *method, PyObject *res,
                 break;
             }
 
-            /*
-             * Some format characters have a sub-format so skip the character
-             * and count the sub-format character next time round.
-             */
-            if (strchr("HDC", ch) == NULL)
+            if (sub_format)
+            {
+                sub_format = FALSE;
+            }
+            else
+            {
                 ++tupsz;
+
+                /* Some format characters have a sub-format. */
+                if (strchr("aAHDC", ch) != NULL)
+                    sub_format = TRUE;
+            }
         }
 
         if (rc == 0)
@@ -2321,6 +2344,30 @@ static int sip_api_parse_result(int *isErr, PyObject *method, PyObject *res,
                         invalid = TRUE;
                     else
                         *va_arg(va,float *) = v;
+                }
+
+                break;
+
+            case 'L':
+                {
+                    signed char v = SIPLong_AsLong(arg);
+
+                    if (PyErr_Occurred())
+                        invalid = TRUE;
+                    else
+                        *va_arg(va, signed char *) = v;
+                }
+
+                break;
+
+            case 'M':
+                {
+                    unsigned char v = sip_api_long_as_unsigned_long(arg);
+
+                    if (PyErr_Occurred())
+                        invalid = TRUE;
+                    else
+                        *va_arg(va, unsigned char *) = v;
                 }
 
                 break;
@@ -4025,6 +4072,56 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                 if (arg != NULL)
                 {
                     unsigned v = sip_api_long_as_unsigned_long(arg);
+
+                    if (PyErr_Occurred())
+                    {
+                        failure.reason = WrongType;
+                        failure.detail_obj = arg;
+                        Py_INCREF(arg);
+                    }
+                    else
+                    {
+                        *p = v;
+                    }
+                }
+
+                break;
+            }
+
+        case 'L':
+            {
+                /* Signed char. */
+
+                signed char *p = va_arg(va, signed char *);
+
+                if (arg != NULL)
+                {
+                    signed char v = SIPLong_AsLong(arg);
+
+                    if (PyErr_Occurred())
+                    {
+                        failure.reason = WrongType;
+                        failure.detail_obj = arg;
+                        Py_INCREF(arg);
+                    }
+                    else
+                    {
+                        *p = v;
+                    }
+                }
+
+                break;
+            }
+
+        case 'M':
+            {
+                /* Unsigned char. */
+
+                unsigned char *p = va_arg(va, unsigned char *);
+
+                if (arg != NULL)
+                {
+                    unsigned char v = sip_api_long_as_unsigned_long(arg);
 
                     if (PyErr_Occurred())
                     {
