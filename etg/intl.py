@@ -46,19 +46,11 @@ def run():
     c.find('WinSublang').ignore()
     c.find('GetLCID').ignore()
     
-    #-----------------------------------------------------------------
-    tools.ignoreAssignmentOperators(module)
-    tools.removeWxPrefixes(module)
-    #-----------------------------------------------------------------
-    # Run the generators
     
-    # Create the code generator and make the wrapper code
-    wg = etgtools.getWrapperGenerator()
-    wg.generate(module)
+    #-----------------------------------------------------------------
+    tools.doCommonTweaks(module)
+    tools.runGenerators(module)
     
-    # Create a documentation generator and let it do its thing
-    dg = etgtools.getDocsGenerator()
-    dg.generate(module)
     
 #---------------------------------------------------------------------------
 if __name__ == '__main__':

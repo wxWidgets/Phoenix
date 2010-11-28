@@ -19,17 +19,6 @@ class WrapperGeneratorBase(object):
         raise NotImplementedError
         
     
-class DumpWrapperGenerator(WrapperGeneratorBase):
-    """This one is just for debugging"""
-        
-    def generate(self, module, destFile=None):
-        print "\n----------------------------------------------------------"
-        print "Dump of Module Objects"
-        print "----------------------------------------------------------"
-        module.dump()
-        
-        
-
 class DocsGeneratorBase(object):
     def __init__(self):
         pass        

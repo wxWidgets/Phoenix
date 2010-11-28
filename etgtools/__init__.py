@@ -94,32 +94,6 @@ def parseDoxyXML(module, class_or_filename_list):
 
 #---------------------------------------------------------------------------
         
-def getWrapperGenerator():
-    """
-    A simple factory function to create a wrapper generator class of the desired type.
-    """
-    if '--dump' in sys.argv:
-        import generators
-        gClass = generators.DumpWrapperGenerator
-    elif '--swig' in sys.argv:
-        import swig_generator
-        gClass = swig_generator.SwigWrapperGenerator
-    elif '--sip' in sys.argv:
-        import sip_generator
-        gClass = sip_generator.SipWrapperGenerator
-    else:
-        # The default is sip, at least for now...
-        import sip_generator
-        gClass = sip_generator.SipWrapperGenerator
-    
-    return gClass()
-
-#---------------------------------------------------------------------------
-
-def getDocsGenerator():
-    import generators    
-    g = generators.StubbedDocsGenerator()
-    return g
 
 #---------------------------------------------------------------------------
         

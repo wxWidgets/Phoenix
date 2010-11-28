@@ -78,18 +78,10 @@ def run():
     
     
     #-----------------------------------------------------------------
-    tools.ignoreAssignmentOperators(module)
-    tools.removeWxPrefixes(module)
-    #-----------------------------------------------------------------
-    # Run the generators
+    tools.doCommonTweaks(module)
+    tools.runGenerators(module)
     
-    # Create the code generator and make the wrapper code
-    wg = etgtools.getWrapperGenerator()
-    wg.generate(module)
     
-    # Create a documentation generator and let it do its thing
-    dg = etgtools.getDocsGenerator()
-    dg.generate(module)
     
 #---------------------------------------------------------------------------
 if __name__ == '__main__':

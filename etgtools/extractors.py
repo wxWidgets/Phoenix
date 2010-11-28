@@ -62,19 +62,7 @@ class BaseDef(object):
             self.briefDoc = bd[0] # Should be just one <para> element
         self.detailedDoc = list(element.find('detaileddescription'))
 
-        
-    def dump(self, indent=0, stream=None):
-        # debug helper, prints the extracted items
-        txt = ("name:         %s\n" 
-               "pyName:       %s\n" 
-               "ignored:      %s\n"
-               "briefDoc:     %s\n" 
-               "detailedDoc:  %s\n" ) % \
-            (self.name, self.pyName, self.ignored, self.briefDoc, 
-             _pf(self.detailedDoc, indent)) 
-        _print(txt, indent, stream)
-        
-        
+                
     def ignore(self, val=True):
         self.ignored = val
                 
@@ -177,13 +165,6 @@ class VariableDef(BaseDef):
         self.definition = element.find('definition').text
         self.argsString = element.find('argsstring').text
 
-    def dump(self, indent=0, stream=None):
-        super(VariableDef, self).dump(indent, stream)
-        txt = ("type:         %s\n"
-               "definition:   %s\n"
-               "argsString:   %s\n"
-               ) % (self.type, self.definition, self.argsString)
-        _print(txt, indent, stream)
 
         
 #---------------------------------------------------------------------------
@@ -220,13 +201,7 @@ class MemberVarDef(VariableDef):
         if self.protection == 'protected':
             self.ignore()
 
-    def dump(self, indent=0, stream=None):
-        super(MemberVarDef, self).dump(indent, stream)
-        txt = ("isStatic:     %s\n"
-               "protection:   %s\n"
-               ) % (self.isStatic, self.protection)
-        _print(txt, indent, stream)
-            
+           
 #---------------------------------------------------------------------------
 
 class FunctionDef(BaseDef):
@@ -269,39 +244,6 @@ class FunctionDef(BaseDef):
             # briefDoc for this ParamDef object.
 
             
-    def dump(self, indent=0, stream=None):
-        super(FunctionDef, self).dump(indent, stream)
-        txt = ("type:         %s\n"
-               "definition:   %s\n"
-               "argsString:   %s\n"
-               "pyArgsString: %s\n"
-               "isOverloaded: %s\n"
-               "deprecated:   %s\n"
-               "factory:      %s\n"
-               "releaseGIL:   %s\n"
-               "noCopy:       %s\n"
-               "transfer:     %s\n"  
-               "transferBack: %s\n"  
-               "transferThis: %s\n"  
-               ) % (self.type, self.definition, self.argsString, self.pyArgsString,
-                    self.isOverloaded, self.deprecated, self.factory, self.pyReleaseGIL,
-                    self.noCopy,
-                    self.transfer, self.transferBack, self.transferThis)
-        _print(txt, indent, stream)
-        if self.items:
-            for p in self.items:
-                assert isinstance(p, ParamDef)
-                _print("ParamDef:", indent, stream)
-                p.dump(indent+4, stream)
-                _print("\n", indent, stream)
-        if self.overloads:
-            _print("Overloaded functions:", indent, stream)
-            for f in self.overloads:
-                _print("MethodDef:", indent+4, stream)
-                f.dump(indent+8, stream)
-                _print("\n", indent, stream)
-
-                
     def checkForOverload(self, methods):
         for m in methods:
             if isinstance(m, MethodDef) and m.name == self.name:
@@ -365,18 +307,7 @@ class MethodDef(FunctionDef):
             self.ignore()
         
     
-    def dump(self, indent=0, stream=None):
-        super(MethodDef, self).dump(indent, stream)
-        txt = ("isCtor:       %s\n"
-               "isDtor:       %s\n"
-               "isStatic:     %s\n"
-               "isVirtual:    %s\n"
-               "protection:   %s\n"
-               "defaultCtor:  %s\n"
-               ) % (self.isCtor, self.isDtor, self.isStatic, self.isVirtual, 
-                    self.protection, self.defaultCtor)
-        _print(txt, indent, stream)
-                
+               
 
 #---------------------------------------------------------------------------
 
@@ -406,23 +337,6 @@ class ParamDef(BaseDef):
         if element.find('defval') is not None:
             self.default = flattenNode(element.find('defval'))
         
-    def dump(self, indent=0, stream=None):
-        #super(ParamDef, self).dump(indent, stream)
-        txt = ("name:         %s\n"
-               "type:         %s\n"
-               "default:      %s\n"
-               "out:          %s\n"  
-               "inOut:        %s\n"  
-               "array:        %s\n"
-               "arraySize:    %s\n"
-               "transfer:     %s\n"  
-               "transferBack: %s\n"  
-               "transferThis: %s\n"  
-               ) % (self.name, self.type, self.default, self.out, self.inOut,
-                    self.array, self.arraySize,
-                    self.transfer, self.transferBack, self.transferThis)
-        _print(txt, indent, stream)
-
 #---------------------------------------------------------------------------
 
 class ClassDef(BaseDef):
@@ -488,22 +402,6 @@ class ClassDef(BaseDef):
             # TODO: do we need support for nested classes?
                 
             
-    def dump(self, indent=0, stream=None):
-        super(ClassDef, self).dump(indent, stream)
-        txt = ("bases:        %s\n"
-               "includes:     %s\n"
-               "abstract:     %s\n"
-               "deprecated:   %s\n"
-               "external:     %s\n"
-               "noDefCtor:    %s\n"
-               "singleton:    %s\n"
-               ) % (_pf(self.bases, indent), _pf(self.includes, indent),
-                    self.abstract, self.deprecated, self.external, self.noDefCtor, self.singlton)
-        _print(txt, indent, stream)
-        for item in self.items:
-            _print("%s:" % item.__class__.__name__, indent, stream)
-            item.dump(indent+4, stream)
-            _print("\n", indent, stream)
 
             
     def addHeaderCode(self, code):
@@ -668,13 +566,7 @@ class EnumDef(BaseDef):
             value = EnumValueDef(node)
             self.items.append(value)
             
-    def dump(self, indent=0, stream=None):
-        super(EnumDef, self).dump(indent, stream)
-        for v in self.items:
-            _print("EnumValueDef:", indent, stream)
-            v.dump(indent+4, stream)
-            _print("\n", indent, stream)
-            
+           
 
 
 class EnumValueDef(BaseDef):
@@ -706,14 +598,6 @@ class PropertyDef(BaseDef):
         self.protection = 'public'
         self.__dict__.update(kw)
         
-    def dump(self, indent=0, stream=None):
-        # debug helper, prints the extracted items
-        txt = ("name:         %s\n"
-               "getter:       %s\n"
-               "setter:       %s\n"
-               "briefDoc:     %s\n") % \
-            (self.name, self.getter, self.setter, self.briefDoc) 
-        _print(txt, indent, stream)
 
         
 #---------------------------------------------------------------------------
@@ -740,16 +624,6 @@ class CppMethodDef(MethodDef):
         self.__dict__.update(kw)
 
         
-    def dump(self, indent=0, stream=None):
-        # debug helper, prints the extracted items
-        txt = ("type:         %s\n"
-               "name:         %s\n"
-               "argsString:   %s\n"
-               "briefDoc:     %s\n"
-               "body:         %s\n") % \
-            (self.type, self.name, self.argsString, self.briefDoc, self.body) 
-        _print(txt, indent, stream)
-    
         
 #---------------------------------------------------------------------------
 
@@ -904,25 +778,6 @@ class ModuleDef(BaseDef):
         return item
     
         
-    def dump(self, indent=0, stream=None):
-        super(ModuleDef, self).dump(indent, stream)
-        txt = ("includes:        %s\n"
-               "imports:         %s\n"
-               "headerCode:      %s\n"
-               "cppCode:         %s\n"
-               "initializerCode: %s\n"
-               ) % (_pf(self.includes, indent), 
-                    _pf(self.imports, indent), 
-                    _pf(self.headerCode, indent), 
-                    _pf(self.cppCode, indent), 
-                    _pf(self.initializerCode, indent))
-        _print(txt, indent, stream)
-        _print('\n', indent, stream)
-
-        for item in self.items:
-            _print(item.__class__.__name__+":", indent, stream)
-            item.dump(indent+4, stream)
-            _print('\n', indent, stream)
          
             
     def addCppFunction(self, type, name, argsString, body, doc=None, **kw):

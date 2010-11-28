@@ -13,7 +13,7 @@ stage of the ETG scripts.
 """
 
 import extractors
-import os
+import sys, os
 
 
 def removeWxPrefixes(node):
@@ -122,8 +122,57 @@ def getMatchingFiles(names, template):
             files.append(name)
     return files
             
+
             
+def doCommonTweaks(module):
+    """
+    A collection of tweaks that should probably be done to all modules.
+    """
+    ignoreAssignmentOperators(module)
+    removeWxPrefixes(module)
     
+#---------------------------------------------------------------------------
+
+
+def getWrapperGenerator():
+    """
+    A simple factory function to create a wrapper generator class of the desired type.
+    """
+    if '--swig' in sys.argv:
+        import swig_generator
+        gClass = swig_generator.SwigWrapperGenerator
+    elif '--sip' in sys.argv:
+        import sip_generator
+        gClass = sip_generator.SipWrapperGenerator
+    else:
+        # The default is sip, at least for now...
+        import sip_generator
+        gClass = sip_generator.SipWrapperGenerator
+    
+    return gClass()
+
+
+def getDocsGenerator():
+    import generators    
+    g = generators.StubbedDocsGenerator()
+    return g
+
+
+
+def runGenerators(module):
+    # Create the code generator and make the wrapper code
+    wg = getWrapperGenerator()
+    wg.generate(module)
+    
+    # Create a documentation generator and let it do its thing
+    dg = getDocsGenerator()
+    dg.generate(module)
+
+
+
+#---------------------------------------------------------------------------
+
+
 def convertTwoIntegersTemplate(CLASS):
     return """\
    // is it just a typecheck?

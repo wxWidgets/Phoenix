@@ -34,7 +34,7 @@ def run():
     # Add a ctor/factory for the Mac that can use the theme brush
     module.addCppCode("""\
     #ifdef __WXMAC__
-    #include <wx/osx/carbon/private.h>
+    #include <wx/osx/private.h>
     #endif
     """)
     
@@ -279,19 +279,11 @@ def run():
     
     
     #-----------------------------------------------------------------
-    tools.ignoreAssignmentOperators(module)
-    tools.removeWxPrefixes(module)
-    #-----------------------------------------------------------------
-    # Run the generators
+    tools.doCommonTweaks(module)
+    tools.runGenerators(module)
     
-    # Create the code generator and make the wrapper code
-    wg = etgtools.getWrapperGenerator()
-    wg.generate(module)
     
-    # Create a documentation generator and let it do its thing
-    dg = etgtools.getDocsGenerator()
-    dg.generate(module)
-    
+   
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()
