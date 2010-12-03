@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/????
+# Name:        etg/tooltip.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     30-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -10,15 +10,15 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = ""   
-MODULE    = ""
-NAME      = ""   # Base name of the file to generate to for this script
+PACKAGE   = "wx"   
+MODULE    = "_core"
+NAME      = "tooltip"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ ]    
-    
+ITEMS  = [ 'wxToolTip' ]    
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -31,10 +31,14 @@ def run():
     # customizing the generated code and docstrings.
     
     
-    c = module.find('wxSomeClassName')
+    c = module.find('wxToolTip')
     assert isinstance(c, etgtools.ClassDef)
 
+    # TODO: This is MSW only
+    c.find('SetMaxWidth').ignore()
     
+    c.addProperty('Tip GetTip SetTip')
+    c.addProperty('Window GetWindow')
     
     
     #-----------------------------------------------------------------

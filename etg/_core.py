@@ -40,6 +40,7 @@ INCLUDES = [  'defs',
               
               'gdiobj',
               'font',
+              'region',
               
               'gdicmn',
               'geometry',
@@ -49,12 +50,18 @@ INCLUDES = [  'defs',
               'tracker',
               'kbdstate',
               'mousestate',
+              'tooltip',
+              'layout',
               'event',
-
+              
               'evtloop',
               'apptrait',
               'app',
+              
+              'validate',
+              'window',
               ]
+
 
 # Separate the list into those that are generated from ETG scripts and the
 # rest. These lists can be used from setup.py for a list of sources and a list

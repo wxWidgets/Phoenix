@@ -29,8 +29,7 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    
+        
     # tweaks for defs.h
     module.find('wxInt16').type = 'short'
     module.find('wxInt64').type = 'long long'
@@ -47,13 +46,25 @@ def run():
     td = module.find('wxUIntPtr')
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxUChar'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxChar'))
+    module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned int', name='size_t'))
     
     
-    # Remove these when the classes are added for real
-    module.insertItem(0, etgtools.WigCode("class wxWindow;  // forward declaration"))
-    module.insertItem(0, etgtools.WigCode("class wxDC;      // forward declaration"))
-    module.insertItem(0, etgtools.WigCode("class wxMenu;    // forward declaration"))
-    module.insertItem(0, etgtools.WigCode("class wxCursor;  // forward declaration"))
+    # Forward declarations for classes that are referenced but not defined
+    # yet. Remove these when the classes are added for real.
+    module.insertItem(0, etgtools.WigCode("""\
+        // forward declarations
+        class wxDC;
+        class wxMenu;
+        class wxCursor;
+        class wxBitmap;
+        class wxWindowList;  
+        class wxSizer;
+        class wxPalette;
+        class wxAcceleratorTable;
+        class wxDropTarget;
+        class wxCaret;
+        
+    """))
     
     
     # TBD: I've always disliked the WXK_* names. Should I rename all the items

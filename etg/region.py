@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/????
+# Name:        etg/region.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     30-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -10,14 +10,16 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = ""   
-MODULE    = ""
-NAME      = ""   # Base name of the file to generate to for this script
+PACKAGE   = "wx"   
+MODULE    = "_core"
+NAME      = "region"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ ]    
+ITEMS  = [ 'wxRegionIterator',
+           'wxRegion'
+           ]    
     
 #---------------------------------------------------------------------------
 
@@ -31,11 +33,29 @@ def run():
     # customizing the generated code and docstrings.
     
     
-    c = module.find('wxSomeClassName')
+    c = module.find('wxRegion')
     assert isinstance(c, etgtools.ClassDef)
+    tools.removeVirtuals(c)
+    c.find('GetBox').findOverload('wxCoord').ignore()
+    c.addProperty('Box GetBox')
+    
+    c = module.find('wxRegionIterator')
+    c.find('operator++').ignore()
+    
+    c.addCppMethod('void', 'Next', '()', 'sipCpp->operator++();')
+    c.addCppMethod('int', '__nonzero__', '()', 'sipRes = (int)sipCpp->operator bool();')
+    
+    c.addProperty('H GetH')
+    c.addProperty('Height GetHeight')
+    c.addProperty('Rect GetRect')
+    c.addProperty('W GetW')
+    c.addProperty('Width GetWidth')
+    c.addProperty('X GetX')
+    c.addProperty('Y GetY')
+    
 
-    
-    
+    # This is defined in the docs, but not in any of the real headers!
+    module.find('wxNullRegion').ignore()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
