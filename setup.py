@@ -139,11 +139,11 @@ extensions.append(
 
 
 etg = loadETG('etg/_core.py')
+etgDepends = etg.DEPENDS + etg.OTHERDEPS
 ext = Extension('_core', 
                 #['src/core_utils.cpp'] + 
                 etg.ETGFILES + rc_file,
-                depends = etg.DEPENDS,
-              
+                depends            = etgDepends,              
                 include_dirs       = cfg.includes,
                 define_macros      = cfg.defines,
                 library_dirs       = cfg.libdirs,

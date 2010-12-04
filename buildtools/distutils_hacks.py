@@ -19,7 +19,7 @@ import distutils.command.install_headers
 import distutils.command.clean
 from distutils.dep_util import newer, newer_group
 
-from config import Config, posixjoin, loadETG
+from config import Config, posixjoin, loadETG, etg2sip
 
 
 
@@ -318,15 +318,7 @@ class etgsip_build_ext(build_ext):
 
     def _sip_output_dir(self):
         cfg = Config()
-        return cfg.SIPOUT
-
-
-    def etg2sip(self, etgfile):
-        cfg = Config()
-        sipfile = os.path.splitext(os.path.basename(etgfile))[0] + '.sip'
-        sipfile = posixjoin(cfg.SIPGEN, sipfile)
-        return sipfile
-    
+        return cfg.SIPOUT   
         
     def build_extension(self, extension):
         """
@@ -337,7 +329,7 @@ class etgsip_build_ext(build_ext):
         if sources is not None and isinstance(sources, (list, tuple)):
             etg_sources = [s for s in sources if s.startswith('etg/')]
             for e in etg_sources:
-                extension.depends.append(self.etg2sip(e))
+                extension.depends.append(etg2sip(e))
 
         # let the base class do the rest
         return build_ext.build_extension(self, extension)
@@ -359,7 +351,7 @@ class etgsip_build_ext(build_ext):
         other_sources = [s for s in sources if not s.startswith('etg/')]
         
         for etg in etg_sources:
-            sipfile = self.etg2sip(etg)
+            sipfile = etg2sip(etg)
             
             deps = [etg]
             ns = loadETG(etg)

@@ -102,7 +102,7 @@ class Configuration(object):
     # ---------------------------------------------------------------
     # Basic initialization and configuration code
     
-    def __init__(self):
+    def __init__(self, noWxConfig=False):
         self.CLEANUP = list()
         
         # load the version numbers into this instance's namespace
@@ -148,6 +148,11 @@ class Configuration(object):
         self.includes = ['sip/siplib',  # to get our version of sip.h
                          'src',         # for any hand-written headers
                          ]
+            
+        if noWxConfig:
+            # this is as far as we go
+            return
+
         
         #---------------------------------------
         # MSW specific settings
@@ -204,8 +209,8 @@ class Configuration(object):
             # Uncomment these to have debug info for all kinds of builds
             #self.cflags += ['/Od', '/Z7']
             #self.lflags = ['/DEBUG', ]
+
         
-            
         #---------------------------------------
         # Posix (wxGTK, wxMac or mingw32) settings
         elif os.name == 'posix' or COMPILER == 'mingw32':
@@ -548,3 +553,10 @@ def loadETG(name):
     execfile(name, ns.nsdict())
     return ns
 
+
+def etg2sip(etgfile):
+    cfg = Config()
+    sipfile = os.path.splitext(os.path.basename(etgfile))[0] + '.sip'
+    sipfile = posixjoin(cfg.SIPGEN, sipfile)
+    return sipfile
+ 
