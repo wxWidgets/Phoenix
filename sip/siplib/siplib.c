@@ -1911,29 +1911,15 @@ static PyObject *buildObject(PyObject *obj, const char *fmt, va_list va)
 
             break;
 
-        case 'd': // double
-        case 'f': // float
+        case 'd':
+        case 'f':
             el = PyFloat_FromDouble(va_arg(va, double));
             break;
 
         case 'e':
-        case 'i':
-#if PY_MAJOR_VERSION >= 3
-            el = PyLong_FromLong(va_arg(va, int));
-#else
-            el = PyInt_FromLong(va_arg(va, int));
-#endif
-            break;
-
-        case 'L':
-#if PY_MAJOR_VERSION >= 3
-            el = PyLong_FromLong(va_arg(va, int));
-#else
-            el = PyInt_FromLong(va_arg(va, int));
-#endif
-            break;
-
         case 'h':
+        case 'i':
+        case 'L':
 #if PY_MAJOR_VERSION >= 3
             el = PyLong_FromLong(va_arg(va, int));
 #else
@@ -2021,9 +2007,9 @@ static PyObject *buildObject(PyObject *obj, const char *fmt, va_list va)
 
             break;
 
-        case 'u':  /* unsigned */
-        case 'M':  /* unsigned char */
-        case 't':  /* unsigned short */
+        case 't':
+        case 'u':
+        case 'M':
             el = PyLong_FromUnsignedLong(va_arg(va, unsigned));
             break;
 
