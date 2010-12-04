@@ -224,6 +224,7 @@ class FunctionDef(BaseDef):
         self.transfer = False         # transfer ownership of return value to C++?
         self.transferBack = False     # transfer ownership of return value from C++ to Python?
         self.transferThis = False     # ownership of 'this' pointer transfered to C++ 
+        self.cppCode = None           # Use this code instead of the default wrapper
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
@@ -243,6 +244,10 @@ class FunctionDef(BaseDef):
             # parameter description items and assign that value as the
             # briefDoc for this ParamDef object.
 
+            
+    def setCppCode(self, code):
+        self.cppCode = code
+        
             
     def checkForOverload(self, methods):
         for m in methods:
@@ -273,6 +278,7 @@ class FunctionDef(BaseDef):
             items.extend(o.items)
         return items
                
+    
 #---------------------------------------------------------------------------
         
 class MethodDef(FunctionDef):

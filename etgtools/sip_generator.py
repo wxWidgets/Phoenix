@@ -159,6 +159,10 @@ from %s import *
                 stream.write('\n')
                 self.generateParameters(function.items, stream, ' '*4)
             stream.write(')%s;\n' % self.annotate(function))
+            if function.cppCode:
+                stream.write('%MethodCode\n')
+                stream.write(nci(function.cppCode, 4))
+                stream.write('%End\n')
         for f in function.overloads:
             self.generateFunction(f, stream)
         stream.write('\n')            
@@ -372,7 +376,12 @@ from %s import *
             stream.write(')')
             if method.isPureVirtual:
                 stream.write(' = 0')
-            stream.write('%s;\n\n' % self.annotate(method))
+            stream.write('%s;\n' % self.annotate(method))
+            if method.cppCode:
+                stream.write('%s%%MethodCode\n' % indent)
+                stream.write(nci(method.cppCode, len(indent)+4))
+                stream.write('%s%%End\n' % indent)
+            stream.write('\n')
         if method.overloads:
             for m in method.overloads:
                 self.generateMethod(m, stream, indent)
