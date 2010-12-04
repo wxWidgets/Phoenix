@@ -1,7 +1,18 @@
 import sys
+import os
+
+# make sure our development dir is on the path
+if os.path.dirname(__file__):
+    phoenixDir = os.path.abspath(os.path.dirname(__file__)+'/..')
+else:  # run as main?
+    d = os.path.dirname(sys.argv[0])
+    if not d: d = '.'
+    phoenixDir = os.path.abspath(d+'/..')
+
+#if phoenixDir not in sys.path:
+sys.path.insert(0, phoenixDir)
 
 # stuff for debugging
-import os
 import wxPhoenix as wx
 print "pid:", os.getpid()
 #print "executable:", sys.executable; raw_input("Press Enter...")
