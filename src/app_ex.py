@@ -178,11 +178,10 @@ logged in on the main display of your Mac."""
 
     def OnPreInit(self):
         """
-        Things that must be done after _BootstrapApp has done its
-        thing, but would be nice if they were already done by the time
-        that OnInit is called.
+        Things that must be done after _BootstrapApp has done its thing, but
+        would be nice if they were already done by the time that OnInit is
+        called.
         """
-        print 'OnPreInit'
 ##        wx.StockGDI._initStockObjects()
         
 
@@ -224,9 +223,9 @@ logged in on the main display of your Mac."""
 
     def SetOutputWindowAttributes(self, title=None, pos=None, size=None):
         """
-        Set the title, position and/or size of the output window if
-        the stdio has been redirected.  This should be called before
-        any output would cause the output window to be created.
+        Set the title, position and/or size of the output window if the stdio
+        has been redirected. This should be called before any output would
+        cause the output window to be created.
         """
         if self.stdioWin:
             if title is not None:
@@ -236,28 +235,28 @@ logged in on the main display of your Mac."""
             if size is not None:
                 self.stdioWin.size = size
             
-## #----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 
-## # TODO: Move this someplace else?
-## def deprecated(func):
-##     def new_func(*args, **kwargs):
-##         import warnings
-##         warnings.warn("Call to deprecated function %s." % func.__name__,
-##                       category=DeprecationWarning)
-##         return func(*args, **kwargs)
-##     new_func.__name__ = func.__name__
-##     new_func.__doc__ = func.__doc__
-##     new_func.__dict__.update(func.__dict__)
-##     return new_func
+# TODO: Move this someplace else?
+def deprecated(func):
+    def new_func(*args, **kwargs):
+        import warnings
+        warnings.warn("Call to deprecated item %s." % func.__name__,
+                      category=DeprecationWarning)
+        return func(*args, **kwargs)
+    new_func.__name__ = func.__name__
+    new_func.__doc__ = func.__doc__
+    new_func.__dict__.update(func.__dict__)
+    return new_func
 
 
-## @deprecated
-## class PySimpleApp(App):
-##     """
-##     This class is deprecated.  Please use wx.App isntead.
-##     """
-##     def __init__(self, *args, **kw):
-##         App.__init__(self, *args, **kw)
+@deprecated
+class PySimpleApp(App):
+    """
+    This class is deprecated.  Please use wx.App instead.
+    """
+    def __init__(self, *args, **kw):
+        App.__init__(self, *args, **kw)
 
 
 ## #----------------------------------------------------------------------------

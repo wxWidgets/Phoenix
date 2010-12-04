@@ -15,19 +15,19 @@ del _core
 
 def version():
     """Returns a string containing version and port info"""
-    if wx.Platform == '__WXMSW__':
+    if wx.Port == '__WXMSW__':
         port = 'msw'
-    elif wx.Platform == '__WXMAC__':
-        if 'wxOSX-carbon' in wx.PlatformInfo:
+    elif wx.Port == '__WXMAC__':
+        if 'wxOSX-carbon' in wx.PortInfo:
             port = 'osx-carbon'
         else:
             port = 'osx-cocoa'
-    elif wx.Platform == '__WXGTK__':
+    elif wx.Port == '__WXGTK__':
         port = 'gtk'
-        if 'gtk2' in wx.PlatformInfo:
+        if 'gtk2' in wx.PortInfo:
             port = 'gtk2'
     else:
-        port = '?'
+        port = '???'
     return "%s %s" % (wx.VERSION_STRING, port)
                        
     
