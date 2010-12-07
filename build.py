@@ -107,7 +107,9 @@ def runcmd(cmd, getOutput=False, echoCmd=True):
     rval = sp.wait()
     if rval:
         # Failed!
-        raise subprocess.CalledProcessError(rval, cmd)
+        #raise subprocess.CalledProcessError(rval, cmd)
+        print "Command '%s' failed with exit code %d." % (cmd, rval)
+        sys.exit(rval)
     
     return output
         
@@ -150,7 +152,6 @@ def setDevModeOptions(args):
     # while working on the code in my local workspaces. Most people will
     # probably not use this so it is not part for the documented options and
     # is explicitly handled here before the options parser is created.
-    
     myDevModeOptions = [
             '--sip',
             '--debug',
@@ -159,7 +160,6 @@ def setDevModeOptions(args):
             '--osx_cocoa',
             '--mac_arch=i386',
             ]
-    
     if '--dev' in args:
         idx = args.index('--dev')
         # replace the --dev item with the items from the list
@@ -182,6 +182,17 @@ def wxDir():
     return WXWIN
 
 
+if sys.platform.startswith("win"):
+    CPU = os.environ.get('CPU')
+    if CPU == 'AMD64':
+        dllDir = os.path.join(wxDir(), "lib", "vc_amd64_dll")        
+    else:
+        dllDir = os.path.join(wxDir(), "lib", "vc_dll")
+    buildDir = os.path.join(wxDir(), "build", "msw")
+
+
+
+
 def makeOptionParser():
     OPTS = [
         ("debug",          (False, "Build wxPython with debug symbols")),
@@ -189,7 +200,7 @@ def makeOptionParser():
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
-        ("mac_universal_binary",  (False, "Build Mac version as a universal binary")),
+        ("mac_universal_binary",(False, "Build Mac version as a universal binary")),
         ("mac_arch",       ("", "Build just the specified architecture on Mac")),
         ("force_config",   (False, "Run configure when building even if the script determines it's not necessary.")),
         ("no_config",      (False, "Turn off configure step on autoconf builds")),
@@ -230,6 +241,35 @@ class pushDir(object):
         os.chdir(self.cwd)
 
         
+def getBuildDir(options):
+    BUILD_DIR = opj(phoenixDir(), 'bld')
+    if options.build_dir:
+        BUILD_DIR = os.path.abspath(options.build_dir)        
+    if sys.platform == 'darwin':
+        port = 'cocoa'
+        if options.osx_carbon:
+            port = 'carbon'
+        BUILD_DIR = opj(BUILD_DIR, port)
+    return BUILD_DIR
+
+
+
+def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
+    print "**** macFixDependencyInstallName(%s, %s, %s, %s)" % (destdir, prefix, extension, buildDir)
+    pwd = os.getcwd()
+    os.chdir(destdir+prefix+'/lib')
+    dylibs = glob.glob('*.dylib')   
+    for lib in dylibs:
+        #cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
+        #      (destdir+prefix,lib,  prefix,lib,  extension)
+        cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
+              (buildDir,lib,  prefix,lib,  extension)
+        print cmd
+        os.system(cmd)        
+    os.chdir(pwd)
+    
+
+
 #---------------------------------------------------------------------------
 # Command functions
 #---------------------------------------------------------------------------
@@ -280,6 +320,13 @@ def test(options, args):
 
     
     
+def build(options, args):
+    msg('Running command: build')
+    build_wx(options, args)
+    build_py(options, args)
+
+    
+
 def build_wx(options, args):
     msg('Running command: build_wx')
 
@@ -292,16 +339,7 @@ def build_wx(options, args):
         if options.osx_carbon:
             options.osx_cocoa = False
         
-        BUILD_DIR = opj(phoenixDir(), 'bld')
-        if options.build_dir:
-            BUILD_DIR = os.path.abspath(options.build_dir)
-            
-        if sys.platform == 'darwin':
-            port = 'cocoa'
-            if options.osx_carbon:
-                port = 'carbon'
-            BUILD_DIR = opj(BUILD_DIR, port)
-    
+        BUILD_DIR = getBuildDir(options)
         DESTDIR = options.installdir
         PREFIX = options.prefix
         if options.mac_framework and sys.platform.startswith("darwin"):
@@ -370,31 +408,116 @@ def build_wx(options, args):
 def build_py(options, args):
     msg('Running command: build_py')
 
-    # Ensure the etg files have been processed. This will also be done inside
-    # setup.py, so this is to just make sure.
-    etg(options, args)
+    if False:
+        # For now, just run setup.py.  
+        # This will need more work later, either to call build-wxpython 
+        # or to implement its important parts here
+        pwd = pushDir(phoenixDir())
+        runcmd(PYTHON + ' setup.py build_ext '
+                        '--inplace '
+                        '--debug '
+                        'USE_SIP=1 '
+                        'WXPORT=osx_cocoa '
+                        'ARCH=i386 '
+                        'WX_CONFIG=/projects/wx/2.9/bld/osx_cocoa/wx-config'
+                        + extraArgs)
+        return
 
-    # For now, just run setup.py.  
-    # This will need more work later, either to call build-wxpython 
-    # or to implement its important parts here
+    if sys.platform.startswith("win"):
+        # Copy the wxWidgets DLLs to the wxPython pacakge folder
+        dlls = glob.glob(os.path.join(dllDir, "wx*" + version2_nodot + dll_type + "*.dll")) + \
+               glob.glob(os.path.join(dllDir, "wx*" + version3_nodot + dll_type + "*.dll")) 
+        for dll in dlls:
+            shutil.copyfile(dll, os.path.join(phoenixDir(), "wxPhoenix", os.path.basename(dll)))
+
+    BUILD_DIR = getBuildDir(options)
+    DESTDIR = options.installdir
+    PREFIX = options.prefix
+    
+    build_options = list()
+    
+    if options.debug:
+        build_options.append("--debug")
+    if options.sip:
+        build_options.append('USE_SIP=1')
+    if options.mac_arch: 
+        build_options.append("ARCH=%s" % options.mac_arch)
+        
+    if sys.platform.startswith("darwin") and options.osx_cocoa:
+        build_options.append("WXPORT=osx_cocoa")
+    if sys.platform.startswith("darwin") and options.osx_carbon:
+        build_options.append("WXPORT=osx_carbon")
+
+    build_base = 'build'
+    if sys.platform.startswith("darwin"):
+        if options.osx_cocoa:
+            build_base += '/cocoa'
+        else:
+            build_base += '/carbon'
+
+    build_options.append("BUILD_BASE=%s" % build_base)
+    build_mode = "build_ext --inplace"
+    if options.install:
+        build_mode = "build"
+    
+    if not sys.platform.startswith("win"):
+        if options.install:
+            wxlocation = DESTDIR + PREFIX
+            #print '-='*20
+            #print 'DESTDIR:', DESTDIR
+            #print 'PREFIX:', PREFIX
+            #print 'wxlocation:', wxlocation
+            #print '-='*20
+            build_options.append('WX_CONFIG="%s/bin/wx-config --prefix=%s"' %
+                                 (wxlocation, wxlocation))
+        else:
+            build_options.append("WX_CONFIG=%s/wx-config" % BUILD_DIR)
+    
     pwd = pushDir(phoenixDir())
-    runcmd(PYTHON + ' setup.py build_ext '
-                    '--inplace '
-                    '--debug '
-                    'WXPORT=osx_cocoa '
-                    'ARCH=i386 '
-                    'WX_CONFIG=/projects/wx/2.9/bld/osx_cocoa/wx-config'
-                    + extraArgs)
+    
+    # Do the build step
+    command = PYTHON + " -u ./setup.py %s %s %s" % \
+        (build_mode, " ".join(build_options), options.extra_setup)
+    runcmd(command)
+    
+    # Do an install?
+    if options.install:
+        # only add the --prefix flag if we have an explicit request to do
+        # so, otherwise let distutils install in the default location.
+        install_dir = DESTDIR or PREFIX
+        WXPY_PREFIX = ""
+        if options.wxpy_installdir:
+            install_dir = options.wxpy_installdir
+            WXPY_PREFIX = "--prefix=%s" % options.wxpy_installdir
+        
+        # do the install step
+        command = PYTHON + " -u ./setup.py install %s %s %s --record installed_files.txt" % \
+            (WXPY_PREFIX, " ".join(build_options), options.extra_setup)
+        runcmd(command)
+    
+        if sys.platform.startswith("darwin") and DESTDIR:
+            # Now that we are finished with the build fix the ids and
+            # names in the wx .dylibs
+            wxbuild.macFixupInstallNames(DESTDIR, PREFIX, BUILD_DIR)
 
-    
-def build(options, args):
-    msg('Running command: build')
+            # and also adjust the dependency names in the wxPython extensions
+            for line in file("installed_files.txt"):
+                line = line.strip()
+                if line.endswith('.so'):
+                    macFixDependencyInstallName(DESTDIR, PREFIX, line, BUILD_DIR)
+                
+    ## update the language files
+    #command = PYTHON + " -u " + os.path.join(phoenixDir(), "distrib", "makemo.py")
+    #runcmd(command)
 
-    build_wx(options, args)
-    build_py(options, args)
-    
-    
-    
+    print "------------ BUILD FINISHED ------------"
+    print "To run the wxPython demo:"
+    print " - Set your PYTHONPATH variable to %s." % phoenixDir()
+    if not sys.platform.startswith("win") and not options.install:
+        print " - Set your (DY)LD_LIBRARY_PATH to %s" % BUILD_DIR + "/lib"
+    print " - Run python demo/demo.py"
+    print
+
         
 #---------------------------------------------------------------------------
 

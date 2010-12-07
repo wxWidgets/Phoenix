@@ -30,10 +30,8 @@ runSilently = False
 
 if os.environ.get('SIP'):
     SIPdefault = os.environ.get('SIP')
-
 elif os.name == 'nt':
     SIPdefault = 'c:/projects/sip/sip/sipgen/sip.exe'
-
 else:
     SIPdefault = '/projects/sip/sip/sipgen/sip' 
 
@@ -42,8 +40,8 @@ else:
 
 class Configuration(object):
     
-    USE_SIP  = True
-    SIP      = SIPdefault
+    USE_SIP  = False              # Can we run sip?
+    SIP      = SIPdefault         # Where is the sip binary?
     SIPINC   = 'sip/siplib'       # Use our local copy of sip.h
     SIPGEN   = 'sip/gen'          # Where the generated .sip files go
     SIPFILES = 'sip'              # where to find other sip files for %Include or %Import
