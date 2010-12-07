@@ -1,7 +1,13 @@
 
+
+# A little trick to make 'wx' be a reference to this module so wx.Names can
+# be used in the python code here.
+import sys as _sys
+wx = _sys.modules[__name__]
+ 
+
 # Load version numbers from __version__...  Ensure that major and minor
 # versions are the same for both wxPython and wxWidgets.
-
 from __version__ import *
 __version__ = VERSION_STRING
 import _core
@@ -30,7 +36,21 @@ def version():
         port = '???'
     return "%s %s" % (wx.VERSION_STRING, port)
                        
-    
+
+
+def deprecated(func):
+    def new_func(*args, **kwargs):
+        import warnings
+        warnings.warn("Call to deprecated item %s." % func.__name__,
+                      category=DeprecationWarning)
+        return func(*args, **kwargs)
+    new_func.__name__ = func.__name__
+    new_func.__doc__ = func.__doc__
+    new_func.__dict__.update(func.__dict__)
+    return new_func
+
+
+
 ## #----------------------------------------------------------------------------
 
 ## class PyDeadObjectError(AttributeError):

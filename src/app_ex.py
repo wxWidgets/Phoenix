@@ -237,19 +237,6 @@ logged in on the main display of your Mac."""
             
 #----------------------------------------------------------------------------
 
-# TODO: Move this someplace else?
-def deprecated(func):
-    def new_func(*args, **kwargs):
-        import warnings
-        warnings.warn("Call to deprecated item %s." % func.__name__,
-                      category=DeprecationWarning)
-        return func(*args, **kwargs)
-    new_func.__name__ = func.__name__
-    new_func.__doc__ = func.__doc__
-    new_func.__dict__.update(func.__dict__)
-    return new_func
-
-
 @deprecated
 class PySimpleApp(App):
     """
