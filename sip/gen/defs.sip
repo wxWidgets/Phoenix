@@ -7,7 +7,6 @@
 // This file will be included by _core.sip
 //
 //---------------------------------------------------------------------------
-
 %ModuleCode
 
     #include <wx/version.h>
@@ -20,23 +19,26 @@
 
 //---------------------------------------------------------------------------
 
-class wxCursor;  // forward declaration
+        // forward declarations
+        class wxDC;
+        class wxMenu;
+        class wxCursor;
+        class wxBitmap;
+        class wxWindowList;  
+        class wxSizer;
+        class wxPalette;
+        class wxAcceleratorTable;
+        class wxDropTarget;
+        class wxCaret;
+        class wxIcon;
+        class wxIconBundle;
 
 
-class wxMenu;    // forward declaration
+typedef signed char wxInt8   /PyInt/;
 
+typedef unsigned char wxUint8   /PyInt/;
 
-class wxDC;      // forward declaration
-
-
-class wxWindow;  // forward declaration
-
-
-typedef signed char wxInt8;
-
-typedef unsigned char wxUint8;
-
-typedef wxUint8 wxByte;
+typedef wxUint8 wxByte   /PyInt/;
 
 typedef short wxInt16;
 
@@ -61,6 +63,8 @@ typedef unsigned long long wxUint64;
 typedef long wxIntPtr;
 
 typedef unsigned long wxUIntPtr;
+
+typedef unsigned int size_t;
 
 typedef wchar_t wxChar;
 

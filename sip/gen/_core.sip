@@ -7,7 +7,7 @@
 %Module(name=wxPhoenix._core, use_argument_names=True, language="C++")
 {
     %AutoPyName(remove_leading="wx")
-}
+};
 
 %Copying
     Copyright: (c) 2010 by Total Control Software
@@ -51,7 +51,6 @@ from _core import *
     
 %End
 
-
 %Include defs.sip
 %Include wxpy_utils.sip
 %Include string.sip
@@ -63,6 +62,7 @@ from _core import *
 %Include intl.sip
 %Include gdiobj.sip
 %Include font.sip
+%Include region.sip
 %Include gdicmn.sip
 %Include geometry.sip
 %Include object.sip
@@ -70,10 +70,16 @@ from _core import *
 %Include tracker.sip
 %Include kbdstate.sip
 %Include mousestate.sip
+%Include tooltip.sip
+%Include layout.sip
 %Include event.sip
 %Include evtloop.sip
 %Include apptrait.sip
 %Include app.sip
+%Include validate.sip
+%Include window.sip
+%Include toplevel.sip
+
 %ModuleCode
 
 void wxPyCoreModuleInject(PyObject* moduleDict)
@@ -155,20 +161,18 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 //---------------------------------------------------------------------------
 
 %Extract(id=pycode, order=10)
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# This code block was included from src/core_ex.py
+
+
 # A little trick to make 'wx' be a reference to this module so wx.Names can
 # be used in the python code here.
 import sys as _sys
 wx = _sys.modules[__name__]
-
-%End
-
-%Extract(id=pycode)
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-# This code block was included from src/core_ex.py
+ 
 
 # Load version numbers from __version__...  Ensure that major and minor
 # versions are the same for both wxPython and wxWidgets.
-
 from __version__ import *
 __version__ = VERSION_STRING
 import _core
@@ -182,22 +186,36 @@ del _core
 
 def version():
     """Returns a string containing version and port info"""
-    if wx.Platform == '__WXMSW__':
+    if wx.Port == '__WXMSW__':
         port = 'msw'
-    elif wx.Platform == '__WXMAC__':
-        if 'wxOSX-carbon' in wx.PlatformInfo:
+    elif wx.Port == '__WXMAC__':
+        if 'wxOSX-carbon' in wx.PortInfo:
             port = 'osx-carbon'
         else:
             port = 'osx-cocoa'
-    elif wx.Platform == '__WXGTK__':
+    elif wx.Port == '__WXGTK__':
         port = 'gtk'
-        if 'gtk2' in wx.PlatformInfo:
+        if 'gtk2' in wx.PortInfo:
             port = 'gtk2'
     else:
-        port = '?'
+        port = '???'
     return "%s %s" % (wx.VERSION_STRING, port)
                        
-    
+
+
+def deprecated(func):
+    def new_func(*args, **kwargs):
+        import warnings
+        warnings.warn("Call to deprecated item %s." % func.__name__,
+                      category=DeprecationWarning)
+        return func(*args, **kwargs)
+    new_func.__name__ = func.__name__
+    new_func.__doc__ = func.__doc__
+    new_func.__dict__.update(func.__dict__)
+    return new_func
+
+
+
 ## #----------------------------------------------------------------------------
 
 ## class PyDeadObjectError(AttributeError):

@@ -13,7 +13,6 @@
 %End
 
 
-
 //---------------------------------------------------------------------------
 
 class wxPoint2DDouble   /PyName=Point2D/
@@ -109,9 +108,15 @@ public:
         const wxPoint2DDouble & pt
     );
 
+    %TypeCode
+    PyObject* _wxPoint2DDouble_Get(wxPoint2DDouble* self, int& _isErr)
+    {
+        return sipBuildResult(&_isErr, "(dd)", self->m_x, self->m_y);
+    }
+    %End
     SIP_PYOBJECT Get();
     %MethodCode
-        sipRes = sipBuildResult(&sipIsErr, "(dd)", sipCpp->m_x, sipCpp->m_y);
+        sipRes = _wxPoint2DDouble_Get(sipCpp, sipIsErr);
     %End
 
     %ConvertToTypeCode
@@ -149,7 +154,7 @@ public:
 };  // end of class wxPoint2DDouble
 
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point2D___str__(self):
     return str(self.Get())
 Point2D.__str__ = _Point2D___str__
@@ -157,7 +162,7 @@ del _Point2D___str__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point2D___repr__(self):
     return "wx.Point2D"+str(self.Get())
 Point2D.__repr__ = _Point2D___repr__
@@ -165,7 +170,7 @@ del _Point2D___repr__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point2D___len__(self):
     return len(self.Get())
 Point2D.__len__ = _Point2D___len__
@@ -173,7 +178,7 @@ del _Point2D___len__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point2D___nonzero__(self):
     return self.Get() != (0,0)
 Point2D.__nonzero__ = _Point2D___nonzero__
@@ -181,7 +186,7 @@ del _Point2D___nonzero__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point2D___reduce__(self):
     return (Point2D, self.Get())
 Point2D.__reduce__ = _Point2D___reduce__
@@ -189,7 +194,7 @@ del _Point2D___reduce__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point2D___getitem__(self, idx):
     return self.Get()[idx]
 Point2D.__getitem__ = _Point2D___getitem__
@@ -197,7 +202,7 @@ del _Point2D___getitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point2D___setitem__(self, idx, val):
     if idx == 0: self.x = val
     elif idx == 1: self.y = val
@@ -207,7 +212,7 @@ del _Point2D___setitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 Point2D.__safe_for_unpickling__ = True
 
 %End
@@ -433,10 +438,16 @@ public:
         const wxRect2DDouble & rect
     );
 
+    %TypeCode
+    PyObject* _wxRect2DDouble_Get(wxRect2DDouble* self, int& _isErr)
+    {
+        return sipBuildResult(&_isErr, "(dddd)", 
+                    self->m_x, self->m_y, self->m_width, self->m_height);
+    }
+    %End
     SIP_PYOBJECT Get();
     %MethodCode
-        sipRes = sipBuildResult(&sipIsErr, "(dddd)", 
-                                sipCpp->m_x, sipCpp->m_y, sipCpp->m_width, sipCpp->m_height);
+        sipRes = _wxRect2DDouble_Get(sipCpp, sipIsErr);
     %End
 
     %ConvertToTypeCode
@@ -481,7 +492,7 @@ public:
 };  // end of class wxRect2DDouble
 
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect2D___str__(self):
     return str(self.Get())
 Rect2D.__str__ = _Rect2D___str__
@@ -489,7 +500,7 @@ del _Rect2D___str__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect2D___repr__(self):
     return "wx.Rect2D"+str(self.Get())
 Rect2D.__repr__ = _Rect2D___repr__
@@ -497,7 +508,7 @@ del _Rect2D___repr__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect2D___len__(self):
     return len(self.Get())
 Rect2D.__len__ = _Rect2D___len__
@@ -505,7 +516,7 @@ del _Rect2D___len__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect2D___nonzero__(self):
     return self.Get() != (0,0,0,0)
 Rect2D.__nonzero__ = _Rect2D___nonzero__
@@ -513,7 +524,7 @@ del _Rect2D___nonzero__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect2D___reduce__(self):
     return (Rect2D, self.Get())
 Rect2D.__reduce__ = _Rect2D___reduce__
@@ -521,7 +532,7 @@ del _Rect2D___reduce__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect2D___getitem__(self, idx):
     return self.Get()[idx]
 Rect2D.__getitem__ = _Rect2D___getitem__
@@ -529,7 +540,7 @@ del _Rect2D___getitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect2D___setitem__(self, idx, val):
     if idx == 0: self.x = val
     elif idx == 1: self.y = val
@@ -541,7 +552,7 @@ del _Rect2D___setitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 Rect2D.__safe_for_unpickling__ = True
 
 %End

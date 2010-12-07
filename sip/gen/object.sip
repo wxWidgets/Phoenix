@@ -8,7 +8,6 @@
 //
 //---------------------------------------------------------------------------
 
-
 //---------------------------------------------------------------------------
 
 class wxRefCounter
@@ -70,14 +69,26 @@ public:
 
     void UnShare();
 
+    %TypeCode
+    const wxChar* _wxObject_GetClassName(wxObject* self, int& _isErr)
+    {
+        return self->GetClassInfo()->GetClassName();
+    }
+    %End
     const wxChar* GetClassName();
     %MethodCode
-        sipRes = sipCpp->GetClassInfo()->GetClassName();
+        sipRes = _wxObject_GetClassName(sipCpp, sipIsErr);
     %End
 
+    %TypeCode
+    void _wxObject_Destroy(wxObject* self, int& _isErr)
+    {
+        delete self;
+    }
+    %End
     void Destroy()   /TranserThis/;
     %MethodCode
-        delete sipCpp;
+        _wxObject_Destroy(sipCpp, sipIsErr);
     %End
 
 };  // end of class wxObject

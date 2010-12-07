@@ -7,7 +7,6 @@
 // This file will be included by _core.sip
 //
 //---------------------------------------------------------------------------
-
 %ModuleCode
 
     #if !wxUSE_HOTKEY
@@ -225,22 +224,34 @@ public:
         const wxString & string
     );
 
-    SIP_PYOBJECT GetClientData();
-    %MethodCode
-        wxPyClientData* data = (wxPyClientData*)sipCpp->GetClientObject();
+    %TypeCode
+    PyObject* _wxCommandEvent_GetClientData(wxCommandEvent* self, int& _isErr)
+    {
+        wxPyClientData* data = (wxPyClientData*)self->GetClientObject();
         if (data) {
             Py_INCREF(data->m_obj);
-            sipRes = data->m_obj;
+            return data->m_obj;
         } else {
             Py_INCREF(Py_None);
-            sipRes = Py_None;
+            return Py_None;
         }
+    }
+    %End
+    SIP_PYOBJECT GetClientData();
+    %MethodCode
+        sipRes = _wxCommandEvent_GetClientData(sipCpp, sipIsErr);
     %End
 
+    %TypeCode
+    void _wxCommandEvent_SetClientData(wxCommandEvent* self, int& _isErr, PyObject* clientData)
+    {
+        wxPyClientData* data = new wxPyClientData(clientData);
+        self->SetClientObject(data);
+    }
+    %End
     void SetClientData(SIP_PYOBJECT clientData);
     %MethodCode
-        wxPyClientData* data = new wxPyClientData(clientData);
-        sipCpp->SetClientObject(data);
+        _wxCommandEvent_SetClientData(sipCpp, sipIsErr, clientData);
     %End
 
     %Property(name=ClientData, get=GetClientData, set=SetClientData)

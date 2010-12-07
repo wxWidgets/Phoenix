@@ -8,7 +8,6 @@
 //
 //---------------------------------------------------------------------------
 
-
 //---------------------------------------------------------------------------
 
 class wxFont : wxGDIObject
@@ -55,11 +54,9 @@ public:
         int pointSize,
         wxFontFamily family,
         int flags = wxFONTFLAG_DEFAULT,
-        const wxString & faceName = wxEmptyString,
-        wxFontEncoding encoding = wxFONTENCODING_DEFAULT
-        )   /NoDerived/;
+        const wxString& faceName = wxEmptyString,
+        wxFontEncoding encoding = wxFONTENCODING_DEFAULT )   /NoDerived/;
     %MethodCode
-        // YUCK!
         wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
         sipCpp = new sipwxFont(*font);
         delete font;
@@ -378,6 +375,23 @@ enum wxFontEncoding
 };
 
 wxFont wxNullFont;
+
+%ModuleCode
+wxFont* _FFont_function(int& _isErr, int pointSize, wxFontFamily family, int flags, const wxString* faceName, wxFontEncoding encoding)
+{
+    wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
+    return font;
+}
+%End
+wxFont* FFont(
+        int pointSize,
+        wxFontFamily family,
+        int flags = wxFONTFLAG_DEFAULT,
+        const wxString& faceName = wxEmptyString,
+        wxFontEncoding encoding = wxFONTENCODING_DEFAULT )   /Factory/;
+%MethodCode
+    sipRes = _FFont_function(sipIsErr, pointSize, family, flags, faceName, encoding);
+%End
 
 
 //---------------------------------------------------------------------------

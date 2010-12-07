@@ -10,51 +10,52 @@
 
 //---------------------------------------------------------------------------
 
-struct wxVideoMode
+class wxToolTip : wxObject
 {
     %TypeHeaderCode
-        #include <wx/vidmode.h>
+        #include <wx/tooltip.h>
     %End
 
-    wxVideoMode(
-        int width = 0,
-        int height = 0,
-        int depth = 0,
-        int freq = 0
+
+public:
+    wxToolTip(
+        const wxString & tip
     );
 
-    int w;
+    wxString GetTip();
 
-    int h;
+    wxWindow * GetWindow();
 
-    int bpp;
-
-    int refresh;
-
-    bool Matches(
-        const wxVideoMode & other
+    void SetTip(
+        const wxString & tip
     );
 
-    int GetWidth();
-
-    int GetHeight();
-
-    int GetDepth();
-
-    bool IsOk();
-
-    bool operator==(
-        const wxVideoMode & m
+    static
+    void Enable(
+        bool flag
     );
 
-    bool operator!=(
-        const wxVideoMode & mode
+    static
+    void SetAutoPop(
+        long msecs
     );
 
-};  // end of class wxVideoMode
+    static
+    void SetDelay(
+        long msecs
+    );
 
+    static
+    void SetReshow(
+        long msecs
+    );
 
-const wxVideoMode wxDefaultVideoMode;
+    %Property(name=Tip, get=GetTip, set=SetTip)
+
+    %Property(name=Window, get=GetWindow)
+
+};  // end of class wxToolTip
+
 
 
 //---------------------------------------------------------------------------

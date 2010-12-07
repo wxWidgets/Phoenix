@@ -7,7 +7,6 @@
 // This file will be included by _core.sip
 //
 //---------------------------------------------------------------------------
-
 %ModuleCode
     #if !defined(__WXMAC__)
     #define wxCURSOR_COPY_ARROW wxCURSOR_ARROW
@@ -62,9 +61,15 @@ public:
 
     int y;
 
+    %TypeCode
+    PyObject* _wxPoint_Get(wxPoint* self, int& _isErr)
+    {
+        return sipBuildResult(&_isErr, "(ii)", self->x, self->y);
+    }
+    %End
     SIP_PYOBJECT Get();
     %MethodCode
-        sipRes = sipBuildResult(&sipIsErr, "(ii)", sipCpp->x, sipCpp->y);
+        sipRes = _wxPoint_Get(sipCpp, sipIsErr);
     %End
 
     %ConvertToTypeCode
@@ -102,7 +107,7 @@ public:
 };  // end of class wxPoint
 
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point___str__(self):
     return str(self.Get())
 Point.__str__ = _Point___str__
@@ -110,7 +115,7 @@ del _Point___str__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point___repr__(self):
     return "wx.Point"+str(self.Get())
 Point.__repr__ = _Point___repr__
@@ -118,7 +123,7 @@ del _Point___repr__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point___len__(self):
     return len(self.Get())
 Point.__len__ = _Point___len__
@@ -126,7 +131,7 @@ del _Point___len__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point___nonzero__(self):
     return self.Get() != (0,0)
 Point.__nonzero__ = _Point___nonzero__
@@ -134,7 +139,7 @@ del _Point___nonzero__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point___reduce__(self):
     return (Point, self.Get())
 Point.__reduce__ = _Point___reduce__
@@ -142,7 +147,7 @@ del _Point___reduce__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point___getitem__(self, idx):
     return self.Get()[idx]
 Point.__getitem__ = _Point___getitem__
@@ -150,7 +155,7 @@ del _Point___getitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Point___setitem__(self, idx, val):
     if idx == 0: self.x = val
     elif idx == 1: self.y = val
@@ -160,7 +165,7 @@ del _Point___setitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 Point.__safe_for_unpickling__ = True
 
 %End
@@ -284,9 +289,15 @@ public:
 
     %Property(name=height, get=GetHeight, set=SetHeight)
 
+    %TypeCode
+    PyObject* _wxSize_Get(wxSize* self, int& _isErr)
+    {
+        return sipBuildResult(&_isErr, "(ii)", self->GetWidth(), self->GetHeight());
+    }
+    %End
     SIP_PYOBJECT Get();
     %MethodCode
-        sipRes = sipBuildResult(&sipIsErr, "(ii)", sipCpp->GetWidth(), sipCpp->GetHeight());
+        sipRes = _wxSize_Get(sipCpp, sipIsErr);
     %End
 
     %ConvertToTypeCode
@@ -324,7 +335,7 @@ public:
 };  // end of class wxSize
 
 
-%Extract pycode
+%Extract(id=pycode)
 def _Size___str__(self):
     return str(self.Get())
 Size.__str__ = _Size___str__
@@ -332,7 +343,7 @@ del _Size___str__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Size___repr__(self):
     return "wx.Size"+str(self.Get())
 Size.__repr__ = _Size___repr__
@@ -340,7 +351,7 @@ del _Size___repr__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Size___len__(self):
     return len(self.Get())
 Size.__len__ = _Size___len__
@@ -348,7 +359,7 @@ del _Size___len__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Size___nonzero__(self):
     return self.Get() != (0,0)
 Size.__nonzero__ = _Size___nonzero__
@@ -356,7 +367,7 @@ del _Size___nonzero__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Size___reduce__(self):
     return (Size, self.Get())
 Size.__reduce__ = _Size___reduce__
@@ -364,7 +375,7 @@ del _Size___reduce__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Size___getitem__(self, idx):
     return self.Get()[idx]
 Size.__getitem__ = _Size___getitem__
@@ -372,7 +383,7 @@ del _Size___getitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Size___setitem__(self, idx, val):
     if idx == 0: self.width = val
     elif idx == 1: self.height = val
@@ -382,7 +393,7 @@ del _Size___setitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 Size.__safe_for_unpickling__ = True
 
 %End
@@ -579,10 +590,16 @@ public:
 
     %Property(name=topRight, get=GetTopRight)
 
+    %TypeCode
+    PyObject* _wxRect_Get(wxRect* self, int& _isErr)
+    {
+        return sipBuildResult(&_isErr, "(iiii)", 
+                              self->x, self->y, self->width, self->height);
+    }
+    %End
     SIP_PYOBJECT Get();
     %MethodCode
-        sipRes = sipBuildResult(&sipIsErr, "(iiii)", 
-                                sipCpp->x, sipCpp->y, sipCpp->width, sipCpp->height);
+        sipRes = _wxRect_Get(sipCpp, sipIsErr);
     %End
 
     %ConvertToTypeCode
@@ -627,7 +644,7 @@ public:
 };  // end of class wxRect
 
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect___str__(self):
     return str(self.Get())
 Rect.__str__ = _Rect___str__
@@ -635,7 +652,7 @@ del _Rect___str__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect___repr__(self):
     return "wx.Rect"+str(self.Get())
 Rect.__repr__ = _Rect___repr__
@@ -643,7 +660,7 @@ del _Rect___repr__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect___len__(self):
     return len(self.Get())
 Rect.__len__ = _Rect___len__
@@ -651,7 +668,7 @@ del _Rect___len__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect___nonzero__(self):
     return self.Get() != (0,0,0,0)
 Rect.__nonzero__ = _Rect___nonzero__
@@ -659,7 +676,7 @@ del _Rect___nonzero__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect___reduce__(self):
     return (Rect, self.Get())
 Rect.__reduce__ = _Rect___reduce__
@@ -667,7 +684,7 @@ del _Rect___reduce__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect___getitem__(self, idx):
     return self.Get()[idx]
 Rect.__getitem__ = _Rect___getitem__
@@ -675,7 +692,7 @@ del _Rect___getitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Rect___setitem__(self, idx, val):
     if idx == 0: self.x = val
     elif idx == 1: self.y = val
@@ -687,7 +704,7 @@ del _Rect___setitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 Rect.__safe_for_unpickling__ = True
 
 %End
@@ -737,10 +754,15 @@ public:
 
     double y;
 
+    %TypeCode
+    PyObject* _wxRealPoint_Get(wxRealPoint* self, int& _isErr)
+    {
+        return sipBuildResult(&_isErr, "(dd)", self->x, self->y);
+    }
+    %End
     SIP_PYOBJECT Get();
     %MethodCode
-        sipRes = sipBuildResult(&sipIsErr, "(dd)", 
-                                sipCpp->x, sipCpp->y);
+        sipRes = _wxRealPoint_Get(sipCpp, sipIsErr);
     %End
 
     %ConvertToTypeCode
@@ -778,7 +800,7 @@ public:
 };  // end of class wxRealPoint
 
 
-%Extract pycode
+%Extract(id=pycode)
 def _RealPoint___str__(self):
     return str(self.Get())
 RealPoint.__str__ = _RealPoint___str__
@@ -786,7 +808,7 @@ del _RealPoint___str__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _RealPoint___repr__(self):
     return "wx.RealPoint"+str(self.Get())
 RealPoint.__repr__ = _RealPoint___repr__
@@ -794,7 +816,7 @@ del _RealPoint___repr__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _RealPoint___len__(self):
     return len(self.Get())
 RealPoint.__len__ = _RealPoint___len__
@@ -802,7 +824,7 @@ del _RealPoint___len__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _RealPoint___nonzero__(self):
     return self.Get() != (0,0)
 RealPoint.__nonzero__ = _RealPoint___nonzero__
@@ -810,7 +832,7 @@ del _RealPoint___nonzero__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _RealPoint___reduce__(self):
     return (Rect, self.Get())
 RealPoint.__reduce__ = _RealPoint___reduce__
@@ -818,7 +840,7 @@ del _RealPoint___reduce__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _RealPoint___getitem__(self, idx):
     return self.Get()[idx]
 RealPoint.__getitem__ = _RealPoint___getitem__
@@ -826,7 +848,7 @@ del _RealPoint___getitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _RealPoint___setitem__(self, idx, val):
     if idx == 0: self.x = val
     elif idx == 1: self.y = val
@@ -836,7 +858,7 @@ del _RealPoint___setitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 RealPoint.__safe_for_unpickling__ = True
 
 %End

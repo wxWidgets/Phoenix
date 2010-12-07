@@ -10,51 +10,48 @@
 
 //---------------------------------------------------------------------------
 
-struct wxVideoMode
+class wxValidator : wxEvtHandler
 {
     %TypeHeaderCode
-        #include <wx/vidmode.h>
+        #include <wx/validate.h>
     %End
 
-    wxVideoMode(
-        int width = 0,
-        int height = 0,
-        int depth = 0,
-        int freq = 0
+
+public:
+    wxValidator();
+
+    virtual
+    ~wxValidator();
+
+    virtual
+    wxObject * Clone();
+
+    wxWindow * GetWindow();
+
+    void SetWindow(
+        wxWindow * window
     );
 
-    int w;
+    virtual
+    bool TransferFromWindow();
 
-    int h;
+    virtual
+    bool TransferToWindow();
 
-    int bpp;
-
-    int refresh;
-
-    bool Matches(
-        const wxVideoMode & other
+    virtual
+    bool Validate(
+        wxWindow * parent
     );
 
-    int GetWidth();
-
-    int GetHeight();
-
-    int GetDepth();
-
-    bool IsOk();
-
-    bool operator==(
-        const wxVideoMode & m
+    static
+    void SuppressBellOnError(
+        bool suppress = true
     );
 
-    bool operator!=(
-        const wxVideoMode & mode
-    );
-
-};  // end of class wxVideoMode
+};  // end of class wxValidator
 
 
-const wxVideoMode wxDefaultVideoMode;
+const wxValidator wxDefaultValidator;
 
 
 //---------------------------------------------------------------------------

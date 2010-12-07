@@ -7,10 +7,9 @@
 // This file will be included by _core.sip
 //
 //---------------------------------------------------------------------------
-
 %ModuleCode
     #ifdef __WXMAC__
-    #include <wx/osx/carbon/private.h>
+    #include <wx/osx/private.h>
     #endif
     
     #undef wxTransparentColour
@@ -166,27 +165,39 @@ public:
 
     %Property(name=alpha, get=Alpha)
 
+    %TypeCode
+    wxIntPtr _wxColour_GetPixel(wxColour* self, int& _isErr)
+    {
+        return (wxIntPtr)self->GetPixel();
+    }
+    %End
     wxIntPtr GetPixel();
     %MethodCode
-        sipRes = (wxIntPtr)sipCpp->GetPixel();
+        sipRes = _wxColour_GetPixel(sipCpp, sipIsErr);
     %End
 
-    SIP_PYOBJECT Get(bool includeAlpha=true);
-    %MethodCode
+    %TypeCode
+    PyObject* _wxColour_Get(wxColour* self, int& _isErr, bool includeAlpha)
+    {
         int red = -1;
         int green = -1;
         int blue = -1;
         int alpha = wxALPHA_OPAQUE;
-        if (sipCpp->IsOk()) {
-            red =   sipCpp->Red();
-            green = sipCpp->Green();
-            blue =  sipCpp->Blue();
-            alpha = sipCpp->Alpha();
+        if (self->IsOk()) {
+            red =   self->Red();
+            green = self->Green();
+            blue =  self->Blue();
+            alpha = self->Alpha();
         }
         if (includeAlpha)
-            sipRes = sipBuildResult(&sipIsErr, "(iiii)", red, green, blue, alpha);
+            return sipBuildResult(&_isErr, "(iiii)", red, green, blue, alpha);
         else
-            sipRes = sipBuildResult(&sipIsErr, "(iii)", red, green, blue);
+            return sipBuildResult(&_isErr, "(iii)", red, green, blue);
+    }
+    %End
+    SIP_PYOBJECT Get(bool includeAlpha=true);
+    %MethodCode
+        sipRes = _wxColour_Get(sipCpp, sipIsErr, includeAlpha);
     %End
 
     %ConvertToTypeCode
@@ -283,7 +294,7 @@ public:
 };  // end of class wxColour
 
 
-%Extract pycode
+%Extract(id=pycode)
 def _Colour___str__(self):
     return str(self.Get())
 Colour.__str__ = _Colour___str__
@@ -291,7 +302,7 @@ del _Colour___str__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Colour___repr__(self):
     return "wx.Colour"+str(self.Get())
 Colour.__repr__ = _Colour___repr__
@@ -299,7 +310,7 @@ del _Colour___repr__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Colour___len__(self):
     return len(self.Get())
 Colour.__len__ = _Colour___len__
@@ -307,7 +318,7 @@ del _Colour___len__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Colour___nonzero__(self):
     return self.IsOk()
 Colour.__nonzero__ = _Colour___nonzero__
@@ -315,7 +326,7 @@ del _Colour___nonzero__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Colour___reduce__(self):
     return (Colour, self.Get())
 Colour.__reduce__ = _Colour___reduce__
@@ -323,7 +334,7 @@ del _Colour___reduce__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Colour___getitem__(self, idx):
     return self.Get()[idx]
 Colour.__getitem__ = _Colour___getitem__
@@ -331,9 +342,9 @@ del _Colour___getitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 def _Colour___setitem__(self, idx, val):
-    if idx == 0: self.red = val
+    if idx == 0:   self.red = val
     elif idx == 1: self.green = val
     elif idx == 2: self.blue = val
     elif idx == 3: self.alpha = val
@@ -343,7 +354,7 @@ del _Colour___setitem__
 
 %End
 
-%Extract pycode
+%Extract(id=pycode)
 Rect.__safe_for_unpickling__ = True
 
 %End
@@ -363,15 +374,21 @@ const int wxALPHA_TRANSPARENT;
 
 const int wxALPHA_OPAQUE;
 
-wxColour MacThemeColour(int themeBrushID)   /Factory/;
-%MethodCode
+%ModuleCode
+wxColour* _MacThemeColour_function(int& _isErr, int themeBrushID)
+{
     #ifdef __WXMAC__
-        sipRes = new wxColour(wxMacCreateCGColorFromHITheme(themeBrushID));
+        return new wxColour(wxMacCreateCGColorFromHITheme(themeBrushID));
     #else
         wxPyRaiseNotImplemented(); 
         sipIsErr = 1;
-        sipRes = NULL; 
+        return NULL; 
     #endif
+}
+%End
+wxColour* MacThemeColour(int themeBrushID)   /Factory/;
+%MethodCode
+    sipRes = _MacThemeColour_function(sipIsErr, themeBrushID);
 %End
 
     wxColour testColourTypeMap(const wxColour& c);
