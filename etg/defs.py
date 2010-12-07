@@ -36,6 +36,10 @@ def run():
     module.find('wxUint64').type = 'unsigned long long'
     module.find('wxIntPtr').type =  'long'           #'ssize_t'
     module.find('wxUIntPtr').type = 'unsigned long'  #'size_t'
+    module.find('wxInt8').pyInt = True
+    module.find('wxUint8').pyInt = True
+    module.find('wxByte').pyInt = True
+    
     
     module.find('wxDELETE').ignore()
     module.find('wxDELETEA').ignore()
@@ -63,7 +67,8 @@ def run():
         class wxAcceleratorTable;
         class wxDropTarget;
         class wxCaret;
-        
+        class wxIcon;
+        class wxIconBundle;
     """))
     
     
