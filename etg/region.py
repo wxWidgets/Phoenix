@@ -42,8 +42,8 @@ def run():
     c = module.find('wxRegionIterator')
     c.find('operator++').ignore()
     
-    c.addCppMethod('void', 'Next', '()', 'sipCpp->operator++();')
-    c.addCppMethod('int', '__nonzero__', '()', 'sipRes = (int)sipCpp->operator bool();')
+    c.addCppMethod('void', 'Next', '()', 'self->operator++();')
+    c.addCppMethod('int', '__nonzero__', '()', 'return (int)self->operator bool();')
     
     c.addProperty('H GetH')
     c.addProperty('Height GetHeight')

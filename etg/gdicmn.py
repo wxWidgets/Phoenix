@@ -104,8 +104,8 @@ def run():
     # wxPoint typemap
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxPoint')
     
-    c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
-        sipRes = sipBuildResult(&sipIsErr, "(ii)", sipCpp->x, sipCpp->y);
+    c.addCppMethod('PyObject*', 'Get', '()', """\
+        return sipBuildResult(&_isErr, "(ii)", self->x, self->y);
     """, briefDoc="""\
         Get() -> (x,y)\n    
         Return the x and y properties as a tuple.""")
@@ -157,8 +157,8 @@ def run():
     # wxSize typemap
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxSize')
     
-    c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
-        sipRes = sipBuildResult(&sipIsErr, "(ii)", sipCpp->GetWidth(), sipCpp->GetHeight());
+    c.addCppMethod('PyObject*', 'Get', '()', """\
+        return sipBuildResult(&_isErr, "(ii)", self->GetWidth(), self->GetHeight());
     """, briefDoc="""\
         Get() -> (width, height)\n    
         Return the width and height properties as a tuple.""")
@@ -183,7 +183,8 @@ def run():
     #---------------------------------------
     # wxRect tweaks
     c = module.find('wxRect')
-    
+    assert isinstance(c, etgtools.ClassDef)
+        
     c.addProperty("left GetLeft")
     c.addProperty("top GetTop")
     c.addProperty("right GetRight")
@@ -228,9 +229,9 @@ def run():
     # wxRect typemap
     c.convertFromPyObject = tools.convertFourIntegersTemplate('wxRect')
     
-    c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
-        sipRes = sipBuildResult(&sipIsErr, "(iiii)", 
-                                sipCpp->x, sipCpp->y, sipCpp->width, sipCpp->height);
+    c.addCppMethod('PyObject*', 'Get', '()', """\
+        return sipBuildResult(&_isErr, "(iiii)", 
+                              self->x, self->y, self->width, self->height);
     """, briefDoc="""\
         Get() -> (x, y, width, height)\n    
         Return the rectangle's properties as a tuple.""")
@@ -277,10 +278,9 @@ def run():
     
     # wxRealPoint typemap
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxRealPoint')
-    
-    c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
-        sipRes = sipBuildResult(&sipIsErr, "(dd)", 
-                                sipCpp->x, sipCpp->y);
+
+    c.addCppMethod('PyObject*', 'Get', '()', """\
+        return sipBuildResult(&_isErr, "(dd)", self->x, self->y);
     """, briefDoc="""\
         Get() -> (x, y, width, height)\n    
         Return the rectangle's properties as a tuple.""")

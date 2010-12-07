@@ -59,8 +59,8 @@ def run():
     
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxPoint2DDouble')
     
-    c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
-        sipRes = sipBuildResult(&sipIsErr, "(dd)", sipCpp->m_x, sipCpp->m_y);
+    c.addCppMethod('PyObject*', 'Get', '()', """\
+        return sipBuildResult(&_isErr, "(dd)", self->m_x, self->m_y);
     """, briefDoc="""\
         Get() -> (x,y)\n    
         Return the x and y properties as a tuple.""")
@@ -93,7 +93,6 @@ def run():
             item.ignore()
         
             
-            
     c = module.find('wxRect2DDouble')
     c.pyName = 'Rect2D'
     c.find('m_x').pyName = 'x'
@@ -103,9 +102,9 @@ def run():
     
     c.convertFromPyObject = tools.convertFourDoublesTemplate('wxRect2DDouble')
     
-    c.addCppMethod('SIP_PYOBJECT', 'Get', '()', """\
-        sipRes = sipBuildResult(&sipIsErr, "(dddd)", 
-                                sipCpp->m_x, sipCpp->m_y, sipCpp->m_width, sipCpp->m_height);
+    c.addCppMethod('PyObject*', 'Get', '()', """\
+        return sipBuildResult(&_isErr, "(dddd)", 
+                    self->m_x, self->m_y, self->m_width, self->m_height);
     """, briefDoc="""\
         Get() -> (x, y, width, height)\n    
         Return the rectangle's properties as a tuple.""")

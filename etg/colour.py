@@ -36,17 +36,17 @@ def run():
     #ifdef __WXMAC__
     #include <wx/osx/private.h>
     #endif
-    """)
-    
-    module.addCppFunction('wxColour', 'MacThemeColour', '(int themeBrushID)', """\
+    """)    
+    module.addCppFunction('wxColour*', 'MacThemeColour', '(int themeBrushID)', """\
     #ifdef __WXMAC__
-        sipRes = new wxColour(wxMacCreateCGColorFromHITheme(themeBrushID));
+        return new wxColour(wxMacCreateCGColorFromHITheme(themeBrushID));
     #else
         wxPyRaiseNotImplemented(); 
         sipIsErr = 1;
-        sipRes = NULL; 
+        return NULL; 
     #endif
     """, factory=True)
+    
     
     # Change this macro into a value so we wont have problems when SIP takes its
     # address
@@ -93,7 +93,7 @@ def run():
     
     c.find('GetPixel').ignore()  # We need to add a typcast
     c.addCppMethod('wxIntPtr', 'GetPixel', '()', """\
-        sipRes = (wxIntPtr)sipCpp->GetPixel();
+        return (wxIntPtr)self->GetPixel();
     """)
         
     # Set a flag on the return value and parameter types that are 'unsigned char'
@@ -123,23 +123,23 @@ def run():
     c.find('MakeMono.b').out = True
     
     
-    c.addCppMethod('SIP_PYOBJECT', 'Get', '(bool includeAlpha=true)', """\
+    c.addCppMethod('PyObject*', 'Get', '(bool includeAlpha=true)', """\
         int red = -1;
         int green = -1;
         int blue = -1;
         int alpha = wxALPHA_OPAQUE;
-        if (sipCpp->IsOk()) {
-            red =   sipCpp->Red();
-            green = sipCpp->Green();
-            blue =  sipCpp->Blue();
-            alpha = sipCpp->Alpha();
+        if (self->IsOk()) {
+            red =   self->Red();
+            green = self->Green();
+            blue =  self->Blue();
+            alpha = self->Alpha();
         }
         if (includeAlpha)
-            sipRes = sipBuildResult(&sipIsErr, "(iiii)", red, green, blue, alpha);
+            return sipBuildResult(&_isErr, "(iiii)", red, green, blue, alpha);
         else
-            sipRes = sipBuildResult(&sipIsErr, "(iii)", red, green, blue);
+            return sipBuildResult(&_isErr, "(iii)", red, green, blue);
     """, briefDoc="""\
-        Get(includeAlpha=Valse) -> (r,g,b) or (r,g,b,a)\n
+        Get(includeAlpha=False) -> (r,g,b) or (r,g,b,a)\n
         Returns the RGB intensity values as a tuple, optionally the alpha value as well.""")
     
     
@@ -152,7 +152,7 @@ def run():
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
                   """\
-                  if idx == 0: self.red = val
+                  if idx == 0:   self.red = val
                   elif idx == 1: self.green = val
                   elif idx == 2: self.blue = val
                   elif idx == 3: self.alpha = val

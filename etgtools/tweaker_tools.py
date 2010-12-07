@@ -81,7 +81,22 @@ def fixEventClass(klass):
     klass.addPrivateAssignOp()
 
     
-    
+def fixWindowClass(klass):
+    """
+    Do common tweaks for a window class.
+    """
+    # The ctor and Create method transfer ownership of the this pointer
+    klass.find('%s.parent' % klass.name).transferThis = True
+    klass.find('Create.parent').transferThis = True
+    # give the id param a default value
+    klass.find('%s.id' % klass.name).default = 'wxID_ANY'
+    klass.find('Create.id').default = 'wxID_ANY'
+    # look for wxByte parameters
+    #for item in klass.allItems():
+    #    if hasattr(item, 'type') and item.type == 'wxByte':
+    #        item.pyInt = True
+            
+            
 def removeVirtuals(klass):
     """
     Sometimes methods are marked as virtual but probably don't ever need to be

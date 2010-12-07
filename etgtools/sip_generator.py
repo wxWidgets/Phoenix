@@ -12,7 +12,7 @@ The generator class for creating SIP definition files from the data
 objects produced by the ETG scripts.
 """
 
-import sys, os
+import sys, os, re
 import extractors
 import generators
 from cStringIO import StringIO
@@ -53,7 +53,7 @@ class SipWrapperGenerator(generators.WrapperGeneratorBase):
 %%Module(name=%s.%s, use_argument_names=True, language="C++")
 {
     %%AutoPyName(remove_leading="wx")
-}
+};
 
 %%Copying
     Copyright: (c) 2010 by Total Control Software
@@ -92,12 +92,15 @@ from %s import *
             stream.write("%End\n\n")
                 
         # %Imports and %Includes
-        for i in module.imports:
-            stream.write("%%Import %s.sip\n" % i)
-        stream.write("\n")
-        for i in module.includes:
-            stream.write("%%Include %s.sip\n" % i)
-
+        if module.imports:
+            for i in module.imports:
+                stream.write("%%Import %s.sip\n" % i)
+            stream.write("\n")
+        if module.includes:
+            for i in module.includes:
+                stream.write("%%Include %s.sip\n" % i)
+            stream.write("\n")
+        
         # C++ code to be written out to the generated module
         if module.cppCode:
             stream.write("%ModuleCode\n")
@@ -133,14 +136,15 @@ from %s import *
         
     def generateModuleItems(self, module, stream):
         methodMap = {
-            extractors.ClassDef     : self.generateClass,
-            extractors.FunctionDef  : self.generateFunction,
-            extractors.EnumDef      : self.generateEnum,
-            extractors.GlobalVarDef : self.generateGlobalVar,
-            extractors.TypedefDef   : self.generateTypedef,
-            extractors.WigCode      : self.generateWigCode,
-            extractors.PyCodeDef    : self.generatePyCode,
-            extractors.CppMethodDef : self.generateCppMethod,
+            extractors.ClassDef         : self.generateClass,
+            extractors.FunctionDef      : self.generateFunction,
+            extractors.EnumDef          : self.generateEnum,
+            extractors.GlobalVarDef     : self.generateGlobalVar,
+            extractors.TypedefDef       : self.generateTypedef,
+            extractors.WigCode          : self.generateWigCode,
+            extractors.PyCodeDef        : self.generatePyCode,
+            extractors.CppMethodDef     : self.generateCppMethod,
+            extractors.CppMethodDef_sip : self.generateCppMethod_sip,
             }
         
         for item in module:
@@ -287,14 +291,15 @@ from %s import *
         protected = [i for i in klass if i.protection == 'protected']
         
         dispatch = {
-            extractors.MemberVarDef    : self.generateMemberVar,
-            extractors.PropertyDef     : self.generateProperty,
-            extractors.MethodDef       : self.generateMethod,
-            extractors.EnumDef         : self.generateEnum,
-            extractors.CppMethodDef    : self.generateCppMethod,
-            extractors.PyMethodDef     : self.generatePyMethod,
-            extractors.PyCodeDef       : self.generatePyCode,
-            extractors.WigCode         : self.generateWigCode,
+            extractors.MemberVarDef     : self.generateMemberVar,
+            extractors.PropertyDef      : self.generateProperty,
+            extractors.MethodDef        : self.generateMethod,
+            extractors.EnumDef          : self.generateEnum,
+            extractors.CppMethodDef     : self.generateCppMethod,
+            extractors.CppMethodDef_sip : self.generateCppMethod_sip,
+            extractors.PyMethodDef      : self.generatePyMethod,
+            extractors.PyCodeDef        : self.generatePyCode,
+            extractors.WigCode          : self.generateWigCode,
             # TODO: nested classes too?
             }
         for item in ctors:
@@ -388,7 +393,94 @@ from %s import *
 
             
     def generateCppMethod(self, method, stream, indent=''):
+        # Add a new C++ method to a class. This one adds the code as a
+        # separate function and then adds a call to that function in the
+        # MethodCode directive.
         assert isinstance(method, extractors.CppMethodDef)
+        if method.ignored:
+            return
+        klass = method.klass
+        if klass:
+            assert isinstance(klass, extractors.ClassDef)
+
+        # create the new function
+        fargs = method.argsString.strip('()').split(',')
+        for idx, arg in enumerate(fargs):
+            # take only the part before the =, if there is one
+            arg = arg.split('=')[0].strip()   
+            arg = arg.replace('&', '*')  # SIP will always want to use pointers for parameters
+            fargs[idx] = arg
+        fargs = ', '.join(fargs)
+        if fargs:
+            fargs = ', ' + fargs
+        if method.isCtor:
+            fname = '_%s_newCtor' % klass.name
+            fargs = '(int& _isErr%s)' % fargs
+            stream.write('%s%%TypeCode\n' % indent)
+            typ = klass.name
+            if method.useDerivedName:
+                typ = 'sip'+klass.name
+                stream.write('%sclass %s;\n' % (indent, typ))   # forward decalre the derived class
+            stream.write('%s%s* %s%s\n%s{\n' % (indent, typ, fname, fargs, indent))
+            stream.write(nci(method.body, len(indent)+4))
+            stream.write('%s}\n' % indent)
+            stream.write('%s%%End\n' % indent)
+            
+        else:
+            if klass:
+                fname = '_%s_%s' % (klass.name, method.name)
+                fargs = '(%s* self, int& _isErr%s)' % (klass.name, fargs)
+                stream.write('%s%%TypeCode\n' % indent)
+            else:
+                fname = '_%s_function' % method.name
+                fargs = '(int& _isErr%s)' % fargs
+                stream.write('%s%%ModuleCode\n' % indent)
+            stream.write('%s%s %s%s\n%s{\n' % (indent, method.type, fname, fargs, indent))
+            stream.write(nci(method.body, len(indent)+4))
+            stream.write('%s}\n' % indent)
+            stream.write('%s%%End\n' % indent)
+                
+        # now insert the method declaration and the code to call the new function
+        # find the parameter names
+        pnames = method.argsString.strip('()').split(',')
+        for idx, pn in enumerate(pnames):
+            # take only the part before the =, if there is one
+            name = pn.split('=')[0].strip()   
+            # now get just the part after and space, * or &, which should be
+            # the parameter name
+            name = re.split(r'[ \*\&]+', name)[-1] 
+            pnames[idx] = name
+        pnames = ', '.join(pnames)
+        if pnames:
+            pnames = ', ' + pnames
+        # convert PyObject* to SIP_PYOBJECT in the return type and param types
+        typ = method.type.replace('PyObject*', 'SIP_PYOBJECT')
+        argsString = method.argsString.replace('PyObject*', 'SIP_PYOBJECT')
+        # spit it all out
+        if method.isCtor:
+            stream.write('%s%s%s%s;\n' % 
+                         (indent, method.name, argsString, self.annotate(method)))
+        else:
+            stream.write('%s%s %s%s%s;\n' % 
+                         (indent, typ, method.name, argsString, self.annotate(method)))
+        stream.write('%s%%MethodCode\n' % indent)
+        stream.write(indent+' '*4)
+        if method.isCtor:
+            stream.write('sipCpp = %s(sipIsErr%s);\n' % (fname, pnames))
+        else:
+            if method.type != 'void':
+                stream.write('sipRes = ')
+            if klass:
+                stream.write('%s(sipCpp, sipIsErr%s);\n' % (fname, pnames))
+            else:
+                stream.write('%s(sipIsErr%s);\n' % (fname, pnames))
+        stream.write('%s%%End\n\n' % indent)
+
+        
+    def generateCppMethod_sip(self, method, stream, indent=''):
+        # Add a new C++ method to a class without the extra generated
+        # function, so SIP specific stuff can be done in the function body.
+        assert isinstance(method, extractors.CppMethodDef_sip)
         if method.ignored:
             return
         if method.isCtor:
@@ -401,7 +493,8 @@ from %s import *
         stream.write('%s%%MethodCode\n' % indent)
         stream.write(nci(method.body, len(indent)+4))
         stream.write('%s%%End\n\n' % indent)
-
+        
+        
         
     def generatePyMethod(self, pm, stream, indent):
         assert isinstance(pm, extractors.PyMethodDef)
@@ -409,7 +502,7 @@ from %s import *
             pm.klass.generateAfterClass.append(pm)
         else:
             klassName = pm.klass.pyName or pm.klass.name
-            stream.write("%Extract pycode\n")
+            stream.write("%Extract(id=pycode)\n")
             stream.write("def _%s_%s%s:\n" % (klassName, pm.name, pm.argsString))
             if pm.briefDoc:
                 stream.write(nci('"""\n%s\n"""\n' % pm.briefDoc, 4))
@@ -443,6 +536,10 @@ from %s import *
                 annotations.append('TransferBack')
             if item.transferThis:
                 annotations.append('TranserThis')
+            if item.pyInt:
+                annotations.append('PyInt')
+                
+        if isinstance(item, extractors.VariableDef):
             if item.pyInt:
                 annotations.append('PyInt')
 
@@ -522,6 +619,10 @@ def nci(text, numSpaces=0, stripLeading=True):
 
     newText = '\n'.join(lines) + '\n'
     return newText
+
+
+class SipGeneratorError(RuntimeError):
+    pass
 
 
 #---------------------------------------------------------------------------

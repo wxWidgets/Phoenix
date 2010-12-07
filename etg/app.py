@@ -62,7 +62,6 @@ def run():
     # platforms, and other goodies, then change the c.name so SIP will
     # generate code wrapping this class as if it was the wxApp class seen in
     # the DoxyXML. 
-    ##c.addCppCode(wxPyApp)  
     c.insertCppCode('src/app_ex.cpp')
     
     for item in c.allItems():  #  change the class name, ctors and dtor names
@@ -84,7 +83,7 @@ def run():
         doc="Hide all application windows just as the user can do with the\nsystem Hide command.  Mac only.",
         body="""\
         #ifdef __WXMAC__
-            sipCpp->MacHideApp();
+            self->MacHideApp();
         #endif
         """)                   
 

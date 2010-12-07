@@ -52,11 +52,11 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
 
     c.addCppMethod('const wxChar*', 'GetClassName', '()',
-        body='sipRes = sipCpp->GetClassInfo()->GetClassName();',
+        body='return self->GetClassInfo()->GetClassName();',
         doc='Returns the class name of the C++ class using wxRTTI.')
     
     c.addCppMethod('void', 'Destroy', '()',
-        body='delete sipCpp;',
+        body='delete self;',
         doc='Deletes the C++ object this Python object is a proxy for.',
         transferThis=True)  # TODO: Check this
         

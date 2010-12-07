@@ -133,20 +133,20 @@ def run():
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
     
-    c.addCppMethod('SIP_PYOBJECT', 'GetClientData', '()', """\
-         wxPyClientData* data = (wxPyClientData*)sipCpp->GetClientObject();
+    c.addCppMethod('PyObject*', 'GetClientData', '()', """\
+         wxPyClientData* data = (wxPyClientData*)self->GetClientObject();
          if (data) {
              Py_INCREF(data->m_obj);
-             sipRes = data->m_obj;
+             return data->m_obj;
          } else {
              Py_INCREF(Py_None);
-             sipRes = Py_None;
+             return Py_None;
          }
     """)
     
-    c.addCppMethod('void', 'SetClientData', '(SIP_PYOBJECT clientData)', """\
+    c.addCppMethod('void', 'SetClientData', '(PyObject* clientData)', """\
         wxPyClientData* data = new wxPyClientData(clientData);
-        sipCpp->SetClientObject(data);
+        self->SetClientObject(data);
     """)
     
     

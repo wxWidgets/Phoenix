@@ -20,6 +20,9 @@ DOCSTRING = ""
 ITEMS  = [ 'wxVisualAttributes',
            'wxWindow' ]    
     
+OTHERDEPS = [ 'src/window_ex.cpp',   # some helper C++ code
+              ]
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -30,9 +33,11 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.    
-    
+
     c = module.find('wxWindow')
     assert isinstance(c, etgtools.ClassDef)
+
+    c.insertCppCode('src/window_ex.cpp')
 
     # ignore some overloads that will be ambiguous afer wrapping
     c.find('GetChildren').overloads = []
@@ -44,6 +49,10 @@ def run():
     c.find('ClientToScreen').findOverload('int *').ignore()
     c.find('ScreenToClient').findOverload('int *').ignore()
     
+    # Rename these overloads for symmetry with the getters of the same name
+    c.find('SetSize').findOverload('wxRect').pyName = 'SetRect'
+    c.find('SetClientSize').findOverload('wxRect').pyName = 'SetClientRect'
+    
     m = c.find('GetTextExtent').findOverload('int *')
     m.pyName = 'GetFullTextExtent'
     m.find('w').out = True
@@ -52,32 +61,82 @@ def run():
     m.find('externalLeading').out = True
     
     c.find('GetHandle').type = 'void*'
+    c.find('GetHandle').setCppCode("sipRes = wxPyGetWinHandle(sipCpp);")
     
-    # Rename these overloads for symmetry with the getters of the same name
-    c.find('SetSize').findOverload('wxRect').pyName = 'SetRect'
-    c.find('SetClientSize').findOverload('wxRect').pyName = 'SetClientRect'
+    c.addCppMethod('void*', 'GetGtkWidget', '()', """\
+    #ifdef __WXGTK__
+        return (void*)self->GetHandle();
+    #else
+        return NULL;
+    #endif
+    """)
     
-    # Add this method
+    # Add some new methods
     c.addCppMethod('wxWindow*', 'GetTopLevelParent', '()',
-                   'sipRes =  wxGetTopLevelParent(sipCpp);')
+                   'return wxGetTopLevelParent(self);')
+    #c.addCppMethod('wxWindow*', 'FindWindowByLabel', '(const wxString& label)', 
+    #               'return wxWindow::FindWindowByLabel(label, self);')
     
-    # TODO: make these be available on Windows, and empty stubs otherwise
-    c.find('RegisterHotKey').ignore()
-    c.find('UnregisterHotKey').ignore()
+    c.addCppMethod('bool', 'MacIsWindowScrollbar', '(const wxWindow* sb)', """\
+    #ifdef __WXMAC__
+        return self->MacIsWindowScrollbar(sb); 
+    #else
+        return false;
+    #endif
+    """)
+    
+    # Make these be available on Windows, and empty stubs otherwise
+    c.find('RegisterHotKey').setCppCode("""\
+    #ifdef __WXMSW__
+        sipRes = sipCpp->RegisterHotKey(hotkeyId, modifiers, virtualKeyCode);
+    #else
+        sipRes = false;
+    #endif
+    """)
+    c.find('UnregisterHotKey').setCppCode("""\
+    #ifdef __WXMSW__
+        sipRes = sipCpp->UnregisterHotKey(hotkeyId);
+    #else
+        sipRes = false;
+    #endif
+    """)    
+    c.find('RegisterHotKey').isVirtual = False
+    c.find('UnregisterHotKey').isVirtual = False
 
-    # maybe these too
+    c.find('SetDoubleBuffered').setCppCode("""\
+    #if defined(__WXGTK20__) || defined(__WXMSW__)
+        sipCpp->SetDoubleBuffered(on);
+    #endif
+    """)
+
+    #%Rename(ConvertDialogPointToPixels, wxPoint, ConvertDialogToPixels(const wxPoint& pt));
+    #%Rename(ConvertDialogSizeToPixels,  wxSize,  ConvertDialogToPixels(const wxSize& sz));
+    #%Rename(ConvertPixelPointToDialog, wxPoint, ConvertPixelsToDialog(const wxPoint& pt));
+    #%Rename(ConvertPixelSizeToDialog,  wxSize,  ConvertPixelsToDialog(const wxSize& sz));
+    
+    # MSW only.  Do we want them wrapped?
     c.find('GetAccessible').ignore()
     c.find('SetAccessible').ignore()
 
-    # Make some of the protected methods overridable from Python
+    
+    # Make some of the protected methods visible and overridable from Python
     c.find('DoCentre').ignore(False)
     c.find('DoGetBestSize').ignore(False)
     c.find('SetInitialBestSize').ignore(False)
     c.find('SendDestroyEvent').ignore(False)
     c.find('ProcessEvent').ignore(False)
     
+    c.addPyMethod('PostCreate', '()', 'pass')
     
-    # Define some properties using the getters and setters
+    # transfer ownership of these parameters to the C++ object
+    c.find('SetCaret.caret').transfer = True
+    c.find('SetToolTip.tip').transfer = True
+    c.find('SetDropTarget.target').transfer = True
+    c.find('SetConstraints.constraints').transfer = True
+    c.find('SetSizer.sizer').transfer = True
+    c.find('SetSizerAndFit.sizer').transfer = True
+    
+    # Define some properties using the getter and setter methods
     c.addProperty('AcceleratorTable GetAcceleratorTable SetAcceleratorTable')
     c.addProperty('AutoLayout GetAutoLayout SetAutoLayout')
     c.addProperty('BackgroundColour GetBackgroundColour SetBackgroundColour')
@@ -143,9 +202,9 @@ def run():
     c.addProperty('MaxClientSize GetMaxClientSize SetMaxClientSize')
     
 
-    
-    
-    
+    tools.fixWindowClass(c)
+
+   
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

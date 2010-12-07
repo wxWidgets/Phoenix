@@ -87,8 +87,6 @@ class BaseDef(object):
             raise ExtractorError("Unable to find item named '%s' within %s named '%s'" %
                                  (head, self.__class__.__name__, self.name))
 
-        
-        
     def addItem(self, item):
         self.items.append(item)
         
@@ -155,6 +153,7 @@ class VariableDef(BaseDef):
         self.type = None
         self.definition = ''
         self.argsString = '' 
+        self.pyInt = False
         self.__dict__.update(**kw)
         if element is not None:
             self.extract(element)
@@ -230,7 +229,7 @@ class FunctionDef(BaseDef):
             self.extract(element)
             
     def releaseGIL(self, release=True):
-        self.pyReleaseGIL = hold
+        self.pyReleaseGIL = release
                     
     def extract(self, element):
         super(FunctionDef, self).extract(element)
@@ -450,6 +449,9 @@ class ClassDef(BaseDef):
         return p
     
         
+    
+    #------------------------------------------------------------------
+ 
     def addCppMethod(self, type, name, argsString, body, doc=None, **kw):
         """
         Add a new C++ method to a class. This method doesn't have to actually
@@ -457,20 +459,42 @@ class ClassDef(BaseDef):
         back-end wrapper generator such that it is visible in the class in the
         target language.
         """
-        md = CppMethodDef(type, name, argsString, body, doc, **kw)
+        md = CppMethodDef(type, name, argsString, body, doc, klass=self, **kw)
         self.items.append(md)
         return md
 
     
-    def addCppCtor(self, argsString, body, doc=None, noDerivedCtor=True, **kw):
+    def addCppCtor(self, argsString, body, doc=None, noDerivedCtor=True, useDerivedName=False, **kw):
         """
         Add a C++ method that is a constructor.
         """
         md = CppMethodDef('', self.name, argsString, body, doc=doc, 
-                          isCtor=True, noDerivedCtor=noDerivedCtor, **kw)
+                          isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, 
+                          useDerivedName=useDerivedName, **kw)
         self.items.append(md)
         return md
-        
+
+    
+    def addCppMethod_sip(self, type, name, argsString, body, doc=None, **kw):
+        """
+        Just like the above but can do more things that are SIP specific in
+        the code body, instead of using the general purpose implementation.
+        """
+        md = CppMethodDef_sip(type, name, argsString, body, doc, klass=self, **kw)
+        self.items.append(md)
+        return md
+
+    def addCppCtor_sip(self, argsString, body, doc=None, noDerivedCtor=True, **kw):
+        """
+        Add a C++ method that is a constructor.
+        """
+        md = CppMethodDef_sip('', self.name, argsString, body, doc=doc, 
+                          isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, **kw)
+        self.items.append(md)
+        return md
+
+    #------------------------------------------------------------------
+    
     
     def addPyMethod(self, name, argsString, body, doc=None, **kw):
         """
@@ -627,8 +651,19 @@ class CppMethodDef(MethodDef):
         self.body = body
         self.briefDoc = doc
         self.protection = 'public'
+        self.klass = None
+        self.noDerivedCtor = False
         self.__dict__.update(kw)
 
+        
+class CppMethodDef_sip(CppMethodDef):
+    """
+    Just like the above, but instead of generating a new function from the
+    privided code, the code is used inline inside SIP's %MethodCode directive.
+    This makes it possible to use additional SIP magic for things that are
+    beyond the general scope of the other C++ Method implementation.
+    """
+    pass
         
         
 #---------------------------------------------------------------------------
@@ -784,7 +819,6 @@ class ModuleDef(BaseDef):
         return item
     
         
-         
             
     def addCppFunction(self, type, name, argsString, body, doc=None, **kw):
         """
@@ -792,6 +826,16 @@ class ModuleDef(BaseDef):
         wrapped.
         """
         md = CppMethodDef(type, name, argsString, body, doc, **kw)
+        self.items.append(md)
+        return md
+
+    
+    def addCppFunction_sip(self, type, name, argsString, body, doc=None, **kw):
+        """
+        Add a new C++ function into the module that is written by hand, not
+        wrapped.
+        """
+        md = CppMethodDef_sip(type, name, argsString, body, doc, **kw)
         self.items.append(md)
         return md
 

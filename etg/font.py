@@ -48,19 +48,33 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
     
-    c.addCppCtor("""(
+    # TODO: Since the TypeCode is inserted before the derived class
+    # (sipwxFont) is defined, we can't use the new version of addCppCtor. Can
+    # this be fixed?
+    c.addCppCtor_sip("""(
         int pointSize,
         wxFontFamily family,
         int flags = wxFONTFLAG_DEFAULT,
-        const wxString & faceName = wxEmptyString,
-        wxFontEncoding encoding = wxFONTENCODING_DEFAULT
-        )""",
+        const wxString& faceName = wxEmptyString,
+        wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
         body="""\
-        // YUCK!
         wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
         sipCpp = new sipwxFont(*font);
         delete font;
         """)
+
+    # Same as the above, but as a factory function
+    module.addCppFunction('wxFont*', 'FFont', """(
+        int pointSize,
+        wxFontFamily family,
+        int flags = wxFONTFLAG_DEFAULT,
+        const wxString& faceName = wxEmptyString,
+        wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
+        body="""\
+        wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
+        return font;
+        """, factory=True)
+
     
     for item in c.findAll('New'):
         item.factory = True
@@ -76,6 +90,7 @@ def run():
     c.addProperty('Underlined GetUnderlined SetUnderlined')
     c.addProperty('Weight GetWeight SetWeight')
 
+       
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
