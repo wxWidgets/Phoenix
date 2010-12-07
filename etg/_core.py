@@ -60,6 +60,7 @@ INCLUDES = [  'defs',
               
               'validate',
               'window',
+              'toplevel',
               ]
 
 
@@ -106,13 +107,7 @@ def run():
     #include <wx/wx.h>
     """)
     
-    module.addPyCode("""\
-    # A little trick to make 'wx' be a reference to this module so wx.Names can
-    # be used in the python code here.
-    import sys as _sys
-    wx = _sys.modules[__name__]
-    """, order=10)
-    module.includePyCode('src/core_ex.py')
+    module.includePyCode('src/core_ex.py', order=10)
     
     module.addInclude(INCLUDES)
     
