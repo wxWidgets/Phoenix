@@ -51,8 +51,10 @@ public:
     );
 
     %Property(name=Tip, get=GetTip, set=SetTip)
-
     %Property(name=Window, get=GetWindow)
+    private:
+        wxToolTip(const wxToolTip&);
+
 
 };  // end of class wxToolTip
 

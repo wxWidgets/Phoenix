@@ -73,21 +73,13 @@ public:
     );
 
     %Property(name=x, get=GetX, set=SetX)
-
     %Property(name=y, get=GetY, set=SetY)
-
     %Property(name=leftIsDown, get=LeftIsDown, set=SetLeftDown)
-
     %Property(name=middleIsDown, get=MiddleIsDown, set=SetMiddleDown)
-
     %Property(name=rightIsDown, get=RightIsDown, set=SetRightDown)
-
     %Property(name=aux1IsDown, get=Aux1IsDown, set=SetAux1Down)
-
     %Property(name=aux2IsDown, get=Aux2IsDown, set=SetAux2Down)
-
     %Property(name=Position, get=GetPosition, set=SetPosition)
-
 };  // end of class wxMouseState
 
 

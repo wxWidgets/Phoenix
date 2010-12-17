@@ -188,6 +188,7 @@ logged in on the main display of your Mac."""
     def __del__(self):
         self.RestoreStdio()  # Just in case the MainLoop was overridden
 
+        
     def Destroy(self):
 ##        self.this.own(False)
         wx.PyApp.Destroy(self)

@@ -10,6 +10,7 @@ import sys
 import os
 import re
 import glob
+import shutil
 import subprocess
 import optparse
 
@@ -26,7 +27,11 @@ version2 = "%d.%d" % (version.VER_MAJOR, version.VER_MINOR)
 version3 = "%d.%d.%d" % (version.VER_MAJOR, version.VER_MINOR, version.VER_RELEASE)
 version2_nodot = version2.replace(".", "")
 version3_nodot = version3.replace(".", "")
+unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or even
     
+isWindows = sys.platform.startswith('win')
+isDarwin = sys.platform == "darwin"
+
 #---------------------------------------------------------------------------
 
 def usage():
@@ -34,23 +39,24 @@ def usage():
 Usage: ./build.py [command(s)] [options]
 
     Commands:
-        N.N NN    Major.Minor version number of the Python to use to run 
-                  the other commands.  Default is 2.6
-        dox       Run Doxygen to produce the XML file used by ETG scripts
-        doxhtml   Run Doxygen to create the HTML documetation for wx
-        touch     'touch' the etg files so they will all get run in the 
-                  next build
-        etg       Run the ETG scripts that are out of date to update their 
-                  SIP files
-        test      Run the unit test suite
+        N.N NN      Major.Minor version number of the Python to use to run 
+                    the other commands.  Default is 2.6
+        dox         Run Doxygen to produce the XML file used by ETG scripts
+        doxhtml     Run Doxygen to create the HTML documetation for wx
+        touch       'touch' the etg files so they will all get run in the 
+                    next build
+        etg         Run the ETG scripts that are out of date to update their 
+                    SIP files
+        sip         Run sip
+        test        Run the unit test suite
         
-        build_wx  Do the wxWidgets part of the build
-        build_py  Build wxPython only
-        build     Builds both wxWidgets and wxPython.
+        build_wx    Do the wxWidgets part of the build
+        build_py    Build wxPython only
+        build       Build both wxWidgets and wxPython.
         
-        clean_wx
-        clean_py
-        cleanall
+        clean_wx    Clean the wx parts of the build
+        clean_py    Clean the wxPython parts of the build
+        cleanall    Clean both wx and wxPython, and a little extra scrubbing
 """
     parser = makeOptionParser()
     parser.print_help()
@@ -74,7 +80,7 @@ def main(args):
     while commands:
         cmd = commands[0]
         commands = commands[1:]
-        if cmd in ['dox', 'doxhtml', 'etg', 'touch', 'test', 
+        if cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
                    'build_wx', 'build_py', 'build',
                    'clean_wx', 'clean_py', 'cleanall']:
             function = globals()[cmd]
@@ -115,10 +121,6 @@ def runcmd(cmd, getOutput=False, echoCmd=True):
         
     
 def setPythonVersion(args):
-    # TODO: Should we default to the python that is running this script if a
-    # version was not given? Probably YES on Windows, but only if TOOLS is not
-    # set in the environment.
-    
     # TODO: Should we have a --option for specifying the path to the python
     # executable that should be used?
 
@@ -138,28 +140,48 @@ def setPythonVersion(args):
             break
 
     PYTHON = 'python%s' % PYVER
-    if sys.platform.startswith('win'):
-        PYTHON = posixjoin(os.environ.get('TOOLS'), 
-                           'python%s' % PYSHORTVER,
-                           'python.exe')
-    findPython = runcmd("which %s" % PYTHON, True, False)
-    msg('Found %s at %s' % (PYTHON, findPython))
+    if isWindows:
+        if os.environ.get('TOOLS'):
+            TOOLS = os.environ.get('TOOLS')
+            if 'cygdrive' in TOOLS:
+                TOOLS = runcmd('cygpath -w '+TOOLS, True, False)
+            PYTHON = posixjoin(TOOLS, 
+                               'python%s' % PYSHORTVER,
+                               'python.exe')
+        else:
+            # if TOOLS is not set then default to the python that invoked 
+            # this script
+            PYTHON = sys.executable
+            PYVER = sys.version[:3]
+            PYSHORTVER = PYVER[0] + PYVER[2]
+        msg('Using %s' % PYTHON)
+    else:
+        findPython = runcmd("which %s" % PYTHON, True, False)
+        msg('Found %s at %s' % (PYTHON, findPython))
     msg(runcmd('%s -c "import sys; print sys.version"' % PYTHON, True, False))
         
 
 def setDevModeOptions(args):
-    # Using --dev is a shortcut for setting several build options that I use
-    # while working on the code in my local workspaces. Most people will
-    # probably not use this so it is not part for the documented options and
-    # is explicitly handled here before the options parser is created.
+    # Using --dev is a shortcut for setting several build options that
+    # I use while working on the code in my local workspaces. Most
+    # people will probably not use this so it is not part for the
+    # documented options and is explicitly handled here before the
+    # options parser is created.  If anybody besides Robin is using
+    # this option do not depend on the options it inserts into the
+    # args list being consistent.  They could change at any update
+    # from the repository.
     myDevModeOptions = [
             '--sip',
-            '--debug',
             '--build_dir=../bld',
             '--prefix=/opt/wx/2.9',
+
+            # These will be ignored on the other platforms so it is okay to
+            # include them here            
             '--osx_cocoa',
             '--mac_arch=i386',
             ]
+    if not isWindows:
+        myDevModeOptions.append('--debug')
     if '--dev' in args:
         idx = args.index('--dev')
         # replace the --dev item with the items from the list
@@ -173,23 +195,32 @@ def phoenixDir():
 def wxDir():
     WXWIN = os.environ.get('WXWIN')
     if not WXWIN:
-        for rel in ['../wxWidgets', '..']:
+        for rel in ['../wxWidgets', '../wx', '..']:
             path = os.path.join(phoenixDir(), rel)
-            if path and os.path.exists(path):
+            if path and os.path.exists(path) and os.path.isdir(path):
                 WXWIN = os.path.abspath(os.path.join(phoenixDir(), rel))
                 break
     assert WXWIN not in [None, '']
     return WXWIN
 
 
-if sys.platform.startswith("win"):
-    CPU = os.environ.get('CPU')
-    if CPU == 'AMD64':
-        dllDir = os.path.join(wxDir(), "lib", "vc_amd64_dll")        
-    else:
-        dllDir = os.path.join(wxDir(), "lib", "vc_dll")
-    buildDir = os.path.join(wxDir(), "build", "msw")
+def getMSWSettings(options):
+    class MSWsettings(object):
+        pass
 
+    msw = MSWsettings()
+    msw.CPU = os.environ.get('CPU')
+    if msw.CPU == 'AMD64':
+        msw.dllDir = posixjoin(wxDir(), "lib", "vc_amd64_dll")        
+    else:
+        msw.dllDir = posixjoin(wxDir(), "lib", "vc_dll")
+    msw.buildDir = posixjoin(wxDir(), "build", "msw")
+
+    #msw.build_type_ext = "u"
+    #if options.debug:
+    #    msw.build_type_ext = "ud"
+    return msw
+        
 
 
 
@@ -211,6 +242,8 @@ def makeOptionParser():
         ("build_dir",      ("", "Directory to store wx build files. (Not used on Windows)")),
         ("extra_setup",    ("", "Extra args to pass on setup.py's command line.")),
         ("extra_make",     ("", "Extra args to pass on [n]make's command line.")),
+        ("both",           (False, "Build both a debug and release version. (Only used on Windows)")),
+        ("unicode",        (True, "Build wxPython with unicode support (always on for wx2.9)")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -245,7 +278,7 @@ def getBuildDir(options):
     BUILD_DIR = opj(phoenixDir(), 'bld')
     if options.build_dir:
         BUILD_DIR = os.path.abspath(options.build_dir)        
-    if sys.platform == 'darwin':
+    if isDarwin:
         port = 'cocoa'
         if options.osx_carbon:
             port = 'carbon'
@@ -275,17 +308,27 @@ def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
 #---------------------------------------------------------------------------
 
 
+def _doDox(arg):
+    if isWindows:
+        d = posixjoin(wxDir(), 'docs/doxygen')
+        d = d.replace('\\', '/')
+        cmd = 'c:/cygwin/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (d, arg)
+    else:
+        pwd = pushDir(posixjoin(wxDir(), 'docs/doxygen'))
+        cmd = './regen.sh %s' % arg
+    runcmd(cmd)
+
+    
 def dox(options, args):
     msg('Running command: dox')
-    pwd = pushDir(posixjoin(wxDir(), 'docs/doxygen'))
-    runcmd('./regen.sh xml')
-
+    _doDox('xml')
+    
     
 def doxhtml(options, args):
     msg('Running command: doxhtml')
-    pwd = pushDir(posixjoin(wxDir(), 'docs/doxygen'))
-    runcmd('./regen.sh html chm')
-
+    _doDox('html chm')
+    
+    
 
 def etg(options, args):
     msg('Running command: etg')
@@ -306,6 +349,20 @@ def etg(options, args):
         if newer_group(deps, sipfile):
             runcmd('%s %s --sip' % (PYTHON, script))
 
+            
+def sip(options, args):
+    msg('Running command: sip')
+    cfg = Config()
+    for src_name in glob.glob(opj(cfg.SIPGEN, '_*.sip')):
+        src_name = src_name.replace('\\', '/')
+        base = os.path.basename(os.path.splitext(src_name)[0])
+        sbf = posixjoin(cfg.SIPOUT, base) + '.sbf'
+        pycode = posixjoin(cfg.PKGDIR, base) + '.py'
+        pycode = '-X pycode:'+pycode        
+        cmd = '%s %s -c %s -b %s %s %s'  % \
+            (cfg.SIP, cfg.SIPOPTS, cfg.SIPOUT, sbf, pycode, src_name)
+        runcmd(cmd)
+                
 
 def touch(options, args):
     msg('Running command: touch')
@@ -330,19 +387,20 @@ def build(options, args):
 def build_wx(options, args):
     msg('Running command: build_wx')
 
-    build_options = list()
+    build_options = ['--wxpython', '--unicode']
 
-    if sys.platform.startswith('win'):
-        # TODO:  Add Windows specific build stuff here
+    if isWindows:
+        # Windows-specific pre build stuff 
         pass
-    else:
+    else:  
+        # Platform is something other than MSW
         if options.osx_carbon:
             options.osx_cocoa = False
         
         BUILD_DIR = getBuildDir(options)
         DESTDIR = options.installdir
         PREFIX = options.prefix
-        if options.mac_framework and sys.platform.startswith("darwin"):
+        if options.mac_framework and isDarwin:
             # TODO:  Don't hard-code this path
             PREFIX = "/Library/Frameworks/wx.framework/Versions/%s" %  version2
         build_options.append('--prefix=%s' % PREFIX)
@@ -369,14 +427,14 @@ def build_wx(options, args):
             else:
                 build_options.append("--no_config")
             
-        if sys.platform.startswith("darwin") and options.osx_cocoa:
+        if isDarwin and options.osx_cocoa:
             build_options.append("--osx_cocoa")
         
         if options.install:
             build_options.append('--installdir=%s' % DESTDIR)
             build_options.append("--install")
         
-        if options.mac_framework and sys.platform.startswith("darwin"):
+        if options.mac_framework and isDarwin:
             build_options.append("--mac_framework")
                                 
         # Change to what will be the wxWidgets build folder
@@ -384,7 +442,7 @@ def build_wx(options, args):
         # because they may be specified as relative paths.)
         pwd = pushDir(BUILD_DIR)
 
-    if options.debug:
+    if options.debug or (isWindows and options.both):
         build_options.append('--debug')
         
     if options.extra_make:
@@ -395,8 +453,16 @@ def build_wx(options, args):
         wxscript = os.path.join(wxDir(), "build/tools/build-wxwidgets.py")
         sys.path.insert(0, os.path.dirname(wxscript))
         wxbuild = __import__('build-wxwidgets')
+
         print 'wxWidgets build options:', build_options
         wxbuild.main(wxscript, build_options)
+        
+        # build again without the --debug flag?
+        if isWindows and options.both:
+            build_options.remove('--debug')
+            print 'wxWidgets build options:', build_options
+            wxbuild.main(wxscript, build_options)
+            
     except:
         print "ERROR: failed building wxWidgets"
         import traceback
@@ -408,27 +474,16 @@ def build_wx(options, args):
 def build_py(options, args):
     msg('Running command: build_py')
 
-    if False:
-        # For now, just run setup.py.  
-        # This will need more work later, either to call build-wxpython 
-        # or to implement its important parts here
-        pwd = pushDir(phoenixDir())
-        runcmd(PYTHON + ' setup.py build_ext '
-                        '--inplace '
-                        '--debug '
-                        'USE_SIP=1 '
-                        'WXPORT=osx_cocoa '
-                        'ARCH=i386 '
-                        'WX_CONFIG=/projects/wx/2.9/bld/osx_cocoa/wx-config'
-                        + extraArgs)
-        return
-
-    if sys.platform.startswith("win"):
+    if isWindows:
         # Copy the wxWidgets DLLs to the wxPython pacakge folder
-        dlls = glob.glob(os.path.join(dllDir, "wx*" + version2_nodot + dll_type + "*.dll")) + \
-               glob.glob(os.path.join(dllDir, "wx*" + version3_nodot + dll_type + "*.dll")) 
+        msw = getMSWSettings(options)
+        cfg = Config()
+
+        # NOTE: this will copy both debug and release DLLs if they both exist...
+        ver = version3_nodot if unstable_series else version2_nodot
+        dlls = glob.glob(os.path.join(msw.dllDir, "wx*%s*.dll" % ver))
         for dll in dlls:
-            shutil.copyfile(dll, os.path.join(phoenixDir(), "wxPhoenix", os.path.basename(dll)))
+            shutil.copyfile(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)))
 
     BUILD_DIR = getBuildDir(options)
     DESTDIR = options.installdir
@@ -436,20 +491,20 @@ def build_py(options, args):
     
     build_options = list()
     
-    if options.debug:
+    if options.debug or (isWindows and options.both):
         build_options.append("--debug")
     if options.sip:
         build_options.append('USE_SIP=1')
-    if options.mac_arch: 
+    if isDarwin and options.mac_arch: 
         build_options.append("ARCH=%s" % options.mac_arch)
         
-    if sys.platform.startswith("darwin") and options.osx_cocoa:
+    if isDarwin and options.osx_cocoa:
         build_options.append("WXPORT=osx_cocoa")
-    if sys.platform.startswith("darwin") and options.osx_carbon:
+    if isDarwin and options.osx_carbon:
         build_options.append("WXPORT=osx_carbon")
 
     build_base = 'build'
-    if sys.platform.startswith("darwin"):
+    if isDarwin:
         if options.osx_cocoa:
             build_base += '/cocoa'
         else:
@@ -460,14 +515,9 @@ def build_py(options, args):
     if options.install:
         build_mode = "build"
     
-    if not sys.platform.startswith("win"):
+    if not isWindows:
         if options.install:
             wxlocation = DESTDIR + PREFIX
-            #print '-='*20
-            #print 'DESTDIR:', DESTDIR
-            #print 'PREFIX:', PREFIX
-            #print 'wxlocation:', wxlocation
-            #print '-='*20
             build_options.append('WX_CONFIG="%s/bin/wx-config --prefix=%s"' %
                                  (wxlocation, wxlocation))
         else:
@@ -479,7 +529,13 @@ def build_py(options, args):
     command = PYTHON + " -u ./setup.py %s %s %s" % \
         (build_mode, " ".join(build_options), options.extra_setup)
     runcmd(command)
-    
+
+    if isWindows and options.both:
+        build_options.remove('--debug')
+        command = PYTHON + " -u ./setup.py %s %s %s" % \
+            (build_mode, " ".join(build_options), options.extra_setup)
+        runcmd(command)
+        
     # Do an install?
     if options.install:
         # only add the --prefix flag if we have an explicit request to do
@@ -495,7 +551,7 @@ def build_py(options, args):
             (WXPY_PREFIX, " ".join(build_options), options.extra_setup)
         runcmd(command)
     
-        if sys.platform.startswith("darwin") and DESTDIR:
+        if isDarwin and DESTDIR:
             # Now that we are finished with the build fix the ids and
             # names in the wx .dylibs
             wxbuild.macFixupInstallNames(DESTDIR, PREFIX, BUILD_DIR)
@@ -513,12 +569,29 @@ def build_py(options, args):
     print "------------ BUILD FINISHED ------------"
     print "To run the wxPython demo:"
     print " - Set your PYTHONPATH variable to %s." % phoenixDir()
-    if not sys.platform.startswith("win") and not options.install:
+    if not isWindows and not options.install:
         print " - Set your (DY)LD_LIBRARY_PATH to %s" % BUILD_DIR + "/lib"
     print " - Run python demo/demo.py"
     print
 
         
+    
+def clean_wx(options, args):
+    msg('Running command: clean_wx')
+    
+
+def clean_py(options, args):
+    msg('Running command: clean_py')
+    
+    
+def cleanall(options, args):
+    msg('Running command: cleanall')
+    
+    clean_wx(options, args)
+    clean_py(options, args)
+    
+    
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

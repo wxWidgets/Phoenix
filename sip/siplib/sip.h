@@ -55,7 +55,7 @@ extern "C" {
  * Define the SIP version number.
  */
 #define SIP_VERSION         0x040c00
-#define SIP_VERSION_STR     "4.12-snapshot-b2f993d3a067"
+#define SIP_VERSION_STR     "4.12-snapshot-40a042b3abce"
 
 
 /*
@@ -69,6 +69,7 @@ extern "C" {
  * History:
  *
  * 8.1  Revised the sipVariableDef structure.
+ *      sip_api_get_address() is now part of the public API.
  *
  * 8.0  Changed the size of the sipSimpleWrapper structure.
  *      Added sip_api_get_address().
@@ -1448,6 +1449,9 @@ typedef struct _sipAPIDef {
             PyObject *sipKwdArgs, const char **kwdlist, PyObject **unused,
             const char *fmt, ...);
     void (*api_add_exception)(sipErrorState es, PyObject **parseErrp);
+    /*
+     * The following are part of the public API.
+     */
     void *(*api_get_address)(struct _sipSimpleWrapper *w);
 } sipAPIDef;
 

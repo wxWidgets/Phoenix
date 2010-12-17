@@ -25,7 +25,15 @@ struct wxVisualAttributes
 };  // end of class wxVisualAttributes
 
 
-class wxWindow : wxEvtHandler
+    class wxWindowBase : wxEvtHandler  /Abstract/
+    {
+    public:
+        virtual void AddChild( wxWindowBase* child );
+        virtual void RemoveChild( wxWindowBase* child );
+    };
+
+
+class wxWindow : wxWindowBase
 {
     %TypeHeaderCode
         #include <wx/window.h>
@@ -76,7 +84,6 @@ public:
         const wxString & name = wxPanelNameStr
     );
 
-    virtual
     ~wxWindow();
 
     virtual
@@ -88,23 +95,19 @@ public:
     virtual
     bool AcceptsFocusRecursively();
 
-    virtual
     bool HasFocus();
 
-    virtual
     void SetCanFocus(
         bool canFocus
     );
 
-    virtual
     void SetFocus();
 
-    virtual
     void SetFocusFromKbd();
 
     virtual
     void AddChild(
-        wxWindow * child
+        wxWindowBase* child
     );
 
     bool DestroyChildren();
@@ -121,7 +124,7 @@ public:
 
     virtual
     void RemoveChild(
-        wxWindow * child
+        wxWindowBase* child
     );
 
     wxWindow * GetGrandParent();
@@ -132,28 +135,23 @@ public:
 
     wxWindow * GetPrevSibling();
 
-    virtual
     bool Reparent(
         wxWindow * newParent
     );
 
-    virtual
     void AlwaysShowScrollbars(
         bool hflag = true,
         bool vflag = true
     );
 
-    virtual
     int GetScrollPos(
         int orientation
     );
 
-    virtual
     int GetScrollRange(
         int orientation
     );
 
-    virtual
     int GetScrollThumb(
         int orientation
     );
@@ -166,22 +164,18 @@ public:
         int orient
     );
 
-    virtual
     bool IsScrollbarAlwaysShown(
         int orient
     );
 
-    virtual
     bool ScrollLines(
         int lines
     );
 
-    virtual
     bool ScrollPages(
         int pages
     );
 
-    virtual
     void ScrollWindow(
         int dx,
         int dy,
@@ -196,14 +190,12 @@ public:
 
     bool PageDown();
 
-    virtual
     void SetScrollPos(
         int orientation,
         int pos,
         bool refresh = true
     );
 
-    virtual
     void SetScrollbar(
         int orientation,
         int position,
@@ -216,39 +208,30 @@ public:
         const wxSize & size
     );
 
-    virtual
     wxSize ClientToWindowSize(
         const wxSize & size
     );
 
-    virtual
     wxSize WindowToClientSize(
         const wxSize & size
     );
 
-    virtual
     void Fit();
 
-    virtual
     void FitInside();
 
     wxSize GetBestSize();
 
     wxSize GetClientSize();
 
-    virtual
     wxSize GetEffectiveMinSize();
 
-    virtual
     wxSize GetMaxClientSize();
 
-    virtual
     wxSize GetMaxSize();
 
-    virtual
     wxSize GetMinClientSize();
 
-    virtual
     wxSize GetMinSize();
 
     int GetMinWidth();
@@ -263,13 +246,10 @@ public:
 
     wxSize GetVirtualSize();
 
-    virtual
     wxSize GetBestVirtualSize();
 
-    virtual
     wxSize GetWindowBorderSize();
 
-    virtual
     bool InformFirstDirection(
         int direction,
         int size,
@@ -282,7 +262,6 @@ public:
 
     void PostSizeEventToParent();
 
-    virtual
     void SendSizeEvent(
         int flags = 0
     );
@@ -312,22 +291,18 @@ public:
         const wxSize & size = wxDefaultSize
     );
 
-    virtual
     void SetMaxClientSize(
         const wxSize & size
     );
 
-    virtual
     void SetMaxSize(
         const wxSize & size
     );
 
-    virtual
     void SetMinClientSize(
         const wxSize & size
     );
 
-    virtual
     void SetMinSize(
         const wxSize & size
     );
@@ -353,14 +328,12 @@ public:
         int height
     );
 
-    virtual
     void SetSizeHints(
         const wxSize & minSize,
         const wxSize & maxSize = wxDefaultSize,
         const wxSize & incSize = wxDefaultSize
     );
 
-    virtual
     void SetSizeHints(
         int minW,
         int minH,
@@ -447,7 +420,6 @@ public:
         const wxPoint & pt
     );
 
-    virtual
     void ClearBackground();
 
     void Freeze();
@@ -458,16 +430,12 @@ public:
 
     wxColour GetBackgroundColour();
 
-    virtual
     wxBackgroundStyle GetBackgroundStyle();
 
-    virtual
     int GetCharHeight();
 
-    virtual
     int GetCharWidth();
 
-    virtual
     wxVisualAttributes GetDefaultAttributes();
 
     wxFont GetFont();
@@ -494,7 +462,6 @@ public:
     virtual
     bool HasTransparentBackground();
 
-    virtual
     void Refresh(
         bool eraseBackground = true,
         const wxRect * rect = NULL
@@ -505,25 +472,20 @@ public:
         bool eraseBackground = true
     );
 
-    virtual
     void Update();
 
-    virtual
     bool SetBackgroundColour(
         const wxColour & colour
     );
 
-    virtual
     bool SetBackgroundStyle(
         wxBackgroundStyle style
     );
 
-    virtual
     bool SetFont(
         const wxFont & font
     );
 
-    virtual
     bool SetForegroundColour(
         const wxColour & colour
     );
@@ -547,18 +509,14 @@ public:
     virtual
     bool ShouldInheritColours();
 
-    virtual
     void SetThemeEnabled(
         bool enable
     );
 
-    virtual
     bool GetThemeEnabled();
 
-    virtual
     bool CanSetTransparent();
 
-    virtual
     bool SetTransparent(
         wxByte alpha
     );
@@ -597,19 +555,16 @@ public:
         wxEvtHandler * handler
     );
 
-    virtual
     void SetNextHandler(
         wxEvtHandler * handler
     );
 
-    virtual
     void SetPreviousHandler(
         wxEvtHandler * handler
     );
 
     long GetExtraStyle();
 
-    virtual
     long GetWindowStyleFlag();
 
     long GetWindowStyle();
@@ -622,12 +577,10 @@ public:
         int flag
     );
 
-    virtual
     void SetExtraStyle(
         long exStyle
     );
 
-    virtual
     void SetWindowStyleFlag(
         long style
     );
@@ -656,15 +609,12 @@ public:
         int flags = wxNavigationKeyEvent::IsForward
     );
 
-    virtual
     void Lower();
 
-    virtual
     void Raise();
 
     bool Hide();
 
-    virtual
     bool HideWithEffect(
         wxShowEffect effect,
         unsigned int timeout = 0
@@ -692,25 +642,20 @@ public:
         wxRect & rect
     );
 
-    virtual
     bool IsShown();
 
-    virtual
     bool IsShownOnScreen();
 
     bool Disable();
 
-    virtual
     bool Enable(
         bool enable = true
     );
 
-    virtual
     bool Show(
         bool show = true
     );
 
-    virtual
     bool ShowWithEffect(
         wxShowEffect effect,
         unsigned int timeout = 0
@@ -722,7 +667,6 @@ public:
         const wxString & helpText
     );
 
-    virtual
     wxString GetHelpTextAtPoint(
         const wxPoint & point,
         wxHelpEvent::Origin origin
@@ -764,10 +708,8 @@ public:
         int y
     );
 
-    virtual
     wxValidator * GetValidator();
 
-    virtual
     void SetValidator(
         const wxValidator & validator
     );
@@ -783,13 +725,10 @@ public:
 
     wxWindowID GetId();
 
-    virtual
     wxString GetLabel();
 
-    virtual
     wxLayoutDirection GetLayoutDirection();
 
-    virtual
     wxString GetName();
 
     wxWindowVariant GetWindowVariant();
@@ -798,17 +737,14 @@ public:
         wxWindowID winid
     );
 
-    virtual
     void SetLabel(
         const wxString & label
     );
 
-    virtual
     void SetLayoutDirection(
         wxLayoutDirection dir
     );
 
-    virtual
     void SetName(
         const wxString & name
     );
@@ -819,7 +755,6 @@ public:
 
     wxAcceleratorTable * GetAcceleratorTable();
 
-    virtual
     void SetAcceleratorTable(
         const wxAcceleratorTable & accel
     );
@@ -828,20 +763,16 @@ public:
         bool force = false
     );
 
-    virtual
-    bool Destroy();
+    bool Destroy()   /TranserThis/;
 
     bool IsBeingDeleted();
 
-    virtual
     wxDropTarget * GetDropTarget();
 
-    virtual
     void SetDropTarget(
         wxDropTarget * target   /Transfer/
     );
 
-    virtual
     void DragAcceptFiles(
         bool accept
     );
@@ -866,7 +797,6 @@ public:
         wxLayoutConstraints * constraints   /Transfer/
     );
 
-    virtual
     bool Layout();
 
     void SetAutoLayout(
@@ -881,7 +811,6 @@ public:
 
     const wxCursor & GetCursor();
 
-    virtual
     bool HasCapture();
 
     void ReleaseMouse();
@@ -890,12 +819,10 @@ public:
         wxCaret * caret   /Transfer/
     );
 
-    virtual
     bool SetCursor(
         const wxCursor & cursor
     );
 
-    virtual
     void WarpPointer(
         int x,
         int y
@@ -916,18 +843,15 @@ public:
 
     wxBorder GetBorder();
 
-    virtual
     void DoUpdateWindowUI(
         wxUpdateUIEvent & event
     );
 
-    virtual
     void* GetHandle();
     %MethodCode
         sipRes = wxPyGetWinHandle(sipCpp);
     %End
 
-    virtual
     bool HasMultiplePages();
 
     virtual
@@ -936,7 +860,6 @@ public:
     virtual
     void InitDialog();
 
-    virtual
     bool IsDoubleBuffered();
 
     void SetDoubleBuffered(
@@ -948,15 +871,12 @@ public:
         #endif
     %End
 
-    virtual
     bool IsRetained();
 
     bool IsThisEnabled();
 
-    virtual
     bool IsTopLevel();
 
-    virtual
     void MakeModal(
         bool modal = true
     );
@@ -988,7 +908,6 @@ public:
         #endif
     %End
 
-    virtual
     void UpdateWindowUI(
         long flags = wxUPDATE_UI_NONE
     );
@@ -1084,137 +1003,89 @@ public:
     %End
 
     %Property(name=AcceleratorTable, get=GetAcceleratorTable, set=SetAcceleratorTable)
-
     %Property(name=AutoLayout, get=GetAutoLayout, set=SetAutoLayout)
-
     %Property(name=BackgroundColour, get=GetBackgroundColour, set=SetBackgroundColour)
-
     %Property(name=BackgroundStyle, get=GetBackgroundStyle, set=SetBackgroundStyle)
-
     %Property(name=EffectiveMinSize, get=GetEffectiveMinSize)
-
     %Property(name=BestSize, get=GetBestSize)
-
     %Property(name=BestVirtualSize, get=GetBestVirtualSize)
-
     %Property(name=Border, get=GetBorder)
-
     %Property(name=Caret, get=GetCaret, set=SetCaret)
-
     %Property(name=CharHeight, get=GetCharHeight)
-
     %Property(name=CharWidth, get=GetCharWidth)
-
     %Property(name=Children, get=GetChildren)
-
     %Property(name=ClientAreaOrigin, get=GetClientAreaOrigin)
-
     %Property(name=ClientRect, get=GetClientRect, set=SetClientRect)
-
     %Property(name=ClientSize, get=GetClientSize, set=SetClientSize)
-
     %Property(name=Constraints, get=GetConstraints, set=SetConstraints)
-
     %Property(name=ContainingSizer, get=GetContainingSizer, set=SetContainingSizer)
-
     %Property(name=Cursor, get=GetCursor, set=SetCursor)
-
     %Property(name=DefaultAttributes, get=GetDefaultAttributes)
-
     %Property(name=DropTarget, get=GetDropTarget, set=SetDropTarget)
-
     %Property(name=EventHandler, get=GetEventHandler, set=SetEventHandler)
-
     %Property(name=ExtraStyle, get=GetExtraStyle, set=SetExtraStyle)
-
     %Property(name=Font, get=GetFont, set=SetFont)
-
     %Property(name=ForegroundColour, get=GetForegroundColour, set=SetForegroundColour)
-
     %Property(name=GrandParent, get=GetGrandParent)
-
     %Property(name=TopLevelParent, get=GetTopLevelParent)
-
     %Property(name=Handle, get=GetHandle)
-
     %Property(name=HelpText, get=GetHelpText, set=SetHelpText)
-
     %Property(name=Id, get=GetId, set=SetId)
-
     %Property(name=Label, get=GetLabel, set=SetLabel)
-
     %Property(name=LayoutDirection, get=GetLayoutDirection, set=SetLayoutDirection)
-
     %Property(name=MaxHeight, get=GetMaxHeight)
-
     %Property(name=MaxSize, get=GetMaxSize, set=SetMaxSize)
-
     %Property(name=MaxWidth, get=GetMaxWidth)
-
     %Property(name=MinHeight, get=GetMinHeight)
-
     %Property(name=MinSize, get=GetMinSize, set=SetMinSize)
-
     %Property(name=MinWidth, get=GetMinWidth)
-
     %Property(name=Name, get=GetName, set=SetName)
-
     %Property(name=Parent, get=GetParent)
-
     %Property(name=Position, get=GetPosition, set=SetPosition)
-
     %Property(name=Rect, get=GetRect, set=SetRect)
-
     %Property(name=ScreenPosition, get=GetScreenPosition)
-
     %Property(name=ScreenRect, get=GetScreenRect)
-
     %Property(name=Size, get=GetSize, set=SetSize)
-
     %Property(name=Sizer, get=GetSizer, set=SetSizer)
-
     %Property(name=ThemeEnabled, get=GetThemeEnabled, set=SetThemeEnabled)
-
     %Property(name=ToolTip, get=GetToolTip, set=SetToolTip)
-
     %Property(name=UpdateClientRect, get=GetUpdateClientRect)
-
     %Property(name=UpdateRegion, get=GetUpdateRegion)
-
     %Property(name=Validator, get=GetValidator, set=SetValidator)
-
     %Property(name=VirtualSize, get=GetVirtualSize, set=SetVirtualSize)
-
     %Property(name=WindowStyle, get=GetWindowStyle, set=SetWindowStyle)
-
     %Property(name=WindowStyleFlag, get=GetWindowStyleFlag, set=SetWindowStyleFlag)
-
     %Property(name=WindowVariant, get=GetWindowVariant, set=SetWindowVariant)
-
     %Property(name=Shown, get=IsShown, set=Show)
-
     %Property(name=Enabled, get=IsEnabled, set=Enable)
-
     %Property(name=TopLevel, get=IsTopLevel)
-
     %Property(name=MinClientSize, get=GetMinClientSize, set=SetMinClientSize)
-
     %Property(name=MaxClientSize, get=GetMaxClientSize, set=SetMaxClientSize)
+    public:
+    virtual wxWindow *GetMainWindowOfCompositeControl();
+
+
+    protected:
+    virtual void DoEnable(bool enable);
+    virtual void OnEnabled(bool enabled);
+    virtual void DoGetPosition(int *x, int *y) const;
+    virtual void DoGetSize(int *width, int *height) const;
+    virtual void DoGetClientSize(int *width, int *height) const;
+    virtual wxSize DoGetBestClientSize() const;
+    virtual void DoSetSize(int x, int y, int width, int height, int sizeFlags);
+    virtual void DoSetClientSize(int width, int height);
+    virtual void DoSetSizeHints( int minW, int minH, int maxW, int maxH, int incW, int incH );
+    virtual wxSize DoGetBorderSize() const;
+    virtual void DoMoveWindow(int x, int y, int width, int height);
+    virtual void DoSetWindowVariant( wxWindowVariant variant);
+    virtual wxBorder GetDefaultBorder() const;
+    virtual wxBorder GetDefaultBorderForControl() const;
+
 
 
 protected:
     virtual
-    void DoCentre(
-        int direction
-    );
-
-    virtual
     wxSize DoGetBestSize();
-
-    virtual
-    void SetInitialBestSize(
-        const wxSize & size
-    );
 
     void SendDestroyEvent();
 
@@ -1227,7 +1098,7 @@ protected:
 
 
 %Extract(id=pycode)
-def _Window_PostCreate():
+def _Window_PostCreate(self, pre):
     pass
 Window.PostCreate = _Window_PostCreate
 del _Window_PostCreate
@@ -1267,6 +1138,23 @@ wxWindow * wxGetActiveWindow();
 wxWindow * wxGetTopLevelParent(
     wxWindow * window
 );
+
+%Extract(id=pycode)
+class FrozenWindow(object):
+    """
+    A context manager to be used with Python 'with' statements
+    that will freeze the given window for the duration of the
+    with block.
+    """
+    def __init__(self, window):
+        self._win = window
+    def __enter__(self):
+        self._win.Freeze()
+        return self
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._win.Thaw()
+
+%End
 
 
 //---------------------------------------------------------------------------

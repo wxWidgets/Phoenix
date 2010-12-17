@@ -65,13 +65,9 @@ public:
 
 
     %Property(name=ClientArea, get=GetClientArea)
-
     %Property(name=CurrentMode, get=GetCurrentMode)
-
     %Property(name=Geometry, get=GetGeometry)
-
     %Property(name=Name, get=GetName)
-
 };  // end of class wxDisplay
 
 

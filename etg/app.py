@@ -49,7 +49,24 @@ def run():
     c.find('OnInitCmdLine').ignore()
     
     c.find('HandleEvent').ignore()
+    c.find('UsesEventLoop').ignore()
+    
 
+    # We will use OnAssertFailure, but I don't think we should let it be
+    # overridden in Python. 
+    c.find('OnAssertFailure').ignore()
+    
+    # TODO: Decide if these should be visible from Python. They are for
+    # dealing with C/C++ exceptions, but perhaps we could also add the ability
+    # to deal with unhandled Python exceptions using these (overridable)
+    # methods too.
+    c.find('OnExceptionInMainLoop').ignore()
+    c.find('OnFatalException').ignore()
+    c.find('OnUnhandledException').ignore()
+    
+    c.find('ExitMainLoop').isVirtual = False
+    
+    
     c.addProperty('AppDisplayName GetAppDisplayName SetAppDisplayName')
     c.addProperty('AppName GetAppName SetAppName')
     c.addProperty('ClassName GetClassName SetClassName')
@@ -57,21 +74,57 @@ def run():
     c.addProperty('VendorName GetVendorName SetVendorName')
     
     
+    #-------------------------------------------------------
     c = module.find('wxApp')
+    
     # Add a new C++ wxPyApp class that adds empty Mac* methods for other
     # platforms, and other goodies, then change the c.name so SIP will
     # generate code wrapping this class as if it was the wxApp class seen in
     # the DoxyXML. 
-    c.insertCppCode('src/app_ex.cpp')
+    c.includeCppCode('src/app_ex.cpp')
     
-    for item in c.allItems():  #  change the class name, ctors and dtor names
+    # Now change the class name, ctors and dtor names from wxApp to wxPyApp
+    for item in c.allItems():  
         if item.name == 'wxApp':
-            item.name = 'wxPyApp'
+            item.name = 'wxPyApp' 
         if item.name == '~wxApp':
             item.name = '~wxPyApp'
     
     c.find('ProcessMessage').ignore()
     
+     
+    c.addCppMethod('void', 'MacHideApp', '()',
+        doc="Hide all application windows just as the user can do with the\nsystem Hide command.  Mac only.",
+        body="""\
+        #ifdef __WXMAC__
+            self->MacHideApp();
+        #endif
+        """)
+
+    # Remove the virtualness from these methods
+    for m in [ 'GetDisplayMode', 'GetLayoutDirection', 'GetTopWindow', 'IsActive', 
+               'SafeYield', 'SafeYieldFor', 'SendIdleEvents', 'SetDisplayMode', 
+               'SetNativeTheme', ]:
+        c.find(m).isVirtual = False
+    
+    # Methods we implement in wxPyApp beyond what are in wxApp, plus some
+    # overridden virtuals (or at least some that we want the wrapper generator
+    # to treat as if they are overridden.)
+    c.addItem(etgtools.WigCode("""\
+        wxAppAssertMode GetAssertMode();
+        void            SetAssertMode(wxAppAssertMode mode);
+        void            _BootstrapApp();
+        static bool     IsDisplayAvailable();
+        
+        virtual int  MainLoop();
+        virtual void OnPreInit();
+        virtual bool OnInit();
+        virtual bool OnInitGui();
+        virtual int  OnRun();
+        virtual int  OnExit();
+        """))
+        
+
     c.addProperty('DisplayMode GetDisplayMode SetDisplayMode')
     c.addProperty('ExitOnFrameDelete GetExitOnFrameDelete SetExitOnFrameDelete')
     c.addProperty('LayoutDirection GetLayoutDirection')
@@ -79,26 +132,9 @@ def run():
     c.addProperty('TopWindow GetTopWindow SetTopWindow')
     
     
-    c.addCppMethod('void', 'MacHideApp', '()',
-        doc="Hide all application windows just as the user can do with the\nsystem Hide command.  Mac only.",
-        body="""\
-        #ifdef __WXMAC__
-            self->MacHideApp();
-        #endif
-        """)                   
-
-    # Methods we implement in wxPyApp beyond what are in wxApp
-    c.addItem(etgtools.WigCode("""\
-        wxAppAssertMode  GetAssertMode();
-        void SetAssertMode(wxAppAssertMode mode);
-        void _BootstrapApp();
-        virtual void OnPreInit();
-        virtual bool OnInit();
-        static bool IsDisplayAvailable();
-        """))
-        
+    
     appHeaderCode = """\
-        enum wxAppAssertMode{
+        enum wxAppAssertMode {
             wxPYAPP_ASSERT_SUPPRESS  = 1,
             wxPYAPP_ASSERT_EXCEPTION = 2,
             wxPYAPP_ASSERT_DIALOG    = 4,
@@ -131,7 +167,7 @@ def run():
         if item.name == 'wxEntry':
             item.ignore()
                 
-    
+
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

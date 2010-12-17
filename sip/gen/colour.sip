@@ -152,19 +152,12 @@ public:
     )   /PyInt/;
 
     %Property(name=Pixel, get=GetPixel)
-
     %Property(name=RGB, get=GetRGB, set=SetRGB)
-
     %Property(name=RGBA, get=GetRGBA, set=SetRGBA)
-
     %Property(name=red, get=Red)
-
     %Property(name=green, get=Green)
-
     %Property(name=blue, get=Blue)
-
     %Property(name=alpha, get=Alpha)
-
     %TypeCode
     wxIntPtr _wxColour_GetPixel(wxColour* self, int& _isErr)
     {
@@ -381,7 +374,7 @@ wxColour* _MacThemeColour_function(int& _isErr, int themeBrushID)
         return new wxColour(wxMacCreateCGColorFromHITheme(themeBrushID));
     #else
         wxPyRaiseNotImplemented(); 
-        sipIsErr = 1;
+        _isErr = 1;
         return NULL; 
     #endif
 }

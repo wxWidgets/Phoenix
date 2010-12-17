@@ -36,8 +36,31 @@ def run():
 
     c = module.find('wxWindow')
     assert isinstance(c, etgtools.ClassDef)
+    
+    # First we need to let the wrapper generator know about wxWindowBase since
+    # AddChild and RemoveChild need to use that type in order to be virtualized.
+    wc = etgtools.WigCode("""\
+    class wxWindowBase : wxEvtHandler  /Abstract/
+    {
+    public:
+        virtual void AddChild( wxWindowBase* child );
+        virtual void RemoveChild( wxWindowBase* child );
+    };
+    """)
+    module.insertItemBefore(c, wc)
 
-    c.insertCppCode('src/window_ex.cpp')
+    # Now change the base class of wxWindow
+    c.bases = ['wxWindowBase']
+    
+    # And fix the arg types we get from Doxy
+    c.find('AddChild.child').type = 'wxWindowBase*'
+    c.find('RemoveChild.child').type = 'wxWindowBase*'
+    
+    
+    # We now return you to our regularly scheduled programming...
+    tools.fixWindowClass(c)
+
+    c.includeCppCode('src/window_ex.cpp')
 
     # ignore some overloads that will be ambiguous afer wrapping
     c.find('GetChildren').overloads = []
@@ -85,7 +108,8 @@ def run():
     #endif
     """)
     
-    # Make these be available on Windows, and empty stubs otherwise
+    # Make the Register/UnregisterHotKey functions be available on Windows,
+    # and empty stubs otherwise
     c.find('RegisterHotKey').setCppCode("""\
     #ifdef __WXMSW__
         sipRes = sipCpp->RegisterHotKey(hotkeyId, modifiers, virtualKeyCode);
@@ -103,6 +127,7 @@ def run():
     c.find('RegisterHotKey').isVirtual = False
     c.find('UnregisterHotKey').isVirtual = False
 
+    
     c.find('SetDoubleBuffered').setCppCode("""\
     #if defined(__WXGTK20__) || defined(__WXMSW__)
         sipCpp->SetDoubleBuffered(on);
@@ -117,16 +142,12 @@ def run():
     # MSW only.  Do we want them wrapped?
     c.find('GetAccessible').ignore()
     c.find('SetAccessible').ignore()
-
-    
+   
     # Make some of the protected methods visible and overridable from Python
-    c.find('DoCentre').ignore(False)
-    c.find('DoGetBestSize').ignore(False)
-    c.find('SetInitialBestSize').ignore(False)
     c.find('SendDestroyEvent').ignore(False)
-    c.find('ProcessEvent').ignore(False)
-    
-    c.addPyMethod('PostCreate', '()', 'pass')
+
+    c.find('Destroy').transferThis=True
+    c.addPyMethod('PostCreate', '(self, pre)', 'pass')
     
     # transfer ownership of these parameters to the C++ object
     c.find('SetCaret.caret').transfer = True
@@ -191,20 +212,39 @@ def run():
     c.addProperty('WindowStyle GetWindowStyle SetWindowStyle')
     c.addProperty('WindowStyleFlag GetWindowStyleFlag SetWindowStyleFlag')
     c.addProperty('WindowVariant GetWindowVariant SetWindowVariant')
-
     c.addProperty('Shown IsShown Show')
     c.addProperty('Enabled IsEnabled Enable')
     c.addProperty('TopLevel IsTopLevel')
-
-    ##c.addProperty('GtkWidget GetGtkWidget')
-
     c.addProperty('MinClientSize GetMinClientSize SetMinClientSize')
     c.addProperty('MaxClientSize GetMaxClientSize SetMaxClientSize')
+    ##c.addProperty('GtkWidget GetGtkWidget')
+
+
+
+    # We probably won't ever need most of the wxWindow virtuals to be
+    # overridable in Python, so we'll clear all the virtual flags here and add
+    # back those that we want to keep in the next step.
+    tools.removeVirtuals(c)
+    tools.addWindowVirtuals(c)
+
     
-
-    tools.fixWindowClass(c)
-
-   
+    
+    module.addPyCode('''\
+    class FrozenWindow(object):
+        """
+        A context manager to be used with Python 'with' statements
+        that will freeze the given window for the duration of the
+        with block.
+        """
+        def __init__(self, window):
+            self._win = window
+        def __enter__(self):
+            self._win.Freeze()
+            return self
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            self._win.Thaw()
+    ''')
+    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

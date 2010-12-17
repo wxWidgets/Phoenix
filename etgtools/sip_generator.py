@@ -360,7 +360,7 @@ from %s import *
         stream.write(')')
         if prop.briefDoc:
             stream.write(' // %s' % prop.briefDoc)
-        stream.write('\n\n')
+        stream.write('\n')
         
         
     def generateMethod(self, method, stream, indent):

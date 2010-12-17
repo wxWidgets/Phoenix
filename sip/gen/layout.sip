@@ -126,21 +126,13 @@ public:
     );
 
     %Property(name=Done, get=GetDone, set=SetDone)
-
     %Property(name=Margin, get=GetMargin, set=SetMargin)
-
     %Property(name=MyEdge, get=GetMyEdge)
-
     %Property(name=OtherEdge, get=GetOtherEdge)
-
     %Property(name=OtherWindow, get=GetOtherWindow)
-
     %Property(name=Percent, get=GetPercent)
-
     %Property(name=Relationship, get=GetRelationship, set=SetRelationship)
-
     %Property(name=Value, get=GetValue, set=SetValue)
-
 };  // end of class wxIndividualLayoutConstraint
 
 

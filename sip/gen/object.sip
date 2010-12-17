@@ -26,6 +26,10 @@ public:
 
     void IncRef();
 
+    private:
+        wxRefCounter(const wxRefCounter&);
+
+
 
 protected:
     virtual

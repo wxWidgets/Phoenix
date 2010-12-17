@@ -91,10 +91,6 @@ def fixWindowClass(klass):
     # give the id param a default value
     klass.find('%s.id' % klass.name).default = 'wxID_ANY'
     klass.find('Create.id').default = 'wxID_ANY'
-    # look for wxByte parameters
-    #for item in klass.allItems():
-    #    if hasattr(item, 'type') and item.type == 'wxByte':
-    #        item.pyInt = True
             
             
 def removeVirtuals(klass):
@@ -108,6 +104,80 @@ def removeVirtuals(klass):
         if isinstance(item, extractors.MethodDef):
             item.isVirtual = item.isPureVirtual = False
 
+            
+def addWindowVirtuals(klass):
+    """
+    
+    """
+    publicWindowVirtuals = [      
+        ('GetClientAreaOrigin',      'wxPoint GetClientAreaOrigin() const'),
+        ('Validate',                 'bool Validate()'),
+        ('TransferDataToWindow',     'bool TransferDataToWindow()'),
+        ('TransferDataFromWindow',   'bool TransferDataFromWindow()'),
+        ('InitDialog',               'void InitDialog()'),
+        ('AcceptsFocus',             'bool AcceptsFocus() const'),
+        ('AcceptsFocusRecursively',  'bool AcceptsFocusRecursively() const'),
+        ('AcceptsFocusFromKeyboard', 'bool AcceptsFocusFromKeyboard() const'),
+        ('AddChild',                 'void AddChild( wxWindowBase *child )'),
+        ('RemoveChild',              'void RemoveChild( wxWindowBase *child )'),
+        ('InheritAttributes',        'void InheritAttributes()'),
+        ('ShouldInheritColours',     'bool ShouldInheritColours() const'),
+        ('HasTransparentBackground', 'bool HasTransparentBackground()'),
+        ('OnInternalIdle',           'void OnInternalIdle()'),
+        ('GetMainWindowOfCompositeControl', 
+                                     'wxWindow *GetMainWindowOfCompositeControl()'),
+        #('Enable', ''),   We have DoEnable now...
+        
+        ## What about these?
+        #bool HasMultiplePages() const 
+        #void UpdateWindowUI(long flags = wxUPDATE_UI_NONE);
+        #void DoUpdateWindowUI(wxUpdateUIEvent& event) ;
+    ]
+    
+    protectedWindowVirtuals = [    
+        ('ProcessEvent',        'bool ProcessEvent(wxEvent & event)'),
+        ('DoEnable',            'void DoEnable(bool enable)'),
+        ('OnEnabled',           'void OnEnabled(bool enabled)'),
+        ('DoGetPosition',        'void DoGetPosition(int *x, int *y) const'),
+        ('DoGetSize',           'void DoGetSize(int *width, int *height) const'),
+        ('DoGetClientSize',     'void DoGetClientSize(int *width, int *height) const'),
+        ('DoGetBestSize',       'wxSize DoGetBestSize() const'),
+        ('DoGetBestClientSize', 'wxSize DoGetBestClientSize() const'),
+        ('DoSetSize',           'void DoSetSize(int x, int y, int width, int height, int sizeFlags)'),
+        ('DoSetClientSize',     'void DoSetClientSize(int width, int height)'),
+        ('DoSetSizeHints',      'void DoSetSizeHints( int minW, int minH, int maxW, int maxH, int incW, int incH )'),
+        ('DoGetBorderSize',     'wxSize DoGetBorderSize() const'),
+        ('DoMoveWindow',        'void DoMoveWindow(int x, int y, int width, int height)'),
+        ('DoSetWindowVariant',  'void DoSetWindowVariant( wxWindowVariant variant)'),
+        ('GetDefaultBorder',    'wxBorder GetDefaultBorder() const'),
+        ('GetDefaultBorderForControl', 
+                                'wxBorder GetDefaultBorderForControl() const'),
+
+        ## What about these?
+        #('DoGetScreenPosition', 'void DoGetScreenPosition(int *x, int *y) const'),
+        #('DoSetVirtualSize',    'void DoSetVirtualSize( int x, int y )'),
+        #('DoGetVirtualSize',    'wxSize DoGetVirtualSize() const'),
+    ]
+    
+    def _processItems(klass, prot, virtuals):
+        txt = ''
+        for name, decl in virtuals:
+            m = klass.findItem(name)
+            if m:
+                m.ignore(False)
+                m.isVirtual = True
+            else:
+                txt += 'virtual %s;\n' % decl
+        if txt:
+            txt = prot + txt
+        return txt
+    
+    txt = _processItems(klass, 'public:\n', publicWindowVirtuals)
+    klass.addItem(extractors.WigCode(txt))
+    txt = _processItems(klass, 'protected:\n', protectedWindowVirtuals)
+    klass.addItem(extractors.WigCode(txt))
+                  
+    
     
 def getEtgFiles(names):
     """

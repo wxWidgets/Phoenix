@@ -69,6 +69,7 @@ public:
     virtual void OnPreInit()  { }
     
     void _BootstrapApp();
+    virtual int MainLoop(); 
 
     static bool IsDisplayAvailable();
 
@@ -93,32 +94,32 @@ void wxPyApp::_BootstrapApp()
     static      bool haveInitialized = false;
     bool        result;
     wxPyBlock_t blocked;
-    PyObject*   retval = NULL;
-    PyObject*   pyint  = NULL;
 
     // Only initialize wxWidgets once
     if (! haveInitialized) {
-        // Get any command-line args passed to this program from the sys module
+        
+        // Copy the values in Python's sys.argv list to a C array of char* to
+        // be passed to the wxEntryStart function below.
         int    argc = 0;
         char** argv = NULL;
         blocked = wxPyBeginBlockThreads();
-        
         PyObject* sysargv = PySys_GetObject("argv");
-        PyObject* executable = PySys_GetObject("executable");
-        
-        if (sysargv != NULL && executable != NULL) {
-            argc = PyList_Size(sysargv) + 1;
+        if (sysargv != NULL) {            
+            argc = PyList_Size(sysargv);
             argv = new char*[argc+1];
-            argv[0] = strdup(PyString_AsString(executable));
             int x;
-            for(x=1; x<argc; x++) {
-                PyObject *pyArg = PyList_GetItem(sysargv, x-1);
+            for(x=0; x<argc; x++) {
+                PyObject *pyArg = PyList_GetItem(sysargv, x); // borrowed reference
+                // if there isn't anything in sys.argv[0] then set it to the python executable
+                if (x == 0 && PyObject_Length(pyArg) < 1) 
+                    pyArg = PySys_GetObject("executable");
                 argv[x] = strdup(PyString_AsString(pyArg));
             }
             argv[argc] = NULL;
         }
         wxPyEndBlockThreads(blocked);
 
+        
         // Initialize wxWidgets
 #ifdef __WXOSX__
         wxMacAutoreleasePool autoreleasePool;
@@ -158,6 +159,28 @@ error:
     wxPyEndBlockThreads(blocked);    
 }
 
+
+int wxPyApp::MainLoop()
+{
+    int retval = 0;
+
+    {
+#ifdef __WXOSX__
+        wxMacAutoreleasePool autoreleasePool;
+#endif
+        DeletePendingObjects();
+    }
+    bool initialized = wxTopLevelWindows.GetCount() != 0;
+    if (initialized) {
+        if ( m_exitOnFrameDelete == Later ) {
+            m_exitOnFrameDelete = Yes;
+        }
+
+        retval = wxApp::MainLoop();
+        OnExit();
+    }
+    return retval;
+}
 
 
 // Function to test if the Display (or whatever is the platform equivallent)

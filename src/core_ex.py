@@ -1,5 +1,4 @@
 
-
 # A little trick to make 'wx' be a reference to this module so wx.Names can
 # be used in the python code here.
 import sys as _sys
@@ -42,7 +41,7 @@ def deprecated(func):
     def new_func(*args, **kwargs):
         import warnings
         warnings.warn("Call to deprecated item %s." % func.__name__,
-                      category=DeprecationWarning)
+                      DeprecationWarning, stacklevel=2)
         return func(*args, **kwargs)
     new_func.__name__ = func.__name__
     new_func.__doc__ = func.__doc__

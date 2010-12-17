@@ -32,6 +32,9 @@
         class wxCaret;
         class wxIcon;
         class wxIconBundle;
+        class wxStatusBar;
+        class wxToolBar;
+        class wxMenuBar;
 
 
 typedef signed char wxInt8   /PyInt/;

@@ -71,19 +71,12 @@ public:
     %End
 
     %Property(name=H, get=GetH)
-
     %Property(name=Height, get=GetHeight)
-
     %Property(name=Rect, get=GetRect)
-
     %Property(name=W, get=GetW)
-
     %Property(name=Width, get=GetWidth)
-
     %Property(name=X, get=GetX)
-
     %Property(name=Y, get=GetY)
-
 };  // end of class wxRegionIterator
 
 
@@ -240,7 +233,6 @@ public:
     );
 
     %Property(name=Box, get=GetBox)
-
 };  // end of class wxRegion
 
 

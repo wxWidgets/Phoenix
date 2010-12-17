@@ -63,6 +63,11 @@ ITEMS  = [
     #'wxThreadEvent',
 ]    
     
+
+OTHERDEPS = [ 'src/event_ex.py',  
+              'src/event_ex.cpp', 
+              ]
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -81,22 +86,86 @@ def run():
     """)
     
     
-    # TODO:
-    #   * PyEventBinder class
-    #   * event binder instances for all the event types implemented here
-    #   * Connect, Bind etc. methods for EvtHandler
-    
-    
     #---------------------------------------
     # wxEvtHandler
     c = module.find('wxEvtHandler')
     c.addPrivateCopyCtor()
+    c.addPublic()
     
     # Ignore the Connect/Disconnect and Bind/Unbind methods (and overloads) for now. 
     for item in c.allItems():
         if item.name in ['Connect', 'Disconnect', 'Bind', 'Unbind']:
             item.ignore()
     
+    c.includeCppCode('src/event_ex.cpp')
+    module.includePyCode('src/event_ex.py')
+    
+    # Connect and disconnect methods for wxPython. Hold a reference to the
+    # event handler function in the event table, so we can fetch it later when
+    # it is time to handle the event.
+    c.addCppMethod(
+        'void', 'Connect', '(int id, int lastId, wxEventType eventType, PyObject* func)',
+        """\
+            if (PyCallable_Check(func)) {
+                self->Connect(id, lastId, eventType,
+                              (wxObjectEventFunction)(wxEventFunction)
+                              &wxPyCallback::EventThunker,
+                              new wxPyCallback(func));
+            }
+            else if (func == Py_None) {
+                self->Disconnect(id, lastId, eventType,
+                                 (wxObjectEventFunction)(wxEventFunction)
+                                 &wxPyCallback::EventThunker);
+            }
+            else {
+                _isErr = 1;
+                PyErr_SetString(PyExc_TypeError, "Expected callable object or None.");
+            }
+        """)
+
+    c.addCppMethod(
+        'bool', 'Disconnect', '(int id, int lastId=-1, '
+                               'wxEventType eventType=wxEVT_NULL, '
+                               'PyObject* func=NULL)', 
+        """\
+            if (func && func != Py_None) {
+                // Find the current matching binder that has this function
+                // pointer and dissconnect that one.  Unfortuneatly since we
+                // wrapped the PyObject function pointer in another object we
+                // have to do the searching ourselves...
+                wxList::compatibility_iterator node = self->GetDynamicEventTable()->GetFirst();
+                while (node)
+                {
+                    wxDynamicEventTableEntry *entry = (wxDynamicEventTableEntry*)node->GetData();
+                    if ((entry->m_id == id) &&
+                        ((entry->m_lastId == lastId) || (lastId == wxID_ANY)) &&
+                        ((entry->m_eventType == eventType) || (eventType == wxEVT_NULL)) &&
+                        // FIXME?
+                        //((entry->m_fn->IsMatching((wxObjectEventFunction)(wxEventFunction)&wxPyCallback::EventThunker))) &&
+                        (entry->m_callbackUserData != NULL))
+                    {
+                        wxPyCallback *cb = (wxPyCallback*)entry->m_callbackUserData;
+                        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+                        int result = PyObject_Compare(cb->m_func, func);
+                        wxPyEndBlockThreads(blocked); 
+                        if (result == 0) {
+                            delete cb;
+                            self->GetDynamicEventTable()->Erase(node);
+                            delete entry;
+                            return true;
+                        }                        
+                    }
+                    node = node->GetNext();
+                }
+                return false;
+            }
+            else {
+                return self->Disconnect(id, lastId, eventType,
+                                        (wxObjectEventFunction)
+                                        &wxPyCallback::EventThunker);
+            }
+        """)
+
     
     # wxEventTable is not documented so we have to ignore SearchEventTable.
     # TODO: Should wxEventTable be available to language bindings?
@@ -109,7 +178,12 @@ def run():
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
     
+    # The only virtual we care about overriding is ProcessEvent, ignore the rest
+    tools.removeVirtuals(c)
+    c.find('ProcessEvent').isVirtual = True
+           
     
+
     #---------------------------------------
     # wxEvent
     c = module.find('wxEvent')

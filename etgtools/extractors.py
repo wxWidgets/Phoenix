@@ -86,6 +86,17 @@ class BaseDef(object):
         else: # got though all items with no match
             raise ExtractorError("Unable to find item named '%s' within %s named '%s'" %
                                  (head, self.__class__.__name__, self.name))
+        
+    def findItem(self, name):
+        """
+        Just like find() but does not raise an exception if the item is not found.
+        """
+        try:
+            item = self.find(name)
+            return item
+        except ExtractorError:
+            return None
+        
 
     def addItem(self, item):
         self.items.append(item)
@@ -228,9 +239,11 @@ class FunctionDef(BaseDef):
         if element is not None:
             self.extract(element)
             
+            
     def releaseGIL(self, release=True):
         self.pyReleaseGIL = release
-                    
+
+        
     def extract(self, element):
         super(FunctionDef, self).extract(element)
         self.type = flattenNode(element.find('type'))
@@ -422,7 +435,7 @@ class ClassDef(BaseDef):
             self.cppCode.append(code)
 
             
-    def insertCppCode(self, filename):
+    def includeCppCode(self, filename):
         self.addCppCode(file(filename).read())
         
         

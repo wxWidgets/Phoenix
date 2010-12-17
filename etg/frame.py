@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/object.py
+# Name:        etg/frame.py
 # Author:      Robin Dunn
 #
-# Created:     9-Nov-2010
+# Created:     6-Dec-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -12,16 +12,12 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
-NAME      = "object"   # Base name of the file to generate to for this script
+NAME      = "frame"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 
-    'wxRefCounter',
-    'wxObject',       
-#    'wxClassInfo',
-]    
+ITEMS  = [ 'wxFrame' ]    
     
 #---------------------------------------------------------------------------
 
@@ -33,40 +29,31 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    
-    module.find('wxCreateDynamicObject').ignore()
-    
-    #module.find('wxClassInfo').abstract = True
-    #module.find('wxClassInfo.wxClassInfo').ignore()
-    
-   
-    
-    #--------------------------------------------------
-    c = module.find('wxRefCounter')
+        
+    c = module.find('wxFrame')
     assert isinstance(c, etgtools.ClassDef)
-    c.find('~wxRefCounter').ignore(False)
-    c.addPrivateCopyCtor()
+    tools.fixWindowClass(c)
     
+    c.find('wxFrame.title').default = 'wxEmptyString'
+    c.find('Create.title').default = 'wxEmptyString'    
     
+    c.find('SetStatusWidths.n').arraySize = True
+    c.find('SetStatusWidths.widths_field').array = True
     
-    #--------------------------------------------------
-    c = module.find('wxObject')
-    c.find('operator delete').ignore()
-    c.find('operator new').ignore()
-    c.find('GetClassInfo').ignore()
-    c.find('IsKindOf').ignore()
+    c.addProperty('MenuBar GetMenuBar SetMenuBar')
+    c.addProperty('StatusBar GetStatusBar SetStatusBar')
+    c.addProperty('StatusBarPane GetStatusBarPane SetStatusBarPane')
+    c.addProperty('ToolBar GetToolBar SetToolBar')
+    
+        
+    tools.removeVirtuals(c)
+    tools.addWindowVirtuals(c)
 
-    c.addCppMethod('const wxChar*', 'GetClassName', '()',
-        body='return self->GetClassInfo()->GetClassName();',
-        doc='Returns the class name of the C++ class using wxRTTI.')
+    # TODO: should these go into a tools.addFrameVirtuals function?
+    c.find('OnCreateStatusBar').isVirtual = True
+    c.find('OnCreateToolBar').isVirtual = True
     
-    c.addCppMethod('void', 'Destroy', '()',
-        body='delete self;',
-        doc='Deletes the C++ object this Python object is a proxy for.',
-        transferThis=True)  # TODO: Check this
-        
-        
+    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

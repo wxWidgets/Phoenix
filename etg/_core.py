@@ -61,6 +61,7 @@ INCLUDES = [  'defs',
               'validate',
               'window',
               'toplevel',
+              'frame',
               ]
 
 

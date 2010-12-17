@@ -30,7 +30,6 @@ public:
         const wxString & name = wxFrameNameStr
     );
 
-    virtual
     ~wxTopLevelWindow();
 
     bool Create(
@@ -43,7 +42,6 @@ public:
         const wxString & name = wxFrameNameStr
     );
 
-    virtual
     bool CanSetTransparent();
 
     void CenterOnScreen(
@@ -54,7 +52,6 @@ public:
         int direction = wxBOTH
     );
 
-    virtual
     bool EnableCloseButton(
         bool enable = true
     );
@@ -65,38 +62,28 @@ public:
 
     const wxIconBundle & GetIcons();
 
-    virtual
     wxString GetTitle();
 
-    virtual
     void Iconize(
         bool iconize = true
     );
 
-    virtual
     bool IsActive();
 
-    virtual
     bool IsAlwaysMaximized();
 
-    virtual
     bool IsFullScreen();
 
-    virtual
     bool IsIconized();
 
-    virtual
     bool IsMaximized();
 
-    virtual
     bool Layout();
 
-    virtual
     void Maximize(
         bool maximize = true
     );
 
-    virtual
     void RequestUserAttention(
         int flags = wxUSER_ATTENTION_INFO
     );
@@ -115,27 +102,22 @@ public:
         const wxIcon & icon
     );
 
-    virtual
     void SetIcons(
         const wxIconBundle & icons
     );
 
-    virtual
     void SetMaxSize(
         const wxSize & size
     );
 
-    virtual
     void SetMinSize(
         const wxSize & size
     );
 
-    virtual
     bool SetShape(
         const wxRegion & region
     );
 
-    virtual
     void SetSizeHints(
         int minW,
         int minH,
@@ -145,35 +127,28 @@ public:
         int incH = -1
     );
 
-    virtual
     void SetSizeHints(
         const wxSize & minSize,
         const wxSize & maxSize = wxDefaultSize,
         const wxSize & incSize = wxDefaultSize
     );
 
-    virtual
     void SetTitle(
         const wxString & title
     );
 
-    virtual
     bool SetTransparent(
         wxByte alpha
     );
 
-    virtual
     bool ShouldPreventAppExit();
 
-    virtual
     void OSXSetModified(
         bool modified
     );
 
-    virtual
     bool OSXIsModified();
 
-    virtual
     bool ShowFullScreen(
         bool show,
         long style = wxFULLSCREEN_ALL
@@ -236,14 +211,46 @@ public:
     %End
 
     %Property(name=DefaultItem, get=GetDefaultItem, set=SetDefaultItem)
-
     %Property(name=Icon, get=GetIcon, set=SetIcon)
-
     %Property(name=Title, get=GetTitle, set=SetTitle)
-
     %Property(name=TmpDefaultItem, get=GetTmpDefaultItem, set=SetTmpDefaultItem)
-
     %Property(name=OSXModified, get=OSXIsModified, set=OSXSetModified)
+    public:
+    virtual wxPoint GetClientAreaOrigin() const;
+    virtual bool Validate();
+    virtual bool TransferDataToWindow();
+    virtual bool TransferDataFromWindow();
+    virtual void InitDialog();
+    virtual bool AcceptsFocus() const;
+    virtual bool AcceptsFocusRecursively() const;
+    virtual bool AcceptsFocusFromKeyboard() const;
+    virtual void AddChild( wxWindowBase *child );
+    virtual void RemoveChild( wxWindowBase *child );
+    virtual void InheritAttributes();
+    virtual bool ShouldInheritColours() const;
+    virtual bool HasTransparentBackground();
+    virtual void OnInternalIdle();
+    virtual wxWindow *GetMainWindowOfCompositeControl();
+
+
+    protected:
+    virtual bool ProcessEvent(wxEvent & event);
+    virtual void DoEnable(bool enable);
+    virtual void OnEnabled(bool enabled);
+    virtual void DoGetPosition(int *x, int *y) const;
+    virtual void DoGetSize(int *width, int *height) const;
+    virtual void DoGetClientSize(int *width, int *height) const;
+    virtual wxSize DoGetBestSize() const;
+    virtual wxSize DoGetBestClientSize() const;
+    virtual void DoSetSize(int x, int y, int width, int height, int sizeFlags);
+    virtual void DoSetClientSize(int width, int height);
+    virtual void DoSetSizeHints( int minW, int minH, int maxW, int maxH, int incW, int incH );
+    virtual wxSize DoGetBorderSize() const;
+    virtual void DoMoveWindow(int x, int y, int width, int height);
+    virtual void DoSetWindowVariant( wxWindowVariant variant);
+    virtual wxBorder GetDefaultBorder() const;
+    virtual wxBorder GetDefaultBorderForControl() const;
+
 
 };  // end of class wxTopLevelWindow
 

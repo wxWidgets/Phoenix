@@ -74,6 +74,10 @@ def run():
     c.addProperty('TmpDefaultItem GetTmpDefaultItem SetTmpDefaultItem')
     c.addProperty('OSXModified OSXIsModified OSXSetModified')
     
+    
+    tools.removeVirtuals(c)
+    tools.addWindowVirtuals(c)
+    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

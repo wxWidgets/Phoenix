@@ -207,25 +207,15 @@ public:
     );
 
     %Property(name=Encoding, get=GetEncoding, set=SetEncoding)
-
     %Property(name=FaceName, get=GetFaceName, set=SetFaceName)
-
     %Property(name=Family, get=GetFamily, set=SetFamily)
-
     %Property(name=NativeFontInfoDesc, get=GetNativeFontInfoDesc, set=SetNativeFontInfo)
-
     %Property(name=NativeFontInfoUserDesc, get=GetNativeFontInfoUserDesc, set=SetNativeFontInfoUserDesc)
-
     %Property(name=PointSize, get=GetPointSize, set=SetPointSize)
-
     %Property(name=PixelSize, get=GetPixelSize, set=SetPixelSize)
-
     %Property(name=Style, get=GetStyle, set=SetStyle)
-
     %Property(name=Underlined, get=GetUnderlined, set=SetUnderlined)
-
     %Property(name=Weight, get=GetWeight, set=SetWeight)
-
 };  // end of class wxFont
 
 

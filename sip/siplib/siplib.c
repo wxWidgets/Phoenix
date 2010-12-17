@@ -363,6 +363,9 @@ static const sipAPIDef sip_api = {
     sip_api_keep_reference,
     sip_api_parse_kwd_args,
     sip_api_add_exception,
+    /*
+     * The following are part of the public API.
+     */
     sip_api_get_address
 };
 

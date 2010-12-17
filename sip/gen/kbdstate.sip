@@ -56,15 +56,10 @@ public:
     );
 
     %Property(name=controlDown, get=ControlDown, set=SetControlDown)
-
     %Property(name=shiftDown, get=ShiftDown, set=SetShiftDown)
-
     %Property(name=altDown, get=AltDown, set=SetAltDown)
-
     %Property(name=metaDown, get=MetaDown, set=SetMetaDown)
-
     %Property(name=cmdDown, get=CmdDown)
-
 };  // end of class wxKeyboardState
 
 

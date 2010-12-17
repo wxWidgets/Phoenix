@@ -46,7 +46,7 @@ def run():
     module.find('wxSwap').ignore()
     module.find('wxVaCopy').ignore()
     
-    # add some typedefs for wxChar, wxUChar
+    # add some typedefs for wxChar, wxUChar, etc.
     td = module.find('wxUIntPtr')
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxUChar'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxChar'))
@@ -69,6 +69,9 @@ def run():
         class wxCaret;
         class wxIcon;
         class wxIconBundle;
+        class wxStatusBar;
+        class wxToolBar;
+        class wxMenuBar;
     """))
     
     

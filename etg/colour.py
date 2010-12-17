@@ -42,7 +42,7 @@ def run():
         return new wxColour(wxMacCreateCGColorFromHITheme(themeBrushID));
     #else
         wxPyRaiseNotImplemented(); 
-        sipIsErr = 1;
+        _isErr = 1;
         return NULL; 
     #endif
     """, factory=True)

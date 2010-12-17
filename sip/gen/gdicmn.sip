@@ -286,9 +286,7 @@ public:
     );
 
     %Property(name=width, get=GetWidth, set=SetWidth)
-
     %Property(name=height, get=GetHeight, set=SetHeight)
-
     %TypeCode
     PyObject* _wxSize_Get(wxSize* self, int& _isErr)
     {
@@ -575,21 +573,13 @@ public:
     );
 
     %Property(name=left, get=GetLeft)
-
     %Property(name=top, get=GetTop)
-
     %Property(name=right, get=GetRight)
-
     %Property(name=bottom, get=GetBottom)
-
     %Property(name=bottomLeft, get=GetBottomLeft)
-
     %Property(name=bottomRight, get=GetBottomRight)
-
     %Property(name=topLeft, get=GetTopLeft)
-
     %Property(name=topRight, get=GetTopRight)
-
     %TypeCode
     PyObject* _wxRect_Get(wxRect* self, int& _isErr)
     {

@@ -40,6 +40,8 @@ def run():
     c.addProperty('Tip GetTip SetTip')
     c.addProperty('Window GetWindow')
     
+    c.addPrivateCopyCtor()
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

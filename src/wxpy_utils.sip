@@ -62,6 +62,12 @@ inline void wxPyEndBlockThreads(wxPyBlock_t blocked) {
     PyGILState_Release(blocked);
 }
 
+
+PyObject* wxPyConstructObject(void* ptr,
+                              const wxString& className,
+                              int setThisOwn=0);
+
+
 %End
 
 
@@ -101,4 +107,16 @@ inline void wxPyEndBlockThreads(wxPyBlock_t blocked) {
             Py_DECREF(uni);  // release the temporary Unicode object we created
         return target;
     }
+    
+    
+PyObject* wxPyConstructObject(void* ptr,
+                              const wxString& className,
+                              int setThisOwn)
+{
+    const sipTypeDef* td = sipFindType(className);
+    if (!td)
+        return NULL;
+    PyObject* transferObj = setThisOwn ? Py_None : NULL;
+    return sipConvertFromType(ptr, td, transferObj);     
+}
 %End
