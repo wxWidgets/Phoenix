@@ -323,7 +323,7 @@ static PyObject *sipVoidPtr_slice(PyObject *self, int left, int right)
     if (left == right)
         left = right = 0;
 
-    return make_voidptr(v->voidptr + left, right - left, v->rw);
+    return make_voidptr((char *)(v->voidptr) + left, right - left, v->rw);
 }
 
 
@@ -378,7 +378,7 @@ static int sipVoidPtr_ass_slice(PyObject *self, int left, int right,
     if (check_slice_size(right - left, value_size) < 0)
         return -1;
 
-    memmove(v->voidptr + left, value_ptr, right - left);
+    memmove((char *)(v->voidptr) + left, value_ptr, right - left);
 
     return 0;
 }
@@ -771,11 +771,7 @@ void *sip_api_convert_to_void_ptr(PyObject *obj)
         return PyCObject_AsVoidPtr(obj);
 #endif
 
-#if PY_MAJOR_VERSION >= 3
     return PyLong_AsVoidPtr(obj);
-#else
-    return (void *)PyInt_AsLong(obj);
-#endif
 }
 
 
@@ -992,11 +988,7 @@ static int vp_convertor(PyObject *arg, struct vp_values *vp)
     }
     else
     {
-#if PY_MAJOR_VERSION >= 3
         ptr = PyLong_AsVoidPtr(arg);
-#else
-        ptr = (void *)PyInt_AsLong(arg);
-#endif
 
         if (PyErr_Occurred())
         {
