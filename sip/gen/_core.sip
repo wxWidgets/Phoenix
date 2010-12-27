@@ -73,6 +73,9 @@ from _core import *
 %Include tooltip.sip
 %Include layout.sip
 %Include event.sip
+%Include pyevent.sip
+%Include process.sip
+%Include utils.sip
 %Include evtloop.sip
 %Include apptrait.sip
 %Include app.sip
@@ -202,7 +205,6 @@ def version():
     return "%s %s" % (wx.VERSION_STRING, port)
                        
 
-
 def deprecated(func):
     def new_func(*args, **kwargs):
         import warnings
@@ -275,32 +277,32 @@ def deprecated(func):
 ##         return 0
 
 
-## #----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 
-## def CallAfter(callable, *args, **kw):
-##     """
-##     Call the specified function after the current and pending event
-##     handlers have been completed.  This is also good for making GUI
-##     method calls from non-GUI threads.  Any extra positional or
-##     keyword args are passed on to the callable when it is called.
+def CallAfter(callable, *args, **kw):
+    """
+    Call the specified function after the current and pending event
+    handlers have been completed.  This is also good for making GUI
+    method calls from non-GUI threads.  Any extra positional or
+    keyword args are passed on to the callable when it is called.
 
-##     :see: `wx.CallLater`
-##     """
-##     app = wx.GetApp()
-##     assert app is not None, 'No wx.App created yet'
+    :see: `wx.CallLater`
+    """
+    app = wx.GetApp()
+    assert app is not None, 'No wx.App created yet'
 
-##     if not hasattr(app, "_CallAfterId"):
-##         app._CallAfterId = wx.NewEventType()
-##         app.Connect(-1, -1, app._CallAfterId,
-##                     lambda event: event.callable(*event.args, **event.kw) )
-##     evt = wx.PyEvent()
-##     evt.SetEventType(app._CallAfterId)
-##     evt.callable = callable
-##     evt.args = args
-##     evt.kw = kw
-##     wx.PostEvent(app, evt)
+    if not hasattr(app, "_CallAfterId"):
+        app._CallAfterId = wx.NewEventType()
+        app.Connect(-1, -1, app._CallAfterId,
+                    lambda event: event.callable(*event.args, **event.kw) )
+    evt = wx.PyEvent()
+    evt.SetEventType(app._CallAfterId)
+    evt.callable = callable
+    evt.args = args
+    evt.kw = kw
+    wx.PostEvent(app, evt)
 
-## #----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 
 
 ## class CallLater:

@@ -37,8 +37,6 @@ class wxEvtHandler : wxObject, wxTrackable
             PyObject*   m_func;
         };
         
-        
-        
         IMPLEMENT_ABSTRACT_CLASS(wxPyCallback, wxEvtHandler);
         
         wxPyCallback::wxPyCallback(PyObject* func) {
@@ -449,7 +447,8 @@ public:
     %Property(name=Int, get=GetInt, set=SetInt)
     %Property(name=Selection, get=GetSelection)
     %Property(name=String, get=GetString, set=SetString)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -476,7 +475,8 @@ public:
     bool GetActive();
 
     %Property(name=Active, get=GetActive)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -501,7 +501,8 @@ public:
     wxWindow * GetWindow();
 
     %Property(name=Window, get=GetWindow)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -524,7 +525,8 @@ public:
         int id = 0
     );
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -563,7 +565,8 @@ public:
         bool veto = true
     );
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -594,7 +597,8 @@ public:
     );
 
     %Property(name=Position, get=GetPosition, set=SetPosition)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -614,7 +618,8 @@ class wxDisplayChangedEvent : wxEvent
 public:
     wxDisplayChangedEvent();
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -647,7 +652,8 @@ public:
     %Property(name=Files, get=GetFiles)
     %Property(name=NumberOfFiles, get=GetNumberOfFiles)
     %Property(name=Position, get=GetPosition)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -673,7 +679,8 @@ public:
     wxDC * GetDC();
 
     %Property(name=DC, get=GetDC)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -703,7 +710,8 @@ public:
     );
 
     %Property(name=Window, get=GetWindow, set=SetWindow)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -747,7 +755,8 @@ public:
         const wxPoint & pt
     );
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -774,7 +783,8 @@ public:
 
     bool Iconized()   /Deprecated/;
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -808,7 +818,8 @@ public:
         wxIdleMode mode
     );
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -830,7 +841,8 @@ public:
         int id = 0
     );
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -883,7 +895,8 @@ public:
 
     bool IsZMove();
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -930,7 +943,8 @@ public:
     %Property(name=RawKeyCode, get=GetRawKeyCode)
     %Property(name=RawKeyFlags, get=GetRawKeyFlags)
     %Property(name=UnicodeKey, get=GetUnicodeKey)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -952,7 +966,8 @@ public:
         int id = 0
     );
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -984,7 +999,8 @@ public:
 
     %Property(name=Menu, get=GetMenu)
     %Property(name=MenuId, get=GetMenuId)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1010,7 +1026,8 @@ public:
     wxWindow * GetCapturedWindow();
 
     %Property(name=CapturedWindow, get=GetCapturedWindow)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1032,7 +1049,8 @@ public:
         wxWindowID windowId = 0
     );
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1134,7 +1152,8 @@ public:
     %Property(name=LogicalPosition, get=GetLogicalPosition)
     %Property(name=WheelDelta, get=GetWheelDelta)
     %Property(name=WheelRotation, get=GetWheelRotation)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1171,7 +1190,8 @@ public:
 
     %Property(name=Rect, get=GetRect, set=SetRect)
     %Property(name=Position, get=GetPosition, set=SetPosition)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1233,7 +1253,8 @@ public:
 
     %Property(name=CurrentFocus, get=GetCurrentFocus, set=SetCurrentFocus)
     %Property(name=Direction, get=GetDirection, set=SetDirection)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1262,7 +1283,8 @@ public:
 
     void Veto();
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1284,7 +1306,8 @@ public:
         int id = 0
     );
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1313,7 +1336,8 @@ public:
     wxWindow * GetChangedWindow();
 
     %Property(name=ChangedWindow, get=GetChangedWindow, set=SetChangedWindow)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1342,7 +1366,8 @@ public:
     bool GetPaletteRealized();
 
     %Property(name=PaletteRealized, get=GetPaletteRealized, set=SetPaletteRealized)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1381,7 +1406,8 @@ public:
 
     %Property(name=Orientation, get=GetOrientation, set=SetOrientation)
     %Property(name=Position, get=GetPosition, set=SetPosition)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1419,7 +1445,8 @@ public:
 
     %Property(name=Orientation, get=GetOrientation, set=SetOrientation)
     %Property(name=Position, get=GetPosition, set=SetPosition)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1457,7 +1484,8 @@ public:
     %Property(name=Cursor, get=GetCursor, set=SetCursor)
     %Property(name=X, get=GetX)
     %Property(name=Y, get=GetY)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1487,7 +1515,8 @@ public:
     bool IsShown();
 
     %Property(name=Show, get=IsShown, set=SetShow)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1524,7 +1553,8 @@ public:
 
     %Property(name=Rect, get=GetRect, set=SetRect)
     %Property(name=Size, get=GetSize, set=SetSize)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1544,7 +1574,8 @@ class wxSysColourChangedEvent : wxEvent
 public:
     wxSysColourChangedEvent();
 
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1626,7 +1657,8 @@ public:
     %Property(name=Enabled, get=GetEnabled, set=Enable)
     %Property(name=Shown, get=GetShown, set=Show)
     %Property(name=Text, get=GetText, set=SetText)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1651,7 +1683,8 @@ public:
     wxWindow * GetWindow();
 
     %Property(name=Window, get=GetWindow)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -1676,7 +1709,8 @@ public:
     wxWindow * GetWindow();
 
     %Property(name=Window, get=GetWindow)
-    virtual wxEvent* Clone();
+    public:
+    virtual wxEvent* Clone() const /Factory/;
 
 
     private:
@@ -2003,7 +2037,7 @@ class PyEventBinder(object):
 
 
     def Bind(self, target, id1, id2, function):
-        """Bind this set of event types to target using its COnnect() method."""
+        """Bind this set of event types to target using its Connect() method."""
         for et in self.evtType:
             target.Connect(id1, id2, et, function)
 
@@ -2052,6 +2086,9 @@ def _EvtHandler_Bind(self, event, handler, source=None, id=wx.ID_ANY, id2=wx.ID_
     :param id2: Used when it is desirable to bind a handler
                 to a range of IDs, such as with EVT_MENU_RANGE.
     """
+    assert isinstance(event, wx.PyEventBinder)
+    assert callable(handler)
+    assert source is None or hasattr(source, 'GetId')
     if source is not None:
         id  = source.GetId()
     event.Bind(self, id, id2, handler)              

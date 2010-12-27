@@ -566,41 +566,6 @@ enum wxOutCode
     wxOutBottom
 };
 
-wxPoint2DDouble operator+(
-    const wxPoint2DDouble & pt1,
-    const wxPoint2DDouble & pt2
-);
-
-wxPoint2DDouble operator-(
-    const wxPoint2DDouble & pt1,
-    const wxPoint2DDouble & pt2
-);
-
-wxPoint2DDouble operator*(
-    const wxPoint2DDouble & pt1,
-    const wxPoint2DDouble & pt2
-);
-
-wxPoint2DDouble operator*(
-    wxDouble n,
-    const wxPoint2DDouble & pt
-);
-
-wxPoint2DDouble operator*(
-    const wxPoint2DDouble & pt,
-    wxDouble n
-);
-
-wxPoint2DDouble operator/(
-    const wxPoint2DDouble & pt1,
-    const wxPoint2DDouble & pt2
-);
-
-wxPoint2DDouble operator/(
-    const wxPoint2DDouble & pt,
-    wxDouble n
-);
-
 
 //---------------------------------------------------------------------------
 

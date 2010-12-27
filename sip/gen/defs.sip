@@ -35,6 +35,9 @@
         class wxStatusBar;
         class wxToolBar;
         class wxMenuBar;
+        class wxExecuteEnv;
+        class wxInputStream;
+        class wxOutputStream;
 
 
 typedef signed char wxInt8   /PyInt/;

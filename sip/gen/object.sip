@@ -95,6 +95,22 @@ public:
         _wxObject_Destroy(sipCpp, sipIsErr);
     %End
 
+        %ConvertToSubClassCode
+            const wxClassInfo* info   = sipCpp->GetClassInfo();
+            wxString           name   = info->GetClassName();
+            bool               exists = sipFindType(name) != NULL;
+            while (info && !exists) {
+                info = info->GetBaseClass1();
+                name = info->GetClassName();
+                exists = sipFindType(name) != NULL;
+            }
+            if (info) 
+                sipType = sipFindType(name);
+            else
+                sipType = NULL;
+        %End
+
+
 };  // end of class wxObject
 
 
