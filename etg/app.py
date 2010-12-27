@@ -2,7 +2,7 @@
 # Name:        etg/app.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     22-Nov-2010
 # Copyright:   (c) 2010 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
