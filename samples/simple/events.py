@@ -1,5 +1,6 @@
 
 import wxPhoenix as wx
+print wx.version()
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
 
 class MyFrame(wx.Frame):
