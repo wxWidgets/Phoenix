@@ -32,7 +32,7 @@ def removeWxPrefixes(node):
                 item.pyName = item.name[2:]
                 item.wxDropped = True
         if item.name.startswith('wxEVT_'):
-            # give these theire actual name so the auto-renamer won't touch them
+            # give these their actual name so the auto-renamer won't touch them
             item.pyName = item.name
             
 
@@ -69,12 +69,13 @@ def fixEventClass(klass):
     Add the extra stuff that an event class needs that are lacking from the
     interface headers.
     """
+    assert isinstance(klass, extractors.ClassDef)
     if klass.name != 'wxEvent':
         # Clone() in wxEvent is pure virtual, so we need to let the back-end
         # know that the other event classes have an implementation for it so
         # it won't think that they are abstract classes too.
-        wig = extractors.WigCode("virtual wxEvent* Clone();")
-        klass.addItem(wig)
+        if not klass.findItem('Clone'):
+            klass.addPublic('virtual wxEvent* Clone() const /Factory/;')
 
     # Add a private assignment operator so the back-end (if it's watching out
     # for this) won't try to make copies by assignment.
@@ -107,7 +108,8 @@ def removeVirtuals(klass):
             
 def addWindowVirtuals(klass):
     """
-    
+    Either turn the virtual flag back on or add a delcaration for the subset of
+    the C++ virtuals in wxWindow classes that we will be supporting.
     """
     publicWindowVirtuals = [      
         ('GetClientAreaOrigin',      'wxPoint GetClientAreaOrigin() const'),
