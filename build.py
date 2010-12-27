@@ -49,6 +49,7 @@ Usage: ./build.py [command(s)] [options]
                     SIP files
         sip         Run sip
         test        Run the unit test suite
+        test_*      Run just one test module
         
         build_wx    Do the wxWidgets part of the build
         build_py    Build wxPython only
@@ -80,7 +81,9 @@ def main(args):
     while commands:
         cmd = commands[0]
         commands = commands[1:]
-        if cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
+        if cmd.startswith('test_'):
+            testOne(cmd, options, args)
+        elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
                    'build_wx', 'build_py', 'build',
                    'clean_wx', 'clean_py', 'cleanall']:
             function = globals()[cmd]
@@ -375,6 +378,11 @@ def test(options, args):
     pwd = pushDir(phoenixDir())
     runcmd(PYTHON + ' unittests/runtests.py -v')
 
+    
+def testOne(name, options, args):
+    msg('Running test %s:' % name)
+    pwd = pushDir(phoenixDir())
+    runcmd(PYTHON + ' unittests/%s.py -v' % name)
     
     
 def build(options, args):

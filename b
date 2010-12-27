@@ -5,7 +5,6 @@
 PYVER=2.6
 PYVER2=26
 
-
 if [ "$OSTYPE" = "cygwin" ]; then
     $TOOLS/python$PYVER2/python.exe -u build.py "$@"
 else
