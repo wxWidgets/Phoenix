@@ -165,22 +165,22 @@ def setPythonVersion(args):
         
 
 def setDevModeOptions(args):
-    # Using --dev is a shortcut for setting several build options that
-    # I use while working on the code in my local workspaces. Most
-    # people will probably not use this so it is not part for the
-    # documented options and is explicitly handled here before the
-    # options parser is created.  If anybody besides Robin is using
-    # this option do not depend on the options it inserts into the
-    # args list being consistent.  They could change at any update
-    # from the repository.
+    # Using --dev is a shortcut for setting several build options that I use
+    # while working on the code in my local workspaces. Most people will
+    # probably not use this so it is not part for the documented options and
+    # is explicitly handled here before the options parser is created. If
+    # anybody besides Robin is using this option do not depend on the options
+    # it inserts into the args list being consistent. They could change at any
+    # update from the repository.
     myDevModeOptions = [
             '--sip',
             '--build_dir=../bld',
             '--prefix=/opt/wx/2.9',
 
             # These will be ignored on the other platforms so it is okay to
-            # include them here            
+            # include them unconditionally
             '--osx_cocoa',
+            #'--osx_carbon',
             '--mac_arch=i386',
             ]
     if not isWindows:
