@@ -127,15 +127,16 @@ class Events(unittest2.TestCase):
         class Frame(wx.Frame):
             def __init__(self, *args, **kw):
                 wx.Frame.__init__(self, *args, **kw)
-                self.Bind(wx.EVT_SIZE, self.onSize)
+                self.Bind(wx.EVT_SIZE, self.OnSize)
                 self.gotEvent = False
-            def onSize(self, evt):
+            def OnSize(self, evt):
                 self.gotEvent = True
                 evt.EventObject.Close()
         app = wx.App()
         frm = Frame(None)
         frm.Show()
-        app.MainLoop()
+        frm.SetSize((200,100))
+        #app.MainLoop()
         self.assertTrue(frm.gotEvent)
         
         
