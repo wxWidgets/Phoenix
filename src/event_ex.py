@@ -16,7 +16,7 @@ class PyEventBinder(object):
 
 
     def Bind(self, target, id1, id2, function):
-        """Bind this set of event types to target using its COnnect() method."""
+        """Bind this set of event types to target using its Connect() method."""
         for et in self.evtType:
             target.Connect(id1, id2, et, function)
 
@@ -65,6 +65,9 @@ def _EvtHandler_Bind(self, event, handler, source=None, id=wx.ID_ANY, id2=wx.ID_
     :param id2: Used when it is desirable to bind a handler
                 to a range of IDs, such as with EVT_MENU_RANGE.
     """
+    assert isinstance(event, wx.PyEventBinder)
+    assert callable(handler)
+    assert source is None or hasattr(source, 'GetId')
     if source is not None:
         id  = source.GetId()
     event.Bind(self, id, id2, handler)              
