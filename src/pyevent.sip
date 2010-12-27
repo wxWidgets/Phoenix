@@ -11,10 +11,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 // These Event classes can be derived from in Python and passed through the
-// event system without loosing anything. They do this by keeping a seaparate
-// dictionary for storring any extra attributes set from Python code. When the
-// event object is cloned then the clone gets a new reference to the same
-// dictionary held by the original object.
+// event system without loosing anything. They do this by copying any
+// attributes added to the Python object for the original event over to the
+// new cloned event in the Clone method.
 
 
 //---------------------------------------------------------------------------
