@@ -186,7 +186,7 @@ logged in on the main display of your Mac."""
         
 
     def __del__(self):
-        self.RestoreStdio()  # Just in case the MainLoop was overridden
+        self.RestoreStdio()  # Just in case the MainLoop was overridden without calling RestoreStio
 
         
     def Destroy(self):
@@ -202,8 +202,9 @@ logged in on the main display of your Mac."""
 
     def MainLoop(self):
         """Execute the main GUI event loop"""
-        wx.PyApp.MainLoop(self)
+        rv = wx.PyApp.MainLoop(self)
         self.RestoreStdio()
+        return rv
 
 
     def RedirectStdio(self, filename=None):

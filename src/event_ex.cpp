@@ -11,8 +11,6 @@ public:
     PyObject*   m_func;
 };
 
-
-
 IMPLEMENT_ABSTRACT_CLASS(wxPyCallback, wxEvtHandler);
 
 wxPyCallback::wxPyCallback(PyObject* func) {

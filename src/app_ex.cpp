@@ -170,15 +170,15 @@ int wxPyApp::MainLoop()
 #endif
         DeletePendingObjects();
     }
-    bool initialized = wxTopLevelWindows.GetCount() != 0;
-    if (initialized) {
+    //bool initialized = wxTopLevelWindows.GetCount() != 0;
+    //if (initialized) {
         if ( m_exitOnFrameDelete == Later ) {
             m_exitOnFrameDelete = Yes;
         }
 
         retval = wxApp::MainLoop();
         OnExit();
-    }
+    //}
     return retval;
 }
 
