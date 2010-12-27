@@ -360,7 +360,8 @@ def sip(options, args):
         src_name = src_name.replace('\\', '/')
         base = os.path.basename(os.path.splitext(src_name)[0])
         sbf = posixjoin(cfg.SIPOUT, base) + '.sbf'
-        pycode = posixjoin(cfg.PKGDIR, base) + '.py'
+        pycode = base.replace('_', '')
+        pycode = posixjoin(cfg.PKGDIR, pycode) + '.py'
         pycode = '-X pycode:'+pycode        
         cmd = '%s %s -c %s -b %s %s %s'  % \
             (cfg.SIP, cfg.SIPOPTS, cfg.SIPOUT, sbf, pycode, src_name)
