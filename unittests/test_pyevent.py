@@ -73,7 +73,7 @@ class PyEvents(unittest2.TestCase):
             rc2 = sys.getrefcount(evt2)
             rc3 = sys.getrefcount(evt1)
             #print '\n****', rc1, rc2, rc3
-            ##self.assertTrue(rc1 == rc2 == rc3)  TODO: rc2 has an extra refcount.  Why?
+            self.assertTrue(rc1 == rc2 == rc3)
             self.assertTrue(evt1.attr == evt2.attr)
 
     #def test_AA(self):
