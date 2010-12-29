@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040d00
-#define SIP_VERSION_STR     "4.13-snapshot-5084598470c3"
+#define SIP_VERSION         0x040c01
+#define SIP_VERSION_STR     "4.12.1-snapshot-1c2692d2bb29"
 
 
 /*
@@ -604,6 +604,7 @@ typedef enum {
 #endif
     iter_slot,          /* __iter__ */
     next_slot,          /* __next__ */
+    setattr_slot,       /* __setattr__, __delattr__ */
 } sipPySlotType;
 
 

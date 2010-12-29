@@ -564,7 +564,7 @@ static PyObject *getScopeDict(sipTypeDef *td, PyObject *mod_dict,
         sipExportedModuleDef *client);
 static PyObject *createContainerType(sipContainerDef *cod, sipTypeDef *td,
         PyObject *bases, PyObject *metatype, PyObject *mod_dict,
-        sipExportedModuleDef *client);
+        PyObject *type_dict, sipExportedModuleDef *client);
 static int createClassType(sipExportedModuleDef *client, sipClassTypeDef *ctd,
         PyObject *mod_dict);
 static int createMappedType(sipExportedModuleDef *client,
@@ -577,7 +577,7 @@ static PyObject *unpickle_enum(PyObject *, PyObject *args);
 static int setReduce(PyTypeObject *type, PyMethodDef *pickler);
 static int createEnumType(sipExportedModuleDef *client, sipEnumTypeDef *etd,
         PyObject *mod_dict);
-static PyObject *createTypeDict(PyObject *mname);
+static PyObject *createTypeDict(sipExportedModuleDef *em);
 static sipExportedModuleDef *getTypeModule(const sipEncodedTypeDef *enc,
         sipExportedModuleDef *em);
 static sipTypeDef *getGeneratedType(const sipEncodedTypeDef *enc,
@@ -3050,7 +3050,8 @@ static void add_failure(PyObject **parseErrp, sipParseFailure *failure)
 
 
 /*
- * Parse a pair of arguments to a C/C++ function without any side effects.
+ * Parse one or a pair of arguments to a C/C++ function without any side
+ * effects.
  */
 static int sip_api_parse_pair(PyObject **parseErrp, PyObject *sipArg0,
         PyObject *sipArg1, const char *fmt, ...)
@@ -3064,7 +3065,7 @@ static int sip_api_parse_pair(PyObject **parseErrp, PyObject *sipArg0,
     if (*parseErrp != NULL && !PyList_Check(*parseErrp))
         return FALSE;
 
-    if ((args = PyTuple_New(2)) == NULL)
+    if ((args = PyTuple_New(sipArg1 != NULL ? 2 : 1)) == NULL)
     {
         /* Stop all parsing and indicate an exception has been raised. */
         Py_XDECREF(*parseErrp);
@@ -3077,8 +3078,11 @@ static int sip_api_parse_pair(PyObject **parseErrp, PyObject *sipArg0,
     Py_INCREF(sipArg0);
     PyTuple_SET_ITEM(args, 0, sipArg0);
 
-    Py_INCREF(sipArg1);
-    PyTuple_SET_ITEM(args, 1, sipArg1);
+    if (sipArg1 != NULL)
+    {
+        Py_INCREF(sipArg1);
+        PyTuple_SET_ITEM(args, 1, sipArg1);
+    }
 
     /*
      * The first pass checks all the types and does conversions that are cheap
@@ -5310,9 +5314,9 @@ static PyObject *getScopeDict(sipTypeDef *td, PyObject *mod_dict,
  */
 static PyObject *createContainerType(sipContainerDef *cod, sipTypeDef *td,
         PyObject *bases, PyObject *metatype, PyObject *mod_dict,
-        sipExportedModuleDef *client)
+        PyObject *type_dict, sipExportedModuleDef *client)
 {
-    PyObject *py_type, *scope_dict, *typedict, *name, *args;
+    PyObject *py_type, *scope_dict, *name, *args;
 
     /* Get the dictionary to place the type in. */
     if (cod->cod_scope.sc_flag)
@@ -5320,10 +5324,6 @@ static PyObject *createContainerType(sipContainerDef *cod, sipTypeDef *td,
         scope_dict = mod_dict;
     }
     else if ((scope_dict = getScopeDict(getGeneratedType(&cod->cod_scope, client), mod_dict, client)) == NULL)
-        goto reterr;
-
-    /* Create the type dictionary. */
-    if ((typedict = createTypeDict(client->em_nameobj)) == NULL)
         goto reterr;
 
     /* Create an object corresponding to the type name. */
@@ -5334,13 +5334,13 @@ static PyObject *createContainerType(sipContainerDef *cod, sipTypeDef *td,
 #endif
 
     if (name == NULL)
-        goto reldict;
+        goto reterr;
 
     /* Create the type by calling the metatype. */
 #if PY_VERSION_HEX >= 0x02040000
-    args = PyTuple_Pack(3, name, bases, typedict);
+    args = PyTuple_Pack(3, name, bases, type_dict);
 #else
-    args = Py_BuildValue("OOO", name, bases, typedict);
+    args = Py_BuildValue("OOO", name, bases, type_dict);
 #endif
 
     if (args == NULL)
@@ -5361,7 +5361,6 @@ static PyObject *createContainerType(sipContainerDef *cod, sipTypeDef *td,
 
     Py_DECREF(args);
     Py_DECREF(name);
-    Py_DECREF(typedict);
 
     return py_type;
 
@@ -5376,9 +5375,6 @@ relargs:
 relname:
     Py_DECREF(name);
 
-reldict:
-    Py_DECREF(typedict);
-
 reterr:
     return NULL;
 }
@@ -5390,7 +5386,7 @@ reterr:
 static int createClassType(sipExportedModuleDef *client, sipClassTypeDef *ctd,
         PyObject *mod_dict)
 {
-    PyObject *bases, *metatype, *py_type;
+    PyObject *bases, *metatype, *py_type, *type_dict;
     sipEncodedTypeDef *sup;
     int i;
 
@@ -5471,8 +5467,25 @@ static int createClassType(sipExportedModuleDef *client, sipClassTypeDef *ctd,
     else
         metatype = (PyObject *)Py_TYPE(PyTuple_GET_ITEM(bases, 0));
 
-    if ((py_type = createContainerType(&ctd->ctd_container, (sipTypeDef *)ctd, bases, metatype, mod_dict, client)) == NULL)
+    /* Create the type dictionary and populate it with any non-lazy methods. */
+    if ((type_dict = createTypeDict(client)) == NULL)
         goto relbases;
+
+    if (sipTypeHasNonlazyMethod(&ctd->ctd_base))
+    {
+        PyMethodDef *pmd = ctd->ctd_container.cod_methods;
+
+        for (i = 0; i < ctd->ctd_container.cod_nrmethods; ++i)
+        {
+            if (isNonlazyMethod(pmd) && addMethod(type_dict, pmd) < 0)
+                goto reldict;
+
+            ++pmd;
+        }
+    }
+
+    if ((py_type = createContainerType(&ctd->ctd_container, (sipTypeDef *)ctd, bases, metatype, mod_dict, type_dict, client)) == NULL)
+        goto reldict;
 
     /* Handle the pickle function. */
     if (ctd->ctd_pickle != NULL)
@@ -5485,23 +5498,9 @@ static int createClassType(sipExportedModuleDef *client, sipClassTypeDef *ctd,
             goto reltype;
     }
 
-    /* Handle any non-lazy methods if the type has one. */
-    if (sipTypeHasNonlazyMethod(&ctd->ctd_base))
-    {
-        PyMethodDef *pmd = ctd->ctd_container.cod_methods;
-        PyObject *dict = ((PyTypeObject *)py_type)->tp_dict;
-
-        for (i = 0; i < ctd->ctd_container.cod_nrmethods; ++i)
-        {
-            if (isNonlazyMethod(pmd) && addMethod(dict, pmd) < 0)
-                goto reltype;
-
-            ++pmd;
-        }
-    }
-
     /* We can now release our references. */
     Py_DECREF(bases);
+    Py_DECREF(type_dict);
 
     return 0;
 
@@ -5509,6 +5508,9 @@ static int createClassType(sipExportedModuleDef *client, sipClassTypeDef *ctd,
 
 reltype:
     Py_DECREF(py_type);
+
+reldict:
+    Py_DECREF(type_dict);
 
 relbases:
     Py_DECREF(bases);
@@ -5525,7 +5527,7 @@ reterr:
 static int createMappedType(sipExportedModuleDef *client,
         sipMappedTypeDef *mtd, PyObject *mod_dict)
 {
-    PyObject *bases;
+    PyObject *bases, *type_dict;
 
     /* Handle the trivial case where we have already been initialised. */
     if (mtd->mtd_base.td_module != NULL)
@@ -5538,15 +5540,23 @@ static int createMappedType(sipExportedModuleDef *client,
     if ((bases = getDefaultBases()) == NULL)
         goto reterr;
 
-    if (createContainerType(&mtd->mtd_container, (sipTypeDef *)mtd, bases, (PyObject *)&sipWrapperType_Type, mod_dict, client) == NULL)
+    /* Create the type dictionary. */
+    if ((type_dict = createTypeDict(client)) == NULL)
         goto relbases;
+
+    if (createContainerType(&mtd->mtd_container, (sipTypeDef *)mtd, bases, (PyObject *)&sipWrapperType_Type, mod_dict, type_dict, client) == NULL)
+        goto reldict;
 
     /* We can now release our references. */
     Py_DECREF(bases);
+    Py_DECREF(type_dict);
 
     return 0;
 
     /* Unwind after an error. */
+
+reldict:
+    Py_DECREF(type_dict);
 
 relbases:
     Py_DECREF(bases);
@@ -5783,7 +5793,7 @@ static int createEnumType(sipExportedModuleDef *client, sipEnumTypeDef *etd,
         PyObject *mod_dict)
 {
     static PyObject *bases = NULL;
-    PyObject *name, *typedict, *args, *dict;
+    PyObject *name, *type_dict, *args, *dict;
     PyTypeObject *py_type;
 
     etd->etd_base.td_module = client;
@@ -5820,17 +5830,17 @@ static int createEnumType(sipExportedModuleDef *client, sipEnumTypeDef *etd,
         goto reterr;
 
     /* Create the type dictionary. */
-    if ((typedict = createTypeDict(client->em_nameobj)) == NULL)
+    if ((type_dict = createTypeDict(client)) == NULL)
         goto relname;
 
     /* Create the type by calling the metatype. */
 #if PY_VERSION_HEX >= 0x02040000
-    args = PyTuple_Pack(3, name, bases, typedict);
+    args = PyTuple_Pack(3, name, bases, type_dict);
 #else
-    args = Py_BuildValue("OOO", name, bases, typedict);
+    args = Py_BuildValue("OOO", name, bases, type_dict);
 #endif
 
-    Py_DECREF(typedict);
+    Py_DECREF(type_dict);
 
     if (args == NULL)
         goto relname;
@@ -5871,10 +5881,9 @@ reterr:
 
 
 /*
- * Create a type dictionary for dynamic type being created in the module with
- * the specified name.
+ * Create a type dictionary for dynamic type being created in a module.
  */
-static PyObject *createTypeDict(PyObject *mname)
+static PyObject *createTypeDict(sipExportedModuleDef *em)
 {
     static PyObject *mstr = NULL;
     PyObject *dict;
@@ -5887,7 +5896,7 @@ static PyObject *createTypeDict(PyObject *mname)
         return NULL;
 
     /* We need to set the module name as an attribute for dynamic types. */
-    if (PyDict_SetItem(dict, mstr, mname) < 0)
+    if (PyDict_SetItem(dict, mstr, em->em_nameobj) < 0)
     {
         Py_DECREF(dict);
         return NULL;
@@ -5988,8 +5997,21 @@ static int getSelfFromArgs(sipTypeDef *td, PyObject *args, int argnr,
  */
 static int isNonlazyMethod(PyMethodDef *pmd)
 {
-    return (strcmp(pmd->ml_name, "__enter__") == 0 ||
-            strcmp(pmd->ml_name, "__exit__") == 0);
+    static const char *lazy[] = {
+        "__getattribute__",
+        "__getattr__",
+        "__enter__",
+        "__exit__",
+        NULL
+    };  
+
+    const char **l;
+
+    for (l = lazy; *l != NULL; ++l)
+        if (strcmp(pmd->ml_name, *l) == 0)
+            return TRUE;
+
+    return FALSE;
 }
 
 
@@ -8795,6 +8817,9 @@ static PyObject *sipSimpleWrapper_new(sipWrapperType *wt, PyObject *args,
         return NULL;
     }
 
+    if (add_all_lazy_attrs(wt->type) < 0)
+        return NULL;
+
     if (sipTypeIsMapped(td))
         cod = &((sipMappedTypeDef *)td)->mtd_container;
     else
@@ -9359,31 +9384,6 @@ static PyObject *slot_richcompare(PyObject *self, PyObject *arg, int op)
 
 
 /*
- * The instance getattro slot.
- */
-static PyObject *sipSimpleWrapper_getattro(PyObject *self, PyObject *name)
-{
-    if (add_all_lazy_attrs(((sipWrapperType *)Py_TYPE(self))->type) < 0)
-        return NULL;
-
-    return PyObject_GenericGetAttr(self, name);
-}
-
-
-/*
- * The instance setattro slot.
- */
-static int sipSimpleWrapper_setattro(PyObject *self, PyObject *name,
-        PyObject *value)
-{
-    if (add_all_lazy_attrs(((sipWrapperType *)Py_TYPE(self))->type) < 0)
-        return -1;
-
-    return PyObject_GenericSetAttr(self, name, value);
-}
-
-
-/*
  * The __dict__ getter.
  */
 static PyObject *sipSimpleWrapper_get_dict(PyObject *self, void *closure)
@@ -9467,8 +9467,8 @@ sipWrapperType sipSimpleWrapper_Type = {
             0,              /* tp_hash */
             0,              /* tp_call */
             0,              /* tp_str */
-            sipSimpleWrapper_getattro,  /* tp_getattro */
-            sipSimpleWrapper_setattro,  /* tp_setattro */
+            0,              /* tp_getattro */
+            0,              /* tp_setattro */
             0,              /* tp_as_buffer */
             Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC,  /* tp_flags */
             0,              /* tp_doc */
@@ -9965,6 +9965,10 @@ static void addTypeSlots(PyHeapTypeObject *heap_to, sipPySlotDef *slots)
 
         case next_slot:
             to->tp_iternext = (iternextfunc)f;
+            break;
+
+        case setattr_slot:
+            to->tp_setattro = (setattrofunc)f;
             break;
         }
 }
