@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------------------
 // Name:        wxpy_utils.sip
 // Purpose:     Some utility functions and such that can be used in other 
 //              snippets of C++ code to help reduce complexity, etc.
@@ -8,7 +8,7 @@
 // Created:     19-Nov-2010
 // Copyright:   (c) 2010 by Total Control Software
 // Licence:     wxWindows license
-/////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------------------
 
 
 %ModuleHeaderCode

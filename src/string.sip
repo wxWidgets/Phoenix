@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------------------
 // Name:        string.sip
 // Purpose:     Implements a %MappedType for wxString
 //
@@ -7,7 +7,7 @@
 // Created:     9-Nov-2010
 // Copyright:   (c) 2010 by Total Control Software
 // Licence:     wxWindows license
-/////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------------------
 
 
 // We don't want the Python user to ever need to deal directly with wxString
@@ -57,7 +57,7 @@
 
 
 
-// Used just for testing the MappedType code
+// Used just for testing the MappedType code, it can be removed later
 %ModuleCode
 wxString testStringTypemap(const wxString& str)
 {

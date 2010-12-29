@@ -17,8 +17,7 @@
         };
         
         class wxPyApp;
-        wxPyApp* wxGetApp();
-        
+        wxPyApp* wxGetApp();        
 %End
 
 
