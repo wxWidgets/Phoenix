@@ -1156,6 +1156,84 @@ class FrozenWindow(object):
 
 %End
 
+class wxWindowList_iterator /Abstract/ 
+{
+    // the C++ implementation of this class
+    %TypeHeaderCode
+        class wxWindowList_iterator {
+        public:
+            wxWindowList_iterator(wxWindowList::compatibility_iterator start)
+                : m_node(start) {}
+            
+            wxWindow* next() {
+                wxWindow* obj = NULL;
+                if (m_node) {
+                    obj = m_node->GetData();
+                    m_node = m_node->GetNext();
+                }
+                else PyErr_SetString(PyExc_StopIteration, "");
+                return (wxWindow*)obj;
+            }
+        private:
+            wxWindowList::compatibility_iterator m_node;
+        };
+    %End
+public:
+    wxWindow* next();
+};       
+
+class wxWindowList 
+{
+public:
+    int __len__();
+    %MethodCode
+        sipRes = sipCpp->size();
+    %End
+
+    wxWindow* __getitem__(size_t index);
+    %MethodCode
+        if (index < sipCpp->size()) {
+            wxWindowList::compatibility_iterator node = sipCpp->Item(index);
+            if (node) 
+                sipRes = (wxWindow*)node->GetData();
+        }
+        PyErr_SetString(PyExc_IndexError, "sequence index out of range");
+        sipError = sipErrorFail;
+    %End
+
+    int __contains__(const wxWindow* obj);
+    %MethodCode
+        wxWindowList::compatibility_iterator node;
+        node = sipCpp->Find((wxWindow*)obj);
+        sipRes = node != NULL;
+    %End
+
+    wxWindowList_iterator* __iter__() /Factory/;
+    %MethodCode
+        sipRes =  new wxWindowList_iterator(sipCpp->GetFirst());
+    %End
+
+    // TODO:  add support for index(value, [start, [stop]])
+    int index(wxWindow* obj);
+    %MethodCode
+        int idx = sipCpp->IndexOf((wxWindow*)obj);
+        if (idx == wxNOT_FOUND) {
+            sipError = sipErrorFail;
+            PyErr_SetString(PyExc_ValueError,
+                            "sequence.index(x): x not in sequence");
+            }
+        sipRes = idx;
+    %End
+};
+
+%Extract(id=pycode)
+def _wxWindowList___repr__(self):
+    return "wxWindowList: " + repr(list(self))
+wxWindowList.__repr__ = _wxWindowList___repr__
+del _wxWindowList___repr__
+%End
+
+
 
 //---------------------------------------------------------------------------
 

@@ -416,3 +416,97 @@ def convertFourDoublesTemplate(CLASS):
 
 
 
+#---------------------------------------------------------------------------
+# Templates for creating wrappers for type-specific wxList and wxArray classes
+
+
+def wxListWrapperTemplate(ListClass, ItemClass, RealItemClass=None):
+    if RealItemClass is None:
+        RealItemClass = ItemClass    
+        
+    # *** TODO: This can probably be done in a way that is not SIP-specfic. Try
+    # creating extractor objects from scratch and attach cppMethods to them.
+        
+    return extractors.WigCode('''\
+class {ListClass}_iterator /Abstract/ 
+{{
+    // the C++ implementation of this class
+    %TypeHeaderCode
+        class {ListClass}_iterator {{
+        public:
+            {ListClass}_iterator({ListClass}::compatibility_iterator start)
+                : m_node(start) {{}}
+            
+            {ItemClass}* next() {{
+                {RealItemClass}* obj = NULL;
+                if (m_node) {{
+                    obj = m_node->GetData();
+                    m_node = m_node->GetNext();
+                }}
+                else PyErr_SetString(PyExc_StopIteration, "");
+                return ({ItemClass}*)obj;
+            }}
+        private:
+            {ListClass}::compatibility_iterator m_node;
+        }};
+    %End
+public:
+    {ItemClass}* next();
+}};       
+
+class {ListClass} 
+{{
+public:
+    int __len__();
+    %MethodCode
+        sipRes = sipCpp->size();
+    %End
+
+    {ItemClass}* __getitem__(size_t index);
+    %MethodCode
+        if (index < sipCpp->size()) {{
+            {ListClass}::compatibility_iterator node = sipCpp->Item(index);
+            if (node) 
+                sipRes = ({ItemClass}*)node->GetData();
+        }}
+        PyErr_SetString(PyExc_IndexError, "sequence index out of range");
+        sipError = sipErrorFail;
+    %End
+
+    int __contains__(const {ItemClass}* obj);
+    %MethodCode
+        {ListClass}::compatibility_iterator node;
+        node = sipCpp->Find(({RealItemClass}*)obj);
+        sipRes = node != NULL;
+    %End
+
+    {ListClass}_iterator* __iter__() /Factory/;
+    %MethodCode
+        sipRes =  new {ListClass}_iterator(sipCpp->GetFirst());
+    %End
+
+    // TODO:  add support for index(value, [start, [stop]])
+    int index({ItemClass}* obj);
+    %MethodCode
+        int idx = sipCpp->IndexOf(({RealItemClass}*)obj);
+        if (idx == wxNOT_FOUND) {{
+            sipError = sipErrorFail;
+            PyErr_SetString(PyExc_ValueError,
+                            "sequence.index(x): x not in sequence");
+            }}
+        sipRes = idx;
+    %End
+}};
+
+%Extract(id=pycode)
+def _{ListClass}___repr__(self):
+    return "{ListClass}: " + repr(list(self))
+{ListClass}.__repr__ = _{ListClass}___repr__
+del _{ListClass}___repr__
+%End
+'''.format(**locals()))
+
+
+
+
+#---------------------------------------------------------------------------

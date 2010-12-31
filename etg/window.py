@@ -220,14 +220,15 @@ def run():
     ##c.addProperty('GtkWidget GetGtkWidget')
 
 
-
     # We probably won't ever need most of the wxWindow virtuals to be
     # overridable in Python, so we'll clear all the virtual flags here and add
     # back those that we want to keep in the next step.
     tools.removeVirtuals(c)
     tools.addWindowVirtuals(c)
 
-    
+
+    #-----------------------------------------------------------------------
+    # Other stuff
     
     module.addPyCode('''\
     class FrozenWindow(object):
@@ -245,9 +246,17 @@ def run():
             self._win.Thaw()
     ''')
     
+    
+    # Add a wrapper for wxWindowList and a new iterator class for it that
+    # makes wxWindowList quack like a read-only Python sequence.
+    module.addItem(tools.wxListWrapperTemplate('wxWindowList', 'wxWindow'))
+    
+    
+    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
+    
     
     
 #---------------------------------------------------------------------------

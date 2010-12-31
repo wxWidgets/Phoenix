@@ -64,7 +64,6 @@ def run():
         class wxMenu;
         class wxCursor;
         class wxBitmap;
-        class wxWindowList;  
         class wxSizer;
         class wxPalette;
         class wxAcceleratorTable;
