@@ -114,7 +114,7 @@ public:
         return sipBuildResult(&_isErr, "(dd)", self->m_x, self->m_y);
     }
     %End
-    SIP_PYOBJECT Get();
+    PyObject* Get();
     %MethodCode
         sipRes = _wxPoint2DDouble_Get(sipCpp, sipIsErr);
     %End
@@ -445,7 +445,7 @@ public:
                     self->m_x, self->m_y, self->m_width, self->m_height);
     }
     %End
-    SIP_PYOBJECT Get();
+    PyObject* Get();
     %MethodCode
         sipRes = _wxRect2DDouble_Get(sipCpp, sipIsErr);
     %End

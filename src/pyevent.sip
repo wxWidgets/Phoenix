@@ -20,8 +20,11 @@
     // transport those attributes over to the clone when wx needs to make a copy
     // of the event instance.
     
-    // NOTE: This class is intentionally not exposed to SIP (see wxPyEvent 
-    // and wxPyCommandEvent)
+    // NOTE: This class is intentionally not exposed to SIP as there is no
+    // need for it in Python code. Intead we just tell SIP that the __*attr__
+    // methods are in the event classes. (See wxPyEvent and wxPyCommandEvent
+    // below.)
+    
     class wxPyEvtDict
     {
     public:
@@ -43,7 +46,7 @@
             wxPyEndBlockThreads(blocked);
         }
 
-        PyObject* _getDict()
+        PyObject* _getAttrDict()
         {
             Py_INCREF(m_dict);
             return m_dict;
@@ -119,21 +122,23 @@ implement the Clone method in your derived classes.
 public:
     wxPyEvent(int id=0, wxEventType eventType = wxEVT_NULL );
     virtual wxEvent* Clone() const /Factory/;
+    PyObject* _getAttrDict();
     
-    SIP_PYOBJECT __getattr__(SIP_PYOBJECT name);
+    PyObject* __getattr__(PyObject* name);
     %MethodCode
         sipRes = sipCpp->__getattr__(name);
     %End
     
-    void __setattr__(SIP_PYOBJECT name, SIP_PYOBJECT value);
+    void __setattr__(PyObject* name, PyObject* value);
     %MethodCode
         sipCpp->__setattr__(name, value);
     %End
     
-    void __delattr__(SIP_PYOBJECT name);    
+    void __delattr__(PyObject* name);    
     %MethodCode
         sipCpp->__delattr__(name);
     %End
+    
 };
 
 
@@ -168,19 +173,19 @@ implement the Clone method in your derived classes.
 public:
     wxPyCommandEvent(wxEventType eventType = wxEVT_NULL, int id=0);
     virtual wxEvent* Clone() const /Factory/;
-    SIP_PYOBJECT _getDict();
+    PyObject* _getAttrDict();
     
-    SIP_PYOBJECT __getattr__(SIP_PYOBJECT name);
+    PyObject* __getattr__(PyObject* name);
     %MethodCode
         sipRes = sipCpp->__getattr__(name);
     %End
     
-    void __setattr__(SIP_PYOBJECT name, SIP_PYOBJECT value);
+    void __setattr__(PyObject* name, PyObject* value);
     %MethodCode
         sipCpp->__setattr__(name, value);
     %End
     
-    void __delattr__(SIP_PYOBJECT name);    
+    void __delattr__(PyObject* name);    
     %MethodCode
         sipCpp->__delattr__(name);
     %End

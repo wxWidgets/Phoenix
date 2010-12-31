@@ -16,6 +16,7 @@ import extractors
 import sys, os
 
 
+
 def removeWxPrefixes(node):
     """
     Rename items with a 'wx' prefix to not have the prefix. If the back-end
@@ -36,7 +37,12 @@ def removeWxPrefixes(node):
             item.pyName = item.name
             
 
-    
+def removeWxPrefix(name):
+    if name.startswith('wx') and not name.startswith('wxEVT_'):
+        name = name[2:]
+    return name
+
+
 def ignoreAssignmentOperators(node):
     """
     Set the ignored flag for all class methods that are assignment operators
@@ -423,7 +429,8 @@ def convertFourDoublesTemplate(CLASS):
 def wxListWrapperTemplate(ListClass, ItemClass, RealItemClass=None):
     if RealItemClass is None:
         RealItemClass = ItemClass    
-        
+    ListClass_noPrefix = removeWxPrefix(ListClass)
+    
     # *** TODO: This can probably be done in a way that is not SIP-specfic. Try
     # creating extractor objects from scratch and attach cppMethods to them.
         
@@ -499,10 +506,10 @@ public:
 }};
 
 %Extract(id=pycode)
-def _{ListClass}___repr__(self):
+def _{ListClass_noPrefix}___repr__(self):
     return "{ListClass}: " + repr(list(self))
-{ListClass}.__repr__ = _{ListClass}___repr__
-del _{ListClass}___repr__
+{ListClass_noPrefix}.__repr__ = _{ListClass_noPrefix}___repr__
+del _{ListClass_noPrefix}___repr__
 %End
 '''.format(**locals()))
 

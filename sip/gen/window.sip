@@ -1227,10 +1227,10 @@ public:
 };
 
 %Extract(id=pycode)
-def _wxWindowList___repr__(self):
+def _WindowList___repr__(self):
     return "wxWindowList: " + repr(list(self))
-wxWindowList.__repr__ = _wxWindowList___repr__
-del _wxWindowList___repr__
+WindowList.__repr__ = _WindowList___repr__
+del _WindowList___repr__
 %End
 
 

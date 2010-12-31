@@ -227,7 +227,7 @@ public:
         }
     }
     %End
-    void Connect(int id, int lastId, wxEventType eventType, SIP_PYOBJECT func);
+    void Connect(int id, int lastId, wxEventType eventType, PyObject* func);
     %MethodCode
         _wxEvtHandler_Connect(sipCpp, sipIsErr, id, lastId, eventType, func);
     %End
@@ -273,7 +273,7 @@ public:
         }
     }
     %End
-    bool Disconnect(int id, int lastId=-1, wxEventType eventType=wxEVT_NULL, SIP_PYOBJECT func=NULL);
+    bool Disconnect(int id, int lastId=-1, wxEventType eventType=wxEVT_NULL, PyObject* func=NULL);
     %MethodCode
         sipRes = _wxEvtHandler_Disconnect(sipCpp, sipIsErr, id, lastId, eventType, func);
     %End
@@ -425,7 +425,7 @@ public:
         }
     }
     %End
-    SIP_PYOBJECT GetClientData();
+    PyObject* GetClientData();
     %MethodCode
         sipRes = _wxCommandEvent_GetClientData(sipCpp, sipIsErr);
     %End
@@ -437,7 +437,7 @@ public:
         self->SetClientObject(data);
     }
     %End
-    void SetClientData(SIP_PYOBJECT clientData);
+    void SetClientData(PyObject* clientData);
     %MethodCode
         _wxCommandEvent_SetClientData(sipCpp, sipIsErr, clientData);
     %End

@@ -188,7 +188,7 @@ public:
             return sipBuildResult(&_isErr, "(iii)", red, green, blue);
     }
     %End
-    SIP_PYOBJECT Get(bool includeAlpha=true);
+    PyObject* Get(bool includeAlpha=true);
     %MethodCode
         sipRes = _wxColour_Get(sipCpp, sipIsErr, includeAlpha);
     %End

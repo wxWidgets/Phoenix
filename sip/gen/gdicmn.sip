@@ -67,7 +67,7 @@ public:
         return sipBuildResult(&_isErr, "(ii)", self->x, self->y);
     }
     %End
-    SIP_PYOBJECT Get();
+    PyObject* Get();
     %MethodCode
         sipRes = _wxPoint_Get(sipCpp, sipIsErr);
     %End
@@ -293,7 +293,7 @@ public:
         return sipBuildResult(&_isErr, "(ii)", self->GetWidth(), self->GetHeight());
     }
     %End
-    SIP_PYOBJECT Get();
+    PyObject* Get();
     %MethodCode
         sipRes = _wxSize_Get(sipCpp, sipIsErr);
     %End
@@ -587,7 +587,7 @@ public:
                               self->x, self->y, self->width, self->height);
     }
     %End
-    SIP_PYOBJECT Get();
+    PyObject* Get();
     %MethodCode
         sipRes = _wxRect_Get(sipCpp, sipIsErr);
     %End
@@ -750,7 +750,7 @@ public:
         return sipBuildResult(&_isErr, "(dd)", self->x, self->y);
     }
     %End
-    SIP_PYOBJECT Get();
+    PyObject* Get();
     %MethodCode
         sipRes = _wxRealPoint_Get(sipCpp, sipIsErr);
     %End

@@ -453,9 +453,13 @@ from %s import *
         pnames = ', '.join(pnames)
         if pnames:
             pnames = ', ' + pnames
-        # convert PyObject* to SIP_PYOBJECT in the return type and param types
-        typ = method.type.replace('PyObject*', 'SIP_PYOBJECT')
-        argsString = method.argsString.replace('PyObject*', 'SIP_PYOBJECT')
+        if False:
+            # convert PyObject* to SIP_PYOBJECT in the return type and param types
+            typ = method.type.replace('PyObject*', 'SIP_PYOBJECT')
+            argsString = method.argsString.replace('PyObject*', 'SIP_PYOBJECT')
+        else:
+            typ = method.type
+            argsString = method.argsString
         # spit it all out
         if method.isCtor:
             stream.write('%s%s%s%s;\n' % 
