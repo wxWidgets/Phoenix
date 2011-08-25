@@ -53,12 +53,14 @@ Usage: ./build.py [command(s)] [options]
         
         build_wx    Do the wxWidgets part of the build
         build_py    Build wxPython only
-        build       Build both wxWidgets and wxPython.
+        build       Build both wxWidgets and wxPython
         
         clean_wx    Clean the wx parts of the build
         clean_py    Clean the wxPython parts of the build
-        cleanall    Clean both wx and wxPython, and a little extra scrubbing
+        clean       Clean both wx and wxPython
 """
+#        cleanall    Clean both wx and wxPython, and a little extra scrubbing
+
     parser = makeOptionParser()
     parser.print_help()
     
@@ -84,8 +86,8 @@ def main(args):
         if cmd.startswith('test_'):
             testOne(cmd, options, args)
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
-                   'build_wx', 'build_py', 'build',
-                   'clean_wx', 'clean_py', 'cleanall']:
+                     'build_wx', 'build_py', 'build',
+                     'clean', 'clean_wx', 'clean_py', 'cleanall']:
             function = globals()[cmd]
             function(options, args)
         else:
@@ -161,6 +163,7 @@ def setPythonVersion(args):
     else:
         findPython = runcmd("which %s" % PYTHON, True, False)
         msg('Found %s at %s' % (PYTHON, findPython))
+        PYTHON = findPython
     msg(runcmd('%s -c "import sys; print sys.version"' % PYTHON, True, False))
         
 
@@ -210,7 +213,6 @@ def wxDir():
 def getMSWSettings(options):
     class MSWsettings(object):
         pass
-
     msw = MSWsettings()
     msw.CPU = os.environ.get('CPU')
     if msw.CPU == 'AMD64':
@@ -219,9 +221,9 @@ def getMSWSettings(options):
         msw.dllDir = posixjoin(wxDir(), "lib", "vc_dll")
     msw.buildDir = posixjoin(wxDir(), "build", "msw")
 
-    #msw.build_type_ext = "u"
-    #if options.debug:
-    #    msw.build_type_ext = "ud"
+    msw.dll_type = "u"
+    if options.debug:
+        msw.dll_type = "ud"
     return msw
         
 
@@ -289,6 +291,19 @@ def getBuildDir(options):
     return BUILD_DIR
 
 
+def deleteIfExists(deldir, verbose=True):
+    if os.path.exists(deldir) and os.path.isdir(deldir):
+        if verbose:
+            print "Removing folder: %s" % deldir
+        shutil.rmtree(deldir)
+        
+        
+def delFiles(fileList, verbose=True):
+    for afile in fileList:
+        if verbose:
+            print "Removing file: %s" % afile
+        os.remove(afile)
+
 
 def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
     print "**** macFixDependencyInstallName(%s, %s, %s, %s)" % (destdir, prefix, extension, buildDir)
@@ -304,7 +319,6 @@ def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
         os.system(cmd)        
     os.chdir(pwd)
     
-
 
 #---------------------------------------------------------------------------
 # Command functions
@@ -329,7 +343,8 @@ def dox(options, args):
     
 def doxhtml(options, args):
     msg('Running command: doxhtml')
-    _doDox('html chm')
+    _doDox('html')
+    _doDox('chm')
     
     
 
@@ -587,18 +602,77 @@ def build_py(options, args):
     
 def clean_wx(options, args):
     msg('Running command: clean_wx')
+    if isWindows:
+        if options.both:
+            options.debug = True
+        msw = getMSWSettings(options)
+        cfg = Config()  
+        deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
+        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version2_nodot, msw.dll_type))))
+        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version3_nodot, msw.dll_type))))  
+        deleteIfExists(opj(msw.buildDir, 'vc_msw'+msw.dll_type+'dll'))
+        
+        if options.both:
+            options.debug = False
+            options.both = False
+            clean_wx(options, args)
+            options.both = True
+    else:
+        BUILD_DIR = getBuildDir(options)
+        deleteIfExists(BUILD_DIR)
     
 
 def clean_py(options, args):
     msg('Running command: clean_py')
+    assert os.getcwd() == phoenixDir()
+    if isWindows and options.both:
+        options.debug = True
+    cfg = Config()
+    build_base = 'build'
+    if isDarwin:
+        if options.osx_cocoa:
+            build_base += '/cocoa'
+        else:
+            build_base += '/carbon'
+    deleteIfExists(build_base)
+    files = list()
+    for wc in ['*.py', '*.pyc', '*.so', '*.pyd', '*.pdb',
+               ]:
+        files += glob.glob(opj(cfg.PKGDIR, wc))
+    if isWindows:
+        msw = getMSWSettings(options)
+        for wc in [ 'wx*' + version2_nodot + msw.dll_type + '*.dll',
+                    'wx*' + version3_nodot + msw.dll_type + '*.dll']:
+            files += glob.glob(opj(cfg.PKGDIR, wc))            
+    delFiles(files)
+
+    if options.both:
+        options.debug = False
+        options.both = False
+        clean_py(options, args)
+        options.both = True
     
+    
+def clean(options, args):
+    clean_wx(options, args)
+    clean_py(options, args)
+   
     
 def cleanall(options, args):
-    msg('Running command: cleanall')
-    
+    # These take care of all the object, lib, shared lib files created by the
+    # compilation part of build
     clean_wx(options, args)
     clean_py(options, args)
     
+    # Now also scrub out all of the SIP and C++ source files that are
+    # generated by the Phoenix ETG system.
+    msg('Running command: cleanall')
+    assert os.getcwd() == phoenixDir()
+    files = list()
+    for wc in ['sip/cpp/*.h', 'sip/cpp/*.cpp', 'sip/cpp/*.sbf', 'sip/gen/*.sip']:
+        files += glob.glob(wc)
+    delFiles(files)
+
     
 
 #---------------------------------------------------------------------------

@@ -21,26 +21,26 @@ public:
     wxTopLevelWindow();
 
     wxTopLevelWindow(
-        wxWindow * parent   /TranserThis/,
+        wxWindow * parent,
         wxWindowID id = wxID_ANY,
         const wxString & title = wxEmptyString,
         const wxPoint & pos = wxDefaultPosition,
         const wxSize & size = wxDefaultSize,
         long style = wxDEFAULT_FRAME_STYLE,
         const wxString & name = wxFrameNameStr
-    );
+    )   /Transfer/;
 
     ~wxTopLevelWindow();
 
     bool Create(
-        wxWindow * parent   /TranserThis/,
+        wxWindow * parent,
         wxWindowID id = wxID_ANY,
         const wxString & title = wxEmptyString,
         const wxPoint & pos = wxDefaultPosition,
         const wxSize & size = wxDefaultSize,
         long style = wxDEFAULT_FRAME_STYLE,
         const wxString & name = wxFrameNameStr
-    );
+    )   /TransferThis/;
 
     bool CanSetTransparent();
 

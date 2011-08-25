@@ -94,6 +94,8 @@ public:
 
     wxFont Smaller();
 
+    wxFont Underlined();
+
     wxFont & MakeBold();
 
     wxFont & MakeItalic();
@@ -101,6 +103,8 @@ public:
     wxFont & MakeLarger();
 
     wxFont & MakeSmaller();
+
+    wxFont & MakeUnderlined();
 
     wxFont & Scale(
         float x
@@ -140,6 +144,15 @@ public:
 
     void SetStyle(
         wxFontStyle style
+    );
+
+    void SetSymbolicSize(
+        wxFontSymbolicSize size
+    );
+
+    void SetSymbolicSizeRelativeTo(
+        wxFontSymbolicSize size,
+        int base
     );
 
     void SetUnderlined(
@@ -214,7 +227,6 @@ public:
     %Property(name=PointSize, get=GetPointSize, set=SetPointSize)
     %Property(name=PixelSize, get=GetPixelSize, set=SetPixelSize)
     %Property(name=Style, get=GetStyle, set=SetStyle)
-    %Property(name=Underlined, get=GetUnderlined, set=SetUnderlined)
     %Property(name=Weight, get=GetWeight, set=SetWeight)
 };  // end of class wxFont
 
@@ -245,6 +257,17 @@ enum wxFontWeight
     wxFONTWEIGHT_LIGHT,
     wxFONTWEIGHT_BOLD,
     wxFONTWEIGHT_MAX
+};
+
+enum wxFontSymbolicSize
+{
+    wxFONTSIZE_XX_SMALL,
+    wxFONTSIZE_X_SMALL,
+    wxFONTSIZE_SMALL,
+    wxFONTSIZE_MEDIUM,
+    wxFONTSIZE_LARGE,
+    wxFONTSIZE_X_LARGE,
+    wxFONTSIZE_XX_LARGE
 };
 
 enum wxFontFlag

@@ -103,7 +103,7 @@ def run():
 
     # Remove the virtualness from these methods
     for m in [ 'GetDisplayMode', 'GetLayoutDirection', 'GetTopWindow', 'IsActive', 
-               'SafeYield', 'SafeYieldFor', 'SendIdleEvents', 'SetDisplayMode', 
+               'SafeYield', 'SafeYieldFor', 'SetDisplayMode', 
                'SetNativeTheme', ]:
         c.find(m).isVirtual = False
     

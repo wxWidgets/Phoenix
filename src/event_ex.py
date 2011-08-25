@@ -285,4 +285,4 @@ EVT_TEXT_CUT   =  wx.PyEventBinder( wxEVT_COMMAND_TEXT_CUT )
 EVT_TEXT_COPY  =  wx.PyEventBinder( wxEVT_COMMAND_TEXT_COPY )
 EVT_TEXT_PASTE =  wx.PyEventBinder( wxEVT_COMMAND_TEXT_PASTE )
 
-EVT_THREAD = wx.PyEventBinder( wxEVT_COMMAND_THREAD )
+EVT_THREAD = wx.PyEventBinder( wxEVT_THREAD )

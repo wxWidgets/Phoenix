@@ -99,7 +99,20 @@ def fixWindowClass(klass):
     klass.find('%s.id' % klass.name).default = 'wxID_ANY'
     klass.find('Create.id').default = 'wxID_ANY'
             
+    
+def fixTopLevelWindowClass(klass):
+    """
+    Tweaks for TLWs 
+    """
+    # TLW tweaks are a little different. We use the function annotation for
+    # TransferThis instead of the argument anotation.
+    klass.find(klass.name).findOverload('parent').transfer = True
+    klass.find('Create').transferThis = True
+    # give the id param a default value
+    klass.find('%s.id' % klass.name).default = 'wxID_ANY'
+    klass.find('Create.id').default = 'wxID_ANY'
             
+    
 def removeVirtuals(klass):
     """
     Sometimes methods are marked as virtual but probably don't ever need to be
@@ -429,10 +442,12 @@ def convertFourDoublesTemplate(CLASS):
 def wxListWrapperTemplate(ListClass, ItemClass, RealItemClass=None):
     if RealItemClass is None:
         RealItemClass = ItemClass    
-    ListClass_noPrefix = removeWxPrefix(ListClass)
+        
+    ListClass_pyName = removeWxPrefix(ListClass)
     
-    # *** TODO: This can probably be done in a way that is not SIP-specfic. Try
-    # creating extractor objects from scratch and attach cppMethods to them.
+    # *** TODO: This can probably be done in a way that is not SIP-specfic.
+    # Try creating extractor objects from scratch and attach cppMethods to
+    # them as needed, etc..
         
     return extractors.WigCode('''\
 class {ListClass}_iterator /Abstract/ 
@@ -444,13 +459,15 @@ class {ListClass}_iterator /Abstract/
             {ListClass}_iterator({ListClass}::compatibility_iterator start)
                 : m_node(start) {{}}
             
-            {ItemClass}* next() {{
+            {ItemClass}* __next__() {{
                 {RealItemClass}* obj = NULL;
                 if (m_node) {{
                     obj = m_node->GetData();
                     m_node = m_node->GetNext();
                 }}
-                else PyErr_SetString(PyExc_StopIteration, "");
+                else {{
+                    PyErr_SetString(PyExc_StopIteration, "");
+                }}
                 return ({ItemClass}*)obj;
             }}
         private:
@@ -458,13 +475,18 @@ class {ListClass}_iterator /Abstract/
         }};
     %End
 public:
-    {ItemClass}* next();
+    {ItemClass}* __next__();
+    %MethodCode
+        sipRes = sipCpp->__next__();
+        if (PyErr_Occurred())
+            return NULL;
+    %End
 }};       
 
 class {ListClass} 
 {{
 public:
-    int __len__();
+    SIP_SSIZE_T __len__();
     %MethodCode
         sipRes = sipCpp->size();
     %End
@@ -506,10 +528,10 @@ public:
 }};
 
 %Extract(id=pycode)
-def _{ListClass_noPrefix}___repr__(self):
-    return "{ListClass}: " + repr(list(self))
-{ListClass_noPrefix}.__repr__ = _{ListClass_noPrefix}___repr__
-del _{ListClass_noPrefix}___repr__
+def _{ListClass_pyName}___repr__(self):
+    return "{ListClass_pyName}: " + repr(list(self))
+{ListClass_pyName}.__repr__ = _{ListClass_pyName}___repr__
+del _{ListClass_pyName}___repr__
 %End
 '''.format(**locals()))
 

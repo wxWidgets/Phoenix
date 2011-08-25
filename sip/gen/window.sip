@@ -76,7 +76,7 @@ public:
     wxWindow();
 
     wxWindow(
-        wxWindow * parent   /TranserThis/,
+        wxWindow * parent   /TransferThis/,
         wxWindowID id = wxID_ANY,
         const wxPoint & pos = wxDefaultPosition,
         const wxSize & size = wxDefaultSize,
@@ -763,7 +763,7 @@ public:
         bool force = false
     );
 
-    bool Destroy()   /TranserThis/;
+    bool Destroy()   /TransferThis/;
 
     bool IsBeingDeleted();
 
@@ -953,7 +953,7 @@ public:
     );
 
     bool Create(
-        wxWindow * parent   /TranserThis/,
+        wxWindow * parent   /TransferThis/,
         wxWindowID id = wxID_ANY,
         const wxPoint & pos = wxDefaultPosition,
         const wxSize & size = wxDefaultSize,
@@ -1165,13 +1165,15 @@ class wxWindowList_iterator /Abstract/
             wxWindowList_iterator(wxWindowList::compatibility_iterator start)
                 : m_node(start) {}
             
-            wxWindow* next() {
+            wxWindow* __next__() {
                 wxWindow* obj = NULL;
                 if (m_node) {
                     obj = m_node->GetData();
                     m_node = m_node->GetNext();
                 }
-                else PyErr_SetString(PyExc_StopIteration, "");
+                else {
+                    PyErr_SetString(PyExc_StopIteration, "");
+                }
                 return (wxWindow*)obj;
             }
         private:
@@ -1179,13 +1181,18 @@ class wxWindowList_iterator /Abstract/
         };
     %End
 public:
-    wxWindow* next();
+    wxWindow* __next__();
+    %MethodCode
+        sipRes = sipCpp->__next__();
+        if (PyErr_Occurred())
+            return NULL;
+    %End
 };       
 
 class wxWindowList 
 {
 public:
-    int __len__();
+    SIP_SSIZE_T __len__();
     %MethodCode
         sipRes = sipCpp->size();
     %End
@@ -1228,11 +1235,22 @@ public:
 
 %Extract(id=pycode)
 def _WindowList___repr__(self):
-    return "wxWindowList: " + repr(list(self))
+    return "WindowList: " + repr(list(self))
 WindowList.__repr__ = _WindowList___repr__
 del _WindowList___repr__
 %End
 
+
+%ModuleCode
+wxWindowList* _GetTopLevelWindows_function(int& _isErr)
+{
+    return &wxTopLevelWindows;
+}
+%End
+wxWindowList* GetTopLevelWindows();
+%MethodCode
+    sipRes = _GetTopLevelWindows_function(sipIsErr);
+%End
 
 
 //---------------------------------------------------------------------------

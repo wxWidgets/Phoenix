@@ -32,7 +32,7 @@ def run():
         
     c = module.find('wxFrame')
     assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
+    tools.fixTopLevelWindowClass(c)
     
     c.find('wxFrame.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'    

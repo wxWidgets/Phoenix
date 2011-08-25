@@ -1800,7 +1800,7 @@ wxEventType wxEVT_COMMAND_COMBOBOX_DROPDOWN   /PyName=wxEVT_COMMAND_COMBOBOX_DRO
 
 wxEventType wxEVT_COMMAND_COMBOBOX_CLOSEUP   /PyName=wxEVT_COMMAND_COMBOBOX_CLOSEUP/;
 
-wxEventType wxEVT_COMMAND_THREAD   /PyName=wxEVT_COMMAND_THREAD/;
+wxEventType wxEVT_THREAD   /PyName=wxEVT_THREAD/;
 
 wxEventType wxEVT_LEFT_DOWN   /PyName=wxEVT_LEFT_DOWN/;
 
@@ -2306,7 +2306,7 @@ EVT_TEXT_CUT   =  wx.PyEventBinder( wxEVT_COMMAND_TEXT_CUT )
 EVT_TEXT_COPY  =  wx.PyEventBinder( wxEVT_COMMAND_TEXT_COPY )
 EVT_TEXT_PASTE =  wx.PyEventBinder( wxEVT_COMMAND_TEXT_PASTE )
 
-EVT_THREAD = wx.PyEventBinder( wxEVT_COMMAND_THREAD )
+EVT_THREAD = wx.PyEventBinder( wxEVT_THREAD )
 
 # End of included code block
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

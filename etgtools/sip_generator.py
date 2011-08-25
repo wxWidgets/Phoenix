@@ -50,7 +50,10 @@ class SipWrapperGenerator(generators.WrapperGeneratorBase):
 """)
         if module.name == module.module:
             stream.write("""
-%%Module(name=%s.%s, use_argument_names=True, language="C++")
+%%Module( name=%s.%s, 
+         keyword_arguments="All",
+         use_argument_names=True, 
+         language="C++")
 {
     %%AutoPyName(remove_leading="wx")
 };
@@ -539,7 +542,7 @@ from %s import *
             if item.transferBack:
                 annotations.append('TransferBack')
             if item.transferThis:
-                annotations.append('TranserThis')
+                annotations.append('TransferThis')
             if item.pyInt:
                 annotations.append('PyInt')
                 

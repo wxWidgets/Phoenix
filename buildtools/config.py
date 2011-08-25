@@ -47,7 +47,7 @@ class Configuration(object):
     SIPFILES = 'sip'              # where to find other sip files for %Include or %Import
     SIPOUT   = 'sip/cpp'          # where to put the generated C++ code
     
-    SIPOPTS  = ' '.join(['-k',    # turn on keyword args support
+    SIPOPTS  = ' '.join(['-w',    # enable warnings
                          '-o',    # turn on auto-docstrings
                          #'-e',    # turn on exceptions support
                          '-T',    # turn off writing the timestamp to the generated files

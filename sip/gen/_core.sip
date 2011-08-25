@@ -4,7 +4,10 @@
 // Copyright: (c) 2010 by Total Control Software
 // License:   wxWindows License
 
-%Module(name=wxPhoenix._core, use_argument_names=True, language="C++")
+%Module( name=wxPhoenix._core, 
+         keyword_arguments="All",
+         use_argument_names=True, 
+         language="C++")
 {
     %AutoPyName(remove_leading="wx")
 };

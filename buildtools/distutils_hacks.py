@@ -151,12 +151,20 @@ from distutils.errors import DistutilsExecError, CompileError
 def _darwin_compiler_fixup(compiler_so, cc_args):
     """
     This function will strip '-isysroot PATH' and '-arch ARCH' from the
-    compile flags if the user has specified one them in extra_compile_flags.
+    compile flags if the user has specified one of them in extra_compile_flags.
 
     This is needed because '-arch ARCH' adds another architecture to the
     build, without a way to remove an architecture. Furthermore GCC will
     barf if multiple '-isysroot' arguments are present.
+    
+    I've further modified our copy of this function to check if there
+    is a -isysroot flag in the CC/CXX values in the environment. If so then we
+    want to make sure that we keep that one and strip the others, instead of
+    stripping it and leaving Python's.
     """
+    ccHasSysroot = '-isysroot' in os.environ.get('CC', '') \
+                 or '-isysroot' in os.environ.get('CXX', '')
+    
     stripArch = stripSysroot = 0
 
     compiler_so = list(compiler_so)
@@ -169,7 +177,7 @@ def _darwin_compiler_fixup(compiler_so, cc_args):
         stripArch = stripSysroot = True
     else:
         stripArch = '-arch' in cc_args
-        stripSysroot = '-isysroot' in cc_args or stripArch  # <== This line changed
+        stripSysroot = '-isysroot' in cc_args or stripArch 
 
     if stripArch:
         while 1:
@@ -182,7 +190,10 @@ def _darwin_compiler_fixup(compiler_so, cc_args):
 
     if stripSysroot:
         try:
-            index = compiler_so.index('-isysroot')
+            index = 0
+            if ccHasSysroot:
+                index = compiler_so.index('-isysroot') + 1
+            index = compiler_so.index('-isysroot', index)
             # Strip this argument and the next one:
             del compiler_so[index:index+2]
         except ValueError:

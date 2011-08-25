@@ -3,8 +3,6 @@ import unittest2
 import wxPhoenix as wx
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
 
-from wxPhoenix import siplib
-
 #---------------------------------------------------------------------------
 
 class PyEvents(unittest2.TestCase):

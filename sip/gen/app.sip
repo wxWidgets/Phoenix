@@ -477,11 +477,6 @@ public:
         long eventsToProcess
     );
 
-    bool SendIdleEvents(
-        wxWindow * win,
-        wxIdleEvent & event
-    );
-
     bool SetDisplayMode(
         const wxVideoMode & info
     );

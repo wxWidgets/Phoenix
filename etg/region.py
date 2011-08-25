@@ -39,6 +39,13 @@ def run():
     c.find('GetBox').findOverload('wxCoord').ignore()
     c.addProperty('Box GetBox')
     
+    
+    # TODO: Make wxRegion and/or wxRegionIterator compatible with Python
+    # Iterator protocol. Perhaps it could be as simple as creating a generator
+    # object that uses a wxRegionIterator and which is returned from a
+    # wxRegion.__iter__ method.
+
+    
     c = module.find('wxRegionIterator')
     c.find('operator++').ignore()
     

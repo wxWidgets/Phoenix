@@ -87,8 +87,11 @@ def run():
     c.addProperty('PointSize GetPointSize SetPointSize')
     c.addProperty('PixelSize GetPixelSize SetPixelSize')
     c.addProperty('Style GetStyle SetStyle')
-    c.addProperty('Underlined GetUnderlined SetUnderlined')
     c.addProperty('Weight GetWeight SetWeight')
+
+    # TODO, there is now a Underlined method so we can't have a
+    # property of the same name.
+    #c.addProperty('Underlined GetUnderlined SetUnderlined')
 
        
     

@@ -90,7 +90,7 @@ public:
         delete self;
     }
     %End
-    void Destroy()   /TranserThis/;
+    void Destroy()   /TransferThis/;
     %MethodCode
         _wxObject_Destroy(sipCpp, sipIsErr);
     %End
