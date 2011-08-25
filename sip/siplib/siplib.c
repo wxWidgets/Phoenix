@@ -1,7 +1,7 @@
 /*
  * SIP library code.
  *
- * Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -2478,9 +2478,9 @@ static int sip_api_parse_result(int *isErr, PyObject *method, PyObject *res,
             case 'o':
                 {
 #if defined(HAVE_LONG_LONG)
-                    unsigned PY_LONG_LONG v = PyLong_AsUnsignedLongLong(arg);
+                    unsigned PY_LONG_LONG v = PyLong_AsUnsignedLongLongMask(arg);
 #else
-                    unsigned long v = PyLong_AsUnsignedLong(arg);
+                    unsigned long v = PyLong_AsUnsignedLongMask(arg);
 #endif
 
                     if (PyErr_Occurred())
@@ -2767,6 +2767,12 @@ static unsigned long sip_api_long_as_unsigned_long(PyObject *o)
     {
         long v = PyInt_AsLong(o);
 
+        /*
+         * Strictly speaking this should be changed to be consistent with the
+         * use of PyLong_AsUnsignedLongMask().  However as it's such an old
+         * version of Python we choose to leave it as it is.
+         */
+
         if (v < 0)
         {
             PyErr_SetString(PyExc_OverflowError,
@@ -2779,7 +2785,13 @@ static unsigned long sip_api_long_as_unsigned_long(PyObject *o)
     }
 #endif
 
-    return PyLong_AsUnsignedLong(o);
+    /*
+     * Note that we now ignore any overflow so that (for example) a negative
+     * integer will be converted to an unsigned as C/C++ would do.  We don't
+     * bother to check for overflow when converting to small C/C++ types (short
+     * etc.) so at least this is consistent.
+     */
+    return PyLong_AsUnsignedLongMask(o);
 }
 
 
@@ -2811,9 +2823,18 @@ static int sip_api_parse_kwd_args(PyObject **parseErrp, PyObject *sipArgs,
     int ok;
     va_list va;
 
-    /* Initialise the return of any unused keyword arguments. */
     if (unused != NULL)
+    {
+        /* Initialise the return of any unused keyword arguments. */
         *unused = NULL;
+    }
+    else if (sipKwdArgs != NULL && kwdlist == NULL)
+    {
+        /* __init__ methods avoid the normal Python checks. */
+        PyErr_SetString(PyExc_TypeError,
+                "keyword arguments are not supported");
+        return FALSE;
+    }
 
     va_start(va, fmt);
     ok = parseKwdArgs(parseErrp, sipArgs, sipKwdArgs, kwdlist, unused, fmt,
@@ -4298,9 +4319,9 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                 if (arg != NULL)
                 {
 #if defined(HAVE_LONG_LONG)
-                    unsigned PY_LONG_LONG v = PyLong_AsUnsignedLongLong(arg);
+                    unsigned PY_LONG_LONG v = PyLong_AsUnsignedLongLongMask(arg);
 #else
-                    unsigned long v = PyLong_AsUnsignedLong(arg);
+                    unsigned long v = PyLong_AsUnsignedLongMask(arg);
 #endif
 
                     if (PyErr_Occurred())
@@ -6755,11 +6776,11 @@ static PyObject *detail_FromFailure(PyObject *failure_obj)
         {
 #if PY_MAJOR_VERSION >= 3
             detail = PyUnicode_FromFormat(
-                    "keyword argument '%s' has unexpected type '%s'",
+                    "argument '%s' has unexpected type '%s'",
                     failure->arg_name, Py_TYPE(failure->detail_obj)->tp_name);
 #else
             detail = PyString_FromFormat(
-                    "keyword argument '%s' has unexpected type '%s'",
+                    "argument '%s' has unexpected type '%s'",
                     failure->arg_name, Py_TYPE(failure->detail_obj)->tp_name);
 #endif
         }
@@ -7580,65 +7601,75 @@ static PyObject *sip_api_is_py_method(sip_gilstate_t *gil, char *pymc,
 
     for (i = 0; i < PyTuple_GET_SIZE(mro); ++i)
     {
-        PyObject *cls_dict;
+        PyObject *cls_dict, *cls_attr;
 
         cls = PyTuple_GET_ITEM(mro, i);
 
 #if PY_MAJOR_VERSION >= 3
         cls_dict = ((PyTypeObject *)cls)->tp_dict;
 #else
-        // Allow for classic classes as mixins.
+        /* Allow for classic classes as mixins. */
         if (PyClass_Check(cls))
             cls_dict = ((PyClassObject *)cls)->cl_dict;
         else
             cls_dict = ((PyTypeObject *)cls)->tp_dict;
 #endif
 
-        if (cls_dict != NULL && (reimp = PyDict_GetItem(cls_dict, mname_obj)) != NULL)
+        /*
+         * Check any possible reimplementation is not the wrapped C++ method or
+         * a default special method implementation..
+         */
+        if (cls_dict != NULL && (cls_attr = PyDict_GetItem(cls_dict, mname_obj)) != NULL && Py_TYPE(cls_attr) != &sipMethodDescr_Type && Py_TYPE(cls_attr) != &PyWrapperDescr_Type)
         {
-            /*
-             * Check any reimplementation is Python code and is not the wrapped
-             * C++ method.
-             */
-            if (PyMethod_Check(reimp))
-            {
-                /* It's already a method but make sure it is bound. */
-                if (PyMethod_GET_SELF(reimp) != NULL)
-                {
-                    Py_INCREF(reimp);
-                }
-                else
-                {
-#if PY_MAJOR_VERSION >= 3
-                    reimp = PyMethod_New(PyMethod_GET_FUNCTION(reimp),
-                            (PyObject *)sipSelf);
-#else
-                    reimp = PyMethod_New(PyMethod_GET_FUNCTION(reimp),
-                            (PyObject *)sipSelf, PyMethod_GET_CLASS(reimp));
-#endif
-                }
-
-                break;
-            }
-
-            if (PyFunction_Check(reimp))
-            {
-#if PY_MAJOR_VERSION >= 3
-                reimp = PyMethod_New(reimp, (PyObject *)sipSelf);
-#else
-                reimp = PyMethod_New(reimp, (PyObject *)sipSelf, cls);
-#endif
-
-                break;
-            }
-
-            reimp = NULL;
+            reimp = cls_attr;
+            break;
         }
     }
 
     Py_DECREF(mname_obj);
 
-    if (reimp == NULL)
+    if (reimp != NULL)
+    {
+        /*
+         * Emulate the behaviour of a descriptor to make sure we return a bound
+         * method.
+         */
+        if (PyMethod_Check(reimp))
+        {
+            /* It's already a method but make sure it is bound. */
+            if (PyMethod_GET_SELF(reimp) != NULL)
+            {
+                Py_INCREF(reimp);
+            }
+            else
+            {
+#if PY_MAJOR_VERSION >= 3
+                reimp = PyMethod_New(PyMethod_GET_FUNCTION(reimp),
+                        (PyObject *)sipSelf);
+#else
+                reimp = PyMethod_New(PyMethod_GET_FUNCTION(reimp),
+                        (PyObject *)sipSelf, PyMethod_GET_CLASS(reimp));
+#endif
+            }
+        }
+        else if (PyFunction_Check(reimp))
+        {
+#if PY_MAJOR_VERSION >= 3
+            reimp = PyMethod_New(reimp, (PyObject *)sipSelf);
+#else
+            reimp = PyMethod_New(reimp, (PyObject *)sipSelf, cls);
+#endif
+        }
+        else
+        {
+            /*
+             * We don't know what it is so just return and assume that an
+             * appropriate exception will be raised later on.
+             */
+            Py_INCREF(reimp);
+        }
+    }
+    else
     {
         /* Use the fast track in future. */
         *pymc = 1;
@@ -8299,9 +8330,15 @@ static void sip_api_call_hook(const char *hookname)
     if ((dictofmods = PyImport_GetModuleDict()) == NULL)
         return;
  
+#if PY_MAJOR_VERSION >= 3
+    /* Get the builtins module. */
+    if ((mod = PyDict_GetItemString(dictofmods, "builtins")) == NULL)
+        return;
+#else
     /* Get the __builtin__ module. */
     if ((mod = PyDict_GetItemString(dictofmods, "__builtin__")) == NULL)
         return;
+#endif
  
     /* Get it's dictionary. */
     if ((dict = PyModule_GetDict(mod)) == NULL)
@@ -9192,9 +9229,9 @@ static void sipSimpleWrapper_releasebuffer(sipSimpleWrapper *self,
     const sipClassTypeDef *ctd;
 
     if ((ptr = getPtrTypeDef(self, &ctd)) == NULL)
-        return -1;
+        return;
 
-    return ctd->ctd_releasebuffer((PyObject *)self, ptr, buf);
+    ctd->ctd_releasebuffer((PyObject *)self, ptr, buf);
 }
 #endif
 
@@ -10662,7 +10699,11 @@ static int convertToWCharArray(PyObject *obj, wchar_t **ap, SIP_SSIZE_T *aszp)
     if ((wc = sip_api_malloc(ulen * sizeof (wchar_t))) == NULL)
         return -1;
 
+#if PY_VERSION_HEX >= 0x03020000
+    ulen = PyUnicode_AsWideChar(obj, wc, ulen);
+#else
     ulen = PyUnicode_AsWideChar((PyUnicodeObject *)obj, wc, ulen);
+#endif
 
     if (ulen < 0)
     {
@@ -10713,7 +10754,11 @@ static int convertToWChar(PyObject *obj, wchar_t *ap)
     if (PyUnicode_GET_SIZE(obj) != 1)
         return -1;
 
+#if PY_VERSION_HEX >= 0x03020000
+    if (PyUnicode_AsWideChar(obj, ap, 1) != 1)
+#else
     if (PyUnicode_AsWideChar((PyUnicodeObject *)obj, ap, 1) != 1)
+#endif
         return -1;
 
     return 0;
@@ -10769,7 +10814,11 @@ static int convertToWCharString(PyObject *obj, wchar_t **ap)
     if ((wc = sip_api_malloc((ulen + 1) * sizeof (wchar_t))) == NULL)
         return -1;
 
+#if PY_VERSION_HEX >= 0x03020000
+    ulen = PyUnicode_AsWideChar(obj, wc, ulen);
+#else
     ulen = PyUnicode_AsWideChar((PyUnicodeObject *)obj, wc, ulen);
+#endif
 
     if (ulen < 0)
     {

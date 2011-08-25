@@ -1,7 +1,7 @@
 /*
  * The SIP module interface.
  *
- * Copyright (c) 2010 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040c01
-#define SIP_VERSION_STR     "4.12.1-snapshot-baf837919f74"
+#define SIP_VERSION         0x040c04
+#define SIP_VERSION_STR     "4.12.4"
 
 
 /*
@@ -1553,9 +1553,13 @@ typedef struct _sipQtAPI {
 
 #define sipIsExactWrappedType(wt)   (sipTypeAsPyTypeObject((wt)->type) == (PyTypeObject *)(wt))
 
-#define sipConvertFromSliceObject(o,len,start,stop,step,slen) \
+#if PY_VERSION_HEX >= 0x03020000
+#define sipConvertFromSliceObject   PySlice_GetIndicesEx
+#else
+#define sipConvertFromSliceObject(o, len, start, stop, step, slen) \
         PySlice_GetIndicesEx((PySliceObject *)(o), (len), (start), (stop), \
                 (step), (slen))
+#endif
 
 
 /*
