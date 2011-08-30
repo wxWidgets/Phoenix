@@ -37,6 +37,7 @@ def run():
     # customizing the generated code and docstrings.
         
     c = module.find('wxAppConsole')
+    module.find('wxDISABLE_DEBUG_SUPPORT').ignore()
     assert isinstance(c, etgtools.ClassDef)
     
     # There's no need for the command line stuff as Python has its own ways to

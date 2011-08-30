@@ -108,6 +108,10 @@ def run():
     #endif
     """)
     
+    c.addCppMethod('void', 'SetDimensions', '(int x, int y, int width, int height, int sizeFlags=wxSIZE_AUTO)', """\
+    self->SetSize(x, y, width, height, sizeFlags);
+    """)
+    
     # Make the Register/UnregisterHotKey functions be available on Windows,
     # and empty stubs otherwise
     c.find('RegisterHotKey').setCppCode("""\
@@ -142,6 +146,10 @@ def run():
     # MSW only.  Do we want them wrapped?
     c.find('GetAccessible').ignore()
     c.find('SetAccessible').ignore()
+    
+    # now undocumented
+    c.find('GetConstraints').ignore()
+    c.find('SetConstraints').ignore()
    
     # Make some of the protected methods visible and overridable from Python
     c.find('SendDestroyEvent').ignore(False)
@@ -153,7 +161,7 @@ def run():
     c.find('SetCaret.caret').transfer = True
     c.find('SetToolTip.tip').transfer = True
     c.find('SetDropTarget.target').transfer = True
-    c.find('SetConstraints.constraints').transfer = True
+    #c.find('SetConstraints.constraints').transfer = True
     c.find('SetSizer.sizer').transfer = True
     c.find('SetSizerAndFit.sizer').transfer = True
     
@@ -173,7 +181,7 @@ def run():
     c.addProperty('ClientAreaOrigin GetClientAreaOrigin')
     c.addProperty('ClientRect GetClientRect SetClientRect')
     c.addProperty('ClientSize GetClientSize SetClientSize')
-    c.addProperty('Constraints GetConstraints SetConstraints')
+    #c.addProperty('Constraints GetConstraints SetConstraints')
     c.addProperty('ContainingSizer GetContainingSizer SetContainingSizer')
     c.addProperty('Cursor GetCursor SetCursor')
     c.addProperty('DefaultAttributes GetDefaultAttributes')
@@ -255,6 +263,7 @@ def run():
     module.addCppFunction('wxWindowList*', 'GetTopLevelWindows', '()', 
                           briefDoc="Returns a list-like object of the the application's top-level windows, (frames,dialogs, etc.)",
                           body="return &wxTopLevelWindows;")
+    module.addPyCode("PyWindow = Window")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

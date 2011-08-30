@@ -17,8 +17,8 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxFont',
-           #'wxFontList',
+ITEMS  = [  'wxFont',
+            'wxFontMetrics',
            ]    
     
 #---------------------------------------------------------------------------
@@ -31,10 +31,7 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    
-    module.find('wxFromString').ignore()
-    module.find('wxToString').ignore()
+
 
     # TODOs
     module.find('wxTheFontList').ignore()

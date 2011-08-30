@@ -25,6 +25,7 @@ ITEMS  = [
     'wxCommandEvent',
 
     'wxActivateEvent',
+    'wxBookCtrlEvent',
     'wxChildFocusEvent',
     'wxClipboardTextEvent',
     'wxCloseEvent',
@@ -85,6 +86,16 @@ def run():
     #endif
     """)
     
+    module.addHeaderCode("#include <wx/collpane.h>")
+    
+    # Macros
+    module.find('wx__DECLARE_EVT0').ignore()
+    module.find('wx__DECLARE_EVT1').ignore()
+    module.find('wx__DECLARE_EVT2').ignore()
+    module.find('wxEVENT_HANDLER_CAST').ignore()
+    module.find('wxDECLARE_EXPORTED_EVENT').ignore()
+    module.find('wxDECLARE_EVENT').ignore()
+    module.find('wxDEFINE_EVENT').ignore()
     
     #---------------------------------------
     # wxEvtHandler

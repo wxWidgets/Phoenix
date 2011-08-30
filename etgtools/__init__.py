@@ -67,6 +67,7 @@ def parseDoxyXML(module, class_or_filename_list):
         
     for class_or_filename in class_or_filename_list:
         pathname = _classToDoxyName(class_or_filename)
+
         if not os.path.exists(pathname):
             pathname = _classToDoxyName(class_or_filename, 'struct')
             if not os.path.exists(pathname):
@@ -82,11 +83,17 @@ def parseDoxyXML(module, class_or_filename_list):
             
             # Also automatically parse the XML for the include file to get related
             # typedefs, functions, enums, etc.
+            # Make sure though, that for interface files we only parse the one
+            # that belongs to this class. Otherwise, enums, etc. will be defined
+            # in multiple places.
+            xmlname = class_or_filename.replace('wx', '').lower()
+            
             if hasattr(item, 'includes'):
                 for inc in item.includes:
                     pathname, name = _includeToDoxyName(inc)
                     if os.path.exists(pathname) \
                        and pathname not in _filesparsed \
+                       and ("interface" not in name or xmlname in name) \
                        and name not in class_or_filename_list:
                         class_or_filename_list.append(name) 
 

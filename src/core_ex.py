@@ -9,13 +9,11 @@ wx = _sys.modules[__name__]
 # versions are the same for both wxPython and wxWidgets.
 from __version__ import *
 __version__ = VERSION_STRING
-import _core
-assert MAJOR_VERSION == _core.MAJOR_VERSION, "wxPython/wxWidgets version mismatch"
-assert MINOR_VERSION == _core.MINOR_VERSION, "wxPython/wxWidgets version mismatch"
-if RELEASE_NUMBER != _core.RELEASE_NUMBER:
+assert MAJOR_VERSION == MAJOR_VERSION, "wxPython/wxWidgets version mismatch"
+assert MINOR_VERSION == MINOR_VERSION, "wxPython/wxWidgets version mismatch"
+if RELEASE_NUMBER != RELEASE_NUMBER:
     import warnings
     warnings.warn("wxPython/wxWidgets release number mismatch")
-del _core
 
 
 def version():

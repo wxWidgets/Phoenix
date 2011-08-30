@@ -16,6 +16,7 @@ import os
 import glob
 import fnmatch
 import tempfile
+import commands
 
 from distutils.file_util import copy_file
 from distutils.dir_util  import mkpath
@@ -33,7 +34,11 @@ if os.environ.get('SIP'):
 elif os.name == 'nt':
     SIPdefault = 'c:/projects/sip/sip/sipgen/sip.exe'
 else:
-    SIPdefault = '/projects/sip/sip/sipgen/sip' 
+    path_sip = commands.getoutput("which sip")
+    if os.path.exists(path_sip):
+        SIPdefault = path_sip
+    else:
+        SIPdefault = '/projects/sip/sip/sipgen/sip' 
 
     
 #----------------------------------------------------------------------

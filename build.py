@@ -249,6 +249,8 @@ def makeOptionParser():
         ("extra_make",     ("", "Extra args to pass on [n]make's command line.")),
         ("both",           (False, "Build both a debug and release version. (Only used on Windows)")),
         ("unicode",        (True, "Build wxPython with unicode support (always on for wx2.9)")),
+        ("waf",            (False, "Use waf to build the bindings.")),
+        ("verbose",        (False, "Print out more information.")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -468,7 +470,7 @@ def build_wx(options, args):
 
     if options.debug or (isWindows and options.both):
         build_options.append('--debug')
-        
+    
     if options.extra_make:
         build_options.append('--extra_make="%s"' % options.extra_make)
                     
@@ -550,8 +552,19 @@ def build_py(options, args):
     pwd = pushDir(phoenixDir())
     
     # Do the build step
-    command = PYTHON + " -u ./setup.py %s %s %s" % \
-        (build_mode, " ".join(build_options), options.extra_setup)
+    if options.waf:
+        os.environ["PATH"] = BUILD_DIR + os.pathsep + os.environ["PATH"]
+        
+        waf_args = "configure build install"
+        for arg in args:
+            if arg.startswith("clean"):
+                waf_args = "clean distclean"
+                
+        command = "./waf %s -v -j6" % waf_args
+    else:
+        command = PYTHON + " -u ./setup.py %s %s %s" % \
+            (build_mode, " ".join(build_options), options.extra_setup)
+    
     runcmd(command)
 
     if isWindows and options.both:
@@ -598,7 +611,6 @@ def build_py(options, args):
     print " - Run python demo/demo.py"
     print
 
-        
     
 def clean_wx(options, args):
     msg('Running command: clean_wx')
@@ -651,7 +663,6 @@ def clean_py(options, args):
         options.both = False
         clean_py(options, args)
         options.both = True
-    
     
 def clean(options, args):
     clean_wx(options, args)

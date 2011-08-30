@@ -150,9 +150,9 @@ class BaseDef(object):
         # If there are more items to be searched than what is in self.items, a
         # subclass can override this to give a different list.
         return self.items
-    
-        
-    
+
+
+
 #---------------------------------------------------------------------------
 
 class VariableDef(BaseDef):
@@ -444,7 +444,39 @@ class ClassDef(BaseDef):
     def includeCppCode(self, filename):
         self.addCppCode(file(filename).read())
         
+    def addGetterSetterProps(self):
+        props = {} # format: { propName: [getter, setter] }
+        getters = []
+        setters = []
+        for item in self.items:
+            if item.ignored:
+                continue
+            if isinstance(item, MethodDef):
+                if not item.name == 'Get' and item.name.find('Get') != -1:
+                    getters.append(item.name)
+                elif not item.name == 'Set' and item.name.find('Set') != -1:
+                    setters.append(item.name)
         
+        for getter in getters:
+            props[getter.replace('Get', '')] = [getter]
+            
+        for setter in setters:
+            propName = setter.replace('Set', '')
+            if not propName in props:
+                props[propName] = [setter]
+            else:
+                props[propName].append(setter)
+                
+        for prop in props:
+            # only create the prop if a method with that name does not exist
+            if not self.findItem(prop):
+                propString = "%s %s" % (prop, props[prop][0])
+                if len(props[prop]) > 1:
+                    propString += " %s" % props[prop][1]
+                self.addProperty(propString.strip())
+            else:
+                print "WARNING: Method %s::%s already exists in C++ class API" % (self.name, prop)
+    
     def addProperty(self, *args, **kw):
         """
         Add a property to a class, with a name, getter function and optionally
@@ -646,8 +678,19 @@ class PropertyDef(BaseDef):
         self.briefDoc = doc
         self.protection = 'public'
         self.__dict__.update(kw)
-        
 
+class DefineDef(BaseDef):
+    """
+    Use the C++ methods of a class to make a Python property.
+
+    NOTE: This one is not automatically extracted, but can be added to
+          classes in the tweaker stage
+    """
+    def __init__(self, element, **kw):
+        super(DefineDef, self).__init__()
+        self.name = element.find('name').text
+        self.value = element.find('initializer').text
+        self.__dict__.update(kw)
         
 #---------------------------------------------------------------------------
 
@@ -826,7 +869,14 @@ class ModuleDef(BaseDef):
             self.items.append(item)
             
         elif kind == 'define':
-            skippingMsg(kind, element)
+            # if it doesn't have a value, it must be a macro.
+            value = element.findtext("initializer")
+            if not value:
+                skippingMsg(kind, element)
+            else:
+                extractingMsg(kind, element)
+                item = DefineDef(element)
+                self.items.append(item)
 
         elif kind == 'file':
             for node in element.findall('sectiondef/memberdef'):

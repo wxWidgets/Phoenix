@@ -39,7 +39,9 @@ INCLUDES = [  'defs',
               'intl',
               
               'gdiobj',
+              'bitmap',
               'font',
+              'image',
               'region',
               
               'gdicmn',
@@ -51,20 +53,35 @@ INCLUDES = [  'defs',
               'kbdstate',
               'mousestate',
               'tooltip',
-              'layout',
               'event',
               'pyevent',
               'process',
               'utils',
+              'sizer',
               
               'evtloop',
               'apptrait',
               'app',
               
               'validate',
+              'panel',
+              'menu',
               'window',
               'toplevel',
+              'dialog',
               'frame',
+              'statbmp',
+              'stattext',
+              'control',
+              'choice',
+              'dc',
+              'button',
+              'notebook',
+              'imagelist',
+              'splitter',
+              'collpane',
+              'statline',
+              'stdpaths',
               ]
 
 
@@ -192,7 +209,10 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 #define wxPortName "wxMac"
 #endif
 
+    wxInitAllImageHandlers();
+
     PyDict_SetItemString(moduleDict, "Port", PyString_FromString(wxPort));
+    PyDict_SetItemString(moduleDict, "Platform", PyString_FromString(wxPort));
 
     // Make a tuple of strings that gives more info about the platform and build.
     PyObject* PortInfo = PyList_New(0);

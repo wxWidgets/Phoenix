@@ -60,6 +60,13 @@ def ignoreAllOperators(node):
         if isinstance(item, extractors.MethodDef) and item.name.startswith('operator'):
             item.ignore()
 
+def addGetterSetterProps(node):
+    """
+    Set the ignored flag for all class methods that are any kind of operator
+    """
+    for item in node.allItems():
+        if isinstance(item, extractors.ClassDef):
+            item.addGetterSetterProps()
             
 def createPyArgsStrings(node):
     """
@@ -93,11 +100,11 @@ def fixWindowClass(klass):
     Do common tweaks for a window class.
     """
     # The ctor and Create method transfer ownership of the this pointer
-    klass.find('%s.parent' % klass.name).transferThis = True
-    klass.find('Create.parent').transferThis = True
-    # give the id param a default value
-    klass.find('%s.id' % klass.name).default = 'wxID_ANY'
-    klass.find('Create.id').default = 'wxID_ANY'
+    for func in klass.findAll('%s' % klass.name) + klass.findAll('Create'):
+        if isinstance(func, extractors.MethodDef):
+            func.find('parent').transferThis = True
+            # give the id param a default value
+            func.find('id').default = 'wxID_ANY'
             
     
 def fixTopLevelWindowClass(klass):

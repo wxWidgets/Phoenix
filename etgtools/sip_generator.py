@@ -140,6 +140,7 @@ from %s import *
     def generateModuleItems(self, module, stream):
         methodMap = {
             extractors.ClassDef         : self.generateClass,
+            extractors.DefineDef        : self.generateDefine,
             extractors.FunctionDef      : self.generateFunction,
             extractors.EnumDef          : self.generateEnum,
             extractors.GlobalVarDef     : self.generateGlobalVar,
@@ -212,8 +213,17 @@ from %s import *
         assert isinstance(globalVar, extractors.GlobalVarDef)
         if globalVar.ignored:
             return
+
         stream.write('%s %s' % (globalVar.type, globalVar.name))
         stream.write('%s;\n\n' % self.annotate(globalVar))
+        
+
+    #-----------------------------------------------------------------------
+    def generateDefine(self, define, stream):
+        assert isinstance(define, extractors.DefineDef)
+        if define.ignored:
+            return
+        stream.write('enum { %s };\n' % define.name)
         
         
     #-----------------------------------------------------------------------

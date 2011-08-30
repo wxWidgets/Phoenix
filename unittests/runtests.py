@@ -26,5 +26,5 @@ else:
     sys.modules['unittest2'] = unittest
     
 args = sys.argv[:1] + 'discover -p test_*.py -s unittests -t .'.split() + sys.argv[1:]
-unittest2.main( argv=args )
+unittest.main( argv=args )
 

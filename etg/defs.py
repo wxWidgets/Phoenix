@@ -60,20 +60,16 @@ def run():
     # TODO: Add these classes for real :-)
     module.insertItem(0, etgtools.WigCode("""\
         // forward declarations
-        class wxDC;
-        class wxMenu;
         class wxCursor;
-        class wxBitmap;
-        class wxSizer;
         class wxPalette;
         class wxAcceleratorTable;
         class wxDropTarget;
         class wxCaret;
+        class wxImageHandler;
         class wxIcon;
         class wxIconBundle;
         class wxStatusBar;
         class wxToolBar;
-        class wxMenuBar;
         class wxExecuteEnv;
         class wxInputStream;
         class wxOutputStream;
