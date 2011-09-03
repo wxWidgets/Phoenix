@@ -17,10 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  =    [
-                'wxBitmapButton',
-                'wxButton'
-            ]
+ITEMS  =    [ 'wxButton' ]
     
 #---------------------------------------------------------------------------
 
@@ -33,17 +30,8 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    c = module.find('wxBitmapButton')
-    c.find('wxBitmapButton.bitmap').default = 'wxNullBitmap'
-    c.find('Create.bitmap').default = 'wxNullBitmap'
-    tools.fixWindowClass(c)
-    
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
-    
     c = module.find('wxButton')
     tools.fixWindowClass(c)
-    
     tools.removeVirtuals(c)
     tools.addWindowVirtuals(c)
     

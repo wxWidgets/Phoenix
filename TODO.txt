@@ -1,0 +1,114 @@
+Phoenix TODO List
+=================
+
+This is just a place for me to jot down things as I think of them.
+The items are in no particular order, and the fact that something is
+on this list does not mean that it will ever actually be done.
+Additionally, no meaning should be attached to items being removed
+from this file, it could mean that items have been done or just that
+I've decided that they will not be done or no longer apply.
+
+
+
+For all new etg files
+---------------------
+    * Use a filename that matches the wxWidgets/interface/wx file name
+      that the classes and other stuff is being loaded from.  This
+      means that there will be lots of very small files in etg, but it
+      will help to find the interface header source to compare what is
+      being declared there with what is being generated and to better
+      understand what may need tweaked in the etg script file.
+    * Check for extras added to the class in Classic wxPython and
+      evaluate whether the same extras should be added to the Phoenix
+      verison.
+    * Check for backwards compatibility issues with Classic wxPython
+      and document in the MigrationGuide.  (This file is still in the
+      Classic wxPython source tree.)
+    * For window classes check if there are other virtual methods
+      besides those added in addWindowVirtuals() that should also be
+      added back.
+    * UNITTESTS!  At least check that every class can be constructed.
+
+
+Handling the GIL
+----------------
+Currenlty nothing is set for how to deal with the GIL, so there is no
+release and reaquire happening yet, meaning that threads will be
+blocked while control is in the C++ code.  There are some
+possibilities to be considered.
+
+    * Classic wxPython would wrap **every** call to a C++ function in
+      GIL release/reaquire code.  Later on I added the ability to not
+      do that for specific classes or methods (those known to not
+      block, take a "long" time, or that could result in a callback.)
+      This likely missed many places that could have benefitted from
+      not dealing with the GIL.  Should the same approach be taken
+      with Phoenix?  Or should the default be to not release/aquire
+      the GIL and we'll have to turn it on for classes or functions
+      that need it?  If so we could automatically turn it on for
+      Window classes and that would probably take care of most of the
+      places that must have it.
+
+    * Take a look at what SIP does when it makes callbacks for virtual
+      methods.  We'll need to do the same thing in the EventThunker
+      and anywhere else that we're doing callbacks ourselves.  NOTE:
+      Currently there is some Classic code alread in use there.  I
+      need to at least verify that it is doing the right thing...
+
+    * Can we reuse the GIL handling functions from Classic wxPython or
+      do they need to be rewritten?
+
+
+Exceptions
+----------
+    * Can we convert C++ exceptions to Python exceptions?
+    * Can we propagate Python exceptions over C++ blocks?
+    * Should we?  (Classic doesn't.)
+
+
+build.py
+--------
+    * Get Kevin's wscript?
+    * Change from using a --waf option to being a "waf" command like
+      the other build.py commands, and assume that any other items on
+      the command line after the waf command are to be passed on the
+      waf command line when it is run.  If there are not any other
+      items on the command line then use a default set of waf
+      commands. 
+
+
+etg/gdicmn.py
+-------------
+    * I've never liked the x,y properties on a wxSize...
+
+
+wx interface files
+-------------------
+    * commit my layout.h on the trunk
+    * also Kevin's interface files patch
+
+
+etg/window.py
+-------------
+    * Do we really want to keep the SetDimensions alias when we have a
+      working overload of SetSize?
+    * Keep the PyWindow alias?  Just deprecate it?  Discuss on
+      wxPython-dev. Do the same for PyPanel, PySizer, PyControl, etc.
+
+
+etg/pen.py
+----------
+    * Add new implementations of Get|SetDashes that use wxArrayInt.
+      SetDashes will likely need some black magic like what was done in
+      Classic wxPython.
+   
+
+etg/menu.py
+------------
+    * Move wxMenuItem to its own etg file
+    * We should be able to support GetMenuItems
+    * wxMenuBar::FindItem as well.
+    * Figure out what to do about the MSW-only methods in wxMenuItem
+
+
+

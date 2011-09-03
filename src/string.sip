@@ -14,7 +14,7 @@
 // at all, so it will be mapped to and from Python Unicode objects using the
 // code snippets below.
 
-// NOTE: Currently we assume that string objects are encoding in utf-8.  
+// NOTE: Currently we assume that string objects are encoded in utf-8.  
 
 %MappedType wxString
 {
@@ -55,60 +55,6 @@
     
 };
 
-%MappedType wxArrayString
-{
-    %ConvertToTypeCode
-        if (!sipIsErr) {
-            if (! PySequence_Check(sipPy)) {
-                PyErr_SetString(PyExc_TypeError, "Sequence of strings expected.");
-                return FALSE;
-            } else
-                return TRUE;
-        }
-        
-        wxArrayString *array = new wxArrayString;
-        int i, len=PySequence_Length(sipPy);
-        for (i=0; i<len; i++) {
-            PyObject* item = PySequence_GetItem(sipPy, i);
-
-            if (PyString_Check(item)) {
-                // if it's a string object convert it to unicode first, assuming utf-8
-                item = PyUnicode_FromEncodedObject(item, "utf-8", "strict");
-                if (PyErr_Occurred()) {
-                    *sipIsErr = 1;
-                    return 0;
-                }
-            }            
-            wxString* string = new wxString();
-            size_t len = PyUnicode_GET_SIZE(item);
-            if (len) {
-                PyUnicode_AsWideChar((PyUnicodeObject*)item,
-                                     wxStringBuffer(*string, len), len);
-            }
-            if (PyErr_Occurred()) {
-                *sipIsErr = 1;
-                return 0;
-            }
-            array->Add(*string);
-            delete string;
-            Py_DECREF(item);
-        }
-        *sipCppPtr = array;
-        return sipGetState(sipTransferObj);
-    %End
-
-         
-    %ConvertFromTypeCode
-        PyObject* list = PyList_New(0);
-        for (size_t i=0; i < sipCpp->GetCount(); i++) {
-            PyObject* str = PyUnicode_FromWideChar(sipCpp->Item(i).c_str(), sipCpp->Item(i).Len());
-            PyList_Append(list, str);
-            Py_DECREF(str);
-        }
-        return list;
-    %End
-    
-};
 
 
 // Used just for testing the MappedType code, it can be removed later

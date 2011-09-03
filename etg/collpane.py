@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        etg/notebook.py
+# Name:        etg/collpane.py
 # Author:      Kevin Ollivier
 #
 # Created:     27-Aug-2011
@@ -34,6 +34,8 @@ def run():
     # customizing the generated code and docstrings.
     
     module.addHeaderCode("#include <wx/collpane.h>")
+    module.addPyCode(
+        "EVT_COLLAPSIBLEPANE_CHANGED = wx.PyEventBinder( wxEVT_COMMAND_COLLPANE_CHANGED )")
     
     c = module.find('wxCollapsiblePane')
     c.find('wxCollapsiblePane.label').default = 'wxEmptyString'

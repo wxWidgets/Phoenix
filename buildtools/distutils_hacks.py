@@ -177,7 +177,7 @@ def _darwin_compiler_fixup(compiler_so, cc_args):
         stripArch = stripSysroot = True
     else:
         stripArch = '-arch' in cc_args
-        stripSysroot = '-isysroot' in cc_args or stripArch 
+        stripSysroot = '-isysroot' in cc_args or stripArch or ccHasSysroot
 
     if stripArch:
         while 1:

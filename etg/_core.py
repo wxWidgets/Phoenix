@@ -31,6 +31,7 @@ ITEMS  = [ ]
 INCLUDES = [  'defs',
               'wxpy_utils',
               'string',
+              'arrays',
               'clntdata',
               'windowid',
               'platinfo',
@@ -38,21 +39,34 @@ INCLUDES = [  'defs',
               'vidmode',
               'intl',
               
-              'gdiobj',
-              'bitmap',
-              'font',
-              'image',
-              'region',
-              
+              'object',
               'gdicmn',
               'geometry',
 
-              'object',
+              'image',
+              'gdiobj',
+              'bitmap',
+              'font',
+              'pen',
+              'brush',
+              'region',
+              'dc',
+              'dcclient',
+              'dcmemory',
+              'dcbuffer',
+              'dcscreen',
+              #'dcgraph',   # TODO:  needs wxGaphicsContext
+              'dcmirror',
+              #'dcprint',   # TODO:  needs wxPrintData
+              #'dcps',      # TODO:  needs wxPrintData
+              'dcsvg',
+              
               'colour',
               'tracker',
               'kbdstate',
               'mousestate',
               'tooltip',
+              'layout',
               'event',
               'pyevent',
               'process',
@@ -73,15 +87,18 @@ INCLUDES = [  'defs',
               'statbmp',
               'stattext',
               'control',
+              'ctrlsub',
               'choice',
-              'dc',
               'button',
+              'bmpbuttn',
+              'bookctrl',
               'notebook',
               'imagelist',
               'splitter',
               'collpane',
               'statline',
-              'stdpaths',
+              'stdpaths',              
+              
               ]
 
 
@@ -257,6 +274,8 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 #else
     _AddInfoString("wx-assertions-off");
 #endif
+    _AddInfoString("phoenix");
+
 #undef _AddInfoString
 
     PyObject* PortInfoTuple = PyList_AsTuple(PortInfo);

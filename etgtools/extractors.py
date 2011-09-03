@@ -78,7 +78,7 @@ class BaseDef(object):
         except ValueError:
             head, tail = name, None
         for item in self._findItems():
-            if item.name == head or item.pyName == head:
+            if item.name == head or item.pyName == head:  # TODO: exclude ignored items?
                 if not tail:
                     return item
                 else:
@@ -285,7 +285,7 @@ class FunctionDef(BaseDef):
         Search for an overloaded method that has matchText in its C++ argsString.
         """
         for o in self.all():
-            if matchText in o.argsString:
+            if matchText in o.argsString and not o.ignored:
                 return o
         return None
     
@@ -445,38 +445,51 @@ class ClassDef(BaseDef):
         self.addCppCode(file(filename).read())
         
     def addGetterSetterProps(self):
-        props = {} # format: { propName: [getter, setter] }
-        getters = []
-        setters = []
+        def countNonDefaultArgs(m):
+            count = 0
+            for p in m.items:
+                if not p.default:
+                    count += 1
+            return count
+        
+        props = dict()
         for item in self.items:
             if item.ignored:
                 continue
-            if isinstance(item, MethodDef):
-                if not item.name == 'Get' and item.name.find('Get') != -1:
-                    getters.append(item.name)
-                elif not item.name == 'Set' and item.name.find('Set') != -1:
-                    setters.append(item.name)
-        
-        for getter in getters:
-            props[getter.replace('Get', '')] = [getter]
-            
-        for setter in setters:
-            propName = setter.replace('Set', '')
-            if not propName in props:
-                props[propName] = [setter]
-            else:
-                props[propName].append(setter)
+            if isinstance(item, MethodDef) and item.name not in ['Get', 'Set'] \
+               and (item.name.startswith('Get') or item.name.startswith('Set')):
+                prefix = item.name[:3]
+                name = item.name[3:]
+                prop = props.get(name, PropertyDef(name))
+                if prefix == 'Get':
+                    prop.getter = item.name
+                    # Getters must be able to be called with no args, ensure
+                    # that item has exactly zero args without a default value
+                    if countNonDefaultArgs(item) != 0:
+                        # TODO: check overloads too
+                        continue
+                elif prefix == 'Set':
+                    prop.setter = item.name
+                    # Setters must be able to be called with 1 arg, ensure
+                    # that item has at least 1 arg and not more than 1 without
+                    # a default value.
+                    if len(item.items) == 0 or countNonDefaultArgs(item) > 1:
+                        # TODO: check overloads too
+                        continue
+                props[name] = prop
                 
-        for prop in props:
+        if props:
+            self.addPublic()
+        for name, prop in sorted(props.items()):
             # only create the prop if a method with that name does not exist
-            if not self.findItem(prop):
-                propString = "%s %s" % (prop, props[prop][0])
-                if len(props[prop]) > 1:
-                    propString += " %s" % props[prop][1]
-                self.addProperty(propString.strip())
+            if not self.findItem(name):
+                # properties must have at least a getter
+                if prop.getter:
+                    self.items.append(prop)
             else:
-                print "WARNING: Method %s::%s already exists in C++ class API" % (self.name, prop)
+                print "WARNING: Method %s::%s already exists in C++ class API, can not create a property." % (self.name, name)
     
+                
     def addProperty(self, *args, **kw):
         """
         Add a property to a class, with a name, getter function and optionally
@@ -663,6 +676,19 @@ class EnumValueDef(BaseDef):
             
 #---------------------------------------------------------------------------
 
+class DefineDef(BaseDef):
+    """
+    Represents a #define with a name and a value.
+    """
+    def __init__(self, element, **kw):
+        super(DefineDef, self).__init__()
+        self.name = element.find('name').text
+        self.value = element.find('initializer').text
+        self.__dict__.update(kw)
+        
+
+#---------------------------------------------------------------------------
+
 class PropertyDef(BaseDef):
     """
     Use the C++ methods of a class to make a Python property.
@@ -670,7 +696,7 @@ class PropertyDef(BaseDef):
     NOTE: This one is not automatically extracted, but can be added to
           classes in the tweaker stage
     """
-    def __init__(self, name, getter, setter=None, doc=None, **kw):
+    def __init__(self, name, getter=None, setter=None, doc=None, **kw):
         super(PropertyDef, self).__init__()
         self.name = name
         self.getter = getter
@@ -679,19 +705,6 @@ class PropertyDef(BaseDef):
         self.protection = 'public'
         self.__dict__.update(kw)
 
-class DefineDef(BaseDef):
-    """
-    Use the C++ methods of a class to make a Python property.
-
-    NOTE: This one is not automatically extracted, but can be added to
-          classes in the tweaker stage
-    """
-    def __init__(self, element, **kw):
-        super(DefineDef, self).__init__()
-        self.name = element.find('name').text
-        self.value = element.find('initializer').text
-        self.__dict__.update(kw)
-        
 #---------------------------------------------------------------------------
 
 class CppMethodDef(MethodDef):
@@ -721,7 +734,7 @@ class CppMethodDef(MethodDef):
 class CppMethodDef_sip(CppMethodDef):
     """
     Just like the above, but instead of generating a new function from the
-    privided code, the code is used inline inside SIP's %MethodCode directive.
+    provided code, the code is used inline inside SIP's %MethodCode directive.
     This makes it possible to use additional SIP magic for things that are
     beyond the general scope of the other C++ Method implementation.
     """
@@ -732,8 +745,10 @@ class CppMethodDef_sip(CppMethodDef):
 
 class WigCode(BaseDef):
     """
-    This class allows code defined by the triggers to be injected into the
-    generated Wrapper Interface Generator file. 
+    This class allows code defined by the extractors to be injected into the
+    generated Wrapper Interface Generator file. In other words, this is extra
+    code meant to be consumed by the back-end code generator, and it will be
+    injected at the point in the file generation that this object is seen.
     """
     def __init__(self, code, **kw):
         super(WigCode, self).__init__()

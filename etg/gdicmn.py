@@ -17,10 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 
-            'wxBrush',
-            'wxPen',
-            'wxPoint',
+ITEMS  = [  'wxPoint',
             'wxSize',
             'wxRect',
             'wxRealPoint',
@@ -304,42 +301,6 @@ def run():
                   """) 
     c.addPyCode('RealPoint.__safe_for_unpickling__ = True')
 
-    c = module.find('wxPen')
-    # TODO: Add back when we add a wxDash typedef
-    c.find('GetDashes').ignore()
-    c.find('SetDashes').ignore()
-
-    # TODO: Fix these. I'm not sure why exactly, but in the CPP code
-    # they end up with the wrong signature.
-    module.find('wxRED_PEN').ignore()
-    module.find('wxBLUE_PEN').ignore()
-    module.find('wxCYAN_PEN').ignore()
-    module.find('wxGREEN_PEN').ignore()
-    module.find('wxYELLOW_PEN').ignore()
-    module.find('wxBLACK_PEN').ignore()
-    module.find('wxWHITE_PEN').ignore()
-    module.find('wxTRANSPARENT_PEN').ignore()
-    module.find('wxBLACK_DASHED_PEN').ignore()
-    module.find('wxGREY_PEN').ignore()
-    module.find('wxMEDIUM_GREY_PEN').ignore()
-    module.find('wxLIGHT_GREY_PEN').ignore()
-
-    module.find('wxBLUE_BRUSH').ignore()
-    module.find('wxGREEN_BRUSH').ignore()
-    module.find('wxYELLOW_BRUSH').ignore()
-    module.find('wxWHITE_BRUSH').ignore()
-    module.find('wxBLACK_BRUSH').ignore()
-    module.find('wxGREY_BRUSH').ignore()
-    module.find('wxMEDIUM_GREY_BRUSH').ignore()
-    module.find('wxLIGHT_GREY_BRUSH').ignore()
-    module.find('wxTRANSPARENT_BRUSH').ignore()
-    module.find('wxCYAN_BRUSH').ignore()
-    module.find('wxRED_BRUSH').ignore()
-
-    module.find('wxTheBrushList').ignore()
-    module.find('wxThePenList').ignore()
-    #module.addItem(tools.wxListWrapperTemplate('wxBrushList', 'wxBrush'))
-    #module.addItem(tools.wxListWrapperTemplate('wxPenList', 'wxPen'))
     module.addItem(tools.wxListWrapperTemplate('wxPointList', 'wxPoint'))
     
     #-----------------------------------------------------------------

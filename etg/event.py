@@ -25,7 +25,6 @@ ITEMS  = [
     'wxCommandEvent',
 
     'wxActivateEvent',
-    'wxBookCtrlEvent',
     'wxChildFocusEvent',
     'wxClipboardTextEvent',
     'wxCloseEvent',
@@ -85,8 +84,6 @@ def run():
     #define wxEVT_HOTKEY 0
     #endif
     """)
-    
-    module.addHeaderCode("#include <wx/collpane.h>")
     
     # Macros
     module.find('wx__DECLARE_EVT0').ignore()
@@ -213,29 +210,15 @@ def run():
     # wxCommandEvent
     c = module.find('wxCommandEvent')
     
-    c.find('GetClientObject').ignore()
-    c.find('SetClientObject').ignore()
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
-    
-    c.addCppMethod('PyObject*', 'GetClientData', '()', """\
-         wxPyClientData* data = (wxPyClientData*)self->GetClientObject();
-         if (data) {
-             Py_INCREF(data->m_obj);
-             return data->m_obj;
-         } else {
-             Py_INCREF(Py_None);
-             return Py_None;
-         }
-    """)
-    
-    c.addCppMethod('void', 'SetClientData', '(PyObject* clientData)', """\
-        wxPyClientData* data = new wxPyClientData(clientData);
-        self->SetClientObject(data);
-    """)
-    
-    
-    c.addProperty('ClientData GetClientData SetClientData')
+
+    c.addPyCode("""\
+        CommandEvent.GetClientData = CommandEvent.GetClientObject
+        CommandEvent.SetClientData = CommandEvent.SetClientObject""")
+            
+    c.addProperty('ClientObject GetClientObject SetClientObject')
+    c.addPyCode('CommandEvent.ClientData = CommandEvent.ClientObject')
     c.addProperty('ExtraLong GetExtraLong SetExtraLong')
     c.addProperty('Int GetInt SetInt')
     c.addProperty('Selection GetSelection')

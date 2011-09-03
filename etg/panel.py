@@ -32,8 +32,10 @@ def run():
 
     c = module.find('wxPanel')
     assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)    
+
+    c.find('OnSysColourChanged').ignore()
     
+    tools.fixWindowClass(c)        
     tools.removeVirtuals(c)
     tools.addWindowVirtuals(c)
     

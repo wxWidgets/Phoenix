@@ -39,6 +39,9 @@ class App(unittest2.TestCase):
         
     def test_version(self):
         v = wx.version()
+        wx.VERSION
+        wx.VERSION_STRING
+        wx.__version__
     
     def test_PySimpleApp(self):
         # wx.PySimpleApp is supposed to be deprecated, make sure it is.

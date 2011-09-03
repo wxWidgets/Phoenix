@@ -31,6 +31,10 @@ def run():
     # customizing the generated code and docstrings.
 
     c = module.find('wxBitmap')
+    assert isinstance(c, etgtools.ClassDef)
+    
+    tools.removeVirtuals(c)
+
     c.find('wxBitmap').findOverload('(const char *const *bits)').ignore()
     c.find('wxBitmap.type').default = 'wxBITMAP_TYPE_ANY'
     c.find('GetHandlers').ignore()

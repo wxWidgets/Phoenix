@@ -17,16 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [  'wxAutoBufferedPaintDC',
-            'wxBufferedDC',
-            'wxBufferedPaintDC',
-            'wxDC',
-            'wxClientDC', 
-            'wxMemoryDC', 
-            'wxPaintDC',
-            'wxScreenDC',
-            'wxWindowDC',
-              ]    
+ITEMS  = [ 'wxDC' ]    
     
 #---------------------------------------------------------------------------
 
@@ -39,45 +30,39 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    c = module.find('wxAutoBufferedPaintDC')
-    c.addPrivateCopyCtor()
-    
-    c = module.find('wxBufferedDC')
-    c.addPrivateCopyCtor()
-    
-    c = module.find('wxBufferedPaintDC')
-    c.addPrivateCopyCtor()
-    
-    
+        
     c = module.find('wxDC')
+    assert isinstance(c, etgtools.ClassDef)
+
     c.addPrivateCopyCtor()
-    c.find('GetMultiLineTextExtent').overloads = []
-    c.find('GetTextExtent').overloads = []
-    c.find('GetSize').overloads = []
-    c.find('GetSizeMM').overloads = []
+    tools.removeVirtuals(c)
+    
+    # rename the more complex overload for these two, like in classic wxPython
+    c.find('GetTextExtent').findOverload('wxCoord *').pyName = 'GetFullTextExtent'
+    c.find('GetMultiLineTextExtent').findOverload('wxCoord *').pyName = 'GetFullMultiLineTextExtent'
+    
+    # Switch this one to return the array instead of passing it through an arg
+    c.find('GetPartialTextExtents').ignore()
+    c.addCppMethod('wxArrayInt', 'GetPartialTextExtents', '(const wxString& text)', """\
+                    wxArrayInt rval;
+                    self->GetPartialTextExtents(*text, rval);
+                    return rval;""")
+                   
+    
+    # Keep the wxSize overloads of these
+    c.find('GetSize').findOverload('wxCoord').ignore()
+    c.find('GetSizeMM').findOverload('wxCoord').ignore()
     
     # needs wxAffineMatrix2D support.
     c.find('GetTransformMatrix').ignore()
     c.find('SetTransformMatrix').ignore()
-    
-    # TODO: restore this once we add wxArrayInt type map
-    c.find('GetPartialTextExtents').ignore()
-    
-    # TODO: add wxFloodFillStyle type map
-    c.find('FloodFill').ignore()
-    c.find('FloodFill').findOverload('int style').ignore()
-    
+        
     # remove wxPoint* overloads, we use the wxPointList ones
     c.find('DrawLines').findOverload('wxPoint points').ignore()
     c.find('DrawPolygon').findOverload('wxPoint points').ignore()
     c.find('DrawPolyPolygon').findOverload('wxPoint points').ignore()
     c.find('DrawSpline').findOverload('wxPoint points').ignore()
     
-    c = module.find('wxClientDC')
-    c.addPrivateCopyCtor()
-    
-    c = module.find('wxWindowDC')
-    c.addPrivateCopyCtor()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

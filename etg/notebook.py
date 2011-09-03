@@ -17,10 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  =    [
-                'wxBookCtrlBase',
-                'wxNotebook',
-            ]
+ITEMS  =    [ 'wxNotebook' ]
     
 #---------------------------------------------------------------------------
 
@@ -33,12 +30,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    c = module.find('wxBookCtrlBase')
-    c.abstract = True
-    
     c = module.find('wxNotebook')
-    tools.fixWindowClass(c)
+    c.find('OnSelChange').ignore()
     
+    #c.addGetterSetterProps()
+    
+    tools.fixWindowClass(c)  
     tools.removeVirtuals(c)
     tools.addWindowVirtuals(c)
     

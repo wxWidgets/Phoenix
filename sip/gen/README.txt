@@ -3,3 +3,5 @@ wrapper generator files which describe the wxWidgets APIs that
 wxPython wraps. These files will be fed to SIP to procude the C++ code
 for the extension modules.
 
+Currently these files are not committed to the SVN repository, but
+they should be included in any source tarballs that are distributed.

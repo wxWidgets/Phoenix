@@ -38,6 +38,11 @@ def run():
     c.find('RGBtoHSV').ignore()
     c.find('HSVtoRGB').ignore()
 
+    f = module.find('wxImageHistogram.FindFirstUnusedColour')
+    f.find('r').out = True
+    f.find('g').out = True
+    f.find('b').out = True
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

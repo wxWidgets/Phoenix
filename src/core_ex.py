@@ -8,12 +8,14 @@ wx = _sys.modules[__name__]
 # Load version numbers from __version__...  Ensure that major and minor
 # versions are the same for both wxPython and wxWidgets.
 from __version__ import *
+import _core
 __version__ = VERSION_STRING
-assert MAJOR_VERSION == MAJOR_VERSION, "wxPython/wxWidgets version mismatch"
-assert MINOR_VERSION == MINOR_VERSION, "wxPython/wxWidgets version mismatch"
-if RELEASE_NUMBER != RELEASE_NUMBER:
+assert MAJOR_VERSION == _core.MAJOR_VERSION, "wxPython/wxWidgets version mismatch"
+assert MINOR_VERSION == _core.MINOR_VERSION, "wxPython/wxWidgets version mismatch"
+if RELEASE_NUMBER != _core.RELEASE_NUMBER:
     import warnings
     warnings.warn("wxPython/wxWidgets release number mismatch")
+del _core
 
 
 def version():
@@ -31,7 +33,7 @@ def version():
             port = 'gtk2'
     else:
         port = '???'
-    return "%s %s" % (wx.VERSION_STRING, port)
+    return "%s %s (phoenix)" % (wx.VERSION_STRING, port)
                        
 
 def deprecated(func):
@@ -108,7 +110,7 @@ def deprecated(func):
 
 #----------------------------------------------------------------------------
 
-def CallAfter(callable, *args, **kw):
+def CallAfter(callableObj, *args, **kw):
     """
     Call the specified function after the current and pending event
     handlers have been completed.  This is also good for making GUI
@@ -117,6 +119,7 @@ def CallAfter(callable, *args, **kw):
 
     :see: `wx.CallLater`
     """
+    assert callable(callableObj), "callableObj is not callable"
     app = wx.GetApp()
     assert app is not None, 'No wx.App created yet'
 
@@ -126,7 +129,7 @@ def CallAfter(callable, *args, **kw):
                     lambda event: event.callable(*event.args, **event.kw) )
     evt = wx.PyEvent()
     evt.SetEventType(app._CallAfterId)
-    evt.callable = callable
+    evt.callable = callableObj
     evt.args = args
     evt.kw = kw
     wx.PostEvent(app, evt)
@@ -150,9 +153,10 @@ def CallAfter(callable, *args, **kw):
 
 ##     :see: `wx.CallAfter`
 ##     """
-##     def __init__(self, millis, callable, *args, **kwargs):
+##     def __init__(self, millis, callableObj, *args, **kwargs):
+##         assert callable(callableObj), "callableObj is not callable"
 ##         self.millis = millis
-##         self.callable = callable
+##         self.callable = callableObj
 ##         self.SetArgs(*args, **kwargs)
 ##         self.runCount = 0
 ##         self.running = False

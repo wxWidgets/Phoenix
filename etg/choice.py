@@ -33,13 +33,9 @@ def run():
     c = module.find('wxChoice')
     c.abstract = False
     c.find('wxChoice').findOverload('wxString choices').ignore()
-    c.find('wxChoice').findOverload('wxArrayString').find('size').default = 'wxDefaultSize'
-    c.find('wxChoice').findOverload('wxArrayString').find('pos').default = 'wxDefaultPosition'
     c.find('wxChoice').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
 
     c.find('Create').findOverload('wxString choices').ignore()
-    c.find('Create').findOverload('wxArrayString').find('size').default = 'wxDefaultSize'
-    c.find('Create').findOverload('wxArrayString').find('pos').default = 'wxDefaultPosition'
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
 
     tools.fixWindowClass(c)

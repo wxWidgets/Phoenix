@@ -1,23 +1,23 @@
 #---------------------------------------------------------------------------
-# Name:        etg/control.py
-# Author:      Kevin Ollivier
+# Name:        etg/brush.py
+# Author:      Robin Dunn
 #
-# Created:     26-Aug-2011
-# Copyright:   (c) 2011 by Wide Open Technologies
+# Created:     
+# Copyright:   (c) 2011 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"
+PACKAGE   = "wx"   
 MODULE    = "_core"
-NAME      = "control"   # Base name of the file to generate to for this script
+NAME      = "brush"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxControl', ]
+ITEMS  = [ 'wxBrush' ]    
     
 #---------------------------------------------------------------------------
 
@@ -29,19 +29,30 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-
-    c = module.find('wxControl')
+    
+    
+    c = module.find('wxBrush')
     assert isinstance(c, etgtools.ClassDef)
-
-    tools.fixWindowClass(c)        
     tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
+    
+    # TODO: Fix these. I'm not sure why exactly, but in the CPP code
+    # they end up with the wrong signature.
+    module.find('wxBLUE_BRUSH').ignore()
+    module.find('wxGREEN_BRUSH').ignore()
+    module.find('wxYELLOW_BRUSH').ignore()
+    module.find('wxWHITE_BRUSH').ignore()
+    module.find('wxBLACK_BRUSH').ignore()
+    module.find('wxGREY_BRUSH').ignore()
+    module.find('wxMEDIUM_GREY_BRUSH').ignore()
+    module.find('wxLIGHT_GREY_BRUSH').ignore()
+    module.find('wxTRANSPARENT_BRUSH').ignore()
+    module.find('wxCYAN_BRUSH').ignore()
+    module.find('wxRED_BRUSH').ignore()
 
-    module.addPyCode("PyControl = Control")
+    module.find('wxTheBrushList').ignore()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
-    tools.addGetterSetterProps(module)
     tools.runGenerators(module)
     
     

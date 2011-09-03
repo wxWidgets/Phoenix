@@ -235,6 +235,12 @@ class Rect(unittest2.TestCase):
         
     def test_xywh_ctor(self):
         r = wx.Rect(1, 2, 3, 4)
+
+    def test_kwargs_ctor(self):
+        r1 = wx.Rect(x=1, y=2, width=3, height=4)
+        r2 = wx.Rect(width=3, height=4, x=1, y=2)
+        self.assertTrue(r1 == r2)
+        self.assertTrue(r2 == (1,2,3,4))
         
     def test_possize_ctor(self):
         r = wx.Rect(wx.Point(10,10), wx.Size(100,100))

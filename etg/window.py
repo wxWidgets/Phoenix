@@ -115,14 +115,14 @@ def run():
     # Make the Register/UnregisterHotKey functions be available on Windows,
     # and empty stubs otherwise
     c.find('RegisterHotKey').setCppCode("""\
-    #ifdef __WXMSW__
+    #if wxUSE_HOTKEY
         sipRes = sipCpp->RegisterHotKey(hotkeyId, modifiers, virtualKeyCode);
     #else
         sipRes = false;
     #endif
     """)
     c.find('UnregisterHotKey').setCppCode("""\
-    #ifdef __WXMSW__
+    #if wxUSE_HOTKEY
         sipRes = sipCpp->UnregisterHotKey(hotkeyId);
     #else
         sipRes = false;
@@ -147,10 +147,6 @@ def run():
     c.find('GetAccessible').ignore()
     c.find('SetAccessible').ignore()
     
-    # now undocumented
-    c.find('GetConstraints').ignore()
-    c.find('SetConstraints').ignore()
-   
     # Make some of the protected methods visible and overridable from Python
     c.find('SendDestroyEvent').ignore(False)
 
@@ -161,7 +157,7 @@ def run():
     c.find('SetCaret.caret').transfer = True
     c.find('SetToolTip.tip').transfer = True
     c.find('SetDropTarget.target').transfer = True
-    #c.find('SetConstraints.constraints').transfer = True
+    c.find('SetConstraints.constraints').transfer = True
     c.find('SetSizer.sizer').transfer = True
     c.find('SetSizerAndFit.sizer').transfer = True
     
@@ -181,7 +177,7 @@ def run():
     c.addProperty('ClientAreaOrigin GetClientAreaOrigin')
     c.addProperty('ClientRect GetClientRect SetClientRect')
     c.addProperty('ClientSize GetClientSize SetClientSize')
-    #c.addProperty('Constraints GetConstraints SetConstraints')
+    c.addProperty('Constraints GetConstraints SetConstraints')
     c.addProperty('ContainingSizer GetContainingSizer SetContainingSizer')
     c.addProperty('Cursor GetCursor SetCursor')
     c.addProperty('DefaultAttributes GetDefaultAttributes')
