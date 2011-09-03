@@ -99,7 +99,7 @@ class Configuration(object):
     NO_SCRIPTS = False
     # Don't install the tools/script files
     
-    PKGDIR = 'wxPhoenix'
+    PKGDIR = 'wx'
     # The name of the top-level package
 
     # ---------------------------------------------------------------

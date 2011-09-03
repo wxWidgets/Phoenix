@@ -1,6 +1,6 @@
 import sys
 import unittest2
-import wxPhoenix as wx
+import wx
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
 
 #---------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class WindowList(unittest2.TestCase):
             self.assertTrue(type(tlw) == wx.Frame)
             self.assertTrue(tlw.Title.startswith('frm'))
         
-    def test_WindowList_GetChildren(self):    
+    def test_WindowList_GetChildren(self):    boo
         children = self.frames[0].GetChildren()
         self.assertTrue(len(children) == 0)
         children = self.frames[4].GetChildren()

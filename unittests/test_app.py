@@ -1,5 +1,5 @@
 import unittest2
-import wxPhoenix as wx
+import wx
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
 
 import warnings

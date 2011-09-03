@@ -2,7 +2,7 @@
 # Name:        etg/_core.py
 # Author:      Robin Dunn
 #
-# Created:     8-Nove-2010
+# Created:     8-Nov-2010
 # Copyright:   (c) 2011 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -10,7 +10,7 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wxPhoenix"   # This is just temporary, rename to 'wx' later.
+PACKAGE   = "wx" 
 MODULE    = "_core"
 NAME      = "_core"   # Base name of the file to generate to for this script
 DOCSTRING = ""
