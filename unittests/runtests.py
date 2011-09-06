@@ -14,6 +14,7 @@ sys.path.insert(0, phoenixDir)
 
 # stuff for debugging
 import wx
+print "wx.version:", wx.version()
 print "pid:", os.getpid()
 #print "executable:", sys.executable; raw_input("Press Enter...")
 

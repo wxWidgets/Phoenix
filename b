@@ -2,8 +2,8 @@
 
 ##set -o xtrace
 
-PYVER=2.6
-PYVER2=26
+PYVER=2.7
+PYVER2=27
 
 if [ "$OSTYPE" = "cygwin" ]; then
     $TOOLS/python$PYVER2/python.exe -u build.py "$@"

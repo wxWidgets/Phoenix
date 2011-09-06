@@ -18,8 +18,8 @@ from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip
 import buildtools.version as version
 
-PYVER = '2.6'
-PYSHORTVER = '26'
+PYVER = '2.7'
+PYSHORTVER = '27'
 PYTHON = 'UNKNOWN'  # it will be set later
 
 # wx version numbers
