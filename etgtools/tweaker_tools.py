@@ -105,8 +105,11 @@ def fixWindowClass(klass):
     for func in klass.findAll(klass.name) + klass.findAll('Create'):
         if isinstance(func, extractors.MethodDef):
             func.find('parent').transferThis = True
-            # give the id param a default value
-            func.find('id').default = 'wxID_ANY'
+            # give the id param a default value if it has one
+            # some classes like wxProgressDialog don't
+            id = func.findItem('id')
+            if id:
+                id.default = 'wxID_ANY'
 
             # if there is a pos or size parameter without a default then give it one.
             p = func.findItem('pos')

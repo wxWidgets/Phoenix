@@ -356,8 +356,12 @@ class ParamDef(BaseDef):
             self.extract(element)
         
     def extract(self, element):
-        self.name = element.find('declname').text
         self.type = flattenNode(element.find('type'))
+        # we've got varags
+        if self.type == '...':
+            self.name = ''
+        else:
+            self.name = element.find('declname').text
         if element.find('defval') is not None:
             self.default = flattenNode(element.find('defval'))
         

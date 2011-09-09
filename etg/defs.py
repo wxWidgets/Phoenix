@@ -40,7 +40,6 @@ def run():
     module.find('wxUint8').pyInt = True
     module.find('wxByte').pyInt = True
     
-    
     module.find('wxDELETE').ignore()
     module.find('wxDELETEA').ignore()
     module.find('wxSwap').ignore()
@@ -60,9 +59,7 @@ def run():
     # TODO: Add these classes for real :-)
     module.insertItem(0, etgtools.WigCode("""\
         // forward declarations
-        class wxCursor;
         class wxPalette;
-        class wxAcceleratorTable;
         class wxDropTarget;
         class wxCaret;
         class wxImageHandler;

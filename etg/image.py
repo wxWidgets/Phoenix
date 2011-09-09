@@ -17,7 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxImage', 'wxImageHistogram' ]    
+ITEMS  = [ 'wxImage', 'wxImageHistogram', 'wxWithImages' ]    
     
 #---------------------------------------------------------------------------
 
@@ -43,6 +43,9 @@ def run():
     f.find('g').out = True
     f.find('b').out = True
     
+    c = module.find('wxWithImages')
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

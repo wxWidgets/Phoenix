@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/dialog.py
+# Name:        etg/log.py
 # Author:      Kevin Ollivier
 #
-# Created:     26-Aug-2011
+# Created:     08-Sept-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -10,58 +10,42 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
-NAME      = "dialog"   # Base name of the file to generate to for this script
+NAME      = "log"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  =    [
-                'wxDialog',
-                'wxDialogLayoutAdapter',
-                'wxProgressDialog',
-            ]
+ITEMS  = [  
+            'wxLog',
+            'wxLogGui',
+            'wxLogNull',
+            'wxLogRecordInfo', 
+            
+         ]
     
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    module.items.append(etgtools.TypedefDef(type='long', name='time_t'))
     etgtools.parseDoxyXML(module, ITEMS)
     
+    # do not use the va_list forms of the functions
+    for func in module.allItems():
+        if 'wxVLog' in func.name:
+            func.ignore()
+    module.find('wxLogTrace').ignore() # deprecated in 2.8, do we support?
+        
+    c = module.find('wxLogRecordInfo')
+    c.find('threadId').ignore()
+    
+    # deprecated, do we want to keep supporting these?
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-
-    module.addHeaderCode("#include <wx/progdlg.h>")
-
-    c = module.find('wxDialog')
-    assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
-    
-    c.find('wxDialog.title').default = 'wxEmptyString'
-    c.find('Create.title').default = 'wxEmptyString'
-    
-    # PocketPC only, don't think we'll need these ;)
-    c.find('DoOK').ignore() 
-    c.find('GetToolBar').ignore()
-    
-    # The docs tell us to just use ShowModal instead, not sure why they 
-    # doc this method then...
-    c.find('SetModal').ignore()
-    
-    c.find('OnSysColourChanged').ignore()
-    
-    # TODO: Restore when wxArrayInt is working
-    c.find('GetMainButtonIds').ignore()
-    
-    c = module.find('wxProgressDialog')
-    assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
-    
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

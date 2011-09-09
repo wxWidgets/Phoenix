@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/dialog.py
+# Name:        etg/cursor.py
 # Author:      Kevin Ollivier
 #
-# Created:     26-Aug-2011
+# Created:     06-Sept-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -10,18 +10,14 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
-NAME      = "dialog"   # Base name of the file to generate to for this script
+NAME      = "cursor"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  =    [
-                'wxDialog',
-                'wxDialogLayoutAdapter',
-                'wxProgressDialog',
-            ]
+ITEMS  = [ 'wxCursor', ]    
     
 #---------------------------------------------------------------------------
 
@@ -33,35 +29,15 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-
-    module.addHeaderCode("#include <wx/progdlg.h>")
-
-    c = module.find('wxDialog')
-    assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
     
-    c.find('wxDialog.title').default = 'wxEmptyString'
-    c.find('Create.title').default = 'wxEmptyString'
+    c = module.find('wxCursor')
+    c.find('wxCursor').findOverload('bits').ignore()
     
-    # PocketPC only, don't think we'll need these ;)
-    c.find('DoOK').ignore() 
-    c.find('GetToolBar').ignore()
+    module.find('wxCROSS_CURSOR').ignore()
+    module.find('wxHOURGLASS_CURSOR').ignore()
+    module.find('wxSTANDARD_CURSOR').ignore()
     
-    # The docs tell us to just use ShowModal instead, not sure why they 
-    # doc this method then...
-    c.find('SetModal').ignore()
-    
-    c.find('OnSysColourChanged').ignore()
-    
-    # TODO: Restore when wxArrayInt is working
-    c.find('GetMainButtonIds').ignore()
-    
-    c = module.find('wxProgressDialog')
-    assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
-    
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
+    module.addPyCode('StockCursor = wx.deprecated(Cursor)')
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

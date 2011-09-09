@@ -33,6 +33,7 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxBookCtrlBase')
+    c.bases.append('wxWithImages')
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
     

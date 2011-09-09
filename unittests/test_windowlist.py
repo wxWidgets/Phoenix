@@ -34,7 +34,7 @@ class WindowList(unittest2.TestCase):
             self.assertTrue(type(tlw) == wx.Frame)
             self.assertTrue(tlw.Title.startswith('frm'))
         
-    def test_WindowList_GetChildren(self):    boo
+    def test_WindowList_GetChildren(self):
         children = self.frames[0].GetChildren()
         self.assertTrue(len(children) == 0)
         children = self.frames[4].GetChildren()

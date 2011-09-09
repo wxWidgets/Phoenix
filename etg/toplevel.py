@@ -43,7 +43,7 @@ def run():
     c.find('IsUsingNativeDecorations').ignore()
     c.find('UseNativeDecorations').ignore()
     c.find('UseNativeDecorationsByDefault').ignore()
-    
+    c.find('MSWGetSystemMenu').ignore() # what is this?
 
     c.addCppMethod('void', 'MacSetMetalAppearance', '(bool on)', """\
         int style = self->GetExtraStyle();

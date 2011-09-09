@@ -44,8 +44,17 @@ def run():
     c.find('Remove').findOverload('(wxWindow *window)').ignore()
 
     c = module.find('wxSizerItem')
-    c.addPrivateCopyCtor()
     
+    gud = c.find('GetUserData')
+    gud.type = 'wxPyUserData*'
+    gud.setCppCode('sipRes = dynamic_cast<wxPyUserData*>(sipCpp->GetUserData());')
+    sud = c.find('SetUserData')
+    sud.find('userData').transfer = True
+    sud.find('userData').type = 'wxPyUserData*'
+    sud.setCppCode('sipCpp->SetUserData(dynamic_cast<wxObject*>(userData));')
+
+    c.addPrivateCopyCtor()
+
     c = module.find('wxFlexGridSizer')
     c.addPrivateCopyCtor()
     
@@ -62,6 +71,7 @@ def run():
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+    tools.addGetterSetterProps(module)
     tools.runGenerators(module)
     
     

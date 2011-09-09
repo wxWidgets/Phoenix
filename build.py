@@ -560,7 +560,7 @@ def build_py(options, args):
             if arg.startswith("clean"):
                 waf_args = "clean distclean"
                 
-        command = "./waf %s -v -j6" % waf_args
+        command = "./waf %s -v -j6 --wx-config=%s/wx-config" % (waf_args, BUILD_DIR)
     else:
         command = PYTHON + " -u ./setup.py %s %s %s" % \
             (build_mode, " ".join(build_options), options.extra_setup)

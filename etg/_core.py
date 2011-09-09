@@ -97,8 +97,12 @@ INCLUDES = [  'defs',
               'splitter',
               'collpane',
               'statline',
-              'stdpaths',              
-              
+              'stdpaths',
+              'snglinst',
+              'accel',
+              'cursor',
+              'userdata',
+              'log',
               ]
 
 

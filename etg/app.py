@@ -92,7 +92,9 @@ def run():
             item.name = '~wxPyApp'
     
     c.find('ProcessMessage').ignore()
-    
+    # The deprecation macros unfortunately get used as the method name.
+    # Until we fix this in the extraction code, just ignore any method marked this way.
+    c.find('wxDEPRECATED_BUT_USED_INTERNALLY').ignore()
      
     c.addCppMethod('void', 'MacHideApp', '()',
         doc="Hide all application windows just as the user can do with the\nsystem Hide command.  Mac only.",
