@@ -32,7 +32,6 @@ def run():
         
     c = module.find('wxFrame')
     assert isinstance(c, etgtools.ClassDef)
-    tools.fixTopLevelWindowClass(c)
     
     c.find('wxFrame.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'    
@@ -46,13 +45,11 @@ def run():
     c.addProperty('ToolBar GetToolBar SetToolBar')
     
         
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
-
     # TODO: should these go into a tools.addFrameVirtuals function?
     c.find('OnCreateStatusBar').isVirtual = True
     c.find('OnCreateToolBar').isVirtual = True
     
+    tools.fixTopLevelWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

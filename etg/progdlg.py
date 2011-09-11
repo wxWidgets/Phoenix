@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/bmpbuttn.py
+# Name:        etg/progdlg
 # Author:      Robin Dunn
 #
-# Created:     31-Aug-2011
+# Created:     9-Sept-2011
 # Copyright:   (c) 2011 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -12,12 +12,12 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
-NAME      = "bmpbuttn"   # Base name of the file to generate to for this script
+NAME      = "progdlg"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxBitmapButton' ]    
+ITEMS  = [ 'wxProgressDialog' ]    
     
 #---------------------------------------------------------------------------
 
@@ -30,12 +30,13 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    c = module.find('wxBitmapButton')
-    c.find('wxBitmapButton.bitmap').default = 'wxNullBitmap'
-    c.find('Create.bitmap').default = 'wxNullBitmap'
+    module.addHeaderCode("#include <wx/progdlg.h>")
 
-    tools.fixWindowClass(c)
+    c = module.find('wxProgressDialog') 
+    assert isinstance(c, etgtools.ClassDef) 
     
+    tools.fixWindowClass(c, False)
+    tools.removeVirtuals(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

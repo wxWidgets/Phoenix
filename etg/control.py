@@ -34,10 +34,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
 
     tools.fixWindowClass(c)        
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
 
-    module.addPyCode("PyControl = Control")
+    module.addPyCode("PyControl = wx.deprecated(Control)")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

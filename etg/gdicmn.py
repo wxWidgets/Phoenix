@@ -134,6 +134,8 @@ def run():
     
     c.addProperty("width GetWidth SetWidth")
     c.addProperty("height GetHeight SetHeight")
+
+    # TODO:  How prevalent is the use of x,y properties on a size object?  Can we deprecate them?
     c.addProperty("x GetWidth SetWidth")
     c.addProperty("y GetHeight SetHeight")
     

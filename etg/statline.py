@@ -33,9 +33,6 @@ def run():
     c = module.find('wxStaticLine')
     tools.fixWindowClass(c)
     
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
-    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.addGetterSetterProps(module)

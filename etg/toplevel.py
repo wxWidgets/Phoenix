@@ -32,7 +32,6 @@ def run():
 
     c = module.find('wxTopLevelWindow')
     assert isinstance(c, etgtools.ClassDef)
-    tools.fixTopLevelWindowClass(c)
 
     c.find('wxTopLevelWindow.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'    
@@ -74,9 +73,7 @@ def run():
     c.addProperty('TmpDefaultItem GetTmpDefaultItem SetTmpDefaultItem')
     c.addProperty('OSXModified OSXIsModified OSXSetModified')
     
-    
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
+    tools.fixTopLevelWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

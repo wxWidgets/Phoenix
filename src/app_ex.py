@@ -239,7 +239,7 @@ logged in on the main display of your Mac."""
             
 #----------------------------------------------------------------------------
 
-@deprecated
+@wx.deprecated
 class PySimpleApp(App):
     """
     This class is deprecated.  Please use wx.App instead.

@@ -36,8 +36,6 @@ def run():
     #c.addGetterSetterProps()
     
     tools.fixWindowClass(c)  
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

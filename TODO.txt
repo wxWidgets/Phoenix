@@ -18,7 +18,7 @@ For all new etg files
       will help to find the interface header source to compare what is
       being declared there with what is being generated and to better
       understand what may need tweaked in the etg script file.
-    * Check for extras added to the class in Classic wxPython and
+    * Check for any extras added to the class in Classic wxPython and
       evaluate whether the same extras should be added to the Phoenix
       verison.
     * Check for backwards compatibility issues with Classic wxPython
@@ -77,24 +77,6 @@ build.py
       commands. 
 
 
-etg/gdicmn.py
--------------
-    * I've never liked the x,y properties on a wxSize...
-
-
-wx interface files
--------------------
-    * commit my layout.h on the trunk
-    * also Kevin's interface files patch
-
-
-etg/window.py
--------------
-    * Do we really want to keep the SetDimensions alias when we have a
-      working overload of SetSize?
-    * Keep the PyWindow alias?  Just deprecate it?  Discuss on
-      wxPython-dev. Do the same for PyPanel, PySizer, PyControl, etc.
-
 
 etg/pen.py
 ----------
@@ -111,4 +93,83 @@ etg/menu.py
     * Figure out what to do about the MSW-only methods in wxMenuItem
 
 
+wxProgressDialog
+----------------
+    * Add wxGenericProgressDialog.
+    * and wxProgressDialog inherits from the generic version
 
+
+Deprecated C++ items
+---------------------
+    * Does Doxygen have a standard way to mark items as deprecated
+      that will also be tagged as such in the XML?
+
+
+custom wrapper code
+-------------------
+Currently function.setCppCode requires some sip-isms (using sipRes and
+sipCpp for example) to be able to replace the wrapper code used to
+wrap the C++ function.  Try making it work more like addCppMethod
+where it will generate a new function that is passed "self" and that
+you can simply return a value from.
+
+
+Namespace Diff Tool
+-------------------
+I think that this will be more than just a diff tool, but for now that
+is the only name that comes to mind.  The general idea is that the
+tool can be used to help us discover differences between different
+versions of wxPython, such as Classic vs. Phoenix, or even between
+different iterations of Phoenix.  The tool would be used to help us
+identify what is missing and still needs to be implemented, or what is
+new, etc.  The granularity would be items at the module level, and
+items within each class, such as methods and properties.  I don't
+think it would be worth the effort to compare things like function
+signatures or docstrings because the effor to do that may be large.
+But maybe it could record whether a docstring is present to help us
+track down items that need them added.
+
+Here is a basic workflow and any other ideas that come up along the
+way:
+
+  * Since the tool will be dealing with multiple versions of wxPython
+    (although nothing should prevent this from being used for other
+    packages as well), including historical versions, then the tool
+    will not be able to do a live introspection and compare.  Instead
+    it should be able to do an introspection and source analysys of a
+    specified package and record the results in a database or perhaps
+    an XML file.  The things it should be able to record are the
+    package/module names, the names and perhaps the types of all top
+    level items in a module, the names of all items in each class,
+    whether modules, classes, methods, functions have docstrings, etc.
+
+  * The scan and analisys should recursively descend to include all
+    modules within the specified package.  Any imports of packages or
+    modules located outside of the target package can be ignored.
+
+  * When the scan is finished all the data can be saved usign a
+    specified name.  (The name can be used to name the XML file, or be
+    used to collate all data related to this scan in a sqlite database
+    if that is what is used to save the data.)
+
+  * The tool should be able to be used to answer questions about the
+    data for a single scan like:
+      * number of classes
+      * list of all class names
+      * list of methods in class Foo
+      * count or list of items starting with "EVT_*"
+      * list of items without docstrings that should have one
+      * etc.
+
+  * Once there are more than one scan saved then the diff tool can be
+    used to highlight differences between them, such as the classes in
+    scan A that are not in scan B. The methods that are in the Foo
+    class in scan A that are not in the Foo class in scan B. Etc.
+
+  * Since it is expected that some things will be missing on purpose
+    there should be an easy way to tell the tool that when comparing
+    scan A and scan B, or perhaps when comparing scan A with any
+    subsequent scan, that it should ignore the fact that item X is
+    missing and not report it.
+
+  * 

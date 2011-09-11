@@ -40,10 +40,8 @@ def run():
     c = module.find('wxCollapsiblePane')
     c.find('wxCollapsiblePane.label').default = 'wxEmptyString'
     c.find('Create.label').default = 'wxEmptyString'
-    tools.fixWindowClass(c)
     
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
+    tools.fixWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

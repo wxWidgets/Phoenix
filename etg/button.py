@@ -32,8 +32,6 @@ def run():
     
     c = module.find('wxButton')
     tools.fixWindowClass(c)
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

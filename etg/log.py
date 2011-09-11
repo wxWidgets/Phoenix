@@ -30,7 +30,6 @@ ITEMS  = [
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
-    module.items.append(etgtools.TypedefDef(type='long', name='time_t'))
     etgtools.parseDoxyXML(module, ITEMS)
     
     # do not use the va_list forms of the functions

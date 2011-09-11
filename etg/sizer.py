@@ -62,7 +62,7 @@ def run():
     c.addPrivateCopyCtor()
     c.addPrivateAssignOp()
     
-    module.addPyCode("PySizer = Sizer")
+    module.addPyCode("PySizer = wx.deprecated(Sizer)")
         
     module.addItem(tools.wxListWrapperTemplate('wxSizerItemList', 'wxSizerItem'))
     #-----------------------------------------------------------------

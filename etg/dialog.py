@@ -19,8 +19,7 @@ DOCSTRING = ""
 # this script. 
 ITEMS  =    [
                 'wxDialog',
-                'wxDialogLayoutAdapter',
-                'wxProgressDialog',
+                'wxDialogLayoutAdapter',               
             ]
     
 #---------------------------------------------------------------------------
@@ -34,11 +33,8 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    module.addHeaderCode("#include <wx/progdlg.h>")
-
     c = module.find('wxDialog')
     assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
     
     c.find('wxDialog.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'
@@ -55,13 +51,8 @@ def run():
     
     # TODO: Restore when wxArrayInt is working
     c.find('GetMainButtonIds').ignore()
-    
-    c = module.find('wxProgressDialog')
-    assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
-    
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
+        
+    tools.fixTopLevelWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

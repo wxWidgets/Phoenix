@@ -32,14 +32,10 @@ def run():
 
     c = module.find('wxPanel')
     assert isinstance(c, etgtools.ClassDef)
-
     c.find('OnSysColourChanged').ignore()
-    
-    tools.fixWindowClass(c)        
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
-    
-    module.addPyCode("PyPanel = Panel")
+    tools.fixWindowClass(c)
+        
+    module.addPyCode("PyPanel = wx.deprecated(Panel)")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

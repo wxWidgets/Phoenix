@@ -17,8 +17,6 @@ import os
 import pprint
 import xml.etree.ElementTree as et
 
-
-
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
 # methods, functions and other items in the C/C++ API being wrapped.

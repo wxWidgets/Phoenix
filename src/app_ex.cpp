@@ -29,6 +29,7 @@ public:
 #ifndef __WXMAC__
     virtual void MacNewFile() {}
     virtual void MacOpenFile(const wxString &) {}
+    virtual void MacOpenFiles(const wxArrayString& fileNames) {}
     virtual void MacOpenURL(const wxString &) {}
     virtual void MacPrintFile(const wxString &) {}
     virtual void MacReopenApp() {}

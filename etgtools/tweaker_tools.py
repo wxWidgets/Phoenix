@@ -97,7 +97,7 @@ def fixEventClass(klass):
     klass.addPrivateAssignOp()
 
     
-def fixWindowClass(klass):
+def fixWindowClass(klass, hideVirtuals=True):
     """
     Do common tweaks for a window class.
     """
@@ -106,7 +106,6 @@ def fixWindowClass(klass):
         if isinstance(func, extractors.MethodDef):
             func.find('parent').transferThis = True
             # give the id param a default value if it has one
-            # some classes like wxProgressDialog don't
             id = func.findItem('id')
             if id:
                 id.default = 'wxID_ANY'
@@ -118,20 +117,39 @@ def fixWindowClass(klass):
             p = func.findItem('size')
             if p and not p.default:
                 p.default = 'wxDefaultSize'
-                
+
+    if hideVirtuals:
+        # There is no need to make all the C++ virtuals overridable in Python, and
+        # hiding the fact that they are virtual from the back end generator will
+        # greatly reduce the amount of code that needs to be generated. Remove all
+        # the virtual flags, and then and then add it back to a select few.
+        removeVirtuals(klass)
+        addWindowVirtuals(klass)
+
     
-def fixTopLevelWindowClass(klass):
+def fixTopLevelWindowClass(klass, hideVirtuals=True):
     """
     Tweaks for TLWs 
     """
     # TLW tweaks are a little different. We use the function annotation for
     # TransferThis instead of the argument anotation.
     klass.find(klass.name).findOverload('parent').transfer = True
-    klass.find('Create').transferThis = True
+    item = klass.findItem('Create')
+    if item:
+        item.transferThis = True
+        
     # give the id param a default value
-    klass.find('%s.id' % klass.name).default = 'wxID_ANY'
-    klass.find('Create.id').default = 'wxID_ANY'
-            
+    item = klass.findItem('%s.id' % klass.name)
+    if item:
+        item.default = 'wxID_ANY'
+    item = klass.findItem('Create.id')
+    if item:
+        item.default = 'wxID_ANY'
+
+    if hideVirtuals:
+        removeVirtuals(klass)
+        addWindowVirtuals(klass)
+    
     
 def removeVirtuals(klass):
     """
@@ -217,6 +235,7 @@ def addWindowVirtuals(klass):
     klass.addItem(extractors.WigCode(txt))
     txt = _processItems(klass, 'protected:\n', protectedWindowVirtuals)
     klass.addItem(extractors.WigCode(txt))
+    klass.addPublic()
                   
     
     

@@ -58,8 +58,6 @@ def run():
     
     
     # We now return you to our regularly scheduled programming...
-    tools.fixWindowClass(c)
-
     c.includeCppCode('src/window_ex.cpp')
 
     # ignore some overloads that will be ambiguous afer wrapping
@@ -111,6 +109,7 @@ def run():
     c.addCppMethod('void', 'SetDimensions', '(int x, int y, int width, int height, int sizeFlags=wxSIZE_AUTO)', """\
     self->SetSize(x, y, width, height, sizeFlags);
     """)
+    c.addPyCode("Window.SetDimensions = wx.deprecated(Window.SetDimensions)")
     
     # Make the Register/UnregisterHotKey functions be available on Windows,
     # and empty stubs otherwise
@@ -223,13 +222,7 @@ def run():
     c.addProperty('MaxClientSize GetMaxClientSize SetMaxClientSize')
     ##c.addProperty('GtkWidget GetGtkWidget')
 
-
-    # We probably won't ever need most of the wxWindow virtuals to be
-    # overridable in Python, so we'll clear all the virtual flags here and add
-    # back those that we want to keep in the next step.
-    tools.removeVirtuals(c)
-    tools.addWindowVirtuals(c)
-
+    tools.fixWindowClass(c)
 
     #-----------------------------------------------------------------------
     # Other stuff
@@ -254,12 +247,12 @@ def run():
     # Add a wrapper for wxWindowList and a new iterator class for it that
     # makes wxWindowList quack like a read-only Python sequence.
     module.addItem(tools.wxListWrapperTemplate('wxWindowList', 'wxWindow'))
-
     
     module.addCppFunction('wxWindowList*', 'GetTopLevelWindows', '()', 
                           briefDoc="Returns a list-like object of the the application's top-level windows, (frames,dialogs, etc.)",
                           body="return &wxTopLevelWindows;")
-    module.addPyCode("PyWindow = Window")
+    
+    module.addPyCode("PyWindow = wx.deprecated(Window)")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
