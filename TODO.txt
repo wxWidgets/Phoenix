@@ -77,7 +77,7 @@ build.py
       commands. 
 
     * Add a little code around the running of SIP that tells it to
-      write the generated C++ and etc. files to a tempokrary location,
+      write the generated C++ and etc. files to a temporary location,
       and then will compare those files with the existing set in the
       sip/cpp folder.  If a file has changed then the new one is
       copied over it, otherwise it is not touched.  This will help
@@ -149,7 +149,7 @@ identify what is missing and still needs to be implemented, or what is
 new, etc.  The granularity would be items at the module level, and
 items within each class, such as methods and properties.  I don't
 think it would be worth the effort to compare things like function
-signatures or docstrings because the effor to do that may be large.
+signatures or docstrings because the effort to do that may be large.
 But maybe it could record whether a docstring is present to help us
 track down items that need them added.
 
@@ -171,7 +171,7 @@ way:
     modules within the specified package.  Any imports of packages or
     modules located outside of the target package can be ignored.
 
-  * When the scan is finished all the data can be saved usign a
+  * When the scan is finished all the data can be saved using a
     specified name.  (The name can be used to name the XML file, or be
     used to collate all data related to this scan in a sqlite database
     if that is what is used to save the data.)
