@@ -76,6 +76,17 @@ build.py
       items on the command line then use a default set of waf
       commands. 
 
+    * Add a little code around the running of SIP that tells it to
+      write the generated C++ and etc. files to a tempokrary location,
+      and then will compare those files with the existing set in the
+      sip/cpp folder.  If a file has changed then the new one is
+      copied over it, otherwise it is not touched.  This will help
+      speed up builds by not rebuilding a file that doesn't need it.
+    * Maybe optionally this could also strip out the lines starting
+      with "#line".  Those are handy when we need to step through code
+      in the debugger, but could cause differences in files that are
+      otherwise identical to their prior version.
+
 
 
 etg/pen.py
