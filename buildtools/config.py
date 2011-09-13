@@ -170,11 +170,11 @@ class Configuration(object):
             else:
                 self.VCDLL = 'vc_dll'
                 
-            self.includes = ['include', 'src',
-                             opj(self.WXDIR, 'lib', self.VCDLL, 'msw'  + self.libFlag()),
-                             opj(self.WXDIR, 'include'),
-                             opj(self.WXDIR, 'contrib', 'include'),
-                             ]
+            self.includes += ['include',
+                              opj(self.WXDIR, 'lib', self.VCDLL, 'msw'  + self.libFlag()),
+                              opj(self.WXDIR, 'include'),
+                              opj(self.WXDIR, 'contrib', 'include'),
+                              ]
         
             self.defines = [ ('WIN32', None),
                              ('_WINDOWS', None),
@@ -218,7 +218,7 @@ class Configuration(object):
         # Posix (wxGTK, wxMac or mingw32) settings
         elif os.name == 'posix' or COMPILER == 'mingw32':
             self.Verify_WX_CONFIG()
-            self.includes = ['include', 'src']
+            self.includes += ['include']
             self.defines = [ ('NDEBUG',),  # using a 1-tuple makes it do an undef                            
                              ]
             self.libdirs = []
@@ -560,6 +560,24 @@ def loadETG(name):
 def etg2sip(etgfile):
     cfg = Config()
     sipfile = os.path.splitext(os.path.basename(etgfile))[0] + '.sip'
+
     sipfile = posixjoin(cfg.SIPGEN, sipfile)
     return sipfile
  
+
+def _getSbfValue(etg, keyName):
+    cfg = Config()
+    sbf = opj(cfg.SIPOUT, etg.NAME + '.sbf')
+    out = list()
+    for line in file(sbf):
+        key, value = line.split('=')
+        if key.strip() == keyName:
+            return [opj(cfg.SIPOUT, v) for v in value.strip().split()]
+    return None
+
+def getEtgSipCppFiles(etg):
+    return _getSbfValue(etg, 'sources')
+
+def getEtgSipHeaders(etg):
+    return _getSbfValue(etg, 'headers')
+

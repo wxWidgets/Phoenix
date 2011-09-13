@@ -234,7 +234,23 @@ class MyUnixCCompiler(distutils.unixccompiler.UnixCCompiler):
         except DistutilsExecError, msg:
             raise CompileError, msg
 
-
+    def _setup_compile(self, outdir, macros, incdirs, sources, depends, extra):
+        m = distutils.ccompiler.CCompiler._setup_compile
+        macros, objects, extra, pp_opts, build = \
+              m(self, outdir, macros, incdirs, sources, depends, extra)
+        
+        # Remove items from the build collection that don't need to be built
+        # because their obj file is newer than the source fle and any other
+        # dependencies.
+        # TODO
+        for obj in objects:
+            src, ext = build[obj]
+            if not newer_group([src] + depends, obj):
+                del build[obj]
+                
+        return macros, objects, extra, pp_opts, build        
+        
+        
 _orig_parse_makefile = distutils.sysconfig.parse_makefile
 def _parse_makefile(filename, g=None):
     rv = _orig_parse_makefile(filename, g)
@@ -331,6 +347,7 @@ class etgsip_build_ext(build_ext):
         cfg = Config()
         return cfg.SIPOUT   
         
+    
     def build_extension(self, extension):
         """
         Modify the dependency list, adding the sip files generated

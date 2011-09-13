@@ -13,6 +13,7 @@ import glob
 import shutil
 import subprocess
 import optparse
+import tempfile
 
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip
@@ -374,6 +375,7 @@ def sip(options, args):
     msg('Running command: sip')
     cfg = Config()
     for src_name in glob.glob(opj(cfg.SIPGEN, '_*.sip')):
+        tmpdir = tempfile.mkdtemp()
         src_name = src_name.replace('\\', '/')
         base = os.path.basename(os.path.splitext(src_name)[0])
         sbf = posixjoin(cfg.SIPOUT, base) + '.sbf'
@@ -381,10 +383,39 @@ def sip(options, args):
         pycode = posixjoin(cfg.PKGDIR, pycode) + '.py'
         pycode = '-X pycode:'+pycode        
         cmd = '%s %s -c %s -b %s %s %s'  % \
-            (cfg.SIP, cfg.SIPOPTS, cfg.SIPOUT, sbf, pycode, src_name)
+            (cfg.SIP, cfg.SIPOPTS, tmpdir, sbf, pycode, src_name)
         runcmd(cmd)
                 
-
+        # Check each file in tmpdir to see if it is different than the same file
+        # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
+        # ignore it.
+        for src in glob.glob(tmpdir + '/*'):
+            dest = opj(cfg.SIPOUT, os.path.basename(src))
+            if not os.path.exists(dest):
+                msg('%s is a new file, copying...' % os.path.basename(src))
+                shutil.copy2(src, dest)
+                continue
+    
+            with file(src, 'rb') as f:
+                srcTxt = f.read()
+                srcTxt = srcTxt.replace(tmpdir, cfg.SIPOUT)
+                # TODO remove lines starting with '#line'?
+            with file(dest, 'rb') as f:
+                destTxt = f.read()
+                
+            if srcTxt == destTxt:
+                pass
+            else:
+                msg('%s is changed, copying...' % os.path.basename(src))
+                f = file(dest, 'wb')
+                f.write(srcTxt)
+                f.close()
+                
+        # Remove tmpdir and its contents
+        shutil.rmtree(tmpdir)
+    
+    
+    
 def touch(options, args):
     msg('Running command: touch')
     pwd = pushDir(phoenixDir())
@@ -664,6 +695,7 @@ def clean_py(options, args):
         clean_py(options, args)
         options.both = True
     
+        
 def clean(options, args):
     clean_wx(options, args)
     clean_py(options, args)

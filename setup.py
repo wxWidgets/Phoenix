@@ -17,7 +17,8 @@ from distutils.dir_util  import mkpath
 from distutils.dep_util  import newer, newer_group
 from distutils.spawn     import spawn
 
-from buildtools.config import Config, msg, opj, loadETG
+from buildtools.config import Config, msg, opj, loadETG, \
+                              getEtgSipCppFiles, getEtgSipHeaders
 import buildtools.distutils_hacks as hacks
 
 
@@ -138,12 +139,11 @@ extensions.append(
               ))
 
 
+
+
 etg = loadETG('etg/_core.py')
-etgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_core', 
-                #['src/core_utils.cpp'] + 
-                etg.ETGFILES + rc_file,
-                depends            = etgDepends,              
+ext = Extension('_core', getEtgSipCppFiles(etg) + rc_file,
+                depends            = getEtgSipHeaders(etg),
                 include_dirs       = cfg.includes,
                 define_macros      = cfg.defines,
                 library_dirs       = cfg.libdirs,
@@ -153,6 +153,23 @@ ext = Extension('_core',
                 )
 extensions.append(ext)
 cfg.CLEANUP.append(opj(cfg.PKGDIR, 'core.py'))
+
+
+#etg = loadETG('etg/_core.py')
+#etgDepends = etg.DEPENDS + etg.OTHERDEPS
+#ext = Extension('_core', 
+                ##['src/core_utils.cpp'] + 
+                #etg.ETGFILES + rc_file,
+                #depends            = etgDepends,              
+                #include_dirs       = cfg.includes,
+                #define_macros      = cfg.defines,
+                #library_dirs       = cfg.libdirs,
+                #libraries          = cfg.libs,
+                #extra_compile_args = cfg.cflags,
+                #extra_link_args    = cfg.lflags,
+                #)
+#extensions.append(ext)
+#cfg.CLEANUP.append(opj(cfg.PKGDIR, 'core.py'))
 
 
 #----------------------------------------------------------------------
@@ -177,7 +194,7 @@ if __name__ == '__main__':
           ext_modules      = extensions,
            
           options          = { 'build'     : BUILD_OPTIONS,  
-                               'build_ext' : {'sip_opts' : cfg.SIPOPTS },
+                               #**'build_ext' : {'sip_opts' : cfg.SIPOPTS },
                                },
 
           scripts          = SCRIPTS,
@@ -189,7 +206,7 @@ if __name__ == '__main__':
                        'install_data'    : hacks.wx_smart_install_data,
                        'install_headers' : hacks.wx_install_headers,
                        'clean'           : hacks.wx_extra_clean,
-                       'build_ext'       : hacks.etgsip_build_ext,
+                       #**'build_ext'       : hacks.etgsip_build_ext,
                        },
 
         )
