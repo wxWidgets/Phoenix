@@ -242,7 +242,6 @@ class MyUnixCCompiler(distutils.unixccompiler.UnixCCompiler):
         # Remove items from the build collection that don't need to be built
         # because their obj file is newer than the source fle and any other
         # dependencies.
-        # TODO
         for obj in objects:
             src, ext = build[obj]
             if not newer_group([src] + depends, obj):
