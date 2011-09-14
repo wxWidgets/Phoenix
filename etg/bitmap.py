@@ -37,8 +37,24 @@ def run():
 
     c.find('wxBitmap').findOverload('(const char *const *bits)').ignore()
     c.find('wxBitmap.type').default = 'wxBITMAP_TYPE_ANY'
-    c.find('GetHandlers').ignore()
+    c.find('LoadFile.type').default = 'wxBITMAP_TYPE_ANY'
         
+    # On MSW the handler classes are different than what is documented, and
+    # this causes compile errors. Nobody has needed them from Python thus far,
+    # so just ignore them all for now.
+    for m in c.find('FindHandler').all():
+        m.ignore()
+    c.find('AddHandler').ignore()
+    c.find('CleanUpHandlers').ignore()
+    c.find('GetHandlers').ignore()
+    c.find('InsertHandler').ignore()
+    c.find('RemoveHandler').ignore()
+    
+    # This one is called from the wx startup code, it's not needed in Python
+    # so nuke it too since we're nuking all the others.
+    c.find('InitStandardHandlers').ignore()
+    
+    module.find('wxBitmapHandler').ignore()
     #module.addItem(tools.wxListWrapperTemplate('wxList', 'wxBitmapHandler'))
     
     #-----------------------------------------------------------------

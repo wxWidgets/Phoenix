@@ -139,8 +139,6 @@ extensions.append(
               ))
 
 
-
-
 etg = loadETG('etg/_core.py')
 ext = Extension('_core', getEtgSipCppFiles(etg) + rc_file,
                 depends            = getEtgSipHeaders(etg),

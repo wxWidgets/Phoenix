@@ -232,23 +232,7 @@ class MyUnixCCompiler(distutils.unixccompiler.UnixCCompiler):
             self.spawn(compiler_so + cc_args + [src, '-o', obj] +
                        extra_postargs)
         except DistutilsExecError, msg:
-            raise CompileError, msg
-
-    def _setup_compile(self, outdir, macros, incdirs, sources, depends, extra):
-        m = distutils.ccompiler.CCompiler._setup_compile
-        macros, objects, extra, pp_opts, build = \
-              m(self, outdir, macros, incdirs, sources, depends, extra)
-        
-        # Remove items from the build collection that don't need to be built
-        # because their obj file is newer than the source fle and any other
-        # dependencies.
-        for obj in objects:
-            src, ext = build[obj]
-            if not newer_group([src] + depends, obj):
-                del build[obj]
-                
-        return macros, objects, extra, pp_opts, build        
-        
+            raise CompileError, msg        
         
 _orig_parse_makefile = distutils.sysconfig.parse_makefile
 def _parse_makefile(filename, g=None):
@@ -270,6 +254,27 @@ distutils.unixccompiler._darwin_compiler_fixup = _darwin_compiler_fixup
 distutils.unixccompiler._darwin_compiler = _darwin_compiler_fixup_24
 distutils.sysconfig.parse_makefile = _parse_makefile
 
+
+# Inject a little code into the CCompiler class that will check if the object
+# file is up to date with respect to its source file and any other
+# dependencies associated with the extentension. If so then it is removed from
+# the collection of files to build.
+_orig_setup_compile = distutils.ccompiler.CCompiler._setup_compile
+def _setup_compile(self, outdir, macros, incdirs, sources, depends, extra):
+    print 'hello'
+    macros, objects, extra, pp_opts, build = \
+          _orig_setup_compile(self, outdir, macros, incdirs, sources, depends, extra)
+    
+    # Remove items from the build collection that don't need to be built
+    # because their obj file is newer than the source fle and any other
+    # dependencies.
+    for obj in objects:
+        src, ext = build[obj]
+        if not newer_group([src] + depends, obj):
+            del build[obj]            
+    return macros, objects, extra, pp_opts, build        
+
+distutils.ccompiler.CCompiler._setup_compile = _setup_compile
 
 #----------------------------------------------------------------------
 # Another hack-job for the CygwinCCompiler class, this time replacing
@@ -399,8 +404,6 @@ class etgsip_build_ext(build_ext):
     
     def _sip_compile(self, sip_bin, source, sbf):
         cfg = Config()
-        if not cfg.USE_SIP:
-            return
         
         other_opts = []
         base = os.path.basename(source)

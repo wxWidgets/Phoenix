@@ -36,6 +36,20 @@ def run():
     c.find('IgnoreAppBuildSubDirs').ignore()
     c.find('MSWGetShellDir').ignore()
     
+    c.find('SetInstallPrefix').setCppCode("""\
+    #ifdef __WXMSW__
+    #else
+        sipCpp->SetInstallPrefix(*prefix);
+    #endif
+    """)
+    c.find('GetInstallPrefix').setCppCode("""\
+    #ifdef __WXMSW__
+        sipRes = new wxString;
+    #else
+        sipRes = new wxString(sipCpp->GetInstallPrefix());
+    #endif
+    """)
+    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.addGetterSetterProps(module)

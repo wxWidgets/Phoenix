@@ -1,9 +1,8 @@
 #!/usr/bin/python
 #---------------------------------------------------------------------------
-# A simple wrapper script that assists with the building of the project for 
-# day-to-day development work.  Instead of needing to remember lots of 
-# commands and options for setup.py or build-wxpython.py this script uses
-# some defaults that are good for development (debug mode, etc.)
+# This script is used to run through the commands used for the various stages
+# of building Phoenix, and can also be a front-end for building wxWidgets and
+# the Python extension mocdules.
 #---------------------------------------------------------------------------
 
 import sys
@@ -41,7 +40,7 @@ Usage: ./build.py [command(s)] [options]
 
     Commands:
         N.N NN      Major.Minor version number of the Python to use to run 
-                    the other commands.  Default is 2.6
+                    the other commands.  Default is 2.7
         dox         Run Doxygen to produce the XML file used by ETG scripts
         doxhtml     Run Doxygen to create the HTML documetation for wx
         touch       'touch' the etg files so they will all get run in the 
@@ -177,7 +176,6 @@ def setDevModeOptions(args):
     # it inserts into the args list being consistent. They could change at any
     # update from the repository.
     myDevModeOptions = [
-            '--sip',
             '--build_dir=../bld',
             '--prefix=/opt/wx/2.9',
 
@@ -233,7 +231,6 @@ def getMSWSettings(options):
 def makeOptionParser():
     OPTS = [
         ("debug",          (False, "Build wxPython with debug symbols")),
-        ("sip",            (False, "Allow SIP to regenerate the wrappers if needed")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
@@ -376,6 +373,7 @@ def sip(options, args):
     cfg = Config()
     for src_name in glob.glob(opj(cfg.SIPGEN, '_*.sip')):
         tmpdir = tempfile.mkdtemp()
+        tmpdir = tmpdir.replace('\\', '/')
         src_name = src_name.replace('\\', '/')
         base = os.path.basename(os.path.splitext(src_name)[0])
         sbf = posixjoin(cfg.SIPOUT, base) + '.sbf'
@@ -550,8 +548,6 @@ def build_py(options, args):
     
     if options.debug or (isWindows and options.both):
         build_options.append("--debug")
-    if options.sip:
-        build_options.append('USE_SIP=1')
     if isDarwin and options.mac_arch: 
         build_options.append("ARCH=%s" % options.mac_arch)
         

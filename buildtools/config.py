@@ -45,7 +45,6 @@ else:
 
 class Configuration(object):
     
-    USE_SIP  = False              # Can we run sip?
     SIP      = SIPdefault         # Where is the sip binary?
     SIPINC   = 'sip/siplib'       # Use our local copy of sip.h
     SIPGEN   = 'sip/gen'          # Where the generated .sip files go
