@@ -123,6 +123,7 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
+    module.check4unittest = False
 
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
