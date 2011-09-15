@@ -38,6 +38,17 @@ def run():
     c.find('wxBitmap').findOverload('(const char *const *bits)').ignore()
     c.find('wxBitmap.type').default = 'wxBITMAP_TYPE_ANY'
     c.find('LoadFile.type').default = 'wxBITMAP_TYPE_ANY'
+
+    c.find('SetMask.mask').transfer = True
+
+    c.addCppMethod('void', 'SetMaskColour', '(const wxColour& colour)', """\
+        wxMask* mask = new wxMask(*self, *colour);
+        self->SetMask(mask);
+        """)
+
+    c.addCppMethod('int', '__nonzero__', '()', """\
+        return self->IsOk();
+        """)
         
     # On MSW the handler classes are different than what is documented, and
     # this causes compile errors. Nobody has needed them from Python thus far,
@@ -56,6 +67,9 @@ def run():
     
     module.find('wxBitmapHandler').ignore()
     #module.addItem(tools.wxListWrapperTemplate('wxList', 'wxBitmapHandler'))
+
+    # TODO: The ctors and methods from Classic for converting to/from
+    #       buffer objects with raw bitmap access.
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
