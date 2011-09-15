@@ -305,6 +305,8 @@ def getDocsGenerator():
 
 
 def runGenerators(module):
+    checkForUnitTestModule(module)
+    
     # Create the code generator and make the wrapper code
     wg = getWrapperGenerator()
     wg.generate(module)
@@ -314,6 +316,12 @@ def runGenerators(module):
     dg.generate(module)
 
 
+def checkForUnitTestModule(module):
+    pathname = 'unittests/test_%s.py' % module.name
+    if os.path.exists(pathname) or not module.check4unittest:
+        return
+    print 'WARNING: Unittest module (%s) not found!' % pathname
+    
 
 #---------------------------------------------------------------------------
 

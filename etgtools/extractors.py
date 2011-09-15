@@ -470,6 +470,9 @@ class ClassDef(BaseDef):
                     if countNonDefaultArgs(item) != 0:
                         # TODO: check overloads too
                         continue
+                    # Getters must not be static methods
+                    if item.isStatic:
+                        continue
                 elif prefix == 'Set':
                     prop.setter = item.name
                     # Setters must be able to be called with 1 arg, ensure
@@ -794,12 +797,13 @@ class ModuleDef(BaseDef):
     """
     This class holds all the items that will be in the generated module
     """
-    def __init__(self, package, module, name, docstring=''):
+    def __init__(self, package, module, name, docstring='', check4unittest=True):
         super(ModuleDef, self).__init__()
         self.package = package
         self.module = module
         self.name = name
         self.docstring = docstring
+        self.check4unittest = check4unittest
         self.headerCode = []
         self.cppCode = []
         self.initializerCode = []
