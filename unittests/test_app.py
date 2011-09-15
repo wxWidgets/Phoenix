@@ -1,4 +1,4 @@
-import unittest2
+import imp_unittest, unittest
 import wx
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
 
@@ -6,7 +6,7 @@ import warnings
 
 #---------------------------------------------------------------------------
 
-class App(unittest2.TestCase):
+class App(unittest.TestCase):
     
     def test_App(self):
         app = wx.App()
@@ -47,7 +47,7 @@ class App(unittest2.TestCase):
         # wx.PySimpleApp is supposed to be deprecated, make sure it is.
         with warnings.catch_warnings():
             warnings.simplefilter("error")
-            with self.assertRaises(DeprecationWarning):
+            with self.assertRaises(wx.wxPyDeprecationWarning):
                 app = wx.PySimpleApp()
 
                 
@@ -71,4 +71,4 @@ class App(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

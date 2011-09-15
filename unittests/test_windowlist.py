@@ -1,11 +1,11 @@
 import sys
-import unittest2
+import imp_unittest, unittest
 import wx
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
 
 #---------------------------------------------------------------------------
 
-class WindowList(unittest2.TestCase):
+class WindowList(unittest.TestCase):
     def setUp(self):
         self.app = wx.App()
         self.frames = list()
@@ -44,4 +44,4 @@ class WindowList(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

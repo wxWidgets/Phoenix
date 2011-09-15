@@ -1,10 +1,10 @@
-import unittest2
+import imp_unittest, unittest
 import wx
 
 
 #---------------------------------------------------------------------------
 
-class Point2D(unittest2.TestCase):
+class Point2D(unittest.TestCase):
     
     def test_default_ctor(self):
         p = wx.Point2D()
@@ -21,7 +21,7 @@ class Point2D(unittest2.TestCase):
         
 
         
-class Rect2D(unittest2.TestCase):
+class Rect2D(unittest.TestCase):
 
     def test_default_ctor(self):
         r = wx.Rect2D()
@@ -42,5 +42,5 @@ class Rect2D(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()
     

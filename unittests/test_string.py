@@ -1,10 +1,10 @@
 
-import unittest2
+import imp_unittest, unittest
 import wx
 
 #---------------------------------------------------------------------------
 
-class String(unittest2.TestCase):
+class String(unittest.TestCase):
         
     if hasattr(wx, 'testStringTypemap'):
         def test_StringTypemaps(self):
@@ -59,4 +59,4 @@ class String(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

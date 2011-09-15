@@ -1,9 +1,9 @@
-import unittest2
+import imp_unittest, unittest
 import wx
 
 #---------------------------------------------------------------------------
 
-class MouseState(unittest2.TestCase):
+class MouseState(unittest.TestCase):
     
     def test_MouseState(self):
         ms = wx.MouseState()
@@ -28,4 +28,4 @@ class MouseState(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

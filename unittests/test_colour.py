@@ -1,10 +1,10 @@
-import unittest2
+import imp_unittest, unittest
 import wx
 
 
 #---------------------------------------------------------------------------
 
-class Colour(unittest2.TestCase):
+class Colour(unittest.TestCase):
     def setUp(self):
         if hasattr(wx, 'InitializeStockLists'):
             wx.InitializeStockLists() # switch to wx.App once we have that class working
@@ -52,4 +52,4 @@ class Colour(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

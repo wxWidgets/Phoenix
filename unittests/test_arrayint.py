@@ -1,13 +1,13 @@
-import unittest2
+import imp_unittest, unittest
 import wx
 
 
 #---------------------------------------------------------------------------
 
-class ArrayInt(unittest2.TestCase):
+class ArrayInt(unittest.TestCase):
         
     if hasattr(wx, 'testArrayIntTypemap'):
-        def test_ArrayStringTypemaps(self):
+        def test_ArrayIntTypemaps(self):
             # basic conversion of list or tuples of numbers
             seqList = [1,2,3,4.5,6.7]
             self.assertEqual(wx.testArrayIntTypemap(seqList), [1,2,3,4,6]) #floats are truncated to int
@@ -24,4 +24,4 @@ class ArrayInt(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

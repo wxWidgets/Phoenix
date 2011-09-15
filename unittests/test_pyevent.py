@@ -1,11 +1,11 @@
 import sys
-import unittest2
+import imp_unittest, unittest
 import wx
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
 
 #---------------------------------------------------------------------------
 
-class PyEvents(unittest2.TestCase):
+class PyEvents(unittest.TestCase):
     
     def test_PyEvent(self):                    
         id = wx.NewId()
@@ -97,4 +97,4 @@ class PyEvents(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

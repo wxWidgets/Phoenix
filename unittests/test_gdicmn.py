@@ -1,10 +1,10 @@
-import unittest2
+import imp_unittest, unittest
 import wx
 
 
 #---------------------------------------------------------------------------
 
-class Point(unittest2.TestCase):
+class Point(unittest.TestCase):
     
     def test_default_ctor(self):
         p = wx.Point()
@@ -86,7 +86,7 @@ class Point(unittest2.TestCase):
 #---------------------------------------------------------------------------
 
 
-class Size(unittest2.TestCase):
+class Size(unittest.TestCase):
     
     def test_default_ctor(self):
         s = wx.Size()
@@ -203,7 +203,7 @@ class Size(unittest2.TestCase):
 #---------------------------------------------------------------------------
         
         
-class RealPoint(unittest2.TestCase):
+class RealPoint(unittest.TestCase):
     
     def test_default_ctor(self):
         p = wx.RealPoint()
@@ -228,7 +228,7 @@ class RealPoint(unittest2.TestCase):
     
 #---------------------------------------------------------------------------
         
-class Rect(unittest2.TestCase):
+class Rect(unittest.TestCase):
     
     def test_default_ctor(self):
         r = wx.Rect()
@@ -272,4 +272,4 @@ class Rect(unittest2.TestCase):
         
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

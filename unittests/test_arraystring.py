@@ -1,10 +1,10 @@
-import unittest2
+import imp_unittest, unittest
 import wx
 
 
 #---------------------------------------------------------------------------
 
-class ArrayString(unittest2.TestCase):
+class ArrayString(unittest.TestCase):
         
     if hasattr(wx, 'testArrayStringTypemap'):
         def test_ArrayStringTypemaps(self):
@@ -28,4 +28,4 @@ class ArrayString(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

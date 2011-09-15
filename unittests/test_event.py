@@ -1,10 +1,10 @@
-import unittest2
+import imp_unittest, unittest
 import wx
 
 
 #---------------------------------------------------------------------------
 
-class Events(unittest2.TestCase):
+class Events(unittest.TestCase):
     
     # Test the constructors to make sure the classes are not abstract, except
     # for wx.Event
@@ -144,4 +144,4 @@ class Events(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()
