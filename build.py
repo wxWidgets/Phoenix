@@ -534,7 +534,9 @@ def build_py(options, args):
         msw = getMSWSettings(options)
         cfg = Config()
 
-        # NOTE: this will copy both debug and release DLLs if they both exist...
+        # NOTE: this will copy both debug and release DLLs if they both
+        # exist... TODO: It would probably be a good idea to filter out the
+        # debug files unless --debug is given.
         ver = version3_nodot if unstable_series else version2_nodot
         dlls = glob.glob(os.path.join(msw.dllDir, "wx*%s*.dll" % ver))
         for dll in dlls:
