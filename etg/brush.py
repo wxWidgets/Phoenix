@@ -2,7 +2,7 @@
 # Name:        etg/brush.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     2-Sept-2011
 # Copyright:   (c) 2011 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -34,7 +34,28 @@ def run():
     c = module.find('wxBrush')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
-    
+
+    c.addCppMethod('int', '__nonzero__', '()', """\
+        return self->IsOk();
+        """)
+
+
+    c.addCppCode("""\
+        #ifdef __WXMAC__
+        #include <wx/osx/private.h>
+        #endif
+        """)    
+    c.addCppMethod('void', 'MacSetTheme', '(int macThemeBrushID)', """\
+        #ifdef __WXMAC__
+            self->SetColour(wxColour(wxMacCreateCGColorFromHITheme(macThemeBrushID)));
+        #else
+            wxPyRaiseNotImplemented(); 
+            _isErr = 1;
+            return NULL; 
+        #endif
+        """)
+
+
     # TODO: Fix these. I'm not sure why exactly, but in the CPP code
     # they end up with the wrong signature.
     module.find('wxBLUE_BRUSH').ignore()
