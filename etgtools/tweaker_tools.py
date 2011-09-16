@@ -104,7 +104,10 @@ def fixWindowClass(klass, hideVirtuals=True):
     # The ctor and Create method transfer ownership of the this pointer
     for func in klass.findAll(klass.name) + klass.findAll('Create'):
         if isinstance(func, extractors.MethodDef):
-            func.find('parent').transferThis = True
+            # if a class has an empty ctor it might not have this
+            parent = func.findItem('parent')
+            if parent:
+                parent.transferThis = True
             # give the id param a default value if it has one
             id = func.findItem('id')
             if id:
@@ -582,7 +585,65 @@ del _{ListClass_pyName}___repr__
 %End
 '''.format(**locals()))
 
+def wxArrayWrapperTemplate(ArrayClass, ItemClass, RealItemClass=None):
+    if RealItemClass is None:
+        RealItemClass = ItemClass    
+        
+    ArrayClass_pyName = removeWxPrefix(ArrayClass)
+    
+    # *** TODO: This can probably be done in a way that is not SIP-specfic.
+    # Try creating extractor objects from scratch and attach cppMethods to
+    # them as needed, etc..
+        
+    return extractors.WigCode('''\
+class {ArrayClass} 
+{{
+public:
+    SIP_SSIZE_T __len__();
+    %MethodCode
+        sipRes = sipCpp->GetCount();
+    %End
 
+    {ItemClass} __getitem__(size_t index);
+    %MethodCode
+        if (index < sipCpp->GetCount()) {{
+            sipRes = &({RealItemClass})sipCpp->Item(index);
+        }}
+        PyErr_SetString(PyExc_IndexError, "sequence index out of range");
+        sipError = sipErrorFail;
+    %End
+
+    int __contains__(const {ItemClass} obj);
+    %MethodCode
+        int idx = sipCpp->Index(({RealItemClass})*obj, false);
+        sipRes = idx != wxNOT_FOUND;
+    %End
+
+    void append(const {ItemClass} obj);
+    %MethodCode
+        sipCpp->Add(({RealItemClass})*obj);
+    %End
+
+    // TODO:  add support for index(value, [start, [stop]])
+    int index({ItemClass} obj);
+    %MethodCode
+        int idx = sipCpp->Index((const {RealItemClass})obj, false);
+        if (idx == wxNOT_FOUND) {{
+            sipError = sipErrorFail;
+            PyErr_SetString(PyExc_ValueError,
+                            "sequence.index(x): x not in sequence");
+            }}
+        sipRes = idx;
+    %End
+}};
+
+%Extract(id=pycode)
+def _{ArrayClass_pyName}___repr__(self):
+    return "{ArrayClass_pyName}: " + repr(list(self))
+{ArrayClass_pyName}.__repr__ = _{ArrayClass_pyName}___repr__
+del _{ArrayClass_pyName}___repr__
+%End
+'''.format(**locals()))
 
 
 #---------------------------------------------------------------------------

@@ -73,6 +73,11 @@ def run():
     c.find('Append').findOverload('clientData').find('clientData').transfer = True
     c.find('Insert').findOverload('clientData').find('clientData').transfer = True
     
+    c.addPyMethod('AppendItems', '(self, items)',    'self.Append(items)')
+    c.addPyMethod('GetItems', '(self)',    'return self.GetStrings()')
+    c.addPyMethod('SetItems', '(self, items)',    'self.Set(items)')
+
+    
     c = module.find('wxControlWithItems')
     c.abstract = True
     

@@ -106,6 +106,18 @@ INCLUDES = [  'defs',
               'cursor',
               'log',
               'progdlg',
+              'textctrl',
+              'combobox',
+              'checkbox',
+              'checklistbox',
+              'listbox',
+              'gauge',
+              'headercol',
+              'dataformat',
+              'filedlg',
+              'dirdlg',
+              'config',
+              'searchctrl',
               ]
 
 

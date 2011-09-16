@@ -101,8 +101,8 @@ VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER,
         "sip/cpp",
     ]
     
-    print "Calling loadETG with %s" % os.path.abspath('etg/_core.py')
     etg = loadETG('etg/_core.py')
+    etg = loadETG('etg/_dataview.py')
 
     def remove_archs(var):
         result = []
@@ -154,7 +154,7 @@ VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER,
 
     bld.add_group()
 
-    wxlib = bld(
+    corelib = bld(
         features='c cxx cxxshlib pyext',
         target='_core',
         includes=cfg.includes + ['sip/siplib'],
@@ -166,4 +166,18 @@ VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER,
         install_path="wx"
     )
     
-    wxlib.source = wxlib.path.ant_glob("sip/cpp/*.cpp", incl=source_exts, remove=False, maxdepth=3)
+    corelib.source = corelib.path.ant_glob("sip/cpp/sip_core*.cpp", incl=source_exts, remove=False, maxdepth=3)
+
+    dataviewlib = bld(
+        features='c cxx cxxshlib pyext',
+        target='_dataview',
+        includes=cfg.includes + ['sip/siplib'],
+        cflags=cfg.cflags,
+        defines=cfg.defines,
+        libpath=cfg.libdirs,
+        linkflags='./siplib.so ./_core.so',
+        use= ['WX'],
+        install_path="wx"
+    )
+    
+    dataviewlib.source = dataviewlib.path.ant_glob("sip/cpp/sip_dataview*.cpp", incl=source_exts, remove=False, maxdepth=3)

@@ -379,7 +379,7 @@ def sip(options, args):
         sbf = posixjoin(cfg.SIPOUT, base) + '.sbf'
         pycode = base.replace('_', '')
         pycode = posixjoin(cfg.PKGDIR, pycode) + '.py'
-        pycode = '-X pycode:'+pycode        
+        pycode = '-X pycode'+base+':'+pycode        
         cmd = '%s %s -c %s -b %s %s %s'  % \
             (cfg.SIP, cfg.SIPOPTS, tmpdir, sbf, pycode, src_name)
         runcmd(cmd)

@@ -43,6 +43,11 @@ def run():
     # Needs wxWin 2.6 compatibility to run
     c.find('Remove').findOverload('(wxWindow *window)').ignore()
 
+    c = module.find('wxBoxSizer')
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
+    c.find('wxBoxSizer.orient').default = 'wxHORIZONTAL'
+
     c = module.find('wxSizerItem')
     
     gud = c.find('GetUserData')

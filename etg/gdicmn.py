@@ -21,7 +21,7 @@ ITEMS  = [  'wxPoint',
             'wxSize',
             'wxRect',
             'wxRealPoint',
-            'wxColourDatabase' ,
+            'wxColourDatabase',
             ]
     
 #---------------------------------------------------------------------------
@@ -55,8 +55,6 @@ def run():
     e.find('wxCURSOR_CROSS_REVERSE').ignore()
     e.find('wxCURSOR_DOUBLE_ARROW').ignore()
     
-            
-    module.find('wxTheColourDatabase').ignore()  
     module.find('wxSetCursor').ignore()          
     
     module.find('wxClientDisplayRect.x').out = True
@@ -304,6 +302,9 @@ def run():
     c.addPyCode('RealPoint.__safe_for_unpickling__ = True')
 
     module.addItem(tools.wxListWrapperTemplate('wxPointList', 'wxPoint'))
+    
+    c = module.find('wxColourDatabase')
+    c.addPyMethod('FindColour', '(self, colour)',    'return self.Find(colour)')   
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

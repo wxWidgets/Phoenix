@@ -190,7 +190,7 @@ def run():
     tools.removeVirtuals(c)
     c.find('ProcessEvent').isVirtual = True
            
-    
+    c.addPyCode('PyEvtHandler = EvtHandler')
 
     #---------------------------------------
     # wxEvent

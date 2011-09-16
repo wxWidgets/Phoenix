@@ -354,15 +354,19 @@ class ParamDef(BaseDef):
             self.extract(element)
         
     def extract(self, element):
-        self.type = flattenNode(element.find('type'))
-        # we've got varags
-        if self.type == '...':
-            self.name = ''
-        else:
-            self.name = element.find('declname').text
-        if element.find('defval') is not None:
-            self.default = flattenNode(element.find('defval'))
-        
+        try:
+            self.type = flattenNode(element.find('type'))
+            # we've got varags
+            if self.type == '...':
+                self.name = ''
+            else:
+                self.name = element.find('declname').text
+            if element.find('defval') is not None:
+                self.default = flattenNode(element.find('defval'))
+        except:
+            print "error when parsing element:"
+            et.dump(element)
+            raise
 #---------------------------------------------------------------------------
 
 class ClassDef(BaseDef):
@@ -422,6 +426,9 @@ class ClassDef(BaseDef):
             elif kind == 'enum':
                 e = EnumDef(node)
                 self.items.append(e)
+            elif kind == 'typedef':
+                # callback function prototype, see wx/filedlg.h for an instance of this
+                continue
             else:
                 raise ExtractorError('Unknown memberdef kind: %s' % kind)
             
@@ -486,8 +493,15 @@ class ClassDef(BaseDef):
         if props:
             self.addPublic()
         for name, prop in sorted(props.items()):
+            starts_with_number = False
+            try:
+                int(name[0])
+                starts_with_number = True
+            except:
+                pass
+            
             # only create the prop if a method with that name does not exist
-            if not self.findItem(name):
+            if not self.findItem(name) and not starts_with_number:
                 # properties must have at least a getter
                 if prop.getter:
                     self.items.append(prop)
@@ -521,14 +535,14 @@ class ClassDef(BaseDef):
     
     #------------------------------------------------------------------
  
-    def addCppMethod(self, type, name, argsString, body, doc=None, **kw):
+    def addCppMethod(self, type, name, argsString, body, doc=None, isConst=False, **kw):
         """
         Add a new C++ method to a class. This method doesn't have to actually
         exist in the real C++ class. Instead it will be grafted on by the
         back-end wrapper generator such that it is visible in the class in the
         target language.
         """
-        md = CppMethodDef(type, name, argsString, body, doc, klass=self, **kw)
+        md = CppMethodDef(type, name, argsString, body, doc, isConst, klass=self, **kw)
         self.items.append(md)
         return md
 
@@ -723,7 +737,7 @@ class CppMethodDef(MethodDef):
     NOTE: This one is not automatically extracted, but can be added to
           classes in the tweaker stage
     """
-    def __init__(self, type, name, argsString, body, doc=None, **kw):
+    def __init__(self, type, name, argsString, body, doc=None, isConst=False, **kw):
         super(CppMethodDef, self).__init__()
         self.type = type
         self.name = name
@@ -733,6 +747,7 @@ class CppMethodDef(MethodDef):
         self.protection = 'public'
         self.klass = None
         self.noDerivedCtor = False
+        self.isConst = isConst
         self.__dict__.update(kw)
 
         

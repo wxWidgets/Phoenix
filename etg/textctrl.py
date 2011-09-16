@@ -1,60 +1,63 @@
 #---------------------------------------------------------------------------
-# Name:        etg/frame.py
-# Author:      Robin Dunn
+# Name:        etg/textctrl.py
+# Author:      Kevin Ollivier
 #
-# Created:     6-Dec-2010
-# Copyright:   (c) 2011 by Total Control Software
+# Created:     9-Sept-2011
+# Copyright:   (c) 2011 by Kevin Ollivier
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
-NAME      = "frame"   # Base name of the file to generate to for this script
+NAME      = "textctrl"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxFrame' ]    
+ITEMS  = [ 'wxTextCtrl', 'wxTextEntry', 'wxTextCompleter', 'wxTextAttr', ]
     
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    
+    module.items.append(etgtools.TypedefDef(type='long', name='wxTextPos'))
+    module.items.append(etgtools.TypedefDef(type='long', name='wxTextCoord'))
+    
     etgtools.parseDoxyXML(module, ITEMS)
     
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-        
-    c = module.find('wxFrame')
+
+    c = module.find('wxTextAttr')
+    for op in c.allItems():
+        if 'operator' in op.name:
+            op.ignore()
+
+    c = module.find('wxTextCompleter')
+    c.addPrivateCopyCtor()
+    
+    c = module.find('wxTextEntry')
+    c.abstract = True
+
+    c = module.find('wxTextCtrl')
+    c.find('HitTest').overloads = []
+    
+    for op in c.findAll('operator<<'):
+        op.ignore()
+
     assert isinstance(c, etgtools.ClassDef)
-    
-    c.find('wxFrame.title').default = 'wxEmptyString'
-    c.find('Create.title').default = 'wxEmptyString'    
-    
-    c.find('SetMenuBar.menuBar').transfer = True
-    
-    c.find('SetStatusWidths.n').arraySize = True
-    c.find('SetStatusWidths.widths_field').array = True
-    
-    c.addProperty('MenuBar GetMenuBar SetMenuBar')
-    c.addProperty('StatusBar GetStatusBar SetStatusBar')
-    c.addProperty('StatusBarPane GetStatusBarPane SetStatusBarPane')
-    c.addProperty('ToolBar GetToolBar SetToolBar')
-    
-        
-    # TODO: should these go into a tools.addFrameVirtuals function?
-    c.find('OnCreateStatusBar').isVirtual = True
-    c.find('OnCreateToolBar').isVirtual = True
-    
-    tools.fixTopLevelWindowClass(c)
+
+    tools.fixWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+    tools.addGetterSetterProps(module)
     tools.runGenerators(module)
     
     
