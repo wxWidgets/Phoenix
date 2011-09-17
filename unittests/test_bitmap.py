@@ -56,11 +56,13 @@ class BitmapTests(wtc.WidgetTestCase):
         
         
     def test_BitmapMask(self):
-        b5 = wx.Bitmap(pngFile)
+        img = wx.Image(pngFile)
+        img = img.ConvertToMono(0,0,0)
+        bmp = wx.Bitmap(img, 1)
         m = wx.Mask()
-        m = wx.Mask(b5, 4)
-        m = wx.Mask(b5)
-        m = wx.Mask(b5, wx.Colour(1,2,3))
+        m = wx.Mask(bmp, 4)
+        m = wx.Mask(bmp)
+        m = wx.Mask(bmp, wx.Colour(1,2,3))
                     
         
 #---------------------------------------------------------------------------
