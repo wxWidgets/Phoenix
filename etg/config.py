@@ -68,8 +68,26 @@ def run():
     c.find('GetGlobalFile').ignore()
     c.find('GetLocalFile').ignore()
     
-    module.addPyCode('Config = FileConfig')
-    
+
+    # In C++ wxConfig is a #define to some other config class. We'll let our
+    # backend generator believe that it's a real class with that name.
+    wc = etgtools.WigCode("""\
+    class wxConfig : wxConfigBase 
+    {
+    public:
+        wxConfig(const wxString& appName = wxEmptyString,
+                 const wxString& vendorName = wxEmptyString,
+                 const wxString& localFilename = wxEmptyString,
+                 const wxString& globalFilename = wxEmptyString,
+                 long style = wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE);
+        ~wxConfig();
+    private:
+        wxConfig(const wxConfig&);
+    };
+    """)
+    module.addItem(wc)
+
+        
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.addGetterSetterProps(module)
