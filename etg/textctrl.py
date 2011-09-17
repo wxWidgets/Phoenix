@@ -44,6 +44,7 @@ def run():
     
     c = module.find('wxTextEntry')
     c.abstract = True
+    tools.removeVirtuals(c)
 
     c = module.find('wxTextCtrl')
     c.find('HitTest').overloads = []

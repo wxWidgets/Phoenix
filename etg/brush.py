@@ -51,7 +51,6 @@ def run():
         #else
             wxPyRaiseNotImplemented(); 
             _isErr = 1;
-            return NULL; 
         #endif
         """)
 

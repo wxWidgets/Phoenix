@@ -394,18 +394,18 @@ def sip(options, args):
                 shutil.copy2(src, dest)
                 continue
     
-            with file(src, 'rb') as f:
+            with file(src, 'rt') as f:
                 srcTxt = f.read()
                 srcTxt = srcTxt.replace(tmpdir, cfg.SIPOUT)
                 # TODO remove lines starting with '#line'?
-            with file(dest, 'rb') as f:
+            with file(dest, 'rt') as f:
                 destTxt = f.read()
                 
             if srcTxt == destTxt:
                 pass
             else:
                 msg('%s is changed, copying...' % os.path.basename(src))
-                f = file(dest, 'wb')
+                f = file(dest, 'wt')
                 f.write(srcTxt)
                 f.close()
                 
