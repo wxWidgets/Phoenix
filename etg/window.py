@@ -94,7 +94,8 @@ def run():
     
     # Add some new methods
     c.addCppMethod('wxWindow*', 'GetTopLevelParent', '()',
-                   'return wxGetTopLevelParent(self);')
+                   'return wxGetTopLevelParent(self);',
+                   briefDoc="Returns the first ancestor of this window which is a top-level window.")
     #c.addCppMethod('wxWindow*', 'FindWindowByLabel', '(const wxString& label)', 
     #               'return wxWindow::FindWindowByLabel(label, self);')
     
@@ -104,7 +105,10 @@ def run():
     #else
         return false;
     #endif
-    """)
+    """,
+    pyArgsString="(sb)",
+    briefDoc="Is the given widget one of this window's built-in scrollbars?  Only applicable on Mac.")
+
     
     c.addCppMethod('void', 'SetDimensions', '(int x, int y, int width, int height, int sizeFlags=wxSIZE_AUTO)', """\
     self->SetSize(x, y, width, height, sizeFlags);
@@ -150,7 +154,7 @@ def run():
     c.find('SendDestroyEvent').ignore(False)
 
     c.find('Destroy').transferThis=True
-    c.addPyMethod('PostCreate', '(self, pre)', 'pass')
+    c.addPyMethod('PostCreate', '(self, pre)', 'pass', deprecated=True)
     
     # transfer ownership of these parameters to the C++ object
     c.find('SetCaret.caret').transfer = True
@@ -224,13 +228,13 @@ def run():
 
     tools.fixWindowClass(c)
 
-    # compatibility with SWIG bindings, we need to deprecate these
-    c.addPyMethod('GetPositionTuple', '(self)',    'return self.GetPosition()')
-    c.addPyMethod('MoveXY', '(self, x, y)',    'return self.Move(x, y)')
-    c.addPyMethod('SetSizeWH', '(self, w, h)',    'return self.SetSize(w,h)')
-    c.addPyMethod('SetVirtualSizeWH', '(self, w, h)',    'return self.SetVirtualSize(w,h)')
-    c.addPyMethod('GetVirtualSizeTuple', '(self)',    'return self.GetVirtualSize()')
-    c.addPyMethod('SetToolTipString', '(self, string)',    'return self.SetToolTip(string)')
+    # for compatibility with Classic
+    c.addPyMethod('GetPositionTuple', '(self)', 'return self.GetPosition()', deprecated=True)
+    c.addPyMethod('MoveXY',  '(self, x, y)', 'return self.Move(x, y)', deprecated=True)
+    c.addPyMethod('SetSizeWH', '(self, w, h)', 'return self.SetSize(w,h)', deprecated=True)
+    c.addPyMethod('SetVirtualSizeWH', '(self, w, h)', 'return self.SetVirtualSize(w,h)', deprecated=True)
+    c.addPyMethod('GetVirtualSizeTuple', '(self)', 'return self.GetVirtualSize()', deprecated=True)
+    c.addPyMethod('SetToolTipString',  '(self, string)', 'return self.SetToolTip(string)', deprecated=True)
 
     #-----------------------------------------------------------------------
     # Other stuff

@@ -160,7 +160,7 @@ from %s import *
         
         
     #-----------------------------------------------------------------------
-    def generateFunction(self, function, stream):
+    def generateFunction(self, function, stream, _needDocstring=True):
         assert isinstance(function, extractors.FunctionDef)
         if not function.ignored:
             stream.write('%s %s(' % (function.type, function.name))
@@ -168,12 +168,19 @@ from %s import *
                 stream.write('\n')
                 self.generateParameters(function.items, stream, ' '*4)
             stream.write(')%s;\n' % self.annotate(function))
+
+            if  _needDocstring:
+                self.generateDocstring(function, stream, '')
+                # We only write a docstring for the first overload, otherwise
+                # SIP appends them all together.
+                _needDocstring = False
+
             if function.cppCode:
                 stream.write('%MethodCode\n')
                 stream.write(nci(function.cppCode, 4))
                 stream.write('%End\n')
         for f in function.overloads:
-            self.generateFunction(f, stream)
+            self.generateFunction(f, stream, _needDocstring)
         stream.write('\n')            
 
         
@@ -271,6 +278,10 @@ from %s import *
         stream.write(self.annotate(klass))
         stream.write('\n%s{\n' % indent)
         indent2 = indent + ' '*4
+
+        if klass.briefDoc is not None:
+            self.generateDocstring(klass, stream, indent2)
+
         if klass.includes:
             stream.write('%s%%TypeHeaderCode\n' % indent2)
             for inc in klass.includes:
@@ -377,7 +388,39 @@ from %s import *
         stream.write('\n')
         
         
-    def generateMethod(self, method, stream, indent):
+    def generateDocstring(self, item, stream, indent):
+        # get the docstring text
+        text = extractors.flattenNode(item.briefDoc)
+        
+        if isinstance(item, extractors.ClassDef):
+            # append the function signatures for the constructors (if any)
+            try:
+                ctor = item.find(item.name)
+                sigs = ctor.collectPySignatures()
+                if sigs:
+                    text += '\n\n' + '\n'.join(sigs)
+            except extractors.ExtractorError:
+                pass
+        else:
+            # Prepend function signature string(s) for functions and methods
+            sigs = item.collectPySignatures()                
+            if sigs:
+                if text:
+                    text = '\n\n' + text
+                text = '\n'.join(sigs) + text
+                
+        # write the directive and the text
+        if True:
+            # SIP is preserving all leading whitespace in the docstring, so
+            # write this without indents. :-(
+            stream.write('%%Docstring\n%s\n%%End\n' % text)
+        else:
+            stream.write('%s%%Docstring\n' % indent)
+            stream.write(nci(text, len(indent)+4))
+            stream.write('%s%%End\n' % indent)
+            
+        
+    def generateMethod(self, method, stream, indent, _needDocstring=True):
         assert isinstance(method, extractors.MethodDef)
         if not method.ignored:
             if method.isVirtual:
@@ -396,6 +439,13 @@ from %s import *
             if method.isPureVirtual:
                 stream.write(' = 0')
             stream.write('%s;\n' % self.annotate(method))
+                        
+            if  _needDocstring and not (method.isCtor or method.isDtor):
+                self.generateDocstring(method, stream, indent)
+                # We only write a docstring for the first overload, otherwise
+                # SIP appends them all together.
+                _needDocstring = False
+                
             if method.cppCode:
                 stream.write('%s%%MethodCode\n' % indent)
                 stream.write(nci(method.cppCode, len(indent)+4))
@@ -403,7 +453,7 @@ from %s import *
             stream.write('\n')
         if method.overloads:
             for m in method.overloads:
-                self.generateMethod(m, stream, indent)
+                self.generateMethod(m, stream, indent, _needDocstring)
 
             
     def generateCppMethod(self, method, stream, indent=''):
@@ -453,9 +503,9 @@ from %s import *
             stream.write(nci(method.body, len(indent)+4))
             stream.write('%s}\n' % indent)
             stream.write('%s%%End\n' % indent)
-                
+
         # now insert the method declaration and the code to call the new function
-        # find the parameter names
+        # first, find the parameter names
         pnames = method.argsString.strip('()').split(',')
         for idx, pn in enumerate(pnames):
             # take only the part before the =, if there is one
@@ -467,13 +517,8 @@ from %s import *
         pnames = ', '.join(pnames)
         if pnames:
             pnames = ', ' + pnames
-        if False:
-            # convert PyObject* to SIP_PYOBJECT in the return type and param types
-            typ = method.type.replace('PyObject*', 'SIP_PYOBJECT')
-            argsString = method.argsString.replace('PyObject*', 'SIP_PYOBJECT')
-        else:
-            typ = method.type
-            argsString = method.argsString
+        typ = method.type
+        argsString = method.argsString
         # spit it all out
         if method.isCtor:
             stream.write('%s%s%s%s;\n' % 
@@ -484,6 +529,9 @@ from %s import *
                 constMod = " const"
             stream.write('%s%s %s%s%s%s;\n' % 
                          (indent, typ, method.name, argsString, constMod, self.annotate(method)))
+ 
+        self.generateDocstring(method, stream, indent)
+            
         stream.write('%s%%MethodCode\n' % indent)
         stream.write(indent+' '*4)
         if method.isCtor:
@@ -496,6 +544,8 @@ from %s import *
             else:
                 stream.write('%s(sipIsErr%s);\n' % (fname, pnames))
         stream.write('%s%%End\n\n' % indent)
+
+            
 
         
     def generateCppMethod_sip(self, method, stream, indent=''):
@@ -514,7 +564,8 @@ from %s import *
         stream.write('%s%%MethodCode\n' % indent)
         stream.write(nci(method.body, len(indent)+4))
         stream.write('%s%%End\n\n' % indent)
-        
+        # TODO: add the %Docstring...
+
         
         
     def generatePyMethod(self, pm, stream, indent):
@@ -528,7 +579,10 @@ from %s import *
             if pm.briefDoc:
                 stream.write(nci('"""\n%s\n"""\n' % pm.briefDoc, 4))
             stream.write(nci(pm.body, 4))
-            stream.write('%s.%s = _%s_%s\n' % (klassName, pm.name, klassName, pm.name))
+            if pm.deprecated:
+                stream.write('%s.%s = wx.deprecated(_%s_%s)\n' % (klassName, pm.name, klassName, pm.name))
+            else:
+                stream.write('%s.%s = _%s_%s\n' % (klassName, pm.name, klassName, pm.name))
             stream.write('del _%s_%s\n' % (klassName, pm.name))
             stream.write('\n%End\n\n')
 

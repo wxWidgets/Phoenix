@@ -70,15 +70,6 @@ def addGetterSetterProps(node):
             item.addGetterSetterProps()
 
             
-def createPyArgsStrings(node):
-    """
-    TODO: Create a pythonized version of the argsString in function and method
-    items that can be used as part of the docstring.
-    """
-    pass
-
-
-
 def fixEventClass(klass):
     """
     Add the extra stuff that an event class needs that are lacking from the

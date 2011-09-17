@@ -17,6 +17,8 @@ import os
 import pprint
 import xml.etree.ElementTree as et
 
+from tweaker_tools import removeWxPrefix
+
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
 # methods, functions and other items in the C/C++ API being wrapped.
@@ -293,8 +295,66 @@ class FunctionDef(BaseDef):
         for o in self.overloads:
             items.extend(o.items)
         return items
-               
+              
     
+    def makePyArgsString(self):
+        """
+        Create a pythonized version of the argsString in function and method
+        items that can be used as part of the docstring.
+        """
+        def _cleanName(name):
+            for txt in ['const', '*', '&', ' ']:
+                name = name.replace(txt, '')
+            name = removeWxPrefix(name)
+            return name
+        
+        params = list()
+        returns = list()
+        if self.type and self.type != 'void':
+            returns.append(_cleanName(self.type))
+        
+        for param in self.items:
+            assert isinstance(param, ParamDef)
+            s = param.pyName or param.name
+            if param.out:
+                returns.append(s)
+            else:
+                if param.default:
+                    default = param.default
+                    defValueMap = { 'true': 'True',
+                                    'false': 'False',
+                                    'NULL':  'None', }
+                    if default in defValueMap:
+                        default = defValueMap.get(default)
+                    
+                    s += '=' + '|'.join([_cleanName(x) for x in default.split('|')])
+                params.append(s)
+            
+        self.pyArgsString = '(' + ', '.join(params) + ')'
+        if len(returns) == 1:
+            self.pyArgsString += ' -> ' + returns[0]
+        if len(returns) > 1:
+            self.pyArgsString += ' -> (' + ', '.join(returns) + ')'
+
+        
+    def collectPySignatures(self):
+        """
+        Collect the pyArgsStrings for self and any overloads, and create a
+        list of function signatures for the docstrings. 
+        """
+        sigs = list()
+        for f in [self] + self.overloads:
+            assert isinstance(f, FunctionDef)
+            if f.ignored:
+                continue
+            if not f.pyArgsString:
+                f.makePyArgsString()
+                
+            sig = f.pyName or removeWxPrefix(f.name)
+            sig += f.pyArgsString
+            sigs.append(sig)
+        return sigs
+        
 #---------------------------------------------------------------------------
         
 class MethodDef(FunctionDef):
@@ -303,6 +363,7 @@ class MethodDef(FunctionDef):
     """
     def __init__(self, element=None, className=None, **kw):
         super(MethodDef, self).__init__()
+        self.className = className
         self.isVirtual = False
         self.isStatic = False
         self.isCtor = False
@@ -312,22 +373,22 @@ class MethodDef(FunctionDef):
         self.noDerivedCtor = False    # don't generate a ctor in the derived class for this ctor
         self.__dict__.update(kw)        
         if element is not None:
-            self.extract(element, className)
+            self.extract(element)
 
-    def extract(self, element, className):
+    def extract(self, element):
         super(MethodDef, self).extract(element)
         self.isStatic = element.get('static') == 'yes'
         self.isVirtual = element.get('virt') in ['virtual', 'pure-virtual']
         self.isPureVirtual = element.get('virt') == 'pure-virtual'
-        self.isCtor = self.name == className
-        self.isDtor = self.name == '~' + className
+        self.isCtor = self.name == self.className
+        self.isDtor = self.name == '~' + self.className
         self.protection = element.get('prot')
         assert self.protection in ['public', 'protected']
         # TODO: Should protected items be ignored by default or should we
         #       leave that up to the tweaker code or the generators?
         if self.protection == 'protected':
             self.ignore()
-        
+
     
                
 
@@ -500,13 +561,17 @@ class ClassDef(BaseDef):
             except:
                 pass
             
-            # only create the prop if a method with that name does not exist
-            if not self.findItem(name) and not starts_with_number:
+            # only create the prop if a method with that name does not exist, and it is a valid name
+            if starts_with_number:
+                print 'WARNING: Invalid property name %s for class %s' % (name, self.name)
+            elif self.findItem(name):
+                print "WARNING: Method %s::%s already exists in C++ class API, can not create a property." % (self.name, name)
+            else:
                 # properties must have at least a getter
                 if prop.getter:
                     self.items.append(prop)
-            else:
-                print "WARNING: Method %s::%s already exists in C++ class API, can not create a property." % (self.name, name)
+
+                
     
                 
     def addProperty(self, *args, **kw):
@@ -804,6 +869,7 @@ class PyMethodDef(BaseDef):
         self.body = body
         self.briefDoc = doc
         self.protection = 'public'
+        self.deprecated = False
         self.__dict__.update(kw)
     
 #---------------------------------------------------------------------------
@@ -977,6 +1043,10 @@ def flattenNode(node):
     Extract just the text from a node and its children, tossing out any child
     node tags and attributes.
     """
+    if node is None:
+        return ""
+    if isinstance(node, basestring):
+        return node
     text = node.text or ""
     for n in node:
         text += flattenNode(n)
