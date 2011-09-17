@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        etg/checklistbox.py
+# Name:        etg/checklst.py
 # Author:      Kevin Ollivier
 #
 # Created:     06-Sept-2011
@@ -12,7 +12,7 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
-NAME      = "checklistbox"   # Base name of the file to generate to for this script
+NAME      = "checklst"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
