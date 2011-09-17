@@ -70,7 +70,9 @@ def run():
     
 
     # In C++ wxConfig is a #define to some other config class. We'll let our
-    # backend generator believe that it's a real class with that name.
+    # backend generator believe that it's a real class with that name. It will
+    # end up using the wxConfig #defined in the C++ code, and will actually be
+    # whatever is the default config class for the platform.
     wc = etgtools.WigCode("""\
     class wxConfig : wxConfigBase 
     {
