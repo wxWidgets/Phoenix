@@ -87,7 +87,7 @@ from %s import *
         
         stream.write(divider)
 
-        self.module_name = module.name
+        self.module_name = module.module
         # C++ code to be written to the module's header 
         if module.headerCode:
             stream.write("\n%ModuleHeaderCode\n")
