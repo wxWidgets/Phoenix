@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        etg/choice.py
+# Name:        etg/combobox.py
 # Author:      Kevin Ollivier
 #
 # Created:     09-Sept-2011
@@ -40,6 +40,7 @@ def run():
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
     c.find('Create').findOverload('wxArrayString').find('value').default = 'wxEmptyString'
 
+    # TODO: Why are these being ignored?
     c.find('GetSelection').overloads = []
     c.find('SetSelection').overloads = []
     c.find('IsEmpty').ignore()

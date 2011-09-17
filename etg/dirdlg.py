@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        etg/choice.py
+# Name:        etg/dirdlg.py
 # Author:      Kevin Ollivier
 #
 # Created:     10-Sept-2011

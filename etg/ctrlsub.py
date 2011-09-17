@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        etg/strlsub.py
+# Name:        etg/ctrlsub.py
 # Author:      Robin Dunn
 #
 # Created:     2-Sept-2011
@@ -73,6 +73,7 @@ def run():
     c.find('Append').findOverload('clientData').find('clientData').transfer = True
     c.find('Insert').findOverload('clientData').find('clientData').transfer = True
     
+    # for compatibility, should they be deprecated?
     c.addPyMethod('AppendItems', '(self, items)',    'self.Append(items)')
     c.addPyMethod('GetItems', '(self)',    'return self.GetStrings()')
     c.addPyMethod('SetItems', '(self, items)',    'self.Set(items)')
