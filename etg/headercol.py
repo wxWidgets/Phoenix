@@ -17,7 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxSettableHeaderColumn', 'wxHeaderColumn', 'wxHeaderColumnSimple', ]
+ITEMS  = [ 'wxHeaderColumn', 'wxSettableHeaderColumn', 'wxHeaderColumnSimple', ]
     
 #---------------------------------------------------------------------------
 
@@ -25,6 +25,10 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
+    
+    #-----------------------------------------------------------------
+    # Tweak the parsed meta objects in the module object as needed for
+    # customizing the generated code and docstrings.
     
     module.addHeaderCode('#include <wx/headercol.h>')
     module.addHeaderCode('#include <wx/dataview.h>')
@@ -34,10 +38,6 @@ def run():
 
     c = module.find('wxSettableHeaderColumn')
     c.abstract = True
-    
-    #-----------------------------------------------------------------
-    # Tweak the parsed meta objects in the module object as needed for
-    # customizing the generated code and docstrings.
     
     
     #-----------------------------------------------------------------
