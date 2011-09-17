@@ -33,15 +33,74 @@ def run():
     c = module.find('wxImage')
     c.find('wxImage').findOverload('(const char *const *xpmData)').ignore()
     c.find('GetHandlers').ignore()
+
+    # TODO: Port the ctors and methods that deal with data buffers for getting
+    # and setting the image and alpha data.
     
     # TODO: Add these later when return types are defined.
     c.find('RGBtoHSV').ignore()
     c.find('HSVtoRGB').ignore()
+    
+    def setParamsPyInt(name):
+        """Set the pyInt flag on 'unsigned char' params"""
+        method = c.find(name)
+        for m in [method] + method.overloads:
+            for p in m.items:
+                if p.type == 'unsigned char':
+                    p.pyInt = True
+                
+    setParamsPyInt('Replace')
+    setParamsPyInt('ConvertAlphaToMask')
+    setParamsPyInt('ConvertToMono')
+    setParamsPyInt('ConvertToDisabled')
+    setParamsPyInt('IsTransparent')
+    setParamsPyInt('SetAlpha')
+    setParamsPyInt('SetMaskColour')
+    setParamsPyInt('SetMaskFromImage')
+    setParamsPyInt('SetRGB')
 
-    f = module.find('wxImageHistogram.FindFirstUnusedColour')
-    f.find('r').out = True
-    f.find('g').out = True
-    f.find('b').out = True
+    
+    c.find('FindFirstUnusedColour.r').pyInt = True
+    c.find('FindFirstUnusedColour.g').pyInt = True
+    c.find('FindFirstUnusedColour.b').pyInt = True
+    c.find('FindFirstUnusedColour.startR').pyInt = True
+    c.find('FindFirstUnusedColour.startG').pyInt = True
+    c.find('FindFirstUnusedColour.startB').pyInt = True
+    c.find('FindFirstUnusedColour.r').out = True
+    c.find('FindFirstUnusedColour.g').out = True
+    c.find('FindFirstUnusedColour.b').out = True
+    
+    c.find('GetAlpha').findOverload('int x, int y').pyInt = True
+    c.find('GetRed').pyInt = True
+    c.find('GetGreen').pyInt = True
+    c.find('GetBlue').pyInt = True
+    c.find('GetMaskRed').pyInt = True
+    c.find('GetMaskGreen').pyInt = True
+    c.find('GetMaskBlue').pyInt = True
+    
+    c.find('GetOrFindMaskColour.r').pyInt = True
+    c.find('GetOrFindMaskColour.g').pyInt = True
+    c.find('GetOrFindMaskColour.b').pyInt = True
+    c.find('GetOrFindMaskColour.r').out = True
+    c.find('GetOrFindMaskColour.g').out = True
+    c.find('GetOrFindMaskColour.b').out = True
+    
+        
+    c = module.find('wxImageHistogram')
+    setParamsPyInt('MakeKey')
+    c.find('FindFirstUnusedColour.r').pyInt = True
+    c.find('FindFirstUnusedColour.g').pyInt = True
+    c.find('FindFirstUnusedColour.b').pyInt = True
+    c.find('FindFirstUnusedColour.startR').pyInt = True
+    c.find('FindFirstUnusedColour.startG').pyInt = True
+    c.find('FindFirstUnusedColour.startB').pyInt = True
+    c.find('FindFirstUnusedColour.r').out = True
+    c.find('FindFirstUnusedColour.g').out = True
+    c.find('FindFirstUnusedColour.b').out = True
+    
+
+    module.find('wxIMAGE_ALPHA_TRANSPARENT').pyInt = True
+    module.find('wxIMAGE_ALPHA_OPAQUE').pyInt = True
     
     
     #-----------------------------------------------------------------
