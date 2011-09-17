@@ -31,12 +31,16 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxConfigBase')
+    assert isinstance(c, etgtools.ClassDef)
+    
     c.abstract = True
     ctor = c.find('wxConfigBase')
     ctor.items.remove(ctor.find('conv'))
     c.find('ReadObject').ignore()
-    #c.find('Read').findOverload('defaultVal').ignore()
-    #c.find('Read').findOverload('str').ignore()
+
+    c.find('Set').transferBack = True      # Python takes ownership of the return value
+    c.find('Set.pConfig').transfer = True  # C++ takes ownership of the arg
+    
     for func in c.findAll('Read'):
         if not 'wxString' in func.type:
             func.ignore()
@@ -44,10 +48,22 @@ def run():
             func.find('defaultVal').default = 'wxEmptyString'
             
     c.addCppMethod('long', 'ReadInt', '(const wxString& key, long defaultVal = 0)', """
+        long rv;
+        self->Read(*key, &rv, defaultVal);
+        return rv;
+    """)
+    c.addCppMethod('double', 'ReadFloat', '(const wxString& key, double defaultVal = 0.0)', """
         double rv;
         self->Read(*key, &rv, defaultVal);
         return rv;
     """)
+    c.addCppMethod('bool', 'ReadBool', '(const wxString& key, bool defaultVal = false)', """
+        bool rv;
+        self->Read(*key, &rv, defaultVal);
+        return rv;
+    """)
+
+    
     c.find('Write').overloads = []
     c.addCppMethod('bool', 'WriteInt', '(const wxString& key, long value)', """
         return self->Write(*key, value);
@@ -58,6 +74,8 @@ def run():
     c.addCppMethod('bool', 'WriteBool', '(const wxString& key, bool value)', """
         return self->Write(*key, value);
     """)
+    
+    
     
     c = module.find('wxFileConfig')
     c.addPrivateCopyCtor()
@@ -83,6 +101,25 @@ def run():
                  const wxString& globalFilename = wxEmptyString,
                  long style = wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE);
         ~wxConfig();
+        
+        // pure virtuals with implementations here
+        const wxString & GetPath();
+        void SetPath(const wxString & strPath);
+        bool GetFirstEntry(wxString & str, long & index);
+        bool GetFirstGroup(wxString & str, long & index);
+        bool GetNextEntry(wxString & str, long & index);
+        bool GetNextGroup(wxString & str, long & index);
+        size_t GetNumberOfEntries(bool bRecursive = false);
+        size_t GetNumberOfGroups(bool bRecursive = false);
+        bool HasEntry(const wxString & strName);
+        bool HasGroup(const wxString & strName);
+        bool Flush(bool bCurrentOnly = false);
+        bool RenameEntry(const wxString & oldName, const wxString & newName); 
+        bool RenameGroup(const wxString & oldName, const wxString & newName);
+        bool DeleteAll();
+        bool DeleteEntry(const wxString & key, bool bDeleteGroupIfEmpty = true);
+        bool DeleteGroup(const wxString & key);
+    
     private:
         wxConfig(const wxConfig&);
     };
