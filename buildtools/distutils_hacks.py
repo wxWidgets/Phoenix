@@ -261,7 +261,6 @@ distutils.sysconfig.parse_makefile = _parse_makefile
 # the collection of files to build.
 _orig_setup_compile = distutils.ccompiler.CCompiler._setup_compile
 def _setup_compile(self, outdir, macros, incdirs, sources, depends, extra):
-    print 'hello'
     macros, objects, extra, pp_opts, build = \
           _orig_setup_compile(self, outdir, macros, incdirs, sources, depends, extra)
     
