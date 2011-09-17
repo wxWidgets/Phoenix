@@ -393,7 +393,7 @@ from %s import *
         text = extractors.flattenNode(item.briefDoc)
         
         if isinstance(item, extractors.ClassDef):
-            # append the function signatures for the constructors (if any)
+            # append the function signatures for the class constructors (if any) to the class' docstring
             try:
                 ctor = item.find(item.name)
                 sigs = ctor.collectPySignatures()
