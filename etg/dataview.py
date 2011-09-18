@@ -63,7 +63,7 @@ def run():
     
     tools.fixWindowClass(c)
     
-    module.addItem(tools.wxArrayWrapperTemplate('wxDataViewItemArray', 'wxDataViewItem'))
+    module.addItem(tools.wxArrayWrapperTemplate('wxDataViewItemArray', 'wxDataViewItem', module))
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

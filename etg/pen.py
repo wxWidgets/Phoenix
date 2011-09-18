@@ -64,8 +64,8 @@ def run():
     module.find('wxLIGHT_GREY_PEN').ignore()
 
     module.find('wxThePenList').ignore()
-    #module.addItem(tools.wxListWrapperTemplate('wxBrushList', 'wxBrush'))
-    #module.addItem(tools.wxListWrapperTemplate('wxPenList', 'wxPen'))
+    #module.addItem(tools.wxListWrapperTemplate('wxBrushList', 'wxBrush', module))
+    #module.addItem(tools.wxListWrapperTemplate('wxPenList', 'wxPen', module))
 
     
     

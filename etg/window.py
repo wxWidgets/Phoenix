@@ -258,11 +258,12 @@ def run():
     
     # Add a wrapper for wxWindowList and a new iterator class for it that
     # makes wxWindowList quack like a read-only Python sequence.
-    module.addItem(tools.wxListWrapperTemplate('wxWindowList', 'wxWindow'))
+    module.addItem(tools.wxListWrapperTemplate('wxWindowList', 'wxWindow', module))
     
     module.addCppFunction('wxWindowList*', 'GetTopLevelWindows', '()', 
                           briefDoc="Returns a list-like object of the the application's top-level windows, (frames,dialogs, etc.)",
                           body="return &wxTopLevelWindows;")
+    
     module.addPyCode("PyWindow = wx.deprecated(Window)")
     module.addPyCode("Window.SetSizeWH = wx.deprecated(Window.SetSizeWH)")
     

@@ -66,7 +66,7 @@ def run():
     c.find('InitStandardHandlers').ignore()
     
     module.find('wxBitmapHandler').ignore()
-    #module.addItem(tools.wxListWrapperTemplate('wxList', 'wxBitmapHandler'))
+    #module.addItem(tools.wxListWrapperTemplate('wxList', 'wxBitmapHandler', module))
 
     # TODO: The ctors and methods from Classic for converting to/from
     #       buffer objects with raw bitmap access.

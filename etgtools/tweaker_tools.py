@@ -480,10 +480,11 @@ def convertFourDoublesTemplate(CLASS):
 # Templates for creating wrappers for type-specific wxList and wxArray classes
 
 
-def wxListWrapperTemplate(ListClass, ItemClass, RealItemClass=None):
+def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None):
     if RealItemClass is None:
         RealItemClass = ItemClass    
         
+    moduleName = module.module        
     ListClass_pyName = removeWxPrefix(ListClass)
     
     # *** TODO: This can probably be done in a way that is not SIP-specfic.
@@ -568,7 +569,7 @@ public:
     %End
 }};
 
-%Extract(id=pycode)
+%Extract(id=pycode{moduleName})
 def _{ListClass_pyName}___repr__(self):
     return "{ListClass_pyName}: " + repr(list(self))
 {ListClass_pyName}.__repr__ = _{ListClass_pyName}___repr__
@@ -576,10 +577,13 @@ del _{ListClass_pyName}___repr__
 %End
 '''.format(**locals()))
 
-def wxArrayWrapperTemplate(ArrayClass, ItemClass, RealItemClass=None):
+
+
+def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, RealItemClass=None):
     if RealItemClass is None:
         RealItemClass = ItemClass    
         
+    moduleName = module.module        
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
     
     # *** TODO: This can probably be done in a way that is not SIP-specfic.
@@ -628,7 +632,7 @@ public:
     %End
 }};
 
-%Extract(id=pycode)
+%Extract(id=pycode{moduleName})
 def _{ArrayClass_pyName}___repr__(self):
     return "{ArrayClass_pyName}: " + repr(list(self))
 {ArrayClass_pyName}.__repr__ = _{ArrayClass_pyName}___repr__

@@ -33,6 +33,10 @@ def run():
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
 
+    #-----------------------------------------------------------------
+    # Tweak the parsed meta objects in the module object as needed for
+    # customizing the generated code and docstrings.
+    
     c = module.find('wxSizer')
     for func in c.findAll('Add') + c.findAll('Insert') + c.findAll('Prepend'):
         sizer = func.findItem('sizer')
@@ -69,10 +73,8 @@ def run():
     
     module.addPyCode("PySizer = wx.deprecated(Sizer)")
         
-    module.addItem(tools.wxListWrapperTemplate('wxSizerItemList', 'wxSizerItem'))
-    #-----------------------------------------------------------------
-    # Tweak the parsed meta objects in the module object as needed for
-    # customizing the generated code and docstrings.
+    module.addItem(tools.wxListWrapperTemplate('wxSizerItemList', 'wxSizerItem', module))
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

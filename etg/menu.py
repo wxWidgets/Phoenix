@@ -72,7 +72,7 @@ def run():
     c.find('FindItem.menu').out = True
     tools.removeVirtuals(c)
 
-    module.addItem(tools.wxListWrapperTemplate('wxMenuList', 'wxMenu'))
+    module.addItem(tools.wxListWrapperTemplate('wxMenuList', 'wxMenu', module))
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

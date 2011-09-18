@@ -301,7 +301,7 @@ def run():
                   """) 
     c.addPyCode('RealPoint.__safe_for_unpickling__ = True')
 
-    module.addItem(tools.wxListWrapperTemplate('wxPointList', 'wxPoint'))
+    module.addItem(tools.wxListWrapperTemplate('wxPointList', 'wxPoint', module))
     
     c = module.find('wxColourDatabase')
     c.addPyMethod('FindColour', '(self, colour)',    'return self.Find(colour)')   

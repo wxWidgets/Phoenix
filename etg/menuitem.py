@@ -45,7 +45,7 @@ def run():
     c.find('SetMarginWidth').ignore()
     c.find('GetTextColour').ignore()
     c.find('SetTextColour').ignore()
-    module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem'))
+    module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem', module))
     
 
     
