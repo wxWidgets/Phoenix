@@ -231,7 +231,9 @@ from %s import *
         assert isinstance(define, extractors.DefineDef)
         if define.ignored:
             return
-        stream.write('enum { %s };\n' % define.name)
+        # We're assuming that the #define is an integer value, tell sip that it is
+        #stream.write('enum { %s };\n' % define.name)
+        stream.write('const int %s;\n' % define.name)
         
         
     #-----------------------------------------------------------------------
@@ -603,6 +605,8 @@ from %s import *
                 annotations.append('Array')
             if item.arraySize:
                 annotations.append('ArraySize')
+            if item.keepReference:
+                annotations.append('KeepReference')
                 
         if isinstance(item, (extractors.ParamDef, extractors.FunctionDef)):
             if item.transfer:

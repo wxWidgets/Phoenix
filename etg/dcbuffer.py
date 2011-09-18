@@ -18,8 +18,8 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ 'wxBufferedDC',
-           'wxAutoBufferedPaintDC',
            'wxBufferedPaintDC',
+           'wxAutoBufferedPaintDC',
            ]    
     
 #---------------------------------------------------------------------------
@@ -33,17 +33,24 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    
+    module.addHeaderCode("#include <wx/dcbuffer.h>")
+
     c = module.find('wxBufferedDC')
     c.addPrivateCopyCtor()
+    for m in c.find('wxBufferedDC').all() + c.find('Init').all():
+        if m.findItem('dc'):
+            m.findItem('dc').keepReference = True
+        if m.findItem('buffer'):
+            m.findItem('buffer').keepReference = True
+
+    
+    c = module.find('wxBufferedPaintDC')
+    c.addPrivateCopyCtor()
+    c.find('wxBufferedPaintDC').findOverload('wxBitmap').find('buffer').keepReference = True
     
     c = module.find('wxAutoBufferedPaintDC')
     c.addPrivateCopyCtor()
 
-    c = module.find('wxBufferedPaintDC')
-    c.addPrivateCopyCtor()
-
-    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

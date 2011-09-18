@@ -410,6 +410,7 @@ class ParamDef(BaseDef):
         self.transfer = False         # transfer ownership of arg to C++?
         self.transferBack = False     # transfer ownership of arg from C++ to Python?
         self.transferThis = False     # ownership of 'this' pointer transfered to this arg 
+        self.keepReference = False    # an extra reference to the arg is held
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
@@ -767,7 +768,7 @@ class DefineDef(BaseDef):
     def __init__(self, element, **kw):
         super(DefineDef, self).__init__()
         self.name = element.find('name').text
-        self.value = element.find('initializer').text
+        self.value = flattenNode(element.find('initializer'))
         self.__dict__.update(kw)
         
 
@@ -972,10 +973,13 @@ class ModuleDef(BaseDef):
             
         elif kind == 'define':
             # if it doesn't have a value, it must be a macro.
-            value = element.findtext("initializer")
+            value = flattenNode(element.find("initializer"))
             if not value:
                 skippingMsg(kind, element)
             else:
+                # NOTE: This assumes that the #defines are numeric values.
+                # There will have to be some tweaking done for items that are
+                # not numeric...
                 extractingMsg(kind, element)
                 item = DefineDef(element)
                 self.items.append(item)
