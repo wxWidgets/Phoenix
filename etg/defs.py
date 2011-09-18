@@ -95,6 +95,7 @@ def run():
     """))
 
     
+    module.addPyCode("wx.BG_STYLE_CUSTOM = wx.BG_STYLE_PAINT")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
