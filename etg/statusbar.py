@@ -1,23 +1,23 @@
 #---------------------------------------------------------------------------
-# Name:        etg/dcgraph.py
-# Author:      Robin Dunn
+# Name:        etg/statusbar.py
+# Author:      Kevin Ollivier
 #
-# Created:     2-Sept-2011
-# Copyright:   (c) 2011 by Total Control Software
+# Created:     16-Sept-2011
+# Copyright:   (c) 2011 by Kevin Ollivier
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
-NAME      = "dcgraph"   # Base name of the file to generate to for this script
+NAME      = "statusbar"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxGCDC' ]    
+ITEMS  = [ 'wxStatusBar', 'wxStatusBarPane', ]    
     
 #---------------------------------------------------------------------------
 
@@ -30,15 +30,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    
-    c = module.find('wxGCDC')
-    # FIXME: Do we handle platform-specific classes, and if so, how?
-    c.find('wxGCDC').findOverload('wxEnhMetaFileDC').ignore()
-    c.addPrivateCopyCtor()
-    
+    c = module.find('wxStatusBar')
+    tools.fixWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+    tools.addGetterSetterProps(module)
     tools.runGenerators(module)
     
     

@@ -40,6 +40,7 @@ INCLUDES = [  'defs',
               'vidmode',
               'intl',
               
+              'cmndata',
               'object',
               'gdicmn',
               'geometry',
@@ -56,11 +57,12 @@ INCLUDES = [  'defs',
               'dcmemory',
               'dcbuffer',
               'dcscreen',
-              #'dcgraph',   # TODO:  needs wxGraphicsContext
+              'dcgraph',
               'dcmirror',
-              #'dcprint',   # TODO:  needs wxPrintData
-              #'dcps',      # TODO:  needs wxPrintData
+              'dcprint',
+              #'dcps',
               'dcsvg',
+              'graphics',
               
               'colour',
               'tracker',
@@ -118,6 +120,14 @@ INCLUDES = [  'defs',
               'dirdlg',
               'config',
               'searchctrl',
+              #'variant',
+              #'radiobox', # need to resolve abiguous GetDefaultBorder issue with mult. inheritance
+              'radiobtn',
+              'scrolwin',
+              'slider',
+              'spinctrl',
+              'togglebtn',
+              'statusbar',
               ]
 
 

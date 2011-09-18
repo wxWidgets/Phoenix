@@ -727,17 +727,17 @@ class EnumDef(BaseDef):
     """
     def __init__(self, element=None, inClass=False, **kw):
         super(EnumDef, self).__init__()
-        prot = element.get('prot')
-        if prot is not None:
-            self.protection = prot
-            assert self.protection in ['public', 'protected']
-            # TODO: Should protected items be ignored by default or should we
-            #       leave that up to the tweaker code or the generators?
-            if self.protection == 'protected':
-                self.ignore()
-        self.__dict__.update(kw)
         if element is not None:
+            prot = element.get('prot')
+            if prot is not None:
+                self.protection = prot
+                assert self.protection in ['public', 'protected']
+                # TODO: Should protected items be ignored by default or should we
+                #       leave that up to the tweaker code or the generators?
+                if self.protection == 'protected':
+                    self.ignore()
             self.extract(element)
+        self.__dict__.update(kw)
         
     def extract(self, element):
         super(EnumDef, self).extract(element)

@@ -67,7 +67,6 @@ def run():
         class wxImageHandler;
         class wxIcon;
         class wxIconBundle;
-        class wxStatusBar;
         class wxToolBar;
         class wxExecuteEnv;
         class wxInputStream;

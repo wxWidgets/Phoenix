@@ -17,13 +17,15 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxPrinterDC' ]    
+ITEMS  = [ 'wxPrinterDC', ]    
     
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    module.items.append(etgtools.TypedefDef(type='int', name='wxPrintQuality'))
+    
     etgtools.parseDoxyXML(module, ITEMS)
     
     #-----------------------------------------------------------------

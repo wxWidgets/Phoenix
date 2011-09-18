@@ -185,3 +185,76 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
 //--------------------------------------------------------------------------
 
 
+%MappedType wxArrayDouble
+{
+    %ConvertToTypeCode
+        // Code to test a PyObject for compatibility
+        if (!sipIsErr) {
+            int success = TRUE;
+            // ensure that it is a sequence
+            if (! PySequence_Check(sipPy)) 
+                success = FALSE;
+            // ensure each item is a number object
+            else {
+                Py_ssize_t i, len = PySequence_Length(sipPy);
+                for (i=0; i<len; i++) {
+                    PyObject* item = PySequence_GetItem(sipPy, i);
+                    if (!PyNumber_Check(item)) {
+                        Py_DECREF(item);
+                        success = FALSE;
+                        break;
+                    }
+                    Py_DECREF(item);
+                }    
+            }
+            if (!success)            
+                PyErr_SetString(PyExc_TypeError, "Sequence of numbers expected.");
+            return success;
+        }
+        
+        // Code to create a new wxArrayDouble and convert a compatible PyObject
+        wxArrayDouble *array = new wxArrayDouble;
+        Py_ssize_t i, len = PySequence_Length(sipPy);
+        for (i=0; i<len; i++) {
+            PyObject* item = PySequence_GetItem(sipPy, i);
+            PyObject* number = PyNumber_Float(item);
+            if (PyErr_Occurred()) {
+                *sipIsErr = 1;
+                delete array;
+                Py_DECREF(item);
+                return 0;
+            }
+            array->Add(PyFloat_AS_DOUBLE(number));
+            Py_DECREF(item);
+            Py_DECREF(number);
+        }
+        *sipCppPtr = array;
+        return sipGetState(sipTransferObj);
+    %End
+
+         
+    %ConvertFromTypeCode
+        // Code to convert a wxArrayInt to a Python list of integers.
+        PyObject* list = PyList_New(0);
+        for (size_t i=0; i < sipCpp->GetCount(); i++) {
+            PyObject* number = PyFloat_FromDouble(sipCpp->Item(i));
+            PyList_Append(list, number);
+            Py_DECREF(number);
+        }
+        return list;
+    %End
+    
+};
+
+
+// Used just for unittesting the MappedType code, it can be removed later
+%ModuleCode
+wxArrayDouble testArrayDoubleTypemap(const wxArrayDouble& arr)
+{
+    wxArrayDouble local = arr;  // force a copy
+    return local;
+}
+%End
+wxArrayDouble testArrayDoubleTypemap(const wxArrayDouble& arr);
+
+//--------------------------------------------------------------------------
