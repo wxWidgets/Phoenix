@@ -40,6 +40,11 @@ class WindowList(unittest.TestCase):
         children = self.frames[4].GetChildren()
         self.assertTrue(len(children) == 5)
        
+    def test_WindowList_repr(self):
+        TLWs = wx.GetTopLevelWindows()
+        self.assertTrue(repr(TLWs).startswith("WindowList:"))
+        
+        
 #---------------------------------------------------------------------------
 
 
