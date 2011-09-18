@@ -2,7 +2,7 @@
 # Name:        etg/font.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     27-Nov-2010
 # Copyright:   (c) 2011 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -18,7 +18,6 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [  'wxFont',
-            'wxFontMetrics',
            ]    
     
 #---------------------------------------------------------------------------
