@@ -16,19 +16,37 @@ For all new etg files
       that the classes and other stuff is being loaded from.  This
       means that there will be lots of very small files in etg, but it
       will help to find the interface header source to compare what is
-      being declared there with what is being generated and to better
+      being declared there with what is being generated, and to better
       understand what may need tweaked in the etg script file.
-    * Check for any extras added to the class in Classic wxPython and
+    * Read the coresponding interface file and ensure that all classes
+      declared in it are listed in the ITEMS list in the etg file,
+      unless the class should not be wrapped for some reason.  Other
+      items from the interface file will be included automatically.
+    * Do not list classes from other interface files in the etg file.
+    * Check for any extras added to each class in Classic wxPython and
       evaluate whether the same extras should be added to the Phoenix
-      verison.
+      verison.  For example, there may be additional C methods added
+      on to the class with %extend or %pythoncode that need to be
+      carried over to Phoenix, such as __nonzero__, etc.  Also look
+      for methods where Classic indicates that ownership should be
+      transfered, or other special directives.
     * Check for backwards compatibility issues with Classic wxPython
       and document in the MigrationGuide.  (This file is still in the
-      Classic wxPython source tree.)
+      Classic wxPython source tree.)  Compatibility issues resulting
+      from not renaming all the overloads can probably be left
+      undocumented, we'll probably be adding some of them back as
+      deprecated methods eventually, and the programmers should be
+      able to figure out the rest once they've started porting some
+      code. 
     * For window classes check if there are other virtual methods
       besides those added in addWindowVirtuals() that should also be
       added back.
-    * UNITTESTS!  At least check that every non-abstract class can be
-      constructed.
+    * UNITTESTS!  Create a unit test script in the unitests folder
+      using the same base file name.  It should at least check that
+      every non-abstract class can be constructed, and should also
+      have tests for things that are added or tweaked in the etg
+      script.  Other things that needed no tweaks are ok to be left
+      untested for the time being.
 
 
 Handling the GIL
