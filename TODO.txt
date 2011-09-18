@@ -27,7 +27,8 @@ For all new etg files
     * For window classes check if there are other virtual methods
       besides those added in addWindowVirtuals() that should also be
       added back.
-    * UNITTESTS!  At least check that every class can be constructed.
+    * UNITTESTS!  At least check that every non-abstract class can be
+      constructed.
 
 
 Handling the GIL
@@ -66,9 +67,26 @@ Exceptions
     * Should we?  (Classic doesn't.)
 
 
+PyAssertionError
+----------------
+    Implement the ability to raise an exception when an assert in wx
+    is triggered.
+
+
+SIP
+----
+
+    * Patch SIP to remove leading space from %Docstring items?  Not
+      really needed but will help our generated .sip files be more
+      pretty and easier to read. I've asked Phil about it and so far
+      he seems a bit reluctant.  "Sip has no business messing about
+      with the user's text formatting."
+
+
 build.py
 --------
-    * Get Kevin's wscript?
+    * Update wscript to support some of the same (or similar) options
+      we have with setup.py.
     * Change from using a --waf option to being a "waf" command like
       the other build.py commands, and assume that any other items on
       the command line after the waf command are to be passed on the
@@ -76,16 +94,12 @@ build.py
       items on the command line then use a default set of waf
       commands. 
 
-    * Add a little code around the running of SIP that tells it to
-      write the generated C++ and etc. files to a temporary location,
-      and then will compare those files with the existing set in the
-      sip/cpp folder.  If a file has changed then the new one is
-      copied over it, otherwise it is not touched.  This will help
-      speed up builds by not rebuilding a file that doesn't need it.
-    * Maybe optionally this could also strip out the lines starting
-      with "#line".  Those are handy when we need to step through code
-      in the debugger, but could cause differences in files that are
-      otherwise identical to their prior version.
+    * When writing generated C++ files from the temp dir to sip/cpp
+      allow optionally stripping out the lines starting with "#line".
+      Those are handy when we need to step through code in the
+      debugger, but could cause differences in files that are
+      otherwise identical to their prior version, which means some
+      unnecesary rebuilds.
 
 
 
@@ -107,8 +121,8 @@ wxProgressDialog
     * and wxProgressDialog inherits from the generic version
 
 
-Generate Unitests
------------------
+Generated Unitests
+------------------
     * Autogenerate a skeleton unittest module for each etg module.
     * It can traverse the items in the module object and use a test
       template based on what kind of item it is.  Templates could
@@ -196,4 +210,29 @@ way:
     subsequent scan, that it should ignore the fact that item X is
     missing and not report it.
 
-  * 
+
+
+other stuff
+------------
+
+  * wxComboBox: why are GetSelection. SetSelection and IsEmpty
+    overloads being ignored?
+
+  * wxListBox: All "Set" methods ignored, why?
+
+  * textctrl: wxTextEntry and wxTextCompleter are in separate files
+
+  * textctrl: add a renamed HitTest row/col overload
+
+  * Figure out how to handle the global stock objects, like wxBLACK.
+
+  * data buffer support for image RGB and alpha data
+
+  * port all of the wxBitmap copy-to and copy-from buffer methods, and
+    raw bitmap access routines from Classic
+
+  * Come up with some way to implement the MustHaveApp check that
+    Classic does.  It should raise an exception when something is
+    created/used that should not be done before there is an application
+    object.
+
