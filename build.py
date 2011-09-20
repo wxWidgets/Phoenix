@@ -423,13 +423,13 @@ def touch(options, args):
 def test(options, args):
     msg('Running command: test')
     pwd = pushDir(phoenixDir())
-    runcmd(PYTHON + ' unittests/runtests.py -v')
+    runcmd(PYTHON + ' unittests/runtests.py %s' % ('-v' if options.verbose else ''))
 
     
 def testOne(name, options, args):
     msg('Running test %s:' % name)
     pwd = pushDir(phoenixDir())
-    runcmd(PYTHON + ' unittests/%s.py -v' % name)
+    runcmd(PYTHON + ' unittests/%s.py %s' % (name, '-v' if options.verbose else ''))
     
     
 def build(options, args):
