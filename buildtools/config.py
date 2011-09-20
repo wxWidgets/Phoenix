@@ -571,7 +571,7 @@ def _getSbfValue(etg, keyName):
     for line in file(sbf):
         key, value = line.split('=')
         if key.strip() == keyName:
-            return [opj(cfg.SIPOUT, v) for v in value.strip().split()]
+            return sorted([opj(cfg.SIPOUT, v) for v in value.strip().split()])
     return None
 
 def getEtgSipCppFiles(etg):
