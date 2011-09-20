@@ -23,17 +23,17 @@ should then be able to work out the details for themselves.
 Overloaded Functions
 --------------------
 
-Up to this point in order to support more than one of the versions of
-an overloaded C++ function or class method we have had to rename all
-but one of them.  For example, for the wxWindow::SetSize method we
-have SetSize, SetDimensions, SetRect and SetSizeWH.  One of the
-features of the new tools used for Project Pheonix is that we no
-longer need to do that and instead we can have just one function or
-method in the Python API and the propper version of the C++ function
-or method is chosen at runtime based on the types of parameters passed
-to the function.  So in most cases the renamed versions of the
-overloaded functions have been removed and you can call the function
-with the same name as the C++ API.
+In order to support more than one of the versions of an overloaded C++
+function or class method in Classic wxPython, we had to rename all but
+one of them.  For example, for the wxWindow::SetSize method we have
+SetSize, SetDimensions, SetRect and SetSizeWH.  One of the features of
+the new tools used for Project Pheonix is that we no longer need to do
+that and instead we can have just one function or method in the Python
+API and the propper version of the C++ function or method is chosen at
+runtime based on the types of parameters passed to the function.  So
+in most cases the renamed versions of the overloaded functions have
+been removed and you can call the function with the same name as the
+C++ API.
 
 This also includes the default constructor for all widget classes,
 used for the 2-phase create. Previously they were renamed to to be the
