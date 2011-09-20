@@ -1,0 +1,100 @@
+========================================
+wxPython Project Phoenix Migration Guide
+========================================
+
+wxPython's Project Phoenix is a new incarnation of the wxPython
+toolkit in which everything that existed before will be cast into the
+flames in the hopes that that which emerges from the ashes will be
+better, brighter, stronger and faster than before.  For more details
+about why and how, please see the ProjectPhoenix_ pages in the
+wiki.
+
+.. _ProjectPhoenix: http://wiki.wxpython.org/ProjectPhoenix
+
+This document will describe some of the incompatibilities that
+programmers will run into when migrating code from Classic wxPython to
+the Phoenix.  For some types of changes there won't be any attempt to
+document the nitty gritty details of the differences, but rather the
+general patterns of the changes will be documented.  Most proggrammers
+should then be able to work out the details for themselves.
+
+
+
+Overloaded Functions
+--------------------
+
+Up to this point in order to support more than one of the versions of
+an overloaded C++ function or class method we have had to rename all
+but one of them.  For example, for the wxWindow::SetSize method we
+have SetSize, SetDimensions, SetRect and SetSizeWH.  One of the
+features of the new tools used for Project Pheonix is that we no
+longer need to do that and instead we can have just one function or
+method in the Python API and the propper version of the C++ function
+or method is chosen at runtime based on the types of parameters passed
+to the function.  So in most cases the renamed versions of the
+overloaded functions have been removed and you can call the function
+with the same name as the C++ API.
+
+This also includes the default constructor for all widget classes,
+used for the 2-phase create. Previously they were renamed to to be the
+class name with "Pre" prepended to it.  For example, wx.PreWindow(),
+wx.PreFrame(), etc.  Now in the Phoenix build of wxPython that is no
+longer neccessary and you can just call the class with no parameters
+like normal.
+
+For those renamed items that are more commonly used in the old
+wxPython I'll add some alias that will issue a DeprecationWarning for
+the first release or two after we switch over to the Phoenix version
+of the code, and then remove them in a later release.
+
+
+
+Unicode and Auto-Converting Strings
+-----------------------------------
+
+Starting with the wxPython 2.9 release series, there are no longer
+separate ansi/Unicode builds of wxPython.  All wxPython builds are now
+essentially the same as the old Unicode builds. This means that all
+string objects passed to wx API functions or methods are converted to
+Unicode before calling the C++ function or method.  By default
+wxPython would use the encoding specified by the locale that was
+current at the time of the import of the wx module.
+
+However using the default locale could sometimes cause issues because
+it meant that slightly different encodings could be used on different
+platforms, even in the same locale, or the program could end up using
+an encoding in a different locale that the developer has not tested
+their code with.
+
+Project Phoenix takes this Unicode simplification one step further by
+stipulating that only the utf-8 encoding will be used for
+auto-converting string objects to the Unicode objects that will be
+passed on to the wx APIs.  If you need to deal with text using a
+different encoding then you will need to convert it to Unicode
+yourself before passing the text to the wx API.  For the most part this
+should not be much of a problem for well written programs that support
+Unicode because they will typically only convert to/from Unicode when
+reading/writing text to a file or database, and will use Unicode objects
+throughout the rest of the code.  The common exception to this is that
+string-literals are often used in the code for specifying labels,
+etc. for UI elements.  If your text for the string literals in your
+code are all ascii or utf-8 then you should not need to make any
+changes at all.  If you have literals with some other encoding then
+you'll need to deal with them one way or another, either change the
+encoding of your source file to utf-8, or convert the literals from
+your encoding to Unicode before passing the text to the wx API.
+
+
+
+wx.Platform, wx.PlatformInfo, wx.USE_UNICODE and wx.__WXDEBUG__
+---------------------------------------------------------------
+
+wx.Platform has been renamed to wx.Port, and wx.PlatformInfo has been
+renamed to wx.PortInfo.  The reason for this change is that wrappers
+for a C++ class named wxPlatformInfo have been added, and would have
+caused a name conflict if the old wx.PlatformInfo had not been
+renamed. 
+
+In related news, wx.USE_UNICODE and wx.__WXDEBUG__ have been removed.
+
+
