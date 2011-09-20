@@ -44,23 +44,38 @@ def run():
 
     c.addCppMethod('long', 'GetHandle', '()', """\
     #ifdef __WXMSW__
-        return self->GetHandle()
-    #endif
-        return 0;""",
+        return (long)self->GetHandle();
+    #else
+        return 0;
+    #endif""",
     briefDoc="Get the handle for the Cursor.  Windows only.")
     
     c.addCppMethod('void', 'SetHandle', '(long handle)', """\
     #ifdef __WXMSW__
-        self->SetHandle(handle)
+        self->SetHandle((WXHANDLE)handle);
     #endif""",
     briefDoc="Set the handle to use for this Cursor.  Windows only.")
     
     # TODO:  Classic has MSW-only getters and setters for width, height, depth, and size.
     
-    module.find('wxCROSS_CURSOR').ignore()
-    module.find('wxHOURGLASS_CURSOR').ignore()
-    module.find('wxSTANDARD_CURSOR').ignore()
+    # The stock Cursor items are documented as simple pointers, but in reality
+    # they are macros that evaluate to a function call that returns a cursor
+    # pointer, and that is only valid *after* the wx.App object has been
+    # created. That messes up the code that SIP generates for them, so we need
+    # to come up with another solution. So instead we will just create
+    # uninitialized cursor in a block of Python code, that will then be
+    # intialized later when the wx.App is created.
+    c.addCppMethod('void', '_copyFrom', '(const wxCursor* other)', 
+                   "*self = *other;",
+                   briefDoc="For internal use only.")  # ??
+    pycode = '# These stock cursors will be initialized when the wx.App object is created.\n'
+    for item in module:
+        if '_CURSOR' in item.name:
+            item.ignore()
+            pycode += '%s = Cursor()\n' % tools.removeWxPrefix(item.name)
+    module.addPyCode(pycode)
     
+    # former renamed constructors
     module.addPyCode('StockCursor = wx.deprecated(Cursor)')
     module.addPyCode('CursorFromImage = wx.deprecated(Cursor)')
     

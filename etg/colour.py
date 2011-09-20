@@ -58,19 +58,7 @@ def run():
     
     module.find('wxFromString').ignore()
     module.find('wxToString').ignore()
-    
-    # TODO: fix this?
-    for name in [ 'wxBLACK',
-                  'wxBLUE',             
-                  'wxCYAN',
-                  'wxGREEN',
-                  'wxYELLOW',
-                  'wxLIGHT_GREY',
-                  'wxRED',
-                  'wxWHITE',
-                  ]:
-        module.find(name).ignore()
-    
+        
     module.find('wxALPHA_TRANSPARENT').type = 'const int'
     module.find('wxALPHA_OPAQUE').type = 'const int'
         
@@ -123,6 +111,32 @@ def run():
     c.find('MakeMono.b').out = True
     
     
+    # The stock Colour items are documented as simple pointers, but in reality
+    # they are macros that evaluate to a function call that returns a Colour
+    # pointer, and that is only valid *after* the wx.App object has been
+    # created. That messes up the code that SIP generates for them, so we need
+    # to come up with another solution. So instead we will just create
+    # uninitialized colour in a block of Python code, that will then be
+    # intialized later when the wx.App is created.
+    c.addCppMethod('void', '_copyFrom', '(const wxColour* other)', 
+                   "*self = *other;",
+                   briefDoc="For internal use only.")  # ??
+    pycode = '# These stock colours will be initialized when the wx.App object is created.\n'
+    for name in [ 'wxBLACK',
+                  'wxBLUE',             
+                  'wxCYAN',
+                  'wxGREEN',
+                  'wxYELLOW',
+                  'wxLIGHT_GREY',
+                  'wxRED',
+                  'wxWHITE',
+                  ]:
+        item = module.find(name)
+        item.ignore()
+        pycode += '%s = Colour()\n' % tools.removeWxPrefix(item.name)
+    module.addPyCode(pycode)
+
+    
     c.addCppMethod('PyObject*', 'Get', '(bool includeAlpha=true)', """\
         int red = -1;
         int green = -1;
@@ -142,7 +156,7 @@ def run():
         Get(includeAlpha=False) -> (r,g,b) or (r,g,b,a)\n
         Returns the RGB intensity values as a tuple, optionally the alpha value as well.""")
     
-    
+        
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "wx.Colour"+str(self.Get())')

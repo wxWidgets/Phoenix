@@ -34,6 +34,8 @@ INCLUDES = [  'defs',
               'arrays',
               'clntdata',
               'userdata',
+              'stockgdi',
+              
               'windowid',
               'platinfo',
               'display',

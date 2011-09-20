@@ -165,8 +165,8 @@ logged in on the main display of your Mac."""
         if redirect:
             self.RedirectStdio(filename)
 
-##        # Use Python's install prefix as the default  
-##        wx.StandardPaths.Get().SetInstallPrefix(_sys.prefix)
+        # Use Python's install prefix as the default  
+        wx.StandardPaths.Get().SetInstallPrefix(_sys.prefix)
 
 ##        # Until the new native control for wxMac is up to par, still use the generic one.
 ##        wx.SystemOptions.SetOptionInt("mac.listctrl.always_use_generic", 1)
@@ -182,7 +182,7 @@ logged in on the main display of your Mac."""
         would be nice if they were already done by the time that OnInit is
         called.
         """
-##        wx.StockGDI._initStockObjects()
+        wx.StockGDI._initStockObjects()
         
 
     def __del__(self):

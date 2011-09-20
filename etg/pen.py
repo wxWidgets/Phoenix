@@ -17,7 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxPen' ]    
+ITEMS  = [ 'wxPen', 'wxPenList', ]    
     
 #---------------------------------------------------------------------------
 
@@ -44,29 +44,33 @@ def run():
                        arr->Add(dashes[i]);
                     return arr;""")
     
+    c.addGetterSetterProps()
+
     # TODO: SetDashes needs to keep the wxDash array alive as long as the pen
     # is alive, but the pen does not take ownership of the array... Classic
     # wxPython did some black magic here, is that still the best way?
     
-    # TODO: Fix these. I'm not sure why exactly, but in the CPP code
-    # they end up with the wrong signature.
-    module.find('wxRED_PEN').ignore()
-    module.find('wxBLUE_PEN').ignore()
-    module.find('wxCYAN_PEN').ignore()
-    module.find('wxGREEN_PEN').ignore()
-    module.find('wxYELLOW_PEN').ignore()
-    module.find('wxBLACK_PEN').ignore()
-    module.find('wxWHITE_PEN').ignore()
-    module.find('wxTRANSPARENT_PEN').ignore()
-    module.find('wxBLACK_DASHED_PEN').ignore()
-    module.find('wxGREY_PEN').ignore()
-    module.find('wxMEDIUM_GREY_PEN').ignore()
-    module.find('wxLIGHT_GREY_PEN').ignore()
+    
+    # The stock Pen items are documented as simple pointers, but in reality
+    # they are macros that evaluate to a function call that returns a pen
+    # pointer, and that is only valid *after* the wx.App object has been
+    # created. That messes up the code that SIP generates for them, so we need
+    # to come up with another solution. So instead we will just create
+    # uninitialized pens in a block of Python code, that will then be
+    # intialized later when the wx.App is created.
+    c.addCppMethod('void', '_copyFrom', '(const wxPen* other)', 
+                   "*self = *other;",
+                   briefDoc="For internal use only.")  # ??
+    pycode = '# These stock pens will be initialized when the wx.App object is created.\n'
+    for item in module:
+        if '_PEN' in item.name:
+            item.ignore()
+            pycode += '%s = Pen()\n' % tools.removeWxPrefix(item.name)
+    module.addPyCode(pycode)
 
+    
+    # it is delay-initialized, see stockgdi.sip
     module.find('wxThePenList').ignore()
-    #module.addItem(tools.wxListWrapperTemplate('wxBrushList', 'wxBrush', module))
-    #module.addItem(tools.wxListWrapperTemplate('wxPenList', 'wxPen', module))
-
     
     
     #-----------------------------------------------------------------

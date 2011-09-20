@@ -18,6 +18,7 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [  'wxFont',
+            'wxFontList',
            ]    
     
 #---------------------------------------------------------------------------
@@ -29,16 +30,7 @@ def run():
     
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
-    # customizing the generated code and docstrings.
-
-
-    # TODOs
-    module.find('wxTheFontList').ignore()
-    module.find('wxNORMAL_FONT').ignore()
-    module.find('wxSMALL_FONT').ignore()
-    module.find('wxITALIC_FONT').ignore()
-    module.find('wxSWISS_FONT').ignore()
-    
+    # customizing the generated code and docstrings.    
     
     c = module.find('wxFont')
     assert isinstance(c, etgtools.ClassDef)
@@ -90,7 +82,26 @@ def run():
     #c.addProperty('Underlined GetUnderlined SetUnderlined')
 
        
-    
+    # The stock Font items are documented as simple pointers, but in reality
+    # they are macros that evaluate to a function call that returns a font
+    # pointer, and that is only valid *after* the wx.App object has been
+    # created. That messes up the code that SIP generates for them, so we need
+    # to come up with another solution. So instead we will just create
+    # uninitialized fonts in a block of Python code, that will then be
+    # intialized later when the wx.App is created.
+    c.addCppMethod('void', '_copyFrom', '(const wxFont* other)', 
+                   "*self = *other;",
+                   briefDoc="For internal use only.")  # ??
+    pycode = '# These stock fonts will be initialized when the wx.App object is created.\n'
+    for item in module:
+        if '_FONT' in item.name:
+            item.ignore()
+            pycode += '%s = Font()\n' % tools.removeWxPrefix(item.name)
+    module.addPyCode(pycode)
+
+    # it is delay-initialized, see stockgdi.sip
+    module.find('wxTheFontList').ignore()
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

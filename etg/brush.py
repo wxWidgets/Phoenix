@@ -17,7 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxBrush' ]    
+ITEMS  = [ 'wxBrush', 'wxBrushList', ]    
     
 #---------------------------------------------------------------------------
 
@@ -54,21 +54,29 @@ def run():
         #endif
         """)
 
-
-    # TODO: Fix these. I'm not sure why exactly, but in the CPP code
-    # they end up with the wrong signature.
-    module.find('wxBLUE_BRUSH').ignore()
-    module.find('wxGREEN_BRUSH').ignore()
-    module.find('wxYELLOW_BRUSH').ignore()
-    module.find('wxWHITE_BRUSH').ignore()
-    module.find('wxBLACK_BRUSH').ignore()
-    module.find('wxGREY_BRUSH').ignore()
-    module.find('wxMEDIUM_GREY_BRUSH').ignore()
-    module.find('wxLIGHT_GREY_BRUSH').ignore()
-    module.find('wxTRANSPARENT_BRUSH').ignore()
-    module.find('wxCYAN_BRUSH').ignore()
-    module.find('wxRED_BRUSH').ignore()
-
+    
+    c.addGetterSetterProps()
+    
+    
+    # The stock Brush items are documented as simple pointers, but in reality
+    # they are macros that evaluate to a function call that returns a brush
+    # pointer, and that is only valid *after* the wx.App object has been
+    # created. That messes up the code that SIP generates for them, so we need
+    # to come up with another solution. So instead we will just create
+    # uninitialized brush in a block of Python code, that will then be
+    # intialized later when the wx.App is created.
+    c.addCppMethod('void', '_copyFrom', '(const wxBrush* other)', 
+                   "*self = *other;",
+                   briefDoc="For internal use only.")  # ??
+    pycode = '# These stock brushes will be initialized when the wx.App object is created.\n'
+    for item in module:
+        if '_BRUSH' in item.name:
+            item.ignore()
+            pycode += '%s = Brush()\n' % tools.removeWxPrefix(item.name)
+    module.addPyCode(pycode)
+            
+    
+    # it is delay-initialized, see stockgdi.sip
     module.find('wxTheBrushList').ignore()
     
     #-----------------------------------------------------------------

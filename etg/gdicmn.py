@@ -303,8 +303,12 @@ def run():
 
     module.addItem(tools.wxListWrapperTemplate('wxPointList', 'wxPoint', module))
     
+    
+    
     c = module.find('wxColourDatabase')
     c.addPyMethod('FindColour', '(self, colour)',    'return self.Find(colour)')   
+
+    module.find('wxTheColourDatabase').ignore()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
