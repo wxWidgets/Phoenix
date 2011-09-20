@@ -122,7 +122,7 @@ INCLUDES = [  'defs',
               'dirdlg',
               'config',
               'searchctrl',
-              #'variant',
+              'variant',
               #'radiobox', # need to resolve abiguous GetDefaultBorder issue with mult. inheritance
               'radiobtn',
               'scrolwin',

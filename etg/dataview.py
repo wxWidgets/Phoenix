@@ -38,11 +38,6 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    module.insertItem(0, etgtools.WigCode("""\
-        // forward declarations
-        class wxVariant;
-    """))
-
     c = module.find('wxDataViewModel')
     c.abstract = True
     #c.find('GetValue').ignore()
