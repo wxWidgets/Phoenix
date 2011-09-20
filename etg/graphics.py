@@ -37,6 +37,10 @@ def run():
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
     
+    #-----------------------------------------------------------------
+    # Tweak the parsed meta objects in the module object as needed for
+    # customizing the generated code and docstrings.
+
     module.addHeaderCode('#include <wx/gdicmn.h>')
     
     def markFactories(klass):
@@ -45,32 +49,39 @@ def run():
                 func.factory = True
     
     c = module.find('wxGraphicsContext')
+    assert isinstance(c, etgtools.ClassDef)
     markFactories(c)
+    tools.removeVirtuals(c)
     c.abstract = True
     
     # FIXME: Handle wxEnhMetaFileDC?
     c.find('Create').findOverload('wxEnhMetaFileDC').ignore()
     
-    # FIXME: Reintroduce the default value once we get wxBLACK and co. working
-    c.find('CreateFont.col').default = ''
+    # SIP doesn't like default parameter values to use dereference syntax,
+    # (such as "col = *wxBLACK") so tweak the syntax a bit by using a macro.
+    c.addHeaderCode("#define BLACK *wxBLACK")
+    c.find('CreateFont.col').default = 'BLACK'
+    
     
     c = module.find('wxGraphicsPath')
+    tools.removeVirtuals(c)
     c.find('GetBox').findOverload('wxDouble *x, wxDouble *y').ignore()
     c.find('GetCurrentPoint').findOverload('wxDouble *x, wxDouble *y').ignore()
     
     c = module.find('wxGraphicsRenderer')
+    tools.removeVirtuals(c)
     markFactories(c)
     c.abstract = True
     
     # FIXME: Handle wxEnhMetaFileDC?
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()
 
-    # FIXME: Reintroduce the default value once we get wxBLACK and co. working
-    c.find('CreateFont.col').default = ''
+    # See above
+    c.find('CreateFont.col').default = 'BLACK'
     
-    #-----------------------------------------------------------------
-    # Tweak the parsed meta objects in the module object as needed for
-    # customizing the generated code and docstrings.
+    
+    c = module.find('wxGraphicsMatrix')
+    tools.removeVirtuals(c)
     
 
     #-----------------------------------------------------------------
