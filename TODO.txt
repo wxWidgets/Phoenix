@@ -18,11 +18,14 @@ For all new etg files
       will help to find the interface header source to compare what is
       being declared there with what is being generated, and to better
       understand what may need tweaked in the etg script file.
+
     * Read the coresponding interface file and ensure that all classes
       declared in it are listed in the ITEMS list in the etg file,
       unless the class should not be wrapped for some reason.  Other
       items from the interface file will be included automatically.
+
     * Do not list classes from other interface files in the etg file.
+
     * Check for any extras added to each class in Classic wxPython and
       evaluate whether the same extras should be added to the Phoenix
       verison.  For example, there may be additional C methods added
@@ -30,6 +33,7 @@ For all new etg files
       carried over to Phoenix, such as __nonzero__, etc.  Also look
       for methods where Classic indicates that ownership should be
       transfered, or other special directives.
+
     * Check for backwards compatibility issues with Classic wxPython
       and document in the MigrationGuide.  (This file is still in the
       Classic wxPython source tree.)  Compatibility issues resulting
@@ -38,15 +42,21 @@ For all new etg files
       deprecated methods eventually, and the programmers should be
       able to figure out the rest once they've started porting some
       code. 
+
     * For window classes check if there are other virtual methods
       besides those added in addWindowVirtuals() that should also be
       added back.
+
     * UNITTESTS!  Create a unit test script in the unitests folder
       using the same base file name.  It should at least check that
       every non-abstract class can be constructed, and should also
       have tests for things that are added or tweaked in the etg
       script.  Other things that needed no tweaks are ok to be left
-      untested for the time being.
+      untested for the time being, although porting over some of the 
+      the old unitest code from Classic would also be a good idea, but
+      priority should be given to testing those things that had to be
+      tweaked or etc.
+
 
 
 Handling the GIL
@@ -93,7 +103,6 @@ PyAssertionError
 
 SIP
 ----
-
     * Patch SIP to remove leading space from %Docstring items?  Not
       really needed but will help our generated .sip files be more
       pretty and easier to read. I've asked Phil about it and so far
@@ -159,6 +168,7 @@ Deprecated C++ items
       that will also be tagged as such in the XML?
 
 
+
 custom wrapper code
 -------------------
 Currently function.setCppCode requires some sip-isms (using sipRes and
@@ -167,6 +177,60 @@ wrap the C++ function.  Try making it work more like addCppMethod
 where it will generate a new function that is passed "self" and that
 you can simply return a value from.
 
+
+
+WingIDE support
+---------------
+WingIDE (and maybe other IDEs too?) has the ability to display
+docstrings and other helps for items that are not Python code but in
+binary extension modules, which have less info available via
+introspection. The way this is handled is Wing is able to read info
+from python-like .pi files that are basically just stubs that show the
+docstrings and APIs of classes and methods, but with no real code.  We
+should probably generate a set of these files for everything in our
+extension modules.  We have all the info needed in the etg scripts, so
+it could be just another generator that it runs.
+
+
+
+Daily builds and releases
+-------------------------
+Set up a buildbot-based system that not only does builds and testing,
+but also makes distributable binaries so some of the wxPython-dev
+folks can play with the bleeding edge versions without needing to be
+able to do full builds themselves.
+  
+  * Make sure that Phoenix files are installed such that they do not
+    clobber any wxPython Classic installed files.
+
+  * Do not install a .pth file so Classic will remain the default "wx"
+    that is imported.
+
+  * Provide a script that can be run to display the installed versions
+    of Classic and Phoenix and allow the user to select which should
+    be imported by default with "import wx".  It will do this simply
+    by writing a new wx.pth file in an appropriate location.  It
+    should be able to deal with the path hackery that was used on Macs
+    to allow wxPython to be used with either Apple Python or
+    Python.org Pythons.
+
+  * Make sure that the selection script can also be used in a
+    virtualenv.  On the Mac we may want to enable the script to also
+    do the stuff needed to make the framework Python work correctly as
+    shown at http://wiki.wxpython.org/wxPythonVirtualenvOnMac
+
+  * To begin with the binaries produced do not need to be very
+    elaborate like Classic currently uses.  Perhaps just a .zip file
+    with instructions of how/where to install would be good enough in
+    the early stages, since our targe audience at the beginning will
+    be techie users that don't mind the bleeding edge and have the
+    know-how to deal with it.  Smarter more capable binaries or
+    installers can be added over time as needed.
+
+  * The making of a distributable build could simply be yet another
+    command handled by build.py.  Perhaps another command can be used
+    to upload the binary to whatever server they will be distributed
+    from. 
 
 
 
@@ -242,8 +306,6 @@ other stuff
 
   * textctrl: add a renamed HitTest row/col overload
 
-  * Figure out how to handle the global stock objects, like wxBLACK.
-
   * data buffer support for image RGB and alpha data
 
   * port all of the wxBitmap copy-to and copy-from buffer methods, and
@@ -254,3 +316,5 @@ other stuff
     created/used that should not be done before there is an application
     object.
 
+  * Should the functions created for things like addCppMethod be
+    marked static?  How about using inline?
