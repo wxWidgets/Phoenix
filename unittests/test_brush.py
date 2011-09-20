@@ -27,6 +27,31 @@ class BrushTests(wtc.WidgetTestCase):
         self.assertFalse(b1 != b2)
         self.assertFalse(b2 == b3)
         
+    def test_StockBrushesExist(self):
+        wx.BLUE_BRUSH
+        wx.GREEN_BRUSH 
+        wx.YELLOW_BRUSH
+        wx.WHITE_BRUSH
+        wx.BLACK_BRUSH
+        wx.GREY_BRUSH 
+        wx.MEDIUM_GREY_BRUSH 
+        wx.LIGHT_GREY_BRUSH
+        wx.TRANSPARENT_BRUSH
+        wx.CYAN_BRUSH
+        wx.RED_BRUSH
+
+    def test_StockBrushesInitialized(self):
+        self.assertTrue(wx.BLUE_BRUSH.IsOk())
+        self.assertTrue(wx.GREEN_BRUSH.IsOk())
+        self.assertTrue(wx.YELLOW_BRUSH.IsOk())
+        self.assertTrue(wx.WHITE_BRUSH.IsOk())
+        self.assertTrue(wx.BLACK_BRUSH.IsOk())
+        self.assertTrue(wx.GREY_BRUSH.IsOk()) 
+        self.assertTrue(wx.MEDIUM_GREY_BRUSH.IsOk())
+        self.assertTrue(wx.LIGHT_GREY_BRUSH.IsOk())
+        self.assertTrue(wx.TRANSPARENT_BRUSH.IsOk())
+        self.assertTrue(wx.CYAN_BRUSH.IsOk())
+        self.assertTrue(wx.RED_BRUSH.IsOk())
         
         
 #---------------------------------------------------------------------------

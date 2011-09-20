@@ -4,6 +4,7 @@ import wx
 import os
 
 pngFile = os.path.join(os.path.dirname(__file__), 'pointy.png')
+curFile = os.path.join(os.path.dirname(__file__), 'horse.cur')
 
 #---------------------------------------------------------------------------
 
@@ -15,7 +16,7 @@ class CursorTests(wtc.WidgetTestCase):
         self.assertTrue(c.IsOk())
 
         # from file
-        c = wx.Cursor(pngFile, wx.BITMAP_TYPE_PNG, 1, 1)
+        c = wx.Cursor(curFile, wx.BITMAP_TYPE_CUR)
         self.assertTrue(c.IsOk())
         
         # from image
@@ -86,7 +87,17 @@ class CursorTests(wtc.WidgetTestCase):
         wx.NullCursor
         self.assertTrue(not wx.NullCursor.IsOk())
 
-                    
+         
+    def test_StockCursorsExist(self):
+        wx.STANDARD_CURSOR
+        wx.HOURGLASS_CURSOR
+        wx.CROSS_CURSOR
+
+    def test_StockCursorsInitialized(self):
+        self.assertTrue(wx.STANDARD_CURSOR.IsOk())
+        self.assertTrue(wx.HOURGLASS_CURSOR.IsOk())
+        self.assertTrue(wx.CROSS_CURSOR.IsOk())
+        
         
 #---------------------------------------------------------------------------
 
