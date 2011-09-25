@@ -82,6 +82,7 @@ INCLUDES = [  'defs',
               'apptrait',
               'app',
               
+              'timer',
               'window',
               'validate',
               'panel',
