@@ -73,7 +73,7 @@ def run():
     c.addProperty('ClassName GetClassName SetClassName')
     c.addProperty('VendorDisplayName GetVendorDisplayName SetVendorDisplayName')
     c.addProperty('VendorName GetVendorName SetVendorName')
-    
+    c.addProperty('Traits GetTraits')
     
     #-------------------------------------------------------
     c = module.find('wxApp')

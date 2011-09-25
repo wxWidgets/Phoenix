@@ -37,15 +37,18 @@ def run():
     
     
     # TODO: Enable these as etg scripts for their return types are added
-    for name in [ 'CreateConfig',
-                  'CreateEventLoop',
-                  'CreateFontMapper',
-                  'CreateLogTarget',
+    for name in [ 'CreateFontMapper',
                   'CreateMessageOutput',
                   'CreateRenderer',
-                  'GetStandardPaths' ]:
+                  'GetStandardPaths',
+                  ]:
         c.find(name).ignore()
     
+    for name in [ 'CreateConfig',
+                  'CreateEventLoop',
+                  'CreateLogTarget',
+                  ]:
+        c.find(name).factory = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
