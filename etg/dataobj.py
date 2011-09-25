@@ -35,7 +35,7 @@ def run():
     c = module.find('wxDataFormat')
     assert isinstance(c, etgtools.ClassDef)
 
-    c.find('GetType').setCppCode("sipRes = static_cast<wxDataFormatId>(sipCpp->GetType());")
+    c.find('GetType').setCppCode("return static_cast<wxDataFormatId>(self->GetType());")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

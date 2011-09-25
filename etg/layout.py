@@ -36,7 +36,7 @@ def run():
     c = module.find('wxIndividualLayoutConstraint')
     assert isinstance(c, etgtools.ClassDef)
 
-    c.find('GetOtherWindow').setCppCode('sipRes = (wxWindow*)sipCpp->GetOtherWindow();')
+    c.find('GetOtherWindow').setCppCode('return (wxWindow*)self->GetOtherWindow();')
     
     c.addProperty('Done GetDone SetDone')
     c.addProperty('Margin GetMargin SetMargin')

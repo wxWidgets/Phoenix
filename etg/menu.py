@@ -50,17 +50,19 @@ def run():
     c.find('wxMenuBar').findOverload('wxMenu *menus[], const wxString titles[], long style=0)').ignore()
     c.find('FindItem').ignore()
     mac_scmb = c.find('MacSetCommonMenuBar')
-    mac_scmb.setCppCode("""
-#ifdef __WXMAC__
-    wxMenuBar::MacSetCommonMenuBar(menubar);
-#endif
+    mac_scmb.setCppCode("""\
+    #ifdef __WXMAC__
+        wxMenuBar::MacSetCommonMenuBar(menubar);
+    #endif
     """)
     
     mac_gcmb = c.find('MacGetCommonMenuBar')
-    mac_gcmb.setCppCode("""
-#ifdef __WXMAC__
-    sipRes = wxMenuBar::MacGetCommonMenuBar();
-#endif
+    mac_gcmb.setCppCode("""\
+    #ifdef __WXMAC__
+        return wxMenuBar::MacGetCommonMenuBar();
+    #else
+        return NULL;
+    #endif
     """)
     
     # don't transfer on other platforms, as this is a no-op there.
