@@ -632,7 +632,7 @@ def build_py(options, args):
     #command = PYTHON + " -u " + os.path.join(phoenixDir(), "distrib", "makemo.py")
     #runcmd(command)
 
-    print "------------ BUILD FINISHED ------------"
+    print "\n------------ BUILD FINISHED ------------"
     print "To run the wxPython demo:"
     print " - Set your PYTHONPATH variable to %s." % phoenixDir()
     if not isWindows and not options.install:
