@@ -82,7 +82,7 @@ def run():
     m.find('externalLeading').out = True
     
     c.find('GetHandle').type = 'void*'
-    c.find('GetHandle').setCppCode("sipRes = wxPyGetWinHandle(sipCpp);")
+    c.find('GetHandle').setCppCode("return wxPyGetWinHandle(self);")
     
     c.addCppMethod('void*', 'GetGtkWidget', '()', """\
     #ifdef __WXGTK__
@@ -119,16 +119,16 @@ def run():
     # and empty stubs otherwise
     c.find('RegisterHotKey').setCppCode("""\
     #if wxUSE_HOTKEY
-        sipRes = sipCpp->RegisterHotKey(hotkeyId, modifiers, virtualKeyCode);
+        return self->RegisterHotKey(hotkeyId, modifiers, virtualKeyCode);
     #else
-        sipRes = false;
+        return false;
     #endif
     """)
     c.find('UnregisterHotKey').setCppCode("""\
     #if wxUSE_HOTKEY
-        sipRes = sipCpp->UnregisterHotKey(hotkeyId);
+        return self->UnregisterHotKey(hotkeyId);
     #else
-        sipRes = false;
+        return false;
     #endif
     """)    
     c.find('RegisterHotKey').isVirtual = False
@@ -137,7 +137,7 @@ def run():
     
     c.find('SetDoubleBuffered').setCppCode("""\
     #if defined(__WXGTK20__) || defined(__WXMSW__)
-        sipCpp->SetDoubleBuffered(on);
+        self->SetDoubleBuffered(on);
     #endif
     """)
 

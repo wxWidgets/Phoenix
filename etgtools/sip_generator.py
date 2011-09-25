@@ -21,6 +21,12 @@ from cStringIO import StringIO
 divider = '//' + '-'*75 + '\n'
 phoenixRoot = os.path.abspath(os.path.split(__file__)[0]+'/..')
 
+# This is a list of types that are used as return by value or by reference
+# function return types that we need to ensure are actually using pointer
+# types in their CppMethodDef or cppCode wrappers.
+forcePtrTypes = [ 'wxString', 
+                  ]
+
 #---------------------------------------------------------------------------
 
 class SipWrapperGenerator(generators.WrapperGeneratorBase):
@@ -176,9 +182,13 @@ from %s import *
                 _needDocstring = False
 
             if function.cppCode:
-                stream.write('%MethodCode\n')
-                stream.write(nci(function.cppCode, 4))
-                stream.write('%End\n')
+                code, codeType = function.cppCode
+                if codeType == 'sip':
+                    stream.write('%MethodCode\n')
+                    stream.write(nci(code, 4))
+                    stream.write('%End\n')
+                elif codeType == 'function':
+                    raise NotImplementedError() # TODO: See generateMethod for an example, refactor to share code...
         for f in function.overloads:
             self.generateFunction(f, stream, _needDocstring)
         stream.write('\n')            
@@ -334,6 +344,7 @@ from %s import *
             f(item, stream, indent + ' '*4)
             
         for item in public:
+            item.klass = klass
             f = dispatch[item.__class__]
             f(item, stream, indent + ' '*4)
 
@@ -438,6 +449,8 @@ from %s import *
                 self.generateParameters(method.items, stream, indent+' '*4)
                 stream.write(indent)
             stream.write(')')
+            if method.isConst:
+                stream.write(' const')
             if method.isPureVirtual:
                 stream.write(' = 0')
             stream.write('%s;\n' % self.annotate(method))
@@ -449,66 +462,32 @@ from %s import *
                 _needDocstring = False
                 
             if method.cppCode:
-                stream.write('%s%%MethodCode\n' % indent)
-                stream.write(nci(method.cppCode, len(indent)+4))
-                stream.write('%s%%End\n' % indent)
+                code, codeType = method.cppCode
+                if codeType == 'sip':
+                    stream.write('%s%%MethodCode\n' % indent)
+                    stream.write(nci(code, len(indent)+4))
+                    stream.write('%s%%End\n' % indent)
+                elif codeType == 'function':
+                    cm = extractors.CppMethodDef.FromMethod(method)
+                    cm.body = code
+                    self.generateCppMethod(cm, stream, indent, skipDeclaration=True)
+                
             stream.write('\n')
         if method.overloads:
             for m in method.overloads:
                 self.generateMethod(m, stream, indent, _needDocstring)
 
             
-    def generateCppMethod(self, method, stream, indent=''):
+    def generateCppMethod(self, method, stream, indent='', skipDeclaration=False):
         # Add a new C++ method to a class. This one adds the code as a
         # separate function and then adds a call to that function in the
         # MethodCode directive.
         assert isinstance(method, extractors.CppMethodDef)
         if method.ignored:
             return
-        klass = method.klass
-        if klass:
-            assert isinstance(klass, extractors.ClassDef)
-
-        # create the new function
-        fargs = method.argsString.strip('()').split(',')
-        for idx, arg in enumerate(fargs):
-            # take only the part before the =, if there is one
-            arg = arg.split('=')[0].strip()   
-            arg = arg.replace('&', '*')  # SIP will always want to use pointers for parameters
-            fargs[idx] = arg
-        fargs = ', '.join(fargs)
-        if fargs:
-            fargs = ', ' + fargs
-        if method.isCtor:
-            fname = '_%s_newCtor' % klass.name
-            fargs = '(int& _isErr%s)' % fargs
-            stream.write('%s%%TypeCode\n' % indent)
-            typ = klass.name
-            if method.useDerivedName:
-                typ = 'sip'+klass.name
-                stream.write('%sclass %s;\n' % (indent, typ))   # forward decalre the derived class
-            stream.write('%s%s* %s%s\n%s{\n' % (indent, typ, fname, fargs, indent))
-            stream.write(nci(method.body, len(indent)+4))
-            stream.write('%s}\n' % indent)
-            stream.write('%s%%End\n' % indent)
-            
-        else:
-            if klass:
-                fname = '_%s_%s' % (klass.name, method.name)
-                fargs = '(%s* self, int& _isErr%s)' % (klass.name, fargs)
-                stream.write('%s%%TypeCode\n' % indent)
-            else:
-                fname = '_%s_function' % method.name
-                fargs = '(int& _isErr%s)' % fargs
-                stream.write('%s%%ModuleCode\n' % indent)
-            stream.write('%s%s %s%s\n%s{\n' % (indent, method.type, fname, fargs, indent))
-            stream.write(nci(method.body, len(indent)+4))
-            stream.write('%s}\n' % indent)
-            stream.write('%s%%End\n' % indent)
-
-        # now insert the method declaration and the code to call the new function
-        # first, find the parameter names
-        pnames = method.argsString.strip('()').split(',')
+        
+        lastP = method.argsString.rfind(')')
+        pnames = method.argsString[:lastP].strip('()').split(',')
         for idx, pn in enumerate(pnames):
             # take only the part before the =, if there is one
             name = pn.split('=')[0].strip()   
@@ -521,19 +500,83 @@ from %s import *
             pnames = ', ' + pnames
         typ = method.type
         argsString = method.argsString
-        # spit it all out
+
+        if not skipDeclaration:
+            # First insert the method declaration
+            if method.isCtor:
+                stream.write('%s%s%s%s;\n' % 
+                             (indent, method.name, argsString, self.annotate(method)))
+            else:
+                constMod = ""
+                if method.isConst:
+                    constMod = " const"
+                stream.write('%s%s %s%s%s%s;\n' % 
+                             (indent, typ, method.name, argsString, constMod, self.annotate(method)))
+    
+            # write the docstring
+            self.generateDocstring(method, stream, indent)
+                
+        klass = method.klass
+        if klass:
+            assert isinstance(klass, extractors.ClassDef)
+
+        # create the new function
+        fstream = StringIO()  # using a new stream so we can do the actual write a little later
+        lastP = method.argsString.rfind(')')
+        fargs = method.argsString[:lastP].strip('()').split(',')
+        for idx, arg in enumerate(fargs):
+            # take only the part before the =, if there is one
+            arg = arg.split('=')[0].strip()   
+            arg = arg.replace('&', '*')  # SIP will always want to use pointers for parameters
+            fargs[idx] = arg
+        fargs = ', '.join(fargs)
+        if fargs:
+            fargs = ', ' + fargs
         if method.isCtor:
-            stream.write('%s%s%s%s;\n' % 
-                         (indent, method.name, argsString, self.annotate(method)))
-        else:
-            constMod = ""
-            if method.isConst:
-                constMod = " const"
-            stream.write('%s%s %s%s%s%s;\n' % 
-                         (indent, typ, method.name, argsString, constMod, self.annotate(method)))
- 
-        self.generateDocstring(method, stream, indent)
+            fname = '_%s_newCtor' % klass.name
+            fargs = '(int& _isErr%s)' % fargs
+            fstream.write('%s%%TypeCode\n' % indent)
+            typ = klass.name
+            if method.useDerivedName:
+                typ = 'sip'+klass.name
+                fstream.write('%sclass %s;\n' % (indent, typ))   # forward decalre the derived class
+            fstream.write('%s%s* %s%s\n%s{\n' % (indent, typ, fname, fargs, indent))
+            fstream.write(nci(method.body, len(indent)+4))
+            fstream.write('%s}\n' % indent)
+            fstream.write('%s%%End\n' % indent)
             
+        else:
+            if klass:
+                fname = '_%s_%s' % (klass.name, method.name)
+                if method.isStatic:
+                    # If the method is static then there is no sipCpp to send to
+                    # the new function, so it should not have a self parameter.
+                    fargs = '(int& _isErr%s)' % fargs
+                else:
+                    fargs = '(%s* self, int& _isErr%s)' % (klass.name, fargs)
+                fstream.write('%s%%TypeCode\n' % indent)
+            else:
+                fname = '_%s_function' % method.name
+                fargs = '(int& _isErr%s)' % fargs
+                fstream.write('%s%%ModuleCode\n' % indent)
+            
+            # If the return type is in the forcePtrTypes list then make sure
+            # that it is a pointer, not a return by value or reference, since
+            # SIP almost always deals with pointers to newly allocated
+            # objects.
+            typPtr = method.type
+            if typPtr in forcePtrTypes:
+                if '&' in typPtr:
+                    typPtr.replace('&', '*')
+                elif '*' not in typPtr:
+                    typPtr += '*'
+        
+            fstream.write('%s%s %s%s\n%s{\n' % (indent, typPtr, fname, fargs, indent))
+            fstream.write(nci(method.body, len(indent)+4))
+            fstream.write('%s}\n' % indent)
+            fstream.write('%s%%End\n' % indent)
+
+        # Write the code that will call the new function
         stream.write('%s%%MethodCode\n' % indent)
         stream.write(indent+' '*4)
         if method.isCtor:
@@ -542,12 +585,20 @@ from %s import *
             if method.type != 'void':
                 stream.write('sipRes = ')
             if klass:
-                stream.write('%s(sipCpp, sipIsErr%s);\n' % (fname, pnames))
+                if method.isStatic:
+                    # If the method is static then there is no sipCpp to send to
+                    # the new function, so it should not have a self parameter.
+                    stream.write('%s(sipIsErr%s);\n' % (fname, pnames))
+                else:
+                    stream.write('%s(sipCpp, sipIsErr%s);\n' % (fname, pnames))
             else:
                 stream.write('%s(sipIsErr%s);\n' % (fname, pnames))
-        stream.write('%s%%End\n\n' % indent)
+        stream.write('%s%%End\n' % indent)
 
-            
+        # and finally, add the new function itself
+        stream.write(fstream.getvalue())
+        stream.write('\n')
+        
 
         
     def generateCppMethod_sip(self, method, stream, indent=''):

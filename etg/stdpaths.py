@@ -39,14 +39,14 @@ def run():
     c.find('SetInstallPrefix').setCppCode("""\
     #ifdef __WXMSW__
     #else
-        sipCpp->SetInstallPrefix(*prefix);
+        self->SetInstallPrefix(*prefix);
     #endif
     """)
     c.find('GetInstallPrefix').setCppCode("""\
     #ifdef __WXMSW__
-        sipRes = new wxString;
+        return new wxString;
     #else
-        sipRes = new wxString(sipCpp->GetInstallPrefix());
+        return new wxString(self->GetInstallPrefix());
     #endif
     """)
     

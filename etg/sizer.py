@@ -56,11 +56,11 @@ def run():
     
     gud = c.find('GetUserData')
     gud.type = 'wxPyUserData*'
-    gud.setCppCode('sipRes = dynamic_cast<wxPyUserData*>(sipCpp->GetUserData());')
+    gud.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetUserData());')
     sud = c.find('SetUserData')
     sud.find('userData').transfer = True
     sud.find('userData').type = 'wxPyUserData*'
-    sud.setCppCode('sipCpp->SetUserData(dynamic_cast<wxObject*>(userData));')
+    sud.setCppCode('self->SetUserData(dynamic_cast<wxObject*>(userData));')
 
     c.addPrivateCopyCtor()
 

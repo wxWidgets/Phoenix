@@ -169,16 +169,6 @@ Deprecated C++ items
 
 
 
-custom wrapper code
--------------------
-Currently function.setCppCode requires some sip-isms (using sipRes and
-sipCpp for example) to be able to replace the wrapper code used to
-wrap the C++ function.  Try making it work more like addCppMethod
-where it will generate a new function that is passed "self" and that
-you can simply return a value from.
-
-
-
 WingIDE support
 ---------------
 WingIDE (and maybe other IDEs too?) has the ability to display

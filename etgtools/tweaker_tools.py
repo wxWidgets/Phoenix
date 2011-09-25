@@ -32,7 +32,7 @@ def removeWxPrefixes(node):
                                      extractors.MethodDef )):  # TODO: Any others?
                 item.pyName = item.name[2:]
                 item.wxDropped = True
-        if item.name.startswith('wxEVT_'):
+        if item.name.startswith('wxEVT_') and 'CATEGORY' not in item.name:
             # give these their actual name so the auto-renamer won't touch them
             item.pyName = item.name
             
