@@ -1,24 +1,28 @@
 import sys
 import imp_unittest, unittest
 import wx
+import wtc
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
 
 #---------------------------------------------------------------------------
 
-class WindowList(unittest.TestCase):
+class WindowList(wtc.WidgetTestCase): #unittest.TestCase):
     def setUp(self):
-        self.app = wx.App()
+        super(WindowList, self).setUp()
         self.frames = list()
         for i in range(5):
-            frm = wx.Frame(None, title='frm%d' % i)
+            frm = wx.Frame(self.frame, title='frm%d' % i)
             self.frames.append( frm )
+            frm.Show()
         for i in range(5):
             w = wx.Window(self.frames[4])
 
-    def tearDown(self):
+    def _tearDown(self):
         def _closeAll():
-            for frm in self.frames:
-                frm.Close()
+            for frm in wx.GetTopLevelWindows():
+                if frm:
+                    frm.Close()
+            self.myYield()
         wx.CallAfter(_closeAll)
         self.app.MainLoop()
         del self.app
@@ -26,19 +30,20 @@ class WindowList(unittest.TestCase):
         
     def test_WindowList_GetTLW1(self):    
         TLWs = wx.GetTopLevelWindows()
-        self.assertTrue(len(TLWs) == 5)
+
+        #self.assertEqual(len(TLWs), 6) # 1 created in the base class plus 5 here
+        # since TLWs delay destroying themselves there may be more than 6 of them here 
+        # when we're running the whole test suite, so we have to comment out that 
+        # assert...
         
-    def test_WindowList_GetTLW2(self):    
-        TLWs = wx.GetTopLevelWindows()        
         for tlw in TLWs:
-            self.assertTrue(type(tlw) == wx.Frame)
-            self.assertTrue(tlw.Title.startswith('frm'))
-        
+            self.assertTrue(isinstance(tlw, wx.TopLevelWindow))
+               
     def test_WindowList_GetChildren(self):
         children = self.frames[0].GetChildren()
-        self.assertTrue(len(children) == 0)
+        self.assertEqual(len(children), 0)
         children = self.frames[4].GetChildren()
-        self.assertTrue(len(children) == 5)
+        self.assertEqual(len(children), 5)
        
     def test_WindowList_repr(self):
         TLWs = wx.GetTopLevelWindows()

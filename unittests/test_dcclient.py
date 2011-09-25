@@ -31,7 +31,7 @@ class ClientDCTests(wtc.WidgetTestCase):
         self.frame.SendSizeEvent()
         panel.Refresh()
         panel.Update()
-        wx.Yield() 
+        self.myYield() 
         self.assertTrue(panel.onPaintCalled == True)
 
         
