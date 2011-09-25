@@ -103,16 +103,16 @@ def run():
         ~wxConfig();
         
         // pure virtuals with implementations here
-        const wxString & GetPath();
+        const wxString & GetPath() const;
         void SetPath(const wxString & strPath);
-        bool GetFirstEntry(wxString & str, long & index);
-        bool GetFirstGroup(wxString & str, long & index);
-        bool GetNextEntry(wxString & str, long & index);
-        bool GetNextGroup(wxString & str, long & index);
-        size_t GetNumberOfEntries(bool bRecursive = false);
-        size_t GetNumberOfGroups(bool bRecursive = false);
-        bool HasEntry(const wxString & strName);
-        bool HasGroup(const wxString & strName);
+        bool GetFirstEntry(wxString & str, long & index) const;
+        bool GetFirstGroup(wxString & str, long & index) const;
+        bool GetNextEntry(wxString & str, long & index) const;
+        bool GetNextGroup(wxString & str, long & index) const;
+        size_t GetNumberOfEntries(bool bRecursive = false) const;
+        size_t GetNumberOfGroups(bool bRecursive = false) const;
+        bool HasEntry(const wxString & strName) const;
+        bool HasGroup(const wxString & strName) const;
         bool Flush(bool bCurrentOnly = false);
         bool RenameEntry(const wxString & oldName, const wxString & newName); 
         bool RenameGroup(const wxString & oldName, const wxString & newName);
