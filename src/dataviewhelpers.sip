@@ -31,10 +31,15 @@ public:
         return 0;
     }
 
-
-    virtual void GetValue( wxVariant &variant,
+    void GetValue( wxVariant &variant,
                    const wxDataViewItem &item, unsigned int col ) const
     {
+        variant = GetValue(item, col);
+    }
+
+    virtual wxVariant GetValue( const wxDataViewItem &item, unsigned int col ) const
+    {
+        return wxVariant();
     }
 
     virtual bool SetValue( const wxVariant &variant,
@@ -50,7 +55,7 @@ public:
 
     virtual bool IsEnabled(const wxDataViewItem &item, unsigned int col) const
     {
-        return false;                                                         
+        return true;                                                        
     }
 
     virtual unsigned int GetColumnCount() const
@@ -84,38 +89,16 @@ public:
 
     virtual int Compare (const wxDataViewItem &item1, const wxDataViewItem &item2, unsigned int column, bool ascending) const;
 
+    virtual wxVariant GetValue( const wxDataViewItem &item, unsigned int col ) const;
 
-    virtual void GetValue( wxVariant &variant,
-                   const wxDataViewItem &item, unsigned int col ) const;
-
-/* FIXME: This is how we want to implement the method, but when compiling it always wants
-          the void version of this method, even if we add both.
-    virtual wxVariant GetValue( wxVariant &variant,
+    void GetValue( wxVariant &variant,
                    const wxDataViewItem &item, unsigned int col ) const;
     %MethodCode
             Py_BEGIN_ALLOW_THREADS
-                wxVariant result;
-                sipCpp->wxDataViewModel::GetValue(result, item, col);
-                sipRes = result;
+                // call the version that returns a variant so that it will call the Python callback
+                *variant = sipCpp->GetValue(*item, col);
             Py_END_ALLOW_THREADS
     %End
-    %VirtualCatcherCode
-            // Convert the 2 element array of integers to the two element
-            // tuple.
-    
-            PyObject *result;
-    
-            result = sipCallMethod(&sipIsErr, sipMethod, "Oi", item, col);
-    
-            if (result != NULL)
-            {
-                // Convert the result to the C++ type.
-                sipParseResult(&sipIsErr, sipMethod, result, "i", &sipRes);
-    
-                Py_DECREF(result);
-            }
-    %End
-*/
 
     virtual bool SetValue( const wxVariant &variant,
                    const wxDataViewItem &item, unsigned int col );
@@ -133,6 +116,27 @@ public:
     virtual bool IsContainer(const wxDataViewItem&) const;
 };
 
+/*
+%MappedType wxPyLongPtr
+{
+    %ConvertToTypeCode
+        // Code to test a PyObject for compatibility
+        if (!sipIsErr) {
+            return PyLong_Check(sipPy) || PyInt_Check(sipPy); 
+        }
+        if (PyLong_Check(sipPy) || PyInt_Check(sipPy))
+            *sipCppPtrV = (wxPyLongPtr)PyLong_AsVoidPtr(sipPy);
+        
+        return sipGetState(sipTransferObj);
+    %End
+
+         
+    %ConvertFromTypeCode
+        return PyLong_FromVoidPtr(sipCpp);
+    %End
+    
+};
+*/
 
 //--------------------------------------------------------------------------
 

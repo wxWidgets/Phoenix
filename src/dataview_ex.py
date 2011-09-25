@@ -1,3 +1,5 @@
+import wx
+
 class DataViewItemObjectMapper(object):
     """
     This class provides a mechanism for mapping between Python objects and the
@@ -32,7 +34,7 @@ class DataViewItemObjectMapper(object):
         """
         Retrieve the object that was used to create an item.
         """
-        oid = item.GetID()
+        oid = int(item.GetID())
         return self.mapper[oid]
 
     def UseWeakRefs(self, flag):
@@ -51,8 +53,34 @@ class DataViewItemObjectMapper(object):
         self.mapper = newmap
         self.usingWeakRefs = flag
         
-class PyDataViewModel(DataViewModelBase, DataViewItemObjectMapper):
-    def __init__(self, *a, **kw):
-        super(PyDataViewModel, self).__init__(*a, **kw)
+class PyDataViewModel(PyDataViewModelBase, DataViewItemObjectMapper):
+    def __init__(self):
+        PyDataViewModelBase.__init__(self)
+        DataViewItemObjectMapper.__init__(self)
 
-    
+NullDataViewItem = DataViewItem()
+
+EVT_DATAVIEW_SELECTION_CHANGED = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED, 1)
+
+EVT_DATAVIEW_ITEM_ACTIVATED = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_ACTIVATED, 1)
+EVT_DATAVIEW_ITEM_COLLAPSING = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_COLLAPSING, 1)
+EVT_DATAVIEW_ITEM_COLLAPSED = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_COLLAPSED, 1)
+EVT_DATAVIEW_ITEM_EXPANDING = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_EXPANDING, 1)
+EVT_DATAVIEW_ITEM_EXPANDED = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_EXPANDED, 1)
+EVT_DATAVIEW_ITEM_START_EDITING = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_START_EDITING, 1)
+EVT_DATAVIEW_ITEM_EDITING_STARTED = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_EDITING_STARTED, 1)
+EVT_DATAVIEW_ITEM_EDITING_DONE = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_EDITING_DONE, 1)
+EVT_DATAVIEW_ITEM_VALUE_CHANGED = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_VALUE_CHANGED, 1)
+
+EVT_DATAVIEW_ITEM_CONTEXT_MENU = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_CONTEXT_MENU, 1)
+
+EVT_DATAVIEW_COLUMN_HEADER_CLICK = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_COLUMN_HEADER_CLICK, 1)
+EVT_DATAVIEW_COLUMN_HEADER_RIGHT_CLICKED = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_COLUMN_HEADER_RIGHT_CLICK, 1)
+EVT_DATAVIEW_COLUMN_SORTED = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_COLUMN_SORTED, 1)
+EVT_DATAVIEW_COLUMN_REORDERED = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_COLUMN_REORDERED, 1)
+EVT_DATAVIEW_CACHE_HINT = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_CACHE_HINT, 1)
+
+EVT_DATAVIEW_ITEM_BEGIN_DRAG = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_BEGIN_DRAG, 1)
+EVT_DATAVIEW_ITEM_DROP_POSSIBLE = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_DROP_POSSIBLE, 1)
+EVT_DATAVIEW_ITEM_DROP = wx.PyEventBinder(wxEVT_COMMAND_DATAVIEW_ITEM_DROP, 1)
+

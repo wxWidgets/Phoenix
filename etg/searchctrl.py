@@ -31,6 +31,7 @@ def run():
     # customizing the generated code and docstrings.
 
     c = module.find('wxSearchCtrl')
+    c.find('SetMenu.menu').transfer = True
 
     assert isinstance(c, etgtools.ClassDef)
 
