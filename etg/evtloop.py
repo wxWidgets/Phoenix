@@ -17,7 +17,9 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxEventLoopBase' ]    
+ITEMS  = [ 'wxEventLoopBase',
+           'wxEventLoopActivator'
+           ]    
     
 #---------------------------------------------------------------------------
 
@@ -34,8 +36,10 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
     
-    
-    
+    c = module.find('wxEventLoopActivator')
+    c.addPrivateAssignOp()
+    c.addPrivateCopyCtor()
+        
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
