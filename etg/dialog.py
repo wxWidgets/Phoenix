@@ -19,7 +19,8 @@ DOCSTRING = ""
 # this script. 
 ITEMS  =    [
                 'wxDialog',
-                'wxDialogLayoutAdapter',               
+                'wxDialogLayoutAdapter',       
+                'wxWindowModalDialogEvent',
             ]
     
 #---------------------------------------------------------------------------
@@ -49,8 +50,6 @@ def run():
     
     c.find('OnSysColourChanged').ignore()
     
-    # TODO: Restore when wxArrayInt is working
-    c.find('GetMainButtonIds').ignore()
         
     tools.fixTopLevelWindowClass(c)
     
