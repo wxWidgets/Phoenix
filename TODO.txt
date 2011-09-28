@@ -185,10 +185,12 @@ it could be just another generator that it runs.
 
 Daily builds and releases
 -------------------------
-Set up a buildbot-based system that not only does builds and testing,
+We now have a buildbot for Phoenix located at http://buildbot.wxpython.org:8010.
+
+We should update the scripts so it not only does builds and testing,
 but also makes distributable binaries so some of the wxPython-dev
 folks can play with the bleeding edge versions without needing to be
-able to do full builds themselves.
+able to do full builds themselves. Specifically, we should:
   
   * Make sure that Phoenix files are installed such that they do not
     clobber any wxPython Classic installed files.
