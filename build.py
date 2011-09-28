@@ -74,6 +74,10 @@ def main(args):
     cfg = Config(noWxConfig=True)
     msg('')
 
+    wxpydir = os.path.join(phoenixDir(), "wx")
+    if not os.path.exists(wxpydir):
+        os.makedirs(wxpydir)
+
     if not args or 'help' in args or '--help' in args or '-h' in args:
         usage()
         sys.exit(1)
