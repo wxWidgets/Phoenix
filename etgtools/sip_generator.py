@@ -69,6 +69,8 @@ class SipWrapperGenerator(generators.WrapperGeneratorBase):
     License:   wxWindows License
 %%End
 
+%%DefaultDocstringFormat(name="deindented")
+
 """ % (module.package, module.name))
 
             if module.name.startswith('_'):
@@ -422,8 +424,8 @@ from %s import *
                     text = '\n\n' + text
                 text = '\n'.join(sigs) + text
                 
-        # write the directive and the text
-        if True:
+        # write the docstring directive and the text
+        if False:
             # SIP is preserving all leading whitespace in the docstring, so
             # write this without indents. :-(
             stream.write('%%Docstring\n%s\n%%End\n' % text)
