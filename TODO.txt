@@ -285,6 +285,45 @@ way:
     missing and not report it.
 
 
+Versioning the Back-end TOOLS
+------------------------------
+
+It would be nice if build.py (or one of the buildtools modules it
+imports) was able to download from wxpython.org (or whereever) and use
+specific verisons of sip or other back-end tools, so we can be sure
+that the correct versions are being used for the build.  This will
+make it easier for others who want to build and for keeping the
+buildbots up to date, especially if we ever have to custom patch the
+tools.
+
+One idea that comes to mind is to rename the binaries such that they
+include the platform and version number in the file names.  The
+build.py script will have a hard-coded value for the desired verison
+number, and before running the tool will check to see if there is a
+{toolName}-{platform}-{verison} file in the ./bin folder.  If so then
+that is what it will run.  If not then it will attempt to download it
+and then run it.  An added benefit of this appraoch is that if we ever
+need to rebuild old versions of Phoenix from an svn tag that depended
+on features of an old version of a tool, then we're covered because
+that verison of build.py will want to use the older verison of the
+tool and will do so automatically.
+
+  * Since this is downloading and executing code from the Internet
+    then we should have some precautions in place to protect the
+    user.  Is comparing the MD5 sum of the download with a value hard
+    coded in build.py  good enough?
+
+  * How should building on platforms that we have not made tool
+    binaries available for be handled?  -- Perhaps just inform the
+    user and instruct them to set an environment variable to a local
+    binary to use instead.
+
+  * How should failed downloads be handled?
+
+  * 
+
+
+
 
 other stuff
 ------------
@@ -310,3 +349,6 @@ other stuff
 
   * Should the functions created for things like addCppMethod be
     marked static?  How about using inline?
+
+
+  * dataobject --> dataobj
