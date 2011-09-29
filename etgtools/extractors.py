@@ -119,7 +119,6 @@ class BaseDef(object):
             self.items.insert(0, item)
 
             
-            
     def allItems(self):
         """
         Recursively create a sequence for traversing all items in the
