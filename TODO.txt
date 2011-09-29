@@ -214,7 +214,7 @@ able to do full builds themselves. Specifically, we should:
   * To begin with the binaries produced do not need to be very
     elaborate like Classic currently uses.  Perhaps just a .zip file
     with instructions of how/where to install would be good enough in
-    the early stages, since our targe audience at the beginning will
+    the early stages, since our target audience at the beginning will
     be techie users that don't mind the bleeding edge and have the
     know-how to deal with it.  Smarter more capable binaries or
     installers can be added over time as needed.
@@ -289,10 +289,10 @@ Versioning the Back-end TOOLS
 ------------------------------
 
 It would be nice if build.py (or one of the buildtools modules it
-imports) was able to download from wxpython.org (or whereever) and use
-specific verisons of sip or other back-end tools, so we can be sure
-that the correct versions are being used for the build.  This will
-make it easier for others who want to build and for keeping the
+imports) was able to download from wxpython.org/tools (or similar) and
+use specific verisons of sip or other back-end tools, so we can be
+sure that the correct versions are being used for the build.  This
+will make it easier for others who want to build and for keeping the
 buildbots up to date, especially if we ever have to custom patch the
 tools.
 
@@ -351,4 +351,4 @@ other stuff
     marked static?  How about using inline?
 
 
-  * dataobject --> dataobj
+ 
