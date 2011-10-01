@@ -48,7 +48,6 @@ INCLUDES = [  'defs',
               'geometry',
 
               'image',
-              'dataobject',
               'gdiobj',
               'bitmap',
               'font',
