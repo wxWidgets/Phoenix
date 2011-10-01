@@ -622,8 +622,29 @@ class ClassDef(BaseDef):
         self.items.append(p)
         return p
     
-        
     
+    
+    def addPyProperty(self, *args, **kw):
+        """
+        Add a property to a class that can use PyMethods that have been
+        monkey-patched into the class. (This property will also be
+        jammed in to the class in like manner.)
+        """
+        # Read the nice comment in the function above.  Ditto.
+        if len(args) == 1:
+            name = getter = setter = ''
+            split = args[0].split()
+            assert len(split) in [2 ,3]
+            if len(split) == 2:
+                name, getter = split
+            else:
+                name, getter, setter = split
+            p = PyPropertyDef(name, getter, setter, **kw)
+        else:
+            p = PyPropertyDef(*args, **kw)
+        self.items.append(p)
+        return p
+
     #------------------------------------------------------------------
  
     def addCppMethod(self, type, name, argsString, body, doc=None, isConst=False, **kw):
@@ -814,6 +835,10 @@ class PropertyDef(BaseDef):
         self.briefDoc = doc
         self.protection = 'public'
         self.__dict__.update(kw)
+
+
+class PyPropertyDef(PropertyDef):
+    pass
 
 #---------------------------------------------------------------------------
 

@@ -332,6 +332,7 @@ from %s import *
         dispatch = {
             extractors.MemberVarDef     : self.generateMemberVar,
             extractors.PropertyDef      : self.generateProperty,
+            extractors.PyPropertyDef    : self.generatePyProperty,
             extractors.MethodDef        : self.generateMethod,
             extractors.EnumDef          : self.generateEnum,
             extractors.CppMethodDef     : self.generateCppMethod,
@@ -625,6 +626,8 @@ from %s import *
         
     def generatePyMethod(self, pm, stream, indent):
         assert isinstance(pm, extractors.PyMethodDef)
+        if pm.ignored:
+            return
         if pm.klass.generatingInClass:
             pm.klass.generateAfterClass.append(pm)
         else:
@@ -632,14 +635,33 @@ from %s import *
             stream.write("%%Extract(id=pycode%s)\n" % self.module_name)
             stream.write("def _%s_%s%s:\n" % (klassName, pm.name, pm.argsString))
             if pm.briefDoc:
-                stream.write(nci('"""\n%s\n"""\n' % pm.briefDoc, 4))
+                doc = nci(pm.briefDoc)
+                stream.write(nci('"""\n%s"""\n' % doc, 4)) 
             stream.write(nci(pm.body, 4))
             if pm.deprecated:
                 stream.write('%s.%s = wx.deprecated(_%s_%s)\n' % (klassName, pm.name, klassName, pm.name))
             else:
                 stream.write('%s.%s = _%s_%s\n' % (klassName, pm.name, klassName, pm.name))
             stream.write('del _%s_%s\n' % (klassName, pm.name))
-            stream.write('\n%End\n\n')
+            stream.write('%End\n\n')
+
+
+    def generatePyProperty(self, prop, stream, indent):
+        assert isinstance(prop, extractors.PyPropertyDef)
+        if prop.ignored:
+            return
+        if prop.klass.generatingInClass:
+            prop.klass.generateAfterClass.append(prop)
+        else:
+            klassName = prop.klass.pyName or prop.klass.name
+            stream.write("%%Extract(id=pycode%s)\n" % self.module_name)
+            stream.write("_%s_%s = property(%s.%s" % (klassName, prop.name, klassName, prop.getter))
+            if prop.setter:
+                stream.write(", %s.%s" % (klassName, prop.setter))
+            stream.write(")\n")
+            stream.write('%s.%s = _%s_%s\n' % (klassName, prop.name, klassName, prop.name))
+            stream.write('del _%s_%s\n' % (klassName, prop.name))
+            stream.write('%End\n\n')
 
     #-----------------------------------------------------------------------
 
