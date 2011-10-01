@@ -36,28 +36,40 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
     
-    # TODO: Since the TypeCode is inserted before the derived class
-    # (sipwxFont) is defined, we can't use the new version of addCppCtor. Can
-    # this be fixed?
-    c.addCppCtor_sip("""(
-        int pointSize,
-        wxFontFamily family,
-        int flags = wxFONTFLAG_DEFAULT,
-        const wxString& faceName = wxEmptyString,
-        wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
+    # EXPERIMENTAL: See alternate implementation below that we can do when
+    # the wxObject dtor is not marked virtual.
+    ## TODO: Since the TypeCode is inserted before the derived class
+    ## (sipwxFont) is defined, we can't use the new version of addCppCtor. Can
+    ## this be fixed?
+    #c.addCppCtor_sip("""(
+    #    int pointSize,
+    #    wxFontFamily family,
+    #    int flags = wxFONTFLAG_DEFAULT,
+    #    const wxString& faceName = wxEmptyString,
+    #    wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
+    #    body="""\
+    #    wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
+    #    sipCpp = new sipwxFont(*font);
+    #    delete font;
+    #    """)
+
+    c.addCppCtor("""(int pointSize,
+                     wxFontFamily family,
+                     int flags = wxFONTFLAG_DEFAULT,
+                     const wxString& faceName = wxEmptyString,
+                     wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
         body="""\
         wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
-        sipCpp = new sipwxFont(*font);
-        delete font;
+        return font;
         """)
 
     # Same as the above, but as a factory function
-    module.addCppFunction('wxFont*', 'FFont', """(
-        int pointSize,
-        wxFontFamily family,
-        int flags = wxFONTFLAG_DEFAULT,
-        const wxString& faceName = wxEmptyString,
-        wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
+    module.addCppFunction('wxFont*', 'FFont', 
+                          """(int pointSize,
+                              wxFontFamily family,
+                              int flags = wxFONTFLAG_DEFAULT,
+                              const wxString& faceName = wxEmptyString,
+                              wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
         body="""\
         wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
         return font;

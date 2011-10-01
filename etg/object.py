@@ -55,6 +55,19 @@ def run():
     c.find('operator new').ignore()
     c.find('GetClassInfo').ignore()
     c.find('IsKindOf').ignore()
+    
+    # EXPERIMENTAL: By turning off the virtualness of the wxObject dtor, and
+    # since there are no other virutals that we are exposing here, then all
+    # classes that derive from wxObject that do not have any virtuals of
+    # their own can have simpler wrappers generated for them with no extra
+    # derived class whose only purpose is to reflect calls to the virtual
+    # methods to Python implementations. (And since the only virtual is the
+    # dtor then that is of no real benefit to Python code since we're not
+    # overriding the dtor anyhow.) In addition it appears that none of these
+    # classes would ever need to have Python derived classes anyway. This
+    # also makes it easier and less SIP-specific to add or replace ctors in
+    # those classes with custom C++ code. (See wxFont and wxAcceleratorTable.)
+    c.find('~wxObject').isVirtual = False
 
     c.addCppMethod('const wxChar*', 'GetClassName', '()',
         body='return self->GetClassInfo()->GetClassName();',
