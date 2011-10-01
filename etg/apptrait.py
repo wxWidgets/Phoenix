@@ -40,13 +40,13 @@ def run():
     for name in [ 'CreateFontMapper',
                   'CreateMessageOutput',
                   'CreateRenderer',
-                  'GetStandardPaths',
                   ]:
         c.find(name).ignore()
     
     for name in [ 'CreateConfig',
                   'CreateEventLoop',
                   'CreateLogTarget',
+                  #'GetStandardPaths',
                   ]:
         c.find(name).factory = True
     
