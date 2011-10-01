@@ -27,6 +27,15 @@ class BrushTests(wtc.WidgetTestCase):
         self.assertFalse(b1 != b2)
         self.assertFalse(b2 == b3)
         
+        
+    def test_nonzero(self):
+        b = wx.Brush(wx.Colour(1,2,3), wx.BRUSHSTYLE_SOLID)
+        if not b:
+            self.fail("__nonzero__ should have avoided this branch")
+        if wx.NullBrush:
+            self.fail("__nonzero__ should have avoided this branch")
+       
+        
     def test_StockBrushesExist(self):
         wx.BLUE_BRUSH
         wx.GREEN_BRUSH 
@@ -39,6 +48,8 @@ class BrushTests(wtc.WidgetTestCase):
         wx.TRANSPARENT_BRUSH
         wx.CYAN_BRUSH
         wx.RED_BRUSH
+        wx.NullBrush
+        
 
     def test_StockBrushesInitialized(self):
         self.assertTrue(wx.BLUE_BRUSH.IsOk())
