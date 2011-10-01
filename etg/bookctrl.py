@@ -25,7 +25,8 @@ ITEMS  = [ 'wxBookCtrlBase',
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
-    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING,
+                                check4unittest=False)
     etgtools.parseDoxyXML(module, ITEMS)
     
     #-----------------------------------------------------------------
