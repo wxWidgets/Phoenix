@@ -21,21 +21,14 @@ class dcgraph_tests(wtc.WidgetTestCase):
     def test_GCDC3(self):
         dc = wx.PrinterDC(wx.PrintData())
         gdc = wx.GCDC(dc)
-                
-     
-
+          
+          
     def test_GCDC4(self):
-        # TODO: This one is crashing when deallocating the context. Not sure
-        # yet if the problem is here or in the GraphicsContext code... To
-        # avoid a crash for now I'll just have this test explicitly fail instead.
-
-        self.fail("wxGCDC(context) has known problems...")
-        
-        #bmp = wx.Bitmap(25,25)
-        #dc = wx.MemoryDC(bmp)
-        #ctx = wx.GraphicsContext.Create(dc)
-        #gdc = wx.GCDC(ctx)
-        #del gdc
+        bmp = wx.Bitmap(25,25)
+        dc = wx.MemoryDC(bmp)
+        ctx = wx.GraphicsContext.Create(dc)
+        gdc = wx.GCDC(ctx)
+        del gdc
         
 #---------------------------------------------------------------------------
 

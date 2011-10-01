@@ -36,11 +36,12 @@ def run():
     c.find('wxGCDC').findOverload('wxEnhMetaFileDC').ignore()
     c.addPrivateCopyCtor()
 
-    #c.find('wxGCDC.windowDC').keepReference = True
-    #c.find('wxGCDC.memoryDC').keepReference = True
-    #c.find('wxGCDC.printerDC').keepReference = True
-    #c.find('wxGCDC.context').keepReference = True
-    
+    c.find('wxGCDC.windowDC').keepReference = True
+    c.find('wxGCDC.memoryDC').keepReference = True
+    c.find('wxGCDC.printerDC').keepReference = True
+
+    c.find('wxGCDC.context').transfer = True   
+    c.find('SetGraphicsContext.ctx').transfer = True
 
 
     #-----------------------------------------------------------------
