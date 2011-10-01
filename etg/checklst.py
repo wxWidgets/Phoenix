@@ -31,13 +31,58 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxCheckListBox')
+    assert isinstance(c, etgtools.ClassDef)
+    
     c.find('wxCheckListBox').findOverload('wxString choices').ignore()
     c.find('wxCheckListBox').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
 
     c.find('Create').findOverload('wxString choices').ignore()
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
-    
+
     tools.fixWindowClass(c)
+    
+    c.addPyMethod('GetChecked', '(self)', doc="""\
+        GetChecked()
+    
+        Return a sequence of integers corresponding to the checked items in
+        the control, based on `IsChecked`.""",
+        body="return tuple([i for i in range(self.Count) if self.IsChecked(i)])")
+
+    c.addPyMethod('GetCheckedStrings', '(self)', 
+        doc="""\
+            GetCheckedStrings()
+     
+            Return a tuple of strings corresponding to the checked
+            items of the control, based on `GetChecked`.""",
+        body="return tuple([self.GetString(i) for i in self.GetChecked()])")
+    
+    c.addPyMethod('SetChecked', '(self, indexes)', 
+        doc="""\
+            SetChecked(indexes)
+
+            Sets the checked state of items if the index of the item is 
+            found in the indexes sequence.""",
+        body="""\
+            for i in indexes:
+                assert 0 <= i < self.Count, "Index (%s) out of range" % i
+            for i in range(self.Count):
+                self.Check(i, i in indexes)""")
+
+    c.addPyMethod('SetCheckedStrings', '(self, strings)', 
+        doc="""\
+            SetCheckedStrings(strings)
+
+            Sets the checked state of items if the item's string is found
+            in the strings sequence.""",
+        body="""\
+            for s in strings:
+                assert s in self.GetStrings(), "String ('%s') not found" % s
+            for i in range(self.Count):
+                self.Check(i, self.GetString(i) in strings)""")
+
+    c.addPyProperty('Checked GetChecked SetChecked')
+    c.addPyProperty('CheckedStrings GetCheckedStrings SetCheckedStrings')
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
