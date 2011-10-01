@@ -18,8 +18,17 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ 'wxDataFormat',
-           # TODO: specify the rest of the classes in dataobj.h here
+           'wxDataObject',
+           #'wxDataObjectSimple',
+           #'wxCustomDataObject',
+           #'wxDataObjectComposite',
+           #'wxBitmapDataObject',
+           #'wxTextDataObject',
+           #'wxURLDataObject',
+           #'wxFileDataObject',
            ]
+
+# TODO: apply some tweaks similar to how Classic implements these classes
     
 #---------------------------------------------------------------------------
 
@@ -34,8 +43,12 @@ def run():
     
     c = module.find('wxDataFormat')
     assert isinstance(c, etgtools.ClassDef)
-
     c.find('GetType').setCppCode("return static_cast<wxDataFormatId>(self->GetType());")
+
+    
+    c = module.find('wxDataObject')
+    c.abstract = True
+   
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
