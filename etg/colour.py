@@ -111,13 +111,12 @@ def run():
     c.find('MakeMono.b').out = True
     
     
-    # The stock Colour items are documented as simple pointers, but in reality
-    # they are macros that evaluate to a function call that returns a Colour
-    # pointer, and that is only valid *after* the wx.App object has been
-    # created. That messes up the code that SIP generates for them, so we need
-    # to come up with another solution. So instead we will just create
-    # uninitialized colour in a block of Python code, that will then be
-    # intialized later when the wx.App is created.
+    # The stock Colour items are documented as simple pointers, but in
+    # reality they are macros that evaluate to a function call that returns a
+    # Colour pointer, and that is only valid *after* the wx.App object has
+    # been created. That messes up the code that SIP generates for them. So
+    # instead we will just create uninitialized colour in a block of Python
+    # code, that will then be intialized later when the wx.App is created.
     c.addCppMethod('void', '_copyFrom', '(const wxColour* other)', 
                    "*self = *other;",
                    briefDoc="For internal use only.")  # ??
@@ -172,10 +171,8 @@ def run():
                   elif idx == 3: self.alpha = val
                   else: raise IndexError
                   """) 
-    c.addPyCode('Rect.__safe_for_unpickling__ = True')
-    
-    
-    
+    c.addPyCode('Colour.__safe_for_unpickling__ = True')
+    c.addPyCode('NamedColour = wx.deprecated(Colour)')
     
     
     # Types that can be converted to wx.Colour:
@@ -284,11 +281,9 @@ def run():
     {
         return c;
     }
-    extern void wxInitializeStockLists();
     """)
     module.addItem(etgtools.WigCode("""\
     wxColour testColourTypeMap(const wxColour& c);
-    void wxInitializeStockLists();
     """))
     
     
