@@ -68,6 +68,24 @@ PyObject* wxPyConstructObject(void* ptr,
                               int setThisOwn=0);
 
 
+
+// A macro that will help to execute simple statments wrapped in
+// StartBlock/EndBlockThreads calls
+#define wxPyBLOCK_THREADS(stmt) \
+    { wxPyBlock_t blocked = wxPyBeginBlockThreads(); stmt; wxPyEndBlockThreads(blocked); }
+
+// Raise the NotImplementedError exception  (blocking threads)
+#define wxPyRaiseNotImplemented() \
+    wxPyBLOCK_THREADS(PyErr_SetNone(PyExc_NotImplementedError))
+
+// Raise the NotImplementedError exception with a message  (blocking threads)
+#define wxPyRaiseNotImplementedMsg(msg) \
+    wxPyBLOCK_THREADS(PyErr_SetString(PyExc_NotImplementedError, msg))
+
+// Raise any exception with a string value  (blocking threads)
+#define wxPyErr_SetString(err, str) \
+    wxPyBLOCK_THREADS(PyErr_SetString(err, str))
+
 %End
 
 
