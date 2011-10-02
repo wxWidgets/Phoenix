@@ -53,6 +53,7 @@ def run():
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxChar'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned int', name='size_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long', name='time_t'))
+    module.insertItemAfter(td, etgtools.TypedefDef(type='int', name='wxPrintQuality'))
 
     
     # Forward declarations for classes that are referenced but not defined

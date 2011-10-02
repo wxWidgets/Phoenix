@@ -24,7 +24,6 @@ ITEMS  = [ 'wxPrinterDC', ]
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
-    module.items.append(etgtools.TypedefDef(type='int', name='wxPrintQuality'))
     
     etgtools.parseDoxyXML(module, ITEMS)
     
