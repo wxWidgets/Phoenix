@@ -1,13 +1,10 @@
 import imp_unittest, unittest
 import wx
-
+import wtc
 
 #---------------------------------------------------------------------------
 
-class Colour(unittest.TestCase):
-    def setUp(self):
-        if hasattr(wx, 'InitializeStockLists'):
-            wx.InitializeStockLists() # switch to wx.App once we have that class working
+class Colour(wtc.WidgetTestCase):
         
     def test_default_ctor(self):
         c = wx.Colour()
