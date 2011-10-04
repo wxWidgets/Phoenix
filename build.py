@@ -543,6 +543,8 @@ def build_py(options, args):
         # debug files unless --debug is given.
         ver = version3_nodot if unstable_series else version2_nodot
         dlls = glob.glob(os.path.join(msw.dllDir, "wx*%s*.dll" % ver))
+        if options.debug:
+            dlls += glob.glob(os.path.join(msw.dllDir, "wx*%s*.pdb" % ver))
         for dll in dlls:
             shutil.copyfile(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)))
 
