@@ -9,9 +9,11 @@ class ClientDCTests(wtc.WidgetTestCase):
             
     def test_ClientDC(self):
         dc = wx.ClientDC(self.frame)
+        dc.DrawLine(0,0, 50,50)
             
     def test_WindowDC(self):
-        dc = wx.ClientDC(self.frame)
+        dc = wx.WindowDC(self.frame)
+        dc.DrawLine(0,0, 50,50)
             
         
     def test_PaintDC(self):

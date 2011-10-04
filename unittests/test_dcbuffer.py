@@ -37,12 +37,16 @@ class BufferedDCTests(wtc.WidgetTestCase):
     def test_BufferedDCDefaultCtor(self):
         dc = wx.BufferedDC()
         dc.Init(None, wx.Bitmap(25,25))
+        dc.DrawLine(0,0, 50,50)
             
         
     def test_BufferedDCCtors(self):
         dc = wx.BufferedDC(wx.ClientDC(self.frame), wx.Size(100,100))
+        dc.DrawLine(0,0, 50,50)
         dc = wx.BufferedDC(wx.ClientDC(self.frame))
+        dc.DrawLine(0,0, 50,50)
         dc = wx.BufferedDC(None, wx.Bitmap(100,100))
+        dc.DrawLine(0,0, 50,50)
 
         
     def test_BufferedPaintDC(self):

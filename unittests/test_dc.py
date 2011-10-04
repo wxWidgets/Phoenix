@@ -1,15 +1,10 @@
-import imp_unittest
+import imp_unittest, unittest
 import wtc
 import wx
+import os
 
-# NOTE: The wx.DC tests are done in the test modules for the various DC types
-# that inherit from wx.DC. The stuff tested here are just the other items
-# generated from etg/dc.py
 
-# TODO: It may make sense to make a mixin class here that does test various
-# aspects and drawing APIs of a DC, and then have the other DC test cases mix
-# with it and call its methods.
-
+pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 
 #---------------------------------------------------------------------------
 
@@ -54,6 +49,87 @@ class DCTests(wtc.WidgetTestCase):
         fm.averageWidth
         
         
+    def test_DCClipper(self):
+        dc = wx.ClientDC(self.frame)
+        c = wx.DCClipper(dc, wx.Rect(10,10,25,25))
+        del c
+        c = wx.DCClipper(dc, (10,10,25,25))
+        del c
+        c = wx.DCClipper(dc, 10,10,25,25)
+        del c
+        r = wx.Region(10,10,25,25)
+        c = wx.DCClipper(dc, r)
+        del c
+        
+
+    def test_DCBrushChanger(self):
+        dc = wx.ClientDC(self.frame)
+        c = wx.DCBrushChanger(dc, wx.Brush('blue'))
+        del c
+
+
+    def test_DCPenChanger(self):
+        dc = wx.ClientDC(self.frame)
+        c = wx.DCPenChanger(dc, wx.Pen('blue'))
+        del c
+
+
+    def test_DCTextColourChanger(self):
+        dc = wx.ClientDC(self.frame)
+        c = wx.DCTextColourChanger(dc)
+        c.Set('blue')
+        del c
+        c = wx.DCTextColourChanger(dc, 'blue')
+        del c
+        
+        
+    def test_DCFontChanger(self):
+        dc = wx.ClientDC(self.frame)
+        font = wx.FFont(12, wx.FONTFAMILY_SWISS)
+        c = wx.DCFontChanger(dc)
+        c.Set(font)
+        del c
+        c = wx.DCFontChanger(dc, font)
+        del c
+        
+
+    def test_NativeWinHandle(self):
+        dc = wx.ClientDC(self.frame)
+        if 'wxMSW' in wx.PortInfo:
+            h = dc.GetHDC()
+            self.assertNotEqual(h, 0)
+        else:
+            with self.assertRaises(NotImplementedError):
+                h = dc.GetHDC()
+            
+    def test_NativeGTKHandle(self):
+        dc = wx.ClientDC(self.frame)
+        if 'wxGTK' in wx.PortInfo:
+            h = dc.GetGdkDrawable()
+            self.assertNotEqual(h, 0)
+        else:
+            with self.assertRaises(NotImplementedError):
+                h = dc.GetGdkDrawable()
+            
+    def test_NativeMacHandle(self):
+        dc = wx.ClientDC(self.frame)
+        if 'wxMac' in wx.PortInfo:
+            h = dc.GetCGContext()
+            self.assertNotEqual(h, 0)
+        else:
+            with self.assertRaises(NotImplemented):
+                h = dc.GetGCContext()
+            
+    def test_trickyStuff(self):
+        # execute some tricky tweaks to make sure they work are as they are supposed to.
+        dc = wx.ClientDC(self.frame)
+        bmp = wx.Bitmap(pngFile)
+        dc.DrawLabel("toucan", bmp, (10,10, 200, 100))
+        
+        values = dc.GetPartialTextExtents("Hello")
+        self.assertTrue(type(values) == list)
+        self.assertTrue(len(values) == 5)
+
 #---------------------------------------------------------------------------
 
 
