@@ -338,6 +338,8 @@ class FunctionDef(BaseDef):
         
         for param in self.items:
             assert isinstance(param, ParamDef)
+            if param.ignored:
+                continue
             s = param.pyName or param.name
             if param.out:
                 returns.append(s)

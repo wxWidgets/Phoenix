@@ -197,6 +197,14 @@ from %s import *
 
         
     def generateParameters(self, parameters, stream, indent):
+        def _lastParameter(idx):
+            if idx == len(parameters)-1:
+                return True
+            for i in range(idx+1, len(parameters)):
+                if not parameters[i].ignored:
+                    return False
+            return True
+        
         for idx, param in enumerate(parameters):
             if param.ignored:
                 continue
@@ -205,7 +213,7 @@ from %s import *
             stream.write(self.annotate(param))
             if param.default:
                 stream.write(' = %s' % param.default)
-            if not idx == len(parameters)-1:
+            if not _lastParameter(idx):
                 stream.write(',')
             stream.write('\n')
         
@@ -485,12 +493,24 @@ from %s import *
         # Add a new C++ method to a class. This one adds the code as a
         # separate function and then adds a call to that function in the
         # MethodCode directive.
+        
+        def _removeIgnoredParams(argsString, paramList):
+            # if there are ignored parameters adjust the argsString to match
+            lastP = argsString.rfind(')')
+            args = argsString[:lastP].strip('()').split(',')
+            for idx, p in enumerate(paramList):
+                if p.ignored:
+                    args[idx] = ''
+            args = [a for a in args if a != '']
+            return '(' + ', '.join(args) + ')'
+        
         assert isinstance(method, extractors.CppMethodDef)
         if method.ignored:
             return
-        
-        lastP = method.argsString.rfind(')')
-        pnames = method.argsString[:lastP].strip('()').split(',')
+
+        argsString = _removeIgnoredParams(method.argsString, method.items)
+        lastP = argsString.rfind(')')
+        pnames = argsString[:lastP].strip('()').split(',')
         for idx, pn in enumerate(pnames):
             # take only the part before the =, if there is one
             name = pn.split('=')[0].strip()   
@@ -502,7 +522,6 @@ from %s import *
         if pnames:
             pnames = ', ' + pnames
         typ = method.type
-        argsString = method.argsString
 
         if not skipDeclaration:
             # First insert the method declaration
@@ -525,8 +544,8 @@ from %s import *
 
         # create the new function
         fstream = StringIO()  # using a new stream so we can do the actual write a little later
-        lastP = method.argsString.rfind(')')
-        fargs = method.argsString[:lastP].strip('()').split(',')
+        lastP = argsString.rfind(')')
+        fargs = argsString[:lastP].strip('()').split(',')
         for idx, arg in enumerate(fargs):
             # take only the part before the =, if there is one
             arg = arg.split('=')[0].strip()   
