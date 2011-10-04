@@ -62,7 +62,7 @@ INCLUDES = [  'defs',
               'dcgraph',
               'dcmirror',
               'dcprint',
-              #'dcps',
+              'dcps',
               'dcsvg',
               'graphics',
               
