@@ -82,22 +82,60 @@ def run():
     
     # Add some code for getting the version numbers
     module.addCppCode("""
-    #include <wx/version.h>
-    const int MAJOR_VERSION = wxMAJOR_VERSION;
-    const int MINOR_VERSION = wxMINOR_VERSION;           
-    const int RELEASE_NUMBER = wxRELEASE_NUMBER;     
-    const int SUBRELEASE_NUMBER = wxSUBRELEASE_NUMBER;
-    """)
+        #include <wx/version.h>
+        const int MAJOR_VERSION = wxMAJOR_VERSION;
+        const int MINOR_VERSION = wxMINOR_VERSION;           
+        const int RELEASE_NUMBER = wxRELEASE_NUMBER;     
+        const int SUBRELEASE_NUMBER = wxSUBRELEASE_NUMBER;
+        """)
     module.addItem(etgtools.WigCode("""
-    const int MAJOR_VERSION;
-    const int MINOR_VERSION;
-    const int RELEASE_NUMBER;
-    const int SUBRELEASE_NUMBER;
-    """))
+        const int MAJOR_VERSION;
+        const int MINOR_VERSION;
+        const int RELEASE_NUMBER;
+        const int SUBRELEASE_NUMBER;
+        """))
 
-    
     module.addPyCode("wx.BG_STYLE_CUSTOM = wx.BG_STYLE_PAINT")
-    
+
+    # Some aliases that should be phased out eventually, (sooner rather than
+    # later.) They are already gone (or wrapped by an #if) in the C++ code,
+    # and so are not found in the documentation...
+    module.addPyCode("""\
+        wx.DEFAULT    = wx.FONTFAMILY_DEFAULT
+        wx.DECORATIVE = wx.FONTFAMILY_DECORATIVE
+        wx.ROMAN      = wx.FONTFAMILY_ROMAN
+        wx.SCRIPT     = wx.FONTFAMILY_SCRIPT
+        wx.SWISS      = wx.FONTFAMILY_SWISS
+        wx.MODERN     = wx.FONTFAMILY_MODERN
+        wx.TELETYPE   = wx.FONTFAMILY_TELETYPE
+
+        wx.NORMAL = wx.FONTWEIGHT_NORMAL
+        wx.LIGHT  = wx.FONTWEIGHT_LIGHT
+        wx.BOLD   = wx.FONTWEIGHT_BOLD
+        
+        wx.NORMAL = wx.FONTSTYLE_NORMAL
+        wx.ITALIC = wx.FONTSTYLE_ITALIC
+        wx.SLANT  = wx.FONTSTYLE_SLANT
+            
+        wx.SOLID       = wx.PENSTYLE_SOLID
+        wx.DOT         = wx.PENSTYLE_DOT 
+        wx.LONG_DASH   = wx.PENSTYLE_LONG_DASH 
+        wx.SHORT_DASH  = wx.PENSTYLE_SHORT_DASH 
+        wx.DOT_DASH    = wx.PENSTYLE_DOT_DASH 
+        wx.USER_DASH   = wx.PENSTYLE_USER_DASH 
+        wx.TRANSPARENT = wx.PENSTYLE_TRANSPARENT 
+
+        wx.STIPPLE_MASK_OPAQUE = wx.BRUSHSTYLE_STIPPLE_MASK_OPAQUE 
+        wx.STIPPLE_MASK        = wx.BRUSHSTYLE_STIPPLE_MASK 
+        wx.STIPPLE             = wx.BRUSHSTYLE_STIPPLE 
+        wx.BDIAGONAL_HATCH     = wx.BRUSHSTYLE_BDIAGONAL_HATCH 
+        wx.CROSSDIAG_HATCH     = wx.BRUSHSTYLE_CROSSDIAG_HATCH 
+        wx.FDIAGONAL_HATCH     = wx.BRUSHSTYLE_FDIAGONAL_HATCH 
+        wx.CROSS_HATCH         = wx.BRUSHSTYLE_CROSS_HATCH 
+        wx.HORIZONTAL_HATCH    = wx.BRUSHSTYLE_HORIZONTAL_HATCH 
+        wx.VERTICAL_HATCH      = wx.BRUSHSTYLE_VERTICAL_HATCH     
+        """)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
