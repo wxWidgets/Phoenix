@@ -117,8 +117,8 @@ class DCTests(wtc.WidgetTestCase):
             h = dc.GetCGContext()
             self.assertNotEqual(h, 0)
         else:
-            with self.assertRaises(NotImplemented):
-                h = dc.GetGCContext()
+            with self.assertRaises(NotImplementedError):
+                h = dc.GetCGContext()
             
     def test_trickyStuff(self):
         # execute some tricky tweaks to make sure they work are as they are supposed to.

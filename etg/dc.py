@@ -162,7 +162,7 @@ def run():
             }
             return cgctx;
         #else
-            wxPyRaiseNotImplemented
+            wxPyRaiseNotImplemented();
             _isErr = 1;
             return NULL;
         #endif""")
