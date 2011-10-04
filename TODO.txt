@@ -350,5 +350,10 @@ other stuff
   * Should the functions created for things like addCppMethod be
     marked static?  How about using inline?
 
+  * Word-wrap the briefDoc strings used for %Docstring directives
+
+  * It looks like the code that is flattening the element nodes to
+    extract the briefDocs is not getting some spaces that should be in
+    there, probably where some tags are being removed.
 
  
