@@ -71,9 +71,13 @@ def run():
     c.find('ScreenToClient').findOverload('int *').ignore()
     
     # Rename these overloads for symmetry with the getters of the same name
-    c.find('SetSize').findOverload('wxRect').pyName = 'SetRect'
-    c.find('SetClientSize').findOverload('wxRect').pyName = 'SetClientRect'
-    
+    #c.find('SetSize').findOverload('wxRect').pyName = 'SetRect'
+    #c.find('SetClientSize').findOverload('wxRect').pyName = 'SetClientRect'
+    c.addPyMethod('SetRect', '(self, rect)', 'return self.SetSize(rect)')
+    c.addPyProperty('Rect GetRect SetRect')
+    c.addPyMethod('SetClientRect', '(self, rect)', 'return self.SetClientSize(rect)')
+    c.addPyProperty('ClientRect GetClientRect SetClientRect')
+                    
     m = c.find('GetTextExtent').findOverload('int *')
     m.pyName = 'GetFullTextExtent'
     m.find('w').out = True
@@ -178,7 +182,6 @@ def run():
     c.addProperty('CharWidth GetCharWidth')
     c.addProperty('Children GetChildren')
     c.addProperty('ClientAreaOrigin GetClientAreaOrigin')
-    c.addProperty('ClientRect GetClientRect SetClientRect')
     c.addProperty('ClientSize GetClientSize SetClientSize')
     c.addProperty('Constraints GetConstraints SetConstraints')
     c.addProperty('ContainingSizer GetContainingSizer SetContainingSizer')
@@ -205,7 +208,6 @@ def run():
     c.addProperty('Name GetName SetName')
     c.addProperty('Parent GetParent')
     c.addProperty('Position GetPosition SetPosition')
-    c.addProperty('Rect GetRect SetRect')
     c.addProperty('ScreenPosition GetScreenPosition')
     c.addProperty('ScreenRect GetScreenRect')
     c.addProperty('Size GetSize SetSize')
