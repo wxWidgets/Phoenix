@@ -13,7 +13,7 @@ class dialog_Tests(wtc.WidgetTestCase):
 
         if 'wxMac' not in wx.PortInfo:
             # Something is causing a hang when running one of these tests, so
-            # for now we'll not actuall test ShowModal on Macs.
+            # for now we'll not actually test ShowModal on Macs.
             # TODO: FIX THIS!!
             wx.CallLater(250, dlg.EndModal, wx.ID_OK)
             val = dlg.ShowModal()
