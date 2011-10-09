@@ -46,12 +46,6 @@ def run():
     # wx.AcceleratorEntry items or a 3-tuple containing the values to pass to
     # the wx.AcceleratorEntry ctor.
 
-    # See EXPERIMENTAL in object.py...
-    # First ignore the fact that this class derives from wxObject. This is
-    # so there will not be any inherited virtuals, so SIP will not generate a
-    # derived class. That makes the adding of a new ctor easier.
-    #c.bases = []
-
     # Ignore the current constructor
     c.find('wxAcceleratorTable').findOverload('entries').ignore()
         
