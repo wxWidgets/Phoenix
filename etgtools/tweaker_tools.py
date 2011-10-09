@@ -540,8 +540,10 @@ public:
             if (node) 
                 sipRes = ({ItemClass}*)node->GetData();
         }}
-        PyErr_SetString(PyExc_IndexError, "sequence index out of range");
-        sipError = sipErrorFail;
+        else {{
+            PyErr_SetString(PyExc_IndexError, "sequence index out of range");
+            sipError = sipErrorFail;
+        }}
     %End
 
     int __contains__(const {ItemClass}* obj);
@@ -599,30 +601,32 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass} __getitem__(size_t index);
+    {ItemClass}& __getitem__(size_t index);
     %MethodCode
         if (index < sipCpp->GetCount()) {{
             sipRes = &({RealItemClass})sipCpp->Item(index);
         }}
-        PyErr_SetString(PyExc_IndexError, "sequence index out of range");
-        sipError = sipErrorFail;
+        else {{
+            PyErr_SetString(PyExc_IndexError, "sequence index out of range");
+            sipError = sipErrorFail;
+        }}
     %End
 
-    int __contains__(const {ItemClass} obj);
+    int __contains__(const {ItemClass}& obj);
     %MethodCode
         int idx = sipCpp->Index(({RealItemClass})*obj, false);
         sipRes = idx != wxNOT_FOUND;
     %End
 
-    void append(const {ItemClass} obj);
+    void append(const {ItemClass}& obj);
     %MethodCode
         sipCpp->Add(({RealItemClass})*obj);
     %End
 
     // TODO:  add support for index(value, [start, [stop]])
-    int index({ItemClass} obj);
+    int index(const {ItemClass}& obj);
     %MethodCode
-        int idx = sipCpp->Index((const {RealItemClass})obj, false);
+        int idx = sipCpp->Index(({RealItemClass})*obj, false);
         if (idx == wxNOT_FOUND) {{
             sipError = sipErrorFail;
             PyErr_SetString(PyExc_ValueError,
