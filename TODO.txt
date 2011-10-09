@@ -328,9 +328,6 @@ tool and will do so automatically.
 other stuff
 ------------
 
-  * wxComboBox: why are GetSelection. SetSelection and IsEmpty
-    overloads being ignored?
-
   * wxListBox: All "Set" methods ignored, why?
 
   * textctrl: wxTextEntry and wxTextCompleter are in separate files
@@ -350,10 +347,20 @@ other stuff
   * Should the functions created for things like addCppMethod be
     marked static?  How about using inline?
 
+  * Change the code generated for CppMethods, etc. to not pass _isErr
+    to the function, and instead just check if PyErr_Occurred after
+    the function returns.
+
   * Word-wrap the briefDoc strings used for %Docstring directives
 
   * It looks like the code that is flattening the element nodes to
     extract the briefDocs is not getting some spaces that should be in
     there, probably where some tags are being removed.
 
- 
+  * Do something for the places where a wx API assumes that does not
+    take ownership of a C array or other object pointer, but assumes
+    that it will continue to exist for the life of the wx object and
+    will have problems (crashes) if it doesn't.  For example
+    wx.Pen.SetDashes and wx.DropFilesEvent, perhaps wx.Image buffers
+    too.   See the idea documented in event.py.
+
