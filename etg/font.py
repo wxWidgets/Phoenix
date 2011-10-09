@@ -36,28 +36,11 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
     
-    # EXPERIMENTAL: See alternate implementation below that we can do when
-    # the wxObject dtor is not marked virtual.
-    ## TODO: Since the TypeCode is inserted before the derived class
-    ## (sipwxFont) is defined, we can't use the new version of addCppCtor. Can
-    ## this be fixed?
-    #c.addCppCtor_sip("""(
-    #    int pointSize,
-    #    wxFontFamily family,
-    #    int flags = wxFONTFLAG_DEFAULT,
-    #    const wxString& faceName = wxEmptyString,
-    #    wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
-    #    body="""\
-    #    wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
-    #    sipCpp = new sipwxFont(*font);
-    #    delete font;
-    #    """)
-
     c.addCppCtor("""(int pointSize,
                      wxFontFamily family,
                      int flags = wxFONTFLAG_DEFAULT,
                      const wxString& faceName = wxEmptyString,
-                     wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
+                     wxFontEncoding encoding = wxFONTENCODING_DEFAULT)""",
         body="""\
         wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
         return font;
@@ -66,10 +49,10 @@ def run():
     # Same as the above, but as a factory function
     module.addCppFunction('wxFont*', 'FFont', 
                           """(int pointSize,
-                              wxFontFamily family,
-                              int flags = wxFONTFLAG_DEFAULT,
-                              const wxString& faceName = wxEmptyString,
-                              wxFontEncoding encoding = wxFONTENCODING_DEFAULT )""",
+                          wxFontFamily family,
+                          int flags = wxFONTFLAG_DEFAULT,
+                          const wxString& faceName = wxEmptyString,
+                          wxFontEncoding encoding = wxFONTENCODING_DEFAULT)""",
         body="""\
         wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
         return font;
@@ -93,6 +76,11 @@ def run():
     # property of the same name.
     #c.addProperty('Underlined GetUnderlined SetUnderlined')
 
+    c.addCppMethod('int', '__nonzero__', '()', """\
+        return self->IsOk();
+        """)
+
+    
        
     # The stock Font items are documented as simple pointers, but in reality
     # they are macros that evaluate to a function call that returns a font
@@ -113,6 +101,9 @@ def run():
 
     # it is delay-initialized, see stockgdi.sip
     module.find('wxTheFontList').ignore()
+
+    module.find('wxFromString').ignore()
+    module.find('wxToString').ignore()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
