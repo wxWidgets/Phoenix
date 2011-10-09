@@ -86,7 +86,7 @@
         // Code to convert a wxArrayString to a Python list of strings.
         PyObject* list = PyList_New(0);
         for (size_t i=0; i < sipCpp->GetCount(); i++) {
-            PyObject* str = PyUnicode_FromWideChar(sipCpp->Item(i).c_str(), sipCpp->Item(i).Len());
+            PyObject* str = wx2PyString(sipCpp->Item(i));
             PyList_Append(list, str);
             Py_DECREF(str);
         }
