@@ -31,10 +31,35 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxFileDialog')
+    isinstance(c, etgtools.ClassDef)
     
-    # TODO: add this back?
+    # TODO: add this back. We'll need a way to pass it a callable that can be
+    # called from a C ExtraControlCreatorFunction function
     c.find('SetExtraControlCreator').ignore()
 
+
+    c.find('GetFilenames').ignore()
+    c.addCppMethod('wxArrayString*', 'GetFilenames', '()', doc="""\
+        Returns a list of filenames chosen in the dialog.  This function
+        should only be used with the dialogs which have wx.MULTIPLE style, 
+        use GetFilename for the others.""",
+        body="""\
+        wxArrayString* arr = new wxArrayString;
+        self->GetFilenames(*arr);
+        return arr;""")
+    
+    c.find('GetPaths').ignore()
+    c.addCppMethod('wxArrayString*', 'GetPaths', '()', doc="""\
+        Returns a list of the full paths of the files chosen. This function 
+        should only be used with the dialogs which have wx.MULTIPLE style, use 
+        GetPath for the others.
+        """,
+        body="""\
+        wxArrayString* arr = new wxArrayString;
+        self->GetPaths(*arr);
+        return arr;""")
+    
+    
     tools.fixWindowClass(c)
     
     #-----------------------------------------------------------------
