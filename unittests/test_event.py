@@ -140,6 +140,14 @@ class Events(unittest.TestCase):
         self.assertTrue(frm.gotEvent)
         
         
+    def test_DropFilesEvent_tweaks(self):
+        evt = wx.DropFilesEvent(123, 'one two three four five'.split())
+        self.assertTrue(evt.NumberOfFiles == 5)
+        f = evt.Files
+        self.assertTrue(isinstance(f, list))
+        self.assertTrue(len(f) == 5)
+        
+        
 #---------------------------------------------------------------------------
 
 
