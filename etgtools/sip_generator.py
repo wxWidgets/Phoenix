@@ -351,6 +351,7 @@ from %s import *
             # TODO: nested classes too?
             }
         for item in ctors:
+            item.klass = klass
             f = dispatch[item.__class__]
             f(item, stream, indent + ' '*4)
             
@@ -362,6 +363,7 @@ from %s import *
         if protected and [i for i in protected if not i.ignored]:
             stream.write('\nprotected:\n')
             for item in protected:
+                item.klass = klass
                 f = dispatch[item.__class__]
                 f(item, stream, indent + ' '*4)
 
@@ -414,7 +416,7 @@ from %s import *
         
     def generateDocstring(self, item, stream, indent):
         # get the docstring text
-        text = extractors.flattenNode(item.briefDoc)
+        text = nci(extractors.flattenNode(item.briefDoc))
         
         if isinstance(item, extractors.ClassDef):
             # append the function signatures for the class constructors (if any) to the class' docstring
@@ -434,15 +436,14 @@ from %s import *
                 text = '\n'.join(sigs) + text
                 
         # write the docstring directive and the text
-        if False:
-            # SIP is preserving all leading whitespace in the docstring, so
-            # write this without indents. :-(
-            stream.write('%%Docstring\n%s\n%%End\n' % text)
-        else:
-            stream.write('%s%%Docstring\n' % indent)
-            stream.write(nci(text, len(indent)+4))
-            stream.write('%s%%End\n' % indent)
-            
+        stream.write('%s%%Docstring\n' % indent)
+        stream.write(nci(text, len(indent)+4))
+        stream.write('%s%%End\n' % indent)
+
+        # and save the docstring back into item in case it is needed by other
+        # generators later on
+        item.pyDocstring = nci(text)
+                    
         
     def generateMethod(self, method, stream, indent, _needDocstring=True):
         assert isinstance(method, extractors.MethodDef)
@@ -561,7 +562,7 @@ from %s import *
             typ = klass.name
             if method.useDerivedName:
                 typ = 'sip'+klass.name
-                fstream.write('%sclass %s;\n' % (indent, typ))   # forward decalre the derived class
+                fstream.write('%sclass %s;\n' % (indent, typ))   # forward declare the derived class
             fstream.write('%s%s* %s%s\n%s{\n' % (indent, typ, fname, fargs, indent))
             fstream.write(nci(method.body, len(indent)+4))
             fstream.write('%s}\n' % indent)
