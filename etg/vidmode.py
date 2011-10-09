@@ -29,10 +29,15 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
 
+    c = module.find('wxVideoMode')
     
-    
+    c.addCppMethod('int', '__nonzero__', '()', """\
+        return self->IsOk();
+        """)
+
+    module.addItem(tools.wxArrayWrapperTemplate(
+        'wxArrayVideoModes', 'wxVideoMode', module))
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
