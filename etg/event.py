@@ -20,6 +20,8 @@ DOCSTRING = ""
 ITEMS  = [ 
     'wxEvtHandler',
     'wxEventBlocker',
+    'wxPropagationDisabler',
+    'wxPropagateOnce',
 
     'wxEvent',
     'wxCommandEvent',
@@ -314,6 +316,58 @@ def run():
     #---------------------------------------
     # wxDropFilesEvent
     c = module.find('wxDropFilesEvent')
+
+    # wxDropFilesEvent assumes that the C array of wxString objects will
+    # continue to live as long as the event object does, and does not take
+    # ownership of the array. Unfortunately the mechanism used to turn the
+    # Python list into a C array will also delete it after the API call, and
+    # so when wxDropFilesEvent tries to access it later the memory pointer is
+    # bad. So we'll copy that array into a special holder class and give that
+    # one to the API, and also assign a Python reference to it to the event
+    # object, so it will get garbage collected later.
+    c.find('wxDropFilesEvent.files').array = True
+    c.find('wxDropFilesEvent.files').transfer = True    
+    c.find('wxDropFilesEvent.noFiles').arraySize = True
+
+    c.find('wxDropFilesEvent').setCppCode_sip("""\
+        if (files) {
+            wxStringArrayHolder* holder = new wxStringArrayHolder;
+            // TODO: if/when sip honors the Transfer annotation then this copy loop 
+            // can be eliminated.  Just do holder->m_array = files instead.
+            holder->m_array = new wxString[noFiles];   
+            for (int i=0; i<noFiles; i++)
+                holder->m_array[i] = files[i];
+            PyObject* pyHolder = sipConvertFromNewType(
+                    (void*)holder, sipType_wxStringArrayHolder, (PyObject*)sipSelf);
+            Py_DECREF(pyHolder);
+            sipCpp = new sipwxDropFilesEvent(id,(int)noFiles,holder->m_array);            
+        }
+        else
+            sipCpp = new sipwxDropFilesEvent(id);
+        """)
+    
+  
+        
+    c.find('GetFiles').type = 'PyObject*'
+    c.find('GetFiles').setCppCode("""\
+        int         count   = self->GetNumberOfFiles();
+        wxString*   files   = self->GetFiles();
+        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        PyObject*   list    = PyList_New(count);
+        if (!list) {
+            PyErr_SetString(PyExc_MemoryError, "Can't allocate list of files!");
+            wxPyEndBlockThreads(blocked);
+            _isErr = 1;
+            return NULL;
+        }
+        for (int i=0; i<count; i++) {
+            PyObject* s = wx2PyString(files[i]);
+            PyList_SET_ITEM(list, i, s);
+        }
+        wxPyEndBlockThreads(blocked);
+        return list;    
+        """)
+    
     c.addProperty('Files GetFiles')
     c.addProperty('NumberOfFiles GetNumberOfFiles')
     c.addProperty('Position GetPosition')
@@ -372,6 +426,26 @@ def run():
     for name in [n for n in ITEMS if n.endswith('Event')]:
         c = module.find(name)
         tools.fixEventClass(c)
+
+    #---------------------------------------
+    # wxEventBlocker
+    c = module.find('wxEventBlocker')
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
+    #---------------------------------------
+    # wxPropagationDisabler
+    c = module.find('wxPropagationDisabler')
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    c.addPrivateCopyCtor()
+
+    #---------------------------------------
+    # wxPropagateOnce
+    c = module.find('wxPropagateOnce')
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    c.addPrivateCopyCtor()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
