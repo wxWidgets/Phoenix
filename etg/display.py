@@ -2,7 +2,7 @@
 # Name:        etg/display.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     27-Nov-2010
 # Copyright:   (c) 2011 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -37,8 +37,6 @@ def run():
     c.addPrivateAssignOp()
     c.addPrivateCopyCtor()
     
-    # TODO: SIP needs to know about wxArrayVideoModes before we can enable this
-    c.find('GetModes').ignore()
     
     c.addProperty('ClientArea GetClientArea')
     c.addProperty('CurrentMode GetCurrentMode')
