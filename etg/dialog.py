@@ -50,6 +50,9 @@ def run():
     
     c.find('OnSysColourChanged').ignore()
     
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
         
     tools.fixTopLevelWindowClass(c)
     
