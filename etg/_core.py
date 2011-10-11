@@ -91,6 +91,7 @@ INCLUDES = [  'defs',
               'menuitem',
               
               # toplevel and dialogs
+              'nonownedwnd',
               'toplevel',
               'dialog',
               'dirdlg',

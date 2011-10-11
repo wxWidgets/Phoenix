@@ -18,6 +18,7 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ 
+            'wxGraphicsBitmap',
             'wxGraphicsBrush',
             'wxGraphicsContext',
             'wxGraphicsFont',
