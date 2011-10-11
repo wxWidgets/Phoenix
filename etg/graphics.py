@@ -60,13 +60,15 @@ def run():
     # SIP doesn't like default parameter values to use dereference syntax,
     # (such as "col = *wxBLACK") so tweak the syntax a bit by using a macro.
     c.addHeaderCode("#define BLACK *wxBLACK")
-    c.find('CreateFont.col').default = 'BLACK'
+    for m in [c.find('CreateFont')] + c.find('CreateFont').overloads:
+        m.find('col').default = 'BLACK'
     
     
     c = module.find('wxGraphicsPath')
     tools.removeVirtuals(c)
     c.find('GetBox').findOverload('wxDouble *x, wxDouble *y').ignore()
     c.find('GetCurrentPoint').findOverload('wxDouble *x, wxDouble *y').ignore()
+    
     
     c = module.find('wxGraphicsRenderer')
     tools.removeVirtuals(c)
@@ -77,8 +79,9 @@ def run():
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()
 
     # See above
-    c.find('CreateFont.col').default = 'BLACK'
-    
+    for m in [c.find('CreateFont')] + c.find('CreateFont').overloads:
+        m.find('col').default = 'BLACK'
+   
     
     c = module.find('wxGraphicsMatrix')
     tools.removeVirtuals(c)
