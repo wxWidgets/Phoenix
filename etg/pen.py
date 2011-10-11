@@ -34,6 +34,9 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
 
+    # The stipple bitmap ctor is not implemented on wxGTK
+    c.find('wxPen').findOverload('wxBitmap').ignore()
+
     c.find('GetDashes').ignore()
     c.find('SetDashes').ignore()
     c.addCppMethod('wxArrayInt*', 'GetDashes', '()', """\

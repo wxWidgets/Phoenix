@@ -12,6 +12,14 @@ class WindowTests(wtc.WidgetTestCase):
         self.assertTrue(w.GetWindowStyle() == wx.BORDER_SIMPLE|wx.VSCROLL)
         self.assertTrue(w.Parent is self.frame)
 
+    def test_windowHandle(self):
+        w = wx.Window(self.frame, -1, (10,10), (50,50))
+        hdl = w.GetHandle()
+        self.assertTrue(isinstance(hdl, (int, long)))
+        
+        
+    def test_windowProperties(self):
+        w = wx.Window(self.frame, -1, (10,10), (50,50))
         # Just test that these properties exist for now. More tests can be
         # added later to ensure that they work correctly.
         w.AcceleratorTable 

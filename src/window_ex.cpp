@@ -15,16 +15,16 @@
 
 
 
-void* wxPyGetWinHandle(wxWindow* win) 
+wxUIntPtr wxPyGetWinHandle(wxWindow* win) 
 {
 #ifdef __WXMSW__
-    return (void*)win->GetHandle();
+    return (wxUIntPtr)win->GetHandle();
 #endif
 #if defined(__WXGTK__) || defined(__WXX11__)
-    return (void*)GetXWindow(win);
+    return (wxUIntPtr)GetXWindow(win);
 #endif
 #ifdef __WXMAC__
-    return (void*)win->GetHandle();
+    return (wxUIntPtr)win->GetHandle();
 #endif
     return 0;
 }

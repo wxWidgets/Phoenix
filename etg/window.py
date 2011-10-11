@@ -85,7 +85,7 @@ def run():
     m.find('descent').out = True
     m.find('externalLeading').out = True
     
-    c.find('GetHandle').type = 'void*'
+    c.find('GetHandle').type = 'unsigned long'
     c.find('GetHandle').setCppCode("return wxPyGetWinHandle(self);")
     
     c.addCppMethod('void*', 'GetGtkWidget', '()', """\

@@ -46,12 +46,13 @@ def run():
     c.addProperty('StatusBarPane GetStatusBarPane SetStatusBarPane')
     c.addProperty('ToolBar GetToolBar SetToolBar')
     
-        
-    # TODO: should these go into a tools.addFrameVirtuals function?
+    tools.fixTopLevelWindowClass(c)
+
+    # Add back the virtual flag for these methods.
+    # TODO: maybe these should go into a tools.addFrameVirtuals function?
     c.find('OnCreateStatusBar').isVirtual = True
     c.find('OnCreateToolBar').isVirtual = True
     
-    tools.fixTopLevelWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
