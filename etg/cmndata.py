@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/cmndata.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     15-Sept-2011
 # Copyright:   (c) 2011 by Total Control Software

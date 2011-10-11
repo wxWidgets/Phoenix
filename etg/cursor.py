@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/cursor.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     06-Sept-2011
 # Copyright:   (c) 2011 by Wide Open Technologies

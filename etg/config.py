@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/config.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier

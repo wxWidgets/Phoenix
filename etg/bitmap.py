@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/bitmap.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     25-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies

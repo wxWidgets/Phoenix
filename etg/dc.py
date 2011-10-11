@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/stattext.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     26-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
@@ -166,7 +167,7 @@ def run():
             _isErr = 1;
             return NULL;
         #endif""")
-    c.addCppMethod('long', 'GetGdkDrawable', '()', """\
+    c.addCppMethod('void*', 'GetGdkDrawable', '()', """\
         #ifdef __WXGTK__
             // TODO: Is this always non-null?  if not then we can check
             // GetSelectedBitmap and get the GdkPixmap from it, as that is a
