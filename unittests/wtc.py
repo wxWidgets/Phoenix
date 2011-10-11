@@ -23,11 +23,6 @@ class WidgetTestCase(unittest.TestCase):
         self.app.MainLoop()
         del self.app
 
-    #def tearDown(self):
-    #    wx.CallAfter(self.frame.Close)
-    #    self.app.MainLoop()
-    #    del self.app
-            
 
     # helper methods
     
