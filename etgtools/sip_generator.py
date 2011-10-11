@@ -424,7 +424,7 @@ from %s import *
                 ctor = item.find(item.name)
                 sigs = ctor.collectPySignatures()
                 if sigs:
-                    text += '\n\n' + '\n'.join(sigs)
+                    text += '\n' + '\n'.join(sigs)
             except extractors.ExtractorError:
                 pass
         else:
