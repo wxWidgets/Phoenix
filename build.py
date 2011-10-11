@@ -13,11 +13,14 @@ import shutil
 import subprocess
 import optparse
 import tempfile
+import urllib2
+import hashlib
 
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip
 import buildtools.version as version
 
+# defaults
 PYVER = '2.7'
 PYSHORTVER = '27'
 PYTHON = 'UNKNOWN'  # it will be set later
@@ -31,6 +34,14 @@ unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or ev
     
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
+
+sipCurrentVersion = '4.12.5-snapshot-de6a700f5faa'
+sipCurrentVersionMD5 = {
+    'darwin' : 'fa3b5c21e537be347a39da9f423a8ce7',
+    'win32'  : 'c8f5188de8d0e19474912718e91515f0',
+    'linux2' : '950b92de13f0f9e63f48ec1c2d3bf6fb',
+}
+toolsURL = 'http://wxpython.org/tools'
 
 #---------------------------------------------------------------------------
 
@@ -322,7 +333,65 @@ def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
         print cmd
         os.system(cmd)        
     os.chdir(pwd)
+
     
+    
+def getSipCmd():
+    # Returns the sip command to use, checking for an explicit version and
+    # attempts to download it if it is not found in the bin dir. Validity of
+    # the binary is checked with an MD5 hash.
+    global _sipCmd
+    if os.environ.get('SIP'):
+        # Setting a a value in the environment overrides other options
+        return os.environ.get('SIP')
+    elif _sipCmd is not None:
+        # use the cached value is there is one
+        return _sipCmd
+    else:
+        platform = sys.platform
+        ext = ''
+        if platform == 'win32':
+            ext = '.exe'
+        cmd = opj('bin', 'sip-%s-%s%s' % (sipCurrentVersion, platform, ext))
+        msg('Checking for %s...' % cmd)
+        if os.path.exists(cmd):
+            m = hashlib.md5()
+            m.update(open(cmd, 'rb').read())
+            if m.hexdigest() != sipCurrentVersionMD5[platform]:
+                print 'ERROR: MD5 mismatch, got "%s"' % m.hexdigest()
+                print '       expected          "%s"' % sipCurrentVersionMD5[platform]
+                print '       Set SIP in the environment to use a local build of sip instead'
+                sys.exit(1)
+            _sipCmd = cmd
+            return cmd
+        
+        msg('Not found.  Attempting to download...')
+        url = '%s/sip-%s-%s%s.bz2' % (toolsURL, sipCurrentVersion, platform, ext)
+        try:
+            connection = urllib2.urlopen(url)
+            msg('Connection successful...')
+            data = connection.read()
+            msg('Data downloaded...')
+        except:
+            print "ERROR: Unable to download", url
+            print "       Set SIP in the environment to use a local build of sip instead"
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
+            
+        import bz2
+        data = bz2.decompress(data)
+        with open(cmd, 'wb') as f:
+            f.write(data)
+        os.chmod(cmd, 0755)
+        return getSipCmd()
+            
+
+# The download and MD5 check only needs to happen once per run, cache the sip
+# cmd value here the first time through.
+_sipCmd = None
+
+
 
 #---------------------------------------------------------------------------
 # Command functions
@@ -384,8 +453,9 @@ def sip(options, args):
         pycode = base.replace('_', '')
         pycode = posixjoin(cfg.PKGDIR, pycode) + '.py'
         pycode = '-X pycode'+base+':'+pycode        
+        sip = getSipCmd()
         cmd = '%s %s -c %s -b %s %s %s'  % \
-            (cfg.SIP, cfg.SIPOPTS, tmpdir, sbf, pycode, src_name)
+            (sip, cfg.SIPOPTS, tmpdir, sbf, pycode, src_name)
         runcmd(cmd)
                 
         # Check each file in tmpdir to see if it is different than the same file

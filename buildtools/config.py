@@ -27,25 +27,10 @@ from distutils.spawn     import spawn
 runSilently = False
 
 #----------------------------------------------------------------------
-# Set some defaults based on the environment or platform
-
-if os.environ.get('SIP'):
-    SIPdefault = os.environ.get('SIP')
-elif os.name == 'nt':
-    SIPdefault = 'c:/projects/sip/sip/sipgen/sip.exe'
-else:
-    path_sip = commands.getoutput("which sip")
-    if os.path.exists(path_sip):
-        SIPdefault = path_sip
-    else:
-        SIPdefault = '/projects/sip/sip/sipgen/sip' 
-
-    
-#----------------------------------------------------------------------
 
 class Configuration(object):
     
-    SIP      = SIPdefault         # Where is the sip binary?
+    ##SIP      = SIPdefault         # Where is the sip binary?
     SIPINC   = 'sip/siplib'       # Use our local copy of sip.h
     SIPGEN   = 'sip/gen'          # Where the generated .sip files go
     SIPFILES = 'sip'              # where to find other sip files for %Include or %Import

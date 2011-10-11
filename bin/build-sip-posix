@@ -1,0 +1,73 @@
+#!/bin/bash
+
+set -o errexit
+#set -o xtrace 
+
+PYVER=2.7
+PYTHON=`which python$PYVER`
+
+if [ ! -x $PYTHON ]; then
+    echo Something is wrong with the Python at $PYTHON	
+    exit 1
+fi
+
+MYBINDIR=$(dirname $(readlink -f $0))
+
+cd /projects/sip/sip
+SIPVER=`$PYTHON configure.py --version | grep -v "This is SIP"`
+PLATFORM=`$PYTHON -c "import sys; print sys.platform"`
+
+if [ "$PLATFORM" = "darwin" ]; then
+    # try to ensure compatiblity back to 10.4
+    $PYTHON configure.py \
+	--universal \
+	--deployment-target=10.4 \
+	--sdk=MacOSX10.4u.sdk \
+	--sip-module wx.siplib \
+	$*
+
+    make -C sipgen CC=gcc-4.0 CXX=g++-4.0 clean all
+else
+    $PYTHON configure.py \
+	--sip-module wx.siplib \
+	$*
+
+    make -C sipgen clean all
+fi
+
+mv sipgen/sip $MYBINDIR/sip-$SIPVER-$PLATFORM
+cd $MYBINDIR
+
+echo ""
+echo "The MD5:"
+$PYTHON mymd5.py sip-$SIPVER-$PLATFORM
+echo ""
+echo "Now bzip2 the new sip binary and then scp it to "
+echo "    robind@riobu.com:/home/robind/domains/wxpython.org/htdocs/tools"
+
+
+
+# myCFLAGS="-ggdb"
+# myLFLAGS="-g"
+
+#    --debug \
+#    CFLAGS_RELEASE="$myCFLAGS" \
+#    CXXFLAGS_RELEASE="$myCFLAGS" \
+#    LFLAGS_RELEASE="$myLFLAGS" \
+
+#    --bindir=$HOME/Library/Python/$PYVER/bin \
+#    --incdir=$HOME/Library/Python/$PYVER/include/python$PYVER \
+#    --sipdir=$HOME/Library/Python/$PYVER/share/sip \
+#    --destdir=$HOME/Library/Python/$PYVER/site-packages \
+
+# # The default build rules for lex and yacc are giving me problems, so
+# # add some explicit rules to the Makefile that do work.
+# cat >> sipgen/Makefile <<EOF
+# parser.c parser.h : parser.y
+# 	yacc -d parser.y
+# 	mv -f y.tab.c parser.c
+# 	mv -f y.tab.h parser.h
+#
+# lexer.c : lexer.l 
+# 	lex -t lexer.l > lexer.c
+# EOF
