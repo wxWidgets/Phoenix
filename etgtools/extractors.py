@@ -340,10 +340,14 @@ class FunctionDef(BaseDef):
             assert isinstance(param, ParamDef)
             if param.ignored:
                 continue
+            if param.arraySize:
+                continue
             s = param.pyName or param.name
             if param.out:
                 returns.append(s)
             else:
+                if param.inOut:
+                    returns.append(s)                    
                 if param.default:
                     default = param.default
                     defValueMap = { 'true': 'True',
