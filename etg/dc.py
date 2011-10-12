@@ -56,12 +56,17 @@ def run():
     # TODO: needs wxAffineMatrix2D support.
     c.find('GetTransformMatrix').ignore()
     c.find('SetTransformMatrix').ignore()
-        
+
     # remove wxPoint* overloads, we use the wxPointList ones
     c.find('DrawLines').findOverload('wxPoint points').ignore()
     c.find('DrawPolygon').findOverload('wxPoint points').ignore()
-    c.find('DrawPolyPolygon').findOverload('wxPoint points').ignore()
     c.find('DrawSpline').findOverload('wxPoint points').ignore()
+
+    # TODO: we'll need a custom method implementation for this since there
+    # are multiple array parameters involved...
+    c.find('DrawPolyPolygon').ignore()
+
+
     
     # Add output param annotations so the generated docstrings will be correct
     c.find('GetUserScale.x').out = True
