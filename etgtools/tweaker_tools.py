@@ -270,6 +270,21 @@ def doCommonTweaks(module):
     ignoreAssignmentOperators(module)
     removeWxPrefixes(module)
     
+    
+def changeTypeNames(module, oldName, newName, skipTypedef=False):
+    """
+    Changes the matching type names for functions and parameters to a new
+    name, and optionally adds typedefs for the new name as well.
+    """
+    if not skipTypedef:
+        module.addHeaderCode("typedef {old} {new};".format(old=oldName, new=newName))
+        module.addItem(extractors.TypedefDef(type=oldName, name=newName))
+    for item in module.allItems():
+        if isinstance(item, (extractors.FunctionDef, extractors.ParamDef)) and \
+                 hasattr(item, 'type') and oldName in item.type:
+            item.type = item.type.replace(oldName, newName)
+
+
 #---------------------------------------------------------------------------
 
 
@@ -315,7 +330,7 @@ def checkForUnitTestModule(module):
     if os.path.exists(pathname) or not module.check4unittest:
         return
     print 'WARNING: Unittest module (%s) not found!' % pathname
-    
+
 
 #---------------------------------------------------------------------------
 
@@ -324,6 +339,7 @@ def convertTwoIntegersTemplate(CLASS):
     return """\
    // is it just a typecheck?
    if (!sipIsErr) {{
+       // is it already an instance of {CLASS}?
        if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
            return 1;
 
@@ -340,138 +356,152 @@ def convertTwoIntegersTemplate(CLASS):
        return 0;
    }}   
    
-   // otherwise do the conversion
-   if (PySequence_Check(sipPy)) {{
-       PyObject* o1 = PySequence_ITEM(sipPy, 0);
-       PyObject* o2 = PySequence_ITEM(sipPy, 1);
-       *sipCppPtr = new {CLASS}(PyInt_AsLong(o1), PyInt_AsLong(o2));
-       Py_DECREF(o1);
-       Py_DECREF(o2);
-       return sipGetState(sipTransferObj);
-    }}    
-    *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
+    // otherwise do the conversion
+    if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS)) {{
+        // Just fetch the existing instance
+        *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return sipGetState(sipTransferObj);
+        return 0;  // not a new instance
+    }}
+    
+    // or create a new instance
+    PyObject* o1 = PySequence_ITEM(sipPy, 0);
+    PyObject* o2 = PySequence_ITEM(sipPy, 1);
+    *sipCppPtr = new {CLASS}(PyInt_AsLong(o1), PyInt_AsLong(o2));
+    Py_DECREF(o1);
+    Py_DECREF(o2);
+    return SIP_TEMPORARY;
     """.format(**locals())
 
 
 def convertFourIntegersTemplate(CLASS):
     return """\
-   // is it just a typecheck?
-   if (!sipIsErr) {{
-       if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
-           return 1;
-
-       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
-           int rval = 1;
-           PyObject* o1 = PySequence_ITEM(sipPy, 0);
-           PyObject* o2 = PySequence_ITEM(sipPy, 1);
-           PyObject* o3 = PySequence_ITEM(sipPy, 2);
-           PyObject* o4 = PySequence_ITEM(sipPy, 3);
-           if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4)) 
-               rval = 0;
-           Py_DECREF(o1);
-           Py_DECREF(o2);
-           Py_DECREF(o3);
-           Py_DECREF(o4);
-           return rval;
-       }}
-       return 0;
-   }}   
+    // is it just a typecheck?
+    if (!sipIsErr) {{
+        // is it already an instance of {CLASS}?
+        if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
+            return 1;
+ 
+        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
+            int rval = 1;
+            PyObject* o1 = PySequence_ITEM(sipPy, 0);
+            PyObject* o2 = PySequence_ITEM(sipPy, 1);
+            PyObject* o3 = PySequence_ITEM(sipPy, 2);
+            PyObject* o4 = PySequence_ITEM(sipPy, 3);
+            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4)) 
+                rval = 0;
+            Py_DECREF(o1);
+            Py_DECREF(o2);
+            Py_DECREF(o3);
+            Py_DECREF(o4);
+            return rval;
+        }}
+        return 0;
+    }}   
    
-   // otherwise do the conversion
-   if (PySequence_Check(sipPy)) {{
-       PyObject* o1 = PySequence_ITEM(sipPy, 0);
-       PyObject* o2 = PySequence_ITEM(sipPy, 1);
-       PyObject* o3 = PySequence_ITEM(sipPy, 2);
-       PyObject* o4 = PySequence_ITEM(sipPy, 3);       
-       *sipCppPtr = new {CLASS}(PyInt_AsLong(o1), PyInt_AsLong(o2),
-                                PyInt_AsLong(o3), PyInt_AsLong(o4));
-       Py_DECREF(o1);
-       Py_DECREF(o2);
-       return sipGetState(sipTransferObj);
-    }}    
-    *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
+    // otherwise do the conversion
+    if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS)) {{
+        // Just fetch the existing instance
+        *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return sipGetState(sipTransferObj);
+        return 0; // not a new instance
+    }}
+    // or create a new instance
+    PyObject* o1 = PySequence_ITEM(sipPy, 0);
+    PyObject* o2 = PySequence_ITEM(sipPy, 1);
+    PyObject* o3 = PySequence_ITEM(sipPy, 2);
+    PyObject* o4 = PySequence_ITEM(sipPy, 3);       
+    *sipCppPtr = new {CLASS}(PyInt_AsLong(o1), PyInt_AsLong(o2),
+                             PyInt_AsLong(o3), PyInt_AsLong(o4));
+    Py_DECREF(o1);
+    Py_DECREF(o2);
+    return SIP_TEMPORARY;
     """.format(**locals())
 
 
 
 def convertTwoDoublesTemplate(CLASS):
     return """\
-   // is it just a typecheck?
-   if (!sipIsErr) {{
-       if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
-           return 1;
-
-       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
-           int rval = 1;
-           PyObject* o1 = PySequence_ITEM(sipPy, 0);
-           PyObject* o2 = PySequence_ITEM(sipPy, 1);
-           if (!PyNumber_Check(o1) || !PyNumber_Check(o2)) 
-               rval = 0;
-           Py_DECREF(o1);
-           Py_DECREF(o2);
-           return rval;
-       }}
-       return 0;
-   }}   
+    // is it just a typecheck?
+    if (!sipIsErr) {{
+        // is it already an instance of {CLASS}?
+        if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
+            return 1;
+ 
+        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
+            int rval = 1;
+            PyObject* o1 = PySequence_ITEM(sipPy, 0);
+            PyObject* o2 = PySequence_ITEM(sipPy, 1);
+            if (!PyNumber_Check(o1) || !PyNumber_Check(o2)) 
+                rval = 0;
+            Py_DECREF(o1);
+            Py_DECREF(o2);
+            return rval;
+        }}
+        return 0;
+    }}   
    
-   // otherwise do the conversion
-   if (PySequence_Check(sipPy)) {{
-       PyObject* o1 = PySequence_ITEM(sipPy, 0);
-       PyObject* o2 = PySequence_ITEM(sipPy, 1);
-       *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2));
-       Py_DECREF(o1);
-       Py_DECREF(o2);
-       return sipGetState(sipTransferObj);
-    }}    
-    *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
+    // otherwise do the conversion
+    if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS)) {{
+        // Just fetch the existing instance
+        *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return sipGetState(sipTransferObj);
+        return 0; // not a new instance
+    }}
+   
+    // or create a new instance
+    PyObject* o1 = PySequence_ITEM(sipPy, 0);
+    PyObject* o2 = PySequence_ITEM(sipPy, 1);
+    *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2));
+    Py_DECREF(o1);
+    Py_DECREF(o2);
+    return SIP_TEMPORARY;
     """.format(**locals())
 
 
 def convertFourDoublesTemplate(CLASS):
     return """\
-   // is it just a typecheck?
-   if (!sipIsErr) {{
-       if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
-           return 1;
-
-       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
-           int rval = 1;
-           PyObject* o1 = PySequence_ITEM(sipPy, 0);
-           PyObject* o2 = PySequence_ITEM(sipPy, 1);
-           PyObject* o3 = PySequence_ITEM(sipPy, 2);
-           PyObject* o4 = PySequence_ITEM(sipPy, 3);
-           if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4)) 
-               rval = 0;
-           Py_DECREF(o1);
-           Py_DECREF(o2);
-           Py_DECREF(o3);
-           Py_DECREF(o4);
-           return rval;
-       }}
-       return 0;
-   }}   
-   
-   // otherwise do the conversion
-   if (PySequence_Check(sipPy)) {{
-       PyObject* o1 = PySequence_ITEM(sipPy, 0);
-       PyObject* o2 = PySequence_ITEM(sipPy, 1);
-       PyObject* o3 = PySequence_ITEM(sipPy, 2);
-       PyObject* o4 = PySequence_ITEM(sipPy, 3);       
-       *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2),
-                                PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
-       Py_DECREF(o1);
-       Py_DECREF(o2);
-       return sipGetState(sipTransferObj);
-    }}    
-    *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
+    // is it just a typecheck?
+    if (!sipIsErr) {{
+        // is it already an instance of {CLASS}?
+        if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
+            return 1;
+ 
+        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
+            int rval = 1;
+            PyObject* o1 = PySequence_ITEM(sipPy, 0);
+            PyObject* o2 = PySequence_ITEM(sipPy, 1);
+            PyObject* o3 = PySequence_ITEM(sipPy, 2);
+            PyObject* o4 = PySequence_ITEM(sipPy, 3);
+            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4)) 
+                rval = 0;
+            Py_DECREF(o1);
+            Py_DECREF(o2);
+            Py_DECREF(o3);
+            Py_DECREF(o4);
+            return rval;
+        }}
+        return 0;
+    }}   
+    
+    // otherwise do the conversion
+    if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS)) {{
+        // Just fetch the existing instance
+        *sipCppPtr = reinterpret_cast<{CLASS}*>(sipConvertToType(
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-    return sipGetState(sipTransferObj);
+        return 0; // not a new instance
+    }}
+    
+    // or create a new instance
+    PyObject* o1 = PySequence_ITEM(sipPy, 0);
+    PyObject* o2 = PySequence_ITEM(sipPy, 1);
+    PyObject* o3 = PySequence_ITEM(sipPy, 2);
+    PyObject* o4 = PySequence_ITEM(sipPy, 3);       
+    *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2),
+    PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
+    Py_DECREF(o1);
+    Py_DECREF(o2);
+    return SIP_TEMPORARY;
     """.format(**locals())
 
 
@@ -480,7 +510,8 @@ def convertFourDoublesTemplate(CLASS):
 # Templates for creating wrappers for type-specific wxList and wxArray classes
 
 
-def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None):
+def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None, 
+                          includeConvertToType=False):
     if RealItemClass is None:
         RealItemClass = ItemClass    
         
@@ -491,7 +522,7 @@ def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None):
     # Try creating extractor objects from scratch and attach cppMethods to
     # them as needed, etc..
         
-    return extractors.WigCode('''\
+    klassCode = '''\
 class {ListClass}_iterator /Abstract/ 
 {{
     // the C++ implementation of this class
@@ -569,6 +600,8 @@ public:
             }}
         sipRes = idx;
     %End
+    
+    @ConvertToTypeCode@
 }};
 
 %Extract(id=pycode{moduleName})
@@ -577,14 +610,76 @@ def _{ListClass_pyName}___repr__(self):
 {ListClass_pyName}.__repr__ = _{ListClass_pyName}___repr__
 del _{ListClass_pyName}___repr__
 %End
-'''.format(**locals()))
+'''
+
+    convertToTypeCode = '''\
+%ConvertToTypeCode
+    // Code to test a PyObject for compatibility
+    if (!sipIsErr) {{
+        int success = TRUE;
+        // is it already a {ListClass}?
+        if (sipCanConvertToType(sipPy, sipType_{ListClass}, SIP_NO_CONVERTORS))
+            return success;
+        // otherwise ensure that it is a sequence
+        if (! PySequence_Check(sipPy)) 
+            success = FALSE;
+        // ensure it is not a string or unicode object (they are sequences too)
+        else if (PyString_Check(sipPy) || PyUnicode_Check(sipPy))
+            success = FALSE;
+        // ensure each item can be converted to {ItemClass}
+        else {{
+            Py_ssize_t i, len = PySequence_Length(sipPy);
+            for (i=0; i<len; i++) {{
+                PyObject* item = PySequence_ITEM(sipPy, i);
+                if (!sipCanConvertToType(item, sipType_{ItemClass}, SIP_NOT_NONE)) {{
+                    Py_DECREF(item);
+                    success = FALSE;
+                    break;
+                }}
+                Py_DECREF(item);
+            }}    
+        }}
+        if (!success)            
+            PyErr_SetString(PyExc_TypeError, "Sequence of {ItemClass} compatible objects expected.");
+        return success;
+    }}
+
+    // Is it already a {ListClass}? Return the exiting instance if so
+    if (sipCanConvertToType(sipPy, sipType_{ListClass}, SIP_NO_CONVERTORS)) {{
+        *sipCppPtr = reinterpret_cast<{ListClass}*>(
+                     sipConvertToType(sipPy, sipType_{ListClass}, NULL, 
+                                      SIP_NO_CONVERTORS, 0, sipIsErr));
+        return 0;
+    }}
+    
+    // Create a new {ListClass} and convert compatible PyObjects from the sequence
+    {ListClass} *list = new {ListClass};
+    list->DeleteContents(true); // tell the list to take ownership of the items
+    Py_ssize_t i, len = PySequence_Length(sipPy);
+    for (i=0; i<len; i++) {{
+        int state;
+        PyObject* pyItem = PySequence_ITEM(sipPy, i);
+        {ItemClass}* cItem = reinterpret_cast<{ItemClass}*>(
+                             sipConvertToType(pyItem, sipType_{ItemClass}, 
+                             NULL, 0, &state, sipIsErr));
+        if (!state)  // a temporary was not created for us, make one now
+            cItem = new {ItemClass}(*cItem);
+        list->Append(cItem);
+        Py_DECREF(pyItem);
+    }}
+    *sipCppPtr = list;
+    return SIP_TEMPORARY;
+%End
+'''
+    if includeConvertToType:
+        klassCode = klassCode.replace('@ConvertToTypeCode@', convertToTypeCode)
+    else:
+        klassCode = klassCode.replace('@ConvertToTypeCode@', '')
+    return extractors.WigCode(klassCode.format(**locals()))
 
 
 
-def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, RealItemClass=None):
-    if RealItemClass is None:
-        RealItemClass = ItemClass    
-        
+def wxArrayWrapperTemplate(ArrayClass, ItemClass, module):
     moduleName = module.module        
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
     
@@ -604,7 +699,7 @@ public:
     {ItemClass}& __getitem__(size_t index);
     %MethodCode
         if (index < sipCpp->GetCount()) {{
-            sipRes = &({RealItemClass})sipCpp->Item(index);
+            sipRes = &sipCpp->Item(index);
         }}
         else {{
             PyErr_SetString(PyExc_IndexError, "sequence index out of range");
@@ -614,19 +709,19 @@ public:
 
     int __contains__(const {ItemClass}& obj);
     %MethodCode
-        int idx = sipCpp->Index(({RealItemClass})*obj, false);
+        int idx = sipCpp->Index(*obj, false);
         sipRes = idx != wxNOT_FOUND;
     %End
 
     void append(const {ItemClass}& obj);
     %MethodCode
-        sipCpp->Add(({RealItemClass})*obj);
+        sipCpp->Add(*obj);
     %End
 
     // TODO:  add support for index(value, [start, [stop]])
     int index(const {ItemClass}& obj);
     %MethodCode
-        int idx = sipCpp->Index(({RealItemClass})*obj, false);
+        int idx = sipCpp->Index(*obj, false);
         if (idx == wxNOT_FOUND) {{
             sipError = sipErrorFail;
             PyErr_SetString(PyExc_ValueError,
