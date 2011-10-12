@@ -332,11 +332,8 @@ def run():
     c.find('wxDropFilesEvent').setCppCode_sip("""\
         if (files) {
             wxStringArrayHolder* holder = new wxStringArrayHolder;
-            // TODO: if/when sip honors the Transfer annotation then this copy loop 
-            // can be eliminated.  Just do holder->m_array = files instead.
-            holder->m_array = new wxString[noFiles];   
-            for (int i=0; i<noFiles; i++)
-                holder->m_array[i] = files[i];
+            holder->m_array = files;   
+            // Make a PyObject for the holder, and transfer its ownership to self.
             PyObject* pyHolder = sipConvertFromNewType(
                     (void*)holder, sipType_wxStringArrayHolder, (PyObject*)sipSelf);
             Py_DECREF(pyHolder);

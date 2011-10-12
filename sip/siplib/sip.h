@@ -55,7 +55,7 @@ extern "C" {
  * Define the SIP version number.
  */
 #define SIP_VERSION         0x040c05
-#define SIP_VERSION_STR     "4.12.5-snapshot-de6a700f5faa"
+#define SIP_VERSION_STR     "4.12.5-snapshot-3a009ee97d60"
 
 
 /*
@@ -67,9 +67,6 @@ extern "C" {
  * to 0.
  *
  * History:
- *
- * 8.2  Deprecated the old sip_api_is_py_method().
- *      Added the new sip_api_is_py_method().
  *
  * 8.1  Revised the sipVariableDef structure.
  *      sip_api_get_address() is now part of the public API.
@@ -178,7 +175,7 @@ extern "C" {
  * 0.0  Original version.
  */
 #define SIP_API_MAJOR_NR    8
-#define SIP_API_MINOR_NR    2
+#define SIP_API_MINOR_NR    1
 
 
 /* The name of the sip module. */
@@ -1418,7 +1415,7 @@ typedef struct _sipAPIDef {
     void (*api_bad_class)(const char *classname);
     void *(*api_get_cpp_ptr)(sipSimpleWrapper *w, const sipTypeDef *td);
     void *(*api_get_complex_cpp_ptr)(sipSimpleWrapper *w);
-    PyObject *(*api_is_py_method_old)(sip_gilstate_t *gil, char *pymc,
+    PyObject *(*api_is_py_method)(sip_gilstate_t *gil, char *pymc,
             sipSimpleWrapper *sipSelf, const char *cname, const char *mname);
     void (*api_call_hook)(const char *hookname);
     void (*api_start_thread)(void);
@@ -1457,13 +1454,6 @@ typedef struct _sipAPIDef {
      * The following are part of the public API.
      */
     void *(*api_get_address)(struct _sipSimpleWrapper *w);
-
-    /*
-     * The following are not part of the public API.
-     */
-    PyObject *(*api_is_py_method)(sip_gilstate_t *gil, char *pymc,
-            sipSimpleWrapper * const *sipSelfp, const char *cname,
-            const char *mname);
 } sipAPIDef;
 
 

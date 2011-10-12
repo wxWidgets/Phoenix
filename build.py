@@ -30,16 +30,16 @@ version2 = "%d.%d" % (version.VER_MAJOR, version.VER_MINOR)
 version3 = "%d.%d.%d" % (version.VER_MAJOR, version.VER_MINOR, version.VER_RELEASE)
 version2_nodot = version2.replace(".", "")
 version3_nodot = version3.replace(".", "")
-unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or even
+unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or even?
     
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
-sipCurrentVersion = '4.12.5-snapshot-de6a700f5faa'
+sipCurrentVersion = '4.12.5-snapshot-3a009ee97d60'
 sipCurrentVersionMD5 = {
-    'darwin' : 'fa3b5c21e537be347a39da9f423a8ce7',
-    'win32'  : 'c8f5188de8d0e19474912718e91515f0',
-    'linux2' : '950b92de13f0f9e63f48ec1c2d3bf6fb',
+    'darwin' : '5d8ea39022e8daca219e5dc7752b3ebb',
+    'win32'  : '9e238f429ce2d19cb418aeca1906230c',
+    'linux2' : 'e5a3a8a0515d17446bf503a9b49951e9',
 }
 toolsURL = 'http://wxpython.org/tools'
 
