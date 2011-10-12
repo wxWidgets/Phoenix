@@ -23,7 +23,8 @@ ITEMS  = [ 'wxTopLevelWindow' ]
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
-    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING,
+                                check4unittest=False)
     etgtools.parseDoxyXML(module, ITEMS)
     module.check4unittest = False
     
@@ -73,6 +74,7 @@ def run():
     c.addProperty('Title GetTitle SetTitle')
     c.addProperty('TmpDefaultItem GetTmpDefaultItem SetTmpDefaultItem')
     c.addProperty('OSXModified OSXIsModified OSXSetModified')
+    c.addProperty('MacMetalAppearance MacGetMetalAppearance MacSetMetalAppearance')
     
     tools.fixTopLevelWindowClass(c)
     
