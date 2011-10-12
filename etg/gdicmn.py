@@ -122,8 +122,9 @@ def run():
                   else: raise IndexError
                   """) 
     c.addPyCode('Point.__safe_for_unpickling__ = True')
-                  
-                  
+                                    
+    module.addItem(
+        tools.wxListWrapperTemplate('wxPointList', 'wxPoint', module, includeConvertToType=True))
     
     
     #---------------------------------------
@@ -301,7 +302,6 @@ def run():
                   """) 
     c.addPyCode('RealPoint.__safe_for_unpickling__ = True')
 
-    module.addItem(tools.wxListWrapperTemplate('wxPointList', 'wxPoint', module))
     
     
     
