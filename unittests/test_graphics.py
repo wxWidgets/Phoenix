@@ -146,7 +146,15 @@ class graphics_Tests(wtc.WidgetTestCase):
         
         gc = wx.GraphicsContext.Create(self.frame)
         b = gc.CreateLinearGradientBrush(0,0, 500, 100, stops)
-        
+
+    def test_gcNullObjects(self):
+        wx.NullGraphicsPen
+        wx.NullGraphicsBrush
+        wx.NullGraphicsFont
+        wx.NullGraphicsBitmap
+        wx.NullGraphicsMatrix
+        wx.NullGraphicsPath
+
         
 #---------------------------------------------------------------------------
 
