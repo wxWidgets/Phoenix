@@ -24,7 +24,8 @@ parser.add_option("-c", "--copyright", dest="copyright", default="Total Control 
 parser.add_option("-i", "--items", dest="items", default="", help="Comma separated list of classes to wrap")
 
 
-etgstub = """#---------------------------------------------------------------------------
+etgstub = """\
+#---------------------------------------------------------------------------
 # Name:        etg/%(filename)s
 # Author:      %(author)s
 #
@@ -60,7 +61,7 @@ def run():
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
-    tools.addGetterSetterProps(module)
+    tools.addAutoProperties(module)
     tools.runGenerators(module)
     
     

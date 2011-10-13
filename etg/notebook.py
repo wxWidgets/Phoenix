@@ -33,13 +33,11 @@ def run():
     c = module.find('wxNotebook')
     c.find('OnSelChange').ignore()
     
-    #c.addGetterSetterProps()
-    
     tools.fixWindowClass(c)  
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
-    tools.addGetterSetterProps(module)
+    tools.addAutoProperties(module)
     tools.runGenerators(module)
     
     

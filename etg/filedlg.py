@@ -65,7 +65,7 @@ def run():
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
-    tools.addGetterSetterProps(module)
+    tools.addAutoProperties(module)
     tools.runGenerators(module)
     
     

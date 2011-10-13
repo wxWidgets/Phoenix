@@ -61,13 +61,13 @@ def ignoreAllOperators(node):
             item.ignore()
 
             
-def addGetterSetterProps(node):
+def addAutoProperties(node):
     """
-    Call klass.addGetterSetterProps for all classes in node.
+    Call klass.addAutoProperties for all classes in node.
     """
     for item in node.allItems():
         if isinstance(item, extractors.ClassDef):
-            item.addGetterSetterProps()
+            item.addAutoProperties()
 
             
 def fixEventClass(klass):

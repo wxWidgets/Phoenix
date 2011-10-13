@@ -47,7 +47,7 @@ def run():
                        arr->Add(dashes[i]);
                     return arr;""")
     
-    c.addGetterSetterProps()
+    c.addAutoProperties()
 
     # TODO: SetDashes needs to keep the wxDash array alive as long as the pen
     # is alive, but the pen does not take ownership of the array... Classic

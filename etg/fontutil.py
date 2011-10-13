@@ -41,7 +41,7 @@ def run():
     c.find('GetPixelSize').ignore()
     c.find('SetPixelSize').ignore()
     
-    c.addGetterSetterProps()
+    c.addAutoProperties()
     
 
     #-----------------------------------------------------------------

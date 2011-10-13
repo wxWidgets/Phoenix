@@ -86,7 +86,7 @@ def run():
         wxPyEndBlockThreads(blocked);
         """)
     
-    c.addGetterSetterProps()
+    c.addAutoProperties()
     
 
 
@@ -99,7 +99,7 @@ def run():
         return self->IsOk();
         """)
     
-    c.addGetterSetterProps()
+    c.addAutoProperties()
 
 
     #-----------------------------------------------------------------

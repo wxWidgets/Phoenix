@@ -54,7 +54,7 @@ def run():
         """)
 
     
-    c.addGetterSetterProps()
+    c.addAutoProperties()
     
     
     # The stock Brush items are documented as simple pointers, but in reality

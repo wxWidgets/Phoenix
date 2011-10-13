@@ -546,7 +546,7 @@ class ClassDef(BaseDef):
     def includeCppCode(self, filename):
         self.addCppCode(file(filename).read())
         
-    def addGetterSetterProps(self):
+    def addAutoProperties(self):
         def countNonDefaultArgs(m):
             count = 0
             for p in m.items:
