@@ -42,7 +42,6 @@ def run():
         return new wxColour(wxMacCreateCGColorFromHITheme(themeBrushID));
     #else
         wxPyRaiseNotImplemented(); 
-        _isErr = 1;
         return NULL; 
     #endif
     """, factory=True)
@@ -148,9 +147,9 @@ def run():
             alpha = self->Alpha();
         }
         if (includeAlpha)
-            return sipBuildResult(&_isErr, "(iiii)", red, green, blue, alpha);
+            return sipBuildResult(0, "(iiii)", red, green, blue, alpha);
         else
-            return sipBuildResult(&_isErr, "(iii)", red, green, blue);
+            return sipBuildResult(0, "(iii)", red, green, blue);
     """, briefDoc="""\
         Get(includeAlpha=False) -> (r,g,b) or (r,g,b,a)\n
         Returns the RGB intensity values as a tuple, optionally the alpha value as well.""")

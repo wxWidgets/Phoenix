@@ -60,8 +60,9 @@ def run():
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxPoint2DDouble')
     
     c.addCppMethod('PyObject*', 'Get', '()', """\
-        return sipBuildResult(&_isErr, "(dd)", self->m_x, self->m_y);
-    """, briefDoc="""\
+        return sipBuildResult(0, "(dd)", self->m_x, self->m_y);
+        """, 
+        briefDoc="""\
         Get() -> (x,y)\n    
         Return the x and y properties as a tuple.""")
     
@@ -103,9 +104,10 @@ def run():
     c.convertFromPyObject = tools.convertFourDoublesTemplate('wxRect2DDouble')
     
     c.addCppMethod('PyObject*', 'Get', '()', """\
-        return sipBuildResult(&_isErr, "(dddd)", 
+        return sipBuildResult(0, "(dddd)", 
                     self->m_x, self->m_y, self->m_width, self->m_height);
-    """, briefDoc="""\
+        """, 
+        briefDoc="""\
         Get() -> (x, y, width, height)\n    
         Return the rectangle's properties as a tuple.""")
     

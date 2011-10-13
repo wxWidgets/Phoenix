@@ -156,7 +156,6 @@ def run():
             return (long)((wxMSWDCImpl*)self->GetImpl())->GetHDC();
         #else
             wxPyRaiseNotImplemented();
-            _isErr = 1;
             return 0;
         #endif""")
     c.addCppMethod('void*', 'GetCGContext', '()', """\
@@ -169,7 +168,6 @@ def run():
             return cgctx;
         #else
             wxPyRaiseNotImplemented();
-            _isErr = 1;
             return NULL;
         #endif""")
     c.addCppMethod('void*', 'GetGdkDrawable', '()', """\
@@ -180,7 +178,6 @@ def run():
             return ((wxGTKDCImpl*)self->GetImpl())->GetGDKWindow();
         #else
             wxPyRaiseNotImplemented();
-            _isErr = 1;
             return NULL;
         #endif""")
     

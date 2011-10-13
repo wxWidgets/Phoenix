@@ -103,7 +103,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxPoint')
     
     c.addCppMethod('PyObject*', 'Get', '()', """\
-        return sipBuildResult(&_isErr, "(ii)", self->x, self->y);
+        return sipBuildResult(0, "(ii)", self->x, self->y);
     """, briefDoc="""\
         Get() -> (x,y)\n    
         Return the x and y properties as a tuple.""")
@@ -161,7 +161,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxSize')
     
     c.addCppMethod('PyObject*', 'Get', '()', """\
-        return sipBuildResult(&_isErr, "(ii)", self->GetWidth(), self->GetHeight());
+        return sipBuildResult(0, "(ii)", self->GetWidth(), self->GetHeight());
     """, briefDoc="""\
         Get() -> (width, height)\n    
         Return the width and height properties as a tuple.""")
@@ -233,7 +233,7 @@ def run():
     c.convertFromPyObject = tools.convertFourIntegersTemplate('wxRect')
     
     c.addCppMethod('PyObject*', 'Get', '()', """\
-        return sipBuildResult(&_isErr, "(iiii)", 
+        return sipBuildResult(0, "(iiii)", 
                               self->x, self->y, self->width, self->height);
     """, briefDoc="""\
         Get() -> (x, y, width, height)\n    
@@ -282,7 +282,7 @@ def run():
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxRealPoint')
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
-        return sipBuildResult(&_isErr, "(dd)", self->x, self->y);
+        return sipBuildResult(0, "(dd)", self->x, self->y);
     """, briefDoc="""\
         Get() -> (x, y, width, height)\n    
         Return the rectangle's properties as a tuple.""")

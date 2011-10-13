@@ -50,7 +50,6 @@ def run():
             self->SetColour(wxColour(wxMacCreateCGColorFromHITheme(macThemeBrushID)));
         #else
             wxPyRaiseNotImplemented(); 
-            _isErr = 1;
         #endif
         """)
 

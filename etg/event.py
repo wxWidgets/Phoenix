@@ -128,7 +128,6 @@ def run():
                                  &wxPyCallback::EventThunker);
             }
             else {
-                _isErr = 1;
                 PyErr_SetString(PyExc_TypeError, "Expected callable object or None.");
             }
         """)
@@ -354,7 +353,6 @@ def run():
         if (!list) {
             PyErr_SetString(PyExc_MemoryError, "Can't allocate list of files!");
             wxPyEndBlockThreads(blocked);
-            _isErr = 1;
             return NULL;
         }
         for (int i=0; i<count; i++) {

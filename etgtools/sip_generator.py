@@ -520,8 +520,6 @@ from %s import *
             name = re.split(r'[ \*\&]+', name)[-1] 
             pnames[idx] = name
         pnames = ', '.join(pnames)
-        if pnames:
-            pnames = ', ' + pnames
         typ = method.type
 
         if not skipDeclaration:
@@ -553,11 +551,9 @@ from %s import *
             arg = arg.replace('&', '*')  # SIP will always want to use pointers for parameters
             fargs[idx] = arg
         fargs = ', '.join(fargs)
-        if fargs:
-            fargs = ', ' + fargs
         if method.isCtor:
             fname = '_%s_newCtor' % klass.name
-            fargs = '(int& _isErr%s)' % fargs
+            fargs = '(%s)' % fargs
             fstream.write('%s%%TypeCode\n' % indent)
             typ = klass.name
             if method.useDerivedName:
@@ -574,13 +570,15 @@ from %s import *
                 if method.isStatic:
                     # If the method is static then there is no sipCpp to send to
                     # the new function, so it should not have a self parameter.
-                    fargs = '(int& _isErr%s)' % fargs
+                    fargs = '(%s)' % fargs
                 else:
-                    fargs = '(%s* self, int& _isErr%s)' % (klass.name, fargs)
+                    if fargs:
+                        fargs = ', ' + fargs
+                    fargs = '(%s* self%s)' % (klass.name, fargs)
                 fstream.write('%s%%TypeCode\n' % indent)
             else:
                 fname = '_%s_function' % method.name
-                fargs = '(int& _isErr%s)' % fargs
+                fargs = '(%s)' % fargs
                 fstream.write('%s%%ModuleCode\n' % indent)
             
             # If the return type is in the forcePtrTypes list then make sure
@@ -603,7 +601,7 @@ from %s import *
         stream.write('%s%%MethodCode\n' % indent)
         stream.write(indent+' '*4)
         if method.isCtor:
-            stream.write('sipCpp = %s(sipIsErr%s);\n' % (fname, pnames))
+            stream.write('sipCpp = %s(%s);\n' % (fname, pnames))
         else:
             if method.type != 'void':
                 stream.write('sipRes = ')
@@ -611,11 +609,15 @@ from %s import *
                 if method.isStatic:
                     # If the method is static then there is no sipCpp to send to
                     # the new function, so it should not have a self parameter.
-                    stream.write('%s(sipIsErr%s);\n' % (fname, pnames))
+                    stream.write('%s(%s);\n' % (fname, pnames))
                 else:
-                    stream.write('%s(sipCpp, sipIsErr%s);\n' % (fname, pnames))
+                    if pnames:
+                        pnames = ', ' + pnames
+                    stream.write('%s(sipCpp%s);\n' % (fname, pnames))
             else:
-                stream.write('%s(sipIsErr%s);\n' % (fname, pnames))
+                stream.write('%s(%s);\n' % (fname, pnames))
+        stream.write(indent+' '*4)
+        stream.write('if (PyErr_Occurred()) sipIsErr = 1;\n')
         stream.write('%s%%End\n' % indent)
 
         # and finally, add the new function itself
@@ -640,7 +642,6 @@ from %s import *
         stream.write('%s%%MethodCode\n' % indent)
         stream.write(nci(method.body, len(indent)+4))
         stream.write('%s%%End\n\n' % indent)
-        # TODO: add the %Docstring...
 
         
         
