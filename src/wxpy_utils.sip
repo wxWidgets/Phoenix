@@ -184,6 +184,19 @@ PyObject* wxPyConstructObject(void* ptr,
         }
         wxString* m_array;            
     };        
+    
+    // And the same for integers
+    class wxIntArrayHolder
+    {
+    public:
+        wxIntArrayHolder() : m_array(NULL) {}
+        ~wxIntArrayHolder() { 
+            delete [] m_array; 
+            m_array = NULL;
+        }
+        int* m_array;            
+    };        
+
 %End
     
 class wxStringArrayHolder
@@ -195,4 +208,15 @@ public:
 private:
     wxStringArrayHolder(const wxStringArrayHolder&);  // no copies    
     wxStringArrayHolder& operator=(wxStringArrayHolder); // no assignment
+};
+
+class wxIntArrayHolder
+{
+public:
+    wxIntArrayHolder();
+    ~wxIntArrayHolder();
+    
+private:
+    wxIntArrayHolder(const wxIntArrayHolder&);  // no copies    
+    wxIntArrayHolder& operator=(wxIntArrayHolder); // no assignment
 };
