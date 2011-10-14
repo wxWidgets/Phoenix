@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/headercol.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
@@ -31,18 +32,50 @@ def run():
     # customizing the generated code and docstrings.
     
     module.addHeaderCode('#include <wx/headercol.h>')
-    module.addHeaderCode('#include <wx/dataview.h>')
     
     c = module.find('wxHeaderColumn')
+    isinstance(c, etgtools.ClassDef)
     c.abstract = True
+    c.addAutoProperties()
+    
+    # addAutoProperties doesn't recognize 'IsFoo' as a getter, but it still
+    # makes sense to use these, so add them manually.
+    c.addProperty('Resizeable', 'IsResizeable')
+    c.addProperty('Sortable', 'IsSortable')
+    c.addProperty('Reorderable', 'IsReorderable')
+    c.addProperty('Hidden', 'IsHidden')
+    c.addProperty('Shown', 'IsShown')
+    c.addProperty('SortOrderAscending', 'IsSortOrderAscending')
+    c.addProperty('SortKey', 'IsSortKey')
+
 
     c = module.find('wxSettableHeaderColumn')
     c.abstract = True
+    c.addAutoProperties()
+    
+    # This class adds some setters to go with the getters (and IsFoo) methods
+    # in the base class, but we can't make properties without them being in
+    # the current class, so we'll monkey-patch in the properties from Python
+    # code instead.
+    c.addPyProperty('Title', 'HeaderColumn.GetTitle', 'SetTitle')
+    c.addPyProperty('Bitmap', 'HeaderColumn.GetBitmap', 'SetBitmap')
+    c.addPyProperty('Width', 'HeaderColumn.GetWidth', 'SetWidth')
+    c.addPyProperty('MinWidth', 'HeaderColumn.GetMinWidth', 'SetMinWidth')
+    c.addPyProperty('Alignment', 'HeaderColumn.GetAlignment', 'SetAlignment')
+    c.addPyProperty('Flags', 'HeaderColumn.GetFlags', 'SetFlags')
+
+    c.addPyProperty('Resizeable', 'HeaderColumn.IsResizeable', 'SetResizeable')
+    c.addPyProperty('Sortable', 'HeaderColumn.IsSortable', 'SetSortable')
+    c.addPyProperty('Reorderable', 'HeaderColumn.IsReorderable', 'SetReorderable')
+    c.addPyProperty('Hidden', 'HeaderColumn.IsHidden', 'SetHidden')
+    
+
+    c = module.find('wxHeaderColumnSimple')
+    c.addAutoProperties()
     
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
-    tools.addAutoProperties(module)
     tools.runGenerators(module)
     
     
