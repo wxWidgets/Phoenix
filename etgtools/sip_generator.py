@@ -324,12 +324,18 @@ from %s import *
                 stream.write(nci(c, len(indent2)+4))
             stream.write("%s%%End\n" % indent2)
             
-        if klass.kind == 'class':
-            stream.write('\n%spublic:\n' % indent)
-
         # is the generator currently inside the class or after it?
         klass.generatingInClass = True 
+
+        for item in klass.innerclasses:
+            if klass.kind == 'class':
+                stream.write('%s%s:\n' % (indent, item.protection))
+            item.klass = klass
+            self.generateClass(item, stream, indent + ' '*4)
         
+        if klass.kind == 'class':
+            stream.write('%spublic:\n' % indent)
+
         # Split the items into public and protected groups
         ctors = [i for i in klass if 
                     isinstance(i, extractors.MethodDef) and 
@@ -348,8 +354,8 @@ from %s import *
             extractors.PyMethodDef      : self.generatePyMethod,
             extractors.PyCodeDef        : self.generatePyCode,
             extractors.WigCode          : self.generateWigCode,
-            # TODO: nested classes too?
             }
+        
         for item in ctors:
             item.klass = klass
             f = dispatch[item.__class__]
@@ -675,13 +681,21 @@ from %s import *
             prop.klass.generateAfterClass.append(prop)
         else:
             klassName = prop.klass.pyName or prop.klass.name
-            stream.write("%%Extract(id=pycode%s)\n" % self.module_name)
-            stream.write("_%s_%s = property(%s.%s" % (klassName, prop.name, klassName, prop.getter))
+            if '.' in prop.getter:
+                getter = prop.getter
+            else:
+                getter = '%s.%s' % (klassName, prop.getter)
             if prop.setter:
-                stream.write(", %s.%s" % (klassName, prop.setter))
+                if '.' in prop.setter:
+                    setter = prop.setter
+                else:
+                    setter = '%s.%s' % (klassName, prop.setter)
+                
+            stream.write("%%Extract(id=pycode%s)\n" % self.module_name)
+            stream.write("%s.%s = property(%s" % (klassName, prop.name, getter))
+            if prop.setter:
+                stream.write(", %s" % setter)
             stream.write(")\n")
-            stream.write('%s.%s = _%s_%s\n' % (klassName, prop.name, klassName, prop.name))
-            stream.write('del _%s_%s\n' % (klassName, prop.name))
             stream.write('%End\n\n')
 
     #-----------------------------------------------------------------------

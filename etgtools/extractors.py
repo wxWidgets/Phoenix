@@ -57,6 +57,9 @@ class BaseDef(object):
         # class. Should be overridden in derived classes to get what each one
         # needs in addition to the base.
         self.name = element.find(self.nameTag).text
+        if '::' in self.name:
+            loc = self.name.rfind('::')
+            self.name = self.name[loc+2:]
         bd = element.find('briefdescription')
         if len(bd):
             self.briefDoc = bd[0] # Should be just one <para> element
@@ -470,6 +473,7 @@ class ClassDef(BaseDef):
     def __init__(self, element=None, kind='class', **kw):
         super(ClassDef, self).__init__()
         self.kind = kind
+        self.protection = ''
         self.bases = []             # base class names
         self.includes = []          # .h file for this class
         self.abstract = False       # is it an abstract base class?
@@ -482,6 +486,8 @@ class ClassDef(BaseDef):
         self.convertToPyObject = None
         self.convertFromPyObject = None
         self.allowNone = False      # Allow the convertFrom code to handle None too.
+        self.innerclasses = []
+        self.isInner = False
         
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
@@ -502,7 +508,23 @@ class ClassDef(BaseDef):
             self.bases.append(node.text)
         for node in element.findall('includes'):
             self.includes.append(node.text)
-            
+
+        for node in element.findall('innerclass'):
+            if node.get('prot') == 'private':
+                continue
+            from etgtools import XMLSRC
+            ref = node.get('refid')
+            fname = os.path.join(XMLSRC, ref+'.xml')
+            root = et.parse(fname).getroot()
+            innerclass = root[0]
+            kind = innerclass.get('kind')
+            assert kind in ['class', 'struct']
+            item = ClassDef(innerclass, kind)
+            item.protection = node.get('prot')
+            item.isInner = True
+            self.innerclasses.append(item)
+        
+        
         # TODO: Is it possible for there to be memberdef's w/o a sectiondef?
         for node in element.findall('sectiondef/memberdef'):
             # skip any private items
@@ -525,9 +547,9 @@ class ClassDef(BaseDef):
             else:
                 raise ExtractorError('Unknown memberdef kind: %s' % kind)
             
-            # TODO: do we need support for nested classes?
                 
-            
+    def _findItems(self):
+        return self.items + self.innerclasses
 
             
     def addHeaderCode(self, code):
