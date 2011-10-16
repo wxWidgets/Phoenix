@@ -81,6 +81,7 @@ def main(args):
     setDevModeOptions(args)
     
     os.environ['PYTHONPATH'] = phoenixDir()
+    os.environ['PYTHONUNBUFFERED'] = 'yes'
     os.environ['WXWIN'] = wxDir()
     cfg = Config(noWxConfig=True)
     msg('')
