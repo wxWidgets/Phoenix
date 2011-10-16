@@ -32,13 +32,21 @@ def run():
     
     
     c = module.find('wxKeyboardState')
+    assert isinstance(c, etgtools.ClassDef)
     
     c.addProperty("controlDown ControlDown SetControlDown")
     c.addProperty("shiftDown   ShiftDown   SetShiftDown")
     c.addProperty("altDown     AltDown     SetAltDown")
     c.addProperty("metaDown    MetaDown    SetMetaDown")
     c.addProperty("cmdDown     CmdDown")
-    
+
+    c.addPyCode("""\
+        # For 2.8 compatibility
+        KeyboardState.m_controlDown = wx.deprecated(KeyboardState.controlDown)
+        KeyboardState.m_shiftDown   = wx.deprecated(KeyboardState.shiftDown)
+        KeyboardState.m_altDown     = wx.deprecated(KeyboardState.altDown)
+        KeyboardState.m_metaDown    = wx.deprecated(KeyboardState.metaDown) 
+        """)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

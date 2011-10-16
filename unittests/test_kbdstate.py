@@ -1,4 +1,4 @@
-import unittest
+import imp_unittest, unittest
 import wx
 
 
@@ -19,4 +19,4 @@ class KeyboardState(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

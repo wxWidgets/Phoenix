@@ -2,7 +2,7 @@
 # Name:        etg/intl.py
 # Author:      Robin Dunn
 #
-# Created:     
+# Created:     27-Nov-2010
 # Copyright:   (c) 2011 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
@@ -38,7 +38,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateAssignOp()
     c.addPrivateCopyCtor()
-    tools.removeVirtuals(c)
+
+    c.addCppMethod('int', '__nonzero__', '()', 'return self->IsOk();')
 
     
     c = module.find('wxLanguageInfo')
@@ -49,6 +50,7 @@ def run():
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+    tools.addAutoProperties(module)
     tools.runGenerators(module)
     
     

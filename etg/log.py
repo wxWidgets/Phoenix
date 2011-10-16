@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/log.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     08-Sept-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
@@ -22,6 +23,14 @@ ITEMS  = [
             'wxLogGui',
             'wxLogNull',
             'wxLogRecordInfo', 
+            'wxLogWindow',
+            'wxLogInterposerTemp',
+            'wxLogChain',
+            #'wxLogStream',  # needs std::ostream
+            'wxLogStderr',
+            'wxLogBuffer',
+            'wxLogInterposer',
+            'wxLogTextCtrl',
             
          ]
     
@@ -32,19 +41,68 @@ def run():
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
     
+    #-----------------------------------------------------------------
+    # Tweak the parsed meta objects in the module object as needed for
+    # customizing the generated code and docstrings.
+
     # do not use the va_list forms of the functions
     for func in module.allItems():
         if 'wxVLog' in func.name:
             func.ignore()
     module.find('wxLogTrace').ignore() # deprecated in 2.8, do we support?
-        
+
+    # Switch the parameters to wxStrings to capitalize on the conversion code
+    # we already have for them. String formatting can be done in Python if
+    # needed. Drop the '...' too.
+    for name in ['wxLogMessage', 'wxLogVerbose', 'wxLogWarning', 'wxLogFatalError',
+                 'wxLogError', 'wxLogDebug', 'wxLogStatus', 'wxLogSysError']:
+        for f in module.find(name).all():
+            p = f.find('formatString')
+            p.type = 'const wxString&'
+            p.name = 'message'
+            f.items = f.items[:-1]
+                
+    module.find('wxSysErrorMsg').type = 'wxString'
+
     c = module.find('wxLogRecordInfo')
     c.find('threadId').ignore()
     
-    # deprecated, do we want to keep supporting these?
-    #-----------------------------------------------------------------
-    # Tweak the parsed meta objects in the module object as needed for
-    # customizing the generated code and docstrings.
+
+    c = module.find('wxLog')
+    assert isinstance(c, etgtools.ClassDef)
+
+    c.find('SetActiveTarget').transferBack = True
+    c.find('SetActiveTarget.logtarget').transfer = True
+    c.find('SetThreadActiveTarget').transferBack = True
+    c.find('SetThreadActiveTarget.logger').transfer = True
+
+    # we need to un-ignore these protected methods as they need to be overridable
+    c.find('DoLogRecord').ignore(False)
+    c.find('DoLogTextAtLevel').ignore(False)
+    c.find('DoLogText').ignore(False)
+
+
+    c = module.find('wxLogStderr')
+    c.find('wxLogStderr.fp').ignore()
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
+
+
+    c = module.find('wxLogBuffer')
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
+    
+    c = module.find('wxLogChain')
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
+    
+    c = module.find('wxLogGui')
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
+ 
+    c = module.find('wxLogTextCtrl')
+    c.addPrivateCopyCtor()
+    c.addPrivateAssignOp()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/listbox.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     10-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
@@ -37,9 +38,20 @@ def run():
     c.find('Create').findOverload('wxString choices').ignore()
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
     
-    # TODO: Take a closer look at this.
+    # Just use the Set() method inherited from wxControlWithItems, it has the
+    # overload defined that works best for us
     for set in c.findAll('Set'):
         set.ignore()
+    
+    c.find('GetSelections').type = 'wxArrayInt*'
+    c.find('GetSelections.selections').ignore()
+    c.find('GetSelections').setCppCode("""\
+        wxArrayInt* array = new wxArrayInt;
+        self->GetSelections(*array);
+        return array;
+        """)
+    
+    c.find('InsertItems').findOverload('wxString *items').ignore()
     
     tools.fixWindowClass(c)
     
