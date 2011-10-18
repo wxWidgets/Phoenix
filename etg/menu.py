@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/menu.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     25-Aug-2011
 # Copyright:   (c) 2011 by Wide Open Technologies
@@ -18,7 +19,7 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ 'wxMenu', 'wxMenuBar' ]    
-    
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -39,13 +40,36 @@ def run():
         for method in c.findAll('Remove') + c.findAll('Replace'):
             method.transferBack = True
 
+
+    #-----------------------------------------------------------------
     c = module.find('wxMenu')
     assert isinstance(c, etgtools.ClassDef)
-    addTransferAnnotations(c, 'menuItem')
-    c.find('GetMenuItems').overloads[0].ignore()
     tools.removeVirtuals(c)
+    addTransferAnnotations(c, 'menuItem')
+    addTransferAnnotations(c, 'subMenu')
+    c.find('AppendSubMenu.submenu').transfer = True
+    c.find('GetMenuItems').overloads[0].ignore()
+    
+    c.addPyMethod('AppendMenu', '(self, id, item, subMenu, help="")', deprecated=True,
+                  body='return self.Append(id, item, subMenu, help)')
+    c.addPyMethod('AppendItem', '(self, menuItem)', deprecated=True,
+                  body='return self.Append(menuItem)')
+    
+    c.addPyMethod('InsertMenu', '(self, pos, id, item, subMenu, help="")', deprecated=True,
+                  body='return self.Insert(pos, id, item, subMenu, help)')
+    c.addPyMethod('InsertItem', '(self, pos, menuItem)', deprecated=True,
+                  body='return self.Insert(pos, menuItem)')
 
+    c.addPyMethod('PrependMenu', '(self, id, item, subMenu, help="")', deprecated=True,
+                  body='return self.Prepend(id, item, subMenu, help)')
+    c.addPyMethod('PrependItem', '(self, menuItem)', deprecated=True,
+                  body='return self.Prepend(menuItem)')
+
+
+    #-----------------------------------------------------------------
     c = module.find('wxMenuBar')
+    assert isinstance(c, etgtools.ClassDef)
+    tools.removeVirtuals(c)
     addTransferAnnotations(c, 'menu')
     c.find('wxMenuBar').findOverload('wxMenu *menus[], const wxString titles[], long style=0)').ignore()
     c.find('FindItem').ignore()
@@ -70,14 +94,34 @@ def run():
     if sys.platform.startswith('darwin'):
         mac_scmb.find('menubar').transfer = True
     
-    assert isinstance(c, etgtools.ClassDef)
     c.find('FindItem.menu').out = True
-    tools.removeVirtuals(c)
+
+
+    c.addPyMethod('GetMenus', '(self)', 
+        doc="""\
+        GetMenus() -> (menu, label)\n
+        Return a list of (menu, label) items for the menus in the MenuBar.""",
+        body="""\
+        return [(self.GetMenu(i), self.GetLabelTop(i)) for i in range(self.GetMenuCount())]
+        """)    
+    c.addPyMethod('SetMenus', '(self, items)', 
+        doc="""\
+        SetMenus()\n
+        Clear and add new menus to the MenuBar from a list of (menu, label) items.""",
+        body="""\
+        for i in range(self.GetMenuCount()-1, -1, -1):
+            self.Remove(i)
+        for m, l in items:
+            self.Append(m, l)
+        """)
+    c.addPyProperty('Menus GetMenus SetMenus')
+    
 
     module.addItem(tools.wxListWrapperTemplate('wxMenuList', 'wxMenu', module))
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+    tools.addAutoProperties(module)
     tools.runGenerators(module)
     
     
