@@ -599,6 +599,10 @@ def build_wx(options, args):
         traceback.print_exc()
         sys.exit(1)
         
+    os.chdir(os.path.join(wxDir(), 'locale'))
+    print 'Building message catalogs'
+    runcmd('make allmo')
+            
             
     
 def build_py(options, args):
