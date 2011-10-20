@@ -17,7 +17,7 @@ import urllib2
 import hashlib
 
 from distutils.dep_util import newer, newer_group
-from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip
+from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd
 import buildtools.version as version
 
 # defaults
@@ -458,7 +458,15 @@ def sip(options, args):
         cmd = '%s %s -c %s -b %s %s %s'  % \
             (sip, cfg.SIPOPTS, tmpdir, sbf, pycode, src_name)
         runcmd(cmd)
+
                 
+        def processSrc(src):
+            with file(src, 'rt') as f:
+                srcTxt = f.read()
+                srcTxt = srcTxt.replace(tmpdir, cfg.SIPOUT)
+                # TODO: remove lines starting with '#line'?
+            return srcTxt
+        
         # Check each file in tmpdir to see if it is different than the same file
         # in cfg.SIPOUT. If so then copy the new one to cfg.SIPOUT, otherwise
         # ignore it.
@@ -466,13 +474,13 @@ def sip(options, args):
             dest = opj(cfg.SIPOUT, os.path.basename(src))
             if not os.path.exists(dest):
                 msg('%s is a new file, copying...' % os.path.basename(src))
-                shutil.copy2(src, dest)
+                srcTxt = processSrc(src)
+                f = file(dest, 'wt')
+                f.write(srcTxt)
+                f.close()
                 continue
-    
-            with file(src, 'rt') as f:
-                srcTxt = f.read()
-                srcTxt = srcTxt.replace(tmpdir, cfg.SIPOUT)
-                # TODO remove lines starting with '#line'?
+
+            srcTxt = processSrc(src)
             with file(dest, 'rt') as f:
                 destTxt = f.read()
                 
@@ -599,10 +607,18 @@ def build_wx(options, args):
         traceback.print_exc()
         sys.exit(1)
         
-    os.chdir(os.path.join(wxDir(), 'locale'))
-    print 'Building message catalogs'
-    runcmd('make allmo')
-            
+    # Build the wx message catalogs, but first check that there is a msgfmt
+    # command available
+    if findCmd('msgfmt'):
+        old = os.getcwd()
+        os.chdir(os.path.join(wxDir(), 'locale'))
+        print 'Building message catalogs'
+        runcmd('make allmo')
+        os.chdir(old)
+    else:
+        print "WARNING: msgfmt command not found, message catalogs not rebulit.\n" \
+              "         Please install gettext and associated tools."
+    
             
     
 def build_py(options, args):

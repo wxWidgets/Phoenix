@@ -565,3 +565,17 @@ def getEtgSipCppFiles(etg):
 def getEtgSipHeaders(etg):
     return _getSbfValue(etg, 'headers')
 
+
+def findCmd(cmd):
+    """
+    Search the PATH for a matching command
+    """
+    PATH = os.environ['PATH'].split(os.pathsep)
+    if os.name == 'nt' and not cmd.endswith('.exe'):
+        cmd += '.exe'
+    for p in PATH:
+        c = os.path.join(p, cmd)
+        if os.path.exists(c):
+            return c
+    return None
+    
