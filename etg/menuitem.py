@@ -34,24 +34,87 @@ def run():
     c = module.find('wxMenuItem')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    c.find('GetBackgroundColour').ignore()
-    c.find('SetBackgroundColour').ignore()
-    c.find('GetBitmap').ignore()
-    c.find('SetBitmap').ignore()
-    c.find('SetBitmaps').ignore()
-    c.find('GetFont').ignore()
-    c.find('SetFont').ignore()
-    c.find('GetMarginWidth').ignore()
-    c.find('SetMarginWidth').ignore()
-    c.find('GetTextColour').ignore()
-    c.find('SetTextColour').ignore()
+    tools.removeVirtuals(c)
+    
+
+    # These are MSW only. Make them be empty stubs for the other ports
+    c.find('GetBackgroundColour').type = 'wxColour*'
+    c.find('GetBackgroundColour').setCppCode("""\
+        #ifdef __WXMSW__
+            return &self->GetBackgroundColour();
+        #else
+            return &wxNullColour;
+        #endif
+        """)
+    
+    c.find('SetBackgroundColour').setCppCode("""\
+        #ifdef __WXMSW__
+            self->SetBackgroundColour(colour);
+        #endif
+        """)
+    c.find('GetFont').type = 'wxFont*'
+    c.find('GetFont').setCppCode("""\
+        #ifdef __WXMSW__
+            return &self->GetFont();
+        #else
+            return &wxNullFont;
+        #endif
+        """)
+    c.find('SetFont').setCppCode("""\
+        #ifdef __WXMSW__
+            self->SetFont(font);
+        #endif
+        """)
+    c.find('GetMarginWidth').setCppCode("""\
+        #ifdef __WXMSW__
+            return self->GetMarginWidth()
+        #else
+            return -1;
+        #endif
+        """)
+    c.find('SetMarginWidth').setCppCode("""\
+        #ifdef __WXMSW__
+            self->SetMarginWidth(width)
+        #endif
+        """)
+    c.find('GetTextColour').type = 'wxColour*'
+    c.find('GetTextColour').setCppCode("""\
+        #ifdef __WXMSW__
+            return &self->GetTextColour();
+        #else
+            return &wxNullColour;
+        #endif
+        """)
+    c.find('SetTextColour').setCppCode("""\
+        #ifdef __WXMSW__
+            self.SetTextColour(colour);
+        #endif
+        """)
+
+    
+    c.find('SetBitmap').setCppCode("""\
+        #ifdef __WXMSW__
+            self->SetBitmap(*bmp, checked);
+        #else
+            self->SetBitmap(*bmp); // no checked arg in this case
+        #endif
+        """)
+    c.find('SetBitmaps').setCppCode("""\
+        #ifdef __WXMSW__
+            self->SetBitmaps(*checked, *unchecked);
+        #else
+            self->SetBitmap(*checked);
+        #endif
+        """)
+
+    
     module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem', module))
     
 
     
-    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
+    tools.addAutoProperties(module)
     tools.runGenerators(module)
     
     
