@@ -49,7 +49,7 @@ def run():
     
     c.find('SetBackgroundColour').setCppCode("""\
         #ifdef __WXMSW__
-            self->SetBackgroundColour(colour);
+            self->SetBackgroundColour(*colour);
         #endif
         """)
     c.find('GetFont').type = 'wxFont*'
@@ -62,19 +62,19 @@ def run():
         """)
     c.find('SetFont').setCppCode("""\
         #ifdef __WXMSW__
-            self->SetFont(font);
+            self->SetFont(*font);
         #endif
         """)
     c.find('GetMarginWidth').setCppCode("""\
         #ifdef __WXMSW__
-            return self->GetMarginWidth()
+            return self->GetMarginWidth();
         #else
             return -1;
         #endif
         """)
     c.find('SetMarginWidth').setCppCode("""\
         #ifdef __WXMSW__
-            self->SetMarginWidth(width)
+            self->SetMarginWidth(width);
         #endif
         """)
     c.find('GetTextColour').type = 'wxColour*'
@@ -87,7 +87,7 @@ def run():
         """)
     c.find('SetTextColour').setCppCode("""\
         #ifdef __WXMSW__
-            self.SetTextColour(colour);
+            self->SetTextColour(*colour);
         #endif
         """)
 
