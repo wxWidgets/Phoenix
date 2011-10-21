@@ -37,23 +37,49 @@ def run():
     # The stipple bitmap ctor is not implemented on wxGTK
     c.find('wxPen').findOverload('wxBitmap').ignore()
 
-    c.find('GetDashes').ignore()
-    c.find('SetDashes').ignore()
-    c.addCppMethod('wxArrayInt*', 'GetDashes', '()', """\
-                   wxArrayInt* arr = new wxArrayInt;
-                   wxDash* dashes;
-                   int num = self->GetDashes(&dashes);
-                   for (int i=0; i<num; i++)
-                       arr->Add(dashes[i]);
-                    return arr;""")
+    m = c.find('GetDashes')
+    assert isinstance(m, etgtools.MethodDef)
+    m.find('dashes').ignore()
+    m.type = 'wxArrayInt*'
+    m.factory = True
+    m.setCppCode("""\
+        wxArrayInt* arr = new wxArrayInt;
+        wxDash* dashes;
+        int num = self->GetDashes(&dashes);
+        for (int i=0; i<num; i++)
+            arr->Add(dashes[i]);
+        return arr;
+        """)
+
+    # SetDashes does not take ownership of the array passed to it, yet that
+    # array must be kept alive as long as the pen lives, so we'll create an
+    # array holder object that will be associated with the pen, and that will
+    # delete the dashes array when it is deleted.
+    #c.find('SetDashes').ignore()
+    c.addHeaderCode('#include "arrayholder.h"')
+    m = c.find('SetDashes')
+    # ignore the existing parameters
+    m.find('n').ignore()
+    m.find('dash').ignore()
+    # add a new one
+    m.items.append(etgtools.ParamDef(type='const wxArrayInt&', name='dashes'))
+    m.setCppCode_sip("""\
+        size_t len = dashes->GetCount();
+        wxDashCArrayHolder* holder = new wxDashCArrayHolder;
+        holder->m_array = new wxDash[len];
+        for (int idx=0; idx<len; idx+=1) {
+            holder->m_array[idx] = (*dashes)[idx];
+        }
+        // Make a PyObject for the holder, and transfer its ownership to self.
+        PyObject* pyHolder = sipConvertFromNewType(
+                (void*)holder, sipType_wxDashCArrayHolder, (PyObject*)sipSelf);
+        Py_DECREF(pyHolder);
+        sipCpp->SetDashes(len, holder->m_array);
+        """)
+
     
     c.addAutoProperties()
 
-    # TODO: SetDashes needs to keep the wxDash array alive as long as the pen
-    # is alive, but the pen does not take ownership of the array... Classic
-    # wxPython did some black magic here, is that still the best way?
-    
-    
     # The stock Pen items are documented as simple pointers, but in reality
     # they are macros that evaluate to a function call that returns a pen
     # pointer, and that is only valid *after* the wx.App object has been
