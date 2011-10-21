@@ -15,11 +15,17 @@ objects produced by the ETG scripts.
 import sys, os, re
 import extractors
 import generators
+from generators import nci
 from cStringIO import StringIO
 
 
 divider = '//' + '-'*75 + '\n'
 phoenixRoot = os.path.abspath(os.path.split(__file__)[0]+'/..')
+
+class SipGeneratorError(RuntimeError):
+    pass
+
+
 
 # This is a list of types that are used as return by value or by reference
 # function return types that we need to ensure are actually using pointer
@@ -331,7 +337,7 @@ from %s import *
             if klass.kind == 'class':
                 stream.write('%s%s:\n' % (indent, item.protection))
             item.klass = klass
-            self.generateClass(item, stream, indent + ' '*4)
+            self.generateClass(item, stream, indent2)
         
         if klass.kind == 'class':
             stream.write('%spublic:\n' % indent)
@@ -359,19 +365,19 @@ from %s import *
         for item in ctors:
             item.klass = klass
             f = dispatch[item.__class__]
-            f(item, stream, indent + ' '*4)
+            f(item, stream, indent2)
             
         for item in public:
             item.klass = klass
             f = dispatch[item.__class__]
-            f(item, stream, indent + ' '*4)
+            f(item, stream, indent2)
 
         if protected and [i for i in protected if not i.ignored]:
             stream.write('\nprotected:\n')
             for item in protected:
                 item.klass = klass
                 f = dispatch[item.__class__]
-                f(item, stream, indent + ' '*4)
+                f(item, stream, indent2)
 
         if klass.convertFromPyObject:
             self.generateConvertCode('%ConvertToTypeCode',
@@ -449,7 +455,7 @@ from %s import *
         # and save the docstring back into item in case it is needed by other
         # generators later on
         item.pyDocstring = nci(text)
-                    
+
         
     def generateMethod(self, method, stream, indent, _needDocstring=True):
         assert isinstance(method, extractors.MethodDef)
@@ -661,9 +667,11 @@ from %s import *
             klassName = pm.klass.pyName or pm.klass.name
             stream.write("%%Extract(id=pycode%s)\n" % self.module_name)
             stream.write("def _%s_%s%s:\n" % (klassName, pm.name, pm.argsString))
+            pm.pyDocstring = ""
             if pm.briefDoc:
                 doc = nci(pm.briefDoc)
-                stream.write(nci('"""\n%s"""\n' % doc, 4)) 
+                pm.pyDocstring = doc
+                stream.write(nci('"""\n%s"""\n' % doc, 4))
             stream.write(nci(pm.body, 4))
             if pm.deprecated:
                 stream.write('%s.%s = wx.deprecated(_%s_%s)\n' % (klassName, pm.name, klassName, pm.name))
@@ -766,52 +774,5 @@ from %s import *
             return '   /%s/' % ', '.join(annotations)
         else:
             return ''
-
-#---------------------------------------------------------------------------
-# helpers and utilities
-
-def nci(text, numSpaces=0, stripLeading=True):
-    """
-    Normalize Code Indents
-    
-    First use the count of leading spaces on the first line and remove that
-    many spaces from the front of all lines, and then indent each line by
-    adding numSpaces spaces. This is used so we can convert the arbitrary
-    indents that might be used by the tweaker code into what is expected for
-    the context we are generating for.
-    """
-    def _getLeadingSpaceCount(line):
-        count = 0
-        for c in line:
-            assert c != '\t', "Use spaces for indent, not tabs"
-            if c != ' ':
-                break
-            count += 1
-        return count
-    
-    def _allSpaces(text):
-        for c in text:
-            if c != ' ':
-                return False
-        return True
-
-    
-    lines = text.rstrip().split('\n')
-    if stripLeading:
-        numStrip = _getLeadingSpaceCount(lines[0])
-    else:
-        numStrip = 0
-    
-    for idx, line in enumerate(lines):
-        assert _allSpaces(line[:numStrip]), "Indentation inconsistent with first line"
-        lines[idx] = ' '*numSpaces + line[numStrip:]
-
-    newText = '\n'.join(lines) + '\n'
-    return newText
-
-
-class SipGeneratorError(RuntimeError):
-    pass
-
 
 #---------------------------------------------------------------------------

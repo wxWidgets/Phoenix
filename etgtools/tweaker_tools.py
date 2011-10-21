@@ -15,6 +15,11 @@ stage of the ETG scripts.
 import extractors
 import sys, os
 
+magicMethods = {
+    'operator!=' : '__ne__',
+    'operator==' : '__eq__',
+    # TODO
+}
 
 
 def removeWxPrefixes(node):
@@ -299,10 +304,9 @@ def getWrapperGenerator():
         import sip_generator
         gClass = sip_generator.SipWrapperGenerator
     else:
-        # The default is sip, at least for now...
+        # The default is sip
         import sip_generator
-        gClass = sip_generator.SipWrapperGenerator
-    
+        gClass = sip_generator.SipWrapperGenerator    
     return gClass()
 
 
@@ -315,14 +319,23 @@ def getDocsGenerator():
 
 def runGenerators(module):
     checkForUnitTestModule(module)
+
+    generators = list()
     
-    # Create the code generator and make the wrapper code
-    wg = getWrapperGenerator()
-    wg.generate(module)
+    # Create the code generator selected from command line args
+    generators.append(getWrapperGenerator())
     
-    # Create a documentation generator and let it do its thing
-    dg = getDocsGenerator()
-    dg.generate(module)
+    # Toss in the PI generator too
+    import pi_generator
+    generators.append(pi_generator.PiWrapperGenerator())    
+    
+    # And finally add the documentation generator
+    generators.append(getDocsGenerator())
+
+    # run them
+    for g in generators:
+        g.generate(module)
+        
 
 
 def checkForUnitTestModule(module):

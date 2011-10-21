@@ -8,5 +8,6 @@
 #---------------------------------------------------------------------------
 
 """
-Move along, there's nothing to see here...
+Move along, there's nothing to see here... These are not the droids you are
+looking for...
 """

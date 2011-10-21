@@ -17,7 +17,7 @@ import os
 import pprint
 import xml.etree.ElementTree as et
 
-from tweaker_tools import removeWxPrefix
+from tweaker_tools import removeWxPrefix, magicMethods
 
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
@@ -339,28 +339,48 @@ class FunctionDef(BaseDef):
         if self.type and self.type != 'void':
             returns.append(_cleanName(self.type))
         
-        for param in self.items:
-            assert isinstance(param, ParamDef)
-            if param.ignored:
-                continue
-            if param.arraySize:
-                continue
-            s = param.pyName or param.name
-            if param.out:
-                returns.append(s)
-            else:
-                if param.inOut:
-                    returns.append(s)                    
-                if param.default:
-                    default = param.default
-                    defValueMap = { 'true': 'True',
-                                    'false': 'False',
-                                    'NULL':  'None', }
+        defValueMap = { 'true':  'True',
+                        'false': 'False',
+                        'NULL':  'None', }
+        if isinstance(self, CppMethodDef):
+            # rip appart the argsString instead of using the (empty) list of parameters
+            lastP = self.argsString.rfind(')')
+            args = self.argsString[:lastP].strip('()').split(',')
+            for arg in args:
+                if not arg:
+                    continue
+                # is there a default value?
+                default = ''
+                if '=' in arg:
+                    default = arg.split('=')[1]
+                    arg = arg.split('=')[0]
                     if default in defValueMap:
                         default = defValueMap.get(default)
-                    
-                    s += '=' + '|'.join([_cleanName(x) for x in default.split('|')])
-                params.append(s)
+                # now grab just the last word, it should be the variable name
+                arg = arg.split()[-1]
+                if default:
+                    arg += '=' + default
+                params.append(arg)
+        else:
+            for param in self.items:
+                assert isinstance(param, ParamDef)
+                if param.ignored:
+                    continue
+                if param.arraySize:
+                    continue
+                s = param.pyName or param.name
+                if param.out:
+                    returns.append(s)
+                else:
+                    if param.inOut:
+                        returns.append(s)                    
+                    if param.default:
+                        default = param.default
+                        if default in defValueMap:
+                            default = defValueMap.get(default)
+                        
+                        s += '=' + '|'.join([_cleanName(x) for x in default.split('|')])
+                    params.append(s)
             
         self.pyArgsString = '(' + ', '.join(params) + ')'
         if len(returns) == 1:
@@ -383,6 +403,8 @@ class FunctionDef(BaseDef):
                 f.makePyArgsString()
                 
             sig = f.pyName or removeWxPrefix(f.name)
+            if sig in magicMethods:
+                sig = magicMethods[sig]
             sig += f.pyArgsString
             sigs.append(sig)
         return sigs
@@ -572,7 +594,7 @@ class ClassDef(BaseDef):
         def countNonDefaultArgs(m):
             count = 0
             for p in m.items:
-                if not p.default:
+                if not p.default and not p.ignored:
                     count += 1
             return count
         
