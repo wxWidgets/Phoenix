@@ -327,16 +327,16 @@ def run():
     c.find('wxDropFilesEvent.files').array = True
     c.find('wxDropFilesEvent.files').transfer = True    
     c.find('wxDropFilesEvent.noFiles').arraySize = True
-
+    c.addHeaderCode('#include "arrayholder.h"')
     c.find('wxDropFilesEvent').setCppCode_sip("""\
         if (files) {
-            wxStringArrayHolder* holder = new wxStringArrayHolder;
+            wxStringCArrayHolder* holder = new wxStringCArrayHolder;
             holder->m_array = files;   
             // Make a PyObject for the holder, and transfer its ownership to self.
             PyObject* pyHolder = sipConvertFromNewType(
-                    (void*)holder, sipType_wxStringArrayHolder, (PyObject*)sipSelf);
+                    (void*)holder, sipType_wxStringCArrayHolder, (PyObject*)sipSelf);
             Py_DECREF(pyHolder);
-            sipCpp = new sipwxDropFilesEvent(id,(int)noFiles,holder->m_array);            
+            sipCpp = new sipwxDropFilesEvent(id,(int)noFiles, holder->m_array);            
         }
         else
             sipCpp = new sipwxDropFilesEvent(id);

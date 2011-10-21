@@ -169,54 +169,31 @@ PyObject* wxPyConstructObject(void* ptr,
 %End
 
 //--------------------------------------------------------------------------
-
-
-%ModuleHeaderCode
-    // This class provides a way to wrap a C array of wxStrings in a wrapped 
-    // object that can be used to manage the lifetime of the array.
-    class wxStringArrayHolder
-    {
-    public:
-        wxStringArrayHolder() : m_array(NULL) {}
-        ~wxStringArrayHolder() { 
-            delete [] m_array; 
-            m_array = NULL;
-        }
-        wxString* m_array;            
-    };        
-    
-    // And the same for integers
-    class wxIntArrayHolder
-    {
-    public:
-        wxIntArrayHolder() : m_array(NULL) {}
-        ~wxIntArrayHolder() { 
-            delete [] m_array; 
-            m_array = NULL;
-        }
-        int* m_array;            
-    };        
-
+// Sometimes we need to hold on to a C array and keep it alive, but typical
+// SIP code will treat it as a temporary and delete it as soon as the ctor or
+// method call is done. This class can hold a pointer to the array and will
+// delete the array in its dtor, and by making this class be wrappable we can
+// make a PyObject for it that is then owned by some other object, and
+// Python's GC will take care of the delaying the cleanup until it's no longer
+// needed.
+template <Type>
+class wxCArrayHolder
+{
+%TypeHeaderCode
+#include "arrayholder.h"
 %End
     
-class wxStringArrayHolder
-{
 public:
-    wxStringArrayHolder();
-    ~wxStringArrayHolder();
+    wxCArrayHolder();
+    ~wxCArrayHolder();
     
 private:
-    wxStringArrayHolder(const wxStringArrayHolder&);  // no copies    
-    wxStringArrayHolder& operator=(wxStringArrayHolder); // no assignment
+    wxCArrayHolder(const wxCArrayHolder<Type>&);  // no copies    
+    wxCArrayHolder& operator=(wxCArrayHolder<Type>); // no assignment
 };
 
-class wxIntArrayHolder
-{
-public:
-    wxIntArrayHolder();
-    ~wxIntArrayHolder();
-    
-private:
-    wxIntArrayHolder(const wxIntArrayHolder&);  // no copies    
-    wxIntArrayHolder& operator=(wxIntArrayHolder); // no assignment
-};
+typedef wxCArrayHolder<int>      wxIntCArrayHolder;
+typedef wxCArrayHolder<wxString> wxStringCArrayHolder;
+typedef wxCArrayHolder<wxDash>   wxDashCArrayHolder;
+
+//--------------------------------------------------------------------------
