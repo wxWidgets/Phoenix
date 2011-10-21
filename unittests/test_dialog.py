@@ -32,7 +32,7 @@ class dialog_Tests(wtc.WidgetTestCase):
         self.runDialog(dlg)
 
     def test_dialog2(self):
-        dlg = wx.Dialog(self.frame, title='World')
+        dlg = wx.Dialog(None, title='World')
         self.runDialog(dlg)
         
 #---------------------------------------------------------------------------

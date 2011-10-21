@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/msgdlg.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     24-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
@@ -33,29 +34,25 @@ def run():
     # customizing the generated code and docstrings.
 
     c = module.find('wxMessageDialog')
+    assert isinstance(c, etgtools.ClassDef)
     
     # These argument types are actually ButtonLabel, but the class is a private
     # helper. We will always be passing in strings, and ButtonLabel will implicitly
     # convert.
+    c.find('SetHelpLabel.help').type = 'const wxString&'
+    c.find('SetOKCancelLabels.ok').type = 'const wxString&'
+    c.find('SetOKCancelLabels.cancel').type = 'const wxString&'
     
-    c.find('SetHelpLabel.help').type = 'wxString'
-    c.find('SetOKCancelLabels.ok').type = 'wxString'
-    c.find('SetOKCancelLabels.cancel').type = 'wxString'
+    c.find('SetOKLabel.ok').type = 'const wxString&'
     
-    c.find('SetOKLabel.ok').type = 'wxString'
+    c.find('SetYesNoCancelLabels.yes').type = 'const wxString&'
+    c.find('SetYesNoCancelLabels.no').type = 'const wxString&'
+    c.find('SetYesNoCancelLabels.cancel').type = 'const wxString&'
     
-    c.find('SetYesNoCancelLabels.yes').type = 'wxString'
-    c.find('SetYesNoCancelLabels.no').type = 'wxString'
-    c.find('SetYesNoCancelLabels.cancel').type = 'wxString'
+    c.find('SetYesNoLabels.yes').type = 'const wxString&'
+    c.find('SetYesNoLabels.no').type = 'const wxString&'
     
-    c.find('SetYesNoLabels.yes').type = 'wxString'
-    c.find('SetYesNoLabels.no').type = 'wxString'
-    
-    assert isinstance(c, etgtools.ClassDef)
-    
-    #c.find('wxMessageDialog.title').default = 'wxEmptyString'
-    #c.find('Create.title').default = 'wxEmptyString'
-        
+            
     tools.fixTopLevelWindowClass(c)
     
     #-----------------------------------------------------------------
