@@ -610,11 +610,9 @@ def build_wx(options, args):
     # Build the wx message catalogs, but first check that there is a msgfmt
     # command available
     if findCmd('msgfmt'):
-        old = os.getcwd()
-        os.chdir(os.path.join(wxDir(), 'locale'))
+        pwd = pushDir(posixjoin(wxDir(), 'locale'))
         print 'Building message catalogs'
         runcmd('make allmo')
-        os.chdir(old)
     else:
         print "WARNING: msgfmt command not found, message catalogs not rebulit.\n" \
               "         Please install gettext and associated tools."
