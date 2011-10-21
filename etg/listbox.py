@@ -44,6 +44,7 @@ def run():
         set.ignore()
     
     c.find('GetSelections').type = 'wxArrayInt*'
+    c.find('GetSelections').factory = True  # a new instance is being created
     c.find('GetSelections.selections').ignore()
     c.find('GetSelections').setCppCode("""\
         wxArrayInt* array = new wxArrayInt;

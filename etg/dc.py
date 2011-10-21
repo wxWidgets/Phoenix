@@ -103,15 +103,16 @@ def run():
     c.find('GetPixel').ignore()
     c.addCppMethod('wxColour*', 'GetPixel', '(wxCoord x, wxCoord y)', 
         doc="Gets the colour at the specified location on the DC.", body="""\
-        wxColour col;
-        self->GetPixel(x, y, &col);
-        return new wxColour(col);
-        """)
+        wxColour* col = new wxColour;
+        self->GetPixel(x, y, col);
+        return col;
+        """, factory=True)
 
     # Return the rect instead of using an output parameter
     m = c.find('DrawLabel')
     m.type = 'wxRect*'
     m.find('rectBounding').ignore()
+    m.factory = True  # a new instance is being created
     m.setCppCode("""\
         wxRect rv;
         self->DrawLabel(*text, *bitmap, *rect, alignment, indexAccel, &rv);
@@ -123,6 +124,7 @@ def run():
     m = c.find('GetPartialTextExtents')
     m.type = 'wxArrayInt*'
     m.find('widths').ignore()
+    m.factory = True  # a new instance is being created
     m.setCppCode("""\
         wxArrayInt rval;
         self->GetPartialTextExtents(*text, rval);
@@ -135,8 +137,7 @@ def run():
         """)
    
     c.addPyMethod('GetBoundingBox', '(self)', doc="""\
-        GetBoundingBox() -> (x1,y1, x2,y2)
-        
+        GetBoundingBox() -> (x1,y1, x2,y2)\n
         Returns the min and max points used in drawing commands so far.""",
         body="return (self.MinX(), self.MinY(), self.MaxX(), self.MaxY())")
     
@@ -181,7 +182,6 @@ def run():
             return NULL;
         #endif""")
     
-
 
     # TODO: Port the wxPyDrawXXX code and the DrawXXXList methods from Classic
     # TODO: Port the PseudoDC from Classic

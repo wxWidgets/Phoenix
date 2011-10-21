@@ -115,8 +115,8 @@ def run():
 
     
     c.addCppMethod('void', 'SetDimensions', '(int x, int y, int width, int height, int sizeFlags=wxSIZE_AUTO)', """\
-    self->SetSize(x, y, width, height, sizeFlags);
-    """)
+        self->SetSize(x, y, width, height, sizeFlags);
+        """)
     c.addPyCode("Window.SetDimensions = wx.deprecated(Window.SetDimensions)")
     
     # Make the Register/UnregisterHotKey functions be available on Windows,

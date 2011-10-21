@@ -106,11 +106,20 @@ def run():
    
     c.addCppMethod('int', '__nonzero__', '()', 'return self->IsOk();')
 
-    c.addPyMethod('ConvertToBitmap', '(self, depth=-1)', """\
+    c.addPyMethod('ConvertToBitmap', '(self, depth=-1)', 
+        doc="""\
+        ConvertToBitmap(depth=-1) -> Bitmap\n
+        Convert the image to a wx.Bitmap.""",
+        body="""\
         bmp = wx.Bitmap(self, depth)
         return bmp
         """)
-    c.addPyMethod('ConvertToMonoBitmap', '(self, red, green, blue)', """\
+    
+    c.addPyMethod('ConvertToMonoBitmap', '(self, red, green, blue)', 
+        doc="""\
+        ConvertToMonoBitmap(red, green, blue) -> Bitmap\n
+        Creates a monochrome version of the image and returns it as a wx.Bitmap.""",
+        body="""\
         mono = self.ConvertToMono( red, green, blue )
         bmp = wx.Bitmap( mono, 1 )
         return bmp    
@@ -119,8 +128,7 @@ def run():
 
     c.addCppMethod('wxImage*', 'AdjustChannels', 
         '(double factor_red, double factor_green, double factor_blue, double factor_alpha=1.0)',
-        doc="""\n
-        AdjustChannels(factor_red, factor_green, factor_blue, factor_alpha=1.0)\n
+        doc="""\
         This function muliplies all 4 channels (red, green, blue, alpha) with
         a factor (around 1.0). Useful for gamma correction, colour correction
         and to add a certain amount of transparency to a image (fade in fade
@@ -222,14 +230,9 @@ def run():
             dest->SetMask(false);
         }
 
-        return dest;
-        """)
+        return dest;""",
+        factory=True)
                                
-    #%property(AlphaBuffer, GetAlphaBuffer, SetAlphaBuffer)
-    #%property(AlphaData, GetAlphaData, SetAlphaData)
-    #%property(Data, GetData, SetData)
-    #%property(DataBuffer, GetDataBuffer, SetDataBuffer)
-
     c.addProperty('Width GetWidth')
     c.addProperty('Height GetHeight')
     c.addProperty('MaskBlue GetMaskBlue')

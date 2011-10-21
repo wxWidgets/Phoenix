@@ -47,7 +47,8 @@ def run():
         body="""\
         wxArrayString* arr = new wxArrayString;
         self->GetFilenames(*arr);
-        return arr;""")
+        return arr;""",
+        factory=True)
     
     c.find('GetPaths').ignore()
     c.addCppMethod('wxArrayString*', 'GetPaths', '()', doc="""\
@@ -58,7 +59,8 @@ def run():
         body="""\
         wxArrayString* arr = new wxArrayString;
         self->GetPaths(*arr);
-        return arr;""")
+        return arr;""",
+        factory=True)
     
     
     tools.fixWindowClass(c)

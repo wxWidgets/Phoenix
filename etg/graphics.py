@@ -87,6 +87,7 @@ def run():
     m = c.find('GetPartialTextExtents')
     m.find('widths').ignore()
     m.type = 'wxArrayDouble*'
+    m.factory = True  # a new instance is being created
     m.setCppCode("""\
         wxArrayDouble rval;
         self->GetPartialTextExtents(*text, rval);
@@ -211,7 +212,8 @@ def run():
     c.addCppMethod('SIP_SSIZE_T', '__len__', '()', body="return (SIP_SSIZE_T)self->GetCount();")
     c.addCppMethod('wxGraphicsGradientStop*', '__getitem__', '(size_t n)',
                    pyArgsString='(n)',
-                   body="return new wxGraphicsGradientStop(self->Item(n));")
+                   body="return new wxGraphicsGradientStop(self->Item(n));",
+                   factory=True)
 
     
     #---------------------------------------------
