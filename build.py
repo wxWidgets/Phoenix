@@ -810,6 +810,24 @@ def cleanall(options, args):
     delFiles(files)
 
     
+def buildall(options, args):
+    # (re)build everything
+    build_wx(options, args)
+    dox(options, args)
+    touch(options, args)
+    etg(options, args)
+    sip(options, args)
+    build_py(options, args)
+    test(options, args)
+    
+    
+def sdist(options, args):
+    # build a source tarball that includes generated files
+    pass
+
+def bdist(options, args):
+    # build a tarball and/or installer that includes the files needed at runtime
+    pass
 
 #---------------------------------------------------------------------------
 
