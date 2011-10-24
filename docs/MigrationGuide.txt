@@ -49,6 +49,31 @@ of the code, and then remove them in a later release.
 
 
 
+Static Methods 
+-------------- 
+
+In the distant past when SWIG was generating wrapper code for C++ static
+methods it would create a standalone function named ClassName_MethodName for
+it. When Python added support for static methods then SWIG was able to use
+that to make a real static method named ClassName.MethodName, but it still
+generated the standalone function named with the underscore, for
+compatibility. That underscore verison of the static methods is now gone, and
+you will get an AttributeError in existing code that is using them. To fix
+the problem simply change the underscore to a dot, for example you should
+change this::
+
+    c = wx.SystemSettings_GetColour(wx.SYS_COLOUR_MENUTEXT)
+    
+to this::
+
+    c = wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUTEXT)
+
+You can also make this change in your existing code that is using pre-Phoenix
+versions of wxPython, in order to help you prepare for the transition.
+
+
+
+
 Unicode and Auto-Converting Strings
 -----------------------------------
 
@@ -89,11 +114,10 @@ your encoding to Unicode before passing the text to the wx API.
 wx.Platform, wx.PlatformInfo, wx.USE_UNICODE and wx.__WXDEBUG__
 ---------------------------------------------------------------
 
-wx.Platform has been renamed to wx.Port, and wx.PlatformInfo has been
-renamed to wx.PortInfo.  The reason for this change is that wrappers
-for a C++ class named wxPlatformInfo have been added, and would have
-caused a name conflict if the old wx.PlatformInfo had not been
-renamed. 
+wx.Platform has been renamed to wx.Port, and wx.PlatformInfo has been renamed
+to wx.PortInfo. The reason for this change is that wrappers for a C++ class
+named wxPlatformInfo have been added, and would have caused a name conflict
+if the old wx.PlatformInfo had not been renamed. 
 
 In related news, wx.USE_UNICODE and wx.__WXDEBUG__ have been removed.
 
