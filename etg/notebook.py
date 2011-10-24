@@ -40,7 +40,6 @@ def run():
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
-    tools.addAutoProperties(module)
     tools.runGenerators(module)
     
     

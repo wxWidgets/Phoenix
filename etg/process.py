@@ -17,7 +17,9 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxProcess' ]    
+ITEMS  = [ 'wxProcess',
+           'wxProcessEvent',
+           ]    
     
 #---------------------------------------------------------------------------
 
@@ -32,6 +34,7 @@ def run():
     
     
     
+    module.addPyCode('EVT_END_PROCESS = wx.PyEventBinder( wxEVT_END_PROCESS )')
     
     
     #-----------------------------------------------------------------

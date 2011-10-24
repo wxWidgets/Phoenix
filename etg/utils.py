@@ -60,10 +60,13 @@ def run():
         if 'Env' in item.name:
             item.ignore()
     module.find('wxGetenv').ignore()
-    
+
     # Keep just the first wxExecute overload
     f = module.find('wxExecute')
     f.overloads = []
+    
+    module.find('wxGetOsVersion.major').out = True
+    module.find('wxGetOsVersion.minor').out = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

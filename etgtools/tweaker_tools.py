@@ -68,10 +68,16 @@ def ignoreAllOperators(node):
             
 def addAutoProperties(node):
     """
-    Call klass.addAutoProperties for all classes in node.
+    Call klass.addAutoProperties for all classes in node with
+    allowAutoProperties set and which do not already have properties added by
+    hand in the tweaker code.
     """
     for item in node.allItems():
         if isinstance(item, extractors.ClassDef):
+            if not item.allowAutoProperties:
+                continue
+            if len([i for i in item if isinstance(i, extractors.PropertyDef)]):
+                continue
             item.addAutoProperties()
 
             
@@ -274,6 +280,7 @@ def doCommonTweaks(module):
     """
     ignoreAssignmentOperators(module)
     removeWxPrefixes(module)
+    addAutoProperties(module)
     
     
 def changeTypeNames(module, oldName, newName, skipTypedef=False):

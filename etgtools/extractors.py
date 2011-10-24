@@ -503,6 +503,7 @@ class ClassDef(BaseDef):
         self.external = False       # class is in another module
         self.noDefCtor = False      # do not generate a default constructor
         self.singlton = False       # class is a singleton so don't call the dtor until the interpreter exits
+        self.allowAutoProperties = True
         self.headerCode = []
         self.cppCode = []
         self.convertToPyObject = None
