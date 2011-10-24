@@ -78,12 +78,6 @@ def run():
     # FIXME: Handle wxEnhMetaFileDC?
     c.find('Create').findOverload('wxEnhMetaFileDC').ignore()
     
-    # SIP doesn't like default parameter values to use dereference syntax,
-    # (such as "col = *wxBLACK") so tweak the syntax a bit by using a macro.
-    c.addHeaderCode("#define BLACK *wxBLACK")
-    for m in c.find('CreateFont').all():
-        m.find('col').default = 'BLACK'
-
     m = c.find('GetPartialTextExtents')
     m.find('widths').ignore()
     m.type = 'wxArrayDouble*'
@@ -182,10 +176,7 @@ def run():
     # FIXME: Handle wxEnhMetaFileDC?
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()
 
-    # See above
-    for m in c.find('CreateFont').all():
-        m.find('col').default = 'BLACK'
-   
+  
     #---------------------------------------------
     c = module.find('wxGraphicsMatrix')
     tools.removeVirtuals(c)

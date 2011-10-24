@@ -42,8 +42,9 @@ echo ""
 echo "The MD5:"
 $PYTHON mymd5.py sip-$SIPVER-$PLATFORM
 echo ""
-echo "Now bzip2 the new sip binary and then scp it to "
-echo "    robind@riobu.com:/home/robind/domains/wxpython.org/htdocs/tools"
+echo "If ready to upload then do these commands now:"
+echo "    bzip2 $MYBINDIR/sip-$SIPVER-$PLATFORM"
+echo "    scp $MYBINDIR/sip-$SIPVER-$PLATFORM.bz2 robind@riobu.com:/home/robind/domains/wxpython.org/htdocs/tools"
 
 
 
