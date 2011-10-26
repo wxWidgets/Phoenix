@@ -601,32 +601,38 @@ class ClassDef(BaseDef):
         
         props = dict()
         for item in self.items:
-            if item.ignored:
-                continue
             if isinstance(item, MethodDef) and item.name not in ['Get', 'Set'] \
                and (item.name.startswith('Get') or item.name.startswith('Set')):
                 prefix = item.name[:3]
                 name = item.name[3:]
                 prop = props.get(name, PropertyDef(name))
-                if prefix == 'Get':
-                    prop.getter = item.name
-                    # Getters must be able to be called with no args, ensure
-                    # that item has exactly zero args without a default value
-                    if countNonDefaultArgs(item) != 0:
-                        # TODO: check overloads too
+                # look at all overloads
+                ok = False
+                for m in item.all():
+                    if m.ignored:
                         continue
-                    # Getters must not be static methods
-                    if item.isStatic:
-                        continue
-                elif prefix == 'Set':
-                    prop.setter = item.name
-                    # Setters must be able to be called with 1 arg, ensure
-                    # that item has at least 1 arg and not more than 1 without
-                    # a default value.
-                    if len(item.items) == 0 or countNonDefaultArgs(item) > 1:
-                        # TODO: check overloads too
-                        continue
-                props[name] = prop
+                    if prefix == 'Get':
+                        prop.getter = m.name
+                        # Getters must be able to be called with no args, ensure
+                        # that item has exactly zero args without a default value
+                        if countNonDefaultArgs(m) != 0:
+                            continue
+                        # Getters must not be static methods
+                        if item.isStatic:
+                            continue
+                        ok = True
+                        break
+                    elif prefix == 'Set':
+                        prop.setter = m.name
+                        # Setters must be able to be called with 1 arg, ensure
+                        # that item has at least 1 arg and not more than 1 without
+                        # a default value.
+                        if len(m.items) == 0 or countNonDefaultArgs(m) > 1:
+                            continue
+                        ok = True
+                        break
+                if ok:
+                    props[name] = prop
                 
         if props:
             self.addPublic()
@@ -698,6 +704,12 @@ class ClassDef(BaseDef):
 
     #------------------------------------------------------------------
  
+    def _addMethod(self, md):
+        if self.findItem(md.name):
+            self.findItem(md.name).overloads.append(md)
+        else:
+            self.items.append(md)
+        
     def addCppMethod(self, type, name, argsString, body, doc=None, isConst=False, **kw):
         """
         Add a new C++ method to a class. This method doesn't have to actually
@@ -706,7 +718,7 @@ class ClassDef(BaseDef):
         target language.
         """
         md = CppMethodDef(type, name, argsString, body, doc, isConst, klass=self, **kw)
-        self.items.append(md)
+        self._addMethod(md)
         return md
 
     
@@ -717,7 +729,7 @@ class ClassDef(BaseDef):
         md = CppMethodDef('', self.name, argsString, body, doc=doc, 
                           isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, 
                           useDerivedName=useDerivedName, **kw)
-        self.items.append(md)
+        self._addMethod(md)
         return md
 
     
@@ -727,7 +739,7 @@ class ClassDef(BaseDef):
         the code body, instead of using the general purpose implementation.
         """
         md = CppMethodDef_sip(type, name, argsString, body, doc, klass=self, **kw)
-        self.items.append(md)
+        self._addMethod(md)
         return md
 
     def addCppCtor_sip(self, argsString, body, doc=None, noDerivedCtor=True, **kw):
@@ -736,7 +748,7 @@ class ClassDef(BaseDef):
         """
         md = CppMethodDef_sip('', self.name, argsString, body, doc=doc, 
                           isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, **kw)
-        self.items.append(md)
+        self._addMethod(md)
         return md
 
     #------------------------------------------------------------------
@@ -915,6 +927,7 @@ class CppMethodDef(MethodDef):
         self.klass = None
         self.noDerivedCtor = False
         self.isConst = isConst
+        self.isPureVirtual = False
         self.__dict__.update(kw)
 
     @staticmethod

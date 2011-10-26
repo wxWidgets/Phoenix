@@ -349,35 +349,17 @@ from %s import *
         public = [i for i in klass if i.protection == 'public' and i not in ctors]
         protected = [i for i in klass if i.protection == 'protected']
         
-        dispatch = {
-            extractors.MemberVarDef     : self.generateMemberVar,
-            extractors.PropertyDef      : self.generateProperty,
-            extractors.PyPropertyDef    : self.generatePyProperty,
-            extractors.MethodDef        : self.generateMethod,
-            extractors.EnumDef          : self.generateEnum,
-            extractors.CppMethodDef     : self.generateCppMethod,
-            extractors.CppMethodDef_sip : self.generateCppMethod_sip,
-            extractors.PyMethodDef      : self.generatePyMethod,
-            extractors.PyCodeDef        : self.generatePyCode,
-            extractors.WigCode          : self.generateWigCode,
-            }
         
         for item in ctors:
-            item.klass = klass
-            f = dispatch[item.__class__]
-            f(item, stream, indent2)
+            self.dispatchClassItem(klass, item, stream, indent2)
             
         for item in public:
-            item.klass = klass
-            f = dispatch[item.__class__]
-            f(item, stream, indent2)
+            self.dispatchClassItem(klass, item, stream, indent2)
 
         if protected and [i for i in protected if not i.ignored]:
             stream.write('\nprotected:\n')
             for item in protected:
-                item.klass = klass
-                f = dispatch[item.__class__]
-                f(item, stream, indent2)
+                self.dispatchClassItem(klass, item, stream, indent2)
 
         if klass.convertFromPyObject:
             self.generateConvertCode('%ConvertToTypeCode',
@@ -394,10 +376,27 @@ from %s import *
         # Now generate anything that was deferred until after the class is finished
         klass.generatingInClass = False
         for item in klass.generateAfterClass:
-            f = dispatch[item.__class__]
-            f(item, stream, indent)
+            self.dispatchClassItem(klass, item, stream, indent)
             
+
         
+    def dispatchClassItem(self, klass, item, stream, indent):
+        dispatch = {
+            extractors.MemberVarDef     : self.generateMemberVar,
+            extractors.PropertyDef      : self.generateProperty,
+            extractors.PyPropertyDef    : self.generatePyProperty,
+            extractors.MethodDef        : self.generateMethod,
+            extractors.EnumDef          : self.generateEnum,
+            extractors.CppMethodDef     : self.generateCppMethod,
+            extractors.CppMethodDef_sip : self.generateCppMethod_sip,
+            extractors.PyMethodDef      : self.generatePyMethod,
+            extractors.PyCodeDef        : self.generatePyCode,
+            extractors.WigCode          : self.generateWigCode,
+            }
+        item.klass = klass
+        f = dispatch[item.__class__]
+        f(item, stream, indent)
+
 
     def generateConvertCode(self, kind, code, stream, indent):
         stream.write('%s%s\n' % (indent, kind))
@@ -457,8 +456,9 @@ from %s import *
         item.pyDocstring = nci(text)
 
         
-    def generateMethod(self, method, stream, indent, _needDocstring=True):
+    def generateMethod(self, method, stream, indent):
         assert isinstance(method, extractors.MethodDef)
+        _needDocstring = getattr(method, '_needDocstring', True)
         if not method.ignored:
             if method.isVirtual:
                 stream.write("%svirtual\n" % indent)
@@ -497,9 +497,11 @@ from %s import *
                     self.generateCppMethod(cm, stream, indent, skipDeclaration=True)
                 
             stream.write('\n')
+            
         if method.overloads:
             for m in method.overloads:
-                self.generateMethod(m, stream, indent, _needDocstring)
+                m._needDocstring = _needDocstring
+                self.dispatchClassItem(method.klass, m, stream, indent)
 
             
     def generateCppMethod(self, method, stream, indent='', skipDeclaration=False):
