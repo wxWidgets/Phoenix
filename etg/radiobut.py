@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        etg/radiobtn.py
+# Name:        etg/radiobut.py
 # Author:      Kevin Ollivier
 #
 # Created:     16-Sept-2011
@@ -12,7 +12,7 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
-NAME      = "radiobtn"   # Base name of the file to generate to for this script
+NAME      = "radiobut"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
