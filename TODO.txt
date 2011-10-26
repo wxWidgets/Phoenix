@@ -122,18 +122,6 @@ build.py
 
 
 
-etg/pen.py
-----------
-    * Add new implementations of Get|SetDashes that use wxArrayInt.
-      SetDashes will likely need some black magic like what was done in
-      Classic wxPython.
-   
-
-etg/menu.py
-------------
-    * Figure out what to do about the MSW-only methods in wxMenuItem
-
-
 wxProgressDialog
 ----------------
     * Add wxGenericProgressDialog.
@@ -158,20 +146,6 @@ Deprecated C++ items
 ---------------------
     * Does Doxygen have a standard way to mark items as deprecated
       that will also be tagged as such in the XML?
-
-
-
-WingIDE support
----------------
-WingIDE (and maybe other IDEs too?) has the ability to display
-docstrings and other helps for items that are not Python code but in
-binary extension modules, which have less info available via
-introspection. The way this is handled is Wing is able to read info
-from python-like .pi files that are basically just stubs that show the
-docstrings and APIs of classes and methods, but with no real code.  We
-should probably generate a set of these files for everything in our
-extension modules.  We have all the info needed in the etg scripts, so
-it could be just another generator that it runs.
 
 
 
