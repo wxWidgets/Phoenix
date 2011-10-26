@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/radiobox.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     16-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
@@ -31,6 +32,8 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxRadioBox')
+    assert isinstance(c, etgtools.ClassDef)
+    
     c.find('wxRadioBox').findOverload('wxString choices').ignore()
     c.find('Create').findOverload('wxString choices').ignore()
     
@@ -39,6 +42,22 @@ def run():
     c.find('wxRadioBox').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
 
+    # Avoid name clashes with base class methods with different signatures
+    c.find('Enable').pyName = 'EnableItem'
+    c.find('Show').pyName = 'ShowItem'
+    
+    c.addPyMethod('GetItemLabel', '(self, n)', 
+                  doc="""\
+                  GetItemLabel(self, n) -> string\n
+                  Return the text of the n'th item in the radio box.""",
+                  body='return self.GetString(n)')
+    c.addPyMethod('SetItemLabel', '(self, n, text)', 
+                  doc="""\
+                  SetItemLabel(self, n, text)\n
+                  Set the text of the n'th item in the radio box.""",
+                  body='self.SetString(n, text)')
+    
+    
     tools.fixWindowClass(c)
     
     #-----------------------------------------------------------------
