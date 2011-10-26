@@ -97,6 +97,8 @@ def main(args):
     options, commands = parseArgs(args)
     
     while commands:
+        # ensure that each command starts with the CWD being the phoenix dir.
+        os.chdir(phoenixDir())
         cmd = commands[0]
         commands = commands[1:]
         if cmd.startswith('test_'):
@@ -610,9 +612,10 @@ def build_wx(options, args):
     # Build the wx message catalogs, but first check that there is a msgfmt
     # command available
     if findCmd('msgfmt'):
-        pwd = pushDir(posixjoin(wxDir(), 'locale'))
-        print 'Building message catalogs'
+        locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
+        print 'Building message catalogs in', os.getcwd()
         runcmd('make allmo')
+        del locale_pwd
     else:
         print "WARNING: msgfmt command not found, message catalogs not rebulit.\n" \
               "         Please install gettext and associated tools."
@@ -822,11 +825,13 @@ def buildall(options, args):
     
     
 def sdist(options, args):
-    # build a source tarball that includes generated files
+    # Build a source tarball that includes the generated SIP and CPP files.
     pass
 
+
 def bdist(options, args):
-    # build a tarball and/or installer that includes the files needed at runtime
+    # Build a tarball and/or installer that includes all the files needed at
+    # runtime for the current platform and the current version of Python.
     pass
 
 #---------------------------------------------------------------------------
