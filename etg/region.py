@@ -36,31 +36,60 @@ def run():
     c = module.find('wxRegion')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
-    c.find('GetBox').findOverload('wxCoord').ignore()
-    c.addProperty('Box GetBox')
-    
-    
-    # TODO: Make wxRegion and/or wxRegionIterator compatible with Python
-    # Iterator protocol. Perhaps it could be as simple as creating a generator
-    # object that uses a wxRegionIterator and which is returned from a
-    # wxRegion.__iter__ method.
+
+    # Replace one of the constructors with one having a more python-friendly API
+    c.find('wxRegion').findOverload('points').ignore()
+    c.addCppCode(tools.ObjArrayHelperTemplate('wxPoint', 'sipType_wxPoint',
+                    "Expected a sequence of length-2 sequences or wx.Point objects."))
+    c.addCppCtor_sip('(PyObject* points, wxPolygonFillMode fillStyle = wxODDEVEN_RULE)',
+        doc="""\
+        Constructs a region corresponding to the polygon made from the points
+        in the provided sequence.""",
+        body="""\
+        size_t count;
+        wxPoint* array = wxPoint_array_helper(points, &count);
+        if ( array != NULL ) {
+            sipCpp = new wxRegion(count, array, fillStyle);
+            delete [] array;
+        }
+        if (PyErr_Occurred()) sipIsErr = 1;
+        """)
 
     
+    c.find('GetBox').findOverload('wxCoord').ignore()
+    
+    
+    
+    # Iterator stuff
+    c.addPyMethod('__iter__', '(self)', 'return PyRegionIterator(self)',
+                  """\
+                  Returns a rectangle interator conforming to the Python iterator
+                  protocol.""")
+    c.addPyCode("""\
+        class PyRegionIterator(object):
+            "A Python iterator for wx.Region objects"
+            def __init__(self, region):
+                self._region = region
+                self._iterator = wx.RegionIterator(region)
+            def next(self):
+                if not self._iterator:
+                    raise StopIteration
+                self._iterator.Next()
+                return self._iterator.GetRect()
+        """)
+    
+
+
     c = module.find('wxRegionIterator')
     c.find('operator++').ignore()
     
-    c.addCppMethod('void', 'Next', '()', 'self->operator++();')
-    c.addCppMethod('int', '__nonzero__', '()', 'return (int)self->operator bool();')
+    c.addCppMethod('void', 'Next', '()', 'self->operator++();',
+                   'Move the iterator to the next rectangle in the region.')
+    c.addCppMethod('int', '__nonzero__', '()', 'return (int)self->operator bool();',
+                   'Returns true while there are still rectangles available in the iteration.')
     
-    c.addProperty('H GetH')
-    c.addProperty('Height GetHeight')
-    c.addProperty('Rect GetRect')
-    c.addProperty('W GetW')
-    c.addProperty('Width GetWidth')
-    c.addProperty('X GetX')
-    c.addProperty('Y GetY')
     
-
+    
     # This is defined in the docs, but not in any of the real headers!
     module.find('wxNullRegion').ignore()
     
