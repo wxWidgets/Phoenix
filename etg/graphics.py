@@ -32,8 +32,6 @@ ITEMS  = [
             'wxGraphicsRenderer',
         ]
     
-OTHERDEPS = [ 'src/Point2D_helpers.cpp']
-
 #---------------------------------------------------------------------------
 
 def run():
@@ -95,7 +93,7 @@ def run():
     m.find('descent').out = True
     m.find('externalLeading').out = True
     
-    m2 = c.addCppMethod('PyObject*', 'GetTextExtent', '(const wxString& text)', 
+    c.addCppMethod('PyObject*', 'GetTextExtent', '(const wxString& text)', 
         pyArgsString="(text) -> (width, height)",
         doc="Gets the dimensions of the string using the currently selected font.",
         body="""\
@@ -103,13 +101,12 @@ def run():
         self->GetTextExtent(*text, &width, &height, NULL, NULL);
         return sipBuildResult(0, "(dd)", width, height);
         """)
-    c.items.remove(m2)
-    c.insertItemAfter(m, m2)
 
     c.addPyCode("GraphicsContext.DrawRotatedText = wx.deprecated(GraphicsContext.DrawText)")
 
     
-    c.includeCppCode('src/Point2D_helpers.cpp')
+    c.addCppCode(tools.ObjArrayHelperTemplate('wxPoint2D', 'sipType_wxPoint2DDouble',
+                    "Expected a sequence of length-2 sequences or wx.Point2D objects."))
 
     # we'll reimplement this overload as StrokeLineSegments
     c.find('StrokeLines').findOverload('beginPoints').ignore()

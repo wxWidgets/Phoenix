@@ -760,4 +760,77 @@ del _{ArrayClass_pyName}___repr__
 '''.format(**locals()))
 
 
+
+
+def ObjArrayHelperTemplate(objType, sipType, errmsg):
+    """
+    Generates a helper function that can convert from a Python sequence of
+    objects (or items that can be converted to the target type) into a C
+    array of values. Copies are made of the items so the object types should
+    support implicit or explicit copies and the copy should be cheap.  
+    
+    This kind of helper is useful for situations where the C/C++ API takes a
+    simple pointer and a count, and there is no higher level container object
+    (like a wxList or wxArray) being used. If there is an overloaded method
+    that uses one of those types then the array overload should just be
+    ignored. But for those cases where the array is the only option then this
+    helper can be used to make the array.
+    """
+    
+    cppCode = """\
+// Convert a Python sequence of {objType} objects, or items that can be converted 
+// to {objType} into a C array of {objType} instances.
+static
+{objType}* {objType}_array_helper(PyObject* source, size_t *count)
+{{
+    {objType}* array;
+    Py_ssize_t idx, len;
+    
+    // ensure that it is a sequence
+    if (! PySequence_Check(source)) 
+        goto error0;
+    // ensure it is not a string or unicode object (they are sequences too)
+    else if (PyString_Check(source) || PyUnicode_Check(source))
+        goto error0;
+    // ensure each item can be converted to {objType}
+    else {{
+        len = PySequence_Length(source);
+        for (idx=0; idx<len; idx++) {{
+            PyObject* item = PySequence_ITEM(source, idx);
+            if (!sipCanConvertToType(item, {sipType}, SIP_NOT_NONE)) {{
+                Py_DECREF(item);
+                goto error0;
+            }}
+            Py_DECREF(item);
+        }}
+    }}
+    
+    // The length of the sequence is returned in count.
+    *count = len;
+    array = new {objType}[*count];
+    if (!array) {{
+        PyErr_SetString(PyExc_MemoryError, "Unable to allocate temporary array");
+        return NULL;
+    }}
+    for (idx=0; idx<len; idx++) {{
+        PyObject* obj = PySequence_ITEM(source, idx);
+        int state = 0;
+        int err = 0;
+        {objType}* item = reinterpret_cast<{objType}*>(
+                        sipConvertToType(obj, {sipType}, NULL, 0, &state, &err));
+        array[idx] = *item;
+        sipReleaseType((void*)item, {sipType}, state); // delete temporary instances
+        Py_DECREF(obj);
+    }}
+    return array;
+
+error0:
+    PyErr_SetString(PyExc_TypeError, "{errmsg}");
+    return NULL;
+}}
+""".format(**locals())
+
+    return cppCode
+
+
 #---------------------------------------------------------------------------
