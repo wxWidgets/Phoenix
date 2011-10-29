@@ -496,6 +496,7 @@ class ClassDef(BaseDef):
         super(ClassDef, self).__init__()
         self.kind = kind
         self.protection = ''
+        self.templateParams = []    # class is a template
         self.bases = []             # base class names
         self.includes = []          # .h file for this class
         self.abstract = False       # is it an abstract base class?
@@ -531,7 +532,9 @@ class ClassDef(BaseDef):
             self.bases.append(node.text)
         for node in element.findall('includes'):
             self.includes.append(node.text)
-
+        for node in element.findall('templateparamlist/param'):
+            self.templateParams.append(node.find('type').text)
+            
         for node in element.findall('innerclass'):
             if node.get('prot') == 'private':
                 continue
@@ -609,16 +612,14 @@ class ClassDef(BaseDef):
                 # look at all overloads
                 ok = False
                 for m in item.all():
-                    if m.ignored:
+                    # don't use ignored or static methods for propertiess
+                    if m.ignored or m.isStatic:
                         continue
                     if prefix == 'Get':
                         prop.getter = m.name
                         # Getters must be able to be called with no args, ensure
                         # that item has exactly zero args without a default value
                         if countNonDefaultArgs(m) != 0:
-                            continue
-                        # Getters must not be static methods
-                        if item.isStatic:
                             continue
                         ok = True
                         break

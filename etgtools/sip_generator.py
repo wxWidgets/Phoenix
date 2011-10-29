@@ -299,6 +299,8 @@ from %s import *
             return
         
         # write the class header
+        if klass.templateParams:
+            stream.write('%stemplate<%s>\n' % (indent, ', '.join(klass.templateParams)))
         stream.write('%s%s %s' % (indent, klass.kind, klass.name))
         if klass.bases:
             stream.write(' : ')
