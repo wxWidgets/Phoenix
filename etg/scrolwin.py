@@ -51,8 +51,7 @@ def run():
     scrolled.find('GetVirtualSize.x').out = True
     scrolled.find('GetVirtualSize.y').out = True
 
-    
-    
+        
     if False:
         # When SIP gets the ability to support template classes where the
         # base class is the template parameter, then we can use this instead
@@ -90,6 +89,7 @@ def run():
                 "wxScrolledCanvas instead."
         scDoc = " This scrolled window is not intended to have children so it doesn't "\
                 "have special handling for TAB traversal or focus management."
+        
         # Make the copies and add them to the module
         for name, base, doc in [ ('wxScrolledCanvas', 'wxWindow', scDoc),
                                  ('wxScrolledWindow', 'wxPanel', swDoc), ]:
