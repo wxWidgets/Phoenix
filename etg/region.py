@@ -74,8 +74,10 @@ def run():
             def next(self):
                 if not self._iterator:
                     raise StopIteration
-                self._iterator.Next()
-                return self._iterator.GetRect()
+                rect = self._iterator.GetRect()
+                if self._iterator.HaveRects():
+                    self._iterator.Next()
+                return rect
         """)
     
 
