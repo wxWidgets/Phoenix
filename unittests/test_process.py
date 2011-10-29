@@ -25,8 +25,11 @@ class process_Tests(wtc.WidgetTestCase):
         if 'wxMac' not in wx.PortInfo:
             p = wx.Process(self.frame)
             self.frame.Bind(wx.EVT_END_PROCESS, onEndProcess)            
-            wx.Execute('%s %s' % (sys.executable, testscript), p)
+            wx.Execute('%s %s' % (sys.executable, testscript), callback=p)
             
+    # TODO: When the stream classes are wrapped add tests for writing to and
+    # reading from the process
+
 #---------------------------------------------------------------------------
 
 
