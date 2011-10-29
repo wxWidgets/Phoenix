@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/scrolwin.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     16-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
@@ -9,6 +10,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+import copy
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -30,25 +32,92 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    
-    # NOTE: We do a trick here, because wxScrolled requires a template argument,
-    # which SIP doesn't handle well. So instead we just wrap the wxScrolledWindow
-    # class, which is defined as wxScrolled<wxPanel>, copying the wxScrolled API over to it.
-    module.find('wxScrolledWindow').ignore()
-    module.find('wxScrolledCanvas').ignore()
-    
-    # TODO: Handle wxScrolledCanvas. Do we just copy the ClassDef,
-    # change the name, and add it?
-    c = module.find('wxScrolled')
-    c.name = 'wxScrolledWindow'
-    c.bases = ['wxPanel']
-    for ctor in c.find('wxScrolled').all():
-        ctor.name = 'wxScrolledWindow'
-    c.find('GetViewStart').findOverload('(int *x, int *y)').ignore()
+    scrolled = module.find('wxScrolled')
+    assert isinstance(scrolled, etgtools.ClassDef)
 
-    c.addPrivateCopyCtor()
-    c.addPrivateAssignOp()
-    tools.fixWindowClass(c)
+    scrolled.find('GetViewStart').findOverload('()').ignore()
+    scrolled.find('GetViewStart.x').out = True
+    scrolled.find('GetViewStart.y').out = True
+    
+    scrolled.find('CalcScrolledPosition.xx').out = True
+    scrolled.find('CalcScrolledPosition.yy').out = True
+
+    scrolled.find('CalcUnscrolledPosition.xx').out = True
+    scrolled.find('CalcUnscrolledPosition.yy').out = True
+
+    scrolled.find('GetScrollPixelsPerUnit.xUnit').out = True
+    scrolled.find('GetScrollPixelsPerUnit.yUnit').out = True
+    
+    scrolled.find('GetVirtualSize.x').out = True
+    scrolled.find('GetVirtualSize.y').out = True
+
+    
+    
+    if False:
+        # When SIP gets the ability to support template classes where the
+        # base class is the template parameter, then we can use this instead
+        # of the trickery below.
+        
+        # Doxygen doesn't declare the base class (the template parameter in
+        # this case) so we can just add it here.
+        scrolled.bases.append('T')
+        
+        scrolled.addPrivateCopyCtor()
+        scrolled.addPrivateAssignOp()
+        tools.fixWindowClass(scrolled)
+
+        # Add back some virtuals that were removed in fixWindowClass
+        node.find('OnDraw').isVirtual = True
+        node.find('GetSizeAvailableForScrollTarget').isVirtual = True
+        node.find('GetSizeAvailableForScrollTarget').ignore(False)
+        
+        
+    else:
+        
+        # NOTE: We do a tricky tweak here because wxScrolled requires using
+        # a template parameter as the base class, which SIP doesn't handle
+        # yet. So instead we'll just copy the current extractor elements for
+        # wxScrolled and morph it into nodes that will generated wrappers for
+        # wxScrolledWindow and wxScrolledCanvas as if they were non-template
+        # classes.
+
+        # First ignore the existing typedefs
+        module.find('wxScrolledWindow').ignore()
+        module.find('wxScrolledCanvas').ignore()
+
+        swDoc = " This class derives from wxPanel so it shares its behavior with regard "\
+                "to TAB traversal and focus handling.  If you do n0t want this then use "\
+                "wxScrolledCanvas instead."
+        scDoc = " This scrolled window is not intended to have children so it doesn't "\
+                "have special handling for TAB traversal or focus management."
+        # Make the copies and add them to the module
+        for name, base, doc in [ ('wxScrolledCanvas', 'wxWindow', scDoc),
+                                 ('wxScrolledWindow', 'wxPanel', swDoc), ]:
+            node = copy.deepcopy(scrolled)
+            assert isinstance(node, etgtools.ClassDef)
+            node.name = name
+            node.templateParams = []
+            node.bases = [base]
+            node.briefDoc = etgtools.flattenNode(node.briefDoc)
+            node.briefDoc = node.briefDoc.replace('wxScrolled', name)
+            node.briefDoc += doc
+            for ctor in node.find('wxScrolled').all():
+                ctor.name = name
+
+            node.addPrivateCopyCtor()
+            node.addPrivateAssignOp()
+            tools.fixWindowClass(node)
+
+            # Add back some virtuals that were removed in fixWindowClass
+            node.find('OnDraw').isVirtual = True
+            node.find('GetSizeAvailableForScrollTarget').isVirtual = True
+            node.find('GetSizeAvailableForScrollTarget').ignore(False)
+            
+            module.insertItemAfter(scrolled, node)
+            
+        # Ignore the wxScrolled template class
+        scrolled.ignore()
+        
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
