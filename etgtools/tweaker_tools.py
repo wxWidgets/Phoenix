@@ -156,6 +156,20 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True):
         addWindowVirtuals(klass)
     
     
+def fixSizerClass(klass):
+    """
+    Remove all virtuals except for CalcMin and RecalcSizes.
+    """
+    removeVirtuals(klass)
+    klass.find('CalcMin').isVirtual = True
+    klass.find('RecalcSizes').isVirtual = True
+    
+    # in the wxSizer class they are pure-virtual
+    if klass.name == 'wxSizer':
+        klass.find('CalcMin').isPureVirtual = True
+        klass.find('RecalcSizes').isPureVirtual = True
+        
+    
 def removeVirtuals(klass):
     """
     Sometimes methods are marked as virtual but probably don't ever need to be
