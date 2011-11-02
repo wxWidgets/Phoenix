@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/spinctrl.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     16-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
@@ -17,7 +18,10 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxSpinCtrl' ]    
+ITEMS  = [ 'wxSpinCtrl',
+           'wxSpinCtrlDouble',
+           'wxSpinDoubleEvent',
+           ]    
     
 #---------------------------------------------------------------------------
 
@@ -30,8 +34,29 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
+    module.addHeaderCode("#include <wx/spinctrl.h>")
+    
     c = module.find('wxSpinCtrl')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPyMethod('SetMin', '(self, minVal)', 'self.SetRange(minVal, self.GetMax())')
+    c.addPyMethod('SetMax', '(self, maxVal)', 'self.SetRange(self.GetMin(), maxVal)')
     tools.fixWindowClass(c)
+
+
+    c = module.find('wxSpinCtrlDouble')
+    c.addPyMethod('SetMin', '(self, minVal)', 'self.SetRange(minVal, self.GetMax())')
+    c.addPyMethod('SetMax', '(self, maxVal)', 'self.SetRange(self.GetMin(), maxVal)')
+    tools.fixWindowClass(c)
+
+
+    c = module.find('wxSpinDoubleEvent')
+    tools.fixEventClass(c)
+    
+    c.addPyCode("""\
+        EVT_SPINCTRL = wx.PyEventBinder( wxEVT_COMMAND_SPINCTRL_UPDATED, 1)
+        EVT_SPINCTRLDOUBLE = wx.PyEventBinder( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, 1)
+        """)
+
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
