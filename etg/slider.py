@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/slider.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     16-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
@@ -31,13 +32,18 @@ def run():
     # customizing the generated code and docstrings.
     
     def addDefaults(func):
-        func.find('value').default = '1'
-        func.find('minValue').default = '1'
+        func.find('value').default = '0'
+        func.find('minValue').default = '0'
         func.find('maxValue').default = '100'
     
+    
     c = module.find('wxSlider')
+    assert isinstance(c, etgtools.ClassDef)
     addDefaults(c.find('wxSlider'))
     addDefaults(c.find('Create'))
+
+    c.addPyMethod('GetRange', '(self)', 'return (self.GetMin(), self.GetMax())')
+    
     tools.fixWindowClass(c)
     
     #-----------------------------------------------------------------
