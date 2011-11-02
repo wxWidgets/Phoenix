@@ -38,12 +38,14 @@ def run():
     
     c = module.find('wxSpinCtrl')
     assert isinstance(c, etgtools.ClassDef)
+    c.addPyMethod('GetRange', '(self)', 'return (self.GetMin(), self.GetMax())')
     c.addPyMethod('SetMin', '(self, minVal)', 'self.SetRange(minVal, self.GetMax())')
     c.addPyMethod('SetMax', '(self, maxVal)', 'self.SetRange(self.GetMin(), maxVal)')
     tools.fixWindowClass(c)
 
 
     c = module.find('wxSpinCtrlDouble')
+    c.addPyMethod('GetRange', '(self)', 'return (self.GetMin(), self.GetMax())')
     c.addPyMethod('SetMin', '(self, minVal)', 'self.SetRange(minVal, self.GetMax())')
     c.addPyMethod('SetMax', '(self, maxVal)', 'self.SetRange(self.GetMin(), maxVal)')
     tools.fixWindowClass(c)
