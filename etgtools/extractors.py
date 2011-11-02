@@ -594,45 +594,85 @@ class ClassDef(BaseDef):
     def includeCppCode(self, filename):
         self.addCppCode(file(filename).read())
         
+        
     def addAutoProperties(self):
+        """
+        Look at MethodDef and PyMethodDef items and generate properties if
+        there are items that have Get/Set prefixes and have appropriate arg
+        counts.
+        """
         def countNonDefaultArgs(m):
             count = 0
             for p in m.items:
                 if not p.default and not p.ignored:
                     count += 1
             return count
+
+        def countPyArgs(item):
+            count = 0
+            args = item.argsString.replace('(', '').replace(')', '')
+            for arg in args.split(','):
+                if arg != 'self':
+                    count += 1
+            return count
+            
+        def countPyNonDefaultArgs(item):
+            count = 0
+            args = item.argsString.replace('(', '').replace(')', '')
+            for arg in args.split(','):
+                if arg != 'self' and '=' not in arg:
+                    count += 1
+            return count
         
         props = dict()
         for item in self.items:
-            if isinstance(item, MethodDef) and item.name not in ['Get', 'Set'] \
+            if isinstance(item, (MethodDef, PyMethodDef)) \
+               and item.name not in ['Get', 'Set'] \
                and (item.name.startswith('Get') or item.name.startswith('Set')):
                 prefix = item.name[:3]
                 name = item.name[3:]
                 prop = props.get(name, PropertyDef(name))
-                # look at all overloads
-                ok = False
-                for m in item.all():
-                    # don't use ignored or static methods for propertiess
-                    if m.ignored or m.isStatic:
-                        continue
-                    if prefix == 'Get':
-                        prop.getter = m.name
-                        # Getters must be able to be called with no args, ensure
-                        # that item has exactly zero args without a default value
-                        if countNonDefaultArgs(m) != 0:
-                            continue
+                if isinstance(item, PyMethodDef):
+                    ok = False
+                    argCount = countPyArgs(item)
+                    nonDefaultArgCount = countPyNonDefaultArgs(item)
+                    if prefix == 'Get' and argCount == 0:
                         ok = True
-                        break
-                    elif prefix == 'Set':
-                        prop.setter = m.name
-                        # Setters must be able to be called with 1 arg, ensure
-                        # that item has at least 1 arg and not more than 1 without
-                        # a default value.
-                        if len(m.items) == 0 or countNonDefaultArgs(m) > 1:
-                            continue
+                        prop.getter = item.name
+                        prop.usesPyMethod = True
+                    elif prefix == 'Set'and \
+                         (nonDefaultArgCount == 1 or (nonDefaultArgCount == 0 and argCount > 0)):
                         ok = True
-                        break
+                        prop.setter = item.name
+                        prop.usesPyMethod = True
+                        
+                else:
+                    # look at all overloads
+                    ok = False
+                    for m in item.all():
+                        # don't use ignored or static methods for propertiess
+                        if m.ignored or m.isStatic:
+                            continue
+                        if prefix == 'Get':
+                            prop.getter = m.name
+                            # Getters must be able to be called with no args, ensure
+                            # that item has exactly zero args without a default value
+                            if countNonDefaultArgs(m) != 0:
+                                continue
+                            ok = True
+                            break
+                        elif prefix == 'Set':
+                            prop.setter = m.name
+                            # Setters must be able to be called with 1 arg, ensure
+                            # that item has at least 1 arg and not more than 1 without
+                            # a default value.
+                            if len(m.items) == 0 or countNonDefaultArgs(m) > 1:
+                                continue
+                            ok = True
+                            break
                 if ok:
+                    if hasattr(prop, 'usesPyMethod'):
+                        prop = PyPropertyDef(prop.name, prop.getter, prop.setter)
                     props[name] = prop
                 
         if props:
