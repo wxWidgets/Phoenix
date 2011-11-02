@@ -38,25 +38,25 @@ def run():
     
     c.find('SetMenu.menu').transfer = True
 
-    c.addCppMethod('void', 'SetSearchBitmap', '(const wxBitmap& bmp)',
+    c.addCppMethod('void', 'SetSearchBitmap', '(const wxBitmap* bmp)',
             """\
             #ifdef __WXMAC__
             #else
-                self->SetSearchBitmap(bmp);
+                self->SetSearchBitmap(*bmp);
             #endif
             """)
-    c.addCppMethod('void', 'SetSearchMenuBitmap', '(const wxBitmap& bmp)',
+    c.addCppMethod('void', 'SetSearchMenuBitmap', '(const wxBitmap* bmp)',
             """\
             #ifdef __WXMAC__
             #else
-                self->SetSearchMenuBitmap(bmp);
+                self->SetSearchMenuBitmap(*bmp);
             #endif
             """)
-    c.addCppMethod('void', 'SetCancelBitmap', '(const wxBitmap& bmp)',
+    c.addCppMethod('void', 'SetCancelBitmap', '(const wxBitmap* bmp)',
             """\
             #ifdef __WXMAC__
             #else
-                self->SetSearchMenuBitmap(bmp);
+                self->SetSearchMenuBitmap(*bmp);
             #endif
             """)
 
