@@ -47,7 +47,7 @@ def run():
     module.find('wxGetHostName').findOverload('buf').ignore()
     module.find('wxGetUserId').findOverload('buf').ignore()
     module.find('wxGetUserName').findOverload('buf').ignore()
-    module.find('CMPFUNCDATA').ignore()
+    module.find('wxSortCallback').ignore()
     module.find('wxLoadUserResource').ignore()
     module.find('wxGetFreeMemory').ignore()
     module.find('wxGetLinuxDistributionInfo').ignore()
