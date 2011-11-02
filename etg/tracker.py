@@ -23,7 +23,7 @@ ITEMS  = [ 'wxTrackable' ]
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
-    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING, False)
     etgtools.parseDoxyXML(module, ITEMS)
     
     #-----------------------------------------------------------------
