@@ -678,6 +678,9 @@ class ClassDef(BaseDef):
         if props:
             self.addPublic()
         for name, prop in sorted(props.items()):
+            # properties must have at least a getter
+            if not prop.getter:
+                continue
             starts_with_number = False
             try:
                 int(name[0])
@@ -691,9 +694,7 @@ class ClassDef(BaseDef):
             elif self.findItem(name):
                 print "WARNING: Method %s::%s already exists in C++ class API, can not create a property." % (self.name, name)
             else:
-                # properties must have at least a getter
-                if prop.getter:
-                    self.items.append(prop)
+                self.items.append(prop)
 
                 
     

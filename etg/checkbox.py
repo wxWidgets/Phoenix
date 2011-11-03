@@ -31,8 +31,15 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxCheckBox')
+    assert isinstance(c, etgtools.ClassDef)
     c.find('wxCheckBox.label').default = 'wxEmptyString'
     c.find('Create.label').default = 'wxEmptyString'
+
+    # Workaround warning for the property name starting with a digit
+    c.find('Get3StateValue').ignore()
+    c.addAutoProperties()
+    c.find('Get3StateValue').ignore(False)
+    c.addProperty('ThreeStateValue Get3StateValue Set3StateValue')
     
     tools.fixWindowClass(c)
     
