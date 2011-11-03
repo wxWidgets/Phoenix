@@ -5,6 +5,7 @@ import wx
 pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 pngFile2 = os.path.join(os.path.dirname(__file__), 'pointy.png')
 
+
 #---------------------------------------------------------------------------
 
 class statbmp_Tests(wtc.WidgetTestCase):
@@ -18,7 +19,7 @@ class statbmp_Tests(wtc.WidgetTestCase):
     def test_statbmpDefaultCtor(self):
         bmp = wx.Bitmap(pngFile)
         sb = wx.StaticBitmap()
-        sb.Create(self.frame, -1, bmp))
+        sb.Create(self.frame, -1, bmp)
         
 
     def test_statbmpProperties(self):
