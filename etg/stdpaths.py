@@ -34,7 +34,14 @@ def run():
     c.find('IgnoreAppSubDir').ignore()
     c.find('DontIgnoreAppSubDir').ignore()
     c.find('IgnoreAppBuildSubDirs').ignore()
-    c.find('MSWGetShellDir').ignore()
+    
+    c.find('MSWGetShellDir').setCppCode("""\
+    #ifdef __WXMSW__
+        return new wxString(self->MSWGetShellDir(csidl));
+    #else
+        return new wxString;
+    #endif
+    """)
     
     c.find('SetInstallPrefix').setCppCode("""\
     #ifdef __WXMSW__
