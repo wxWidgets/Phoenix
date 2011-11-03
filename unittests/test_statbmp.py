@@ -1,6 +1,7 @@
 import imp_unittest, unittest
 import wtc
 import wx
+import os
 
 pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 pngFile2 = os.path.join(os.path.dirname(__file__), 'pointy.png')
