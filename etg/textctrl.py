@@ -1,6 +1,7 @@
 #---------------------------------------------------------------------------
 # Name:        etg/textctrl.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     9-Sept-2011
 # Copyright:   (c) 2011 by Kevin Ollivier
@@ -17,17 +18,13 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxTextCtrl', 'wxTextEntry', 'wxTextCompleter', 'wxTextAttr', ]
+ITEMS  = [ 'wxTextAttr', 'wxTextCtrl', ]
     
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
-    
-    module.items.append(etgtools.TypedefDef(type='long', name='wxTextPos'))
-    module.items.append(etgtools.TypedefDef(type='long', name='wxTextCoord'))
-    
     etgtools.parseDoxyXML(module, ITEMS)
     
     #-----------------------------------------------------------------
@@ -35,24 +32,29 @@ def run():
     # customizing the generated code and docstrings.
 
     c = module.find('wxTextAttr')
-    for op in c.allItems():
-        if 'operator' in op.name:
-            op.ignore()
+    assert isinstance(c, etgtools.ClassDef)
+    c.find('operator=').ignore()
 
-    c = module.find('wxTextCompleter')
-    c.addPrivateCopyCtor()
-    
-    c = module.find('wxTextEntry')
-    c.abstract = True
-    tools.removeVirtuals(c)
 
     c = module.find('wxTextCtrl')
-    c.find('HitTest').overloads = []
     
+    # Split the HitTest overloads into separately named methods since once
+    # the output parameters are applied they will have the same function
+    # signature.
+    ht1 = c.find('HitTest')
+    ht2 = ht1.overloads[0]
+    ht1.overloads = []
+    c.insertItemAfter(ht1, ht2)
+    ht1.pyName = 'HitTestPos'
+    ht1.find('pos').out = True
+    ht2.find('row').out = True
+    ht2.find('col').out = True
+    
+    c.find('PositionToXY.x').out = True
+    c.find('PositionToXY.y').out = True
+
     for op in c.findAll('operator<<'):
         op.ignore()
-
-    assert isinstance(c, etgtools.ClassDef)
 
     tools.fixWindowClass(c)
     
