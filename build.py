@@ -5,16 +5,18 @@
 # the Python extension mocdules.
 #---------------------------------------------------------------------------
 
-import sys
+import commands
+import glob
+import hashlib
+import optparse
 import os
 import re
-import glob
 import shutil
 import subprocess
-import optparse
+import sys
+import tarfile
 import tempfile
 import urllib2
-import hashlib
 
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd
@@ -66,6 +68,8 @@ Usage: ./build.py [command(s)] [options]
         build_py    Build wxPython only
         build       Build both wxWidgets and wxPython
         
+        bdist       Create a binary release of wxPython Phoenix
+        
         clean_wx    Clean the wx parts of the build
         clean_py    Clean the wxPython parts of the build
         clean       Clean both wx and wxPython
@@ -104,7 +108,7 @@ def main(args):
         if cmd.startswith('test_'):
             testOne(cmd, options, args)
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
-                     'build_wx', 'build_py', 'build',
+                     'build_wx', 'build_py', 'build', 'bdist',
                      'clean', 'clean_wx', 'clean_py', 'cleanall']:
             function = globals()[cmd]
             function(options, args)
@@ -832,8 +836,46 @@ def sdist(options, args):
 def bdist(options, args):
     # Build a tarball and/or installer that includes all the files needed at
     # runtime for the current platform and the current version of Python.
-    pass
+    
+    dllext = ".so"
+    environ_script="packaging/phoenix_environ.sh"
+    wxlibdir = os.path.join(getBuildDir(options), "lib") 
+    if sys.platform.startswith('win'):
+        dllext = ".dll"
+        wxlibdir = os.path.join(wxlibdir, "vc_dll")
+        #environ_script="packaging/phoenix_environ.bat"
+    elif sys.platform.startswith('darwin'):
+        dllext = ".dylib"
+    
+    dlls = glob.glob(os.path.join(wxlibdir, "*%s" % dllext))
+    
+    svnrev = None
+    try:
+        svnrev = "r" + commands.getoutput('svnversion').split(':')[0]
+    except:
+        #TODO: if this fails, append the date built instead
+        raise
+        
+    rootname = "wxPython-Phoenix-%s" % svnrev
+    tarfilename = "dist/%s.tar.gz" % rootname
 
+    if not os.path.exists('dist'):
+        os.makedirs('dist')
+    
+    if os.path.exists(tarfilename):
+        os.remove(tarfilename)
+    print "Archiving Phoenix bindings..."
+    tarball = tarfile.open(name=tarfilename, mode="w:gz")
+    tarball.add('wx', os.path.join(rootname, 'wx'))
+    print "Archiving wxWidgets dlls..."
+    for dll in dlls:
+        tarball.add(dll, os.path.join(rootname, 'wx', os.path.basename(dll)))
+    tarball.add(environ_script, os.path.join(rootname, os.path.basename(environ_script)))
+    tarball.close()
+    
+    print "Relase built at %s" % tarfilename
+
+    
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
