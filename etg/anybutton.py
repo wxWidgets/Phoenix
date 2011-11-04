@@ -1,39 +1,38 @@
 #---------------------------------------------------------------------------
-# Name:        etg/togglebtn.py
-# Author:      Kevin Ollivier
+# Name:        etg/anybutton.py
+# Author:      Robin Dunn
 #
-# Created:     16-Sept-2011
-# Copyright:   (c) 2011 by Kevin Ollivier
+# Created:     03-Nov-2011
+# Copyright:   (c) 2011 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"
+PACKAGE   = "wx"   
 MODULE    = "_core"
-NAME      = "togglebtn"   # Base name of the file to generate to for this script
+NAME      = "anybutton"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxToggleButton' ]    
+ITEMS  = [ "wxAnyButton", ]    
     
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
-    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING, False)
     etgtools.parseDoxyXML(module, ITEMS)
     
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    c = module.find('wxToggleButton')
-    c.find('wxToggleButton.label').default = 'wxEmptyString'
-    c.find('Create.label').default = 'wxEmptyString'
-    tools.fixWindowClass(c)
+    c = module.find('wxAnyButton')
+    assert isinstance(c, etgtools.ClassDef)
+    c.abstract = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
