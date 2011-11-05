@@ -70,9 +70,7 @@ def run():
     c.find('ClientToScreen').findOverload('int *').ignore()
     c.find('ScreenToClient').findOverload('int *').ignore()
     
-    # Rename these overloads for symmetry with the getters of the same name
-    #c.find('SetSize').findOverload('wxRect').pyName = 'SetRect'
-    #c.find('SetClientSize').findOverload('wxRect').pyName = 'SetClientRect'
+    # Add a couple wrapper functions for symmetry with the getters of the same name
     c.addPyMethod('SetRect', '(self, rect)', 'return self.SetSize(rect)')
     c.addPyProperty('Rect GetRect SetRect')
     c.addPyMethod('SetClientRect', '(self, rect)', 'return self.SetClientSize(rect)')
@@ -95,6 +93,14 @@ def run():
         return NULL;
     #endif
     """)
+    
+    c.addCppMethod('void', 'AssociateHandle', '(long handle)',
+        doc="Associate the window with a new native handle",
+        body="self->AssociateHandle((WXWidget)handle);")
+    c.addCppMethod('void', 'DissociateHandle', '()',
+        doc="Dissociate the current native handle from the window",
+        body="self->DissociateHandle();")
+        
     
     # Add some new methods
     c.addCppMethod('wxWindow*', 'GetTopLevelParent', '()',
@@ -145,10 +151,6 @@ def run():
     #endif
     """)
 
-    #%Rename(ConvertDialogPointToPixels, wxPoint, ConvertDialogToPixels(const wxPoint& pt));
-    #%Rename(ConvertDialogSizeToPixels,  wxSize,  ConvertDialogToPixels(const wxSize& sz));
-    #%Rename(ConvertPixelPointToDialog, wxPoint, ConvertPixelsToDialog(const wxPoint& pt));
-    #%Rename(ConvertPixelSizeToDialog,  wxSize,  ConvertPixelsToDialog(const wxSize& sz));
     
     # MSW only.  Do we want them wrapped?
     c.find('GetAccessible').ignore()
