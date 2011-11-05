@@ -67,7 +67,7 @@ class timer_Tests(wtc.WidgetTestCase):
     
     def test_timerCallLater1(self):
         # simple CallLater usage
-        wx.CallLater(250, self.onCallLater)
+        wx.CallLater(150, self.onCallLater)
         self.waitFor(500)
         self.assertTrue(self.flag)
 
