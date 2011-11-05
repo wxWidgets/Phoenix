@@ -99,6 +99,8 @@ PyAssertionError
 ----------------
     Implement the ability to raise an exception when an assert in wx
     is triggered.
+    
+    See /RaisesPyException/
 
 
 
@@ -254,12 +256,6 @@ way:
 
 other stuff
 ------------
-
-  * wxListBox: All "Set" methods ignored, why?
-
-  * textctrl: wxTextEntry and wxTextCompleter are in separate files
-
-  * textctrl: add a renamed HitTest row/col overload
 
   * data buffer support for wxImage RGB and alpha data
 
