@@ -37,7 +37,7 @@ def run():
     
     c.find('MSWGetShellDir').setCppCode("""\
     #ifdef __WXMSW__
-        return new wxString(self->MSWGetShellDir(csidl));
+        return new wxString(wxStandardPaths::MSWGetShellDir(csidl));
     #else
         return new wxString;
     #endif
