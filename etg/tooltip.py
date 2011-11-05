@@ -35,7 +35,11 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
 
     # TODO: This is MSW only
-    c.find('SetMaxWidth').ignore()
+    c.find('SetMaxWidth').setCppCode("""\
+    #ifdef __WXMSW__
+        wxToolTip::SetMaxWidth(width);
+    #endif
+    """)
     
     c.addProperty('Tip GetTip SetTip')
     c.addProperty('Window GetWindow')
