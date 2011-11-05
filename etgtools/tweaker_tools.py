@@ -204,6 +204,10 @@ def addWindowVirtuals(klass):
         ('OnInternalIdle',           'void OnInternalIdle()'),
         ('GetMainWindowOfCompositeControl', 
                                      'wxWindow *GetMainWindowOfCompositeControl()'),
+        ('InformFirstDirection',     'bool InformFirstDirection(int direction, int size, int availableOtherDir)'),
+        ('SetCanFocus',              'void SetCanFocus(bool canFocus)'),
+        
+        
         #('Enable', ''),   We have DoEnable now...
         
         ## What about these?
