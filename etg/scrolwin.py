@@ -118,6 +118,7 @@ def run():
         # Ignore the wxScrolled template class
         scrolled.ignore()
         
+    module.addPyCode("PyScrolledWindow = wx.deprecated(ScrolledWindow)")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
