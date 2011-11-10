@@ -54,8 +54,7 @@ public:
         PEN_MEDIUMGREY,
         PEN_RED,
         PEN_TRANSPARENT,
-        PEN_WHITE,
-        ITEMCOUNT
+        PEN_WHITE
     };
 
     wxStockGDI();
