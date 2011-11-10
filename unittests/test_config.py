@@ -4,19 +4,11 @@ import wx
 import os
 
 cfgFilename = os.path.join(os.path.dirname(__file__), 'cfgtest')
+
 #---------------------------------------------------------------------------
 
 class ConfigTests(wtc.WidgetTestCase):
     
-    def test_Config1(self):
-        null = wx.LogNull()
-        name = cfgFilename + '_1'
-        cfg = wx.Config('unittest_ConfigTests', localFilename=name)
-        self.writeStuff(cfg)
-        del cfg
-        if os.path.exists(name):
-            os.remove(name)
-
     def writeStuff(self, cfg):
         cfg.SetPath('/one/two/three')
         cfg.Write('key', 'value')
@@ -25,9 +17,55 @@ class ConfigTests(wtc.WidgetTestCase):
         cfg.WriteBool('bool', True)
         cfg.Flush()
 
+
+    def test_Config1(self):
+        null = wx.LogNull()
+        name = cfgFilename + '_1'
+        cfg = wx.Config('unittest_ConfigTests', localFilename=name)
+        self.writeStuff(cfg)
+        del cfg
+        if os.path.exists(name):
+            os.remove(name)
         
         
     def test_Config2(self):
+        null = wx.LogNull()
+        name = cfgFilename + '_3'
+        
+        cfg = wx.Config('unittest_ConfigTests', localFilename=name)
+        self.writeStuff(cfg)
+
+        cfg.SetPath('/before')
+        self.assertTrue(cfg.GetPath() == '/before')
+        changer = wx.ConfigPathChanger(cfg, '/one/two/three/')
+        self.assertTrue(cfg.GetPath() == '/one/two/three')
+        del changer
+        self.assertTrue(cfg.GetPath() == '/before')
+                    
+        del cfg
+        if os.path.exists(name):
+            os.remove(name)
+
+
+    def test_Config3(self):
+        null = wx.LogNull()
+        name = cfgFilename + '_3'
+        
+        cfg = wx.Config('unittest_ConfigTests', localFilename=name)
+        self.writeStuff(cfg)
+
+        cfg.SetPath('/before')
+        self.assertTrue(cfg.GetPath() == '/before')
+        with wx.ConfigPathChanger(cfg, '/one/two/three/'):
+            self.assertTrue(cfg.GetPath() == '/one/two/three')
+        self.assertTrue(cfg.GetPath() == '/before')
+                    
+        del cfg
+        if os.path.exists(name):
+            os.remove(name)
+
+
+    def test_Config4(self):
         null = wx.LogNull()
         name = cfgFilename + '_2'
         
@@ -49,7 +87,7 @@ class ConfigTests(wtc.WidgetTestCase):
         if os.path.exists(name):
             os.remove(name)
 
-        
+
        
 #---------------------------------------------------------------------------
 

@@ -18,7 +18,10 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxConfigBase', 'wxFileConfig', ]
+ITEMS  = [ 'wxConfigBase', 
+           'wxFileConfig', 
+           'wxConfigPathChanger',
+           ]
     
 #---------------------------------------------------------------------------
 
@@ -79,6 +82,7 @@ def run():
     
     
     
+    #-----------------------------------------------------------------
     c = module.find('wxFileConfig')
     c.addPrivateCopyCtor()
     c.find('wxFileConfig').findOverload('wxInputStream').ignore()
@@ -88,7 +92,7 @@ def run():
     c.find('GetGlobalFile').ignore()
     c.find('GetLocalFile').ignore()
     
-
+    #-----------------------------------------------------------------
     # In C++ wxConfig is a #define to some other config class. We'll let our
     # backend generator believe that it's a real class with that name. It will
     # end up using the wxConfig #defined in the C++ code, and will actually be
@@ -127,6 +131,15 @@ def run():
     };
     """)
     module.addItem(wc)
+
+    
+    #-----------------------------------------------------------------
+    c = module.find('wxConfigPathChanger')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
 
         
     #-----------------------------------------------------------------
