@@ -42,7 +42,7 @@ sipCurrentVersionMD5 = {
     'win32'  : 'b21b910d98411e64f552b1cd74dc5d86',
     'linux2' : 'fbab55f36f05dfbf31d4968ce187abb8',
 }
-toolsURL = 'http://wxpython.org/tools'
+toolsURL = 'http://wxpython.org/Phoenix/tools'
 
 #---------------------------------------------------------------------------
 
