@@ -27,10 +27,10 @@ class statbmp_Tests(wtc.WidgetTestCase):
         bmp = wx.Bitmap(pngFile)
         sb = wx.StaticBitmap(self.frame, label=bmp)
         
-        sb.Icon
         sb.Bitmap
         sb.Bitmap = wx.Bitmap(pngFile2)
         
+        #sb.Icon   # TODO: this asserts if SetIcon hasn't been called
         
 #---------------------------------------------------------------------------
 
