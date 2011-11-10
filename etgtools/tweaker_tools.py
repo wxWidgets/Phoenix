@@ -207,9 +207,6 @@ def addWindowVirtuals(klass):
         ('InformFirstDirection',     'bool InformFirstDirection(int direction, int size, int availableOtherDir)'),
         ('SetCanFocus',              'void SetCanFocus(bool canFocus)'),
         
-        
-        #('Enable', ''),   We have DoEnable now...
-        
         ## What about these?
         #bool HasMultiplePages() const 
         #void UpdateWindowUI(long flags = wxUPDATE_UI_NONE);
@@ -220,7 +217,7 @@ def addWindowVirtuals(klass):
         ('ProcessEvent',        'bool ProcessEvent(wxEvent & event)'),
         ('DoEnable',            'void DoEnable(bool enable)'),
         ('OnEnabled',           'void OnEnabled(bool enabled)'),
-        ('DoGetPosition',        'void DoGetPosition(int *x, int *y) const'),
+        ('DoGetPosition',       'void DoGetPosition(int *x, int *y) const'),
         ('DoGetSize',           'void DoGetSize(int *width, int *height) const'),
         ('DoGetClientSize',     'void DoGetClientSize(int *width, int *height) const'),
         ('DoGetBestSize',       'wxSize DoGetBestSize() const'),
@@ -234,6 +231,8 @@ def addWindowVirtuals(klass):
         ('GetDefaultBorder',    'wxBorder GetDefaultBorder() const'),
         ('GetDefaultBorderForControl', 
                                 'wxBorder GetDefaultBorderForControl() const'),
+        ('DoFreeze',            'void DoFreeze()'),
+        ('DoThaw',              'void DoThaw()'),
 
         ## What about these?
         #('DoGetScreenPosition', 'void DoGetScreenPosition(int *x, int *y) const'),
