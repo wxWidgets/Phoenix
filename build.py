@@ -5,7 +5,6 @@
 # the Python extension mocdules.
 #---------------------------------------------------------------------------
 
-import commands
 import glob
 import hashlib
 import optparse
@@ -638,9 +637,13 @@ def build_py(options, args):
         # exist... TODO: It would probably be a good idea to filter out the
         # debug files unless --debug is given.
         ver = version3_nodot if unstable_series else version2_nodot
-        dlls = glob.glob(os.path.join(msw.dllDir, "wx*%s*.dll" % ver))
-        if options.debug:
-            dlls += glob.glob(os.path.join(msw.dllDir, "wx*%s*.pdb" % ver))
+        dlls = list()
+        if not options.debug or options.both:
+            dlls += glob.glob(os.path.join(msw.dllDir, "wx*%su_*.dll" % ver))
+        if options.debug or options.both:
+            dlls += glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.dll" % ver))
+            dlls += glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.pdb" % ver))
+            
         for dll in dlls:
             shutil.copyfile(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)))
 
@@ -841,22 +844,28 @@ def bdist(options, args):
     environ_script="packaging/phoenix_environ.sh"
     wxlibdir = os.path.join(getBuildDir(options), "lib") 
     if sys.platform.startswith('win'):
-        dllext = ".dll"
-        wxlibdir = os.path.join(wxlibdir, "vc_dll")
-        #environ_script="packaging/phoenix_environ.bat"
+        #dllext = ".dll"
+        #wxlibdir = os.path.join(wxDir(), "lib", "vc_dll")
+        environ_script = None #"packaging/phoenix_environ.bat"
     elif sys.platform.startswith('darwin'):
         dllext = ".dylib"
-    
-    dlls = glob.glob(os.path.join(wxlibdir, "*%s" % dllext))
-    
+     
+    def _getDate():
+        import datetime
+        today = datetime.date.today()
+        return "%d%02d%02d" % (today.year, today.month, today.day)
+        
     svnrev = None
     try:
-        svnrev = "r" + commands.getoutput('svnversion').split(':')[0]
+        rev = runcmd('svnversion', getOutput=True, echoCmd=False)
+        if rev == 'exported':
+            svnrev = _getDate()
+        else:
+            svnrev = "r" + rev.split(':')[0]
     except:
-        #TODO: if this fails, append the date built instead
-        raise
+        svnrev = _getDate()
         
-    rootname = "wxPython-Phoenix-%s" % svnrev
+    rootname = "wxPython-Phoenix-%s-%s-py%s" % (svnrev, sys.platform, PYVER)
     tarfilename = "dist/%s.tar.gz" % rootname
 
     if not os.path.exists('dist'):
@@ -867,10 +876,16 @@ def bdist(options, args):
     print "Archiving Phoenix bindings..."
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
     tarball.add('wx', os.path.join(rootname, 'wx'))
-    print "Archiving wxWidgets dlls..."
-    for dll in dlls:
-        tarball.add(dll, os.path.join(rootname, 'wx', os.path.basename(dll)))
-    tarball.add(environ_script, os.path.join(rootname, os.path.basename(environ_script)))
+    if not sys.platform.startswith('win'):
+        # The DLLs have already been copied to wx on Windows, and so are
+        # already in the tarball. For other platforms fetch them now.
+        print "Archiving wxWidgets shared libraries..."
+        dlls = glob.glob(os.path.join(wxlibdir, "*%s" % dllext))
+        for dll in dlls:
+            tarball.add(dll, os.path.join(rootname, 'wx', os.path.basename(dll)))
+
+    if environ_script:
+        tarball.add(environ_script, os.path.join(rootname, os.path.basename(environ_script)))
     tarball.close()
     
     print "Relase built at %s" % tarfilename
