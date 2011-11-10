@@ -55,7 +55,8 @@ def run():
     # we already have for them. String formatting can be done in Python if
     # needed. Drop the '...' too.
     for name in ['wxLogMessage', 'wxLogVerbose', 'wxLogWarning', 'wxLogFatalError',
-                 'wxLogError', 'wxLogDebug', 'wxLogStatus', 'wxLogSysError']:
+                 'wxLogError', 'wxLogDebug', 'wxLogStatus', 'wxLogSysError',
+                 'wxLogGeneric']:
         for f in module.find(name).all():
             p = f.find('formatString')
             p.type = 'const wxString&'
