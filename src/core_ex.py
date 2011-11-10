@@ -34,6 +34,7 @@ def version():
     else:
         port = '???'
     return "%s %s (phoenix)" % (wx.VERSION_STRING, port)
+         
                        
 import warnings
 class wxPyDeprecationWarning(DeprecationWarning):
