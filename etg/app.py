@@ -79,7 +79,7 @@ def run():
     c = module.find('wxApp')
     
     # Add a new C++ wxPyApp class that adds empty Mac* methods for other
-    # platforms, and other goodies, then change the c.name so SIP will
+    # platforms, and other goodies, then change the name so SIP will
     # generate code wrapping this class as if it was the wxApp class seen in
     # the DoxyXML. 
     c.includeCppCode('src/app_ex.cpp')
@@ -111,20 +111,46 @@ def run():
     # overridden virtuals (or at least some that we want the wrapper generator
     # to treat as if they are overridden.)
     c.addItem(etgtools.WigCode("""\
-        wxAppAssertMode GetAssertMode();
-        void            SetAssertMode(wxAppAssertMode mode);
-        void            _BootstrapApp();
-        static bool     IsDisplayAvailable();
-        
         virtual int  MainLoop();
         virtual void OnPreInit();
         virtual bool OnInit();
         virtual bool OnInitGui();
         virtual int  OnRun();
         virtual int  OnExit();
-        """))
         
+        void         _BootstrapApp();
+        """))
 
+    # Add these methods by creating extractor objects so they can be tweaked
+    # like normal, their docs will be able to be generated, etc.
+    c.addItem(etgtools.MethodDef(
+        protection='public', type='wxAppAssertMode', name='GetAssertMode', argsString='()',
+        briefDoc="Returns the current mode for how the application responds to wx asserts."))
+    
+    m = etgtools.MethodDef(
+        protection='public', type='void', name='SetAssertMode', argsString='(wxAppAssertMode mode)',
+        briefDoc="""\
+        Set the mode indicating how the application responds to wx assertion 
+        statements. Valid settings are a combination of these flags: 
+        
+            wx.APP_ASSERT_SUPPRESS 
+            wx.APP_ASSERT_EXCEPTION 
+            wx.APP_ASSERT_DIALOG 
+            wx.APP_ASSERT_LOG
+            
+        The default behavior is to raise a wx.PyAssertionError exception.
+        """)
+    m.addItem(etgtools.ParamDef(type='wxAppAssertMode', name='wxAppAssertMode'))
+    c.addItem(m)
+
+    c.addItem(etgtools.MethodDef(
+        protection='public', isStatic=True, type='bool', name='IsDisplayAvailable', argsString='()',
+        briefDoc="""\
+        Returns True if the application is able to connect to the system's 
+        display, or whatever the equivallent is for the platform."""))
+
+
+    c.addProperty('AssertMode GetAssertMode SetAssertMode')
     c.addProperty('DisplayMode GetDisplayMode SetDisplayMode')
     c.addProperty('ExitOnFrameDelete GetExitOnFrameDelete SetExitOnFrameDelete')
     c.addProperty('LayoutDirection GetLayoutDirection')
@@ -132,25 +158,31 @@ def run():
     c.addProperty('TopWindow GetTopWindow SetTopWindow')
     
     
+    #-------------------------------------------------------
     
-    appHeaderCode = """\
+    
+    module.addHeaderCode("""\
         enum wxAppAssertMode {
-            wxPYAPP_ASSERT_SUPPRESS  = 1,
-            wxPYAPP_ASSERT_EXCEPTION = 2,
-            wxPYAPP_ASSERT_DIALOG    = 4,
-            wxPYAPP_ASSERT_LOG       = 8
-        };
-        """
-    # Add it to both the header and the generator files
-    module.insertItemBefore(c, etgtools.WigCode(appHeaderCode))
-    module.addHeaderCode(appHeaderCode)
+            wxAPP_ASSERT_SUPPRESS  = 1,
+            wxAPP_ASSERT_EXCEPTION = 2,
+            wxAPP_ASSERT_DIALOG    = 4,
+            wxAPP_ASSERT_LOG       = 8
+        };""")
+    # add extractor objects for the enum too
+    enum = etgtools.EnumDef(name='wxAppAssertMode')
+    for eitem in "wxAPP_ASSERT_SUPPRESS wxAPP_ASSERT_EXCEPTION wxAPP_ASSERT_DIALOG wxAPP_ASSERT_LOG".split():
+        enum.addItem(etgtools.EnumValueDef(name=eitem))
+    module.insertItemBefore(c, enum)
+    
     module.addHeaderCode("""\
         class wxPyApp;
         wxPyApp* wxGetApp();
         """)
-    module.insertItemAfter(c, etgtools.WigCode("""\
-        wxPyApp* wxGetApp();
-        """))
+    module.find('wxTheApp').ignore()
+    f = module.find('wxGetApp')
+    f.type = 'wxPyApp*'
+    f.briefDoc = "Returns the current application object."
+    f.detailedDoc = []
     
     
     # This includes Python code for the on-demand output window, the Python
@@ -158,8 +190,6 @@ def run():
     module.includePyCode('src/app_ex.py')
     
 
-    module.find('wxTheApp').ignore()
-    module.find('wxGetApp').ignore()
     module.find('wxInitialize').ignore()
     module.find('wxUninitialize').ignore()
 

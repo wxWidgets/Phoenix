@@ -105,7 +105,7 @@ class wxPyApp : public wxApp
 
 public:
     wxPyApp() : wxApp() {
-        m_assertMode = wxPYAPP_ASSERT_EXCEPTION;
+        m_assertMode = wxAPP_ASSERT_EXCEPTION;
         m_startupComplete = false;
         //m_callFilterEvent = false;
         ms_appInstance = this;
@@ -147,13 +147,19 @@ public:
 #endif
 
     wxAppAssertMode  GetAssertMode() { return m_assertMode; }
-    void SetAssertMode(wxAppAssertMode mode) { m_assertMode = mode; }
+    void SetAssertMode(wxAppAssertMode mode) { 
+        m_assertMode = mode; 
+        if (mode & wxAPP_ASSERT_SUPPRESS)
+            wxDisableAsserts();
+        else
+            wxSetDefaultAssertHandler();
+    }
 
-//     virtual void OnAssertFailure(const wxChar *file,
-//                                  int line,
-//                                  const wxChar *func,
-//                                  const wxChar *cond,
-//                                  const wxChar *msg);
+    virtual void OnAssertFailure(const wxChar *file,
+                                 int line,
+                                 const wxChar *func,
+                                 const wxChar *cond,
+                                 const wxChar *msg);
 
     
     // Implementing OnInit is optional for wxPython apps
@@ -178,7 +184,59 @@ private:
 IMPLEMENT_ABSTRACT_CLASS(wxPyApp, wxApp);
 
 wxPyApp* wxPyApp::ms_appInstance = NULL;
+extern PyObject* wxPyAssertionError;
 
+
+void wxPyApp::OnAssertFailure(const wxChar *file,
+                              int line,
+                              const wxChar *func,
+                              const wxChar *cond,
+                              const wxChar *msg)
+{
+    // ignore it?
+    if (m_assertMode & wxAPP_ASSERT_SUPPRESS)
+        return;
+
+    // turn it into a Python exception?
+    if (m_assertMode & wxAPP_ASSERT_EXCEPTION) {
+        wxString buf;
+        buf.Alloc(4096);
+        buf.Printf(wxT("C++ assertion \"%s\" failed at %s(%d)"), cond, file, line);
+        if ( func && *func )
+            buf << wxT(" in ") << func << wxT("()");
+        if (msg != NULL) 
+            buf << wxT(": ") << msg;
+        
+        // set the exception
+        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        PyObject* s = wx2PyString(buf);
+        PyErr_SetObject(wxPyAssertionError, s);
+        Py_DECREF(s);
+        wxPyEndBlockThreads(blocked);
+
+        // Now when control returns to whatever API wrapper was called from
+        // Python it should detect that an exception is set and will return
+        // NULL, signalling the exception to Python.
+    }
+
+    // Send it to the normal log destination, but only if
+    // not _DIALOG because it will call this too
+    if ( (m_assertMode & wxAPP_ASSERT_LOG) && !(m_assertMode & wxAPP_ASSERT_DIALOG)) {
+        wxString buf;
+        buf.Alloc(4096);
+        buf.Printf(wxT("%s(%d): assert \"%s\" failed"),
+                   file, line, cond);
+        if ( func && *func )
+            buf << wxT(" in ") << func << wxT("()");
+        if (msg != NULL) 
+            buf << wxT(": ") << msg;
+        wxLogDebug(buf);
+    }
+
+    // do the normal wx assert dialog?
+    if (m_assertMode & wxAPP_ASSERT_DIALOG)
+        wxApp::OnAssertFailure(file, line, func, cond, msg);    
+}    
 
 
 void wxPyApp::_BootstrapApp()
@@ -276,8 +334,7 @@ int wxPyApp::MainLoop()
 
 
 // Function to test if the Display (or whatever is the platform equivallent)
-// can be connected to.  This is accessable from wxPython as a staticmethod of
-// wx.App called IsDisplayAvailable().
+// can be connected to.  
 bool wxPyApp::IsDisplayAvailable()
 {
 #ifdef __WXGTK__

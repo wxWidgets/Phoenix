@@ -231,6 +231,7 @@ class FunctionDef(BaseDef):
         self.deprecated = False       # is the function deprecated
         self.factory = False          # a factory function that creates a new instance of the return value
         self.pyReleaseGIL = False     # release the Python GIL for this function call
+        self.pyRaisesException = True # function may raise a Python exception
         self.noCopy = False           # don't make a copy of the return value, just wrap the original
         self.pyInt = False            # treat char types as integers
         self.transfer = False         # transfer ownership of return value to C++?
@@ -419,6 +420,7 @@ class MethodDef(FunctionDef):
         super(MethodDef, self).__init__()
         self.className = className
         self.isVirtual = False
+        self.isPureVirtual = False
         self.isStatic = False
         self.isConst = False
         self.isCtor = False
@@ -1074,6 +1076,9 @@ class ModuleDef(BaseDef):
             self.cppCode.extend(code)
         else:
             self.cppCode.append(code)
+
+    def includeCppCode(self, filename):
+        self.addCppCode(file(filename).read())
         
     def addInitializerCode(self, code):
         if isinstance(code, list):

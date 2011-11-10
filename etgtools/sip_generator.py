@@ -619,6 +619,7 @@ from %s import *
         if method.isCtor:
             stream.write('sipCpp = %s(%s);\n' % (fname, pnames))
         else:
+            stream.write('%sPyErr_Clear();\n' % indent+' '*4)
             if method.type != 'void':
                 stream.write('sipRes = ')
             if klass:
@@ -632,8 +633,7 @@ from %s import *
                     stream.write('%s(sipCpp%s);\n' % (fname, pnames))
             else:
                 stream.write('%s(%s);\n' % (fname, pnames))
-        stream.write(indent+' '*4)
-        stream.write('if (PyErr_Occurred()) sipIsErr = 1;\n')
+            stream.write('%sif (PyErr_Occurred()) sipIsErr = 1;\n' % indent+' '*4)
         stream.write('%s%%End\n' % indent)
 
         # and finally, add the new function itself
@@ -753,6 +753,15 @@ from %s import *
                 annotations.append('ReleaseGIL')
             if item.noCopy:
                 annotations.append('NoCopy')
+            if item.pyRaisesException:
+                # is it a class method?
+                if isinstance(item, extractors.MethodDef):
+                    if not item.isCtor and not item.isDtor:
+                        annotations.append('RaisesPyException')
+                # otherwise it's a plain function so no additional conditions
+                # need to be checked
+                else:
+                    annotations.append('RaisesPyException')
             
         if isinstance(item, extractors.MethodDef):
             if item.defaultCtor:
