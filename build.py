@@ -888,7 +888,7 @@ def bdist(options, args):
         tarball.add(environ_script, os.path.join(rootname, os.path.basename(environ_script)))
     tarball.close()
     
-    print "Relase built at %s" % tarfilename
+    print "Release built at %s" % tarfilename
 
     
 #---------------------------------------------------------------------------
