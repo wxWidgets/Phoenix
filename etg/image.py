@@ -262,13 +262,13 @@ def run():
     module.find('wxIMAGE_ALPHA_TRANSPARENT').pyInt = True
     module.find('wxIMAGE_ALPHA_OPAQUE').pyInt = True
     
-    # These are defines for string objects, not integers, so we can't generate
-    # code for them the same way as integer values. Since they are #defines we
-    # can't just tell SIP that they are global wxString objects because it will
-    # then end up taking the address of temporary values when it makes the
-    # getters for them. So instead we'll just make some python code to add the
-    # .py module and hope that the interface file always has the correct
-    # values of these options.
+    # These are defines for string objects, not integers, so we can't
+    # generate code for them the same way as integer values. Since they are
+    # #defines we can't just tell SIP that they are global wxString objects
+    # because it will then end up taking the address of temporary values when
+    # it makes the getters for them. So instead we'll just make some python
+    # code to insert into the .py module and hope that the interface file
+    # always has the correct values of these options.
     pycode = ""
     for item in module:
         if 'IMAGE_OPTION' in item.name and isinstance(item, etgtools.DefineDef):

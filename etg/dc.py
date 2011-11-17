@@ -109,7 +109,7 @@ def run():
         """, factory=True)
 
     # Return the rect instead of using an output parameter
-    m = c.find('DrawLabel')
+    m = c.find('DrawLabel').findOverload('rectBounding')
     m.type = 'wxRect*'
     m.find('rectBounding').ignore()
     m.factory = True  # a new instance is being created
