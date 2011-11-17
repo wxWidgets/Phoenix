@@ -67,8 +67,6 @@ def run():
         class wxDropTarget;
         class wxCaret;
         class wxImageHandler;
-        class wxIcon;
-        class wxIconBundle;
         class wxToolBar;
         class wxExecuteEnv;
         class wxInputStream;
