@@ -461,6 +461,7 @@ from %s import *
     def generateMethod(self, method, stream, indent):
         assert isinstance(method, extractors.MethodDef)
         _needDocstring = getattr(method, '_needDocstring', True)
+        checkOverloads = True
         if not method.ignored:
             if method.isVirtual:
                 stream.write("%svirtual\n" % indent)
@@ -488,6 +489,7 @@ from %s import *
                 _needDocstring = False
                 
             if method.cppCode:
+                checkOverloads = False
                 code, codeType = method.cppCode
                 if codeType == 'sip':
                     stream.write('%s%%MethodCode\n' % indent)
@@ -500,7 +502,7 @@ from %s import *
                 
             stream.write('\n')
             
-        if method.overloads:
+        if checkOverloads and method.overloads:
             for m in method.overloads:
                 m._needDocstring = _needDocstring
                 self.dispatchClassItem(method.klass, m, stream, indent)
@@ -525,6 +527,7 @@ from %s import *
         if method.ignored:
             return
 
+        _needDocstring = getattr(method, '_needDocstring', True)
         argsString = _removeIgnoredParams(method.argsString, method.items)
         lastP = argsString.rfind(')')
         pnames = argsString[:lastP].strip('()').split(',')
@@ -551,7 +554,11 @@ from %s import *
                              (indent, typ, method.name, argsString, constMod, self.annotate(method)))
     
             # write the docstring
-            self.generateDocstring(method, stream, indent)
+            if  _needDocstring and not (method.isCtor or method.isDtor):
+                self.generateDocstring(method, stream, indent)
+                # We only write a docstring for the first overload, otherwise
+                # SIP appends them all together.
+                _needDocstring = False
                 
         klass = method.klass
         if klass:
@@ -568,7 +575,8 @@ from %s import *
             fargs[idx] = arg
         fargs = ', '.join(fargs)
         if method.isCtor:
-            fname = '_%s_newCtor' % klass.name
+            klass.cppCtorCount += 1
+            fname = '_%s_ctor%d' % (klass.name, klass.cppCtorCount)
             fargs = '(%s)' % fargs
             fstream.write('%s%%TypeCode\n' % indent)
             typ = klass.name
@@ -619,7 +627,8 @@ from %s import *
         if method.isCtor:
             stream.write('sipCpp = %s(%s);\n' % (fname, pnames))
         else:
-            stream.write('%sPyErr_Clear();\n' % indent+' '*4)
+            stream.write('PyErr_Clear();\n')
+            stream.write(indent+' '*4)
             if method.type != 'void':
                 stream.write('sipRes = ')
             if klass:
@@ -633,12 +642,17 @@ from %s import *
                     stream.write('%s(sipCpp%s);\n' % (fname, pnames))
             else:
                 stream.write('%s(%s);\n' % (fname, pnames))
-            stream.write('%sif (PyErr_Occurred()) sipIsErr = 1;\n' % indent+' '*4)
+            stream.write('%sif (PyErr_Occurred()) sipIsErr = 1;\n' % (indent+' '*4))
         stream.write('%s%%End\n' % indent)
 
         # and finally, add the new function itself
         stream.write(fstream.getvalue())
         stream.write('\n')
+
+        if method.overloads:
+            for m in method.overloads:
+                m._needDocstring = _needDocstring
+                self.dispatchClassItem(method.klass, m, stream, indent)
         
 
         

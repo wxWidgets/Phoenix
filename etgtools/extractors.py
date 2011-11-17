@@ -514,6 +514,7 @@ class ClassDef(BaseDef):
         self.allowNone = False      # Allow the convertFrom code to handle None too.
         self.innerclasses = []
         self.isInner = False
+        self.cppCtorCount = 0
         
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
