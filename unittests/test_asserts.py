@@ -34,6 +34,7 @@ class asserts_Tests(wtc.WidgetTestCase):
         with self.assertRaises(wx.PyAssertionError):
             wx.NullBitmap.ConvertToImage()
         
+        
 #---------------------------------------------------------------------------
 
 
