@@ -114,6 +114,13 @@ PyAssertionError
 
 
 
+PyDeadObjectError
+-----------------
+Determine what to do about objects where the C++ part has been destroyed.  Does 
+SIP already have a solution for this?
+
+
+
 Exceptions
 ----------
     * Can we convert C++ exceptions to Python exceptions?
