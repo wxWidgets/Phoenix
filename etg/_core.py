@@ -47,6 +47,8 @@ INCLUDES = [  'defs',
               'gdicmn',
               'geometry',
 
+              'stream',
+
               'image',
               'gdiobj',
               'bitmap',

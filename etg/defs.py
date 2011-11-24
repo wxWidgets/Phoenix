@@ -54,6 +54,9 @@ def run():
     module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned int', name='size_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long', name='time_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='int', name='wxPrintQuality'))
+    module.insertItemAfter(td, etgtools.TypedefDef(type='long long', name='wxFileOffset'))
+    module.insertItemAfter(td, etgtools.TypedefDef(type='SIP_SSIZE_T', name='ssize_t'))
+    
 
     
     # Forward declarations for classes that are referenced but not defined
@@ -69,8 +72,6 @@ def run():
         class wxImageHandler;
         class wxToolBar;
         class wxExecuteEnv;
-        class wxInputStream;
-        class wxOutputStream;
     """))
     
     
