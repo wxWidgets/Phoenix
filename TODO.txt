@@ -121,6 +121,16 @@ SIP already have a solution for this?
 
 
 
+Win32 Activation Context
+-------------------------
+Port the code from Classic that creates the activation context for the
+process. This is what is needed to make the themed version of the native
+controls be used instead of the old Win2k style controls. There are a
+couple tickets in Trac releated to the activation context, so look at those
+and see if those issues are solveable in the Phoenix verison of the code.
+
+
+
 Exceptions
 ----------
     * Can we convert C++ exceptions to Python exceptions?
@@ -175,6 +185,31 @@ Deprecated C++ items
       that will also be tagged as such in the XML?
 
 
+other dev stuff
+---------------
+
+  * data buffer support for wxImage RGB and alpha data
+
+  * port all of the wx.Bitmap copy-to and copy-from buffer methods, and
+    raw bitmap access routines from Classic. 
+
+  * Come up with some way to implement the MustHaveApp check that
+    Classic does.  It should raise an exception when something is
+    created/used that should not be done before there is an application
+    object.
+
+  * Should the functions created for things like addCppMethod be
+    marked static?  How about using inline?
+
+  * Word-wrap the briefDoc strings used for %Docstring directives
+
+  * It looks like the code that is flattening the element nodes to
+    extract the briefDocs is not getting some spaces that should be in
+    there, probably where some tags are being removed.
+
+
+
+
 
 Daily builds and releases
 -------------------------
@@ -216,6 +251,8 @@ able to do full builds themselves. Specifically, we should:
     command handled by build.py.  Perhaps another command can be used
     to upload the binary to whatever server they will be distributed
     from. 
+
+
 
 
 
@@ -277,28 +314,5 @@ way:
     subsequent scan, that it should ignore the fact that item X is
     missing and not report it.
 
-
-
-other stuff
-------------
-
-  * data buffer support for wxImage RGB and alpha data
-
-  * port all of the wx.Bitmap copy-to and copy-from buffer methods, and
-    raw bitmap access routines from Classic. 
-
-  * Come up with some way to implement the MustHaveApp check that
-    Classic does.  It should raise an exception when something is
-    created/used that should not be done before there is an application
-    object.
-
-  * Should the functions created for things like addCppMethod be
-    marked static?  How about using inline?
-
-  * Word-wrap the briefDoc strings used for %Docstring directives
-
-  * It looks like the code that is flattening the element nodes to
-    extract the briefDocs is not getting some spaces that should be in
-    there, probably where some tags are being removed.
 
 
