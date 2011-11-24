@@ -36,17 +36,18 @@ def run():
 
     c.find('wxIcon').findOverload('*bits').ignore()
     c.find('wxIcon').findOverload('bits[]').ignore()
-    c.find('wxIcon.type').default = 'wxBITMAP_TYPE_ANY'
-    
+
+    c.find('wxIcon.type').default = 'wxBITMAP_TYPE_ANY'    
     c.find('LoadFile.type').default = 'wxBITMAP_TYPE_ANY'
+
     c.find('ConvertToDisabled').ignore()
-    
+
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();""")
         
     c.addCppMethod('long', 'GetHandle', '()', """\
         #ifdef __WXMSW__
-            return self->GetHandle();
+            return (long)self->GetHandle();
         #else
             return 0;
         #endif
@@ -54,7 +55,7 @@ def run():
 
     c.addCppMethod('void', 'SetHandle', '(long handle)', """\
         #ifdef __WXMSW__
-            self->SetHandle((WXHANDLE)long);
+            self->SetHandle((WXHANDLE)handle);
         #endif
         """)
     
