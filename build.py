@@ -252,6 +252,7 @@ def getMSWSettings(options):
 def makeOptionParser():
     OPTS = [
         ("debug",          (False, "Build wxPython with debug symbols")),
+        ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
@@ -465,11 +466,16 @@ def sip(options, args):
         runcmd(cmd)
 
                 
-        def processSrc(src):
+        def processSrc(src, keepHashLines=False):
             with file(src, 'rt') as f:
                 srcTxt = f.read()
-                srcTxt = srcTxt.replace(tmpdir, cfg.SIPOUT)
-                # TODO: remove lines starting with '#line'?
+                if keepHashLines:
+                    # Either just fix the pathnames in the #line lines...
+                    srcTxt = srcTxt.replace(tmpdir, cfg.SIPOUT)
+                else:
+                    # ...or totally remove them by replacing those lines with ''
+                    import re
+                    srcTxt = re.sub(r'^#line.*\n', '', srcTxt, flags=re.MULTILINE)
             return srcTxt
         
         # Check each file in tmpdir to see if it is different than the same file
@@ -479,13 +485,13 @@ def sip(options, args):
             dest = opj(cfg.SIPOUT, os.path.basename(src))
             if not os.path.exists(dest):
                 msg('%s is a new file, copying...' % os.path.basename(src))
-                srcTxt = processSrc(src)
+                srcTxt = processSrc(src, options.keep_hash_lines)
                 f = file(dest, 'wt')
                 f.write(srcTxt)
                 f.close()
                 continue
 
-            srcTxt = processSrc(src)
+            srcTxt = processSrc(src, options.keep_hash_lines)
             with file(dest, 'rt') as f:
                 destTxt = f.read()
                 
