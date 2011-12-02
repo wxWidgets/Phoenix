@@ -89,6 +89,7 @@ INCLUDES = [  'defs',
               'sizer',
               'wrapsizer',
               
+              'eventfilter',
               'evtloop',
               'apptrait',
               'app',
