@@ -52,7 +52,7 @@ def run():
     scrolled.find('GetVirtualSize.y').out = True
 
         
-    if False:
+    if True:
         # When SIP gets the ability to support template classes where the
         # base class is the template parameter, then we can use this instead
         # of the trickery below.
@@ -66,9 +66,9 @@ def run():
         tools.fixWindowClass(scrolled)
 
         # Add back some virtuals that were removed in fixWindowClass
-        node.find('OnDraw').isVirtual = True
-        node.find('GetSizeAvailableForScrollTarget').isVirtual = True
-        node.find('GetSizeAvailableForScrollTarget').ignore(False)
+        scrolled.find('OnDraw').isVirtual = True
+        scrolled.find('GetSizeAvailableForScrollTarget').isVirtual = True
+        scrolled.find('GetSizeAvailableForScrollTarget').ignore(False)
         
         
     else:
@@ -76,7 +76,7 @@ def run():
         # NOTE: We do a tricky tweak here because wxScrolled requires using
         # a template parameter as the base class, which SIP doesn't handle
         # yet. So instead we'll just copy the current extractor elements for
-        # wxScrolled and morph it into nodes that will generated wrappers for
+        # wxScrolled and morph it into nodes that will generate wrappers for
         # wxScrolledWindow and wxScrolledCanvas as if they were non-template
         # classes.
 
@@ -85,7 +85,7 @@ def run():
         module.find('wxScrolledCanvas').ignore()
 
         swDoc = " This class derives from wxPanel so it shares its behavior with regard "\
-                "to TAB traversal and focus handling.  If you do n0t want this then use "\
+                "to TAB traversal and focus handling.  If you do not want this then use "\
                 "wxScrolledCanvas instead."
         scDoc = " This scrolled window is not intended to have children so it doesn't "\
                 "have special handling for TAB traversal or focus management."
@@ -118,6 +118,7 @@ def run():
         # Ignore the wxScrolled template class
         scrolled.ignore()
         
+    
     module.addPyCode("PyScrolledWindow = wx.deprecated(ScrolledWindow)")
     
     #-----------------------------------------------------------------
