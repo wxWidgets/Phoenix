@@ -269,7 +269,6 @@ def run():
                           body="return &wxTopLevelWindows;")
     
     module.addPyCode("PyWindow = wx.deprecated(Window)")
-    module.addPyCode("Window.SetSizeWH = wx.deprecated(Window.SetSizeWH)")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
