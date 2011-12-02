@@ -44,9 +44,8 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 
-    %(items)s
-]    
+ITEMS  = [ %(items)s
+           ]    
     
 #---------------------------------------------------------------------------
 
@@ -74,30 +73,37 @@ if __name__ == '__main__':
 
 """
 
-(options, args) = parser.parse_args()
+def main():
+    (options, args) = parser.parse_args()
+    if not args:
+        parser.print_help()
+        return
+    
+    item_str = ""
+    for item in options.items.split(","):
+        item_str += '"%s",\n' % item
+    
+    arg_dict = {
+        "author"    : options.author,
+        "copyright" : options.copyright,
+        "items"     : item_str,
+        "year"      : date.today().strftime("%Y"),
+        "date"      : date.today().strftime("%d-%b-%Y"),
+        "name"      : args[0],
+        "filename"  : args[0] + ".py",
+        "module"    : args[1],
+    }
+    
+    output_file = os.path.join(root_dir, "etg", arg_dict["filename"])
+    
+    if os.path.exists(output_file):
+        print "Bindings with this name already exist. Exiting."
+        sys.exit(1)
+    
+    output = open(output_file, 'w')
+    output.write(etgstub % arg_dict)
+    output.close()
 
-item_str = ""
-for item in options.items.split(","):
-    item_str += '"%s",\n' % item
 
-arg_dict = {
-    "author"    : options.author,
-    "copyright" : options.copyright,
-    "items"     : item_str,
-    "year"      : date.today().strftime("%Y"),
-    "date"      : date.today().strftime("%d-%b-%Y"),
-    "name"      : args[0],
-    "filename"  : args[0] + ".py",
-    "module"    : args[1],
-}
-
-output_file = os.path.join(root_dir, "etg", arg_dict["filename"])
-
-if os.path.exists(output_file):
-    print "Bindings with this name already exist. Exiting."
-    sys.exit(1)
-
-output = open(output_file, 'w')
-output.write(etgstub % arg_dict)
-output.close()
-
+if __name__ == '__main__':
+    main()
