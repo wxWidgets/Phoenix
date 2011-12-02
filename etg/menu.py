@@ -48,7 +48,7 @@ def run():
     addTransferAnnotations(c, 'menuItem')
     addTransferAnnotations(c, 'subMenu')
     c.find('AppendSubMenu.submenu').transfer = True
-    c.find('GetMenuItems').overloads[0].ignore()
+    c.find('GetMenuItems').ignore() # keep the overload, but not the first one.
     
     c.addPyMethod('AppendMenu', '(self, id, item, subMenu, help="")', deprecated=True,
                   body='return self.Append(id, item, subMenu, help)')

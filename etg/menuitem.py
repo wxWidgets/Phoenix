@@ -52,6 +52,7 @@ def run():
             self->SetBackgroundColour(*colour);
         #endif
         """)
+    
     c.find('GetFont').type = 'wxFont*'
     c.find('GetFont').setCppCode("""\
         #ifdef __WXMSW__
@@ -60,11 +61,13 @@ def run():
             return &wxNullFont;
         #endif
         """)
+    
     c.find('SetFont').setCppCode("""\
         #ifdef __WXMSW__
             self->SetFont(*font);
         #endif
         """)
+
     c.find('GetMarginWidth').setCppCode("""\
         #ifdef __WXMSW__
             return self->GetMarginWidth();
@@ -72,11 +75,13 @@ def run():
             return -1;
         #endif
         """)
+
     c.find('SetMarginWidth').setCppCode("""\
         #ifdef __WXMSW__
             self->SetMarginWidth(width);
         #endif
         """)
+
     c.find('GetTextColour').type = 'wxColour*'
     c.find('GetTextColour').setCppCode("""\
         #ifdef __WXMSW__
@@ -85,6 +90,7 @@ def run():
             return &wxNullColour;
         #endif
         """)
+    
     c.find('SetTextColour').setCppCode("""\
         #ifdef __WXMSW__
             self->SetTextColour(*colour);
@@ -99,6 +105,7 @@ def run():
             self->SetBitmap(*bmp); // no checked arg in this case
         #endif
         """)
+
     c.find('SetBitmaps').setCppCode("""\
         #ifdef __WXMSW__
             self->SetBitmaps(*checked, *unchecked);

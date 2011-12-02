@@ -15,7 +15,7 @@
 
 
 
-wxUIntPtr wxPyGetWinHandle(wxWindow* win) 
+wxUIntPtr wxPyGetWinHandle(const wxWindow* win) 
 {
 #ifdef __WXMSW__
     return (wxUIntPtr)win->GetHandle();
