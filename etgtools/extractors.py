@@ -231,7 +231,6 @@ class FunctionDef(BaseDef):
         self.deprecated = False       # is the function deprecated
         self.factory = False          # a factory function that creates a new instance of the return value
         self.pyReleaseGIL = False     # release the Python GIL for this function call
-        self.pyRaisesException = True # function may raise a Python exception
         self.noCopy = False           # don't make a copy of the return value, just wrap the original
         self.pyInt = False            # treat char types as integers
         self.transfer = False         # transfer ownership of return value to C++?
@@ -536,7 +535,9 @@ class ClassDef(BaseDef):
         for node in element.findall('includes'):
             self.includes.append(node.text)
         for node in element.findall('templateparamlist/param'):
-            self.templateParams.append(node.find('type').text)
+            txt = node.find('type').text
+            txt = txt.replace('class ', '')
+            self.templateParams.append(txt)
             
         for node in element.findall('innerclass'):
             if node.get('prot') == 'private':
@@ -1217,7 +1218,7 @@ class ModuleDef(BaseDef):
 # Some helper functions and such
 #---------------------------------------------------------------------------
 
-def flattenNode(node):
+def flattenNode(node, rstrip=True):
     """
     Extract just the text from a node and its children, tossing out any child
     node tags and attributes.
@@ -1230,8 +1231,12 @@ def flattenNode(node):
     for n in node:
         text += flattenNode(n)
     if node.tail: 
-        text += node.tail.rstrip()
-    return text.rstrip()          
+        text += node.tail
+        if rstrip:
+            text = text.rstrip()
+    if rstrip:
+        text = text.rstrip()
+    return text
 
 
 class ExtractorError(RuntimeError):

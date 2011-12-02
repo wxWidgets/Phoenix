@@ -65,6 +65,7 @@ class SipWrapperGenerator(generators.WrapperGeneratorBase):
 %%Module( name=%s.%s, 
          keyword_arguments="All",
          use_argument_names=True, 
+         all_raise_py_exception=True,
          language="C++")
 {
     %%AutoPyName(remove_leading="wx")
@@ -598,7 +599,10 @@ from %s import *
                 else:
                     if fargs:
                         fargs = ', ' + fargs
-                    fargs = '(%s* self%s)' % (klass.name, fargs)
+                    selfConst = ''
+                    if method.isConst:
+                        selfConst = 'const '
+                    fargs = '(%s%s* self%s)' % (selfConst, klass.name, fargs)
                 fstream.write('%s%%TypeCode\n' % indent)
             else:
                 fname = '_%s_function' % method.name
@@ -767,15 +771,6 @@ from %s import *
                 annotations.append('ReleaseGIL')
             if item.noCopy:
                 annotations.append('NoCopy')
-            if item.pyRaisesException:
-                # is it a class method?
-                if isinstance(item, extractors.MethodDef):
-                    if not item.isCtor and not item.isDtor:
-                        annotations.append('RaisesPyException')
-                # otherwise it's a plain function so no additional conditions
-                # need to be checked
-                else:
-                    annotations.append('RaisesPyException')
             
         if isinstance(item, extractors.MethodDef):
             if item.defaultCtor:
