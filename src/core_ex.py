@@ -102,66 +102,6 @@ def deprecated(item, msg=''):
         raise TypeError, "unsupported type %s" % type(item)
                    
 
-
-## #----------------------------------------------------------------------------
-
-## class PyDeadObjectError(AttributeError):
-##     pass
-
-## class _wxPyDeadObject(object):
-##     """
-##     Instances of wx objects that are OOR capable will have their __class__
-##     changed to this class when the C++ object is deleted.  This should help
-##     prevent crashes due to referencing a bogus C++ pointer.
-##     """
-##     reprStr = "wxPython wrapper for DELETED %s object! (The C++ object no longer exists.)"
-##     attrStr = "The C++ part of the %s object has been deleted, attribute access no longer allowed."
-
-##     def __repr__(self):
-##         if not hasattr(self, "_name"):
-##             self._name = "[unknown]"
-##         return self.reprStr % self._name
-
-##     def __getattr__(self, *args):
-##         if not hasattr(self, "_name"):
-##             self._name = "[unknown]"
-##         raise PyDeadObjectError(self.attrStr % self._name)
-
-##     def __nonzero__(self):
-##         return 0
-
-
-
-## class PyUnbornObjectError(AttributeError):
-##     pass
-
-## class _wxPyUnbornObject(object):
-##     """
-##     Some stock objects are created when the wx._core module is
-##     imported, but their C++ instance is not created until the wx.App
-##     object is created and initialized.  These object instances will
-##     temporarily have their __class__ changed to this class so an
-##     exception will be raised if they are used before the C++ instance
-##     is ready.
-##     """
-
-##     reprStr = "wxPython wrapper for UNBORN object! (The C++ object is not initialized yet.)"
-##     attrStr = "The C++ part of this object has not been initialized, attribute access not allowed."
-
-##     def __repr__(self):
-##         #if not hasattr(self, "_name"):
-##         #    self._name = "[unknown]"
-##         return self.reprStr #% self._name
-
-##     def __getattr__(self, *args):
-##         #if not hasattr(self, "_name"):
-##         #    self._name = "[unknown]"
-##         raise PyUnbornObjectError(self.attrStr) # % self._name )
-
-##     def __nonzero__(self):
-##         return 0
-
-
 #----------------------------------------------------------------------------
 
 def CallAfter(callableObj, *args, **kw):
