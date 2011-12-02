@@ -151,6 +151,15 @@ def run():
     #endif
     """)
 
+    c.addPyMethod('__nonzero__', '(self)',
+        doc="Can be used to test if the C++ part of the window still exists, with \n"
+            "code like this:\n\n"
+            "    if theWindow:\n"
+            "        doSomething()",
+        body="""\
+        import wx.siplib
+        return not wx.siplib.isdeleted(self)
+        """)
     
     # MSW only.  Do we want them wrapped?
     c.find('GetAccessible').ignore()

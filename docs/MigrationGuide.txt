@@ -175,3 +175,20 @@ that is using the old names to use the new ones instead::
             wx.VERTICAL_HATCH      = wx.BRUSHSTYLE_VERTICAL_HATCH 
 
 
+
+wx.PyDeadObjectError
+---------------------
+
+Classic wxPython tracks when the C++ part of some types of objects (pretty
+much just window types) is destroyed and then replaces the proxy object's
+class with one that rases a wx.PyDeadObjectError exception. SIP takes care of
+that for us now in a much better way, so that custom hack is no longer
+present in Phoenix, however a RuntimeError is the exception that is raised
+now. The wx.Window class has a __nonzero__ method that tests if the C++
+object has been deleted, so you can still test the window with an if or other
+conditional statement to see if it is safe to use, like this::
+
+    if someWindow:
+        doSomething()
+        
+        

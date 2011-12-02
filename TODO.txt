@@ -114,12 +114,6 @@ PyAssertionError
 
 
 
-PyDeadObjectError
------------------
-Determine what to do about objects where the C++ part has been destroyed.  Does 
-SIP already have a solution for this?
-
-
 
 Win32 Activation Context
 -------------------------
