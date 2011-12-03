@@ -33,14 +33,14 @@ void wxPyPreInit(PyObject* moduleDict)
 
 
 
-PyObject* wxPyAssertionError = NULL;
+PyObject* wxAssertionError = NULL;        // Exception object raised for wxASSERT failures
 
 void wxPyCoreModuleInject(PyObject* moduleDict)
 {
     // Create an exception object to use for wxASSERTions
-    wxPyAssertionError = PyErr_NewException("wx._core.PyAssertionError",
+    wxAssertionError = PyErr_NewException("wx._core.wxAssertionError",
                                             PyExc_AssertionError, NULL);
-    PyDict_SetItemString(moduleDict, "PyAssertionError", wxPyAssertionError);
+    PyDict_SetItemString(moduleDict, "wxAssertionError", wxAssertionError);
 
 //    // Create an exception object to use when the app object hasn't been created yet
 //    wxPyNoAppError = PyErr_NewException("wx._core.PyNoAppError",

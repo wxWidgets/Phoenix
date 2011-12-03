@@ -138,7 +138,7 @@ def run():
             wx.APP_ASSERT_DIALOG 
             wx.APP_ASSERT_LOG
             
-        The default behavior is to raise a wx.PyAssertionError exception.
+        The default behavior is to raise a wx.wxAssertionError exception.
         """)
     m.addItem(etgtools.ParamDef(type='wxAppAssertMode', name='wxAppAssertMode'))
     c.addItem(m)

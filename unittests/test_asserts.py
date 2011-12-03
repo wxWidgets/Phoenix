@@ -7,7 +7,8 @@ import wx
 class asserts_Tests(wtc.WidgetTestCase):
 
     def test_asserts1(self):
-        wx.PyAssertionError
+        wx.wxAssertionError
+        wx.PyAssertionError   # a compatibility alias for wxAssertionError
         wx.APP_ASSERT_SUPPRESS
         wx.APP_ASSERT_EXCEPTION
         wx.APP_ASSERT_DIALOG
@@ -20,7 +21,7 @@ class asserts_Tests(wtc.WidgetTestCase):
 
         # attempting to convert an invalid bitmap to an image is an easy way
         # to trigger an assert
-        with self.assertRaises(wx.PyAssertionError):
+        with self.assertRaises(wx.wxAssertionError):
             wx.NullBitmap.ConvertToImage()
 
 
@@ -31,7 +32,7 @@ class asserts_Tests(wtc.WidgetTestCase):
 
         # ...and then turned back on
         wx.GetApp().SetAssertMode(wx.APP_ASSERT_EXCEPTION)
-        with self.assertRaises(wx.PyAssertionError):
+        with self.assertRaises(wx.wxAssertionError):
             wx.NullBitmap.ConvertToImage()
         
         

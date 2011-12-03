@@ -176,8 +176,8 @@ that is using the old names to use the new ones instead::
 
 
 
-wx.PyDeadObjectError
----------------------
+wx.PyDeadObjectError --> RuntimeError
+-------------------------------------
 
 Classic wxPython tracks when the C++ part of some types of objects (pretty
 much just window types) is destroyed and then replaces the proxy object's
@@ -192,3 +192,14 @@ conditional statement to see if it is safe to use, like this::
         doSomething()
         
         
+        
+wx.PyAssertionError --> wx.wxAssertionError
+-------------------------------------------
+
+This is the exception raised when one of the wxASSERT (or similar) statements
+in the wx C++ code fails. Since it is a wxWidgets assertion and not a
+wxPython assertion the name was changed to make that a little more clear. A
+compatibility alias exists so using wx.PyAssertionError will still work, but
+you should migrate those uses to wx.wxAssertionError if possible.
+
+

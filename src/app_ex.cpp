@@ -184,7 +184,7 @@ private:
 IMPLEMENT_ABSTRACT_CLASS(wxPyApp, wxApp);
 
 wxPyApp* wxPyApp::ms_appInstance = NULL;
-extern PyObject* wxPyAssertionError;
+extern PyObject* wxAssertionError;         // Exception object raised for wxASSERT failures
 
 
 void wxPyApp::OnAssertFailure(const wxChar *file,
@@ -210,7 +210,7 @@ void wxPyApp::OnAssertFailure(const wxChar *file,
         // set the exception
         wxPyBlock_t blocked = wxPyBeginBlockThreads();
         PyObject* s = wx2PyString(buf);
-        PyErr_SetObject(wxPyAssertionError, s);
+        PyErr_SetObject(wxAssertionError, s);
         Py_DECREF(s);
         wxPyEndBlockThreads(blocked);
 

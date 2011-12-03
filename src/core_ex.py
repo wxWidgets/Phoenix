@@ -231,3 +231,9 @@ class CallLater(object):
 
     Interval = property(GetInterval)
     Result = property(GetResult)
+
+#----------------------------------------------------------------------------
+
+PyAssertionError = wx.wxAssertionError  # an alias for compatibility with Classic
+
+#----------------------------------------------------------------------------

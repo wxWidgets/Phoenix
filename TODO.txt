@@ -89,29 +89,6 @@ possibilities to be considered.
 
 
 
-PyAssertionError
-----------------
-    This is currently done by implementing wxPyApp::OnAssertionFailure
-    (mostly copied from Classic) where it will raise a wx.PyAssertionError if
-    the mode is set to wx.APP_ASSERT_EXCEPTION. There are still some
-    questions though...
-      
-    * Currently OnAssertionFailure cannot be overridden from Python code.
-      Should it be possible?
-      
-    * The /RaisesPyException/ annotation is now added to all
-      functions/methods generated from sip_generator. This is needed so code
-      will be generated that checks for a Python exception upon return from any
-      wrapped method. Unfortunately this means that any hand-written sip code
-      will not automatically get this annotation. I've asked Phil if there
-      could be a way for sip to turn on this mode for everything. No response
-      yet.
-      
-    * It would probably be good to have a way to turn off /RaisesPyException/
-      for all methods in a class or whatever, for things where an assertion
-      exception is not expected, so they can be more efficient. Such as
-      wxPoint, wxSize, etc.
-
 
 
 
