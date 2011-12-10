@@ -423,7 +423,7 @@ def dox(options, args):
     
 def doxhtml(options, args):
     msg('Running command: doxhtml')
-    _doDox('html')
+    #_doDox('html')
     _doDox('chm')
     
     
