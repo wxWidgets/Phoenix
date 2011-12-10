@@ -104,9 +104,9 @@ def run():
     
     c.addCppMethod('PyObject*', 'Get', '()', """\
         return sipBuildResult(0, "(ii)", self->x, self->y);
-    """, briefDoc="""\
-        Get() -> (x,y)\n    
-        Return the x and y properties as a tuple.""")
+        """, 
+        pyArgsString="Get() -> (x,y)",
+        briefDoc="Return the x and y properties as a tuple.")
     
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
@@ -162,9 +162,9 @@ def run():
     
     c.addCppMethod('PyObject*', 'Get', '()', """\
         return sipBuildResult(0, "(ii)", self->GetWidth(), self->GetHeight());
-    """, briefDoc="""\
-        Get() -> (width, height)\n    
-        Return the width and height properties as a tuple.""")
+        """,
+        pyArgsString="Get() -> (width, height)",
+        briefDoc="Return the width and height properties as a tuple.")
     
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
@@ -235,9 +235,9 @@ def run():
     c.addCppMethod('PyObject*', 'Get', '()', """\
         return sipBuildResult(0, "(iiii)", 
                               self->x, self->y, self->width, self->height);
-    """, briefDoc="""\
-        Get() -> (x, y, width, height)\n    
-        Return the rectangle's properties as a tuple.""")
+        """, 
+        pyArgsString="Get() -> (x, y, width, height)",
+        briefDoc="Return the rectangle's properties as a tuple.")
     
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
@@ -283,9 +283,9 @@ def run():
 
     c.addCppMethod('PyObject*', 'Get', '()', """\
         return sipBuildResult(0, "(dd)", self->x, self->y);
-    """, briefDoc="""\
-        Get() -> (x, y, width, height)\n    
-        Return the rectangle's properties as a tuple.""")
+        """, 
+        pyArgsString="Get() -> (x, y)",
+        briefDoc="Return the point's properties as a tuple.")
     
     # Add sequence protocol methods and other goodies
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')

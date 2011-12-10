@@ -430,7 +430,7 @@ from %s import *
         
     def generateDocstring(self, item, stream, indent):
         # get the docstring text
-        text = nci(extractors.flattenNode(item.briefDoc))
+        text = nci(extractors.flattenNode(item.briefDoc, False))
         
         if isinstance(item, extractors.ClassDef):
             # append the function signatures for the class constructors (if any) to the class' docstring

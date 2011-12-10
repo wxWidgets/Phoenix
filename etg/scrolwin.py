@@ -98,7 +98,7 @@ def run():
             node.name = name
             node.templateParams = []
             node.bases = [base]
-            node.briefDoc = etgtools.flattenNode(node.briefDoc)
+            node.briefDoc = etgtools.flattenNode(node.briefDoc, False)
             node.briefDoc = node.briefDoc.replace('wxScrolled', name)
             node.briefDoc += doc
             for ctor in node.find('wxScrolled').all():
