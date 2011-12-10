@@ -84,6 +84,8 @@ def run():
         if func.findItem('userData'):
             func.find('userData').transfer = True
             func.find('userData').type = 'wxPyUserData*'
+        if func.findItem('item'):
+            func.find('item').transfer = True
             
     c.find('GetChildren').overloads = []
     
@@ -163,7 +165,7 @@ def run():
         
     module.addItem(tools.wxListWrapperTemplate('wxSizerItemList', 'wxSizerItem', module))
     
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
