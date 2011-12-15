@@ -163,6 +163,8 @@ from %s import *
             extractors.TypedefDef       : self.generateTypedef,
             extractors.WigCode          : self.generateWigCode,
             extractors.PyCodeDef        : self.generatePyCode,
+            extractors.PyFunctionDef    : self.generatePyFunction,
+            extractors.PyClassDef       : self.generatePyClass,
             extractors.CppMethodDef     : self.generateCppMethod,
             extractors.CppMethodDef_sip : self.generateCppMethod_sip,
             }
@@ -282,16 +284,113 @@ from %s import *
     #-----------------------------------------------------------------------
     def generatePyCode(self, pc, stream, indent=''):
         assert isinstance(pc, extractors.PyCodeDef)
-        if hasattr(pc, 'klass') and pc.klass.generatingInClass:
+        if hasattr(pc, 'klass') and isinstance(pc.klass, extractors.ClassDef) and pc.klass.generatingInClass:
             pc.klass.generateAfterClass.append(pc)
         else:
+            if len(indent) == 0:
+                stream.write('%%Extract(id=pycode%s' % self.module_name)
+                if pc.order is not None:
+                    stream.write(', order=%d' % pc.order)
+                stream.write(')\n')
+
+            stream.write(nci(pc.code, len(indent)))
+
+            if len(indent) == 0:
+                stream.write('\n%End\n\n')
+    
+    #-----------------------------------------------------------------------
+    def generatePyProperty(self, prop, stream, indent=''):
+        assert isinstance(prop, extractors.PyPropertyDef)
+        if prop.ignored:
+            return
+        if isinstance(prop.klass, extractors.ClassDef) and prop.klass.generatingInClass:
+            prop.klass.generateAfterClass.append(prop)
+        elif isinstance(prop.klass, extractors.PyClassDef):
+            stream.write('%s%s = property(%s' % (indent, prop.name, prop.getter))
+            if prop.setter:
+                stream.write(', %s' % prop.setter)
+            stream.write(')\n')
+        else:
+            klassName = prop.klass.pyName or prop.klass.name
+            if '.' in prop.getter:
+                getter = prop.getter
+            else:
+                getter = '%s.%s' % (klassName, prop.getter)
+            if prop.setter:
+                if '.' in prop.setter:
+                    setter = prop.setter
+                else:
+                    setter = '%s.%s' % (klassName, prop.setter)
+                
+            stream.write("%%Extract(id=pycode%s)\n" % self.module_name)
+            stream.write("%s.%s = property(%s" % (klassName, prop.name, getter))
+            if prop.setter:
+                stream.write(", %s" % setter)
+            stream.write(")\n")
+            stream.write('%End\n\n')
+
+
+    #-----------------------------------------------------------------------
+    def generatePyFunction(self, pf, stream, indent=''):
+        assert isinstance(pf, extractors.PyFunctionDef)
+        if len(indent) == 0:
+            stream.write('%%Extract(id=pycode%s' % self.module_name)
+            if pf.order is not None:
+                stream.write(', order=%d' % pf.order)
+            stream.write(')\n')
+        if pf.deprecated:
+            stream.write('%s@wx.deprecated\n' % indent)
+        if pf.isStatic:
+            stream.write('%s@staticmethod\n' % indent)
+        stream.write('%sdef %s%s:\n' % (indent, pf.name, pf.argsString))
+        indent2 = indent + ' '*4
+        if pf.briefDoc:
+            stream.write('%s"""\n' % indent2)
+            stream.write(nci(pf.briefDoc, len(indent2)))
+            stream.write('%s"""\n' % indent2)
+        stream.write(nci(pf.body, len(indent2)))
+        if len(indent) == 0:
+            stream.write('\n%End\n')
+        stream.write('\n')
+    
+    
+    #-----------------------------------------------------------------------
+    def generatePyClass(self, pc, stream, indent=''):
+        assert isinstance(pc, extractors.PyClassDef)
+        if len(indent) == 0:
             stream.write('%%Extract(id=pycode%s' % self.module_name)
             if pc.order is not None:
                 stream.write(', order=%d' % pc.order)
             stream.write(')\n')
-            stream.write(nci(pc.code))
-            stream.write('\n%End\n\n')
-    
+
+        # write the class declaration and docstring
+        if pc.deprecated:
+            stream.write('%s@wx.deprecated\n' % indent)
+        stream.write('%sclass %s' % (indent, pc.name))
+        if pc.bases:
+            stream.write('(%s):\n' % ', '.join(pc.bases))
+        indent2 = indent + ' '*4
+        if pc.briefDoc:
+            stream.write('%s"""\n' % indent2)
+            stream.write(nci(pc.briefDoc, len(indent2)))
+            stream.write('%s"""\n' % indent2)
+
+        # these are the only kinds of items allowed to be items in a PyClass
+        dispatch = {
+            extractors.PyFunctionDef    : self.generatePyFunction,
+            extractors.PyPropertyDef    : self.generatePyProperty,
+            extractors.PyCodeDef        : self.generatePyCode,
+            extractors.PyClassDef       : self.generatePyClass,
+        }
+        for item in pc.items:
+            item.klass = pc
+            f = dispatch[item.__class__]
+            f(item, stream, indent2)
+ 
+        if len(indent) == 0:
+            stream.write('\n%End\n')
+        stream.write('\n')
+        
     
     #-----------------------------------------------------------------------
     def generateClass(self, klass, stream, indent=''):
@@ -702,31 +801,6 @@ from %s import *
             stream.write('del _%s_%s\n' % (klassName, pm.name))
             stream.write('%End\n\n')
 
-
-    def generatePyProperty(self, prop, stream, indent):
-        assert isinstance(prop, extractors.PyPropertyDef)
-        if prop.ignored:
-            return
-        if prop.klass.generatingInClass:
-            prop.klass.generateAfterClass.append(prop)
-        else:
-            klassName = prop.klass.pyName or prop.klass.name
-            if '.' in prop.getter:
-                getter = prop.getter
-            else:
-                getter = '%s.%s' % (klassName, prop.getter)
-            if prop.setter:
-                if '.' in prop.setter:
-                    setter = prop.setter
-                else:
-                    setter = '%s.%s' % (klassName, prop.setter)
-                
-            stream.write("%%Extract(id=pycode%s)\n" % self.module_name)
-            stream.write("%s.%s = property(%s" % (klassName, prop.name, getter))
-            if prop.setter:
-                stream.write(", %s" % setter)
-            stream.write(")\n")
-            stream.write('%End\n\n')
 
     #-----------------------------------------------------------------------
 

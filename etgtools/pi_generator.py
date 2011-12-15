@@ -113,6 +113,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
             extractors.TypedefDef       : self.generateTypedef,
             extractors.WigCode          : self.generateWigCode,
             extractors.PyCodeDef        : self.generatePyCode,
+            extractors.PyFunctionDef    : self.generatePyFunction,
+            extractors.PyClassDef       : self.generatePyClass,            
             extractors.CppMethodDef     : self.generateCppMethod,
             extractors.CppMethodDef_sip : self.generateCppMethod_sip,
             }
@@ -180,6 +182,52 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         stream.write(nci(pc.code, len(indent)))
 
     #-----------------------------------------------------------------------
+    def generatePyFunction(self, pf, stream, indent=''):
+        assert isinstance(pf, extractors.PyFunctionDef)
+        stream.write('\n')
+        if pf.deprecated:
+            stream.write('%s@wx.deprecated\n' % indent)  
+        if pf.isStatic:
+            stream.write('%s@staticmethodn' % indent)  
+        stream.write('%sdef %s%s:\n' % (indent, pf.name, pf.argsString))
+        indent2 = indent + ' '*4
+        if pf.briefDoc:
+            stream.write('%s"""\n' % indent2)
+            stream.write(nci(pf.briefDoc, len(indent2)))
+            stream.write('%s"""\n' % indent2)
+        stream.write('%spass\n' % indent2)
+        
+    #-----------------------------------------------------------------------
+    def generatePyClass(self, pc, stream, indent=''):
+        assert isinstance(pc, extractors.PyClassDef)
+    
+        # write the class declaration and docstring
+        if pc.deprecated:
+            stream.write('%s@wx.deprecated\n' % indent)
+        stream.write('%sclass %s' % (indent, pc.name))
+        if pc.bases:
+            stream.write('(%s):\n' % ', '.join(pc.bases))
+        indent2 = indent + ' '*4
+        if pc.briefDoc:
+            stream.write('%s"""\n' % indent2)
+            stream.write(nci(pc.briefDoc, len(indent2)))
+            stream.write('%s"""\n' % indent2)
+
+        # these are the only kinds of items allowed to be items in a PyClass
+        dispatch = {
+            extractors.PyFunctionDef    : self.generatePyFunction,
+            extractors.PyPropertyDef    : self.generatePyProperty,
+            extractors.PyCodeDef        : self.generatePyCode,
+            extractors.PyClassDef       : self.generatePyClass,
+        }
+        for item in pc.items:
+            item.klass = pc
+            f = dispatch[item.__class__]
+            f(item, stream, indent2)
+
+
+
+    #-----------------------------------------------------------------------
     def generateFunction(self, function, stream):
         assert isinstance(function, extractors.FunctionDef)
         stream.write('\ndef %s' % function.pyName)
@@ -191,6 +239,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         stream.write('    """\n')
         stream.write(nci(function.pyDocstring, 4))
         stream.write('    """\n')
+        
         
     def generateParameters(self, parameters, stream, indent):
         def _lastParameter(idx):

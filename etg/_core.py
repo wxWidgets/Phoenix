@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
 PACKAGE   = "wx" 
 MODULE    = "_core"
@@ -195,10 +196,125 @@ def run():
     #include <wx/wx.h>
     """)
     
-    module.includePyCode('src/core_ex.py', order=10)
-    
     module.addInclude(INCLUDES)
-    
+    module.includePyCode('src/core_ex.py', order=10)
+
+
+    module.addPyFunction('CallAfter', '(callableObj, *args, **kw)', doc="""\
+            Call the specified function after the current and pending event
+            handlers have been completed.  This is also good for making GUI
+            method calls from non-GUI threads.  Any extra positional or
+            keyword args are passed on to the callable when it is called.
+            
+            :see: `wx.CallLater`""",
+        body="""\
+            assert callable(callableObj), "callableObj is not callable"
+            app = wx.GetApp()
+            assert app is not None, 'No wx.App created yet'
+        
+            if not hasattr(app, "_CallAfterId"):
+                app._CallAfterId = wx.NewEventType()
+                app.Connect(-1, -1, app._CallAfterId,
+                            lambda event: event.callable(*event.args, **event.kw) )
+            evt = wx.PyEvent()
+            evt.SetEventType(app._CallAfterId)
+            evt.callable = callableObj
+            evt.args = args
+            evt.kw = kw
+            wx.PostEvent(app, evt)""")
+
+
+    module.addPyClass('CallLater', ['object'], 
+        doc="""\
+            A convenience class for `wx.Timer`, that calls the given callable
+            object once after the given amount of milliseconds, passing any
+            positional or keyword args.  The return value of the callable is
+            availbale after it has been run with the `GetResult` method.
+            
+            If you don't need to get the return value or restart the timer
+            then there is no need to hold a reference to this object.  It will
+            hold a reference to itself while the timer is running (the timer
+            has a reference to self.Notify) but the cycle will be broken when
+            the timer completes, automatically cleaning up the wx.CallLater
+            object.
+            
+            :see: `wx.CallAfter`""",
+        items = [
+            PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
+                body="""\
+                    assert callable(callableObj), "callableObj is not callable"
+                    self.millis = millis
+                    self.callable = callableObj
+                    self.SetArgs(*args, **kwargs)
+                    self.runCount = 0
+                    self.running = False
+                    self.hasRun = False
+                    self.result = None
+                    self.timer = None
+                    self.Start()"""),
+            
+            PyFunctionDef('__del__', '(self)', 'self.Stop()'),
+            
+            PyFunctionDef('Start', '(self, millis=None, *args, **kwargs)', 
+                doc="(Re)start the timer",
+                body="""\
+                    self.hasRun = False
+                    if millis is not None:
+                        self.millis = millis
+                    if args or kwargs:
+                        self.SetArgs(*args, **kwargs)
+                    self.Stop()
+                    self.timer = wx.PyTimer(self.Notify)
+                    self.timer.Start(self.millis, wx.TIMER_ONE_SHOT)
+                    self.running = True"""),
+            PyCodeDef('Restart = Start'),
+            
+            PyFunctionDef('Stop', '(self)', 
+                doc="Stop and destroy the timer.",
+                body="""\
+                    if self.timer is not None:
+                        self.timer.Stop()
+                        self.timer = None"""),
+            
+            PyFunctionDef('GetInterval', '(self)', """\
+                if self.timer is not None:
+                    return self.timer.GetInterval()
+                else:
+                    return 0"""),
+            
+            PyFunctionDef('IsRunning', '(self)', 
+                """return self.timer is not None and self.timer.IsRunning()"""),
+            
+            PyFunctionDef('SetArgs', '(self, *args, **kwargs)', 
+                doc="""\
+                    (Re)set the args passed to the callable object.  This is
+                    useful in conjunction with Restart if you want to schedule a
+                    new call to the same callable object but with different
+                    parameters.""",
+                body="""\
+                    self.args = args
+                    self.kwargs = kwargs"""),
+            
+            PyFunctionDef('HasRun', '(self)', 'return self.hasRun'),
+            PyFunctionDef('GetResult', '(self)', 'return self.result'),
+            
+            PyFunctionDef('Notify', '(self)', 
+                doc="The timer has expired so call the callable.",
+                body="""\
+                    if self.callable and getattr(self.callable, 'im_self', True):
+                        self.runCount += 1
+                        self.running = False
+                        self.result = self.callable(*self.args, **self.kwargs)
+                    self.hasRun = True
+                    if not self.running:
+                        # if it wasn't restarted, then cleanup
+                        wx.CallAfter(self.Stop)"""),
+            
+            PyPropertyDef('Interval', 'GetInterval'),
+            PyPropertyDef('Result', 'GetResult'),                    
+            ])
+
+
     # This code is inserted into the module initialization function
     module.addPostInitializerCode("""\
         wxPyCoreModuleInject(sipModuleDict);

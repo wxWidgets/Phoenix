@@ -1030,20 +1030,56 @@ class PyCodeDef(BaseDef):
 
 #---------------------------------------------------------------------------
 
-class PyMethodDef(BaseDef):
+class PyFunctionDef(BaseDef):
     """
-    A PyMethodDef can be used to define Python functions that will then be
-    monkey-patched in to the extension module Types as if they belonged there.
+    A PyFunctionDef can be used to define Python functions that will be
+    written pretty much as-is to a module's .py file. Can also be used for
+    methods in a PyClassDef. Using an explicit extractor object rather than
+    just "including" the raw code lets us provide the needed metadata for
+    document generators, etc.
     """
-    def __init__(self, klass, name, argsString, body, doc=None, **kw):
-        super(PyMethodDef, self).__init__()
-        self.klass = klass
+    def __init__(self, name, argsString, body, doc=None, order=None, **kw):
+        super(PyFunctionDef, self).__init__()
         self.name = name
         self.argsString = argsString
         self.body = body
         self.briefDoc = doc
-        self.protection = 'public'
+        self.order = order
         self.deprecated = False
+        self.isStatic = False
+        self.__dict__.update(kw)
+
+#---------------------------------------------------------------------------
+
+class PyClassDef(BaseDef):
+    """
+    A PyClassDef is used to define a pure-python class that will be injected
+    into the module's .py file, but does so in a way that the various bits of
+    information about the class are available in the extractor objects for
+    the generators to use.
+    """
+    def __init__(self, name, bases=[], doc=None, items=[], order=None, **kw):
+        super(PyClassDef, self).__init__()
+        self.name = name
+        self.bases = bases
+        self.briefDoc = doc
+        self.items.extend(items)
+        self.deprecated = False
+        self.order = order
+        self.__dict__.update(kw)
+        
+    
+#---------------------------------------------------------------------------
+
+class PyMethodDef(PyFunctionDef):
+    """
+    A PyMethodDef can be used to define Python class methods that will then be
+    monkey-patched in to the extension module Types as if they belonged there.
+    """
+    def __init__(self, klass, name, argsString, body, doc=None, **kw):
+        super(PyMethodDef, self).__init__(name, argsString, body, doc)
+        self.klass = klass
+        self.protection = 'public'
         self.__dict__.update(kw)
     
 #---------------------------------------------------------------------------
@@ -1212,7 +1248,24 @@ class ModuleDef(BaseDef):
             "#" + '-=' * 38 + '\n'            ,
             order
             )
+
     
+    def addPyFunction(self, name, argsString, body, doc=None, order=None, **kw):
+        """
+        Add a Python function to this module.
+        """
+        pf = PyFunctionDef(name, argsString, body, doc, order, **kw)
+        self.items.append(pf)
+        return pf
+
+    
+    def addPyClass(self, name, bases=[], doc=None, items=[], order=None, **kw):
+        """
+        Add a pure Python class to this module.
+        """
+        pc = PyClassDef(name, bases, doc, items, order, **kw)
+        self.items.append(pc)
+        return pc
     
 #---------------------------------------------------------------------------
 # Some helper functions and such
