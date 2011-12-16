@@ -124,6 +124,8 @@ int sip_api_save_slot(sipSlot *sp, PyObject *rxObj, const char *slot);
 /*
  * These are not part of the SIP API but are used within the SIP module.
  */
+sipClassTypeDef *sipGetGeneratedClassType(sipEncodedTypeDef *enc,
+        const sipClassTypeDef *ctd);
 void sipSaveMethod(sipPyMethod *pm,PyObject *meth);
 void *sipGetPending(sipWrapper **op, int *fp);
 PyObject *sipWrapSimpleInstance(void *cppPtr, const sipTypeDef *td,

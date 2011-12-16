@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040c05
-#define SIP_VERSION_STR     "4.12.5-snapshot-4eba42cb2457"
+#define SIP_VERSION         0x040d01
+#define SIP_VERSION_STR     "4.13.1-snapshot-7ab562ae0e39"
 
 
 /*
@@ -1506,13 +1506,14 @@ typedef struct _sipQtAPI {
 /*
  * Useful macros, not part of the public API.
  */
-#define SIP_PY_OWNED        0x0004  /* Owned by Python. */
+#define SIP_PY_OWNED        0x0004  /* If owned by Python. */
 #define SIP_INDIRECT        0x0008  /* If there is a level of indirection. */
 #define SIP_ACCFUNC         0x0010  /* If there is an access function. */
-#define SIP_NOT_IN_MAP      0x0020  /* If Python object not in the map. */
+#define SIP_NOT_IN_MAP      0x0020  /* If Python object is not in the map. */
 #define SIP_SHARE_MAP       0x0040  /* If the map slot might be occupied. */
 #define SIP_CPP_HAS_REF     0x0080  /* If C/C++ has a reference. */
 #define SIP_POSSIBLE_PROXY  0x0100  /* If there might be a proxy slot. */
+#define SIP_ALIAS           0x0200  /* If it is an alias. */
 
 #define sipIsPyOwned(w)     ((w)->flags & SIP_PY_OWNED)
 #define sipSetPyOwned(w)    ((w)->flags |= SIP_PY_OWNED)
@@ -1527,6 +1528,7 @@ typedef struct _sipQtAPI {
 #define sipResetCppHasRef(w)    ((w)->flags &= ~SIP_CPP_HAS_REF)
 #define sipPossibleProxy(w) ((w)->flags & SIP_POSSIBLE_PROXY)
 #define sipSetPossibleProxy(w)  ((w)->flags |= SIP_POSSIBLE_PROXY)
+#define sipIsAlias(w)       ((w)->flags & SIP_ALIAS)
 
 
 #define SIP_TYPE_TYPE_MASK  0x0007  /* The type type mask. */

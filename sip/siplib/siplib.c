@@ -8606,6 +8606,16 @@ static sipTypeDef *getGeneratedType(const sipEncodedTypeDef *enc,
 
 
 /*
+ * Return the generated class type structure of a class's super-class.
+ */
+sipClassTypeDef *sipGetGeneratedClassType(sipEncodedTypeDef *enc,
+        const sipClassTypeDef *ctd)
+{
+    return (sipClassTypeDef *)getGeneratedType(enc, ctd->ctd_base.td_module);
+}
+
+
+/*
  * Find a particular slot function for a type.
  */
 static void *findSlot(PyObject *self, sipPySlotType st)
@@ -8631,19 +8641,15 @@ static void *findSlot(PyObject *self, sipPySlotType st)
 
             /* Search any super-types. */
             if ((sup = ctd->ctd_supers) != NULL)
-            {
-                sipClassTypeDef *sup_ctd;
-
                 do
                 {
-                    sup_ctd = (sipClassTypeDef *)getGeneratedType(sup,
-                            ctd->ctd_base.td_module);
+                    sipClassTypeDef *sup_ctd = sipGetGeneratedClassType(sup,
+                            ctd);
 
                     if (sup_ctd->ctd_pyslots != NULL)
                         slot = findSlotInType(sup_ctd->ctd_pyslots, st);
                 }
                 while (slot == NULL && !sup++->sc_flag);
-            }
         }
     }
     else
@@ -9176,7 +9182,7 @@ static int sipSimpleWrapper_traverse(sipSimpleWrapper *self, visitproc visit,
 
             if ((sup = ctd->ctd_supers) != NULL)
                 do
-                    sup_ctd = (sipClassTypeDef *)getGeneratedType(sup, ctd->ctd_base.td_module);
+                    sup_ctd = sipGetGeneratedClassType(sup, ctd);
                 while (sup_ctd->ctd_traverse == NULL && !sup++->sc_flag);
         }
 

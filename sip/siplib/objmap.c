@@ -40,6 +40,12 @@ static unsigned long hash_primes[] = {
 
 static sipHashEntry *newHashTable(unsigned long);
 static sipHashEntry *findHashEntry(sipObjectMap *,void *);
+static void add_object(sipObjectMap *om, void *addr, sipSimpleWrapper *val);
+static void add_aliases(sipObjectMap *om, void *addr, sipSimpleWrapper *val,
+        const sipClassTypeDef *base_ctd, const sipClassTypeDef *ctd);
+static int remove_object(sipObjectMap *om, void *addr, sipSimpleWrapper *val);
+static void remove_aliases(sipObjectMap *om, void *addr, sipSimpleWrapper *val,
+        const sipClassTypeDef *base_ctd, const sipClassTypeDef *ctd);
 static void reorganiseMap(sipObjectMap *om);
 static void *getUnguardedPointer(sipSimpleWrapper *w);
 
@@ -115,6 +121,10 @@ sipSimpleWrapper *sipOMFindObject(sipObjectMap *om, void *key,
     /* Go through each wrapped object at this address. */
     for (sw = he->first; sw != NULL; sw = sw->next)
     {
+        sipSimpleWrapper *unaliased;
+
+        unaliased = (sipIsAlias(sw) ? (sipSimpleWrapper *)sw->data : sw);
+
         /*
          * If the reference count is 0 then it is in the process of being
          * deleted, so ignore it.  It's not completely clear how this can
@@ -122,19 +132,19 @@ sipSimpleWrapper *sipOMFindObject(sipObjectMap *om, void *key,
          * code is being re-entered (and there are guards in place to prevent
          * this).
          */
-        if (Py_REFCNT(sw) == 0)
+        if (Py_REFCNT(unaliased) == 0)
             continue;
 
         /* Ignore it if the C/C++ address is no longer valid. */
-        if (sip_api_get_address(sw) == NULL)
+        if (sip_api_get_address(unaliased) == NULL)
             continue;
 
         /*
          * If this wrapped object is of the given type, or a sub-type of it,
          * then we assume it is the same C++ object.
          */
-        if (PyObject_TypeCheck(sw, py_type))
-            return sw;
+        if (PyObject_TypeCheck(unaliased, py_type))
+            return unaliased;
     }
 
     return NULL;
@@ -146,7 +156,82 @@ sipSimpleWrapper *sipOMFindObject(sipObjectMap *om, void *key,
  */
 void sipOMAddObject(sipObjectMap *om, sipSimpleWrapper *val)
 {
-    sipHashEntry *he = findHashEntry(om, getUnguardedPointer(val));
+    void *addr = getUnguardedPointer(val);
+    const sipClassTypeDef *base_ctd;
+
+    /* Add the object. */
+    add_object(om, addr, val);
+
+    /* Add any aliases. */
+    base_ctd = (const sipClassTypeDef *)((sipWrapperType *)Py_TYPE(val))->type;
+    add_aliases(om, addr, val, base_ctd, base_ctd);
+}
+
+
+/*
+ * Add an alias for any address that is different when cast to a super-type.
+ */
+static void add_aliases(sipObjectMap *om, void *addr, sipSimpleWrapper *val,
+        const sipClassTypeDef *base_ctd, const sipClassTypeDef *ctd)
+{
+    const sipEncodedTypeDef *sup;
+
+    /* See if there are any super-classes. */
+    if ((sup = ctd->ctd_supers) != NULL)
+    {
+        sipClassTypeDef *sup_ctd = sipGetGeneratedClassType(sup, ctd);
+
+        /* Recurse up the hierachy for the first super-class. */
+        add_aliases(om, addr, val, base_ctd, sup_ctd);
+
+        /*
+         * We only check for aliases for subsequent super-classes because the
+         * first one can never need one.
+         */
+        while (!sup++->sc_flag)
+        {
+            void *sup_addr;
+
+            sup_ctd = sipGetGeneratedClassType(sup, ctd);
+
+            /* Recurse up the hierachy for the remaining super-classes. */
+            add_aliases(om, addr, val, base_ctd, sup_ctd);
+
+            sup_addr = (*base_ctd->ctd_cast)(addr, sup_ctd);
+
+            if (sup_addr != addr)
+            {
+                sipSimpleWrapper *alias;
+
+                /* Note that we silently ignore errors. */
+                if ((alias = sip_api_malloc(sizeof (sipSimpleWrapper))) != NULL)
+                {
+                    /*
+                     * An alias is basically a bit-wise copy of the Python
+                     * object but only to ensure the fields we are subverting
+                     * are in the right place.  An alias should never be passed
+                     * to the Python API.
+                     */
+                    *alias = *val;
+
+                    alias->flags = (val->flags & SIP_SHARE_MAP) | SIP_ALIAS;
+                    alias->data = val;
+                    alias->next = NULL;
+
+                    add_object(om, sup_addr, alias);
+                }
+            }
+        }
+    }
+}
+
+
+/*
+ * Add a wrapper (which may be an alias) to the map.
+ */
+static void add_object(sipObjectMap *om, void *addr, sipSimpleWrapper *val)
+{
+    sipHashEntry *he = findHashEntry(om, addr);
 
     /*
      * If the bucket is in use then we appear to have several objects at the
@@ -196,11 +281,13 @@ void sipOMAddObject(sipObjectMap *om, sipSimpleWrapper *val)
     /* See if the bucket was unused or stale. */
     if (he->key == NULL)
     {
-        he->key = getUnguardedPointer(val);
+        he->key = addr;
         om->unused--;
     }
     else
+    {
         om->stale--;
+    }
 
     /* Add the rest of the new value. */
     he->first = val;
@@ -261,9 +348,8 @@ static void reorganiseMap(sipObjectMap *om)
  */
 int sipOMRemoveObject(sipObjectMap *om, sipSimpleWrapper *val)
 {
-    sipHashEntry *he;
-    sipSimpleWrapper **swp;
     void *addr;
+    const sipClassTypeDef *base_ctd;
 
     /* Handle the trivial case. */
     if (sipNotInMap(val))
@@ -272,12 +358,89 @@ int sipOMRemoveObject(sipObjectMap *om, sipSimpleWrapper *val)
     if ((addr = getUnguardedPointer(val)) == NULL)
         return 0;
 
-    he = findHashEntry(om, addr);
+    /* Remove any aliases. */
+    base_ctd = (const sipClassTypeDef *)((sipWrapperType *)Py_TYPE(val))->type;
+    remove_aliases(om, addr, val, base_ctd, base_ctd);
+
+    /* Remove the object. */
+    return remove_object(om, addr, val);
+}
+
+
+/*
+ * Remove an alias for any address that is different when cast to a super-type.
+ */
+static void remove_aliases(sipObjectMap *om, void *addr, sipSimpleWrapper *val,
+        const sipClassTypeDef *base_ctd, const sipClassTypeDef *ctd)
+{
+    const sipEncodedTypeDef *sup;
+
+    /* See if there are any super-classes. */
+    if ((sup = ctd->ctd_supers) != NULL)
+    {
+        sipClassTypeDef *sup_ctd = sipGetGeneratedClassType(sup, ctd);
+
+        /* Recurse up the hierachy for the first super-class. */
+        remove_aliases(om, addr, val, base_ctd, sup_ctd);
+
+        /*
+         * We only check for aliases for subsequent super-classes because the
+         * first one can never need one.
+         */
+        while (!sup++->sc_flag)
+        {
+            void *sup_addr;
+
+            sup_ctd = sipGetGeneratedClassType(sup, ctd);
+
+            /* Recurse up the hierachy for the remaining super-classes. */
+            remove_aliases(om, addr, val, base_ctd, sup_ctd);
+
+            sup_addr = (*base_ctd->ctd_cast)(addr, sup_ctd);
+
+            if (sup_addr != addr)
+                remove_object(om, sup_addr, val);
+        }
+    }
+}
+
+
+/*
+ * Remove a wrapper from the map.
+ */
+static int remove_object(sipObjectMap *om, void *addr, sipSimpleWrapper *val)
+{
+    sipHashEntry *he = findHashEntry(om, addr);
+    sipSimpleWrapper **swp;
 
     for (swp = &he->first; *swp != NULL; swp = &(*swp)->next)
-        if (*swp == val)
+    {
+        sipSimpleWrapper *sw, *next;
+        int do_remove;
+
+        sw = *swp;
+        next = sw->next;
+
+        if (sipIsAlias(sw))
         {
-            *swp = val->next;
+            if (sw->data == val)
+            {
+                sip_api_free(sw);
+                do_remove = TRUE;
+            }
+            else
+            {
+                do_remove = FALSE;
+            }
+        }
+        else
+        {
+            do_remove = (sw == val);
+        }
+
+        if (do_remove)
+        {
+            *swp = next;
 
             /*
              * If the bucket is now empty then count it as stale.  Note that we
@@ -292,6 +455,7 @@ int sipOMRemoveObject(sipObjectMap *om, sipSimpleWrapper *val)
 
             return 0;
         }
+    }
 
     return -1;
 }
