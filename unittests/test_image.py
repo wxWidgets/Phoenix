@@ -52,7 +52,6 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
 
     def test_imageCtor8(self):
-        self.fail('stream support TBI')
         data = open(pngFile, 'rb').read()
         import StringIO
         stream = StringIO.StringIO(data)
@@ -60,8 +59,6 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
 
     def test_imageCtor9(self):
-        return
-        self.fail('stream support TBI')
         data = open(pngFile, 'rb').read()
         import StringIO
         stream = StringIO.StringIO(data)
