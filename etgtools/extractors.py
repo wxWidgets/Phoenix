@@ -317,7 +317,7 @@ class FunctionDef(BaseDef):
         # If the item being ignored has overloads then try to reorder the
         # items so the primary item is not an ignored one.
         super(FunctionDef, self).ignore(val)        
-        if self.overloads:
+        if val and self.overloads:
             all = [self] + self.overloads
             all.sort(key=lambda item: item.ignored)
             first = all[0]
