@@ -89,7 +89,7 @@ def run():
             
     c.find('GetChildren').overloads = []
     
-    # Needs wxWin 2.6 compatibility to run
+    # Needs wxWin 2.6 compatibility
     c.find('Remove').findOverload('(wxWindow *window)').ignore()
 
     c.addPyMethod('AddMany', '(self, items)', 

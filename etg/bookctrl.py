@@ -37,6 +37,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
     
+    c.find('HitTest.flags').out = True
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

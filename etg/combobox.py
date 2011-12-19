@@ -41,11 +41,10 @@ def run():
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
     c.find('Create').findOverload('wxArrayString').find('value').default = 'wxEmptyString'
 
-    # We ignore these because if from,to are set as output parameters the
+    # We ignore this one because if from,to are set as output parameters the
     # methods will be ambiguous. Maybe the names should just be changed
     # instead?
     c.find('GetSelection').findOverload('long *from, long *to').ignore()
-    c.find('SetSelection').findOverload('long from, long to').ignore()
     
     # The docs say to not use this one.
     c.find('IsEmpty').ignore()

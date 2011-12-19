@@ -49,7 +49,9 @@ def run():
     for func in module.allItems():
         if 'wxVLog' in func.name:
             func.ignore()
-    module.find('wxLogTrace').ignore() # deprecated in 2.8, do we support?
+            
+    for f in module.find('wxLogTrace').all(): # deprecated in 2.8
+        f.ignore()
 
     # Switch the parameters to wxStrings to capitalize on the conversion code
     # we already have for them. String formatting can be done in Python if

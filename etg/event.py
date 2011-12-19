@@ -179,6 +179,9 @@ def run():
     # wxEventTable is not documented so we have to ignore SearchEventTable.
     # TODO: Should wxEventTable be available to language bindings?
     c.find('SearchEventTable').ignore()
+
+    c.find('QueueEvent.event').transfer = True
+    module.find('wxQueueEvent.event').transfer = True
     
     # TODO: If we don't need to use the wxEvtHandler's client data for our own
     # tracking then enable these....
