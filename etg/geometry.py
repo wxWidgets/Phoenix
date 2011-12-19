@@ -86,12 +86,12 @@ def run():
     c.find('operator*=').findOverload('wxInt32').ignore()
     c.find('operator/=').findOverload('wxInt32').ignore()
     
-    # ignore some of the global operators too
+    
+    # ignore all the global operators too, there is no equivallent in Python
     for item in module:
-        if isinstance(item, etgtools.FunctionDef) and item.type == 'wxPoint2DInt':
-            item.ignore()
-        if item.name in ['operator*', 'operator/'] and 'wxInt32' in item.argsString:
-            item.ignore()
+        if isinstance(item, etgtools.FunctionDef) and item.name.startswith('operator'):
+            for f in item.all():
+                f.ignore()
         
             
     c = module.find('wxRect2DDouble')
