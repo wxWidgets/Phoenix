@@ -110,6 +110,8 @@ INCLUDES = [  'defs',
               'frame',
               'msgdlg',
               'progdlg',
+              'popupwin',
+              'tipwin',
               
               # controls
               'statbmp',
@@ -206,7 +208,7 @@ def run():
             method calls from non-GUI threads.  Any extra positional or
             keyword args are passed on to the callable when it is called.
             
-            :see: `wx.CallLater`""",
+            :see: `CallLater`""",
         body="""\
             assert callable(callableObj), "callableObj is not callable"
             app = wx.GetApp()
@@ -238,7 +240,7 @@ def run():
             the timer completes, automatically cleaning up the wx.CallLater
             object.
             
-            :see: `wx.CallAfter`""",
+            :see: `CallAfter`""",
         items = [
             PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
                 body="""\

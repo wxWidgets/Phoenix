@@ -160,11 +160,10 @@ other dev stuff
 
   * Word-wrap the briefDoc strings used for %Docstring directives
 
-  * For full coverage of what is in Classic core modules ETG files 
-    are needed for:
+  * For full coverage of what was in the Classic core modules we'll need ETG
+    files for the following:
+
       * filesys, fs_mem, fs_inet, fs_arch (with wxZipFSHandler typedef)
-      * versioninfo
-      * popupwin
       * tipwin
       * vscroll
       * taskbar
