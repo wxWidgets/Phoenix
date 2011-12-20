@@ -313,6 +313,13 @@ class FunctionDef(BaseDef):
         return None
     
     
+    def hasOverloads(self):
+        """
+        Returns True if there are any overloads that are not ignored.
+        """
+        return bool([x for x in self.overloads if not x.ignored])
+    
+    
     def ignore(self,  val=True):
         # If the item being ignored has overloads then try to reorder the
         # items so the primary item is not an ignored one.
