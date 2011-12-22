@@ -84,12 +84,15 @@ def run():
 
     c = module.find('wxRegionIterator')
     c.find('operator++').ignore()
-    
-    c.addCppMethod('void', 'Next', '()', 'self->operator++();',
-                   'Move the iterator to the next rectangle in the region.')
+
+    # SIP maps operator bool() to __int__, but Classic used __nonzero__. Does
+    # it make any difference either way?
+    c.find('operator bool').ignore()
     c.addCppMethod('int', '__nonzero__', '()', 'return (int)self->operator bool();',
                    'Returns true while there are still rectangles available in the iteration.')
     
+    c.addCppMethod('void', 'Next', '()', 'self->operator++();',
+                   'Move the iterator to the next rectangle in the region.')
     
     
     # This is defined in the docs, but not in any of the real headers!
