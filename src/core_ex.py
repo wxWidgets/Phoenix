@@ -17,24 +17,6 @@ if RELEASE_NUMBER != _core.RELEASE_NUMBER:
     warnings.warn("wxPython/wxWidgets release number mismatch")
 del _core
 
-
-def version():
-    """Returns a string containing version and port info"""
-    if wx.Port == '__WXMSW__':
-        port = 'msw'
-    elif wx.Port == '__WXMAC__':
-        if 'wxOSX-carbon' in wx.PortInfo:
-            port = 'osx-carbon'
-        else:
-            port = 'osx-cocoa'
-    elif wx.Port == '__WXGTK__':
-        port = 'gtk'
-        if 'gtk2' in wx.PortInfo:
-            port = 'gtk2'
-    else:
-        port = '???'
-    return "%s %s (phoenix)" % (wx.VERSION_STRING, port)
-         
                        
 import warnings
 class wxPyDeprecationWarning(DeprecationWarning):

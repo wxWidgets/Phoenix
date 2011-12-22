@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
@@ -21,8 +22,7 @@ ITEMS  = [ 'wxAppConsole',
            'wxApp',           
            ]    
 
-OTHERDEPS = [ 'src/app_ex.py',    # Some extra app-related Python code
-              'src/app_ex.cpp',   # and some C++ code too
+OTHERDEPS = [ 'src/app_ex.cpp',   # and some C++ code too
               ]
 
 #---------------------------------------------------------------------------
@@ -94,12 +94,14 @@ def run():
     c.find('ProcessMessage').ignore()
      
     c.addCppMethod('void', 'MacHideApp', '()',
-        doc="Hide all application windows just as the user can do with the\nsystem Hide command.  Mac only.",
+        doc="""\
+            Hide all application windows just as the user can do with the
+            system Hide command.  Mac only.""",
         body="""\
-        #ifdef __WXMAC__
-            self->MacHideApp();
-        #endif
-        """)
+            #ifdef __WXMAC__
+                self->MacHideApp();
+            #endif
+            """)
 
     # Remove the virtualness from these methods
     for m in [ 'GetDisplayMode', 'GetLayoutDirection', 'GetTopWindow', 'IsActive', 
@@ -183,12 +185,278 @@ def run():
     f.type = 'wxPyApp*'
     f.briefDoc = "Returns the current application object."
     f.detailedDoc = []
+
+
+    #-------------------------------------------------------
     
+    # Now add extractor objects for the main App class as a Python class,
+    # deriving from the wx.PyApp class that we created above. Also define the
+    # stdio helper class too.
+
     
-    # This includes Python code for the on-demand output window, the Python
-    # derived wx.App class, etc.
-    module.includePyCode('src/app_ex.py')
+    module.addPyClass('PyOnDemandOutputWindow', ['object'],
+        doc="""\
+            A class that can be used for redirecting Python's stdout and
+            stderr streams.  It will do nothing until something is wrriten to
+            the stream at which point it will create a Frame with a text area
+            and write the text there.
+            """,
+        items=[
+            PyFunctionDef('__init__', '(self, title="wxPython: stdout/stderr")',
+                body="""\
+                    self.frame  = None
+                    self.title  = title
+                    self.pos    = wx.DefaultPosition
+                    self.size   = (450, 300)
+                    self.parent = None
+                    """),
+ 
+            PyFunctionDef('SetParent', '(self, parent)',
+                doc="""Set the window to be used as the popup Frame's parent.""",
+                body="""self.parent = parent"""),
     
+            PyFunctionDef('CreateOutputWindow', '(self, txt)',
+                doc="",
+                body="""\
+                    self.frame = wx.Frame(self.parent, -1, self.title, self.pos, self.size,
+                                          style=wx.DEFAULT_FRAME_STYLE)
+                    self.text  = wx.TextCtrl(self.frame, -1, "",
+                                             style=wx.TE_MULTILINE|wx.TE_READONLY)
+                    self.text.AppendText(txt)
+                    self.frame.Show(True)
+                    self.frame.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
+                    """),
+            
+            PyFunctionDef('OnCloseWindow', '(self, event)',
+                doc="",
+                body="""\
+                    if self.frame is not None:
+                        self.frame.Destroy()
+                    self.frame = None
+                    self.text  = None
+                    self.parent = None
+                    """),
+    
+            # These methods provide the file-like output behaviour.
+            PyFunctionDef('write', '(self, text)',
+                doc="""\
+                    Create the output window if needed and write the string to it.
+                    If not called in the context of the gui thread then CallAfter is 
+                    used to do the work there.
+                    """,
+                body="""\
+                    if self.frame is None:
+                        if not wx.Thread.IsMain():
+                            wx.CallAfter(self.CreateOutputWindow, text)
+                        else:
+                            self.CreateOutputWindow(text)
+                    else:
+                        if not wx.Thread.IsMain():
+                            wx.CallAfter(self.text.AppendText, text)
+                        else:
+                            self.text.AppendText(text)
+                     """),
+            
+            PyFunctionDef('close', '(self)',
+                doc="",
+                body="""\
+                    if self.frame is not None:
+                        wx.CallAfter(self.frame.Close)
+                    """),
+    
+            PyFunctionDef('flush', '(self)', 'pass'),
+            ])
+        
+
+    module.addPyClass('App', ['PyApp'],
+        doc="""\
+            The ``wx.App`` class represents the application and is used to:
+        
+              * bootstrap the wxPython system and initialize the underlying
+                gui toolkit
+              * set and get application-wide properties
+              * implement the native windowing system main message or event loop,
+                and to dispatch events to window instances
+              * etc.
+        
+            Every wx application must have a single ``wx.App`` instance, and all
+            creation of UI objects should be delayed until after the ``wx.App`` object
+            has been created in order to ensure that the gui platform and wxWidgets
+            have been fully initialized.
+        
+            Normally you would derive from this class and implement an ``OnInit``
+            method that creates a frame and then calls ``self.SetTopWindow(frame)``,
+            however ``wx.App`` is also usable on it's own without derivation.
+            """,
+        
+        items=[
+            PyCodeDef('outputWindowClass = PyOnDemandOutputWindow'),
+            
+            PyFunctionDef('__init__', '(self, redirect=False, filename=None, useBestVisual=False, clearSigInt=True)',
+                doc="""\
+                    Construct a ``wx.App`` object.  
+    
+                    :param redirect: Should ``sys.stdout`` and ``sys.stderr`` be
+                        redirected?  Defaults to False. If ``filename`` is None
+                        then output will be redirected to a window that pops up
+                        as needed.  (You can control what kind of window is created
+                        for the output by resetting the class variable
+                        ``outputWindowClass`` to a class of your choosing.)
+            
+                    :param filename: The name of a file to redirect output to, if
+                        redirect is True.
+            
+                    :param useBestVisual: Should the app try to use the best
+                        available visual provided by the system (only relevant on
+                        systems that have more than one visual.)  This parameter
+                        must be used instead of calling `SetUseBestVisual` later
+                        on because it must be set before the underlying GUI
+                        toolkit is initialized.
+            
+                    :param clearSigInt: Should SIGINT be cleared?  This allows the
+                        app to terminate upon a Ctrl-C in the console like other
+                        GUI apps will.
+            
+                    :note: You should override OnInit to do applicaition
+                        initialization to ensure that the system, toolkit and
+                        wxWidgets are fully initialized.
+                    """,
+                body="""\
+                    PyApp.__init__(self)
+            
+                    # make sure we can create a GUI
+                    if not self.IsDisplayAvailable():
+                        
+                        if wx.Port == "__WXMAC__":
+                            msg = "This program needs access to the screen. Please run with a\\n" \\
+                                  "Framework build of python, and only when you are logged in\\n" \\
+                                  "on the main display of your Mac."
+                            
+                        elif wx.Port == "__WXGTK__":
+                            msg ="Unable to access the X Display, is $DISPLAY set properly?"
+            
+                        else:
+                            msg = "Unable to create GUI"
+                            # TODO: more description is needed for wxMSW...
+            
+                        raise SystemExit(msg)
+                    
+                    # This has to be done before OnInit
+                    self.SetUseBestVisual(useBestVisual)
+            
+                    # Set the default handler for SIGINT.  This fixes a problem
+                    # where if Ctrl-C is pressed in the console that started this
+                    # app then it will not appear to do anything, (not even send
+                    # KeyboardInterrupt???)  but will later segfault on exit.  By
+                    # setting the default handler then the app will exit, as
+                    # expected (depending on platform.)
+                    if clearSigInt:
+                        try:
+                            import signal
+                            signal.signal(signal.SIGINT, signal.SIG_DFL)
+                        except:
+                            pass
+            
+                    # Save and redirect the stdio to a window?
+                    self.stdioWin = None
+                    self.saveStdio = (_sys.stdout, _sys.stderr)
+                    if redirect:
+                        self.RedirectStdio(filename)
+            
+                    # Use Python's install prefix as the default  
+                    wx.StandardPaths.Get().SetInstallPrefix(_sys.prefix)
+            
+                    # Until the new native control for wxMac is up to par, still use the generic one.
+                    ##wx.SystemOptions.SetOptionInt("mac.listctrl.always_use_generic", 1)
+            
+                    # This finishes the initialization of wxWindows and then calls
+                    # the OnInit that should be present in the derived class
+                    self._BootstrapApp()
+                    """),
+    
+            PyFunctionDef('OnPreInit', '(self)',
+                doc="""\
+                    Things that must be done after _BootstrapApp has done its thing, but
+                    would be nice if they were already done by the time that OnInit is
+                    called.  This can be overridden in derived classes, but be sure to call
+                    this method from there.
+                    """,
+                body="wx.StockGDI._initStockObjects()"),
+            
+            PyFunctionDef('__del__', '(self)',
+                doc="",
+                body="""\
+                    # Just in case the MainLoop was overridden without calling RestoreStio
+                    self.RestoreStdio()
+                    """),
+    
+            PyFunctionDef('SetTopWindow', '(self, frame)',
+                doc="""\
+                    Set the \"main\" top level window, which will be used for the parent of 
+                    the on-demand output window as well as for dialogs that do not have
+                    an explicit parent set.
+                    """,
+                body="""\
+                    if self.stdioWin:
+                        self.stdioWin.SetParent(frame)
+                    wx.PyApp.SetTopWindow(self, frame)
+                    """),
+            
+            PyFunctionDef('MainLoop', '(self)',
+                doc="""Execute the main GUI event loop""",
+                body="""\
+                    rv = wx.PyApp.MainLoop(self)
+                    self.RestoreStdio()
+                    return rv
+                    """),
+    
+            PyFunctionDef('RedirectStdio', '(self, filename=None)',
+                doc="""Redirect sys.stdout and sys.stderr to a file or a popup window.""",
+                body="""\
+                    if filename:
+                        _sys.stdout = _sys.stderr = open(filename, 'a')
+                    else:
+                        self.stdioWin = self.outputWindowClass()
+                        _sys.stdout = _sys.stderr = self.stdioWin
+                    """),
+        
+            PyFunctionDef('RestoreStdio', '(self)',
+                doc="",
+                body="""\
+                    try:
+                        _sys.stdout, _sys.stderr = self.saveStdio
+                    except:
+                        pass
+                    """),
+        
+            PyFunctionDef('SetOutputWindowAttributes', '(self, title=None, pos=None, size=None)',
+                doc="""\
+                    Set the title, position and/or size of the output window if the stdio
+                    has been redirected. This should be called before any output would
+                    cause the output window to be created.
+                    """,
+                body="""\
+                    if self.stdioWin:
+                        if title is not None:
+                            self.stdioWin.title = title
+                        if pos is not None:
+                            self.stdioWin.pos = pos
+                        if size is not None:
+                            self.stdioWin.size = size
+                    """),
+            ])
+
+
+
+
+    module.addPyClass('PySimpleApp', ['App'], deprecated=True,
+        doc="""This class is deprecated.  Please use wx.App instead.""",
+        items=[
+            PyFunctionDef('__init__', '(self, *args, **kw)',
+                body="App.__init__(self, *args, **kw)")
+            ])
+
+
 
     module.find('wxInitialize').ignore()
     module.find('wxUninitialize').ignore()
