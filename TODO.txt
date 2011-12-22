@@ -164,7 +164,6 @@ other dev stuff
     files for the following:
 
       * filesys, fs_mem, fs_inet, fs_arch (with wxZipFSHandler typedef)
-      * vscroll
       * taskbar
       * all missing common dialogs
       * print (as in print framework classes)

@@ -47,6 +47,7 @@ INCLUDES = [  'defs',
               'object',
               'gdicmn',
               'geometry',
+              'position',
 
               'stream',
 
@@ -150,6 +151,7 @@ INCLUDES = [  'defs',
               'spinctrl',
               'tglbtn',
               'statusbar',
+              'vscroll',
               ]
 
 
