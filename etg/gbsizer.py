@@ -44,7 +44,7 @@ def run():
     c.addCppMethod('PyObject*', 'Get', '()', """\
         return sipBuildResult(0, "(ii)", self->GetRow(), self->GetCol());
         """, 
-        pyArgsString="Get() -> (row, col)",
+        pyArgsString="() -> (row, col)",
         briefDoc="Return the row and col properties as a tuple.")
     c.addCppMethod('void', 'Set', '(int row=0, int col=0)', """\
         self->SetRow(row);
@@ -86,7 +86,7 @@ def run():
     c.addCppMethod('PyObject*', 'Get', '()', """\
         return sipBuildResult(0, "(ii)", self->GetRowspan(), self->GetColspan());
         """, 
-        pyArgsString="Get() -> (rowspan, colspan)",
+        pyArgsString="() -> (rowspan, colspan)",
         briefDoc="Return the rowspan and colspan properties as a tuple.")
     c.addCppMethod('void', 'Set', '(int rowspan=0, int colspan=0)', """\
         self->SetRowspan(rowspan);

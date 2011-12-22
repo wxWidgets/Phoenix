@@ -37,6 +37,14 @@ def run():
 
     c.find('GetSelection.from').out = True
     c.find('GetSelection.to').out = True
+    c.find('GetRange.from').name = 'from_'
+    c.find('GetRange.to').name = 'to_'
+    c.find('Remove.from').name = 'from_'
+    c.find('Remove.to').name = 'to_'
+    c.find('Replace.from').name = 'from_'
+    c.find('Replace.to').name = 'to_'
+    c.find('SetSelection.from').name = 'from_'
+    c.find('SetSelection.to').name = 'to_'
     
     
     #-----------------------------------------------------------------

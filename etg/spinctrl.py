@@ -41,6 +41,8 @@ def run():
     c.addPyMethod('GetRange', '(self)', 'return (self.GetMin(), self.GetMax())')
     c.addPyMethod('SetMin', '(self, minVal)', 'self.SetRange(minVal, self.GetMax())')
     c.addPyMethod('SetMax', '(self, maxVal)', 'self.SetRange(self.GetMin(), maxVal)')
+    c.find('SetSelection.from').name = 'from_'
+    c.find('SetSelection.to').name = 'to_'
     tools.fixWindowClass(c)
 
 
