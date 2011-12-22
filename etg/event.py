@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
@@ -96,26 +97,74 @@ def run():
     module.find('wxDECLARE_EVENT').ignore()
     module.find('wxDEFINE_EVENT').ignore()
     
+
+    module.addPyClass('PyEventBinder', ['object'],
+        doc="""\
+            Instances of this class are used to bind specific events to event handlers.
+            """,
+        items=[
+            PyFunctionDef('__init__', '(self, evtType, expectedIDs=0)',
+                body="""\
+                    if expectedIDs not in [0, 1, 2]:
+                        raise ValueError, "Invalid number of expectedIDs"
+                    self.expectedIDs = expectedIDs
+            
+                    if isinstance(evtType, (list, tuple)):
+                        self.evtType = list(evtType)
+                    else:
+                        self.evtType = [evtType]
+                    """),
+            
+            PyFunctionDef('Bind', '(self, target, id1, id2, function)',
+                doc="""Bind this set of event types to target using its Connect() method.""",
+                body="""\
+                    for et in self.evtType:
+                        target.Connect(id1, id2, et, function)
+                    """),
+            
+            PyFunctionDef('Unbind', '(self, target, id1, id2, handler=None)',
+                doc="""Remove an event binding.""",
+                body="""\
+                    success = 0
+                    for et in self.evtType:
+                        success += target.Disconnect(id1, id2, et, handler)
+                    return success != 0
+                    """),
+            
+            PyFunctionDef('_getEvtType', '(self)',
+                doc="""\
+                    Make it easy to get to the default wxEventType typeID for this
+                    event binder.
+                    """,
+                body="""return self.evtType[0]"""),
+            
+            PyPropertyDef('typeId', '_getEvtType'),
+            ])
+    
+
+    module.includePyCode('src/event_ex.py')
+    
     #---------------------------------------
     # wxEvtHandler
     c = module.find('wxEvtHandler')
     c.addPrivateCopyCtor()
     c.addPublic()
+
+    c.includeCppCode('src/event_ex.cpp')
     
     # Ignore the Connect/Disconnect and Bind/Unbind methods (and overloads) for now. 
     for item in c.allItems():
         if item.name in ['Connect', 'Disconnect', 'Bind', 'Unbind']:
             item.ignore()
     
-    c.includeCppCode('src/event_ex.cpp')
-    module.includePyCode('src/event_ex.py')
     
     # Connect and disconnect methods for wxPython. Hold a reference to the
     # event handler function in the event table, so we can fetch it later when
     # it is time to handle the event.
     c.addCppMethod(
         'void', 'Connect', '(int id, int lastId, wxEventType eventType, PyObject* func)',
-        """\
+        doc="Make an entry in the dynamic event table for an event binding.",
+        body="""\
             if (PyCallable_Check(func)) {
                 self->Connect(id, lastId, eventType,
                               (wxObjectEventFunction)(wxEventFunction)
@@ -132,11 +181,13 @@ def run():
             }
         """)
 
+
     c.addCppMethod(
         'bool', 'Disconnect', '(int id, int lastId=-1, '
                                'wxEventType eventType=wxEVT_NULL, '
                                'PyObject* func=NULL)', 
-        """\
+        doc="Remove an event binding by removing its entry in the synamic event table.",
+        body="""\
             if (func && func != Py_None) {
                 // Find the current matching binder that has this function
                 // pointer and dissconnect that one.  Unfortuneatly since we
@@ -195,6 +246,54 @@ def run():
     c.find('ProcessEvent').isVirtual = True
            
     c.addPyCode('PyEvtHandler = wx.deprecated(EvtHandler)')
+
+
+    c.addPyMethod('Bind', '(self, event, handler, source=None, id=wx.ID_ANY, id2=wx.ID_ANY)',
+        doc="""\
+            Bind an event to an event handler.
+    
+            :param event: One of the EVT_* objects that specifies the
+                          type of event to bind,
+        
+            :param handler: A callable object to be invoked when the
+                            event is delivered to self.  Pass None to
+                            disconnect an event handler.
+        
+            :param source: Sometimes the event originates from a
+                           different window than self, but you still
+                           want to catch it in self.  (For example, a
+                           button event delivered to a frame.)  By
+                           passing the source of the event, the event
+                           handling system is able to differentiate
+                           between the same event type from different
+                           controls.
+        
+            :param id: Used to spcify the event source by ID instead
+                       of instance.
+        
+            :param id2: Used when it is desirable to bind a handler
+                        to a range of IDs, such as with EVT_MENU_RANGE.
+            """,
+        body="""\
+            assert isinstance(event, wx.PyEventBinder)
+            assert callable(handler)
+            assert source is None or hasattr(source, 'GetId')
+            if source is not None:
+                id  = source.GetId()
+            event.Bind(self, id, id2, handler)            
+            """)
+    
+    
+    c.addPyMethod('Unbind', '(self, event, source=None, id=wx.ID_ANY, id2=wx.ID_ANY, handler=None)',
+        doc="""\
+            Disconnects the event handler binding for event from self.
+            Returns True if successful.
+            """,
+        body="""\
+            if source is not None:
+                id  = source.GetId()
+            return event.Unbind(self, id, id2, handler)              
+            """)
 
     #---------------------------------------
     # wxEvent
