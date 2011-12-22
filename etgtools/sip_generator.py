@@ -528,6 +528,9 @@ from %s import *
         
         
     def generateDocstring(self, item, stream, indent):
+        item.pyDocstring = ""
+        #return
+        
         # get the docstring text
         text = nci(extractors.flattenNode(item.briefDoc, False))
         

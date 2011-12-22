@@ -71,8 +71,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         """
         sectionBeginLine = -1
         sectionEndLine = -1
-        sectionBeginMarker = '#-- begin-' + sectionName
-        sectionEndMarker = '#-- end-' + sectionName
+        sectionBeginMarker = '#-- begin-%s --#' % sectionName
+        sectionEndMarker = '#-- end-%s --#' % sectionName
         
         lines = file(destFile, 'rt').readlines()
         for idx, line in enumerate(lines):
@@ -150,7 +150,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         elif guessTypeStr(globalVar):
             valTyp = '""'
         else:
-            valTyp = removeWxPrefix(globalVar.type) + '()'
+            valTyp = removeWxPrefix(globalVar.type.replace('const ', '')) + '()'
         
         stream.write('%s = %s\n' % (name, valTyp))
         
@@ -234,7 +234,17 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         if function.overloads:
             stream.write('(*args, **kw)')
         else:
-            stream.write(function.pyArgsString)
+            argsString = function.pyArgsString
+            if not argsString:
+                argsString = '()'
+            if '->' in argsString:
+                pos = argsString.find(')')
+                argsString = argsString[:pos+1]
+            if '(' != argsString[0]:
+                pos = argsString.find('(')
+                argsString = argsString[pos:]
+            argsString = argsString.replace('::', '.')
+            stream.write(argsString)
         stream.write(':\n')
         stream.write('    """\n')
         stream.write(nci(function.pyDocstring, 4))
@@ -347,7 +357,9 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         assert isinstance(method, extractors.MethodDef)
         if method.ignored:
             return
-
+        if method.isDtor:
+            return
+        
         name = name or method.pyName or method.name
         if name in magicMethods:
             name = magicMethods[name]
@@ -365,14 +377,18 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
             argsString = method.pyArgsString
             if not argsString:
                 argsString = '()'
+            if '->' in argsString:
+                pos = argsString.find(')')
+                argsString = argsString[:pos+1]
+            if '(' != argsString[0]:
+                pos = argsString.find('(')
+                argsString = argsString[pos:]
             if not method.isStatic:
-                if argsString[:2] == '()':
-                    argsString = '(self)' + argsString[2:]
+                if argsString == '()':
+                    argsString = '(self)'
                 else:
                     argsString = '(self, ' + argsString[1:]
-            if '->' in argsString:
-                    pos = argsString.rfind(')')
-                    argsString = argsString[:pos+1]
+            argsString = argsString.replace('::', '.')
             stream.write(argsString)
         stream.write(':\n')
         indent2 = indent + ' '*4
@@ -384,7 +400,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
             else:
                 docstring = ""
         stream.write('%s"""\n' % indent2)
-        stream.write(nci(docstring, len(indent2)))
+        if docstring.strip():
+            stream.write(nci(docstring, len(indent2)))
         stream.write('%s"""\n' % indent2)
         
         

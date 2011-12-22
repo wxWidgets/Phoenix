@@ -16,9 +16,18 @@ import extractors
 import sys, os
 
 magicMethods = {
-    'operator!=' : '__ne__',
-    'operator==' : '__eq__',
-    # TODO
+    'operator!='    : '__ne__',
+    'operator=='    : '__eq__',
+    'operator+'     : '__add__',
+    'operator-'     : '__sub__',
+    'operator*'     : '__mul__',
+    'operator/'     : '__div__',
+    'operator+='    : '__iadd__',
+    'operator-='    : '__isub__',
+    'operator*='    : '__imul__',
+    'operator/='    : '__idiv__',
+    'operator bool' : '__int__',  # Why not __nonzero__?
+    # TODO: add more
 }
 
 
