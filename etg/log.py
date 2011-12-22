@@ -31,7 +31,7 @@ ITEMS  = [
             'wxLogBuffer',
             'wxLogInterposer',
             'wxLogTextCtrl',
-            
+            'wxLogFormatter',
          ]
     
 #---------------------------------------------------------------------------
@@ -106,6 +106,12 @@ def run():
     c = module.find('wxLogTextCtrl')
     c.addPrivateCopyCtor()
     c.addPrivateAssignOp()
+    
+    
+    
+    c = module.find('wxLogFormatter')
+    c.find('FormatTime').ignore(False)
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
