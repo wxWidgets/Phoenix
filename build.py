@@ -271,6 +271,7 @@ def makeOptionParser():
         ("unicode",        (True, "Build wxPython with unicode support (always on for wx2.9)")),
         ("waf",            (False, "Use waf to build the bindings.")),
         ("verbose",        (False, "Print out more information.")),
+        ("upload_package", (False, "Upload package to nightly server.")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -893,6 +894,29 @@ def bdist(options, args):
     if environ_script:
         tarball.add(environ_script, os.path.join(rootname, os.path.basename(environ_script)))
     tarball.close()
+    
+    if options.upload_package:
+        print "Preparing to upload package..."
+        configfile = os.path.join(os.getenv("HOME"), "phoenix_package_server.cfg")
+        if not os.path.exists(configfile):
+            print "Cannot upload, server configuration not set."
+            #sys.exit(1)
+            
+        import ConfigParser
+        parser = ConfigParser.ConfigParser()
+        parser.read(configfile)
+        
+        print "Connecting to FTP server..."
+        from ftplib import FTP
+        ftp = FTP(parser.get("FTP", "host"))
+        ftp.login(parser.get("FTP", "user"), parser.get("FTP", "pass"))
+        f = open(tarfilename, 'rb')
+        ftp_path = '%s/%s' % (parser.get("FTP", "dir"), os.path.basename(tarfilename))
+        print "Uploading package (this may take some time)..."
+        ftp.storbinary('STOR %s' % ftp_path, f)
+
+        ftp.close()
+        print "Upload complete!"
     
     print "Release built at %s" % tarfilename
 
