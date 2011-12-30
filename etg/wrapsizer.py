@@ -19,7 +19,7 @@ DOCSTRING = ""
 # this script. 
 ITEMS  = [ "wxWrapSizer",
            ]    
-    
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -30,6 +30,8 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    module.addHeaderCode("#include <wx/wrapsizer.h>")
     
     c = module.find('wxWrapSizer')
     assert isinstance(c, etgtools.ClassDef)
