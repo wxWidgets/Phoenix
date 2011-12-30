@@ -107,7 +107,23 @@ WIDGETS_IMAGES_ROOT  = os.path.join(SPHINXROOT,  '_static', 'images', 'widgets',
 SPHINX_IMAGES_ROOT   = os.path.join(SPHINXROOT,  '_static', 'images', 'sphinxdocs')
 
 # The Doxygen root for the XML docstrings
-DOXYROOT             = os.path.join(os.environ['WXWIN'], 'docs', 'doxygen')
+xmlsrcbase = 'docs/doxygen/out/xml'
+
+WXWIN = os.environ.get('WXWIN')
+
+if not WXWIN:
+    for rel in ['../wxWidgets', '..', '../../wxWidgets/trunk']:
+        path = os.path.join(PHOENIXROOT, rel, xmlsrcbase)
+        if path and os.path.exists(path):
+            WXWIN = os.path.abspath(os.path.join(PHOENIXROOT, rel))
+            break
+
+if WXWIN:
+    XMLSRC = os.path.join(WXWIN, xmlsrcbase)
+
+assert WXWIN and os.path.exists(XMLSRC), "Unable to locate Doxygen XML files"
+
+DOXYROOT             = os.path.join(WXWIN, 'docs', 'doxygen')
 
 # Dictionary copied over from tweaker_tools
 MAGIC_METHODS = {
