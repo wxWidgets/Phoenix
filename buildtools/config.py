@@ -121,16 +121,7 @@ class Configuration(object):
             self.COMPILER=None
 
         self.WXPLAT2 = None
-
-        
-        if os.environ.has_key('WXWIN'):
-            self.WXDIR = os.environ['WXWIN']
-        else:
-            if os.path.exists('../wxWidgets'):
-                self.WXDIR = '../wxWidgets'  # assumes in parallel SVN tree
-            else:
-                self.WXDIR = '..'  # assumes wxPython is subdir
-            msg("WARNING: WXWIN not set in environment. Assuming '%s'" % self.WXDIR)
+        self.WXDIR = wxDir()
         
         self.includes = ['sip/siplib',  # to get our version of sip.h
                          'src',         # for any hand-written headers
@@ -579,3 +570,19 @@ def findCmd(cmd):
             return c
     return None
     
+    
+def phoenixDir():
+    return os.path.abspath(posixjoin(os.path.dirname(__file__), '..'))
+
+
+def wxDir():
+    WXWIN = os.environ.get('WXWIN')
+    if not WXWIN:
+        for rel in ['../wxWidgets', '../wx', '..']:
+            path = os.path.join(phoenixDir(), rel)
+            if path and os.path.exists(path) and os.path.isdir(path):
+                WXWIN = os.path.abspath(os.path.join(phoenixDir(), rel))
+                break
+    assert WXWIN not in [None, '']
+    return WXWIN
+

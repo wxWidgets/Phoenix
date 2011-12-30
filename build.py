@@ -18,7 +18,8 @@ import tempfile
 import urllib2
 
 from distutils.dep_util import newer, newer_group
-from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd
+from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
+                               phoenixDir, wxDir
 
 from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
 
@@ -220,21 +221,6 @@ def setDevModeOptions(args):
         args[idx:idx+1] = myDevModeOptions
 
     
-def phoenixDir():
-    return os.path.abspath(os.path.split(__file__)[0])
-
-
-def wxDir():
-    WXWIN = os.environ.get('WXWIN')
-    if not WXWIN:
-        for rel in ['../wxWidgets', '../wx', '..']:
-            path = os.path.join(phoenixDir(), rel)
-            if path and os.path.exists(path) and os.path.isdir(path):
-                WXWIN = os.path.abspath(os.path.join(phoenixDir(), rel))
-                break
-    assert WXWIN not in [None, '']
-    return WXWIN
-
 
 def getMSWSettings(options):
     class MSWsettings(object):
