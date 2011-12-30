@@ -1,0 +1,2 @@
+    
+     wx.App.SetTopWindow(None) 

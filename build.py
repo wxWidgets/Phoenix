@@ -19,6 +19,9 @@ import urllib2
 
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd
+
+from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
+
 import buildtools.version as version
 
 # defaults
@@ -36,11 +39,11 @@ unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or ev
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
-sipCurrentVersion = '4.13.1-snapshot-7ab562ae0e39'
+sipCurrentVersion = '4.13.1-snapshot-98421b9cc511'
 sipCurrentVersionMD5 = {
-    'darwin' : '2da0cc2ba853b2787499da0596b4e8ac', 
-    'win32'  : '45673b36d6885632ad0f273c496a1383', 
-    'linux2' : 'f7971044b97f7fc7650fef2189517937', 
+    'darwin' : '1d5ae7c54b768a77d951df3bae15a33e', 
+    'win32'  : 'abe8ff9ff1804f9cf6def83712643187', 
+    'linux2' : 'fbab55f36f05dfbf31d4968ce187abb8', # TODO: linux build needs updated!!
 }
 toolsURL = 'http://wxpython.org/Phoenix/tools'
 
@@ -59,6 +62,8 @@ Usage: ./build.py [command(s)] [options]
                     next build
         etg         Run the ETG scripts that are out of date to update their 
                     SIP files
+        sphinx      Run the documentation building process using Sphinx (this
+                    needs to be done after dox and etg)
         sip         Run sip
         test        Run the unit test suite
         test_*      Run just one test module
@@ -108,7 +113,8 @@ def main(args):
             testOne(cmd, options, args)
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
                      'build_wx', 'build_py', 'build', 'bdist',
-                     'clean', 'clean_wx', 'clean_py', 'cleanall']:
+                     'clean', 'clean_wx', 'clean_py', 'cleanall',
+                     'sphinx']:
             function = globals()[cmd]
             function(options, args)
         else:
@@ -424,7 +430,7 @@ def dox(options, args):
     
 def doxhtml(options, args):
     msg('Running command: doxhtml')
-    #_doDox('html')
+    _doDox('html')
     _doDox('chm')
     
     
@@ -432,6 +438,11 @@ def doxhtml(options, args):
 def etg(options, args):
     msg('Running command: etg')
     pwd = pushDir(phoenixDir())
+
+    sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
+
+    clean_sphinx(sphinxDir, full=True)
+
     etgfiles = glob.glob('etg/_*.py')
     for script in etgfiles:
         sipfile = etg2sip(script)
@@ -448,7 +459,65 @@ def etg(options, args):
         if newer_group(deps, sipfile):
             runcmd('%s %s --sip' % (PYTHON, script))
 
-            
+    # Copy the rst files into txt files
+    restDir = os.path.join(sphinxDir, 'rest_substitutions', 'overviews')
+    rstFiles = glob.glob(restDir + '/*.rst')
+    
+    for rst in rstFiles:
+        rstName = os.path.split(rst)[1]
+        txt = os.path.join(sphinxDir, os.path.splitext(rstName)[0] + '.txt')
+        shutil.copyfile(rst, txt)
+
+    SphinxIndexes(sphinxDir)
+    GenGallery()
+        
+
+def clean_sphinx(sphinxDir, full=True):
+
+    sphinxfiles = []
+    
+    if full:
+        sphinxfiles = glob.glob(sphinxDir + '/*.txt')
+        sphinxfiles += glob.glob(sphinxDir + '/*.inc')
+        
+    pklfiles = glob.glob(sphinxDir + '/*.pkl')
+    lstfiles = glob.glob(sphinxDir + '/*.lst')
+
+    for f in sphinxfiles + pklfiles + lstfiles:
+        os.remove(f)
+
+    
+def sphinx(options, args):
+
+    sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
+
+    if not os.path.isdir(sphinxDir):
+        raise Exception('Missing sphinx folder in the distribution') 
+
+    textFiles = glob.glob(sphinxDir + '/*.txt')
+    if not textFiles:
+        raise Exception('No documentation files found. Please run "build.py touch etg" first')
+
+    todos = os.path.join(phoenixDir(), 'TODO.txt')
+    migration_guide = os.path.join(phoenixDir(), 'docs', 'MigrationGuide.txt')
+    
+    if os.path.isfile(migration_guide):
+        shutil.copy(migration_guide, sphinxDir)
+    
+    if os.path.isfile(todos):
+        shutil.copy(todos, sphinxDir)
+
+    MakeHeadings()
+
+    pwd = pushDir(sphinxDir)
+    runcmd('make html')
+
+    buildDir = os.path.join(sphinxDir, 'build')
+    PostProcess(buildDir)
+
+    clean_sphinx(sphinxDir, full=False)
+    
+    
 def sip(options, args):
     msg('Running command: sip')
     cfg = Config()
@@ -894,7 +963,7 @@ def bdist(options, args):
     if environ_script:
         tarball.add(environ_script, os.path.join(rootname, os.path.basename(environ_script)))
     tarball.close()
-    
+
     if options.upload_package:
         print "Preparing to upload package..."
         configfile = os.path.join(os.getenv("HOME"), "phoenix_package_server.cfg")
@@ -917,7 +986,7 @@ def bdist(options, args):
 
         ftp.close()
         print "Upload complete!"
-    
+        
     print "Release built at %s" % tarfilename
 
     

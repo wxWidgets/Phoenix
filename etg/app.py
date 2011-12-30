@@ -127,7 +127,8 @@ def run():
     # like normal, their docs will be able to be generated, etc.
     c.addItem(etgtools.MethodDef(
         protection='public', type='wxAppAssertMode', name='GetAssertMode', argsString='()',
-        briefDoc="Returns the current mode for how the application responds to wx asserts."))
+        briefDoc="Returns the current mode for how the application responds to wx asserts.",
+        className=c.name))
     
     m = etgtools.MethodDef(
         protection='public', type='void', name='SetAssertMode', argsString='(wxAppAssertMode mode)',
@@ -135,13 +136,15 @@ def run():
         Set the mode indicating how the application responds to wx assertion 
         statements. Valid settings are a combination of these flags: 
         
-            wx.APP_ASSERT_SUPPRESS 
-            wx.APP_ASSERT_EXCEPTION 
-            wx.APP_ASSERT_DIALOG 
-            wx.APP_ASSERT_LOG
+            - wx.APP_ASSERT_SUPPRESS 
+            - wx.APP_ASSERT_EXCEPTION 
+            - wx.APP_ASSERT_DIALOG 
+            - wx.APP_ASSERT_LOG
             
         The default behavior is to raise a wx.wxAssertionError exception.
-        """)
+        """,
+        className=c.name)
+    
     m.addItem(etgtools.ParamDef(type='wxAppAssertMode', name='wxAppAssertMode'))
     c.addItem(m)
 
@@ -149,7 +152,8 @@ def run():
         protection='public', isStatic=True, type='bool', name='IsDisplayAvailable', argsString='()',
         briefDoc="""\
         Returns True if the application is able to connect to the system's 
-        display, or whatever the equivallent is for the platform."""))
+        display, or whatever the equivallent is for the platform.""",
+        className=c.name))
 
 
     c.addProperty('AssertMode GetAssertMode SetAssertMode')

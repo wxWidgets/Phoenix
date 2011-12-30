@@ -30,7 +30,6 @@ magicMethods = {
     # TODO: add more
 }
 
-
 def removeWxPrefixes(node):
     """
     Rename items with a 'wx' prefix to not have the prefix. If the back-end
@@ -54,6 +53,10 @@ def removeWxPrefixes(node):
 def removeWxPrefix(name):
     if name.startswith('wx') and not name.startswith('wxEVT_'):
         name = name[2:]
+
+    if name.startswith('``wx') and not name.startswith('``wxEVT_'):
+        name = name[0:2] + name[4:]
+        
     return name
 
 
@@ -363,7 +366,8 @@ def runGenerators(module):
     generators.append(pi_generator.PiWrapperGenerator())    
     
     # And finally add the documentation generator
-    generators.append(getDocsGenerator())
+    import sphinx_generator
+    generators.append(sphinx_generator.SphinxGenerator())
 
     # run them
     for g in generators:

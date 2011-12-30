@@ -1,0 +1,22 @@
+
+{% extends "!layout.html" %}
+
+{%- block relbaritems %}
+  <li>{{ title }}</li>
+{% endblock %}
+
+{% block rootrellink %}
+
+        <li><img src="_static/phoenix_small.png" alt="" style="vertical-align: middle; margin-top: 7px"/></li>
+        <li><a href="index.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);">Home</a> |&nbsp;</li>
+        <li><a href="search.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);">Search</a> |&nbsp;</li>
+        <li><a href="gallery.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);">Gallery</a> |&nbsp;</li>
+        <li><a href="main.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);">Documentation</a> &raquo; </li>
+
+{% endblock %}
+
+{% block header %}
+<div class="floatcenter" style="background-color: white; text-align: middle; align: middle; padding: 40px 10px 15px 15px">
+<img src="{{ pathto("_static/phoenix_top.png", 1) }}" alt="Phoenix Logo" align="middle" />
+</div>
+{% endblock %}

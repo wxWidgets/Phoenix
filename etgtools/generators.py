@@ -31,6 +31,10 @@ class StubbedDocsGenerator(DocsGeneratorBase):
         pass
 
 
+class SphinxGenerator(DocsGeneratorBase):
+    def generate(self, module):
+        pass
+
 #---------------------------------------------------------------------------
 # helpers
 
