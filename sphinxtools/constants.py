@@ -17,6 +17,7 @@ import datetime
 
 # Phoenix-specific imports
 import buildtools.version as version
+from buildtools.config import phoenixDir, wxDir
 
 # List of strings that should be ignored when creating inline literals
 # such as ``ID_ANY`` or ``HORIZONtAL``, with double backticks
@@ -77,7 +78,7 @@ CPP_ITEMS = ['*', '&', 'const', 'unsigned', '(size_t)', 'size_t', 'void']
 # building the ReST docs:
 
 # The location of the Phoenix main folder
-PHOENIXROOT          = os.path.abspath(os.path.split(__file__)[0] + '/..')
+PHOENIXROOT          = phoenixDir()
 
 # The location of the Sphinx main folder
 SPHINXROOT           = os.path.join(PHOENIXROOT, 'docs', 'sphinx')
@@ -106,18 +107,12 @@ WIDGETS_IMAGES_ROOT  = os.path.join(SPHINXROOT,  '_static', 'images', 'widgets',
 # Folder for the icons used for titles, sub-titles and so on for the Sphinx documentation
 SPHINX_IMAGES_ROOT   = os.path.join(SPHINXROOT,  '_static', 'images', 'sphinxdocs')
 
+
 # The Doxygen root for the XML docstrings
 xmlsrcbase = 'docs/doxygen/out/xml'
+WXWIN = wxDir()
 
-WXWIN = os.environ.get('WXWIN')
-
-if not WXWIN:
-    for rel in ['../wxWidgets', '..', '../../wxWidgets/trunk']:
-        path = os.path.join(PHOENIXROOT, rel, xmlsrcbase)
-        if path and os.path.exists(path):
-            WXWIN = os.path.abspath(os.path.join(PHOENIXROOT, rel))
-            break
-
+XMLSRC = ''
 if WXWIN:
     XMLSRC = os.path.join(WXWIN, xmlsrcbase)
 

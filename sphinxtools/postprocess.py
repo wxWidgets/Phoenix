@@ -138,6 +138,7 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace('non-NULL', 'not ``None``')
         text = text.replace(',,', ',').replace(', ,', ',')
         text = text.replace(':note:', '.. note::')
+        text = text.replace(':see:', '.. seealso::')
         
         fid = open(input, 'wt')
         fid.write(text)
