@@ -40,11 +40,11 @@ unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or ev
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
-sipCurrentVersion = '4.13.1-snapshot-98421b9cc511'
+sipCurrentVersion = '4.13.1-snapshot-7ab562ae0e39'
 sipCurrentVersionMD5 = {
-    'darwin' : '1d5ae7c54b768a77d951df3bae15a33e', 
-    'win32'  : 'abe8ff9ff1804f9cf6def83712643187', 
-    'linux2' : 'fbab55f36f05dfbf31d4968ce187abb8', # TODO: linux build needs updated!!
+    'darwin' : '2da0cc2ba853b2787499da0596b4e8ac', 
+    'win32'  : '45673b36d6885632ad0f273c496a1383', 
+    'linux2' : 'f7971044b97f7fc7650fef2189517937', 
 }
 toolsURL = 'http://wxpython.org/Phoenix/tools'
 
