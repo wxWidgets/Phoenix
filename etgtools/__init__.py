@@ -17,15 +17,10 @@ from extractors import *
 
 #---------------------------------------------------------------------------
 
-phoenixRoot = os.path.abspath(os.path.split(__file__)[0]+'/..')
+from buildtools.config import phoenixDir, wxDir
+
 xmlsrcbase = 'docs/doxygen/out/xml'
-WXWIN = os.environ.get('WXWIN')
-if not WXWIN:
-    for rel in ['../wxWidgets', '..']:
-        path = os.path.join(phoenixRoot, rel, xmlsrcbase)
-        if path and os.path.exists(path):
-            WXWIN = os.path.abspath(os.path.join(phoenixRoot, rel))
-            break
+WXWIN = wxDir()
 if WXWIN:
     XMLSRC = os.path.join(WXWIN, xmlsrcbase)
 assert WXWIN and os.path.exists(XMLSRC), "Unable to locate Doxygen XML files"
@@ -98,6 +93,8 @@ def parseDoxyXML(module, class_or_filename_list):
                         class_or_filename_list.append(name) 
 
         _filesparsed.clear()
+    
+    module.parseCompleted()
 
 #---------------------------------------------------------------------------
         

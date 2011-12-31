@@ -990,10 +990,11 @@ class DefineDef(BaseDef):
     """
     Represents a #define with a name and a value.
     """
-    def __init__(self, element, **kw):
+    def __init__(self, element=None, **kw):
         super(DefineDef, self).__init__()
-        self.name = element.find('name').text
-        self.value = flattenNode(element.find('initializer'))
+        if element is not None:
+            self.name = element.find('name').text
+            self.value = flattenNode(element.find('initializer'))
         self.__dict__.update(kw)
         
 
@@ -1191,6 +1192,34 @@ class ModuleDef(BaseDef):
         self.postInitializerCode = []
         self.includes = []
         self.imports = []
+
+    def parseCompleted(self):
+        """
+        Called after the loading of items from the XML has completed, just
+        before the tweaking stage is done.
+        """
+
+        # Reorder the items in the module to be a little more sane, such as
+        # enums and other constants first, then the classes and functions (since
+        # they may use those constants) and then the global variables, but perhaps
+        # only those that have classes in this module as their type.
+        one = list()
+        two = list()
+        three = list()
+        for item in self.items:
+            if isinstance(item, (ClassDef, FunctionDef)):
+                two.append(item)
+            elif isinstance(item, GlobalVarDef):
+                three.append(item)
+            # template instantiations go at the end
+            elif isinstance(item, TypedefDef) and '<' in item.type:  
+                three.append(item)
+            
+            else:
+                one.append(item)
+        self.items = one + two + three
+        
+        
 
     def addHeaderCode(self, code):
         if isinstance(code, list):
