@@ -21,8 +21,6 @@ from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer
 
-from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
-
 import buildtools.version as version
 
 # defaults
@@ -452,6 +450,8 @@ def etg(options, args):
         
     
 def sphinx(options, args):
+    from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
+
     msg('Running command: sphinx')
     pwd = pushDir(phoenixDir())
 
@@ -466,8 +466,7 @@ def sphinx(options, args):
 
     # Copy the rst files into txt files
     restDir = os.path.join(sphinxDir, 'rest_substitutions', 'overviews')
-    rstFiles = glob.glob(restDir + '/*.rst')
-    
+    rstFiles = glob.glob(restDir + '/*.rst')  
     for rst in rstFiles:
         rstName = os.path.split(rst)[1]
         txt = os.path.join(sphinxDir, os.path.splitext(rstName)[0] + '.txt')

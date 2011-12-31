@@ -19,6 +19,7 @@ import random
 
 # Phoenix-specific imports
 import templates
+from buildtools.config import copyIfNewer, writeIfChanged, newer
 
 from utilities import Wx2Sphinx
 from constants import HTML_REPLACE, SVN_REVISION, TODAY, SPHINXROOT
@@ -41,20 +42,16 @@ def MakeHeadings():
     
     heading_file = os.path.join(SPHINXROOT, 'headings.inc')
 
-    fid = open(heading_file, 'wt')
-
+    text = ""
     for img in images:
         name = os.path.split(os.path.splitext(img)[0])[1]
         rel_path_index = img.find('_static')
         rel_path = img[rel_path_index:]
 
         width = ('overload' in name and [16] or [32])[0]
-        text = templates.TEMPLATE_HEADINGS % (name, os.path.normpath(rel_path), width)
+        text += templates.TEMPLATE_HEADINGS % (name, os.path.normpath(rel_path), width)
 
-        fid.write(text)
-
-    fid.close() 
-    
+    writeIfChanged(heading_file, text)    
 
 # ----------------------------------------------------------------------- #
 
@@ -115,7 +112,7 @@ def BuildEnumsAndMethods(sphinxDir):
     for input in textfiles:
                 
         fid = open(input, 'rt')
-        text = fid.read()
+        orig_text = text = fid.read()
         fid.close()
 
         for old, new in enum_dict.items():
@@ -140,9 +137,10 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace(':note:', '.. note::')
         text = text.replace(':see:', '.. seealso::')
         
-        fid = open(input, 'wt')
-        fid.write(text)
-        fid.close()
+        if text != orig_text:
+            fid = open(input, 'wt')
+            fid.write(text)
+            fid.close()
 
     if not unreferenced_classes:
         return
@@ -283,6 +281,9 @@ def ReformatFunctions(file):
     text_file = os.path.splitext(file)[0] + '.txt'
     local_file = os.path.split(file)[1]
     
+    if not newer(file, text_file):
+        return
+    
     fid = open(file, 'rb')
     functions = cPickle.load(fid)
     fid.close()
@@ -321,10 +322,7 @@ def ReformatFunctions(file):
     for fun in names:
         text += functions[fun] + '\n'
     
-    fid = open(text_file, 'wt')
-    fid.write(text)
-    fid.close()
-
+    writeIfChanged(text_file, text)
 
 # ----------------------------------------------------------------------- #
 
@@ -332,6 +330,9 @@ def MakeClassIndex(file):
 
     text_file = os.path.splitext(file)[0] + '.txt'
     local_file = os.path.split(file)[1]
+
+    if not newer(file, text_file):
+        return
     
     fid = open(file, 'rb')
     classes = cPickle.load(fid)
@@ -357,9 +358,7 @@ def MakeClassIndex(file):
 
     text += 80*'=' + ' ' + 80*'=' + '\n'
 
-    fid = open(text_file, 'wt')
-    fid.write(text)
-    fid.close()
+    writeIfChanged(text_file, text)
 
 
 # ----------------------------------------------------------------------- #
@@ -423,9 +422,7 @@ def GenGallery():
                 break
 
     gallery = os.path.join(SPHINXROOT, '_templates', 'gallery.html')
-    fid = open(gallery, 'wt')
-    fid.write(templates.TEMPLATE_GALLERY % text)
-    fid.close()
+    writeIfChanged(gallery, templates.TEMPLATE_GALLERY % text)
         
 
 # ----------------------------------------------------------------------- #
@@ -508,7 +505,7 @@ def PostProcess(folder):
         methods_done = properties_done = False
         
         fid = open(files, "rt")
-        text = fid.read()
+        orig_text = text = fid.read()
         fid.close()
 
         text = text.replace('|SVN|', SVN_REVISION)
@@ -558,9 +555,10 @@ def PostProcess(folder):
         for old, new in enum_dict.items():
             newtext = newtext.replace(old, new)
 
-        fid = open(files, "wt")
-        fid.write(newtext)
-        fid.close()
+        if orig_text != newtext:
+            fid = open(files, "wt")
+            fid.write(newtext)
+            fid.close()
 
 
 # ----------------------------------------------------------------------- #
