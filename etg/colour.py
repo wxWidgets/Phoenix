@@ -171,9 +171,7 @@ def run():
                   else: raise IndexError
                   """) 
     c.addPyCode('Colour.__safe_for_unpickling__ = True')
-    c.addPyCode('NamedColour = wx.deprecated(Colour)')
-    
-    
+
     # Types that can be converted to wx.Colour:
     #     wxColour (duh)
     #     Sequence with 3 or 4 integers
@@ -271,8 +269,10 @@ def run():
             sipPy, sipType_wxColour, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
         return sipGetState(sipTransferObj);
     """
-    
-    
+
+
+    module.addPyCode('NamedColour = wx.deprecated(Colour)')
+        
     
     # Just for TESTING, remove it later
     module.addCppCode("""\

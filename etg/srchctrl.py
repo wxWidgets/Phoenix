@@ -65,13 +65,14 @@ def run():
     c.addProperty('SearchButtonVisible IsSearchButtonVisible ShowSearchButton')
     c.addProperty('CancelButtonVisible IsCancelButtonVisible ShowCancelButton')
     c.addProperty('DescriptiveText GetDescriptiveText SetDescriptiveText')
+
+    tools.fixWindowClass(c)
+    
         
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_SEARCHCTRL_CANCEL_BTN = wx.PyEventBinder( wxEVT_COMMAND_SEARCHCTRL_CANCEL_BTN, 1)
         EVT_SEARCHCTRL_SEARCH_BTN = wx.PyEventBinder( wxEVT_COMMAND_SEARCHCTRL_SEARCH_BTN, 1)
         """)
-    
-    tools.fixWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

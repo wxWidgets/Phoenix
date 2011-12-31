@@ -245,7 +245,6 @@ def run():
     tools.removeVirtuals(c)
     c.find('ProcessEvent').isVirtual = True
            
-    c.addPyCode('PyEvtHandler = wx.deprecated(EvtHandler)')
 
 
     c.addPyMethod('Bind', '(self, event, handler, source=None, id=wx.ID_ANY, id2=wx.ID_ANY)',
@@ -294,6 +293,9 @@ def run():
                 id  = source.GetId()
             return event.Unbind(self, id, id2, handler)              
             """)
+
+    module.addPyCode('PyEvtHandler = wx.deprecated(EvtHandler)')
+
 
     #---------------------------------------
     # wxEvent

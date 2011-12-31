@@ -33,7 +33,7 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
@@ -41,24 +41,23 @@ def run():
     # These enums are declared in files that we will not be using because
     # wxPython does not need the classes that are in those files. So just
     # inject the enums here instead.
-    module.insertItem(0, etgtools.WigCode("""\
-    enum wxStreamError
-    {
-        wxSTREAM_NO_ERROR,
-        wxSTREAM_EOF,
-        wxSTREAM_WRITE_ERROR,
-        wxSTREAM_READ_ERROR
-    };
+    from etgtools import EnumDef, EnumValueDef
+    e = EnumDef(name='wxStreamError')
+    e.items.extend([ EnumValueDef(name='wxSTREAM_NO_ERROR'),
+                     EnumValueDef(name='wxSTREAM_EOF'),
+                     EnumValueDef(name='wxSTREAM_WRITE_ERROR'),
+                     EnumValueDef(name='wxSTREAM_READ_ERROR'),
+                     ])
+    module.insertItem(0, e)
     
-    enum wxSeekMode
-    {
-        wxFromStart,
-        wxFromCurrent,
-        wxFromEnd
-    };
-    """))
-
-
+    e = EnumDef(name='wxSeekMode')
+    e.items.extend([ EnumValueDef(name='wxFromStart'),
+                     EnumValueDef(name='wxFromCurrent'),
+                     EnumValueDef(name='wxFromEnd'),
+                     ])
+    module.insertItem(1, e)
+    
+    
     #-----------------------------------------------------------------
     c = module.find('wxStreamBase')
     assert isinstance(c, etgtools.ClassDef)

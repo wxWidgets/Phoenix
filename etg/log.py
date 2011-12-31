@@ -23,13 +23,13 @@ ITEMS  = [
             'wxLogGui',
             'wxLogNull',
             'wxLogRecordInfo', 
-            'wxLogWindow',
-            'wxLogInterposerTemp',
             'wxLogChain',
+            'wxLogInterposer',
+            'wxLogInterposerTemp',
+            'wxLogWindow',
             #'wxLogStream',  # needs std::ostream
             'wxLogStderr',
             'wxLogBuffer',
-            'wxLogInterposer',
             'wxLogTextCtrl',
             'wxLogFormatter',
          ]

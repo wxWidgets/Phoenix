@@ -56,7 +56,7 @@ def run():
     c = module.find('wxSpinDoubleEvent')
     tools.fixEventClass(c)
     
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_SPINCTRL = wx.PyEventBinder( wxEVT_COMMAND_SPINCTRL_UPDATED, 1)
         EVT_SPINCTRLDOUBLE = wx.PyEventBinder( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, 1)
         """)
