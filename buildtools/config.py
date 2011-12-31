@@ -594,3 +594,18 @@ def copyIfNewer(src, dest):
     if newer(src, dest):
         shutil.copy(src, dest)
         
+        
+def writeIfChanged(filename, text):
+    """
+    Check the current contents of filename and only overwrite with text if
+    the content is different (therefore preserving the timestamp if there is
+    no update.)
+    """
+    text = str(text)
+    if os.path.exists(filename):
+        current = open(filename, 'rt').read()
+        if current == text:
+            return
+    f = open(filename, 'wt')
+    f.write(text)
+    f.close()
