@@ -347,10 +347,17 @@ def getWrapperGenerator():
 
 
 def getDocsGenerator():
-    import generators    
-    g = generators.StubbedDocsGenerator()
-    return g
-
+    if '--nodocs' in sys.argv:
+        import generators    
+        return generators.StubbedDocsGenerator()
+    elif '--sphinx' in sys.argv:
+        import sphinx_generator
+        return sphinx_generator.SphinxGenerator()
+    else:
+        # the current default is sphinx
+        import sphinx_generator
+        return sphinx_generator.SphinxGenerator()
+        
 
 
 def runGenerators(module):
@@ -366,10 +373,9 @@ def runGenerators(module):
     generators.append(pi_generator.PiWrapperGenerator())    
     
     # And finally add the documentation generator
-    import sphinx_generator
-    generators.append(sphinx_generator.SphinxGenerator())
+    generators.append(getDocsGenerator())
 
-    # run them
+    # run the generators
     for g in generators:
         g.generate(module)
         
