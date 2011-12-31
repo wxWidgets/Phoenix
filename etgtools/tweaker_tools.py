@@ -347,7 +347,7 @@ def getWrapperGenerator():
 
 
 def getDocsGenerator():
-    if '--nodocs' in sys.argv:
+    if '--nodoc' in sys.argv:
         import generators    
         return generators.StubbedDocsGenerator()
     elif '--sphinx' in sys.argv:

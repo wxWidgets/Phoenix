@@ -17,6 +17,7 @@ import glob
 import fnmatch
 import tempfile
 import commands
+import shutil
 
 from distutils.file_util import copy_file
 from distutils.dir_util  import mkpath
@@ -586,3 +587,10 @@ def wxDir():
     assert WXWIN not in [None, '']
     return WXWIN
 
+
+def copyIfNewer(src, dest):
+    if os.path.isdir(dest):
+        dest = os.path.join(dest, os.path.basename(src))
+    if newer(src, dest):
+        shutil.copy(src, dest)
+        

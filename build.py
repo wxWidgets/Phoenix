@@ -19,7 +19,7 @@ import urllib2
 
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
-                               phoenixDir, wxDir
+                               phoenixDir, wxDir, copyIfNewer
 
 from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
 
@@ -54,30 +54,32 @@ def usage():
     print """\
 Usage: ./build.py [command(s)] [options]
 
-    Commands:
-        N.N NN      Major.Minor version number of the Python to use to run 
+  Commands:
+      N.N NN        Major.Minor version number of the Python to use to run 
                     the other commands.  Default is 2.7
-        dox         Run Doxygen to produce the XML file used by ETG scripts
-        doxhtml     Run Doxygen to create the HTML documetation for wx
-        touch       'touch' the etg files so they will all get run in the 
+      dox           Run Doxygen to produce the XML file used by ETG scripts
+      doxhtml       Run Doxygen to create the HTML documetation for wx
+      touch         'touch' the etg files so they will all get run in the 
                     next build
-        etg         Run the ETG scripts that are out of date to update their 
+      etg           Run the ETG scripts that are out of date to update their 
                     SIP files
-        sphinx      Run the documentation building process using Sphinx (this
+      sphinx        Run the documentation building process using Sphinx (this
                     needs to be done after dox and etg)
-        sip         Run sip
-        test        Run the unit test suite
-        test_*      Run just one test module
+      sip           Run sip
+      test          Run the unit test suite
+      test_*        Run just one test module
         
-        build_wx    Do the wxWidgets part of the build
-        build_py    Build wxPython only
-        build       Build both wxWidgets and wxPython
+      build_wx      Do the wxWidgets part of the build
+      build_py      Build wxPython only
+      build         Build both wxWidgets and wxPython
         
-        bdist       Create a binary release of wxPython Phoenix
+      bdist         Create a binary release of wxPython Phoenix
         
-        clean_wx    Clean the wx parts of the build
-        clean_py    Clean the wxPython parts of the build
-        clean       Clean both wx and wxPython
+      clean_wx      Clean the wx parts of the build
+      clean_py      Clean the wxPython parts of the build
+      clean_sphinx  Clean the sphinx files
+      
+      clean         Clean wx, wxPython and Sphinx
 """
 #        cleanall    Clean both wx and wxPython, and a little extra scrubbing
 
@@ -114,7 +116,7 @@ def main(args):
             testOne(cmd, options, args)
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
                      'build_wx', 'build_py', 'build', 'bdist',
-                     'clean', 'clean_wx', 'clean_py', 'cleanall',
+                     'clean', 'clean_wx', 'clean_py', 'cleanall', 'clean_sphinx',
                      'sphinx']:
             function = globals()[cmd]
             function(options, args)
@@ -263,7 +265,8 @@ def makeOptionParser():
         ("unicode",        (True, "Build wxPython with unicode support (always on for wx2.9)")),
         ("waf",            (False, "Use waf to build the bindings.")),
         ("verbose",        (False, "Print out more information.")),
-        ("upload_package", (False, "Upload package to nightly server.")),
+        ("nodoc",          (False, "Do not run the default docs generator")),
+        ("upload_package", (False, "Upload bdist package to nightly server.")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -425,9 +428,10 @@ def etg(options, args):
     msg('Running command: etg')
     pwd = pushDir(phoenixDir())
 
-    sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
-
-    clean_sphinx(sphinxDir, full=True)
+    # TODO: Better support for selecting etg cmd-line flags...
+    flags = '--sip'
+    if options.nodoc:
+        flags += ' --nodoc'
 
     etgfiles = glob.glob('etg/_*.py')
     for script in etgfiles:
@@ -441,39 +445,15 @@ def etg(options, args):
         if hasattr(ns, 'OTHERDEPS'):
             deps += ns.OTHERDEPS
         
-        # run the script if any dependencies are newer
+        # run the script only if any dependencies are newer
         if newer_group(deps, sipfile):
-            runcmd('%s %s --sip' % (PYTHON, script))
+            runcmd('%s %s %s' % (PYTHON, script, flags))
 
-    # Copy the rst files into txt files
-    restDir = os.path.join(sphinxDir, 'rest_substitutions', 'overviews')
-    rstFiles = glob.glob(restDir + '/*.rst')
-    
-    for rst in rstFiles:
-        rstName = os.path.split(rst)[1]
-        txt = os.path.join(sphinxDir, os.path.splitext(rstName)[0] + '.txt')
-        shutil.copyfile(rst, txt)
-
-    SphinxIndexes(sphinxDir)
-    GenGallery()
         
-
-def clean_sphinx(sphinxDir, full=True):
-
-    sphinxfiles = []
-    
-    if full:
-        sphinxfiles = glob.glob(sphinxDir + '/*.txt')
-        sphinxfiles += glob.glob(sphinxDir + '/*.inc')
-        
-    pklfiles = glob.glob(sphinxDir + '/*.pkl')
-    lstfiles = glob.glob(sphinxDir + '/*.lst')
-
-    for f in sphinxfiles + pklfiles + lstfiles:
-        os.remove(f)
-
     
 def sphinx(options, args):
+    msg('Running command: sphinx')
+    pwd = pushDir(phoenixDir())
 
     sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
 
@@ -484,24 +464,33 @@ def sphinx(options, args):
     if not textFiles:
         raise Exception('No documentation files found. Please run "build.py touch etg" first')
 
-    todos = os.path.join(phoenixDir(), 'TODO.txt')
-    migration_guide = os.path.join(phoenixDir(), 'docs', 'MigrationGuide.txt')
+    # Copy the rst files into txt files
+    restDir = os.path.join(sphinxDir, 'rest_substitutions', 'overviews')
+    rstFiles = glob.glob(restDir + '/*.rst')
     
-    if os.path.isfile(migration_guide):
-        shutil.copy(migration_guide, sphinxDir)
-    
-    if os.path.isfile(todos):
-        shutil.copy(todos, sphinxDir)
+    for rst in rstFiles:
+        rstName = os.path.split(rst)[1]
+        txt = os.path.join(sphinxDir, os.path.splitext(rstName)[0] + '.txt')
+        copyIfNewer(rst, txt)
 
+    SphinxIndexes(sphinxDir)
+    GenGallery()
+
+    todo = os.path.join(phoenixDir(), 'TODO.txt')
+    migration_guide = os.path.join(phoenixDir(), 'docs', 'MigrationGuide.txt')
+    copyIfNewer(todo, sphinxDir)
+    copyIfNewer(migration_guide, sphinxDir)
+    
     MakeHeadings()
 
-    pwd = pushDir(sphinxDir)
+    pwd2 = pushDir(sphinxDir)
     runcmd('make html')
-
+    del pwd2
+    
     buildDir = os.path.join(sphinxDir, 'build')
+    msg('Postprocesing sphinx...')
     PostProcess(buildDir)
 
-    clean_sphinx(sphinxDir, full=False)
     
     
 def sip(options, args):
@@ -859,18 +848,42 @@ def clean_py(options, args):
         options.both = False
         clean_py(options, args)
         options.both = True
+
     
+def clean_sphinx(options, args, full=True):
+    msg('Running command: clean_sphinx')
+    assert os.getcwd() == phoenixDir()
+
+    sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
+    sphinxfiles = []
+    
+    if full:
+        sphinxfiles = glob.glob(sphinxDir + '/*.txt')
+        sphinxfiles += glob.glob(sphinxDir + '/*.inc')
+        
+    pklfiles = glob.glob(sphinxDir + '/*.pkl')
+    lstfiles = glob.glob(sphinxDir + '/*.lst')
+
+    for f in sphinxfiles + pklfiles + lstfiles:
+        os.remove(f)
+        
+    buildDir = os.path.join(sphinxDir, 'build')
+    if os.path.exists(buildDir):
+        shutil.rmtree(buildDir)
+
         
 def clean(options, args):
     clean_wx(options, args)
     clean_py(options, args)
-   
+    clean_sphinx(options, args)
+    
     
 def cleanall(options, args):
     # These take care of all the object, lib, shared lib files created by the
     # compilation part of build
     clean_wx(options, args)
     clean_py(options, args)
+    clean_sphinx(options, args)
     
     # Now also scrub out all of the SIP and C++ source files that are
     # generated by the Phoenix ETG system.
