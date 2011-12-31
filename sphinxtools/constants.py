@@ -111,12 +111,7 @@ SPHINX_IMAGES_ROOT   = os.path.join(SPHINXROOT,  '_static', 'images', 'sphinxdoc
 # The Doxygen root for the XML docstrings
 xmlsrcbase = 'docs/doxygen/out/xml'
 WXWIN = wxDir()
-
-XMLSRC = ''
-if WXWIN:
-    XMLSRC = os.path.join(WXWIN, xmlsrcbase)
-
-assert WXWIN and os.path.exists(XMLSRC), "Unable to locate Doxygen XML files"
+XMLSRC = os.path.join(WXWIN, xmlsrcbase)
 
 DOXYROOT             = os.path.join(WXWIN, 'docs', 'doxygen')
 
