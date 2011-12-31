@@ -178,8 +178,11 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
     #-----------------------------------------------------------------------
     def generatePyCode(self, pc, stream, indent=''):
         assert isinstance(pc, extractors.PyCodeDef)
+        code = pc.code
+        if hasattr(pc, 'klass'):
+            code = code.replace(pc.klass.name+'.', '')  # TODO: Check this
         stream.write('\n')
-        stream.write(nci(pc.code, len(indent)))
+        stream.write(nci(code, len(indent)))
 
     #-----------------------------------------------------------------------
     def generatePyFunction(self, pf, stream, indent=''):
@@ -442,7 +445,7 @@ def guessTypeInt(v):
         return True
     type = v.type.replace('const', '')
     type = type.replace(' ', '')
-    if type in ['int', 'long', 'byte', 'size_t']:
+    if type in ['int', 'long', 'byte', 'size_t', 'wxCoord']:
         return True
     if 'unsigned' in type:
         return True
