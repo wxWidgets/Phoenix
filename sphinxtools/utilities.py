@@ -458,7 +458,7 @@ def MakeSummary(name, item_list, template, kind):
 
 # ----------------------------------------------------------------------- #
 
-def WriteSphinxOutput(stream, filename):
+def WriteSphinxOutput(stream, filename, append=False):
     """
     Writes the text contained in the `stream` to the `filename` output file.
 
@@ -469,10 +469,10 @@ def WriteSphinxOutput(stream, filename):
     text_file = os.path.join(SPHINXROOT, filename)
     text = stream.getvalue()
 
-    if not os.path.isfile(text_file):
-        text = '.. include:: headings.inc\n\n' + text
-        
-    fid = codecs.open(text_file, "a", encoding='utf-8')        
+    mode = 'a' if append else 'w'
+    fid = codecs.open(text_file, mode, encoding='utf-8')        
+    if mode == 'w':
+        fid.write('.. include:: headings.inc\n\n')
     fid.write(text)
     fid.close()
 

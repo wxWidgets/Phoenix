@@ -2380,7 +2380,7 @@ class XMLDocString(object):
         stream.write("\n\n")
 
         if not self.is_overload and write:
-            WriteSphinxOutput(stream, self.output_file)
+            WriteSphinxOutput(stream, self.output_file, append=True)
 
         return stream.getvalue()
 
@@ -2468,13 +2468,13 @@ class XMLDocString(object):
 
         text_file = os.path.join(SPHINXROOT, self.output_file)
 
-        if os.path.isfile(text_file):
-            message = '\nWARNING: Duplicated description for `%s` enumeration.\n\n' \
-                      'The duplicated instance will still be written to its output ReST file but\n' \
-                      'Sphinx/Docutils will issue a warning when building the HTML docs.\n\n'
-
-            duplicated = self.output_file.replace('.enumeration.txt', '')
-            print message % duplicated
+        #if os.path.isfile(text_file):
+        #    message = '\nWARNING: Duplicated description for `%s` enumeration.\n\n' \
+        #              'The duplicated instance will still be written to its output ReST file but\n' \
+        #              'Sphinx/Docutils will issue a warning when building the HTML docs.\n\n'
+        #
+        #    duplicated = self.output_file.replace('.enumeration.txt', '')
+        #    print message % duplicated
 
         if count > 0 and write:
             WriteSphinxOutput(stream, self.output_file)
