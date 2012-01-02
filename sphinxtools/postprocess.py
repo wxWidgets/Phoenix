@@ -476,14 +476,14 @@ def ClassToFile(line):
 
 def PostProcess(folder):
 
-    fileNames = glob.glob(folder + "/html/*.html")
+    fileNames = glob.glob(folder + "/*.html")
 
     phoenix_image = '<div class="floatcenter" style="background-color: white; text-align: middle; align: middle; padding: 40px 10px 15px 15px">\n' \
                     '<img src="_static/phoenix_top.png" alt="Phoenix Logo" align="middle" />\n' \
                     '</div>'
 
 
-    enum_files = glob.glob(folder + '/html/*.enumeration.html')
+    enum_files = glob.glob(folder + '/*.enumeration.html')
 
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
     enum_base = [enum.replace('.enumeration', '') for enum in enum_base]

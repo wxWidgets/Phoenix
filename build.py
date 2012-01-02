@@ -77,9 +77,9 @@ Usage: ./build.py [command(s)] [options]
       clean_py      Clean the wxPython parts of the build
       clean_sphinx  Clean the sphinx files
       
-      clean         Clean wx, wxPython and Sphinx
+      clean         Clean both wx and wxPython
+      cleanall      Clean all and do a little extra scrubbing too
 """
-#        cleanall    Clean both wx and wxPython, and a little extra scrubbing
 
     parser = makeOptionParser()
     parser.print_help()
@@ -483,12 +483,13 @@ def sphinx(options, args):
     MakeHeadings()
 
     pwd2 = pushDir(sphinxDir)
-    runcmd('make html')
+    buildDir = os.path.join(sphinxDir, 'build')
+    htmlDir = os.path.join(phoenixDir(), 'docs', 'html')
+    runcmd('sphinx-build -b html -d %s/doctrees . %s' % (buildDir, htmlDir))
     del pwd2
     
-    buildDir = os.path.join(sphinxDir, 'build')
-    msg('Postprocesing sphinx...')
-    PostProcess(buildDir)
+    msg('Postprocesing sphinx output...')
+    PostProcess(htmlDir)
 
     
     
@@ -849,32 +850,36 @@ def clean_py(options, args):
         options.both = True
 
     
-def clean_sphinx(options, args, full=True):
+def clean_sphinx(options, args):
     msg('Running command: clean_sphinx')
     assert os.getcwd() == phoenixDir()
 
-    sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
-    sphinxfiles = []
-    
-    if full:
-        sphinxfiles = glob.glob(sphinxDir + '/*.txt')
-        sphinxfiles += glob.glob(sphinxDir + '/*.inc')
-        
-    pklfiles = glob.glob(sphinxDir + '/*.pkl')
-    lstfiles = glob.glob(sphinxDir + '/*.lst')
+    sphinxDir = opj(phoenixDir(), 'docs', 'sphinx')
+         
+    globs = [ opj(sphinxDir, '*.txt'),
+              opj(sphinxDir, '*.inc'),
+              opj(sphinxDir, '*.pkl'),
+              opj(sphinxDir, '*.lst'),
+              opj(sphinxDir, '_templates/gallery.html'),
+              opj(sphinxDir, 'rest_substitutions/snippets/python/*.py'),
+              opj(sphinxDir, 'rest_substitutions/snippets/cpp/*.cpp'),
+              ]
+    for wc in globs:
+        for f in glob.glob(wc):
+            os.remove(f)
 
-    for f in sphinxfiles + pklfiles + lstfiles:
-        os.remove(f)
-        
-    buildDir = os.path.join(sphinxDir, 'build')
-    if os.path.exists(buildDir):
-        shutil.rmtree(buildDir)
+    dirs = [opj(sphinxDir, 'build'),
+            opj(phoenixDir(), 'docs/html'),
+            ]
+    for d in dirs:
+        if os.path.exists(d):
+            shutil.rmtree(d)
+
 
         
 def clean(options, args):
     clean_wx(options, args)
     clean_py(options, args)
-    clean_sphinx(options, args)
     
     
 def cleanall(options, args):
@@ -882,6 +887,8 @@ def cleanall(options, args):
     # compilation part of build
     clean_wx(options, args)
     clean_py(options, args)
+    
+    # Clean all the intermediate and generated files from the sphinx command
     clean_sphinx(options, args)
     
     # Now also scrub out all of the SIP and C++ source files that are
