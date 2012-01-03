@@ -106,13 +106,6 @@ def run():
             self.Add(*item)
         """)
 
-    c.addPyMethod('Hide', '(self, item, recursive=False)',
-        doc="""\
-        A convenience method for `Show`(item, False, recursive).
-        """,
-        body="""\
-        return self.Show(item, False, recursive)
-        """)
     
     #---------------------------------------------
     c = module.find('wxBoxSizer')
