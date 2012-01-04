@@ -77,6 +77,22 @@ def run():
     
     # it is delay-initialized, see stockgdi.sip
     module.find('wxTheBrushList').ignore()
+
+
+    # Some aliases that should be phased out eventually, (sooner rather than
+    # later.) They are already gone (or wrapped by an #if) in the C++ code,
+    # and so are not found in the documentation...
+    module.addPyCode("""\
+        wx.STIPPLE_MASK_OPAQUE = wx.BRUSHSTYLE_STIPPLE_MASK_OPAQUE 
+        wx.STIPPLE_MASK        = wx.BRUSHSTYLE_STIPPLE_MASK 
+        wx.STIPPLE             = wx.BRUSHSTYLE_STIPPLE 
+        wx.BDIAGONAL_HATCH     = wx.BRUSHSTYLE_BDIAGONAL_HATCH 
+        wx.CROSSDIAG_HATCH     = wx.BRUSHSTYLE_CROSSDIAG_HATCH 
+        wx.FDIAGONAL_HATCH     = wx.BRUSHSTYLE_FDIAGONAL_HATCH 
+        wx.CROSS_HATCH         = wx.BRUSHSTYLE_CROSS_HATCH 
+        wx.HORIZONTAL_HATCH    = wx.BRUSHSTYLE_HORIZONTAL_HATCH 
+        wx.VERTICAL_HATCH      = wx.BRUSHSTYLE_VERTICAL_HATCH     
+        """)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

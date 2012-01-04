@@ -35,6 +35,8 @@ def run():
     c.find('wxCheckBox.label').default = 'wxEmptyString'
     c.find('Create.label').default = 'wxEmptyString'
 
+    module.addGlobalStr('wxCheckBoxNameStr', c)
+
     # Workaround warning for the property name starting with a digit
     c.find('Get3StateValue').ignore()
     c.addAutoProperties()

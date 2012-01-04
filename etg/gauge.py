@@ -34,6 +34,8 @@ def run():
     c.find('wxGauge.range').default = '100'
     c.find('Create.range').default = '100'
     
+    module.addGlobalStr('wxGaugeNameStr', c)
+
     tools.fixWindowClass(c)
     
     #-----------------------------------------------------------------

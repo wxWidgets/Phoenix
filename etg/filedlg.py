@@ -33,6 +33,10 @@ def run():
     
     c = module.find('wxFileDialog')
     isinstance(c, etgtools.ClassDef)
+    module.addGlobalStr('wxFileDialogNameStr', c)
+    module.addGlobalStr('wxFileSelectorPromptStr', c)
+    module.addGlobalStr('wxFileSelectorDefaultWildcardStr', c)
+    
     
     # TODO: add this back. We'll need a way to pass it a callable that can be
     # called from a C ExtraControlCreatorFunction function

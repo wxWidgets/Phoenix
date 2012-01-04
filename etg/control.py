@@ -32,7 +32,8 @@ def run():
 
     c = module.find('wxControl')
     assert isinstance(c, etgtools.ClassDef)
-
+    module.addGlobalStr('wxControlNameStr', c)
+    
     tools.fixWindowClass(c)        
 
     module.addPyCode("PyControl = wx.deprecated(Control)")

@@ -35,6 +35,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
     
+    module.addGlobalStr('wxScrollBarNameStr', c)
     
     
     #-----------------------------------------------------------------

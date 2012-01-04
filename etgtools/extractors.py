@@ -17,7 +17,8 @@ import os
 import pprint
 import xml.etree.ElementTree as et
 
-from tweaker_tools import removeWxPrefix, magicMethods
+from tweaker_tools import removeWxPrefix, magicMethods, \
+                          guessTypeInt, guessTypeFloat, guessTypeStr
 from sphinxtools.utilities import FindDescendants
 
 #---------------------------------------------------------------------------
@@ -368,7 +369,9 @@ class FunctionDef(BaseDef):
         
         defValueMap = { 'true':  'True',
                         'false': 'False',
-                        'NULL':  'None', }
+                        'NULL':  'None', 
+                        'wxString()': '""',
+                        }
         if isinstance(self, CppMethodDef):
             # rip appart the argsString instead of using the (empty) list of parameters
             lastP = self.argsString.rfind(')')
@@ -1209,6 +1212,9 @@ class ModuleDef(BaseDef):
         for item in self.items:
             if isinstance(item, (ClassDef, FunctionDef)):
                 two.append(item)
+            elif isinstance(item, GlobalVarDef) and (
+                     guessTypeInt(item) or guessTypeFloat(item) or guessTypeStr(item)):
+                one.append(item)
             elif isinstance(item, GlobalVarDef):
                 three.append(item)
             # template instantiations go at the end
@@ -1357,6 +1363,15 @@ class ModuleDef(BaseDef):
         pc = PyCodeDef(code, order)
         self.items.append(pc)
         return pc
+
+    
+    def addGlobalStr(self, name, before=None):
+        gv = GlobalVarDef(type='const char*', name=name)
+        if before is None:
+            self.addItem(gv)
+        else:
+            self.insertItemBefore(before, gv)
+        return gv
     
     
     def includePyCode(self, filename, order=None):

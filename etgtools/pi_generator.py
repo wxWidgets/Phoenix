@@ -20,7 +20,8 @@ import sys, os, re
 import extractors
 import generators
 from generators import nci
-from tweaker_tools import removeWxPrefix, magicMethods
+from tweaker_tools import removeWxPrefix, magicMethods, \
+                          guessTypeInt, guessTypeFloat, guessTypeStr
 from cStringIO import StringIO
 
 
@@ -167,7 +168,17 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         assert isinstance(typedef, extractors.TypedefDef)
         if typedef.ignored:
             return
-        # write nothing for this one
+        # If the typedef is for a template instantiation then write a mock
+        # class for it that combines the template and class, otherwise write
+        # nothing.
+        if '<' in typedef.type and '>' in typedef.type:
+            t = typedef.type.replace('>', '')
+            t = t.replace(' ', '')
+            bases = t.split('<')
+            bases = [removeWxPrefix(b) for b in bases]
+            name = removeWxPrefix(typedef.name)
+            stream.write('class %s(%s):\n    pass\n\n' % (name, ', '.join(bases)))
+
 
     #-----------------------------------------------------------------------
     def generateWigCode(self, wig, stream, indent=''):
@@ -180,7 +191,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         assert isinstance(pc, extractors.PyCodeDef)
         code = pc.code
         if hasattr(pc, 'klass'):
-            code = code.replace(pc.klass.name+'.', '')  # TODO: Check this
+            code = code.replace(pc.klass.pyName+'.', '') 
         stream.write('\n')
         stream.write(nci(code, len(indent)))
 
@@ -279,12 +290,18 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         if klass.ignored:
             return
         
-        # class declaration
+        # check if it's a template with the template parameter as the base class
+        bases = klass.bases[:]
+        for tp in klass.templateParams:
+            if tp in bases:
+                bases.remove(tp)
+        
+        # write class declaration
         klassName = klass.pyName or klass.name
         stream.write('\n%sclass %s' % (indent, klassName))
-        if klass.bases:
+        if bases:
             stream.write('(')
-            bases = [removeWxPrefix(b) for b in klass.bases]
+            bases = [removeWxPrefix(b) for b in bases]
             stream.write(', '.join(bases))
             stream.write(')')
         stream.write(':\n')
@@ -300,10 +317,14 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
             self.generateClass(item, stream, indent2)
             
         # Split the items into public and protected groups
+        enums = [i for i in klass if 
+                     isinstance(i, extractors.EnumDef) and 
+                     i.protection == 'public']
         ctors = [i for i in klass if 
-                    isinstance(i, extractors.MethodDef) and 
-                    i.protection == 'public' and (i.isCtor or i.isDtor)]
-        public = [i for i in klass if i.protection == 'public' and i not in ctors]
+                     isinstance(i, extractors.MethodDef) and 
+                     i.protection == 'public' and (i.isCtor or i.isDtor)]
+        public = [i for i in klass if i.protection == 'public' and 
+                     i not in ctors and i not in enums]
         protected = [i for i in klass if i.protection == 'protected']
 
         dispatch = {
@@ -319,16 +340,23 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
             extractors.WigCode          : self.generateWigCode,
             }
 
+        for item in enums:
+            item.klass = klass
+            self.generateEnum(item, stream, indent2)
+
         for item in ctors: 
             if item.isCtor:
+                item.klass = klass
                 self.generateMethod(item, stream, indent2, 
                                     name='__init__', docstring=klass.pyDocstring)
 
         for item in public:
+            item.klass = klass
             f = dispatch[item.__class__]
             f(item, stream, indent2)
             
         for item in protected:
+            item.klass = klass
             f = dispatch[item.__class__]
             f(item, stream, indent2)
 
@@ -436,34 +464,4 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         
         
 #---------------------------------------------------------------------------
-# helpers
-
-def guessTypeInt(v):
-    if isinstance(v, extractors.EnumValueDef):
-        return True
-    if isinstance(v, extractors.DefineDef) and '"' not in v.value:
-        return True
-    type = v.type.replace('const', '')
-    type = type.replace(' ', '')
-    if type in ['int', 'long', 'byte', 'size_t', 'wxCoord']:
-        return True
-    if 'unsigned' in type:
-        return True
-    return False
-
-
-def guessTypeFloat(v):
-    type = v.type.replace('const', '')
-    type = type.replace(' ', '')
-    if type in ['float', 'double', 'wxDouble']:
-        return True
-    return False
-
-def guessTypeStr(v):
-    if hasattr(v, 'value') and '"' in v.value:
-        return True
-    if 'wxString' in v.type:
-        return True
-    return False
-
 #---------------------------------------------------------------------------

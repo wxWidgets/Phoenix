@@ -37,6 +37,7 @@ def run():
     c.find('Create.label').default = 'wxEmptyString'
     tools.fixWindowClass(c)
     
+    module.addGlobalStr('wxStaticBoxNameStr', c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

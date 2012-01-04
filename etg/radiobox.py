@@ -33,6 +33,8 @@ def run():
     
     c = module.find('wxRadioBox')
     assert isinstance(c, etgtools.ClassDef)
+
+    module.addGlobalStr('wxRadioBoxNameStr', c)
     
     c.find('wxRadioBox').findOverload('wxString choices').ignore()
     c.find('Create').findOverload('wxString choices').ignore()

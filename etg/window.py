@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import ClassDef, MethodDef, ParamDef
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
@@ -36,19 +37,19 @@ def run():
 
     c = module.find('wxWindow')
     assert isinstance(c, etgtools.ClassDef)
+    module.addGlobalStr('wxPanelNameStr', c)
+        
     
     # First we need to let the wrapper generator know about wxWindowBase since
     # AddChild and RemoveChild need to use that type in order to be virtualized.
-    wc = etgtools.WigCode("""\
-    class wxWindowBase : wxEvtHandler  /Abstract/
-    {
-    public:
-        virtual void AddChild( wxWindowBase* child );
-        virtual void RemoveChild( wxWindowBase* child );
-    };
-    """)
-    module.insertItemBefore(c, wc)
-
+    winbase = ClassDef(name='wxWindowBase', bases=['wxEvtHandler'], abstract=True,
+            items=[MethodDef(name='AddChild', isVirtual=True, type='void', protection='public',
+                        items=[ParamDef(name='child', type='wxWindowBase*')]),
+                   MethodDef(name='RemoveChild', isVirtual=True, type='void', protection='public',
+                        items=[ParamDef(name='child', type='wxWindowBase*')])
+                   ])
+    module.insertItemBefore(c, winbase)
+    
     # Now change the base class of wxWindow
     c.bases = ['wxWindowBase']
     
@@ -120,7 +121,9 @@ def run():
     briefDoc="Is the given widget one of this window's built-in scrollbars?  Only applicable on Mac.")
 
     
-    c.addCppMethod('void', 'SetDimensions', '(int x, int y, int width, int height, int sizeFlags=wxSIZE_AUTO)', """\
+    c.addCppMethod('void', 'SetDimensions', '(int x, int y, int width, int height, int sizeFlags=wxSIZE_AUTO)', 
+        pyArgsString="(x, y, width, height, sizeFlags=SIZE_AUTO)",
+        body="""\
         self->SetSize(x, y, width, height, sizeFlags);
         """)
     c.addPyCode("Window.SetDimensions = wx.deprecated(Window.SetDimensions)")

@@ -42,6 +42,10 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
                                             PyExc_AssertionError, NULL);
     PyDict_SetItemString(moduleDict, "wxAssertionError", wxAssertionError);
 
+    // An alias that should be deprecated sometime
+    PyDict_SetItemString(moduleDict, "PyAssertionError", wxAssertionError);
+    
+    
 //    // Create an exception object to use when the app object hasn't been created yet
 //    wxPyNoAppError = PyErr_NewException("wx._core.PyNoAppError",
 //                                        PyExc_RuntimeError, NULL);

@@ -309,7 +309,8 @@ def run():
     c.addPyMethod('FindColour', '(self, colour)',    'return self.Find(colour)')   
 
     module.find('wxTheColourDatabase').ignore()
-    
+        
+                               
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

@@ -261,6 +261,7 @@ def run():
 
     module.find('wxIMAGE_ALPHA_TRANSPARENT').pyInt = True
     module.find('wxIMAGE_ALPHA_OPAQUE').pyInt = True
+    module.find('wxIMAGE_ALPHA_THRESHOLD').pyInt = True
     
     # These are defines for string objects, not integers, so we can't
     # generate code for them the same way as integer values. Since they are

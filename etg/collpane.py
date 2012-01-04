@@ -42,6 +42,8 @@ def run():
     c.find('Create.label').default = 'wxEmptyString'
     
     tools.fixWindowClass(c)
+
+    module.addGlobalStr('wxCollapsiblePaneNameStr', c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

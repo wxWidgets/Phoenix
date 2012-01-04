@@ -34,6 +34,7 @@ def run():
 
     c = module.find('wxTopLevelWindow')
     assert isinstance(c, etgtools.ClassDef)
+    module.addGlobalStr('wxFrameNameStr', c)
 
     c.find('wxTopLevelWindow.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'    

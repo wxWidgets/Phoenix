@@ -33,6 +33,8 @@ def run():
     c = module.find('wxButton')
     tools.fixWindowClass(c)
     
+    module.addGlobalStr('wxButtonNameStr', c)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

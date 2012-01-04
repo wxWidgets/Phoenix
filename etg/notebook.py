@@ -37,6 +37,7 @@ def run():
     
     tools.fixWindowClass(c)  
     
+    module.addGlobalStr('wxNotebookNameStr', c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

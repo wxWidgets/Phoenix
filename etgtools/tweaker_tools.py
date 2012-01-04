@@ -870,3 +870,36 @@ error0:
 
 
 #---------------------------------------------------------------------------
+# type helpers
+
+def guessTypeInt(v):
+    if isinstance(v, extractors.EnumValueDef):
+        return True
+    if isinstance(v, extractors.DefineDef) and '"' not in v.value:
+        return True
+    type = v.type.replace('const', '')
+    type = type.replace(' ', '')
+    if type in ['int', 'long', 'byte', 'size_t', 'wxCoord', 'wxEventType']:
+        return True
+    if 'unsigned' in type:
+        return True
+    return False
+
+
+def guessTypeFloat(v):
+    type = v.type.replace('const', '')
+    type = type.replace(' ', '')
+    if type in ['float', 'double', 'wxDouble']:
+        return True
+    return False
+
+
+def guessTypeStr(v):
+    if hasattr(v, 'value') and '"' in v.value:
+        return True
+    for t in ['wxString', 'wxChar', 'char*', 'char *']:
+        if t in v.type:
+            return True
+    return False
+
+#---------------------------------------------------------------------------

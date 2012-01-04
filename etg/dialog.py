@@ -36,6 +36,7 @@ def run():
 
     c = module.find('wxDialog')
     assert isinstance(c, etgtools.ClassDef)
+    module.addGlobalStr('wxDialogNameStr', c)
     
     c.find('wxDialog.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'

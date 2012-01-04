@@ -42,6 +42,8 @@ def run():
     addDefaults(c.find('wxSlider'))
     addDefaults(c.find('Create'))
 
+    module.addGlobalStr('wxSliderNameStr', c)
+
     c.addPyMethod('GetRange', '(self)', 'return (self.GetMin(), self.GetMax())')
     
     tools.fixWindowClass(c)

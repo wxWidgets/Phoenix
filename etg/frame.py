@@ -33,6 +33,10 @@ def run():
     c = module.find('wxFrame')
     assert isinstance(c, etgtools.ClassDef)
     
+    # TODO: Remove these when wxToolBar is added to Phoenix
+    module.addGlobalStr('wxToolBarNameStr', c)
+    module.insertItemBefore(c, etgtools.GlobalVarDef(type='const int', name='wxTB_HORIZONTAL'))
+    
     c.find('wxFrame.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'    
     

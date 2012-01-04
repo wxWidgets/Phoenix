@@ -53,6 +53,7 @@ def run():
                           int flags = wxFONTFLAG_DEFAULT,
                           const wxString& faceName = wxEmptyString,
                           wxFontEncoding encoding = wxFONTENCODING_DEFAULT)""",
+        pyArgsString="(pointSize, family, flags=FONTFLAG_DEFAULT, faceName=EmptyString, encoding=FONTENCODING_DEFAULT)",
         body="""\
         wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
         return font;
@@ -104,6 +105,28 @@ def run():
 
     module.find('wxFromString').ignore()
     module.find('wxToString').ignore()
+
+
+    # Some aliases that should be phased out eventually, (sooner rather than
+    # later.) They are already gone (or wrapped by an #if) in the C++ code,
+    # and so are not found in the documentation...
+    module.addPyCode("""\
+        wx.DEFAULT    = wx.FONTFAMILY_DEFAULT
+        wx.DECORATIVE = wx.FONTFAMILY_DECORATIVE
+        wx.ROMAN      = wx.FONTFAMILY_ROMAN
+        wx.SCRIPT     = wx.FONTFAMILY_SCRIPT
+        wx.SWISS      = wx.FONTFAMILY_SWISS
+        wx.MODERN     = wx.FONTFAMILY_MODERN
+        wx.TELETYPE   = wx.FONTFAMILY_TELETYPE
+
+        wx.NORMAL = wx.FONTWEIGHT_NORMAL
+        wx.LIGHT  = wx.FONTWEIGHT_LIGHT
+        wx.BOLD   = wx.FONTWEIGHT_BOLD
+        
+        wx.NORMAL = wx.FONTSTYLE_NORMAL
+        wx.ITALIC = wx.FONTSTYLE_ITALIC
+        wx.SLANT  = wx.FONTSTYLE_SLANT
+        """)        
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

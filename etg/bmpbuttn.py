@@ -31,6 +31,8 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxBitmapButton')
+    assert isinstance(c, etgtools.ClassDef)
+    
     c.find('wxBitmapButton.bitmap').default = 'wxNullBitmap'
     c.find('Create.bitmap').default = 'wxNullBitmap'
 

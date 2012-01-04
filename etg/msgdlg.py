@@ -35,6 +35,8 @@ def run():
 
     c = module.find('wxMessageDialog')
     assert isinstance(c, etgtools.ClassDef)
+
+    module.addGlobalStr('wxMessageBoxCaptionStr', c)
     
     # These argument types are actually ButtonLabel, but the class is a private
     # helper. We will always be passing in strings, and ButtonLabel will implicitly

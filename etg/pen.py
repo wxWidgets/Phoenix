@@ -101,6 +101,20 @@ def run():
     # it is delay-initialized, see stockgdi.sip
     module.find('wxThePenList').ignore()
     
+
+
+    # Some aliases that should be phased out eventually, (sooner rather than
+    # later.) They are already gone (or wrapped by an #if) in the C++ code,
+    # and so are not found in the documentation...
+    module.addPyCode("""\
+        wx.SOLID       = wx.PENSTYLE_SOLID
+        wx.DOT         = wx.PENSTYLE_DOT 
+        wx.LONG_DASH   = wx.PENSTYLE_LONG_DASH 
+        wx.SHORT_DASH  = wx.PENSTYLE_SHORT_DASH 
+        wx.DOT_DASH    = wx.PENSTYLE_DOT_DASH 
+        wx.USER_DASH   = wx.PENSTYLE_USER_DASH 
+        wx.TRANSPARENT = wx.PENSTYLE_TRANSPARENT 
+        """)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

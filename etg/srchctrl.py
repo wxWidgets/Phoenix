@@ -35,6 +35,8 @@ def run():
 
     c = module.find('wxSearchCtrl')
     assert isinstance(c, etgtools.ClassDef)
+
+    module.addGlobalStr('wxSearchCtrlNameStr', c)
     
     c.find('SetMenu.menu').transfer = True
 

@@ -32,6 +32,7 @@ def run():
     
     c = module.find('wxStatusBar')
     tools.fixWindowClass(c)
+    module.addGlobalStr('wxStatusBarNameStr', c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

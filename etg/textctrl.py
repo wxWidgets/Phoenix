@@ -37,6 +37,7 @@ def run():
 
 
     c = module.find('wxTextCtrl')
+    module.addGlobalStr('wxTextCtrlNameStr', c)
     
     # Split the HitTest overloads into separately named methods since once
     # the output parameters are applied they will have the same function

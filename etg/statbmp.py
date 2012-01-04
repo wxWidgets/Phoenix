@@ -33,8 +33,9 @@ def run():
     c = module.find('wxStaticBitmap')
     c.find('wxStaticBitmap.label').default = 'wxNullBitmap'
     c.find('Create.label').default = 'wxNullBitmap'
-    
     tools.fixWindowClass(c)
+
+    module.addGlobalStr('wxStaticBitmapNameStr', c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

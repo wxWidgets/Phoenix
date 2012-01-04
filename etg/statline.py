@@ -29,10 +29,14 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    module.addHeaderCode("#include <wx/statline.h>")
     
     c = module.find('wxStaticLine')
     tools.fixWindowClass(c)
     
+    module.addGlobalStr('wxStaticLineNameStr', c)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

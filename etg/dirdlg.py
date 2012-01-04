@@ -31,6 +31,8 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxDirDialog')
+    module.addGlobalStr('wxDirDialogNameStr', c)
+    module.addGlobalStr('wxDirSelectorPromptStr', c)
     
     tools.fixWindowClass(c)
     
