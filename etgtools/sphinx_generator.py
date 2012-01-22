@@ -2139,6 +2139,9 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
+        if not klass.nodeBases:
+            klass.nodeBases = ({name: (name, name, [])}, [name])
+            
         inheritance_diagram = InheritanceDiagram(klass.nodeBases)
         png, map = inheritance_diagram.MakeInheritanceDiagram()
 

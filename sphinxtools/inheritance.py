@@ -36,6 +36,10 @@ class InheritanceDiagram(object):
 
     def __init__(self, class_info):
 
+        print class_info
+        print
+        print
+        
         self.class_info, self.specials = class_info
 
 
