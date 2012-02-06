@@ -67,21 +67,6 @@ class platinfo_Tests(wtc.WidgetTestCase):
         wx.PORT_MSW
         wx.PORT_MOTIF
         wx.PORT_GTK
-        wx.PORT_MGL
-        wx.PORT_X11
-        wx.PORT_OS2
-        wx.PORT_MAC
-        wx.PORT_COCOA
-        wx.PORT_WINCE
-        wx.PORT_PALMOS
-        wx.PORT_DFB
-    
-        wx.PORT_UNKNOWN
-        wx.PORT_BASE
-        wx.PORT_MSW
-        wx.PORT_MOTIF
-        wx.PORT_GTK
-        wx.PORT_MGL
         wx.PORT_X11
         wx.PORT_OS2
         wx.PORT_MAC
