@@ -72,7 +72,6 @@ class platinfo_Tests(wtc.WidgetTestCase):
         wx.PORT_MAC
         wx.PORT_COCOA
         wx.PORT_WINCE
-        wx.PORT_PALMOS
         wx.PORT_DFB
        
         wx.ARCH_INVALID

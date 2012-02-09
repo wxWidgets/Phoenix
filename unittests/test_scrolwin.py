@@ -57,6 +57,7 @@ class scrolwin_Tests(wtc.WidgetTestCase):
         w = MyScrolledWin(self.frame)
         self.commonBits(w)
         w.Refresh()
+        self.myUpdate(w)
         self.myYield()
         self.assertTrue(w.flag) # True if OnDraw was called
                 

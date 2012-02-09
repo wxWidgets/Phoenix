@@ -32,7 +32,7 @@ class ClientDCTests(wtc.WidgetTestCase):
         panel = TestPanel(self.frame)
         self.frame.SendSizeEvent()
         panel.Refresh()
-        panel.Update()
+        self.myUpdate(panel)
         self.myYield() 
         self.assertTrue(panel.onPaintCalled == True)
 

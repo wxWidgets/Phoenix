@@ -167,6 +167,7 @@ class font_Tests(wtc.WidgetTestCase):
         f4 = wx.Font(wx.Size(12,12), wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         f5 = wx.FFont(18, wx.FONTFAMILY_ROMAN)
         f6 = wx.Font.New(18, wx.FONTFAMILY_SWISS)
+        f7 = wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD|wx.FONTFLAG_ITALIC)
 
         
     def test_fontOk(self):
@@ -210,8 +211,8 @@ class font_Tests(wtc.WidgetTestCase):
 
 
     def test_fontFixedWidth(self):
-         f = wx.FFont(10, wx.FONTFAMILY_TELETYPE)
-         self.assertTrue(f.IsFixedWidth())
+        f = wx.FFont(10, wx.FONTFAMILY_TELETYPE)
+        self.assertTrue(f.IsFixedWidth())
 
 
     def test_fontTweaks(self):
