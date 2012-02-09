@@ -5729,6 +5729,9 @@ static PyObject *pickle_type(PyObject *obj, PyObject *ignore)
                      */
                     init_args = ctd->ctd_pickle(sip_api_get_cpp_ptr((sipSimpleWrapper *)obj, NULL));
 
+                    if (init_args == NULL)
+                        return NULL;
+
                     if (!PyTuple_Check(init_args))
                     {
                         PyErr_Format(PyExc_TypeError,

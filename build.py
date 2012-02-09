@@ -38,11 +38,11 @@ unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or ev
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
-sipCurrentVersion = '4.13.1-snapshot-7ab562ae0e39'
+sipCurrentVersion = '4.13.1'
 sipCurrentVersionMD5 = {
-    'darwin' : '2da0cc2ba853b2787499da0596b4e8ac', 
-    'win32'  : '45673b36d6885632ad0f273c496a1383', 
-    'linux2' : 'f7971044b97f7fc7650fef2189517937', 
+    'darwin' : '542198b5a4b05a65c41ac888bc59f779',
+    'win32'  : '2a7194cbfbca8d0110c68857a94e0efa', 
+    'linux2' : '0049b8d33e83ae008fc2664ded4eb567', 
 }
 toolsURL = 'http://wxpython.org/Phoenix/tools'
 
@@ -210,8 +210,9 @@ def setDevModeOptions(args):
             # These will be ignored on the other platforms so it is okay to
             # include them unconditionally
             '--osx_cocoa',
+            '--mac_arch=x86_64',
             #'--osx_carbon',
-            '--mac_arch=i386',
+            #'--mac_arch=i386',
             ]
     if not isWindows:
         myDevModeOptions.append('--debug')
