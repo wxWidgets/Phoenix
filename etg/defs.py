@@ -47,11 +47,12 @@ def run():
     module.find('wxSwap').ignore()
     module.find('wxVaCopy').ignore()
     
-    # add some typedefs for wxChar, wxUChar, etc.
+    # Add some typedefs for basic wx types and others so the backend
+    # generator knows what they are
     td = module.find('wxUIntPtr')
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxUChar'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxChar'))
-    module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned int', name='size_t'))
+    module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long', name='size_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long', name='time_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='int', name='wxPrintQuality'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long long', name='wxFileOffset'))
@@ -94,7 +95,7 @@ def run():
         const int SUBRELEASE_NUMBER;
         """))
 
-    module.addPyCode("wx.BG_STYLE_CUSTOM = wx.BG_STYLE_PAINT")
+    module.addPyCode("BG_STYLE_CUSTOM = BG_STYLE_PAINT")
 
 
     #-----------------------------------------------------------------
