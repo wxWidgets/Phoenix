@@ -36,17 +36,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
     
-    c.addCppCtor("""(int pointSize,
-                     wxFontFamily family,
-                     int flags = wxFONTFLAG_DEFAULT,
-                     const wxString& faceName = wxEmptyString,
-                     wxFontEncoding encoding = wxFONTENCODING_DEFAULT)""",
-        body="""\
-        wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
-        return font;
-        """)
-
-    # Same as the above, but as a factory function
+    # FFont factory function for backwards compatibility
     module.addCppFunction('wxFont*', 'FFont', 
                           """(int pointSize,
                           wxFontFamily family,
@@ -59,6 +49,7 @@ def run():
         return font;
         """, factory=True)
 
+    c.find('wxFont.flags').default = 'wxFONTFLAG_DEFAULT'
     
     for item in c.findAll('New'):
         item.factory = True
@@ -76,6 +67,7 @@ def run():
     # TODO, there is now a Underlined method so we can't have a
     # property of the same name.
     #c.addProperty('Underlined GetUnderlined SetUnderlined')
+    #c.addProperty('Strikethrough GetStrikethrough SetStrikethrough')
 
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
