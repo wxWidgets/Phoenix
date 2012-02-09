@@ -37,6 +37,7 @@ def run():
     tools.removeVirtuals(c)
 
     c.find('wxBitmap').findOverload('(const char *const *bits)').ignore()
+    c.find('wxBitmap.bits').type = 'const char*'
     c.find('wxBitmap.type').default = 'wxBITMAP_TYPE_ANY'
     c.find('LoadFile.type').default = 'wxBITMAP_TYPE_ANY'
 
