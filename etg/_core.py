@@ -48,6 +48,7 @@ INCLUDES = [  'defs',
               'gdicmn',
               'geometry',
               'position',
+              'uiaction',
 
               'stream',
 
