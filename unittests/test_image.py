@@ -25,6 +25,7 @@ class image_Tests(wtc.WidgetTestCase):
         img = wx.Image((100,100))
         self.assertTrue(img.IsOk())
 
+    @unittest.expectedFailure
     def test_imageCtor4(self):
         self.fail("data buffer support TBI")
         import array
@@ -33,8 +34,8 @@ class image_Tests(wtc.WidgetTestCase):
         img = wx.Image(w, h, buf, True)
         self.assertTrue(img.IsOk())
 
+    @unittest.expectedFailure
     def test_imageCtor5(self):
-        return
         self.fail("data buffer support TBI")
         import array
         w = h = 10
