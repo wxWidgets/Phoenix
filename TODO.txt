@@ -10,8 +10,8 @@ I've decided that they will not be done or no longer apply.
 
 
 
-For all new etg files
----------------------
+Checklist for all new etg files
+-------------------------------
     * Use a filename that matches the wxWidgets/interface/wx file name
       that the classes and other stuff is being loaded from.  This
       means that there will be lots of very small files in etg, but it
@@ -35,17 +35,16 @@ For all new etg files
       transfered, or other special directives.
 
     * Check for backwards compatibility issues with Classic wxPython
-      and document in the MigrationGuide.  (This file is still in the
-      Classic wxPython source tree.)  Compatibility issues resulting
-      from not renaming all the overloads can probably be left
-      undocumented, we'll probably be adding some of them back as
+      and document in the MigrationGuide. Compatibility issues
+      resulting from not renaming all the overloads can probably be
+      left undocumented, we'll probably be adding some of them back as
       deprecated methods eventually, and the programmers should be
       able to figure out the rest once they've started porting some
-      code. 
+      code.
 
     * For window classes check if there are other virtual methods
-      besides those added in addWindowVirtuals() that should also be
-      added back.
+      besides those added in addWindowVirtuals() that should be
+      unignored.
 
     * UNITTESTS!  Create a unit test script in the unitests folder
       using the same base file name.  It should at least check that
@@ -55,7 +54,7 @@ For all new etg files
       untested for the time being, although porting over some of the 
       the old unitest code from Classic would also be a good idea, but
       priority should be given to testing those things that had to be
-      tweaked or etc.
+      tweaked or added.
 
 
 
@@ -114,6 +113,7 @@ build.py
 --------
     * Update wscript to support some of the same (or similar) capabilities
       we have with setup.py.
+
     * Change from using a --waf option to being a "waf" command like
       the other build.py commands, and assume that any other items on
       the command line after the waf command are to be passed on the
@@ -121,12 +121,6 @@ build.py
       items on the command line then use a default set of waf
       commands. 
 
-    * When writing generated C++ files from the temp dir to sip/cpp
-      allow optionally stripping out the lines starting with "#line".
-      Those are handy when we need to step through code in the
-      debugger, but could cause differences in files that are
-      otherwise identical to their prior version, which means some
-      unnecesary rebuilds.
 
 
 Deprecated C++ items
@@ -188,7 +182,7 @@ other dev stuff
       * settings
       * sysopt
       * tipdlg
-      * check for items missing from _functions.i and _misc.i
+      * check that all items in _functions.i and _misc.i have been wrapped
       * joystick
       * sound
       * mimetype
@@ -197,12 +191,13 @@ other dev stuff
       * clipbrd, dnd, finish dataobj
       * power
       * about
-      * uiaction
-      
-      
       
   * Divide Phoenix core into multiple modules. Perhaps using the same
-    divisions that a wx multi-lib build uses would be a good idea.
+    divisions that a wx multi-lib build uses would be a good idea. OTOH, doing
+    something like what Classic did will make the transition easier for anybody
+    who explicitly used the core extensions there...
+
+  * Check wxDialog::CreateTextSizer, is it wrapped?
   
   
 
@@ -244,9 +239,9 @@ able to do full builds themselves. Specifically, we should:
     installers can be added over time as needed.
 
   * The making of a distributable build could simply be yet another
-    command handled by build.py.  Perhaps another command can be used
-    to upload the binary to whatever server they will be distributed
-    from. 
+    command handled by build.py.  Perhaps yet another command can be
+    used to upload the binary to whatever server they will be
+    distributed from.
 
 
 
