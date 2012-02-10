@@ -146,7 +146,15 @@ class Events(unittest.TestCase):
         f = evt.Files
         self.assertTrue(isinstance(f, list))
         self.assertTrue(len(f) == 5)
-        
+
+
+    def test_EventCategory(self):
+        wx.EVT_CATEGORY_UI
+        wx.EVT_CATEGORY_USER_INPUT
+        wx.EVT_CATEGORY_SOCKET
+        wx.EVT_CATEGORY_TIMER
+        wx.EVT_CATEGORY_THREAD
+        wx.EVT_CATEGORY_ALL
         
 #---------------------------------------------------------------------------
 
