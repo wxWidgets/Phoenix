@@ -103,15 +103,18 @@ def run():
             #endif
             """)
 
-    # Remove the virtualness from these methods
+    # Remove the virtualness from these methods 
     for m in [ 'GetDisplayMode', 'GetLayoutDirection', 'GetTopWindow', 'IsActive', 
                'SafeYield', 'SafeYieldFor', 'SetDisplayMode', 
                'SetNativeTheme', ]:
         c.find(m).isVirtual = False
     
     # Methods we implement in wxPyApp beyond what are in wxApp, plus some
-    # overridden virtuals (or at least some that we want the wrapper generator
-    # to treat as if they are overridden.)
+    # overridden virtuals (or at least some that we want the wrapper
+    # generator to treat as if they are overridden.)
+    #
+    # TODO: Add them as etg method objects instead of a WigCode block so the
+    # documentation generators will see them too
     c.addItem(etgtools.WigCode("""\
         virtual int  MainLoop();
         virtual void OnPreInit();
@@ -121,7 +124,17 @@ def run():
         virtual int  OnExit();
         
         void         _BootstrapApp();
+
+        static long GetMacAboutMenuItemId();
+        static long GetMacPreferencesMenuItemId();
+        static long GetMacExitMenuItemId();
+        static wxString GetMacHelpMenuTitleName();
+        static void SetMacAboutMenuItemId(long val);
+        static void SetMacPreferencesMenuItemId(long val);
+        static void SetMacExitMenuItemId(long val);
+        static void SetMacHelpMenuTitleName(const wxString& val);
         """))
+
 
     # Add these methods by creating extractor objects so they can be tweaked
     # like normal, their docs will be able to be generated, etc.
