@@ -77,7 +77,6 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxGBSpan')
     assert isinstance(c, etgtools.ClassDef)
-    c.find('operator!').ignore()
 
     # allow a 2 element sequence to be auto converted
     c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxGBSpan')
