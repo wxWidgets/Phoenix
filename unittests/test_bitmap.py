@@ -23,6 +23,17 @@ class BitmapTests(wtc.WidgetTestCase):
         img = wx.Image(pngFile)
         b6 = wx.Bitmap(img)
         self.assertTrue( b6.IsOk() )
+
+
+    def test_EmptyBitmapFactory(self):
+        # wx.EmptyBitmap is supposed to be deprecated, make sure it is.
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")        
+            with self.assertRaises(wx.wxPyDeprecationWarning):
+                b7 = wx.EmptyBitmap(5,10, 32)
+                self.assertTrue( b7.IsOk() )
+        
         
         
     def test_Bitmap__nonzero__(self):

@@ -72,7 +72,14 @@ def run():
 
     # TODO: The ctors and methods from Classic for converting to/from
     #       buffer objects with raw bitmap access.
-    
+
+
+    # For compatibility:
+    module.addPyFunction('EmptyBitmap', '(width, height, depth=BITMAP_SCREEN_DEPTH)',
+                         deprecated=True,
+                         doc='A compatibility wrapper for the wx.Bitmap(width, height, depth) constructor',
+                         body='return Bitmap(width, height, depth)')
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
