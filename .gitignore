@@ -1,0 +1,46 @@
+
+# /
+/.hg
+/.hgignore
+/build
+/tmp
+/dist
+/license
+
+# /bin/
+/bin/sip-*
+
+# /docs/sphinx/
+/docs/sphinx/*.txt
+/docs/sphinx/*.pkl
+/docs/sphinx/*.inc
+/docs/sphinx/*.lst
+
+# /docs/sphinx/_static/images/inheritance/
+/docs/sphinx/_static/images/inheritance/*_inheritance.png
+
+# /docs/sphinx/_templates/
+/docs/sphinx/_templates/gallery.html
+
+# /docs/sphinx/rest_substitutions/snippets/cpp/
+/docs/sphinx/rest_substitutions/snippets/cpp/*.cpp
+
+# /sip/cpp/
+/sip/cpp/sip.signature
+/sip/cpp/*.sbf
+/sip/cpp/*.h
+/sip/cpp/*.cpp
+
+# /sip/gen/
+/sip/gen/*.sip
+
+# /sip/siplib/
+/sip/siplib/.update
+
+# /wx/
+/wx/*.py
+/wx/*.pyc
+/wx/*.pi
+/wx/*.so
+/wx/*.pyd
+/wx/locale
