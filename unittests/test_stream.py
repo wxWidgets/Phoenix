@@ -24,7 +24,7 @@ class stream_Tests(wtc.WidgetTestCase):
         
     def test_outputStreamParam(self):
         # This tests being able to pass a Python file-like object to a
-        # wrapped function expecting a wxOytputStream.
+        # wrapped function expecting a wxOutputStream.
 
         image = wx.Image(pngFile)
         stream = StringIO()

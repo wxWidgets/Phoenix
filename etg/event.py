@@ -186,7 +186,7 @@ def run():
         'bool', 'Disconnect', '(int id, int lastId=-1, '
                                'wxEventType eventType=wxEVT_NULL, '
                                'PyObject* func=NULL)', 
-        doc="Remove an event binding by removing its entry in the synamic event table.",
+        doc="Remove an event binding by removing its entry in the dynamic event table.",
         body="""\
             if (func && func != Py_None) {
                 // Find the current matching binder that has this function
