@@ -49,8 +49,6 @@ def run():
     # doc this method then...
     c.find('SetModal').ignore()
     
-    c.find('OnSysColourChanged').ignore()
-    
     # context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
