@@ -198,6 +198,7 @@ other dev stuff
       * clipbrd, dnd, finish dataobj
       * power
       * about
+      * overlay
       
   * Divide Phoenix core into multiple modules. Perhaps using the same
     divisions that a wx multi-lib build uses would be a good idea. OTOH, doing
