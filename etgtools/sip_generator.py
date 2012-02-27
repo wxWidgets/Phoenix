@@ -839,6 +839,10 @@ from %s import *
             if item.pyInt:
                 annotations.append('PyInt')
 
+        if isinstance(item, extractors.TypedefDef):
+            if item.noTypeName:
+                annotations.append('NoTypeName')
+
         if isinstance(item, extractors.FunctionDef):
             if item.deprecated:
                 annotations.append('Deprecated')
