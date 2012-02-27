@@ -48,7 +48,6 @@ INCLUDES = [  'defs',
               'gdicmn',
               'geometry',
               'position',
-              'uiaction',
 
               'stream', 'filesys',
 
@@ -90,6 +89,7 @@ INCLUDES = [  'defs',
               'utils',
               'process',
               'sizer', 'gbsizer', 'wrapsizer',
+              'uiaction', 
               
               'eventfilter',
               'evtloop',
@@ -158,7 +158,7 @@ INCLUDES = [  'defs',
               'snglinst',
               'scrolwin',
               'vscroll',
-              
+             
               ]
 
 
