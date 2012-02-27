@@ -5,8 +5,6 @@ import os
 from cStringIO import StringIO
 
 
-pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
-
 #---------------------------------------------------------------------------
 
 class filesys_Tests(wtc.WidgetTestCase):

@@ -3,8 +3,6 @@ import wtc
 import wx
 import os
 
-pngFile = os.path.join(os.path.dirname(__file__), 'pointy.png')
-
 #---------------------------------------------------------------------------
 
 class intl_Tests(wtc.WidgetTestCase):
