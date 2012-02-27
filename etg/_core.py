@@ -50,7 +50,7 @@ INCLUDES = [  'defs',
               'position',
               'uiaction',
 
-              'stream',
+              'stream', 'filesys',
 
               'colour',
               'image',

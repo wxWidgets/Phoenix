@@ -73,6 +73,7 @@ def run():
         class wxImageHandler;
         class wxToolBar;
         class wxExecuteEnv;
+        class wxDateTime;
     """))
     
     
