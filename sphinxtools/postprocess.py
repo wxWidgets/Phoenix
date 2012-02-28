@@ -22,7 +22,7 @@ import templates
 from buildtools.config import copyIfNewer, writeIfChanged, newer
 
 from utilities import Wx2Sphinx
-from constants import HTML_REPLACE, SVN_REVISION, TODAY, SPHINXROOT
+from constants import HTML_REPLACE, SVN_REVISION, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
 
 
@@ -118,6 +118,14 @@ def BuildEnumsAndMethods(sphinxDir):
         for old, new in enum_dict.items():
             text = text.replace(old, new)
 
+        widget_name = os.path.split(os.path.splitext(input)[0])[1]
+
+        if widget_name in SECTIONS_EXCLUDE:
+            start, end = SECTIONS_EXCLUDE[widget_name]
+            lindex = text.index(start)
+            rindex = text.index(end)
+            text = text[0:lindex] + text[rindex:]
+            
         # Replace the "Perl Note" stuff, we don't need it
         newtext = ''
         for line in text.splitlines():
@@ -479,7 +487,7 @@ def PostProcess(folder):
     fileNames = glob.glob(folder + "/*.html")
 
     phoenix_image = '<div class="floatcenter" style="background-color: white; text-align: middle; align: middle; padding: 40px 10px 15px 15px">\n' \
-                    '<img src="_static/phoenix_top.png" alt="Phoenix Logo" align="middle" />\n' \
+                    '<img src="_static/images/sphinxdocs/phoenix_top.png" alt="Phoenix Logo" align="middle" />\n' \
                     '</div>'
 
 

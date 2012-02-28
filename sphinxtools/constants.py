@@ -131,6 +131,8 @@ MAGIC_METHODS = {
     # TODO: add more
     }
 
+SECTIONS_EXCLUDE = {'TextCtrl': ('|phoenix_title| TextCtrl and ``C++`` Streams', '|phoenix_title| Event Handling')}
+
 # A regex to split a string keeping the whitespaces
 RE_KEEP_SPACES = re.compile(r'(\s+)')
 
@@ -141,7 +143,7 @@ HTML_REPLACE = ['module', 'function', 'method', 'class', 'classmethod', 'staticm
 
 # The SVN revision of wxWidgets/Phoenix used to build the Sphinx docs.
 # There must be a more intelligent way to get this information automatically.
-SVN_REVISION = '70154'
+SVN_REVISION = '70741'
 
 # Today's date representation for the Sphinx HTML docs
 TODAY = datetime.date.today().strftime('%d %B %Y')

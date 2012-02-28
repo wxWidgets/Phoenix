@@ -1685,7 +1685,7 @@ class Title(Node):
 
         text = '|phoenix_title| ' + ConvertToPython(self.element.text)
         lentext = len(text)
-        text = '\n\n%s\n%s\n\n'%(text, '='*lentext)
+        text = '\n\n%s\n%s\n\n'%(text.rstrip('.'), '='*lentext)
 
         return text
 
@@ -2001,6 +2001,7 @@ class XMLDocString(object):
             rest_class = Emphasis(element, parent)
 
         elif tag == 'title':
+            text = ConvertToPython(element.text)
             rest_class = Title(element, parent)
 
         elif tag == 'para':
@@ -2788,7 +2789,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         filename = self.current_module + "%s.txt"%name
 
-        WriteSphinxOutput(stream, filename)
+        WriteSphinxOutput(stream, filename, append=True)
     
     # -----------------------------------------------------------------------
         
@@ -2945,7 +2946,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         name = RemoveWxPrefix(self.current_class.name) or self.current_class.pyName
         filename = self.current_module + "%s.txt"%name
 
-        WriteSphinxOutput(stream, filename)
+        WriteSphinxOutput(stream, filename, append=True)
            
     # -----------------------------------------------------------------------
 
@@ -2971,7 +2972,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         filename = self.current_module + "%s.txt"%name
 
-        WriteSphinxOutput(stream, filename)
+        WriteSphinxOutput(stream, filename, append=True)
 
 
     def createPropertyLinks(self, name, prop):

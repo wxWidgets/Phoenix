@@ -25,7 +25,7 @@ sys.path.append('..')
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.todo', 'sphinx.ext.autodoc',
               'sphinx.ext.autosummary', 'sphinx.ext.coverage',
-              'availability']
+              'availability'] #, 'rst2pdf.pdfbuilder']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -261,18 +261,3 @@ pdf_verbosity = 2
 # Enable experimental feature to split table cells. Use it
 # if you get "DelayedTable too big" errors
 pdf_splittables = True
-
-##def process_docstring(app, what, name, obj, options, lines):
-##
-##    if what == "data":
-##
-##        fid = open("autodata_docstrings.pkl", "rb")
-##        autodata_dict = cPickle.load(fid)
-##        fid.close()
-##
-##        if name in autodata_dict:
-##            lines[:] = [autodata_dict[name].strip()]
-##
-##    
-##def setup(app):
-##    app.connect('autodoc-process-docstring', process_docstring)
