@@ -251,6 +251,8 @@ def run():
     c.addPyMethod('SetVirtualSizeWH', '(self, w, h)', 'return self.SetVirtualSize(w,h)', deprecated=True)
     c.addPyMethod('GetVirtualSizeTuple', '(self)', 'return self.GetVirtualSize()', deprecated=True)
     c.addPyMethod('SetToolTipString',  '(self, string)', 'return self.SetToolTip(string)', deprecated=True)
+    c.addPyMethod('ConvertDialogPointToPixels', '(self, point)', 'return self.ConvertDialogToPixels(point)', deprecated=True)
+    c.addPyMethod('ConvertDialogSizeToPixels', '(self, size)', 'return self.ConvertDialogToPixels(point)', deprecated=True)
 
     #-----------------------------------------------------------------------
     # Other stuff
