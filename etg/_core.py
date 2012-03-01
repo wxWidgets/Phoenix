@@ -345,6 +345,10 @@ def run():
             ])
 
 
+    module.addPreInitializerCode("""\
+        wxPyPreInit(sipModuleDict);
+        """)
+
     # This code is inserted into the module initialization function
     module.addPostInitializerCode("""\
         wxPyCoreModuleInject(sipModuleDict);

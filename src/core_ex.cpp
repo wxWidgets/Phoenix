@@ -1,9 +1,73 @@
 
+#ifdef __WXMSW__             // If building for Windows...
+
+#include <wx/msw/private.h>
+#include <wx/msw/winundef.h>
+#include <wx/msw/msvcrt.h>
+
+//----------------------------------------------------------------------
+// Use an ActivationContext to ensure that the new (themed) version of
+// the comctl32 DLL is loaded.
+//----------------------------------------------------------------------
+
+// Note that the use of the ISOLATION_AWARE_ENABLED define replaces the
+// activation context APIs with wrappers that dynamically load the API
+// pointers from the kernel32 DLL so we don't have to do that ourselves.
+// Using ISOLATION_AWARE_ENABLED also causes the manifest resource to be put
+// in slot #2 as expected for DLLs. (See wx/msw/wx.rc)
+
+#ifdef ISOLATION_AWARE_ENABLED
+
+static ULONG_PTR wxPySetActivationContext()
+{
+
+    OSVERSIONINFO info;
+    wxZeroMemory(info);
+    info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO); 
+    GetVersionEx(&info);
+    if (info.dwMajorVersion < 5)
+        return 0;
+    
+    ULONG_PTR cookie = 0;
+    HANDLE h;
+    ACTCTX actctx;
+    TCHAR modulename[MAX_PATH];
+
+    GetModuleFileName(wxGetInstance(), modulename, MAX_PATH);
+    wxZeroMemory(actctx);
+    actctx.cbSize = sizeof(actctx);
+    actctx.lpSource = modulename;
+    actctx.lpResourceName = MAKEINTRESOURCE(2);
+    actctx.hModule = wxGetInstance();
+    actctx.dwFlags = ACTCTX_FLAG_HMODULE_VALID | ACTCTX_FLAG_RESOURCE_NAME_VALID;
+    
+    h = CreateActCtx(&actctx);
+    if (h == INVALID_HANDLE_VALUE) {
+        wxLogLastError(wxT("CreateActCtx"));
+        return 0;
+    }
+
+    if (! ActivateActCtx(h, &cookie))
+        wxLogLastError(wxT("ActivateActCtx"));
+    
+    return cookie;
+}
+
+static void wxPyClearActivationContext(ULONG_PTR cookie)
+{
+    if (! DeactivateActCtx(0, cookie))
+        wxLogLastError(wxT("DeactivateActCtx"));
+}
+
+#endif  // ISOLATION_AWARE_ENABLED
+
+#endif // __WXMSW__
+
 void wxPyPreInit(PyObject* moduleDict)
 {
-//#ifdef ISOLATION_AWARE_ENABLED
-//    wxPySetActivationContext();
-//#endif
+#ifdef ISOLATION_AWARE_ENABLED
+    wxPySetActivationContext();
+#endif
 //#ifdef __WXMSW__
 ////     wxCrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF
 ////                     | _CRTDBG_CHECK_ALWAYS_DF
@@ -27,8 +91,6 @@ void wxPyPreInit(PyObject* moduleDict)
 
     // Ensure that the build options in the DLL (or whatever) match this build
     wxApp::CheckBuildOptions(WX_BUILD_OPTIONS_SIGNATURE, "wxPython");
-
-    wxInitAllImageHandlers();
 }
 
 
