@@ -127,7 +127,7 @@ def main(args):
 #---------------------------------------------------------------------------
             
             
-def runcmd(cmd, getOutput=False, echoCmd=True):
+def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
     if echoCmd:
         msg(cmd)
 
@@ -148,7 +148,8 @@ def runcmd(cmd, getOutput=False, echoCmd=True):
         # Failed!
         #raise subprocess.CalledProcessError(rval, cmd)
         print "Command '%s' failed with exit code %d." % (cmd, rval)
-        sys.exit(rval)
+        if fatal:
+            sys.exit(rval)
     
     return output
         
@@ -266,6 +267,7 @@ def makeOptionParser():
         ("verbose",        (False, "Print out more information.")),
         ("nodoc",          (False, "Do not run the default docs generator")),
         ("upload_package", (False, "Upload bdist package to nightly server.")),
+        ("cairo",          (False, "Use Cairo for wxGraphicsContext instaed of native (Win only)")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -563,13 +565,13 @@ def touch(options, args):
 def test(options, args):
     msg('Running command: test')
     pwd = pushDir(phoenixDir())
-    runcmd(PYTHON + ' unittests/runtests.py %s' % ('-v' if options.verbose else ''))
+    runcmd(PYTHON + ' unittests/runtests.py %s' % ('-v' if options.verbose else ''), fatal=False)
 
     
 def testOne(name, options, args):
     msg('Running test %s:' % name)
     pwd = pushDir(phoenixDir())
-    runcmd(PYTHON + ' unittests/%s.py %s' % (name, '-v' if options.verbose else ''))
+    runcmd(PYTHON + ' unittests/%s.py %s' % (name, '-v' if options.verbose else ''), fatal=False)
     
     
 def build(options, args):
@@ -586,7 +588,8 @@ def build_wx(options, args):
 
     if isWindows:
         # Windows-specific pre build stuff 
-        pass
+        if options.cairo:
+            build_options.append('--cairo')
     else:  
         # Platform is something other than MSW
         if options.osx_carbon:
