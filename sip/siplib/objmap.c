@@ -264,9 +264,16 @@ static void add_object(sipObjectMap *om, void *addr, sipSimpleWrapper *val)
             {
                 sipSimpleWrapper *next = sw->next;
 
-                /* We are removing it from the map here. */
-                sipSetNotInMap(sw);
-                sip_api_common_dtor(sw);
+                if (sipIsAlias(sw))
+                {
+                    sip_api_free(sw);
+                }
+                else
+                {
+                    /* We are removing it from the map here. */
+                    sipSetNotInMap(sw);
+                    sip_api_common_dtor(sw);
+                }
 
                 sw = next;
             }
