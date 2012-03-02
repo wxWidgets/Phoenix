@@ -136,6 +136,10 @@ class BaseDef(object):
             if hasattr(item, 'overloads'):
                 for o in item.overloads:
                     items.extend(o.allItems())
+            if hasattr(item, 'innerclasses'):
+                for o in item.innerclasses:
+                    items.extend(o.allItems())
+    
         return items
                 
     
@@ -311,13 +315,17 @@ class FunctionDef(BaseDef):
         return [self] + self.overloads
     
     
-    def findOverload(self, matchText):
+    def findOverload(self, matchText, isConst=None):
         """
         Search for an overloaded method that has matchText in its C++ argsString.
         """
         for o in self.all():
             if matchText in o.argsString and not o.ignored:
-                return o
+                if isConst is None:
+                    return o
+                else:
+                    if o.isConst == isConst:
+                        return o
         return None
     
 
@@ -327,6 +335,42 @@ class FunctionDef(BaseDef):
         """
         return bool([x for x in self.overloads if not x.ignored])
 
+
+    def renameOverload(self, matchText, newName, **kw):
+        """
+        Rename the overload with matching matchText in the argsString to
+        newName. The overload is moved out of this function's overload list
+        and directly into the parent module or class so it can appear to be a
+        separate function.
+        """
+        if hasattr(self, 'module'):
+            parent = self.module
+        else:
+            parent = self.klass
+        item = self.findOverload(matchText)
+        item.pyName = newName    
+        item.__dict__.update(kw)
+        
+        if item is self and not self.hasOverloads():
+            # We're done, there actually is only one instance of this method
+            pass
+        elif item is self:
+            # Make the first overload take the place of this node in the
+            # parent, and then insert this item into the parent's list again
+            overloads = self.overloads
+            overloads.sort(key=lambda o: o.ignored)
+            self.overloads = []
+            first = overloads[0]
+            first.overloads = overloads[1:]
+            idx = parent.items.index(self)
+            parent.items[idx] = first
+            parent.insertItemAfter(first, self)
+            
+        else:
+            # Just remove from the overloads list and insert it into the parent.
+            self.overloads.remove(item)
+            parent.insertItemAfter(self, item)
+        
     
     def ignore(self,  val=True):
         # If the item being ignored has overloads then try to reorder the

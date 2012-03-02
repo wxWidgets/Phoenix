@@ -435,23 +435,32 @@ from %s import *
         # is the generator currently inside the class or after it?
         klass.generatingInClass = True 
 
+        # Split the items into public and protected groups
+        ctors = [i for i in klass if 
+                    isinstance(i, extractors.MethodDef) and 
+                    i.protection == 'public' and (i.isCtor or i.isDtor)]
+        enums = [i for i in klass if 
+                    isinstance(i, extractors.EnumDef) and 
+                    i.protection == 'public']
+        public = [i for i in klass if i.protection == 'public' and i not in ctors+enums]
+        protected = [i for i in klass if i.protection == 'protected']
+ 
+        if klass.kind == 'class':
+            stream.write('%spublic:\n' % indent)
+
+        # Write enums first since they may be used as default values in
+        # methods or in nested classes
+        for item in enums:
+            self.dispatchClassItem(klass, item, stream, indent2)
+            
+        # Next do inner classes
         for item in klass.innerclasses:
             if klass.kind == 'class':
                 stream.write('%s%s:\n' % (indent, item.protection))
             item.klass = klass
             self.generateClass(item, stream, indent2)
-        
-        if klass.kind == 'class':
-            stream.write('%spublic:\n' % indent)
-
-        # Split the items into public and protected groups
-        ctors = [i for i in klass if 
-                    isinstance(i, extractors.MethodDef) and 
-                    i.protection == 'public' and (i.isCtor or i.isDtor)]
-        public = [i for i in klass if i.protection == 'public' and i not in ctors]
-        protected = [i for i in klass if i.protection == 'protected']
-        
-        
+    
+        # and then the ctors and the rest of the items in the class
         for item in ctors:
             self.dispatchClassItem(klass, item, stream, indent2)
             
