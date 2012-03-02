@@ -37,6 +37,8 @@ INCLUDES = [  'defs',
               'clntdata',
               'userdata',
               'stockgdi',
+              'longlong',
+              'wxdatetime',
               
               'windowid',
               'platinfo',
@@ -355,8 +357,8 @@ def run():
         """)
     # Here is the function it calls
     module.includeCppCode('src/core_ex.cpp')
-                      
     
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

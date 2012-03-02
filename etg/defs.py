@@ -73,8 +73,7 @@ def run():
         class wxImageHandler;
         class wxToolBar;
         class wxExecuteEnv;
-        class wxDateTime;
-    """))
+        """))
     
     
     # TBD: I've always disliked the WXK_* names. Should I rename all the items

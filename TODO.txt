@@ -168,7 +168,6 @@ other dev stuff
   * For full coverage of what was in the Classic core modules we'll need ETG
     files for the following:
 
-      * filesys, fs_mem, fs_inet, fs_arch (with wxZipFSHandler typedef)
       * taskbar
       * all missing common dialogs
       * print (as in print framework classes)
@@ -194,7 +193,6 @@ other dev stuff
       * sound
       * mimetype
       * artprov
-      * datetime, or make it be a MappedType for Python date objects?
       * clipbrd, dnd, finish dataobj
       * power
       * about
