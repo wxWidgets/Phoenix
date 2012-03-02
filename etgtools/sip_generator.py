@@ -662,8 +662,11 @@ from %s import *
                 constMod = ""
                 if method.isConst:
                     constMod = " const"
-                stream.write('%s%s %s%s%s%s;\n' % 
-                             (indent, typ, method.name, argsString, constMod, self.annotate(method)))
+                static = ""
+                if method.isStatic:
+                    static = "static "
+                stream.write('%s%s%s %s%s%s%s;\n' % 
+                             (indent, static, typ, method.name, argsString, constMod, self.annotate(method)))
     
             # write the docstring
             if  _needDocstring and not (method.isCtor or method.isDtor):

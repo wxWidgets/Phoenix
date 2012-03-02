@@ -409,6 +409,7 @@ class FunctionDef(BaseDef):
         def _cleanName(name):
             for txt in ['const', '*', '&', ' ']:
                 name = name.replace(txt, '')
+            name = name.replace('::', '.')
             name = removeWxPrefix(name)
             return name
         
