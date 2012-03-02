@@ -267,7 +267,7 @@ def run():
         // if we get this far then it must already be a wxColour instance
         *sipCppPtr = reinterpret_cast<wxColour*>(sipConvertToType(
             sipPy, sipType_wxColour, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-        return sipGetState(sipTransferObj);
+        return 0; // not a new instance
     """
 
 
