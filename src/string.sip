@@ -77,10 +77,10 @@
 
 // Used just for testing the MappedType code, it can be removed later
 %ModuleCode
-wxString testStringTypemap(const wxString& str)
+wxString _testStringTypemap(const wxString& str)
 {
     wxString local = str;
     return local;
 }
 %End
-wxString testStringTypemap(const wxString& str);
+wxString _testStringTypemap(const wxString& str);
