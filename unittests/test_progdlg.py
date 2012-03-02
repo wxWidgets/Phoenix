@@ -1,12 +1,13 @@
 import imp_unittest, unittest
 import wtc
 import wx
-
+import sys
 
 #---------------------------------------------------------------------------
 
 class progdlg_Tests(wtc.WidgetTestCase):
 
+    @unittest.skipIf(sys.platform.startswith("win"), "not running on Windows")
     def test_progdlg1(self):        
         max = 50
         dlg = wx.ProgressDialog("Progress dialog example",
