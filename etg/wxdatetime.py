@@ -263,7 +263,7 @@ def run():
     
     # Add some code to automatically convert from a Python datetime.date or a
     # datetime.datetime object
-    c.addHeaderCode("#include <Python/datetime.h>")
+    c.addHeaderCode("#include <datetime.h>")
     c.convertFromPyObject = """\
         PyDateTime_IMPORT;
     
