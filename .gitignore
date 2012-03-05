@@ -1,5 +1,9 @@
-# global ignores
+# Global wildcards to ignore
 *.pyc
+*.pyd
+*.pdb
+*.dll
+
 
 # /
 /.hg
