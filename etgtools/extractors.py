@@ -1417,6 +1417,8 @@ class ModuleDef(BaseDef):
 
     
     def addGlobalStr(self, name, before=None):
+        if self.findItem(name):
+            self.findItem(name).ignore()
         gv = GlobalVarDef(type='const char*', name=name)
         if before is None:
             self.addItem(gv)
