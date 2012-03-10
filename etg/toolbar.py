@@ -36,17 +36,70 @@ def run():
         // forward declarations
         class wxToolBarBase;
         """))
+
+    # Use wxPyUserData for the clientData values instead of a plain wxObject
+    def _fixClientData(c):
+        for item in c.allItems():
+            if isinstance(item, etgtools.ParamDef) and item.name == 'clientData':
+                item.type = 'wxPyUserData*'
+                item.transfer = True
                       
+                                           
+    #---------------------------------------------                
     c = module.find('wxToolBarToolBase')
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
-    module.addGlobalStr('wxToolBarNameStr', c)
+    _fixClientData(c)
 
-   
-    c = module.find('wxToolBar')
-    c.find('SetBitmapResource').ignore()
+    gcd = c.find('GetClientData')
+    gcd.type = 'wxPyUserData*'
+    gcd.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetClientData());')
 
     
+   
+    #---------------------------------------------                
+    c = module.find('wxToolBar')
+    tools.fixWindowClass(c)
+    _fixClientData(c)
+    c.find('SetBitmapResource').ignore()
+
+    gcd = c.find('GetToolClientData')
+    gcd.type = 'wxPyUserData*'
+    gcd.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetToolClientData(toolId));')
+
+    c.find('AddTool.tool').transfer = True
+    c.find('InsertTool.tool').transfer = True
+
+    c.find('OnLeftClick').ignore()
+    c.find('OnMouseEnter').ignore()
+    c.find('OnRightClick').ignore()
+    c.find('OnLeftClick').ignore()
+
+    c.addPyMethod('AddSimpleTool', '(self, toolId, bitmap, shortHelpString='', longHelpString='', isToggle=0)',
+        doc='Old style method to add a tool to the toolbar.',
+        deprecated=True,
+        body="""\
+            kind = wx.ITEM_NORMAL
+            if isToggle: kind = wx.ITEM_CHECK
+            return self.AddTool(toolId, '', bitmap, wx.NullBitmap, kind,
+                                shortHelpString, longHelpString)
+            """)
+
+    c.addPyMethod('InsertSimpleTool', '(self, pos, toolId, bitmap, shortHelpString='', longHelpString='', isToggle=0)',
+        doc='Old style method to insert a tool in the toolbar.',
+        deprecated=True,
+        body="""\
+            kind = wx.ITEM_NORMAL
+            if isToggle: kind = wx.ITEM_CHECK
+            return self.InsertTool(pos, toolId, '', bitmap, wx.NullBitmap, kind,
+                                     shortHelpString, longHelpString)
+            """)
+
+
+    module.addGlobalStr('wxToolBarNameStr', c)
+
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
