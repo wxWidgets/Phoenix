@@ -184,7 +184,7 @@ other dev stuff
       * filectrl
       * infobar
       * commandlinkbutton
-      * axbase  (ActiveX.  Need to figure out best was to do MSW-only...)
+      * axbase  (ActiveX.  Need to figure out best ways to do MSW-only items...)
       * settings
       * sysopt
       * tipdlg
