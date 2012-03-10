@@ -75,7 +75,7 @@ def run():
     c.find('OnRightClick').ignore()
     c.find('OnLeftClick').ignore()
 
-    c.addPyMethod('AddSimpleTool', '(self, toolId, bitmap, shortHelpString='', longHelpString='', isToggle=0)',
+    c.addPyMethod('AddSimpleTool', '(self, toolId, bitmap, shortHelpString="", longHelpString="", isToggle=0)',
         doc='Old style method to add a tool to the toolbar.',
         deprecated=True,
         body="""\
@@ -85,7 +85,7 @@ def run():
                                 shortHelpString, longHelpString)
             """)
 
-    c.addPyMethod('InsertSimpleTool', '(self, pos, toolId, bitmap, shortHelpString='', longHelpString='', isToggle=0)',
+    c.addPyMethod('InsertSimpleTool', '(self, pos, toolId, bitmap, shortHelpString="", longHelpString="", isToggle=0)',
         doc='Old style method to insert a tool in the toolbar.',
         deprecated=True,
         body="""\
