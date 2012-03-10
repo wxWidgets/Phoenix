@@ -71,7 +71,6 @@ def run():
         class wxDropTarget;
         class wxCaret;
         class wxImageHandler;
-        class wxToolBar;
         class wxExecuteEnv;
         """))
     

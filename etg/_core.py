@@ -142,6 +142,7 @@ INCLUDES = [  'defs',
               'spinctrl',
               'tglbtn',
               'scrolbar',
+              'toolbar',
               
               # toplevel and dialogs
               'nonownedwnd',
