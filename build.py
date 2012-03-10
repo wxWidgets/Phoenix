@@ -586,6 +586,9 @@ def build_wx(options, args):
 
     build_options = ['--wxpython', '--unicode']
 
+    if os.environ.get('JOBS', None):
+        build_options.append('--jobs=%d' % os.environ.get('MAKE_JOBS'))
+
     if isWindows:
         # Windows-specific pre build stuff 
         if options.cairo:
