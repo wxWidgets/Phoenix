@@ -25,7 +25,7 @@ sys.path.append('..')
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.todo', 'sphinx.ext.autodoc',
               'sphinx.ext.autosummary', 'sphinx.ext.coverage',
-              'availability'] #, 'rst2pdf.pdfbuilder']
+              'availability']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'wxPython (Phoenix)'
-copyright = u'2011, Andrea Gavana'
+copyright = u'2012, Andrea Gavana'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
