@@ -392,6 +392,7 @@ def checkForUnitTestModule(module):
 
 
 def convertTwoIntegersTemplate(CLASS):
+    # Note: The GIL is already acquired where this code is used.
     return """\
    // is it just a typecheck?
    if (!sipIsErr) {{
@@ -431,6 +432,7 @@ def convertTwoIntegersTemplate(CLASS):
 
 
 def convertFourIntegersTemplate(CLASS):
+    # Note: The GIL is already acquired where this code is used.
     return """\
     // is it just a typecheck?
     if (!sipIsErr) {{
@@ -477,6 +479,7 @@ def convertFourIntegersTemplate(CLASS):
 
 
 def convertTwoDoublesTemplate(CLASS):
+    # Note: The GIL is already acquired where this code is used.
     return """\
     // is it just a typecheck?
     if (!sipIsErr) {{
@@ -516,6 +519,7 @@ def convertTwoDoublesTemplate(CLASS):
 
 
 def convertFourDoublesTemplate(CLASS):
+    # Note: The GIL is already acquired where this code is used.
     return """\
     // is it just a typecheck?
     if (!sipIsErr) {{
@@ -628,7 +632,7 @@ public:
                 sipRes = ({ItemClass}*)node->GetData();
         }}
         else {{
-            PyErr_SetString(PyExc_IndexError, "sequence index out of range");
+            wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
             sipError = sipErrorFail;
         }}
     %End
@@ -651,9 +655,9 @@ public:
         int idx = sipCpp->IndexOf(({RealItemClass}*)obj);
         if (idx == wxNOT_FOUND) {{
             sipError = sipErrorFail;
-            PyErr_SetString(PyExc_ValueError,
-                            "sequence.index(x): x not in sequence");
-            }}
+            wxPyErr_SetString(PyExc_ValueError,
+                              "sequence.index(x): x not in sequence");
+        }}
         sipRes = idx;
     %End
     
@@ -758,7 +762,7 @@ public:
             sipRes = &sipCpp->Item(index);
         }}
         else {{
-            PyErr_SetString(PyExc_IndexError, "sequence index out of range");
+            wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
             sipError = sipErrorFail;
         }}
     %End
@@ -780,8 +784,8 @@ public:
         int idx = sipCpp->Index(*obj, false);
         if (idx == wxNOT_FOUND) {{
             sipError = sipErrorFail;
-            PyErr_SetString(PyExc_ValueError,
-                            "sequence.index(x): x not in sequence");
+            wxPyErr_SetString(PyExc_ValueError,
+                              "sequence.index(x): x not in sequence");
             }}
         sipRes = idx;
     %End
@@ -821,6 +825,7 @@ static
 {{
     {objType}* array;
     Py_ssize_t idx, len;
+    wxPyBlock_t blocked = wxPyBeginBlockThreads();
     
     // ensure that it is a sequence
     if (! PySequence_Check(source)) 
@@ -846,6 +851,7 @@ static
     array = new {objType}[*count];
     if (!array) {{
         PyErr_SetString(PyExc_MemoryError, "Unable to allocate temporary array");
+        wxPyEndBlockThreads(blocked);
         return NULL;
     }}
     for (idx=0; idx<len; idx++) {{
@@ -858,10 +864,12 @@ static
         sipReleaseType((void*)item, {sipType}, state); // delete temporary instances
         Py_DECREF(obj);
     }}
+    wxPyEndBlockThreads(blocked);
     return array;
 
 error0:
     PyErr_SetString(PyExc_TypeError, "{errmsg}");
+    wxPyEndBlockThreads(blocked);
     return NULL;
 }}
 """.format(**locals())

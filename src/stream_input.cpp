@@ -55,6 +55,7 @@ public:
     
     wxPyInputStream(const wxPyInputStream& other)
     {
+        wxPyBlock_t blocked = wxPyBeginBlockThreads();
         m_read  = other.m_read;
         m_seek  = other.m_seek;
         m_tell  = other.m_tell;
@@ -62,6 +63,7 @@ public:
         Py_INCREF(m_read);
         Py_INCREF(m_seek);
         Py_INCREF(m_tell);
+        wxPyEndBlockThreads(blocked);
     }
     
 protected:

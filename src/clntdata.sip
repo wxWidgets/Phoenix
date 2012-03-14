@@ -19,15 +19,14 @@
         {
             m_obj = obj;
             m_incRef = incref;
-            if (incref)
-                Py_INCREF(m_obj);
+            if (incref) {
+                wxPyBLOCK_THREADS( Py_INCREF(m_obj) );
+                }
         }
         ~wxPyClientData() 
         {
             if (m_incRef) {
-                // TODO: wxPyBlock_t blocked = wxPyBeginBlockThreads();
-                Py_DECREF(m_obj);
-                //wxPyEndBlockThreads(blocked);
+                wxPyBLOCK_THREADS( Py_DECREF(m_obj) );
             }
             m_obj = NULL;
         }

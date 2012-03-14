@@ -30,12 +30,12 @@
     public:
         wxPyEvtDict() 
         {
-            m_dict = PyDict_New(); 
+            wxPyBLOCK_THREADS(m_dict = PyDict_New()); 
         }
             
         wxPyEvtDict(const wxPyEvtDict& other)
         {
-            m_dict = PyDict_Copy(other.m_dict);
+            wxPyBLOCK_THREADS(m_dict = PyDict_Copy(other.m_dict));
         }
         
         ~wxPyEvtDict()
@@ -48,7 +48,7 @@
 
         PyObject* _getAttrDict()
         {
-            Py_INCREF(m_dict);
+            wxPyBLOCK_THREADS( Py_INCREF(m_dict) );
             return m_dict;
         }
         

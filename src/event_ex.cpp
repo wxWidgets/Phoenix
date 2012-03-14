@@ -15,18 +15,16 @@ IMPLEMENT_ABSTRACT_CLASS(wxPyCallback, wxEvtHandler);
 
 wxPyCallback::wxPyCallback(PyObject* func) {
     m_func = func;
-    Py_INCREF(m_func);
+    wxPyBLOCK_THREADS( Py_INCREF(m_func) );
 }
 
 wxPyCallback::wxPyCallback(const wxPyCallback& other) {
     m_func = other.m_func;
-    Py_INCREF(m_func);
+    wxPyBLOCK_THREADS( Py_INCREF(m_func) );
 }
 
 wxPyCallback::~wxPyCallback() {
-    wxPyBlock_t blocked = wxPyBeginBlockThreads();
-    Py_DECREF(m_func);
-    wxPyEndBlockThreads(blocked);
+    wxPyBLOCK_THREADS( Py_DECREF(m_func) );
 }
 
 

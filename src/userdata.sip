@@ -26,15 +26,14 @@
         {
             m_obj = obj;
             m_incRef = incref;
-            if (incref)
-                Py_INCREF(m_obj);
+            if (incref) {
+                wxPyBLOCK_THREADS( Py_INCREF(m_obj) );
+            }
         }
         virtual ~wxPyUserData() 
         {
             if (m_incRef) {
-                // TODO: wxPyBlock_t blocked = wxPyBeginBlockThreads();
-                Py_DECREF(m_obj);
-                //wxPyEndBlockThreads(blocked);
+                wxPyBLOCK_THREADS( Py_DECREF(m_obj) );
             }
             m_obj = NULL;
         }
@@ -76,5 +75,8 @@
         Py_INCREF(obj);
         return obj;
     %End
-    
 };
+
+
+// NOTE TO SELF: It looks like the GIL is already held by the current thread
+// in ConvertToTypeCode and ConvertFromTypeCode code blocks...
