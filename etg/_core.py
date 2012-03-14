@@ -161,7 +161,7 @@ INCLUDES = [  'defs',
               'snglinst',
               'scrolwin',
               'vscroll',
-             
+              'infobar',
               ]
 
 

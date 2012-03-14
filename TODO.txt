@@ -172,7 +172,6 @@ other dev stuff
       * all missing common dialogs
       * print (as in print framework classes)
       * mdi (die mdi! die!)
-      * toolbar 
       * listctrl
       * treectrl
       * dirctrl
@@ -182,7 +181,6 @@ other dev stuff
       * hyperlink
       * pickerbase, clrpicker, filepicker, fontpicker
       * filectrl
-      * infobar
       * commandlinkbutton
       * axbase  (ActiveX.  Need to figure out best ways to do MSW-only items...)
       * settings
