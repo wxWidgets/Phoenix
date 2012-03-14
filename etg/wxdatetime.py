@@ -351,6 +351,30 @@ def run():
         bool operator!=(const wxTimeSpan &ts) const;
         """))
     
+
+    #---------------------------------------------
+    # Convert to/from Python date objects
+    module.addPyFunction('pydate2wxdate', '(date)', 
+        doc='Convert a Python date or datetime to a wx.DateTime object',
+        body="""\
+            import datetime
+            assert isinstance(date, (datetime.datetime, datetime.date))
+            return DateTime(date)  # the built-in typemap will convert it for us
+        """)
+    
+    module.addPyFunction('wxdate2pydate', '(date)', 
+        doc='Convert a wx.DateTime object to a Python datetime.',
+        body="""\
+            import datetime
+            assert isinstance(date, DateTime)
+            if date.IsValid():
+                return datetime.datetime(date.year, date.month+1, date.day,
+                                         date.hour, date.minute, date.second, date.millisecond*1000)
+            else:
+                return None
+            """)
+    
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

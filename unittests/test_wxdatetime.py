@@ -127,7 +127,16 @@ class datetime_Tests(wtc.WidgetTestCase):
         d2 = wx.DateTime()
         d2.ParseFormat(st, fmt)
         self.assertEqual(d, d2)
+
+
+    def test_datetimeConvertHelpers(self):
+        d1 = wx.DateTime(1, wx.DateTime.Mar, 2012, 8, 15, 45)
+        pd = wx.wxdate2pydate(d1)
+        d2 = wx.pydate2wxdate(pd)
+        self.assertTrue(isinstance(pd, datetime.datetime))
+        self.assertEqual(d1, d2)
         
+                                   
 #---------------------------------------------------------------------------
 
 
