@@ -92,7 +92,7 @@ def run():
             kind = wx.ITEM_NORMAL
             if isToggle: kind = wx.ITEM_CHECK
             return self.InsertTool(pos, toolId, '', bitmap, wx.NullBitmap, kind,
-                                     shortHelpString, longHelpString)
+                                   shortHelpString, longHelpString)
             """)
 
 
