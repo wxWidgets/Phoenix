@@ -209,6 +209,14 @@ other dev stuff
   * Check wxDialog::CreateTextSizer, is it wrapped?
   
   
+  
+Python 3.x
+----------
+If all goes well, only the build scripts and the custom code snippets that
+deal with PyObjects or use the Python API will need to be tweaked for Python
+3.x compatibility. For the code snippets appropriate #ifdefs can be used. SIP
+should take care of everything else for us.
+
 
 
 Daily builds and releases
