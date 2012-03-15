@@ -30,8 +30,7 @@ ITEMS  = [ ]
 
 INCLUDES = [
               'dataview',
-              'dataviewhelpers',
-           
+              'dataviewhelpers',          
            ]
 
 
@@ -54,6 +53,10 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
+    module.addHeaderCode("""\
+        #include <wx/wx.h>
+        #include "wxpy_utils.h"
+        """)
     module.addImport('_core')
     module.addInclude(INCLUDES)
     

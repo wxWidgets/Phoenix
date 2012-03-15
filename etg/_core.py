@@ -32,6 +32,7 @@ ITEMS  = [ ]
 INCLUDES = [  'defs',
               'object',
               'wxpy_utils',
+              'arrayholder',
               'string',
               'arrays',
               'clntdata',

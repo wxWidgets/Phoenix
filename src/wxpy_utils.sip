@@ -12,87 +12,27 @@
 
 
 %ModuleHeaderCode
-
-// Convert a wxString to a Python string (actually a PyUnicode object).
-// Assumes that the GIL has already been acquired.
-inline PyObject* wx2PyString(const wxString& str) {
-    return PyUnicode_FromWideChar(str.wc_str(), str.length());
-}
-
-// Convert a PyObject to a wxString
-// Assumes that the GIL has already been acquired.
-wxString Py2wxString(PyObject* source);
-   
-
-typedef PyGILState_STATE wxPyBlock_t;
-
-// Calls from Python to wxWindows code are wrapped in calls to these
-// functions:
-inline PyThreadState* wxPyBeginAllowThreads() {
-    PyThreadState* saved = PyEval_SaveThread();  // Like Py_BEGIN_ALLOW_THREADS;
-    return saved;
-}
-
-inline void wxPyEndAllowThreads(PyThreadState* saved) {
-    PyEval_RestoreThread(saved);   // Like Py_END_ALLOW_THREADS;
-}
-
-
-// Calls from wxWindows back to Python code, or even any PyObject
-// manipulations, PyDECREF's and etc. are wrapped in calls to these functions:
-inline wxPyBlock_t wxPyBeginBlockThreads() {
-    if (! Py_IsInitialized()) {
-        return (wxPyBlock_t)0;
-    }
-    PyGILState_STATE state = PyGILState_Ensure();
-    return state;
-}
-
-inline void wxPyEndBlockThreads(wxPyBlock_t blocked) {
-    if (! Py_IsInitialized()) {
-        return;
-    }            
-    PyGILState_Release(blocked);
-}
-
-
-// A macro that will help to execute simple statments wrapped in
-// StartBlock/EndBlockThreads calls
-#define wxPyBLOCK_THREADS(stmt) \
-    { wxPyBlock_t blocked = wxPyBeginBlockThreads(); stmt; wxPyEndBlockThreads(blocked); }
-
-// Raise any exception with a string value  (blocking threads)
-#define wxPyErr_SetString(err, str) \
-    wxPyBLOCK_THREADS(PyErr_SetString(err, str))
-
-   
-// Raise NotImplemented exceptions
-inline void wxPyRaiseNotImplemented() {
-    wxPyBLOCK_THREADS( PyErr_SetNone(PyExc_NotImplementedError) );
-}
-
-inline void wxPyRaiseNotImplementedMsg(const char* msg) {
-    wxPyBLOCK_THREADS( PyErr_SetString(PyExc_NotImplementedError, msg) );
-}
-
-
-
-
-// Create a PyObject of the requested type from a void* and a class name.
-// Assumes that the GIL has already been acquired.
-PyObject* wxPyConstructObject(void* ptr,
-                              const wxString& className,
-                              int setThisOwn=0);
-
+#include "wxpy_utils.h"
 %End
-
 
 //--------------------------------------------------------------------------
 
 
-
 %ModuleCode
 // Various wxPython helper/utility functions
+
+
+// Create a PyObject of the requested type from a void* and a class name.
+PyObject* wxPyConstructObject(void* ptr,
+                              const wxString& className,
+                              int setThisOwn)
+{
+    const sipTypeDef* td = sipFindType(className);
+    if (!td)
+        return NULL;
+    PyObject* transferObj = setThisOwn ? Py_None : NULL;
+    return sipConvertFromType(ptr, td, transferObj);     
+}
 
 
 // See also the wxString MappedType.  This code is similar, but doesn't 
@@ -126,7 +66,7 @@ wxString Py2wxString(PyObject* source)
         Py_DECREF(uni);  // release the temporary Unicode object we created
     return target;
 }
-    
+
     
 // TODO:  This might be a good way to share the string conversion code here and in string.sip...    
 // A function to convert a Python string or unicode object to a wxString
@@ -158,45 +98,7 @@ wxString Py2wxString(PyObject* source)
 //}
     
     
-// Create a PyObject of the requested type from a void* and a class name.
-PyObject* wxPyConstructObject(void* ptr,
-                              const wxString& className,
-                              int setThisOwn)
-{
-    const sipTypeDef* td = sipFindType(className);
-    if (!td)
-        return NULL;
-    PyObject* transferObj = setThisOwn ? Py_None : NULL;
-    return sipConvertFromType(ptr, td, transferObj);     
-}
 %End
 
-//--------------------------------------------------------------------------
-// Sometimes we need to hold on to a C array and keep it alive, but typical
-// SIP code will treat it as a temporary and delete it as soon as the ctor or
-// method call is done. This class can hold a pointer to the array and will
-// delete the array in its dtor, and by making this class be wrappable we can
-// make a PyObject for it that is then owned by some other object, and
-// Python's GC will take care of the delaying the cleanup until it's no longer
-// needed.
-template <Type>
-class wxCArrayHolder
-{
-%TypeHeaderCode
-#include "arrayholder.h"
-%End
-    
-public:
-    wxCArrayHolder();
-    ~wxCArrayHolder();
-    
-private:
-    wxCArrayHolder(const wxCArrayHolder<Type>&);  // no copies    
-    wxCArrayHolder& operator=(wxCArrayHolder<Type>); // no assignment
-};
-
-typedef wxCArrayHolder<int>      wxIntCArrayHolder;
-typedef wxCArrayHolder<wxString> wxStringCArrayHolder;
-typedef wxCArrayHolder<wxDash>   wxDashCArrayHolder;
 
 //--------------------------------------------------------------------------
