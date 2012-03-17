@@ -241,10 +241,11 @@ class Configuration(object):
         
                 self.libs = ['stdc++']
                 if not self.ARCH == "":
-                    self.cflags.append("-arch")
-                    self.cflags.append(self.ARCH)
-                    self.lflags.append("-arch")
-                    self.lflags.append(self.ARCH)
+                    for arch in self.ARCH.split(','):
+                        self.cflags.append("-arch")
+                        self.cflags.append(arch)
+                        self.lflags.append("-arch")
+                        self.lflags.append(arch)
         
                 if not os.environ.get('CC') or not os.environ.get('CXX'):
                     self.CC =  os.environ["CC"]  = self.getWxConfigValue('--cc')
