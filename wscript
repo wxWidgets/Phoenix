@@ -68,6 +68,15 @@ def configure(conf):
         # sets of flags stored to use with different extension modules below.
         # WXGL, WXHTML, etc.
 
+        # NOTE: This assumes that if the platform is not win32 (from
+        # the test above) and not darwin then we must be using the
+        # GTK2 port of wxWidgets.  If we ever support other ports then
+        # this code will need to be adjusted.
+        if sys.platform != 'darwin':
+            gtkflags = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
+            conf.env.CFLAGS_WX   += gtkflags.split()
+            conf.env.CXXFLAGS_WX += gtkflags.split()
+
         # finish configuring the Config object
         cfg.finishSetup(conf.env.wx_config, conf.env.debug)
 
@@ -156,7 +165,7 @@ def build(bld):
  
     # Create the build tasks for each of our extension modules.
     siplib = bld(
-        features = 'c cxx cxxshlib pyext',
+        features = 'c cxx cshlib cxxshlib pyext',
         target   = 'siplib',
         source   = ['sip/siplib/apiversions.c',
                     'sip/siplib/bool.cpp',
@@ -170,7 +179,7 @@ def build(bld):
         uselib   = 'WX WXPY',
     )  
     makeExtCopyRule(bld, 'siplib')
-    
+
     
     etg = loadETG('etg/_core.py')
     rc = ['src/wxc.rc'] if sys.platform == 'win32' else []

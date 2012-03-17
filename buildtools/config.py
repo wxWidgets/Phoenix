@@ -226,7 +226,9 @@ class Configuration(object):
             self.WXBASENAME = self.getWxConfigValue('--basename')
             self.WXRELEASE  = self.getWxConfigValue('--release')
             self.WXPREFIX   = self.getWxConfigValue('--prefix')
-        
+
+            self.CC = self.CXX = None
+
             # wxMac settings
             if sys.platform[:6] == "darwin":
                 self.WXPLAT = '__WXMAC__'
@@ -244,7 +246,6 @@ class Configuration(object):
                     self.lflags.append("-arch")
                     self.lflags.append(self.ARCH)
         
-                self.CC = self.CXX = None
                 if not os.environ.get('CC') or not os.environ.get('CXX'):
                     self.CC =  os.environ["CC"]  = self.getWxConfigValue('--cc')
                     self.CXX = os.environ["CXX"] = self.getWxConfigValue('--cxx')
