@@ -268,7 +268,7 @@ def makeOptionParser():
         ("verbose",        (False, "Print out more information.")),
         ("nodoc",          (False, "Do not run the default docs generator")),
         ("upload_package", (False, "Upload bdist package to nightly server.")),
-        ("cairo",          (False, "Use Cairo for wxGraphicsContext instaed of native (Win only)")),
+        ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
         ]
 
     parser = optparse.OptionParser("build options:")
