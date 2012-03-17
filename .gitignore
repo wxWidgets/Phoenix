@@ -18,6 +18,7 @@
 
 # /bin/
 /bin/sip-*
+/bin/waf-*
 
 # /docs/sphinx/
 /docs/sphinx/*.txt

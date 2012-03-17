@@ -150,6 +150,9 @@ def build(bld):
     if sys.platform in ['win32', 'darwin']:
         cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
 
+    # copy __init__.py
+    copy_file('src/__init__.py', cfg.PKGDIR, update=1, verbose=1)
+ 
  
     # Create the build tasks for each of our extension modules.
     siplib = bld(

@@ -44,6 +44,10 @@ sipCurrentVersionMD5 = {
     'win32'  : 'b5885b420b7fe16e9dc5e32ef381a847', 
     'linux2' : '5956f74dc9a1e0673633e7a494705dca', 
 }
+
+wafCurrentVersion = '1.6.11'
+wafCurrentVersionMD5 = '9a631fda1e570da8e4813faf9f3c49a4'
+
 toolsURL = 'http://wxpython.org/Phoenix/tools'
 
 #---------------------------------------------------------------------------
@@ -67,9 +71,12 @@ Usage: ./build.py [command(s)] [options]
       test          Run the unit test suite
       test_*        Run just one test module
         
-      build_wx      Do the wxWidgets part of the build
-      build_py      Build wxPython only
       build         Build both wxWidgets and wxPython
+      build_wx      Do only the wxWidgets part of the build
+
+      setup_py      Build wxPython only, using setup.py
+      waf_py        Build wxPython only, using waf
+      build_py      Alias for "setup_py"
         
       bdist         Create a binary release of wxPython Phoenix
         
@@ -113,7 +120,7 @@ def main(args):
         if cmd.startswith('test_'):
             testOne(cmd, options, args)
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
-                     'build_wx', 'build_py', 'build', 'bdist',
+                     'build_wx', 'build_py', 'setup_py', 'waf_py', 'build', 'bdist',
                      'clean', 'clean_wx', 'clean_py', 'cleanall', 'clean_sphinx',
                      'sphinx']:
             function = globals()[cmd]
@@ -207,6 +214,7 @@ def setDevModeOptions(args):
     myDevModeOptions = [
             '--build_dir=../bld',
             '--prefix=/opt/wx/2.9',
+            '--jobs=%s' % numCPUs(),
 
             # These will be ignored on the other platforms so it is okay to
             # include them unconditionally
@@ -214,6 +222,7 @@ def setDevModeOptions(args):
             '--mac_arch=x86_64',
             #'--osx_carbon',
             #'--mac_arch=i386',
+            #'--mac_arch=i386,x86_64',
             ]
     if not isWindows:
         myDevModeOptions.append('--debug')
@@ -222,6 +231,29 @@ def setDevModeOptions(args):
         # replace the --dev item with the items from the list
         args[idx:idx+1] = myDevModeOptions
 
+
+def numCPUs():
+    """
+    Detects the number of CPUs on a system.
+    This approach is from detectCPUs here: http://www.artima.com/weblogs/viewpost.jsp?thread=230001
+    """
+    # Linux, Unix and MacOS:
+    if hasattr(os, "sysconf"):
+        if os.sysconf_names.has_key("SC_NPROCESSORS_ONLN"):
+            # Linux & Unix:
+            ncpus = os.sysconf("SC_NPROCESSORS_ONLN")
+            if isinstance(ncpus, int) and ncpus > 0:
+                return ncpus
+        else: # OSX:
+            p = subprocess.Popen("sysctl -n hw.ncpu", shell=True, stdout=subprocess.PIPE)
+            return p.stdout.read()
+            
+    # Windows:
+    if os.environ.has_key("NUMBER_OF_PROCESSORS"):
+            ncpus = int(os.environ["NUMBER_OF_PROCESSORS"]);
+            if ncpus > 0:
+                return ncpus
+    return 1 # Default
     
 
 def getMSWSettings(options):
@@ -250,8 +282,7 @@ def makeOptionParser():
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
-        ("mac_universal_binary",(False, "Build Mac version as a universal binary")),
-        ("mac_arch",       ("", "Build just the specified architecture on Mac")),
+        ("mac_arch",       ("", "Comma separated list of architectures to build on Mac")),
         ("force_config",   (False, "Run configure when building even if the script determines it's not necessary.")),
         ("no_config",      (False, "Turn off configure step on autoconf builds")),
         ("prefix",         ("/usr/local", "Prefix value to pass to the wx build.")),
@@ -261,10 +292,10 @@ def makeOptionParser():
         ("build_dir",      ("", "Directory to store wx build files. (Not used on Windows)")),
         ("extra_setup",    ("", "Extra args to pass on setup.py's command line.")),
         ("extra_make",     ("", "Extra args to pass on [n]make's command line.")),
+        ("extra_waf",      ("", "Extra args to pass on waf's command line.")),   
         ("jobs",           ("", "Number of parallel compile jobs to do, if supported.")), 
         ("both",           (False, "Build both a debug and release version. (Only used on Windows)")),
         ("unicode",        (True, "Build wxPython with unicode support (always on for wx2.9)")),
-        ("waf",            (False, "Use waf to build the bindings.")),
         ("verbose",        (False, "Print out more information.")),
         ("nodoc",          (False, "Do not run the default docs generator")),
         ("upload_package", (False, "Upload bdist package to nightly server.")),
@@ -396,6 +427,56 @@ def getSipCmd():
 # cmd value here the first time through.
 _sipCmd = None
 
+
+# Same thing for WAF, except it is not a platform specific binary and is not
+# compressed...
+_wafCmd = None
+
+# TODO: Refactor this and getSipCmd to share code as much as possible.
+
+def getWafCmd():
+    # Returns the waf command to use, checking for an explicit version and
+    # attempts to download it if it is not found in the bin dir. Validity of
+    # the binary is checked with an MD5 hash.
+    global _wafCmd
+    if os.environ.get('WAF'):
+        # Setting a a value in the environment overrides other options
+        return os.environ.get('WAF')
+    elif _wafCmd is not None:
+        # use the cached value is there is one
+        return _wafCmd
+    else:
+        cmd = opj('bin', 'waf-%s' % wafCurrentVersion)
+        msg('Checking for %s...' % cmd)
+        if os.path.exists(cmd):
+            m = hashlib.md5()
+            m.update(open(cmd, 'rb').read())
+            if m.hexdigest() != wafCurrentVersionMD5:
+                print 'ERROR: MD5 mismatch, got "%s"' % m.hexdigest()
+                print '       expected          "%s"' % wafCurrentVersionMD5
+                print '       Set WAF in the environment to use a local build of waf instead'
+                sys.exit(1)
+            _wafCmd = cmd
+            return cmd
+        
+        msg('Not found.  Attempting to download...')
+        url = '%s/waf-%s' % (toolsURL, wafCurrentVersion)
+        try:
+            connection = urllib2.urlopen(url)
+            msg('Connection successful...')
+            data = connection.read()
+            msg('Data downloaded...')
+        except:
+            print "ERROR: Unable to download", url
+            print "       Set WAF in the environment to use a local build of waf instead"
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
+            
+        with open(cmd, 'wb') as f:
+            f.write(data)
+        #os.chmod(cmd, 0755)
+        return getWafCmd()
 
 
 #---------------------------------------------------------------------------
@@ -609,10 +690,8 @@ def build_wx(options, args):
             
         if not os.path.exists(BUILD_DIR):
             os.makedirs(BUILD_DIR)
-        if options.mac_universal_binary:
-            build_options.append("--mac_universal_binary")
         if  options.mac_arch: 
-            build_options.append("--mac_arch=%s" % options.mac_arch)
+            build_options.append("--mac_universal_binary=%s" % options.mac_arch)
 
         if options.no_config:
             build_options.append('--no_config')
@@ -683,9 +762,16 @@ def build_wx(options, args):
               "         Please install gettext and associated tools."
     
             
-    
+# While transitioning to waf this is an alias that will call the distutils
+# build by default.
 def build_py(options, args):
     msg('Running command: build_py')
+    setup_py(options, args)
+    #waf_py(options, args)
+    
+    
+def setup_py(options, args):
+    msg('Running command: setup_py')
 
     if isWindows:
         # Copy the wxWidgets DLLs to the wxPython pacakge folder
@@ -745,17 +831,7 @@ def build_py(options, args):
     pwd = pushDir(phoenixDir())
     
     # Do the build step
-    if options.waf:
-        os.environ["PATH"] = BUILD_DIR + os.pathsep + os.environ["PATH"]
-        
-        waf_args = "configure build install"
-        for arg in args:
-            if arg.startswith("clean"):
-                waf_args = "clean distclean"
-                
-        command = "./waf %s -v -j6 --wx-config=%s/wx-config" % (waf_args, BUILD_DIR)
-    else:
-        command = PYTHON + " -u ./setup.py %s %s %s" % \
+    command = PYTHON + " -u ./setup.py %s %s %s" % \
             (build_mode, " ".join(build_options), options.extra_setup)
     
     runcmd(command)
@@ -840,9 +916,9 @@ def clean_py(options, args):
         else:
             build_base += '/carbon'
     deleteIfExists(build_base)
+    deleteIfExists('build_waf')  # make this smarter later, or just use 'build' for waf too
     files = list()
-    for wc in ['*.py', '*.pyc', '*.so', '*.pyd', '*.pdb',
-               ]:
+    for wc in ['*.py', '*.pyc', '*.so', '*.pyd', '*.pdb', '*.pi']:
         files += glob.glob(opj(cfg.PKGDIR, wc))
     if isWindows:
         msw = getMSWSettings(options)
@@ -856,6 +932,33 @@ def clean_py(options, args):
         options.both = False
         clean_py(options, args)
         options.both = True
+
+
+def waf_py(options, args):
+    msg('Running command: waf_py')
+    waf = getWafCmd()
+
+    BUILD_DIR = getBuildDir(options)
+    DESTDIR = options.installdir
+    PREFIX = options.prefix
+    
+    build_options = list()
+    build_options.append('--prefix=%s' % PREFIX)
+    if options.debug or (isWindows and options.both):
+        build_options.append("--debug")
+    if isDarwin and options.mac_arch: 
+        build_options.append("--mac_arch=%s" % options.mac_arch)
+    if not isWindows:
+        build_options.append('--wx_config=%s' % opj(BUILD_DIR, 'wx-config'))
+    if options.verbose:
+        build_options.append('--verbose')
+    if options.jobs:
+        build_options.append('--jobs=%s' % options.jobs)
+        
+    pwd = pushDir(phoenixDir())
+    cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
+    runcmd(cmd)
+
 
     
 def clean_sphinx(options, args):

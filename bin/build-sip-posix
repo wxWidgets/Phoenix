@@ -55,7 +55,7 @@ $PYTHON mymd5.py sip-$SIPVER-$PLATFORM
 echo ""
 echo "If ready to upload then do these commands now:"
 echo "    bzip2 $MYBINDIR/sip-$SIPVER-$PLATFORM"
-echo "    scp $MYBINDIR/sip-$SIPVER-$PLATFORM.bz2 robind@riobu.com:/home/robind/domains/wxpython.org/htdocs/tools"
+echo "    scp $MYBINDIR/sip-$SIPVER-$PLATFORM.bz2 robind@riobu.com:/home/robind/domains/wxpython.org/htdocs/Phoenix/tools"
 
 if [ "$SDKWARNING" == "yes" ]; then
     echo ""
