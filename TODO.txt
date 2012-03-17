@@ -195,6 +195,7 @@ other dev stuff
       * power
       * about
       * overlay
+      * PseudoDC
       
   * Divide Phoenix core into multiple modules. Perhaps using the same
     divisions that a wx multi-lib build uses would be a good idea. OTOH, doing
