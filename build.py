@@ -261,6 +261,7 @@ def makeOptionParser():
         ("build_dir",      ("", "Directory to store wx build files. (Not used on Windows)")),
         ("extra_setup",    ("", "Extra args to pass on setup.py's command line.")),
         ("extra_make",     ("", "Extra args to pass on [n]make's command line.")),
+        ("jobs",           ("", "Number of parallel compile jobs to do, if supported.")), 
         ("both",           (False, "Build both a debug and release version. (Only used on Windows)")),
         ("unicode",        (True, "Build wxPython with unicode support (always on for wx2.9)")),
         ("waf",            (False, "Use waf to build the bindings.")),
@@ -586,8 +587,8 @@ def build_wx(options, args):
 
     build_options = ['--wxpython', '--unicode']
 
-    if os.environ.get('JOBS', None):
-        build_options.append('--jobs=%d' % os.environ.get('MAKE_JOBS'))
+    if options.jobs:
+        build_options.append('--jobs=%s' % options.jobs)
 
     if isWindows:
         # Windows-specific pre build stuff 
