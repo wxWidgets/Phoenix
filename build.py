@@ -15,6 +15,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import datetime
 import urllib2
 
 from distutils.dep_util import newer, newer_group
@@ -479,6 +480,21 @@ def getWafCmd():
         return getWafCmd()
 
 
+class CommandTimer(object):
+    def __init__(self, name):
+        self.name = name
+        self.startTime = datetime.datetime.now()
+        msg('Running command: %s' % self.name)
+        
+    def __del__(self):
+        delta = datetime.datetime.now() - self.startTime
+        time = ""
+        if delta.seconds / 60 > 0:
+            time = "%dm" % (delta.seconds / 60)
+        time += "%d.%ds" % (delta.seconds % 60, delta.microseconds / 1000)
+        msg('Finished command: %s (%s)' % (self.name, time))            
+
+
 #---------------------------------------------------------------------------
 # Command functions
 #---------------------------------------------------------------------------
@@ -496,19 +512,19 @@ def _doDox(arg):
 
     
 def dox(options, args):
-    msg('Running command: dox')
+    cmdTimer = CommandTimer('dox')
     _doDox('xml')
     
     
 def doxhtml(options, args):
-    msg('Running command: doxhtml')
+    cmdTimer = CommandTimer('doxhtml')
     _doDox('html')
     _doDox('chm')
     
     
 
 def etg(options, args):
-    msg('Running command: etg')
+    cmdTimer = CommandTimer('etg')
     pwd = pushDir(phoenixDir())
 
     # TODO: Better support for selecting etg cmd-line flags...
@@ -537,7 +553,7 @@ def etg(options, args):
 def sphinx(options, args):
     from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
 
-    msg('Running command: sphinx')
+    cmdTimer = CommandTimer('sphinx')
     pwd = pushDir(phoenixDir())
 
     sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
@@ -579,7 +595,7 @@ def sphinx(options, args):
     
     
 def sip(options, args):
-    msg('Running command: sip')
+    cmdTimer = CommandTimer('sip')
     cfg = Config()
     for src_name in glob.glob(opj(cfg.SIPGEN, '_*.sip')):
         tmpdir = tempfile.mkdtemp()
@@ -639,33 +655,33 @@ def sip(options, args):
     
     
 def touch(options, args):
-    msg('Running command: touch')
+    cmdTimer = CommandTimer('touch')
     pwd = pushDir(phoenixDir())
     runcmd('touch etg/*.py')
     
     
 def test(options, args):
-    msg('Running command: test')
+    cmdTimer = CommandTimer('test')
     pwd = pushDir(phoenixDir())
     runcmd(PYTHON + ' unittests/runtests.py %s' % ('-v' if options.verbose else ''), fatal=False)
 
     
 def testOne(name, options, args):
-    msg('Running test %s:' % name)
+    cmdTimer = CommandTimer('test %s:' % name)
     pwd = pushDir(phoenixDir())
     runcmd(PYTHON + ' unittests/%s.py %s' % (name, '-v' if options.verbose else ''), fatal=False)
     
     
 def build(options, args):
-    msg('Running command: build')
+    cmdTimer = CommandTimer('build')
     build_wx(options, args)
     build_py(options, args)
 
     
 
 def build_wx(options, args):
-    msg('Running command: build_wx')
-
+    cmdTimer = CommandTimer('build_wx')
+    
     build_options = ['--wxpython', '--unicode']
 
     if options.jobs:
@@ -760,18 +776,20 @@ def build_wx(options, args):
     else:
         print "WARNING: msgfmt command not found, message catalogs not rebulit.\n" \
               "         Please install gettext and associated tools."
+        
     
+        
             
 # While transitioning to waf this is an alias that will call the distutils
 # build by default.
 def build_py(options, args):
-    msg('Running command: build_py')
+    cmdTimer = CommandTimer('build_py')
     setup_py(options, args)
     #waf_py(options, args)
     
     
 def setup_py(options, args):
-    msg('Running command: setup_py')
+    cmdTimer = CommandTimer('setup_py')
 
     if isWindows:
         # Copy the wxWidgets DLLs to the wxPython pacakge folder
@@ -882,7 +900,7 @@ def setup_py(options, args):
 
     
 def clean_wx(options, args):
-    msg('Running command: clean_wx')
+    cmdTimer = CommandTimer('clean_wx')
     if isWindows:
         if options.both:
             options.debug = True
@@ -904,7 +922,7 @@ def clean_wx(options, args):
     
 
 def clean_py(options, args):
-    msg('Running command: clean_py')
+    cmdTimer = CommandTimer('clean_py')
     assert os.getcwd() == phoenixDir()
     if isWindows and options.both:
         options.debug = True
@@ -935,7 +953,7 @@ def clean_py(options, args):
 
 
 def waf_py(options, args):
-    msg('Running command: waf_py')
+    cmdTimer = CommandTimer('waf_py')
     waf = getWafCmd()
 
     BUILD_DIR = getBuildDir(options)
@@ -962,7 +980,7 @@ def waf_py(options, args):
 
     
 def clean_sphinx(options, args):
-    msg('Running command: clean_sphinx')
+    cmdTimer = CommandTimer('clean_sphinx')
     assert os.getcwd() == phoenixDir()
 
     sphinxDir = opj(phoenixDir(), 'docs', 'sphinx')
@@ -1004,7 +1022,7 @@ def cleanall(options, args):
     
     # Now also scrub out all of the SIP and C++ source files that are
     # generated by the Phoenix ETG system.
-    msg('Running command: cleanall')
+    cmdTimer = CommandTimer('cleanall')
     assert os.getcwd() == phoenixDir()
     files = list()
     for wc in ['sip/cpp/*.h', 'sip/cpp/*.cpp', 'sip/cpp/*.sbf', 'sip/gen/*.sip']:
