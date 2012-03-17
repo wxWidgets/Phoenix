@@ -13,6 +13,28 @@
 #ifndef _WXPY_UTILS_H
 #define _WXPY_UTILS_H
 
+#if defined(__APPLE__)
+    // When it's possible that we're building universal binaries with both
+    // 32-bit and 64-bit architectures then these need to be undefed because
+    // otherwise the values set by configure could conflict with those set
+    // based on runtime flags in Python's headers.  We also do something
+    // similar in wx/platform.h so it's okay to undef them now because they
+    // will be defined again soon.
+    #undef SIZEOF_VOID_P
+    #undef SIZEOF_LONG
+    #undef SIZEOF_SIZE_T
+
+    // Turn off the warning about converting string literals to char*
+    // TODO: fix these the right way...
+    #pragma GCC diagnostic ignored "-Wwrite-strings"
+#endif
+#ifdef _MSC_VER
+    #pragma warning(disable:4800)
+    #pragma warning(disable:4190)
+#endif
+
+#include <wx/wx.h>
+
 
 // Convert a wxString to a Python string (actually a PyUnicode object).
 // Assumes that the GIL has already been acquired.
