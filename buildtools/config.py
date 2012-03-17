@@ -129,10 +129,20 @@ class Configuration(object):
                          ]
             
         if noWxConfig:
-            # this is as far as we go
+            # this is as far as we go for now
             return
 
+        # otherwise do the rest of it
+        self.finishSetup()
         
+        
+    def finishSetup(self, wx_config=None, debug=None):
+        if wx_config is not None:
+            self.WX_CONFIG = wx_config
+
+        if debug is not None:
+            self.debug = debug
+            
         #---------------------------------------
         # MSW specific settings
         if os.name == 'nt' and  self.COMPILER == 'msvc':
@@ -157,7 +167,7 @@ class Configuration(object):
                              (self.WXPLAT, None),
                              ('WXUSINGDLL', '1'),
                              ('ISOLATION_AWARE_ENABLED', None),
-                             ('NDEBUG',),  # using a 1-tuple makes it do an undef
+                             #('NDEBUG',),  # using a 1-tuple makes it do an undef
                              ]
         
             self.libs = []
@@ -178,7 +188,8 @@ class Configuration(object):
                           'odbc32', 'ole32', 'oleaut32', 'uuid', 'rpcrt4',
                           'advapi32', 'wsock32']
         
-            self.cflags = [ '/Gy',
+            self.cflags = [ '/UNDEBUG',
+                            '/Gy',
                             '/EHsc',
                             # '/GX-'  # workaround for internal compiler error in MSVC on some machines
                             ]
@@ -195,7 +206,7 @@ class Configuration(object):
         elif os.name == 'posix' or COMPILER == 'mingw32':
             self.Verify_WX_CONFIG()
             self.includes += ['include']
-            self.defines = [ ('NDEBUG',),  # using a 1-tuple makes it do an undef                            
+            self.defines = [ #('NDEBUG',),  # using a 1-tuple makes it do an undef                            
                              ]
             self.libdirs = []
             self.libs = []
@@ -233,9 +244,10 @@ class Configuration(object):
                     self.lflags.append("-arch")
                     self.lflags.append(self.ARCH)
         
+                self.CC = self.CXX = None
                 if not os.environ.get('CC') or not os.environ.get('CXX'):
-                    os.environ["CXX"] = self.getWxConfigValue('--cxx')
-                    os.environ["CC"]  = self.getWxConfigValue('--cc')
+                    self.CC =  os.environ["CC"]  = self.getWxConfigValue('--cc')
+                    self.CXX = os.environ["CXX"] = self.getWxConfigValue('--cxx')
                     
             # wxGTK settings
             else:
@@ -272,10 +284,22 @@ class Configuration(object):
             # into the distutils lists.
             self.cflags = self.adjustCFLAGS(self.cflags, self.defines, self.includes)
             self.lflags = self.adjustLFLAGS(self.lflags, self.libdirs, self.libs)
+
+            self.cflags.insert(0, '-UNDEBUG')
         
             if self.debug and self.WXPORT == 'msw' and self.COMPILER != 'mingw32':
                 self.defines.append( ('_DEBUG', None) )
-            
+
+        # WAF wants a simple list of strings, so convert self.defines in case
+        # we'll be using that instead of distutils
+        self.wafDefines = []
+        for d in self.defines:
+            if len(d) > 1:
+                name, val = d
+                if val:
+                    name = name+'='+val
+                self.wafDefines.append(name)
+                    
 
     # ---------------------------------------------------------------
     # Helper functions

@@ -3,12 +3,15 @@
 *.pyd
 *.pdb
 *.dll
+.waf-*
+.lock-waf*
 
 
 # /
 /.hg
 /.hgignore
 /build
+/build_waf
 /tmp
 /dist
 /license
