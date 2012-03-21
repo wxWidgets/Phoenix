@@ -780,25 +780,21 @@ def build_wx(options, args):
     
         
             
-# While transitioning to waf this is an alias that will call the distutils
-# build by default.
+# While transitioning to waf this is an alias that will call the old
+# distutils build by default.
 def build_py(options, args):
     cmdTimer = CommandTimer('build_py')
     setup_py(options, args)
     #waf_py(options, args)
-    
-    
-def setup_py(options, args):
-    cmdTimer = CommandTimer('setup_py')
 
+
+    
+def copyWxDlls(options):
     if isWindows:
         # Copy the wxWidgets DLLs to the wxPython pacakge folder
         msw = getMSWSettings(options)
         cfg = Config()
 
-        # NOTE: this will copy both debug and release DLLs if they both
-        # exist... TODO: It would probably be a good idea to filter out the
-        # debug files unless --debug is given.
         ver = version3_nodot if unstable_series else version2_nodot
         dlls = list()
         if not options.debug or options.both:
@@ -810,6 +806,13 @@ def setup_py(options, args):
         for dll in dlls:
             shutil.copyfile(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)))
 
+    
+    
+def setup_py(options, args):
+    cmdTimer = CommandTimer('setup_py')
+
+    copyWxDlls(options)
+    
     BUILD_DIR = getBuildDir(options)
     DESTDIR = options.installdir
     PREFIX = options.prefix
@@ -886,9 +889,47 @@ def setup_py(options, args):
                 if line.endswith('.so'):
                     macFixDependencyInstallName(DESTDIR, PREFIX, line, BUILD_DIR)
                 
-    ## update the language files
-    #command = PYTHON + " -u " + os.path.join(phoenixDir(), "distrib", "makemo.py")
-    #runcmd(command)
+    print "\n------------ BUILD FINISHED ------------"
+    print "To run the wxPython demo:"
+    print " - Set your PYTHONPATH variable to %s." % phoenixDir()
+    if not isWindows and not options.install:
+        print " - Set your (DY)LD_LIBRARY_PATH to %s" % BUILD_DIR + "/lib"
+    print " - Run python demo/demo.py"
+    print
+
+
+
+def waf_py(options, args):
+    cmdTimer = CommandTimer('waf_py')
+    waf = getWafCmd()
+
+    copyWxDlls(options)
+
+    BUILD_DIR = getBuildDir(options)
+    DESTDIR = options.installdir
+    PREFIX = options.prefix
+    
+    build_options = list()
+    build_options.append('--prefix=%s' % PREFIX)
+    if options.debug or (isWindows and options.both):
+        build_options.append("--debug")
+    if isDarwin and options.mac_arch: 
+        build_options.append("--mac_arch=%s" % options.mac_arch)
+    if not isWindows:
+        build_options.append('--wx_config=%s' % opj(BUILD_DIR, 'wx-config'))
+    if options.verbose:
+        build_options.append('--verbose')
+    if options.jobs:
+        build_options.append('--jobs=%s' % options.jobs)
+        
+    pwd = pushDir(phoenixDir())
+    cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
+    runcmd(cmd)
+
+    if isWindows and options.both:
+        build_options.remove('--debug')
+        cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
+        runcmd(cmd)
 
     print "\n------------ BUILD FINISHED ------------"
     print "To run the wxPython demo:"
@@ -897,6 +938,7 @@ def setup_py(options, args):
         print " - Set your (DY)LD_LIBRARY_PATH to %s" % BUILD_DIR + "/lib"
     print " - Run python demo/demo.py"
     print
+
 
     
 def clean_wx(options, args):
@@ -950,32 +992,6 @@ def clean_py(options, args):
         options.both = False
         clean_py(options, args)
         options.both = True
-
-
-def waf_py(options, args):
-    cmdTimer = CommandTimer('waf_py')
-    waf = getWafCmd()
-
-    BUILD_DIR = getBuildDir(options)
-    DESTDIR = options.installdir
-    PREFIX = options.prefix
-    
-    build_options = list()
-    build_options.append('--prefix=%s' % PREFIX)
-    if options.debug or (isWindows and options.both):
-        build_options.append("--debug")
-    if isDarwin and options.mac_arch: 
-        build_options.append("--mac_arch=%s" % options.mac_arch)
-    if not isWindows:
-        build_options.append('--wx_config=%s' % opj(BUILD_DIR, 'wx-config'))
-    if options.verbose:
-        build_options.append('--verbose')
-    if options.jobs:
-        build_options.append('--jobs=%s' % options.jobs)
-        
-    pwd = pushDir(phoenixDir())
-    cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
-    runcmd(cmd)
 
 
     

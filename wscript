@@ -36,9 +36,16 @@ def options(opt):
 
 
 def configure(conf):
-    conf.load('compiler_cc compiler_cxx python')
+    if sys.platform == 'win32':
+	conf.env['MSVC_VERSIONS'] = ['msvc 9.0']
+	conf.env['MSVC_TARGETS'] = ['x86']
+	conf.load('msvc python')
+        pass
+    else:
+        conf.load('compiler_cc compiler_cxx python')
+    
     if conf.options.python:
-        conf.env.PYTHON = [conf.options.python]
+	conf.env.PYTHON = [conf.options.python]
     conf.check_python_headers()
     conf.check_python_version(minver=(2,7,0))
             
@@ -47,17 +54,22 @@ def configure(conf):
 
     # Ensure that the headers in siplib and Phoenix's src dir can be found
     conf.env.INCLUDES_WXPY = ['sip/siplib', 'src']
-    
-    # Create the other WXPY lib variables we'll be using below
-    conf.env.CFLAGS_WXPY = []
-    conf.env.CXXFLAGS_WXPY = []
-    conf.env.ARCH_WXPY = []
-
-    
+        
     if sys.platform == 'win32':
-        # Windows/MSVC specific stuff     TODO
-        pass
-    else:
+        # Windows/MSVC specific stuff
+
+        cfg.finishSetup(debug=conf.env.debug)
+	
+        conf.env.INCLUDES_WX = cfg.includes
+	conf.env.DEFINES_WX = cfg.wafDefines
+        conf.env.CFLAGS_WX = cfg.cflags
+        conf.env.CXXFLAGS_WX = cfg.cflags
+	conf.env.LIBPATH_WX = cfg.libdirs
+	conf.env.LIB_WX = cfg.libs
+	conf.env.LIBFLAGS_WX = cfg.lflags
+
+	
+    else:  # Non-Windows, use wx-config
         # Configuration stuff for ports using wx-config
         
         # Check wx-config exists and fetch some values from it
@@ -118,9 +130,9 @@ def configure(conf):
             if conf.options.mac_arch:
                 conf.env.ARCH_WXPY = conf.options.mac_arch.split(',')
                 
-                    
-        #import pprint
-        #pprint.pprint( [(k, conf.env[k]) for k in conf.env.keys()] )
+		
+    #import pprint
+    #pprint.pprint( [(k, conf.env[k]) for k in conf.env.keys()] )
 
 #-----------------------------------------------------------------------------
 # Build command
@@ -180,7 +192,7 @@ def build(bld):
     )  
     makeExtCopyRule(bld, 'siplib')
 
-    
+
     etg = loadETG('etg/_core.py')
     rc = ['src/wxc.rc'] if sys.platform == 'win32' else []
     core = bld(
