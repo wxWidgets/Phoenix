@@ -116,17 +116,12 @@ Exceptions
 
 
 
-build.py
---------
-    * Update wscript to support some of the same (or similar) capabilities
-      we have with setup.py.
+Build
+-----
+    * Update wscript to support installation of the wxPython package, either
+      to the site-pacakges dir of the active Python or to a DESTROOT for when
+      building installer packages.
 
-    * Change from using a --waf option to being a "waf" command like
-      the other build.py commands, and assume that any other items on
-      the command line after the waf command are to be passed on the
-      waf command line when it is run.  If there are not any other
-      items on the command line then use a default set of waf
-      commands. 
 
 
 
