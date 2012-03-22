@@ -199,7 +199,7 @@ other dev stuff
     module might not be so bad...
     
     We will likely need to have a way to export (like with a CObject) some of
-    the helper functions in wxpy_utils.sip from the core module so they can
+    the helper functions in wxpy_api.sip from the core module so they can
     be used in the other extension modules...
 
   * Check wxDialog::CreateTextSizer, is it wrapped?

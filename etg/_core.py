@@ -31,7 +31,7 @@ ITEMS  = [ ]
 
 INCLUDES = [  'defs',
               'object',
-              'wxpy_utils',
+              'wxpy_api',
               'arrayholder',
               'string',
               'arrays',
@@ -187,7 +187,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    module.addHeaderCode('#include <wxpy_utils.h>')
+    module.addHeaderCode('#include <wxpy_aip.h>')
     
     module.addInclude(INCLUDES)
     module.includePyCode('src/core_ex.py', order=10)

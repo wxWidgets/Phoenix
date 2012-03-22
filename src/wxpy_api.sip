@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------
-// Name:        wxpy_utils.sip
+// Name:        wxpy_api.sip
 // Purpose:     Some utility functions and such that can be used in other 
 //              snippets of C++ code to help reduce complexity, etc.
 //
@@ -12,7 +12,7 @@
 
 
 %ModuleHeaderCode
-#include "wxpy_utils.h"
+#include "wxpy_api.h"
 %End
 
 //--------------------------------------------------------------------------

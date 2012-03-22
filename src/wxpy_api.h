@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------
-// Name:        wxpy_utils.h
+// Name:        wxpy_api.h
 // Purpose:     Some utility functions and such that can be used in other 
 //              snippets of C++ code to help reduce complexity, etc.
 //
@@ -10,8 +10,8 @@
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
-#ifndef _WXPY_UTILS_H
-#define _WXPY_UTILS_H
+#ifndef _WXPY_API_H
+#define _WXPY_API_H
 
 #if defined(__APPLE__)
     // When it's possible that we're building universal binaries with both

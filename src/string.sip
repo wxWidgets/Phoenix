@@ -68,7 +68,7 @@
 
          
     %ConvertFromTypeCode
-        // Convert a wxString to a Python Unicode object.  See wxpy_utils.sip
+        // Convert a wxString to a Python Unicode object.  See wxpy_api.sip
         return wx2PyString(*sipCpp);
     %End    
 };
