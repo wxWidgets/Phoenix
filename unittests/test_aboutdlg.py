@@ -13,6 +13,7 @@ class aboutdlg_Tests(wtc.WidgetTestCase):
         info.SetName('My Goofy App')
         info.SetDevelopers(['Goofy', 'Mickey', 'Donald'])
         info.SetDescription('This is a very goofy application')
+        info.SetCopyright('(c) by Goofy Enterprises, Inc.')
         return info 
     
     def test_aboutdlgNative(self):

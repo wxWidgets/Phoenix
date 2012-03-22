@@ -45,7 +45,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
     def generate(self, module, destFile=None):
         stream = StringIO()
         
-        # generate SIP code from the module and its objects
+        # process the module object and its child objects
         self.generateModule(module, stream)
         
         # Write the contents of the stream to the destination file
@@ -104,6 +104,11 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         Generate code for each of the top-level items in the module.
         """
         assert isinstance(module, extractors.ModuleDef)
+        
+        for item in module.imports:
+            if item.startswith('_'):
+                item = item[1:]
+            stream.write('from %s import *\n' % item)
         
         methodMap = {
             extractors.ClassDef         : self.generateClass,

@@ -11,7 +11,7 @@ class PIImportTest(unittest.TestCase):
     the extension modules and that are not easily introspected.
     
     This test case ensures that the code in the pi files is valid by trying
-    to run the file with a with a new instance of Python.
+    to run the file with a new instance of Python.
     """
 
     def runPI(self, filename):
@@ -34,6 +34,8 @@ class PIImportTest(unittest.TestCase):
     def test_core_pi(self):
         self.runPI('core.pi')
         
+    #def test_adv_pi(self):
+    #    self.runPI('adv.pi')
         
 #---------------------------------------------------------------------------
 

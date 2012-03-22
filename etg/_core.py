@@ -161,8 +161,8 @@ INCLUDES = [  # core
               'tipwin',
 
               # misc
-              'process',
               'utils',
+              'process',
               'uiaction', 
               'snglinst',
               
