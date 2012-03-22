@@ -70,6 +70,9 @@ def configure(conf):
 	conf.env.LIB_WX = cfg.libs
 	conf.env.LIBFLAGS_WX = cfg.lflags
 
+        _copyEnvGroup(conf.env, '_WX', '_WXADV')
+        conf.env.LIB_WXADV += cfg.makeLibName('adv')
+    
 	
     else: 
         # Configuration stuff for non-Windows ports using wx-config
@@ -134,11 +137,11 @@ def configure(conf):
             conf.env.MACOSX_DEPLOYMENT_TARGET = "10.4"  # should we bump this to 10.5?
 
             if conf.options.mac_arch:
-                conf.env.ARCH_WXPY = conf.options.mac_arch.split(',')
-                
+                conf.env.ARCH_WXPY = conf.options.mac_arch.split(',')        
 		
     #import pprint
     #pprint.pprint( [(k, conf.env[k]) for k in conf.env.keys()] )
+
 
 #-----------------------------------------------------------------------------
 # Build command
@@ -265,5 +268,15 @@ def copyFileToPkg(task):
     tgt = opj(cfg.PKGDIR, os.path.basename(src))
     copy_file(src, tgt, verbose=1)
     return 0
-    
+
+
+# Copy all the items in env with a matching postfix to a similarly
+# named item with the dest postfix.
+def _copyEnvGroup(env, srcPostfix, destPostfix):
+    import copy
+    for key in env.keys():
+        if key.endswith(srcPostfix):
+            newKey = key[:-len(srcPostfix)] + destPostfix
+            env[newKey] = copy.copy(env[key])
+            
 #-----------------------------------------------------------------------------
