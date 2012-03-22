@@ -1,8 +1,10 @@
 #!/usr/bin/python
 #-----------------------------------------------------------------------------
-#  WAF build script for building the wxPython extension modules.
+#  WAF script for building and installing the wxPython extension modules.
 #
-#
+# Author:      Robin Dunn
+# Copyright:   (c) 2012 by Total Control Software
+# License:     wxWindows License
 #-----------------------------------------------------------------------------
 
 import sys
@@ -69,16 +71,20 @@ def configure(conf):
 	conf.env.LIBFLAGS_WX = cfg.lflags
 
 	
-    else:  # Non-Windows, use wx-config
-        # Configuration stuff for ports using wx-config
+    else: 
+        # Configuration stuff for non-windows ports using wx-config
         
         # Check wx-config exists and fetch some values from it
         conf.env.wx_config = conf.options.wx_config
-        conf.check_cfg(path=conf.options.wx_config, package='', args='--cxxflags --libs', 
+        conf.check_cfg(path=conf.options.wx_config, package='', 
+	               args='--cxxflags --libs', 
                        uselib_store='WX', mandatory=True)
-        # TODO: Run it again with different libs options to get different
-        # sets of flags stored to use with different extension modules below.
-        # WXGL, WXHTML, etc.
+        # Run it again with different libs options to get different
+        # sets of flags stored to use with varous extension modules below.
+	conf.check_cfg(path=conf.options.wx_config, package='', 
+	               args='--cxxflags --libs adv,core', 
+	               uselib_store='WXADV', mandatory=True)
+
 
         # NOTE: This assumes that if the platform is not win32 (from
         # the test above) and not darwin then we must be using the
@@ -102,7 +108,7 @@ def configure(conf):
         conf.env.CFLAGS_WXPY.append('-g')
         conf.env.CXXFLAGS_WXPY.append('-g')
         
-        # And if --debug is set turn on more detailed info and turn off optimization
+        # And if --debug is set turn on more detailed debug info and turn off optimization
         if conf.env.debug:
             conf.env.CFLAGS_WXPY.extend(['-ggdb', '-O0'])
             conf.env.CXXFLAGS_WXPY.extend(['-ggdb', '-O0'])
@@ -203,13 +209,23 @@ def build(bld):
     )
     makeExtCopyRule(bld, '_core')
     
-    
+        
+    etg = loadETG('etg/_adv.py')
+    dataview = bld(
+        features = 'c cxx cxxshlib pyext',
+        target   = '_adv',
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXADV WXPY',
+    )
+    makeExtCopyRule(bld, '_adv')
+
+
     etg = loadETG('etg/_dataview.py')
     dataview = bld(
         features = 'c cxx cxxshlib pyext',
         target   = '_dataview',
         source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WX WXPY',
+        uselib   = 'WXADV WXPY',
     )
     makeExtCopyRule(bld, '_dataview')
     
