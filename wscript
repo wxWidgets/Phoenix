@@ -72,17 +72,17 @@ def configure(conf):
 
 	
     else: 
-        # Configuration stuff for non-windows ports using wx-config
+        # Configuration stuff for non-Windows ports using wx-config
         
         # Check wx-config exists and fetch some values from it
         conf.env.wx_config = conf.options.wx_config
         conf.check_cfg(path=conf.options.wx_config, package='', 
-	               args='--cxxflags --libs', 
+	               args='--cxxflags --libs core,net', 
                        uselib_store='WX', mandatory=True)
         # Run it again with different libs options to get different
         # sets of flags stored to use with varous extension modules below.
 	conf.check_cfg(path=conf.options.wx_config, package='', 
-	               args='--cxxflags --libs adv,core', 
+	               args='--cxxflags --libs adv,core,net', 
 	               uselib_store='WXADV', mandatory=True)
 
 
