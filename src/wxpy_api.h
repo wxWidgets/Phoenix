@@ -25,11 +25,14 @@
     #undef SIZEOF_VOID_P
     #undef SIZEOF_LONG
     #undef SIZEOF_SIZE_T
+#endif
 
+#if defined(__GNUC__)
     // Turn off the warning about converting string literals to char*
     // TODO: fix these the right way...
     #pragma GCC diagnostic ignored "-Wwrite-strings"
 #endif
+
 #ifdef _MSC_VER
     #pragma warning(disable:4800)
     #pragma warning(disable:4190)
