@@ -54,7 +54,6 @@ def run():
     # customizing the generated code and docstrings.
     
     module.addHeaderCode('#include <wxpy_api.h>')
-    
     module.addImport('_core')
     module.addInclude(INCLUDES)
     

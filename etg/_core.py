@@ -29,7 +29,8 @@ ITEMS  = [ ]
 # remove it from this list of Includes, and change the MODULE value in the
 # promoted script to be the same as its NAME.
 
-INCLUDES = [  'defs',
+INCLUDES = [  # core
+              'defs',
               'object',
               'wxpy_api',
               'arrayholder',
@@ -51,10 +52,11 @@ INCLUDES = [  'defs',
               'gdicmn',
               'geometry',
               'position',
+              'colour',
 
               'stream', 'filesys',
 
-              'colour',
+              # GDI and graphics
               'image',
               'gdiobj',
               'bitmap',
@@ -76,7 +78,9 @@ INCLUDES = [  'defs',
               'dcps',
               'dcsvg',
               'graphics',
+              'imaglist',
               
+              # more core
               'accel',
               'log',
               'dataobj',
@@ -89,10 +93,8 @@ INCLUDES = [  'defs',
               'layout',
               'event',
               'pyevent',
-              'utils',
-              'process',
               'sizer', 'gbsizer', 'wrapsizer',
-              'uiaction', 
+              'stdpaths',
               
               'eventfilter',
               'evtloop',
@@ -105,9 +107,9 @@ INCLUDES = [  'defs',
               'validate',
               'panel',
               'menu',
-              'menuitem',
-              'imaglist',
-              
+              'menuitem',              
+              'scrolwin',
+              'vscroll',
               
               # controls
               'control',
@@ -144,6 +146,7 @@ INCLUDES = [  'defs',
               'tglbtn',
               'scrolbar',
               'toolbar',
+              'infobar',
               
               # toplevel and dialogs
               'nonownedwnd',
@@ -157,18 +160,18 @@ INCLUDES = [  'defs',
               'popupwin',
               'tipwin',
 
-              # other window types and stuff
-              'stdpaths',
+              # misc
+              'process',
+              'utils',
+              'uiaction', 
               'snglinst',
-              'scrolwin',
-              'vscroll',
-              'infobar',
+              
               ]
 
 
 # Separate the list into those that are generated from ETG scripts and the
-# rest. These lists can be used from setup.py for a list of sources and a list
-# of additional dependencies when building this extension module
+# rest. These lists can be used from the build scripts to get a list of
+# sources and/or additional dependencies when building this extension module.
 ETGFILES = ['etg/%s.py' % NAME] + tools.getEtgFiles(INCLUDES)
 DEPENDS = tools.getNonEtgFiles(INCLUDES)
 OTHERDEPS = [ 'src/core_ex.py',
