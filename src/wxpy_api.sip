@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------
 // Name:        wxpy_api.sip
-// Purpose:     Some utility functions and such that can be used in other 
-//              snippets of C++ code to help reduce complexity, etc.
+// Purpose:     The implementation of the API functions that are exported 
+//              from the core extension module.
 //
 // Author:      Robin Dunn
 //
@@ -19,26 +19,13 @@
 
 
 %ModuleCode
-// Various wxPython helper/utility functions
-
-
-// Create a PyObject of the requested type from a void* and a class name.
-PyObject* wxPyConstructObject(void* ptr,
-                              const wxString& className,
-                              int setThisOwn)
-{
-    const sipTypeDef* td = sipFindType(className);
-    if (!td)
-        return NULL;
-    PyObject* transferObj = setThisOwn ? Py_None : NULL;
-    return sipConvertFromType(ptr, td, transferObj);     
-}
+// wxPython's API helper and utility functions
 
 
 // See also the wxString MappedType.  This code is similar, but doesn't 
 // allocate a new wxString instance on the heap, is able to convert 
 // non-string/unicode objects to unicode, and won't raise exceptions
-wxString Py2wxString(PyObject* source)
+static wxString i_Py2wxString(PyObject* source)
 {
     PyObject* uni = source;
     if (PyString_Check(source)) {
@@ -97,8 +84,58 @@ wxString Py2wxString(PyObject* source)
 //    return str;
 //}
     
-    
+
+// Create a PyObject of the requested type from a void* and a class name.
+static PyObject* i_wxPyConstructObject(void* ptr,
+                                       const wxString& className,
+                                       bool setThisOwn)
+{
+    const sipTypeDef* td = sipFindType(className);
+    if (!td)
+        return NULL;
+    PyObject* transferObj = setThisOwn ? Py_None : NULL;
+    return sipConvertFromType(ptr, td, transferObj);     
+}
+
+
+
+
+// Calls from wxWindows back to Python code, or even any PyObject
+// manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
+static wxPyBlock_t i_wxPyBeginBlockThreads() 
+{
+    if (! Py_IsInitialized()) {
+        return (wxPyBlock_t)0;
+    }
+    PyGILState_STATE state = PyGILState_Ensure();
+    return state;
+}
+
+static void i_wxPyEndBlockThreads(wxPyBlock_t blocked) 
+{
+    if (! Py_IsInitialized()) {
+        return;
+    }            
+    PyGILState_Release(blocked);
+}
+
+
+// An instance of the API structure
+static wxPyAPI  API = {
+    i_Py2wxString,
+    i_wxPyConstructObject,
+    i_wxPyBeginBlockThreads,
+    i_wxPyEndBlockThreads
+};
 %End
 
+
+// Code that will run when _core is imported that will stash away a pointer 
+// to the structure.
+%InitialisationCode
+    PyObject* cobj = PyCObject_FromVoidPtr(&API, NULL);
+    PyDict_SetItemString(sipModuleDict, "_wxPyAPI", cobj);
+    Py_XDECREF(cobj);
+%End
 
 //--------------------------------------------------------------------------

@@ -1,7 +1,9 @@
 //--------------------------------------------------------------------------
 // Name:        wxpy_api.h
 // Purpose:     Some utility functions and such that can be used in other 
-//              snippets of C++ code to help reduce complexity, etc.
+//              snippets of C++ code to help reduce complexity, etc.  They 
+//              are all either macros, inline functions, or functions that
+//              are exported from the core extension module.
 //
 // Author:      Robin Dunn
 //
@@ -35,6 +37,13 @@
 
 #include <wx/wx.h>
 
+//--------------------------------------------------------------------------
+// The API items that can be inline functions or macros.  
+// These are made available simply by #including this header file.
+//--------------------------------------------------------------------------
+
+typedef PyGILState_STATE wxPyBlock_t;
+
 
 // Convert a wxString to a Python string (actually a PyUnicode object).
 // Assumes that the GIL has already been acquired.
@@ -42,14 +51,8 @@ inline PyObject* wx2PyString(const wxString& str) {
     return PyUnicode_FromWideChar(str.wc_str(), str.length());
 }
 
-// Convert a PyObject to a wxString
-// Assumes that the GIL has already been acquired.
-wxString Py2wxString(PyObject* source);
-   
 
-typedef PyGILState_STATE wxPyBlock_t;
-
-// Calls from Python to wxWindows code are wrapped in calls to these
+// Calls from Python to wxWindows code should be wrapped in calls to these
 // functions:
 inline PyThreadState* wxPyBeginAllowThreads() {
     PyThreadState* saved = PyEval_SaveThread();  // Like Py_BEGIN_ALLOW_THREADS;
@@ -61,22 +64,6 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 }
 
 
-// Calls from wxWindows back to Python code, or even any PyObject
-// manipulations, PyDECREF's and etc. are wrapped in calls to these functions:
-inline wxPyBlock_t wxPyBeginBlockThreads() {
-    if (! Py_IsInitialized()) {
-        return (wxPyBlock_t)0;
-    }
-    PyGILState_STATE state = PyGILState_Ensure();
-    return state;
-}
-
-inline void wxPyEndBlockThreads(wxPyBlock_t blocked) {
-    if (! Py_IsInitialized()) {
-        return;
-    }            
-    PyGILState_Release(blocked);
-}
 
 
 // A macro that will help to execute simple statments wrapped in
@@ -90,21 +77,62 @@ inline void wxPyEndBlockThreads(wxPyBlock_t blocked) {
 
    
 // Raise NotImplemented exceptions
-inline void wxPyRaiseNotImplemented() {
-    wxPyBLOCK_THREADS( PyErr_SetNone(PyExc_NotImplementedError) );
+#define wxPyRaiseNotImplemented() \
+    wxPyBLOCK_THREADS( PyErr_SetNone(PyExc_NotImplementedError) )
+
+
+#define wxPyRaiseNotImplementedMsg(msg) \
+    wxPyBLOCK_THREADS( PyErr_SetString(PyExc_NotImplementedError, msg) );
+
+
+
+//--------------------------------------------------------------------------
+// The API items whose implementation can not or should not be inline 
+// functions or macros.  The implementations will instead be accessed via 
+// a structure of function pointers that is exported from the wx._core 
+// extension module.  See wxpy_api.sip for the implementations.
+//--------------------------------------------------------------------------
+
+
+struct wxPyAPI {
+    wxString      (*p_Py2wxString)(PyObject* source);
+    PyObject*     (*p_wxPyConstructObject)(void* ptr, const wxString& className, bool setThisOwn);
+    wxPyBlock_t   (*p_wxPyBeginBlockThreads)();
+    void          (*p_wxPyEndBlockThreads)(wxPyBlock_t blocked);
+    // Always add new items here at the end.
+};
+
+inline wxPyAPI* wxPyGetAPIPtr()
+{
+    static wxPyAPI* wxPyAPIPtr = NULL;
+    
+    if (wxPyAPIPtr == NULL) {
+        wxPyAPIPtr = (wxPyAPI*)PyCObject_Import("wx._core", "_wxPyAPI");
+    }
+    // wxASSERT_MSG(wxPyAPIPtr != NULL, wxT("wxPyAPIPtr is NULL!!!"));  // uncomment when needed for debugging
+    return wxPyAPIPtr;
 }
 
-inline void wxPyRaiseNotImplementedMsg(const char* msg) {
-    wxPyBLOCK_THREADS( PyErr_SetString(PyExc_NotImplementedError, msg) );
-}
+//--------------------------------------------------------------------------
+// Inline wrappers to call the API functions
+
+// Convert a PyObject to a wxString
+// Assumes that the GIL has already been acquired.
+inline wxString Py2wxString(PyObject* source) 
+    { return wxPyGetAPIPtr()->p_Py2wxString(source); }
 
 
 // Create a PyObject of the requested type from a void* and a class name.
 // Assumes that the GIL has already been acquired.
-PyObject* wxPyConstructObject(void* ptr,
-                              const wxString& className,
-                              int setThisOwn=0);
+inline PyObject* wxPyConstructObject(void* ptr, const wxString& className, bool setThisOwn=false) 
+    { return wxPyGetAPIPtr()->p_wxPyConstructObject(ptr, className, setThisOwn); }
 
-
+    
+// Calls from wxWindows back to Python code, or even any PyObject
+// manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
+inline wxPyBlock_t wxPyBeginBlockThreads() 
+    { return wxPyGetAPIPtr()->p_wxPyBeginBlockThreads(); }
+inline void wxPyEndBlockThreads(wxPyBlock_t blocked) 
+    { wxPyGetAPIPtr()->p_wxPyEndBlockThreads(blocked); }
     
 #endif
