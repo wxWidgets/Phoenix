@@ -3,6 +3,9 @@ syntax:glob
 *.orig
 *.pyc
 
+.lock-waf*
+bin/.waf*
+
 build
 build_waf
 tmp
