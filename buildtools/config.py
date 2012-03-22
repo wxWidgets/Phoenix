@@ -177,10 +177,7 @@ class Configuration(object):
             else:
                 self.libs += [ 'wxbase' + self.WXDLLVER + self.libFlag(), 
                                'wxbase' + self.WXDLLVER + self.libFlag() + '_net',
-                               'wxbase' + self.WXDLLVER + self.libFlag() + '_xml',
                                self.makeLibName('core')[0],
-                               self.makeLibName('adv')[0],
-                               self.makeLibName('html')[0],
                                ]
         
             self.libs += ['kernel32', 'user32', 'gdi32', 'comdlg32',
