@@ -29,6 +29,8 @@ wx/*.pyc
 wx/*.pi
 wx/*.so
 wx/*.pyd
+wx/*.dll
+wx/*.pdb
 wx/locale
 sip/siplib/.update
 bin/sip-*
