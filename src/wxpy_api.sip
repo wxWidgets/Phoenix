@@ -136,6 +136,7 @@ static wxPyAPI  API = {
     PyObject* cobj = PyCObject_FromVoidPtr(&API, NULL);
     PyDict_SetItemString(sipModuleDict, "_wxPyAPI", cobj);
     Py_XDECREF(cobj);
+    wxPyGetAPIPtr();
 %End
 
 //--------------------------------------------------------------------------
