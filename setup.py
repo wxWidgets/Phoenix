@@ -153,6 +153,7 @@ extensions.append(ext)
 cfg.CLEANUP.append(opj(cfg.PKGDIR, 'core.py'))
 
 
+
 etg = loadETG('etg/_adv.py')
 etgDepends = etg.DEPENDS + etg.OTHERDEPS
 ext = Extension('_adv', getEtgSipCppFiles(etg),
@@ -160,7 +161,7 @@ ext = Extension('_adv', getEtgSipCppFiles(etg),
                 include_dirs       = cfg.includes,
                 define_macros      = cfg.defines,
                 library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('adv'),
+                libraries          = cfg.libs + cfg.makeLibName('adv', True),
                 extra_compile_args = cfg.cflags,
                 extra_link_args    = cfg.lflags,
                 )
@@ -175,7 +176,7 @@ ext = Extension('_dataview', getEtgSipCppFiles(etg),
                 include_dirs       = cfg.includes,
                 define_macros      = cfg.defines,
                 library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('adv'),
+                libraries          = cfg.libs + cfg.makeLibName('adv', True),
                 extra_compile_args = cfg.cflags,
                 extra_link_args    = cfg.lflags,
                 )

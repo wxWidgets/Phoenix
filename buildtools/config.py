@@ -418,7 +418,9 @@ class Configuration(object):
         return file_list
     
     
-    def makeLibName(self, name):
+    def makeLibName(self, name, checkMonolithic=False):
+        if checkMonolithic and self.MONOLITHIC:
+            return []
         if os.name == 'posix' or self.COMPILER == 'mingw32':
             libname = '%s_%s-%s' % (self.WXBASENAME, name, self.WXRELEASE)
         elif name:
