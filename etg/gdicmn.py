@@ -130,7 +130,12 @@ def run():
     #---------------------------------------
     # wxSize tweaks
     c = module.find('wxSize')
-    
+
+    # Used for testing releaseing or holding the GIL in giltest.py
+    #c.find('wxSize').findOverload('int width, int height').releaseGIL()
+    #c.find('DecBy').findOverload('int dx, int dy').releaseGIL()
+    #c.find('IncBy').findOverload('int dx, int dy').releaseGIL()
+        
     c.addProperty("width GetWidth SetWidth")
     c.addProperty("height GetHeight SetHeight")
 

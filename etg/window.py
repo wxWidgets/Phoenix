@@ -70,6 +70,12 @@ def run():
     c.find('GetScreenPosition').findOverload('int *').ignore()
     c.find('ClientToScreen').findOverload('int *').ignore()
     c.find('ScreenToClient').findOverload('int *').ignore()
+
+    # Release the GIL for potentially blocking or long-running functions
+    c.find('PopupMenu').releaseGIL()
+    c.find('ProcessEvent').releaseGIL()
+    c.find('ProcessWindowEvent').releaseGIL()
+    c.find('ProcessWindowEventLocally').releaseGIL()
     
     # Add a couple wrapper functions for symmetry with the getters of the same name
     c.addPyMethod('SetRect', '(self, rect)', 'return self.SetSize(rect)')

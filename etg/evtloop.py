@@ -38,6 +38,10 @@ def run():
     c = module.find('wxEventLoopBase')
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
+
+    c.find('Yield').releaseGIL()
+    c.find('YieldFor').releaseGIL()
+    
     
     c = module.find('wxEventLoopActivator')
     c.addPrivateAssignOp()

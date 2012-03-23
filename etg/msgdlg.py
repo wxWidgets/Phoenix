@@ -53,9 +53,10 @@ def run():
     
     c.find('SetYesNoLabels.yes').type = 'const wxString&'
     c.find('SetYesNoLabels.no').type = 'const wxString&'
-    
-            
+                
     tools.fixTopLevelWindowClass(c)
+    
+    module.find('wxMessageBox').releaseGIL()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

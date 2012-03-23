@@ -51,7 +51,6 @@ def run():
     
     c.find('HandleEvent').ignore()
     c.find('UsesEventLoop').ignore()
-    
 
     # We will use OnAssertFailure, but I don't think we should let it be
     # overridden in Python. 
@@ -65,8 +64,12 @@ def run():
     c.find('OnFatalException').ignore()
     c.find('OnUnhandledException').ignore()
     
-    c.find('ExitMainLoop').isVirtual = False
+    c.find('ExitMainLoop').isVirtual = False    
     
+    # Release the GIL for potentially blocking or long-running functions
+    c.find('MainLoop').releaseGIL()
+    c.find('ProcessPendingEvents').releaseGIL()
+    c.find('Yield').releaseGIL()
     
     c.addProperty('AppDisplayName GetAppDisplayName SetAppDisplayName')
     c.addProperty('AppName GetAppName SetAppName')
@@ -116,7 +119,7 @@ def run():
     # TODO: Add them as etg method objects instead of a WigCode block so the
     # documentation generators will see them too
     c.addItem(etgtools.WigCode("""\
-        virtual int  MainLoop();
+        virtual int  MainLoop() /ReleaseGIL/;
         virtual void OnPreInit();
         virtual bool OnInit();
         virtual bool OnInitGui();
@@ -168,6 +171,9 @@ def run():
         display, or whatever the equivallent is for the platform.""",
         className=c.name))
 
+    # Release the GIL for potentially blocking or long-running functions
+    c.find('SafeYield').releaseGIL()
+    c.find('SafeYieldFor').releaseGIL()
 
     c.addProperty('AssertMode GetAssertMode SetAssertMode')
     c.addProperty('DisplayMode GetDisplayMode SetDisplayMode')
@@ -204,6 +210,9 @@ def run():
     f.detailedDoc = []
 
 
+    module.find('wxYield').releaseGIL()
+    module.find('wxSafeYield').releaseGIL()
+    
     #-------------------------------------------------------
     
     # Now add extractor objects for the main App class as a Python class,

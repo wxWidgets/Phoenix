@@ -245,6 +245,11 @@ def run():
     tools.removeVirtuals(c)
     c.find('ProcessEvent').isVirtual = True
            
+    # Release the GIL for potentially blocking or long-running functions
+    c.find('ProcessEvent').releaseGIL()
+    c.find('ProcessEventLocally').releaseGIL()
+    c.find('SafelyProcessEvent').releaseGIL()
+    c.find('ProcessPendingEvents').releaseGIL()
 
 
     c.addPyMethod('Bind', '(self, event, handler, source=None, id=wx.ID_ANY, id2=wx.ID_ANY)',
