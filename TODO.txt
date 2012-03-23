@@ -58,36 +58,6 @@ Checklist for all new etg files
 
 
 
-Handling the GIL
-----------------
-Currenlty nothing is set for how to deal with the GIL, so there is no
-release and reaquire happening yet, meaning that threads will be
-blocked while control is in the C++ code.  There are some
-possibilities to be considered.
-
-    * Classic wxPython would wrap **every** call to a C++ function in
-      GIL release/reaquire code.  Later on I added the ability to not
-      do that for specific classes or methods (those known to not
-      block, take a "long" time, or that could result in a callback.)
-      This likely missed many places that could have benefitted from
-      not dealing with the GIL.  Should the same approach be taken
-      with Phoenix?  Or should the default be to not release/aquire
-      the GIL and we'll have to turn it on for classes or functions
-      that need it?  If so we could automatically turn it on for
-      Window classes and that would probably take care of most of the
-      places that must have it.
-
-    * Take a look at what SIP does when it makes callbacks for virtual
-      methods.  We'll need to do the same thing in the EventThunker
-      and anywhere else that we're doing callbacks ourselves.  NOTE:
-      Currently there is some Classic code alread in use there.  I
-      need to at least verify that it is doing the right thing...
-
-    * Can we reuse the GIL handling functions from Classic wxPython or
-      do they need to be rewritten?
-
-
-
 
 
 
