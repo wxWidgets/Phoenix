@@ -65,6 +65,9 @@ def run():
     c.addPyMethod('PrependItem', '(self, menuItem)', deprecated=True,
                   body='return self.Prepend(menuItem)')
 
+    # Don't hide the Destroy inherited from wxObject
+    c.find('Destroy').findOverload('int').pyName = 'DestroyItem'
+    c.find('Destroy').findOverload('wxMenuItem').pyName = 'DestroyItem'
 
     #-----------------------------------------------------------------
     c = module.find('wxMenuBar')
