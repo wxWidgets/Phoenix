@@ -243,6 +243,7 @@ class FunctionDef(BaseDef):
         self.deprecated = False       # is the function deprecated
         self.factory = False          # a factory function that creates a new instance of the return value
         self.pyReleaseGIL = False     # release the Python GIL for this function call
+        self.pyHoldGIL = False        # hold the Python GIL for this function call
         self.noCopy = False           # don't make a copy of the return value, just wrap the original
         self.pyInt = False            # treat char types as integers
         self.transfer = False         # transfer ownership of return value to C++?
@@ -270,6 +271,9 @@ class FunctionDef(BaseDef):
     def releaseGIL(self, release=True):
         self.pyReleaseGIL = release
         
+    def holdGIL(self, hold=True):
+        self.pyHoldGIL = hold
+
         
     def setCppCode_sip(self, code):
         """

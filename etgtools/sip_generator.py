@@ -860,8 +860,10 @@ from %s import *
                 annotations.append('Deprecated')
             if item.factory:
                 annotations.append('Factory')
-            if item.pyReleaseGIL:   # else HoldGIL??
+            if item.pyReleaseGIL:  
                 annotations.append('ReleaseGIL')
+            if item.pyHoldGIL:  
+                annotations.append('HoldGIL')
             if item.noCopy:
                 annotations.append('NoCopy')
             
