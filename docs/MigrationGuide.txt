@@ -227,3 +227,12 @@ if your application is not using any of these lesser used classes then you
 will not have to bundle the new modules (nor the associated wx DLLs) with
 your application when you use py2exe or other executable builder.
 
+
+
+wx.ListCtrl
+-----------
+
+* In wx.ListItem and wx.ListEvent the "m_" properties are no longer
+  public. Instead use the associated getter/setter methods or the
+  auto-generated properties that are using them.
+

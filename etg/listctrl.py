@@ -1,0 +1,341 @@
+#---------------------------------------------------------------------------
+# Name:        etg/listctrl.py
+# Author:      Robin Dunn
+#
+# Created:     23-Mar-2012
+# Copyright:   (c) 2012 by Total Control Software
+# License:     wxWindows License
+#---------------------------------------------------------------------------
+
+import etgtools
+import etgtools.tweaker_tools as tools
+
+PACKAGE   = "wx"   
+MODULE    = "_core"
+NAME      = "listctrl"   # Base name of the file to generate to for this script
+DOCSTRING = ""
+
+# The classes and/or the basename of the Doxygen XML files to be processed by
+# this script. 
+ITEMS  = [ "wxListItemAttr",
+           "wxListItem",
+           "wxListCtrl",
+           "wxListView",
+           "wxListEvent",
+           ]    
+    
+#---------------------------------------------------------------------------
+
+def run():
+    # Parse the XML file(s) building a collection of Extractor objects
+    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    etgtools.parseDoxyXML(module, ITEMS)
+    
+    #-----------------------------------------------------------------
+    # Tweak the parsed meta objects in the module object as needed for
+    # customizing the generated code and docstrings.
+    
+
+    #-------------------------------------------------------
+    c = module.find('wxListItem')
+    assert isinstance(c, etgtools.ClassDef)
+    c.find('SetData').findOverload('void *').ignore()
+    c.find('GetData').type = 'long'
+    
+    #-------------------------------------------------------
+    c = module.find('wxListCtrl')
+    tools.fixWindowClass(c)
+
+    module.addGlobalStr('wxListCtrlNameStr', before=c)
+
+    # Unignore some protected virtual methods that we want to allow to be
+    # overridden in derived classes
+    for name in [ 'OnGetItemAttr',
+                  #'OnGetItemColumnAttr',  # MSW only?
+                  'OnGetItemColumnImage',
+                  'OnGetItemImage',
+                  'OnGetItemText']:
+        c.find(name).ignore(False)
+        c.find(name).isVirtual = True
+    
+    
+    # Tweaks to allow passing and using a Python callable object for the sort
+    # compare function. First provide a sort callback function that can call the
+    # Python function.
+    c.addCppCode("""\
+        static int wxCALLBACK wxPyListCtrl_SortItems(wxIntPtr item1, wxIntPtr item2, wxIntPtr funcPtr) 
+        {
+            int retval = 0;
+            PyObject* func = (PyObject*)funcPtr;
+            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+
+            PyObject* args = Py_BuildValue("(ii)", item1, item2);
+            PyObject* result = PyEval_CallObject(func, args);
+            Py_DECREF(args);
+            if (result) {
+                retval = PyInt_AsLong(result);
+                Py_DECREF(result);
+            }
+  
+            wxPyEndBlockThreads(blocked);
+            return retval;
+        }
+        """)
+    
+    # Next, provide an alternate implementation of SortItems that will use that callback.
+    sim = c.find('SortItems')
+    assert isinstance(sim, etgtools.MethodDef)
+    sim.find('fnSortCallBack').type = 'PyObject*'
+    sim.find('data').ignore() # we will be using it to pass the python callback function
+    sim.argsString = sim.argsString.replace('wxListCtrlCompare', 'PyObject*')
+    sim.setCppCode("""\
+        if (!PyCallable_Check(fnSortCallBack))
+            return false;
+        return self->SortItems((wxListCtrlCompare)wxPyListCtrl_SortItems, 
+                               (wxIntPtr)fnSortCallBack);       
+    """)
+    
+    # Change the semantics of GetColumn to return the item as the return
+    # value instead of through a prameter.
+    # bool GetColumn(int col, wxListItem& item) const;
+    c.find('GetColumn').ignore()
+    c.addCppMethod('wxListItem*', 'GetColumn', '(int col)',
+        doc='Gets information about this column. See SetItem() for more information.',
+        factory=True,
+        body="""\
+        wxListItem item;
+        item.SetMask( wxLIST_MASK_STATE |
+                      wxLIST_MASK_TEXT  |
+                      wxLIST_MASK_IMAGE |
+                      wxLIST_MASK_DATA  |
+                      wxLIST_SET_ITEM   |
+                      wxLIST_MASK_WIDTH |
+                      wxLIST_MASK_FORMAT
+                      );
+        if (self->GetColumn(col, item))
+            return new wxListItem(item);
+        else
+            return NULL;       
+        """)
+    
+    # Do the same for GetItem
+    # bool GetItem(wxListItem& info) const;
+    c.find('GetItem').ignore()
+    c.addCppMethod('wxListItem*', 'GetItem', '(int itemIdx, int col=0)',
+        doc='Gets information about the item. See SetItem() for more information.',
+        factory=True,
+        body="""\
+        wxListItem* info = new wxListItem;
+        info->m_itemId = itemIdx;
+        info->m_col = col;
+        info->m_mask = 0xFFFF;
+        info->m_stateMask = 0xFFFF;
+        self->GetItem(*info);
+        return info;
+        """)
+    
+    # bool GetItemPosition(long item, wxPoint& pos) const;
+    c.find('GetItemPosition').ignore()
+    c.addCppMethod('wxPoint*', 'GetItemPosition', '(long item)',
+        doc='Returns the position of the item, in icon or small icon view.',
+        factory=True,
+        body="""\
+        wxPoint* pos = new wxPoint;
+        self->GetItemPosition(item, *pos);
+        return pos;
+        """)
+    
+    # bool GetItemRect(long item, wxRect& rect, int code = wxLIST_RECT_BOUNDS) const;
+    c.find('GetItemRect').ignore()
+    c.addCppMethod('wxRect*', 'GetItemRect', '(long item, int code = wxLIST_RECT_BOUNDS)',
+        doc="""\
+        Returns the rectangle representing the item's size and position, in physical coordinates.
+        code is one of wx.LIST_RECT_BOUNDS, wx.LIST_RECT_ICON, wx.LIST_RECT_LABEL.""",
+        factory=True,
+        body="""\
+        wxRect* rect = new wxRect;
+        self->GetItemRect(item, *rect, code);
+        return rect;
+        """)
+    
+    
+    c.find('EditLabel.textControlClass').ignore()
+    c.find('EndEditLabel').ignore()
+    c.find('AssignImageList.imageList').transfer = True
+    c.find('HitTest.flags').out = True
+    c.find('HitTest.ptrSubItem').out = True
+        
+    # Some deprecated aliases for Classic renames
+    c.addPyCode('ListCtrl.FindItemData = wx.deprecated(ListCtrl.FindItem)')
+    c.addPyCode('ListCtrl.FindItemAtPos = wx.deprecated(ListCtrl.FindItem)')
+    c.addPyCode('ListCtrl.InsertStringItem = wx.deprecated(ListCtrl.InsertItem)')
+    c.addPyCode('ListCtrl.InsertImageItem = wx.deprecated(ListCtrl.InsertItem)')
+    c.addPyCode('ListCtrl.InsertImageStringItem = wx.deprecated(ListCtrl.InsertItem)')
+    c.addPyCode('ListCtrl.SetStringItem = wx.deprecated(ListCtrl.SetItem)')
+    
+    
+    # Provide a way to determine if column ordering is possble
+    c.addCppMethod('bool', 'HasColumnOrderSupport', '()',
+        """\
+        #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
+            return true;
+        #else
+            return false;
+        #endif
+        """)
+    
+    # And provide implementation of those methods that will work whether or
+    # not wx has column ordering support
+    c.find('GetColumnOrder').setCppCode("""\
+        #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
+            return self->GetColumnOrder(col);
+        #else
+            wxPyRaiseNotImplemented();
+            return 0;
+        #endif
+        """)
+        
+    c.find('GetColumnIndexFromOrder').setCppCode("""\
+        #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
+            return self->GetColumnIndexFromOrder(order);
+        #else
+            wxPyRaiseNotImplemented();
+            return 0;
+        #endif
+        """)
+        
+    c.find('GetColumnsOrder').type = 'wxArrayInt*'
+    c.find('GetColumnsOrder').factory=True
+    c.find('GetColumnsOrder').setCppCode("""\
+        #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
+            return new wxArrayInt(self->GetColumnsOrder());
+        #else
+            wxPyRaiseNotImplemented();
+            return new wxArrayInt();
+        #endif
+        """)
+        
+    c.find('SetColumnsOrder').setCppCode("""\
+        #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
+            return self->SetColumnsOrder(orders);
+        #else
+            wxPyRaiseNotImplemented();
+            return false;
+        #endif
+        """)
+
+
+    # Add some Python helper methods
+    c.addPyMethod('Select', '(self, idx, on=1)',
+        doc='[de]select an item',
+        body="""\
+        if on: state = wx.LIST_STATE_SELECTED
+        else: state = 0
+        self.SetItemState(idx, state, wx.LIST_STATE_SELECTED)
+        """)
+    
+    c.addPyMethod('Focus', '(self, idx)', 
+        doc='Focus and show the given item',
+        body="""\
+        self.SetItemState(idx, wx.LIST_STATE_FOCUSED, wx.LIST_STATE_FOCUSED)
+        self.EnsureVisible(idx)
+        """)
+
+    c.addPyMethod('GetFocusedItem', '(self)',
+        doc='get the currently focused item or -1 if none',
+        body='return self.GetNextItem(-1, wx.LIST_NEXT_ALL, wx.LIST_STATE_FOCUSED)')
+
+    c.addPyMethod('GetFirstSelected', '(self, *args)',
+        doc='return first selected item, or -1 when none',
+        body="return self.GetNextSelected(-1)")
+
+    c.addPyMethod('GetNextSelected', '(self, item)',
+        doc='return subsequent selected items, or -1 when no more',
+        body="return self.GetNextItem(item, wx.LIST_NEXT_ALL, wx.LIST_STATE_SELECTED)")
+
+    c.addPyMethod('IsSelected', '(self, idx)',
+        doc='return True if the item is selected',
+        body="return (self.GetItemState(idx, wx.LIST_STATE_SELECTED) & wx.LIST_STATE_SELECTED) != 0")
+
+    c.addPyMethod('SetColumnImage', '(self, col, image)',
+        body="""\
+        item = self.GetColumn(col)
+        # preserve all other attributes too
+        item.SetMask( wx.LIST_MASK_STATE |
+                      wx.LIST_MASK_TEXT  |
+                      wx.LIST_MASK_IMAGE |
+                      wx.LIST_MASK_DATA  |
+                      wx.LIST_SET_ITEM   |
+                      wx.LIST_MASK_WIDTH |
+                      wx.LIST_MASK_FORMAT )
+        item.SetImage(image)
+        self.SetColumn(col, item)
+        """)
+
+    c.addPyMethod('ClearColumnImage', '(self, col)',
+        body="self.SetColumnImage(col, -1)")
+
+    c.addPyMethod('Append', '(self, entry)',
+        doc='''\
+        Append an item to the list control.  The entry parameter should be a
+        sequence with an item for each column''',
+        body="""\
+        if len(entry):
+            pos = self.GetItemCount()
+            self.InsertItem(pos, unicode(entry[0]))
+            for i in range(1, len(entry)):
+                self.SetItem(pos, i, unicode(entry[i]))
+            return pos
+        """)
+        
+        
+    c.addCppMethod('wxWindow*', 'GetMainWindow', '()',
+        body="""\
+        #if defined(__WXMSW__) || defined(__WXMAC__)
+            return self;
+        #else
+            return (wxWindow*)self->m_mainWin;
+        #endif
+        """)
+
+        
+    #-------------------------------------------------------
+    c = module.find('wxListView')
+    tools.fixWindowClass(c)
+
+    #-------------------------------------------------------
+    c = module.find('wxListEvent')
+    tools.fixEventClass(c)
+
+    c.addPyCode("""\
+        EVT_LIST_BEGIN_DRAG        = PyEventBinder(wxEVT_COMMAND_LIST_BEGIN_DRAG       , 1)
+        EVT_LIST_BEGIN_RDRAG       = PyEventBinder(wxEVT_COMMAND_LIST_BEGIN_RDRAG      , 1)
+        EVT_LIST_BEGIN_LABEL_EDIT  = PyEventBinder(wxEVT_COMMAND_LIST_BEGIN_LABEL_EDIT , 1)
+        EVT_LIST_END_LABEL_EDIT    = PyEventBinder(wxEVT_COMMAND_LIST_END_LABEL_EDIT   , 1)
+        EVT_LIST_DELETE_ITEM       = PyEventBinder(wxEVT_COMMAND_LIST_DELETE_ITEM      , 1)
+        EVT_LIST_DELETE_ALL_ITEMS  = PyEventBinder(wxEVT_COMMAND_LIST_DELETE_ALL_ITEMS , 1)
+        EVT_LIST_ITEM_SELECTED     = PyEventBinder(wxEVT_COMMAND_LIST_ITEM_SELECTED    , 1)
+        EVT_LIST_ITEM_DESELECTED   = PyEventBinder(wxEVT_COMMAND_LIST_ITEM_DESELECTED  , 1)
+        EVT_LIST_KEY_DOWN          = PyEventBinder(wxEVT_COMMAND_LIST_KEY_DOWN         , 1)
+        EVT_LIST_INSERT_ITEM       = PyEventBinder(wxEVT_COMMAND_LIST_INSERT_ITEM      , 1)
+        EVT_LIST_COL_CLICK         = PyEventBinder(wxEVT_COMMAND_LIST_COL_CLICK        , 1)
+        EVT_LIST_ITEM_RIGHT_CLICK  = PyEventBinder(wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK , 1)
+        EVT_LIST_ITEM_MIDDLE_CLICK = PyEventBinder(wxEVT_COMMAND_LIST_ITEM_MIDDLE_CLICK, 1)
+        EVT_LIST_ITEM_ACTIVATED    = PyEventBinder(wxEVT_COMMAND_LIST_ITEM_ACTIVATED   , 1)
+        EVT_LIST_CACHE_HINT        = PyEventBinder(wxEVT_COMMAND_LIST_CACHE_HINT       , 1)
+        EVT_LIST_COL_RIGHT_CLICK   = PyEventBinder(wxEVT_COMMAND_LIST_COL_RIGHT_CLICK  , 1)
+        EVT_LIST_COL_BEGIN_DRAG    = PyEventBinder(wxEVT_COMMAND_LIST_COL_BEGIN_DRAG   , 1)
+        EVT_LIST_COL_DRAGGING      = PyEventBinder(wxEVT_COMMAND_LIST_COL_DRAGGING     , 1)
+        EVT_LIST_COL_END_DRAG      = PyEventBinder(wxEVT_COMMAND_LIST_COL_END_DRAG     , 1)
+        EVT_LIST_ITEM_FOCUSED      = PyEventBinder(wxEVT_COMMAND_LIST_ITEM_FOCUSED     , 1)
+        """)
+    
+    #-----------------------------------------------------------------
+    tools.doCommonTweaks(module)
+    tools.runGenerators(module)
+    
+    
+#---------------------------------------------------------------------------
+if __name__ == '__main__':
+    run()
+
