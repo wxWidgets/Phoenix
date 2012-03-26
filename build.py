@@ -598,6 +598,9 @@ def sip(options, args):
     cmdTimer = CommandTimer('sip')
     cfg = Config()
     for src_name in glob.glob(opj(cfg.SIPGEN, '_*.sip')):
+        # TODO: Add some dependency checking here. If none of the included
+        # files has been updated then running sip can probably be avoided.
+        # OTOH, it's fast enough that it probably doesn't matter.
         tmpdir = tempfile.mkdtemp()
         tmpdir = tmpdir.replace('\\', '/')
         src_name = src_name.replace('\\', '/')
