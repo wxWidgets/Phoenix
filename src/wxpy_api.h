@@ -55,7 +55,7 @@ inline PyObject* wx2PyString(const wxString& str) {
 }
 
 
-// Calls from Python to wxWindows code should be wrapped in calls to these
+// Calls from Python to wxWidgets code should be wrapped in calls to these
 // functions:
 inline PyThreadState* wxPyBeginAllowThreads() {
     PyThreadState* saved = PyEval_SaveThread();  // Like Py_BEGIN_ALLOW_THREADS;
