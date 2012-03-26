@@ -86,12 +86,14 @@ Exceptions
 
 
 
-Build
------
+WAF Build
+---------
     * Update wscript to support installation of the wxPython package, either
       to the site-pacakges dir of the active Python or to a DESTROOT for when
       building installer packages.
 
+    * Add support for using the cygwin and mingw32 compilers.
+    
 
 
 
