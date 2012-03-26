@@ -24,8 +24,40 @@ ITEMS  = [ ]
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
 # the wxWidgets "adv" library in a multi-lib build.
-INCLUDES = [  'aboutdlg',              
-              ]
+INCLUDES = [  
+             'aboutdlg',
+             
+             # TODOs - 
+             # These modules are also in the C++ adv lib and so should included be here:
+             #
+             #'animate',
+             #'bannerwindow',
+             #'bmpcbox',
+             #'calctrl',
+             #'commandlinkbutton',
+             #'datectrl',
+             #'dateevt',
+             #'editlbox',
+             #'hyperlink',
+             #'joystick',
+             #'laywin',
+             #'notifmsg',
+             #'odcombo',
+             #'richtooltip',
+             #'sashwin',
+             #'sound',
+             #'splash',
+             #'taskbar',
+             #'timectrl',
+             #'tipdlg',
+             #'treelist',
+             #'wizard',
+
+             # Except for these, which have, or will have their own extension modules
+             #'dataview',
+             #'grid',   
+             #'propdlg',
+             ]
 
 
 # Separate the list into those that are generated from ETG scripts and the
