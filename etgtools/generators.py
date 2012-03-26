@@ -78,3 +78,13 @@ def nci(text, numSpaces=0, stripLeading=True):
     return newText
 
 #---------------------------------------------------------------------------
+
+from StringIO import StringIO
+
+class Utf8EncodingStream(StringIO):
+    def write(self, text):
+        if isinstance(text, unicode):
+            text = text.encode('utf-8')
+        return StringIO.write(self, text) #super(EncodingStream, self).write(text)
+
+#---------------------------------------------------------------------------

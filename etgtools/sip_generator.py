@@ -15,8 +15,7 @@ objects produced by the ETG scripts.
 import sys, os, re
 import extractors
 import generators
-from generators import nci
-from cStringIO import StringIO
+from generators import nci, Utf8EncodingStream
 
 
 divider = '//' + '-'*75 + '\n'
@@ -38,7 +37,7 @@ forcePtrTypes = [ 'wxString',
 class SipWrapperGenerator(generators.WrapperGeneratorBase):
         
     def generate(self, module, destFile=None):
-        stream = StringIO()
+        stream = Utf8EncodingStream()
         
         # generate SIP code from the module and its objects
         self.generateModule(module, stream)
@@ -680,7 +679,7 @@ from %s import *
             assert isinstance(klass, extractors.ClassDef)
 
         # create the new function
-        fstream = StringIO()  # using a new stream so we can do the actual write a little later
+        fstream = Utf8EncodingStream()  # using a new stream so we can do the actual write a little later
         lastP = argsString.rfind(')')
         fargs = argsString[:lastP].strip('()').split(',')
         for idx, arg in enumerate(fargs):
