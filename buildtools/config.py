@@ -18,12 +18,15 @@ import fnmatch
 import tempfile
 import commands
 import shutil
+import codecs
 
 from distutils.file_util import copy_file
 from distutils.dir_util  import mkpath
 from distutils.dep_util  import newer
 from distutils.spawn     import spawn
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 runSilently = False
 
@@ -626,11 +629,15 @@ def writeIfChanged(filename, text):
     the content is different (therefore preserving the timestamp if there is
     no update.)
     """
-    text = str(text)
+        
     if os.path.exists(filename):
-        current = open(filename, 'rt').read()
+        fid = codecs.open(filename, 'r', 'utf-8')
+        current = fid.read()
+        fid.close()
+        
         if current == text:
             return
-    f = open(filename, 'wt')
-    f.write(text)
+
+    f = codecs.open(filename, 'w', 'utf-8')
+    f.write(text.encode('utf-8'))
     f.close()

@@ -232,7 +232,7 @@ your application when you use py2exe or other executable builder.
 wx.ListCtrl
 -----------
 
-* In wx.ListItem and wx.ListEvent the "m_" properties are no longer
+* In wx.ListItem and wx.ListEvent the ``"m_"`` properties are no longer
   public. Instead use the associated getter/setter methods or the
   auto-generated properties that are using them.
 

@@ -68,7 +68,8 @@ REMOVED_LINKS = ['Library:', 'Category:', 'Predefined objects/pointers:']
 # This needs to be kept up to date when other stuff comes in (i.e., wx.grid,
 # wx.html and so on)
 MODULENAME_REPLACE = {'_core'    : '',
-                      '_dataview': 'dataview.'
+                      '_dataview': 'dataview.',
+                      '_adv'     : '',
                       }
 
 # Other C++ specific things to strip away
@@ -143,7 +144,7 @@ HTML_REPLACE = ['module', 'function', 'method', 'class', 'classmethod', 'staticm
 
 # The SVN revision of wxWidgets/Phoenix used to build the Sphinx docs.
 # There must be a more intelligent way to get this information automatically.
-SVN_REVISION = '70741'
+SVN_REVISION = '71022'
 
 # Today's date representation for the Sphinx HTML docs
 TODAY = datetime.date.today().strftime('%d %B %Y')

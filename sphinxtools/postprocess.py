@@ -144,6 +144,7 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace(',,', ',').replace(', ,', ',')
         text = text.replace(':note:', '.. note::')
         text = text.replace(':see:', '.. seealso::')
+        text = text.replace('`String`&', 'string')
         
         if text != orig_text:
             fid = open(input, 'wt')
