@@ -210,7 +210,7 @@ The 'wx' namespace and submodules reorganized
 
 Some reorganization of what classes and functions goes in which internal wx
 extension module has been done. In Classic the organization of the extension
-modules was somewhat haphazard and caotic. For example there were 5 separate
+modules was somewhat haphazard and chaotic. For example there were 5 separate
 modules whose contents were loaded into the main "wx" package namespace and
 several others that needed to be imported separately. However since there was
 not much organization of the core the C++ wxadv and wxhtml DLLs would need to
