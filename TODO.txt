@@ -145,10 +145,9 @@ other dev stuff
       * all missing common dialogs
       * print (as in print framework classes)
       * mdi (die mdi! die!)
-      * treectrl
       * dirctrl
       * cshelp
-      * dragimag
+      * dragimag 
       * datectrl
       * hyperlink
       * pickerbase, clrpicker, filepicker, fontpicker

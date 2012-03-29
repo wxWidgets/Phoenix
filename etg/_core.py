@@ -148,6 +148,7 @@ INCLUDES = [  # core
               'toolbar',
               'infobar',
               'listctrl',
+              'treectrl',
               
               # toplevel and dialogs
               'nonownedwnd',

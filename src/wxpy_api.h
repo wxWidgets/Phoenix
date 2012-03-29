@@ -88,6 +88,9 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
     wxPyBLOCK_THREADS( PyErr_SetString(PyExc_NotImplementedError, msg) );
 
 
+// A convenience macro for properly returning Py_None
+//#define RETURN_NONE()    { Py_INCREF(Py_None); return Py_None; }
+#define RETURN_NONE()    { wxPyBLOCK_THREADS(Py_INCREF(Py_None)); return Py_None; }
 
 //--------------------------------------------------------------------------
 // The API items whose implementation can not or should not be inline 
