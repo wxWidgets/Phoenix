@@ -73,6 +73,28 @@ if __name__ == '__main__':
 
 """
 
+unitteststub = """\
+import imp_unittest, unittest
+import wtc
+import wx
+
+#---------------------------------------------------------------------------
+
+class %(name)s_Tests(wtc.WidgetTestCase):
+
+    # TODO: Remove this test and add real ones.
+    def test_%(name)s1(self):
+        self.fail("Unit tests for %(name)s not implemented yet.")
+        
+#---------------------------------------------------------------------------
+
+if __name__ == '__main__':
+    unittest.main()
+"""
+
+
+
+
 def main():
     (options, args) = parser.parse_args()
     if not args:
@@ -83,7 +105,7 @@ def main():
     for item in options.items.split(","):
         item_str += '"%s",\n' % item
     
-    arg_dict = {
+    values = {
         "author"    : options.author,
         "copyright" : options.copyright,
         "items"     : item_str,
@@ -94,15 +116,23 @@ def main():
         "module"    : args[1],
     }
     
-    output_file = os.path.join(root_dir, "etg", arg_dict["filename"])
-    
-    if os.path.exists(output_file):
-        print "Bindings with this name already exist. Exiting."
+    writeFile(
+        os.path.join(root_dir, "etg", values["filename"]), etgstub, values)
+    writeFile(
+        os.path.join(root_dir, "unittests", "test_%s.py"%values["name"]),
+        unitteststub, values)
+
+
+def writeFile(filename, stub, values):
+    if os.path.exists(filename):
+        print "'%s' already exists. Exiting." % filename
         sys.exit(1)
-    
-    output = open(output_file, 'w')
-    output.write(etgstub % arg_dict)
+    output = open(filename, 'w')
+    output.write(stub % values)
     output.close()
+    print "Wrote", filename
+
+
 
 
 if __name__ == '__main__':
