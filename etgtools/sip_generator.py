@@ -537,7 +537,9 @@ from %s import *
         
     def generateDocstring(self, item, stream, indent):
         item.pyDocstring = ""
-        #return
+        
+        if item.name.startswith('operator'):
+            return  # Apparently sip doesn't like operators to have docstrings...
         
         # get the docstring text
         text = nci(extractors.flattenNode(item.briefDoc, False))
