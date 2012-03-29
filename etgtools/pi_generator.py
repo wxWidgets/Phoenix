@@ -249,6 +249,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
     #-----------------------------------------------------------------------
     def generateFunction(self, function, stream):
         assert isinstance(function, extractors.FunctionDef)
+        if not function.pyName:
+            return
         stream.write('\ndef %s' % function.pyName)
         if function.overloads:
             stream.write('(*args, **kw)')
