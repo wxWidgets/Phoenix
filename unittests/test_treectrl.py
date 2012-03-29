@@ -17,40 +17,61 @@ class treectrl_Tests(wtc.WidgetTestCase):
     def test_treectrlTreeItemId(self):
         tree = wx.TreeCtrl(self.frame)
         root = tree.AddRoot('root item')
-        self.assertTrue( isinstance(root, wx.TreeItemId) )
-        self.assertTrue( root.IsOk() )
+        self.assertTrue(isinstance(root, wx.TreeItemId))
+        self.assertTrue(root.IsOk())
 
         r = tree.GetRootItem()
-        self.assertTrue( r is not root )
-        self.assertTrue( r == root )
+        self.assertTrue(r is not root)
+        self.assertTrue(r == root)
         
         child = tree.AppendItem(root, 'child item')
-        self.assertTrue( child is not root )
-        self.assertTrue( child != root )
+        self.assertTrue(child is not root)
+        self.assertTrue(child != root)
 
 
     def test_treectrlTreeItemData(self):
         value = 'Some Python Object'
         tree = wx.TreeCtrl(self.frame)
-        data = wx.TreeItemData(value)
-        root = tree.AddRoot('root item', data=data)
-        d = tree.GetItemData(root)
-        self.assertTrue(d.GetData() == value)
-        self.assertTrue(d.Data == value)
-        self.assertTrue(d.Id == root)
+        root = tree.AddRoot('root item', data=value)
+        v = tree.GetItemData(root)
+        self.assertTrue(v == value)
         tree.SetItemData(root, None)
         self.assertTrue(tree.GetItemData(root) is None)
         
         
     def test_treectrlTreeItemPyData(self):
+        # ensure that the "Py" versions raise deprecation warnings
         value = 'Some Python Object'
         tree = wx.TreeCtrl(self.frame)
         root = tree.AddRoot('root item')
-        tree.SetItemPyData(root, value)
-        self.assertTrue(tree.GetItemPyData(root) == value)
-        self.assertTrue(tree.GetItemData(root).GetData() == value)
-        tree.SetItemPyData(root, None)
-        self.assertTrue(tree.GetItemPyData(root) is None)
+        tree.SetItemData(root, value)
+        
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")        
+            with self.assertRaises(wx.wxPyDeprecationWarning):
+                tree.SetItemPyData(root, value)
+                
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")        
+            with self.assertRaises(wx.wxPyDeprecationWarning):
+                tree.GetItemPyData(root)
+
+        
+    def test_treectrlGetSelections(self):
+        tree = wx.TreeCtrl(self.frame, style=wx.TR_MULTIPLE)
+        root = tree.AddRoot('root item')
+        c1 = tree.AppendItem(root, 'c1')
+        c2 = tree.AppendItem(root, 'c2')
+        tree.SelectItem(c1)
+        tree.SelectItem(c2)
+        self.assertTrue(tree.IsSelected(c1))
+        self.assertTrue(tree.IsSelected(c2))
+        
+        sel = tree.GetSelections()
+        self.assertTrue(isinstance(sel, list))
+        self.assertTrue(len(sel) == 2)
+        self.assertTrue(isinstance(sel[0], wx.TreeItemId))
         
         
 
@@ -89,6 +110,7 @@ class treectrl_Tests(wtc.WidgetTestCase):
         wx.TREE_HITTEST_ONITEMUPPERPART
         wx.TREE_HITTEST_ONITEMLOWERPART
         wx.TREE_HITTEST_ONITEM
+        
         
     def test_treeEventsExist(self):
         wx.wxEVT_COMMAND_TREE_BEGIN_DRAG

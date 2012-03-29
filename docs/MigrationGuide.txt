@@ -236,3 +236,17 @@ wx.ListCtrl
   public. Instead use the associated getter/setter methods or the
   auto-generated properties that are using them.
 
+wx.TreeCtrl
+-----------
+
+* The GetItemData and SetItemData now behave just like GetItemPyData
+  and SetItemPyData did in Classic wxPython.  In other words, instead
+  of needing to create and use instances of wx.TreeItemData to
+  associate Python data objects with tree items, you just use the
+  Python objects directly.  It will also work when passing the data
+  objects directly to the AppendItem, InsertItem, etc. methods.  (If
+  anybody was actually using the wx.TreeItemData objects directly
+  before and are unable to adapt then please let Robin know.)  The 
+  [G|S]etItemPyData members still exist, but are now deprecated
+  aliases for [G|S]etItemData.
+

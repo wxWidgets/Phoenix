@@ -18,12 +18,10 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ "wxTreeItemId",
-           ##"wxTreeItemData",
+           ##"wxTreeItemData",  We're using a MappedType instead
            "wxTreeCtrl",
            "wxTreeEvent",           
            ]    
-
-DEPENDS = [ 'src/treeitemdata.h' ]
 
 #---------------------------------------------------------------------------
 
@@ -35,7 +33,6 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
     
     
     #-------------------------------------------------------
@@ -50,84 +47,20 @@ def run():
     
     
     #-------------------------------------------------------
-    # Instead of using the wxTreeItemData defined in the dox file we'll
-    # create our own subclass that knows about dealing with PyObjects
-    # properly and then tweak the wxTreeCtrl methods below to define the use
-    # of this new class instead.
-    
-    # TODO: build this with ClassDef, etc. extractor objects instead of WigCode.
-
-    # OR maybe just assume that nobody uses the Set/GetId and make it a %MappedType?
-    # Then Set/GetItemPyData can just be aliases.
-    tid = etgtools.WigCode("""\
-        class TreeItemData {
-        %TypeHeaderCode
-            #include "treeitemdata.h"
-        %End
-        
-        public:
-            TreeItemData(PyObject* obj = NULL);
-            ~TreeItemData();
-
-            const wxTreeItemId& GetId() const;
-            void SetId(const wxTreeItemId& id);
-        
-            PyObject* GetData();
-            void SetData(PyObject* obj);        
-            
-            %Property(name=Id, get=GetId, set=SetId)
-            %Property(name=Data, get=GetData, set=SetData)
-        };
-        """)
-    module.insertItemAfter(c, tid)
-    
-    
-
-    #-------------------------------------------------------
     c = module.find('wxTreeCtrl')
     tools.fixWindowClass(c)
     module.addGlobalStr('wxTreeCtrlNameStr', before=c)
     
     
-    # Switch all wxTreeItemData parameters to our TreeItemData class.
+    # Set all wxTreeItemData parameters to transfer ownership.  Is this still needed with MappedTypes?
     for item in c.allItems():
-        if hasattr(item, 'type') and item.type == 'wxTreeItemData *':
-            item.type = 'TreeItemData *'
-            if isinstance(item, etgtools.ParamDef):
+        if hasattr(item, 'type') and item.type == 'wxTreeItemData *' and \
+           isinstance(item, etgtools.ParamDef):
                 item.transfer = True
 
-    # Typecast the return value to our data item type
-    c.find('GetItemData').setCppCode(
-        'return dynamic_cast<TreeItemData*>(self->GetItemData(*item));')
-    
-    # The setter takes ownership of the data object
-    c.find('SetItemData.data').transfer = True
-        
-    # Add methods that allow direct setting/getting of the PyObject without
-    # requiring the programmer to use our TreeItemData class themselves.
-    c.addCppMethod('PyObject*', 'GetItemPyData', '(const wxTreeItemId& item)',
-        doc='Get the Python object associated with the tree item.',
-        body="""\
-        TreeItemData* data = (TreeItemData*)self->GetItemData(*item);
-        if (data == NULL) {
-            RETURN_NONE();
-        }
-        return data->GetData();
-        """)
-    c.addCppMethod('void', 'SetItemPyData', '(const wxTreeItemId& item, PyObject* obj)',
-        doc='Associate a Python object with an item in the treectrl.',
-        body="""\
-        TreeItemData* data = (TreeItemData*)self->GetItemData(*item);
-        if (data == NULL) {
-            data = new TreeItemData(obj);
-            self->SetItemData(*item, data);
-        } else {
-            data->SetData(obj);
-        }
-        """)
     c.addPyCode("""\
-        TreeCtrl.GetPyData = wx.deprecated(TreeCtrl.GetItemPyData)
-        TreeCtrl.SetPyData = wx.deprecated(TreeCtrl.SetItemPyData)
+        TreeCtrl.GetItemPyData = wx.deprecated(TreeCtrl.GetItemData)
+        TreeCtrl.SetItemPyData = wx.deprecated(TreeCtrl.SetItemData)
         """)
 
     

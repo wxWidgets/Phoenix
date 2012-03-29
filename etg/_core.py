@@ -148,6 +148,7 @@ INCLUDES = [  # core
               'toolbar',
               'infobar',
               'listctrl',
+              'treeitemdata',
               'treectrl',
               
               # toplevel and dialogs
