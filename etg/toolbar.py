@@ -62,6 +62,7 @@ def run():
     tools.fixWindowClass(c)
     _fixClientData(c)
     c.find('SetBitmapResource').ignore()
+    module.addGlobalStr('wxToolBarNameStr', c)
 
     gcd = c.find('GetToolClientData')
     gcd.type = 'wxPyUserData*'
@@ -75,6 +76,9 @@ def run():
     c.find('OnRightClick').ignore()
     c.find('OnLeftClick').ignore()
 
+
+    # Add some deprecated methods to aid with Classic compatibility.
+    # TODO: Which others are commonly enough used that they should be here too?
     c.addPyMethod('AddSimpleTool', '(self, toolId, bitmap, shortHelpString="", longHelpString="", isToggle=0)',
         doc='Old style method to add a tool to the toolbar.',
         deprecated=True,
@@ -83,6 +87,15 @@ def run():
             if isToggle: kind = wx.ITEM_CHECK
             return self.AddTool(toolId, '', bitmap, wx.NullBitmap, kind,
                                 shortHelpString, longHelpString)
+            """)
+    c.addPyMethod('AddLabelTool', 
+                  '(self, id, label, bitmap, bmpDisabled=wx.NullBitmap, kind=wx.ITEM_NORMAL,'
+                  ' shortHelp="", longHelp="", clientData=None)',
+        doc='Old style method to add a tool in the toolbar.',
+        deprecated=True,
+        body="""\
+            return self.AddTool(id, label, bitmap, bmpDisabled, kind,
+                                shortHelp, longHelp, clientData)
             """)
 
     c.addPyMethod('InsertSimpleTool', '(self, pos, toolId, bitmap, shortHelpString="", longHelpString="", isToggle=0)',
@@ -94,9 +107,16 @@ def run():
             return self.InsertTool(pos, toolId, '', bitmap, wx.NullBitmap, kind,
                                    shortHelpString, longHelpString)
             """)
+    c.addPyMethod('InsertLabelTool', 
+                  '(self, pos, id, label, bitmap, bmpDisabled=wx.NullBitmap, kind=wx.ITEM_NORMAL,'
+                  ' shortHelp="", longHelp="", clientData=None)',
+        doc='Old style method to insert a tool in the toolbar.',
+        deprecated=True,
+        body="""\
+            return self.InsertTool(pos, id, label, bitmap, bmpDisabled, kind,
+                                   shortHelp, longHelp, clientData)
+            """)
 
-
-    module.addGlobalStr('wxToolBarNameStr', c)
 
 
 
