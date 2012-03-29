@@ -91,6 +91,12 @@ WAF Build
     * Update wscript to support installation of the wxPython package, either
       to the site-pacakges dir of the active Python or to a DESTROOT for when
       building installer packages.
+      
+    * Can we also do other distutils- or setuptools-like things from our wscript?  
+      For example, creating an egg or other standardized python distribution format, 
+      uploading to pypi, etc.  Or perhaps we can dynamically generate a setup.py 
+      script that will do that stuff for us.  I'd really rather not have to 
+      maintain both setup.py and the wscript that can both do full builds...
 
     * Add support for using the cygwin and mingw32 compilers.
     
