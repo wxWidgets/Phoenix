@@ -145,7 +145,6 @@ other dev stuff
       * all missing common dialogs
       * print (as in print framework classes)
       * mdi (die mdi! die!)
-      * dirctrl
       * cshelp
       * dragimag 
       * datectrl

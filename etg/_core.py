@@ -150,6 +150,7 @@ INCLUDES = [  # core
               'listctrl',
               'treeitemdata',
               'treectrl',
+              'dirctrl',
               
               # toplevel and dialogs
               'nonownedwnd',
