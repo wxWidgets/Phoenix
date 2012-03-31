@@ -150,19 +150,21 @@ INCLUDES = [  # core
               'listctrl',
               'treeitemdata',
               'treectrl',
-              'dirctrl',
               
               # toplevel and dialogs
               'nonownedwnd',
               'toplevel',
               'dialog',
               'dirdlg',
+              'dirctrl',
               'filedlg',
               'frame',
               'msgdlg',
               'progdlg',
               'popupwin',
               'tipwin',
+              'colordlg',
+              'choicdlg',
 
               # misc
               'utils',
