@@ -67,7 +67,7 @@ def run():
         factory=True)
     
     
-    tools.fixWindowClass(c)
+    tools.fixTopLevelWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

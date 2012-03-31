@@ -36,8 +36,7 @@ def run():
     
     c = module.find('wxGenericDirCtrl')
     assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
-    
+    tools.fixTopLevelWindowClass(c)
     
     
     #-----------------------------------------------------------------

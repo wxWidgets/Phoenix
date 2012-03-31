@@ -7,9 +7,9 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
+from core import __version__
+
 # Import all items from the core wxPython modules so they appear in the wx
 # package namespace.
 from core import *
 
-
-from core import __version__
