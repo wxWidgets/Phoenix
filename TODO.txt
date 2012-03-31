@@ -109,12 +109,6 @@ Deprecated C++ items
       that will also be tagged as such in the XML?
 
 
-wxProgressDialog
-----------------
-    * Add wxGenericProgressDialog.
-    * and wxProgressDialog inherits from the generic version
-
-
 
 other dev stuff
 ---------------

@@ -17,7 +17,9 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxProgressDialog' ]    
+ITEMS  = [ 'wxGenericProgressDialog',
+           'wxProgressDialog' 
+           ]    
     
 #---------------------------------------------------------------------------
 
@@ -32,11 +34,18 @@ def run():
     
     module.addHeaderCode("#include <wx/progdlg.h>")
 
-    c = module.find('wxProgressDialog') 
+    c = module.find('wxGenericProgressDialog') 
     assert isinstance(c, etgtools.ClassDef) 
     
-    tools.fixWindowClass(c, False)
-    tools.removeVirtuals(c)
+    tools.fixWindowClass(c)#, False)
+    #tools.removeVirtuals(c)
+    
+    c.find('Pulse.skip').out = True
+    c.find('Update.skip').out = True
+    
+    
+    c = module.find('wxProgressDialog') 
+    tools.fixWindowClass(c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
