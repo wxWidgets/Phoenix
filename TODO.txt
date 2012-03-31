@@ -136,7 +136,6 @@ other dev stuff
     files for the following:
 
       * taskbar
-      * all missing common dialogs
       * print (as in print framework classes)
       * mdi (die mdi! die!)
       * cshelp
