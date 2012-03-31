@@ -165,6 +165,7 @@ INCLUDES = [  # core
               'tipwin',
               'colordlg',
               'choicdlg',
+              'fdrepdlg',
 
               # misc
               'utils',
