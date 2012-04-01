@@ -148,7 +148,9 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace('See also\n', '.. seealso:: ')
         # Avoid Sphinx warnings on wx.TreeCtrl
         text = text.replace('**( `', '** ( `')
-            
+        # Replace EmptyString stuff
+        text = text.replace('EmptyString', "''")
+        
         if text != orig_text:
             fid = open(input, 'wt')
             fid.write(text)
