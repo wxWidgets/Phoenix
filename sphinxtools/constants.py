@@ -144,7 +144,7 @@ HTML_REPLACE = ['module', 'function', 'method', 'class', 'classmethod', 'staticm
 
 # The SVN revision of wxWidgets/Phoenix used to build the Sphinx docs.
 # There must be a more intelligent way to get this information automatically.
-SVN_REVISION = '71022'
+SVN_REVISION = '71066'
 
 # Today's date representation for the Sphinx HTML docs
 TODAY = datetime.date.today().strftime('%d %B %Y')

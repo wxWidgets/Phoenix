@@ -19,6 +19,8 @@ import cPickle
 from UserDict import UserDict
 
 # Phoenix-specific imports
+from templates import TEMPLATE_CONTRIB
+
 from constants import IGNORE, PUNCTUATION
 from constants import CPP_ITEMS, VERSION, VALUE_MAP
 from constants import RE_KEEP_SPACES
@@ -587,3 +589,31 @@ def Wx2Sphinx(name):
 
 
 # ----------------------------------------------------------------------- #
+
+def FormatContributedSnippets(kind, contrib_snippets):
+
+    spacer = ''
+    if kind == 'function':
+        spacer = 3*' '
+    elif kind == 'method':
+        spacer = 6*' '
+
+    if kind == 'class':
+        text = TEMPLATE_CONTRIB
+    else:
+        text = spacer + '\n**Contributed Examples:**\n\n'
+    
+    for indx, snippet in enumerate(contrib_snippets):
+        fid = open(snippet, 'rt')
+        lines = fid.readlines()
+        fid.close()
+        user = lines[0].replace('##', '').strip()
+
+        text += '\n' + spacer + 'Example %d (%s)::\n\n'%(indx+1, user)
+
+        for line in lines[1:]:
+            text += 4*' '+ spacer + line
+
+        text += '\n'
+
+    return text

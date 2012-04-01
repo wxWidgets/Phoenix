@@ -198,6 +198,12 @@ TEMPLATE_EVENTS = '''
 
 '''
 
+TEMPLATE_CONTRIB = '''
+
+|user| Contributed Examples
+===========================
+
+'''
 
 # Template used to generate the widgets gallery (this needs some work)
 TEMPLATE_GALLERY = '''

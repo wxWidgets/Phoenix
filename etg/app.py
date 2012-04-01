@@ -343,7 +343,7 @@ def run():
                         app to terminate upon a Ctrl-C in the console like other
                         GUI apps will.
             
-                    :note: You should override OnInit to do applicaition
+                    :note: You should override OnInit to do application
                         initialization to ensure that the system, toolkit and
                         wxWidgets are fully initialized.
                     """,

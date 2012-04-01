@@ -19,7 +19,8 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ ]    
-    
+
+
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These items are in their own etg scripts
@@ -228,7 +229,14 @@ def run():
             method calls from non-GUI threads.  Any extra positional or
             keyword args are passed on to the callable when it is called.
             
-            :see: `CallLater`""",
+            :param callableObj: the callable object
+            :param args: arguments to be passed to the callable object
+            :param kw: keywords to be passed to the callable object
+            
+            .. seealso::
+                :class:`CallLater`
+            
+            """,
         body="""\
             assert callable(callableObj), "callableObj is not callable"
             app = wx.GetApp()
@@ -260,7 +268,15 @@ def run():
             the timer completes, automatically cleaning up the wx.CallLater
             object.
             
-            :see: `CallAfter`""",
+            :param int millis: number of milli seconds
+            :param callableObj: the callable object
+            :param args: arguments to be passed to the callable object
+            :param kw: keywords to be passed to the callable object
+            
+            ::seealso:
+                :func:`CallAfter`
+                
+            """,
         items = [
             PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
                 body="""\
@@ -278,7 +294,14 @@ def run():
             PyFunctionDef('__del__', '(self)', 'self.Stop()'),
             
             PyFunctionDef('Start', '(self, millis=None, *args, **kwargs)', 
-                doc="(Re)start the timer",
+                doc="""\
+                    (Re)start the timer
+
+                    :param int millis: number of milli seconds
+                    :param args: arguments to be passed to the callable object
+                    :param kw: keywords to be passed to the callable object
+
+                    """,
                 body="""\
                     self.hasRun = False
                     if millis is not None:
@@ -312,14 +335,28 @@ def run():
                     (Re)set the args passed to the callable object.  This is
                     useful in conjunction with Restart if you want to schedule a
                     new call to the same callable object but with different
-                    parameters.""",
+                    parameters.
+
+                    :param args: arguments to be passed to the callable object
+                    :param kw: keywords to be passed to the callable object
+                    
+                    """,
                 body="""\
                     self.args = args
                     self.kwargs = kwargs"""),
             
-            PyFunctionDef('HasRun', '(self)', 'return self.hasRun'),
-            PyFunctionDef('GetResult', '(self)', 'return self.result'),
-            
+            PyFunctionDef('HasRun', '(self)', 'return self.hasRun',
+                doc="""\
+                    :rtype: boolean
+                    
+                    """),
+
+            PyFunctionDef('GetResult', '(self)', 'return self.result',
+                doc="""\
+                    :rtype: result from callable
+                    
+                    """),
+
             PyFunctionDef('Notify', '(self)', 
                 doc="The timer has expired so call the callable.",
                 body="""\

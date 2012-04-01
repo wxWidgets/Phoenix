@@ -126,7 +126,7 @@ project in the `wxWidgets SVN <http://svn.wxwidgets.org/viewvc/wx/wxPython>`_.
 wxPython Documentation
 ----------------------
 
-The new wxPython API documentation is available `in this page <APIMain.html>`_.
+The new wxPython API documentation is available `in this page <main.html>`_.
 
 
 .. toctree::

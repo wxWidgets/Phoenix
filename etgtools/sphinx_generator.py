@@ -20,6 +20,7 @@ import os
 import operator
 import shutil
 import textwrap
+import glob
 
 from StringIO import StringIO
 
@@ -41,6 +42,7 @@ from sphinxtools.utilities import FindControlImages, MakeSummary, PickleItem
 from sphinxtools.utilities import ChopDescription, PythonizeType, Wx2Sphinx
 from sphinxtools.utilities import PickleClassInfo, IsNumeric
 from sphinxtools.utilities import Underscore2Capitals, CountSpaces
+from sphinxtools.utilities import FormatContributedSnippets
 
 from sphinxtools.constants import VERSION, REMOVED_LINKS, SECTIONS
 from sphinxtools.constants import MAGIC_METHODS, MODULENAME_REPLACE
@@ -1512,9 +1514,9 @@ class XRef(Node):
 
         else:
             text = ':ref:`%s`'%Wx2Sphinx(stripped)[1]
-        
-        return space_before + text + space_after + ConvertToPython(tail)
 
+        return space_before + text + space_after + ConvertToPython(tail)
+    
 
 # ----------------------------------------------------------------------- #
 
@@ -1578,6 +1580,8 @@ class ComputerOutput(Node):
             text += ConvertToPython(self.element.tail)
 
         space_before, space_after = CountSpaces(text)
+        if space_before == '':
+            space_before = ' '
 
         return space_before + text + space_after
 
@@ -1626,15 +1630,43 @@ class Emphasis(Node):
 
         if self.element.tag == 'emphasis':
             format = '`%s`'
+            emphasys = '`'
         elif self.element.tag == 'bold':
             format = '**%s**'
+            emphasys = '**'
 
         spacing = ('ParameterList' in self.GetHierarchy() and [' '] or [''])[0]
 
         text = Node.Join(self, with_tail=False)
 
-        if text.strip():
-            text = spacing + format % text.strip()
+        if self.children:
+
+            startPos = 0
+            newText = spacing
+
+            for child in self.children:
+                childText = child.Join()
+
+                tail = child.element.tail
+                tail = (tail is not None and [tail] or [''])[0]
+
+                childText = childText.replace(ConvertToPython(tail), '')
+                fullChildText = child.Join()
+                endPos = text.index(childText)
+
+                newText += ' ' + emphasys + text[startPos:endPos].strip() + emphasys + ' '
+                newText += childText + ' '
+                remaining = fullChildText.replace(childText, '')
+                newText += emphasys + remaining.strip() + emphasys + ' '
+                
+                startPos = endPos
+
+            text = newText
+            
+        else:
+            
+            if text.strip():
+                text = spacing + format % text.strip()
 
         if self.element.tail:
             text += ConvertToPython(self.element.tail)
@@ -1776,6 +1808,8 @@ class XMLDocString(object):
         self.class_name = ''
         
         self.snippet_count = 0
+        self.contrib_snippets = []
+
         self.table_count = 0
 
         self.list_level = 1        
@@ -1787,7 +1821,7 @@ class XMLDocString(object):
         
         self.appearance = []
         self.overloads = []
-                                        
+        
         if isinstance(xml_item, extractors.MethodDef):
             self.kind = 'method'
         elif isinstance(xml_item, (extractors.FunctionDef, extractors.PyFunctionDef)):
@@ -2050,13 +2084,29 @@ class XMLDocString(object):
             dummy, fullname = Wx2Sphinx(name)
         elif self.kind == 'method':
             method = self.xml_item
-            if method.isCtor:
+            if hasattr(method, 'isCtor') and method.isCtor:
                 method_name = '__init__'
+                
+                if hasattr(method, 'className') and method.className is not None:
+                    klass = RemoveWxPrefix(method.className)
+                else:
+                    klass = RemoveWxPrefix(method.klass.name)
+                    
+                method_name = '%s.%s'%(klass, method_name)
             else:
                 method_name = method.name or method.pyName
-                method_name = RemoveWxPrefix(method_name)
-            dummy, fullname = Wx2Sphinx(method.className)
-            fullname = fullname + '.' + method_name
+                if hasattr(method, 'className') and method.className is not None:
+                    klass = RemoveWxPrefix(method.className)
+                    method_name = '%s.%s'%(klass, method_name)
+                elif hasattr(method, 'klass'):
+                    klass = RemoveWxPrefix(method.klass.name)
+                    method_name = '%s.%s'%(klass, method_name)
+                else:
+                    method_name = RemoveWxPrefix(method_name)
+                    method_name = '%s'%method_name
+                    klass = None
+
+            dummy, fullname = Wx2Sphinx(method_name)
         elif self.kind == 'function':
             function = self.xml_item
             name = function.pyName or function.name
@@ -2090,7 +2140,17 @@ class XMLDocString(object):
         converted_py = os.path.join(SNIPPETROOT, 'python', 'converted', fullname + '.%d.py'%self.snippet_count)
         
         return cpp_file, python_file, converted_py
-            
+
+
+    def HuntContributedSnippets(self):
+        
+        fullname = self.GetFullName()
+        contrib_folder = os.path.join(SNIPPETROOT, 'python', 'contrib')
+
+        possible_py = glob.glob(os.path.normpath(contrib_folder + '/' + fullname + '*.py'))
+
+        return possible_py
+                
 
     # -----------------------------------------------------------------------
 
@@ -2158,6 +2218,13 @@ class XMLDocString(object):
             subs = ', '.join(subs)
             subs_desc = templates.TEMPLATE_SUBCLASSES % subs
             stream.write(subs_desc)
+
+        possible_py = self.HuntContributedSnippets()
+        
+        if possible_py:
+            possible_py.sort()
+            snippets = FormatContributedSnippets(self.kind, possible_py)
+            stream.write(snippets)
 
         if klass.method_list:
             summary = MakeSummary(name, klass.method_list, templates.TEMPLATE_METHOD_SUMMARY, 'meth')
@@ -2381,6 +2448,14 @@ class XMLDocString(object):
         stream.write('\n\n')
 
         self.Reformat(stream)
+
+        possible_py = self.HuntContributedSnippets()
+        
+        if possible_py:
+            possible_py.sort()
+            snippets = FormatContributedSnippets(self.kind, possible_py)
+            stream.write(snippets)
+
         stream.write("\n\n")
 
         if not self.is_overload and write:
@@ -2417,6 +2492,13 @@ class XMLDocString(object):
         stream.write('\n\n')                    
 
         self.Reformat(stream)
+
+        possible_py = self.HuntContributedSnippets()
+        
+        if possible_py:
+            possible_py.sort()
+            snippets = FormatContributedSnippets(self.kind, possible_py)
+            stream.write(snippets)
 
         if not self.is_overload and write:        
             PickleItem(stream.getvalue(), self.current_module, name, 'function')
@@ -2494,8 +2576,11 @@ class XMLDocString(object):
         newline = line
 
         if 'supports the following styles:' in line:
-            docstrings += templates.TEMPLATE_WINDOW_STYLES % class_name
-
+            if class_name is not None:
+                # Crappy wxWidgets docs!!! They put the Window Styles inside the
+                # constructor!!!
+                docstrings += templates.TEMPLATE_WINDOW_STYLES % class_name
+                
         elif 'The following event handler macros' in line:
             last = line.index(':')
             line = line[last+1:].strip()
@@ -2935,12 +3020,18 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         stream = StringIO()
         stream.write('\n   .. method:: %s%s\n\n' % (pm.name, pm.argsString))
 
-        docstrings = ConvertToPython(pm.pyDocstring).replace('\n', ' ')
+##        docstrings = ConvertToPython(pm.pyDocstring).replace('\n', ' ')
+        docstrings = ConvertToPython(pm.pyDocstring)
 
         newdocs = ''
+        spacer = ' '*6
+        
         for line in docstrings.splitlines():
-            newdocs += ' '*6 + line + "\n"
-
+            if not line.startswith(spacer):
+                newdocs += spacer + line + "\n"
+            else:
+                newdocs += line + "\n"
+                
         stream.write(newdocs + '\n\n')
 
         name = RemoveWxPrefix(self.current_class.name) or self.current_class.pyName

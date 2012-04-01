@@ -145,7 +145,10 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace(':note:', '.. note::')
         text = text.replace(':see:', '.. seealso::')
         text = text.replace('`String`&', 'string')
-        
+        text = text.replace('See also\n', '.. seealso:: ')
+        # Avoid Sphinx warnings on wx.TreeCtrl
+        text = text.replace('**( `', '** ( `')
+            
         if text != orig_text:
             fid = open(input, 'wt')
             fid.write(text)
@@ -184,8 +187,14 @@ def BuildEnumsAndMethods(sphinxDir):
 # ----------------------------------------------------------------------- #
 
 def FindInherited(input, class_summary, enum_base, text):
-    
-    regex = re.findall(':meth:\S+', text)
+
+    # Malformed inter-links
+    regex = re.findall(r'\S:meth:\S+', text)
+    for regs in regex:
+        newreg = regs[0] + ' ' + regs[1:]
+        text = text.replace(regs, newreg)
+
+    regex = re.findall(r':meth:\S+', text)
 
     for regs in regex:
         
@@ -304,20 +313,25 @@ def ReformatFunctions(file):
         label = local_file.split('.')[0:-2][0]
 
     names = functions.keys()
+    names = [name.lower() for name in names]
     names.sort()
 
     text = templates.TEMPLATE_FUNCTION_SUMMARY % (label, label)
 
     letters = []
     for fun in names:
-        if fun[0] not in letters:
-            letters.append(fun[0].upper())
+        upper = fun[0].upper()
+        if upper not in letters:
+            letters.append(upper)
 
-    text += '  |  '.join(['`%s`_'%letter for letter in letters])
+    text += '  |  '.join([':ref:`%s <%s %s>`'%(letter, label, letter) for letter in letters])
     text += '\n\n\n'
 
+    names = functions.keys()
+    names = sorted(names, key=str.lower)
+
     for letter in letters:
-        text += '%s\n^\n\n'%letter
+        text += '.. _%s %s:\n\n%s\n^\n\n'%(label, letter, letter)
         for fun in names:
             if fun[0].upper() != letter:
                 continue
