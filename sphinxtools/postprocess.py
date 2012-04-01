@@ -150,6 +150,8 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace('**( `', '** ( `')
         # Replace EmptyString stuff
         text = text.replace('EmptyString', "''")
+        # Replace ArrayString stuff...
+        text = text.replace('ArrayString', 'list of strings')
         
         if text != orig_text:
             fid = open(input, 'wt')
