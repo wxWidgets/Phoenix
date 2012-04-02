@@ -142,8 +142,12 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace('wx.``', '``')
         text = text.replace('non-NULL', 'not ``None``')
         text = text.replace(',,', ',').replace(', ,', ',')
-        text = text.replace(':note:', '.. note::')
-        text = text.replace(':see:', '.. seealso::')
+
+        if 'DocstringsGuidelines' not in input:
+            # Leave the DocstringsGuidelines.txt file alone on these ones
+            text = text.replace(':note:', '.. note::')            
+            text = text.replace(':see:', '.. seealso::')
+            
         text = text.replace('`String`&', 'string')
         text = text.replace('See also\n', '.. seealso:: ')
         # Avoid Sphinx warnings on wx.TreeCtrl
@@ -151,6 +155,7 @@ def BuildEnumsAndMethods(sphinxDir):
         # Replace EmptyString stuff
         text = text.replace('EmptyString', "''")
         # Replace ArrayString stuff...
+        text = text.replace('ArrayString()', '[]')
         text = text.replace('ArrayString', 'list of strings')
         
         if text != orig_text:
@@ -560,7 +565,7 @@ def PostProcess(folder):
             if '<div class="admonition-availability admonition' in line:
                 line = '<div class="admonition-availability admonition availability">'
                 
-            line = ClassToFile(line)
+##            line = ClassToFile(line)
 
             if index < len_split - 1:
 
