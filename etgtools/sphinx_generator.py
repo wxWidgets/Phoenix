@@ -649,7 +649,12 @@ class ParameterList(Node):
         docstrings = ''
         
         for name, parameter in self.py_parameters.items():
-            docstrings += ':param %s `%s`: %s\n'%(parameter.type, name, parameter.Join().lstrip('\n'))
+            if parameter.type.strip():
+                docstrings += ':param `%s`: %s\n'%(name, parameter.Join().lstrip('\n'))
+                docstrings += ':type `%s`: %s\n'%(name, parameter.type)
+            else:
+                docstrings += ':param `%s`: %s\n'%(name, parameter.Join().lstrip('\n'))
+            
 
         if docstrings:
             docstrings = '\n\n\n%s\n\n'%docstrings

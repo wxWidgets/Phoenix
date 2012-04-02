@@ -402,7 +402,7 @@ def GenGallery():
     link_template = """\
     <table><caption align="bottom"><a href="%s"<b>%s</b></a</caption>
     <tr>
-    <td><a href="%s"><img src="_static/%s/%s" border="20" alt="%s"/></a>
+    <td><a href="%s"><img src="_static/images/widgets/fullsize/%s/%s" border="20" alt="%s"/></a>
     </td>
     </tr>
     </table>
