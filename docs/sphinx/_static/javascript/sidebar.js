@@ -29,7 +29,7 @@ $(function() {
   var sidebarbutton = $('<div id="sidebarbutton"><div></div></div>');
   var sbw_width = sidebar.width();
   var sbb_width = 9;
-  var dark_color = $('div.related').css('background-color');
+  var dark_color = 'darkgrey';
   var light_color = sidebarwrapper.css('color');
   var opacity_factor = $.browser.msie ? 1 : 0.75;
   var collapsed = sidebarwrapper.is(':not(:visible)');
@@ -97,8 +97,8 @@ $(function() {
         'color': light_color,
         'font-size': 14,
         'text-align': 'center',
-        'border-left': '1px solid ' + dark_color,
-        'border-right': '1px solid ' + dark_color,
+        'border-left': '1px solid ' + 'white',
+        'border-right': '1px solid ' + 'white',
         'padding': '1px 0',
         'margin': '0',
         'width': sbb_width - 2,

@@ -178,6 +178,9 @@ def depart_availability_node(self, node):
 
 def setup(app):
     app.add_javascript('javascript/header.js')
+    app.add_javascript('javascript/sidebar.js')
+    app.add_javascript('javascript/jquery.collapse.js')
+    app.add_javascript('javascript/jquery.cookie.js')
     
     app.add_config_value('availability_include_availabilities', False, False)
 

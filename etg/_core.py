@@ -229,7 +229,7 @@ def run():
             method calls from non-GUI threads.  Any extra positional or
             keyword args are passed on to the callable when it is called.
             
-            :param callableObj: the callable object
+            :param PyObject callableObj: the callable object
             :param args: arguments to be passed to the callable object
             :param kw: keywords to be passed to the callable object
             
@@ -256,29 +256,36 @@ def run():
 
     module.addPyClass('CallLater', ['object'], 
         doc="""\
-            A convenience class for `wx.Timer`, that calls the given callable
+            A convenience class for :class:`Timer`, that calls the given callable
             object once after the given amount of milliseconds, passing any
             positional or keyword args.  The return value of the callable is
-            availbale after it has been run with the `GetResult` method.
+            availbale after it has been run with the :meth:`~CallLater.GetResult` method.
             
             If you don't need to get the return value or restart the timer
             then there is no need to hold a reference to this object.  It will
             hold a reference to itself while the timer is running (the timer
-            has a reference to self.Notify) but the cycle will be broken when
-            the timer completes, automatically cleaning up the wx.CallLater
+            has a reference to :meth:`~CallLater.Notify`) but the cycle will be broken when
+            the timer completes, automatically cleaning up the :class:`CallLater`
             object.
-            
-            :param int millis: number of milli seconds
-            :param callableObj: the callable object
-            :param args: arguments to be passed to the callable object
-            :param kw: keywords to be passed to the callable object
-            
-            ::seealso:
+                        
+            .. seealso::
                 :func:`CallAfter`
                 
             """,
         items = [
             PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
+                doc="""\
+                    A convenience class for :class:`Timer`, that calls the given callable
+                    object once after the given amount of milliseconds, passing any
+                    positional or keyword args.  The return value of the callable is
+                    availbale after it has been run with the :meth:`~CallLater.GetResult` method.
+
+                    :param int millis: number of milli seconds
+                    :param PyObject callableObj: the callable object
+                    :param args: arguments to be passed to the callable object
+                    :param kw: keywords to be passed to the callable object
+                """,
+                
                 body="""\
                     assert callable(callableObj), "callableObj is not callable"
                     self.millis = millis
@@ -333,7 +340,7 @@ def run():
             PyFunctionDef('SetArgs', '(self, *args, **kwargs)', 
                 doc="""\
                     (Re)set the args passed to the callable object.  This is
-                    useful in conjunction with Restart if you want to schedule a
+                    useful in conjunction with :meth:`Restart` if you want to schedule a
                     new call to the same callable object but with different
                     parameters.
 
@@ -347,14 +354,18 @@ def run():
             
             PyFunctionDef('HasRun', '(self)', 'return self.hasRun',
                 doc="""\
-                    :rtype: boolean
+                    Returns whether or not the callable has run.
+                    
+                    :rtype: bool
                     
                     """),
 
             PyFunctionDef('GetResult', '(self)', 'return self.result',
                 doc="""\
-                    :rtype: result from callable
+                    Returns the value of the callable.
                     
+                    :rtype: a Python object
+                    :return: result from callable                    
                     """),
 
             PyFunctionDef('Notify', '(self)', 

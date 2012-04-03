@@ -21,6 +21,7 @@ import operator
 import shutil
 import textwrap
 import glob
+import cPickle
 
 from StringIO import StringIO
 
@@ -515,7 +516,7 @@ class ParameterList(Node):
         
         for pdef in xml_item.items:
             
-            if pdef.out:
+            if pdef.out or pdef.ignored:
                 continue
 
             name = pdef.name    
@@ -609,8 +610,14 @@ class ParameterList(Node):
                   '  ==> Function/Method signature from `extractors`: %s\n' \
                   '  ==> Parameter list from wxWidgets XML items:     %s\n\n' \
                   'This may be a documentation bug in wxWidgets or a side-effect of removing the `wx` prefix from signatures.\n\n'
+
+        theargs = []
         
         for arg in arguments:
+
+            myarg = arg.split('=')[0].strip()
+            if myarg:
+                theargs.append(myarg)
 
             if '*' in arg or ')' in arg:
                 continue
@@ -624,6 +631,17 @@ class ParameterList(Node):
                     class_name = Wx2Sphinx(xml_item.className)[1] + '.'
 
                 print message % (class_name + name, arg, signature, py_parameters)
+
+##        for param in py_parameters:
+##            if param not in theargs:
+##                class_name = ''
+##                if hasattr(xml_item, 'className') and xml_item.className is not None:
+##                    class_name = Wx2Sphinx(xml_item.className)[1] + '.'
+##
+##                print '\n      |||  %s;%s;%s  |||\n'%(class_name[0:-1], signature, param)
+##                fid = open('mismatched.txt', 'a')
+##                fid.write('%s;%s;%s\n'%(class_name[0:-1], signature, param))
+##                fid.close()
                 
 
     # -----------------------------------------------------------------------
@@ -689,7 +707,7 @@ class Parameter(Node):
         self.pdef = pdef
         self.name = pdef.name
 
-        self.type = PythonizeType(pdef.type)        
+        self.type = PythonizeType(pdef.type)
                 
 
 # ----------------------------------------------------------------------- # 
@@ -2787,6 +2805,9 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         function.overloads = []
         function.pyArgsString = function.argsString
+
+        self.UnIndent(function)
+        
         # docstring
         docstring = XMLDocString(function)
         docstring.kind = 'function'
@@ -2806,7 +2827,28 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         docstring.Dump()
                         
-                
+
+    def UnIndent(self, item):
+
+        if not item.briefDoc:
+            return
+
+        newdocs = ''
+        for line in item.briefDoc.splitlines():
+            if line.strip():
+                stripped = len(line) - len(line.lstrip())
+                break
+
+        newdocs = ''
+        for line in item.briefDoc.splitlines():
+            if line.strip():
+                line = line[stripped:]
+
+            newdocs += line + '\n'
+
+        item.briefDoc = newdocs
+        
+        
     # -----------------------------------------------------------------------
         
     def generatePyClass(self, klass):
@@ -2843,6 +2885,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             init_method = class_items.pop(init_position)
             class_items.insert(0, init_method)
 
+        self.UnIndent(klass)
+
         docstring = XMLDocString(klass)
         docstring.kind = 'class'
 
@@ -2853,17 +2897,16 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         docstring.Dump()
 
         # these are the only kinds of items allowed to be items in a PyClass
-        dispatch = {
-            extractors.PyFunctionDef    : self.generateMethod,
-            extractors.PyPropertyDef    : self.generatePyProperty,
-            extractors.PyCodeDef        : self.generatePyCode,
-            extractors.PyClassDef       : self.generatePyClass,
-        }
+        dispatch = [(extractors.PyFunctionDef, self.generateMethod),
+                    (extractors.PyPropertyDef, self.generatePyProperty),
+                    (extractors.PyCodeDef,     self.generatePyCode),
+                    (extractors.PyClassDef,    self.generatePyClass)]
 
-        for item in class_items:
-            item.klass = klass                
-            f = dispatch[item.__class__]
-            f(item)
+        for kind, function in dispatch:
+            for item in class_items:
+                if kind == item.__class__:
+                    item.klass = klass
+                    function(item)
 
 
     # -----------------------------------------------------------------------
@@ -2979,6 +3022,9 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 ##        if name.startswith("__") and "__init__" not in name:
 ##            return
 
+        if isinstance(method, extractors.PyFunctionDef):
+            self.UnIndent(method)
+            
         class_name = RemoveWxPrefix(self.current_class.name) or self.current_class.pyName
             
         # docstring

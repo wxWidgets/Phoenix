@@ -226,23 +226,47 @@ def PythonizeType(ptype):
     :rtype: `string`
     """
 
-    ptype = Wx2Sphinx(ReplaceCppItems(ptype))[1]
+    if 'size_t' in ptype:
+        ptype = 'int'
+    elif 'wx.' in ptype:
+        ptype = ptype[3:]
+    else:
+        ptype = Wx2Sphinx(ReplaceCppItems(ptype))[1]
+        
     ptype = ptype.replace('::', '.').replace('*&', '')
     ptype = ptype.replace('int const', 'int')
     ptype = ptype.replace('Uint32', 'int').replace('**', '').replace('Int32', 'int')
     ptype = ptype.replace('FILE', 'file')
+    ptype = ptype.replace('boolean', 'bool')
 
     for item in ['unsignedchar', 'unsignedint', 'unsignedlong', 'unsigned']:
         ptype = ptype.replace(item, 'int')
     
-    ptype = ptype.strip()
+    ptype = ptype.strip()        
     ptype = RemoveWxPrefix(ptype)
 
-    if ptype.lower() == 'double':
+    if '. wx' in ptype:
+        ptype = ptype.replace('. wx', '.')
+
+    plower = ptype.lower()
+    
+    if plower == 'double':
         ptype = 'float'
 
-    if ptype.lower() in ['string', 'char']:
+    if plower in ['string', 'char']:
         ptype = 'string'
+
+    if plower in ['coord', 'byte', 'fileoffset', 'short', 'time_t', 'intptr', 'uintptr', 'windowid']:
+        ptype = 'int'
+        
+    if plower in ['longlong']:
+        ptype = 'long'
+                  
+    cpp =    ['ArrayString', 'ArrayInt', 'ArrayDouble']
+    python = ['list of strings', 'list of integers', 'list of floats']
+    
+    for c, p in zip(cpp, python):
+        ptype = ptype.replace(c, p)
 
     if 'Image.' in ptype:
         ptype = ptype.split('.')[-1]
@@ -590,6 +614,22 @@ def Wx2Sphinx(name):
 
 # ----------------------------------------------------------------------- #
 
+RAW_1 = """
+
+%s.. raw:: html
+
+%s    <div class="codeexpander">
+
+"""
+
+RAW_2 = """
+
+%s.. raw:: html
+
+%s    </div>
+
+"""
+
 def FormatContributedSnippets(kind, contrib_snippets):
 
     spacer = ''
@@ -608,12 +648,15 @@ def FormatContributedSnippets(kind, contrib_snippets):
         lines = fid.readlines()
         fid.close()
         user = lines[0].replace('##', '').strip()
+        onlyfile = os.path.split(snippet)[1]
 
-        text += '\n' + spacer + 'Example %d (%s)::\n\n'%(indx+1, user)
+        text += RAW_1%(spacer, spacer)
+        text += '\n' + spacer + 'Example %d - %s (:download:`download <_downloads/%s>`)::\n\n'%(indx+1, user, onlyfile)
 
         for line in lines[1:]:
             text += 4*' '+ spacer + line
 
         text += '\n'
+        text += RAW_2%(spacer, spacer)
 
     return text

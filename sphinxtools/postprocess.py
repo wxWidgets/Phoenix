@@ -150,14 +150,17 @@ def BuildEnumsAndMethods(sphinxDir):
             
         text = text.replace('`String`&', 'string')
         text = text.replace('See also\n', '.. seealso:: ')
+
         # Avoid Sphinx warnings on wx.TreeCtrl
         text = text.replace('**( `', '** ( `')
         # Replace EmptyString stuff
         text = text.replace('EmptyString', "''")
-        # Replace ArrayString stuff...
-        text = text.replace('ArrayString()', '[]')
-        text = text.replace('ArrayString', 'list of strings')
         
+        # Replace ArrayXXX stuff...
+
+        for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()']:
+            text = text.replace(cpp, '[]')
+                
         if text != orig_text:
             fid = open(input, 'wt')
             fid.write(text)
@@ -506,6 +509,36 @@ def ClassToFile(line):
 
 # ----------------------------------------------------------------------- #
 
+def AddJavaScript(text):
+
+    jsCode = """\
+        <script>
+            $(".codeexpander").collapse({head: "p", group: "div"},
+            {show: function(){
+                    this.animate({
+                        opacity: 'toggle',
+                        height: 'toggle'
+                    }, 300);
+                },
+                hide : function() {
+
+                    this.animate({
+                        opacity: 'toggle',
+                        height: 'toggle'
+                    }, 300);
+                }
+            });
+        </script>
+        """
+
+    index = text.rfind('</body>')
+    newtext = text[0:index] + jsCode + text[index:]
+
+    return newtext 
+    
+    
+# ----------------------------------------------------------------------- #
+
 def PostProcess(folder):
 
     fileNames = glob.glob(folder + "/*.html")
@@ -581,11 +614,13 @@ def PostProcess(folder):
                     elif stripline == '<dl class="attribute">' and not properties_done:
                         line = '<br><h3>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>' + '\n' + line
                         properties_done = True
-                
+                                
             newtext += line + '\n'                
 
         for old, new in enum_dict.items():
             newtext = newtext.replace(old, new)
+
+        newtext = AddJavaScript(newtext)            
 
         if orig_text != newtext:
             fid = open(files, "wt")

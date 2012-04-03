@@ -1,11 +1,30 @@
-
 {% extends "!layout.html" %}
 
 {%- block relbaritems %}
   <li>{{ title }}</li>
 {% endblock %}
 
-{% block sidebar1 %}{{ sidebar() }}{% endblock %}
+{%- set render_sidebar = (not embedded) and (not theme_nosidebar|tobool)
+    and (sidebars != []) and (pagename != 'index') %}
+
+{% macro phoenixsidebar() %}
+   {%- if render_sidebar %}{{ sidebar() }}{%- endif %}
+{% endmacro %}
+
+{% macro sidebarcss() %}
+  {%- if not render_sidebar %}
+    <style type="text/css">
+    div.document, div.footer { margin-left:0; margin-right: 0; }
+    </style>
+  {%- endif %}
+{% endmacro %}
+
+{% block extrahead %}{{ sidebarcss() }}{% endblock %}
+
+{% block sidebar1 %}{{ phoenixsidebar() }}{% endblock %}
+{% block sidebar2 %}{% endblock %}
+
+{% block relbar2 %}{% endblock %}
 
 {% block rootrellink %}
 
@@ -15,10 +34,38 @@
         <li><a href="gallery.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);">Gallery</a> |&nbsp;</li>
         <li><a href="main.html" style="color: rgb(238, 152, 22); hover: rgb(53, 95, 124);">Documentation</a> &raquo; </li>
 
+{%- if pagename != 'search' %}
+<li id="searchbox" style="display: none; margin: 0 20px;" class="right">
+  <form class="search" action="{{ pathto('search') }}" method="get">
+    <span>{{ _('Search:') }}</span>
+    <input type="text" name="q" size="18" />
+    <input type="submit" value="{{ _('Go') }}" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</li>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+{%- endif %}
 {% endblock %}
+
+{% block document %}
+  <div class="documentwrapper">
+    <div class="body headerfix">
+      {% block body %} {% endblock %}
+      {%- if theme_disqus_comments|tobool %}
+      <div id="disqus_thread"></div>
+      <script type="text/javascript" src="http://disqus.com/forums/tg-site/embed.js"></script>
+      <noscript><a href="http://tg-site.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+      {%- endif %}
+    </div>
+  </div>
+{%- endblock %}
 
 {% block header %}
 <div class="floatcenter" style="background-color: white; text-align: middle; align: middle; padding: 40px 10px 15px 15px">
 <img src="{{ pathto("_static/images/sphinxdocs/phoenix_top.png", 1) }}" alt="Phoenix Logo" align="middle" />
 </div>
 {% endblock %}
+
+set script_files = script_files + ['_static/sidebar.js']
+set script_files = script_files + ['_static/header.js']
