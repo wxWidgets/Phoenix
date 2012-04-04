@@ -52,6 +52,7 @@ INCLUDES = [  # core
               'cmndata',
               'gdicmn',
               'geometry',
+              'affinematrix2d',
               'position',
               'colour',
 
