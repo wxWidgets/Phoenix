@@ -144,8 +144,68 @@ HTML_REPLACE = ['module', 'function', 'method', 'class', 'classmethod', 'staticm
 
 # The SVN revision of wxWidgets/Phoenix used to build the Sphinx docs.
 # There must be a more intelligent way to get this information automatically.
-SVN_REVISION = '71086'
+SVN_REVISION = '71066'
 
 # Today's date representation for the Sphinx HTML docs
 TODAY = datetime.date.today().strftime('%d %B %Y')
+
+# wx.lib and other pure-Python stuff
+
+class Enumeration(object):
+
+    def __init__(self, name, enumList):
+
+        self.__doc__ = name
+        lookup = { }
+        reverseLookup = { }
+        i = 0
+        uniqueNames = [ ]
+        uniqueValues = [ ]
+
+        for item in enumList:
+            x = item.upper()
+            uniqueNames.append(x)
+            uniqueValues.append(i)
+            lookup[x] = i
+            reverseLookup[i] = x
+            i = i + 1
+
+        self.lookup = lookup
+        self.reverseLookup = reverseLookup
+
+    def __getattr__(self, attr):
+
+        if not self.lookup.has_key(attr):
+            raise AttributeError
+
+        return self.lookup[attr]
+
+    def whatis(self, value):
+
+        return self.reverseLookup[value]
+
+
+CONSTANT_RE = re.compile('^([\w\s,]+)=', re.M)
+
+EXCLUDED_ATTRS = ['__builtins__', '__doc__', '__name__', '__file__', '__path__',
+                  '__module__', '__all__']
+
+TYPE_DESCRIPTION = ['library',
+                    'package',
+                    'py_module', 'pyd_module', 'pyc_module', 'pyw_module',
+                    'klass',
+                    'function', 
+                    'method', 'static_method', 'class_method', 'instance_method',
+                    'method_descriptor', 'builtin_method', 'builtin_function',
+                    'property',
+                    'booltype', 'classtype', 'complextype', 'dictproxytype', 'dicttype', 'filetype',
+                    'floattype', 'instancetype', 'inttype', 'lambdatype', 'listtype', 'longtype',
+                    'nonetype', 'objecttype', 'slicetype', 'strtype', 'tracebacktype', 'tupletype',
+                    'typetype', 'unicodetype', 'unknowntype', 'xrangetype']
+
+object_types = Enumeration('Object_Types', TYPE_DESCRIPTION)
+
+MODULE_TO_ICON = [(".py",  object_types.PY_MODULE, "Py_Module"),   (".pyd", object_types.PYD_MODULE, "Pyd_Module"),
+                  (".pyc", object_types.PYC_MODULE, "Pyc_Module"), (".pyw", object_types.PYW_MODULE, "Pyw_Module"),
+                  (".so",  object_types.PYD_MODULE, "Pyd_Module")]
 

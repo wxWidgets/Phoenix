@@ -68,6 +68,8 @@ Usage: ./build.py [command(s)] [options]
                     SIP files
       sphinx        Run the documentation building process using Sphinx (this
                     needs to be done after dox and etg)
+      wxlib         Run the documentation building process using Sphinx for
+                    wx.lib (and possibly other pure-Python modules/packages)
       sip           Run sip
       test          Run the unit test suite
       test_*        Run just one test module
@@ -123,7 +125,7 @@ def main(args):
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
                      'build_wx', 'build_py', 'setup_py', 'waf_py', 'build', 'bdist',
                      'clean', 'clean_wx', 'clean_py', 'cleanall', 'clean_sphinx',
-                     'sphinx']:
+                     'sphinx', 'wxlib']:
             function = globals()[cmd]
             function(options, args)
         else:
@@ -592,6 +594,23 @@ def sphinx(options, args):
     msg('Postprocesing sphinx output...')
     PostProcess(htmlDir)
 
+
+def wxlib(options, args):
+    from sphinxtools.modulehunter import ModuleHunter
+
+    cmdTimer = CommandTimer('wxlib')
+    pwd = pushDir(phoenixDir())
+
+    libDir = os.path.join(phoenixDir(), 'wx', 'lib')
+
+    if not os.path.isdir(libDir):
+        raise Exception('Missing wx.lib folder in the distribution')
+
+    init_name = os.path.join(libDir, '__init__.py')
+    import_name = 'lib'
+    version = version3
+
+    ModuleHunter(init_name, import_name, version)
     
     
 def sip(options, args):

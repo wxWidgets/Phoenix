@@ -16,9 +16,9 @@ TEMPLATE_DESCRIPTION = '''
 
 .. _%s:
 
-=====================================================================================
+==========================================================================================================================================
 |phoenix_title|  **%s**
-=====================================================================================
+==========================================================================================================================================
 
 '''
 
@@ -86,6 +86,18 @@ TEMPLATE_APPEARANCE = '''
 TEMPLATE_SUBCLASSES = '''
 |sub_classes| Known Subclasses
 ==============================
+
+%s
+
+|
+
+'''
+
+# Template for the superclasses of a class, with a string containing a list
+# of comma separated class names with their ReST role as :ref: prepended
+TEMPLATE_SUPERCLASSES = '''
+|super_classes| Known Superclasses
+==================================
 
 %s
 
@@ -247,3 +259,53 @@ TEMPLATE_HEADINGS = '''
 
 '''
 
+# Templates for the summary of modules/packages, containing a table made of
+# ``module name``      ``short description``
+TEMPLATE_MODULE_SUMMARY = '''
+|module_summary| Modules Summary
+================================
+
+%s
+
+|
+
+'''
+
+TEMPLATE_PACKAGE_SUMMARY = '''
+|package_summary| Packages Summary
+==================================
+
+%s
+
+|
+
+'''
+
+TEMPLATE_STD_FUNCTION_SUMMARY = '''
+|function_summary| Functions Summary
+====================================
+
+%s
+
+|
+
+'''
+
+TEMPLATE_STD_CLASS_SUMMARY = '''
+|class_summary| Classes Summary
+===============================
+
+%s
+
+|
+
+'''
+
+
+TEMPLATE_TOCTREE = '''
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+%s
+'''

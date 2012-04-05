@@ -32,15 +32,68 @@ class InheritanceDiagram(object):
     graphviz dot graph from them.
     """
 
-    # ----------------------------------------------------------------------- #
+    def __init__(self, classes, main_class=None):
 
-    def __init__(self, class_info):
+        if main_class is None:
+            self.class_info, self.specials = classes
+            self.class_info = self.class_info.values()
+        else:
+            self.class_info, self.specials = self._class_info(classes)
+            
+        self.main_class = main_class
 
-        #print class_info
-        #print
-        #print
-        
-        self.class_info, self.specials = class_info
+
+    def _class_info(self, classes):
+        """Return name and bases for all classes that are ancestors of
+        *classes*.
+
+        *parts* gives the number of dotted name parts that is removed from the
+        displayed node names.
+        """
+
+        all_classes = {}
+        specials = []
+
+        def recurse(cls):
+            nodename, fullname = self.class_name(cls)
+
+            baselist = []
+            all_classes[cls] = (nodename, fullname, baselist)
+
+            for base in cls.__bases__:
+                baselist.append(self.class_name(base)[0])
+                if base not in all_classes:
+                    recurse(base)
+
+        for cls in classes:
+            recurse(cls)
+            specials.append(self.class_name(cls)[1])
+
+        return all_classes.values(), specials
+
+
+    def class_name(self, cls):
+        """Given a class object, return a fully-qualified name.
+
+        This works for things I've tested in matplotlib so far, but may not be
+        completely general.
+        """
+
+        module = cls.__module__
+
+        if module == '__builtin__':
+            fullname = cls.__name__
+        else:
+            fullname = '%s.%s' % (module, cls.__name__)
+
+        name_parts = fullname.split('.')
+        if 'wx._' in fullname:
+            nodename = fullname = name_parts[-1]
+        else:
+            # Just the last 2 parts
+            nodename = '.'.join(name_parts[-2:])
+
+        return nodename, fullname
 
 
     # These are the default attrs for graphviz
@@ -61,32 +114,22 @@ class InheritanceDiagram(object):
         'style': '"setlinewidth(0.5)"',
     }
 
-
-    # ----------------------------------------------------------------------- #
-
-    def FormatNodeAttrs(self, attrs):
-
+    def _format_node_attrs(self, attrs):
         return ','.join(['%s=%s' % x for x in attrs.items()])
 
-
-    # ----------------------------------------------------------------------- #
-
-    def FormatGraphAttrs(self, attrs):
-
+    def _format_graph_attrs(self, attrs):
         return ''.join(['%s=%s;\n' % x for x in attrs.items()])
 
+    def generate_dot(self, name="dummy", urls={}, graph_attrs={}, node_attrs={}, edge_attrs={}):
+        """Generate a graphviz dot graph from the classes that were passed in
+        to __init__.
 
-    # ----------------------------------------------------------------------- #
+        *name* is the name of the graph.
 
-    def GenerateDot(self, name="dummy"):
-        """
-        Generate a graphviz dot graph from the classes that were passed in to `__init__`.
+        *urls* is a dictionary mapping class names to HTTP URLs.
 
-        :param string `name`: the name of the graph.
-
-        :rtype: `string`
-
-        :returns: A string representing the Graphviz dot diagram.        
+        *graph_attrs*, *node_attrs*, *edge_attrs* are dictionaries containing
+        key/value pairs to pass on as graphviz properties.
         """
 
         inheritance_graph_attrs = dict(fontsize=9, ratio='auto', size='""', rankdir="LR")
@@ -97,7 +140,7 @@ class InheritanceDiagram(object):
                                   'labelloc': 'c', 'fontcolor': 'grey45'}
 
         inheritance_edge_attrs = {'arrowsize': 0.5, 'style': '"setlinewidth(0.5)"', "color": "black"}
-        
+
         g_attrs = self.default_graph_attrs.copy()
         n_attrs = self.default_node_attrs.copy()
         e_attrs = self.default_edge_attrs.copy()
@@ -107,35 +150,39 @@ class InheritanceDiagram(object):
 
         res = []
         res.append('digraph %s {\n' % name)
-        res.append(self.FormatGraphAttrs(g_attrs))
+        res.append(self._format_graph_attrs(g_attrs))
 
-        for name, fullname, bases in self.class_info.values():
+        for name, fullname, bases in self.class_info:
             # Write the node
             this_node_attrs = n_attrs.copy()
 
-            if name in self.specials:
+            if fullname in self.specials:
                 this_node_attrs['fontcolor'] = 'black'
                 this_node_attrs['color'] = 'blue'
                 this_node_attrs['style'] = 'bold'
 
-            newname, fullname = Wx2Sphinx(name)
+            if self.main_class is None:
+                newname, fullname = Wx2Sphinx(name)
+            else:
+                newname = name
 
             this_node_attrs['URL'] = '"%s.html"'%fullname
             res.append('  "%s" [%s];\n' %
-                       (newname, self.FormatNodeAttrs(this_node_attrs)))
+                       (newname, self._format_node_attrs(this_node_attrs)))
 
             # Write the edges
             for base_name in bases:
 
                 this_edge_attrs = e_attrs.copy()
-                if name in self.specials:
+                if fullname in self.specials:
                     this_edge_attrs['color'] = 'red'
 
-                base_name, dummy = Wx2Sphinx(base_name)
-                    
+                if self.main_class is None:
+                    base_name, dummy = Wx2Sphinx(base_name)
+
                 res.append('  "%s" -> "%s" [%s];\n' %
                            (base_name, newname,
-                            self.FormatNodeAttrs(this_edge_attrs)))
+                            self._format_node_attrs(this_edge_attrs)))
         res.append('}\n')
         return ''.join(res)
 
@@ -155,31 +202,43 @@ class InheritanceDiagram(object):
         :returns: a tuple containing the PNG file name and a string representing the content
          of the MAP file (with newlines stripped away).
 
-        .. note:: The MAP file is deleted as soon as its content has been read.         
+        .. note:: The MAP file is deleted as soon as its content has been read.
         """
 
-        code = self.GenerateDot()
-        
+        static_root = INHERITANCEROOT
+
+        if self.main_class is not None:
+            filename = self.main_class.name
+        else:                        
+            dummy, filename = Wx2Sphinx(self.specials[0])
+
+        outfn = os.path.join(static_root, filename + '_inheritance.png')
+        mapfile = outfn + '.map'
+
+        if os.path.isfile(outfn) and os.path.isfile(mapfile):
+            fid = open(mapfile, 'rt')
+            map = fid.read()
+            fid.close()
+            return os.path.split(outfn)[1], map.replace('\n', ' ')
+
+        code = self.generate_dot()
+
         # graphviz expects UTF-8 by default
         if isinstance(code, unicode):
             code = code.encode('utf-8')
 
-        static_root = INHERITANCEROOT
-
         dot_args = ['dot']
-        dummy, filename = Wx2Sphinx(self.specials[0])
-        outfn = os.path.join(static_root, filename + '_inheritance.png')
 
         if os.path.isfile(outfn):
             os.remove(outfn)
-        if os.path.isfile(outfn + '.map'):
-            os.remove(outfn + '.map')
-            
+        if os.path.isfile(mapfile):
+            os.remove(mapfile)
+
         dot_args.extend(['-Tpng', '-o' + outfn])
-        dot_args.extend(['-Tcmapx', '-o%s.map' % outfn])
-        
+        dot_args.extend(['-Tcmapx', '-o' + mapfile])
+
         try:
-            
+
             p = Popen(dot_args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
 
         except OSError, err:
@@ -188,7 +247,7 @@ class InheritanceDiagram(object):
                 raise
 
             print '\nERROR: Graphviz command `dot` cannot be run (needed for Graphviz output), check your ``PATH`` setting'
-        
+
         try:
             # Graphviz may close standard input when an error occurs,
             # resulting in a broken pipe on communicate()
@@ -200,17 +259,12 @@ class InheritanceDiagram(object):
             # directly, to get the error message(s)
             stdout, stderr = p.stdout.read(), p.stderr.read()
             p.wait()
-            
+
         if p.returncode != 0:
             print '\nERROR: Graphviz `dot` command exited with error:\n[stderr]\n%s\n[stdout]\n%s\n\n' % (stderr, stdout)
-
-        mapfile = outfn + '.map'
 
         fid = open(mapfile, 'rt')
         map = fid.read()
         fid.close()
-        
-        os.remove(mapfile)        
-        
-        return os.path.split(outfn)[1], map.replace('\n', ' ')
 
+        return os.path.split(outfn)[1], map.replace('\n', ' ')

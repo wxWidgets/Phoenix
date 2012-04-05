@@ -70,7 +70,7 @@ def SphinxIndexes(sphinxDir):
         if file.endswith('functions.pkl'):
             ReformatFunctions(file)
         elif 'classindex' in file:
-            MakeClassIndex(file)
+            MakeClassIndex(sphinxDir, file)
 
     BuildEnumsAndMethods(sphinxDir)
 
@@ -122,9 +122,10 @@ def BuildEnumsAndMethods(sphinxDir):
 
         if widget_name in SECTIONS_EXCLUDE:
             start, end = SECTIONS_EXCLUDE[widget_name]
-            lindex = text.index(start)
-            rindex = text.index(end)
-            text = text[0:lindex] + text[rindex:]
+            if start in text and end in text:
+                lindex = text.index(start)
+                rindex = text.index(end)
+                text = text[0:lindex] + text[rindex:]
             
         # Replace the "Perl Note" stuff, we don't need it
         newtext = ''
@@ -361,7 +362,7 @@ def ReformatFunctions(file):
 
 # ----------------------------------------------------------------------- #
 
-def MakeClassIndex(file):
+def MakeClassIndex(sphinxDir, file):
 
     text_file = os.path.splitext(file)[0] + '.txt'
     local_file = os.path.split(file)[1]
@@ -376,13 +377,24 @@ def MakeClassIndex(file):
     if local_file.count('.') == 1:
         # Core functions
         label = 'Core'
+        module = ''
+        enumDots = 1
     else:
         label = local_file.split('.')[0:-2][0]
+        module = label
+        enumDots = 2
+
+    enum_files = glob.glob(sphinxDir + '/%s*.enumeration.txt'%module)
+    enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
 
     names = classes.keys()
     names.sort()
 
-    text = templates.TEMPLATE_CLASS_INDEX % (label, label)
+    text = ''
+    if module:
+        text += '\n\n.. module:: %s\n\n'%module
+        
+    text += templates.TEMPLATE_CLASS_INDEX % (label, label)
 
     text += 80*'=' + ' ' + 80*'=' + '\n'
     text += '%-80s **Short Description**\n'%'**Class**'
@@ -391,8 +403,24 @@ def MakeClassIndex(file):
     for cls in names:
         text += '%-80s %s\n'%(':ref:`%s`'%Wx2Sphinx(cls)[1], classes[cls])
 
-    text += 80*'=' + ' ' + 80*'=' + '\n'
+    text += 80*'=' + ' ' + 80*'=' + '\n\n'
 
+    contents = []
+    for cls in names:
+        contents.append(Wx2Sphinx(cls)[1])
+
+    for enum in enum_base:
+        if enum.count('.') == enumDots:
+            contents.append(enum)
+
+    contents.sort()
+    
+    toctree = ''
+    for item in contents:
+        toctree += '   %s\n'%item
+
+    text += templates.TEMPLATE_TOCTREE%toctree
+        
     writeIfChanged(text_file, text)
 
 

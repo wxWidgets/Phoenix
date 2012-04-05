@@ -1,0 +1,74 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: I18N wxPyhton sample\n"
+"POT-Creation-Date: 2012-04-05 12:12+Paris, Madrid (heure dété)\n"
+"PO-Revision-Date: 2012-04-05 12:13+0100\n"
+"Last-Translator: Werner F. Bruhin <werner@thewinecellarbook.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:17
+msgid "The I18N sample application"
+msgstr "Die I18N-Beispielanwendung"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:28
+msgid "Close"
+msgstr "Schliessen"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:29
+msgid "Close the application"
+msgstr "Die Anwendung schliessen"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:31
+msgid "&File"
+msgstr "&Datei"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:36
+msgid "Edit something"
+msgstr "Etwas bearbeiten"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:37
+msgid "Edit an entry of something"
+msgstr "Einenen Eintrag bearbeiten von etwas"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:40
+msgid "&Edit"
+msgstr "&Bearbeiten"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:45
+msgid "&About"
+msgstr "&Über"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:46
+msgid "About the program"
+msgstr "Über die Anwendung"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:48
+msgid "&Help"
+msgstr "&Hilfe"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:58
+msgid "A nice label for the TextCtrl"
+msgstr "Ein schönes Etikett für die TextCtrl"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:62
+msgid "a search control"
+msgstr "Eine Such Kontrolle"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:68
+msgid "Open a file dialog"
+msgstr "Einen Dateidialog öffnen"
+
+#: h:\devProjectsT\PhoenixI18N\i18nwxapp\sampleapp.py:80
+msgid "Choose a file"
+msgstr "Eine Datei auswählen"
+

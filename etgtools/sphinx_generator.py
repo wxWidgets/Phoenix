@@ -2218,6 +2218,11 @@ class XMLDocString(object):
         klass = self.xml_item
         name = self.class_name
         dummy, fullname = Wx2Sphinx(name)
+
+        if '.' in fullname:
+            parts = fullname.split('.')
+            module = '.'.join(parts[0:-1])
+            stream.write('\n\n.. currentmodule:: %s\n\n'%module)
         
         stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, name))
 
@@ -2250,11 +2255,11 @@ class XMLDocString(object):
             stream.write(snippets)
 
         if klass.method_list:
-            summary = MakeSummary(name, klass.method_list, templates.TEMPLATE_METHOD_SUMMARY, 'meth')
+            summary = MakeSummary(klass.method_list, templates.TEMPLATE_METHOD_SUMMARY, 'meth')
             stream.write(summary)
 
         if klass.property_list:
-            summary = MakeSummary(name, klass.property_list, templates.TEMPLATE_PROPERTY_SUMMARY, 'attr')
+            summary = MakeSummary(klass.property_list, templates.TEMPLATE_PROPERTY_SUMMARY, 'attr')
             stream.write(summary)
 
         stream.write(templates.TEMPLATE_API)
@@ -2548,6 +2553,9 @@ class XMLDocString(object):
         
         stream = StringIO()
         self.output_file = self.current_module + "%s.enumeration.txt"%enum_name
+
+        if self.current_module.strip():
+            stream.write('\n\n.. currentmodule:: %s\n\n'%self.current_module[0:-1])
         
         stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, enum_name))
         stream.write('\n\nThe `%s` enumeration provides the following values:\n\n'%enum_name)
@@ -2856,14 +2864,14 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         klass.module = self.current_module
         self.current_class = klass
 
-        name = klass.name
+        class_name = klass.name
         self.current_class.method_list = []
         self.current_class.property_list = []
 
         class_items = [i for i in klass if not i.ignored]
         class_items = sorted(class_items, key=operator.attrgetter('name'))
 
-        class_items = self.RemoveDuplicated(name, class_items)
+        class_items = self.RemoveDuplicated(class_name, class_items)
 
         init_position = -1
         
@@ -2872,14 +2880,14 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 method_name, simple_docs = self.getName(item)
                 if method_name == '__init__':
                     init_position = index
-                    self.current_class.method_list.insert(0, (method_name, simple_docs))
+                    self.current_class.method_list.insert(0, ('%s.%s'%(class_name, method_name), simple_docs))
                 else:
-                    self.current_class.method_list.append((method_name, simple_docs))
+                    self.current_class.method_list.append(('%s.%s'%(class_name, method_name), simple_docs))
             elif isinstance(item, extractors.PyPropertyDef):
-                simple_docs = self.createPropertyLinks(name, item)
-                self.current_class.property_list.append((item.name, simple_docs))
+                simple_docs = self.createPropertyLinks(class_name, item)
+                self.current_class.property_list.append(('%s.%s'%(class_name, item.name), simple_docs))
 
-        PickleClassInfo(self.current_module + name, self.current_class)
+        PickleClassInfo(self.current_module + class_name, self.current_class)
 
         if init_position >= 0:
             init_method = class_items.pop(init_position)
@@ -2890,7 +2898,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         docstring = XMLDocString(klass)
         docstring.kind = 'class'
 
-        filename = self.current_module + "%s.txt"%name
+        filename = self.current_module + "%s.txt"%class_name
         docstring.output_file = filename
         docstring.current_module = self.current_module
 
@@ -2983,15 +2991,15 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         for item in class_items:
             if isinstance(item, methods) and not self.IsFullyDeprecated(item):
                 method_name, simple_docs = self.getName(item)
-                self.current_class.method_list.append((method_name, simple_docs))
+                self.current_class.method_list.append(('%s.%s'%(name, method_name), simple_docs))
             elif isinstance(item, properties):
                 simple_docs = self.createPropertyLinks(name, item)
-                self.current_class.property_list.append((item.name, simple_docs))
+                self.current_class.property_list.append(('%s.%s'%(name, item.name), simple_docs))
 
         for item in ctors: 
             if item.isCtor:
                 method_name, simple_docs = self.getName(item)
-                self.current_class.method_list.insert(0, ('__init__', simple_docs))
+                self.current_class.method_list.insert(0, ('%s.__init__'%name, simple_docs))
 
         PickleClassInfo(self.current_module + name, self.current_class)
                 

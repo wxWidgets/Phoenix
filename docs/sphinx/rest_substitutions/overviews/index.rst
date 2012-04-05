@@ -134,7 +134,43 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    :hidden:
    :glob:
    
-   *
+   MigrationGuide
+   TODO
+   DocstringsGuidelines
+   functions
+   1classindex
+   app_overview
+   bitmap_overview
+   bookctrl_overview
+   common_dialogs_overview
+   config_overview
+   datetime_overview
+   dc_overview
+   dialog_overview
+   dnd_overview
+   events_overview
+   filesystem_overview
+   font_encodings
+   font_overview
+   internationalization
+   listctrl_overview
+   log_classes_overview
+   printing_framework_overview
+   refcount_overview
+   scrolling_overview
+   sizers_overview
+   splitterwindow_overview
+   standard_event_identifiers
+   stock_items
+   toolbar_overview
+   treectrl_overview
+   validator_overview
+   window_deletion_overview
+   window_ids_overview
+   window_sizing_overview
+   window_styles_overview
+   dataview.1classindex
+   lib
 
 
 Indices and tables

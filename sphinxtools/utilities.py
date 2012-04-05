@@ -458,26 +458,38 @@ def FindControlImages(element):
 
 # ----------------------------------------------------------------------- #
 
-def MakeSummary(name, item_list, template, kind):
+def MakeSummary(item_list, template, kind, add_tilde=True):
     """
     This function generates a table containing a method/property name
     and a shortened version of its docstrings.
 
-    :param string `name`: the method/property class name.
     :param list `item_list`: a list of tuples like `(method/property name, short docstrings)`.
     :param string `template`: the template to use (from `sphinxtools/templates.py`, can
      be the ``TEMPLATE_METHOD_SUMMARY`` or the ``TEMPLATE_PROPERTY_SUMMARY``.
-    :param string `kind`: can be ":meth:" or ":attr:".
+    :param string `kind`: can be ":meth:" or ":attr:" or ":ref:".
 
     :rtype: `string`    
     """
+
+    maxlen = 0
+    for method, simple_docs in item_list:
+        substr = ':%s:`~%s`'%(kind, method)
+        maxlen = max(maxlen, len(substr))
+
+    maxlen = max(80, maxlen)        
     
-    summary = '='*80 + ' ' + '='*80 + "\n"
+    summary = '='*maxlen + ' ' + '='*80 + "\n"
+    format = '%-' + str(maxlen) + 's %s'
 
     for method, simple_docs in item_list:
-        summary += '%-80s %s'%(':%s:`~%s.%s`'%(kind, name, method), simple_docs) + '\n'
+        if add_tilde:
+            substr = ':%s:`~%s`'%(kind, method)
+        else:
+            substr = ':%s:`%s`'%(kind, method)
+            
+        summary += format%(substr, simple_docs) + '\n'
 
-    summary += '='*80 + ' ' + '='*80 + "\n"
+    summary += '='*maxlen + ' ' + '='*80 + "\n"
 
     return template % summary
     
@@ -585,7 +597,7 @@ def PickleClassInfo(class_name, element):
 
     for base in element.bases:
         bases.append(Wx2Sphinx(base)[1])
-        
+
     items[class_name] = (method_list, bases)
     fid = open(pickle_file, 'wb')
     cPickle.dump(items, fid)
