@@ -168,6 +168,7 @@ INCLUDES = [  # core
               'colordlg',
               'choicdlg',
               'fdrepdlg',
+              'mdi',
 
               # misc
               'utils',
