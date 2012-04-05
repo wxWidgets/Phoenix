@@ -156,12 +156,14 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True):
         item.transferThis = True
         
     # give the id param a default value
-    item = klass.findItem('%s.id' % klass.name)
-    if item:
-        item.default = 'wxID_ANY'
-    item = klass.findItem('Create.id')
-    if item:
-        item.default = 'wxID_ANY'
+    for item in [klass.findItem('%s.id' % klass.name), klass.findItem('Create.id')]:
+        if item:
+            item.default = 'wxID_ANY'
+
+    # give title param a default too if it needs it
+    for item in [klass.findItem('%s.title' % klass.name), klass.findItem('Create.title')]:
+        if item and not item.default:
+            item.default = 'wxEmptyString'
 
     if hideVirtuals:
         removeVirtuals(klass)
