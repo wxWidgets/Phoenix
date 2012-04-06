@@ -46,6 +46,8 @@ except ImportError:
     
 import wx
 
+print '\nUSING VERSION: %s\n'%wx.VERSION_STRING
+
 
 if hasattr(os.path, "relpath"):
     relpath = os.path.relpath # since Python 2.6
@@ -367,6 +369,9 @@ def describe_class(obj, module_class, module_name, constants):
         
     if source_code:
         description = get_constructor(source_code)
+        if '(' not in description and ':' in description:
+            description = description[0:description.index(':')]
+            
         klass.signature = description.strip()
         klass.number_lines = '%d'%len(source_code.split("\n"))
 

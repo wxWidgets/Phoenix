@@ -630,12 +630,12 @@ def PostProcess(folder):
 
             if index < len_split - 1:
 
-                if line.strip() == '<br><hr />':
-                    
+                if line.strip() == '<br><hr />' or line.strip() == '<dd><br><hr />':                    
                     next_line = splitted_text[index+1]
                     stripline = next_line.strip()
                     
-                    if (stripline == '<dl class="staticmethod">' or stripline == '<dl class="method">') and not methods_done:
+                    if (stripline == '<dl class="staticmethod">' or stripline == '<dl class="method">' \
+                       or stripline == '<dl class="classmethod">') and not methods_done:
                         line = '<br><h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>' + '\n' + line
                         methods_done = True
                         

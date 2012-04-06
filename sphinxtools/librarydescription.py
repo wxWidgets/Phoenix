@@ -9,7 +9,8 @@ from subprocess import Popen, PIPE
 
 from inspect import getmro, getclasstree, getdoc, getcomments
 
-from utilities import MakeSummary, ChopDescription, WriteSphinxOutput, PickleClassInfo
+from utilities import MakeSummary, ChopDescription, WriteSphinxOutput
+from utilities import FindControlImages, PickleClassInfo
 from constants import object_types, MODULE_TO_ICON
 import templates
 
@@ -72,7 +73,7 @@ def generic_summary(libraryItem, stream):
         table = []
         for item in sub_list:
             
-            if item.is_redundant:
+            if item.is_redundant or item.GetShortName().startswith('__test'):
                 continue
             
             docs = ChopDescription(ReplaceWxDot(item.docs))
@@ -102,7 +103,9 @@ def ReplaceWxDot(text):
     
     # Signle ticks with 'wx.' in them... try and referencing them
     text = re.sub(r'`wx\.(.*?)`', r'`\1`   ', text)
-    
+
+    # Masked is funny...
+    text = text.replace('</LI>', '')
     return text
 
     
@@ -282,7 +285,7 @@ class Library(ParentBase):
         print '\n\nReST-ifying %s...\n\n'%self.base_name
         stream = StringIO()
 
-        header = templates.TEMPLATE_DESCRIPTION%(self.base_name, self.base_name + ' Library')
+        header = templates.TEMPLATE_DESCRIPTION%(self.base_name, self.base_name)
         stream.write(header)
 
         stream.write(ReplaceWxDot(self.docs) + '\n\n')
@@ -316,6 +319,9 @@ class Module(ParentBase):
 
 
     def ToRest(self):
+
+        if self.is_redundant or self.GetShortName().startswith('__test'):
+            return
         
         stream = StringIO()
 
@@ -325,8 +331,9 @@ class Module(ParentBase):
 
         stream.write('.. module:: %s\n\n'%self.name)
         stream.write('.. currentmodule:: %s\n\n'%self.name)
+        stream.write('.. highlight:: python\n\n')
             
-        header = templates.TEMPLATE_DESCRIPTION%(self.name, '%s %s'%(self.name, label))
+        header = templates.TEMPLATE_DESCRIPTION%(self.name, '%s'%self.GetShortName())
         
         stream.write(header)
         stream.write(ReplaceWxDot(self.docs) + '\n\n')
@@ -345,22 +352,21 @@ class Module(ParentBase):
 
         generic_summary(self, stream)
 
-        if self.kind != object_types.PACKAGE:
-            functions = self.GetItemByKind(object_types.FUNCTION)
+        functions = self.GetItemByKind(object_types.FUNCTION)
 
-            count = 0
-            for fun in functions:
-                if not fun.is_redundant:
-                    count = 1
-                    break
+        count = 0
+        for fun in functions:
+            if not fun.is_redundant:
+                count = 1
+                break
 
-            if count > 0:
-                stream.write('\n\nFunctions\n===========\n\n')
-                
-            for fun in functions:
-                if fun.is_redundant:
-                    continue
-                fun.Write(stream)
+        if count > 0:
+            stream.write('\n\nFunctions\n------------\n\n')
+            
+        for fun in functions:
+            if fun.is_redundant:
+                continue
+            fun.Write(stream)
 
         WriteSphinxOutput(stream, self.sphinx_file)
 
@@ -394,7 +400,7 @@ class Class(ParentBase):
                 name_parts = sup.split('.')
                 sup = name_parts[-1]
 
-            sortedSupClasses.append(sup)
+            sortedSupClasses.append(sup.replace('wx.', ''))
 
         sortedSupClasses.sort()    
            
@@ -412,10 +418,16 @@ class Class(ParentBase):
                 name_parts = cls.split('.')
                 cls = name_parts[-1]
 
-            sortedSubClasses.append(cls)
+            sortedSubClasses.append(cls.replace('wx.', ''))
 
         sortedSubClasses.sort()
+
+        if len(sortedSubClasses) == 1 and sortedSubClasses[0] == 'object':
+            sortedSubClasses = []
         
+        if len(sortedSupClasses) == 1 and sortedSupClasses[0] == 'object':
+            sortedSupClasses = []
+
         self.class_tree = make_class_tree(getclasstree(getmro(obj)))
         
         self.subClasses = sortedSubClasses
@@ -431,7 +443,7 @@ class Class(ParentBase):
 
     def ToRest(self):
 
-        if self.is_redundant:
+        if self.is_redundant or self.GetShortName().startswith('__test'):
             return
 
         stream = StringIO()
@@ -440,10 +452,13 @@ class Class(ParentBase):
         current_module = '.'.join(parts[0:-1])
 
         stream.write('.. currentmodule:: %s\n\n'%current_module)
+        stream.write('.. highlight:: python\n\n')
+
+        class_docs = ReplaceWxDot(self.docs)
         
         header = templates.TEMPLATE_DESCRIPTION%(self.name, self.GetShortName())
         stream.write(header)
-        stream.write(ReplaceWxDot(self.docs) + '\n\n')
+        stream.write(class_docs + '\n\n')
 
         if self.inheritance_diagram:
             png, map = self.inheritance_diagram.MakeInheritanceDiagram()
@@ -451,22 +466,33 @@ class Class(ParentBase):
             image_desc = templates.TEMPLATE_INHERITANCE % (short_name, png, short_name, map)
             stream.write(image_desc)
 
+        appearance = FindControlImages(self.name.lower())
+        if appearance:
+            appearance_desc = templates.TEMPLATE_APPEARANCE % tuple(appearance)
+            stream.write(appearance_desc + '\n\n')
+
         if self.subClasses:
-            subs = [':ref:`%s`'%cls for cls in self.superClasses]
+            subs = [':ref:`%s`'%cls for cls in self.subClasses]
             subs = ', '.join(subs)
             subs_desc = templates.TEMPLATE_SUBCLASSES % subs
             stream.write(subs_desc)
 
         if self.superClasses:
-            subs = [':ref:`%s`'%cls for cls in self.superClasses]
-            subs = ', '.join(subs)
-            subs_desc = templates.TEMPLATE_SUPERCLASSES % subs
-            stream.write(subs_desc)
+            sups = [':ref:`%s`'%cls for cls in self.superClasses]
+            sups = ', '.join(sups)
+            sups_desc = templates.TEMPLATE_SUPERCLASSES % sups
+            stream.write(sups_desc)
 
         generic_summary(self, stream)
 
         stream.write(templates.TEMPLATE_API)
-        stream.write("\n.. class:: %s\n\n\n"%self.signature)
+        stream.write("\n.. class:: %s\n\n"%self.signature)
+
+        docs = ''
+        for line in class_docs.splitlines(True):
+            docs += ' '*3 + line
+            
+        stream.write(docs + '\n\n')
 
         methods = self.GetItemByKind(object_types.METHOD, object_types.INSTANCE_METHOD)
         properties = self.GetItemByKind(object_types.PROPERTY)
@@ -607,6 +633,15 @@ class Method(ChildrenBase):
         if self.signature.startswith('def '):
             self.signature = self.signature[4:]
 
+        if '@staticmethod' in self.signature:
+            self.kind = object_types.STATIC_METHOD
+        elif '@classmethod' in self.signature:
+            self.kind = object_types.CLASS_METHOD
+
+        if ' def ' in self.signature:
+            index = self.signature.index(' def ')
+            self.signature = self.signature[index+5:].strip()
+            
         if not self.signature.strip():
             self.is_redundant = True            
 
@@ -620,7 +655,12 @@ class Method(ChildrenBase):
             stream.write('.. function:: %s\n\n'%self.signature)
             indent = 3*' '
         else:
-            stream.write('   .. method:: %s\n\n'%self.signature)
+            if self.kind == object_types.STATIC_METHOD:
+                stream.write('   .. staticmethod:: %s\n\n'%self.signature)
+            elif self.kind == object_types.CLASS_METHOD:
+                stream.write('   .. classmethod:: %s\n\n'%self.signature)
+            else:
+                stream.write('   .. method:: %s\n\n'%self.signature)
             indent = 6*' '
 
         if not self.docs.strip():

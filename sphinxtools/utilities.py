@@ -387,9 +387,10 @@ def FindDescendants(element, tag, descendants=None):
 
 # ----------------------------------------------------------------------- #
 
-def FindControlImages(element):
+def FindControlImages(elementOrString):
     """
-    Given the input `element` (an instance of `xml.etree.ElementTree.Element`)
+    Given the input `element` (an instance of `xml.etree.ElementTree.Element`
+    or a plain string)
     representing a Phoenix class description, this function will scan the
     doxygen image folder ``DOXYROOT`` to look for a widget screenshot.
 
@@ -398,7 +399,8 @@ def FindControlImages(element):
     in one of its sub-folders (``wxmsw``, ``wxgtk``, ``wxmac``) depending on
     which platform the screenshot was taken.
 
-    :param xml.etree.ElementTree.Element `element`: the XML element we want to examine.
+    :param `elementOrString`: the XML element we want to examine (an instance of
+     xml.etree.ElementTree.Element) or a plain string (usually for wx.lib).
 
     :rtype: `list`
 
@@ -411,11 +413,15 @@ def FindControlImages(element):
 
     """       
 
-    class_name = RemoveWxPrefix(element.name) or element.pyName
-    py_class_name = Wx2Sphinx(class_name)[1]
+    if isinstance(elementOrString, basestring):
+        class_name = py_class_name = elementOrString.lower()
+    else:
+        element = elementOrString
+        class_name = RemoveWxPrefix(element.name) or element.pyName
+        py_class_name = Wx2Sphinx(class_name)[1]
 
-    class_name = class_name.lower()
-    py_class_name = py_class_name.lower()
+        class_name = class_name.lower()
+        py_class_name = py_class_name.lower()
 
     image_folder = os.path.join(DOXYROOT, 'images')
 
