@@ -103,12 +103,6 @@ WAF Build
 
 
 
-Deprecated C++ items
----------------------
-    * Does Doxygen have a standard way to mark items as deprecated
-      that will also be tagged as such in the XML?
-
-
 
 other dev stuff
 ---------------
@@ -175,6 +169,11 @@ other dev stuff
     be used in the other extension modules...  DONE.
 
   * Check wxDialog::CreateTextSizer, is it wrapped?
+  
+  * Add wxCHMHelpController  (MSW-only)
+  
+  
+  
   
   
   

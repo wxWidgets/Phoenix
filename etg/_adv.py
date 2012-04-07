@@ -26,6 +26,7 @@ ITEMS  = [ ]
 # the wxWidgets "adv" library in a multi-lib build.
 INCLUDES = [  
              'aboutdlg',
+             'helpext',
              
              # TODOs - 
              # These modules are also in the C++ adv lib and so should included be here:

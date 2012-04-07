@@ -175,6 +175,7 @@ INCLUDES = [  # core
               'process',
               'uiaction', 
               'snglinst',
+              'help',
               'cshelp',
               ]
 
