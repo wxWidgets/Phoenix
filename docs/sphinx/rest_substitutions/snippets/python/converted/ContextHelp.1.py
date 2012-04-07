@@ -1,0 +1,2 @@
+    
+        contextHelp = wx.ContextHelp(myWindow)

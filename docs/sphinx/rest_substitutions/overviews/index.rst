@@ -152,6 +152,7 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    filesystem_overview
    font_encodings
    font_overview
+   html_overview
    internationalization
    listctrl_overview
    log_classes_overview
@@ -171,6 +172,8 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    window_styles_overview
    dataview.1classindex
    lib
+   py
+   tools
 
 
 Indices and tables

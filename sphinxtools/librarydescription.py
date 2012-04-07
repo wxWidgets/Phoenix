@@ -11,11 +11,13 @@ from inspect import getmro, getclasstree, getdoc, getcomments
 
 from utilities import MakeSummary, ChopDescription, WriteSphinxOutput
 from utilities import FindControlImages, PickleClassInfo
-from constants import object_types, MODULE_TO_ICON
+from constants import object_types, MODULE_TO_ICON, DOXY_2_REST
 import templates
 
 ENOENT = getattr(errno, 'ENOENT', 0)
 EPIPE  = getattr(errno, 'EPIPE', 0)
+
+EPYDOC_PATTERN = re.compile(r'\S+{\S+}', re.DOTALL)
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -73,7 +75,7 @@ def generic_summary(libraryItem, stream):
         table = []
         for item in sub_list:
             
-            if item.is_redundant or item.GetShortName().startswith('__test'):
+            if item.is_redundant or item.GetShortName().startswith('__test') or '.extern.' in item.name:
                 continue
             
             docs = ChopDescription(ReplaceWxDot(item.docs))
@@ -106,9 +108,156 @@ def ReplaceWxDot(text):
 
     # Masked is funny...
     text = text.replace('</LI>', '')
-    return text
 
+    space_added = False
+    for old, new in DOXY_2_REST:
+
+        if old not in text:
+            continue
+        
+        if new in [':keyword', ':param']:
+            if not space_added:
+                space_added = True
+                new_with_newline = '\n%s'%new
+                text = text.replace(old, new_with_newline, 1)
+
+        text = text.replace(old, new)
     
+    lines = text.splitlines(True)
+    newtext = ''
+
+    for line in lines:
+        if '@section' not in line:
+            newtext += line
+            continue
+
+        # Extract the section header
+        splitted = line.split()
+        header = ' '.join(line[2:])
+        header = header.strip()
+
+        newtext += header + '\n'
+        newtext += '-'*len(header) + '\n\n'
+    
+    return newtext
+
+
+def GetTopLevelParent(klass):
+
+    parent = klass.parent
+
+    if not parent:
+        return klass
+    
+    parents = [parent]
+    
+    while parent:
+        parent = parent.parent
+        parents.append(parent)
+
+    return parents[-2]
+
+
+def FindInHierarchy(klass, newlink):
+
+    library = GetTopLevelParent(klass)
+    return library.FindItem(newlink)
+
+
+def FindBestLink(klass, newlink):
+
+    parent_class = klass.parent
+    
+    if klass.kind in range(object_types.FUNCTION, object_types.INSTANCE_METHOD):
+        if parent_class.GetShortName() == newlink:
+            return ':class:`%s`'%newlink
+        else:
+            child_names = [sub.GetShortName() for sub in parent_class.children]
+            if newlink in child_names:
+                index = child_names.index(newlink)
+                child = parent_class.children[index]
+
+                if child.kind in range(object_types.PACKAGE, object_types.PYW_MODULE+1):
+                    return ':mod:`~%s`'%child.name
+                elif child.kind in range(object_types.FUNCTION, object_types.INSTANCE_METHOD):
+                    return ':meth:`~%s`'%child.name
+                else:
+                    return ':class:`~%s`'%child.name
+
+    full_loop = FindInHierarchy(klass, newlink)
+
+    if full_loop:
+        return full_loop
+
+    return ':ref:`%s`'%newlink
+
+
+def KillEpydoc(klass, newtext):
+
+    epydocs = re.findall(EPYDOC_PATTERN, newtext)
+
+    if not epydocs:
+        return newtext
+    
+    newepydocs = epydocs[:]
+    
+    for item in epydocs:
+        if '#{' in item:
+            # this is for masked stuff
+            newepydocs.remove(item)
+
+    if not newepydocs:
+        return newtext
+
+    for regex in newepydocs:
+
+        start = regex.index('{')
+        end   = regex.index('}')
+        
+        if 'U{' in regex:
+            # Simple link, leave it as it is
+            newlink = regex[start+1:end]
+
+        elif 'C{' in regex:
+            # It's an inclined text, but we can attach some
+            # class reference to it
+            newlink = regex[start+1:end]
+
+            if 'wx.' in regex or 'wx' in regex:
+                newlink = newlink.replace('wx.', '')
+                newlink = newlink.replace('wx', '')
+                newlink = ':class:`%s`'%newlink.strip()
+            else:
+                newlink = '`%s`'%newlink
+
+        elif 'I{' in regex:
+            # It's an inclined text
+            newlink = regex[start+1:end]
+            newlink = ' `%s` '%newlink
+
+        elif 'L{' in regex:
+            # Some kind of link, but we can't figure it out
+            # very easily from here... just use :ref:
+            newlink = regex[start+1:end]
+
+            if newlink.upper() == newlink:
+                # Use double backticks
+                newlink = '``%s``'%newlink
+            else:
+                # Try and reference it
+                bestlink = FindBestLink(klass, newlink)
+                if bestlink:
+                    newlink = bestlink
+                
+        else:
+            # Something else, don't bother for the moment
+            continue
+
+        newtext = newtext.replace(regex, newlink)
+
+    return newtext
+
+
 class ParentBase(object):
     
     def __init__(self, name, kind):
@@ -275,6 +424,42 @@ class Library(ParentBase):
             self.Walk(child)
 
 
+    def FindItem(self, newlink, obj=None):
+
+        if obj is None:
+            obj = self
+            
+        # must have at least root folder
+        children = obj.GetChildren()
+        bestlink = ''
+        
+        if not children:
+            return bestlink
+        
+        # check each name
+        for child in children:
+
+            if child.is_redundant:
+                continue
+
+            parts = child.name.split('.')
+            dotname = '.'.join(parts[-2:])
+            if child.name.endswith(newlink) and (child.GetShortName() == newlink or dotname == newlink):
+                if child.kind in range(object_types.PACKAGE, object_types.PYW_MODULE+1):
+                    return ':mod:`~%s`'%child.name
+                elif child.kind in range(object_types.FUNCTION, object_types.INSTANCE_METHOD+1):
+                    return ':meth:`~%s`'%child.name
+                else:
+                    return ':class:`~%s`'%child.name
+
+            bestlink = self.FindItem(newlink, child)
+            
+            if bestlink:
+                return bestlink
+
+        return bestlink
+            
+
     def GetPythonVersion(self):
 
         return self.python_version
@@ -288,7 +473,10 @@ class Library(ParentBase):
         header = templates.TEMPLATE_DESCRIPTION%(self.base_name, self.base_name)
         stream.write(header)
 
-        stream.write(ReplaceWxDot(self.docs) + '\n\n')
+        newtext = ReplaceWxDot(self.docs)
+        stream.write(newtext + '\n\n')
+
+        newtext = KillEpydoc(self, newtext)
 
         generic_summary(self, stream)
         WriteSphinxOutput(stream, self.sphinx_file)
@@ -320,7 +508,7 @@ class Module(ParentBase):
 
     def ToRest(self):
 
-        if self.is_redundant or self.GetShortName().startswith('__test'):
+        if self.is_redundant or self.GetShortName().startswith('__test') or '.extern.' in self.name:
             return
         
         stream = StringIO()
@@ -336,7 +524,11 @@ class Module(ParentBase):
         header = templates.TEMPLATE_DESCRIPTION%(self.name, '%s'%self.GetShortName())
         
         stream.write(header)
-        stream.write(ReplaceWxDot(self.docs) + '\n\n')
+        
+        newtext = ReplaceWxDot(self.docs)
+        stream.write(newtext + '\n\n')
+
+        newtext = KillEpydoc(self, newtext)
 
         spacer = '   '*self.name.count('.')
         
@@ -443,7 +635,7 @@ class Class(ParentBase):
 
     def ToRest(self):
 
-        if self.is_redundant or self.GetShortName().startswith('__test'):
+        if self.is_redundant or self.GetShortName().startswith('__test') or '.extern.' in self.name:
             return
 
         stream = StringIO()
@@ -455,6 +647,7 @@ class Class(ParentBase):
         stream.write('.. highlight:: python\n\n')
 
         class_docs = ReplaceWxDot(self.docs)
+        class_docs = KillEpydoc(self, class_docs)
         
         header = templates.TEMPLATE_DESCRIPTION%(self.name, self.GetShortName())
         stream.write(header)
@@ -536,8 +729,11 @@ class Class(ParentBase):
             index = self.signature.index(' def __init__')
             self.signature = self.signature[0:index]
 
-        self.signature.strip()
-                    
+        self.signature = self.signature.strip()
+
+        if len(self.signature) < 2:
+            self.is_redundant = True
+
 
 class ChildrenBase(object):
     
@@ -641,6 +837,9 @@ class Method(ChildrenBase):
         if ' def ' in self.signature:
             index = self.signature.index(' def ')
             self.signature = self.signature[index+5:].strip()
+
+        if '*' in self.signature:
+            self.signature = self.signature.replace('*', r'\*')
             
         if not self.signature.strip():
             self.is_redundant = True            
@@ -668,12 +867,14 @@ class Method(ChildrenBase):
             return
             
         text = ''
-        for line in self.docs.splitlines():
-            text += indent + ReplaceWxDot(line) + '\n'
-
-        text += '\n\n'
-        stream.write(text)
+        newdocs = ReplaceWxDot(self.docs)
         
+        for line in newdocs.splitlines(True):
+            text += indent + line
+
+        text = KillEpydoc(self, text)
+        text += '\n\n\n'
+        stream.write(text)
 
 
 class Property(ChildrenBase):

@@ -26,6 +26,8 @@ def _displayHook(obj):
 import __builtin__
 __builtin__.__dict__['_'] = wx.GetTranslation
 
+import app_const as appC
+
 from wx.lib.mixins.inspection import InspectionMixin
 
 class BaseApp(wx.App, InspectionMixin):
@@ -35,13 +37,6 @@ class BaseApp(wx.App, InspectionMixin):
         sys.displayhook = _displayHook
         
         self.appName = "I18N sample application"
-        # define the translation domain, the name has to match your .mo files
-        self.langDomain = "I18Nwxapp"
-        # languages you want to support
-        self.supLang = {u"en": wx.LANGUAGE_ENGLISH,
-                        u"fr": wx.LANGUAGE_FRENCH,
-                        u"de": wx.LANGUAGE_GERMAN,
-                        }
         
         self.doConfig()
         
@@ -89,8 +84,8 @@ class BaseApp(wx.App, InspectionMixin):
         
         """
         # if an unsupported language is requested default to English
-        if lang in self.supLang:
-            selLang = self.supLang[lang]
+        if lang in appC.supLang:
+            selLang = appC.supLang[lang]
         else:
             selLang = wx.LANGUAGE_ENGLISH
             
@@ -101,7 +96,7 @@ class BaseApp(wx.App, InspectionMixin):
         # create a locale object for this language
         self.locale = wx.Locale(selLang)
         if self.locale.IsOk():
-            self.locale.AddCatalog(self.langDomain)
+            self.locale.AddCatalog(appC.langDomain)
         else:
             self.locale = None
             

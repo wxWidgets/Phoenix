@@ -1673,7 +1673,9 @@ class Emphasis(Node):
                 tail = child.element.tail
                 tail = (tail is not None and [tail] or [''])[0]
 
-                childText = childText.replace(ConvertToPython(tail), '')
+                if tail.strip() != ':':
+                    childText = childText.replace(ConvertToPython(tail), '')
+                    
                 fullChildText = child.Join()
                 endPos = text.index(childText)
 

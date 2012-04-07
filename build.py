@@ -68,8 +68,9 @@ Usage: ./build.py [command(s)] [options]
                     SIP files
       sphinx        Run the documentation building process using Sphinx (this
                     needs to be done after dox and etg)
-      wxlib         Run the documentation building process using Sphinx for
-                    wx.lib (and possibly other pure-Python modules/packages)
+      wxlib         Run the documentation building process using Sphinx for wx.lib
+      wxpy          Run the documentation building process using Sphinx for wx.py
+      wxtools       Run the documentation building process using Sphinx for wx.tools
       sip           Run sip
       test          Run the unit test suite
       test_*        Run just one test module
@@ -125,7 +126,7 @@ def main(args):
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
                      'build_wx', 'build_py', 'setup_py', 'waf_py', 'build', 'bdist',
                      'clean', 'clean_wx', 'clean_py', 'cleanall', 'clean_sphinx',
-                     'sphinx', 'wxlib']:
+                     'sphinx', 'wxlib', 'wxpy', 'wxtools']:
             function = globals()[cmd]
             function(options, args)
         else:
@@ -598,7 +599,7 @@ def sphinx(options, args):
 def wxlib(options, args):
     from sphinxtools.modulehunter import ModuleHunter
 
-    cmdTimer = CommandTimer('wxlib')
+    cmdTimer = CommandTimer('wx.lib')
     pwd = pushDir(phoenixDir())
 
     libDir = os.path.join(phoenixDir(), 'wx', 'lib')
@@ -612,6 +613,42 @@ def wxlib(options, args):
 
     ModuleHunter(init_name, import_name, version)
     
+
+def wxpy(options, args):
+    from sphinxtools.modulehunter import ModuleHunter
+
+    cmdTimer = CommandTimer('wx.py')
+    pwd = pushDir(phoenixDir())
+
+    libDir = os.path.join(phoenixDir(), 'wx', 'py')
+
+    if not os.path.isdir(libDir):
+        raise Exception('Missing wx.py folder in the distribution')
+
+    init_name = os.path.join(libDir, '__init__.py')
+    import_name = 'py'
+    version = version3
+
+    ModuleHunter(init_name, import_name, version)
+
+
+def wxtools(options, args):
+    from sphinxtools.modulehunter import ModuleHunter
+
+    cmdTimer = CommandTimer('wx.tools')
+    pwd = pushDir(phoenixDir())
+
+    libDir = os.path.join(phoenixDir(), 'wx', 'tools')
+
+    if not os.path.isdir(libDir):
+        raise Exception('Missing wx.tools folder in the distribution')
+
+    init_name = os.path.join(libDir, '__init__.py')
+    import_name = 'tools'
+    version = version3
+
+    ModuleHunter(init_name, import_name, version)
+
     
 def sip(options, args):
     cmdTimer = CommandTimer('sip')

@@ -504,12 +504,12 @@ def FindModuleType(filename):
 
 
 def SubImport(import_string, module, parent_class, ispkg):
-                
+    
     try:
         submod = __import__(import_string, fromlist=[module])            
     except:
         # pubsub and Editra can be funny sometimes...
-        message = "Unable to import module/package '%s'.\n         Exception was: %s"%(module, format_traceback())
+        message = "Unable to import module/package '%s.%s'.\n         Exception was: %s"%(import_string, module, format_traceback())
         print "\nWARNING: %s\n"%message
         return None, 0
 
@@ -517,6 +517,10 @@ def SubImport(import_string, module, parent_class, ispkg):
         return None, 0
 
     filename = getfile(submod)
+
+    subpath = os.path.dirname(filename)
+    if subpath not in sys.path:
+        sys.path.append(subpath)
     
     if ispkg:
         kind = object_types.PACKAGE
@@ -545,7 +549,7 @@ def SubImport(import_string, module, parent_class, ispkg):
 
 def ModuleHunter(init_name, import_name, version):
 
-    pickle_file = os.path.join(os.getcwd(), 'docs', 'sphinx', 'wxlib.pkl')
+    pickle_file = os.path.join(os.getcwd(), 'docs', 'sphinx', 'wx%s.pkl'%import_name)
     
     if os.path.isfile(pickle_file):
         fid = open(pickle_file, 'rb')

@@ -209,3 +209,35 @@ MODULE_TO_ICON = [(".py",  object_types.PY_MODULE, "Py_Module"),   (".pyd", obje
                   (".pyc", object_types.PYC_MODULE, "Pyc_Module"), (".pyw", object_types.PYW_MODULE, "Pyw_Module"),
                   (".so",  object_types.PYD_MODULE, "Pyd_Module")]
 
+# wx.tools and other stuff
+
+DOXY_2_REST = [('@author:',        '\n.. moduleauthor:: '),
+               ('@deprecated:',    '\n.. deprecated:: '),
+               ('@param',          ':param'),
+               ('@var',            ':param'),
+               ('@keyword',        ':keyword'),
+               ('@kwarg',          ':keyword'),
+               ('@note:',          '\n.. note:: '),
+               ('@package:',       '\n**Package:** '),
+               ('@package',       '\n**Package:** '),
+               ('@postcondition:', '\n:postcondition: '),
+               ('@pre:',           '\n:precondition: '),
+               ('@precondition:',  '\n:precondition: '),
+               ('@requires:',      '\n:requires: '),
+               ('@returns:',       '\n:returns: '),
+               ('@return:',        '\n:returns: '),
+               ('@returns',        '\n:returns: '),
+               ('@return',         '\n:returns: '),
+               ('@rtype:',         '\n:rtype: '),
+               # ('@section',      XXX),      Deal with this separately
+               ('@see:',           '\n.. seealso:: '),
+               ('@status:',        '\n.. todo:: '),
+               ('@summary:',       '\n**Summary:** '),
+               ('@throws:',        '\n:raise: '),
+               ('@todo:',          '\n.. todo:: '),
+               ('@verbatim ',      ''),       # TODO This one
+               ('@verbatim',       ''),       # TODO This one
+               ('@endverbatim ',   ''),       # TODO This one
+               ('@endverbatim',    ''),       # TODO This one
+               ('@version:',        '\n:version: ')]
+
