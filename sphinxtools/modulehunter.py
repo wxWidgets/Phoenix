@@ -33,16 +33,21 @@ sys.setdefaultencoding("utf-8")
 try:
     import wx
 except ImportError:
-    wxPath = None
+
+    wxPath = ''
+    basePath = ''
+    
     for path in sys.path:
         if 'wx-' in path:
-            wxPath = path
-            break
+            dummy, newPath = os.path.split(path)
+            if newPath > wxPath:
+                wxPath = newPath
+                basePath = dummy
 
-    if wxPath is None:
+    if not wxPath:
         raise Exception('Unable to find the wx package')
     
-    sys.path.insert(0, wxPath)
+    sys.path.insert(0, os.path.join(basePath, wxPath))
     
 import wx
 
