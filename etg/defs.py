@@ -71,6 +71,7 @@ def run():
         class wxCaret;
         class wxImageHandler;
         class wxExecuteEnv;
+        class wxHelpControllerBase;
         """))
     
     
