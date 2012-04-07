@@ -197,7 +197,7 @@ def run():
         
     c.find('GetColumnIndexFromOrder').setCppCode("""\
         #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
-            return self->GetColumnIndexFromOrder(order);
+            return self->GetColumnIndexFromOrder(pos);
         #else
             wxPyRaiseNotImplemented();
             return 0;
@@ -217,7 +217,7 @@ def run():
         
     c.find('SetColumnsOrder').setCppCode("""\
         #ifdef wxHAS_LISTCTRL_COLUMN_ORDER
-            return self->SetColumnsOrder(orders);
+            return self->SetColumnsOrder(*orders);
         #else
             wxPyRaiseNotImplemented();
             return false;

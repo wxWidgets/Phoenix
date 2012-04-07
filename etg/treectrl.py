@@ -130,6 +130,12 @@ def run():
     c.find('GetFirstChild.cookie').inOut = True
 
 
+    # TODO: These don't exist on MSW, Are they important enough that we
+    # should provide them for the other platforms anyway?
+    c.find('AssignButtonsImageList').ignore()
+    c.find('GetButtonsImageList').ignore()
+    c.find('SetButtonsImageList').ignore()
+
     
     #-------------------------------------------------------
     c = module.find('wxTreeEvent')
