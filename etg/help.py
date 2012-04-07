@@ -18,7 +18,7 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ "wxHelpControllerBase",
-           "wxHelpController",
+           #"wxHelpController",        See note below
            ]    
 
 #---------------------------------------------------------------------------
@@ -36,19 +36,28 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
     
-    c = module.find('wxHelpController')
-    c.addPrivateCopyCtor()
     
-    # Add pure virtuals with implemenations here
-    c.addItem(etgtools.WigCode("""\
-    virtual bool DisplayBlock(long blockNo);
-    virtual bool DisplayContents();
-    virtual bool DisplaySection(int sectionNo);
-    virtual bool KeywordSearch(const wxString& keyWord,
-                               wxHelpSearchMode mode = wxHELP_SEARCH_ALL);
-    virtual bool LoadFile(const wxString& file = wxEmptyString);
-    virtual bool Quit();    
-    """))
+    
+    # NOTE: Since wxHelpController is an alias for wxHtmlHelpController on
+    # Mac and GTK, and since we don't want to force the wx.core extension
+    # module to link to the wxHTML library, then we won't provide a wrapper
+    # for the wxHelpController 'class'. Later on when we've got all the help
+    # controller classes that we'll want then we can add a wxHelpController
+    # alias of our own in Python code.
+    
+    
+    #c = module.find('wxHelpController')
+    #c.addPrivateCopyCtor()
+    ## Add pure virtuals with implemenations here
+    #c.addItem(etgtools.WigCode("""\
+    #virtual bool DisplayBlock(long blockNo);
+    #virtual bool DisplayContents();
+    #virtual bool DisplaySection(int sectionNo);
+    #virtual bool KeywordSearch(const wxString& keyWord,
+    #                           wxHelpSearchMode mode = wxHELP_SEARCH_ALL);
+    #virtual bool LoadFile(const wxString& file = wxEmptyString);
+    #virtual bool Quit();    
+    #"""))
     
    
 
