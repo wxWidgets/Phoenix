@@ -92,13 +92,13 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 //#define RETURN_NONE()    { Py_INCREF(Py_None); return Py_None; }
 #define RETURN_NONE()    { wxPyBLOCK_THREADS(Py_INCREF(Py_None)); return Py_None; }
 
-//--------------------------------------------------------------------------
-// The API items whose implementation can not or should not be inline 
-// functions or macros.  The implementations will instead be accessed via 
-// a structure of function pointers that is exported from the wx._core 
-// extension module.  See wxpy_api.sip for the implementations.
-//--------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------
+// These are the API items whose implementation can not or should not be
+// inline functions or macros. The implementations will instead be accessed
+// via a structure of function pointers that is exported from the wx._core
+// extension module. See wxpy_api.sip for the implementations.
+//--------------------------------------------------------------------------
 
 struct wxPyAPI {
     wxString      (*p_Py2wxString)(PyObject* source);
