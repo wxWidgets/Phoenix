@@ -48,6 +48,7 @@ INCLUDES = [  # core
               'vidmode',
               'display',
               'intl',
+              'translation',
               
               'cmndata',
               'gdicmn',
