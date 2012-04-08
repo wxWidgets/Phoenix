@@ -178,6 +178,7 @@ INCLUDES = [  # core
               'help',
               'cshelp',
               'settings',
+              'sysopt',
               ]
 
 

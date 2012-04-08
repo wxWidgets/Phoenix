@@ -138,7 +138,6 @@ other dev stuff
       * filectrl
       * commandlinkbutton
       * axbase  (ActiveX.  Need to figure out best ways to do MSW-only items...)
-      * sysopt
       * tipdlg
       * check that all items in _functions.i and _misc.i have been wrapped
       * joystick
