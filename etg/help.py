@@ -36,6 +36,9 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
     
+    c.find('GetFrameParameters.size').out = True
+    c.find('GetFrameParameters.pos').out = True
+    c.find('GetFrameParameters.newFrameEachTime').out = True
     
     
     # NOTE: Since wxHelpController is an alias for wxHtmlHelpController on
