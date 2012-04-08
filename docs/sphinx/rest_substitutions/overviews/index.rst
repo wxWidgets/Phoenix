@@ -154,6 +154,7 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    font_overview
    html_overview
    internationalization
+   writing_non_english_applications
    listctrl_overview
    log_classes_overview
    printing_framework_overview
