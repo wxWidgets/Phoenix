@@ -143,7 +143,6 @@ other dev stuff
       * joystick
       * sound
       * mimetype
-      * artprov
       * clipbrd, dnd, finish dataobj
       * power
       * overlay

@@ -179,6 +179,7 @@ INCLUDES = [  # core
               'cshelp',
               'settings',
               'sysopt',
+              'artprov',
               ]
 
 
