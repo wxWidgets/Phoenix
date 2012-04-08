@@ -89,7 +89,7 @@ def format_method(method):
 
     if "def " not in method:
         return None, None
-    
+
     indx1, indx2, indx3 = method.index("def "), method.index("("), method.rindex(")")
     name = method[indx1+4:indx2]
     signature = method[indx2+1:indx3]
@@ -232,7 +232,7 @@ def describe_func(obj, parent_class, module_name):
     except AttributeError:
         # Funny comtypes...
         return
-
+        
     if name.startswith("_") and "__init__" not in name:
         return
 

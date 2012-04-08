@@ -1143,11 +1143,12 @@ class Table(Node):
 
         .. note:: 
 
-                  There are 3 customized versions of 3 XML tables up to now, for various reasons:
+                  There are 4 customized versions of 4 XML tables up to now, for various reasons:
         
                   1. The `wx.Sizer` flags table is a flexible grid table, very difficult to ReSTify automatically
                   2. The `wx.ColourDatabase` table of colour comes up all messy when ReSTified from XML
                   3. The "wxWidgets 2.8 Compatibility Functions" table for `wx.VScrolledWindow`
+                  4. The `wx.ArtProvider` IDs table
          
         """
 

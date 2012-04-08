@@ -2,6 +2,7 @@
 
 
 .. _stock items:
+.. _stock id list:
 
 ===============================================
 |phoenix_title|  **Stock items**

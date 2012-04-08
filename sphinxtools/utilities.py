@@ -253,7 +253,7 @@ def PythonizeType(ptype):
     if plower == 'double':
         ptype = 'float'
 
-    if plower in ['string', 'char']:
+    if plower in ['string', 'char', 'artid', 'artclient']:
         ptype = 'string'
 
     if plower in ['coord', 'byte', 'fileoffset', 'short', 'time_t', 'intptr', 'uintptr', 'windowid']:

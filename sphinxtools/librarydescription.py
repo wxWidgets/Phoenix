@@ -77,8 +77,10 @@ def generic_summary(libraryItem, stream):
             
             if item.is_redundant or item.GetShortName().startswith('__test') or '.extern.' in item.name:
                 continue
-            
-            docs = ChopDescription(ReplaceWxDot(item.docs))
+
+            item_docs = ReplaceWxDot(item.docs)
+            item_docs = KillEpydoc(item, item_docs)
+            docs = ChopDescription(item_docs)
             table.append((item.name, docs))
 
             if item.kind != object_types.FUNCTION:
@@ -133,7 +135,7 @@ def ReplaceWxDot(text):
 
         # Extract the section header
         splitted = line.split()
-        header = ' '.join(line[2:])
+        header = ' '.join(splitted[2:])
         header = header.strip()
 
         newtext += header + '\n'
@@ -474,9 +476,9 @@ class Library(ParentBase):
         stream.write(header)
 
         newtext = ReplaceWxDot(self.docs)
-        stream.write(newtext + '\n\n')
-
         newtext = KillEpydoc(self, newtext)
+
+        stream.write(newtext + '\n\n')
 
         generic_summary(self, stream)
         WriteSphinxOutput(stream, self.sphinx_file)
@@ -526,9 +528,9 @@ class Module(ParentBase):
         stream.write(header)
         
         newtext = ReplaceWxDot(self.docs)
-        stream.write(newtext + '\n\n')
-
         newtext = KillEpydoc(self, newtext)
+
+        stream.write(newtext + '\n\n')
 
         spacer = '   '*self.name.count('.')
         

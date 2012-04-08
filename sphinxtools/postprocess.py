@@ -16,13 +16,14 @@ import re
 import cPickle
 import glob
 import random
+import subprocess
 
 # Phoenix-specific imports
 import templates
 from buildtools.config import copyIfNewer, writeIfChanged, newer
 
 from utilities import Wx2Sphinx
-from constants import HTML_REPLACE, SVN_REVISION, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
+from constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
 
 
@@ -601,12 +602,11 @@ def PostProcess(folder):
         orig_text = text = fid.read()
         fid.close()
 
-        text = text.replace('|SVN|', SVN_REVISION)
-        text = text.replace('|TODAY|', TODAY)
-
         split = os.path.split(files)[1]
-        
-        if split not in ['index.html', 'main.html']:
+
+        if split in ['index.html', 'main.html']:
+            text = ChangeSVNRevision(text)
+        else:
             text = text.replace(phoenix_image, '')
         
 ##        text = AddPrettyTable(text)
@@ -658,3 +658,18 @@ def PostProcess(folder):
 
 # ----------------------------------------------------------------------- #
 
+def ChangeSVNRevision(text):
+    
+    svn_result = subprocess.Popen(["svn", "info"], stdout=subprocess.PIPE).communicate()[0]
+    SVN_REVISION = ''
+    for line in svn_result.split("\n"):
+       if line.startswith("Revision"):
+           SVN_REVISION = line.split(":")[-1].strip()
+           break
+
+    if not SVN_REVISION:
+        text = text.replace('|TODAY|', TODAY)
+        return text
+    
+    text = text.replace('|SVN|', SVN_REVISION)
+    return text

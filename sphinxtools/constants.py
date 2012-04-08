@@ -142,10 +142,6 @@ RE_KEEP_SPACES = re.compile(r'(\s+)')
 # description
 HTML_REPLACE = ['module', 'function', 'method', 'class', 'classmethod', 'staticmethod', 'attribute']
 
-# The SVN revision of wxWidgets/Phoenix used to build the Sphinx docs.
-# There must be a more intelligent way to get this information automatically.
-SVN_REVISION = '71140'
-
 # Today's date representation for the Sphinx HTML docs
 TODAY = datetime.date.today().strftime('%d %B %Y')
 
