@@ -177,6 +177,7 @@ INCLUDES = [  # core
               'snglinst',
               'help',
               'cshelp',
+              'settings',
               ]
 
 
