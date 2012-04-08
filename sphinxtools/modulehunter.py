@@ -15,6 +15,8 @@ import pkgutil
 
 import __builtin__
 
+from buildtools.config import phoenixDir
+
 from inspect import getargspec, ismodule, getdoc, getmodule, getcomments, isfunction
 from inspect import ismethoddescriptor, getsource, ismemberdescriptor, isgetsetdescriptor
 from inspect import isbuiltin, isclass, getfile, ismethod
@@ -491,7 +493,7 @@ def Import(init_name, import_name, full_process=True):
 def PrintProgress(name, looped_names):
 
     looped_names.append(name)
-    if len(looped_names) == 5:
+    if len(looped_names) == 4:
         message = ", ".join(looped_names)
         looped_names = []
         print message
@@ -552,15 +554,29 @@ def SubImport(import_string, module, parent_class, ispkg):
     return module_class, count
     
 
+def ToRest(import_name):
+
+    sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
+    pickle_file = os.path.join(sphinxDir, 'wx%s.pkl'%import_name)
+
+    fid = open(pickle_file, 'rb')
+    library_class = cPickle.load(fid)
+    fid.close()
+
+    fid = open(os.path.join(sphinxDir, 'class_summary.lst'), 'rb')
+    class_summary = cPickle.load(fid)
+    fid.close()
+
+    library_class.Walk(library_class, class_summary)
+
+
 def ModuleHunter(init_name, import_name, version):
 
-    pickle_file = os.path.join(os.getcwd(), 'docs', 'sphinx', 'wx%s.pkl'%import_name)
+    sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
+    pickle_file = os.path.join(sphinxDir, 'wx%s.pkl'%import_name)
     
     if os.path.isfile(pickle_file):
-        fid = open(pickle_file, 'rb')
-        library_class = cPickle.load(fid)
-        fid.close()
-        library_class.Walk(library_class)
+        ToRest(import_name)
         return
 
     path = list(sys.path)
@@ -627,7 +643,7 @@ def ModuleHunter(init_name, import_name, version):
     cPickle.dump(library_class, fid)
     fid.close()
 
-    library_class.Walk(library_class)
+    ToRest(import_name)
 
 
 if __name__ == "__main__":

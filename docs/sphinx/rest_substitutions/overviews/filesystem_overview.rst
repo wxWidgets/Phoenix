@@ -46,9 +46,9 @@ The left location precedes the protocol in the URL string.
 
 It is not used by global protocols like HTTP but it becomes handy when nesting protocols - for example you may want to access files in a ZIP archive: 
 
-file:archives/cpp_doc.zip#zip:reference/fopen.htm#syntax 
+``file:archives/cpp_doc.zip#zip:reference/fopen.htm#syntax`` 
 
-In this example, the protocol is "zip", right location is "reference/fopen.htm", anchor is "syntax" and left location is "file:archives/cpp_doc.zip".
+In this example, the protocol is "zip", right location is "reference/fopen.htm", anchor is "syntax" and left location is ``file:archives/cpp_doc.zip``.
 
 There are two protocols used in this example: "zip" and "file".
 

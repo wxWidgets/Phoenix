@@ -23,7 +23,7 @@ from templates import TEMPLATE_CONTRIB
 
 from constants import IGNORE, PUNCTUATION
 from constants import CPP_ITEMS, VERSION, VALUE_MAP
-from constants import RE_KEEP_SPACES
+from constants import RE_KEEP_SPACES, EXTERN_INHERITANCE
 from constants import DOXYROOT, SPHINXROOT, WIDGETS_IMAGES_ROOT
 
 
@@ -472,9 +472,11 @@ def MakeSummary(item_list, template, kind, add_tilde=True):
     :param list `item_list`: a list of tuples like `(method/property name, short docstrings)`.
     :param string `template`: the template to use (from `sphinxtools/templates.py`, can
      be the ``TEMPLATE_METHOD_SUMMARY`` or the ``TEMPLATE_PROPERTY_SUMMARY``.
-    :param string `kind`: can be ":meth:" or ":attr:" or ":ref:".
+    :param string `kind`: can be ``:meth:`` or ``:attr:`` or ``:ref:`` or ``:mod:``;
+    :param bool `add_tilde`: ``True`` to add the ``~`` character in front of the first
+     summary table column, ``False`` otherwise.
 
-    :rtype: `string`    
+    :rtype: `string`
     """
 
     maxlen = 0
@@ -507,7 +509,9 @@ def WriteSphinxOutput(stream, filename, append=False):
     Writes the text contained in the `stream` to the `filename` output file.
 
     :param StringIO.StringIO `stream`: the stream where the text lives.
-    :param string `filename`: the output file we want to write the text in.
+    :param string `filename`: the output file we want to write the text in;
+    :param bool `append`: ``True`` to append to the file, ``False`` to simply
+     write to it.
     """
 
     text_file = os.path.join(SPHINXROOT, filename)
@@ -587,6 +591,13 @@ def PickleItem(description, current_module, name, kind):
 # ----------------------------------------------------------------------- #
 
 def PickleClassInfo(class_name, element):
+    """
+    Saves some information about a class in a cPickle-compatible file., i.e. the
+    list of methods in that class and its super-classes.
+
+    :param string `class_name`: the name of the class we want to pickle;
+    :param xml.etree.ElementTree.Element `element`: the XML element we want to examine.
+    """
 
     pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
         
@@ -649,6 +660,19 @@ RAW_2 = """
 """
 
 def FormatContributedSnippets(kind, contrib_snippets):
+    """
+    This method will include and properly ReST-ify contributed snippets
+    of wxPython code (at the moment only 2 snippets are available), by
+    including the Python code into the ReST files and allowing the user to
+    show/hide the snippets using a JavaScript "Accordion" script thanks to
+    the ``.. raw::`` directive (default for snippets is to be hidden).
+
+    :param string `kind`: can be "method", "function" or "class" depending on the
+     current item being scanned by the `sphinxgenerator.py` tool;
+    :param list `contrib_snippets`: a list of file names (with the ``*.py`` extension)
+     containing the contributed snippets of code. Normally these snippets live
+     in the ``SPHINXROOT/rest_substitutions/snippets/python/contrib`` folder.
+    """
 
     spacer = ''
     if kind == 'function':
@@ -678,3 +702,55 @@ def FormatContributedSnippets(kind, contrib_snippets):
         text += RAW_2%(spacer, spacer)
 
     return text
+
+
+def FormatExternalLink(fullname, inheritance=False):
+    """
+    Analyzes the input `fullname` string to check whether a class description
+    is actually coming from an external documentation tool
+    (like http://docs.python.org/library/ or http://docs.scipy.org/doc/numpy/reference/generated/).
+
+    If the method finds such an external link, the associated inheritance
+    diagram (if `inheritance` is ``True``) or the ``:ref:`` directive are
+    modified accordingly to link it to the correct external documentation.
+
+    :param string `fullname`: the fully qualified name for a class, method or function,
+     i.e. `exceptions.Exception` or `threading.Thread`;
+    :param bool `inheritance`: ``True`` if the call is coming from :mod:`inheritance`,
+     ``False`` otherwise.
+    """    
+
+    if fullname.count('.') == 0:
+        if not inheritance:
+            return ':class:`%s`'%fullname
+        return ''
+
+    parts = fullname.split('.')
+    possible_external = parts[-2] + '.'
+    real_name = '.'.join(parts[-2:])
+    
+    if possible_external.startswith('_'):
+        # funny ctypes...
+        possible_external = possible_external[1:]
+        real_name = real_name[1:]
+
+    if possible_external not in EXTERN_INHERITANCE:
+        if not inheritance:
+            return ':class:`%s`'%fullname
+
+        return ''
+    
+    base_address = EXTERN_INHERITANCE[possible_external]
+
+    if 'numpy' in real_name:
+        htmlpage = '%s.html#%s'%(real_name.lower(), real_name)
+    else:
+        htmlpage = '%shtml#%s'%(possible_external.lower(), real_name)
+
+    if inheritance:
+        full_page = '"%s"'%(base_address + htmlpage)
+    else:
+        full_page = '`%s <%s>`_'%(fullname, base_address + htmlpage)
+
+    return full_page
+

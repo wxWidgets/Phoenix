@@ -145,6 +145,19 @@ HTML_REPLACE = ['module', 'function', 'method', 'class', 'classmethod', 'staticm
 # Today's date representation for the Sphinx HTML docs
 TODAY = datetime.date.today().strftime('%d %B %Y')
 
+# Inheritance diagram external hyperlinks
+
+PYTHON_DOCS = 'http://docs.python.org/library/'
+NUMPY_DOCS = 'http://docs.scipy.org/doc/numpy/reference/generated/'
+
+EXTERN_INHERITANCE = {'UserDict.'  : PYTHON_DOCS,
+                      'ctypes.'   : PYTHON_DOCS,
+                      'code.'      : PYTHON_DOCS,
+                      'exceptions.': PYTHON_DOCS,
+                      'threading.' : PYTHON_DOCS,
+                      'numpy.'     : NUMPY_DOCS
+                      }
+
 # wx.lib and other pure-Python stuff
 
 class Enumeration(object):

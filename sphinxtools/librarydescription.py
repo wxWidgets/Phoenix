@@ -1,21 +1,17 @@
 import sys
 import os
 import operator
-import errno
 import re
+import cPickle
 
 from StringIO import StringIO
-from subprocess import Popen, PIPE
 
 from inspect import getmro, getclasstree, getdoc, getcomments
 
 from utilities import MakeSummary, ChopDescription, WriteSphinxOutput
-from utilities import FindControlImages, PickleClassInfo
-from constants import object_types, MODULE_TO_ICON, DOXY_2_REST
+from utilities import FindControlImages, FormatExternalLink
+from constants import object_types, MODULE_TO_ICON, DOXY_2_REST, SPHINXROOT
 import templates
-
-ENOENT = getattr(errno, 'ENOENT', 0)
-EPIPE  = getattr(errno, 'EPIPE', 0)
 
 EPYDOC_PATTERN = re.compile(r'\S+{\S+}', re.DOTALL)
 
@@ -75,7 +71,7 @@ def generic_summary(libraryItem, stream):
         table = []
         for item in sub_list:
             
-            if item.is_redundant or item.GetShortName().startswith('__test') or '.extern.' in item.name:
+            if item.is_redundant:
                 continue
 
             item_docs = ReplaceWxDot(item.docs)
@@ -140,7 +136,13 @@ def ReplaceWxDot(text):
 
         newtext += header + '\n'
         newtext += '-'*len(header) + '\n\n'
-    
+
+    # Try and replace True with ``True`` and False with ``False``
+    # ``None`` gives trouble sometimes...
+
+    for keyword in ['True', 'False']:
+        newtext = re.sub(r'\s%s\s'%keyword, ' ``%s`` '%keyword, newtext)
+
     return newtext
 
 
@@ -183,8 +185,10 @@ def FindBestLink(klass, newlink):
                     return ':mod:`~%s`'%child.name
                 elif child.kind in range(object_types.FUNCTION, object_types.INSTANCE_METHOD):
                     return ':meth:`~%s`'%child.name
-                else:
+                elif child.kind == object_types.KLASS:
                     return ':class:`~%s`'%child.name
+                else:
+                    return ':attr:`~%s`'%child.name
 
     full_loop = FindInHierarchy(klass, newlink)
 
@@ -290,6 +294,9 @@ class ParentBase(object):
 
     def Save(self):
 
+        if self.GetShortName().startswith('__test') or '.extern.' in self.name:
+            self.is_redundant = True
+
         self.children = sorted(self.children, key=lambda k: (getattr(k, "order"), getattr(k, "name").lower()))
 
         if self.docs is None:
@@ -377,7 +384,7 @@ class ParentBase(object):
         return items 
 
 
-    def ToRest(self):
+    def ToRest(self, class_summary):
 
         pass
     
@@ -403,10 +410,10 @@ class Library(ParentBase):
         return self.name        
     
 
-    def Walk(self, obj):
+    def Walk(self, obj, class_summary):
 
         if obj == self:
-            obj.ToRest()
+            obj.ToRest(class_summary)
 
         # must have at least root folder
         children = obj.GetChildren()
@@ -420,10 +427,10 @@ class Library(ParentBase):
             if child.is_redundant:
                 continue
 
-            child.ToRest()
+            child.ToRest(class_summary)
 
             # recursively scan other folders, appending results
-            self.Walk(child)
+            self.Walk(child, class_summary)
 
 
     def FindItem(self, newlink, obj=None):
@@ -451,8 +458,10 @@ class Library(ParentBase):
                     return ':mod:`~%s`'%child.name
                 elif child.kind in range(object_types.FUNCTION, object_types.INSTANCE_METHOD+1):
                     return ':meth:`~%s`'%child.name
-                else:
+                elif child.kind == object_types.KLASS:
                     return ':class:`~%s`'%child.name
+                else:
+                    return ':attr:`~%s`'%child.name
 
             bestlink = self.FindItem(newlink, child)
             
@@ -467,7 +476,7 @@ class Library(ParentBase):
         return self.python_version
 
 
-    def ToRest(self):
+    def ToRest(self, class_summary):
 
         print '\n\nReST-ifying %s...\n\n'%self.base_name
         stream = StringIO()
@@ -483,7 +492,51 @@ class Library(ParentBase):
         generic_summary(self, stream)
         WriteSphinxOutput(stream, self.sphinx_file)
 
+
+    def ClassesToPickle(self, obj, class_dict):
+
+        # must have at least root folder
+        children = obj.GetChildren()
+
+        if not children:
+            return class_dict
+
+        # check each name
+        for child in children:
+            if child.kind == object_types.KLASS:
+                if child.is_redundant:
+                    continue
                 
+                class_dict[child.name] = (child.method_list, child.bases)
+
+            # recursively scan other folders, appending results
+            class_dict = self.ClassesToPickle(child, class_dict)
+
+        return class_dict
+
+
+    def Save(self):
+
+        ParentBase.Save(self)
+
+        class_dict = {}
+        class_dict = self.ClassesToPickle(self, class_dict)
+
+        pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
+
+        if os.path.isfile(pickle_file):
+            fid = open(pickle_file, 'rb')
+            items = cPickle.load(fid)
+            fid.close()
+        else:
+            items = {}
+
+        items.update(class_dict)
+        fid = open(pickle_file, 'wb')
+        cPickle.dump(items, fid)
+        fid.close()
+
+
 class Module(ParentBase):
 
     def __init__(self, name, kind):
@@ -508,9 +561,9 @@ class Module(ParentBase):
         self.inheritance_diagram = None
 
 
-    def ToRest(self):
+    def ToRest(self, class_summary):
 
-        if self.is_redundant or self.GetShortName().startswith('__test') or '.extern.' in self.name:
+        if self.is_redundant:
             return
         
         stream = StringIO()
@@ -537,9 +590,9 @@ class Module(ParentBase):
         if self.kind != object_types.PACKAGE:
             print '%s - %s (module)'%(spacer, self.name)
             if self.inheritance_diagram:
-                png, map = self.inheritance_diagram.MakeInheritanceDiagram()
+                png, map = self.inheritance_diagram.MakeInheritanceDiagram(class_summary)
                 short_name = self.GetShortName()
-                image_desc = templates.TEMPLATE_INHERITANCE % (short_name, png, short_name, map)
+                image_desc = templates.TEMPLATE_INHERITANCE % ('module', short_name, png, short_name, map)
                 stream.write(image_desc)
         else:
             print '%s - %s (package)'%(spacer, self.name)
@@ -564,7 +617,14 @@ class Module(ParentBase):
 
         WriteSphinxOutput(stream, self.sphinx_file)
 
-                
+
+    def Save(self):
+
+        ParentBase.Save(self)
+
+        if self.GetShortName().startswith('__test') or '.extern.' in self.name:
+            self.is_redundant = True
+
 
 class Class(ParentBase):
 
@@ -635,9 +695,9 @@ class Class(ParentBase):
         self.sphinx_file = MakeSphinxFile(name)
 
 
-    def ToRest(self):
+    def ToRest(self, class_summary):
 
-        if self.is_redundant or self.GetShortName().startswith('__test') or '.extern.' in self.name:
+        if self.is_redundant:
             return
 
         stream = StringIO()
@@ -656,9 +716,9 @@ class Class(ParentBase):
         stream.write(class_docs + '\n\n')
 
         if self.inheritance_diagram:
-            png, map = self.inheritance_diagram.MakeInheritanceDiagram()
+            png, map = self.inheritance_diagram.MakeInheritanceDiagram(class_summary)
             short_name = self.GetShortName()
-            image_desc = templates.TEMPLATE_INHERITANCE % (short_name, png, short_name, map)
+            image_desc = templates.TEMPLATE_INHERITANCE % ('class', short_name, png, short_name, map)
             stream.write(image_desc)
 
         appearance = FindControlImages(self.name.lower())
@@ -667,13 +727,13 @@ class Class(ParentBase):
             stream.write(appearance_desc + '\n\n')
 
         if self.subClasses:
-            subs = [':ref:`%s`'%cls for cls in self.subClasses]
+            subs = [FormatExternalLink(cls) for cls in self.subClasses]
             subs = ', '.join(subs)
             subs_desc = templates.TEMPLATE_SUBCLASSES % subs
             stream.write(subs_desc)
 
         if self.superClasses:
-            sups = [':ref:`%s`'%cls for cls in self.superClasses]
+            sups = [FormatExternalLink(cls) for cls in self.superClasses]
             sups = ', '.join(sups)
             sups_desc = templates.TEMPLATE_SUPERCLASSES % sups
             stream.write(sups_desc)
@@ -691,23 +751,16 @@ class Class(ParentBase):
 
         methods = self.GetItemByKind(object_types.METHOD, object_types.INSTANCE_METHOD)
         properties = self.GetItemByKind(object_types.PROPERTY)
-        method_list = []
         
         for meth in methods:
             meth.Write(stream)
-            if not meth.is_redundant:
-                method_list.append((meth.GetShortName(), ''))
                     
         for prop in properties:
             prop.Write(stream, short_name)
             
         WriteSphinxOutput(stream, self.sphinx_file)
-
         self.bases = self.superClasses
-        self.method_list = method_list
         
-        PickleClassInfo(self.name, self)
-
 
     def Save(self):
 
@@ -736,6 +789,22 @@ class Class(ParentBase):
         if len(self.signature) < 2:
             self.is_redundant = True
 
+        if self.GetShortName().startswith('__test') or '.extern.' in self.name:
+            self.is_redundant = True
+            
+        if self.is_redundant:
+            return
+
+        methods = self.GetItemByKind(object_types.METHOD, object_types.INSTANCE_METHOD)
+        method_list = []
+        
+        for meth in methods:
+            if not meth.is_redundant:
+                method_list.append(meth.GetShortName())
+
+        self.method_list = method_list
+        self.bases = self.superClasses
+        
 
 class ChildrenBase(object):
     
@@ -793,7 +862,7 @@ class ChildrenBase(object):
             self.comments = u''
 
 
-    def ToRest(self):
+    def ToRest(self, class_summary):
 
         pass
     
@@ -972,7 +1041,7 @@ class Attribute(ChildrenBase):
         self.order = 7
         
 
-    def ToRest(self):
+    def ToRest(self, class_summary):
 
         pass
 

@@ -33,7 +33,7 @@ TEMPLATE_INHERITANCE = '''
 |class_hierarchy| Inheritance Diagram
 =====================================
 
-Inheritance diagram for: **%s**
+Inheritance diagram for %s **%s**
 
 .. raw:: html
 

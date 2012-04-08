@@ -2237,7 +2237,7 @@ class XMLDocString(object):
         inheritance_diagram = InheritanceDiagram(klass.nodeBases)
         png, map = inheritance_diagram.MakeInheritanceDiagram()
 
-        image_desc = templates.TEMPLATE_INHERITANCE % (name, png, name, map)
+        image_desc = templates.TEMPLATE_INHERITANCE % ('class', name, png, name, map)
         stream.write(image_desc)
 
         if self.appearance:

@@ -4,7 +4,7 @@
 .. _writing non-english applications:
 
 =====================================================
-|phoenix_title|  **writing Non-English Applications**
+|phoenix_title|  **Writing Non-English Applications**
 =====================================================
 
 This article describes how to write applications that communicate with the

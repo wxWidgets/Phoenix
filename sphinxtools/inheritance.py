@@ -18,7 +18,7 @@ from subprocess import Popen, PIPE
 
 # Phoenix-specific imports
 
-from utilities import Wx2Sphinx
+from utilities import Wx2Sphinx, FormatExternalLink
 from constants import INHERITANCEROOT
 
 ENOENT = getattr(errno, 'ENOENT', 0)
@@ -92,7 +92,9 @@ class InheritanceDiagram(object):
         else:
             # Just the last 2 parts
             nodename = '.'.join(name_parts[-2:])
-
+            if fullname.startswith('wx.'):
+                fullname = fullname[3:]
+                
         return nodename, fullname
 
 
@@ -120,13 +122,11 @@ class InheritanceDiagram(object):
     def _format_graph_attrs(self, attrs):
         return ''.join(['%s=%s;\n' % x for x in attrs.items()])
 
-    def generate_dot(self, name="dummy", urls={}, graph_attrs={}, node_attrs={}, edge_attrs={}):
+    def generate_dot(self, class_summary, name="dummy", graph_attrs={}, node_attrs={}, edge_attrs={}):
         """Generate a graphviz dot graph from the classes that were passed in
         to __init__.
 
         *name* is the name of the graph.
-
-        *urls* is a dictionary mapping class names to HTTP URLs.
 
         *graph_attrs*, *node_attrs*, *edge_attrs* are dictionaries containing
         key/value pairs to pass on as graphviz properties.
@@ -166,7 +166,20 @@ class InheritanceDiagram(object):
             else:
                 newname = name
 
-            this_node_attrs['URL'] = '"%s.html"'%fullname
+            if class_summary is None:
+                # Phoenix base classes, assume there is always a link
+                this_node_attrs['URL'] = '"%s.html"'%fullname
+            else:
+                if 'wx.' in fullname:
+                    fullname = fullname[3:]
+                
+                if fullname in class_summary:
+                    this_node_attrs['URL'] = '"%s.html"'%fullname
+                else:
+                    full_page = FormatExternalLink(fullname, inheritance=True)
+                    if full_page:
+                        this_node_attrs['URL'] = full_page
+                    
             res.append('  "%s" [%s];\n' %
                        (newname, self._format_node_attrs(this_node_attrs)))
 
@@ -189,13 +202,16 @@ class InheritanceDiagram(object):
 
     # ----------------------------------------------------------------------- #
 
-    def MakeInheritanceDiagram(self):
+    def MakeInheritanceDiagram(self, class_summary):
         """
         Actually generates the inheritance diagram as a PNG file plus the corresponding
         MAP file for mouse navigation over the inheritance boxes.
 
         These two files are saved into the ``INHERITANCEROOT`` folder (see `sphinxtools/constants.py`
         for more information).
+
+        :param `class_summary`: if not ``None``, used to identify if a class is actually been
+         wrapped or not (to avoid links pointing to non-existent pages).
 
         :rtype: `tuple`
 
@@ -221,7 +237,7 @@ class InheritanceDiagram(object):
             fid.close()
             return os.path.split(outfn)[1], map.replace('\n', ' ')
 
-        code = self.generate_dot()
+        code = self.generate_dot(class_summary)
 
         # graphviz expects UTF-8 by default
         if isinstance(code, unicode):
