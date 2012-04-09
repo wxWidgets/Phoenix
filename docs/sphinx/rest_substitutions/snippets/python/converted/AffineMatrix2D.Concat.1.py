@@ -1,4 +1,4 @@
     
-            #           | t.self.11  t.self.12  0 |   | self.11  self.12   0 |
-            # matrix' = | t.self.21  t.self.22  0 | x | self.21  self.22   0 |
-            #           | t.self.tx  t.self.ty  1 |   | self.tx  self.ty   1 |
+            #           | t.m_11  t.m_12  0 |   | m_11  m_12   0 |
+            # matrix' = | t.m_21  t.m_22  0 | x | m_21  m_22   0 |
+            #           | t.m_tx  t.m_ty  1 |   | m_tx  m_ty   1 |

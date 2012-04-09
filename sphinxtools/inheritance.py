@@ -202,7 +202,7 @@ class InheritanceDiagram(object):
 
     # ----------------------------------------------------------------------- #
 
-    def MakeInheritanceDiagram(self, class_summary):
+    def MakeInheritanceDiagram(self, class_summary=None):
         """
         Actually generates the inheritance diagram as a PNG file plus the corresponding
         MAP file for mouse navigation over the inheritance boxes.

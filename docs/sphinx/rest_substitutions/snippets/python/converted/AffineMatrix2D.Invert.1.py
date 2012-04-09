@@ -1,4 +1,4 @@
     
-            #           | self.11  self.12  0 |
-            # Invert    | self.21  self.22  0 |
-            #           | self.tx  self.ty  1 |
+            #           | m_11  m_12  0 |
+            # Invert    | m_21  m_22  0 |
+            #           | m_tx  m_ty  1 |
