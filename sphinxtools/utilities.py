@@ -590,13 +590,14 @@ def PickleItem(description, current_module, name, kind):
 
 # ----------------------------------------------------------------------- #
 
-def PickleClassInfo(class_name, element):
+def PickleClassInfo(class_name, element, short_description):
     """
     Saves some information about a class in a cPickle-compatible file., i.e. the
     list of methods in that class and its super-classes.
 
     :param string `class_name`: the name of the class we want to pickle;
-    :param xml.etree.ElementTree.Element `element`: the XML element we want to examine.
+    :param xml.etree.ElementTree.Element `element`: the XML element we want to examine;
+    :param string `short_description`: the class short description (if any).
     """
 
     pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
@@ -615,7 +616,7 @@ def PickleClassInfo(class_name, element):
     for base in element.bases:
         bases.append(Wx2Sphinx(base)[1])
 
-    items[class_name] = (method_list, bases)
+    items[class_name] = (method_list, bases, short_description)
     fid = open(pickle_file, 'wb')
     cPickle.dump(items, fid)
     fid.close()

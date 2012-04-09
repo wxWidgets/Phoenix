@@ -2712,6 +2712,7 @@ class XMLDocString(object):
             
             if self.kind == 'class':
                 desc = ChopDescription(docstrings)
+                self.short_description = desc
                 class_name = self.class_name.lower()
                 PickleItem(desc, self.current_module, self.class_name, 'class')
                         
@@ -2890,8 +2891,6 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 simple_docs = self.createPropertyLinks(class_name, item)
                 self.current_class.property_list.append(('%s.%s'%(class_name, item.name), simple_docs))
 
-        PickleClassInfo(self.current_module + class_name, self.current_class)
-
         if init_position >= 0:
             init_method = class_items.pop(init_position)
             class_items.insert(0, init_method)
@@ -2906,6 +2905,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         docstring.current_module = self.current_module
 
         docstring.Dump()
+
+        PickleClassInfo(self.current_module + class_name, self.current_class, docstring.short_description)
 
         # these are the only kinds of items allowed to be items in a PyClass
         dispatch = [(extractors.PyFunctionDef, self.generateMethod),
@@ -3003,8 +3004,6 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             if item.isCtor:
                 method_name, simple_docs = self.getName(item)
                 self.current_class.method_list.insert(0, ('%s.__init__'%name, simple_docs))
-
-        PickleClassInfo(self.current_module + name, self.current_class)
                 
         docstring = XMLDocString(klass)
 
@@ -3013,6 +3012,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         docstring.current_module = self.current_module
 
         docstring.Dump()
+
+        PickleClassInfo(self.current_module + name, self.current_class, docstring.short_description)
         
         for item in ctors: 
             if item.isCtor:

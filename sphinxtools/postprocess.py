@@ -96,7 +96,7 @@ def BuildEnumsAndMethods(sphinxDir):
     fid = open(os.path.join(sphinxDir, 'class_summary.lst'), 'rb')
     class_summary = cPickle.load(fid)
     fid.close()
-
+    
     unreferenced_classes = {}
     
     textfiles = glob.glob(sphinxDir + '/*.txt')
@@ -162,7 +162,9 @@ def BuildEnumsAndMethods(sphinxDir):
 
         for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()']:
             text = text.replace(cpp, '[]')
-                
+
+        text = TooltipsOnInheritance(text, class_summary)
+
         if text != orig_text:
             fid = open(input, 'wt')
             fid.write(text)
@@ -248,7 +250,7 @@ def FindInherited(input, class_summary, enum_base, text):
         if curr_class not in class_summary:
             continue
         
-        methods, bases = class_summary[curr_class]
+        methods, bases, short_description = class_summary[curr_class]
 
         if meth_name in methods:
             continue
@@ -259,7 +261,7 @@ def FindInherited(input, class_summary, enum_base, text):
             if cls not in class_summary:
                 continue
 
-            submethods, subbases = class_summary[cls]
+            submethods, subbases, subshort = class_summary[cls]
 
             if meth_name in submethods:
                 if not hasdot:
@@ -673,3 +675,51 @@ def ChangeSVNRevision(text):
     
     text = text.replace('|SVN|', SVN_REVISION)
     return text
+
+
+def TooltipsOnInheritance(text, class_summary):
+
+    graphviz = re.findall(r'<p class="graphviz">(.*?)</p>', text, re.DOTALL)
+
+    if not graphviz:
+        return text
+
+    graphviz = graphviz[0]
+    original = graphviz[:]
+    
+    html_links = re.findall('href="(.*?)"', graphviz)
+    titles = re.findall('title="(.*?)"', graphviz)
+
+    ReST = ['ref', 'class', 'mod', 'meth', 'attr']
+    
+    for link, title in zip(html_links, titles):
+        if 'http://' in link:
+            # No tooltip for this one
+            continue
+
+        class_name = os.path.splitext(link)[0]
+
+        if class_name not in class_summary:
+            continue
+
+        methods, bases, short_description = class_summary[class_name]
+
+        if not short_description.strip():
+            # Leave the default tooltip
+            continue
+        
+        replace_string = 'title="%s"'%title
+        description = short_description.replace('\n', ' ').lstrip()
+
+        for item in ReST:
+            description = re.sub(':%s:`~(.*?)`'%item, r'\1', description)
+            description = re.sub(':%s:`(.*?)`'%item, r'\1', description)
+
+        description = description.replace('"', "'")
+        graphviz = graphviz.replace(replace_string, 'title="%s"'%description)
+
+    text = text.replace(original, graphviz)
+
+    return text
+
+    

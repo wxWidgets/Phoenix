@@ -507,7 +507,7 @@ class Library(ParentBase):
                 if child.is_redundant:
                     continue
                 
-                class_dict[child.name] = (child.method_list, child.bases)
+                class_dict[child.name] = (child.method_list, child.bases, ChopDescription(child.docs))
 
             # recursively scan other folders, appending results
             class_dict = self.ClassesToPickle(child, class_dict)
