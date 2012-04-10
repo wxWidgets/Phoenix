@@ -14,6 +14,8 @@ stage of the ETG scripts.
 
 import extractors
 import sys, os
+import copy
+
 
 magicMethods = {
     'operator!='    : '__ne__',
@@ -327,6 +329,21 @@ def changeTypeNames(module, oldName, newName, skipTypedef=False):
                  hasattr(item, 'type') and oldName in item.type:
             item.type = item.type.replace(oldName, newName)
 
+
+
+def copyClassDef(klass, newName):
+    """
+    Make a copy of a class object and give it a new name.
+    """
+    oldName = klass.name
+    klass = copy.deepcopy(klass)
+    assert isinstance(klass, extractors.ClassDef)
+    klass.name = newName
+    for ctor in klass.find(oldName).all():
+        ctor.name = newName
+    if klass.findItem('~'+oldName):
+        klass.find('~'+oldName).name = '~'+newName
+    return klass
 
 #---------------------------------------------------------------------------
 

@@ -28,16 +28,17 @@ INCLUDES = [
              'aboutdlg',
              'helpext',
              'commandlinkbutton',
+             'dateevt',
+             'datectrl',
+             'calctrl',
+             
              
              # TODOs - 
-             # These modules are also in the C++ adv lib and so should included be here:
+             # These modules are also in the C++ adv lib and so should be included here:
              #
              #'animate',
              #'bannerwindow',
              #'bmpcbox',
-             #'calctrl',
-             #'datectrl',
-             #'dateevt',
              #'editlbox',
              #'hyperlink',
              #'joystick',
@@ -83,9 +84,10 @@ def run():
     
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
+    module.addPyCode("import core as wx", order=10)
     module.addInclude(INCLUDES)
        
-
+    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

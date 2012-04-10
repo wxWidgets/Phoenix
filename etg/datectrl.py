@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        etg/dragimag.py
+# Name:        etg/datectrl.py
 # Author:      Robin Dunn
 #
 # Created:     09-Apr-2012
@@ -10,14 +10,15 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
+
 PACKAGE   = "wx"   
-MODULE    = "_core"
-NAME      = "dragimag"   # Base name of the file to generate to for this script
+MODULE    = "_adv"
+NAME      = "datectrl"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ "wxDragImage",
+ITEMS  = [ "wxDatePickerCtrl",
            ]    
     
 #---------------------------------------------------------------------------
@@ -31,24 +32,26 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    di = module.find('wxDragImage')
-    assert isinstance(di, etgtools.ClassDef)
+    module.addHeaderCode("#include <wx/datectrl.h>")
+    module.addHeaderCode("#include <wx/generic/datectrl.h>")
     
-    # make a copy and rename it to 'wxGenericDragImage'
-    gdi = tools.copyClassDef(di, 'wxGenericDragImage')
-    module.insertItemAfter(di, gdi)
+    dpc = module.find('wxDatePickerCtrl')
+    assert isinstance(dpc, etgtools.ClassDef)
 
-    # now add some tweaks for wxDragImage
-    di.find('DoDrawImage').ignore()
-    di.find('GetImageRect').ignore()
-    di.find('UpdateBackingFromWindow').ignore()
-    di.addPrivateCopyCtor()
+    # Make a copy and call it wxDatePickerCtrlGeneric so we can generate
+    # wrappers for both classes
+    gdpc = tools.copyClassDef(dpc, 'wxDatePickerCtrlGeneric')
+    assert isinstance(gdpc, etgtools.ClassDef)
+    module.insertItemAfter(dpc, gdpc)
+    # and give it a new Python name to match Classic
+    gdpc.pyName = 'GenericDatePickerCtrl'
     
-    # and for wxGenericDragImage
-    gdi.addPrivateCopyCtor()
-    
-    
-    
+    # now back to our regular tweaking
+    for c in [dpc, gdpc]:
+        tools.fixWindowClass(c)
+        c.find('GetRange.dt1').out = True
+        c.find('GetRange.dt2').out = True
+   
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
