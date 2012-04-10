@@ -33,7 +33,6 @@ def run():
     # customizing the generated code and docstrings.
     
     module.addHeaderCode("#include <wx/datectrl.h>")
-    module.addHeaderCode("#include <wx/generic/datectrl.h>")
     
     dpc = module.find('wxDatePickerCtrl')
     assert isinstance(dpc, etgtools.ClassDef)
@@ -51,6 +50,8 @@ def run():
         tools.fixWindowClass(c)
         c.find('GetRange.dt1').out = True
         c.find('GetRange.dt2').out = True
+
+    gdpc.addHeaderCode("#include <wx/generic/datectrl.h>")
    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

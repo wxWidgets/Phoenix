@@ -31,6 +31,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
+    
     di = module.find('wxDragImage')
     assert isinstance(di, etgtools.ClassDef)
     
@@ -46,7 +47,7 @@ def run():
     
     # and for wxGenericDragImage
     gdi.addPrivateCopyCtor()
-    
+    gdi.addHeaderCode("#include <wx/generic/dragimgg.h>")    
     
     
     #-----------------------------------------------------------------

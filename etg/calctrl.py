@@ -33,6 +33,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
+    
     c = module.find('wxCalendarEvent')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
@@ -68,6 +69,8 @@ def run():
             CalendarCtrl.PySetDateRange = wx.deprecated(CalendarCtrl.SetDateRange)        
             """)
     
+    cc.find('EnableYearChange').ignore()
+    gcc.addHeaderCode("#include <wx/generic/calctrlg.h>")
 
     module.addGlobalStr('wxCalendarNameStr', cc)
     
