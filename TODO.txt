@@ -131,7 +131,6 @@ other dev stuff
 
       * taskbar
       * print (as in print framework classes)
-      * dragimag 
       * datectrl
       * hyperlink
       * pickerbase, clrpicker, filepicker, fontpicker

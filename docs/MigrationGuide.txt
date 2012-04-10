@@ -236,6 +236,8 @@ wx.ListCtrl
   public. Instead use the associated getter/setter methods or the
   auto-generated properties that are using them.
 
+
+
 wx.TreeCtrl
 -----------
 
@@ -250,3 +252,14 @@ wx.TreeCtrl
   [G|S]etItemPyData members still exist, but are now deprecated
   aliases for [G|S]etItemData.
 
+
+
+wx.DragImage
+------------
+
+Phoenix is providing both wx.DragImage and wx.GenericDragImage classes.
+Classic wxPython only provided wx.DragImage, but it was actually using
+wx.GenericDragImage internally for all platforms. wx.DragImage will now be a
+native implementation on Windows, and will still be the generic version
+elsewhere. If you would rather use the generic implementation on Window to
+then switch to using the wx.GenericDragImage class name.

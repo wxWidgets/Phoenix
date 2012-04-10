@@ -181,6 +181,7 @@ INCLUDES = [  # core
               'settings',
               'sysopt',
               'artprov',
+              'dragimag',
               ]
 
 
