@@ -28,11 +28,20 @@ class dialog_Tests(wtc.WidgetTestCase):
         self.runDialog(dlg)
         
     def test_dialog1(self):
+        # with parent
         dlg = wx.Dialog(self.frame, title='Hello')
         self.runDialog(dlg)
 
     def test_dialog2(self):
+        # without parent
         dlg = wx.Dialog(None, title='World')
+        self.runDialog(dlg)
+        
+    def test_dialogTextSizer(self):
+        dlg = wx.Dialog(self.frame, title='Hello')
+        s = dlg.CreateTextSizer("This is a test.\nThis is only a test.\nHello World")
+        self.assertTrue(isinstance(s, wx.Sizer))
+        self.assertTrue(len(s.Children) == 3)
         self.runDialog(dlg)
         
 #---------------------------------------------------------------------------
