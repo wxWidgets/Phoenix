@@ -27,6 +27,7 @@ ITEMS  = [ ]
 INCLUDES = [  
              'aboutdlg',
              'helpext',
+             'commandlinkbutton',
              
              # TODOs - 
              # These modules are also in the C++ adv lib and so should included be here:
@@ -35,7 +36,6 @@ INCLUDES = [
              #'bannerwindow',
              #'bmpcbox',
              #'calctrl',
-             #'commandlinkbutton',
              #'datectrl',
              #'dateevt',
              #'editlbox',
