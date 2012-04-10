@@ -31,6 +31,7 @@ INCLUDES = [
              'dateevt',
              'datectrl',
              'calctrl',
+             'hyperlink',
              
              
              # TODOs - 
@@ -40,7 +41,6 @@ INCLUDES = [
              #'bannerwindow',
              #'bmpcbox',
              #'editlbox',
-             #'hyperlink',
              #'joystick',
              #'laywin',
              #'notifmsg',
