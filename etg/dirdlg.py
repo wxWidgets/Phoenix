@@ -32,10 +32,11 @@ def run():
     
     c = module.find('wxDirDialog')
     module.addGlobalStr('wxDirDialogNameStr', c)
-    module.addGlobalStr('wxDirSelectorPromptStr', c)
     module.addGlobalStr('wxDirDialogDefaultFolderStr', c)
     
     tools.fixWindowClass(c)
+
+    module.find('wxDirSelectorPromptStr').ignore()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -17,7 +17,9 @@ if 'wxEVT_NULL' in dir():
         import warnings
         warnings.warn("wxPython/wxWidgets release number mismatch")
     del _core
-
+else:
+    Port = ''
+    PortInfo = []
                        
 import warnings
 class wxPyDeprecationWarning(DeprecationWarning):

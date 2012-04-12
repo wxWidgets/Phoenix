@@ -20,7 +20,7 @@ DOCSTRING = ""
 ITEMS  = [ "wxGenericDirCtrl",
            "wxDirFilterListCtrl",
            ]    
-    
+
 #---------------------------------------------------------------------------
 
 def run():
