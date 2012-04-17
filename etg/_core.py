@@ -154,6 +154,7 @@ INCLUDES = [  # core
               'treeitemdata',
               'treectrl',
               'pickers',
+              'filectrl',
               
               # toplevel and dialogs
               'nonownedwnd',
