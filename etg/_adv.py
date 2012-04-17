@@ -32,6 +32,7 @@ INCLUDES = [
              'datectrl',
              'calctrl',
              'hyperlink',
+             'tipdlg',
              
              
              # TODOs - 
@@ -51,7 +52,6 @@ INCLUDES = [
              #'splash',
              #'taskbar',
              #'timectrl',
-             #'tipdlg',
              #'treelist',
              #'wizard',
 
