@@ -131,7 +131,6 @@ other dev stuff
 
       * taskbar
       * print (as in print framework classes)
-      * pickerbase, clrpicker, filepicker, fontpicker
       * filectrl
       * axbase  (ActiveX.  Need to figure out best ways to do MSW-only items...)
       * tipdlg
