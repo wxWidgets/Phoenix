@@ -54,7 +54,7 @@ toolsURL = 'http://wxpython.org/Phoenix/tools'
 #---------------------------------------------------------------------------
 
 def usage():
-    print """\
+    print ("""\
 Usage: ./build.py [command(s)] [options]
 
   Commands:
@@ -90,7 +90,7 @@ Usage: ./build.py [command(s)] [options]
       
       clean         Clean both wx and wxPython
       cleanall      Clean all and do a little extra scrubbing too
-"""
+      """)
 
     parser = makeOptionParser()
     parser.print_help()
@@ -130,7 +130,7 @@ def main(args):
             function = globals()[cmd]
             function(options, args)
         else:
-            print '*** Unknown command:', cmd
+            print('*** Unknown command: ' + cmd)
             usage()
             sys.exit(1)
     msg("Done!")
@@ -158,7 +158,7 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
     if rval:
         # Failed!
         #raise subprocess.CalledProcessError(rval, cmd)
-        print "Command '%s' failed with exit code %d." % (cmd, rval)
+        print("Command '%s' failed with exit code %d." % (cmd, rval))
         if fatal:
             sys.exit(rval)
     
@@ -204,7 +204,7 @@ def setPythonVersion(args):
         findPython = runcmd("which %s" % PYTHON, True, False)
         msg('Found %s at %s' % (PYTHON, findPython))
         PYTHON = findPython
-    msg(runcmd('%s -c "import sys; print sys.version"' % PYTHON, True, False))
+    msg(runcmd('%s -c "import sys; print(sys.version)"' % PYTHON, True, False))
         
 
 def setDevModeOptions(args):
@@ -349,19 +349,19 @@ def getBuildDir(options):
 def deleteIfExists(deldir, verbose=True):
     if os.path.exists(deldir) and os.path.isdir(deldir):
         if verbose:
-            print "Removing folder: %s" % deldir
+            print("Removing folder: %s" % deldir)
         shutil.rmtree(deldir)
         
         
 def delFiles(fileList, verbose=True):
     for afile in fileList:
         if verbose:
-            print "Removing file: %s" % afile
+            print("Removing file: %s" % afile)
         os.remove(afile)
 
 
 def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
-    print "**** macFixDependencyInstallName(%s, %s, %s, %s)" % (destdir, prefix, extension, buildDir)
+    print("**** macFixDependencyInstallName(%s, %s, %s, %s)" % (destdir, prefix, extension, buildDir))
     pwd = os.getcwd()
     os.chdir(destdir+prefix+'/lib')
     dylibs = glob.glob('*.dylib')   
@@ -370,7 +370,7 @@ def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
         #      (destdir+prefix,lib,  prefix,lib,  extension)
         cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
               (buildDir,lib,  prefix,lib,  extension)
-        print cmd
+        print(cmd)
         os.system(cmd)        
     os.chdir(pwd)
 
@@ -398,9 +398,9 @@ def getSipCmd():
             m = hashlib.md5()
             m.update(open(cmd, 'rb').read())
             if m.hexdigest() != sipCurrentVersionMD5[platform]:
-                print 'ERROR: MD5 mismatch, got "%s"' % m.hexdigest()
-                print '       expected          "%s"' % sipCurrentVersionMD5[platform]
-                print '       Set SIP in the environment to use a local build of sip instead'
+                print('ERROR: MD5 mismatch, got "%s"' % m.hexdigest())
+                print('       expected          "%s"' % sipCurrentVersionMD5[platform])
+                print('       Set SIP in the environment to use a local build of sip instead')
                 sys.exit(1)
             _sipCmd = cmd
             return cmd
@@ -413,8 +413,8 @@ def getSipCmd():
             data = connection.read()
             msg('Data downloaded...')
         except:
-            print "ERROR: Unable to download", url
-            print "       Set SIP in the environment to use a local build of sip instead"
+            print("ERROR: Unable to download " + url)
+            print("       Set SIP in the environment to use a local build of sip instead")
             import traceback
             traceback.print_exc()
             sys.exit(1)
@@ -456,9 +456,9 @@ def getWafCmd():
             m = hashlib.md5()
             m.update(open(cmd, 'rb').read())
             if m.hexdigest() != wafCurrentVersionMD5:
-                print 'ERROR: MD5 mismatch, got "%s"' % m.hexdigest()
-                print '       expected          "%s"' % wafCurrentVersionMD5
-                print '       Set WAF in the environment to use a local build of waf instead'
+                print('ERROR: MD5 mismatch, got "%s"' % m.hexdigest())
+                print('       expected          "%s"' % wafCurrentVersionMD5)
+                print('       Set WAF in the environment to use a local build of waf instead')
                 sys.exit(1)
             _wafCmd = cmd
             return cmd
@@ -471,8 +471,8 @@ def getWafCmd():
             data = connection.read()
             msg('Data downloaded...')
         except:
-            print "ERROR: Unable to download", url
-            print "       Set WAF in the environment to use a local build of waf instead"
+            print("ERROR: Unable to download" + url)
+            print("       Set WAF in the environment to use a local build of waf instead")
             import traceback
             traceback.print_exc()
             sys.exit(1)
@@ -810,17 +810,17 @@ def build_wx(options, args):
         sys.path.insert(0, os.path.dirname(wxscript))
         wxbuild = __import__('build-wxwidgets')
 
-        print 'wxWidgets build options:', build_options
+        print('wxWidgets build options: ' + str(build_options))
         wxbuild.main(wxscript, build_options)
         
         # build again without the --debug flag?
         if isWindows and options.both:
             build_options.remove('--debug')
-            print 'wxWidgets build options:', build_options
+            print('wxWidgets build options: ' + str(build_options))
             wxbuild.main(wxscript, build_options)
             
     except:
-        print "ERROR: failed building wxWidgets"
+        print("ERROR: failed building wxWidgets")
         import traceback
         traceback.print_exc()
         sys.exit(1)
@@ -829,12 +829,12 @@ def build_wx(options, args):
     # command available
     if findCmd('msgfmt'):
         locale_pwd = pushDir(posixjoin(wxDir(), 'locale'))
-        print 'Building message catalogs in', os.getcwd()
+        print('Building message catalogs in ' + os.getcwd())
         runcmd('make allmo')
         del locale_pwd
     else:
-        print "WARNING: msgfmt command not found, message catalogs not rebulit.\n" \
-              "         Please install gettext and associated tools."
+        print("WARNING: msgfmt command not found, message catalogs not rebulit.\n"
+              "         Please install gettext and associated tools.")
         
     
         
@@ -948,13 +948,13 @@ def setup_py(options, args):
                 if line.endswith('.so'):
                     macFixDependencyInstallName(DESTDIR, PREFIX, line, BUILD_DIR)
                 
-    print "\n------------ BUILD FINISHED ------------"
-    print "To run the wxPython demo:"
-    print " - Set your PYTHONPATH variable to %s." % phoenixDir()
+    print("\n------------ BUILD FINISHED ------------")
+    print("To run the wxPython demo:")
+    print(" - Set your PYTHONPATH variable to %s." % phoenixDir())
     if not isWindows and not options.install:
-        print " - Set your (DY)LD_LIBRARY_PATH to %s" % BUILD_DIR + "/lib"
-    print " - Run python demo/demo.py"
-    print
+        print(" - Set your (DY)LD_LIBRARY_PATH to %s" % BUILD_DIR + "/lib")
+    print(" - Run python demo/demo.py")
+    print("")
 
 
 
@@ -990,13 +990,13 @@ def waf_py(options, args):
         cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
         runcmd(cmd)
 
-    print "\n------------ BUILD FINISHED ------------"
-    print "To run the wxPython demo:"
-    print " - Set your PYTHONPATH variable to %s." % phoenixDir()
+    print("\n------------ BUILD FINISHED ------------")
+    print("To run the wxPython demo:")
+    print(" - Set your PYTHONPATH variable to %s." % phoenixDir())
     if not isWindows and not options.install:
-        print " - Set your (DY)LD_LIBRARY_PATH to %s" % BUILD_DIR + "/lib"
-    print " - Run python demo/demo.py"
-    print
+        print(" - Set your (DY)LD_LIBRARY_PATH to %s" % BUILD_DIR + "/lib")
+    print(" - Run python demo/demo.py")
+    print("")
 
 
     
@@ -1158,13 +1158,13 @@ def bdist(options, args):
     
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
-    print "Archiving Phoenix bindings..."
+    print("Archiving Phoenix bindings...")
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
     tarball.add('wx', os.path.join(rootname, 'wx'))
     if not sys.platform.startswith('win'):
         # The DLLs have already been copied to wx on Windows, and so are
         # already in the tarball. For other platforms fetch them now.
-        print "Archiving wxWidgets shared libraries..."
+        print("Archiving wxWidgets shared libraries...")
         dlls = glob.glob(os.path.join(wxlibdir, "*%s" % dllext))
         for dll in dlls:
             tarball.add(dll, os.path.join(rootname, 'wx', os.path.basename(dll)))
@@ -1174,29 +1174,29 @@ def bdist(options, args):
     tarball.close()
 
     if options.upload_package:
-        print "Preparing to upload package..."
+        print("Preparing to upload package...")
         configfile = os.path.join(os.getenv("HOME"), "phoenix_package_server.cfg")
         if not os.path.exists(configfile):
-            print "Cannot upload, server configuration not set."
+            print("Cannot upload, server configuration not set.")
             #sys.exit(1)
             
         import ConfigParser
         parser = ConfigParser.ConfigParser()
         parser.read(configfile)
         
-        print "Connecting to FTP server..."
+        print("Connecting to FTP server...")
         from ftplib import FTP
         ftp = FTP(parser.get("FTP", "host"))
         ftp.login(parser.get("FTP", "user"), parser.get("FTP", "pass"))
         f = open(tarfilename, 'rb')
         ftp_path = '%s/%s' % (parser.get("FTP", "dir"), os.path.basename(tarfilename))
-        print "Uploading package (this may take some time)..."
+        print("Uploading package (this may take some time)...")
         ftp.storbinary('STOR %s' % ftp_path, f)
 
         ftp.close()
-        print "Upload complete!"
+        print("Upload complete!")
         
-    print "Release built at %s" % tarfilename
+    print("Release built at %s" % tarfilename)
 
     
 #---------------------------------------------------------------------------
