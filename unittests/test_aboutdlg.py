@@ -16,20 +16,16 @@ class aboutdlg_Tests(wtc.WidgetTestCase):
         info.SetCopyright('(c) by Goofy Enterprises, Inc.')
         return info 
 
-    def _closeDlg(self):
-        for w in wx.GetTopLevelWindows():
-            if isinstance(w, wx.Dialog):
-                w.EndModal(wx.ID_OK)
     
     def test_aboutdlgNative(self):
         if not 'wxMSW' in wx.PlatformInfo():
             info = self._makeInfo()
-            wx.CallLater(250, self._closeDlg)
+            wx.CallLater(25, self.closeDialogs)
             wx.adv.AboutBox(info, self.frame)
                      
     def test_aboutdlgGeneric(self):
         info = self._makeInfo()
-        wx.CallLater(250, self._closeDlg)
+        wx.CallLater(25, self.closeDialogs)
         wx.adv.GenericAboutBox(info, self.frame)
                      
         

@@ -12,7 +12,7 @@ class tipdlg_Tests(wtc.WidgetTestCase):
 
     def test_tipdlg1(self):
         tp = wx.adv.CreateFileTipProvider(tipFile, 0);
-        wx.CallLater(25, self._closeTipDialog)
+        wx.CallLater(25, self.closeDialogs)
         wx.adv.ShowTip(self.frame, tp)
         
         
@@ -21,16 +21,10 @@ class tipdlg_Tests(wtc.WidgetTestCase):
             def GetTip(self):
                 return "This is my tip"
             
-        wx.CallLater(25, self._closeTipDialog)
+        wx.CallLater(25, self.closeDialogs)
         wx.adv.ShowTip(self.frame, MyTipProvider(0))
 
-        
-    def _closeTipDialog(self):
-        #self.myYield()
-        for w in wx.GetTopLevelWindows():
-            if isinstance(w, wx.Dialog):
-                w.EndModal(wx.ID_CANCEL)
-                
+                       
                 
 #---------------------------------------------------------------------------
 
