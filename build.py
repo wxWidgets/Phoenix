@@ -1127,6 +1127,7 @@ def bdist(options, args):
     
     dllext = ".so"
     environ_script="packaging/phoenix_environ.sh"
+    readme = "packaging/README.txt"
     wxlibdir = os.path.join(getBuildDir(options), "lib") 
     if sys.platform.startswith('win'):
         #dllext = ".dll"
@@ -1135,19 +1136,41 @@ def bdist(options, args):
     elif sys.platform.startswith('darwin'):
         dllext = ".dylib"
      
+    # Some helpers for the code below
     def _getDate():
         import datetime
         today = datetime.date.today()
         return "%d%02d%02d" % (today.year, today.month, today.day)
-        
-    svnrev = None
-    try:
-        rev = runcmd('svnversion', getOutput=True, echoCmd=False)
-        if rev == 'exported':
-            svnrev = _getDate()
-        else:
+    
+    def _getSvnRevision():
+        svnrev = None
+        try:
+            rev = runcmd('svnversion', getOutput=True, echoCmd=False)
+        except:
+            return None
+        if rev != 'exported':
             svnrev = "r" + rev.split(':')[0]
-    except:
+        return svnrev
+    
+    def _getGitSvnRevision():
+        svnrev = None
+        try:
+            info = runcmd('git svn info', getOutput=True, echoCmd=False)
+        except:
+            return None
+        for line in info.splitlines():
+            if line.startswith('Revision:'):
+                svnrev = "r" + line.split(' ')[-1]
+                break
+        return svnrev
+        
+        
+    # Try getting the revision number from SVN, or GIT SVN, or just fall back
+    # to the date.
+    svnrev = _getSvnRevision()
+    if not svnrev:
+        svnrev = _getGitSvnRevision()
+    if not svnrev:
         svnrev = _getDate()
         
     rootname = "wxPython-Phoenix-%s-%s-py%s" % (svnrev, sys.platform, PYVER)
@@ -1171,6 +1194,7 @@ def bdist(options, args):
 
     if environ_script:
         tarball.add(environ_script, os.path.join(rootname, os.path.basename(environ_script)))
+    tarball.add(readme, os.path.join(rootname, os.path.basename(readme)))
     tarball.close()
 
     if options.upload_package:
@@ -1189,7 +1213,18 @@ def bdist(options, args):
         ftp = FTP(parser.get("FTP", "host"))
         ftp.login(parser.get("FTP", "user"), parser.get("FTP", "pass"))
         f = open(tarfilename, 'rb')
-        ftp_path = '%s/%s' % (parser.get("FTP", "dir"), os.path.basename(tarfilename))
+        ftp_dir = parser.get("FTP", "dir")
+        old_files = ftp.nlst(ftp_dir)
+        
+        to_delete = []
+        for afile in old_files:
+            if afile.find(sys.platform):
+                to_delete.append(afile)
+        
+        # leave the last 5 builds, including this new one, on the server
+        for i in xrange(len(to_delete) - 4):
+            ftp.delete("%s/%s" % (ftp_dir, to_delete[i])) 
+        ftp_path = '%s/%s' % (ftp_dir, os.path.basename(tarfilename))
         print("Uploading package (this may take some time)...")
         ftp.storbinary('STOR %s' % ftp_path, f)
 
