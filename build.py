@@ -836,8 +836,8 @@ def build_wx(options, args):
         print("WARNING: msgfmt command not found, message catalogs not rebulit.\n"
               "         Please install gettext and associated tools.")
         
+
     
-        
             
 # While transitioning to waf this is an alias that will call the old
 # distutils build by default.
