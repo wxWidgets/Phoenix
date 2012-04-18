@@ -20,7 +20,8 @@ import urllib2
 
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
-                               phoenixDir, wxDir, copyIfNewer
+                               phoenixDir, wxDir, copyIfNewer, copyFile, \
+                               macFixDependencyInstallName, macSetLoaderNames
 
 import buildtools.version as version
 
@@ -360,21 +361,6 @@ def delFiles(fileList, verbose=True):
         os.remove(afile)
 
 
-def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
-    print("**** macFixDependencyInstallName(%s, %s, %s, %s)" % (destdir, prefix, extension, buildDir))
-    pwd = os.getcwd()
-    os.chdir(destdir+prefix+'/lib')
-    dylibs = glob.glob('*.dylib')   
-    for lib in dylibs:
-        #cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
-        #      (destdir+prefix,lib,  prefix,lib,  extension)
-        cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
-              (buildDir,lib,  prefix,lib,  extension)
-        print(cmd)
-        os.system(cmd)        
-    os.chdir(pwd)
-
-    
     
 def getSipCmd():
     # Returns the sip command to use, checking for an explicit version and
@@ -863,15 +849,27 @@ def copyWxDlls(options):
             dlls += glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.pdb" % ver))
             
         for dll in dlls:
-            shutil.copyfile(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)))
+            copyIfNewer(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)), verbose=True)
 
+    elif isDarwin:
+        # Copy the wxWidgets dylibs
+        cfg = Config()        
+        wxlibdir = os.path.join(getBuildDir(options), "lib") 
+        dlls = glob.glob(wxlibdir + '/*.dylib')
+        for dll in dlls:
+            copyIfNewer(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)), verbose=True)
+                         
+        # Now use install_name_tool to change the extension modules to look
+        # in the same folder for the wx libs, instead of the build dir. Also
+        # change the wx libs the same way.
+        macSetLoaderNames(glob.glob(opj(phoenixDir(), cfg.PKGDIR, '*.so')) + 
+                     glob.glob(opj(phoenixDir(), cfg.PKGDIR, '*.dylib')))
+                
     
     
 def setup_py(options, args):
     cmdTimer = CommandTimer('setup_py')
 
-    copyWxDlls(options)
-    
     BUILD_DIR = getBuildDir(options)
     DESTDIR = options.installdir
     PREFIX = options.prefix
@@ -922,6 +920,8 @@ def setup_py(options, args):
             (build_mode, " ".join(build_options), options.extra_setup)
         runcmd(command)
         
+    copyWxDlls(options)
+    
     # Do an install?
     if options.install:
         # only add the --prefix flag if we have an explicit request to do
@@ -937,6 +937,8 @@ def setup_py(options, args):
             (WXPY_PREFIX, " ".join(build_options), options.extra_setup)
         runcmd(command)
     
+        # NOTE: Can probably get rid of this if we keep the code that is
+        # setting @loader_path in the install names...
         if isDarwin and DESTDIR:
             # Now that we are finished with the build fix the ids and
             # names in the wx .dylibs
@@ -961,8 +963,6 @@ def setup_py(options, args):
 def waf_py(options, args):
     cmdTimer = CommandTimer('waf_py')
     waf = getWafCmd()
-
-    copyWxDlls(options)
 
     BUILD_DIR = getBuildDir(options)
     DESTDIR = options.installdir
@@ -990,6 +990,13 @@ def waf_py(options, args):
         cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
         runcmd(cmd)
 
+    copyWxDlls(options)
+
+    # Do an install?
+    if options.install:
+        pass # TODO...
+    
+    
     print("\n------------ BUILD FINISHED ------------")
     print("To run the wxPython demo:")
     print(" - Set your PYTHONPATH variable to %s." % phoenixDir())
@@ -1037,7 +1044,7 @@ def clean_py(options, args):
     deleteIfExists(build_base)
     deleteIfExists('build_waf')  # make this smarter later, or just use 'build' for waf too
     files = list()
-    for wc in ['*.py', '*.pyc', '*.so', '*.pyd', '*.pdb', '*.pi']:
+    for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi']:
         files += glob.glob(opj(cfg.PKGDIR, wc))
     if isWindows:
         msw = getMSWSettings(options)
@@ -1212,9 +1219,9 @@ def bdist(options, args):
         from ftplib import FTP
         ftp = FTP(parser.get("FTP", "host"))
         ftp.login(parser.get("FTP", "user"), parser.get("FTP", "pass"))
-        f = open(tarfilename, 'rb')
         ftp_dir = parser.get("FTP", "dir")
         old_files = ftp.nlst(ftp_dir)
+        old_files.sort()
         
         to_delete = []
         for afile in old_files:
@@ -1226,6 +1233,7 @@ def bdist(options, args):
             ftp.delete("%s/%s" % (ftp_dir, to_delete[i])) 
         ftp_path = '%s/%s' % (ftp_dir, os.path.basename(tarfilename))
         print("Uploading package (this may take some time)...")
+        f = open(tarfilename, 'rb')
         ftp.storbinary('STOR %s' % ftp_path, f)
 
         ftp.close()

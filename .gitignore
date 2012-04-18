@@ -53,4 +53,5 @@
 /wx/*.pi
 /wx/*.so
 /wx/*.pyd
+/wx/*.dylib
 /wx/locale

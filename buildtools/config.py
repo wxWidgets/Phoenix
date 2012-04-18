@@ -524,7 +524,7 @@ def Config(*args, **kw):
 
 def msg(text):
     if not runSilently:
-        print text
+        print(text)
 
         
 def opj(*args):
@@ -616,11 +616,28 @@ def wxDir():
     return WXWIN
 
 
-def copyIfNewer(src, dest):
+def copyFile(src, dest, verbose=False):
+    """
+    Copy file from src to dest, preserving permission bits, etc. If src is a
+    symlink then dest will be a symlink as well instead of just copying the
+    linked file's contents to a new file.
+    """
+    if verbose:
+        msg('copying %s --> %s' % (src, dest))
+    if os.path.islink(src):
+        if os.path.exists(dest):
+            os.unlink(dest)
+        linkto = os.readlink(src)
+        os.symlink(linkto, dest)
+    else:
+        shutil.copy2(src, dest)
+        
+        
+def copyIfNewer(src, dest, verbose=False):
     if os.path.isdir(dest):
         dest = os.path.join(dest, os.path.basename(src))
     if newer(src, dest):
-        shutil.copy(src, dest)
+        copyFile(src, dest, verbose)
         
         
 def writeIfChanged(filename, text):
@@ -641,3 +658,38 @@ def writeIfChanged(filename, text):
     f = codecs.open(filename, 'w', 'utf-8')
     f.write(text.encode('utf-8'))
     f.close()
+
+
+# TODO: we might be able to get rid of this when the install code is updated...
+def macFixDependencyInstallName(destdir, prefix, extension, buildDir):
+    print("**** macFixDependencyInstallName(%s, %s, %s, %s)" % (destdir, prefix, extension, buildDir))
+    pwd = os.getcwd()
+    os.chdir(destdir+prefix+'/lib')
+    dylibs = glob.glob('*.dylib')   
+    for lib in dylibs:
+        #cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
+        #      (destdir+prefix,lib,  prefix,lib,  extension)
+        cmd = 'install_name_tool -change %s/lib/%s %s/lib/%s %s' % \
+              (buildDir,lib,  prefix,lib,  extension)
+        print(cmd)
+        os.system(cmd)        
+    os.chdir(pwd)
+
+
+def macSetLoaderNames(filenames):
+    """
+    Scan the list of dynamically loaded files for each file in filenames,
+    replacing the path for the wxWidgets libraries with "@loader_path"
+    """
+    for filename in filenames:
+        if not os.path.isfile(filename):
+            continue
+        for line in os.popen('otool -L %s' % filename, 'r').readlines():  # -arch all  ??
+            if line.startswith('\t') and 'libwx_' in line:
+                line = line.strip()
+                endPos = line.rfind(' (')
+                curName = line[:endPos]
+                newName = '@loader_path/' + os.path.basename(curName)
+                cmd = 'install_name_tool -change %s %s %s' % (curName, newName, filename)
+                os.system(cmd)
+        
