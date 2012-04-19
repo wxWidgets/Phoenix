@@ -21,19 +21,16 @@
 /bin/waf-*
 
 # /docs/sphinx/
+/docs/html
 /docs/sphinx/*.txt
 /docs/sphinx/*.pkl
 /docs/sphinx/*.inc
 /docs/sphinx/*.lst
-
-# /docs/sphinx/_static/images/inheritance/
-/docs/sphinx/_static/images/inheritance/*_inheritance.png
-
-# /docs/sphinx/_templates/
+/docs/sphinx/_static/images/inheritance/*_inheritance.*
 /docs/sphinx/_templates/gallery.html
-
-# /docs/sphinx/rest_substitutions/snippets/cpp/
 /docs/sphinx/rest_substitutions/snippets/cpp/*.cpp
+/docs/sphinx/build
+
 
 # /sip/cpp/
 /sip/cpp/sip.signature
