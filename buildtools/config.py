@@ -19,6 +19,7 @@ import tempfile
 import commands
 import shutil
 import codecs
+import subprocess
 
 from distutils.file_util import copy_file
 from distutils.dir_util  import mkpath
@@ -693,3 +694,72 @@ def macSetLoaderNames(filenames):
                 cmd = 'install_name_tool -change %s %s %s' % (curName, newName, filename)
                 os.system(cmd)
         
+
+def getSvnRev():
+    # Some helpers for the code below
+    def _getDate():
+        import datetime
+        today = datetime.date.today()
+        return "%d%02d%02d" % (today.year, today.month, today.day)
+    
+    def _getSvnRevision():
+        svnrev = None
+        try:
+            rev = runcmd('svnversion', getOutput=True, echoCmd=False)
+        except:
+            return None
+        if rev != 'exported':
+            svnrev = "r" + rev.split(':')[0]
+        return svnrev
+    
+    def _getGitSvnRevision():
+        svnrev = None
+        try:
+            info = runcmd('git svn info', getOutput=True, echoCmd=False)
+        except:
+            return None
+        for line in info.splitlines():
+            if line.startswith('Revision:'):
+                svnrev = "r" + line.split(' ')[-1]
+                break
+        return svnrev
+        
+    # Try getting the revision number from SVN, or GIT SVN, or just fall back
+    # to the date.
+    svnrev = _getSvnRevision()
+    if not svnrev:
+        svnrev = _getGitSvnRevision()
+    if not svnrev:
+        svnrev = _getDate()
+        msg('WARNING: Unable to determine SVN revision, using date (%s) instead.' % svnrev)
+    
+    return svnrev
+
+
+def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
+    if echoCmd:
+        msg(cmd)
+
+    otherKwArgs = dict()
+    if getOutput:
+        otherKwArgs = dict(stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT)
+        
+    sp = subprocess.Popen(cmd, shell=True, **otherKwArgs)
+
+    output = None
+    if getOutput:
+        output = sp.stdout.read()
+        output = output.rstrip()
+        
+    rval = sp.wait()
+    if rval:
+        # Failed!
+        #raise subprocess.CalledProcessError(rval, cmd)
+        print("Command '%s' failed with exit code %d." % (cmd, rval))
+        if fatal:
+            sys.exit(rval)
+    
+    return output
+        
+    

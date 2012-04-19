@@ -21,7 +21,9 @@ import urllib2
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
-                               macFixDependencyInstallName, macSetLoaderNames
+                               macFixDependencyInstallName, macSetLoaderNames, \
+                               getSvnRev, runcmd
+
 
 import buildtools.version as version
 
@@ -73,6 +75,7 @@ Usage: ./build.py [command(s)] [options]
       wxpy          Run the documentation building process using Sphinx for wx.py
       wxtools       Run the documentation building process using Sphinx for wx.tools
       sip           Run sip
+      
       test          Run the unit test suite
       test_*        Run just one test module
         
@@ -84,6 +87,7 @@ Usage: ./build.py [command(s)] [options]
       build_py      Alias for "setup_py"
         
       bdist         Create a binary release of wxPython Phoenix
+      docs_bdist    Build a tarball containing the documentation
         
       clean_wx      Clean the wx parts of the build
       clean_py      Clean the wxPython parts of the build
@@ -127,7 +131,7 @@ def main(args):
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
                      'build_wx', 'build_py', 'setup_py', 'waf_py', 'build', 'bdist',
                      'clean', 'clean_wx', 'clean_py', 'cleanall', 'clean_sphinx',
-                     'sphinx', 'wxlib', 'wxpy', 'wxtools']:
+                     'sphinx', 'wxlib', 'wxpy', 'wxtools', 'docs_bdist']:
             function = globals()[cmd]
             function(options, args)
         else:
@@ -137,35 +141,10 @@ def main(args):
     msg("Done!")
     
 #---------------------------------------------------------------------------
-            
-            
-def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
-    if echoCmd:
-        msg(cmd)
+# Helper functions  (see also buildtools.config for more)
+#---------------------------------------------------------------------------
 
-    otherKwArgs = dict()
-    if getOutput:
-        otherKwArgs = dict(stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT)
-        
-    sp = subprocess.Popen(cmd, shell=True, **otherKwArgs)
-
-    output = None
-    if getOutput:
-        output = sp.stdout.read()
-        output = output.rstrip()
-        
-    rval = sp.wait()
-    if rval:
-        # Failed!
-        #raise subprocess.CalledProcessError(rval, cmd)
-        print("Command '%s' failed with exit code %d." % (cmd, rval))
-        if fatal:
-            sys.exit(rval)
-    
-    return output
-        
-    
+            
 def setPythonVersion(args):
     # TODO: Should we have a --option for specifying the path to the python
     # executable that should be used?
@@ -484,6 +463,49 @@ class CommandTimer(object):
         msg('Finished command: %s (%s)' % (self.name, time))            
 
 
+
+def uploadPackage(fileName, matchString, keep=5):
+    """
+    Upload the given filename to the configured package server location.
+    Only the `keep` number of files containing `matchString` will be
+    kept, any others will be removed from the server. It is assumed that
+    if the files are in sorted order then the end of the list will be the
+    newest files.
+    """
+    msg("Preparing to upload %s..." % fileName)
+    configfile = os.path.join(os.getenv("HOME"), "phoenix_package_server.cfg")
+    if not os.path.exists(configfile):
+        msg("ERROR: Can not upload, server configuration not set.")
+        return
+        
+    import ConfigParser
+    parser = ConfigParser.ConfigParser()
+    parser.read(configfile)
+    
+    msg("Connecting to FTP server...")
+    from ftplib import FTP
+    ftp = FTP(parser.get("FTP", "host"))
+    ftp.login(parser.get("FTP", "user"), parser.get("FTP", "pass"))
+    ftp_dir = parser.get("FTP", "dir")
+    ftp_path = '%s/%s' % (ftp_dir, os.path.basename(fileName))
+    msg("Uploading package (this may take some time)...")
+    f = open(fileName, 'rb')
+    ftp.storbinary('STOR %s' % ftp_path, f)
+    f.close()
+    
+    allFiles = [name for name in ftp.nlst(ftp_dir) if matchString in name]
+    allFiles.sort()  # <== if an alpha sort is not the correct order, pass a cmp function!
+    
+    # leave the last 5 builds, including this new one, on the server
+    for name in allFiles[:-keep]:
+        msg("Deleting %s" % name)
+        ftp.delete(name)
+
+    ftp.close()
+    msg("Upload complete!")
+
+
+
 #---------------------------------------------------------------------------
 # Command functions
 #---------------------------------------------------------------------------
@@ -537,7 +559,7 @@ def etg(options, args):
         if newer_group(deps, sipfile):
             runcmd('%s %s %s' % (PYTHON, script, flags))
 
-        
+
     
 def sphinx(options, args):
     from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
@@ -635,6 +657,32 @@ def wxtools(options, args):
 
     ModuleHunter(init_name, import_name, version)
 
+
+def docs_bdist(options, args):
+    cmdTimer = CommandTimer('docs_bdist')
+    pwd = pushDir(phoenixDir())
+
+    svnrev = getSvnRev()
+        
+    rootname = "wxPython-Phoenix-%s-docs" % svnrev
+    tarfilename = "dist/%s.tar.gz" % rootname
+
+    if not os.path.exists('dist'):
+        os.makedirs('dist')
+    if os.path.exists(tarfilename):
+        os.remove(tarfilename)
+        
+    msg("Archiving Phoenix documentation...")
+    tarball = tarfile.open(name=tarfilename, mode="w:gz")
+    tarball.add('docs/html', os.path.join(rootname, 'docs/html'), 
+                filter=lambda info: None if '.svn' in info.name else info)    
+    tarball.close()
+    
+    if options.upload_package:
+        uploadPackage(tarfilename, '-docs')    
+    
+    msg('Documentation tarball built at %s' % tarfilename)
+    
     
 def sip(options, args):
     cmdTimer = CommandTimer('sip')
@@ -1132,6 +1180,9 @@ def bdist(options, args):
     # Build a tarball and/or installer that includes all the files needed at
     # runtime for the current platform and the current version of Python.
     
+    cmdTimer = CommandTimer('bdist')
+    assert os.getcwd() == phoenixDir()
+
     dllext = ".so"
     environ_script="packaging/phoenix_environ.sh"
     readme = "packaging/README.txt"
@@ -1143,42 +1194,7 @@ def bdist(options, args):
     elif sys.platform.startswith('darwin'):
         dllext = ".dylib"
      
-    # Some helpers for the code below
-    def _getDate():
-        import datetime
-        today = datetime.date.today()
-        return "%d%02d%02d" % (today.year, today.month, today.day)
-    
-    def _getSvnRevision():
-        svnrev = None
-        try:
-            rev = runcmd('svnversion', getOutput=True, echoCmd=False)
-        except:
-            return None
-        if rev != 'exported':
-            svnrev = "r" + rev.split(':')[0]
-        return svnrev
-    
-    def _getGitSvnRevision():
-        svnrev = None
-        try:
-            info = runcmd('git svn info', getOutput=True, echoCmd=False)
-        except:
-            return None
-        for line in info.splitlines():
-            if line.startswith('Revision:'):
-                svnrev = "r" + line.split(' ')[-1]
-                break
-        return svnrev
-        
-        
-    # Try getting the revision number from SVN, or GIT SVN, or just fall back
-    # to the date.
-    svnrev = _getSvnRevision()
-    if not svnrev:
-        svnrev = _getGitSvnRevision()
-    if not svnrev:
-        svnrev = _getDate()
+    svnrev = getSvnRev()
         
     rootname = "wxPython-Phoenix-%s-%s-py%s" % (svnrev, sys.platform, PYVER)
     tarfilename = "dist/%s.tar.gz" % rootname
@@ -1188,13 +1204,14 @@ def bdist(options, args):
     
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
-    print("Archiving Phoenix bindings...")
+    msg("Archiving Phoenix bindings...")
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
-    tarball.add('wx', os.path.join(rootname, 'wx'))
-    if not sys.platform.startswith('win'):
+    tarball.add('wx', os.path.join(rootname, 'wx'), 
+                filter=lambda info: None if '.svn' in info.name else info)
+    if not isDarwin and not isWindows:
         # The DLLs have already been copied to wx on Windows, and so are
         # already in the tarball. For other platforms fetch them now.
-        print("Archiving wxWidgets shared libraries...")
+        msg("Archiving wxWidgets shared libraries...")
         dlls = glob.glob(os.path.join(wxlibdir, "*%s" % dllext))
         for dll in dlls:
             tarball.add(dll, os.path.join(rootname, 'wx', os.path.basename(dll)))
@@ -1205,41 +1222,9 @@ def bdist(options, args):
     tarball.close()
 
     if options.upload_package:
-        print("Preparing to upload package...")
-        configfile = os.path.join(os.getenv("HOME"), "phoenix_package_server.cfg")
-        if not os.path.exists(configfile):
-            print("Cannot upload, server configuration not set.")
-            #sys.exit(1)
-            
-        import ConfigParser
-        parser = ConfigParser.ConfigParser()
-        parser.read(configfile)
-        
-        print("Connecting to FTP server...")
-        from ftplib import FTP
-        ftp = FTP(parser.get("FTP", "host"))
-        ftp.login(parser.get("FTP", "user"), parser.get("FTP", "pass"))
-        ftp_dir = parser.get("FTP", "dir")
-        old_files = ftp.nlst(ftp_dir)
-        old_files.sort()
-        
-        to_delete = []
-        for afile in old_files:
-            if afile.find(sys.platform):
-                to_delete.append(afile)
-        
-        # leave the last 5 builds, including this new one, on the server
-        for i in xrange(len(to_delete) - 4):
-            ftp.delete("%s/%s" % (ftp_dir, to_delete[i])) 
-        ftp_path = '%s/%s' % (ftp_dir, os.path.basename(tarfilename))
-        print("Uploading package (this may take some time)...")
-        f = open(tarfilename, 'rb')
-        ftp.storbinary('STOR %s' % ftp_path, f)
-
-        ftp.close()
-        print("Upload complete!")
-        
-    print("Release built at %s" % tarfilename)
+        uploadPackage(tarfilename, '-%s-py%s' % (sys.platform, PYVER))
+                
+    msg("Release built at %s" % tarfilename)
 
     
 #---------------------------------------------------------------------------
