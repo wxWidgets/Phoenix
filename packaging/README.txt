@@ -44,16 +44,16 @@ nothing extra should be needed because the system will automatically
 look for the DLLs in the same folder that the extension modules are
 located in.
 
-For Mac OSX there should also not be anything extra needed to help Phoenix
-find the wxWidgets dynamic libraries because the install names have been
-modified to use @loader_path so they can find the libraries in the same
-folder as the extension modules.
+For Mac OSX there should also not be anything extra needed to help
+Phoenix find the wxWidgets dynamic libraries because the install names
+have been modified to use @loader_path so they can find the libraries
+in the same folder as the extension modules.
 
-For Unix-like systems like Linux the locations that are searched for the
-dynamic libraries can be controlled by setting the LD_LIBRARY_PATH
-environment variable. Basically you just need to set that variable to the
-path of the wx package, for example if you're in the folder where this README
-is located, then you can do something like this::
+For Unix-like systems like Linux the locations that are searched for
+the dynamic libraries can be controlled by setting the LD_LIBRARY_PATH
+environment variable. Basically you just need to set that variable to
+the path of the wx package, for example if you're in the folder where
+this README is located, then you can do something like this::
 
     export LD_LIBRARY_PATH=`pwd`/wx
 
@@ -63,4 +63,5 @@ in the current shell's environment will be modified.
 
 It is also possible to embed the path that the dynamic library should
 be loaded from directly into the extension module.  For now at least
-this is left as an exercise for the reader.  Look for the chrpath tool.
+this is left as an exercise for the reader.  Look for the chrpath
+tool.
