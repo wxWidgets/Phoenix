@@ -64,10 +64,10 @@ def run():
         c.find('SetAttr.attr').transfer = True
         
         c.addPyCode("""\
-            CalendarCtrl.PyGetDate = wx.deprecated(CalendarCtrl.GetDate)
-            CalendarCtrl.PySetDate = wx.deprecated(CalendarCtrl.SetDate)
-            CalendarCtrl.PySetDateRange = wx.deprecated(CalendarCtrl.SetDateRange)        
-            """)
+            {name}.PyGetDate = wx.deprecated({name}.GetDate)
+            {name}.PySetDate = wx.deprecated({name}.SetDate)
+            {name}.PySetDateRange = wx.deprecated({name}.SetDateRange)        
+            """.format(name=c.name[2:]))
     
     cc.find('EnableYearChange').ignore()
     gcc.addHeaderCode("#include <wx/generic/calctrlg.h>")
