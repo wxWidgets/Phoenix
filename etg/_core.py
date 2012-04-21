@@ -184,6 +184,8 @@ INCLUDES = [  # core
               'sysopt',
               'artprov',
               'dragimag',
+              'printfw',
+              'printdlg',
               ]
 
 

@@ -129,8 +129,6 @@ other dev stuff
   * For full coverage of what was in the Classic core modules we'll need ETG
     files for the following:
 
-      * taskbar
-      * print (as in print framework classes)
       * axbase  (ActiveX.  Need to figure out best ways to do MSW-only items...)
       * check that all items in _functions.i and _misc.i have been wrapped
       * joystick
