@@ -164,6 +164,7 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    splitterwindow_overview
    standard_event_identifiers
    stock_items
+   tipprovider_overview
    toolbar_overview
    treectrl_overview
    validator_overview

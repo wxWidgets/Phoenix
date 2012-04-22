@@ -112,6 +112,8 @@ as many other print settings, which may vary from platform to platform). You pro
 the :ref:`PrintDialog` at construction, which is used to populate the dialog.
 
 
+.. _print data:
+
 PrintData
 ---------
 
@@ -121,6 +123,8 @@ Essentially, :ref:`PrintData` contains those bits of information from the two di
 :ref:`PostScriptDC` (e.g., size, orientation, etc.). You might wish to create a global instance of this object to provide 
 call-to-call persistence to your application's print settings.
 
+
+.. _print dialog data:
 
 PrintDialogData
 ---------------
