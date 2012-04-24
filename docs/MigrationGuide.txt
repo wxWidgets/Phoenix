@@ -189,7 +189,7 @@ object has been deleted, so you can still test the window with an if or other
 conditional statement to see if it is safe to use, like this::
 
     if someWindow:
-        doSomething()
+        someWindow.doSomething()
         
         
         
@@ -261,5 +261,40 @@ Phoenix is providing both wx.DragImage and wx.GenericDragImage classes.
 Classic wxPython only provided wx.DragImage, but it was actually using
 wx.GenericDragImage internally for all platforms. wx.DragImage will now be a
 native implementation on Windows, and will still be the generic version
-elsewhere. If you would rather use the generic implementation on Window to
+elsewhere. If you would rather use the generic implementation on Windows too
 then switch to using the wx.GenericDragImage class name.
+
+
+2-Phase Create
+--------------
+
+In Classic wxPython we had to do some fancy footwork to make use of
+wxWidget's 2-Phase Create scheme for creating instances of a C++ widget
+class, but delaying the creation of the UI object until later. (This is
+needed for things like setting extended style flags that can not be set after
+creation, or with class factories like XRC.) The old trickery should no
+longer be needed, and instead you can write code that is much more sane. For
+example, instead of Classic code like this::
+
+    class MyDialog(wx.Dialog):
+        def __init__(self, parent, ID, title):
+            pre = wx.PreDialog()
+            pre.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)
+            pre.Create(parent, ID, title)
+            self.PostCreate(pre)                           # 4
+
+In Phoenix that should now be done like this::
+
+    class MyDialog(wx.Dialog):
+        def __init__(self, parent, ID, title):
+            wx.Dialog.__init__(self)                       # 1
+            self.SetExtraStyle(wx.FRAME_EX_CONTEXTHELP)    # 2
+            self.Create(parent, ID, title)                 # 3
+
+
+Notice that we are (#1) calling the base class __init__ like usual, but
+passing no parameters so the default C++ constructor will be invoked. Next
+(#2, #3) we use self instead of pre because self is now a legitimate instance
+of wx.Dialog, and (#4) there is no longer any need to call PostCreate to do
+its black magic for us because there is no longer a rogue instance that needs
+to be transplanted into self.
