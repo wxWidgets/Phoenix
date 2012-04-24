@@ -36,6 +36,9 @@ def run():
     c = module.find('wxPlatformInfo')
     assert isinstance(c, etgtools.ClassDef)
     
+    # to avoid conflicts with wxPython's wx.PlatformInfo
+    c.pyName = 'PlatformInformation'        
+    
     c.find('GetEndianness').findOverload('end').ignore()
     c.find('GetArchName').findOverload('arch').ignore()
     c.find('GetOperatingSystemId').findOverload('name').ignore()
@@ -46,10 +49,6 @@ def run():
     c.find('GetPortIdName').findOverload('port').ignore()
     c.find('GetPortIdShortName').findOverload('port').ignore()
 
-    
-    # Make this class act a bit like the wx.PlatformInfo tuple in Classic
-    c.addPyMethod('__getitem__', '(self, idx)', 'return wx.PortInfo[idx]')
-    c.addPyMethod('__len__', '(self)', 'return len(wx.PortInfo)')
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

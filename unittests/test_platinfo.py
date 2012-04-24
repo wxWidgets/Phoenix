@@ -7,21 +7,16 @@ import wx
 class platinfo_Tests(wtc.WidgetTestCase):
 
     def test_platinfo(self):
-        pi = wx.PlatformInfo.Get()
+        pi = wx.PlatformInformation.Get()
 
         pi.GetArchitecture()
         pi.GetOperatingSystemId()
         pi.GetPortId()
         
-        
-    def test_platinfoClassicCompatibility(self):
-        self.assertTrue( ('wxMac' in wx.PlatformInfo.Get()) == ('wxMac' in wx.PortInfo) )
-        self.assertTrue( ('wxMSW' in wx.PlatformInfo.Get()) == ('wxMSW' in wx.PortInfo) )
-        self.assertTrue( ('wxGTK' in wx.PlatformInfo.Get()) == ('wxGTK' in wx.PortInfo) )
-        
+           
 
     def test_platinfoProperties(self):
-        pi = wx.PlatformInfo.Get()
+        pi = wx.PlatformInformation.Get()
         pi.ArchName
         pi.Architecture
         pi.DesktopEnvironment

@@ -42,7 +42,7 @@ class WidgetTestCase(unittest.TestCase):
         1/30 of second we need to wait a little to ensure that there will
         actually be a paint event while we are yielding.
         """
-        if 'wxOSX' in wx.PlatformInfo():
+        if 'wxOSX' in wx.PlatformInfo:
             wx.MilliSleep(40)  # a little more than 1/30, just in case
         window.Update()
         

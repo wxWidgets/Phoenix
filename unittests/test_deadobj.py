@@ -29,7 +29,7 @@ class deadobj_Tests(wtc.WidgetTestCase):
 
         # TODO: figure out if this is a bug in wxMSW, or just an oddity of
         # the test environment.
-        if 'wxMSW' not in wx.PlatformInfo.Get():
+        if 'wxMSW' not in wx.PlatformInfo:
             self.assertFalse(True if f else False)
         
         

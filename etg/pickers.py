@@ -139,7 +139,7 @@ def run():
     # button can't change color.  So for the Mac we'll implement our own
     # picker using a wx.BitmapButton instead.
     module.addPyCode("""\
-    if 'wxMac' in wx.PortInfo:
+    if 'wxMac' in wx.PlatformInfo:
         # ColourData object to be shared by all colour pickers
         _colourData = None
         

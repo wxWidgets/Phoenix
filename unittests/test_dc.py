@@ -95,7 +95,7 @@ class dc_Tests(wtc.WidgetTestCase):
 
     def test_NativeWinHandle(self):
         dc = wx.ClientDC(self.frame)
-        if 'wxMSW' in wx.PortInfo:
+        if 'wxMSW' in wx.PlatformInfo:
             h = dc.GetHDC()
             self.assertNotEqual(h, 0)
         else:
@@ -104,7 +104,7 @@ class dc_Tests(wtc.WidgetTestCase):
             
     def test_NativeGTKHandle(self):
         dc = wx.ClientDC(self.frame)
-        if 'wxGTK' in wx.PortInfo:
+        if 'wxGTK' in wx.PlatformInfo:
             h = dc.GetGdkDrawable()
             self.assertNotEqual(h, 0)
         else:
@@ -113,7 +113,7 @@ class dc_Tests(wtc.WidgetTestCase):
             
     def test_NativeMacHandle(self):
         dc = wx.ClientDC(self.frame)
-        if 'wxMac' in wx.PortInfo:
+        if 'wxMac' in wx.PlatformInfo:
             h = dc.GetCGContext()
             self.assertNotEqual(h, 0)
         else:

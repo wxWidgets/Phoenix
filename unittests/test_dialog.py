@@ -11,7 +11,7 @@ class dialog_Tests(wtc.WidgetTestCase):
         ok = wx.Button(dlg, wx.ID_OK, pos=(10,10))
         cancel = wx.Button(dlg, wx.ID_CANCEL, pos=(100,10))
 
-        if 'wxMac' not in wx.PortInfo:
+        if 'wxMac' not in wx.PlatformInfo:
             # Something is causing a hang when running one of these tests, so
             # for now we'll not actually test ShowModal on Macs.
             # TODO: FIX THIS!!

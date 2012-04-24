@@ -111,28 +111,6 @@ your encoding to Unicode before passing the text to the wx API.
 
 
 
-wx.Platform, wx.PlatformInfo
-----------------------------
-
-wx.Platform has been renamed to wx.Port, and wx.PlatformInfo has been renamed
-to wx.PortInfo. The reason for this change is that wrappers for a C++ class
-named wxPlatformInfo have been added, and would have caused a name conflict
-if the old wx.PlatformInfo had not been renamed. To make transitioning a
-little easier, I've made instances of the new wx.PlatformInfo class act like
-a Python sequence containing the same items as the old wx.PlatformInfo. So
-that means that you can simply change things like this::
-
-    if 'wxMac' in wx.PlatformInfo:
-        ...
-        
-to this::
-
-    if 'wxMac' in wx.PlatformInfo.Get():
-        ...
-
-
-
-
 Font, Pen, and Brush Styles
 ---------------------------
 

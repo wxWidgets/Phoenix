@@ -19,7 +19,8 @@ if 'wxEVT_NULL' in dir():
     del _core
 else:
     Port = ''
-    PortInfo = []
+    Platform = ''
+    PlatformInfo = []
                        
 import warnings
 class wxPyDeprecationWarning(DeprecationWarning):

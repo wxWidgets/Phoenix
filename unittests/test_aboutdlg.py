@@ -18,7 +18,7 @@ class aboutdlg_Tests(wtc.WidgetTestCase):
 
     
     def test_aboutdlgNative(self):
-        if not 'wxMSW' in wx.PlatformInfo():
+        if not 'wxMSW' in wx.PlatformInfo:
             info = self._makeInfo()
             wx.CallLater(25, self.closeDialogs)
             wx.adv.AboutBox(info, self.frame)
