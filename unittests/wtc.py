@@ -49,7 +49,7 @@ class WidgetTestCase(unittest.TestCase):
         
     def closeDialogs(self):
         """
-        Close dialogs by calling their EndModal
+        Close dialogs by calling their EndModal method
         """
         #self.myYield()
         for w in wx.GetTopLevelWindows():
