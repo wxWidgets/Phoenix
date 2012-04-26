@@ -25,24 +25,45 @@ class image_Tests(wtc.WidgetTestCase):
         img = wx.Image((100,100))
         self.assertTrue(img.IsOk())
 
-    @unittest.expectedFailure
+
     def test_imageCtor4(self):
-        self.fail("data buffer support TBI")
         import array
         w = h = 10
         buf = array.array('B', '\0' * (w*h*3))
-        img = wx.Image(w, h, buf, True)
+        img = wx.Image(w, h, buf)
         self.assertTrue(img.IsOk())
 
-    @unittest.expectedFailure
     def test_imageCtor5(self):
-        self.fail("data buffer support TBI")
         import array
         w = h = 10
         buf = array.array('B', '\0' * (w*h*3))
         alpha = array.array('B', '\0' * (w*h))
-        img = wx.Image(w, h, buf, alpha, True)
+        img = wx.Image(w, h, buf, alpha)
         self.assertTrue(img.IsOk())
+
+    def test_imageCtor4b(self):
+        import array
+        w = h = 10
+        buf = array.array('B', '\0' * (w*h*3))
+        img = wx.Image((w, h), buf)
+        self.assertTrue(img.IsOk())
+
+    def test_imageCtor4c(self):
+        import array
+        w = h = 10
+        buf = array.array('B', '\0' * (w*h*3))
+        with self.assertRaises(ValueError):
+            # should be an exception here because the buffer is the wrong size
+            img = wx.Image((w, h+1), buf)  
+
+    def test_imageCtor5b(self):
+        import array
+        w = h = 10
+        buf = array.array('B', '\0' * (w*h*3))
+        alpha = array.array('B', '\0' * (w*h))
+        img = wx.Image((w, h), buf, alpha)
+        self.assertTrue(img.IsOk())
+
 
     def test_imageCtor6(self):
         img = wx.Image(pngFile, wx.BITMAP_TYPE_PNG)
@@ -66,6 +87,111 @@ class image_Tests(wtc.WidgetTestCase):
         img = wx.Image(stream, 'image/png')
         self.assertTrue(img.IsOk())
 
+
+    def test_imageSetData1(self):
+        import array
+        w = h = 10
+        img = wx.Image(w,h)
+        buf = array.array('B', '\2' * (w*h*3))
+        img.SetData(buf)
+        self.assertTrue(img.IsOk())
+        self.assertTrue(img.GetRed(1,1) == 2)
+        
+    def test_imageSetData2(self):
+        import array
+        w = h = 10
+        img = wx.Image(1,1)
+        buf = array.array('B', '\2' * (w*h*3))
+        img.SetData(buf, w, h)
+        self.assertTrue(img.IsOk())
+        self.assertTrue(img.GetRed(1,1) == 2)
+
+    def test_imageSetAlpha1(self):
+        import array
+        w = h = 10
+        img = wx.Image(w,h)
+        buf = array.array('B', '\2' * (w*h))
+        img.SetAlpha(buf)
+        self.assertTrue(img.IsOk())
+        self.assertTrue(img.GetRed(1,1) == 0)        
+        self.assertTrue(img.GetAlpha(1,1) == 2)
+
+    def test_imageGetData(self):
+        img = wx.Image(pngFile)
+        data = img.GetData()
+        self.assertEqual(len(data), img.Width * img.Height * 3)
+
+    def test_imageGetAlpha(self):
+        img = wx.Image(pngFile)
+        data = img.GetAlpha()
+        self.assertEqual(len(data), img.Width * img.Height)
+
+    def test_imageGetDataBuffer(self):
+        w = h = 10
+        img = wx.Image(w, h)
+        self.assertTrue(img.IsOk())
+        data = img.GetDataBuffer()
+        data[0] = '\1'
+        data[1] = '\2'
+        data[2] = '\3'
+        self.assertEqual(1, img.GetRed(0,0))
+        self.assertEqual(2, img.GetGreen(0,0))
+        self.assertEqual(3, img.GetBlue(0,0))
+                  
+    def test_imageGetAlphaDataBuffer(self):
+        w = h = 10
+        img = wx.Image(w, h)
+        img.InitAlpha()
+        self.assertTrue(img.IsOk())
+        data = img.GetAlphaBuffer()
+        data[0] = '\1'
+        data[1] = '\2'
+        data[2] = '\3'
+        self.assertEqual(1, img.GetAlpha(0,0))
+        self.assertEqual(2, img.GetAlpha(1,0))
+        self.assertEqual(3, img.GetAlpha(2,0))
+        
+        
+    def test_imageSetDataBuffer1(self):
+        import array
+        w = h = 10
+        img = wx.Image(w,h)
+        buf = array.array('B', '\0' * (w*h*3))
+        img.SetDataBuffer(buf)
+        buf[0] = 1
+        buf[1] = 2
+        buf[2] = 3
+        self.assertEqual(1, img.GetRed(0,0))
+        self.assertEqual(2, img.GetGreen(0,0))
+        self.assertEqual(3, img.GetBlue(0,0))
+        
+
+    def test_imageSetDataBuffer2(self):
+        import array
+        w = h = 10
+        img = wx.Image(1,1)
+        buf = array.array('B', '\0' * (w*h*3))
+        img.SetDataBuffer(buf, w, h)
+        buf[0] = 1
+        buf[1] = 2
+        buf[2] = 3
+        self.assertEqual(1, img.GetRed(0,0))
+        self.assertEqual(2, img.GetGreen(0,0))
+        self.assertEqual(3, img.GetBlue(0,0))
+
+
+    def test_imageSetAlphaBuffer(self):
+        import array
+        w = h = 10
+        img = wx.Image(w,h)
+        buf = array.array('B', '\0' * (w*h))
+        img.SetAlphaBuffer(buf)
+        buf[0] = 1
+        buf[1] = 2
+        buf[2] = 3
+        self.assertEqual(1, img.GetAlpha(0,0))
+        self.assertEqual(2, img.GetAlpha(1,0))
+        self.assertEqual(3, img.GetAlpha(2,0))
 
         
     def test_imageNestedClasses(self):

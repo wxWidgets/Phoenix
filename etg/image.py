@@ -20,7 +20,7 @@ DOCSTRING = ""
 # this script. 
 ITEMS  = [ 'wxImage', 
            'wxImageHistogram',
-           #'wxImageHandler',  # TODO
+           'wxImageHandler',  
            ]    
 
 #---------------------------------------------------------------------------
@@ -33,23 +33,299 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-
+    
     c = module.find('wxImage')
     assert isinstance(c, etgtools.ClassDef)
     c.find('wxImage').findOverload('(const char *const *xpmData)').ignore()
 
-    c.find('GetHandlers').ignore()
-    c.find('AddHandler').ignore()
-    c.find('InsertHandler').ignore()
-    c.find('RemoveHandler').ignore()
-    for m in c.find('FindHandler').all():
-        m.ignore()
-    c.find('FindHandlerMime').ignore()
+    c.find('GetHandlers').ignore()  # TODO
+    #c.find('AddHandler').ignore()
+    #c.find('InsertHandler').ignore()
+    #c.find('RemoveHandler').ignore()
+    #for m in c.find('FindHandler').all():
+    #    m.ignore()
+    #c.find('FindHandlerMime').ignore()
     
     
-    # TODO: Port the ctors and methods that deal with data buffers for getting
-    # and setting the image and alpha data.
+    # Helper functions for dealing with data buffers for wxImage
+    c.addCppCode("""\
+        static void* copyDataBuffer(PyObject* obj, Py_ssize_t expectedSize)
+        {
+            Py_ssize_t dataSize;
+            void*      dataPtr;
+            
+            if (PyObject_AsReadBuffer(obj, (const void**)&dataPtr, &dataSize) == -1)
+                return NULL;
+            if (dataSize != expectedSize) {
+                wxPyErr_SetString(PyExc_ValueError, "Invalid data buffer size.");
+                return NULL;
+            }    
+            void* copy = malloc(dataSize);
+            if (copy == NULL) {
+                wxPyBLOCK_THREADS(PyErr_NoMemory());
+                return NULL;
+            }            
+            memcpy(copy, dataPtr, dataSize);
+            return copy;
+        }
+        
+        static void* getDataBufferPtr(PyObject* obj, Py_ssize_t expectedSize)
+        {
+            Py_ssize_t dataSize;
+            void*      dataPtr;
+            
+            if (PyObject_AsReadBuffer(obj, (const void**)&dataPtr, &dataSize) == -1)
+                return NULL;
+            if (dataSize != expectedSize) {
+                wxPyErr_SetString(PyExc_ValueError, "Invalid data buffer size.");
+                return NULL;
+            }    
+            return dataPtr;
+        }
+        """)
+
+    # Ignore the ctors taking raw data buffers, so we can add in our own
+    # versions that are a little smarter (accepts any buffer object, checks
+    # the data length, etc.)
+    c.find('wxImage').findOverload('int width, int height, unsigned char *data, bool static_data').ignore()
+    c.find('wxImage').findOverload('const wxSize &sz, unsigned char *data, bool static_data').ignore()
+    c.find('wxImage').findOverload('int width, int height, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
+    c.find('wxImage').findOverload('const wxSize &sz, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
+
+    c.addCppCtor_sip('(int width, int height, PyObject* data)',
+        doc="Creates an image from RGB data in memory.",
+        body="""\
+            void* dataCopy = copyDataBuffer(data, width*height*3);
+            if (!dataCopy)
+                return NULL;
+            sipCpp = new sipwxImage;
+            sipCpp->Create(width, height, (unsigned char*)dataCopy);
+            """)
+      
+    c.addCppCtor_sip('(int width, int height, PyObject* data, PyObject* alpha)',
+        doc="Creates an image from RGB data in memory, plus an alpha channel",
+        body="""\
+            void* dataCopy = copyDataBuffer(data, width*height*3);
+            if (!dataCopy)
+                return NULL;
+            void* alphaCopy = copyDataBuffer(alpha, width*height);
+            if (!alphaCopy) {
+                free(dataCopy);
+                return NULL;
+            }
+            sipCpp = new sipwxImage;
+            sipCpp->Create(width, height, (unsigned char*)dataCopy, (unsigned char*)alphaCopy, false);
+            """)
+      
+    c.addCppCtor_sip('(const wxSize& size, PyObject* data)',
+        doc="Creates an image from RGB data in memory.",
+        body="""\
+            void* dataCopy = copyDataBuffer(data, size->x*size->y*3);
+            if (!dataCopy)
+                return NULL;
+            sipCpp = new sipwxImage;
+            sipCpp->Create(size->x, size->y, (unsigned char*)dataCopy, false);
+            """)
+      
+    c.addCppCtor_sip('(const wxSize& size, PyObject* data, PyObject* alpha)',
+        doc="Creates an image from RGB data in memory, plus an alpha channel",
+        body="""\
+            void* dataCopy = copyDataBuffer(data, size->x*size->y*3);
+            if (!dataCopy)
+                return NULL;
+            void* alphaCopy = copyDataBuffer(alpha, size->x*size->y);
+            if (!alphaCopy) {
+                free(dataCopy);
+                return NULL;
+            }
+            sipCpp = new sipwxImage;
+            sipCpp->Create(size->x, size->y, (unsigned char*)dataCopy, (unsigned char*)alphaCopy, false);
+            """)
+      
+      
+    # Do the same for the Create method overloads that need to deal with data buffers
+    c.find('Create').findOverload('int width, int height, unsigned char *data, bool static_data').ignore()
+    c.find('Create').findOverload('const wxSize &sz, unsigned char *data, bool static_data').ignore()
+    c.find('Create').findOverload('int width, int height, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
+    c.find('Create').findOverload('const wxSize &sz, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
+      
+    c.addCppMethod('bool', 'Create', '(int width, int height, PyObject* data)', 
+        doc="",
+        body="""\
+            void* dataCopy = copyDataBuffer(data, width*height*3);
+            if (!dataCopy)
+                return false;
+            return self->Create(width, height, (unsigned char*)dataCopy);
+            """)
+      
+    c.addCppMethod('bool', 'Create', '(int width, int height, PyObject* data, PyObject* alpha)', 
+        doc="",
+        body="""\
+            void* dataCopy = copyDataBuffer(data, width*height*3);
+            if (!dataCopy)
+                return false;
+            void* alphaCopy = copyDataBuffer(alpha, width*height);
+            if (!alphaCopy) {
+                free(dataCopy);
+                return false;
+            }
+            return self->Create(width, height, (unsigned char*)dataCopy, (unsigned char*)alpha);
+            """)
+      
+    c.addCppMethod('bool', 'Create', '(const wxSize& size, PyObject* data)', 
+        doc="",
+        body="""\
+            void* dataCopy = copyDataBuffer(data, size->x*size->y*3);
+            if (!dataCopy)
+                return false;
+            return self->Create(size->x, size->y, (unsigned char*)dataCopy);
+            """)
+      
+    c.addCppMethod('bool', 'Create', '(const wxSize& size, PyObject* data, PyObject* alpha)', 
+        doc="",
+        body="""\
+            void* dataCopy = copyDataBuffer(data, size->x*size->y*3);
+            if (!dataCopy)
+                return false;
+            void* alphaCopy = copyDataBuffer(alpha, size->x*size->y);
+            if (!alphaCopy) {
+                free(dataCopy);
+                return false;
+            }
+            return self->Create(size->x, size->y, (unsigned char*)dataCopy, (unsigned char*)alpha);
+            """)
+      
+      
+    # And also do similar for SetData and SetAlpha
+    m = c.find('SetData').findOverload('unsigned char *data')
+    bd, dd = m.briefDoc, m.detailedDoc
+    m.ignore()
+    c.addCppMethod('void', 'SetData', '(PyObject* data)',
+        body="""\
+        void* dataCopy = copyDataBuffer(data, self->GetWidth()*self->GetHeight()*3);
+        if (!dataCopy)
+            return;
+        self->SetData((unsigned char*)dataCopy, false);
+        """, briefDoc=bd, detailedDoc=dd)
+
+    c.find('SetData').findOverload('int new_width').ignore()
+    c.addCppMethod('void', 'SetData', '(PyObject* data, int new_width, int new_height)',
+        body="""\
+        void* dataCopy = copyDataBuffer(data, new_width*new_height*3);
+        if (!dataCopy)
+            return;
+        self->SetData((unsigned char*)dataCopy, new_width, new_height, false);
+        """)
+      
+    m = c.find('SetAlpha').findOverload('unsigned char *alpha')
+    bd, dd = m.briefDoc, m.detailedDoc
+    m.ignore()
+    c.addCppMethod('void', 'SetAlpha', '(PyObject* alpha)',
+        body="""\
+        void* dataCopy = copyDataBuffer(alpha, self->GetWidth()*self->GetHeight());
+        if (!dataCopy)
+            return;
+        self->SetAlpha((unsigned char*)dataCopy, false);
+        """)
+
+
+    # GetData() and GetAlpha() return a copy of the image data/alpha bytes as
+    # a string object. 
+    # TODO: in Python 3.x a bytes object should be returned instead.
+    c.find('GetData').ignore()
+    c.addCppMethod('PyObject*', 'GetData', '()',
+        doc="Returns a copy of the RGB bytes of the image.",
+        body="""\
+            unsigned char* data = self->GetData();
+            Py_ssize_t len = self->GetWidth() * self->GetHeight() * 3;
+            PyObject* rv = NULL;
+            wxPyBLOCK_THREADS( rv = PyString_FromStringAndSize((char*)data, len));
+            return rv;           
+            """)
     
+    c.find('GetAlpha').findOverload('()').ignore()
+    c.addCppMethod('PyObject*', 'GetAlpha', '()',
+        doc="Returns a copy of the Alpha bytes of the image.",
+        body="""\
+            unsigned char* data = self->GetAlpha();
+            Py_ssize_t len = self->GetWidth() * self->GetHeight();
+            PyObject* rv = NULL;
+            wxPyBLOCK_THREADS( rv = PyString_FromStringAndSize((char*)data, len));
+            return rv;           
+            """)
+    
+    
+    # GetDataBuffer, GetAlphaBuffer provide direct access to the image's
+    # internal buffers as a writable buffer object.
+    c.addCppMethod('PyObject*', 'GetDataBuffer', '()',
+        doc="""\
+        Returns a writable Python buffer object that is pointing at the RGB
+        image data buffer inside the wx.Image. You need to ensure that you do
+        not use this buffer object after the image has been destroyed.""",
+        body="""\
+            unsigned char* data = self->GetData();
+            Py_ssize_t len = self->GetWidth() * self->GetHeight() * 3;
+            PyObject* rv;
+            wxPyBLOCK_THREADS( rv = PyBuffer_FromReadWriteMemory(data, len) );
+            return rv;
+            """)
+
+    c.addCppMethod('PyObject*', 'GetAlphaBuffer', '()',
+        doc="""\
+        Returns a writable Python buffer object that is pointing at the Alpha
+        data buffer inside the wx.Image. You need to ensure that you do
+        not use this buffer object after the image has been destroyed.""",
+        body="""\
+            unsigned char* data = self->GetAlpha();
+            Py_ssize_t len = self->GetWidth() * self->GetHeight();
+            PyObject* rv;
+            wxPyBLOCK_THREADS( rv = PyBuffer_FromReadWriteMemory(data, len) );
+            return rv;
+            """)
+
+    # SetDataBuffer, SetAlphaBuffer tell the image to use some other memory
+    # buffer pointed to by a Python buffer object.
+    c.addCppMethod('void', 'SetDataBuffer', '(PyObject* data)',
+        doc="""\
+        Sets the internal image data pointer to point at a Python buffer
+        object.  This can save making an extra copy of the data but you must
+        ensure that the buffer object lives lives at least as long as the 
+        wx.Image does.""",
+        body="""\
+            void* ptr = getDataBufferPtr(data, self->GetWidth() * self->GetHeight() * 3);
+            if (ptr)
+                // True means don't free() the pointer
+                self->SetData((unsigned char*)ptr, true);  
+        """)
+    c.addCppMethod('void', 'SetDataBuffer', '(PyObject* data, int new_width, int new_height)',
+        doc="""\
+        Sets the internal image data pointer to point at a Python buffer
+        object.  This can save making an extra copy of the data but you must
+        ensure that the buffer object lives lives at least as long as the 
+        wx.Image does.""",
+        body="""\
+            void* ptr = getDataBufferPtr(data, new_width * new_height * 3);
+            if (ptr)
+                // True means don't free() the pointer
+                self->SetData((unsigned char*)ptr, new_width, new_height, true);  
+        """)
+
+
+    c.addCppMethod('void', 'SetAlphaBuffer', '(PyObject* alpha)',
+        doc="""\
+        Sets the internal image alpha pointer to point at a Python buffer
+        object.  This can save making an extra copy of the data but you must
+        ensure that the buffer object lives lives at least as long as the 
+        wx.Image does.""",
+        body="""\
+            void* ptr = getDataBufferPtr(alpha, self->GetWidth() * self->GetHeight());
+            if (ptr)
+                // True means don't free() the pointer
+                self->SetAlpha((unsigned char*)ptr, true);
+        """)
+
+
+
       
     def setParamsPyInt(name):
         """Set the pyInt flag on 'unsigned char' params"""
@@ -241,6 +517,28 @@ def run():
     c.addProperty('Type GetType SetType')
 
 
+    # For compatibility:
+    module.addPyFunction('EmptyImage', '(width=0, height=0, clear=True)',
+                         deprecated=True,
+                         doc='A compatibility wrapper for the wx.Image(width, height) constructor',
+                         body='return Image(width, height, clear)')
+    
+    module.addPyFunction('ImageFromBitmap', '(bitmap)',
+                         deprecated=True,
+                         doc='Create a wx.Image from a wx.Bitmap',
+                         body='return bitmap.ConvertToImage()')
+
+    module.addPyFunction('ImageFromData', '(width, height, data)',
+                         deprecated=True,
+                         doc='Compatibility wrapper for creating an image from RGB data',
+                         body='return Image(width, height, data)')
+
+    module.addPyFunction('ImageFromDataWithAlpha', '(width, height, data, alpha)',
+                         deprecated=True,
+                         doc='Compatibility wrapper for creating an image from RGB and Alpha data',
+                         body='return Image(width, height, data, alpha)')
+
+   
     
     #-------------------------------------------------------
     c = module.find('wxImageHistogram')
@@ -255,6 +553,17 @@ def run():
     c.find('FindFirstUnusedColour.r').out = True
     c.find('FindFirstUnusedColour.g').out = True
     c.find('FindFirstUnusedColour.b').out = True
+    
+    
+
+    #-------------------------------------------------------
+    c = module.find('wxImageHandler')
+    c.abstract = True
+    c.addPrivateCopyCtor()
+    c.find('GetLibraryVersionInfo').ignore()
+
+    c.find('DoGetImageCount').ignore(False)
+    c.find('DoCanRead').ignore(False)
     
 
     #-------------------------------------------------------

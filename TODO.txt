@@ -107,8 +107,6 @@ WAF Build
 other dev stuff
 ---------------
 
-  * data buffer support for wxImage RGB and alpha data
-
   * port all of the wx.Bitmap copy-to and copy-from buffer methods, and
     raw bitmap access routines from Classic. 
 

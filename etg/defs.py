@@ -69,7 +69,6 @@ def run():
         class wxPalette;
         class wxDropTarget;
         class wxCaret;
-        class wxImageHandler;
         class wxExecuteEnv;
         """))
     
