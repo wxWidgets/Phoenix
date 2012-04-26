@@ -867,6 +867,8 @@ from %s import *
                 annotations.append('HoldGIL')
             if item.noCopy:
                 annotations.append('NoCopy')
+            if item.noArgParser:
+                annotations.append('NoArgParser')
             
         if isinstance(item, extractors.MethodDef):
             if item.defaultCtor:

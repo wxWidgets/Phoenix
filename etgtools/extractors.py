@@ -250,6 +250,7 @@ class FunctionDef(BaseDef):
         self.transferBack = False     # transfer ownership of return value from C++ to Python?
         self.transferThis = False     # ownership of 'this' pointer transfered to C++ 
         self.cppCode = None           # Use this code instead of the default wrapper
+        self.noArgParser = False      # set the NoargParser annotation
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
