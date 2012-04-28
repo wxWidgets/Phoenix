@@ -32,7 +32,7 @@ public:
     // Ensure that the buffer's size is the expected size.  Raises a 
     // Python ValueError exception and returns false if not.
     bool checkSize(Py_ssize_t expectedSize) {
-        if (m_len != expectedSize) {
+        if (m_len < expectedSize) {
             wxPyErr_SetString(PyExc_ValueError, "Invalid data buffer size.");
             return false;
         }
