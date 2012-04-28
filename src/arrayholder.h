@@ -9,7 +9,9 @@
 // Copyright:   (c) 2011 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
-//
+
+#ifndef ARRAYHOLDER_H
+#define ARRAYHOLDER_H
 // Sometimes we need to hold on to a C array and keep it alive, but typical
 // SIP code will treat it as a temporary and delete it as soon as the ctor or
 // method call is done. This class can hold a pointer to the array and will
@@ -34,4 +36,5 @@ typedef wxCArrayHolder<int>      wxIntCArrayHolder;
 typedef wxCArrayHolder<wxString> wxStringCArrayHolder;
 typedef wxCArrayHolder<wxDash>   wxDashCArrayHolder;
 
+#endif
 //--------------------------------------------------------------------------
