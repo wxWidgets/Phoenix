@@ -107,9 +107,6 @@ WAF Build
 other dev stuff
 ---------------
 
-  * port all of the wx.Bitmap copy-to and copy-from buffer methods, and
-    raw bitmap access routines from Classic. 
-
   * Come up with some way to implement the MustHaveApp check that
     Classic does.  It should raise an exception when something is
     created/used that should not be done before there is an application

@@ -21,6 +21,8 @@ DOCSTRING = ""
 ITEMS  = [ 'wxImage', 
            'wxImageHistogram',
            'wxImageHandler',  
+           #'wxQuantize',
+           #'wxPalette',
            ]    
 
 #---------------------------------------------------------------------------
@@ -58,7 +60,7 @@ def run():
             if (! copy) 
                 return NULL;
             sipCpp = new sipwxImage;
-            sipCpp->Create(width, height, (unsigned char*)copy);            
+            sipCpp->Create(width, height, (byte*)copy);            
             """)
       
     c.addCppCtor_sip('(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)',
@@ -70,7 +72,7 @@ def run():
             if ((dcopy = data->copy()) == NULL || (acopy = alpha->copy()) == NULL)
                 return NULL;
             sipCpp = new sipwxImage;
-            sipCpp->Create(width, height, (unsigned char*)dcopy, (unsigned char*)acopy, false);
+            sipCpp->Create(width, height, (byte*)dcopy, (byte*)acopy, false);
             """)
       
     c.addCppCtor_sip('(const wxSize& size, wxPyBuffer* data)',
@@ -82,7 +84,7 @@ def run():
             if (! copy) 
                 return NULL;
             sipCpp = new sipwxImage;
-            sipCpp->Create(size->x, size->y, (unsigned char*)copy, false);
+            sipCpp->Create(size->x, size->y, (byte*)copy, false);
             """)
       
     c.addCppCtor_sip('(const wxSize& size, wxPyBuffer* data, wxPyBuffer* alpha)',
@@ -94,7 +96,7 @@ def run():
             if ((dcopy = data->copy()) == NULL || (acopy = alpha->copy()) == NULL)
                 return NULL;
             sipCpp = new sipwxImage;
-            sipCpp->Create(size->x, size->y, (unsigned char*)dcopy, (unsigned char*)acopy, false);
+            sipCpp->Create(size->x, size->y, (byte*)dcopy, (byte*)acopy, false);
             """)
       
       
@@ -112,7 +114,7 @@ def run():
             void* copy = data->copy();
             if (! copy) 
                 return false;
-            return self->Create(width, height, (unsigned char*)copy);
+            return self->Create(width, height, (byte*)copy);
             """)
       
     c.addCppMethod('bool', 'Create', '(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)', 
@@ -123,7 +125,7 @@ def run():
                 return false;
             if ((dcopy = data->copy()) == NULL || (acopy = alpha->copy()) == NULL)
                 return false;
-            return self->Create(width, height, (unsigned char*)dcopy, (unsigned char*)acopy);
+            return self->Create(width, height, (byte*)dcopy, (byte*)acopy);
             """)
       
     c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data)', 
@@ -134,7 +136,7 @@ def run():
             void* copy = data->copy();
             if (! copy) 
                 return false;
-            return self->Create(size->x, size->y, (unsigned char*)copy);
+            return self->Create(size->x, size->y, (byte*)copy);
             """)
       
     c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data, wxPyBuffer* alpha)', 
@@ -145,7 +147,7 @@ def run():
                 return false;
             if ((dcopy = data->copy()) == NULL || (acopy = alpha->copy()) == NULL)
                 return false;
-            return self->Create(size->x, size->y, (unsigned char*)dcopy, (unsigned char*)acopy);
+            return self->Create(size->x, size->y, (byte*)dcopy, (byte*)acopy);
             """)
       
       
@@ -160,7 +162,7 @@ def run():
         void* copy = data->copy();
         if (!copy)
             return;
-        self->SetData((unsigned char*)copy, false);
+        self->SetData((byte*)copy, false);
         """, briefDoc=bd, detailedDoc=dd)
 
     c.find('SetData').findOverload('int new_width').ignore()
@@ -171,7 +173,7 @@ def run():
         void* copy = data->copy();
         if (!copy)
             return;
-        self->SetData((unsigned char*)copy, new_width, new_height, false);
+        self->SetData((byte*)copy, new_width, new_height, false);
         """)
       
     m = c.find('SetAlpha').findOverload('unsigned char *alpha')
@@ -184,7 +186,7 @@ def run():
         void* copy = alpha->copy();
         if (!copy)
             return;
-        self->SetAlpha((unsigned char*)copy, false);
+        self->SetAlpha((byte*)copy, false);
         """)
 
 
@@ -195,7 +197,7 @@ def run():
     c.addCppMethod('PyObject*', 'GetData', '()',
         doc="Returns a copy of the RGB bytes of the image.",
         body="""\
-            unsigned char* data = self->GetData();
+            byte* data = self->GetData();
             Py_ssize_t len = self->GetWidth() * self->GetHeight() * 3;
             PyObject* rv = NULL;
             wxPyBLOCK_THREADS( rv = PyByteArray_FromStringAndSize((const char*)data, len));
@@ -206,7 +208,7 @@ def run():
     c.addCppMethod('PyObject*', 'GetAlpha', '()',
         doc="Returns a copy of the Alpha bytes of the image.",
         body="""\
-            unsigned char* data = self->GetAlpha();
+            byte* data = self->GetAlpha();
             Py_ssize_t len = self->GetWidth() * self->GetHeight();
             PyObject* rv = NULL;
             wxPyBLOCK_THREADS( rv = PyByteArray_FromStringAndSize((const char*)data, len));
@@ -223,7 +225,7 @@ def run():
         image data buffer inside the wx.Image. You need to ensure that you do
         not use this buffer object after the image has been destroyed.""",
         body="""\
-            unsigned char* data = self->GetData();
+            byte* data = self->GetData();
             Py_ssize_t len = self->GetWidth() * self->GetHeight() * 3;
             PyObject* rv;
             Py_buffer view;
@@ -240,7 +242,7 @@ def run():
         data buffer inside the wx.Image. You need to ensure that you do
         not use this buffer object after the image has been destroyed.""",
         body="""\
-            unsigned char* data = self->GetAlpha();
+            byte* data = self->GetAlpha();
             Py_ssize_t len = self->GetWidth() * self->GetHeight();
             PyObject* rv;
             Py_buffer view;
@@ -263,7 +265,7 @@ def run():
             if (!data->checkSize(self->GetWidth() * self->GetHeight() * 3))
                 return;
             // True means don't free() the pointer
-            self->SetData((unsigned char*)data->m_ptr, true);  
+            self->SetData((byte*)data->m_ptr, true);  
             """)
     c.addCppMethod('void', 'SetDataBuffer', '(wxPyBuffer* data, int new_width, int new_height)',
         doc="""\
@@ -275,7 +277,7 @@ def run():
             if (!data->checkSize(new_width * new_height * 3))
                 return;
             // True means don't free() the pointer
-            self->SetData((unsigned char*)data->m_ptr, new_width, new_height, true);  
+            self->SetData((byte*)data->m_ptr, new_width, new_height, true);  
             """)
 
 
@@ -289,7 +291,7 @@ def run():
             if (!alpha->checkSize(self->GetWidth() * self->GetHeight()))
                 return;
             // True means don't free() the pointer
-            self->SetAlpha((unsigned char*)alpha->m_ptr, true);
+            self->SetAlpha((byte*)alpha->m_ptr, true);
             """)
 
 
@@ -387,10 +389,10 @@ def run():
 
         unsigned rgblen =   3 * self->GetWidth() * self->GetHeight();
         unsigned alphalen = self->GetWidth() * self->GetHeight();
-        unsigned char* src_data =  self->GetData();
-        unsigned char* src_alpha = self->GetAlpha();
-        unsigned char* dst_data =  dest->GetData();
-        unsigned char* dst_alpha = NULL;
+        byte* src_data =  self->GetData();
+        byte* src_alpha = self->GetAlpha();
+        byte* dst_data =  dest->GetData();
+        byte* dst_alpha = NULL;
 
         // adjust rgb
         if ( factor_red == 1.0 && factor_green == 1.0 && factor_blue == 1.0)
@@ -403,18 +405,18 @@ def run():
             // rgb pixel for pixel
             for ( unsigned i = 0; i < rgblen; i= i + 3 )
             {
-                dst_data[i] =     (unsigned char) wxMin( 255, (int) (factor_red * src_data[i]) );
-                dst_data[i + 1] = (unsigned char) wxMin( 255, (int) (factor_green * src_data[i + 1]) );
-                dst_data[i + 2] = (unsigned char) wxMin( 255, (int) (factor_blue * src_data[i + 2]) );
+                dst_data[i] =     (byte) wxMin( 255, (int) (factor_red * src_data[i]) );
+                dst_data[i + 1] = (byte) wxMin( 255, (int) (factor_green * src_data[i + 1]) );
+                dst_data[i + 2] = (byte) wxMin( 255, (int) (factor_blue * src_data[i + 2]) );
             }
         }
 
         // adjust the mask colour
         if ( self->HasMask() )
         {
-            dest->SetMaskColour((unsigned char) wxMin( 255, (int) (factor_red * self->GetMaskRed() ) ),
-                                (unsigned char) wxMin( 255, (int) (factor_green * self->GetMaskGreen() ) ),
-                                (unsigned char) wxMin( 255, (int) (factor_blue * self->GetMaskBlue() ) ) );
+            dest->SetMaskColour((byte) wxMin( 255, (int) (factor_red * self->GetMaskRed() ) ),
+                                (byte) wxMin( 255, (int) (factor_green * self->GetMaskGreen() ) ),
+                                (byte) wxMin( 255, (int) (factor_blue * self->GetMaskBlue() ) ) );
         }
 
         // adjust the alpha channel
@@ -436,7 +438,7 @@ def run():
                 // alpha value for alpha value
                 for ( unsigned i = 0; i < alphalen; ++i )
                 {
-                    dst_alpha[i] = (unsigned char) wxMin( 255, (int) (factor_alpha * src_alpha[i]) );
+                    dst_alpha[i] = (byte) wxMin( 255, (int) (factor_alpha * src_alpha[i]) );
                 }
             }
         }
@@ -450,7 +452,7 @@ def run():
     
             for ( unsigned i = 0; i < alphalen; ++i )
             {
-                dst_alpha[i] = (unsigned char) wxMin( 255, (int) (factor_alpha * 255) );
+                dst_alpha[i] = (byte) wxMin( 255, (int) (factor_alpha * 255) );
             }
         }
 
@@ -458,9 +460,9 @@ def run():
         if ( dst_alpha && dest->HasMask() )
         {
             // make the mask transparent honoring the alpha channel
-            const unsigned char mr = dest->GetMaskRed();
-            const unsigned char mg = dest->GetMaskGreen();
-            const unsigned char mb = dest->GetMaskBlue();
+            const byte mr = dest->GetMaskRed();
+            const byte mg = dest->GetMaskGreen();
+            const byte mb = dest->GetMaskBlue();
 
             for ( unsigned i = 0; i < alphalen; ++i )
             {
@@ -506,7 +508,42 @@ def run():
                          doc='Compatibility wrapper for creating an image from RGB and Alpha data',
                          body='return Image(width, height, data, alpha)')
 
-   
+
+
+    module.addPyFunction('ImageFromBuffer', '(width, height, dataBuffer, alphaBuffer=None)',
+        doc="""\
+            Creates a `wx.Image` from the data in dataBuffer.  The dataBuffer
+            parameter must be a Python object that implements the buffer interface,
+            such as a string, array, etc.  The dataBuffer object is expected to
+            contain a series of RGB bytes and be width*height*3 bytes long.  A buffer
+            object can optionally be supplied for the image's alpha channel data, and
+            it is expected to be width*height bytes long.
+        
+            The wx.Image will be created with its data and alpha pointers initialized
+            to the memory address pointed to by the buffer objects, thus saving the
+            time needed to copy the image data from the buffer object to the wx.Image.
+            While this has advantages, it also has the shoot-yourself-in-the-foot
+            risks associated with sharing a C pointer between two objects.
+        
+            To help alleviate the risk a reference to the data and alpha buffer
+            objects are kept with the wx.Image, so that they won't get deleted until
+            after the wx.Image is deleted.  However please be aware that it is not
+            guaranteed that an object won't move its memory buffer to a new location
+            when it needs to resize its contents.  If that happens then the wx.Image
+            will end up referring to an invalid memory location and could cause the
+            application to crash.  Therefore care should be taken to not manipulate
+            the objects used for the data and alpha buffers in a way that would cause
+            them to change size.
+            """,
+        body="""\
+            img = Image(width, height)
+            img.SetDataBuffer(dataBuffer)
+            if alphaBuffer:
+                img.SetAlphaBuffer(alphaBuffer)
+            img._buffer = dataBuffer
+            img._alpha = alphaBuffer
+            return img
+            """)
     
     #-------------------------------------------------------
     c = module.find('wxImageHistogram')

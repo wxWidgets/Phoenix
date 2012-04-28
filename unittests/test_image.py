@@ -9,11 +9,6 @@ pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 
 def makeBuf(w, h, bpp=1, init=0):
     "Make a simple buffer for testing with"
-
-    # Apparently array objects do not implement the new buffer protocol...
-    #import array
-    #buf = array.array('B', [init] * (w*h*bpp))
-    
     buf = bytearray([init] * (w*h*bpp))
     return buf
 

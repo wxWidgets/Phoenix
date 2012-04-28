@@ -18,8 +18,14 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxBitmap', 'wxBitmapHandler', 'wxMask' ]    
+ITEMS  = [ 'wxBitmap', 
+           'wxBitmapHandler', 
+           'wxMask' ]    
     
+OTHERDEPS = [ 'src/bitmap_ex.h',
+              'src/bitmap_ex.cpp', ]
+
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -52,9 +58,36 @@ def run():
         return self->IsOk();
         """)
         
-    # On MSW the handler classes are different than what is documented, and
-    # this causes compile errors. Nobody has needed them from Python thus far,
-    # so just ignore them all for now.
+    c.addCppMethod('long', 'GetHandle', '()',
+        doc='MSW-only method to fetch the windows handle for the bitmap.',
+        body="""\
+            #ifdef __WXMSW__
+                return self->GetHandle();
+            #else
+                return 0;
+            #endif
+            """)
+        
+    c.addCppMethod('void', 'SetHandle', '(long handle)',
+        doc='MSW-only method to set the windows handle for the bitmap.',
+        body="""\
+            #ifdef __WXMSW__
+                self->SetHandle((WXHANDLE)handle);
+            #endif
+            """)
+
+    c.addCppMethod('void', 'SetSize', '(const wxSize& size)',
+        doc='Set the bitmap size (does not affect the existing bitmap data).',
+        body="""\
+            self->SetWidth(size->x);
+            self->SetHeight(size->y);
+            """)
+
+
+
+    # On MSW the bitmap handler classes are different than what is
+    # documented, and this causes compile errors. Nobody has needed them from
+    # Python thus far, so just ignore them all for now.
     for m in c.find('FindHandler').all():
         m.ignore()
     c.find('AddHandler').ignore()
@@ -70,9 +103,230 @@ def run():
     module.find('wxBitmapHandler').ignore()
     #module.addItem(tools.wxListWrapperTemplate('wxList', 'wxBitmapHandler', module))
 
-    # TODO: The ctors and methods from Classic for converting to/from
-    #       buffer objects with raw bitmap access.
 
+    #-----------------------------------------------------------------------
+    # Declarations, helpers and methods for converting to/from buffer objects
+    # with raw bitmap access.
+
+    from etgtools import EnumDef, EnumValueDef
+    e = EnumDef(name='wxBitmapBufferFormat')
+    e.items.extend([ EnumValueDef(name='wxBitmapBufferFormat_RGB'),
+                     EnumValueDef(name='wxBitmapBufferFormat_RGBA'),
+                     EnumValueDef(name='wxBitmapBufferFormat_RGB32'),
+                     EnumValueDef(name='wxBitmapBufferFormat_ARGB32'),
+                     ])
+    module.insertItem(0, e)
+
+    c.includeCppCode('src/bitmap_ex.cpp')
+    module.addHeaderCode('#include "bitmap_ex.h"')
+
+
+    c.addCppMethod('void', 'CopyFromBuffer', 
+        '(wxPyBuffer* data, wxBitmapBufferFormat format=wxBitmapBufferFormat_RGB, int stride=-1)',
+        doc="""\
+            Copy data from a buffer object to replace the bitmap pixel data.
+            Default format is plain RGB, but other formats are now supported as
+            well.  The following symbols are used to specify the format of the
+            bytes in the buffer:
+        
+                =============================  ================================
+                wx.BitmapBufferFormat_RGB      A simple sequence of RGB bytes
+                wx.BitmapBufferFormat_RGBA     A simple sequence of RGBA bytes
+                wx.BitmapBufferFormat_ARGB32   A sequence of 32-bit values in native
+                                               endian order, with alpha in the upper
+                                               8 bits, followed by red, green, and
+                                               blue.
+                wx.BitmapBufferFormat_RGB32    Same as above but the alpha byte
+                                               is ignored.
+                =============================  ================================""",
+        body="""\
+            wxPyCopyBitmapFromBuffer(self, (byte*)data->m_ptr, data->m_len, format, stride);
+        """)
+
+
+    c.addCppMethod('void', 'CopyToBuffer',
+        '(wxPyBuffer* data, wxBitmapBufferFormat format=wxBitmapBufferFormat_RGB, int stride=-1)',
+        doc="""\
+            Copy pixel data to a buffer object.  See `CopyFromBuffer` for buffer
+            format details.""",
+        body="""\
+            wxPyCopyBitmapToBuffer(self, (byte*)data->m_ptr, data->m_len, format, stride);
+            """)
+
+
+    # Some bitmap factories added as static methods
+    
+    c.addCppMethod('wxBitmap*', 'FromBufferAndAlpha', 
+        '(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)',
+        isStatic=True,
+        factory=True,
+        doc="""\
+            Creates a `wx.Bitmap` from in-memory data.  The data and alpha 
+            parameters must be a Python object that implements the buffer 
+            interface, such as a string, bytearray, etc.  The data object 
+            is expected to contain a series of RGB bytes and be at least 
+            width*height*3 bytes long, while the alpha object is expected 
+            to be width*height bytes long and represents the image's alpha
+            channel.  On Windows and Mac the RGB values will be 
+            'premultiplied' by the alpha values.  (The other platforms do 
+            the multiplication themselves.)
+        
+            Unlike `wx.ImageFromBuffer` the bitmap created with this function
+            does not share the memory block with the buffer object.  This is
+            because the native pixel buffer format varies on different
+            platforms, and so instead an efficient as possible copy of the
+            data is made from the buffer object to the bitmap's native pixel
+            buffer.            
+            """,
+        body="""\
+            if (!data->checkSize(width*height*3) || !alpha->checkSize(width*height))
+                return NULL;
+            
+            byte* ddata = (byte*)data->m_ptr;
+            byte* adata = (byte*)alpha->m_ptr;
+            wxBitmap* bmp = new wxBitmap(width, height, 32);
+            
+            wxAlphaPixelData pixData(*bmp, wxPoint(0,0), wxSize(width,height));
+            if (! pixData) {
+                wxPyErr_SetString(PyExc_RuntimeError, "Failed to gain raw access to bitmap data.");
+                return NULL;
+            }
+                    
+            wxAlphaPixelData::Iterator p(pixData);
+            for (int y=0; y<height; y++) {
+                wxAlphaPixelData::Iterator rowStart = p;
+                for (int x=0; x<width; x++) {
+                    byte a = *(adata++);
+                    p.Red()   = wxPy_premultiply(*(ddata++), a);
+                    p.Green() = wxPy_premultiply(*(ddata++), a);
+                    p.Blue()  = wxPy_premultiply(*(ddata++), a);
+                    p.Alpha() = a;
+                    ++p; 
+                }
+                p = rowStart;
+                p.OffsetY(pixData, 1);
+            }
+            return bmp;            
+            """)
+
+    c.addCppMethod('wxBitmap*', 'FromBuffer', '(int width, int height, wxPyBuffer* data)',
+        isStatic=True,
+        factory=True,
+        doc="""\
+            Creates a `wx.Bitmap` from in-memory data.  The data parameter 
+            must be a Python object that implements the buffer interface, such 
+            as a string, bytearray, etc.  The data object is expected to contain 
+            a series of RGB bytes and be at least width*height*3 bytes long.
+            
+            Unlike `wx.ImageFromBuffer` the bitmap created with this function
+            does not share the memory block with the buffer object.  This is
+            because the native pixel buffer format varies on different
+            platforms, and so instead an efficient as possible copy of the
+            data is made from the buffer object to the bitmap's native pixel
+            buffer.            
+            """,
+        body="""\
+            wxBitmap* bmp = new wxBitmap(width, height, 24);
+            wxPyCopyBitmapFromBuffer(bmp, (byte*)data->m_ptr, data->m_len, wxBitmapBufferFormat_RGB);
+            if (PyErr_Occurred()) {
+                delete bmp;
+                bmp = NULL;
+            }
+            return bmp;
+            """)
+
+    module.addPyFunction('BitmapFromBuffer', '(width, height, dataBuffer, alphaBuffer=None)',
+        deprecated=True,
+        doc='A compatibility wrapper for Bitmap.FromBuffer and Bitmap.FromBufferAndAlpha',
+        body="""\
+            if alphaBuffer is not None:
+                return Bitmap.FromBufferAndAlpha(width, height, dataBuffer, alphaBuffer)
+            else:
+                return Bitmap.FromBuffer(width, height, dataBuffer)
+            """)
+
+
+
+
+    c.addCppMethod('wxBitmap*', 'FromBufferRGBA', '(int width, int height, wxPyBuffer* data)',
+        isStatic=True,
+        factory=True,
+        doc="""\
+            Creates a `wx.Bitmap` from in-memory data.  The data parameter 
+            must be a Python object that implements the buffer interface, such 
+            as a string, bytearray, etc.  The data object is expected to contain 
+            a series of RGBA bytes and be at least width*height*4 bytes long.
+            On Windows and Mac the RGB values will be 'premultiplied' by the 
+            alpha values.  (The other platforms do the multiplication themselves.)
+            
+            Unlike `wx.ImageFromBuffer` the bitmap created with this function
+            does not share the memory block with the buffer object.  This is
+            because the native pixel buffer format varies on different
+            platforms, and so instead an efficient as possible copy of the
+            data is made from the buffer object to the bitmap's native pixel
+            buffer.            
+            """,
+        body="""\
+            wxBitmap* bmp = new wxBitmap(width, height, 32);
+            wxPyCopyBitmapFromBuffer(bmp, (byte*)data->m_ptr, data->m_len, wxBitmapBufferFormat_RGBA);
+            if (PyErr_Occurred()) {
+                delete bmp;
+                bmp = NULL;
+            }
+            return bmp;
+            """)
+
+    module.addPyFunction('BitmapFromBufferRGBA', '(width, height, dataBuffer)',
+        deprecated=True,
+        doc='A compatibility wrapper for Bitmap.FromBufferRGBA',
+        body='return Bitmap.FromBufferRGBA(width, height, dataBuffer)')
+
+
+
+
+    c.addCppMethod('wxBitmap*', 'FromRGBA', 
+        '(int width, int height, byte red=0, byte green=0, byte blue=0, byte alpha=0)',
+        isStatic=True,
+        factory=True,
+        doc="""\
+            Creates a new empty 32-bit `wx.Bitmap` where every pixel has been
+            initialized with the given RGBA values.
+            """,
+        body="""\
+            if ( !(width > 0 && height > 0) ) {
+                wxPyErr_SetString(PyExc_ValueError, "Width and height must be greater than zero");
+                return NULL;
+            }
+
+            wxBitmap* bmp = new wxBitmap(width, height, 32);
+            wxAlphaPixelData pixData(*bmp, wxPoint(0,0), wxSize(width,height));
+            if (! pixData) {
+                wxPyErr_SetString(PyExc_RuntimeError, "Failed to gain raw access to bitmap data.");
+                return NULL;
+            }
+                
+            wxAlphaPixelData::Iterator p(pixData);
+            for (int y=0; y<height; y++) {
+                wxAlphaPixelData::Iterator rowStart = p;
+                for (int x=0; x<width; x++) {
+                    p.Red()   = wxPy_premultiply(red, alpha);
+                    p.Green() = wxPy_premultiply(green, alpha);
+                    p.Blue()  = wxPy_premultiply(blue, alpha);
+                    p.Alpha() = alpha;
+                    ++p; 
+                }
+                p = rowStart;
+                p.OffsetY(pixData, 1);
+            }
+            return bmp;        
+            """)
+
+    module.addPyFunction('EmptyBitmapRGBA', '(width, height, red=0, green=0, blue=0, alpha=0)',
+        deprecated=True,
+        doc='A compatibility wrapper for Bitmap.FromRGBA',
+        body='return Bitmap.FromRGBA(width, height, red, green, blue, alpha)')
+
+    #-----------------------------------------------------------------------
 
     # For compatibility:
     module.addPyFunction('EmptyBitmap', '(width, height, depth=BITMAP_SCREEN_DEPTH)',

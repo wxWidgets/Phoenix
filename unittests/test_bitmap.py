@@ -7,19 +7,35 @@ pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 
 #---------------------------------------------------------------------------
 
+def makeBuf(w, h, bpp=1, init=0):
+    "Make a simple buffer for testing with"
+    buf = bytearray([init] * (w*h*bpp))
+    return buf
+
+
 class BitmapTests(wtc.WidgetTestCase):
     
-    def test_BitmapCtors(self):
+    def test_BitmapCtor1(self):
         b1 = wx.Bitmap()
         self.assertTrue( not b1.IsOk() )
+
+    def test_BitmapCtor2(self):
         b2 = wx.Bitmap(5, 10, 32)
         self.assertTrue( b2.IsOk() )
+
+    def test_BitmapCtor3(self):
         b3 = wx.Bitmap(wx.Size(5,10), 32)
         self.assertTrue( b3.IsOk() )
+
+    def test_BitmapCtor4(self):
         b4 = wx.Bitmap((5,10), 32)
         self.assertTrue( b4.IsOk() )
+
+    def test_BitmapCtor5(self):
         b5 = wx.Bitmap(pngFile)
         self.assertTrue( b5.IsOk() )
+
+    def test_BitmapCtor6(self):
         img = wx.Image(pngFile)
         b6 = wx.Bitmap(img)
         self.assertTrue( b6.IsOk() )
@@ -75,6 +91,96 @@ class BitmapTests(wtc.WidgetTestCase):
         m = wx.Mask(bmp)
         m = wx.Mask(bmp, wx.Colour(1,2,3))
                     
+        
+    def test_bitmapFormatConstants(self):
+        wx.BitmapBufferFormat_RGB
+        wx.BitmapBufferFormat_RGBA
+        wx.BitmapBufferFormat_RGB32
+        wx.BitmapBufferFormat_ARGB32
+        
+    def test_bitmapSetSize(self):
+        b1 = wx.Bitmap(1,1)
+        b1.SetSize((20,30))
+        self.assertTrue(b1.GetSize() == (20,30))
+        self.assertTrue(b1.Size == (20,30))
+        b1.Size = (25,35)
+        self.assertTrue(b1.GetSize() == (25,35))
+        
+    def test_bitmapHandle(self):
+        b1 = wx.Bitmap(1,1)
+        b1.Handle
+        b1.GetHandle()
+        
+        
+    def test_bitmapCopyFromBuffer1(self):
+        w = h = 10
+        buf = makeBuf(w,h,3)
+        bmp = wx.Bitmap(w,h,24)
+        bmp.CopyFromBuffer(buf, wx.BitmapBufferFormat_RGB)
+        
+    def test_bitmapCopyFromBuffer2(self):
+        w = h = 10
+        buf = makeBuf(w,h,4)
+        bmp = wx.Bitmap(w,h,32)
+        bmp.CopyFromBuffer(buf, wx.BitmapBufferFormat_RGBA)
+        
+    def test_bitmapCopyFromBuffer3(self):
+        w = h = 10
+        buf = makeBuf(w,h,4)
+        bmp = wx.Bitmap(w,h,32)
+        bmp.CopyFromBuffer(buf, wx.BitmapBufferFormat_ARGB32)
+        
+        
+    def test_bitmapCopyToBuffer1(self):
+        w = h = 10
+        buf = makeBuf(w,h,3)
+        bmp = wx.Bitmap(w,h,24)
+        bmp.CopyToBuffer(buf, wx.BitmapBufferFormat_RGB)
+        
+    def test_bitmapCopyToBuffer2(self):
+        w = h = 10
+        buf = makeBuf(w,h,4)
+        bmp = wx.Bitmap(w,h,32)
+        bmp.CopyToBuffer(buf, wx.BitmapBufferFormat_RGBA)
+        
+    def test_bitmapCopyToBuffer3(self):
+        w = h = 10
+        buf = makeBuf(w,h,4)
+        bmp = wx.Bitmap(w,h,32)
+        bmp.CopyToBuffer(buf, wx.BitmapBufferFormat_ARGB32)
+        
+        
+    def test_bitmapBufferFactory1(self):
+        w = h = 10
+        buf = makeBuf(w,h,3, 111)
+        bmp = wx.Bitmap.FromBuffer(w, h, buf)
+        self.assertTrue(bmp.IsOk())
+        
+    def test_bitmapBufferFactory2(self):
+        w = h = 10
+        buf = makeBuf(w,h,3, 111)
+        alpha = makeBuf(w,h,1)
+        bmp = wx.Bitmap.FromBufferAndAlpha(w, h, buf, alpha)
+        self.assertTrue(bmp.IsOk())
+
+    def test_bitmapBufferFactory3(self):
+        w = h = 10
+        buf = makeBuf(w,h,4, 111)
+        bmp = wx.Bitmap.FromBufferRGBA(w, h, buf)
+        self.assertTrue(bmp.IsOk())
+
+
+    def test_bitmapEmptyFactory1(self):
+        w = h = 10
+        bmp = wx.Bitmap.FromRGBA(w, h)
+        self.assertTrue(bmp.IsOk())
+
+    def test_bitmapEmptyFactory2(self):
+        w = h = 10
+        bmp = wx.Bitmap.FromRGBA(w, h, 1, 2, 3, 4)
+        self.assertTrue(bmp.IsOk())
+
+
         
 #---------------------------------------------------------------------------
 
