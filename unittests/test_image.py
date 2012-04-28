@@ -7,8 +7,19 @@ pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 
 #---------------------------------------------------------------------------
 
-class image_Tests(wtc.WidgetTestCase):
+def makeBuf(w, h, bpp=1, init=0):
+    "Make a simple buffer for testing with"
 
+    # Apparently array objects do not implement the new buffer protocol...
+    #import array
+    #buf = array.array('B', [init] * (w*h*bpp))
+    
+    buf = bytearray([init] * (w*h*bpp))
+    return buf
+
+
+class image_Tests(wtc.WidgetTestCase):
+    
     def test_imageCtor1(self):
         img = wx.Image()
         self.assertTrue(not img.IsOk())
@@ -27,40 +38,35 @@ class image_Tests(wtc.WidgetTestCase):
 
 
     def test_imageCtor4(self):
-        import array
         w = h = 10
-        buf = array.array('B', '\0' * (w*h*3))
+        buf = makeBuf(w,h,3)
         img = wx.Image(w, h, buf)
         self.assertTrue(img.IsOk())
 
     def test_imageCtor5(self):
-        import array
         w = h = 10
-        buf = array.array('B', '\0' * (w*h*3))
-        alpha = array.array('B', '\0' * (w*h))
+        buf = makeBuf(w,h,3)
+        alpha = makeBuf(w,h)
         img = wx.Image(w, h, buf, alpha)
         self.assertTrue(img.IsOk())
 
     def test_imageCtor4b(self):
-        import array
         w = h = 10
-        buf = array.array('B', '\0' * (w*h*3))
+        buf = makeBuf(w,h,3)
         img = wx.Image((w, h), buf)
         self.assertTrue(img.IsOk())
 
     def test_imageCtor4c(self):
-        import array
         w = h = 10
-        buf = array.array('B', '\0' * (w*h*3))
+        buf = makeBuf(w,h,3)
         with self.assertRaises(ValueError):
             # should be an exception here because the buffer is the wrong size
             img = wx.Image((w, h+1), buf)  
 
     def test_imageCtor5b(self):
-        import array
         w = h = 10
-        buf = array.array('B', '\0' * (w*h*3))
-        alpha = array.array('B', '\0' * (w*h))
+        buf = makeBuf(w,h,3)
+        alpha = makeBuf(w,h)
         img = wx.Image((w, h), buf, alpha)
         self.assertTrue(img.IsOk())
 
@@ -89,28 +95,25 @@ class image_Tests(wtc.WidgetTestCase):
 
 
     def test_imageSetData1(self):
-        import array
         w = h = 10
         img = wx.Image(w,h)
-        buf = array.array('B', '\2' * (w*h*3))
+        buf = makeBuf(w,h,3, init=2)
         img.SetData(buf)
         self.assertTrue(img.IsOk())
         self.assertTrue(img.GetRed(1,1) == 2)
         
     def test_imageSetData2(self):
-        import array
         w = h = 10
         img = wx.Image(1,1)
-        buf = array.array('B', '\2' * (w*h*3))
+        buf = makeBuf(w,h,3, init=2)
         img.SetData(buf, w, h)
         self.assertTrue(img.IsOk())
         self.assertTrue(img.GetRed(1,1) == 2)
 
     def test_imageSetAlpha1(self):
-        import array
         w = h = 10
         img = wx.Image(w,h)
-        buf = array.array('B', '\2' * (w*h))
+        buf = makeBuf(w,h, init=2)
         img.SetAlpha(buf)
         self.assertTrue(img.IsOk())
         self.assertTrue(img.GetRed(1,1) == 0)        
@@ -120,30 +123,35 @@ class image_Tests(wtc.WidgetTestCase):
         img = wx.Image(pngFile)
         data = img.GetData()
         self.assertEqual(len(data), img.Width * img.Height * 3)
+        self.assertTrue(isinstance(data, bytearray))
 
     def test_imageGetAlpha(self):
         img = wx.Image(pngFile)
         data = img.GetAlpha()
         self.assertEqual(len(data), img.Width * img.Height)
+        self.assertTrue(isinstance(data, bytearray))
+
 
     def test_imageGetDataBuffer(self):
         w = h = 10
         img = wx.Image(w, h)
         self.assertTrue(img.IsOk())
         data = img.GetDataBuffer()
+        self.assertTrue(isinstance(data, memoryview))
         data[0] = '\1'
         data[1] = '\2'
         data[2] = '\3'
         self.assertEqual(1, img.GetRed(0,0))
         self.assertEqual(2, img.GetGreen(0,0))
         self.assertEqual(3, img.GetBlue(0,0))
-                  
+                                   
     def test_imageGetAlphaDataBuffer(self):
         w = h = 10
         img = wx.Image(w, h)
         img.InitAlpha()
         self.assertTrue(img.IsOk())
         data = img.GetAlphaBuffer()
+        self.assertTrue(isinstance(data, memoryview))
         data[0] = '\1'
         data[1] = '\2'
         data[2] = '\3'
@@ -153,10 +161,9 @@ class image_Tests(wtc.WidgetTestCase):
         
         
     def test_imageSetDataBuffer1(self):
-        import array
         w = h = 10
         img = wx.Image(w,h)
-        buf = array.array('B', '\0' * (w*h*3))
+        buf = makeBuf(w,h,3)
         img.SetDataBuffer(buf)
         buf[0] = 1
         buf[1] = 2
@@ -165,12 +172,10 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertEqual(2, img.GetGreen(0,0))
         self.assertEqual(3, img.GetBlue(0,0))
         
-
     def test_imageSetDataBuffer2(self):
-        import array
         w = h = 10
         img = wx.Image(1,1)
-        buf = array.array('B', '\0' * (w*h*3))
+        buf = makeBuf(w,h,3)
         img.SetDataBuffer(buf, w, h)
         buf[0] = 1
         buf[1] = 2
@@ -179,12 +184,10 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertEqual(2, img.GetGreen(0,0))
         self.assertEqual(3, img.GetBlue(0,0))
 
-
     def test_imageSetAlphaBuffer(self):
-        import array
         w = h = 10
         img = wx.Image(w,h)
-        buf = array.array('B', '\0' * (w*h))
+        buf = makeBuf(w,h)
         img.SetAlphaBuffer(buf)
         buf[0] = 1
         buf[1] = 2

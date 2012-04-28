@@ -39,107 +39,62 @@ def run():
     c.find('wxImage').findOverload('(const char *const *xpmData)').ignore()
 
     c.find('GetHandlers').ignore()  # TODO
-    #c.find('AddHandler').ignore()
-    #c.find('InsertHandler').ignore()
-    #c.find('RemoveHandler').ignore()
-    #for m in c.find('FindHandler').all():
-    #    m.ignore()
-    #c.find('FindHandlerMime').ignore()
     
     
-    # Helper functions for dealing with data buffers for wxImage
-    c.addCppCode("""\
-        static void* copyDataBuffer(PyObject* obj, Py_ssize_t expectedSize)
-        {
-            Py_ssize_t dataSize;
-            void*      dataPtr;
-            
-            if (PyObject_AsReadBuffer(obj, (const void**)&dataPtr, &dataSize) == -1)
-                return NULL;
-            if (dataSize != expectedSize) {
-                wxPyErr_SetString(PyExc_ValueError, "Invalid data buffer size.");
-                return NULL;
-            }    
-            void* copy = malloc(dataSize);
-            if (copy == NULL) {
-                wxPyBLOCK_THREADS(PyErr_NoMemory());
-                return NULL;
-            }            
-            memcpy(copy, dataPtr, dataSize);
-            return copy;
-        }
-        
-        static void* getDataBufferPtr(PyObject* obj, Py_ssize_t expectedSize)
-        {
-            Py_ssize_t dataSize;
-            void*      dataPtr;
-            
-            if (PyObject_AsReadBuffer(obj, (const void**)&dataPtr, &dataSize) == -1)
-                return NULL;
-            if (dataSize != expectedSize) {
-                wxPyErr_SetString(PyExc_ValueError, "Invalid data buffer size.");
-                return NULL;
-            }    
-            return dataPtr;
-        }
-        """)
-
     # Ignore the ctors taking raw data buffers, so we can add in our own
-    # versions that are a little smarter (accepts any buffer object, checks
+    # versions that are a little smarter (accept any buffer object, check
     # the data length, etc.)
     c.find('wxImage').findOverload('int width, int height, unsigned char *data, bool static_data').ignore()
     c.find('wxImage').findOverload('const wxSize &sz, unsigned char *data, bool static_data').ignore()
     c.find('wxImage').findOverload('int width, int height, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
     c.find('wxImage').findOverload('const wxSize &sz, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
 
-    c.addCppCtor_sip('(int width, int height, PyObject* data)',
+    c.addCppCtor_sip('(int width, int height, wxPyBuffer* data)',
         doc="Creates an image from RGB data in memory.",
         body="""\
-            void* dataCopy = copyDataBuffer(data, width*height*3);
-            if (!dataCopy)
+            if (! data->checkSize(width*height*3)) 
+                return NULL;
+            void* copy = data->copy();
+            if (! copy) 
                 return NULL;
             sipCpp = new sipwxImage;
-            sipCpp->Create(width, height, (unsigned char*)dataCopy);
+            sipCpp->Create(width, height, (unsigned char*)copy);            
             """)
       
-    c.addCppCtor_sip('(int width, int height, PyObject* data, PyObject* alpha)',
+    c.addCppCtor_sip('(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)',
         doc="Creates an image from RGB data in memory, plus an alpha channel",
         body="""\
-            void* dataCopy = copyDataBuffer(data, width*height*3);
-            if (!dataCopy)
+            void* dcopy; void* acopy;
+            if (!data->checkSize(width*height*3) || !alpha->checkSize(width*height))
                 return NULL;
-            void* alphaCopy = copyDataBuffer(alpha, width*height);
-            if (!alphaCopy) {
-                free(dataCopy);
+            if ((dcopy = data->copy()) == NULL || (acopy = alpha->copy()) == NULL)
                 return NULL;
-            }
             sipCpp = new sipwxImage;
-            sipCpp->Create(width, height, (unsigned char*)dataCopy, (unsigned char*)alphaCopy, false);
+            sipCpp->Create(width, height, (unsigned char*)dcopy, (unsigned char*)acopy, false);
             """)
       
-    c.addCppCtor_sip('(const wxSize& size, PyObject* data)',
+    c.addCppCtor_sip('(const wxSize& size, wxPyBuffer* data)',
         doc="Creates an image from RGB data in memory.",
         body="""\
-            void* dataCopy = copyDataBuffer(data, size->x*size->y*3);
-            if (!dataCopy)
+            if (! data->checkSize(size->x*size->y*3)) 
+                return NULL;
+            void* copy = data->copy();
+            if (! copy) 
                 return NULL;
             sipCpp = new sipwxImage;
-            sipCpp->Create(size->x, size->y, (unsigned char*)dataCopy, false);
+            sipCpp->Create(size->x, size->y, (unsigned char*)copy, false);
             """)
       
-    c.addCppCtor_sip('(const wxSize& size, PyObject* data, PyObject* alpha)',
+    c.addCppCtor_sip('(const wxSize& size, wxPyBuffer* data, wxPyBuffer* alpha)',
         doc="Creates an image from RGB data in memory, plus an alpha channel",
         body="""\
-            void* dataCopy = copyDataBuffer(data, size->x*size->y*3);
-            if (!dataCopy)
+            void* dcopy; void* acopy;
+            if (!data->checkSize(size->x*size->y*3) || !alpha->checkSize(size->x*size->y))
                 return NULL;
-            void* alphaCopy = copyDataBuffer(alpha, size->x*size->y);
-            if (!alphaCopy) {
-                free(dataCopy);
+            if ((dcopy = data->copy()) == NULL || (acopy = alpha->copy()) == NULL)
                 return NULL;
-            }
             sipCpp = new sipwxImage;
-            sipCpp->Create(size->x, size->y, (unsigned char*)dataCopy, (unsigned char*)alphaCopy, false);
+            sipCpp->Create(size->x, size->y, (unsigned char*)dcopy, (unsigned char*)acopy, false);
             """)
       
       
@@ -149,50 +104,48 @@ def run():
     c.find('Create').findOverload('int width, int height, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
     c.find('Create').findOverload('const wxSize &sz, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
       
-    c.addCppMethod('bool', 'Create', '(int width, int height, PyObject* data)', 
+    c.addCppMethod('bool', 'Create', '(int width, int height, wxPyBuffer* data)', 
         doc="",
         body="""\
-            void* dataCopy = copyDataBuffer(data, width*height*3);
-            if (!dataCopy)
+            if (! data->checkSize(width*height*3)) 
                 return false;
-            return self->Create(width, height, (unsigned char*)dataCopy);
+            void* copy = data->copy();
+            if (! copy) 
+                return false;
+            return self->Create(width, height, (unsigned char*)copy);
             """)
       
-    c.addCppMethod('bool', 'Create', '(int width, int height, PyObject* data, PyObject* alpha)', 
+    c.addCppMethod('bool', 'Create', '(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)', 
         doc="",
         body="""\
-            void* dataCopy = copyDataBuffer(data, width*height*3);
-            if (!dataCopy)
+            void* dcopy; void* acopy;
+            if (!data->checkSize(width*height*3) || !alpha->checkSize(width*height))
                 return false;
-            void* alphaCopy = copyDataBuffer(alpha, width*height);
-            if (!alphaCopy) {
-                free(dataCopy);
+            if ((dcopy = data->copy()) == NULL || (acopy = alpha->copy()) == NULL)
                 return false;
-            }
-            return self->Create(width, height, (unsigned char*)dataCopy, (unsigned char*)alpha);
+            return self->Create(width, height, (unsigned char*)dcopy, (unsigned char*)acopy);
             """)
       
-    c.addCppMethod('bool', 'Create', '(const wxSize& size, PyObject* data)', 
+    c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data)', 
         doc="",
         body="""\
-            void* dataCopy = copyDataBuffer(data, size->x*size->y*3);
-            if (!dataCopy)
+            if (! data->checkSize(size->x*size->y*3)) 
                 return false;
-            return self->Create(size->x, size->y, (unsigned char*)dataCopy);
+            void* copy = data->copy();
+            if (! copy) 
+                return false;
+            return self->Create(size->x, size->y, (unsigned char*)copy);
             """)
       
-    c.addCppMethod('bool', 'Create', '(const wxSize& size, PyObject* data, PyObject* alpha)', 
+    c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data, wxPyBuffer* alpha)', 
         doc="",
         body="""\
-            void* dataCopy = copyDataBuffer(data, size->x*size->y*3);
-            if (!dataCopy)
+            void* dcopy; void* acopy;
+            if (!data->checkSize(size->x*size->y*3) || !alpha->checkSize(size->x*size->y))
                 return false;
-            void* alphaCopy = copyDataBuffer(alpha, size->x*size->y);
-            if (!alphaCopy) {
-                free(dataCopy);
+            if ((dcopy = data->copy()) == NULL || (acopy = alpha->copy()) == NULL)
                 return false;
-            }
-            return self->Create(size->x, size->y, (unsigned char*)dataCopy, (unsigned char*)alpha);
+            return self->Create(size->x, size->y, (unsigned char*)dcopy, (unsigned char*)acopy);
             """)
       
       
@@ -200,32 +153,38 @@ def run():
     m = c.find('SetData').findOverload('unsigned char *data')
     bd, dd = m.briefDoc, m.detailedDoc
     m.ignore()
-    c.addCppMethod('void', 'SetData', '(PyObject* data)',
+    c.addCppMethod('void', 'SetData', '(wxPyBuffer* data)',
         body="""\
-        void* dataCopy = copyDataBuffer(data, self->GetWidth()*self->GetHeight()*3);
-        if (!dataCopy)
+        if (!data->checkSize(self->GetWidth()*self->GetHeight()*3))
             return;
-        self->SetData((unsigned char*)dataCopy, false);
+        void* copy = data->copy();
+        if (!copy)
+            return;
+        self->SetData((unsigned char*)copy, false);
         """, briefDoc=bd, detailedDoc=dd)
 
     c.find('SetData').findOverload('int new_width').ignore()
-    c.addCppMethod('void', 'SetData', '(PyObject* data, int new_width, int new_height)',
+    c.addCppMethod('void', 'SetData', '(wxPyBuffer* data, int new_width, int new_height)',
         body="""\
-        void* dataCopy = copyDataBuffer(data, new_width*new_height*3);
-        if (!dataCopy)
+        if (!data->checkSize(new_width*new_height*3))
             return;
-        self->SetData((unsigned char*)dataCopy, new_width, new_height, false);
+        void* copy = data->copy();
+        if (!copy)
+            return;
+        self->SetData((unsigned char*)copy, new_width, new_height, false);
         """)
       
     m = c.find('SetAlpha').findOverload('unsigned char *alpha')
     bd, dd = m.briefDoc, m.detailedDoc
     m.ignore()
-    c.addCppMethod('void', 'SetAlpha', '(PyObject* alpha)',
+    c.addCppMethod('void', 'SetAlpha', '(wxPyBuffer* alpha)',
         body="""\
-        void* dataCopy = copyDataBuffer(alpha, self->GetWidth()*self->GetHeight());
-        if (!dataCopy)
+        if (!alpha->checkSize(self->GetWidth()*self->GetHeight()))
             return;
-        self->SetAlpha((unsigned char*)dataCopy, false);
+        void* copy = alpha->copy();
+        if (!copy)
+            return;
+        self->SetAlpha((unsigned char*)copy, false);
         """)
 
 
@@ -239,7 +198,7 @@ def run():
             unsigned char* data = self->GetData();
             Py_ssize_t len = self->GetWidth() * self->GetHeight() * 3;
             PyObject* rv = NULL;
-            wxPyBLOCK_THREADS( rv = PyString_FromStringAndSize((char*)data, len));
+            wxPyBLOCK_THREADS( rv = PyByteArray_FromStringAndSize((const char*)data, len));
             return rv;           
             """)
     
@@ -250,13 +209,14 @@ def run():
             unsigned char* data = self->GetAlpha();
             Py_ssize_t len = self->GetWidth() * self->GetHeight();
             PyObject* rv = NULL;
-            wxPyBLOCK_THREADS( rv = PyString_FromStringAndSize((char*)data, len));
+            wxPyBLOCK_THREADS( rv = PyByteArray_FromStringAndSize((const char*)data, len));
             return rv;           
             """)
     
     
     # GetDataBuffer, GetAlphaBuffer provide direct access to the image's
-    # internal buffers as a writable buffer object.
+    # internal buffers as a writable buffer object.  We'll use memoryview 
+    # objects.
     c.addCppMethod('PyObject*', 'GetDataBuffer', '()',
         doc="""\
         Returns a writable Python buffer object that is pointing at the RGB
@@ -266,7 +226,11 @@ def run():
             unsigned char* data = self->GetData();
             Py_ssize_t len = self->GetWidth() * self->GetHeight() * 3;
             PyObject* rv;
-            wxPyBLOCK_THREADS( rv = PyBuffer_FromReadWriteMemory(data, len) );
+            Py_buffer view;
+            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            PyBuffer_FillInfo(&view, NULL, data, len, 0, PyBUF_WRITABLE|PyBUF_FORMAT|PyBUF_ND);
+            rv = PyMemoryView_FromBuffer(&view);
+            wxPyEndBlockThreads(blocked);
             return rv;
             """)
 
@@ -279,50 +243,54 @@ def run():
             unsigned char* data = self->GetAlpha();
             Py_ssize_t len = self->GetWidth() * self->GetHeight();
             PyObject* rv;
-            wxPyBLOCK_THREADS( rv = PyBuffer_FromReadWriteMemory(data, len) );
+            Py_buffer view;
+            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            PyBuffer_FillInfo(&view, NULL, data, len, 0, PyBUF_WRITABLE|PyBUF_FORMAT|PyBUF_ND);
+            rv = PyMemoryView_FromBuffer(&view);
+            wxPyEndBlockThreads(blocked);
             return rv;
             """)
 
     # SetDataBuffer, SetAlphaBuffer tell the image to use some other memory
     # buffer pointed to by a Python buffer object.
-    c.addCppMethod('void', 'SetDataBuffer', '(PyObject* data)',
+    c.addCppMethod('void', 'SetDataBuffer', '(wxPyBuffer* data)',
         doc="""\
         Sets the internal image data pointer to point at a Python buffer
         object.  This can save making an extra copy of the data but you must
         ensure that the buffer object lives lives at least as long as the 
         wx.Image does.""",
         body="""\
-            void* ptr = getDataBufferPtr(data, self->GetWidth() * self->GetHeight() * 3);
-            if (ptr)
-                // True means don't free() the pointer
-                self->SetData((unsigned char*)ptr, true);  
-        """)
-    c.addCppMethod('void', 'SetDataBuffer', '(PyObject* data, int new_width, int new_height)',
+            if (!data->checkSize(self->GetWidth() * self->GetHeight() * 3))
+                return;
+            // True means don't free() the pointer
+            self->SetData((unsigned char*)data->m_ptr, true);  
+            """)
+    c.addCppMethod('void', 'SetDataBuffer', '(wxPyBuffer* data, int new_width, int new_height)',
         doc="""\
         Sets the internal image data pointer to point at a Python buffer
         object.  This can save making an extra copy of the data but you must
         ensure that the buffer object lives lives at least as long as the 
         wx.Image does.""",
         body="""\
-            void* ptr = getDataBufferPtr(data, new_width * new_height * 3);
-            if (ptr)
-                // True means don't free() the pointer
-                self->SetData((unsigned char*)ptr, new_width, new_height, true);  
-        """)
+            if (!data->checkSize(new_width * new_height * 3))
+                return;
+            // True means don't free() the pointer
+            self->SetData((unsigned char*)data->m_ptr, new_width, new_height, true);  
+            """)
 
 
-    c.addCppMethod('void', 'SetAlphaBuffer', '(PyObject* alpha)',
+    c.addCppMethod('void', 'SetAlphaBuffer', '(wxPyBuffer* alpha)',
         doc="""\
         Sets the internal image alpha pointer to point at a Python buffer
         object.  This can save making an extra copy of the data but you must
         ensure that the buffer object lives lives at least as long as the 
         wx.Image does.""",
         body="""\
-            void* ptr = getDataBufferPtr(alpha, self->GetWidth() * self->GetHeight());
-            if (ptr)
-                // True means don't free() the pointer
-                self->SetAlpha((unsigned char*)ptr, true);
-        """)
+            if (!alpha->checkSize(self->GetWidth() * self->GetHeight()))
+                return;
+            // True means don't free() the pointer
+            self->SetAlpha((unsigned char*)alpha->m_ptr, true);
+            """)
 
 
 

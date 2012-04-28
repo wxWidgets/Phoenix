@@ -39,6 +39,8 @@ INCLUDES = [  # core
               'arrays',
               'clntdata',
               'userdata',
+              'wxpybuffer',              
+              
               'stockgdi',
               'longlong',
               'wxdatetime',
