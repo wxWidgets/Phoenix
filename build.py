@@ -687,7 +687,12 @@ def docs_bdist(options, args):
 def sip(options, args):
     cmdTimer = CommandTimer('sip')
     cfg = Config()
-    for src_name in glob.glob(opj(cfg.SIPGEN, '_*.sip')):
+    modules = glob.glob(opj(cfg.SIPGEN, '_*.sip'))
+    # move _core the to the front of the list
+    modules.remove(opj(cfg.SIPGEN, '_core.sip'))
+    modules.insert(0, opj(cfg.SIPGEN, '_core.sip'))
+    
+    for src_name in modules:
         # TODO: Add some dependency checking here. If none of the included
         # files has been updated then running sip can probably be avoided.
         # OTOH, it's fast enough that it probably doesn't matter.
