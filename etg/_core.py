@@ -89,6 +89,7 @@ INCLUDES = [  # core
               'accel',
               'log',
               'dataobj',
+              'dnd',
               'config',
               'variant',
               'tracker',
