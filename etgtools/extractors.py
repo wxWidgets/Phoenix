@@ -442,6 +442,8 @@ class FunctionDef(BaseDef):
                     arg = arg.split('=')[0]
                     if default in defValueMap:
                         default = defValueMap.get(default)
+                    else:
+                        default = removeWxPrefix(default)
                 # now grab just the last word, it should be the variable name
                 arg = arg.split()[-1]
                 if default:

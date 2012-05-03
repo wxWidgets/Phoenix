@@ -647,7 +647,7 @@ from %s import *
         for idx, pn in enumerate(pnames):
             # take only the part before the =, if there is one
             name = pn.split('=')[0].strip()   
-            # now get just the part after and space, * or &, which should be
+            # now get just the part after any space, * or &, which should be
             # the parameter name
             name = re.split(r'[ \*\&]+', name)[-1] 
             pnames[idx] = name
