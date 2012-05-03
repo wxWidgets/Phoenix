@@ -129,7 +129,7 @@ other dev stuff
       * joystick
       * sound
       * mimetype
-      * clipbrd, dnd, finish dataobj
+      * clipbrd, finish dataobj
       * power
       * overlay
       * PseudoDC

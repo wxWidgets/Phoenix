@@ -18,10 +18,10 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ "interface_2wx_2dnd_8h.xml",
-           #"wxDropTarget",
-           #"wxTextDropTarget",
-           #"wxFileDropTarget",
-           #"wxDropSource",
+           "wxDropSource",
+           "wxDropTarget",
+           "wxTextDropTarget",
+           "wxFileDropTarget",
            ]    
 
 #---------------------------------------------------------------------------
@@ -37,12 +37,48 @@ def run():
 
     module.addHeaderCode('#include <wx/dnd.h>')
         
-    #c = module.find('wxDropSource')
-    #assert isinstance(c, etgtools.ClassDef)
+    c = module.find('wxDropSource')
+    assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
+
+    for m in c.find('wxDropSource').all():
+        if 'wxIcon' in m.argsString:
+            # Ignore the ctors taking wxIcon parameters. They are GTK only
+            # and we don't have an easy way yet to support platform specific
+            # APIs in the ctors.
+            m.ignore()
+        else:
+            # Ignore the cursor parameters. We'll need to use SetCursor or
+            # SetIcon instead.
+            m.find('iconCopy').ignore()
+            m.find('iconMove').ignore()
+            m.find('iconNone').ignore()
+                    
+    # void SetCursor(wxDragResult res, const wxCursor& cursor);                
+    c.find('SetCursor').setCppCode("""\
+        #ifdef __WXGTK__
+            wxPyRaiseNotImplementedMsg("Cursors not supported, use SetIcon on wxGTK instead.");
+        #else
+            self->SetCursor(res, *cursor);
+        #endif
+        """)
     
-    #for m in c.find('wxDropSource').all():
-    #    if 'wxIcon' in m.argsString:
-    #        m.ignore()
+    # void SetIcon(wxDragResult res, const wxIcon& icon)
+    c.find('SetIcon').setCppCode("""\
+        #ifdef __WXGTK__
+            self->SetIcon(res, *icon);
+        #else
+            wxPyRaiseNotImplementedMsg("Icons not supported, use SetCursor on non-wxGTK ports.");
+        #endif
+        """)
+    
+    
+    
+    c = module.find('wxDropTarget')
+    c.addPrivateCopyCtor()
+    c.find('wxDropTarget.data').transfer = True
+    c.find('SetDataObject.data').transfer = True
+    c.addPyCode("PyDropTarget = wx.deprecated(DropTarget)")
     
     
     

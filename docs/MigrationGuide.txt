@@ -307,3 +307,15 @@ you to tell the wx.Image to use memory buffers in other objects (such
 as a numpy array) as its RGB or Alpha data, as long as the other
 object supports the new buffer protocol.
 
+
+
+wx.DropSource
+-------------
+
+We don't (yet) have an easy way to support different APIs per platform
+in the wx class constructors, so wx.DropSource (which optionally takes
+parameters that should be a wx.Icon on wxGTK or a wx.Cursor on the
+other platforms) has been changed to not accept the cursor/icon in the
+constructors.  Instead you'll have to call either SetCursor or SetIcon
+depending on the platform.
+

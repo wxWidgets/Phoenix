@@ -68,7 +68,6 @@ def run():
     module.insertItem(0, etgtools.WigCode("""\
         // forward declarations
         class wxPalette;
-        class wxDropTarget;
         class wxCaret;
         class wxExecuteEnv;
         """))
