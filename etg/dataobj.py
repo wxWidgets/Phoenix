@@ -130,7 +130,7 @@ def run():
     c.addCppMethod('void', '_testGetAllFormats', '()',
         body="""\
             size_t count = self->GetFormatCount();
-            wxDataFormat fmts[count];
+            wxDataFormat* fmts = new wxDataFormat[count];
             self->GetAllFormats(fmts);
             """)
 
@@ -335,6 +335,26 @@ def run():
     addGetAllFormats(c)
     
     
+    #------------------------------------------------------------
+    c = module.find('wxURLDataObject')
+    
+    # wxURLDataObject derives from wxDataObjectComposite on some platforms,
+    # and wxTextDataObject on others, so we need to take a least common
+    # denominator approach here to be able to work on all platforms.
+    c.bases = ['wxDataObject']
+    
+    addGetAllFormats(c)
+    c.addItem(etgtools.WigCode(code="""\
+        virtual size_t GetFormatCount(Direction dir = Get) const;
+        virtual wxDataFormat GetPreferredFormat(Direction dir = Get) const;
+        private:
+        virtual size_t GetDataSize(const wxDataFormat& format) const;
+        virtual bool GetDataHere(const wxDataFormat& format, void* buf) const;
+        virtual bool SetData(const wxDataFormat& format, size_t len, const void* buf);
+        """))
+
+    
+
     #------------------------------------------------------------
     module.addPyCode("PyDataObjectSimple = wx.deprecated(DataObjectSimple)")
     module.addPyCode("PyTextDataObject = wx.deprecated(TextDataObject)")
