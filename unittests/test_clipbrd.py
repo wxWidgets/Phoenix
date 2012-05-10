@@ -6,9 +6,20 @@ import wx
 
 class clipbrd_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
     def test_clipbrd1(self):
-        self.fail("Unit tests for clipbrd not implemented yet.")
+        # copy
+        data1 = wx.TextDataObject('This is some data.')
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.SetData(data1)
+            wx.TheClipboard.Close()
+              
+        # paste  
+        data2 = wx.TextDataObject()
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.GetData(data2)
+            wx.TheClipboard.Close()
+        
+        self.assertEqual(data2.GetText(), 'This is some data.')
         
 #---------------------------------------------------------------------------
 

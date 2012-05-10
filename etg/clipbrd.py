@@ -41,6 +41,7 @@ def run():
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Close()')
     
+    # TODO: This init wrapper class may be useful elsewhere...
     module.addPyCode("""\
         # Since wxTheClipoard is not really a global varaiable (it is a macro 
         # that calls the Get static method) we can't declare it as a global 
