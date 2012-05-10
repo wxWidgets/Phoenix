@@ -37,9 +37,6 @@
 
     // This isn't being used anywhere yet, but it should work.         
     %ConvertFromTypeCode
-        Py_buffer view;
-        PyBuffer_FillInfo(&view, NULL, sipCpp->m_ptr, sipCpp->m_len, 0, 
-                          PyBUF_WRITABLE|PyBUF_FORMAT|PyBUF_ND);
-        return PyMemoryView_FromBuffer(&view);
+        return wxPyMakeBuffer(sipCpp->m_ptr, sipCpp->m_len);
     %End
 };

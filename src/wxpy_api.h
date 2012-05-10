@@ -95,6 +95,13 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 #define RETURN_NONE()    { wxPyBLOCK_THREADS(Py_INCREF(Py_None)); return Py_None; }
 
 
+inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len) {
+    Py_buffer view;
+    PyBuffer_FillInfo(&view, NULL, ptr, len, 0, PyBUF_WRITABLE|PyBUF_FORMAT|PyBUF_ND);
+    return PyMemoryView_FromBuffer(&view);
+}
+
+
 //--------------------------------------------------------------------------
 // These are the API items whose implementation can not or should not be
 // inline functions or macros. The implementations will instead be accessed
