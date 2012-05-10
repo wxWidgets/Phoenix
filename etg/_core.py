@@ -90,6 +90,7 @@ INCLUDES = [  # core
               'log',
               'dataobj',
               'dnd',
+              'clipbrd',
               'config',
               'variant',
               'tracker',
