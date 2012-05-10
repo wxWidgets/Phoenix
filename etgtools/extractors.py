@@ -886,25 +886,28 @@ class ClassDef(BaseDef):
         else:
             self.items.append(md)
         
-    def addCppMethod(self, type, name, argsString, body, doc=None, isConst=False, **kw):
+    def addCppMethod(self, type, name, argsString, body, doc=None, isConst=False, 
+                     cppSignature=None, **kw):
         """
         Add a new C++ method to a class. This method doesn't have to actually
         exist in the real C++ class. Instead it will be grafted on by the
         back-end wrapper generator such that it is visible in the class in the
         target language.
         """
-        md = CppMethodDef(type, name, argsString, body, doc, isConst, klass=self, **kw)
+        md = CppMethodDef(type, name, argsString, body, doc, isConst, klass=self, 
+                          cppSignature=cppSignature, **kw)
         self._addMethod(md)
         return md
 
     
-    def addCppCtor(self, argsString, body, doc=None, noDerivedCtor=True, useDerivedName=False, **kw):
+    def addCppCtor(self, argsString, body, doc=None, noDerivedCtor=True, 
+                   useDerivedName=False, cppSignature=None, **kw):
         """
         Add a C++ method that is a constructor.
         """
         md = CppMethodDef('', self.name, argsString, body, doc=doc, 
                           isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, 
-                          useDerivedName=useDerivedName, **kw)
+                          useDerivedName=useDerivedName, cppSignature=cppSignature, **kw)
         self._addMethod(md)
         return md
 
@@ -1094,7 +1097,8 @@ class CppMethodDef(MethodDef):
     NOTE: This one is not automatically extracted, but can be added to
           classes in the tweaker stage
     """
-    def __init__(self, type, name, argsString, body, doc=None, isConst=False, **kw):
+    def __init__(self, type, name, argsString, body, doc=None, isConst=False, 
+                 cppSignature=None, virtualCatcherCode=None, **kw):
         super(CppMethodDef, self).__init__()
         self.type = type
         self.name = name
@@ -1106,6 +1110,8 @@ class CppMethodDef(MethodDef):
         self.noDerivedCtor = False
         self.isConst = isConst
         self.isPureVirtual = False
+        self.cppSignature = cppSignature
+        self.virtualCatcherCode = virtualCatcherCode
         self.__dict__.update(kw)
 
     @staticmethod

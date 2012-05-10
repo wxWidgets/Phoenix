@@ -655,19 +655,19 @@ from %s import *
         typ = method.type
 
         if not skipDeclaration:
+            cppSig = " [ %s ]" % method.cppSignature if method.cppSignature else ""                
             # First insert the method declaration
             if method.isCtor:
-                stream.write('%s%s%s%s;\n' % 
-                             (indent, method.name, argsString, self.annotate(method)))
+                stream.write('%s%s%s%s%s;\n' % 
+                             (indent, method.name, argsString, self.annotate(method), cppSig))
             else:
-                constMod = ""
-                if method.isConst:
-                    constMod = " const"
-                static = ""
-                if method.isStatic:
-                    static = "static "
-                stream.write('%s%s%s %s%s%s%s;\n' % 
-                             (indent, static, typ, method.name, argsString, constMod, self.annotate(method)))
+                constMod = " const" if method.isConst else ""
+                static = "static " if method.isStatic else ""
+                virtual = "virtual " if method.isVirtual else ""                
+                pure = " = 0" if method.isPureVirtual else ""
+                stream.write('%s%s%s%s %s%s%s%s%s%s;\n' % 
+                             (indent, static, virtual, typ, 
+                              method.name, argsString, constMod, pure, self.annotate(method), cppSig))
     
             # write the docstring
             if  _needDocstring and not (method.isCtor or method.isDtor):
@@ -764,6 +764,11 @@ from %s import *
             stream.write('%sif (PyErr_Occurred()) sipIsErr = 1;\n' % (indent+' '*4))
         stream.write('%s%%End\n' % indent)
 
+        if method.virtualCatcherCode:
+            stream.write('%s%%VirtualCatcherCode\n' % indent)
+            stream.write(nci(method.virtualCatcherCode, len(indent)+4))
+            stream.write('%s%%End\n' % indent)
+            
         # and finally, add the new function itself
         stream.write(fstream.getvalue())
         stream.write('\n')
