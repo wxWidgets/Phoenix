@@ -747,6 +747,7 @@ from %s import *
             stream.write('sipCpp = %s(%s);\n' % (fname, pnames))
         else:
             stream.write('PyErr_Clear();\n')
+            stream.write('Py_BEGIN_ALLOW_THREADS\n')
             stream.write(indent+' '*4)
             if method.type != 'void':
                 stream.write('sipRes = ')
@@ -761,6 +762,7 @@ from %s import *
                     stream.write('%s(sipCpp%s);\n' % (fname, pnames))
             else:
                 stream.write('%s(%s);\n' % (fname, pnames))
+            stream.write('Py_END_ALLOW_THREADS\n')            
             stream.write('%sif (PyErr_Occurred()) sipIsErr = 1;\n' % (indent+' '*4))
         stream.write('%s%%End\n' % indent)
 
