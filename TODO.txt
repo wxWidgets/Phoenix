@@ -129,7 +129,6 @@ other dev stuff
       * joystick
       * sound
       * mimetype
-      * finish dataobj
       * power
       * overlay
       * PseudoDC

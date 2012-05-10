@@ -319,3 +319,42 @@ other platforms) has been changed to not accept the cursor/icon in the
 constructors.  Instead you'll have to call either SetCursor or SetIcon
 depending on the platform.
 
+
+
+wx.DataObject and derived classes
+---------------------------------
+
+The wx.DataObject and wx.DataObjectSimple classes can now be
+subclassed in Python.  wx.DataObject will let you proivide complex
+multi-format data objects that do not need to copy the data until one
+of the formats is requested from the clipboard or a DnD operation.
+wx.DataObjectSimple is a simplification that only deals with one data
+format, (although multiple objects can still be provided with
+wx.DataObjectComposite.)
+
+Python buffer objects are used for transferring data to/from the
+clipboard or DnD partner.  Anything that supports the buffer protocol
+can be used for setting or providing data, and a memoryview object is
+created for the APIs where the data object should fetch from or copy
+to a specific memory location.  Here is a simple example::
+
+        class MyDataObject(wx.DataObjectSimple):
+            def __init__(self, value=''):
+                wx.DataObjectSimple.__init__(self)
+                self.SetFormat(wx.DataFormat("my data format"))
+                self.myData = bytes(value)
+                
+            def GetDataSize(self):
+                return len(self.myData)
+            
+            def GetDataHere(self, buf):
+                # copy our local data value to buf
+                assert isinstance(buf, memoryview)
+                buf[:] = self.myData
+                return True
+                            
+            def SetData(self, buf):
+                # copy from buf to our local data value
+                assert isinstance(buf, memoryview)
+                self.myData = buf.tobytes()
+                return True
