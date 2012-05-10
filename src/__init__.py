@@ -7,7 +7,10 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
-from core import __version__
+# Load the main version string into the package namespace
+import __version__
+__version__ = __version__.VERSION_STRING
+
 
 # Import all items from the core wxPython modules so they appear in the wx
 # package namespace.
