@@ -275,6 +275,27 @@ def addWindowVirtuals(klass):
     klass.addItem(extractors.WigCode(txt))
     klass.addPublic()
                   
+                  
+def addSipConvertToSubClassCode(klass):
+    """
+    Teach SIP how to convert to specific subclass types
+    """
+    klass.addItem(extractors.WigCode("""\
+    %ConvertToSubClassCode
+        const wxClassInfo* info   = sipCpp->GetClassInfo();
+        wxString           name   = info->GetClassName();
+        bool               exists = sipFindType(name) != NULL;
+        while (info && !exists) {
+            info = info->GetBaseClass1();
+            name = info->GetClassName();
+            exists = sipFindType(name) != NULL;
+        }
+        if (info) 
+            sipType = sipFindType(name);
+        else
+            sipType = NULL;
+    %End
+    """))
     
     
 def getEtgFiles(names):

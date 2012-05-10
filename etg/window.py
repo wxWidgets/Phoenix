@@ -249,6 +249,7 @@ def run():
     ##c.addProperty('GtkWidget GetGtkWidget')
 
     tools.fixWindowClass(c)
+    tools.addSipConvertToSubClassCode(c)
 
     # for compatibility with Classic
     c.addPyMethod('GetPositionTuple', '(self)', 'return self.GetPosition()', deprecated=True)
