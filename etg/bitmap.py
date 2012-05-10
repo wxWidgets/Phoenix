@@ -228,10 +228,12 @@ def run():
         body="""\
             wxBitmap* bmp = new wxBitmap(width, height, 24);
             wxPyCopyBitmapFromBuffer(bmp, (byte*)data->m_ptr, data->m_len, wxBitmapBufferFormat_RGB);
+            wxPyBlock_t blocked = wxPyBeginBlockThreads();
             if (PyErr_Occurred()) {
                 delete bmp;
                 bmp = NULL;
             }
+            wxPyEndBlockThreads(blocked);
             return bmp;
             """)
 
@@ -269,10 +271,12 @@ def run():
         body="""\
             wxBitmap* bmp = new wxBitmap(width, height, 32);
             wxPyCopyBitmapFromBuffer(bmp, (byte*)data->m_ptr, data->m_len, wxBitmapBufferFormat_RGBA);
+            wxPyBlock_t blocked = wxPyBeginBlockThreads();            
             if (PyErr_Occurred()) {
                 delete bmp;
                 bmp = NULL;
             }
+            wxPyEndBlockThreads(blocked);
             return bmp;
             """)
 
