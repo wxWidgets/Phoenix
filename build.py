@@ -210,6 +210,9 @@ def setDevModeOptions(args):
             ]
     if not isWindows:
         myDevModeOptions.append('--debug')
+    if isWindows:
+        myDevModeOptions.append('--cairo')
+        
     if '--dev' in args:
         idx = args.index('--dev')
         # replace the --dev item with the items from the list
@@ -789,6 +792,9 @@ def build_wx(options, args):
         # Windows-specific pre build stuff 
         if options.cairo:
             build_options.append('--cairo')
+            if not os.environ.get("CAIRO_ROOT"):
+                msg("WARNING: Expected CAIRO_ROOT set in the environment!")
+
     else:  
         # Platform is something other than MSW
         if options.osx_carbon:
@@ -900,7 +906,11 @@ def copyWxDlls(options):
         if options.debug or options.both:
             dlls += glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.dll" % ver))
             dlls += glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.pdb" % ver))
-            
+
+        # Also copy the cairo DLLs if needed
+        if options.cairo:
+            dlls += glob.glob(os.path.join(os.environ['CAIRO_ROOT'], 'bin', '*.dll'))
+
         for dll in dlls:
             copyIfNewer(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)), verbose=True)
 
