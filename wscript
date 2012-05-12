@@ -19,14 +19,31 @@ cfg = buildtools.config.Config(True)
 APPNAME = 'wxPython'
 VERSION = cfg.VERSION
 
+isWindows = sys.platform.startswith('win')
+isDarwin = sys.platform == "darwin"
+
 top = '.'
 out = 'build_waf'
+if isWindows:
+    out = 'build_waf/release'
+
 
 
 def options(opt):
     opt.load('compiler_cc compiler_cxx python')
-    opt.add_option('--debug', dest='debug', action='store_true', default=False,
-                   help='Turn on debug compile options.')
+    
+    if isWindows:
+        def debugOptionCallback(option, optstr, value, parser):
+            """Set debug flag and also change the output directory option"""
+            parser.values.out = 'build_waf/debug'
+            parser.values.debug = True
+            
+        opt.add_option('--debug', dest='debug', default=False, action='callback', 
+                       callback=debugOptionCallback, help='Turn on debug compile options.')
+    else:
+        opt.add_option('--debug', dest='debug', action='store_true', default=False,
+                       help='Turn on debug compile options.')
+        
     opt.add_option('--python', dest='python', default='', action='store',
                    help='Full path to the Python executrable to use.')
     opt.add_option('--wx_config', dest='wx_config', default='wx-config', action='store',
@@ -37,17 +54,18 @@ def options(opt):
                    'used by wxWidgets and Python')
 
 
-def configure(conf):
-    if sys.platform == 'win32':
+def configure(conf):    
+    if isWindows:
         conf.env['MSVC_VERSIONS'] = ['msvc 9.0']
         conf.env['MSVC_TARGETS'] = ['x86']
-        conf.load('msvc python')
+        conf.load('msvc')
         pass
     else:
-        conf.load('compiler_cc compiler_cxx python')
+        conf.load('compiler_cc compiler_cxx')
 
     if conf.options.python:
-        conf.env.PYTHON = [conf.options.python]
+        conf.env.PYTHON = conf.options.python
+    conf.load('python')
     conf.check_python_headers()
     conf.check_python_version(minver=(2,7,0))
 
@@ -57,7 +75,7 @@ def configure(conf):
     # Ensure that the headers in siplib and Phoenix's src dir can be found
     conf.env.INCLUDES_WXPY = ['sip/siplib', 'src']
 
-    if sys.platform == 'win32':
+    if isWindows:
         # Windows/MSVC specific stuff
 
         cfg.finishSetup(debug=conf.env.debug)
@@ -73,7 +91,20 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXADV')
         conf.env.LIB_WXADV += cfg.makeLibName('adv')
 
-
+        # tweak the PYEXT compile and link flags if making a --debug build
+        if conf.env.debug:
+            for listname in ['CFLAGS_PYEXT', 'CXXFLAGS_PYEXT']:
+                lst = conf.env[listname]
+                for opt in '/Ox /MD /DNDEBUG'.split():
+                    try:
+                        lst.remove(opt)
+                    except ValueError:
+                        pass
+                lst[1:1] = '/Od /MDd /D_DEBUG'.split()
+                
+            conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
+            conf.env['LIB_PYEXT'][0] += '_d'
+            
     else: 
         # Configuration stuff for non-Windows ports using wx-config
 
@@ -93,7 +124,7 @@ def configure(conf):
         # the test above) and not darwin then we must be using the
         # GTK2 port of wxWidgets.  If we ever support other ports then
         # this code will need to be adjusted.
-        if sys.platform != 'darwin':
+        if not isDarwin:
             gtkflags = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
             conf.env.CFLAGS_WX   += gtkflags.split()
             conf.env.CXXFLAGS_WX += gtkflags.split()
@@ -133,7 +164,7 @@ def configure(conf):
 
 
         # Some Mac-specific stuff
-        if sys.platform == 'darwin':
+        if isDarwin:
             conf.env.MACOSX_DEPLOYMENT_TARGET = "10.4"  # should we bump this to 10.5?
 
             if conf.options.mac_arch:
@@ -177,7 +208,7 @@ def build(bld):
         % cfg.__dict__)
 
     # copy the wx locale message catalogs to the package dir
-    if sys.platform in ['win32', 'darwin']:
+    if isWindows or isDarwin:
         cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
 
     # copy __init__.py
@@ -187,7 +218,7 @@ def build(bld):
     # Create the build tasks for each of our extension modules.
     siplib = bld(
         features = 'c cxx cshlib cxxshlib pyext',
-        target   = 'siplib',
+        target   = makeTargetName(bld, 'siplib'),
         source   = ['sip/siplib/apiversions.c',
                     'sip/siplib/bool.cpp',
                     'sip/siplib/descriptors.c',
@@ -203,10 +234,10 @@ def build(bld):
 
 
     etg = loadETG('etg/_core.py')
-    rc = ['src/wxc.rc'] if sys.platform == 'win32' else []
+    rc = ['src/wxc.rc'] if isWindows else []
     core = bld(
         features = 'c cxx cxxshlib pyext',
-        target   = '_core',
+        target   = makeTargetName(bld, '_core'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WX WXPY',
     )
@@ -216,7 +247,7 @@ def build(bld):
     etg = loadETG('etg/_adv.py')
     dataview = bld(
         features = 'c cxx cxxshlib pyext',
-        target   = '_adv',
+        target   = makeTargetName(bld, '_adv'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WXADV WXPY',
     )
@@ -226,11 +257,13 @@ def build(bld):
     etg = loadETG('etg/_dataview.py')
     dataview = bld(
         features = 'c cxx cxxshlib pyext',
-        target   = '_dataview',
+        target   = makeTargetName(bld, '_dataview'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WXADV WXPY',
     )
     makeExtCopyRule(bld, '_dataview')
+
+
 
 #-----------------------------------------------------------------------------
 # helpers
@@ -249,10 +282,16 @@ def _cleanFlags(ctx, key):
     ctx.env[key] = cleaned
 
 
+def makeTargetName(bld, name):
+    if isWindows and bld.env.debug:
+        name += '_d'
+    return name
+
 
 # Make a rule that will copy a built extension module to the in-place package
 # dir so we can test locally without doing an install.
 def makeExtCopyRule(bld, name):
+    name = makeTargetName(bld, name)
     src = bld.env.pyext_PATTERN % name
     tgt = 'pkg.%s' % name  # just a name to be touched to serve as a timestamp of the copy
     bld(rule=copyFileToPkg, source=src, target=tgt, after=name)
