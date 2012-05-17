@@ -104,6 +104,8 @@ Unlike a :ref:`PrinterDC`, there is no distinction between the page rectangle an
 both rectangles are taken to represent the entire sheet of paper.
 
 
+.. _printdialog overview:
+
 PrintDialog
 -----------
 

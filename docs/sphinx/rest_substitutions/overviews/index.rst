@@ -144,6 +144,7 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    bookctrl_overview
    common_dialogs_overview
    config_overview
+   dataobject_overview
    datetime_overview
    dc_overview
    dialog_overview
