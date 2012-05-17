@@ -63,6 +63,7 @@ def run():
         """)
     
     c.find('Play').renameOverload('filename', 'PlaySound')
+    c.find('IsPlaying').ignore()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
