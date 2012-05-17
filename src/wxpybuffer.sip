@@ -15,7 +15,6 @@
 #include "wxpybuffer.h"
 %End
 
-// TODO:  Use new buffer APIs and memoryview or bytearray objects?
 
 %MappedType wxPyBuffer
 {

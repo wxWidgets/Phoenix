@@ -17,25 +17,10 @@
 
 %MappedType wxString
 {
-    // TODO:  Will something like this work (and be a good idea) in order to
-    // share the conversion code here and in the utlities module?
-    //%ConvertToTypeCode
-    //    // Code to test a PyObject for compatibility with wxString
-    //    if (!sipIsErr) {
-    //        if (PyString_Check(sipPy) || PyUnicode_Check(sipPy))
-    //            return TRUE;
-    //        return FALSE;
-    //    }
-    //
-    //    // Convert a compatible PyObject to a wxString
-    //    wxString str = Py2wxString(sipPy, true, *sipIsErr);
-    //    if (*sipIsErr)
-    //        return 0;
-    //    *sipCppPtr = new wxString(str);
-    //    return sipGetState(sipTransferObj);
-    //%End
-    
-    
+
+    // TODO: It is still possible to have a wx build that uses utf-8 inside
+    // wxString, so we should probably be checking wxUSE_UNICODE_WCHAR or
+    // wxUSE_UNICODE_UTF8 for this conversion.
     
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility with wxString
