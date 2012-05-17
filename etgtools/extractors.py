@@ -921,12 +921,14 @@ class ClassDef(BaseDef):
         self._addMethod(md)
         return md
 
-    def addCppCtor_sip(self, argsString, body, doc=None, noDerivedCtor=True, **kw):
+    def addCppCtor_sip(self, argsString, body, doc=None, noDerivedCtor=True, 
+                       cppSignature=None, **kw):
         """
         Add a C++ method that is a constructor.
         """
         md = CppMethodDef_sip('', self.name, argsString, body, doc=doc, 
-                          isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, **kw)
+                          isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, 
+                          cppSignature=None, **kw)
         self._addMethod(md)
         return md
 
