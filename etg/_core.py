@@ -190,6 +190,7 @@ INCLUDES = [  # core
               'dragimag',
               'printfw',
               'printdlg',
+              'mimetype',
               ]
 
 
