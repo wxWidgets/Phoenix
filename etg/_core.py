@@ -84,6 +84,7 @@ INCLUDES = [  # core
               'dcsvg',
               'graphics',
               'imaglist',
+              'overlay',
               
               # more core
               'accel',
