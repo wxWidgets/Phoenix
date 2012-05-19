@@ -178,6 +178,7 @@ INCLUDES = [  # core
               'mdi',
 
               # misc
+              'power',
               'utils',
               'process',
               'uiaction', 

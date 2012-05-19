@@ -18,7 +18,6 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ 'utils_8h.xml',
-           'power_8h.xml',
            'wxWindowDisabler',
            'wxBusyCursor',
            'wxVersionInfo',
