@@ -70,6 +70,7 @@ def run():
     #---------------------------------------
     # wxPoint tweaks
     c = module.find('wxPoint')
+    tools.addAutoProperties(c)
     
     # Some operators are documented within the class that shouldn't be, so just
     # ignore them all.
@@ -130,6 +131,7 @@ def run():
     #---------------------------------------
     # wxSize tweaks
     c = module.find('wxSize')
+    tools.addAutoProperties(c)
 
     # Used for testing releasing or holding the GIL in giltest.py
     #c.find('wxSize').findOverload('int width, int height').releaseGIL()
@@ -192,16 +194,17 @@ def run():
     # wxRect tweaks
     c = module.find('wxRect')
     assert isinstance(c, etgtools.ClassDef)
-        
-    c.addProperty("left GetLeft")
-    c.addProperty("top GetTop")
-    c.addProperty("right GetRight")
-    c.addProperty("bottom GetBottom")
+    tools.addAutoProperties(c)
     
-    c.addProperty("bottomLeft GetBottomLeft")
-    c.addProperty("bottomRight GetBottomRight")
-    c.addProperty("topLeft GetTopLeft")
-    c.addProperty("topRight GetTopRight")
+    c.addProperty("left GetLeft SetLeft")
+    c.addProperty("top GetTop SetTop")
+    c.addProperty("right GetRight SetRight")
+    c.addProperty("bottom GetBottom SetBottom")
+    
+    c.addProperty("bottomLeft GetBottomLeft SetBottomLeft")
+    c.addProperty("bottomRight GetBottomRight SetBottomRight")
+    c.addProperty("topLeft GetTopLeft SetTopLeft")
+    c.addProperty("topRight GetTopRight SetTopRight")
     
     # take care of the same issues as wxPoint
     tools.ignoreAllOperators(c)
@@ -266,6 +269,7 @@ def run():
     #---------------------------------------
     # wxRealPoint tweaks
     c = module.find('wxRealPoint')
+    tools.addAutoProperties(c)
         
     # take care of the same issues as wxPoint
     tools.ignoreAllOperators(c)
