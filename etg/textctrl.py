@@ -35,6 +35,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.find('operator=').ignore()
 
+    c.find('SetFont').pyArgsString = '(font, flags=TEXT_ATTR_FONT & ~TEXT_ATTR_FONT_PIXEL_SIZE)'
 
     c = module.find('wxTextCtrl')
     module.addGlobalStr('wxTextCtrlNameStr', c)
