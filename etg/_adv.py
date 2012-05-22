@@ -36,12 +36,12 @@ INCLUDES = [
              'taskbar',
              'sound',
              'joystick',
+             'animate',
              
              
              # TODOs - 
              # These modules are also in the C++ adv lib and so should be included here:
              #
-             #'animate',
              #'bannerwindow',
              #'bmpcbox',
              #'editlbox',
