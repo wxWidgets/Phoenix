@@ -156,11 +156,12 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         elif guessTypeStr(globalVar):
             valTyp = '""'
         else:
-            valTyp = removeWxPrefix(globalVar.type)
+            valTyp = globalVar.type
             valTyp = valTyp.replace('const ', '')
             valTyp = valTyp.replace('*', '')
             valTyp = valTyp.replace('&', '')
             valTyp = valTyp.replace(' ', '')
+            valTyp = removeWxPrefix(valTyp)
             valTyp += '()'
         
         stream.write('%s = %s\n' % (name, valTyp))
