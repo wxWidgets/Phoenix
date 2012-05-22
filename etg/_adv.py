@@ -38,13 +38,13 @@ INCLUDES = [
              'joystick',
              'animate',
              'bannerwindow',
+             'editlbox',
              
              
              # TODOs - 
              # These modules are also in the C++ adv lib and so should be included here:
              #
              #'bmpcbox',
-             #'editlbox',
              #'laywin',
              #'notifmsg',
              #'odcombo',
