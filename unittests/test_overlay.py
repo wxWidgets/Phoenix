@@ -6,9 +6,14 @@ import wx
 
 class overlay_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
     def test_overlay1(self):
-        self.fail("Unit tests for overlay not implemented yet.")
+        o = wx.Overlay()
+        dc = wx.ClientDC(self.frame)
+        odc = wx.DCOverlay(o, dc)
+        odc.Clear()
+        del odc
+        o.Reset()
+        
         
 #---------------------------------------------------------------------------
 
