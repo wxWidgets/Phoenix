@@ -126,7 +126,6 @@ other dev stuff
 
       * axbase  (ActiveX.  Need to figure out best ways to do MSW-only items...)
       * check that all items in _functions.i and _misc.i have been wrapped
-      * joystick
       * PseudoDC
        
   * Add wxCHMHelpController  (MSW-only)

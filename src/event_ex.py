@@ -204,3 +204,13 @@ EVT_TEXT_PASTE =  wx.PyEventBinder( wxEVT_COMMAND_TEXT_PASTE )
 EVT_THREAD = wx.PyEventBinder( wxEVT_THREAD )
 
 EVT_WINDOW_MODAL_DIALOG_CLOSED = wx.PyEventBinder( wxEVT_WINDOW_MODAL_DIALOG_CLOSED )
+
+EVT_JOY_BUTTON_DOWN = wx.PyEventBinder( wxEVT_JOY_BUTTON_DOWN )
+EVT_JOY_BUTTON_UP = wx.PyEventBinder( wxEVT_JOY_BUTTON_UP )
+EVT_JOY_MOVE = wx.PyEventBinder( wxEVT_JOY_MOVE )
+EVT_JOY_ZMOVE = wx.PyEventBinder( wxEVT_JOY_ZMOVE )
+EVT_JOYSTICK_EVENTS = wx.PyEventBinder([ wxEVT_JOY_BUTTON_DOWN,
+                                        wxEVT_JOY_BUTTON_UP, 
+                                        wxEVT_JOY_MOVE, 
+                                        wxEVT_JOY_ZMOVE,
+                                        ])

@@ -35,6 +35,7 @@ INCLUDES = [
              'tipdlg',
              'taskbar',
              'sound',
+             'joystick',
              
              
              # TODOs - 
@@ -44,7 +45,6 @@ INCLUDES = [
              #'bannerwindow',
              #'bmpcbox',
              #'editlbox',
-             #'joystick',
              #'laywin',
              #'notifmsg',
              #'odcombo',
