@@ -1104,6 +1104,7 @@ class CppMethodDef(MethodDef):
         super(CppMethodDef, self).__init__()
         self.type = type
         self.name = name
+        self.useDerivedName = True
         self.argsString = argsString
         self.body = body
         self.briefDoc = doc

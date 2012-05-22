@@ -19,8 +19,7 @@ class mimetype_Tests(wtc.WidgetTestCase):
         ft.GetIcon()
 
     def test_mimetype3(self):        
-        fti = wx.FileTypeInfo('mime', 'open', 'print', 'desc')
-        fti.AddExtension('ext1')
+        fti = wx.FileTypeInfo('mime', 'open', 'print', 'desc', 'ext1')
         fti.AddExtension('ext2')
         fti.AddExtension('ext3')                       
         self.assertEqual(fti.GetMimeType(), 'mime')

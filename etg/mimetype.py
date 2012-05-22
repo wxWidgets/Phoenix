@@ -146,11 +146,18 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxFileTypeInfo')
     
-    # Ignore the last two args for this ctor as the varargs is causing some
-    # trouble. TODO: Figure this out...
+    # Ignore the variadic nature of this ctor
     ctor = c.find('wxFileTypeInfo').findOverload('extension')
     ctor.items[-1].ignore()
-    ctor.items[-2].ignore()
+    ctor.setCppCode("""\
+        wxFileTypeInfo* fti = new wxFileTypeInfo(*mimeType);
+        fti->SetOpenCommand(*openCmd);
+        fti->SetPrintCommand(*printCmd);
+        fti->SetDescription(*description);
+        fti->AddExtension(*extension);
+        return fti;
+        """)
+    ctor.useDerivedName = False
     
     
     #-----------------------------------------------------------------
