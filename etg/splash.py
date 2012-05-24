@@ -43,7 +43,7 @@ def run():
     c.addCppMethod('wxBitmap*', 'GetBitmap', '()', 
         doc="Get the spash screen's bitmap",
         body="""\
-            return &self->GetSplashWindow()->GetBitmap();
+            return & self->GetSplashWindow()->GetBitmap();
             """)
     
     c.addCppMethod('void', 'SetBitmap', '(const wxBitmap& bitmap)',
