@@ -100,7 +100,7 @@ def configure(conf):
                         lst.remove(opt)
                     except ValueError:
                         pass
-                lst[1:1] = '/Od /MDd /D_DEBUG'.split()
+                lst[1:1] = '/Od /MDd /Z7 /D_DEBUG'.split()
                 
             conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
             conf.env['LIB_PYEXT'][0] += '_d'
