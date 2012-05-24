@@ -13,9 +13,9 @@ objects produced by the ETG scripts.
 """
 
 import sys, os, re
-import extractors
-import generators
-from generators import nci, Utf8EncodingStream
+import etgtools.extractors as extractors
+import etgtools.generators as generators
+from etgtools.generators import nci, Utf8EncodingStream, textfile_open
 
 
 divider = '//' + '-'*75 + '\n'
@@ -45,7 +45,7 @@ class SipWrapperGenerator(generators.WrapperGeneratorBase):
         # Write the contents of the stream to the destination file
         if not destFile:
             destFile = os.path.join(phoenixRoot, 'sip/gen', module.name + '.sip')
-        file(destFile, 'wt').write(stream.getvalue())
+        textfile_open(destFile, 'wt').write(stream.getvalue())
             
         
     #-----------------------------------------------------------------------
@@ -90,7 +90,7 @@ class SipWrapperGenerator(generators.WrapperGeneratorBase):
 # Copyright: (c) 2011 by Total Control Software
 # License:   wxWindows License
 %s
-from %s import *
+from .%s import *
 
 %%End
 

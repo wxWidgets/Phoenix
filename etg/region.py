@@ -78,6 +78,7 @@ def run():
                 if self._iterator.HaveRects():
                     self._iterator.Next()
                 return rect
+            __next__ = next  # for Python 3
         """)
     
 

@@ -1,14 +1,21 @@
-import wx
-print wx.version()
-#import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
- 
+import sys, os, wx
+print(wx.version()); print(sys.version)
+
 app = wx.App()
 frm = wx.Frame(None, title="Hello World!")
-
 pnl = wx.Panel(frm)
 pnl.BackgroundColour = 'sky blue'
-st = wx.StaticText(pnl, -1, 'This is wxPython\n%s' % wx.version(), (15,15))
+
+st = wx.StaticText(pnl, -1, 'Hello World!', (15,10))
 st.SetFont(wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
+
+st = wx.StaticText(pnl, pos=(15,40), label=
+                   'This is wxPython %s\nrunning on Python %s' % 
+                       (wx.version(), sys.version.split(' ')[0]))
+st.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
+
+bmp = wx.Bitmap(os.path.join(os.path.dirname(__file__), 'phoenix_main.png'))
+sb = wx.StaticBitmap(pnl, label=bmp, pos=(15,85))
 
 frm.Show()
 app.MainLoop()

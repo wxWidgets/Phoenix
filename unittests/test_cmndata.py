@@ -36,9 +36,14 @@ class cmndata_tests(wtc.WidgetTestCase):
         pd = wx.PrintData()
         pdd = wx.PrintDialogData()
     
-        psdd.__nonzero__()
-        pd.__nonzero__()
-        pdd.__nonzero__()
+        if wtc.isPython3():
+            psdd.__bool__()
+            pd.__bool__()
+            pdd.__bool__()
+        else:
+            psdd.__nonzero__()
+            pd.__nonzero__()
+            pdd.__nonzero__()
         
 #---------------------------------------------------------------------------
 

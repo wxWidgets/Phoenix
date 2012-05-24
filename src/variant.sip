@@ -16,9 +16,9 @@
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            if (PyString_Check(sipPy) || PyUnicode_Check(sipPy))
+            if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
                 return TRUE;
-            else if (PyInt_Check(sipPy) || PyLong_Check(sipPy))
+            else if (wxPyInt_Check(sipPy) || PyLong_Check(sipPy))
                 return TRUE;
             else if (PyBool_Check(sipPy))
                 return TRUE;
@@ -30,7 +30,7 @@
         
         // Code to create a new wxPyUserData from the PyObject
         wxVariant* data =  new wxVariant();
-        if (PyString_Check(sipPy) || PyUnicode_Check(sipPy)) {
+        if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)) {
             // TODO: Can we just reuse the code in string.sip somehow?
             
             // TODO: check state or iserr?
@@ -38,8 +38,8 @@
             wxString* strPtr = (wxString*)sipConvertToType(sipPy, sipType_wxString, NULL, SIP_NOT_NONE, NULL, &iserr);
             *data = *strPtr;
         }
-        else if (PyInt_Check(sipPy))
-            *data = (long)PyInt_AS_LONG(sipPy);
+        else if (wxPyInt_Check(sipPy))
+            *data = (long)wxPyInt_AS_LONG(sipPy);
         else if (PyLong_Check(sipPy))
             *data = (long)PyLong_AsLong(sipPy);
         else if (PyBool_Check(sipPy)) {

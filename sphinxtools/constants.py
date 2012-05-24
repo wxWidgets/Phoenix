@@ -184,7 +184,7 @@ class Enumeration(object):
 
     def __getattr__(self, attr):
 
-        if not self.lookup.has_key(attr):
+        if not attr in self.lookup:
             raise AttributeError
 
         return self.lookup[attr]

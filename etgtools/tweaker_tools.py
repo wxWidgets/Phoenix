@@ -12,7 +12,8 @@ Some helpers and utility functions that can assist with the tweaker
 stage of the ETG scripts.
 """
 
-import extractors
+import etgtools as extractors
+from .generators import textfile_open
 import sys, os
 import copy
 
@@ -31,6 +32,7 @@ magicMethods = {
     'operator bool' : '__int__',  # Why not __nonzero__?
     # TODO: add more
 }
+
 
 def removeWxPrefixes(node):
     """
@@ -374,28 +376,28 @@ def getWrapperGenerator():
     A simple factory function to create a wrapper generator class of the desired type.
     """
     if '--swig' in sys.argv:
-        import swig_generator
+        from etgtools import swig_generator
         gClass = swig_generator.SwigWrapperGenerator
     elif '--sip' in sys.argv:
-        import sip_generator
+        from etgtools import sip_generator
         gClass = sip_generator.SipWrapperGenerator
     else:
         # The default is sip
-        import sip_generator
+        from etgtools import sip_generator
         gClass = sip_generator.SipWrapperGenerator    
     return gClass()
 
 
 def getDocsGenerator():
     if '--nodoc' in sys.argv:
-        import generators    
+        from etgtools import generators    
         return generators.StubbedDocsGenerator()
     elif '--sphinx' in sys.argv:
-        import sphinx_generator
+        from etgtools import sphinx_generator
         return sphinx_generator.SphinxGenerator()
     else:
         # the current default is sphinx
-        import sphinx_generator
+        from etgtools import sphinx_generator
         return sphinx_generator.SphinxGenerator()
         
 
@@ -409,7 +411,7 @@ def runGenerators(module):
     generators.append(getWrapperGenerator())
     
     # Toss in the PI generator too
-    import pi_generator
+    from etgtools import pi_generator
     generators.append(pi_generator.PiWrapperGenerator())    
     
     # And finally add the documentation generator
@@ -425,7 +427,7 @@ def checkForUnitTestModule(module):
     pathname = 'unittests/test_%s.py' % module.name
     if os.path.exists(pathname) or not module.check4unittest:
         return
-    print 'WARNING: Unittest module (%s) not found!' % pathname
+    print('WARNING: Unittest module (%s) not found!' % pathname)
 
 
 #---------------------------------------------------------------------------
@@ -464,7 +466,7 @@ def convertTwoIntegersTemplate(CLASS):
     // or create a new instance
     PyObject* o1 = PySequence_ITEM(sipPy, 0);
     PyObject* o2 = PySequence_ITEM(sipPy, 1);
-    *sipCppPtr = new {CLASS}(PyInt_AsLong(o1), PyInt_AsLong(o2));
+    *sipCppPtr = new {CLASS}(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2));
     Py_DECREF(o1);
     Py_DECREF(o2);
     return SIP_TEMPORARY;
@@ -509,8 +511,8 @@ def convertFourIntegersTemplate(CLASS):
     PyObject* o2 = PySequence_ITEM(sipPy, 1);
     PyObject* o3 = PySequence_ITEM(sipPy, 2);
     PyObject* o4 = PySequence_ITEM(sipPy, 3);       
-    *sipCppPtr = new {CLASS}(PyInt_AsLong(o1), PyInt_AsLong(o2),
-                             PyInt_AsLong(o3), PyInt_AsLong(o4));
+    *sipCppPtr = new {CLASS}(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2),
+                             wxPyInt_AsLong(o3), wxPyInt_AsLong(o4));
     Py_DECREF(o1);
     Py_DECREF(o2);
     return SIP_TEMPORARY;
@@ -724,7 +726,7 @@ del _{ListClass_pyName}___repr__
         if (! PySequence_Check(sipPy)) 
             success = FALSE;
         // ensure it is not a string or unicode object (they are sequences too)
-        else if (PyString_Check(sipPy) || PyUnicode_Check(sipPy))
+        else if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
             success = FALSE;
         // ensure each item can be converted to {ItemClass}
         else {{
@@ -871,7 +873,7 @@ static
     if (! PySequence_Check(source)) 
         goto error0;
     // ensure it is not a string or unicode object (they are sequences too)
-    else if (PyString_Check(source) || PyUnicode_Check(source))
+    else if (PyBytes_Check(source) || PyUnicode_Check(source))
         goto error0;
     // ensure each item can be converted to {objType}
     else {{

@@ -118,7 +118,7 @@ def run():
             }
             else {
                 // Return the data as a string object.  TODO: Py3
-                obj = PyString_FromStringAndSize(buf, buf.GetDataLen());
+                obj = PyBytes_FromStringAndSize(buf, buf.GetDataLen());
             }
             wxPyEndBlockThreads(blocked);
             return obj;
@@ -205,7 +205,7 @@ def run():
                 }
                 wxPyBlock_t blocked = wxPyBeginBlockThreads();
                 PyList_Append(pylist, s);
-                i += PyString_Size(s);
+                i += PyBytes_Size(s);
                 wxPyEndBlockThreads(blocked);
             }
     
@@ -274,12 +274,12 @@ def run():
 
     c.addCppMethod('void', 'write', '(PyObject* data)', """\
         // We use only strings for the streams, not unicode
-        PyObject* str = PyObject_Str(data);
+        PyObject* str = PyObject_Bytes(data);
         if (! str) {
             PyErr_SetString(PyExc_TypeError, "Unable to convert to string");
             return;
         }
-        self->Write(PyString_AS_STRING(str), PyString_GET_SIZE(str));
+        self->Write(PyBytes_AS_STRING(str), PyBytes_GET_SIZE(str));
         Py_DECREF(str);
         """)
     

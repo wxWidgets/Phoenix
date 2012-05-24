@@ -94,13 +94,13 @@ protected:
         Py_DECREF(arglist);
     
         size_t o = 0;
-        if ((result != NULL) && PyString_Check(result)) {
-            o = PyString_Size(result);
+        if ((result != NULL) && PyBytes_Check(result)) {
+            o = PyBytes_Size(result);
             if (o == 0)
                 m_lasterror = wxSTREAM_EOF;
             if (o > bufsize)
                 o = bufsize;
-            memcpy((char*)buffer, PyString_AsString(result), o);  // strings only, not unicode...
+            memcpy((char*)buffer, PyBytes_AsString(result), o);  // strings only, not unicode...
             Py_DECREF(result);
     
         }
@@ -125,9 +125,9 @@ protected:
             // wxFileOffset is a 64-bit value...
             PyTuple_SET_ITEM(arglist, 0, PyLong_FromLongLong(off));
         else
-            PyTuple_SET_ITEM(arglist, 0, PyInt_FromLong(off));
+            PyTuple_SET_ITEM(arglist, 0, wxPyInt_FromLong(off));
     
-        PyTuple_SET_ITEM(arglist, 1, PyInt_FromLong(mode));
+        PyTuple_SET_ITEM(arglist, 1, wxPyInt_FromLong(mode));
     
     
         PyObject* result = PyEval_CallObject(m_seek, arglist);
@@ -148,7 +148,7 @@ protected:
             if (PyLong_Check(result))
                 o = PyLong_AsLongLong(result);
             else
-                o = PyInt_AsLong(result);
+                o = wxPyInt_AsLong(result);
             Py_DECREF(result);
         };
         wxPyEndBlockThreads(blocked);

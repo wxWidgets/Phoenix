@@ -5,6 +5,9 @@
 # the Python extension mocdules.
 #---------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
+import sys
 import glob
 import hashlib
 import optparse
@@ -16,13 +19,17 @@ import sys
 import tarfile
 import tempfile
 import datetime
-import urllib2
+if sys.version_info < (3,):
+    from urllib2 import urlopen
+else:
+    from urllib.request import urlopen
+    
 
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macFixDependencyInstallName, macSetLoaderNames, \
-                               getSvnRev, runcmd
+                               getSvnRev, runcmd, textfile_open
 
 
 import buildtools.version as version
@@ -226,17 +233,17 @@ def numCPUs():
     """
     # Linux, Unix and MacOS:
     if hasattr(os, "sysconf"):
-        if os.sysconf_names.has_key("SC_NPROCESSORS_ONLN"):
+        if "SC_NPROCESSORS_ONLN" in os.sysconf_names:
             # Linux & Unix:
             ncpus = os.sysconf("SC_NPROCESSORS_ONLN")
             if isinstance(ncpus, int) and ncpus > 0:
                 return ncpus
         else: # OSX:
             p = subprocess.Popen("sysctl -n hw.ncpu", shell=True, stdout=subprocess.PIPE)
-            return p.stdout.read()
+            return int(p.stdout.read())
             
     # Windows:
-    if os.environ.has_key("NUMBER_OF_PROCESSORS"):
+    if "NUMBER_OF_PROCESSORS" in os.environ:
             ncpus = int(os.environ["NUMBER_OF_PROCESSORS"]);
             if ncpus > 0:
                 return ncpus
@@ -376,7 +383,7 @@ def getSipCmd():
         msg('Not found.  Attempting to download...')
         url = '%s/sip-%s-%s%s.bz2' % (toolsURL, sipCurrentVersion, platform, ext)
         try:
-            connection = urllib2.urlopen(url)
+            connection = urlopen(url)
             msg('Connection successful...')
             data = connection.read()
             msg('Data downloaded...')
@@ -391,7 +398,7 @@ def getSipCmd():
         data = bz2.decompress(data)
         with open(cmd, 'wb') as f:
             f.write(data)
-        os.chmod(cmd, 0755)
+        os.chmod(cmd, 0o755)
         return getSipCmd()
             
 
@@ -434,7 +441,7 @@ def getWafCmd():
         msg('Not found.  Attempting to download...')
         url = '%s/waf-%s' % (toolsURL, wafCurrentVersion)
         try:
-            connection = urllib2.urlopen(url)
+            connection = urlopen(url)
             msg('Connection successful...')
             data = connection.read()
             msg('Data downloaded...')
@@ -561,7 +568,6 @@ def etg(options, args):
         # run the script only if any dependencies are newer
         if newer_group(deps, sipfile):
             runcmd('%s %s %s' % (PYTHON, script, flags))
-
 
     
 def sphinx(options, args):
@@ -714,7 +720,7 @@ def sip(options, args):
 
                 
         def processSrc(src, keepHashLines=False):
-            with file(src, 'rt') as f:
+            with textfile_open(src, 'rt') as f:
                 srcTxt = f.read()
                 if keepHashLines:
                     # Either just fix the pathnames in the #line lines...
@@ -733,20 +739,20 @@ def sip(options, args):
             if not os.path.exists(dest):
                 msg('%s is a new file, copying...' % os.path.basename(src))
                 srcTxt = processSrc(src, options.keep_hash_lines)
-                f = file(dest, 'wt')
+                f = textfile_open(dest, 'wt')
                 f.write(srcTxt)
                 f.close()
                 continue
 
             srcTxt = processSrc(src, options.keep_hash_lines)
-            with file(dest, 'rt') as f:
+            with textfile_open(dest, 'rt') as f:
                 destTxt = f.read()
                 
             if srcTxt == destTxt:
                 pass
             else:
                 msg('%s is changed, copying...' % os.path.basename(src))
-                f = file(dest, 'wt')
+                f = textfile_open(dest, 'wt')
                 f.write(srcTxt)
                 f.close()
                 
@@ -1008,7 +1014,7 @@ def setup_py(options, args):
             wxbuild.macFixupInstallNames(DESTDIR, PREFIX, BUILD_DIR)
 
             # and also adjust the dependency names in the wxPython extensions
-            for line in file("installed_files.txt"):
+            for line in open("installed_files.txt"):
                 line = line.strip()
                 if line.endswith('.so'):
                     macFixDependencyInstallName(DESTDIR, PREFIX, line, BUILD_DIR)
@@ -1043,6 +1049,8 @@ def waf_py(options, args):
         build_options.append('--verbose')
     if options.jobs:
         build_options.append('--jobs=%s' % options.jobs)
+
+    build_options.append('--python=%s' % PYTHON)
         
     pwd = pushDir(phoenixDir())
     cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)

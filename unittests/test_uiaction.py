@@ -179,11 +179,11 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
     def test_uiactionKeyboardKeyDownUp(self):
         uia = wx.UIActionSimulator()
         for c in "This is a test":
-            if c in string.uppercase:
+            if c.isupper():
                 uia.KeyDown(wx.WXK_SHIFT);  self.myYield()
             uia.KeyDown(ord(c));            self.myYield()
             uia.KeyUp(ord(c));              self.myYield()
-            if c in string.uppercase:
+            if c.isupper():
                 uia.KeyUp(wx.WXK_SHIFT);    self.myYield()
         self.myYield()
                 
@@ -194,7 +194,7 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
         uia = wx.UIActionSimulator()
         for c in "This is a test":
             mod = wx.MOD_NONE
-            if c in string.uppercase:
+            if c.isupper():
                 mod = wx.MOD_SHIFT
             uia.Char(ord(c), mod);  self.myYield()
         self.myYield()

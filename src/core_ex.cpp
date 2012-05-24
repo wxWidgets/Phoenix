@@ -130,15 +130,15 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 
     // TODO: Find some blackmagic way to deprecate wx.Platform such that it raises 
     // a wraning when used...  Maybe a class that returns wx.Port for any __getattr__?
-    PyDict_SetItemString(moduleDict, "Port", PyString_FromString(wxPort));
-    PyDict_SetItemString(moduleDict, "Platform", PyString_FromString(wxPort));    
+    PyDict_SetItemString(moduleDict, "Port", PyUnicode_FromString(wxPort));
+    PyDict_SetItemString(moduleDict, "Platform", PyUnicode_FromString(wxPort));    
 
     // Make a tuple of strings that gives more info about the platform and build.
     PyObject* PlatformInfo = PyList_New(0);
     PyObject* obj;
 
 #define _AddInfoString(st) \
-    obj = PyString_FromString(st); \
+    obj = PyUnicode_FromString(st); \
     PyList_Append(PlatformInfo, obj); \
     Py_DECREF(obj)
 

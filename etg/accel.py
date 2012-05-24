@@ -79,7 +79,7 @@ def run():
             PyObject* o1 = PySequence_ITEM(obj, 0);
             PyObject* o2 = PySequence_ITEM(obj, 1);
             PyObject* o3 = PySequence_ITEM(obj, 2);
-            tmpEntries[idx].Set(PyInt_AsLong(o1), PyInt_AsLong(o2), PyInt_AsLong(o3));
+            tmpEntries[idx].Set(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3));
             Py_DECREF(o1);
             Py_DECREF(o2);
             Py_DECREF(o3);            

@@ -11,20 +11,24 @@
 #---------------------------------------------------------------------------
 
 # Standard library imports
+import sys
 import os
 import codecs
 import shutil
-import cPickle
-
-from UserDict import UserDict
+if sys.version_info < (3,):
+    import cPickle as pickle
+    from UserDict import UserDict
+else:
+    import pickle
+    from collections import UserDict
 
 # Phoenix-specific imports
-from templates import TEMPLATE_CONTRIB
+from .templates import TEMPLATE_CONTRIB
 
-from constants import IGNORE, PUNCTUATION
-from constants import CPP_ITEMS, VERSION, VALUE_MAP
-from constants import RE_KEEP_SPACES, EXTERN_INHERITANCE
-from constants import DOXYROOT, SPHINXROOT, WIDGETS_IMAGES_ROOT
+from .constants import IGNORE, PUNCTUATION
+from .constants import CPP_ITEMS, VERSION, VALUE_MAP
+from .constants import RE_KEEP_SPACES, EXTERN_INHERITANCE
+from .constants import DOXYROOT, SPHINXROOT, WIDGETS_IMAGES_ROOT
 
 
 # ----------------------------------------------------------------------- #
@@ -577,14 +581,14 @@ def PickleItem(description, current_module, name, kind):
         
     if os.path.isfile(pickle_file):
         fid = open(pickle_file, 'rb')
-        items = cPickle.load(fid)
+        items = pickle.load(fid)
         fid.close()
     else:
         items = {}
 
     items[name] = description
     fid = open(pickle_file, 'wb')
-    cPickle.dump(items, fid)
+    pickle.dump(items, fid)
     fid.close()
 
 
@@ -592,7 +596,7 @@ def PickleItem(description, current_module, name, kind):
 
 def PickleClassInfo(class_name, element, short_description):
     """
-    Saves some information about a class in a cPickle-compatible file., i.e. the
+    Saves some information about a class in a pickle-compatible file., i.e. the
     list of methods in that class and its super-classes.
 
     :param string `class_name`: the name of the class we want to pickle;
@@ -604,7 +608,7 @@ def PickleClassInfo(class_name, element, short_description):
         
     if os.path.isfile(pickle_file):
         fid = open(pickle_file, 'rb')
-        items = cPickle.load(fid)
+        items = pickle.load(fid)
         fid.close()
     else:
         items = {}
@@ -618,7 +622,7 @@ def PickleClassInfo(class_name, element, short_description):
 
     items[class_name] = (method_list, bases, short_description)
     fid = open(pickle_file, 'wb')
-    cPickle.dump(items, fid)
+    pickle.dump(items, fid)
     fid.close()
 
 

@@ -15,7 +15,11 @@ class WindowTests(wtc.WidgetTestCase):
     def test_windowHandle(self):
         w = wx.Window(self.frame, -1, (10,10), (50,50))
         hdl = w.GetHandle()
-        self.assertTrue(isinstance(hdl, (int, long)))
+        if wtc.isPython3():
+            base = int
+        else:
+            base = (int, long)
+        self.assertTrue(isinstance(hdl, base))
         
         
     def test_windowProperties(self):

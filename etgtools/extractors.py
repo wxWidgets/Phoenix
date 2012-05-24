@@ -17,8 +17,9 @@ import os
 import pprint
 import xml.etree.ElementTree as et
 
-from tweaker_tools import removeWxPrefix, magicMethods, \
-                          guessTypeInt, guessTypeFloat, guessTypeStr
+from .tweaker_tools import removeWxPrefix, magicMethods, \
+                           guessTypeInt, guessTypeFloat, guessTypeStr, \
+                           textfile_open
 from sphinxtools.utilities import FindDescendants
 
 #---------------------------------------------------------------------------
@@ -571,7 +572,7 @@ class ParamDef(BaseDef):
             if element.find('defval') is not None:
                 self.default = flattenNode(element.find('defval'))
         except:
-            print "error when parsing element:"
+            print("error when parsing element:")
             et.dump(element)
             raise
 #---------------------------------------------------------------------------
@@ -725,7 +726,7 @@ class ClassDef(BaseDef):
 
             
     def includeCppCode(self, filename):
-        self.addCppCode(file(filename).read())
+        self.addCppCode(textfile_open(filename).read())
         
         
     def addAutoProperties(self):
@@ -823,9 +824,9 @@ class ClassDef(BaseDef):
             
             # only create the prop if a method with that name does not exist, and it is a valid name
             if starts_with_number:
-                print 'WARNING: Invalid property name %s for class %s' % (name, self.name)
+                print('WARNING: Invalid property name %s for class %s' % (name, self.name))
             elif self.findItem(name):
-                print "WARNING: Method %s::%s already exists in C++ class API, can not create a property." % (self.name, name)
+                print("WARNING: Method %s::%s already exists in C++ class API, can not create a property." % (self.name, name))
             else:
                 self.items.append(prop)
 
@@ -1307,7 +1308,7 @@ class ModuleDef(BaseDef):
             self.cppCode.append(code)
 
     def includeCppCode(self, filename):
-        self.addCppCode(file(filename).read())
+        self.addCppCode(textfile_open(filename).read())
         
     def addInitializerCode(self, code):
         if isinstance(code, list):
@@ -1447,7 +1448,7 @@ class ModuleDef(BaseDef):
         """
         Add a snippet of Python code from a file to the wrapper module.
         """
-        text = file(filename).read()
+        text = textfile_open(filename).read()
         return self.addPyCode(
             "#" + '-=' * 38 + '\n' +
             ("# This code block was included from %s\n%s\n" % (filename, text)) + 
@@ -1487,7 +1488,11 @@ def flattenNode(node, rstrip=True):
     """
     if node is None:
         return ""
-    if isinstance(node, basestring):
+    if sys.version_info < (3,):
+        strclass = basestring
+    else:
+        strclass = str
+    if isinstance(node, strclass):
         return node
     text = node.text or ""
     for n in node:
@@ -1526,11 +1531,11 @@ def verbose():
 
 def extractingMsg(kind, element, nameTag='name'):
     if verbose():
-        print 'Extracting %s: %s' % (kind, element.find(nameTag).text)
+        print('Extracting %s: %s' % (kind, element.find(nameTag).text))
                                      
 def skippingMsg(kind, element):
     if verbose():
-        print 'Skipping %s: %s' % (kind, element.find('name').text)
+        print('Skipping %s: %s' % (kind, element.find('name').text))
         
     
 #---------------------------------------------------------------------------

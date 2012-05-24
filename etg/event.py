@@ -106,7 +106,7 @@ def run():
             PyFunctionDef('__init__', '(self, evtType, expectedIDs=0)',
                 body="""\
                     if expectedIDs not in [0, 1, 2]:
-                        raise ValueError, "Invalid number of expectedIDs"
+                        raise ValueError("Invalid number of expectedIDs")
                     self.expectedIDs = expectedIDs
             
                     if isinstance(evtType, (list, tuple)):
@@ -205,10 +205,11 @@ def run():
                         (entry->m_callbackUserData != NULL))
                     {
                         wxPyCallback *cb = (wxPyCallback*)entry->m_callbackUserData;
-                        wxPyBlock_t blocked = wxPyBeginBlockThreads();
-                        int result = PyObject_Compare(cb->m_func, func);
-                        wxPyEndBlockThreads(blocked); 
-                        if (result == 0) {
+                        //wxPyBlock_t blocked = wxPyBeginBlockThreads();
+                        //int result = PyObject_Compare(cb->m_func, func);
+                        //wxPyEndBlockThreads(blocked); 
+                        //if (result == 0) {
+                        if (cb->m_func == func) {
                             delete cb;
                             self->GetDynamicEventTable()->Erase(node);
                             delete entry;

@@ -404,7 +404,7 @@ def run():
             ])
 
 
-    module.addPreInitializerCode("""\
+    module.addInitializerCode("""\
         wxPyPreInit(sipModuleDict);
         """)
 

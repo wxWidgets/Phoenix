@@ -16,7 +16,6 @@ import os
 import glob
 import fnmatch
 import tempfile
-import commands
 import shutil
 import codecs
 import subprocess
@@ -26,8 +25,6 @@ from distutils.dir_util  import mkpath
 from distutils.dep_util  import newer
 from distutils.spawn     import spawn
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 runSilently = False
 
@@ -98,7 +95,8 @@ class Configuration(object):
         self.CLEANUP = list()
         
         # load the version numbers into this instance's namespace
-        execfile(opj(os.path.split(__file__)[0], 'version.py'), self.__dict__)
+        versionfile = opj(os.path.split(__file__)[0], 'version.py')
+        myExecfile(versionfile, self.__dict__)
         
         # If we're doing a dated build then alter the VERSION strings
         if os.path.exists('DAILY_BUILD'):
@@ -272,7 +270,7 @@ class Configuration(object):
                     self.WXPLAT = '__WXMSW__'
                     portcfg = ''
                 else:
-                    raise SystemExit, "Unknown WXPORT value: " + self.WXPORT
+                    raise SystemExit("Unknown WXPORT value: " + self.WXPORT)
         
                 self.cflags += portcfg.split()
         
@@ -382,14 +380,18 @@ class Configuration(object):
 
     def build_locale_list(self, srcdir):
         # get a list of all files under the srcdir, to be used for install_data
-        def walk_helper(lst, dirname, files):
-            for f in files:
-                filename = opj(dirname, f)
-                if not os.path.isdir(filename):
-                    lst.append( (dirname, [filename]) )
-        file_list = []
-        os.path.walk(srcdir, walk_helper, file_list)
-        return file_list
+        if sys.version_info[0] == 2:
+            def walk_helper(lst, dirname, files):
+                for f in files:
+                    filename = opj(dirname, f)
+                    if not os.path.isdir(filename):
+                        lst.append( (dirname, [filename]) )
+            file_list = []
+            os.path.walk(srcdir, walk_helper, file_list)
+            return file_list
+        else:
+            # TODO: Python3 version using os.walk generator
+            return []
     
     
     def find_data_files(self, srcdir, *wildcards, **kw):
@@ -558,7 +560,7 @@ def loadETG(name):
             return self.__dict__
             
     ns = _Namespace()
-    execfile(name, ns.nsdict())
+    myExecfile(name, ns.nsdict())
     return ns
 
 
@@ -574,7 +576,7 @@ def _getSbfValue(etg, keyName):
     cfg = Config()
     sbf = opj(cfg.SIPOUT, etg.NAME + '.sbf')
     out = list()
-    for line in file(sbf):
+    for line in open(sbf):
         key, value = line.split('=')
         if key.strip() == keyName:
             return sorted([opj(cfg.SIPOUT, v) for v in value.strip().split()])
@@ -750,6 +752,8 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
     output = None
     if getOutput:
         output = sp.stdout.read()
+        if sys.version_info > (3,):
+            output = output.decode('utf-8')  # TODO: is utf-8 okay here?
         output = output.rstrip()
         
     rval = sp.wait()
@@ -763,3 +767,22 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
     return output
         
     
+def myExecfile(filename, ns):
+    if sys.version_info < (3,):
+        execfile(filename, ns)
+    else:
+        source = open(filename, 'r').read()
+        exec(source, ns)
+    
+    
+def textfile_open(filename, mode='rt'):
+    """
+    Simple wrapper around open() that will open normally on Python 2.x and on
+    Python 2.3 will add the encoding parameter. The mode parameter must
+    include the 't' to put the stream into text mode.
+    """
+    assert 't' in mode
+    if sys.version_info < (3,):
+        return open(filename, mode)
+    else:
+        return open(filename, mode, encoding='utf-8')

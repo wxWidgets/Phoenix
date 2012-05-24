@@ -24,7 +24,8 @@ class sound_Tests(wtc.WidgetTestCase):
     def test_sound3(self):
         sound = wx.adv.Sound()
         self.assertTrue(not sound.IsOk())
-        data = open(wavFile, 'rb').read()
+        with open(wavFile, 'rb') as f:
+            data = f.read()
         sound.CreateFromData(data)
         self.assertTrue(sound.IsOk())
         rv = sound.Play(wx.adv.SOUND_SYNC)

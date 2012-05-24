@@ -68,21 +68,21 @@ def run():
     c.addCppMethod('PyObject*', 'GetPrivData', '()', """\
         PyObject* data;
         wxPyBlock_t blocked = wxPyBeginBlockThreads();
-        data = PyString_FromStringAndSize(self->GetPrivData(),
-                                          self->GetPrivDataLen());
+        data = PyBytes_FromStringAndSize(self->GetPrivData(),
+                                         self->GetPrivDataLen());
         wxPyEndBlockThreads(blocked);
         return data;    
         """)
     
     c.addCppMethod('void', 'SetPrivData', '(PyObject* data)', """\
-        if (! PyString_Check(data)) {
+        if (! PyBytes_Check(data)) {
             wxPyBLOCK_THREADS(PyErr_SetString(PyExc_TypeError,
                                               "Expected string object"));
             return /* NULL */ ;
         }
 
         wxPyBlock_t blocked = wxPyBeginBlockThreads();
-        self->SetPrivData(PyString_AS_STRING(data), PyString_GET_SIZE(data));
+        self->SetPrivData(PyBytes_AS_STRING(data), PyBytes_GET_SIZE(data));
         wxPyEndBlockThreads(blocked);
         """)
     

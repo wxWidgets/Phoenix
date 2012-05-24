@@ -8,15 +8,17 @@ class mimetype_Tests(wtc.WidgetTestCase):
 
     def test_mimetype1(self):
         ft = wx.TheMimeTypesManager.GetFileTypeFromExtension('*.pdf')
-        ft.GetExtensions()
-        ft.GetMimeType()
-        ft.GetIcon()
+        if ft:
+            ft.GetExtensions()
+            ft.GetMimeType()
+            ft.GetIcon()
 
     def test_mimetype2(self):        
         ft = wx.TheMimeTypesManager.GetFileTypeFromMimeType('image/png')
-        ft.GetExtensions()
-        ft.GetMimeType()
-        ft.GetIcon()
+        if ft:
+            ft.GetExtensions()
+            ft.GetMimeType()
+            ft.GetIcon()
 
     def test_mimetype3(self):        
         fti = wx.FileTypeInfo('mime', 'open', 'print', 'desc', 'ext1')

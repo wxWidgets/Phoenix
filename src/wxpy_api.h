@@ -102,6 +102,35 @@ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len) {
 }
 
 
+// Macros to work around differences in the Python 3 API
+#if PY_MAJOR_VERSION >= 3
+    #define wxPyInt_Check       PyLong_Check
+    #define wxPyInt_AsLong      PyLong_AsLong
+    #define wxPyInt_AS_LONG     PyLong_AS_LONG
+    #define wxPyInt_AsSsize_t   PyLong_AsSsize_t
+    #define wxPyInt_FromLong    PyLong_FromLong
+    #define wxPyNumber_Int      PyNumber_Long
+#else
+    #define wxPyInt_Check       PyInt_Check
+    #define wxPyInt_AsLong      PyInt_AsLong
+    #define wxPyInt_AS_LONG     PyInt_AS_LONG
+    #define wxPyInt_AsLong      PyInt_AsLong
+    #define wxPyInt_AsSsize_t   PyInt_AsSsize_t
+    #define wxPyInt_FromLong    PyInt_FromLong
+    #define wxPyNumber_Int      PyNumber_Int
+#endif
+
+inline 
+Py_ssize_t wxPyUnicode_AsWideChar(PyObject* unicode, wchar_t* w, Py_ssize_t size)
+{
+#if PY_MAJOR_VERSION >= 3
+    return PyUnicode_AsWideChar(unicode, w, size);
+#else
+    return PyUnicode_AsWideChar((PyUnicodeObject*)unicode, w, size);
+#endif
+}
+
+
 //--------------------------------------------------------------------------
 // These are the API items whose implementation can not or should not be
 // inline functions or macros. The implementations will instead be accessed
@@ -117,14 +146,18 @@ struct wxPyAPI {
     // Always add new items here at the end.
 };
 
+
 inline wxPyAPI* wxPyGetAPIPtr()
 {
     static wxPyAPI* wxPyAPIPtr = NULL;
     
     if (wxPyAPIPtr == NULL) {
-        wxPyAPIPtr = (wxPyAPI*)PyCObject_Import("wx._core", "_wxPyAPI");
+        wxPyAPIPtr = (wxPyAPI*)PyCapsule_Import("wx._wxPyAPI", 0);
+        // uncomment if needed for debugging
+        //if (PyErr_Occurred()) { PyErr_Print(); }
+        //wxASSERT_MSG(wxPyAPIPtr != NULL, wxT("wxPyAPIPtr is NULL!!!"));  
     }
-    // wxASSERT_MSG(wxPyAPIPtr != NULL, wxT("wxPyAPIPtr is NULL!!!"));  // uncomment when needed for debugging
+
     return wxPyAPIPtr;
 }
 
@@ -147,6 +180,7 @@ inline PyObject* wxPyConstructObject(void* ptr, const wxString& className, bool 
 // manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
 inline wxPyBlock_t wxPyBeginBlockThreads() 
     { return wxPyGetAPIPtr()->p_wxPyBeginBlockThreads(); }
+    
 inline void wxPyEndBlockThreads(wxPyBlock_t blocked) 
     { wxPyGetAPIPtr()->p_wxPyEndBlockThreads(blocked); }
     

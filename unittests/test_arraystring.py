@@ -1,25 +1,32 @@
 import imp_unittest, unittest
 import wx
-
+import wtc
+import sys
 
 #---------------------------------------------------------------------------
+
+if not wtc.isPython3():
+    alt = unicode
+else:
+    def alt(s):
+        return bytes(s, 'utf-8')
 
 class ArrayString(unittest.TestCase):
         
     if hasattr(wx, 'testArrayStringTypemap'):
         def test_ArrayStringTypemaps(self):
             # basic conversion of list or tuples of strings
-            seqList = ['a', u'b', 'hello world']
-            self.assertEqual(wx.testArrayStringTypemap(seqList), seqList)
-            seqTuple = ('a', u'b', 'hello world')
-            self.assertEqual(wx.testArrayStringTypemap(seqTuple), list(seqTuple))
+            seqList = ['a', alt('b'), 'hello world']
+            self.assertEqual(wx.testArrayStringTypemap(seqList), ['a', 'b', 'hello world'])
+            seqTuple = ('a', alt('b'), 'hello world')
+            self.assertEqual(wx.testArrayStringTypemap(seqTuple), ['a', 'b', 'hello world'])
             
         def test_ArrayStringTypemapErrors(self):
             # test error conditions
             with self.assertRaises(TypeError):
                 wx.testArrayStringTypemap("STRING sequence")
             with self.assertRaises(TypeError):
-                wx.testArrayStringTypemap(u"UNICODE sequence")
+                wx.testArrayStringTypemap(alt("ALT sequence"))
             with self.assertRaises(TypeError):
                 wx.testArrayStringTypemap(["list", "with", "non-string", "items", 123])
             

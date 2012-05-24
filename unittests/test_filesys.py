@@ -2,7 +2,6 @@ import imp_unittest, unittest
 import wtc
 import wx
 import os
-from cStringIO import StringIO
 
 
 #---------------------------------------------------------------------------

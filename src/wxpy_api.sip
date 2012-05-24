@@ -28,7 +28,7 @@
 static wxString i_Py2wxString(PyObject* source)
 {
     PyObject* uni = source;
-    if (PyString_Check(source)) {
+    if (PyBytes_Check(source)) {
         // if it's a string object convert it to unicode first, assumes utf-8
         uni = PyUnicode_FromEncodedObject(source, "utf-8", "strict");
         if (PyErr_Occurred()) {
@@ -37,7 +37,11 @@ static wxString i_Py2wxString(PyObject* source)
         }
     }            
     else if (!PyUnicode_Check(source)) {
+#if PY_MAJOR_VERSION >= 3
+        uni = PyObject_Str(source);
+#else
         uni = PyObject_Unicode(source); 
+#endif
         if (PyErr_Occurred()) {
             PyErr_Clear();
             return wxEmptyString;
@@ -46,8 +50,7 @@ static wxString i_Py2wxString(PyObject* source)
     wxString target;
     size_t len = PyUnicode_GET_SIZE(uni);
     if (len) {
-        PyUnicode_AsWideChar((PyUnicodeObject*)uni,
-                             wxStringBuffer(target, len), len);
+        wxPyUnicode_AsWideChar(uni, wxStringBuffer(target, len), len);
     }
     if (!PyUnicode_Check(source))
         Py_DECREF(uni);  // release the temporary Unicode object we created
@@ -61,7 +64,7 @@ static wxString i_Py2wxString(PyObject* source)
 //inline wxString Py2wxString(PyObject* obj, bool setException=false, int& isErr=0) {
 //    wxString str;
 //    PyObject* uni = obj;
-//    if (PyString_Check(obj)) {
+//    if (PyBytes_Check(obj)) {
 //        // if it's a string object convert it to unicode first, assuming utf-8
 //        uni = PyUnicode_FromEncodedObject(sipPy, "utf-8", "strict");
 //        if (PyErr_Occurred()) {
@@ -77,7 +80,7 @@ static wxString i_Py2wxString(PyObject* source)
 //    // TODO: Coerce non-unicode types to unicode here?  (Classic does)
 //    size_t len = PyUnicode_GET_SIZE(uni);
 //    if (len) {
-//        PyUnicode_AsWideChar((PyUnicodeObject*)uni, wxStringBuffer(str, len), len);
+//        wxPyUnicode_AsWideChar(uni, wxStringBuffer(str, len), len);
 //    }
 //    if (obj != uni)
 //        Py_DECREF(uni) // release the temporary Unicode object we may have created
@@ -130,12 +133,15 @@ static wxPyAPI  API = {
 %End
 
 
-// Code that will run when _core is imported that will stash away a pointer 
-// to the structure.
-%InitialisationCode
-    PyObject* cobj = PyCObject_FromVoidPtr(&API, NULL);
-    PyDict_SetItemString(sipModuleDict, "_wxPyAPI", cobj);
-    Py_XDECREF(cobj);
+%PostInitialisationCode
+    // Code that will run when _core is imported that will stash away a
+    // pointer to the API structure.
+    PyObject* wxmod = PyImport_ImportModule("wx");
+    PyObject* wxmodDict = PyModule_GetDict(wxmod);
+    PyObject* apiObj = PyCapsule_New(&API, "wx._wxPyAPI", NULL);
+    PyDict_SetItemString(wxmodDict, "_wxPyAPI", apiObj);
+    Py_XDECREF(apiObj);
+    Py_DECREF(wxmod);
     wxPyGetAPIPtr();
 %End
 

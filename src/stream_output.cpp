@@ -96,7 +96,7 @@ protected:
         
         wxPyBlock_t blocked = wxPyBeginBlockThreads();
         PyObject* arglist = PyTuple_New(1);
-        PyTuple_SET_ITEM(arglist, 0, PyString_FromStringAndSize((char*)buffer, bufsize));
+        PyTuple_SET_ITEM(arglist, 0, PyBytes_FromStringAndSize((char*)buffer, bufsize));
         
         PyObject* result = PyEval_CallObject(m_write, arglist);
         Py_DECREF(arglist);
@@ -118,9 +118,9 @@ protected:
             // wxFileOffset is a 64-bit value...
             PyTuple_SET_ITEM(arglist, 0, PyLong_FromLongLong(off));
         else
-            PyTuple_SET_ITEM(arglist, 0, PyInt_FromLong(off));
+            PyTuple_SET_ITEM(arglist, 0, wxPyInt_FromLong(off));
     
-        PyTuple_SET_ITEM(arglist, 1, PyInt_FromLong(mode));
+        PyTuple_SET_ITEM(arglist, 1, wxPyInt_FromLong(mode));
     
     
         PyObject* result = PyEval_CallObject(m_seek, arglist);
@@ -141,7 +141,7 @@ protected:
             if (PyLong_Check(result))
                 o = PyLong_AsLongLong(result);
             else
-                o = PyInt_AsLong(result);
+                o = wxPyInt_AsLong(result);
             Py_DECREF(result);
         };
         wxPyEndBlockThreads(blocked);

@@ -122,9 +122,9 @@ public:
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
-            return PyLong_Check(sipPy) || PyInt_Check(sipPy); 
+            return PyLong_Check(sipPy) || wxPyInt_Check(sipPy); 
         }
-        if (PyLong_Check(sipPy) || PyInt_Check(sipPy))
+        if (PyLong_Check(sipPy) || wxPyInt_Check(sipPy))
             *sipCppPtrV = (wxPyLongPtr)PyLong_AsVoidPtr(sipPy);
         
         return sipGetState(sipTransferObj);

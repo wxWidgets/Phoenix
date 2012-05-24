@@ -39,7 +39,7 @@ class dnd_Tests(wtc.WidgetTestCase):
         if 'wxGTK' in wx.PlatformInfo:
             ds.SetIcon(wx.DragCopy, wx.Icon(icoFile))
         else:
-            ds.SetCursor(wx.DragCopy, wx.Cursor(curFile))
+            ds.SetCursor(wx.DragCopy, wx.Cursor(curFile, wx.BITMAP_TYPE_CUR))
         
         
 #---------------------------------------------------------------------------

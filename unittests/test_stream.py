@@ -2,7 +2,10 @@ import imp_unittest, unittest
 import wtc
 import wx
 import os
-from cStringIO import StringIO
+if wtc.isPython3():
+    from io import BytesIO as FileLikeObject
+else:
+    from cStringIO import StringIO as FileLikeObject
 
 
 pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
@@ -16,7 +19,9 @@ class stream_Tests(wtc.WidgetTestCase):
         # wrapped function expecting a wxInputStream.
         
         # First, load the image data into a StringIO object
-        stream = StringIO(open(pngFile, 'rb').read())
+        f = open(pngFile, 'rb')
+        stream = FileLikeObject(f.read())
+        f.close()
         
         # Then use it to create a wx.Image
         img = wx.Image(stream)
@@ -27,11 +32,11 @@ class stream_Tests(wtc.WidgetTestCase):
         # wrapped function expecting a wxOutputStream.
 
         image = wx.Image(pngFile)
-        stream = StringIO()
+        stream = FileLikeObject()
         image.SaveFile(stream, wx.BITMAP_TYPE_PNG)
         del image
         
-        stream = StringIO(stream.getvalue())        
+        stream = FileLikeObject(stream.getvalue())        
         image = wx.Image(stream)
         self.assertTrue(image.IsOk())
         

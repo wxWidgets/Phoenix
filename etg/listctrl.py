@@ -73,7 +73,7 @@ def run():
             PyObject* result = PyEval_CallObject(func, args);
             Py_DECREF(args);
             if (result) {
-                retval = PyInt_AsLong(result);
+                retval = wxPyInt_AsLong(result);
                 Py_DECREF(result);
             }
   

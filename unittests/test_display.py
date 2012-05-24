@@ -1,7 +1,7 @@
 import imp_unittest, unittest
 import wtc
 import wx
-import os; print os.getpid()
+#import os; print(os.getpid())
 
 #---------------------------------------------------------------------------
 

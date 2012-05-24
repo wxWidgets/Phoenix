@@ -25,14 +25,14 @@
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility with wxString
         if (!sipIsErr) {
-            if (PyString_Check(sipPy) || PyUnicode_Check(sipPy))
+            if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
                 return TRUE;
             return FALSE;
         }
 
         // Code to convert a compatible PyObject to a wxString
         PyObject* uni = sipPy;
-        if (PyString_Check(sipPy)) {
+        if (PyBytes_Check(sipPy)) {
             // if it's a string object convert it to unicode first, assuming utf-8
             uni = PyUnicode_FromEncodedObject(sipPy, "utf-8", "strict");
             if (PyErr_Occurred()) {
@@ -43,10 +43,9 @@
         *sipCppPtr = new wxString();
         size_t len = PyUnicode_GET_SIZE(uni);
         if (len) {
-            PyUnicode_AsWideChar((PyUnicodeObject*)uni,
-                                 wxStringBuffer(**sipCppPtr, len), len);
+            wxPyUnicode_AsWideChar(uni, wxStringBuffer(**sipCppPtr, len), len);
         }
-        if (PyString_Check(sipPy))
+        if (PyBytes_Check(sipPy))
             Py_DECREF(uni);  // release the temporary Unicode object we created
         return sipGetState(sipTransferObj);
     %End
@@ -62,10 +61,10 @@
 
 // Used just for testing the MappedType code, it can be removed later
 %ModuleCode
-wxString _testStringTypemap(const wxString& str)
+wxString testStringTypemap(const wxString& str)
 {
     wxString local = str;
     return local;
 }
 %End
-wxString _testStringTypemap(const wxString& str);
+wxString testStringTypemap(const wxString& str);

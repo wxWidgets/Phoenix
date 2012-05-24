@@ -11,6 +11,7 @@
 Just some base classes and stubs for the various generators
 """
 
+import sys
 
 class WrapperGeneratorBase(object):
     def __init__(self):
@@ -79,12 +80,37 @@ def nci(text, numSpaces=0, stripLeading=True):
 
 #---------------------------------------------------------------------------
 
-from StringIO import StringIO
+if sys.version_info < (3,):
+    # For Python 2.x we'll convert any unicode text values to strings before
+    # adding them to the buffer
+    from StringIO import StringIO
+    class Utf8EncodingStream(StringIO):
+        def write(self, text):
+            if isinstance(text, unicode):
+                text = text.encode('utf-8')
+            return StringIO.write(self, text)
 
-class Utf8EncodingStream(StringIO):
-    def write(self, text):
-        if isinstance(text, unicode):
-            text = text.encode('utf-8')
-        return StringIO.write(self, text) #super(EncodingStream, self).write(text)
+else:
+    # For Python 3.x we'll keep it all as str (unicode) objects and let the
+    # conversion to bytes happen when the text is written to the actual
+    # file.
+    from io import StringIO
+    class Utf8EncodingStream(StringIO):
+        pass
 
+
+
+def textfile_open(filename, mode='rt'):
+    """
+    Simple wrapper around open() that will open normally on Python 2.x and on
+    Python 2.3 will add the encoding parameter. The mode parameter must
+    include the 't' to put the stream into text mode.
+    """
+    assert 't' in mode
+    if sys.version_info < (3,):
+        return open(filename, mode)
+    else:
+        return open(filename, mode, encoding='utf-8')
+    
+    
 #---------------------------------------------------------------------------

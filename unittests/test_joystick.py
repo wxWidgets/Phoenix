@@ -27,9 +27,11 @@ class joystick_Tests(wtc.WidgetTestCase):
         wx.EVT_JOY_ZMOVE
         wx.EVT_JOYSTICK_EVENTS
 
-
+    
+    @unittest.expectedFailure
     def test_joystick2(self):
         # Creating a Joystick object should fail on Mac.  Currently it isn't...
+        # We'll need a new feature added to sip to get it.
         if 'wxMac' in wx.PlatformInfo:
             with self.assertRaises(NotImplementedError):
                 j = wx.adv.Joystick()

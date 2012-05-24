@@ -2,6 +2,10 @@ import imp_unittest, unittest
 import wtc
 import wx
 import os
+if wtc.isPython3():
+    from io import BytesIO as FileLikeObject
+else:
+    from cStringIO import StringIO as FileLikeObject
 
 pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 
@@ -75,16 +79,16 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
 
     def test_imageCtor8(self):
-        data = open(pngFile, 'rb').read()
-        import StringIO
-        stream = StringIO.StringIO(data)
+        with open(pngFile, 'rb') as f:
+            data = f.read()
+        stream = FileLikeObject(data)
         img = wx.Image(stream, wx.BITMAP_TYPE_PNG)
         self.assertTrue(img.IsOk())
 
     def test_imageCtor9(self):
-        data = open(pngFile, 'rb').read()
-        import StringIO
-        stream = StringIO.StringIO(data)
+        with open(pngFile, 'rb') as f:
+            data = f.read()
+        stream = FileLikeObject(data)
         img = wx.Image(stream, 'image/png')
         self.assertTrue(img.IsOk())
 
@@ -133,9 +137,9 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
         data = img.GetDataBuffer()
         self.assertTrue(isinstance(data, memoryview))
-        data[0] = '\1'
-        data[1] = '\2'
-        data[2] = '\3'
+        data[0] = b'\1'
+        data[1] = b'\2'
+        data[2] = b'\3'
         self.assertEqual(1, img.GetRed(0,0))
         self.assertEqual(2, img.GetGreen(0,0))
         self.assertEqual(3, img.GetBlue(0,0))
@@ -147,9 +151,9 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
         data = img.GetAlphaBuffer()
         self.assertTrue(isinstance(data, memoryview))
-        data[0] = '\1'
-        data[1] = '\2'
-        data[2] = '\3'
+        data[0] = b'\1'
+        data[1] = b'\2'
+        data[2] = b'\3'
         self.assertEqual(1, img.GetAlpha(0,0))
         self.assertEqual(2, img.GetAlpha(1,0))
         self.assertEqual(3, img.GetAlpha(2,0))

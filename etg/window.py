@@ -169,6 +169,8 @@ def run():
         import wx.siplib
         return not wx.siplib.isdeleted(self)
         """)
+    c.addPyCode('Window.__bool__ = Window.__nonzero__') # For Python 3
+    
     
     # MSW only.  Do we want them wrapped?
     c.find('GetAccessible').ignore()

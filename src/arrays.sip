@@ -25,14 +25,14 @@
             if (! PySequence_Check(sipPy)) 
                 success = FALSE;
             // Ensure it is not a string or unicode object (they are sequences)
-            else if (PyString_Check(sipPy) || PyUnicode_Check(sipPy))
+            else if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
                 success = FALSE;
             // ensure each item is a string/unicode object
             else {
                 Py_ssize_t i, len = PySequence_Length(sipPy);
                 for (i=0; i<len; i++) {
                     PyObject* item = PySequence_GetItem(sipPy, i);
-                    if (!PyString_Check(item) && !PyUnicode_Check(item)) {
+                    if (!PyBytes_Check(item) && !PyUnicode_Check(item)) {
                         Py_DECREF(item);
                         success = FALSE;
                         break;
@@ -52,7 +52,7 @@
             PyObject* item = PySequence_GetItem(sipPy, i);
 
             // if it's a string object convert it to unicode first, assuming utf-8
-            if (PyString_Check(item)) {
+            if (PyBytes_Check(item)) {
                 Py_DECREF(item);
                 item = PyUnicode_FromEncodedObject(item, "utf-8", "strict");
                 if (PyErr_Occurred()) {
@@ -65,8 +65,7 @@
             wxString string;
             size_t len = PyUnicode_GET_SIZE(item);
             if (len) {
-                PyUnicode_AsWideChar((PyUnicodeObject*)item,
-                                     wxStringBuffer(string, len), len);
+                wxPyUnicode_AsWideChar(item, wxStringBuffer(string, len), len);
             }
             if (PyErr_Occurred()) {
                 *sipIsErr = 1;
@@ -141,14 +140,14 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
         Py_ssize_t i, len = PySequence_Length(sipPy);
         for (i=0; i<len; i++) {
             PyObject* item = PySequence_GetItem(sipPy, i);
-            PyObject* number = PyNumber_Int(item);
+            PyObject* number = wxPyNumber_Int(item);
             if (PyErr_Occurred()) {
                 *sipIsErr = 1;
                 delete array;
                 Py_DECREF(item);
                 return 0;
             }
-            array->Add(PyInt_AS_LONG(number));
+            array->Add(wxPyInt_AS_LONG(number));
             Py_DECREF(item);
             Py_DECREF(number);
         }
@@ -161,7 +160,7 @@ wxArrayString testArrayStringTypemap(const wxArrayString& arr);
         // Code to convert a wxArrayInt to a Python list of integers.
         PyObject* list = PyList_New(0);
         for (size_t i=0; i < sipCpp->GetCount(); i++) {
-            PyObject* number = PyInt_FromLong(sipCpp->Item(i));
+            PyObject* number = wxPyInt_FromLong(sipCpp->Item(i));
             PyList_Append(list, number);
             Py_DECREF(number);
         }

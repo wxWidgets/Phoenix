@@ -1,5 +1,6 @@
 import imp_unittest, unittest
 import wx
+import sys
 
 #---------------------------------------------------------------------------
 
@@ -66,6 +67,20 @@ class WidgetTestCase(unittest.TestCase):
                 break
             intervals -= 1
     
+    
+        
+#---------------------------------------------------------------------------
+
+def isPython3():
+    return sys.version_info[0] >= 3
+
+
+def mybytes(text):
+    if isPython3():
+        return bytes(text, 'utf-8')
+    else:
+        return str(text)
+
 #---------------------------------------------------------------------------
 
 

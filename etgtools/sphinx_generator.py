@@ -28,8 +28,8 @@ from StringIO import StringIO
 import xml.etree.ElementTree as et
 
 # Phoenix-specific stuff
-import extractors
-import generators
+import etgtools.extractors as extractors
+import etgtools.generators as generators
 
 # Sphinx-Phoenix specific stuff
 from sphinxtools.inheritance import InheritanceDiagram

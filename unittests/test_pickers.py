@@ -7,7 +7,7 @@ import wx
 class pickers_Tests(wtc.WidgetTestCase):
 
     def test_pickersColour(self):
-        p = wx.ColourPickerCtrl(self.frame, col='blue')
+        p = wx.ColourPickerCtrl(self.frame, colour='blue')
         self.assertTrue(p.GetColour() == wx.Colour(0, 0, 0xff))
 
     def test_pickersColourConstants(self):

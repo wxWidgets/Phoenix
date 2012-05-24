@@ -1,26 +1,26 @@
 
+# Load version numbers from __version__...  Ensure that major and minor
+# versions are the same for both wxPython and wxWidgets.
+if 'wxEVT_NULL' in dir():
+    from wx.__version__ import *
+    import wx._core
+    __version__ = VERSION_STRING
+    assert MAJOR_VERSION == wx._core.MAJOR_VERSION, "wxPython/wxWidgets version mismatch"
+    assert MINOR_VERSION == wx._core.MINOR_VERSION, "wxPython/wxWidgets version mismatch"
+    if RELEASE_NUMBER != wx._core.RELEASE_NUMBER:
+        import warnings
+        warnings.warn("wxPython/wxWidgets release number mismatch")
+    del wx._core
+else:
+    Port = ''
+    Platform = ''
+    PlatformInfo = []
+
 # A little trick to make 'wx' be a reference to this module so wx.Names can
 # be used in the python code here.
 import sys as _sys
 wx = _sys.modules[__name__]
  
-
-# Load version numbers from __version__...  Ensure that major and minor
-# versions are the same for both wxPython and wxWidgets.
-if 'wxEVT_NULL' in dir():
-    from __version__ import *
-    import _core
-    __version__ = VERSION_STRING
-    assert MAJOR_VERSION == _core.MAJOR_VERSION, "wxPython/wxWidgets version mismatch"
-    assert MINOR_VERSION == _core.MINOR_VERSION, "wxPython/wxWidgets version mismatch"
-    if RELEASE_NUMBER != _core.RELEASE_NUMBER:
-        import warnings
-        warnings.warn("wxPython/wxWidgets release number mismatch")
-    del _core
-else:
-    Port = ''
-    Platform = ''
-    PlatformInfo = []
                        
 import warnings
 class wxPyDeprecationWarning(DeprecationWarning):
@@ -28,6 +28,7 @@ class wxPyDeprecationWarning(DeprecationWarning):
 
 warnings.simplefilter('default', wxPyDeprecationWarning)
 del warnings
+
 
 def deprecated(item, msg=''):
     """
@@ -86,7 +87,7 @@ def deprecated(item, msg=''):
         else:
             return DepGetProp(item, msg)
     else:
-        raise TypeError, "unsupported type %s" % type(item)
+        raise TypeError("unsupported type %s" % type(item))
                    
 
 #----------------------------------------------------------------------------

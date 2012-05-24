@@ -8,11 +8,11 @@
 #---------------------------------------------------------------------------
 
 # Load the main version string into the package namespace
-import __version__
-__version__ = __version__.VERSION_STRING
+import wx.__version__
+__version__ = wx.__version__.VERSION_STRING
 
 
 # Import all items from the core wxPython modules so they appear in the wx
 # package namespace.
-from core import *
+from wx.core import *
 

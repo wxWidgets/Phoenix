@@ -4,6 +4,7 @@
 *.pdb
 *.dll
 .waf-*
+.waf3-*
 .lock-waf*
 
 

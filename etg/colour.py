@@ -185,7 +185,7 @@ def run():
                 return 1;
             if (sipCanConvertToType(sipPy, sipType_wxColour, SIP_NO_CONVERTORS))
                 return 1;
-            if (PyString_Check(sipPy) || PyUnicode_Check(sipPy))
+            if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
                 return 1;           
             if (PySequence_Check(sipPy)) {
                 size_t len = PySequence_Size(sipPy);
@@ -210,7 +210,7 @@ def run():
             return sipGetState(sipTransferObj);
         }
         // Is it a string?
-        else if (PyString_Check(sipPy) || PyUnicode_Check(sipPy)) {
+        else if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)) {
             wxString spec = Py2wxString(sipPy);
             if (spec.GetChar(0) == '#' 
                 && (spec.length() == 7 || spec.length() == 9)) {  // It's  #RRGGBB[AA]
@@ -251,11 +251,11 @@ def run():
             PyObject* o2 = PySequence_GetItem(sipPy, 1);
             PyObject* o3 = PySequence_GetItem(sipPy, 2);
             if (len == 3) 
-                *sipCppPtr = new wxColour(PyInt_AsLong(o1), PyInt_AsLong(o2), PyInt_AsLong(o3));
+                *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3));
             else {
                 PyObject* o4 = PySequence_GetItem(sipPy, 3);
-                *sipCppPtr = new wxColour(PyInt_AsLong(o1), PyInt_AsLong(o2), PyInt_AsLong(o3),
-                                          PyInt_AsLong(o4));
+                *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3),
+                                          wxPyInt_AsLong(o4));
                 Py_DECREF(o4);
             }
             Py_DECREF(o1);

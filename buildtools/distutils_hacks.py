@@ -17,9 +17,9 @@ import distutils.command.install
 import distutils.command.install_data
 import distutils.command.install_headers
 import distutils.command.clean
-from distutils.dep_util import newer, newer_group
+from   distutils.dep_util import newer, newer_group
 
-from config import Config, posixjoin, loadETG, etg2sip
+from .config import Config, posixjoin, loadETG, etg2sip
 
 
 
@@ -231,8 +231,8 @@ class MyUnixCCompiler(distutils.unixccompiler.UnixCCompiler):
         try:
             self.spawn(compiler_so + cc_args + [src, '-o', obj] +
                        extra_postargs)
-        except DistutilsExecError, msg:
-            raise CompileError, msg        
+        except DistutilsExecError as msg:
+            raise CompileError(msg)
         
 _orig_parse_makefile = distutils.sysconfig.parse_makefile
 def _parse_makefile(filename, g=None):
@@ -289,14 +289,14 @@ def _compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts):
             #self.spawn(["windres", "-i", src, "-o", obj])
             self.spawn(["windres", "-i", src, "-o", obj] +
                        [arg for arg in cc_args if arg.startswith("-I")] )
-        except DistutilsExecError, msg:
-            raise CompileError, msg
+        except DistutilsExecError as msg:
+            raise CompileError(msg)
     else: # for other files use the C-compiler
         try:
             self.spawn(self.compiler_so + cc_args + [src, '-o', obj] +
                        extra_postargs)
-        except DistutilsExecError, msg:
-            raise CompileError, msg
+        except DistutilsExecError as msg:
+            raise CompileError(msg)
 
 distutils.cygwinccompiler.CygwinCCompiler._compile = _compile
 
@@ -327,7 +327,7 @@ if os.name == 'nt' and  sys.version_info >= (2,6):
 #----------------------------------------------------------------------
             
 
-from sipdistutils import build_ext
+from .sipdistutils import build_ext
 
 class etgsip_build_ext(build_ext):
     """

@@ -17,11 +17,11 @@ completion, displaying docstrings in the source assistant panel, etc.
 """
 
 import sys, os, re
-import extractors
-import generators
-from generators import nci, Utf8EncodingStream
-from tweaker_tools import removeWxPrefix, magicMethods, \
-                          guessTypeInt, guessTypeFloat, guessTypeStr
+import etgtools.extractors as extractors
+import etgtools.generators as generators
+from etgtools.generators import nci, Utf8EncodingStream, textfile_open
+from etgtools.tweaker_tools import removeWxPrefix, magicMethods, \
+                                   guessTypeInt, guessTypeFloat, guessTypeStr
 
 
 phoenixRoot = os.path.abspath(os.path.split(__file__)[0]+'/..')
@@ -57,7 +57,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
             
         if not os.path.exists(destFile):
             # create the file and write the header
-            f = file(destFile, 'wt')
+            f = textfile_open(destFile, 'wt')
             f.write(header)
             f.close()
             
@@ -75,7 +75,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         sectionBeginMarker = '#-- begin-%s --#' % sectionName
         sectionEndMarker = '#-- end-%s --#' % sectionName
         
-        lines = file(destFile, 'rt').readlines()
+        lines = textfile_open(destFile, 'rt').readlines()
         for idx, line in enumerate(lines):
             if line.startswith(sectionBeginMarker):
                 sectionBeginLine = idx
@@ -91,9 +91,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
             # replace the existing lines
             lines[sectionBeginLine+1:sectionEndLine] = [sectionText]
             
-        f = file(destFile, 'wt')
+        f = textfile_open(destFile, 'wt')
         f.writelines(lines)
-        #f.write('\n')
         f.close()
         
         

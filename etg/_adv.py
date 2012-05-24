@@ -84,7 +84,7 @@ def run():
     
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
-    module.addPyCode("import core as wx", order=10)
+    module.addPyCode("import wx", order=10)
     module.addInclude(INCLUDES)
        
     

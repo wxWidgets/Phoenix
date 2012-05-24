@@ -194,20 +194,31 @@ void wxPyApp::_BootstrapApp()
         
         // Copy the values in Python's sys.argv list to a C array of char* to
         // be passed to the wxEntryStart function below.
-        int    argc = 0;
-        char** argv = NULL;
+        #if PY_MAJOR_VERSION >= 3
+            #define argType   wchar_t
+        #else
+            #define argType   char
+        #endif
+        int       argc = 0;
+        argType** argv = NULL;
         blocked = wxPyBeginBlockThreads();
         PyObject* sysargv = PySys_GetObject("argv");
         if (sysargv != NULL) {            
             argc = PyList_Size(sysargv);
-            argv = new char*[argc+1];
+            argv = new argType*[argc+1];
             int x;
             for(x=0; x<argc; x++) {
                 PyObject *pyArg = PyList_GetItem(sysargv, x); // borrowed reference
                 // if there isn't anything in sys.argv[0] then set it to the python executable
                 if (x == 0 && PyObject_Length(pyArg) < 1) 
                     pyArg = PySys_GetObject("executable");
-                argv[x] = strdup(PyString_AsString(pyArg));
+                #if PY_MAJOR_VERSION >= 3
+                    int len = PyObject_Length(pyArg);
+                    argv[x] = new argType[len+1];
+                    wxPyUnicode_AsWideChar(pyArg, argv[x], len+1);
+                #else
+                    argv[x] = strdup(PyBytes_AsString(pyArg));
+                #endif
             }
             argv[argc] = NULL;
         }

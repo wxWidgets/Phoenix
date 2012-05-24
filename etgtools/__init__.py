@@ -13,7 +13,7 @@ them from the Doxygen XML, and producing wrapper code from them.
 """
 
 import sys, os
-from extractors import *
+from .extractors import *
 
 #---------------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ def parseDoxyXML(module, class_or_filename_list):
             if not os.path.exists(pathname):
                 pathname = os.path.join(XMLSRC, class_or_filename)
         if verbose():
-            print "Loading %s..." % pathname
+            print("Loading %s..." % pathname)
         _filesparsed.add(pathname)
         
         root = et.parse(pathname).getroot()

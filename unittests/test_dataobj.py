@@ -68,7 +68,7 @@ class DataObjTests(wtc.WidgetTestCase):
             def __init__(self, value=''):
                 wx.DataObject.__init__(self)
                 self.myFormats = [wx.DataFormat(wx.DF_TEXT)]                
-                self.myData = bytes(value)
+                self.myData = wtc.mybytes(value)
                 
             def GetAllFormats(self, d):
                 return self.myFormats            
@@ -120,7 +120,7 @@ class DataObjTests(wtc.WidgetTestCase):
             def __init__(self, value=''):
                 wx.DataObjectSimple.__init__(self)
                 self.SetFormat(wx.DataFormat(wx.DF_TEXT))
-                self.myData = bytes(value)
+                self.myData = wtc.mybytes(value)
                 
             def GetDataSize(self):
                 return len(self.myData)
@@ -155,11 +155,11 @@ class DataObjTests(wtc.WidgetTestCase):
             
     def test_CustomDataObject(self):
         import pickle
-        data1 = range(10)
+        data1 = list(range(10))
         obj = wx.CustomDataObject('my custom format')
         obj.SetData(pickle.dumps(data1))
         data2 = pickle.loads(obj.GetData().tobytes())
-        self.assertTrue(data1 == data2)
+        self.assertEqual(data1, data2)
     
     
     

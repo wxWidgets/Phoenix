@@ -10,7 +10,7 @@ class aboutdlg_Tests(wtc.WidgetTestCase):
     def _makeInfo(self):
         info = wx.adv.AboutDialogInfo()
         info.SetVersion('1.2.3')
-        info.SetName('My Goofy App')
+        info.SetName('My Goofy AboutBox Test')
         info.SetDevelopers(['Goofy', 'Mickey', 'Donald'])
         info.SetDescription('This is a very goofy application')
         info.SetCopyright('(c) by Goofy Enterprises, Inc.')

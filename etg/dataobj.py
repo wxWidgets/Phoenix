@@ -165,7 +165,7 @@ def run():
             if (!fmtObj) goto error;
             sizeObj = PyObject_CallMethod(self, "GetDataSize", "(O)", fmtObj, NULL);
             if (!sizeObj) goto error;
-            size = PyInt_AsSsize_t(sizeObj);
+            size = wxPyInt_AsSsize_t(sizeObj);
 
             // Make a buffer that big using the pointer passed to us, and then 
             // call the Python method.
@@ -237,7 +237,7 @@ def run():
             
             sizeObj = PyObject_CallMethod(self, "GetDataSize", "", NULL);
             if (!sizeObj) goto error;
-            size = PyInt_AsSsize_t(sizeObj);
+            size = wxPyInt_AsSsize_t(sizeObj);
 
             // Make a buffer that big using the pointer passed to us, and then 
             // call the Python method.

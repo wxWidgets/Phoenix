@@ -44,8 +44,12 @@ class datetime_Tests(wtc.WidgetTestCase):
         
     def test_datetimeGetAmPm(self):
         am, pm = wx.DateTime.GetAmPmStrings()
-        self.assertTrue(isinstance(am, basestring) and am != "")
-        self.assertTrue(isinstance(pm, basestring) and pm != "")
+        if wtc.isPython3():
+            base = str
+        else:
+            base = unicode
+        self.assertTrue(isinstance(am, base) and am != "")
+        self.assertTrue(isinstance(pm, base) and pm != "")
         
         
     def test_datetimeProperties(self):
