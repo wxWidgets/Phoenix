@@ -40,6 +40,7 @@ INCLUDES = [
              'bannerwindow',
              'editlbox',
              'notifmsg',
+             'splash',
              
              
              # TODOs - 
@@ -50,7 +51,6 @@ INCLUDES = [
              #'odcombo',
              #'richtooltip',
              #'sashwin',
-             #'splash',
              #'timectrl',
              #'treelist',
              #'wizard',
