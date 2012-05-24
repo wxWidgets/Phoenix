@@ -39,6 +39,7 @@ INCLUDES = [
              'animate',
              'bannerwindow',
              'editlbox',
+             'notifmsg',
              
              
              # TODOs - 
@@ -46,7 +47,6 @@ INCLUDES = [
              #
              #'bmpcbox',
              #'laywin',
-             #'notifmsg',
              #'odcombo',
              #'richtooltip',
              #'sashwin',

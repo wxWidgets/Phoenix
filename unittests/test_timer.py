@@ -5,16 +5,6 @@ import wx
 #---------------------------------------------------------------------------
 
 class timer_Tests(wtc.WidgetTestCase):
-
-    def waitFor(self, milliseconds):
-        intervals = milliseconds/100
-        while intervals > 0:
-            wx.MilliSleep(100)
-            self.myYield()
-            if hasattr(self, 'flag') and self.flag:
-                break
-            intervals -= 1
-
             
     def onTimerEvt(self, *evt):
         self.flag = True

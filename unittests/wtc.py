@@ -55,6 +55,16 @@ class WidgetTestCase(unittest.TestCase):
         for w in wx.GetTopLevelWindows():
             if isinstance(w, wx.Dialog):
                 w.EndModal(wx.ID_CANCEL)
+
+
+    def waitFor(self, milliseconds):
+        intervals = milliseconds/100
+        while intervals > 0:
+            wx.MilliSleep(100)
+            self.myYield()
+            if hasattr(self, 'flag') and self.flag:
+                break
+            intervals -= 1
     
 #---------------------------------------------------------------------------
 
