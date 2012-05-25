@@ -45,7 +45,9 @@ class SipWrapperGenerator(generators.WrapperGeneratorBase):
         # Write the contents of the stream to the destination file
         if not destFile:
             destFile = os.path.join(phoenixRoot, 'sip/gen', module.name + '.sip')
-        textfile_open(destFile, 'wt').write(stream.getvalue())
+        f = textfile_open(destFile, 'wt')
+        f.write(stream.getvalue())
+        f.close()
             
         
     #-----------------------------------------------------------------------

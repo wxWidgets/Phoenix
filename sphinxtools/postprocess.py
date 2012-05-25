@@ -20,7 +20,7 @@ import subprocess
 
 # Phoenix-specific imports
 import templates
-from buildtools.config import copyIfNewer, writeIfChanged, newer, getSvnRev
+from buildtools.config import copyIfNewer, writeIfChanged, newer, getSvnRev, textfile_open
 
 from utilities import Wx2Sphinx
 from constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
@@ -112,7 +112,7 @@ def BuildEnumsAndMethods(sphinxDir):
     
     for input in textfiles:
                 
-        fid = open(input, 'rt')
+        fid = textfile_open(input, 'rt') 
         orig_text = text = fid.read()
         fid.close()
 
@@ -166,7 +166,7 @@ def BuildEnumsAndMethods(sphinxDir):
         text = TooltipsOnInheritance(text, class_summary)
 
         if text != orig_text:
-            fid = open(input, 'wt')
+            fid = textfile_open(input, 'wt')  
             fid.write(text)
             fid.close()
 
@@ -185,7 +185,7 @@ def BuildEnumsAndMethods(sphinxDir):
     keys = unreferenced_classes.keys()
     keys.sort()
 
-    fid = open(os.path.join(SPHINXROOT, 'unreferenced_classes.inc'), 'wt')
+    fid = textfile_open(os.path.join(SPHINXROOT, 'unreferenced_classes.inc'), 'wt') 
     fid.write('\n')
     fid.write('='*50 + ' ' + '='*50 + '\n')
     fid.write('%-50s %-50s\n'%('Reference', 'File Name(s)'))

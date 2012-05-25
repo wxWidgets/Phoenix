@@ -651,15 +651,15 @@ def writeIfChanged(filename, text):
     """
         
     if os.path.exists(filename):
-        fid = codecs.open(filename, 'r', 'utf-8')
-        current = fid.read()
-        fid.close()
+        f = textfile_open(filename, 'rt')
+        current = f.read()
+        f.close()
         
         if current == text:
             return
 
-    f = codecs.open(filename, 'w', 'utf-8')
-    f.write(text.encode('utf-8'))
+    f = textfile_open(filename, 'wt')
+    f.write(text)
     f.close()
 
 
@@ -777,12 +777,13 @@ def myExecfile(filename, ns):
     
 def textfile_open(filename, mode='rt'):
     """
-    Simple wrapper around open() that will open normally on Python 2.x and on
-    Python 2.3 will add the encoding parameter. The mode parameter must
-    include the 't' to put the stream into text mode.
+    Simple wrapper around open() that will use codecs.open on Python 2.x and
+    on Python 2.3 will add the encoding parameter to the normal open(). The
+    mode parameter must include the 't' to put the stream into text mode.
     """
     assert 't' in mode
     if sys.version_info < (3,):
-        return open(filename, mode)
+        import codecs
+        return codecs.open(filename, mode, encoding='utf-8')
     else:
         return open(filename, mode, encoding='utf-8')

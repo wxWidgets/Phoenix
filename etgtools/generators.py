@@ -80,35 +80,31 @@ def nci(text, numSpaces=0, stripLeading=True):
 
 #---------------------------------------------------------------------------
 
-if sys.version_info < (3,):
-    # For Python 2.x we'll convert any unicode text values to strings before
-    # adding them to the buffer
-    from StringIO import StringIO
-    class Utf8EncodingStream(StringIO):
+# io.StringIO reads/writes unicode objects for both Python 2.7 and 3.x. For
+# 2.7 we'll convert any string values to unicode objects before storing them
+# in the StringIO
+
+import io
+class Utf8EncodingStream(io.StringIO):
+    if sys.version_info < (3,):
         def write(self, text):
-            if isinstance(text, unicode):
-                text = text.encode('utf-8')
-            return StringIO.write(self, text)
-
-else:
-    # For Python 3.x we'll keep it all as str (unicode) objects and let the
-    # conversion to bytes happen when the text is written to the actual
-    # file.
-    from io import StringIO
-    class Utf8EncodingStream(StringIO):
-        pass
-
+            if isinstance(text, str):
+                text = text.decode('utf-8')
+            return io.StringIO.write(self, text)
+    
+    
 
 
 def textfile_open(filename, mode='rt'):
     """
-    Simple wrapper around open() that will open normally on Python 2.x and on
-    Python 2.3 will add the encoding parameter. The mode parameter must
-    include the 't' to put the stream into text mode.
+    Simple wrapper around open() that will use codecs.open on Python 2.x and
+    on Python 2.3 will add the encoding parameter to the normal open(). The
+    mode parameter must include the 't' to put the stream into text mode.
     """
     assert 't' in mode
     if sys.version_info < (3,):
-        return open(filename, mode)
+        import codecs
+        return codecs.open(filename, mode, encoding='utf-8')
     else:
         return open(filename, mode, encoding='utf-8')
     
