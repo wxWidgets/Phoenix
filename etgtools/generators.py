@@ -104,6 +104,7 @@ def textfile_open(filename, mode='rt'):
     assert 't' in mode
     if sys.version_info < (3,):
         import codecs
+        mode = mode.replace('t', '')
         return codecs.open(filename, mode, encoding='utf-8')
     else:
         return open(filename, mode, encoding='utf-8')
