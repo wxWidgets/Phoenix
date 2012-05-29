@@ -173,6 +173,8 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    window_ids_overview
    window_sizing_overview
    window_styles_overview
+   adv.1classindex
+   adv.functions
    dataview.1classindex
    lib
    py

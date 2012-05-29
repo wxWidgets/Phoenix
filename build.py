@@ -1145,6 +1145,7 @@ def clean_sphinx(options, args):
               opj(sphinxDir, '_templates/gallery.html'),
               opj(sphinxDir, 'rest_substitutions/snippets/python/*.py'),
               opj(sphinxDir, 'rest_substitutions/snippets/cpp/*.cpp'),
+              opj(sphinxDir, '_static/images/inheritance/*.*'),
               ]
     for wc in globs:
         for f in glob.glob(wc):
@@ -1156,7 +1157,6 @@ def clean_sphinx(options, args):
     for d in dirs:
         if os.path.exists(d):
             shutil.rmtree(d)
-
 
         
 def clean(options, args):

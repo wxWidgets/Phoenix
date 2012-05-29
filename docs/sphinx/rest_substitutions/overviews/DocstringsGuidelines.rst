@@ -103,7 +103,7 @@ In general, the standards for the ``:param`` field are the following:
    Or, alternatively::
 
        :param `pt`: the mouse pointer location.
-       :type `pt`: `Point`
+       :type `pt`: Point
 
 
 Similarly, for the ``:return:`` and ``:rtype:`` field, you may consider doing the following:

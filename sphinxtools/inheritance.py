@@ -13,16 +13,22 @@
 # Standard library imports
 
 import os
+import sys
 import errno
 from subprocess import Popen, PIPE
 
 # Phoenix-specific imports
 
-from utilities import Wx2Sphinx, FormatExternalLink
-from constants import INHERITANCEROOT
+from .utilities import Wx2Sphinx, FormatExternalLink
+from .constants import INHERITANCEROOT
 
 ENOENT = getattr(errno, 'ENOENT', 0)
 EPIPE  = getattr(errno, 'EPIPE', 0)
+
+if sys.version_info < (3, ):
+    string_base = basestring
+else:    
+    string_base = str
 
 
 class InheritanceDiagram(object):
@@ -36,7 +42,7 @@ class InheritanceDiagram(object):
 
         if main_class is None:
             self.class_info, self.specials = classes
-            self.class_info = self.class_info.values()
+            self.class_info = list(self.class_info.values())
         else:
             self.class_info, self.specials = self._class_info(classes)
             
@@ -69,7 +75,7 @@ class InheritanceDiagram(object):
             recurse(cls)
             specials.append(self.class_name(cls)[1])
 
-        return all_classes.values(), specials
+        return list(all_classes.values()), specials
 
 
     def class_name(self, cls):
@@ -117,10 +123,10 @@ class InheritanceDiagram(object):
     }
 
     def _format_node_attrs(self, attrs):
-        return ','.join(['%s=%s' % x for x in attrs.items()])
+        return ','.join(['%s=%s' % x for x in list(attrs.items())])
 
     def _format_graph_attrs(self, attrs):
-        return ''.join(['%s=%s;\n' % x for x in attrs.items()])
+        return ''.join(['%s=%s;\n' % x for x in list(attrs.items())])
 
     def generate_dot(self, class_summary, name="dummy", graph_attrs={}, node_attrs={}, edge_attrs={}):
         """Generate a graphviz dot graph from the classes that were passed in
@@ -240,7 +246,7 @@ class InheritanceDiagram(object):
         code = self.generate_dot(class_summary)
 
         # graphviz expects UTF-8 by default
-        if isinstance(code, unicode):
+        if isinstance(code, string_base):
             code = code.encode('utf-8')
 
         dot_args = ['dot']
@@ -257,19 +263,19 @@ class InheritanceDiagram(object):
 
             p = Popen(dot_args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
 
-        except OSError, err:
+        except OSError as err:
 
             if err.errno != ENOENT:   # No such file or directory
                 raise
 
-            print '\nERROR: Graphviz command `dot` cannot be run (needed for Graphviz output), check your ``PATH`` setting'
+            print('\nERROR: Graphviz command `dot` cannot be run (needed for Graphviz output), check your ``PATH`` setting')
 
         try:
             # Graphviz may close standard input when an error occurs,
             # resulting in a broken pipe on communicate()
             stdout, stderr = p.communicate(code)
 
-        except OSError, err:
+        except OSError as err:
 
             # in this case, read the standard output and standard error streams
             # directly, to get the error message(s)
@@ -277,7 +283,7 @@ class InheritanceDiagram(object):
             p.wait()
 
         if p.returncode != 0:
-            print '\nERROR: Graphviz `dot` command exited with error:\n[stderr]\n%s\n[stdout]\n%s\n\n' % (stderr, stdout)
+            print(('\nERROR: Graphviz `dot` command exited with error:\n[stderr]\n%s\n[stdout]\n%s\n\n' % (stderr, stdout)))
 
         fid = open(mapfile, 'rt')
         map = fid.read()

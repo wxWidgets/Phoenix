@@ -2,21 +2,25 @@ import sys
 import os
 import operator
 import re
-import cPickle
 
-from StringIO import StringIO
+if sys.version_info < (3,):
+    import cPickle as pickle
+    from StringIO import StringIO
+else:
+    import pickle
+    from io import StringIO
 
 from inspect import getmro, getclasstree, getdoc, getcomments
 
-from utilities import MakeSummary, ChopDescription, WriteSphinxOutput
-from utilities import FindControlImages, FormatExternalLink
-from constants import object_types, MODULE_TO_ICON, DOXY_2_REST, SPHINXROOT
-import templates
+from .utilities import MakeSummary, ChopDescription, WriteSphinxOutput
+from .utilities import FindControlImages, FormatExternalLink, IsPython3
+from .constants import object_types, MODULE_TO_ICON, DOXY_2_REST, SPHINXROOT
+from . import templates
 
 EPYDOC_PATTERN = re.compile(r'\S+{\S+}', re.DOTALL)
 
 reload(sys)
-sys.setdefaultencoding("utf-8")
+sys.setdefaultencoding('utf-8')
 
 
 def make_class_tree(tree):
@@ -271,8 +275,8 @@ class ParentBase(object):
         self.name = name
         self.kind = kind
 
-        self.docs = u''
-        self.comments = u''
+        self.docs = ''
+        self.comments = ''
 
         self.is_redundant = False
 
@@ -281,7 +285,7 @@ class ParentBase(object):
 
     def Add(self, klass):
 
-        if u'lambda' in klass.name:
+        if 'lambda' in klass.name:
             return
 
         for child in self.children:
@@ -297,13 +301,13 @@ class ParentBase(object):
         if self.GetShortName().startswith('__test') or '.extern.' in self.name:
             self.is_redundant = True
 
-        self.children = sorted(self.children, key=lambda k: (getattr(k, "order"), getattr(k, "name").lower()))
+        self.children = sorted(self.children, key=lambda k: (getattr(k, 'order'), getattr(k, 'name').lower()))
 
         if self.docs is None:
-            self.docs = u''
+            self.docs = ''
 
         if self.comments is None or not self.comments.strip():
-            self.comments = u''
+            self.comments = ''
             
         for child in self.children:
             child.Save()
@@ -321,7 +325,7 @@ class ParentBase(object):
 
     def GetShortName(self):
 
-        return self.name.split(".")[-1]
+        return self.name.split('.')[-1]
 
 
     def GetObject(self):
@@ -349,7 +353,7 @@ class ParentBase(object):
 
         total = count
 
-        for n in xrange(count):
+        for n in range(count):
             total += self.children[n].GetChildrenCount()
         
         return total
@@ -396,10 +400,10 @@ class Library(ParentBase):
         ParentBase.__init__(self, name, object_types.LIBRARY)
 
         self.parent = None
-        self.filename = u''
+        self.filename = ''
         self.order = 0
-        self.obj_type = u"Library"
-        self.python_version = u''
+        self.obj_type = 'Library'
+        self.python_version = ''
 
         self.sphinx_file = MakeSphinxFile(name)
         self.base_name = name
@@ -478,7 +482,7 @@ class Library(ParentBase):
 
     def ToRest(self, class_summary):
 
-        print '\n\nReST-ifying %s...\n\n'%self.base_name
+        print(('\n\nReST-ifying %s...\n\n'%self.base_name))
         stream = StringIO()
 
         header = templates.TEMPLATE_DESCRIPTION%(self.base_name, self.base_name)
@@ -526,14 +530,14 @@ class Library(ParentBase):
 
         if os.path.isfile(pickle_file):
             fid = open(pickle_file, 'rb')
-            items = cPickle.load(fid)
+            items = pickle.load(fid)
             fid.close()
         else:
             items = {}
 
         items.update(class_dict)
         fid = open(pickle_file, 'wb')
-        cPickle.dump(items, fid)
+        pickle.dump(items, fid)
         fid.close()
 
 
@@ -543,11 +547,11 @@ class Module(ParentBase):
 
         ParentBase.__init__(self, name, kind)
         
-        self.filename = u''
+        self.filename = ''
         self.sphinx_file = MakeSphinxFile(name)
 
         if kind == object_types.PACKAGE:
-            self.obj_type = u"Package"
+            self.obj_type = 'Package'
             self.order = kind
             return
 
@@ -588,14 +592,14 @@ class Module(ParentBase):
         spacer = '   '*self.name.count('.')
         
         if self.kind != object_types.PACKAGE:
-            print '%s - %s (module)'%(spacer, self.name)
+            print(('%s - %s (module)'%(spacer, self.name)))
             if self.inheritance_diagram:
                 png, map = self.inheritance_diagram.MakeInheritanceDiagram(class_summary)
                 short_name = self.GetShortName()
                 image_desc = templates.TEMPLATE_INHERITANCE % ('module', short_name, png, short_name, map)
                 stream.write(image_desc)
         else:
-            print '%s - %s (package)'%(spacer, self.name)
+            print(('%s - %s (package)'%(spacer, self.name)))
 
         generic_summary(self, stream)
 
@@ -645,10 +649,10 @@ class Class(ParentBase):
         for item in sups:
             item = repr(item)
             
-            sup = item.replace("<class ", "").replace(">", "").replace("<type ", "")
-            sup = sup.strip().replace('"', "").replace("'", "")
-            if " at " in sup:
-                sup = sup[0:sup.index(" at ")].strip()
+            sup = item.replace('<class ', '').replace('>', '').replace('<type ', '')
+            sup = sup.strip().replace('"', '').replace("'", '')
+            if ' at ' in sup:
+                sup = sup[0:sup.index(' at ')].strip()
 
             if 'wx._' in sup:
                 name_parts = sup.split('.')
@@ -687,11 +691,11 @@ class Class(ParentBase):
         self.subClasses = sortedSubClasses
         self.superClasses = sortedSupClasses
 
-        self.signature = ""
+        self.signature = ''
         self.inheritance_diagram = None
         
         self.order = 3
-        self.obj_type = u"Class"
+        self.obj_type = 'Class'
         self.sphinx_file = MakeSphinxFile(name)
 
 
@@ -741,7 +745,7 @@ class Class(ParentBase):
         generic_summary(self, stream)
 
         stream.write(templates.TEMPLATE_API)
-        stream.write("\n.. class:: %s\n\n"%self.signature)
+        stream.write('\n.. class:: %s\n\n'%self.signature)
 
         docs = ''
         for line in class_docs.splitlines(True):
@@ -815,8 +819,8 @@ class ChildrenBase(object):
 
         self.order = 4        
 
-        self.docs = u''
-        self.comments = u''
+        self.docs = ''
+        self.comments = ''
 
         self.is_redundant = False
 
@@ -835,7 +839,7 @@ class ChildrenBase(object):
 
     def GetShortName(self):
 
-        return self.name.split(".")[-1]
+        return self.name.split('.')[-1]
 
 
     def GetChildren(self):
@@ -856,10 +860,10 @@ class ChildrenBase(object):
     def Save(self):
         
         if self.docs is None:
-            self.docs = u''
+            self.docs = ''
 
         if self.comments is None or not self.comments.strip():
-            self.comments = u''
+            self.comments = ''
 
 
     def ToRest(self, class_summary):
@@ -876,9 +880,9 @@ class Method(ChildrenBase):
         self.order = 5
         
         self.arguments = []
-        self.signature = u''
+        self.signature = ''
 
-        self.obj_type = u"Method/Function"
+        self.obj_type = 'Method/Function'
         
 
     def Save(self):
@@ -888,8 +892,8 @@ class Method(ChildrenBase):
         newargs = []
         if self.arguments and any(self.arguments[0]):
             for name, repr_val, eval_val in self.arguments:
-                repr_val = (repr_val is not None and [repr_val] or [""])[0]
-                eval_val = (eval_val is not None and [eval_val] or [""])[0]
+                repr_val = (repr_val is not None and [repr_val] or [''])[0]
+                eval_val = (eval_val is not None and [eval_val] or [''])[0]
                 newargs.append((name, repr_val, eval_val))
 
         self.arguments = newargs
@@ -954,7 +958,7 @@ class Property(ChildrenBase):
 
         ChildrenBase.__init__(self, name, object_types.PROPERTY)
         
-        self.getter = self.setter = self.deleter = ""
+        self.getter = self.setter = self.deleter = ''
 
         try:
             if item.fget:
@@ -975,7 +979,7 @@ class Property(ChildrenBase):
         self.docs = getdoc(item)
         self.comments = getcomments(item)
         
-        self.obj_type = u"Property"
+        self.obj_type = 'Property'
         self.order = 6
 
 
@@ -1003,7 +1007,11 @@ class Attribute(ChildrenBase):
 
     def __init__(self, name, specs, value):
 
-        specs = unicode(specs)        
+        if IsPython3():
+            specs = str(specs)
+        else:
+            specs = unicode(specs)
+            
         start, end = specs.find("'"), specs.rfind("'")
         specs = specs[start+1:end]
 
@@ -1014,7 +1022,7 @@ class Attribute(ChildrenBase):
             kind = getattr(object_types, uspecs)
         except AttributeError:
             try:
-                uspecs = uspecs + u"TYPE"
+                uspecs = uspecs + 'TYPE'
                 kind = getattr(object_types, uspecs)
             except AttributeError:                
                 kind = object_types.UNKNOWNTYPE
@@ -1022,9 +1030,9 @@ class Attribute(ChildrenBase):
         try:
             reprValue = repr(value.__class__)
         except (NameError, AttributeError):
-            reprValue = ""
+            reprValue = ''
             
-        if u"class" in strValue or u"class" in reprValue:
+        if 'class' in strValue or 'class' in reprValue:
             kind = object_types.INSTANCETYPE
 
         ChildrenBase.__init__(self, name, kind)
@@ -1035,9 +1043,9 @@ class Attribute(ChildrenBase):
         try:
             self.docs = getdoc(value)
         except (NameError, AttributeError):
-            self.docs = u''
+            self.docs = ''
 
-        self.obj_type = u"Attribute"
+        self.obj_type = 'Attribute'
         self.order = 7
         
 

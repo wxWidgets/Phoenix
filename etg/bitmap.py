@@ -132,12 +132,8 @@ def run():
                 =============================  ================================
                 wx.BitmapBufferFormat_RGB      A simple sequence of RGB bytes
                 wx.BitmapBufferFormat_RGBA     A simple sequence of RGBA bytes
-                wx.BitmapBufferFormat_ARGB32   A sequence of 32-bit values in native
-                                               endian order, with alpha in the upper
-                                               8 bits, followed by red, green, and
-                                               blue.
-                wx.BitmapBufferFormat_RGB32    Same as above but the alpha byte
-                                               is ignored.
+                wx.BitmapBufferFormat_ARGB32   A sequence of 32-bit values in native endian order, with alpha in the upper 8 bits, followed by red, green, and blue.
+                wx.BitmapBufferFormat_RGB32    Same as above but the alpha byte is ignored.
                 =============================  ================================""",
         body="""\
             wxPyCopyBitmapFromBuffer(self, (byte*)data->m_ptr, data->m_len, format, stride);

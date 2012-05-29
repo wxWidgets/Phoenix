@@ -8,12 +8,16 @@ import os
 import sys
 import glob
 import types
-import cPickle
 import imp
 import traceback
 import pkgutil
 
 import __builtin__
+
+if sys.version_info < (3,):
+    import cPickle as pickle
+else:
+    import pickle
 
 from buildtools.config import phoenixDir
 
@@ -21,16 +25,17 @@ from inspect import getargspec, ismodule, getdoc, getmodule, getcomments, isfunc
 from inspect import ismethoddescriptor, getsource, ismemberdescriptor, isgetsetdescriptor
 from inspect import isbuiltin, isclass, getfile, ismethod
 
-from librarydescription import Library, Module, Class
-from librarydescription import Method, Property, Attribute
+from .librarydescription import Library, Module, Class
+from .librarydescription import Method, Property, Attribute
 
-import inheritance
+from . import inheritance
 
-from constants import object_types, EXCLUDED_ATTRS, MODULE_TO_ICON
-from constants import CONSTANT_RE
+from .utilities import IsPython3
+from .constants import object_types, EXCLUDED_ATTRS, MODULE_TO_ICON
+from .constants import CONSTANT_RE
 
 reload(sys)
-sys.setdefaultencoding("utf-8")
+sys.setdefaultencoding('utf-8')
 
 try:
     import wx
@@ -53,17 +58,17 @@ except ImportError:
     
 import wx
 
-print '\nUSING VERSION: %s\n'%wx.VERSION_STRING
+print(('\nUSING VERSION: %s\n'%wx.VERSION_STRING))
 
 
-if hasattr(os.path, "relpath"):
+if hasattr(os.path, 'relpath'):
     relpath = os.path.relpath # since Python 2.6
 else:
     def relpath(path, start=os.path.curdir):
         """Return a relative version of a path"""
 
         if not path:
-            raise ValueError("no path specified")
+            raise ValueError('no path specified')
 
         start_list = os.path.abspath(start).split(os.path.sep)
         path_list = os.path.abspath(path).split(os.path.sep)
@@ -81,7 +86,7 @@ else:
 def format_traceback():
 
     t, v = sys.exc_info()[:2]
-    message = "".join(traceback.format_exception_only(t, v)).replace("\n", " ")
+    message = ''.join(traceback.format_exception_only(t, v)).replace('\n', ' ')
     return message.strip()
 
 
@@ -89,18 +94,18 @@ def format_method(method):
 
     method = method.strip()
 
-    if "def " not in method:
+    if 'def ' not in method:
         return None, None
 
-    indx1, indx2, indx3 = method.index("def "), method.index("("), method.rindex(")")
+    indx1, indx2, indx3 = method.index('def '), method.index('('), method.rindex(')')
     name = method[indx1+4:indx2]
     signature = method[indx2+1:indx3]
 
-    if "\n" in signature:
-        sig = signature.split("\n")
-        params = ""
+    if '\n' in signature:
+        sig = signature.split('\n')
+        params = ''
         for s in sig:
-            params += s.strip() + " "
+            params += s.strip() + ' '
         params = params.rstrip()
     else:
         params = signature
@@ -110,10 +115,10 @@ def format_method(method):
 
 def analyze_params(obj, signature):
 
-    params = signature.split(",")
-    if "self" in params:
-        params.remove("self")
-        signature = ",".join(params)
+    params = signature.split(',')
+    if 'self' in params:
+        params.remove('self')
+        signature = ','.join(params)
 
     param_tuple = []
 
@@ -145,17 +150,20 @@ def analyze_params(obj, signature):
         p = par.strip()
         pvalue = peval = None
 
-        if "=" in p:
-            all_values = p.split("=")
-            pname, pvalue = all_values[0].strip(), "=".join(all_values[1:]).strip()
+        if '=' in p:
+            all_values = p.split('=')
+            pname, pvalue = all_values[0].strip(), '='.join(all_values[1:]).strip()
             pvalue = pvalue.strip()
             if pname in pevals:
                 try:
-                    peval = unicode(pevals[pname])
+                    if IsPython3():
+                        peval = str(pevals[pname])
+                    else:
+                        peval = unicode(pevals[pname])
                 except UnicodeDecodeError:
                     peval = repr(pevals[pname])
                 except TypeError:
-                    peval = u''
+                    peval = ''
         else:
             pname = p
 
@@ -166,17 +174,17 @@ def analyze_params(obj, signature):
 
 def get_constructor(source):
 
-    description = ""
+    description = ''
     hasComma = False
     
-    for line in source.split("\n"):
+    for line in source.split('\n'):
 
         if '#' in line:
             line = line[0:line.index('#')].strip()
             
-        if ":" in line:
+        if ':' in line:
             hasComma = True
-            commaPos = line.index(":")
+            commaPos = line.index(':')
 
         if ('"""' in line or "'''" in line) and hasComma:
             break
@@ -186,9 +194,9 @@ def get_constructor(source):
             if defPos > commaPos:
                 break
         
-        description += " " + line.strip()
+        description += ' ' + line.strip()
         
-        if "):" in line or ") :" in line or ")  :" in line:
+        if '):' in line or ') :' in line or ')  :' in line:
             break
 
     return description
@@ -207,17 +215,19 @@ def inspect_source(method_class, obj, source):
     method_class.arguments = param_tuple
     method_class.signature = description.strip()
 
-    if "classmethod " in description or is_classmethod(obj):
+    if 'classmethod ' in description or is_classmethod(obj):
         method_class.kind = object_types.CLASS_METHOD
-    elif "staticmethod " in description:
+    elif 'staticmethod ' in description:
         method_class.kind = object_types.STATIC_METHOD
         
 
 def is_classmethod(instancemethod):
-    " Determine if an instancemethod is a classmethod. "
+    """ Determine if an instancemethod is a classmethod. """
 
-    if hasattr(instancemethod, 'im_self'):
-        return instancemethod.im_self is not None
+    attribute = (IsPython3() and ['__self__'] or ['im_self'] )[0]
+
+    if hasattr(instancemethod, attribute):
+        return getattr(instancemethod, attribute) is not None
 
     return False
 
@@ -235,10 +245,10 @@ def describe_func(obj, parent_class, module_name):
         # Funny comtypes...
         return
         
-    if name.startswith("_") and "__init__" not in name:
+    if name.startswith('_') and '__init__' not in name:
         return
 
-    name = parent_class.name + "." + name
+    name = parent_class.name + '.' + name
     
     docs = getdoc(obj)
     comments = getcomments(obj)
@@ -256,7 +266,7 @@ def describe_func(obj, parent_class, module_name):
     try:
         source_code = getsource(obj)
     except (IOError, TypeError):
-        source_code = ""
+        source_code = ''
 
     klass = Method(name, method)
     klass.docs = docs
@@ -267,23 +277,32 @@ def describe_func(obj, parent_class, module_name):
 
     if source_code:
         inspect_source(klass, obj, source_code)
-        klass.number_lines = "%d"%len(source_code.split("\n"))
+        klass.number_lines = '%d'%len(source_code.split('\n'))
         
     if isinstance(obj, staticmethod):
         klass.method = method = object_types.STATIC_METHOD
 
     try:
         if method in [object_types.METHOD, object_types.METHOD_DESCRIPTOR, object_types.INSTANCE_METHOD]:
-            code = obj.im_func.func_code
+            if IsPython3():
+                code = obj.__func__.__code__
+            else:
+                code = obj.im_func.func_code
         elif method == object_types.STATIC_METHOD:
-            code = obj.im_func.func_code
+            if IsPython3():
+                code = obj.__func__.__code__
+            else:
+                code = obj.im_func.func_code
         else:
-            code = obj.func_code
+            if IsPython3():
+                obj.__code__
+            else:
+                code = obj.func_code
     except AttributeError:
         code = None
 
     if code is not None:
-        klass.firstlineno = "%d"%code.co_firstlineno
+        klass.firstlineno = '%d'%code.co_firstlineno
     
     parent_class.Add(klass)
                         
@@ -296,10 +315,10 @@ def describe_class(obj, module_class, module_name, constants):
 
     class_name = obj.__name__
 
-    if class_name == "object":
+    if class_name == 'object':
         return
 
-    class_name = module_class.name + "." + class_name
+    class_name = module_class.name + '.' + class_name
     
     docs = getdoc(obj)
     comments = getcomments(obj)
@@ -312,7 +331,7 @@ def describe_class(obj, module_class, module_name, constants):
    
     for name in obj_dict:
 
-        if name.startswith("_") and "__init__" not in name:
+        if name.startswith('_') and '__init__' not in name:
             continue
 
         if name in EXCLUDED_ATTRS:
@@ -340,7 +359,7 @@ def describe_class(obj, module_class, module_name, constants):
             count += 1
             describe_class(item, klass, module_name, constants)
         else:
-            name = class_name + "." + name
+            name = class_name + '.' + name
             if isinstance(item, property):
                 item_class = Property(name, item)
                 klass.Add(item_class)
@@ -372,7 +391,7 @@ def describe_class(obj, module_class, module_name, constants):
     try:
         source_code = getsource(obj)
     except (IOError, TypeError):
-        source_code = ""
+        source_code = ''
         
     if source_code:
         description = get_constructor(source_code)
@@ -380,7 +399,7 @@ def describe_class(obj, module_class, module_name, constants):
             description = description[0:description.index(':')]
             
         klass.signature = description.strip()
-        klass.number_lines = '%d'%len(source_code.split("\n"))
+        klass.number_lines = '%d'%len(source_code.split('\n'))
 
 
 def describe_module(module, kind, constants=[]):
@@ -431,7 +450,7 @@ def describe_module(module, kind, constants=[]):
             count +=1
             describe_func(obj, klass, module_name)
         else:
-            attribute = Attribute(module_name + "." + name, type(obj), obj)
+            attribute = Attribute(module_name + '.' + name, type(obj), obj)
             klass.Add(attribute)
 
             if constants:
@@ -463,8 +482,7 @@ def Import(init_name, import_name, full_process=True):
     except (ImportError, NameError):
 
         message = format_traceback()
-        message += ' Please check that the "Import command" text box is correctly filled'
-        print "Error: %s"%message
+        print(('Error: %s'%message))
 
         if not full_process:
             sys.path = path[:]
@@ -482,10 +500,10 @@ def Import(init_name, import_name, full_process=True):
             try:
                 version = mainmod.__VERSION__
             except AttributeError:
-                print "Warning: Library '%s' has no __version__ or __VERSION__ attribute. Please specify it in the 'Import command' textbox"%import_name
+                print(('Warning: Library "%s" has no __version__ or __VERSION__ attribute.'%import_name))
                 return
 
-        print version            
+        print(version)
 
     return mainmod
         
@@ -494,9 +512,9 @@ def PrintProgress(name, looped_names):
 
     looped_names.append(name)
     if len(looped_names) == 4:
-        message = ", ".join(looped_names)
+        message = ', '.join(looped_names)
         looped_names = []
-        print message
+        print(message)
 
     return looped_names
 
@@ -517,7 +535,7 @@ def SubImport(import_string, module, parent_class, ispkg):
     except:
         # pubsub and Editra can be funny sometimes...
         message = "Unable to import module/package '%s.%s'.\n         Exception was: %s"%(import_string, module, format_traceback())
-        print "\nWARNING: %s\n"%message
+        print(('\nWARNING: %s\n'%message))
         return None, 0
 
     if not ismodule(submod):
@@ -538,12 +556,12 @@ def SubImport(import_string, module, parent_class, ispkg):
 
     if kind in [object_types.PY_MODULE, object_types.PACKAGE]:
 
-        contents = open(filename, "rt").read()
+        contents = open(filename, 'rt').read()
         consts = CONSTANT_RE.findall(contents)
 
         for c in consts:
-            if "," in c:
-                c = c.split(",")
+            if ',' in c:
+                c = c.split(',')
                 constants.extend([v.strip() for v in c])
             else:
                 constants.append(c.strip())
@@ -560,11 +578,11 @@ def ToRest(import_name):
     pickle_file = os.path.join(sphinxDir, 'wx%s.pkl'%import_name)
 
     fid = open(pickle_file, 'rb')
-    library_class = cPickle.load(fid)
+    library_class = pickle.load(fid)
     fid.close()
 
     fid = open(os.path.join(sphinxDir, 'class_summary.lst'), 'rb')
-    class_summary = cPickle.load(fid)
+    class_summary = pickle.load(fid)
     fid.close()
 
     library_class.Walk(library_class, class_summary)
@@ -592,33 +610,33 @@ def ModuleHunter(init_name, import_name, version):
         return
     
     message = "Importing main library '%s'..."%import_name
-    print "Message: %s"%message
+    print(('Message: %s'%message))
 
-    module_name = os.path.splitext(getfile(mainmod))[0] + ".py"
-    contents = open(module_name, "rt").read()
+    module_name = os.path.splitext(getfile(mainmod))[0] + '.py'
+    contents = open(module_name, 'rt').read()
     constants = CONSTANT_RE.findall(contents)
 
     library_class, count = describe_module(mainmod, kind=object_types.LIBRARY, constants=constants)
-    library_class.name = "%s-%s"%(import_name, version)
+    library_class.name = '%s-%s'%(import_name, version)
 
     message = "Main library '%s' imported..."%library_class.name
-    print "Message: %s"%message
+    print(('Message: %s'%message))
     
     message = "Importing sub-modules and sub-packages...\n"    
-    print "Message: %s"%message
+    print(('Message: %s'%message))
 
     looped_names = []
     ancestors_dict = {import_name: library_class}
     
     for importer, module_name, ispkg in pkgutil.walk_packages(path=[directory],
-                                                              prefix=import_name+".",
+                                                              prefix=import_name+'.',
                                                               onerror=lambda x: None):
 
         import_string = module_name
-        splitted = module_name.split(".")
+        splitted = module_name.split('.')
 
         fromlist = splitted[-1]
-        parent_name = ".".join(splitted[0:-1])
+        parent_name = '.'.join(splitted[0:-1])
         
         parent_class = ancestors_dict[parent_name]
         module_class, count = SubImport(import_string, fromlist, parent_class, ispkg)
@@ -632,7 +650,7 @@ def ModuleHunter(init_name, import_name, version):
             ancestors_dict[module_name] = module_class
 
     major, minor, micro, release = sys.version_info[0:-1]
-    pythonVersion = u"%d.%d.%d-%s"%(major, minor, micro, release)
+    pythonVersion = '%d.%d.%d-%s'%(major, minor, micro, release)
 
     library_class.python_version = pythonVersion
     library_class.Save()
@@ -640,13 +658,13 @@ def ModuleHunter(init_name, import_name, version):
     sys.path[:] = path # restore
 
     fid = open(pickle_file, 'wb')
-    cPickle.dump(library_class, fid)
+    pickle.dump(library_class, fid)
     fid.close()
 
     ToRest(import_name)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     argv = sys.argv[1:]
     

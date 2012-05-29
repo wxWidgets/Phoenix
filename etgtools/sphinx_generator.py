@@ -18,13 +18,21 @@ the various XML elements passed by the Phoenix extractors into ReST format.
 # Standard library stuff
 import os
 import operator
+import sys
 import shutil
 import textwrap
 import glob
-import cPickle
 
-from StringIO import StringIO
+if sys.version_info < (3, ):
 
+    from StringIO import StringIO
+    string_base = basestring
+
+else:
+    
+    from io import StringIO
+    string_base = str
+    
 import xml.etree.ElementTree as et
 
 # Phoenix-specific stuff
@@ -140,7 +148,7 @@ class Node(object):
         :returns: The element text for the input `tag_name` or ``None``.
         """
 
-        if isinstance(self.element, basestring):
+        if isinstance(self.element, string_base):
             return None
         
         return self.element.get(tag_name)
@@ -262,7 +270,7 @@ class Node(object):
         if self.element is None:
             return text
         
-        if isinstance(self.element, basestring):
+        if isinstance(self.element, string_base):
             text = self.element
         else:
             text, tail = self.element.text, self.element.tail
@@ -376,7 +384,7 @@ class Root(Node):
         text = Node.Join(self, with_tail)
 
         # Health check
-        existing_sections = self.sections.keys()[:]
+        existing_sections = list(self.sections.keys())
 
         for section_name, dummy in SECTIONS:
             if section_name not in self.sections:
@@ -603,7 +611,7 @@ class ParameterList(Node):
 
         signature = name + '(%s)'%arguments            
         arguments = arguments.split(',')
-        py_parameters = self.py_parameters.keys()
+        py_parameters = list(self.py_parameters.keys())
         
         message = '\nSEVERE: Incompatibility between function/method signature and list of parameters in `%s`:\n\n' \
                   'The parameter `%s` appears in the method signature but could not be found in the parameter list.\n\n' \
@@ -630,7 +638,7 @@ class ParameterList(Node):
                 if hasattr(xml_item, 'className') and xml_item.className is not None:
                     class_name = Wx2Sphinx(xml_item.className)[1] + '.'
 
-                print message % (class_name + name, arg, signature, py_parameters)
+                print((message % (class_name + name, arg, signature, py_parameters)))
 
 ##        for param in py_parameters:
 ##            if param not in theargs:
@@ -666,7 +674,7 @@ class ParameterList(Node):
 
         docstrings = ''
         
-        for name, parameter in self.py_parameters.items():
+        for name, parameter in list(self.py_parameters.items()):
             if parameter.type.strip():
                 docstrings += ':param `%s`: %s\n'%(name, parameter.Join().lstrip('\n'))
                 docstrings += ':type `%s`: %s\n'%(name, parameter.type)
@@ -992,7 +1000,7 @@ class Section(Node):
         self.is_overload = is_overload
         self.share_docstrings = share_docstrings
 
-        dummy, section_type = self.element.items()[0]
+        dummy, section_type = list(self.element.items())[0]
         self.section_type = section_type.split("_")[0]
 
 
@@ -1098,7 +1106,7 @@ class Image(Node):
            to avoid wrong ReST output.
         """
         
-        for key, value in self.element.items():
+        for key, value in list(self.element.items()):
             if key == 'name':
                 break
 
@@ -1186,8 +1194,8 @@ class Table(Node):
         has_title = False
 
         count = 0        
-        for row in xrange(rows):
-            for col in xrange(cols):
+        for row in range(rows):
+            for col in range(cols):
                 child = self.children[count]
                 
                 text = child.Join(with_tail)
@@ -1210,11 +1218,11 @@ class Table(Node):
 
         count = 0
         
-        for row in xrange(rows):
+        for row in range(rows):
 
             table += spacer
             
-            for col in xrange(cols):
+            for col in range(cols):
                 table += formats[col] % (self.children[count].Join(with_tail).strip())
                 count += 1
 
@@ -1311,7 +1319,7 @@ class Snippet(Node):
             if tag == 'sp':
                 self.snippet += ' '
                 
-            if isinstance(element, basestring):
+            if isinstance(element, string_base):
                 self.snippet += element
             else:
                 if element.text:
@@ -1354,7 +1362,7 @@ class Snippet(Node):
             message = '\nWARNING: Missing C++ => Python conversion of the snippet of code for %s'%(os.path.split(self.cpp_file)[1])
             message += '\n\nA slightly Pythonized version of this snippet has been saved into:\n\n  ==> %s\n\n'%self.python_file
 
-            print message
+            print(message)
             
             py_code = self.snippet.replace(';', '')
             py_code = py_code.replace('{', '').replace('}', '')
@@ -1458,7 +1466,7 @@ class XRef(Node):
         if "(" in text:
             text = text[0:text.index("(")]
 
-        refid, link = element.items()[0]
+        refid, link = list(element.items())[0]
         remainder = link.split('_')[-1]
 
         space_before, space_after = CountSpaces(text)
@@ -1789,7 +1797,7 @@ class ULink(Node):
            to avoid wrong ReST output.
         """
 
-        dummy, link = self.element.items()[0]
+        dummy, link = list(self.element.items())[0]
         text = self.element.text
         
         text = '`%s <%s>`_'%(text, link)
@@ -1981,7 +1989,7 @@ class XMLDocString(object):
         if element is None:
             return Node('', parent)            
 
-        if isinstance(element, basestring):
+        if isinstance(element, string_base):
             rest_class = Paragraph(element, parent, self.kind)
             return rest_class
         
@@ -2299,7 +2307,7 @@ class XMLDocString(object):
                 if found:
                     newlines = self.CodeIndent(line, newlines)
 
-        newdocs = u''
+        newdocs = ''
         for line in newlines:
             newdocs += ' '*3 + line + "\n"
 
@@ -2577,7 +2585,7 @@ class XMLDocString(object):
             name = ConvertToPython(RemoveWxPrefix(v.name))
             stream.write('%-80s'%name)
             
-            if not isinstance(docstrings, basestring):
+            if not isinstance(docstrings, string_base):
                 rest_class = self.RecurseXML(docstrings, self.root)
                 docstrings = rest_class.Join()
 
@@ -2692,7 +2700,7 @@ class XMLDocString(object):
 
         elif self.is_overload and self.share_docstrings:
             
-            docstrings = self.Indent(None, self.docstrings, spacer, u'')
+            docstrings = self.Indent(None, self.docstrings, spacer, '')
 
         else:
 
@@ -2704,11 +2712,11 @@ class XMLDocString(object):
             if isinstance(self.xml_item, (extractors.PyFunctionDef, extractors.PyClassDef)):
                 docstrings = self.xml_item.briefDoc
                 if docstrings:
-                    docstrings = self.Indent(class_name, docstrings, spacer, u'')
+                    docstrings = self.Indent(class_name, docstrings, spacer, '')
                 else:
                     docstrings = ''
             else:
-                docstrings = self.Indent(class_name, self.docstrings, spacer, u'')
+                docstrings = self.Indent(class_name, self.docstrings, spacer, '')
             
             if self.kind == 'class':
                 desc = ChopDescription(docstrings)
@@ -2767,7 +2775,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 continue
 
             if name in done:
-                print message % (kind, name, class_name, name, item.__class__.__name__)
+                print((message % (kind, name, class_name, name, item.__class__.__name__)))
                 duplicated_indexes.append(index)
                 continue
 
@@ -3202,7 +3210,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             simple_docs = ConvertToPython(method.pyDocstring)
         else:
             brief = method.briefDoc
-            if not isinstance(brief, basestring):
+            if not isinstance(brief, string_base):
                 docstring = XMLDocString(method)
                 docstring.kind = 'method'
                 docstring.current_module = self.current_module

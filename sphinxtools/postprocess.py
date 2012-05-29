@@ -12,19 +12,24 @@
 
 # Standard library imports
 import os
+import sys
 import re
-import cPickle
 import glob
 import random
 import subprocess
 
+if sys.version_info < (3,):
+    import cPickle as pickle
+else:
+    import pickle
+
 # Phoenix-specific imports
-import templates
 from buildtools.config import copyIfNewer, writeIfChanged, newer, getSvnRev, textfile_open
 
-from utilities import Wx2Sphinx
-from constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
-from constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
+from . import templates
+from .utilities import Wx2Sphinx
+from .constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
+from .constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
 
 
 def MakeHeadings():
@@ -94,7 +99,7 @@ def BuildEnumsAndMethods(sphinxDir):
     """
 
     fid = open(os.path.join(sphinxDir, 'class_summary.lst'), 'rb')
-    class_summary = cPickle.load(fid)
+    class_summary = pickle.load(fid)
     fid.close()
     
     unreferenced_classes = {}
@@ -116,7 +121,7 @@ def BuildEnumsAndMethods(sphinxDir):
         orig_text = text = fid.read()
         fid.close()
 
-        for old, new in enum_dict.items():
+        for old, new in list(enum_dict.items()):
             text = text.replace(old, new)
 
         widget_name = os.path.split(os.path.splitext(input)[0])[1]
@@ -144,6 +149,7 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace('wx.``', '``')
         text = text.replace('non-NULL', 'not ``None``')
         text = text.replace(',,', ',').replace(', ,', ',')
+        text = text.replace('|wx', '|')
 
         if 'DocstringsGuidelines' not in input:
             # Leave the DocstringsGuidelines.txt file alone on these ones
@@ -182,7 +188,7 @@ def BuildEnumsAndMethods(sphinxDir):
            'the text file "unreferenced_classes.inc" together with the ReST file names where they\n' \
            'appear.\n\n'
 
-    keys = unreferenced_classes.keys()
+    keys = list(unreferenced_classes.keys())
     keys.sort()
 
     fid = textfile_open(os.path.join(SPHINXROOT, 'unreferenced_classes.inc'), 'wt') 
@@ -197,7 +203,7 @@ def BuildEnumsAndMethods(sphinxDir):
     fid.write('='*50 + ' ' + '='*50 + '\n')
     fid.close()
 
-    print warn%(len(keys))
+    print((warn%(len(keys))))
             
 
 # ----------------------------------------------------------------------- #
@@ -319,7 +325,7 @@ def ReformatFunctions(file):
         return
     
     fid = open(file, 'rb')
-    functions = cPickle.load(fid)
+    functions = pickle.load(fid)
     fid.close()
     
     if local_file.count('.') == 1:
@@ -328,7 +334,7 @@ def ReformatFunctions(file):
     else:
         label = local_file.split('.')[0:-2][0]
 
-    names = functions.keys()
+    names = list(functions.keys())
     names = [name.lower() for name in names]
     names.sort()
 
@@ -343,7 +349,7 @@ def ReformatFunctions(file):
     text += '  |  '.join([':ref:`%s <%s %s>`'%(letter, label, letter) for letter in letters])
     text += '\n\n\n'
 
-    names = functions.keys()
+    names = list(functions.keys())
     names = sorted(names, key=str.lower)
 
     for letter in letters:
@@ -374,7 +380,7 @@ def MakeClassIndex(sphinxDir, file):
         return
     
     fid = open(file, 'rb')
-    classes = cPickle.load(fid)
+    classes = pickle.load(fid)
     fid.close()
     
     if local_file.count('.') == 1:
@@ -390,7 +396,7 @@ def MakeClassIndex(sphinxDir, file):
     enum_files = glob.glob(sphinxDir + '/%s*.enumeration.txt'%module)
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
 
-    names = classes.keys()
+    names = list(classes.keys())
     names.sort()
 
     text = ''
@@ -466,7 +472,7 @@ def GenGallery():
         possible = possible.lower()
         html_files[possible + '.png'] = simple + '.html'
 
-    keys = html_files.keys()
+    keys = list(html_files.keys())
     keys.sort()
 
     text = ''
@@ -475,7 +481,7 @@ def GenGallery():
         possible_png = key
         html = html_files[possible_png]
 
-        rand_list = range(3)
+        rand_list = list(range(3))
         random.shuffle(rand_list)
 
         for plat_index in rand_list:
@@ -647,7 +653,7 @@ def PostProcess(folder):
                                 
             newtext += line + '\n'                
 
-        for old, new in enum_dict.items():
+        for old, new in list(enum_dict.items()):
             newtext = newtext.replace(old, new)
 
         newtext = AddJavaScript(newtext)            

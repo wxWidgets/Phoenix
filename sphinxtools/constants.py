@@ -69,9 +69,12 @@ REMOVED_LINKS = ['Library:', 'Category:', 'Predefined objects/pointers:']
 # wx.html and so on)
 MODULENAME_REPLACE = {'_core'    : '',
                       '_dataview': 'dataview.',
-                      '_adv'     : '',
+                      '_adv'     : 'adv.',
                       }
 
+NO_MODULE = {'DatePickerCtrlGeneric': 'adv.',
+             'GenericCalendarCtrl': 'adv.'}
+             
 # Other C++ specific things to strip away
 CPP_ITEMS = ['*', '&', 'const', 'unsigned', '(size_t)', 'size_t', 'void']
 
@@ -88,11 +91,12 @@ SPHINXROOT           = os.path.join(PHOENIXROOT, 'docs', 'sphinx')
 # converted Python snippets in 3 sub-folders
 SNIPPETROOT          = os.path.join(SPHINXROOT,  'rest_substitutions', 'snippets')
 
-# A folder where some of the difficult-to-translate-to-ReST tables are. There are 3 of
+# A folder where some of the difficult-to-translate-to-ReST tables are. There are 4 of
 # them up to now, for various reasons:
 # 1. The wx.Sizer flags table is a grid table, very difficult to ReSTify automatically
 # 2. The wx.ColourDatabase table of colour comes up all messy when ReSTified from XML
 # 3. The "wxWidgets 2.8 Compatibility Functions" table for wx.VScrolledWindow
+# 4. The wx.ArtProvider table
 TABLEROOT            = os.path.join(SPHINXROOT,  'rest_substitutions', 'tables')
 
 # Folder where to save the inheritance diagrams for the classes

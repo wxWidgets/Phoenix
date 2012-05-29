@@ -15,18 +15,25 @@ import sys
 import os
 import codecs
 import shutil
+import glob
+import imp
+
 if sys.version_info < (3,):
     import cPickle as pickle
     from UserDict import UserDict
+    string_base = basestring
 else:
     import pickle
     from collections import UserDict
+    string_base = str
 
 # Phoenix-specific imports
+from buildtools.config import phoenixDir
+
 from .templates import TEMPLATE_CONTRIB
 
-from .constants import IGNORE, PUNCTUATION
-from .constants import CPP_ITEMS, VERSION, VALUE_MAP
+from .constants import IGNORE, PUNCTUATION, MODULENAME_REPLACE
+from .constants import CPP_ITEMS, VERSION, VALUE_MAP, NO_MODULE
 from .constants import RE_KEEP_SPACES, EXTERN_INHERITANCE
 from .constants import DOXYROOT, SPHINXROOT, WIDGETS_IMAGES_ROOT
 
@@ -67,7 +74,7 @@ class odict(UserDict):
         return dict
 
     def items(self):
-        return zip(self._keys, self.values())
+        return list(zip(self._keys, list(self.values())))
 
     def keys(self):
         return self._keys
@@ -89,11 +96,11 @@ class odict(UserDict):
 
     def update(self, dict):
         UserDict.update(self, dict)
-        for key in dict.keys():
+        for key in list(dict.keys()):
             if key not in self._keys: self._keys.append(key)
 
     def values(self):
-        return map(self.get, self._keys)
+        return list(map(self.get, self._keys))
 
 
 # ----------------------------------------------------------------------- #
@@ -417,7 +424,7 @@ def FindControlImages(elementOrString):
 
     """       
 
-    if isinstance(elementOrString, basestring):
+    if isinstance(elementOrString, string_base):
         class_name = py_class_name = elementOrString.lower()
     else:
         element = elementOrString
@@ -456,14 +463,14 @@ def FindControlImages(elementOrString):
 
             appearance[sub_folder] = py_png_file
             
-    if not any(appearance.values()):
+    if not any(list(appearance.values())):
         return []
     
-    for sub_folder, image in appearance.items():
+    for sub_folder, image in list(appearance.items()):
         if not image:
             appearance[sub_folder] = '../no_appearance.png'
 
-    return appearance.values()
+    return list(appearance.values())
 
 
 # ----------------------------------------------------------------------- #
@@ -627,6 +634,35 @@ def PickleClassInfo(class_name, element, short_description):
 
 
 # ----------------------------------------------------------------------- #
+
+global ALL_ITEMS
+ALL_ITEMS = {}
+
+def Class2Module():
+
+    global ALL_ITEMS
+    
+    if ALL_ITEMS:
+        return ALL_ITEMS
+
+    etg_files = glob.glob(os.path.join(phoenixDir(), 'etg') + '/*.py')
+    etg_files = [files for files in etg_files if not files.startswith('_')]
+
+    for files in etg_files:
+        split = os.path.split(os.path.splitext(files)[0])[1]
+        module = imp.load_source(split, files)
+
+        current_module = MODULENAME_REPLACE.get(module.MODULE, '')
+
+        for item in module.ITEMS:
+            
+            item = RemoveWxPrefix(item)
+            ALL_ITEMS[item] = current_module
+
+    ALL_ITEMS.update(NO_MODULE)
+
+    return ALL_ITEMS            
+    
     
 def Wx2Sphinx(name):
     """
@@ -636,13 +672,22 @@ def Wx2Sphinx(name):
     """
 
     if '<' in name:
-        name = name[0:name.index('<')].strip()
+        name = name[0:name.index('<')]
 
+    name = name.strip()    
     newname = fullname = RemoveWxPrefix(name)
 
-    if 'DataView' in name:
-        fullname = 'dataview.' + fullname
+    if '.' in newname:
+        lookup, remainder = newname.split('.')
+        remainder = '.%s'%remainder
+    else:
+        lookup = newname
+        remainder = ''
 
+    all_items = Class2Module()
+    if lookup in all_items:
+        fullname = all_items[lookup] + lookup + remainder
+        
     return newname, fullname
 
 
@@ -758,4 +803,10 @@ def FormatExternalLink(fullname, inheritance=False):
         full_page = '`%s <%s>`_'%(fullname, base_address + htmlpage)
 
     return full_page
+
+
+def IsPython3():
+    """ Returns ``True`` if we are using Python 3.x. """
+
+    return sys.version_info >= (3, )    
 
