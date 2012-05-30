@@ -26,6 +26,7 @@ ITEMS  = [ 'wxDataFormat',
            'wxTextDataObject',
            'wxURLDataObject',
            'wxFileDataObject',
+           'wxHTMLDataObject',
            ]
 
    

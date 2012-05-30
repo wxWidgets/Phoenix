@@ -212,7 +212,13 @@ class DataObjTests(wtc.WidgetTestCase):
         self.assertTrue(len(names) == 3)
         self.assertTrue(names[0] == 'filename1')
         self.assertTrue(names == do.Filenames)
+
         
+    def test_HTMLDataObject(self):
+        data = "<html><body>This is some data</body></html>"
+        do = wx.HTMLDataObject(data)
+        self.assertEqual(do.GetHTML(), data)
+        self.assertEqual(do.HTML, data)
         
         
 #---------------------------------------------------------------------------
