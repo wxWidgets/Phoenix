@@ -302,13 +302,21 @@ def RemoveUnreferenced(input, class_summary, enum_base, unreferenced_classes, te
             # Overview pages
             continue
 
+        if '.' in reg:
+            # Sometimes in wxWidgets the enums and structures are reported as
+            # Class.Enum/Class.Structure, while we only have links to Enum and Structures
+            possible_enum = reg.split('.')[1]
+            if possible_enum in enum_base or possible_enum in class_summary:
+                text = text.replace(':ref:`%s`'%reg, ':ref:`%s`'%possible_enum, 1)
+                continue
+
         if reg not in unreferenced_classes:
             unreferenced_classes[reg] = []
 
         split = os.path.split(input)[1]
         if split not in unreferenced_classes[reg]:
             unreferenced_classes[reg].append(split)
-            
+                
         text = text.replace(':ref:`%s`'%reg, '`%s`'%reg, 1)
 
     return text, unreferenced_classes        

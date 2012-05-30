@@ -25,7 +25,7 @@ wxPython has five variants of this control:
 Best Book
 ---------
 
-:ref:`BookCtrl` is mapped to the class best suited for a given platform. Currently it provides :ref:`Choicebook`
+:ref:`BookCtrlBase` is mapped to the class best suited for a given platform. Currently it provides :ref:`Choicebook`
 for smartphones equipped with WinCE, and :ref:`Notebook` for all other platforms. The mapping consists of:
 
 =============================================== ==================================================

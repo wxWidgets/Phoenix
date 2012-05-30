@@ -55,7 +55,7 @@ from sphinxtools.utilities import FormatContributedSnippets
 
 from sphinxtools.constants import VERSION, REMOVED_LINKS, SECTIONS
 from sphinxtools.constants import MAGIC_METHODS, MODULENAME_REPLACE
-from sphinxtools.constants import IGNORE
+from sphinxtools.constants import IGNORE, NO_MODULE
 from sphinxtools.constants import SPHINXROOT, DOXYROOT
 from sphinxtools.constants import SNIPPETROOT, TABLEROOT, OVERVIEW_IMAGES_ROOT
 
@@ -1534,15 +1534,18 @@ class XRef(Node):
 
                     if '(' in stripped:
                         stripped = stripped[0:stripped.index('(')].strip()
-                    
-                    if '.' not in stripped:
-                        klass = self.IsClassDescription()
-                        if klass:
-                            text = ':meth:`~%s.%s`'%(klass, stripped)
+
+                    if stripped in NO_MODULE:
+                        text = ':ref:`%s`'%(NO_MODULE[stripped] + stripped)
+                    else:                    
+                        if '.' not in stripped:
+                            klass = self.IsClassDescription()
+                            if klass:
+                                text = ':meth:`~%s.%s`'%(klass, stripped)
+                            else:
+                                text =  ':meth:`%s` '%stripped
                         else:
                             text =  ':meth:`%s` '%stripped
-                    else:
-                        text =  ':meth:`%s` '%stripped
 
         else:
             text = ':ref:`%s`'%Wx2Sphinx(stripped)[1]
@@ -2423,10 +2426,15 @@ class XMLDocString(object):
             new_section = []
             
             for ret in return_section:
-                if ret[0].isupper():
-                    new_section.append(':ref:`%s`'%ret.strip())
+                stripped = ret.strip()
+                if stripped in NO_MODULE:
+                    ret = NO_MODULE[stripped] + stripped
+                    new_section.append(':ref:`%s`'%ret)
                 else:
-                    new_section.append('`%s`'%ret.strip())
+                    if ret[0].isupper():
+                        new_section.append(':ref:`%s`'%stripped)
+                    else:
+                        new_section.append('`%s`'%stripped)
 
             element = et.Element('return', kind='return')
             element.text = '( %s )'%(', '.join(new_section))

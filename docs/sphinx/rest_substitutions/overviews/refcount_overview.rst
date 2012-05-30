@@ -52,7 +52,7 @@ List of Reference Counted Classes
 The following classes in wxPython have efficient (i.e. fast) assignment operators and copy constructors since they are reference-counted:
 
 - :ref:`AcceleratorTable`
-- :ref:`animate.Animation`
+- :ref:`adv.Animation`
 - :ref:`Bitmap`
 - :ref:`Brush`
 - :ref:`Cursor`

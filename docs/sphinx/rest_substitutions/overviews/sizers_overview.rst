@@ -136,7 +136,7 @@ be stretched horizontally. The following sample shows the same dialog as in the 
 StaticBoxSizer
 ^^^^^^^^^^^^^^
 
-:ref:`StaticBoxSixer` is the same as a :ref:`BoxSizer`, but surrounded by a static box. Here is a sample:
+:class:`StaticBoxSixer` is the same as a :class:`BoxSizer`, but surrounded by a static box. Here is a sample:
 
 
 .. figure:: _static/images/overviews/overview_sizer_09.png
@@ -301,7 +301,7 @@ the width of each field is the width of the widest child, the height of each fie
 same height and all fields in one column having the same width, but all rows or all columns are not necessarily the same height or 
 width as in the :ref:`GridSizer`.
 
-:ref:`StaticBoxSizer` is a sizer derived from :ref:`BoxSizer` but adds a static box around the sizer. Note that this static box
+:class:`StaticBoxSizer` is a sizer derived from :ref:`BoxSizer` but adds a static box around the sizer. Note that this static box
 has to be created separately.
 
 :ref:`GridBagSizer` is a rather special kind of sizer which, unlike the other classes, allows to directly put the elements at the 

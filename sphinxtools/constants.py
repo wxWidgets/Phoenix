@@ -20,10 +20,11 @@ import buildtools.version as version
 from buildtools.config import phoenixDir, wxDir
 
 # List of strings that should be ignored when creating inline literals
-# such as ``ID_ANY`` or ``HORIZONtAL``, with double backticks
+# such as ``ID_ANY`` or ``HORIZONTAL``, with double backticks
 IGNORE = ['wxPython', 'wxWidgets', 'wxOSX', 'wxMGL', 'wxDFB', 'wxMAC', 'wxGTK', 'wxGTK2', 'wxUniversal',
           'OS', 'X', 'OSX', 'DFB', 'MAC', 'GTK', 'GTK2', 'MSW', 'wxMSW', 'X11', 'OS2', 'MS', 'XP', 'GTK+',
-          'UI', 'GUI', '--', 'OTOH', 'GDI+', 'API', 'NT', 'RTL', 'GDI', '3D', 'MDI']
+          'UI', 'GUI', '--', 'OTOH', 'GDI+', 'API', 'NT', 'RTL', 'GDI', '3D', 'MDI', 'SDI', 'TDI', 'URL',
+          'XPM', 'HTML', 'MIME', 'C++', 'XDG', 'A4', 'A5']
 
 # C++ stuff to Python/ReST stuff
 VALUE_MAP = {'true':  '``True``',
@@ -72,8 +73,31 @@ MODULENAME_REPLACE = {'_core'    : '',
                       '_adv'     : 'adv.',
                       }
 
-NO_MODULE = {'DatePickerCtrlGeneric': 'adv.',
-             'GenericCalendarCtrl': 'adv.'}
+NO_MODULE = {
+             # -- wxAdvanced -- #
+             # Widgets
+             'DatePickerCtrlGeneric': 'adv.',
+             'GenericCalendarCtrl'  : 'adv.',
+             
+             # Enums/constants
+             'AnimationType'        : 'adv.',
+             'CalendarDateBorder'   : 'adv.',
+             'CalendarHitTestResult': 'adv.',
+             'LayoutAlignment'      : 'adv.',
+             'LayoutOrientation'    : 'adv.',
+             'SashDragStatus'       : 'adv.',
+             'SashEdgePosition'     : 'adv.',
+             'TaskBarIconType'      : 'adv.',
+
+             # -- wxDataView -- #
+             # Widgets
+             
+             # Enums/constants
+             'DataViewCellMode'       : 'dataview.',
+             'DataViewCellRenderState': 'dataview.',
+             'DataViewColumnFlags'    : 'dataview.',
+             
+             }
              
 # Other C++ specific things to strip away
 CPP_ITEMS = ['*', '&', 'const', 'unsigned', '(size_t)', 'size_t', 'void']
@@ -136,7 +160,15 @@ MAGIC_METHODS = {
     # TODO: add more
     }
 
-SECTIONS_EXCLUDE = {'TextCtrl': ('|phoenix_title| TextCtrl and ``C++`` Streams', '|phoenix_title| Event Handling')}
+SECTIONS_EXCLUDE = {
+                    'ConfigBase'   : ('Related Include Files', '|phoenix_title| Example'),
+                    'KeyboardState': ('This class is implemented ', '.. seealso::'),
+                    'Menu'         : ('|phoenix_title| Allocation strategy', '|phoenix_title| Event handling'),
+                    'MouseState'   : ('This class is implemented', '.. seealso::'),
+                    'Panel'        : ('Please see  :ref:`/', 'if not all characters'),
+                    'TextCtrl'     : ('|phoenix_title| TextCtrl and ``C++`` Streams', '|phoenix_title| Event Handling'),
+                    'TextEntry'    : ('Notice that you need', 'Currently this method is only '),
+                    }
 
 # A regex to split a string keeping the whitespaces
 RE_KEEP_SPACES = re.compile(r'(\s+)')
@@ -155,7 +187,7 @@ PYTHON_DOCS = 'http://docs.python.org/library/'
 NUMPY_DOCS = 'http://docs.scipy.org/doc/numpy/reference/generated/'
 
 EXTERN_INHERITANCE = {'UserDict.'  : PYTHON_DOCS,
-                      'ctypes.'   : PYTHON_DOCS,
+                      'ctypes.'    : PYTHON_DOCS,
                       'code.'      : PYTHON_DOCS,
                       'exceptions.': PYTHON_DOCS,
                       'threading.' : PYTHON_DOCS,
