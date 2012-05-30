@@ -107,7 +107,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         for item in module.imports:
             if item.startswith('_'):
                 item = item[1:]
-            stream.write('from %s import *\n' % item)
+            stream.write('from wx.%s import *\n' % item)
         
         methodMap = {
             extractors.ClassDef         : self.generateClass,
