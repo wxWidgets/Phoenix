@@ -199,7 +199,7 @@ For Phoenix the location of the wrapper code for the classes and functions
 will attempt to follow the same organization that wxWidgets uses for putting
 those same classes and functions into DLLs or shared libraries. This means
 that some things that were formerly in the core wx package namespace are no
-longer there. They will have to be used by importing a wx sumbodule. Most of
+longer there. They will have to be used by importing a wx submodule. Most of
 them will be in the wx.adv module. Once nice advantage of doing this is that
 if your application is not using any of these lesser used classes then you
 will not have to bundle the new modules (nor the associated wx DLLs) with
