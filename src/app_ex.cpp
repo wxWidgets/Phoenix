@@ -231,7 +231,8 @@ void wxPyApp::_BootstrapApp()
         // wxApp takes ownership of the argv array, don't delete it here
 
         if (! result)  {
-            wxPyErr_SetString(PyExc_SystemError,
+            wxPyThreadBlocker blocker;
+            PyErr_SetString(PyExc_SystemError,
                               "wxEntryStart failed, unable to initialize wxWidgets!"
 #ifdef __WXGTK__
                               "  (Is DISPLAY set properly?)"
