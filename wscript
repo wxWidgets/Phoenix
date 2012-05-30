@@ -23,9 +23,10 @@ isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
 top = '.'
-out = 'build_waf'
+outBASE = 'build_waf'
+out = outBASE
 if isWindows:
-    out = 'build_waf/release'
+    out = outBASE + '/release'
 
 
 
@@ -35,7 +36,7 @@ def options(opt):
     if isWindows:
         def debugOptionCallback(option, optstr, value, parser):
             """Set debug flag and also change the output directory option"""
-            parser.values.out = 'build_waf/debug'
+            parser.values.out = outBASE + '/debug'
             parser.values.debug = True
             
         opt.add_option('--debug', dest='debug', default=False, action='callback', 
@@ -68,6 +69,10 @@ def configure(conf):
     conf.load('python')
     conf.check_python_headers()
     conf.check_python_version(minver=(2,7,0))
+
+    # Add the Python version to the output path name  
+    # TODO: Is there some way to do something like this that will actually work?
+    # conf.options.out += '/' + conf.env.PYTHON_VERSION 
 
     # fetch and save the debug option
     conf.env.debug = conf.options.debug
