@@ -11,29 +11,15 @@
 
 
 %ModuleHeaderCode
-    // A wxClientData that holds a reference to a Python object
-    class wxPyClientData : public wxClientData 
-    {
-    public:
-        wxPyClientData(PyObject* obj, bool incref=true) 
-        {
-            m_obj = obj;
-            m_incRef = incref;
-            if (incref) {
-                wxPyBLOCK_THREADS( Py_INCREF(m_obj) );
-                }
-        }
-        ~wxPyClientData() 
-        {
-            if (m_incRef) {
-                wxPyBLOCK_THREADS( Py_DECREF(m_obj) );
-            }
-            m_obj = NULL;
-        }
-        PyObject* m_obj;
-        bool      m_incRef;
-    };
- 
+// A wxClientData that holds a reference to a Python object
+class wxPyClientData : public wxPyUserDataHelper<wxClientData>
+{
+public:
+    wxPyClientData(PyObject* obj = NULL)
+        : wxPyUserDataHelper<wxClientData>(obj)
+    { }
+};
+
 %End
 
 
@@ -59,13 +45,7 @@
     %ConvertFromTypeCode
         // Code to convert a wxClientData back to the PyObject.
         PyObject* obj;
-        if (sipCpp == NULL) {
-            obj = Py_None;
-        } else {            
-            wxPyClientData* data = static_cast<wxPyClientData*>(sipCpp);  // TODO: verify poitner type?
-            obj = data->m_obj;
-        }
-        Py_INCREF(obj);
+        obj = wxPyClientData::SafeGetData(static_cast<wxPyClientData*>(sipCpp));
         return obj;
     %End
     

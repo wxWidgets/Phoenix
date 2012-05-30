@@ -213,5 +213,71 @@ private:
     wxPyBlock_t m_oldstate;
     bool        m_block;
 };
+  
+  
+//--------------------------------------------------------------------------
+// helper template to make common code for all of the various user data owners
+template<typename Base>
+class wxPyUserDataHelper : public Base {
+public:
+    explicit wxPyUserDataHelper(PyObject* obj = NULL) 
+        : m_obj(obj ? obj : Py_None) 
+    {
+        wxPyThreadBlocker blocker;
+        Py_INCREF(m_obj);   
+    }  
     
+    ~wxPyUserDataHelper()
+    {   // normally the derived class does the clean up, or deliberately leaks
+        // by setting m_obj to 0, but if not then do it here.
+        if (m_obj) {    
+            wxPyThreadBlocker blocker;
+            Py_DECREF(m_obj);
+            m_obj = 0;
+        }
+    }
+
+    // Return Value: New reference
+    PyObject* GetData() const {
+        wxPyThreadBlocker blocker;
+        Py_INCREF(m_obj);
+        return m_obj;
+    }
+    
+    // Return Value: Borrowed reference
+    PyObject* BorrowData() const {
+        return m_obj;
+    }
+
+    void SetData(PyObject* obj) {
+        if (obj != m_obj) {
+            wxPyThreadBlocker blocker;
+            Py_DECREF(m_obj);
+            m_obj = obj ? obj : Py_None;
+            Py_INCREF(m_obj);
+        }
+    }
+    
+    // Return the object in udata or None if udata is null
+    // Return Value: New reference
+    static PyObject* SafeGetData(wxPyUserDataHelper<Base>* udata) {
+        wxPyThreadBlocker blocker;
+        PyObject* obj = udata ? udata->BorrowData() : Py_None;
+        Py_INCREF(obj);
+        return obj;
+    }
+    
+    // Set the m_obj to null, this should only be used during clean up, when
+    // the object should be leaked.
+    // Calling any other methods on this object is then undefined behaviour
+    void ReleaseDataDuringCleanup()
+    {
+        m_obj = 0;        
+    }
+
+private:
+    PyObject* m_obj;
+};
+
+//--------------------------------------------------------------------------  
 #endif

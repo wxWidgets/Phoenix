@@ -11,36 +11,15 @@
 
 
 %ModuleHeaderCode
-    // A wxPyUserData object that holds a reference to a Python object
-    class wxPyUserData : public wxObject 
-    {
-    public:
-        wxPyUserData() : wxObject()
-        {
-            m_obj = NULL;
-            m_incRef = false;
-        }
-        
-        wxPyUserData(PyObject* obj, bool incref=true) 
-        : wxObject()
-        {
-            m_obj = obj;
-            m_incRef = incref;
-            if (incref) {
-                wxPyBLOCK_THREADS( Py_INCREF(m_obj) );
-            }
-        }
-        virtual ~wxPyUserData() 
-        {
-            if (m_incRef) {
-                wxPyBLOCK_THREADS( Py_DECREF(m_obj) );
-            }
-            m_obj = NULL;
-        }
-        PyObject* m_obj;
-        bool      m_incRef;
-    };
- 
+// A wxObject object that holds a reference to a Python object
+class wxPyUserData : public wxPyUserDataHelper<wxObject>
+{
+public:
+    wxPyUserData(PyObject* obj = NULL)
+        : wxPyUserDataHelper<wxObject>(obj)
+    { }
+};
+
 %End
 
 
@@ -66,17 +45,8 @@
     %ConvertFromTypeCode
         // Code to convert a wxPyUserData back to the PyObject.
         PyObject* obj;
-        if (sipCpp == NULL) {
-            obj = Py_None;
-        } else {            
-            wxPyUserData* data = static_cast<wxPyUserData*>(sipCpp);  // TODO: verify pointer type?
-            obj = data->m_obj;
-        }
-        Py_INCREF(obj);
+        obj = wxPyUserData::SafeGetData(static_cast<wxPyUserData*>(sipCpp));
         return obj;
     %End
 };
 
-
-// NOTE TO SELF: It looks like the GIL is already held by the current thread
-// in ConvertToTypeCode and ConvertFromTypeCode code blocks...

@@ -15,21 +15,14 @@
 #include <wx/treebase.h>
 
 // A wxTreeItemData that knows what to do with PyObjects for maintianing the refcount
-class wxPyTreeItemData : public wxTreeItemData {
+class wxPyTreeItemData : public wxPyUserDataHelper<wxTreeItemData>
+{
 public:
-    wxPyTreeItemData(PyObject* obj = NULL) {
-        if (obj == NULL)
-            obj = Py_None;
-        wxPyBLOCK_THREADS( Py_INCREF(obj) );
-        m_obj = obj;
-    }
+    wxPyTreeItemData(PyObject* obj = NULL)
+        : wxPyUserDataHelper<wxTreeItemData>(obj)
+    { }
+};
 
-    ~wxPyTreeItemData() {
-        wxPyBLOCK_THREADS( Py_DECREF(m_obj) );
-    }
-
-    PyObject* m_obj;
-};    
 %End
 
 
@@ -41,7 +34,7 @@ public:
             return TRUE; // any python object is valid
         }
         
-        // Code to create a new wxClientData from the PyObject
+        // Code to create a new wxTreeItemData from the PyObject
         wxPyTreeItemData* data =  new wxPyTreeItemData(sipPy);
         *sipCppPtr = data;
         return sipGetState(sipTransferObj);
@@ -51,13 +44,7 @@ public:
     %ConvertFromTypeCode
         // Code to convert a wxPyTreeItemData back to the PyObject.
         PyObject* obj;
-        if (sipCpp == NULL) {
-            obj = Py_None;
-        } else {            
-            wxPyTreeItemData* data = static_cast<wxPyTreeItemData*>(sipCpp); 
-            obj = data->m_obj;
-        }
-        Py_INCREF(obj);
+        obj = wxPyTreeItemData::SafeGetData(static_cast<wxPyTreeItemData*>(sipCpp));
         return obj;
     %End
     
