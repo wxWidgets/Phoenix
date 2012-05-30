@@ -41,16 +41,16 @@ INCLUDES = [
              'editlbox',
              'notifmsg',
              'splash',
+             'sashwin',
+             'laywin',
              
              
              # TODOs - 
              # These modules are also in the C++ adv lib and so should be included here:
              #
              #'bmpcbox',
-             #'laywin',
              #'odcombo',
              #'richtooltip',
-             #'sashwin',
              #'timectrl',
              #'treelist',
              #'wizard',
