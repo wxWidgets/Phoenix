@@ -179,7 +179,7 @@ def run():
             '''
             #--------------------------------------------------
             class ColourPickerButton(BitmapButton):
-                def __init__(self, parent, id=-1, col=wx.BLACK,
+                def __init__(self, parent, id=-1, colour=wx.BLACK,
                              pos=wx.DefaultPosition, size=wx.DefaultSize,
                              style = CLRP_DEFAULT_STYLE,
                              validator = wx.DefaultValidator,
@@ -187,7 +187,7 @@ def run():
                     
                     wx.BitmapButton.__init__(self, parent, id, wx.Bitmap(1,1), 
                                              pos, size, style, validator, name)
-                    self.SetColour(col)
+                    self.SetColour(colour)
                     self.InvalidateBestSize()
                     self.SetInitialSize(size)
                     self.Bind(wx.EVT_BUTTON, self.OnButtonClick)
@@ -202,8 +202,8 @@ def run():
                             _colourData.SetCustomColour(i, c)
                             grey += 16                                            
                                 
-                def SetColour(self, col):
-                    self.colour = col
+                def SetColour(self, colour):
+                    self.colour = colour
                     bmp = self._makeBitmap()
                     self.SetBitmapLabel(bmp)
                 
@@ -240,18 +240,18 @@ def run():
             
             #--------------------------------------------------
         
-            def __init__(self, parent, id=-1, col=wx.BLACK,
+            def __init__(self, parent, id=-1, colour=wx.BLACK,
                          pos=wx.DefaultPosition, size=wx.DefaultSize,
                          style = CLRP_DEFAULT_STYLE,
                          validator = wx.DefaultValidator,
                          name = "colourpicker"):
-                if type(col) != wx.Colour:
-                    col = wx.Colour(col)
+                if type(colour) != wx.Colour:
+                    colour = wx.Colour(colour)
                 wx.PickerBase.__init__(self)
-                self.CreateBase(parent, id, col.GetAsString(),
+                self.CreateBase(parent, id, colour.GetAsString(),
                                 pos, size, style, validator, name)
                 widget = ColourPickerCtrl.ColourPickerButton(
-                    self, -1, col, style=self.GetPickerStyle(style))
+                    self, -1, colour, style=self.GetPickerStyle(style))
                 self.SetPickerCtrl(widget)
                 widget.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnColourChange)
                 self.PostCreation()
@@ -262,9 +262,9 @@ def run():
                 return self.GetPickerCtrl().GetColour()
         
         
-            def SetColour(self, col):
+            def SetColour(self, colour):
                 '''Returns the currently selected colour.'''
-                self.GetPickerCtrl().SetColour(col)
+                self.GetPickerCtrl().SetColour(colour)
                 self.UpdateTextCtrlFromPicker()
         
                 
