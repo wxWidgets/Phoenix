@@ -74,7 +74,7 @@ def run():
         doc='Returns a list of currently selected items in the tree.  This function '
             'can be called only if the control has the wx.TR_MULTIPLE style.',
         body="""\
-        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker blocker;
         PyObject*           rval = PyList_New(0);
         wxArrayTreeItemIds  array;
         size_t              num, x;
@@ -85,7 +85,6 @@ def run():
             PyList_Append(rval, item);
             Py_DECREF(item);
         }
-        wxPyEndBlockThreads(blocked);
         return rval;
         """)
     
@@ -104,10 +103,9 @@ def run():
         body="""\
         wxRect rect;
         if (self->GetBoundingRect(*item, rect, textOnly)) {
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            wxPyThreadBlocker blocker;
             wxRect* r = new wxRect(rect);
             PyObject* val = wxPyConstructObject((void*)r, wxT("wxRect"), true);
-            wxPyEndBlockThreads(blocked);
             return val;
         }
         else

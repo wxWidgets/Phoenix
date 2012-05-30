@@ -64,7 +64,7 @@
 
          
     %ConvertFromTypeCode
-        // Code to convert a wxClientData back to the PyObject.
+        // Code to convert a wxPyUserData back to the PyObject.
         PyObject* obj;
         if (sipCpp == NULL) {
             obj = Py_None;

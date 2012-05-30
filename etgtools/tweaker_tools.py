@@ -867,7 +867,7 @@ static
 {{
     {objType}* array;
     Py_ssize_t idx, len;
-    wxPyBlock_t blocked = wxPyBeginBlockThreads();
+    wxPyThreadBlocker blocker;
     
     // ensure that it is a sequence
     if (! PySequence_Check(source)) 
@@ -893,7 +893,6 @@ static
     array = new {objType}[*count];
     if (!array) {{
         PyErr_SetString(PyExc_MemoryError, "Unable to allocate temporary array");
-        wxPyEndBlockThreads(blocked);
         return NULL;
     }}
     for (idx=0; idx<len; idx++) {{
@@ -906,12 +905,10 @@ static
         sipReleaseType((void*)item, {sipType}, state); // delete temporary instances
         Py_DECREF(obj);
     }}
-    wxPyEndBlockThreads(blocked);
     return array;
 
 error0:
     PyErr_SetString(PyExc_TypeError, "{errmsg}");
-    wxPyEndBlockThreads(blocked);
     return NULL;
 }}
 """.format(**locals())

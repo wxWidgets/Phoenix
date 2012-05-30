@@ -111,7 +111,7 @@ def run():
         static PyObject* _makeReadBufObj(wxInputStream* self, wxMemoryBuffer& buf) {
             PyObject* obj = NULL;
 
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            wxPyThreadBlocker blocker;
             wxStreamError err = self->GetLastError();  // error check
             if (err != wxSTREAM_NO_ERROR && err != wxSTREAM_EOF) {
                 PyErr_SetString(PyExc_IOError,"IOError in wxInputStream");
@@ -120,7 +120,6 @@ def run():
                 // Return the data as a string object.  TODO: Py3
                 obj = PyBytes_FromStringAndSize(buf, buf.GetDataLen());
             }
-            wxPyEndBlockThreads(blocked);
             return obj;
         }
         """)

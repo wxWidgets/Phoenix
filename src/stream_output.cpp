@@ -33,29 +33,24 @@ public:
     wxPyOutputStream(PyObject* fileObj, bool block=true) 
     {
         m_block = block;
-        wxPyBlock_t blocked = wxPyBlock_t_default;
-        if (block) blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker blocker(m_block);
     
         m_write = wxPyGetMethod(fileObj, "write");
         m_seek = wxPyGetMethod(fileObj, "seek");
         m_tell = wxPyGetMethod(fileObj, "tell");
-    
-        if (block) wxPyEndBlockThreads(blocked);
     }
     
     virtual ~wxPyOutputStream()
     {
-        wxPyBlock_t blocked = wxPyBlock_t_default;
-        if (m_block) blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker blocker(m_block);
         Py_XDECREF(m_write);
         Py_XDECREF(m_seek);
         Py_XDECREF(m_tell);
-        if (m_block) wxPyEndBlockThreads(blocked);
     }
     
     wxPyOutputStream(const wxPyOutputStream& other)
     {
-        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker blocker;
         m_write  = other.m_write;
         m_seek  = other.m_seek;
         m_tell  = other.m_tell;
@@ -63,7 +58,6 @@ public:
         Py_INCREF(m_write);
         Py_INCREF(m_seek);
         Py_INCREF(m_tell);
-        wxPyEndBlockThreads(blocked);
     }
     
 protected:
@@ -94,7 +88,7 @@ protected:
         if (bufsize == 0)
             return 0;
         
-        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker blocker;
         PyObject* arglist = PyTuple_New(1);
         PyTuple_SET_ITEM(arglist, 0, PyBytes_FromStringAndSize((char*)buffer, bufsize));
         
@@ -105,13 +99,12 @@ protected:
             Py_DECREF(result);
         else
             m_lasterror = wxSTREAM_WRITE_ERROR;
-        wxPyEndBlockThreads(blocked);
         return bufsize;            
     }
     
     wxFileOffset OnSysSeek(wxFileOffset off, wxSeekMode mode) 
     {
-        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker blocker;
         PyObject* arglist = PyTuple_New(2);
     
         if (sizeof(wxFileOffset) > sizeof(long))
@@ -126,13 +119,12 @@ protected:
         PyObject* result = PyEval_CallObject(m_seek, arglist);
         Py_DECREF(arglist);
         Py_XDECREF(result);
-        wxPyEndBlockThreads(blocked);
         return OnSysTell();
     }
     
     wxFileOffset OnSysTell() const 
     {
-        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker blocker;
         PyObject* arglist = Py_BuildValue("()");
         PyObject* result = PyEval_CallObject(m_tell, arglist);
         Py_DECREF(arglist);
@@ -144,7 +136,6 @@ protected:
                 o = wxPyInt_AsLong(result);
             Py_DECREF(result);
         };
-        wxPyEndBlockThreads(blocked);
         return o;
     }
         

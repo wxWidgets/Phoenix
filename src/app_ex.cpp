@@ -152,11 +152,10 @@ void wxPyApp::OnAssertFailure(const wxChar *file,
             buf << wxT(": ") << msg;
         
         // set the exception
-        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker blocker;
         PyObject* s = wx2PyString(buf);
         PyErr_SetObject(wxAssertionError, s);
         Py_DECREF(s);
-        wxPyEndBlockThreads(blocked);
 
         // Now when control returns to whatever API wrapper was called from
         // Python it should detect that an exception is set and will return
@@ -187,7 +186,6 @@ void wxPyApp::_BootstrapApp()
 {
     static      bool haveInitialized = false;
     bool        result;
-    wxPyBlock_t blocked;
 
     // Only initialize wxWidgets once
     if (! haveInitialized) {
@@ -201,29 +199,29 @@ void wxPyApp::_BootstrapApp()
         #endif
         int       argc = 0;
         argType** argv = NULL;
-        blocked = wxPyBeginBlockThreads();
-        PyObject* sysargv = PySys_GetObject("argv");
-        if (sysargv != NULL) {            
-            argc = PyList_Size(sysargv);
-            argv = new argType*[argc+1];
-            int x;
-            for(x=0; x<argc; x++) {
-                PyObject *pyArg = PyList_GetItem(sysargv, x); // borrowed reference
-                // if there isn't anything in sys.argv[0] then set it to the python executable
-                if (x == 0 && PyObject_Length(pyArg) < 1) 
-                    pyArg = PySys_GetObject("executable");
-                #if PY_MAJOR_VERSION >= 3
-                    int len = PyObject_Length(pyArg);
-                    argv[x] = new argType[len+1];
-                    wxPyUnicode_AsWideChar(pyArg, argv[x], len+1);
-                #else
-                    argv[x] = strdup(PyBytes_AsString(pyArg));
-                #endif
+        {
+            wxPyThreadBlocker blocker;
+            PyObject* sysargv = PySys_GetObject("argv");
+            if (sysargv != NULL) {            
+                argc = PyList_Size(sysargv);
+                argv = new argType*[argc+1];
+                int x;
+                for(x=0; x<argc; x++) {
+                    PyObject *pyArg = PyList_GetItem(sysargv, x); // borrowed reference
+                    // if there isn't anything in sys.argv[0] then set it to the python executable
+                    if (x == 0 && PyObject_Length(pyArg) < 1) 
+                        pyArg = PySys_GetObject("executable");
+                    #if PY_MAJOR_VERSION >= 3
+                        int len = PyObject_Length(pyArg);
+                        argv[x] = new argType[len+1];
+                        wxPyUnicode_AsWideChar(pyArg, argv[x], len+1);
+                    #else
+                        argv[x] = strdup(PyBytes_AsString(pyArg));
+                    #endif
+                }
+                argv[argc] = NULL;
             }
-            argv[argc] = NULL;
         }
-        wxPyEndBlockThreads(blocked);
-
         
         // Initialize wxWidgets
 #ifdef __WXOSX__
@@ -232,17 +230,15 @@ void wxPyApp::_BootstrapApp()
         result = wxEntryStart(argc, argv);
         // wxApp takes ownership of the argv array, don't delete it here
 
-        blocked = wxPyBeginBlockThreads();
         if (! result)  {
-            PyErr_SetString(PyExc_SystemError,
-                            "wxEntryStart failed, unable to initialize wxWidgets!"
+            wxPyErr_SetString(PyExc_SystemError,
+                              "wxEntryStart failed, unable to initialize wxWidgets!"
 #ifdef __WXGTK__
-                            "  (Is DISPLAY set properly?)"
+                              "  (Is DISPLAY set properly?)"
 #endif
                 );
             goto error;
         }
-        wxPyEndBlockThreads(blocked);
         haveInitialized = true;
     }
     else {
@@ -256,12 +252,11 @@ void wxPyApp::_BootstrapApp()
     OnPreInit();
     result = OnInit();
 
-    blocked = wxPyBeginBlockThreads();
     if (! result) {
-        PyErr_SetString(PyExc_SystemExit, "OnInit returned false, exiting...");
+        wxPyErr_SetString(PyExc_SystemExit, "OnInit returned false, exiting...");
     }
 error:
-    wxPyEndBlockThreads(blocked);    
+    return;
 }
 
 

@@ -50,14 +50,13 @@ def addGetAllFormats(klass, pureVirtual=False):
             size_t count = self->GetFormatCount(dir);
             wxDataFormat* formats = new wxDataFormat[count];
             self->GetAllFormats(formats, dir);
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            wxPyThreadBlocker blocker;
             PyObject* list = PyList_New(count);
             for (size_t i=0; i<count; i++) {
                 wxDataFormat* format = new wxDataFormat(formats[i]);
                 PyObject* obj = wxPyConstructObject((void*)format, wxT("wxDataFormat"), true);
                 PyList_SET_ITEM(list, i, obj); // PyList_SET_ITEM steals a reference
             }            
-            wxPyEndBlockThreads(blocked);
             delete [] formats;
             return list;
             """,

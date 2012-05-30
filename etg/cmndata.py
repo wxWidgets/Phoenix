@@ -67,23 +67,20 @@ def run():
     # holding the data...
     c.addCppMethod('PyObject*', 'GetPrivData', '()', """\
         PyObject* data;
-        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker blocker;
         data = PyBytes_FromStringAndSize(self->GetPrivData(),
                                          self->GetPrivDataLen());
-        wxPyEndBlockThreads(blocked);
         return data;    
         """)
     
     c.addCppMethod('void', 'SetPrivData', '(PyObject* data)', """\
+        wxPyThreadBlocker blocker;
         if (! PyBytes_Check(data)) {
-            wxPyBLOCK_THREADS(PyErr_SetString(PyExc_TypeError,
-                                              "Expected string object"));
-            return /* NULL */ ;
+            wxPyErr_SetString(PyExc_TypeError, "Expected string object");
+            return;
         }
 
-        wxPyBlock_t blocked = wxPyBeginBlockThreads();
         self->SetPrivData(PyBytes_AS_STRING(data), PyBytes_GET_SIZE(data));
-        wxPyEndBlockThreads(blocked);
         """)
     
     c.addAutoProperties()

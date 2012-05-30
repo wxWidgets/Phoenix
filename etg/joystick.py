@@ -37,10 +37,8 @@ def run():
         class wxJoystick : public wxObject {
         public:
             wxJoystick(int joystick = wxJOYSTICK1) {
-                wxPyBlock_t blocked = wxPyBeginBlockThreads();
-                PyErr_SetString(PyExc_NotImplementedError,
-                                "wxJoystick is not available on this platform.");
-                wxPyEndBlockThreads(blocked);
+                wxPyErr_SetString(PyExc_NotImplementedError,
+                                  "wxJoystick is not available on this platform.");
             }
             wxPoint GetPosition() const { return wxPoint(-1,-1); }
             int GetPosition(unsigned axis) const { return -1; }

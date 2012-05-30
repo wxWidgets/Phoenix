@@ -228,11 +228,8 @@ def run():
             byte* data = self->GetData();
             Py_ssize_t len = self->GetWidth() * self->GetHeight() * 3;
             PyObject* rv;
-            Py_buffer view;
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
-            PyBuffer_FillInfo(&view, NULL, data, len, 0, PyBUF_WRITABLE|PyBUF_FORMAT|PyBUF_ND);
-            rv = PyMemoryView_FromBuffer(&view);
-            wxPyEndBlockThreads(blocked);
+            wxPyThreadBlocker blocker;
+            rv = wxPyMakeBuffer(data, len);
             return rv;
             """)
 
@@ -245,11 +242,8 @@ def run():
             byte* data = self->GetAlpha();
             Py_ssize_t len = self->GetWidth() * self->GetHeight();
             PyObject* rv;
-            Py_buffer view;
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
-            PyBuffer_FillInfo(&view, NULL, data, len, 0, PyBUF_WRITABLE|PyBUF_FORMAT|PyBUF_ND);
-            rv = PyMemoryView_FromBuffer(&view);
-            wxPyEndBlockThreads(blocked);
+            wxPyThreadBlocker blocker;
+            rv = wxPyMakeBuffer(data, len);
             return rv;
             """)
 

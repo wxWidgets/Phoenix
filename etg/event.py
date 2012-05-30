@@ -205,10 +205,6 @@ def run():
                         (entry->m_callbackUserData != NULL))
                     {
                         wxPyCallback *cb = (wxPyCallback*)entry->m_callbackUserData;
-                        //wxPyBlock_t blocked = wxPyBeginBlockThreads();
-                        //int result = PyObject_Compare(cb->m_func, func);
-                        //wxPyEndBlockThreads(blocked); 
-                        //if (result == 0) {
                         if (cb->m_func == func) {
                             delete cb;
                             self->GetDynamicEventTable()->Erase(node);
@@ -458,18 +454,16 @@ def run():
     c.find('GetFiles').setCppCode("""\
         int         count   = self->GetNumberOfFiles();
         wxString*   files   = self->GetFiles();
-        wxPyBlock_t blocked = wxPyBeginBlockThreads();
+        wxPyThreadBlocker   blocker;
         PyObject*   list    = PyList_New(count);
         if (!list) {
             PyErr_SetString(PyExc_MemoryError, "Can't allocate list of files!");
-            wxPyEndBlockThreads(blocked);
             return NULL;
         }
         for (int i=0; i<count; i++) {
             PyObject* s = wx2PyString(files[i]);
             PyList_SET_ITEM(list, i, s);
         }
-        wxPyEndBlockThreads(blocked);
         return list;    
         """)
     

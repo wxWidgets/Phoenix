@@ -83,7 +83,6 @@ def nci(text, numSpaces=0, stripLeading=True):
 # io.StringIO reads/writes unicode objects for both Python 2.7 and 3.x. For
 # 2.7 we'll convert any string values to unicode objects before storing them
 # in the StringIO
-
 import io
 class Utf8EncodingStream(io.StringIO):
     if sys.version_info < (3,):

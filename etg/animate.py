@@ -39,6 +39,11 @@ def run():
     tools.fixWindowClass(c)
     module.addGlobalStr('wxAnimationCtrlNameStr', c)
     
+    # move this before wxAnimationCtrl so it can be used for default arg values
+    item = module.find('wxNullAnimation')
+    module.items.remove(item)
+    module.insertItemBefore(c, item)
+    
     
     # TODO: It would be nice to be able to use the generic verison on all
     # platforms since the native GTK version has some limitations...

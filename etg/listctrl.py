@@ -67,7 +67,7 @@ def run():
         {
             int retval = 0;
             PyObject* func = (PyObject*)funcPtr;
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            wxPyThreadBlocker blocker;
 
             PyObject* args = Py_BuildValue("(ii)", item1, item2);
             PyObject* result = PyEval_CallObject(func, args);
@@ -77,7 +77,6 @@ def run():
                 Py_DECREF(result);
             }
   
-            wxPyEndBlockThreads(blocked);
             return retval;
         }
         """)

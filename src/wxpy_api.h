@@ -46,6 +46,8 @@
 //--------------------------------------------------------------------------
 
 typedef PyGILState_STATE wxPyBlock_t;
+#define wxPyBlock_t_default PyGILState_UNLOCKED
+
 typedef unsigned char  byte;
 typedef unsigned char* buffer;
 
@@ -74,7 +76,7 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 // A macro that will help to execute simple statments wrapped in
 // StartBlock/EndBlockThreads calls
 #define wxPyBLOCK_THREADS(stmt) \
-    { wxPyBlock_t blocked = wxPyBeginBlockThreads(); stmt; wxPyEndBlockThreads(blocked); }
+    { wxPyThreadBlocker _blocker; stmt; }
 
 // Raise any exception with a string value  (blocking threads)
 #define wxPyErr_SetString(err, str) \
@@ -96,6 +98,7 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 
 
 inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len) {
+    // GIL should already be held
     Py_buffer view;
     PyBuffer_FillInfo(&view, NULL, ptr, len, 0, PyBUF_WRITABLE|PyBUF_FORMAT|PyBUF_ND);
     return PyMemoryView_FromBuffer(&view);
@@ -123,6 +126,7 @@ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len) {
 inline 
 Py_ssize_t wxPyUnicode_AsWideChar(PyObject* unicode, wchar_t* w, Py_ssize_t size)
 {
+    // GIL should already be held
 #if PY_MAJOR_VERSION >= 3
     return PyUnicode_AsWideChar(unicode, w, size);
 #else
@@ -162,7 +166,7 @@ inline wxPyAPI* wxPyGetAPIPtr()
 }
 
 //--------------------------------------------------------------------------
-// Inline wrappers to call the API functions
+// Inline wrappers which call the functions in the API structure
 
 // Convert a PyObject to a wxString
 // Assumes that the GIL has already been acquired.
@@ -183,5 +187,31 @@ inline wxPyBlock_t wxPyBeginBlockThreads()
     
 inline void wxPyEndBlockThreads(wxPyBlock_t blocked) 
     { wxPyGetAPIPtr()->p_wxPyEndBlockThreads(blocked); }
+    
+    
+    
+    
+    
+//--------------------------------------------------------------------------
+// Convenience helper for RAII thread blocking
+class wxPyThreadBlocker {
+public:
+    explicit wxPyThreadBlocker(bool block=true)
+        :   m_oldstate(block ?  wxPyBeginBlockThreads() : wxPyBlock_t_default),
+            m_block(block)
+    { }
+
+    ~wxPyThreadBlocker() {
+        if (m_block) {
+            wxPyEndBlockThreads(m_oldstate);
+        }
+    } 
+
+private:
+    void operator=(const wxPyThreadBlocker&);
+    explicit wxPyThreadBlocker(const wxPyThreadBlocker&);    
+    wxPyBlock_t m_oldstate;
+    bool        m_block;
+};
     
 #endif

@@ -40,10 +40,9 @@
         
         ~wxPyEvtDict()
         {
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            wxPyThreadBlocker blocker;
             Py_DECREF(m_dict);
             m_dict = NULL;
-            wxPyEndBlockThreads(blocked);
         }
 
         PyObject* _getAttrDict()
@@ -55,7 +54,7 @@
         PyObject* __getattr__(PyObject* name)
         {
             PyObject* value = NULL;
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            wxPyThreadBlocker blocker;
             if (PyDict_Contains(m_dict, name)) {
                 value = PyDict_GetItem(m_dict, name);
                 Py_INCREF(value);
@@ -63,25 +62,22 @@
             else {
                 PyErr_SetObject(PyExc_AttributeError, name);
             }
-            wxPyEndBlockThreads(blocked);
             return value;
         }
         
         void __setattr__(PyObject* name, PyObject* value)
         {
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            wxPyThreadBlocker blocker;
             PyDict_SetItem(m_dict, name, value);
-            wxPyEndBlockThreads(blocked);
         }
         
         void __delattr__(PyObject* name)
         {
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
+            wxPyThreadBlocker blocker;
             if (PyDict_Contains(m_dict, name))
                 PyDict_DelItem(m_dict, name);
             else 
                 PyErr_SetObject(PyExc_AttributeError, name);
-            wxPyEndBlockThreads(blocked);
         }
         
     protected:

@@ -40,7 +40,7 @@ void wxPyCallback::EventThunker(wxEvent& event) {
     PyObject*       tuple;
     bool            checkSkip = false;
 
-    wxPyBlock_t blocked = wxPyBeginBlockThreads();
+    wxPyThreadBlocker blocker;
     wxString className = event.GetClassInfo()->GetClassName();
     arg = wxPyConstructObject((void*)&event, className);
     
@@ -59,5 +59,4 @@ void wxPyCallback::EventThunker(wxEvent& event) {
         }
         Py_DECREF(tuple);
     }
-    wxPyEndBlockThreads(blocked);
 }
