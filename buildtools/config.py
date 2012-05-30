@@ -126,8 +126,8 @@ class Configuration(object):
         self.WXPLAT2 = None
         self.WXDIR = wxDir()
         
-        self.includes = ['sip/siplib',  # to get our version of sip.h
-                         'src',         # for any hand-written headers
+        self.includes = [phoenixDir() + '/sip/siplib',  # to get our version of sip.h
+                         phoenixDir() + '/src',         # for any hand-written headers
                          ]
             
         if noWxConfig:
