@@ -1036,21 +1036,29 @@ def waf_py(options, args):
     BUILD_DIR = getBuildDir(options)
     DESTDIR = options.installdir
     PREFIX = options.prefix
-    
+
+    wafBuildBase = posixjoin('build_waf', PYVER)
+    wafBuildDir  = wafBuildBase
+    if isWindows:
+        wafBuildDir = posixjoin(wafBuildBase, 'release')
+        
     build_options = list()
     build_options.append('--prefix=%s' % PREFIX)
     if options.debug or (isWindows and options.both):
         build_options.append("--debug")
+        if isWindows:
+            wafBuildDir = posixjoin(wafBuildBase, 'debug')
     if isDarwin and options.mac_arch: 
         build_options.append("--mac_arch=%s" % options.mac_arch)
     if not isWindows:
-        build_options.append('--wx_config=%s' % opj(BUILD_DIR, 'wx-config'))
+        build_options.append('--wx_config=%s' % posixjoin(BUILD_DIR, 'wx-config'))
     if options.verbose:
         build_options.append('--verbose')
     if options.jobs:
         build_options.append('--jobs=%s' % options.jobs)
 
     build_options.append('--python=%s' % PYTHON)
+    build_options.append('--out=%s' % wafBuildDir)
         
     pwd = pushDir(phoenixDir())
     cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
@@ -1058,6 +1066,9 @@ def waf_py(options, args):
 
     if isWindows and options.both:
         build_options.remove('--debug')
+        del build_options[-1]
+        wafBuildDir = posixjoin(wafBuildBase, 'release')
+        build_options.append('--out=%s' % wafBuildDir)
         cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
         runcmd(cmd)
 

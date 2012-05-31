@@ -23,28 +23,14 @@ isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
 top = '.'
-outBASE = 'build_waf'
-out = outBASE
-if isWindows:
-    out = outBASE + '/release'
-
+out = 'build_waf'
 
 
 def options(opt):
     opt.load('compiler_cc compiler_cxx python')
-    
-    if isWindows:
-        def debugOptionCallback(option, optstr, value, parser):
-            """Set debug flag and also change the output directory option"""
-            parser.values.out = outBASE + '/debug'
-            parser.values.debug = True
-            
-        opt.add_option('--debug', dest='debug', default=False, action='callback', 
-                       callback=debugOptionCallback, help='Turn on debug compile options.')
-    else:
-        opt.add_option('--debug', dest='debug', action='store_true', default=False,
-                       help='Turn on debug compile options.')
-        
+
+    opt.add_option('--debug', dest='debug', action='store_true', default=False,
+                   help='Turn on debug compile options.')        
     opt.add_option('--python', dest='python', default='', action='store',
                    help='Full path to the Python executrable to use.')
     opt.add_option('--wx_config', dest='wx_config', default='wx-config', action='store',
@@ -69,10 +55,6 @@ def configure(conf):
     conf.load('python')
     conf.check_python_headers()
     conf.check_python_version(minver=(2,7,0))
-
-    # Add the Python version to the output path name  
-    # TODO: Is there some way to do something like this that will actually work?
-    # conf.options.out += '/' + conf.env.PYTHON_VERSION 
 
     # fetch and save the debug option
     conf.env.debug = conf.options.debug
