@@ -788,3 +788,19 @@ def textfile_open(filename, mode='rt'):
         return codecs.open(filename, mode, encoding='utf-8')
     else:
         return open(filename, mode, encoding='utf-8')
+
+
+def getSipFiles(names):
+    """
+    Returns a list of the coresponding .sip files for each of the names in names.
+    """
+    files = list()
+    for template in ['sip/gen/%s.sip', 'src/%s.sip']:
+        for name in names:
+            name = template % name
+            if os.path.exists(name):
+                files.append(name)
+    return files
+            
+
+    

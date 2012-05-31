@@ -29,7 +29,7 @@ from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macFixDependencyInstallName, macSetLoaderNames, \
-                               getSvnRev, runcmd, textfile_open
+                               getSvnRev, runcmd, textfile_open, getSipFiles
 
 
 import buildtools.version as version
@@ -702,14 +702,20 @@ def sip(options, args):
     modules.insert(0, opj(cfg.SIPGEN, '_core.sip'))
     
     for src_name in modules:
-        # TODO: Add some dependency checking here. If none of the included
-        # files has been updated then running sip can probably be avoided.
-        # OTOH, it's fast enough that it probably doesn't matter.
         tmpdir = tempfile.mkdtemp()
         tmpdir = tmpdir.replace('\\', '/')
         src_name = src_name.replace('\\', '/')
         base = os.path.basename(os.path.splitext(src_name)[0])
         sbf = posixjoin(cfg.SIPOUT, base) + '.sbf'
+        
+        # Check if any of the included files are newer than the .sbf file
+        # produced by the previous run of sip. If not then we don't need to
+        # run sip again.
+        etg = loadETG(posixjoin('etg', base + '.py'))
+        sipFiles = getSipFiles(etg.INCLUDES)
+        if not newer_group(sipFiles, sbf):
+            continue
+        
         pycode = base[1:] # remove the leading _
         pycode = posixjoin(cfg.PKGDIR, pycode) + '.py'
         pycode = '-X pycode'+base+':'+pycode        
