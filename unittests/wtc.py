@@ -1,6 +1,6 @@
 import imp_unittest, unittest
 import wx
-import sys
+import sys, os
 
 #---------------------------------------------------------------------------
 
@@ -68,7 +68,30 @@ class WidgetTestCase(unittest.TestCase):
             intervals -= 1
     
     
+    def myExecfile(self, filename, ns):
+        if sys.version_info < (3,):
+            execfile(filename, ns)
+        else:
+            f = open(filename, 'r')
+            source = f.read()
+            f.close()
+            exec(source, ns)
         
+        
+    def execSample(self, name):
+        ns = Namespace()
+        samplesDir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../samples'))        
+        self.myExecfile(os.path.join(samplesDir, name), ns.dict())
+        return ns
+    
+    
+    
+#---------------------------------------------------------------------------
+
+class Namespace(object):
+    def dict(self):
+        return self.__dict__
+
 #---------------------------------------------------------------------------
 
 def isPython3():

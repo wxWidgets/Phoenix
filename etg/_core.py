@@ -160,6 +160,7 @@ INCLUDES = [  # core
               'treectrl',
               'pickers',
               'filectrl',
+              'combo',
               
               # toplevel and dialogs
               'nonownedwnd',
