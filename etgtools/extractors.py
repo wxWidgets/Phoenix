@@ -71,6 +71,7 @@ class BaseDef(object):
                 
     def ignore(self, val=True):
         self.ignored = val
+        return self
                 
         
     def find(self, name):
@@ -395,6 +396,7 @@ class FunctionDef(BaseDef):
                 first.overloads = all[1:]
                 idx = parent.items.index(self)
                 parent.items[idx] = first
+        return self
     
         
     def _findItems(self):
