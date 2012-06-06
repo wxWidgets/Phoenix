@@ -358,3 +358,23 @@ to a specific memory location.  Here is a simple example::
                 assert isinstance(buf, memoryview)
                 self.myData = buf.tobytes()
                 return True
+
+
+
+Multiple Inheritance
+--------------------
+
+The SIP tool currently does not support having more than one wrapped
+C++ class as the base classes of a Python class.  In most cases this
+is not a problem because in wxPython you're more likely to use
+multiple inheritance with simple mix-in classes or similar constructs
+than needing to inherit from more than one wx class.
+
+However there is at least one use case where that can be a problem,
+and that is with the ComboCtrl's wx.ComboPopup class.  In wxWidgets
+and also in Classic wxPython you're encouraged to use wx.ComboPopup as
+a mix-in class comkbined with the widget class that is going to be
+your popup window for the wx.ComboCtrl.  This can not currently be
+done with Phoenix in the same way, but you can also use a widget class
+with a wx.ComboPopup in a has-a relationship rather than an is-a
+relationship.  See samples/combo/combo1.py for an example.
