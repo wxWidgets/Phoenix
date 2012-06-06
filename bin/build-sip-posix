@@ -13,7 +13,7 @@ fi
 
 MYBINDIR=$(dirname $(readlink -f $0))
 
-cd /projects/sip/sip
+cd $PROJECTS/sip/sip
 SIPVER=`$PYTHON configure.py --version | grep -v "This is SIP"`
 PLATFORM=`$PYTHON -c "import sys; print sys.platform"`
 
