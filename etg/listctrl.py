@@ -162,7 +162,25 @@ def run():
     c.find('EndEditLabel').ignore()
     c.find('AssignImageList.imageList').transfer = True
     c.find('HitTest.flags').out = True
-    c.find('HitTest.ptrSubItem').out = True
+    c.find('HitTest.ptrSubItem').ignore()
+
+    c.addCppMethod(
+        'PyObject*', 'HitTestSubItem', '(const wxPoint& point)', 
+        pyArgsString="HitTestSubItem(point) -> (item, flags, subitem)",
+        doc="Determines which item (if any) is at the specified point, giving details in flags.",
+        body="""\
+            long item, subitem;
+            int flags;
+            item = self->HitTest(*point, flags, &subitem);
+            wxPyThreadBlocker blocker;
+            PyObject* rv = PyTuple_New(3);
+            PyTuple_SetItem(rv, 0, PyInt_FromLong(item));
+            PyTuple_SetItem(rv, 1, PyInt_FromLong(flags));
+            PyTuple_SetItem(rv, 2, PyInt_FromLong(subitem));
+            return rv;
+            """)
+
+
         
     # Some deprecated aliases for Classic renames
     c.addPyCode('ListCtrl.FindItemData = wx.deprecated(ListCtrl.FindItem)')
