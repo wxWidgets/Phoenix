@@ -49,11 +49,11 @@ unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or ev
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
-sipCurrentVersion = '4.13.2'
+sipCurrentVersion = '4.13.3-snapshot-377e9e4763f5'
 sipCurrentVersionMD5 = {
-    'darwin' : 'b9262c3ea3d2a0010f4c59c27c60e8c1',
-    'win32'  : 'b5885b420b7fe16e9dc5e32ef381a847', 
-    'linux2' : '5956f74dc9a1e0673633e7a494705dca', 
+    'darwin' : 'c43e77a4a63dd663be2f9d90853276ad',
+    'win32'  : '801c477ebe9e02e314e7e153e6ea7356', 
+    'linux2' : '07a1676641918106132bb64aa6517734', 
 }
 
 wafCurrentVersion = '1.6.11'

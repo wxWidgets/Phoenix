@@ -1,7 +1,7 @@
 /*
  * SIP library code.
  *
- * Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -555,7 +555,7 @@ static int getSelfFromArgs(sipTypeDef *td, PyObject *args, int argnr,
         sipSimpleWrapper **selfp);
 static PyObject *createEnumMember(sipTypeDef *td, sipEnumMemberDef *enm);
 static int compareTypedefName(const void *key, const void *el);
-static int checkPointer(void *ptr);
+static int checkPointer(void *ptr, sipSimpleWrapper *sw);
 static void *cast_cpp_ptr(void *ptr, PyTypeObject *src_type,
         const sipTypeDef *dst_type);
 static void finalise(void);
@@ -1058,7 +1058,7 @@ static PyObject *callDtor(PyObject *self, PyObject *args)
 
     addr = getPtrTypeDef(sw, &ctd);
 
-    if (checkPointer(addr) < 0)
+    if (checkPointer(addr, sw) < 0)
         return NULL;
 
     if (PyObject_TypeCheck((PyObject *)sw, (PyTypeObject *)&sipWrapper_Type))
@@ -3373,7 +3373,7 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                                 break;
                             }
                         }
-                        else if (a < nr_pos_args)
+                        else if (a < nr_pos_args - *selfargp)
                         {
                             /*
                              * The argument has been given positionally and as
@@ -3403,7 +3403,7 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
         }
         else if (sipKwdArgs != NULL && kwdlist != NULL)
         {
-            const char *name = kwdlist[argnr];
+            const char *name = kwdlist[argnr - *selfargp];
 
             if (name != NULL)
             {
@@ -4655,7 +4655,7 @@ static int parsePass2(sipSimpleWrapper *self, int selfarg, PyObject *sipArgs,
         }
         else if (sipKwdArgs != NULL)
         {
-            const char *name = kwdlist[a];
+            const char *name = kwdlist[a - selfarg];
 
             if (name != NULL)
                 arg = PyDict_GetItemString(sipKwdArgs, name);
@@ -7549,6 +7549,10 @@ static PyObject *sip_api_is_py_method(sip_gilstate_t *gil, char *pymc,
     if (sipInterpreter == NULL)
         return NULL;
 
+#ifdef WITH_THREAD
+    *gil = PyGILState_Ensure();
+#endif
+
     /*
      * It's possible that the Python object has been deleted but the underlying
      * C++ instance is still working and trying to handle virtual functions.
@@ -7557,7 +7561,7 @@ static PyObject *sip_api_is_py_method(sip_gilstate_t *gil, char *pymc,
      * reimplementation.
      */
     if (sipSelf == NULL)
-        return NULL;
+        goto release_gil;
 
     /*
      * It's possible that the object's type's tp_mro is NULL.  A possible
@@ -7569,13 +7573,9 @@ static PyObject *sip_api_is_py_method(sip_gilstate_t *gil, char *pymc,
     mro = ((PyTypeObject *)cls)->tp_mro;
 
     if (mro == NULL)
-        return NULL;
+        goto release_gil;
 
     /* Get any reimplementation. */
-
-#ifdef WITH_THREAD
-    *gil = PyGILState_Ensure();
-#endif
 
 #if PY_MAJOR_VERSION >= 3
     mname_obj = PyUnicode_FromString(mname);
@@ -7584,12 +7584,7 @@ static PyObject *sip_api_is_py_method(sip_gilstate_t *gil, char *pymc,
 #endif
 
     if (mname_obj == NULL)
-    {
-#ifdef WITH_THREAD
-        PyGILState_Release(*gil);
-#endif
-        return NULL;
-    }
+        goto release_gil;
 
     /*
      * We don't use PyObject_GetAttr() because that might find the generated
@@ -7600,11 +7595,7 @@ static PyObject *sip_api_is_py_method(sip_gilstate_t *gil, char *pymc,
     if (add_all_lazy_attrs(((sipWrapperType *)Py_TYPE(sipSelf))->type) < 0)
     {
         Py_DECREF(mname_obj);
-
-#ifdef WITH_THREAD
-        PyGILState_Release(*gil);
-#endif
-        return NULL;
+        goto release_gil;
     }
 
     if (sipSelf->dict != NULL)
@@ -7684,6 +7675,12 @@ static PyObject *sip_api_is_py_method(sip_gilstate_t *gil, char *pymc,
             reimp = PyMethod_New(reimp, (PyObject *)sipSelf, cls);
 #endif
         }
+        else if (Py_TYPE(reimp)->tp_descr_get)
+        {
+            /* It is a descriptor, so assume it will do the right thing. */
+            reimp = Py_TYPE(reimp)->tp_descr_get(reimp, (PyObject *)sipSelf,
+                    cls);
+        }
         else
         {
             /*
@@ -7713,6 +7710,12 @@ static PyObject *sip_api_is_py_method(sip_gilstate_t *gil, char *pymc,
     }
 
     return reimp;
+
+release_gil:
+#ifdef WITH_THREAD
+    PyGILState_Release(*gil);
+#endif
+    return NULL;
 }
 
 
@@ -7811,7 +7814,7 @@ void *sip_api_get_cpp_ptr(sipSimpleWrapper *sw, const sipTypeDef *td)
 {
     void *ptr = sip_api_get_address(sw);
 
-    if (checkPointer(ptr) < 0)
+    if (checkPointer(ptr, sw) < 0)
         return NULL;
 
     if (td != NULL)
@@ -7847,12 +7850,14 @@ static void *cast_cpp_ptr(void *ptr, PyTypeObject *src_type,
 /*
  * Check that a pointer is non-NULL.
  */
-static int checkPointer(void *ptr)
+static int checkPointer(void *ptr, sipSimpleWrapper *sw)
 {
     if (ptr == NULL)
     {
-        PyErr_SetString(PyExc_RuntimeError,
-                "underlying C/C++ object has been deleted");
+        PyErr_Format(PyExc_RuntimeError, (sipWasCreated(sw) ?
+                        "wrapped C/C++ object of %S has been deleted" :
+                        "super-class __init__() of %S was never called"),
+                (PyObject *)sw);
         return -1;
     }
 
@@ -9070,8 +9075,6 @@ static int sipSimpleWrapper_init(sipSimpleWrapper *self, PyObject *args,
         {
             sipInitExtenderDef *ie = wt->iextend;
 
-            assert(parseErr != NULL);
-
             /*
              * If we have not found an appropriate overload then try any
              * extenders.
@@ -9135,7 +9138,7 @@ static int sipSimpleWrapper_init(sipSimpleWrapper *self, PyObject *args,
     }
 
     self->data = sipNew;
-    self->flags = sipFlags;
+    self->flags = sipFlags | SIP_CREATED;
 
     /* Set the access function. */
     if (sipIsAccessFunc(self))
@@ -10326,7 +10329,11 @@ static char sip_api_string_as_ascii_char(PyObject *obj)
     if (parseString_AsASCIIChar(obj, &ch) < 0)
     {
         /* Use the exception set if it was an encoding error. */
+#if PY_VERSION_HEX >= 0x03030000
+        if (!PyUnicode_Check(obj) || PyUnicode_GET_LENGTH(obj) != 1)
+#else
         if (!PyUnicode_Check(obj) || PyUnicode_GET_SIZE(obj) != 1)
+#endif
             PyErr_Format(PyExc_TypeError,
 #if PY_MAJOR_VERSION >= 3
                     "bytes or ASCII string of length 1 expected not '%s'",
@@ -10362,7 +10369,11 @@ static char sip_api_string_as_latin1_char(PyObject *obj)
     if (parseString_AsLatin1Char(obj, &ch) < 0)
     {
         /* Use the exception set if it was an encoding error. */
+#if PY_VERSION_HEX >= 0x03030000
+        if (!PyUnicode_Check(obj) || PyUnicode_GET_LENGTH(obj) != 1)
+#else
         if (!PyUnicode_Check(obj) || PyUnicode_GET_SIZE(obj) != 1)
+#endif
             PyErr_Format(PyExc_TypeError,
 #if PY_MAJOR_VERSION >= 3
                     "bytes or Latin-1 string of length 1 expected not '%s'",
@@ -10398,7 +10409,11 @@ static char sip_api_string_as_utf8_char(PyObject *obj)
     if (parseString_AsUTF8Char(obj, &ch) < 0)
     {
         /* Use the exception set if it was an encoding error. */
+#if PY_VERSION_HEX >= 0x03030000
+        if (!PyUnicode_Check(obj) || PyUnicode_GET_LENGTH(obj) != 1)
+#else
         if (!PyUnicode_Check(obj) || PyUnicode_GET_SIZE(obj) != 1)
+#endif
             PyErr_Format(PyExc_TypeError,
 #if PY_MAJOR_VERSION >= 3
                     "bytes or UTF-8 string of length 1 expected not '%s'",
@@ -10752,7 +10767,11 @@ static int convertToWCharArray(PyObject *obj, wchar_t **ap, SIP_SSIZE_T *aszp)
     SIP_SSIZE_T ulen;
     wchar_t *wc;
 
+#if PY_VERSION_HEX >= 0x03030000
+    ulen = PyUnicode_GET_LENGTH(obj);
+#else
     ulen = PyUnicode_GET_SIZE(obj);
+#endif
 
     if ((wc = sip_api_malloc(ulen * sizeof (wchar_t))) == NULL)
         return -1;
@@ -10809,7 +10828,11 @@ static int parseWChar(PyObject *obj, wchar_t *ap)
  */
 static int convertToWChar(PyObject *obj, wchar_t *ap)
 {
+#if PY_VERSION_HEX >= 0x03030000
+    if (PyUnicode_GET_LENGTH(obj) != 1)
+#else
     if (PyUnicode_GET_SIZE(obj) != 1)
+#endif
         return -1;
 
 #if PY_VERSION_HEX >= 0x03020000
@@ -10867,7 +10890,11 @@ static int convertToWCharString(PyObject *obj, wchar_t **ap)
     SIP_SSIZE_T ulen;
     wchar_t *wc;
 
+#if PY_VERSION_HEX >= 0x03030000
+    ulen = PyUnicode_GET_LENGTH(obj);
+#else
     ulen = PyUnicode_GET_SIZE(obj);
+#endif
 
     if ((wc = sip_api_malloc((ulen + 1) * sizeof (wchar_t))) == NULL)
         return -1;

@@ -1,7 +1,7 @@
 /*
  * The SIP module interface.
  *
- * Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040d02
-#define SIP_VERSION_STR     "4.13.2"
+#define SIP_VERSION         0x040d03
+#define SIP_VERSION_STR     "4.13.3-snapshot-377e9e4763f5"
 
 
 /*
@@ -686,6 +686,7 @@ typedef struct _sipVariableDef {
 } sipVariableDef;
 
 
+#if SIP_API_MAJOR_NR == 8
 /*
  * The information describing a variable.  This is deprecated from v8.1 of the
  * API and should be removed in v9.0.
@@ -703,6 +704,14 @@ typedef struct _sipVariableDef_8 {
     /* This is set if the variable is static. */
     int vd_is_static;
 } sipVariableDef_8;
+#else
+/*
+ * In addition, change the getter signature so that it is also passed the self
+ * Python object so that the getter doesn't need to reverse map it from the
+ * C++ pointer.
+ */
+#error "Remove v8 support for sipVariableDef"
+#endif
 
 
 /*
@@ -1514,6 +1523,7 @@ typedef struct _sipQtAPI {
 #define SIP_CPP_HAS_REF     0x0080  /* If C/C++ has a reference. */
 #define SIP_POSSIBLE_PROXY  0x0100  /* If there might be a proxy slot. */
 #define SIP_ALIAS           0x0200  /* If it is an alias. */
+#define SIP_CREATED         0x0400  /* If the C/C++ object has been created. */
 
 #define sipIsPyOwned(w)     ((w)->flags & SIP_PY_OWNED)
 #define sipSetPyOwned(w)    ((w)->flags |= SIP_PY_OWNED)
@@ -1529,6 +1539,7 @@ typedef struct _sipQtAPI {
 #define sipPossibleProxy(w) ((w)->flags & SIP_POSSIBLE_PROXY)
 #define sipSetPossibleProxy(w)  ((w)->flags |= SIP_POSSIBLE_PROXY)
 #define sipIsAlias(w)       ((w)->flags & SIP_ALIAS)
+#define sipWasCreated(w)    ((w)->flags & SIP_CREATED)
 
 
 #define SIP_TYPE_TYPE_MASK  0x0007  /* The type type mask. */

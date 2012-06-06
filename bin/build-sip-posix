@@ -37,7 +37,8 @@ if [ "$PLATFORM" = "darwin" ]; then
 	--sip-module wx.siplib \
 	$*
 
-    make -C sipgen CC=gcc-4.0 CXX=g++-4.0 LINK=g++-4.0 clean all
+    #make -C sipgen CC=gcc-4.0 CXX=g++-4.0 LINK=g++-4.0 clean all
+    make -C sipgen clean all
 else
     $PYTHON configure.py \
 	--sip-module wx.siplib \
