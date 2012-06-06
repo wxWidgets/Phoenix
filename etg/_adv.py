@@ -43,13 +43,13 @@ INCLUDES = [
              'splash',
              'sashwin',
              'laywin',
+             'odcombo',
              
              
              # TODOs - 
              # These modules are also in the C++ adv lib and so should be included here:
              #
              #'bmpcbox',
-             #'odcombo',
              #'richtooltip',
              #'timectrl',
              #'treelist',
