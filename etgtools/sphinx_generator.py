@@ -2149,6 +2149,10 @@ class XMLDocString(object):
             name = function.pyName or function.name
             fullname = self.current_module + 'functions.%s'%name
 
+        if not fullname.strip():
+            dummy = xml_item.name or xml_item.pyName
+            raise Exception('Invalid item name for %s (kind=%s)'%(dummy, self.kind))
+        
         return fullname            
 
 

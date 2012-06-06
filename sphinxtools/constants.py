@@ -78,16 +78,18 @@ NO_MODULE = {
              # Widgets
              'DatePickerCtrlGeneric': 'adv.',
              'GenericCalendarCtrl'  : 'adv.',
+             'OwnerDrawnComboBox'   : 'adv.',
              
              # Enums/constants
-             'AnimationType'        : 'adv.',
-             'CalendarDateBorder'   : 'adv.',
-             'CalendarHitTestResult': 'adv.',
-             'LayoutAlignment'      : 'adv.',
-             'LayoutOrientation'    : 'adv.',
-             'SashDragStatus'       : 'adv.',
-             'SashEdgePosition'     : 'adv.',
-             'TaskBarIconType'      : 'adv.',
+             'AnimationType'                  : 'adv.',
+             'CalendarDateBorder'             : 'adv.',
+             'CalendarHitTestResult'          : 'adv.',
+             'LayoutAlignment'                : 'adv.',
+             'LayoutOrientation'              : 'adv.',
+             'OwnerDrawnComboBoxPaintingFlags': 'adv.',
+             'SashDragStatus'                 : 'adv.',
+             'SashEdgePosition'               : 'adv.',
+             'TaskBarIconType'                : 'adv.',
 
              # -- wxDataView -- #
              # Widgets
