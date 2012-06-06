@@ -771,9 +771,11 @@ def myExecfile(filename, ns):
     if sys.version_info < (3,):
         execfile(filename, ns)
     else:
-        source = open(filename, 'r').read()
+        f = open(filename, 'r')
+        source = f.read()
+        f.close()
         exec(source, ns)
-    
+
     
 def textfile_open(filename, mode='rt'):
     """

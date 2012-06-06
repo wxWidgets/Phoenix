@@ -649,6 +649,9 @@ from .%s import *
         for idx, pn in enumerate(pnames):
             # take only the part before the =, if there is one
             name = pn.split('=')[0].strip()   
+            # remove annotations
+            name = re.sub('/[A-Za-z]*/', '', name) 
+            name = name.strip()
             # now get just the part after any space, * or &, which should be
             # the parameter name
             name = re.split(r'[ \*\&]+', name)[-1] 
@@ -690,6 +693,7 @@ from .%s import *
             # take only the part before the =, if there is one
             arg = arg.split('=')[0].strip()   
             arg = arg.replace('&', '*')  # SIP will always want to use pointers for parameters
+            arg = re.sub('/[A-Za-z]*/', '', arg)  # remove annotations
             fargs[idx] = arg
         fargs = ', '.join(fargs)
         if method.isCtor:

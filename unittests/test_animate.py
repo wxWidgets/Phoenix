@@ -17,13 +17,14 @@ class animate_Tests(wtc.WidgetTestCase):
         self.assertTrue(ani.IsOk())
         anictrl = wx.adv.AnimationCtrl(self.frame, anim=ani)
         anictrl.Play()
-
+        self.waitFor(500)
 
     def test_animate2(self):
         ani = wx.adv.Animation(gifFile)
         self.assertTrue(ani.IsOk())
         anictrl = wx.adv.AnimationCtrl(self.frame, anim=ani)
         anictrl.Play()
+        self.waitFor(500)
         
 #---------------------------------------------------------------------------
 

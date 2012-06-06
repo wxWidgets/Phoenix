@@ -9,7 +9,7 @@ else:  # run as main?
     if not d: d = '.'
     phoenixDir = os.path.abspath(d+'/..')
 
-#if phoenixDir not in sys.path:
+# in case phoenixDir not in sys.path:
 sys.path.insert(0, phoenixDir)
 
 # stuff for debugging
