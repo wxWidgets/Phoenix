@@ -64,10 +64,16 @@ def run():
     # would be virtually the same anyway.
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
-    c.addPyCode("""\
-        ItemContainer.GetClientData = ItemContainer.GetClientObject
-        ItemContainer.SetClientData = ItemContainer.SetClientObject""")
-
+    c.find('GetClientObject').pyName = 'GetClientData'
+    c.find('SetClientObject').pyName = 'SetClientData'
+    c.addPyMethod('GetClientObject', '(self, n)', 
+        doc="alias for GetClientData",
+        body="return self.GetClientData(n)")
+    c.addPyMethod('SetClientObject', '(self, n, data)', 
+        doc="alias for SetClientData",
+        body="self.SetClientData(n, data)")
+    
+    
     # Deal with transfering ownership of wxClientData objects
     c.find('DetachClientObject').transfer = True
     c.find('SetClientObject.data').transfer = True
