@@ -2,7 +2,7 @@
         def OnSaveAs(self, event):
         
             saveFileDialog = wx.FileDialog(self, "Save XYZ file", "", "",
-                                           "XYZ files (*.xyz)|*.xyz", wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
+                                           "XYZ files (*.xyz)|*.xyz", wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
     
             if saveFileDialog.ShowModal() == wx.ID_CANCEL:
                 return     # the user changed idea...

@@ -1,7 +1,7 @@
     
         def OnAbout(self, event):
         
-            aboutInfo = wx.AboutDialogInfo()
+            aboutInfo = wx.adv.AboutDialogInfo()
             aboutInfo.SetName("MyApp")
             aboutInfo.SetVersion(MY_APP_VERSION_STRING)
             aboutInfo.SetDescription(_("My wxPython-based application!"))
@@ -9,5 +9,5 @@
             aboutInfo.SetWebSite("http:#myapp.org")
             aboutInfo.AddDeveloper("My Self")
     
-            wx.AboutBox(aboutInfo)
+            wx.adv.AboutBox(aboutInfo)
         

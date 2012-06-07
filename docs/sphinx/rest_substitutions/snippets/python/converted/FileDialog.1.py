@@ -10,7 +10,7 @@
                 # else: proceed asking to the user the new file to open
             
                 openFileDialog = wx.FileDialog(self, "Open XYZ file", "", "",
-                                               "XYZ files (*.xyz)|*.xyz", wx.FD_OPEN|wx.FD_FILE_MUST_EXIST)
+                                               "XYZ files (*.xyz)|*.xyz", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
     
                 if openFileDialog.ShowModal() == wx.ID_CANCEL:
                     return     # the user changed idea...

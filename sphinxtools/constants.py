@@ -24,7 +24,7 @@ from buildtools.config import phoenixDir, wxDir
 IGNORE = ['wxPython', 'wxWidgets', 'wxOSX', 'wxMGL', 'wxDFB', 'wxMAC', 'wxGTK', 'wxGTK2', 'wxUniversal',
           'OS', 'X', 'OSX', 'DFB', 'MAC', 'GTK', 'GTK2', 'MSW', 'wxMSW', 'X11', 'OS2', 'MS', 'XP', 'GTK+',
           'UI', 'GUI', '--', 'OTOH', 'GDI+', 'API', 'NT', 'RTL', 'GDI', '3D', 'MDI', 'SDI', 'TDI', 'URL',
-          'XPM', 'HTML', 'MIME', 'C++', 'XDG', 'A4', 'A5']
+          'XPM', 'HTML', 'MIME', 'C++', 'XDG', 'A4', 'A5', 'KDE', 'GNOME', 'XFCE']
 
 # C++ stuff to Python/ReST stuff
 VALUE_MAP = {'true':  '``True``',
@@ -90,6 +90,7 @@ NO_MODULE = {
              'SashDragStatus'                 : 'adv.',
              'SashEdgePosition'               : 'adv.',
              'TaskBarIconType'                : 'adv.',
+             'TipKind'                        : 'adv.',
 
              # -- wxDataView -- #
              # Widgets

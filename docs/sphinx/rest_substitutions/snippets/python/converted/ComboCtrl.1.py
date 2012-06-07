@@ -40,7 +40,7 @@
 
             # Create the popup child control.  Return true for success.
             def Create(self, parent):
-                self.lc = wx.ListCtrl(parent, style=wx.LC_LIST|wx.LC_SINGLE_SEL|wx.SIMPLE_BORDER)
+                self.lc = wx.ListCtrl(parent, style=wx.LC_LIST | wx.LC_SINGLE_SEL | wx.SIMPLE_BORDER)
                 self.lc.Bind(wx.EVT_MOTION, self.OnMotion)
                 self.lc.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
                 return True

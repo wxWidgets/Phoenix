@@ -1,2 +1,2 @@
     
-            wx.Sound(filename).Play(flags)
+            wx.adv.Sound(filename).Play(flags)
