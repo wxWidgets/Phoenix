@@ -47,12 +47,12 @@ INCLUDES = [
              'bmpcbox',
              'richtooltip',
              'timectrl',
+             'treelist',
              
              
              # TODOs - 
              # These modules are also in the C++ adv lib and so should be included here:
              #
-             #'treelist',
              #'wizard',
 
              # Except for these, which have, or will have their own extension modules
