@@ -253,8 +253,8 @@ def run():
         doc="""\
             Bind an event to an event handler.
     
-            :param event: One of the EVT_* objects that specifies the
-                          type of event to bind,
+            :param event: One of the EVT_* event binder objects that
+                          specifies the type of event to bind.
         
             :param handler: A callable object to be invoked when the
                             event is delivered to self.  Pass None to
