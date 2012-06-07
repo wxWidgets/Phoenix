@@ -46,12 +46,12 @@ INCLUDES = [
              'odcombo',
              'bmpcbox',
              'richtooltip',
+             'timectrl',
              
              
              # TODOs - 
              # These modules are also in the C++ adv lib and so should be included here:
              #
-             #'timectrl',
              #'treelist',
              #'wizard',
 
