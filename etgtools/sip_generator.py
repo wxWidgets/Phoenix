@@ -15,7 +15,7 @@ objects produced by the ETG scripts.
 import sys, os, re
 import etgtools.extractors as extractors
 import etgtools.generators as generators
-from etgtools.generators import nci, Utf8EncodingStream, textfile_open
+from etgtools.generators import nci, Utf8EncodingStream, textfile_open, wrapText
 
 
 divider = '//' + '-'*75 + '\n'
@@ -545,23 +545,38 @@ from .%s import *
         
         # get the docstring text
         text = nci(extractors.flattenNode(item.briefDoc, False))
+        text = wrapText(text)        
         
+
+        #if isinstance(item, extractors.ClassDef):
+        #    # append the function signatures for the class constructors (if any) to the class' docstring
+        #    try:
+        #        ctor = item.find(item.name)
+        #        sigs = ctor.collectPySignatures()
+        #        if sigs:
+        #            text += '\n' + '\n'.join(sigs)
+        #    except extractors.ExtractorError:
+        #        pass
+        #else:
+        #    # Prepend function signature string(s) for functions and methods
+        #    sigs = item.collectPySignatures()                
+        #    if sigs:
+        #        if text:
+        #            text = '\n\n' + text
+        #        text = '\n'.join(sigs) + text
+
         if isinstance(item, extractors.ClassDef):
-            # append the function signatures for the class constructors (if any) to the class' docstring
             try:
                 ctor = item.find(item.name)
                 sigs = ctor.collectPySignatures()
-                if sigs:
-                    text += '\n' + '\n'.join(sigs)
             except extractors.ExtractorError:
                 pass
         else:
-            # Prepend function signature string(s) for functions and methods
             sigs = item.collectPySignatures()                
-            if sigs:
-                if text:
-                    text = '\n\n' + text
-                text = '\n'.join(sigs) + text
+        if sigs:
+            if text:
+                text = '\n\n' + text
+            text = '\n'.join(sigs) + text
                 
         # write the docstring directive and the text
         stream.write('%s%%Docstring\n' % indent)

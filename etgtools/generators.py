@@ -78,6 +78,16 @@ def nci(text, numSpaces=0, stripLeading=True):
     newText = '\n'.join(lines) + '\n'
     return newText
 
+
+def wrapText(text):
+    import textwrap
+    lines = []
+    tw = textwrap.TextWrapper(width=70, break_long_words=False)
+    for line in text.split('\n'):
+        lines.append(tw.fill(line))
+    return '\n'.join(lines)
+
+
 #---------------------------------------------------------------------------
 
 # io.StringIO reads/writes unicode objects for both Python 2.7 and 3.x. For
