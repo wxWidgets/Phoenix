@@ -564,7 +564,8 @@ from .%s import *
         #        if text:
         #            text = '\n\n' + text
         #        text = '\n'.join(sigs) + text
-
+        
+        sigs = None
         if isinstance(item, extractors.ClassDef):
             try:
                 ctor = item.find(item.name)
