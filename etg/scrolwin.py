@@ -69,7 +69,7 @@ def run():
         scrolled.find('OnDraw').isVirtual = True
         scrolled.find('GetSizeAvailableForScrollTarget').isVirtual = True
         scrolled.find('GetSizeAvailableForScrollTarget').ignore(False)
-        node.find('SendAutoScrollEvents').isVirtual = True
+        scrolled.find('SendAutoScrollEvents').isVirtual = True
         
         
     else:
