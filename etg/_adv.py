@@ -48,17 +48,7 @@ INCLUDES = [
              'richtooltip',
              'timectrl',
              'treelist',
-             
-             
-             # TODOs - 
-             # These modules are also in the C++ adv lib and so should be included here:
-             #
-             #'wizard',
-
-             # Except for these, which have, or will have their own extension modules
-             #'dataview',
-             #'grid',   
-             #'propdlg',
+             'wizard',
              ]
 
 
