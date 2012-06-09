@@ -53,9 +53,9 @@ def run():
 
         
     if True:
-        # When SIP gets the ability to support template classes where the
+        # Now that SIP has the ability to support template classes where the
         # base class is the template parameter, then we can use this instead
-        # of the trickery below.
+        # of the trickery in the other branch below.
         
         # Doxygen doesn't declare the base class (the template parameter in
         # this case) so we can just add it here.
@@ -71,9 +71,11 @@ def run():
         scrolled.find('GetSizeAvailableForScrollTarget').ignore(False)
         scrolled.find('SendAutoScrollEvents').isVirtual = True
         
+        # The wxScrolledWindow and wxScrolledCanvas typedefs will be output
+        # normall and SIP will treat them like classes that have a wxScrolled
+        # mix-in as one of their base classes.
         
     else:
-        
         # NOTE: We do a tricky tweak here because wxScrolled requires using
         # a template parameter as the base class, which SIP doesn't handle
         # yet. So instead we'll just copy the current extractor elements for
@@ -101,6 +103,7 @@ def run():
             node.bases = [base]
             node.briefDoc = etgtools.flattenNode(node.briefDoc, False)
             node.briefDoc = node.briefDoc.replace('wxScrolled', name)
+            # TODO: replace wxScrolled in the detailedDoc too?
             node.briefDoc += doc
             for ctor in node.find('wxScrolled').all():
                 ctor.name = name
