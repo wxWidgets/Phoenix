@@ -150,6 +150,10 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace('non-NULL', 'not ``None``')
         text = text.replace(',,', ',').replace(', ,', ',')
         text = text.replace('|wx', '|')
+        
+        # Replacements for ScrolledWindow and ScrolledCanvas...
+        text = text.replace('<wxWindow>', 'Window')
+        text = text.replace('<wxPanel>', 'Panel')
 
         if 'DocstringsGuidelines' not in input:
             # Leave the DocstringsGuidelines.txt file alone on these ones

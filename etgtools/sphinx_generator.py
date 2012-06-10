@@ -1041,7 +1041,9 @@ class Section(Node):
             # Special treatment for the versionadded
             if len(text) > 6:
                 version, remainder = text[0:6], text[6:]
-                text = '%s\n%s%s'%(version, sub_spacer, remainder)
+                if '.' in version:
+                    text = '%s\n%s%s'%(version, sub_spacer, remainder)
+                    
 
         elif section_type == 'deprecated':
             # Special treatment for deprecated, wxWidgets devs do not put the version number
