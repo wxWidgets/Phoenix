@@ -17,6 +17,7 @@ import codecs
 import shutil
 import glob
 import imp
+import re
 
 if sys.version_info < (3,):
     import cPickle as pickle
@@ -475,14 +476,15 @@ def FindControlImages(elementOrString):
 
 # ----------------------------------------------------------------------- #
 
-def MakeSummary(item_list, template, kind, add_tilde=True):
+def MakeSummary(class_name, item_list, template, kind, add_tilde=True):
     """
     This function generates a table containing a method/property name
     and a shortened version of its docstrings.
 
-    :param list `item_list`: a list of tuples like `(method/property name, short docstrings)`.
+    :param string `class_name`: the class name containing the method/property lists;
+    :param list `item_list`: a list of tuples like `(method/property name, short docstrings)`;
     :param string `template`: the template to use (from `sphinxtools/templates.py`, can
-     be the ``TEMPLATE_METHOD_SUMMARY`` or the ``TEMPLATE_PROPERTY_SUMMARY``.
+     be the ``TEMPLATE_METHOD_SUMMARY`` or the ``TEMPLATE_PROPERTY_SUMMARY``;
     :param string `kind`: can be ``:meth:`` or ``:attr:`` or ``:ref:`` or ``:mod:``;
     :param bool `add_tilde`: ``True`` to add the ``~`` character in front of the first
      summary table column, ``False`` otherwise.
@@ -505,8 +507,20 @@ def MakeSummary(item_list, template, kind, add_tilde=True):
             substr = ':%s:`~%s`'%(kind, method)
         else:
             substr = ':%s:`%s`'%(kind, method)
-            
-        summary += format%(substr, simple_docs) + '\n'
+
+        new_docs = simple_docs
+
+        if kind == 'meth':
+            regex = re.findall(r':meth:\S+', simple_docs)
+            for regs in regex:
+                if '.' in regs:
+                    continue
+
+                meth_name = regs[regs.index('`')+1:regs.rindex('`')]
+                newstr = ':meth:`~%s.%s`'%(class_name, meth_name)
+                new_docs = new_docs.replace(regs, newstr, 1)
+                            
+        summary += format%(substr, new_docs) + '\n'
 
     summary += '='*maxlen + ' ' + '='*80 + "\n"
 

@@ -261,6 +261,7 @@ def FindInherited(input, class_summary, enum_base, text):
             continue
         
         methods, bases, short_description = class_summary[curr_class]
+        methods = [m.split('.')[-1] for m in methods]
 
         if meth_name in methods:
             continue
@@ -268,20 +269,22 @@ def FindInherited(input, class_summary, enum_base, text):
         newstr = ''
 
         for cls in bases:
+
             if cls not in class_summary:
                 continue
 
             submethods, subbases, subshort = class_summary[cls]
-
-            if meth_name in submethods:
+            short_submethods = [m.split('.')[-1] for m in submethods]
+            
+            if meth_name in short_submethods:
                 if not hasdot:
                     newstr = ':meth:`~%s.%s`'%(cls, meth_name)                        
                 elif not hastilde:
-                    newstr = ':meth:`%s.%s`'%(cls, meth_name)
+                    newstr = ':meth:`%s.%s <%s.%s>`'%(curr_class, meth_name, cls, meth_name)
                 elif hasdot:
                     newstr = ':meth:`~%s.%s`'%(cls, meth_name)
                 else:
-                    newstr = ':meth:`%s.%s`'%(cls, meth_name)
+                    newstr = ':meth:`%s.%s <%s.%s>`'%(curr_class, meth_name, cls, meth_name)
 
                 break                        
 

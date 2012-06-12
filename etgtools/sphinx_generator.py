@@ -2275,11 +2275,11 @@ class XMLDocString(object):
             stream.write(snippets)
 
         if klass.method_list:
-            summary = MakeSummary(klass.method_list, templates.TEMPLATE_METHOD_SUMMARY, 'meth')
+            summary = MakeSummary(name, klass.method_list, templates.TEMPLATE_METHOD_SUMMARY, 'meth')
             stream.write(summary)
 
         if klass.property_list:
-            summary = MakeSummary(klass.property_list, templates.TEMPLATE_PROPERTY_SUMMARY, 'attr')
+            summary = MakeSummary(name, klass.property_list, templates.TEMPLATE_PROPERTY_SUMMARY, 'attr')
             stream.write(summary)
 
         stream.write(templates.TEMPLATE_API)

@@ -87,7 +87,7 @@ def generic_summary(libraryItem, stream):
                 toctree += '   %s\n'%item.name
 
         if table:
-            summary = MakeSummary(table, templ[index], refs[index], add_tilde[index])
+            summary = MakeSummary(libraryItem.name, table, templ[index], refs[index], add_tilde[index])
             stream.write(summary)
             
     if toctree and write_toc:
