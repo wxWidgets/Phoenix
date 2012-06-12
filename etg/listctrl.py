@@ -174,9 +174,9 @@ def run():
             item = self->HitTest(*point, flags, &subitem);
             wxPyThreadBlocker blocker;
             PyObject* rv = PyTuple_New(3);
-            PyTuple_SetItem(rv, 0, PyInt_FromLong(item));
-            PyTuple_SetItem(rv, 1, PyInt_FromLong(flags));
-            PyTuple_SetItem(rv, 2, PyInt_FromLong(subitem));
+            PyTuple_SetItem(rv, 0, wxPyInt_FromLong(item));
+            PyTuple_SetItem(rv, 1, wxPyInt_FromLong(flags));
+            PyTuple_SetItem(rv, 2, wxPyInt_FromLong(subitem));
             return rv;
             """)
 
