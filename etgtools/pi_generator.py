@@ -231,6 +231,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         stream.write('%sclass %s' % (indent, pc.name))
         if pc.bases:
             stream.write('(%s):\n' % ', '.join(pc.bases))
+        else:
+            stream.write('(object):\n')
         indent2 = indent + ' '*4
         if pc.briefDoc:
             stream.write('%s"""\n' % indent2)
@@ -316,6 +318,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
             bases = [removeWxPrefix(b) for b in bases]
             stream.write(', '.join(bases))
             stream.write(')')
+        else:
+            stream.write('(object)')
         stream.write(':\n')
         indent2 = indent + ' '*4
         

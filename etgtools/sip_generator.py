@@ -370,6 +370,8 @@ from .%s import *
         stream.write('%sclass %s' % (indent, pc.name))
         if pc.bases:
             stream.write('(%s):\n' % ', '.join(pc.bases))
+        else:
+            stream.write('(object):\n')
         indent2 = indent + ' '*4
         if pc.briefDoc:
             stream.write('%s"""\n' % indent2)
