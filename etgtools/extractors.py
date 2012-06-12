@@ -199,6 +199,8 @@ class TypedefDef(VariableDef):
     def __init__(self, element=None, **kw):
         super(TypedefDef, self).__init__()
         self.noTypeName = False
+        self.docAsClass = False
+        self.bases = []
         self.__dict__.update(**kw)
         if element is not None:
             self.extract(element)

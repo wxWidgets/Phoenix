@@ -72,8 +72,34 @@ def run():
         scrolled.find('SendAutoScrollEvents').isVirtual = True
         
         # The wxScrolledWindow and wxScrolledCanvas typedefs will be output
-        # normall and SIP will treat them like classes that have a wxScrolled
-        # mix-in as one of their base classes.
+        # normally and SIP will treat them like classes that have a
+        # wxScrolled mix-in as one of their base classes. Let's add some more
+        # info to them for the doc generators.
+        docBase = """\
+        The :ref:`{name}` class is a combination of the :ref:`{base}` and
+        :ref:`Scrolled` class, which manages scrolling for its client area,
+        transforming the coordinates according to the scrollbar positions,
+        and setting the scroll positions, thumb sizes and ranges according to
+        the area in view.
+        """
+        item = module.find('wxScrolledWindow')
+        assert isinstance(item, etgtools.TypedefDef)
+        item.docAsClass = True
+        item.bases = ['wxPanel', 'wxScrolled']
+        item.briefDoc = docBase.format(name='ScrolledWindow', base='Panel')
+        item.briefDoc += """
+        Since this class derives from :ref:`Panel` it shares its behavior
+        with regard to TAB traversal and focus handling. If you do not want
+        this then use :ref:`ScrolledCanvas` instead."""
+        
+        item = module.find('wxScrolledCanvas')
+        item.docAsClass = True
+        item.bases = ['wxWindow', 'wxScrolled']
+        item.briefDoc = docBase.format(name='ScrolledCanvas', base='Window')
+        item.briefDoc += """
+        This scrolled window is not intended to have children so it doesn't
+        have special handling for TAB traversal or focus management."""            
+
         
     else:
         # NOTE: We do a tricky tweak here because wxScrolled requires using

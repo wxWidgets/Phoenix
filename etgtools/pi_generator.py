@@ -174,20 +174,41 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         stream.write('%s = 0\n' % (define.pyName or define.name))
         
     #-----------------------------------------------------------------------
-    def generateTypedef(self, typedef, stream):
+    def generateTypedef(self, typedef, stream, indent=''):
         assert isinstance(typedef, extractors.TypedefDef)
         if typedef.ignored:
             return
-        # If the typedef is for a template instantiation then write a mock
-        # class for it that combines the template and class, otherwise write
-        # nothing.
-        if '<' in typedef.type and '>' in typedef.type:
+
+        # If it's not a template instantiation, or has not been flagged by
+        # the tweaker script that it should be treated as a class, then just
+        # ignore the typedef and return.
+        if not ('<' in typedef.type and '>' in typedef.type) and not typedef.docAsClass:
+            return
+        
+        # Otherwise write a mock class for it that combines the template and class.
+        # First, extract the info we need.
+        if typedef.docAsClass:
+            bases = [removeWxPrefix(b) for b in typedef.bases]
+            name = removeWxPrefix(typedef.name)
+            
+        elif '<' in typedef.type and '>' in typedef.type:
             t = typedef.type.replace('>', '')
             t = t.replace(' ', '')
             bases = t.split('<')
             bases = [removeWxPrefix(b) for b in bases]
             name = removeWxPrefix(typedef.name)
-            stream.write('class %s(%s):\n    pass\n\n' % (name, ', '.join(bases)))
+            
+        # Now write the Python equivallent class for the typedef
+        if not bases:
+            bases = ['object']  # this should not happpen, but just in case...
+        stream.write('%sclass %s(%s):\n' % (indent, name, ', '.join(bases)))
+        indent2 = indent + ' '*4
+        if typedef.briefDoc:
+            stream.write('%s"""\n' % indent2)
+            stream.write(nci(typedef.briefDoc, len(indent2)))
+            stream.write('%s"""\n' % indent2)
+        else:
+            stream.write('%spass\n\n' % indent2)
 
 
     #-----------------------------------------------------------------------
