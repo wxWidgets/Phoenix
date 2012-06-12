@@ -1865,7 +1865,7 @@ class XMLDocString(object):
             self.kind = 'method'
         elif isinstance(xml_item, (extractors.FunctionDef, extractors.PyFunctionDef)):
             self.kind = 'function'
-        elif isinstance(xml_item, (extractors.ClassDef, extractors.PyClassDef)):
+        elif isinstance(xml_item, (extractors.ClassDef, extractors.PyClassDef, extractors.TypedefDef)):
             self.kind = 'class'
             self.appearance = FindControlImages(xml_item)
             self.class_name = RemoveWxPrefix(xml_item.name) or xml_item.pyName
@@ -3196,7 +3196,39 @@ class SphinxGenerator(generators.DocsGeneratorBase):
     # -----------------------------------------------------------------------
     def generateTypedef(self, typedef):
         assert isinstance(typedef, extractors.TypedefDef)
-        # write nothing for this one
+
+        if typedef.ignored or not typedef.docAsClass:
+            return
+
+        name = RemoveWxPrefix(typedef.name) or typedef.pyName        
+        typedef.module = self.current_module
+
+        all_classes = {}
+        nodename = fullname = name
+        specials = [nodename]
+
+        baselist = [base for base in typedef.bases if base != 'object']
+        all_classes[nodename] = (nodename, fullname, baselist)
+
+        self.UnIndent(typedef)
+
+        typedef.nodeBases = all_classes, specials
+        typedef.subClasses = []
+        typedef.method_list = typedef.property_list = []
+        typedef.pyDocstring = typedef.briefDoc
+        self.current_class = typedef
+
+        docstring = XMLDocString(typedef)
+        docstring.kind = 'class'
+
+        filename = self.current_module + "%s.txt"%name
+        docstring.output_file = filename
+        docstring.current_module = self.current_module
+
+        docstring.Dump()
+
+        PickleClassInfo(self.current_module + name, self.current_class, docstring.short_description)
+
 
     # -----------------------------------------------------------------------
     def generateWigCode(self, wig):

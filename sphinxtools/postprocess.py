@@ -266,6 +266,11 @@ def FindInherited(input, class_summary, enum_base, text):
         if meth_name in methods:
             continue
 
+        if meth_name in class_summary:
+            newtext = ':ref:`%s`'%meth_name
+            text = text.replace(regs, newtext, 1)
+            continue
+
         newstr = ''
 
         for cls in bases:
