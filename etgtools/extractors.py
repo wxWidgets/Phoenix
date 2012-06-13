@@ -1231,6 +1231,9 @@ class PyClassDef(BaseDef):
         baselist = [base for base in self.bases if base != 'object']
         all_classes[nodename] = (nodename, fullname, baselist)
 
+        for base in baselist:
+            all_classes[base] = (base, base, [])
+
         return all_classes, specials
         
     

@@ -1043,7 +1043,14 @@ class Section(Node):
                 version, remainder = text[0:6], text[6:]
                 if '.' in version:
                     text = '%s\n%s%s'%(version, sub_spacer, remainder)
-                    
+                else:
+                    target = (' 2.' in text and [' 2.'] or [' 3.'])[0]
+                    vindex1 = text.index(target)
+                    vindex2 = text[vindex1+2:].index(' ') + vindex1 + 2
+                    version = text[vindex1:vindex2].strip()
+                    if version.endswith('.'):
+                        version = version[0:-1]
+                    text = '%s\n%s%s'%(version, sub_spacer, text)                    
 
         elif section_type == 'deprecated':
             # Special treatment for deprecated, wxWidgets devs do not put the version number
@@ -2297,7 +2304,7 @@ class XMLDocString(object):
 
         py_docs = klass.pyDocstring
 
-        if isinstance(self.xml_item, extractors.PyClassDef):
+        if isinstance(self.xml_item, (extractors.PyClassDef, extractors.TypedefDef)):
             newlines = self.xml_item.briefDoc.splitlines()
         else:
             newlines = []
@@ -3210,12 +3217,17 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         baselist = [base for base in typedef.bases if base != 'object']
         all_classes[nodename] = (nodename, fullname, baselist)
 
+        for base in baselist:
+            all_classes[base] = (base, base, [])
+
         self.UnIndent(typedef)
 
         typedef.nodeBases = all_classes, specials
         typedef.subClasses = []
         typedef.method_list = typedef.property_list = []
         typedef.pyDocstring = typedef.briefDoc
+        typedef.detailedDoc = ''
+
         self.current_class = typedef
 
         docstring = XMLDocString(typedef)
