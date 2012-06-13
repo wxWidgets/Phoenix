@@ -86,20 +86,16 @@ def run():
         assert isinstance(item, etgtools.TypedefDef)
         item.docAsClass = True
         item.bases = ['wxPanel', 'wxScrolled']
-        item.briefDoc = docBase.format(name='ScrolledWindow', base='Panel')
-        item.briefDoc += """
-        Since this class derives from :ref:`Panel` it shares its behavior
-        with regard to TAB traversal and focus handling. If you do not want
-        this then use :ref:`ScrolledCanvas` instead."""
+        item.briefDoc = docBase.format(name='ScrolledWindow', base='Panel')        
         
         item = module.find('wxScrolledCanvas')
         item.docAsClass = True
         item.bases = ['wxWindow', 'wxScrolled']
         item.briefDoc = docBase.format(name='ScrolledCanvas', base='Window')
-        item.briefDoc += """
-        This scrolled window is not intended to have children so it doesn't
-        have special handling for TAB traversal or focus management."""            
-
+        item.detailedDoc[0] = "This scrolled window is not intended to have children "\
+                              "so it doesn't have special handling for TAB traversal "\
+                              "or focus management."
+        
         
     else:
         # NOTE: We do a tricky tweak here because wxScrolled requires using

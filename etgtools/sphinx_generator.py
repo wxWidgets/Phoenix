@@ -3226,7 +3226,6 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         typedef.subClasses = []
         typedef.method_list = typedef.property_list = []
         typedef.pyDocstring = typedef.briefDoc
-        typedef.detailedDoc = ''
 
         self.current_class = typedef
 
