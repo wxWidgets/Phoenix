@@ -77,7 +77,7 @@ def run():
         # info to them for the doc generators.
         docBase = """\
         The :ref:`{name}` class is a combination of the :ref:`{base}` and
-        :ref:`Scrolled` class, which manages scrolling for its client area,
+        :ref:`Scrolled` classes, and manages scrolling for its client area,
         transforming the coordinates according to the scrollbar positions,
         and setting the scroll positions, thumb sizes and ranges according to
         the area in view.
