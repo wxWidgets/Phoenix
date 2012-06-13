@@ -49,16 +49,27 @@ unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or ev
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
+
+# Some tools will be downloaded for the builds. These are the versions and
+# MD5s of the tool binaries currently in use.
 sipCurrentVersion = '4.13.3-snapshot-377e9e4763f5'
-sipCurrentVersionMD5 = {
+sipMD5 = {
     'darwin' : 'c43e77a4a63dd663be2f9d90853276ad',
     'win32'  : '801c477ebe9e02e314e7e153e6ea7356', 
     'linux2' : '07a1676641918106132bb64aa6517734', 
 }
 
 wafCurrentVersion = '1.6.11'
-wafCurrentVersionMD5 = '9a631fda1e570da8e4813faf9f3c49a4'
+wafMD5 = '9a631fda1e570da8e4813faf9f3c49a4'
 
+doxygenCurrentVersion = '1.7.4'
+doxygenMD5 = {
+    'darwin' : 'dbb76a5317ab1fe9b8d77683b726250e',
+    'win32'  : 'b9882b83ec63cc816b91bd7dd05facdc', 
+    'linux2' : '8cb4ef98775046428a70737fd0aa3a19', 
+}
+
+# And the location where they can be downloaded from
 toolsURL = 'http://wxpython.org/Phoenix/tools'
 
 #---------------------------------------------------------------------------
@@ -176,7 +187,7 @@ def setPythonVersion(args):
         if os.environ.get('TOOLS'):
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
-                TOOLS = runcmd('cygpath -w '+TOOLS, True, False)
+                TOOLS = runcmd('c:/cygwin/bin/cygpath -w '+TOOLS, True, False)
             PYTHON = posixjoin(TOOLS, 
                                'python%s' % PYSHORTVER,
                                'python.exe')
@@ -350,46 +361,46 @@ def delFiles(fileList, verbose=True):
         os.remove(afile)
 
 
-    
-def getSipCmd():
-    # Returns the sip command to use, checking for an explicit version and
-    # attempts to download it if it is not found in the bin dir. Validity of
-    # the binary is checked with an MD5 hash.
-    global _sipCmd
-    if os.environ.get('SIP'):
+def getTool(cmdName, version, MD5, envVar, platformBinary):
+    # Check in the bin dir for the specified version of the tool command. If
+    # it's not there then attempt to download it. Validity of the binary is
+    # checked with an MD5 hash.
+    if os.environ.get(envVar):
         # Setting a a value in the environment overrides other options
-        return os.environ.get('SIP')
-    elif _sipCmd is not None:
-        # use the cached value is there is one
-        return _sipCmd
+        return os.environ.get(envVar)
     else:
-        platform = sys.platform
-        ext = ''
-        if platform == 'win32':
-            ext = '.exe'
-        cmd = opj('bin', 'sip-%s-%s%s' % (sipCurrentVersion, platform, ext))
+        if platformBinary:
+            platform = sys.platform
+            ext = ''
+            if platform == 'win32':
+                ext = '.exe'
+            cmd = opj('bin', '%s-%s-%s%s' % (cmdName, version, platform, ext))
+            md5 = MD5[platform]
+        else:
+            cmd = opj('bin', '%s-%s' % (cmdName, version))
+            md5 = MD5
+
         msg('Checking for %s...' % cmd)
         if os.path.exists(cmd):
             m = hashlib.md5()
             m.update(open(cmd, 'rb').read())
-            if m.hexdigest() != sipCurrentVersionMD5[platform]:
+            if m.hexdigest() != md5:
                 print('ERROR: MD5 mismatch, got "%s"' % m.hexdigest())
-                print('       expected          "%s"' % sipCurrentVersionMD5[platform])
-                print('       Set SIP in the environment to use a local build of sip instead')
+                print('       expected          "%s"' % md5)
+                print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
                 sys.exit(1)
-            _sipCmd = cmd
             return cmd
-        
+            
         msg('Not found.  Attempting to download...')
-        url = '%s/sip-%s-%s%s.bz2' % (toolsURL, sipCurrentVersion, platform, ext)
+        url = '%s/%s.bz2' % (toolsURL, os.path.basename(cmd))
         try:
             connection = urlopen(url)
             msg('Connection successful...')
             data = connection.read()
             msg('Data downloaded...')
         except:
-            print("ERROR: Unable to download " + url)
-            print("       Set SIP in the environment to use a local build of sip instead")
+            print('ERROR: Unable to download ' + url)
+            print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
             import traceback
             traceback.print_exc()
             sys.exit(1)
@@ -399,63 +410,40 @@ def getSipCmd():
         with open(cmd, 'wb') as f:
             f.write(data)
         os.chmod(cmd, 0o755)
-        return getSipCmd()
-            
+        
+        # Recursive call so the MD5 value will be double-checked on what was
+        # just downloaded
+        return getTool(cmdName, version, MD5, envVar, platformBinary)
 
+
+            
 # The download and MD5 check only needs to happen once per run, cache the sip
 # cmd value here the first time through.
 _sipCmd = None
+def getSipCmd():
+    global _sipCmd
+    if _sipCmd is None:
+        _sipCmd = getTool('sip', sipCurrentVersion, sipMD5, 'SIP', True)
+    return _sipCmd
 
 
-# Same thing for WAF, except it is not a platform specific binary and is not
-# compressed...
+# Same thing for WAF
 _wafCmd = None
-
-# TODO: Refactor this and getSipCmd to share code as much as possible.
-
 def getWafCmd():
-    # Returns the waf command to use, checking for an explicit version and
-    # attempts to download it if it is not found in the bin dir. Validity of
-    # the binary is checked with an MD5 hash.
     global _wafCmd
-    if os.environ.get('WAF'):
-        # Setting a a value in the environment overrides other options
-        return os.environ.get('WAF')
-    elif _wafCmd is not None:
-        # use the cached value is there is one
-        return _wafCmd
-    else:
-        cmd = opj('bin', 'waf-%s' % wafCurrentVersion)
-        msg('Checking for %s...' % cmd)
-        if os.path.exists(cmd):
-            m = hashlib.md5()
-            m.update(open(cmd, 'rb').read())
-            if m.hexdigest() != wafCurrentVersionMD5:
-                print('ERROR: MD5 mismatch, got "%s"' % m.hexdigest())
-                print('       expected          "%s"' % wafCurrentVersionMD5)
-                print('       Set WAF in the environment to use a local build of waf instead')
-                sys.exit(1)
-            _wafCmd = cmd
-            return cmd
-        
-        msg('Not found.  Attempting to download...')
-        url = '%s/waf-%s' % (toolsURL, wafCurrentVersion)
-        try:
-            connection = urlopen(url)
-            msg('Connection successful...')
-            data = connection.read()
-            msg('Data downloaded...')
-        except:
-            print("ERROR: Unable to download" + url)
-            print("       Set WAF in the environment to use a local build of waf instead")
-            import traceback
-            traceback.print_exc()
-            sys.exit(1)
-            
-        with open(cmd, 'wb') as f:
-            f.write(data)
-        #os.chmod(cmd, 0755)
-        return getWafCmd()
+    if _wafCmd is None:
+        _wafCmd = getTool('waf', wafCurrentVersion, wafMD5, 'WAF', False)
+    return _wafCmd
+
+# and Doxygen
+_doxCmd = None
+def getDoxCmd():
+    global _doxCmd
+    if _doxCmd is None:
+        _doxCmd = getTool('doxygen', doxygenCurrentVersion, doxygenMD5, 'DOXYGEN', True)
+    return _doxCmd
+    
+    
 
 
 class CommandTimer(object):
@@ -522,11 +510,18 @@ def uploadPackage(fileName, matchString, keep=5):
 
 
 def _doDox(arg):
+    doxCmd = getDoxCmd()
+    doxCmd = os.path.abspath(doxCmd)
+    
     if isWindows:
+        doxCmd = doxCmd.replace('\\', '/')
+        doxCmd = runcmd('c:/cygwin/bin/cygpath -u '+doxCmd, True, False)
+        os.environ['DOXYGEN'] = doxCmd
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
         cmd = 'c:/cygwin/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (d, arg)
     else:
+        os.environ['DOXYGEN'] = doxCmd
         pwd = pushDir(posixjoin(wxDir(), 'docs/doxygen'))
         cmd = './regen.sh %s' % arg
     runcmd(cmd)
