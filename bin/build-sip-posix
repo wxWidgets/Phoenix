@@ -34,6 +34,7 @@ if [ "$PLATFORM" = "darwin" ]; then
     $PYTHON configure.py \
 	--deployment-target=$TARGET \
 	--sdk=$SDK \
+	--arch=i386 \
 	--sip-module wx.siplib \
 	$*
 

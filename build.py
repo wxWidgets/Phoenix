@@ -54,7 +54,7 @@ isDarwin = sys.platform == "darwin"
 # MD5s of the tool binaries currently in use.
 sipCurrentVersion = '4.13.3-snapshot-377e9e4763f5'
 sipMD5 = {
-    'darwin' : 'c43e77a4a63dd663be2f9d90853276ad',
+    'darwin' : '23e22703cacf9110730c539d348e6e46',
     'win32'  : '801c477ebe9e02e314e7e153e6ea7356', 
     'linux2' : '07a1676641918106132bb64aa6517734', 
 }
