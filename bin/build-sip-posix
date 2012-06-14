@@ -18,27 +18,22 @@ SIPVER=`$PYTHON configure.py --version | grep -v "This is SIP"`
 PLATFORM=`$PYTHON -c "import sys; print sys.platform"`
 
 if [ "$PLATFORM" = "darwin" ]; then
-    # try to ensure compatiblity back to 10.4 if we can
+    # try to ensure compatiblity back to 10.5 if we can
     xcode=$(xcode-select -print-path)
-    if [ -d $xcode/SDKs/MacOSX10.4u.sdk ]; then
-        SDK=$xcode/SDKs/MacOSX10.4u.sdk
-	TARGET=10.4
-    elif [ -d $xcode/SDKs/MacOSX10.5.sdk ]; then
+    if [ -d $xcode/SDKs/MacOSX10.5.sdk ]; then
         SDK=$xcode/SDKs/MacOSX10.5.sdk
-	TARGET=10.5
     elif [ -d $xcode/SDKs/MacOSX10.6.sdk ]; then
         SDK=$xcode/SDKs/MacOSX10.6.sdk
-	TARGET=10.6
-	SDKWARNING=yes
+    elif [ -d $xcode/SDKs/MacOSX10.7.sdk ]; then
+        SDK=$xcode/SDKs/MacOSX10.7.sdk
     fi
     $PYTHON configure.py \
-	--deployment-target=$TARGET \
+	--deployment-target=10.5 \
 	--sdk=$SDK \
 	--arch=i386 \
 	--sip-module wx.siplib \
 	$*
 
-    #make -C sipgen CC=gcc-4.0 CXX=g++-4.0 LINK=g++-4.0 clean all
     make -C sipgen clean all
 else
     $PYTHON configure.py \
@@ -59,36 +54,4 @@ echo "If ready to upload then do these commands now:"
 echo "    bzip2 $MYBINDIR/sip-$SIPVER-$PLATFORM"
 echo "    scp $MYBINDIR/sip-$SIPVER-$PLATFORM.bz2 robind@riobu.com:/home/robind/domains/wxpython.org/htdocs/Phoenix/tools"
 
-if [ "$SDKWARNING" == "yes" ]; then
-    echo ""
-    echo "WARNING: The 10.6 SDK was used.  If you have Xcode3 installed it might be better"
-    echo "to switch to it using xcode-select so a 10.4 or 10.5 SDK will be used instead,"
-    echo "just in case some build-bots are running earlier versions of OSX."
-    echo ""
-fi
 
-
-# myCFLAGS="-ggdb"
-# myLFLAGS="-g"
-
-#    --debug \
-#    CFLAGS_RELEASE="$myCFLAGS" \
-#    CXXFLAGS_RELEASE="$myCFLAGS" \
-#    LFLAGS_RELEASE="$myLFLAGS" \
-
-#    --bindir=$HOME/Library/Python/$PYVER/bin \
-#    --incdir=$HOME/Library/Python/$PYVER/include/python$PYVER \
-#    --sipdir=$HOME/Library/Python/$PYVER/share/sip \
-#    --destdir=$HOME/Library/Python/$PYVER/site-packages \
-
-# # The default build rules for lex and yacc are giving me problems, so
-# # add some explicit rules to the Makefile that do work.
-# cat >> sipgen/Makefile <<EOF
-# parser.c parser.h : parser.y
-# 	yacc -d parser.y
-# 	mv -f y.tab.c parser.c
-# 	mv -f y.tab.h parser.h
-#
-# lexer.c : lexer.l 
-# 	lex -t lexer.l > lexer.c
-# EOF
