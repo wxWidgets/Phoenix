@@ -189,15 +189,16 @@ def _darwin_compiler_fixup(compiler_so, cc_args):
                 break
 
     if stripSysroot:
-        try:
-            index = 0
-            if ccHasSysroot:
-                index = compiler_so.index('-isysroot') + 1
-            index = compiler_so.index('-isysroot', index)
-            # Strip this argument and the next one:
-            del compiler_so[index:index+2]
-        except ValueError:
-            pass
+        index = 0
+        if ccHasSysroot:
+            index = compiler_so.index('-isysroot') + 1
+        while 1:
+            try:
+                index = compiler_so.index('-isysroot', index)
+                # Strip this argument and the next one:
+                del compiler_so[index:index+2]
+            except ValueError:
+                break
 
     # Check if the SDK that is used during compilation actually exists, 
     # the universal build requires the usage of a universal SDK and not all
