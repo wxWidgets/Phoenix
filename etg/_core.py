@@ -195,6 +195,7 @@ INCLUDES = [  # core
               'printdlg',
               'mimetype',
               'busyinfo',
+              'caret',
               ]
 
 

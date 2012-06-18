@@ -120,8 +120,6 @@ other dev stuff
       * PseudoDC (not actually an ETG script, probably a .sip)
       
       * access
-      * busyinfo
-      * caret
       * choicebk
       * cmdproc
       * dialup  ??
