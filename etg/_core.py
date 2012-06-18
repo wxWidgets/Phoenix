@@ -194,6 +194,7 @@ INCLUDES = [  # core
               'printfw',
               'printdlg',
               'mimetype',
+              'busyinfo',
               ]
 
 
