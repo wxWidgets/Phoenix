@@ -115,23 +115,78 @@ other dev stuff
   * Should the functions created for things like addCppMethod be
     marked static?  How about using inline?
 
-  * Word-wrap the briefDoc strings used for %Docstring directives
-
-  * It looks like the code that is flattening the element nodes to
-    extract the briefDocs is not getting some spaces that should be in
-    there, probably where some tags are being removed.
-
-  * For full coverage of what was in the Classic core modules we'll need ETG
-    files for the following:
+  * Add ETG scripts for these items in _core:      
+      
+      * PseudoDC (not actually an ETG script, probably a .sip)
+      
+      * access
+      * busyinfo
+      * caret
+      * choicebk
+      * cmdproc
+      * dialup  ??
+      * docmdi  ??
+      * docview ??
+      * filehistory
+      * fontdata
+      * fontdlg
+      * fontenum
+      * fontmap
+      * fswatcher
+      * headerctrl
+      * listbook
+      * metafile
+      * minifram
+      * mousemanager
+      * msgout
+      * palette  ?
+      * persist  ?
+      * quantize
+      * rawbmp
+      * rearrangectrl
+      * renderer
+      * richmsgdlg
+      * textdlg
+      * toolbook
+      * treebook
+      * valgen
+      * valnum
+      * valtext
+      * vlbox
+  
+  * Add a _msw module that will contain classes and such that are only
+    available in the Windows port:  
 
       * axbase  (ActiveX.  Need to figure out best ways to do MSW-only items...)
-      * check that all items in _functions.i and _misc.i have been wrapped
-      * PseudoDC
-       
-  * Add wxCHMHelpController  (MSW-only)
+      * wxCHMHelpController
+      * Any others?
+
+  * Add _grid module
   
+  * Add _propdlg module
   
+  * Finish _dataview module
   
+  * Add _html module
+  
+  * Add _html2 module  (webview)
+  
+  * Add _stc module
+  
+  * Add _xrc module (containg xrc and xml classes)
+  
+  * Add _gl moodule
+    
+  * Add _richtext module
+  
+  * Add _aui module ??  (or go with only agw aui)
+  
+  * Add _ribbon module
+  
+  * Add _media module
+  
+    
+    
   
   
   
