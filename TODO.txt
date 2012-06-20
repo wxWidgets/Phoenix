@@ -124,7 +124,6 @@ other dev stuff
       * docmdi  ??
       * docview ??
       * filehistory
-      * fontmap
       * fswatcher
       * headerctrl
       * minifram
