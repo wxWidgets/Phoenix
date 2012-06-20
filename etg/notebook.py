@@ -38,6 +38,21 @@ def run():
     tools.fixWindowClass(c)  
     
     module.addGlobalStr('wxNotebookNameStr', c)
+
+    module.addPyCode("""\
+        EVT_NOTEBOOK_PAGE_CHANGED  = wx.PyEventBinder( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, 1 )
+        EVT_NOTEBOOK_PAGE_CHANGING = wx.PyEventBinder( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING, 1 )
+        """)
+    
+    module.addPyCode("""\
+        # Aliases for the "best book" control as described in the overview
+        BookCtrl =                               Notebook
+        wxEVT_COMMAND_BOOKCTRL_PAGE_CHANGED =    wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED
+        wxEVT_COMMAND_BOOKCTRL_PAGE_CHANGING =   wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING
+        EVT_BOOKCTRL_PAGE_CHANGED =              EVT_NOTEBOOK_PAGE_CHANGED
+        EVT_BOOKCTRL_PAGE_CHANGING =             EVT_NOTEBOOK_PAGE_CHANGING
+        """)
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

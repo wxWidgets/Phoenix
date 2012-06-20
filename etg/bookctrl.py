@@ -17,7 +17,8 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxBookCtrlBase',
+ITEMS  = [ 'interface_2wx_2bookctrl_8h.xml', 
+           'wxBookCtrlBase',
            'wxBookCtrlEvent',
            ]    
     
@@ -25,13 +26,15 @@ ITEMS  = [ 'wxBookCtrlBase',
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
-    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING,
-                                check4unittest=False)
+    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
     
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    # Ignore the macro.  We'll add a Python alias in notebook.py instead.
+    module.find('wxBookCtrl').ignore()  
     
     c = module.find('wxBookCtrlBase')
     assert isinstance(c, etgtools.ClassDef)

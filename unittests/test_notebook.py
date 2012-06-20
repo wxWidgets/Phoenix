@@ -31,6 +31,11 @@ class notebook_Tests(wtc.WidgetTestCase):
         wx.NB_HITTEST_ONITEM 
         wx.NB_HITTEST_ONPAGE 
 
+    def test_notebookEventTypes(self):
+        wx.wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED
+        wx.wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING
+        wx.EVT_NOTEBOOK_PAGE_CHANGED  
+        wx.EVT_NOTEBOOK_PAGE_CHANGING 
         
     def test_notebookPages(self):
         nb = wx.Notebook(self.frame, style=wx.NB_BOTTOM)
