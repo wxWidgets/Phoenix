@@ -118,9 +118,7 @@ other dev stuff
   * Add ETG scripts for these items in _core:      
       
       * PseudoDC (not actually an ETG script, probably a .sip)
-      
       * access
-      * choicebk
       * cmdproc
       * dialup  ??
       * docmdi  ??
@@ -132,7 +130,6 @@ other dev stuff
       * fontmap
       * fswatcher
       * headerctrl
-      * listbook
       * metafile
       * minifram
       * mousemanager
@@ -145,8 +142,6 @@ other dev stuff
       * renderer
       * richmsgdlg
       * textdlg
-      * toolbook
-      * treebook
       * valgen
       * valnum
       * valtext

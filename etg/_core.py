@@ -30,7 +30,7 @@ ITEMS  = [ ]
 # remove it from this list of Includes, and change the MODULE value in the
 # promoted script to be the same as its NAME.
 
-INCLUDES = [  # core
+INCLUDES = [  # base and core stuff
               'defs',
               'object',
               'wxpy_api',
@@ -161,6 +161,10 @@ INCLUDES = [  # core
               'pickers',
               'filectrl',
               'combo',
+              'choicebk',
+              'listbook',
+              'toolbook',
+              'treebook',
               
               # toplevel and dialogs
               'nonownedwnd',

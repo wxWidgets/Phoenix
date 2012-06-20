@@ -186,8 +186,28 @@ def fixSizerClass(klass):
     if klass.name == 'wxSizer':
         klass.find('CalcMin').isPureVirtual = True
         klass.find('RecalcSizes').isPureVirtual = True
-        
     
+    
+def fixBookctrlClass(klass, treeBook=False):
+    """
+    Add declarations of the pure virtual methods from the base class.
+    """    
+    klass.addItem(extractors.WigCode("""\
+        virtual int GetPageImage(size_t nPage) const;
+        virtual bool SetPageImage(size_t page, int image);
+        virtual wxString GetPageText(size_t nPage) const;
+        virtual bool SetPageText(size_t page, const wxString& text);
+        virtual int SetSelection(size_t page);
+        virtual int ChangeSelection(size_t page);
+        """))
+    if not treeBook:
+        klass.addItem(extractors.WigCode("""\
+        virtual int GetSelection() const;
+        virtual bool InsertPage(size_t index, wxWindow * page, const wxString & text,
+                                bool select = false, int imageId = NO_IMAGE);
+        """))
+    
+
 def removeVirtuals(klass):
     """
     Sometimes methods are marked as virtual but probably don't ever need to be
