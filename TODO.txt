@@ -124,8 +124,6 @@ other dev stuff
       * docmdi  ??
       * docview ??
       * filehistory
-      * fontdata
-      * fontdlg
       * fontenum
       * fontmap
       * fswatcher
