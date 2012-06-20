@@ -130,7 +130,6 @@ other dev stuff
       * fontmap
       * fswatcher
       * headerctrl
-      * metafile
       * minifram
       * mousemanager
       * msgout
@@ -152,6 +151,7 @@ other dev stuff
 
       * axbase  (ActiveX.  Need to figure out best ways to do MSW-only items...)
       * wxCHMHelpController
+      * metafile
       * Any others?
 
   * Add _grid module
