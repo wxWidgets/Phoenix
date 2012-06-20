@@ -94,6 +94,10 @@ def configure(conf):
             
     else: 
         # Configuration stuff for non-Windows ports using wx-config
+        conf.env.CFLAGS_WX   = list()
+        conf.env.CXXFLAGS_WX = list()
+        conf.env.CFLAGS_WXPY   = list()
+        conf.env.CXXFLAGS_WXPY = list()
 
         # Check wx-config exists and fetch some values from it
         conf.env.wx_config = conf.options.wx_config
@@ -106,7 +110,7 @@ def configure(conf):
                        args='--cxxflags --libs adv,core,net', 
                        uselib_store='WXADV', mandatory=True)
 
-
+        
         # NOTE: This assumes that if the platform is not win32 (from
         # the test above) and not darwin then we must be using the
         # GTK2 port of wxWidgets.  If we ever support other ports then
@@ -128,7 +132,7 @@ def configure(conf):
         # Add basic debug info for all builds
         conf.env.CFLAGS_WXPY.append('-g')
         conf.env.CXXFLAGS_WXPY.append('-g')
-
+        
         # And if --debug is set turn on more detailed debug info and turn off optimization
         if conf.env.debug:
             conf.env.CFLAGS_WXPY.extend(['-ggdb', '-O0'])
