@@ -201,6 +201,7 @@ INCLUDES = [  # base and core stuff
               'mimetype',
               'busyinfo',
               'caret',
+              'fontenum',
               ]
 
 
