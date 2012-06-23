@@ -63,9 +63,7 @@ def run():
     c.find('OnExceptionInMainLoop').ignore()
     c.find('OnFatalException').ignore()
     c.find('OnUnhandledException').ignore()
-    
-    c.find('ExitMainLoop').isVirtual = False    
-    
+        
     # Release the GIL for potentially blocking or long-running functions
     c.find('MainLoop').releaseGIL()
     c.find('ProcessPendingEvents').releaseGIL()
