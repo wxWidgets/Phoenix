@@ -112,10 +112,11 @@ class dc_Tests(wtc.WidgetTestCase):
                 h = dc.GetGdkDrawable()
             
     def test_NativeMacHandle(self):
-        dc = wx.ClientDC(self.frame)
+        dc = wx.MemoryDC(wx.Bitmap(10,10))
         if 'wxMac' in wx.PlatformInfo:
             h = dc.GetCGContext()
-            self.assertNotEqual(h, 0)
+            self.assertTrue(h is not None)
+            self.assertNotEqual(int(h), 0)
         else:
             with self.assertRaises(NotImplementedError):
                 h = dc.GetCGContext()
