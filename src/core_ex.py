@@ -41,7 +41,7 @@ def deprecated(item, msg=''):
         # It is a class.  Make a subclass that raises a warning.
         class DeprecatedClassProxy(item):
             def __init__(*args, **kw):
-                warnings.warn("Using deprecated class. %s" % msg,
+                warnings.warn("Using deprecated class %s. %s" % (item.__name__, msg),
                           wxPyDeprecationWarning, stacklevel=2)
                 item.__init__(*args, **kw)
         DeprecatedClassProxy.__name__ = item.__name__
