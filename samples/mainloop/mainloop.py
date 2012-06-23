@@ -46,7 +46,6 @@ class MyFrame(wx.Frame):
         
 
     def OnCloseWindow(self, event):
-        print wx.GetApp().GetExitOnFrameDelete()
         self.Destroy()
 
     def OnIdle(self, event):
