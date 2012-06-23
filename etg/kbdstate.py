@@ -35,6 +35,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     
     c.addProperty("controlDown ControlDown SetControlDown")
+    c.addProperty("rawControlDown RawControlDown SetRawControlDown")
     c.addProperty("shiftDown   ShiftDown   SetShiftDown")
     c.addProperty("altDown     AltDown     SetAltDown")
     c.addProperty("metaDown    MetaDown    SetMetaDown")
