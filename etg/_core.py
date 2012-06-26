@@ -183,6 +183,7 @@ INCLUDES = [  # base and core stuff
               'fdrepdlg',
               'mdi',
               'fontdlg',
+              'rearrangectrl',
 
               # misc
               'power',

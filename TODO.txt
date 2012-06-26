@@ -133,7 +133,6 @@ other dev stuff
       * persist  ?
       * quantize
       * rawbmp
-      * rearrangectrl
       * renderer
       * richmsgdlg
       * textdlg
