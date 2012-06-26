@@ -25,6 +25,7 @@ from distutils.dir_util  import mkpath
 from distutils.dep_util  import newer
 from distutils.spawn     import spawn
 
+import distutils.sysconfig
 
 runSilently = False
 
@@ -249,9 +250,28 @@ class Configuration(object):
                 if not os.environ.get('CC') or not os.environ.get('CXX'):
                     self.CC =  os.environ["CC"]  = self.getWxConfigValue('--cc')
                     self.CXX = os.environ["CXX"] = self.getWxConfigValue('--cxx')
-                    self.LDSHARED = os.environ["LDSHARED"]  = \
-                         self.getWxConfigValue('--ld').replace(' -o', '') \
-                         + ' -bundle -undefined dynamic_lookup'
+        
+                    # We want to use the linker command from wx to make sure
+                    # we get the right sysroot, but we also need to ensure that
+                    # the other linker flags that distutils wants to use are
+                    # included as well.
+                    LDSHARED = distutils.sysconfig.get_config_var('LDSHARED').split()
+                    # remove the compiler command
+                    del LDSHARED[0]
+                    # remove any -sysroot flags and their arg
+                    while 1:
+                        try:
+                            index = LDSHARED.index('-isysroot')
+                            # Strip this argument and the next one:
+                            del LDSHARED[index:index+2]
+                        except ValueError:
+                            break            
+                    LDSHARED = ' '.join(LDSHARED)
+                    # Combine with wx's ld command and stash it in the env
+                    # where distutils will get it later.
+                    LDSHARED = self.getWxConfigValue('--ld').replace(' -o', '') + ' ' + LDSHARED
+                    os.environ["LDSHARED"]  = LDSHARED
+                    
                     
             # wxGTK settings
             else:
