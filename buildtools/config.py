@@ -226,7 +226,7 @@ class Configuration(object):
             self.WXRELEASE  = self.getWxConfigValue('--release')
             self.WXPREFIX   = self.getWxConfigValue('--prefix')
 
-            self.CC = self.CXX = None
+            self.CC = self.CXX = self.LDSHARED = None
 
             # wxMac settings
             if sys.platform[:6] == "darwin":
@@ -249,6 +249,9 @@ class Configuration(object):
                 if not os.environ.get('CC') or not os.environ.get('CXX'):
                     self.CC =  os.environ["CC"]  = self.getWxConfigValue('--cc')
                     self.CXX = os.environ["CXX"] = self.getWxConfigValue('--cxx')
+                    self.LDSHARED = os.environ["LDSHARED"]  = \
+                         self.getWxConfigValue('--ld').replace(' -o', '') \
+                         + ' -bundle -undefined dynamic_lookup'
                     
             # wxGTK settings
             else:
