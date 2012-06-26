@@ -702,17 +702,17 @@ def sip(options, args):
         src_name = src_name.replace('\\', '/')
         base = os.path.basename(os.path.splitext(src_name)[0])
         sbf = posixjoin(cfg.SIPOUT, base) + '.sbf'
+        pycode = base[1:] # remove the leading _
+        pycode = posixjoin(cfg.PKGDIR, pycode) + '.py'
         
         # Check if any of the included files are newer than the .sbf file
         # produced by the previous run of sip. If not then we don't need to
         # run sip again.
         etg = loadETG(posixjoin('etg', base + '.py'))
         sipFiles = getSipFiles(etg.INCLUDES)
-        if not newer_group(sipFiles, sbf):
+        if not newer_group(sipFiles, sbf) and os.path.exists(pycode):
             continue
         
-        pycode = base[1:] # remove the leading _
-        pycode = posixjoin(cfg.PKGDIR, pycode) + '.py'
         pycode = '-X pycode'+base+':'+pycode        
         sip = getSipCmd()
         cmd = '%s %s -c %s -b %s %s %s'  % \
