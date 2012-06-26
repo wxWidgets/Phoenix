@@ -785,7 +785,7 @@ def build(options, args):
     build_wx(options, args)
     build_py(options, args)
 
-    
+
 
 def build_wx(options, args):
     cmdTimer = CommandTimer('build_wx')
@@ -891,12 +891,10 @@ def build_wx(options, args):
 
     
             
-# While transitioning to waf this is an alias that will call the old
-# distutils build by default.
 def build_py(options, args):
     cmdTimer = CommandTimer('build_py')
-    setup_py(options, args)
-    #waf_py(options, args)
+    #setup_py(options, args)
+    waf_py(options, args)
 
 
     
