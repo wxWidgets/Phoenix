@@ -54,14 +54,6 @@ def configure(conf):
         conf.env.PYTHON = conf.options.python
     conf.load('python')
     conf.check_python_version(minver=(2,7,0))
-    
-    if isDarwin:
-        # This will set the CC, CXX and LDSHARED values in the environement
-        # the same way it will be when we do the real builds. This will allow
-        # the configure tests done in check_python_headers() below to use the
-        # correct compile and link commands while configuring.
-        cfg.finishSetup(wx_config=conf.options.wx_config, debug=conf.options.debug)
-        
     conf.check_python_headers()
 
     # fetch and save the debug option
