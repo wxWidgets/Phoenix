@@ -39,6 +39,19 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     
+    
+    #virtual void DrawTitleBarBitmap(wxWindow *win,
+    #                                wxDC& dc,
+    #                                const wxRect& rect,
+    #                                wxTitleBarButton button,
+    #                                int flags = 0) = 0;
+    c.find('DrawTitleBarBitmap').setCppCode("""\
+    #ifdef wxHAS_DRAW_TITLE_BAR_BITMAP
+        self->DrawTitleBarBitmap(win, *dc, *rect, button, flags);
+    #endif
+    """)
+    
+    
     c = module.find('wxDelegateRendererNative')
     c.addPrivateCopyCtor()
     
