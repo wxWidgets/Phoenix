@@ -133,7 +133,6 @@ other dev stuff
       * persist  ?
       * quantize
       * rawbmp
-      * renderer
       * richmsgdlg
       * textdlg
       * valgen
