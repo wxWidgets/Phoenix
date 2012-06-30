@@ -185,6 +185,7 @@ INCLUDES = [  # base and core stuff
               'mdi',
               'fontdlg',
               'rearrangectrl',
+              'minifram',
 
               # misc
               'power',

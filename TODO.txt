@@ -126,14 +126,13 @@ other dev stuff
       * filehistory
       * fswatcher
       * headerctrl
-      * minifram
       * mousemanager
       * msgout
       * palette  ?
       * persist  ?
       * quantize
       * rawbmp
-      * richmsgdlg
+      * richmsgdlg  (requires wrappers for wxGenericMessageDialog)
       * textdlg
       * valgen
       * valnum
