@@ -126,7 +126,6 @@ other dev stuff
       * filehistory
       * fswatcher
       * headerctrl
-      * mousemanager
       * msgout
       * palette  ?
       * persist  ?
