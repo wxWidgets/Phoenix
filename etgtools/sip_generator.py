@@ -633,6 +633,11 @@ from .%s import *
                     cm.body = code
                     self.generateCppMethod(cm, stream, indent, skipDeclaration=True)
                 
+            if method.virtualCatcherCode:
+                stream.write('%s%%VirtualCatcherCode\n' % indent)
+                stream.write(nci(method.virtualCatcherCode, len(indent)+4))
+                stream.write('%s%%End\n' % indent)
+                
             stream.write('\n')
             
         if checkOverloads and method.overloads:

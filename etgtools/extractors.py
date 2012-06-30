@@ -522,6 +522,7 @@ class MethodDef(FunctionDef):
         self.protection = ''
         self.defaultCtor = False      # use this ctor as the default one
         self.noDerivedCtor = False    # don't generate a ctor in the derived class for this ctor
+        self.virtualCatcherCode = None
         self.__dict__.update(kw)        
         if element is not None:
             self.extract(element)
