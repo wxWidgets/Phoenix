@@ -125,7 +125,6 @@ other dev stuff
       * docview ??
       * filehistory
       * fswatcher
-      * headerctrl
       * msgout
       * palette  ?
       * persist  ?

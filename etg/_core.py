@@ -146,6 +146,7 @@ INCLUDES = [  # base and core stuff
               'checklst',
               'gauge',
               'headercol',
+              #'headerctrl',  waiting on fix for a sip bug...
               'srchctrl',
               'radiobox', 
               'radiobut',
