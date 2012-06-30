@@ -5,6 +5,7 @@
 
 #ifdef __WXGTK__
 #include <gdk/gdkx.h>
+#include <gtk/gtk.h>
 #include <wx/gtk/private/win_gtk.h>
 #define GetXWindow(wxwin) (wxwin)->m_wxwindow ? \
                           GDK_WINDOW_XWINDOW((wxwin)->m_wxwindow->window) : \
