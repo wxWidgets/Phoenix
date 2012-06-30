@@ -432,6 +432,8 @@ class FunctionDef(BaseDef):
                         'false': 'False',
                         'NULL':  'None', 
                         'wxString()': '""',
+                        'wxArrayString()' : '[]',
+                        'wxArrayInt()' : '[]',
                         }
         if isinstance(self, CppMethodDef):
             # rip appart the argsString instead of using the (empty) list of parameters
