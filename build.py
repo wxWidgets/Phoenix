@@ -1099,7 +1099,7 @@ def clean_wx(options, args):
         deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version2_nodot, msw.dll_type))))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version3_nodot, msw.dll_type))))  
-        deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll' % (getVisCVersion(), +msw.dll_type)))
+        deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll' % (getVisCVersion(), msw.dll_type)))
         
         if options.both:
             options.debug = False
