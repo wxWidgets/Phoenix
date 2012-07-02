@@ -155,9 +155,9 @@ class Configuration(object):
             self.WXPLAT = '__WXMSW__'
         
             if os.environ.get('CPU', None) == 'AMD64':
-                self.VCDLL = 'vc_amd64_dll'
+                self.VCDLL = 'vc%s_amd64_dll' % getVisCVersion()
             else:
-                self.VCDLL = 'vc_dll'
+                self.VCDLL = 'vc%s_dll' % getVisCVersion()
                 
             self.includes += ['include',
                               opj(self.WXDIR, 'lib', self.VCDLL, 'msw'  + self.libFlag()),
@@ -828,4 +828,12 @@ def getSipFiles(names):
     return files
             
 
+    
+def getVisCVersion():
+    text = runcmd("cl.exe", getOutput=True)
+    if 'Version 15' in text:
+        return '90'
+    # TODO: Add more tests to get the other versions...
+    else:
+        return 'FIXME'
     

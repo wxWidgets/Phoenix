@@ -29,7 +29,8 @@ from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macFixDependencyInstallName, macSetLoaderNames, \
-                               getSvnRev, runcmd, textfile_open, getSipFiles
+                               getSvnRev, runcmd, textfile_open, getSipFiles, \
+                               getVisCVersion
 
 
 import buildtools.version as version
@@ -267,9 +268,9 @@ def getMSWSettings(options):
     msw = MSWsettings()
     msw.CPU = os.environ.get('CPU')
     if msw.CPU == 'AMD64':
-        msw.dllDir = posixjoin(wxDir(), "lib", "vc_amd64_dll")        
+        msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_amd64_dll" % getVisCVersion())        
     else:
-        msw.dllDir = posixjoin(wxDir(), "lib", "vc_dll")
+        msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_dll" % getVisCVersion())
     msw.buildDir = posixjoin(wxDir(), "build", "msw")
 
     msw.dll_type = "u"
@@ -1098,7 +1099,7 @@ def clean_wx(options, args):
         deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version2_nodot, msw.dll_type))))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version3_nodot, msw.dll_type))))  
-        deleteIfExists(opj(msw.buildDir, 'vc_msw'+msw.dll_type+'dll'))
+        deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll' % (getVisCVersion(), +msw.dll_type)))
         
         if options.both:
             options.debug = False
@@ -1221,9 +1222,7 @@ def bdist(options, args):
     readme = "packaging/README.txt"
     wxlibdir = os.path.join(getBuildDir(options), "lib") 
     if sys.platform.startswith('win'):
-        #dllext = ".dll"
-        #wxlibdir = os.path.join(wxDir(), "lib", "vc_dll")
-        environ_script = None #"packaging/phoenix_environ.bat"
+        environ_script = None 
     elif sys.platform.startswith('darwin'):
         dllext = ".dylib"
      
