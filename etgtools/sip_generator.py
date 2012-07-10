@@ -343,7 +343,7 @@ from .%s import *
             if isinstance(pf.deprecated, int):
                 stream.write('%s@wx.deprecated\n' % indent)
             else:
-                stream.write('%s@wx.deprecatedMsg(%s)\n' % (indent, pf.deprecated))
+                stream.write('%s@wx.deprecatedMsg("%s")\n' % (indent, pf.deprecated))
         if pf.isStatic:
             stream.write('%s@staticmethod\n' % indent)
         stream.write('%sdef %s%s:\n' % (indent, pf.name, pf.argsString))
@@ -372,7 +372,7 @@ from .%s import *
             if isinstance(pc.deprecated, int):
                 stream.write('%s@wx.deprecated\n' % indent)
             else:
-                stream.write('%s@wx.deprecatedMsg(%s)\n' % (indent, pc.deprecated))
+                stream.write('%s@wx.deprecatedMsg("%s")\n' % (indent, pc.deprecated))
         stream.write('%sclass %s' % (indent, pc.name))
         if pc.bases:
             stream.write('(%s):\n' % ', '.join(pc.bases))
@@ -441,6 +441,12 @@ from .%s import *
                 stream.write(nci(c, len(indent2)+4))
             stream.write("%s%%End\n" % indent2)
             
+        # C++ code to create a new instance of this class
+        if klass.instanceCode:
+            stream.write("%s%%InstanceCode\n" % indent2)
+            stream.write(nci(klass.instanceCode, len(indent2)+4))
+            stream.write("%s%%End\n" % indent2)
+
         # is the generator currently inside the class or after it?
         klass.generatingInClass = True 
 

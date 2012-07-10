@@ -610,6 +610,7 @@ class ClassDef(BaseDef):
         self.convertToPyObject = None
         self.convertFromPyObject = None
         self.allowNone = False      # Allow the convertFrom code to handle None too.
+        self.instanceCode = None    # Code to be used to create new instances of this class
         self.innerclasses = []
         self.isInner = False
         self.cppCtorCount = 0
