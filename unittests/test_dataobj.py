@@ -2,6 +2,7 @@ import imp_unittest, unittest
 import wtc
 import wx
 import os
+import sys
 
 pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 
@@ -61,8 +62,8 @@ class DataObjTests(wtc.WidgetTestCase):
         if hasattr(data, '_testGetAllFormats'):
             data._testGetAllFormats()
         
-        
-        
+    # TODO: Get this fixed!  See https://groups.google.com/d/topic/wx-dev/wFxevpvbhvQ/discussion
+    @unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
     def test_DataObject(self):
         class MyDataObject(wx.DataObject):
             def __init__(self, value=''):
@@ -106,6 +107,48 @@ class DataObjTests(wtc.WidgetTestCase):
         self.assertEqual(data1.myData, data2.myData)
         
         
+    def test_DataObject2(self):
+        class MyDataObject(wx.DataObject):
+            def __init__(self, value=''):
+                wx.DataObject.__init__(self)
+                self.myFormats = [wx.DataFormat("My Custom DataFormat")]                
+                self.myData = wtc.mybytes(value)
+                
+            def GetAllFormats(self, d):
+                return self.myFormats            
+            def GetFormatCount(self, d):
+                return len(self.myFormats)  
+            def GetPreferredFormat(self, d):
+                return self.myFormats[0]
+            def GetDataSize(self, format):
+                return len(self.myData)
+            
+            def GetDataHere(self, format, buf):
+                # copy our local data value to buf
+                assert isinstance(buf, memoryview)
+                buf[:] = self.myData
+                return True
+                            
+            def SetData(self, format, buf):
+                # copy from buf to our local data value
+                assert isinstance(buf, memoryview)
+                self.myData = buf.tobytes()
+                return True
+            
+        # copy
+        data1 = MyDataObject('This is some data.')
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.SetData(data1)
+            wx.TheClipboard.Close()
+               
+        # paste 
+        data2 = MyDataObject()
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.GetData(data2)
+            wx.TheClipboard.Close()
+        
+        self.assertEqual(data1.myData, data2.myData)
+        
         
     def test_DataObjectSimple1(self):
         df = wx.DataFormat(wx.DF_TEXT)
@@ -115,6 +158,8 @@ class DataObjTests(wtc.WidgetTestCase):
         self.assertTrue(dobj.GetAllFormats()[0] == df)
 
         
+    # TODO: Get this fixed!  See https://groups.google.com/d/topic/wx-dev/wFxevpvbhvQ/discussion
+    @unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
     def test_DataObjectSimple2(self):
         class MyDataObject(wx.DataObjectSimple):
             def __init__(self, value=''):
@@ -152,6 +197,42 @@ class DataObjTests(wtc.WidgetTestCase):
         self.assertEqual(data1.myData, data2.myData)
             
         
+    def test_DataObjectSimple3(self):
+        class MyDataObject(wx.DataObjectSimple):
+            def __init__(self, value=''):
+                wx.DataObjectSimple.__init__(self)
+                self.SetFormat(wx.DataFormat("My Custom Data Format"))
+                self.myData = wtc.mybytes(value)
+                
+            def GetDataSize(self):
+                return len(self.myData)
+            
+            def GetDataHere(self, buf):
+                # copy our local data value to buf
+                assert isinstance(buf, memoryview)
+                buf[:] = self.myData
+                return True
+                            
+            def SetData(self, buf):
+                # copy from buf to our local data value
+                assert isinstance(buf, memoryview)
+                self.myData = buf.tobytes()
+                return True
+            
+        # copy
+        data1 = MyDataObject('This is some data.')
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.SetData(data1)
+            wx.TheClipboard.Close()
+              
+        # paste  
+        data2 = MyDataObject()
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.GetData(data2)
+            wx.TheClipboard.Close()
+        
+        self.assertEqual(data1.myData, data2.myData)
+            
             
     def test_CustomDataObject(self):
         import pickle
