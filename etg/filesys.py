@@ -55,7 +55,7 @@ def run():
     
     c = module.find('wxArchiveFSHandler')
     c.addPrivateCopyCtor();
-    module.addPyCode('ZipFSHandler = wx.deprecated(ArchiveFSHandler)')
+    module.addPyCode('ZipFSHandler = wx.deprecated(ArchiveFSHandler, "Use ArchiveFSHandler.")')
     
     c = module.find('wxFSFile')
     c.addPrivateCopyCtor();

@@ -36,7 +36,7 @@ def run():
     
     tools.fixWindowClass(c)        
 
-    module.addPyCode("PyControl = wx.deprecated(Control)")
+    module.addPyCode("PyControl = wx.deprecated(Control, 'Use Control.')")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

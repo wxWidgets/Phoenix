@@ -154,7 +154,7 @@ def run():
 
 
     
-    module.addPyCode("PySizer = wx.deprecated(Sizer)")
+    module.addPyCode("PySizer = wx.deprecated(Sizer, 'Use Sizer.')")
         
     module.addItem(tools.wxListWrapperTemplate('wxSizerItemList', 'wxSizerItem', module))
     

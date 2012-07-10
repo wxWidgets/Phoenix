@@ -102,7 +102,7 @@ def run():
         return sipBuildResult(0, "(dd)", width, height);
         """)
 
-    c.addPyCode("GraphicsContext.DrawRotatedText = wx.deprecated(GraphicsContext.DrawText)")
+    c.addPyCode("GraphicsContext.DrawRotatedText = wx.deprecated(GraphicsContext.DrawText, 'Use DrawText.')")
 
     
     c.addCppCode(tools.ObjArrayHelperTemplate('wxPoint2D', 'sipType_wxPoint2DDouble',

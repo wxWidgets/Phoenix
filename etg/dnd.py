@@ -79,7 +79,7 @@ def run():
     c.find('wxDropTarget.data').transfer = True
     c.find('SetDataObject.data').transfer = True
     
-    module.addPyCode("PyDropTarget = wx.deprecated(DropTarget)")
+    module.addPyCode("PyDropTarget = wx.deprecated(DropTarget, 'Use DropTarget.')")
     
     
     

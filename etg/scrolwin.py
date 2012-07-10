@@ -146,7 +146,7 @@ def run():
         scrolled.ignore()
         
     
-    module.addPyCode("PyScrolledWindow = wx.deprecated(ScrolledWindow)")
+    module.addPyCode("PyScrolledWindow = wx.deprecated(ScrolledWindow, 'Use ScrolledWindow.')")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

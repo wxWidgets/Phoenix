@@ -73,7 +73,7 @@ def run():
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
         """)
-    c.addPyCode("PrintPreview.Ok = wx.deprecated(PrintPreview.IsOk)")
+    c.addPyCode("PrintPreview.Ok = wx.deprecated(PrintPreview.IsOk, 'Use IsOk.')")
 
     c = module.find('wxPrinter')
     c.addPrivateCopyCtor()
@@ -98,10 +98,10 @@ def run():
     
 
     # deprecated classes
-    module.addPyCode("PyPrintPreview = wx.deprecated(PrintPreview)")
-    module.addPyCode("PyPreviewFrame = wx.deprecated(PreviewFrame)")
-    module.addPyCode("PyPreviewControlBar = wx.deprecated(PreviewControlBar)")
-    module.addPyCode("PyPrintout = wx.deprecated(Printout)")
+    module.addPyCode("PyPrintPreview = wx.deprecated(PrintPreview, 'Use PrintPreview.')")
+    module.addPyCode("PyPreviewFrame = wx.deprecated(PreviewFrame, 'Use PreviewFrame.')")
+    module.addPyCode("PyPreviewControlBar = wx.deprecated(PreviewControlBar, 'Use PreviewControlBar.')")
+    module.addPyCode("PyPrintout = wx.deprecated(Printout, 'Use Printout.')")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

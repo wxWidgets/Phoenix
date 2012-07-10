@@ -296,7 +296,7 @@ def run():
             return event.Unbind(self, id, id2, handler)              
             """)
 
-    module.addPyCode('PyEvtHandler = wx.deprecated(EvtHandler)')
+    module.addPyCode('PyEvtHandler = wx.deprecated(EvtHandler, "Use EvtHandler.")')
 
 
     #---------------------------------------

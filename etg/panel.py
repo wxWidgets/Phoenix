@@ -35,7 +35,7 @@ def run():
     c.find('OnSysColourChanged').ignore()
     tools.fixWindowClass(c)
         
-    module.addPyCode("PyPanel = wx.deprecated(Panel)")
+    module.addPyCode("PyPanel = wx.deprecated(Panel, 'Use Panel.')")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

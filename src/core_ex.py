@@ -30,18 +30,26 @@ warnings.simplefilter('default', wxPyDeprecationWarning)
 del warnings
 
 
-def deprecated(item, msg=''):
+def deprecated(item, msg='', useName=False):
     """
     Create a delegating wrapper that raises a deprecation warning.  Can be
     used with callable objects (functions, methods, classes) or with
     properties.
     """
     import warnings
+    
+    name = ''
+    if useName:
+        try:
+            name = ' ' + item.__name__
+        except AttributeError:
+            pass
+        
     if isinstance(item, type):
         # It is a class.  Make a subclass that raises a warning.
         class DeprecatedClassProxy(item):
             def __init__(*args, **kw):
-                warnings.warn("Using deprecated class %s. %s" % (item.__name__, msg),
+                warnings.warn("Using deprecated class%s. %s" % (name, msg),
                           wxPyDeprecationWarning, stacklevel=2)
                 item.__init__(*args, **kw)
         DeprecatedClassProxy.__name__ = item.__name__
@@ -50,7 +58,7 @@ def deprecated(item, msg=''):
     elif callable(item):
         # wrap a new function around the callable
         def deprecated_func(*args, **kw):
-            warnings.warn("Call to deprecated item '%s'. %s" % (item.__name__, msg),
+            warnings.warn("Call to deprecated item%s. %s" % (name, msg),
                           wxPyDeprecationWarning, stacklevel=2)
             return item(*args, **kw)
         deprecated_func.__name__ = item.__name__
@@ -89,6 +97,16 @@ def deprecated(item, msg=''):
     else:
         raise TypeError("unsupported type %s" % type(item))
                    
+
+def deprecatedMsg(msg):
+    """
+    A wrapper for the deprecated decorator that makes it easier to attach a
+    custom message to the warning that is raised if the item is used. This
+    can also be used in the @decorator role since it returns the real
+    decorator when called.
+    """
+    import functools
+    return functools.partial(deprecated, msg=msg, useName=True)
 
 #----------------------------------------------------------------------------
 

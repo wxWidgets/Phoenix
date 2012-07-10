@@ -340,7 +340,10 @@ from .%s import *
                 stream.write(', order=%d' % pf.order)
             stream.write(')\n')
         if pf.deprecated:
-            stream.write('%s@wx.deprecated\n' % indent)
+            if isinstance(pf.deprecated, int):
+                stream.write('%s@wx.deprecated\n' % indent)
+            else:
+                stream.write('%s@wx.deprecatedMsg(%s)\n' % (indent, pf.deprecated))
         if pf.isStatic:
             stream.write('%s@staticmethod\n' % indent)
         stream.write('%sdef %s%s:\n' % (indent, pf.name, pf.argsString))
@@ -366,7 +369,10 @@ from .%s import *
 
         # write the class declaration and docstring
         if pc.deprecated:
-            stream.write('%s@wx.deprecated\n' % indent)
+            if isinstance(pc.deprecated, int):
+                stream.write('%s@wx.deprecated\n' % indent)
+            else:
+                stream.write('%s@wx.deprecatedMsg(%s)\n' % (indent, pc.deprecated))
         stream.write('%sclass %s' % (indent, pc.name))
         if pc.bases:
             stream.write('(%s):\n' % ', '.join(pc.bases))
@@ -847,7 +853,10 @@ from .%s import *
                 stream.write(nci('"""\n%s"""\n' % doc, 4))
             stream.write(nci(pm.body, 4))
             if pm.deprecated:
-                stream.write('%s.%s = wx.deprecated(_%s_%s)\n' % (klassName, pm.name, klassName, pm.name))
+                if isinstance(pm.deprecated, int):
+                    stream.write('%s.%s = wx.deprecated(_%s_%s)\n' % (klassName, pm.name, klassName, pm.name))
+                else:
+                    stream.write('%s.%s = wx.deprecated(_%s_%s, "%s")\n' % (klassName, pm.name, klassName, pm.name, pm.deprecated))
             else:
                 stream.write('%s.%s = _%s_%s\n' % (klassName, pm.name, klassName, pm.name))
             stream.write('del _%s_%s\n' % (klassName, pm.name))

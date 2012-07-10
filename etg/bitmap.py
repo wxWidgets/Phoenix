@@ -233,7 +233,7 @@ def run():
             """)
 
     module.addPyFunction('BitmapFromBuffer', '(width, height, dataBuffer, alphaBuffer=None)',
-        deprecated=True,
+        deprecated="Use Bitmap.FromBuffer or Bitmap.FromBufferAndAlpha.",
         doc='A compatibility wrapper for Bitmap.FromBuffer and Bitmap.FromBufferAndAlpha',
         body="""\
             if alphaBuffer is not None:
@@ -275,7 +275,7 @@ def run():
             """)
 
     module.addPyFunction('BitmapFromBufferRGBA', '(width, height, dataBuffer)',
-        deprecated=True,
+        deprecated="Use Bitmap.FromBufferRGBA.",
         doc='A compatibility wrapper for Bitmap.FromBufferRGBA',
         body='return Bitmap.FromBufferRGBA(width, height, dataBuffer)')
 
@@ -320,7 +320,7 @@ def run():
             """)
 
     module.addPyFunction('EmptyBitmapRGBA', '(width, height, red=0, green=0, blue=0, alpha=0)',
-        deprecated=True,
+        deprecated="Use Bitmap.FromRGBA.",
         doc='A compatibility wrapper for Bitmap.FromRGBA',
         body='return Bitmap.FromRGBA(width, height, red, green, blue, alpha)')
 
@@ -328,7 +328,7 @@ def run():
 
     # For compatibility:
     module.addPyFunction('EmptyBitmap', '(width, height, depth=BITMAP_SCREEN_DEPTH)',
-                         deprecated=True,
+                         deprecated="Use wx.Bitmap instead",
                          doc='A compatibility wrapper for the wx.Bitmap(width, height, depth) constructor',
                          body='return Bitmap(width, height, depth)')
 

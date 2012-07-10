@@ -483,27 +483,27 @@ def run():
 
     # For compatibility:
     module.addPyFunction('EmptyImage', '(width=0, height=0, clear=True)',
-                         deprecated=True,
+                         deprecated="Use wx.Image.",
                          doc='A compatibility wrapper for the wx.Image(width, height) constructor',
                          body='return Image(width, height, clear)')
     
     module.addPyFunction('ImageFromBitmap', '(bitmap)',
-                         deprecated=True,
+                         deprecated="Use wx.Image.",
                          doc='Create a wx.Image from a wx.Bitmap',
                          body='return bitmap.ConvertToImage()')
 
     module.addPyFunction('ImageFromData', '(width, height, data)',
-                         deprecated=True,
+                         deprecated="Use wx.Image.",
                          doc='Compatibility wrapper for creating an image from RGB data',
                          body='return Image(width, height, data)')
 
     module.addPyFunction('ImageFromDataWithAlpha', '(width, height, data, alpha)',
-                         deprecated=True,
+                         deprecated="Use wx.Image.",
                          doc='Compatibility wrapper for creating an image from RGB and Alpha data',
                          body='return Image(width, height, data, alpha)')
 
 
-
+    
     module.addPyFunction('ImageFromBuffer', '(width, height, dataBuffer, alphaBuffer=None)',
         doc="""\
             Creates a `wx.Image` from the data in dataBuffer.  The dataBuffer

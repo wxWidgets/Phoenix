@@ -270,8 +270,7 @@ def run():
         return 0; // not a new instance
     """
 
-
-    module.addPyCode('NamedColour = wx.deprecated(Colour)')
+    module.addPyCode('NamedColour = wx.deprecated(Colour, "Use Colour.")')
         
     
     # Just for TESTING, remove it later

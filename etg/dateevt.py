@@ -43,8 +43,8 @@ def run():
         """)
     
     c.addPyCode("""\
-        DateEvent.PyGetDate = wx.deprecated(DateEvent.GetDate)
-        DateEvent.PySetDate = wx.deprecated(DateEvent.SetDate)
+        DateEvent.PyGetDate = wx.deprecated(DateEvent.GetDate, 'Use GetDate.')
+        DateEvent.PySetDate = wx.deprecated(DateEvent.SetDate, 'Use GetDate.')
         """)
     
     #-----------------------------------------------------------------

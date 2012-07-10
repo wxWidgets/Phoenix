@@ -356,9 +356,9 @@ def run():
     
 
     #------------------------------------------------------------
-    module.addPyCode("PyDataObjectSimple = wx.deprecated(DataObjectSimple)")
-    module.addPyCode("PyTextDataObject = wx.deprecated(TextDataObject)")
-    module.addPyCode("PyBitmapDataObject = wx.deprecated(BitmapDataObject)")
+    module.addPyCode("PyDataObjectSimple = wx.deprecated(DataObjectSimple), 'Use DataObjectSimple.'")
+    module.addPyCode("PyTextDataObject = wx.deprecated(TextDataObject, 'Use TextDataObject.')")
+    module.addPyCode("PyBitmapDataObject = wx.deprecated(BitmapDataObject, 'Use TextDataObject.')")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

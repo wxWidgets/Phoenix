@@ -34,7 +34,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.find('Clone').factory = True
 
-    module.addPyCode("PyValidator = wx.deprecated(Validator)")
+    module.addPyCode("PyValidator = wx.deprecated(Validator, 'Use Validator.')")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -64,9 +64,9 @@ def run():
         c.find('SetAttr.attr').transfer = True
         
         c.addPyCode("""\
-            {name}.PyGetDate = wx.deprecated({name}.GetDate)
-            {name}.PySetDate = wx.deprecated({name}.SetDate)
-            {name}.PySetDateRange = wx.deprecated({name}.SetDateRange)        
+            {name}.PyGetDate = wx.deprecated({name}.GetDate, 'Use GetDate.')
+            {name}.PySetDate = wx.deprecated({name}.SetDate, 'Use SetDate.')
+            {name}.PySetDateRange = wx.deprecated({name}.SetDateRange, 'Use SetDateRange.')        
             """.format(name=c.name[2:]))
     
     cc.find('EnableYearChange').ignore()

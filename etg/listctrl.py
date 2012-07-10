@@ -183,12 +183,12 @@ def run():
 
         
     # Some deprecated aliases for Classic renames
-    c.addPyCode('ListCtrl.FindItemData = wx.deprecated(ListCtrl.FindItem)')
-    c.addPyCode('ListCtrl.FindItemAtPos = wx.deprecated(ListCtrl.FindItem)')
-    c.addPyCode('ListCtrl.InsertStringItem = wx.deprecated(ListCtrl.InsertItem)')
-    c.addPyCode('ListCtrl.InsertImageItem = wx.deprecated(ListCtrl.InsertItem)')
-    c.addPyCode('ListCtrl.InsertImageStringItem = wx.deprecated(ListCtrl.InsertItem)')
-    c.addPyCode('ListCtrl.SetStringItem = wx.deprecated(ListCtrl.SetItem)')
+    c.addPyCode('ListCtrl.FindItemData = wx.deprecated(ListCtrl.FindItem, "Use  FindItem.")')
+    c.addPyCode('ListCtrl.FindItemAtPos = wx.deprecated(ListCtrl.FindItem, "Use FindItem.")')
+    c.addPyCode('ListCtrl.InsertStringItem = wx.deprecated(ListCtrl.InsertItem, "Use InsertItem.")')
+    c.addPyCode('ListCtrl.InsertImageItem = wx.deprecated(ListCtrl.InsertItem, "Use InsertItem.")')
+    c.addPyCode('ListCtrl.InsertImageStringItem = wx.deprecated(ListCtrl.InsertItem, "Use InsertItem.")')
+    c.addPyCode('ListCtrl.SetStringItem = wx.deprecated(ListCtrl.SetItem, "Use SetItem.")')
     
     
     # Provide a way to determine if column ordering is possble

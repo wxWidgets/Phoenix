@@ -50,19 +50,19 @@ def run():
     c.find('AppendSubMenu.submenu').transfer = True
     c.find('GetMenuItems').ignore() # keep the overload, but not the first one.
     
-    c.addPyMethod('AppendMenu', '(self, id, item, subMenu, help="")', deprecated=True,
+    c.addPyMethod('AppendMenu', '(self, id, item, subMenu, help="")', deprecated='Use Append.',
                   body='return self.Append(id, item, subMenu, help)')
-    c.addPyMethod('AppendItem', '(self, menuItem)', deprecated=True,
+    c.addPyMethod('AppendItem', '(self, menuItem)', deprecated='Use Append.',
                   body='return self.Append(menuItem)')
     
-    c.addPyMethod('InsertMenu', '(self, pos, id, item, subMenu, help="")', deprecated=True,
+    c.addPyMethod('InsertMenu', '(self, pos, id, item, subMenu, help="")', deprecated='Use Insert.',
                   body='return self.Insert(pos, id, item, subMenu, help)')
-    c.addPyMethod('InsertItem', '(self, pos, menuItem)', deprecated=True,
+    c.addPyMethod('InsertItem', '(self, pos, menuItem)', deprecated='Use Insert.',
                   body='return self.Insert(pos, menuItem)')
 
-    c.addPyMethod('PrependMenu', '(self, id, item, subMenu, help="")', deprecated=True,
+    c.addPyMethod('PrependMenu', '(self, id, item, subMenu, help="")', deprecated='Use Prepend.',
                   body='return self.Prepend(id, item, subMenu, help)')
-    c.addPyMethod('PrependItem', '(self, menuItem)', deprecated=True,
+    c.addPyMethod('PrependItem', '(self, menuItem)', deprecated='Use Prepend.',
                   body='return self.Prepend(menuItem)')
 
     # Don't hide the Destroy inherited from wxObject
