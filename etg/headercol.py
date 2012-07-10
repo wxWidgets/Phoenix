@@ -37,6 +37,8 @@ def run():
     isinstance(c, etgtools.ClassDef)
     c.abstract = True
     c.addAutoProperties()
+
+    c.instanceCode = 'sipCpp = new wxHeaderColumnSimple("");'
     
     # addAutoProperties doesn't recognize 'IsFoo' as a getter, but it still
     # makes sense to use these, so add them manually.
