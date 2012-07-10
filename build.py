@@ -267,8 +267,8 @@ def getMSWSettings(options):
         pass
     msw = MSWsettings()
     msw.CPU = os.environ.get('CPU')
-    if msw.CPU == 'AMD64':
-        msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_amd64_dll" % getVisCVersion())        
+    if msw.CPU in ['AMD64', 'X64']:
+        msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_x64_dll" % getVisCVersion())        
     else:
         msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_dll" % getVisCVersion())
     msw.buildDir = posixjoin(wxDir(), "build", "msw")

@@ -154,8 +154,8 @@ class Configuration(object):
             # will probably vary...
             self.WXPLAT = '__WXMSW__'
         
-            if os.environ.get('CPU', None) == 'AMD64':
-                self.VCDLL = 'vc%s_amd64_dll' % getVisCVersion()
+            if os.environ.get('CPU', None) in ['AMD64', 'X64']:
+                self.VCDLL = 'vc%s_x64_dll' % getVisCVersion()
             else:
                 self.VCDLL = 'vc%s_dll' % getVisCVersion()
                 
