@@ -53,11 +53,11 @@ isDarwin = sys.platform == "darwin"
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.13.3-snapshot-377e9e4763f5'
+sipCurrentVersion = '4.13.4-snapshot-9b330b545c65'
 sipMD5 = {
-    'darwin' : '23e22703cacf9110730c539d348e6e46',
-    'win32'  : '801c477ebe9e02e314e7e153e6ea7356', 
-    'linux2' : '07a1676641918106132bb64aa6517734', 
+    'darwin' : 'b76995b8a3c5b6f57f2b9d5a2c9f44cd',
+    'win32'  : '15d8a08cb6f26e38974ed37f1c671491', 
+    'linux2' : 'a7e72631a26024847f7c73dd74d5167f', 
 }
 
 wafCurrentVersion = '1.6.11'
