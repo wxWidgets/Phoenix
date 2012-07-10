@@ -12,8 +12,9 @@ class tipdlg_Tests(wtc.WidgetTestCase):
 
     def test_tipdlg1(self):
         tp = wx.adv.CreateFileTipProvider(tipFile, 0);
-        wx.CallLater(50, self.closeDialogs)
+        wx.CallLater(150, self.closeDialogs)
         wx.adv.ShowTip(self.frame, tp)
+        self.myYield()
         
         
     def test_tipdlg2(self):
@@ -23,6 +24,7 @@ class tipdlg_Tests(wtc.WidgetTestCase):
             
         wx.CallLater(150, self.closeDialogs)
         wx.adv.ShowTip(self.frame, MyTipProvider(0))
+        self.myYield()
 
                        
                 
