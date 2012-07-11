@@ -434,6 +434,7 @@ def run():
         """)
     # Here is the function it calls
     module.includeCppCode('src/core_ex.cpp')
+    module.addItem(etgtools.WigCode("void _wxPyCleanup();"))
     
 
     #-----------------------------------------------------------------
