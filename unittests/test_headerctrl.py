@@ -39,6 +39,7 @@ class headerctrl_Tests(wtc.WidgetTestCase):
         wx.EVT_HEADER_END_REORDER
         wx.EVT_HEADER_DRAGGING_CANCELLED
         
+        
     @unittest.expectedFailure  # it's an abstract class
     def test_headerctrl2(self):
         hc = wx.HeaderCtrl(self.frame)

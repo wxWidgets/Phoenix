@@ -140,7 +140,7 @@ other dev stuff
   * Add a _msw module that will contain classes and such that are only
     available in the Windows port:  
 
-      * axbase  (ActiveX.  Need to figure out best ways to do MSW-only items...)
+      * axbase  (ActiveX.)
       * wxCHMHelpController
       * metafile
       * Any others?
