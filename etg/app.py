@@ -270,12 +270,12 @@ def run():
                     """,
                 body="""\
                     if self.frame is None:
-                        if not wx.Thread.IsMain():
+                        if not wx.IsMainThread():
                             wx.CallAfter(self.CreateOutputWindow, text)
                         else:
                             self.CreateOutputWindow(text)
                     else:
-                        if not wx.Thread.IsMain():
+                        if not wx.IsMainThread():
                             wx.CallAfter(self.text.AppendText, text)
                         else:
                             self.text.AppendText(text)

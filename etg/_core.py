@@ -419,6 +419,11 @@ def run():
             ])
 
 
+    module.addCppFunction('bool', 'IsMainThread', '()',
+        doc="Returns True if the current thread is what wx considers the GUI thread.",
+        body="return wxThread::IsMain();")
+    
+
     module.addInitializerCode("""\
         wxPyPreInit(sipModuleDict);
         """)
