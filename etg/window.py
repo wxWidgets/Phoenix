@@ -132,7 +132,7 @@ def run():
         body="""\
         self->SetSize(x, y, width, height, sizeFlags);
         """)
-    c.addPyCode("Window.SetDimensions = wx.deprecated(Window.SetDimensions, 'Use SetSize.')")
+    c.addPyCode("Window.SetDimensions = wx.deprecated(Window.SetDimensions, 'Use SetSize instead.')")
     
     # Make the Register/UnregisterHotKey functions be available on Windows,
     # and empty stubs otherwise
@@ -254,14 +254,14 @@ def run():
     tools.addSipConvertToSubClassCode(c)
 
     # for compatibility with Classic
-    c.addPyMethod('GetPositionTuple', '(self)', 'return self.GetPosition()', deprecated='Use GetPosition')
-    c.addPyMethod('MoveXY',  '(self, x, y)', 'return self.Move(x, y)', deprecated='Use Move.')
-    c.addPyMethod('SetSizeWH', '(self, w, h)', 'return self.SetSize(w,h)', deprecated='Use SetSize.')
-    c.addPyMethod('SetVirtualSizeWH', '(self, w, h)', 'return self.SetVirtualSize(w,h)', deprecated='Use SetVirtualSize.')
-    c.addPyMethod('GetVirtualSizeTuple', '(self)', 'return self.GetVirtualSize()', deprecated='Use GetVirtualSize.')
-    c.addPyMethod('SetToolTipString',  '(self, string)', 'return self.SetToolTip(string)', deprecated='Use SetToolTip')
-    c.addPyMethod('ConvertDialogPointToPixels', '(self, point)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels.')
-    c.addPyMethod('ConvertDialogSizeToPixels', '(self, size)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels.')
+    c.addPyMethod('GetPositionTuple', '(self)', 'return self.GetPosition()', deprecated='Use GetPosition instead')
+    c.addPyMethod('MoveXY',  '(self, x, y)', 'return self.Move(x, y)', deprecated='Use Move instead.')
+    c.addPyMethod('SetSizeWH', '(self, w, h)', 'return self.SetSize(w,h)', deprecated='Use SetSize instead.')
+    c.addPyMethod('SetVirtualSizeWH', '(self, w, h)', 'return self.SetVirtualSize(w,h)', deprecated='Use SetVirtualSize instead.')
+    c.addPyMethod('GetVirtualSizeTuple', '(self)', 'return self.GetVirtualSize()', deprecated='Use GetVirtualSize instead.')
+    c.addPyMethod('SetToolTipString',  '(self, string)', 'return self.SetToolTip(string)', deprecated='Use SetToolTip instead.')
+    c.addPyMethod('ConvertDialogPointToPixels', '(self, point)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
+    c.addPyMethod('ConvertDialogSizeToPixels', '(self, size)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
 
     #-----------------------------------------------------------------------
     # Other stuff
@@ -291,7 +291,7 @@ def run():
                           briefDoc="Returns a list-like object of the the application's top-level windows, (frames,dialogs, etc.)",
                           body="return &wxTopLevelWindows;")
     
-    module.addPyCode("PyWindow = wx.deprecated(Window, 'Use Window.')")
+    module.addPyCode("PyWindow = wx.deprecated(Window, 'Use Window instead.')")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

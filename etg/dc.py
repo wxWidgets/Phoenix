@@ -118,7 +118,7 @@ def run():
         self->DrawLabel(*text, *bitmap, *rect, alignment, indexAccel, &rv);
         return new wxRect(rv);
         """)
-    c.addPyCode('DC.DrawImageLabel = wx.deprecated(DC.DrawLabel, "Use DrawLabel.")')
+    c.addPyCode('DC.DrawImageLabel = wx.deprecated(DC.DrawLabel, "Use DrawLabel instead.")')
 
     # Return the array instead of using an output parameter
     m = c.find('GetPartialTextExtents')

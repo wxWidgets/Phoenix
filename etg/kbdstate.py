@@ -43,10 +43,10 @@ def run():
 
     c.addPyCode("""\
         # For 2.8 compatibility
-        KeyboardState.m_controlDown = wx.deprecated(KeyboardState.controlDown, "Use controlDown.")
-        KeyboardState.m_shiftDown   = wx.deprecated(KeyboardState.shiftDown, "Use shiftDown.")
-        KeyboardState.m_altDown     = wx.deprecated(KeyboardState.altDown, "Use altDown.")
-        KeyboardState.m_metaDown    = wx.deprecated(KeyboardState.metaDown, "Use metaDown.") 
+        KeyboardState.m_controlDown = wx.deprecated(KeyboardState.controlDown, "Use controlDown instead.")
+        KeyboardState.m_shiftDown   = wx.deprecated(KeyboardState.shiftDown, "Use shiftDown instead.")
+        KeyboardState.m_altDown     = wx.deprecated(KeyboardState.altDown, "Use altDown instead.")
+        KeyboardState.m_metaDown    = wx.deprecated(KeyboardState.metaDown, "Use metaDown instead.") 
         """)
     
     #-----------------------------------------------------------------

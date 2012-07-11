@@ -115,19 +115,19 @@ def run():
     module.addPyFunction('DateTimeFromTimeT', '(timet)',
         doc="Compatibility wrapper for DateTime.FromTimeT",
         body="return DateTime.FromTimeT(timet)",
-        deprecated='Use DateTime.FromTimeT.')
+        deprecated='Use DateTime.FromTimeT instead.')
     module.addPyFunction('DateTimeFromJDN', '(jdn)',
         doc="Compatibility wrapper for DateTime.FromJDN",
         body="return DateTime.FromJDN(jdn)",
-        deprecated='Use DateTime.FromJDN')
+        deprecated='Use DateTime.FromJDN instead.')
     module.addPyFunction('DateTimeFromHMS', '(hour, minute=0, second=0, millisecond=0)',
         doc="Compatibility wrapper for DateTime.FromHMS",
         body="return DateTime.FromHMS(hour, minute, second, millisecond)",
-        deprecated='DateTime.FromHMS')
+        deprecated='DateTime.FromHMS instead.')
     module.addPyFunction('DateTimeFromDMY', '(day, month, year=DateTime.Inv_Year, hour=0, minute=0, second=0, millisecond=0)',
         doc="Compatibility wrapper for DateTime.FromDMY",
         body="return DateTime.FromDMY(day, month, year, hour, minute, second, millisecond)",
-        deprecated='Use DateTime.FromDMY')
+        deprecated='Use DateTime.FromDMY instead.')
     
     
     # Fixup similar conflicts in the Set method overloads

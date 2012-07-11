@@ -77,8 +77,8 @@ def run():
     module.addPyCode(pycode)
     
     # former renamed constructors
-    module.addPyCode('StockCursor = wx.deprecated(Cursor, "Use Cursor instead")')
-    module.addPyCode('CursorFromImage = wx.deprecated(Cursor, "Use Cursor instead")')
+    module.addPyCode('StockCursor = wx.deprecated(Cursor, "Use Cursor instead.")')
+    module.addPyCode('CursorFromImage = wx.deprecated(Cursor, "Use Cursor instead.")')
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

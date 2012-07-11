@@ -73,7 +73,7 @@ def run():
         """))
     
     module.addPyCode("""\
-        @wx.deprecatedMsg('Use GUIEventLoop.')
+        @wx.deprecatedMsg('Use GUIEventLoop instead.')
         class EventLoop(GUIEventLoop):
             '''Class using the old name for compatibility.'''
             def __init__(self):

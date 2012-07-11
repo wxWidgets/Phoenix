@@ -59,8 +59,8 @@ def run():
                 item.transfer = True
 
     c.addPyCode("""\
-        TreeCtrl.GetItemPyData = wx.deprecated(TreeCtrl.GetItemData, 'Use GetItemData.')
-        TreeCtrl.SetItemPyData = wx.deprecated(TreeCtrl.SetItemData, 'Use SetItemData.')
+        TreeCtrl.GetItemPyData = wx.deprecated(TreeCtrl.GetItemData, 'Use GetItemData instead.')
+        TreeCtrl.SetItemPyData = wx.deprecated(TreeCtrl.SetItemData, 'Use SetItemData instead.')
         """)
 
     
