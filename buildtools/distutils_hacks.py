@@ -17,7 +17,9 @@ import distutils.command.install
 import distutils.command.install_data
 import distutils.command.install_headers
 import distutils.command.clean
+
 from   distutils.dep_util import newer, newer_group
+from distutils import log
 
 from .config import Config, posixjoin, loadETG, etg2sip
 
@@ -41,7 +43,6 @@ class wx_extra_clean(distutils.command.clean.clean):
     --all flag was used also searches for .pyc, .pyd, .so files
     """
     def run(self):
-        from distutils import log
         from distutils.filelist import FileList
 
         distutils.command.clean.clean.run(self)
@@ -177,7 +178,7 @@ def _darwin_compiler_fixup(compiler_so, cc_args):
         stripArch = stripSysroot = True
     else:
         stripArch = '-arch' in cc_args
-        stripSysroot = '-isysroot' in cc_args or stripArch or ccHasSysroot
+        stripSysroot = '-isysroot' in cc_args
 
     if stripArch:
         while 1:
