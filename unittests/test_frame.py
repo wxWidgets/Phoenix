@@ -11,6 +11,7 @@ class frame_Tests(wtc.WidgetTestCase):
         wx.FRAME_NO_TASKBAR     
         wx.FRAME_TOOL_WINDOW    
         wx.FRAME_FLOAT_ON_PARENT
+        wx.FRAME_SHAPED
         
         
     def test_frameCtors(self):
