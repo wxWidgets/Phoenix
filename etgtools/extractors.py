@@ -575,7 +575,10 @@ class ParamDef(BaseDef):
             if self.type == '...':
                 self.name = ''
             else:
-                self.name = element.find('declname').text
+                if element.find('declname') is not None:
+                    self.name = element.find('declname').text
+                elif element.find('defname') is not None:
+                    self.name = element.find('defname').text
             if element.find('defval') is not None:
                 self.default = flattenNode(element.find('defval'))
         except:
@@ -711,6 +714,8 @@ class ClassDef(BaseDef):
                 self.items.append(e)
             elif kind == 'typedef':
                 # callback function prototype, see wx/filedlg.h for an instance of this
+                continue
+            elif kind == 'friend':
                 continue
             else:
                 raise ExtractorError('Unknown memberdef kind: %s' % kind)
@@ -1404,7 +1409,8 @@ class ModuleDef(BaseDef):
                 item = DefineDef(element)
                 self.items.append(item)
 
-        elif kind == 'file':
+        elif kind == 'file' or kind == 'namespace':
+            extractingMsg(kind, element)
             for node in element.findall('sectiondef/memberdef'):
                 self.addElement(node)
 
