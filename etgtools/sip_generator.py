@@ -18,8 +18,11 @@ import etgtools.generators as generators
 from etgtools.generators import nci, Utf8EncodingStream, textfile_open, wrapText
 
 
+from buildtools.config import Config
+cfg = Config(noWxConfig=True)
+
 divider = '//' + '-'*75 + '\n'
-phoenixRoot = os.path.abspath(os.path.split(__file__)[0]+'/..')
+phoenixRoot = cfg.ROOT_DIR
 
 class SipGeneratorError(RuntimeError):
     pass

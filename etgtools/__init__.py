@@ -13,17 +13,20 @@ them from the Doxygen XML, and producing wrapper code from them.
 """
 
 import sys, os
+# Mac Python actually has a buildtools module, so we need
+# to make sure ours is picked up when we're not run from the
+# Phoenix root dir.
+sys.path.insert(0, os.path.abspath(os.path.split(__file__)[0]+'/..'))
+
+from buildtools.config import Config
 from .extractors import *
 
 #---------------------------------------------------------------------------
+cfg = Config(noWxConfig=True)
 
-from buildtools.config import phoenixDir, wxDir
-
-xmlsrcbase = 'docs/doxygen/out/xml'
-WXWIN = wxDir()
-if WXWIN:
-    XMLSRC = os.path.join(WXWIN, xmlsrcbase)
-assert WXWIN and os.path.exists(XMLSRC), "Unable to locate Doxygen XML files"
+phoenixRoot = cfg.ROOT_DIR
+XMLSRC = cfg.DOXY_XML_DIR
+assert os.path.exists(XMLSRC), "Unable to locate Doxygen XML files at " + XMLSRC
 
 
 #---------------------------------------------------------------------------

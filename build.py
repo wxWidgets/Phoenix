@@ -375,10 +375,10 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
             ext = ''
             if platform == 'win32':
                 ext = '.exe'
-            cmd = opj('bin', '%s-%s-%s%s' % (cmdName, version, platform, ext))
+            cmd = opj(phoenixDir(), 'bin', '%s-%s-%s%s' % (cmdName, version, platform, ext))
             md5 = MD5[platform]
         else:
-            cmd = opj('bin', '%s-%s' % (cmdName, version))
+            cmd = opj(phoenixDir(), 'bin', '%s-%s' % (cmdName, version))
             md5 = MD5
 
         msg('Checking for %s...' % cmd)
@@ -542,7 +542,8 @@ def doxhtml(options, args):
 
 def etg(options, args):
     cmdTimer = CommandTimer('etg')
-    pwd = pushDir(phoenixDir())
+    cfg = Config()
+    pwd = pushDir(cfg.ROOT_DIR)
 
     # TODO: Better support for selecting etg cmd-line flags...
     flags = '--sip'
@@ -692,6 +693,7 @@ def docs_bdist(options, args):
 def sip(options, args):
     cmdTimer = CommandTimer('sip')
     cfg = Config()
+    pwd = pushDir(cfg.ROOT_DIR)
     modules = glob.glob(opj(cfg.SIPGEN, '_*.sip'))
     # move _core the to the front of the list
     modules.remove(opj(cfg.SIPGEN, '_core.sip'))

@@ -38,15 +38,11 @@ class Configuration(object):
     SIPGEN   = 'sip/gen'          # Where the generated .sip files go
     SIPFILES = 'sip'              # where to find other sip files for %Include or %Import
     SIPOUT   = 'sip/cpp'          # where to put the generated C++ code
-    
-    SIPOPTS  = ' '.join(['-w',    # enable warnings
-                         '-o',    # turn on auto-docstrings
-                         #'-e',    # turn on exceptions support
-                         '-T',    # turn off writing the timestamp to the generated files
-                         '-g',    # always release and reaquire the GIL
-                         #'-r',    # turn on function call tracing
-                         '-I', 'src'
-                         ])
+
+    ROOT_DIR = os.path.abspath(os.path.split(__file__)[0]+'/..')
+
+    # we need the WXWIN dir to configure this, see __init__
+    DOXY_XML_DIR = None
 
     WX_CONFIG = None
     # Usually you shouldn't need to touch this, but you can set it to
@@ -94,7 +90,6 @@ class Configuration(object):
     
     def __init__(self, noWxConfig=False):
         self.CLEANUP = list()
-        
         # load the version numbers into this instance's namespace
         versionfile = opj(os.path.split(__file__)[0], 'version.py')
         myExecfile(versionfile, self.__dict__)
@@ -112,7 +107,7 @@ class Configuration(object):
 
         # change the PORT default for wxMac
         if sys.platform[:6] == "darwin":
-            self.WXPORT = 'osx_carbon'
+            self.WXPORT = 'osx_cocoa'
 
         # and do the same for wxMSW, just for consistency
         if os.name == 'nt':
@@ -130,7 +125,19 @@ class Configuration(object):
         self.includes = [phoenixDir() + '/sip/siplib',  # to get our version of sip.h
                          phoenixDir() + '/src',         # for any hand-written headers
                          ]
-            
+
+        self.DOXY_XML_DIR = os.path.join(self.WXDIR, 'docs/doxygen/out/xml')
+
+        self.SIPOPTS  = ' '.join(['-w',    # enable warnings
+                         '-o',    # turn on auto-docstrings
+                         #'-e',    # turn on exceptions support
+                         '-T',    # turn off writing the timestamp to the generated files
+                         '-g',   # always release and reaquire the GIL
+                         #'-r',   # turn on function call tracing
+                         '-I', os.path.join(phoenixDir(), 'src'),
+                         '-I', os.path.join(phoenixDir(), 'sip', 'gen'),
+                         ])
+                         
         if noWxConfig:
             # this is as far as we go for now
             return
@@ -378,7 +385,7 @@ class Configuration(object):
                     break
             else:
                 msg("ERROR: WX_CONFIG not specified and wx-config not found on the $PATH")
-
+                sys.exit(1)
             # TODO:  execute WX_CONFIG --list and verify a matching config is found
 
 
