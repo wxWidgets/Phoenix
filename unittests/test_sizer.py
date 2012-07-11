@@ -51,7 +51,57 @@ class sizer_Tests(wtc.WidgetTestCase):
         self.assertTrue(items[0].IsWindow())
         self.assertTrue(items[1].IsSpacer())
         self.assertTrue(items[2].Border == 5)
-                     
+
+
+    def test_sizerSpacers1(self):
+        bs = wx.BoxSizer()
+        w = 5
+        h = 10
+        bs.Add(w, h)
+        bs.Add( (w, h) )
+        bs.Add(wx.Size(w,h))
+
+    def test_sizerSpacers2(self):
+        bs = wx.BoxSizer()
+        w = 5
+        h = 10
+        bs.Add(w, h, wx.SizerFlags(1))
+        bs.Add( (w, h), wx.SizerFlags(2) )
+        bs.Add(wx.Size(w,h), wx.SizerFlags(3))
+        
+    def test_sizerSpacers3(self):
+        bs = wx.BoxSizer()
+        w = 5
+        h = 10
+        bs.Prepend(w, h)
+        bs.Prepend( (w, h) )
+        bs.Prepend(wx.Size(w,h))
+
+    def test_sizerSpacers4(self):
+        bs = wx.BoxSizer()
+        w = 5
+        h = 10
+        bs.Prepend(w, h, wx.SizerFlags(1))
+        bs.Prepend( (w, h), wx.SizerFlags(2) )
+        bs.Prepend(wx.Size(w,h), wx.SizerFlags(3))
+
+    def test_sizerSpacers5(self):
+        bs = wx.BoxSizer()
+        w = 5
+        h = 10
+        bs.Insert(0, w, h)
+        bs.Insert(0, (w, h) )
+        bs.Insert(0, wx.Size(w,h))
+
+    def test_sizerSpacers6(self):
+        bs = wx.BoxSizer()
+        w = 5
+        h = 10
+        bs.Insert(0, w, h, wx.SizerFlags(1))
+        bs.Insert(0, (w, h), wx.SizerFlags(2) )
+        bs.Insert(0, wx.Size(w,h), wx.SizerFlags(3))
+
+        
 #---------------------------------------------------------------------------
 
 
