@@ -93,7 +93,10 @@ void wxPyPreInit(PyObject* moduleDict)
     wxApp::CheckBuildOptions(WX_BUILD_OPTIONS_SIGNATURE, "wxPython");
 }
 
-
+void _wxPyCleanup()
+{
+    wxEntryCleanup();
+}
 
 PyObject* wxAssertionError = NULL;        // Exception object raised for wxASSERT failures
 

@@ -97,6 +97,13 @@ def deprecated(item, msg='', useName=False):
     else:
         raise TypeError("unsupported type %s" % type(item))
                    
+class __wxPyCleanup:
+    def __init__(self):
+        self.cleanup = _core._wxPyCleanup
+    def __del__(self):
+        self.cleanup()
+
+_sys.__wxPythonCleanup = __wxPyCleanup()
 
 def deprecatedMsg(msg):
     """
