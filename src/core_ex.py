@@ -1,3 +1,4 @@
+import sys as _sys
 
 # Load version numbers from __version__...  Ensure that major and minor
 # versions are the same for both wxPython and wxWidgets.
@@ -13,7 +14,6 @@ if 'wxEVT_NULL' in dir():
         
     # Create an object that will cleanup wxWidgets when it is GC'd and save
     # it in sys so it won't be GC'd until Python is shutting down.
-    import sys as _sys
     class __wxPyCleanup:
         def __init__(self):
             self.cleanup = wx._core._wxPyCleanup
