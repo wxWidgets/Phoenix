@@ -837,7 +837,7 @@ def getSipFiles(names):
 
     
 def getVisCVersion():
-    text = runcmd("cl.exe", getOutput=True)
+    text = runcmd("cl.exe", getOutput=True, echoCmd=False)
     if 'Version 15' in text:
         return '90'
     # TODO: Add more tests to get the other versions...
