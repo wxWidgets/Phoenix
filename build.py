@@ -39,6 +39,7 @@ import buildtools.version as version
 PYVER = '2.7'
 PYSHORTVER = '27'
 PYTHON = 'UNKNOWN'  # it will be set later
+PYTHON_ARCH = 'UNKNOWN'
 
 # wx version numbers
 version2 = "%d.%d" % (version.VER_MAJOR, version.VER_MINOR) 
@@ -171,6 +172,7 @@ def setPythonVersion(args):
     global PYVER
     global PYSHORTVER
     global PYTHON
+    global PYTHON_ARCH
     for idx, arg in enumerate(args):
         if re.match(r'^[0-9]\.[0-9]$', arg):
             PYVER = arg
@@ -189,6 +191,9 @@ def setPythonVersion(args):
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
                 TOOLS = runcmd('c:/cygwin/bin/cygpath -w '+TOOLS, True, False)
+            CPU = os.environ.get('CPU')
+            if CPU in ['AMD64', 'X64']:
+                TOOLS = posixjoin(TOOLS, 'amd64')
             PYTHON = posixjoin(TOOLS, 
                                'python%s' % PYSHORTVER,
                                'python.exe')
@@ -204,7 +209,11 @@ def setPythonVersion(args):
         msg('Found %s at %s' % (PYTHON, findPython))
         PYTHON = findPython
     msg(runcmd('%s -c "import sys; print(sys.version)"' % PYTHON, True, False))
+    PYTHON_ARCH = runcmd('%s -c "import platform; print(platform.architecture()[0])"' 
+                         % PYTHON, True, False)
+    msg('Python\'s architecture is %s' % PYTHON_ARCH)
         
+
 
 def setDevModeOptions(args):
     # Using --dev is a shortcut for setting several build options that I use
@@ -267,7 +276,7 @@ def getMSWSettings(options):
         pass
     msw = MSWsettings()
     msw.CPU = os.environ.get('CPU')
-    if msw.CPU in ['AMD64', 'X64']:
+    if msw.CPU in ['AMD64', 'X64'] or PYTHON_ARCH == '64bit':
         msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_x64_dll" % getVisCVersion())        
     else:
         msw.dllDir = posixjoin(wxDir(), "lib", "vc%s_dll" % getVisCVersion())
@@ -350,10 +359,14 @@ def getBuildDir(options):
 
 def deleteIfExists(deldir, verbose=True):
     if os.path.exists(deldir) and os.path.isdir(deldir):
-        if verbose:
-            print("Removing folder: %s" % deldir)
-        shutil.rmtree(deldir)
-        
+        try:
+            if verbose:
+                msg("Removing folder: %s" % deldir)
+            shutil.rmtree(deldir)
+        except:
+            if verbose:
+                import traceback
+                msg("Error: %s" % traceback.format_exc(1))
         
 def delFiles(fileList, verbose=True):
     for afile in fileList:
@@ -1040,6 +1053,12 @@ def waf_py(options, args):
     PREFIX = options.prefix
 
     wafBuildBase = posixjoin('build_waf', PYVER)
+    if isWindows:
+        if PYTHON_ARCH == '64bit':
+            wafBuildBase = posixjoin(wafBuildBase, 'x64')
+        else:
+            wafBuildBase = posixjoin(wafBuildBase, 'x86')
+            
     wafBuildDir  = wafBuildBase
     if isWindows:
         wafBuildDir = posixjoin(wafBuildBase, 'release')
@@ -1052,6 +1071,11 @@ def waf_py(options, args):
             wafBuildDir = posixjoin(wafBuildBase, 'debug')
     if isDarwin and options.mac_arch: 
         build_options.append("--mac_arch=%s" % options.mac_arch)
+    if isWindows:
+        if PYTHON_ARCH == '64bit':
+            build_options.append('--msvc_arch=x64')
+        else:
+            build_options.append('--msvc_arch=x86')
     if not isWindows:
         build_options.append('--wx_config=%s' % posixjoin(BUILD_DIR, 'wx-config'))
     if options.verbose:
@@ -1101,7 +1125,10 @@ def clean_wx(options, args):
         deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version2_nodot, msw.dll_type))))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version3_nodot, msw.dll_type))))  
-        deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll' % (getVisCVersion(), msw.dll_type)))
+        if PYTHON_ARCH == '64bit':
+            deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll_x64' % (getVisCVersion(), msw.dll_type)))
+        else:
+            deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll' % (getVisCVersion(), msw.dll_type)))
         
         if options.both:
             options.debug = False

@@ -39,12 +39,15 @@ def options(opt):
                    help='One or more comma separated architecture names to be used for '
                    'the Mac builds. Should be at least a subset of the architectures '
                    'used by wxWidgets and Python')
+    opt.add_option('--msvc_arch', dest='msvc_arch', default='x86', action='store',
+                   help='The architecture to target for MSVC builds. Supported values '
+                   'are: "x86" or "x64"')
 
 
 def configure(conf):    
     if isWindows:
         conf.env['MSVC_VERSIONS'] = ['msvc 9.0']
-        conf.env['MSVC_TARGETS'] = ['x86']
+        conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
         conf.load('msvc')
         pass
     else:
