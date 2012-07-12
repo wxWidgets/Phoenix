@@ -10,6 +10,17 @@ if 'wxEVT_NULL' in dir():
     if RELEASE_NUMBER != wx._core.RELEASE_NUMBER:
         import warnings
         warnings.warn("wxPython/wxWidgets release number mismatch")
+        
+    # Create an object that will cleanup wxWidgets when it is GC'd and save
+    # it in sys so it won't be GC'd until Python is shutting down.
+    import sys as _sys
+    class __wxPyCleanup:
+        def __init__(self):
+            self.cleanup = wx._core._wxPyCleanup
+        def __del__(self):
+            self.cleanup()
+    _sys.__wxPythonCleanup = __wxPyCleanup()
+    
     del wx._core
 else:
     Port = ''
@@ -18,7 +29,6 @@ else:
 
 # A little trick to make 'wx' be a reference to this module so wx.Names can
 # be used in the python code here.
-import sys as _sys
 wx = _sys.modules[__name__]
  
                        
@@ -97,13 +107,6 @@ def deprecated(item, msg='', useName=False):
     else:
         raise TypeError("unsupported type %s" % type(item))
                    
-class __wxPyCleanup:
-    def __init__(self):
-        self.cleanup = _core._wxPyCleanup
-    def __del__(self):
-        self.cleanup()
-
-_sys.__wxPythonCleanup = __wxPyCleanup()
 
 def deprecatedMsg(msg):
     """
