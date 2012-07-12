@@ -13,8 +13,7 @@ class MyFrame(wx.Frame):
     and has a simple menu.
     """
     def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent, -1, title,
-                          pos=(150, 150), size=(350, 250))
+        wx.Frame.__init__(self, parent, -1, title)
 
         # Create the menubar
         menuBar = wx.MenuBar()
@@ -41,7 +40,7 @@ class MyFrame(wx.Frame):
         panel = wx.Panel(self)
 
         # and a few controls
-        text = wx.StaticText(panel, -1, "Hello World!")
+        text = wx.StaticText(panel, -1, "Hello World!  Welcome to wxPython.")
         text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         text.SetSize(text.GetBestSize())
         btn = wx.Button(panel, -1, "Close")
@@ -65,6 +64,8 @@ class MyFrame(wx.Frame):
         sizer = wx.BoxSizer()
         sizer.Add(panel, 1, wx.EXPAND)
         self.SetSizer(sizer)
+        self.Fit()
+        self.CenterOnScreen(wx.BOTH)
         
 
     def OnTimeToClose(self, evt):
