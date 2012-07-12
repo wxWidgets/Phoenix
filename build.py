@@ -712,7 +712,7 @@ def sip(options, args):
         # produced by the previous run of sip. If not then we don't need to
         # run sip again.
         etg = loadETG(posixjoin('etg', base + '.py'))
-        sipFiles = getSipFiles(etg.INCLUDES)
+        sipFiles = getSipFiles(etg.INCLUDES) + [opj(cfg.SIPGEN, base+'.sip')]
         if not newer_group(sipFiles, sbf) and os.path.exists(pycode):
             continue
         
