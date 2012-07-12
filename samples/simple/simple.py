@@ -14,7 +14,7 @@ class MyFrame(wx.Frame):
     """
     def __init__(self, parent, title):
         wx.Frame.__init__(self, parent, -1, title,
-                          pos=(150, 150), size=(350, 200))
+                          pos=(150, 150), size=(350, 250))
 
         # Create the menubar
         menuBar = wx.MenuBar()
