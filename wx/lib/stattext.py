@@ -7,9 +7,9 @@
 # Author:      Robin Dunn
 #
 # Created:     8-July-2002
-# RCS-ID:      $Id$
 # Copyright:   (c) 2002 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port, unittest
 #----------------------------------------------------------------------
 # 12/12/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -27,17 +27,17 @@ if wx.Platform == "__WXMAC__":
     
 #----------------------------------------------------------------------
 
-class GenStaticText(wx.PyControl):
+class GenStaticText(wx.Control):
     labelDelta = 1
 
     def __init__(self, parent, ID=-1, label="",
                  pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0,
                  name="genstattext"):
-        wx.PyControl.__init__(self, parent, ID, pos, size, style|wx.NO_BORDER,
+        wx.Control.__init__(self, parent, ID, pos, size, style|wx.NO_BORDER,
                              wx.DefaultValidator, name)
 
-        wx.PyControl.SetLabel(self, label) # don't check wx.ST_NO_AUTORESIZE yet
+        wx.Control.SetLabel(self, label) # don't check wx.ST_NO_AUTORESIZE yet
         self.InheritAttributes()
         self.SetInitialSize(size)
 
@@ -55,7 +55,7 @@ class GenStaticText(wx.PyControl):
         Sets the static text label and updates the control's size to exactly
         fit the label unless the control has wx.ST_NO_AUTORESIZE flag.
         """
-        wx.PyControl.SetLabel(self, label)
+        wx.Control.SetLabel(self, label)
         style = self.GetWindowStyleFlag()
         self.InvalidateBestSize()
         if not style & wx.ST_NO_AUTORESIZE:
@@ -68,7 +68,7 @@ class GenStaticText(wx.PyControl):
         Sets the static text font and updates the control's size to exactly
         fit the label unless the control has wx.ST_NO_AUTORESIZE flag.
         """
-        wx.PyControl.SetFont(self, font)
+        wx.Control.SetFont(self, font)
         style = self.GetWindowStyleFlag()
         self.InvalidateBestSize()
         if not style & wx.ST_NO_AUTORESIZE:
@@ -103,15 +103,13 @@ class GenStaticText(wx.PyControl):
 
     def Enable(self, enable=True):
         """Overridden Enable() method to properly refresh the widget. """
-
-        wx.PyControl.Enable(self, enable)
+        wx.Control.Enable(self, enable)
         self.Refresh()
 
 
     def Disable(self):
         """Overridden Disable() method to properly refresh the widget. """
-
-        wx.PyControl.Disable(self)
+        wx.Control.Disable(self)
         self.Refresh()
 
            
