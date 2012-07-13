@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-
 #---------------------------------------------------------------------------
-# Name:        etgtools/make-new-etg-file.py
+# Name:        bin/make-new-etg-file.py
 # Author:      Kevin Ollivier
 #
 # Created:     24-Sept-2011
@@ -72,6 +71,8 @@ if __name__ == '__main__':
     run()
 
 """
+
+# TODO: refactor to just use make-new-unittest-file instead of duplicating it here...
 
 unitteststub = """\
 import imp_unittest, unittest
