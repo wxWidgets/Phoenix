@@ -1,0 +1,9 @@
+Release Notes: PyPubSub 3.1.2
+
+This is a minor release for small improvements made (see docs/CHANGELOG.txt) 
+based on feedback from user community. Also extended the documentation. See 
+pubsub.sourceforge.net for installation and usage. See the examples folder for 
+some useful examples. 
+
+Oliver Schoenborn
+Nov 2011
