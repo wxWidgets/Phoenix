@@ -39,11 +39,13 @@ def run():
     scrolled.find('GetViewStart.x').out = True
     scrolled.find('GetViewStart.y').out = True
     
-    scrolled.find('CalcScrolledPosition.xx').out = True
-    scrolled.find('CalcScrolledPosition.yy').out = True
+    m = scrolled.find('CalcScrolledPosition').findOverload('xx')
+    m.find('xx').out = True
+    m.find('yy').out = True
 
-    scrolled.find('CalcUnscrolledPosition.xx').out = True
-    scrolled.find('CalcUnscrolledPosition.yy').out = True
+    m = scrolled.find('CalcUnscrolledPosition').findOverload('xx')
+    m.find('xx').out = True
+    m.find('yy').out = True
 
     scrolled.find('GetScrollPixelsPerUnit.xUnit').out = True
     scrolled.find('GetScrollPixelsPerUnit.yUnit').out = True

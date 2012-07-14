@@ -22,6 +22,9 @@ class scrolwin_Tests(wtc.WidgetTestCase):
         self.assertEqual(w.GetViewStart(),             (3,3))  # scroll units
         self.assertEqual(w.CalcScrolledPosition(0,0),  (-3*rate,-3*rate)) # pixels
         self.assertEqual(w.CalcUnscrolledPosition(0,0),(3*rate,3*rate))   # pixels
+        # also test the Point overloads
+        self.assertEqual(w.CalcScrolledPosition( (0,0) ),  (-3*rate,-3*rate)) # pixels
+        self.assertEqual(w.CalcUnscrolledPosition( (0,0) ),(3*rate,3*rate))   # pixels
         
 
     def test_scrolwinCtor(self):
