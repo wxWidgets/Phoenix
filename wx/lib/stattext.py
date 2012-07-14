@@ -9,7 +9,7 @@
 # Created:     8-July-2002
 # Copyright:   (c) 2002 by Total Control Software
 # Licence:     wxWindows license
-# Tags:        phoenix-port, unittest
+# Tags:        phoenix-port, unittest, documented
 #----------------------------------------------------------------------
 # 12/12/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
