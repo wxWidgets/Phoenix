@@ -47,6 +47,9 @@ wxPython I'll add some alias that will issue a DeprecationWarning for
 the first release or two after we switch over to the Phoenix version
 of the code, and then remove them in a later release.
 
+For a (relatively comprehensive) list of classes, functions and methods
+which need modification while porting your code from Classic to Phoenix,
+please see the :ref:`Classic vs. Phoenix <classic vs phoenix>` document.
 
 
 Static Methods 
