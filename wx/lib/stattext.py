@@ -155,7 +155,7 @@ class GenStaticText(wx.Control):
         Overridden base class virtual.  Determines the best size of
         the control based on the label size and the current font.
 
-        :note: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`Control`.
         """
         
         label = self.GetLabel()
@@ -187,10 +187,10 @@ class GenStaticText(wx.Control):
         :returns: ``True`` if the window has been enabled or disabled, ``False`` if nothing was
          done, i.e. if the window had already been in the specified state.
 
-        :note: Note that when a parent window is disabled, all of its children are disabled as
-         well and they are reenabled again when the parent is.
+        .. note:: Note that when a parent window is disabled, all of its children are disabled as
+           well and they are reenabled again when the parent is.
 
-        :note: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`Control`.
         """
 
         retVal = wx.Control.Enable(self, enable)
@@ -206,9 +206,9 @@ class GenStaticText(wx.Control):
         :returns: ``True`` if the window has been disabled, ``False`` if it had been
          already disabled before the call to this function.
          
-        :note: This is functionally equivalent of calling :meth:`~Control.Enable` with a ``False`` flag.
+        .. note:: This is functionally equivalent of calling :meth:`~Control.Enable` with a ``False`` flag.
 
-        :note: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`Control`.
         """
 
         retVal = wx.Control.Disable(self)
@@ -221,7 +221,7 @@ class GenStaticText(wx.Control):
         """
         Can this window be given focus by mouse click?
 
-        :note: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`Control`.
         """
 
         return False
@@ -230,10 +230,11 @@ class GenStaticText(wx.Control):
     def GetDefaultAttributes(self):
         """
         Overridden base class virtual.  By default we should use
-        the same font/colour attributes as the native StaticText.
+        the same font/colour attributes as the native :class:`StaticText`.
 
-        :note: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`Control`.
         """
+        
         return wx.StaticText.GetClassDefaultAttributes()
 
 
@@ -242,8 +243,9 @@ class GenStaticText(wx.Control):
         Overridden base class virtual.  If the parent has non-default
         colours then we want this control to inherit them.
 
-        :note: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`Control`.
         """
+
         return True
 
     
@@ -301,7 +303,7 @@ class GenStaticText(wx.Control):
 
         :param `event`: a :class:`EraseEvent` event to be processed.
 
-        :note: This is intentionally empty to reduce flicker.
+        .. note:: This is intentionally empty to reduce flicker.
         """
 
         pass
