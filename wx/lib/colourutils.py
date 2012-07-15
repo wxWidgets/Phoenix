@@ -1,6 +1,18 @@
+#----------------------------------------------------------------------
+# Name:        colourutils.py
+# Purpose:     Some useful colour-related utility functions.
+#
+# Author:      Cody Precord
+#
+# Created:     13-March-2001
+# RCS-ID:      $Id: colourutils.py 72102 2012-07-15 15:01:29Z AG $
+# Copyright:   (c) 2001 by Total Control Software
+# Licence:     wxWindows license
+# Tags:        phoenix-port, documented
+#----------------------------------------------------------------------
+
 """
 Some useful colour-related utility functions.
-
 """
 
 __author__ = "Cody Precord <cprecord@editra.org>"
@@ -21,20 +33,33 @@ if wx.Platform == '__WXMAC__':
 #-----------------------------------------------------------------------------#
 
 def AdjustAlpha(colour, alpha):
-    """Adjust the alpha of a given colour"""
+    """
+    Adjust the alpha of a given colour
+
+    :param integer `alpha`: the new value for the colour alpha channel (between 0
+     and 255).
+
+    :rtype: :class:`Colour`
+    :returns: A new :class:`Colour` with the alpha channel specified as input
+    """
+    
     return wx.Colour(colour.Red(), colour.Green(), colour.Blue(), alpha)
 
 
 def AdjustColour(color, percent, alpha=wx.ALPHA_OPAQUE):
     """
-    Brighten/Darken input colour by percent and adjust alpha
+    Brighten/darken input colour by `percent` and adjust alpha
     channel if needed. Returns the modified color.
     
-    :param Colour `color`: color object to adjust
-    :param integer `percent`: percent to adjust +(brighten) or -(darken)
-    :keyword `alpha`: amount to adjust alpha channel
+    :param Colour `color`: color object to adjust;
+    :param integer `percent`: percent to adjust +(brighten) or -(darken);
+    :param integer `alpha`: amount to adjust alpha channel.
 
+    :rtype: :class:`Colour`
+    :returns: A new darkened/lightened :class:`Colour` with the alpha channel
+     specified as input
     """
+    
     radj, gadj, badj = [ int(val * (abs(percent) / 100.))
                          for val in color.Get() ]
 
@@ -54,10 +79,12 @@ def BestLabelColour(color, bw=False):
     Get the best color to use for the label that will be drawn on
     top of the given color.
     
-    :param Colour `color`: background color that text will be drawn on
-    :keyword `bw`: If True, only return black or white
-    
+    :param Colour `color`: background color that text will be drawn on;
+    :param bool `bw`: If ``True``, only return black or white.
+
+    :rtype: :class:`Colour`
     """
+    
     avg = sum(color.Get()) / 3
     if avg > 192:
         txt_color = wx.BLACK
@@ -71,12 +98,14 @@ def BestLabelColour(color, bw=False):
         else: txt_color = AdjustColour(color, 95)
     return txt_color
 
-def GetHighlightColour():
-    """Get the default highlight color
-    
-    :return: :class:`Colour`
 
+def GetHighlightColour():
     """
+    Gets the default highlight color.
+    
+    :rtype: :class:`Colour`
+    """
+    
     if wx.Platform == '__WXMAC__':
         if CARBON:
             if wx.VERSION < (2, 9, 0, 0, ''):
