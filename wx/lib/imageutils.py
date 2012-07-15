@@ -8,7 +8,47 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2002 by
 # Licence:     wxWindows license
+# Tags:        phoenix-port, unittest, documented
 #----------------------------------------------------------------------
+
+"""
+This module contains a collection of functions for simple image manipulations.
+
+
+Description
+===========
+
+This module contains a collection of functions for simple image manipulations.
+The 2 functions defined here (:func:`grayOut`, :func:`makeGray` and :func:`stepColour`)
+can be used to convert a given image into a grey-scale representation and to
+darken/lighten a specific wxPython :class:`Colour`.
+
+
+Usage
+=====
+
+Sample usage::
+
+    import wx
+    from wx.lib.imageutils import grayOut, stepColour
+
+    app = wx.App(0)
+
+    bmp = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (32, 32))
+    disabled_bmp = wx.Bitmap(grayOut(bmp.ConvertToImage()))
+
+    colour = wx.Colour(100, 120, 130)
+
+    # Darker
+    dark_colour = stepColour(colour, 50)
+
+    # Lighter
+    light_colour = stepColour(colour, 120)
+    
+    app.MainLoop()
+
+"""
+
 
 import wx
 
@@ -16,18 +56,28 @@ def grayOut(anImage):
     """
     Convert the given image (in place) to a grayed-out
     version, appropriate for a 'disabled' appearance.
+
+    :param Image `anImage`: the image we want to convert to gray-scale.
+
+    :rtype: :class:`Image`
+    :returns: The modified (greyed out) image.
+    
+    .. note:: the image is converted in place, i.e. the input image will
+       be modified to a greyed out version.
+       
     """
+
     factor = 0.7        # 0 < f < 1.  Higher is grayer.
     if anImage.HasMask():
         maskColor = (anImage.GetMaskRed(), anImage.GetMaskGreen(), anImage.GetMaskBlue())
     else:
         maskColor = None
     if anImage.HasAlpha():
-        alpha = anImage.GetAlphaData()
+        alpha = anImage.GetAlpha()
     else:
         alpha = None
         
-    data = map(ord, list(anImage.GetData()))
+    data = anImage.GetData()
 
     for i in range(0, len(data), 3):
         pixel = (data[i], data[i+1], data[i+2])
@@ -36,29 +86,45 @@ def grayOut(anImage):
             data[i+x] = pixel[x]
     anImage.SetData(''.join(map(chr, data)))
     if alpha:
-        anImage.SetAlphaData(alpha)
+        anImage.SetAlpha(alpha)
         
 
-def makeGray((r,g,b), factor, maskColor):
+def makeGray(rgb, factor, maskColor):
     """
-    Make a pixel grayed-out. If the pixel
-    matches the maskColor, it won't be
+    Make a pixel grayed-out. If the pixel matches the maskColor, it won't be
     changed.
+
+    :param tuple `rgb`: a tuple of red, green, blue integers, defining the pixel :class:`Colour`;
+    :param float `factor`: the amount for which we want to grey out a pixel colour;
+    :param `maskColor`: the mask colour.
+
+    :type `maskColor`: tuple or :class:`Colour`.
+    
+    :rtype: tuple
+    :returns: An RGB tuple with the greyed out pixel colour.
     """
-    if (r,g,b) != maskColor:
-        return map(lambda x: int((230 - x) * factor) + x, (r,g,b))
+    
+    if rgb != maskColor:
+        return tuple([int((230 - x)*factor) + x for x in rgb])
     else:
-        return (r,g,b)
+        return rgb
 
 
 
 def stepColour(c, step):
     """
-    stepColour is a utility function that simply darkens or lightens a
+    An utility function that simply darkens or lightens a
     color, based on the specified step value.  A step of 0 is
     completely black and a step of 200 is totally white, and 100
     results in the same color as was passed in.
+
+    :param Colour `c`: the input colour to be modified (darkened or lightened);
+    :param integer `step`: the step value.
+
+    :rtype: :class:`Colour`
+    :returns: A new colour, darkened or lightened depending on the input `step` value.
     """
+    
     def _blendColour(fg, bg, dstep):
         result = bg + (dstep * (fg - bg))
         if result < 0:
