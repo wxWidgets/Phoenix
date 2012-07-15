@@ -9,22 +9,83 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2001 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port, unittest, documented
 #----------------------------------------------------------------------
 
 """
-Load addition color names/values into the wx colour database.  These
-names and values originally came from the rgb.txt file on my system...
+This module loads additional colour names/values into the :class:`ColourDatabase`. 
+
+
+Description
+===========
+
+This module loads additional colour names/values into the :class:`ColourDatabase`. 
+
+The :mod:`colourdb` will update the wxPython :class:`ColourDatabase` using a pre-defined
+set of colour names/colour tuples, hard-coded in this module source code.
+
+
+Usage
+=====
+
+Sample usage::
+
+    import wx
+    import wx.lib.colourdb
+
+    class MyFrame(wx.Frame):
+        def __init__(self, parent, title):
+            wx.Frame.__init__(self, parent, wx.ID_ANY, title, size=(400, 300))
+            # show the selected colour in this panel
+            self.panel = wx.Panel(self)
+
+            wx.lib.colourdb.updateColourDB()
+            # create a colour list from the colourdb database
+            colour_list = wx.lib.colourdb.getColourList()
+
+            # create a choice widget
+            self.choice = wx.Choice(self, -1, choices=colour_list)
+            # select item 0 (first item) in choice list to show
+            self.choice.SetSelection(0)
+            # set the current frame colour to the choice
+            self.SetBackgroundColour(self.choice.GetStringSelection())
+            # bind the checkbox events to an action
+            self.choice.Bind(wx.EVT_CHOICE, self.OnChoice)
+
+
+        def OnChoice(self, event):
+            bgcolour = self.choice.GetStringSelection()
+            # change colour of the panel to the selected colour ...
+            self.panel.SetBackgroundColour(bgcolour)
+            self.panel.Refresh()
+            # show the selected colour in the frame title
+            self.SetTitle(bgcolour.lower())
+
+    app = wx.App()
+    frame = MyFrame(None, 'Select a colour')
+    frame.Show()
+    app.MainLoop()
+
 """
 
 
 def getColourList():
-    """Returns a list of just the colour names used by this module."""
+    """
+    Returns a list of just the colour names used by this module.
+
+    :rtype: list of strings
+    """
+    
     return [ x[0] for x in getColourInfoList() ]
 
 
-
 def getColourInfoList():
-    """Returns the list of colour name/value tuples used by this module."""
+    """
+    Returns the list of colour name/value tuples used by this module.
+
+    :rtype: list of tuples
+    """
+    
     return [
         ("SNOW", 255, 250, 250),
         ("GHOST WHITE", 248, 248, 255),
@@ -662,7 +723,8 @@ def getColourInfoList():
 _haveUpdated = False
 
 def updateColourDB():
-    """Updates the wx colour database by adding new colour names and RGB values."""
+    """ Updates the :class:`ColourDatabase` by adding new colour names and RGB values. """
+    
     global _haveUpdated
     if not _haveUpdated:
         import wx
@@ -670,7 +732,8 @@ def updateColourDB():
         cl = getColourInfoList()
         
         for info in cl:
-            wx.TheColourDatabase.Append(*info)
+            name, colour = info[0], wx.Colour(*info[1:])
+            wx.TheColourDatabase.AddColour(name, colour)
             
         _haveUpdated = True
 
