@@ -22,7 +22,7 @@ Functions and Classes Modifications
 ===========================================================  ===========================================================
 `Classic` Name                                               `Phoenix` Name
 ===========================================================  ===========================================================
-AboutBox                                                     :func:`adv.AboutBox`
+AboutBox                                                     :func:`adv.AboutBox <AboutBox>`
 AboutDialogInfo                                              :class:`adv.AboutDialogInfo`
 AcceleratorEntry_Create                                      ``MISSING``
 AlphaPixelData                                               ``MISSING``
@@ -48,21 +48,21 @@ BitmapFromIcon                                               :class:`Bitmap`
 BitmapFromImage                                              :class:`Bitmap`
 BitmapFromXPMData                                            :class:`Bitmap`
 BMPHandler                                                   ``MISSING``
-BookCtrlBase_GetClassDefaultAttributes                       :meth:`BookCtrlBase.GetClassDefaultAttributes`
+BookCtrlBase_GetClassDefaultAttributes                       :meth:`BookCtrl.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 BrushFromBitmap                                              :class:`Brush`
-Button_GetClassDefaultAttributes                             :meth:`Button.GetClassDefaultAttributes`
+Button_GetClassDefaultAttributes                             :meth:`Button.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 Button_GetDefaultSize                                        :meth:`Button.GetDefaultSize`
 CalculateLayoutEvent                                         :class:`adv.CalculateLayoutEvent`
 Caret_GetBlinkTime                                           :meth:`Caret.GetBlinkTime`
 Caret_SetBlinkTime                                           :meth:`Caret.SetBlinkTime`
-CheckBox_GetClassDefaultAttributes                           :meth:`CheckBox.GetClassDefaultAttributes`
-Choice_GetClassDefaultAttributes                             :meth:`Choice.GetClassDefaultAttributes`
+CheckBox_GetClassDefaultAttributes                           :meth:`CheckBox.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
+Choice_GetClassDefaultAttributes                             :meth:`Choice.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 ChoicebookEvent                                              :class:`BookCtrlEvent`
 Clipboard_Get                                                :meth:`Clipboard.Get`
 ClipboardEvent                                               :class:`ClipboardTextEvent`
 ClipboardLocker                                              ``MISSING``
 ColourRGB                                                    :class:`Colour`
-ComboBox_GetClassDefaultAttributes                           :meth:`ComboBox.GetClassDefaultAttributes`
+ComboBox_GetClassDefaultAttributes                           :meth:`ComboBox.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 CommandLinkButton                                            :class:`adv.CommandLinkButton`
 ConfigBase_Create                                            :meth:`ConfigBase.Create`
 ConfigBase_DontCreateOnDemand                                :meth:`ConfigBase.DontCreateOnDemand`
@@ -75,7 +75,7 @@ Control_GetClassDefaultAttributes                            :meth:`Control.GetC
 Control_GetCompositeControlsDefaultAttributes                ``MISSING``
 Control_RemoveMnemonics                                      :meth:`Control.RemoveMnemonics`
 CPPFileSystemHandler                                         ``MISSING``
-CreateFileTipProvider                                        :func:`adv.CreateFileTipProvider`
+CreateFileTipProvider                                        :func:`adv.CreateFileTipProvider <CreateFileTipProvider>`
 CURHandler                                                   ``MISSING``
 CursorFromImage                                              :class:`Cursor`
 CustomDataFormat                                             ``MISSING``
@@ -114,7 +114,7 @@ DateTime_Today                                               :meth:`DateTime.Tod
 DateTime_UNow                                                :meth:`DateTime.UNow`
 DateTimeFromDateTime                                         :class:`DateTime`
 Dialog_EnableLayoutAdaptation                                :meth:`Dialog.EnableLayoutAdaptation`
-Dialog_GetClassDefaultAttributes                             :meth:`Dialog.GetClassDefaultAttributes`
+Dialog_GetClassDefaultAttributes                             :meth:`Dialog.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 Dialog_GetLayoutAdapter                                      :meth:`Dialog.GetLayoutAdapter`
 Dialog_IsLayoutAdaptationEnabled                             :meth:`Dialog.IsLayoutAdaptationEnabled`
 Dialog_SetLayoutAdapter                                      :meth:`Dialog.SetLayoutAdapter`
@@ -139,7 +139,7 @@ EventProcessInHandlerOnly                                    ``MISSING``
 EVT_COMMAND                                                  ``MISSING``
 EVT_COMMAND_RANGE                                            ``MISSING``
 ExpandEnvVars                                                ``MISSING``
-FFontFromPixelSize                                           :class:`wx.Font`
+FFontFromPixelSize                                           :class:`Font`
 FileConfig_GetGlobalFileName                                 :meth:`FileConfig.GetGlobalFileName`
 FileConfig_GetLocalFileName                                  :meth:`FileConfig.GetLocalFileName`
 FileHistory                                                  ``MISSING``
@@ -174,9 +174,9 @@ FontMapper_GetEncodingFromName                               :meth:`FontMapper.G
 FontMapper_GetEncodingName                                   :meth:`FontMapper.GetEncodingName`
 FontMapper_GetSupportedEncodingsCount                        :meth:`FontMapper.GetSupportedEncodingsCount`
 FontMapper_Set                                               :meth:`FontMapper.Set`
-Frame_GetClassDefaultAttributes                              :meth:`Frame.GetClassDefaultAttributes`
+Frame_GetClassDefaultAttributes                              :meth:`Frame.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 FutureCall                                                   :class:`CallLater`
-Gauge_GetClassDefaultAttributes                              :meth:`Gauge.GetClassDefaultAttributes`
+Gauge_GetClassDefaultAttributes                              :meth:`Gauge.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 GBSizerItemList                                              ``MISSING``
 GBSizerItemList_iterator                                     ``MISSING``
 GBSizerItemSizer                                             ``MISSING``
@@ -246,8 +246,8 @@ Joystick                                                     :class:`adv.Joystic
 JPEGHandler                                                  ``MISSING``
 LayoutAlgorithm                                              :class:`adv.LayoutAlgorithm`
 ListbookEvent                                                :class:`BookCtrlEvent`
-ListBox_GetClassDefaultAttributes                            :meth:`ListBox.GetClassDefaultAttributes`
-ListCtrl_GetClassDefaultAttributes                           :meth:`ListCtrl.GetClassDefaultAttributes`
+ListBox_GetClassDefaultAttributes                            :meth:`ListBox.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
+ListCtrl_GetClassDefaultAttributes                           :meth:`ListCtrl.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 ListCtrl_HasColumnOrderSupport                               :meth:`ListCtrl.HasColumnOrderSupport`
 Locale_AddCatalogLookupPathPrefix                            :meth:`Locale.AddCatalogLookupPathPrefix`
 Locale_AddLanguage                                           :meth:`Locale.AddLanguage`
@@ -314,21 +314,21 @@ NativeEncodingInfo                                           ``MISSING``
 NativePixelData                                              ``MISSING``
 NativePixelData_Accessor                                     ``MISSING``
 NcPaintEvent                                                 ``MISSING``
-Notebook_GetClassDefaultAttributes                           :meth:`Notebook.GetClassDefaultAttributes`
+Notebook_GetClassDefaultAttributes                           :meth:`Notebook.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 NotebookEvent                                                :class:`BookCtrlEvent`
 NotebookPage                                                 ``MISSING``
 NotificationMessage                                          :class:`adv.NotificationMessage`
 NullFileTypeInfo                                             ``MISSING``
 NumberEntryDialog                                            ``MISSING``
-Panel_GetClassDefaultAttributes                              :meth:`Panel.GetClassDefaultAttributes`
+Panel_GetClassDefaultAttributes                              :meth:`Panel.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 PasswordEntryDialog                                          ``MISSING``
 PCXHandler                                                   ``MISSING``
 PixelDataBase                                                ``MISSING``
-PlatformInformation_GetOperatingSystemDirectory              :meth:`PlatformInformation.GetOperatingSystemDirectory`
+PlatformInformation_GetOperatingSystemDirectory              :meth:`PlatformInfo.GetOperatingSystemDirectory`
 PNGHandler                                                   ``MISSING``
 PNMHandler                                                   ``MISSING``
-Point2DCopy                                                  :class:`Point2D`
-Point2DFromPoint                                             :class:`Point2D`
+Point2DCopy                                                  :class:`Point2DDouble`
+Point2DFromPoint                                             :class:`Point2DDouble`
 PreBitmapButton                                              :class:`BitmapButton`
 PreButton                                                    :class:`Button`
 PreCheckBox                                                  :class:`CheckBox`
@@ -449,8 +449,8 @@ PyWindow                                                     :class:`Window`
 Quantize                                                     ``MISSING``
 Quantize_Quantize                                            ``MISSING``
 QueryLayoutInfoEvent                                         :class:`adv.QueryLayoutInfoEvent`
-RadioBox_GetClassDefaultAttributes                           :meth:`RadioBox.GetClassDefaultAttributes`
-RadioButton_GetClassDefaultAttributes                        :meth:`RadioButton.GetClassDefaultAttributes`
+RadioBox_GetClassDefaultAttributes                           :meth:`RadioBox.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
+RadioButton_GetClassDefaultAttributes                        :meth:`RadioButton.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 RectPP                                                       :class:`Rect`
 RectPS                                                       :class:`Rect`
 RectS                                                        :class:`Rect`
@@ -465,39 +465,39 @@ RendererVersion_IsCompatible                                 :meth:`RendererVers
 SashEvent                                                    :class:`adv.SashEvent`
 SashLayoutWindow                                             :class:`adv.SashLayoutWindow`
 SashWindow                                                   :class:`adv.SashWindow`
-ScrollBar_GetClassDefaultAttributes                          :meth:`ScrollBar.GetClassDefaultAttributes`
-ScrolledWindow_GetClassDefaultAttributes                     :meth:`ScrolledWindow.GetClassDefaultAttributes`
+ScrollBar_GetClassDefaultAttributes                          :meth:`ScrollBar.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
+ScrolledWindow_GetClassDefaultAttributes                     :meth:`ScrolledWindow.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 ScrollHelper                                                 :class:`VarHVScrollHelper`
 SearchCtrlBase                                               :class:`SearchCtrl`
 SetCursor                                                    ``MISSING``
 SetDefaultPyEncoding                                         ``MISSING``
-ShowTip                                                      :func:`adv.ShowTip`
+ShowTip                                                      :func:`adv.ShowTip <ShowTip>`
 SimpleHtmlListBox                                            ``MISSING``
 SizerFlags_GetDefaultBorder                                  :meth:`SizerFlags.GetDefaultBorder`
 SizerItemSizer                                               ``MISSING``
 SizerItemSpacer                                              ``MISSING``
 SizerItemWindow                                              ``MISSING``
-Slider_GetClassDefaultAttributes                             :meth:`Slider.GetClassDefaultAttributes`
+Slider_GetClassDefaultAttributes                             :meth:`Slider.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 Sound                                                        :class:`adv.Sound`
 Sound_PlaySound                                              :meth:`adv.Sound.PlaySound`
 Sound_Stop                                                   :meth:`adv.Sound.Stop`
 SoundFromData                                                :class:`adv.Sound`
-SpinButton_GetClassDefaultAttributes                         :meth:`SpinButton.GetClassDefaultAttributes`
-SpinCtrl_GetClassDefaultAttributes                           :meth:`SpinCtrl.GetClassDefaultAttributes`
+SpinButton_GetClassDefaultAttributes                         :meth:`SpinButton.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
+SpinCtrl_GetClassDefaultAttributes                           :meth:`SpinCtrl.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 SplashScreen                                                 :class:`adv.SplashScreen`
 SplashScreenWindow                                           ``MISSING``
-SplitterWindow_GetClassDefaultAttributes                     :meth:`SplitterWindow.GetClassDefaultAttributes`
+SplitterWindow_GetClassDefaultAttributes                     :meth:`SplitterWindow.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 StandardDialogLayoutAdapter                                  ``MISSING``
 StandardDialogLayoutAdapter_DoFitWithScrolling               ``MISSING``
 StandardDialogLayoutAdapter_DoMustScroll                     ``MISSING``
 StandardDialogLayoutAdapter_DoReparentControls               ``MISSING``
 StandardPaths_Get                                            :meth:`StandardPaths.Get`
-StaticBitmap_GetClassDefaultAttributes                       :meth:`StaticBitmap.GetClassDefaultAttributes`
-StaticBox_GetClassDefaultAttributes                          :meth:`StaticBox.GetClassDefaultAttributes`
-StaticLine_GetClassDefaultAttributes                         :meth:`StaticLine.GetClassDefaultAttributes`
+StaticBitmap_GetClassDefaultAttributes                       :meth:`StaticBitmap.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
+StaticBox_GetClassDefaultAttributes                          :meth:`StaticBox.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
+StaticLine_GetClassDefaultAttributes                         :meth:`StaticLine.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 StaticLine_GetDefaultSize                                    :meth:`StaticLine.GetDefaultSize`
-StaticText_GetClassDefaultAttributes                         :meth:`StaticText.GetClassDefaultAttributes`
-StatusBar_GetClassDefaultAttributes                          :meth:`StatusBar.GetClassDefaultAttributes`
+StaticText_GetClassDefaultAttributes                         :meth:`StaticText.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
+StatusBar_GetClassDefaultAttributes                          :meth:`StatusBar.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 StockCursor                                                  :class:`Cursor`
 StockGDI_DeleteAll                                           :meth:`StockGDI.DeleteAll`
 StockGDI_GetBrush                                            :meth:`StockGDI.GetBrush`
@@ -529,7 +529,7 @@ TextAttr_CombineBitlists                                     ``MISSING``
 TextAttr_RemoveStyle                                         ``MISSING``
 TextAttr_SplitParaCharStyles                                 ``MISSING``
 TextAttr_TabsEq                                              ``MISSING``
-TextCtrl_GetClassDefaultAttributes                           :meth:`TextCtrl.GetClassDefaultAttributes`
+TextCtrl_GetClassDefaultAttributes                           :meth:`TextCtrl.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 TextCtrlBase                                                 ``MISSING``
 TextCtrlIface                                                ``MISSING``
 TextEntryBase                                                ``MISSING``
@@ -552,8 +552,8 @@ TimeSpan_Seconds                                             :meth:`TimeSpan.Sec
 TimeSpan_Week                                                :meth:`TimeSpan.Week`
 TimeSpan_Weeks                                               :meth:`TimeSpan.Weeks`
 TipProvider                                                  :class:`adv.TipProvider`
-ToggleButton_GetClassDefaultAttributes                       :meth:`ToggleButton.GetClassDefaultAttributes`
-ToolBar_GetClassDefaultAttributes                            :meth:`ToolBar.GetClassDefaultAttributes`
+ToggleButton_GetClassDefaultAttributes                       :meth:`ToggleButton.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
+ToolBar_GetClassDefaultAttributes                            :meth:`ToolBar.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 ToolbookEvent                                                :class:`BookCtrlEvent`
 ToolTip_Enable                                               :meth:`ToolTip.Enable`
 ToolTip_SetAutoPop                                           :meth:`ToolTip.SetAutoPop`
@@ -563,7 +563,7 @@ ToolTip_SetReshow                                            :meth:`ToolTip.SetR
 TopLevelWindow_GetDefaultSize                                :meth:`TopLevelWindow.GetDefaultSize`
 Trap                                                         ``MISSING``
 TreebookEvent                                                :class:`BookCtrlEvent`
-TreeCtrl_GetClassDefaultAttributes                           :meth:`TreeCtrl.GetClassDefaultAttributes`
+TreeCtrl_GetClassDefaultAttributes                           :meth:`TreeCtrl.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 TreeItemData                                                 ``MISSING``
 UpdateUIEvent_CanUpdate                                      :meth:`UpdateUIEvent.CanUpdate`
 UpdateUIEvent_GetMode                                        :meth:`UpdateUIEvent.GetMode`
