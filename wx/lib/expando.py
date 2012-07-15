@@ -9,12 +9,101 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2006 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port, unittest, documented
 #
 #---------------------------------------------------------------------------
+
 """
-This module contains the `ExpandoTextCtrl` which is a multi-line
+This module contains the :class:`ExpandoTextCtrl`, which is a multi-line
 text control that will expand its height on the fly to be able to show
 all the lines of the content of the control.
+
+
+Description
+===========
+
+The :class:`ExpandoTextCtrl` is a multi-line :class:`TextCtrl` that will
+adjust its height on the fly as needed to accomodate the number of
+lines needed to display the current content of the control.  It is
+assumed that the width of the control will be a fixed value and
+that only the height will be adjusted automatically.  If the
+control is used in a sizer then the width should be set as part of
+the initial or min size of the control.
+
+When the control resizes itself it will attempt to also make
+necessary adjustments in the sizer hierarchy it is a member of (if
+any) but if that is not suffiecient then the programmer can catch
+the EVT_ETC_LAYOUT_NEEDED event in the container and make any
+other layout adjustments that may be needed.
+
+
+Usage
+=====
+
+Sample usage::
+
+    import wx
+    from wx.lib.expando import ExpandoTextCtrl, EVT_ETC_LAYOUT_NEEDED
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self):
+        
+            wx.Frame.__init__(self, None, title="Test ExpandoTextCtrl")
+            self.pnl = p = wx.Panel(self)
+            self.eom = ExpandoTextCtrl(p, size=(250,-1),
+                                       value="This control will expand as you type")
+            self.Bind(EVT_ETC_LAYOUT_NEEDED, self.OnRefit, self.eom)
+
+            # create some buttons and sizers to use in testing some
+            # features and also the layout
+            vBtnSizer = wx.BoxSizer(wx.VERTICAL)
+
+            btn = wx.Button(p, -1, "Write Text")
+            self.Bind(wx.EVT_BUTTON, self.OnWriteText, btn)
+            vBtnSizer.Add(btn, 0, wx.ALL|wx.EXPAND, 5)
+
+            btn = wx.Button(p, -1, "Append Text")
+            self.Bind(wx.EVT_BUTTON, self.OnAppendText, btn)
+            vBtnSizer.Add(btn, 0, wx.ALL|wx.EXPAND, 5)
+
+            sizer = wx.BoxSizer(wx.HORIZONTAL)
+            col1 = wx.BoxSizer(wx.VERTICAL)
+            col1.Add(self.eom, 0, wx.ALL, 10)
+            sizer.Add(col1)
+            sizer.Add(vBtnSizer)
+            p.SetSizer(sizer)
+
+            # Put the panel in a sizer for the frame so we can use self.Fit()
+            frameSizer = wx.BoxSizer()
+            frameSizer.Add(p, 1, wx.EXPAND)
+            self.SetSizer(frameSizer)
+            
+            self.Fit()
+
+
+        def OnRefit(self, evt):
+            # The Expando control will redo the layout of the
+            # sizer it belongs to, but sometimes this may not be
+            # enough, so it will send us this event so we can do any
+            # other layout adjustments needed.  In this case we'll
+            # just resize the frame to fit the new needs of the sizer.
+            self.Fit()
+
+            
+        def OnWriteText(self, evt):
+            self.eom.WriteText("\nThis is a test...  Only a test.  If this had "
+                               "been a real emergency you would have seen the "
+                               "quick brown fox jump over the lazy dog.\n")
+        
+        def OnAppendText(self, evt):
+            self.eom.AppendText("\nAppended text.")
+
+    app = wx.App(0)
+    frame = MyFrame()
+    frame.Show()
+    app.MainLoop()
+
 """
 
 import wx
@@ -25,7 +114,7 @@ import wx.lib.newevent
 # notifications that the ExpandoTextCtrl has resized itself and
 # that layout adjustments may need to be made.
 wxEVT_ETC_LAYOUT_NEEDED = wx.NewEventType()
-EVT_ETC_LAYOUT_NEEDED = wx.PyEventBinder( wxEVT_ETC_LAYOUT_NEEDED, 1 )
+EVT_ETC_LAYOUT_NEEDED = wx.PyEventBinder(wxEVT_ETC_LAYOUT_NEEDED, 1)
 
 
 #---------------------------------------------------------------------------
@@ -46,12 +135,32 @@ class ExpandoTextCtrl(wx.TextCtrl):
     the EVT_ETC_LAYOUT_NEEDED event in the container and make any
     other layout adjustments that may be needed.
     """
+    
     _defaultHeight = -1
     _leading = 1   # TODO: find a way to calculate this, it may vary by platform
     
     def __init__(self, parent, id=-1, value="",
                  pos=wx.DefaultPosition,  size=wx.DefaultSize,
                  style=0, validator=wx.DefaultValidator, name="expando"):
+        """
+        Default class constructor.
+
+        :param `parent`: parent window, must not be ``None``;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param string `value`: the control text label;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param integer `style`: the underlying :class:`Control` style;
+        :param Validator `validator`: the window validator;
+        :param string `name`: the widget name.
+
+        :type parent: :class:`Window`
+        :type pos: tuple or :class:`Point`
+        :type size: tuple or :class:`Size`
+        """
+
         # find the default height of a single line control
         self.defaultHeight = self._getDefaultHeight(parent)
         # make sure we default to that height if none was given
@@ -76,30 +185,78 @@ class ExpandoTextCtrl(wx.TextCtrl):
 
     def SetMaxHeight(self, h):
         """
-        Sets the max height that the control will expand to on its
+        Sets the maximum height that the control will expand to on its
         own, and adjusts it down if needed.
+
+        :param integer `h`: the maximum control height, in pixels.
         """
+
         self.maxHeight = h
         if h != -1 and self.GetSize().height > h:
             self.SetSize((-1, h))
-        
+
+
     def GetMaxHeight(self):
-        """Sets the max height that the control will expand to on its own"""
+        """
+        Returns the maximum height that the control will expand to on its own.
+
+        :rtype: int
+        """
+        
         return self.maxHeight
 
 
     def SetFont(self, font):
-        wx.TextCtrl.SetFont(self, font)
+        """
+        Sets the font for the :class:`ExpandoTextCtrl`.
+
+        :param Font font: font to associate with the :class:`ExpandoTextCtrl`, pass
+         ``NullFont`` to reset to the default font.
+
+        :rtype: bool
+        :returns: ``True`` if the font was really changed, ``False`` if it was already
+         set to this font and nothing was done.
+        """
+        
+        retVal = wx.TextCtrl.SetFont(self, font)
         self.numLines = -1
         self._adjustCtrl()
 
+        return retVal
+        
+
     def WriteText(self, text):
+        """
+        Writes the text into the text control at the current insertion position.
+
+        :param string `text`: text to write to the text control.
+
+        .. note::
+
+           Newlines in the text string are the only control characters allowed, and they
+           will cause appropriate line breaks. See :meth:`AppendText` for more convenient
+           ways of writing to the window. After the write operation, the insertion point
+           will be at the end of the inserted text, so subsequent write operations will
+           be appended. To append text after the user may have interacted with the control,
+           call :meth:`TextCtrl.SetInsertionPointEnd` before writing.
+           
+        """
+        
         # work around a bug of a lack of a EVT_TEXT when calling
         # WriteText on wxMac
         wx.TextCtrl.WriteText(self, text)
         self._adjustCtrl()
 
+
     def AppendText(self, text):
+        """
+        Appends the text to the end of the text control.
+
+        :param string `text`: text to write to the text control.
+
+        .. seealso:: :meth:`WriteText`
+        """
+        
         # Instead of using wx.TextCtrl.AppendText append and set the
         # insertion point ourselves.  This works around a bug on wxMSW
         # where it scrolls the old text out of view, and since there
@@ -109,12 +266,24 @@ class ExpandoTextCtrl(wx.TextCtrl):
 
 
     def OnTextChanged(self, evt):
+        """
+        Handles the ``wx.EVT_TEXT`` event for :class:`ExpandoTextCtrl`.
+
+        :param `event`: a :class:`CommandEvent` event to be processed.
+        """
+
         # check if any adjustments are needed on every text update
         self._adjustCtrl()
         evt.Skip()
         
 
     def OnSize(self, evt):
+        """
+        Handles the ``wx.EVT_SIZE`` event for :class:`ExpandoTextCtrl`.
+
+        :param `event`: a :class:`SizeEvent` event to be processed.
+        """
+
         # The number of lines needed can change when the ctrl is resized too.
         self._adjustCtrl()
         evt.Skip()
@@ -147,7 +316,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
                 else:
                     self.SetSize((-1, height))
                 # send notification that layout may be needed
-                evt = wx.PyCommandEvent(wxEVT_ETC_LAYOUT_NEEDED, self.GetId())
+                evt = wx.CommandEvent(wxEVT_ETC_LAYOUT_NEEDED, self.GetId())
                 evt.SetEventObject(self)
                 evt.height = height
                 evt.numLines = numLines
