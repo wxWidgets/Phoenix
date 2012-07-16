@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -18,6 +18,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -31,7 +32,7 @@ Description
 ===========
 
 :class:`FloatSpin` implements a floating point :class:`SpinCtrl`. It is built using a custom
-:class:`PyControl`, composed by a :class:`TextCtrl` and a :class:`SpinButton`. In order to
+:class:`Control`, composed by a :class:`TextCtrl` and a :class:`SpinButton`. In order to
 correctly handle floating points numbers without rounding errors or non-exact
 floating point representations, :class:`FloatSpin` uses the great :class:`FixedPoint` class
 from Tim Peters.
@@ -135,9 +136,9 @@ License And Version
 
 :class:`FloatSpin` control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.9
+Version 1.0
 
 
 Backward Incompatibilities
@@ -176,6 +177,9 @@ import wx
 import locale
 from math import ceil, floor
 
+# Python 2/3 compatibility helper
+import wx.lib.wx2to3 as wx2to3
+
 # Set The Styles For The Underline wx.TextCtrl
 FS_READONLY = 1
 """ Sets :class:`FloatSpin` as read-only control. """
@@ -201,7 +205,7 @@ EVT_FLOATSPIN = wx.PyEventBinder(wxEVT_FLOATSPIN, 1)
 # Class FloatSpinEvent
 # ---------------------------------------------------------------------------- #
 
-class FloatSpinEvent(wx.PyCommandEvent):
+class FloatSpinEvent(wx.CommandEvent):
     """ This event will be sent when a ``EVT_FLOATSPIN`` event is mapped in the parent. """
 
     def __init__(self, eventType, eventId=1, nSel=-1, nOldSel=-1):
@@ -214,7 +218,7 @@ class FloatSpinEvent(wx.PyCommandEvent):
         :param `nOldSel`: the old selection.
         """
 
-        wx.PyCommandEvent.__init__(self, eventType, eventId)
+        wx.CommandEvent.__init__(self, eventType, eventId)
         self._eventType = eventType
 
 
@@ -320,10 +324,10 @@ class FloatTextCtrl(wx.TextCtrl):
 # This Is The Main Class Implementation
 # ---------------------------------------------------------------------------- #
 
-class FloatSpin(wx.PyControl):
+class FloatSpin(wx.Control):
     """
     :class:`FloatSpin` implements a floating point :class:`SpinCtrl`. It is built using a custom
-    :class:`PyControl`, composed by a :class:`TextCtrl` and a :class:`SpinButton`. In order to
+    :class:`Control`, composed by a :class:`TextCtrl` and a :class:`SpinButton`. In order to
     correctly handle floating points numbers without rounding errors or non-exact
     floating point representations, :class:`FloatSpin` uses the great :class:`FixedPoint` class
     from Tim Peters.
@@ -363,9 +367,9 @@ class FloatSpin(wx.PyControl):
 
         """
 
-        wx.PyControl.__init__(self, parent, id, pos, size, style|wx.NO_BORDER|
-                              wx.NO_FULL_REPAINT_ON_RESIZE | wx.CLIP_CHILDREN,
-                              wx.DefaultValidator, name)
+        wx.Control.__init__(self, parent, id, pos, size, style|wx.NO_BORDER|
+                            wx.NO_FULL_REPAINT_ON_RESIZE | wx.CLIP_CHILDREN,
+                            wx.DefaultValidator, name)
 
         # Don't call SetRange here, because it will try to modify
         # self._value whose value doesn't exist yet.
@@ -424,7 +428,7 @@ class FloatSpin(wx.PyControl):
             height = best_size.GetHeight()
 
         self._validkeycode = [43, 44, 45, 46, 69, 101, 127, 314]
-        self._validkeycode.extend(range(48, 58))
+        self._validkeycode.extend(list(range(48, 58)))
         self._validkeycode.extend([wx.WXK_RETURN, wx.WXK_TAB, wx.WXK_BACK,
                                    wx.WXK_LEFT, wx.WXK_RIGHT])
 
@@ -501,7 +505,7 @@ class FloatSpin(wx.PyControl):
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
         # start Philip Semanchuk move
-        self.SetBestSize((width, height))
+        self.SetInitialSize((width, height))
         # end Philip Semanchuk move
 
 
@@ -530,7 +534,7 @@ class FloatSpin(wx.PyControl):
         minimal size which doesn't truncate the control, for a panel - the same
         size as it would have after a call to `Fit()`.
         
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         if self._spinctrl_bestsize.x == -999:
@@ -756,9 +760,9 @@ class FloatSpin(wx.PyControl):
         
         self._textctrl.SetPosition((self._text_left, self._text_top))
         
-        text_width, text_height = self._textctrl.GetSizeTuple()
+        text_width, text_height = self._textctrl.GetSize()
         
-        spin_width, _ = self._spinbutton.GetSizeTuple()
+        spin_width, _ = self._spinbutton.GetSize()
         
         text_width = event_width - (spin_width + self._gap + self._text_left)
 
@@ -1125,7 +1129,7 @@ class FloatSpin(wx.PyControl):
         """
 
         if font is None:
-            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
 
         if not self._textctrl:
             return False
@@ -1340,7 +1344,7 @@ class FixedPoint(object):
             self.n = n
             return
 
-        if isinstance(value, type(42)) or isinstance(value, type(42L)):
+        if isinstance(value, wx2to3.integer_types):
             self.n = long(value) * _tento(p)
             return
 
@@ -1361,7 +1365,7 @@ class FixedPoint(object):
             # up all bits in 2 iterations for all known binary double-
             # precision formats, and small enough to fit in an int.
             CHUNK = 28
-            top = 0L
+            top = 0
             # invariant: |value| = (top + f) * 2**e exactly
             while f:
                 f = math.ldexp(f, CHUNK)
@@ -1379,7 +1383,7 @@ class FixedPoint(object):
             if e >= 0:
                 n = top << e
             else:
-                n = _roundquotient(top, 1L << -e)
+                n = _roundquotient(top, 1 << -e)
             if value < 0:
                 n = -n
             self.n = n
@@ -1387,7 +1391,7 @@ class FixedPoint(object):
 
         if isinstance(value, type(42-42j)):
             raise TypeError("can't convert complex to FixedPoint: " +
-                            `value`)
+                            repr(value))
 
         # can we coerce to a float?
         yes = 1
@@ -1409,7 +1413,7 @@ class FixedPoint(object):
             self.__init__(aslong, p)
             return
 
-        raise TypeError("can't convert to FixedPoint: " + `value`)
+        raise TypeError("can't convert to FixedPoint: " + repr(value))
 
 
     def get_precision(self):
@@ -1438,9 +1442,9 @@ class FixedPoint(object):
             p = int(precision)
         except:
             raise TypeError("precision not convertable to int: " +
-                            `precision`)
+                            repr(precision))
         if p < 0:
-            raise ValueError("precision must be >= 0: " + `precision`)
+            raise ValueError("precision must be >= 0: " + repr(precision))
 
         if p > self.p:
             self.n = self.n * _tento(p - self.p)
@@ -1465,7 +1469,7 @@ class FixedPoint(object):
 
     def __repr__(self):
 
-        return "FixedPoint" + `(str(self), self.p)`
+        return "FixedPoint" + repr((str(self), self.p))
 
 
     def copy(self):
@@ -1576,7 +1580,7 @@ class FixedPoint(object):
     # XXX note that __int__ inherits whatever __long__ does,
     # XXX and .frac() is affected too
     def __long__(self):
-        answer = abs(self.n) / _tento(self.p)
+        answer = abs(self.n) // _tento(self.p)
         if self.n < 0:
             answer = -answer
         return answer
@@ -1605,7 +1609,7 @@ class FixedPoint(object):
             p = 0
         while p and n % 10 == 0:
             p = p - 1
-            n = n / 10
+            n = n // 10
         return n, p
 
 # return 10L**n
@@ -1614,7 +1618,7 @@ def _tento(n, cache={}):
     try:
         return cache[n]
     except KeyError:
-        answer = cache[n] = 10L ** n
+        answer = cache[n] = 10 ** n
         return answer
 
 # return xn, yn, p s.t.
@@ -1691,7 +1695,7 @@ del re
 def _string2exact(s):
     m = _parser(s)
     if m is None:
-        raise ValueError("can't parse as number: " + `s`)
+        raise ValueError("can't parse as number: " + repr(s))
 
     exp = m.group('exp')
     if exp is None:
@@ -1719,3 +1723,34 @@ def _string2exact(s):
         i = -i
 
     return i, exp
+
+
+if __name__ == '__main__':
+
+    import wx
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+        
+            wx.Frame.__init__(self, parent, -1, "FloatSpin Demo")
+
+            panel = wx.Panel(self)
+            
+            floatspin = FloatSpin(panel, -1, pos=(50, 50), min_val=0, max_val=1,
+                                  increment=0.01, value=0.1, agwStyle=FS_LEFT)
+            floatspin.SetFormat("%f")
+            floatspin.SetDigits(2)
+
+            
+    # our normal wxApp-derived class, as usual
+
+    app = wx.App(0)
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+
+    

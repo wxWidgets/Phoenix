@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 Oct 2005
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -29,6 +29,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -122,9 +123,9 @@ License And Version
 
 :class:`AdvancedSplash` control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.4
+Version 0.5
 
 """
 
@@ -252,7 +253,7 @@ class AdvancedSplash(wx.Frame):
         self.SetTextColour()
 
         # Calculate The Shape Of AdvancedSplash Using The Input-Modified Bitmap
-        self.reg = wx.RegionFromBitmap(self.bmp)
+        self.reg = wx.Region(self.bmp)
 
         # Don't Know If It Works On Other Platforms!!
         # Tested Only In Windows XP/2000
@@ -275,7 +276,8 @@ class AdvancedSplash(wx.Frame):
 
         if agwStyle & AS_TIMEOUT:
             # Starts The Timer. Once Expired, AdvancedSplash Is Destroyed
-            self._splashtimer = wx.PyTimer(self.OnNotify)
+            self._splashtimer = wx.Timer(self)
+            self.Bind(wx.EVT_TIMER, self.OnNotify)
             self._splashtimer.Start(timeout)
 
         # Catch Some Mouse Events, To Behave Like wx.SplashScreen
@@ -346,8 +348,12 @@ class AdvancedSplash(wx.Frame):
             wx.SafeYield(self, True)
 
 
-    def OnNotify(self):
-        """ Handles the timer expiration, and calls the `Close()` method. """
+    def OnNotify(self, event):
+        """
+        Handles the timer expiration, and calls the `Close()` method.
+
+        :param `event`: a :class:`wx.TimerEvent` to be processed.
+        """
 
         self.Close()
 
@@ -546,3 +552,14 @@ class AdvancedSplash(wx.Frame):
 
         return stringstyle, integerstyle
 
+
+if __name__ == '__main__':
+
+    import wx
+
+    app = wx.App(0)
+
+    bitmap = wx.Bitmap(100, 100)    
+    splash = AdvancedSplash(None, bitmap=bitmap, timeout=5000)
+
+    app.MainLoop()

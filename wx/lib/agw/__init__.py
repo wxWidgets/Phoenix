@@ -118,11 +118,11 @@ You can contact me at:
 andrea.gavana@gmail.com
 andrea.gavana@maerskoil.com
 
-AGW version: 0.9.6
+AGW version: 0.9.7
 
-Last updated: 04 July 2012, 18.00 GMT
+Last updated: 16 July 2012, 18.00 GMT
 
 """
 
-__version__ = "0.9.6"
+__version__ = "0.9.7"
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"

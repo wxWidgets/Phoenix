@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -22,6 +22,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -134,7 +135,7 @@ Usage example::
             obj = event.GetEventObject()
 
             # This will print the button label
-            print obj.GetText()
+            print(obj.GetText())
 
 
     # our normal wxApp-derived class, as usual
@@ -179,9 +180,9 @@ License And Version
 
 :class:`ButtonPanel` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.6.
+Version 0.7.
 
 """
 
@@ -295,7 +296,7 @@ def BrightenColour(colour, factor):
     else:
         blue = val
 
-    return wx.Colour(red, green, blue) 
+    return wx.Colour(int(red), int(green), int(blue))
 
 
 # ----------------------------------------------------------------------------
@@ -310,7 +311,7 @@ def MakeDisabledBitmap(original):
     """
     
     img = original.ConvertToImage()
-    return wx.BitmapFromImage(img.ConvertToGreyscale())
+    return wx.Bitmap(img.ConvertToGreyscale())
 
 
 # ---------------------------------------------------------------------------- #
@@ -333,11 +334,11 @@ class BPArt(object):
         :param integer `parentStyle`: the window style for :class:`ButtonPanel`.
         """
 
-        base_colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+        base_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
 
-        self._background_brush = wx.Brush(base_colour, wx.SOLID)
+        self._background_brush = wx.Brush(base_colour, wx.BRUSHSTYLE_SOLID)
         self._gradient_colour_to = wx.WHITE
-        self._gradient_colour_from = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self._gradient_colour_from = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
 
         if parentStyle & BP_USE_GRADIENT:
             self._border_pen = wx.Pen(wx.WHITE, 3)
@@ -348,18 +349,18 @@ class BPArt(object):
         else:
             self._border_pen = wx.Pen(BrightenColour(base_colour, 0.9), 3)
             self._caption_text_colour = wx.BLACK
-            self._buttontext_colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT)
+            self._buttontext_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT)
             self._separator_pen = wx.Pen(BrightenColour(base_colour, 0.9))
             self._gradient_type = BP_GRADIENT_NONE
             
-        self._buttontext_inactive_colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRAYTEXT)
+        self._buttontext_inactive_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
         self._selection_brush = wx.Brush(wx.Colour(225, 225, 255))
-        self._selection_pen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
+        self._selection_pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
         
         sysfont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._caption_font = wx.Font(sysfont.GetPointSize(), wx.DEFAULT, wx.NORMAL, wx.BOLD,
+        self._caption_font = wx.Font(sysfont.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD,
                                      False, sysfont.GetFaceName())
-        self._buttontext_font = wx.Font(sysfont.GetPointSize(), wx.DEFAULT, wx.NORMAL, wx.NORMAL,
+        self._buttontext_font = wx.Font(sysfont.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD,
                                         False, sysfont.GetFaceName())
    
         self._separator_size = 7
@@ -606,12 +607,12 @@ class BPArt(object):
         dc.SetPen(self._separator_pen)
 
         if isVertical:
-            ystart = yend = rect.y + rect.height/2
+            ystart = yend = rect.y + rect.height//2
             xstart = int(rect.x + 1.5*self._caption_border_size)
             xend = int(rect.x + rect.width - 1.5*self._caption_border_size)
             dc.DrawLine(xstart, ystart, xend, yend)
         else:
-            xstart = xend = rect.x + rect.width/2
+            xstart = xend = rect.x + rect.width//2
             ystart = int(rect.y + 1.5*self._caption_border_size)
             yend = int(rect.y + rect.height - 1.5*self._caption_border_size)
             dc.DrawLine(xstart, ystart, xend, yend)
@@ -670,19 +671,19 @@ class BPArt(object):
                 textW, textH = dc.GetTextExtent(text)
                 
                 if textAlignment == BP_BUTTONTEXT_ALIGN_RIGHT:
-                    fullExtent = bmpxsize + padding.x/2 + textW
-                    bmpypos = rect.y + (rect.height - bmpysize)/2
-                    bmpxpos = rect.x + (rect.width - fullExtent)/2
-                    textxpos = bmpxpos + padding.x/2 + bmpxsize
-                    textypos = bmpypos + (bmpysize - textH)/2
+                    fullExtent = bmpxsize + padding.x//2 + textW
+                    bmpypos = rect.y + (rect.height - bmpysize)//2
+                    bmpxpos = rect.x + (rect.width - fullExtent)//2
+                    textxpos = bmpxpos + padding.x//2 + bmpxsize
+                    textypos = bmpypos + (bmpysize - textH)//2
                 else:
-                    bmpxpos = rect.x + (rect.width - bmpxsize)/2
+                    bmpxpos = rect.x + (rect.width - bmpxsize)//2
                     bmpypos = rect.y + padding.y
-                    textxpos = rect.x + (rect.width - textW)/2
-                    textypos = bmpypos + bmpysize + padding.y/2
+                    textxpos = rect.x + (rect.width - textW)//2
+                    textypos = bmpypos + bmpysize + padding.y//2
             else:
-                bmpxpos = rect.x + (rect.width - bmpxsize)/2
-                bmpypos = rect.y + (rect.height - bmpysize)/2
+                bmpxpos = rect.x + (rect.width - bmpxsize)//2
+                bmpypos = rect.y + (rect.height - bmpysize)//2
                 
                 
         else:
@@ -694,20 +695,20 @@ class BPArt(object):
                 textW, textH = dc.GetTextExtent(text)
                 
                 if textAlignment == BP_BUTTONTEXT_ALIGN_RIGHT:
-                    fullExtent = bmpxsize + padding.x/2 + textW
-                    bmpypos = rect.y + (rect.height - bmpysize)/2
-                    bmpxpos = rect.x + (rect.width - fullExtent)/2
-                    textxpos = bmpxpos + padding.x/2 + bmpxsize
-                    textypos = bmpypos + (bmpysize - textH)/2
+                    fullExtent = bmpxsize + padding.x//2 + textW
+                    bmpypos = rect.y + (rect.height - bmpysize)//2
+                    bmpxpos = rect.x + (rect.width - fullExtent)//2
+                    textxpos = bmpxpos + padding.x//2 + bmpxsize
+                    textypos = bmpypos + (bmpysize - textH)//2
                 else:
-                    fullExtent = bmpysize + padding.y/2 + textH
-                    bmpxpos = rect.x + (rect.width - bmpxsize)/2
-                    bmpypos = rect.y + (rect.height - fullExtent)/2
-                    textxpos = rect.x + (rect.width - textW)/2
-                    textypos = bmpypos + bmpysize + padding.y/2
+                    fullExtent = bmpysize + padding.y//2 + textH
+                    bmpxpos = rect.x + (rect.width - bmpxsize)//2
+                    bmpypos = rect.y + (rect.height - fullExtent)//2
+                    textxpos = rect.x + (rect.width - textW)//2
+                    textypos = bmpypos + bmpysize + padding.y//2
             else:
-                bmpxpos = rect.x + (rect.width - bmpxsize)/2
-                bmpypos = rect.y + (rect.height - bmpysize)/2
+                bmpxpos = rect.x + (rect.width - bmpxsize)//2
+                bmpypos = rect.y + (rect.height - bmpysize)//2
                     
         # Draw a button 
         # [ Padding | Text | .. Buttons .. | Padding ]
@@ -715,7 +716,7 @@ class BPArt(object):
         if buttonStatus in ["Pressed", "Toggled", "Hover"]:                
             dc.SetBrush(self._selection_brush) 
             dc.SetPen(self._selection_pen)
-            dc.DrawRoundedRectangleRect(rect, 4)
+            dc.DrawRoundedRectangle(rect, 4)
 
         if buttonStatus == "Pressed" or isToggled:
             dx = dy = 1
@@ -766,7 +767,7 @@ class BPArt(object):
         
         dc.SetBrush(backBrush) 
         dc.SetPen(self._border_pen)
-        dc.DrawRectangleRect(rect) 
+        dc.DrawRectangle(rect) 
         
 
     def FillGradientColour(self, dc, rect):
@@ -794,7 +795,7 @@ class BPArt(object):
         gstep = float((col2.Green() - col1.Green()))/float(size)
         bstep = float((col2.Blue() - col1.Blue()))/float(size)
 
-        for coord in xrange(start, start + size):
+        for coord in range(start, start + size):
          
             currCol = wx.Colour(col1.Red() + rf, col1.Green() + gf, col1.Blue() + bf)
             dc.SetBrush(wx.Brush(currCol, wx.SOLID)) 
@@ -928,7 +929,7 @@ class Control(wx.EvtHandler):
         return self.Enable(False)
 
 
-    def Enable(self, value=True):
+    def Enable(self, enable=True):
         """
         Enable or disable the window for user input. 
 
@@ -941,7 +942,7 @@ class Control(wx.EvtHandler):
          well and they are reenabled again when the parent is.
         """
 
-        self.disabled = not value
+        self.disabled = not enable
         return True
     
 
@@ -1784,7 +1785,7 @@ class ButtonInfo(Control):
 # -- ButtonPanel class implementation ----------------------------------
 # This is the main class.
 
-class ButtonPanel(wx.PyPanel):
+class ButtonPanel(wx.Panel):
     """
     A custom panel class with gradient background shading with the possibility to
     add buttons and controls still respecting the gradient background.
@@ -1803,8 +1804,8 @@ class ButtonPanel(wx.PyPanel):
         :param string `name`: window class name.
         """
         
-        wx.PyPanel.__init__(self, parent, id, wx.DefaultPosition, wx.DefaultSize,
-                            wx.NO_BORDER, name=name)
+        wx.Panel.__init__(self, parent, id, wx.DefaultPosition, wx.DefaultSize,
+                          wx.NO_BORDER, name=name)
         
         self._vButtons = []
         self._vSeparators = []
@@ -2331,7 +2332,7 @@ class ButtonPanel(wx.PyPanel):
                 break
 
         # Leave out the last spacer, it has to be there always        
-        for ii in xrange(len(nonspacers)-1):
+        for ii in range(len(nonspacers)-1):
             indx = children.index(nonspacers[ii])
             self._mainsizer.Show(indx, ii < indx1)
                 
@@ -2395,7 +2396,7 @@ class ButtonPanel(wx.PyPanel):
 
         nonspacers.reverse()
         
-        for jj in xrange(2, lennonspacers):
+        for jj in range(2, lennonspacers):
             indx = allchildren.index(nonspacers[jj])
             self._mainsizer.Show(indx, jj >= count)
 
@@ -2611,7 +2612,7 @@ class ButtonPanel(wx.PyPanel):
 
         shortHelp = hit.GetShortHelp()
         if shortHelp:
-            self.SetToolTipString(shortHelp)
+            self.SetToolTip(shortHelp)
             self._haveTip = True
 
         longHelp = hit.GetLongHelp()
@@ -2639,7 +2640,7 @@ class ButtonPanel(wx.PyPanel):
             return
 
         if self._haveTip:
-            self.SetToolTipString("")
+            self.SetToolTip("")
             self._haveTip = False
 
         if self._statusTimer and self._statusTimer.IsRunning():
@@ -2707,7 +2708,7 @@ class ButtonPanel(wx.PyPanel):
          client rectangle contains the input point `pt`, or ``wx.NOT_FOUND`` and ``BP_HT_NONE``.
         """
          
-        for ii in xrange(len(self._vButtons)):
+        for ii in range(len(self._vButtons)):
             if not self._vButtons[ii].IsEnabled():
                 continue
             if self._vButtons[ii].GetRect().Contains(pt):
@@ -2744,7 +2745,7 @@ class ButtonPanel(wx.PyPanel):
             """
 
             self._freezeCount = self._freezeCount + 1
-            wx.PyPanel.Freeze(self)
+            wx.Panel.Freeze(self)
 
 
         def Thaw(self):
@@ -2757,7 +2758,7 @@ class ButtonPanel(wx.PyPanel):
                 raise Exception("\nERROR: Thawing Unfrozen ButtonPanel?")
 
             self._freezeCount = self._freezeCount - 1
-            wx.PyPanel.Thaw(self)        
+            wx.Panel.Thaw(self)        
         
 
         def IsFrozen(self):
@@ -2765,3 +2766,69 @@ class ButtonPanel(wx.PyPanel):
 
             return self._freezeCount != 0
 
+
+if __name__ == '__main__':
+
+    import wx
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent, id=-1, title='ButtonPanel', pos=wx.DefaultPosition,
+                     size=(800, 600), style=wx.DEFAULT_FRAME_STYLE):
+                 
+            wx.Frame.__init__(self, parent, id, title, pos, size, style)
+
+            mainPanel = wx.Panel(self, -1)
+            self.logtext = wx.TextCtrl(mainPanel, -1, '', style=wx.TE_MULTILINE)
+
+            vSizer = wx.BoxSizer(wx.VERTICAL) 
+            mainPanel.SetSizer(vSizer) 
+
+            titleBar = ButtonPanel(mainPanel, -1, 'A Simple Test & Demo')
+
+            btn1 = ButtonInfo(titleBar, wx.NewId(),
+                              wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (32, 32)),
+                              text='Button 1')
+            titleBar.AddButton(btn1)
+            self.Bind(wx.EVT_BUTTON, self.OnButton, btn1)
+
+            btn2 = ButtonInfo(titleBar, wx.NewId(),
+                              wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_OTHER, (32, 32)),
+                              text='Button 2')
+            titleBar.AddButton(btn2)
+            self.Bind(wx.EVT_BUTTON, self.OnButton, btn2)
+
+            btn3 = ButtonInfo(titleBar, wx.NewId(),
+                              wx.ArtProvider.GetBitmap(wx.ART_WARNING, wx.ART_OTHER, (32, 32)),
+                              text='Button 3')
+
+            titleBar.AddButton(btn3)
+            self.Bind(wx.EVT_BUTTON, self.OnButton, btn3)
+
+            vSizer.Add(titleBar, 0, wx.EXPAND)
+            vSizer.Add((20, 20))
+            vSizer.Add(self.logtext, 1, wx.EXPAND|wx.ALL, 5)
+
+            titleBar.DoLayout()
+            vSizer.Layout()
+
+
+        def OnButton(self, event):
+            ''' Handler for the ``wx.EVT_BUTTON`` event. '''
+
+            obj = event.GetEventObject()
+
+            # This will print the button label
+            print(obj.GetText())
+
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.App(0)
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+    

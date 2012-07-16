@@ -4,7 +4,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Aug 2007
-# Latest Revision: 26 Feb 2012, 15.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # TODO List
@@ -23,6 +23,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -124,13 +125,11 @@ License And Version
 
 :class:`CubeColourDialog` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 26 Feb 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.4.
+Version 0.5.
 
 """
-
-__docformat__ = "epytext"
 
 
 #----------------------------------------------------------------------
@@ -1456,10 +1455,10 @@ def DrawCheckerBoard(dc, rect, checkColour, box=5):
 
     dc.SetPen(checkPen) 
     dc.SetBrush(checkBrush)
-    dc.SetClippingRect(rect)
+    dc.SetClippingRegion(rect)
     
     while y < rect.height: 
-        x = box*((y/box)%2) + 2
+        x = box*((y//box)%2) + 2
         while x < rect.width: 
             dc.DrawRectangle(x, y, box, box) 
             x += box*2 
@@ -1620,7 +1619,7 @@ class LineDescription(object):
         self.c = c
 
 
-class BasePyControl(wx.PyControl):
+class BasePyControl(wx.Control):
     """
     Base class used to hold common code for the HSB colour wheel and the RGB
     colour cube.
@@ -1635,7 +1634,7 @@ class BasePyControl(wx.PyControl):
         :param `bitmap`: the background bitmap for this custom control.
         """
 
-        wx.PyControl.__init__(self, parent, style=wx.NO_BORDER)
+        wx.Control.__init__(self, parent, style=wx.NO_BORDER)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
         self._bitmap = bitmap
@@ -1807,6 +1806,7 @@ class RGBCube(BasePyControl):
 
         BasePyControl.__init__(self, parent, bitmap=RGBCubeImage.GetBitmap())
         self._index = -1
+        self._mouseIn = False
 
 
     def DrawMarkers(self, dc=None):
@@ -1830,15 +1830,15 @@ class RGBCube(BasePyControl):
         redLen = self._mainDialog._redLen
         colour = self._mainDialog._colour
 
-        pt = [wx.Point() for i in xrange(3)]
-        pt[0] = PointOnLine(Vertex, Top, (colour.r*redLen)/255, redLen)
-        pt[1] = PointOnLine(Vertex, Left, (colour.g*greenLen)/255, greenLen)
-        pt[2] = PointOnLine(Vertex, Right, (colour.b*blueLen)/255, blueLen)
+        pt = [wx.Point() for i in range(3)]
+        pt[0] = PointOnLine(Vertex, Top, (colour.r*redLen)/255.0, redLen)
+        pt[1] = PointOnLine(Vertex, Left, (colour.g*greenLen)/255.0, greenLen)
+        pt[2] = PointOnLine(Vertex, Right, (colour.b*blueLen)/255.0, blueLen)
 
-        for i in xrange(3):
+        for i in range(3):
             rect = wx.Rect(pt[i].x - RECT_WIDTH, pt[i].y - RECT_WIDTH, 2*RECT_WIDTH, 2*RECT_WIDTH)
             rects.append(rect)
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
 
         self.DrawLines(dc)
         RestoreOldDC(dc, oldPen, oldBrush, oldMode)
@@ -1855,17 +1855,17 @@ class RGBCube(BasePyControl):
         
         cuboid = self._mainDialog._cuboid
         
-        dc.DrawLinePoint(cuboid[1], cuboid[2])
-        dc.DrawLinePoint(cuboid[2], cuboid[3])
-        dc.DrawLinePoint(cuboid[3], cuboid[4])
-        dc.DrawLinePoint(cuboid[4], cuboid[5])
-        dc.DrawLinePoint(cuboid[5], cuboid[2])
+        dc.DrawLine(cuboid[1], cuboid[2])
+        dc.DrawLine(cuboid[2], cuboid[3])
+        dc.DrawLine(cuboid[3], cuboid[4])
+        dc.DrawLine(cuboid[4], cuboid[5])
+        dc.DrawLine(cuboid[5], cuboid[2])
 
-        dc.DrawLinePoint(cuboid[5], cuboid[6])
-        dc.DrawLinePoint(cuboid[6], cuboid[7])
-        dc.DrawLinePoint(cuboid[7], cuboid[4])
+        dc.DrawLine(cuboid[5], cuboid[6])
+        dc.DrawLine(cuboid[6], cuboid[7])
+        dc.DrawLine(cuboid[7], cuboid[4])
 
-        dc.DrawLinePoint(cuboid[1], cuboid[6])
+        dc.DrawLine(cuboid[1], cuboid[6])
         
 
     def OnLeftDown(self, event):
@@ -1937,10 +1937,10 @@ class RGBCube(BasePyControl):
             if val > redLen:
                 val = redLen
             
-            val = (float(val)/redLen)*255
+            val = (float(val)/redLen)*255.0
             colour.r = int(val)
 
-            pt = PointOnLine(Vertex, Top, (colour.r*redLen)/255, redLen)
+            pt = PointOnLine(Vertex, Top, (colour.r*redLen)/255.0, redLen)
             self._rects[RED] = wx.Rect(pt.x - RECT_WIDTH, pt.y - RECT_WIDTH,
                                        2*RECT_WIDTH, 2*RECT_WIDTH)
 
@@ -1956,10 +1956,10 @@ class RGBCube(BasePyControl):
             if val > greenLen:
                 val = greenLen
             
-            val = (float(val)/greenLen)*255
+            val = (float(val)/greenLen)*255.0
             colour.g = int(val)
 
-            pt = PointOnLine(Vertex, Left, (colour.g*greenLen)/255, greenLen)
+            pt = PointOnLine(Vertex, Left, (colour.g*greenLen)/255.0, greenLen)
             self._rects[GREEN] = wx.Rect(pt.x - RECT_WIDTH, pt.y - RECT_WIDTH,
                                          2*RECT_WIDTH, 2*RECT_WIDTH)
 
@@ -1975,10 +1975,10 @@ class RGBCube(BasePyControl):
             if val > blueLen:
                 val = blueLen
             
-            val = (float(val)/blueLen)*255
+            val = (float(val)/blueLen)*255.0
             colour.b = int(val)
 
-            pt = PointOnLine(Vertex, Right, (colour.b*blueLen)/255, blueLen)
+            pt = PointOnLine(Vertex, Right, (colour.b*blueLen)/255.0, blueLen)
             self._rects[BLUE] = wx.Rect(pt.x - RECT_WIDTH, pt.y - RECT_WIDTH,
                                         2*RECT_WIDTH, 2*RECT_WIDTH)
             
@@ -2031,7 +2031,7 @@ class HSVWheel(BasePyControl):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetLogicalFunction(wx.XOR)
         
-        dc.DrawRectangleRect(self._mainDialog._currentRect)
+        dc.DrawRectangle(self._mainDialog._currentRect)
         RestoreOldDC(dc, oldPen, oldBrush, oldMode)
         
 
@@ -2122,7 +2122,7 @@ class HSVWheel(BasePyControl):
         mainDialog.DrawAlpha()
 
 
-class BaseLineCtrl(wx.PyControl):
+class BaseLineCtrl(wx.Control):
     """
     Base class used to hold common code for the Alpha channel control and the
     brightness palette control.
@@ -2136,7 +2136,7 @@ class BaseLineCtrl(wx.PyControl):
         :param `parent`: the control parent window.
         """
 
-        wx.PyControl.__init__(self, parent, size=(20, 200), style=wx.NO_BORDER)
+        wx.Control.__init__(self, parent, size=(20, 200), style=wx.NO_BORDER)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)    
 
         self._mainDialog = wx.GetTopLevelParent(self)
@@ -2313,7 +2313,7 @@ class BrightCtrl(BaseLineCtrl):
 
         dc.SetPen(wx.BLACK_PEN)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.DrawRectangleRect(brightRect)
+        dc.DrawRectangle(brightRect)
         
         self.DrawMarkers(dc)
         
@@ -2327,12 +2327,12 @@ class BrightCtrl(BaseLineCtrl):
 
         brightRect = self.BuildRect()
         d = brightRect.GetBottom() - pt.y
-        d *= 255
+        d *= 255.0
         d /= brightRect.height
         if d < 0:
            d = 0
         if d > 255:
-            d = 255;
+            d = 255
         
         mainDialog = self._mainDialog
         colour = mainDialog._colour
@@ -2371,7 +2371,7 @@ class BrightCtrl(BaseLineCtrl):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetLogicalFunction(wx.XOR)
         
-        dc.DrawRectangleRect(brightMark)
+        dc.DrawRectangle(brightMark)
         RestoreOldDC(dc, oldPen, oldBrush, oldMode)
 
 
@@ -2405,7 +2405,7 @@ class AlphaCtrl(BaseLineCtrl):
 
         mem_dc = wx.MemoryDC()
         fullRect = self.GetClientRect()
-        bmp = wx.EmptyBitmap(fullRect.width, fullRect.height)
+        bmp = wx.Bitmap(fullRect.width, fullRect.height)
         mem_dc.SelectObject(bmp)
         
         rect = self.BuildRect()
@@ -2414,7 +2414,7 @@ class AlphaCtrl(BaseLineCtrl):
         mem_dc.Clear()
 
         mem_dc.SetBrush(wx.WHITE_BRUSH)
-        mem_dc.DrawRectangleRect(rect)
+        mem_dc.DrawRectangle(rect)
 
         DrawCheckerBoard(mem_dc, rect, checkColour)
         self.DrawAlphaShading(mem_dc, rect)
@@ -2424,7 +2424,7 @@ class AlphaCtrl(BaseLineCtrl):
         
         mem_dc.SetBrush(wx.TRANSPARENT_BRUSH)
         mem_dc.SetPen(wx.BLACK_PEN)
-        mem_dc.DrawRectangleRect(rect)
+        mem_dc.DrawRectangle(rect)
 
         mem_dc.SelectObject(wx.NullBitmap)
         pdc.DrawBitmap(bmp, 0, 0)
@@ -2442,7 +2442,7 @@ class AlphaCtrl(BaseLineCtrl):
         
         colour = self._mainDialog._colour.GetPyColour()
         
-        alpha = 255.0
+        alpha = 255
         vstep = 255.0*2/(rect.height-1)
         r, g, b = colour.Red(), colour.Green(), colour.Blue()
 
@@ -2465,7 +2465,7 @@ class AlphaCtrl(BaseLineCtrl):
 
         alphaRect = self.BuildRect()
         d = alphaRect.GetBottom() - pt.y
-        d *= 255
+        d *= 255.0
         d /= alphaRect.height
         if d < 0:
            d = 0
@@ -2499,11 +2499,11 @@ class AlphaCtrl(BaseLineCtrl):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetLogicalFunction(wx.XOR)
         
-        dc.DrawRectangleRect(alphaMark)
+        dc.DrawRectangle(alphaMark)
         RestoreOldDC(dc, oldPen, oldBrush, oldMode)
         
         
-class ColourPanel(wx.PyPanel):
+class ColourPanel(wx.Panel):
     """
     Simple custom class used to display "old" and "new" colour panels, with alpha
     blending capabilities.
@@ -2518,7 +2518,7 @@ class ColourPanel(wx.PyPanel):
         :param `style`: the :class:`ColourPanel` window style.
         """
 
-        wx.PyPanel.__init__(self, parent, style=style)
+        wx.Panel.__init__(self, parent, style=style)
         self._mainDialog = wx.GetTopLevelParent(self)
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -2540,7 +2540,7 @@ class ColourPanel(wx.PyPanel):
 
         mem_dc = wx.MemoryDC()
         rect = self.GetClientRect()
-        bmp = wx.EmptyBitmap(rect.width, rect.height)
+        bmp = wx.Bitmap(rect.width, rect.height)
         mem_dc.SelectObject(bmp)
         
         backBrush = wx.Brush(self.GetParent().GetBackgroundColour())
@@ -2548,7 +2548,7 @@ class ColourPanel(wx.PyPanel):
         mem_dc.Clear()
 
         mem_dc.SetBrush(wx.WHITE_BRUSH)
-        mem_dc.DrawRectangleRect(rect)
+        mem_dc.DrawRectangle(rect)
 
         DrawCheckerBoard(mem_dc, rect, checkColour, box=10)
 
@@ -2556,7 +2556,7 @@ class ColourPanel(wx.PyPanel):
         colour_gcdc = wx.Colour(self._colour.r, self._colour.g, self._colour.b, self._colour._alpha)
         gcdc.SetBrush(wx.Brush(colour_gcdc))
         gcdc.SetPen(wx.Pen(colour_gcdc))
-        gcdc.DrawRectangleRect(rect)
+        gcdc.DrawRectangle(rect)
 
         mem_dc.SelectObject(wx.NullBitmap)
         dc.DrawBitmap(bmp, 0, 0)
@@ -2623,7 +2623,7 @@ class ColourPanel(wx.PyPanel):
         return False
 
 
-class CustomPanel(wx.PyControl):
+class CustomPanel(wx.Control):
     """
     This panel displays a series of custom colours (chosen by the user) just like
     the standard :class:`ColourDialog`.
@@ -2638,7 +2638,7 @@ class CustomPanel(wx.PyControl):
         :param `colourData`: an instance of :class:`ColourData`.
         """
         
-        wx.PyControl.__init__(self, parent, style=wx.NO_BORDER)
+        wx.Control.__init__(self, parent, style=wx.NO_BORDER)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
         self._colourData = colourData
@@ -2664,9 +2664,9 @@ class CustomPanel(wx.PyControl):
         curr = self._colourData.GetColour()
         self._colourSelection = -1
         
-        for i in xrange(16):
+        for i in range(16):
             c = self._colourData.GetCustomColour(i)
-            if c.Ok():
+            if c.IsOk():
                 self._customColours[i] = self._colourData.GetCustomColour(i)
             else:
                 self._customColours[i] = wx.Colour(255, 255, 255)
@@ -2731,8 +2731,8 @@ class CustomPanel(wx.PyControl):
 
         x, y = event.GetX(), event.GetY()
         
-        selX = (x - self._customColourRect.x)/(self._smallRectangleSize.x + self._gridSpacing)
-        selY = (y - self._customColourRect.y)/(self._smallRectangleSize.y + self._gridSpacing)
+        selX = (x - self._customColourRect.x)//(self._smallRectangleSize.x + self._gridSpacing)
+        selY = (y - self._customColourRect.y)//(self._smallRectangleSize.y + self._gridSpacing)
         ptr = selX + selY*8
 
         dc = wx.ClientDC(self)
@@ -2753,8 +2753,8 @@ class CustomPanel(wx.PyControl):
         :param `dc`: an instance of :class:`DC`.
         """
 
-        for i in xrange(2):
-            for j in xrange(8):
+        for i in range(2):
+            for j in range(8):
             
                 ptr = i*8 + j
                 x = (j*(self._smallRectangleSize.x+self._gridSpacing)) + self._customColourRect.x
@@ -2785,7 +2785,7 @@ class CustomPanel(wx.PyControl):
         deltaX = deltaY = 2
 
         # User-defined colours
-        y = self._colourSelection/8
+        y = self._colourSelection//8
         x = self._colourSelection - (y*8)
 
         x = (x*(self._smallRectangleSize.x + self._gridSpacing) + self._customColourRect.x) - deltaX
@@ -3023,7 +3023,7 @@ class CubeColourDialog(wx.Dialog):
         accessSizer.Add(self.accessCode, 0)
         panelSizer.Add(newLabel, 0, wx.BOTTOM, 3)
         panelSizer.Add(self.newColourPanel, 0, wx.EXPAND)
-        panelSizer.Add((0, 0), 1, wx.EXPAND)
+        panelSizer.Add(0, 0, 1, wx.EXPAND)
         panelSizer.Add(accessSizer, 0, wx.TOP, 5)
         mainSizer.Add(panelSizer, (2, 3), (1, 1), wx.ALL|wx.EXPAND, 10)
         redLabel = wx.StaticText(self.mainPanel, -1, _("Red"))
@@ -3083,7 +3083,7 @@ class CubeColourDialog(wx.Dialog):
         """ Initialize the :class:`CubeColourDialog`. """
 
         hsvRect = self.hsvBitmap.GetClientRect()
-        self._centre = wx.Point(hsvRect.x + hsvRect.width/2, hsvRect.y + hsvRect.height/2)
+        self._centre = wx.Point(hsvRect.x + hsvRect.width//2, hsvRect.y + hsvRect.height//2)
 
         self._redLen = Distance(Vertex, Top)
         self._greenLen = Distance(Vertex, Left)
@@ -3108,7 +3108,7 @@ class CubeColourDialog(wx.Dialog):
         self._lines[GREEN].slope = Slope(Left, Vertex)
         self._lines[BLUE].slope = Slope(Right, Vertex)
 
-        for i in xrange(3):
+        for i in range(3):
             self._lines[i].x = Vertex.x
             self._lines[i].y = Vertex.y
             self._lines[i].c = FindC(self._lines[i])
@@ -3121,7 +3121,7 @@ class CubeColourDialog(wx.Dialog):
         gLen = (self._colour.g*self._greenLen)/255.0
         bLen = (self._colour.b*self._blueLen)/255.0
 
-        lines = [LineDescription() for i in xrange(12)]
+        lines = [LineDescription() for i in range(12)]
         self._cuboid = [None]*8
 
         self._cuboid[0] = Vertex
@@ -3492,3 +3492,33 @@ class CubeColourDialog(wx.Dialog):
         return (self._colour.h, self._colour.s, self._colour.v, self._colour._alpha)
 
 
+if __name__ == '__main__':
+
+    import wx
+
+    # Our normal wxApp-derived class, as usual
+    app = wx.App(0)
+    
+    colourData = wx.ColourData()
+    colourData.SetColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
+    dlg = CubeColourDialog(None, colourData)
+
+    if dlg.ShowModal() == wx.ID_OK:
+
+        # If the user selected OK, then the dialog's wx.ColourData will
+        # contain valid information. Fetch the data ...
+        colourData = dlg.GetColourData()
+        h, s, v, a = dlg.GetHSVAColour()
+
+        # ... then do something with it. The actual colour data will be
+        # returned as a three-tuple (r, g, b) in this particular case.
+        colour = colourData.GetColour()
+        r, g, b, alpha = colour.Red(), colour.Green(), colour.Blue(), colour.Alpha()
+        print(("You selected (RGBA): %d, %d, %d, %d"%(r, g, b, alpha)))
+        print(("You selected (HSVA): %d, %d, %d, %d"%(h, s, v, a)))
+
+    # Once the dialog is destroyed, Mr. wx.ColourData is no longer your
+    # friend. Don't use it again!
+    dlg.Destroy()
+
+    app.MainLoop()

@@ -3,7 +3,7 @@
 # Ported From Jorgen Bodde & Julian Smart (Extended Demo) C++ Code By:
 #
 # Andrea Gavana, @ 23 Mar 2005
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # TODO List
@@ -53,6 +53,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -128,16 +129,16 @@ Usage example::
 
             text_ctrl = wx.TextCtrl(self, -1, size=(400, 100), style=wx.TE_MULTILINE)
             
-            panel_bar = fpb.FoldPanelBar(self, -1, agwStyle=fpb.FPB_HORIZONTAL|fpb.FPB_DEFAULT_STYLE)
+            panel_bar = fpb.FoldPanelBar(self, -1, agwStyle=fpb.FPB_VERTICAL)
             
             fold_panel = panel_bar.AddFoldPanel("Thing")
             thing = wx.TextCtrl(fold_panel, -1, size=(400, -1), style=wx.TE_MULTILINE)
             
             panel_bar.AddFoldPanelWindow(fold_panel, thing)
 
-            main_sizer = wx.BoxSizer(wx.HORIZONTAL)
+            main_sizer = wx.BoxSizer(wx.VERTICAL)
             main_sizer.Add(text_ctrl, 1, wx.EXPAND)
-            main_sizer.Add(panel_bar, 0, wx.EXPAND)
+            main_sizer.Add(panel_bar, 1, wx.EXPAND)
             self.SetSizer(main_sizer)
 
 
@@ -195,9 +196,9 @@ License And Version
 
 :class:`FoldPanelBar` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.5
+Version 0.6
 
 """
 
@@ -523,7 +524,7 @@ EmptyCaptionBarStyle = CaptionBarStyle()
 # class CaptionBarEvent
 # ---------------------------------------------------------------------------- #
 
-class CaptionBarEvent(wx.PyCommandEvent):
+class CaptionBarEvent(wx.CommandEvent):
     """
     This event will be sent when a ``EVT_CAPTIONBAR`` is mapped in the parent.
     It is to notify the parent that the bar is now in collapsed or expanded
@@ -537,7 +538,7 @@ class CaptionBarEvent(wx.PyCommandEvent):
         :param `evtType`: the event type.
         """
 
-        wx.PyCommandEvent.__init__(self, evtType)
+        wx.CommandEvent.__init__(self, evtType)
 
         
     def GetFoldStatus(self):
@@ -829,9 +830,9 @@ class CaptionBar(wx.Window):
         dc.SetTextForeground(self._style.GetCaptionColour())
 
         if vertical:
-            dc.DrawText(self._caption, 4, FPB_EXTRA_Y/2)
+            dc.DrawText(self._caption, 4, FPB_EXTRA_Y//2)
         else:
-            dc.DrawRotatedText(self._caption, FPB_EXTRA_Y/2,
+            dc.DrawRotatedText(self._caption, FPB_EXTRA_Y//2,
                                wndRect.GetBottom() - 4, 90)
 
         # draw small icon, either collapsed or expanded
@@ -844,11 +845,11 @@ class CaptionBar(wx.Window):
             if vertical:
                 drw = wndRect.GetRight() - self._iconWidth - self._rightIndent
                 self._foldIcons.Draw(index, dc, drw,
-                                     (wndRect.GetHeight() - self._iconHeight)/2,
+                                     (wndRect.GetHeight() - self._iconHeight)//2,
                                      wx.IMAGELIST_DRAW_TRANSPARENT)
             else:
                 self._foldIcons.Draw(index, dc,
-                                     (wndRect.GetWidth() - self._iconWidth)/2,
+                                     (wndRect.GetWidth() - self._iconWidth)//2,
                                      self._rightIndent, wx.IMAGELIST_DRAW_TRANSPARENT)
 
 ##        event.Skip()
@@ -909,7 +910,7 @@ class CaptionBar(wx.Window):
                 send_event = True
 
         elif event.LeftDClick():
-            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
             send_event = True
 
         elif event.Entering() and self._foldIcons:
@@ -919,12 +920,12 @@ class CaptionBar(wx.Window):
             drw = (rect.GetWidth() - self._iconWidth - self._rightIndent)
             if vertical and pt.x > drw or not vertical and \
                pt.y < (self._iconHeight + self._rightIndent):
-                self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+                self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
             else:
-                self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
         elif event.Leaving():
-            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
         elif event.Moving():
             pt = event.GetPosition()
@@ -933,9 +934,9 @@ class CaptionBar(wx.Window):
             drw = (rect.GetWidth() - self._iconWidth - self._rightIndent)           
             if vertical and pt.x > drw or not vertical and \
                pt.y < (self._iconHeight + self._rightIndent):
-                self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+                self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
             else:
-                self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
                 
         # send the collapse, expand event to the parent
         
@@ -1015,7 +1016,7 @@ class CaptionBar(wx.Window):
         for y in range(rect.y, rect.y + rect.height):
             currCol = (r1 + rf, g1 + gf, b1 + bf)
                 
-            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(rect.x, rect.y + (y - rect.y), rect.width, rect.height)
             rf = rf + rstep
             gf = gf + gstep
@@ -1053,7 +1054,7 @@ class CaptionBar(wx.Window):
         for x in range(rect.x, rect.x + rect.width):
             currCol = (r1 + rf, g1 + gf, b1 + bf)
                 
-            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(rect.x + (x - rect.x), rect.y, 1, rect.height)
             rf = rf + rstep
             gf = gf + gstep
@@ -1074,7 +1075,7 @@ class CaptionBar(wx.Window):
         dc.SetPen(wx.TRANSPARENT_PEN)
 
         # draw simple rectangle
-        dc.SetBrush(wx.Brush(self._style.GetFirstColour(), wx.SOLID))
+        dc.SetBrush(wx.Brush(self._style.GetFirstColour(), wx.BRUSHSTYLE_SOLID))
         dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height)
         
 
@@ -1093,10 +1094,10 @@ class CaptionBar(wx.Window):
 
         if self._style.GetCaptionStyle() == CAPTIONBAR_RECTANGLE:
             colour = self.GetParent().GetBackgroundColour()
-            br = wx.Brush(colour, wx.SOLID)
+            br = wx.Brush(colour, wx.BRUSHSTYLE_SOLID)
         else:
             colour = self._style.GetFirstColour()
-            br = wx.Brush(colour, wx.SOLID)
+            br = wx.Brush(colour, wx.BRUSHSTYLE_SOLID)
 
         # setup the pen frame
 
@@ -1815,7 +1816,7 @@ class FoldPanelItem(wx.Panel):
         xpos = (vertical and [leftSpacing] or [self._LastInsertPos + spacing])[0]
         ypos = (vertical and [self._LastInsertPos + spacing] or [leftSpacing])[0]
 
-        window.SetDimensions(xpos, ypos, -1, -1, wx.SIZE_USE_EXISTING)
+        window.SetSize(xpos, ypos, -1, -1, wx.SIZE_USE_EXISTING)
 
         self._LastInsertPos = self._LastInsertPos + wi.GetWindowLength(vertical)
         self.ResizePanel()
@@ -1865,7 +1866,7 @@ class FoldPanelItem(wx.Panel):
         xpos = (vertical and [-1] or [pos])[0]
         ypos = (vertical and [pos] or [-1])[0]
 
-        self.SetDimensions(xpos, ypos, -1, -1, wx.SIZE_USE_EXISTING)
+        self.SetSize(xpos, ypos, -1, -1, wx.SIZE_USE_EXISTING)
         self._itemPos = pos
 
         self.Thaw()
@@ -2089,25 +2090,25 @@ class FoldWindowItem(object):
         :see: :meth:`FoldPanelBar.AddFoldPanelWindow() <FoldPanelBar.AddFoldPanelWindow>` for a list of valid alignment flags.
         """
 
-        if not kw.has_key("Type"):
+        if "Type" not in kw:
             raise Exception('ERROR: Missing Window Type Information. This Should Be "WINDOW" Or "SEPARATOR"')
 
         if kw.get("Type") == "WINDOW":
             # Window constructor. This initialises the class as a wx.Window Type
             
-            if kw.has_key("flags"):
+            if "flags" in kw:
                 self._flags = kw.get("flags")
             else:
                 self._flags = FPB_ALIGN_WIDTH
-            if kw.has_key("spacing"):
+            if "spacing" in kw:
                 self._spacing = kw.get("spacing")
             else:
                 self._spacing = FPB_DEFAULT_SPACING
-            if kw.has_key("leftSpacing"):
+            if "leftSpacing" in kw:
                 self._leftSpacing = kw.get("leftSpacing")
             else:
                 self._leftSpacing = FPB_DEFAULT_LEFTSPACING
-            if kw.has_key("rightSpacing"):
+            if "rightSpacing" in kw:
                 self._rightSpacing = kw.get("rightSpacing")
             else:
                 self._rightSpacing = FPB_DEFAULT_RIGHTSPACING
@@ -2120,27 +2121,27 @@ class FoldWindowItem(object):
         elif kw.get("Type") == "SEPARATOR":
             # separator constructor. This initialises the class as a separator type
             
-            if kw.has_key("y"):
+            if "y" in kw:
                 self._lineY = kw.get("y")
             else:
                 raise Exception("ERROR: Undefined Y Position For The Separator")
-            if kw.has_key("lineColour"):
+            if "lineColour" in kw:
                 self._sepLineColour = kw.get("lineColour")
             else:
                 self._sepLineColour = wx.BLACK
-            if kw.has_key("flags"):
+            if "flags" in kw:
                 self._flags = kw.get("flags")
             else:
                 self._flags = FPB_ALIGN_WIDTH
-            if kw.has_key("spacing"):
+            if "spacing" in kw:
                 self._spacing = kw.get("spacing")
             else:
                 self._spacing = FPB_DEFAULT_SPACING
-            if kw.has_key("leftSpacing"):
+            if "leftSpacing" in kw:
                 self._leftSpacing = kw.get("leftSpacing")
             else:
                 self._leftSpacing = FPB_DEFAULT_LEFTSPACING
-            if kw.has_key("rightSpacing"):
+            if "rightSpacing" in kw:
                 self._rightSpacing = kw.get("rightSpacing")
             else:
                 self._rightSpacing = FPB_DEFAULT_RIGHTSPACING
@@ -2244,3 +2245,39 @@ class FoldWindowItem(object):
 
                 self._wnd.SetSize((xsize, ysize))
         
+
+if __name__ == '__main__':
+
+    import wx
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+        
+            wx.Frame.__init__(self, parent, -1, "FoldPanelBar Demo")
+
+            text_ctrl = wx.TextCtrl(self, -1, size=(400, 100), style=wx.TE_MULTILINE)
+            
+            panel_bar = FoldPanelBar(self, -1, agwStyle=FPB_VERTICAL)
+            
+            fold_panel = panel_bar.AddFoldPanel("Thing")
+            thing = wx.TextCtrl(fold_panel, -1, size=(400, -1), style=wx.TE_MULTILINE)
+            
+            panel_bar.AddFoldPanelWindow(fold_panel, thing)
+
+            main_sizer = wx.BoxSizer(wx.VERTICAL)
+            main_sizer.Add(text_ctrl, 1, wx.EXPAND)
+            main_sizer.Add(panel_bar, 1, wx.EXPAND)
+            self.SetSizer(main_sizer)
+
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.App(0)
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+    

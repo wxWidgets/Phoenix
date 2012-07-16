@@ -3,7 +3,7 @@
 # Ported From Angelo Mandato C++ Code By:
 #
 # Andrea Gavana, @ 27 Mar 2005
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # Original Web Site (For The C++ Code):
@@ -21,6 +21,7 @@
 #
 # Or, obviously, to the wxPython mailing list!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -114,9 +115,9 @@ License And Version
 
 :class:`HyperLinkCtrl` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.6
+Version 0.7
 
 """
 
@@ -160,7 +161,7 @@ EVT_HYPERLINK_RIGHT = wx.PyEventBinder(wxEVT_HYPERLINK_RIGHT, 1)
 # This class implements the event listener for the hyperlinks
 # ------------------------------------------------------------
 
-class HyperLinkEvent(wx.PyCommandEvent):
+class HyperLinkEvent(wx.CommandEvent):
     """
     Event object sent in response to clicking on a :class:`HyperLinkCtrl`.
     """
@@ -173,7 +174,7 @@ class HyperLinkEvent(wx.PyCommandEvent):
         :param `eventId`: the event identifier.
         """
         
-        wx.PyCommandEvent.__init__(self, eventType, eventId)
+        wx.CommandEvent.__init__(self, eventType, eventId)
         self._eventType = eventType
 
 
@@ -359,7 +360,7 @@ class HyperLinkCtrl(StaticText):
                     menuPopUp = wx.Menu("", wx.MENU_TEAROFF)
                     menuPopUp.Append(wxHYPERLINKS_POPUP_COPY, "Copy HyperLink")
                     self.Bind(wx.EVT_MENU, self.OnPopUpCopy, id=wxHYPERLINKS_POPUP_COPY)
-                    self.PopupMenu(menuPopUp, wx.Point(event.X, event.Y))
+                    self.PopupMenu(menuPopUp, wx.Point(event.x, event.y))
                     menuPopUp.Destroy()
                     self.Unbind(wx.EVT_MENU, id=wxHYPERLINKS_POPUP_COPY)
                     
@@ -503,10 +504,10 @@ class HyperLinkCtrl(StaticText):
         """
         Sets link cursor properties.
 
-        :param `cur`: an integer representing a :class:`StockCursor` constant.
+        :param `cur`: an integer representing a :ref:`StockCursor` constant.
         """
         
-        self._CursorHand = wx.StockCursor(cur)
+        self._CursorHand = wx.Cursor(cur)
 
 
     def GetLinkCursor(self):
@@ -619,4 +620,46 @@ class HyperLinkCtrl(StaticText):
         
         self._DoPopup = DoPopup
 
+    
+
+if __name__ == '__main__':
+
+    import wx
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+        
+            wx.Frame.__init__(self, parent, -1, "HyperLink Demo")
+
+            panel = wx.Panel(self, -1)
+
+            # Default Web links:
+            hyper1 = HyperLinkCtrl(panel, -1, "wxPython Main Page", pos=(100, 100),
+                                   URL="http://www.wxpython.org/")
+            
+            
+            # Web link with underline rollovers, opens in same window
+            hyper2 = HyperLinkCtrl(panel, -1, "My Home Page", pos=(100, 150),
+                                   URL="http://xoomer.virgilio.it/infinity77/")
+                                      
+            hyper2.AutoBrowse(False)
+            hyper2.SetColours("BLUE", "BLUE", "BLUE")
+            hyper2.EnableRollover(True)
+            hyper2.SetUnderlines(False, False, True)
+            hyper2.SetBold(True)
+            hyper2.OpenInSameWindow(True)
+            hyper2.SetToolTip(wx.ToolTip("Hello World!"))
+            hyper2.UpdateLink()
+        
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.App(0)
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
     

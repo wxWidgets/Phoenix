@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # TODO List
@@ -18,6 +18,7 @@
 #
 # Or, obviously, to the wxPython mailing list!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------------- #
@@ -121,9 +122,9 @@ License And Version
 
 :class:`GenericMessageDialog` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.7
+Version 0.8
 
 """
 
@@ -557,19 +558,19 @@ class StdDialogButtonSizer(wx.BoxSizer):
             self.Add((0, 0), 1, wx.EXPAND, 0)
 
             if self._buttonAffirmative:
-                self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonAffirmative.ConvertDialogSizeToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonAffirmative.ConvertDialogToPixels(wx.Size(2, 0)).x)
 
             if self._buttonNegative:
-                self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonNegative.ConvertDialogSizeToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonNegative.ConvertDialogToPixels(wx.Size(2, 0)).x)
             
             if self._buttonCancel:
-                self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonCancel.ConvertDialogSizeToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonCancel.ConvertDialogToPixels(wx.Size(2, 0)).x)
             
             if self._buttonApply:
-                self.Add(self._buttonApply, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonApply.ConvertDialogSizeToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonApply, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonApply.ConvertDialogToPixels(wx.Size(2, 0)).x)
 
             if self._buttonHelp:
-                self.Add(self._buttonHelp, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonHelp.ConvertDialogSizeToPixels(wx.Size(2, 0)).x)
+                self.Add(self._buttonHelp, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonHelp.ConvertDialogToPixels(wx.Size(2, 0)).x)
 
             self.Add((0, 0), 1, wx.EXPAND, 0)
 
@@ -577,22 +578,22 @@ class StdDialogButtonSizer(wx.BoxSizer):
             # GTK+1 and any other platform
 
             if self._buttonHelp:
-                self.Add(self._buttonHelp, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonHelp.ConvertDialogSizeToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonHelp, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonHelp.ConvertDialogToPixels(wx.Size(4, 0)).x)
 
             # extra whitespace between help and cancel/ok buttons
             self.Add((0, 0), 1, wx.EXPAND, 0)
 
             if self._buttonApply:
-                self.Add(self._buttonApply, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonApply.ConvertDialogSizeToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonApply, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonApply.ConvertDialogToPixels(wx.Size(4, 0)).x)
 
             if self._buttonAffirmative:
-                self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonAffirmative.ConvertDialogSizeToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonAffirmative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonAffirmative.ConvertDialogToPixels(wx.Size(4, 0)).x)
             
             if self._buttonNegative:
-                self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonNegative.ConvertDialogSizeToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonNegative, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonNegative.ConvertDialogToPixels(wx.Size(4, 0)).x)
             
             if self._buttonCancel:
-                self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonCancel.ConvertDialogSizeToPixels(wx.Size(4, 0)).x)
+                self.Add(self._buttonCancel, 0, wx.ALIGN_CENTRE | wx.LEFT | wx.RIGHT, self._buttonCancel.ConvertDialogToPixels(wx.Size(4, 0)).x)
                 # Cancel or help should be default
                 # self._buttonCancel.SetDefaultButton()
             
@@ -712,10 +713,10 @@ class GenericMessageDialog(wx.Dialog):
 
             msgSizer = self.CreateTextSizer(message)
 
-            for index in xrange(len(msgSizer.GetChildren())):
+            for index in range(len(msgSizer.GetChildren())):
                 msgSizer.GetItem(index).GetWindow().SetFont(boldFont)
                 
-            textsizer.AddF(msgSizer, wx.SizerFlags().Border(wx.BOTTOM, 20))
+            textsizer.Add(msgSizer, wx.SizerFlags().Border(wx.BOTTOM, 20))
             lowerMessage = self.GetExtendedMessage()
 
         else: # no extended message
@@ -745,12 +746,12 @@ class GenericMessageDialog(wx.Dialog):
         topsizer.Fit(self)
         size = self.GetSize()
         
-        if size.x < size.y*3/2:
-            size.x = size.y*3/2
+        if size.x < size.y*3//2:
+            size.x = size.y*3//2
             self.SetSize(size)
 
         self.Layout()
-        self.Centre(wx.BOTH | wx.CENTER_FRAME)
+        self.Centre(wx.BOTH)
 
         self.Bind(wx.EVT_BUTTON, self.OnYes, id=wx.ID_YES)
         self.Bind(wx.EVT_BUTTON, self.OnOk, id=wx.ID_OK)
@@ -934,8 +935,8 @@ class GenericMessageDialog(wx.Dialog):
         # grouping elements
         if wx.Platform != "__WXMAC__":
             topsizer = wx.BoxSizer(wx.VERTICAL)
-            topsizer.AddF(wx.StaticLine(self), wx.SizerFlags().Expand().DoubleBorder(wx.BOTTOM))
-            topsizer.AddF(sizer, wx.SizerFlags().Expand())
+            topsizer.Add(wx.StaticLine(self), wx.SizerFlags().Expand().DoubleBorder(wx.BOTTOM))
+            topsizer.Add(sizer, wx.SizerFlags().Expand())
             sizer = topsizer
             
         return sizer
@@ -1463,12 +1464,9 @@ class GenericMessageDialog(wx.Dialog):
 
         :return: a new message wrapped at maximum `wrap` pixels wide.
         
-        .. todo::
-
-           Estabilish if wrapping all messages by default is a better idea than
-           provide a keyword parameter to :class:`GenericMessageDialog`. A default maximum
-           line width might be the wxMac one, at 360 pixels.
-           
+        :todo: Estabilish if wrapping all messages by default is a better idea than
+         provide a keyword parameter to :class:`GenericMessageDialog`. A default maximum
+         line width might be the wxMac one, at 360 pixels.
         """
         
         dc = wx.ClientDC(self)
@@ -1584,3 +1582,23 @@ class GenericMessageDialog(wx.Dialog):
 
         return msg
 
+
+
+if __name__ == '__main__':
+
+    import wx
+
+    # Our normal wxApp-derived class, as usual
+    app = wx.App(0)
+    
+    main_message = "Hello world! I am the main message."
+    
+    dlg = GenericMessageDialog(None, main_message, "A Nice Message Box",
+                               agwStyle=wx.ICON_INFORMATION|wx.OK)
+                                   
+    dlg.ShowModal()
+    dlg.Destroy()
+
+    app.MainLoop()
+
+    
