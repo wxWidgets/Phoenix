@@ -39,7 +39,7 @@ class lib_agw_foldpanelbar_Tests(wtc.WidgetTestCase):
         self.assertTrue(not foldpanel.IsExpanded())
 
         
-    def test_lib_agw_foldpanelbarConstantsExists(self):
+    def test_lib_agw_foldpanelbarConstantsExist(self):
         FPB.CAPTIONBAR_FILLED_RECTANGLE
         FPB.CAPTIONBAR_GRADIENT_H
         FPB.CAPTIONBAR_GRADIENT_V

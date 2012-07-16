@@ -43,7 +43,7 @@ class lib_agw_fourwaysplitter_Tests(wtc.WidgetTestCase):
             self.assertTrue(not splitter.GetWindow(index).IsShown())
             
         
-    def test_lib_agw_fourwaysplitterConstantsExists(self):
+    def test_lib_agw_fourwaysplitterConstantsExist(self):
         FWS.FLAG_CHANGED
         FWS.FLAG_PRESSED
         FWS.NOWHERE

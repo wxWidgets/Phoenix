@@ -2,7 +2,7 @@
 # PYGAUGE wxPython IMPLEMENTATION
 #
 # Mark Reed, @ 28 Jul 2010
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 # TODO List
 #
@@ -19,6 +19,8 @@
 # Write To The:
 #
 # wxPython Mailing List!!!
+#
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------------- #
@@ -114,7 +116,7 @@ import wx
 import copy
 
 
-class PyGauge(wx.PyWindow):
+class PyGauge(wx.Window):
     """ 
     This class provides a visual alternative for :class:`Gauge`. It currently 
     only support determinate mode (see :meth:`PyGauge.SetValue() <PyGauge.SetValue>` and
@@ -132,10 +134,10 @@ class PyGauge(wx.PyWindow):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`PyWindow` window style.
+        :param `style`: the underlying :class:`Window` window style.
         """
 
-        wx.PyWindow.__init__(self, parent, id, pos, size, style)
+        wx.Window.__init__(self, parent, id, pos, size, style)
         
         self._size = size
         
@@ -162,7 +164,7 @@ class PyGauge(wx.PyWindow):
         the minimal size which doesn't truncate the control, for a panel - the
         same size as it would have after a call to `Fit()`.
 
-        :note: Overridden from :class:`PyWindow`.        
+        :note: Overridden from :class:`Window`.        
         """
         
         return wx.Size(self._size[0], self._size[1])
@@ -325,12 +327,12 @@ class PyGauge(wx.PyWindow):
         colour = self.GetBackgroundColour()
         dc.SetBrush(wx.Brush(colour))
         dc.SetPen(wx.Pen(colour))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
         
         
         if self._border_colour:
             dc.SetPen(wx.Pen(self.GetBorderColour()))
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
             pad = 1 + self.GetBorderPadding()
             rect.Deflate(pad,pad)
 
@@ -349,7 +351,7 @@ class PyGauge(wx.PyWindow):
                 w = rect.width * (float(self._valueSorted[i]) / self._range)
                 r = copy.copy(rect)
                 r.width = w 
-                dc.DrawRectangleRect(r)
+                dc.DrawRectangle(r)
 
         
     def OnTimer(self,event):
@@ -403,7 +405,7 @@ class PyGauge(wx.PyWindow):
                 raise Exception("ERROR:\n Gauge value must be between 0 and its range. ")
         
             self._update_value.append(value[i] + v)
-            self._update_step.append(float(value[i])/(time/50))
+            self._update_step.append(float(value[i])/(time/50.0))
             
         #print self._update_
 
@@ -427,3 +429,56 @@ class PyGauge(wx.PyWindow):
             self._valueSorted     = list(a)
             self._barColourSorted = list(b)
 
+
+
+if __name__ == '__main__':
+
+    import wx
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+
+            wx.Frame.__init__(self, parent, -1, "PyGauge Demo")
+
+            panel = wx.Panel(self)
+            
+            gauge1 = PyGauge(panel, -1, size=(100, 25), style=wx.GA_HORIZONTAL)
+            gauge1.SetValue(80)
+            gauge1.SetBackgroundColour(wx.WHITE)
+            gauge1.SetBorderColor(wx.BLACK)
+            
+            gauge2 = PyGauge(panel, -1, size=(100, 25), style=wx.GA_HORIZONTAL)
+            gauge2.SetValue([20, 80])
+            gauge2.SetBarColor([wx.Colour(162, 255, 178), wx.Colour(159, 176, 255)])
+            gauge2.SetBackgroundColour(wx.WHITE)
+            gauge2.SetBorderColor(wx.BLACK)
+            gauge2.SetBorderPadding(2)
+            gauge2.Update([30, 0], 2000)
+            
+            gauge3 = PyGauge(panel, -1, size=(100, 25), style=wx.GA_HORIZONTAL)
+            gauge3.SetValue(50)
+            gauge3.SetBarColor(wx.GREEN)
+            gauge3.SetBackgroundColour(wx.WHITE)
+            gauge3.SetBorderColor(wx.BLACK)
+
+            sizer = wx.BoxSizer(wx.VERTICAL)
+            sizer.Add(gauge1, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
+            sizer.Add(gauge2, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
+            sizer.Add(gauge3, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
+        
+            panel.SetSizer(sizer)
+            sizer.Layout()
+
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.App(0)
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+
+    

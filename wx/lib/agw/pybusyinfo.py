@@ -1,3 +1,31 @@
+# --------------------------------------------------------------------------- #
+# PYBUSYINFO Control wxPython IMPLEMENTATION
+# Inspired By And Heavily Based On wxBusyInfo.
+#
+# Python Code By:
+#
+# Andrea Gavana, @ 10 December 2009
+# Latest Revision: 16 Jul 2012, 15.00 GMT
+#
+#
+# TODO List/Caveats
+#
+# 1. ?
+#
+#
+# For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
+# Write To Me At:
+#
+# andrea.gavana@gmail.com
+# andrea.gavana@maerskoil.com
+#
+# Or, Obviously, To The wxPython Mailing List!!!
+#
+# Tags:        phoenix-port, unittest, documented
+#
+# End Of Comments
+# --------------------------------------------------------------------------- #
+
 """
 :class:`PyBusyInfo` constructs a busy info window and displays a message in it.
 
@@ -95,14 +123,14 @@ License And Version
 
 :class:`PyBusyInfo` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.2
+Version 0.3
 
 """
 
 # Version Info
-__version__ = "0.2"
+__version__ = "0.3"
 
 import wx
 
@@ -133,7 +161,7 @@ class PyInfoFrame(wx.Frame):
         self._icon = icon
 
         dc = wx.ClientDC(self)
-        textWidth, textHeight, dummy = dc.GetMultiLineTextExtent(self._message)
+        textWidth, textHeight, dummy = dc.GetFullMultiLineTextExtent(self._message)
         sizeText = wx.Size(textWidth, textHeight)
 
         self.SetClientSize((max(sizeText.x, 340) + 60, max(sizeText.y, 40) + 60))
@@ -148,13 +176,13 @@ class PyInfoFrame(wx.Frame):
 
         # Create a non-rectangular region to set the frame shape
         size = self.GetSize()
-        bmp = wx.EmptyBitmap(size.x, size.y)
+        bmp = wx.Bitmap(size.x, size.y)
         dc = wx.BufferedDC(None, bmp)
-        dc.SetBackground(wx.Brush(wx.Colour(0, 0, 0), wx.SOLID))
+        dc.SetBackground(wx.Brush(wx.Colour(0, 0, 0)))
         dc.Clear()
         dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1))
         dc.DrawRoundedRectangle(0, 0, size.x, size.y, 12)                
-        r = wx.RegionFromBitmapColour(bmp, wx.Colour(0, 0, 0))
+        r = wx.Region(bmp, wx.Colour(0, 0, 0))
         # Store the non-rectangular region
         self.reg = r
 
@@ -193,14 +221,14 @@ class PyInfoFrame(wx.Frame):
         dc.Clear()
 
         # Fill the background with a gradient shading
-        startColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        startColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         endColour = wx.WHITE
 
         rect = panel.GetRect()
         dc.GradientFillLinear(rect, startColour, endColour, wx.SOUTH)
 
         # Draw the label
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         dc.SetFont(font)
 
         # Draw the message
@@ -211,13 +239,13 @@ class PyInfoFrame(wx.Frame):
         # Draw the top title
         font.SetWeight(wx.BOLD)
         dc.SetFont(font)
-        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_CAPTIONTEXT)))
-        dc.SetTextForeground(wx.SystemSettings_GetColour(wx.SYS_COLOUR_CAPTIONTEXT))
+        dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT)))
+        dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT))
 
         if self._icon.IsOk():
             iconWidth, iconHeight = self._icon.GetWidth(), self._icon.GetHeight()
             dummy, textHeight = dc.GetTextExtent(self._title)
-            textXPos, textYPos = iconWidth + 10, (iconHeight-textHeight)/2
+            textXPos, textYPos = iconWidth + 10, (iconHeight-textHeight)//2
             dc.DrawBitmap(self._icon, 5, 5, True)
         else:
             textXPos, textYPos = 5, 0
@@ -329,3 +357,44 @@ class PyBusyInfo(object):
 
         self._infoFrame.Update()
 
+
+if __name__ == '__main__':
+
+    import wx    
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+        
+            wx.Frame.__init__(self, parent, -1, "PyBusyInfo Demo")
+
+            panel = wx.Panel(self)
+    
+            b = wx.Button(panel, -1, "Test PyBusyInfo ", (50,50))
+            self.Bind(wx.EVT_BUTTON, self.OnButton, b)
+
+
+        def OnButton(self, event):
+            
+            message = "Please wait 5 seconds, working..."
+            busy = PyBusyInfo(message, parent=self, title="Really Busy")
+
+            wx.Yield()
+            
+            for indx in xrange(5):
+                wx.MilliSleep(1000)
+
+            del busy
+
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.App(0)
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+
+    

@@ -41,7 +41,7 @@ class lib_agw_floatspin_Tests(wtc.WidgetTestCase):
         self.assertEqual(floatspin.GetIncrement(), FS.FixedPoint(str(0.01), 20))
         
         
-    def test_lib_agw_floatspinConstantsExists(self):
+    def test_lib_agw_floatspinConstantsExist(self):
         FS.DEFAULT_PRECISION
         FS.FS_CENTRE
         FS.FS_LEFT

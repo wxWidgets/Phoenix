@@ -2,7 +2,7 @@
 # MULTIDIRDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # TODO List
@@ -21,6 +21,7 @@
 #
 # Or, obviously, to the wxPython mailing list!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------------- #
@@ -91,7 +92,7 @@ This class supports the following window styles:
 ===================== =========== ==================================================
 Window Styles         Hex Value   Description
 ===================== =========== ==================================================
-``DD_NEW_DIR_BUTTON``       0x000 Enable/disable the "Make new folder" button
+``DD_NEW_DIR_BUTTON``       0x080 Enable/disable the "Make new folder" button
 ``DD_DIR_MUST_EXIST``       0x200 The dialog will allow the user to choose only an existing folder. When this style is not given, a "Create new directory" button is added to the dialog (on Windows) or some other way is provided to the user to type the name of a new folder.
 ``DD_MULTIPLE``             0x400 Allows the selection of multiple folders.
 ===================== =========== ==================================================
@@ -108,9 +109,9 @@ License And Version
 
 :class:`MultiDirDialog` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.3
+Version 0.4
 
 """
 
@@ -127,7 +128,7 @@ DD_DEFAULT_STYLE = wx.DD_DEFAULT_STYLE
 """ Equivalent to a combination of ``wx.DEFAULT_DIALOG_STYLE`` and ``wx.RESIZE_BORDER``. """
 DD_DIR_MUST_EXIST = wx.DD_DIR_MUST_EXIST
 """ The dialog will allow the user to choose only an existing folder. When this style is not given, a "Create new directory" button is added to the dialog (on Windows) or some other way is provided to the user to type the name of a new folder. """
-DD_NEW_DIR_BUTTON = wx.DD_NEW_DIR_BUTTON
+DD_NEW_DIR_BUTTON = 0x080
 """ The `Make New Folder` button will be displayed. """
 
 _ = wx.GetTranslation
@@ -314,7 +315,7 @@ class MultiDirDialog(wx.Dialog):
          ===================== =========== ==================================================
          Window Styles         Hex Value   Description
          ===================== =========== ==================================================
-         ``DD_NEW_DIR_BUTTON``       0x000 Enable/disable the "Make new folder" button
+         ``DD_NEW_DIR_BUTTON``       0x080 Enable/disable the "Make new folder" button
          ``DD_DIR_MUST_EXIST``       0x200 The dialog will allow the user to choose only an existing folder. When this style is not given, a "Create new directory" button is added to the dialog (on Windows) or some other way is provided to the user to type the name of a new folder.
          ``DD_MULTIPLE``             0x400 Allows the selection of multiple folders.
          ===================== =========== ==================================================
@@ -582,3 +583,30 @@ class MultiDirDialog(wx.Dialog):
 
         event.Skip()
         
+
+
+if __name__ == '__main__':
+
+    import os, sys
+    import wx
+    
+    # Our normal wxApp-derived class, as usual
+    app = wx.App(0)
+
+    dlg = MultiDirDialog(None, title="Custom MultiDirDialog", defaultPath=os.getcwd(),
+                         agwStyle=DD_MULTIPLE|DD_DIR_MUST_EXIST)
+        
+    if dlg.ShowModal() != wx.ID_OK:
+        print("You Cancelled The Dialog!")
+        dlg.Destroy()
+        sys.exit()
+
+    paths = dlg.GetPaths()
+    for indx, path in enumerate(paths):
+        print(("Path %d: %s"%(indx+1, path)))
+        
+    dlg.Destroy()
+
+    app.MainLoop()
+
+    

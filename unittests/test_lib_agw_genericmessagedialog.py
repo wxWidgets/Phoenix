@@ -30,7 +30,7 @@ class lib_agw_genericmessagedialog_Tests(wtc.WidgetTestCase):
         self.assertEqual(dlg.GetFullMessage(), '%s\n\n%s'%(dlg.GetMessage(), dlg.GetExtendedMessage()))
 
             
-    def test_lib_agw_genericmessagedialogConstantsExists(self):
+    def test_lib_agw_genericmessagedialogConstantsExist(self):
         GMD.BUTTON_SIZER_FLAGS
         GMD.GMD_DEFAULT
         GMD.GMD_USE_AQUABUTTONS

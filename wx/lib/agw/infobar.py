@@ -5,7 +5,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 12 March 2012
-# Latest Revision: 22 Mar 2012, 21.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -21,6 +21,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -91,7 +92,7 @@ The simplest possible example of using this class would be::
             self._infoBar = IB.InfoBar(self)
 
             sizer = wx.BoxSizer(wx.VERTICAL)
-            sizer.AddF(self._infoBar, wx.SizerFlags().Expand())
+            sizer.Add(self._infoBar, wx.SizerFlags().Expand())
 
             panel = wx.Panel(self)
             sizer.Add(panel, 1, wx.EXPAND)
@@ -149,14 +150,14 @@ License And Version
 
 :class:`InfoBar` control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 22 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.2
+Version 0.3
 
 """
 
 # Version Info
-__version__ = "0.2"
+__version__ = "0.3"
 
 # Start the imports
 import wx
@@ -165,7 +166,7 @@ import wx
 # is managed by PyAUI or wx.aui, in which case the handling
 # of the showing/dismissing is done a bit differently
 import wx.aui
-import aui.framemanager as framemanager
+from aui import framemanager as framemanager
 
 # These are for the AutoWrapStaticText class
 from wx.lib.wordwrap import wordwrap
@@ -211,13 +212,13 @@ def GetCloseButtonBitmap(win, size, colBg, flags=0):
      ``wx.CONTROL_ISDEFAULT`` bit set.
     """
 
-    bmp = wx.EmptyBitmap(*size)
+    bmp = wx.Bitmap(*size)
     dc = wx.MemoryDC()
     dc.SelectObject(bmp)
     dc.SetBackground(wx.Brush(colBg))
     dc.Clear()
     
-    wx.RendererNative.Get().DrawTitleBarBitmap(win, dc, wx.RectS(size), wx.TITLEBAR_BUTTON_CLOSE, flags)
+    wx.RendererNative.Get().DrawTitleBarBitmap(win, dc, wx.Rect(size), wx.TITLEBAR_BUTTON_CLOSE, flags)
     dc.SelectObject(wx.NullBitmap)
 
     return bmp
@@ -305,7 +306,7 @@ class AutoWrapStaticText(StaticText):
         :param bool `wrapped`: ``True`` if this method was called by the developer using :meth:`~AutoWrapStaticText.SetLabel`,
          ``False`` if it comes from the :meth:`~AutoWrapStaticText.OnSize` event handler.
          
-        :note: Reimplemented from :class:`PyControl`.
+        :note: Reimplemented from :class:`Control`.
         """
 
         if not wrapped:
@@ -318,7 +319,7 @@ class AutoWrapStaticText(StaticText):
 # Implementation
 # ============================================================================
 
-class InfoBar(wx.PyControl):
+class InfoBar(wx.Control):
     """
     An info bar is a transient window shown at top or bottom of its parent window to display
     non-critical information to the user.
@@ -343,7 +344,7 @@ class InfoBar(wx.PyControl):
         :param string `name`: the control name.
         """
 
-        wx.PyControl.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE, name=name)
+        wx.Control.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE, name=name)
 
         self.SetInitialSize(size)
         self.Init()
@@ -379,7 +380,7 @@ class InfoBar(wx.PyControl):
             self._button.SetBitmapCurrent(GetCloseButtonBitmap(self, sizeBmp, colBg, wx.CONTROL_CURRENT))
             
         self._button.SetBackgroundColour(colBg)
-        self._button.SetToolTipString(_("Hide this notification message."))
+        self._button.SetToolTip(_("Hide this notification message."))
 
         # center the text inside the sizer with an icon to the left of it and a
         # button at the very right
@@ -387,10 +388,10 @@ class InfoBar(wx.PyControl):
         # NB: AddButton() relies on the button being the last control in the sizer
         #     and being preceded by a spacer
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        sizer.AddF(self._icon, wx.SizerFlags().Centre().Border())
+        sizer.Add(self._icon, wx.SizerFlags().Centre().Border())
         sizer.Add(self._text, 2000000, wx.ALIGN_CENTER_VERTICAL)
         sizer.AddStretchSpacer()
-        sizer.AddF(self._button, wx.SizerFlags().Centre().Border())
+        sizer.Add(self._button, wx.SizerFlags().Centre().Border())
         self.SetSizer(sizer)
 
         self.Bind(wx.EVT_BUTTON, self.OnButton)        
@@ -421,7 +422,7 @@ class InfoBar(wx.PyControl):
         :note: Reimplemented from :class:`Window`.
         """
         
-        if not wx.PyControl.SetFont(self, font):
+        if not wx.Control.SetFont(self, font):
             return False
         
         # check that we're not called before Create()
@@ -578,14 +579,14 @@ class InfoBar(wx.PyControl):
         # without really showing it
         self.GetParent().Freeze()
         
-        wx.PyControl.Show(self)
+        wx.Control.Show(self)
         
         # adjust the parent layout to account for us
         self.UpdateParent()
         
         # reset the flag back before really showing the window or it wouldn't be
         # shown at all because it would believe itself already visible
-        wx.PyControl.Show(self, False)
+        wx.Control.Show(self, False)
         self.GetParent().Thaw()
         
         # finally do really show the window.
@@ -625,16 +626,16 @@ class InfoBar(wx.PyControl):
             
         else: # do show an icon
             bitmap = wx.ArtProvider.GetBitmap(FLAGS2ART[flags], wx.ART_BUTTON)
-            iconSize = bitmap.GetWidth() + wx.SizerFlags().Border().GetBorderInPixels()
+            iconSize = bitmap.GetWidth() + wx.SizerFlags().Border().GetDefaultBorder()
             self._icon.SetBitmap(bitmap)
             self._icon.Show()
             
         # notice the use of EscapeMnemonics() to ensure that "&" come through
         # correctly
-        self._text.SetLabel(wx.PyControl.EscapeMnemonics(msg))
+        self._text.SetLabel(wx.Control.EscapeMnemonics(msg))
         
         parentSize = self.GetParent().GetSize()
-        self._text.Wrap(parentSize.x - iconSize - wx.SizerFlags().Border().GetBorderInPixels())
+        self._text.Wrap(parentSize.x - iconSize - wx.SizerFlags().Border().GetDefaultBorder())
         
         # then show this entire window if not done yet
         if not self.IsShown():
@@ -709,7 +710,7 @@ class InfoBar(wx.PyControl):
             # smaller buttons look better in the(narrow)info bar under OS X
             button.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)
      
-        sizer.AddF(button, wx.SizerFlags().Centre().DoubleBorder())
+        sizer.Add(button, wx.SizerFlags().Centre().DoubleBorder())
 
         if self.IsShown():
             self.UpdateParent()
@@ -829,3 +830,43 @@ class InfoBar(wx.PyControl):
 
         return self._effectDuration
     
+
+if __name__ == '__main__':
+
+    import wx
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+
+            wx.Frame.__init__(self, parent, -1, 'InfoBar Demo')
+
+            self._infoBar = InfoBar(self)
+
+            sizer = wx.BoxSizer(wx.VERTICAL)
+            sizer.Add(self._infoBar, wx.SizerFlags().Expand())
+
+            panel = wx.Panel(self)
+            sizer.Add(panel, 1, wx.EXPAND)
+            
+            # ... Add other frame controls to the sizer ...
+            self.SetSizer(sizer)
+
+            wx.CallLater(2000, self.SomeMethod)
+            
+
+        def SomeMethod(self):
+
+            self._infoBar.ShowMessage("Something happened", wx.ICON_INFORMATION)
+
+
+    # our normal wxApp-derived class, as usual
+
+    app = wx.App(0)
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+

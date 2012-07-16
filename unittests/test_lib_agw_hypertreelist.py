@@ -48,7 +48,7 @@ class lib_agw_hypertreelist_Tests(wtc.WidgetTestCase):
         tree.SetColumnEditable(0, True)
         self.assertTrue(tree.IsColumnEditable(0))
                         
-    def test_lib_agw_hypertreelistConstantsExists(self):
+    def test_lib_agw_hypertreelistConstantsExist(self):
         HTL.TR_ALIGN_WINDOWS
         HTL.TR_AUTO_CHECK_CHILD
         HTL.TR_AUTO_CHECK_PARENT
