@@ -2,7 +2,7 @@
 # PYPROGRESS wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # TODO List
@@ -20,6 +20,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------------- #
@@ -80,7 +81,7 @@ Usage example::
         count += 1
         wx.MilliSleep(30)
 
-        if count >= max / 2:
+        if count >= max // 2:
             keepGoing = dlg.UpdatePulse("Half-time!")
         else:
             keepGoing = dlg.UpdatePulse()
@@ -125,16 +126,14 @@ License And Version
 
 :class:`PyProgress` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.4
+Version 0.5
 
 """
 
-__docformat__ = "epytext"
-
-
 import wx
+import time
 
 # Some constants, taken straight from wx.ProgressDialog
 Uncancelable = -1
@@ -164,7 +163,7 @@ PD_ELAPSED_TIME = wx.PD_ELAPSED_TIME
 # Class ProgressGauge
 # ---------------------------------------------------------------------------- #
 
-class ProgressGauge(wx.PyWindow):
+class ProgressGauge(wx.Window):
     """ This class provides a visual alternative for :class:`Gauge`."""
     
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
@@ -180,7 +179,7 @@ class ProgressGauge(wx.PyWindow):
          chosen by either the windowing system or wxPython, depending on platform.
         """
 
-        wx.PyWindow.__init__(self, parent, id, pos, size, style=wx.SUNKEN_BORDER)
+        wx.Window.__init__(self, parent, id, pos, size, style=wx.SUNKEN_BORDER)
 
         self._value = 0
         self._steps = 50
@@ -189,7 +188,7 @@ class ProgressGauge(wx.PyWindow):
         self._gaugeproportion = 0.2
         self._firstGradient = wx.WHITE
         self._secondGradient = wx.BLUE
-        self._background = wx.Brush(wx.WHITE, wx.SOLID)
+        self._background = wx.Brush(wx.WHITE)
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
@@ -208,9 +207,6 @@ class ProgressGauge(wx.PyWindow):
         :param `colour`: a valid :class:`Colour` object.
         """
 
-        if not isinstance(colour, wx.Colour):
-            colour = wx.NamedColour(colour)
-            
         self._firstGradient = colour
         self.Refresh()
 
@@ -227,9 +223,6 @@ class ProgressGauge(wx.PyWindow):
 
         :param `colour`: a valid :class:`Colour` object.
         """
-
-        if not isinstance(colour, wx.Colour):
-            colour = wx.NamedColour(colour)
 
         self._secondGradient = colour
         self.Refresh()
@@ -248,10 +241,7 @@ class ProgressGauge(wx.PyWindow):
         :param `colour`: a valid :class:`Colour` object.
         """
 
-        if not isinstance(colour, wx.Colour):
-            colour = wx.NamedColour(colour)
-
-        self._background = wx.Brush(colour, wx.SOLID)        
+        self._background = wx.Brush(colour) 
 
 
     def SetGaugeSteps(self, steps):
@@ -333,7 +323,7 @@ class ProgressGauge(wx.PyWindow):
 
         self._pos = interval*self._value
         
-        status = self._current/(self._steps - int(self._gaugeproportion*xsize)/int(interval))
+        status = self._current//(self._steps - int(self._gaugeproportion*xsize)//int(interval))
         
         if status%2 == 0:
             increment = 1
@@ -375,7 +365,7 @@ class ProgressGauge(wx.PyWindow):
         rf, gf, bf = 0, 0, 0
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
             
-        for ii in xrange(int(self._pos), int(self._pos+interval)):
+        for ii in range(int(self._pos), int(self._pos+interval)):
             currCol = (r1 + rf, g1 + gf, b1 + bf)                
             dc.SetPen(wx.Pen(currCol, 2))
             dc.DrawLine(ii, 1, ii, ysize-2)
@@ -447,7 +437,7 @@ class PyProgress(wx.Dialog):
         self._parentTop = wx.GetTopLevelParent(parent)
 
         dc = wx.ClientDC(self)
-        dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
         widthText, dummy = dc.GetTextExtent(message)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -484,7 +474,7 @@ class PyProgress(wx.Dialog):
 
             label = wx.StaticText(self, -1, "")    
             # set it to the current time
-            self._timeStart = wx.GetCurrentTime()
+            self._timeStart = int(time.time())
             sizeDlg.y += nTimeLabels*(label.GetSize().y + LAYOUT_MARGIN)
             label.Destroy()
 
@@ -520,12 +510,12 @@ class PyProgress(wx.Dialog):
         sizeDlg.y += 2*LAYOUT_MARGIN
 
         # try to make the dialog not square but rectangular of reasonable width
-        sizeDlg.x = max(widthText, 4*sizeDlg.y/3)
+        sizeDlg.x = max(widthText, 4*sizeDlg.y//3)
         sizeDlg.x *= 3
-        sizeDlg.x /= 2
+        sizeDlg.x //= 2
         self.SetClientSize(sizeDlg)
     
-        self.Centre(wx.CENTER_FRAME|wx.BOTH)
+        self.Centre(wx.CENTER|wx.BOTH)
 
         if agwStyle & wx.PD_APP_MODAL:
             self._winDisabler = wx.WindowDisabler(self)
@@ -542,9 +532,9 @@ class PyProgress(wx.Dialog):
         if self._elapsed:
             self.SetTimeLabel(0, self._elapsed)
 
-        if not wx.EventLoop().GetActive():
-            self.evtloop = wx.EventLoop()
-            wx.EventLoop.SetActive(self.evtloop)
+        if not wx.GUIEventLoop().GetActive():
+            self.evtloop = wx.GUIEventLoop()
+            wx.GUIEventLoop.SetActive(self.evtloop)
         
         self.Update()
 
@@ -596,10 +586,10 @@ class PyProgress(wx.Dialog):
         
         if newmsg and newmsg != self._msg.GetLabel():
             self._msg.SetLabel(newmsg)
-            wx.YieldIfNeeded() 
+            wx.SafeYield() 
         
         if self._elapsed:        
-            elapsed = wx.GetCurrentTime() - self._timeStart
+            elapsed = int(time.time()) - self._timeStart
             if self._last_timeupdate < elapsed:
                 self._last_timeupdate = elapsed
                 
@@ -615,7 +605,7 @@ class PyProgress(wx.Dialog):
                     # also provide the finishing message if the application didn't
                     self._msg.SetLabel("Done.")
                 
-                wx.YieldIfNeeded()
+                wx.SafeYield()
                 self.ShowModal()
                 return False
             
@@ -628,7 +618,7 @@ class PyProgress(wx.Dialog):
             
         # we have to yield because not only we want to update the display but
         # also to process the clicks on the cancel and skip buttons
-        wx.YieldIfNeeded()
+        wx.SafeYield()
 
         return self._state != Canceled
 
@@ -740,6 +730,16 @@ class PyProgress(wx.Dialog):
         return self.Show()
 
 
+    def GetAGWWindowStyleFlag(self):
+        """
+        Returns the :class:`PyProgress` style.
+
+        :see: The :meth:`~PyProgress.__init__` method for a list of possible style flags.
+        """
+
+        return self._agwStyle
+
+
     # ----------------------------------------------------------------------------
     # event handlers
     # ----------------------------------------------------------------------------
@@ -770,7 +770,7 @@ class PyProgress(wx.Dialog):
             self.DisableAbort()
 
             # save the time when the dialog was stopped
-            self._timeStop = wx.GetCurrentTime()
+            self._timeStop = int(time.time())
 
         self.ReenableOtherWindows()
 
@@ -810,7 +810,7 @@ class PyProgress(wx.Dialog):
             self._state = Canceled
             self.DisableAbort()
     
-            self._timeStop = wx.GetCurrentTime()
+            self._timeStop = int(time.time())
     
 
     def ReenableOtherWindows(self):
@@ -836,8 +836,8 @@ class PyProgress(wx.Dialog):
 
         if label:
         
-            hours = val/3600
-            minutes = (val%3600)/60
+            hours = val//3600
+            minutes = (val%3600)//60
             seconds = val%60
             strs = ("%lu:%02lu:%02lu")%(hours, minutes, seconds)
 
@@ -876,3 +876,39 @@ class PyProgress(wx.Dialog):
 
         self.EnableAbort(False)
 
+
+
+if __name__ == '__main__':
+
+    import wx
+
+    # Our normal wxApp-derived class, as usual
+    app = wx.App(0)
+    
+    dlg = PyProgress(None, -1, "PyProgress Example",
+                     "An Informative Message",
+                     agwStyle=wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
+
+    dlg.SetGaugeProportion(0.2)
+    dlg.SetGaugeSteps(50)
+    dlg.SetGaugeBackground(wx.WHITE)
+    dlg.SetFirstGradientColour(wx.WHITE)
+    dlg.SetSecondGradientColour(wx.BLUE)
+    
+    max = 400
+    keepGoing = True
+    count = 0
+
+    while keepGoing and count < max:
+        count += 1
+        wx.MilliSleep(30)
+
+        if count >= max // 2:
+            keepGoing = dlg.UpdatePulse("Half-time!")
+        else:
+            keepGoing = dlg.UpdatePulse()
+
+    dlg.Destroy()
+
+    app.MainLoop()
+    

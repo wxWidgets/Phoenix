@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 18 Oct 2005
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 16 Jul 2012, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -34,6 +34,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -149,9 +150,9 @@ License And Version
 
 `ShapedButton` is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
-Version 0.4
+Version 0.5
 
 """
 
@@ -196,7 +197,7 @@ def opj(path):
     :param `path`: the path to convert.
     """
 
-    strs = apply(os.path.join, tuple(path.split('/')))
+    strs = os.path.join(*tuple(path.split('/')))
     # HACK: on Linux, a leading / gets lost...
     if path.startswith('/'):
         strs = '/' + strs
@@ -212,7 +213,7 @@ def opj(path):
 # And ToggleButton Events.
 #----------------------------------------------------------------------
 
-class SButtonEvent(wx.PyCommandEvent):
+class SButtonEvent(wx.CommandEvent):
     """ Event sent from the generic buttons when the button is activated. """
 
     def __init__(self, eventType, eventId):
@@ -223,7 +224,7 @@ class SButtonEvent(wx.PyCommandEvent):
         :param `eventId`: the event identifier.
         """
 
-        wx.PyCommandEvent.__init__(self, eventType, eventId)
+        wx.CommandEvent.__init__(self, eventType, eventId)
         self.isDown = False
         self.theButton = None
         
@@ -492,12 +493,12 @@ class SButton(wx.Window):
         textclr = self.GetLabelColour()
         faceclr = self.GetButtonColour()
 
-        r, g, b = faceclr.Get()
+        r, g, b, a = faceclr.Get()
         hr, hg, hb = min(255,r+64), min(255,g+64), min(255,b+64)
         self._focusclr = wx.Colour(hr, hg, hb)
 
         if wx.Platform == "__WXMAC__":
-            self._focusindpen = wx.Pen(textclr, 1, wx.SOLID)
+            self._focusindpen = wx.Pen(textclr, 1)
         else:
             self._focusindpen = wx.Pen(textclr, 1, wx.USER_DASH)
             self._focusindpen.SetDashes([1,1])
@@ -544,8 +545,8 @@ class SButton(wx.Window):
         position = self.GetPosition()
 
         main, secondary = self.GetEllipseAxis()
-        xc = width/2
-        yc = height/2
+        xc = width/2.0
+        yc = height/2.0
 
         if abs(main - secondary) < 1e-6:
             # In This Case The Button Is A Circle
@@ -560,12 +561,12 @@ class SButton(wx.Window):
             if main > secondary:
                 # This Is An Ellipse With Main Axis Aligned With X Axis
                 rect2 = w
-                rect3 = w*secondary/main
+                rect3 = w*secondary//main
 
             else:
                 # This Is An Ellipse With Main Axis Aligned With Y Axis
                 rect3 = w
-                rect2 = w*main/secondary
+                rect2 = w*main//secondary
 
             if self._isup:
                 img = self._mainbuttonup.Scale(rect2, rect3)
@@ -577,24 +578,24 @@ class SButton(wx.Window):
         if abs(main - secondary) < 1e-6:
             if height > width:
                 xpos = 0
-                ypos = (height - width)/2
+                ypos = (height - width)//2
             else:
-                xpos = (width - height)/2
+                xpos = (width - height)//2
                 ypos = 0
         else:
             if height > width:
                 if main > secondary:
                     xpos = 0
-                    ypos = (height - rect3)/2
+                    ypos = (height - rect3)//2
                 else:
-                    xpos = (width - rect2)/2
-                    ypos = (height - rect3)/2
+                    xpos = (width - rect2)//2
+                    ypos = (height - rect3)//2
             else:
                 if main > secondary:
-                    xpos = (width - rect2)/2
-                    ypos = (height - rect3)/2
+                    xpos = (width - rect2)//2
+                    ypos = (height - rect3)//2
                 else:
-                    xpos = (width - rect2)/2
+                    xpos = (width - rect2)//2
                     ypos = 0
 
         # Draw Finally The Bitmap
@@ -638,12 +639,12 @@ class SButton(wx.Window):
 
         # Check If There Is Any Rotation Chosen By The User
         if angle == 0:
-            dc.DrawText(label, (width-tw)/2+dw, (height-th)/2+dh)
+            dc.DrawText(label, (width-tw)//2+dw, (height-th)//2+dh)
         else:
-            xc, yc = (width/2, height/2)
+            xc, yc = (width//2, height//2)
 
-            xp = xc - (tw/2)* cos(angle) - (th/2)*sin(angle)
-            yp = yc + (tw/2)*sin(angle) - (th/2)*cos(angle)
+            xp = xc - (tw//2)* cos(angle) - (th//2)*sin(angle)
+            yp = yc + (tw//2)*sin(angle) - (th//2)*cos(angle)
 
             dc.DrawRotatedText(label, xp + dw, yp + dh , angle*180/pi)
 
@@ -669,9 +670,9 @@ class SButton(wx.Window):
         if abs(main - secondary) < 1e-6:
             # Ah, That Is A Round Button
             if height > width:
-                dc.DrawCircle(width/2, height/2, width/2-4)
+                dc.DrawCircle(width//2, height//2, width//2-4)
             else:
-                dc.DrawCircle(width/2, height/2, height/2-4)
+                dc.DrawCircle(width//2, height//2, height//2-4)
         else:
             # This Is An Ellipse
             if hasattr(self, "_xpos"):
@@ -698,7 +699,7 @@ class SButton(wx.Window):
         :param `event`: a :class:`PaintEvent` event to be processed.
         """
 
-        (width, height) = self.GetClientSizeTuple()
+        width, height = self.GetClientSize()
 
         # Use A Double Buffered DC (Good Speed Up)
         dc = wx.BufferedPaintDC(self)
@@ -706,7 +707,7 @@ class SButton(wx.Window):
         # The DC Background *Must* Be The Same As The Parent Background Colour,
         # In Order To Hide The Fact That Our "Shaped" Button Is Still Constructed
         # Over A Rectangular Window
-        brush = wx.Brush(self.GetParent().GetBackgroundColour(), wx.SOLID)
+        brush = wx.Brush(self.GetParent().GetBackgroundColour())
 
         dc.SetBackground(brush)
         dc.Clear()
@@ -726,9 +727,9 @@ class SButton(wx.Window):
         :param `y`: the mouse y position.
         """
 
-        (width, height) = self.GetClientSizeTuple()
+        width, height = self.GetClientSize()
         diam = min(width, height)
-        xc, yc = (width/2, height/2)
+        xc, yc = (width//2, height//2)
 
         main, secondary = self.GetEllipseAxis()
 
@@ -805,7 +806,7 @@ class SButton(wx.Window):
             return
 
         if event.LeftIsDown() and self.HasCapture():
-            x, y = event.GetPositionTuple()
+            x, y = event.GetPosition()
 
             if self._isup and not self.IsOutside(x, y):
                 self._isup = False
@@ -829,7 +830,7 @@ class SButton(wx.Window):
 
         self._hasfocus = True
         dc = wx.ClientDC(self)
-        w, h = self.GetClientSizeTuple()
+        w, h = self.GetClientSize()
 
         if self._usefocusind:
             self.DrawFocusIndicator(dc, w, h)
@@ -844,7 +845,7 @@ class SButton(wx.Window):
 
         self._hasfocus = False
         dc = wx.ClientDC(self)
-        w, h = self.GetClientSizeTuple()
+        w, h = self.GetClientSize()
 
         if self._usefocusind:
             self.DrawFocusIndicator(dc, w, h)
@@ -894,7 +895,7 @@ class SButton(wx.Window):
 
         l = []
         for i in range(255):
-            l.extend([tr*i / 255, tg*i / 255, tb*i / 255])
+            l.extend([tr*i // 255, tg*i // 255, tb*i // 255])
 
         return l
 
@@ -923,11 +924,11 @@ class SButton(wx.Window):
         """
 
         if alpha:
-            image = apply(wx.EmptyImage, pil.size)
+            image = wx.Image(*pil.size)
             image.SetData(pil.convert("RGB").tostring())
-            image.SetAlphaData(pil.convert("RGBA").tostring()[3::4])
+            image.SetAlpha(pil.convert("RGBA").tostring()[3::4])
         else:
-            image = wx.EmptyImage(pil.size[0], pil.size[1])
+            image = wx.Image(pil.size[0], pil.size[1])
             new_image = pil.convert('RGB')
             data = new_image.tostring()
             image.SetData(data)
@@ -1083,7 +1084,7 @@ class SBitmapButton(SButton):
         self._bmplabel = bitmap
 
         if bitmap is not None and createothers:
-            dis_bitmap = wx.BitmapFromImage(bitmap.ConvertToImage().ConvertToGreyscale())
+            dis_bitmap = wx.Bitmap(bitmap.ConvertToImage().ConvertToGreyscale())
             self.SetBitmapDisabled(dis_bitmap)
 
 
@@ -1124,7 +1125,7 @@ class SBitmapButton(SButton):
             dw = dh = self._labeldelta
 
         hasMask = bmp.GetMask() != None
-        dc.DrawBitmap(bmp, (width - bw)/2 + dw, (height - bh)/2 + dh, hasMask)
+        dc.DrawBitmap(bmp, (width - bw)//2 + dw, (height - bh)//2 + dh, hasMask)
 
 
 #----------------------------------------------------------------------
@@ -1229,23 +1230,23 @@ class SBitmapTextButton(SBitmapButton):
 
         w = min(width, height)
 
-        pos_x = (width - bw - tw)/2 + dw      # adjust for bitmap and text to centre
+        pos_x = (width - bw - tw)//2 + dw      # adjust for bitmap and text to centre
 
         rotangle = self.GetAngleOfRotation()*pi/180.0
 
         if bmp != None:
             if rotangle < 1.0/180.0:
-                dc.DrawBitmap(bmp, pos_x, (height - bh)/2 + dh, hasMask) # draw bitmap if available
+                dc.DrawBitmap(bmp, pos_x, (height - bh)//2 + dh, hasMask) # draw bitmap if available
                 pos_x = pos_x + 4   # extra spacing from bitmap
             else:
                 pass
 
         if rotangle < 1.0/180.0:
-            dc.DrawText(label, pos_x + dw + bw, (height-th)/2+dh)      # draw the text
+            dc.DrawText(label, pos_x + dw + bw, (height-th)//2+dh)      # draw the text
         else:
-            xc, yc = (width/2, height/2)
-            xp = xc - (tw/2)* cos(rotangle) - (th/2)*sin(rotangle)
-            yp = yc + (tw/2)*sin(rotangle) - (th/2)*cos(rotangle)
+            xc, yc = (width//2, height//2)
+            xp = xc - (tw//2)* cos(rotangle) - (th//2)*sin(rotangle)
+            yp = yc + (tw//2)*sin(rotangle) - (th//2)*cos(rotangle)
             dc.DrawRotatedText(label, xp, yp , rotangle*180.0/pi)
 
 
@@ -1348,8 +1349,8 @@ class __SToggleMixin(object):
 
         if event.LeftIsDown() and self.HasCapture():
 
-            x,y = event.GetPositionTuple()
-            w,h = self.GetClientSizeTuple()
+            x, y = event.GetPosition()
+            w, h = self.GetClientSize()
 
             if not self.IsOutside(x, y):
                 self._isup = not self._saveup
@@ -1777,3 +1778,33 @@ DownButton = PyEmbeddedImage(
     "XCCjKzh78hBvUN1agACivkeAWeYtfo+8fUUDSwECiBYeGRAAEEDDxiMAATRsPAIQYAAZi6PF"
     "fdLmvAAAAABJRU5ErkJggg==")
 
+
+if __name__ == '__main__':
+
+    import wx
+
+    class MyFrame(wx.Frame):
+
+        def __init__(self, parent):
+        
+            wx.Frame.__init__(self, parent, -1, "ShapedButton Demo")
+
+            panel = wx.Panel(self)
+
+            # Create bitmaps for the button
+            bmp = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (16, 16))
+                        
+            play = SBitmapToggleButton(panel, -1, bmp, (100, 50))
+            play.SetUseFocusIndicator(False)
+        
+        
+    # our normal wxApp-derived class, as usual
+
+    app = wx.App(0)
+
+    frame = MyFrame(None)
+    app.SetTopWindow(frame)
+    frame.Show()
+
+    app.MainLoop()
+    
