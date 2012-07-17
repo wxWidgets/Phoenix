@@ -106,7 +106,7 @@ class InheritanceDiagram(object):
 
     # These are the default attrs for graphviz
     default_graph_attrs = {
-        'rankdir': 'LR',
+        'rankdir': 'TB',
         'size': '"8.0, 12.0"',
     }
     default_node_attrs = {
@@ -138,7 +138,7 @@ class InheritanceDiagram(object):
         key/value pairs to pass on as graphviz properties.
         """
 
-        inheritance_graph_attrs = dict(fontsize=9, ratio='auto', size='""', rankdir="LR")
+        inheritance_graph_attrs = dict(fontsize=9, ratio='auto', size='""', rankdir="TB")
         inheritance_node_attrs = {"align": "center", 'shape': 'box',
                                   'fontsize': 10, 'height': 0.3,
                                   'fontname': 'Vera Sans, DejaVu Sans, Liberation Sans, '

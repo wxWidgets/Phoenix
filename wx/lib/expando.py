@@ -92,12 +92,12 @@ Sample usage::
 
             
         def OnWriteText(self, evt):
-            self.eom.WriteText("\nThis is a test...  Only a test.  If this had "
+            self.eom.WriteText("This is a test...  Only a test.  If this had "
                                "been a real emergency you would have seen the "
-                               "quick brown fox jump over the lazy dog.\n")
+                               "quick brown fox jump over the lazy dog.")
         
         def OnAppendText(self, evt):
-            self.eom.AppendText("\nAppended text.")
+            self.eom.AppendText("Appended text.")
 
     app = wx.App(0)
     frame = MyFrame()

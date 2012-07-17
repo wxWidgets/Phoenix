@@ -590,6 +590,11 @@ class Module(ParentBase):
         stream.write(newtext + '\n\n')
 
         spacer = '   '*self.name.count('.')
+
+        # IMPORTANT!!
+        # Remove this line to get back the inheritance diagram for a module
+        #
+        self.inheritance_diagram = None
         
         if self.kind != object_types.PACKAGE:
             print(('%s - %s (module)'%(spacer, self.name)))

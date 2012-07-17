@@ -112,7 +112,9 @@ import wx
 
 def NewEvent():
     """
-    Generates a new `(event, binder)` tuple::
+    Generates a new `(event, binder)` tuple.
+
+    ::
     
         MooEvent, EVT_MOO = NewEvent()
         
@@ -131,7 +133,9 @@ def NewEvent():
 
 def NewCommandEvent():
     """
-    Generates a new `(command_event, binder)` tuple::
+    Generates a new `(command_event, binder)` tuple.
+
+    ::
     
         MooCmdEvent, EVT_MOO = NewCommandEvent()
         

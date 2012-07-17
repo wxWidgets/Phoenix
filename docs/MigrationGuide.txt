@@ -381,3 +381,11 @@ your popup window for the wx.ComboCtrl.  This can not currently be
 done with Phoenix in the same way, but you can also use a widget class
 with a wx.ComboPopup in a has-a relationship rather than an is-a
 relationship.  See samples/combo/combo1.py for an example.
+
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   classic_vs_phoenix
+

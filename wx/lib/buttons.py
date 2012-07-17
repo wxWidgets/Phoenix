@@ -785,7 +785,7 @@ class GenBitmapButton(GenButton):
         Set the bitmap to display normally.
         This is the only one that is required.
 
-        If `createOthers` is ``True`, then the other bitmaps will be generated
+        If `createOthers` is ``True``, then the other bitmaps will be generated
         on the fly.  Currently, only the disabled bitmap is generated.
 
         :param Bitmap `bitmap`: the bitmap for the normal button appearance.
