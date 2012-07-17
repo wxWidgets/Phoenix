@@ -85,16 +85,16 @@ Usage: ./build.py [command(s)] [options]
                     the other commands.  Default is 2.7
       dox           Run Doxygen to produce the XML file used by ETG scripts
       doxhtml       Run Doxygen to create the HTML documetation for wx
-      touch         'touch' the etg files so they will all get run in the 
-                    next build
+      touch         'touch' the etg files so they will all get run the next  
+                    time the etg command is run.
       etg           Run the ETG scripts that are out of date to update their 
-                    SIP files
-      sphinx        Run the documentation building process using Sphinx (this
-                    needs to be done after dox and etg)
-      wxlib         Run the documentation building process using Sphinx for wx.lib
-      wxpy          Run the documentation building process using Sphinx for wx.py
-      wxtools       Run the documentation building process using Sphinx for wx.tools
+                    SIP files and their Sphinx input files
       sip           Run sip
+      
+      wxlib         Build the Sphinx input files for wx.lib
+      wxpy          Build the Sphinx input files for wx.py
+      wxtools       Build the Sphinx input files for wx.tools
+      sphinx        Run the documentation building process using Sphinx
       
       test          Run the unit test suite
       test_*        Run just one test module
@@ -104,7 +104,7 @@ Usage: ./build.py [command(s)] [options]
 
       setup_py      Build wxPython only, using setup.py
       waf_py        Build wxPython only, using waf
-      build_py      Alias for "setup_py"
+      build_py      Alias for "waf_py"
         
       bdist         Create a binary release of wxPython Phoenix
       docs_bdist    Build a tarball containing the documentation
