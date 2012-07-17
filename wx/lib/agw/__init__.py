@@ -11,7 +11,7 @@ Description:
 AGW contains many different modules, listed below. Items labelled with 
 an asterisk were already present in :mod:`lib` before:
 
-- AdvancedSplash: reproduces the behaviour of :class:`SplashScreen`, with more
+- AdvancedSplash: reproduces the behaviour of :class:`~adv.SplashScreen`, with more
   advanced features like custom shapes and text animations;
 - AquaButton: this is another custom-drawn button class which
   *approximatively* mimics the behaviour of Aqua buttons on the Mac;

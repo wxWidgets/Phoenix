@@ -36,20 +36,20 @@
 
 
 """
-:class:`AdvancedSplash` tries to reproduce the behavior of :class:`SplashScreen`, with
+:class:`AdvancedSplash` tries to reproduce the behavior of :class:`~adv.SplashScreen`, with
 some enhancements.
 
 
 Description
 ===========
 
-:class:`AdvancedSplash` tries to reproduce the behavior of :class:`SplashScreen`, but with
+:class:`AdvancedSplash` tries to reproduce the behavior of :class:`~adv.SplashScreen`, but with
 some enhancements (in my opinion).
 
 :class:`AdvancedSplash` starts its construction from a simple frame. Then, depending on
 the options passed to it, it sets the frame shape accordingly to the image passed
-as input. :class:`AdvancedSplash` behaves somewhat like :class:`SplashScreen`, and almost
-all the methods available in :class:`SplashScreen` are available also in
+as input. :class:`AdvancedSplash` behaves somewhat like :class:`~adv.SplashScreen`, and almost
+all the methods available in :class:`~adv.SplashScreen` are available also in
 this module.
 
 
@@ -164,7 +164,7 @@ AS_SHADOW_BITMAP = 32
 
 class AdvancedSplash(wx.Frame):
     """
-    :class:`AdvancedSplash` tries to reproduce the behavior of :class:`SplashScreen`, with
+    :class:`AdvancedSplash` tries to reproduce the behavior of :class:`~adv.SplashScreen`, with
     some enhancements.
 
     This is the main class implementation.    
@@ -364,7 +364,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `event`: a :class:`MouseEvent` to be processed.
         
-        :note: This reproduces the behavior of :class:`SplashScreen`.
+        :note: This reproduces the behavior of :class:`~adv.SplashScreen`.
         """
 
         if event.LeftDown() or event.RightDown():
@@ -379,7 +379,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `event`: a :class:`KeyEvent` to be processed.
         
-        :note: This reproduces the behavior of :class:`SplashScreen`.
+        :note: This reproduces the behavior of :class:`~adv.SplashScreen`.
         """
 
         self.Close()
@@ -391,7 +391,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `event`: a :class:`CloseEvent` to be processed.
         
-        :note: This reproduces the behavior of :class:`SplashScreen`.
+        :note: This reproduces the behavior of :class:`~adv.SplashScreen`.
         """
 
         if hasattr(self, "_splashtimer"):
