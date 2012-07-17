@@ -208,6 +208,7 @@ INCLUDES = [  # base and core stuff
               'fontenum',
               'fontmap',
               'mousemanager',
+              'filehistory',
               ]
 
 

@@ -123,7 +123,6 @@ other dev stuff
       * dialup  ??
       * docmdi  ??
       * docview ??
-      * filehistory
       * fswatcher
       * msgout
       * palette  ?
