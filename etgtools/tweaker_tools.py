@@ -632,9 +632,15 @@ def convertFourDoublesTemplate(CLASS):
 
 
 def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None, 
-                          includeConvertToType=False):
+                          includeConvertToType=False, fakeListClassName=None):
     if RealItemClass is None:
         RealItemClass = ItemClass    
+
+    if fakeListClassName:
+        TypeDef = "typedef %s %s;" % (ListClass, fakeListClassName)
+        ListClass = fakeListClassName
+    else:
+        TypeDef = ""
         
     moduleName = module.module        
     ListClass_pyName = removeWxPrefix(ListClass)
@@ -648,6 +654,7 @@ class {ListClass}_iterator /Abstract/
 {{
     // the C++ implementation of this class
     %TypeHeaderCode
+        {TypeDef}
         class {ListClass}_iterator {{
         public:
             {ListClass}_iterator({ListClass}::compatibility_iterator start)
@@ -656,7 +663,7 @@ class {ListClass}_iterator /Abstract/
             {ItemClass}* __next__() {{
                 {RealItemClass}* obj = NULL;
                 if (m_node) {{
-                    obj = m_node->GetData();
+                    obj = ({RealItemClass}*) m_node->GetData();
                     m_node = m_node->GetNext();
                 }}
                 else {{
@@ -679,6 +686,9 @@ public:
 
 class {ListClass} 
 {{
+    %TypeHeaderCode
+        {TypeDef}
+    %End        
 public:
     SIP_SSIZE_T __len__();
     %MethodCode
@@ -873,8 +883,8 @@ def ObjArrayHelperTemplate(objType, sipType, errmsg):
     This kind of helper is useful for situations where the C/C++ API takes a
     simple pointer and a count, and there is no higher level container object
     (like a wxList or wxArray) being used. If there is an overloaded method
-    that uses one of those types then the array overload should just be
-    ignored. But for those cases where the array is the only option then this
+    that uses one of those types then the C array overload should just be
+    ignored. But for those cases where the C array is the only option then this
     helper can be used to make the array.
     """
     
