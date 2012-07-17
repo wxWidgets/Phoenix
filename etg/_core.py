@@ -209,6 +209,7 @@ INCLUDES = [  # base and core stuff
               'fontmap',
               'mousemanager',
               'filehistory',
+              'cmdproc',
               ]
 
 

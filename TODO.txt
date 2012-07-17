@@ -119,7 +119,6 @@ other dev stuff
       
       * PseudoDC (not actually an ETG script, probably a .sip)
       * access
-      * cmdproc
       * dialup  ??
       * docmdi  ??
       * docview ??
