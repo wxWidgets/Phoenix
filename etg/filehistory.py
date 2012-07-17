@@ -34,9 +34,12 @@ def run():
     c = module.find('wxFileHistory')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    
-    # TODO: Either add a custom GetMenu, or do something to make wxList available
-    c.find('GetMenus').ignore()
+       
+    # There is already a wxMenuList class so we have to name this one something else.
+    module.addItem(
+        tools.wxListWrapperTemplate('wxList', 'wxMenu', module, 
+                                    fakeListClassName='wxFileHistoryMenuList'))    
+    c.find('GetMenus').type = 'const wxFileHistoryMenuList&'
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
