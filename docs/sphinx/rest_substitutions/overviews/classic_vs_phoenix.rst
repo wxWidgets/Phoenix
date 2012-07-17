@@ -721,11 +721,21 @@ Miscellaneous Modifications
 `Classic` Name                                               `Phoenix` Name
 ===========================================================  ===========================================================
 Rect.OffsetXY                                                :meth:`Rect.Offset`
-wx.lib.buttonpanel                                           wx.lib.agw.buttonpanel
-wx.lib.customtreectrl                                        wx.lib.agw.customtreectrl
-wx.lib.flatnotebook                                          wx.lib.agw.flatnotebook
-wx.lib.foldpanelbar                                          wx.lib.agw.foldpanelbar
-wx.lib.hyperlink                                             wx.lib.agw.hyperlink
+===========================================================  ===========================================================
+
+
+
+wx.lib Modifications
+--------------------
+
+===========================================================  ===========================================================
+`Classic` Name                                               `Phoenix` Name
+===========================================================  ===========================================================
+wx.lib.buttonpanel                                           :mod:`lib.agw.buttonpanel`
+wx.lib.customtreectrl                                        :mod:`lib.agw.customtreectrl`
+wx.lib.flatnotebook                                          :mod:`lib.agw.flatnotebook`
+wx.lib.foldpanelbar                                          :mod:`lib.agw.foldpanelbar`
+wx.lib.hyperlink                                             :mod:`lib.agw.hyperlink`
 wx.lib.grids                                                 ``REMOVED``
 wx.lib.pyshell                                               ``REMOVED``
 wx.lib.rightalign                                            ``REMOVED``
