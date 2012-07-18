@@ -63,6 +63,11 @@ class BrushTests(wtc.WidgetTestCase):
         self.assertTrue(wx.TRANSPARENT_BRUSH.IsOk())
         self.assertTrue(wx.CYAN_BRUSH.IsOk())
         self.assertTrue(wx.RED_BRUSH.IsOk())
+
+
+    def test_brushOldStyleNames(self):
+        b = wx.Brush(wx.RED, wx.SOLID)
+
         
         
 #---------------------------------------------------------------------------

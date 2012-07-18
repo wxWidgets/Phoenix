@@ -111,6 +111,12 @@ class pen_Tests(wtc.WidgetTestCase):
         wx.CAP_ROUND
         wx.CAP_PROJECTING
         wx.CAP_BUTT
+
+
+    def test_penOldStyleNames(self):
+        p = wx.Pen('red', 1, wx.STIPPLE)
+
+
         
 #---------------------------------------------------------------------------
 

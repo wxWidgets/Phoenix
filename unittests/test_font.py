@@ -215,9 +215,10 @@ class font_Tests(wtc.WidgetTestCase):
         self.assertTrue(f.IsFixedWidth())
 
 
-    def test_fontTweaks(self):
-        pass
+    def test_fontOldStyleNames(self):
+        f = wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL)
 
+    
     
 #---------------------------------------------------------------------------
 

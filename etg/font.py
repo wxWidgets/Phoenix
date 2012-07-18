@@ -103,21 +103,21 @@ def run():
     # later.) They are already gone (or wrapped by an #if) in the C++ code,
     # and so are not found in the documentation...
     module.addPyCode("""\
-        wx.DEFAULT    = wx.FONTFAMILY_DEFAULT
-        wx.DECORATIVE = wx.FONTFAMILY_DECORATIVE
-        wx.ROMAN      = wx.FONTFAMILY_ROMAN
-        wx.SCRIPT     = wx.FONTFAMILY_SCRIPT
-        wx.SWISS      = wx.FONTFAMILY_SWISS
-        wx.MODERN     = wx.FONTFAMILY_MODERN
-        wx.TELETYPE   = wx.FONTFAMILY_TELETYPE
+        wx.DEFAULT    = int(wx.FONTFAMILY_DEFAULT)
+        wx.DECORATIVE = int(wx.FONTFAMILY_DECORATIVE)
+        wx.ROMAN      = int(wx.FONTFAMILY_ROMAN)
+        wx.SCRIPT     = int(wx.FONTFAMILY_SCRIPT)
+        wx.SWISS      = int(wx.FONTFAMILY_SWISS)
+        wx.MODERN     = int(wx.FONTFAMILY_MODERN)
+        wx.TELETYPE   = int(wx.FONTFAMILY_TELETYPE)
 
-        wx.NORMAL = wx.FONTWEIGHT_NORMAL
-        wx.LIGHT  = wx.FONTWEIGHT_LIGHT
-        wx.BOLD   = wx.FONTWEIGHT_BOLD
+        wx.NORMAL = int(wx.FONTWEIGHT_NORMAL)
+        wx.LIGHT  = int(wx.FONTWEIGHT_LIGHT)
+        wx.BOLD   = int(wx.FONTWEIGHT_BOLD)
         
-        wx.NORMAL = wx.FONTSTYLE_NORMAL
-        wx.ITALIC = wx.FONTSTYLE_ITALIC
-        wx.SLANT  = wx.FONTSTYLE_SLANT
+        wx.NORMAL = int(wx.FONTSTYLE_NORMAL)
+        wx.ITALIC = int(wx.FONTSTYLE_ITALIC)
+        wx.SLANT  = int(wx.FONTSTYLE_SLANT)
         """)        
 
     #-----------------------------------------------------------------

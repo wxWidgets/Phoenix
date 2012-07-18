@@ -107,13 +107,13 @@ def run():
     # later.) They are already gone (or wrapped by an #if) in the C++ code,
     # and so are not found in the documentation...
     module.addPyCode("""\
-        wx.SOLID       = wx.PENSTYLE_SOLID
-        wx.DOT         = wx.PENSTYLE_DOT 
-        wx.LONG_DASH   = wx.PENSTYLE_LONG_DASH 
-        wx.SHORT_DASH  = wx.PENSTYLE_SHORT_DASH 
-        wx.DOT_DASH    = wx.PENSTYLE_DOT_DASH 
-        wx.USER_DASH   = wx.PENSTYLE_USER_DASH 
-        wx.TRANSPARENT = wx.PENSTYLE_TRANSPARENT 
+        wx.SOLID       = int(wx.PENSTYLE_SOLID)
+        wx.DOT         = int(wx.PENSTYLE_DOT) 
+        wx.LONG_DASH   = int(wx.PENSTYLE_LONG_DASH)
+        wx.SHORT_DASH  = int(wx.PENSTYLE_SHORT_DASH) 
+        wx.DOT_DASH    = int(wx.PENSTYLE_DOT_DASH) 
+        wx.USER_DASH   = int(wx.PENSTYLE_USER_DASH) 
+        wx.TRANSPARENT = int(wx.PENSTYLE_TRANSPARENT) 
         """)
     
     #-----------------------------------------------------------------
