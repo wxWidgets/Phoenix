@@ -1399,6 +1399,11 @@ class Snippet(Node):
             
             while 1:
                 tline = fid.readline()
+                if not tline:  # end of file
+                    code = ""
+                    fid.close()
+                    break
+                
                 if not tline.strip():
                     continue
 
