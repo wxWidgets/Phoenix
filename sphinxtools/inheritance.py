@@ -62,11 +62,15 @@ class InheritanceDiagram(object):
 
         def recurse(cls):
             nodename, fullname = self.class_name(cls)
-
+            if cls in [object] or nodename.startswith('sip.'):
+                return
+            
             baselist = []
             all_classes[cls] = (nodename, fullname, baselist)
 
             for base in cls.__bases__:
+                if base in [object] or self.class_name(base)[0].startswith('sip.'):
+                    continue
                 baselist.append(self.class_name(base)[0])
                 if base not in all_classes:
                     recurse(base)
