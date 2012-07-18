@@ -38,7 +38,7 @@ Inheritance diagram for %s **%s**
 .. raw:: html
 
    <p class="graphviz">
-   <img src="_static/images/inheritance/%s" alt="Inheritance diagram of %s" usemap="#dummy" class="inheritance"/>
+   <center><img src="_static/images/inheritance/%s" alt="Inheritance diagram of %s" usemap="#dummy" class="inheritance"/></center>
    %s
    </p>
 
