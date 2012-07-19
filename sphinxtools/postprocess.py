@@ -65,7 +65,7 @@ def SphinxIndexes(sphinxDir):
     """
     This is the main function called after the `etg` process has finished.
 
-    It class other functions to generate the standalone functions page, the
+    It calls other functions to generate the standalone functions page, the
     main class index and some clean-up/maintenance of the generated ReST
     files.
     """

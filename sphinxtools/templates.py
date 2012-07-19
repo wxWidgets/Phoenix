@@ -30,15 +30,21 @@ TEMPLATE_INHERITANCE = '''
 
 |
 
-|class_hierarchy| Inheritance Diagram
-=====================================
-
-Inheritance diagram for %s **%s**
+|class_hierarchy| Class Hierarchy
+=================================
 
 .. raw:: html
 
+   <div id="toggleBlock" onclick="return toggleVisibility(this)" class="closed" style="cursor:pointer;">
+   <img id="toggleBlock-trigger" src="_static/images/closed.png"/>    
+   Inheritance diagram for %s <strong>%s</strong>:
+   </div>
+   <div id="toggleBlock-summary" style="display:block;"></div>
+   <div id="toggleBlock-content" style="display:none;">
    <p class="graphviz">
    <center><img src="_static/images/inheritance/%s" alt="Inheritance diagram of %s" usemap="#dummy" class="inheritance"/></center>
+   </div>
+   <script type="text/javascript">toggleVisibilityOnLoad(document.getElementById('toggleBlock'))</script>
    %s
    </p>
 
