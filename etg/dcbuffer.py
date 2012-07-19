@@ -51,6 +51,8 @@ def run():
     c = module.find('wxAutoBufferedPaintDC')
     c.addPrivateCopyCtor()
 
+
+    module.find('wxAutoBufferedPaintDCFactory').factory = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
