@@ -3,50 +3,34 @@
 {% block body %}
   <h1>Welcome to wxPython (Phoenix)'s documentation!</h1>
 
-  <div class="quotebar">
-    <p><em>SVN Revisions</em></p>
-    <p>&ldquo;Built with wxWidgets & wxPython SVN revision <b>|SVN|</b>&rdquo;</p>
-  </div>
-
   <p>
-    Welcome! This is the documentation for wxPython {{ release }}, last updated |TODAY|.
+    Welcome! This is the documentation for wxPython {{ release }}, last updated |TODAY| from 
+    Subversion revision |SVN|.
   </p>
 
   <p>
-  This is the first, very-alpha release of this set of documentation. Documentation TODOs:
-
-  <ul>
-  	<li><del>Add the pure-Python classes, methods and functions (i.e., <i>wx.CallAfter</i>)</del> </li>
-  	<li>Find a way to link snippets of code to (almost) every class (maybe from the demo?)</li>
-  	<li>Link the documentation to the wxPython Wiki (a web crawler will be needed)</li>
-  	<li>Add <i>wx.lib</i> and the various other pure-Python third party libraries</li>
-  </ul>
-  </p>
-  <p>
-  <br>
-  <b>Phoenix</b> is the code name of for the new version of wxPython. <i>Robin Dunn</i> called this the Phoenix project
-  because in the process of doing this project wxPython's implementation will be utterly destroyed and then reborn
-  in a new and marvelous way, much like the mythical Phoenix rising from the ashes of its former self.
+  <b>Phoenix</b> is the code name for the new version of wxPython. <i>Robin Dunn</i> called
+  this <a href="http://wiki.wxpython.org/ProjectPhoenix">Project Phoenix</a> because in the 
+  process of doing this project wxPython's implementation will be utterly destroyed and then
+  reborn in a new and marvelous way, much like the mythical Phoenix rising from the ashes 
+  of its former self.  For wxPython many things about how the wrapper/bindings code is 
+  produced will be changing, and we'll also be eliminating some other crud along the way.   
   </p>
 
   <p>
-  For wxPython many things about how the wrapper/bindings code is produced will be changing, and we'll also be
-  eliminating some other crud along the way.
-  </p>
-
-  <p>
-    Some interesting documents about the current status or the Phoenix project and its development:
+  Some interesting documents about the current status or the Phoenix project and its development:
   </p>
   <ul>
-    <li><b>Migration Guide:</b> the <a href="MigrationGuide.html">Migration Guide</a> will give you
-      some hints on how to modify your existing wxPython applications to be compatible with Phoenix
+    <li><b>Project Phoenix Wiki:</b> The <a href="http://wiki.wxpython.org/ProjectPhoenix">
+    Project Phoenix</a> section of the wxPython wiki has information about the background
+    of, and reasons for this project, as well as information for developers who want to help out.
     </li>
-    <li><b>TODO List:</b> maily for developers, <a href="TODO.html">this document</a> explains what
-      remains to be done in order to complete the Phoenix project</li>
-    <li><b>Project Goals:</b> this external <a href="http://wiki.wxpython.org/ProjectPhoenix/ProjectGoals">link</a>
-      highlights the project goals and the driving forces behind it</li>
-    <li><b>Development Process:</b> this external <a href="http://wiki.wxpython.org/ProjectPhoenix/DevelopmentProcess">link</a>
-      shows the main thoughts behind the project Phoenix implementation</li>
+    <li><b>Migration Guide:</b> the <a href="MigrationGuide.html">Migration Guide</a> will give you
+      some hints on how to modify your existing wxPython applications to be compatible with Phoenix,
+      and the <a href="classic_vs_phoenix.html">Classic vs. Phoenix</a> document will give details 
+      on the identifier names that have changed and what you should use instead in your applications. 
+      These documents are updated as the project progresses, so be sure to check them often.
+    </li>
   </ul>
 
 <br>
@@ -60,45 +44,35 @@
 
 <br>
 
-  <p>
-    The Phoenix documentation has been built automatically starting from XML files representing the
-    <a href="http://www.wxwidgets.org/">wxWidgets</a> C++ documentation (generated using <a href="www.doxygen.org/">Doxygen</a>).
-  </p>
-
-  <p>
-  	I developed a set of <a href="www.python.org/">Python</a> routines to translate this XML hell into
-    <a href="http://docutils.sf.net/rst.html">reStructuredText</a>. Then, <a href="www.sphinx.pocoo.org/">Sphinx</a>
-    has been used to generate the final set of documentation for Phoenix.
-  </p>
-  <br>
 
   <h2>Documentation</h2>
 
   <table class="contentstable" align="center" style="margin-left: 30px">
   	<tr>
-    <td width="50%">
-      <p class="biglink"><a class="biglink" href="{{ pathto("1classindex") }}">Phoenix Widgets</a><br/>
-         <span class="linkdescr">Swig-ed from wxWidgets</span></p>
-
-         	<br/>
-      <p class="biglink"><a class="biglink" href="{{ pathto("functions") }}">Phoenix Functions</a><br/>
+    <td width="50%" valign="top">
+      <p class="biglink"><a class="biglink" href="{{ pathto("1classindex") }}">Core Classes</a><br/>
+         <span class="linkdescr">The classes which appear in the wx namespace</span></p>
+         
+      <p class="biglink"><a class="biglink" href="{{ pathto("functions") }}">Core Functions</a><br/>
          <span class="linkdescr">Standalone/Static functions</span></p>
+         
+      <p class="biglink"><a class="biglink" href="{{ pathto("adv.1classindex") }}">wx.adv</a><br/>
+         <span class="linkdescr">Less commonly used or more advanced classes</span></p>
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("datavew.1classindex") }}">wx.dataview</a><br/>
+         <span class="linkdescr">Classes for viewing tabular or hierarchical data</span></p>
+
     </td>
     <td width="50%">
-      <p class="biglink"><a class="biglink" >Wrapped Sub-Modules</a><br/>
-         <span class="linkdescr">Contained in <i>wx.something</i> modules</span></p>
-	  <p>
-	  </p>
-	<ul>
-      <li><a href="adv.1classindex.html">adv</a></li>
-      <li><a href="dataview.1classindex.html">dataview</a></li>
-     </ul>
       <p class="biglink"><a class="biglink" href="{{ pathto("lib") }}">wx.lib</a><br/>
          <span class="linkdescr">Our pure-Python library of widgets</span></p>
+
       <p class="biglink"><a class="biglink" href="{{ pathto("py") }}">wx.py</a><br/>
-         <span class="linkdescr">The py package, formerly the PyCrust package.</span></p>
+         <span class="linkdescr">The py package, containing PyCrust and related modules</span></p>
+
       <p class="biglink"><a class="biglink" href="{{ pathto("tools") }}">wx.tools</a><br/>
-         <span class="linkdescr">Some useful tools and utilities for wxPython (Editra, XRCed).</span></p>
+         <span class="linkdescr">Some useful tools and utilities for wxPython.</span></p>
+
     </td></tr>
   </table>
 
