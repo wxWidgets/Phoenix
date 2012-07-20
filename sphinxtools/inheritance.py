@@ -149,7 +149,12 @@ class InheritanceDiagram(object):
                                   'Arial, Helvetica, sans', 'style': '"setlinewidth(0.5)"',
                                   'labelloc': 'c', 'fontcolor': 'grey45'}
 
-        inheritance_edge_attrs = {'arrowsize': 0.5, 'style': '"setlinewidth(0.5)"', "color": "black"}
+        inheritance_edge_attrs = {'arrowsize': 0.5, 
+                                  'style': '"setlinewidth(0.5)"', 
+                                  'color': '"#23238E"',
+                                  'dir': 'back',
+                                  'arrowtail': 'open',
+                                  }
 
         g_attrs = self.default_graph_attrs.copy()
         n_attrs = self.default_node_attrs.copy()
