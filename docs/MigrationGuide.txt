@@ -84,7 +84,7 @@ Starting with the wxPython 2.9 release series, there are no longer
 separate ansi/Unicode builds of wxPython.  All wxPython builds are now
 essentially the same as the old Unicode builds. This means that all
 string objects passed to wx API functions or methods are converted to
-Unicode before calling the C++ function or method.  By default
+Unicode before calling the C++ function or method.  By default CLassic
 wxPython would use the encoding specified by the locale that was
 current at the time of the import of the wx module.
 
@@ -295,7 +295,7 @@ support the new protocol, but everything else I've tried so far do.
 
 GetData and GetAlpha now return a copy of the image data as a
 bytearray object instead of a string object.  This means that since
-bytearrays are mutable you can do things like make cahnges to the data
+bytearrays are mutable you can do things like make changes to the data
 and then use it in the SetData of another image.  
 
 GetDataBuffer and GetAlphaBuffer now return memoryview objects, which
@@ -376,7 +376,7 @@ than needing to inherit from more than one wx class.
 However there is at least one use case where that can be a problem,
 and that is with the ComboCtrl's wx.ComboPopup class.  In wxWidgets
 and also in Classic wxPython you're encouraged to use wx.ComboPopup as
-a mix-in class comkbined with the widget class that is going to be
+a mix-in class combined with the widget class that is going to be
 your popup window for the wx.ComboCtrl.  This can not currently be
 done with Phoenix in the same way, but you can also use a widget class
 with a wx.ComboPopup in a has-a relationship rather than an is-a
