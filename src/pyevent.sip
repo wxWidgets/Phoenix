@@ -88,6 +88,9 @@
 
 //---------------------------------------------------------------------------
 
+// TODO: Move these classes to an etg script and build using extractor 
+// objects so they will be seen by the document generator and others.
+
 class wxPyEvent : wxEvent 
 {
 %Docstring
