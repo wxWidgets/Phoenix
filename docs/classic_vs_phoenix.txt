@@ -141,7 +141,6 @@ ExpandEnvVars                                                ``MISSING``
 FFontFromPixelSize                                           :class:`Font`
 FileConfig_GetGlobalFileName                                 :meth:`FileConfig.GetGlobalFileName`
 FileConfig_GetLocalFileName                                  :meth:`FileConfig.GetLocalFileName`
-FileHistory                                                  ``MISSING``
 FileSystem_AddHandler                                        :meth:`FileSystem.AddHandler`
 FileSystem_CleanUpHandlers                                   ``MISSING``
 FileSystem_FileNameToURL                                     :meth:`FileSystem.FileNameToURL`
@@ -154,7 +153,7 @@ FileSystemHandler_GetProtocol                                ``MISSING``
 FileSystemHandler_GetRightLocation                           ``MISSING``
 FileType_ExpandCommand                                       :meth:`FileType.ExpandCommand`
 FileTypeInfoSequence                                         ``MISSING``
-FindWindowById                                               ``MISSING``
+FindWindowById                                               :meth:`Window.FindWindowById`
 Font2                                                        :class:`Font`
 Font_AdjustToSymbolicSize                                    ``MISSING``
 Font_GetDefaultEncoding                                      :meth:`Font.GetDefaultEncoding`
@@ -176,17 +175,15 @@ FontMapper_Set                                               :meth:`FontMapper.S
 Frame_GetClassDefaultAttributes                              :meth:`Frame.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 FutureCall                                                   :class:`CallLater`
 Gauge_GetClassDefaultAttributes                              :meth:`Gauge.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
-GBSizerItemList                                              ``MISSING``
-GBSizerItemList_iterator                                     ``MISSING``
-GBSizerItemSizer                                             ``MISSING``
-GBSizerItemSpacer                                            ``MISSING``
-GBSizerItemWindow                                            ``MISSING``
+GBSizerItemSizer                                             :class:`GbSizerItem`
+GBSizerItemSpacer                                            :class:`GbSizerItem`
+GBSizerItemWindow                                            :class:`GbSizerItem`
 GDIObjListBase                                               ``MISSING``
 GenericFindWindowAtPoint                                     :func:`FindWindowAtPoint`
 GetAccelFromString                                           ``MISSING``
 GetCurrentId                                                 ``MISSING``
 GetCurrentTime                                               ``MISSING``
-GetDefaultPyEncoding                                         ``MISSING``
+GetDefaultPyEncoding                                         ``REMOVED``
 GetDisplayDepth                                              :func:`DisplayDepth`
 GetFreeMemory                                                ``MISSING``
 GetLocale                                                    ``MISSING``
@@ -205,7 +202,7 @@ GIFHandler                                                   ``MISSING``
 GraphicsContext_Create                                       :meth:`GraphicsContext.Create`
 GraphicsContext_CreateFromNative                             :meth:`GraphicsContext.CreateFromNative`
 GraphicsContext_CreateFromNativeWindow                       :meth:`GraphicsContext.CreateFromNativeWindow`
-GraphicsContext_CreateMeasuringContext                       ``MISSING``
+GraphicsContext_CreateMeasuringContext                       :meth:`GraphicsContext.Create`
 GraphicsRenderer_GetCairoRenderer                            :meth:`GraphicsRenderer.GetCairoRenderer`
 GraphicsRenderer_GetDefaultRenderer                          :meth:`GraphicsRenderer.GetDefaultRenderer`
 HelpProvider_Get                                             :meth:`HelpProvider.Get`
@@ -224,7 +221,7 @@ IdleEvent_GetMode                                            :meth:`IdleEvent.Ge
 IdleEvent_SetMode                                            :meth:`IdleEvent.SetMode`
 Image_AddHandler                                             :meth:`Image.AddHandler`
 Image_CanRead                                                :meth:`Image.CanRead`
-Image_CanReadStream                                          ``MISSING``
+Image_CanReadStream                                          :meth:`Image.CanRead`
 Image_GetHandlers                                            ``MISSING``
 Image_GetImageCount                                          :meth:`Image.GetImageCount`
 Image_GetImageExtWildcard                                    :meth:`Image.GetImageExtWildcard`
@@ -406,13 +403,13 @@ Process_Exists                                               :meth:`Process.Exis
 Process_Kill                                                 :meth:`Process.Kill`
 Process_Open                                                 :meth:`Process.Open`
 PseudoDC                                                     ``MISSING``
-PyApp_GetComCtl32Version                                     ``MISSING``
+PyApp_GetComCtl32Version                                     :meth:`PyApp.GetComCtl32Version`
 PyApp_GetMacAboutMenuItemId                                  :meth:`PyApp.GetMacAboutMenuItemId`
 PyApp_GetMacExitMenuItemId                                   :meth:`PyApp.GetMacExitMenuItemId`
 PyApp_GetMacHelpMenuTitleName                                :meth:`PyApp.GetMacHelpMenuTitleName`
 PyApp_GetMacPreferencesMenuItemId                            :meth:`PyApp.GetMacPreferencesMenuItemId`
 PyApp_GetMacSupportPCMenuShortcuts                           ``MISSING``
-PyApp_GetShell32Version                                      ``MISSING``
+PyApp_GetShell32Version                                      :meth:`PyApp.GetShell32Version`
 PyApp_GetTraitsIfExists                                      ``MISSING``
 PyApp_IsDisplayAvailable                                     :meth:`PyApp.IsDisplayAvailable`
 PyApp_IsMainLoopRunning                                      :meth:`PyApp.IsMainLoopRunning <AppConsole.IsMainLoopRunning>`
@@ -423,12 +420,10 @@ PyApp_SetMacPreferencesMenuItemId                            :meth:`PyApp.SetMac
 PyApp_SetMacSupportPCMenuShortcuts                           ``MISSING``
 PyAxBaseWindow_FromHWND                                      ``MISSING``
 PyBitmapDataObject                                           :class:`BitmapDataObject`
-PyCommandEvent                                               :class:`CommandEvent`
 PyControl                                                    :class:`Control`
 PyDataObjectSimple                                           :class:`DataObjectSimple`
 PyDeadObjectError                                            `RuntimeError`
 PyDropTarget                                                 :class:`DropTarget`
-PyEvent                                                      :class:`Event`
 PyEvtHandler                                                 :class:`EvtHandler`
 PyImageHandler                                               :class:`ImageHandler`
 PyLocale                                                     :class:`Locale`
@@ -469,13 +464,13 @@ ScrolledWindow_GetClassDefaultAttributes                     :meth:`ScrolledWind
 ScrollHelper                                                 :class:`VarHVScrollHelper`
 SearchCtrlBase                                               :class:`SearchCtrl`
 SetCursor                                                    ``MISSING``
-SetDefaultPyEncoding                                         ``MISSING``
+SetDefaultPyEncoding                                         ``REMOVED``
 ShowTip                                                      :func:`adv.ShowTip <ShowTip>`
 SimpleHtmlListBox                                            ``MISSING``
 SizerFlags_GetDefaultBorder                                  :meth:`SizerFlags.GetDefaultBorder`
-SizerItemSizer                                               ``MISSING``
-SizerItemSpacer                                              ``MISSING``
-SizerItemWindow                                              ``MISSING``
+SizerItemSizer                                               :class:`SizerItem`
+SizerItemSpacer                                              :class:`SizerItem`
+SizerItemWindow                                              :class:`SizerItem`
 Slider_GetClassDefaultAttributes                             :meth:`Slider.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 Sound                                                        :class:`adv.Sound`
 Sound_PlaySound                                              :meth:`adv.Sound.PlaySound`
@@ -510,7 +505,7 @@ SystemOptions_GetOptionInt                                   :meth:`SystemOption
 SystemOptions_HasOption                                      :meth:`SystemOptions.HasOption`
 SystemOptions_IsFalse                                        :meth:`SystemOptions.IsFalse`
 SystemOptions_SetOption                                      :meth:`SystemOptions.SetOption`
-SystemOptions_SetOptionInt                                   ``MISSING``
+SystemOptions_SetOptionInt                                   :meth:`SystemOptions.SetOption`
 SystemSettings_GetColour                                     :meth:`SystemSettings.GetColour`
 SystemSettings_GetFont                                       :meth:`SystemSettings.GetFont`
 SystemSettings_GetMetric                                     :meth:`SystemSettings.GetMetric`
@@ -535,7 +530,7 @@ TextEntryBase                                                ``MISSING``
 TextEntryDialog                                              ``MISSING``
 TextUrlEvent                                                 ``MISSING``
 TGAHandler                                                   ``MISSING``
-Thread_IsMain                                                ``MISSING``
+Thread_IsMain                                                :meth:`IsMainThread`
 ThreadEvent                                                  ``MISSING``
 TIFFHandler                                                  ``MISSING``
 TimeSpan_Day                                                 :meth:`TimeSpan.Day`
@@ -563,7 +558,7 @@ TopLevelWindow_GetDefaultSize                                :meth:`TopLevelWind
 Trap                                                         ``MISSING``
 TreebookEvent                                                :class:`BookCtrlEvent`
 TreeCtrl_GetClassDefaultAttributes                           :meth:`TreeCtrl.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
-TreeItemData                                                 ``MISSING``
+TreeItemData                                                 ``REMOVED`` (a MappedType is being used instead to handle setting any PyObject as item data.)
 UpdateUIEvent_CanUpdate                                      :meth:`UpdateUIEvent.CanUpdate`
 UpdateUIEvent_GetMode                                        :meth:`UpdateUIEvent.GetMode`
 UpdateUIEvent_GetUpdateInterval                              :meth:`UpdateUIEvent.GetUpdateInterval`
@@ -628,7 +623,7 @@ GetImpl                                                      ``MISSING``
 GetLogicalOriginTuple                                        :meth:`~DC.GetLogicalOrigin`
 GetMultiLineTextExtent                                       :meth:`~DC.GetFullMultiLineTextExtent`
 GetOptimization                                              ``MISSING``
-GetPixelPoint                                                ``MISSING``
+GetPixelPoint                                                :meth:`~DC.GetPixel`
 GetResolution                                                ``MISSING``
 GetSizeMMTuple                                               :meth:`~DC.GetSizeMM`
 Ok                                                           :meth:`~DC.IsOk`
@@ -656,8 +651,8 @@ CanBeOutsideClientArea                                       ``MISSING``
 ClientToScreenXY                                             :meth:`~Window.ClientToScreen`
 ConvertDialogPointToPixels                                   :meth:`~Window.ConvertDialogToPixels`
 ConvertDialogSizeToPixels                                    :meth:`~Window.ConvertDialogToPixels`
-GetAdjustedBestSize                                          ``REMOVED``
-GetBestFittingSize                                           ``REMOVED``
+GetAdjustedBestSize                                          :meth:`~Window.GetEffectiveMinSize`
+GetBestFittingSize                                           :meth:`~Window.GetEffectiveMinSize`
 GetBestSizeTuple                                             :meth:`~Window.GetBestSize`
 GetClientSizeTuple                                           :meth:`~Window.GetClientSize`
 GetScreenPositionTuple                                       :meth:`~Window.GetScreenPosition`
@@ -667,18 +662,18 @@ HitTestXY                                                    :meth:`~Window.HitT
 InheritsBackgroundColour                                     ``MISSING``
 IsExposedPoint                                               :meth:`~Window.IsExposed`
 IsExposedRect                                                :meth:`~Window.IsExposed`
-MakeModal                                                    ``MISSING``
+MakeModal                                                    ``REMOVED``
 PopupMenuXY                                                  :meth:`~Window.PopupMenu`
 ScreenToClientXY                                             :meth:`~Window.ScreenToClient`
 SendIdleEvents                                               ``MISSING``
-SetBestFittingSize                                           ``REMOVED``
+SetBestFittingSize                                           :meth:`~Window.SetInitialSize`
 SetClientSizeWH                                              :meth:`~Window.SetClientSize`
 SetDimensions                                                :meth:`~Window.SetSize`
 SetHelpTextForId                                             :meth:`~Window.SetHelpText`
 SetSizeHintsSz                                               :meth:`~Window.SetSizeHints`
 SetToolTipString                                             :meth:`~Window.SetToolTip`
-SetVirtualSizeHints                                          ``MISSING``
-SetVirtualSizeHintsSz                                        ``MISSING``
+SetVirtualSizeHints                                          ``REMOVED``
+SetVirtualSizeHintsSz                                        ``REMOVED``
 UseBgCol                                                     ``MISSING``
 ===========================================================  ===========================================================
 
