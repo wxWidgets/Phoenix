@@ -48,6 +48,7 @@ class sizer_Tests(wtc.WidgetTestCase):
                      ])
         items = bs.GetChildren()
         self.assertTrue(len(items) == 3)
+        self.assertTrue(isinstance(items[0], wx.SizerItem))
         self.assertTrue(items[0].IsWindow())
         self.assertTrue(items[1].IsSpacer())
         self.assertTrue(items[2].Border == 5)

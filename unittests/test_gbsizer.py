@@ -92,7 +92,20 @@ class gbsizer_Tests(wtc.WidgetTestCase):
         with self.assertRaises(wx.wxAssertionError):
             gbs.Add(wx.Panel(self.frame), (0, 0), (2,2))
 
-            
+    def test_gbsizer_sizer3(self):
+        gbs = wx.GridBagSizer(2, 4)
+        gbs.Add(wx.Panel(self.frame), (1,1), flag=wx.ALL, border=5) # window
+        gbs.Add(wx.BoxSizer(), (1,2))                               # sizer
+        gbs.Add(5, 25, (1,3))                                       # spacer
+
+        items = gbs.GetChildren()
+        self.assertTrue(len(items) == 3)
+        self.assertTrue(isinstance(items[0], wx.GBSizerItem))
+        self.assertTrue(items[0].IsWindow())
+        self.assertTrue(items[1].IsSizer())
+        self.assertTrue(items[2].IsSpacer())
+        self.assertTrue(items[0].Border == 5)
+        
 #---------------------------------------------------------------------------
 
 
