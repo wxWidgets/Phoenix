@@ -607,9 +607,10 @@ def sphinx(options, args):
     GenGallery()
 
     todo = os.path.join(phoenixDir(), 'TODO.txt')
-    migration_guide = os.path.join(phoenixDir(), 'docs', 'MigrationGuide.txt')
     copyIfNewer(todo, sphinxDir)
-    copyIfNewer(migration_guide, sphinxDir)
+    txtFiles = glob.glob(os.path.join(phoenixDir(), 'docs', '*.txt'))
+    for txtFile in txtFiles:
+        copyIfNewer(txtFile, sphinxDir)
     
     MakeHeadings()
 
