@@ -142,45 +142,30 @@ def run():
         body="return (self.MinX(), self.MinY(), self.MaxX(), self.MaxY())")
     
     
-    # Add some methods that return handles to the platform specific parts of a wxDC
-    c.addHeaderCode("""\
-        #ifdef __WXMSW__
-        #include <wx/msw/dc.h>
-        #endif
-        #ifdef __WXGTK__
-        #include <wx/gtk/dc.h>
-        #endif
-        #include <wx/dcgraph.h>
-        """)
     c.addCppMethod('long', 'GetHDC', '()', """\
         #ifdef __WXMSW__
-            return (long)((wxMSWDCImpl*)self->GetImpl())->GetHDC();
+            return (long)self->GetHandle();
         #else
             wxPyRaiseNotImplemented();
             return 0;
-        #endif""")
+        #endif""",
+        deprecated='Use GetHandle instead.')
     c.addCppMethod('void*', 'GetCGContext', '()', """\
         #ifdef __WXMAC__
-            void* cgctx = NULL;
-            wxGraphicsContext* gc = ((wxGCDCImpl*)self->GetImpl())->GetGraphicsContext();
-            if (gc) {
-                cgctx = gc->GetNativeContext();
-            }
-            return cgctx;
+            return self->GetHandle();
         #else
             wxPyRaiseNotImplemented();
             return NULL;
-        #endif""")
+        #endif""", 
+        deprecated='Use GetHandle instead.')
     c.addCppMethod('void*', 'GetGdkDrawable', '()', """\
         #ifdef __WXGTK__
-            // TODO: Is this always non-null?  if not then we can check
-            // GetSelectedBitmap and get the GdkPixmap from it, as that is a
-            // drawable too.
-            return ((wxGTKDCImpl*)self->GetImpl())->GetGDKWindow();
+            return self->GetHandle();
         #else
             wxPyRaiseNotImplemented();
             return NULL;
-        #endif""")
+        #endif""", 
+        deprecated='Use GetHandle instead.')
     
 
     # TODO: Port the wxPyDrawXXX code and the DrawXXXList methods from Classic
