@@ -148,24 +148,26 @@ def run():
         #else
             wxPyRaiseNotImplemented();
             return 0;
-        #endif""",
-        deprecated='Use GetHandle instead.')
+        #endif""")
     c.addCppMethod('void*', 'GetCGContext', '()', """\
         #ifdef __WXMAC__
             return self->GetHandle();
         #else
             wxPyRaiseNotImplemented();
             return NULL;
-        #endif""", 
-        deprecated='Use GetHandle instead.')
+        #endif""")
     c.addCppMethod('void*', 'GetGdkDrawable', '()', """\
         #ifdef __WXGTK__
             return self->GetHandle();
         #else
             wxPyRaiseNotImplemented();
             return NULL;
-        #endif""", 
-        deprecated='Use GetHandle instead.')
+        #endif""")
+    
+    c.addPyCode('DC.GetHDC = wx.deprecated(DC.GetHDC, "Use GetHandle instead.")')
+    c.addPyCode('DC.GetCGContext = wx.deprecated(DC.GetCGContext, "Use GetHandle instead.")')
+    c.addPyCode('DC.GetGdkDrawable = wx.deprecated(DC.GetGdkDrawable, "Use GetHandle instead.")')
+    
     
 
     # TODO: Port the wxPyDrawXXX code and the DrawXXXList methods from Classic
