@@ -183,7 +183,7 @@ def run():
 
         
     # Some deprecated aliases for Classic renames
-    c.addPyCode('ListCtrl.FindItemData = wx.deprecated(ListCtrl.FindItem, "Use  FindItem instead.")')
+    c.addPyCode('ListCtrl.FindItemData = wx.deprecated(ListCtrl.FindItem, "Use FindItem instead.")')
     c.addPyCode('ListCtrl.FindItemAtPos = wx.deprecated(ListCtrl.FindItem, "Use FindItem instead.")')
     c.addPyCode('ListCtrl.InsertStringItem = wx.deprecated(ListCtrl.InsertItem, "Use InsertItem instead.")')
     c.addPyCode('ListCtrl.InsertImageItem = wx.deprecated(ListCtrl.InsertItem, "Use InsertItem instead.")')
