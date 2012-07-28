@@ -98,6 +98,8 @@ def run():
     module.find('wxFromString').ignore()
     module.find('wxToString').ignore()
 
+    c.addPyMethod('SetNoAntiAliasing', '(self, no=True)', 'pass', deprecated=True)
+    c.addPyMethod('GetNoAntiAliasing', '(self)', 'pass', deprecated=True)
 
     # Some aliases that should be phased out eventually, (sooner rather than
     # later.) They are already gone (or wrapped by an #if) in the C++ code,
