@@ -496,6 +496,13 @@ def run():
                         if size is not None:
                             self.stdioWin.size = size
                     """),
+            
+            PyFunctionDef('Get', '()', isStatic=True,
+                doc="""\
+                    A staticmethod returning the currently active application object.  
+                    Essentially just a more pythonic version of :meth:`GetApp`.""",
+                body="return GetApp()"
+                )
             ])
 
 
