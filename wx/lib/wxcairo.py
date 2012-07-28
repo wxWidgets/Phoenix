@@ -68,7 +68,7 @@ pycairoAPI = None
 # a convenience funtion, just to save a bit of typing below
 def voidp(ptr):
     """Convert a SWIGged void* type to a ctypes c_void_p"""
-    return ctypes.c_void_p(int(ptr))
+    return ctypes.c_void_p(long(ptr))
 
 #----------------------------------------------------------------------------
 
@@ -85,15 +85,19 @@ def ContextFromDC(dc):
         width, height = dc.GetSize()
 
         # use the CGContextRef of the DC to make the cairo surface
-        cgc = dc.GetCGContext()
+        cgc = dc.GetHandle()
         assert cgc is not None, "Unable to get CGContext from DC."
         cgref = voidp( cgc )
-        surfaceptr = voidp(
-            cairoLib.cairo_quartz_surface_create_for_cg_context(
-                cgref, width, height) )
+        surface_create = cairoLib.cairo_quartz_surface_create_for_cg_context
+        surface_create.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int]
+        surface_create.restype = ctypes.c_void_p
+        surfaceptr = voidp(surface_create(cgref, width, height))
 
         # create a cairo context for that surface
-        ctxptr = cairoLib.cairo_create(surfaceptr)
+        cairo_create = cairoLib.cairo_create
+        cairo_create.argtypes = [ctypes.c_void_p]
+        cairo_create.restype = ctypes.c_void_p
+        ctxptr = voidp(cairo_create(surfaceptr))
 
         # Turn it into a pycairo context object
         ctx = pycairoAPI.Context_FromContext(ctxptr, pycairoAPI.Context_Type, None)
@@ -105,8 +109,10 @@ def ContextFromDC(dc):
     elif 'wxMSW' in wx.PlatformInfo:
         # This one is easy, just fetch the HDC and use PyCairo to make
         # the surface and context.
-        hdc = dc.GetHDC()
-        surface = cairo.Win32Surface(hdc)
+        hdc = dc.GetHandle()
+        # Ensure the pointer value is clampped into the range of a C signed long
+        hdc = ctypes.c_long(hdc)
+        surface = cairo.Win32Surface(hdc.value)
         ctx = cairo.Context(surface)
     
 
@@ -114,7 +120,7 @@ def ContextFromDC(dc):
         gdkLib = _findGDKLib()
 
         # Get the GdkDrawable from the dc
-        drawable = voidp( dc.GetGdkDrawable() )
+        drawable = voidp( dc.GetHandle() )
 
         # Call a GDK API to create a cairo context
         gdkLib.gdk_cairo_create.restype = ctypes.c_void_p
@@ -138,13 +144,16 @@ def FontFaceFromFont(font):
     """
     
     if 'wxMac' in wx.PlatformInfo:
-        fontfaceptr = voidp(
-            cairoLib.cairo_quartz_font_face_create_for_cgfont(
-                voidp(font.OSXGetCGFont())) )
+        font_face_create = cairoLib.cairo_quartz_font_face_create_for_cgfont
+        font_face_create.argtypes = [ctypes.c_void_p]
+        font_face_create.restype = ctypes.c_void_p
+        
+        fontfaceptr = font_face_create(voidp(font.OSXGetCGFont()))
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
 
 
     elif 'wxMSW' in wx.PlatformInfo:
+        cairoLib.cairo_win32_font_face_create_for_hfont.restype = ctypes.c_void_p
         fontfaceptr = voidp( cairoLib.cairo_win32_font_face_create_for_hfont(
             ctypes.c_ulong(font.GetHFONT())) )
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
@@ -257,11 +266,12 @@ def _findCairoLib():
     # appropriate for the system
     for name in names:
         location = ctypes.util.find_library(name) 
-        try:
-            cairoLib = ctypes.CDLL(location)
-            return
-        except:
-            pass
+        if location:
+            try:
+                cairoLib = ctypes.CDLL(location)
+                return
+            except:
+                pass
         
     # If the above didn't find it on OS X then we still have a
     # trick up our sleeve...

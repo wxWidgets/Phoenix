@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     1-Aug-2011
-# RCS-ID:      $Id$
+# RCS-ID:      $Id: softwareupdate.py 72188 2012-07-24 03:24:51Z RD $
 # Copyright:   (c) 2011 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
@@ -45,6 +45,10 @@ except AttributeError:
     wx.App.GetAppDisplayName = wx.App.GetAppName
     wx.App.SetAppDisplayName = wx.App.SetAppName
     
+    
+SOT = 0
+#if 'wxMac' in wx.PlatformInfo:
+#    SOT = wx.STAY_ON_TOP
     
 #----------------------------------------------------------------------
 
@@ -158,7 +162,8 @@ class SoftwareUpdate(object):
                 if not silentUnlessUpdate:
                     MultiMessageBox(
                         self._networkFailureMsg % self._updatesURL,
-                        self._caption, parent=parentWindow, icon=self._icon)
+                        self._caption, parent=parentWindow, icon=self._icon,
+                        style=wx.OK|SOT)
                 return
         
             active = self._esky.active_version
@@ -173,7 +178,8 @@ class SoftwareUpdate(object):
                 if not silentUnlessUpdate:
                     MultiMessageBox("You are already running the newest verison of %s." % 
                                     self.GetAppDisplayName(),
-                                    self._caption, parent=parentWindow, icon=self._icon)
+                                    self._caption, parent=parentWindow, icon=self._icon,
+                                    style=wx.OK|SOT)
                 return 
             self._parentWindow = parentWindow
         
@@ -181,7 +187,7 @@ class SoftwareUpdate(object):
                    "You are currently running verison %s; version %s is now "
                    "available for download.  Do you wish to install it now?"
                    % (self.GetAppDisplayName(), active, newest),
-                   self._caption, msg2=chLogTxt, style=wx.YES_NO, 
+                   self._caption, msg2=chLogTxt, style=wx.YES_NO|SOT, 
                    parent=parentWindow, icon=self._icon, 
                    btnLabels={wx.ID_YES:"Yes, install now", 
                               wx.ID_NO:"No, maybe later"})
@@ -215,12 +221,13 @@ class SoftwareUpdate(object):
                 self._esky.auto_update(self._updateProgress)
                 
             except UpdateAbortedError:
-                self._esky.cleanup()
-                self._esky.reinitialize()
                 MultiMessageBox("Update canceled.", self._caption, 
-                                parent=parentWindow, icon=self._icon)
+                                parent=parentWindow, icon=self._icon,
+                                style=wx.OK|SOT)
                 if self._pd:
                     self._pd.Destroy()
+                    
+                self.InitUpdates(self._updatesURL, self._changelogURL, self._icon)
                 return              
     
             # Ask the user if they want the application to be restarted.
@@ -228,7 +235,7 @@ class SoftwareUpdate(object):
                                    "need to be restarted to begin using the new release.\n\n"
                                    "Restart %s now?"
                                    % (self.GetAppDisplayName(), newest, self.GetAppDisplayName()),
-                                   self._caption, style=wx.YES_NO, 
+                                   self._caption, style=wx.YES_NO|SOT, 
                                    parent=parentWindow, icon=self._icon,
                                    btnLabels={wx.ID_YES:"Yes, restart now", 
                                               wx.ID_NO:"No, I'll restart later"})
@@ -297,7 +304,10 @@ class SoftwareUpdate(object):
             received = status.get('received')
             size = status.get('size')
             currentPercentage = 1.0 * received / size * 100
-            self._doUpdateProgress(False, "Downloading...", int(currentPercentage))
+            if currentPercentage > 99.5:
+                self._doUpdateProgress(False, "Unzipping...", int(currentPercentage))
+            else:
+                self._doUpdateProgress(False, "Downloading...", int(currentPercentage))
             
         elif status.get('status') == 'done': 
             if self._pd:
