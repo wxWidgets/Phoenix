@@ -10,6 +10,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2007 by Anthony Tuininga
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 
 import base64
@@ -45,7 +46,7 @@ class PyEmbeddedImage(object):
         self.isBase64 = isBase64
 
     def GetBitmap(self):
-        return wx.BitmapFromImage(self.GetImage())
+        return wx.Bitmap(self.GetImage())
 
     def GetData(self):
         data = self.data
@@ -60,7 +61,7 @@ class PyEmbeddedImage(object):
 
     def GetImage(self):
         stream = cStringIO.StringIO(self.GetData())
-        return wx.ImageFromStream(stream)
+        return wx.Image(stream)
 
     # added for backwards compatibility
     getBitmap = GetBitmap
