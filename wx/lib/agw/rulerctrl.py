@@ -607,10 +607,6 @@ class RulerCtrl(wx.Panel):
         self._minorfont = wx.Font(fontsize, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self._majorfont = wx.Font(fontsize, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
 
-        if wx.Platform == "__WXMAC__":
-            self._minorfont.SetNoAntiAliasing(True)
-            self._majorfont.SetNoAntiAliasing(True)
-
         self._bits = []
         self._userbits = []
         self._userbitlen = 0
@@ -1098,10 +1094,6 @@ class RulerCtrl(wx.Panel):
 
         self._minorfont = minorFont
         self._majorfont = majorFont
-
-        if wx.Platform == "__WXMAC__":
-            self._minorfont.SetNoAntiAliasing(True)
-            self._majorfont.SetNoAntiAliasing(True)
 
         self.Invalidate()
 
