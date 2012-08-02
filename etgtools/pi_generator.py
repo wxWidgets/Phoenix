@@ -233,7 +233,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         if pf.deprecated:
             stream.write('%s@wx.deprecated\n' % indent)  
         if pf.isStatic:
-            stream.write('%s@staticmethodn' % indent)  
+            stream.write('%s@staticmethod\n' % indent)  
         stream.write('%sdef %s%s:\n' % (indent, pf.name, pf.argsString))
         indent2 = indent + ' '*4
         if pf.briefDoc:
