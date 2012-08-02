@@ -2,7 +2,7 @@ import imp_unittest, unittest
 import wtc
 import wx
 import os
-
+import warnings
 
 pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 
@@ -92,34 +92,45 @@ class dc_Tests(wtc.WidgetTestCase):
         c = wx.DCFontChanger(dc, font)
         del c
         
+        
+    def test_NativeHandle(self):
+        dc = wx.MemoryDC(wx.Bitmap(10,10))
+        h = dc.GetHandle()
+        self.assertTrue(h is not None)
+        self.assertNotEqual(int(h), 0)
+        
 
     def test_NativeWinHandle(self):
         dc = wx.ClientDC(self.frame)
-        if 'wxMSW' in wx.PlatformInfo:
-            h = dc.GetHDC()
-            self.assertNotEqual(h, 0)
-        else:
-            with self.assertRaises(NotImplementedError):
-                h = dc.GetHDC()
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")                    
+            with self.assertRaises(wx.wxPyDeprecationWarning):
+                try:
+                    h = dc.GetHDC()
+                except NotImplementedError:
+                    pass
+                    
             
     def test_NativeGTKHandle(self):
         dc = wx.ClientDC(self.frame)
-        if 'wxGTK' in wx.PlatformInfo:
-            h = dc.GetGdkDrawable()
-            self.assertNotEqual(h, 0)
-        else:
-            with self.assertRaises(NotImplementedError):
-                h = dc.GetGdkDrawable()
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")        
+            with self.assertRaises(wx.wxPyDeprecationWarning):
+                try:
+                    h = dc.GetGdkDrawable()
+                except NotImplementedError:
+                    pass
             
     def test_NativeMacHandle(self):
         dc = wx.MemoryDC(wx.Bitmap(10,10))
-        if 'wxMac' in wx.PlatformInfo:
-            h = dc.GetCGContext()
-            self.assertTrue(h is not None)
-            self.assertNotEqual(int(h), 0)
-        else:
-            with self.assertRaises(NotImplementedError):
-                h = dc.GetCGContext()
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")        
+            with self.assertRaises(wx.wxPyDeprecationWarning):
+                try:
+                    h = dc.GetCGContext()
+                except NotImplementedError:
+                    pass
+                
             
     def test_trickyStuff(self):
         # execute some tricky tweaks to make sure they work are as they are supposed to.
@@ -131,9 +142,9 @@ class dc_Tests(wtc.WidgetTestCase):
         self.assertTrue(type(values) == list)
         self.assertTrue(len(values) == 5)
 
+
     def test_dcPointLists(self):
         dc = wx.ClientDC(self.frame)
-
         dc.DrawLines([wx.Point(5,5), wx.Point(25,5), wx.Point(25,25), wx.Point(25,5), wx.Point(5,5)])
         dc.DrawLines([(15,15), (35,15), (35,35), (35,15), (15,15)])
         
