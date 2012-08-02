@@ -43,16 +43,6 @@ def run():
     c.find('AddHandler.handler').transfer = True
     c.find('RemoveHandler').transferBack = True
 
-    m = c.find('URLToFileName')
-    m.type = 'wxString'
-    m.setCppCode("""\
-        wxFileName fname = wxFileSystem::URLToFileName(*url);
-        return new wxString(fname.GetFullPath());       
-        """)
-
-    fileNameTypedef = etgtools.TypedefDef(type='wxString', name='wxFileName', noTypeName=True)
-    module.insertItemBefore(c, fileNameTypedef)
-    
     c = module.find('wxArchiveFSHandler')
     c.addPrivateCopyCtor();
     module.addPyCode('ZipFSHandler = wx.deprecated(ArchiveFSHandler, "Use ArchiveFSHandler instead.")')
