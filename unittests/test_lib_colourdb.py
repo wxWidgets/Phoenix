@@ -19,8 +19,8 @@ class lib_colourdb_Tests(wtc.WidgetTestCase):
         self.assertEqual(wx.TheColourDatabase.Find('ORANGERED1'),
                          wx.Colour(255, 69, 0, 255))
 
-        self.assertEqual(wx.TheColourDatabase.FindName(wx.Colour(255, 69, 0)),
-                         'ORANGE RED')
+        self.assertIn(wx.TheColourDatabase.FindName(wx.Colour(255, 69, 0)),
+                      ['ORANGE RED', 'ORANGERED'])
         
 #---------------------------------------------------------------------------
 

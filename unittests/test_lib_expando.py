@@ -16,7 +16,11 @@ class lib_expando_Tests(wtc.WidgetTestCase):
         bs2 = w.GetSize()
         
         self.assertEqual(w.GetValue(), "This is a test\nThis is a New Label")
-        self.assertEqual(w.GetNumberOfLines(), 3)
+        
+        # All we can test here is that we have more lines than we started
+        # with, since different platforms may wrap at different spots in the
+        # string.
+        self.assertTrue(w.GetNumberOfLines() > 2)
         self.assertTrue(bs2.height > bs1.height)
         
 #---------------------------------------------------------------------------
