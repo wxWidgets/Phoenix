@@ -27,6 +27,9 @@
 // non-string/unicode objects to unicode, and won't raise exceptions
 static wxString i_Py2wxString(PyObject* source)
 {
+#if wxUSE_UNICODE_WCHAR == 0
+#error wxString converison can only handle WCHAR wxStrings currently
+#endif
     PyObject* uni = source;
     if (PyBytes_Check(source)) {
         // if it's a string object convert it to unicode first, assumes utf-8

@@ -97,6 +97,7 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 #define RETURN_NONE()    { wxPyBLOCK_THREADS(Py_INCREF(Py_None)); return Py_None; }
 
 
+// Make a memory view object from a C buffer and size.
 inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len) {
     // GIL should already be held
     Py_buffer view;

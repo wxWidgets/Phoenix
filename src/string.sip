@@ -23,6 +23,10 @@
     // wxUSE_UNICODE_UTF8 for this conversion.
     
     %ConvertToTypeCode
+        #if wxUSE_UNICODE_WCHAR == 0
+        #error wxString converison can only handle WCHAR wxStrings currently
+        #endif
+    
         // Code to test a PyObject for compatibility with wxString
         if (!sipIsErr) {
             if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
