@@ -36,6 +36,7 @@ INCLUDES = [  # base and core stuff
               'wxpy_api',
               'arrayholder',
               'string',
+              'filename',
               'arrays',
               'clntdata',
               'userdata',
@@ -210,6 +211,7 @@ INCLUDES = [  # base and core stuff
               'mousemanager',
               'filehistory',
               'cmdproc',
+              'fswatcher',
               ]
 
 

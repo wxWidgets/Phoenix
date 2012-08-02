@@ -132,7 +132,6 @@ other dev stuff
       * dialup  ??
       * docmdi  ??
       * docview ??
-      * fswatcher
       * msgout
       * palette  ?
       * persist  ?
