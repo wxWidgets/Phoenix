@@ -23,6 +23,7 @@ ITEMS  = [ "wxPreviewControlBar",
            "wxPrintPreview",
            "wxPrinter",
            "wxPrintout",
+           "wxPrintAbortDialog",
            ]    
     
 #---------------------------------------------------------------------------
@@ -96,7 +97,11 @@ def run():
     c.find('GetPageInfo.pageFrom').out = True
     c.find('GetPageInfo.pageTo').out = True
     
-
+    
+    c = module.find('wxPrintAbortDialog')
+    tools.fixTopLevelWindowClass(c)
+    
+    
     # deprecated classes
     module.addPyCode("PyPrintPreview = wx.deprecated(PrintPreview, 'Use PrintPreview instead.')")
     module.addPyCode("PyPreviewFrame = wx.deprecated(PreviewFrame, 'Use PreviewFrame instead.')")
