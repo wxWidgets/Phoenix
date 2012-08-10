@@ -157,10 +157,12 @@ inline wxPyAPI* wxPyGetAPIPtr()
     static wxPyAPI* wxPyAPIPtr = NULL;
     
     if (wxPyAPIPtr == NULL) {
+        PyGILState_STATE state = PyGILState_Ensure();
         wxPyAPIPtr = (wxPyAPI*)PyCapsule_Import("wx._wxPyAPI", 0);
         // uncomment if needed for debugging
         //if (PyErr_Occurred()) { PyErr_Print(); }
         //wxASSERT_MSG(wxPyAPIPtr != NULL, wxT("wxPyAPIPtr is NULL!!!"));  
+        PyGILState_Release(state);
     }
 
     return wxPyAPIPtr;
