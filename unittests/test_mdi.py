@@ -24,11 +24,13 @@ class mdi_Tests(wtc.WidgetTestCase):
         
     def test_mdiChildFrame1(self):
         f = wx.MDIParentFrame(None, title="MDI Parent")
+        f.SetMenuBar(wx.MenuBar())
         c = wx.MDIChildFrame(f, title="MDI Child")
         f.Close()
         
     def test_mdiChildFrame2(self):
         f = wx.MDIParentFrame(None, title="MDI Parent")
+        f.SetMenuBar(wx.MenuBar())
         c = wx.MDIChildFrame()
         c.Create(f, title="MDI Child")
         f.Close()

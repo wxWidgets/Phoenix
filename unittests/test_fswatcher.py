@@ -1,6 +1,7 @@
 import imp_unittest, unittest
 import wtc
 import wx
+import os
 
 #---------------------------------------------------------------------------
 
@@ -11,7 +12,7 @@ class fswatcher_Tests(wtc.WidgetTestCase):
         evtLoop = self.app.GetTraits().CreateEventLoop()
         activator = wx.EventLoopActivator(evtLoop) # automatically restores the old one
         watcher = wx.FileSystemWatcher()
-        watcher.Add(__file__)
+        watcher.Add(os.getcwd())
         watcher.Bind(wx.EVT_FSWATCHER, lambda evt: None)
         
         

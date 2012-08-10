@@ -31,15 +31,17 @@ class toolbook_Tests(wtc.WidgetTestCase):
     def test_toolbook3(self):
         book = wx.Toolbook(self.frame)
 
-        il = wx.ImageList()
+        il = wx.ImageList(32,32)
         for name in toolImgFiles:
             il.Add(wx.Bitmap(name))
         book.AssignImageList(il)
-        
+
         book.AddPage(wx.Panel(book), 'one', imageId=0)
         book.AddPage(wx.Panel(book), 'two', imageId=1)
         book.AddPage(wx.Panel(book), 'three', imageId=2)
         book.AddPage(wx.Panel(book), 'four', imageId=3)
+
+        self.myYield()
 
         
 #---------------------------------------------------------------------------
