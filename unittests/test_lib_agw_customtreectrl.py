@@ -105,7 +105,7 @@ class lib_agw_customtreectrl_Tests(wtc.WidgetTestCase):
         tree.DeleteAllItems()
         self.assertTrue(tree.GetCount() == 0)
         if sys.platform == 'darwin':
-            # On Mac the scrollbars and the gropper between them on
+            # On Mac the scrollbars and the gripper between them on
             # ScrolledWindows are also wx widgets, so they are in the
             # children list.
             self.assertEqual(len(tree.GetChildren()), 3)
