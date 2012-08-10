@@ -1,4 +1,5 @@
 import imp_unittest, unittest
+import sys
 import wtc
 import wx
 
@@ -103,7 +104,13 @@ class lib_agw_customtreectrl_Tests(wtc.WidgetTestCase):
 
         tree.DeleteAllItems()
         self.assertTrue(tree.GetCount() == 0)
-        self.assertTrue(len(tree.GetChildren()) == 0)
+        if sys.platform == 'darwin':
+            # On Mac the scrollbars and the gropper between them on
+            # ScrolledWindows are also wx widgets, so they are in the
+            # children list.
+            self.assertEqual(len(tree.GetChildren()), 3)
+        else:
+            self.assertEqual(len(tree.GetChildren()), 0)
         
     def test_lib_agw_customtreectrlConstantsExist(self):
         CT.TR_NO_BUTTONS          
