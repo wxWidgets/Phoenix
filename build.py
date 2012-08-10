@@ -212,6 +212,7 @@ def setPythonVersion(args):
     PYTHON_ARCH = runcmd('%s -c "import platform; print(platform.architecture()[0])"' 
                          % PYTHON, True, False)
     msg('Python\'s architecture is %s' % PYTHON_ARCH)
+    os.environ['PYTHON'] = PYTHON
         
 
 
