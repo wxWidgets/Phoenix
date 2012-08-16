@@ -112,9 +112,6 @@ other dev stuff
     created/used that should not be done before there is an application
     object.
 
-  * Should the functions created for things like addCppMethod be
-    marked static?  How about using inline?
-
   * Move PyEvent and PyCommandEvent classes to an etg script and build them
     using extractor objects so they will be seen by the document generator and
     others.
@@ -130,7 +127,6 @@ other dev stuff
       * PseudoDC (not actually an ETG script, probably a .sip)
       * msgout
       * quantize
-      * rawbmp
       * richmsgdlg  (requires wrappers for wxGenericMessageDialog)
       * valgen  (No. It could probably be reimplemented in Python easier than wrapping)
       * valnum  (No. Ditto)

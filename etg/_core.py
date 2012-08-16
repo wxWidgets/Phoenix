@@ -87,6 +87,7 @@ INCLUDES = [  # base and core stuff
               'imaglist',
               'overlay',
               'renderer',
+              'rawbmp',
               
               # more core
               'accel',

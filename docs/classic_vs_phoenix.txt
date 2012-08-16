@@ -25,8 +25,6 @@ Functions and Classes Modifications
 AboutBox                                                     :func:`adv.AboutBox <AboutBox>`
 AboutDialogInfo                                              :class:`adv.AboutDialogInfo`
 AcceleratorEntry_Create                                      ``MISSING``
-AlphaPixelData                                               ``MISSING``
-AlphaPixelData_Accessor                                      ``MISSING``
 ANIHandler                                                   ``MISSING``
 App_CleanUp                                                  ``MISSING``
 ArtProvider_Delete                                           :meth:`ArtProvider.Delete`
@@ -307,8 +305,6 @@ MutexGuiLeave                                                ``MISSING``
 MutexGuiLocker                                               ``MISSING``
 NamedColour                                                  :class:`Colour`
 NativeEncodingInfo                                           ``MISSING``
-NativePixelData                                              ``MISSING``
-NativePixelData_Accessor                                     ``MISSING``
 NcPaintEvent                                                 ``MISSING``
 Notebook_GetClassDefaultAttributes                           :meth:`Notebook.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 NotebookEvent                                                :class:`BookCtrlEvent`
@@ -318,7 +314,6 @@ NullFileTypeInfo                                             ``MISSING``
 NumberEntryDialog                                            ``MISSING``
 Panel_GetClassDefaultAttributes                              :meth:`Panel.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 PCXHandler                                                   ``MISSING``
-PixelDataBase                                                ``MISSING``
 PlatformInformation_GetOperatingSystemDirectory              :meth:`PlatformInfo.GetOperatingSystemDirectory`
 PNGHandler                                                   ``MISSING``
 PNMHandler                                                   ``MISSING``
