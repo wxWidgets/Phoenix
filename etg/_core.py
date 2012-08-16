@@ -168,6 +168,7 @@ INCLUDES = [  # base and core stuff
               'listbook',
               'toolbook',
               'treebook',
+              'vlbox',
               
               # toplevel and dialogs
               'nonownedwnd',

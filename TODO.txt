@@ -135,7 +135,6 @@ other dev stuff
       * valgen  (No. It could probably be reimplemented in Python easier than wrapping)
       * valnum  (No. Ditto)
       * valtext (No. Ditto. It works by using a pointer to long-lived wxString object.)
-      * vlbox
       * dialup  ??
       * docmdi  ??
       * docview ??
