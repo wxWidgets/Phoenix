@@ -245,9 +245,9 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
             body="""\
                 wxPyThreadBlocker blocker;
                 PyObject* rv = PyTuple_New(3);
-                PyTuple_SetItem(rv, 0, PyInt_FromLong(self->Red()));
-                PyTuple_SetItem(rv, 1, PyInt_FromLong(self->Green()));
-                PyTuple_SetItem(rv, 2, PyInt_FromLong(self->Blue()));
+                PyTuple_SetItem(rv, 0, wxPyInt_FromLong(self->Red()));
+                PyTuple_SetItem(rv, 1, wxPyInt_FromLong(self->Green()));
+                PyTuple_SetItem(rv, 2, wxPyInt_FromLong(self->Blue()));
                 return rv;            
                 """)
     
@@ -269,10 +269,10 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
                 int blue  = self->Blue();
                 int alpha = self->Alpha();
                 
-                PyTuple_SetItem(rv, 0, PyInt_FromLong( wxPy_unpremultiply(red,   alpha) ));
-                PyTuple_SetItem(rv, 1, PyInt_FromLong( wxPy_unpremultiply(green, alpha) ));
-                PyTuple_SetItem(rv, 2, PyInt_FromLong( wxPy_unpremultiply(blue,  alpha) ));
-                PyTuple_SetItem(rv, 3, PyInt_FromLong( alpha ));
+                PyTuple_SetItem(rv, 0, wxPyInt_FromLong( wxPy_unpremultiply(red,   alpha) ));
+                PyTuple_SetItem(rv, 1, wxPyInt_FromLong( wxPy_unpremultiply(green, alpha) ));
+                PyTuple_SetItem(rv, 2, wxPyInt_FromLong( wxPy_unpremultiply(blue,  alpha) ));
+                PyTuple_SetItem(rv, 3, wxPyInt_FromLong( alpha ));
                 return rv;
                 """)
     
