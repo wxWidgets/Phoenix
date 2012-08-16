@@ -214,7 +214,7 @@ class MemberVarDef(VariableDef):
     def __init__(self, element=None, **kw):
         super(MemberVarDef, self).__init__()
         self.isStatic = False
-        self.protection = ''
+        self.protection = 'public'
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
@@ -519,7 +519,7 @@ class MethodDef(FunctionDef):
         self.isConst = False
         self.isCtor = False
         self.isDtor = False
-        self.protection = ''
+        self.protection = 'public'
         self.defaultCtor = False      # use this ctor as the default one
         self.noDerivedCtor = False    # don't generate a ctor in the derived class for this ctor
         self.virtualCatcherCode = None
@@ -595,7 +595,7 @@ class ClassDef(BaseDef):
     def __init__(self, element=None, kind='class', **kw):
         super(ClassDef, self).__init__()
         self.kind = kind
-        self.protection = ''
+        self.protection = 'public'
         self.templateParams = []    # class is a template
         self.bases = []             # base class names
         self.subClasses = []        # sub classes
