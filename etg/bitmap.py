@@ -108,7 +108,7 @@ def run():
             """)
 
     c.addCppMethod('void', 'SetSize', '(const wxSize& size)',
-        doc='Set the bitmap size (does not affect the existing bitmap data).',
+        doc='Set the bitmap size (does not alter the existing native bitmap data or image size).',
         body="""\
             self->SetWidth(size->x);
             self->SetHeight(size->y);
