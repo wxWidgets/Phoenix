@@ -394,7 +394,7 @@ PreToolBar                                                   :class:`ToolBar`
 PreToolbook                                                  :class:`Toolbook`
 PreTreebook                                                  :class:`Treebook`
 PreTreeCtrl                                                  :class:`TreeCtrl`
-PreVListBox                                                  ``MISSING``
+PreVListBox                                                  :class:`VListBox`
 PreVScrolledWindow                                           :class:`VScrolledWindow`
 PreWindow                                                    :class:`Window`
 Printer_GetLastError                                         :meth:`Printer.GetLastError`
@@ -516,7 +516,7 @@ TaskBarIcon                                                  :class:`adv.TaskBar
 TaskBarIcon_IsAvailable                                      :meth:`adv.TaskBarIcon.IsAvailable`
 TaskBarIconEvent                                             :class:`adv.TaskBarIconEvent`
 TestFontEncoding                                             ``MISSING``
-TextAreaBase                                                 ``MISSING``
+TextAreaBase                                                 ``NONE (implementation detail)``
 TextAttr_BitlistsEqPartial                                   ``MISSING``
 TextAttr_Combine                                             ``MISSING``
 TextAttr_CombineBitlists                                     ``MISSING``
@@ -524,9 +524,9 @@ TextAttr_RemoveStyle                                         ``MISSING``
 TextAttr_SplitParaCharStyles                                 ``MISSING``
 TextAttr_TabsEq                                              ``MISSING``
 TextCtrl_GetClassDefaultAttributes                           :meth:`TextCtrl.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
-TextCtrlBase                                                 ``MISSING``
-TextCtrlIface                                                ``MISSING``
-TextEntryBase                                                ``MISSING``
+TextCtrlBase                                                 ``NONE (implementation detail)``
+TextCtrlIface                                                ``NONE (implementation detail)``
+TextEntryBase                                                ``NONE (implementation detail)``
 TextUrlEvent                                                 ``MISSING``
 TGAHandler                                                   ``MISSING``
 Thread_IsMain                                                :meth:`IsMainThread`
@@ -564,10 +564,9 @@ UpdateUIEvent_GetUpdateInterval                              :meth:`UpdateUIEven
 UpdateUIEvent_ResetUpdateTime                                :meth:`UpdateUIEvent.ResetUpdateTime`
 UpdateUIEvent_SetMode                                        :meth:`UpdateUIEvent.SetMode`
 UpdateUIEvent_SetUpdateInterval                              :meth:`UpdateUIEvent.SetUpdateInterval`
-Validator_IsSilent                                           ``MISSING``
-Validator_SetBellOnError                                     ``MISSING``
+Validator_IsSilent                                           :meth:`Validator.IsSilent`
+Validator_SetBellOnError                                     ``REMOVED``
 Validator_SuppressBellOnError                                :meth:`Validator.SuppressBellOnError`
-VListBox                                                     ``MISSING``
 WakeUpMainThread                                             ``MISSING``
 Window_FindFocus                                             :meth:`Window.FindFocus`
 Window_FromHWND                                              ``MISSING``
@@ -589,8 +588,6 @@ YieldIfNeeded                                                ``MISSING``
 BeginDrawing                                                 ``REMOVED``
 BlitPointSize                                                :meth:`~DC.Blit`
 CalcBoundingBoxPoint                                         :meth:`~DC.CalcBoundingBox`
-CanDrawBitmap                                                ``MISSING``
-CanGetTextExtent                                             ``MISSING``
 CrossHairPoint                                               :meth:`~DC.CrossHair`
 DrawArcPoint                                                 :meth:`~DC.DrawArc`
 DrawBitmapPoint                                              :meth:`~DC.DrawBitmap`
@@ -616,14 +613,13 @@ DrawTextList                                                 ``MISSING``
 DrawTextPoint                                                :meth:`~DC.DrawText`
 EndDrawing                                                   ``REMOVED``
 FloodFillPoint                                               :meth:`~DC.FloodFill`
-GetAsBitmap                                                  ``MISSING``
 GetDeviceOriginTuple                                         :meth:`~DC.GetDeviceOrigin`
-GetImpl                                                      ``MISSING``
+GetImpl                                                      ``REMOVED``
 GetLogicalOriginTuple                                        :meth:`~DC.GetLogicalOrigin`
 GetMultiLineTextExtent                                       :meth:`~DC.GetFullMultiLineTextExtent`
 GetOptimization                                              ``REMOVED``
 GetPixelPoint                                                :meth:`~DC.GetPixel`
-GetResolution                                                ``MISSING``
+GetResolution                                                :meth:`~DC.GetPPI`  
 GetSizeMMTuple                                               :meth:`~DC.GetSizeMM`
 Ok                                                           :meth:`~DC.IsOk`
 SetClippingRect                                              :meth:`~DC.SetClippingRegion`
@@ -642,11 +638,6 @@ StretchBlitPointSize                                         :meth:`~DC.StretchB
 ===========================================================  ===========================================================
 `Classic` Name                                               `Phoenix` Name
 ===========================================================  ===========================================================
-AdjustForLayoutDirection                                     ``MISSING``
-CanAcceptFocus                                               ``MISSING``
-CanAcceptFocusFromKeyboard                                   ``MISSING``
-CanApplyThemeBorder                                          ``MISSING``
-CanBeOutsideClientArea                                       ``MISSING``
 ClientToScreenXY                                             :meth:`~Window.ClientToScreen`
 ConvertDialogPointToPixels                                   :meth:`~Window.ConvertDialogToPixels`
 ConvertDialogSizeToPixels                                    :meth:`~Window.ConvertDialogToPixels`
@@ -658,13 +649,11 @@ GetScreenPositionTuple                                       :meth:`~Window.GetS
 GetSizeTuple                                                 :meth:`~Window.GetSize`
 GetToolTipString                                             :meth:`~Window.GetToolTipText`
 HitTestXY                                                    :meth:`~Window.HitTest`
-InheritsBackgroundColour                                     ``MISSING``
 IsExposedPoint                                               :meth:`~Window.IsExposed`
 IsExposedRect                                                :meth:`~Window.IsExposed`
 MakeModal                                                    ``REMOVED``
 PopupMenuXY                                                  :meth:`~Window.PopupMenu`
 ScreenToClientXY                                             :meth:`~Window.ScreenToClient`
-SendIdleEvents                                               ``MISSING``
 SetBestFittingSize                                           :meth:`~Window.SetInitialSize`
 SetClientSizeWH                                              :meth:`~Window.SetClientSize`
 SetDimensions                                                :meth:`~Window.SetSize`
@@ -673,7 +662,6 @@ SetSizeHintsSz                                               :meth:`~Window.SetS
 SetToolTipString                                             :meth:`~Window.SetToolTip`
 SetVirtualSizeHints                                          ``REMOVED``
 SetVirtualSizeHintsSz                                        ``REMOVED``
-UseBgCol                                                     ``MISSING``
 ===========================================================  ===========================================================
 
 
@@ -687,7 +675,7 @@ AddF                                                         :meth:`~Sizer.Add`
 AddItem                                                      :meth:`~Sizer.Add`
 AddSizer                                                     :meth:`~Sizer.Add`
 AddWindow                                                    :meth:`~Sizer.Add`
-DeleteWindows                                                ``MISSING``
+DeleteWindows                                                :meth:`~Sizer.Clear`
 GetItemIndex                                                 :meth:`~Sizer.GetItem`
 GetMinSizeTuple                                              :meth:`~Sizer.GetMinSize`
 GetPositionTuple                                             :meth:`~Sizer.GetPosition`
@@ -702,8 +690,6 @@ PrependWindow                                                :meth:`~Sizer.Prepe
 RemovePos                                                    :meth:`~Sizer.Remove`
 RemoveSizer                                                  :meth:`~Sizer.Remove`
 RemoveWindow                                                 :meth:`~Sizer.Remove`
-SetContainingWindow                                          ``MISSING``
-ShowItems                                                    ``MISSING``
 ===========================================================  ===========================================================
 
 
