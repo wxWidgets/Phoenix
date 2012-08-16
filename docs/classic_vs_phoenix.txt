@@ -317,7 +317,6 @@ NotificationMessage                                          :class:`adv.Notific
 NullFileTypeInfo                                             ``MISSING``
 NumberEntryDialog                                            ``MISSING``
 Panel_GetClassDefaultAttributes                              :meth:`Panel.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
-PasswordEntryDialog                                          ``MISSING``
 PCXHandler                                                   ``MISSING``
 PixelDataBase                                                ``MISSING``
 PlatformInformation_GetOperatingSystemDirectory              :meth:`PlatformInfo.GetOperatingSystemDirectory`
@@ -448,6 +447,7 @@ RadioButton_GetClassDefaultAttributes                        :meth:`RadioButton.
 RectPP                                                       :class:`Rect`
 RectPS                                                       :class:`Rect`
 RectS                                                        :class:`Rect`
+Rect.OffsetXY                                                :meth:`Rect.Offset`
 RegionFromBitmap                                             :class:`Region`
 RegionFromBitmapColour                                       :class:`Region`
 RegionFromPoints                                             :class:`Region`
@@ -527,7 +527,6 @@ TextCtrl_GetClassDefaultAttributes                           :meth:`TextCtrl.Get
 TextCtrlBase                                                 ``MISSING``
 TextCtrlIface                                                ``MISSING``
 TextEntryBase                                                ``MISSING``
-TextEntryDialog                                              ``MISSING``
 TextUrlEvent                                                 ``MISSING``
 TGAHandler                                                   ``MISSING``
 Thread_IsMain                                                :meth:`IsMainThread`
@@ -622,7 +621,7 @@ GetDeviceOriginTuple                                         :meth:`~DC.GetDevic
 GetImpl                                                      ``MISSING``
 GetLogicalOriginTuple                                        :meth:`~DC.GetLogicalOrigin`
 GetMultiLineTextExtent                                       :meth:`~DC.GetFullMultiLineTextExtent`
-GetOptimization                                              ``MISSING``
+GetOptimization                                              ``REMOVED``
 GetPixelPoint                                                :meth:`~DC.GetPixel`
 GetResolution                                                ``MISSING``
 GetSizeMMTuple                                               :meth:`~DC.GetSizeMM`
@@ -632,7 +631,7 @@ SetClippingRegionAsRegion                                    :meth:`~DC.SetClipp
 SetClippingRegionPointSize                                   :meth:`~DC.SetClippingRegion`
 SetDeviceOriginPoint                                         :meth:`~DC.SetDeviceOrigin`
 SetLogicalOriginPoint                                        :meth:`~DC.SetLogicalOrigin`
-SetOptimization                                              ``MISSING``
+SetOptimization                                              ``REMOVED``
 StretchBlitPointSize                                         :meth:`~DC.StretchBlit`
 ===========================================================  ===========================================================
 
@@ -708,14 +707,6 @@ ShowItems                                                    ``MISSING``
 ===========================================================  ===========================================================
 
 
-Miscellaneous Modifications
----------------------------
-
-===========================================================  ===========================================================
-`Classic` Name                                               `Phoenix` Name
-===========================================================  ===========================================================
-Rect.OffsetXY                                                :meth:`Rect.Offset`
-===========================================================  ===========================================================
 
 
 

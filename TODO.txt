@@ -128,21 +128,19 @@ other dev stuff
   * Add ETG scripts for these items in _core:      
       
       * PseudoDC (not actually an ETG script, probably a .sip)
-      * access
-      * dialup  ??
-      * docmdi  ??
-      * docview ??
       * msgout
-      * palette  ?
-      * persist  ?
       * quantize
       * rawbmp
       * richmsgdlg  (requires wrappers for wxGenericMessageDialog)
-      * textdlg
-      * valgen
-      * valnum
-      * valtext
+      * valgen  (No. It could probably be reimplemented in Python easier than wrapping)
+      * valnum  (No. Ditto)
+      * valtext (No. Ditto. It works by using a pointer to long-lived wxString object.)
       * vlbox
+      * dialup  ??
+      * docmdi  ??
+      * docview ??
+      * palette ??
+      * persist ??
   
   * Add a _msw module that will contain classes and such that are only
     available in the Windows port:  
@@ -150,6 +148,7 @@ other dev stuff
       * axbase  (ActiveX.)
       * wxCHMHelpController
       * metafile
+      * access
       * Any others?
 
   * Add _grid module
