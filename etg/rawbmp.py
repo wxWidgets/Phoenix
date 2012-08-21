@@ -139,7 +139,7 @@ def addPixelDataBaseClass(module):
     
 def addPixelDataClass(module, pd, img, bpp, doc=""):
     # This function creates a ClassDef for a PixelData class defined in C++.
-    # The C++ versions are template instantiations, so this allows this
+    # The C++ versions are template instantiations, so this allows us to
     # create nearly identical classes and just substitute the image class
     # name and the pixel data class name.
 
