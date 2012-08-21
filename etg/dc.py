@@ -27,6 +27,8 @@ ITEMS  = [ 'wxFontMetrics',
            'wxDCFontChanger',
            ]    
     
+OTHERDEPS = [ 'src/dc_ex.cpp', ]
+    
 #---------------------------------------------------------------------------
 
 def run():
@@ -169,39 +171,238 @@ def run():
     c.addPyCode('DC.GetGdkDrawable = wx.deprecated(DC.GetGdkDrawable, "Use GetHandle instead.")')
     
     
+    # This file contains implementations of functions for quickly drawing
+    # lists of items on the DC. They are called from the CppMethods defined
+    # below, which in turn are called from the PyMethods below that.
+    c.includeCppCode('src/dc_ex.cpp')
+    
+    c.addCppMethod('PyObject*', '_DrawPointList', '(PyObject* pyCoords, PyObject* pyPens, PyObject* pyBrushes)',
+        body="return wxPyDrawXXXList(*self, wxPyDrawXXXPoint, pyCoords, pyPens, pyBrushes);")
 
-    # TODO: Port the wxPyDrawXXX code and the DrawXXXList methods from Classic
-    # TODO: Port the PseudoDC from Classic
+    c.addCppMethod('PyObject*', '_DrawLineList', '(PyObject* pyCoords, PyObject* pyPens, PyObject* pyBrushes)',
+        body="return wxPyDrawXXXList(*self, wxPyDrawXXXLine, pyCoords, pyPens, pyBrushes);")
+
+    c.addCppMethod('PyObject*', '_DrawRectangleList', '(PyObject* pyCoords, PyObject* pyPens, PyObject* pyBrushes)',
+        body="return wxPyDrawXXXList(*self, wxPyDrawXXXRectangle, pyCoords, pyPens, pyBrushes);")
+
+    c.addCppMethod('PyObject*', '_DrawEllipseList', '(PyObject* pyCoords, PyObject* pyPens, PyObject* pyBrushes)',
+        body="return wxPyDrawXXXList(*self, wxPyDrawXXXEllipse, pyCoords, pyPens, pyBrushes);")
+
+    c.addCppMethod('PyObject*', '_DrawPolygonList', '(PyObject* pyCoords, PyObject* pyPens, PyObject* pyBrushes)',
+        body="return wxPyDrawXXXList(*self, wxPyDrawXXXPolygon, pyCoords, pyPens, pyBrushes);")
+
+    c.addCppMethod('PyObject*', '_DrawTextList', 
+        '(PyObject* textList, PyObject* pyPoints, PyObject* foregroundList, PyObject* backgroundList)',
+        body="return wxPyDrawTextList(*self, textList, pyPoints, foregroundList, backgroundList);")
 
     
+    c.addPyMethod('DrawPointList', '(self, points, pens=None)',
+        doc="""\
+            Draw a list of points as quickly as possible.
+    
+            :param points: A sequence of 2-element sequences representing 
+                           each point to draw, (x,y).
+            :param pens:   If None, then the current pen is used.  If a single 
+                           pen then it will be used for all points.  If a list of 
+                           pens then there should be one for each point in points.
+            """,
+        body="""\
+            if pens is None:
+                pens = []
+            elif isinstance(pens, wx.Pen):
+                pens = [pens]
+            elif len(pens) != len(points):
+                raise ValueError('points and pens must have same length')
+            return self._DrawPointList(points, pens, [])
+            """)
+
+    c.addPyMethod('DrawLineList', '(self, lines, pens=None)',
+        doc="""\
+            Draw a list of lines as quickly as possible.
+    
+            :param lines: A sequence of 4-element sequences representing
+                          each line to draw, (x1,y1, x2,y2).
+            :param pens:  If None, then the current pen is used.  If a
+                          single pen then it will be used for all lines.  If
+                          a list of pens then there should be one for each line
+                          in lines.
+            """,
+        body="""\
+            if pens is None:
+                pens = []
+            elif isinstance(pens, wx.Pen):
+                pens = [pens]
+            elif len(pens) != len(lines):
+                raise ValueError('lines and pens must have same length')
+            return self._DrawLineList(lines, pens, [])
+            """)
+
+    c.addPyMethod('DrawRectangleList', '(self, rectangles, pens=None, brushes=None)',
+        doc="""\
+            Draw a list of rectangles as quickly as possible.
+    
+            :param rectangles: A sequence of 4-element sequences representing
+                               each rectangle to draw, (x,y, w,h).
+            :param pens:       If None, then the current pen is used.  If a
+                               single pen then it will be used for all rectangles.
+                               If a list of pens then there should be one for each 
+                               rectangle in rectangles.
+            :param brushes:    A brush or brushes to be used to fill the rectagles,
+                               with similar semantics as the pens parameter.
+            """,
+        body="""\
+            if pens is None:
+                pens = []
+            elif isinstance(pens, wx.Pen):
+                pens = [pens]
+            elif len(pens) != len(rectangles):
+                raise ValueError('rectangles and pens must have same length')
+            if brushes is None:
+                brushes = []
+            elif isinstance(brushes, wx.Brush):
+                brushes = [brushes]
+            elif len(brushes) != len(rectangles):
+                raise ValueError('rectangles and brushes must have same length')
+            return self._DrawRectangleList(rectangles, pens, brushes)
+            """)
+    
+    c.addPyMethod('DrawEllipseList', '(self, ellipses, pens=None, brushes=None)',
+        doc="""\
+            Draw a list of ellipses as quickly as possible.
+    
+            :param ellipses: A sequence of 4-element sequences representing
+                             each ellipse to draw, (x,y, w,h).
+            :param pens:     If None, then the current pen is used.  If a
+                             single pen then it will be used for all ellipses.
+                             If a list of pens then there should be one for each 
+                             ellipse in ellipses.
+            :param brushes:  A brush or brushes to be used to fill the ellipses,
+                             with similar semantics as the pens parameter.
+            """,
+        body="""\
+            if pens is None:
+                pens = []
+            elif isinstance(pens, wx.Pen):
+                pens = [pens]
+            elif len(pens) != len(ellipses):
+                raise ValueError('ellipses and pens must have same length')
+            if brushes is None:
+                brushes = []
+            elif isinstance(brushes, wx.Brush):
+                brushes = [brushes]
+            elif len(brushes) != len(ellipses):
+                raise ValueError('ellipses and brushes must have same length')
+            return self._DrawEllipseList(ellipses, pens, brushes)
+            """)
+    
+    c.addPyMethod('DrawPolygonList', '(self, polygons, pens=None, brushes=None)',
+        doc="""\
+            Draw a list of polygons, each of which is a list of points.
+    
+            :param polygons: A sequence of sequences of sequences.
+                             [[(x1,y1),(x2,y2),(x3,y3)...], [(x1,y1),(x2,y2),(x3,y3)...]]
+                                  
+            :param pens:     If None, then the current pen is used.  If a
+                             single pen then it will be used for all polygons.
+                             If a list of pens then there should be one for each 
+                             polygon.
+            :param brushes:  A brush or brushes to be used to fill the polygons,
+                             with similar semantics as the pens parameter.
+            """,
+        body="""\
+            if pens is None:
+                pens = []
+            elif isinstance(pens, wx.Pen):
+                pens = [pens]
+            elif len(pens) != len(polygons):
+                raise ValueError('polygons and pens must have same length')
+            if brushes is None:
+                brushes = []
+            elif isinstance(brushes, wx.Brush):
+                brushes = [brushes]
+            elif len(brushes) != len(polygons):
+                raise ValueError('polygons and brushes must have same length')
+            return self._DrawPolygonList(polygons, pens, brushes)
+            """)
+    
+    c.addPyMethod('DrawTextList', '(self, textList, coords, foregrounds=None, backgrounds=None)',
+        doc="""\
+            Draw a list of strings using a list of coordinants for positioning each string.
+    
+            :param textList:    A list of strings
+            :param coords:      A list of (x,y) positions
+            :param foregrounds: A list of `wx.Colour` objects to use for the
+                                foregrounds of the strings.
+            :param backgrounds: A list of `wx.Colour` objects to use for the
+                                backgrounds of the strings.
+    
+            NOTE: Make sure you set background mode to wx.Solid (DC.SetBackgroundMode)
+                  If you want backgrounds to do anything.
+            """,
+        body="""\
+            if type(textList) == type(''):
+                textList = [textList]
+            elif len(textList) != len(coords):
+                raise ValueError('textlist and coords must have same length')
+            if foregrounds is None:
+                foregrounds = []
+            elif isinstance(foregrounds, wx.Colour):
+                foregrounds = [foregrounds]
+            elif len(foregrounds) != len(coords):
+                raise ValueError('foregrounds and coords must have same length')
+            if backgrounds is None:
+                backgrounds = []
+            elif isinstance(backgrounds, wx.Colour):
+                backgrounds = [backgrounds]
+            elif len(backgrounds) != len(coords):
+                raise ValueError('backgrounds and coords must have same length')
+            return  self._DrawTextList(textList, coords, foregrounds, backgrounds)
+            """)
+
+
+
+
+    # TODO: Port the PseudoDC from Classic
+
+
+    
+    #-----------------------------------------------------------------
     c = module.find('wxDCClipper')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     # context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
     
+    #-----------------------------------------------------------------
     c = module.find('wxDCBrushChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     # context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
     
+    #-----------------------------------------------------------------
     c = module.find('wxDCPenChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     # context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
     
+    #-----------------------------------------------------------------
     c = module.find('wxDCTextColourChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     # context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+
     
+    #-----------------------------------------------------------------
     c = module.find('wxDCFontChanger')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()

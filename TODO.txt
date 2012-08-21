@@ -119,9 +119,6 @@ other dev stuff
   * Locate and/or add items for the various functions and things in Classic's 
     _functions.i module.
 
-  * Add CppMethods to wx.DC for the "*List" methods (DrawLinesList, etc.) that 
-    were in Classic.  
-
   * Add ETG scripts for these items in _core:      
       
       * PseudoDC (not actually an ETG script, probably a .sip)

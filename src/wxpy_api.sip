@@ -104,6 +104,25 @@ static PyObject* i_wxPyConstructObject(void* ptr,
 }
 
 
+// Check if a PyObject is a wrapped type
+static bool i_wxPyWrappedPtr_Check(PyObject* obj)
+{
+    return PyObject_TypeCheck(obj, sipWrapper_Type);
+}
+
+
+// Convert a wrapped SIP object to its C++ pointer, ensuring that it is of the expected type
+static bool i_wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& className)
+{
+    const sipTypeDef* td = sipFindType(className);
+    if (!td)
+        return false;
+    if (! sipCanConvertToType(obj, td, SIP_NO_CONVERTORS))
+        return false;
+    int sipIsErr = 0;
+    *ptr = sipConvertToType(obj, td, NULL, SIP_NO_CONVERTORS, 0, &sipIsErr);
+    return true;
+}
 
 
 // Calls from wxWindows back to Python code, or even any PyObject
@@ -126,12 +145,83 @@ static void i_wxPyEndBlockThreads(wxPyBlock_t blocked)
 }
 
 
+// A helper for converting a 2 element sequence to a pair of integers
+static bool i_wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
+{
+    bool isFast = PyList_Check(source) || PyTuple_Check(source);
+    PyObject *o1, *o2;
+
+    if (!PySequence_Check(source) || PySequence_Length(source) != 2)
+        return false;
+
+    if (isFast) {
+        o1 = PySequence_Fast_GET_ITEM(source, 0);
+        o2 = PySequence_Fast_GET_ITEM(source, 1);
+    }
+    else {
+        o1 = PySequence_GetItem(source, 0);
+        o2 = PySequence_GetItem(source, 1);
+    }
+
+    *i1 = wxPyInt_AsLong(o1);
+    *i2 = wxPyInt_AsLong(o2);
+
+    if (! isFast) {
+        Py_DECREF(o1);
+        Py_DECREF(o2);
+    }
+    return true;
+}
+
+// A helper for converting a 4 element sequence to a set of integers
+static bool i_wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4) 
+{
+    bool isFast = PyList_Check(source) || PyTuple_Check(source);
+    PyObject *o1, *o2, *o3, *o4;
+
+    if (!PySequence_Check(source) || PySequence_Length(source) != 4)
+        return false;
+
+    if (isFast) {
+        o1 = PySequence_Fast_GET_ITEM(source, 0);
+        o2 = PySequence_Fast_GET_ITEM(source, 1);
+        o3 = PySequence_Fast_GET_ITEM(source, 2);
+        o4 = PySequence_Fast_GET_ITEM(source, 3);
+    }
+    else {
+        o1 = PySequence_GetItem(source, 0);
+        o2 = PySequence_GetItem(source, 1);
+        o3 = PySequence_GetItem(source, 2);
+        o4 = PySequence_GetItem(source, 3);
+    }
+
+    *i1 = wxPyInt_AsLong(o1);
+    *i2 = wxPyInt_AsLong(o2);
+    *i3 = wxPyInt_AsLong(o3);
+    *i4 = wxPyInt_AsLong(o4);
+
+    if (! isFast) {
+        Py_DECREF(o1);
+        Py_DECREF(o2);
+        Py_DECREF(o3);
+        Py_DECREF(o4);
+    }
+    return true;
+}
+
+
+
+
 // An instance of the API structure
 static wxPyAPI  API = {
     i_Py2wxString,
     i_wxPyConstructObject,
     i_wxPyBeginBlockThreads,
-    i_wxPyEndBlockThreads
+    i_wxPyEndBlockThreads,
+    i_wxPyWrappedPtr_Check,
+    i_wxPyConvertWrappedPtr,
+    i_wxPy2int_seq_helper,
+    i_wxPy4int_seq_helper
 };
 %End
 

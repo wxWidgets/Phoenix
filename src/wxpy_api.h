@@ -148,8 +148,13 @@ struct wxPyAPI {
     PyObject*     (*p_wxPyConstructObject)(void* ptr, const wxString& className, bool setThisOwn);
     wxPyBlock_t   (*p_wxPyBeginBlockThreads)();
     void          (*p_wxPyEndBlockThreads)(wxPyBlock_t blocked);
+    bool          (*p_wxPyWrappedPtr_Check)(PyObject* obj);
+    bool          (*p_wxPyConvertWrappedPtr)(PyObject* obj, void **ptr, const wxString& className);
+    bool          (*p_wxPy2int_seq_helper)(PyObject* source, int* i1, int* i2);
+    bool          (*p_wxPy4int_seq_helper)(PyObject* source, int* i1, int* i2, int* i3, int* i4);
     // Always add new items here at the end.
 };
+
 
 
 inline wxPyAPI* wxPyGetAPIPtr()
@@ -182,6 +187,16 @@ inline wxString Py2wxString(PyObject* source)
 inline PyObject* wxPyConstructObject(void* ptr, const wxString& className, bool setThisOwn=false) 
     { return wxPyGetAPIPtr()->p_wxPyConstructObject(ptr, className, setThisOwn); }
 
+
+// Check if a PyObject is a wrapped type
+inline bool wxPyWrappedPtr_Check(PyObject* obj)
+    { return wxPyGetAPIPtr()->p_wxPyWrappedPtr_Check(obj); }
+
+
+// Convert a wrapped SIP object to its C++ pointer, ensuring that it is of the expected type
+inline bool wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& className)
+    { return wxPyGetAPIPtr()->p_wxPyConvertWrappedPtr(obj, ptr, className); }
+    
     
 // Calls from wxWindows back to Python code, or even any PyObject
 // manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
@@ -192,6 +207,14 @@ inline void wxPyEndBlockThreads(wxPyBlock_t blocked)
     { wxPyGetAPIPtr()->p_wxPyEndBlockThreads(blocked); }
     
     
+
+// A helper for converting a 2 element sequence to a pair of integers
+inline bool wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
+    { return wxPyGetAPIPtr()->p_wxPy2int_seq_helper(source, i1, i2); }
+
+// A helper for converting a 4 element sequence to a set of integers
+inline bool wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4) 
+    { return wxPyGetAPIPtr()->p_wxPy4int_seq_helper(source, i1, i2, i3, i4); }
     
     
     
