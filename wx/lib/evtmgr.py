@@ -34,11 +34,9 @@ programmer to declare or track control ids or parent containers::
 
     eventManager.Register(handleEvents, EVT_BUTTON, myButton)
 
-This module is Python 2.1+ compatible.
-
 """
 import  wx
-import  pubsub # publish / subscribe library
+from wx.lib.pubsub import pub # publish / subscribe library
 
 #---------------------------------------------------------------------------
 
@@ -55,7 +53,6 @@ class EventManager:
         self.messageAdapterDict  = {}
         self.windowTopicLookup   = {}
         self.listenerTopicLookup = {}
-        self.__publisher         = pubsub.Publisher()
         self.EMPTY_LIST          = []
 
 
@@ -96,7 +93,7 @@ class EventManager:
             # Some widgets do not function as their own windows.
             win = self._determineWindow(source)
             
-        topic = (event, win, id)
+        topic = ".".join([str(event.typeId), str(win.GetId()), str(id)])
 
         #  Create an adapter from the PS system back to wxEvents, and
         #  possibly one from wxEvents:
@@ -319,24 +316,14 @@ class EventMacroInfo:
     A class that provides information about event macros.
     """
     def __init__(self):
-        self.lookupTable = {}
-
+        pass
 
     def getEventTypes(self, eventMacro):
         """
         Return the list of event types that the given
         macro corresponds to.
         """
-        try:
-            return self.lookupTable[eventMacro]
-        except KeyError:
-            win = FakeWindow()
-            try:
-                eventMacro(win, None, None)
-            except (TypeError, AssertionError):
-                eventMacro(win, None)
-            self.lookupTable[eventMacro] = win.eventTypes
-            return win.eventTypes
+        return eventMacro.evtType
 
 
     def eventIsA(self, event, macroList):
@@ -413,8 +400,7 @@ class EventAdapter:
         Instantiate a new adapter. Pre-compute my Publish/Subscribe
         topic, which is constant, and register with wxWindows.
         """
-        self.publisher = pubsub.Publisher()
-        self.topic     = ((func, win, id),)
+        self.topic     = ".".join([str(func.typeId), str(win.GetId()), str(id)])
         self.id        = id
         self.win       = win
         self.eventType = _macroInfo.getEventTypes(func)[0]
@@ -439,7 +425,7 @@ class EventAdapter:
         """
         In response to a wxWindows event, send a PS message
         """
-        self.publisher.sendMessage(topic=self.topic, data=event)
+        pub.sendMessage(self.topic, message=event)
 
 
     def Destroy(self):
@@ -473,14 +459,15 @@ class MessageAdapter:
         given eventHandler.
         """
         self.eventHandler = eventHandler
-        pubsub.Publisher().subscribe(listener=self.deliverEvent, topic=(topicPattern,))
+        self.topicPattern = topicPattern
+        pub.subscribe(self.deliverEvent, topicPattern)
 
     def deliverEvent(self, message):
-        event = message.data        # Extract the wxEvent
-        self.eventHandler(event)    # Perform the call as wxWindows would
+        # the message is the event object
+        self.eventHandler(message) 
 
     def Destroy(self):
-        pubsub.Publisher().unsubscribe(listener=self.deliverEvent)
+        pub.unsubscribe(self.deliverEvent, self.topicPattern)
 
 
 #---------------------------------------------------------------------------
