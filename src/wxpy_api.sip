@@ -96,7 +96,13 @@ static PyObject* i_wxPyConstructObject(void* ptr,
                                        const wxString& className,
                                        bool setThisOwn)
 {
-    const sipTypeDef* td = sipFindType(className);
+    wxString name = className;
+    wxString nsDelimiter = "::";
+    int pos = name.Find(nsDelimiter);
+    if (pos != wxNOT_FOUND)
+        name = name.Mid(pos + nsDelimiter.Len());    
+
+    const sipTypeDef* td = sipFindType(name);
     if (!td)
         return NULL;
     PyObject* transferObj = setThisOwn ? Py_None : NULL;
