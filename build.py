@@ -711,8 +711,10 @@ def sip(options, args):
     pwd = pushDir(cfg.ROOT_DIR)
     modules = glob.glob(opj(cfg.SIPGEN, '_*.sip'))
     # move _core the to the front of the list
-    modules.remove(opj(cfg.SIPGEN, '_core.sip'))
-    modules.insert(0, opj(cfg.SIPGEN, '_core.sip'))
+    core_file = opj(cfg.SIPGEN, '_core.sip')
+    if core_file in modules:
+        modules.remove(core_file)
+        modules.insert(0, core_file)
     
     for src_name in modules:
         tmpdir = tempfile.mkdtemp()
