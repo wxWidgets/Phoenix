@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 20 Mar 2012, 21.00 GMT
+# Latest Revision: 25 Aug 2012, 10.00 GMT
 #
 #
 # TODO List
@@ -11,7 +11,10 @@
 #    in the header and footer;
 # 2) Check whether it's possible to use rounded corners and
 #    shadows on the Mac
-#
+# 3) Split OnPaint() into smaller pieces to improve readability and
+#    ability to redefine behaviour in subclasses
+# 4) Extend text formatting capabilities
+# 5) Make better use of links (right now it's difficult to click them without hiding tooltip)
 #
 # For all kind of problems, requests of enhancements and bug reports, please
 # write to me at:
@@ -64,12 +67,12 @@ Usage example::
     class MyFrame(wx.Frame):
 
         def __init__(self, parent):
-        
+
             wx.Frame.__init__(self, parent, -1, "SuperToolTip Demo")
 
             panel = wx.Panel(self)
             button = wx.Button(panel, -1, "I am the SuperToolTip target", pos=(100, 50))
-            
+
             tip = STT.SuperToolTip("A nice tooltip message")
 
             tip.SetHeader("Hello World")
@@ -77,10 +80,10 @@ Usage example::
             tip.SetDrawHeaderLine(True)
 
             tip.ApplyStyle("Office 2007 Blue")
-            
+
             tip.SetDropShadow(True)
-        
-        
+
+
     # our normal wxApp-derived class, as usual
 
     app = wx.App(0)
@@ -117,7 +120,7 @@ License And Version
 
 :class:`SuperToolTip` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 25 Aug 2012, 10.00 GMT
 
 Version 0.5
 
@@ -135,7 +138,7 @@ _libimported = None
 if wx.Platform == "__WXMSW__":
     osVersion = wx.GetOsVersion()
     # Shadows behind menus are supported only in XP
-    if osVersion[1] == 5 and osVersion[2] == 1:
+    if osVersion[1] > 5 or (osVersion[1] == 5 and osVersion[2] >= 1):
         try:
             # Try Mark Hammond's win32all extensions
             import win32api
@@ -256,7 +259,7 @@ class ToolTipWindowBase(object):
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_TIMER, self.AlphaCycle)
-        self.Bind(wx.EVT_KILL_FOCUS, self.OnDestroy)
+        parent.Bind(wx.EVT_KILL_FOCUS, self.OnDestroy)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnDestroy)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnDestroy)
 
@@ -265,14 +268,20 @@ class ToolTipWindowBase(object):
         """
         Handles the ``wx.EVT_PAINT`` event for :class:`SuperToolTip`.
 
-        :param `event`: a :class:`PaintEvent` event to be processed.
+        If the `event` parameter is ``None``, calculates best size and returns it.
+
+        :param `event`: a :class:`PaintEvent` event to be processed or ``None``.
         """
 
-        # Go with double buffering...
-        dc = wx.BufferedPaintDC(self)
+        maxWidth = 0
+        if event is None:
+            dc = wx.ClientDC(self)
+        else:
+            # Go with double buffering...
+            dc = wx.BufferedPaintDC(self)
 
         frameRect = self.GetClientRect()
-        x, y, width, height = frameRect
+        x, y, width, _height = frameRect
         # Store the rects for the hyperlink lines
         self._hyperlinkRect, self._hyperlinkWeb = [], []
         classParent = self._classParent
@@ -294,8 +303,8 @@ class ToolTipWindowBase(object):
         headerFont, messageFont, footerFont, hyperlinkFont = classParent.GetHeaderFont(), classParent.GetMessageFont(), \
                                                              classParent.GetFooterFont(), classParent.GetHyperlinkFont()
 
-        xPos, yPos = self._spacing, 0
-        bmpXPos = bmpYPos = 0
+        yPos = 0
+        bmpXPos = 0
         bmpHeight = textHeight = bmpWidth = 0
 
         if headerBmp and headerBmp.IsOk():
@@ -307,7 +316,7 @@ class ToolTipWindowBase(object):
             # We got the header text
             dc.SetFont(headerFont)
             textWidth, textHeight = dc.GetTextExtent(header)
-
+        maxWidth = max(bmpWidth, maxWidth)
         # Calculate the header height
         height = max(textHeight, bmpHeight)
         if header:
@@ -321,7 +330,7 @@ class ToolTipWindowBase(object):
                 # Draw the separator line after the header
                 dc.SetPen(wx.GREY_PEN)
                 dc.DrawLine(self._spacing, yPos+self._spacing, width-self._spacing, yPos+self._spacing)
-
+        maxWidth = max(bmpXPos + bmpWidth + self._spacing, maxWidth)
         # Get the big body image (if any)
         embeddedImage = classParent.GetBodyImage()
         bmpWidth = bmpHeight = -1
@@ -330,13 +339,12 @@ class ToolTipWindowBase(object):
 
         # A bunch of calculations to draw the main body message
         messageHeight = 0
-        textSpacing = (bmpWidth > 0 and [3*self._spacing] or [2*self._spacing])[0]
         lines = classParent.GetMessage().split("\n")
         yText = yPos
         normalText = wx.SystemSettings_GetColour(wx.SYS_COLOUR_MENUTEXT)
         hyperLinkText = wx.BLUE
-
-        for indx, line in enumerate(lines):
+        messagePos = self._getTextExtent(dc, lines[0] if lines else "")[1] // 2 + self._spacing
+        for line in lines:
             # Loop over all the lines in the message
             isLink = False
             dc.SetTextForeground(normalText)
@@ -353,23 +361,16 @@ class ToolTipWindowBase(object):
                 # Is a normal line
                 dc.SetFont(messageFont)
 
-            textWidth, textHeight = dc.GetTextExtent(line)
-            if textHeight == 0:
-                textWidth, textHeight = dc.GetTextExtent("a")
+            textWidth, textHeight = self._getTextExtent(dc, line)
 
             messageHeight += textHeight
 
-            xText = (bmpWidth > 0 and [bmpWidth+2*self._spacing] or [self._spacing])[0]
+            xText = (bmpWidth + 2 * self._spacing) if bmpWidth > 0 else self._spacing
             yText += textHeight/2+self._spacing
-
+            maxWidth = max(xText + textWidth + self._spacing, maxWidth)
             dc.DrawText(line, xText, yText)
             if isLink:
-                # Store the hyperlink rectangle and link
-                self._hyperlinkRect.append(wx.Rect(xText, yText, textWidth, textHeight))
-                self._hyperlinkWeb.append(hl)
-
-            if indx == 0:
-                messagePos = yText
+                self._storeHyperLinkInfo(xText, yText, textWidth, textHeight, hl)
 
         toAdd = 0
         if bmpHeight > textHeight:
@@ -385,7 +386,7 @@ class ToolTipWindowBase(object):
 
         footer, footerBmp = classParent.GetFooter(), classParent.GetFooterBitmap()
         bmpHeight = bmpWidth = textHeight = textWidth = 0
-        bmpXPos = bmpYPos = 0
+        bmpXPos = 0
 
         if footerBmp and footerBmp.IsOk():
             # Got the footer bitmap
@@ -401,16 +402,37 @@ class ToolTipWindowBase(object):
             if drawFooter:
                 # Draw the separator line before the footer
                 dc.SetPen(wx.GREY_PEN)
-                dc.DrawLine(self._spacing, yPos-self._spacing/2+toAdd, width-self._spacing, yPos-self._spacing/2+toAdd)
-
+                dc.DrawLine(self._spacing, yPos-self._spacing/2+toAdd,
+                            width-self._spacing, yPos-self._spacing/2+toAdd)
         # Draw the footer and footer bitmap (if any)
         dc.SetTextForeground(normalText)
         height = max(textHeight, bmpHeight)
         yPos += toAdd
         if footer:
-            dc.DrawText(footer, bmpXPos+bmpWidth+self._spacing, yPos + (height-textHeight+self._spacing)/2)
+            toAdd = (height - textHeight + self._spacing) // 2
+            dc.DrawText(footer, bmpXPos + bmpWidth + self._spacing, yPos + toAdd)
+            maxWidth = max(bmpXPos + bmpWidth + self._spacing, maxWidth)
         if footerBmp and footerBmp.IsOk():
-            dc.DrawBitmap(footerBmp, bmpXPos, yPos + (height-bmpHeight+self._spacing)/2, True)
+            toAdd = (height - bmpHeight + self._spacing) / 2
+            dc.DrawBitmap(footerBmp, bmpXPos, yPos + toAdd, True)
+            maxWidth = max(footerBmp.GetSize().GetWidth() + bmpXPos, maxWidth)
+
+        maxHeight = yPos + toAdd
+        if event is None:
+            return maxWidth, maxHeight
+
+
+    @staticmethod
+    def _getTextExtent(dc, line):
+        textWidth, textHeight = dc.GetTextExtent(line)
+        if textHeight == 0:
+            _, textHeight = dc.GetTextExtent("a")
+        return textWidth, textHeight
+
+    def _storeHyperLinkInfo(self, hTextPos, vTextPos, textWidth, textHeight, linkTarget):
+        # Store the hyperlink rectangle and link
+        self._hyperlinkRect.append(wx.Rect(hTextPos, vTextPos, textWidth, textHeight))
+        self._hyperlinkWeb.append(linkTarget)
 
 
     def OnEraseBackground(self, event):
@@ -469,7 +491,8 @@ class ToolTipWindowBase(object):
 
         if not isinstance(event, wx.MouseEvent):
             # We haven't clicked a link
-            self.Destroy()
+            if self:  # Check if window still exists, Destroy might have been called manually (more than once)
+                self.Destroy()
             return
 
         x, y = event.GetPosition()
@@ -644,90 +667,9 @@ class ToolTipWindowBase(object):
     def CalculateBestSize(self):
         """ Calculates the :class:`SuperToolTip` window best size. """
 
-        # See the OnPaint method for explanations...
-        maxWidth = maxHeight = 0
-        dc = wx.ClientDC(self)
-
-        classParent = self._classParent
-        header, headerBmp = classParent.GetHeader(), classParent.GetHeaderBitmap()
-
-        textHeight, bmpHeight = 0, 0
-        headerFont, messageFont, footerFont, hyperlinkFont = classParent.GetHeaderFont(), classParent.GetMessageFont(), \
-                                                             classParent.GetFooterFont(), classParent.GetHyperlinkFont()
-        if header:
-            dc.SetFont(headerFont)
-            textWidth, textHeight = dc.GetTextExtent(header)
-            maxWidth = max(maxWidth, textWidth + 2*self._spacing)
-            maxHeight += self._spacing/2
-        if headerBmp and headerBmp.IsOk():
-            maxWidth += headerBmp.GetWidth() + 2*self._spacing
-            bmpHeight = headerBmp.GetHeight()
-            if not header:
-                maxHeight += self._spacing/2
-
-        maxHeight += max(textHeight, bmpHeight)
-        if textHeight or bmpHeight:
-            maxHeight += self._spacing/2
-
-        # See the OnPaint method for explanations...
-        bmpWidth = bmpHeight = -1
-        embeddedImage = classParent.GetBodyImage()
-        if embeddedImage and embeddedImage.IsOk():
-            bmpWidth, bmpHeight = embeddedImage.GetWidth(), embeddedImage.GetHeight()
-
-        messageHeight = 0
-        textSpacing = (bmpWidth and [3*self._spacing] or [2*self._spacing])[0]
-        lines = classParent.GetMessage().split("\n")
-
-        for line in lines:
-            if line.startswith("</b>"):      # is a bold line
-                font = MakeBold(messageFont)
-                dc.SetFont(font)
-                line = line[4:]
-            elif line.startswith("</l>"):    # is a link
-                dc.SetFont(hyperlinkFont)
-                line, hl = ExtractLink(line)
-            else:
-                dc.SetFont(messageFont)
-
-            textWidth, textHeight = dc.GetTextExtent(line)
-            if textHeight == 0:
-                textWidth, textHeight = dc.GetTextExtent("a")
-
-            maxWidth = max(maxWidth, textWidth + textSpacing + bmpWidth)
-            messageHeight += textHeight
-
-        # See the OnPaint method for explanations...
-        messageHeight = max(messageHeight, bmpHeight)
-        maxHeight += messageHeight
-        toAdd = 0
-        if bmpHeight > textHeight:
-            maxHeight += 2*self._spacing
-            toAdd = self._spacing
-        else:
-            maxHeight += 2*self._spacing
-
-        footer, footerBmp = classParent.GetFooter(), classParent.GetFooterBitmap()
-        textHeight, bmpHeight = 0, 0
-
-        # See the OnPaint method for explanations...
-        if footer:
-            dc.SetFont(footerFont)
-            textWidth, textHeight = dc.GetTextExtent(footer)
-            maxWidth = max(maxWidth, textWidth + 2*self._spacing)
-            maxHeight += self._spacing/2
-
-        if footerBmp and footerBmp.IsOk():
-            bmpWidth, bmpHeight = footerBmp.GetWidth(), footerBmp.GetHeight()
-            maxWidth = max(maxWidth, textWidth + 3*self._spacing + bmpWidth)
-            if not footer:
-                maxHeight += self._spacing/2
-
-        if textHeight or bmpHeight:
-            maxHeight += self._spacing/2 + max(textHeight, bmpHeight)
-
-        maxHeight += toAdd
+        maxWidth, maxHeight = self.OnPaint(None)
         self.SetSize((maxWidth, maxHeight))
+
 
     def CalculateBestPosition(self,widget):
         screen = wx.ClientDisplayRect()[2:]
@@ -903,11 +845,14 @@ class SuperToolTip(object):
             # The running app doesn't want tooltips...
             return
 
+        if not self._widget.GetTopLevelParent().IsActive():
+            self._startTimer.Stop()
+            return
+
         if self._startTimer.IsRunning():
             # We are already running
             event.Skip()
             return
-
         self._startTimer.Start(self._startDelayTime*1000)
         event.Skip()
 
@@ -918,15 +863,6 @@ class SuperToolTip(object):
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
-
-        pos = wx.GetMousePosition()
-        realPos = self._widget.ScreenToClient(pos)
-        rect = self._widget.GetClientRect()
-
-        if rect.Contains(realPos):
-            # We get fake leave events...
-            event.Skip()
-            return
 
         if self._superToolTip:
             if self.GetUseFade():
@@ -1006,6 +942,24 @@ class SuperToolTip(object):
         self._endTimer.Start(self._endDelayTime*1000)
 
 
+    def DoHideNow(self):
+        """
+        Dismiss the :class:`SuperToolTip` window immediately.
+
+        .. versionadded:: 0.9.6
+        """
+
+        if self._superToolTip:
+            if self.GetUseFade():
+                # Fade out...
+                self._superToolTip.StartAlpha(False)
+            else:
+                self._superToolTip.Destroy()
+
+        self._startTimer.Stop()
+        self._endTimer.Stop()
+
+
     def Show(self, show=True):
         """
         Shows or hides the window.
@@ -1014,7 +968,7 @@ class SuperToolTip(object):
         top, although this is not needed if :meth:`~SuperToolTip.Show` is called immediately after the frame creation.
 
         :param bool `show`: ``True`` to show the :class:`SuperToolTip` window, ``False`` to hide it.
-        
+
         :return: ``True`` if the window has been shown or hidden or ``False`` if nothing was done
          because it already was in the requested state.
 
@@ -1027,9 +981,15 @@ class SuperToolTip(object):
 
         .. versionadded:: 0.9.5
         """
-        
-        self.DoShowNow()
-        
+
+        if show and self._superToolTip is None:
+            self.DoShowNow()
+            return True
+        elif not show and self._superToolTip is not None:
+            self.DoHideNow()
+            return True
+        return False
+
 
     def Update(self):
         """
@@ -1458,7 +1418,16 @@ class SuperToolTip(object):
 
         wx.GetApp().__superToolTip = enable
         if not enable and self._superToolTip:
-            self._superToolTip.Destroy()
-            self._superToolTip = None
+            self.DoHideNow()
             del self._superToolTip
+            self._superToolTip = None
 
+
+    def IsEnabled(self):
+        """
+        Returns ``True`` when :class:`SuperToolTip` is globally enabled, ``False`` otherwise.
+
+        .. versionadded:: 0.9.6
+        """
+
+        return wx.GetApp().__superToolTip
