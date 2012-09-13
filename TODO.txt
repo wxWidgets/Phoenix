@@ -121,7 +121,7 @@ other dev stuff
 
   * Add ETG scripts for these items in _core:      
       
-      * PseudoDC (not actually an ETG script, probably a .sip)
+      * PseudoDC 
       * msgout
       * quantize
       * richmsgdlg  (requires wrappers for wxGenericMessageDialog)
