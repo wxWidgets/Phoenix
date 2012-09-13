@@ -47,7 +47,10 @@ def run():
     module.find('wxGetUserId').findOverload('buf').ignore()
     module.find('wxGetUserName').findOverload('buf').ignore()
     module.find('wxSortCallback').ignore()
-    module.find('wxLoadUserResource').ignore()
+
+    module.find('wxLoadUserResource').findOverload('pLen').ignore()
+    module.find('wxLoadUserResource').findOverload('outData').ignore()
+    
     module.find('wxGetFreeMemory').ignore()
     module.find('wxGetLinuxDistributionInfo').ignore()
     module.find('wxGetDisplayName').ignore()
