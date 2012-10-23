@@ -233,7 +233,7 @@ wxArrayInt testArrayIntTypemap(const wxArrayInt& arr);
 
          
     %ConvertFromTypeCode
-        // Code to convert a wxArrayInt to a Python list of integers.
+        // Code to convert a wxArrayDouble to a Python list of floating point values.
         PyObject* list = PyList_New(0);
         for (size_t i=0; i < sipCpp->GetCount(); i++) {
             PyObject* number = PyFloat_FromDouble(sipCpp->Item(i));

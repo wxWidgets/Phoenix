@@ -124,7 +124,7 @@ other dev stuff
       * PseudoDC 
       * msgout
       * quantize
-      * richmsgdlg  (requires wrappers for wxGenericMessageDialog)
+      * richmsgdlg  (requires wrappers for wxGenericMessageDialog first)
       * valgen  (No. It could probably be reimplemented in Python easier than wrapping)
       * valnum  (No. Ditto)
       * valtext (No. Ditto. It works by using a pointer to long-lived wxString object.)
