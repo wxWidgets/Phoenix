@@ -121,7 +121,10 @@ def addPixelDataBaseClass(module):
                     return 'pixel(%d,%d): %s' % (x,y,self.Get())
                 X = property(lambda self: x)
                 Y = property(lambda self: y)
-                
+    
+            if sys.version_info >= (3,):
+                xrange = range
+    
             pf = PixelFacade()        
             for y in xrange(height):
                 pixels.MoveTo(self, 0, y)
