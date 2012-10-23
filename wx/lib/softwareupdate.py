@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     1-Aug-2011
-# RCS-ID:      $Id: softwareupdate.py 72188 2012-07-24 03:24:51Z RD $
+# RCS-ID:      $Id$
 # Copyright:   (c) 2011 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
@@ -61,7 +61,7 @@ class SoftwareUpdate(object):
     """
     Mix this class with wx.App and call InitForUpdates from the derived class'
     OnInit method. Be sure that the wx.App has set a display name
-    (self.SetSppDisplayName) as that value will be used in the update dialogs.
+    (self.SetAppDisplayName) as that value will be used in the update dialogs.
     """
     
     _caption = "Software Update"
@@ -109,6 +109,7 @@ class SoftwareUpdate(object):
             return
         if cfg is None:
             cfg = wx.Config.Get()
+        oldPath = cfg.GetPath()
         cfg.SetPath('/autoUpdate')
         lastCheck = cfg.ReadInt('lastCheck', 0)
         lastCheckVersion = cfg.Read('lastCheckVersion', '')
@@ -118,6 +119,7 @@ class SoftwareUpdate(object):
         if (today - lastCheck >= frequencyInDays
             or lastCheckVersion != active):
                 self.CheckForUpdate(True, parentWindow, cfg)
+        cfg.SetPath(oldPath)
         
         
     def CheckForUpdate(self, silentUnlessUpdate=False, parentWindow=None, cfg=None):
@@ -168,10 +170,13 @@ class SoftwareUpdate(object):
         
             active = self._esky.active_version
             if cfg:
+                oldPath = cfg.GetPath()
+                cfg.SetPath('/autoUpdate')
                 today = int(wx.DateTime.Today().GetJulianDayNumber())
                 cfg.WriteInt('lastCheck', today)
                 cfg.Write('lastCheckVersion', active)
                 cfg.Flush()
+                cfg.SetPath(oldPath)
             
             newest, chLogTxt = result
             if newest is None:
