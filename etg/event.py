@@ -224,6 +224,11 @@ def run():
         """)
 
     
+    # Ignore the C++ version of CallAfter. We have our own. 
+    # TODO: If we want to support this we'll need concrete implementations of
+    # the template, probably using PyObject* args.
+    c.find('CallAfter').ignore()
+    
     # wxEventTable is not documented so we have to ignore SearchEventTable.
     # TODO: Should wxEventTable be available to language bindings?
     c.find('SearchEventTable').ignore()
