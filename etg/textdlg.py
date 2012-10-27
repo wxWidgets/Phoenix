@@ -33,12 +33,15 @@ def run():
     # customizing the generated code and docstrings.
     
     module.addHeaderCode("#include <wx/textdlg.h>")
-    module.find('wxGetTextFromUserPromptStr').type = 'const char*'
-    module.find('wxGetPasswordFromUserPromptStr').type = 'const char*'
+    module.find('wxGetTextFromUserPromptStr').ignore()
+    module.find('wxGetPasswordFromUserPromptStr').ignore()
+    
     
     c = module.find('wxTextEntryDialog')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
+    module.addGlobalStr('wxGetTextFromUserPromptStr', c)
+    module.addGlobalStr('wxGetPasswordFromUserPromptStr', c)
     
     
     c = module.find('wxPasswordEntryDialog')
