@@ -71,6 +71,7 @@ REMOVED_LINKS = ['Library:', 'Category:', 'Predefined objects/pointers:']
 MODULENAME_REPLACE = {'_core'    : '',
                       '_dataview': 'dataview.',
                       '_adv'     : 'adv.',
+                      '_stc'     : 'stc.',
                       }
 
 NO_MODULE = {
