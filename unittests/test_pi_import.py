@@ -36,6 +36,9 @@ class PIImportTest(unittest.TestCase):
         
     #def test_adv_pi(self):
     #    self.runPI('adv.pi')
+
+    def test_stc_pi(self):
+        self.runPI('stc.pi')
         
 #---------------------------------------------------------------------------
 

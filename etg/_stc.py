@@ -63,7 +63,7 @@ def run():
     c = module.find('wxStyledTextCtrl')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c, False)
-    module.addGlobalStr('wxSTCNameStr')
+    module.addGlobalStr('wxSTCNameStr', c)
     
 
     c.find('GetCurLine.linePos').out = True
