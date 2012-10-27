@@ -78,6 +78,7 @@ def run():
     c.addProperty('MacMetalAppearance MacGetMetalAppearance MacSetMetalAppearance')
     
     tools.fixTopLevelWindowClass(c)
+    c.find('ShouldPreventAppExit').isVirtual = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
