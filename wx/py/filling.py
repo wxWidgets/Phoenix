@@ -58,8 +58,7 @@ class FillingTree(wx.TreeCtrl):
             rootLabel = 'locals()'
         if not rootLabel:
             rootLabel = 'Ingredients'
-        rootData = wx.TreeItemData(rootObject)
-        self.item = self.root = self.AddRoot(rootLabel, -1, -1, rootData)
+        self.item = self.root = self.AddRoot(rootLabel, -1, -1, rootObject)
         self.SetItemHasChildren(self.root, self.objHasChildren(rootObject))
         self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.OnItemExpanding, id=self.GetId())
         self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed, id=self.GetId())
@@ -99,7 +98,7 @@ class FillingTree(wx.TreeCtrl):
         """Launch a DirFrame."""
         item = event.GetItem()
         text = self.getFullName(item)
-        obj = self.GetPyData(item)
+        obj = self.GetItemData(item)
         frame = FillingFrame(parent=self, size=(600, 100), rootObject=obj,
                              rootLabel=text, rootIsNamespace=False)
         frame.Show()
@@ -136,7 +135,7 @@ class FillingTree(wx.TreeCtrl):
 
     def addChildren(self, item):
         self.DeleteChildren(item)
-        obj = self.GetPyData(item)
+        obj = self.GetItemData(item)
         children = self.objGetChildren(obj)
         if not children:
             return
@@ -153,8 +152,7 @@ class FillingTree(wx.TreeCtrl):
                  or (item == self.root and not self.rootIsNamespace)):
                 itemtext = repr(key)
             child = children[key]
-            data = wx.TreeItemData(child)
-            branch = self.AppendItem(parent=item, text=itemtext, data=data)
+            branch = self.AppendItem(parent=item, text=itemtext, data=child)
             self.SetItemHasChildren(branch, self.objHasChildren(child))
 
     def display(self):
@@ -164,7 +162,7 @@ class FillingTree(wx.TreeCtrl):
         if self.IsExpanded(item):
             self.addChildren(item)
         self.setText('')
-        obj = self.GetPyData(item)
+        obj = self.GetItemData(item)
         if wx.Platform == '__WXMSW__':
             if obj is None: # Windows bug fix.
                 return
@@ -207,7 +205,7 @@ class FillingTree(wx.TreeCtrl):
         obj = None
         if item != self.root:
             parent = self.GetItemParent(item)
-            obj = self.GetPyData(parent)
+            obj = self.GetItemData(parent)
         # Apply dictionary syntax to dictionary items, except the root
         # and first level children of a namepace.
         if (type(obj) is types.DictType \
@@ -291,7 +289,7 @@ class Filling(wx.SplitterWindow):
                                 static=static)
         self.text = FillingText(parent=self, static=static)
         
-        wx.FutureCall(1, self.SplitVertically, self.tree, self.text, 200)
+        wx.CallLater(1, self.SplitVertically, self.tree, self.text, 200)
         
         self.SetMinimumPaneSize(1)
 
@@ -313,7 +311,7 @@ class Filling(wx.SplitterWindow):
 
     def LoadSettings(self, config):
         pos = config.ReadInt('Sash/FillingPos', 200)
-        wx.FutureCall(250, self.SetSashPosition, pos)
+        wx.CallLater(250, self.SetSashPosition, pos)
         zoom = config.ReadInt('View/Zoom/Filling', -99)
         if zoom != -99:
             self.text.SetZoom(zoom)

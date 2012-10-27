@@ -195,9 +195,9 @@ class Frame(wx.Frame):
                  '&Insert Call Tips', wx.ITEM_CHECK)
 
         m = self.optionsMenu = wx.Menu()
-        m.AppendMenu(ID_AUTOCOMP, '&Auto Completion', self.autocompMenu,
+        m.Append(ID_AUTOCOMP, '&Auto Completion', self.autocompMenu,
                      'Auto Completion Options')
-        m.AppendMenu(ID_CALLTIPS, '&Call Tips', self.calltipsMenu,
+        m.Append(ID_CALLTIPS, '&Call Tips', self.calltipsMenu,
                      'Call Tip Options')
                 
         m.AppendSeparator()
@@ -209,7 +209,7 @@ class Frame(wx.Frame):
                  'Save history')
         self.historyMenu.Append(ID_CLEARHISTORY, '&Clear History ',
                  'Clear history')
-        m.AppendMenu(-1, "&History", self.historyMenu, "History Options")
+        m.Append(-1, "&History", self.historyMenu, "History Options")
 
         self.startupMenu = wx.Menu()
         self.startupMenu.Append(ID_EXECSTARTUPSCRIPT,
@@ -222,7 +222,7 @@ class Frame(wx.Frame):
             self.startupMenu.Append(ID_SHOWPYSLICESTUTORIAL,
                                 '&Show PySlices Tutorial',
                                 'Show PySlices Tutorial', wx.ITEM_CHECK)
-        m.AppendMenu(ID_STARTUP, '&Startup', self.startupMenu, 'Startup Options')
+        m.Append(ID_STARTUP, '&Startup', self.startupMenu, 'Startup Options')
 
         self.settingsMenu = wx.Menu()
         if self.shellName in ['PySlices','SymPySlices']:
@@ -242,7 +242,7 @@ class Frame(wx.Frame):
         self.settingsMenu.Append(ID_DELSETTINGSFILE,
                                  '&Revert to default',
                                  'Revert to the default settings')
-        m.AppendMenu(ID_SETTINGS, '&Settings', self.settingsMenu, 'Settings Options')           
+        m.Append(ID_SETTINGS, '&Settings', self.settingsMenu, 'Settings Options')           
 
         m = self.helpMenu = wx.Menu()
         m.Append(ID_HELP, '&Help\tF1', 'Help!')
@@ -488,7 +488,7 @@ class Frame(wx.Frame):
     def OnWrap(self, event):
         win = wx.Window.FindFocus()
         win.SetWrapMode(event.IsChecked())
-        wx.FutureCall(1, self.shell.EnsureCaretVisible)
+        wx.CallLater(1, self.shell.EnsureCaretVisible)
 
     def OnSaveHistory(self, event):
         self.autoSaveHistory = event.IsChecked()
@@ -850,7 +850,7 @@ class ShellFrameMixin:
                 name = os.path.join(self.dataDir, 'history')
                 f = file(name, 'w')
                 hist = []
-                enc = wx.GetDefaultPyEncoding()
+                enc = 'utf-8'
                 for h in self.shell.history:
                     if isinstance(h, unicode):
                         h = h.encode(enc)

@@ -766,7 +766,7 @@ class DialogResults:
 
 def fileDialog(parent=None, title='Open', directory='', filename='',
                wildcard='All Files (*.*)|*.*',
-               style=wx.OPEN | wx.MULTIPLE):
+               style=wx.FD_OPEN | wx.FD_MULTIPLE):
     """File dialog wrapper function."""
     dialog = wx.FileDialog(parent, title, directory, filename,
                            wildcard, style)
@@ -780,7 +780,7 @@ def fileDialog(parent=None, title='Open', directory='', filename='',
 
 
 def openSingle(parent=None, title='Open', directory='', filename='',
-               wildcard='All Files (*.*)|*.*', style=wx.OPEN):
+               wildcard='All Files (*.*)|*.*', style=wx.FD_OPEN):
     """File dialog wrapper function."""
     dialog = wx.FileDialog(parent, title, directory, filename,
                            wildcard, style)
@@ -795,14 +795,14 @@ def openSingle(parent=None, title='Open', directory='', filename='',
 
 def openMultiple(parent=None, title='Open', directory='', filename='',
                  wildcard='All Files (*.*)|*.*',
-                 style=wx.OPEN | wx.MULTIPLE):
+                 style=wx.FD_OPEN | wx.FD_MULTIPLE):
     """File dialog wrapper function."""
     return fileDialog(parent, title, directory, filename, wildcard, style)
 
 
 def saveSingle(parent=None, title='Save', directory='', filename='',
                wildcard='All Files (*.*)|*.*',
-               style=wx.SAVE | wx.OVERWRITE_PROMPT):
+               style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT):
     """File dialog wrapper function."""
     dialog = wx.FileDialog(parent, title, directory, filename,
                            wildcard, style)

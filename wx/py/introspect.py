@@ -303,7 +303,7 @@ def getTokens(command):
     # In case the command is unicode try encoding it
     if type(command) == unicode:
         try:
-            command = command.encode(wx.GetDefaultPyEncoding())
+            command = command.encode('utf-8')
         except UnicodeEncodeError:
             pass # otherwise leave it alone
                 

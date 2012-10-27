@@ -76,7 +76,7 @@ class EditWindow(stc.StyledTextCtrl):
         """Create EditWindow instance."""
         stc.StyledTextCtrl.__init__(self, parent, id, pos, size, style)
         self.__config()
-        stc.EVT_STC_UPDATEUI(self, id, self.OnUpdateUI)
+        self.Bind(stc.EVT_STC_UPDATEUI, self.OnUpdateUI)
         dispatcher.connect(receiver=self._fontsizer, signal='FontIncrease')
         dispatcher.connect(receiver=self._fontsizer, signal='FontDecrease')
         dispatcher.connect(receiver=self._fontsizer, signal='FontDefault')

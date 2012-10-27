@@ -33,7 +33,7 @@ USE_MAGIC=True
 PRINT_UPDATE_MAX_TIME=2
 
 NAVKEYS = (wx.WXK_END, wx.WXK_LEFT, wx.WXK_RIGHT,
-           wx.WXK_UP, wx.WXK_DOWN, wx.WXK_PRIOR, wx.WXK_NEXT)
+           wx.WXK_UP, wx.WXK_DOWN, wx.WXK_PAGEUP, wx.WXK_PAGEDOWN)
 
 
 class ShellFrame(frame.Frame, frame.ShellFrameMixin):
@@ -173,7 +173,6 @@ class ShellFacade:
         d = self.__dict__
         d['other'] = other
         d['helpText'] = HELP_TEXT
-        d['this'] = other.this
 
     def help(self):
         """Display some useful information about how to use the shell."""
@@ -884,7 +883,7 @@ class Shell(editwindow.EditWindow):
                 self.write(os.linesep)
             else:
                 self.push(command)
-                wx.FutureCall(1, self.EnsureCaretVisible)
+                wx.CallLater(1, self.EnsureCaretVisible)
         # Or replace the current command with the other command.
         else:
             # If the line contains a command (even an invalid one).

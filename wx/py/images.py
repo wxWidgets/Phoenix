@@ -9,16 +9,16 @@ import cStringIO
 
 
 def getPyIcon(shellName='PyCrust'):
-    icon = wx.EmptyIcon()
+    icon = wx.Icon()
     icon.CopyFromBitmap(getPyBitmap(shellName))
     return icon
 
 def getPyBitmap(shellName='PyCrust'):
-    return wx.BitmapFromImage(getPyImage(shellName))
+    return wx.Bitmap(getPyImage(shellName))
 
 def getPyImage(shellName='PyCrust'):
     stream = cStringIO.StringIO(getPyData(shellName))
-    return wx.ImageFromStream(stream)
+    return wx.Image(stream)
 
 def getPyData(shellName='PyCrust'):
     if shellName=='PyCrust':     

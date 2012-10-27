@@ -39,7 +39,7 @@ USE_MAGIC=True
 PRINT_UPDATE_MAX_TIME=2
 
 NAVKEYS = (wx.WXK_HOME, wx.WXK_END, wx.WXK_LEFT, wx.WXK_RIGHT,
-           wx.WXK_UP, wx.WXK_DOWN, wx.WXK_PRIOR, wx.WXK_NEXT)
+           wx.WXK_UP, wx.WXK_DOWN, wx.WXK_PAGEUP, wx.WXK_PAGEDOWN)
 
 GROUPING_SELECTING=0
 IO_SELECTING = 1
@@ -543,7 +543,6 @@ class SlicesShellFacade:
         d = self.__dict__
         d['other'] = other
         d['helpText'] = HELP_TEXT
-        d['this'] = other.this
 
     def help(self):
         """Display some useful information about how to use the slices shell."""
@@ -2332,7 +2331,7 @@ class SlicesShell(editwindow.EditWindow):
                 self.runningSlice = (startline,endline)
                 self.push(command,useMultiCommand=True)
                 #print 'command: ',command
-                wx.FutureCall(1, self.EnsureCaretVisible)
+                wx.CallLater(1, self.EnsureCaretVisible)
                 self.runningSlice=None
         
         skip=self.BackspaceWMarkers(force=True)
@@ -3356,8 +3355,7 @@ class SlicesShell(editwindow.EditWindow):
                    and self.GetSelectionStart() <= sliceEndPos \
                    and self.GetSelectionEnd() <= sliceEndPos:
                 return True
-            else:
-                return False
+        return False
 
     def Cut(self):
         """Remove selection and place it on the clipboard."""
