@@ -81,6 +81,9 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXADV')
         conf.env.LIB_WXADV += cfg.makeLibName('adv')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXSTC')
+        conf.env.LIB_WXSTC += cfg.makeLibName('stc')
+
         # tweak the PYEXT compile and link flags if making a --debug build
         if conf.env.debug:
             for listname in ['CFLAGS_PYEXT', 'CXXFLAGS_PYEXT']:
@@ -102,17 +105,25 @@ def configure(conf):
         conf.env.CFLAGS_WXPY   = list()
         conf.env.CXXFLAGS_WXPY = list()
 
-        # Check wx-config exists and fetch some values from it
+        # finish configuring the Config object
         conf.env.wx_config = conf.options.wx_config
+        cfg.finishSetup(conf.env.wx_config, conf.env.debug)
+
+        # Check wx-config exists and fetch some values from it
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs core,net', 
                        uselib_store='WX', mandatory=True)
+        
         # Run it again with different libs options to get different
         # sets of flags stored to use with varous extension modules below.
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs adv,core,net', 
                        uselib_store='WXADV', mandatory=True)
 
+        libname = '' if cfg.MONOLITHIC else 'stc,' # workaround bug in wx-config
+        conf.check_cfg(path=conf.options.wx_config, package='', 
+                       args='--cxxflags --libs %score,net' % libname, 
+                       uselib_store='WXSTC', mandatory=True)
         
         # NOTE: This assumes that if the platform is not win32 (from
         # the test above) and not darwin then we must be using the
@@ -122,9 +133,6 @@ def configure(conf):
             gtkflags = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
             conf.env.CFLAGS_WX   += gtkflags.split()
             conf.env.CXXFLAGS_WX += gtkflags.split()
-
-        # finish configuring the Config object
-        cfg.finishSetup(conf.env.wx_config, conf.env.debug)
 
         # clear out Python's default NDEBUG and make sure it is undef'd too just in case
         if 'NDEBUG' in conf.env.DEFINES_PYEXT:
@@ -239,7 +247,7 @@ def build(bld):
 
 
     etg = loadETG('etg/_adv.py')
-    dataview = bld(
+    adv = bld(
         features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_adv'),
         source   = getEtgSipCppFiles(etg) + rc,
@@ -253,9 +261,20 @@ def build(bld):
         features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_dataview'),
         source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXADV WXPY',
+        uselib   = 'WXADV WXPY',    # dataview classes are also in the adv library
     )
     makeExtCopyRule(bld, '_dataview')
+
+
+    etg = loadETG('etg/_stc.py')
+    stc = bld(
+        features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_stc'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXSTC WXPY',
+    )
+    makeExtCopyRule(bld, '_stc')
+
 
 
 

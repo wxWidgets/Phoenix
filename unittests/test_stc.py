@@ -1,0 +1,231 @@
+import imp_unittest, unittest
+import wtc
+import wx
+import wx.stc as stc
+
+text = """\
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+laborum.
+""" * 2
+
+if wx.Platform == '__WXMSW__':
+    face1 = 'Arial'
+    face2 = 'Times New Roman'
+    face3 = 'Courier New'
+    pb = 10
+else:
+    face1 = 'Helvetica'
+    face2 = 'Times'
+    face3 = 'Courier'
+    pb = 12
+
+#---------------------------------------------------------------------------
+
+class stc_Tests(wtc.WidgetTestCase):
+
+    def test_stcCtor(self):
+        ed = stc.StyledTextCtrl(self.frame)
+
+    def test_stcDefaultCtor(self):
+        ed = stc.StyledTextCtrl()
+        ed.Create(self.frame)
+        
+    def test_stcStyleTextCtrl1(self):
+        ed = stc.StyledTextCtrl(self.frame)
+        ed.SetText(text)
+        ed.EmptyUndoBuffer()
+        ed.GotoPos(0)
+        
+        ed.SetMarginType(1, stc.STC_MARGIN_SYMBOL)
+        ed.MarkerDefine(0, stc.STC_MARK_ROUNDRECT, "#CCFF00", "RED")
+        ed.MarkerDefine(1, stc.STC_MARK_CIRCLE, "FOREST GREEN", "SIENNA")
+        ed.MarkerDefine(2, stc.STC_MARK_SHORTARROW, "blue", "blue")
+        ed.MarkerDefine(3, stc.STC_MARK_ARROW, "#00FF00", "#00FF00")
+        ed.MarkerAdd(1, 0)
+        ed.MarkerAdd(2, 1)
+        ed.MarkerAdd(3, 2)
+        ed.MarkerAdd(4, 3)
+        ed.MarkerAdd(5, 0)
+
+    
+    def test_stcStyleTextCtrl2(self):
+        ed = stc.StyledTextCtrl(self.frame)
+        ed.SetText(text)
+        ed.EmptyUndoBuffer()
+        ed.GotoPos(0)
+
+        ed.IndicatorSetStyle(0, stc.STC_INDIC_SQUIGGLE)
+        ed.IndicatorSetForeground(0, wx.RED)
+        ed.IndicatorSetStyle(1, stc.STC_INDIC_DIAGONAL)
+        ed.IndicatorSetForeground(1, wx.BLUE)
+        ed.IndicatorSetStyle(2, stc.STC_INDIC_STRIKE)
+        ed.IndicatorSetForeground(2, wx.RED)    
+        ed.StartStyling(100, stc.STC_INDICS_MASK)
+        ed.SetStyling(10, stc.STC_INDIC0_MASK)
+        ed.SetStyling(8, stc.STC_INDIC1_MASK)
+        ed.SetStyling(10, stc.STC_INDIC2_MASK | stc.STC_INDIC1_MASK)
+
+
+    def test_stcStyleTextCtrl3(self):
+        ed = stc.StyledTextCtrl(self.frame)
+        ed.SetText(text)
+        ed.EmptyUndoBuffer()
+        ed.GotoPos(0)
+        
+        ed.StyleSetSpec(stc.STC_STYLE_DEFAULT, "size:%d,face:%s" % (pb, face3))
+        ed.StyleClearAll()
+        ed.StyleSetSpec(1, "size:%d,bold,face:%s,fore:#0000FF" % (pb, face1))
+        ed.StyleSetSpec(2, "face:%s,italic,fore:#FF0000,size:%d" % (face2, pb))
+        ed.StyleSetSpec(3, "face:%s,bold,size:%d" % (face2, pb))
+        ed.StyleSetSpec(4, "face:%s,size:%d" % (face1, pb-1))
+        ed.StyleSetSpec(5, "back:#FFF0F0")
+        ed.StartStyling(80, 0xff)
+        ed.SetStyling(6, 1)    
+        ed.StartStyling(100, 0xff)
+        ed.SetStyling(20, 2)
+        ed.StartStyling(180, 0xff)
+        ed.SetStyling(4, 3)
+        ed.SetStyling(2, 0)
+        ed.SetStyling(10, 4)
+        
+        
+    def test_stcStyleTextCtrl5(self):
+        ed = stc.StyledTextCtrl(self.frame)
+        ed.SetText(text)
+        ed.EmptyUndoBuffer()
+        ed.GotoPos(0)
+
+        ed.SetMarginType(0, stc.STC_MARGIN_NUMBER)
+        ed.SetMarginWidth(0, 22)
+        ed.StyleSetSpec(stc.STC_STYLE_LINENUMBER, "size:%d,face:%s" % (pb-2, face1))
+        
+
+    def test_stcStyleTextCtrl6(self):
+        ed = stc.StyledTextCtrl(self.frame)
+        ed.SetText(text)
+        ed.EmptyUndoBuffer()
+        ed.GotoPos(10)
+
+        textbytes = ed.GetStyledText(100,150)
+        self.assertTrue(isinstance(textbytes, memoryview))
+        
+        pointer = ed.GetCharacterPointer()
+        self.assertTrue(isinstance(pointer, memoryview))
+        
+        line, pos = ed.GetCurLine()
+        self.assertTrue(isinstance(text, bytes))
+        self.assertTrue(len(line) != 0)
+        self.assertTrue(isinstance(pos, int))
+       
+        
+    def test_stcStyleTextCtrl8(self):
+        ed = stc.StyledTextCtrl(self.frame)
+        ed.SetText(text)
+        ed.EmptyUndoBuffer()
+        ed.GotoPos(10)
+
+        raw = ed.GetLineRaw(5)
+        self.assertTrue(isinstance(raw, bytes))
+        
+        ed.AddTextRaw(bytes("some new text"))
+        
+        
+        
+    def test_stcStyleTextCtrlConstantsExist(self):
+        # This is not even close to the full set of constants in the module,
+        # but just a represenative few to help ensure that the code
+        # generation is continuing to do what it is supposed to be doing.
+        stc.STC_P_DEFAULT
+        stc.STC_P_DECORATOR        
+        stc.STC_KEY_DOWN
+        stc.STC_MARK_CIRCLE
+        stc.STC_MARGIN_NUMBER
+        stc.STC_STYLE_BRACELIGHT
+        stc.STC_CHARSET_MAC
+        stc.STC_INDIC_DIAGONAL
+        stc.STC_LEX_PYTHON
+        stc.STC_CMD_REDO
+        stc.STC_CMD_LINEENDEXTEND
+        stc.STC_CMD_PARADOWN
+        
+        
+    def test_stcEvent(self):
+        evt = stc.StyledTextEvent(stc.wxEVT_STC_CHANGE)
+        
+    def test_stcEventConstantsExist(self):
+        stc.wxEVT_STC_CHANGE
+        stc.wxEVT_STC_STYLENEEDED
+        stc.wxEVT_STC_CHARADDED
+        stc.wxEVT_STC_SAVEPOINTREACHED
+        stc.wxEVT_STC_SAVEPOINTLEFT
+        stc.wxEVT_STC_ROMODIFYATTEMPT
+        stc.wxEVT_STC_KEY
+        stc.wxEVT_STC_DOUBLECLICK
+        stc.wxEVT_STC_UPDATEUI
+        stc.wxEVT_STC_MODIFIED
+        stc.wxEVT_STC_MACRORECORD
+        stc.wxEVT_STC_MARGINCLICK
+        stc.wxEVT_STC_NEEDSHOWN
+        stc.wxEVT_STC_PAINTED
+        stc.wxEVT_STC_USERLISTSELECTION
+        stc.wxEVT_STC_URIDROPPED
+        stc.wxEVT_STC_DWELLSTART
+        stc.wxEVT_STC_DWELLEND
+        stc.wxEVT_STC_START_DRAG
+        stc.wxEVT_STC_DRAG_OVER
+        stc.wxEVT_STC_DO_DROP
+        stc.wxEVT_STC_ZOOM
+        stc.wxEVT_STC_HOTSPOT_CLICK
+        stc.wxEVT_STC_HOTSPOT_DCLICK
+        stc.wxEVT_STC_CALLTIP_CLICK
+        stc.wxEVT_STC_AUTOCOMP_SELECTION
+        stc.wxEVT_STC_INDICATOR_CLICK
+        stc.wxEVT_STC_INDICATOR_RELEASE
+        stc.wxEVT_STC_AUTOCOMP_CANCELLED
+        stc.wxEVT_STC_AUTOCOMP_CHAR_DELETED
+        stc.wxEVT_STC_HOTSPOT_RELEASE_CLICK
+        
+    def test_stcEventBinderssExist(self):
+        stc.EVT_STC_CHANGE
+        stc.EVT_STC_STYLENEEDED
+        stc.EVT_STC_CHARADDED
+        stc.EVT_STC_SAVEPOINTREACHED
+        stc.EVT_STC_SAVEPOINTLEFT
+        stc.EVT_STC_ROMODIFYATTEMPT
+        stc.EVT_STC_KEY
+        stc.EVT_STC_DOUBLECLICK
+        stc.EVT_STC_UPDATEUI
+        stc.EVT_STC_MODIFIED
+        stc.EVT_STC_MACRORECORD
+        stc.EVT_STC_MARGINCLICK
+        stc.EVT_STC_NEEDSHOWN
+        stc.EVT_STC_PAINTED
+        stc.EVT_STC_USERLISTSELECTION
+        stc.EVT_STC_URIDROPPED
+        stc.EVT_STC_DWELLSTART
+        stc.EVT_STC_DWELLEND
+        stc.EVT_STC_START_DRAG
+        stc.EVT_STC_DRAG_OVER
+        stc.EVT_STC_DO_DROP
+        stc.EVT_STC_ZOOM
+        stc.EVT_STC_HOTSPOT_CLICK
+        stc.EVT_STC_HOTSPOT_DCLICK
+        stc.EVT_STC_CALLTIP_CLICK
+        stc.EVT_STC_AUTOCOMP_SELECTION
+        stc.EVT_STC_INDICATOR_CLICK
+        stc.EVT_STC_INDICATOR_RELEASE
+        stc.EVT_STC_AUTOCOMP_CANCELLED
+        stc.EVT_STC_AUTOCOMP_CHAR_DELETED
+        
+        
+        
+#---------------------------------------------------------------------------
+
+
+if __name__ == '__main__':
+    unittest.main()

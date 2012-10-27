@@ -153,7 +153,7 @@ other dev stuff
   
   * Add _html2 module  (webview)
   
-  * Add _stc module
+  * Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py) to StyledTextCtrl
   
   * Add _xrc module (containg xrc and xml classes)
   

@@ -98,10 +98,13 @@ inline void wxPyEndAllowThreads(PyThreadState* saved) {
 
 
 // Make a memory view object from a C buffer and size.
-inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len) {
+inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) {
     // GIL should already be held
     Py_buffer view;
-    PyBuffer_FillInfo(&view, NULL, ptr, len, 0, PyBUF_WRITABLE|PyBUF_FORMAT|PyBUF_ND);
+    int flags = PyBUF_FORMAT|PyBUF_ND;
+    if (!readOnly)
+        flags |= PyBUF_WRITABLE;
+    PyBuffer_FillInfo(&view, NULL, ptr, len, readOnly ? 1:0, flags);
     return PyMemoryView_FromBuffer(&view);
 }
 
