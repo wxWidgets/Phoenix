@@ -68,8 +68,30 @@ def run():
 
     c.find('GetCurLine.linePos').out = True
     c.find('GetCurLineRaw.linePos').out = True
+    for name in ['Remove', 'Replace', 'SetSelection', 'GetSelection']:
+        m = c.find(name)
+        m.find('from').name = 'from_'
+        m.find('to').name = 'to_'
+        
+    c.find('GetSelection.from_').out = True
+    c.find('GetSelection.to_').out = True
+    c.find('PositionToXY.x').out = True
+    c.find('PositionToXY.y').out = True
     
+    # Split the HitTest overloads into separately named methods since once
+    # the output parameters are applied they will have the same function
+    # signature.
+    ht1 = c.find('HitTest')
+    ht2 = ht1.overloads[0]
+    ht1.overloads = []
+    c.insertItemAfter(ht1, ht2)
+    ht1.pyName = 'HitTestPos'
+    ht1.find('pos').out = True
+    ht2.find('row').out = True
+    ht2.find('col').out = True
 
+    
+    # Replace the *Pointer methods with ones that return a memoryview object instead.
     c.find('GetCharacterPointer').ignore()
     c.addCppMethod('PyObject*', 'GetCharacterPointer', '()',
         doc="""\
@@ -100,7 +122,7 @@ def run():
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)
     
 
-
+    #-----------------------------------------------------------------
     c = module.find('wxStyledTextEvent')
     tools.fixEventClass(c)
     
