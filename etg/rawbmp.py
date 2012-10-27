@@ -122,13 +122,13 @@ def addPixelDataBaseClass(module):
                 X = property(lambda self: x)
                 Y = property(lambda self: y)
     
-            if sys.version_info >= (3,):
-                xrange = range
+            import sys
+            rangeFunc = range if sys.version_info >= (3,) else xrange
     
             pf = PixelFacade()        
-            for y in xrange(height):
+            for y in rangeFunc(height):
                 pixels.MoveTo(self, 0, y)
-                for x in xrange(width):
+                for x in rangeFunc(width):
                     # We always generate the same pf instance, but it
                     # accesses the pixels object which we use to iterate
                     # over the pixel buffer.
