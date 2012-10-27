@@ -425,6 +425,13 @@ def run():
             PyPropertyDef('Result', 'GetResult'),                    
             ])
 
+    module.addPyCode("FutureCall = deprecated(CallLater, 'Use CallLater instead.')")
+
+    module.addPyCode("""\
+        def GetDefaultPyEncoding():
+            return "utf-8"
+        GetDefaultPyEncoding = deprecated(GetDefaultPyEncoding, msg="wxPython now always uses utf-8")
+        """)
 
     module.addCppFunction('bool', 'IsMainThread', '()',
         doc="Returns True if the current thread is what wx considers the GUI thread.",

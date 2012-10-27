@@ -363,6 +363,11 @@ def run():
                          doc='A compatibility wrapper for the wx.Bitmap(width, height, depth) constructor',
                          body='return Bitmap(width, height, depth)')
 
+    module.addPyFunction('BitmapFromImage', '(image)',
+                         deprecated="Use wx.Bitmap instead",
+                         doc='A compatibility wrapper for the wx.Bitmap(wx.Image) constructor',
+                         body='return Bitmap(image)')
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

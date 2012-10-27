@@ -59,6 +59,12 @@ def run():
         #endif
         """)
     
+    # For compatibility:
+    module.addPyFunction('EmptyIcon', '()',
+                         deprecated="Use wx.Icon instead",
+                         doc='A compatibility wrapper for the wx.Icon() constructor',
+                         body='return Icon()')
+    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

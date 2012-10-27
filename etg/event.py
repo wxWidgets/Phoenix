@@ -139,6 +139,34 @@ def run():
                 body="""return self.evtType[0]"""),
             
             PyPropertyDef('typeId', '_getEvtType'),
+            
+            PyFunctionDef('__call__', '(self, *args)',
+                deprecated="Use wx.EvtHandler.Bind() instead.",
+                doc="""\
+                    For backwards compatibility with the old EVT_* functions.
+                    Should be called with either (window, func), (window, ID,
+                    func) or (window, ID1, ID2, func) parameters depending on the
+                    type of the event.
+                    """,
+                body="""\
+                    assert len(args) == 2 + self.expectedIDs
+                    id1 = ID_ANY
+                    id2 = ID_ANY
+                    target = args[0]
+                    if self.expectedIDs == 0:
+                        func = args[1]
+                    elif self.expectedIDs == 1:
+                        id1 = args[1]
+                        func = args[2]
+                    elif self.expectedIDs == 2:
+                        id1 = args[1]
+                        id2 = args[2]
+                        func = args[3]
+                    else:
+                        raise ValueError, "Unexpected number of IDs"
+            
+                    self.Bind(target, id1, id2, func)
+                    """)
             ])
     
 

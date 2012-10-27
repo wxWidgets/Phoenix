@@ -44,7 +44,13 @@ def run():
 
     td = etgtools.TypedefDef(name='wxTreeItemIdValue', type='void*')
     module.insertItemBefore(c, td)
-    
+
+    #-------------------------------------------------------
+    module.addPyCode("""\
+        def TreeItemData(data):
+            return data
+        TreeItemData = deprecated(TreeItemData, "The TreeItemData class no longer exists, just pass your object directly to the tree instead.")
+        """)
     
     #-------------------------------------------------------
     c = module.find('wxTreeCtrl')
@@ -61,6 +67,8 @@ def run():
     c.addPyCode("""\
         TreeCtrl.GetItemPyData = wx.deprecated(TreeCtrl.GetItemData, 'Use GetItemData instead.')
         TreeCtrl.SetItemPyData = wx.deprecated(TreeCtrl.SetItemData, 'Use SetItemData instead.')
+        TreeCtrl.GetPyData = wx.deprecated(TreeCtrl.GetItemData, 'Use GetItemData instead.')
+        TreeCtrl.SetPyData = wx.deprecated(TreeCtrl.SetItemData, 'Use SetItemData instead.')
         """)
 
     

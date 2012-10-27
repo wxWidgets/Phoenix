@@ -492,6 +492,11 @@ def run():
                          doc='Create a wx.Image from a wx.Bitmap',
                          body='return bitmap.ConvertToImage()')
 
+    module.addPyFunction('ImageFromStream', '(stream, type=BITMAP_TYPE_ANY, index=-1)',
+                         deprecated="Use wx.Image instead.",
+                         doc='Load an image from a stream (file-like object)',
+                         body='return wx.Image(stream, type, index)')
+
     module.addPyFunction('ImageFromData', '(width, height, data)',
                          deprecated="Use wx.Image instead.",
                          doc='Compatibility wrapper for creating an image from RGB data',
