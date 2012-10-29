@@ -64,6 +64,9 @@ ITEMS  = [
     'wxWindowDestroyEvent',
     
     #'wxThreadEvent',
+    
+    'event__base_8h.xml',
+    'event_8h.xml',
 ]    
     
 
@@ -88,7 +91,7 @@ def run():
     #endif
     """)
     
-    # Macros
+    # C macros that need to be ignored
     module.find('wx__DECLARE_EVT0').ignore()
     module.find('wx__DECLARE_EVT1').ignore()
     module.find('wx__DECLARE_EVT2').ignore()
