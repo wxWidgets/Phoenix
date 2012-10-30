@@ -65,8 +65,6 @@ ITEMS  = [
     
     #'wxThreadEvent',
     
-    'event__base_8h.xml',
-    'event_8h.xml',
 ]    
     
 
