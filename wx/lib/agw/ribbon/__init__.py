@@ -150,7 +150,7 @@ License And Version
 
 RIBBON library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 04 June 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 31 Oct 2012, 21.00 GMT
 
 Version 0.3. 
 
