@@ -46,7 +46,7 @@ def run():
     # module to link to the wxHTML library, then we won't provide a wrapper
     # for the wxHelpController 'class'. Later on when we've got all the help
     # controller classes that we'll want then we can add a wxHelpController
-    # alias of our own in Python code.
+    # or factory of our own in Python code.
     
     
     #c = module.find('wxHelpController')

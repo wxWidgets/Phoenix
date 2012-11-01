@@ -36,7 +36,12 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     
+    c.find('GetParamAsColour.clr').out = True
+    c.find('GetParamAsInt.value').out = True
+    c.find('ParseAsColour.clr').out = True
     
+    for m in c.findAll('ScanParam'):
+        m.ignore()
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

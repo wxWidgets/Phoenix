@@ -41,6 +41,8 @@ def run():
     
     c.find('OnCellClicked').ignore(False)
     c.find('OnCellMouseHover').ignore(False)
+
+    tools.fixHtmlSetFonts(c)
     
     # Pure virtuals inherited from wxHtmlWindowInterface
     c.addItem(etgtools.WigCode("""\

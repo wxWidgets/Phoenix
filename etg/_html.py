@@ -23,21 +23,22 @@ ITEMS  = [ ]
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
-# the wxWidgets "adv" library in a multi-lib build.
+# the wxWidgets "html" library in a multi-lib build.
 INCLUDES = [  
+             'htmldefs',
              'htmlcell',
              'htmlfilt',
              'htmltag',
              'htmlpars',
              'htmlwin',
              'htmlprint',
-             #'htmlwinpars',
+             'htmlwinpars',
              
-             'helpctrl',
              'helpdata',
              'helpdlg',
              'helpfrm',
              'helpwnd',
+             'helpctrl',
              ]
 
 
@@ -66,6 +67,14 @@ def run():
     module.addPyCode("import wx", order=10)
     module.addInclude(INCLUDES)
        
+    module.addCppCode("""\
+        #include <wx/html/htmlwin.h>
+        #include <wx/html/htmprint.h>
+        #include <wx/html/helpctrl.h>
+        #include <wx/html/helpwnd.h>
+        #include <wx/html/helpfrm.h>
+        #include <wx/html/helpdlg.h>
+        """)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

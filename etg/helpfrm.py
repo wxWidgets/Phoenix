@@ -36,6 +36,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
     
+    c.find('SetController.controller').transfer = True
     
     
     #-----------------------------------------------------------------

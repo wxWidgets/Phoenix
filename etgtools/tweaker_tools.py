@@ -206,6 +206,21 @@ def fixBookctrlClass(klass, treeBook=False):
         virtual bool InsertPage(size_t index, wxWindow * page, const wxString & text,
                                 bool select = false, int imageId = NO_IMAGE);
         """))
+
+    
+def fixHtmlSetFonts(klass):
+    # Use wxArrayInt instead of a C array of ints.
+    m = klass.find('SetFonts')
+    m.find('sizes').type = 'const wxArrayInt&'
+    m.find('sizes').default = ''
+    m.argsString = '(const wxString & normal_face, const wxString & fixed_face, const wxArrayInt& sizes)'
+    m.setCppCode("""\
+        if (sizes->GetCount() != 7) {
+            wxPyErr_SetString(PyExc_ValueError, "Sequence of 7 integers expected.");
+            return;
+        }
+        self->SetFonts(*normal_face, *fixed_face, &sizes->Item(0));
+        """)
     
 
 def removeVirtuals(klass):

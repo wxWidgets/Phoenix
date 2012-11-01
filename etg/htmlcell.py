@@ -45,6 +45,9 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     
+    c.find('SetNext.cell').transfer = True
+    c.find('AdjustPagebreak.pagebreak').inOut = True
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
