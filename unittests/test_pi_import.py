@@ -39,6 +39,9 @@ class PIImportTest(unittest.TestCase):
 
     def test_stc_pi(self):
         self.runPI('stc.pi')
+
+    def test_html_pi(self):
+        self.runPI('html.pi')
         
 #---------------------------------------------------------------------------
 

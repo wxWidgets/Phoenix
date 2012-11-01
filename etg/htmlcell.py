@@ -44,10 +44,12 @@ def run():
     c = module.find('wxHtmlCell')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    
     c.find('SetNext.cell').transfer = True
     c.find('AdjustPagebreak.pagebreak').inOut = True
     
+
+    c = module.find('wxHtmlContainerCell')
+    c.find('InsertCell.cell').transfer = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

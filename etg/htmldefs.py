@@ -18,7 +18,6 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ "htmldefs_8h.xml",
-
            ]    
     
 #---------------------------------------------------------------------------
@@ -35,6 +34,7 @@ def run():
     #c = module.find('')
     #assert isinstance(c, etgtools.ClassDef)
     
+    module.addItem(etgtools.DefineDef(name='INT_MAX', value='11111'))
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

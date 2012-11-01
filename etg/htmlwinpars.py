@@ -50,6 +50,10 @@ def run():
     
     c.find('AddModule').ignore()
     
+    c.addItem(etgtools.WigCode("""\
+        virtual wxObject* GetProduct();
+        """))
+    
     
     module.addCppCode("""\
         class wxPyHtmlTagsModule : public wxHtmlTagsModule {
@@ -58,7 +62,7 @@ def run():
                 m_tagHandlerClass = thc;
                 wxPyThreadBlocker blocker;
                 Py_INCREF(m_tagHandlerClass);
-                RegisterModule(this);            
+                RegisterModule(this);        
                 wxHtmlWinParser::AddModule(this);
             }
         
@@ -70,11 +74,9 @@ def run():
                     PyObject* obj = (PyObject*)m_objArray.Item(x);
                     Py_DECREF(obj);
                 }
-            };
+            }
         
             void FillHandlersTable(wxHtmlWinParser *parser) {
-                // Wave our magic wand...  (if it works it's a miracle!  ;-)
-        
                 wxPyThreadBlocker blocker;
                 wxHtmlWinTagHandler* thPtr = 0;
                 // First, make a new instance of the tag handler
@@ -107,6 +109,7 @@ def run():
             // Dynamically create a new wxModule.  Refcounts tagHandlerClass
             // and adds itself to the wxModules list and to the wxHtmlWinParser.
             new wxPyHtmlTagsModule(tagHandlerClass);
+            wxModule::InitializeModules();
             """)
 
     

@@ -60,7 +60,12 @@ class htmldefs_Tests(wtc.WidgetTestCase):
         wx.html.HTML_COND_ISIMAGEMAP    
         wx.html.HTML_COND_USER          
 
-        
+        wx.html.HTML_FIND_EXACT 
+        wx.html.HTML_FIND_NEAREST_BEFORE
+        wx.html.HTML_FIND_NEAREST_AFTER 
+        wx.html.HTML_SCRIPT_NORMAL
+        wx.html.HTML_SCRIPT_SUB
+        wx.html.HTML_SCRIPT_SUP
         
 #---------------------------------------------------------------------------
 

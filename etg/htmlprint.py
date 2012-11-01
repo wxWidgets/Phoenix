@@ -21,7 +21,7 @@ ITEMS  = [ "wxHtmlDCRenderer",
            "wxHtmlEasyPrinting",
            "wxHtmlPrintout",
            ]    
-    
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -37,6 +37,9 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     tools.fixHtmlSetFonts(c)
+    
+    c.find('Render.from').name = 'from_'
+    c.find('Render.to').name = 'to_'
     
     c = module.find('wxHtmlEasyPrinting')
     c.addPrivateCopyCtor()
