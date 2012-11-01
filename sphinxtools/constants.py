@@ -72,6 +72,7 @@ MODULENAME_REPLACE = {'_core'    : '',
                       '_dataview': 'dataview.',
                       '_adv'     : 'adv.',
                       '_stc'     : 'stc.',
+                      '_html'    : 'html.',
                       }
 
 NO_MODULE = {
