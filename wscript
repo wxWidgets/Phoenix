@@ -84,6 +84,11 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXSTC')
         conf.env.LIB_WXSTC += cfg.makeLibName('stc')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXHTML')
+        conf.env.LIB_WXHTML += cfg.makeLibName('html')
+
+
+
         # tweak the PYEXT compile and link flags if making a --debug build
         if conf.env.debug:
             for listname in ['CFLAGS_PYEXT', 'CXXFLAGS_PYEXT']:
@@ -125,6 +130,11 @@ def configure(conf):
                        args='--cxxflags --libs %score,net' % libname, 
                        uselib_store='WXSTC', mandatory=True)
         
+        conf.check_cfg(path=conf.options.wx_config, package='', 
+                       args='--cxxflags --libs html,core,net', 
+                       uselib_store='WXHTML', mandatory=True)
+
+
         # NOTE: This assumes that if the platform is not win32 (from
         # the test above) and not darwin then we must be using the
         # GTK2 port of wxWidgets.  If we ever support other ports then
@@ -274,6 +284,16 @@ def build(bld):
         uselib   = 'WXSTC WXPY',
     )
     makeExtCopyRule(bld, '_stc')
+
+
+    etg = loadETG('etg/_html.py')
+    adv = bld(
+        features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_html'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXHTML WXPY',
+    )
+    makeExtCopyRule(bld, '_html')
 
 
 

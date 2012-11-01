@@ -199,6 +199,21 @@ extensions.append(ext)
 cfg.CLEANUP.append(opj(cfg.PKGDIR, 'stc.py'))
 
 
+etg = loadETG('etg/_html.py')
+etgDepends = etg.DEPENDS + etg.OTHERDEPS
+ext = Extension('_html', getEtgSipCppFiles(etg),
+                depends            = getEtgSipHeaders(etg),
+                include_dirs       = cfg.includes,
+                define_macros      = cfg.defines,
+                library_dirs       = cfg.libdirs,
+                libraries          = cfg.libs + cfg.makeLibName('html', True),
+                extra_compile_args = cfg.cflags,
+                extra_link_args    = cfg.lflags,
+                )
+extensions.append(ext)
+cfg.CLEANUP.append(opj(cfg.PKGDIR, 'html.py'))
+
+
 #----------------------------------------------------------------------
 
 if __name__ == '__main__':
