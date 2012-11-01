@@ -35,8 +35,8 @@ INCLUDES = [
              'htmlwinpars',
              
              'helpdata',
-             'helpdlg',
              'helpfrm',
+             'helpdlg',
              'helpwnd',
              'helpctrl',
              ]

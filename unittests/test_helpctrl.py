@@ -1,14 +1,23 @@
 import imp_unittest, unittest
 import wtc
 import wx
+import wx.html
+
+import os
+helpPath = os.path.join(os.path.dirname(__file__), 'helpfiles')
 
 #---------------------------------------------------------------------------
 
 class helpctrl_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
     def test_helpctrl1(self):
-        self.fail("Unit tests for helpctrl not implemented yet.")
+        hc = wx.html.HtmlHelpController(parentWindow=self.frame)
+        hc.AddBook(os.path.join(helpPath, 'testing.hhp'))
+        hc.AddBook(os.path.join(helpPath, 'another.hhp'))
+        hc.SetShouldPreventAppExit(False)
+        
+        hc.DisplayContents()
+        self.myYield()
         
 #---------------------------------------------------------------------------
 

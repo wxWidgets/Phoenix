@@ -35,7 +35,17 @@ def run():
     c = module.find('wxHtmlHelpController')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    
+
+    c.find('CreateHelpDialog').ignore(False)
+    c.find('CreateHelpFrame').ignore(False)
+
+    c.addItem(etgtools.WigCode("""\
+        // Add implementations for the pure virtuals in the base class
+        virtual bool DisplayBlock(long blockNo);
+        virtual bool DisplaySection(int sectionNo);
+        virtual bool LoadFile(const wxString& file = wxEmptyString);
+        virtual bool Quit();
+        """))
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

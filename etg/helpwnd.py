@@ -38,6 +38,11 @@ def run():
     
     c.find('SetController.controller').transfer = True
     
+    c.find('CreateSearch').ignore(False)
+    c.find('AddToolbarButtons').ignore(False)
+    c.find('CreateContents').ignore(False)
+    c.find('CreateIndex').ignore(False)
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

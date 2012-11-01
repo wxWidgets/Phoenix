@@ -1,14 +1,23 @@
 import imp_unittest, unittest
 import wtc
 import wx
+import wx.html
+
+import os
+helpPath = os.path.join(os.path.dirname(__file__), 'helpfiles')
 
 #---------------------------------------------------------------------------
 
 class helpdlg_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
     def test_helpdlg1(self):
-        self.fail("Unit tests for helpdlg not implemented yet.")
+        data = wx.html.HtmlHelpData()
+        data.AddBook(os.path.join(helpPath, 'testing.hhp'))
+        data.AddBook(os.path.join(helpPath, 'another.hhp'))
+        dlg = wx.html.HtmlHelpDialog(data)
+        
+        self.myYield()
+        dlg.Destroy()
         
 #---------------------------------------------------------------------------
 
