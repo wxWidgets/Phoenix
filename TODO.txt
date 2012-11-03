@@ -112,10 +112,6 @@ other dev stuff
     created/used that should not be done before there is an application
     object.
 
-  * Move PyEvent and PyCommandEvent classes to an etg script and build them
-    using extractor objects so they will be seen by the document generator and
-    others.
-
   * Locate and/or add items for the various functions and things in Classic's 
     _functions.i module.
 
