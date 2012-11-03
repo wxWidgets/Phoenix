@@ -125,9 +125,6 @@ other dev stuff
       * msgout
       * quantize
       * richmsgdlg  (requires wrappers for wxGenericMessageDialog first)
-      * valgen  (No. It could probably be reimplemented in Python easier than wrapping)
-      * valnum  (No. Ditto)
-      * valtext (No. Ditto. It works by using a pointer to long-lived wxString object.)
       * dialup  ??
       * docmdi  ??
       * docview ??
@@ -149,11 +146,7 @@ other dev stuff
   
   * Finish _dataview module
   
-  * Add _html module
-  
   * Add _html2 module  (webview)
-  
-  * Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py) to StyledTextCtrl
   
   * Add _xrc module (containg xrc and xml classes)
   
@@ -167,29 +160,14 @@ other dev stuff
   
   * Add _media module
   
+  * Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py) to StyledTextCtrl
+  
+  * Reimplement the classes in the valgen, valnum and valtext headers as
+    Python code, and make them visible in the core wx namespace?  
     
-    
   
   
   
-Python 3.x
-----------
-
-If all goes well, only the build scripts and the custom code snippets that
-deal with PyObjects or use the Python API will need to be tweaked for Python
-3.x compatibility. For the code snippets appropriate #ifdefs can be used. SIP
-should take care of everything else for us. DONE. Yay! 
-See http://trac.wxwidgets.org/changeset/71554
-
-Still to be determined:
-
-  * How to handle the Python library code. Should we try to make it all be
-    usable from both Python 2.7 and Python 3.2+? Or should there be two sets of
-    library modules in the package tree and which is used is dynamically
-    decided at runtime in a more or less transparent manner for the programmer?
-
-
-
 
 
 
