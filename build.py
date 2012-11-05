@@ -532,11 +532,13 @@ def _doDox(arg):
         doxCmd = doxCmd.replace('\\', '/')
         doxCmd = runcmd('c:/cygwin/bin/cygpath -u '+doxCmd, True, False)
         os.environ['DOXYGEN'] = doxCmd
+        os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
         cmd = 'c:/cygwin/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (d, arg)
     else:
         os.environ['DOXYGEN'] = doxCmd
+        os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
         pwd = pushDir(posixjoin(wxDir(), 'docs/doxygen'))
         cmd = './regen.sh %s' % arg
     runcmd(cmd)
