@@ -122,6 +122,11 @@ def run():
         wx.SLANT  = int(wx.FONTSTYLE_SLANT)
         """)        
 
+
+    c = module.find('wxFontList')
+    c.bases = ['wxObject']
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

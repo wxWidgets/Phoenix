@@ -777,7 +777,7 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
         otherKwArgs = dict(stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT)
         
-    sp = subprocess.Popen(cmd, shell=True, **otherKwArgs)
+    sp = subprocess.Popen(cmd, shell=True, env=os.environ, **otherKwArgs)
 
     output = None
     if getOutput:
