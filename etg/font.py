@@ -123,10 +123,6 @@ def run():
         """)        
 
 
-    c = module.find('wxFontList')
-    c.bases = ['wxObject']
-
-
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

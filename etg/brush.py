@@ -75,9 +75,6 @@ def run():
     module.addPyCode(pycode)
 
 
-    c = module.find('wxBrushList')
-    c.bases = ['wxObject']
-    
     # it is delay-initialized, see stockgdi.sip
     module.find('wxTheBrushList').ignore()
 
