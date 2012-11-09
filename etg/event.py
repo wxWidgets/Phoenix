@@ -164,7 +164,7 @@ def run():
                         id2 = args[2]
                         func = args[3]
                     else:
-                        raise ValueError, "Unexpected number of IDs"
+                        raise ValueError("Unexpected number of IDs")
             
                     self.Bind(target, id1, id2, func)
                     """)
