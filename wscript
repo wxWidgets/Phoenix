@@ -87,6 +87,10 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXHTML')
         conf.env.LIB_WXHTML += cfg.makeLibName('html')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXGL')
+        conf.env.LIB_WXGL += cfg.makeLibName('gl')
+
+
 
 
         # tweak the PYEXT compile and link flags if making a --debug build
@@ -133,6 +137,10 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs html,core,net', 
                        uselib_store='WXHTML', mandatory=True)
+
+        conf.check_cfg(path=conf.options.wx_config, package='', 
+                       args='--cxxflags --libs gl,core,net', 
+                       uselib_store='WXGL', mandatory=True)
 
 
         # NOTE: This assumes that if the platform is not win32 (from
@@ -295,6 +303,15 @@ def build(bld):
     )
     makeExtCopyRule(bld, '_html')
 
+
+    etg = loadETG('etg/_glcanvas.py')
+    adv = bld(
+        features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_glcanvas'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXGL WXPY',
+    )
+    makeExtCopyRule(bld, '_glcanvas')
 
 
 
