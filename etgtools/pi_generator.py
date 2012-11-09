@@ -423,7 +423,11 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
 
     def generateMethod(self, method, stream, indent, name=None, docstring=None):
         assert isinstance(method, extractors.MethodDef)
-        if method.ignored:
+        for m in method.all():  # use the first not ignored if there are overloads
+            if not m.ignored:
+                method = m
+                break
+        else:
             return
         if method.isDtor:
             return

@@ -832,13 +832,14 @@ from .%s import *
         assert isinstance(method, extractors.CppMethodDef_sip)
         if method.ignored:
             return
+        cppSig = " [ %s ]" % method.cppSignature if method.cppSignature else ""                
         if method.isCtor:
-            stream.write('%s%s%s%s;\n' % 
-                         (indent, method.name, method.argsString, self.annotate(method)))
+            stream.write('%s%s%s%s%s;\n' % 
+                         (indent, method.name, method.argsString, self.annotate(method), cppSig))
         else:
-            stream.write('%s%s %s%s%s;\n' % 
+            stream.write('%s%s %s%s%s%s;\n' % 
                          (indent, method.type, method.name, method.argsString, 
-                          self.annotate(method)))
+                          self.annotate(method), cppSig))
         stream.write('%s%%MethodCode\n' % indent)
         stream.write(nci(method.body, len(indent)+4))
         stream.write('%s%%End\n\n' % indent)

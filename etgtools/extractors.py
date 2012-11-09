@@ -942,7 +942,7 @@ class ClassDef(BaseDef):
         """
         md = CppMethodDef_sip('', self.name, argsString, body, doc=doc, 
                           isCtor=True, klass=self, noDerivedCtor=noDerivedCtor, 
-                          cppSignature=None, **kw)
+                          cppSignature=cppSignature, **kw)
         self._addMethod(md)
         return md
 
