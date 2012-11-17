@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040d04
-#define SIP_VERSION_STR     "4.13.4-snapshot-9b330b545c65"
+#define SIP_VERSION         0x040e01
+#define SIP_VERSION_STR     "4.14.1"
 
 
 /*
@@ -67,6 +67,17 @@ extern "C" {
  * to 0.
  *
  * History:
+ *
+ * 9.1  Added the capsule type.
+ *      Added the 'z' format character to sip_api_build_result().
+ *      Added the 'z', '!' and '$' format characters to
+ *      sip_api_parse_result_ex().
+ *
+ * 9.0  Changed the sipVariableGetterFunc signature.
+ *      Added sip_api_parse_result_ex() to the private API.
+ *      Added sip_api_call_error_handler() to the private API.
+ *      Added em_virterrorhandlers to sipExportedModuleDef.
+ *      Re-ordered the API functions.
  *
  * 8.1  Revised the sipVariableDef structure.
  *      sip_api_get_address() is now part of the public API.
@@ -174,7 +185,7 @@ extern "C" {
  *
  * 0.0  Original version.
  */
-#define SIP_API_MAJOR_NR    8
+#define SIP_API_MAJOR_NR    9
 #define SIP_API_MINOR_NR    1
 
 
@@ -190,12 +201,6 @@ extern "C" {
  * that don't include it themselves (i.e. MSVC).
  */
 typedef unsigned int uint;
-
-
-/* Some compatibility stuff to help with handwritten code for SIP v3. */
-#if !defined(ANY)
-#define ANY     void
-#endif
 
 
 /* Some Python compatibility stuff. */
@@ -268,6 +273,15 @@ typedef unsigned int uint;
 #endif
 
 
+#if defined(SIP_USE_PYCAPSULE)
+#define SIPCapsule_FromVoidPtr(p, n)    PyCapsule_New((p), (n), NULL)
+#define SIPCapsule_AsVoidPtr(p, n)      PyCapsule_GetPointer((p), (n))
+#else
+#define SIPCapsule_FromVoidPtr(p, n)    sipConvertFromVoidPtr((p))
+#define SIPCapsule_AsVoidPtr(p, n)      sipConvertToVoidPtr((p))
+#endif
+
+
 /*
  * The mask that can be passed to sipTrace().
  */
@@ -329,14 +343,16 @@ typedef void *(*sipCastFunc)(void *, const struct _sipTypeDef *);
 typedef const struct _sipTypeDef *(*sipSubClassConvertFunc)(void **);
 typedef int (*sipConvertToFunc)(PyObject *, void **, int *, PyObject *);
 typedef PyObject *(*sipConvertFromFunc)(void *, PyObject *);
-typedef int (*sipVirtHandlerFunc)(void *, PyObject *, ...);
+typedef void (*sipVirtErrorHandlerFunc)(struct _sipSimpleWrapper *);
+typedef int (*sipVirtHandlerFunc)(sip_gilstate_t, sipVirtErrorHandlerFunc,
+        struct _sipSimpleWrapper *, PyObject *, ...);
 typedef void (*sipAssignFunc)(void *, SIP_SSIZE_T, const void *);
 typedef void *(*sipArrayFunc)(SIP_SSIZE_T);
 typedef void *(*sipCopyFunc)(const void *, SIP_SSIZE_T);
 typedef void (*sipReleaseFunc)(void *, int);
 typedef PyObject *(*sipPickleFunc)(void *);
 typedef int (*sipAttrGetterFunc)(const struct _sipTypeDef *, PyObject *);
-typedef PyObject *(*sipVariableGetterFunc)(void *, PyObject *);
+typedef PyObject *(*sipVariableGetterFunc)(void *, PyObject *, PyObject *);
 typedef int (*sipVariableSetterFunc)(void *, PyObject *, PyObject *);
 
 
@@ -686,34 +702,6 @@ typedef struct _sipVariableDef {
 } sipVariableDef;
 
 
-#if SIP_API_MAJOR_NR == 8
-/*
- * The information describing a variable.  This is deprecated from v8.1 of the
- * API and should be removed in v9.0.
- */
-typedef struct _sipVariableDef_8 {
-    /* The variable name. */
-    const char *vd_name;
-
-    /* The variable getter. */
-    sipVariableGetterFunc vd_getter;
-
-    /* The variable setter.  It is NULL if the variable is const. */
-    sipVariableSetterFunc vd_setter;
-
-    /* This is set if the variable is static. */
-    int vd_is_static;
-} sipVariableDef_8;
-#else
-/*
- * In addition, change the getter signature so that it is also passed the self
- * Python object so that the getter doesn't need to reverse map it from the
- * C++ pointer.
- */
-#error "Remove v8 support for sipVariableDef"
-#endif
-
-
 /*
  * The information describing a type, either a C++ class (or C struct), a C++
  * namespace, a mapped type or a named enum.
@@ -1045,6 +1033,9 @@ typedef struct _sipExportedModuleDef {
 
     /* The table of virtual handlers. */
     sipVirtHandlerFunc *em_virthandlers;
+
+    /* The table of virtual error handlers. */
+    sipVirtErrorHandlerFunc *em_virterrorhandlers;
 
     /* The sub-class convertors. */
     sipSubClassConvertorDef *em_convertors;
@@ -1381,6 +1372,7 @@ typedef struct _sipAPIDef {
             sipAttrGetterFunc getter);
     int (*api_is_api_enabled)(const char *name, int from, int to);
     sipErrorState (*api_bad_callable_arg)(int arg_nr, PyObject *arg);
+    void *(*api_get_address)(struct _sipSimpleWrapper *w);
 
     /*
      * The following are deprecated parts of the public API.
@@ -1459,10 +1451,11 @@ typedef struct _sipAPIDef {
             PyObject *sipKwdArgs, const char **kwdlist, PyObject **unused,
             const char *fmt, ...);
     void (*api_add_exception)(sipErrorState es, PyObject **parseErrp);
-    /*
-     * The following are part of the public API.
-     */
-    void *(*api_get_address)(struct _sipSimpleWrapper *w);
+    int (*api_parse_result_ex)(sip_gilstate_t, sipVirtErrorHandlerFunc,
+            sipSimpleWrapper *, PyObject *method, PyObject *res,
+            const char *fmt, ...);
+    void (*api_call_error_handler)(sipVirtErrorHandlerFunc,
+            sipSimpleWrapper *);
 } sipAPIDef;
 
 
