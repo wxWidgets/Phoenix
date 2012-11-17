@@ -156,6 +156,8 @@ struct wxPyAPI {
     bool          (*p_wxPy2int_seq_helper)(PyObject* source, int* i1, int* i2);
     bool          (*p_wxPy4int_seq_helper)(PyObject* source, int* i1, int* i2, int* i3, int* i4);
     bool          (*p_wxPyWrappedPtr_TypeCheck)(PyObject* obj, const wxString& className);
+    wxVariant     (*p_wxVariant_in_helper)(PyObject* obj);
+    PyObject*     (*p_wxVariant_out_helper)(const wxVariant& value);
     // Always add new items here at the end.
 };
 
@@ -196,7 +198,7 @@ inline PyObject* wxPyConstructObject(void* ptr, const wxString& className, bool 
 inline bool wxPyWrappedPtr_Check(PyObject* obj)
     { return wxPyGetAPIPtr()->p_wxPyWrappedPtr_Check(obj); }
 
-
+// Check if a PyObject is a specific wrapped type (or a subclass)
 inline bool wxPyWrappedPtr_TypeCheck(PyObject* obj, const wxString& className)
     { return wxPyGetAPIPtr()->p_wxPyWrappedPtr_TypeCheck(obj, className); }
 
@@ -223,11 +225,21 @@ inline bool wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
 // A helper for converting a 4 element sequence to a set of integers
 inline bool wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4) 
     { return wxPyGetAPIPtr()->p_wxPy4int_seq_helper(source, i1, i2, i3, i4); }
+   
     
+// Convert a PyObject to a wxVariant
+inline wxVariant wxVariant_in_helper(PyObject* obj)
+    { return wxPyGetAPIPtr()->p_wxVariant_in_helper(obj); }
     
+// Convert a wxVariant to a PyObject    
+inline PyObject* wxVariant_out_helper(const wxVariant& value)
+    { return wxPyGetAPIPtr()->p_wxVariant_out_helper(value); }
+
     
+
 //--------------------------------------------------------------------------
-// Convenience helper for RAII thread blocking
+// Convenience helper for RAII-style thread blocking
+
 class wxPyThreadBlocker {
 public:
     explicit wxPyThreadBlocker(bool block=true)
@@ -251,6 +263,7 @@ private:
   
 //--------------------------------------------------------------------------
 // helper template to make common code for all of the various user data owners
+
 template<typename Base>
 class wxPyUserDataHelper : public Base {
 public:

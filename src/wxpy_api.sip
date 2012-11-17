@@ -22,6 +22,9 @@
 // wxPython's API helper and utility functions
 
 
+//--------------------------------------------------------------------------
+// wxString conversion
+
 // See also the wxString MappedType.  This code is similar, but doesn't 
 // allocate a new wxString instance on the heap, is able to convert 
 // non-string/unicode objects to unicode, and won't raise exceptions
@@ -90,6 +93,8 @@ static wxString i_Py2wxString(PyObject* source)
 //    return str;
 //}
     
+//--------------------------------------------------------------------------
+// Wrapped object checks and converters
 
 // Create a PyObject of the requested type from a void* and a class name.
 static PyObject* i_wxPyConstructObject(void* ptr,
@@ -138,6 +143,8 @@ static bool i_wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& c
     return true;
 }
 
+//--------------------------------------------------------------------------
+// Deal with the GIL
 
 // Calls from wxWindows back to Python code, or even any PyObject
 // manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
@@ -158,6 +165,8 @@ static void i_wxPyEndBlockThreads(wxPyBlock_t blocked)
     PyGILState_Release(blocked);
 }
 
+//--------------------------------------------------------------------------
+// Commonly used helpers for converting small sequences of numbers
 
 // A helper for converting a 2 element sequence to a pair of integers
 static bool i_wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
@@ -224,8 +233,129 @@ static bool i_wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, i
 }
 
 
+//--------------------------------------------------------------------------
+// wxVariant helpers
 
 
+// A wxVariantData class that can hold a PyObject
+class wxVariantDataPyObject : public wxPyUserDataHelper<wxVariantData>
+{
+public:
+    explicit wxVariantDataPyObject(PyObject* obj = 0)
+        : wxPyUserDataHelper<wxVariantData>(obj) {}
+    
+    virtual bool Eq(wxVariantData& data) const;
+    
+    virtual wxString GetType() const { return wxT("PyObject"); }
+    wxVariantData* Clone() const { return new wxVariantDataPyObject(BorrowData()); }
+};
+
+bool wxVariantDataPyObject::Eq(wxVariantData& data) const
+{
+    wxASSERT_MSG( (data.GetType() == wxT("PyObject")),
+                  wxT("wxVariantDataPyObject::Eq: argument mismatch") );
+    wxVariantDataPyObject& otherData = (wxVariantDataPyObject&) data;
+
+    int result;
+    wxPyThreadBlocker blocker;
+    PyObject_Cmp(BorrowData(), otherData.BorrowData(), &result);
+    return result == 0;
+}
+
+
+
+
+// Helper functions for the wxVariant mapped type. For the basic types that
+// wxVariant knows about we will try to store/fetch natively, otherwise we'll
+// just carry the PyObject through.
+//
+// These functions are here in the API so they can be used by both the
+// wxVariant MappedType and by other classes or types that want to add support
+// for additional kinds of nativly supported types (see dataview for example.)
+
+// PyObject --> wxVariant
+wxVariant i_wxVariant_in_helper(PyObject* obj)
+{
+    wxVariant value;
+    
+    if (PyBytes_Check(obj) || PyUnicode_Check(obj)) 
+        value = Py2wxString(obj);
+    else if (wxPyInt_Check(obj))
+        value = (long)wxPyInt_AS_LONG(obj);
+    else if (PyLong_Check(obj))
+        value = (long)PyLong_AsLong(obj);
+    else if (PyBool_Check(obj))
+        value = (obj == Py_True);
+    else if (PyFloat_Check(obj))
+        value = PyFloat_AS_DOUBLE(obj);
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxDateTime"))) {
+        wxDateTime* ptr;
+        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxDateTime"));
+        value = *ptr;
+    }
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxBitmap"))) {
+        wxBitmap* ptr;
+        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxBitmap"));
+        value << *ptr;
+    }
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxIcon"))) {
+        wxIcon* ptr;
+        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxIcon"));
+        value <<*ptr;
+    }
+    else
+        value = new wxVariantDataPyObject(obj);
+        
+    return value;
+}
+
+
+// wxVariant --> PyObject
+PyObject* i_wxVariant_out_helper(const wxVariant& value)
+{
+    PyObject* obj;
+        
+    if (value.IsType("string"))
+        obj = wx2PyString(value.GetString());
+    else if (value.IsType("long"))
+        obj = PyLong_FromLong(value.GetLong());
+    else if (value.IsType("double"))
+        obj = PyFloat_FromDouble(value.GetDouble());
+    else if (value.IsType("bool"))
+        obj = PyBool_FromLong((long)value.GetBool());
+    else if ( value.IsType("datetime") )
+    {
+        wxDateTime val = value.GetDateTime();
+        obj = wxPyConstructObject(new wxDateTime(val), wxT("wxDateTime"));
+    }
+    else if ( value.IsType("wxBitmap") )
+    {
+        wxBitmap val;
+        val << value;
+        obj = wxPyConstructObject(new wxBitmap(val), wxT("wxBitmap"));
+    }
+    else if ( value.IsType("wxIcon") )
+    {
+        wxIcon val;
+        val << value;
+        obj = wxPyConstructObject(new wxIcon(val), wxT("wxIcon"));
+    }
+    else if ( value.IsType("PyObject") )
+    {
+        wxVariantDataPyObject* data = (wxVariantDataPyObject*)value.GetData();
+        obj = data->GetData();
+    }
+    else
+    {
+        wxString msg = "Unexpected type (\"" + value.GetType() + "\") in wxVariant.";
+        wxPyErr_SetString(PyExc_TypeError, msg.mb_str());
+        obj = NULL;
+    }                
+}
+
+
+
+//--------------------------------------------------------------------------
 // An instance of the API structure
 static wxPyAPI  API = {
     i_Py2wxString,
@@ -236,7 +366,9 @@ static wxPyAPI  API = {
     i_wxPyConvertWrappedPtr,
     i_wxPy2int_seq_helper,
     i_wxPy4int_seq_helper,
-    i_wxPyWrappedPtr_TypeCheck
+    i_wxPyWrappedPtr_TypeCheck,
+    i_wxVariant_in_helper,
+    i_wxVariant_out_helper
 };
 %End
 
