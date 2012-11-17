@@ -280,12 +280,12 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
     
     if (PyBytes_Check(obj) || PyUnicode_Check(obj)) 
         value = Py2wxString(obj);
+    else if (PyBool_Check(obj))
+        value = (obj == Py_True);
     else if (wxPyInt_Check(obj))
         value = (long)wxPyInt_AS_LONG(obj);
     else if (PyLong_Check(obj))
         value = (long)PyLong_AsLong(obj);
-    else if (PyBool_Check(obj))
-        value = (obj == Py_True);
     else if (PyFloat_Check(obj))
         value = PyFloat_AS_DOUBLE(obj);
     else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxDateTime"))) {
@@ -317,12 +317,12 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
         
     if (value.IsType("string"))
         obj = wx2PyString(value.GetString());
+    else if (value.IsType("bool"))
+        obj = PyBool_FromLong((long)value.GetBool());
     else if (value.IsType("long"))
         obj = PyLong_FromLong(value.GetLong());
     else if (value.IsType("double"))
         obj = PyFloat_FromDouble(value.GetDouble());
-    else if (value.IsType("bool"))
-        obj = PyBool_FromLong((long)value.GetBool());
     else if ( value.IsType("datetime") )
     {
         wxDateTime val = value.GetDateTime();
@@ -350,7 +350,8 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
         wxString msg = "Unexpected type (\"" + value.GetType() + "\") in wxVariant.";
         wxPyErr_SetString(PyExc_TypeError, msg.mb_str());
         obj = NULL;
-    }                
+    }       
+    return obj;
 }
 
 

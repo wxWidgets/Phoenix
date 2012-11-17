@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 // Name:        variant.sip
-// Purpose:     
+// Purpose:     MappedType for wxVariant
 //
-// Author:      Kevin Ollivier
+// Author:      Kevin Ollivier, Robin Dunn
 //
 // Created:     20-Sept-2011
-// Copyright:   (c) 2011 by Kevin Ollivier
+// Copyright:   (c) 2012 by Kevin Ollivier, Robin Dunn
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 

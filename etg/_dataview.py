@@ -27,11 +27,9 @@ ITEMS  = [ ]
 # easier to promote one of these to module status later if desired, simply
 # remove it from this list of Includes, and change the MODULE value in the
 # promoted script to be the same as its NAME.
-
-INCLUDES = [
-              'dataview',
-              'dataviewhelpers',          
-           ]
+INCLUDES = [ 'dvcvariant',
+             'dataview',
+             ]
 
 
 # Separate the list into those that are generated from ETG scripts and the
@@ -46,7 +44,7 @@ OTHERDEPS = []
  
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
-    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
+    module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING, check4unittest=False)
     etgtools.parseDoxyXML(module, ITEMS)
 
     #-----------------------------------------------------------------
@@ -55,15 +53,10 @@ def run():
     
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
+    module.addPyCode("import wx", order=10)
+    
     module.addInclude(INCLUDES)
     
-    # This code is inserted into the module initialization function
-    module.addPostInitializerCode("""
-    wxPyDataViewModuleInject(sipModuleDict);
-    """)
-    # Here is the function it calls
-    module.addCppCode(wxPyDataViewModuleInject)
-                      
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
@@ -73,12 +66,6 @@ def run():
     
 #---------------------------------------------------------------------------
 
-wxPyDataViewModuleInject = """
-void wxPyDataViewModuleInject(PyObject* moduleDict)
-{
-
-}
-"""
 
 if __name__ == '__main__':
     run()

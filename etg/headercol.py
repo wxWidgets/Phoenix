@@ -35,7 +35,7 @@ def run():
     
     c = module.find('wxHeaderColumn')
     isinstance(c, etgtools.ClassDef)
-    c.abstract = True
+    #c.abstract = True
     c.addAutoProperties()
 
     c.instanceCode = 'sipCpp = new wxHeaderColumnSimple("");'
@@ -52,7 +52,7 @@ def run():
 
 
     c = module.find('wxSettableHeaderColumn')
-    c.abstract = True
+    #c.abstract = True
     c.addAutoProperties()
     
     # This class adds some setters to go with the getters (and IsFoo) methods
