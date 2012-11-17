@@ -155,6 +155,7 @@ struct wxPyAPI {
     bool          (*p_wxPyConvertWrappedPtr)(PyObject* obj, void **ptr, const wxString& className);
     bool          (*p_wxPy2int_seq_helper)(PyObject* source, int* i1, int* i2);
     bool          (*p_wxPy4int_seq_helper)(PyObject* source, int* i1, int* i2, int* i3, int* i4);
+    bool          (*p_wxPyWrappedPtr_TypeCheck)(PyObject* obj, const wxString& className);
     // Always add new items here at the end.
 };
 
@@ -194,6 +195,10 @@ inline PyObject* wxPyConstructObject(void* ptr, const wxString& className, bool 
 // Check if a PyObject is a wrapped type
 inline bool wxPyWrappedPtr_Check(PyObject* obj)
     { return wxPyGetAPIPtr()->p_wxPyWrappedPtr_Check(obj); }
+
+
+inline bool wxPyWrappedPtr_TypeCheck(PyObject* obj, const wxString& className)
+    { return wxPyGetAPIPtr()->p_wxPyWrappedPtr_TypeCheck(obj, className); }
 
 
 // Convert a wrapped SIP object to its C++ pointer, ensuring that it is of the expected type

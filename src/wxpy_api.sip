@@ -116,6 +116,14 @@ static bool i_wxPyWrappedPtr_Check(PyObject* obj)
     return PyObject_TypeCheck(obj, sipWrapper_Type);
 }
 
+// Check if a PyObject is a specific wrapped class or subclass
+static bool i_wxPyWrappedPtr_TypeCheck(PyObject* obj, const wxString& className)
+{
+    const sipTypeDef* td = sipFindType(className);
+    if (!td)
+        return false;
+    return sipCanConvertToType(obj, td, SIP_NO_CONVERTORS);
+}
 
 // Convert a wrapped SIP object to its C++ pointer, ensuring that it is of the expected type
 static bool i_wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& className)
@@ -227,7 +235,8 @@ static wxPyAPI  API = {
     i_wxPyWrappedPtr_Check,
     i_wxPyConvertWrappedPtr,
     i_wxPy2int_seq_helper,
-    i_wxPy4int_seq_helper
+    i_wxPy4int_seq_helper,
+    i_wxPyWrappedPtr_TypeCheck
 };
 %End
 
