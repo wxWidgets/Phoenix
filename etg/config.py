@@ -51,18 +51,18 @@ def run():
         else:
             func.find('defaultVal').default = 'wxEmptyString'
             
-    c.addCppMethod('long', 'ReadInt', '(const wxString& key, long defaultVal = 0)',  """\
+    c.addCppMethod('long', 'ReadInt', '(const wxString& key, long defaultVal=0)',  """\
         long rv;
         self->Read(*key, &rv, defaultVal);
         return rv;
         """)
-    c.addCppMethod('double', 'ReadFloat', '(const wxString& key, double defaultVal = 0.0)', """\
+    c.addCppMethod('double', 'ReadFloat', '(const wxString& key, double defaultVal=0.0)', """\
         double rv;
         self->Read(*key, &rv, defaultVal);
         return rv;
         """)
     c.find('ReadBool').ignore()
-    c.addCppMethod('bool', 'ReadBool', '(const wxString& key, bool defaultVal = false)', """\
+    c.addCppMethod('bool', 'ReadBool', '(const wxString& key, bool defaultVal=false)', """\
         bool rv;
         self->Read(*key, &rv, defaultVal);
         return rv;

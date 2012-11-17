@@ -61,7 +61,8 @@ def run():
         
         # Doxygen doesn't declare the base class (the template parameter in
         # this case) so we can just add it here.
-        scrolled.bases.append('T')
+        # FIXED in Dox 1.8.x
+        #scrolled.bases.append('T')
         
         scrolled.addPrivateCopyCtor()
         scrolled.addPrivateAssignOp()

@@ -25,6 +25,7 @@ from etgtools.tweaker_tools import removeWxPrefix, magicMethods, \
 
 
 phoenixRoot = os.path.abspath(os.path.split(__file__)[0]+'/..')
+
 header = """\
 # -*- coding: utf-8 -*-
 #---------------------------------------------------------------------------
@@ -38,6 +39,7 @@ header = """\
 #---------------------------------------------------------------------------
 
 """
+
 #---------------------------------------------------------------------------
 
 class PiWrapperGenerator(generators.WrapperGeneratorBase):

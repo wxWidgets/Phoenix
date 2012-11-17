@@ -445,8 +445,8 @@ class FunctionDef(BaseDef):
                 # is there a default value?
                 default = ''
                 if '=' in arg:
-                    default = arg.split('=')[1]
-                    arg = arg.split('=')[0]
+                    default = arg.split('=')[1].strip()
+                    arg = arg.split('=')[0].strip()
                     if default in defValueMap:
                         default = defValueMap.get(default)
                     else:

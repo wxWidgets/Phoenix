@@ -38,15 +38,18 @@ def addGetAllFormats(klass, pureVirtual=False):
     m = klass.findItem('GetAllFormats')
     if m:
         m.ignore()        
+
+    pyArgs = '(dir=Get)' if klass.name == 'wxDataObject' else '(dir=DataObject.Get)'
     
     klass.addCppMethod('PyObject*', 'GetAllFormats', '(wxDataObject::Direction dir=wxDataObject::Get)',
         cppSignature='void (wxDataFormat* formats, Direction dir)',
+        pyArgsString=pyArgs,
         isVirtual=True, 
         isPureVirtual=pureVirtual,
         isConst=True,
         doc="""\
-            Returns a list of wx.DataFormat objects which this data object supports 
-            transfering in the given direction.""",
+            Returns a list of wx.DataFormat objects which this data object
+            supports transfering in the given direction.""",
         body="""\
             size_t count = self->GetFormatCount(dir);
             wxDataFormat* formats = new wxDataFormat[count];
