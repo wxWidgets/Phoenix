@@ -256,10 +256,8 @@ bool wxVariantDataPyObject::Eq(wxVariantData& data) const
                   wxT("wxVariantDataPyObject::Eq: argument mismatch") );
     wxVariantDataPyObject& otherData = (wxVariantDataPyObject&) data;
 
-    int result;
     wxPyThreadBlocker blocker;
-    PyObject_Cmp(BorrowData(), otherData.BorrowData(), &result);
-    return result == 0;
+    return PyObject_RichCompareBool(BorrowData(), otherData.BorrowData(), Py_EQ);
 }
 
 

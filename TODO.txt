@@ -140,8 +140,6 @@ other dev stuff
   
   * Add _propdlg module
   
-  * Finish _dataview module
-  
   * Add _html2 module  (webview)
   
   * Add _xrc module (containg xrc and xml classes)
