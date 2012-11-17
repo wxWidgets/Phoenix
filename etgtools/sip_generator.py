@@ -628,6 +628,9 @@ from .%s import *
                 stream.write(' const')
             if method.isPureVirtual:
                 stream.write(' = 0')
+            cppSig = " [ %s ]" % method.cppSignature if method.cppSignature else ""                
+            if cppSig:
+                stream.write(cppSig)
             stream.write('%s;\n' % self.annotate(method))
                         
             if  _needDocstring and not (method.isCtor or method.isDtor):
