@@ -13,63 +13,123 @@
 // is basically to allow a variable to be multiple types in C++
 %MappedType wxVariant
 {
+    %TypeCode
+    // A wxVariantData class that can hold a PyObject
+    class wxVariantDataPyObject : public wxPyUserDataHelper<wxVariantData>
+    {
+    public:
+        explicit wxVariantDataPyObject(PyObject* obj = 0)
+            : wxPyUserDataHelper<wxVariantData>(obj) {}
+        
+        virtual bool Eq(wxVariantData& data) const;
+        
+        virtual wxString GetType() const { return wxT("PyObject"); }
+        wxVariantData* Clone() const { return new wxVariantDataPyObject(BorrowData()); }
+    };
+    
+    bool wxVariantDataPyObject::Eq(wxVariantData& data) const
+    {
+        wxASSERT_MSG( (data.GetType() == wxT("PyObject")),
+                      wxT("wxVariantDataPyObject::Eq: argument mismatch") );
+        wxVariantDataPyObject& otherData = (wxVariantDataPyObject&) data;
+    
+        int result;
+        wxPyThreadBlocker blocker;
+        PyObject_Cmp(BorrowData(), otherData.BorrowData(), &result);
+        return result == 0;
+    }
+    %End
+    
+    
+    
     %ConvertToTypeCode
-        // Code to test a PyObject for compatibility
+        // Code to test a PyObject for compatibility.  
         if (!sipIsErr) {
-            if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
-                return TRUE;
-            else if (wxPyInt_Check(sipPy) || PyLong_Check(sipPy))
-                return TRUE;
-            else if (PyBool_Check(sipPy))
-                return TRUE;
-            else if (PyFloat_Check(sipPy))
-                return TRUE;
-            
-            return FALSE;
+            // Any type should work since we'll just use the PyObject directly 
+            // if the type is not recognized.
+            return TRUE;
         }
         
-        // Code to create a new wxPyUserData from the PyObject
-        wxVariant* data =  new wxVariant();
-        if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)) {
-            // TODO: Can we just reuse the code in string.sip somehow?
-            
-            // TODO: check state or iserr?
-            int iserr = 0;
-            wxString* strPtr = (wxString*)sipConvertToType(sipPy, sipType_wxString, NULL, SIP_NOT_NONE, NULL, &iserr);
-            *data = *strPtr;
-        }
+        // Code to create a new wxVariant from the PyObject
+        wxVariant* value =  new wxVariant();
+        if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)) 
+            *value = Py2wxString(sipPy);
         else if (wxPyInt_Check(sipPy))
-            *data = (long)wxPyInt_AS_LONG(sipPy);
+            *value = (long)wxPyInt_AS_LONG(sipPy);
         else if (PyLong_Check(sipPy))
-            *data = (long)PyLong_AsLong(sipPy);
-        else if (PyBool_Check(sipPy)) {
-            if (sipPy == Py_True)
-                *data = true;
-            else
-                *data = false;
-        }
+            *value = (long)PyLong_AsLong(sipPy);
+        else if (PyBool_Check(sipPy))
+            *value = (sipPy == Py_True);
         else if (PyFloat_Check(sipPy))
-            *data = PyFloat_AS_DOUBLE(sipPy);
-        *sipCppPtr = data;
+            *value = PyFloat_AS_DOUBLE(sipPy);
+        else if (wxPyWrappedPtr_TypeCheck(sipPy, wxT("wxDateTime"))) {
+            wxDateTime* ptr;
+            wxPyConvertWrappedPtr(sipPy, (void**)&ptr, wxT("wxDateTime"));
+            *value = *ptr;
+        }
+        else if (wxPyWrappedPtr_TypeCheck(sipPy, wxT("wxBitmap"))) {
+            wxBitmap* ptr;
+            wxPyConvertWrappedPtr(sipPy, (void**)&ptr, wxT("wxBitmap"));
+            *value << *ptr;
+        }
+        else if (wxPyWrappedPtr_TypeCheck(sipPy, wxT("wxIcon"))) {
+            wxIcon* ptr;
+            wxPyConvertWrappedPtr(sipPy, (void**)&ptr, wxT("wxIcon"));
+            *value <<*ptr;
+        }
+        else
+            *value = new wxVariantDataPyObject(sipPy);
+            
+        *sipCppPtr = value;
         return sipGetState(sipTransferObj);
     %End
 
          
     %ConvertFromTypeCode
-        // Code to convert a wxClientData back to the PyObject.
+        // Code to convert a wxVariant to a PyObject.
         PyObject* obj;
         
         if (sipCpp == NULL) {
             obj = Py_None;
-        } else {            
-            if (sipCpp->GetType() == "string")
-                obj = PyUnicode_FromWideChar(sipCpp->GetString().wc_str(), sipCpp->GetString().length());
-            else if (sipCpp->GetType() == "long")
-                obj = PyLong_FromLong(sipCpp->GetLong());
-            else if (sipCpp->GetType() == "double")
-                obj = PyFloat_FromDouble(sipCpp->GetDouble());
-            else if (sipCpp->GetType() == "bool")
-                obj = PyBool_FromLong((long)sipCpp->GetBool());
+        } else {        
+            wxVariant& value = *sipCpp;
+
+            if (value.IsType("string"))
+                obj = wx2PyString(value.GetString());
+            else if (value.IsType("long"))
+                obj = PyLong_FromLong(value.GetLong());
+            else if (value.IsType("double"))
+                obj = PyFloat_FromDouble(value.GetDouble());
+            else if (value.IsType("bool"))
+                obj = PyBool_FromLong((long)value.GetBool());
+            else if ( value.IsType("datetime") )
+            {
+                wxDateTime val = value.GetDateTime();
+                obj = wxPyConstructObject(new wxDateTime(val), wxT("wxDateTime"));
+            }
+            else if ( value.IsType("wxBitmap") )
+            {
+                wxBitmap val;
+                val << value;
+                obj = wxPyConstructObject(new wxBitmap(val), wxT("wxBitmap"));
+            }
+            else if ( value.IsType("wxIcon") )
+            {
+                wxIcon val;
+                val << value;
+                obj = wxPyConstructObject(new wxIcon(val), wxT("wxIcon"));
+            }
+            else if ( value.IsType("PyObject") )
+            {
+                wxVariantDataPyObject* data = (wxVariantDataPyObject*)value.GetData();
+                obj = data->GetData();
+            }
+            else
+            {
+                wxString msg = "Unexpected type (\"" + value.GetType() + "\") in wxVariant.";
+                wxPyErr_SetString(PyExc_TypeError, msg.mb_str());
+                obj = NULL;
+            }                
         }
         return obj;
     %End
@@ -78,10 +138,10 @@
 
 // Used just for unittesting the MappedType code, it can be removed later
 %ModuleCode
-wxVariant testVariantTypemap(const wxVariant& arr)
+wxVariant testVariantTypemap(const wxVariant& var)
 {
-    wxVariant local = arr;  // force a copy
+    wxVariant local = var;  // force a copy
     return local;
 }
 %End
-wxVariant testVariantTypemap(const wxVariant& arr);
+wxVariant testVariantTypemap(const wxVariant& var);
