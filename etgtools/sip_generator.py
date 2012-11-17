@@ -462,7 +462,8 @@ from .%s import *
                     i.protection == 'public']
         public = [i for i in klass if i.protection == 'public' and i not in ctors+enums]
         protected = [i for i in klass if i.protection == 'protected']
- 
+        private = [i for i in klass if i.protection == 'private']
+   
         if klass.kind == 'class':
             stream.write('%spublic:\n' % indent)
 
@@ -488,6 +489,11 @@ from .%s import *
         if protected and [i for i in protected if not i.ignored]:
             stream.write('\nprotected:\n')
             for item in protected:
+                self.dispatchClassItem(klass, item, stream, indent2)
+
+        if private and [i for i in private if not i.ignored]:
+            stream.write('\nprivate:\n')
+            for item in private:
                 self.dispatchClassItem(klass, item, stream, indent2)
 
         if klass.convertFromPyObject:
@@ -703,9 +709,10 @@ from .%s import *
         if not skipDeclaration:
             cppSig = " [ %s ]" % method.cppSignature if method.cppSignature else ""                
             # First insert the method declaration
-            if method.isCtor:
-                stream.write('%s%s%s%s%s;\n' % 
-                             (indent, method.name, argsString, self.annotate(method), cppSig))
+            if method.isCtor or method.isDtor:
+                virtual = 'virtual ' if method.isVirtual else ''
+                stream.write('%s%s%s%s%s%s;\n' % 
+                             (indent, virtual, method.name, argsString, self.annotate(method), cppSig))
             else:
                 constMod = " const" if method.isConst else ""
                 static = "static " if method.isStatic else ""
@@ -738,8 +745,7 @@ from .%s import *
             fargs[idx] = arg
         fargs = ', '.join(fargs)
         if method.isCtor:
-            klass.cppCtorCount += 1
-            fname = '_%s_ctor%d' % (klass.name, klass.cppCtorCount)
+            fname = '_%s_ctor' % klass.name
             fargs = '(%s)' % fargs
             fstream.write('%s%%TypeCode\n' % indent)
             typ = klass.name
@@ -747,6 +753,15 @@ from .%s import *
                 typ = 'sip'+klass.name
                 fstream.write('%sclass %s;\n' % (indent, typ))   # forward declare the derived class
             fstream.write('%s%s* %s%s\n%s{\n' % (indent, typ, fname, fargs, indent))
+            fstream.write(nci(method.body, len(indent)+4))
+            fstream.write('%s}\n' % indent)
+            fstream.write('%s%%End\n' % indent)
+            
+        elif method.isDtor:
+            fname = '_%s_dtor' % klass.name
+            fargs = '(%s* self)' % klass.name
+            fstream.write('%s%%TypeCode\n' % indent)
+            fstream.write('%svoid %s%s\n%s{\n' % (indent, fname, fargs, indent))
             fstream.write(nci(method.body, len(indent)+4))
             fstream.write('%s}\n' % indent)
             fstream.write('%s%%End\n' % indent)
@@ -792,6 +807,14 @@ from .%s import *
         stream.write(indent+' '*4)
         if method.isCtor:
             stream.write('sipCpp = %s(%s);\n' % (fname, pnames))
+        
+        elif method.isDtor:
+            stream.write('PyErr_Clear();\n')
+            stream.write('%sPy_BEGIN_ALLOW_THREADS\n' % (indent+' '*4))
+            stream.write(indent+' '*4)
+            stream.write('%s(sipCpp);\n' % fname)
+            stream.write('%sPy_END_ALLOW_THREADS\n' % (indent+' '*4))            
+            
         else:
             stream.write('PyErr_Clear();\n')
             stream.write('%sPy_BEGIN_ALLOW_THREADS\n' % (indent+' '*4))

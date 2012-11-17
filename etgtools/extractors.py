@@ -617,7 +617,6 @@ class ClassDef(BaseDef):
         self.instanceCode = None    # Code to be used to create new instances of this class
         self.innerclasses = []
         self.isInner = False
-        self.cppCtorCount = 0
         
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
@@ -927,6 +926,16 @@ class ClassDef(BaseDef):
         return md
 
     
+    def addCppDtor(self, body, useDerivedName=False, **kw):
+        """
+        Add a C++ method that is a destructor.
+        """
+        md = CppMethodDef('', '~'+self.name, '()', body, isDtor=True, klass=self, 
+                          useDerivedName=useDerivedName, **kw)
+        self._addMethod(md)
+        return md
+
+
     def addCppMethod_sip(self, type, name, argsString, body, doc=None, **kw):
         """
         Just like the above but can do more things that are SIP specific in
