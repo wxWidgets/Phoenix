@@ -32,7 +32,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    module.addHeaderCode('#include <wx/fswatcher.h>')
+    module.addHeaderCode("""
+        #include <wx/fswatcher.h>
+        #ifndef wxHAS_INOTIFY
+        #define wxFSW_EVENT_UNMOUNT 0x2000
+        #endif
+        """)
     
     c = module.find('wxFileSystemWatcher')
     assert isinstance(c, etgtools.ClassDef)
