@@ -366,6 +366,8 @@ def run():
     
     c.addProperty('EditCancelled', 'IsEditCancelled', 'SetEditCanceled')
     
+    c.find('SetCache.from').name = 'from_'
+    c.find('SetCache.to').name = 'to_'
     
     c.find('GetDataBuffer').ignore()
     c.addCppMethod('PyObject*', 'GetDataBuffer', '()', isConst=True,
