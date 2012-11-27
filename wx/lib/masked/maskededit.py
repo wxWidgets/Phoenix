@@ -2864,16 +2864,20 @@ class MaskedEditMixin:
                 wAdjust = 8
             elif isinstance(self, wx.lib.masked.combobox.ComboBox):
                 if self._masklength > 10:
-                    sizing_text = 'FDSJKLREUI' * (self._masklength/10)
+                    tC, sC = divmod(self._masklength, 10.0)
+                    sizing_text = 'FDSJKLREUI' * int(tC)
+                    sizing_text += 'M' * int(sC)                    
                     wAdjust = 26
                 else:
-                    sizing_text = 'M' * self._masklength
+                    sizing_text = 'MJ' * (self._masklength/2)
                     wAdjust = 4
             else:
                 if self._masklength > 10:
-                    sizing_text = 'FDSJKLREUI' * (self._masklength/10)
+                    tC, sC = divmod(self._masklength, 10.0)
+                    sizing_text = 'FDSJKLREUI' * int(tC)
+                    sizing_text += 'M' * int(sC)
                 else:
-                    sizing_text = 'M' * self._masklength
+                    sizing_text = 'MJ' * (self._masklength/2)
                 wAdjust = 4
             if wx.Platform != "__WXMSW__":   # give it a little extra space
                 sizing_text += 'M'
@@ -3784,8 +3788,11 @@ class MaskedEditMixin:
 ##        dbg('current pos:', pos)
         sel_start, sel_to = self._GetSelection()
 
-        if self._masklength < 0:   # no fields; process tab normally
-            self._AdjustField(pos)
+        # no fields; process tab normally
+        # sel_to == -1 would cause an index error in _FindField
+        if self._masklength < 0 or sel_to == -1:
+            if pos != -1:
+                self._AdjustField(pos)
             if event.GetKeyCode() == wx.WXK_TAB:
 ##                dbg('tab to next ctrl')
                 # As of 2.5.2, you don't call event.Skip() to do
