@@ -50,6 +50,26 @@ class msgdlg_Tests(wtc.WidgetTestCase):
         wx.ICON_QUESTION
         wx.ICON_INFORMATION
         wx.STAY_ON_TOP
+
+
+    def test_gmsgdlg1(self):
+        dlg = wx.GenericMessageDialog(None, 'Message', 'Caption')
+        dlg.Destroy()
+        
+    def test_gmsgdlg2(self):
+        dlg = wx.GenericMessageDialog(self.frame, 'Message', 'Caption')
+        dlg.Destroy()
+        
+    def test_gmsgdlg3(self):
+        dlg = wx.GenericMessageDialog(None, 'Message', 'Caption')
+        dlg.SetExtendedMessage('extended')
+        dlg.SetMessage('message')
+        dlg.SetOKCancelLabels('okidoky', 'bye-bye')
+        self.assertEqual(dlg.GetExtendedMessage(), 'extended')
+        self.assertEqual(dlg.GetMessage(), 'message')
+        self.assertEqual(dlg.GetOKLabel(), 'okidoky')
+        self.assertEqual(dlg.GetCancelLabel(), 'bye-bye')
+        dlg.Destroy()
         
 #---------------------------------------------------------------------------
 

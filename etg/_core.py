@@ -180,6 +180,7 @@ INCLUDES = [  # base and core stuff
               'filedlg',
               'frame',
               'msgdlg',
+              'richmsgdlg',
               'progdlg',
               'popupwin',
               'tipwin',

@@ -107,9 +107,11 @@ class BaseDef(object):
 
     def addItem(self, item):
         self.items.append(item)
+        return item
         
     def insertItem(self, index, item):
         self.items.insert(index, item)
+        return item
         
     def insertItemAfter(self, after, item):
         try:
@@ -117,6 +119,7 @@ class BaseDef(object):
             self.items.insert(idx+1, item)
         except ValueError:
             self.items.append(item)
+        return item
     
     def insertItemBefore(self, before, item):
         try:
@@ -124,6 +127,7 @@ class BaseDef(object):
             self.items.insert(idx, item)
         except ValueError:
             self.items.insert(0, item)
+        return item
 
             
     def allItems(self):

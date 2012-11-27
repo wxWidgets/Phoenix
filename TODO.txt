@@ -120,7 +120,6 @@ other dev stuff
       * PseudoDC 
       * msgout
       * quantize
-      * richmsgdlg  (requires wrappers for wxGenericMessageDialog first)
       * dialup  ??
       * docmdi  ??
       * docview ??

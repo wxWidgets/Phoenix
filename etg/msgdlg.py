@@ -10,6 +10,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+import copy
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
@@ -55,6 +56,30 @@ def run():
     c.find('SetYesNoLabels.no').type = 'const wxString&'
                 
     tools.fixTopLevelWindowClass(c)
+
+
+    
+    # Make a copy of wxMessageDialog so we can generate code for
+    # wxGenericMessageDialog too.
+    gmd = copy.deepcopy(c)
+    assert isinstance(gmd, etgtools.ClassDef)
+    gmd.name = 'wxGenericMessageDialog'
+    gmd.find('wxMessageDialog').name = 'wxGenericMessageDialog'  # the ctor
+
+    m = gmd.addItem(etgtools.MethodDef(
+        protection='protected', type='void', name='AddMessageDialogCheckBox',
+        briefDoc="Can be overridden to provide more contents for the dialog",
+        className=gmd.name))
+    m.addItem(etgtools.ParamDef(type='wxSizer*', name='sizer'))
+    
+    m = gmd.addItem(etgtools.MethodDef(
+        protection='protected', type='void', name='AddMessageDialogDetails',
+        briefDoc="Can be overridden to provide more contents for the dialog",
+        className=gmd.name))
+    m.addItem(etgtools.ParamDef(type='wxSizer*', name='sizer'))
+    
+    module.addItem(gmd)
+    
     
     module.find('wxMessageBox').releaseGIL()
     
