@@ -91,6 +91,8 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
 
         kwargs['choices'] = choices                 ## set up maskededit to work with choice list too
 
+        self._prevSelection = (-1, -1)
+
         ## Since combobox completion is case-insensitive, always validate same way
         if not kwargs.has_key('compareNoCase'):
             kwargs['compareNoCase'] = True
@@ -234,7 +236,8 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         REQUIRED by any class derived from MaskedEditMixin.
         """
 ##        dbg('MaskedComboBox::_SetSelection: setting mark to (%d, %d)' % (sel_start, sel_to))
-        return self.SetMark( sel_start, sel_to )
+        if not self.__readonly:
+            return self.SetMark( sel_start, sel_to )
 
 
     def _GetInsertionPoint(self):
@@ -249,7 +252,8 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
 
     def _SetInsertionPoint(self, pos):
 ##        dbg('MaskedComboBox::_SetInsertionPoint(%d)' % pos)
-        self.SetInsertionPoint(pos)
+        if not self.__readonly:
+            self.SetInsertionPoint(pos)
 
 
     def IsEmpty(*args, **kw):
@@ -417,10 +421,11 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         This function defines the undo operation for the control. (The default
         undo is 1-deep.)
         """
-        if self._mask:
-            self._Undo()
-        else:
-            wx.ComboBox.Undo()       # else revert to base control behavior
+        if not self.__readonly:
+            if self._mask:
+                self._Undo()
+            else:
+                wx.ComboBox.Undo(self)       # else revert to base control behavior
 
     def Append( self, choice, clientData=None ):
         """
