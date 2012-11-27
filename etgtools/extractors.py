@@ -17,7 +17,7 @@ import os
 import pprint
 import xml.etree.ElementTree as et
 
-from .tweaker_tools import removeWxPrefix, magicMethods, \
+from .tweaker_tools import FixWxPrefix, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
                            textfile_open
 from sphinxtools.utilities import FindDescendants
@@ -236,7 +236,9 @@ class MemberVarDef(VariableDef):
            
 #---------------------------------------------------------------------------
 
-class FunctionDef(BaseDef):
+_globalIsCore = None
+
+class FunctionDef(BaseDef, FixWxPrefix):
     """
     Information about a standalone function.
     """
@@ -424,7 +426,7 @@ class FunctionDef(BaseDef):
             for txt in ['const', '*', '&', ' ']:
                 name = name.replace(txt, '')
             name = name.replace('::', '.')
-            name = removeWxPrefix(name)
+            name = self.fixWxPrefix(name, True)
             return name
         
         params = list()
@@ -454,7 +456,7 @@ class FunctionDef(BaseDef):
                     if default in defValueMap:
                         default = defValueMap.get(default)
                     else:
-                        default = removeWxPrefix(default)
+                        default = self.fixWxPrefix(default, True)
                 # now grab just the last word, it should be the variable name
                 arg = arg.split()[-1]
                 if default:
@@ -501,7 +503,7 @@ class FunctionDef(BaseDef):
             if not f.pyArgsString:
                 f.makePyArgsString()
                 
-            sig = f.pyName or removeWxPrefix(f.name)
+            sig = f.pyName or self.fixWxPrefix(f.name)
             if sig in magicMethods:
                 sig = magicMethods[sig]
             sig += f.pyArgsString
@@ -528,9 +530,12 @@ class MethodDef(FunctionDef):
         self.noDerivedCtor = False    # don't generate a ctor in the derived class for this ctor
         self.cppSignature = None
         self.virtualCatcherCode = None
-        self.__dict__.update(kw)        
+        self.__dict__.update(kw)                    
         if element is not None:
             self.extract(element)
+        elif not hasattr(self, 'isCore'):
+            self.isCore = _globalIsCore
+            
 
     def extract(self, element):
         super(MethodDef, self).extract(element)
@@ -1143,6 +1148,7 @@ class CppMethodDef(MethodDef):
         self.isPureVirtual = False
         self.cppSignature = cppSignature
         self.virtualCatcherCode = virtualCatcherCode
+        self.isCore = _globalIsCore
         self.__dict__.update(kw)
 
     @staticmethod
@@ -1294,6 +1300,7 @@ class ModuleDef(BaseDef):
         self.includes = []
         self.imports = []
 
+
     def parseCompleted(self):
         """
         Called after the loading of items from the XML has completed, just
@@ -1322,6 +1329,12 @@ class ModuleDef(BaseDef):
             else:
                 one.append(item)
         self.items = one + two + three
+        
+        # give everything an isCore flag
+        global _globalIsCore 
+        _globalIsCore = self.module == '_core'
+        for item in self.allItems():
+            item.isCore = _globalIsCore
         
         
 

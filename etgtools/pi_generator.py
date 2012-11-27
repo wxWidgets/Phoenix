@@ -20,7 +20,7 @@ import sys, os, re
 import etgtools.extractors as extractors
 import etgtools.generators as generators
 from etgtools.generators import nci, Utf8EncodingStream, textfile_open
-from etgtools.tweaker_tools import removeWxPrefix, magicMethods, \
+from etgtools.tweaker_tools import FixWxPrefix, magicMethods, \
                                    guessTypeInt, guessTypeFloat, guessTypeStr
 
 
@@ -40,9 +40,10 @@ header = """\
 
 """
 
+    
 #---------------------------------------------------------------------------
 
-class PiWrapperGenerator(generators.WrapperGeneratorBase):
+class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         
     def generate(self, module, destFile=None):
         stream = Utf8EncodingStream()
@@ -105,12 +106,25 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         Generate code for each of the top-level items in the module.
         """
         assert isinstance(module, extractors.ModuleDef)
+        self.isCore = module.module == '_core'
         
         for item in module.imports:
             if item.startswith('_'):
                 item = item[1:]
-            stream.write('from wx.%s import *\n' % item)
+            if item == 'core':
+                continue
+            stream.write('import wx.%s\n' % item)
         
+        # Move all PyCode items with an order value to the begining of the
+        # list as they most likely should appear before everything else.
+        pycode = list()
+        for item in module:
+            if isinstance(item, extractors.PyCodeDef) and item.order is not None:
+                pycode.append(item)
+        for item in pycode:
+            module.items.remove(item)
+        module.items = pycode + module.items
+                
         methodMap = {
             extractors.ClassDef         : self.generateClass,
             extractors.DefineDef        : self.generateDefine,
@@ -162,7 +176,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
             valTyp = valTyp.replace('*', '')
             valTyp = valTyp.replace('&', '')
             valTyp = valTyp.replace(' ', '')
-            valTyp = removeWxPrefix(valTyp)
+            valTyp = self.fixWxPrefix(valTyp)
             valTyp += '()'
         
         stream.write('%s = %s\n' % (name, valTyp))
@@ -190,15 +204,15 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         # Otherwise write a mock class for it that combines the template and class.
         # First, extract the info we need.
         if typedef.docAsClass:
-            bases = [removeWxPrefix(b) for b in typedef.bases]
-            name = removeWxPrefix(typedef.name)
+            bases = [self.fixWxPrefix(b, True) for b in typedef.bases]
+            name = self.fixWxPrefix(typedef.name)
             
         elif '<' in typedef.type and '>' in typedef.type:
             t = typedef.type.replace('>', '')
             t = t.replace(' ', '')
             bases = t.split('<')
-            bases = [removeWxPrefix(b) for b in bases]
-            name = removeWxPrefix(typedef.name)
+            bases = [self.fixWxPrefix(b, True) for b in bases]
+            name = self.fixWxPrefix(typedef.name)
             
         # Now write the Python equivallent class for the typedef
         if not bases:
@@ -338,7 +352,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase):
         stream.write('\n%sclass %s' % (indent, klassName))
         if bases:
             stream.write('(')
-            bases = [removeWxPrefix(b) for b in bases]
+            bases = [self.fixWxPrefix(b, True) for b in bases]
             stream.write(', '.join(bases))
             stream.write(')')
         else:

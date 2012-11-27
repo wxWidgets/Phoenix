@@ -64,6 +64,61 @@ def removeWxPrefix(name):
     return name
 
 
+
+
+class FixWxPrefix(object):
+    """
+    A mixin class that can help with removing the wx prefix, or changing it
+    in to a "wx.Name" depending on where it is being used from.
+    """
+    
+    _coreTopLevelNames = None
+    
+    def fixWxPrefix(self, name, checkIsCore=False):
+        # By default remove the wx prefix like normal
+        name = removeWxPrefix(name)
+        if not checkIsCore or self.isCore:
+            return name
+        
+        # Otherwise, if we're not processing the core module currently then check
+        # if the name is local or if it resides in core. If it does then return
+        # the name as 'wx.Name'
+        if FixWxPrefix._coreTopLevelNames is None:
+            self._getCoreTopLevelNames()
+                
+        if name in FixWxPrefix._coreTopLevelNames:
+            return 'wx.'+name
+        else:
+            return name
+
+    def _getCoreTopLevelNames(self):
+        # Since the real wx.core module may not exist yet, and since actually
+        # executing code at this point is probably a bad idea, try parsing the
+        # core.pi file and pulling the top level names from it.
+        import ast
+
+        def _processItem(item, names):
+            if isinstance(item, ast.Assign):
+                for t in item.targets:
+                    _processItem(t, names)
+            elif isinstance(item, ast.Name):
+                names.append(item.id)
+            elif isinstance(item, ast.ClassDef):
+                names.append(item.name)
+            elif isinstance(item, ast.FunctionDef):
+                names.append(item.name)
+        
+        names = list()
+        text = open('wx/core.pi').read()
+        parseTree = ast.parse(text, 'wx/core.pi')
+        for item in parseTree.body:
+            _processItem(item, names)
+
+        FixWxPrefix._coreTopLevelNames = names
+        
+    
+
+
 def ignoreAssignmentOperators(node):
     """
     Set the ignored flag for all class methods that are assignment operators
