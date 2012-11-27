@@ -90,6 +90,8 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXGL')
         conf.env.LIB_WXGL += cfg.makeLibName('gl')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXWEBVIEW')
+        conf.env.LIB_WXWEBVIEW += cfg.makeLibName('webview')
 
 
 
@@ -141,6 +143,10 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs gl,core,net', 
                        uselib_store='WXGL', mandatory=True)
+
+        conf.check_cfg(path=conf.options.wx_config, package='', 
+                       args='--cxxflags --libs webview,core,net', 
+                       uselib_store='WXWEBVIEW', mandatory=True)
 
 
         # NOTE: This assumes that if the platform is not win32 (from
@@ -312,6 +318,16 @@ def build(bld):
         uselib   = 'WXGL WXPY',
     )
     makeExtCopyRule(bld, '_glcanvas')
+
+
+    etg = loadETG('etg/_html2.py')
+    adv = bld(
+        features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_html2'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXWEBVIEW WXPY',
+    )
+    makeExtCopyRule(bld, '_html2')
 
 
 

@@ -43,6 +43,9 @@ class PIImportTest(unittest.TestCase):
     def test_html_pi(self):
         self.runPI('html.pi')
         
+    def test_html2_pi(self):
+        self.runPI('html2.pi')
+        
     def test_dataview_pi(self):
         self.runPI('dataview.pi')
         

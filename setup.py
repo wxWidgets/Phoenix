@@ -229,6 +229,22 @@ extensions.append(ext)
 cfg.CLEANUP.append(opj(cfg.PKGDIR, 'glcanvas.py'))
 
 
+etg = loadETG('etg/_html2.py')
+tgDepends = etg.DEPENDS + etg.OTHERDEPS
+ext = Extension('_html2', getEtgSipCppFiles(etg),
+                depends            = getEtgSipHeaders(etg),
+                include_dirs       = cfg.includes,
+                define_macros      = cfg.defines,
+                library_dirs       = cfg.libdirs,
+                libraries          = cfg.libs + cfg.makeLibName('webview', True),
+                extra_compile_args = cfg.cflags,
+                extra_link_args    = cfg.lflags,
+                )
+extensions.append(ext)
+cfg.CLEANUP.append(opj(cfg.PKGDIR, 'html2.py'))
+
+
+
 #----------------------------------------------------------------------
 
 if __name__ == '__main__':
