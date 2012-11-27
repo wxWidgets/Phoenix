@@ -111,7 +111,7 @@ PyObject* wxDVCVariant_out_helper(const wxVariant& value)
 
          
     %ConvertFromTypeCode
-         // no reverse convert needed yet...
+         // no C++ --> Python convert needed yet...
          return NULL;
     %End
 };

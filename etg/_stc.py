@@ -25,7 +25,7 @@ ITEMS  = [ 'wxStyledTextCtrl',
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
-# the wxWidgets "adv" library in a multi-lib build.
+# the wxWidgets "stc" library in a multi-lib build.
 INCLUDES = [ ]
 
 
