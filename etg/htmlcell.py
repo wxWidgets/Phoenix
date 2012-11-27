@@ -38,14 +38,18 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    
+        
     
     c = module.find('wxHtmlCell')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     c.find('SetNext.cell').transfer = True
     c.find('AdjustPagebreak.pagebreak').inOut = True
+
+    m = c.find('Find')
+    assert isinstance(m, etgtools.MethodDef)
+    m.find('param').type = 'const char*'
+    m.cppSignature = 'const wxHtmlCell* (int condition, const void* param)'
     
 
     c = module.find('wxHtmlContainerCell')
