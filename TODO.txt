@@ -139,8 +139,6 @@ other dev stuff
   
   * Add _propdlg module
   
-  * Add _html2 module  (webview)
-  
   * Add _xrc module (containg xrc and xml classes)
   
   * Add _richtext module
