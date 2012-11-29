@@ -142,6 +142,7 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    app_overview
    bitmap_overview
    bookctrl_overview
+   command_overview
    common_dialogs_overview
    config_overview
    dataobject_overview
@@ -176,6 +177,11 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    adv.1classindex
    adv.functions
    dataview.1classindex
+   glcanvas.1classindex
+   html.1classindex
+   html.functions
+   html2.1classindex
+   stc.1classindex
    lib
    py
    tools

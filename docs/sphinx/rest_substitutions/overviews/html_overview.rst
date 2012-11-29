@@ -127,6 +127,9 @@ image files, for HTML (or helpview) to read; and the ``".zip"`` file can
 optionally be renamed to ``".htb"``.
 
 
+.. _.hhp files:
+.. _.hhp file:
+
 Header file (.hhp)
 ~~~~~~~~~~~~~~~~~~~
 
@@ -219,6 +222,9 @@ Index files have same format as contents files except that ID params are
 ignored and sublists are **not** allowed.
 
 
+.. _input filter:
+.. _input filters:
+
 Input Filters
 --------------
 
@@ -229,6 +235,8 @@ many different file formats.
 make a file type known to :class:`~html.HtmlWindow` you must create a :class:`~html.HtmlFilter`
 filter and register it using :meth:`~html.HtmlWindow.AddFilter`.
 
+
+.. _cells and containers:
 
 Cells and Containers
 ---------------------
@@ -257,6 +265,7 @@ containers:
 
 .. image:: _static/images/overviews/overview_html_contbox.png
    :alt: overview_html_contbox.png
+   :align: center
 
 
 
@@ -277,6 +286,7 @@ parent container. See explanation:
 
 .. image:: _static/images/overviews/overview_html_cont.png
    :alt: overview_html_cont.png
+   :align: center
 
 
 There clearly must be same number of calls to OpenContainer as to CloseContainer.
@@ -322,6 +332,8 @@ body).
    :meth:`~html.HtmlContainerCell.InsertCell` instead of adding text to the parser
    directly.
 
+
+.. _tag handlers:
 
 Tag Handlers
 -------------

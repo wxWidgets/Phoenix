@@ -2,6 +2,7 @@
 
 
 .. _log classes overview:
+.. _logging overview:
 
 ===============================================
 |phoenix_title|  **Log Classes Overview**

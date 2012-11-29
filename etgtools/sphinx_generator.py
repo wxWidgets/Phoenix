@@ -1025,7 +1025,7 @@ class Section(Node):
         """
         
         section_type = self.section_type
-
+        
         text = Node.Join(self, with_tail=False)
             
         if not text.strip() or len(text.strip()) < 3:
@@ -1055,7 +1055,19 @@ class Section(Node):
         elif section_type == 'deprecated':
             # Special treatment for deprecated, wxWidgets devs do not put the version number
             text = '%s\n%s%s'%(VERSION, sub_spacer, text.lstrip('Deprecated'))
-            
+
+        elif section_type == 'par':
+            # Horrible hack... Why is there a </para> end tag inside the @par tag???
+            text = Node.Join(self, with_tail=True)
+            split = text.split('\n')
+            current = 0
+            for index, line in enumerate(split):
+                if '---' in line:
+                    current = index-1
+                    break
+
+            return '\n\n' + '\n'.join(split[current:]) + '\n\n'
+        
         if section_type in ['note', 'remark', 'remarks', 'return']:
             text = '\n\n' + sub_spacer + text
 
@@ -1396,13 +1408,19 @@ class Snippet(Node):
         else:
 
             fid = open(self.converted_py, 'rt')
+            highlight = None
             
             while 1:
                 tline = fid.readline()
+
                 if not tline:  # end of file
                     code = ""
                     fid.close()
                     break
+
+                if 'code-block::' in tline:
+                    highlight = tline.replace('#', '').strip()
+                    continue
                 
                 if not tline.strip():
                     continue
@@ -1411,6 +1429,9 @@ class Snippet(Node):
                 fid.close()
                 break
 
+            if highlight:
+                docstrings += '\n\n%s\n\n'%highlight
+                
             docstrings += '::\n\n'
             docstrings += code.rstrip() + '\n\n'
 
@@ -1766,9 +1787,17 @@ class Title(Node):
            to avoid wrong ReST output.
         """
 
-        text = '|phoenix_title| ' + ConvertToPython(self.element.text)
+        if isinstance(self.parent, Section) and self.parent.section_type == 'par':
+            # Sub-title in a @par doxygen tag
+            text = ConvertToPython(self.element.text)
+            underline = '-'
+        else:
+            # Normal big title
+            text = '|phoenix_title| ' + ConvertToPython(self.element.text)
+            underline = '='
+
         lentext = len(text)
-        text = '\n\n%s\n%s\n\n'%(text.rstrip('.'), '='*lentext)
+        text = '\n\n%s\n%s\n\n'%(text.rstrip('.'), underline*lentext)
 
         return text
 
@@ -2041,11 +2070,20 @@ class XMLDocString(object):
             if 'ListItem' in parent.GetHierarchy():
                 rest_class = Section(element, parent, self.kind, self.is_overload, self.share_docstrings)
             else:
-                if element.tail:
+                dummy, section_type = list(element.items())[0]
+                section_type = section_type.split("_")[0]
+
+                if element.tail and section_type != 'par':
                     Node(element.tail, parent)
-                    
-                rest_class = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
-                self.root.AddSection(rest_class)
+
+                if section_type == 'par':
+                    # doxygen @par stuff
+                    rest_class = Section(element, parent, self.kind, self.is_overload, self.share_docstrings)
+                    if element.tail:
+                        Node(element.tail, rest_class)
+                else:
+                    rest_class = Section(element, None, self.kind, self.is_overload, self.share_docstrings)
+                    self.root.AddSection(rest_class)
                         
         elif tag == 'image':
             rest_class = Image(element, parent)
@@ -2109,7 +2147,7 @@ class XMLDocString(object):
 
             self.root.AddSection(section)
             rest_class = parent
-                
+
         else:                
             rest_class = Node('', parent)
 
@@ -2638,7 +2676,7 @@ class XMLDocString(object):
 
     # -----------------------------------------------------------------------
 
-    def EventsInStyle(self, line, class_name):
+    def EventsInStyle(self, line, class_name, added=False):
 
         docstrings = ''
         newline = line
@@ -2649,7 +2687,7 @@ class XMLDocString(object):
                 # constructor!!!
                 docstrings += templates.TEMPLATE_WINDOW_STYLES % class_name
                 
-        elif 'The following event handler macros' in line:
+        elif 'The following event handler macros' in line and not added:
             last = line.index(':')
             line = line[last+1:].strip()
 
@@ -2659,14 +2697,16 @@ class XMLDocString(object):
                 newline = 'Handlers bound for the following event types will receive a %s parameter.'%line
                 
             docstrings += templates.TEMPLATE_EVENTS % class_name
+            added = True
 
-        elif 'Event macros for events' in line:
+        elif 'Event macros for events' in line and not added:
             docstrings += templates.TEMPLATE_EVENTS % class_name
+            added = True
 
         elif 'following extra styles:' in line:
             docstrings += templates.TEMPLATE_WINDOW_EXTRASTYLES % class_name
 
-        return docstrings, newline
+        return docstrings, newline, added
         
 
     # -----------------------------------------------------------------------
@@ -2697,9 +2737,10 @@ class XMLDocString(object):
     
     def Indent(self, class_name, item, spacer, docstrings):
 
+        added = False
         for line in item.splitlines():
             if line.strip():
-                newdocs, newline = self.EventsInStyle(line, class_name) 
+                newdocs, newline, added = self.EventsInStyle(line, class_name, added) 
                 docstrings += newdocs
                 docstrings += spacer + newline + '\n'
             else:

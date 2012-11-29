@@ -59,7 +59,8 @@ SECTIONS = [('return'    , ':returns:'),
             ('available' , '.. availability::'),
             ('note'      , '.. note::'),            
             ('see'       , '.. seealso::'),
-            ('todo'      , '.. todo::')]
+            ('todo'      , '.. todo::'),
+            ('par'       , '')]
 
 
 # List of things to remove/ignore (there may be more)
@@ -100,9 +101,11 @@ NO_MODULE = {
              # Widgets
              
              # Enums/constants
-             'DataViewCellMode'       : 'dataview.',
-             'DataViewCellRenderState': 'dataview.',
-             'DataViewColumnFlags'    : 'dataview.',
+             'DataViewCellMode'        : 'dataview.',
+             'DataViewCellRenderState' : 'dataview.',
+             'DataViewColumnFlags'     : 'dataview.',
+             'DataViewItemObjectMapper': 'dataview.',
+             'PyDataViewModel'         : 'dataview.',
              
              }
              

@@ -20,6 +20,7 @@ A dialog box is similar to a panel, in that it is a window which can be used for
 
 
 .. _automatic scrolling dialogs:
+.. _automatic scrolled dialogs:
 
 Automatic scrolling dialogs
 ---------------------------
