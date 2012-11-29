@@ -209,8 +209,6 @@ def setPythonVersion(args):
         msg('Found %s at %s' % (PYTHON, findPython))
         PYTHON = findPython
 
-##    PYTHON = r"C:\Python32\python.exe"
-
     msg(runcmd('%s -c "import sys; print(sys.version)"' % PYTHON, True, False))
     PYTHON_ARCH = runcmd('%s -c "import platform; print(platform.architecture()[0])"' 
                          % PYTHON, True, False)
@@ -918,8 +916,8 @@ def build_wx(options, args):
             
 def build_py(options, args):
     cmdTimer = CommandTimer('build_py')
-    setup_py(options, args)
-    #waf_py(options, args)
+    #setup_py(options, args)
+    waf_py(options, args)
 
 
     
