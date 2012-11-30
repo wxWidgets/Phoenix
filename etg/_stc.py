@@ -32,9 +32,9 @@ INCLUDES = [ ]
 # Separate the list into those that are generated from ETG scripts and the
 # rest. These lists can be used from the build scripts to get a list of
 # sources and/or additional dependencies when building this extension module.
-#ETGFILES = ['etg/%s.py' % NAME] + tools.getEtgFiles(INCLUDES)
-#DEPENDS = tools.getNonEtgFiles(INCLUDES)
-#OTHERDEPS = [  ]
+ETGFILES = ['etg/%s.py' % NAME] + tools.getEtgFiles(INCLUDES)
+DEPENDS = tools.getNonEtgFiles(INCLUDES)
+OTHERDEPS = [  ]
 
 
 #---------------------------------------------------------------------------
