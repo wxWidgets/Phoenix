@@ -114,13 +114,14 @@ def run():
     m = c.find('DrawLabel').findOverload('rectBounding')
     m.type = 'wxRect*'
     m.find('rectBounding').ignore()
-    m.factory = True  # a new instance is being created
+    m.factory = True  # a new instance of wxRect is being created
     m.setCppCode("""\
         wxRect rv;
         self->DrawLabel(*text, *bitmap, *rect, alignment, indexAccel, &rv);
         return new wxRect(rv);
         """)
     c.addPyCode('DC.DrawImageLabel = wx.deprecated(DC.DrawLabel, "Use DrawLabel instead.")')
+
 
     # Return the array instead of using an output parameter
     m = c.find('GetPartialTextExtents')
