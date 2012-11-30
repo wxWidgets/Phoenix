@@ -66,6 +66,29 @@ class statusbar_Tests(wtc.WidgetTestCase):
         pane.Text
         
         
+    def test_statusbarWidths1(self):
+        sb = wx.StatusBar(self.frame)
+        sb.SetFieldsCount(3)
+        sb.SetStatusWidths([200, -1, 100])
+        self.frame.SetStatusBar(sb)
+        
+        self.frame.SendSizeEvent()
+        self.myYield()
+        
+        widths = [sb.GetStatusWidth(i) for i in range(sb.GetFieldsCount())]
+        self.assertEqual(widths, [200, -1, 100])
+        
+        
+    def test_statusbarWidths2(self):
+        sb = self.frame.CreateStatusBar(3)
+        self.frame.SetStatusWidths([200, -1, 100])
+        
+        self.frame.SendSizeEvent()
+        self.myYield()
+        
+        widths = [sb.GetStatusWidth(i) for i in range(sb.GetFieldsCount())]
+        self.assertEqual(widths, [200, -1, 100])
+        
 #---------------------------------------------------------------------------
 
 

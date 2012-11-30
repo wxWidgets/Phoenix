@@ -34,8 +34,17 @@ def run():
     tools.fixWindowClass(c)
     module.addGlobalStr('wxStatusBarNameStr', c)
 
-    c.find('SetStatusWidths.n').arraySize = True
-    c.find('SetStatusWidths.widths_field').array = True
+    # We already have a MappedType for wxArrayInt, so just tweak the
+    # interface to use that instead of an array size and a const int pointer.
+    m = c.find('SetStatusWidths')
+    m.find('n').ignore()
+    m.find('widths_field').type = 'const wxArrayInt&'
+    m.find('widths_field').name = 'widths'
+    m.argsString = '(int n, const wxArrayInt& widths)'
+    m.setCppCode("""\
+        const int* ptr = &widths->front();
+        self->SetStatusWidths(widths->size(), ptr);
+        """)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
