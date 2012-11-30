@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<resource>
+  <object class="wxFrame" name="MainFrame">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxPanel" name="MainPanel">
+          <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+              <object class="wxStaticText" name="TitleText">
+                <label>Hello World</label>
+                <fg>#3056D3</fg>
+                <font>
+                  <size>24</size>
+                  <style>normal</style>
+                  <weight>bold</weight>
+                  <underlined>0</underlined>
+                  <family>swiss</family>
+                </font>
+              </object>
+              <flag>wxALL|wxEXPAND|wxALIGN_CENTRE</flag>
+              <border>10</border>
+            </object>
+            <object class="sizeritem">
+              <object class="wxStaticLine"/>
+              <flag>wxEXPAND</flag>
+            </object>
+            <object class="sizeritem">
+              <object class="wxFlexGridSizer">
+                <object class="sizeritem">
+                  <object class="wxStaticText">
+                    <label>Howdy!</label>
+                  </object>
+                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxTextCtrl"/>
+                  <flag>wxEXPAND</flag>
+                </object>
+                <object class="spacer">
+                  <size>5,5</size>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxButton" name="wxID_OK"/>
+                </object>
+                <cols>2</cols>
+                <rows>0</rows>
+                <vgap>5</vgap>
+                <hgap>5</hgap>
+                <growablecols>1</growablecols>
+              </object>
+              <option>1</option>
+              <flag>wxALL|wxEXPAND</flag>
+              <border>10</border>
+            </object>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+      </object>
+    </object>
+    <size>400,250</size>
+    <title>This is a test</title>
+  </object>
+</resource>

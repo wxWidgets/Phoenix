@@ -34,8 +34,8 @@ class PIImportTest(unittest.TestCase):
     def test_core_pi(self):
         self.runPI('core.pi')
         
-    #def test_adv_pi(self):
-    #    self.runPI('adv.pi')
+    def test_adv_pi(self):
+        self.runPI('adv.pi')
 
     def test_stc_pi(self):
         self.runPI('stc.pi')
@@ -48,6 +48,14 @@ class PIImportTest(unittest.TestCase):
         
     def test_dataview_pi(self):
         self.runPI('dataview.pi')
+
+    def test_xml_pi(self):
+        self.runPI('xml.pi')
+
+    def test_xrc_pi(self):
+        self.runPI('xrc.pi')
+
+
         
 #---------------------------------------------------------------------------
 

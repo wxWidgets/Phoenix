@@ -244,6 +244,37 @@ extensions.append(ext)
 cfg.CLEANUP.append(opj(cfg.PKGDIR, 'html2.py'))
 
 
+etg = loadETG('etg/_xml.py')
+tgDepends = etg.DEPENDS + etg.OTHERDEPS
+ext = Extension('_xml', getEtgSipCppFiles(etg),
+                depends            = getEtgSipHeaders(etg),
+                include_dirs       = cfg.includes,
+                define_macros      = cfg.defines,
+                library_dirs       = cfg.libdirs,
+                libraries          = cfg.libs + cfg.makeLibName('xml', True),
+                extra_compile_args = cfg.cflags,
+                extra_link_args    = cfg.lflags,
+                )
+extensions.append(ext)
+cfg.CLEANUP.append(opj(cfg.PKGDIR, 'xml.py'))
+
+
+etg = loadETG('etg/_xrc.py')
+tgDepends = etg.DEPENDS + etg.OTHERDEPS
+ext = Extension('_xrc', getEtgSipCppFiles(etg),
+                depends            = getEtgSipHeaders(etg),
+                include_dirs       = cfg.includes,
+                define_macros      = cfg.defines,
+                library_dirs       = cfg.libdirs,
+                libraries          = cfg.libs + cfg.makeLibName('xml', True) + cfg.makeLibName('xrc', True),
+                extra_compile_args = cfg.cflags,
+                extra_link_args    = cfg.lflags,
+                )
+extensions.append(ext)
+cfg.CLEANUP.append(opj(cfg.PKGDIR, 'xrc.py'))
+
+
+
 
 #----------------------------------------------------------------------
 

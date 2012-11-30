@@ -93,6 +93,13 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXWEBVIEW')
         conf.env.LIB_WXWEBVIEW += cfg.makeLibName('webview')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXXML')
+        conf.env.LIB_WXWEBVIEW += cfg.makeLibName('xml')
+
+        _copyEnvGroup(conf.env, '_WX', '_WXXRC')
+        conf.env.LIB_WXWEBVIEW += cfg.makeLibName('xrc')
+
+
 
 
         # tweak the PYEXT compile and link flags if making a --debug build
@@ -147,6 +154,15 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs webview,core,net', 
                        uselib_store='WXWEBVIEW', mandatory=True)
+
+        conf.check_cfg(path=conf.options.wx_config, package='', 
+                       args='--cxxflags --libs xml,core,net', 
+                       uselib_store='WXXML', mandatory=True)
+
+        conf.check_cfg(path=conf.options.wx_config, package='', 
+                       args='--cxxflags --libs xrc,xml,core,net', 
+                       uselib_store='WXXRC', mandatory=True)
+
 
 
         # NOTE: This assumes that if the platform is not win32 (from
@@ -261,73 +277,84 @@ def build(bld):
 
     etg = loadETG('etg/_core.py')
     rc = ['src/wxc.rc'] if isWindows else []
-    core = bld(
-        features = 'c cxx cxxshlib pyext',
+    bld(features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_core'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WX WXPY',
-    )
+        )
     makeExtCopyRule(bld, '_core')
 
 
     etg = loadETG('etg/_adv.py')
-    adv = bld(
-        features = 'c cxx cxxshlib pyext',
+    bld(features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_adv'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WXADV WXPY',
-    )
+        )
     makeExtCopyRule(bld, '_adv')
 
 
     etg = loadETG('etg/_dataview.py')
-    dataview = bld(
-        features = 'c cxx cxxshlib pyext',
+    bld(features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_dataview'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WXADV WXPY',    # dataview classes are also in the adv library
-    )
+        )
     makeExtCopyRule(bld, '_dataview')
 
 
     etg = loadETG('etg/_stc.py')
-    stc = bld(
-        features = 'c cxx cxxshlib pyext',
+    bld(features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_stc'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WXSTC WXPY',
-    )
+        )
     makeExtCopyRule(bld, '_stc')
 
 
     etg = loadETG('etg/_html.py')
-    adv = bld(
-        features = 'c cxx cxxshlib pyext',
+    bld(features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_html'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WXHTML WXPY',
-    )
+        )
     makeExtCopyRule(bld, '_html')
 
 
     etg = loadETG('etg/_glcanvas.py')
-    adv = bld(
-        features = 'c cxx cxxshlib pyext',
+    bld(features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_glcanvas'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WXGL WXPY',
-    )
+        )
     makeExtCopyRule(bld, '_glcanvas')
 
 
     etg = loadETG('etg/_html2.py')
-    adv = bld(
-        features = 'c cxx cxxshlib pyext',
+    bld(features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_html2'),
         source   = getEtgSipCppFiles(etg) + rc,
         uselib   = 'WXWEBVIEW WXPY',
-    )
+        )
     makeExtCopyRule(bld, '_html2')
+
+
+    etg = loadETG('etg/_xml.py')
+    bld(features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_xml'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXXML WXPY',
+        )
+    makeExtCopyRule(bld, '_xml')
+
+
+    etg = loadETG('etg/_xrc.py')
+    bld(features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_xrc'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXXRC WXPY',
+        )
+    makeExtCopyRule(bld, '_xrc')
 
 
 

@@ -383,6 +383,19 @@ with a wx.ComboPopup in a has-a relationship rather than an is-a
 relationship.  See samples/combo/combo1.py for an example.
 
 
+
+XRC
+-------
+
+The "LoadOnFoo" methods of the XmlResource class were renamed overloads of
+the coresponding "LoadFoo" methods. Since we no longer need to rename
+overloaded methods the "LoadOn" version has been removed and you should just
+use the "LoadFoo" version instead. These methods are used to load some XRC
+content onto an existing window, such as a Frame, instead of creating a new
+Frame for the content.
+
+
+
 .. toctree::
    :maxdepth: 2
    :hidden:
