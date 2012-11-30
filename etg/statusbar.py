@@ -33,6 +33,9 @@ def run():
     c = module.find('wxStatusBar')
     tools.fixWindowClass(c)
     module.addGlobalStr('wxStatusBarNameStr', c)
+
+    c.find('SetStatusWidths.n').arraySize = True
+    c.find('SetStatusWidths.widths_field').array = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
