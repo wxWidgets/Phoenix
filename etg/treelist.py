@@ -63,6 +63,12 @@ def run():
     
     module.addGlobalStr('wxTreeListCtrlNameStr', c)
     
+    # Change NO_IMAGE default arg values to just -1, as the pi code has
+    # problems when using the class name before the class is fully defined.
+    for item in c.allItems():
+        if isinstance(item, etgtools.ParamDef) and item.default == 'NO_IMAGE':
+            item.default = '-1'
+    
     # transfer ownership of some parameters
     c.find('AssignImageList.imageList').transfer = True
     c.find('SetItemData.data').transfer = True
