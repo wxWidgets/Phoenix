@@ -646,7 +646,7 @@ from .%s import *
                 _needDocstring = False
                 
             if method.cppCode:
-                checkOverloads = False
+                #checkOverloads = False   ## SIP now allows overloads to have %MethodCode
                 code, codeType = method.cppCode
                 if codeType == 'sip':
                     stream.write('%s%%MethodCode\n' % indent)
@@ -656,6 +656,10 @@ from .%s import *
                     cm = extractors.CppMethodDef.FromMethod(method)
                     cm.body = code
                     self.generateCppMethod(cm, stream, indent, skipDeclaration=True)
+                    # generateCppMethod will have already done the overloads
+                    # and virtual catcher code, so we can just return from
+                    # here.
+                    return
                 
             if method.virtualCatcherCode:
                 stream.write('%s%%VirtualCatcherCode\n' % indent)
