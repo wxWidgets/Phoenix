@@ -85,11 +85,16 @@ class FixWxPrefix(object):
         # the name as 'wx.Name'
         if FixWxPrefix._coreTopLevelNames is None:
             self._getCoreTopLevelNames()
-                
-        if name in FixWxPrefix._coreTopLevelNames:
+            
+        testName = name
+        if '(' in name:
+            testName = name[:name.find('(')]
+            
+        if testName in FixWxPrefix._coreTopLevelNames:
             return 'wx.'+name
         else:
             return name
+
 
     def _getCoreTopLevelNames(self):
         # Since the real wx.core module may not exist yet, and since actually
