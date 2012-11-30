@@ -18,7 +18,7 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ 'wxWebViewHistoryItem',
-           'wxWebViewHandler',
+           'wxWebViewHandler', 
            'wxWebViewArchiveHandler',
            'wxWebViewFSHandler',
            'wxWebView',
@@ -67,7 +67,7 @@ def run():
         wxVector<wxSharedPtr<wxWebViewHistoryItem> >  vector = self->{method}();
         for (size_t idx=0; idx < vector.size(); idx++) {{
             PyObject* obj;
-            wxWebViewHistoryItem* item = new wxWebViewHistoryItem(*vector[idx].get());
+            wxWebViewHistoryItem* item = new wxWebViewHistoryItem(*vector[idx].get()) 
             obj = wxPyConstructObject((void*)item, "wxWebViewHistoryItem", true);
             PyList_Append(result, obj);
             Py_DECREF(obj);

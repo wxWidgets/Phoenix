@@ -1431,8 +1431,9 @@ class Snippet(Node):
 
             if highlight:
                 docstrings += '\n\n%s\n\n'%highlight
+            else:
+                docstrings += '::\n\n'
                 
-            docstrings += '::\n\n'
             docstrings += code.rstrip() + '\n\n'
 
         if self.element.tail and len(self.element.tail.strip()) > 1:
@@ -2676,7 +2677,7 @@ class XMLDocString(object):
 
     # -----------------------------------------------------------------------
 
-    def EventsInStyle(self, line, class_name, added=False):
+    def EventsInStyle(self, line, class_name, added):
 
         docstrings = ''
         newline = line
@@ -2688,19 +2689,28 @@ class XMLDocString(object):
                 docstrings += templates.TEMPLATE_WINDOW_STYLES % class_name
                 
         elif 'The following event handler macros' in line and not added:
-            last = line.index(':')
-            line = line[last+1:].strip()
+            index = line.index('The following event handler macros')
+            newline1 = line[0:index] + '\n\n'
+            macro_line = line[index:]
+            last = macro_line.index(':')
+            line = macro_line[last+1:].strip()
 
             if line.count(':') > 2:            
                 newline = 'Handlers bound for the following event types will receive one of the %s parameters.'%line
             else:
                 newline = 'Handlers bound for the following event types will receive a %s parameter.'%line
                 
-            docstrings += templates.TEMPLATE_EVENTS % class_name
+            docstrings += newline1 + templates.TEMPLATE_EVENTS % class_name
+            docstrings = docstrings.replace('Event macros for events emitted by this class: ', '')
+            newline = newline.replace('Event macros for events emitted by this class: ', '')
             added = True
 
-        elif 'Event macros for events' in line and not added:
-            docstrings += templates.TEMPLATE_EVENTS % class_name
+        elif 'Event macros for events' in line:
+            if added:
+                newline = ''
+            else:
+                docstrings += templates.TEMPLATE_EVENTS % class_name
+
             added = True
 
         elif 'following extra styles:' in line:
@@ -2740,9 +2750,10 @@ class XMLDocString(object):
         added = False
         for line in item.splitlines():
             if line.strip():
-                newdocs, newline, added = self.EventsInStyle(line, class_name, added) 
-                docstrings += newdocs
-                docstrings += spacer + newline + '\n'
+                newdocs, newline, added = self.EventsInStyle(line, class_name, added)
+                if newline.strip():
+                    docstrings += newdocs
+                    docstrings += spacer + newline + '\n'
             else:
                 docstrings += line + '\n'
         
@@ -2801,7 +2812,11 @@ class XMLDocString(object):
                     docstrings += spacer + line + '\n'
 
                 docstrings += '%s**~~~**\n\n'%spacer
-                                                        
+        
+        if '**Perl Note:**' in docstrings:
+            index = docstrings.index('**Perl Note:**')
+            docstrings = docstrings[0:index]
+
         stream.write(docstrings + "\n\n")
             
     

@@ -170,7 +170,7 @@ def BuildEnumsAndMethods(sphinxDir):
         
         # Replace ArrayXXX stuff...
 
-        for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()']:
+        for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()', 'ArrayString']:
             text = text.replace(cpp, '[]')
 
         text = TooltipsOnInheritance(text, class_summary)

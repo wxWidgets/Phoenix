@@ -24,7 +24,8 @@ from buildtools.config import phoenixDir, wxDir
 IGNORE = ['wxPython', 'wxWidgets', 'wxOSX', 'wxMGL', 'wxDFB', 'wxMAC', 'wxGTK', 'wxGTK2', 'wxUniversal',
           'OS', 'X', 'OSX', 'DFB', 'MAC', 'GTK', 'GTK2', 'MSW', 'wxMSW', 'X11', 'OS2', 'MS', 'XP', 'GTK+',
           'UI', 'GUI', '--', 'OTOH', 'GDI+', 'API', 'NT', 'RTL', 'GDI', '3D', 'MDI', 'SDI', 'TDI', 'URL',
-          'XPM', 'HTML', 'MIME', 'C++', 'XDG', 'A4', 'A5', 'KDE', 'GNOME', 'XFCE']
+          'XPM', 'HTML', 'MIME', 'C++', 'XDG', 'A4', 'A5', 'KDE', 'GNOME', 'XFCE', 'CSS', 'IE', 'FONT',
+          'SIZE', 'COLOR']
 
 # C++ stuff to Python/ReST stuff
 VALUE_MAP = {'true':  '``True``',
@@ -176,7 +177,7 @@ SECTIONS_EXCLUDE = {
                     'Menu'         : ('|phoenix_title| Allocation strategy', '|phoenix_title| Event handling'),
                     'MouseState'   : ('This class is implemented', '.. seealso::'),
                     'Panel'        : ('Please see  :ref:`/', 'if not all characters'),
-                    'TextCtrl'     : ('|phoenix_title| TextCtrl and ``C++`` Streams', '|phoenix_title| Event Handling'),
+                    'TextCtrl'     : ('|phoenix_title| TextCtrl and C++ Streams', '|phoenix_title| Event Handling'),
                     'TextEntry'    : ('Notice that you need', 'Currently this method is only '),
                     }
 

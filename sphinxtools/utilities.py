@@ -214,9 +214,14 @@ def ReplaceCppItems(line):
             item = 'float'
 
         if len(item.replace('``', '')) > 2:
-            # Avoid replacing standalone '&&' and similar
-            for cpp in CPP_ITEMS[0:2]:
-                item = item.replace(cpp, '')
+            if '*' in item:
+                try:
+                    eval(item)
+                    item = item.replace('*', 'x')
+                except:
+                    # Avoid replacing standalone '&&' and similar
+                    for cpp in CPP_ITEMS[0:2]:
+                        item = item.replace(cpp, '')
             
         newstr.append(item)
 
@@ -282,6 +287,9 @@ def PythonizeType(ptype):
 
     if 'Image.' in ptype:
         ptype = ptype.split('.')[-1]
+
+    if ptype.endswith('&'):
+        ptype = ':class:`%s`'%ptype[0:-1]
         
     return ptype
 
@@ -354,6 +362,7 @@ def ConvertToPython(text):
                 if '``' not in newword and '()' not in word and '**' not in word:
                     word = word.replace(newword, "``%s``"%newword)
 
+            word = word.replace('->', '.')
             newline.append(word)
 
         newline = spacer + ''.join(newline)

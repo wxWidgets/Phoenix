@@ -174,7 +174,7 @@ def run():
     c.addCppMethod('void', 'CopyToBuffer',
         '(wxPyBuffer* data, wxBitmapBufferFormat format=wxBitmapBufferFormat_RGB, int stride=-1)',
         doc="""\
-            Copy pixel data to a buffer object.  See `CopyFromBuffer` for buffer
+            Copy pixel data to a buffer object.  See :meth:`CopyFromBuffer` for buffer
             format details.""",
         body="""\
             wxPyCopyBitmapToBuffer(self, (byte*)data->m_ptr, data->m_len, format, stride);
@@ -188,7 +188,7 @@ def run():
         isStatic=True,
         factory=True,
         doc="""\
-            Creates a `wx.Bitmap` from in-memory data.  The data and alpha 
+            Creates a :class:`Bitmap` from in-memory data.  The data and alpha 
             parameters must be a Python object that implements the buffer 
             interface, such as a string, bytearray, etc.  The data object 
             is expected to contain a series of RGB bytes and be at least 
@@ -198,7 +198,7 @@ def run():
             'premultiplied' by the alpha values.  (The other platforms do 
             the multiplication themselves.)
         
-            Unlike `wx.ImageFromBuffer` the bitmap created with this function
+            Unlike :func:`ImageFromBuffer` the bitmap created with this function
             does not share the memory block with the buffer object.  This is
             because the native pixel buffer format varies on different
             platforms, and so instead an efficient as possible copy of the
@@ -240,12 +240,12 @@ def run():
         isStatic=True,
         factory=True,
         doc="""\
-            Creates a `wx.Bitmap` from in-memory data.  The data parameter 
+            Creates a :class:`Bitmap` from in-memory data.  The data parameter 
             must be a Python object that implements the buffer interface, such 
             as a string, bytearray, etc.  The data object is expected to contain 
             a series of RGB bytes and be at least width*height*3 bytes long.
             
-            Unlike `wx.ImageFromBuffer` the bitmap created with this function
+            Unlike :func:`ImageFromBuffer` the bitmap created with this function
             does not share the memory block with the buffer object.  This is
             because the native pixel buffer format varies on different
             platforms, and so instead an efficient as possible copy of the
@@ -280,14 +280,14 @@ def run():
         isStatic=True,
         factory=True,
         doc="""\
-            Creates a `wx.Bitmap` from in-memory data.  The data parameter 
+            Creates a :class:`Bitmap` from in-memory data.  The data parameter 
             must be a Python object that implements the buffer interface, such 
             as a string, bytearray, etc.  The data object is expected to contain 
             a series of RGBA bytes and be at least width*height*4 bytes long.
             On Windows and Mac the RGB values will be 'premultiplied' by the 
             alpha values.  (The other platforms do the multiplication themselves.)
             
-            Unlike `wx.ImageFromBuffer` the bitmap created with this function
+            Unlike :func:`ImageFromBuffer` the bitmap created with this function
             does not share the memory block with the buffer object.  This is
             because the native pixel buffer format varies on different
             platforms, and so instead an efficient as possible copy of the
@@ -318,7 +318,7 @@ def run():
         isStatic=True,
         factory=True,
         doc="""\
-            Creates a new empty 32-bit `wx.Bitmap` where every pixel has been
+            Creates a new empty 32-bit :class:`Bitmap` where every pixel has been
             initialized with the given RGBA values.
             """,
         body="""\
