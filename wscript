@@ -94,10 +94,10 @@ def configure(conf):
         conf.env.LIB_WXWEBVIEW += cfg.makeLibName('webview')
 
         _copyEnvGroup(conf.env, '_WX', '_WXXML')
-        conf.env.LIB_WXWEBVIEW += cfg.makeLibName('xml')
+        conf.env.LIB_WXXML += cfg.makeLibName('xml', isMSWBase=True)
 
         _copyEnvGroup(conf.env, '_WX', '_WXXRC')
-        conf.env.LIB_WXWEBVIEW += cfg.makeLibName('xrc')
+        conf.env.LIB_WXXRC += cfg.makeLibName('xrc')
 
 
 

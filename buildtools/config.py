@@ -454,15 +454,16 @@ class Configuration(object):
         return file_list
     
     
-    def makeLibName(self, name, checkMonolithic=False):
+    def makeLibName(self, name, checkMonolithic=False, isMSWBase=False):
         if checkMonolithic and self.MONOLITHIC:
             return []
+        basename = 'base' if isMSWBase else 'msw'
         if os.name == 'posix' or self.COMPILER == 'mingw32':
             libname = '%s_%s-%s' % (self.WXBASENAME, name, self.WXRELEASE)
         elif name:
-            libname = 'wxmsw%s%s_%s' % (self.WXDLLVER, self.libFlag(), name)
+            libname = 'wx%s%s%s_%s' % (basename, self.WXDLLVER, self.libFlag(), name)
         else:
-            libname = 'wxmsw%s%s' % (self.WXDLLVER, self.libFlag())
+            libname = 'wx%s%s%s' % (basename, self.WXDLLVER, self.libFlag())
         return [libname]
     
     
