@@ -2355,7 +2355,6 @@ class XMLDocString(object):
 
             found = False
             for line in py_docs.splitlines():
-
                 if line.startswith(name):
                     if not found:
                         newlines.append("**Possible constructors**::\n")
@@ -2365,6 +2364,7 @@ class XMLDocString(object):
                     newlines.append(ConvertToPython(line))
 
                 if found:
+                    line = line.replace('wx.EmptyString', '""')
                     newlines = self.CodeIndent(line, newlines)
 
         newdocs = ''

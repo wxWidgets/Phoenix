@@ -25,7 +25,7 @@ IGNORE = ['wxPython', 'wxWidgets', 'wxOSX', 'wxMGL', 'wxDFB', 'wxMAC', 'wxGTK', 
           'OS', 'X', 'OSX', 'DFB', 'MAC', 'GTK', 'GTK2', 'MSW', 'wxMSW', 'X11', 'OS2', 'MS', 'XP', 'GTK+',
           'UI', 'GUI', '--', 'OTOH', 'GDI+', 'API', 'NT', 'RTL', 'GDI', '3D', 'MDI', 'SDI', 'TDI', 'URL',
           'XPM', 'HTML', 'MIME', 'C++', 'XDG', 'A4', 'A5', 'KDE', 'GNOME', 'XFCE', 'CSS', 'IE', 'FONT',
-          'SIZE', 'COLOR']
+          'SIZE', 'COLOR', 'NOT', 'DOES']
 
 # C++ stuff to Python/ReST stuff
 VALUE_MAP = {'true':  '``True``',
