@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2009
-# Latest Revision: 22 Apr 2011, 11.00 GMT
+# Latest Revision: 03 Dec 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -141,7 +141,7 @@ class PersistentObject(object):
          methods with the same name instead.
         """
 
-        self._persistentHandler.Restore()
+        return self._persistentHandler.Restore()
 
 
     def SaveValue(self, name, value):
@@ -270,6 +270,9 @@ class PersistenceManager(object):
         # one of them to False may make sense in some situations)
         self._doSave = True
         self._doRestore = True
+        
+        # Flag set to True when PersistenceManager has restored any window
+        self._hasRestored = False
         
         # map with the registered objects as keys and associated
         # PersistentObjects as values        
@@ -532,9 +535,7 @@ class PersistenceManager(object):
             return False
 
         name = window.GetName()
-        self._persistentObjects[name].Restore()
-
-        return True
+        return self._persistentObjects[name].Restore()
     
 
     def DisableSaving(self):
@@ -622,10 +623,15 @@ class PersistenceManager(object):
         :param `children`: list of children of the input `window`, on first call it is equal to ``None``.
         """
         
+        self._hasRestored = False
+        
         if children is None:
             if HasCtrlHandler(window):
                 # Control has persist support
-                self.RegisterAndRestore(window)
+                topRetVal = self.RegisterAndRestore(window)
+                if topRetVal:
+                    self._hasRestored = True
+                    
             children = window.GetChildren()
 
         for child in children:
@@ -634,9 +640,26 @@ class PersistenceManager(object):
             if name not in BAD_DEFAULT_NAMES:
                 if HasCtrlHandler(child):
                     # Control has persist support
-                    self.RegisterAndRestore(child)
+                    topRetVal = self.RegisterAndRestore(child)
+                    if topRetVal:
+                        self._hasRestored = True
 
             self.RegisterAndRestoreAll(window, child.GetChildren())
+        
+        return self._hasRestored
+
+
+    def HasRestored(self):
+        """
+        This method returns ``True`` if any of the windows managed by
+        :class:`PersistenceManager` has had its settings restored.
+
+        :returns: ``True`` if any window was restored, ``False`` otherwise.
+
+        .. versionadded:: 0.9.7
+        """
+
+        return self._hasRestored
         
 
     def GetKey(self, obj, keyName):
