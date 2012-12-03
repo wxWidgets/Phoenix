@@ -705,7 +705,7 @@ def Wx2Sphinx(name):
     name = name.strip()    
     newname = fullname = RemoveWxPrefix(name)
 
-    if '.' in newname:
+    if '.' in newname and len(newname) > 3:
         lookup, remainder = newname.split('.')
         remainder = '.%s'%remainder
     else:
