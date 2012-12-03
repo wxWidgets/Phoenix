@@ -1,10 +1,10 @@
 
         # provide the message parameters for the MIME type manager
-        class MailMessageParameters(wx.FileType.MessageParameters):
+        class MailMessageParameters(wx.MessageParameters):
 
             def __init__(self, filename, mimetype):
 
-                wx.FileType.MessageParameters.__init__(self, filename, mimetype)
+                wx.MessageParameters.__init__(self, filename, mimetype)
 
 
             def GetParamValue(self, name):
@@ -13,6 +13,6 @@
                 if name.lower() == "charset":
                     return "US-ASCII"
                 else:
-                    return wx.FileType.MessageParameters.GetParamValue(name)
+                    return wx.MessageParameters.GetParamValue(name)
             
 

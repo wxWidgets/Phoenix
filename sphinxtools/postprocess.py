@@ -169,11 +169,14 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace('EmptyString', "''")
         
         # Replace ArrayXXX stuff...
-
         for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()', 'ArrayString']:
             text = text.replace(cpp, '[]')
 
+        # Remove lines with "Event macros" in them...
+        text = text.replace('Event macros:', '')
+
         text = TooltipsOnInheritance(text, class_summary)
+        text = AddSpacesToLinks(text)
 
         if text != orig_text:
             fid = textfile_open(input, 'wt')  
@@ -333,6 +336,17 @@ def RemoveUnreferenced(input, class_summary, enum_base, unreferenced_classes, te
 
     return text, unreferenced_classes        
 
+
+# ----------------------------------------------------------------------- #
+
+def AddSpacesToLinks(text):
+
+    regex = re.findall('\w:ref:`(.*?)`', text)
+
+    for reg in regex:
+        text = text.replace(':ref:`%s`'%reg, ' :ref:`%s`'%reg)
+
+    return text
 
 # ----------------------------------------------------------------------- #
 

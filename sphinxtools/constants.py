@@ -102,14 +102,46 @@ NO_MODULE = {
 
              # -- wxDataView -- #
              # Widgets
+             'DataViewItemObjectMapper': 'dataview.',
+             'PyDataViewModel'         : 'dataview.',
              
              # Enums/constants
              'DataViewCellMode'        : 'dataview.',
              'DataViewCellRenderState' : 'dataview.',
              'DataViewColumnFlags'     : 'dataview.',
-             'DataViewItemObjectMapper': 'dataview.',
-             'PyDataViewModel'         : 'dataview.',
              
+             # -- wxHTML -- #
+             # Widgets
+             
+             # Enums/constants
+             'HTMLCursor'              : 'html.',
+             'HtmlOpeningStatus'       : 'html.',
+             'HtmlScriptMode'          : 'html.',
+             'HtmlSelectionState'      : 'html.',
+             'HtmlURLType'             : 'html.',
+
+             # -- wxHTML2 -- #
+             # Widgets
+             
+             # Enums/constants
+             'WebViewBackend'          : 'html2.',
+             'WebViewNavigationError'  : 'html2.',
+             'WebViewReloadFlags'      : 'html2.',
+             'WebViewZoom'             : 'html2.',
+             'WebViewZoomType'         : 'html2.',
+
+             # -- wxXML -- #
+             # Widgets
+             
+             # Enums/constants
+             'XmlDocumentLoadFlag'     : 'xml.',
+             'XmlNodeType'             : 'xml.',
+             
+             # -- wxXRC -- #
+             # Widgets
+             
+             # Enums/constants
+             'XmlResourceFlags'        : 'xrc.',
              }
              
 # Other C++ specific things to strip away

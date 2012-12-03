@@ -523,10 +523,6 @@ class ParameterList(Node):
         self.py_parameters = odict()
         
         for pdef in xml_item.items:
-            
-            if pdef.out or pdef.ignored:
-                continue
-
             name = pdef.name    
             parameter = Parameter(self, pdef)
             self.py_parameters[name] = parameter
@@ -550,10 +546,13 @@ class ParameterList(Node):
 
         name = element_name.strip()
         
-        if name not in self.py_parameters:
-            return
+        if name in self.py_parameters:
+            return self.py_parameters[name]
 
-        return self.py_parameters[name]        
+        if '_' in name:
+            name = name[0:name.index('_')]
+            if name in self.py_parameters:
+                return self.py_parameters[name]
 
 
     # -----------------------------------------------------------------------
@@ -611,7 +610,14 @@ class ParameterList(Node):
 
         signature = name + '(%s)'%arguments            
         arguments = arguments.split(',')
-        py_parameters = list(self.py_parameters.keys())
+
+        py_parameters = []
+        for key, parameter in self.py_parameters.items():
+            pdef = parameter.pdef
+            if pdef.out or pdef.ignored:
+                continue
+
+            py_parameters.append(key)
         
         message = '\nSEVERE: Incompatibility between function/method signature and list of parameters in `%s`:\n\n' \
                   'The parameter `%s` appears in the method signature but could not be found in the parameter list.\n\n' \
@@ -675,6 +681,15 @@ class ParameterList(Node):
         docstrings = ''
         
         for name, parameter in list(self.py_parameters.items()):
+
+            pdef = parameter.pdef
+            
+            if pdef.out or pdef.ignored:
+                continue
+
+##            print name
+##            print parameter.Join()
+##            print
             if parameter.type.strip():
                 docstrings += ':param `%s`: %s\n'%(name, parameter.Join().lstrip('\n'))
                 docstrings += ':type `%s`: %s\n'%(name, parameter.type)
@@ -1271,7 +1286,12 @@ class Table(Node):
             table = '\n\n' + spacer + '.. include:: %s\n\n'%possible_rest_input
 
         if self.element.tail and self.element.tail.strip():
-            table += ConvertToPython(self.element.tail.rstrip())
+            rest = ConvertToPython(self.element.tail.rstrip())
+            split = rest.splitlines()
+            for index, r in enumerate(split):
+                table += spacer + r
+                if index < len(split)-1:
+                    table += '\n'
 
         return table
 
@@ -1437,7 +1457,13 @@ class Snippet(Node):
             docstrings += code.rstrip() + '\n\n'
 
         if self.element.tail and len(self.element.tail.strip()) > 1:
-            spacer = ('Section' in self.GetHierarchy() and ['   '] or [''])[0]
+            hierarchy = self.GetHierarchy()
+            spacer = ''
+            if 'Section' in hierarchy:
+                spacer = ' '*4
+            elif 'Parameter' in hierarchy:
+                spacer = ' '
+                
             tail = ConvertToPython(self.element.tail.lstrip())
             tail = tail.replace('\n', ' ')
             docstrings += spacer + tail.replace('  ', ' ')
