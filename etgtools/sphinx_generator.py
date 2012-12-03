@@ -2158,7 +2158,7 @@ class XMLDocString(object):
             rest_class = Paragraph(element, parent, self.kind)
 
         elif tag == 'linebreak':
-            spacer = ''
+            spacer = ('ParameterList' in parent.GetHierarchy() and [' '] or [''])[0]
             dummy = Node('\n\n%s%s'%(spacer, tail.strip()), parent)
             rest_class = parent
             
