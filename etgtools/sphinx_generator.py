@@ -1463,6 +1463,8 @@ class Snippet(Node):
                 spacer = ' '*3
             elif 'Parameter' in hierarchy:
                 spacer = ' '
+            elif 'List' in hierarchy:
+                spacer = '  '
                 
             tail = ConvertToPython(self.element.tail.lstrip())
             tail = tail.replace('\n', ' ')
