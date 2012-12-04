@@ -355,6 +355,8 @@ def ConvertToPython(text):
                 newword = RemoveWxPrefix(newword)
 
             if "::" in word and not word.endswith("::"):
+                # Bloody SetCursorEvent...
+                word = word.replace("::wx", ".")
                 word = word.replace("::", ".")
                 word = "`%s`"%word
                 newline.append(word)
