@@ -33,16 +33,16 @@ def run():
     
     cls = ClassDef(name='wxPyEvent', bases=['wxEvent'], 
         briefDoc="""\
-            wx.PyEvent can be used as a base class for implementing custom
+            :class:`PyEvent` can be used as a base class for implementing custom
             event types in Python. You should derive from this class instead
-            of `wx.Event` because this class is Python-aware and is able to
+            of :class:`Event` because this class is Python-aware and is able to
             transport its Python bits safely through the wxWidgets event
             system and have them still be there when the event handler is
-            invoked. Note that since wx.PyEvent is taking care of preserving
+            invoked. Note that since :class:`PyEvent` is taking care of preserving
             the extra attributes that have been set then you do not need to
             override the Clone method in your derived classes.
             
-            :see: `wx.PyCommandEvent`""",
+            :see: :class:`PyCommandEvent`""",
         items=[
             MethodDef(name='wxPyEvent', isCtor=True, items=[
                 ParamDef(type='int', name='id', default='0'),
@@ -74,17 +74,17 @@ def run():
     
     cls = ClassDef(name='wxPyCommandEvent', bases=['wxCommandEvent'], 
         briefDoc="""\
-            wx.PyCommandEvent can be used as a base class for implementing
+            :class:`PyCommandEvent` can be used as a base class for implementing
             custom event types in Python. You should derive from this class
-            instead of `wx.CommandEvent` because this class is Python-aware
+            instead of :class:`CommandEvent` because this class is Python-aware
             and is able to transport its Python bits safely through the
             wxWidgets event system and have them still be there when the
-            event handler is invoked. Note that since wx.PyCommandEvent is
+            event handler is invoked. Note that since :class:`PyCommandEvent` is
             taking care of preserving the extra attributes that have been set
             then you do not need to override the Clone method in your
             derived classes.
             
-            :see: `wx.PyEvent`""",
+            :see: :class:`PyEvent`""",
         items=[
             MethodDef(name='wxPyCommandEvent', isCtor=True, items=[
                 ParamDef(type='wxEventType', name='evenType', default='wxEVT_NULL'),

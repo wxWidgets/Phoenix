@@ -165,8 +165,10 @@ def BuildEnumsAndMethods(sphinxDir):
 
         # Avoid Sphinx warnings on wx.TreeCtrl
         text = text.replace('**( `', '** ( `')
+        
         # Replace EmptyString stuff
-        text = text.replace('EmptyString', "''")
+        for item in ['wx.EmptyString', 'EmptyString']:
+            text = text.replace(item, '""')
         
         # Replace ArrayXXX stuff...
         for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()', 'ArrayString']:

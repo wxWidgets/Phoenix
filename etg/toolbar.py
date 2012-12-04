@@ -81,7 +81,7 @@ def run():
     # TODO: Which others are commonly enough used that they should be here too?
     c.addPyMethod('AddSimpleTool', '(self, toolId, bitmap, shortHelpString="", longHelpString="", isToggle=0)',
         doc='Old style method to add a tool to the toolbar.',
-        deprecated='Use AddTool instead.',
+        deprecated='Use :meth:`AddTool` instead.',
         body="""\
             kind = wx.ITEM_NORMAL
             if isToggle: kind = wx.ITEM_CHECK
@@ -92,7 +92,7 @@ def run():
                   '(self, id, label, bitmap, bmpDisabled=wx.NullBitmap, kind=wx.ITEM_NORMAL,'
                   ' shortHelp="", longHelp="", clientData=None)',
         doc='Old style method to add a tool in the toolbar.',
-        deprecated='Use AddTool instead.',
+        deprecated='Use :meth:`AddTool` instead.',
         body="""\
             return self.AddTool(id, label, bitmap, bmpDisabled, kind,
                                 shortHelp, longHelp, clientData)
@@ -100,7 +100,7 @@ def run():
 
     c.addPyMethod('InsertSimpleTool', '(self, pos, toolId, bitmap, shortHelpString="", longHelpString="", isToggle=0)',
         doc='Old style method to insert a tool in the toolbar.',
-        deprecated='Use InsertTool instead.',
+        deprecated='Use :meth:`InsertTool` instead.',
         body="""\
             kind = wx.ITEM_NORMAL
             if isToggle: kind = wx.ITEM_CHECK
@@ -111,7 +111,7 @@ def run():
                   '(self, pos, id, label, bitmap, bmpDisabled=wx.NullBitmap, kind=wx.ITEM_NORMAL,'
                   ' shortHelp="", longHelp="", clientData=None)',
         doc='Old style method to insert a tool in the toolbar.',
-        deprecated='Use InsertTool instead.',
+        deprecated='Use :meth:`InsertTool` instead.',
         body="""\
             return self.InsertTool(pos, id, label, bitmap, bmpDisabled, kind,
                                    shortHelp, longHelp, clientData)

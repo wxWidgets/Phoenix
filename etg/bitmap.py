@@ -264,8 +264,8 @@ def run():
             """)
 
     module.addPyFunction('BitmapFromBuffer', '(width, height, dataBuffer, alphaBuffer=None)',
-        deprecated="Use Bitmap.FromBuffer or Bitmap.FromBufferAndAlpha instead.",
-        doc='A compatibility wrapper for Bitmap.FromBuffer and Bitmap.FromBufferAndAlpha',
+        deprecated="Use :meth:`Bitmap.FromBuffer` or :meth:`Bitmap.FromBufferAndAlpha` instead.",
+        doc='A compatibility wrapper for :meth:`Bitmap.FromBuffer` and :meth:`Bitmap.FromBufferAndAlpha`',
         body="""\
             if alphaBuffer is not None:
                 return Bitmap.FromBufferAndAlpha(width, height, dataBuffer, alphaBuffer)
@@ -306,8 +306,8 @@ def run():
             """)
 
     module.addPyFunction('BitmapFromBufferRGBA', '(width, height, dataBuffer)',
-        deprecated="Use Bitmap.FromBufferRGBA instead.",
-        doc='A compatibility wrapper for Bitmap.FromBufferRGBA',
+        deprecated="Use :meth:`Bitmap.FromBufferRGBA` instead.",
+        doc='A compatibility wrapper for :meth:`Bitmap.FromBufferRGBA`',
         body='return Bitmap.FromBufferRGBA(width, height, dataBuffer)')
 
 
@@ -351,20 +351,20 @@ def run():
             """)
 
     module.addPyFunction('EmptyBitmapRGBA', '(width, height, red=0, green=0, blue=0, alpha=0)',
-        deprecated="Use Bitmap.FromRGBA instead.",
-        doc='A compatibility wrapper for Bitmap.FromRGBA',
+        deprecated="Use :meth:`Bitmap.FromRGBA` instead.",
+        doc='A compatibility wrapper for :meth:`Bitmap.FromRGBA`',
         body='return Bitmap.FromRGBA(width, height, red, green, blue, alpha)')
 
     #-----------------------------------------------------------------------
 
     # For compatibility:
     module.addPyFunction('EmptyBitmap', '(width, height, depth=BITMAP_SCREEN_DEPTH)',
-                         deprecated="Use wx.Bitmap instead",
+                         deprecated="Use :class:`Bitmap` instead",
                          doc='A compatibility wrapper for the wx.Bitmap(width, height, depth) constructor',
                          body='return Bitmap(width, height, depth)')
 
     module.addPyFunction('BitmapFromImage', '(image)',
-                         deprecated="Use wx.Bitmap instead",
+                         deprecated="Use :class:`Bitmap` instead",
                          doc='A compatibility wrapper for the wx.Bitmap(wx.Image) constructor',
                          body='return Bitmap(image)')
 

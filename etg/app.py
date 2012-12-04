@@ -508,8 +508,8 @@ def run():
 
 
 
-    module.addPyClass('PySimpleApp', ['App'], deprecated="Use wx.App instead.",
-        doc="""This class is deprecated.  Please use wx.App instead.""",
+    module.addPyClass('PySimpleApp', ['App'], deprecated="Use :class:`App` instead.",
+        doc="""This class is deprecated.  Please use :class:`App` instead.""",
         items=[
             PyFunctionDef('__init__', '(self, *args, **kw)',
                 body="App.__init__(self, *args, **kw)")

@@ -1460,7 +1460,7 @@ class Snippet(Node):
             hierarchy = self.GetHierarchy()
             spacer = ''
             if 'Section' in hierarchy:
-                spacer = ' '*4
+                spacer = ' '*3
             elif 'Parameter' in hierarchy:
                 spacer = ' '
                 
@@ -1942,7 +1942,7 @@ class XMLDocString(object):
         else:
             raise Exception('Unhandled docstring kind for %s'%xml_item.__class__.__name__)
 
-        if hasattr(xml_item, 'deprecated') and xml_item.deprecated:
+        if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, basestring):
             element = et.Element('deprecated', kind='deprecated')
             element.text = VERSION
             
@@ -2267,7 +2267,16 @@ class XMLDocString(object):
         fullname = self.GetFullName()
         contrib_folder = os.path.join(SNIPPETROOT, 'python', 'contrib')
 
-        possible_py = glob.glob(os.path.normpath(contrib_folder + '/' + fullname + '*.py'))
+        possible_py = []
+
+        for suffix in range(1, 101):
+
+            sample = os.path.join(contrib_folder, '%s.%d.py'%(fullname, suffix))
+
+            if not os.path.isfile(sample):
+                break
+
+            possible_py.append(sample)
 
         return possible_py
                 
@@ -2579,6 +2588,12 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
+        if hasattr(method, 'deprecated') and method.deprecated:
+            text = method.deprecated
+            if isinstance(text, basestring):
+                text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, text.replace('\n', ' '))
+                stream.write(text)
+
         possible_py = self.HuntContributedSnippets()
         
         if possible_py:
@@ -2622,6 +2637,10 @@ class XMLDocString(object):
         stream.write('\n\n')                    
 
         self.Reformat(stream)
+
+        if hasattr(function, 'deprecated') and function.deprecated:
+            text = '%s %s\n%s%s\n\n'%('   .. deprecated::', VERSION, ' '*6, function.deprecated.replace('\n', ' '))
+            stream.write(text)
 
         possible_py = self.HuntContributedSnippets()
         

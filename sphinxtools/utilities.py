@@ -560,6 +560,7 @@ def WriteSphinxOutput(stream, filename, append=False):
     fid = codecs.open(text_file, mode, encoding='utf-8')        
     if mode == 'w':
         fid.write('.. include:: headings.inc\n\n')
+
     fid.write(text)
     fid.close()
 
@@ -761,7 +762,7 @@ def FormatContributedSnippets(kind, contrib_snippets):
     if kind == 'class':
         text = TEMPLATE_CONTRIB
     else:
-        text = spacer + '\n**Contributed Examples:**\n\n'
+        text = '\n' + spacer + '**Contributed Examples:**\n\n'
     
     for indx, snippet in enumerate(contrib_snippets):
         fid = open(snippet, 'rt')
@@ -771,13 +772,18 @@ def FormatContributedSnippets(kind, contrib_snippets):
         onlyfile = os.path.split(snippet)[1]
 
         text += RAW_1%(spacer, spacer)
-        text += '\n' + spacer + 'Example %d - %s (:download:`download <_downloads/%s>`)::\n\n'%(indx+1, user, onlyfile)
+        text += '\n' + spacer + 'Example %d - %s (:download:`download <_downloads/%s>`):\n\n'%(indx+1, user, onlyfile)
 
-        for line in lines[1:]:
-            text += 4*' '+ spacer + line
+        text += spacer + '.. literalinclude:: %s\n'%snippet
+        text += spacer + '   :lines: 2-\n\n'
 
-        text += '\n'
         text += RAW_2%(spacer, spacer)
+
+        text += '\n\n%s|\n\n'%spacer
+        
+        download = os.path.join(SPHINXROOT, '_downloads', onlyfile)
+        if not os.path.isfile(download):
+            shutil.copyfile(snippet, download)
 
     return text
 

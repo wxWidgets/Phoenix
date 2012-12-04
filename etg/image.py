@@ -222,7 +222,7 @@ def run():
     c.addCppMethod('PyObject*', 'GetDataBuffer', '()',
         doc="""\
         Returns a writable Python buffer object that is pointing at the RGB
-        image data buffer inside the wx.Image. You need to ensure that you do
+        image data buffer inside the :class:`Image`. You need to ensure that you do
         not use this buffer object after the image has been destroyed.""",
         body="""\
             byte* data = self->GetData();
@@ -236,7 +236,7 @@ def run():
     c.addCppMethod('PyObject*', 'GetAlphaBuffer', '()',
         doc="""\
         Returns a writable Python buffer object that is pointing at the Alpha
-        data buffer inside the wx.Image. You need to ensure that you do
+        data buffer inside the :class:`Image`. You need to ensure that you do
         not use this buffer object after the image has been destroyed.""",
         body="""\
             byte* data = self->GetAlpha();
@@ -254,7 +254,7 @@ def run():
         Sets the internal image data pointer to point at a Python buffer
         object.  This can save making an extra copy of the data but you must
         ensure that the buffer object lives lives at least as long as the 
-        wx.Image does.""",
+        :class:`Image` does.""",
         body="""\
             if (!data->checkSize(self->GetWidth() * self->GetHeight() * 3))
                 return;
@@ -266,7 +266,7 @@ def run():
         Sets the internal image data pointer to point at a Python buffer
         object.  This can save making an extra copy of the data but you must
         ensure that the buffer object lives lives at least as long as the 
-        wx.Image does.""",
+        :class:`Image` does.""",
         body="""\
             if (!data->checkSize(new_width * new_height * 3))
                 return;
@@ -280,7 +280,7 @@ def run():
         Sets the internal image alpha pointer to point at a Python buffer
         object.  This can save making an extra copy of the data but you must
         ensure that the buffer object lives lives at least as long as the 
-        wx.Image does.""",
+        :class:`Image` does.""",
         body="""\
             if (!alpha->checkSize(self->GetWidth() * self->GetHeight()))
                 return;
@@ -349,7 +349,7 @@ def run():
     c.addPyMethod('ConvertToBitmap', '(self, depth=-1)', 
         doc="""\
         ConvertToBitmap(depth=-1) -> Bitmap\n
-        Convert the image to a wx.Bitmap.""",
+        Convert the image to a :class:`Bitmap`.""",
         body="""\
         bmp = wx.Bitmap(self, depth)
         return bmp
@@ -358,7 +358,7 @@ def run():
     c.addPyMethod('ConvertToMonoBitmap', '(self, red, green, blue)', 
         doc="""\
         ConvertToMonoBitmap(red, green, blue) -> Bitmap\n
-        Creates a monochrome version of the image and returns it as a wx.Bitmap.""",
+        Creates a monochrome version of the image and returns it as a :class:`Bitmap`.""",
         body="""\
         mono = self.ConvertToMono( red, green, blue )
         bmp = wx.Bitmap( mono, 1 )
@@ -483,27 +483,27 @@ def run():
 
     # For compatibility:
     module.addPyFunction('EmptyImage', '(width=0, height=0, clear=True)',
-                         deprecated="Use wx.Image instead.",
+                         deprecated="Use :class:`Image` instead.",
                          doc='A compatibility wrapper for the wx.Image(width, height) constructor',
                          body='return Image(width, height, clear)')
     
     module.addPyFunction('ImageFromBitmap', '(bitmap)',
-                         deprecated="Use wx.Image instead.",
-                         doc='Create a wx.Image from a wx.Bitmap',
+                         deprecated="Use :class:`Image` instead.",
+                         doc='Create a :class:`Image` from a :class:`Bitmap`',
                          body='return bitmap.ConvertToImage()')
 
     module.addPyFunction('ImageFromStream', '(stream, type=BITMAP_TYPE_ANY, index=-1)',
-                         deprecated="Use wx.Image instead.",
+                         deprecated="Use :class:`Image` instead.",
                          doc='Load an image from a stream (file-like object)',
                          body='return wx.Image(stream, type, index)')
 
     module.addPyFunction('ImageFromData', '(width, height, data)',
-                         deprecated="Use wx.Image instead.",
+                         deprecated="Use :class:`Image` instead.",
                          doc='Compatibility wrapper for creating an image from RGB data',
                          body='return Image(width, height, data)')
 
     module.addPyFunction('ImageFromDataWithAlpha', '(width, height, data, alpha)',
-                         deprecated="Use wx.Image instead.",
+                         deprecated="Use :class:`Image` instead.",
                          doc='Compatibility wrapper for creating an image from RGB and Alpha data',
                          body='return Image(width, height, data, alpha)')
 
@@ -511,24 +511,24 @@ def run():
     
     module.addPyFunction('ImageFromBuffer', '(width, height, dataBuffer, alphaBuffer=None)',
         doc="""\
-            Creates a `wx.Image` from the data in dataBuffer.  The dataBuffer
+            Creates a :class:`Image` from the data in `dataBuffer`.  The `dataBuffer`
             parameter must be a Python object that implements the buffer interface,
-            such as a string, array, etc.  The dataBuffer object is expected to
+            such as a string, array, etc.  The `dataBuffer` object is expected to
             contain a series of RGB bytes and be width*height*3 bytes long.  A buffer
             object can optionally be supplied for the image's alpha channel data, and
             it is expected to be width*height bytes long.
         
-            The wx.Image will be created with its data and alpha pointers initialized
+            The :class:`Image` will be created with its data and alpha pointers initialized
             to the memory address pointed to by the buffer objects, thus saving the
-            time needed to copy the image data from the buffer object to the wx.Image.
+            time needed to copy the image data from the buffer object to the :class:`Image`.
             While this has advantages, it also has the shoot-yourself-in-the-foot
             risks associated with sharing a C pointer between two objects.
         
             To help alleviate the risk a reference to the data and alpha buffer
-            objects are kept with the wx.Image, so that they won't get deleted until
+            objects are kept with the :class:`Image`, so that they won't get deleted until
             after the wx.Image is deleted.  However please be aware that it is not
             guaranteed that an object won't move its memory buffer to a new location
-            when it needs to resize its contents.  If that happens then the wx.Image
+            when it needs to resize its contents.  If that happens then the :class:`Image`
             will end up referring to an invalid memory location and could cause the
             application to crash.  Therefore care should be taken to not manipulate
             the objects used for the data and alpha buffers in a way that would cause

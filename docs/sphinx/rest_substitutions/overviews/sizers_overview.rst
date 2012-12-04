@@ -106,6 +106,418 @@ two buttons have a stretch factor of zero and keep their initial width:
 Within wxDesigner, this stretch factor gets set from the `Option` menu.
 
 
+`wx.Sizers` - the visual approach
+---------------------------------
+
+
+----------------------------
+Basic way of adding a window
+----------------------------
+
+Let's take a look at :class:`BoxSizer`.
+This is the most simple type of box sizer, and the way we add widgets to it is explained by looking
+at the :meth:`BoxSizer.Add` signature:
+
+.. raw:: html
+
+   <hr color="#A9A9A9">
+
+.. method:: Add(window, proportion=0, flag=0, border=0, userData=None)
+
+   Appends a child to the sizer.
+
+   :param `window`: a window, a spacer or another sizer to be added to the sizer. Its initial size 
+    (either set explicitly by the user or calculated internally) is interpreted as the minimal and 
+    in many cases also the initial size.
+   :param int proportion: this parameter is used in :class:`BoxSizer` to indicate if a child of a sizer 
+    can change its size in the main orientation of the :class:`BoxSizer` - where 0 stands for not changeable 
+    and a value of more than zero is interpreted relative to the value of other children of the same 
+    :class:`BoxSizer`. For example, you might have a horizontal :class:`BoxSizer` with three children, two 
+    of which are supposed to change their size with the sizer. Then the two stretchable windows would 
+    get a value of 1 each to make them grow and shrink equally with the sizer's horizontal dimension.
+   :param int flag: OR-combination of flags affecting sizer's behaviour.
+   :param int border: determines the border width, if the flag parameter is set to include any border flag.
+   :param object userData: allows an extra object to be attached to the sizer item, for use in derived 
+    classes when sizing information is more complex than the proportion and flag will allow for.
+    
+   :rtype: :class:`SizerItem`
+
+.. raw:: html
+
+   <hr color="#A9A9A9">
+
+
+Let's create a vertical sizer (children will be placed on top of each other) and place two buttons in it.
+All the "extra" parameters are set to 0; we'll worry about them later.
+
+.. figure:: _static/images/overviews/boxsizer1.png
+   :class: floatright
+
+::
+
+    sizer = wx.BoxSizer(wx.VERTICAL)
+    sizer.Add(wx.Button(self, -1, 'An extremely long button text'), 0, 0, 0)
+    sizer.Add(wx.Button(self, -1, 'Small button'), 0, 0, 0)
+    self.SetSizer(sizer)
+    
+
+You'll notice a couple of things about this:
+
+* The buttons are just big enough to accommodate the text in them. In fact, any control placed
+  into a sizer this way will appear at its minimum size unless we change the parameters.
+* The window size is not changed to fit the sizer. This results in a lot of ugly empty space.
+
+
+Let's worry about the second issue first. To make the window size more appropriate, we can set 
+the size hints to tell the enclosing window to adjust to the size of the sizer:
+
+.. figure:: _static/images/overviews/boxsizer2.png
+   :class: floatright
+
+.. code-block:: python
+   :emphasize-lines: 4
+
+    sizer = wx.BoxSizer(wx.VERTICAL)
+    sizer.Add(wx.Button(self, -1, 'An extremely long button text'), 0, 0, 0)
+    sizer.Add(wx.Button(self, -1, 'Small button'), 0, 0, 0)
+    sizer.SetSizeHints(self)
+    self.SetSizer(sizer)
+
+This is particularly useful in circumstances like this one, in which the :class:`Frame`'s default size 
+would otherwise be much too big or small to show most layouts in an aesthetically pleasing manner.
+
+--------------------------
+The `proportion` parameter
+--------------------------
+
+The first parameter to :meth:`BoxSizer.Add`
+is obviously the :class:`Window` or :class:`Sizer` that you are adding. The second one (the `proportion`)
+defines how large the sizer's children are in relation to each other. In a vertical sizer, this changes
+the height; in a horizontal sizer, this changes the width. Here are some examples:
+
+.. list-table:: 
+   :header-rows: 1
+   :widths: 40 10
+   :class: centertable
+
+   * - Code
+   
+     - Resulting Image
+   
+   * - .. code-block:: python
+          :emphasize-lines: 3,4
+
+		  sizer = wx.BoxSizer(wx.VERTICAL)
+		  # Second button is three times as tall as first button
+		  sizer.Add(wx.Button(self, -1, 'An extremely long button text'), 1, 0, 0)
+		  sizer.Add(wx.Button(self, -1, 'Small button'), 3, 0, 0)
+		  sizer.SetSizeHints(self)
+		  self.SetSizer(sizer)
+
+     - .. figure:: _static/images/overviews/boxsizer3.png
+          :align: left
+
+   * - Same code as above, with window resized. Notice that the bottom button is still three times as tall as the top button.
+
+     - .. figure:: _static/images/overviews/boxsizer31.png
+          :align: left
+
+   * - .. code-block:: python
+          :emphasize-lines: 3,4
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # First button is 3/2 the height of the second button
+          sizer.Add(wx.Button(self, -1, 'An extremely long button text'), 3, 0, 0)
+          sizer.Add(wx.Button(self, -1, 'Small button'), 2, 0, 0)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+
+     - .. figure:: _static/images/overviews/boxsizer32.png
+          :align: left
+		  
+
+|
+
+If one of the `proportion` parameters is 0, that :class:`Window` will be the minimum size, and the others 
+will resize proportionally:
+
+.. list-table:: 
+   :header-rows: 1
+   :widths: 40 10
+   :class: centertable
+
+   * - Code
+   
+     - Resulting Image
+   
+   * - .. code-block:: python
+          :emphasize-lines: 4,5
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # Third button is twice the size of the second button
+          sizer.Add(wx.Button(self, -1, 'An extremely long button text'), 0, 0, 0)
+          sizer.Add(wx.Button(self, -1, 'Small button'), 1, 0, 0)
+          sizer.Add(wx.Button(self, -1, 'Another button'), 2, 0, 0)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+
+     - .. figure:: _static/images/overviews/boxsizer33.png
+          :align: left
+
+   * - Same code as above, with window resized. The top button (proportion 0) is still the minimum height, 
+       and the third button is still twice the height of the second.
+
+     - .. figure:: _static/images/overviews/boxsizer34.png
+          :align: left
+
+
+This is especially useful when you want, for example, a button at the bottom which is only
+as big as necessary, and some other control that occupies the rest of the frame. To do so, 
+give the button proportion 0 and the other control a number greater than 0. Mac users in 
+particular will appreciate you for not creating huge aqua-styled buttons.
+
+
+-----------------------------------
+The `flags` and `border` parameters
+-----------------------------------
+
+The `flag` argument accepted by :meth:`Sizer.Add`
+is a ``OR``-combination of the following flags. Two main behaviours are defined using these flags. One is 
+the border around a window: the `border` parameter determines the border width whereas the flags given here 
+determine which side(s) of the item that the border will be added. The other flags determine how the sizer 
+item behaves when the space allotted to the sizer changes, and is somewhat dependent on the specific kind 
+of sizer used.
+
++---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| Sizer Flag                                                          | Description                                                                 |
++=====================================================================+=============================================================================+
+| ``TOP``                                                             | These flags are used to specify which side(s) of the sizer                  |
++---------------------------------------------------------------------+ item the border width will apply to.                                        | 
+| ``BOTTOM``                                                          |                                                                             |
++---------------------------------------------------------------------+                                                                             |
+| ``LEFT``                                                            |                                                                             |
++---------------------------------------------------------------------+                                                                             |
+| ``RIGHT``                                                           |                                                                             |
++---------------------------------------------------------------------+                                                                             |
+| ``ALL``                                                             |                                                                             |
++---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| ``EXPAND``                                                          | The item will be expanded to fill the space assigned to                     |
+|                                                                     | the item.                                                                   |
++---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| ``SHAPED``                                                          | The item will be expanded as much as possible while also                    |
+|                                                                     | maintaining its aspect ratio                                                |
++---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| ``FIXED_MINSIZE``                                                   | If you would rather have a window item stay the size it started with then   |
+|                                                                     | use ``FIXED_MINSIZE``                                                       |
++---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| ``RESERVE_SPACE_EVEN_IF_HIDDEN``                                    | Normally `Sizers` don't allocate space for hidden windows or other items.   | 
+|                                                                     | This flag overrides this behavior so that sufficient space is allocated for |
+|                                                                     | the window even if it isn't visible. This makes it possible to dynamically  |
+|                                                                     | show and hide controls without resizing parent dialog, for example.         |
++---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| ``ALIGN_CENTER`` **or** ``ALIGN_CENTRE``                            | The ``ALIGN*`` flags allow you to specify the alignment of the item         |
++---------------------------------------------------------------------+ within the space allotted to it by the sizer, adjusted for the border if    |
+| ``ALIGN_LEFT``                                                      | any.                                                                        |
++---------------------------------------------------------------------+                                                                             | 
+| ``ALIGN_RIGHT``                                                     |                                                                             |
++---------------------------------------------------------------------+                                                                             | 
+| ``ALIGN_TOP``                                                       |                                                                             |
++---------------------------------------------------------------------+                                                                             | 
+| ``ALIGN_BOTTOM``                                                    |                                                                             |
++---------------------------------------------------------------------+                                                                             | 
+| ``ALIGN_CENTER_VERTICAL`` **or** ``ALIGN_CENTRE_VERTICAL``          |                                                                             |
++---------------------------------------------------------------------+                                                                             | 
+| ``ALIGN_CENTER_HORIZONTAL`` **or** ``ALIGN_CENTRE_HORIZONTAL``      |                                                                             |
++---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+
+|
+
+
+Let's start with the simplest case: the alignment flags. These are pretty self-explanatory.
+
+.. list-table:: 
+   :header-rows: 1
+   :widths: 40 10
+   :class: centertable
+
+   * - Code
+   
+     - Resulting Image
+   
+   * - .. code-block:: python
+          :emphasize-lines: 4
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # Second button is right aligned
+          sizer.Add(wx.Button(self, -1, "An extremely long button text"), 0, 0, 0)
+          sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.ALIGN_RIGHT, 0)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+
+
+     - .. figure:: _static/images/overviews/boxsizer4.png
+          :align: left
+
+
+   * - .. code-block:: python
+          :emphasize-lines: 4
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # Second button is center-aligned
+          sizer.Add(wx.Button(self, -1, "An extremely long button text"), 0, 0, 0)
+          sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.ALIGN_CENTER, 0)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+
+
+     - .. figure:: _static/images/overviews/boxsizer41.png
+          :align: left
+
+
+
+Next is the ``EXPAND`` flag. This is synonymous with ``GROW``.
+
+.. list-table:: 
+   :header-rows: 1
+   :widths: 40 10
+   :class: centertable
+
+   * - Code
+   
+     - Resulting Image
+   
+   * - .. code-block:: python
+          :emphasize-lines: 4
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # Second button expands to the whole parent's width
+          sizer.Add(wx.Button(self, -1, "An extremely long button text"), 0, 0, 0)
+          sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.EXPAND, 0)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+
+
+     - .. figure:: _static/images/overviews/boxsizer5.png
+          :align: left
+
+
+
+You can see that the first button takes its minimum size, and the second one grows to match it. This affects 
+controls in the opposite manner of the second parameter; ``EXPAND`` in a vertical sizer causes horizontal 
+expansion, and in a horizontal sizer it causes vertical expansion.
+
+Next is ``SHAPED``. This flag ensures that the width and height of the object stay proportional to each other. 
+It doesn't make much sense for buttons, but can be excellent for bitmaps, which would be contorted or clipped 
+if not scaled proportionally.
+
+
+.. list-table:: 
+   :header-rows: 1
+   :widths: 30 10
+   :class: centertable
+
+   * - Code
+   
+     - Resulting Image
+   
+   * - .. code-block:: python
+          :emphasize-lines: 4
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # Second button will scale proportionally
+          sizer.Add(wx.Button(self, -1, "An extremely long button text"), 0, 0, 0)
+          sizer.Add(wx.Button(self, -1, "Small Button"), 1, wx.SHAPED, 0)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+
+
+     - .. figure:: _static/images/overviews/boxsizer51.png
+          :align: left
+
+   * - Same code as above, with window resized. The width grew dramatically with the height. In fact, it didn't 
+       quite grow vertically the whole way because it couldn't maintain the correct ratio while doing so.
+
+     - .. figure:: _static/images/overviews/boxsizer52.png
+          :align: left
+
+
+Finally, we have the border flags. These only make sense when the `border` parameter is greater than 0, and describe 
+the sides of the control on which the border should appear. In order to demonstrate this most clearly, we'll keep 
+the ``EXPAND`` flag.
+
+
+.. list-table:: 
+   :header-rows: 1
+   :widths: 40 10
+   :class: centertable
+
+   * - Code
+   
+     - Resulting Image
+   
+   * - .. code-block:: python
+          :emphasize-lines: 4
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # Border size effects
+          sizer.Add(wx.Button(self, -1, "An extremely long button text"), 0, 0, 0)
+          sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.EXPAND | wx.LEFT, 20)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+          
+          
+     - .. figure:: _static/images/overviews/boxsizer53.png
+          :align: left
+          
+
+   * - .. code-block:: python
+          :emphasize-lines: 4
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # Border size effects
+          sizer.Add(wx.Button(self, -1, "An extremely long button text"), 0, 0, 0)
+          sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 20)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+          
+          
+     - .. figure:: _static/images/overviews/boxsizer54.png
+          :align: left
+          
+
+   * - .. code-block:: python
+          :emphasize-lines: 4
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # Border size effects
+          sizer.Add(wx.Button(self, -1, "An extremely long button text"), 0, 0, 0)
+          sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 20)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+          
+          
+     - .. figure:: _static/images/overviews/boxsizer55.png
+          :align: left
+
+   * - .. code-block:: python
+          :emphasize-lines: 4
+
+          sizer = wx.BoxSizer(wx.VERTICAL)
+          # Border size effects
+          sizer.Add(wx.Button(self, -1, "An extremely long button text"), 0, 0, 0)
+          sizer.Add(wx.Button(self, -1, "Small Button"), 0, wx.EXPAND | wx.ALL, 20)
+          sizer.SetSizeHints(self)
+          self.SetSizer(sizer)
+          
+          
+     - .. figure:: _static/images/overviews/boxsizer56.png
+          :align: left
+
+
+You can see that the button is offset from the specified edges of the sizer by the number of pixels that we
+specified in the `border` parameter.
+
+
 Hiding Controls Using Sizers
 ----------------------------
 
@@ -118,9 +530,9 @@ This is useful when hiding parts of the interface, since you can avoid removing 
 .. note:: This is supported only by :ref:`BoxSizer` and :ref:`FlexGridSizer`.
 
 
-
+--------
 BoxSizer
-^^^^^^^^
+--------
 
 :ref:`BoxSizer` can lay out its children either vertically or horizontally, depending on what flag is being used in its constructor. 
 When using a vertical sizer, each child can be centered, aligned to the right or aligned to the left. Correspondingly, when using a 
@@ -132,9 +544,9 @@ be stretched horizontally. The following sample shows the same dialog as in the 
    :align: center
 
 
-
+--------------
 StaticBoxSizer
-^^^^^^^^^^^^^^
+--------------
 
 :class:`StaticBoxSixer` is the same as a :class:`BoxSizer`, but surrounded by a static box. Here is a sample:
 
@@ -143,9 +555,9 @@ StaticBoxSizer
    :align: center
 
 
-
+---------
 GridSizer
-^^^^^^^^^
+---------
 
 :ref:`GridSizer` is a two-dimensional sizer. All children are given the same size, which is the minimal size required by the biggest
 child, in this case the text control in the left bottom border. Either the number of columns or the number or rows is fixed and the grid
@@ -158,9 +570,9 @@ sizer will grow in the respectively other orientation if new children are added:
 
 For programming information, see :ref:`GridSizer`.
 
-
+-------------
 FlexGridSizer
-^^^^^^^^^^^^^
+-------------
 
 Another two-dimensional sizer derived from :ref:`GridSizer`. The width of each column and the height of each row are calculated individually
 according to the minimal requirements from the respectively biggest child. Additionally, columns and rows can be declared to be stretchable 

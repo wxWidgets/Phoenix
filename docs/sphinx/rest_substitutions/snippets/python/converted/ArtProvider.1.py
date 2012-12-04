@@ -7,7 +7,7 @@
                    pass
                  
     
-                   # optionally override this one as well
+               # optionally override this one as well
                def CreateIconBundle(self, id, client):
 
                    # Your implementation of CreateIconBundle here

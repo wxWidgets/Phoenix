@@ -113,21 +113,21 @@ def run():
     
     # and give them some simple wrappers for Classic compatibility
     module.addPyFunction('DateTimeFromTimeT', '(timet)',
-        doc="Compatibility wrapper for DateTime.FromTimeT",
+        doc="Compatibility wrapper for :meth:`DateTime.FromTimeT`",
         body="return DateTime.FromTimeT(timet)",
-        deprecated='Use DateTime.FromTimeT instead.')
+        deprecated='Use :meth:`DateTime.FromTimeT` instead.')
     module.addPyFunction('DateTimeFromJDN', '(jdn)',
-        doc="Compatibility wrapper for DateTime.FromJDN",
+        doc="Compatibility wrapper for :meth:`DateTime.FromJDN`",
         body="return DateTime.FromJDN(jdn)",
-        deprecated='Use DateTime.FromJDN instead.')
+        deprecated='Use :meth:`DateTime.FromJDN` instead.')
     module.addPyFunction('DateTimeFromHMS', '(hour, minute=0, second=0, millisecond=0)',
-        doc="Compatibility wrapper for DateTime.FromHMS",
+        doc="Compatibility wrapper for :meth:`DateTime.FromHMS`",
         body="return DateTime.FromHMS(hour, minute, second, millisecond)",
-        deprecated='DateTime.FromHMS instead.')
+        deprecated='Use :meth:`DateTime.FromHMS` instead.')
     module.addPyFunction('DateTimeFromDMY', '(day, month, year=DateTime.Inv_Year, hour=0, minute=0, second=0, millisecond=0)',
-        doc="Compatibility wrapper for DateTime.FromDMY",
+        doc="Compatibility wrapper for :meth:`DateTime.FromDMY`",
         body="return DateTime.FromDMY(day, month, year, hour, minute, second, millisecond)",
-        deprecated='Use DateTime.FromDMY instead.')
+        deprecated='Use :meth:`DateTime.FromDMY` instead.')
     
     
     # Fixup similar conflicts in the Set method overloads

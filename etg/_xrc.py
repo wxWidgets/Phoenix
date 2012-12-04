@@ -122,7 +122,7 @@ def run():
     
     
     module.addPyFunction('EmptyXmlResource', '(flags=XRC_USE_LOCALE, domain="")',
-        deprecated="Use XmlResource instead",
+        deprecated="Use :class:`xrc.XmlResource` instead",
         doc='A compatibility wrapper for the XmlResource(flags, domain) constructor',
         body='return XmlResource(flags, domain)')
     

@@ -142,7 +142,7 @@ def run():
             PyPropertyDef('typeId', '_getEvtType'),
             
             PyFunctionDef('__call__', '(self, *args)',
-                deprecated="Use wx.EvtHandler.Bind() instead.",
+                deprecated="Use :meth:`EvtHandler.Bind` instead.",
                 doc="""\
                     For backwards compatibility with the old EVT_* functions.
                     Should be called with either (window, func), (window, ID,
@@ -330,7 +330,7 @@ def run():
             return event.Unbind(self, id, id2, handler)              
             """)
 
-    module.addPyCode('PyEvtHandler = wx.deprecated(EvtHandler, "Use EvtHandler instead.")')
+    module.addPyCode('PyEvtHandler = wx.deprecated(EvtHandler, "Use :class:`EvtHandler` instead.")')
 
 
     #---------------------------------------

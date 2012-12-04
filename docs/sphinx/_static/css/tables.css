@@ -55,3 +55,31 @@
 {
   background: #E0E0E0 url('../images/sphinxdocs/cell-grey.jpg');
 }
+
+.centertable
+{
+    margin-bottom: 2em;
+}
+
+.centertable th.head
+{
+    font-weight: bold;
+    text-align: left;
+    border-bottom: 1px solid black;
+    padding-right: .5em;
+}
+
+.centertable th.field-name
+{
+    font-weight: bold;
+    text-align: left;
+    padding-right: 1em;
+}
+
+.centertable th {
+    background-color: #ede;
+}
+
+.centertable td {
+    vertical-align: middle;
+}
