@@ -628,9 +628,7 @@ class PersistenceManager(object):
         if children is None:
             if HasCtrlHandler(window):
                 # Control has persist support
-                topRetVal = self.RegisterAndRestore(window)
-                if topRetVal:
-                    self._hasRestored = True
+                self._hasRestored = self.RegisterAndRestore(window)
                     
             children = window.GetChildren()
 
@@ -640,9 +638,7 @@ class PersistenceManager(object):
             if name not in BAD_DEFAULT_NAMES:
                 if HasCtrlHandler(child):
                     # Control has persist support
-                    topRetVal = self.RegisterAndRestore(child)
-                    if topRetVal:
-                        self._hasRestored = True
+                    self._hasRestored = self.RegisterAndRestore(child)
 
             self.RegisterAndRestoreAll(window, child.GetChildren())
         
