@@ -74,7 +74,7 @@ Event handlers can be bound at any moment. For example, it's possible to do some
 handlers if and when it succeeds. This can avoid the need to test that the object was properly initialized in the event 
 handlers themselves. With `Bind()` they simply won't be called if it wasn't correctly initialized.
 
-As a slight extension of the above, the handlers can also be unbound at any time with `Unbind()` (and maybe rebound later). 
+As a slight extension of the above, the handlers can also be unbound at any time with :meth:`EvtHandler.Unbind` () (and maybe rebound later). 
 
 Almost last but very, very far from least is the flexibility which allows to bind an event to:
 
@@ -89,9 +89,10 @@ first one for the object methods and the other one for arbitrary functors (calla
 In addition to using a method of the object generating the event itself, you can use a method from a completely different
 object as an event handler::
 
-	def OnFrameExit(event)
+	def OnFrameExit(event):
 
 	    # Do something useful.
+		pass
 
 
 	class MyFrame(wx.Frame):
@@ -283,7 +284,7 @@ events. The only exceptions to this rule are:
 
 
 :meth:`TextEntry.ChangeValue` can be used instead of :meth:`TextEntry.SetValue` but the other functions, such as :meth:`TextEntry.Replace`
-or meth:`TextCtrl.WriteText` don't have event-free equivalents.
+or :meth:`TextCtrl.WriteText` don't have event-free equivalents.
 
 
 

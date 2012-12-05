@@ -378,7 +378,8 @@ def ConvertToPython(text):
         newlines.append(newline)
 
     formatted = "\n".join(newlines)
-    formatted = formatted.replace('\\', '\\\\')        
+    formatted = formatted.replace('\\', '\\\\')
+
     return formatted
             
 
@@ -764,7 +765,7 @@ def FormatContributedSnippets(kind, contrib_snippets):
     if kind == 'class':
         text = TEMPLATE_CONTRIB
     else:
-        text = '\n' + spacer + '**Contributed Examples:**\n\n'
+        text = '\n' + spacer + '|contributed| **Contributed Examples:**\n\n'
     
     for indx, snippet in enumerate(contrib_snippets):
         fid = open(snippet, 'rt')

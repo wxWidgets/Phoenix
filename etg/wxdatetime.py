@@ -81,12 +81,12 @@ def run():
     # Add static factories for some of the ctors we ignored
     c.addCppMethod('wxDateTime*', 'FromTimeT', '(time_t timet)', 
         factory=True, isStatic=True,
-        doc="Construct a DateTime from a C time_t value, the number of seconds since the epoch.",
+        doc="Construct a :class:`DateTime` from a C ``time_t`` value, the number of seconds since the epoch.",
         body="return new wxDateTime(timet);")
                    
     c.addCppMethod('wxDateTime*', 'FromJDN', '(double jdn)', 
         factory=True, isStatic=True,
-        doc="Construct a DateTime from a Julian Day Number.\n\n"
+        doc="Construct a :class:`DateTime` from a Julian Day Number.\n\n"
             "By definition, the Julian Day Number, usually abbreviated as JDN, of a particular instant is the fractional number of days since 12 hours Universal Coordinated Time (Greenwich mean noon) on January 1 of the year -4712 in the Julian proleptic calendar.",
         body="return new wxDateTime(jdn);")
     
@@ -96,7 +96,7 @@ def run():
             unsigned short second=0, 
             unsigned short millisecond=0)""", 
         factory=True, isStatic=True,
-        doc="Construct a DateTime equal to Today() with the time set to the supplied parameters.",
+        doc="Construct a :class:`DateTime` equal to :meth:`Today` () with the time set to the supplied parameters.",
         body="return new wxDateTime(hour, minute, second, millisecond);")
 
     c.addCppMethod('wxDateTime*', 'FromDMY', 
@@ -108,7 +108,7 @@ def run():
             unsigned short second=0, 
             unsigned short millisecond=0)""", 
         factory=True, isStatic=True,
-        doc="Construct a DateTime using the supplied parameters.",
+        doc="Construct a :class:`DateTime` using the supplied parameters.",
         body="return new wxDateTime(day, month, year, hour, minute, second, millisecond);")
     
     # and give them some simple wrappers for Classic compatibility
@@ -355,7 +355,7 @@ def run():
     #---------------------------------------------
     # Convert to/from Python date objects
     module.addPyFunction('pydate2wxdate', '(date)', 
-        doc='Convert a Python date or datetime to a wx.DateTime object',
+        doc='Convert a Python date or datetime to a :class:`DateTime` object',
         body="""\
             import datetime
             assert isinstance(date, (datetime.datetime, datetime.date))
@@ -363,7 +363,7 @@ def run():
         """)
     
     module.addPyFunction('wxdate2pydate', '(date)', 
-        doc='Convert a wx.DateTime object to a Python datetime.',
+        doc='Convert a :class:`DateTime` object to a Python datetime.',
         body="""\
             import datetime
             assert isinstance(date, DateTime)

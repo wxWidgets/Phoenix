@@ -86,7 +86,7 @@ You can customize :class:`~html.HtmlWindow` by setting font size, font face and 
 -   :meth:`~html.HtmlWindow.ReadCustomization`
 -   :meth:`~html.HtmlWindow.WriteCustomization`
 
-The last two functions are used to store user customization info :class:`Config`
+The last two functions are used to store user customization info :class:`ConfigBase`
 stuff (for example in the registry under Windows, or in a dotfile under
 Unix).
 

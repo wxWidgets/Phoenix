@@ -103,14 +103,14 @@ def run():
     c.addPyMethod('GetMenus', '(self)', 
         doc="""\
         GetMenus() -> (menu, label)\n
-        Return a list of (menu, label) items for the menus in the MenuBar.""",
+        Return a list of (menu, label) items for the menus in the :class:`MenuBar`.""",
         body="""\
         return [(self.GetMenu(i), self.GetLabelTop(i)) for i in range(self.GetMenuCount())]
         """)    
     c.addPyMethod('SetMenus', '(self, items)', 
         doc="""\
         SetMenus()\n
-        Clear and add new menus to the MenuBar from a list of (menu, label) items.""",
+        Clear and add new menus to the :class:`MenuBar` from a list of (menu, label) items.""",
         body="""\
         for i in range(self.GetMenuCount()-1, -1, -1):
             self.Remove(i)

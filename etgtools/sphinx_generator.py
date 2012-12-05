@@ -1146,6 +1146,9 @@ class Image(Node):
             if key == 'name':
                 break
 
+        if 'appear-' in value:
+            return ''
+        
         image_path = os.path.normpath(os.path.join(DOXYROOT, 'images', value))
         static_path = os.path.join(OVERVIEW_IMAGES_ROOT, os.path.split(image_path)[1])
 
@@ -1727,7 +1730,13 @@ class Emphasis(Node):
            to avoid wrong ReST output.
         """
 
-        if self.element.tag == 'emphasis':
+
+        text = Node.Join(self, with_tail=False)
+
+        if '``' in text:
+            format = '%s'
+            emphasis = ''
+        elif self.element.tag == 'emphasis':
             format = '`%s`'
             emphasys = '`'
         elif self.element.tag == 'bold':
@@ -1735,8 +1744,6 @@ class Emphasis(Node):
             emphasys = '**'
 
         spacing = ('ParameterList' in self.GetHierarchy() and [' '] or [''])[0]
-
-        text = Node.Join(self, with_tail=False)
 
         if self.children:
 
@@ -1765,7 +1772,7 @@ class Emphasis(Node):
             text = newText
             
         else:
-            
+
             if text.strip():
                 text = spacing + format % text.strip()
 
@@ -2402,6 +2409,7 @@ class XMLDocString(object):
 
                 if found:
                     line = line.replace('wx.EmptyString', '""')
+                    line = line.replace('wx.', '')
                     newlines = self.CodeIndent(line, newlines)
 
         newdocs = ''
@@ -2477,6 +2485,7 @@ class XMLDocString(object):
             if self.is_overload:
                 arguments = '`%s`'%arguments.strip()
 
+        arguments = arguments.replace('wx.', '')
         self.arguments = arguments
 
 
@@ -3216,12 +3225,20 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         if self.IsFullyDeprecated(pm):
             return
-        
+
         stream = StringIO()
         stream.write('\n   .. method:: %s%s\n\n' % (pm.name, pm.argsString))
-
-##        docstrings = ConvertToPython(pm.pyDocstring).replace('\n', ' ')
-        docstrings = ConvertToPython(pm.pyDocstring)
+        
+        docstrings = return_type = ''
+        
+        for line in pm.pyDocstring.splitlines():
+            if '->' in line:
+                arguments, after = line.strip().split("->")
+                return_type = self.ReturnSection(after)
+            else:
+                docstrings += line
+                
+        docstrings = ConvertToPython(docstrings)
 
         newdocs = ''
         spacer = ' '*6
@@ -3233,6 +3250,10 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 newdocs += line + "\n"
                 
         stream.write(newdocs + '\n\n')
+
+        if hasattr(pm, 'deprecated') and pm.deprecated:
+            text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, pm.deprecated.replace('\n', ' '))
+            stream.write(text)
 
         name = RemoveWxPrefix(self.current_class.name) or self.current_class.pyName
         filename = self.current_module + "%s.txt"%name
@@ -3386,6 +3407,55 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         simple_docs = ChopDescription(simple_docs)
 
         return method_name, simple_docs
+
+    # ---------------------------------------------------------------------------
+    def ReturnSection(self, after):
+
+        if '(' in after:
+
+            rtype1 = ReturnType('`tuple`', None)
+            
+            return_section = after.strip().lstrip('(').rstrip(')')
+            return_section = return_section.split(',')
+            new_section = []
+            
+            for ret in return_section:
+                stripped = ret.strip()
+                if stripped in NO_MODULE:
+                    ret = NO_MODULE[stripped] + stripped
+                    new_section.append(':ref:`%s`'%ret)
+                else:
+                    if ret[0].isupper():
+                        new_section.append(':ref:`%s`'%stripped)
+                    else:
+                        new_section.append('`%s`'%stripped)
+
+            element = et.Element('return', kind='return')
+            element.text = '( %s )'%(', '.join(new_section))
+            
+            rtype2 = Section(element, None, 'method')
+            rtype = rtype1.Join() + rtype2.Join()
+            
+        else:
+
+            rtype = PythonizeType(after)
+
+            if not rtype:
+                return ''
+            
+            if rtype[0].isupper() or '.' in rtype:
+                rtype = ':ref:`%s`'%rtype
+            else:
+                rtype = '`%s`'%rtype
+
+            rtype = ReturnType(rtype, None)
+            rtype = rtype.Join()
+            
+        out = ''
+        for r in rtype.splitlines():
+            out += 6*' ' + r + '\n'
+            
+        return out
 
         
 # ---------------------------------------------------------------------------

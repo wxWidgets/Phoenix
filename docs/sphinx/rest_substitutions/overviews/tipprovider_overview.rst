@@ -21,18 +21,18 @@ feature is extremely easy. To show a tip, it is enough to just call :func:`ShowT
 
 
 Of course, you need to get the text of the tips from somewhere - in the example above, the text is supposed to be in the
-file `tips.txt` from where it is read by the tip provider. The tip provider is just an object of a class deriving from :class:`TipProvider`. 
+file `tips.txt` from where it is read by the tip provider. The tip provider is just an object of a class deriving from :class:`~adv.TipProvider`. 
 It has to implement one pure virtual function of the base class, `GetTip`. In the case of the tip provider created by 
 :func:`CreateFileTipProvider`, the tips are just the lines of the text file.
 
 If you want to implement your own tip provider (for example, if you wish to hardcode the tips inside your program), you 
-just have to derive another class from :class:`TipProvider` and pass a pointer to the object of this class to func:`ShowTip` - then 
+just have to derive another class from :class:`~adv.TipProvider` and pass a pointer to the object of this class to func:`ShowTip` - then 
 you don't need :func:`CreateFileTipProvider` at all.
 
 You will probably want to save somewhere the index of the tip last shown - so that the program doesn't always show the same 
 tip on startup. As you also need to remember whether to show tips or not (you shouldn't do it if the user unchecked 
 "Show tips on startup" checkbox in the dialog), you will probably want to store both the index of the last shown tip 
-(as returned by :meth:`TipProvider.GetCurrentTip` and the flag telling whether to show the tips at startup at all.
+(as returned by :meth:`~adv.TipProvider.GetCurrentTip` and the flag telling whether to show the tips at startup at all.
 
 In a `tips.txt` file, lines that begin with a ``#`` character are considered comments and are automatically skipped. Blank 
 lines and lines only having spaces are also skipped.

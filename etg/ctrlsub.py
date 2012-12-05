@@ -67,10 +67,10 @@ def run():
     c.find('GetClientObject').pyName = 'GetClientData'
     c.find('SetClientObject').pyName = 'SetClientData'
     c.addPyMethod('GetClientObject', '(self, n)', 
-        doc="alias for GetClientData",
+        doc="Alias for :meth:`GetClientData`",
         body="return self.GetClientData(n)")
     c.addPyMethod('SetClientObject', '(self, n, data)', 
-        doc="alias for SetClientData",
+        doc="Alias for :meth:`SetClientData`",
         body="self.SetClientData(n, data)")
     
     

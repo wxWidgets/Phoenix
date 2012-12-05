@@ -54,7 +54,10 @@ def MakeHeadings():
         rel_path_index = img.find('_static')
         rel_path = img[rel_path_index:]
 
-        width = ('overload' in name and [16] or [32])[0]
+        width = 32
+        if 'overload' in name or 'contributed' in name:
+            width = 16
+
         text += templates.TEMPLATE_HEADINGS % (name, os.path.normpath(rel_path), width)
 
     writeIfChanged(heading_file, text)    
@@ -658,7 +661,9 @@ def PostProcess(folder):
         text = text.replace('<p><img alt="overload"', '<br><p><img alt="overload"')
         text = text.replace('<strong>Overloaded Implementations</strong>', '<em><strong>Overloaded Implementations</strong></em>')
         text = text.replace('<strong>~~~</strong></p>', '<hr style="color:#0000FF;background-color:#0000FF;height:1px;border:none;width:50%;float:left" /></p><br>')
-        
+
+        text = text.replace('<p><img alt="contributed"', '<br><p><img alt="contributed"')
+
         for item in HTML_REPLACE:
             text = text.replace('<dl class="%s">'%item, '<br><hr />\n<dl class="%s">'%item)
 

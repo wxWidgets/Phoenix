@@ -14,6 +14,6 @@
             def OnTimer(self, event):
         
                 # do whatever you want to do every second here
-                print 'Hello'
+                print('Hello')
                 
         

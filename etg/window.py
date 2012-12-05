@@ -162,7 +162,7 @@ def run():
 
     c.addPyMethod('__nonzero__', '(self)',
         doc="Can be used to test if the C++ part of the window still exists, with \n"
-            "code like this:\n\n"
+            "code like this::\n\n"
             "    if theWindow:\n"
             "        doSomething()",
         body="""\

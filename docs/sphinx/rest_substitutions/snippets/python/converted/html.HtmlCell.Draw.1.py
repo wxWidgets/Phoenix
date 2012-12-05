@@ -1,3 +1,3 @@
     
     
-        dc.DrawText("hello", x + self.PosX, y + self.PosY)
+        dc.DrawText("hello", x + cell.PosX, y + cell.PosY)

@@ -98,5 +98,5 @@ PropertySheetDialog and Wizard
 Adaptation for :ref:`PropertySheetDialog` is always done by simply making the pages scrollable, since :meth:`Dialog.GetContentWindow` returns the dialog's 
 book control and this is handled by the standard layout adapter.
 
-:ref:`Wizard` uses its own `CanDoLayoutAdaptation` and `DoLayoutAdaptation` functions rather than the global adapter: again, only the wizard pages are made scrollable.
+:class:`~adv.Wizard` uses its own `CanDoLayoutAdaptation` and `DoLayoutAdaptation` functions rather than the global adapter: again, only the wizard pages are made scrollable.
 

@@ -46,7 +46,7 @@ def run():
         GetChecked()
     
         Return a sequence of integers corresponding to the checked items in
-        the control, based on `IsChecked`.""",
+        the control, based on :meth:`IsChecked`.""",
         body="return tuple([i for i in range(self.Count) if self.IsChecked(i)])")
 
     c.addPyMethod('GetCheckedStrings', '(self)', 
@@ -54,7 +54,7 @@ def run():
             GetCheckedStrings()
      
             Return a tuple of strings corresponding to the checked
-            items of the control, based on `GetChecked`.""",
+            items of the control, based on :meth:`GetChecked`.""",
         body="return tuple([self.GetString(i) for i in self.GetChecked()])")
     
     c.addPyMethod('SetChecked', '(self, indexes)', 

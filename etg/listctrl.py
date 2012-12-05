@@ -244,7 +244,7 @@ def run():
 
     # Add some Python helper methods
     c.addPyMethod('Select', '(self, idx, on=1)',
-        doc='[de]select an item',
+        doc='Selects/deselects an item.',
         body="""\
         if on: state = wx.LIST_STATE_SELECTED
         else: state = 0
@@ -252,26 +252,26 @@ def run():
         """)
     
     c.addPyMethod('Focus', '(self, idx)', 
-        doc='Focus and show the given item',
+        doc='Focus and show the given item.',
         body="""\
         self.SetItemState(idx, wx.LIST_STATE_FOCUSED, wx.LIST_STATE_FOCUSED)
         self.EnsureVisible(idx)
         """)
 
     c.addPyMethod('GetFocusedItem', '(self)',
-        doc='get the currently focused item or -1 if none',
+        doc='Gets the currently focused item or -1 if none is focused.',
         body='return self.GetNextItem(-1, wx.LIST_NEXT_ALL, wx.LIST_STATE_FOCUSED)')
 
     c.addPyMethod('GetFirstSelected', '(self, *args)',
-        doc='return first selected item, or -1 when none',
+        doc='Returns the first selected item, or -1 when none is selected.',
         body="return self.GetNextSelected(-1)")
 
     c.addPyMethod('GetNextSelected', '(self, item)',
-        doc='return subsequent selected items, or -1 when no more',
+        doc='Returns subsequent selected items, or -1 when no more are selected.',
         body="return self.GetNextItem(item, wx.LIST_NEXT_ALL, wx.LIST_STATE_SELECTED)")
 
     c.addPyMethod('IsSelected', '(self, idx)',
-        doc='return True if the item is selected',
+        doc='Returns ``True`` if the item is selected.',
         body="return (self.GetItemState(idx, wx.LIST_STATE_SELECTED) & wx.LIST_STATE_SELECTED) != 0")
 
     c.addPyMethod('SetColumnImage', '(self, col, image)',
@@ -294,7 +294,7 @@ def run():
 
     c.addPyMethod('Append', '(self, entry)',
         doc='''\
-        Append an item to the list control.  The entry parameter should be a
+        Append an item to the list control.  The `entry` parameter should be a
         sequence with an item for each column''',
         body="""\
         if len(entry):

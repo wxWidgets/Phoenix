@@ -113,20 +113,20 @@ def run():
     module.addPyClass('DataViewItemObjectMapper', ['object'],
         doc="""\
             This class provides a mechanism for mapping between Python objects and the
-            DataViewItem objects used by the DataViewModel for tracking the items in
+            :class:`DataViewItem` objects used by the :class:`DataViewModel` for tracking the items in
             the view. The ID used for the item is the id() of the Python object. Use
-            `ObjectToItem` to create a DataViewItem using a Python object as its ID,
-            and use `ItemToObject` to fetch that Python object again later for a given
-            DataViewItem.
+            :meth:`ObjectToItem` to create a :class:`DataViewItem` using a Python object as its ID,
+            and use :meth:`ItemToObject` to fetch that Python object again later for a given
+            :class:`DataViewItem`.
     
             By default a regular dictionary is used to implement the ID to object
             mapping. Optionally a WeakValueDictionary can be useful when there will be
             a high turnover of objects and mantaining an extra reference to the
             objects would be unwise.  If weak references are used then the objects
             associated with data items must be weak-referenceable.  (Things like
-            stock lists and dictionaries are not.)  See `UseWeakRefs`.
+            stock lists and dictionaries are not.)  See :meth:`UseWeakRefs`.
             
-            This class is used in `PyDataViewModel` as a mixin for convenience.
+            This class is used in :class:`PyDataViewModel` as a mixin for convenience.
             """,
         items=[
             PyFunctionDef('__init__', '(self)', 
@@ -136,7 +136,7 @@ def run():
                     """),
             
             PyFunctionDef('ObjectToItem', '(self, obj)',
-                doc="Create a DataViewItem for the object, and remember the ID-->obj mapping.",
+                doc="Create a :class:`DataViewItem` for the object, and remember the ID-->obj mapping.",
                 body="""\
                     oid = id(obj)
                     self.mapper[oid] = obj
@@ -169,7 +169,7 @@ def run():
             ])
 
     module.addPyClass('PyDataViewModel', ['DataViewModel', 'DataViewItemObjectMapper'],
-        doc="A convenience class that is a DataViewModel combined with an object mapper.",
+        doc="A convenience class that is a :class:`DataViewModel` combined with an object mapper.",
         items=[
             PyFunctionDef('__init__', '(self)', 
                 body="""\
@@ -326,7 +326,7 @@ def run():
     c.find('AssociateModel').pyName = '_AssociateModel'
     c.addPyMethod('AssociateModel', '(self, model)', 
         doc="""\
-            Associates a DataViewModel with the control.
+            Associates a :class:`DataViewModel` with the control.
             Ownership of the model object is passed to C++, however it 
             is reference counted so it can be shared with other views.
             """,

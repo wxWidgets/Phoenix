@@ -144,7 +144,7 @@ def run():
             PyFunctionDef('__call__', '(self, *args)',
                 deprecated="Use :meth:`EvtHandler.Bind` instead.",
                 doc="""\
-                    For backwards compatibility with the old EVT_* functions.
+                    For backwards compatibility with the old ``EVT_*`` functions.
                     Should be called with either (window, func), (window, ID,
                     func) or (window, ID1, ID2, func) parameters depending on the
                     type of the event.
@@ -287,11 +287,11 @@ def run():
         doc="""\
             Bind an event to an event handler.
     
-            :param event: One of the EVT_* event binder objects that
+            :param event: One of the ``EVT_*`` event binder objects that
                           specifies the type of event to bind.
         
             :param handler: A callable object to be invoked when the
-                            event is delivered to self.  Pass None to
+                            event is delivered to self.  Pass ``None`` to
                             disconnect an event handler.
         
             :param source: Sometimes the event originates from a
@@ -321,8 +321,8 @@ def run():
     
     c.addPyMethod('Unbind', '(self, event, source=None, id=wx.ID_ANY, id2=wx.ID_ANY, handler=None)',
         doc="""\
-            Disconnects the event handler binding for event from self.
-            Returns True if successful.
+            Disconnects the event handler binding for event from `self`.
+            Returns ``True`` if successful.
             """,
         body="""\
             if source is not None:
