@@ -691,7 +691,10 @@ def PostProcess(folder):
                     elif stripline == '<dl class="attribute">' and not properties_done:
                         line = '<br><h3>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>' + '\n' + line
                         properties_done = True
-                                
+
+            if '<em>  ' in line and '&#8211;' in line:
+                line = line.replace('<em>  ', '<em>')
+                
             newtext += line + '\n'                
 
         for old, new in list(enum_dict.items()):

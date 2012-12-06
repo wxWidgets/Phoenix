@@ -232,13 +232,15 @@ def ReplaceCppItems(line):
 
 # ----------------------------------------------------------------------- #
 
-def PythonizeType(ptype):
+def PythonizeType(ptype, is_param):
     """
     Replaces various C++ specific stuff with more Pythonized version of them,
     for parameter lists and return types (i.e., the `:param:` and `:rtype:`
     ReST roles).
 
-    :param string `ptype`: any string.
+    :param string `ptype`: any string;
+    :param bool `is_param`: ``True`` if this is a parameter description, ``False``
+     if it is a return type.
 
     :rtype: `string`
     """
@@ -295,7 +297,15 @@ def PythonizeType(ptype):
         ptype = ptype[0:-1]
         if ' ' not in ptype:
             ptype = ':class:`%s`'%ptype
-        
+
+    else:
+        if is_param and '.' in ptype:
+            modules = MODULENAME_REPLACE.values()
+            modules.sort()
+            modules = modules[1:]
+            if ptype.split('.')[0] + '.' in modules:
+                ptype = ':ref:`%s`'%ptype
+
     return ptype
 
 

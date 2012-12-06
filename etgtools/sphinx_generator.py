@@ -277,8 +277,9 @@ class Node(object):
             text = (text is not None and [text] or [''])[0]
             tail = (tail is not None and [tail] or [''])[0]
 
-        if text.strip() in REMOVED_LINKS:
-            return ''
+        for link in REMOVED_LINKS:
+            if link in text.strip():
+                return ''
         
         text = ConvertToPython(text)
 
@@ -730,7 +731,7 @@ class Parameter(Node):
         self.pdef = pdef
         self.name = pdef.name
 
-        self.type = PythonizeType(pdef.type)
+        self.type = PythonizeType(pdef.type, is_param=True)
                 
 
 # ----------------------------------------------------------------------- # 
@@ -2547,7 +2548,7 @@ class XMLDocString(object):
                     
         else:
 
-            rtype = PythonizeType(after)
+            rtype = PythonizeType(after, is_param=False)
 
             if not rtype:
                 return
@@ -3438,7 +3439,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             
         else:
 
-            rtype = PythonizeType(after)
+            rtype = PythonizeType(after, is_param=False)
 
             if not rtype:
                 return ''

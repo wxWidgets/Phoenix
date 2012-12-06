@@ -9,7 +9,7 @@
 #---------------------------------------------------------------------------
 
 """
-A class like wx.BusyInfo but which doesn't take up so much space by default
+A class like :class:`BusyInfo` but which doesn't take up so much space by default
 and which has a nicer look.
 """
 
@@ -21,7 +21,7 @@ from wx.lib.stattext import GenStaticText as StaticText
 
 class BusyInfo(object):
     """
-    This class is just like :class:`wx.BusyInfo`, except that its default
+    This class is just like :class:`BusyInfo`, except that its default
     size is smaller, (unless the size of the message requires a larger window
     size) and the background and foreground colors of the message box can be
     set.
@@ -29,7 +29,7 @@ class BusyInfo(object):
     Creating an instace of the class witll create an show a window with the
     given message, and when the instance is deleted then that window will be
     closed. This class also implements the context manager magic methods, so
-    it can be used with Python's 'with` statement, like this::
+    it can be used with Python's `with` statement, like this::
     
         with BusyInfo('Please wait...'):
             doSomethingThatNeedsWaiting()
@@ -38,16 +38,16 @@ class BusyInfo(object):
     
     def __init__(self, msg, parent=None, bgColour=None, fgColour=None):
         """
-        Create a new `BusyInfo`.
+        Create a new :class:`BusyInfo`.
         
-        :param `msg`:     a string to be displayed in the BusyInfo window.
-        :param `parent`:  an optional window to be used as the parent of 
-            the `BusyInfo`.  If given then the BusyInfo will be centered 
+        :param string `msg`:     a string to be displayed in the BusyInfo window.
+        :param Window `parent`:  an optional window to be used as the parent of 
+            the `:class:`BusyInfo`.  If given then the BusyInfo will be centered 
             over that window, otherwise it will be centered on the screen.
-        :param `bgColour`: :class:`Colour` to be used for the background 
-            of the `BusyInfo`
-        :param `fgColour`: :class:`Colour` to be used for the foreground (text)
-            of the `BusyInfo`
+        :param Colour `bgColour`: colour to be used for the background 
+            of the :class:`BusyInfo`
+        :param Colour `fgColour`: colour to be used for the foreground (text)
+            of the :class:`BusyInfo`
         """
         self.frame = _InfoFrame(parent, msg, bgColour, fgColour)
         self.frame.Show()
@@ -59,7 +59,7 @@ class BusyInfo(object):
         
     def Close(self):
         """
-        Hide and close the busy info box
+        Hide and close the busy info box.
         """
         if self.frame:
             self.frame.Hide()

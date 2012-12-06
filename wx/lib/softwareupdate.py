@@ -59,8 +59,8 @@ class UpdateAbortedError(RuntimeError):
 
 class SoftwareUpdate(object):
     """
-    Mix this class with wx.App and call InitForUpdates from the derived class'
-    OnInit method. Be sure that the wx.App has set a display name
+    Mix this class with :class:`App` and call :meth:`InitForUpdates` from the derived class'
+    OnInit method. Be sure that the :class:`App` has set a display name
     (self.SetAppDisplayName) as that value will be used in the update dialogs.
     """
     
@@ -100,7 +100,7 @@ class SoftwareUpdate(object):
 
     def AutoCheckForUpdate(self, frequencyInDays, parentWindow=None, cfg=None):
         """
-        If it has been frequencyInDays since the last auto-check then check if
+        If it has been `frequencyInDays` since the last auto-check then check if
         a software update is available and prompt the user to download and
         install it. This can be called after a application has started up, and
         if there is no update available the user will not be bothered.
