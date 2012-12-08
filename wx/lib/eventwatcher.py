@@ -287,7 +287,7 @@ class EventChooser(wx.Panel):
 
 class EventWatcher(wx.Frame):
     """
-    A frame that will catch and display al events sent to some widget.
+    A frame that will catch and display all events sent to some widget.
     """
     def __init__(self, *args, **kw):
         wx.Frame.__init__(self, *args, **kw)
