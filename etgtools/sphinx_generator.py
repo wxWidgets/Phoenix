@@ -1287,7 +1287,11 @@ class Table(Node):
         possible_rest_input = os.path.join(TABLEROOT, self.xml_item_name)
         
         if os.path.isfile(possible_rest_input):
-            table = '\n\n' + spacer + '.. include:: %s\n\n'%possible_rest_input
+            # Work around for the buildbot sphinx generator which seems unable
+            # to find the tables...
+            rst_file = os.path.split(possible_rest_input)[1]
+            rst_folder = os.path.normpath(os.path.relpath(TABLEROOT, SPHINXROOT))
+            table = '\n\n' + spacer + '.. include:: %s\n\n'%os.path.join(rst_folder, rst_file)
 
         if self.element.tail and self.element.tail.strip():
             rest = ConvertToPython(self.element.tail.rstrip())

@@ -784,20 +784,20 @@ def FormatContributedSnippets(kind, contrib_snippets):
         user = lines[0].replace('##', '').strip()
         onlyfile = os.path.split(snippet)[1]
 
+        download = os.path.join(SPHINXROOT, '_downloads', onlyfile)
+        if not os.path.isfile(download):
+            shutil.copyfile(snippet, download)
+
         text += RAW_1%(spacer, spacer)
         text += '\n' + spacer + 'Example %d - %s (:download:`download <_downloads/%s>`):\n\n'%(indx+1, user, onlyfile)
 
-        text += spacer + '.. literalinclude:: %s\n'%snippet
+        text += spacer + '.. literalinclude:: _downloads/%s\n'%onlyfile
         text += spacer + '   :lines: 2-\n\n'
 
         text += RAW_2%(spacer, spacer)
 
         text += '\n\n%s|\n\n'%spacer
         
-        download = os.path.join(SPHINXROOT, '_downloads', onlyfile)
-        if not os.path.isfile(download):
-            shutil.copyfile(snippet, download)
-
     return text
 
 
