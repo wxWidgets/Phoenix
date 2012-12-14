@@ -173,6 +173,7 @@ def setPythonVersion(args):
     global PYSHORTVER
     global PYTHON
     global PYTHON_ARCH
+
     for idx, arg in enumerate(args):
         if re.match(r'^[0-9]\.[0-9]$', arg):
             PYVER = arg
@@ -191,8 +192,11 @@ def setPythonVersion(args):
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
                 TOOLS = runcmd('c:/cygwin/bin/cygpath -w '+TOOLS, True, False)
+            use64flag = '--x64' in args
+            if use64flag:
+                args.remove('--x64')
             CPU = os.environ.get('CPU')
-            if CPU in ['AMD64', 'X64']:
+            if use64flag or CPU in ['AMD64', 'X64', 'amd64', 'x64']:
                 TOOLS = posixjoin(TOOLS, 'amd64')
             PYTHON = posixjoin(TOOLS, 
                                'python%s' % PYSHORTVER,
@@ -204,6 +208,8 @@ def setPythonVersion(args):
             PYVER = sys.version[:3]
             PYSHORTVER = PYVER[0] + PYVER[2]
         msg('Using %s' % PYTHON)
+        
+        
     else:
         findPython = runcmd("which %s" % PYTHON, True, False)
         msg('Found %s at %s' % (PYTHON, findPython))
@@ -214,6 +220,11 @@ def setPythonVersion(args):
                          % PYTHON, True, False)
     msg('Python\'s architecture is %s' % PYTHON_ARCH)
     os.environ['PYTHON'] = PYTHON
+
+    if PYTHON_ARCH == '64bit':
+        # This may be set already, but there are a couple code paths above
+        # where it may not be...
+        os.environ['CPU'] = 'X64'
         
 
 
@@ -520,6 +531,33 @@ def uploadPackage(fileName, matchString, keep=5):
 
 
 
+def checkCompiler():
+    if isWindows:
+        # Make sure that the compiler that Python wants to use can be found.
+        # It will terminate if the compiler is not found or other exceptions
+        # are raised.
+        cmd = "import distutils.msvc9compiler as msvc; " \
+              "mc = msvc.MSVCCompiler(); " \
+              "mc.initialize(); " \
+              "print(mc.cc)"
+        CC = runcmd('%s -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False)
+        msg("MSVC: %s" % CC)
+        
+        # Now get the environment variables which that compiler needs from
+        # its vcvarsall.bat command and load them into this process's
+        # environment.
+        cmd = "import distutils.msvc9compiler as msvc; " \
+              "arch = msvc.PLAT_TO_VCVARS[msvc.get_platform()]; " \
+              "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
+              "print(env)"
+        env = eval(runcmd('%s -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
+        os.environ['PATH'] = bytes(env['path'])
+        os.environ['INCLUDE'] = bytes(env['include'])
+        os.environ['LIB'] = bytes(env['lib'])
+        os.environ['LIBPATH'] = bytes(env['libpath'])
+        
+        
+        
 #---------------------------------------------------------------------------
 # Command functions
 #---------------------------------------------------------------------------
@@ -812,6 +850,7 @@ def build(options, args):
 
 def build_wx(options, args):
     cmdTimer = CommandTimer('build_wx')
+    checkCompiler()
     
     build_options = ['--wxpython', '--unicode']
 
@@ -960,6 +999,7 @@ def copyWxDlls(options):
     
 def setup_py(options, args):
     cmdTimer = CommandTimer('setup_py')
+    checkCompiler()
 
     BUILD_DIR = getBuildDir(options)
     DESTDIR = options.installdir
@@ -1054,6 +1094,7 @@ def setup_py(options, args):
 def waf_py(options, args):
     cmdTimer = CommandTimer('waf_py')
     waf = getWafCmd()
+    checkCompiler()
 
     BUILD_DIR = getBuildDir(options)
     DESTDIR = options.installdir

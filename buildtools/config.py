@@ -792,6 +792,8 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
         # Failed!
         #raise subprocess.CalledProcessError(rval, cmd)
         print("Command '%s' failed with exit code %d." % (cmd, rval))
+        if getOutput:
+            print(output)
         if fatal:
             sys.exit(rval)
     
@@ -839,6 +841,8 @@ def getSipFiles(names):
     
 def getVisCVersion():
     text = runcmd("cl.exe", getOutput=True, echoCmd=False)
+    if 'Version 13' in text:
+        return '71'
     if 'Version 15' in text:
         return '90'
     # TODO: Add more tests to get the other versions...
