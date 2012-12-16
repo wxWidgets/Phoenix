@@ -812,8 +812,8 @@ def myExecfile(filename, ns):
     
 def textfile_open(filename, mode='rt'):
     """
-    Simple wrapper around open() that will use codecs.open on Python 2.x and
-    on Python 2.3 will add the encoding parameter to the normal open(). The
+    Simple wrapper around open() that will use codecs.open on Python2 and
+    on Python3 will add the encoding parameter to the normal open(). The
     mode parameter must include the 't' to put the stream into text mode.
     """
     assert 't' in mode

@@ -114,7 +114,7 @@ class FixWxPrefix(object):
                 names.append(item.name)
         
         names = list()
-        text = open('wx/core.pi').read()
+        text = textfile_open('wx/core.pi').read()
         parseTree = ast.parse(text, 'wx/core.pi')
         for item in parseTree.body:
             _processItem(item, names)
