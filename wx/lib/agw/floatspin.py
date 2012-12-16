@@ -178,8 +178,10 @@ import locale
 from math import ceil, floor
 
 # Python 2/3 compatibility helper
-import wx.lib.wx2to3 as wx2to3
-
+import wx.lib.six as six
+if six.PY3:
+    long = int
+    
 # Set The Styles For The Underline wx.TextCtrl
 FS_READONLY = 1
 """ Sets :class:`FloatSpin` as read-only control. """
@@ -1335,7 +1337,7 @@ class FixedPoint(object):
             self.n = n
             return
 
-        if isinstance(value, wx2to3.integer_types):
+        if isinstance(value, six.integer_types):
             self.n = long(value) * _tento(p)
             return
 

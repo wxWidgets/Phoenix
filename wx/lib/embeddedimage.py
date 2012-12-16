@@ -14,7 +14,7 @@
 #----------------------------------------------------------------------
 
 import base64
-import cStringIO
+from wx.lib.six import BytesIO
 import wx
 
 try:
@@ -60,7 +60,7 @@ class PyEmbeddedImage(object):
         return icon
 
     def GetImage(self):
-        stream = cStringIO.StringIO(self.GetData())
+        stream = BytesIO(self.GetData())
         return wx.Image(stream)
 
     # added for backwards compatibility

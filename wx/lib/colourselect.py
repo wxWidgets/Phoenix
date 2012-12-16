@@ -79,6 +79,7 @@ Sample usage::
 #----------------------------------------------------------------------------
 
 import  wx
+import functools
 
 #----------------------------------------------------------------------------
 
@@ -259,7 +260,7 @@ class ColourSelect(wx.BitmapButton):
 
         if label:
             # Add a label to it
-            avg = reduce(lambda a, b: a + b, self.colour.Get()) / 3
+            avg = functools.reduce(lambda a, b: a + b, self.colour.Get()) / 3
             fcolour = avg > 128 and wx.BLACK or wx.WHITE
             dc.SetTextForeground(fcolour)
             dc.DrawLabel(label, (0,0, width-bdr, height-bdr),

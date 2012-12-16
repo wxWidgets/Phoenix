@@ -12,7 +12,6 @@ class xrc_Tests(wtc.WidgetTestCase):
     
     def checkXmlRes(self, xmlres):
         assert isinstance(xmlres, xrc.XmlResource)
-        #xmlres.InitAllHandlers()
         f = xmlres.LoadFrame(self.frame, 'MainFrame')
         self.assertNotEqual(f, None) 
         f.Show()
@@ -41,8 +40,9 @@ class xrc_Tests(wtc.WidgetTestCase):
 
     def test_xrc3(self):
         xmlres = xrc.XmlResource()
-        text = open(xrcFile).read()
-        xmlres.LoadFromString(text)
+        with open(xrcFile, 'rb') as f:
+            data = f.read()
+        xmlres.LoadFromString(data)
         self.checkXmlRes(xmlres)
 
     def test_xrc4(self):

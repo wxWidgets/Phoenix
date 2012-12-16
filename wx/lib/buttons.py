@@ -60,7 +60,7 @@ Sample usage::
 """
 
 import wx
-import imageutils
+import wx.lib.imageutils as imageutils
 
 
 #----------------------------------------------------------------------

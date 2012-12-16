@@ -1,6 +1,7 @@
 import imp_unittest, unittest
 import wx
 import sys, os
+import wx.lib.six as six
 
 #---------------------------------------------------------------------------
 
@@ -72,9 +73,8 @@ class WidgetTestCase(unittest.TestCase):
         if sys.version_info < (3,):
             execfile(filename, ns)
         else:
-            f = open(filename, 'r')
-            source = f.read()
-            f.close()
+            with open(filename, 'r') as f:
+                source = f.read()
             exec(source, ns)
         
         
@@ -94,12 +94,8 @@ class Namespace(object):
 
 #---------------------------------------------------------------------------
 
-def isPython3():
-    return sys.version_info[0] >= 3
-
-
 def mybytes(text):
-    if isPython3():
+    if six.PY3:
         return bytes(text, 'utf-8')
     else:
         return str(text)

@@ -167,7 +167,7 @@ except:
     pass
 
 # Python 2/3 compatibility helper
-import wx.lib.wx2to3 as wx2to3
+import wx.lib.six as six
 
 # Built-in formats
 IntFormat = 1
@@ -225,7 +225,7 @@ def GetIndicatorBitmap():
 def GetIndicatorImage():
     """ Returns the image indicator as a :class:`Image`. """
     
-    stream = wx2to3.StringIO(GetIndicatorData())
+    stream = six.StringIO(GetIndicatorData())
     return wx.Image(stream)
 
 

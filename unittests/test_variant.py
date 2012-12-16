@@ -2,6 +2,8 @@ import imp_unittest, unittest
 import wtc
 import wx
 
+import wx.lib.six as six
+
 #---------------------------------------------------------------------------
 
 class variant_Tests(wtc.WidgetTestCase):
@@ -9,7 +11,7 @@ class variant_Tests(wtc.WidgetTestCase):
     @unittest.skipIf(not hasattr(wx, 'testVariantTypemap'), '')
     def test_variant1(self):
         n = wx.testVariantTypemap(123)
-        self.assertTrue(isinstance(n, (int, long)))
+        self.assertTrue(isinstance(n, six.integer_types))
         self.assertEqual(n, 123)
         
         

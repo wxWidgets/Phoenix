@@ -312,7 +312,7 @@ import wx
 from wx.lib.expando import ExpandoTextCtrl
 
 # Python 2/3 compatibility helper
-import wx.lib.wx2to3 as wx2to3
+import wx.lib.six as six
 
 # ----------------------------------------------------------------------------
 # Constants
@@ -5933,7 +5933,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         if len(children) > 1:
             self._dirty = True
-            children = wx2to3.sort(children, self.OnCompareItems)
+            children = six.sort(children, self.OnCompareItems)
             item._children = children
 
 

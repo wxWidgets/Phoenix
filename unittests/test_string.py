@@ -1,6 +1,6 @@
-
 import imp_unittest, unittest
 import wx
+import wx.lib.six as six
 import wtc
 
 #---------------------------------------------------------------------------
@@ -10,7 +10,7 @@ import wtc
 class String(unittest.TestCase):
         
     if hasattr(wx, 'testStringTypemap'):
-        if not wtc.isPython3():  
+        if not six.PY3:  
             def test_StringTypemapsPy2(self):
                 utf  = '\xc3\xa9l\xc3\xa9phant'     # utf-8 string
                 uni  = utf.decode('utf-8')          # convert to unicode

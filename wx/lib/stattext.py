@@ -71,8 +71,11 @@ BUFFERED = 0   # In unbuffered mode we can let the theme shine through,
                # otherwise we draw the background ourselves.
 
 if wx.Platform == "__WXMAC__":
-    from Carbon.Appearance import kThemeBrushDialogBackgroundActive
-    
+    try:
+        from Carbon.Appearance import kThemeBrushDialogBackgroundActive
+    except ImportError:
+        kThemeBrushDialogBackgroundActive = 1
+        
 #----------------------------------------------------------------------
 
 class GenStaticText(wx.Control):

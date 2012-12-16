@@ -135,8 +135,8 @@ import wx.lib.buttons as buttons
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 # To use AquaButtons or GradientButtons instead of wx.lib.buttons
-import aquabutton as AB
-import gradientbutton as GB
+import wx.lib.agw.aquabutton as AB
+import wx.lib.agw.gradientbutton as GB
 
 # GenericMessageDialog styles
 GMD_DEFAULT = 0

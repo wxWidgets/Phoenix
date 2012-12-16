@@ -8,7 +8,7 @@
 #---------------------------------------------------------------------------
 
 """
-This script will find and run all of the Phoenix test cases. We use custom
+This script will find and run all of the Phoenix test cases. We use a custom
 TestSuite and other customized unittest classes so we can run each test
 module in a separate process. This helps to isolate the test cases from each
 other so they don't stomp on each other too much. 
@@ -39,6 +39,7 @@ else:  # run as main?
 sys.path.insert(0, phoenixDir)
 
 import wx
+import wx.lib.six as six
 print("wx.version: " + wx.version())
 print("pid: " + str(os.getpid()))
 #print("executable: " + sys.executable); raw_input("Press Enter...")
@@ -84,8 +85,8 @@ class MyTestSuite(unittest.TestSuite):
             # run it
             sp = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE)#, stderr=subprocess.STDOUT)
             output = sp.stdout.read()
-            if sys.version_info > (3,):
-                output = output.decode('ascii') 
+            #if sys.version_info > (3,):
+            #    output = output.decode('ascii') 
             output = output.rstrip()
             rval = sp.wait()
             if rval:
@@ -120,7 +121,7 @@ class MyTestResult(unittest.TextTestResult):
         Override getDescription() to be able to deal with the test already
         being converted to a string.
         """
-        if isinstance(test, basestring):
+        if isinstance(test, six.string_types):
             return test
         return super(MyTestResult, self).getDescription(test)
     

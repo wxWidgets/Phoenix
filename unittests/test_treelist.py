@@ -42,7 +42,7 @@ class treelist_Tests(wtc.WidgetTestCase):
         root = tlc.AppendItem(tlc.GetRootItem(), 'My Root') 
         tlc.SetItemText(root, 1, 'root col 2')
         
-        for x in xrange(3):
+        for x in range(3):
             item = tlc.AppendItem(root, 'item %d' % (x+1))
             tlc.SetItemText(item, 1, 'item col 2')
             

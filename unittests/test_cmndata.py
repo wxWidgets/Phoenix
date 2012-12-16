@@ -1,6 +1,7 @@
 import imp_unittest, unittest
 import wtc
 import wx
+import wx.lib.six as six
 
 #---------------------------------------------------------------------------
 
@@ -36,7 +37,7 @@ class cmndata_tests(wtc.WidgetTestCase):
         pd = wx.PrintData()
         pdd = wx.PrintDialogData()
     
-        if wtc.isPython3():
+        if six.PY3:
             psdd.__bool__()
             pd.__bool__()
             pdd.__bool__()

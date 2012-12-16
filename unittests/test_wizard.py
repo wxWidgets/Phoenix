@@ -39,7 +39,7 @@ class wizard_Tests(wtc.WidgetTestCase):
         
         # create the pages
         pages = []
-        for i in xrange(5):
+        for i in range(5):
             pages.append(MySimpleWizPage(wiz, str(i+1)))
                 
         # set the next/prev pages
@@ -58,7 +58,7 @@ class wizard_Tests(wtc.WidgetTestCase):
         wiz = wx.adv.Wizard(self.frame, title="Test Wizard 2", bitmap=bmp)
         
         pages = []
-        for i in xrange(5):
+        for i in range(5):
             pages.append(MySimpleWizPage(wiz, str(i+1)))
 
         wx.adv.WizardPageSimple.Chain(pages[0], pages[1])

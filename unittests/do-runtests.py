@@ -18,7 +18,7 @@ import sys
 import os
 import unittest
 import unittest.runner
-from StringIO import StringIO
+from wx.lib.six import PY3, BytesIO
 import pickle
     
 g_testResult = None
@@ -55,7 +55,7 @@ class MyTestRunner(unittest.TextTestRunner):
     def _makeResult(self):
         global g_testResult
         if g_testResult is None:
-            self.stream = unittest.runner._WritelnDecorator(StringIO())
+            self.stream = unittest.runner._WritelnDecorator(BytesIO())
             g_testResult = MyTestResult(self.stream, self.descriptions, self.verbosity)
         return g_testResult
     
@@ -64,5 +64,8 @@ if __name__ == '__main__':
     unittest.main(module=None, exit=False, testRunner=MyTestRunner)
     msg = g_testResult.getResultsMsg()
     text = pickle.dumps(msg)
-    sys.stdout.write(text)
+    if PY3:
+        sys.stdout.buffer.write(text)
+    else:
+        sys.stdout.write(text)
     

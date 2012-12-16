@@ -1,6 +1,7 @@
 import imp_unittest, unittest
 import wtc
 import wx
+import wx.lib.six as six
 
 #---------------------------------------------------------------------------
 
@@ -15,11 +16,7 @@ class WindowTests(wtc.WidgetTestCase):
     def test_windowHandle(self):
         w = wx.Window(self.frame, -1, (10,10), (50,50))
         hdl = w.GetHandle()
-        if wtc.isPython3():
-            base = int
-        else:
-            base = (int, long)
-        self.assertTrue(isinstance(hdl, base))
+        self.assertTrue(isinstance(hdl, six.integer_types))
         
         
     def test_windowProperties(self):

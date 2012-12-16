@@ -2,14 +2,16 @@ import imp_unittest, unittest
 import wx
 import wtc
 import sys
+import wx.lib.six as six
 
 #---------------------------------------------------------------------------
 
-if not wtc.isPython3():
+if not six.PY3:
     alt = unicode
 else:
     def alt(s):
         return bytes(s, 'utf-8')
+
 
 class ArrayString(unittest.TestCase):
         

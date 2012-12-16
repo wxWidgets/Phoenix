@@ -84,7 +84,7 @@ def grayOut(anImage):
         pixel = makeGray(pixel, factor, maskColor)
         for x in range(3):
             data[i+x] = pixel[x]
-    anImage.SetData(''.join(map(chr, data)))
+    anImage.SetData(data)  # ''.join(map(chr, data)))
     if alpha:
         anImage.SetAlpha(alpha)
         

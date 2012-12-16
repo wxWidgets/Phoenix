@@ -23,9 +23,9 @@ class rawbmp_Tests(wtc.WidgetTestCase):
 
         # This block of code is another way to do the same as above
         pixels = pixelData.GetPixels()
-        for y in xrange(DIM):
+        for y in range(DIM):
             pixels.MoveTo(pixelData, 0, y)
-            for x in xrange(DIM):
+            for x in range(DIM):
                 pixels.Set(red, green, blue, alpha)
                 pixels.nextPixel()
 

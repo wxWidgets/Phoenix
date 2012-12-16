@@ -118,7 +118,6 @@ class stc_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(pointer, memoryview))
         
         line, pos = ed.GetCurLine()
-        self.assertTrue(isinstance(text, bytes))
         self.assertTrue(len(line) != 0)
         self.assertTrue(isinstance(pos, int))
        
@@ -132,7 +131,7 @@ class stc_Tests(wtc.WidgetTestCase):
         raw = ed.GetLineRaw(5)
         self.assertTrue(isinstance(raw, bytes))
         
-        ed.AddTextRaw(bytes("some new text"))
+        ed.AddTextRaw(b"some new text")
         
         
         

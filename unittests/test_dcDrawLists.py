@@ -118,7 +118,7 @@ def makeRandomPens():
     for i in range(num):
         c = random.choice(colornames)
         t = random.randint(1, 4)
-        if not pencache.has_key( (c, t) ):
+        if (c,t) not in pencache:
             pencache[(c, t)] = wx.Pen(c, t)
         pens.append( pencache[(c, t)] )
     return pens
@@ -128,7 +128,7 @@ def makeRandomBrushes():
     brushes = []
     for i in range(num):
         c = random.choice(colornames)
-        if not brushcache.has_key(c):
+        if c not in brushcache:
             brushcache[c] = wx.Brush(c)
         brushes.append( brushcache[c] )
     return brushes

@@ -1,11 +1,9 @@
 import imp_unittest, unittest
 import wtc
 import wx
+import wx.lib.six as six
+from wx.lib.six import BytesIO as FileLikeObject
 import os
-if wtc.isPython3():
-    from io import BytesIO as FileLikeObject
-else:
-    from cStringIO import StringIO as FileLikeObject
 
 
 pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
@@ -19,9 +17,9 @@ class stream_Tests(wtc.WidgetTestCase):
         # wrapped function expecting a wxInputStream.
         
         # First, load the image data into a StringIO object
-        f = open(pngFile, 'rb')
-        stream = FileLikeObject(f.read())
-        f.close()
+        with open(pngFile, 'rb') as f:
+            stream = FileLikeObject(f.read())
+        
         
         # Then use it to create a wx.Image
         img = wx.Image(stream)

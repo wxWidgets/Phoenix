@@ -271,13 +271,13 @@ Version 1.4
 import wx
 import wx.adv
 
-from customtreectrl import CustomTreeCtrl
-from customtreectrl import DragImage, TreeEvent, GenericTreeItem, ChopText
-from customtreectrl import TreeEditTimer as TreeListEditTimer
-from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED, EVT_TREE_ITEM_HYPERLINK
+from wx.lib.agw.customtreectrl import CustomTreeCtrl
+from wx.lib.agw.customtreectrl import DragImage, TreeEvent, GenericTreeItem, ChopText
+from wx.lib.agw.customtreectrl import TreeEditTimer as TreeListEditTimer
+from wx.lib.agw.customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED, EVT_TREE_ITEM_HYPERLINK
 
 # Python 2/3 compatibility helper
-import wx.lib.wx2to3 as wx2to3
+import wx.lib.six as six
 
 # Version Info
 __version__ = "1.4"
@@ -407,7 +407,7 @@ class TreeListColumnInfo(object):
         :param `edit`: ``True`` to set the column as editable, ``False`` otherwise.
         """
 
-        if isinstance(input, basestring):
+        if isinstance(input, six.string_types):
             self._text = input
             self._width = width
             self._flag = flag
@@ -3409,7 +3409,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         if self._curColumn == -1:
             self._curColumn = 0
 
-        self.SetItemText(self._editItem, wx2to3.text_type(value), self._curColumn)
+        self.SetItemText(self._editItem, six.text_type(value), self._curColumn)
 
 
     def OnCancelEdit(self):

@@ -18,6 +18,8 @@ import sys, os
 import copy
 
 
+PY3 = sys.version_info[0] == 3
+
 magicMethods = {
     'operator!='    : '__ne__',
     'operator=='    : '__eq__',
@@ -114,8 +116,14 @@ class FixWxPrefix(object):
                 names.append(item.name)
         
         names = list()
-        text = textfile_open('wx/core.pi').read()
-        parseTree = ast.parse(text, 'wx/core.pi')
+        filename = 'wx/core.pi'
+        if PY3:
+            with open(filename, 'rt', encoding='utf-8') as f:
+                text = f.read()
+        else:
+            with open(filename, 'r') as f:
+                text = f.read()
+        parseTree = ast.parse(text, filename)
         for item in parseTree.body:
             _processItem(item, names)
 
