@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2009
-# Latest Revision: 03 Dec 2012, 21.00 GMT
+# Latest Revision: 17 Dec 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -622,8 +622,6 @@ class PersistenceManager(object):
         :param `window`: an instance of :class:`Window`;
         :param `children`: list of children of the input `window`, on first call it is equal to ``None``.
         """
-        
-        self._hasRestored = False
         
         if children is None:
             if HasCtrlHandler(window):
