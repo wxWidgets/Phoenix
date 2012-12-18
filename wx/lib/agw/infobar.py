@@ -165,7 +165,12 @@ import wx
 # These two are needed only to check if the InfoBar parent
 # is managed by PyAUI or wx.aui, in which case the handling
 # of the showing/dismissing is done a bit differently
-import wx.aui
+CPP_AUI = True
+try:
+    import wx.aui
+except ImportError:
+    CPP_AUI = False
+    
 from aui import framemanager as framemanager
 
 # These are for the AutoWrapStaticText class
@@ -556,7 +561,10 @@ class InfoBar(wx.Control):
         self.HideWithEffect(self.GetHideEffect(), self.GetEffectDuration())
 
         handler = self.GetParent().GetEventHandler()
-        managers = (framemanager.AuiManager, wx.aui.AuiManager)
+        if CPP_AUI:
+            managers = (framemanager.AuiManager, wx.aui.AuiManager)
+        else:
+            managers = (framemanager.AuiManager, )
         
         if not isinstance(handler, managers):
             self.UpdateParent()
@@ -593,7 +601,11 @@ class InfoBar(wx.Control):
         self.ShowWithEffect(self.GetShowEffect(), self.GetEffectDuration())
 
         handler = self.GetParent().GetEventHandler()
-        managers = (framemanager.AuiManager, wx.aui.AuiManager)
+
+        if CPP_AUI:
+            managers = (framemanager.AuiManager, wx.aui.AuiManager)
+        else:
+            managers = (framemanager.AuiManager, )
 
         if isinstance(handler, managers):
             pane = handler.GetPane(self)

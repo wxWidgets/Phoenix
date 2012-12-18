@@ -2497,7 +2497,7 @@ ID_RESTORE_FRAME = wx.ID_HIGHEST + 10000
 BUTTON_DROPDOWN_WIDTH = 10
 """ Width of the drop-down button in AuiToolBar. """
 
-DISABLED_TEXT_GREY_HUE = 153.0
+DISABLED_TEXT_GREY_HUE = 153
 """ Hue text colour for the disabled text in AuiToolBar. """
 DISABLED_TEXT_COLOUR = wx.Colour(DISABLED_TEXT_GREY_HUE,
                                  DISABLED_TEXT_GREY_HUE,

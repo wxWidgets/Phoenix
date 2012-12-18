@@ -55,7 +55,7 @@ class PyEmbeddedImage(object):
         return data
 
     def GetIcon(self):
-        icon = wx.EmptyIcon()
+        icon = wx.Icon()
         icon.CopyFromBitmap(self.GetBitmap())
         return icon
 
