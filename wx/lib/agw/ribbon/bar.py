@@ -9,7 +9,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 15 Oct 2009
-# Latest Revision: 17 Aug 2011, 15.00 GMT
+# Latest Revision: 18 Dec 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -41,7 +41,7 @@ As :class:`RibbonBar` can only have :class:`~lib.agw.ribbon.page.RibbonPage` as 
 when a page is created, it is automatically added to the bar - there is no `AddPage` equivalent to call.
 
 After all pages have been created, and all controls and panels placed on those pages,
-meth:`~RibbonBar.Realize` must be called.
+:meth:`~RibbonBar.Realize` must be called.
 
 
 Window Styles
