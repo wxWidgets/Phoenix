@@ -342,6 +342,11 @@ def describe_class(obj, module_class, module_name, constants):
         except AttributeError:
             # Thanks to ReportLab for this funny exception...
             continue
+        except ImportError:
+            # This can come from the pseudo module in wx.lib.six
+            message = "ImportError from '%s.%s'.\n         Exception was: %s"%(obj, name, format_traceback())
+            print(('\nWARNING: %s\n' % message))
+            continue
             
         if ismodule(item):
             continue
