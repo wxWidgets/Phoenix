@@ -12,7 +12,11 @@ import wx.__version__
 __version__ = wx.__version__.VERSION_STRING
 
 
-# Import all items from the core wxPython modules so they appear in the wx
+# Import all items from the core wxPython module so they appear in the wx
 # package namespace.
 from wx.core import *
 
+
+# Clean up the package namespace
+del core
+del wx
