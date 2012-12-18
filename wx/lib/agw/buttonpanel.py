@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 18 Dec 2012, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -58,7 +58,7 @@ Usage
 =====
 
 :class:`ButtonPanel` supports 4 alignments: left, right, top, bottom, which have a
-different meaning and behavior with respect to :class:`Toolbar`. The easiest
+different meaning and behavior with respect to :class:`ToolBar`. The easiest
 thing is to try the demo to understand, but I'll try to explain how it works.
 
 **CASE 1**: :class:`ButtonPanel` has a main caption text.
@@ -123,7 +123,7 @@ Usage example::
 
             vSizer.Add(titleBar, 0, wx.EXPAND)
             vSizer.Add((20, 20))
-            vSizer.Add(self.logtext, 1, wx.EXPAND|wx.ALL, 5)
+            vSizer.Add(self.logtext, 1, wx.EXPAND | wx.ALL, 5)
 
             titleBar.DoLayout()
             vSizer.Layout()
@@ -180,7 +180,7 @@ License And Version
 
 :class:`ButtonPanel` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 18 Dec 2012, 15.00 GMT
 
 Version 0.7.
 

@@ -2,7 +2,7 @@
 # PYGAUGE wxPython IMPLEMENTATION
 #
 # Mark Reed, @ 28 Jul 2010
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 18 Dec 2012, 21.00 GMT
 #
 # TODO List
 #
@@ -32,7 +32,7 @@
 Description
 ===========
 
-:class:`PyGauge` supports the determinate mode functions as :class:`Gauge` and adds an meth:~PyGauge.Update` function
+:class:`PyGauge` supports the determinate mode functions as :class:`Gauge` and adds an :meth:~PyGauge.Update` function
 which takes a value and a time parameter. The `value` is added to the current value over 
 a period of `time` milliseconds.
 
@@ -73,9 +73,9 @@ Usage example::
             gauge3.SetBorderColor(wx.BLACK)
 
             sizer = wx.BoxSizer(wx.VERTICAL)
-            sizer.Add(gauge1, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
-            sizer.Add(gauge2, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
-            sizer.Add(gauge3, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 20)
+            sizer.Add(gauge1, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 20)
+            sizer.Add(gauge2, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 20)
+            sizer.Add(gauge3, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 20)
         
             panel.SetSizer(sizer)
             sizer.Layout()
@@ -106,7 +106,7 @@ License And Version
 
 :class:`PyGauge` has been kindly contributed to the AGW library by Mark Reed.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
 
 Version 0.1
 

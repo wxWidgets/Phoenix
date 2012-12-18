@@ -41,14 +41,14 @@ an asterisk were already present in :mod:`lib` before:
 - GradientButton: another custom-drawn button class which mimics Windows CE
   mobile gradient buttons, using a tri-vertex blended gradient background;
 - HyperLinkCtrl (*): this widget acts line an hyper link in a typical browser;
-- HyperTreeList: a class that mimics the behaviour of :class:`gizmos.TreeListCtrl`,
+- HyperTreeList: a class that mimics the behaviour of :class:`wx.adv.TreeListCtrl`,
   with almost the same base functionalities plus some more enhancements;
 - InfoBar: a transient window shown at top or bottom of its parent window to display
   non-critical information to the user;
 - KnobCtrl: a widget which lets the user select a numerical value by
   rotating it, like a slider with a wheel shape;
 - LabelBook and FlatImageBook: these are a quasi-full implementations of
-  :class:`ListBook`, with additional features;
+  :class:`Listbook`, with additional features;
 - MultiDirDialog: it represents a possible replacement for :class:`DirDialog`,
   with the additional ability of selecting multiple folders at once and a
   fancier look;
@@ -120,7 +120,7 @@ andrea.gavana@maerskoil.com
 
 AGW version: 0.9.7
 
-Last updated: 17 December 2012, 21.00 GMT
+Last updated: 18 December 2012, 21.00 GMT
 
 """
 

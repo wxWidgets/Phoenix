@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 18 Dec 2012, 21.00 GMT
 #
 #
 # TODO/Caveats List
@@ -111,7 +111,7 @@ Window Styles        Hex Value   Description
 ==================== =========== ==================================================
 ``TB_SIMPLE``                0x1 A simple `ToasterBox`, with background image and text customization can be created.
 ``TB_ONTIME``                0x1 `ToasterBox` will close after a specified amount of time.
-``TB_COMPLEX``               0x2 ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the meth:~ToasterBox.AddPanel` method and pass  to it a dummy frame and a :class:`Panel`. See the demo for details.
+``TB_COMPLEX``               0x2 ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the :meth:~ToasterBox.AddPanel` method and pass  to it a dummy frame and a :class:`Panel`. See the demo for details.
 ``TB_ONCLICK``               0x2 `ToasterBox` can be closed by clicking anywhere on the `ToasterBox` frame.
 ``TB_DEFAULT_STYLE``   0x2008002 Default window style for `ToasterBox`, with no caption nor close box.
 ``TB_CAPTION``        0x22009806 `ToasterBox` will have a caption, with the possibility to set a title for the `ToasterBox` frame, and a close box.
@@ -129,7 +129,7 @@ License And Version
 
 ToasterBox is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
 
 Version 0.3
 

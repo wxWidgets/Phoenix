@@ -2,7 +2,7 @@
 # PEAKMETERCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 18 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -73,8 +73,8 @@ Usage example::
 
             # Layout the two PeakMeterCtrl            
             mainSizer = wx.BoxSizer(wx.HORIZONTAL)
-            mainSizer.Add(self.vertPeak, 0, wx.EXPAND|wx.ALL, 15)
-            mainSizer.Add(self.horzPeak, 0, wx.EXPAND|wx.ALL, 15)
+            mainSizer.Add(self.vertPeak, 0, wx.EXPAND | wx.ALL, 15)
+            mainSizer.Add(self.horzPeak, 0, wx.EXPAND | wx.ALL, 15)
 
             panel.SetSizer(mainSizer)
             mainSizer.Layout()
@@ -156,7 +156,7 @@ License And Version
 
 :class:`PeakMeterCtrl` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
 
 Version 0.4
 

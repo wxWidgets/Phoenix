@@ -60,7 +60,7 @@ Usage example::
             bar.ResetSize()
 
             sizer = wx.BoxSizer(wx.HORIZONTAL)
-            sizer.Add(bar, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 15)
+            sizer.Add(bar, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 15)
             panel.SetSizer(sizer)
             
 

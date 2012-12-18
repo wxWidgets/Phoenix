@@ -63,7 +63,7 @@ Usage example::
     main_message = "Hello world! I am the main message."
     
     dlg = GMD.GenericMessageDialog(None, main_message, "A Nice Message Box",
-                                   agwStyle=wx.ICON_INFORMATION|wx.OK)
+                                   agwStyle=wx.ICON_INFORMATION | wx.OK)
                                    
     dlg.ShowModal()
     dlg.Destroy()

@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 18 Dec 2012, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -45,7 +45,7 @@ Some features:
 - It is a generic control;
 - Currently there are 6 different styles - VC8, VC 71, Standard, Fancy, Firefox 2 and Ribbon;
 - Mouse middle click can be used to close tabs;
-- A function to add right click menu for tabs (simple as meth:~FlatNotebook.SetRightClickMenu`);
+- A function to add right click menu for tabs (simple as :meth:~FlatNotebook.SetRightClickMenu`);
 - All styles has bottom style as well (they can be drawn in the bottom of screen);
 - An option to hide 'X' button or navigation buttons (separately);
 - Gradient colouring of the selected tabs and border;
@@ -88,7 +88,7 @@ Usage example::
                 notebook.AddPage(self.CreatePage(notebook, caption), caption)
                 
             sizer = wx.BoxSizer(wx.VERTICAL)
-            sizer.Add(notebook, 1, wx.ALL|wx.EXPAND, 5)
+            sizer.Add(notebook, 1, wx.ALL | wx.EXPAND, 5)
             panel.SetSizer(sizer)
 
 
@@ -175,7 +175,7 @@ License And Version
 
 :class:`FlatNotebook` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
 
 Version 3.2
 """

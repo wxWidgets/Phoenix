@@ -3,7 +3,7 @@
 # Inspired By the GIMP Shortcut Editor.
 #
 # Andrea Gavana, @ 05 March 2012
-# Latest Revision: 21 Jun 2012, 20.00 GMT
+# Latest Revision: 18 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -65,7 +65,7 @@ Various features:
 * Possibility to send back the new/updated shortcuts to the original :class:`MenuBar` or
   the original :class:`AcceleratorTable`;
 * Filters on the shortcuts label (case-insensitive);
-* Basic help window with instructions (customizable via meth:`~ShortcutEditor.SetHTMLHelpFile`), via
+* Basic help window with instructions (customizable via :meth:`~ShortcutEditor.SetHTMLHelpFile`), via
   the ``Help`` button.
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
@@ -139,7 +139,7 @@ Base Functionalities
 There are basically three ways to populate the :class:`ShortcutEditor` dialog, depending on
 your needs. These approaches can be combined if needed.
 
-1) Use the meth:`~ShortcutEditor.FromMenuBar` method: if you need to give your user the ability to edit
+1) Use the :meth:`~ShortcutEditor.FromMenuBar` method: if you need to give your user the ability to edit
    the various :class:`MenuItem` shortcuts in your application, you can create :class:`ShortcutEditor`
    in this way::
 
@@ -160,7 +160,7 @@ your needs. These approaches can be combined if needed.
         dlg.Destroy()
 
 
-2) Use the meth:`~ShortcutEditor.FromAcceleratorTable` method: if you need to give your user the ability to edit
+2) Use the :meth:`~ShortcutEditor.FromAcceleratorTable` method: if you need to give your user the ability to edit
    the various accelerators you set via :class:`AcceleratorTable` in your application, you can
    create :class:`ShortcutEditor` in this way::
 
@@ -195,7 +195,7 @@ your needs. These approaches can be combined if needed.
         dlg.Destroy()
 
 
-3) Build your own hierarchy of shortcuts using meth:`~ShortcutEditor.GetShortcutManager`::
+3) Build your own hierarchy of shortcuts using :meth:`~ShortcutEditor.GetShortcutManager`::
 
         dlg = ShortcutEditor(self)
         manager = dlg.GetShortcutManager()
@@ -287,7 +287,7 @@ License And Version
 
 :class:`ShortcutEditor` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 21 Jun 2012, 20.00 GMT
+Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
 
 Version 0.1
 

@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 06 Aug 2012, 21.00 GMT
+# Latest Revision: 18 Dec 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -92,7 +92,7 @@ Events
 
 In addition, there are some other functionalities:
 
-- It remembers the initial value as a default value, call meth:~FloatSpin.SetToDefaultValue`, or
+- It remembers the initial value as a default value, call :meth:~FloatSpin.SetToDefaultValue`, or
   press ``Esc`` to return to it;
 - ``Shift`` + arrow = 2 * increment        (or ``Shift`` + mouse wheel);
 - ``Ctrl``  + arrow = 10 * increment       (or ``Ctrl`` + mouse wheel);
@@ -136,7 +136,7 @@ License And Version
 
 :class:`FloatSpin` control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 06 Aug 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
 
 Version 1.0
 

@@ -5,7 +5,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 12 March 2012
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 18 Dec 2012, 15.00 GMT
 #
 #
 # TODO List/Caveats
@@ -64,7 +64,7 @@ Base Functionalities
 ====================
 
 :class:`InfoBar` supports all the :class:`InfoBar` generic implementation functionalities, and in addition
-it using meth:~InfoBar.AddButton` it is possible to add a button with a bitmap (and not only a plain :class:`Button`).
+it using :meth:~InfoBar.AddButton` it is possible to add a button with a bitmap (and not only a plain :class:`Button`).
 
 For example::
 
@@ -150,7 +150,7 @@ License And Version
 
 :class:`InfoBar` control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 18 Dec 2012, 15.00 GMT
 
 Version 0.3
 

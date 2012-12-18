@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 09 Aug 2012, 21.00 GMT
+# Latest Revision: 18 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -52,7 +52,7 @@ Appearance
   as it is the case of :class:`ImageList`. Simply use :class:`PyImageList` instead of :class:`ImageList`
   to add your images.
 * Font, colour, background, custom renderers and formatting for items and subitems;
-* Ability to add persistent data to an item using meth:~UltimateListCtrl.SetItemPyData` and meth:~UltimateListCtrl.GetItemPyData`:
+* Ability to add persistent data to an item using :meth:~UltimateListCtrl.SetItemPyData` and :meth:~UltimateListCtrl.GetItemPyData`:
   the data can be any Python object and not necessarily an integer as in :class:`ListCtrl`;
 * CheckBox-type items and subitems;
 * RadioButton-type items and subitems;
@@ -94,7 +94,7 @@ Usage example::
 
             wx.Frame.__init__(self, parent, -1, "UltimateListCtrl Demo")
 
-            list = ULC.UltimateListCtrl(self, wx.ID_ANY, agwStyle=wx.LC_REPORT|wx.LC_VRULES|wx.LC_HRULES|wx.LC_SINGLE_SEL)
+            list = ULC.UltimateListCtrl(self, wx.ID_ANY, agwStyle=wx.LC_REPORT | wx.LC_VRULES | wx.LC_HRULES | wx.LC_SINGLE_SEL)
 
             list.InsertColumn(0, "Column 1")
             list.InsertColumn(1, "Column 2")
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 09 Aug 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
 
 Version 0.8
 

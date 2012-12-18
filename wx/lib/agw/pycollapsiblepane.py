@@ -3,7 +3,7 @@
 # Generic Implementation Based On wx.CollapsiblePane.
 #
 # Andrea Gavana, @ 09 Aug 2007
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 18 Dec 2012, 15.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -29,8 +29,8 @@ Description
 
 A collapsible pane is a container with an embedded button-like control which
 can be used by the user to collapse or expand the pane's contents.
-Once constructed you should use the meth:~PyCollapsiblePane.GetPane` function to access the pane and
-add your controls inside it (i.e. use the window returned from meth:~PyCollapsiblePane.GetPane` as the
+Once constructed you should use the :meth:~PyCollapsiblePane.GetPane` function to access the pane and
+add your controls inside it (i.e. use the window returned from :meth:~PyCollapsiblePane.GetPane` as the
 parent for the controls which must go in the pane, **not** the :class:`PyCollapsiblePane`
 itself!).
 
@@ -63,13 +63,13 @@ Usage example::
             title.SetForegroundColour("blue")
 
             self.cp = cp = PCP.PyCollapsiblePane(panel, label="Some Data",
-                                                 style=wx.CP_DEFAULT_STYLE|wx.CP_NO_TLW_RESIZE)
+                                                 style=wx.CP_DEFAULT_STYLE | wx.CP_NO_TLW_RESIZE)
 
             self.MakePaneContent(cp.GetPane())
 
             sizer = wx.BoxSizer(wx.VERTICAL)
             sizer.Add(title, 0, wx.ALL, 25)
-            sizer.Add(cp, 0, wx.RIGHT|wx.LEFT|wx.EXPAND, 25)
+            sizer.Add(cp, 0, wx.RIGHT | wx.LEFT | wx.EXPAND, 25)
 
             panel.SetSizer(sizer)
             sizer.Layout()
@@ -93,25 +93,25 @@ Usage example::
             addrSizer = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
             addrSizer.AddGrowableCol(1)
             addrSizer.Add(nameLbl, 0,
-                          wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL)
+                          wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
             addrSizer.Add(name, 0, wx.EXPAND)
             addrSizer.Add(addrLbl, 0,
-                          wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL)
+                          wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
             addrSizer.Add(addr1, 0, wx.EXPAND)
             addrSizer.Add((5,5)) 
             addrSizer.Add(addr2, 0, wx.EXPAND)
 
             addrSizer.Add(cstLbl, 0,
-                          wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL)
+                          wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
 
             cstSizer = wx.BoxSizer(wx.HORIZONTAL)
             cstSizer.Add(city, 1)
-            cstSizer.Add(state, 0, wx.LEFT|wx.RIGHT, 5)
+            cstSizer.Add(state, 0, wx.LEFT | wx.RIGHT, 5)
             cstSizer.Add(zip)
             addrSizer.Add(cstSizer, 0, wx.EXPAND)
 
             border = wx.BoxSizer()
-            border.Add(addrSizer, 1, wx.EXPAND|wx.ALL, 5)
+            border.Add(addrSizer, 1, wx.EXPAND | wx.ALL, 5)
             pane.SetSizer(border)
             
 
@@ -159,7 +159,7 @@ License And Version
 
 :class:`PyCollapsiblePane` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 18 Dec 2012, 15.00 GMT
 
 Version 0.5
 

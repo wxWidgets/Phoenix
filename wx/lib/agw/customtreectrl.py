@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 27 Aug 2012, 21.00 GMT
+# Latest Revision: 18 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -88,8 +88,8 @@ to the standard :class:`TreeCtrl` behaviour this class supports:
   or divide tree items, with the following caveats:
 
   - Separator items should not have children, labels, data or an associated window;
-  - You can change the color of individual separators by using meth:~CustomTreeCtrl.SetItemTextColour`, or you can use
-    meth:~CustomTreeCtrl.SetSeparatorColour` to change the color of all separators. The default separator colour
+  - You can change the color of individual separators by using :meth:~CustomTreeCtrl.SetItemTextColour`, or you can use
+    :meth:~CustomTreeCtrl.SetSeparatorColour` to change the color of all separators. The default separator colour
     is that returned by `SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)`;
   - Separators can be selected just like any other tree item;
   - Separators cannot have text;
@@ -268,19 +268,19 @@ This class processes the following events:
 Event Name                     Description
 ============================== ==================================================
 ``EVT_TREE_BEGIN_DRAG``        Begin dragging with the left mouse button.
-``EVT_TREE_BEGIN_LABEL_EDIT``  Begin editing a label. This can be prevented by calling meth:~TreeEvent.Veto`.
+``EVT_TREE_BEGIN_LABEL_EDIT``  Begin editing a label. This can be prevented by calling :meth:~TreeEvent.Veto`.
 ``EVT_TREE_BEGIN_RDRAG``       Begin dragging with the right mouse button.
 ``EVT_TREE_DELETE_ITEM``       Delete an item.
 ``EVT_TREE_END_DRAG``          End dragging with the left or right mouse button.
-``EVT_TREE_END_LABEL_EDIT``    End editing a label. This can be prevented by calling meth:~TreeEvent.Veto`.
+``EVT_TREE_END_LABEL_EDIT``    End editing a label. This can be prevented by calling :meth:~TreeEvent.Veto`.
 ``EVT_TREE_GET_INFO``          Request information from the application (not implemented in :class:`CustomTreeCtrl`).
 ``EVT_TREE_ITEM_ACTIVATED``    The item has been activated, i.e. chosen by double clicking it with mouse or from keyboard.
 ``EVT_TREE_ITEM_CHECKED``      A checkbox or radiobox type item has been checked.
 ``EVT_TREE_ITEM_CHECKING``     A checkbox or radiobox type item is being checked.
 ``EVT_TREE_ITEM_COLLAPSED``    The item has been collapsed.
-``EVT_TREE_ITEM_COLLAPSING``   The item is being collapsed. This can be prevented by calling meth:~TreeEvent.Veto`.
+``EVT_TREE_ITEM_COLLAPSING``   The item is being collapsed. This can be prevented by calling :meth:~TreeEvent.Veto`.
 ``EVT_TREE_ITEM_EXPANDED``     The item has been expanded.
-``EVT_TREE_ITEM_EXPANDING``    The item is being expanded. This can be prevented by calling meth:~TreeEvent.Veto`.
+``EVT_TREE_ITEM_EXPANDING``    The item is being expanded. This can be prevented by calling :meth:~TreeEvent.Veto`.
 ``EVT_TREE_ITEM_GETTOOLTIP``   The opportunity to set the item tooltip is being given to the application (call `TreeEvent.SetToolTip`).
 ``EVT_TREE_ITEM_HYPERLINK``    An hyperlink type item has been clicked.
 ``EVT_TREE_ITEM_MENU``         The context menu for the selected item has been requested, either by a right click or by using the menu key.
@@ -288,7 +288,7 @@ Event Name                     Description
 ``EVT_TREE_ITEM_RIGHT_CLICK``  The user has clicked the item with the right mouse button.
 ``EVT_TREE_KEY_DOWN``          A key has been pressed.
 ``EVT_TREE_SEL_CHANGED``       Selection has changed.
-``EVT_TREE_SEL_CHANGING``      Selection is changing. This can be prevented by calling meth:~TreeEvent.Veto`.
+``EVT_TREE_SEL_CHANGING``      Selection is changing. This can be prevented by calling :meth:~TreeEvent.Veto`.
 ``EVT_TREE_SET_INFO``          Information is being supplied to the application (not implemented in :class:`CustomTreeCtrl`).
 ``EVT_TREE_STATE_IMAGE_CLICK`` The state image has been clicked (not implemented in :class:`CustomTreeCtrl`).
 ============================== ==================================================
@@ -299,7 +299,7 @@ License And Version
 
 :class:`CustomTreeCtrl` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 27 Aug 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
 
 Version 2.6
 
@@ -495,9 +495,9 @@ EVT_TREE_BEGIN_DRAG = wx.EVT_TREE_BEGIN_DRAG
 EVT_TREE_BEGIN_RDRAG = wx.EVT_TREE_BEGIN_RDRAG
 """ Begin dragging with the right mouse button. """
 EVT_TREE_BEGIN_LABEL_EDIT = wx.EVT_TREE_BEGIN_LABEL_EDIT
-""" Begin editing a label. This can be prevented by calling meth:~TreeEvent.Veto`. """
+""" Begin editing a label. This can be prevented by calling :meth:~TreeEvent.Veto`. """
 EVT_TREE_END_LABEL_EDIT = wx.EVT_TREE_END_LABEL_EDIT
-""" End editing a label. This can be prevented by calling meth:~TreeEvent.Veto`. """
+""" End editing a label. This can be prevented by calling :meth:~TreeEvent.Veto`. """
 EVT_TREE_DELETE_ITEM = wx.EVT_TREE_DELETE_ITEM
 """ Delete an item. """
 EVT_TREE_GET_INFO = wx.EVT_TREE_GET_INFO
@@ -507,15 +507,15 @@ EVT_TREE_SET_INFO = wx.EVT_TREE_SET_INFO
 EVT_TREE_ITEM_EXPANDED = wx.EVT_TREE_ITEM_EXPANDED
 """ The item has been expanded. """
 EVT_TREE_ITEM_EXPANDING = wx.EVT_TREE_ITEM_EXPANDING
-""" The item is being expanded. This can be prevented by calling meth:~TreeEvent.Veto`. """
+""" The item is being expanded. This can be prevented by calling :meth:~TreeEvent.Veto`. """
 EVT_TREE_ITEM_COLLAPSED = wx.EVT_TREE_ITEM_COLLAPSED
 """ The item has been collapsed. """
 EVT_TREE_ITEM_COLLAPSING = wx.EVT_TREE_ITEM_COLLAPSING
-""" The item is being collapsed. This can be prevented by calling meth:~TreeEvent.Veto`. """
+""" The item is being collapsed. This can be prevented by calling :meth:~TreeEvent.Veto`. """
 EVT_TREE_SEL_CHANGED = wx.EVT_TREE_SEL_CHANGED
 """ Selection has changed. """
 EVT_TREE_SEL_CHANGING = wx.EVT_TREE_SEL_CHANGING
-""" Selection is changing. This can be prevented by calling meth:~TreeEvent.Veto`. """
+""" Selection is changing. This can be prevented by calling :meth:~TreeEvent.Veto`. """
 EVT_TREE_KEY_DOWN = wx.EVT_TREE_KEY_DOWN
 """ A key has been pressed. """
 EVT_TREE_ITEM_ACTIVATED = wx.EVT_TREE_ITEM_ACTIVATED

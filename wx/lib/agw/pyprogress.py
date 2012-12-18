@@ -2,7 +2,7 @@
 # PYPROGRESS wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 18 Dec 2012, 15.00 GMT
 #
 #
 # TODO List
@@ -65,7 +65,7 @@ Usage example::
     
     dlg = PP.PyProgress(None, -1, "PyProgress Example",
                         "An Informative Message",                            
-                        agwStyle=wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
+                        agwStyle=wx.PD_APP_MODAL | wx.PD_ELAPSED_TIME)
 
     dlg.SetGaugeProportion(0.2)
     dlg.SetGaugeSteps(50)
