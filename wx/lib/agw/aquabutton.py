@@ -151,7 +151,7 @@ class AquaButtonEvent(wx.PyCommandEvent):
         return self.theButton
 
 
-class AquaButton(wx.wx.Control):
+class AquaButton(wx.Control):
     """ This is the main class implementation of :class:`AquaButton`. """
 
     def __init__(self, parent, id=wx.ID_ANY, bitmap=None, label="", pos=wx.DefaultPosition,
@@ -175,7 +175,7 @@ class AquaButton(wx.wx.Control):
         :param string `name`: the button name.
         """
 
-        wx.wx.Control.__init__(self, parent, id, pos, size, style, validator, name)
+        wx.Control.__init__(self, parent, id, pos, size, style, validator, name)
 
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
@@ -565,7 +565,7 @@ class AquaButton(wx.wx.Control):
 
         if size is None:
             size = wx.DefaultSize
-        wx.wx.Control.SetInitialSize(self, size)
+        wx.Control.SetInitialSize(self, size)
 
     SetBestSize = SetInitialSize
 
@@ -613,7 +613,7 @@ class AquaButton(wx.wx.Control):
         :note: Overridden from :class:`wx.Control`.
         """
 
-        wx.wx.Control.Enable(self, enable)
+        wx.Control.Enable(self, enable)
         self.Refresh()
 
 
@@ -680,7 +680,7 @@ class AquaButton(wx.wx.Control):
         :note: Overridden from :class:`wx.Control`.
         """
 
-        wx.wx.Control.SetBackgroundColour(self, colour)
+        wx.Control.SetBackgroundColour(self, colour)
         self._backColour = colour
         self.Invalidate()
 
@@ -809,7 +809,7 @@ class AquaButton(wx.wx.Control):
         :note: Overridden from :class:`wx.Control`.
         """
 
-        wx.wx.Control.SetForegroundColour(self, colour)
+        wx.Control.SetForegroundColour(self, colour)
         self._textColour = colour
         self.Invalidate()
 
