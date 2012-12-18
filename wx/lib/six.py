@@ -31,7 +31,7 @@ __version__ = "1.2.0"
 
 # True if we are running on Python 3.
 PY3 = sys.version_info[0] == 3
-PY33 = sys.version_info[0] == 3 and sys.version_info[1] == 3  #*# wxPython change
+PY33 = sys.version_info[0] == 3 and sys.version_info[1] >= 3  #*# wxPython change
 
 if PY3:
     string_types = str,
