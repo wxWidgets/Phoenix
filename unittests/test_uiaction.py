@@ -55,7 +55,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
             # before the asserts to avoid false negatives.
             return
         
-        self.assertEqual(len(p.events) == 3)
+        self.assertEqual(len(p.events), 3)
         self.assertTrue(self.cmp(p.events[0], wx.wxEVT_MOTION, (1,1)))
         self.assertTrue(self.cmp(p.events[1], wx.wxEVT_MOTION, (5,5)))
         self.assertTrue(self.cmp(p.events[2], wx.wxEVT_MOTION, (10,10)))
