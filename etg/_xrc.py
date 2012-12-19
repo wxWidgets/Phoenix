@@ -134,10 +134,7 @@ def run():
     for item in c.allItems():
         if isinstance(item, etgtools.MethodDef):
             item.ignore(False)
-
-    # except for this (for now)
-    #c.find('GetAnimation').ignore()
-    
+   
     c.find('DoCreateResource').factory = True
     
 
