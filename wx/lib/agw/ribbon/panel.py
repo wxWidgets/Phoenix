@@ -741,7 +741,7 @@ class RibbonPanel(RibbonControl):
 
         :return: An instance of :class:`Size`.
         
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         # Ask sizer if present
@@ -793,7 +793,7 @@ class RibbonPanel(RibbonControl):
             if self._minimised_icon.IsOk() and self._minimised_icon.GetSize() != bitmap_size:            
                 img = self._minimised_icon.ConvertToImage()
                 img.Rescale(bitmap_size.GetWidth(), bitmap_size.GetHeight(), wx.IMAGE_QUALITY_HIGH)
-                self._minimised_icon_resized = wx.BitmapFromImage(img)
+                self._minimised_icon_resized = wx.Bitmap(img)
             else:            
                 self._minimised_icon_resized = self._minimised_icon
             
@@ -828,7 +828,7 @@ class RibbonPanel(RibbonControl):
             self.GetSizer().SetDimension(position.x, position.y, size.x, size.y) # SetSize and Layout()           
         elif len(children) == 1:        
            # Common case of no sizer and single child taking up the entire panel
-             children[0].SetDimensions(position.x, position.y, size.GetWidth(), size.GetHeight())
+             children[0].SetSize(position.x, position.y, size.GetWidth(), size.GetHeight())
 
         if self.HasExtButton():
             self._ext_button_rect = self._art.GetPanelExtButtonArea(dc, self, self.GetSize())
@@ -908,7 +908,7 @@ class RibbonPanel(RibbonControl):
             return False
 
         size = self.GetBestSize()
-        pos = self.GetExpandedPosition(wx.RectPS(self.GetScreenPosition(), self.GetSize()), size, self._preferred_expand_direction).GetTopLeft()
+        pos = self.GetExpandedPosition(wx.Rect(self.GetScreenPosition(), self.GetSize()), size, self._preferred_expand_direction).GetTopLeft()
 
         # Need a top-level frame to contain the expanded panel
         container = wx.Frame(None, wx.ID_ANY, self.GetLabel(), pos, size, wx.FRAME_NO_TASKBAR | wx.BORDER_NONE)
@@ -1084,7 +1084,7 @@ class RibbonPanel(RibbonControl):
             pos.y = panel.GetY() + (panel.GetHeight() - expanded_size.GetHeight()) / 2
             secondary_x = 1
         
-        expanded = wx.RectPS(pos, expanded_size)
+        expanded = wx.Rect(pos, expanded_size)
         best = wx.Rect(*expanded)
         best_distance = 10000
 

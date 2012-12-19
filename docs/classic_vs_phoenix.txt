@@ -126,6 +126,7 @@ DragTreeItem                                                 ``MISSING``
 DROP_ICON                                                    ``MISSING``
 EmptyBitmap                                                  :class:`Bitmap`
 EmptyIcon                                                    :class:`Icon`
+EmptyImage                                                   :class:`Image`
 EncodingConverter                                            ``MISSING``
 EncodingConverter_CanConvert                                 ``MISSING``
 EncodingConverter_GetAllEquivalents                          ``MISSING``

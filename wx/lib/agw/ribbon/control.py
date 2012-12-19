@@ -22,7 +22,7 @@ rectangle being painted) if you want transparent regions.
 
 import wx
 
-class RibbonControl(wx.PyControl):
+class RibbonControl(wx.Control):
     """ Base class for all the Ribbon stuff. """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0,
@@ -46,7 +46,7 @@ class RibbonControl(wx.PyControl):
         :param string `name`: window name.
         """
 
-        wx.PyControl.__init__(self, parent, id, pos, size, style, validator, name)
+        wx.Control.__init__(self, parent, id, pos, size, style, validator, name)
         self._art = None
 
         if isinstance(parent, RibbonControl):

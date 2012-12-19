@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 25 Sep 2005
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -184,7 +184,7 @@ License And Version
 
 :class:`SpeedMeter` is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.3
 
@@ -360,13 +360,13 @@ class BufferedWindow(wx.Window):
         :param `event`: a :class:`SizeEvent` event to be processed.
         """
         
-        self.Width, self.Height = self.GetClientSizeTuple()
+        self.Width, self.Height = self.GetClientSize()
 
         # Make new off screen bitmap: this bitmap will always have the
         # current drawing in it, so it can be used to save the image to
         # a file, or whatever.
 
-        # This seems required on MacOS, it doesn't like wx.EmptyBitmap with
+        # This seems required on MacOS, it doesn't like wx.Bitmap with
         # size = (0, 0)
         # Thanks to Gerard Grazzini
 
@@ -376,7 +376,7 @@ class BufferedWindow(wx.Window):
             if self.Height == 0:
                 self.Height = 1
 
-        self._Buffer = wx.EmptyBitmap(self.Width, self.Height)
+        self._Buffer = wx.Bitmap(self.Width, self.Height)
         self.UpdateDrawing()
 
 
@@ -547,9 +547,7 @@ class SpeedMeter(BufferedWindow):
                           float(new_dim[1]) / self.dim[1]])
 
         # Create An Empty Bitmap
-        self.faceBitmap = wx.EmptyBitmap(size.width, size.height)
-
-        dc.BeginDrawing()
+        self.faceBitmap = wx.Bitmap(size.width, size.height)
 
         speedbackground = self.GetSpeedBackground()
         # Set Background Of The Control
@@ -1132,9 +1130,6 @@ class SpeedMeter(BufferedWindow):
                 dc.DrawCircle(centerX, centerY, 4*self.scale)
 
 
-        dc.EndDrawing()
-
-
     def SetIntervals(self, intervals=None):
         """
         Sets the intervals for :class:`SpeedMeter` (main ticks numeric values).
@@ -1334,7 +1329,7 @@ class SpeedMeter(BufferedWindow):
         """
 
         if colour is None:
-            colour = wx.SystemSettings_GetColour(0)
+            colour = wx.SystemSettings.GetColour(0)
 
         self._speedbackground = colour
 
@@ -1545,7 +1540,7 @@ class SpeedMeter(BufferedWindow):
         :param `icon`: a valid :class:`Bitmap` object.
         """
 
-        if icon.Ok():
+        if icon.IsOk():
             self._middleicon = icon
         else:
             raise Exception("\nERROR: Invalid Icon Passed To SpeedMeter.")

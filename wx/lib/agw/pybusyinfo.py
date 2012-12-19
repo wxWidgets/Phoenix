@@ -5,7 +5,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 December 2009
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -123,7 +123,7 @@ License And Version
 
 :class:`PyBusyInfo` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.3
 

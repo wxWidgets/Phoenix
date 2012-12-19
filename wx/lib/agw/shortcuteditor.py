@@ -3,7 +3,7 @@
 # Inspired By the GIMP Shortcut Editor.
 #
 # Andrea Gavana, @ 05 March 2012
-# Latest Revision: 18 Dec 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -1723,7 +1723,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         """
 
         dc = wx.MemoryDC()
-        dc.SelectObject(wx.EmptyBitmap(20, 20))
+        dc.SelectObject(wx.Bitmap(20, 20))
         dc.SetFont(self.GetFont())
 
         space = 0

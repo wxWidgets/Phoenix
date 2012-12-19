@@ -546,7 +546,7 @@ class RibbonButtonBar(RibbonControl):
 
         img = original.ConvertToImage()
         img.Rescale(size.GetWidth(), size.GetHeight(), wx.IMAGE_QUALITY_HIGH)
-        return wx.BitmapFromImage(img)
+        return wx.Bitmap(img)
 
 
     def MakeDisabledBitmap(self, original):
@@ -559,7 +559,7 @@ class RibbonButtonBar(RibbonControl):
         """
 
         img = original.ConvertToImage()
-        return wx.BitmapFromImage(img.ConvertToGreyscale())
+        return wx.Bitmap(img.ConvertToGreyscale())
 
 
     def Realize(self):
@@ -843,7 +843,7 @@ class RibbonButtonBar(RibbonControl):
                 bitmap = base.bitmap_large_disabled
                 bitmap_small = base.bitmap_small_disabled
 
-            rect = wx.RectPS(button.position + self._layout_offset, base.sizes[button.size].size)
+            rect = wx.Rect(button.position + self._layout_offset, base.sizes[button.size].size)
             self._art.DrawButtonBarButton(dc, self, rect, base.kind, base.state | button.size, base.label, bitmap, bitmap_small)
 
 
@@ -903,7 +903,7 @@ class RibbonButtonBar(RibbonControl):
         .. versionadded:: 0.9.5
         """
 
-        wx.PyControl.UpdateWindowUI(self, flags)
+        wx.Control.UpdateWindowUI(self, flags)
 
         # don't waste time updating state of tools in a hidden toolbar
         if not self.IsShown():
@@ -977,7 +977,7 @@ class RibbonButtonBar(RibbonControl):
 
         :return: An instance of :class:`Size`.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return wx.Size(*self._layouts[0].overall_size)
@@ -1154,7 +1154,7 @@ class RibbonButtonBar(RibbonControl):
                 break
 
         if new_hovered == None and self.GetToolTip():
-            self.SetToolTipString("")
+            self.SetToolTip("")
 
         if new_hovered != self._hovered_button or (self._hovered_button != None and \
                                                    new_hovered_state != self._hovered_button.base.state):
@@ -1165,7 +1165,7 @@ class RibbonButtonBar(RibbonControl):
             self._hovered_button = new_hovered
             if self._hovered_button != None:
                 self._hovered_button.base.state = new_hovered_state
-                self.SetToolTipString(self._hovered_button.base.help_string)
+                self.SetToolTip(self._hovered_button.base.help_string)
 
             self.Refresh(False)
 

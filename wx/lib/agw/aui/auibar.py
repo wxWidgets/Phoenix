@@ -188,13 +188,13 @@ class AuiToolBarEvent(CommandToolBarEvent):
 
 # ----------------------------------------------------------------------
 
-class ToolbarCommandCapture(wx.PyEvtHandler):
+class ToolbarCommandCapture(wx.EvtHandler):
     """ A class to handle the dropdown window menu. """
     
     def __init__(self):
         """ Default class constructor. """
         
-        wx.PyEvtHandler.__init__(self)
+        wx.EvtHandler.__init__(self)
         self._last_id = 0
 
 
@@ -549,7 +549,7 @@ class AuiToolBarItem(object):
             clockwise = False
 
         if not rotated_bitmap.IsOk():
-            rotated_bitmap = wx.BitmapFromImage(bitmap_to_rotate.ConvertToImage().Rotate90(clockwise))
+            rotated_bitmap = wx.Bitmap(bitmap_to_rotate.ConvertToImage().Rotate90(clockwise))
 
         return rotated_bitmap
 
@@ -998,7 +998,7 @@ class AuiDefaultToolBarArt(object):
             
                 dc.SetPen(wx.Pen(self._highlight_colour))
                 dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 150)))
-                dc.DrawRectangleRect(rect)
+                dc.DrawRectangle(rect)
             
             elif item.GetState() & AUI_BUTTON_STATE_HOVER or item.IsSticky():
             
@@ -1010,7 +1010,7 @@ class AuiDefaultToolBarArt(object):
                 if item.GetState() & AUI_BUTTON_STATE_CHECKED:
                     dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 180)))
 
-                dc.DrawRectangleRect(rect)
+                dc.DrawRectangle(rect)
             
             elif item.GetState() & AUI_BUTTON_STATE_CHECKED:
             
@@ -1018,7 +1018,7 @@ class AuiDefaultToolBarArt(object):
                 # hover, otherwise hovers won't draw properly for checked items
                 dc.SetPen(wx.Pen(self._highlight_colour))
                 dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 170)))
-                dc.DrawRectangleRect(rect)
+                dc.DrawRectangle(rect)
             
         if item.GetState() & AUI_BUTTON_STATE_DISABLED:
             bmp = item.GetDisabledBitmap()
@@ -1077,15 +1077,15 @@ class AuiDefaultToolBarArt(object):
         
             dc.SetPen(wx.Pen(self._highlight_colour))
             dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 140)))
-            dc.DrawRectangleRect(button_rect)
-            dc.DrawRectangleRect(dropdown_rect)
+            dc.DrawRectangle(button_rect)
+            dc.DrawRectangle(dropdown_rect)
         
         elif item.GetState() & AUI_BUTTON_STATE_HOVER or item.IsSticky():
         
             dc.SetPen(wx.Pen(self._highlight_colour))
             dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 170)))
-            dc.DrawRectangleRect(button_rect)
-            dc.DrawRectangleRect(dropdown_rect)
+            dc.DrawRectangle(button_rect)
+            dc.DrawRectangle(dropdown_rect)
 
         elif item.GetState() & AUI_BUTTON_STATE_CHECKED:
             # it's important to put this code in an else statment after the 
@@ -1112,7 +1112,7 @@ class AuiDefaultToolBarArt(object):
         if horizontal:
             dc.DrawBitmap(dropbmp, dropbmp_x, dropbmp_y, True)
         else:
-            dc.DrawBitmap(wx.BitmapFromImage(dropbmp.ConvertToImage().Rotate90(item.GetOrientation() == AUI_TBTOOL_VERT_CLOCKWISE)),
+            dc.DrawBitmap(wx.Bitmap(dropbmp.ConvertToImage().Rotate90(item.GetOrientation() == AUI_TBTOOL_VERT_CLOCKWISE)),
                           dropbmp_x, dropbmp_y, True)
             
         # set the item's text colour based on if it is disabled
@@ -1504,7 +1504,7 @@ class AuiDefaultToolBarArt(object):
         return bmp_rect, text_rect
 
     
-class AuiToolBar(wx.PyControl):
+class AuiToolBar(wx.Control):
     """
     AuiToolBar is a completely owner-drawn toolbar perfectly integrated with the AUI layout system.
     This allows drag and drop of toolbars, docking/floating behaviour and the possibility to define
@@ -1548,7 +1548,7 @@ class AuiToolBar(wx.PyControl):
 
         """
         
-        wx.PyControl.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE)
+        wx.Control.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE)
 
         self._sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.SetSizer(self._sizer)
@@ -1621,10 +1621,10 @@ class AuiToolBar(wx.PyControl):
          creation and that `Refresh` might need to be be called after changing the
          others for the change to take place immediately.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
-        wx.PyControl.SetWindowStyleFlag(self, style|wx.BORDER_NONE)
+        wx.Control.SetWindowStyleFlag(self, style|wx.BORDER_NONE)
         
 
     def SetAGWWindowStyleFlag(self, agwStyle):
@@ -2522,10 +2522,10 @@ class AuiToolBar(wx.PyControl):
 
         :param Font `font`: the new toolbar font.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """        
 
-        res = wx.PyControl.SetFont(self, font)
+        res = wx.Control.SetFont(self, font)
 
         if self._art:
             self._art.SetFont(font)
@@ -3187,7 +3187,7 @@ class AuiToolBar(wx.PyControl):
     def GetOverflowRect(self):
         """ Returns the rectangle of the overflow button. """
 
-        cli_rect = wx.RectPS(wx.Point(0, 0), self.GetClientSize())
+        cli_rect = wx.Rect(wx.Point(0, 0), self.GetClientSize())
         overflow_rect = wx.Rect(*self._overflow_sizer_item.GetRect())
         overflow_size = self._art.GetElementSize(AUI_TBART_OVERFLOW_SIZE)
 
@@ -3375,7 +3375,7 @@ class AuiToolBar(wx.PyControl):
                                               for MSW and ignored elsewhere currently) 
          ===================================  ======================================
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
         
         parent_size = self.GetParent().GetClientSize()
@@ -3384,7 +3384,7 @@ class AuiToolBar(wx.PyControl):
         if y + height > parent_size.y:
             height = max(0, parent_size.y - y)
 
-        wx.PyControl.DoSetSize(self, x, y, width, height, sizeFlags)
+        wx.Control.DoSetSize(self, x, y, width, height, sizeFlags)
 
 
     def OnIdle(self, event):
@@ -3404,7 +3404,7 @@ class AuiToolBar(wx.PyControl):
         minimal size which doesn't truncate the control, for a panel - the same
         size as it would have after a call to `Fit()`.
         
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._absolute_min_size
@@ -3418,7 +3418,7 @@ class AuiToolBar(wx.PyControl):
         """
 
         dc = wx.AutoBufferedPaintDC(self)
-        cli_rect = wx.RectPS(wx.Point(0, 0), self.GetClientSize())
+        cli_rect = wx.Rect(wx.Point(0, 0), self.GetClientSize())
 
         horizontal = True
         if self._agwStyle & AUI_TB_VERTICAL:
@@ -3522,7 +3522,7 @@ class AuiToolBar(wx.PyControl):
         :param `event`: a :class:`MouseEvent` event to be processed.        
         """
         
-        cli_rect = wx.RectPS(wx.Point(0, 0), self.GetClientSize())
+        cli_rect = wx.Rect(wx.Point(0, 0), self.GetClientSize())
         self.StopPreviewTimer()
 
         if self._gripper_sizer_item:
@@ -3656,7 +3656,7 @@ class AuiToolBar(wx.PyControl):
         else:
 
             if self._action_item and hit_item == self._action_item:
-                self.SetToolTipString("")
+                self.SetToolTip("")
 
                 if hit_item.kind in [ITEM_CHECK, ITEM_RADIO]:
                     toggle = not (self._action_item.state & AUI_BUTTON_STATE_CHECKED)
@@ -3717,7 +3717,7 @@ class AuiToolBar(wx.PyControl):
         :param `event`: a :class:`MouseEvent` event to be processed.        
         """
         
-        cli_rect = wx.RectPS(wx.Point(0, 0), self.GetClientSize())
+        cli_rect = wx.Rect(wx.Point(0, 0), self.GetClientSize())
 
         if self._gripper_sizer_item:
             gripper_rect = self._gripper_sizer_item.GetRect()
@@ -3782,7 +3782,7 @@ class AuiToolBar(wx.PyControl):
         :param `event`: a :class:`MouseEvent` event to be processed.        
         """
         
-        cli_rect = wx.RectPS(wx.Point(0, 0), self.GetClientSize())
+        cli_rect = wx.Rect(wx.Point(0, 0), self.GetClientSize())
 
         if self._gripper_sizer_item:
         
@@ -3843,7 +3843,7 @@ class AuiToolBar(wx.PyControl):
         if not self._dragging and self._action_item != None and self._action_pos != wx.Point(-1, -1) and \
            abs(event.GetX() - self._action_pos.x) + abs(event.GetY() - self._action_pos.y) > 5:
         
-            self.SetToolTipString("")
+            self.SetToolTip("")
             self._dragging = True
 
             e = AuiToolBarEvent(wxEVT_COMMAND_AUITOOLBAR_BEGIN_DRAG, self.GetId())
@@ -3875,14 +3875,14 @@ class AuiToolBar(wx.PyControl):
 
                 if packing_hit_item.short_help != "":
                     self.StartPreviewTimer()
-                    self.SetToolTipString(packing_hit_item.short_help)
+                    self.SetToolTip(packing_hit_item.short_help)
                 else:
-                    self.SetToolTipString("")
+                    self.SetToolTip("")
                     self.StopPreviewTimer()
             
         else:
         
-            self.SetToolTipString("")
+            self.SetToolTip("")
             self._tip_item = None
             self.StopPreviewTimer()
         
@@ -3927,7 +3927,7 @@ class AuiToolBar(wx.PyControl):
         
             gripper_rect = self._gripper_sizer_item.GetRect()
             if gripper_rect.Contains((event.GetX(), event.GetY())):
-                cursor = wx.StockCursor(wx.CURSOR_SIZING)
+                cursor = wx.Cursor(wx.CURSOR_SIZING)
             
         event.SetCursor(cursor)
 

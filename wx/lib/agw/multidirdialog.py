@@ -2,7 +2,7 @@
 # MULTIDIRDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -109,7 +109,7 @@ License And Version
 
 :class:`MultiDirDialog` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.4
 
@@ -564,9 +564,13 @@ class MultiDirDialog(wx.Dialog):
         :param `event`: a :class:`TreeEvent` event to be processed.        
         """
 
-        if self.IsBeingDeleted():
-            # We are being destroyed...
-            event.Skip()
+        try:
+            if self.IsBeingDeleted():
+                # We are being destroyed...
+                event.Skip()
+                return
+        except RuntimeError:
+            # We are really being destroyed...
             return
         
         item = event.GetItem()

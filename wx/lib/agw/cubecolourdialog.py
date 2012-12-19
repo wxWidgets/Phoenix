@@ -4,7 +4,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Aug 2007
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -125,7 +125,7 @@ License And Version
 
 :class:`CubeColourDialog` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.5.
 
@@ -1713,7 +1713,7 @@ class BasePyControl(wx.Control):
         :note: This method always returns ``False`` as we do not accept focus from
          the keyboard.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return False
@@ -1726,7 +1726,7 @@ class BasePyControl(wx.Control):
         :note: This method always returns ``False`` as we do not accept focus from
          mouse click.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return False
@@ -1783,7 +1783,7 @@ class BasePyControl(wx.Control):
         Overridden base class virtual. Determines the best size of the
         control based on the bitmap size.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return wx.Size(self._bitmap.GetWidth(), self._bitmap.GetHeight())        
@@ -2216,7 +2216,7 @@ class BaseLineCtrl(wx.Control):
         """
         Overridden base class virtual. Determines the best size of the control.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return wx.Size(24, 208)    
@@ -2243,7 +2243,7 @@ class BaseLineCtrl(wx.Control):
         :note: This method always returns ``False`` as we do not accept focus from
          the keyboard.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return False
@@ -2256,7 +2256,7 @@ class BaseLineCtrl(wx.Control):
         :note: This method always returns ``False`` as we do not accept focus from
          mouse click.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return False
@@ -2604,7 +2604,7 @@ class ColourPanel(wx.Panel):
         :note: This method always returns ``False`` as we do not accept focus from
          the keyboard.
 
-        :note: Overridden from :class:`PyPanel`.
+        :note: Overridden from :class:`Panel`.
         """
 
         return False
@@ -2617,7 +2617,7 @@ class ColourPanel(wx.Panel):
         :note: This method always returns ``False`` as we do not accept focus from
          mouse click.
 
-        :note: Overridden from :class:`PyPanel`.
+        :note: Overridden from :class:`Panel`.
         """
 
         return False
@@ -2679,7 +2679,7 @@ class CustomPanel(wx.Control):
         """
         Overridden base class virtual. Determines the best size of the control.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._customColourRect.width+4, self._customColourRect.height+4

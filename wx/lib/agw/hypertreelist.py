@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.adv.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 25 Aug 2012, 10.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -262,14 +262,13 @@ License And Version
 
 :class:`HyperTreeList` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 25 Aug 2012, 10.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 1.4
 
 """
 
 import wx
-import wx.adv
 
 from wx.lib.agw.customtreectrl import CustomTreeCtrl
 from wx.lib.agw.customtreectrl import DragImage, TreeEvent, GenericTreeItem, ChopText
@@ -308,6 +307,8 @@ _EDIT_TIMER_TICKS = 250 # minimum edit wait time in ms
 # --------------------------------------------------------------------------
 # Additional HitTest style
 # --------------------------------------------------------------------------
+TREE_HITTEST_ONITEMCOLUMN     = 0x2000
+""" On the item column. """
 TREE_HITTEST_ONITEMCHECKICON  = 0x4000
 """ On the check icon, if present. """
 
@@ -1468,7 +1469,7 @@ class TreeListItem(GenericTreeItem):
                         continue
                     w = header_win.GetColumnWidth(j)
                     if ((j != maincol) and (point.x >= x and point.x < x+w)):
-                        flags |= wx.TREE_HITTEST_ONITEMCOLUMN
+                        flags |= TREE_HITTEST_ONITEMCOLUMN
                         column = j
                         return self, flags, column
 
@@ -2026,7 +2027,7 @@ class TreeListMainWindow(CustomTreeCtrl):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`PyScrolledWindow` style;
+        :param `style`: the underlying :class:`ScrolledWindow` style;
         :param `agwStyle`: the AGW-specific :class:`TreeListMainWindow` window style. This can be a
          combination of the following bits:
 
@@ -2677,7 +2678,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 # ----------------------------------------------------------------------------
 
     def AdjustMyScrollbars(self):
-        """ Internal method used to adjust the :class:`PyScrolledWindow` scrollbars. """
+        """ Internal method used to adjust the :class:`ScrolledWindow` scrollbars. """
 
         if self._anchor:
             xUnit, yUnit = self.GetScrollPixelsPerUnit()
@@ -3035,7 +3036,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of :class:`TreeListItem`;
         :param `dc`: an instance of :class:`DC`;
         :param `level`: the item level in the tree hierarchy;
-        :param `y`: the current vertical position in the :class:`PyScrolledWindow`;
+        :param `y`: the current vertical position in the :class:`ScrolledWindow`;
         :param `x_maincol`: the horizontal position of the main column.
         """
 
@@ -3832,7 +3833,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of :class:`TreeListItem`;
         :param `dc`: an instance of :class:`DC`;
         :param `level`: the item level in the tree hierarchy;
-        :param `y`: the current vertical position inside the :class:`PyScrolledWindow`;
+        :param `y`: the current vertical position inside the :class:`ScrolledWindow`;
         :param `x_colstart`: the x coordinate at which the item's column starts.
         """
 
@@ -4104,7 +4105,7 @@ class HyperTreeList(wx.Control):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`PyScrolledWindow` style;
+        :param `style`: the underlying :class:`ScrolledWindow` style;
         :param `agwStyle`: the AGW-specific :class:`HyperTreeList` window style. This can be a combination
          of the following bits:
 

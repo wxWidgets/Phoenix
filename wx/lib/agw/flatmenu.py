@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 29 Apr 2012, 23.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 # TODO List
 #
@@ -185,7 +185,7 @@ License And Version
 
 :class:`FlatMenu` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 29 Apr 2012, 23.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 1.0
 
@@ -261,9 +261,14 @@ if wx.Platform == "__WXMSW__":
 # to have shadows behind them, even the user defined wx.PopupWindow
 # that do not derive from FlatMenu.
 
-import wx.aui as AUI
-AuiPaneInfo = AUI.AuiPaneInfo
-""" Default AuiPaneInfo as in :class:`~lib.agw.aui.AuiPaneInfo`. """
+CPP_AUI = True
+
+try:
+    import wx.aui as AUI
+    AuiPaneInfo = AUI.AuiPaneInfo
+    """ Default AuiPaneInfo as in :class:`~lib.agw.aui.AuiPaneInfo`. """
+except ImportError:
+    CPP_AUI = False
 
 try:
     import aui as PyAUI
@@ -326,7 +331,7 @@ def ConvertToMonochrome(bmp):
     """
 
     mem_dc = wx.MemoryDC()
-    shadow = wx.EmptyBitmap(bmp.GetWidth(), bmp.GetHeight())
+    shadow = wx.Bitmap(bmp.GetWidth(), bmp.GetHeight())
     mem_dc.SelectObject(shadow)
     mem_dc.DrawBitmap(bmp, 0, 0, True)
     mem_dc.SelectObject(wx.NullBitmap)
@@ -335,12 +340,12 @@ def ConvertToMonochrome(bmp):
     
     # we now have black where the original bmp was drawn,
     # white elsewhere
-    shadow = wx.BitmapFromImage(img)
+    shadow = wx.Bitmap(img)
     shadow.SetMask(wx.Mask(shadow, wx.BLACK))
 
     # Convert the black to grey
-    tmp = wx.EmptyBitmap(bmp.GetWidth(), bmp.GetHeight())
-    col = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)
+    tmp = wx.Bitmap(bmp.GetWidth(), bmp.GetHeight())
+    col = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)
     mem_dc.SelectObject(tmp)
     mem_dc.SetPen(wx.Pen(col))
     mem_dc.SetBrush(wx.Brush(col))
@@ -440,28 +445,28 @@ class FMRenderer(object):
         self.scrollBarButtons = False   # Display scrollbar buttons if the menu doesn't fit on the screen
                                         # otherwise default to up and down arrow menu items
         
-        self.itemTextColourDisabled = ArtManager.Get().LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRAYTEXT), 30)
+        self.itemTextColourDisabled = ArtManager.Get().LightColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT), 30)
        
         # Background Colours
         self.menuFaceColour     = wx.WHITE
-        self.menuBarFaceColour  = ArtManager.Get().LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 80)
+        self.menuBarFaceColour  = ArtManager.Get().LightColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE), 80)
         
-        self.menuBarFocusFaceColour     = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.menuBarFocusBorderColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.menuBarPressedFaceColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.menuBarPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.menuBarFocusFaceColour     = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.menuBarFocusBorderColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.menuBarPressedFaceColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.menuBarPressedBorderColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         
-        self.menuFocusFaceColour     = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.menuFocusBorderColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.menuPressedFaceColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.menuPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.menuFocusFaceColour     = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.menuFocusBorderColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.menuPressedFaceColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.menuPressedBorderColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         
-        self.buttonFaceColour          = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.buttonBorderColour        = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.buttonFocusFaceColour     = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.buttonFocusBorderColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.buttonPressedFaceColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        self.buttonPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.buttonFaceColour          = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.buttonBorderColour        = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.buttonFocusFaceColour     = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.buttonFocusBorderColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.buttonPressedFaceColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self.buttonPressedBorderColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         
         # create wxBitmaps from the xpm's
         self._rightBottomCorner = self.ConvertToBitmap(shadow_center_xpm, shadow_center_alpha)
@@ -574,7 +579,7 @@ class FMRenderer(object):
 
         if alpha is not None:
 
-            img = wx.BitmapFromXPMData(xpm)
+            img = wx.Bitmap(xpm)
             img = img.ConvertToImage()
             x, y = img.GetWidth(), img.GetHeight()
             img.InitAlpha()
@@ -585,9 +590,9 @@ class FMRenderer(object):
         else:
 
             stream = cStringIO.StringIO(xpm)
-            img = wx.ImageFromStream(stream)
+            img = wx.Image(stream)
             
-        return wx.BitmapFromImage(img)
+        return wx.Bitmap(img)
     
     
     def DrawLeftMargin(self, item, dc, menuRect):
@@ -611,7 +616,7 @@ class FMRenderer(object):
         """
         
         # Place a separator bitmap
-        bmp = wx.EmptyBitmap(rect.width, rect.height)
+        bmp = wx.Bitmap(rect.width, rect.height)
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(bmp)
         mem_dc.SetPen(wx.BLACK_PEN)
@@ -714,7 +719,7 @@ class FMRenderer(object):
         dc.SetPen(wx.Pen(colour))
         dc.SetBrush(wx.Brush(colour))
     
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
         self.DrawBitmapShadow(dc, rect)
 
         
@@ -735,7 +740,7 @@ class FMRenderer(object):
 
         artMgr = ArtManager.Get()
         backColour = artMgr.GetMenuFaceColour()
-        lightColour = wx.NamedColour("LIGHT GREY")
+        lightColour = wx.Colour("LIGHT GREY")
         
         artMgr.PaintStraightGradientBox(dc, sepRect1, backColour, lightColour, False)
         artMgr.PaintStraightGradientBox(dc, sepRect2, lightColour, backColour, False) 
@@ -780,7 +785,7 @@ class FMRenderer(object):
             pen = wx.Pen(penColour)
             dc.SetPen(pen)
             dc.SetBrush(backBrush)
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
 
         # Draw the left margin gradient
         if self.drawLeftMargin:
@@ -804,7 +809,7 @@ class FMRenderer(object):
             self.DrawMenuButton(dc, rect.Deflate(1,0), ControlFocus)
             #copy.Inflate(0, menubar._spacer)
 
-        if bmp.Ok():
+        if bmp.IsOk():
         
             # Calculate the postion to place the image
             imgHeight = bmp.GetHeight()
@@ -855,7 +860,7 @@ class FMRenderer(object):
 
             font = item.GetFont()
             if font is None:
-                font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+                font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
                 
             if selected:
                 enabledTxtColour = colourutils.BestLabelColour(self.menuFocusFaceColour, bw=True)
@@ -921,7 +926,7 @@ class FMRenderer(object):
         if item.GetSubMenu():
         
             # Draw arrow 
-            rightArrowBmp = wx.BitmapFromXPMData(menu_right_arrow_xpm)
+            rightArrowBmp = wx.Bitmap(menu_right_arrow_xpm)
             rightArrowBmp.SetMask(wx.Mask(rightArrowBmp, wx.WHITE))
 
             xx = xCoord + rightMarginX + borderXSize 
@@ -949,7 +954,7 @@ class FMRenderer(object):
         dcsaver = DCSaver(dc)
         dc.SetPen(wx.Pen(penColour))
         dc.SetBrush(wx.Brush(brushColour))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
 
     def DrawMenuButton(self, dc, rect, state):
@@ -972,7 +977,7 @@ class FMRenderer(object):
         dcsaver = DCSaver(dc)
         dc.SetPen(wx.Pen(penColour))
         dc.SetBrush(wx.Brush(brushColour))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
         
 
     def DrawScrollButton(self, dc, rect, state):
@@ -987,7 +992,7 @@ class FMRenderer(object):
         if not self.scrollBarButtons:
             return
 
-        colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         colour = ArtManager.Get().LightColour(colour, 30)
         
         artMgr = ArtManager.Get()
@@ -1004,8 +1009,8 @@ class FMRenderer(object):
         rightPt = wx.Point(rect.x + rect.width-1, rect.y + (rect.height / 2))
 
         # Define the top region
-        top = wx.RectPP((rect.GetLeft(), rect.GetTop()), rightPt)
-        bottom = wx.RectPP(leftPt, (rect.GetRight(), rect.GetBottom()))
+        top = wx.Rect((rect.GetLeft(), rect.GetTop()), rightPt)
+        bottom = wx.Rect(leftPt, (rect.GetRight(), rect.GetBottom()))
 
         upperBoxTopPercent, upperBoxBottomPercent, lowerBoxTopPercent, lowerBoxBottomPercent, \
                             concaveUpperBox, concaveLowerBox = self.GetColoursAccordingToState(state)
@@ -1023,12 +1028,12 @@ class FMRenderer(object):
 
         frameColour = artMgr.LightColour(baseColour, 60)
         dc.SetPen(wx.Pen(frameColour))
-        dc.DrawRectangleRect(rr)
+        dc.DrawRectangle(rr)
 
         wc = artMgr.LightColour(baseColour, 80)
         dc.SetPen(wx.Pen(wc))
         rr.Deflate(1, 1)
-        dc.DrawRectangleRect(rr)
+        dc.DrawRectangle(rr)
 
         
     def DrawButton(self, dc, rect, state, colour=None):
@@ -1069,7 +1074,7 @@ class FMRenderer(object):
         dcsaver = DCSaver(dc)
         dc.SetPen(wx.Pen(penColour))
         dc.SetBrush(wx.Brush(brushColour))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
 
     def DrawMenuBarBackground(self, dc, rect):
@@ -1087,7 +1092,7 @@ class FMRenderer(object):
 
         dc.SetPen(wx.Pen(colour))
         dc.SetBrush(wx.Brush(colour))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
 
     def DrawMenuBar(self, menubar, dc):
@@ -1099,7 +1104,7 @@ class FMRenderer(object):
         """
 
         #artMgr = ArtManager.Get()
-        fnt = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        fnt = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         textColour = colourutils.BestLabelColour(menubar.GetBackgroundColour(), bw=True)
         highlightTextColour = colourutils.BestLabelColour(self.menuBarFocusFaceColour, bw=True)
 
@@ -1168,16 +1173,16 @@ class FMRenderer(object):
             ww, hh = dc.GetTextExtent(labelOnly)
             textOffset = (rect.width - ww) / 2
 
-            if not menubar._isLCD and item.GetTextBitmap().Ok() and not selected:
+            if not menubar._isLCD and item.GetTextBitmap().IsOk() and not selected:
                 dc.DrawBitmap(item.GetTextBitmap(), rect.x, rect.y, True)
-            elif not menubar._isLCD and item.GetSelectedTextBitmap().Ok() and selected:
+            elif not menubar._isLCD and item.GetSelectedTextBitmap().IsOk() and selected:
                 dc.DrawBitmap(item.GetSelectedTextBitmap(), rect.x, rect.y, True)
             else:
                 if not menubar._isLCD:
                     # Draw the text on a bitmap using memory dc, 
                     # so on following calls we will use this bitmap instead
                     # of calculating everything from scratch
-                    bmp = wx.EmptyBitmap(rect.width, rect.height)
+                    bmp = wx.Bitmap(rect.width, rect.height)
                     memDc = wx.MemoryDC()
                     memDc.SelectObject(bmp)
                     if selected:
@@ -1255,7 +1260,7 @@ class FMRenderer(object):
         # Get a background image of the more menu button
         moreMenubtnBgBmpRect = wx.Rect(*menubar.GetMoreMenuButtonRect())
         if not menubar._moreMenuBgBmp:
-            menubar._moreMenuBgBmp = wx.EmptyBitmap(moreMenubtnBgBmpRect.width, moreMenubtnBgBmpRect.height)
+            menubar._moreMenuBgBmp = wx.Bitmap(moreMenubtnBgBmpRect.width, moreMenubtnBgBmpRect.height)
 
         if menubar._showToolbar and len(menubar._tbButtons) > 0:
             rectX      = 0
@@ -1295,21 +1300,21 @@ class FMRenderer(object):
         """
         
         menuRect = flatmenu.GetClientRect()
-        menuBmp = wx.EmptyBitmap(menuRect.width, menuRect.height)
+        menuBmp = wx.Bitmap(menuRect.width, menuRect.height)
 
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(menuBmp)
 
         # colour the menu face with background colour
         backColour = self.menuFaceColour
-        penColour  = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)
+        penColour  = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)
 
         backBrush = wx.Brush(backColour)
         pen = wx.Pen(penColour)
 
         mem_dc.SetPen(pen)
         mem_dc.SetBrush(backBrush)
-        mem_dc.DrawRectangleRect(menuRect)
+        mem_dc.DrawRectangle(menuRect)
 
         backgroundImage = flatmenu._backgroundImage
         
@@ -1325,7 +1330,7 @@ class FMRenderer(object):
             item.Show(False)
 
         visibleItems = 0
-        screenHeight = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_Y)
+        screenHeight = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
 
         numCols = flatmenu.GetNumberColumns()
         switch, posx, index = 1e6, 0, 0
@@ -1389,23 +1394,23 @@ class FMRendererMSOffice2007(FMRenderer):
         self.highlightCheckAndRadio = True
         self.scrollBarButtons = True   # Display scrollbar buttons if the menu doesn't fit on the screen
         
-        self.menuBarFaceColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+        self.menuBarFaceColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
         
-        self.buttonBorderColour        = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.buttonBorderColour        = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.buttonFaceColour          = ArtManager.Get().LightColour(self.buttonBorderColour, 75)
-        self.buttonFocusBorderColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.buttonFocusBorderColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.buttonFocusFaceColour     = ArtManager.Get().LightColour(self.buttonFocusBorderColour, 75)
-        self.buttonPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.buttonPressedBorderColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.buttonPressedFaceColour   = ArtManager.Get().LightColour(self.buttonPressedBorderColour, 60)
         
-        self.menuFocusBorderColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.menuFocusBorderColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuFocusFaceColour     = ArtManager.Get().LightColour(self.buttonFocusBorderColour, 75)
-        self.menuPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.menuPressedBorderColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuPressedFaceColour   = ArtManager.Get().LightColour(self.buttonPressedBorderColour, 60)
         
-        self.menuBarFocusBorderColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.menuBarFocusBorderColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuBarFocusFaceColour     = ArtManager.Get().LightColour(self.buttonFocusBorderColour, 75)
-        self.menuBarPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.menuBarPressedBorderColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuBarPressedFaceColour   = ArtManager.Get().LightColour(self.buttonPressedBorderColour, 60)
 
 
@@ -1429,7 +1434,7 @@ class FMRendererMSOffice2007(FMRenderer):
         marginColour = artMgr.DarkColour(faceColour, 5)
         dc.SetPen(wx.Pen(marginColour))
         dc.SetBrush(wx.Brush(marginColour))
-        dc.DrawRectangleRect(marginRect)
+        dc.DrawRectangle(marginRect)
 
         dc.SetPen(wx.WHITE_PEN)
         dc.DrawLine(marginRect.x + marginRect.width, marginRect.y, marginRect.x + marginRect.width, marginRect.y + marginRect.height)
@@ -1474,7 +1479,7 @@ class FMRendererMSOffice2007(FMRenderer):
          the :class:`FlatMenuItem` background.
         """
 
-        colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         colour = ArtManager.Get().LightColour(colour, 30)
         self.DrawButtonColour(dc, rect, state, colour)
 
@@ -1503,8 +1508,8 @@ class FMRendererMSOffice2007(FMRenderer):
         rightPt = wx.Point(rect.x + rect.width-1, rect.y + (rect.height / 2))
 
         # Define the top region
-        top = wx.RectPP((rect.GetLeft(), rect.GetTop()), rightPt)
-        bottom = wx.RectPP(leftPt, (rect.GetRight(), rect.GetBottom()))
+        top = wx.Rect((rect.GetLeft(), rect.GetTop()), rightPt)
+        bottom = wx.Rect(leftPt, (rect.GetRight(), rect.GetBottom()))
 
         upperBoxTopPercent, upperBoxBottomPercent, lowerBoxTopPercent, lowerBoxBottomPercent, \
                             concaveUpperBox, concaveLowerBox = self.GetColoursAccordingToState(state)
@@ -1522,12 +1527,12 @@ class FMRendererMSOffice2007(FMRenderer):
 
         frameColour = artMgr.LightColour(baseColour, 60)
         dc.SetPen(wx.Pen(frameColour))
-        dc.DrawRectangleRect(rr)
+        dc.DrawRectangle(rr)
 
         wc = artMgr.LightColour(baseColour, 80)
         dc.SetPen(wx.Pen(wc))
         rr.Deflate(1, 1)
-        dc.DrawRectangleRect(rr)
+        dc.DrawRectangle(rr)
 
 
     def DrawMenuBarBackground(self, dc, rect):
@@ -1543,9 +1548,9 @@ class FMRendererMSOffice2007(FMRenderer):
         artMgr = ArtManager.Get()
         baseColour = self.menuBarFaceColour
 
-        dc.SetBrush(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
-        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
-        dc.DrawRectangleRect(rect)
+        dc.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
+        dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
+        dc.DrawRectangle(rect)
 
         # Define the rounded rectangle base on the given rect
         # we need an array of 9 points for it
@@ -1583,17 +1588,17 @@ class FMRendererMSOffice2007(FMRenderer):
         topReg[6] = topReg[0]
 
         # Define the middle region
-        middle = wx.RectPP(leftPt1, wx.Point(rightPt2.x - 2, rightPt2.y))
+        middle = wx.Rect(leftPt1, wx.Point(rightPt2.x - 2, rightPt2.y))
             
         # Define the bottom region
-        bottom = wx.RectPP(leftPt2, wx.Point(rect.GetRight() - 1, rect.GetBottom()))
+        bottom = wx.Rect(leftPt2, wx.Point(rect.GetRight() - 1, rect.GetBottom()))
 
         topStartColour    = artMgr.LightColour(baseColour, 90)
         topEndColour      = artMgr.LightColour(baseColour, 60)
         bottomStartColour = artMgr.LightColour(baseColour, 40)
         bottomEndColour   = artMgr.LightColour(baseColour, 20)
         
-        topRegion = wx.RegionFromPoints(topReg)
+        topRegion = wx.Region(topReg)
 
         artMgr.PaintGradientRegion(dc, topRegion, topStartColour, topEndColour)
         artMgr.PaintStraightGradientBox(dc, bottom, bottomStartColour, bottomEndColour)
@@ -1619,9 +1624,9 @@ class FMRendererMSOffice2007(FMRenderer):
         baseColour = self.menuBarFaceColour
         baseColour = artMgr.LightColour(baseColour, 20)
 
-        dc.SetBrush(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
-        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
-        dc.DrawRectangleRect(rect)
+        dc.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
+        dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
+        dc.DrawRectangle(rect)
 
         radius = 2
         
@@ -1659,17 +1664,17 @@ class FMRendererMSOffice2007(FMRenderer):
         topReg[6] = topReg[0]
 
         # Define the middle region
-        middle = wx.RectPP(leftPt1, wx.Point(rightPt2.x - 2, rightPt2.y))
+        middle = wx.Rect(leftPt1, wx.Point(rightPt2.x - 2, rightPt2.y))
 
         # Define the bottom region
-        bottom = wx.RectPP(leftPt2, wx.Point(rect.GetRight() - 1, rect.GetBottom()))
+        bottom = wx.Rect(leftPt2, wx.Point(rect.GetRight() - 1, rect.GetBottom()))
         
         topStartColour   = artMgr.LightColour(baseColour, 90)
         topEndColour = artMgr.LightColour(baseColour, 60)
         bottomStartColour = artMgr.LightColour(baseColour, 40)
         bottomEndColour   = artMgr.LightColour(baseColour, 20)
         
-        topRegion = wx.RegionFromPoints(topReg)
+        topRegion = wx.Region(topReg)
 
         artMgr.PaintGradientRegion(dc, topRegion, topStartColour, topEndColour)
         artMgr.PaintStraightGradientBox(dc, bottom, bottomStartColour, bottomEndColour)
@@ -1681,7 +1686,7 @@ class FMRendererMSOffice2007(FMRenderer):
     def GetTextColourEnable(self):
         """ Returns the colour used for text colour when enabled. """
 
-        return wx.NamedColour("MIDNIGHT BLUE")
+        return wx.Colour("MIDNIGHT BLUE")
     
 
 # ---------------------------------------------------------------------------- #
@@ -1727,10 +1732,10 @@ class FMRendererVista(FMRendererMSOffice2007):
         
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetPen(wx.Pen(outer))
-        dc.DrawRoundedRectangleRect(bdrRect, 3)
+        dc.DrawRoundedRectangle(bdrRect, 3)
         bdrRect.Deflate(1, 1)
         dc.SetPen(wx.Pen(inner))
-        dc.DrawRoundedRectangleRect(bdrRect, 2)
+        dc.DrawRoundedRectangle(bdrRect, 2)
 
         
 # ---------------------------------------------------------------------------- #
@@ -1750,21 +1755,21 @@ class FMRendererXP(FMRenderer):
         self.highlightCheckAndRadio = True
         self.scrollBarButtons = True   # Display scrollbar buttons if the menu doesn't fit on the screen
         
-        self.buttonBorderColour        = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.buttonBorderColour        = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.buttonFaceColour          = ArtManager.Get().LightColour(self.buttonBorderColour, 75)
-        self.buttonFocusBorderColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.buttonFocusBorderColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.buttonFocusFaceColour     = ArtManager.Get().LightColour(self.buttonFocusBorderColour, 75)
-        self.buttonPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.buttonPressedBorderColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.buttonPressedFaceColour   = ArtManager.Get().LightColour(self.buttonPressedBorderColour, 60)
         
-        self.menuFocusBorderColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.menuFocusBorderColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuFocusFaceColour     = ArtManager.Get().LightColour(self.buttonFocusBorderColour, 75)
-        self.menuPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.menuPressedBorderColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuPressedFaceColour   = ArtManager.Get().LightColour(self.buttonPressedBorderColour, 60)
         
-        self.menuBarFocusBorderColour   = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.menuBarFocusBorderColour   = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuBarFocusFaceColour     = ArtManager.Get().LightColour(self.buttonFocusBorderColour, 75)
-        self.menuBarPressedBorderColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self.menuBarPressedBorderColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self.menuBarPressedFaceColour   = ArtManager.Get().LightColour(self.buttonPressedBorderColour, 60)
 
 
@@ -1816,7 +1821,7 @@ class FMRendererXP(FMRenderer):
 
             dc.SetPen(wx.Pen(startColour))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
 
 
     def DrawToolBarBg(self, dc, rect):
@@ -2517,7 +2522,7 @@ class FlatMenuBar(wx.Panel):
         """ Recalculates the :class:`FlatMenuBar` height when its settings change. """
 
         mem_dc = wx.MemoryDC()
-        mem_dc.SelectObject(wx.EmptyBitmap(1, 1))
+        mem_dc.SelectObject(wx.Bitmap(1, 1))
         dummy, self._barHeight = mem_dc.GetTextExtent("Tp")
         mem_dc.SelectObject(wx.NullBitmap)
        
@@ -2708,7 +2713,7 @@ class FlatMenuBar(wx.Panel):
                 if not control.IsShown():
                     control.Show()
                     
-                buttonRect = wx.RectPS(ctrlPos, ctrlSize)
+                buttonRect = wx.Rect(ctrlPos, ctrlSize)
                 xx += buttonRect.width
                 self._tbButtons[i]._rect = buttonRect
                 continue            
@@ -2719,7 +2724,7 @@ class FlatMenuBar(wx.Panel):
                     bmp = tbItem.GetDisabledBitmap()
 
             # Draw the toolbar image
-            if bmp.Ok():
+            if bmp.IsOk():
 
                 x = xx - self._toolbarSpacer/2
                 #y = rect.y + (rect.height - bmp.GetHeight())/2 - 1
@@ -2815,7 +2820,7 @@ class FlatMenuBar(wx.Panel):
             self.GetRenderer().DrawButton(dc, rect, state)
         else:
             # Delete current image
-            if self._moreMenuBgBmp.Ok():
+            if self._moreMenuBgBmp.IsOk():
                 dc.DrawBitmap(self._moreMenuBgBmp, rect.x, rect.y, True)
 
         dropArrowBmp = self.GetRenderer()._bitmaps["arrow_down"]
@@ -3764,12 +3769,12 @@ class FlatMenuBar(wx.Panel):
         :param bool `fixToolbar`: ``True`` if :class:`FlatMenuBar` can not be floated.
         """
 
-        if isinstance(mgr, wx.aui.AuiManager):
+        if CPP_AUI and isinstance(mgr, wx.aui.AuiManager):
             pn = AuiPaneInfo()
         else:
             pn = PyAuiPaneInfo()
             
-        xx = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_X)
+        xx = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
 
         # We add our menu bar as a toolbar, with the following settings
 
@@ -3809,7 +3814,7 @@ class FlatMenuBar(wx.Panel):
 
         shortHelp = hit.GetShortHelp()
         if shortHelp:
-            self.SetToolTipString(shortHelp)
+            self.SetToolTip(shortHelp)
             self._haveTip = True
 
         longHelp = hit.GetLongHelp()
@@ -3834,7 +3839,7 @@ class FlatMenuBar(wx.Panel):
         """ Removes the tooltips and statusbar help (if any) for a button. """
 
         if self._haveTip:
-            self.SetToolTipString("")
+            self.SetToolTip("")
             self._haveTip = False
 
         if self._statusTimer and self._statusTimer.IsRunning():
@@ -3951,8 +3956,8 @@ class FlatMenuButton(object):
         self._timerID = wx.NewId()
         self._scrollOnHover = scrollOnHover
 
-        if not disabledBmp.Ok():
-            self._disabledBmp = wx.BitmapFromImage(self._normalBmp.ConvertToImage().ConvertToGreyscale())
+        if not disabledBmp.IsOk():
+            self._disabledBmp = wx.Bitmap(self._normalBmp.ConvertToImage().ConvertToGreyscale())
         else: 
             self._disabledBmp = disabledBmp
         
@@ -3974,7 +3979,7 @@ class FlatMenuButton(object):
     def Contains(self, pt):
         """ Used internally. """
     
-        rect = wx.RectPS(self._pos, self._size)
+        rect = wx.Rect(self._pos, self._size)
         if not rect.Contains(pt):
             return False
 
@@ -3988,7 +3993,7 @@ class FlatMenuButton(object):
         :param `dc`: an instance of :class:`DC`.
         """
 
-        rect = wx.RectPS(self._pos, self._size)
+        rect = wx.Rect(self._pos, self._size)
         xx = rect.x + (rect.width - self._normalBmp.GetWidth())/2
         yy = rect.y + (rect.height - self._normalBmp.GetHeight())/2
 
@@ -4114,7 +4119,7 @@ class FlatMenuButton(object):
     def GetClientRect(self):
         """ Returns the client rectangle for :class:`FlatMenuButton`. """
 
-        return wx.RectPS(self._pos, self._size)
+        return wx.Rect(self._pos, self._size)
 
 
 #--------------------------------------------------------
@@ -4291,7 +4296,7 @@ class FlatMenuBase(ShadowPopupWindow):
             
             sz = self.GetSize()
             # Get the screen height
-            scrHeight = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_Y)
+            scrHeight = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
             
 
             # position the scrollbar - If we are doing scroll bar buttons put them in the top right and 
@@ -4339,8 +4344,8 @@ class FlatMenuBase(ShadowPopupWindow):
         """
 
         # Check that the menu can fully appear in the screen
-        scrWidth  = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_X)
-        scrHeight = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_Y)
+        scrWidth  = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
+        scrHeight = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
         
         scrollBarButtons = self.GetRenderer().scrollBarButtons
         scrollBarMenuItems = not scrollBarButtons
@@ -4581,9 +4586,9 @@ class FlatToolbarItem(object):
             self._disabledImg = disabledBmp
             self._customCtrl = None
             
-            if not self._disabledImg.Ok():
+            if not self._disabledImg.IsOk():
                 # Create a grey bitmap from the normal bitmap
-                self._disabledImg = wx.BitmapFromImage(self._normalBmp.ConvertToImage().ConvertToGreyscale())
+                self._disabledImg = wx.Bitmap(self._normalBmp.ConvertToImage().ConvertToGreyscale())
 
         self._kind = kind
         self._enabled = True
@@ -4851,9 +4856,9 @@ class FlatMenuItem(object):
         self.SetLabel(self._text)
         self.SetMenuBar()
 
-        self._checkMarkBmp = wx.BitmapFromXPMData(check_mark_xpm)
+        self._checkMarkBmp = wx.Bitmap(check_mark_xpm)
         self._checkMarkBmp.SetMask(wx.Mask(self._checkMarkBmp, wx.WHITE))
-        self._radioMarkBmp = wx.BitmapFromXPMData(radio_item_xpm)
+        self._radioMarkBmp = wx.Bitmap(radio_item_xpm)
         self._radioMarkBmp.SetMask(wx.Mask(self._radioMarkBmp, wx.WHITE))
 
                 
@@ -5139,8 +5144,8 @@ class FlatMenuItem(object):
         """
 
         normalBmp = self._normalBmp
-        gBmp = (self._disabledBmp.Ok() and [self._disabledBmp] or [self._normalBmp])[0]
-        hotBmp = (self._hotBmp.Ok() and [self._hotBmp] or [self._normalBmp])[0]
+        gBmp = (self._disabledBmp.IsOk() and [self._disabledBmp] or [self._normalBmp])[0]
+        hotBmp = (self._hotBmp.IsOk() and [self._hotBmp] or [self._normalBmp])[0]
 
         if not self.IsEnabled():
             return gBmp
@@ -5561,7 +5566,7 @@ class FlatMenu(FlatMenuBase):
         self.SetSize(wx.Size(self._menuWidth*self._numCols, menuHeight+4))
 
         if self._originalBackgroundImage:
-            img = wx.ImageFromBitmap(self._originalBackgroundImage)
+            img = wx.Image(self._originalBackgroundImage)
             img = img.Scale(self._menuWidth*self._numCols-2-self._leftMarginWidth, menuHeight, wx.IMAGE_QUALITY_HIGH)
             self._backgroundImage = img.ConvertToBitmap()
 
@@ -5612,7 +5617,7 @@ class FlatMenu(FlatMenuBase):
         
         bmpHeight = bmpWidth = 0
         
-        if menuItem.GetBitmap().Ok():
+        if menuItem.GetBitmap().IsOk():
             bmpHeight = menuItem.GetBitmap().GetHeight()
             bmpWidth  = menuItem.GetBitmap().GetWidth()
         
@@ -6472,7 +6477,7 @@ class FlatMenu(FlatMenuBase):
 
         if "__WXMSW__" in wx.Platform:
             self._oldCur = self.GetCursor()
-            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
         event.Skip()
 

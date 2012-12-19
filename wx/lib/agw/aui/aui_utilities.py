@@ -73,7 +73,7 @@ def StepColour(c, ialpha):
     g = BlendColour(g, bg, alpha)
     b = BlendColour(b, bg, alpha)
 
-    return wx.Colour(r, g, b)
+    return wx.Colour(int(r), int(g), int(b))
 
 
 def LightContrastColour(c):
@@ -104,7 +104,7 @@ def ChopText(dc, text, max_size):
     """
     
     # first check if the text fits with no problems
-    x, y, dummy = dc.GetMultiLineTextExtent(text)
+    x, y, dummy = dc.GetFullMultiLineTextExtent(text)
     
     if x <= max_size:
         return text
@@ -137,11 +137,11 @@ def BitmapFromBits(bits, w, h, colour):
      raw bitmap.
     """
 
-    img = wx.BitmapFromBits(bits, w, h).ConvertToImage()
+    img = wx.Bitmap(bits, w, h).ConvertToImage()
     img.Replace(0, 0, 0, 123, 123, 123)
     img.Replace(255, 255, 255, colour.Red(), colour.Green(), colour.Blue())
     img.SetMaskColour(123, 123, 123)
-    return wx.BitmapFromImage(img)
+    return wx.Bitmap(img)
 
 
 def IndentPressedBitmap(rect, button_state):
@@ -281,7 +281,7 @@ def PaneCreateStippleBitmap():
     """
 
     data = [0, 0, 0, 192, 192, 192, 192, 192, 192, 0, 0, 0]
-    img = wx.EmptyImage(2, 2)
+    img = wx.Image(2, 2)
     counter = 0
     
     for ii in xrange(2):
@@ -300,7 +300,7 @@ def DrawMACCloseButton(colour, backColour=None):
     :param Colour `backColour`: the optional background colour for the circle.
     """
 
-    bmp = wx.EmptyBitmapRGBA(16, 16)
+    bmp = wx.Bitmap.FromRGBA(16, 16)
     dc = wx.MemoryDC()
     dc.SelectObject(bmp)
 
@@ -438,7 +438,7 @@ class TabDragImage(wx.DragImage):
         :param `tabArt`: an instance of :class:`~lib.agw.aui.tabart.AuiDefaultTabArt` or one of its derivations.
         """
 
-        self._backgroundColour = wx.NamedColour("pink")        
+        self._backgroundColour = wx.Colour("pink")        
         self._bitmap = self.CreateBitmap(notebook, page, button_state, tabArt)
         wx.DragImage.__init__(self, self._bitmap)
 
@@ -454,7 +454,7 @@ class TabDragImage(wx.DragImage):
         """
 
         control = page.control
-        memory = wx.MemoryDC(wx.EmptyBitmap(1, 1))
+        memory = wx.MemoryDC(wx.Bitmap(1, 1))
 
         tab_size, x_extent = tabArt.GetTabSize(memory, notebook, page.caption, page.bitmap, page.active,
                                                button_state, control)
@@ -462,7 +462,7 @@ class TabDragImage(wx.DragImage):
         tab_width, tab_height = tab_size
         rect = wx.Rect(0, 0, tab_width, tab_height)
 
-        bitmap = wx.EmptyBitmap(tab_width+1, tab_height+1)
+        bitmap = wx.Bitmap(tab_width+1, tab_height+1)
         memory.SelectObject(bitmap)
 
         if wx.Platform == "__WXMAC__":
@@ -550,7 +550,7 @@ def TakeScreenShot(rect):
     # Create a Bitmap that will later on hold the screenshot image
     # Note that the Bitmap must have a size big enough to hold the screenshot
     # -1 means using the current default colour depth
-    bmp = wx.EmptyBitmap(rect.width, rect.height)
+    bmp = wx.Bitmap(rect.width, rect.height)
 
     # Create a memory DC that will be used for actually taking the screenshot
     memDC = wx.MemoryDC()
@@ -602,7 +602,7 @@ def RescaleScreenShot(bmp, thumbnail_size=200):
             img.Rescale(newW, newH, wx.IMAGE_QUALITY_HIGH)
 
     newBmp = img.ConvertToBitmap()
-    otherBmp = wx.EmptyBitmap(newW+5, newH+5)    
+    otherBmp = wx.Bitmap(newW+5, newH+5)    
 
     memDC = wx.MemoryDC()
     memDC.SelectObject(otherBmp)

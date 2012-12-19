@@ -150,7 +150,7 @@ class TabTextCtrl(ExpandoTextCtrl):
             image_w += 6
 
         dc = wx.ClientDC(self._owner)
-        h = max(image_h, dc.GetMultiLineTextExtent(tab.caption)[1])
+        h = max(image_h, dc.GetFullMultiLineTextExtent(tab.caption)[1])
         h = h + 2
 
         # FIXME: what are all these hardcoded 4, 8 and 11s really?
@@ -259,7 +259,7 @@ class TabTextCtrl(ExpandoTextCtrl):
             mySize = self.GetSize()
 
             dc = wx.ClientDC(self)
-            sx, sy, dummy = dc.GetMultiLineTextExtent(self.GetValue() + "M")
+            sx, sy, dummy = dc.GetFullMultiLineTextExtent(self.GetValue() + "M")
 
             self.SetSize((sx, -1))
             self._currentValue = self.GetValue()
@@ -605,7 +605,7 @@ class TabNavigatorWindow(wx.Dialog):
         if props.Icon.GetSize() != (16, 16):
             img = self._props.Icon.ConvertToImage()
             img.Rescale(16, 16, wx.IMAGE_QUALITY_HIGH)
-            self._props.Icon = wx.BitmapFromImage(img)
+            self._props.Icon = wx.Bitmap(img)
 
         if self._props.Font.IsOk():
             self.Font = self._props.Font
@@ -618,8 +618,8 @@ class TabNavigatorWindow(wx.Dialog):
                                    wx.LB_SINGLE | wx.NO_BORDER)
 
         mem_dc = wx.MemoryDC()
-        mem_dc.SelectObject(wx.EmptyBitmap(1,1))
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        mem_dc.SelectObject(wx.Bitmap(1, 1))
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.BOLD)
         mem_dc.SetFont(font)
 
@@ -647,8 +647,8 @@ class TabNavigatorWindow(wx.Dialog):
         self._panel.Bind(wx.EVT_PAINT, self.OnPanelPaint)
         self._panel.Bind(wx.EVT_ERASE_BACKGROUND, self.OnPanelEraseBg)
 
-        self.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE))
-        self._listBox.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE))
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
+        self._listBox.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self.PopulateListControl(parent)
 
         self.SetInitialSize(props.MinSize)
@@ -771,12 +771,12 @@ class TabNavigatorWindow(wx.Dialog):
         dc = wx.PaintDC(self._panel)
         rect = self._panel.GetClientRect()
 
-        bmp = wx.EmptyBitmap(rect.width, rect.height)
+        bmp = wx.Bitmap(rect.width, rect.height)
 
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(bmp)
 
-        endColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)
+        endColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)
         startColour = LightColour(endColour, 50)
         mem_dc.GradientFillLinear(rect, startColour, endColour, wx.SOUTH)
 
@@ -788,7 +788,7 @@ class TabNavigatorWindow(wx.Dialog):
         mem_dc.DrawBitmap(self._props.Icon, bmpPt.x, bmpPt.y, True)
 
         # get the text position, and draw it
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.BOLD)
         mem_dc.SetFont(font)
         fontHeight = mem_dc.GetCharHeight()
@@ -1321,7 +1321,7 @@ class AuiTabContainer(object):
         button_count = len(self._buttons)
 
         # create off-screen bitmap
-        bmp = wx.EmptyBitmap(self._rect.GetWidth(), self._rect.GetHeight())
+        bmp = wx.Bitmap(self._rect.GetWidth(), self._rect.GetHeight())
         dc.SelectObject(bmp)
 
         if not dc.IsOk():
@@ -1359,7 +1359,7 @@ class AuiTabContainer(object):
             if control:
                 try:
                     control.GetSize()
-                except wx.PyDeadObjectError:
+                except RuntimeError:
                     page.control = None
 
             size, x_extent = self._art.GetTabSize(dc, wnd, page.caption, page.bitmap, page.active,
@@ -1499,7 +1499,7 @@ class AuiTabContainer(object):
             clip_rect = wx.Rect(*self._rect)
             clip_rect.x = offset
 
-            dc.SetClippingRect(clip_rect)
+            dc.SetClippingRegion(clip_rect)
             self._art.DrawTab(dc, wnd, page, rect, tab_button.cur_state)
             dc.DestroyClippingRegion()
 
@@ -1772,7 +1772,7 @@ class AuiTabContainer(object):
 # ----------------------------------------------------------------------
 # -- AuiTabCtrl class implementation --
 
-class AuiTabCtrl(wx.PyControl, AuiTabContainer):
+class AuiTabCtrl(wx.Control, AuiTabContainer):
     """
     This is an actual :class:`Window` - derived window which can be used as a tab control in the normal sense.
     """
@@ -1792,7 +1792,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         :param integer `style`: the window style.
         """
 
-        wx.PyControl.__init__(self, parent, id, pos, size, style, name="AuiTabCtrl")
+        wx.Control.__init__(self, parent, id, pos, size, style, name="AuiTabCtrl")
         AuiTabContainer.__init__(self, parent)
 
         self._click_pt = wx.Point(-1, -1)
@@ -1866,7 +1866,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         minimal size which doesn't truncate the control, for a panel - the same
         size as it would have after a call to `Fit()`.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return wx.Size(self._rect.width, self._rect.height)
@@ -2503,7 +2503,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
 
 # ----------------------------------------------------------------------
 
-class TabFrame(wx.PyWindow):
+class TabFrame(wx.Window):
     """
     TabFrame is an interesting case. It's important that all child pages
     of the multi-notebook control are all actually children of that control
@@ -2521,7 +2521,7 @@ class TabFrame(wx.PyWindow):
         Used internally, do not call it in your code!
         """
 
-        pre = wx.PrePyWindow()
+        pre = wx.Window()
 
         self._tabs = None
         self._rect = wx.Rect(0, 0, 200, 200)
@@ -2529,7 +2529,7 @@ class TabFrame(wx.PyWindow):
         self._tab_rect = wx.Rect()
         self._parent = parent
 
-        self.PostCreate(pre)
+        self.Create(parent)
 
 
     def SetTabCtrlHeight(self, h):
@@ -2568,7 +2568,7 @@ class TabFrame(wx.PyWindow):
                                               for MSW and ignored elsewhere currently)
          ===================================  ======================================
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         self._rect = wx.Rect(x, y, max(1, width), max(1, height))
@@ -2579,7 +2579,7 @@ class TabFrame(wx.PyWindow):
         """
         Returns the window size.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._rect.width, self._rect.height
@@ -2589,7 +2589,7 @@ class TabFrame(wx.PyWindow):
         """
         Returns the window client size.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._rect.width, self._rect.height
@@ -2603,7 +2603,7 @@ class TabFrame(wx.PyWindow):
 
         :note:
 
-         Overridden from :class:`PyControl`, this method always returns ``False`` as
+         Overridden from :class:`Control`, this method always returns ``False`` as
          :class:`TabFrame` should never be phisically shown on screen.
         """
 
@@ -2627,14 +2627,14 @@ class TabFrame(wx.PyWindow):
             if self._tabs.GetAGWFlags() & AUI_NB_BOTTOM:
                 self._tab_rect = wx.Rect(self._rect.x, self._rect.y + self._rect.height - tab_height,
                                          self._rect.width, tab_height)
-                self._tabs.SetDimensions(self._rect.x, self._rect.y + self._rect.height - tab_height,
-                                         self._rect.width, tab_height)
+                self._tabs.SetSize(self._rect.x, self._rect.y + self._rect.height - tab_height,
+                                   self._rect.width, tab_height)
                 self._tabs.SetTabRect(wx.Rect(0, 0, self._rect.width, tab_height))
 
             else:
 
                 self._tab_rect = wx.Rect(self._rect.x, self._rect.y, self._rect.width, tab_height)
-                self._tabs.SetDimensions(self._rect.x, self._rect.y, self._rect.width, tab_height)
+                self._tabs.SetSize(self._rect.x, self._rect.y, self._rect.width, tab_height)
                 self._tabs.SetTabRect(wx.Rect(0, 0, self._rect.width, tab_height))
 
             # TODO: elif (GetAGWFlags() & AUI_NB_LEFT)
@@ -2646,7 +2646,7 @@ class TabFrame(wx.PyWindow):
         else:
 
             tab_height = 0
-            self._tabs.SetDimensions(self._rect.x, self._rect.y, self._rect.width, tab_height)
+            self._tabs.SetSize(self._rect.x, self._rect.y, self._rect.width, tab_height)
             self._tabs.SetTabRect(wx.Rect(0, 0, self._rect.width, tab_height))
 
         pages = self._tabs.GetPages()
@@ -2661,10 +2661,10 @@ class TabFrame(wx.PyWindow):
                 height = 0
 
             if self._tabs.GetAGWFlags() & AUI_NB_BOTTOM:
-                page.window.SetDimensions(self._rect.x, self._rect.y, self._rect.width, height)
+                page.window.SetSize(self._rect.x, self._rect.y, self._rect.width, height)
 
             else:
-                page.window.SetDimensions(self._rect.x, self._rect.y + tab_height,
+                page.window.SetSize(self._rect.x, self._rect.y + tab_height,
                                           self._rect.width, height)
 
             # TODO: elif (GetAGWFlags() & AUI_NB_LEFT)
@@ -2684,7 +2684,7 @@ class TabFrame(wx.PyWindow):
          nothing happens if nothing has been invalidated (i.e. marked as requiring a redraw).
          Use `Refresh` first if you want to immediately redraw the window unconditionally.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         # does nothing
@@ -2694,7 +2694,7 @@ class TabFrame(wx.PyWindow):
 # ----------------------------------------------------------------------
 # -- AuiNotebook class implementation --
 
-class AuiNotebook(wx.PyPanel):
+class AuiNotebook(wx.Panel):
     """
     AuiNotebook is a notebook control which implements many features common in applications with dockable panes.
     Specifically, AuiNotebook implements functionality which allows the user to rearrange tab
@@ -2718,7 +2718,7 @@ class AuiNotebook(wx.PyPanel):
          chosen by either the windowing system or wxPython, depending on platform;
         :param Size `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param integer `style`: the underlying :class:`PyPanel` window style;
+        :param integer `style`: the underlying :class:`Panel` window style;
         :param integer `agwStyle`: the AGW-specific window style. This can be a combination of the following bits:
 
          ==================================== ==================================
@@ -2768,7 +2768,7 @@ class AuiNotebook(wx.PyPanel):
         self._tabBounds = (-1, -1)
         self._click_tab = None
 
-        wx.PyPanel.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL, name=name)
+        wx.Panel.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL, name=name)
         self._mgr = framemanager.AuiManager()
         self._tabs = AuiTabContainer(self)
 
@@ -2799,7 +2799,7 @@ class AuiNotebook(wx.PyPanel):
         """
         
         self._mgr.UnInit()
-        return wx.PyPanel.Destroy(self)
+        return wx.Panel.Destroy(self)
         
 
     def __getitem__(self, index):
@@ -4256,7 +4256,7 @@ class AuiNotebook(wx.PyPanel):
 
         # create a new tab frame
         new_tabs = TabFrame(self)
-        new_tabs._rect = wx.RectPS(wx.Point(0, 0), split_size)
+        new_tabs._rect = wx.Rect(wx.Point(0, 0), split_size)
         new_tabs.SetTabCtrlHeight(self._tab_ctrl_height)
         self._tab_id_counter += 1
         new_tabs._tabs = AuiTabCtrl(self, self._tab_id_counter)
@@ -4633,7 +4633,7 @@ class AuiNotebook(wx.PyPanel):
             if not tab_ctrl:
                 if self._agwFlags & AUI_NB_TAB_FLOAT:
                     if self.IsMouseWellOutsideWindow():
-                        hintRect = wx.RectPS(screen_pt, (400, 300))
+                        hintRect = wx.Rect(screen_pt, (400, 300))
                         # Use CallAfter so we overwrite the hint that might be
                         # shown by our superclass:
                         wx.CallAfter(self._mgr.ShowHint, hintRect)
@@ -4653,7 +4653,7 @@ class AuiNotebook(wx.PyPanel):
                     if nb != self:
 
                         hint_rect = tab_ctrl.GetClientRect()
-                        hint_rect.x, hint_rect.y = tab_ctrl.ClientToScreenXY(hint_rect.x, hint_rect.y)
+                        hint_rect.x, hint_rect.y = tab_ctrl.ClientToScreen((hint_rect.x, hint_rect.y))
                         self._mgr.ShowHint(hint_rect)
                         return
 
@@ -4666,7 +4666,7 @@ class AuiNotebook(wx.PyPanel):
 
         if self._agwFlags & AUI_NB_TAB_FLOAT:
             if self.IsMouseWellOutsideWindow():
-                hintRect = wx.RectPS(screen_pt, (400, 300))
+                hintRect = wx.Rect(screen_pt, (400, 300))
                 # Use CallAfter so we overwrite the hint that might be
                 # shown by our superclass:
                 wx.CallAfter(self._mgr.ShowHint, hintRect)
@@ -4683,7 +4683,7 @@ class AuiNotebook(wx.PyPanel):
         if dest_tabs:
 
             hint_rect = dest_tabs.GetRect()
-            hint_rect.x, hint_rect.y = self.ClientToScreenXY(hint_rect.x, hint_rect.y)
+            hint_rect.x, hint_rect.y = self.ClientToScreen((hint_rect.x, hint_rect.y))
             self._mgr.ShowHint(hint_rect)
 
         else:
@@ -4697,7 +4697,7 @@ class AuiNotebook(wx.PyPanel):
                 tab_frame = self.GetTabFrameFromWindow(hit_wnd)
                 if tab_frame:
                     hint_rect = wx.Rect(*tab_frame._rect)
-                    hint_rect.x, hint_rect.y = self.ClientToScreenXY(hint_rect.x, hint_rect.y)
+                    hint_rect.x, hint_rect.y = self.ClientToScreen((hint_rect.x, hint_rect.y))
                     rect.Intersect(hint_rect)
                     self._mgr.ShowHint(rect)
                 else:
@@ -4872,7 +4872,7 @@ class AuiNotebook(wx.PyPanel):
 
                 # If there is no tabframe at all, create one
                 new_tabs = TabFrame(self)
-                new_tabs._rect = wx.RectPS(wx.Point(0, 0), self.CalculateNewSplitSize())
+                new_tabs._rect = wx.Rect(wx.Point(0, 0), self.CalculateNewSplitSize())
                 new_tabs.SetTabCtrlHeight(self._tab_ctrl_height)
                 self._tab_id_counter += 1
                 new_tabs._tabs = AuiTabCtrl(self, self._tab_id_counter)
@@ -5543,10 +5543,10 @@ class AuiNotebook(wx.PyPanel):
 
         :param Font `font`: the new font to use to draw tab labels in their normal, un-selected state.
 
-        :note: Overridden from :class:`PyPanel`.
+        :note: Overridden from :class:`Panel`.
         """
 
-        wx.PyPanel.SetFont(self, font)
+        wx.Panel.SetFont(self, font)
 
         selectedFont = wx.Font(font.GetPointSize(), font.GetFamily(),
                                font.GetStyle(), wx.BOLD, font.GetUnderlined(),
@@ -5729,7 +5729,7 @@ class AuiNotebook(wx.PyPanel):
         already override it to return ``True`` and user-defined classes with similar behaviour
         should do it as well to allow the library to handle such windows appropriately.
 
-        :note: Overridden from :class:`PyPanel`.
+        :note: Overridden from :class:`Panel`.
         """
 
         return True

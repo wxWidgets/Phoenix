@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 18 Dec 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -45,7 +45,7 @@ Some features:
 - It is a generic control;
 - Currently there are 6 different styles - VC8, VC 71, Standard, Fancy, Firefox 2 and Ribbon;
 - Mouse middle click can be used to close tabs;
-- A function to add right click menu for tabs (simple as :meth:~FlatNotebook.SetRightClickMenu`);
+- A function to add right click menu for tabs (simple as :meth:`~FlatNotebook.SetRightClickMenu`);
 - All styles has bottom style as well (they can be drawn in the bottom of screen);
 - An option to hide 'X' button or navigation buttons (separately);
 - Gradient colouring of the selected tabs and border;
@@ -175,12 +175,10 @@ License And Version
 
 :class:`FlatNotebook` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 3.2
 """
-
-__docformat__ = "epytext"
 
 
 #----------------------------------------------------------------------
@@ -805,10 +803,8 @@ def FormatColour(colour):
      in the first place.
     """
 
-    if isinstance(colour, (list, tuple)):
-        colour = wx.Colour(*colour)
-    elif isinstance(colour, basestring):
-        colour = wx.NamedColour(colour)
+    if colour is not None:
+        colour = wx.Colour(colour)
 
     return colour
 
@@ -932,15 +928,15 @@ def DrawButton(dc, rect, focus, upperTabs):
         rightPt = wx.Point(rect.x + rect.width - 2, rect.y + (rect.height / 2))
 
     # Define the top region
-    top = wx.RectPP(rect.GetTopLeft(), rightPt)
-    bottom = wx.RectPP(leftPt, rect.GetBottomRight())
+    top = wx.Rect(rect.GetTopLeft(), rightPt)
+    bottom = wx.Rect(leftPt, rect.GetBottomRight())
 
     topStartColour = wx.WHITE
 
     if not focus:
-        topStartColour = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 50)
+        topStartColour = LightColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE), 50)
 
-    topEndColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+    topEndColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
     bottomStartColour = topEndColour
     bottomEndColour = topEndColour
 
@@ -1071,7 +1067,7 @@ class FNBDropTarget(wx.DropTarget):
         wx.DropTarget.__init__(self)
 
         self._parent = parent
-        self._dataobject = wx.CustomDataObject(wx.CustomDataFormat("FlatNotebook"))
+        self._dataobject = wx.CustomDataObject(wx.DataFormat(u'FlatNotebook'))
         self.SetDataObject(self._dataobject)
 
 
@@ -1260,7 +1256,7 @@ class PageInfo(object):
         :param `points`: a Python list of :class:`Point`
         """
 
-        self._region = wx.RegionFromPoints(points)
+        self._region = wx.Region(points)
 
 
     def GetRegion(self):
@@ -1495,8 +1491,8 @@ class TabNavigatorWindow(wx.Dialog):
         self._listBox = wx.ListBox(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(200, 150), [], wx.LB_SINGLE | wx.NO_BORDER)
 
         mem_dc = wx.MemoryDC()
-        mem_dc.SelectObject(wx.EmptyBitmap(1,1))
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        mem_dc.SelectObject(wx.Bitmap(1,1))
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.BOLD)
         mem_dc.SetFont(font)
 
@@ -1523,8 +1519,8 @@ class TabNavigatorWindow(wx.Dialog):
         self._panel.Bind(wx.EVT_PAINT, self.OnPanelPaint)
         self._panel.Bind(wx.EVT_ERASE_BACKGROUND, self.OnPanelEraseBg)
 
-        self.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE))
-        self._listBox.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE))
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
+        self._listBox.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self.PopulateListControl(parent)
 
         self.GetSizer().Fit(self)
@@ -1653,12 +1649,12 @@ class TabNavigatorWindow(wx.Dialog):
         dc = wx.PaintDC(self._panel)
         rect = self._panel.GetClientRect()
 
-        bmp = wx.EmptyBitmap(rect.width, rect.height)
+        bmp = wx.Bitmap(rect.width, rect.height)
 
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(bmp)
 
-        endColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)
+        endColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)
         startColour = LightColour(endColour, 50)
         PaintStraightGradientBox(mem_dc, rect, startColour, endColour)
 
@@ -1670,7 +1666,7 @@ class TabNavigatorWindow(wx.Dialog):
         mem_dc.DrawBitmap(self._bmp, bmpPt.x, bmpPt.y, True)
 
         # get the text position, and draw it
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.BOLD)
         mem_dc.SetFont(font)
         fontHeight = mem_dc.GetCharHeight()
@@ -1863,15 +1859,15 @@ class FNBRenderer(object):
 
         # Set the bitmap according to the button status
         if pc._nLeftButtonStatus == FNB_BTN_HOVER:
-            arrowBmp = wx.BitmapFromXPMData(left_arrow_hilite_xpm)
+            arrowBmp = wx.Bitmap(left_arrow_hilite_xpm)
         elif pc._nLeftButtonStatus == FNB_BTN_PRESSED:
-            arrowBmp = wx.BitmapFromXPMData(left_arrow_pressed_xpm)
+            arrowBmp = wx.Bitmap(left_arrow_pressed_xpm)
         else:
-            arrowBmp = wx.BitmapFromXPMData(left_arrow_xpm)
+            arrowBmp = wx.Bitmap(left_arrow_xpm)
 
         if pc._nFrom == 0:
             # Handle disabled arrow
-            arrowBmp = wx.BitmapFromXPMData(left_arrow_disabled_xpm)
+            arrowBmp = wx.Bitmap(left_arrow_disabled_xpm)
 
         arrowBmp.SetMask(wx.Mask(arrowBmp, MASK_COLOUR))
 
@@ -1907,16 +1903,16 @@ class FNBRenderer(object):
             
         # Set the bitmap according to the button status
         if pc._nRightButtonStatus == FNB_BTN_HOVER:
-            arrowBmp = wx.BitmapFromXPMData(right_arrow_hilite_xpm)
+            arrowBmp = wx.Bitmap(right_arrow_hilite_xpm)
         elif pc._nRightButtonStatus == FNB_BTN_PRESSED:
-            arrowBmp = wx.BitmapFromXPMData(right_arrow_pressed_xpm)
+            arrowBmp = wx.Bitmap(right_arrow_pressed_xpm)
         else:
-            arrowBmp = wx.BitmapFromXPMData(right_arrow_xpm)
+            arrowBmp = wx.Bitmap(right_arrow_xpm)
 
         # Check if the right most tab is visible, if it is
         # don't rotate right anymore
         if pc._pagesInfoVec[-1].GetPosition() != wx.Point(-1, -1):
-            arrowBmp = wx.BitmapFromXPMData(right_arrow_disabled_xpm)
+            arrowBmp = wx.Bitmap(right_arrow_disabled_xpm)
 
         arrowBmp.SetMask(wx.Mask(arrowBmp, MASK_COLOUR))
 
@@ -1948,11 +1944,11 @@ class FNBRenderer(object):
             return
 
         if pc._nArrowDownButtonStatus == FNB_BTN_HOVER:
-            downBmp = wx.BitmapFromXPMData(down_arrow_hilite_xpm)
+            downBmp = wx.Bitmap(down_arrow_hilite_xpm)
         elif pc._nArrowDownButtonStatus == FNB_BTN_PRESSED:
-            downBmp = wx.BitmapFromXPMData(down_arrow_pressed_xpm)
+            downBmp = wx.Bitmap(down_arrow_pressed_xpm)
         else:
-            downBmp = wx.BitmapFromXPMData(down_arrow_xpm)
+            downBmp = wx.Bitmap(down_arrow_xpm)
 
         downBmp.SetMask(wx.Mask(downBmp, MASK_COLOUR))
 
@@ -1985,11 +1981,11 @@ class FNBRenderer(object):
 
         # Set the bitmap according to the button status
         if pc._nXButtonStatus == FNB_BTN_HOVER:
-            xbmp = wx.BitmapFromXPMData(x_button_hilite_xpm)
+            xbmp = wx.Bitmap(x_button_hilite_xpm)
         elif pc._nXButtonStatus == FNB_BTN_PRESSED:
-            xbmp = wx.BitmapFromXPMData(x_button_pressed_xpm)
+            xbmp = wx.Bitmap(x_button_pressed_xpm)
         else:
-            xbmp = wx.BitmapFromXPMData(x_button_xpm)
+            xbmp = wx.Bitmap(x_button_xpm)
 
         xbmp.SetMask(wx.Mask(xbmp, MASK_COLOUR))
 
@@ -2023,11 +2019,11 @@ class FNBRenderer(object):
         # Set the bitmap according to the button status
 
         if btnStatus == FNB_BTN_HOVER:
-            xBmp = wx.BitmapFromXPMData(x_button_hilite_xpm)
+            xBmp = wx.Bitmap(x_button_hilite_xpm)
         elif btnStatus == FNB_BTN_PRESSED:
-            xBmp = wx.BitmapFromXPMData(x_button_pressed_xpm)
+            xBmp = wx.Bitmap(x_button_pressed_xpm)
         else:
-            xBmp = wx.BitmapFromXPMData(x_button_xpm)
+            xBmp = wx.Bitmap(x_button_xpm)
 
         # Set the masking
         xBmp.SetMask(wx.Mask(xBmp, MASK_COLOUR))
@@ -2057,7 +2053,7 @@ class FNBRenderer(object):
 
         if pc.HasAGWFlag(FNB_FF2):
             if not pc.HasAGWFlag(FNB_BOTTOM):
-                fillColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+                fillColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
             else:
                 fillColour = wx.WHITE
 
@@ -2068,7 +2064,7 @@ class FNBRenderer(object):
                 dc.DrawLine(1, 0, clntRect.width-1, 0)
                 dc.DrawLine(1, 1, clntRect.width-1, 1)
 
-                dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)))
+                dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)))
                 dc.DrawLine(1, 2, clntRect.width-1, 2)
 
                 dc.SetPen(wx.Pen(fillColour))
@@ -2079,10 +2075,10 @@ class FNBRenderer(object):
                 dc.DrawLine(1, clntRect.height, clntRect.width-1, clntRect.height)
                 dc.DrawLine(1, clntRect.height-1, clntRect.width-1, clntRect.height-1)
 
-                dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)))
+                dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)))
                 dc.DrawLine(1, clntRect.height-2, clntRect.width-1, clntRect.height-2)
 
-                dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
+                dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
                 dc.DrawLine(selTabX1 + 2, clntRect.height-2, selTabX2-1, clntRect.height-2)
 
         else:
@@ -2099,11 +2095,11 @@ class FNBRenderer(object):
 
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.SetPen(wx.Pen(pc.GetSingleLineBorderColour()))
-            dc.DrawRectangleRect(clientRect2)
-            dc.DrawRectangleRect(clientRect3)
+            dc.DrawRectangle(clientRect2)
+            dc.DrawRectangle(clientRect3)
 
-            dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)))
-            dc.DrawRectangleRect(clientRect)
+            dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)))
+            dc.DrawRectangle(clientRect)
 
             if not pc.HasAGWFlag(FNB_TABS_BORDER_SIMPLE):
 
@@ -2132,9 +2128,9 @@ class FNBRenderer(object):
 
         pc = pageContainer
         dc = wx.MemoryDC()
-        dc.SelectObject(wx.EmptyBitmap(1,1))
+        dc.SelectObject(wx.Bitmap(1,1))
 
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         if pc.IsDefaultTabs():
@@ -2191,12 +2187,12 @@ class FNBRenderer(object):
 
         pc = pageContainer
         dc = wx.MemoryDC()
-        dc.SelectObject(wx.EmptyBitmap(1,1))
+        dc.SelectObject(wx.Bitmap(1,1))
 
         # For GTK it seems that we must do this steps in order
         # for the tabs will get the proper height on initialization
         # on MSW, preforming these steps yields wierd results
-        normalFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        normalFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont = normalFont
 
         if "__WXGTK__" in wx.PlatformInfo:
@@ -2240,14 +2236,14 @@ class FNBRenderer(object):
 
         # Set the maximum client size
         pc.SetSizeHints(self.GetButtonsAreaLength(pc), tabHeight)
-        borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
+        borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
 
         if agwStyle & FNB_VC71:
             backBrush = wx.Brush(wx.Colour(247, 243, 233))
         else:
             backBrush = wx.Brush(pc._tabAreaColour)
 
-        noselBrush = wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE))
+        noselBrush = wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE))
         selBrush = wx.Brush(pc._activeTabColour)
 
         size = pc.GetSize()
@@ -2286,7 +2282,7 @@ class FNBRenderer(object):
             greyLineYVal  = (pc.HasAGWFlag(FNB_BOTTOM) and [0] or [size.y - 2])[0]
             whiteLineYVal = (pc.HasAGWFlag(FNB_BOTTOM) and [3] or [size.y - 3])[0]
 
-            pen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE))
+            pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
             dc.SetPen(pen)
 
             # Draw thik grey line between the windows area and
@@ -2302,8 +2298,8 @@ class FNBRenderer(object):
             dc.SetPen(borderPen)
 
         # Draw labels
-        normalFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        normalFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
         dc.SetFont(boldFont)
 
@@ -2404,7 +2400,7 @@ class FNBRenderer(object):
             vc8ShapeLen = self.CalcTabHeight(pageContainer) - VERTICAL_BORDER_PADDING - 2
             tabPos.x += vc8ShapeLen
 
-        rect = wx.RectPS(tabPos, page.GetSize())
+        rect = wx.Rect(tabPos, page.GetSize())
         rect = wx.Rect(rect.x+2, rect.y+2, rect.width-4, rect.height-8)
 
         if wx.Platform == '__WXMAC__':
@@ -2412,7 +2408,7 @@ class FNBRenderer(object):
 
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetPen(self._focusPen)
-        dc.DrawRoundedRectangleRect(rect, 2)
+        dc.DrawRoundedRectangle(rect, 2)
 
 
     def DrawDragHint(self, pc, tabIdx):
@@ -2562,7 +2558,7 @@ class FNBRendererDefault(FNBRenderer):
         """
 
         # Default style
-        borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
+        borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
         pc = pageContainer
 
         tabPoints = [wx.Point() for ii in xrange(7)]
@@ -2696,7 +2692,7 @@ class FNBRendererFirefox2(FNBRenderer):
         :param `btnStatus`: the status of the 'X' button inside this tab.
         """
 
-        borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
+        borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
         pc = pageContainer
 
         tabPoints = [wx.Point() for indx in xrange(7)]
@@ -2724,7 +2720,7 @@ class FNBRendererFirefox2(FNBRenderer):
         #------------------------------------
         # Paint the tab with gradient
         #------------------------------------
-        rr = wx.RectPP(tabPoints[2], tabPoints[5])
+        rr = wx.Rect(tabPoints[2], tabPoints[5])
         DrawButton(dc, rr, pc.GetSelection() == tabIdx , not pc.HasAGWFlag(FNB_BOTTOM))
 
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -2811,11 +2807,11 @@ class FNBRendererVC71(FNBRenderer):
         """
 
         # Visual studio 7.1 style
-        borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
+        borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
         pc = pageContainer
 
-        dc.SetPen((tabIdx == pc.GetSelection() and [wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE))] or [borderPen])[0])
-        dc.SetBrush((tabIdx == pc.GetSelection() and [wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE))] or [wx.Brush(wx.Colour(247, 243, 233))])[0])
+        dc.SetPen((tabIdx == pc.GetSelection() and [wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))] or [borderPen])[0])
+        dc.SetBrush((tabIdx == pc.GetSelection() and [wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))] or [wx.Brush(wx.Colour(247, 243, 233))])[0])
 
         if tabIdx == pc.GetSelection():
 
@@ -2937,10 +2933,10 @@ class FNBRendererFancy(FNBRenderer):
 
         # Fancy tabs - like with VC71 but with the following differences:
         # - The Selected tab is coloured with gradient colour
-        borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
+        borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
         pc = pageContainer
 
-        pen = (tabIdx == pc.GetSelection() and [wx.Pen(pc._pParent.GetBorderColour())] or [wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE))])[0]
+        pen = (tabIdx == pc.GetSelection() and [wx.Pen(pc._pParent.GetBorderColour())] or [wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))])[0]
 
         if tabIdx == pc.GetSelection():
 
@@ -2955,7 +2951,7 @@ class FNBRendererFancy(FNBRenderer):
             PaintStraightGradientBox(dc, rect, col1, col2)
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.SetPen(pen)
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
 
             # erase the bottom/top line of the rectangle
             dc.SetPen(wx.Pen(pc._pParent.GetGradientColourFrom()))
@@ -3060,8 +3056,8 @@ class FNBRendererVC8(FNBRenderer):
         tabHeight = self.CalcTabHeight(pageContainer)
 
         # Set the font for measuring the tab height
-        normalFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        normalFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         # Calculate the number of rows required for drawing the tabs
@@ -3069,11 +3065,11 @@ class FNBRendererVC8(FNBRenderer):
 
         # Set the maximum client size
         pc.SetSizeHints(self.GetButtonsAreaLength(pc), tabHeight)
-        borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
+        borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
 
         # Create brushes
         backBrush = wx.Brush(pc._tabAreaColour)
-        noselBrush = wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE))
+        noselBrush = wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE))
         selBrush = wx.Brush(pc._activeTabColour)
         size = pc.GetSize()
 
@@ -3251,7 +3247,7 @@ class FNBRendererVC8(FNBRenderer):
         # Draw the polygon
         br = dc.GetBrush()
         dc.SetBrush(wx.Brush((tabIdx == pc.GetSelection() and [pc._activeTabColour] or [pc._colourTo])[0]))
-        dc.SetPen(wx.Pen((tabIdx == pc.GetSelection() and [wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)] or [pc._colourBorder])[0]))
+        dc.SetPen(wx.Pen((tabIdx == pc.GetSelection() and [wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)] or [pc._colourBorder])[0]))
         dc.DrawPolygon(tabPoints)
 
         # Restore the brush
@@ -3272,7 +3268,7 @@ class FNBRendererVC8(FNBRenderer):
         # but without the bottom (upper line incase of wxBOTTOM)
         if tabIdx == pc.GetSelection():
 
-            borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
+            borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
             dc.SetPen(borderPen)
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.DrawPolygon(tabPoints)
@@ -3286,7 +3282,7 @@ class FNBRendererVC8(FNBRenderer):
         # Draw a thin line to the right of the non-selected tab
         if tabIdx != pc.GetSelection():
 
-            dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
+            dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
             dc.DrawLine(tabPoints[4].x-1, tabPoints[4].y, tabPoints[5].x-1, tabPoints[5].y)
             dc.DrawLine(tabPoints[5].x-1, tabPoints[5].y, tabPoints[6].x-1, tabPoints[6].y)
 
@@ -3310,7 +3306,7 @@ class FNBRendererVC8(FNBRenderer):
                                      posx + imageXOffset, imageYCoord,
                                      wx.IMAGELIST_DRAW_TRANSPARENT, True)
 
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
 
         # if selected tab, draw text in bold
         if tabIdx == pc.GetSelection():
@@ -3356,8 +3352,8 @@ class FNBRendererVC8(FNBRenderer):
 
         if self._first:
             self._first = False
-            pc._colourTo   = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 0)
-            pc._colourFrom = LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 60)
+            pc._colourTo   = LightColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE), 0)
+            pc._colourFrom = LightColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE), 60)
 
         col2 = pc._pParent.GetGradientColourTo()
         col1 = pc._pParent.GetGradientColourFrom()
@@ -3409,7 +3405,7 @@ class FNBRendererVC8(FNBRenderer):
                 if y < tabPoints[0].y - size:
                     break
 
-            currCol = wx.Colour(col1.Red() + rf, col1.Green() + gf, col1.Blue() + bf)
+            currCol = wx.Colour(col1.Red() + int(rf), col1.Green() + int(gf), col1.Blue() + int(bf))
 
             dc.SetPen((bSelectedTab and [wx.Pen(pc._activeTabColour)] or [wx.Pen(currCol)])[0])
             startX = self.GetStartX(tabPoints, y, pc.GetParent().GetAGWWindowStyleFlag())
@@ -3417,7 +3413,7 @@ class FNBRendererVC8(FNBRenderer):
             dc.DrawLine(startX, y, endX, y)
 
             # Draw the border using the 'edge' point
-            dc.SetPen(wx.Pen((bSelectedTab and [wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)] or [pc._colourBorder])[0]))
+            dc.SetPen(wx.Pen((bSelectedTab and [wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)] or [pc._colourBorder])[0]))
 
             dc.DrawPoint(startX, y)
             dc.DrawPoint(endX, y)
@@ -3627,9 +3623,9 @@ class FNBRendererRibbonTabs(FNBRenderer):
 
         pc = pageContainer
         dc = wx.MemoryDC()
-        dc.SelectObject(wx.EmptyBitmap(1,1))
+        dc.SelectObject(wx.Bitmap(1,1))
 
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
 
         if pc.IsDefaultTabs():
             shapePoints = int(tabHeight*math.tan(float(pc._pagesInfoVec[tabIdx].GetTabAngle())/180.0*math.pi))
@@ -3784,7 +3780,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         dc.SetTextBackground(pc.GetBackgroundColour())
         dc.SetTextForeground(pc._activeTextColour)
 
-        borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
+        borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW))
         backBrush = wx.Brush(pc._tabAreaColour)
 
         # If border style is set, set the pen to be border pen
@@ -3797,7 +3793,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         dc.DrawRectangle(0, 0, size.x, size.y)
 
         # Draw labels
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         dc.SetFont(font)
 
         posx = pc._pParent.GetPadding()
@@ -3874,7 +3870,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
 # Class FlatNotebook
 # ---------------------------------------------------------------------------- #
 
-class FlatNotebook(wx.PyPanel):
+class FlatNotebook(wx.Panel):
     """
     The :class:`FlatNotebook` is a full implementation of the :class:`Notebook`, and designed to be
     a drop-in replacement for :class:`Notebook`. The API functions are similar so one can
@@ -3892,7 +3888,7 @@ class FlatNotebook(wx.PyPanel):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`PyPanel` window style;
+        :param `style`: the underlying :class:`Panel` window style;
         :param `agwStyle`: the AGW-specific window style. This can be a combination of the
          following bits:
 
@@ -3939,7 +3935,7 @@ class FlatNotebook(wx.PyPanel):
         self._orientation = None
         self._customPanel = None
 
-        wx.PyPanel.__init__(self, parent, id, pos, size, style)
+        wx.Panel.__init__(self, parent, id, pos, size, style)
         attr = self.GetDefaultAttributes()
         self.SetOwnForegroundColour(attr.colFg)
         self.SetOwnBackgroundColour(attr.colBg)
@@ -3954,13 +3950,13 @@ class FlatNotebook(wx.PyPanel):
     def Init(self):
         """ Initializes all the class attributes. """
 
-        self._pages._colourBorder = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)
+        self._pages._colourBorder = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)
 
         self._mainSizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(self._mainSizer)
 
         # The child panels will inherit this bg colour, so leave it at the default value
-        #self.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_APPWORKSPACE))
+        #self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_APPWORKSPACE))
 
         # Set default page height
         dc = wx.ClientDC(self)
@@ -3969,7 +3965,7 @@ class FlatNotebook(wx.PyPanel):
             # For GTK it seems that we must do this steps in order
             # for the tabs will get the proper height on initialization
             # on MSW, preforming these steps yields wierd results
-            boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
             boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
             dc.SetFont(boldFont)
 
@@ -3996,7 +3992,7 @@ class FlatNotebook(wx.PyPanel):
         minimal size which doesn't truncate the control, for a panel - the same
         size as it would have after a call to `Fit()`.
 
-        :note: Overridden from :class:`PyPanel`.
+        :note: Overridden from :class:`Panel`.
         """
 
         if not self._windows:
@@ -4575,7 +4571,7 @@ class FlatNotebook(wx.PyPanel):
             if bmp.GetSize() != (16, 16):
                 img = bmp.ConvertToImage()
                 img.Rescale(16, 16, wx.IMAGE_QUALITY_HIGH)
-                bmp = wx.BitmapFromImage(img)
+                bmp = wx.Bitmap(img)
             self._naviIcon = bmp
         else:
             raise TypeError("SetNavigatorIcon requires a valid bitmap")
@@ -5073,7 +5069,7 @@ class FlatNotebook(wx.PyPanel):
 # Acts as a container for the pages you add to FlatNotebook
 # ---------------------------------------------------------------------------- #
 
-class PageContainer(wx.PyPanel):
+class PageContainer(wx.Panel):
     """
     This class acts as a container for the pages you add to :class:`FlatNotebook`.
     """
@@ -5115,29 +5111,29 @@ class PageContainer(wx.PyPanel):
 
         self._pagesInfoVec = []
 
-        self._colourTo = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        self._colourTo = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
         self._colourFrom = wx.WHITE
         self._activeTabColour = wx.WHITE
-        self._activeTextColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT)
-        self._nonActiveTextColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNTEXT)
-        self._tabAreaColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE)
+        self._activeTextColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT)
+        self._nonActiveTextColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT)
+        self._tabAreaColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE)
 
         self._nFrom = 0
         self._isdragging = False
 
         # Set default page height, this is done according to the system font
         memDc = wx.MemoryDC()
-        memDc.SelectObject(wx.EmptyBitmap(1,1))
+        memDc.SelectObject(wx.Bitmap(1,1))
 
         if "__WXGTK__" in wx.PlatformInfo:
-            boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
             boldFont.SetWeight(wx.BOLD)
             memDc.SetFont(boldFont)
 
         height = memDc.GetCharHeight()
         tabHeight = height + FNB_HEIGHT_SPACER # We use 10 pixels as padding
 
-        wx.PyPanel.__init__(self, parent, id, pos, wx.Size(size.x, tabHeight),
+        wx.Panel.__init__(self, parent, id, pos, wx.Size(size.x, tabHeight),
                             style|wx.NO_BORDER|wx.NO_FULL_REPAINT_ON_RESIZE|wx.WANTS_CHARS)
 
         attr = self.GetDefaultAttributes()
@@ -5822,12 +5818,12 @@ class PageContainer(wx.PyPanel):
 
                 if not self.GetEnabled(tabIdx):
                     # Set the cursor to be 'No-entry'
-                    wx.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+                    self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
                     self._setCursor = True
                 else:
                     self._nHoveringOverTabIndex = tabIdx
                     if self._setCursor:
-                        wx.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                        self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
                         self._setCursor = False
 
                 # Support for drag and drop
@@ -5836,7 +5832,7 @@ class PageContainer(wx.PyPanel):
                     self._isdragging = True
                     draginfo = FNBDragInfo(self, tabIdx)
                     drginfo = cPickle.dumps(draginfo)
-                    dataobject = wx.CustomDataObject(wx.CustomDataFormat("FlatNotebook"))
+                    dataobject = wx.CustomDataObject(wx.DataFormat(u'FlatNotebook'))
                     dataobject.SetData(drginfo)
                     dragSource = FNBDropSource(self)
                     dragSource.SetData(dataobject)
@@ -6012,7 +6008,7 @@ class PageContainer(wx.PyPanel):
         if pWindow:
             pToolTip = pWindow.GetToolTip()
             if pToolTip and pToolTip.GetWindow() == pWindow:
-                self.SetToolTipString(pToolTip.GetTip())
+                self.SetToolTip(pToolTip.GetTip())
 
 
     def SetPageImage(self, page, image):
@@ -6600,7 +6596,7 @@ class FlatNotebookCompatible(FlatNotebook):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`PyPanel` window style;
+        :param `style`: the underlying :class:`Panel` window style;
         :param `agwStyle`: the AGW-specific window style. This can be a combination of the
          following bits:
 

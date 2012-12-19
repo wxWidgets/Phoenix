@@ -65,9 +65,9 @@ def RibbonDrawParallelGradientLines(dc, nlines, line_origins, stepx, stepy, nums
 
 def RibbonLoadPixmap(bits, fore):
 
-    xpm = wx.BitmapFromXPMData(bits).ConvertToImage()
+    xpm = wx.Bitmap(bits).ConvertToImage()
     xpm.Replace(255, 0, 255, fore.Red(), fore.Green(), fore.Blue())
-    return wx.BitmapFromImage(xpm)
+    return wx.Bitmap(xpm)
 
 
 class RibbonHSLColour(object):

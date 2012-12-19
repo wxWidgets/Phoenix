@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 18 Dec 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -52,7 +52,7 @@ Appearance
   as it is the case of :class:`ImageList`. Simply use :class:`PyImageList` instead of :class:`ImageList`
   to add your images.
 * Font, colour, background, custom renderers and formatting for items and subitems;
-* Ability to add persistent data to an item using :meth:~UltimateListCtrl.SetItemPyData` and :meth:~UltimateListCtrl.GetItemPyData`:
+* Ability to add persistent data to an item using :meth:`~UltimateListCtrl.SetItemPyData` and :meth:`~UltimateListCtrl.GetItemPyData`:
   the data can be any Python object and not necessarily an integer as in :class:`ListCtrl`;
 * CheckBox-type items and subitems;
 * RadioButton-type items and subitems;
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.8
 
@@ -618,7 +618,7 @@ def MakeDisabledBitmap(original):
     """
 
     img = original.ConvertToImage()
-    return wx.BitmapFromImage(img.ConvertToGreyscale())
+    return wx.Bitmap(img.ConvertToGreyscale())
 
 # ----------------------------------------------------------------------------
 
@@ -648,14 +648,14 @@ D\x90\x1d\xef19_\xf5\xde5y\xb6+\xa7\xdeZ\xfbA\x9bu\x9f`\xffD\xafYn\xf6\x9eW\
 def GetdragcursorBitmap():
     """ Returns the drag and drop cursor image as a :class:`Bitmap`. """
 
-    return wx.BitmapFromImage(GetdragcursorImage())
+    return wx.Bitmap(GetdragcursorImage())
 
 
 def GetdragcursorImage():
     """ Returns the drag and drop cursor image as a :class:`Image`. """
 
     stream = cStringIO.StringIO(GetdragcursorData())
-    return wx.ImageFromStream(stream)
+    return wx.Image(stream)
 
 
 #-----------------------------------------------------------------------------
@@ -770,7 +770,7 @@ class PyImageList(object):
          into smaller images, each matching the dimensions of the image list.
         """
 
-        return self.Add(wx.BitmapFromIcon(icon))
+        return self.Add(wx.Bitmap(icon))
 
 
     def AddWithColourMask(self, bitmap, maskColour):
@@ -791,7 +791,7 @@ class PyImageList(object):
         img = bitmap.ConvertToImage()
         img.SetMaskColour(maskColour.Red(), maskColour.Green(), maskColour.Blue())
 
-        return self.Add(wx.BitmapFromImage(img))
+        return self.Add(wx.Bitmap(img))
 
 
     def GetBitmap(self, index):
@@ -819,7 +819,7 @@ class PyImageList(object):
         if index >= len(self._images):
             return wx.NullIcon
 
-        return wx.IconFromBitmap(self._images[index])
+        return wx.Icon(self._images[index])
 
 
     def Replace(self, index, bitmap):
@@ -848,7 +848,7 @@ class PyImageList(object):
          :class:`Icon`.
         """
 
-        return self.Replace(index, wx.BitmapFromIcon(icon))
+        return self.Replace(index, wx.Bitmap(icon))
 
 
     def Remove(self, index):
@@ -1250,19 +1250,19 @@ class UltimateListItemAttr(object):
     def HasTextColour(self):
         """ Returns ``True`` if the currently set text colour is valid. """
 
-        return self._colText.Ok()
+        return self._colText.IsOk()
 
 
     def HasBackgroundColour(self):
         """ Returns ``True`` if the currently set background colour is valid. """
 
-        return self._colBack.Ok()
+        return self._colBack.IsOk()
 
 
     def HasFont(self):
         """ Returns ``True`` if the currently set font is valid. """
 
-        return self._font.Ok()
+        return self._font.IsOk()
 
 
     def HasFooterTextColour(self):
@@ -1271,7 +1271,7 @@ class UltimateListItemAttr(object):
         is valid.
         """
 
-        return self._footerColText.Ok()
+        return self._footerColText.IsOk()
 
 
     def HasFooterBackgroundColour(self):
@@ -1280,7 +1280,7 @@ class UltimateListItemAttr(object):
         is valid.
         """
 
-        return self._footerColBack.Ok()
+        return self._footerColBack.IsOk()
 
 
     def HasFooterFont(self):
@@ -1289,7 +1289,7 @@ class UltimateListItemAttr(object):
         is valid.
         """
 
-        return self._footerFont.Ok()
+        return self._footerFont.IsOk()
 
 
     # getters
@@ -4375,14 +4375,14 @@ class UltimateListLineData(object):
 
                         wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, self._gi._rectHighlight, flags)
                     else:
-                        dc.DrawRectangleRect(self._gi._rectHighlight)
+                        dc.DrawRectangle(self._gi._rectHighlight)
 
         else:
 
             if borderOnly:
                 dc.SetBrush(wx.WHITE_BRUSH)
                 dc.SetPen(wx.TRANSPARENT_PEN)
-                dc.DrawRectangleRect(self._gi._rectAll)
+                dc.DrawRectangle(self._gi._rectAll)
 
         if item.GetKind() in [1, 2]:
             rectCheck = self._gi._rectCheck
@@ -4397,7 +4397,7 @@ class UltimateListLineData(object):
         if item.HasText():
             rectLabel = self._gi._rectLabel
 
-            dc.SetClippingRect(rectLabel)
+            dc.SetClippingRegion(rectLabel)
             dc.DrawText(item.GetText(), rectLabel.x, rectLabel.y)
             dc.DestroyClippingRegion()
 
@@ -4405,8 +4405,8 @@ class UltimateListLineData(object):
             if line == self._owner._newHotCurrent and not drawn:
                 r = wx.Rect(*self._gi._rectAll)
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                dc.SetPen(wx.Pen(wx.NamedColour("orange")))
-                dc.DrawRoundedRectangleRect(r, 3)
+                dc.SetPen(wx.Pen(wx.Colour("orange")))
+                dc.DrawRoundedRectangle(r, 3)
 
         if borderOnly and drawn:
             dc.SetPen(wx.Pen(wx.Colour(0, 191, 255), 2))
@@ -4416,7 +4416,7 @@ class UltimateListLineData(object):
             r.y += 1
             r.width -= 1
             r.height -= 1
-            dc.DrawRoundedRectangleRect(r, 4)
+            dc.DrawRoundedRectangle(r, 4)
 
 
     def HideItemWindow(self, item):
@@ -4506,7 +4506,7 @@ class UltimateListLineData(object):
 
                         wx.RendererNative.Get().DrawItemSelectionRect(self._owner, dc, paintRect, flags)
                     else:
-                        dc.DrawRectangleRect(paintRect)
+                        dc.DrawRectangle(paintRect)
 
         else:
 
@@ -4514,7 +4514,7 @@ class UltimateListLineData(object):
 
                 dc.SetBrush(wx.WHITE_BRUSH)
                 dc.SetPen(wx.TRANSPARENT_PEN)
-                dc.DrawRectangleRect(paintRect)
+                dc.DrawRectangle(paintRect)
 
         x = rect.x + HEADER_OFFSET_X
         y = rect.y
@@ -4577,12 +4577,12 @@ class UltimateListLineData(object):
             if overflow:
                 itemRect = wx.Rect(xOld-2*HEADER_OFFSET_X, rect.y, rectHL.width-xSize-HEADER_OFFSET_X, rect.height)
 
-            dc.SetClippingRect(itemRect)
+            dc.SetClippingRegion(itemRect)
 
             if item.HasBackgroundColour():
                 dc.SetBrush(wx.Brush(item.GetBackgroundColour()))
                 dc.SetPen(wx.Pen(item.GetBackgroundColour()))
-                dc.DrawRectangleRect(itemRect)
+                dc.DrawRectangle(itemRect)
                 dc.SetBrush(oldBR)
                 dc.SetPen(oldPN)
 
@@ -4647,8 +4647,8 @@ class UltimateListLineData(object):
                 r.y += 1
                 r.height -= 1
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                dc.SetPen(wx.Pen(wx.NamedColour("orange")))
-                dc.DrawRoundedRectangleRect(r, 3)
+                dc.SetPen(wx.Pen(wx.Colour("orange")))
+                dc.DrawRoundedRectangle(r, 3)
                 dc.SetPen(oldPN)
 
         if borderOnly and drawn:
@@ -4657,7 +4657,7 @@ class UltimateListLineData(object):
             rect = wx.Rect(*paintRect)
             rect.y += 1
             rect.height -= 1
-            dc.DrawRoundedRectangleRect(rect, 3)
+            dc.DrawRoundedRectangle(rect, 3)
             dc.SetPen(oldPN)
 
 
@@ -4674,7 +4674,7 @@ class UltimateListLineData(object):
          ``False`` otherwise.
         """
         # determine if the string can fit inside the current width
-        w, h, dummy = dc.GetMultiLineTextExtent(text)
+        w, h, dummy = dc.GetFullMultiLineTextExtent(text)
         width = itemRect.width
 
         shortItems = self._owner._shortItems
@@ -4783,7 +4783,7 @@ class UltimateListLineData(object):
 
         dc.SetPen(oldpen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
         dc.SetBrush(oldbrush)
 
 
@@ -4831,7 +4831,7 @@ class UltimateListLineData(object):
 
         dc.SetPen(oldpen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
         dc.SetBrush(oldbrush)
 
 
@@ -4890,10 +4890,10 @@ class UltimateListLineData(object):
 
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetPen(wx.Pen(outer))
-        dc.DrawRoundedRectangleRect(bdrRect, 3)
+        dc.DrawRoundedRectangle(bdrRect, 3)
         bdrRect.Deflate(1, 1)
         dc.SetPen(wx.Pen(inner))
-        dc.DrawRoundedRectangleRect(bdrRect, 2)
+        dc.DrawRoundedRectangle(bdrRect, 2)
 
         dc.SetPen(oldpen)
         dc.SetBrush(oldbrush)
@@ -4928,7 +4928,7 @@ class UltimateListLineData(object):
 #  UltimateListHeaderWindow (internal)
 #-----------------------------------------------------------------------------
 
-class UltimateListHeaderWindow(wx.PyControl):
+class UltimateListHeaderWindow(wx.Control):
     """
     This class holds the header window for :class:`UltimateListCtrl`.
     """
@@ -4953,12 +4953,12 @@ class UltimateListHeaderWindow(wx.PyControl):
          position, ``False`` otherwise.
         """
 
-        wx.PyControl.__init__(self, win, id, pos, size, style|wx.NO_BORDER, validator, name)
+        wx.Control.__init__(self, win, id, pos, size, style|wx.NO_BORDER, validator, name)
 
         self._isFooter = isFooter
         self._owner = owner
         self._currentCursor = wx.NullCursor
-        self._resizeCursor = wx.StockCursor(wx.CURSOR_SIZEWE)
+        self._resizeCursor = wx.Cursor(wx.CURSOR_SIZEWE)
         self._isDragging = False
         self._headerHeight = None
         self._footerHeight = None
@@ -5111,7 +5111,7 @@ class UltimateListHeaderWindow(wx.PyControl):
             else:
                 dc.SetFont(self.GetFont())
 
-            wLabel, hLabel, dummy = dc.GetMultiLineTextExtent(item.GetText())
+            wLabel, hLabel, dummy = dc.GetFullMultiLineTextExtent(item.GetText())
             maxH = max(maxH, hLabel)
 
         return maxH
@@ -5231,7 +5231,7 @@ class UltimateListHeaderWindow(wx.PyControl):
 
             # for this we need the width of the text
             text = (isFooter and [item.GetFooterText()] or [item.GetText()])[0]
-            wLabel, hLabel, dummy = dc.GetMultiLineTextExtent(text)
+            wLabel, hLabel, dummy = dc.GetFullMultiLineTextExtent(text)
             wLabel += 2*EXTRA_WIDTH
 
             # and the width of the icon, if any
@@ -5289,9 +5289,9 @@ class UltimateListHeaderWindow(wx.PyControl):
                 # Why does the custom renderer need this adjustment??
                 header_rect.x = header_rect.x - 1
                 header_rect.y = header_rect.y - 1
-                self._headerCustomRenderer.DrawHeaderButton(dc, header_rect, wx.CONTROL_DIRTY)
+                self._headerCustomRenderer.DrawHeaderButton(dc, header_rect, wx.CONTROL_SPECIAL)
             else:
-                renderer.DrawHeaderButton(self, dc, header_rect, wx.CONTROL_DIRTY) # mark as last column
+                renderer.DrawHeaderButton(self, dc, header_rect, wx.CONTROL_SPECIAL) # mark as last column
 
 
     def DrawTextFormatted(self, dc, text, rect):
@@ -5304,7 +5304,7 @@ class UltimateListHeaderWindow(wx.PyControl):
         """
 
         # determine if the string can fit inside the current width
-        w, h, dummy = dc.GetMultiLineTextExtent(text)
+        w, h, dummy = dc.GetFullMultiLineTextExtent(text)
         width = rect.width
 
         if w <= width:
@@ -5360,7 +5360,7 @@ class UltimateListHeaderWindow(wx.PyControl):
         to the window in idle time.
         """
 
-        wx.PyControl.OnInternalIdle(self)
+        wx.Control.OnInternalIdle(self)
 
         if self._isFooter:
             return
@@ -5468,9 +5468,9 @@ class UltimateListHeaderWindow(wx.PyControl):
                 # First check to see if we have a tooltip to display
                 colItem = self._owner.GetColumn(col)
                 if colItem.GetToolTip() != "":
-                    self.SetToolTipString(colItem.GetToolTip())
+                    self.SetToolTip(colItem.GetToolTip())
                 else:
-                    self.SetToolTipString("")
+                    self.SetToolTip("")
 
             if event.LeftUp():
                 self._leftDown = False
@@ -5843,7 +5843,7 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
                 self._finished = True
                 self._owner.SetFocusIgnoringChildren()
                 self._owner.ResetTextControl()
-        except wx.PyDeadObjectError:
+        except RuntimeError:
             return
 
 
@@ -5890,7 +5890,7 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
             mySize = self.GetSize()
 
             dc = wx.ClientDC(self)
-            sx, sy, dummy = dc.GetMultiLineTextExtent(self.GetValue() + "M")
+            sx, sy, dummy = dc.GetFullMultiLineTextExtent(self.GetValue() + "M")
 
             if myPos.x + sx > parentSize.x:
                 sx = parentSize.x - myPos.x
@@ -5935,7 +5935,7 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
 #  UltimateListMainWindow (internal)
 #-----------------------------------------------------------------------------
 
-class UltimateListMainWindow(wx.PyScrolledWindow):
+class UltimateListMainWindow(wx.ScrolledWindow):
     """
     This is the main widget implementation of :class:`UltimateListCtrl`.
     """
@@ -5951,7 +5951,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`PyScrolledWindow` window style;
+        :param `style`: the underlying :class:`ScrolledWindow` window style;
         :param `agwStyle`: the AGW-specific window style; can be almost any combination of the following
          bits:
 
@@ -5996,7 +5996,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         :param `name`: the window name.
         """
 
-        wx.PyScrolledWindow.__init__(self, parent, id, pos, size, style|wx.HSCROLL|wx.VSCROLL, name)
+        wx.ScrolledWindow.__init__(self, parent, id, pos, size, style|wx.HSCROLL|wx.VSCROLL, name)
 
         # the list of column objects
         self._columns = []
@@ -6027,7 +6027,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         self._highlightBrush = wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT), wx.SOLID)
 
-        btnshadow = wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW)
+        btnshadow = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)
         self._highlightUnfocusedBrush = wx.Brush(btnshadow, wx.SOLID)
         r, g, b = btnshadow.Red(), btnshadow.Green(), btnshadow.Blue()
         backcolour = (max((r >> 1) - 20, 0),
@@ -6102,7 +6102,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         self._disabledColour = wx.Colour(180, 180, 180)
 
         # Gradient selection colours
-        self._firstcolour = colour= wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        self._firstcolour = colour= wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         self._secondcolour = wx.WHITE
         self._usegradients = False
         self._gradientstyle = 1   # Vertical Gradient
@@ -6116,7 +6116,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         self._disabledColour = wx.Colour(180, 180, 180)
 
         # Hyperlinks things
-        normalFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        normalFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._hypertextfont = wx.Font(normalFont.GetPointSize(), normalFont.GetFamily(),
                                       normalFont.GetStyle(), wx.NORMAL, True,
                                       normalFont.GetFaceName(), normalFont.GetEncoding())
@@ -6134,11 +6134,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         image = GetdragcursorImage()
 
         # since this image didn't come from a .cur file, tell it where the hotspot is
-        image.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 1)
-        image.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 1)
+        image.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 1)
+        image.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 1)
 
         # make the image into a cursor
-        self._dragCursor = wx.CursorFromImage(image)
+        self._dragCursor = wx.Cursor(image)
         self._dragItem = None
         self._dropTarget = None
 
@@ -6372,10 +6372,10 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 
         :param `font`: a valid :class:`Font` object.
 
-        :note: Overridden from :class:`PyScrolledWindow`.
+        :note: Overridden from :class:`ScrolledWindow`.
         """
 
-        if not wx.PyScrolledWindow.SetFont(self, font):
+        if not wx.ScrolledWindow.SetFont(self, font):
             return False
 
         self._lineHeight = 0
@@ -6451,7 +6451,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         Called by :meth:`UltimateListCtrl.OnSize() <UltimateListCtrl.OnSize>` when the window is resized.
         """
 
-        if not self: # Avoid PyDeadObjectErrors on Mac
+        if not self: # Avoid RuntimeError on Mac
             return
 
         if self._resizeColumn == -1:
@@ -6472,7 +6472,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         listWidth = self.GetClientSize().width
         if wx.Platform != '__WXMSW__':
             if self.GetItemCount() > self.GetCountPerPage():
-                scrollWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
+                scrollWidth = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
                 listWidth = listWidth - scrollWidth
 
         totColWidth = 0 # Width of all columns except last one.
@@ -6621,7 +6621,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 else:
                     dc.SetFont(self.GetFont())
 
-                text_x, text_y, dummy = dc.GetMultiLineTextExtent(items.GetText())
+                text_x, text_y, dummy = dc.GetFullMultiLineTextExtent(items.GetText())
                 allTextY = max(text_y, allTextY)
 
                 if items.GetWindow():
@@ -7176,7 +7176,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                    and not self.HasAGWFlag(ULC_BORDER_SELECT) and not self.HasAGWFlag(ULC_NO_FULL_ROW_SELECT):
                     dc.SetPen(wx.BLACK_PEN)
                     dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                    dc.DrawRectangleRect(self.GetLineHighlightRect(self._current))
+                    dc.DrawRectangle(self.GetLineHighlightRect(self._current))
 
 
     def OnEraseBackground(self, event):
@@ -7279,12 +7279,12 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         .. note::
 
            This method is intentionally empty to prevent the default handler in
-           :class:`PyScrolledWindow` from needlessly scrolling the window when the edit
+           :class:`ScrolledWindow` from needlessly scrolling the window when the edit
            control is dismissed.
 
         """
 
-        # Do nothing here.  This prevents the default handler in wx.PyScrolledWindow
+        # Do nothing here.  This prevents the default handler in wx.ScrolledWindow
         # from needlessly scrolling the window when the edit control is
         # dismissed.  See ticket #9563.
 
@@ -7522,11 +7522,11 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 self._hoverTimer.Start(HOVER_TIME, wx.TIMER_ONE_SHOT)
 
             if newItem and newItem.IsHyperText() and (hitResult & ULC_HITTEST_ONITEMLABEL) and theItem and theItem.IsEnabled():
-                self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+                self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
                 self._isonhyperlink = True
             else:
                 if self._isonhyperlink:
-                    self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                    self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
                     self._isonhyperlink = False
 
             if self.HasAGWFlag(ULC_STICKY_HIGHLIGHT) and hitResult:
@@ -7542,15 +7542,15 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                     tt = line.GetToolTip(c)
                     if tt and not tt == "":
                         if self.GetToolTip() and self.GetToolTip().GetTip() != tt:
-                            self.SetToolTipString(tt)
+                            self.SetToolTip(tt)
                     elif (r,c) in self._shortItems: # if the text didn't fit in the column
                         text = newItem.GetText()
                         if self.GetToolTip() and self.GetToolTip().GetTip() != text:
-                            self.SetToolTipString(text)
+                            self.SetToolTip(text)
                     else:
-                        self.SetToolTipString("")
+                        self.SetToolTip("")
                 else:
-                    self.SetToolTipString("")
+                    self.SetToolTip("")
 
             if self.HasAGWFlag(ULC_HOT_TRACKING):
                 if hitResult:
@@ -7617,7 +7617,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
                 else:
 
                     if self._dragItem == current:
-                        self.SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+                        self.SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
 
             if self.HasAGWFlag(ULC_REPORT) and self._dragItem != current:
                 self.DrawDnDArrow()
@@ -8388,7 +8388,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         dc = wx.ClientDC(self)
         dc.SetFont(self.GetFont())
 
-        lw, lh, dummy = dc.GetMultiLineTextExtent(s)
+        lw, lh, dummy = dc.GetFullMultiLineTextExtent(s)
 
         return lw + AUTOSIZE_COL_MARGIN
 
@@ -8536,7 +8536,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         :param `y`: the height of the bitmap, in pixels.
         """
 
-        bmp = wx.EmptyBitmap(x, y)
+        bmp = wx.Bitmap(x, y)
         mdc = wx.MemoryDC(bmp)
         dc = wx.GCDC(mdc)
         render = wx.RendererNative.Get()
@@ -10340,7 +10340,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             width += ix + IMAGE_MARGIN_IN_REPORT_MODE
 
         if item.GetText():
-            w, h, dummy = dc.GetMultiLineTextExtent(item.GetText())
+            w, h, dummy = dc.GetFullMultiLineTextExtent(item.GetText())
             width += w
 
         if item.GetWindow():
@@ -10375,7 +10375,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
             start += ix + IMAGE_MARGIN_IN_REPORT_MODE
 
         if item.GetText():
-            w, h, dummy = dc.GetMultiLineTextExtent(item.GetText())
+            w, h, dummy = dc.GetFullMultiLineTextExtent(item.GetText())
             end = w
 
         return start, end
@@ -10588,7 +10588,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
         """
 
         if colour is None:
-            colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+            colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
 
         self._firstcolour = colour
         if self._usegradients:
@@ -10795,7 +10795,7 @@ class UltimateListMainWindow(wx.PyScrolledWindow):
 # UltimateListCtrl
 # -------------------------------------------------------------------------------------
 
-class UltimateListCtrl(wx.PyControl):
+class UltimateListCtrl(wx.Control):
     """
     UltimateListCtrl is a class that mimics the behaviour of :class:`ListCtrl`, with almost
     the same base functionalities plus some more enhancements. This class does
@@ -10813,7 +10813,7 @@ class UltimateListCtrl(wx.PyControl):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`PyControl` window style;
+        :param `style`: the underlying :class:`Control` window style;
         :param `agwStyle`: the AGW-specific window style; can be almost any combination of the following
          bits:
 
@@ -10878,7 +10878,7 @@ class UltimateListCtrl(wx.PyControl):
         if agwStyle & ULC_USER_ROW_HEIGHT and (agwStyle & ULC_REPORT) == 0:
             raise Exception("Style ULC_USER_ROW_HEIGHT can be used only with ULC_REPORT")
 
-        wx.PyControl.__init__(self, parent, id, pos, size, style|wx.CLIP_CHILDREN, validator, name)
+        wx.Control.__init__(self, parent, id, pos, size, style|wx.CLIP_CHILDREN, validator, name)
 
         self._mainWin = None
         self._headerWin = None
@@ -12298,7 +12298,7 @@ class UltimateListCtrl(wx.PyControl):
         to the window in idle time.
         """
 
-        wx.PyControl.OnInternalIdle(self)
+        wx.Control.OnInternalIdle(self)
 
         # do it only if needed
         if self._mainWin and self._mainWin._dirty:
@@ -12324,7 +12324,7 @@ class UltimateListCtrl(wx.PyControl):
          you may wish to call :meth:`Window.ClearBackground` or :meth:`Window.Refresh` after
          calling this function.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         if self._mainWin:
@@ -12341,10 +12341,10 @@ class UltimateListCtrl(wx.PyControl):
         :param `colour`: the colour to be used as the foreground colour, pass
          :class:`NullColour` to reset to the default colour.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
-        if not wx.PyControl.SetForegroundColour(self, colour):
+        if not wx.Control.SetForegroundColour(self, colour):
             return False
 
         if self._mainWin:
@@ -12363,10 +12363,10 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `font`: a valid :class:`Font` instance.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
-        if not wx.PyControl.SetFont(self, font):
+        if not wx.Control.SetFont(self, font):
             return False
 
         if self._mainWin:
@@ -12400,7 +12400,7 @@ class UltimateListCtrl(wx.PyControl):
          colour, if the field doesn't make sense as is the case for `colBg` for the
          controls with themed background.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         attr = wx.VisualAttributes()
@@ -12427,7 +12427,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :param `dropTarget`: an instance of :class:`DropTarget`.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         self._mainWin.SetDropTarget(dropTarget)
@@ -12437,7 +12437,7 @@ class UltimateListCtrl(wx.PyControl):
         """
         Returns the associated drop target, which may be ``None``.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._mainWin.GetDropTarget()
@@ -12453,7 +12453,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :note: The window cursor also sets it for the children of the window implicitly.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return (self._mainWin and [self._mainWin.SetCursor(cursor)] or [False])[0]
@@ -12463,7 +12463,7 @@ class UltimateListCtrl(wx.PyControl):
         """
         Returns the background colour of the window.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return (self._mainWin and [self._mainWin.GetBackgroundColour()] or [wx.NullColour])[0]
@@ -12473,7 +12473,7 @@ class UltimateListCtrl(wx.PyControl):
         """
         Returns the foreground colour of the window.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return (self._mainWin and [self._mainWin.GetForegroundColour()] or [wx.NullColour])[0]
@@ -12490,7 +12490,7 @@ class UltimateListCtrl(wx.PyControl):
         :param `menu`: an instance of :class:`Menu` to pop up;
         :param `pos`: the position where the menu will appear.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._mainWin.PopupMenu(menu, pos)
@@ -12505,7 +12505,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :return: the coordinates relative to the screen.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._mainWin.ClientToScreen(*pointOrTuple)
@@ -12520,7 +12520,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :return: the coordinates relative to the screen.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._mainWin.ClientToScreen(x, y)
@@ -12535,7 +12535,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :return: the coordinates relative to this window.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._mainWin.ScreenToClient(*pointOrTuple)
@@ -12550,7 +12550,7 @@ class UltimateListCtrl(wx.PyControl):
 
         :return: the coordinates relative to this window.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._mainWin.ScreenToClient(x, y)
@@ -12819,7 +12819,7 @@ class UltimateListCtrl(wx.PyControl):
          event loop iteration, if you need to update the window immediately you should
          use :meth:`~UltimateListCtrl.Update` instead.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         if not rect:
@@ -12864,11 +12864,11 @@ class UltimateListCtrl(wx.PyControl):
          happens if nothing has been invalidated (i.e. marked as requiring a redraw).
          Use :meth:`~UltimateListCtrl.Refresh` first if you want to immediately redraw the window unconditionally.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         self._mainWin.ResetVisibleLinesRange(True)
-        wx.PyControl.Update(self)
+        wx.Control.Update(self)
 
 
     def GetEditControl(self):
@@ -13047,6 +13047,7 @@ class UltimateListCtrl(wx.PyControl):
 
         item = CreateListItem(itemOrId, col)
         return self._mainWin.SetItemHyperText(item, hyper)
+
 
     def SetColumnToolTip(self, col, tip):
         """

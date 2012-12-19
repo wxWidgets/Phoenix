@@ -94,8 +94,8 @@ class FMTitlePanel(wx.Panel):
 
         # Set the panel size
         dc = wx.MemoryDC()
-        dc.SelectObject(wx.EmptyBitmap(1, 1))
-        dc.SetFont(wx.SystemSettings_GetFont( wx.SYS_DEFAULT_GUI_FONT ))
+        dc.SelectObject(wx.Bitmap(1, 1))
+        dc.SetFont(wx.SystemSettings.GetFont( wx.SYS_DEFAULT_GUI_FONT ))
         
         ww, hh = dc.GetTextExtent("Tp")
         dc.SelectObject(wx.NullBitmap)
@@ -132,12 +132,12 @@ class FMTitlePanel(wx.Panel):
         dc = wx.BufferedPaintDC(self)
 
         # Draw the background
-        colour1 = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+        colour1 = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
         colour2 = ArtManager.Get().LightColour(colour1, 70)
         ArtManager.Get().PaintStraightGradientBox(dc, self.GetClientRect(), colour1, colour2, False)
 
         # Draw the text
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.BOLD)
         dc.SetFont(font)
         dc.SetTextForeground(wx.BLACK)
@@ -193,7 +193,7 @@ class FMCustomizeDlg(wx.Dialog):
 
         self._book.SetColour(INB_TAB_AREA_BACKGROUND_COLOUR, ArtManager.Get().GetMenuFaceColour())
 
-        colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+        colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
         self._book.SetColour(INB_ACTIVE_TAB_COLOUR, colour)
 
         self.created = False

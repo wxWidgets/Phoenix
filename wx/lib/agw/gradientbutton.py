@@ -2,7 +2,7 @@
 # GRADIENTBUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -155,7 +155,7 @@ class GradientButtonEvent(wx.PyCommandEvent):
         return self.theButton
 
     
-class GradientButton(wx.PyControl):
+class GradientButton(wx.Control):
     """ This is the main class implementation of :class:`GradientButton`. """
     
     def __init__(self, parent, id=wx.ID_ANY, bitmap=None, label="", pos=wx.DefaultPosition,
@@ -177,7 +177,7 @@ class GradientButton(wx.PyControl):
         :param `name`: the button name.
         """
         
-        wx.PyControl.__init__(self, parent, id, pos, size, style, validator, name)
+        wx.Control.__init__(self, parent, id, pos, size, style, validator, name)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, lambda event: None)
@@ -499,7 +499,7 @@ class GradientButton(wx.PyControl):
         
         if size is None:
             size = wx.DefaultSize            
-        wx.PyControl.SetInitialSize(self, size)
+        wx.Control.SetInitialSize(self, size)
 
     SetBestSize = SetInitialSize
     
@@ -508,7 +508,7 @@ class GradientButton(wx.PyControl):
         """
         Can this window be given focus by mouse click?
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
         
         return self.IsShown() and self.IsEnabled()
@@ -528,7 +528,7 @@ class GradientButton(wx.PyControl):
         Overridden base class virtual. Buttons usually don't inherit
         the parent's colours.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
         
         return False
@@ -540,10 +540,10 @@ class GradientButton(wx.PyControl):
 
         :param `enable`: ``True`` to enable the button, ``False`` to disable it.
         
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
         
-        wx.PyControl.Enable(self, enable)
+        wx.Control.Enable(self, enable)
         self.Refresh()
 
 
@@ -655,10 +655,10 @@ class GradientButton(wx.PyControl):
 
         :param `colour`: a valid :class:`Colour` object.
 
-        :note: Overridden from :class:`PyControl`.        
+        :note: Overridden from :class:`Control`.        
         """
 
-        wx.PyControl.SetForegroundColour(self, colour)
+        wx.Control.SetForegroundColour(self, colour)
         self.Refresh()
         
         
@@ -667,7 +667,7 @@ class GradientButton(wx.PyControl):
         Overridden base class virtual. Determines the best size of the
         button based on the label and bezel size.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         label = self.GetLabel()

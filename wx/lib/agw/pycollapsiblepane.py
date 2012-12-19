@@ -3,7 +3,7 @@
 # Generic Implementation Based On wx.CollapsiblePane.
 #
 # Andrea Gavana, @ 09 Aug 2007
-# Latest Revision: 18 Dec 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -29,8 +29,8 @@ Description
 
 A collapsible pane is a container with an embedded button-like control which
 can be used by the user to collapse or expand the pane's contents.
-Once constructed you should use the :meth:~PyCollapsiblePane.GetPane` function to access the pane and
-add your controls inside it (i.e. use the window returned from :meth:~PyCollapsiblePane.GetPane` as the
+Once constructed you should use the :meth:`~PyCollapsiblePane.GetPane` function to access the pane and
+add your controls inside it (i.e. use the window returned from :meth:`~PyCollapsiblePane.GetPane` as the
 parent for the controls which must go in the pane, **not** the :class:`PyCollapsiblePane`
 itself!).
 
@@ -159,7 +159,7 @@ License And Version
 
 :class:`PyCollapsiblePane` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 18 Dec 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.5
 

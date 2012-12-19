@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 18 Dec 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -37,7 +37,7 @@ Description
 
 With :class:`ButtonPanel` class you have a panel with gradient colouring
 on it and with the possibility to place some buttons on it. Using a
-standard panel with normal :class:`Buttons` leads to an ugly result: the
+standard panel with normal :class:`Button` leads to an ugly result: the
 buttons are placed correctly on the panel - but with grey area around
 them. Gradient colouring is kept behind the images - this was achieved
 due to the PNG format and the transparency of the bitmaps.
@@ -1084,7 +1084,7 @@ class BoxSizer(Sizer, wx.BoxSizer):
          |                                                                     | maintaining its aspect ratio                                                |
          +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
          | ``wx.FIXED_MINSIZE``                                                | Normally :class:`Sizer` will use                                            |
-         |                                                                     | :meth:`Window.GetAdjustedBestSize` to                                       |
+         |                                                                     | :meth:`Window.GetEffectiveMinSize` to                                       |
          |                                                                     | determine what the minimal size of window items should be, and will use that| 
          |                                                                     | size to calculate the layout. This allows layouts to adjust when an item    |
          |                                                                     | changes and its best size becomes different. If you would rather have a     |
@@ -2193,7 +2193,7 @@ class ButtonPanel(wx.Panel):
 
         :return: An instance of :class:`Size`.
 
-        :note: Overridden from :class:`PyPanel`.        
+        :note: Overridden from :class:`Panel`.        
         """
 
         w = h = btnWidth = btnHeight = 0

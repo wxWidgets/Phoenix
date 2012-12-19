@@ -397,11 +397,11 @@ menu_down_arrow_xpm = ["16 16 2 1",
 
 
 def getMenuUpArrowBitmap():
-    bmp = wx.BitmapFromXPMData(menu_up_arrow_xpm)
+    bmp = wx.Bitmap(menu_up_arrow_xpm)
     bmp.SetMask(wx.Mask(bmp, wx.WHITE))
     return bmp
 
 def getMenuDownArrowBitmap():
-    bmp = wx.BitmapFromXPMData(menu_down_arrow_xpm)
+    bmp = wx.Bitmap(menu_down_arrow_xpm)
     bmp.SetMask(wx.Mask(bmp, wx.WHITE))
     return bmp

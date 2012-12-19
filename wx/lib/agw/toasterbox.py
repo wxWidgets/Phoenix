@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 18 Dec 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO/Caveats List
@@ -111,7 +111,7 @@ Window Styles        Hex Value   Description
 ==================== =========== ==================================================
 ``TB_SIMPLE``                0x1 A simple `ToasterBox`, with background image and text customization can be created.
 ``TB_ONTIME``                0x1 `ToasterBox` will close after a specified amount of time.
-``TB_COMPLEX``               0x2 ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the :meth:~ToasterBox.AddPanel` method and pass  to it a dummy frame and a :class:`Panel`. See the demo for details.
+``TB_COMPLEX``               0x2 ToasterBoxes with different degree of complexity can be created. You can add as  many controls as you want, provided that you call the :meth:`~ToasterBox.AddPanel` method and pass  to it a dummy frame and a :class:`Panel`. See the demo for details.
 ``TB_ONCLICK``               0x2 `ToasterBox` can be closed by clicking anywhere on the `ToasterBox` frame.
 ``TB_DEFAULT_STYLE``   0x2008002 Default window style for `ToasterBox`, with no caption nor close box.
 ``TB_CAPTION``        0x22009806 `ToasterBox` will have a caption, with the possibility to set a title for the `ToasterBox` frame, and a close box.
@@ -129,13 +129,14 @@ License And Version
 
 ToasterBox is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.3
 
 """
 
 import textwrap
+import time
 import wx
 
 
@@ -392,7 +393,7 @@ class ToasterBox(wx.Timer):
             colour = wx.WHITE
 
         if isinstance(colour, basestring):
-            colour = wx.NamedColour(colour)
+            colour = wx.Colour(colour)
             
         self._backgroundcolour = colour
         self._tb.SetPopupBackgroundColour(self._backgroundcolour)
@@ -412,7 +413,7 @@ class ToasterBox(wx.Timer):
             colour = wx.BLACK
 
         if isinstance(colour, basestring):
-            colour = wx.NamedColour(colour)
+            colour = wx.Colour(colour)
             
         self._foregroundcolour = colour
 
@@ -646,7 +647,7 @@ class ToasterBox(wx.Timer):
             # reset where the object THINKS its supposed to be
             tmpTb.SetPopupPosition((self._popupposition[0], ourNewHeight))
             # actually move it
-            tmpTb.SetDimensions(self._popupposition[0], ourNewHeight, tmpTb.GetSize().GetWidth(),
+            tmpTb.SetSize(self._popupposition[0], ourNewHeight, tmpTb.GetSize().GetWidth(),
                                 tmpTb.GetSize().GetHeight())
 
         self._startPos += 4
@@ -743,7 +744,7 @@ class ToasterBoxWindow(wx.Frame):
         wx.Frame.__init__(self, parent, wx.ID_ANY, "window", wx.DefaultPosition,
                          wx.DefaultSize, style=windowstyle | wx.CLIP_CHILDREN)
 
-        self._starttime = wx.GetLocalTime()
+        self._starttime = int(time.time())
         self._parent2 = parent2
         self._parent = parent
         self._sleeptime = 10
@@ -781,7 +782,7 @@ class ToasterBoxWindow(wx.Frame):
         self._bottomright = wx.Point(wx.GetDisplaySize().GetWidth(),
                                      wx.GetDisplaySize().GetHeight())
 
-        self.SetDimensions(self._bottomright.x, self._bottomright.y,
+        self.SetSize(self._bottomright.x, self._bottomright.y,
                            framesize.GetWidth(), framesize.GetHeight())
 
         self._scrollTimer = wx.Timer(self, -1)
@@ -843,7 +844,7 @@ class ToasterBoxWindow(wx.Frame):
         :param `size`: the new control size, an instance of :class:`Size`.        
         """
 
-        self.SetDimensions(self._bottomright.x, self._bottomright.y, size[0], size[1])
+        self.SetSize(self._bottomright.x, self._bottomright.y, size[0], size[1])
 
 
     def SetPopupPosition(self, pos):
@@ -1080,7 +1081,7 @@ class ToasterBoxWindow(wx.Frame):
         elif self._scrollType == TB_SCR_TYPE_DU:
             dimY = step
 
-        self.SetDimensions(self._dialogtop[0], dimY, self.GetSize().GetWidth(), self._windowsize)
+        self.SetSize(self._dialogtop[0], dimY, self.GetSize().GetWidth(), self._windowsize)
 
         self.Refresh(False)
 
@@ -1115,7 +1116,7 @@ class ToasterBoxWindow(wx.Frame):
             elif self._scrollType == TB_SCR_TYPE_DU:
                 dimY = step
 
-            self.SetDimensions(self._dialogtop[0], dimY,
+            self.SetSize(self._dialogtop[0], dimY,
                                self.GetSize().GetWidth(), self._windowsize)
 
             self.Update()

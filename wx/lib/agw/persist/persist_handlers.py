@@ -1757,8 +1757,8 @@ class DatePickerHandler(AbstractHandler):
 
     This class handles the following wxPython widgets:
 
-    - :class:`DatePickerCtrl`;
-    - :class:`GenericDatePickerCtrl`.
+    - :class:`~adv.DatePickerCtrl`;
+    - :class:`~adv.GenericDatePickerCtrl`.
     
     """
     

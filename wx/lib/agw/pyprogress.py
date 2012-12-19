@@ -2,7 +2,7 @@
 # PYPROGRESS wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 18 Dec 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -74,7 +74,7 @@ Usage example::
     dlg.SetSecondGradientColour(wx.BLUE)
     
     max = 400
-    keepGoing = True
+    keepGoing = 1
     count = 0
 
     while keepGoing and count < max:
@@ -126,7 +126,7 @@ License And Version
 
 :class:`PyProgress` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.5
 

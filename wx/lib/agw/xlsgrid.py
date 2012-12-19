@@ -2,7 +2,7 @@
 # XLSGRID wxPython IMPLEMENTATION
 #
 # Andrea Gavana @ 08 Aug 2011
-# Latest Revision: 20 MAr 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -226,7 +226,7 @@ License And Version
 
 :class:`XLSGrid` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 20 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.4
 
@@ -952,7 +952,7 @@ class XLSText(object):
         elif self.text_wrapped:
                             
             value = wordwrap(self.value, new_width, dc)
-            text_width, text_height, dummy = dc.GetMultiLineTextExtent(value)
+            text_width, text_height, dummy = dc.GetFullMultiLineTextExtent(value)
 
         if self.rotation:
             if self.shrink_to_fit:
@@ -1189,7 +1189,7 @@ class XLSBackground(object):
         fill_image.Replace(255, 255, 255, r, g, b)
         fill_bitmap = fill_image.ConvertToBitmap()
 
-        self.fill_brush = wx.BrushFromBitmap(fill_bitmap)
+        self.fill_brush = wx.Brush(fill_bitmap)
 
 
     def CombineAttr(self, attr):
@@ -1211,18 +1211,18 @@ class XLSBackground(object):
         :param `rect`: an instance of :class:`Rect`, representing the cell rectangle.
         """
 
-        dc.SetClippingRect(rect)
+        dc.SetClippingRegion(rect)
 
         dc.SetBackgroundMode(wx.SOLID)
         dc.SetBrush(self.background_brush)
         dc.SetPen(wx.TRANSPARENT_PEN)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
         if self.fill_brush:
 
             dc.SetBrush(self.fill_brush)
             dc.SetBackgroundMode(wx.TRANSPARENT)
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
             
         dc.DestroyClippingRegion()
 
@@ -1716,7 +1716,7 @@ class XLSRenderer(gridlib.PyGridCellRenderer):
             gdc.SetBrush(wx.Brush(brush_colour))
             gdc.SetPen(wx.TRANSPARENT_PEN)
 
-            gdc.DrawRectangleRect(rect)
+            gdc.DrawRectangle(rect)
             
 
 class XLSTable(gridlib.PyGridTableBase):
@@ -1846,14 +1846,14 @@ class XLSGrid(gridlib.Grid):
         if self.tip_window:
             try:
                 self.tip_window.GetTipWindow().Destroy()
-            except wx.PyDeadObjectError:
+            except RuntimeError:
                 pass
             
             del self.tip_window
             self.tip_window = None
 
         if self.tip_shown:
-            self.GetGridWindow().SetToolTipString("")            
+            self.GetGridWindow().SetToolTip("")            
             self.GetGridWindow().SetCursor(wx.NullCursor)
             self.tip_shown = False
         
@@ -1890,8 +1890,8 @@ class XLSGrid(gridlib.Grid):
 
                 window = self.GetGridWindow()
                 if cell.text.IsHyperLink():
-                    window.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
-                    window.SetToolTipString(cell.text.tooltip)
+                    window.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+                    window.SetToolTip(cell.text.tooltip)
                     self.tip_shown = True
                     if not comment:
                         return

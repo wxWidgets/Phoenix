@@ -55,10 +55,12 @@ if sys.platform == "win32":
 else:
     _greekEncoding = str(wx.FONTENCODING_ISO8859_7)
 
-_families = {"fixed" : wx.FIXED, "default" : wx.DEFAULT, "decorative" : wx.DECORATIVE, "roman" : wx.ROMAN,
-                "script" : wx.SCRIPT, "swiss" : wx.SWISS, "modern" : wx.MODERN}
-_styles = {"normal" : wx.NORMAL, "slant" : wx.SLANT, "italic" : wx.ITALIC}
-_weights = {"normal" : wx.NORMAL, "light" : wx.LIGHT, "bold" : wx.BOLD}
+_families = {"fixed" : wx.FONTFAMILY_TELETYPE, "default" : wx.FONTFAMILY_DEFAULT, 
+             "decorative" : wx.FONTFAMILY_DECORATIVE, "roman" : wx.FONTFAMILY_ROMAN,
+             "script" : wx.FONTFAMILY_SCRIPT, "swiss" : wx.FONTFAMILY_SWISS, 
+             "modern" : wx.FONTFAMILY_MODERN}
+_styles = {"normal" : wx.FONTSTYLE_NORMAL, "slant" : wx.FONTSTYLE_SLANT, "italic" : wx.FONTSTYLE_ITALIC}
+_weights = {"normal" : wx.FONTWEIGHT_NORMAL, "light" : wx.FONTWEIGHT_LIGHT, "bold" : wx.FONTWEIGHT_BOLD}
 
 # The next three classes: Renderer, SizeRenderer and DCRenderer are
 # what you will need to override to extend the XML language. All of
@@ -104,7 +106,7 @@ class Renderer:
         if Renderer.defaultSize is None:
             Renderer.defaultSize = wx.NORMAL_FONT.GetPointSize()
         if Renderer.defaultEncoding is None:
-            Renderer.defaultEncoding = wx.Font_GetDefaultEncoding()
+            Renderer.defaultEncoding = wx.Font.GetDefaultEncoding()
         
     def getY(self):
         if self._y is None:

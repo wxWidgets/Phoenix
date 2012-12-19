@@ -570,7 +570,7 @@ class SwitcherItems(object):
         dc.SetLogicalFunction(wx.COPY)
         dc.SetBrush(wx.Brush(backgroundColour))
         dc.SetPen(wx.TRANSPARENT_PEN)
-        dc.DrawRectangleRect(win.GetClientRect())
+        dc.DrawRectangle(win.GetClientRect())
         dc.SetBackgroundMode(wx.TRANSPARENT)
 
         for i in xrange(len(self._items)):
@@ -578,12 +578,12 @@ class SwitcherItems(object):
             if i == self._selection:
                 dc.SetPen(wx.Pen(selectionOutlineColour))
                 dc.SetBrush(wx.Brush(selectionColour))
-                dc.DrawRectangleRect(item.GetRect())
+                dc.DrawRectangle(item.GetRect())
             
             clippingRect = wx.Rect(*item.GetRect())
             clippingRect.Deflate(1, 1)
 
-            dc.SetClippingRect(clippingRect)
+            dc.SetClippingRegion(clippingRect)
 
             if item.GetTextColour().IsOk():
                 dc.SetTextForeground(item.GetTextColour())
@@ -671,13 +671,13 @@ class SwitcherItems(object):
         return wx.NOT_FOUND
 
 
-class MultiColumnListCtrl(wx.PyControl):
+class MultiColumnListCtrl(wx.Control):
     """ A control for displaying several columns (not scrollable). """
 
     def __init__(self, parent, aui_manager, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0, validator=wx.DefaultValidator, name="MultiColumnListCtrl"):
 
-        wx.PyControl.__init__(self, parent, id, pos, size, style, validator, name)
+        wx.Control.__init__(self, parent, id, pos, size, style, validator, name)
 
         self._overallSize = wx.Size(200, 100)
         self._modifierKey = wx.WXK_CONTROL
@@ -1145,12 +1145,12 @@ class SwitcherDialog(wx.Dialog):
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
             rect = self.GetClientRect()
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
 
             # Draw border around the HTML control
             rect = wx.Rect(*self._descriptionCtrl.GetRect())
             rect.Inflate(1, 1)
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
 
     
     def OnSelectItem(self, event):

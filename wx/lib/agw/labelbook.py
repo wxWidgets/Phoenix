@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 07 Dec 2011, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -27,6 +27,7 @@
 #             between the controls and the pages so the background
 #             colour can flow into the window background
 #
+# Tags:        phoenix-port, unittest, documented
 #
 #
 # End Of Comments
@@ -169,13 +170,12 @@ License And Version
 
 :class:`LabelBook` and :class:`FlatImageBook` are distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 07 Dec 2011, 21.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.6.
 
 """
 
-__docformat__ = "epytext"
 __version__ = "0.6"
 
 
@@ -820,7 +820,7 @@ class ImageContainerBase(wx.Panel):
             
             # For Web Hover style, we test the TextRect
             if not self.HasAGWFlag(INB_WEB_HILITE):
-                buttonRect = wx.RectPS(self._pagesInfoVec[i].GetPosition(), self._pagesInfoVec[i].GetSize())
+                buttonRect = wx.Rect(self._pagesInfoVec[i].GetPosition(), self._pagesInfoVec[i].GetSize())
             else:
                 buttonRect = self._pagesInfoVec[i].GetTextRect()
                 
@@ -912,7 +912,7 @@ class ImageContainerBase(wx.Panel):
             self.DrawPin(dc, self._pinBtnRect, not self._bCollapsed)
         
         # Restore cursor
-        wx.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+        self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         
         if bRepaint:
             self.Refresh()
@@ -1001,12 +1001,12 @@ class ImageContainerBase(wx.Panel):
             if self._nHoveredImgIdx >= 0 and self.HasAGWFlag(INB_WEB_HILITE):
             
                 # Change the cursor to be Hand if we have the Web hover style set
-                wx.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+                self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
             
             elif not self.PointOnSash(event.GetPosition()):
             
                 # Restore the cursor if we are not currently hovering the sash
-                wx.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
         self.Refresh()
 
@@ -1024,9 +1024,9 @@ class ImageContainerBase(wx.Panel):
         # Set the bitmap according to the button status
 
         if downPin:
-            pinBmp = wx.BitmapFromXPMData(pin_down_xpm)
+            pinBmp = wx.Bitmap(pin_down_xpm)
         else:
-            pinBmp = wx.BitmapFromXPMData(pin_left_xpm)
+            pinBmp = wx.Bitmap(pin_left_xpm)
 
         xx = rect.x + 2
         
@@ -1044,7 +1044,7 @@ class ImageContainerBase(wx.Panel):
         elif self._nPinButtonStatus == INB_PIN_PRESSED:
             
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.SetPen(wx.Pen(wx.NamedColour("LIGHT GREY")))
+            dc.SetPen(wx.Pen(wx.Colour("LIGHT GREY")))
             dc.DrawRectangle(xx, rect.y, 16, 16)
 
             # Draw upper and left border with grey colour
@@ -1206,7 +1206,7 @@ class ImageContainer(ImageContainerBase):
 
         backBrush = wx.WHITE_BRUSH
         if style & INB_BORDER:
-            borderPen = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DSHADOW))
+            borderPen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DSHADOW))
         else:
             borderPen = wx.TRANSPARENT_PEN
 
@@ -1262,8 +1262,8 @@ class ImageContainer(ImageContainerBase):
         nTextPaddingLeft = 2
 
         count = 0
-        normalFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        normalFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont.SetWeight(wx.BOLD)
         
         for i in xrange(len(self._pagesInfoVec)):
@@ -1320,8 +1320,8 @@ class ImageContainer(ImageContainerBase):
             if self._nIndex == i:
             
                 # Set the colours
-                penColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
-                brushColour = ArtManager.Get().LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION), 75)
+                penColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+                brushColour = ArtManager.Get().LightColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION), 75)
 
                 dc.SetPen(wx.Pen(penColour))
                 dc.SetBrush(wx.Brush(brushColour))
@@ -1334,13 +1334,13 @@ class ImageContainer(ImageContainerBase):
                     else:
                         buttonRect = wx.Rect(buttonRect.x, buttonRect.y + 1, buttonRect.width, buttonRect.height - 1)
                 
-                dc.DrawRectangleRect(buttonRect)
+                dc.DrawRectangle(buttonRect)
             
             if self._nHoveredImgIdx == i:
             
                 # Set the colours
-                penColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
-                brushColour = ArtManager.Get().LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION), 90)
+                penColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+                brushColour = ArtManager.Get().LightColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION), 90)
 
                 dc.SetPen(wx.Pen(penColour))
                 dc.SetBrush(wx.Brush(brushColour))
@@ -1353,7 +1353,7 @@ class ImageContainer(ImageContainerBase):
                     else:
                         buttonRect = wx.Rect(buttonRect.x, buttonRect.y + 1, buttonRect.width, buttonRect.height - 1)
                 
-                dc.DrawRectangleRect(buttonRect)
+                dc.DrawRectangle(buttonRect)
             
             if bUseYcoord:
                 rect = wx.Rect(0, pos, rectWidth, rectWidth)
@@ -1418,7 +1418,7 @@ class ImageContainer(ImageContainerBase):
                     textOffsetY = (not style & INB_SHOW_ONLY_TEXT and [self._nImgSize + imgTopPadding + 3] or \
                                        [((self._nImgSize * 2 - textHeight) / 2 )])[0]
                 
-                dc.SetTextForeground(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOWTEXT))
+                dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOWTEXT))
                 dc.DrawText(fixedText, textOffsetX, textOffsetY)
             
             # Update the page info
@@ -1586,7 +1586,7 @@ class LabelContainer(ImageContainerBase):
             style ^= INB_SHOW_ONLY_IMAGES
             self.GetParent().SetAGWWindowStyleFlag(style)
 
-        if self.HasAGWFlag(INB_GRADIENT_BACKGROUND) and not self._skin.Ok():
+        if self.HasAGWFlag(INB_GRADIENT_BACKGROUND) and not self._skin.IsOk():
         
             # Draw graident in the background area
             startColour = self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR]
@@ -1597,19 +1597,19 @@ class LabelContainer(ImageContainerBase):
         else:
         
             # Draw the border and background
-            if self._skin.Ok():
+            if self._skin.IsOk():
             
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
                 self.DrawBackgroundBitmap(dc)
             
-            dc.DrawRectangleRect(wx.Rect(0, 0, size.x, size.y))
+            dc.DrawRectangle(wx.Rect(0, 0, size.x, size.y))
         
         # Draw border
         if self.HasAGWFlag(INB_BORDER) and self.HasAGWFlag(INB_GRADIENT_BACKGROUND):
         
             # Just draw the border with transparent brush
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.DrawRectangleRect(wx.Rect(0, 0, size.x, size.y))
+            dc.DrawRectangle(wx.Rect(0, 0, size.x, size.y))
 
         bUsePin = (self.HasAGWFlag(INB_USE_PIN_BUTTON) and [True] or [False])[0]
 
@@ -1637,7 +1637,7 @@ class LabelContainer(ImageContainerBase):
             rectWidth = self._nTabAreaWidth  
             
             if self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
-                font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+                font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
                 font.SetPointSize(font.GetPointSize() * self.GetParent().GetFontSizeMultiple())
 
                 if self.GetParent().GetFontBold():
@@ -1700,7 +1700,7 @@ class LabelContainer(ImageContainerBase):
         if bmpRect != clientRect:
         
             mem_dc = wx.MemoryDC()
-            bmp = wx.EmptyBitmap(width, height)
+            bmp = wx.Bitmap(width, height)
             mem_dc.SelectObject(bmp)
 
             while coveredY < height:
@@ -1750,9 +1750,9 @@ class LabelContainer(ImageContainerBase):
         self._sashRect = wx.Rect()
 
         # Restore cursor
-        if self._oldCursor.Ok():
+        if self._oldCursor.IsOk():
         
-            wx.SetCursor(self._oldCursor)
+            self.SetCursor(self._oldCursor)
             self._oldCursor = wx.NullCursor
         
         ImageContainerBase.OnMouseLeftUp(self, event)
@@ -1813,14 +1813,14 @@ class LabelContainer(ImageContainerBase):
                 # Progress sash, and redraw it
                 clientRect = self.GetClientRect()
                 pt = self.ClientToScreen(wx.Point(event.GetX(), 0))
-                self._sashRect = wx.RectPS(pt, wx.Size(4, clientRect.height))
+                self._sashRect = wx.Rect(pt, wx.Size(4, clientRect.height))
                 ArtManager.Get().DrawDragSash(self._sashRect)
             
             else:
             
                 # Sash is not being dragged
-                if self._oldCursor.Ok():
-                    wx.SetCursor(self._oldCursor)
+                if self._oldCursor.IsOk():
+                    self.SetCursor(self._oldCursor)
                     self._oldCursor = wx.NullCursor
                 
         else:
@@ -1832,11 +1832,11 @@ class LabelContainer(ImageContainerBase):
             
                 # Change cursor to EW cursor
                 self._oldCursor = self.GetCursor()
-                wx.SetCursor(wx.StockCursor(wx.CURSOR_SIZEWE))
+                self.SetCursor(wx.Cursor(wx.CURSOR_SIZEWE))
             
-            elif self._oldCursor.Ok():
+            elif self._oldCursor.IsOk():
             
-                wx.SetCursor(self._oldCursor)
+                self.SetCursor(self._oldCursor)
                 self._oldCursor = wx.NullCursor
             
             self._sashRect = wx.Rect()
@@ -1868,11 +1868,11 @@ class LabelContainer(ImageContainerBase):
 
                 # Change mouse cursor
                 self._oldCursor = self.GetCursor()
-                wx.SetCursor(wx.StockCursor(wx.CURSOR_SIZEWE))
+                self.SetCursor(wx.Cursor(wx.CURSOR_SIZEWE))
             
             clientRect = self.GetClientRect()
             pt = self.ClientToScreen(wx.Point(event.GetX(), 0))
-            self._sashRect = wx.RectPS(pt, wx.Size(4, clientRect.height))
+            self._sashRect = wx.Rect(pt, wx.Size(4, clientRect.height))
 
             ArtManager.Get().DrawDragSash(self._sashRect)
         
@@ -1953,7 +1953,7 @@ class LabelContainer(ImageContainerBase):
         """
 
         # Redraw the text with underlined font
-        underLinedFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        underLinedFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         underLinedFont.SetPointSize(underLinedFont.GetPointSize() * self.GetParent().GetFontSizeMultiple())
         if self.GetParent().GetFontBold():
             underLinedFont.SetWeight(wx.FONTWEIGHT_BOLD)
@@ -2009,8 +2009,8 @@ class LabelContainer(ImageContainerBase):
         # Initialize map colours
         self._coloursMap.update({INB_TAB_AREA_BACKGROUND_COLOUR: ArtManager.Get().LightColour(ArtManager.Get().FrameColour(), 50)})
         self._coloursMap.update({INB_ACTIVE_TAB_COLOUR: ArtManager.Get().GetMenuFaceColour()})
-        self._coloursMap.update({INB_TABS_BORDER_COLOUR: wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DSHADOW)})
-        self._coloursMap.update({INB_HILITE_TAB_COLOUR: wx.NamedColour("LIGHT BLUE")})
+        self._coloursMap.update({INB_TABS_BORDER_COLOUR: wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DSHADOW)})
+        self._coloursMap.update({INB_HILITE_TAB_COLOUR: wx.Colour("LIGHT BLUE")})
         self._coloursMap.update({INB_TEXT_COLOUR: wx.WHITE})
         self._coloursMap.update({INB_ACTIVE_TEXT_COLOUR: wx.BLACK})
 
@@ -2052,7 +2052,7 @@ class LabelContainer(ImageContainerBase):
         textRect = wx.Rect(*rect)
         imgRect = wx.Rect(*rect)
         
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetPointSize(font.GetPointSize() * self.GetParent().GetFontSizeMultiple())
 
         if self.GetParent().GetFontBold():
@@ -2075,7 +2075,7 @@ class LabelContainer(ImageContainerBase):
         textRect.y = rect.y + (rect.height - h)/2
         textRect.width = rect.width - 2 * nPadding
 
-        if bmp.Ok() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
+        if bmp.IsOk() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
             textRect.x += (bmp.GetWidth() + nPadding)
             textRect.width -= (bmp.GetWidth() + nPadding)
         
@@ -2085,7 +2085,7 @@ class LabelContainer(ImageContainerBase):
         caption = ArtManager.Get().TruncateText(dc, text, textRect.width)
 
         # Image bounding rectangle
-        if bmp.Ok() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
+        if bmp.IsOk() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
         
             imgRect.x += nPadding
             imgRect.width = bmp.GetWidth()
@@ -2111,7 +2111,7 @@ class LabelContainer(ImageContainerBase):
                 labelRect.width += 3
                 labelRect.x -= 3
             
-            dc.DrawRoundedRectangleRect(labelRect, 3)
+            dc.DrawRoundedRectangle(labelRect, 3)
 
             if not orientationLeft and self.HasAGWFlag(INB_DRAW_SHADOW):
                 dc.SetPen(wx.BLACK_PEN)
@@ -2132,7 +2132,7 @@ class LabelContainer(ImageContainerBase):
         
             imgInfo.SetTextRect(wx.Rect())
         
-        if bmp.Ok() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
+        if bmp.IsOk() and not self.HasAGWFlag(INB_SHOW_ONLY_TEXT):
             dc.DrawBitmap(bmp, imgRect.x, imgRect.y, True)
 
         # Drop shadow
@@ -2299,7 +2299,7 @@ class FlatBookBase(wx.Panel):
             self.ResizeTabArea()
             
         self._mainSizer.Layout()
-        dummy = wx.SizeEvent()
+        dummy = wx.SizeEvent(self.GetSize())
         wx.PostEvent(self, dummy)
         self._pages.Refresh()
 
@@ -2496,8 +2496,8 @@ class FlatBookBase(wx.Panel):
 
         if agwStyle & INB_LEFT or agwStyle & INB_RIGHT:
             dc = wx.MemoryDC()
-            dc.SelectObject(wx.EmptyBitmap(1, 1))
-            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            dc.SelectObject(wx.Bitmap(1, 1))
+            font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
             font.SetPointSize(font.GetPointSize()*self._fontSizeMultiple)
             if self.GetFontBold() or agwStyle & INB_BOLD_TAB_SELECTION:
                 font.SetWeight(wx.FONTWEIGHT_BOLD)

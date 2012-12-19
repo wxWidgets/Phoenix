@@ -2,7 +2,7 @@
 # PYGAUGE wxPython IMPLEMENTATION
 #
 # Mark Reed, @ 28 Jul 2010
-# Latest Revision: 18 Dec 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 # TODO List
 #
@@ -32,7 +32,7 @@
 Description
 ===========
 
-:class:`PyGauge` supports the determinate mode functions as :class:`Gauge` and adds an :meth:~PyGauge.Update` function
+:class:`PyGauge` supports the determinate mode functions as :class:`Gauge` and adds an :meth:`~PyGauge.Update` function
 which takes a value and a time parameter. The `value` is added to the current value over 
 a period of `time` milliseconds.
 
@@ -96,7 +96,7 @@ Supported Platforms
 ===================
 
 :class:`PyGauge` has been tested on the following platforms:
-  * Windows (Windows XP);
+  * Windows (Windows XP, Windows 7);
   
 
 License And Version
@@ -106,7 +106,7 @@ License And Version
 
 :class:`PyGauge` has been kindly contributed to the AGW library by Mark Reed.
 
-Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.1
 
@@ -152,6 +152,8 @@ class PyGauge(wx.Window):
         
         self._timerId = wx.NewId()
         self._timer = None
+
+        self._drawIndicatorText = False
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
@@ -353,7 +355,91 @@ class PyGauge(wx.Window):
                 r.width = w 
                 dc.DrawRectangle(r)
 
-        
+
+        if self._drawIndicatorText:
+            dc.SetFont(self._drawIndicatorText_font)
+            dc.SetTextForeground(self._drawIndicatorText_colour)
+            drawValue = self._valueSorted[i]
+
+            if self._drawIndicatorText_drawPercent:
+                drawValue = (float(self._valueSorted[i]) * 100)  / self._range
+
+            drawString = self._drawIndicatorText_formatString.format(drawValue)
+            rect = self.GetClientRect()
+            (textWidth, textHeight, descent, extraLeading) = dc.GetFullTextExtent(drawString)
+            textYPos = (rect.height-textHeight)/2
+
+            if textHeight > rect.height:
+                textYPos = 0-descent+extraLeading
+
+            textXPos = (rect.width-textWidth)/2
+
+            if textWidth>rect.width:
+                textXPos = 0
+
+            dc.DrawText(drawString, textXPos, textYPos)
+
+
+    def SetDrawValue(self, draw=True, drawPercent=True, font=None, colour=wx.BLACK, formatString=None):
+        """
+        Sets whether percentage or current value should be drawn on the gauge for precise indication.
+
+        :param bool `draw`: a boolean value, which if ``True`` tells to start drawing value or percentage.
+         If set to ``False`` nothing will be drawn and other parameters will be ignored;
+        :param bool `drawPercent`: a boolean value which indicates that a percent should be drawn instead
+         of value passed in :meth:`SetValue`;
+        :param Font `font`: a font with which indication should be drawn, if ``None``, then ``wx.NORMAL_FONT``
+         will be used. Usually text would be displayed centered in the control, but if the text font is too large
+         to be displayed (either in width or height) the corresponding coordinate will be set to zero;
+        :param Colour `colour`: the colour with which indication should be drawn, if ``None`` then ``wx.BLACK`` will be used;
+        :param string `formatString`: a string specifying format of the indication (should have one and only one
+         number placeholder). If set to ``None``, will use ``{:.0f}`` format string for values and ``{:.0f}%``
+         format string for percentages. As described in http://docs.python.org/library/string.html#format-specification-mini-language.
+         
+        .. note:: `formatString` will override addition of percent sign (after value) even if `drawPercent` is ``True``.
+
+        .. versionadded:: 0.9.7
+        """
+
+        if not draw:
+            # Will not draw anything unless this is True
+            self._drawIndicatorText = False
+            return
+
+        self._drawIndicatorText = True
+        self._drawIndicatorText_drawPercent = drawPercent
+
+        if font is None or not isinstance(font, wx.Font):
+            self._drawIndicatorText_font = wx.NORMAL_FONT
+        else:
+            self._drawIndicatorText_font = font
+
+        if colour is None or not isinstance(colour, wx.Colour):
+            self._drawIndicatorText_colour = wx.BLACK
+        else:
+            self._drawIndicatorText_colour = colour
+
+        if formatString is not None:
+            error_occurred = True
+            try:
+                # This is to test if format string is valid. If not, it will be replaced with default one.
+                formatString.format(12.345)
+                error_occurred = False
+            except Exception as e:
+                print("We have exception:%s"%e)
+                
+            if error_occurred:
+                formatString = None
+
+        # Here formatString is either valid formatting string, or None in case of error or None passed
+        if formatString is None:
+            if self._drawIndicatorText_drawPercent:
+                self._drawIndicatorText_formatString = "{:.0f}%"
+            else: self._drawIndicatorText_formatString = "{:.0f}"
+        else:
+            self._drawIndicatorText_formatString = formatString
+
+
     def OnTimer(self,event):
         """
         Handles the ``wx.EVT_TIMER`` event for :class:`PyGauge`.

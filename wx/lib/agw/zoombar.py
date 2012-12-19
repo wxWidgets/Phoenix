@@ -105,7 +105,7 @@ License And Version
 
 :class:`ZoomBar` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Aug 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.1
 
@@ -313,7 +313,7 @@ def MakeDisabledBitmap(original):
     """
     
     img = original.ConvertToImage()
-    return wx.BitmapFromImage(img.ConvertToGreyscale())
+    return wx.Bitmap(img.ConvertToGreyscale())
 
 # ----------------------------------------------------------------------------
 
@@ -628,7 +628,7 @@ class ImageBar(object):
         """        
 
         if not isinstance(colour, wx.Colour):
-            colour = wx.NamedColour(colour)
+            colour = wx.Colour(colour)
 
         if self._hasBitmap:
             bitmap = self._hasBitmap
@@ -705,7 +705,7 @@ class ZoomBarEvent(wx.PyCommandEvent):
         self._label = label
 
 
-class ZoomBar(wx.PyControl):
+class ZoomBar(wx.Control):
     """
     :class:`ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
     inside a :class:`Panel`.
@@ -727,7 +727,7 @@ class ZoomBar(wx.PyControl):
         :param `name`: the window name.
         """
 
-        wx.PyControl.__init__(self, parent, id, pos, size, style=wx.BORDER_THEME)
+        wx.Control.__init__(self, parent, id, pos, size, style=wx.BORDER_THEME)
 
         # Zoom from the center. If True button zooms upwards.
         self._centerZoom = False
@@ -771,7 +771,7 @@ class ZoomBar(wx.PyControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         xSize = self._buttonSize*len(self._buttons) + len(self._buttons) + self._buttonSize

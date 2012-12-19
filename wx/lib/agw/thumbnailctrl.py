@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana And Peter Damoc, @ 12 Dec 2005
-# Latest Revision: 14 Mar 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -149,7 +149,7 @@ License And Version
 
 :class:`ThumbnailCtrl` is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.9
 
@@ -190,14 +190,14 @@ o\xda\x84pB2\x1f\x81Fa\x8c\x9c\x08\x04Z{\xcf\xa72\xbcv\xfa\xc5\x08 \x80r\x80\
 def GetMondrianBitmap():
     """ Returns a default image placeholder as a :class:`Bitmap`. """
 
-    return wx.BitmapFromImage(GetMondrianImage())
+    return wx.Bitmap(GetMondrianImage())
 
 
 def GetMondrianImage():
     """ Returns a default image placeholder as a :class:`Image`. """
 
     stream = cStringIO.StringIO(GetMondrianData())
-    return wx.ImageFromStream(stream)
+    return wx.Image(stream)
 
 
 #----------------------------------------------------------------------
@@ -318,9 +318,9 @@ def getDataTR():
 def getShadow():
     """ Creates a shadow behind every thumbnail. """
     
-    sh_tr = wx.ImageFromStream(cStringIO.StringIO(getDataTR())).ConvertToBitmap()
-    sh_bl = wx.ImageFromStream(cStringIO.StringIO(getDataBL())).ConvertToBitmap()
-    sh_sh = wx.ImageFromStream(cStringIO.StringIO(getDataSH())).Rescale(500, 500, wx.IMAGE_QUALITY_HIGH)
+    sh_tr = wx.Image(cStringIO.StringIO(getDataTR())).ConvertToBitmap()
+    sh_bl = wx.Image(cStringIO.StringIO(getDataBL())).ConvertToBitmap()
+    sh_sh = wx.Image(cStringIO.StringIO(getDataSH())).Rescale(500, 500, wx.IMAGE_QUALITY_HIGH)
     return (sh_tr, sh_bl, sh_sh.ConvertToBitmap())
 
 
@@ -487,7 +487,7 @@ class PILImageHandler(object):
         originalsize = pil.size
         
         pil.thumbnail(thumbnailsize)
-        img = wx.EmptyImage(pil.size[0], pil.size[1])
+        img = wx.Image(pil.size[0], pil.size[1])
 
         img.SetData(pil.convert("RGB").tostring())
 
@@ -617,8 +617,8 @@ class Thumb(object):
         self._lastmod = lastmod
         self._parent = parent
         self._captionbreaks = []
-        self._bitmap = wx.EmptyBitmap(1,1)
-        self._image = wx.EmptyImage(1,1)
+        self._bitmap = wx.Bitmap(1, 1)
+        self._image = wx.Image(1, 1)
         self._rotation = 0
         self._alpha = None
 
@@ -674,7 +674,7 @@ class Thumb(object):
         """
         
         self._filename = filename
-        self._bitmap = wx.EmptyBitmap(1, 1)
+        self._bitmap = wx.Bitmap(1, 1)
         
 
     def GetId(self):
@@ -718,7 +718,7 @@ class Thumb(object):
         """
         
         if self.GetRotation() % (2*pi) < 1e-6:
-            if not self._bitmap.Ok():
+            if not self._bitmap.IsOk():
                 if not hasattr(self, "_threadedimage"):
                     img = GetMondrianImage()
                 else:
@@ -849,7 +849,7 @@ class Thumb(object):
         end = 0
 
         dc = wx.MemoryDC()
-        bmp = wx.EmptyBitmap(10,10)
+        bmp = wx.Bitmap(10, 10)
         dc.SelectObject(bmp)
         
         while 1:
@@ -1138,7 +1138,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         self._selectioncolour = "#009EFF"
         self.grayPen = wx.Pen("#A2A2D2", 1, wx.SHORT_DASH)
         self.grayPen.SetJoin(wx.JOIN_MITER)
-        self.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_LISTBOX))
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_LISTBOX))
 
         t, b, s = getShadow()
         self.shadow = wx.MemoryDC()
@@ -1387,7 +1387,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         
         if colour is None:
-            colour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+            colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
 
         self._selectioncolour = colour
         
@@ -2002,7 +2002,6 @@ class ScrolledThumbnail(wx.ScrolledWindow):
 
         dc = wx.MemoryDC()
         dc.SelectObject(bmp)
-        dc.BeginDrawing()
         
         x = self._tBorder/2
         y = self._tBorder/2
@@ -2089,7 +2088,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             if selected:
 
                 dc.SetPen(self.grayPen)
-                dc.DrawRoundedRectangleRect(dotrect, 2)
+                dc.DrawRoundedRectangle(dotrect, 2)
                 
                 dc.SetPen(wx.Pen(wx.WHITE))
                 dc.DrawRectangle(imgRect.x, imgRect.y,
@@ -2111,7 +2110,6 @@ class ScrolledThumbnail(wx.ScrolledWindow):
                                  imgRect.width + 2, imgRect.height + 2)
             
   
-        dc.EndDrawing()
         dc.SelectObject(wx.NullBitmap)
 
 
@@ -2153,7 +2151,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             if not paintRect.Intersects(wx.Rect(tx, ty, tw, th)):
                 continue
           
-            thmb = wx.EmptyBitmap(tw, th)
+            thmb = wx.Bitmap(tw, th)
             self.DrawThumbnail(thmb, self._items[ii], ii)
             dc.DrawBitmap(thmb, tx, ty)
   
@@ -2175,7 +2173,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
             rect.x = rect.x + col*(self._tWidth + self._tBorder)
             rect.y = rect.y + (self._rows - 1)*(self._tHeight + self._tBorder) + \
                      self.GetCaptionHeight(0, self._rows - 1)
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
 
 
     def OnResize(self, event):
@@ -2466,7 +2464,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
                 newangle = thumb.GetRotation()*180/pi + angle
                 fil = opj(thumb.GetFullFileName())
                 pil = Image.open(fil).rotate(newangle)
-                img = wx.EmptyImage(pil.size[0], pil.size[1])
+                img = wx.Image(pil.size[0], pil.size[1])
                 img.SetData(pil.convert('RGB').tostring())
                 thumb.SetRotation(newangle*pi/180)
             else:

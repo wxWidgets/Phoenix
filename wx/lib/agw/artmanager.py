@@ -88,7 +88,7 @@ class RendererBase(object):
         dcsaver = DCSaver(dc)
         dc.SetPen(wx.Pen(penColour))
         dc.SetBrush(wx.Brush(brushColour))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
 
     def DrawBitmapArea(self, dc, xpm_name, rect, baseColour, flipSide):
@@ -112,7 +112,7 @@ class RendererBase(object):
                                                       wx.WHITE, True, False)
 
         # draw arrow
-        arrowDown = wx.BitmapFromXPMData(xpm_name)
+        arrowDown = wx.Bitmap(xpm_name)
         arrowDown.SetMask(wx.Mask(arrowDown, wx.WHITE))
         dc.DrawBitmap(arrowDown, rect.x + 1 , rect.y + 1, True)
 
@@ -149,7 +149,7 @@ class RendererBase(object):
         :return: An instance of :class:`Colour`.
         """
         
-        return ArtManager.Get().LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE), 80)
+        return ArtManager.Get().LightColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE), 80)
 
 
     def GetTextColourEnable(self):
@@ -169,7 +169,7 @@ class RendererBase(object):
         :return: An instance of :class:`Colour`.
         """
 
-        return ArtManager.Get().LightColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRAYTEXT), 30)
+        return ArtManager.Get().LightColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT), 30)
 
 
     def GetFont(self):
@@ -179,7 +179,7 @@ class RendererBase(object):
         :return: An instance of :class:`Font`.
         """
 
-        return wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        return wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
 
                 
 # ---------------------------------------------------------------------------- #
@@ -288,7 +288,7 @@ class RendererXP(RendererBase):
 
             dc.SetPen(wx.Pen(startColour))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
-            dc.DrawRectangleRect(rect)
+            dc.DrawRectangle(rect)
 
 
     def DrawToolBarBg(self, dc, rect):
@@ -436,8 +436,8 @@ class RendererMSOffice2007(RendererBase):
         rightPt = wx.Point(rect.x + rect.width-1, rect.y + (rect.height / 2))
 
         # Define the top region
-        top = wx.RectPP((rect.GetLeft(), rect.GetTop()), rightPt)
-        bottom = wx.RectPP(leftPt, (rect.GetRight(), rect.GetBottom()))
+        top = wx.Rect((rect.GetLeft(), rect.GetTop()), rightPt)
+        bottom = wx.Rect(leftPt, (rect.GetRight(), rect.GetBottom()))
 
         upperBoxTopPercent, upperBoxBottomPercent, lowerBoxTopPercent, lowerBoxBottomPercent, \
                             concaveUpperBox, concaveLowerBox = self.GetColoursAccordingToState(state)
@@ -455,12 +455,12 @@ class RendererMSOffice2007(RendererBase):
 
         frameColour = artMgr.LightColour(baseColour, 60)
         dc.SetPen(wx.Pen(frameColour))
-        dc.DrawRectangleRect(rr)
+        dc.DrawRectangle(rr)
 
         wc = artMgr.LightColour(baseColour, 80)
         dc.SetPen(wx.Pen(wc))
         rr.Deflate(1, 1)
-        dc.DrawRectangleRect(rr)
+        dc.DrawRectangle(rr)
 
 
     def DrawMenuBarBg(self, dc, rect):
@@ -476,9 +476,9 @@ class RendererMSOffice2007(RendererBase):
         artMgr = ArtManager.Get()
         baseColour = artMgr.GetMenuBarFaceColour()
 
-        dc.SetBrush(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
-        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
-        dc.DrawRectangleRect(rect)
+        dc.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
+        dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
+        dc.DrawRectangle(rect)
 
         # Define the rounded rectangle base on the given rect
         # we need an array of 9 points for it
@@ -516,17 +516,17 @@ class RendererMSOffice2007(RendererBase):
         topReg[6] = topReg[0]
 
         # Define the middle region
-        middle = wx.RectPP(leftPt1, wx.Point(rightPt2.x - 2, rightPt2.y))
+        middle = wx.Rect(leftPt1, wx.Point(rightPt2.x - 2, rightPt2.y))
             
         # Define the bottom region
-        bottom = wx.RectPP(leftPt2, wx.Point(rect.GetRight() - 1, rect.GetBottom()))
+        bottom = wx.Rect(leftPt2, wx.Point(rect.GetRight() - 1, rect.GetBottom()))
 
         topStartColour   = artMgr.LightColour(baseColour, 90)
         topEndColour = artMgr.LightColour(baseColour, 60)
         bottomStartColour = artMgr.LightColour(baseColour, 40)
         bottomEndColour   = artMgr.LightColour(baseColour, 20)
         
-        topRegion = wx.RegionFromPoints(topReg)
+        topRegion = wx.Region(topReg)
 
         artMgr.PaintGradientRegion(dc, topRegion, topStartColour, topEndColour)
         artMgr.PaintStraightGradientBox(dc, bottom, bottomStartColour, bottomEndColour)
@@ -552,9 +552,9 @@ class RendererMSOffice2007(RendererBase):
         baseColour = artMgr.GetMenuBarFaceColour()
         baseColour = artMgr.LightColour(baseColour, 20)
 
-        dc.SetBrush(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
-        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)))
-        dc.DrawRectangleRect(rect)
+        dc.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
+        dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
+        dc.DrawRectangle(rect)
 
         radius = 2
         
@@ -592,17 +592,17 @@ class RendererMSOffice2007(RendererBase):
         topReg[6] = topReg[0]
 
         # Define the middle region
-        middle = wx.RectPP(leftPt1, wx.Point(rightPt2.x - 2, rightPt2.y))
+        middle = wx.Rect(leftPt1, wx.Point(rightPt2.x - 2, rightPt2.y))
 
         # Define the bottom region
-        bottom = wx.RectPP(leftPt2, wx.Point(rect.GetRight() - 1, rect.GetBottom()))
+        bottom = wx.Rect(leftPt2, wx.Point(rect.GetRight() - 1, rect.GetBottom()))
         
         topStartColour   = artMgr.LightColour(baseColour, 90)
         topEndColour = artMgr.LightColour(baseColour, 60)
         bottomStartColour = artMgr.LightColour(baseColour, 40)
         bottomEndColour   = artMgr.LightColour(baseColour, 20)
         
-        topRegion = wx.RegionFromPoints(topReg)
+        topRegion = wx.Region(topReg)
 
         artMgr.PaintGradientRegion(dc, topRegion, topStartColour, topEndColour)
         artMgr.PaintStraightGradientBox(dc, bottom, bottomStartColour, bottomEndColour)
@@ -618,7 +618,7 @@ class RendererMSOffice2007(RendererBase):
         :return: An instance of :class:`Colour`.
         """
 
-        return wx.NamedColour("MIDNIGHT BLUE")
+        return wx.Colour("MIDNIGHT BLUE")
     
     
 # ---------------------------------------------------------------------------- #
@@ -649,7 +649,7 @@ class ArtManager(wx.EvtHandler):
         """ Default class constructor. """
 
         wx.EvtHandler.__init__(self)
-        self._menuBarBgColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE)
+        self._menuBarBgColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
         
         # connect an event handler to the system colour change event
         self.Bind(wx.EVT_SYS_COLOUR_CHANGED, self.OnSysColourChange)
@@ -698,7 +698,7 @@ class ArtManager(wx.EvtHandler):
 
         if alpha is not None:
 
-            img = wx.BitmapFromXPMData(xpm)
+            img = wx.Bitmap(xpm)
             img = img.ConvertToImage()
             x, y = img.GetWidth(), img.GetHeight()
             img.InitAlpha()
@@ -709,9 +709,9 @@ class ArtManager(wx.EvtHandler):
         else:
 
             stream = cStringIO.StringIO(xpm)
-            img = wx.ImageFromStream(stream)
+            img = wx.Image(stream)
             
-        return wx.BitmapFromImage(img)
+        return wx.Bitmap(img)
 
                 
     def Initialize(self):
@@ -899,7 +899,7 @@ class ArtManager(wx.EvtHandler):
         # The way to achieve non-rectangle 
         memDC = wx.MemoryDC()
         rect = region.GetBox()
-        bitmap = wx.EmptyBitmap(rect.width, rect.height)
+        bitmap = wx.Bitmap(rect.width, rect.height)
         memDC.SelectObject(bitmap)
 
         # Colour the whole rectangle with gradient
@@ -1110,7 +1110,7 @@ class ArtManager(wx.EvtHandler):
         :return: An instance of :class:`Colour`.
         """
 
-        return wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        return wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
 
 
     def BackgroundColour(self):
@@ -1623,12 +1623,12 @@ class ArtManager(wx.EvtHandler):
         if enable:
             dc.SetTextForeground(fontColour)
         else:
-            dc.SetTextForeground(wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRAYTEXT))
+            dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
         
         # set the font
         
         if font == wx.NullFont:
-            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
             
         dc.SetFont(font)
         
@@ -1709,14 +1709,14 @@ class ArtManager(wx.EvtHandler):
             HEIGHT = 26
 
         dc = wx.MemoryDC()
-        dc.SelectBitmap(wx.EmptyBitmap(1, 1))
+        dc.SelectBitmap(wx.Bitmap(1, 1))
 
-        dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
-        width, height, dummy = dc.GetMultiLineTextExtent(label)
+        dc.SetFont(wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT))
+        width, height, dummy = dc.GetFullMultiLineTextExtent(label)
 
         width += 2*self.GetAlignBuffer() 
 
-        if bmp.Ok():
+        if bmp.IsOk():
         
             # allocate extra space for the bitmap
             heightBmp = bmp.GetHeight() + 2
@@ -1815,7 +1815,7 @@ class ArtManager(wx.EvtHandler):
         """
 
         if not useLightColours and not self.IsDark(self.FrameColour()):
-            return wx.NamedColour("GOLD")
+            return wx.Colour("GOLD")
         else:
             return self.LightColour(self.FrameColour(), 30)
 
@@ -1942,7 +1942,7 @@ class ArtManager(wx.EvtHandler):
         dc = wx.ScreenDC()
         mem_dc = wx.MemoryDC()
         
-        bmp = wx.EmptyBitmap(rect.width, rect.height)
+        bmp = wx.Bitmap(rect.width, rect.height)
         mem_dc.SelectObject(bmp)
         mem_dc.SetBrush(wx.WHITE_BRUSH)
         mem_dc.SetPen(wx.Pen(wx.WHITE, 1))
@@ -1965,7 +1965,7 @@ class ArtManager(wx.EvtHandler):
         # Create a Bitmap that will later on hold the screenshot image
         # Note that the Bitmap must have a size big enough to hold the screenshot
         # -1 means using the current default colour depth
-        bmp = wx.EmptyBitmap(rect.width, rect.height)
+        bmp = wx.Bitmap(rect.width, rect.height)
 
         # Create a memory DC that will be used for actually taking the screenshot
         memDC = wx.MemoryDC()
@@ -2064,10 +2064,10 @@ class ArtManager(wx.EvtHandler):
     def InitColours(self):
         """ Initialise the colour map. """
 
-        self._colourSchemeMap = {_("Default"): wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE),
+        self._colourSchemeMap = {_("Default"): wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE),
                                 _("Dark"): wx.BLACK,
-                                _("Dark Olive Green"): wx.NamedColour("DARK OLIVE GREEN"),
-                                _("Generic"): wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)}
+                                _("Dark Olive Green"): wx.Colour("DARK OLIVE GREEN"),
+                                _("Generic"): wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)}
 
 
     def GetColourSchemes(self):
@@ -2090,7 +2090,7 @@ class ArtManager(wx.EvtHandler):
         """
 
         img = bmp.ConvertToImage()
-        return wx.BitmapFromImage(img.ConvertToGreyscale())
+        return wx.Bitmap(img.ConvertToGreyscale())
 
 
     def GetRaiseToolbar(self):

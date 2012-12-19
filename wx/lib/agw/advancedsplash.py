@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 10 Oct 2005
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -123,7 +123,7 @@ License And Version
 
 :class:`AdvancedSplash` control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.5
 

@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 03 Dec 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -100,7 +100,7 @@ License And Version
 
 :class:`AquaButton` control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 03 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.4
 
@@ -550,7 +550,7 @@ class AquaButton(wx.Control):
 
         image = self._storedBitmap.AdjustChannels(gamma, gamma, gamma, 1.0)
         dc = wx.ClientDC(self)
-        dc.SetClippingRect(wx.Rect(xpos, ypos, width-8, height-8))
+        dc.SetClippingRegion(wx.Rect(xpos, ypos, width-8, height-8))
         dc.DrawBitmap(image.ConvertToBitmap(), xpos, ypos, True)
 
 
@@ -949,8 +949,8 @@ class __ToggleMixin(object):
             return
         
         if event.LeftIsDown() and self.HasCapture():
-            x, y = event.GetPositionTuple()
-            w, h = self.GetClientSizeTuple()
+            x, y = event.GetPosition()
+            w, h = self.GetClientSize()
             
             if x < w and x >= 0 and y < h and y >= 0:
                 self.up = not self.saveUp
@@ -1018,7 +1018,7 @@ class __ToggleMixin(object):
         path2 = self.GetPath(gc, rc2, 10)
         br2 = gc.CreateRadialGradientBrush(rc2.x, rc2.y,
                                            rc2.x+rc2.width, rc2.y+rc2.height,
-                                           rc2.width, wx.NamedColour("grey"), wx.WHITE)
+                                           rc2.width, wx.Colour("grey"), wx.WHITE)
 
         # Create top water colour to give "aqua" effect
         rc3 = wx.Rect(*rc1)

@@ -368,7 +368,7 @@ class RibbonPage(RibbonControl):
         if height < 0:
             height = 0
             
-        self.SetDimensions(x, y, width, height)
+        self.SetSize(x, y, width, height)
 
 
     def DoSetSize(self, x, y, width, height, sizeFlags=wx.SIZE_AUTO):
@@ -533,10 +533,10 @@ class RibbonPage(RibbonControl):
             for child in self.GetChildren():
                 w, h = child.GetSize()
                 if major_axis == wx.HORIZONTAL:
-                    child.SetDimensions(origin.x, origin.y, w, minor_axis_size)
+                    child.SetSize(origin.x, origin.y, w, minor_axis_size)
                     origin.x += w + gap
                 else:                
-                    child.SetDimensions(origin.x, origin.y, minor_axis_size, h)
+                    child.SetSize(origin.x, origin.y, minor_axis_size, h)
                     origin.y += h + gap
 
             if iteration == 1:
@@ -880,7 +880,7 @@ class RibbonPage(RibbonControl):
 
         :return: An instance of :class:`Size`.
         
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         best = wx.Size(0, 0)

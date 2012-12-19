@@ -2,7 +2,7 @@
 # GENERICMESSAGEDIALOG wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -41,8 +41,8 @@ replacement for the standard :class:`MessageDialog`, with these extra functional
 * Custom icons for the ``OK``, ``Yes``, ``No``, ``Cancel`` and ``Help`` buttons;
 * Possibility to set an icon to the dialog;
 * More visibility to the button getting the focus;
-* Support for Aqua buttons or Gradient buttons instead of themed ones (see :class:`AquaButton`
-  and :class:`GradientButton`);
+* Support for Aqua buttons or Gradient buttons instead of themed ones (see :class:`~lib.agw.aquabutton.AquaButton`
+  and :class:`~lib.agw.gradientbutton.GradientButton`);
 * Possibility to automatically wrap long lines of text;
 * Good old Python code :-D .
 
@@ -122,7 +122,7 @@ License And Version
 
 :class:`GenericMessageDialog` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.8
 

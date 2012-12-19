@@ -5,7 +5,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 12 March 2012
-# Latest Revision: 18 Dec 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -52,7 +52,7 @@ Info bar may show an icon (on the left), text message and, optionally, buttons a
 user to react to the information presented. It always has a close button at the right allowing
 the user to dismiss it so it isn't necessary to provide a button just to close it.
 
-:class:`InfoBar` calls its parent `Layout()` method (if its parent is **not** managed by :class:`framemanager`
+:class:`InfoBar` calls its parent `Layout()` method (if its parent is **not** managed by :class:`~aui.framemanager`
 or :class:`~lib.agw.aui.AuiManager`) and assumes that it will change the parent layout appropriately depending
 on whether the info bar itself is shown or hidden. Usually this is achieved by simply using a
 sizer for the parent window layout and adding wxInfoBar to this sizer as one of the items.
@@ -64,7 +64,7 @@ Base Functionalities
 ====================
 
 :class:`InfoBar` supports all the :class:`InfoBar` generic implementation functionalities, and in addition
-it using :meth:~InfoBar.AddButton` it is possible to add a button with a bitmap (and not only a plain :class:`Button`).
+it using :meth:`~InfoBar.AddButton` it is possible to add a button with a bitmap (and not only a plain :class:`Button`).
 
 For example::
 
@@ -150,7 +150,7 @@ License And Version
 
 :class:`InfoBar` control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 18 Dec 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.3
 

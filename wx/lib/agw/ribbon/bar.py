@@ -9,7 +9,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 15 Oct 2009
-# Latest Revision: 18 Dec 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -891,9 +891,9 @@ class RibbonBar(RibbonControl):
             if self._tab_scroll_buttons_shown:
                 if not tabs_rect.Intersects(info.rect):
                     continue
-                dc.SetClippingRect(tabs_rect)
+                dc.SetClippingRegion(tabs_rect)
             
-            dc.SetClippingRect(info.rect)
+            dc.SetClippingRegion(info.rect)
             self._art.DrawTab(dc, self, info)
 
             if info.rect.width < info.small_begin_need_separator_width:
@@ -918,7 +918,7 @@ class RibbonBar(RibbonControl):
                     continue
                 
                 dc.DestroyClippingRegion()
-                dc.SetClippingRect(rect)
+                dc.SetClippingRegion(rect)
                 self._art.DrawTabSeparator(dc, self, rect, sep_visibility)
 
         if self._tab_scroll_buttons_shown:        
@@ -1214,7 +1214,7 @@ class RibbonBar(RibbonControl):
 
         :return: An instance of :class:`Size`.
         
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         best = wx.Size(0, 0)

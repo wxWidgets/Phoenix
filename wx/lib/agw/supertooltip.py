@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 25 Aug 2012, 10.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -120,7 +120,7 @@ License And Version
 
 :class:`SuperToolTip` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 25 Aug 2012, 10.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.5
 
@@ -341,7 +341,7 @@ class ToolTipWindowBase(object):
         messageHeight = 0
         lines = classParent.GetMessage().split("\n")
         yText = yPos
-        normalText = wx.SystemSettings_GetColour(wx.SYS_COLOUR_MENUTEXT)
+        normalText = wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUTEXT)
         hyperLinkText = wx.BLUE
         messagePos = self._getTextExtent(dc, lines[0] if lines else "")[1] // 2 + self._spacing
         for line in lines:
@@ -470,7 +470,7 @@ class ToolTipWindowBase(object):
         for rect in self._hyperlinkRect:
             if rect.Contains((x, y)):
                 # We are over one hyperlink...
-                self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+                self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
                 self._wasOnLink = True
                 return
 
@@ -673,8 +673,8 @@ class ToolTipWindowBase(object):
 
     def CalculateBestPosition(self,widget):
         screen = wx.ClientDisplayRect()[2:]
-        left,top = widget.ClientToScreenXY(0,0)
-        right,bottom = widget.ClientToScreenXY(*widget.GetClientRect()[2:])
+        left,top = widget.ClientToScreen((0, 0))
+        right,bottom = widget.ClientToScreen(widget.GetClientRect()[2:])
         size = self.GetSize()
         if right+size[0]>screen[0]:
             xpos = left-size[0]
@@ -1252,12 +1252,12 @@ class SuperToolTip(object):
     def InitFont(self):
         """ Initalizes the fonts for :class:`SuperToolTip`. """
 
-        self._messageFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._headerFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        self._messageFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        self._headerFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._headerFont.SetWeight(wx.BOLD)
-        self._footerFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        self._footerFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._footerFont.SetWeight(wx.BOLD)
-        self._hyperlinkFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        self._hyperlinkFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._hyperlinkFont.SetWeight(wx.BOLD)
         self._hyperlinkFont.SetUnderlined(True)
 

@@ -149,7 +149,7 @@ class AuiDefaultDockArt(object):
             self._caption_font = wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False)
 
         self.SetDefaultPaneBitmaps(isMac)
-        self._restore_bitmap = wx.BitmapFromXPMData(restore_xpm)
+        self._restore_bitmap = wx.Bitmap(restore_xpm)
 
         # default metric values
         self._sash_size = 4
@@ -328,11 +328,11 @@ class AuiDefaultDockArt(object):
         """
 
         if isinstance(colour, basestring):
-            colour = wx.NamedColour(colour)
+            colour = wx.Colour(colour)
         elif isinstance(colour, types.TupleType):
             colour = wx.Colour(*colour)
         elif isinstance(colour, types.IntType):
-            colour = wx.ColourRGB(colour)
+            colour = wx.Colour(colour)
 
         if id == AUI_DOCKART_BACKGROUND_COLOUR:
             self._background_brush.SetColour(colour)
@@ -545,7 +545,7 @@ class AuiDefaultDockArt(object):
         """
 
         # Draw the icon centered vertically
-        if pane.icon.Ok():
+        if pane.icon.IsOk():
             if pane.HasCaptionLeft():
                 bmp = wx.ImageFromBitmap(pane.icon).Rotate90(clockwise=False)
                 dc.DrawBitmap(bmp.ConvertToBitmap(), rect.x+(rect.width-pane.icon.GetWidth())/2, rect.y+rect.height-2-pane.icon.GetHeight(), True)

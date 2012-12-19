@@ -504,7 +504,7 @@ class HyperLinkCtrl(StaticText):
         """
         Sets link cursor properties.
 
-        :param `cur`: an integer representing a :ref:`StockCursor` constant.
+        :param `cur`: an integer representing a :ref:`Cursor` constant.
         """
         
         self._CursorHand = wx.Cursor(cur)

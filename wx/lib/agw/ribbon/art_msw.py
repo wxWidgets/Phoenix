@@ -1076,7 +1076,7 @@ class RibbonMSWArtProvider(object):
     def ReallyDrawTabSeparator(self, wnd, rect, visibility):
 
         if not self._cached_tab_separator.IsOk() or self._cached_tab_separator.GetSize() != rect.GetSize():
-            self._cached_tab_separator = wx.EmptyBitmap(*rect.GetSize())
+            self._cached_tab_separator = wx.Bitmap(*rect.GetSize())
     
         dc = wx.MemoryDC(self._cached_tab_separator)
         self.DrawTabCtrlBackground(dc, wnd, rect)
@@ -1267,8 +1267,8 @@ class RibbonMSWArtProvider(object):
             # and size adjustment.
             dc.SetPen(wx.TRANSPARENT_PEN)
             dc.SetBrush(self._tab_ctrl_background_brush)
-            dc.DrawRectangleRect(rect)
-            dc.SetClippingRect(rect)
+            dc.DrawRectangle(rect)
+            dc.SetClippingRegion(rect)
             
             result = style & RIBBON_SCROLL_BTN_DIRECTION_MASK
             
@@ -1477,7 +1477,7 @@ class RibbonMSWArtProvider(object):
                         label = new_label
                         break
                     
-        dc.DrawRectangleRect(label_rect)
+        dc.DrawRectangle(label_rect)
         
         if clip_label:        
             clip = wx.DCClipper(dc, label_rect)

@@ -126,7 +126,7 @@ class RibbonGalleryItem(object):
         
     def SetPosition(self, x, y, size):
     
-        self._position = wx.RectPS(wx.Point(x, y), size)
+        self._position = wx.Rect(wx.Point(x, y), size)
     
 
     def IsVisible(self):
@@ -571,7 +571,7 @@ class RibbonGallery(RibbonControl):
         padding_top = self._art.GetMetric(RIBBON_ART_GALLERY_BITMAP_PADDING_TOP_SIZE)
         padding_left = self._art.GetMetric(RIBBON_ART_GALLERY_BITMAP_PADDING_LEFT_SIZE)
 
-        dc.SetClippingRect(self._client_rect)
+        dc.SetClippingRegion(self._client_rect)
 
         offset_vertical = True
         
@@ -698,7 +698,7 @@ class RibbonGallery(RibbonControl):
         client_size, origin, self._scroll_up_button_rect, self._scroll_down_button_rect, self._extension_button_rect = \
                      self._art.GetGalleryClientSize(dc, self, wx.Size(*self.GetSize()))
         
-        self._client_rect = wx.RectPS(origin, client_size)
+        self._client_rect = wx.Rect(origin, client_size)
 
         x_cursor = y_cursor = 0
         art_flags = self._art.GetFlags()
@@ -762,7 +762,7 @@ class RibbonGallery(RibbonControl):
 
         :return: An instance of :class:`Size`.
         
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self._best_size

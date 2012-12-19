@@ -102,7 +102,7 @@ three text controls in a frame window::
 What's New
 ==========
 
-Current wxAUI Version Tracked: wxWidgets 2.9.4 (SVN HEAD)
+Current wxAUI Version Tracked: wxWidgets 2.9.5 (SVN HEAD)
 
 The wxPython AUI version fixes the following bugs or implement the following
 missing features (the list is not exhaustive):
@@ -278,7 +278,7 @@ License And Version
 
 AUI library is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 25 Apr 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 1.3. 
 

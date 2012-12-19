@@ -460,7 +460,7 @@ class RibbonToolBar(RibbonControl):
     def MakeDisabledBitmap(self, original):
 
         img = original.ConvertToImage()
-        return wx.BitmapFromImage(img.ConvertToGreyscale())
+        return wx.Bitmap(img.ConvertToGreyscale())
 
 
     def AppendGroup(self):
@@ -1212,7 +1212,7 @@ class RibbonToolBar(RibbonControl):
 
         :return: An instance of :class:`Size`.
         
-        :note: Overridden from :class:`PyControl`.
+        :note: Overridden from :class:`Control`.
         """
 
         return self.GetMinSize()
@@ -1247,10 +1247,10 @@ class RibbonToolBar(RibbonControl):
             tool_count = len(group.tools)
 
             if tool_count != 0:            
-                self._art.DrawToolGroupBackground(dc, self, wx.RectPS(group.position, group.size))
+                self._art.DrawToolGroupBackground(dc, self, wx.Rect(group.position, group.size))
 
                 for tool in group.tools:
-                    rect = wx.RectPS(group.position + tool.position, tool.size)
+                    rect = wx.Rect(group.position + tool.position, tool.size)
 
                     if tool.state & RIBBON_TOOLBAR_TOOL_DISABLED:
                         self._art.DrawTool(dc, self, rect, tool.bitmap_disabled, tool.kind, tool.state)
@@ -1283,9 +1283,9 @@ class RibbonToolBar(RibbonControl):
                 break
 
         if new_hover and new_hover != self._hover_tool:
-            self.SetToolTipString(new_hover.help_string)
+            self.SetToolTip(new_hover.help_string)
         elif self.GetToolTip() and new_hover != self._hover_tool:
-            self.SetToolTipString("")
+            self.SetToolTip("")
             
         if new_hover != self._hover_tool:
             if self._hover_tool:            
@@ -1432,7 +1432,7 @@ class RibbonToolBar(RibbonControl):
         .. versionadded:: 0.9.5
         """        
 
-        wx.PyControl.UpdateWindowUI(self, flags)
+        wx.Control.UpdateWindowUI(self, flags)
 
         # don't waste time updating state of tools in a hidden toolbar
         if not self.IsShown():

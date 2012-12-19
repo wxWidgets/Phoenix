@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 25 Apr 2012, 21.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -1991,7 +1991,7 @@ class AuiDockingGuideWindow(wx.Window):
 
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.SetBrush(wx.Brush(colourTargetBackground))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
         dc.SetPen(wx.Pen(colourTargetBorder))
 
@@ -2051,7 +2051,7 @@ class AuiDockingGuideWindow(wx.Window):
         rect.Deflate(4, 4)
         dc.SetPen(wx.Pen(colourIconBorder))
         dc.SetBrush(wx.Brush(colourIconBackground))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
         right1 = rect.GetRight() + 1
         bottom1 = rect.GetBottom() + 1
@@ -2145,7 +2145,7 @@ class AuiDockingGuideWindow(wx.Window):
         for i in xrange(4):
             pt1 = wx.Point(point.x - rx.x*i, point.y - rx.y*i)
             pt2 = wx.Point(point.x + rx.x*(i+1), point.y + rx.y*(i+1))
-            dc.DrawLinePoint(pt1, pt2)
+            dc.DrawLine(pt1, pt2)
             point.x += ry.x
             point.y += ry.y
 
@@ -2284,7 +2284,7 @@ class AuiSingleDockingGuide(AuiDockingGuide):
 
         useAero = (useWhidbey and [2] or [1])[0]
         bmp, dummy = GetDockingImage(self._direction, useAero, False)
-        region = wx.RegionFromBitmap(bmp)
+        region = wx.Region(bmp)
 
         self.region = region
 
@@ -2473,15 +2473,15 @@ class AuiCenterDockingGuide(AuiDockingGuide):
             region.UnionRect(rectRight)
             region.UnionRect(rectBottom)
             region.UnionRect(rectCenter)
-            region.UnionRegion(wx.RegionFromPoints(tld))
-            region.UnionRegion(wx.RegionFromPoints(bld))
-            region.UnionRegion(wx.RegionFromPoints(trd))
-            region.UnionRegion(wx.RegionFromPoints(brd))
+            region.UnionRegion(wx.Region(tld))
+            region.UnionRegion(wx.Region(bld))
+            region.UnionRegion(wx.Region(trd))
+            region.UnionRegion(wx.Region(brd))
 
         elif useAero:
 
             self._aeroBmp = aero_dock_pane.GetBitmap()
-            region = wx.RegionFromBitmap(self._aeroBmp)
+            region = wx.Region(self._aeroBmp)
 
             self._allAeroBmps = [aero_dock_pane_left.GetBitmap(), aero_dock_pane_top.GetBitmap(),
                                  aero_dock_pane_right.GetBitmap(), aero_dock_pane_bottom.GetBitmap(),
@@ -2493,7 +2493,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         elif useWhidbey:
 
             self._aeroBmp = whidbey_dock_pane.GetBitmap()
-            region = wx.RegionFromBitmap(self._aeroBmp)
+            region = wx.Region(self._aeroBmp)
 
             self._allAeroBmps = [whidbey_dock_pane_left.GetBitmap(), whidbey_dock_pane_top.GetBitmap(),
                                  whidbey_dock_pane_right.GetBitmap(), whidbey_dock_pane_bottom.GetBitmap(),
@@ -2674,7 +2674,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
 
         dc.SetPen(wx.Pen(colourTargetBorder, 2))
         for pts in self._triangles:
-            dc.DrawLinePoint(pts[0], pts[1])
+            dc.DrawLine(pts[0], pts[1])
 
 
 # ----------------------------------------------------------------------------
@@ -2834,7 +2834,7 @@ class AuiDockingHintWindow(wx.Frame):
         :param `event`: an instance of :class:`PaintEvent` to be processed.
         """
 
-        rect = wx.RectPS(wx.Point(0, 0), self.GetSize())
+        rect = wx.Rect(wx.Point(0, 0), self.GetSize())
 
         dc = wx.PaintDC(self)
         event.Skip()
@@ -2842,7 +2842,7 @@ class AuiDockingHintWindow(wx.Frame):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetPen(wx.Pen(wx.Colour(60, 60, 60), 5))
         rect.Deflate(1, 1)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
 
 # ---------------------------------------------------------------------------- #
@@ -3222,7 +3222,7 @@ class AuiFloatingFrame(wx.MiniFrame):
         if event.GetEventType() == wx.wxEVT_MOVING:
             self.OnMoving(event.GetRect(), dir)
         else:
-            self.OnMoving(wx.RectPS(event.GetPosition(), self.GetSize()), dir)
+            self.OnMoving(wx.Rect(event.GetPosition(), self.GetSize()), dir)
 
 
     def OnIdle(self, event):
@@ -3450,16 +3450,16 @@ def DrawResizeHint(dc, rect):
             dc.SetPen(wx.TRANSPARENT_PEN)
             dc.SetBrush(wx.BLACK_BRUSH)
         dc.SetLogicalFunction(wx.INVERT)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
         dc.SetLogicalFunction(wx.COPY)
     else:
         stipple = PaneCreateStippleBitmap()
-        brush = wx.BrushFromBitmap(stipple)
+        brush = wx.Brush(stipple)
         dc.SetBrush(brush)
         dc.SetPen(wx.TRANSPARENT_PEN)
 
         dc.SetLogicalFunction(wx.XOR)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
 
 def CopyDocksAndPanes(src_docks, src_panes):
@@ -6438,8 +6438,8 @@ class AuiManager(wx.EvtHandler):
                     # frame already exists, make sure it's position
                     # and size reflect the information in AuiPaneInfo
                     if pFrame.GetPosition() != p.floating_pos or pFrame.GetSize() != p.floating_size:
-                        pFrame.SetDimensions(p.floating_pos.x, p.floating_pos.y,
-                                             p.floating_size.x, p.floating_size.y, wx.SIZE_USE_EXISTING)
+                        pFrame.SetSize(p.floating_pos.x, p.floating_pos.y,
+                                       p.floating_size.x, p.floating_size.y, wx.SIZE_USE_EXISTING)
 
                     # update whether the pane is resizable or not
                     style = p.frame.GetWindowStyleFlag()
@@ -6457,7 +6457,7 @@ class AuiManager(wx.EvtHandler):
                 if pFrame.GetTitle() != p.caption:
                     pFrame.SetTitle(p.caption)
                 if p.icon.IsOk():
-                    pFrame.SetIcon(wx.IconFromBitmap(p.icon))
+                    pFrame.SetIcon(wx.Icon(p.icon))
 
             else:
 
@@ -6939,7 +6939,7 @@ class AuiManager(wx.EvtHandler):
         for part in uiparts:
             pos = part.sizer_item.GetPosition()
             size = part.sizer_item.GetSize()
-            part.rect = wx.RectPS(pos, size)
+            part.rect = wx.Rect(pos, size)
             if part.type == AuiDockUIPart.typeDock:
                 part.dock.rect = part.rect
 
@@ -7131,7 +7131,7 @@ class AuiManager(wx.EvtHandler):
 
         for part in uiparts:
 
-            part.rect = wx.RectPS(part.sizer_item.GetPosition(), part.sizer_item.GetSize())
+            part.rect = wx.Rect(part.sizer_item.GetPosition(), part.sizer_item.GetSize())
             if part.type == AuiDockUIPart.typeDock:
                 part.dock.rect = part.rect
 
@@ -8087,16 +8087,16 @@ class AuiManager(wx.EvtHandler):
                         rect2.height += 35
                         rect2.Inflate(5, 5)
 
-                    clip.SubtractRect(rect2)
+                    clip.Subtract(rect2)
 
             # As we can only hide the hint by redrawing the managed window, we
             # need to clip the region to the managed window too or we get
             # nasty redrawn problems.
-            clip.IntersectRect(self._frame.GetRect())
-            screendc.SetClippingRegionAsRegion(clip)
+            clip.Intersect(self._frame.GetRect())
+            screendc.SetClippingRegion(clip)
 
             stipple = PaneCreateStippleBitmap()
-            brush = wx.BrushFromBitmap(stipple)
+            brush = wx.Brush(stipple)
             screendc.SetBrush(brush)
             screendc.SetPen(wx.TRANSPARENT_PEN)
             screendc.DrawRectangle(rect.x, rect.y, 5, rect.height)
@@ -8285,7 +8285,7 @@ class AuiManager(wx.EvtHandler):
 
         for part in uiparts:
             if part.pane and part.pane.name == sought:
-                rect.Union(wx.RectPS(part.sizer_item.GetPosition(),
+                rect.Union(wx.Rect(part.sizer_item.GetPosition(),
                                      part.sizer_item.GetSize()))
 
         sizer.Destroy()
@@ -8294,7 +8294,7 @@ class AuiManager(wx.EvtHandler):
         if rect.IsEmpty():
             for p in panes:
                 if p.name == sought and p.IsFloating():
-                    return wx.RectPS(p.floating_pos, p.floating_size)
+                    return wx.Rect(p.floating_pos, p.floating_size)
 
         if rect.IsEmpty():
             return rect
@@ -8341,7 +8341,7 @@ class AuiManager(wx.EvtHandler):
 
         for part in self._uiparts:
             if part.pane and part.pane.name == "__HINT__":
-                rect.Union(wx.RectPS(part.sizer_item.GetPosition(),
+                rect.Union(wx.Rect(part.sizer_item.GetPosition(),
                                      part.sizer_item.GetSize()))
 
         return rect
@@ -8624,7 +8624,7 @@ class AuiManager(wx.EvtHandler):
                     paneInfo.frame.SetTransparent(150)
 
             if paneInfo.IsToolbar():
-                self._frame.SetCursor(wx.StockCursor(wx.CURSOR_SIZING))
+                self._frame.SetCursor(wx.Cursor(wx.CURSOR_SIZING))
 
 
     def OnRender(self, event):
@@ -8892,12 +8892,12 @@ class AuiManager(wx.EvtHandler):
                     return
 
                 if part.orientation == wx.VERTICAL:
-                    cursor = wx.StockCursor(wx.CURSOR_SIZEWE)
+                    cursor = wx.Cursor(wx.CURSOR_SIZEWE)
                 else:
-                    cursor = wx.StockCursor(wx.CURSOR_SIZENS)
+                    cursor = wx.Cursor(wx.CURSOR_SIZENS)
 
             elif part.type == AuiDockUIPart.typeGripper:
-                cursor = wx.StockCursor(wx.CURSOR_SIZING)
+                cursor = wx.Cursor(wx.CURSOR_SIZING)
 
         event.SetCursor(cursor)
 
@@ -8971,7 +8971,7 @@ class AuiManager(wx.EvtHandler):
                                            event.GetY() - part.rect.y)
 
             # draw the resize hint
-            rect = wx.RectPS(self._frame.ClientToScreen(part.rect.GetPosition()),
+            rect = wx.Rect(self._frame.ClientToScreen(part.rect.GetPosition()),
                              part.rect.GetSize())
 
             self._action_rect = wx.Rect(*rect)
@@ -9190,7 +9190,7 @@ class AuiManager(wx.EvtHandler):
         try:
             if self._frame.HasCapture():
                 self._frame.ReleaseMouse()
-        except wx.PyDeadObjectError:
+        except RuntimeError:
             pass
 
         self._action = actionNone
@@ -9458,7 +9458,7 @@ class AuiManager(wx.EvtHandler):
         else:
             pos.x = Clip(clientPt.x - self._action_offset.x, minPix, maxPix)
 
-        hintrect = wx.RectPS(self._frame.ClientToScreen(pos), self._action_part.rect.GetSize())
+        hintrect = wx.Rect(self._frame.ClientToScreen(pos), self._action_part.rect.GetSize())
 
         if hintrect != self._action_rect:
 
@@ -10343,10 +10343,10 @@ class AuiManager(wx.EvtHandler):
             width, height = win_rect.width - i*wstep, win_rect.height - i*hstep
             x, y = xstart - i*xstep, ystart - i*ystep
             new_rect = wx.Rect(x, y, width, height)
-            dc.DrawRoundedRectangleRect(new_rect, 3)
+            dc.DrawRoundedRectangle(new_rect, 3)
             wx.SafeYield()
             wx.MilliSleep(10)
-            dc.DrawRoundedRectangleRect(new_rect, 3)
+            dc.DrawRoundedRectangle(new_rect, 3)
 
 
     def SmoothDock(self, paneInfo):
@@ -10575,12 +10575,12 @@ class AuiManager(wx.EvtHandler):
 
         for i in xrange(0, stopX, step):
             window_size = i
-            self._sliding_frame.SetDimensions(startX, startY, window_size, stopY)
+            self._sliding_frame.SetSize(startX, startY, window_size, stopY)
             self._sliding_frame.Refresh()
             self._sliding_frame.Update()
             wx.MilliSleep(10)
 
-        self._sliding_frame.SetDimensions(startX, startY, stopX, stopY)
+        self._sliding_frame.SetSize(startX, startY, stopX, stopY)
         self._sliding_frame.Refresh()
         self._sliding_frame.Update()
 
@@ -10605,14 +10605,14 @@ class AuiManager(wx.EvtHandler):
 
         for i in xrange(stopX, 0, -step):
             window_size = i
-            self._sliding_frame.SetDimensions(startX, startY, window_size, stopY)
+            self._sliding_frame.SetSize(startX, startY, window_size, stopY)
             self._sliding_frame.Refresh()
             self._sliding_frame.Update()
             self._frame.RefreshRect(wx.Rect(startX+window_size, startY, step, stopY))
             self._frame.Update()
             wx.MilliSleep(10)
 
-        self._sliding_frame.SetDimensions(startX, startY, 0, stopY)
+        self._sliding_frame.SetSize(startX, startY, 0, stopY)
 
         window.Hide()
         window.Reparent(self._frame)
