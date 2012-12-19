@@ -334,7 +334,7 @@ class GridColMover(wx.EvtHandler):
                 col = self.grid.XToCol(px+sx)
 
                 if col != wx.NOT_FOUND:
-                    self.grid.SelectCol(col,evt.m_controlDown)
+                    self.grid.SelectCol(col,evt.ControlDown())
 
                 return
             else:
@@ -462,7 +462,7 @@ class GridRowMover(wx.EvtHandler):
                 row = self.grid.YToRow(py + sy)
 
                 if row != wx.NOT_FOUND:
-                    self.grid.SelectRow(row,evt.m_controlDown)
+                    self.grid.SelectRow(row,evt.ControlDown())
                 return
             else:
                 bRow = self.rowWin.GetInsertionRow()

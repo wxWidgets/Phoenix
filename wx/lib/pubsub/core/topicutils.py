@@ -48,7 +48,7 @@ class TopicNameInvalid(RuntimeError):
 
 
 import re
-_validNameRE = re.compile(r'[a-zA-Z]\w*')
+_validNameRE = re.compile(r'[-0-9a-zA-Z]\w*')
 
 
 def validateName(topicName):

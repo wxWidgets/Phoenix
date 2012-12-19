@@ -6153,8 +6153,8 @@ class FlatMenu(FlatMenuBase):
                 
                 if win.GetClientRect().Contains(p):
                 
-                    event.m_x = p.x
-                    event.m_y = p.y
+                    event.SetX(p.x)
+                    event.SetY(p.y)
                     win.OnMouseLeftUp(event)
                     return
                 
