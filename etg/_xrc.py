@@ -56,15 +56,20 @@ def run():
     module.addInclude(INCLUDES)
 
     module.addInitializerCode("""\
-        wxXmlInitResourceModule();
+        //wxXmlInitResourceModule();
+        wxXmlResource::Get()->InitAllHandlers();
         """)
 
     module.addHeaderCode('#include <wx/xrc/xmlres.h>')
     module.addHeaderCode('#include <wx/fs_mem.h>')
     module.addHeaderCode('#include "wxpybuffer.h"')
+
+    module.insertItem(0, etgtools.WigCode("""\
+        // forward declarations
+        class wxAnimation;
+        """))
     
-    #-----------------------------------------------------------------
-    
+    #-----------------------------------------------------------------   
     
     c = module.find('wxXmlResource')
     assert isinstance(c, etgtools.ClassDef)
@@ -116,11 +121,27 @@ def run():
             """)
     
     c.find('AddHandler.handler').transfer = True
-    c.find('InsertHandler').transfer = True
+    c.find('InsertHandler.handler').transfer = True
     c.find('Set.res').transfer = True
     c.find('Set').transferBack = True
+    c.find('AddSubclassFactory.factory').transfer = True
     
     
+    #-----------------------------------------------------------------    
+    c = module.find('wxXmlResourceHandler')
+
+    # un-ignore all the protected methods
+    for item in c.allItems():
+        if isinstance(item, etgtools.MethodDef):
+            item.ignore(False)
+
+    # except for this (for now)
+    #c.find('GetAnimation').ignore()
+    
+    c.find('DoCreateResource').factory = True
+    
+
+    #-----------------------------------------------------------------
     module.addPyFunction('EmptyXmlResource', '(flags=XRC_USE_LOCALE, domain="")',
         deprecated="Use :class:`xrc.XmlResource` instead",
         doc='A compatibility wrapper for the XmlResource(flags, domain) constructor',
@@ -146,7 +167,40 @@ def run():
         };"""))
 
 
-    
+    module.addPyCode("""\
+        # Create a factory for handling the subclass property of XRC's 
+        # object tag.  This factory will search for the specified 
+        # package.module.class and will try to instantiate it for XRC's 
+        # use.  The class must support instantiation with no parameters and 
+        # delayed creation of the UI widget (aka 2-phase create).
+
+        def _my_import(name):
+            try:
+                mod = __import__(name)
+            except ImportError:
+                import traceback
+                print traceback.format_exc()
+                raise
+            components = name.split('.')
+            for comp in components[1:]:
+                mod = getattr(mod, comp)
+            return mod
+        
+        class XmlSubclassFactory_Python(XmlSubclassFactory):
+            def __init__(self):
+                XmlSubclassFactory.__init__(self)
+        
+            def Create(self, className):
+                assert className.find('.') != -1, "Module name must be specified!"
+                mname = className[:className.rfind('.')]
+                cname = className[className.rfind('.')+1:]
+                module = _my_import(mname)
+                klass = getattr(module, cname)
+                inst = klass()
+                return inst        
+        
+        XmlResource.AddSubclassFactory(XmlSubclassFactory_Python())
+        """)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
