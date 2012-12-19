@@ -819,7 +819,9 @@ class PyImageList(object):
         if index >= len(self._images):
             return wx.NullIcon
 
-        return wx.Icon(self._images[index])
+        icon = wx.Icon()
+        icon.CopyFromBitmap(self.GetBitmap(index))
+        return icon
 
 
     def Replace(self, index, bitmap):
