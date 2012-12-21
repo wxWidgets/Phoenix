@@ -168,7 +168,7 @@ class HyperLinkEvent(wx.CommandEvent):
 
     def __init__(self, eventType, eventId):
         """
-        Default Class Constructor.
+        Default class constructor.
 
         :param `eventType`: the event type;
         :param `eventId`: the event identifier.

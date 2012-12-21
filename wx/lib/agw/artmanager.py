@@ -1154,7 +1154,7 @@ class ArtManager(wx.EvtHandler):
                         firstColour.Blue() + blueOffset)
 
 
-    def RandomColour(): 
+    def RandomColour(self): 
         """
         Creates a random colour.
 
@@ -1188,8 +1188,8 @@ class ArtManager(wx.EvtHandler):
     def TruncateText(self, dc, text, maxWidth):
         """
         Truncates a given string to fit given width size. if the text does not fit
-        into the given width it is truncated to fit. the format of the fixed text
-        is <truncate text ...>.
+        into the given width it is truncated to fit. The format of the fixed text
+        is ``truncate text ...``.
 
         :param `dc`: an instance of :class:`DC`;
         :param string `text`: the text to be (eventually) truncated;

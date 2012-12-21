@@ -405,7 +405,7 @@ class RibbonMSWArtProvider(object):
         """
         Set the style flags.
 
-        Normally called automatically by :meth:`RibbonBar.SetArtProvider() <RibbonBar.SetArtProvider>` with the ribbon
+        Normally called automatically by :meth:`RibbonBar.SetArtProvider() <lib.agw.ribbon.bar.RibbonBar.SetArtProvider>` with the ribbon
         bar's style flags, so that the art provider has the same flags as the bar which
         it is serving.
 
@@ -1531,11 +1531,12 @@ class RibbonMSWArtProvider(object):
         :param `wnd`: The window which is being drawn onto, which is always the gallery
          whose background and chrome is being drawn. Attributes used during drawing like
          the gallery hover state and individual button states can be queried from this
-         parameter by :meth:`RibbonGallery.IsHovered() <RibbonGallery.IsHovered>`, :meth:`RibbonGallery.GetExtensionButtonState() <RibbonGallery.GetExtensionButtonState>`,
-         :meth:`RibbonGallery.GetUpButtonState() <RibbonGallery.GetUpButtonState>`, and :meth:`RibbonGallery.GetDownButtonState() <RibbonGallery.GetDownButtonState>`;
+         parameter by :meth:`RibbonGallery.IsHovered() <lib.agw.ribbon.gallery.RibbonGallery.IsHovered>`, 
+         :meth:`RibbonGallery.GetExtensionButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetExtensionButtonState>`,
+         :meth:`RibbonGallery.GetUpButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetUpButtonState>`, and 
+         :meth:`RibbonGallery.GetDownButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetDownButtonState>`;
         :param `rect`: The rectangle within which to draw. This rectangle is the entire
          area of the gallery control, not just the client rectangle.
-
         """
 
         self.DrawPartialPageBackground(dc, wnd, rect)
@@ -1648,8 +1649,9 @@ class RibbonMSWArtProvider(object):
          The drawing rectangle will be entirely within a rectangle on the same device
          context previously painted with :meth:`~RibbonMSWArtProvider.DrawGalleryBackground`;
         :param `item`: The item whose background is being painted. Typically the background
-         will vary if the item is hovered, active, or selected; :meth:`RibbonGallery.GetSelection() <RibbonGallery.GetSelection>`,
-         :meth:`RibbonGallery.GetActiveItem() <RibbonGallery.GetActiveItem>`, and :meth:`RibbonGallery.GetHoveredItem() <RibbonGallery.GetHoveredItem>` can be
+         will vary if the item is hovered, active, or selected; :meth:`RibbonGallery.GetSelection() <lib.agw.ribbon.gallery.RibbonGallery.GetSelection>`,
+         :meth:`RibbonGallery.GetActiveItem() <lib.agw.ribbon.gallery.RibbonGallery.GetActiveItem>`, and 
+         :meth:`RibbonGallery.GetHoveredItem() <lib.agw.ribbon.gallery.RibbonGallery.GetHoveredItem>` can be
          called to test if the given item is in one of these states.
 
         """

@@ -334,7 +334,7 @@ class RibbonBar(RibbonControl):
         """
         Dismiss the expanded panel of the currently active page.
 
-        Calls and returns the value from :meth:`RibbonPage.DismissExpandedPanel() <RibbonPage.DismissExpandedPanel>` for the
+        Calls and returns the value from :meth:`RibbonPage.DismissExpandedPanel() <lib.agw.ribbon.page.RibbonPage.DismissExpandedPanel>` for the
         currently active page, or ``False`` if there is no active page.
         """
 

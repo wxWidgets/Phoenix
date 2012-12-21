@@ -1263,10 +1263,10 @@ class TreeListItem(GenericTreeItem):
     This class holds all the information and methods for every single item in
     :class:`HyperTreeList`.
 
-    :note: Subclassed from :class:`GenericTreeItem`.
+    :note: Subclassed from :class:`~lib.agw.customtreectrl.GenericTreeItem`.
     """
 
-    def __init__(self, mainWin, parent, text=[], ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
+    def __init__(self, mainWin, parent, text="", ct_type=0, wnd=None, image=-1, selImage=-1, data=None):
         """
         Default class constructor.
         For internal use: do not call it in your code!

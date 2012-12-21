@@ -621,8 +621,8 @@ class GenericMessageDialog(wx.Dialog):
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
          ``GMD_DEFAULT``                       0 Uses normal generic buttons
-         ``GMD_USE_AQUABUTTONS``            0x20 Uses :class:`AquaButton` buttons instead of generic buttons.
-         ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses :class:`GradientButton` buttons instead of generic buttons.
+         ``GMD_USE_AQUABUTTONS``            0x20 Uses :class:`~lib.agw.aquabutton.AquaButton` buttons instead of generic buttons.
+         ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses :class:`~lib.agw.gradientbutton.GradientButton` buttons instead of generic buttons.
          =========================== =========== ==================================================
 
          The styles above are mutually exclusive. The style chosen above can be combined with a
@@ -1146,7 +1146,7 @@ class GenericMessageDialog(wx.Dialog):
             main_message = "Hello world! I am the main message."
     
             dlg = GenericMessageDialog(None, main_message, "A Nice Message Box",
-                                       agwStyle=wx.ICON_INFORMATION|wx.OK)
+                                       agwStyle=wx.ICON_INFORMATION | wx.OK)
                                        
             if dlg.SetYesNoLabels(_("&Quit"), _("&Don't quit")):
                 dlg.SetMessage(_("What do you want to do?"))

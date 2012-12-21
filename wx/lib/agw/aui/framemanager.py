@@ -1682,7 +1682,8 @@ class AuiPaneInfo(object):
         """
         Copies the `source` pane members that pertain to docking position to `self`.
 
-        :param AuiPaneInfo `source`: the source pane from where to copy the attributes.
+        :param `source`: the source pane from where to copy the attributes, 
+         an instance of :class:`AuiPaneInfo`.
         """
 
         self.dock_direction = source.dock_direction
@@ -2468,15 +2469,15 @@ class AuiCenterDockingGuide(AuiDockingGuide):
                                 wx.Point(rectBottom.x+rectBottom.width-1, rectBottom.y+8)]]
 
             region = wx.Region()
-            region.UnionRect(rectLeft)
-            region.UnionRect(rectTop)
-            region.UnionRect(rectRight)
-            region.UnionRect(rectBottom)
-            region.UnionRect(rectCenter)
-            region.UnionRegion(wx.Region(tld))
-            region.UnionRegion(wx.Region(bld))
-            region.UnionRegion(wx.Region(trd))
-            region.UnionRegion(wx.Region(brd))
+            region.Union(rectLeft)
+            region.Union(rectTop)
+            region.Union(rectRight)
+            region.Union(rectBottom)
+            region.Union(rectCenter)
+            region.Union(wx.Region(tld))
+            region.Union(wx.Region(bld))
+            region.Union(wx.Region(trd))
+            region.Union(wx.Region(brd))
 
         elif useAero:
 
@@ -2623,12 +2624,12 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         leftRect, topRect, rightRect, bottomRect, centerRect = self._aeroRects
         thePos = pos + wx.Point((size.x-sizeY)/2, (size.y-sizeX)/2)
 
-        centerRect.SetPosition(thePos)
+        centerRect.SetTopLeft(thePos)
 
-        leftRect.SetPosition(thePos + wx.Point(-sizeY, 0))
-        topRect.SetPosition(thePos + wx.Point(0, -sizeY))
-        rightRect.SetPosition(thePos + wx.Point(sizeX, 0))
-        bottomRect.SetPosition(thePos + wx.Point(0, sizeX))
+        leftRect.SetTopLeft(thePos + wx.Point(-sizeY, 0))
+        topRect.SetTopLeft(thePos + wx.Point(0, -sizeY))
+        rightRect.SetTopLeft(thePos + wx.Point(sizeX, 0))
+        bottomRect.SetTopLeft(thePos + wx.Point(0, sizeX))
 
 
     def OnEraseBackground(self, event):
@@ -3819,8 +3820,8 @@ def RemovePaneFromDocks(docks, pane, exc=None):
     with a possible exception specified by parameter `exc`.
 
     :param `docks`: a list of :class:`AuiDockInfo` structures;
-    :param AuiPaneInfo `pane`: the pane to be removed;
-    :param AuiPaneInfo `exc`: the possible pane exception.
+    :param `pane`: the pane to be removed, an instance of :class:`AuiPaneInfo`;
+    :param `exc`: the possible pane exception, an instance of :class:`AuiPaneInfo`.
     """
 
     for ii in xrange(len(docks)):
@@ -3863,7 +3864,7 @@ def SetActivePane(panes, active_pane):
     are turned off.
 
     :param `panes`: a list of :class:`AuiPaneInfo` structures;
-    :param AuiPaneInfo `active_pane`: the pane to be made active (if found).
+    :param `active_pane`: the pane to be made active (if found), an instance of :class:`AuiPaneInfo`.
     """
 
     for pane in panes:
@@ -3911,8 +3912,8 @@ def PaneSortFunc(p1, p2):
     """
     This function is used to sort panes by dock position.
 
-    :param AuiPaneInfo `p1`: the first pane instance to compare;
-    :param AuiPaneInfo `p2`: the second pane instance to compare.
+    :param `p1`: the first pane instance to compare, an instance of :class:`AuiPaneInfo`;
+    :param `p2`: the second pane instance to compare, an instance of :class:`AuiPaneInfo`.
     """
 
     return (p1.dock_pos < p2.dock_pos and [-1] or [1])[0]
@@ -5374,7 +5375,7 @@ class AuiManager(wx.EvtHandler):
     def SavePerspective(self):
         """
         Saves the entire user interface layout into an encoded string, which can then
-        be stored by the application (probably using :class:`Config`).
+        be stored by the application (probably using :class:`Config <ConfigBase>`).
 
         When a perspective is restored using :meth:`LoadPerspective`, the entire user
         interface will return to the state it was when the perspective was saved.
@@ -5607,7 +5608,7 @@ class AuiManager(wx.EvtHandler):
         :param bool `spacer_only`: whether to add a simple spacer or a real window.
         """
 
-        sizer_item = wx.SizerItem()
+        #sizer_item = wx.SizerItem()
         caption_size = self._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
         gripper_size = self._art.GetMetric(AUI_DOCKART_GRIPPER_SIZE)
         pane_border_size = self._art.GetMetric(AUI_DOCKART_PANE_BORDER_SIZE)
@@ -5795,7 +5796,7 @@ class AuiManager(wx.EvtHandler):
         :param bool `spacer_only`: whether to add a simple spacer or a real window.
         """
 
-        sizer_item = wx.SizerItem()
+#        sizer_item = wx.SizerItem()
         part = AuiDockUIPart()
 
         sash_size = self._art.GetMetric(AUI_DOCKART_SASH_SIZE)
@@ -7262,7 +7263,7 @@ class AuiManager(wx.EvtHandler):
         """
         Checks if a UI part can be actually resized.
 
-        :param AuiDockUIPart `part`: a UI part.
+        :param `part`: a UI part, an instance of :class:`AuiDockUIPart`.
         """
 
         # a dock may not be resized if it has a single
@@ -7581,7 +7582,7 @@ class AuiManager(wx.EvtHandler):
 
         :param `docks`: a list of :class:`AuiDockInfo` classes;
         :param `panes`: a list of :class:`AuiPaneInfo` instances;
-        :param AuiPaneInfo `target`: the target pane containing the toolbar;
+        :param `target`: the target pane containing the toolbar, an instance of :class:`AuiPaneInfo`;
         :param Point `pt`: a mouse position to check for a drop operation;
         :param Point `offset`: a possible offset from the input point `pt`.
         """
@@ -7708,7 +7709,8 @@ class AuiManager(wx.EvtHandler):
 
         :param `docks`: a list of :class:`AuiDockInfo` classes;
         :param `panes`: a list of :class:`AuiPaneInfo` instances;
-        :param AuiPaneInfo `target`: the target pane containing the window;
+        :param `target`: the target pane containing the window, an instance of 
+         :class:`AuiPaneInfo`;
         :param Point `pt`: a mouse position to check for a drop operation.
         """
 
@@ -7828,7 +7830,7 @@ class AuiManager(wx.EvtHandler):
 
         :param `docks`: a list of :class:`AuiDockInfo` classes;
         :param `panes`: a list of :class:`AuiPaneInfo` instances;
-        :param AuiPaneInfo `target`: the target pane containing the toolbar;
+        :param `target`: the target pane containing the toolbar, an instance of :class:`AuiPaneInfo`;
         :param Point `pt`: a mouse position to check for a drop operation.
         """
 
@@ -7980,7 +7982,7 @@ class AuiManager(wx.EvtHandler):
         Handles the situation in which `target` is a single dock guide.
 
         :param `docks`: a list of :class:`AuiDockInfo` classes;
-        :param AuiPaneInfo `target`: the target pane;
+        :param `target`: the target pane, an instance of :class:`AuiPaneInfo`;
         :param integer `dock_direction`: the docking direction.
         """
 
@@ -8023,7 +8025,7 @@ class AuiManager(wx.EvtHandler):
         Drop a pane in the interface.
 
         :param `panes`: a list of :class:`AuiPaneInfo` classes;
-        :param AuiPaneInfo `target`: the target pane;
+        :param `target`: the target pane, an instance of :class:`AuiPaneInfo`;
         :param integer `dock_direction`: the docking direction;
         :param integer `dock_layer`: the docking layer;
         :param integer `dock_row`: the docking row;
@@ -8042,7 +8044,7 @@ class AuiManager(wx.EvtHandler):
         Insert a row in the interface before dropping.
 
         :param `panes`: a list of :class:`AuiPaneInfo` classes;
-        :param AuiPaneInfo `target`: the target pane;
+        :param `target`: the target pane, an instance of :class:`AuiPaneInfo`;
         :param integer `dock_direction`: the docking direction;
         :param integer `dock_layer`: the docking layer;
         :param integer `dock_row`: the docking row.
@@ -8145,7 +8147,7 @@ class AuiManager(wx.EvtHandler):
         """
         Returns whether a pane button in the pane caption is visible.
 
-        :param AuiDockUIPart `part`: the UI part to analyze.
+        :param `part`: the UI part to analyze, an instance of :class:`AuiDockUIPart`.
         """
 
         captionRect = wx.Rect()
@@ -8156,7 +8158,7 @@ class AuiManager(wx.EvtHandler):
                 captionRect = temp_part.rect
                 break
 
-        return captionRect.ContainsRect(part.rect)
+        return captionRect.Contains(part.rect)
 
 
     def DrawPaneButton(self, dc, part, pt):
@@ -8164,7 +8166,7 @@ class AuiManager(wx.EvtHandler):
         Draws a pane button in the caption (convenience function).
 
         :param `dc`: a :class:`DC` device context object;
-        :param AuiDockUIPart `part`: the UI part to analyze;
+        :param `part`: the UI part to analyze, an instance of :class:`AuiDockUIPart`;
         :param Point `pt`: the mouse location.
         """
 
@@ -8193,7 +8195,7 @@ class AuiManager(wx.EvtHandler):
         """
         Refreshes a pane button in the caption.
 
-        :param AuiDockUIPart `part`: the UI part to analyze.
+        :param `part`: the UI part to analyze, an instance of :class:`AuiDockUIPart`.
         """
 
         rect = wx.Rect(*part.rect)
@@ -8906,7 +8908,7 @@ class AuiManager(wx.EvtHandler):
         """
         Updates/redraws the UI part containing a pane button.
 
-        :param AuiDockUIPart `button_ui_part`: the UI part the button belongs to;
+        :param `button_ui_part`: the UI part the button belongs to, an instance of :class:`AuiDockUIPart`.;
         :param `event`: a :class:`MouseEvent` to be processed.
         """
 
@@ -10209,7 +10211,8 @@ class AuiManager(wx.EvtHandler):
         Creates an auto-notebook base from a pane, and then add that pane as a page.
 
         :param list `panes`: set of panes to append new notebook base pane to
-        :param AuiPaneInfo `paneInfo`: the pane to be converted to a new notebook.
+        :param `paneInfo`: the pane to be converted to a new notebook, an instance of 
+         :class:`AuiPaneInfo`.
         """
 
         # Create base notebook pane ...

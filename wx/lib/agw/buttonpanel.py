@@ -407,7 +407,7 @@ class BPArt(object):
         Sets the option value for the specified size `id`.
 
         :param integer `id`: the identification bit for the size value;
-        :param input`new_val`: the new value for the size.
+        :param integer `new_val`: the new value for the size.
 
         :raise: `Exception` if the `id` is not recognized.        
 
@@ -431,7 +431,7 @@ class BPArt(object):
         """
         Returns the option value for the specified colour `id`.
 
-        :param internal`id`: the identification bit for the colour value. This can be one of the
+        :param integer `id`: the identification bit for the colour value. This can be one of the
          following bits:
 
          ================================== ======= =====================================
@@ -1651,11 +1651,11 @@ class ButtonInfo(Control):
         """
         Add a programmer-defined status in addition to the 5 default status:
 
-         - Normal;
-         - Disabled;
-         - Hover;
-         - Pressed;
-         - Toggled.
+        - Normal;
+        - Disabled;
+        - Hover;
+        - Pressed;
+        - Toggled.
 
         :param string `name`: the new status name;
         :param Bitmap `bmp`: the bitmap associated with the new status.

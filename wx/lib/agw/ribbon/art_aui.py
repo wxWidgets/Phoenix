@@ -230,7 +230,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `secondary`: MISSING DESCRIPTION;
         :param `tertiary`: MISSING DESCRIPTION.
 
-        :see: :meth:`~RibbonAUIArtProvider.SetColour`, :meth:`RibbonMSWArtProvider.GetColourScheme() <RibbonMSWArtProvider.GetColourScheme>`
+        :see: :meth:`~RibbonAUIArtProvider.SetColour`, :meth:`RibbonMSWArtProvider.GetColourScheme() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetColourScheme>`
         """
 
         primary_hsl = RibbonHSLColour(primary)
@@ -529,7 +529,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
          :class:`~lib.agw.ribbon.page.RibbonPage` whose background is being drawn, but doesn't have to be);
         :param `rect`: The rectangle within which to draw.
 
-        :see: :meth:`RibbonMSWArtProvider.GetPageBackgroundRedrawArea() <RibbonMSWArtProvider.GetPageBackgroundRedrawArea>`
+        :see: :meth:`RibbonMSWArtProvider.GetPageBackgroundRedrawArea() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetPageBackgroundRedrawArea>`
         """
 
         dc.SetPen(wx.TRANSPARENT_PEN)
@@ -818,12 +818,12 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `wnd`: The window which is being drawn onto, which is always the panel
          which is minimised. The panel label can be obtained from this window. The
          minimised icon obtained from querying the window may not be the size requested
-         by :meth:`RibbonMSWArtProvider.GetMinimisedPanelMinimumSize() <RibbonMSWArtProvider.GetMinimisedPanelMinimumSize>` - the argument contains the icon in the
+         by :meth:`RibbonMSWArtProvider.GetMinimisedPanelMinimumSize() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetMinimisedPanelMinimumSize>` - the argument contains the icon in the
          requested size;
         :param `rect`: The rectangle within which to draw. The size of the rectangle
-         will be at least the size returned by :meth:`RibbonMSWArtProvider.GetMinimisedPanelMinimumSize() <RibbonMSWArtProvider.GetMinimisedPanelMinimumSize>`;
+         will be at least the size returned by :meth:`RibbonMSWArtProvider.GetMinimisedPanelMinimumSize() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetMinimisedPanelMinimumSize>`;
         :param `bitmap`: A copy of the panel's minimised bitmap rescaled to the size
-         returned by :meth:`RibbonMSWArtProvider.GetMinimisedPanelMinimumSize() <RibbonMSWArtProvider.GetMinimisedPanelMinimumSize>`.
+         returned by :meth:`RibbonMSWArtProvider.GetMinimisedPanelMinimumSize() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetMinimisedPanelMinimumSize>`.
 
         """
 
@@ -943,8 +943,10 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `wnd`: The window which is being drawn onto, which is always the gallery
          whose background and chrome is being drawn. Attributes used during drawing like
          the gallery hover state and individual button states can be queried from this
-         parameter by :meth:`RibbonGallery.IsHovered() <RibbonGallery.IsHovered>`, :meth:`RibbonGallery.GetExtensionButtonState() <RibbonGallery.GetExtensionButtonState>`,
-         :meth:`RibbonGallery.GetUpButtonState() <RibbonGallery.GetUpButtonState>`, and :meth:`RibbonGallery.GetDownButtonState() <RibbonGallery.GetDownButtonState>`;
+         parameter by :meth:`RibbonGallery.IsHovered() <lib.agw.ribbon.gallery.RibbonGallery.IsHovered>`, 
+         :meth:`RibbonGallery.GetExtensionButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetExtensionButtonState>`,
+         :meth:`RibbonGallery.GetUpButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetUpButtonState>`, and 
+         :meth:`RibbonGallery.GetDownButtonState() <lib.agw.ribbon.gallery.RibbonGallery.GetDownButtonState>`;
         :param `rect`: The rectangle within which to draw. This rectangle is the entire
          area of the gallery control, not just the client rectangle.
 
@@ -1026,8 +1028,10 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
          context previously painted with :meth:`~RibbonAUIArtProvider.DrawGalleryBackground`;
         :param `item`: The item whose background is being painted. Typically the
          background will vary if the item is hovered, active, or selected;
-         :meth:`RibbonGallery.GetSelection() <RibbonGallery.GetSelection>`, :meth:`RibbonGallery.GetActiveItem() <RibbonGallery.GetActiveItem>`, and
-         :meth:`RibbonGallery.GetHoveredItem() <RibbonGallery.GetHoveredItem>` can be called to test if the given item is in one of these states.
+         :meth:`RibbonGallery.GetSelection() <lib.agw.ribbon.gallery.RibbonGallery.GetSelection>`, 
+         :meth:`RibbonGallery.GetActiveItem() <lib.agw.ribbon.gallery.RibbonGallery.GetActiveItem>`, and
+         :meth:`RibbonGallery.GetHoveredItem() <lib.agw.ribbon.gallery.RibbonGallery.GetHoveredItem>` 
+         can be called to test if the given item is in one of these states.
 
         """
 
@@ -1065,7 +1069,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto;
         :param `rect`: The rectangle within which to draw. The size of this rectangle
-         will be a size previously returned by :meth:`RibbonMSWArtProvider.GetButtonBarButtonSize() <RibbonMSWArtProvider.GetButtonBarButtonSize>`, and the
+         will be a size previously returned by :meth:`RibbonMSWArtProvider.GetButtonBarButtonSize() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetButtonBarButtonSize>`, and the
          rectangle will be entirely within a rectangle on the same device context
          previously painted with :meth:`~RibbonAUIArtProvider.DrawButtonBarBackground`;
         :param `kind`: The kind of button to draw (normal, dropdown or hybrid);
@@ -1183,7 +1187,8 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `wnd`: The window which is being drawn onto. In most cases this will
          be a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. The size of this rectangle
-         will at least the size returned by :meth:`RibbonMSWArtProvider.GetToolSize() <RibbonMSWArtProvider.GetToolSize>`, and the height of it will
+         will at least the size returned by :meth:`RibbonMSWArtProvider.GetToolSize() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetToolSize>`, 
+         and the height of it will
          be equal for all tools within the same group. The rectangle will be entirely
          within a rectangle on the same device context previously painted with
          :meth:`~RibbonAUIArtProvider.DrawToolGroupBackground`;

@@ -2,7 +2,7 @@
 # RULERCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 16 Jul 2012, 15.00 GMT
+# Latest Revision: 19 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -147,7 +147,7 @@ License And Version
 
 :class:`RulerCtrl` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
 
 Version 0.4
 
@@ -960,7 +960,7 @@ class RulerCtrl(wx.Panel):
         """
         Sets whether :class:`RulerCtrl` should have a logarithmic scale or not.
 
-        :param `log`: ``True`` to use a logarithmic scake, ``False`` to use a
+        :param `log`: ``True`` to use a logarithmic scale, ``False`` to use a
          linear one.
         """
 

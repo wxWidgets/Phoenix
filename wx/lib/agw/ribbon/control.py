@@ -60,7 +60,7 @@ class RibbonControl(wx.Control):
         In many cases, setting the art provider will also set the art provider on all
         child windows which extend :class:`RibbonControl`. In most cases, controls will not
         take ownership of the given pointer, with the notable exception being
-        :meth:`RibbonBar.SetArtProvider() <RibbonBar.SetArtProvider>`.
+        :meth:`RibbonBar.SetArtProvider() <lib.agw.ribbon.bar.RibbonBar.SetArtProvider>`.
 
         :param `art`: an art provider.
         """

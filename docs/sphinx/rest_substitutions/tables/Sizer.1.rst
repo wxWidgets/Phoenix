@@ -18,7 +18,7 @@
 |                                                                     | maintaining its aspect ratio                                                |
 +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
 | ``FIXED_MINSIZE``                                                   | Normally `Sizers` will use                                                  |
-|                                                                     | :meth:`Window.GetAdjustedBestSize` to                                       |
+|                                                                     | :meth:`Window.GetEffectiveMinSize` to                                       |
 |                                                                     | determine what the minimal size of window items should be, and will use that| 
 |                                                                     | size to calculate the layout. This allows layouts to adjust when an item    |
 |                                                                     | changes and its best size becomes different. If you would rather have a     |

@@ -846,7 +846,7 @@ class AquaButton(wx.Control):
 
         :note: Note that under Motif, calling this function immediately after creation of a button
          and before the creation of other buttons will cause misalignment of the row of buttons,
-         since default buttons are larger. To get around this, call :meth:`~aquabutton.AquaButton.SetDefault` after you
+         since default buttons are larger. To get around this, call :meth:`SetDefault` after you
          have created a row of buttons: wxPython will then set the size of all buttons currently
          on the panel to the same size.
         """

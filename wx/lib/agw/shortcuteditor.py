@@ -1673,8 +1673,8 @@ class ConflictDialog(GMD.GenericMessageDialog):
     
 class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
     """
-    :class:`ListShortcut` is a subclass of :class:`HyperTreeList`, customized to look
-    like the GIMP main shortcut list. This class is used to display the
+    :class:`ListShortcut` is a subclass of :class:`~lib.agw.hypertreelist.HyperTreeList`, 
+    customized to look like the GIMP main shortcut list. This class is used to display the
     shortcut label (with an optional bitmap next to it), its accelerator and
     the help string associated with it (if present).
 
@@ -1746,7 +1746,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         """
         Recursively populates the :class:`ListShortcut` with information from the :class:`Shortcut` tree.
 
-        :param `item`: an instance of :class:`GenericTreeItem`. If ``None``, it is defaulted to
+        :param `item`: an instance of :class:`~lib.agw.customtreectrl.GenericTreeItem`. If ``None``, it is defaulted to
          the :class:`ListShortcut` root item to make this function reentrant (i.e. allow more than one
          enumeration on one and the same object simultaneously);
         :param `shortcut`: an instance of :class:`Shortcut`. If ``None``, it is defaulted to
@@ -1828,7 +1828,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
 
         In this implementation this returns the item label.
 
-        :param `item`: an instance of :class:`GenericTreeItem`.        
+        :param `item`: an instance of :class:`~lib.agw.customtreectrl.GenericTreeItem`.        
         """
 
         return self.GetItemText(item)
@@ -2045,7 +2045,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         the conflicting shortcut (by putting a "Disabled" string as its accelerator).
 
         :param `conflict`: an instance of :class:`Shortcut` to reset;
-        :param `item`: an instance of :class:`GenericTreeItem`. If defaulted to ``None``, it is set
+        :param `item`: an instance of :class:`~lib.agw.customtreectrl.GenericTreeItem`. If defaulted to ``None``, it is set
          to the :class:`ListShortcut` root item and used only to make this function reentrant
          (i.e. allow more than one enumeration on one and the same object simultaneously).
         """
@@ -2164,7 +2164,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
     def HasFlag(self, flag):
         """
         Overridden from :class:`Window` as a workaround on the conflicts between `treemixin` and
-        :class:`HyperTreeList` with the ``wx.TR_HIDE_ROOT`` `agwStyle` set.
+        :class:`~lib.agw.hypertreelist.HyperTreeList` with the ``wx.TR_HIDE_ROOT`` `agwStyle` set.
 
         :param integer `flag`: an integer bit flag specifying the `agwStyle` style.
 
@@ -2590,7 +2590,7 @@ class ShortcutEditor(wx.Dialog):
 
         Program flow does not return until the dialog has been dismissed with `EndModal`.
 
-        :return: The value set with `SetReturnCode`.
+        :return: The value set with :meth:`~Dialog.SetReturnCode`.
 
         .. note::
 
@@ -2604,7 +2604,7 @@ class ShortcutEditor(wx.Dialog):
            Note that this function creates a temporary event loop which takes precedence
            over the application's main event loop (see :class:`EventLoopBase`) and which is
            destroyed when the dialog is dismissed. This also results in a call to
-           :meth:`App.ProcessPendingEvents` ().
+           :meth:`AppConsole.ProcessPendingEvents` ().
            
         """        
 

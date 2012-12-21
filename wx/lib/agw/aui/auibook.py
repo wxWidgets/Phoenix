@@ -2228,7 +2228,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
                     if self._agwFlags & AUI_NB_TAB_FLOAT:
                         self._drag_image.BeginDrag(wx.Point(0,0), self, fullScreen=True)
                     else:
-                        self._drag_image.BeginDragBounded(wx.Point(0,0), self, self.GetParent())
+                        self._drag_image.BeginDrag(wx.Point(0,0), self, self.GetParent())
 
                     # Capture the mouse cursor position offset relative to
                     # The tab image location
@@ -2521,7 +2521,7 @@ class TabFrame(wx.Window):
         Used internally, do not call it in your code!
         """
 
-        pre = wx.Window()
+        pre = wx.Window.__init__(self)
 
         self._tabs = None
         self._rect = wx.Rect(0, 0, 200, 200)
@@ -2909,7 +2909,7 @@ class AuiNotebook(wx.Panel):
     def SavePerspective(self):
         """
         Saves the entire user interface layout into an encoded string, which can then
-        be stored by the application (probably using :class:`Config`). When a perspective
+        be stored by the application (probably using :class:`Config <ConfigBase>`). When a perspective
         is restored using :meth:`LoadPerspective`, the entire user interface will return
         to the state it was when the perspective was saved.
         """
@@ -5759,6 +5759,7 @@ class AuiNotebook(wx.Panel):
         pages = tabCtrl.GetPages()
 
         pageStatus, pageText = [], []
+        count = 0
 
         for indx, page in enumerate(pages):
 
@@ -5774,10 +5775,11 @@ class AuiNotebook(wx.Panel):
             bmp = RescaleScreenShot(TakeScreenShot(rect), thumbnail_size)
 
             page.enabled = False
-            if indx == 0:
+            if count == 0:
                 il = wx.ImageList(bmp.GetWidth(), bmp.GetHeight(), True)
 
             il.Add(bmp)
+            count += 1
 
         # create the list control
         listCtrl = wx.ListCtrl(self, style=wx.LC_ICON|wx.LC_AUTOARRANGE|wx.LC_HRULES|wx.LC_VRULES,

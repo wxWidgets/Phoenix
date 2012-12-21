@@ -366,7 +366,7 @@ class FMRendererMgr(object):
     """
     This class represents a manager that handles all the renderers defined. 
     Every instance of this class will share the same state, so everyone can
-    instantiate their own and a call to :meth:`FMRendererMgr.SetTheme() <flatmenu.FMRendererMgr.SetTheme>` anywhere will affect everyone. 
+    instantiate their own and a call to :meth:`FMRendererMgr.SetTheme() <FMRendererMgr.SetTheme>` anywhere will affect everyone. 
     """
 
     def __new__(cls, *p, **k):
@@ -2091,7 +2091,7 @@ class FileHistory(object):
         """
         Loads the file history from the given `config` object.
 
-        :param `config`: an instance of :class:`Config`.
+        :param `config`: an instance of :class:`Config <ConfigBase>`. 
         
         :note: This function should be called explicitly by the application.
 
@@ -2117,7 +2117,7 @@ class FileHistory(object):
         """
         Saves the file history to the given `config` object.
 
-        :param `config`: an instance of :class:`Config`.
+        :param `config`: an instance of :class:`Config <ConfigBase>`.
         
         :note: This function should be called explicitly by the application.
 
@@ -2801,7 +2801,7 @@ class FlatMenuBar(wx.Panel):
         :param `dc`: an instance of :class:`DC`;
         :param integer `state`: the 'more' button state.
 
-        :see: :meth:`MenuEntryInfo.SetState() <flatmenu.MenuEntryInfo.SetState>` for a list of valid menu states.
+        :see: :meth:`MenuEntryInfo.SetState() <MenuEntryInfo.SetState>` for a list of valid menu states.
         """
 
         if (not self._showCustomize) and self.GetInvisibleMenuItemCount() < 1 and  self.GetInvisibleToolbarItemCount() < 1:
@@ -3255,7 +3255,7 @@ class FlatMenuBar(wx.Panel):
         :param integer `idx`: the tool index in the toolbar;
         :param integer `state`: the button state.
 
-        :see: :meth:`MenuEntryInfo.SetState() <flatmenu.MenuEntryInfo.SetState>` for a list of valid menu states.        
+        :see: :meth:`MenuEntryInfo.SetState() <MenuEntryInfo.SetState>` for a list of valid menu states.        
         """
 
         if idx >= len(self._tbButtons) or idx < 0:
@@ -3664,7 +3664,8 @@ class FlatMenuBar(wx.Panel):
         """
         Appends a tool to the :class:`FlatMenuBar`.
 
-        .. deprecated:: This method is now deprecated.
+        .. deprecated:: 0.9.5
+           This method is now deprecated.
 
         :see: :meth:`~FlatMenuBar.AddTool`        
         """
@@ -3765,7 +3766,7 @@ class FlatMenuBar(wx.Panel):
         """
         Positions the control inside a wxAUI / PyAUI frame manager.
 
-        :param `mgr`: an instance of :class:`~lib.agw.aui.AuiManager` or :class:`framemanager`;
+        :param `mgr`: an instance of :class:`~lib.agw.aui.framemanager.AuiManager` or :class:`framemanager`;
         :param bool `fixToolbar`: ``True`` if :class:`FlatMenuBar` can not be floated.
         """
 
@@ -4517,7 +4518,7 @@ class ToolBarItem(object):
         :param `rect`: the client rectangle for the toolbar item, an instance of :class:`Rect`;
         :param integer `state`: the toolbar item state.
 
-        :see: :meth:`MenuEntryInfo.SetState() <flatmenu.MenuEntryInfo.SetState>` for a list of valid item states.        
+        :see: :meth:`MenuEntryInfo.SetState() <MenuEntryInfo.SetState>` for a list of valid item states.        
         """
 
         self._tbItem = tbItem

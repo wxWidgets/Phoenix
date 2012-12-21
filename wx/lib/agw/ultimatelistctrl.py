@@ -5765,8 +5765,8 @@ class UltimateListTextCtrl(ExpandoTextCtrl):
     """
     Control used for in-place edit.
 
-    This is a subclass of `ExpandoTextCtrl` as :class:`UltimateListCtrl` supports multiline
-    text items.
+    This is a subclass of :class:`~lib.expando.ExpandoTextCtrl` as :class:`UltimateListCtrl` 
+    supports multiline text items.
 
     :note: To add a newline character in a multiline item, press ``Shift`` + ``Enter``
      as the ``Enter`` key alone is consumed by :class:`UltimateListCtrl` to finish

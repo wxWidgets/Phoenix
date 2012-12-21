@@ -2448,7 +2448,7 @@ class VC8TabArt(AuiDefaultTabArt):
 
         if self._buttonRect.width > 0:
             buttonRegion = wx.Region(*self._buttonRect)
-            region.XorRegion(buttonRegion)
+            region.Xor(buttonRegion)
         
         dc.SetClippingRegion(region)
 
