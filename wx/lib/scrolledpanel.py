@@ -14,28 +14,100 @@
 #
 # o wxScrolledPanel -> ScrolledPanel
 #
+# 21 Dec 2012 - Andrea Gavana (andrea.gavana@gmail.com)
+#
+# Tags:        phoenix-port, unittest, documented
+#
+
+"""
+:class:`ScrolledPanel` extends :class:`ScrolledWindow`, adding all
+the necessary bits to set up scroll handling for you.
+
+Description
+===========
+
+:class:`ScrolledPanel` fills a "hole" in the implementation of
+:class:`ScrolledWindow`, providing automatic scrollbar and scrolling
+behavior and the tab traversal management that :class:`ScrolledWindow`
+lacks.  This code was based on the original demo code showing how
+to do this, but is now available for general use as a proper class
+(and the demo is now converted to just use it.)
+
+It is assumed that the :class:`ScrolledPanel` will have a sizer, as it is
+used to calculate the minimal virtual size of the panel and etc.
+
+Usage
+=====
+
+Usage example::
+
+    import wx
+    import wx.lib.scrolledpanel as scrolled
+
+    class TestPanel(scrolled.ScrolledPanel):
+
+        def __init__(self, parent, log):
+
+            scrolled.ScrolledPanel.__init__(self, parent, -1)
+
+            vbox = wx.BoxSizer(wx.VERTICAL)
+
+            desc = wx.StaticText(self, -1,
+                                "ScrolledPanel extends wx.ScrolledWindow, adding all "
+                                "the necessary bits to set up scroll handling for you.\n\n"
+                                "Here are three fixed size examples of its use. The "
+                                "demo panel for this sample is also using it -- the \nwx.StaticLine "
+                                "below is intentionally made too long so a scrollbar will be "
+                                "activated."
+                                )
+                                
+            desc.SetForegroundColour("Blue")
+            vbox.Add(desc, 0, wx.ALIGN_LEFT | wx.ALL, 5)
+            vbox.Add(wx.StaticLine(self, -1, size=(1024, -1)), 0, wx.ALL, 5)
+            vbox.Add((20, 20))
+
+            self.SetSizer(vbox)
+            self.SetAutoLayout(1)
+            self.SetupScrolling()
+
+
+    app = wx.App(0)
+    frame = wx.Frame(None, wx.ID_ANY)
+    fa = TestPanel(frame)
+    frame.Show()
+    app.MainLoop()
+
+"""
 
 import wx
 import math
 
-class ScrolledPanel( wx.PyScrolledWindow ):
-
-    """ ScrolledPanel fills a "hole" in the implementation of
-    wx.ScrolledWindow, providing automatic scrollbar and scrolling
-    behavior and the tab traversal management that wxScrolledWindow
-    lacks.  This code was based on the original demo code showing how
-    to do this, but is now available for general use as a proper class
-    (and the demo is now converted to just use it.)
-
-    It is assumed that the ScrolledPanel will have a sizer, as it is
-    used to calculate the minimal virtual size of the panel and etc.
+class ScrolledPanel(wx.ScrolledWindow):
+    """
+    :class:`ScrolledPanel` fills a "hole" in the implementation of
+    :class:`ScrolledWindow`, providing automatic scrollbar and scrolling
+    behavior and the tab traversal management that :class:`ScrolledWindow` lacks.
     """
     
-    def __init__(self, parent, id=-1, pos = wx.DefaultPosition,
-                 size = wx.DefaultSize, style = wx.TAB_TRAVERSAL,
-                 name = "scrolledpanel"):
+    def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
+                 size=wx.DefaultSize, style=wx.TAB_TRAVERSAL,
+                 name="scrolledpanel"):
+        """
+        Default class constructor.
 
-        wx.PyScrolledWindow.__init__(self, parent, id,
+        :param Window `parent`: parent window. Must not be ``None``;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :type `pos`: tuple or :class:`Point`
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :type `size`: tuple or :class:`Size`
+        :param integer `style`: the underlying :class:`wx.ScrolledWindow` style;
+        :param string `name`: the scrolled panel name.
+        """
+
+        wx.ScrolledWindow.__init__(self, parent, id,
                                      pos=pos, size=size,
                                      style=style, name=name)
         self.scrollIntoView = True
@@ -47,12 +119,19 @@ class ScrolledPanel( wx.PyScrolledWindow ):
                        scrollToTop=True, scrollIntoView=True):
         """
         This function sets up the event handling necessary to handle
-        scrolling properly. It should be called within the __init__
-        function of any class that is derived from ScrolledPanel,
+        scrolling properly. It should be called within the `__init__`
+        function of any class that is derived from :class:`ScrolledPanel`,
         once the controls on the panel have been constructed and
         thus the size of the scrolling area can be determined.
 
+        :param bool `scroll_x`: ``True`` to allow horizontal scrolling, ``False`` otherwise;
+        :param bool `scroll_y`: ``True`` to allow vertical scrolling, ``False`` otherwise;
+        :param int `rate_x`: the horizontal scroll increment;
+        :param int `rate_y`: the vertical scroll increment;
+        :param bool `scrollToTop`: ``True`` to scroll all way to the top, ``False`` otherwise;        
+        :param bool `scrollIntoView`: ``True`` to scroll a focused child into view, ``False`` otherwise.
         """
+        
         self.scrollIntoView = scrollIntoView
 
         # The following is all that is needed to integrate the sizer and the scrolled window
@@ -82,7 +161,10 @@ class ScrolledPanel( wx.PyScrolledWindow ):
         """
         If the child window that gets the focus is not fully visible,
         this handler will try to scroll enough to see it.
+
+        :param `evt`: a :class:`ChildFocusEvent` event to be processed.
         """
+        
         child = evt.GetWindow()
         if self.scrollIntoView:
             self.ScrollChildIntoView(child)
@@ -91,11 +173,16 @@ class ScrolledPanel( wx.PyScrolledWindow ):
 
     def ScrollChildIntoView(self, child):
         """
-        Scroll the panel so that the specified child window is in
-        view.  NOTE. This method looks redundant if evt.Skip() is
-        called as well - the base wx.ScrolledWindow widget now seems
-        to be doing the same thing anyway
-        """ 
+        Scroll the panel so that the specified child window is in view.
+
+        :param Window `child`: any :class:`Window` - derived control.
+        
+        .. note:: This method looks redundant if `evt.Skip()` is
+           called as well - the base :class:`ScrolledWindow` widget now seems
+           to be doing the same thing anyway.
+
+        """
+        
         sppu_x, sppu_y = self.GetScrollPixelsPerUnit()
         vs_x, vs_y   = self.GetViewStart()
         cr = child.GetRect()
