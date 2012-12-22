@@ -828,9 +828,9 @@ WXK_CTRL_Z = (ord('Z')+1) - ord('A')
 
 nav = (
     wx.WXK_BACK, wx.WXK_LEFT, wx.WXK_RIGHT, wx.WXK_UP, wx.WXK_DOWN, wx.WXK_TAB,
-    wx.WXK_HOME, wx.WXK_END, wx.WXK_RETURN, wx.WXK_PRIOR, wx.WXK_NEXT,
+    wx.WXK_HOME, wx.WXK_END, wx.WXK_RETURN, wx.WXK_PAGEUP, wx.WXK_,
     wx.WXK_NUMPAD_LEFT, wx.WXK_NUMPAD_RIGHT, wx.WXK_NUMPAD_UP, wx.WXK_NUMPAD_DOWN,
-    wx.WXK_NUMPAD_HOME, wx.WXK_NUMPAD_END, wx.WXK_NUMPAD_ENTER, wx.WXK_NUMPAD_PRIOR, wx.WXK_NUMPAD_NEXT
+    wx.WXK_NUMPAD_HOME, wx.WXK_NUMPAD_END, wx.WXK_NUMPAD_ENTER, wx.WXK_NUMPAD_PAGEUP, wx.WXK_NUMPAD_PAGEDOWN
     )
 
 control = (
@@ -858,7 +858,7 @@ wx_control_keycodes = range(32) + list(nav) + list(control) + [
     wx.WXK_NUMPAD_SPACE, wx.WXK_NUMPAD_TAB, wx.WXK_NUMPAD_ENTER, wx.WXK_NUMPAD_F1,
     wx.WXK_NUMPAD_F2, wx.WXK_NUMPAD_F3, wx.WXK_NUMPAD_F4, wx.WXK_NUMPAD_HOME,
     wx.WXK_NUMPAD_LEFT, wx.WXK_NUMPAD_UP, wx.WXK_NUMPAD_RIGHT, wx.WXK_NUMPAD_DOWN,
-    wx.WXK_NUMPAD_PRIOR, wx.WXK_NUMPAD_PAGEUP, wx.WXK_NUMPAD_NEXT, wx.WXK_NUMPAD_PAGEDOWN,
+    wx.WXK_NUMPAD_PAGEUP, wx.WXK_NUMPAD_PAGEUP, wx.WXK_NUMPAD_PAGEDOWN, wx.WXK_NUMPAD_PAGEDOWN,
     wx.WXK_NUMPAD_END, wx.WXK_NUMPAD_BEGIN, wx.WXK_NUMPAD_INSERT, wx.WXK_NUMPAD_DELETE,
     wx.WXK_NUMPAD_EQUAL, wx.WXK_NUMPAD_MULTIPLY, wx.WXK_NUMPAD_ADD, wx.WXK_NUMPAD_SEPARATOR,
     wx.WXK_NUMPAD_SUBTRACT, wx.WXK_NUMPAD_DECIMAL, wx.WXK_NUMPAD_DIVIDE, wx.WXK_WINDOWS_LEFT,
@@ -1770,10 +1770,10 @@ class MaskedEditMixin:
             wx.WXK_NUMPAD_END:      self._OnEnd,
             wx.WXK_RETURN:          self._OnReturn,
             wx.WXK_NUMPAD_ENTER:    self._OnReturn,
-            wx.WXK_PRIOR:           self._OnAutoCompleteField,
-            wx.WXK_NUMPAD_PRIOR:    self._OnAutoCompleteField,
-            wx.WXK_NEXT:            self._OnAutoCompleteField,
-            wx.WXK_NUMPAD_NEXT:     self._OnAutoCompleteField,
+            wx.WXK_PAGEUP:           self._OnAutoCompleteField,
+            wx.WXK_NUMPAD_PAGEUP:    self._OnAutoCompleteField,
+            wx.WXK_PAGEDOWN:            self._OnAutoCompleteField,
+            wx.WXK_NUMPAD_PAGEDOWN:     self._OnAutoCompleteField,
 
             # default function control keys and handlers:
             wx.WXK_DELETE:          self._OnDelete,
@@ -4127,19 +4127,19 @@ class MaskedEditMixin:
 ##            dbg('choices:', field._choices)
 ##            dbg('compareChoices:', field._compareChoices)
             choices, choice_required = field._compareChoices, field._choiceRequired
-            if keycode in (wx.WXK_PRIOR, wx.WXK_UP, wx.WXK_NUMPAD_PRIOR, wx.WXK_NUMPAD_UP):
+            if keycode in (wx.WXK_PAGEUP, wx.WXK_UP, wx.WXK_NUMPAD_PAGEUP, wx.WXK_NUMPAD_UP):
                 direction = -1
             else:
                 direction = 1
             match_index, partial_match = self._autoComplete(direction, choices, text, compareNoCase=field._compareNoCase, current_index = field._autoCompleteIndex)
             if( match_index is None
-                and (keycode in self._autoCompleteKeycodes + [wx.WXK_PRIOR, wx.WXK_NEXT, wx.WXK_NUMPAD_PRIOR, wx.WXK_NUMPAD_NEXT]
+                and (keycode in self._autoCompleteKeycodes + [wx.WXK_PAGEUP, wx.WXK_PAGEDOWN, wx.WXK_NUMPAD_PAGEUP, wx.WXK_NUMPAD_PAGEDOWN]
                      or (keycode in [wx.WXK_UP, wx.WXK_DOWN, wx.WXK_NUMPAD_UP, wx.WXK_NUMPAD_DOWN] and event.ShiftDown() ) ) ):
                 # Select the 1st thing from the list:
                 match_index = 0
 
             if( match_index is not None
-                and ( keycode in self._autoCompleteKeycodes + [wx.WXK_PRIOR, wx.WXK_NEXT, wx.WXK_NUMPAD_PRIOR, wx.WXK_NUMPAD_NEXT]
+                and ( keycode in self._autoCompleteKeycodes + [wx.WXK_PAGEUP, wx.WXK_PAGEDOWN, wx.WXK_NUMPAD_PAGEUP, wx.WXK_NUMPAD_PAGEDOWN]
                       or (keycode in [wx.WXK_UP, wx.WXK_DOWN, wx.WXK_NUMPAD_UP, wx.WXK_NUMPAD_DOWN] and event.ShiftDown())
                       or (keycode in [wx.WXK_DOWN, wx.WXK_NUMPAD_DOWN] and partial_match) ) ):
 
@@ -7022,7 +7022,7 @@ __i=0
 ##      Choices for each field are validated for length and pastability into
 ##      the field in question, raising ValueError if not appropriate for the control.
 ##      Also added selective additional validation based on individual field constraints.
-##      By default, SHIFT-WXK_DOWN, SHIFT-WXK_UP, WXK_PRIOR and WXK_NEXT all
+##      By default, SHIFT-WXK_DOWN, SHIFT-WXK_UP, WXK_PAGEUP and WXK_PAGEDOWN all
 ##      auto-complete fields with choice lists, supplying the 1st entry in
 ##      the choice list if the field is empty, and cycling through the list in
 ##      the appropriate direction if already a match.  WXK_DOWN will also auto-
@@ -7031,7 +7031,7 @@ __i=0
 ##      auto-completion performed.
 ##   5. Added autoCompleteKeycodes=[] parameters for allowing further
 ##      customization of the control.  Any keycode supplied as a member
-##      of the _autoCompleteKeycodes list will be treated like WXK_NEXT.  If
+##      of the _autoCompleteKeycodes list will be treated like WXK_PAGEDOWN.  If
 ##      requireFieldChoice is set, then a valid value from each non-empty
 ##      choice list will be required for the value of the control to validate.
 ##   6. Fixed "auto-sizing" to be relative to the font actually used, rather

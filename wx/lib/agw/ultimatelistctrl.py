@@ -8169,7 +8169,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                 self.OnArrowChar(0, event)
                 self._dirty = True
 
-        elif keyCode == wx.WXK_PRIOR:
+        elif keyCode == wx.WXK_PAGEUP:
             steps = (self.InReportView() and [self._linesPerPage - 1] or [self._current % self._linesPerPage])[0]
             index = self._current - steps
 
@@ -8179,7 +8179,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
             self.OnArrowChar(index, event)
             self._dirty = True
 
-        elif keyCode == wx.WXK_NEXT:
+        elif keyCode == wx.WXK_PAGEDOWN:
 
             steps = (self.InReportView() and [self._linesPerPage - 1] or [self._linesPerPage - (self._current % self._linesPerPage) - 1])[0]
             index = self._current + steps

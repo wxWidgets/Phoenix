@@ -668,7 +668,7 @@ class FloatSpin(wx.Control):
             self.SetValue(self._value - self._increment*modifier)
             self.DoSendEvent()
 
-        elif keycode == wx.WXK_PRIOR:
+        elif keycode == wx.WXK_PAGEUP:
 
             if self._textctrl and self._textctrl.IsModified():
                 self.SyncSpinToText(False)
@@ -676,7 +676,7 @@ class FloatSpin(wx.Control):
             self.SetValue(self._value + 10.0*self._increment*modifier)
             self.DoSendEvent()
 
-        elif keycode == wx.WXK_NEXT:
+        elif keycode == wx.WXK_PAGEDOWN:
 
             if self._textctrl and self._textctrl.IsModified():
                 self.SyncSpinToText(False)

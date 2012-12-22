@@ -821,8 +821,8 @@ class Editor(wx.ScrolledWindow):
         action[wx.WXK_UP]    = self.MoveUp
         action[wx.WXK_LEFT]  = self.MoveLeft
         action[wx.WXK_RIGHT] = self.MoveRight
-        action[wx.WXK_NEXT]  = self.MovePageDown
-        action[wx.WXK_PRIOR] = self.MovePageUp
+        action[wx.WXK_PAGEDOWN]  = self.MovePageDown
+        action[wx.WXK_PAGEUP] = self.MovePageUp
         action[wx.WXK_HOME]  = self.MoveHome
         action[wx.WXK_END]   = self.MoveEnd
 
