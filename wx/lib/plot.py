@@ -113,23 +113,17 @@ import  time as _time
 import  sys
 import  wx
 
-# Needs Numeric or numarray or NumPy
+# Needs NumPy
 try:
     import numpy.oldnumeric as _Numeric
 except:
-    try:
-        import numarray as _Numeric  #if numarray is used it is renamed Numeric
-    except:
-        try:
-            import Numeric as _Numeric
-        except:
-            msg= """
-            This module requires the Numeric/numarray or NumPy module,
-            which could not be imported.  It probably is not installed
-            (it's not part of the standard Python distribution). See the
-            Numeric Python site (http://numpy.scipy.org) for information on
-            downloading source or binaries."""
-            raise ImportError, "Numeric,numarray or NumPy not found. \n" + msg
+    msg= """
+    This module requires the NumPy module, which could not be
+    imported.  It probably is not installed (it's not part of the
+    standard Python distribution). See the Numeric Python site
+    (http://numpy.scipy.org) for information on downloading source or
+    binaries."""
+    raise ImportError, "NumPy not found.\n" + msg
 
 
 
