@@ -39,6 +39,7 @@ INCLUDES = [  # base and core stuff
               'filename',
               'arrays',
               'clntdata',
+              'clntdatactnr',
               'userdata',
               'wxpybuffer',              
               
