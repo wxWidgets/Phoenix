@@ -32,6 +32,7 @@ ITEMS  = [ ]
 
 INCLUDES = [  # base and core stuff
               'defs',
+              'debug',
               'object',
               'wxpy_api',
               'arrayholder',
