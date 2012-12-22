@@ -1042,6 +1042,14 @@ private:
     ~{CLASS}();""".format(CLASS=self.name, PROT=prot))
         self.addItem(wig)
 
+    def addDefaultCtor(self, prot='protected'):
+        # add declaration of a default constructor to this class
+        wig = WigCode("""\
+{PROT}:
+    {CLASS}();""".format(CLASS=self.name, PROT=prot))
+        self.addItem(wig)
+
+
 #---------------------------------------------------------------------------
 
 class EnumDef(BaseDef):
