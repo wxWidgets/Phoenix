@@ -92,7 +92,8 @@ def run():
         """))
 
     module.addPyCode("BG_STYLE_CUSTOM = BG_STYLE_PAINT")
-
+    module.addItem(etgtools.DefineDef(name='wxADJUST_MINSIZE', value='0'))
+    
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
