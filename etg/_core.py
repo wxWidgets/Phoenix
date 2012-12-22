@@ -46,6 +46,7 @@ INCLUDES = [  # base and core stuff
               'stockgdi',
               'longlong',
               'wxdatetime',
+              'stopwatch',
               
               'windowid',
               'platinfo',
