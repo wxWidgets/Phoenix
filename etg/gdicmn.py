@@ -1,4 +1,4 @@
-#---------------------------------------------------------------------------
+setcur#---------------------------------------------------------------------------
 # Name:        etg/gdicmn.py
 # Author:      Robin Dunn
 #
@@ -54,8 +54,6 @@ def run():
     e.find('wxCURSOR_BASED_ARROW_UP').ignore()
     e.find('wxCURSOR_CROSS_REVERSE').ignore()
     e.find('wxCURSOR_DOUBLE_ARROW').ignore()
-    
-    module.find('wxSetCursor').ignore()          
     
     module.find('wxClientDisplayRect.x').out = True
     module.find('wxClientDisplayRect.y').out = True
