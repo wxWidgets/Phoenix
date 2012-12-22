@@ -32,6 +32,8 @@ def run():
     
     c = module.find('wxClientDataContainer')
     assert isinstance(c, etgtools.ClassDef)
+
+    c.find('SetClientObject.data').transfer = True
     
     # The [G|S]etClientData methods deal with untyped void* values, which we
     # don't support. The [G|S]etClientObject methods use wxClientData instaces
@@ -48,6 +50,7 @@ def run():
     c.addPyMethod('SetClientObject', '(self, data)', 
         doc="Alias for :meth:`SetClientData`",
         body="self.SetClientData(data)")
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

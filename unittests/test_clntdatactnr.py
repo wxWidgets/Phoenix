@@ -6,9 +6,12 @@ import wx
 
 class clntdatactnr_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
     def test_clntdatactnr1(self):
-        self.fail("Unit tests for clntdatactnr not implemented yet.")
+        data = wx.ClientDataContainer()
+        data.SetClientData("This is a test")
+        val = data.GetClientData()
+        self.assertEqual(val, "This is a test")
+        
         
 #---------------------------------------------------------------------------
 
