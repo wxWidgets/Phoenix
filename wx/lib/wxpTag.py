@@ -28,7 +28,7 @@ wxHtmlWinParsers created from that time forth.
 Tags of the following form are recognised::
 
     <WXP class="classname" [module="modulename"] [width="num"] [height="num"]>
-        <PARAM name="parameterName" value="parameterValue>
+        <PARAM name="parameterName" value="parameterValue">
         ...
     </WXP>
 
