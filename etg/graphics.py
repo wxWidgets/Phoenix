@@ -66,11 +66,30 @@ def run():
     tools.removeVirtuals(c)
     c.abstract = True
 
-    # ensure that the target DC lives as long as the GC does
+    # Ensure that the target DC lives as long as the GC does.
+    # NOTE: Since the Creates are static methods there is no self to
+    # associate the extra reference with, so we can't use SIP's KeepReference
+    # without leaking the ref's. Instead we'll rename the Creates and then
+    # wrap a little Python code around it to deal with holding the ref to the
+    # target.
     for m in c.find('Create').all():
-        for p in m.items:
-            if 'DC' in p.name or p.name == 'image':
-                p.keepReference = True
+        m.pyName = '_Create'
+        #for p in m.items:
+        #    if 'DC' in p.name or p.name == 'image':
+        #        p.keepReference = True
+    c.addPyMethod('Create', '(target)',
+        isStatic=True,
+        doc="""\
+            Create(target) -> GraphicsContext\n
+            Create a GraphicsContext with a :class:`Window`, :class:`WindowDC`, 
+            :class:`MemoryDC`, :class:`PrinterDC` or :class:`Image` as the target 
+            of the drawing operations.
+            """,
+        body="""\
+            gc = GraphicsContext._Create(target)
+            gc._target = target
+            return gc
+            """)
     
     
     # FIXME: Handle wxEnhMetaFileDC?
