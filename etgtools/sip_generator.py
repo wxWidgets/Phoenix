@@ -892,13 +892,18 @@ from .%s import *
                 pm.pyDocstring = doc
                 stream.write(nci('"""\n%s"""\n' % doc, 4))
             stream.write(nci(pm.body, 4))
+            stream.write('%s.%s = ' % (klassName, pm.name))
+            end = '\n'
+            if pm.isStatic:
+                stream.write('staticmethod(')
+                end = ')' + end
             if pm.deprecated:
-                if isinstance(pm.deprecated, int):
-                    stream.write('%s.%s = wx.deprecated(_%s_%s)\n' % (klassName, pm.name, klassName, pm.name))
-                else:
-                    stream.write('%s.%s = wx.deprecated(_%s_%s, "%s")\n' % (klassName, pm.name, klassName, pm.name, pm.deprecated))
-            else:
-                stream.write('%s.%s = _%s_%s\n' % (klassName, pm.name, klassName, pm.name))
+                stream.write('wx.deprecated(')
+                end = ')' + end
+            stream.write('_%s_%s' % (klassName, pm.name))
+            if pm.deprecated and not isinstance(pm.deprecated, int):
+                stream.write(', "%s"' % pm.deprecated)
+            stream.write(end)
             stream.write('del _%s_%s\n' % (klassName, pm.name))
             stream.write('%End\n\n')
 

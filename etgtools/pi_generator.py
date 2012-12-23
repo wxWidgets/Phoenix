@@ -508,6 +508,8 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         assert isinstance(pm, extractors.PyMethodDef)
         if pm.ignored:
             return
+        if pm.isStatic:
+            stream.write('\n%s@staticmethod' % indent)
         stream.write('\n%sdef %s' % (indent, pm.name))
         stream.write(pm.argsString)
         stream.write(':\n')
