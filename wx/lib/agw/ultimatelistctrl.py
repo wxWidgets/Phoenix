@@ -3,7 +3,7 @@
 # Inspired by and heavily based on the wxWidgets C++ generic version of wxListCtrl.
 #
 # Andrea Gavana, @ 08 May 2009
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 26 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -225,7 +225,7 @@ License And Version
 
 UltimateListCtrl is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 26 Dec 2012, 21.00 GMT
 
 Version 0.8
 
@@ -8540,7 +8540,8 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         bmp = wx.Bitmap(x, y)
         mdc = wx.MemoryDC(bmp)
-        dc = wx.GCDC(mdc)
+        mdc.SetBrush(wx.BLACK_BRUSH)
+        mdc.Clear()
         render = wx.RendererNative.Get()
 
         if checked:
