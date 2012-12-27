@@ -58,7 +58,7 @@ sipCurrentVersion = '4.14.1'
 sipMD5 = {
     'darwin' : '40854cc412e486909a289c1ffcd4e633',
     'win32'  : 'acfd4033565c754895e658b9fa993a56', 
-    'linux2' : '11fe8b21434d67b024ef204351877e79', 
+    'linux'  : '11fe8b21434d67b024ef204351877e79', 
 }
 
 wafCurrentVersion = '1.6.11'
@@ -68,7 +68,7 @@ doxygenCurrentVersion = '1.8.2'
 doxygenMD5 = {
     'darwin' : '96a3012d97893f4e05387cda544de0e8',
     'win32'  : '71f97ebaa87171c824a7742de5bf3381', 
-    'linux2' : '6fca3d2016f8019a7737716eee4d5377', 
+    'linux'  : '6fca3d2016f8019a7737716eee4d5377', 
 }
 
 # And the location where they can be downloaded from
@@ -397,7 +397,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
         return os.environ.get(envVar)
     else:
         if platformBinary:
-            platform = sys.platform
+            platform = 'linux' if sys.platform.startswith('linux') else sys.platform
             ext = ''
             if platform == 'win32':
                 ext = '.exe'

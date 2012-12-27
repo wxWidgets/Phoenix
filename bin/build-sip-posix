@@ -15,7 +15,8 @@ MYBINDIR=$(dirname $(readlink -f $0))
 
 cd $PROJECTS/sip/sip
 SIPVER=`$PYTHON configure.py --version | grep -v "This is SIP"`
-PLATFORM=`$PYTHON -c "import sys; print sys.platform"`
+PLATFORM=`$PYTHON -c "import sys; platform = 'linux' if sys.platform.startswith('linux') else sys.platform; print(platform)"`
+echo $PLATFORM
 
 if [ "$PLATFORM" = "darwin" ]; then
     # try to ensure compatiblity back to 10.5 if we can
