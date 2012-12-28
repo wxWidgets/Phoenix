@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -170,7 +170,7 @@ License And Version
 
 :class:`LabelBook` and :class:`FlatImageBook` are distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.6.
 
@@ -185,8 +185,8 @@ __version__ = "0.6"
 
 import wx
 
-from artmanager import ArtManager, DCSaver
-from fmresources import *
+from .artmanager import ArtManager, DCSaver
+from .fmresources import *
 
 # Check for the new method in 2.7 (not present in 2.6.3.3)
 if wx.VERSION_STRING < "2.7":
@@ -813,7 +813,7 @@ class ImageContainerBase(wx.Panel):
             if self._pinBtnRect.Contains(pt):
                 return -1, IMG_OVER_PIN        
 
-        for i in xrange(len(self._pagesInfoVec)):
+        for i in range(len(self._pagesInfoVec)):
         
             if self._pagesInfoVec[i].GetPosition() == wx.Point(-1, -1):
                 break
@@ -1266,7 +1266,7 @@ class ImageContainer(ImageContainerBase):
         boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont.SetWeight(wx.BOLD)
         
-        for i in xrange(len(self._pagesInfoVec)):
+        for i in range(len(self._pagesInfoVec)):
 
             count = count + 1            
         
@@ -1428,7 +1428,7 @@ class ImageContainer(ImageContainerBase):
             pos += rectWidth
         
         # Update all buttons that can not fit into the screen as non-visible
-        for ii in xrange(count, len(self._pagesInfoVec)):
+        for ii in range(count, len(self._pagesInfoVec)):
             self._pagesInfoVec[ii].SetPosition(wx.Point(-1, -1))
 
         # Draw the pin button
@@ -1630,7 +1630,7 @@ class LabelContainer(ImageContainerBase):
         posy = 20 
         count = 0
         
-        for i in xrange(len(self._pagesInfoVec)):
+        for i in range(len(self._pagesInfoVec)):
             count = count+1        
             # Default values for the surronounding rectangle 
             # around a button
@@ -1673,7 +1673,7 @@ class LabelContainer(ImageContainerBase):
             posy += rectHeight
         
         # Update all buttons that can not fit into the screen as non-visible
-        for ii in xrange(count, len(self._pagesInfoVec)):
+        for ii in range(count, len(self._pagesInfoVec)):
             self._pagesInfoVec[i].SetPosition(wx.Point(-1, -1))
 
         if bUsePin:
@@ -1997,10 +1997,7 @@ class LabelContainer(ImageContainerBase):
         :see: :meth:`~LabelContainer.SetColour` for a list of valid colour keys.
         """
 
-        if not self._coloursMap.has_key(which):
-            return wx.Colour()
-
-        return self._coloursMap[which]        
+        return self._coloursMap.get(which, wx.Colour())
 
 
     def InitializeColours(self):
@@ -2504,7 +2501,7 @@ class FlatBookBase(wx.Panel):
             dc.SetFont(font)
             maxW = 0
             
-            for page in xrange(self.GetPageCount()):
+            for page in range(self.GetPageCount()):
                 caption = self._pages.GetPageText(page)
                 w, h = dc.GetTextExtent(caption)
                 maxW = max(maxW, w)

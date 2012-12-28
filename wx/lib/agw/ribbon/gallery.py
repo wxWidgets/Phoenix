@@ -32,8 +32,8 @@ Event Name                          Description
 
 import wx
 
-from control import RibbonControl
-from art import *
+from .control import RibbonControl
+from .art import *
 
 wxEVT_COMMAND_RIBBONGALLERY_HOVER_CHANGED = wx.NewEventType()
 wxEVT_COMMAND_RIBBONGALLERY_SELECTED = wx.NewEventType()

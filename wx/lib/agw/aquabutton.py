@@ -2,7 +2,7 @@
 # AQUABUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -18,6 +18,7 @@
 #
 # Or, obviously, to the wxPython mailing list!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------------- #
@@ -100,7 +101,7 @@ License And Version
 
 :class:`AquaButton` control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.4
 
@@ -869,6 +870,8 @@ class __ToggleMixin(object):
     """
     A mixin that allows to transform :class:`AquaButton` in the corresponding toggle button.
     """
+
+    up = True
 
     def SetToggle(self, flag):
         """

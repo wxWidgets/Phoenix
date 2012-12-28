@@ -179,7 +179,7 @@ License And Version
 
 `PersistentObjects` library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 Version 0.4. 
 
 """
@@ -188,6 +188,6 @@ __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 __date__ = "16 November 2009"
 
 
-from persist_constants import *
-from persistencemanager import *
-from persist_handlers import *
+from .persist_constants import *
+from .persistencemanager import *
+from .persist_handlers import *

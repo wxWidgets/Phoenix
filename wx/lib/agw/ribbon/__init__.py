@@ -150,7 +150,7 @@ License And Version
 
 RIBBON library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.3. 
 
@@ -160,18 +160,18 @@ __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 __date__ = "16 October 2009"
 
 
-from art import *
-from art_aui import *
-from art_internal import *
-from art_msw import *
-from art_default import *
+from .art import *
+from .art_aui import *
+from .art_internal import *
+from .art_msw import *
+from .art_default import *
 
-from bar import *
-from buttonbar import *
-from control import *
-from gallery import *
+from .bar import *
+from .buttonbar import *
+from .control import *
+from .gallery import *
 
-from page import *
-from panel import *
-from toolbar import *
+from .page import *
+from .panel import *
+from .toolbar import *
 

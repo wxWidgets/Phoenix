@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -136,7 +136,7 @@ License And Version
 
 :class:`FloatSpin` control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 1.0
 
@@ -1497,6 +1497,9 @@ class FixedPoint(object):
         return hash(n) ^ hash(p)
 
     def __nonzero__(self):
+        return self.n != 0
+
+    def __bool__(self):
         return self.n != 0
 
     def __neg__(self):

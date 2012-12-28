@@ -2,7 +2,7 @@
 # GRADIENTBUTTON wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -18,6 +18,7 @@
 #
 # Or, obviously, to the wxPython mailing list!!!
 #
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------------- #
@@ -108,7 +109,7 @@ License And Version
 
 :class:`GradientButton` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 14 Mar 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.3
 
@@ -194,7 +195,7 @@ class GradientButton(wx.Control):
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDown)
 
         self._mouseAction = None
-        self._bitmap = bitmap
+        self.SetBitmapLabel(bitmap)
         self._hasFocus = False
         
         self.SetLabel(label)
@@ -202,6 +203,17 @@ class GradientButton(wx.Control):
         self.SetInitialSize(size)
 
         self.SetBaseColours()
+
+
+    def SetBitmapLabel(self, bitmap):
+        """
+        Sets the bitmap label for the button.
+
+        :param `bitmap`: the bitmap label to set, an instance of :class:`Bitmap`.
+        """
+        
+        self._bitmap = bitmap
+        self.Refresh()
 
 
     def SetBaseColours(self, startcolour=wx.BLACK, foregroundcolour=wx.WHITE):

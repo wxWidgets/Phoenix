@@ -20,11 +20,11 @@ import wx
 if wx.Platform == '__WXMAC__':
     import Carbon.Appearance
 
-from aui_utilities import BitmapFromBits, StepColour, IndentPressedBitmap, ChopText
-from aui_utilities import GetBaseColour, DrawMACCloseButton, LightColour, TakeScreenShot
-from aui_utilities import CopyAttributes
+from .aui_utilities import BitmapFromBits, StepColour, IndentPressedBitmap, ChopText
+from .aui_utilities import GetBaseColour, DrawMACCloseButton, LightColour, TakeScreenShot
+from .aui_utilities import CopyAttributes
 
-from aui_constants import *
+from .aui_constants import *
 
 
 # -- GUI helper classes and functions --
@@ -405,7 +405,7 @@ class AuiDefaultTabArt(object):
         # we'll just use a rectangle for the clipping region for now --
         dc.SetClippingRegion(tab_x, tab_y, clip_width+1, tab_height-3)
 
-        border_points = [wx.Point() for i in xrange(6)]
+        border_points = [wx.Point() for i in range(6)]
         agwFlags = self.GetAGWFlags()
         
         if agwFlags & AUI_NB_BOTTOM:
@@ -1207,7 +1207,7 @@ class AuiSimpleTabArt(object):
         
         # -- draw line --
 
-        points = [wx.Point() for i in xrange(7)]
+        points = [wx.Point() for i in range(7)]
         points[0].x = tab_x
         points[0].y = tab_y + tab_height - 1
         points[1].x = tab_x + tab_height - 3
@@ -1928,7 +1928,7 @@ class FF2TabArt(AuiDefaultTabArt):
             
         dc.SetClippingRegion(tab_x, tab_y, clip_width + 1, tab_height - 3)
 
-        tabPoints = [wx.Point() for i in xrange(7)]
+        tabPoints = [wx.Point() for i in range(7)]
         
         adjust = 0
         if not page.active:
@@ -2101,7 +2101,7 @@ class FF2TabArt(AuiDefaultTabArt):
 
         # Define the rounded rectangle base on the given rect
         # we need an array of 9 points for it
-        regPts = [wx.Point() for indx in xrange(9)]
+        regPts = [wx.Point() for indx in range(9)]
 
         if focus:
             if upperTabs:
@@ -2247,7 +2247,7 @@ class VC8TabArt(AuiDefaultTabArt):
         if tab_x + clip_width > in_rect.x + in_rect.width - 4:
             clip_width = (in_rect.x + in_rect.width) - tab_x - 4
         
-        tabPoints = [wx.Point() for i in xrange(8)]
+        tabPoints = [wx.Point() for i in range(8)]
 
         # If we draw the first tab or the active tab, 
         # we draw a full tab, else we draw a truncated tab

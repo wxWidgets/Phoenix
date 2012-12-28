@@ -13,13 +13,14 @@ __date__ = "31 March 2009"
 
 
 import wx
-import types
 
-from aui_utilities import BitmapFromBits, StepColour, GetLabelSize
-from aui_utilities import GetBaseColour, MakeDisabledBitmap
+from .aui_utilities import BitmapFromBits, StepColour, GetLabelSize
+from .aui_utilities import GetBaseColour, MakeDisabledBitmap
 
 import framemanager
-from aui_constants import *
+from .aui_constants import *
+
+import wx.lib.six as six
 
 # wxPython version string
 _VERSION_STRING = wx.VERSION_STRING
@@ -55,7 +56,7 @@ class CommandToolBarEvent(wx.PyCommandEvent):
         :param integer `win_id`: the window identification number.
         """
         
-        if type(command_type) == types.IntType:    
+        if type(command_type) in six.integer_types:    
             wx.PyCommandEvent.__init__(self, command_type, win_id)
         else:
             wx.PyCommandEvent.__init__(self, command_type.GetEventType(), command_type.GetId())
@@ -145,7 +146,7 @@ class AuiToolBarEvent(CommandToolBarEvent):
 
         CommandToolBarEvent.__init__(self, command_type, win_id)
 
-        if type(command_type) == types.IntType:
+        if type(command_type) in six.integer_types:
             self.notify = wx.NotifyEvent(command_type, win_id)
         else:
             self.notify = wx.NotifyEvent(command_type.GetEventType(), command_type.GetId())
@@ -2636,13 +2637,13 @@ class AuiToolBar(wx.Control):
             if tool.kind == ITEM_RADIO:
                 idx = self.GetToolIndex(tool_id)
                 if idx >= 0 and idx < len(self._items):
-                    for i in xrange(idx, len(self._items)):
+                    for i in range(idx, len(self._items)):
                         tool = self.FindToolByIndex(i)
                         if tool.kind != ITEM_RADIO:
                             break
                         tool.state &= ~AUI_BUTTON_STATE_CHECKED
 
-                    for i in xrange(idx, -1, -1):
+                    for i in range(idx, -1, -1):
                         tool = self.FindToolByIndex(i)
                         if tool.kind != ITEM_RADIO:
                             break
@@ -3565,19 +3566,19 @@ class AuiToolBar(wx.Control):
 
                     # add custom overflow prepend items, if any
                     count = len(self._custom_overflow_prepend)
-                    for i in xrange(count):
+                    for i in range(count):
                         overflow_items.append(self._custom_overflow_prepend[i])
 
                     # only show items that don't fit in the dropdown
                     count = len(self._items)
-                    for i in xrange(count):
+                    for i in range(count):
                     
                         if not self.GetToolFitsByIndex(i):
                             overflow_items.append(self._items[i])
                     
                     # add custom overflow append items, if any
                     count = len(self._custom_overflow_append)
-                    for i in xrange(count):
+                    for i in range(count):
                         overflow_items.append(self._custom_overflow_append[i])
 
                     res = self._art.ShowDropDown(self, overflow_items)

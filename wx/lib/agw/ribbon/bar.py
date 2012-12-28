@@ -9,7 +9,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 15 Oct 2009
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -90,13 +90,14 @@ See Also
 
 
 import wx
-import types
 
-from control import RibbonControl
+import wx.lib.six as six
 
-from art_internal import RibbonPageTabInfo
-from art_msw import RibbonMSWArtProvider
-from art import *
+from .control import RibbonControl
+
+from .art_internal import RibbonPageTabInfo
+from .art_msw import RibbonMSWArtProvider
+from .art import *
 
 wxEVT_COMMAND_RIBBONBAR_PAGE_CHANGED = wx.NewEventType()
 wxEVT_COMMAND_RIBBONBAR_PAGE_CHANGING = wx.NewEventType()
@@ -589,7 +590,7 @@ class RibbonBar(RibbonControl):
          ribbon bar).
         """
 
-        for i in xrange(len(self._pages)):
+        for i in range(len(self._pages)):
             if self._pages[i].page == page:
                 return self.SetActivePageByIndex(i)
             
@@ -599,7 +600,7 @@ class RibbonBar(RibbonControl):
     def SetActivePage(self, page):
         """ See comments on :meth:`~RibbonBar.SetActivePageByIndex` and :meth:`~RibbonBar.SetActivePageByPage`. """
 
-        if isinstance(page, types.IntType):
+        if isinstance(page, six.integer_types):
             return self.SetActivePageByIndex(page)
 
         return self.SetActivePageByPage(page)
@@ -871,7 +872,7 @@ class RibbonBar(RibbonControl):
 
         dc = wx.AutoBufferedPaintDC(self)
 
-        if not self.GetUpdateRegion().ContainsRect(wx.Rect(0, 0, self.GetClientSize().GetWidth(), self._tab_height)):
+        if not self.GetUpdateRegion().Contains(wx.Rect(0, 0, self.GetClientSize().GetWidth(), self._tab_height)):
             # Nothing to do in the tab area, and the page area is handled by the active page
             return
         
@@ -910,7 +911,7 @@ class RibbonBar(RibbonControl):
             rect.width = self._art.GetMetric(RIBBON_ART_TAB_SEPARATION_SIZE)
             sep_visibility /= float(numtabs)
             
-            for i in xrange(0, numtabs-1):
+            for i in range(0, numtabs-1):
                 info = self._pages[i]
                 rect.x = info.rect.x + info.rect.width
 

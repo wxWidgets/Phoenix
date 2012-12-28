@@ -4,8 +4,8 @@ __date__ = "31 March 2009"
 
 import wx
 
-import auibook
-from aui_constants import *
+from . import auibook
+from .aui_constants import *
 
 _ = wx.GetTranslation
 
@@ -341,7 +341,7 @@ class AuiMDIChildFrame(wx.Panel):
             pParentFrame.SetActiveChild(None)
             pParentFrame.SetChildMenuBar(None)
         
-        for pos in xrange(pClientWindow.GetPageCount()):
+        for pos in range(pClientWindow.GetPageCount()):
             if pClientWindow.GetPage(pos) == self:
                 return pClientWindow.DeletePage(pos)
 
@@ -385,7 +385,7 @@ class AuiMDIChildFrame(wx.Panel):
         pClientWindow = pParentFrame.GetClientWindow()
         if pClientWindow is not None:
         
-            for pos in xrange(pClientWindow.GetPageCount()):
+            for pos in range(pClientWindow.GetPageCount()):
                 if pClientWindow.GetPage(pos) == self:
                     pClientWindow.SetPageText(pos, self._title)
                     break
@@ -439,7 +439,7 @@ class AuiMDIChildFrame(wx.Panel):
         pClientWindow = pParentFrame.GetClientWindow()
         if pClientWindow is not None:
         
-            for pos in xrange(pClientWindow.GetPageCount()):
+            for pos in range(pClientWindow.GetPageCount()):
                 if pClientWindow.GetPage(pos) == self:
                     pClientWindow.SetSelection(pos)
                     break
@@ -662,5 +662,5 @@ class AuiMDIClientWindow(auibook.AuiNotebook):
 
         auibook.AuiNotebook.OnSize(self, event)
 
-        for pos in xrange(self.GetPageCount()):
+        for pos in range(self.GetPageCount()):
             self.GetPage(pos).ApplyMDIChildFrameRect()

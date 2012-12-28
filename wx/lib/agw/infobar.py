@@ -5,7 +5,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 12 March 2012
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -150,7 +150,7 @@ License And Version
 
 :class:`InfoBar` control is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.3
 
@@ -171,7 +171,7 @@ try:
 except ImportError:
     CPP_AUI = False
     
-from aui import framemanager as framemanager
+from .aui import framemanager as framemanager
 
 # These are for the AutoWrapStaticText class
 from wx.lib.wordwrap import wordwrap
@@ -668,7 +668,7 @@ class InfoBar(wx.Control):
         self.DoHide()
 
         
-    def AddButton(self, btnid, label, bitmap=wx.NullBitmap):
+    def AddButton(self, btnid, label='', bitmap=wx.NullBitmap):
         """
         Adds a button to be shown in the info bar.
 
@@ -747,7 +747,7 @@ class InfoBar(wx.Control):
         # they are repeated removing the last added one probably makes more sense)
         items = sizer.GetChildren()
 
-        for item in items[::-1]:
+        for item in reversed(items):
             # if we reached the spacer separating the buttons from the text
             # preceding them without finding our button,it must mean it's not
             # there at all
@@ -755,13 +755,14 @@ class InfoBar(wx.Control):
                 raise Exception("button with id %d not found"%btnid)
 
             # check if we found our button
-            if item.GetWindow().GetId() == btnid:
-                sizer.Detach(item)
-                item.GetWindow().Destroy()
+            window = item.GetWindow()
+            if window.GetId() == btnid:
+                sizer.Detach(window)
+                window.Destroy()
                 break
-            
+
         # check if there are any custom buttons left
-        if sizer.GetChildren()[-1].IsSpacer():
+        if list(sizer.GetChildren())[-1].IsSpacer():
             # if the last item is the spacer,none are left so restore the
             # standard close button
             sizer.Add(self._button, wx.SizerFlags().Centre().DoubleBorder())

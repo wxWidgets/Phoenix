@@ -3,7 +3,7 @@
 # Ported And Enhanced From wxWidgets Contribution (Aj Bommarito) By:
 #
 # Andrea Gavana, @ 16 September 2005
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO/Caveats List
@@ -129,7 +129,7 @@ License And Version
 
 ToasterBox is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.3
 
@@ -392,9 +392,7 @@ class ToasterBox(wx.Timer):
         if colour is None:
             colour = wx.WHITE
 
-        if isinstance(colour, basestring):
-            colour = wx.Colour(colour)
-            
+        colour = wx.Colour(colour)            
         self._backgroundcolour = colour
         self._tb.SetPopupBackgroundColour(self._backgroundcolour)
 
@@ -412,9 +410,7 @@ class ToasterBox(wx.Timer):
         if colour is None:
             colour = wx.BLACK
 
-        if isinstance(colour, basestring):
-            colour = wx.Colour(colour)
-            
+        colour = wx.Colour(colour)            
         self._foregroundcolour = colour
 
 
@@ -465,8 +461,7 @@ class ToasterBox(wx.Timer):
         """
 
         if bitmap is not None:
-            if isinstance(bitmap, basestring):
-                bitmap = wx.Bitmap(bitmap)
+            bitmap = wx.Bitmap(bitmap)
 
         self._bitmap = bitmap
 
@@ -641,7 +636,7 @@ class ToasterBox(wx.Timer):
             current = self._popupposition[1]
 
         # loop through all the windows
-        for j in xrange(0, len(winlist)):
+        for j in range(0, len(winlist)):
             ourNewHeight = current - (j*self._popupsize[1] - 8)
             tmpTb = winlist[j]
             # reset where the object THINKS its supposed to be
@@ -1087,7 +1082,7 @@ class ToasterBoxWindow(wx.Frame):
 
         self._currentStep += self._scrollStep
 
-        if self._currentStep not in range(self._start, self._stop, self._scrollStep):
+        if self._currentStep not in list(range(self._start, self._stop, self._scrollStep)):
             self._scrollTimer.Stop()
             self.Update()
 

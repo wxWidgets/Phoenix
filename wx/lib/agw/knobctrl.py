@@ -2,7 +2,7 @@
 # KNOBCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 18 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -135,7 +135,7 @@ License And Version
 
 :class:`KnobCtrl` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.4
 
@@ -917,11 +917,11 @@ if __name__ == '__main__':
             knob1 = KnobCtrl(panel, -1, size=(100, 100))
             knob2 = KnobCtrl(panel, -1, size=(100, 100))
 
-            knob1.SetTags(range(0, 151, 10))
+            knob1.SetTags(list(range(0, 151, 10)))
             knob1.SetAngularRange(-45, 225)
             knob1.SetValue(45)
 
-            knob2.SetTags(range(0, 151, 10))
+            knob2.SetTags(list(range(0, 151, 10)))
             knob2.SetAngularRange(0, 270)
             knob2.SetValue(100)
         

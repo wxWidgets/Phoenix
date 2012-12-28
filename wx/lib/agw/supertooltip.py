@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -120,7 +120,7 @@ License And Version
 
 :class:`SuperToolTip` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.5
 
@@ -201,7 +201,7 @@ _colourSchemes = {"Beige": (wx.Colour(255,255,255), wx.Colour(242,242,223), wx.C
 def GetStyleKeys():
     """ Returns the predefined styles keywords. """
 
-    schemes = _colourSchemes.keys()
+    schemes = list(_colourSchemes.keys())
     schemes.sort()
     return schemes
 

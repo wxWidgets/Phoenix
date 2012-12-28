@@ -47,7 +47,7 @@ def RibbonDrawParallelGradientLines(dc, nlines, line_origins, stepx, stepy, nums
     gd = end_colour.Green() - start_colour.Green()
     bd = end_colour.Blue() - start_colour.Blue()
 
-    for step in xrange(numsteps):    
+    for step in range(numsteps):    
         r = start_colour.Red() + (((step*rd*100)/numsteps)/100)
         g = start_colour.Green() + (((step*gd*100)/numsteps)/100)
         b = start_colour.Blue() + (((step*bd*100)/numsteps)/100)
@@ -55,7 +55,7 @@ def RibbonDrawParallelGradientLines(dc, nlines, line_origins, stepx, stepy, nums
         p = wx.Pen(wx.Colour(r, g, b))
         dc.SetPen(p)
 
-        for n in xrange(nlines):        
+        for n in range(nlines):        
             dc.DrawLine(offset_x + line_origins[n].x, offset_y + line_origins[n].y,
                         offset_x + line_origins[n].x + stepx, offset_y + line_origins[n].y + stepy)
         
@@ -179,7 +179,7 @@ class RibbonHSLColour(object):
             else:
                 blue = tmp1
         
-        return wx.Colour(red * 255.0, green * 255.0, blue * 255.0)
+        return wx.Colour(int(red * 255.0), int(green * 255.0), int(blue * 255.0))
 
 
     def Darker(self, delta):

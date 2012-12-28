@@ -29,19 +29,18 @@ See Also
 """
 
 import wx
-import types
 
 from math import cos
 from math import pi as M_PI
 
-import panel as PANEL
-import page as PAGE
+from . import panel as PANEL
+from . import page as PAGE
 
-from art_internal import RibbonLoadPixmap, RibbonInterpolateColour, RibbonDrawParallelGradientLines
-from art_internal import RibbonCanLabelBreakAtPosition
-from art_internal import RibbonHSLColour
+from .art_internal import RibbonLoadPixmap, RibbonInterpolateColour, RibbonDrawParallelGradientLines
+from .art_internal import RibbonCanLabelBreakAtPosition
+from .art_internal import RibbonHSLColour
 
-from art import *
+from .art import *
 
 
 gallery_up_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", "     ", "  x  ", " xxx ", "xxxxx", "     "]
@@ -77,10 +76,10 @@ class RibbonMSWArtProvider(object):
         self._button_bar_label_font = wx.NORMAL_FONT
         self._panel_label_font = wx.NORMAL_FONT
 
-        self._gallery_up_bitmap = [wx.NullBitmap for i in xrange(4)]
-        self._gallery_down_bitmap = [wx.NullBitmap for i in xrange(4)]
-        self._gallery_extension_bitmap = [wx.NullBitmap for i in xrange(4)]
-        self._panel_extension_bitmap = [wx.NullBitmap for i in xrange(2)]
+        self._gallery_up_bitmap = [wx.NullBitmap for i in range(4)]
+        self._gallery_down_bitmap = [wx.NullBitmap for i in range(4)]
+        self._gallery_extension_bitmap = [wx.NullBitmap for i in range(4)]
+        self._panel_extension_bitmap = [wx.NullBitmap for i in range(2)]
 
         if set_colour_scheme:
             self.SetColourScheme(wx.Colour(194, 216, 241), wx.Colour(255, 223, 114), wx.Colour(0, 0, 0))
@@ -290,12 +289,12 @@ class RibbonMSWArtProvider(object):
 
     def CloneTo(self, copy):
 
-        for i in xrange(4):    
+        for i in range(4):    
             copy._gallery_up_bitmap[i] = self._gallery_up_bitmap[i]
             copy._gallery_down_bitmap[i] = self._gallery_down_bitmap[i]
             copy._gallery_extension_bitmap[i] = self._gallery_extension_bitmap[i]
 
-        for i in xrange(2):
+        for i in range(2):
             copy._panel_extension_bitmap[i] = self._panel_extension_bitmap[i]
     
         copy._toolbar_drop_bitmap = self._toolbar_drop_bitmap
@@ -979,7 +978,7 @@ class RibbonMSWArtProvider(object):
                 dc.GradientFillLinear(background, self._tab_hover_background_colour,
                                       self._tab_hover_background_gradient_colour, wx.SOUTH)
            
-            border_points = [wx.Point() for i in xrange(6)]
+            border_points = [wx.Point() for i in range(6)]
             border_points[0] = wx.Point(1, tab.rect.height - 2)
             border_points[1] = wx.Point(1, 3)
             border_points[2] = wx.Point(3, 1)
@@ -1094,13 +1093,13 @@ class RibbonMSWArtProvider(object):
         g3 = self._tab_separator_gradient_colour.Green()
         b3 = self._tab_separator_gradient_colour.Blue()
 
-        for i in xrange(rect.height-1):
+        for i in range(rect.height-1):
         
             p = float(i)/h
 
-            r = (p * r3 + (1.0 - p) * r2) * visibility + r1
-            g = (p * g3 + (1.0 - p) * g2) * visibility + g1
-            b = (p * b3 + (1.0 - p) * b2) * visibility + b1
+            r = int((p * r3 + (1.0 - p) * r2) * visibility + r1)
+            g = int((p * g3 + (1.0 - p) * g2) * visibility + g1)
+            b = int((p * b3 + (1.0 - p) * b2) * visibility + b1)
 
             P = wx.Pen(wx.Colour(r, g, b))
             dc.SetPen(P)
@@ -1111,7 +1110,7 @@ class RibbonMSWArtProvider(object):
 
     def DrawPartialPageBackground(self, dc, wnd, rect, allow_hovered_or_page=True, offset=None, hovered=False):
 
-        if isinstance(allow_hovered_or_page, types.BooleanType):
+        if isinstance(allow_hovered_or_page, bool):
             self.DrawPartialPageBackground2(dc, wnd, rect, allow_hovered_or_page)
         else:
             self.DrawPartialPageBackground1(dc, wnd, rect, allow_hovered_or_page, offset, hovered)
@@ -1226,7 +1225,7 @@ class RibbonMSWArtProvider(object):
         dc.GradientFillLinear(background, self._page_background_colour,
                               self._page_background_gradient_colour, wx.SOUTH)
     
-        border_points = [wx.Point() for i in xrange(8)]
+        border_points = [wx.Point() for i in range(8)]
         border_points[0] = wx.Point(2, 0)
         border_points[1] = wx.Point(1, 1)
         border_points[2] = wx.Point(1, rect.height - 4)
@@ -1306,7 +1305,7 @@ class RibbonMSWArtProvider(object):
         dc.GradientFillLinear(background, self._page_background_colour,
                               self._page_background_gradient_colour, wx.SOUTH)
     
-        border_points = [wx.Point() for i in xrange(7)]
+        border_points = [wx.Point() for i in range(7)]
         result = style & RIBBON_SCROLL_BTN_DIRECTION_MASK
         
         if result == RIBBON_SCROLL_BTN_LEFT:
@@ -1347,7 +1346,7 @@ class RibbonMSWArtProvider(object):
         dc.DrawLines(border_points, rect.x, rect.y)
     
         # NB: Code for handling hovered/active state is temporary
-        arrow_points = [wx.Point() for i in xrange(3)]
+        arrow_points = [wx.Point() for i in range(3)]
         result = style & RIBBON_SCROLL_BTN_DIRECTION_MASK
         
         if result == RIBBON_SCROLL_BTN_LEFT:
@@ -1386,7 +1385,7 @@ class RibbonMSWArtProvider(object):
 
     def DrawDropdownArrow(self, dc, x, y, colour):
 
-        arrow_points = [wx.Point() for i in xrange(3)]
+        arrow_points = [wx.Point() for i in range(3)]
         brush = wx.Brush(colour)
         arrow_points[0] = wx.Point(1, 2)
         arrow_points[1] = arrow_points[0] + wx.Point(-3, -3)
@@ -1470,7 +1469,7 @@ class RibbonMSWArtProvider(object):
             else:            
                 # Room for some characters and ...
                 # Display as many characters as possible and append ...
-                for l in xrange(len(label)-1, 3, -1):                
+                for l in range(len(label)-1, 3, -1):                
                     new_label = label[0:l] + "..."
                     label_size = wx.Size(*dc.GetTextExtent(new_label))
                     if label_size.GetWidth() <= label_rect.GetWidth():                    
@@ -1515,7 +1514,7 @@ class RibbonMSWArtProvider(object):
         :param `rect`: The panel client rectangle.
         """
 
-        true_rect = wx.Rect(*self.RemovePanelPadding(rect))
+        true_rect = wx.Rect(self.RemovePanelPadding(rect))
         true_rect = wx.Rect(true_rect.GetRight()-13, true_rect.GetBottom()-13, 13, 13)
         return true_rect
 
@@ -1692,7 +1691,7 @@ class RibbonMSWArtProvider(object):
 
     def DrawPanelBorder(self, dc, rect, primary_colour, secondary_colour):
 
-        border_points = [wx.Point() for i in xrange(9)]
+        border_points = [wx.Point() for i in range(9)]
         border_points[0] = wx.Point(2, 0)
         border_points[1] = wx.Point(rect.width - 3, 0)
         border_points[2] = wx.Point(rect.width - 1, 2)
@@ -1835,7 +1834,7 @@ class RibbonMSWArtProvider(object):
         dc.SetTextForeground(self._panel_minimised_label_colour)
         dc.DrawText(wnd.GetLabel(), xpos, ypos)
         
-        arrow_points = [wx.Point() for i in xrange(3)]
+        arrow_points = [wx.Point() for i in range(3)]
         
         if self._flags & RIBBON_BAR_FLOW_VERTICAL:
             xpos += label_width
@@ -2006,7 +2005,7 @@ class RibbonMSWArtProvider(object):
                 dc.GradientFillLinear(bg_rect, self._button_bar_hover_background_colour,
                                       self._button_bar_hover_background_gradient_colour, wx.SOUTH)
 
-            border_points = [wx.Point() for i in xrange(9)]
+            border_points = [wx.Point() for i in range(9)]
             border_points[0] = wx.Point(2, 0)
             border_points[1] = wx.Point(rect.width - 3, 0)
             border_points[2] = wx.Point(rect.width - 1, 2)
@@ -2123,7 +2122,7 @@ class RibbonMSWArtProvider(object):
         """
 
         dc.SetPen(self._toolbar_border_pen)
-        outline = [wx.Point() for i in xrange(9)]
+        outline = [wx.Point() for i in range(9)]
         outline[0] = wx.Point(2, 0)
         outline[1] = wx.Point(rect.width - 3, 0)
         outline[2] = wx.Point(rect.width - 1, 2)
@@ -2574,7 +2573,7 @@ class RibbonMSWArtProvider(object):
         
         if result == RIBBON_BUTTONBAR_BUTTON_SMALL:
             # Small bitmap, no label
-            button_size = bitmap_size_small + wx.Size(6, 4)
+            button_size = wx.Size(bitmap_size_small + wx.Size(6, 4))
             
             if kind in [RIBBON_BUTTON_NORMAL, RIBBON_BUTTON_TOGGLE]:
                 normal_region = wx.Rect(0, 0, *button_size)
@@ -2620,7 +2619,7 @@ class RibbonMSWArtProvider(object):
             if kind not in [RIBBON_BUTTON_NORMAL, RIBBON_BUTTON_TOGGLE]:
                 last_line_extra_width += 8
             
-            for i in xrange(0, len(label)):            
+            for i in range(0, len(label)):            
                 if RibbonCanLabelBreakAtPosition(label, i):
                     
                     width = max(dc.GetTextExtent(label[0:i])[0],

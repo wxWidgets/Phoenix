@@ -278,7 +278,7 @@ License And Version
 
 AUI library is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 1.3. 
 
@@ -288,11 +288,11 @@ __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 __date__ = "31 March 2009"
 
 
-from aui_constants import *
-from aui_utilities import *
-from auibar import *
-from auibook import *
-from tabart import *
-from dockart import *
-from framemanager import *
-from tabmdi import *
+from .aui_constants import *
+from .aui_utilities import *
+from .auibar import *
+from .auibook import *
+from .tabart import *
+from .dockart import *
+from .framemanager import *
+from .tabmdi import *

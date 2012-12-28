@@ -2,7 +2,7 @@
 # XLSGRID wxPython IMPLEMENTATION
 #
 # Andrea Gavana @ 08 Aug 2011
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -226,7 +226,7 @@ License And Version
 
 :class:`XLSGrid` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.4
 
@@ -249,10 +249,12 @@ import string
 
 import wx.grid as gridlib
 
+import wx.lib.six as six
+
 from wx.lib.embeddedimage import PyEmbeddedImage
 from wx.lib.wordwrap import wordwrap
 
-import supertooltip as STT
+from . import supertooltip as STT
 
 from math import pi, sin, cos
 from operator import attrgetter
@@ -314,7 +316,7 @@ XF_FONT_FAMILY = {0: wx.SWISS, 1: wx.ROMAN, 2: wx.SWISS,
 
 # Unicode ordinals for Hebrew, Arabic and Syriac
 # I don't know if there are other RTL languages
-RTL_UNICODE = range(1424, 1872)
+RTL_UNICODE = list(range(1424, 1872))
 
 # To guess text direction we exclude digits and punctuation
 USELESS_CHARS = string.punctuation + string.digits + " "
@@ -436,8 +438,8 @@ def SplitThousands(s, tSep=',', dSep='.'):
      
     """    
     
-    if not isinstance(s, basestring):
-        s = unicode(s, "utf-8", "ignore")
+    if not isinstance(s, six.string_types):
+        s = six.u(s)
 
     cnt = 0
     numChars = dSep + '0123456789'
@@ -497,8 +499,8 @@ def ReadExcelCOM(filename, sheetname, rows, cols):
     try:
         workbook = Excel(filename, sheetname)
 
-        for i in xrange(1, rows+1):
-            for j in xrange(1, cols+1):
+        for i in range(1, rows+1):
+            for j in range(1, cols+1):
                 texts[i-1][j-1]    = workbook.GetText(i, j)
 
         comm_range = workbook.GetCommentsRange()
@@ -834,7 +836,7 @@ class XLSText(object):
                 value = representation%value
             except ValueError:
                 # Fall back to string
-                value = unicode(value, "utf-8", "ignore")
+                value = six.u(value)
             
             if "#," in number_format:
                 value = SplitThousands(value)
@@ -1036,7 +1038,7 @@ class XLSRichText(XLSText):
         rich_text.append((len(value), rich_text[-1][1]))
         attributes = []
         
-        for indx in xrange(len(rich_text)-1):
+        for indx in range(len(rich_text)-1):
             offset_start, index_start = rich_text[indx]
             offset_end, index_end = rich_text[indx+1]
 
@@ -1417,7 +1419,7 @@ class XLSBorderFactory(object):
         borders = {}
         diagonals = border.diag_up, border.diag_down
         
-        for label, location in XF_BORDER_STYLES.items():
+        for label, location in list(XF_BORDER_STYLES.items()):
             line_style = getattr(border, "%s_line_style"%label)
             colour_index = getattr(border, "%s_colour_index"%label)
             border_colour = book.colour_map[colour_index]
@@ -1425,7 +1427,7 @@ class XLSBorderFactory(object):
             border_class = XLSBorder(location, line_style, border_colour, default_colour, diagonals)
             borders[location] = border_class
 
-        self.draw_priority = sorted(borders.values(), key=attrgetter('draw_priority'))
+        self.draw_priority = sorted(list(borders.values()), key=attrgetter('draw_priority'))
         
 
     def Draw(self, dc, rect):
@@ -1936,9 +1938,9 @@ class XLSGrid(gridlib.Grid):
 
         self.cells = {}
 
-        for i in xrange(nrows):
+        for i in range(nrows):
 
-            for j in xrange(ncols):
+            for j in range(ncols):
 
                 hyperlink = rich_text = None
 
@@ -1955,7 +1957,7 @@ class XLSGrid(gridlib.Grid):
         row_height = sheet.default_row_height
         col_width = sheet.defcolwidth 
         
-        for i in xrange(nrows):
+        for i in range(nrows):
             if i in sheet.rowinfo_map:
                 current = sheet.rowinfo_map[i].height
             else:
@@ -1964,7 +1966,7 @@ class XLSGrid(gridlib.Grid):
             row_height = int(round(float(default_height)*current/256.0))
             self.SetRowSize(i, row_height)
 
-        for j in xrange(ncols):
+        for j in range(ncols):
             if j in sheet.colinfo_map:
                 current = sheet.colinfo_map[j].width
             else:

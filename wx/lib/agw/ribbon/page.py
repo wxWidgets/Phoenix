@@ -14,10 +14,10 @@ See Also
 
 import wx
 
-from control import RibbonControl
-from panel import RibbonPanel
+from .control import RibbonControl
+from .panel import RibbonPanel
 
-from art import *
+from .art import *
 
 # As scroll buttons need to be rendered on top of a page's child windows, the
 # buttons themselves have to be proper child windows (rather than just painted
@@ -30,6 +30,7 @@ from art import *
 
 def GetSizeInOrientation(size, orientation):
 
+    size = wx.Size(size)
     if orientation == wx.HORIZONTAL:
         return size.GetWidth()
     elif orientation == wx.VERTICAL:
@@ -528,7 +529,7 @@ class RibbonPage(RibbonControl):
         if minor_axis_size < 0:
             minor_axis_size = 0
  
-        for iteration in xrange(1, 3):
+        for iteration in range(1, 3):
         
             for child in self.GetChildren():
                 w, h = child.GetSize()

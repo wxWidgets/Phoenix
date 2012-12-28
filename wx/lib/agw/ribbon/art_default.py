@@ -30,9 +30,9 @@ See Also
 
 import wx
 
-from art_msw import RibbonMSWArtProvider
-from art_aui import RibbonAUIArtProvider
-from art_osx import RibbonOSXArtProvider
+from .art_msw import RibbonMSWArtProvider
+from .art_aui import RibbonAUIArtProvider
+from .art_osx import RibbonOSXArtProvider
 
 if wx.Platform == "__WXMSW__":
 

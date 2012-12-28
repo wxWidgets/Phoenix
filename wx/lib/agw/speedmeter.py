@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 25 Sep 2005
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List/Caveats
@@ -184,7 +184,7 @@ License And Version
 
 :class:`SpeedMeter` is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.3
 
@@ -267,10 +267,10 @@ SM_DRAW_FANCY_TICKS = 1024
 SM_MOUSE_TRACK = 1
 """ Flag to allow the left/right click of the mouse to change the :class:`SpeedMeter` value interactively. """
 
-fontfamily = range(70, 78)
+fontfamily = list(range(70, 78))
 familyname = ["default", "decorative", "roman", "script", "swiss", "modern", "teletype"]
 
-weights = range(90, 93)
+weights = list(range(90, 93))
 weightsname = ["normal", "light", "bold"]
 
 styles = [90, 93, 94]
@@ -952,7 +952,7 @@ class SpeedMeter(BufferedWindow):
 
                     spacing = (newinterval - oldinterval)/float(ticknum+1)
 
-                    for tcount in xrange(ticknum):
+                    for tcount in range(ticknum):
                         if direction == "Advance":
                             oldinterval = (oldinterval + spacing) - start
                             stint = oldinterval
@@ -1583,7 +1583,7 @@ class SpeedMeter(BufferedWindow):
         else:
             interval = intervals
 
-        indexes = range(len(intervals))
+        indexes = list(range(len(intervals)))
         try:
             intersection = [ind for ind in indexes if interval[ind] <= current <= interval[ind+1]]
         except:

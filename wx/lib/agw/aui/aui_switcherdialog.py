@@ -73,7 +73,7 @@ Event handler::
         # Add the main windows and toolbars, in two separate columns
         # We'll use the item 'id' to store the notebook selection, or -1 if not a page
 
-        for k in xrange(2):
+        for k in range(2):
             if k == 0:
                 items.AddGroup(_("Main Windows"), "mainwindows")
             else:
@@ -94,7 +94,7 @@ Event handler::
         for pane in self._mgr.GetAllPanes():
             nb = pane.window
             if isinstance(nb, aui.AuiNotebook):
-                for j in xrange(nb.GetPageCount()):
+                for j in range(nb.GetPageCount()):
 
                     name = nb.GetPageText(j)
                     win = nb.GetPage(j)
@@ -147,9 +147,9 @@ Event handler::
 
 import wx
 
-import auibook
-from aui_utilities import FindFocusDescendant
-from aui_constants import SWITCHER_TEXT_MARGIN_X, SWITCHER_TEXT_MARGIN_Y
+from . import auibook
+from .aui_utilities import FindFocusDescendant
+from .aui_constants import SWITCHER_TEXT_MARGIN_X, SWITCHER_TEXT_MARGIN_Y
 
 
 # Define a translation function
@@ -424,7 +424,7 @@ class SwitcherItems(object):
 
     def FindItemByName(self, name):
 
-        for i in xrange(len(self._items)):
+        for i in range(len(self._items)):
             if self._items[i].GetName() == name:
                 return i
         
@@ -433,7 +433,7 @@ class SwitcherItems(object):
 
     def FindItemById(self, id):
 
-        for i in xrange(len(self._items)):
+        for i in range(len(self._items)):
             if self._items[i].GetId() == id:
                 return i
         
@@ -573,7 +573,7 @@ class SwitcherItems(object):
         dc.DrawRectangle(win.GetClientRect())
         dc.SetBackgroundMode(wx.TRANSPARENT)
 
-        for i in xrange(len(self._items)):
+        for i in range(len(self._items)):
             item = self._items[i]
             if i == self._selection:
                 dc.SetPen(wx.Pen(selectionOutlineColour))
@@ -823,7 +823,7 @@ class MultiColumnListCtrl(wx.Control):
                 newCol = self._items.GetColumnCount() - 1
 
             # Find the first item from the end whose row matches and whose column is equal or lower
-            for i in xrange(self._items.GetItemCount()-1, -1, -1):
+            for i in range(self._items.GetItemCount()-1, -1, -1):
                 item2 = self._items.GetItem(i)
                 if item2.GetColPos() == newCol and item2.GetRowPos() <= row:
                     self._items.SetSelection(i)
@@ -842,7 +842,7 @@ class MultiColumnListCtrl(wx.Control):
                 newCol = 0
 
             # Find the first item from the end whose row matches and whose column is equal or lower
-            for i in xrange(self._items.GetItemCount()-1, -1, -1):
+            for i in range(self._items.GetItemCount()-1, -1, -1):
                 item2 = self._items.GetItem(i)
                 if item2.GetColPos() == newCol and item2.GetRowPos() <= row:
                     self._items.SetSelection(i)

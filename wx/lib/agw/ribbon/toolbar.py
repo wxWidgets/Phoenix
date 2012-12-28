@@ -24,12 +24,11 @@ Event Name                             Description
 """
 
 import wx
-import sys
 
-from control import RibbonControl
-from panel import RibbonPanel
+from .control import RibbonControl
+from .panel import RibbonPanel
 
-from art import *
+from .art import *
 
 wxEVT_COMMAND_RIBBONTOOL_CLICKED = wx.NewEventType()
 wxEVT_COMMAND_RIBBONTOOL_DROPDOWN_CLICKED = wx.NewEventType()
@@ -105,11 +104,11 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
             group_count = len(self._bar._groups)
             tobreak = False
 
-            for g in xrange(group_count):            
+            for g in range(group_count):            
                 group = self._bar._groups[g]
                 tool_count = len(group.tools)
                 
-                for t in xrange(tool_count):                
+                for t in range(tool_count):                
                     tool = group.tools[t]
                     if tool == self._bar._active_tool:                    
                         pos = wx.Point(*group.position)
@@ -441,7 +440,7 @@ class RibbonToolBar(RibbonControl):
             if pos < tool_count:
                 new_group = self.InsertGroup(index+1)
 
-                for t in xrange(pos, tool_count):
+                for t in range(pos, tool_count):
                     new_group.tools.append(group.tools[t])
                     
                 group.tools = group.tools[0:pos]
@@ -543,7 +542,7 @@ class RibbonToolBar(RibbonControl):
 
                     next_group = self._groups[index+1]
 
-                    for t in xrange(0, len(next_group.tools)):
+                    for t in range(0, len(next_group.tools)):
                         group.tools.append(next_group.tools[t])
 
                     self._groups.pop(index+1)
@@ -882,7 +881,7 @@ class RibbonToolBar(RibbonControl):
         area = 0
         tobreak = False
 
-        for nrows in xrange(self._nrows_max, self._nrows_min-1, -1):
+        for nrows in range(self._nrows_max, self._nrows_min-1, -1):
         
             size = wx.Size(*self._sizes[nrows - self._nrows_min])
             original = wx.Size(*size)
@@ -923,7 +922,7 @@ class RibbonToolBar(RibbonControl):
         area = 10000
         tobreak = False
         
-        for nrows in xrange(self._nrows_min, self._nrows_max+1):
+        for nrows in range(self._nrows_min, self._nrows_max+1):
 
             size = wx.Size(*self._sizes[nrows - self._nrows_min])
             original = wx.Size(*size)
@@ -977,7 +976,7 @@ class RibbonToolBar(RibbonControl):
         self._nrows_max = nMax
 
         self._sizes = []
-        self._sizes = [wx.Size(0, 0) for i in xrange(self._nrows_min, self._nrows_max + 1)]
+        self._sizes = [wx.Size(0, 0) for i in range(self._nrows_min, self._nrows_max + 1)]
 
         self.Realize()
 
@@ -1033,11 +1032,11 @@ class RibbonToolBar(RibbonControl):
         # Calculate the minimum size for each possible number of rows
         sep = self._art.GetMetric(RIBBON_ART_TOOL_GROUP_SEPARATION_SIZE)
         smallest_area = 10000
-        row_sizes = [wx.Size(0, 0) for i in xrange(self._nrows_max)]
+        row_sizes = [wx.Size(0, 0) for i in range(self._nrows_max)]
         major_axis = ((self._art.GetFlags() & RIBBON_BAR_FLOW_VERTICAL) and [wx.VERTICAL] or [wx.HORIZONTAL])[0]
         self.SetMinSize(wx.Size(0, 0))
 
-        minSize = wx.Size(sys.maxint, sys.maxint)
+        minSize = wx.Size(10000, 10000)
 
         # See if we're sizing flexibly (i.e. wrapping), and set min size differently
         sizingFlexibly = False
@@ -1051,17 +1050,17 @@ class RibbonToolBar(RibbonControl):
         if sizingFlexibly:
             major_axis = wx.HORIZONTAL
         
-        for nrows in xrange(self._nrows_min, self._nrows_max+1):
+        for nrows in range(self._nrows_min, self._nrows_max+1):
         
-            for r in xrange(nrows):
+            for r in range(nrows):
                 row_sizes[r] = wx.Size(0, 0)
                 
-            for g in xrange(group_count):
+            for g in range(group_count):
             
                 group = self._groups[g]
                 shortest_row = 0
 
-                for r in xrange(1, nrows):                
+                for r in range(1, nrows):                
                     if row_sizes[r].GetWidth() < row_sizes[shortest_row].GetWidth():
                         shortest_row = r
                 
@@ -1071,7 +1070,7 @@ class RibbonToolBar(RibbonControl):
             
             size = wx.Size(0, 0)
             
-            for r in xrange(nrows):            
+            for r in range(nrows):            
                 if row_sizes[r].GetWidth() != 0:
                     row_sizes[r].DecBy(sep, 0)
                 if row_sizes[r].GetWidth() > size.GetWidth():
@@ -1135,7 +1134,7 @@ class RibbonToolBar(RibbonControl):
     
         if self._nrows_max != self._nrows_min:        
             area = 0
-            for i in xrange(self._nrows_max - self._nrows_min + 1):            
+            for i in range(self._nrows_max - self._nrows_min + 1):            
                 if self._sizes[i].x <= size.x and self._sizes[i].y <= size.y and \
                    GetSizeInOrientation(self._sizes[i], major_axis) > area:
                     area = GetSizeInOrientation(self._sizes[i], major_axis)
@@ -1143,13 +1142,13 @@ class RibbonToolBar(RibbonControl):
                     bestSize = wx.Size(*self._sizes[i])
 
         # Assign groups to rows and calculate row widths
-        row_sizes = [wx.Size(0, 0) for i in xrange(row_count)]
+        row_sizes = [wx.Size(0, 0) for i in range(row_count)]
         sep = self._art.GetMetric(RIBBON_ART_TOOL_GROUP_SEPARATION_SIZE)
 
         group_count = len(self._groups)
         for group in self._groups:
             shortest_row = 0
-            for r in xrange(1, row_count):            
+            for r in range(1, row_count):            
                 if row_sizes[r].GetWidth() < row_sizes[shortest_row].GetWidth():
                     shortest_row = r
             
@@ -1160,13 +1159,13 @@ class RibbonToolBar(RibbonControl):
 
         # Calculate row positions
         total_height = 0
-        for r in xrange(row_count):
+        for r in range(row_count):
             total_height += row_sizes[r].GetHeight()
             
         rowsep = (size.GetHeight() - total_height) / (row_count + 1)
         rowypos = [0]*row_count
         rowypos[0] = rowsep
-        for r in xrange(1, row_count):          
+        for r in range(1, row_count):          
             rowypos[r] = rowypos[r - 1] + row_sizes[r - 1].GetHeight() + rowsep
 
         # Set group y positions
@@ -1193,7 +1192,7 @@ class RibbonToolBar(RibbonControl):
 
         if self._nrows_max != self._nrows_min:
             area = 0
-            for i in xrange(self._nrows_max - self._nrows_min + 1):            
+            for i in range(self._nrows_max - self._nrows_min + 1):            
 
                 if self._sizes[i].x <= size.x and self._sizes[i].y <= size.y and \
                    GetSizeInOrientation(self._sizes[i], major_axis) > area:

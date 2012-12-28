@@ -31,7 +31,7 @@ See Also
 """
 
 import wx
-from art_aui import RibbonAUIArtProvider
+from .art_aui import RibbonAUIArtProvider
 
 class RibbonOSXArtProvider(RibbonAUIArtProvider):
 

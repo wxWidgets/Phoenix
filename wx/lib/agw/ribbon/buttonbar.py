@@ -33,8 +33,10 @@ Event Name                               Description
 
 import wx
 
-from control import RibbonControl
-from art import *
+import wx.lib.six as six
+
+from .control import RibbonControl
+from .art import *
 
 wxEVT_COMMAND_RIBBONBUTTON_CLICKED = wx.NewEventType()
 wxEVT_COMMAND_RIBBONBUTTON_DROPDOWN_CLICKED = wx.NewEventType()
@@ -72,7 +74,7 @@ class RibbonButtonBarButtonBase(object):
         self.bitmap_large_disabled = wx.NullBitmap
         self.bitmap_small = wx.NullBitmap
         self.bitmap_small_disabled = wx.NullBitmap
-        self.sizes = [RibbonButtonBarButtonSizeInfo() for i in xrange(3)]
+        self.sizes = [RibbonButtonBarButtonSizeInfo() for i in range(3)]
         self.client_data = None
         self.id = -1
         self.kind = None
@@ -98,7 +100,7 @@ class RibbonButtonBarButtonBase(object):
 
     def GetSmallerSize(self, size, n=1):
 
-        for i in xrange(n, 0, -1):
+        for i in range(n, 0, -1):
 
             if size == RIBBON_BUTTONBAR_BUTTON_LARGE:
                 if self.sizes[RIBBON_BUTTONBAR_BUTTON_MEDIUM].is_supported:
@@ -340,7 +342,7 @@ class RibbonButtonBar(RibbonControl):
         if not bitmap.IsOk() and not bitmap_small.IsOk():
             raise Exception("Invalid main bitmap")
 
-        if not isinstance(help_string, basestring):
+        if not isinstance(help_string, six.string_types):
             raise Exception("Invalid help string parameter")
 
         if not self._buttons:
@@ -858,7 +860,7 @@ class RibbonButtonBar(RibbonControl):
         layout_count = len(self._layouts)
         self._current_layout = layout_count - 1
 
-        for layout_i in xrange(layout_count):
+        for layout_i in range(layout_count):
 
             layout_size = self._layouts[layout_i].overall_size
             if layout_size.x <= new_size.x and layout_size.y <= new_size.y:
@@ -1092,7 +1094,7 @@ class RibbonButtonBar(RibbonControl):
             # it is only done when the first button is involved in a collapse.
             preserve_height = True
 
-        for btn_i in xrange(count, first_btn+1):
+        for btn_i in range(count, first_btn+1):
             instance = layout.buttons[btn_i]
             result, instance.size = instance.base.GetSmallerSize(instance.size)
             instance.position = wx.Point(*cursor)
@@ -1100,7 +1102,7 @@ class RibbonButtonBar(RibbonControl):
 
         x_adjust = available_width - used_width
 
-        for btn_i in xrange(first_btn+1, btn_count):
+        for btn_i in range(first_btn+1, btn_count):
             instance = layout.buttons[btn_i]
             instance.position.x -= x_adjust
 

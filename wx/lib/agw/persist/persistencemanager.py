@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2009
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -34,10 +34,10 @@ import datetime
 
 import wx.gizmos
 
-from persist_handlers import FindHandler, HasCtrlHandler
+from .persist_handlers import FindHandler, HasCtrlHandler
 
-from persist_constants import BAD_DEFAULT_NAMES, CONFIG_PATH_SEPARATOR
-from persist_constants import PM_DEFAULT_STYLE, PM_PERSIST_CONTROL_VALUE
+from .persist_constants import BAD_DEFAULT_NAMES, CONFIG_PATH_SEPARATOR
+from .persist_constants import PM_DEFAULT_STYLE, PM_PERSIST_CONTROL_VALUE
 
 # ----------------------------------------------------------------------------------- #
 
@@ -595,7 +595,7 @@ class PersistenceManager(object):
         """
 
         if window is None:
-            for name, obj in self._persistentObjects.items():
+            for name, obj in list(self._persistentObjects.items()):
                 self.SaveAndUnregister(obj.GetWindow())
 
             return

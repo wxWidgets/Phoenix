@@ -3,7 +3,7 @@
 # Inspired By the GIMP Shortcut Editor.
 #
 # Andrea Gavana, @ 05 March 2012
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -287,7 +287,7 @@ License And Version
 
 :class:`ShortcutEditor` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.1
 
@@ -309,8 +309,8 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 from wx.lib.mixins import treemixin
 
 # AGW stuff
-import hypertreelist as HTL
-import genericmessagedialog as GMD
+from . import hypertreelist as HTL
+from . import genericmessagedialog as GMD
 
 # add support for I18N
 _ = wx.GetTranslation
@@ -980,25 +980,25 @@ class HTMLHelpWindow(wx.Frame):
         w, h = _html_reload.GetBitmap().GetWidth(), _html_reload.GetBitmap().GetHeight()        
         toolbar.SetToolBitmapSize((w, h))
 
-        toolbar.AddLabelTool(wx.ID_BACKWARD, _('Back'), _html_back.GetBitmap(), shortHelp=_('Back'),
-                             longHelp=_('Go to the previous page'))
+        toolbar.AddTool(wx.ID_BACKWARD, _('Back'), _html_back.GetBitmap(), wx.NullBitmap, shortHelpString=_('Back'),
+                        longHelpString=_('Go to the previous page'))
 
-        toolbar.AddLabelTool(wx.ID_FORWARD, _('Forward'), _html_forward.GetBitmap(), shortHelp=_('Forward'),
-                             longHelp=_('Go to the next page'))
+        toolbar.AddTool(wx.ID_FORWARD, _('Forward'), _html_forward.GetBitmap(), wx.NullBitmap, shortHelpString=_('Forward'),
+                        longHelpString=_('Go to the next page'))
 
         toolbar.AddSeparator()
 
-        toolbar.AddLabelTool(wx.ID_HOME, _('Home'), _html_home.GetBitmap(), shortHelp=_('Home Page'),
-                             longHelp=_('Go to the home page'))
+        toolbar.AddTool(wx.ID_HOME, _('Home'), _html_home.GetBitmap(), wx.NullBitmap, shortHelpString=_('Home Page'),
+                        longHelpString=_('Go to the home page'))
 
-        toolbar.AddLabelTool(wx.ID_REFRESH, _('Refresh'), _html_reload.GetBitmap(), shortHelp=_('Refresh'),
-                             longHelp=_('Refresh the current page'))
+        toolbar.AddTool(wx.ID_REFRESH, _('Refresh'), _html_reload.GetBitmap(), wx.NullBitmap, shortHelpString=_('Refresh'),
+                        longHelpString=_('Refresh the current page'))
 
         toolbar.AddSeparator()
         toolbar.AddStretchableSpace()
 
-        toolbar.AddLabelTool(wx.ID_PRINT, _('Print'), _html_print.GetBitmap(), shortHelp=_('Print'),
-                             longHelp=_('Print the current page'))
+        toolbar.AddTool(wx.ID_PRINT, _('Print'), _html_print.GetBitmap(), wx.NullBitmap, shortHelpString=_('Print'),
+                        longHelpString=_('Print the current page'))
 
         toolbar.Realize()
 
@@ -1360,7 +1360,7 @@ class Shortcut(object):
         return None
 
 
-    def Match(self, filter=u'', item=None):
+    def Match(self, filter='', item=None):
         """
         Matches this :class:`Shortcut` label string against the `filter` input variable.
 
@@ -1611,8 +1611,8 @@ class Shortcut(object):
         split = accelerator.split('+')
         modifiers, keyCode = split[0:-1], split[-1]
         
-        inv_Accel = dict(zip(ACCELERATORS.values(), ACCELERATORS.keys()))
-        inv_KeyMap = dict(zip(KEYMAP.values(), KEYMAP.keys()))
+        inv_Accel = dict(list(zip(list(ACCELERATORS.values()), list(ACCELERATORS.keys()))))
+        inv_KeyMap = dict(list(zip(list(KEYMAP.values()), list(KEYMAP.keys()))))
         
         base = wx.ACCEL_NORMAL
 
@@ -1704,7 +1704,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
 
         self.selectedItem = None
         self.hookBound = False
-        self.filter = u''
+        self.filter = ''
         self.expansionState = []
         
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
@@ -2129,7 +2129,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
             textCtrl.Hide()
                 
 
-    def SetFilter(self, filter=u''):
+    def SetFilter(self, filter=''):
         """
         Sets the `filter` string against all the shortcuts in the :class:`ListShortcut` are matched.
 
@@ -2148,7 +2148,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
 
         self.Freeze()
         self.DeleteAllItems()
-        self.AddRoot(u'')
+        self.AddRoot('')
         
         self.Populate()
 
@@ -2336,7 +2336,7 @@ class ShortcutEditor(wx.Dialog):
         
         def MenuItemSearch(menu, item):
             
-            for menuItem in menu.GetMenuItems():
+            for menuItem in list(menu.GetMenuItems()):
                 label = menuItem.GetLabel()
                 
                 if not label:
@@ -2465,7 +2465,7 @@ class ShortcutEditor(wx.Dialog):
         """
 
         total_width = 0
-        for col in xrange(self.listShortcut.GetColumnCount()):
+        for col in range(self.listShortcut.GetColumnCount()):
             self.listShortcut.SetColumnWidth(col, wx.LIST_AUTOSIZE)
             width = self.listShortcut.GetColumnWidth(col)
             
@@ -2512,7 +2512,7 @@ class ShortcutEditor(wx.Dialog):
         :param `event`: an instance of :class:`CommandEvent`.
         """
 
-        self.searchText.SetValue(u'')
+        self.searchText.SetValue('')
 
 
     def OnRestoreDefaults(self, event):

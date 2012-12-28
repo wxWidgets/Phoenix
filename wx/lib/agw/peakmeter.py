@@ -2,7 +2,7 @@
 # PEAKMETERCTRL wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 18 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # TODO List
@@ -156,7 +156,7 @@ License And Version
 
 :class:`PeakMeterCtrl` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 18 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.4
 
@@ -911,7 +911,7 @@ if __name__ == '__main__':
             nElements = 15
             arrayData = []
             
-            for i in xrange(nElements):
+            for i in range(nElements):
                 nRandom = random.randint(0, 100)
                 arrayData.append(nRandom)
 

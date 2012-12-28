@@ -59,9 +59,9 @@ def AdjustColour(color, percent, alpha=wx.ALPHA_OPAQUE):
     :returns: A new darkened/lightened :class:`Colour` with the alpha channel
      specified as input
     """
-    
+
     radj, gadj, badj = [ int(val * (abs(percent) / 100.))
-                         for val in color.Get() ]
+                         for val in color.Get(includeAlpha=False) ]
 
     if percent < 0:
         radj, gadj, badj = [ val * -1 for val in [radj, gadj, badj] ]

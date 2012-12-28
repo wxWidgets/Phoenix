@@ -6,9 +6,9 @@ This module contains a custom dialog class used to personalize the appearance of
 import wx
 from UserDict import UserDict
 
-from artmanager import ArtManager
-from fmresources import *
-from labelbook import LabelBook
+from .artmanager import ArtManager
+from .fmresources import *
+from .labelbook import LabelBook
 
 _ = wx.GetTranslation
 
@@ -43,7 +43,7 @@ class OrderedDict(UserDict):
         return dict
 
     def items(self):
-        return zip(self._keys, self.values())
+        return list(zip(self._keys, list(self.values())))
 
     def keys(self):
         return self._keys
@@ -65,11 +65,11 @@ class OrderedDict(UserDict):
 
     def update(self, dict):
         UserDict.update(self, dict)
-        for key in dict.keys():
+        for key in list(dict.keys()):
             if key not in self._keys: self._keys.append(key)
 
     def values(self):
-        return map(self.get, self._keys)
+        return list(map(self.get, self._keys))
 
 
 # ---------------------------------------------------------------------------- #
@@ -242,7 +242,7 @@ class FMCustomizeDlg(wx.Dialog):
             self.order = []
         
         # Add all the menu items that are currently visible to the list
-        for i in xrange(len(mb._items)):
+        for i in range(len(mb._items)):
         
             dummy, lableOnly = ArtManager.Get().GetAccelIndex(mb._items[i].GetTitle())
             choices.append(lableOnly)
@@ -254,7 +254,7 @@ class FMCustomizeDlg(wx.Dialog):
         
         # Add all hidden menus to the menu bar
 
-        for key in self._hiddenMenus.keys():
+        for key in list(self._hiddenMenus.keys()):
             choices.append(key)
 
         if self.created:
@@ -419,7 +419,7 @@ class FMCustomizeDlg(wx.Dialog):
         if checked:
         
             # remove the item from the hidden map
-            if self._hiddenMenus.has_key(menuName):
+            if menuName in self._hiddenMenus:
                 menu = self._hiddenMenus.pop(menuName)
             
             # add it to the visible map
@@ -434,7 +434,7 @@ class FMCustomizeDlg(wx.Dialog):
         else:
         
             # remove the item from the visible items
-            if self._visibleMenus.has_key(menuName):
+            if menuName in self._visibleMenus:
                 menu = self._visibleMenus.pop(menuName)
 
             # add it to the hidden map

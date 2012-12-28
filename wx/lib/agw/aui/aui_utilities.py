@@ -10,7 +10,7 @@ __date__ = "31 March 2009"
 
 import wx
 
-from aui_constants import *
+from .aui_constants import *
 
 
 if wx.Platform == "__WXMAC__":
@@ -112,7 +112,7 @@ def ChopText(dc, text, max_size):
     textLen = len(text)
     last_good_length = 0
     
-    for i in xrange(textLen, -1, -1):
+    for i in range(textLen, -1, -1):
         s = text[0:i]
         s += "..."
 
@@ -232,7 +232,7 @@ def MakeGray(rgbTuple, factor, maskColour):
 
     if rgbTuple != maskColour:
         r, g, b = rgbTuple
-        return map(lambda x: int((230 - x) * factor) + x, (r, g, b))
+        return [int((230 - x) * factor) + x for x in (r, g, b)]
     else:
         return rgbTuple
 
@@ -284,8 +284,8 @@ def PaneCreateStippleBitmap():
     img = wx.Image(2, 2)
     counter = 0
     
-    for ii in xrange(2):
-        for jj in xrange(2):
+    for ii in range(2):
+        for jj in range(2):
             img.SetRGB(ii, jj, data[counter], data[counter+1], data[counter+2])
             counter = counter + 3
     
@@ -489,8 +489,8 @@ class TabDragImage(wx.DragImage):
             timg = bitmap.ConvertToImage()
             if not timg.HasAlpha():
                 timg.InitAlpha()
-            for y in xrange(timg.GetHeight()):
-                for x in xrange(timg.GetWidth()):
+            for y in range(timg.GetHeight()):
+                for x in range(timg.GetWidth()):
                     pix = wx.Colour(timg.GetRed(x, y),
                                     timg.GetGreen(x, y),
                                     timg.GetBlue(x, y))
@@ -612,7 +612,7 @@ def RescaleScreenShot(bmp, thumbnail_size=200):
     memDC.SetPen(wx.TRANSPARENT_PEN)
 
     pos = 0
-    for i in xrange(5, 0, -1):
+    for i in range(5, 0, -1):
         brush = wx.Brush(wx.Colour(50*i, 50*i, 50*i))
         memDC.SetBrush(brush)
         memDC.DrawRoundedRectangle(0, 0, newW+5-pos, newH+5-pos, 2)

@@ -6,7 +6,6 @@ actions depending on the widget kind.
 """
 
 import wx
-import types
 import datetime
 
 import wx.aui
@@ -42,9 +41,9 @@ except:
 
 import wx.lib.agw.ultimatelistctrl as ULC
 
-import persistencemanager as PM
+from . import persistencemanager as PM
 
-from persist_constants import *
+from .persist_constants import *
 
 
 def PyDate2wxDate(date):
@@ -67,7 +66,7 @@ def wxDate2PyDate(date):
     """
 
     if date.IsValid():
-        ymd = map(int, date.FormatISODate().split('-'))
+        ymd = list(map(int, date.FormatISODate().split('-')))
         return datetime.date(*ymd)
     else:
         return None
@@ -237,7 +236,7 @@ class TreebookHandler(BookHandler):
         book, obj = self._window, self._pObject
 
         expanded = ""
-        for page in xrange(book.GetPageCount()):
+        for page in range(book.GetPageCount()):
             if book.IsNodeExpanded(page):
                 if expanded:
                     expanded += PERSIST_SEP
@@ -653,7 +652,7 @@ class ListCtrlHandler(ListBoxHandler):
             return retVal
         
         colSizes = []
-        for col in xrange(listCtrl.GetColumnCount()):
+        for col in range(listCtrl.GetColumnCount()):
             colSizes.append(listCtrl.GetColumnWidth(col))
             
         obj.SaveValue(PERSIST_LISTCTRL_COLWIDTHS, colSizes)
@@ -709,7 +708,7 @@ class CheckListBoxHandler(ListBoxHandler):
         checkList, obj = self._window, self._pObject
 
         checked = []
-        for index in xrange(checkList.GetCount()):
+        for index in range(checkList.GetCount()):
             if checkList.IsChecked(index):
                 checked.append(index)
 
@@ -804,7 +803,7 @@ class FoldPanelBarHandler(AbstractHandler):
     def Save(self):
     
         fpb, obj = self._window, self._pObject
-        expanded = [fpb.GetFoldPanel(i).IsExpanded() for i in xrange(fpb.GetCount())]
+        expanded = [fpb.GetFoldPanel(i).IsExpanded() for i in range(fpb.GetCount())]
         obj.SaveValue(PERSIST_FOLDPANELBAR_EXPANDED, expanded)
 
         return True
@@ -1638,7 +1637,7 @@ class TreeListCtrlHandler(TreeCtrlHandler):
         treeList, obj = self._window, self._pObject
 
         colSizes = []
-        for col in xrange(treeList.GetColumnCount()):
+        for col in range(treeList.GetColumnCount()):
             colSizes.append(treeList.GetColumnWidth(col))
         
         obj.SaveValue(PERSIST_TREELISTCTRL_COLWIDTHS, colSizes)
@@ -1922,7 +1921,7 @@ class FileDirPickerHandler(AbstractHandler):
 
         if value is not None:
             if issubclass(picker.__class__, wx.FileDialog):
-                if type(value) == types.ListType:
+                if type(value) == list:
                     value = value[-1]
                         
             picker.SetPath(value)
@@ -2007,7 +2006,7 @@ class FileHistoryHandler(AbstractHandler):
         history, obj = self._window, self._pObject
         
         paths = []
-        for indx in xrange(history.GetCount()):
+        for indx in range(history.GetCount()):
             paths.append(history.GetHistoryFile(indx))
             
         obj.SaveValue(PERSIST_FILEHISTORY_PATHS, paths)
@@ -2062,7 +2061,7 @@ class MenuBarHandler(AbstractHandler):
             return False
 
         checkRadioItems = {}
-        for indx in xrange(menuCount):
+        for indx in range(menuCount):
             menu = bar.GetMenu(indx)
             for item in menu.GetMenuItems():
                 if item.GetKind() in [wx.ITEM_CHECK, wx.ITEM_RADIO]:
@@ -2087,7 +2086,7 @@ class MenuBarHandler(AbstractHandler):
             return False
         
         retVal = True
-        for indx in xrange(menuCount):
+        for indx in range(menuCount):
             menu = bar.GetMenu(indx)
             for item in menu.GetMenuItems():
                 if item.GetKind() in [wx.ITEM_CHECK, wx.ITEM_RADIO]:
@@ -2138,7 +2137,7 @@ class ToolBarHandler(AbstractHandler):
             return False
 
         checkRadioItems = {}
-        for indx in xrange(toolCount):
+        for indx in range(toolCount):
             tool = bar.FindToolByIndex(indx)
             if tool is not None:
                 if tool.GetKind() in [AUI.ITEM_CHECK, AUI.ITEM_RADIO]:
@@ -2162,7 +2161,7 @@ class ToolBarHandler(AbstractHandler):
         if checkRadioItems is None:
             return False
         
-        for indx in xrange(toolCount):
+        for indx in range(toolCount):
             tool = bar.FindToolByIndex(indx)
             if tool is not None:
                 toolId = tool.GetId()
@@ -2371,7 +2370,7 @@ class ColourDialogHandler(TLWHandler):
         obj.SaveValue(PERSIST_COLOURDIALOG_CHOOSEFULL, data.GetChooseFull())
 
         customColours = []
-        for indx in xrange(15):
+        for indx in range(15):
             colour = data.GetCustomColour(indx)
             if not colour.IsOk() or colour == wx.WHITE:
                 break

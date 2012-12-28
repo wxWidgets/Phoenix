@@ -114,6 +114,8 @@ Version 0.1
 import wx
 import sys
 
+import wx.lib.six as six
+
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 zoombackgrey = PyEmbeddedImage(
@@ -354,7 +356,7 @@ class ZoomBarImage(object):
         self._oldHeight = 0
         self._vCenter = 0
         self._hCenter = 0
-        self._oldInc = -sys.maxint
+        self._oldInc = -six.MAXSIZE
         self._isSeparator = False
         self._enabled = True
         
@@ -797,7 +799,7 @@ class ZoomBar(wx.Control):
         nButton = self._buttons.index(toButton)
         
         # do any buttons on the right 
-        for n in xrange(nButton + 1, len(self._buttons)):
+        for n in range(nButton + 1, len(self._buttons)):
             oButton = self._buttons[n]
             oButton._left = nRight
 
@@ -813,7 +815,7 @@ class ZoomBar(wx.Control):
         # now to the left
         if nButton > 0:
             # only for 2nd and more
-            for n in xrange(nButton-1, -1, -1):
+            for n in range(nButton-1, -1, -1):
                 oButton = self._buttons[n]
                 oButton._left = nLeft - (oButton._width + 1)
                 if self._showReflections:

@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -180,7 +180,7 @@ License And Version
 
 :class:`ButtonPanel` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 18 Dec 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.7.
 
@@ -2819,7 +2819,7 @@ if __name__ == '__main__':
             obj = event.GetEventObject()
 
             # This will print the button label
-            print(obj.GetText())
+            print((obj.GetText()))
 
 
     # our normal wxApp-derived class, as usual

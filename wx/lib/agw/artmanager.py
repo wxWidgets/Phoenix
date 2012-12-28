@@ -4,10 +4,11 @@ This module contains drawing routines and customizations for the AGW widgets
 """
 
 import wx
-import cStringIO
 import random
 
-from fmresources import *
+from wx.lib.six import StringIO
+
+from .fmresources import *
 
 # ---------------------------------------------------------------------------- #
 # Class DCSaver
@@ -482,7 +483,7 @@ class RendererMSOffice2007(RendererBase):
 
         # Define the rounded rectangle base on the given rect
         # we need an array of 9 points for it
-        regPts = [wx.Point() for ii in xrange(9)]
+        regPts = [wx.Point() for ii in range(9)]
         radius = 2
         
         regPts[0] = wx.Point(rect.x, rect.y + radius)
@@ -506,7 +507,7 @@ class RendererMSOffice2007(RendererBase):
         rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor)*(factor-1))
 
         # Define the top region
-        topReg = [wx.Point() for ii in xrange(7)]
+        topReg = [wx.Point() for ii in range(7)]
         topReg[0] = regPts[0]
         topReg[1] = regPts[1]
         topReg[2] = wx.Point(regPts[2].x+1, regPts[2].y)
@@ -702,13 +703,13 @@ class ArtManager(wx.EvtHandler):
             img = img.ConvertToImage()
             x, y = img.GetWidth(), img.GetHeight()
             img.InitAlpha()
-            for jj in xrange(y):
-                for ii in xrange(x):
+            for jj in range(y):
+                for ii in range(x):
                     img.SetAlpha(ii, jj, alpha[jj*x+ii])
                     
         else:
 
-            stream = cStringIO.StringIO(xpm)
+            stream = StringIO(xpm)
             img = wx.Image(stream)
             
         return wx.Bitmap(img)
@@ -754,10 +755,7 @@ class ArtManager(wx.EvtHandler):
          Othewise, :class:`NullBitmap` is returned.
         """
 
-        if self._bitmaps.has_key(name):
-            return self._bitmaps[name]
-
-        return wx.NullBitmap
+        return self._bitmaps.get(name, wx.NullBitmap)
 
 
     def Get(self):
@@ -996,7 +994,7 @@ class ArtManager(wx.EvtHandler):
         bstep = float(col2.Blue() - col1.Blue())/float(size)
         
         # draw the upper triangle
-        for i in xrange(size):
+        for i in range(size):
         
             currCol = wx.Colour(col1.Red() + rf, col1.Green() + gf, col1.Blue() + bf)
             dc.SetBrush(wx.Brush(currCol, wx.SOLID))
@@ -1032,7 +1030,7 @@ class ArtManager(wx.EvtHandler):
             bf += bstep/2
         
         # draw the lower triangle
-        for i in xrange(size):
+        for i in range(size):
 
             currCol = wx.Colour(col1.Red() + rf, col1.Green() + gf, col1.Blue() + bf)        
             dc.SetBrush(wx.Brush(currCol, wx.SOLID))
@@ -1215,7 +1213,7 @@ class ArtManager(wx.EvtHandler):
         w, h = dc.GetTextExtent(suffix)
         rectSize -= w
 
-        for i in xrange(textLen, -1, -1):
+        for i in range(textLen, -1, -1):
         
             textW, textH = dc.GetTextExtent(tempText)
             if rectSize >= textW:
@@ -2027,7 +2025,7 @@ class ArtManager(wx.EvtHandler):
 
         self._menuBarColourScheme = scheme
         # set default colour
-        if scheme in self._colourSchemeMap.keys():
+        if scheme in self._colourSchemeMap:
             self._menuBarBgColour = self._colourSchemeMap[scheme]
 
 
@@ -2065,9 +2063,9 @@ class ArtManager(wx.EvtHandler):
         """ Initialise the colour map. """
 
         self._colourSchemeMap = {_("Default"): wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE),
-                                _("Dark"): wx.BLACK,
-                                _("Dark Olive Green"): wx.Colour("DARK OLIVE GREEN"),
-                                _("Generic"): wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)}
+                                 _("Dark"): wx.BLACK,
+                                 _("Dark Olive Green"): wx.Colour("DARK OLIVE GREEN"),
+                                 _("Generic"): wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)}
 
 
     def GetColourSchemes(self):
@@ -2077,7 +2075,7 @@ class ArtManager(wx.EvtHandler):
         :return: A list of strings representing the available colour schemes.
         """
 
-        return self._colourSchemeMap.keys()     
+        return list(self._colourSchemeMap.keys())
                 
 
     def CreateGreyBitmap(self, bmp):

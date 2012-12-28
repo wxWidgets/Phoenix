@@ -2,7 +2,7 @@
 # FLATMENU wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 # TODO List
 #
@@ -185,7 +185,7 @@ License And Version
 
 :class:`FlatMenu` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 1.0
 
@@ -197,13 +197,14 @@ __version__ = "1.0"
 import wx
 import os
 import math
-import cStringIO
 
 import wx.lib.colourutils as colourutils
 
-from fmcustomizedlg import FMCustomizeDlg
-from artmanager import ArtManager, DCSaver
-from fmresources import *
+import wx.lib.six as six
+
+from .fmcustomizedlg import FMCustomizeDlg
+from .artmanager import ArtManager, DCSaver
+from .fmresources import *
             
 # FlatMenu styles
 FM_OPT_IS_LCD = 1
@@ -271,7 +272,7 @@ except ImportError:
     CPP_AUI = False
 
 try:
-    import aui as PyAUI
+    from . import aui as PyAUI
     PyAuiPaneInfo = PyAUI.AuiPaneInfo
     """ Default AuiPaneInfo as in :class:`framemanager`. """
 except ImportError:
@@ -583,13 +584,13 @@ class FMRenderer(object):
             img = img.ConvertToImage()
             x, y = img.GetWidth(), img.GetHeight()
             img.InitAlpha()
-            for jj in xrange(y):
-                for ii in xrange(x):
+            for jj in range(y):
+                for ii in range(x):
                     img.SetAlpha(ii, jj, alpha[jj*x+ii])
                     
         else:
 
-            stream = cStringIO.StringIO(xpm)
+            stream = six.StringIO(xpm)
             img = wx.Image(stream)
             
         return wx.Bitmap(img)
@@ -1342,7 +1343,7 @@ class FMRenderer(object):
         if not self.scrollBarButtons and flatmenu._showScrollButtons:
             posy += flatmenu.GetItemHeight()
             
-        for nCount in xrange(flatmenu._first, nItems):
+        for nCount in range(flatmenu._first, nItems):
 
             visibleItems += 1
             item = flatmenu._itemsArr[nCount]
@@ -1554,7 +1555,7 @@ class FMRendererMSOffice2007(FMRenderer):
 
         # Define the rounded rectangle base on the given rect
         # we need an array of 9 points for it
-        regPts = [wx.Point() for ii in xrange(9)]
+        regPts = [wx.Point() for ii in range(9)]
         radius = 2
         
         regPts[0] = wx.Point(rect.x, rect.y + radius)
@@ -1578,7 +1579,7 @@ class FMRendererMSOffice2007(FMRenderer):
         rightPt2 = wx.Point(rect.x + rect.width, rect.y + (rect.height / factor)*(factor-1))
 
         # Define the top region
-        topReg = [wx.Point() for ii in xrange(7)]
+        topReg = [wx.Point() for ii in range(7)]
         topReg[0] = regPts[0]
         topReg[1] = regPts[1]
         topReg[2] = wx.Point(regPts[2].x+1, regPts[2].y)
@@ -2010,7 +2011,7 @@ class FileHistory(object):
         numFiles += 1
 
         # update the labels in all menus
-        for index in xrange(numFiles):
+        for index in range(numFiles):
         
             # if in same directory just show the filename otherwise the full path
             fnOld = self._fileHistory[index]
@@ -2046,7 +2047,7 @@ class FileHistory(object):
 
         for menu in self._fileMenus:
             # shift filenames up
-            for j in xrange(numFiles):            
+            for j in range(numFiles):            
                 menu.SetLabel(self._idBase + j, GetMRUEntryLabel(j, self._fileHistory[j]))
             
             # delete the last menu item which is unused now
@@ -2126,7 +2127,7 @@ class FileHistory(object):
 
         buffer = "file%d"
 
-        for index in xrange(self._fileMaxFiles):
+        for index in range(self._fileMaxFiles):
         
             if index < len(self._fileHistory):
                 config.Write(buffer%(index+1), self._fileHistory[i])
@@ -2166,7 +2167,7 @@ class FileHistory(object):
         if menu.GetMenuItemCount():
             menu.AppendSeparator()
 
-        for index in xrange(len(self._fileHistory)):        
+        for index in range(len(self._fileHistory)):        
             menu.Append(self._idBase + index, GetMRUEntryLabel(index, self._fileHistory[i]))
         
 
@@ -2225,7 +2226,7 @@ class MenuEntryInfo(object):
         :param integer `cmd`: the menu accelerator identifier.
         """
 
-        if isinstance(titleOrMenu, basestring):
+        if isinstance(titleOrMenu, six.string_types):
 
             self._title = titleOrMenu
             self._menu = menu
@@ -2665,7 +2666,7 @@ class FlatMenuBar(wx.Panel):
 
         counter = 0
         # Get all the toolbar items
-        for i in xrange(len(self._tbButtons)):
+        for i in range(len(self._tbButtons)):
             
             xx += self._toolbarSpacer
 
@@ -2772,10 +2773,10 @@ class FlatMenuBar(wx.Panel):
                         self.DoGiveHelp(self._tbButtons[self._showTooltip]._tbItem)
                     except:
                         if _debug:
-                            print "FlatMenu.py; fn : DrawToolbar; Can't create Tooltip "
+                            print("FlatMenu.py; fn : DrawToolbar; Can't create Tooltip ")
                         pass
 
-        for j in xrange(counter, len(self._tbButtons)):
+        for j in range(counter, len(self._tbButtons)):
             if self._tbButtons[j]._tbItem.IsCustomControl():
                 control = self._tbButtons[j]._tbItem.GetCustomControl()
                 control.Hide()
@@ -3209,7 +3210,7 @@ class FlatMenuBar(wx.Panel):
             # switch is if its a unselected radio item
             if not item.IsSelected() and item.IsRadioItem():
                 group = item.GetGroup()
-                for i in xrange(len(self._tbButtons)):
+                for i in range(len(self._tbButtons)):
                     if self._tbButtons[i]._tbItem.GetGroup() == group and \
                       i != idx and self._tbButtons[i]._tbItem.IsSelected():
                         self._tbButtons[i]._state = ControlNormal
@@ -3452,7 +3453,8 @@ class FlatMenuBar(wx.Panel):
                 accelString = "\tAlt+" + accelChar
                 title += accelString
 
-                accel = wx.GetAccelFromString(title)
+                accel = wx.AcceleratorEntry()
+                accel.FromString(title)
                 itemId = item.GetCmdId()
                 
                 if accel:
@@ -3462,10 +3464,10 @@ class FlatMenuBar(wx.Panel):
                     accel.Set(accel.GetFlags(), accel.GetKeyCode(), itemId)
                     updatedTable.append(accel)
                 
-        entries = [wx.AcceleratorEntry() for ii in xrange(len(updatedTable))]
+        entries = [wx.AcceleratorEntry() for ii in range(len(updatedTable))]
                     
         # Add the new menu items
-        for i in xrange(len(updatedTable)):
+        for i in range(len(updatedTable)):
             entries[i] = updatedTable[i]
 
         table = wx.AcceleratorTable(entries)
@@ -3506,7 +3508,7 @@ class FlatMenuBar(wx.Panel):
         
         last_item = self.GetLastVisibleMenu()
         # find the current active menu
-        for i in xrange(last_item+1):
+        for i in range(last_item+1):
             if self._items[i].GetMenu().IsShown():
                 nextMenu = i + 1
                 if nextMenu >= last_item:
@@ -3539,7 +3541,7 @@ class FlatMenuBar(wx.Panel):
         # find the current active menu
         last_item = self.GetLastVisibleMenu()
 
-        for i in xrange(last_item):
+        for i in range(last_item):
             if self._items[i].GetMenu().IsShown():
                 prevMenu = i - 1
                 if prevMenu < 0:
@@ -3568,7 +3570,7 @@ class FlatMenuBar(wx.Panel):
         
         invM = self.GetInvisibleMenuItemCount()
         
-        for i in xrange(len(self._items) - invM, len(self._items)):
+        for i in range(len(self._items) - invM, len(self._items)):
             item = FlatMenuItem(self._moreMenu, wx.ID_ANY, self._items[i].GetTitle(),
                                 "", wx.ITEM_NORMAL, self._items[i].GetMenu())
             self._moreMenu.AppendItem(item)
@@ -3580,7 +3582,7 @@ class FlatMenuBar(wx.Panel):
             if self.GetInvisibleMenuItemCount() > 0:
                 self._moreMenu.AppendSeparator()
 
-            for i in xrange(len(self._tbButtons) - invT, len(self._tbButtons)):
+            for i in range(len(self._tbButtons) - invT, len(self._tbButtons)):
                 if self._tbButtons[i]._tbItem.IsSeparator():
                     self._moreMenu.AppendSeparator()
                 elif not self._tbButtons[i]._tbItem.IsCustomControl():
@@ -3593,7 +3595,7 @@ class FlatMenuBar(wx.Panel):
         if self._showCustomize:
             if invT + invM > 0:
                 self._moreMenu.AppendSeparator()
-            item = FlatMenuItem(self._moreMenu, self._popupDlgCmdId, _(u"Customize..."))
+            item = FlatMenuItem(self._moreMenu, self._popupDlgCmdId, _(six.u("Customize...")))
             self._moreMenu.AppendItem(item)
 
 
@@ -3615,7 +3617,7 @@ class FlatMenuBar(wx.Panel):
         """
         
         count = 0
-        for i in xrange(len(self._tbButtons)):
+        for i in range(len(self._tbButtons)):
             if self._tbButtons[i]._visible == False:
                 break
             count = i
@@ -4274,7 +4276,7 @@ class FlatMenuBase(ShadowPopupWindow):
         """
 
         # some controls update themselves from OnIdle() call - let them do it
-        wx.GetApp().ProcessIdle()
+        wx.GetApp().GetMainLoop().ProcessIdle()
 
         # The mouse was pressed in the parent coordinates, 
         # e.g. pressing on the left top of a text ctrl
@@ -4327,7 +4329,7 @@ class FlatMenuBase(ShadowPopupWindow):
                 self._upButton.Move((1, 3))
                 self._downButton.Move((1, scrHeight - pos.y - 3 - self.GetItemHeight()))
 
-        self.Move(pos)        
+        self.Move(pos)      
         self.Show()
 
         # Capture mouse event and direct them to us
@@ -5206,7 +5208,9 @@ class FlatMenuItem(object):
     def GetAcceleratorEntry(self):
         """ Returns the accelerator entry associated to this menu item. """
 
-        return wx.GetAccelFromString(self.GetText())
+        accel = wx.AcceleratorEntry()
+        accel.FromString(self.GetText())
+        return accel
 
 
     def GetMnemonicChar(self):
@@ -5407,7 +5411,7 @@ class FlatMenu(FlatMenuBase):
         # If owner is None, the Default GetParent() is used as the owner
         self._owner = owner
 
-        for cc in xrange(numEvents):
+        for cc in range(numEvents):
             self.SendUIEvent(cc)
 
         # Adjust menu position and show it
@@ -5567,7 +5571,7 @@ class FlatMenu(FlatMenuBase):
         self.SetSize(wx.Size(self._menuWidth*self._numCols, menuHeight+4))
 
         if self._originalBackgroundImage:
-            img = wx.Image(self._originalBackgroundImage)
+            img = self._originalBackgroundImage.ConvertToImage()
             img = img.Scale(self._menuWidth*self._numCols-2-self._leftMarginWidth, menuHeight, wx.IMAGE_QUALITY_HIGH)
             self._backgroundImage = img.ConvertToBitmap()
 
@@ -5935,7 +5939,7 @@ class FlatMenu(FlatMenuBase):
                 itemIdx = -1
                 occur = 0
                 
-                for i in xrange(len(self._itemsArr)):
+                for i in range(len(self._itemsArr)):
                 
                     item = self._itemsArr[i]
                     mnemonic = item.GetMnemonicChar()
@@ -5997,7 +6001,7 @@ class FlatMenu(FlatMenuBase):
         num=0
         singleItemIdx = -1
 
-        for i in xrange(len(self._itemsArr)):
+        for i in range(len(self._itemsArr)):
         
             item = self._itemsArr[i]
             if item.IsSeparator():
@@ -6913,7 +6917,7 @@ class FlatMenu(FlatMenuBase):
 
         idx = wx.NOT_FOUND
 
-        for i in xrange(len(self._itemsArr)):
+        for i in range(len(self._itemsArr)):
         
             item = self._itemsArr[i]
 
@@ -6943,7 +6947,7 @@ class FlatMenu(FlatMenuBase):
         if n == 0:
             return wx.NullAcceleratorTable
         
-        entries = [wx.AcceleratorEntry() for ii in xrange(n)]
+        entries = [wx.AcceleratorEntry() for ii in range(n)]
 
         for counter in len(entries):
             entries[counter] = self._accelArray[counter]
@@ -7059,7 +7063,7 @@ class FlatMenu(FlatMenuBase):
         self._resizeMenu = False
 
         lenItems = len(self._itemsArr)
-        for ii in xrange(lenItems):
+        for ii in range(lenItems):
             self.Destroy(self._itemsArr[0].GetId())
 
         # Now we can resize the menu
@@ -7080,7 +7084,7 @@ class FlatMenu(FlatMenuBase):
         if item == None or len(self._itemsArr) == 0:
             return wx.NOT_FOUND
 
-        for i in xrange(len(self._itemsArr)):
+        for i in range(len(self._itemsArr)):
             if self._itemsArr[i] == item:
                 return i
         
@@ -7126,7 +7130,7 @@ class FlatMenu(FlatMenuBase):
             return newitems
         
         # if any item in this menu has sub-menu, copy them as well
-        for i in xrange(len(menu._itemsArr)):
+        for i in range(len(menu._itemsArr)):
             if menu._itemsArr[i].IsSubMenu():
                 newitems = self.GetAllItems(menu._itemsArr[i].GetSubMenu(), newitems)
 

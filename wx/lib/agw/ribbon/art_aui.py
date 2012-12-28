@@ -33,12 +33,12 @@ import wx
 from math import cos
 from math import pi as M_PI
 
-from art_msw import RibbonMSWArtProvider
-from art_internal import RibbonHSLColour, RibbonShiftLuminance, RibbonInterpolateColour
+from .art_msw import RibbonMSWArtProvider
+from .art_internal import RibbonHSLColour, RibbonShiftLuminance, RibbonInterpolateColour
 
-import bar as BAR, panel as PANEL
+from . import bar as BAR, panel as PANEL
 
-from art import *
+from .art import *
 
 if wx.Platform == "__WXMAC__":
     import Carbon.Appearance
@@ -393,7 +393,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
             grad_rect.height = btm_rect.y - grad_rect.y
             dc.GradientFillLinear(grad_rect, self._tab_hover_background_top_colour, self._tab_hover_background_top_gradient_colour, wx.SOUTH)
         
-        border_points = [wx.Point() for i in xrange(5)]
+        border_points = [wx.Point() for i in range(5)]
         border_points[0] = wx.Point(0, 3)
         border_points[1] = wx.Point(1, 2)
         border_points[2] = wx.Point(tab.rect.width - 3, 2)
@@ -576,7 +576,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         """
 
         true_rect = wx.Rect(*rect)
-        arrow_points = [wx.Point() for i in xrange(3)]
+        arrow_points = [wx.Point() for i in range(3)]
 
         if style & RIBBON_SCROLL_BTN_FOR_MASK == RIBBON_SCROLL_BTN_FOR_TABS:        
             true_rect.y += 2
@@ -710,7 +710,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         :param `rect`: The panel client rectangle.
         """
 
-        true_rect = wx.Rect(*rect)
+        true_rect = wx.Rect(rect)
         true_rect = self.RemovePanelPadding(true_rect)
 
         true_rect.x += 1

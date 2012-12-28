@@ -2,7 +2,7 @@
 # PYGAUGE wxPython IMPLEMENTATION
 #
 # Mark Reed, @ 28 Jul 2010
-# Latest Revision: 19 Dec 2012, 21.00 GMT
+# Latest Revision: 27 Dec 2012, 21.00 GMT
 #
 # TODO List
 #
@@ -106,7 +106,7 @@ License And Version
 
 :class:`PyGauge` has been kindly contributed to the AGW library by Mark Reed.
 
-Latest Revision: Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
 Version 0.1
 
@@ -426,7 +426,7 @@ class PyGauge(wx.Window):
                 formatString.format(12.345)
                 error_occurred = False
             except Exception as e:
-                print("We have exception:%s"%e)
+                print(("We have exception: %s"%e))
                 
             if error_occurred:
                 formatString = None
@@ -506,12 +506,12 @@ class PyGauge(wx.Window):
         
         if self.GetBarGradient():
             tmp = sorted(zip(self._value,self._barGradient)); tmp.reverse()
-            a,b = zip(*tmp)
+            a, b = list(zip(*tmp))
             self._valueSorted       = list(a)
             self._barGradientSorted = list(b)
         else:
             tmp = sorted(zip(self._value,self._barColour)); tmp.reverse()
-            a,b = zip(*tmp)
+            a, b = list(zip(*tmp))
             self._valueSorted     = list(a)
             self._barColourSorted = list(b)
 

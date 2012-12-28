@@ -47,9 +47,9 @@ See Also
 
 import wx
 
-from control import RibbonControl
+from .control import RibbonControl
 
-from art import *
+from .art import *
 
 
 wxEVT_COMMAND_RIBBONPANEL_EXTBUTTON_ACTIVATED = wx.NewEventType()
@@ -339,8 +339,8 @@ class RibbonPanel(RibbonControl):
 
     def RemoveChild(self, child):
 
-        child.Bind(wx.EVT_ENTER_WINDOW, None)
-        child.Bind(wx.EVT_LEAVE_WINDOW, None)
+        child.Unbind(wx.EVT_ENTER_WINDOW)
+        child.Unbind(wx.EVT_LEAVE_WINDOW)
 
         RibbonControl.RemoveChild(self, child)
 
@@ -1090,9 +1090,9 @@ class RibbonPanel(RibbonControl):
 
         display_n = wx.Display.GetCount()
 
-        for display_i in xrange(display_n):
+        for display_i in range(display_n):
             display = wx.Display(display_i).GetGeometry()
-            if display.ContainsRect(expanded):            
+            if display.Contains(expanded):            
                 return expanded
             
             elif display.Intersects(expanded):            

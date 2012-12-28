@@ -16,18 +16,18 @@ __date__ = "31 March 2009"
 
 
 import wx
-import types
 import datetime
 
 from wx.lib.expando import ExpandoTextCtrl
+import wx.lib.six as six
 
 import framemanager
-import tabart as TA
+from . import tabart as TA
 
-from aui_utilities import LightColour, MakeDisabledBitmap, TabDragImage
-from aui_utilities import TakeScreenShot, RescaleScreenShot
+from .aui_utilities import LightColour, MakeDisabledBitmap, TabDragImage
+from .aui_utilities import TakeScreenShot, RescaleScreenShot
 
-from aui_constants import *
+from .aui_constants import *
 
 # AuiNotebook events
 wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSE = wx.NewEventType()
@@ -371,7 +371,7 @@ class CommandNotebookEvent(wx.PyCommandEvent):
         :param integer `win_id`: the window identification number.
         """
 
-        if type(command_type) == types.IntType:
+        if type(command_type) in six.integer_types:
             wx.PyCommandEvent.__init__(self, command_type, win_id)
         else:
             wx.PyCommandEvent.__init__(self, command_type.GetEventType(), command_type.GetId())
@@ -504,7 +504,7 @@ class AuiNotebookEvent(CommandNotebookEvent):
 
         CommandNotebookEvent.__init__(self, command_type, win_id)
 
-        if type(command_type) == types.IntType:
+        if type(command_type) in six.integer_types:
             self.notify = wx.NotifyEvent(command_type, win_id)
         else:
             self.notify = wx.NotifyEvent(command_type.GetEventType(), command_type.GetId())
@@ -1092,7 +1092,7 @@ class AuiTabContainer(object):
         :param `wndOrInt`: an instance of :class:`Window` or an integer specifying a tab index.
         """
 
-        if type(wndOrInt) == types.IntType:
+        if type(wndOrInt) in six.integer_types:
 
             if wndOrInt >= len(self._pages):
                 return False
@@ -1329,7 +1329,7 @@ class AuiTabContainer(object):
 
         # prepare the tab-close-button array
         # make sure tab button entries which aren't used are marked as hidden
-        for i in xrange(page_count, len(self._tab_close_buttons)):
+        for i in range(page_count, len(self._tab_close_buttons)):
             self._tab_close_buttons[i].cur_state = AUI_BUTTON_STATE_HIDDEN
 
         # make sure there are enough tab button entries to accommodate all tabs
@@ -1345,7 +1345,7 @@ class AuiTabContainer(object):
         total_width = visible_width = 0
         tab_width = [0] * page_count
 
-        for i in xrange(page_count):
+        for i in range(page_count):
             page = self._pages[i]
 
             # determine if a close button is on this tab
@@ -1442,7 +1442,7 @@ class AuiTabContainer(object):
         # draw the buttons on the right side
         offset = self._rect.x + self._rect.width
 
-        for i in xrange(button_count):
+        for i in range(button_count):
             button = self._buttons[button_count - i - 1]
 
             if button.location != wx.RIGHT:
@@ -1462,7 +1462,7 @@ class AuiTabContainer(object):
         offset = 0
 
         # draw the buttons on the left side
-        for i in xrange(button_count):
+        for i in range(button_count):
             button = self._buttons[button_count - i - 1]
 
             if button.location != wx.LEFT:
@@ -1483,7 +1483,7 @@ class AuiTabContainer(object):
             offset += self._art.GetIndentSize()
 
         # buttons before the tab offset must be set to hidden
-        for i in xrange(self._tab_offset):
+        for i in range(self._tab_offset):
             self._tab_close_buttons[i].cur_state = AUI_BUTTON_STATE_HIDDEN
             if self._pages[i].control:
                 if self._pages[i].control.IsShown():
@@ -1511,7 +1511,7 @@ class AuiTabContainer(object):
         rect.y = 0
         rect.height = self._rect.height
 
-        for i in xrange(self._tab_offset, page_count):
+        for i in range(self._tab_offset, page_count):
 
             page = self._pages[i]
             tab_button = self._tab_close_buttons[i]
@@ -1547,7 +1547,7 @@ class AuiTabContainer(object):
 
         lenPages = len(self._pages)
         # make sure to deactivate buttons which are off the screen to the right
-        for j in xrange(i+1, len(self._tab_close_buttons)):
+        for j in range(i+1, len(self._tab_close_buttons)):
             self._tab_close_buttons[j].cur_state = AUI_BUTTON_STATE_HIDDEN
             if j > 0 and j <= lenPages:
                 if self._pages[j-1].control:
@@ -1591,7 +1591,7 @@ class AuiTabContainer(object):
             # First check if both buttons are disabled - if so, there's no need to
             # check further for visibility.
             arrowButtonVisibleCount = 0
-            for i in xrange(button_count):
+            for i in range(button_count):
 
                 button = self._buttons[i]
                 if button.id == AUI_BUTTON_LEFT or \
@@ -1617,7 +1617,7 @@ class AuiTabContainer(object):
         # calculate size of the buttons on the right side
         offset = self._rect.x + self._rect.width
 
-        for i in xrange(button_count):
+        for i in range(button_count):
             button = self._buttons[button_count - i - 1]
 
             if button.location != wx.RIGHT:
@@ -1631,7 +1631,7 @@ class AuiTabContainer(object):
         offset = 0
 
         # calculate size of the buttons on the left side
-        for i in xrange(button_count):
+        for i in range(button_count):
             button = self._buttons[button_count - i - 1]
 
             if button.location != wx.LEFT:
@@ -1652,7 +1652,7 @@ class AuiTabContainer(object):
         rect.height = self._rect.height
 
         # See if the given page is visible at the given tab offset (effectively scroll position)
-        for i in xrange(tabOffset, page_count):
+        for i in range(tabOffset, page_count):
 
             page = self._pages[i]
             tab_button = self._tab_close_buttons[i]
@@ -1691,7 +1691,7 @@ class AuiTabContainer(object):
         dc = wx.ClientDC(win)
 
         if not self.IsTabVisible(tabPage, self.GetTabOffset(), dc, win):
-            for i in xrange(len(self._pages)):
+            for i in range(len(self._pages)):
                 if self.IsTabVisible(tabPage, i, dc, win):
                     self.SetTabOffset(i)
                     win.Refresh()
@@ -1715,7 +1715,7 @@ class AuiTabContainer(object):
             if btn in self._buttons:
                 return None
 
-        for i in xrange(self._tab_offset, len(self._pages)):
+        for i in range(self._tab_offset, len(self._pages)):
             page = self._pages[i]
             if page.rect.Contains((x,y)):
                 return page.window
@@ -2933,7 +2933,7 @@ class AuiNotebook(wx.Panel):
             # add tab id's
             page_count = tabframe._tabs.GetPageCount()
 
-            for p in xrange(page_count):
+            for p in range(page_count):
 
                 page = tabframe._tabs.GetPage(p)
                 page_idx = self._tabs.GetIdxFromWindow(page.window)
@@ -2965,7 +2965,7 @@ class AuiNotebook(wx.Panel):
 
         # Remove all tab ctrls (but still keep them in main index)
         tab_count = self._tabs.GetPageCount()
-        for i in xrange(tab_count):
+        for i in range(tab_count):
             wnd = self._tabs.GetWindowFromIdx(i)
 
             # find out which onscreen tab ctrl owns this tab
@@ -3508,11 +3508,11 @@ class AuiNotebook(wx.Panel):
         if self.GetEnabled(ctrl_idx):
             return ctrl_idx
 
-        for indx in xrange(ctrl_idx, ctrl.GetPageCount()):
+        for indx in range(ctrl_idx, ctrl.GetPageCount()):
             if self.GetEnabled(indx):
                 return indx
 
-        for indx in xrange(ctrl_idx, -1, -1):
+        for indx in range(ctrl_idx, -1, -1):
             if self.GetEnabled(indx):
                 return indx
 
@@ -3733,7 +3733,7 @@ class AuiNotebook(wx.Panel):
         if page >= self._tabs.GetPageCount():
             return False
 
-        if not isinstance(image, types.IntType):
+        if not isinstance(image, six.integer_types):
             raise Exception("The image parameter must be an integer, you passed " \
                             "%s"%repr(image))
 
@@ -3766,7 +3766,7 @@ class AuiNotebook(wx.Panel):
         bitmap = self.GetPageBitmap(page)
         bmpData1 = bitmap.ConvertToImage().GetData()
 
-        for indx in xrange(self._imageList.GetImageCount()):
+        for indx in range(self._imageList.GetImageCount()):
             imgListBmp = self._imageList.GetBitmap(indx)
             bmpData2 = imgListBmp.ConvertToImage().GetData()
             if bmpData1 == bmpData2:
@@ -4346,7 +4346,7 @@ class AuiNotebook(wx.Panel):
         # select first tab as destination
         self.SetSelection(0)
         # iterate all other tabs
-        for idx in xrange(1, self.GetPageCount()):
+        for idx in range(1, self.GetPageCount()):
             # get win reference
             win = self.GetPage(idx)
             # get tab title
@@ -4459,7 +4459,7 @@ class AuiNotebook(wx.Panel):
         selection = -1
         page_count = dest_tabs.GetPageCount()
 
-        for page in xrange(src_tabs.GetPageCount()-1, -1, -1):
+        for page in range(src_tabs.GetPageCount()-1, -1, -1):
             # remove the page from the source tabs
             page_info = src_tabs.GetPage(page)
             if page_info.active:
@@ -5160,7 +5160,7 @@ class AuiNotebook(wx.Panel):
         # tab set, the remove the tab control completely
         all_panes = self._mgr.GetAllPanes()
 
-        for indx in xrange(len(all_panes)-1, -1, -1):
+        for indx in range(len(all_panes)-1, -1, -1):
             pane = all_panes[indx]
             if pane.name == "dummy":
                 continue
@@ -5364,7 +5364,7 @@ class AuiNotebook(wx.Panel):
                         page_count = tabs.GetPageCount()
                         selection = -1
 
-                        for page in xrange(page_count):
+                        for page in range(page_count):
                             # remove the page from the source tabs
                             page_info = tabs.GetPage(page)
                             if page_info.active:
