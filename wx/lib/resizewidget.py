@@ -173,13 +173,13 @@ class ResizeWidget(wx.PyPanel):
         if not self._managedChild:
             return
         sz = self.GetSize() 
-        self._managedChild.SetRect(
-            wx.RectPS((0,0), sz - (RW_THICKNESS, RW_THICKNESS)))
-        r = wx.Rect(sz.width - RW_LENGTH, 
-                    sz.height - RW_LENGTH,
-                    RW_LENGTH, RW_LENGTH)
-        r.Inflate(2,2)
-        self.RefreshRect(r)
+        cr = wx.RectPS((0,0), sz - (RW_THICKNESS, RW_THICKNESS))
+        self._managedChild.SetRect(cr)
+        r1 = wx.Rect(0, cr.height, sz.width, RW_THICKNESS)
+        r2 = wx.Rect(cr.width, 0, RW_THICKNESS, sz.height)
+        self.RefreshRect(r1)
+        self.RefreshRect(r2)
+        
         
         
     def OnPaint(self, evt): 
