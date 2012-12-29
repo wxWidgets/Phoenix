@@ -100,6 +100,15 @@ def run():
     # wxPython anyway.
     c.find('wxAcceleratorTable').findOverload('resource').ignore()
     
+    
+    module.addPyFunction('GetAccelFromString', '(label)',
+        deprecated=True,
+        body="""\
+            accel = wx.AcceleratorEntry()
+            accel.FromString(label)
+            return accel
+            """)
+    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
