@@ -2869,7 +2869,12 @@ class MaskedEditMixin:
                     sizing_text += 'M' * int(sC)                    
                     wAdjust = 26
                 else:
-                    sizing_text = 'MJ' * (self._masklength/2)
+                    sizing_text = ""
+                    for cn in range(self._masklength):
+                        if cn % 2:
+                            sizing_text += "M"
+                        else:
+                            sizing_text += "I"
                     wAdjust = 4
             else:
                 if self._masklength > 10:
@@ -2877,7 +2882,12 @@ class MaskedEditMixin:
                     sizing_text = 'FDSJKLREUI' * int(tC)
                     sizing_text += 'M' * int(sC)
                 else:
-                    sizing_text = 'MJ' * (self._masklength/2)
+                    sizing_text = ""
+                    for cn in range(self._masklength):
+                        if cn % 2:
+                            sizing_text += "M"
+                        else:
+                            sizing_text += "I"
                 wAdjust = 4
             if wx.Platform != "__WXMSW__":   # give it a little extra space
                 sizing_text += 'M'
