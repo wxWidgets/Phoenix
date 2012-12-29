@@ -120,8 +120,8 @@ INCLUDES = [  # base and core stuff
               'window',
               'validate',
               'panel',
-              'menu',
               'menuitem',              
+              'menu',
               'scrolwin',
               'vscroll',
               

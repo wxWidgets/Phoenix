@@ -69,13 +69,34 @@ def run():
     c.find('Destroy').findOverload('int').pyName = 'DestroyItem'
     c.find('Destroy').findOverload('wxMenuItem').pyName = 'DestroyItem'
 
+    c.find('FindChildItem.pos').out = True
+    c.find('FindItem.menu').out = True
+    c.addCppMethod('wxMenuItem*', 'FindItembyId', '(int id)', isConst=True,
+        doc="""\
+            FindItemById(id) -> MenuItem
+
+            Finds the menu item object associated with the given menu item identifier.""",
+        body="""\
+            return self->FindItem(id);""")
+
+
     #-----------------------------------------------------------------
     c = module.find('wxMenuBar')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
     addTransferAnnotations(c, 'menu')
     c.find('wxMenuBar').findOverload('wxMenu *menus[], const wxString titles[], long style=0)').ignore()
-    c.find('FindItem').ignore()
+    
+    c.find('FindItem.menu').out = True
+    c.addCppMethod('wxMenuItem*', 'FindItembyId', '(int id)', isConst=True,
+        doc="""\
+            FindItemById(id) -> MenuItem
+
+            Finds the menu item object associated with the given menu item identifier.""",
+        body="""\
+            return self->FindItem(id);""")
+                   
+
     mac_scmb = c.find('MacSetCommonMenuBar')
     mac_scmb.setCppCode("""\
     #ifdef __WXMAC__
