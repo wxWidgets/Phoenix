@@ -2655,7 +2655,11 @@ class XMLDocString(object):
         self.Reformat(stream)
 
         if hasattr(function, 'deprecated') and function.deprecated:
-            text = '%s %s\n%s%s\n\n'%('   .. deprecated::', VERSION, ' '*6, function.deprecated.replace('\n', ' '))
+            if isinstance(function.deprecated, int):
+                msg = ""
+            else:
+                msg = function.deprecated.replace('\n', ' ')
+            text = '%s %s\n%s%s\n\n'%('   .. deprecated::', VERSION, ' '*6, msg)
             stream.write(text)
 
         possible_py = self.HuntContributedSnippets()
