@@ -102,6 +102,12 @@ class sizer_Tests(wtc.WidgetTestCase):
         bs.Insert(0, (w, h), wx.SizerFlags(2) )
         bs.Insert(0, wx.Size(w,h), wx.SizerFlags(3))
 
+    def test_sizerOrientation(self):
+        bs = wx.BoxSizer(wx.HORIZONTAL)
+        self.assertEqual(bs.GetOrientation(), wx.HORIZONTAL)
+        bs.SetOrientation(wx.VERTICAL)
+        self.assertEqual(bs.Orientation, wx.VERTICAL)
+        
         
 #---------------------------------------------------------------------------
 
