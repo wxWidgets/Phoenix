@@ -14,7 +14,6 @@ class tglbtn_Tests(wtc.WidgetTestCase):
         btn = wx.ToggleButton(self.frame, -1, 'label', (10,10), (100,-1), wx.BU_LEFT)
         bmp = wx.Bitmap(pngFile)
         btn.SetBitmap(bmp)
-
        
         
     def test_ButtonDefaultCtor(self):
@@ -22,7 +21,11 @@ class tglbtn_Tests(wtc.WidgetTestCase):
         btn.Create(self.frame, -1, 'button label')
         
         
+    def test_ButtonDefaultEvt(self):
+        wx.wxEVT_COMMAND_TOGGLEBUTTON_CLICKED
+        wx.EVT_TOGGLEBUTTON
         
+
 #---------------------------------------------------------------------------
 
 

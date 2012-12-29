@@ -33,6 +33,8 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
+    module.addHeaderCode("#include <wx/tglbtn.h>")
+    
     c = module.find('wxToggleButton')
     c.find('wxToggleButton.label').default = 'wxEmptyString'
     c.find('Create.label').default = 'wxEmptyString'
@@ -42,6 +44,9 @@ def run():
     c.find('wxBitmapToggleButton.label').default = 'wxNullBitmap'
     c.find('Create.label').default = 'wxNullBitmap'
     tools.fixWindowClass(c)
+    
+    module.addPyCode("""\
+        EVT_TOGGLEBUTTON = PyEventBinder(wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, 1)""")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
