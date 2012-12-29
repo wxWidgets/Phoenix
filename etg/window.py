@@ -113,9 +113,7 @@ def run():
     c.addCppMethod('wxWindow*', 'GetTopLevelParent', '()',
                    'return wxGetTopLevelParent(self);',
                    briefDoc="Returns the first ancestor of this window which is a top-level window.")
-    #c.addCppMethod('wxWindow*', 'FindWindowByLabel', '(const wxString& label)', 
-    #               'return wxWindow::FindWindowByLabel(label, self);')
-    
+
     c.addCppMethod('bool', 'MacIsWindowScrollbar', '(const wxWindow* sb)', """\
     #ifdef __WXMAC__
         return self->MacIsWindowScrollbar(sb); 
@@ -292,6 +290,44 @@ def run():
                           body="return &wxTopLevelWindows;")
     
     module.addPyCode("PyWindow = wx.deprecated(Window, 'Use Window instead.')")
+
+
+
+   
+    module.addCppFunction('wxWindow*', 'FindWindowById', '(long id, const wxWindow* parent=NULL)', 
+        doc="""\
+            FindWindowById(id, parent=None) -> Window
+        
+            Find the first window in the application with the given id. If parent
+            is None, the search will start from all top-level frames and dialog
+            boxes; if non-None, the search will be limited to the given window
+            hierarchy. The search is recursive in both cases.
+            """,
+        body="return wxWindow::FindWindowById(id, parent);")
+    
+    module.addCppFunction('wxWindow*', 'FindWindowByName', '(const wxString& name, const wxWindow* parent=NULL)', 
+        doc="""\
+            FindWindowByName(name, parent=None) -> Window
+            
+            Find a window by its name (as given in a window constructor or Create
+            function call). If parent is None, the search will start from all
+            top-level frames and dialog boxes; if non-None, the search will be
+            limited to the given window hierarchy. The search is recursive in both
+            cases.
+
+            If no window with the name is found, wx.FindWindowByLabel is called.""",
+        body="return wxWindow::FindWindowByName(*name, parent);")
+    
+    module.addCppFunction('wxWindow*', 'FindWindowByLabel', '(const wxString& label, const wxWindow* parent=NULL)', 
+        doc="""\
+            FindWindowByLabel(label, parent=None) -> Window
+            
+            Find a window by its label. Depending on the type of window, the label
+            may be a window title or panel item label. If parent is None, the
+            search will start from all top-level frames and dialog boxes; if
+            non-None, the search will be limited to the given window
+            hierarchy. The search is recursive in both cases.""",
+        body="return wxWindow::FindWindowByLabel(*label, parent);")
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

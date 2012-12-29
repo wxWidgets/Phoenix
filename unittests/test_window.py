@@ -83,9 +83,15 @@ class WindowTests(wtc.WidgetTestCase):
         w.MinClientSize 
         w.MaxClientSize 
 
-        
-        
+
+    def test_windowFunctions(self):
+        wx.FindWindowById
+        wx.FindWindowByName
+        wx.FindWindowByLabel
     
+        self.assertEqual(wx.FindWindowById(self.frame.GetId()),  self.frame)
+        
+        
 #---------------------------------------------------------------------------
 
 
