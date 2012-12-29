@@ -79,23 +79,23 @@ def run():
     for f in c.find('operator+=').all() + c.find('operator-=').all():
         f.ignore(False)
         
-    # Add some stand-alone function declarations for the operators that really do
-    # exist.
-    wc = etgtools.WigCode("""\
-    bool operator==(const wxPoint& p1, const wxPoint& p2);
-    bool operator!=(const wxPoint& p1, const wxPoint& p2);
-    wxPoint operator+(const wxPoint& p, const wxSize& s);
-    wxPoint operator+(const wxPoint& p1, const wxPoint& p2);
-    wxPoint operator+(const wxSize& s, const wxPoint& p);
-    wxPoint operator-(const wxPoint& p);
-    wxPoint operator-(const wxPoint& p, const wxSize& s);
-    wxPoint operator-(const wxPoint& p1, const wxPoint& p2);
-    wxPoint operator-(const wxSize& s, const wxPoint& p);
-    wxPoint operator*(const wxPoint& s, int i);
-    wxPoint operator*(int i, const wxPoint& s);
-    wxPoint operator/(const wxPoint& s, int i);
-    """)
-    module.insertItemAfter(c, wc)
+    # Add some method declarations for operators that really do exist. Note
+    # that these actually use C++ global operator functions, but we treat
+    # them as methods to help disambiguate implementations due to how
+    # multiple classes can be converted automatically to/from 2-element
+    # sequences.    
+    c.addCppMethod('bool', '__eq__', '(const wxPoint& other)',
+        body="return *self == *other;")
+    c.addCppMethod('bool', '__neq__', '(const wxPoint& other)',
+        body="return *self != *other;")
+    
+    c.addItem(etgtools.WigCode("""\
+        wxPoint operator+(const wxPoint& other);
+        wxPoint operator-();
+        wxPoint operator-(const wxPoint& other);
+        wxPoint operator*(int i);
+        wxPoint operator/(int i);
+        """))
     
     
     # wxPoint typemap
@@ -143,23 +143,30 @@ def run():
     c.addProperty("x GetWidth SetWidth")
     c.addProperty("y GetHeight SetHeight")
     
-    # take care of the same issues as wxPoint
+    # Take care of the same issues as wxPoint
     tools.ignoreAllOperators(c)
     for f in c.find('operator+=').all() + \
              c.find('operator-=').all() + \
              c.find('operator*=').all() + \
              c.find('operator/=').all():
         f.ignore(False)
-    wc = etgtools.WigCode("""\
-    bool operator==(const wxSize& s1, const wxSize& s2);
-    bool operator!=(const wxSize& s1, const wxSize& s2);
-    wxSize operator*(const wxSize& s, int i);
-    wxSize operator*(int i, const wxSize& s);
-    wxSize operator+(const wxSize& s1, const wxSize& s2);
-    wxSize operator-(const wxSize& s1, const wxSize& s2);
-    wxSize operator/(const wxSize& s, int i);
-    """)
-    module.insertItemAfter(c, wc)
+        
+    c.addCppMethod('bool', '__eq__', '(const wxSize& other)',
+        body="return *self == *other;")
+    c.addCppMethod('bool', '__neq__', '(const wxSize& other)',
+        body="return *self != *other;")
+    
+    c.addItem(etgtools.WigCode("""\
+        wxSize operator+(const wxSize& other);
+        wxSize operator-(const wxSize& other);
+        wxSize operator*(int i);
+        wxSize operator/(int i);
+
+        wxPoint operator+(const wxPoint& other);
+        wxPoint operator-(const wxPoint& other);
+        wxRealPoint operator+(const wxRealPoint& other);
+        wxRealPoint operator-(const wxRealPoint& other);
+        """))
     
     
     # wxSize typemap
@@ -209,13 +216,17 @@ def run():
     for f in c.find('operator+=').all() + \
              c.find('operator*=').all():
         f.ignore(False)
-    wc = etgtools.WigCode("""\
-    bool operator==(const wxRect& r1, const wxRect& r2);
-    bool operator!=(const wxRect& r1, const wxRect& r2);
-    wxRect operator+(const wxRect& r1, const wxRect& r2);
-    wxRect operator*(const wxRect& r1, const wxRect& r2);
-    """)
-    module.insertItemAfter(c, wc)
+                
+    c.addCppMethod('bool', '__eq__', '(const wxRect& other)',
+        body="return *self == *other;")
+    c.addCppMethod('bool', '__neq__', '(const wxRect& other)',
+        body="return *self != *other;")
+    
+    c.addItem(etgtools.WigCode("""\
+        wxRect operator+(const wxRect& other);
+        wxRect operator*(const wxRect& other);
+        """))
+
     
     # Because of our add-ons that make wx.Point and wx.Size act like 2-element
     # sequences, and also the typecheck code that allows 2-element sequences, then
@@ -274,17 +285,20 @@ def run():
     for f in c.find('operator+=').all() + \
              c.find('operator-=').all():
         f.ignore(False)
-    wc = etgtools.WigCode("""\
-    bool operator==(const wxRealPoint& p1, const wxRealPoint& p2);
-    bool operator!=(const wxRealPoint& p1, const wxRealPoint& p2);
-    wxRealPoint operator*(const wxRealPoint& s, double i);
-    wxRealPoint operator*(double i, const wxRealPoint& s);
-    wxRealPoint operator+(const wxRealPoint& p1, const wxRealPoint& p2);
-    wxRealPoint operator-(const wxRealPoint& p1, const wxRealPoint& p2);
-    wxRealPoint operator/(const wxRealPoint& s, int i);
-    """)
-    module.insertItemAfter(c, wc)
+                
+    c.addCppMethod('bool', '__eq__', '(const wxRealPoint& other)',
+        body="return *self == *other;")
+    c.addCppMethod('bool', '__neq__', '(const wxRealPoint& other)',
+        body="return *self != *other;")
     
+    c.addItem(etgtools.WigCode("""\
+        wxRealPoint operator+(const wxRealPoint& other);
+        wxRealPoint operator-(const wxRealPoint& other);
+        wxRealPoint operator*(int i);
+        wxRealPoint operator/(int i);
+        """))
+
+        
     # wxRealPoint typemap
     c.convertFromPyObject = tools.convertTwoDoublesTemplate('wxRealPoint')
 

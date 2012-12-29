@@ -65,7 +65,7 @@ class Point(unittest.TestCase):
         p = p1 - p2
         p = p1 - wx.Size(5,5)
         p = p1 * 5
-        p = 5 * p1
+        #p = 5 * p1
         p = p1 / 5
         p1 += p2
         p1 -= p2
@@ -83,6 +83,31 @@ class Point(unittest.TestCase):
         with self.assertRaises(IndexError):
             p[2]
         
+    def test_math(self):
+        p = wx.Point(4,6)
+        p1 = p + wx.Point(4,2)
+        p2 = p + (4,2)
+        p3 = p * 2
+        p4 = p / 2
+        p5 = p - wx.Point(4,2)
+        p6 = -p
+        
+        self.assertTrue(isinstance(p1, wx.Point))
+        self.assertTrue(isinstance(p2, wx.Point))
+        self.assertTrue(isinstance(p3, wx.Point))
+        self.assertTrue(isinstance(p4, wx.Point))
+        self.assertTrue(isinstance(p5, wx.Point))
+        self.assertTrue(isinstance(p6, wx.Point))
+                        
+        self.assertEqual(p1, (8,8))
+        self.assertEqual(p2, (8,8))
+        self.assertEqual(p3, (8,12))
+        self.assertEqual(p4, (2,3))
+        self.assertEqual(p5, (0,4))
+        self.assertEqual(p6, (-4,-6))
+                        
+                        
+                        
 #---------------------------------------------------------------------------
 
 
@@ -159,7 +184,7 @@ class Size(unittest.TestCase):
         s1 == s2
         s1 != s2
         s = s1 * 5
-        s = 5 * s1
+        #s = 5 * s1
         s = s1 + s2
         s = s1 - s2
         s = s1 / 5
