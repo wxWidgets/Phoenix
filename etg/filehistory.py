@@ -40,6 +40,7 @@ def run():
         tools.wxListWrapperTemplate('wxList', 'wxMenu', module, 
                                     fakeListClassName='wxFileHistoryMenuList'))    
     c.find('GetMenus').type = 'const wxFileHistoryMenuList&'
+    c.find('GetMenus').noCopy = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

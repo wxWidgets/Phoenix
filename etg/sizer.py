@@ -88,6 +88,7 @@ def run():
             func.find('item').transfer = True
             
     c.find('GetChildren').overloads = []
+    c.find('GetChildren').noCopy = True
     
     # Needs wxWin 2.6 compatibility
     c.find('Remove').findOverload('(wxWindow *window)').ignore()

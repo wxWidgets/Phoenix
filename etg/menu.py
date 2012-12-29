@@ -48,7 +48,15 @@ def run():
     addTransferAnnotations(c, 'menuItem')
     addTransferAnnotations(c, 'subMenu')
     c.find('AppendSubMenu.submenu').transfer = True
-    c.find('GetMenuItems').ignore() # keep the overload, but not the first one.
+    
+    # We only need one of these overloads, the non-const/const is not enough
+    # to distinguish a unique Python signature.
+    c.find('GetMenuItems').overloads = []
+    
+    # Ensure that no copy is made of the list object, so we only wrap the
+    # existing object and keep it owned by C++
+    c.find('GetMenuItems').noCopy = True
+    
     
     c.addPyMethod('AppendMenu', '(self, id, item, subMenu, help="")', deprecated='Use Append instead.',
                   body='return self.Append(id, item, subMenu, help)')
@@ -64,6 +72,7 @@ def run():
                   body='return self.Prepend(id, item, subMenu, help)')
     c.addPyMethod('PrependItem', '(self, menuItem)', deprecated='Use Prepend instead.',
                   body='return self.Prepend(menuItem)')
+
 
     # Don't hide the Destroy inherited from wxObject
     c.find('Destroy').findOverload('int').pyName = 'DestroyItem'

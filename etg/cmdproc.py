@@ -49,6 +49,7 @@ def run():
         tools.wxListWrapperTemplate('wxList', 'wxCommand', module, 
                                     fakeListClassName='wxCommandList'))
     c.find('GetCommands').type = 'wxCommandList&'
+    c.find('GetCommands').noCopy = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

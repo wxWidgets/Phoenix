@@ -63,6 +63,7 @@ def run():
 
     # ignore some overloads that will be ambiguous afer wrapping
     c.find('GetChildren').overloads = []
+    c.find('GetChildren').noCopy = True
     c.find('GetClientSize').findOverload('int *').ignore()
     c.find('GetSize').findOverload('int *').ignore()
     c.find('GetVirtualSize').findOverload('int *').ignore()
@@ -286,8 +287,9 @@ def run():
     module.addItem(tools.wxListWrapperTemplate('wxWindowList', 'wxWindow', module))
     
     module.addCppFunction('wxWindowList*', 'GetTopLevelWindows', '()', 
-                          briefDoc="Returns a list-like object of the the application's top-level windows, (frames,dialogs, etc.)",
-                          body="return &wxTopLevelWindows;")
+        noCopy=True,
+        briefDoc="Returns a list-like object of the the application's top-level windows, (frames,dialogs, etc.)",
+        body="return &wxTopLevelWindows;")
     
     module.addPyCode("PyWindow = wx.deprecated(Window, 'Use Window instead.')")
 
