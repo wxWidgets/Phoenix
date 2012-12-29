@@ -41,3 +41,4 @@ class lib_agw_pyprogress_Tests(wtc.WidgetTestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    
