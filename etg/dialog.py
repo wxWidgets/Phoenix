@@ -45,10 +45,6 @@ def run():
     c.find('DoOK').ignore() 
     c.find('GetToolBar').ignore()
     
-    # The docs tell us to just use ShowModal instead, not sure why they 
-    # doc this method then...
-    c.find('SetModal').ignore()
-    
     # Release the GIL for potentially blocking or long-running functions
     c.find('ShowModal').releaseGIL()
     
