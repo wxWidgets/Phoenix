@@ -506,7 +506,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         'emptyBackgroundColour': "White",
         'validBackgroundColour': "White",
         'invalidBackgroundColour': "Yellow",
-        'useFixedWidthFont': True,          # by default, use a fixed-width font
+        'useFixedWidthFont': False,         # use base control default font, instead of fixed width one
         'autoSize': True,                   # by default, set the width of the control based on the mask
         }
 

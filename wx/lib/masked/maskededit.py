@@ -173,6 +173,9 @@ useFixedWidthFont
   subsequent modifications to the value.  Set to False if having
   the control font be the same as other controls is required. (This is
   a control-level parameter.)
+  
+  .. versionchanged::  2.9.5
+     The default is changed to False for numctrl only
 
 defaultEncoding
   (Applies to unicode systems only) By default, the default unicode encoding
