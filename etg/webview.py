@@ -23,6 +23,7 @@ ITEMS  = [ 'wxWebViewHistoryItem',
            'wxWebViewFSHandler',
            'wxWebView',
            'wxWebViewEvent',
+           'wxWebViewFactory',
            ]    
     
 #---------------------------------------------------------------------------
@@ -37,6 +38,10 @@ def run():
     # customizing the generated code and docstrings.
     
     module.addHeaderCode('#include <wx/webview.h>')
+
+    module.addGlobalStr('wxWebViewBackendDefault')
+    module.addGlobalStr('wxWebViewBackendIE')
+    module.addGlobalStr('wxWebViewBackendWebKit')
     
     c = module.find('wxWebView')
     assert isinstance(c, etgtools.ClassDef)
@@ -56,6 +61,12 @@ def run():
     c.find('RegisterHandler.handler').transfer = True
     c.find('RegisterHandler').setCppCode_sip(
         "sipCpp->RegisterHandler(wxSharedPtr<wxWebViewHandler>(handler));")
+
+
+    c.find('RegisterFactory.factory').type = 'wxWebViewFactory*'
+    c.find('RegisterFactory.factory').transfer = True
+    c.find('RegisterFactory').setCppCode_sip(
+        "wxWebView::RegisterFactory(*backend, wxSharedPtr<wxWebViewFactory>(factory));")
     
 
     # Custom code to deal with the
