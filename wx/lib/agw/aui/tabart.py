@@ -550,7 +550,7 @@ class AuiDefaultTabArt(object):
         ypos = drawn_tab_yoff + (drawn_tab_height)/2 - (texty/2) - 1
 
         offset_focus = text_offset     
-        if control is not None:
+        if control:
             if control.GetPosition() != wx.Point(text_offset+1, ypos):
                 control.SetPosition(wx.Point(text_offset+1, ypos))
 
@@ -693,7 +693,7 @@ class AuiDefaultTabArt(object):
         if agwFlags & AUI_NB_TAB_FIXED_WIDTH:
             tab_width = self._fixed_tab_width
 
-        if control is not None:
+        if control:
             tab_width += control.GetSize().GetWidth() + 4
             
         x_extent = tab_width
@@ -1266,7 +1266,7 @@ class AuiSimpleTabArt(object):
 
         ypos = (tab_y + tab_height)/2 - (texty/2) + 1
 
-        if control is not None:
+        if control:
             if control.GetPosition() != wx.Point(text_offset+1, ypos):
                 control.SetPosition(wx.Point(text_offset+1, ypos))
 
@@ -1382,7 +1382,7 @@ class AuiSimpleTabArt(object):
         if self._agwFlags & AUI_NB_TAB_FIXED_WIDTH:
             tab_width = self._fixed_tab_width
 
-        if control is not None:
+        if control:
             controlW, controlH = control.GetSize()
             tab_width += controlW + 4
 
@@ -1794,7 +1794,7 @@ class VC71TabArt(AuiDefaultTabArt):
 
         offset_focus = text_offset
         
-        if control is not None:
+        if control:
             if control.GetPosition() != wx.Point(text_offset+1, ypos):
                 control.SetPosition(wx.Point(text_offset+1, ypos))
 
@@ -2032,7 +2032,7 @@ class FF2TabArt(AuiDefaultTabArt):
 
         offset_focus = text_offset
         
-        if control is not None:
+        if control:
             if control.GetPosition() != wx.Point(text_offset+1, ypos):
                 control.SetPosition(wx.Point(text_offset+1, ypos))
 
@@ -2367,7 +2367,7 @@ class VC8TabArt(AuiDefaultTabArt):
 
         offset_focus = text_offset
         
-        if control is not None:
+        if control:
             if control.GetPosition() != wx.Point(text_offset+1, ypos):
                 control.SetPosition(wx.Point(text_offset+1, ypos))
 
@@ -2728,7 +2728,7 @@ class ChromeTabArt(AuiDefaultTabArt):
 
         ypos = drawn_tab_yoff + drawn_tab_height/2 - texty/2 - 1
 
-        if control is not None:
+        if control:
             if control.GetPosition() != wx.Point(text_offset+1, ypos):
                 control.SetPosition(wx.Point(text_offset+1, ypos))
 
