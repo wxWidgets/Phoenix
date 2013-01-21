@@ -5,7 +5,7 @@
 // Author:      Robin Dunn
 //
 // Created:     29-Feb-2012
-// Copyright:   (c) 2012 by Total Control Software
+// Copyright:   (c) 2013 by Total Control Software
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 

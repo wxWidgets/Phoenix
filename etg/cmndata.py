@@ -4,7 +4,7 @@
 #              Robin Dunn
 #
 # Created:     15-Sept-2011
-# Copyright:   (c) 2011 by Total Control Software
+# Copyright:   (c) 2013 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

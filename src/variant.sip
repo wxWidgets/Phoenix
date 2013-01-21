@@ -5,7 +5,7 @@
 // Author:      Kevin Ollivier, Robin Dunn
 //
 // Created:     20-Sept-2011
-// Copyright:   (c) 2012 by Kevin Ollivier, Robin Dunn
+// Copyright:   (c) 2013 by Kevin Ollivier, Robin Dunn
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 

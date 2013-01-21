@@ -3,7 +3,7 @@
 #  WAF script for building and installing the wxPython extension modules.
 #
 # Author:      Robin Dunn
-# Copyright:   (c) 2012 by Total Control Software
+# Copyright:   (c) 2013 by Total Control Software
 # License:     wxWindows License
 #-----------------------------------------------------------------------------
 

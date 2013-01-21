@@ -3,7 +3,7 @@
 # Author:      Kevin Ollivier
 #
 # Created:     16-Sept-2011
-# Copyright:   (c) 2011 by Kevin Ollivier
+# Copyright:   (c) 2013 by Kevin Ollivier
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

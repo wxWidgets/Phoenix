@@ -4,7 +4,7 @@
 #              Robin Dunn
 #
 # Created:     06-Sept-2011
-# Copyright:   (c) 2011 by Kevin Ollivier
+# Copyright:   (c) 2013 by Kevin Ollivier
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

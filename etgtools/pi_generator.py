@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Oct-2011
-# Copyright:   (c) 2011 by Total Control Software
+# Copyright:   (c) 2013 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ header = """\
 # (The *.pi files are used by WingIDE to provide more information than it is 
 # able to glean from introspection of extension types and methods.)
 #
-# Copyright: (c) 2011 by Total Control Software
+# Copyright: (c) 2013 by Total Control Software
 # License:   wxWindows License
 #---------------------------------------------------------------------------
 

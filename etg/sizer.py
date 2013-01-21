@@ -4,7 +4,7 @@
 #              Robin Dunn
 #
 # Created:     26-Aug-2011
-# Copyright:   (c) 2011 by Wide Open Technologies
+# Copyright:   (c) 2013 by Wide Open Technologies
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
