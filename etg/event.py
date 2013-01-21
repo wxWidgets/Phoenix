@@ -370,7 +370,7 @@ def run():
     # wxKeyEvent
     c = module.find('wxKeyEvent')
     
-    c.find('GetPosition').findOverload('long').ignore()
+    c.find('GetPosition').findOverload('wxCoord').ignore()
     
     c.addProperty('X GetX')
     c.addProperty('Y GetY')
