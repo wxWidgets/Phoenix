@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 03 Nov 2006
-# Latest Revision: 27 Dec 2012, 21.00 GMT
+# Latest Revision: 22 Jan 2013, 21.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -170,7 +170,7 @@ License And Version
 
 :class:`LabelBook` and :class:`FlatImageBook` are distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 22 Jan 2013, 21.00 GMT
 
 Version 0.6.
 
@@ -2224,6 +2224,7 @@ class FlatBookBase(wx.Panel):
         self._bInitializing = False
 
         self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
+        self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, lambda evt: True)
 
 
     def SetAGWWindowStyleFlag(self, agwStyle):
