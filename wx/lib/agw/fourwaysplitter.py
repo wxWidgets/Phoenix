@@ -127,7 +127,7 @@ License And Version
 
 :class:`FourWaySplitter` is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 15 Jul 2012, 15.00 GMT
+Latest Revision: Andrea Gavana @ 16 Jul 2012, 15.00 GMT
 
 Version 0.5
 
