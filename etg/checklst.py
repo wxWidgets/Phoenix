@@ -41,9 +41,13 @@ def run():
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
 
     tools.fixWindowClass(c)
+
     
-    c.addPyMethod('GetChecked', '(self)', doc="""\
-        GetChecked()
+    # We already have the Python methods below, so just ignore this new method for now.
+    c.find('GetCheckedItems').ignore()
+    
+    c.addPyMethod('GetCheckedItems', '(self)', doc="""\
+        GetCheckedItems()
     
         Return a sequence of integers corresponding to the checked items in
         the control, based on :meth:`IsChecked`.""",
@@ -55,11 +59,11 @@ def run():
      
             Return a tuple of strings corresponding to the checked
             items of the control, based on :meth:`GetChecked`.""",
-        body="return tuple([self.GetString(i) for i in self.GetChecked()])")
+        body="return tuple([self.GetString(i) for i in self.GetCheckedItems()])")
     
-    c.addPyMethod('SetChecked', '(self, indexes)', 
+    c.addPyMethod('SetCheckedItems', '(self, indexes)', 
         doc="""\
-            SetChecked(indexes)
+            SetCheckedItems(indexes)
 
             Sets the checked state of items if the index of the item is 
             found in the indexes sequence.""",
@@ -81,7 +85,14 @@ def run():
             for i in range(self.Count):
                 self.Check(i, self.GetString(i) in strings)""")
 
+
+    c.addPyMethod('GetChecked', '(self)', 'return self.GetCheckedItems()',
+                  deprecated='Use GetCheckedItems instead.')
+    c.addPyMethod('SetChecked', '(self, indexes)', 'return self.SetCheckedItems(indexes)',
+                  deprecated='Use SetCheckedItems instead.')
+                  
     c.addPyProperty('Checked GetChecked SetChecked')
+    c.addPyProperty('CheckedItems GetCheckedItems SetCheckedItems')    
     c.addPyProperty('CheckedStrings GetCheckedStrings SetCheckedStrings')
     
     
