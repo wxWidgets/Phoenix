@@ -433,9 +433,15 @@ class GridRowMover(wx.EvtHandler):
             evt.Skip()
             return
 
+        row = self.grid.YToRow(py + sy)
+                
+        if row == wx.NOT_FOUND:
+            evt.Skip()
+            return
+     
         self.isDragging = True
         self.didMove = False
-        row = self.grid.YToRow(py + sy)
+                        
         rect = self.grid.RowToRect(row)
         self.cellY = py + sy - rect.y
         size = self.lwin.GetSize()
