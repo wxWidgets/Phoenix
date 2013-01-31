@@ -144,8 +144,7 @@ def main(args):
     while commands:
         # ensure that each command starts with the CWD being the phoenix dir.
         os.chdir(phoenixDir())
-        cmd = commands[0]
-        commands = commands[1:]
+        cmd = commands.pop(0)
         if cmd.startswith('test_'):
             testOne(cmd, options, args)
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
