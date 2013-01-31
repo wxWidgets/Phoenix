@@ -11,17 +11,13 @@ if 'wxEVT_NULL' in dir():
     if RELEASE_NUMBER != wx._core.RELEASE_NUMBER:
         import warnings
         warnings.warn("wxPython/wxWidgets release number mismatch")
-        
-    # Create an object that will cleanup wxWidgets when it is GC'd and save
-    # it in sys so it won't be GC'd until Python is shutting down.
-    class __wxPyCleanup:
-        def __init__(self):
-            self.cleanup = wx._core._wxPyCleanup
-        def __del__(self):
-            self.cleanup()
-    _sys.__wxPythonCleanup = __wxPyCleanup()
-    
-    del wx._core
+       
+    # Register a function to be called when Python terminates that will clean
+    # up and release all system resources that wxWidgets allocated.
+    import atexit
+    atexit.register(wx._core._wxPyCleanup)
+    del atexit
+
 else:
     Port = ''
     Platform = ''
