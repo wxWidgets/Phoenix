@@ -2,7 +2,7 @@
 # SUPERTOOLTIP wxPython IMPLEMENTATION
 #
 # Andrea Gavana, @ 07 October 2008
-# Latest Revision: 27 Dec 2012, 21.00 GMT
+# Latest Revision: 04 Feb 2013, 21.00 GMT
 #
 #
 # TODO List
@@ -120,7 +120,7 @@ License And Version
 
 :class:`SuperToolTip` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
+Latest Revision: Andrea Gavana @ 04 Feb 2013, 21.00 GMT
 
 Version 0.5
 
@@ -316,7 +316,7 @@ class ToolTipWindowBase(object):
             # We got the header text
             dc.SetFont(headerFont)
             textWidth, textHeight = dc.GetTextExtent(header)
-        maxWidth = max(bmpWidth, maxWidth)
+        maxWidth = max(bmpWidth+(textWidth+self._spacing*3), maxWidth)
         # Calculate the header height
         height = max(textHeight, bmpHeight)
         if header:
@@ -330,6 +330,8 @@ class ToolTipWindowBase(object):
                 # Draw the separator line after the header
                 dc.SetPen(wx.GREY_PEN)
                 dc.DrawLine(self._spacing, yPos+self._spacing, width-self._spacing, yPos+self._spacing)
+                yPos += self._spacing
+
         maxWidth = max(bmpXPos + bmpWidth + self._spacing, maxWidth)
         # Get the big body image (if any)
         embeddedImage = classParent.GetBodyImage()
@@ -341,36 +343,41 @@ class ToolTipWindowBase(object):
         messageHeight = 0
         lines = classParent.GetMessage().split("\n")
         yText = yPos
+        embImgPos = yPos
         normalText = wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUTEXT)
         hyperLinkText = wx.BLUE
         messagePos = self._getTextExtent(dc, lines[0] if lines else "")[1] // 2 + self._spacing
         for line in lines:
             # Loop over all the lines in the message
-            isLink = False
-            dc.SetTextForeground(normalText)
-            if line.startswith("</b>"):      # is a bold line
-                line = line[4:]
-                font = MakeBold(messageFont)
-                dc.SetFont(font)
-            elif line.startswith("</l>"):    # is a link
-                dc.SetFont(hyperlinkFont)
-                isLink = True
-                line, hl = ExtractLink(line)
-                dc.SetTextForeground(hyperLinkText)
+            if line.startswith("<hr>"):     # draw a line
+                yText += self._spacing * 2
+                dc.DrawLine(self._spacing, yText+self._spacing, width-self._spacing, yText+self._spacing)
             else:
-                # Is a normal line
-                dc.SetFont(messageFont)
+                isLink = False
+                dc.SetTextForeground(normalText)
+                if line.startswith("</b>"):      # is a bold line
+                    line = line[4:]
+                    font = MakeBold(messageFont)
+                    dc.SetFont(font)
+                elif line.startswith("</l>"):    # is a link
+                    dc.SetFont(hyperlinkFont)
+                    isLink = True
+                    line, hl = ExtractLink(line)
+                    dc.SetTextForeground(hyperLinkText)
+                else:
+                    # Is a normal line
+                    dc.SetFont(messageFont)
 
-            textWidth, textHeight = self._getTextExtent(dc, line)
+                textWidth, textHeight = self._getTextExtent(dc, line)
 
-            messageHeight += textHeight
+                messageHeight += textHeight
 
-            xText = (bmpWidth + 2 * self._spacing) if bmpWidth > 0 else self._spacing
-            yText += textHeight/2+self._spacing
-            maxWidth = max(xText + textWidth + self._spacing, maxWidth)
-            dc.DrawText(line, xText, yText)
-            if isLink:
-                self._storeHyperLinkInfo(xText, yText, textWidth, textHeight, hl)
+                xText = (bmpWidth + 2 * self._spacing) if bmpWidth > 0 else self._spacing
+                yText += textHeight/2+self._spacing
+                maxWidth = max(xText + textWidth + self._spacing, maxWidth)
+                dc.DrawText(line, xText, yText)
+                if isLink:
+                    self._storeHyperLinkInfo(xText, yText, textWidth, textHeight, hl)
 
         toAdd = 0
         if bmpHeight > textHeight:
@@ -382,7 +389,7 @@ class ToolTipWindowBase(object):
         yText = max(messageHeight, bmpHeight+2*self._spacing)
         if embeddedImage and embeddedImage.IsOk():
             # Draw the main body image
-            dc.DrawBitmap(embeddedImage, self._spacing, messagePos, True)
+            dc.DrawBitmap(embeddedImage, self._spacing, embImgPos + (self._spacing * 2), True)
 
         footer, footerBmp = classParent.GetFooter(), classParent.GetFooterBitmap()
         bmpHeight = bmpWidth = textHeight = textWidth = 0
@@ -411,13 +418,13 @@ class ToolTipWindowBase(object):
         if footer:
             toAdd = (height - textHeight + self._spacing) // 2
             dc.DrawText(footer, bmpXPos + bmpWidth + self._spacing, yPos + toAdd)
-            maxWidth = max(bmpXPos + bmpWidth + self._spacing, maxWidth)
+            maxWidth = max(bmpXPos + bmpWidth + (self._spacing*2) + textWidth, maxWidth)
         if footerBmp and footerBmp.IsOk():
             toAdd = (height - bmpHeight + self._spacing) / 2
             dc.DrawBitmap(footerBmp, bmpXPos, yPos + toAdd, True)
             maxWidth = max(footerBmp.GetSize().GetWidth() + bmpXPos, maxWidth)
 
-        maxHeight = yPos + toAdd
+        maxHeight = yPos + height + toAdd
         if event is None:
             return maxWidth, maxHeight
 
