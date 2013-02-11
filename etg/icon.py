@@ -59,6 +59,18 @@ def run():
         #endif
         """)
     
+    c.find('CreateFromHICON').ignore()
+    c.addCppMethod('bool', 'CreateFromHICON', '(long hicon)',
+        doc='MSW-only method to create a wx.Icon from a native icon handle.',
+        body="""\
+            #ifdef __WXMSW__
+                return self->CreateFromHICON((WXHICON)hicon);
+            #else
+                return false;
+            #endif
+            """)
+    
+    
     # For compatibility:
     module.addPyFunction('EmptyIcon', '()',
                          deprecated="Use :class:`Icon` instead",
