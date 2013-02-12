@@ -184,6 +184,21 @@ extensions.append(ext)
 cfg.CLEANUP.append(opj(cfg.PKGDIR, 'dataview.py'))
 
 
+etg = loadETG('etg/_grid.py')
+etgDepends = etg.DEPENDS + etg.OTHERDEPS
+ext = Extension('_grid', getEtgSipCppFiles(etg),
+                depends            = getEtgSipHeaders(etg),
+                include_dirs       = cfg.includes,
+                define_macros      = cfg.defines,
+                library_dirs       = cfg.libdirs,
+                libraries          = cfg.libs + cfg.makeLibName('adv', True),
+                extra_compile_args = cfg.cflags,
+                extra_link_args    = cfg.lflags,
+                )
+extensions.append(ext)
+cfg.CLEANUP.append(opj(cfg.PKGDIR, 'grid.py'))
+
+
 etg = loadETG('etg/_stc.py')
 etgDepends = etg.DEPENDS + etg.OTHERDEPS
 ext = Extension('_stc', getEtgSipCppFiles(etg),

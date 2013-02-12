@@ -303,6 +303,15 @@ def build(bld):
     makeExtCopyRule(bld, '_dataview')
 
 
+    etg = loadETG('etg/_grid.py')
+    bld(features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_grid'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXADV WXPY',    # grid classes are also in the adv library
+        )
+    makeExtCopyRule(bld, '_grid')
+
+
     etg = loadETG('etg/_stc.py')
     bld(features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_stc'),
