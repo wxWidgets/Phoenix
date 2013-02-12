@@ -165,7 +165,7 @@ def addAutoProperties(node):
             item.addAutoProperties()
 
             
-def fixEventClass(klass):
+def fixEventClass(klass, ignoreProtected=True):
     """
     Add the extra stuff that an event class needs that are lacking from the
     interface headers.
@@ -182,8 +182,14 @@ def fixEventClass(klass):
     # for this) won't try to make copies by assignment.
     klass.addPrivateAssignOp()
 
+    if not ignoreProtected:
+        for item in klass.allItems():
+            if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
+                item.ignore(False)
+        
+
     
-def fixWindowClass(klass, hideVirtuals=True):
+def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Do common tweaks for a window class.
     """
@@ -215,8 +221,14 @@ def fixWindowClass(klass, hideVirtuals=True):
         removeVirtuals(klass)
         addWindowVirtuals(klass)
 
+    if not ignoreProtected:
+        for item in klass.allItems():
+            if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
+                item.ignore(False)
+        
+        
     
-def fixTopLevelWindowClass(klass, hideVirtuals=True):
+def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Tweaks for TLWs 
     """
@@ -240,6 +252,12 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True):
     if hideVirtuals:
         removeVirtuals(klass)
         addWindowVirtuals(klass)
+    
+    if not ignoreProtected:
+        for item in klass.allItems():
+            if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
+                item.ignore(False)
+    
     
     
 def fixSizerClass(klass):
