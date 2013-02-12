@@ -330,11 +330,13 @@ class FunctionDef(BaseDef, FixWxPrefix):
         return [self] + self.overloads
     
     
-    def findOverload(self, matchText, isConst=None):
+    def findOverload(self, matchText, isConst=None, printSig=False):
         """
         Search for an overloaded method that has matchText in its C++ argsString.
         """
         for o in self.all():
+            if printSig:
+                print("%s%s" % (o.name, o.argsString))
             if matchText in o.argsString and not o.ignored:
                 if isConst is None:
                     return o
