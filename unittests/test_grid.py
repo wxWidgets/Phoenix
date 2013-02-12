@@ -80,29 +80,17 @@ class grid_Tests(wtc.WidgetTestCase):
         
     def test_grid17(self):
         class MyEditor(wx.grid.GridCellEditor):
-            def Clone(self):
-                return MyEditor()
-            
-            def BeginEdit(self, row, col, grid):
-                pass
-            
-            def Create(self, parent, id, evtHandler):
-                pass
-            
-            def EndEdit(self, row, col, grid, oldval):
-                return None
-            
-            def ApplyEdit(self, row, col, grid):
-                pass
-            
-            def Reset(self):
-                pass
-            
-            def GetValue(self):
-                return ""
+            def Clone(self): return MyEditor()
+            def BeginEdit(self, row, col, grid): pass            
+            def Create(self, parent, id, evtHandler): pass            
+            def EndEdit(self, row, col, grid, oldval): return None            
+            def ApplyEdit(self, row, col, grid): pass            
+            def Reset(self): pass             
+            def GetValue(self): return ""
             
         e = MyEditor()
         
+
             
             
     def test_grid18(self):
