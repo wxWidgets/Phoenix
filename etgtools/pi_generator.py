@@ -186,8 +186,11 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         assert isinstance(define, extractors.DefineDef)
         if define.ignored:
             return
-        # we're assuming that all #defines that are not ignored are integer values
-        stream.write('%s = 0\n' % (define.pyName or define.name))
+        # we're assuming that all #defines that are not ignored are integer or string values
+        if '"' in define.value:
+            stream.write('%s = ""\n' % (define.pyName or define.name))
+        else:
+            stream.write('%s = 0\n' % (define.pyName or define.name))
         
     #-----------------------------------------------------------------------
     def generateTypedef(self, typedef, stream, indent=''):
