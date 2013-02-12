@@ -79,6 +79,7 @@ MODULENAME_REPLACE = {'_core'    : '',
                       '_glcanvas': 'glcanvas.',
                       '_xml'     : 'xml.',
                       '_xrc'     : 'xrc.',
+                      '_grid'    : 'grid.',
                       }
 
 NO_MODULE = {
