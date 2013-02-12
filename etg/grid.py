@@ -49,6 +49,8 @@ ITEMS  = [ 'wxGridCellCoords',
            
            'wxGridCellAttrProvider',
            'wxGridTableBase',
+           'wxGridTableMessage',
+           'wxGridStringTable',
            'wxGridSizesInfo',
            
            'wxGrid',
@@ -72,6 +74,20 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
+    module.addGlobalStr('wxGridNameStr', module.items[0])    
+    module.addPyCode("""\
+        GRID_VALUE_STRING =    "string"
+        GRID_VALUE_BOOL =      "bool"
+        GRID_VALUE_NUMBER =    "long"
+        GRID_VALUE_FLOAT =     "double"
+        GRID_VALUE_CHOICE =    "choice"
+        GRID_VALUE_TEXT =      "string"
+        GRID_VALUE_LONG =      "long"
+        GRID_VALUE_CHOICEINT = "choiceint"
+        GRID_VALUE_DATETIME =  "datetime"
+        """)
+    
+    #-----------------------------------------------------------------
     c = module.find('wxGridCellCoords')
     assert isinstance(c, etgtools.ClassDef)
     tools.addAutoProperties(c)
@@ -107,29 +123,8 @@ def run():
     
 
     #-----------------------------------------------------------------
-    c = module.find('wxGridCellAttrProvider')
-    c.addPrivateCopyCtor()
-    
-
-    #-----------------------------------------------------------------
-    c = module.find('wxGrid')
-    tools.fixWindowClass(c)
-    c.bases = ['wxScrolledWindow']
-    
-    
-    #-----------------------------------------------------------------
     c = module.find('wxGridSizesInfo')
     c.find('m_customSizes').ignore()   # TODO: Add support for wxUnsignedToIntHashMap??
-
-
-    #-----------------------------------------------------------------
-    for name in ['wxGridEvent',
-                 'wxGridSizeEvent',
-                 'wxGridRangeSelectEvent',
-                 'wxGridEditorCreatedEvent',
-                 ]:
-        c = module.find(name)
-        tools.fixEventClass(c)
         
         
     #-----------------------------------------------------------------
@@ -158,7 +153,9 @@ def run():
         if 'Cell' in name and 'Renderer' in name:
             fixRendererClass(name)            
             
-    
+    module.addPyCode("PyGridCellRenderer = wx.deprecated(GridCellRenderer, 'Use GridCellRenderer instead.')")
+        
+        
     #-----------------------------------------------------------------
     def fixEditorClass(name):
         klass = module.find(name)
@@ -172,8 +169,15 @@ def run():
             ('EndEdit',    "virtual bool EndEdit(int row, int col, const wxGrid* grid, const wxString& oldval, wxString* newval);"),
             ('ApplyEdit',  "virtual void ApplyEdit(int row, int col, wxGrid* grid);"),
             ('Reset',      "virtual void Reset();"),
+            ('GetValue',   "virtual wxString GetValue() const;"),
             ]
+        for method, code in methods:
+            if not klass.findItem(method):
+                klass.addItem(etgtools.WigCode(code))
 
+    
+    # TODO: Fix up EndEdit so it returns newVal on success or None on failure
+    
     
     c = module.find('wxGridCellEditor')
     c.addPrivateCopyCtor()
@@ -186,24 +190,20 @@ def run():
         if 'Cell' in name and 'Editor' in name:
             fixEditorClass(name)            
     
+    module.addPyCode("PyGridCellEditor = wx.deprecated(GridCellEditor, 'Use GridCellEditor instead.')")
     
     #-----------------------------------------------------------------
     c = module.find('wxGridCellAttr')
     c.addPrivateCopyCtor()
     c.find('~wxGridCellAttr').ignore(False)
 
-    
-    #-----------------------------------------------------------------
-    c = module.find('wxGridUpdateLocker')
-    c.addPrivateCopyCtor()
-        
-    
-    #-----------------------------------------------------------------
-    c = module.find('wxGridTableBase')
-    c.addPrivateCopyCtor()
-    
+    c.find('GetAlignment.hAlign').out = True
+    c.find('GetAlignment.vAlign').out = True
+    c.find('GetNonDefaultAlignment.hAlign').out = True
+    c.find('GetNonDefaultAlignment.vAlign').out = True
 
 
+    
     #----------------------------------------------------------------- 
     # The insanceCode attribute is code that is used to make a default
     # instance of the class. We can't create them using the same class in
@@ -219,7 +219,129 @@ def run():
     c.instanceCode = 'sipCpp = new wxGridColumnHeaderRendererDefault;'
 
 
+    
     #-----------------------------------------------------------------
+    c = module.find('wxGridCellAttrProvider')
+    c.addPrivateCopyCtor()
+    
+    c.find('SetAttr.attr').transfer = True
+    c.find('SetRowAttr.attr').transfer = True
+    c.find('SetColAttr.attr').transfer = True
+            
+    module.addPyCode("PyGridCellAttrProvider = wx.deprecated(GridCellAttrProvider, 'Use GridCellAttrProvider instead.')")
+    
+    
+    #-----------------------------------------------------------------
+    c = module.find('wxGridTableBase')
+    c.addPrivateCopyCtor()
+    
+    c.find('SetAttr.attr').transfer = True
+    c.find('SetRowAttr.attr').transfer = True
+    c.find('SetColAttr.attr').transfer = True
+
+    module.addPyCode("PyGridTableBase = wx.deprecated(GridTableBase, 'Use GridTableBase instead.')")
+
+
+    #-----------------------------------------------------------------
+    c = module.find('wxGridTableMessage')
+    c.addPrivateCopyCtor()
+    
+
+    #-----------------------------------------------------------------
+    c = module.find('wxGrid')
+    tools.fixWindowClass(c, ignoreProtected=False)
+    c.bases = ['wxScrolledWindow']
+
+    c.find('GetColLabelAlignment.horiz').out = True
+    c.find('GetColLabelAlignment.vert').out = True
+    c.find('GetRowLabelAlignment.horiz').out = True
+    c.find('GetRowLabelAlignment.vert').out = True
+
+    c.find('GetCellAlignment.horiz').out = True
+    c.find('GetCellAlignment.vert').out = True
+    c.find('GetDefaultCellAlignment.horiz').out = True
+    c.find('GetDefaultCellAlignment.vert').out = True
+
+
+    c.find('RegisterDataType.renderer').transfer = True
+    c.find('RegisterDataType.editor').transfer = True
+    c.find('SetCellEditor.editor').transfer = True
+    c.find('SetCellRenderer.renderer').transfer = True
+
+    # This overload is deprecated, so don't generate code for it.
+    c.find('SetCellValue').findOverload('wxString &val').ignore()
+    
+    c.find('SetDefaultEditor.editor').transfer = True
+    c.find('SetDefaultRenderer.renderer').transfer = True
+    
+
+    #-----------------------------------------------------------------
+    c = module.find('wxGridUpdateLocker')
+    c.addPrivateCopyCtor()
+    
+    # context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
+    
+    
+    #-----------------------------------------------------------------
+
+    for name in ['wxGridSizeEvent',
+                 'wxGridRangeSelectEvent',
+                 'wxGridEditorCreatedEvent',
+                 'wxGridEvent'
+                 ]:
+        c = module.find(name)
+        tools.fixEventClass(c)
+        
+
+    c.addPyCode("""\
+        EVT_GRID_CELL_LEFT_CLICK = wx.PyEventBinder( wxEVT_GRID_CELL_LEFT_CLICK )
+        EVT_GRID_CELL_RIGHT_CLICK = wx.PyEventBinder( wxEVT_GRID_CELL_RIGHT_CLICK )
+        EVT_GRID_CELL_LEFT_DCLICK = wx.PyEventBinder( wxEVT_GRID_CELL_LEFT_DCLICK )
+        EVT_GRID_CELL_RIGHT_DCLICK = wx.PyEventBinder( wxEVT_GRID_CELL_RIGHT_DCLICK )
+        EVT_GRID_LABEL_LEFT_CLICK = wx.PyEventBinder( wxEVT_GRID_LABEL_LEFT_CLICK )
+        EVT_GRID_LABEL_RIGHT_CLICK = wx.PyEventBinder( wxEVT_GRID_LABEL_RIGHT_CLICK )
+        EVT_GRID_LABEL_LEFT_DCLICK = wx.PyEventBinder( wxEVT_GRID_LABEL_LEFT_DCLICK )
+        EVT_GRID_LABEL_RIGHT_DCLICK = wx.PyEventBinder( wxEVT_GRID_LABEL_RIGHT_DCLICK )
+        EVT_GRID_ROW_SIZE = wx.PyEventBinder( wxEVT_GRID_ROW_SIZE )
+        EVT_GRID_COL_SIZE = wx.PyEventBinder( wxEVT_GRID_COL_SIZE )
+        EVT_GRID_RANGE_SELECT = wx.PyEventBinder( wxEVT_GRID_RANGE_SELECT )
+        EVT_GRID_CELL_CHANGING = wx.PyEventBinder( wxEVT_GRID_CELL_CHANGING )
+        EVT_GRID_CELL_CHANGED = wx.PyEventBinder( wxEVT_GRID_CELL_CHANGED )
+        EVT_GRID_SELECT_CELL = wx.PyEventBinder( wxEVT_GRID_SELECT_CELL )
+        EVT_GRID_EDITOR_SHOWN = wx.PyEventBinder( wxEVT_GRID_EDITOR_SHOWN )
+        EVT_GRID_EDITOR_HIDDEN = wx.PyEventBinder( wxEVT_GRID_EDITOR_HIDDEN )
+        EVT_GRID_EDITOR_CREATED = wx.PyEventBinder( wxEVT_GRID_EDITOR_CREATED )
+        EVT_GRID_CELL_BEGIN_DRAG = wx.PyEventBinder( wxEVT_GRID_CELL_BEGIN_DRAG )
+        EVT_GRID_COL_MOVE = wx.PyEventBinder( wxEVT_GRID_COL_MOVE )
+        EVT_GRID_COL_SORT = wx.PyEventBinder( wxEVT_GRID_COL_SORT )
+        EVT_GRID_TABBING = wx.PyEventBinder( wxEVT_GRID_TABBING )
+
+        # The same as above but with the ability to specify an identifier
+        EVT_GRID_CMD_CELL_LEFT_CLICK =     wx.PyEventBinder( wxEVT_GRID_CELL_LEFT_CLICK,    1 )
+        EVT_GRID_CMD_CELL_RIGHT_CLICK =    wx.PyEventBinder( wxEVT_GRID_CELL_RIGHT_CLICK,   1 )
+        EVT_GRID_CMD_CELL_LEFT_DCLICK =    wx.PyEventBinder( wxEVT_GRID_CELL_LEFT_DCLICK,   1 )
+        EVT_GRID_CMD_CELL_RIGHT_DCLICK =   wx.PyEventBinder( wxEVT_GRID_CELL_RIGHT_DCLICK,  1 )
+        EVT_GRID_CMD_LABEL_LEFT_CLICK =    wx.PyEventBinder( wxEVT_GRID_LABEL_LEFT_CLICK,   1 )
+        EVT_GRID_CMD_LABEL_RIGHT_CLICK =   wx.PyEventBinder( wxEVT_GRID_LABEL_RIGHT_CLICK,  1 )
+        EVT_GRID_CMD_LABEL_LEFT_DCLICK =   wx.PyEventBinder( wxEVT_GRID_LABEL_LEFT_DCLICK,  1 )
+        EVT_GRID_CMD_LABEL_RIGHT_DCLICK =  wx.PyEventBinder( wxEVT_GRID_LABEL_RIGHT_DCLICK, 1 )
+        EVT_GRID_CMD_ROW_SIZE =            wx.PyEventBinder( wxEVT_GRID_ROW_SIZE,           1 )
+        EVT_GRID_CMD_COL_SIZE =            wx.PyEventBinder( wxEVT_GRID_COL_SIZE,           1 )
+        EVT_GRID_CMD_RANGE_SELECT =        wx.PyEventBinder( wxEVT_GRID_RANGE_SELECT,       1 )
+        EVT_GRID_CMD_CELL_CHANGING =       wx.PyEventBinder( wxEVT_GRID_CELL_CHANGING,      1 )
+        EVT_GRID_CMD_CELL_CHANGED =        wx.PyEventBinder( wxEVT_GRID_CELL_CHANGED,       1 )
+        EVT_GRID_CMD_SELECT_CELL =         wx.PyEventBinder( wxEVT_GRID_SELECT_CELL,        1 )
+        EVT_GRID_CMD_EDITOR_SHOWN =        wx.PyEventBinder( wxEVT_GRID_EDITOR_SHOWN,       1 )
+        EVT_GRID_CMD_EDITOR_HIDDEN =       wx.PyEventBinder( wxEVT_GRID_EDITOR_HIDDEN,      1 )
+        EVT_GRID_CMD_EDITOR_CREATED =      wx.PyEventBinder( wxEVT_GRID_EDITOR_CREATED,     1 )
+        EVT_GRID_CMD_CELL_BEGIN_DRAG =     wx.PyEventBinder( wxEVT_GRID_CELL_BEGIN_DRAG,    1 )
+        EVT_GRID_CMD_COL_MOVE =            wx.PyEventBinder( wxEVT_GRID_COL_MOVE,           1 )
+        EVT_GRID_CMD_COL_SORT =            wx.PyEventBinder( wxEVT_GRID_COL_SORT,           1 )
+        EVT_GRID_CMD_TABBING =             wx.PyEventBinder( wxEVT_GRID_TABBING,            1 )
+        """)
+        
     #-----------------------------------------------------------------    
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
