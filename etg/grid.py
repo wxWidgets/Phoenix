@@ -322,6 +322,9 @@ def run():
 
     c.find('RegisterDataType.renderer').transfer = True
     c.find('RegisterDataType.editor').transfer = True
+
+    c.find('SetRowAttr.attr').transfer = True
+    c.find('SetColAttr.attr').transfer = True
     c.find('SetCellEditor.editor').transfer = True
     c.find('SetCellRenderer.renderer').transfer = True
 
