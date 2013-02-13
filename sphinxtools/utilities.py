@@ -546,6 +546,9 @@ def MakeSummary(class_name, item_list, template, kind, add_tilde=True):
                 meth_name = regs[regs.index('`')+1:regs.rindex('`')]
                 newstr = ':meth:`~%s.%s`'%(class_name, meth_name)
                 new_docs = new_docs.replace(regs, newstr, 1)
+
+        if '===' in new_docs:
+            new_docs = ''
                             
         summary += format%(substr, new_docs) + '\n'
 

@@ -158,6 +158,9 @@ def BuildEnumsAndMethods(sphinxDir):
         text = text.replace('<wxWindow>', 'Window')
         text = text.replace('<wxPanel>', 'Panel')
 
+        # Replacement for wx.grid stuff
+        text = text.replace(' int *,', ' int,')
+        
         if 'DocstringsGuidelines' not in input:
             # Leave the DocstringsGuidelines.txt file alone on these ones
             text = text.replace(':note:', '.. note::')            

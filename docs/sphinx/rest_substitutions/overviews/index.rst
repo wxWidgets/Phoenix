@@ -178,6 +178,7 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    adv.functions
    dataview.1classindex
    glcanvas.1classindex
+   grid.1classindex
    html.1classindex
    html.functions
    html2.1classindex
