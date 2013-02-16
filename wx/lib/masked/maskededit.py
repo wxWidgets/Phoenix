@@ -3623,16 +3623,19 @@ class MaskedEditMixin:
 ##            dbg(indent=0)
             return False
 
+        # If the caller just wants the erased value without validation 
+        # (because a just pressed key might make this string valid again)
+        # then return it.
+        if just_return_value:
+##            dbg(indent=0)
+            return newstr
+
         # if erasure results in an invalid value, disallow it:
         if self._ctrl_constraints._validRequired and not self.IsValid(newstr):
             if not wx.Validator_IsSilent():
                 wx.Bell()
 ##            dbg(indent=0)
             return False
-
-        if just_return_value:
-##            dbg(indent=0)
-            return newstr
 
         # else...
 ##        dbg('setting value (later) to', newstr)
@@ -4757,6 +4760,7 @@ class MaskedEditMixin:
             return approved
         else:
 ##            dbg('%d is a !???! character; returning False', indent=0)
+##            dbg(indent=0)
             return False
 
 
