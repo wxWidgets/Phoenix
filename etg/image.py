@@ -191,7 +191,7 @@ def run():
 
 
     # GetData() and GetAlpha() return a copy of the image data/alpha bytes as
-    # a string object. 
+    # a bytearray object. 
     # TODO: in Python 3.x a bytes object should be returned instead.
     c.find('GetData').ignore()
     c.addCppMethod('PyObject*', 'GetData', '()',
@@ -488,7 +488,7 @@ def run():
                          body='return Image(width, height, clear)')
     
     module.addPyFunction('ImageFromBitmap', '(bitmap)',
-                         deprecated="Use :class:`Image` instead.",
+                         deprecated="Use bitmap.ConvertToImage instead.",
                          doc='Create a :class:`Image` from a :class:`Bitmap`',
                          body='return bitmap.ConvertToImage()')
 
