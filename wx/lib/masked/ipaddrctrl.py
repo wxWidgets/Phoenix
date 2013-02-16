@@ -6,6 +6,7 @@
 # Copyright:    (c) 2003 by Will Sadkin, 2003
 # RCS-ID:       $Id$
 # License:      wxWidgets license
+# Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------------
 # NOTE:
 #   Masked.IpAddrCtrl is a minor modification to masked.TextCtrl, that is
@@ -155,7 +156,7 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
     def _OnCtrl_S(self, event):
 ##        dbg("IpAddrCtrl::_OnCtrl_S")
         if self._demo:
-            print "value:", self.GetAddress()
+            print("value:", self.GetAddress())
         return False
 
     def SetValue(self, value):
@@ -202,7 +203,7 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
             raise ValueError('value (%s) must be a string of form n.n.n.n where n is empty or in range 0-255' % str(value))
         else:
 ##            dbg('parts:', parts)
-            value = string.join(parts, '.')
+            value = '.'.join(parts)
             BaseMaskedTextCtrl.SetValue(self, value)
 ##        dbg(indent=0)
 

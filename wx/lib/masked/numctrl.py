@@ -5,6 +5,7 @@
 # Copyright:   (c) 2003-2007 by Will Sadkin
 # RCS-ID:      $Id$
 # License:     wxWidgets license
+# Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------------
 # NOTE:
 #   This was written to provide a numeric edit control for wxPython that
@@ -403,9 +404,9 @@ import  types
 
 import  wx
 
-from sys import maxint
-MAXINT = maxint     # (constants should be in upper case)
-MININT = -maxint-1
+from sys import maxsize
+MAXINT = maxsize     # (constants should be in upper case)
+MININT = -maxsize-1
 
 from wx.tools.dbg import Logger
 from wx.lib.masked import MaskedEditMixin, Field, BaseMaskedTextCtrl
@@ -1039,7 +1040,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 # have to test against the limits explicitly after testing
                 # special cases for handling -0 and empty controls...
                 fracval = self.GetFraction(value)
-            except ValueError, e:
+            except ValueError as e:
 ##                dbg('Exception:', e, 'must be out of bounds; disallow value')
                 self._disallowValue()
 ##                dbg(indent=0)
@@ -1118,7 +1119,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                             value = self._toGUI(string.atof(numvalue))
                         else:
                             value = self._toGUI(string.atol(numvalue))
-                    except ValueError, e:
+                    except ValueError as e:
 ##                        dbg('Exception:', e, 'must be out of bounds; disallow value')
                         self._disallowValue()
 ##                        dbg(indent=0)
@@ -1470,7 +1471,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         else:
             try:
                 value = self._GetNumValue(self._toGUI(value))
-            except ValueError, e:
+            except ValueError as e:
 ##                dbg('error getting NumValue(self._toGUI(value)):', e, indent=0)
                 return False
             if value.strip() == '':
@@ -1582,7 +1583,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                     value = float(value)
                 else:
                     value = long(value)
-            except Exception, e:
+            except Exception as e:
 ##                dbg('exception raised:', e, indent=0)
                 raise ValueError ('NumCtrl requires numeric value, passed %s'% repr(value) )
 
@@ -1862,7 +1863,7 @@ if __name__ == '__main__':
             self.Bind(EVT_NUM, self.OnChange, self.int_ctrl)
 
         def OnChange(self, event):
-            print 'value now', event.GetValue()
+            print('value now', event.GetValue())
 
     class TestApp(wx.App):
         def OnInit(self):
@@ -1882,7 +1883,7 @@ if __name__ == '__main__':
             dlg.int_ctrl.SetInsertionPoint(1)
             dlg.int_ctrl.SetSelection(1,2)
             rc = dlg.ShowModal()
-            print 'final value', dlg.int_ctrl.GetValue()
+            print('final value', dlg.int_ctrl.GetValue())
             del dlg
             self.frame.Destroy()
 

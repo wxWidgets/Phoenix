@@ -8,6 +8,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2001 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -64,7 +65,7 @@ class ColumnSorterMixin:
         self.SetColumnCount(numColumns)
         list = self.GetListCtrl()
         if not list:
-            raise ValueError, "No wx.ListCtrl available"
+            raise ValueError("No wx.ListCtrl available")
         list.Bind(wx.EVT_LIST_COL_CLICK, self.__OnColClick, list)
 
 
