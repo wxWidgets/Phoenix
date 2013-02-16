@@ -135,8 +135,6 @@ other dev stuff
       * access
       * Any others?
 
-  * Add _grid module
-  
   * Add _propdlg module
   
   * Add _richtext module
