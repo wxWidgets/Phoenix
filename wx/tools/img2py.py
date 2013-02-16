@@ -7,6 +7,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2002 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------
 #
 # Changes:
@@ -117,7 +118,7 @@ def convert(fileName, maskClr, outputDir, outputName, outType, outExt):
         else:
             newname = os.path.join(outputDir,
                                    os.path.basename(os.path.splitext(fileName)[0]) + outExt)
-        file(newname, "wb").write(file(fileName, "rb").read())
+        open(newname, "wb").write(open(fileName, "rb").read())
         return 1, "ok"
   
     else:
@@ -147,14 +148,14 @@ def img2py(image_file, python_file,
         
     global app
     if not wx.GetApp():
-        app = wx.PySimpleApp()
+        app = wx.App(0)
         
     # convert the image file to a temporary file
     tfname = tempfile.mktemp()
     try:
         ok, msg = convert(image_file, maskClr, None, tfname, wx.BITMAP_TYPE_PNG, ".png")
         if not ok:
-            print msg
+            print(msg)
             return
 
         lines = []
@@ -162,7 +163,10 @@ def img2py(image_file, python_file,
         while data:
             part = data[:72]
             data = data[72:]
-            output = '    "%s"' % part
+            if sys.version > '3':
+                output = '    %s' % part
+            else:
+                output = '    "%s"' % part
             if not data:
                 output += ")"
             lines.append(output)
@@ -212,7 +216,7 @@ def img2py(image_file, python_file,
         imgPath, imgFile = os.path.split(image_file)
         if not imgName:
             imgName = os.path.splitext(imgFile)[0]
-            print "\nWarning: -n not specified. Using filename (%s) for name of image and/or catalog entry." % imgName
+            print("\nWarning: -n not specified. Using filename (%s) for name of image and/or catalog entry." % imgName)
 
         out.write("#" + "-" * 70 + "\n")
         if not append:
@@ -235,8 +239,8 @@ def img2py(image_file, python_file,
 
         if catalog:
             if imgName in old_index:
-                print "Warning: %s already in catalog." % imgName
-                print "         Only the last entry will be accessible.\n"
+                print("Warning: %s already in catalog." % imgName)
+                print("         Only the last entry will be accessible.\n")
             old_index.append(imgName)
             out.write("index.append('%s')\n" % imgName)
             out.write("catalog['%s'] = %s\n" % (imgName, varName))
@@ -260,7 +264,7 @@ def img2py(image_file, python_file,
         else:
             m_msg = ""
 
-        print "Embedded %s%s into %s%s" % (image_file, n_msg, python_file, m_msg)
+        print("Embedded %s%s into %s%s" % (image_file, n_msg, python_file, m_msg))
     finally:
         if python_file != '-':
             out.close()
@@ -272,7 +276,7 @@ def main(args=None):
         args = sys.argv[1:]
         
     if not args or ("-h" in args):
-        print __doc__
+        print(__doc__)
         return
         
     append = DEFAULT_APPEND
@@ -286,7 +290,7 @@ def main(args=None):
     try:
         opts, fileArgs = getopt.getopt(args, "auicfFn:m:")
     except getopt.GetoptError:
-        print __doc__
+        print(__doc__)
         return
 
     for opt, val in opts:
@@ -306,7 +310,7 @@ def main(args=None):
             compatible = False
 
     if len(fileArgs) != 2:
-        print __doc__
+        print(__doc__)
         return
 
     image_file, python_file = fileArgs
