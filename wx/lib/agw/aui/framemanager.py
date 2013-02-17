@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 27 Dec 2012, 21.00 GMT
+# Latest Revision: 17 Feb 2013, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -94,6 +94,8 @@ __date__ = "31 March 2009"
 
 
 import wx
+# just for isinstance
+import wx.lib.sized_controls as sc
 import time
 import warnings
 
@@ -1684,7 +1686,7 @@ class AuiPaneInfo(object):
         """
         Copies the `source` pane members that pertain to docking position to `self`.
 
-        :param `source`: the source pane from where to copy the attributes, 
+        :param `source`: the source pane from where to copy the attributes,
          an instance of :class:`AuiPaneInfo`.
         """
 
@@ -4460,6 +4462,8 @@ class AuiManager(wx.EvtHandler):
 
         if not managed_window:
             raise Exception("Specified managed window must be non-null. ")
+        if isinstance(managed_window, sc.SizedParent):
+            raise Exception("Do not use wx.lib.sized_control for managed window. ")
 
         self.UnInit()
 
@@ -7711,7 +7715,7 @@ class AuiManager(wx.EvtHandler):
 
         :param `docks`: a list of :class:`AuiDockInfo` classes;
         :param `panes`: a list of :class:`AuiPaneInfo` instances;
-        :param `target`: the target pane containing the window, an instance of 
+        :param `target`: the target pane containing the window, an instance of
          :class:`AuiPaneInfo`;
         :param Point `pt`: a mouse position to check for a drop operation.
         """
@@ -10213,7 +10217,7 @@ class AuiManager(wx.EvtHandler):
         Creates an auto-notebook base from a pane, and then add that pane as a page.
 
         :param list `panes`: set of panes to append new notebook base pane to
-        :param `paneInfo`: the pane to be converted to a new notebook, an instance of 
+        :param `paneInfo`: the pane to be converted to a new notebook, an instance of
          :class:`AuiPaneInfo`.
         """
 
