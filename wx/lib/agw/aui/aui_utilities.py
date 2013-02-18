@@ -196,45 +196,7 @@ def MakeDisabledBitmap(bitmap):
     :param Bitmap `bitmap`: the bitmap to gray-out.
     """
 
-    anImage = bitmap.ConvertToImage()    
-    factor = 0.7        # 0 < f < 1.  Higher Is Grayer
-    
-    if anImage.HasMask():
-        maskColour = (anImage.GetMaskRed(), anImage.GetMaskGreen(), anImage.GetMaskBlue())
-    else:
-        maskColour = None
-        
-    data = list(anImage.GetData())
-    
-    for i in range(0, len(data), 3):
-        
-        pixel = (data[i], data[i+1], data[i+2])
-        pixel = MakeGray(pixel, factor, maskColour)
-
-        for x in range(3):
-            data[i+x] = pixel[x]
-
-    anImage.SetData(''.join(map(chr, data)))
-    
-    return anImage.ConvertToBitmap()
-
-
-def MakeGray(rgbTuple, factor, maskColour):
-    """
-    Make a pixel grayed-out.
-
-    If the pixel matches the `maskColour`, it won't be changed.
-
-    :param tuple `rgbTuple`: a tuple representing a pixel colour;
-    :param integer `factor`: a graying-out factor;
-    :param Colour `maskColour`: a colour mask.
-    """
-
-    if rgbTuple != maskColour:
-        r, g, b = rgbTuple
-        return [int((230 - x) * factor) + x for x in (r, g, b)]
-    else:
-        return rgbTuple
+    return bitmap.ConvertToDisabled()
 
 
 def Clip(a, b, c):
