@@ -284,6 +284,7 @@ def numCPUs():
     
 
 def getMSWSettings(options):
+    checkCompiler()
     class MSWsettings(object):
         pass
     msw = MSWsettings()
