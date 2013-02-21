@@ -61,8 +61,10 @@ sipMD5 = {
     'linux'  : '11fe8b21434d67b024ef204351877e79', 
 }
 
-wafCurrentVersion = '1.6.11'
-wafMD5 = '9a631fda1e570da8e4813faf9f3c49a4'
+#wafCurrentVersion = '1.6.11'
+#wafMD5 = '9a631fda1e570da8e4813faf9f3c49a4'
+wafCurrentVersion = '1.7.9'
+wafMD5 = 'ff4cb55ee4fcabc05a062a90d35b7e20'
 
 doxygenCurrentVersion = '1.8.2'
 doxygenMD5 = {
@@ -206,6 +208,7 @@ def setPythonVersion(args):
             PYTHON = sys.executable
             PYVER = sys.version[:3]
             PYSHORTVER = PYVER[0] + PYVER[2]
+        PYTHON = os.path.abspath(PYTHON)
         msg('Using %s' % PYTHON)
         
         
@@ -284,7 +287,7 @@ def numCPUs():
     
 
 def getMSWSettings(options):
-    checkCompiler()
+    checkCompiler(quiet=True)
     class MSWsettings(object):
         pass
     msw = MSWsettings()
@@ -532,7 +535,7 @@ def uploadPackage(fileName, matchString, keep=5):
 
 
 
-def checkCompiler():
+def checkCompiler(quiet=False):
     if isWindows:
         # Make sure that the compiler that Python wants to use can be found.
         # It will terminate if the compiler is not found or other exceptions
@@ -542,7 +545,8 @@ def checkCompiler():
               "mc.initialize(); " \
               "print(mc.cc)"
         CC = runcmd('%s -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False)
-        msg("MSVC: %s" % CC)
+        if not quiet:
+            msg("MSVC: %s" % CC)
         
         # Now get the environment variables which that compiler needs from
         # its vcvarsall.bat command and load them into this process's
@@ -1113,7 +1117,9 @@ def waf_py(options, args):
         wafBuildDir = posixjoin(wafBuildBase, 'release')
         
     build_options = list()
-    build_options.append('--prefix=%s' % PREFIX)
+    if options.verbose:
+        build_options.append('--verbose')
+    #build_options.append('--prefix=%s' % PREFIX)
     if options.debug or (isWindows and options.both):
         build_options.append("--debug")
         if isWindows:

@@ -27,7 +27,11 @@ out = 'build_waf'
 
 
 def options(opt):
-    opt.load('compiler_cc compiler_cxx python')
+    if isWindows:
+        opt.load('msvc')
+    else:
+        opt.load('compiler_cc compiler_cxx')
+    opt.load('python')
 
     opt.add_option('--debug', dest='debug', action='store_true', default=False,
                    help='Turn on debug compile options.')        
@@ -42,14 +46,27 @@ def options(opt):
     opt.add_option('--msvc_arch', dest='msvc_arch', default='x86', action='store',
                    help='The architecture to target for MSVC builds. Supported values '
                    'are: "x86" or "x64"')
+    #opt.add_option('--msvc_ver', dest='msvc_ver', default='9.0', action='store',
+    #               help='The MSVC version to use for the build, if multiple versions are '
+    #               'installed. Currently supported values are: "9.0" or "10.0"')
+
+    # TODO: The waf msvc tool has --msvc_version and --msvc_target options
+    # already. We should just switch to those instead of adding our own
+    # option names...
 
 
 def configure(conf):    
+    #import waflib.Logs
+    #waflib.Logs.init_log()
+
     if isWindows:
-        conf.env['MSVC_VERSIONS'] = ['msvc 9.0']
+        msvc_version = '9.0' #conf.options.msvc_ver
+        if conf.options.python and '33' in conf.options.python:
+            msvc_version = '10.0'
+
+        conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
         conf.load('msvc')
-        pass
     else:
         conf.load('compiler_cc compiler_cxx')
 
@@ -57,7 +74,47 @@ def configure(conf):
         conf.env.PYTHON = conf.options.python
     conf.load('python')
     conf.check_python_version(minver=(2,7,0))
-    conf.check_python_headers()
+
+    if isWindows:
+        # WAF seems to occasionally have troubles building the test programs
+        # correctly on Windows, and so it ends up thinking that the Python
+        # lib and/or Python.h files do not exist. So instead of using the
+        # check_python_headers function we will just manually fill in the
+        # values for Windows based on what we already know that the function
+        # would normally have done , but without running the test programs.
+
+        v = 'prefix SO INCLUDEPY'.split()
+        try:
+            lst = conf.get_python_variables(["get_config_var('%s') or ''" % x for x in v])
+        except RuntimeError:
+            conf.fatal("Python development headers not found (-v for details).")
+        dct = dict(zip(v, lst))
+
+        conf.env['pyext_PATTERN'] = '%s' + dct['SO'] # not a mistake
+
+        libname = 'python' + conf.env['PYTHON_VERSION'].replace('.', '')
+        # TODO: libpath will be incorrect in virtualenv's.  Fix this...
+        libpath = [os.path.join(dct['prefix'], "libs")]       
+        
+        conf.env['LIBPATH_PYEMBED'] = libpath
+        conf.env.append_value('LIB_PYEMBED', [libname])
+        conf.env['LIBPATH_PYEXT'] = conf.env['LIBPATH_PYEMBED']
+        conf.env['LIB_PYEXT'] = conf.env['LIB_PYEMBED']
+
+        conf.env['INCLUDES_PYEXT'] = [dct['INCLUDEPY']]
+        conf.env['INCLUDES_PYEMBED'] = [dct['INCLUDEPY']]
+
+        from distutils.msvccompiler import MSVCCompiler
+        dist_compiler = MSVCCompiler()
+        dist_compiler.initialize()
+        conf.env.append_value('CFLAGS_PYEXT', dist_compiler.compile_options)
+        conf.env.append_value('CXXFLAGS_PYEXT', dist_compiler.compile_options)
+        conf.env.append_value('LINKFLAGS_PYEXT', dist_compiler.ldflags_shared)
+
+    else:
+        # If not Windows then let WAF take care of it all.
+        conf.check_python_headers()
+
 
     # fetch and save the debug option
     conf.env.debug = conf.options.debug
@@ -112,10 +169,10 @@ def configure(conf):
                     except ValueError:
                         pass
                 lst[1:1] = '/Od /MDd /Z7 /D_DEBUG'.split()
-                
+
             conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
             conf.env['LIB_PYEXT'][0] += '_d'
-            
+
     else: 
         # Configuration stuff for non-Windows ports using wx-config
         conf.env.CFLAGS_WX   = list()
@@ -131,7 +188,7 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs core,net', 
                        uselib_store='WX', mandatory=True)
-        
+
         # Run it again with different libs options to get different
         # sets of flags stored to use with varous extension modules below.
         conf.check_cfg(path=conf.options.wx_config, package='', 
@@ -142,7 +199,7 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs %score,net' % libname, 
                        uselib_store='WXSTC', mandatory=True)
-        
+
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs html,core,net', 
                        uselib_store='WXHTML', mandatory=True)
@@ -183,7 +240,7 @@ def configure(conf):
         # Add basic debug info for all builds
         conf.env.CFLAGS_WXPY.append('-g')
         conf.env.CXXFLAGS_WXPY.append('-g')
-        
+
         # And if --debug is set turn on more detailed debug info and turn off optimization
         if conf.env.debug:
             conf.env.CFLAGS_WXPY.extend(['-ggdb', '-O0'])
