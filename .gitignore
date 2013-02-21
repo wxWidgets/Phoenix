@@ -20,6 +20,7 @@
 # /bin/
 /bin/sip-*
 /bin/waf-*
+/bin/waf3-*
 /bin/doxygen-*
 
 # /docs/sphinx/
