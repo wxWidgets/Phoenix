@@ -1311,8 +1311,10 @@ def bdist(options, args):
         dllext = ".dylib"
      
     svnrev = getSvnRev()
-        
-    rootname = "wxPython-Phoenix-%s-%s-py%s" % (svnrev, sys.platform, PYVER)
+    platform = sys.platform
+    if isWindows and PYTHON_ARCH == '64bit':
+        platform = 'win64'
+    rootname = "wxPython-Phoenix-%s-%s-py%s" % (svnrev, platform, PYVER)
     tarfilename = "dist/%s.tar.gz" % rootname
 
     if not os.path.exists('dist'):
