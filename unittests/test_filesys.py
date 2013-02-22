@@ -19,6 +19,16 @@ class filesys_Tests(wtc.WidgetTestCase):
         wx.InternetFSHandler
         wx.ZipFSHandler
 
+    def test_filesys02(self):
+        wx.FileSystem.AddHandler(wx.ArchiveFSHandler())
+        
+    def test_filesys03(self):
+        wx.FileSystem.AddHandler(wx.InternetFSHandler())
+
+    def test_filesys04(self):
+        wx.FileSystem.AddHandler(wx.MemoryFSHandler())
+
+        
     # TODO: Add more tests.
         
 #---------------------------------------------------------------------------

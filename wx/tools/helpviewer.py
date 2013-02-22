@@ -5,8 +5,7 @@
 # Author:      Robin Dunn
 #
 # Created:     11-Dec-2002
-# RCS-ID:      $Id$
-# Copyright:   (c) 2002 by Total Control Software
+# Copyright:   (c) 2013 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 
@@ -50,7 +49,7 @@ def main(args=sys.argv):
     import wx
     import wx.html
 
-    app = wx.PySimpleApp()
+    app = wx.App()
     #wx.Log.SetActiveTarget(wx.LogStderr())
     wx.Log.SetLogLevel(wx.LOG_Error)
 
@@ -60,7 +59,7 @@ def main(args=sys.argv):
     cfg = wx.ConfigBase.Get()
 
     # Add the Zip filesystem
-    wx.FileSystem.AddHandler(wx.ZipFSHandler())
+    wx.FileSystem.AddHandler(wx.ArchiveFSHandler())
 
     # Create the viewer
     helpctrl = wx.html.HtmlHelpController()
