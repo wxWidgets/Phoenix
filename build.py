@@ -332,6 +332,7 @@ def makeOptionParser():
         ("upload_package", (False, "Upload bdist package to nightly server.")),
         ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
         ("x64",            (False, "Use the 64bit version of Python on Windows")),
+        ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -868,6 +869,9 @@ def build_wx(options, args):
             build_options.append('--cairo')
             if not os.environ.get("CAIRO_ROOT"):
                 msg("WARNING: Expected CAIRO_ROOT set in the environment!")
+
+        if options.jom:
+            build_options.append('--jom')
 
     else:  
         # Platform is something other than MSW
