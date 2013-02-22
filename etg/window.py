@@ -169,6 +169,20 @@ def run():
         return not wx.siplib.isdeleted(self)
         """)
     c.addPyCode('Window.__bool__ = Window.__nonzero__') # For Python 3
+
+
+    c.addPyMethod('DestroyLater', '(self)',
+        doc="""\
+           Schedules the window to be destroyed in the near future.
+           
+           This should be used whenever Destroy could happen too soon, such
+           as when there may still be events for this window or its children
+           waiting in the event queue. 
+           """,
+        body="""\
+            self.Hide()
+            wx.GetApp().ScheduleForDestruction(self)
+            """)
     
     
     # MSW only.  Do we want them wrapped?
