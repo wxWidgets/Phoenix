@@ -7,6 +7,7 @@
 # Created:     11-Dec-2002
 # Copyright:   (c) 2013 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------
 
 """
@@ -33,7 +34,7 @@ def makeOtherFrame(helpctrl):
 
 def main(args=sys.argv):
     if len(args) < 2:
-        print __doc__
+        print(__doc__)
         return
 
     args = args[1:]
@@ -43,7 +44,7 @@ def main(args=sys.argv):
         args = args[1:]
 
     if len(args) == 0:
-        print __doc__
+        print(__doc__)
         return
 
     import wx
@@ -68,7 +69,7 @@ def main(args=sys.argv):
 
     # and add the books
     for helpfile in args:
-        print "Adding %s..." % helpfile
+        print("Adding %s..." % helpfile)
         helpctrl.AddBook(helpfile, 1)
 
     # The frame used by the HtmlHelpController is set to not prevent
