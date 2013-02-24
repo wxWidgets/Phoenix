@@ -108,6 +108,7 @@ Usage: ./build.py [command(s)] [options]
       waf_py        Build wxPython only, using waf
       build_py      Alias for "waf_py"
         
+      sdist         Build a tarball containing all source files
       bdist         Create a binary release of wxPython Phoenix
       docs_bdist    Build a tarball containing the documentation
         
@@ -152,7 +153,8 @@ def main(args):
         elif cmd in ['dox', 'doxhtml', 'etg', 'sip', 'touch', 'test', 
                      'build_wx', 'build_py', 'setup_py', 'waf_py', 'build', 'bdist',
                      'clean', 'clean_wx', 'clean_py', 'cleanall', 'clean_sphinx',
-                     'sphinx', 'wxlib', 'wxpy', 'wxtools', 'docs_bdist']:
+                     'sphinx', 'wxlib', 'wxpy', 'wxtools', 'docs_bdist',
+                     'sdist']:
             function = globals()[cmd]
             function(options, args)
         else:
@@ -1295,13 +1297,74 @@ def buildall(options, args):
     
 def sdist(options, args):
     # Build a source tarball that includes the generated SIP and CPP files.
-    pass
+    cmdTimer = CommandTimer('sdist')
+    assert os.getcwd() == phoenixDir()
+
+    isGit = os.path.exists('.git')
+    isSvn = os.path.exists('.svn')
+    if not isGit and not isSvn:
+        msg("Sorry, I don't know what to do in this source tree, no git or svn repos found.")
+        return
+            
+    # make a tree for building up the archive files
+    ADEST = 'build/sdist'
+    PDEST = posixjoin(ADEST, 'Phoenix')
+    WDEST = posixjoin(ADEST, 'wxWidgets')
+    if not os.path.exists(PDEST):
+        os.makedirs(PDEST)
+    if not os.path.exists(WDEST):
+        os.makedirs(WDEST)
+    
+    # and a place to put the final tarball
+    if not os.path.exists('dist'):
+        os.mkdir('dist')
+    
+    if isGit:        
+        # pull out an archive copy of the repo files
+        msg('Exporting Phoenix...')
+        runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
+        msg('Exporting wxWidgets...')
+        runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (wxDir(), WDEST), echoCmd=False)
+    elif isSvn:
+        msg('Exporting Phoenix...')
+        runcmd('svn export --force . %s' % PDEST, echoCmd=False)
+        msg('Exporting wxWidgets...')
+        runcmd('(cd %s; svn export --force . %s)' % (wxDir(), os.path.abspath(WDEST)), echoCmd=False)
+        
+        
+    # copy Phoenix's generated code into the archive tree
+    msg('Copying generated files...')
+    for srcdir in ['cpp', 'gen']:
+        destdir = posixjoin(PDEST, 'sip', srcdir)
+        for name in glob.glob(posixjoin('sip', srcdir, '*')):
+            copyFile(name, destdir)
+            
+    # build the tarball
+    msg('Archiving Phoenix source...')
+    svnrev = getSvnRev()
+    rootname = "wxPython-Phoenix-%s-src" % svnrev
+    tarfilename = "dist/%s.tar.gz" % rootname
+    if os.path.exists(tarfilename):
+        os.remove(tarfilename)
+    tarball = tarfile.open(name=tarfilename, mode="w:gz")
+    pwd = pushDir(ADEST)
+    tarball.add('Phoenix', os.path.join(rootname, 'Phoenix')) 
+    tarball.add('wxWidgets', os.path.join(rootname, 'wxWidgets')) 
+    tarball.close()
+    msg('Cleaning up...')
+    del pwd
+    shutil.rmtree(ADEST)
+
+    if options.upload_package:
+        uploadPackage(tarfilename, '-src')
+    
+    msg("Source release built at %s" % tarfilename)
+
 
 
 def bdist(options, args):
     # Build a tarball and/or installer that includes all the files needed at
     # runtime for the current platform and the current version of Python.
-    
     cmdTimer = CommandTimer('bdist')
     assert os.getcwd() == phoenixDir()
 
@@ -1326,7 +1389,7 @@ def bdist(options, args):
     
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
-    msg("Archiving Phoenix bindings...")
+    msg("Archiving Phoenix binaries...")
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
     tarball.add('wx', os.path.join(rootname, 'wx'), 
                 filter=lambda info: None if '.svn' in info.name else info)
@@ -1346,7 +1409,7 @@ def bdist(options, args):
     if options.upload_package:
         uploadPackage(tarfilename, '-%s-py%s' % (sys.platform, PYVER))
                 
-    msg("Release built at %s" % tarfilename)
+    msg("Binary release built at %s" % tarfilename)
 
     
 #---------------------------------------------------------------------------
