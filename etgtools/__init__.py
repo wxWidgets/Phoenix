@@ -26,7 +26,6 @@ cfg = Config(noWxConfig=True)
 
 phoenixRoot = cfg.ROOT_DIR
 XMLSRC = cfg.DOXY_XML_DIR
-assert os.path.exists(XMLSRC), "Unable to locate Doxygen XML files at " + XMLSRC
 
 
 #---------------------------------------------------------------------------

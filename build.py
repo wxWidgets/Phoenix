@@ -606,6 +606,8 @@ def doxhtml(options, args):
 def etg(options, args):
     cmdTimer = CommandTimer('etg')
     cfg = Config()
+    assert os.path.exists(cfg.DOXY_XML_DIR), "Doxygen XML folder not found: " + cfg.DOXY_XML_DIR
+    
     pwd = pushDir(cfg.ROOT_DIR)
 
     # TODO: Better support for selecting etg cmd-line flags...
