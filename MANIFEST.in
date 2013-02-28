@@ -1,0 +1,12 @@
+#
+# Although we don't use this template to make source distributions, it is 
+# still an easy way to specify what data files (non *.py files) should be 
+# included in the package dirs.
+#
+
+recursive-include   wx  **
+
+recursive-exclude   wx  .svn
+recursive-exclude   wx  .git
+recursive-exclude   wx  *.pyc
+recursive-exclude   wx  __pycache__

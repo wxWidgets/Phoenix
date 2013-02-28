@@ -9,22 +9,28 @@
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
-
 import sys, os
-from distutils.core      import setup, Extension
-from distutils.file_util import copy_file
-from distutils.dir_util  import mkpath
-from distutils.dep_util  import newer, newer_group
-from distutils.spawn     import spawn
+import glob
 
-from buildtools.config import Config, msg, opj, loadETG, \
-                              getEtgSipCppFiles, getEtgSipHeaders
-import buildtools.distutils_hacks as hacks
+try:
+    import setuptools
+except ImportError:
+    from distribute_setup import use_setuptools
+    use_setuptools()
+
+from setuptools                     import setup, Extension, find_packages
+from distutils.command.build        import build as orig_build
+from setuptools.command.install     import install as orig_install
+from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
+from setuptools.command.build_py    import build_py as orig_build_py
+
+
+from buildtools.config import Config, msg, opj, runcmd 
 
 
 #----------------------------------------------------------------------
 
-NAME             = "wxPython (phoenix)"
+NAME             = "wxPython-Phoenix"
 DESCRIPTION      = "Cross platform GUI toolkit for Python"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
@@ -43,258 +49,147 @@ feel, by using the native widgets where possible.
 
 CLASSIFIERS      = """\
 Development Status :: 6 - Mature
-Environment :: MacOS X :: Carbon
+Environment :: MacOS X :: Cocoa
 Environment :: Win32 (MS Windows)
 Environment :: Win64 (MS Windows)
 Environment :: X11 Applications :: GTK
 Intended Audience :: Developers
 License :: OSI Approved
 Operating System :: MacOS :: MacOS X
-Operating System :: Microsoft :: Windows :: Windows 2000/XP/Vista/7
+Operating System :: Microsoft :: Windows :: Windows 2000/XP/Vista/7/8
 Operating System :: POSIX
 Programming Language :: Python
 Topic :: Software Development :: User Interfaces
 """
 
 #----------------------------------------------------------------------
+# Classes used in place of some distutils/setuptools classes.
+
+class wx_build(orig_build):
+    """
+    Delgate to build.py for doing the actual build, (including wxWidgets)
+    instead of letting distutils do it all.
+    """
+    def initialize_options(self):
+        orig_build.initialize_options(self)
+        self.skip_build = '--skip-build' in sys.argv
+    
+    def run(self):        
+        if not self.skip_build:
+            # Run build.py to do the actual building of the extension modules
+            msg('WARNING: Building this way assumes that all generated files have been \n'
+                'generated already.  If that is not the case then use build.py directly \n'
+                'to generate the source and perform the build stage.  You can use \n'
+                '--skip-build with the bdist_* or install commands to avoid this \n'
+                'message and the wxWidgets and Phoenix build steps in the future.\n')       
+        
+            # Use the executable and version of the Python that is running this script.
+            cmd = [sys.executable, '-u', 'build.py', sys.version[:3], 'build']
+            cmd = ' '.join(cmd)
+            runcmd(cmd)
+        
+        # Let distutils handle building up the package folder under the
+        # build/lib folder like normal.
+        orig_build.run(self)
+
+
+class wx_build_py(orig_build_py):
+    """
+    A build_py command class that preserves symlinks in build_package_data.
+    """
+    def build_package_data(self):
+        """Copy data files into build directory"""
+        lastdir = None
+        for package, src_dir, build_dir, filenames in self.data_files:
+            for filename in filenames:
+                target = os.path.join(build_dir, filename)
+                self.mkpath(os.path.dirname(target))
+                srcfile = os.path.join(src_dir, filename)
+                if os.path.islink(srcfile):                        #
+                    linkdest = os.readlink(srcfile)                #
+                    os.symlink(linkdest, target)                   #
+                else:                                              #
+                    outf, copied = self.copy_file(srcfile, target)
+                    srcfile = os.path.abspath(srcfile)
+                    if copied and srcfile in self.distribution.convert_2to3_doctests:
+                        self.__doctests_2to3.append(outf)
+
+
+
+class wx_bdist_egg(orig_bdist_egg):
+    def run(self):
+        self.run_command("build")
+        # Clean out any libwx* symlinks in the build folder, as they will
+        # turn into copies in the egg since zip files can't handle symlinks.
+        # The links are not really needed, and they would bloat the egg too
+        # much if they were left in.
+        builddir = opj('build', 'lib.%s-%s' % (self.plat_name, sys.version[:3]), 'wx')
+        for libname in glob.glob(opj(builddir, 'libwx*')):
+            if os.path.islink(libname):
+                os.unlink(libname)
+        
+        orig_bdist_egg.run(self)
+    
+
+class wx_install(orig_install):
+    def run(self):
+        self.run_command("build")
+        orig_install.run(self)
+
+    
+
+# Map these new classes to the appropriate distutils command names.
+CMDCLASS = {
+    'build'     : wx_build,
+    'build_py'  : wx_build_py,
+    'bdist_egg' : wx_bdist_egg,
+    'install'   : wx_install,
+    }
+
+
+
+#----------------------------------------------------------------------
 
 # Create a buildtools.config.Configuration object
-cfg = Config()
+cfg = Config(noWxConfig=True)
 
 
 # Ensure that the directory containing this script is on the python
 # path for spawned commands so the builder and phoenix packages can be
 # found.
-thisdir = os.path.abspath(os.path.split(__file__)[0])
-os.environ['PYTHONPATH'] = thisdir + os.pathsep + os.environ.get('PYTHONPATH', '')
+#thisdir = os.path.abspath(os.path.split(__file__)[0])
+#os.environ['PYTHONPATH'] = thisdir + os.pathsep + os.environ.get('PYTHONPATH', '')
 
   
-WX_PKGLIST = [ cfg.PKGDIR ]
+WX_PKGLIST = [cfg.PKGDIR] + [cfg.PKGDIR + '.' + pkg for pkg in find_packages('wx')]
 
-SCRIPTS = None
+ENTRY_POINTS = {
+    'console_scripts' : [ 
+        "helpviewer = wx.tools.helpviewer:main",
+        "img2png = wx.tools.img2png:main",
+        "img2py = wx.tools.img2py:main",
+        "img2xpm = wx.tools.img2xpm:main",
+        "pywxrc = wx.tools.pywxrc:main",
+        "pycrust = wx.py.PyCrust:main",
+        "pyshell = wx.py.PyShell:main",
+        "pyslices = wx.py.PySlices:main",
+        "pyslicesshell = wx.py.PySlicesShell:main",        
+        ]}
+
+SCRIPTS = []
 DATA_FILES = []
+
 HEADERS = None
-BUILD_OPTIONS = { 'build_base' : cfg.BUILD_BASE }
+BUILD_OPTIONS = { } #'build_base' : cfg.BUILD_BASE }
 if cfg.WXPORT == 'msw':
     BUILD_OPTIONS[ 'compiler' ] = cfg.COMPILER
+
     
-copy_file('src/__init__.py', cfg.PKGDIR, update=1, verbose=0)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, '__init__.py'))
-
-# update the license files
-mkpath('license')
-for filename in ['preamble.txt', 'licence.txt', 'licendoc.txt', 'lgpl.txt']:
-    copy_file(opj(cfg.WXDIR, 'docs', filename), opj('license',filename), update=1, verbose=0)
-    cfg.CLEANUP.append(opj('license',filename))
-cfg.CLEANUP.append('license')
-
-
-# create the package's __version__ module
-open(opj(cfg.PKGDIR, '__version__.py'), 'w').write("""\
-# This file was generated by setup.py...
-
-VERSION_STRING    = '%(VERSION)s'
-MAJOR_VERSION     = %(VER_MAJOR)s
-MINOR_VERSION     = %(VER_MINOR)s
-RELEASE_NUMBER    = %(VER_RELEASE)s
-SUBRELEASE_NUMBER = %(VER_SUBREL)s
-
-VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER,
-           SUBRELEASE_NUMBER, '%(VER_FLAGS)s')
-""" % cfg.__dict__)
-cfg.CLEANUP.append(opj(cfg.PKGDIR,'__version__.py'))
-
-
-if sys.platform in ['win32', 'darwin']:
-    cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
-    DATA_FILES += cfg.build_locale_list(opj(cfg.PKGDIR, 'locale'))
-
-
-if os.name == 'nt':
-    rc_file = ['src/wxc.rc']
-else:
-    rc_file = []
-
-
 #----------------------------------------------------------------------
     
-extensions = []
-
-extensions.append( 
-    Extension('siplib', ['sip/siplib/apiversions.c',
-                         'sip/siplib/bool.cpp',
-                         'sip/siplib/descriptors.c',
-                         'sip/siplib/objmap.c',
-                         'sip/siplib/qtlib.c',
-                         'sip/siplib/siplib.c',
-                         'sip/siplib/threads.c',
-                         'sip/siplib/voidptr.c',
-                         ], 
-              include_dirs       = cfg.includes,
-              define_macros      = cfg.defines,
-              library_dirs       = cfg.libdirs,
-              libraries          = cfg.libs,
-              extra_compile_args = cfg.cflags,
-              extra_link_args    = cfg.lflags,
-              ))
-
-
-etg = loadETG('etg/_core.py')
-ext = Extension('_core', getEtgSipCppFiles(etg) + rc_file,
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs,
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'core.py'))
-
-
-
-etg = loadETG('etg/_adv.py')
-etgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_adv', getEtgSipCppFiles(etg),
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('adv', True),
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'adv.py'))
-
-
-etg = loadETG('etg/_dataview.py')
-etgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_dataview', getEtgSipCppFiles(etg),
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('adv', True),
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'dataview.py'))
-
-
-etg = loadETG('etg/_grid.py')
-etgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_grid', getEtgSipCppFiles(etg),
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('adv', True),
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'grid.py'))
-
-
-etg = loadETG('etg/_stc.py')
-etgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_stc', getEtgSipCppFiles(etg),
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('stc', True),
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'stc.py'))
-
-
-etg = loadETG('etg/_html.py')
-etgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_html', getEtgSipCppFiles(etg),
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('html', True),
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'html.py'))
-
-
-etg = loadETG('etg/_glcanvas.py')
-etgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_glcanvas', getEtgSipCppFiles(etg),
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('gl', True),
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'glcanvas.py'))
-
-
-etg = loadETG('etg/_html2.py')
-tgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_html2', getEtgSipCppFiles(etg),
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('webview', True),
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'html2.py'))
-
-
-etg = loadETG('etg/_xml.py')
-tgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_xml', getEtgSipCppFiles(etg),
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('xml', True, isMSWBase=True),
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'xml.py'))
-
-
-etg = loadETG('etg/_xrc.py')
-tgDepends = etg.DEPENDS + etg.OTHERDEPS
-ext = Extension('_xrc', getEtgSipCppFiles(etg),
-                depends            = getEtgSipHeaders(etg),
-                include_dirs       = cfg.includes,
-                define_macros      = cfg.defines,
-                library_dirs       = cfg.libdirs,
-                libraries          = cfg.libs + cfg.makeLibName('xml', True) + cfg.makeLibName('xrc', True),
-                extra_compile_args = cfg.cflags,
-                extra_link_args    = cfg.lflags,
-                )
-extensions.append(ext)
-cfg.CLEANUP.append(opj(cfg.PKGDIR, 'xrc.py'))
-
-
-
-
-#----------------------------------------------------------------------
 
 if __name__ == '__main__':
-    setup(name             = NAME, #'wxPython',
+    setup(name             = NAME, 
           version          = cfg.VERSION,
           description      = DESCRIPTION,
           long_description = LONG_DESCRIPTION,
@@ -306,26 +201,23 @@ if __name__ == '__main__':
           platforms        = PLATFORMS,
           classifiers      = [c for c in CLASSIFIERS.split("\n") if c],
           keywords         = KEYWORDS,
-
+          zip_safe         = False,
+          include_package_data = True,
+          
           packages         = WX_PKGLIST,
-          #extra_path       = EXTRA_PATH,
+          
+          # Add a bogus extension module (will never be built here since we
+          # are overriding the build command) so things like bdist_egg will
+          # know that there are extension modules and will name the dist with
+          # the full platform info.          
+          ext_modules      = [Extension('siplib', [])],           
           ext_package      = cfg.PKGDIR,
-          ext_modules      = extensions,
-           
-          options          = { 'build'     : BUILD_OPTIONS,  
-                               #**'build_ext' : {'sip_opts' : cfg.SIPOPTS },
-                               },
+
+          options          = { 'build'     : BUILD_OPTIONS },
 
           scripts          = SCRIPTS,
           data_files       = DATA_FILES,
           headers          = HEADERS,
-
-          # Override some of the default distutils command classes with my own
-          cmdclass = { 'install'         : hacks.wx_install,
-                       'install_data'    : hacks.wx_smart_install_data,
-                       'install_headers' : hacks.wx_install_headers,
-                       'clean'           : hacks.wx_extra_clean,
-                       #**'build_ext'       : hacks.etgsip_build_ext,
-                       },
-
+          cmdclass         = CMDCLASS,
+          entry_points     = ENTRY_POINTS,
         )

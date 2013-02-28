@@ -16,6 +16,7 @@
 /tmp
 /dist
 /license
+/*.egg-info
 
 # /bin/
 /bin/sip-*
