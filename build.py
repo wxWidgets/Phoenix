@@ -366,7 +366,7 @@ class pushDir(object):
 
         
 def getBuildDir(options):
-    BUILD_DIR = opj(phoenixDir(), 'bld')
+    BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld')
     if options.build_dir:
         BUILD_DIR = os.path.abspath(options.build_dir)        
     if isDarwin:
@@ -1113,7 +1113,7 @@ def waf_py(options, args):
     DESTDIR = options.installdir
     PREFIX = options.prefix
 
-    wafBuildBase = posixjoin('build_waf', PYVER)
+    wafBuildBase = posixjoin('build', 'waf', PYVER)
     if isWindows:
         if PYTHON_ARCH == '64bit':
             wafBuildBase = posixjoin(wafBuildBase, 'x64')
@@ -1216,7 +1216,7 @@ def clean_py(options, args):
         else:
             build_base += '/carbon'
     deleteIfExists(build_base)
-    deleteIfExists('build_waf')  # make this smarter later, or just use 'build' for waf too
+    deleteIfExists('build/waf')
     files = list()
     for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi']:
         files += glob.glob(opj(cfg.PKGDIR, wc))

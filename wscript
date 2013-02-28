@@ -23,7 +23,7 @@ isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 
 top = '.'
-out = 'build_waf'
+out = 'build/waf'
 
 
 def options(opt):
