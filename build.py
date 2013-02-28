@@ -1340,6 +1340,10 @@ def sdist(options, args):
         destdir = posixjoin(PDEST, 'sip', srcdir)
         for name in glob.glob(posixjoin('sip', srcdir, '*')):
             copyFile(name, destdir)
+    for wc in ['*.py', '*.pi']:
+        destdir = posixjoin(PDEST, 'wx')
+        for name in glob.glob(posixjoin('wx', wc)):
+            copyFile(name, destdir)
             
     # build the tarball
     msg('Archiving Phoenix source...')
