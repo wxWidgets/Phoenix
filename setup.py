@@ -70,6 +70,12 @@ class wx_build(orig_build):
     Delgate to build.py for doing the actual build, (including wxWidgets)
     instead of letting distutils do it all.
     """
+    user_options = [
+        ('skip-build', None, 'skip building the C/C++ code (assumes it has already been done)'),
+        ]
+    boolean_options = ['skip-build']
+    
+    
     def initialize_options(self):
         orig_build.initialize_options(self)
         self.skip_build = '--skip-build' in sys.argv
@@ -93,41 +99,27 @@ class wx_build(orig_build):
         orig_build.run(self)
 
 
-class wx_build_py(orig_build_py):
-    """
-    A build_py command class that preserves symlinks in build_package_data.
-    """
-    def build_package_data(self):
-        """Copy data files into build directory"""
-        lastdir = None
-        for package, src_dir, build_dir, filenames in self.data_files:
-            for filename in filenames:
-                target = os.path.join(build_dir, filename)
-                self.mkpath(os.path.dirname(target))
-                srcfile = os.path.join(src_dir, filename)
-                if os.path.islink(srcfile):                        #
-                    linkdest = os.readlink(srcfile)                #
-                    os.symlink(linkdest, target)                   #
-                else:                                              #
-                    outf, copied = self.copy_file(srcfile, target)
-                    srcfile = os.path.abspath(srcfile)
-                    if copied and srcfile in self.distribution.convert_2to3_doctests:
-                        self.__doctests_2to3.append(outf)
-
-
 
 class wx_bdist_egg(orig_bdist_egg):
     def run(self):
+        # Ensure that there is a basic library build for bdist_egg to pull from.
         self.run_command("build")
-        # Clean out any libwx* symlinks in the build folder, as they will
+        
+        # Clean out any libwx* symlinks in the build_lib folder, as they will
         # turn into copies in the egg since zip files can't handle symlinks.
-        # The links are not really needed, and they would bloat the egg too
-        # much if they were left in.
-        builddir = opj('build', 'lib.%s-%s' % (self.plat_name, sys.version[:3]), 'wx')
-        for libname in glob.glob(opj(builddir, 'libwx*')):
+        # The links are not really needed, and they could bloat the egg too
+        # much if they were left in.  
+        #
+        # TODO: can eggs have post-install scripts that would allow us to 
+        # restore the links?
+        #builddir = opj('build', 'lib.%s-%s' % (self.plat_name, sys.version[:3]), 'wx')
+        build_lib = self.get_finalized_command('build').build_lib
+        build_lib = opj(build_lib, 'wx')
+        for libname in glob.glob(opj(build_lib, 'libwx*')):
             if os.path.islink(libname):
                 os.unlink(libname)
         
+        # Run the default bdist_egg command
         orig_bdist_egg.run(self)
     
 
@@ -141,10 +133,52 @@ class wx_install(orig_install):
 # Map these new classes to the appropriate distutils command names.
 CMDCLASS = {
     'build'     : wx_build,
-    'build_py'  : wx_build_py,
     'bdist_egg' : wx_bdist_egg,
     'install'   : wx_install,
     }
+
+
+
+
+#----------------------------------------------------------------------
+# Monkey-patch copy_file and copy_tree such that they preserve symlinks. We
+# need this since we're copying the wx shared libs into the package folder
+# and the default implementations would have copied the file content multiple
+# times instead of just copying the symlinks.
+
+
+def wx_copy_file(src, dst, preserve_mode=1, preserve_times=1, update=0,
+                 link=None, verbose=1, dry_run=0):
+    if not os.path.islink(src):
+        return orig_copy_file(
+            src, dst, preserve_mode, preserve_times, update, link, verbose, dry_run)
+    else:
+        # make a new, matching symlink in dst
+        if os.path.isdir(dst):
+            dir = dst
+            dst = os.path.join(dst, os.path.basename(src))
+        linkdst = os.readlink(src)
+        if verbose >= 1:
+            from distutils import log
+            log.info("%s %s -> %s", 'copying symlink', src, dst)
+        if not dry_run and not os.path.exists(dst):
+            os.symlink(linkdst, dst)
+        return (dst, 1)
+
+import distutils.file_util
+orig_copy_file = distutils.file_util.copy_file
+distutils.file_util.copy_file = wx_copy_file
+        
+        
+
+def wx_copy_tree(src, dst, preserve_mode=1, preserve_times=1,
+                 preserve_symlinks=0, update=0, verbose=1, dry_run=0):
+    return orig_copy_tree(
+        src, dst, preserve_mode, preserve_times, 1, update, verbose, dry_run)
+
+import distutils.dir_util
+orig_copy_tree = distutils.dir_util.copy_tree
+distutils.dir_util.copy_tree = wx_copy_tree
 
 
 
@@ -181,8 +215,8 @@ DATA_FILES = []
 
 HEADERS = None
 BUILD_OPTIONS = { } #'build_base' : cfg.BUILD_BASE }
-if cfg.WXPORT == 'msw':
-    BUILD_OPTIONS[ 'compiler' ] = cfg.COMPILER
+#if cfg.WXPORT == 'msw':
+#    BUILD_OPTIONS[ 'compiler' ] = cfg.COMPILER
 
     
 #----------------------------------------------------------------------
@@ -207,9 +241,9 @@ if __name__ == '__main__':
           packages         = WX_PKGLIST,
           
           # Add a bogus extension module (will never be built here since we
-          # are overriding the build command) so things like bdist_egg will
-          # know that there are extension modules and will name the dist with
-          # the full platform info.          
+          # are overriding the build command to do it from build.py) so
+          # things like bdist_egg will know that there are extension modules
+          # and will name the dist with the full platform info.          
           ext_modules      = [Extension('siplib', [])],           
           ext_package      = cfg.PKGDIR,
 
