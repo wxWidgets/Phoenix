@@ -18,7 +18,7 @@ functions and classes in at least two places:
   manual input of the documentation strings. This is achieved by editing the source Python files
   located in the ``etg`` folder in the Phoenix directory tree;
 * **wx.lib**: the whole of ``wx.lib`` (and its sub-folders) is made up of pure-Python modules,
-  ofter representing owner-drawn widgets which are not available as wrapped modules. Again,
+  often representing owner-drawn widgets which are not available as wrapped modules. Again,
   this requires manual editing of the source Python files.
 
 This document is a starting point in setting some reasonable standards on how the pure-Python

@@ -60,7 +60,7 @@ methods it would create a standalone function named ClassName_MethodName for
 it. When Python added support for static methods then SWIG was able to use
 that to make a real static method named ClassName.MethodName, but it still
 generated the standalone function named with the underscore, for
-compatibility. That underscore verison of the static methods is now gone, and
+compatibility. That underscore version of the static methods is now gone, and
 you will get an AttributeError in existing code that is using them. To fix
 the problem simply change the underscore to a dot, for example you should
 change this::
@@ -162,7 +162,7 @@ wx.PyDeadObjectError --> RuntimeError
 
 Classic wxPython tracks when the C++ part of some types of objects (pretty
 much just window types) is destroyed and then replaces the proxy object's
-class with one that rases a wx.PyDeadObjectError exception. SIP takes care of
+class with one that raises a wx.PyDeadObjectError exception. SIP takes care of
 that for us now in a much better way, so that custom hack is no longer
 present in Phoenix, however a RuntimeError is the exception that is raised
 now. The wx.Window class has a __nonzero__ method that tests if the C++
@@ -203,7 +203,7 @@ will attempt to follow the same organization that wxWidgets uses for putting
 those same classes and functions into DLLs or shared libraries. This means
 that some things that were formerly in the core wx package namespace are no
 longer there. They will have to be used by importing a wx submodule. Most of
-them will be in the wx.adv module. Once nice advantage of doing this is that
+them will be in the wx.adv module. One nice advantage of doing this is that
 if your application is not using any of these lesser used classes then you
 will not have to bundle the new modules (nor the associated wx DLLs) with
 your application when you use py2exe or other executable builder.
