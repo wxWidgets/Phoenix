@@ -219,6 +219,7 @@ INCLUDES = [  # base and core stuff
               'filehistory',
               'cmdproc',
               'fswatcher',
+              'preferences',
               ]
 
 
