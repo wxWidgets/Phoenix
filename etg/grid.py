@@ -334,6 +334,8 @@ def run():
     c.find('SetDefaultEditor.editor').transfer = True
     c.find('SetDefaultRenderer.renderer').transfer = True
     
+    for n in ['GetColGridLinePen', 'GetDefaultGridLinePen', 'GetRowGridLinePen']:
+        c.find(n).isVirtual = True
 
     #-----------------------------------------------------------------
     c = module.find('wxGridUpdateLocker')
