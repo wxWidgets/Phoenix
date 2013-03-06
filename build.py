@@ -1413,7 +1413,7 @@ def bdist(options, args):
     tarball.close()
 
     if options.upload_package:
-        uploadPackage(tarfilename, '-%s-py%s' % (sys.platform, PYVER))
+        uploadPackage(tarfilename, '-%s-py%s' % (platform, PYVER))
                 
     msg("Binary release built at %s" % tarfilename)
 
