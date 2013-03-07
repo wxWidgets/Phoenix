@@ -308,7 +308,8 @@ def run():
     module.addPyCode("PyWindow = wx.deprecated(Window, 'Use Window instead.')")
 
 
-
+    module.find('wxFindWindowAtPointer.pt').out = True
+    
    
     module.addCppFunction('wxWindow*', 'FindWindowById', '(long id, const wxWindow* parent=NULL)', 
         doc="""\

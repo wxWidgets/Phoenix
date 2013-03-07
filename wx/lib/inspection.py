@@ -315,7 +315,7 @@ class InspectionFrame(wx.Frame):
 
     def OnLeftDown(self, evt):
         self.ReleaseMouse()
-        wnd = wx.FindWindowAtPointer()
+        wnd, pt = wx.FindWindowAtPointer()
         if wnd is not None:
             self.SetObj(wnd)
         else:

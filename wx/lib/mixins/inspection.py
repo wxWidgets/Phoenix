@@ -70,7 +70,7 @@ class InspectionMixin(object):
         to display the widget under the cursor.
         """
         # get the current widget under the mouse
-        wnd = wx.FindWindowAtPointer()
+        wnd, pt = wx.FindWindowAtPointer()
         InspectionTool().Show(wnd)
 
 
