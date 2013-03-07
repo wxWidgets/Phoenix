@@ -53,7 +53,19 @@ def run():
     
     
     c = module.find('wxTaskBarIcon')
-    c.find('CreatePopupMenu').ignore(False)
+    method = c.find('CreatePopupMenu')
+    method.ignore(False)
+    method.transfer = True
+    method.virtualCatcherCode = """\
+        // VirtualCatcherCode for wxTaskBarIcon.CreatePopupMenu
+        PyObject *sipResObj = sipCallMethod(0, sipMethod, "");
+        sipParseResult(0, sipMethod, sipResObj, "H0", sipType_wxMenu, &sipRes);
+        if (sipRes) {
+            sipTransferTo(sipResObj, Py_None);
+        }
+        """
+    
+    
     c.find('Destroy').transferThis = True
     
     c.addCppMethod('bool', 'ShowBalloon', '(const wxString& title, const wxString& text,'
