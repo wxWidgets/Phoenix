@@ -45,27 +45,6 @@ def run():
     c.find('Replace.to').name = 'to_'
     c.find('SetSelection.from').name = 'from_'
     c.find('SetSelection.to').name = 'to_'
-
-    
-    # Rename the class to wxTextEntryBase and then add a new wxTextEntry
-    # which derives from that class. This is needed because the backend
-    # generator will need to know that the real wxTextEntryBase exists so
-    # wxTextCtrlIface can derive from it.
-    c.name = 'wxTextEntryBase'
-    textEntry = etgtools.ClassDef(name='wxTextEntry', bases=['wxTextEntryBase'],
-                                  abstract=True)
-    module.insertItemAfter(c, textEntry)
-    
-    
-    # Now add wxTextAreaBase and wxTextCtrlIface
-    # TODO:  Do we need the wx.TextAreaBase methods defined?
-    textAreaBase = etgtools.ClassDef(name='wxTextAreaBase', bases=[], abstract=True)
-    module.insertItemAfter(textEntry, textAreaBase)
-    
-    textIface = etgtools.ClassDef(name='wxTextCtrlIface', 
-                                  bases=['wxTextAreaBase', 'wxTextEntryBase'], 
-                                  abstract=True)
-    module.insertItemAfter(textAreaBase, textIface)
     
     
     #-----------------------------------------------------------------
