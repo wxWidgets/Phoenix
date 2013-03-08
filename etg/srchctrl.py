@@ -35,6 +35,7 @@ def run():
 
     c = module.find('wxSearchCtrl')
     assert isinstance(c, etgtools.ClassDef)
+    c.bases = ['wxControl', 'wxTextCtrlIface']
 
     module.addGlobalStr('wxSearchCtrlNameStr', c)
     
