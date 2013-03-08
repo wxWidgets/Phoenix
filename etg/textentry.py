@@ -21,7 +21,7 @@ ITEMS  = [ "wxTextEntry", ]
     
 #---------------------------------------------------------------------------
 
-def run():
+def parseAndTweakModule():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING, False)
     etgtools.parseDoxyXML(module, ITEMS)
@@ -45,9 +45,12 @@ def run():
     c.find('Replace.to').name = 'to_'
     c.find('SetSelection.from').name = 'from_'
     c.find('SetSelection.to').name = 'to_'
+
+    return module
     
-    
-    #-----------------------------------------------------------------
+#-----------------------------------------------------------------
+def run():
+    module = parseAndTweakModule()
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
     

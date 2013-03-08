@@ -35,7 +35,6 @@ def run():
 
     c = module.find('wxSearchCtrl')
     assert isinstance(c, etgtools.ClassDef)
-
     module.addGlobalStr('wxSearchCtrlNameStr', c)
     
     c.find('SetMenu.menu').transfer = True
@@ -62,14 +61,49 @@ def run():
             #endif
             """)
 
-    # Not using autoProperties here because some getters use 'Is'
-    c.addProperty('Menu GetMenu SetMenu')
-    c.addProperty('SearchButtonVisible IsSearchButtonVisible ShowSearchButton')
-    c.addProperty('CancelButtonVisible IsCancelButtonVisible ShowCancelButton')
-    c.addProperty('DescriptiveText GetDescriptiveText SetDescriptiveText')
-
-    tools.fixWindowClass(c)
+    searchCtrl = c
     
+
+    # The safest way to reconcile the differences in the class hierachy
+    # between the native wxSearchCtrl on Mac and the generic one on the other
+    # platforms is to just say that this class derives directly from
+    # wxControl (the first common ancestor) instead of wxTextCtrl, and then
+    # redeclare all the wxTextEntry and/or wxTextCtrlIface methods that we
+    # are interested in having here. That way the C++ compiler can sort out
+    # the proper way to call those methods and avoid calling the wrong
+    # implementations like would happen if try to force it another way...
+    searchCtrl.bases = ['wxControl']
+
+    # Instead of duplicating those declarations here, let's use the parser
+    # and tweakers we already have and then just transplant those MethodDefs
+    # into this ClassDef. That will then preserve things like the
+    # documentation and custom tweaks that would be real tedious to duplicate
+    # and maintain.
+    import textentry
+    mod = textentry.parseAndTweakModule()
+    klass = mod.find('wxTextEntry')
+    searchCtrl.items.extend(klass.items)
+
+    # Do the same with wxTextCtrl, but also remove things like the
+    # Constructors and Create methods first.
+    import textctrl
+    mod = textctrl.parseAndTweakModule()
+    klass = mod.find('wxTextCtrl')
+    # get just the methods that are not ctors, dtor or Create
+    items = [item for item in klass.items if isinstance(item, etgtools.MethodDef) and
+                                             not item.isCtor and
+                                             not item.isDtor and
+                                             item.name != 'Create']
+    searchCtrl.items.extend(items)
+    
+
+    
+    # Add some properties that autoProperties would not see because they are
+    # not using 'Get' and 'Set'
+    searchCtrl.addProperty('SearchButtonVisible IsSearchButtonVisible ShowSearchButton')
+    searchCtrl.addProperty('CancelButtonVisible IsCancelButtonVisible ShowCancelButton')
+    searchCtrl.addAutoProperties()    
+    tools.fixWindowClass(searchCtrl)
         
     module.addPyCode("""\
         EVT_SEARCHCTRL_CANCEL_BTN = wx.PyEventBinder( wxEVT_COMMAND_SEARCHCTRL_CANCEL_BTN, 1)

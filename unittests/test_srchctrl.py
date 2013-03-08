@@ -36,6 +36,29 @@ class srchctrl_Tests(wtc.WidgetTestCase):
         t.SetValue('Hello')
         self.assertEqual(t.GetValue(), 'Hello')
         self.assertEqual(t.Value, 'Hello')
+    
+        
+    def test_srchctrlHasTextCtrlMethods(self):
+        # Just ensure that the common TextCtrl methods are present. This is
+        # done because although the C++ class either derives from wxTextCtrl
+        # or from wxTextCtrlIface, we have to kludge it up a bit since the
+        # actual class hierarchies are different between platforms. See
+        # etg/srchctrl.py for details.
+
+        t = wx.SearchCtrl(self.frame)
+        t.Cut
+        t.CanCut
+        t.DiscardEdits
+        t.GetDefaultStyle
+        t.GetNumberOfLines
+        t.GetStyle
+        t.IsModified
+        t.HitTest
+        t.AppendText
+        t.WriteText
+        t.ChangeValue
+        
+    
         
 #---------------------------------------------------------------------------
 

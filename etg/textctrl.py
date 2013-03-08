@@ -22,7 +22,7 @@ ITEMS  = [ 'wxTextAttr', 'wxTextCtrl', ]
     
 #---------------------------------------------------------------------------
 
-def run():
+def parseAndTweakModule():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
@@ -34,8 +34,8 @@ def run():
     c = module.find('wxTextAttr')
     assert isinstance(c, etgtools.ClassDef)
     c.find('operator=').ignore()
-
     c.find('SetFont').pyArgsString = '(font, flags=TEXT_ATTR_FONT & ~TEXT_ATTR_FONT_PIXEL_SIZE)'
+
 
     c = module.find('wxTextCtrl')
     module.addGlobalStr('wxTextCtrlNameStr', c)
@@ -58,9 +58,15 @@ def run():
     for op in c.findAll('operator<<'):
         op.ignore()
 
+    c.find('OnDropFiles').ignore()
+
     tools.fixWindowClass(c)
-    
-    #-----------------------------------------------------------------
+    return module
+
+
+#-----------------------------------------------------------------
+def run():
+    module = parseAndTweakModule()    
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
     
