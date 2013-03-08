@@ -31,6 +31,12 @@ class srchctrl_Tests(wtc.WidgetTestCase):
         self.frame.Bind(wx.EVT_SEARCHCTRL_SEARCH_BTN, lambda e: None, t)
         
 
+    def test_srchctrlGetSetValue(self):
+        t = wx.SearchCtrl(self.frame)
+        t.SetValue('Hello')
+        self.assertEqual(t.GetValue(), 'Hello')
+        self.assertEqual(t.Value, 'Hello')
+        
 #---------------------------------------------------------------------------
 
 
