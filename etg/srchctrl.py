@@ -97,6 +97,9 @@ def run():
     searchCtrl.items.extend(items)
     
 
+    searchCtrl.find('LoadFile').ignore()
+    searchCtrl.find('SaveFile').ignore()
+    
     
     # Add some properties that autoProperties would not see because they are
     # not using 'Get' and 'Set'
