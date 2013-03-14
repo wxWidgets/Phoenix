@@ -1168,17 +1168,23 @@ def cmd_install(options, args):
     
 def cmd_install_wx(options, args):
     cmdTimer = CommandTimer('install_wx')
-    if not isWindows and options.use_syswx:
+    if isWindows:
+        msg('No wxWidgets installation required on Windows')
+        return
+    
+    if options.use_syswx:
         msg("use_syswx option specified, skipping wxWidgets install")
         return     
     
-    # On Windows the DLLs are always copied to the wxPython package, and so there
-    # is no installing needed
-    if not isWindows:
-        BUILD_DIR = getBuildDir(options)
-        DESTDIR = '' if not options.destdir else 'DESTDIR=' + options.destdir
-        pwd = pushDir(BUILD_DIR)
-        runcmd("make install %s %s" % (DESTDIR, options.extra_make))
+    if not options.no_magic:
+        msg('Magic is in use, wxWidgets will be installed with wxPython')
+        return 
+    
+    # Otherwise, run 'make install' in the wx build folder
+    BUILD_DIR = getBuildDir(options)
+    DESTDIR = '' if not options.destdir else 'DESTDIR=' + options.destdir
+    pwd = pushDir(BUILD_DIR)
+    runcmd("make install %s %s" % (DESTDIR, options.extra_make))
         
 
 

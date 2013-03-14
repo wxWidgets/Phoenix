@@ -24,7 +24,7 @@ from setuptools.command.install     import install as orig_install
 from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
 from setuptools.command.build_py    import build_py as orig_build_py
 
-from buildtools.config import Config, msg, opj, runcmd 
+from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName 
 
 
 #----------------------------------------------------------------------
@@ -60,6 +60,10 @@ Operating System :: POSIX
 Programming Language :: Python
 Topic :: Software Development :: User Interfaces
 """
+
+
+isWindows = sys.platform.startswith('win')
+isDarwin = sys.platform == "darwin"
 
 #----------------------------------------------------------------------
 # Classes used in place of some distutils/setuptools classes.
@@ -113,17 +117,33 @@ class wx_bdist_egg(orig_bdist_egg):
         # TODO: can eggs have post-install scripts that would allow us to 
         # restore the links?
         #
-        #builddir = opj('build', 'lib.%s-%s' % (self.plat_name, sys.version[:3]), 'wx')
         build_lib = self.get_finalized_command('build').build_lib
         build_lib = opj(build_lib, 'wx')
         for libname in glob.glob(opj(build_lib, 'libwx*')):
             
-            # TODO: This should check which lib is the actual soname referred
-            # to from the extension modules and delete the others. It may not
-            # actually be the one that is not a link...
-            
             if os.path.islink(libname):
-                os.unlink(libname)
+                if isDarwin:
+                    # On Mac the name used by the extension module is the real
+                    # file, so we can just get rid of all the links.
+                    os.unlink(libname)
+                    
+                elif canGetSOName():
+                    # On linux the soname used in the extension modules may
+                    # be (probably is) one of the symlinks, so we have to be
+                    # more tricky here. If the named file is a link and it is
+                    # the soname, then remove the link and rename the
+                    # linked-to file to this name.
+                    soname = getSOName(libname)
+                    if soname == os.path.basename(libname):
+                        realfile = os.path.join(build_lib, os.readlink(libname))
+                        os.unlink(libname)
+                        os.rename(realfile, libname)
+                    else:
+                        os.unlink(libname)
+                else:
+                    # Otherwise just leave the symlink there since we don't
+                    # know what to do with it.
+                    pass
         
         # Run the default bdist_egg command
         orig_bdist_egg.run(self)

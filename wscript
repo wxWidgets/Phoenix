@@ -152,7 +152,7 @@ def configure(conf):
         cfg.finishSetup(conf.env.wx_config, conf.env.debug)
 
         # Check wx-config exists and fetch some values from it
-        rpath = ' --no-rpath' if not cmd.options.no_magic else ''
+        rpath = ' --no-rpath' if not conf.options.no_magic else ''
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs core,net' + rpath, 
                        uselib_store='WX', mandatory=True)

@@ -15,6 +15,7 @@ import sys
 import os
 import glob
 import fnmatch
+import re
 import tempfile
 import shutil
 import codecs
@@ -851,3 +852,18 @@ def getVisCVersion():
     else:
         return 'FIXME'
     
+
+_haveObjDump = None
+def canGetSOName():
+    global _haveObjDump
+    if _haveObjDump is None:
+        _haveObjDump = findCmd('objdump') is not None
+    return _haveObjDump
+
+
+def getSOName(filename):
+    output = runcmd('objdump -p %s' % filename, True)
+    result = re.search('^\s+SONAME\s+(.+)$', output, re.MULTILINE)
+    if result:
+        return result.group(1)    
+    return None
