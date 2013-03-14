@@ -57,8 +57,8 @@ isDarwin = sys.platform == "darwin"
 sipCurrentVersion = '4.14.4'
 sipMD5 = {
     'darwin' : 'dd8d1128fc43586072206038bfa35a66',
-    'win32'  : 'acfd4033565c754895e658b9fa993a56', 
-    'linux'  : '11fe8b21434d67b024ef204351877e79', 
+    'win32'  : '3edfb918fbddc19ac7a26b931addfeed', 
+    'linux'  : 'b9fa64b1f6f5a6407777a0dda0de5778', 
 }
 
 #wafCurrentVersion = '1.6.11'
