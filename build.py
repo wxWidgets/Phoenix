@@ -155,8 +155,8 @@ def main(args):
         cmd = commands.pop(0)
         if cmd.startswith('test_'):
             testOne(cmd, options, args)
-        elif cmd+'_cmd' in globals():
-            function = globals()[cmd+'_cmd']  
+        elif 'cmd_'+cmd in globals():
+            function = globals()['cmd_'+cmd]  
             function(options, args)
         else:
             print('*** Unknown command: ' + cmd)
@@ -630,19 +630,19 @@ def _doDox(arg):
     runcmd(cmd)
 
     
-def dox_cmd(options, args):
+def cmd_dox(options, args):
     cmdTimer = CommandTimer('dox')
     _doDox('xml')
     
     
-def doxhtml_cmd(options, args):
+def cmd_doxhtml(options, args):
     cmdTimer = CommandTimer('doxhtml')
     _doDox('html')
     _doDox('chm')
     
     
 
-def etg_cmd(options, args):
+def cmd_etg(options, args):
     cmdTimer = CommandTimer('etg')
     cfg = Config()
     assert os.path.exists(cfg.DOXY_XML_DIR), "Doxygen XML folder not found: " + cfg.DOXY_XML_DIR
@@ -671,7 +671,7 @@ def etg_cmd(options, args):
             runcmd('%s %s %s' % (PYTHON, script, flags))
 
     
-def sphinx_cmd(options, args):
+def cmd_sphinx(options, args):
     from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
 
     cmdTimer = CommandTimer('sphinx')
@@ -715,7 +715,7 @@ def sphinx_cmd(options, args):
     PostProcess(htmlDir)
 
 
-def wxlib_cmd(options, args):
+def cmd_wxlib(options, args):
     from sphinxtools.modulehunter import ModuleHunter
 
     cmdTimer = CommandTimer('wx.lib')
@@ -733,7 +733,7 @@ def wxlib_cmd(options, args):
     ModuleHunter(init_name, import_name, version)
     
 
-def wxpy_cmd(options, args):
+def cmd_wxpy(options, args):
     from sphinxtools.modulehunter import ModuleHunter
 
     cmdTimer = CommandTimer('wx.py')
@@ -751,7 +751,7 @@ def wxpy_cmd(options, args):
     ModuleHunter(init_name, import_name, version)
 
 
-def wxtools_cmd(options, args):
+def cmd_wxtools(options, args):
     from sphinxtools.modulehunter import ModuleHunter
 
     cmdTimer = CommandTimer('wx.tools')
@@ -769,7 +769,7 @@ def wxtools_cmd(options, args):
     ModuleHunter(init_name, import_name, version)
 
 
-def docs_bdist_cmd(options, args):
+def cmd_docs_bdist(options, args):
     cmdTimer = CommandTimer('docs_bdist')
     pwd = pushDir(phoenixDir())
 
@@ -795,7 +795,7 @@ def docs_bdist_cmd(options, args):
     msg('Documentation tarball built at %s' % tarfilename)
     
     
-def sip_cmd(options, args):
+def cmd_sip(options, args):
     cmdTimer = CommandTimer('sip')
     cfg = Config()
     pwd = pushDir(cfg.ROOT_DIR)
@@ -872,7 +872,7 @@ def sip_cmd(options, args):
     
     
     
-def touch_cmd(options, args):
+def cmd_touch(options, args):
     cmdTimer = CommandTimer('touch')
     pwd = pushDir(phoenixDir())
     runcmd('touch etg/*.py')
@@ -890,14 +890,14 @@ def testOne(name, options, args):
     runcmd(PYTHON + ' unittests/%s.py %s' % (name, '-v' if options.verbose else ''), fatal=False)
     
     
-def build_cmd(options, args):
+def cmd_build(options, args):
     cmdTimer = CommandTimer('build')
-    build_wx_cmd(options, args)
-    build_py_cmd(options, args)
+    cmd_build_wx(options, args)
+    cmd_build_py(options, args)
 
 
 
-def build_wx_cmd(options, args):
+def cmd_build_wx(options, args):
     cmdTimer = CommandTimer('build_wx')
     if not isWindows and options.use_syswx:
         msg("use_syswx option specified, skipping wxWidgets build")
@@ -1052,12 +1052,12 @@ def copyWxDlls(options):
         pass
     
 
-def waf_py_cmd(options, args):
+def cmd_waf_py(options, args):
     cmdTimer = CommandTimer('waf_py')
-    build_py_cmd(options, args)
+    cmd_build_py(options, args)
     
 
-def build_py_cmd(options, args):
+def cmd_build_py(options, args):
     cmdTimer = CommandTimer('build_py')
     waf = getWafCmd()
     checkCompiler()
@@ -1134,13 +1134,13 @@ def build_py_cmd(options, args):
 
 
 
-def install_cmd(options, args):
+def cmd_install(options, args):
     cmdTimer = CommandTimer('install')
-    install_wx_cmd(options, args)
-    install_py_cmd(options, args)
+    cmd_install_wx(options, args)
+    cmd_install_py(options, args)
     
     
-def install_wx_cmd(options, args):
+def cmd_install_wx(options, args):
     cmdTimer = CommandTimer('install_wx')
     if not isWindows and options.use_syswx:
         msg("use_syswx option specified, skipping wxWidgets install")
@@ -1156,7 +1156,7 @@ def install_wx_cmd(options, args):
         
 
 
-def install_py_cmd(options, args):
+def cmd_install_py(options, args):
     cmdTimer = CommandTimer('install_py')
     DESTDIR = '' if not options.destdir else '--root=' + options.destdir
     VERBOSE = '--verbose' if options.verbose else ''
@@ -1172,15 +1172,15 @@ def _doSimpleSetupCmd(options, args, setupCmd):
     runcmd(cmd)
      
 
-def bdist_egg_cmd(options, args):
+def cmd_bdist_egg(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_egg')
     
-def bdist_wininst_cmd(options, args):
+def cmd_bdist_wininst(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_wininst')
 
 # bdist_msi requires the version number to be only 3 components, but we're
 # using 4.  TODO: Fix this?
-#def bdist_msi_cmd(options, args):
+#def cmd_bdist_msi(options, args):
 #    _doSimpleSetupCmd(options, args, 'bdist_msi')
 
 
@@ -1188,7 +1188,7 @@ def bdist_wininst_cmd(options, args):
 
     
 
-def clean_wx_cmd(options, args):
+def cmd_clean_wx(options, args):
     cmdTimer = CommandTimer('clean_wx')
     if isWindows:
         if options.both:
@@ -1206,14 +1206,14 @@ def clean_wx_cmd(options, args):
         if options.both:
             options.debug = False
             options.both = False
-            clean_wx_cmd(options, args)
+            cmd_clean_wx(options, args)
             options.both = True
     else:
         BUILD_DIR = getBuildDir(options)
         deleteIfExists(BUILD_DIR)
     
 
-def clean_py_cmd(options, args):
+def cmd_clean_py(options, args):
     cmdTimer = CommandTimer('clean_py')
     assert os.getcwd() == phoenixDir()
     if isWindows and options.both:
@@ -1240,12 +1240,12 @@ def clean_py_cmd(options, args):
     if options.both:
         options.debug = False
         options.both = False
-        clean_py_cmd(options, args)
+        cmd_clean_py(options, args)
         options.both = True
 
 
     
-def clean_sphinx_cmd(options, args):
+def cmd_clean_sphinx(options, args):
     cmdTimer = CommandTimer('clean_sphinx')
     assert os.getcwd() == phoenixDir()
 
@@ -1272,19 +1272,19 @@ def clean_sphinx_cmd(options, args):
             shutil.rmtree(d)
 
         
-def clean_cmd(options, args):
-    clean_wx_cmd(options, args)
-    clean_py_cmd(options, args)
+def cmd_clean(options, args):
+    cmd_clean_wx(options, args)
+    cmd_clean_py(options, args)
     
     
-def cleanall_cmd(options, args):
+def cmd_cleanall(options, args):
     # These take care of all the object, lib, shared lib files created by the
     # compilation part of build
-    clean_wx_cmd(options, args)
-    clean_py_cmd(options, args)
+    cmd_clean_wx(options, args)
+    cmd_clean_py(options, args)
     
     # Clean all the intermediate and generated files from the sphinx command
-    clean_sphinx_cmd(options, args)
+    cmd_clean_sphinx(options, args)
     
     # Now also scrub out all of the SIP and C++ source files that are
     # generated by the Phoenix ETG system.
@@ -1296,18 +1296,18 @@ def cleanall_cmd(options, args):
     delFiles(files)
 
     
-def buildall_cmd(options, args):
+def cmd_buildall(options, args):
     # (re)build everything
-    build_wx_cmd(options, args)
-    dox_cmd(options, args)
-    touch_cmd(options, args)
-    etg_cmd(options, args)
-    sip_cmd(options, args)
-    build_py_cmd(options, args)
-    test_cmd(options, args)
+    cmd_build_wx(options, args)
+    cmd_dox(options, args)
+    cmd_touch(options, args)
+    cmd_etg(options, args)
+    cmd_sip(options, args)
+    cmd_build_py(options, args)
+    cmd_test(options, args)
     
     
-def sdist_cmd(options, args):
+def cmd_sdist(options, args):
     # Build a source tarball that includes the generated SIP and CPP files.
     cmdTimer = CommandTimer('sdist')
     assert os.getcwd() == phoenixDir()
@@ -1378,7 +1378,7 @@ def sdist_cmd(options, args):
 
 
 
-def bdist_cmd(options, args):
+def cmd_bdist(options, args):
     # Build a tarball and/or installer that includes all the files needed at
     # runtime for the current platform and the current version of Python.
     cmdTimer = CommandTimer('bdist')
