@@ -1179,7 +1179,7 @@ def bdist_wininst_cmd(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_wininst')
 
 # bdist_msi requires the version number to be only 3 components, but we're
-# using 4.  TODO: Fix this.
+# using 4.  TODO: Fix this?
 #def bdist_msi_cmd(options, args):
 #    _doSimpleSetupCmd(options, args, 'bdist_msi')
 
