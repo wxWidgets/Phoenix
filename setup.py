@@ -24,7 +24,6 @@ from setuptools.command.install     import install as orig_install
 from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
 from setuptools.command.build_py    import build_py as orig_build_py
 
-
 from buildtools.config import Config, msg, opj, runcmd 
 
 
@@ -107,15 +106,22 @@ class wx_bdist_egg(orig_bdist_egg):
         
         # Clean out any libwx* symlinks in the build_lib folder, as they will
         # turn into copies in the egg since zip files can't handle symlinks.
-        # The links are not really needed, and they could bloat the egg too
-        # much if they were left in.  
-        #
+        # The links are not really needed since the extensions link to
+        # specific soname, and they could bloat the egg too much if they were
+        # left in.
+        #        
         # TODO: can eggs have post-install scripts that would allow us to 
         # restore the links?
+        #
         #builddir = opj('build', 'lib.%s-%s' % (self.plat_name, sys.version[:3]), 'wx')
         build_lib = self.get_finalized_command('build').build_lib
         build_lib = opj(build_lib, 'wx')
         for libname in glob.glob(opj(build_lib, 'libwx*')):
+            
+            # TODO: This should check which lib is the actual soname referred
+            # to from the extension modules and delete the others. It may not
+            # actually be the one that is not a link...
+            
             if os.path.islink(libname):
                 os.unlink(libname)
         
@@ -187,14 +193,6 @@ distutils.dir_util.copy_tree = wx_copy_tree
 # Create a buildtools.config.Configuration object
 cfg = Config(noWxConfig=True)
 
-
-# Ensure that the directory containing this script is on the python
-# path for spawned commands so the builder and phoenix packages can be
-# found.
-#thisdir = os.path.abspath(os.path.split(__file__)[0])
-#os.environ['PYTHONPATH'] = thisdir + os.pathsep + os.environ.get('PYTHONPATH', '')
-
-  
 WX_PKGLIST = [cfg.PKGDIR] + [cfg.PKGDIR + '.' + pkg for pkg in find_packages('wx')]
 
 ENTRY_POINTS = {

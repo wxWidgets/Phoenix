@@ -39,6 +39,9 @@ def options(opt):
                    help='Full path to the Python executrable to use.')
     opt.add_option('--wx_config', dest='wx_config', default='wx-config', action='store',
                    help='Full path to the wx-config script to be used for this build.')
+    opt.add_option('--no_magic', dest='no_magic', action='store_true', default=False,
+                   help='Don\'t use linker magic to enable wx libs to be bundled with '
+                   'wxPython.  See build.py for more info.')
     opt.add_option('--mac_arch', dest='mac_arch', default='', action='store',
                    help='One or more comma separated architecture names to be used for '
                    'the Mac builds. Should be at least a subset of the architectures '
@@ -120,7 +123,7 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXXRC')
         conf.env.LIB_WXXRC += cfg.makeLibName('xrc')
 
-
+        # ** Add code for new modules here
 
 
         # tweak the PYEXT compile and link flags if making a --debug build
@@ -149,41 +152,43 @@ def configure(conf):
         cfg.finishSetup(conf.env.wx_config, conf.env.debug)
 
         # Check wx-config exists and fetch some values from it
+        rpath = ' --no-rpath' if not cmd.options.no_magic else ''
         conf.check_cfg(path=conf.options.wx_config, package='', 
-                       args='--cxxflags --libs core,net', 
+                       args='--cxxflags --libs core,net' + rpath, 
                        uselib_store='WX', mandatory=True)
 
         # Run it again with different libs options to get different
         # sets of flags stored to use with varous extension modules below.
         conf.check_cfg(path=conf.options.wx_config, package='', 
-                       args='--cxxflags --libs adv,core,net', 
+                       args='--cxxflags --libs adv,core,net' + rpath, 
                        uselib_store='WXADV', mandatory=True)
 
         libname = '' if cfg.MONOLITHIC else 'stc,' # workaround bug in wx-config
         conf.check_cfg(path=conf.options.wx_config, package='', 
-                       args='--cxxflags --libs %score,net' % libname, 
+                       args=('--cxxflags --libs %score,net' % libname) + rpath, 
                        uselib_store='WXSTC', mandatory=True)
 
         conf.check_cfg(path=conf.options.wx_config, package='', 
-                       args='--cxxflags --libs html,core,net', 
+                       args='--cxxflags --libs html,core,net' + rpath, 
                        uselib_store='WXHTML', mandatory=True)
 
         conf.check_cfg(path=conf.options.wx_config, package='', 
-                       args='--cxxflags --libs gl,core,net', 
+                       args='--cxxflags --libs gl,core,net' + rpath, 
                        uselib_store='WXGL', mandatory=True)
 
         conf.check_cfg(path=conf.options.wx_config, package='', 
-                       args='--cxxflags --libs webview,core,net', 
+                       args='--cxxflags --libs webview,core,net' + rpath, 
                        uselib_store='WXWEBVIEW', mandatory=True)
 
         conf.check_cfg(path=conf.options.wx_config, package='', 
-                       args='--cxxflags --libs xml,core,net', 
+                       args='--cxxflags --libs xml,core,net' + rpath, 
                        uselib_store='WXXML', mandatory=True)
 
         conf.check_cfg(path=conf.options.wx_config, package='', 
-                       args='--cxxflags --libs xrc,xml,core,net', 
+                       args='--cxxflags --libs xrc,xml,core,net' + rpath, 
                        uselib_store='WXXRC', mandatory=True)
 
+        # ** Add code for new modules here
 
 
         # NOTE: This assumes that if the platform is not win32 (from
@@ -505,6 +510,8 @@ def build(bld):
         )
     makeExtCopyRule(bld, '_xrc')
 
+
+    # ** Add code for new modules here
 
 
 #-----------------------------------------------------------------------------

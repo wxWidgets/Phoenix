@@ -55,4 +55,5 @@
 /wx/*.so
 /wx/*.pyd
 /wx/*.dylib
+/wx/libwx_*
 /wx/locale

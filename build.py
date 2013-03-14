@@ -162,6 +162,7 @@ def main(args):
             sys.exit(1)
     msg("Done!")
     
+    
 #---------------------------------------------------------------------------
 # Helper functions  (see also buildtools.config for more)
 #---------------------------------------------------------------------------
@@ -348,11 +349,22 @@ def makeOptionParser():
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
         ("mac_arch",       ("",    "Comma separated list of architectures to build on Mac")),
         
-        ("use_syswx",      (False, "Try to use an installed wx rather than building the one in this source tree.  The wx-config in {prefix}/bin or the first found on the PATH determines which wx is used.  Implies --no_magic.")),
-        ("force_config",   (False, "Run configure when building even if the script determines it's not necessary.")),
+        ("use_syswx",      (False, "Try to use an installed wx rather than building the "
+                                   "one in this source tree.  The wx-config in {prefix}/bin "
+                                   "or the first found on the PATH determines which wx is "
+                                   "used.  Implies --no_magic.")),
+        ("force_config",   (False, "Run configure when building even if the script "
+                                   "determines it's not necessary.")),
         ("no_config",      (False, "Turn off configure step on autoconf builds")),
 
-        ("no_magic",       (False, "Do NOT use the magic that will enable the wxWidgets libraries to be bundled with wxPython. (Such as in an egg.)  When using this flag you should either build with an already installed wxWidgets, or allow this script to install wxWidgets.")),
+        ("no_magic",       (False, "Do NOT use the magic that will enable the wxWidgets "
+                                   "libraries to be bundled with wxPython. (Such as when "
+                                   "using an uninstalled wx/wxPython from the build dir, "
+                                   "or when distributing wxPython as an egg.)  When using "
+                                   "this flag you should either build with an already "
+                                   "installed wxWidgets, or allow this script to install "
+                                   "wxWidgets.")),
+        
         ("build_dir",      ("",    "Directory to store wx build files. (Not used on Windows)")),
         ("prefix",         ("",    "Prefix value to pass to the wx build.")), 
         ("destdir",        ("",    "Installation root for wxWidgets, files will go to {destdir}/{prefix}")),
@@ -387,8 +399,12 @@ def makeOptionParser():
 def parseArgs(args):
     parser = makeOptionParser()
     options, args = parser.parse_args(args)
-    if options.use_syswx:
-        options.no_rpath = True
+    if isWindows:
+        # We always use magic on Windows
+        options.no_magic = False
+        options.use_syswx = False
+    elif options.use_syswx:
+        options.no_magic = True
     return options, args
 
 
@@ -1041,9 +1057,18 @@ def copyWxDlls(options):
                      glob.glob(opj(phoenixDir(), cfg.PKGDIR, '*.dylib')))
                 
     else:
-        # not Windows and not OSX
-        pass
+        # Not Windows and not OSX.  For now that means that we'll assume it's wxGTK.
+        cfg = Config()        
+        wxlibdir = os.path.join(getBuildDir(options), "lib") 
+        dlls = glob.glob(wxlibdir + '/libwx_*.so')
+        dlls += glob.glob(wxlibdir + '/libwx_*.so.[0-9]*')
+        for dll in dlls:
+            copyIfNewer(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)), verbose=True)
     
+        # If all went well the wxPython extensions should already be looking
+        # for the wxlib's in $ORIGIN, so there is nothing else to do here
+
+
 
 def cmd_waf_py(options, args):
     cmdTimer = CommandTimer('waf_py')
@@ -1103,6 +1128,14 @@ def cmd_build_py(options, args):
     build_options.append('--python=%s' % PYTHON)
     build_options.append('--out=%s' % wafBuildDir)
         
+    if not isWindows and not isDarwin and not options.no_magic and not options.use_syswx:
+        # Using $ORIGIN in the rpath will cause the dynamic linker to look
+        # for shared libraries in a folder relative to the loading binary's
+        # location. Here we'll use just $ORIGIN so it should look in the same
+        # folder as the wxPython extension modules.
+        os.environ['LD_RUN_PATH'] = '$ORIGIN'
+        
+    # Run waf to perform the builds
     pwd = pushDir(phoenixDir())
     cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
     runcmd(cmd)
@@ -1118,11 +1151,11 @@ def cmd_build_py(options, args):
     copyWxDlls(options)
     
     print("\n------------ BUILD FINISHED ------------")
-    print("To use wxPython from the build folder (without instaling):")
+    print("To use wxPython from the build folder (without installing):")
     print(" - Set your PYTHONPATH variable to %s." % phoenixDir())
     if not isWindows:
-        print(" - You may need to set your (DY)LD_LIBRARY_PATH to %s/lib, or wherever the wxWidgets libs have been installed." % BUILD_DIR)
-    print(" - Run python demo/demo.py")
+        print(" - You may also need to set your (DY)LD_LIBRARY_PATH to %s/lib, or wherever the wxWidgets libs have been installed." % BUILD_DIR)
+    #print(" - Run python demo/demo.py")
     print("")
 
 
