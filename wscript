@@ -58,10 +58,12 @@ def options(opt):
 
 
 def configure(conf):    
-    #import waflib.Logs
-    #waflib.Logs.init_log()
-
-    if isWindows:
+    if isWindows:        
+        # For now simply choose the compiler version based on the Python
+        # version. We have a chicken-egg problem here. The compiler needs to
+        # be selected before the Python stuff can be configured, but we need
+        # Python to know what version of the compiler to use.
+        # TODO: Fix this
         msvc_version = '9.0' #conf.options.msvc_ver
         if conf.options.python and '33' in conf.options.python:
             msvc_version = '10.0'
@@ -76,49 +78,7 @@ def configure(conf):
         conf.env.PYTHON = conf.options.python
     conf.load('python')
     conf.check_python_version(minver=(2,7,0))
-
-    """
-    if isWindows:
-        # WAF seems to occasionally have troubles building the test programs
-        # correctly on Windows, and so it ends up thinking that the Python
-        # lib and/or Python.h files do not exist. So instead of using the
-        # check_python_headers function we will just manually fill in the
-        # values for Windows based on what we already know that the function
-        # would normally have done , but without running the test programs.
-
-        v = 'prefix SO INCLUDEPY'.split()
-        try:
-            lst = conf.get_python_variables(["get_config_var('%s') or ''" % x for x in v])
-        except RuntimeError:
-            conf.fatal("Python development headers not found (-v for details).")
-        dct = dict(zip(v, lst))
-
-        conf.env['pyext_PATTERN'] = '%s' + dct['SO'] 
-        libname = 'python' + conf.env['PYTHON_VERSION'].replace('.', '')
-        # TODO: libpath will be incorrect in virtualenv's.  Fix this...
-        libpath = [os.path.join(dct['prefix'], "libs")]       
-
-        conf.env['LIBPATH_PYEMBED'] = libpath
-        conf.env.append_value('LIB_PYEMBED', [libname])
-        conf.env['LIBPATH_PYEXT'] = conf.env['LIBPATH_PYEMBED']
-        conf.env['LIB_PYEXT'] = conf.env['LIB_PYEMBED']
-
-        conf.env['INCLUDES_PYEXT'] = [dct['INCLUDEPY']]
-        conf.env['INCLUDES_PYEMBED'] = [dct['INCLUDEPY']]
-
-        from distutils.msvccompiler import MSVCCompiler
-        dist_compiler = MSVCCompiler()
-        dist_compiler.initialize()
-        conf.env.append_value('CFLAGS_PYEXT', dist_compiler.compile_options)
-        conf.env.append_value('CXXFLAGS_PYEXT', dist_compiler.compile_options)
-        conf.env.append_value('LINKFLAGS_PYEXT', dist_compiler.ldflags_shared)
-
-    else:
-        # If not Windows then let WAF take care of it all.
-        conf.check_python_headers()
-    """
-
-    conf.my_check_python_headers()
+    conf.my_check_python_headers()  # See my_check_python_headers below
 
     # fetch and save the debug option
     conf.env.debug = conf.options.debug
