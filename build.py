@@ -408,11 +408,11 @@ def getBuildDir(options):
     BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld')
     if options.build_dir:
         BUILD_DIR = os.path.abspath(options.build_dir)        
-    if isDarwin:
-        port = 'cocoa'
-        if options.osx_carbon:
-            port = 'carbon'
-        BUILD_DIR = opj(BUILD_DIR, port)
+    #if isDarwin:
+    #    port = 'cocoa'
+    #    if options.osx_carbon:
+    #        port = 'carbon'
+    #    BUILD_DIR = opj(BUILD_DIR, port)
     return BUILD_DIR
 
 
@@ -1219,13 +1219,13 @@ def clean_py_cmd(options, args):
     if isWindows and options.both:
         options.debug = True
     cfg = Config()
-    build_base = 'build'
-    if isDarwin:
-        if options.osx_cocoa:
-            build_base += '/cocoa'
-        else:
-            build_base += '/carbon'
-    deleteIfExists(build_base)
+    #build_base = 'build'
+    #if isDarwin:
+    #    if options.osx_cocoa:
+    #        build_base += '/cocoa'
+    #    else:
+    #        build_base += '/carbon'
+    #deleteIfExists(build_base)
     deleteIfExists('build/waf')
     files = list()
     for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi']:
