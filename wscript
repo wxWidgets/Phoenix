@@ -55,6 +55,8 @@ def options(opt):
     # option names...
 
 
+
+
 def configure(conf):    
     #import waflib.Logs
     #waflib.Logs.init_log()
@@ -75,6 +77,7 @@ def configure(conf):
     conf.load('python')
     conf.check_python_version(minver=(2,7,0))
 
+    """
     if isWindows:
         # WAF seems to occasionally have troubles building the test programs
         # correctly on Windows, and so it ends up thinking that the Python
@@ -90,12 +93,11 @@ def configure(conf):
             conf.fatal("Python development headers not found (-v for details).")
         dct = dict(zip(v, lst))
 
-        conf.env['pyext_PATTERN'] = '%s' + dct['SO'] # not a mistake
-
+        conf.env['pyext_PATTERN'] = '%s' + dct['SO'] 
         libname = 'python' + conf.env['PYTHON_VERSION'].replace('.', '')
         # TODO: libpath will be incorrect in virtualenv's.  Fix this...
         libpath = [os.path.join(dct['prefix'], "libs")]       
-        
+
         conf.env['LIBPATH_PYEMBED'] = libpath
         conf.env.append_value('LIB_PYEMBED', [libname])
         conf.env['LIBPATH_PYEXT'] = conf.env['LIBPATH_PYEMBED']
@@ -114,7 +116,9 @@ def configure(conf):
     else:
         # If not Windows then let WAF take care of it all.
         conf.check_python_headers()
+    """
 
+    conf.my_check_python_headers()
 
     # fetch and save the debug option
     conf.env.debug = conf.options.debug
@@ -271,6 +275,123 @@ def configure(conf):
 
     #import pprint
     #pprint.pprint( [(k, conf.env[k]) for k in conf.env.keys()] )
+
+
+
+# This is a copy of WAF's check_python_headers with some problematic stuff ripped out.
+from waflib.Configure import conf
+
+@conf
+def my_check_python_headers(conf):
+    """
+    Check for headers and libraries necessary to extend or embed python by using the module *distutils*.
+    On success the environment variables xxx_PYEXT and xxx_PYEMBED are added:
+
+    * PYEXT: for compiling python extensions
+    * PYEMBED: for embedding a python interpreter
+    """
+
+    env = conf.env
+    if not env['CC_NAME'] and not env['CXX_NAME']:
+        conf.fatal('load a compiler first (gcc, g++, ..)')
+
+    if not env['PYTHON_VERSION']:
+        conf.check_python_version()
+
+    pybin = conf.env.PYTHON
+    if not pybin:
+        conf.fatal('Could not find the python executable')
+
+    v = 'prefix SO LDFLAGS LIBDIR LIBPL INCLUDEPY Py_ENABLE_SHARED MACOSX_DEPLOYMENT_TARGET LDSHARED CFLAGS'.split()
+    try:
+        lst = conf.get_python_variables(["get_config_var('%s') or ''" % x for x in v])
+    except RuntimeError:
+        conf.fatal("Python development headers not found (-v for details).")
+
+    vals = ['%s = %r' % (x, y) for (x, y) in zip(v, lst)]
+    conf.to_log("Configuration returned from %r:\n%r\n" % (pybin, '\n'.join(vals)))
+
+    dct = dict(zip(v, lst))
+    x = 'MACOSX_DEPLOYMENT_TARGET'
+    if dct[x]:
+        conf.env[x] = conf.environ[x] = dct[x]
+
+    env['pyext_PATTERN'] = '%s' + dct['SO'] # not a mistake
+
+    # Check for python libraries for embedding
+    all_flags = dct['LDFLAGS'] + ' ' + dct['CFLAGS']
+    conf.parse_flags(all_flags, 'PYEMBED')
+
+    all_flags = dct['LDFLAGS'] + ' ' + dct['LDSHARED'] + ' ' + dct['CFLAGS']
+    conf.parse_flags(all_flags, 'PYEXT')
+
+    if isWindows:
+        libname = 'python' + conf.env['PYTHON_VERSION'].replace('.', '')
+        
+        # TODO: libpath will be incorrect in virtualenv's.  Fix this...
+        libpath = [os.path.join(dct['prefix'], "libs")]       
+        
+        conf.env['LIBPATH_PYEMBED'] = libpath
+        conf.env.append_value('LIB_PYEMBED', [libname])
+        conf.env['LIBPATH_PYEXT'] = conf.env['LIBPATH_PYEMBED']
+        conf.env['LIB_PYEXT'] = conf.env['LIB_PYEMBED']
+       
+    else:
+        result = None
+        for name in ('python' + env['PYTHON_VERSION'], 'python' + env['PYTHON_VERSION'].replace('.', '')):
+    
+            # LIBPATH_PYEMBED is already set; see if it works.
+            if not result and env['LIBPATH_PYEMBED']:
+                path = env['LIBPATH_PYEMBED']
+                conf.to_log("\n\n# Trying default LIBPATH_PYEMBED: %r\n" % path)
+                result = conf.check(lib=name, uselib='PYEMBED', libpath=path, mandatory=False, msg='Checking for library %s in LIBPATH_PYEMBED' % name)
+    
+            if not result and dct['LIBDIR']:
+                path = [dct['LIBDIR']]
+                conf.to_log("\n\n# try again with -L$python_LIBDIR: %r\n" % path)
+                result = conf.check(lib=name, uselib='PYEMBED', libpath=path, mandatory=False, msg='Checking for library %s in LIBDIR' % name)
+    
+            if not result and dct['LIBPL']:
+                path = [dct['LIBPL']]
+                conf.to_log("\n\n# try again with -L$python_LIBPL (some systems don't install the python library in $prefix/lib)\n")
+                result = conf.check(lib=name, uselib='PYEMBED', libpath=path, mandatory=False, msg='Checking for library %s in python_LIBPL' % name)
+    
+            if not result:
+                path = [os.path.join(dct['prefix'], "libs")]
+                conf.to_log("\n\n# try again with -L$prefix/libs, and pythonXY name rather than pythonX.Y (win32)\n")
+                result = conf.check(lib=name, uselib='PYEMBED', libpath=path, mandatory=False, msg='Checking for library %s in $prefix/libs' % name)
+    
+            if result:
+                break # do not forget to set LIBPATH_PYEMBED
+    
+        if result:
+            env['LIBPATH_PYEMBED'] = path
+            env.append_value('LIB_PYEMBED', [name])
+        else:
+            conf.to_log("\n\n### LIB NOT FOUND\n")
+
+
+        conf.to_log("Include path for Python extensions "
+                    "(found via distutils module): %r\n" % (dct['INCLUDEPY'],))
+        env['INCLUDES_PYEXT'] = [dct['INCLUDEPY']]
+        env['INCLUDES_PYEMBED'] = [dct['INCLUDEPY']]
+
+    # Code using the Python API needs to be compiled with -fno-strict-aliasing
+    if env['CC_NAME'] == 'gcc':
+        env.append_value('CFLAGS_PYEMBED', ['-fno-strict-aliasing'])
+        env.append_value('CFLAGS_PYEXT', ['-fno-strict-aliasing'])
+    if env['CXX_NAME'] == 'gcc':
+        env.append_value('CXXFLAGS_PYEMBED', ['-fno-strict-aliasing'])
+        env.append_value('CXXFLAGS_PYEXT', ['-fno-strict-aliasing'])
+
+    if env.CC_NAME == "msvc":
+        from distutils.msvccompiler import MSVCCompiler
+        dist_compiler = MSVCCompiler()
+        dist_compiler.initialize()
+        env.append_value('CFLAGS_PYEXT', dist_compiler.compile_options)
+        env.append_value('CXXFLAGS_PYEXT', dist_compiler.compile_options)
+        env.append_value('LINKFLAGS_PYEXT', dist_compiler.ldflags_shared)
+
 
 
 #-----------------------------------------------------------------------------
