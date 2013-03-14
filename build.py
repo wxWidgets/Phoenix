@@ -1163,15 +1163,31 @@ def install_py_cmd(options, args):
     cmd = "%s setup.py install --skip-build  %s %s %s" % (
         PYTHON, DESTDIR, VERBOSE, options.extra_setup)
     runcmd(cmd)
-    
+
+  
+def _doSimpleSetupCmd(options, args, setupCmd):
+    cmdTimer = CommandTimer(setupCmd)
+    VERBOSE = '--verbose' if options.verbose else ''
+    cmd = "%s setup.py %s --skip-build  %s %s" % (PYTHON, setupCmd, VERBOSE, options.extra_setup)
+    runcmd(cmd)
+     
 
 def bdist_egg_cmd(options, args):
-    cmdTimer = CommandTimer('bdist_egg')
-    VERBOSE = '--verbose' if options.verbose else ''
-    cmd = "%s setup.py bdist_egg --skip-build  %s %s" % (PYTHON, VERBOSE, options.extra_setup)
-    runcmd(cmd)
+    _doSimpleSetupCmd(options, args, 'bdist_egg')
+    
+def bdist_wininst_cmd(options, args):
+    _doSimpleSetupCmd(options, args, 'bdist_wininst')
+
+# bdist_msi requires the version number to be only 3 components, but we're
+# using 4.  TODO: Fix this.
+#def bdist_msi_cmd(options, args):
+#    _doSimpleSetupCmd(options, args, 'bdist_msi')
+
+
+
 
     
+
 def clean_wx_cmd(options, args):
     cmdTimer = CommandTimer('clean_wx')
     if isWindows:
