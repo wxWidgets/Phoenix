@@ -61,8 +61,6 @@ sipMD5 = {
     'linux'  : 'b9fa64b1f6f5a6407777a0dda0de5778', 
 }
 
-#wafCurrentVersion = '1.6.11'
-#wafMD5 = '9a631fda1e570da8e4813faf9f3c49a4'
 wafCurrentVersion = '1.7.9'
 wafMD5 = 'ff4cb55ee4fcabc05a062a90d35b7e20'
 
@@ -210,10 +208,10 @@ def setPythonVersion(args):
             # root of all Python's on the system, with the 64-bit ones in an
             # amd64 subfolder, like this:
             #
-            # $TOOLS\Python27
-            # $TOOLS\Python33
-            # $TOOLS\amd64\Python27
-            # $TOOLS\amd64\Python33
+            # $TOOLS\Python27\python.exe
+            # $TOOLS\Python33\python.exe
+            # $TOOLS\amd64\Python27\python.exe
+            # $TOOLS\amd64\Python33\python.exe
             #            
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
@@ -408,11 +406,6 @@ def getBuildDir(options):
     BUILD_DIR = opj(phoenixDir(), 'build', 'wxbld')
     if options.build_dir:
         BUILD_DIR = os.path.abspath(options.build_dir)        
-    #if isDarwin:
-    #    port = 'cocoa'
-    #    if options.osx_carbon:
-    #        port = 'carbon'
-    #    BUILD_DIR = opj(BUILD_DIR, port)
     return BUILD_DIR
 
 
@@ -606,7 +599,7 @@ def checkCompiler(quiet=False):
         
         
 #---------------------------------------------------------------------------
-# Command functions
+# Command functions and helpers
 #---------------------------------------------------------------------------
 
 
@@ -1219,13 +1212,6 @@ def cmd_clean_py(options, args):
     if isWindows and options.both:
         options.debug = True
     cfg = Config()
-    #build_base = 'build'
-    #if isDarwin:
-    #    if options.osx_cocoa:
-    #        build_base += '/cocoa'
-    #    else:
-    #        build_base += '/carbon'
-    #deleteIfExists(build_base)
     deleteIfExists('build/waf')
     files = list()
     for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi']:
