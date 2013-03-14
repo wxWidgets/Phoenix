@@ -1,7 +1,7 @@
 /*
  * SIP library code.
  *
- * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -185,7 +185,9 @@ static int sip_api_parse_result_ex(sip_gilstate_t gil_state,
 static int sip_api_parse_result(int *isErr, PyObject *method, PyObject *res,
         const char *fmt, ...);
 static void sip_api_call_error_handler(sipVirtErrorHandlerFunc error_handler,
-        sipSimpleWrapper *py_self);
+        sipSimpleWrapper *py_self, sip_gilstate_t gil_state);
+static void sip_api_call_error_handler_old(
+        sipVirtErrorHandlerFuncOld error_handler, sipSimpleWrapper *py_self);
 static void sip_api_trace(unsigned mask,const char *fmt,...);
 static void sip_api_transfer_back(PyObject *self);
 static void sip_api_transfer_to(PyObject *self, PyObject *owner);
@@ -370,6 +372,7 @@ static const sipAPIDef sip_api = {
     sip_api_parse_kwd_args,
     sip_api_add_exception,
     sip_api_parse_result_ex,
+    sip_api_call_error_handler_old,
     sip_api_call_error_handler
 };
 
@@ -527,6 +530,7 @@ static sipSymbol *sipSymbolList = NULL; /* The list of published symbols. */
 static sipAttrGetter *sipAttrGetters = NULL;  /* The list of attribute getters. */
 static sipPyObject *sipRegisteredPyTypes = NULL;    /* Registered Python types. */
 static PyInterpreterState *sipInterpreter = NULL;   /* The interpreter. */
+static int destroy_on_exit = TRUE;      /* Destroy owned objects on exit. */
 
 
 static void addClassSlots(sipWrapperType *wt, sipClassTypeDef *ctd);
@@ -620,6 +624,7 @@ static PyObject *wrapInstance(PyObject *self, PyObject *args);
 static PyObject *unwrapInstance(PyObject *self, PyObject *args);
 static PyObject *transferBack(PyObject *self, PyObject *args);
 static PyObject *transferTo(PyObject *self, PyObject *args);
+static PyObject *setDestroyOnExit(PyObject *self, PyObject *args);
 static void print_object(const char *label, PyObject *obj);
 static void addToParent(sipWrapper *self, sipWrapper *owner);
 static void removeFromParent(sipWrapper *self);
@@ -705,6 +710,7 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
         {"ispyowned", isPyOwned, METH_VARARGS, NULL},
         {"setapi", sipSetAPI, METH_VARARGS, NULL},
         {"setdeleted", setDeleted, METH_VARARGS, NULL},
+        {"setdestroyonexit", setDestroyOnExit, METH_VARARGS, NULL},
         {"settracemask", setTraceMask, METH_VARARGS, NULL},
         {"transferback", transferBack, METH_VARARGS, NULL},
         {"transferto", transferTo, METH_VARARGS, NULL},
@@ -1217,6 +1223,21 @@ static PyObject *wrapInstance(PyObject *self, PyObject *args)
 
     if (PyArg_ParseTuple(args, "kO!:wrapinstance", &addr, &sipWrapperType_Type, &wt))
         return sip_api_convert_from_type((void *)addr, wt->type, NULL);
+
+    return NULL;
+}
+
+
+/*
+ * Set the destroy on exit flag.
+ */
+static PyObject *setDestroyOnExit(PyObject *self, PyObject *args)
+{
+    if (PyArg_ParseTuple(args, "i:setdestroyonexit", &destroy_on_exit))
+    {
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
 
     return NULL;
 }
@@ -2229,20 +2250,38 @@ static int sip_api_parse_result_ex(sip_gilstate_t gil_state,
 
     Py_DECREF(method);
 
-    SIP_RELEASE_GIL(gil_state);
-
     if (rc < 0)
-        sip_api_call_error_handler(error_handler, py_self);
+        sip_api_call_error_handler(error_handler, py_self, gil_state);
+
+    SIP_RELEASE_GIL(gil_state);
 
     return rc;
 }
 
 
 /*
- * Call a virtual error handler.
+ * Call a virtual error handler.  This is called with the GIL and from the
+ * thread that raised the error.
  */
 static void sip_api_call_error_handler(sipVirtErrorHandlerFunc error_handler,
-        sipSimpleWrapper *py_self)
+        sipSimpleWrapper *py_self, sip_gilstate_t sipGILState)
+{
+    if (error_handler != NULL)
+        error_handler(py_self, sipGILState);
+    else
+        PyErr_Print();
+}
+
+
+/*
+ * Call a virtual error handler.  This is called without the GIL.  This is
+ * deprecated.
+ */
+#if SIP_API_MAJOR_NR != 9
+#error Remove deprecated error handler support.
+#endif
+static void sip_api_call_error_handler_old(
+        sipVirtErrorHandlerFuncOld error_handler, sipSimpleWrapper *py_self)
 {
     if (error_handler != NULL)
     {
@@ -2251,6 +2290,10 @@ static void sip_api_call_error_handler(sipVirtErrorHandlerFunc error_handler,
     else
     {
         SIP_BLOCK_THREADS
+        /*
+         * The current thread may not be the one that raised the exception and
+         * so may not print anything.  This is why this function is deprecated.
+         */
         PyErr_Print();
         SIP_UNBLOCK_THREADS
     }
@@ -9245,7 +9288,7 @@ static PyObject *sipSimpleWrapper_new(sipWrapperType *wt, PyObject *args,
     /*
      * See if the object is being created explicitly rather than being wrapped.
      */
-    if (sipGetPending(NULL, NULL) == NULL)
+    if (!sipIsPending())
     {
         /*
          * See if it cannot be instantiated or sub-classed from Python, eg.
@@ -9314,7 +9357,10 @@ static int sipSimpleWrapper_init(sipSimpleWrapper *self, PyObject *args,
     unused = NULL;
 
     /* Check there is no existing C++ instance waiting to be wrapped. */
-    if ((sipNew = sipGetPending(&owner, &sipFlags)) == NULL)
+    if (sipGetPending(&sipNew, &owner, &sipFlags) < 0)
+        return -1;
+
+    if (sipNew == NULL)
     {
         PyObject *parseErr = NULL;
 
@@ -9915,17 +9961,7 @@ static int sipWrapper_clear(sipWrapper *self)
 
     /* Detach children (which will be owned by C/C++). */
     while ((sw = (sipSimpleWrapper *)self->first_child) != NULL)
-    {
-        /*
-         * Although this object is being garbage collected it doesn't follow
-         * that it's children should be.  So we make sure that the child stays
-         * alive and remember we have done so.
-         */
-        Py_INCREF(sw);
-        sipSetCppHasRef(sw);
-
         removeFromParent(self->first_child);
-    }
 
     return vret;
 }
@@ -10364,8 +10400,6 @@ static void addTypeSlots(PyHeapTypeObject *heap_to, sipPySlotDef *slots)
  */
 static void forgetObject(sipSimpleWrapper *sw)
 {
-    const sipClassTypeDef *ctd;
-
     /*
      * This is needed because we release the GIL when calling a C++ dtor.
      * Without it the cyclic garbage collector can be invoked from another
@@ -10385,10 +10419,11 @@ static void forgetObject(sipSimpleWrapper *sw)
      */
     sipOMRemoveObject(&cppPyMap, sw);
 
-    if (getPtrTypeDef(sw, &ctd) != NULL)
+    if (sipInterpreter != NULL || destroy_on_exit)
     {
-        /* Call the C++ dtor if there is one. */
-        if (ctd->ctd_dealloc != NULL)
+        const sipClassTypeDef *ctd;
+
+        if (getPtrTypeDef(sw, &ctd) != NULL && ctd->ctd_dealloc != NULL)
             ctd->ctd_dealloc(sw);
     }
 

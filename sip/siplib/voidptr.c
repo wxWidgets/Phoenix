@@ -1,7 +1,7 @@
 /*
  * SIP library code.
  *
- * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -46,7 +46,7 @@ struct vp_values {
 static int check_size(PyObject *self);
 static int check_rw(PyObject *self);
 static int check_index(PyObject *self, SIP_SSIZE_T idx);
-#if PY_VERSION_HEX < 0x02060000
+#if PY_VERSION_HEX < 0x02060300
 static SIP_SSIZE_T get_value_data(PyObject *value, void **value_ptr);
 #endif
 #if PY_VERSION_HEX < 0x02050000
@@ -455,7 +455,7 @@ static int sipVoidPtr_ass_subscript(PyObject *self, PyObject *key,
 {
     sipVoidPtrObject *v;
     Py_ssize_t start, size;
-#if PY_VERSION_HEX >= 0x02060000
+#if PY_VERSION_HEX >= 0x02060300
     Py_buffer value_view;
 #else
     Py_ssize_t value_size;
@@ -502,7 +502,7 @@ static int sipVoidPtr_ass_subscript(PyObject *self, PyObject *key,
         return -1;
     }
 
-#if PY_VERSION_HEX >= 0x02060000
+#if PY_VERSION_HEX >= 0x02060300
     if (PyObject_GetBuffer(value, &value_view, PyBUF_CONTIG_RO) < 0)
         return -1;
 
@@ -548,9 +548,9 @@ static PyMappingMethods sipVoidPtr_MappingMethods = {
 #endif
 
 
-#if PY_VERSION_HEX >= 0x02060000
+#if PY_VERSION_HEX >= 0x02060300
 /*
- * The buffer implementation for Python v2.6 and later.
+ * The buffer implementation for Python v2.6.3 and later.
  */
 static int sipVoidPtr_getbuffer(PyObject *self, Py_buffer *buf, int flags)
 {
@@ -639,7 +639,7 @@ static PyBufferProcs sipVoidPtr_BufferProcs = {
     sipVoidPtr_getsegcount, /* bf_getsegcount */
 #if PY_VERSION_HEX >= 0x02050000
     (charbufferproc)sipVoidPtr_getreadbuffer,   /* bf_getcharbuffer */
-#if PY_VERSION_HEX >= 0x02060000
+#if PY_VERSION_HEX >= 0x02060300
     sipVoidPtr_getbuffer,   /* bf_getbuffer */
     0                       /* bf_releasebuffer */
 #endif
@@ -749,27 +749,16 @@ PyTypeObject sipVoidPtr_Type = {
  */
 void *sip_api_convert_to_void_ptr(PyObject *obj)
 {
+    struct vp_values vp;
+
     if (obj == NULL)
     {
         PyErr_SetString(PyExc_TypeError, "sip.voidptr is NULL");
         return NULL;
     }
 
-    if (obj == Py_None)
-        return NULL;
-
-    if (PyObject_TypeCheck(obj, &sipVoidPtr_Type))
-        return ((sipVoidPtrObject *)obj)->voidptr;
-
-#if defined(SIP_USE_PYCAPSULE)
-    if (PyCapsule_CheckExact(obj))
-        return PyCapsule_GetPointer(obj, NULL);
-#endif
-
-#if defined(SIP_SUPPORT_PYCOBJECT)
-    if (PyCObject_Check(obj))
-        return PyCObject_AsVoidPtr(obj);
-#endif
+    if (vp_convertor(obj, &vp))
+        return vp.voidptr;
 
     return PyLong_AsVoidPtr(obj);
 }
@@ -857,7 +846,7 @@ static int check_index(PyObject *self, SIP_SSIZE_T idx)
 }
 
 
-#if PY_VERSION_HEX < 0x02060000
+#if PY_VERSION_HEX < 0x02060300
 /*
  * Get the address and size of the data from a value that supports the buffer
  * interface.
@@ -986,6 +975,25 @@ static int vp_convertor(PyObject *arg, struct vp_values *vp)
         size = ((sipVoidPtrObject *)arg)->size;
         rw = ((sipVoidPtrObject *)arg)->rw;
     }
+#if PY_VERSION_HEX >= 0x02060300
+    else if (PyObject_CheckBuffer(arg))
+    {
+        Py_buffer view;
+
+        if (PyObject_GetBuffer(arg, &view, PyBUF_SIMPLE) < 0)
+            return 0;
+
+        ptr = view.buf;
+        size = view.len;
+        rw = !view.readonly;
+    }
+#endif
+#if PY_VERSION_HEX < 0x03000000
+    else if (PyObject_AsReadBuffer(arg, &ptr, &size) >= 0)
+    {
+        rw = (Py_TYPE(arg)->tp_as_buffer->bf_getwritebuffer != NULL);
+    }
+#endif
     else
     {
         ptr = PyLong_AsVoidPtr(arg);
@@ -993,9 +1001,9 @@ static int vp_convertor(PyObject *arg, struct vp_values *vp)
         if (PyErr_Occurred())
         {
 #if PY_VERSION_HEX >= 0x03010000
-            PyErr_SetString(PyExc_TypeError, "a single integer, CObject, None or another sip.voidptr object is required");
+            PyErr_SetString(PyExc_TypeError, "a single integer, CObject, None, buffer protocol implementor or another sip.voidptr object is required");
 #else
-            PyErr_SetString(PyExc_TypeError, "a single integer, Capsule, CObject, None or another sip.voidptr object is required");
+            PyErr_SetString(PyExc_TypeError, "a single integer, Capsule, CObject, None, buffer protocol implementor or another sip.voidptr object is required");
 #endif
             return 0;
         }

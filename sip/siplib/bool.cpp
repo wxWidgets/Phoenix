@@ -1,6 +1,6 @@
 // This contains all the C++ code that is needed by the sip module.
 //
-// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
 //
 // This file is part of SIP.
 //

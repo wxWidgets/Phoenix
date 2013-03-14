@@ -3,7 +3,7 @@
  * C++ classes that provide a thread interface to interact properly with the
  * Python threading infrastructure.
  *
- * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -47,46 +47,45 @@ typedef struct _threadDef {
     struct _threadDef *next;        /* Next in the list. */
 } threadDef;
 
-
 static threadDef *threads = NULL;   /* Linked list of threads. */
 
-
-static threadDef *currentThreadDef(void);
+static threadDef *currentThreadDef(int auto_alloc);
 
 #endif
 
 
-static pendingDef pending;          /* An object waiting to be wrapped. */
+static pendingDef *get_pending(int auto_alloc);
 
 
 /*
- * Get the address of any C/C++ object waiting to be wrapped.
+ * Get the address etc. of any C/C++ object waiting to be wrapped.
  */
-void *sipGetPending(sipWrapper **op, int *fp)
+int sipGetPending(void **pp, sipWrapper **op, int *fp)
 {
-    pendingDef *pp;
+    pendingDef *pd;
 
-#ifdef WITH_THREAD
-    threadDef *thread;
+    if ((pd = get_pending(TRUE)) == NULL)
+        return -1;
 
-    if ((thread = currentThreadDef()) != NULL)
-        pp = &thread->pending;
-    else
-        pp = &pending;
-#else
-    pp = &pending;
-#endif
+    *pp = pd->cpp;
+    *op = pd->owner;
+    *fp = pd->flags;
 
-    if (pp->cpp != NULL)
-    {
-        if (op != NULL)
-            *op = pp->owner;
+    return 0;
+}
 
-        if (fp != NULL)
-            *fp = pp->flags;
-    }
 
-    return pp->cpp;
+/*
+ * Return TRUE if anything is pending.
+ */
+int sipIsPending()
+{
+    pendingDef *pd;
+
+    if ((pd = get_pending(FALSE)) == NULL)
+        return FALSE;
+
+    return (pd->cpp != NULL);
 }
 
 
@@ -98,11 +97,8 @@ PyObject *sipWrapSimpleInstance(void *cppPtr, const sipTypeDef *td,
 {
     static PyObject *nullargs = NULL;
 
-    pendingDef old_pending;
+    pendingDef old_pending, *pd;
     PyObject *self;
-#ifdef WITH_THREAD
-    threadDef *thread;
-#endif
 
     if (nullargs == NULL && (nullargs = PyTuple_New(0)) == NULL)
         return NULL;
@@ -119,41 +115,18 @@ PyObject *sipWrapSimpleInstance(void *cppPtr, const sipTypeDef *td,
      * recursively.  Therefore we save any existing pending object before
      * setting the new one.
      */
-#ifdef WITH_THREAD
-    if ((thread = currentThreadDef()) != NULL)
-    {
-        old_pending = thread->pending;
+    if ((pd = get_pending(TRUE)) == NULL)
+        return NULL;
 
-        thread->pending.cpp = cppPtr;
-        thread->pending.owner = owner;
-        thread->pending.flags = flags;
-    }
-    else
-    {
-        old_pending = pending;
+    old_pending = *pd;
 
-        pending.cpp = cppPtr;
-        pending.owner = owner;
-        pending.flags = flags;
-    }
-#else
-    old_pending = pending;
-
-    pending.cpp = cppPtr;
-    pending.owner = owner;
-    pending.flags = flags;
-#endif
+    pd->cpp = cppPtr;
+    pd->owner = owner;
+    pd->flags = flags;
 
     self = PyObject_Call((PyObject *)sipTypeAsPyTypeObject(td), nullargs, NULL);
 
-#ifdef WITH_THREAD
-    if (thread != NULL)
-        thread->pending = old_pending;
-    else
-        pending = old_pending;
-#else
-    pending = old_pending;
-#endif
+    *pd = old_pending;
 
     return self;
 }
@@ -163,44 +136,52 @@ PyObject *sipWrapSimpleInstance(void *cppPtr, const sipTypeDef *td,
  * This is called from a newly created thread to initialise some thread local
  * storage.
  */
+#if SIP_API_MAJOR_NR != 9
+#error Remove deprecated sip_api_start_thread().
+#endif
 void sip_api_start_thread(void)
 {
-#ifdef WITH_THREAD
-    threadDef *thread;
-
-    /* Save the thread ID.  First, find an empty slot in the list. */
-    for (thread = threads; thread != NULL; thread = thread->next)
-        if (thread->thr_ident == 0)
-            break;
-
-    if (thread == NULL)
-    {
-        thread = sip_api_malloc(sizeof (threadDef));
-        thread->next = threads;
-        threads = thread;
-    }
-
-    if (thread != NULL)
-    {
-        thread->thr_ident = PyThread_get_thread_ident();
-        thread->pending.cpp = NULL;
-    }
-#endif
+    /*
+     * The thread local storage allocation now happens when it is needed, so
+     * this is now redundant.
+     */
 }
 
 
 /*
- * Handle the termination of a thread.  The thread state should already have
- * been handled by the last call to PyGILState_Release().
+ * Handle the termination of a thread.
  */
 void sip_api_end_thread(void)
 {
 #ifdef WITH_THREAD
     threadDef *thread;
+    PyGILState_STATE gil = PyGILState_Ensure();
 
-    /* We have the GIL at this point. */
-    if ((thread = currentThreadDef()) != NULL)
+    if ((thread = currentThreadDef(FALSE)) != NULL)
         thread->thr_ident = 0;
+
+    PyGILState_Release(gil);
+#endif
+}
+
+
+/*
+ * Return the pending data for the current thread, allocating it if necessary,
+ * or NULL if there was an error.
+ */
+static pendingDef *get_pending(int auto_alloc)
+{
+#ifdef WITH_THREAD
+    threadDef *thread;
+
+    if ((thread = currentThreadDef(auto_alloc)) == NULL)
+        return NULL;
+
+    return &thread->pending;
+#else
+    static pendingDef pending;
+
+    return &pending;
 #endif
 }
 
@@ -208,17 +189,47 @@ void sip_api_end_thread(void)
 #ifdef WITH_THREAD
 
 /*
- * Return the thread data for the current thread or NULL if it wasn't
- * recognised.
+ * Return the thread data for the current thread, allocating it if necessary,
+ * or NULL if there was an error.
  */
-static threadDef *currentThreadDef(void)
+static threadDef *currentThreadDef(int auto_alloc)
 {
-    threadDef *thread;
+    threadDef *thread, *empty = NULL;
     long ident = PyThread_get_thread_ident();
 
+    /* See if we already know about the thread. */
     for (thread = threads; thread != NULL; thread = thread->next)
+    {
         if (thread->thr_ident == ident)
-            break;
+            return thread;
+
+        if (thread->thr_ident == 0)
+            empty = thread;
+    }
+
+    if (!auto_alloc)
+    {
+        /* This is not an error. */
+        return NULL;
+    }
+
+    if (empty != NULL)
+    {
+        /* Use an empty entry in the list. */
+        thread = empty;
+    }
+    else if ((thread = sip_api_malloc(sizeof (threadDef))) == NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        thread->next = threads;
+        threads = thread;
+    }
+
+    thread->thr_ident = ident;
+    thread->pending.cpp = NULL;
 
     return thread;
 }

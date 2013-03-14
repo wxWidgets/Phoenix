@@ -2,7 +2,7 @@
  * The SIP library code that implements the interface to the optional module
  * supplied Qt support.
  *
- * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *

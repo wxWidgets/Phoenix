@@ -1,7 +1,7 @@
 /*
  * The SIP module interface.
  *
- * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040e01
-#define SIP_VERSION_STR     "4.14.1"
+#define SIP_VERSION         0x040e04
+#define SIP_VERSION_STR     "4.14.4"
 
 
 /*
@@ -67,6 +67,11 @@ extern "C" {
  * to 0.
  *
  * History:
+ *
+ * 9.2  Added sip_gilstate_t and SIP_RELEASE_GIL to the public API.
+ *      Renamed sip_api_call_error_handler() to
+ *      sip_api_call_error_handler_old().
+ *      Added the new sip_api_call_error_handler() to the private API.
  *
  * 9.1  Added the capsule type.
  *      Added the 'z' format character to sip_api_build_result().
@@ -186,7 +191,7 @@ extern "C" {
  * 0.0  Original version.
  */
 #define SIP_API_MAJOR_NR    9
-#define SIP_API_MINOR_NR    1
+#define SIP_API_MINOR_NR    2
 
 
 /* The name of the sip module. */
@@ -343,7 +348,9 @@ typedef void *(*sipCastFunc)(void *, const struct _sipTypeDef *);
 typedef const struct _sipTypeDef *(*sipSubClassConvertFunc)(void **);
 typedef int (*sipConvertToFunc)(PyObject *, void **, int *, PyObject *);
 typedef PyObject *(*sipConvertFromFunc)(void *, PyObject *);
-typedef void (*sipVirtErrorHandlerFunc)(struct _sipSimpleWrapper *);
+typedef void (*sipVirtErrorHandlerFunc)(struct _sipSimpleWrapper *,
+        sip_gilstate_t);
+typedef void (*sipVirtErrorHandlerFuncOld)(struct _sipSimpleWrapper *);
 typedef int (*sipVirtHandlerFunc)(sip_gilstate_t, sipVirtErrorHandlerFunc,
         struct _sipSimpleWrapper *, PyObject *, ...);
 typedef void (*sipAssignFunc)(void *, SIP_SSIZE_T, const void *);
@@ -1454,8 +1461,10 @@ typedef struct _sipAPIDef {
     int (*api_parse_result_ex)(sip_gilstate_t, sipVirtErrorHandlerFunc,
             sipSimpleWrapper *, PyObject *method, PyObject *res,
             const char *fmt, ...);
-    void (*api_call_error_handler)(sipVirtErrorHandlerFunc,
+    void (*api_call_error_handler_old)(sipVirtErrorHandlerFuncOld,
             sipSimpleWrapper *);
+    void (*api_call_error_handler)(sipVirtErrorHandlerFunc,
+            sipSimpleWrapper *, sip_gilstate_t);
 } sipAPIDef;
 
 
