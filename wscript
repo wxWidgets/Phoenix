@@ -278,7 +278,9 @@ def configure(conf):
 
 
 
+#
 # This is a copy of WAF's check_python_headers with some problematic stuff ripped out.
+#
 from waflib.Configure import conf
 
 @conf
@@ -371,10 +373,10 @@ def my_check_python_headers(conf):
             conf.to_log("\n\n### LIB NOT FOUND\n")
 
 
-        conf.to_log("Include path for Python extensions "
-                    "(found via distutils module): %r\n" % (dct['INCLUDEPY'],))
-        env['INCLUDES_PYEXT'] = [dct['INCLUDEPY']]
-        env['INCLUDES_PYEMBED'] = [dct['INCLUDEPY']]
+    conf.to_log("Include path for Python extensions "
+                "(found via distutils module): %r\n" % (dct['INCLUDEPY'],))
+    env['INCLUDES_PYEXT'] = [dct['INCLUDEPY']]
+    env['INCLUDES_PYEMBED'] = [dct['INCLUDEPY']]
 
     # Code using the Python API needs to be compiled with -fno-strict-aliasing
     if env['CC_NAME'] == 'gcc':

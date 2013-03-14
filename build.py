@@ -170,44 +170,51 @@ def main(args):
 
             
 def setPythonVersion(args):
-    # TODO: Should we have a --option for specifying the path to the python
-    # executable that should be used?
-
     global PYVER
     global PYSHORTVER
     global PYTHON
     global PYTHON_ARCH
 
+    havePyVer = False
+    havePyPath = False
+    
     for idx, arg in enumerate(args):
         if re.match(r'^[0-9]\.[0-9]$', arg):
+            havePyVer = True
             PYVER = arg
             PYSHORTVER = arg[0] + arg[2]
-            PYTHON = 'python%s' % PYVER
             del args[idx]
             break
         if re.match(r'^[0-9][0-9]$', arg):
+            havePyVer = True
             PYVER = '%s.%s' % (arg[0], arg[1])
             PYSHORTVER = arg
-            PYTHON = 'python%s' % PYVER
             del args[idx]
             break
         if arg.startswith('--python'):
+            havePyPath = True
             if '=' in arg:
                 PYTHON = arg.split('=')[1]
                 del args[idx]
             else:
                 PYTHON = args[idx+1]
-                del args[idx:idx+1]
-            PYVER = runcmd('%s -c "import sys; print(sys.version[:3)"', getOutput=True, echoCmd=False)
+                del args[idx:idx+2]
+            PYVER = runcmd('%s -c "import sys; print(sys.version[:3])"' % PYTHON, 
+                           getOutput=True, echoCmd=False)
             PYSHORTVER = PYVER[0] + PYVER[2]
             break
         
-    if not PYTHON:
-        PYTHON = sys.executable  # Use the Python running this script
-        #'python'+PYVER if not isWindows else 'python.exe'  # Use one on the PATH
-        
-    if isWindows:
-        if os.environ.get('TOOLS'):
+    if havePyVer:
+        if isWindows and os.environ.get('TOOLS'):
+            # Use $TOOLS to find the correct Python. It should be the install
+            # root of all Python's on the system, with the 64-bit ones in an
+            # amd64 subfolder, like this:
+            #
+            # $TOOLS\Python27
+            # $TOOLS\Python33
+            # $TOOLS\amd64\Python27
+            # $TOOLS\amd64\Python33
+            #            
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
                 TOOLS = runcmd('c:/cygwin/bin/cygpath -w '+TOOLS, True, False)
@@ -220,21 +227,31 @@ def setPythonVersion(args):
             PYTHON = posixjoin(TOOLS, 
                                'python%s' % PYSHORTVER,
                                'python.exe')
-        else:
-            # if TOOLS is not set then default to the python that invoked 
-            # this script
+            
+        elif isWindows:
+            # Otherwise check if the invoking Python is the right version
+            if sys.version[:3] != PYVER:
+                msg('ERROR: The invoking Python is not the requested version.  Perhaps you should use --python')
+                sys.exit(1)
             PYTHON = sys.executable
             PYVER = sys.version[:3]
             PYSHORTVER = PYVER[0] + PYVER[2]
-        PYTHON = os.path.abspath(PYTHON)
-        msg('Using %s' % PYTHON)
+                
+        elif not isWindows:
+            # find a pythonX.Y on the PATH
+            PYTHON = runcmd("which python%s" % PYVER, True, False)
+            
         
+    if not PYTHON:
+        # If no version or path were specified then default to the python
+        # that invoked this script
+        PYTHON = sys.executable
+        PYVER = sys.version[:3]
+        PYSHORTVER = PYVER[0] + PYVER[2]
         
-    else:
-        findPython = runcmd("which %s" % PYTHON, True, False)
-        msg('Found %s at %s' % (PYTHON, findPython))
-        PYTHON = findPython
-
+    PYTHON = os.path.abspath(PYTHON)
+    msg('Build using: %s' % PYTHON)
+        
     msg(runcmd('%s -c "import sys; print(sys.version)"' % PYTHON, True, False))
     PYTHON_ARCH = runcmd('%s -c "import platform; print(platform.architecture()[0])"' 
                          % PYTHON, True, False)
@@ -242,8 +259,7 @@ def setPythonVersion(args):
     os.environ['PYTHON'] = PYTHON
 
     if PYTHON_ARCH == '64bit':
-        # This may be set already, but there are a couple code paths above
-        # where it may not be...
+        # Make sure this is set in case it wasn't above.
         os.environ['CPU'] = 'X64'
         
 
