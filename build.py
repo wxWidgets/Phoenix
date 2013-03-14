@@ -354,7 +354,7 @@ def makeOptionParser():
         ("force_config",   (False, "Run configure when building even if the script determines it's not necessary.")),
         ("no_config",      (False, "Turn off configure step on autoconf builds")),
 
-        ("no_magic",       (False, "Do NOT use the magic that will enable the wxWidgets libraries to be bundled with wxPython. (Such as in an egg.)")),
+        ("no_magic",       (False, "Do NOT use the magic that will enable the wxWidgets libraries to be bundled with wxPython. (Such as in an egg.)  When using this flag you should either build with an already installed wxWidgets, or allow this script to install wxWidgets.")),
         ("build_dir",      ("",    "Directory to store wx build files. (Not used on Windows)")),
         ("prefix",         ("",    "Prefix value to pass to the wx build.")), 
         ("destdir",        ("",    "Installation root for wxWidgets, files will go to {destdir}/{prefix}")),
