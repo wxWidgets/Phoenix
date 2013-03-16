@@ -778,21 +778,23 @@ class SizedPanel(wx.Panel, SizedParent):
 
 
 class SizedScrolledPanel(sp.ScrolledPanel, SizedParent):
-    """A sized scrolled panel
+    """
+    A sized scrolled panel.
     
     Controls added to it will automatically be added to its sizer.
     """
     def __init__(self, *args, **kwargs):
         """
-        'self' in the following sample is a SizedScrolledPanel instance
+        `self` in the following sample is a :class:`SizedScrolledPanel` instance.
 
         Sample usage::
         
-        self.SetSizerType("horizontal")
-        
-        b1 = wx.Button(self, wx.ID_ANY)
-        t1 = wx.TextCtrl(self, -1)
-        t1.SetSizerProps(expand=True)
+            self.SetSizerType("horizontal")
+            
+            b1 = wx.Button(self, wx.ID_ANY)
+            t1 = wx.TextCtrl(self, -1)
+            t1.SetSizerProps(expand=True)
+
         """
 
         sp.ScrolledPanel.__init__(self, *args, **kwargs)
