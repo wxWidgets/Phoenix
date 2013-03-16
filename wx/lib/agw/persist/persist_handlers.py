@@ -1753,12 +1753,11 @@ class CollapsiblePaneHandler(AbstractHandler):
 
 class DatePickerHandler(AbstractHandler):
     """
-    Supports saving/restoring a :class:`adv.DatePickerCtrl` / :class:`adv.GenericDatePickerCtrl` date.
+    Supports saving/restoring a :class:`adv.DatePickerCtrl` date.
 
     This class handles the following wxPython widgets:
 
-    - :class:`~adv.DatePickerCtrl`;
-    - :class:`~adv.GenericDatePickerCtrl`.
+    - :class:`~adv.DatePickerCtrl`.
     
     """
     
@@ -2526,7 +2525,7 @@ HANDLERS = [
     ("CalendarCtrlHandler", (wx.adv.CalendarCtrl, )), 
     ("CollapsiblePaneHandler", (wx.CollapsiblePane, PCP.PyCollapsiblePane)), 
     ("AUIHandler", (wx.Panel, )),
-    ("DatePickerHandler", (wx.adv.DatePickerCtrl, wx.adv.GenericDatePickerCtrl)), 
+    ("DatePickerHandler", (wx.adv.DatePickerCtrl, )), 
 #    ("MediaCtrlHandler", (wx.media.MediaCtrl, )), not wrapped yet
     ("ColourPickerHandler", (wx.ColourPickerCtrl, csel.ColourSelect)), 
     ("FileDirPickerHandler", (wx.FilePickerCtrl, wx.DirPickerCtrl)), 
