@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2009
-# Latest Revision: 17 Feb 2013, 21.00 GMT
+# Latest Revision: 16 Mar 2013, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -19,6 +19,8 @@
 # andrea.gavana@maerskoil.com
 #
 # Or, Obviously, To The wxPython Mailing List!!!
+#
+# Tags:        phoenix-port, unittest, documented
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -32,7 +34,7 @@ import os
 import warnings
 import datetime
 
-import wx.gizmos
+import wx.adv
 
 from .persist_handlers import FindHandler, HasCtrlHandler
 
@@ -74,7 +76,7 @@ class PersistentObject(object):
         klass = window.__class__
         if issubclass(klass, wx.GenericDirCtrl):
             self._window = window.GetTreeCtrl()
-        elif issubclass(klass, wx.gizmos.EditableListBox):
+        elif issubclass(klass, wx.adv.EditableListBox):
             self._window = window.GetListCtrl()
         else:
             self._window = window

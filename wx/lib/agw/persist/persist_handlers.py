@@ -8,11 +8,16 @@ actions depending on the widget kind.
 import wx
 import datetime
 
-import wx.aui
-import wx.combo
-import wx.calendar as calendar
-import wx.gizmos
-import wx.media
+import wx.adv
+
+# Will likely not be wrapped
+# import wx.aui
+
+# Not wrapped, unmaintained
+# import wx.gizmos
+
+# Not wrapped yet, coming soon
+# import wx.media
 
 import wx.lib.scrolledpanel as scrolled
 import wx.lib.expando as expando
@@ -41,7 +46,7 @@ except:
 
 import wx.lib.agw.ultimatelistctrl as ULC
 
-from . import persistencemanager as PM
+import persistencemanager as PM
 
 from .persist_constants import *
 
@@ -55,7 +60,7 @@ def PyDate2wxDate(date):
     
     tt = date.timetuple()
     dmy = (tt[2], tt[1]-1, tt[0])
-    return wx.DateTimeFromDMY(*dmy)
+    return wx.DateTime.FromDMY(*dmy)
 
 
 def wxDate2PyDate(date):
@@ -275,8 +280,7 @@ class TreebookHandler(BookHandler):
 
 class AUIHandler(AbstractHandler):
     """
-    Supports saving/restoring :class:`lib.agw.aui.framemanager.AuiManager` and :class:`wx.aui.AuiManager`
-    perspectives.
+    Supports saving/restoring :class:`lib.agw.aui.framemanager.AuiManager` perspectives.
     """
     
     def __init__(self, pObject):
@@ -290,8 +294,7 @@ class AUIHandler(AbstractHandler):
         eventHandler = self._window.GetEventHandler()
 
         isAGWAui = isinstance(eventHandler, AUI.AuiManager)
-        isAui = isinstance(eventHandler, wx.aui.AuiManager)
-        if not isAui and not isAGWAui:
+        if not isAGWAui:
             return True
         
         manager = PM.PersistenceManager.Get()
@@ -315,8 +318,7 @@ class AUIHandler(AbstractHandler):
         restoreCodeCaption = False
 
         isAGWAui = isinstance(eventHandler, AUI.AuiManager)
-        isAui = isinstance(eventHandler, wx.aui.AuiManager)
-        if not isAui and not isAGWAui:
+        if not isAGWAui:
             return True
         
         manager = PM.PersistenceManager.Get()
@@ -361,7 +363,7 @@ class TLWHandler(AUIHandler):
     |
     
     In addition, if the toplevel window has an associated AuiManager (whether it is 
-    :class:`~lib.agw.aui.framemanager.AuiManager` or :class:`wx.aui.AuiManager`) and
+    :class:`~lib.agw.aui.framemanager.AuiManager`) and
     :class:`~lib.agw.persist.persistencemanager.PersistenceManager`
     has the ``PM_SAVE_RESTORE_AUI_PERSPECTIVES`` style set (the default), this class
     will also save and restore AUI perspectives using the underlying :class:`AUIHandler`
@@ -502,7 +504,7 @@ class CheckBoxHandler(AbstractHandler):
 class ListBoxHandler(AbstractHandler):
     """
     Supports saving/restoring selected items in :class:`ListBox`, :class:`ListCtrl`, :class:`ListView`,
-    :class:`VListBox`, :class:`HtmlListBox`, :class:`SimpleHtmlListBox`, :class:`gizmos.EditableListBox`.
+    :class:`VListBox`, :class:`HtmlListBox`, :class:`SimpleHtmlListBox`, :class:`adv.EditableListBox`.
 
     This class handles the following wxPython widgets:
     
@@ -512,7 +514,7 @@ class ListBoxHandler(AbstractHandler):
     - :class:`VListBox`;
     - :class:`HtmlListBox`;
     - :class:`SimpleHtmlListBox`;
-    - :class:`gizmos.EditableListBox`.    
+    - :class:`adv.EditableListBox`.    
     
     """
     
@@ -524,19 +526,21 @@ class ListBoxHandler(AbstractHandler):
     def GetSelections(self, listBox):
         """
         Returns a list of selected items for :class:`ListBox`, :class:`ListCtrl`, :class:`ListView`,
-        :class:`VListBox`, :class:`HtmlListBox`, :class:`SimpleHtmlListBox`, :class:`gizmos.EditableListBox`.
+        :class:`VListBox`, :class:`HtmlListBox`, :class:`SimpleHtmlListBox`, :class:`adv.EditableListBox`.
 
         :param `listBox`: an instance of :class:`ListBox`, :class:`ListCtrl`, :class:`ListView`,
-         :class:`VListBox`, :class:`HtmlListBox`, :class:`SimpleHtmlListBox`, :class:`gizmos.EditableListBox`..
+         :class:`VListBox`, :class:`HtmlListBox`, :class:`SimpleHtmlListBox`, :class:`adv.EditableListBox`..
         """
 
         indices = []
-        if isinstance(listBox, (wx.HtmlListBox, wx.SimpleHtmlListBox)):
-            if listBox.GetSelectedCount() == 0:
-                return indices
-        else:
-            if listBox.GetSelectedItemCount() == 0:
-                return indices
+
+        # Not wrapped yet?
+        # if isinstance(listBox, (wx.HtmlListBox, wx.SimpleHtmlListBox)):
+        #    if listBox.GetSelectedCount() == 0:
+        #        return indices
+        # else:
+        if listBox.GetSelectedItemCount() == 0:
+            return indices
 
         isVirtual = issubclass(listBox.__class__, wx.VListBox)
         
@@ -602,8 +606,10 @@ class ListBoxHandler(AbstractHandler):
         listBox, obj = self._window, self._pObject
 
         isVirtual = issubclass(listBox.__class__, wx.VListBox) or isinstance(listBox, wx.CheckListBox)
-        isHtml = isinstance(listBox, wx.HtmlListBox)
-        if isVirtual and not isHtml:
+        
+        # Not wrapped yet?
+        # isHtml = isinstance(listBox, wx.HtmlListBox)
+        if isVirtual: # and not isHtml:
             count = listBox.GetCount()
         else:
             count = listBox.GetItemCount()
@@ -740,14 +746,14 @@ class CheckListBoxHandler(ListBoxHandler):
 
 class ChoiceComboHandler(AbstractHandler):
     """
-    Supports saving/restoring :class:`Choice`, :class:`ComboBox` and :class:`combo.OwnerDrawnComboBox`
+    Supports saving/restoring :class:`Choice`, :class:`ComboBox` and :class:`adv.OwnerDrawnComboBox`
     selection.
 
     This class handles the following wxPython widgets:
     
     - :class:`Choice`;
     - :class:`ComboBox`;
-    - :class:`combo.OwnerDrawnComboBox`.
+    - :class:`adv.OwnerDrawnComboBox`.
 
     """
     
@@ -1222,7 +1228,6 @@ class TreeCtrlHandler(AbstractHandler):
     def __init__(self, pObject):
 
         AbstractHandler.__init__(self, pObject)
-        self._isTreeList = isinstance(pObject.GetWindow(), wx.gizmos.TreeListCtrl)
         
 
     def GetItemChildren(self, item=None, recursively=False):
@@ -1544,10 +1549,7 @@ class TreeCtrlHandler(AbstractHandler):
         """
 
         if self.GetItemIdentity(item) in listOfSelectedItems:
-            if self._isTreeList:
-                self._window.SelectItem(item, unselect_others=False)
-            else:
-                self._window.SelectItem(item)
+            self._window.SelectItem(item)
 
         self.SetSelectedStateOfChildren(listOfSelectedItems, item)
 
@@ -1617,12 +1619,11 @@ class TreeCtrlHandler(AbstractHandler):
 
 class TreeListCtrlHandler(TreeCtrlHandler):
     """
-    Supports saving/restoring a :class:`gizmos.TreeListCtrl` / :class:`lib.agw.hypertreelist.HyperTreeList` expansion state,
+    Supports saving/restoring a :class:`lib.agw.hypertreelist.HyperTreeList` expansion state,
     selections, column widths and checked items state (meaningful only for :class:`~lib.agw.hypertreelist.HyperTreeList`).
 
     This class handles the following wxPython widgets:
 
-    - :class:`gizmos.TreeListCtrl`;
     - :class:`lib.agw.hypertreelist.HyperTreeList`.
     
     """
@@ -1670,11 +1671,11 @@ class TreeListCtrlHandler(TreeCtrlHandler):
 
 class CalendarCtrlHandler(AbstractHandler):
     """
-    Supports saving/restoring a :class:`calendar.CalendarCtrl` date.
+    Supports saving/restoring a :class:`adv.CalendarCtrl` date.
 
     This class handles the following wxPython widgets:
 
-    - :class:`lib.calendar.CalendarCtrl`.
+    - :class:`adv.CalendarCtrl`.
 
     """
     
@@ -1752,7 +1753,7 @@ class CollapsiblePaneHandler(AbstractHandler):
 
 class DatePickerHandler(AbstractHandler):
     """
-    Supports saving/restoring a :class:`DatePickerCtrl` / :class:`GenericDatePickerCtrl` date.
+    Supports saving/restoring a :class:`adv.DatePickerCtrl` / :class:`adv.GenericDatePickerCtrl` date.
 
     This class handles the following wxPython widgets:
 
@@ -2502,17 +2503,17 @@ class TextEntryHandler(TLWHandler, TextCtrlHandler):
 
 
 HANDLERS = [
-    ("BookHandler", (wx.BookCtrlBase, wx.aui.AuiNotebook, AUI.AuiNotebook, FNB.FlatNotebook,
+    ("BookHandler", (wx.BookCtrlBase, AUI.AuiNotebook, FNB.FlatNotebook,
                     LBK.LabelBook, LBK.FlatImageBook)),
     ("TLWHandler", (wx.TopLevelWindow, )),
     ("CheckBoxHandler", (wx.CheckBox, )), 
     ("TreeCtrlHandler", (wx.TreeCtrl, wx.GenericDirCtrl, CT.CustomTreeCtrl)), 
     ("MenuBarHandler", (wx.MenuBar, FM.FlatMenuBar)), 
     ("ToolBarHandler", (AUI.AuiToolBar, )),
-    ("ListBoxHandler", (wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox,
-                        wx.gizmos.EditableListBox)), 
+    ("ListBoxHandler", (wx.ListBox, wx.VListBox, # not wrapped yet?? wx.HtmlListBox, wx.SimpleHtmlListBox,
+                        wx.adv.EditableListBox)), 
     ("ListCtrlHandler", (wx.ListCtrl, wx.ListView)),  #ULC.UltimateListCtrl (later)
-    ("ChoiceComboHandler", (wx.Choice, wx.ComboBox, wx.combo.OwnerDrawnComboBox)), 
+    ("ChoiceComboHandler", (wx.Choice, wx.ComboBox, wx.adv.OwnerDrawnComboBox)), 
     ("RadioBoxHandler", (wx.RadioBox, )), 
     ("RadioButtonHandler", (wx.RadioButton, )), 
     ("ScrolledWindowHandler", (wx.ScrolledWindow, scrolled.ScrolledPanel)), 
@@ -2521,12 +2522,12 @@ HANDLERS = [
     ("SplitterHandler", (wx.SplitterWindow, )), 
     ("TextCtrlHandler", (wx.TextCtrl, wx.SearchCtrl, expando.ExpandoTextCtrl, masked.TextCtrl,
                         masked.ComboBox, masked.IpAddrCtrl, masked.TimeCtrl, masked.NumCtrl)), 
-    ("TreeListCtrlHandler", (HTL.HyperTreeList, wx.gizmos.TreeListCtrl)), 
-    ("CalendarCtrlHandler", (calendar.CalendarCtrl, )), 
+    ("TreeListCtrlHandler", (HTL.HyperTreeList, )), 
+    ("CalendarCtrlHandler", (wx.adv.CalendarCtrl, )), 
     ("CollapsiblePaneHandler", (wx.CollapsiblePane, PCP.PyCollapsiblePane)), 
     ("AUIHandler", (wx.Panel, )),
-    ("DatePickerHandler", (wx.DatePickerCtrl, wx.GenericDatePickerCtrl)), 
-    ("MediaCtrlHandler", (wx.media.MediaCtrl, )), 
+    ("DatePickerHandler", (wx.adv.DatePickerCtrl, wx.adv.GenericDatePickerCtrl)), 
+#    ("MediaCtrlHandler", (wx.media.MediaCtrl, )), not wrapped yet
     ("ColourPickerHandler", (wx.ColourPickerCtrl, csel.ColourSelect)), 
     ("FileDirPickerHandler", (wx.FilePickerCtrl, wx.DirPickerCtrl)), 
     ("FontPickerHandler", (wx.FontPickerCtrl, )), 

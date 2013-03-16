@@ -39,15 +39,13 @@ following classes are supported:
 * wx.TopLevelWindow (and hence wx.Frame and wx.Dialog, together with their own AUI perspectives);
 * wx.MenuBar, FlatMenuBar;
 * AuiToolBar;
-* wx.Notebook, wx.Toolbook, wx.Treebook, wx.Choicebook, wx.aui.AuiNotebook,
-  AuiNotebook (together with its own AUI perspective),
-  FlatNotebook, LabelBook,
-  FlatImageBook;
+* wx.Notebook, wx.Toolbook, wx.Treebook, wx.Choicebook, AuiNotebook (together with its own AUI perspective),
+  FlatNotebook, LabelBook, FlatImageBook;
 * wx.CheckBox;
-* wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox, wx.gizmos.EditableListBox;
+* wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox, wx.adv.EditableListBox;
 * wx.ListCtrl, wx.ListView, UltimateListCtrl;
 * wx.CheckListBox;
-* wx.Choice, wx.ComboBox, wx.combo.OwnerDrawnComboBox;
+* wx.Choice, wx.ComboBox, wx.adv.OwnerDrawnComboBox;
 * wx.RadioBox;
 * wx.RadioButton;
 * wx.ScrolledWindow, wx.lib.scrolledpanel.ScrolledPanel;
@@ -59,10 +57,10 @@ following classes are supported:
   wx.lib.buttons.GenBitmapTextToggleButton, SToggleButton,
   SBitmapToggleButton, SBitmapTextToggleButton;
 * wx.TreeCtrl, wx.GenericDirCtrl, CustomTreeCtrl;
-* wx.gizmos.TreeListCtrl, HyperTreeList;
-* wx.lib.calendar.CalendarCtrl;
+* HyperTreeList;
+* wx.lib.calendar.CalendarCtrl, wx.adv.CalendarCtrl;
 * wx.CollapsiblePane, PyCollapsiblePane;
-* wx.DatePickerCtrl, wx.GenericDatePickerCtrl;
+* wx.adv.DatePickerCtrl, wx.adv.GenericDatePickerCtrl;
 * wx.media.MediaCtrl;
 * wx.ColourPickerCtrl, wx.lib.colourselect.ColourSelect;
 * wx.FilePickerCtrl, wx.DirPickerCtrl;
@@ -179,8 +177,8 @@ License And Version
 
 `PersistentObjects` library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 17 Feb 2013, 21.00 GMT
-Version 0.4. 
+Latest revision: Andrea Gavana @ 16 Mar 2013, 21.00 GMT
+Version 0.5. 
 
 """
 
