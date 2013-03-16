@@ -116,6 +116,9 @@ class TableSizer(wx.PySizer):
     def CalcNumRowsCols(self):
         """
         Calculate the number of rows and columns needed.
+
+        :returns: The number of rows and columns needed by the sizer.
+        :rtype: `tuple`
         """
         numrows = self.rows
         numcols = self.cols
@@ -140,9 +143,9 @@ class TableSizer(wx.PySizer):
         
     def CalcMin(self):
         """
-        Calculate the minimum size
+        Calculate the minimum size.
         
-        :return: :ref:`wx.Size`
+        :rtype: :ref:`Size`
         
         """
         numrows, numcols = self.CalcNumRowsCols() 
@@ -152,7 +155,7 @@ class TableSizer(wx.PySizer):
             return wx.Size(10, 10)
             
         if numrows == 0 and numcols == 0:
-            print "TableSizer must have the number of rows or columns set. Cannot continue."
+            print("TableSizer must have the number of rows or columns set. Cannot continue.")
             return wx.Size(10, 10)
        
         self.row_widths = [0 for x in range(0, numrows)]
@@ -203,6 +206,7 @@ class TableSizer(wx.PySizer):
         """
         Recalculate the sizes.
         """
+        
         numrows, numcols = self.CalcNumRowsCols()
         numchild = len(self.GetChildren())
         
@@ -212,8 +216,8 @@ class TableSizer(wx.PySizer):
         currentCol = 0
         counter = 0
         
-        print "cols %d, rows %d" % (self.cols, self.rows)
-        print "fixed_height %d, fixed_width %d" % (self.fixed_height, self.fixed_width)
+        print("cols %d, rows %d" % (self.cols, self.rows))
+        print("fixed_height %d, fixed_width %d" % (self.fixed_height, self.fixed_width))
         #print "self.GetSize() = " + `self.GetSize()`
         
         row_widths = [0 for x in range(0, numrows)]
@@ -239,7 +243,7 @@ class TableSizer(wx.PySizer):
                 width = item_minsize[0]
                 height = item_minsize[1]
                 
-                print "row_height %d, row_width %d" % (self.col_heights[currentCol], self.row_widths[currentRow])
+                print("row_height %d, row_width %d" % (self.col_heights[currentCol], self.row_widths[currentRow]))
                 growable_width = (self.GetSize()[0]) - width
                 growable_height = (self.GetSize()[1]) - height
                 
@@ -265,11 +269,11 @@ class TableSizer(wx.PySizer):
                         
                 if growable_width > 0 and item.GetHGrow() > 0:
                     item_hgrow = (growable_width * item.GetHGrow()) / 100
-                    print "hgrow = %d" % (item_hgrow)
+                    print("hgrow = %d" % (item_hgrow))
 
                 if growable_height > 0 and item.GetVGrow() > 0:
                     item_vgrow = (growable_height * item.GetVGrow()) / 100
-                    print "vgrow = %d" % (item_vgrow)
+                    print("vgrow = %d" % (item_vgrow))
                 
                 grow_size = wx.Size(item_hgrow, item_vgrow)
                 size = item_minsize #wx.Size(item_minsize[0] + item_hgrow, item_minsize[1] + item_vgrow) 
@@ -329,6 +333,8 @@ class TableSizer(wx.PySizer):
 def GetDefaultBorder(self):
     """
     Return the platform specific default border.
+
+    :rtype: `int`
     """
     border = 4
     if wx.Platform == "__WXMAC__":
@@ -353,7 +359,7 @@ def SetDefaultSizerProps(self):
         
 def GetSizerProps(self):
     """
-    Returns a dictionary of prop name + value
+    Returns a dictionary of prop name + value.
     """
     props = {}
     item = self.GetParent().GetSizer().GetItem(self)
@@ -400,11 +406,11 @@ def SetSizerProp(self, prop, value):
     
     Sample usages::
     
-    control.SetSizerProp('expand', True)
+        control.SetSizerProp('expand', True)
     
-    :param prop: valid strings are "proportion", "hgrow", "vgrow",
-        "align", "halign", "valign", "border", "minsize" and "expand"
-    :param value: corresponding value for the prop
+    :param string `prop`: valid strings are "proportion", "hgrow", "vgrow",
+     "align", "halign", "valign", "border", "minsize" and "expand"
+    :param `value`: corresponding value for the prop
     """
     
     lprop = prop.lower()
@@ -478,16 +484,16 @@ def SetSizerProps(self, props={}, **kwargs):
         
     Sample usages::
     
-    control.SetSizerProps(expand=True, proportion=1)
+        control.SetSizerProps(expand=True, proportion=1)
     
-    control.SetSizerProps(expand=True, valign='center', border=(['top',
-                                                                 'bottom'], 5))
+        control.SetSizerProps(expand=True, valign='center', border=(['top',
+                                                                     'bottom'], 5))
                                                                  
-    control.SetSizerProps({'growable_row': (1, 1),
-                           'growable_col': (0, 1),})
+        control.SetSizerProps({'growable_row': (1, 1),
+                               'growable_col': (0, 1),})
 
-    :param props: a dictionary of prop name + value
-    :param kwargs: key words can be used for properties, e.g. expand=True
+    :param dict `props`: a dictionary of prop name + value
+    :param `kwargs`: keywords can be used for properties, e.g. expand=True
     
     """
 
@@ -501,7 +507,10 @@ def SetSizerProps(self, props={}, **kwargs):
 def GetDialogBorder(self):
     """
     Get the platform specific dialog border.
+
+    :rtype: `int`
     """
+    
     border = 6
     if wx.Platform == "__WXMAC__" or wx.Platform == "__WXGTK__":
         border = 12
@@ -515,9 +524,9 @@ def SetHGrow(self, proportion):
     """
     Set horizontal grow proportion.
     
-    :param `proportion`: proportion to use
-    
+    :param int `proportion`: proportion to use
     """
+    
     data = self.GetUserData()
     if "HGrow" in data:
         data["HGrow"] = proportion
@@ -526,7 +535,10 @@ def SetHGrow(self, proportion):
 def GetHGrow(self):
     """
     Get the horizontal grow value.
+
+    :rtype: `int`
     """
+    
     if self.GetUserData() and "HGrow" in self.GetUserData():
         return self.GetUserData()["HGrow"]
     else:
@@ -536,9 +548,9 @@ def SetVGrow(self, proportion):
     """
     Set vertical grow proportion.
     
-    :param `proportion`: proportion to use
-    
+    :param int `proportion`: proportion to use
     """
+    
     data = self.GetUserData()
     if "VGrow" in data:
         data["VGrow"] = proportion
@@ -547,7 +559,10 @@ def SetVGrow(self, proportion):
 def GetVGrow(self):
     """
     Get the vertical grow value.
+
+    :rtype: `int`
     """
+    
     if self.GetUserData() and "VGrow" in self.GetUserData():
         return self.GetUserData()["VGrow"]
     else:
@@ -580,15 +595,16 @@ wx.SizerItem.GetVGrow = GetVGrow
 
 class SizedParent:
     """
-    Mixin class for some methods used by the Sized* classes.
+    Mixin class for some methods used by the ``Sized*`` classes.
     """
     def AddChild(self, child):
         """
         Add a child to sizer
         
-        :param `child`: child (window or another sizer) to be added to sizer
-        
+        :param `child`: child (window or another sizer) to be added to sizer.
+        :type `child`: :class:`Window` or :class:`Sizer`
         """
+        
         # Note: The wx.LogNull is used here to suppress a log message
         # on wxMSW that happens because when AddChild is called the
         # widget's hwnd hasn't been set yet, so the GetWindowRect that
@@ -610,7 +626,10 @@ class SizedParent:
     def GetSizerType(self):
         """
         Return the sizer type.
+
+        :rtype: `string`
         """
+        
         return self.sizerType
     
     def SetSizerType(self, type, options={}):
@@ -618,9 +637,9 @@ class SizedParent:
         Sets the sizer type and automatically re-assign any children
         to it.
         
-        :param type: sizer type, valid values are "horizontal", "vertical",
-            "form", "table" and "grid"
-        :param options: dictionary of options depending on type
+        :param string `type`: sizer type, valid values are "horizontal", "vertical",
+         "form", "table" and "grid";
+        :param dict `options`: dictionary of options depending on type.
         
         """
 
@@ -678,9 +697,9 @@ class SizedParent:
         """
         Detach children from sizer.
         
-        :param `sizer`: sizer to detach children from
-        
+        :param Sizer `sizer`: sizer to detach children from
         """
+        
         props = {}
         for child in self.GetChildren():
             # On the Mac the scrollbars and corner gripper of a
@@ -713,21 +732,21 @@ class SizedParent:
 
 class SizedPanel(wx.Panel, SizedParent):
     """
-    A sized panel
+    A sized panel.
     
     Controls added to it will automatically be added to its sizer.
     """
     def __init__(self, *args, **kwargs):
         """
-        'self' in the following sample is a SizedPanel instance
+        `self` in the following sample is a :class:`SizedPanel` instance.
 
         Sample usage::
         
-        self.SetSizerType("horizontal")
+            self.SetSizerType("horizontal")
         
-        b1 = wx.Button(self, wx.ID_ANY)
-        t1 = wx.TextCtrl(self, -1)
-        t1.SetSizerProps(expand=True)
+            b1 = wx.Button(self, wx.ID_ANY)
+            t1 = wx.TextCtrl(self, -1)
+            t1.SetSizerProps(expand=True)
         
         """
 
@@ -738,7 +757,7 @@ class SizedPanel(wx.Panel, SizedParent):
 
     def AddChild(self, child):
         """
-        Called automatically by wx, do not call it from user code
+        Called automatically by wx, do not call it from user code.
         """
 
         if wx.VERSION < (2,8):
@@ -784,7 +803,9 @@ class SizedScrolledPanel(sp.ScrolledPanel, SizedParent):
 
     def AddChild(self, child):
         """
-        Called automatically by wx, should not be called from user code
+        Called automatically by wx, should not be called from user code.
+
+        :param `child`: child (window or another sizer) to be added to sizer.
         """
 
         if wx.VERSION < (2,8):
@@ -812,16 +833,16 @@ class SizedDialog(wx.Dialog):
     """
     def __init__(self, *args, **kwargs):    
         """
-        'self' in the following sample is a SizedDialog instance
+        `self` in the following sample is a :class:`SizedDialog` instance.
 
         Sample usage::
         
-        pane = self.GetContentsPane()
-        pane.SetSizerType("horizontal")
+            pane = self.GetContentsPane()
+            pane.SetSizerType("horizontal")
         
-        b1 = wx.Button(pane, wx.ID_ANY)
-        t1 = wx.TextCtrl(pane, wx.ID_ANY)
-        t1.SetSizerProps(expand=True)
+            b1 = wx.Button(pane, wx.ID_ANY)
+            t1 = wx.TextCtrl(pane, wx.ID_ANY)
+            t1.SetSizerProps(expand=True)
         
         """
  
@@ -840,13 +861,13 @@ class SizedDialog(wx.Dialog):
         
     def GetContentsPane(self):
         """
-        Return the pane to add controls too
+        Return the pane to add controls too.
         """
         return self.mainPanel
         
     def SetButtonSizer(self, sizer):
         """
-        Set a sizer for buttons and adjust the button order
+        Set a sizer for buttons and adjust the button order.
         """
         self.GetSizer().Add(sizer, 0, wx.EXPAND | wx.BOTTOM | wx.RIGHT, self.GetDialogBorder())
         
@@ -858,25 +879,27 @@ class SizedDialog(wx.Dialog):
             
 class SizedFrame(wx.Frame):
     """
-        A sized frame
+    A sized frame.
         
-        Controls added to its content pane will automatically be added to 
-        the panes sizer.
+    Controls added to its content pane will automatically be added to 
+    the panes sizer.
     """
+    
     def __init__(self, *args, **kwargs):    
         """
-        'self' in the following sample is a SizedFrame instance
+        `self` in the following sample is a :class:`SizedFrame` instance
 
         Sample usage::
         
-        pane = self.GetContentsPane()
-        pane.SetSizerType("horizontal")
-        
-        b1 = wx.Button(pane, wx.ID_ANY)
-        t1 = wx.TextCtrl(pane, -1)
-        t1.SetSizerProps(expand=True)
+            pane = self.GetContentsPane()
+            pane.SetSizerType("horizontal")
+            
+            b1 = wx.Button(pane, wx.ID_ANY)
+            t1 = wx.TextCtrl(pane, -1)
+            t1.SetSizerProps(expand=True)
         
         """
+
         wx.Frame.__init__(self, *args, **kwargs)
         
         self.borderLen = 12
