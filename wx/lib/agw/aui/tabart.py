@@ -2450,7 +2450,7 @@ class VC8TabArt(AuiDefaultTabArt):
             buttonRegion = wx.Region(*self._buttonRect)
             region.Xor(buttonRegion)
         
-        dc.SetClippingRegion(region)
+        dc.SetDeviceClippingRegion(region)
 
         if active:
             bottom_colour = top_colour = wx.WHITE
