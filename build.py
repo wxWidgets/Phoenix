@@ -613,6 +613,15 @@ def checkCompiler(quiet=False):
         os.environ['LIBPATH'] = bytes(env['libpath'])
         
         
+def getWafBuildBase():    
+    base = posixjoin('build', 'waf', PYVER)
+    if isWindows:
+        if PYTHON_ARCH == '64bit':
+            base = posixjoin(base, 'x64')
+        else:
+            base = posixjoin(base, 'x86')
+    return base
+    
         
 #---------------------------------------------------------------------------
 # Command functions and helpers
@@ -1070,10 +1079,12 @@ def copyWxDlls(options):
 
 
 
+# just an alias for build_py now
 def cmd_waf_py(options, args):
     cmdTimer = CommandTimer('waf_py')
     cmd_build_py(options, args)
     
+
 
 def cmd_build_py(options, args):
     cmdTimer = CommandTimer('build_py')
@@ -1091,15 +1102,8 @@ def cmd_build_py(options, args):
             else:
                 WX_CONFIG = 'wx-config' # hope it is on the PATH
                 
-        
-    wafBuildBase = posixjoin('build', 'waf', PYVER)
-    if isWindows:
-        if PYTHON_ARCH == '64bit':
-            wafBuildBase = posixjoin(wafBuildBase, 'x64')
-        else:
-            wafBuildBase = posixjoin(wafBuildBase, 'x86')
             
-    wafBuildDir  = wafBuildBase
+    wafBuildBase = wafBuildDir  = getWafBuildBase()
     if isWindows:
         wafBuildDir = posixjoin(wafBuildBase, 'release')
         
@@ -1251,7 +1255,7 @@ def cmd_clean_py(options, args):
     if isWindows and options.both:
         options.debug = True
     cfg = Config()
-    deleteIfExists('build/waf')
+    deleteIfExists(getWafBuildBase())
     files = list()
     for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi']:
         files += glob.glob(opj(cfg.PKGDIR, wc))
