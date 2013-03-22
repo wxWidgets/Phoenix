@@ -6,6 +6,7 @@
 #
 # o wxScrolledMessageDialog -> ScrolledMessageDialog
 # 
+# Tags: 
 
 import  re
 import  wx
@@ -177,11 +178,11 @@ class Layoutf(wx.LayoutConstraints):
                 attr = getattr(self, self.attr_d[g[0]])
                 func = getattr(attr, self.op_d[g[1]])
                 if g[1] == '!':
-                    print "%s.%s.%s(%s)" % \
-                     ('self',self.attr_d[g[0]],self.op_d[g[1]],g[2])
+                    print("%s.%s.%s(%s)" % 
+                     ('self',self.attr_d[g[0]],self.op_d[g[1]],g[2]))
                 else:
-                    print "%s.%s.%s()" % \
-                     ('self',self.attr_d[g[0]],self.op_d[g[1]])
+                    print("%s.%s.%s()" % 
+                     ('self',self.attr_d[g[0]],self.op_d[g[1]]))
                 continue
             m = self.rexp2.match(item)
             if not m: raise ValueError
@@ -190,18 +191,18 @@ class Layoutf(wx.LayoutConstraints):
             else: g[3] = 0;
             g[4] = int(g[4]) - 1
             if g[1] in '<>^_':
-                if g[3]: print "%s.%s.%s(%s,%d)" % \
+                if g[3]: print("%s.%s.%s(%s,%d)" % 
                  ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]],
-                  g[3])
-                else: print "%s.%s.%s(%s)" % \
-                 ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]])
+                  g[3]))
+                else: print("%s.%s.%s(%s)" % \
+                 ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]]))
             else:
-                if g[3]: print "%s.%s.%s(%s,%s,%d)" % \
+                if g[3]: print("%s.%s.%s(%s,%s,%d)" % 
                  ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]],
-                  self.cmp_d[g[2]],g[3])
-                else: print "%s.%s.%s(%s,%s)" % \
+                  self.cmp_d[g[2]],g[3]))
+                else: print("%s.%s.%s(%s,%s)" % \
                  ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]],
-                  self.cmp_d[g[2]])
+                  self.cmp_d[g[2]]))
 
 if __name__=='__main__':
 

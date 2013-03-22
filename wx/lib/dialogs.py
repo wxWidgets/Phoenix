@@ -6,9 +6,9 @@
 # Author:      Various
 #
 # Created:     3-January-2002
-# RCS-ID:      $Id$
 # Copyright:   (c) 2002 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        
 #----------------------------------------------------------------------
 # 12/01/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -273,7 +273,7 @@ def scrolledMessageDialog(parent=None, message='', title='', pos=wx.DefaultPosit
 
 
 def fileDialog(parent=None, title='Open', directory='', filename='', wildcard='*.*',
-               style=wx.OPEN | wx.MULTIPLE):
+               style=wx.FD_OPEN | wx.FD_MULTIPLE):
 
     dialog = wx.FileDialog(parent, title, directory, filename, wildcard, style)
     result = DialogResults(dialog.ShowModal())
@@ -290,13 +290,13 @@ def fileDialog(parent=None, title='Open', directory='', filename='', wildcard='*
 ## with the most common style options
 def openFileDialog(parent=None, title='Open', directory='', filename='',
                    wildcard='All Files (*.*)|*.*',
-                   style=wx.OPEN | wx.MULTIPLE):
+                   style=wx.FD_OPEN | wx.FD_MULTIPLE):
     return fileDialog(parent, title, directory, filename, wildcard, style)
 
 
 def saveFileDialog(parent=None, title='Save', directory='', filename='',
                    wildcard='All Files (*.*)|*.*',
-                   style=wx.SAVE | wx.OVERWRITE_PROMPT):
+                   style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT):
     return fileDialog(parent, title, directory, filename, wildcard, style)
 
 
@@ -429,7 +429,7 @@ class MultiMessageDialog(wx.Dialog):
             # with good maximums
             dc = wx.ClientDC(t)
             dc.SetFont(t.GetFont())
-            w,h,lh = dc.GetMultiLineTextExtent(msg2)
+            w,h = dc.GetMultiLineTextExtent(msg2)
             w = min(self.CONTENT_MAX_W, 10 + w + wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X))
             h = min(self.CONTENT_MAX_H, 10 + h)
             t.SetMinSize((w,h))
@@ -498,8 +498,14 @@ def MultiMessageBox(message, caption, msg2="", style=wx.OK, parent=None,
     elif ans == wx.ID_CANCEL:
         return wx.CANCEL
 
-    print "unexpected return code from MultiMessageDialog??"
+    print("unexpected return code from MultiMessageDialog??")
     return wx.CANCEL
             
             
 #---------------------------------------------------------------------------
+
+if __name__ == '__main__':
+    app = wx.App()
+    MultiMessageBox("Hello World", "howdy", "This is a MultiMessageBox \ntest. With a multi-line message.")
+    app.MainLoop()
+    
