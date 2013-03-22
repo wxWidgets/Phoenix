@@ -31,6 +31,9 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
+
+    module.addHeaderCode("#include <wx/htmllbox.h>")
+
     
     c = module.find('wxHtmlListBox')
     assert isinstance(c, etgtools.ClassDef)
