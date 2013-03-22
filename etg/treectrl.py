@@ -133,7 +133,7 @@ def run():
     
     # Make the cookie values be returned, instead of setting it through the parameter
     c.find('GetFirstChild.cookie').out = True
-    c.find('GetFirstChild.cookie').inOut = True
+    c.find('GetNextChild.cookie').inOut = True
 
 
     # TODO: These don't exist on MSW, Are they important enough that we

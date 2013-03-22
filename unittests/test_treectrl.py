@@ -74,6 +74,28 @@ class treectrl_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(sel[0], wx.TreeItemId))
         
         
+        
+    def test_treectrlGetFirstNext(self):
+        tree = wx.TreeCtrl(self.frame)
+        root = tree.AddRoot('root item')
+        c1 = tree.AppendItem(root, 'c1')
+        c2 = tree.AppendItem(root, 'c2')
+        c3 = tree.AppendItem(root, 'c3')
+        c4 = tree.AppendItem(root, 'c4')
+        
+        children = []
+        item, cookie = tree.GetFirstChild(root)
+        while item:
+            children.append(item)
+            item, cookie = tree.GetNextChild(root, cookie)
+            
+        self.assertEqual(len(children), 4)
+        self.assertEqual(children[0], c1)
+        self.assertEqual(children[1], c2)
+        self.assertEqual(children[2], c3)
+        self.assertEqual(children[3], c4)
+        
+        
 
     def test_treectrlConstantsExist(self):
         wx.TR_NO_BUTTONS
