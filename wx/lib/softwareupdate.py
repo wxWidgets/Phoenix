@@ -10,6 +10,8 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2011 by Total Control Software
 # Licence:     wxWindows license
+#
+# Tags:        py3-port??
 #----------------------------------------------------------------------
 
 """
@@ -29,7 +31,14 @@ import wx
 import sys
 import os
 import atexit
-import urllib2
+import wx.lib.six as six
+
+if six.PY3:
+    from urllib.request import urlopen
+    from urllib.error import URLError
+else:
+    from urllib2 import urlopen
+    from urllib2 import URLError
 
 from wx.lib.dialogs import MultiMessageBox
 
@@ -148,12 +157,12 @@ class SoftwareUpdate(object):
                 newest = self._esky.find_update()
                 chLogTxt = ''
                 if newest is not None and self._changelogURL:
-                    req = urllib2.urlopen(self._changelogURL, timeout=4)
+                    req = urlopen(self._changelogURL, timeout=4)
                     chLogTxt = req.read()
                     req.close()
                 return (newest, chLogTxt)
             
-            except urllib2.URLError:
+            except URLError:
                 return 'URLError'
 
 
