@@ -156,6 +156,16 @@ class Events(unittest.TestCase):
         wx.EVT_CATEGORY_THREAD
         wx.EVT_CATEGORY_ALL
         
+        
+    def test_evtHandlerSubclass(self):
+        class MyEvtHandler(wx.EvtHandler):
+            def __init__(self, **kwds):
+                super(MyEvtHandler, self).__init__()  #**kwds)
+
+        eh = MyEvtHandler()
+        eh.Destroy()
+        
+        
 #---------------------------------------------------------------------------
 
 
