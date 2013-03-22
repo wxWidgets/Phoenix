@@ -39,6 +39,8 @@ INCLUDES = [
              'helpdlg',
              'helpwnd',
              'helpctrl',
+             
+             'htmllbox',
              ]
 
 
