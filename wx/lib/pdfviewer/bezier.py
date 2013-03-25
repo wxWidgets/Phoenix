@@ -10,6 +10,8 @@
 
 # History:      Created 17 Jun 2009
 #
+# Tags:         phoenix-port, documented
+#
 #----------------------------------------------------------------------------
  
 import wx
@@ -50,9 +52,11 @@ def calculate_bezier(p, steps = 30):
     return points
 
 def compute_points(controlpoints, nsteps=30):
-    """ Input 4 control points as wxRealPoints and convert to vec2d instances.
-        compute the nsteps points on the resulting curve and return them
-        as a list of wxPoints """
+    """
+    Input 4 control points as :class:`RealPoint` and convert to vec2d instances.
+    compute the nsteps points on the resulting curve and return them
+    as a list of :class:`Point`
+    """
     controlvectors = []
     for p in controlpoints:
         controlvectors.append(vec2d(p.x, p.y))

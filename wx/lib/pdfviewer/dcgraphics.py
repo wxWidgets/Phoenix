@@ -11,19 +11,21 @@
 # History:       8 Aug 2009 - created
 #               12 Dec 2011 - amended DrawText
 #
+# Tags:         phoenix-port, unittest, documented
+#
 #----------------------------------------------------------------------------
 """
-This module implements an API similar to wx.GraphicsContext and the
-related classes. The implementation is done using wx.DC
+This module implements an API similar to :class:`GraphicsContext` and the
+related classes. The implementation is done using :class:`DC`
 
-Why do this?  Neither wx.GraphicsContext not the Cairo-based
+Why do this?  Neither :class:`GraphicsContext` nor the Cairo-based
 GraphicsContext API provided by wx.lib.graphics can be written
-directly to a PrintDC. It can be done via an intermediate bitmap in
-a MemoryDC but transferring this to a PrintDC is an order of magnitude
-slower than writing directly.
+directly to a :class:`PrintDC`. It can be done via an intermediate bitmap in
+a :class:`MemoryDC` but transferring this to a :class:`PrintDC` is an order of
+magnitude slower than writing directly.
 
-Why not just use wxPrintDC directly?  There may be times when you do want
-to use wx.GraphicsContext for its displayed appearance and for its
+Why not just use :class:`PrintDC` directly?  There may be times when you do want
+to use :class:`GraphicsContext` for its displayed appearance and for its
 clean(er) API, so being able to use the same code for printing as well is nice.
 
 It started out with the intention of being a full implementation of the 
@@ -37,11 +39,14 @@ import bezier
 import wx
 
 class dcGraphicsState:
-    """ Each instance holds the current graphics state. It can be
-        saved (pushed) and restored (popped) by the owning parent
+    """
+    Each instance holds the current graphics state. It can be
+    saved (pushed) and restored (popped) by the owning parent.
     """
     def __init__ (self):
-        """ Creates an instance with default values """
+        """
+        Default constructor, creates an instance with default values.
+        """
         self.Yoffset = 0.0
         self.Xtrans = 0.0
         self.Ytrans = 0.0
@@ -54,47 +59,84 @@ class dcGraphicsState:
         self.rotDegrees = 0
 
     def Ytop(self, y):
-        """ Return y co-ordinate wrt top of current page """
+        """
+        Return y co-ordinate wrt top of current page
+        
+        :param integer `y`: y co-ordinate ????
+        """
         return self.Yoffset + y
 
     def Translate(self, dx, dy):
-        """move the origin from the current point to (dx,dy) """
+        """
+        Move the origin from the current point to (dx, dy).
+        
+        :param `dx`: x co-ordiante to move to ????
+        :param `dy`: y co-ordiante to move to ????
+        
+        """
         self.Xtrans += (dx * self.Xscale)
         self.Ytrans += (dy * self.Yscale)
 
     def Scale(self, sx, sy):
-        """scale the current co-ordinates """
+        """
+        Scale the current co-ordinates.
+        
+        :param `sx`: x co-ordiante to scale to ????
+        :param `sy`: y co-ordiante to scale to ????
+
+        """
         self.Xscale *= sx
         self.Yscale *= sy
 
     def Rotate(self, cosA, sinA):
-        """ Compute the (text only) rotation angle
-            sinA is inverted to cancel the original inversion in
-            pdfviewer.drawfile that was introduced because of the difference
-            in y direction between pdf and GraphicsContext co-ordinates
+        """
+        Compute the (text only) rotation angle
+        sinA is inverted to cancel the original inversion in
+        pdfviewer.drawfile that was introduced because of the difference
+        in y direction between pdf and GraphicsContext co-ordinates.
+        
+        :param `cosA`: ????
+        :param `sinA`: ????
+        
         """
         self.cosA = cosA
         self.sinA = sinA
         self.rotDegrees += asin(-self.sinA) * 180 / pi
 
     def Skew(self, tanAlpha, tanBeta):
+        """
+        ????
+        
+        :param `tanAlpha`: ????
+        :param `tanBeta`: ????
+        """
         self.tanAlpha = tanAlpha
         self.tanBeta = tanBeta
 
     def Get_x(self, x=0, y=0):
-        """ Return x co-ordinate using graphic states and transforms
-            Input x,y are current co-ords 
+        """
+        Return x co-ordinate using graphic states and transforms
+        
+        :param `x`: current x co-ordinats
+        :param `y`: current y co-ordinats
+
         """
         return ((x*self.cosA*self.Xscale - y*self.sinA*self.Yscale) + self.Xtrans)
 
     def Get_y(self, x=0, y=0):
-        """ Return y co-ordinate using graphic states and transforms
-            Input x,y are current co-ords
+        """
+        Return y co-ordinate using graphic states and transforms
+        
+        :param `x`: current x co-ordinats
+        :param `y`: current y co-ordinats
+
         """
         return self.Ytop((x*self.sinA*self.Xscale + y*self.cosA*self.Yscale) + self.Ytrans)
 
     def Get_angle(self):
-        """ Return rotation angle in degrees """
+        """
+        Return rotation angle in degrees.
+        """
         return self.rotDegrees
 
 #----------------------------------------------------------------------------
@@ -102,12 +144,19 @@ class dcGraphicsState:
 class dcGraphicsContext(object):
 
     def __init__(self, context=None, yoffset=0, have_cairo=False):
-        """ The incoming co-ordinates have a bottom left origin with increasing
-            y downwards (so y values are all negative). The DC origin is top left
-            also with increasing y down. yoffset informs us of the page height.
-            wx.DC and wx.GraphicsContext fonts are too big in the ratio of pixels
-            per inch to points per inch. If screen rendering used Cairo, printed
-            fonts need to be scaled but if wx.GC was used, they are already scaled
+        """
+        The incoming co-ordinates have a bottom left origin with increasing
+        y downwards (so y values are all negative). The DC origin is top left
+        also with increasing y down.
+        :class:`DC` and :class:`GraphicsContext` fonts are too big in the ratio
+        of pixels per inch to points per inch. If screen rendering used Cairo,
+        printed fonts need to be scaled but if :class:`GC` was used, they are
+        already scaled.
+        
+        :param `context`: ????
+        :param integer `yoffset`: informs us of the page height
+        :param boolean `have_cairo`: is Cairo used
+        
         """
         self._context = context
         self.gstate = dcGraphicsState()
@@ -120,7 +169,9 @@ class dcGraphicsContext(object):
 
     @staticmethod
     def Create(dc, yoffset, have_cairo):
-        """ The created pGraphicsContext instance uses the dc itself """
+        """
+        The created pGraphicsContext instance uses the dc itself.
+        """
         assert isinstance(dc, wx.DC)
         return dcGraphicsContext(dc, yoffset, have_cairo)
       
@@ -154,7 +205,11 @@ class dcGraphicsContext(object):
 
     def Scale(self, xScale, yScale):
         """
-        Sets the dc userscale factor
+        Sets the dc userscale factor.
+        
+        :param `xScale`: ????
+        :param `yScale`: ????
+        
         """
         self._context.SetUserScale(xScale, yScale)
        
@@ -174,22 +229,32 @@ class dcGraphicsContext(object):
 
     def SetPen(self, pen):
         """
-        Set the wx.Pen to be used for stroking lines in future drawing
+        Set the :class:`Pen` to be used for stroking lines in future drawing
         operations.
+        
+        :param `pen`: the :class:`Pen` to be used from now on.
+        
         """
         self._context.SetPen(pen)
 
     def SetBrush(self, brush):
         """
-        Set the Brush to be used for filling shapes in future drawing
+        Set the :class:`Brush` to be used for filling shapes in future drawing
         operations.  
+
+        :param `brush`: the :class:`Brush` to be used from now on.
+
         """
         self._context.SetBrush(brush)
 
     def SetFont(self, font, colour=None):
         """
-        Sets the wx.Font to be used for drawing text.
+        Sets the :class:`Font` to be used for drawing text.
         Don't set the dc font yet as it may need to be scaled
+        
+        :param `font`: the :class:`Font` for drawing text
+        :param `colour`: the colour to be used
+        
         """
         self._font = font
         if colour is not None:
@@ -198,6 +263,8 @@ class dcGraphicsContext(object):
     def StrokePath(self, path):
         """
         Strokes the path (draws the lines) using the current pen.
+        
+        :param `path`: path to draw line on
         """
         raise NotImplementedError("TODO")
             
@@ -205,6 +272,9 @@ class dcGraphicsContext(object):
     def FillPath(self, path, fillStyle=wx.ODDEVEN_RULE):
         """
         Fills the path using the current brush.
+        
+        :param `path`: path to draw line on
+        :param `fillStyle`: the fill style to use
         """
         raise NotImplementedError("TODO")
             
@@ -212,6 +282,10 @@ class dcGraphicsContext(object):
     def DrawPath(self, path, fillStyle=wx.ODDEVEN_RULE):
         """
         Draws the path using current pen and brush.
+
+        :param `path`: path to draw line on
+        :param `fillStyle`: the fill style to use
+
         """
         pathdict = {'SetPen': self._context.SetPen,
                     'DrawLine': self._context.DrawLine,
@@ -227,8 +301,13 @@ class dcGraphicsContext(object):
         """
         Set the dc font at the required size.
         Ensure original font is not altered
-        Draw the text at (x,y) using the current font.
-        Ignore backgroundBrush 
+        Draw the text at (x, y) using the current font.
+        
+        :param `text`: the text to draw
+        :param `x`: x co-ordinates for text
+        :param `y`: y co-ordinates for text
+        :param `backgroundBrush`: curently ignored
+        
         """
         g = self.gstate
         orgsize = self._font.GetPointSize()
@@ -242,7 +321,14 @@ class dcGraphicsContext(object):
 
     def DrawBitmap(self, bmp, x, y, w=-1, h=-1):
         """
-        Draw the bitmap at (x,y), ignoring w, h
+        Draw the bitmap
+        
+        :param `bmp`: the bitmap to draw
+        :param `x`: the x co-ordinate for the bitmap
+        :param `y`: the y co-ordinate for the bitmap
+        :param `w`: currently ignored
+        :param `h`: currently ignored
+        
         """
         g = self.gstate
         self._context.DrawBitmap(bmp, g.Get_x(x, y), g.Get_y(x, y))
@@ -256,17 +342,33 @@ class dcGraphicsMatrix(object):
     between different coordinante spaces.
     """
     def __init__(self):
+        """
+        The default constructor
+        """
         self._matrix = ()
 
 
     def Set(self, a=1.0, b=0.0, c=0.0, d=1.0, tx=0.0, ty=0.0):
-        """Set the componenets of the matrix by value, default values
-        are the identity matrix."""
+        """
+        Set the componenets of the matrix by value, default values
+        are the identity matrix.
+        
+        :param `a`: ????
+        :param `b`: ????
+        :param `c`: ????
+        :param `d`: ????
+        :param `tx`: ????
+        :param `ty`: ????
+        
+        
+        """
         self._matrix = (a, b, c, d, tx, ty)
 
 
     def Get(self):
-        """Return the component values of the matrix as a tuple."""
+        """
+        Return the component values of the matrix as a tuple.
+        """
         return tuple(self._matrix)
 
 #---------------------------------------------------------------------------
@@ -278,9 +380,10 @@ class dcGraphicsPath(object):
     areas to be stroked and filled on a GraphicsContext.
     """
     def __init__(self, parent=None):
-        """ A path is essentially an object that we use just for
-            collecting path moves, lines, and curves in order to apply
-            them to the real context using DrawPath
+        """
+        A path is essentially an object that we use just for
+        collecting path moves, lines, and curves in order to apply
+        them to the real context using DrawPath.
         """
         self.commands = []
         self.allpoints = []
@@ -293,6 +396,14 @@ class dcGraphicsPath(object):
         """
         Adds a cubic Bezier curve from the current point, using two
         control points and an end point.
+
+        :param `cx1`: ????
+        :param `cy1`: ????
+        :param `cx2`: ????
+        :param `cy2`: ????
+        :param `x`: ????
+        :param `y`: ????
+        
         """
         g = self.gstate
         clist = []
@@ -309,7 +420,11 @@ class dcGraphicsPath(object):
 
     def AddLineToPoint(self, x, y):
         """
-        Adds a straight line from the current point to (x,y)
+        Adds a straight line from the current point to (x, y)
+        
+        :param `x`: ????
+        :param `y`: ????
+
         """
         x2 = self.gstate.Get_x(x, y)
         y2 = self.gstate.Get_y(x, y)
@@ -323,6 +438,12 @@ class dcGraphicsPath(object):
     def AddRectangle(self, x, y, w, h):
         """
         Adds a new rectangle as a closed sub-path.
+        
+        :param `x`: ????
+        :param `y`: ????
+        :param `w`: ????
+        :param `h`: ????
+        
         """
         g = self.gstate
         xr = g.Get_x(x, y)

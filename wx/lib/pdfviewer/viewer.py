@@ -14,6 +14,8 @@
 #               pdfViewer.Print(). Added option to pdfViewer.LoadFile() to
 #               accept a file-like object as well as a path string
 #
+# Tags:        phoenix-port, documented
+#
 #----------------------------------------------------------------------------
 
 import sys, os, time, types
@@ -24,13 +26,33 @@ FONTSCALE = 1.0
 CACHE_LATE_PAGES = True
 LATE_THRESHOLD = 200        # Time to render (ttr), milliseconds
 
-SHOW_LOAD_PROGRESS = True
-USE_PRINTDIRECT = True
 VERBOSE = False
 
-from pyPdf import PdfFileReader
-from pyPdf.pdf import ContentStream, PageObject
-from pyPdf.filters import ASCII85Decode, FlateDecode
+fpypdf = 0
+try:
+    import pyPdf
+    fpypdf = 1
+except:
+    pass
+
+try:
+    import PyPDF2
+    fpypdf = 2
+except:
+    pass
+
+if not fpypdf:
+    msg = "You either need pyPdf or pyPDF2 to use this."
+    raise ImportError(msg)
+elif fpypdf == 2:
+    from PyPDF2 import PdfFileReader
+    from PyPDF2.pdf import ContentStream, PageObject
+    from PyPDF2.filters import ASCII85Decode, FlateDecode
+elif fpypdf == 1:
+    from pyPdf import PdfFileReader
+    from pyPdf.pdf import ContentStream, PageObject
+    from pyPdf.filters import ASCII85Decode, FlateDecode
+
 from dcgraphics import dcGraphicsContext
 
 import wx
@@ -81,22 +103,39 @@ PageObject.extractOperators = extractOperators
 #----------------------------------------------------------------------------
     
 class pdfViewer(wx.ScrolledWindow):
-    """ View pdf reports in a scrolled window.  Contents are read from PDF file
-        and rendered in a GraphicsContext. Show visible window contents
-        as quickly as possible then read the whole file and build the set of drawing
-        commands for each page. This can take time for a big file or if there are complex
-        drawings eg. ReportLab's colour shading inside charts. Originally read in a thread
-        but navigation is limited until whole file is ready, so now done in main
-        thread with a progress bar, which isn't modal so can still do whatever navigation
-        is possible as the content availability increases.
+    """ 
+    View pdf reports in a scrolled window.  Contents are read from PDF file
+    and rendered in a :class:`GraphicsContext`. Show visible window contents
+    as quickly as possible then read the whole file and build the set of drawing
+    commands for each page. This can take time for a big file or if there are complex
+    drawings eg. ReportLab's colour shading inside charts. Originally read in a thread
+    but navigation is limited until whole file is ready, so now done in main
+    thread with a progress bar, which isn't modal so can still do whatever navigation
+    is possible as the content availability increases.
     """
     def __init__(self, parent, id, pos, size, style):
+        """
+        Default class constructor.
+
+        :param Window `parent`: parent window. Must not be ``None``;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :type `pos`: tuple or :class:`Point`
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :type `size`: tuple or :class:`Size`
+        :param integer `style`: the button style (unused);
+
+        """
         wx.ScrolledWindow.__init__(self, parent, id, pos, size,
                                 style | wx.NO_FULL_REPAINT_ON_RESIZE)
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)     # recommended in wxWidgets docs
         self.buttonpanel = None     # reference to panel is set by their common parent
+        self._showLoadProgress = True
+        self._usePrintDirect = True
+        
         self.Bind(wx.EVT_PAINT, self.OnPaint)
-        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_SIZE, self.OnResize)
         self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
         self.Bind(wx.EVT_IDLE, self.OnIdle)
@@ -104,40 +143,43 @@ class pdfViewer(wx.ScrolledWindow):
         self.resizing = False
         self.numpages = None
         self.zoomscale = -1     # fit page to screen width
-        self.page_gap = 20      # nominal inter-page gap (points)
+        self.nom_page_gap = 20  # nominal inter-page gap (points) 
         self.scrollrate = 20    # pixels per scrollbar increment
         self.ClearBackground()
 
     def OnIdle(self, event):
-        " Redraw on resize"
+        """
+        Redraw on resize.
+        """
         if self.resizing:
             self.Render()
             self.resizing = False
         event.Skip()
 
-    def OnEraseBackground(self, event):
-        "Does this need to be handled?"
-        event.Skip()
-
     def OnResize(self, event):
-        " Buffer size change due to client area resize."
+        """
+        Buffer size change due to client area resize.
+        """
         self.resizing = True
         self.cachedpages = {}
         event.Skip()
 
     def OnScroll(self,event):
-        " Recalculate and redraw visible area. CallAfter is *essential* for coordination."
+        """
+        Recalculate and redraw visible area. CallAfter is *essential*
+        for coordination.
+        """
         wx.CallAfter(self.Render, force=False)
         event.Skip()
 
     def OnPaint(self, event):
-        " Refresh visible window with bitmap contents"
+        """
+        Refresh visible window with bitmap contents.
+        """
         paintDC = wx.PaintDC(self)
         if hasattr(self, 'pdc'):
-            paintDC.BeginDrawing()
             paintDC.Blit(0, 0, self.winwidth, self.winheight, self.pdc,
                                                      self.xshift, self.yshift)
-            paintDC.EndDrawing()
         else:
             paintDC.Clear()
 
@@ -147,10 +189,11 @@ class pdfViewer(wx.ScrolledWindow):
         
     def LoadFile(self, pdf_file):
         """
-        Read pdf file using pypdf. Assume all pages are same size, for now.
+        Read pdf file using pyPdf/pyPDF2. Assume all pages are same size, for now.
         
         :param `pdf_file`: can be either a string holding a filename path or
          a file-like object.
+         
         """
         if isinstance(pdf_file, types.StringTypes):
             # it must be a filename/path string, open it as a file
@@ -178,10 +221,13 @@ class pdfViewer(wx.ScrolledWindow):
         wx.CallAfter(self.DrawFile, 0, self.numpages-1)
 
     def Save(self):
-        "A pdf-only Save."
+        """
+        A pdf-only Save.
+        """
         wild = "Portable document format (*.pdf)|*.pdf"
-        dlg = wx.FileDialog(self, message="Save file as ...", defaultDir=getpath('report'), 
-                            defaultFile="", wildcard=wild, style=wx.SAVE|wx.OVERWRITE_PROMPT)
+        dlg = wx.FileDialog(self, message="Save file as ...",
+                                  wildcard=wild,
+                                  style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
         if dlg.ShowModal() == wx.ID_OK:
             pathname = dlg.GetPath()
             shutil.copy(self.pdfpathname, pathname)
@@ -198,6 +244,7 @@ class pdfViewer(wx.ScrolledWindow):
          receive the printout. Default: as set by the O/S.
         :param `orientation`: select the orientation (wx.PORTRAIT or
          wx.LANDSCAPE) for the printout. Default: as set by the O/S.
+        
         """
         pdd = wx.PrintDialogData()
         pdd.SetMinPage(1)
@@ -220,10 +267,14 @@ class pdfViewer(wx.ScrolledWindow):
         printout.Destroy()
 
     def SetZoom(self, zoomscale):
-        """ Positive integer or floating zoom scale will render the file at corresponding
-            size where 1.0 is "actual" point size (1/72"). 
-            -1 fits page width and -2 fits page height into client area
-            Redisplay the current page(s) at the new size
+        """
+        Positive integer or floating zoom scale will render the file at
+        the corresponding size where 1.0 is "actual" point size (1/72"). 
+        -1 fits page width and -2 fits page height into client area
+        Redisplay the current page(s) at the new size
+        
+        :param `zoomscale`: an integer or float
+        
         """
         pagenow = self.frompage
         self.zoomscale = zoomscale
@@ -232,6 +283,12 @@ class pdfViewer(wx.ScrolledWindow):
         self.GoPage(pagenow)
 
     def GoPage(self, pagenum):
+        """
+        Go to page
+        
+        :param integer `pagenum`: go to the provided page number if it is valid
+        
+        """
         if pagenum >= 0 and pagenum <= self.numpages:
             self.Scroll(0, pagenum*self.Ypagepixels/self.GetScrollPixelsPerUnit()[1])
             self.Render()
@@ -241,14 +298,15 @@ class pdfViewer(wx.ScrolledWindow):
     "This section is concerned with rendering a sub-set of drawing commands on demand"
 
     def CalculateDimensions(self, force):
-        """ Compute the required buffer sizes to hold the viewed rectangle and
-            the range of pages visible. Override force flag and set true if 
-            the current set of rendered pages changes
+        """
+        Compute the required buffer sizes to hold the viewed rectangle and
+        the range of pages visible. Override force flag and set true if 
+        the current set of rendered pages changes.
         """
         self.clientdc = dc = wx.ClientDC(self)      # dc for device scaling 
         self.device_scale = dc.GetPPI()[0]/72.0     # pixels per inch / points per inch 
-        self.winwidth, self.winheight = self.GetClientSizeTuple()
-        self.Ypage = self.pageheight + self.page_gap
+        self.winwidth, self.winheight = self.GetClientSize()
+        self.Ypage = self.pageheight + self.nom_page_gap 
         if self.zoomscale > 0.0:
             self.scale = self.zoomscale * self.device_scale
         else:
@@ -303,19 +361,20 @@ class pdfViewer(wx.ScrolledWindow):
         return force
 
     def Render(self, force=True):
-        """ Recalculate dimensions as client area may have been scrolled or resized.
-            The smallest unit of rendering that can be done is the pdf page. So render
-            the drawing commands for the pages in the visible rectangle into a buffer
-            big enough to hold this set of pages. For each page, use gc.Translate to 
-            render wrt the pdf origin, which is at the bottom left corner of the page. 
-            Force re-creating the page buffer only when client view moves outside it.
+        """
+        Recalculate dimensions as client area may have been scrolled or resized.
+        The smallest unit of rendering that can be done is the pdf page. So render
+        the drawing commands for the pages in the visible rectangle into a buffer
+        big enough to hold this set of pages. For each page, use gc.Translate to 
+        render wrt the pdf origin, which is at the bottom left corner of the page. 
+        Force re-creating the page buffer only when client view moves outside it.
         """
         if not self.have_file:
             return
         force = self.CalculateDimensions(force)
         if force:
             # Initialize the buffer bitmap. 
-            self.pagebuffer = wx.EmptyBitmap(self.pagebufferwidth, self.pagebufferheight)
+            self.pagebuffer = wx.Bitmap(self.pagebufferwidth, self.pagebufferheight)
             self.pdc = wx.MemoryDC(self.pagebuffer)     # must persist
             gc = GraphicsContext.Create(self.pdc)       # Cairo/wx.GraphicsContext API
             # white background
@@ -341,8 +400,7 @@ class pdfViewer(wx.ScrolledWindow):
                     # Show inter-page gap
                     gc.SetBrush(wx.Brush(wx.Colour(180, 180, 180)))        #mid grey
                     gc.SetPen(wx.TRANSPARENT_PEN)
-                    gc.DrawRectangle(0, 0, self.pagewidth*self.device_scale,
-                                                  self.page_gap*self.device_scale)
+                    gc.DrawRectangle(0, 0, self.pagewidth, self.page_gap)
                     gc.PopState()
                     ttr = time.time()-t1 
                     if CACHE_LATE_PAGES and ttr * 1000 > LATE_THRESHOLD:
@@ -357,10 +415,13 @@ class pdfViewer(wx.ScrolledWindow):
         #self.pagebuffer.SaveFile('pagemap.png', wx.BITMAP_TYPE_PNG)
 
     def RenderPage(self, gc, pagedrawings):
-        """ Render the set of pagedrawings
-            In pdf file, bitmaps are treated as being of unit width and height and
-            are scaled appropriately in X and Y. Cairo can handle this but not
-            wx.GraphicsContext (although it should in theory) or wx.DC, 
+        """
+        Render the set of pagedrawings
+        In a pdf file, bitmaps are treated as being of unit width and height and
+        are scaled via a previous ConcatTransform containing the corresponding width 
+        and height as scale factors. wx.GraphicsContext/Cairo appear not to respond to  
+        this so scaling is removed from transform and width & height are added
+        to the Drawbitmap call.
         """    
         drawdict = {'ConcatTransform': gc.ConcatTransform,
                     'PushState': gc.PushState,
@@ -393,7 +454,9 @@ class pdfViewer(wx.ScrolledWindow):
                     pathdict[drawcmd](*args, **kwargs)
 
     def RenderPageBoundaries(self, gc):
-        "Show non-page areas in grey"
+        """
+        Show non-page areas in grey.
+        """
         gc.SetBrush(wx.Brush(wx.Colour(180, 180, 180)))        #mid grey
         gc.SetPen(wx.TRANSPARENT_PEN)
         gc.Scale(1.0, 1.0)
@@ -405,10 +468,11 @@ class pdfViewer(wx.ScrolledWindow):
             gc.DrawRectangle(0, self.winheight-extraheight, self.maxwidth, extraheight)
 
     def CachePage(self, pageno):
-        """ When page takes a 'long' time to render, save its contents out of
-            self.pdc and re-use it to minimise jerky scrolling
         """
-        cachebuffer = wx.EmptyBitmap(self.Xpagepixels, self.Ypagepixels)
+        When page takes a 'long' time to render, save its contents out of
+        self.pdc and re-use it to minimise jerky scrolling.
+        """
+        cachebuffer = wx.Bitmap(self.Xpagepixels, self.Ypagepixels)
         cdc = wx.MemoryDC(cachebuffer)
         cdc.Blit(0, 0, self.Xpagepixels, self.Ypagepixels,
                       self.pdc, self.xpageoffset, self.ypageoffset)
@@ -419,7 +483,9 @@ class pdfViewer(wx.ScrolledWindow):
     "These methods interpret the PDF contents as a set of drawing commands"
 
     def Progress(self, ptype, value):
-        " This function is called at regular intervals during Drawfile"
+        """
+        This function is called at regular intervals during Drawfile.
+        """
         if ptype == 'start':
             msg = 'Reading pdf file'
             self.progbar = wx.ProgressDialog('Load file', msg, value, None,  
@@ -431,15 +497,16 @@ class pdfViewer(wx.ScrolledWindow):
             self.progbar.Destroy()
 
     def DrawFile(self, frompage, topage):
-        """ Build set of drawing commands from PDF contents. Ideally these could be drawn
-            straight into a PseudoDC and the visible section painted directly into
-            scrolled window, but we need to be able to zoom and scale the output quickly
-            without having to rebuild the drawing commands (slow). So roll our
-            own command lists, one per page, into self.pagedrawings.
+        """
+        Build set of drawing commands from PDF contents. Ideally these could be drawn
+        straight into a PseudoDC and the visible section painted directly into
+        scrolled window, but we need to be able to zoom and scale the output quickly
+        without having to rebuild the drawing commands (slow). So roll our
+        own command lists, one per page, into self.pagedrawings.
         """  
         t0 = time.time()
         numpages_generated = 0
-        rp = (SHOW_LOAD_PROGRESS and frompage == 0 and topage == self.numpages-1)
+        rp = (self.ShowLoadProgress and frompage == 0 and topage == self.numpages-1)
         if rp: self.Progress('start', self.numpages)
         for self.pageno in range(frompage, topage+1):
             self.gstate = pdfState()    # state is reset with every new page
@@ -457,7 +524,9 @@ class pdfViewer(wx.ScrolledWindow):
         self.GoPage(frompage)
 
     def FetchFonts(self, currentobject):
-        " Return the standard fonts in current page or form"
+        """
+        Return the standard fonts in current page or form.
+        """
         pdf_fonts = {}
         fonts = currentobject["/Resources"].getObject()['/Font']
         for key in fonts:
@@ -465,7 +534,9 @@ class pdfViewer(wx.ScrolledWindow):
         return pdf_fonts
 
     def ProcessOperators(self, opslist, pdf_fonts):
-        " Interpret each operation in opslist and return in drawlist"
+        """
+        Interpret each operation in opslist and return in drawlist.
+        """
         drawlist = []
         path = []
         for operand, operator in opslist :
@@ -549,10 +620,21 @@ class pdfViewer(wx.ScrolledWindow):
                 if operator not in self.unimplemented:
                     if VERBOSE: print 'PDF operator %s is not implemented' % operator
                     self.unimplemented[operator] = 1
+
+        # Fix bitmap transform. Remove the scaling from any transform matrix that precedes
+        # a DrawBitmap operation as the scaling is now done in that operation.
+        for k in range(len(drawlist)-1):
+            if drawlist[k][0] == 'ConcatTransform' and drawlist[k+1][0] == 'DrawBitmap':
+                args = list(drawlist[k][1])
+                args[0] = 1.0
+                args[3] = 1.0
+                drawlist[k][1] = tuple(args)
         return drawlist            
 
     def SetFont(self, pdfont, size):
-        """ Returns wx.Font instance from supplied pdf font information """
+        """
+        Returns :class:`Font` instance from supplied pdf font information.
+        """
         self.knownfont = True
         pdfont = pdfont.lower()
         if pdfont.count('courier'):
@@ -585,7 +667,9 @@ class pdfViewer(wx.ScrolledWindow):
         return wx.Font(max(1,size), family, style, weight, faceName=font)
 
     def DrawTextString(self, text): 
-        "word spacing only works for horizontal text (??)"
+        """
+        Word spacing only works for horizontal text (??).
+        """
         dlist = []
         g = self.gstate
         f  = self.SetFont(g.font, g.fontSize*FONTSCALE)
@@ -614,7 +698,9 @@ class pdfViewer(wx.ScrolledWindow):
         return ['DrawText', (textitem, x, -y-(ht-descend)/self.device_scale), {}]
 
     def DrawPath(self, path, action):
-        """ Stroke and/or fill the defined path depending on operator """
+        """
+        Stroke and/or fill the defined path depending on operator.
+        """
         dlist = []
         g = self.gstate
         acts = {'S':  (1, 0, 0),
@@ -685,7 +771,9 @@ class pdfViewer(wx.ScrolledWindow):
         return dlist
 
     def InsertXObject(self, name):
-        " XObject can be an image or a 'form' (an arbitrary PDF sequence) "
+        """
+        XObject can be an image or a 'form' (an arbitrary PDF sequence).
+        """
         dlist = []
         xobject = self.page["/Resources"].getObject()['/XObject']
         stream = xobject[name]
@@ -710,7 +798,9 @@ class pdfViewer(wx.ScrolledWindow):
         return dlist
 
     def InlineImage(self, operand):
-        " operand contains an image"
+        """
+        Operand contains an image.
+        """
         dlist = []
         data = operand.get('data')
         settings = operand.get('settings')
@@ -722,7 +812,9 @@ class pdfViewer(wx.ScrolledWindow):
         return dlist
 
     def AddBitmap(self, data, width, height, filters):
-        "Add wx.Bitmap from data, processed by filters"
+        """
+        Add wx.Bitmap from data, processed by filters.
+        """
         if '/A85' in filters or '/ASCII85Decode' in filters:
             data = _AsciiBase85DecodePYTHON(data)
         if '/Fl' in filters or '/FlateDecode' in filters:
@@ -733,25 +825,59 @@ class pdfViewer(wx.ScrolledWindow):
             bitmap = wx.BitmapFromImage(image)
         else:    
             bitmap = wx.BitmapFromBuffer(width, height, data)
-        return ['DrawBitmap', (bitmap, 0, 0-height, 1.0, 1.0), {}]
+        return ['DrawBitmap', (bitmap, 0, 0-height, width, height), {}]
 
     def ConvertCMYK(self, operand):
-        "Convert CMYK values (0 to 1.0) in operand to nearest RGB"
+        """
+        Convert CMYK values (0 to 1.0) in operand to nearest RGB.
+        """
         c, m, y, k = operand
         r = round((1-c)*(1-k)*255)
         b = round((1-y)*(1-k)*255)
         g = round((1-m)*(1-k)*255)
         return (r, g, b)
+    
+    @property
+    def ShowLoadProgress(self):
+        """
+        Property to control if loading progress be shown.
+        """
+        return self._showLoadProgress
+    
+    @ShowLoadProgress.setter
+    def ShowLoadProgress(self, flag):
+        """
+        Setter for showLoadProgress.
+        """
+        self._showLoadProgress = flag
        
+    @property
+    def UsePrintDirect(self):
+        """
+        Property to control to use either Cairo (via a page buffer) or
+        dcGraphicsContext.
+        """
+        return self._usePrintDirect
+    
+    @UsePrintDirect.setter
+    def UsePrintDirect(self, flag):
+        """
+        Setter for usePrintDirect.
+        """
+        self._usePrintDirect = flag
+ 
 #----------------------------------------------------------------------------
 
 class pdfState:
-    """ Instance holds the current pdf graphics and text state. It can be
-        saved (pushed) and restored (popped) by the owning parent
+    """
+    Instance holds the current pdf graphics and text state. It can be
+    saved (pushed) and restored (popped) by the owning parent.
     """
     def __init__ (self):
-        """ Creates an instance with default values. Individual attributes 
-            are modified directly not via getters and setters """
+        """
+        Creates an instance with default values. Individual attributes 
+        are modified directly not via getters and setters.
+        """
         self.lineWidth = 1.0
         self.lineCapStyle = wx.CAP_BUTT
         self.lineJoinStyle = wx.JOIN_MITER
@@ -776,44 +902,52 @@ class pdfState:
 #------------------------------------------------------------------------------
 
 class pdfPrintout(wx.Printout):
-    """ Class encapsulating the functionality of printing out the document. The methods below
-        over-ride those of the base class and supply document-specific information to the
-        printing framework that calls them internally.
+    """
+    Class encapsulating the functionality of printing out the document. The methods below
+    over-ride those of the base class and supply document-specific information to the
+    printing framework that calls them internally.
     """
     def __init__(self, title, view):
-        "Pass in the instance of dpViewer to be printed"
+        """
+        Pass in the instance of dpViewer to be printed.
+        """
         wx.Printout.__init__(self, title)
         self.view = view
 
     def HasPage(self, pageno):
-        "Report whether pageno exists"
+        """
+        Report whether pageno exists.
+        """
         if pageno <= self.view.numpages:
             return True
         else:
             return False
 
     def GetPageInfo(self):
-        """ Supply maximum range of pages and the range to be printed
-            These are initial values passed to Printer dialog, where they
-            can be amended by user.
+        """
+        Supply maximum range of pages and the range to be printed
+        These are initial values passed to Printer dialog, where they
+        can be amended by user.
         """ 
         max = self.view.numpages
         return (1, max, 1, max)
 
     def OnPrintPage(self, page):
-        """ Provide the data for page by rendering the drawing commands
-            to the printer DC using either Cairo (via a page buffer) or
-            dcGraphicsContext depending on USE_PRINTDIRECT
         """
-        if USE_PRINTDIRECT:
+        Provide the data for page by rendering the drawing commands
+        to the printer DC using either Cairo (via a page buffer) or
+        dcGraphicsContext depending on the self.view.usePrintDirect property.
+        """
+        if self.view.UsePrintDirect:
             self.PrintDirect(page)
         else:
             self.PrintViaBuffer(page)
         return True    
 
     def PrintDirect(self, page):
-        """ Provide the data for page by rendering the drawing commands
-            to the printer DC using dcGraphicsContext
+        """
+        Provide the data for page by rendering the drawing commands
+        to the printer DC using :class:`dcGraphicsContext`.
         """
         pageno = page - 1       # zero based
         width = self.view.pagewidth
@@ -824,9 +958,10 @@ class pdfPrintout(wx.Printout):
         self.view.RenderPage(gc, self.view.pagedrawings[pageno])
 
     def PrintViaBuffer(self, page):
-        """ Provide the data for page by drawing it as a bitmap to the printer DC
-            sfac needs to provide a high enough resolution bitmap for printing that
-            reduces anti-aliasing blur but be kept small to minimise printing time 
+        """
+        Provide the data for page by drawing it as a bitmap to the printer DC
+        sfac needs to provide a high enough resolution bitmap for printing that
+        reduces anti-aliasing blur but be kept small to minimise printing time .
         """
         sfac = 6.0
         pageno = page - 1       # zero based
@@ -835,7 +970,7 @@ class pdfPrintout(wx.Printout):
         height = self.view.pageheight*sfac
         self.FitThisSizeToPage(wx.Size(width, height))
         # Initialize the buffer bitmap. 
-        buffer = wx.EmptyBitmap(width, height)
+        buffer = wx.Bitmap(width, height)
         mdc = wx.MemoryDC(buffer)
         gc = GraphicsContext.Create(mdc)
         # white background
@@ -850,16 +985,19 @@ class pdfPrintout(wx.Printout):
 
 #------------------------------------------------------------------------------
 
-""" The following has been "borrowed" from  from reportlab.pdfbase.pdfutils,
-    where it is used for testing, because the equivalent function in pyPdf
-    fails when attempting to decode an embedded JPEG image
+"""
+The following has been "borrowed" from  from reportlab.pdfbase.pdfutils,
+where it is used for testing, because the equivalent function in pyPdf
+fails when attempting to decode an embedded JPEG image.
 """
 
 def _AsciiBase85DecodePYTHON(input):
-    """Decodes input using ASCII-Base85 coding.
+    """
+    Decodes input using ASCII-Base85 coding.
 
     This is not used - Acrobat Reader decodes for you
-    - but a round trip is essential for testing."""
+    - but a round trip is essential for testing.
+    """
     #strip all whitespace
     stripped = ''.join(input.split())
     #check end

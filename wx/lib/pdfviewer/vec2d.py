@@ -9,15 +9,18 @@
 
 # History:      Created 17 Jun 2009
 #
+# Tags:         phoenix-port, documented
+#
 #----------------------------------------------------------------------------
 
 import operator
 import math
  
 class vec2d(object):
-    """2d vector class, supports vector and scalar operators,
-       and also provides a bunch of high level functions
-       """
+    """
+    2d vector class, supports vector and scalar operators,
+    and also provides a bunch of high level functions.
+    """
     __slots__ = ['x', 'y']
  
     def __init__(self, x_or_pair, y = None):
@@ -69,7 +72,9 @@ class vec2d(object):
  
     # Generic operator handlers
     def _o2(self, other, f):
-        "Any two-operator operation where the left operand is a vec2d"
+        """
+        Any two-operator operation where the left operand is a vec2d.
+        """
         if isinstance(other, vec2d):
             return vec2d(f(self.x, other.x),
                          f(self.y, other.y))
@@ -81,7 +86,9 @@ class vec2d(object):
                          f(self.y, other))
  
     def _r_o2(self, other, f):
-        "Any two-operator operation where the right operand is a vec2d"
+        """
+        Any two-operator operation where the right operand is a vec2d.
+        """
         if (hasattr(other, "__getitem__")):
             return vec2d(f(other[0], self.x),
                          f(other[1], self.y))
@@ -90,7 +97,9 @@ class vec2d(object):
                          f(other, self.y))
  
     def _io(self, other, f):
-        "inplace operator"
+        """
+        inplace operator
+        """
         if (hasattr(other, "__getitem__")):
             self.x = f(self.x, other[0])
             self.y = f(self.y, other[1])
