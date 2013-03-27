@@ -10,7 +10,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2009
-# Latest Revision: 16 Mar 2013, 21.00 GMT
+# Latest Revision: 27 Mar 2013, 21.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -643,6 +643,35 @@ class PersistenceManager(object):
                     self._hasRestored = self.RegisterAndRestore(child)
 
             self.RegisterAndRestoreAll(window, child.GetChildren())
+
+        return self._hasRestored
+
+
+    def RestoreAll(self, window, children=None):
+        """
+        Recursively restore the state of the input `window` and of
+        all of its children.
+
+        :param `window`: an instance of :class:`Window`;
+        :param `children`: list of children of the input `window`, on first call it is equal to ``None``.
+        """
+
+        if children is None:
+            if HasCtrlHandler(window):
+                # Control has persist support
+                self._hasRestored = self.Restore(window)
+
+            children = window.GetChildren()
+
+        for child in children:
+            name = child.GetName()
+
+            if name not in BAD_DEFAULT_NAMES:
+                if HasCtrlHandler(child):
+                    # Control has persist support
+                    self._hasRestored = self.Restore(child)
+
+            self.RestoreAll(window, child.GetChildren())
 
         return self._hasRestored
 
