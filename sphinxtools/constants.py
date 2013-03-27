@@ -113,6 +113,9 @@ NO_MODULE = {
              
              # -- wxHTML -- #
              # Widgets
+             'HTMLHelpDialog'          : 'html.',
+             'HTMLHelpFrame'           : 'html.',
+             'HTMLHelpWindow'          : 'html.',
              
              # Enums/constants
              'HTMLCursor'              : 'html.',
