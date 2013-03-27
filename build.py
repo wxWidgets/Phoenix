@@ -1383,6 +1383,12 @@ def cmd_sdist(options, args):
         destdir = posixjoin(PDEST, 'wx')
         for name in glob.glob(posixjoin('wx', wc)):
             copyFile(name, destdir)
+
+    # Also add the waf executable
+    copyFile('bin/waf-%s' % wafCurrentVersion, os.path.join(PDEST, 'bin'))
+
+    # Add a setup.py for the root folder
+    copyFile('packaging/setup.py', ADEST)
             
     # build the tarball
     msg('Archiving Phoenix source...')

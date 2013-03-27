@@ -254,6 +254,7 @@ if __name__ == '__main__':
           classifiers      = [c for c in CLASSIFIERS.split("\n") if c],
           keywords         = KEYWORDS,
           zip_safe         = False,
+          use_2to3         = False,
           include_package_data = True,
           
           packages         = WX_PKGLIST,
