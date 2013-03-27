@@ -534,13 +534,12 @@ class ListBoxHandler(AbstractHandler):
 
         indices = []
 
-        # Not wrapped yet?
-        # if isinstance(listBox, (wx.HtmlListBox, wx.SimpleHtmlListBox)):
-        #    if listBox.GetSelectedCount() == 0:
-        #        return indices
-        # else:
-        if listBox.GetSelectedItemCount() == 0:
-            return indices
+        if isinstance(listBox, (wx.HtmlListBox, wx.SimpleHtmlListBox)):
+            if listBox.GetSelectedCount() == 0:
+                return indices
+        else:
+            if listBox.GetSelectedItemCount() == 0:
+                return indices
 
         isVirtual = issubclass(listBox.__class__, wx.VListBox)
         
@@ -607,9 +606,8 @@ class ListBoxHandler(AbstractHandler):
 
         isVirtual = issubclass(listBox.__class__, wx.VListBox) or isinstance(listBox, wx.CheckListBox)
         
-        # Not wrapped yet?
-        # isHtml = isinstance(listBox, wx.HtmlListBox)
-        if isVirtual: # and not isHtml:
+        isHtml = isinstance(listBox, wx.HtmlListBox)
+        if isVirtual and not isHtml:
             count = listBox.GetCount()
         else:
             count = listBox.GetItemCount()
@@ -2509,7 +2507,7 @@ HANDLERS = [
     ("TreeCtrlHandler", (wx.TreeCtrl, wx.GenericDirCtrl, CT.CustomTreeCtrl)), 
     ("MenuBarHandler", (wx.MenuBar, FM.FlatMenuBar)), 
     ("ToolBarHandler", (AUI.AuiToolBar, )),
-    ("ListBoxHandler", (wx.ListBox, wx.VListBox, # not wrapped yet?? wx.HtmlListBox, wx.SimpleHtmlListBox,
+    ("ListBoxHandler", (wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox,
                         wx.adv.EditableListBox)), 
     ("ListCtrlHandler", (wx.ListCtrl, wx.ListView)),  #ULC.UltimateListCtrl (later)
     ("ChoiceComboHandler", (wx.Choice, wx.ComboBox, wx.adv.OwnerDrawnComboBox)), 
