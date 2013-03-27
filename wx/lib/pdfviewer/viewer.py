@@ -289,8 +289,10 @@ class pdfViewer(wx.ScrolledWindow):
         :param integer `pagenum`: go to the provided page number if it is valid
         
         """
-        if pagenum >= 0 and pagenum <= self.numpages:
+        if pagenum > 0 and pagenum <= self.numpages:
             self.Scroll(0, pagenum*self.Ypagepixels/self.GetScrollPixelsPerUnit()[1])
+        else:
+            self.Scroll(0, 0)
             self.Render()
 
 #----------------------------------------------------------------------------
@@ -303,10 +305,14 @@ class pdfViewer(wx.ScrolledWindow):
         the range of pages visible. Override force flag and set true if 
         the current set of rendered pages changes.
         """
+        self.frompage = 0
+        self.topage = 0
         self.clientdc = dc = wx.ClientDC(self)      # dc for device scaling 
         self.device_scale = dc.GetPPI()[0]/72.0     # pixels per inch / points per inch 
         self.winwidth, self.winheight = self.GetClientSize()
-        self.Ypage = self.pageheight + self.nom_page_gap 
+        if self.winheight < 100:
+            return
+        self.Ypage = self.pageheight + self.nom_page_gap
         if self.zoomscale > 0.0:
             self.scale = self.zoomscale * self.device_scale
         else:
