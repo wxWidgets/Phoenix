@@ -73,6 +73,36 @@ def run():
         return self->IsOk();
         """)
 
+    c.addCppMethod('void*', 'GetHFONT', '()', 
+        doc="Returns the font's native handle.",
+        body="""\
+        #ifdef __WXMSW__
+            return self->GetHFONT();
+        #else
+            return 0;
+        #endif
+        """)
+    
+    c.addCppMethod('void*', 'OSXGetCGFont', '()', 
+        doc="Returns the font's native handle.",
+        body="""\
+        #ifdef __WXMAC__
+            return self->OSXGetCGFont();
+        #else
+            return 0;
+        #endif
+        """)
+
+    c.addCppMethod('void*', 'GetPangoFontDescription', '()', 
+        doc="Returns the font's native handle.",
+        body="""\
+        #ifdef __WXGTK__
+            return self->GetNativeFontInfo()->description;
+        #else
+            return 0;
+        #endif
+        """)
+    
     
        
     # The stock Font items are documented as simple pointers, but in reality
