@@ -9,6 +9,7 @@ import wx
 import datetime
 
 import wx.adv
+import wx.html
 
 # Will likely not be wrapped
 # import wx.aui
@@ -504,7 +505,7 @@ class CheckBoxHandler(AbstractHandler):
 class ListBoxHandler(AbstractHandler):
     """
     Supports saving/restoring selected items in :class:`ListBox`, :class:`ListCtrl`, :class:`ListView`,
-    :class:`VListBox`, :class:`HtmlListBox`, :class:`SimpleHtmlListBox`, :class:`adv.EditableListBox`.
+    :class:`VListBox`, :class:`html.HtmlListBox`, :class:`html.SimpleHtmlListBox`, :class:`adv.EditableListBox`.
 
     This class handles the following wxPython widgets:
     
@@ -512,8 +513,8 @@ class ListBoxHandler(AbstractHandler):
     - :class:`ListCtrl` (only for selected items. For column sizes see :class:`ListCtrlHandler`);
     - :class:`ListView` (only for selected items. For column sizes see :class:`ListCtrlHandler`);
     - :class:`VListBox`;
-    - :class:`HtmlListBox`;
-    - :class:`SimpleHtmlListBox`;
+    - :class:`html.HtmlListBox`;
+    - :class:`html.SimpleHtmlListBox`;
     - :class:`adv.EditableListBox`.    
     
     """
@@ -526,15 +527,15 @@ class ListBoxHandler(AbstractHandler):
     def GetSelections(self, listBox):
         """
         Returns a list of selected items for :class:`ListBox`, :class:`ListCtrl`, :class:`ListView`,
-        :class:`VListBox`, :class:`HtmlListBox`, :class:`SimpleHtmlListBox`, :class:`adv.EditableListBox`.
+        :class:`VListBox`, :class:`html.HtmlListBox`, :class:`html.SimpleHtmlListBox`, :class:`adv.EditableListBox`.
 
         :param `listBox`: an instance of :class:`ListBox`, :class:`ListCtrl`, :class:`ListView`,
-         :class:`VListBox`, :class:`HtmlListBox`, :class:`SimpleHtmlListBox`, :class:`adv.EditableListBox`..
+         :class:`VListBox`, :class:`html.HtmlListBox`, :class:`html.SimpleHtmlListBox`, :class:`adv.EditableListBox`..
         """
 
         indices = []
 
-        if isinstance(listBox, (wx.HtmlListBox, wx.SimpleHtmlListBox)):
+        if isinstance(listBox, (wx.html.HtmlListBox, wx.html.SimpleHtmlListBox)):
             if listBox.GetSelectedCount() == 0:
                 return indices
         else:
@@ -606,7 +607,7 @@ class ListBoxHandler(AbstractHandler):
 
         isVirtual = issubclass(listBox.__class__, wx.VListBox) or isinstance(listBox, wx.CheckListBox)
         
-        isHtml = isinstance(listBox, wx.HtmlListBox)
+        isHtml = isinstance(listBox, wx.html.HtmlListBox)
         if isVirtual and not isHtml:
             count = listBox.GetCount()
         else:
@@ -2507,7 +2508,7 @@ HANDLERS = [
     ("TreeCtrlHandler", (wx.TreeCtrl, wx.GenericDirCtrl, CT.CustomTreeCtrl)), 
     ("MenuBarHandler", (wx.MenuBar, FM.FlatMenuBar)), 
     ("ToolBarHandler", (AUI.AuiToolBar, )),
-    ("ListBoxHandler", (wx.ListBox, wx.VListBox, wx.HtmlListBox, wx.SimpleHtmlListBox,
+    ("ListBoxHandler", (wx.ListBox, wx.VListBox, wx.html.HtmlListBox, wx.html.SimpleHtmlListBox,
                         wx.adv.EditableListBox)), 
     ("ListCtrlHandler", (wx.ListCtrl, wx.ListView)),  #ULC.UltimateListCtrl (later)
     ("ChoiceComboHandler", (wx.Choice, wx.ComboBox, wx.adv.OwnerDrawnComboBox)), 
