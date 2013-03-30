@@ -36,16 +36,9 @@ div.body {
 }
 
 div.footer {
-    color: #ffffff;
-    width: 100%;
-    padding: 9px 0 9px 0;
+    padding: 40px 0 9px 0;
     text-align: center;
     font-size: 75%;
-}
-
-div.footer a {
-    color: #ffffff;
-    text-decoration: underline;
 }
 
 div.related {

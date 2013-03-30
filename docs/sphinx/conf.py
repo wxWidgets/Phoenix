@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'wxPython (Phoenix)'
-copyright = u'2012, Andrea Gavana'
+copyright = u'2012-2013, The wxPython Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -189,7 +189,7 @@ htmlhelp_basename = 'PhoenixDocs'
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'PhoenixDocs.tex', u'wxPython (Phoenix) Documentation',
-   u'Andrea Gavana', 'manual'),
+   u'The wxPython Team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -223,7 +223,7 @@ latex_documents = [
 # dict(pdf_compressed = True))
 # would mean that specific document would be compressed
 # regardless of the global pdf_compressed setting.
-pdf_documents = [('index', u'PhoenixDocs', u'wxPython (Phoenix) Documentation', u'Andrea Gavana'),]
+pdf_documents = [('index', u'PhoenixDocs', u'wxPython (Phoenix) Documentation', u'The wxPython Team'),]
 
 # A comma-separated list of custom stylesheets. Example:
 # pdf_stylesheets = ['sphinx', 'kerning', 'a4', "C:\\AGW\\agw\\fonts\\sphinx.json"]
