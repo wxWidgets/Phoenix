@@ -228,16 +228,19 @@ WX_PKGLIST = [cfg.PKGDIR] + [cfg.PKGDIR + '.' + pkg for pkg in find_packages('wx
 
 ENTRY_POINTS = {
     'console_scripts' : [ 
-        "helpviewer = wx.tools.helpviewer:main",
         "img2png = wx.tools.img2png:main",
         "img2py = wx.tools.img2py:main",
         "img2xpm = wx.tools.img2xpm:main",
         "pywxrc = wx.tools.pywxrc:main",
+        ],
+    'gui_scripts' : [ 
+        "helpviewer = wx.tools.helpviewer:main",
         "pycrust = wx.py.PyCrust:main",
         "pyshell = wx.py.PyShell:main",
         "pyslices = wx.py.PySlices:main",
         "pyslicesshell = wx.py.PySlicesShell:main",        
-        ]}
+        ],
+    }
 
 SCRIPTS = []
 DATA_FILES = []
