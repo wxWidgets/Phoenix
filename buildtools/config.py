@@ -94,16 +94,24 @@ class Configuration(object):
         # load the version numbers into this instance's namespace
         versionfile = opj(os.path.split(__file__)[0], 'version.py')
         myExecfile(versionfile, self.__dict__)
-        
-        # If we're doing a dated build then alter the VERSION strings
-        if os.path.exists('DAILY_BUILD'):
-            self.VER_FLAGS += '.b' + open('DAILY_BUILD').read().strip()
+
+        # Include the subversion revision in the version number?
+        if os.environ.get('WXRELEASE') is None:
+            # TODO: It would be nice to have a better fallback than the date
+            # if this is not being run in a svn or git-svn environment...
+            # Perhaps writing the last used valid revision number to a file?
+            # Or perhaps pull it from the PKG-INFO file in egg-info?
+            #
+            # TODO #2: an environment variable is not a good way to control
+            # this...
+            self.VER_FLAGS = '-' + getSvnRev()
+            
         self.VERSION = "%s.%s.%s.%s%s" % (self.VER_MAJOR, 
                                           self.VER_MINOR, 
                                           self.VER_RELEASE,
                                           self.VER_SUBREL, 
                                           self.VER_FLAGS)
-
+        
         self.WXDLLVER = '%d%d' % (self.VER_MAJOR, self.VER_MINOR)
 
         # change the PORT default for wxMac

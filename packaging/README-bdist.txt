@@ -30,7 +30,7 @@ Help Python find Phoenix
 
 All the usual suspects apply here.  You can simply add this folder to
 your PYTHONPATH environment variable.  Or you can add a phoenix.pth
-file to some place already on the sys.path which contains the path to
+file to someplace already on the sys.path which contains the path to
 this folder.  Or you can even copy the wx folder into the
 site-packages folder in your virtualenv.
 
@@ -38,30 +38,20 @@ site-packages folder in your virtualenv.
 Help Phoenix find wxWidgets
 ---------------------------
 
-The Phoenix extension modules need to load the dynamic libraries that
-contain the wxWidgets code for the platform.  For the Windows platform
-nothing extra should be needed because the system will automatically
-look for the DLLs in the same folder that the extension modules are
-located in.
+The Phoenix extension modules need to load the dynamic libraries that contain
+the wxWidgets code for the platform. In most cases the extension modules in
+this snapshot already know to look in the same folder for the wxWidgets
+shared libraries. This will work for Windows and Mac, and should also work
+for any unix-like system based on ELF binaries, and if the expected objdump 
+utility was found on the build system.
 
-For Mac OSX there should also not be anything extra needed to help
-Phoenix find the wxWidgets dynamic libraries because the install names
-have been modified to use @loader_path so they can find the libraries
-in the same folder as the extension modules.
-
-For Unix-like systems like Linux the locations that are searched for
-the dynamic libraries can be controlled by setting the LD_LIBRARY_PATH
-environment variable. Basically you just need to set that variable to
-the path of the wx package, for example if you're in the folder where
-this README is located, then you can do something like this::
+For those cases where the build was not able to perform the neccesary magic
+required to be able to make and use relocatable shared libraries, you may
+need to do a little extra to help wxPython find the wxWidgets libraries.
+Check your platform's documentation for details, but it may be as simple as
+setting the LD_LIBRARY_PATH variable in the environment. For example if
+you're in the folder where this README is located, then you can do something
+like this::
 
     export LD_LIBRARY_PATH=`pwd`/wx
 
-The phoenix_environ.sh shell script included with this build can help
-you do that, just be sure to use the "source" command so the variables
-in the current shell's environment will be modified.
-
-It is also possible to embed the path that the dynamic library should
-be loaded from directly into the extension module.  For now at least
-this is left as an exercise for the reader.  Look for the chrpath
-tool.

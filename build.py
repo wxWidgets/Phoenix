@@ -32,7 +32,6 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                getSvnRev, runcmd, textfile_open, getSipFiles, \
                                getVisCVersion
 
-
 import buildtools.version as version
 
 # defaults
@@ -50,6 +49,9 @@ unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or ev
     
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
+
+baseName = 'wxPython_Phoenix'
+eggInfoName = baseName + '.egg-info'
 
 
 # Some tools will be downloaded for the builds. These are the versions and
@@ -791,9 +793,9 @@ def cmd_docs_bdist(options, args):
     cmdTimer = CommandTimer('docs_bdist')
     pwd = pushDir(phoenixDir())
 
-    svnrev = getSvnRev()
+    cfg = Config()
         
-    rootname = "wxPython-Phoenix-%s-docs" % svnrev
+    rootname = "%s-%s-docs" % (baseName, cfg.VERSION)
     tarfilename = "dist/%s.tar.gz" % rootname
 
     if not os.path.exists('dist'):
@@ -1215,10 +1217,17 @@ def cmd_bdist_wininst(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_wininst')
 
 # bdist_msi requires the version number to be only 3 components, but we're
-# using 4.  TODO: Fix this?
+# using 4.  TODO: Can we fix this?
 #def cmd_bdist_msi(options, args):
 #    _doSimpleSetupCmd(options, args, 'bdist_msi')
 
+
+def cmd_egg_info(options, args, egg_base=None):
+    cmdTimer = CommandTimer('egg_info')
+    VERBOSE = '--verbose' if options.verbose else ''
+    BASE = '--egg-base '+egg_base if egg_base is not None else ''
+    cmd = "%s setup.py egg_info %s %s" % (PYTHON, VERBOSE, BASE)
+    runcmd(cmd)
 
 
 
@@ -1341,10 +1350,12 @@ def cmd_sdist(options, args):
     cmdTimer = CommandTimer('sdist')
     assert os.getcwd() == phoenixDir()
 
+    cfg = Config()
+
     isGit = os.path.exists('.git')
     isSvn = os.path.exists('.svn')
     if not isGit and not isSvn:
-        msg("Sorry, I don't know what to do in this source tree, no git or svn repos found.")
+        msg("Sorry, I don't know what to do in this source tree, no git or svn workspace found.")
         return
             
     # make a tree for building up the archive files
@@ -1389,16 +1400,14 @@ def cmd_sdist(options, args):
 
     # Add some extra stuff to the root folder
     copyFile('packaging/setup.py', ADEST)
-    copyFile('packaging/README.rst', ADEST)
-    cmd = "%s setup.py egg_info --egg-base %s" % (PYTHON, ADEST)
-    runcmd(cmd)
+    copyFile('packaging/README-sdist.txt', opj(ADEST, 'README.txt'))
+    cmd_egg_info(options, args, egg_base=ADEST)
     copyFile(opj(ADEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
              opj(ADEST, 'PKG-INFO'))
             
     # build the tarball
     msg('Archiving Phoenix source...')
-    svnrev = getSvnRev()
-    rootname = "wxPython-Phoenix-%s-src" % svnrev
+    rootname = "%s-%s-src" % (baseName, cfg.VERSION)
     tarfilename = "dist/%s.tar.gz" % rootname
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
@@ -1424,20 +1433,18 @@ def cmd_bdist(options, args):
     cmdTimer = CommandTimer('bdist')
     assert os.getcwd() == phoenixDir()
 
+    cmd_egg_info(options, args)
+    cfg = Config()
+
     dllext = ".so"
-    environ_script="packaging/phoenix_environ.sh"
-    readme = "packaging/README.txt"
     wxlibdir = os.path.join(getBuildDir(options), "lib") 
-    if sys.platform.startswith('win'):
-        environ_script = None 
-    elif sys.platform.startswith('darwin'):
+    if sys.platform.startswith('darwin'):
         dllext = ".dylib"
      
-    svnrev = getSvnRev()
     platform = sys.platform
     if isWindows and PYTHON_ARCH == '64bit':
         platform = 'win64'
-    rootname = "wxPython-Phoenix-%s-%s-py%s" % (svnrev, platform, PYVER)
+    rootname = "%s-%s-%s-py%s" % (baseName, cfg.VERSION, platform, PYVER)
     tarfilename = "dist/%s.tar.gz" % rootname
 
     if not os.path.exists('dist'):
@@ -1447,8 +1454,12 @@ def cmd_bdist(options, args):
         os.remove(tarfilename)
     msg("Archiving Phoenix binaries...")
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
-    tarball.add('wx', os.path.join(rootname, 'wx'), 
-                filter=lambda info: None if '.svn' in info.name else info)
+    tarball.add('wx', opj(rootname, 'wx'), 
+                filter=lambda info: None if '.svn' in info.name \
+                                            or info.name.endswith('.pyc') \
+                                            or '__pycache__' in info.name else info)
+    tarball.add(eggInfoName, opj(rootname, eggInfoName)) 
+    
     if not isDarwin and not isWindows and not options.no_magic and not options.use_syswx:
         # If the DLLs are not already in the wx package folder then go fetch
         # them now.
@@ -1457,9 +1468,7 @@ def cmd_bdist(options, args):
         for dll in dlls:
             tarball.add(dll, os.path.join(rootname, 'wx', os.path.basename(dll)))
 
-    if environ_script:
-        tarball.add(environ_script, os.path.join(rootname, os.path.basename(environ_script)))
-    tarball.add(readme, os.path.join(rootname, os.path.basename(readme)))
+    tarball.add('packaging/README-bdist.txt', os.path.join(rootname, 'README.txt'))
     tarball.close()
 
     if options.upload_package:
