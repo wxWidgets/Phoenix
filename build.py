@@ -61,8 +61,8 @@ sipMD5 = {
     'linux'  : 'b9fa64b1f6f5a6407777a0dda0de5778', 
 }
 
-wafCurrentVersion = '1.7.9'
-wafMD5 = 'ff4cb55ee4fcabc05a062a90d35b7e20'
+wafCurrentVersion = '1.7.10'
+wafMD5 = '6825d465baf2968c1d20a58dd65a0e9d'
 
 doxygenCurrentVersion = '1.8.2'
 doxygenMD5 = {
