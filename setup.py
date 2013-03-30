@@ -23,6 +23,7 @@ from distutils.command.build        import build as orig_build
 from setuptools.command.install     import install as orig_install
 from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
 from setuptools.command.build_py    import build_py as orig_build_py
+from setuptools.command.sdist       import sdist as orig_sdist
 
 from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName 
 
@@ -92,8 +93,8 @@ class wx_build(orig_build):
                 '--skip-build with the bdist_* or install commands to avoid this \n'
                 'message and the wxWidgets and Phoenix build steps in the future.\n')       
         
-            # Use the executable and version of the Python that is running this script.
-            cmd = [sys.executable, '-u', 'build.py', sys.version[:3], 'build']
+            # Use the same Python that is running this script.
+            cmd = [sys.executable, '-u', 'build.py', 'build']
             cmd = ' '.join(cmd)
             runcmd(cmd)
         
@@ -154,6 +155,15 @@ class wx_install(orig_install):
         self.run_command("build")
         orig_install.run(self)
 
+
+
+class wx_sdist(orig_sdist):
+    def run(self):
+        # Use build.py to perform the sdist
+        cmd = [sys.executable, '-u', 'build.py', 'sdist']
+        cmd = ' '.join(cmd)
+        runcmd(cmd)
+
     
 
 # Map these new classes to the appropriate distutils command names.
@@ -161,6 +171,7 @@ CMDCLASS = {
     'build'     : wx_build,
     'bdist_egg' : wx_bdist_egg,
     'install'   : wx_install,
+    'sdist'     : wx_sdist,
     }
 
 
