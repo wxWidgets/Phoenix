@@ -20,11 +20,11 @@ related classes. The implementation is done using :class:`DC`
 
 Why do this?  Neither :class:`GraphicsContext` nor the Cairo-based
 GraphicsContext API provided by wx.lib.graphics can be written
-directly to a :class:`PrintDC`. It can be done via an intermediate bitmap in
-a :class:`MemoryDC` but transferring this to a :class:`PrintDC` is an order of
+directly to a :class:`PrinterDC`. It can be done via an intermediate bitmap in
+a :class:`MemoryDC` but transferring this to a :class:`PrinterDC` is an order of
 magnitude slower than writing directly.
 
-Why not just use :class:`PrintDC` directly?  There may be times when you do want
+Why not just use :class:`PrinterDC` directly?  There may be times when you do want
 to use :class:`GraphicsContext` for its displayed appearance and for its
 clean(er) API, so being able to use the same code for printing as well is nice.
 
@@ -150,7 +150,7 @@ class dcGraphicsContext(object):
         also with increasing y down.
         :class:`DC` and :class:`GraphicsContext` fonts are too big in the ratio
         of pixels per inch to points per inch. If screen rendering used Cairo,
-        printed fonts need to be scaled but if :class:`GC` was used, they are
+        printed fonts need to be scaled but if :class:`GCDC` was used, they are
         already scaled.
         
         :param `context`: ????

@@ -29,8 +29,8 @@ pyPdf can be downloaded from: https://pypi.python.org/pypi/pyPdf
 pyPDF2 home page: http://knowah.github.com/PyPDF2/
 pyPDF2 can be downloaded from: https://github.com/knowah/PyPDF2/
 
-There is an optional :class:`pdfButtonPanel` class, derived from 
-wx.lib.agw.buttonpanel, that can be placed, for example, at the top of the
+There is an optional :class:`~lib.pdfviewer.pdfButtonPanel` class, derived from 
+:class:`~lib.agw.buttonpanel`, that can be placed, for example, at the top of the
 scrolled viewer window, and which contains navigation and zoom controls.
 
 Usage

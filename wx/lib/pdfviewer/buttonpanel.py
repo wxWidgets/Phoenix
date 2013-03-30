@@ -21,7 +21,7 @@ import wx.lib.agw.buttonpanel as bp
 
 class pdfButtonPanel(bp.ButtonPanel):
     """
-    :class:`pdfButtonPanel` is derived from wx.lib.agw.buttonpanel and provides
+    :class:`pdfButtonPanel` is derived from :class:`~lib.agw.buttonpanel` and provides
     buttons to manipulate the viewed PDF, e.g. zoom, save, print etc.
     """
     def __init__(self, parent, id, pos, size, style):

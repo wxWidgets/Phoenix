@@ -953,7 +953,7 @@ class pdfPrintout(wx.Printout):
     def PrintDirect(self, page):
         """
         Provide the data for page by rendering the drawing commands
-        to the printer DC using :class:`dcGraphicsContext`.
+        to the printer DC using :class:`~lib.pdfviewer.dcgraphics.dcGraphicsContext`.
         """
         pageno = page - 1       # zero based
         width = self.view.pagewidth
