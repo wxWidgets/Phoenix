@@ -29,5 +29,11 @@ for wc in ['wxWidgets/configure',
 
 # Now execute the real setup.py that was copied here in order to do whatever
 # command was trying to be done before.
-execfile('setup.py')
+if sys.version_info < (3,):
+    execfile('setup.py')
+else:
+    f = open('setup.py', 'r')
+    source = f.read()
+    f.close()
+    exec(source)
 
