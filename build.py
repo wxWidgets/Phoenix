@@ -1387,8 +1387,13 @@ def cmd_sdist(options, args):
     # Also add the waf executable
     copyFile('bin/waf-%s' % wafCurrentVersion, os.path.join(PDEST, 'bin'))
 
-    # Add a setup.py for the root folder
+    # Add some extra stuff to the root folder
     copyFile('packaging/setup.py', ADEST)
+    copyFile('packaging/README.rst', ADEST)
+    cmd = "%s setup.py egg_info --egg-base %s" % (PYTHON, ADEST)
+    runcmd(cmd)
+    copyFile(opj(ADEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
+             opj(ADEST, 'PKG-INFO'))
             
     # build the tarball
     msg('Archiving Phoenix source...')
@@ -1399,8 +1404,8 @@ def cmd_sdist(options, args):
         os.remove(tarfilename)
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
     pwd = pushDir(ADEST)
-    tarball.add('Phoenix', os.path.join(rootname, 'Phoenix')) 
-    tarball.add('wxWidgets', os.path.join(rootname, 'wxWidgets')) 
+    for name in glob.glob('*'):
+        tarball.add(name, os.path.join(rootname, name)) 
     tarball.close()
     msg('Cleaning up...')
     del pwd
@@ -1444,9 +1449,9 @@ def cmd_bdist(options, args):
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
     tarball.add('wx', os.path.join(rootname, 'wx'), 
                 filter=lambda info: None if '.svn' in info.name else info)
-    if not isDarwin and not isWindows:
-        # The DLLs have already been copied to wx on Windows, and so are
-        # already in the tarball. For other platforms fetch them now.
+    if not isDarwin and not isWindows and not options.no_magic and not options.use_syswx:
+        # If the DLLs are not already in the wx package folder then go fetch
+        # them now.
         msg("Archiving wxWidgets shared libraries...")
         dlls = glob.glob(os.path.join(wxlibdir, "*%s" % dllext))
         for dll in dlls:
