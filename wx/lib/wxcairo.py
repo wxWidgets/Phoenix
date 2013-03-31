@@ -2,13 +2,14 @@
 # Name:        wx.lib.wxcairo
 # Purpose:     Glue code to allow the pycairo package to be used
 #              with a wx.DC as the cairo surface.
-#              
+#
 # Author:      Robin Dunn
 #
 # Created:     3-Sept-2008
-# RCS-ID:      $Id$
 # Copyright:   (c) 2008 by Total Control Software
 # Licence:     wxWindows license
+#
+# Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------
 
 """
@@ -18,8 +19,8 @@ drawing surface.  The `CairoContextFromDC` function in this module
 will return an instance of the pycairo Context class that is ready for
 drawing, using the native cairo surface type for the current platform.
 
-This module requires the pycairo pacakge, and makes use of ctypes for 
-fetching the pycairo C API and also for digging into the cairo library 
+This module requires the pycairo package, and makes use of ctypes for
+fetching the pycairo C API and also for digging into the cairo library
 itself.
 
 To use Cairo with wxPython you will need to have a few dependencies
@@ -51,6 +52,8 @@ installer for the pycairo pacakge here:
 
 
 import wx
+from wx.lib.six import PY3
+
 import cairo
 import ctypes
 import ctypes.util
@@ -59,16 +62,19 @@ import ctypes.util
 #----------------------------------------------------------------------------
 
 # A reference to the cairo shared lib via ctypes.CDLL
-cairoLib = None  
+cairoLib = None
 
 # A reference to the pycairo C API structure
 pycairoAPI = None
 
 
-# a convenience funtion, just to save a bit of typing below
+# a convenience function, just to save a bit of typing below
 def voidp(ptr):
-    """Convert a SWIGged void* type to a ctypes c_void_p"""
-    return ctypes.c_void_p(long(ptr))
+    """Convert a SIP void* type to a ctypes c_void_p"""
+    if PY3:
+        return ctypes.c_void_p(int(ptr))
+    else:
+        return ctypes.c_void_p(long(ptr))
 
 #----------------------------------------------------------------------------
 
@@ -79,8 +85,8 @@ def ContextFromDC(dc):
     at this time.)
     """
     if not isinstance(dc, wx.WindowDC) and not isinstance(dc, wx.MemoryDC):
-        raise TypeError, "Only window and memory DC's are supported at this time."
-    
+        raise TypeError("Only window and memory DC's are supported at this time.")
+
     if 'wxMac' in wx.PlatformInfo:
         width, height = dc.GetSize()
 
@@ -88,15 +94,9 @@ def ContextFromDC(dc):
         cgc = dc.GetHandle()
         assert cgc is not None, "Unable to get CGContext from DC."
         cgref = voidp( cgc )
-        surface_create = cairoLib.cairo_quartz_surface_create_for_cg_context
-        surface_create.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int]
-        surface_create.restype = ctypes.c_void_p
         surfaceptr = voidp(surface_create(cgref, width, height))
 
         # create a cairo context for that surface
-        cairo_create = cairoLib.cairo_create
-        cairo_create.argtypes = [ctypes.c_void_p]
-        cairo_create.restype = ctypes.c_void_p
         ctxptr = voidp(cairo_create(surfaceptr))
 
         # Turn it into a pycairo context object
@@ -105,7 +105,7 @@ def ContextFromDC(dc):
         # The context keeps its own reference to the surface
         cairoLib.cairo_surface_destroy(surfaceptr)
 
-        
+
     elif 'wxMSW' in wx.PlatformInfo:
         # This one is easy, just fetch the HDC and use PyCairo to make
         # the surface and context.
@@ -114,25 +114,22 @@ def ContextFromDC(dc):
         hdc = ctypes.c_long(hdc)
         surface = cairo.Win32Surface(hdc.value)
         ctx = cairo.Context(surface)
-    
+
 
     elif 'wxGTK' in wx.PlatformInfo:
-        gdkLib = _findGDKLib()
-
         # Get the GdkDrawable from the dc
         drawable = voidp( dc.GetHandle() )
 
         # Call a GDK API to create a cairo context
-        gdkLib.gdk_cairo_create.restype = ctypes.c_void_p
         ctxptr = gdkLib.gdk_cairo_create(drawable)
 
         # Turn it into a pycairo context object
         ctx = pycairoAPI.Context_FromContext(ctxptr, pycairoAPI.Context_Type, None)
-    
-    else:
-        raise NotImplementedError, "Help  me, I'm lost..."
 
-    return ctx 
+    else:
+        raise NotImplementedError("Help  me, I'm lost...")
+
+    return ctx
 
 
 #----------------------------------------------------------------------------
@@ -142,43 +139,30 @@ def FontFaceFromFont(font):
     Creates and returns a cairo.FontFace object from the native
     information in a wx.Font.
     """
-    
+
     if 'wxMac' in wx.PlatformInfo:
-        font_face_create = cairoLib.cairo_quartz_font_face_create_for_cgfont
-        font_face_create.argtypes = [ctypes.c_void_p]
-        font_face_create.restype = ctypes.c_void_p
-        
         fontfaceptr = font_face_create(voidp(font.OSXGetCGFont()))
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
 
 
     elif 'wxMSW' in wx.PlatformInfo:
-        cairoLib.cairo_win32_font_face_create_for_hfont.restype = ctypes.c_void_p
         fontfaceptr = voidp( cairoLib.cairo_win32_font_face_create_for_hfont(
             ctypes.c_ulong(font.GetHFONT())) )
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
 
 
     elif 'wxGTK' in wx.PlatformInfo:
-        gdkLib = _findGDKLib()
-        pcLib = _findPangoCairoLib()
-
         # wow, this is a hell of a lot of steps...
         desc = voidp( font.GetPangoFontDescription() )
 
-        pcLib.pango_cairo_font_map_get_default.restype = ctypes.c_void_p
         pcfm = voidp(pcLib.pango_cairo_font_map_get_default())
 
-        gdkLib.gdk_pango_context_get.restype = ctypes.c_void_p
         pctx = voidp(gdkLib.gdk_pango_context_get())
 
-        pcLib.pango_font_map_load_font.restype = ctypes.c_void_p
         pfnt = voidp( pcLib.pango_font_map_load_font(pcfm, pctx, desc) )
 
-        pcLib.pango_cairo_font_get_scaled_font.restype = ctypes.c_void_p
         scaledfontptr = voidp( pcLib.pango_cairo_font_get_scaled_font(pfnt) )
 
-        cairoLib.cairo_scaled_font_get_font_face.restype = ctypes.c_void_p
         fontfaceptr = voidp(cairoLib.cairo_scaled_font_get_font_face(scaledfontptr))
         cairoLib.cairo_font_face_reference(fontfaceptr)
 
@@ -187,7 +171,7 @@ def FontFaceFromFont(font):
         gdkLib.g_object_unref(pctx)
 
     else:
-        raise NotImplementedError, "Help  me, I'm lost..."
+        raise NotImplementedError("Help  me, I'm lost...")
 
     return fontface
 
@@ -202,7 +186,7 @@ def BitmapFromImageSurface(surface):
     format = surface.get_format()
     if format not in [cairo.FORMAT_ARGB32, cairo.FORMAT_RGB24]:
         raise TypeError("Unsupported format")
-    
+
     width  = surface.get_width()
     height = surface.get_height()
     stride = surface.get_stride()
@@ -212,7 +196,7 @@ def BitmapFromImageSurface(surface):
     else:
         fmt = wx.BitmapBufferFormat_RGB32
 
-    bmp = wx.EmptyBitmap(width, height, 32)
+    bmp = wx.Bitmap(width, height, 32)
     bmp.CopyFromBuffer(data, fmt, stride)
     return bmp
 
@@ -222,7 +206,7 @@ def ImageSurfaceFromBitmap(bitmap):
     Create an ImageSurface from a wx.Bitmap
     """
     width, height = bitmap.GetSize()
-    if bitmap.HasAlpha():
+    if bitmap.ConvertToImage().HasAlpha():
         format = cairo.FORMAT_ARGB32
         fmt = wx.BitmapBufferFormat_ARGB32
     else:
@@ -233,7 +217,7 @@ def ImageSurfaceFromBitmap(bitmap):
         stride = cairo.ImageSurface.format_stride_for_width(format, width)
     except AttributeError:
         stride = width * 4
-    
+
     surface = cairo.ImageSurface(format, width, height)
     bitmap.CopyToBuffer(surface.get_data(), fmt, stride)
     surface.mark_dirty()
@@ -265,14 +249,14 @@ def _findCairoLib():
     # if that didn't work then use the ctypes util to search the paths
     # appropriate for the system
     for name in names:
-        location = ctypes.util.find_library(name) 
+        location = ctypes.util.find_library(name)
         if location:
             try:
                 cairoLib = ctypes.CDLL(location)
                 return
             except:
                 pass
-        
+
     # If the above didn't find it on OS X then we still have a
     # trick up our sleeve...
     if 'wxMac' in wx.PlatformInfo:
@@ -289,9 +273,9 @@ def _findCairoLib():
                         pass
 
     if not cairoLib:
-        raise RuntimeError, "Unable to find the Cairo shared library"
-    
-            
+        raise RuntimeError("Unable to find the Cairo shared library")
+
+
 
 #----------------------------------------------------------------------------
 
@@ -309,7 +293,7 @@ def _findHelper(names, key, msg):
         if location:
             break
     if not location:
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
     dll = ctypes.CDLL(location)
     _dlls[key] = dll
     return dll
@@ -325,7 +309,7 @@ def _findPangoCairoLib():
 def _findAppSvcLib():
     return _findHelper(['ApplicationServices'], 'appsvc',
                        "Unable to find the ApplicationServices Framework")
-    
+
 
 #----------------------------------------------------------------------------
 
@@ -374,7 +358,7 @@ class Pycairo_CAPI(ctypes.Structure):
     # This structure is known good with pycairo 1.8.4.
     # We have to also test for (1,10,8) because pycairo 1.8.10 has an
     # incorrect version_info value
-    elif cairo.version_info < (1,9) or cairo.version_info == (1,10,8):  
+    elif cairo.version_info < (1,9) or cairo.version_info == (1,10,8):
         _fields_ = [
             ('Context_Type', ctypes.py_object),
             ('Context_FromContext', ctypes.PYFUNCTYPE(ctypes.py_object,
@@ -414,7 +398,7 @@ class Pycairo_CAPI(ctypes.Structure):
 
     # This structure is known good with pycairo 1.10.0. They keep adding stuff
     # to the middle of the structure instead of only adding to the end!
-    elif cairo.version_info < (1,11):  
+    elif cairo.version_info < (1,11):
         _fields_ = [
             ('Context_Type', ctypes.py_object),
             ('Context_FromContext', ctypes.PYFUNCTYPE(ctypes.py_object,
@@ -422,7 +406,7 @@ class Pycairo_CAPI(ctypes.Structure):
                                                       ctypes.py_object,
                                                       ctypes.py_object)),
             ('FontFace_Type', ctypes.py_object),
-            ('ToyFontFace_Type', ctypes.py_object),  
+            ('ToyFontFace_Type', ctypes.py_object),
             ('FontFace_FromFontFace', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p)),
             ('FontOptions_Type', ctypes.py_object),
             ('FontOptions_FromFontOptions', ctypes.PYFUNCTYPE(ctypes.py_object, ctypes.c_void_p)),
@@ -459,11 +443,17 @@ def _loadPycairoAPI():
     global pycairoAPI
     if pycairoAPI is not None:
         return
-    
-    PyCObject_AsVoidPtr = ctypes.pythonapi.PyCObject_AsVoidPtr
-    PyCObject_AsVoidPtr.argtypes = [ctypes.py_object]
-    PyCObject_AsVoidPtr.restype = ctypes.c_void_p
-    ptr = PyCObject_AsVoidPtr(cairo.CAPI)
+
+    if PY3:
+        PyCapsule_GetPointer = ctypes.pythonapi.PyCapsule_GetPointer
+        PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
+        PyCapsule_GetPointer.restype = ctypes.c_void_p
+        ptr = PyCapsule_GetPointer(cairo.CAPI, b'cairo.CAPI')
+    else:
+        PyCObject_AsVoidPtr = ctypes.pythonapi.PyCObject_AsVoidPtr
+        PyCObject_AsVoidPtr.argtypes = [ctypes.py_object]
+        PyCObject_AsVoidPtr.restype = ctypes.c_void_p
+        ptr = PyCObject_AsVoidPtr(cairo.CAPI)
     pycairoAPI = ctypes.cast(ptr, ctypes.POINTER(Pycairo_CAPI)).contents
 
 #----------------------------------------------------------------------------
@@ -473,4 +463,30 @@ def _loadPycairoAPI():
 _findCairoLib()
 _loadPycairoAPI()
 
+if 'wxMac' in wx.PlatformInfo:
+    surface_create = cairoLib.cairo_quartz_surface_create_for_cg_context
+    surface_create.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int]
+    surface_create.restype = ctypes.c_void_p
+
+    cairo_create = cairoLib.cairo_create
+    cairo_create.argtypes = [ctypes.c_void_p]
+    cairo_create.restype = ctypes.c_void_p
+
+    font_face_create = cairoLib.cairo_quartz_font_face_create_for_cgfont
+    font_face_create.argtypes = [ctypes.c_void_p]
+    font_face_create.restype = ctypes.c_void_p
+
+elif 'wxMSW' in wx.PlatformInfo:
+    cairoLib.cairo_win32_font_face_create_for_hfont.restype = ctypes.c_void_p
+
+elif 'wxGTK' in wx.PlatformInfo:
+    gdkLib = _findGDKLib()
+    pcLib = _findPangoCairoLib()
+
+    gdkLib.gdk_cairo_create.restype = ctypes.c_void_p
+    pcLib.pango_cairo_font_map_get_default.restype = ctypes.c_void_p
+    gdkLib.gdk_pango_context_get.restype = ctypes.c_void_p
+    pcLib.pango_font_map_load_font.restype = ctypes.c_void_p
+    pcLib.pango_cairo_font_get_scaled_font.restype = ctypes.c_void_p
+    cairoLib.cairo_scaled_font_get_font_face.restype = ctypes.c_void_p
 #----------------------------------------------------------------------------
