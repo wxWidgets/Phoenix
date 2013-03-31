@@ -82,6 +82,12 @@ def run():
     module.addPyCode("PyDropTarget = wx.deprecated(DropTarget, 'Use DropTarget instead.')")
     
     
+    c = module.find('wxTextDropTarget')
+    c.addItem(etgtools.WigCode("virtual wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);"))
+
+    c = module.find('wxFileDropTarget')
+    c.addItem(etgtools.WigCode("virtual wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);"))
+
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
