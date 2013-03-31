@@ -354,7 +354,6 @@ def addWindowVirtuals(klass):
     protectedWindowVirtuals = [    
         ('ProcessEvent',              'bool ProcessEvent(wxEvent & event)'),
         ('DoEnable',                  'void DoEnable(bool enable)'),
-        ('OnEnabled',                 'void OnEnabled(bool enabled)'),
         ('DoGetPosition',             'void DoGetPosition(int *x, int *y) const'),
         ('DoGetSize',                 'void DoGetSize(int *width, int *height) const'),
         ('DoGetClientSize',           'void DoGetClientSize(int *width, int *height) const'),
