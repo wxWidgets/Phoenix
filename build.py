@@ -674,7 +674,13 @@ def cmd_etg(options, args):
     if options.nodoc:
         flags += ' --nodoc'
 
-    etgfiles = glob.glob('etg/_*.py')
+    # get the files to run, moving _core the to the front of the list
+    etgfiles = glob.glob(opj('etg', '_*.py'))
+    core_file = opj('etg', '_core.py')
+    if core_file in etgfiles:
+        etgfiles.remove(core_file)
+        etgfiles.insert(0, core_file)
+
     for script in etgfiles:
         sipfile = etg2sip(script)
         deps = [script]
