@@ -9,10 +9,12 @@
 
 # History:      Created 17 Jun 2009
 #
-# Tags:         phoenix-port, documented
+# Tags:         phoenix-port, documented, unittest
 #
 #----------------------------------------------------------------------------
-
+"""
+This module is used to compute Bezier curves.
+"""
 import operator
 import math
  

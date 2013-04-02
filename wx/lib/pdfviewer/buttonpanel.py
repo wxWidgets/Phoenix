@@ -12,7 +12,10 @@
 # Tags:         phoenix-port, documented
 #
 #----------------------------------------------------------------------------
-
+"""
+This module provides the :class:`pdfButtonPanel` which can be used together
+with the :class:`pdfViewer`.
+"""
 import sys, os, time
 
 import images

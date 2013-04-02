@@ -13,7 +13,10 @@
 # Tags:         phoenix-port, documented
 #
 #----------------------------------------------------------------------------
- 
+"""
+This module is used to compute Bezier curves for PDF rendering.
+"""
+
 import wx
 from vec2d import *
  

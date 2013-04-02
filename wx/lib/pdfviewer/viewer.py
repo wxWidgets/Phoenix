@@ -14,10 +14,13 @@
 #               pdfViewer.Print(). Added option to pdfViewer.LoadFile() to
 #               accept a file-like object as well as a path string
 #
-# Tags:        phoenix-port, documented
+# Tags:        phoenix-port, documented, unittest
 #
 #----------------------------------------------------------------------------
-
+"""
+This module provides the :class:`pdfViewer` to view PDF files.
+"""
+This module 
 import sys, os, time, types
 import copy, shutil, cStringIO
 
@@ -86,9 +89,11 @@ except ImportError:
 #----------------------------------------------------------------------------
 
 ## New PageObject method added by Forestfield Software
-#  Locate and return all commands in the order they
-#  occur in the content stream. Used by pdfviewer
 def extractOperators(self):
+    """
+    Locate and return all commands in the order they
+    occur in the content stream. Used by pdfviewer.
+    """
     ops = []
     content = self["/Contents"].getObject()
     if not isinstance(content, ContentStream):
@@ -104,7 +109,7 @@ PageObject.extractOperators = extractOperators
     
 class pdfViewer(wx.ScrolledWindow):
     """ 
-    View pdf reports in a scrolled window.  Contents are read from PDF file
+    View PDF report files in a scrolled window.  Contents are read from PDF file
     and rendered in a :class:`GraphicsContext`. Show visible window contents
     as quickly as possible then read the whole file and build the set of drawing
     commands for each page. This can take time for a big file or if there are complex
@@ -242,8 +247,8 @@ class pdfViewer(wx.ScrolledWindow):
          immediately. Default: True.
         :param string `printer_name`: the name of the printer that is to
          receive the printout. Default: as set by the O/S.
-        :param `orientation`: select the orientation (wx.PORTRAIT or
-         wx.LANDSCAPE) for the printout. Default: as set by the O/S.
+        :param `orientation`: select the orientation (:class:`wx.PORTRAIT` or
+         :class:`wx.LANDSCAPE`) for the printout. Default: as set by the O/S.
         
         """
         pdd = wx.PrintDialogData()
@@ -674,7 +679,10 @@ class pdfViewer(wx.ScrolledWindow):
 
     def DrawTextString(self, text): 
         """
-        Word spacing only works for horizontal text (??).
+        Draw a text string. Word spacing only works for horizontal text.
+        
+        :param string `text`: the text to draw
+        
         """
         dlist = []
         g = self.gstate
@@ -689,6 +697,13 @@ class pdfViewer(wx.ScrolledWindow):
         return dlist    
 
     def DrawTextItem(self, textitem, f):
+        """
+        Draw a text item.
+        
+        :param `textitem`: the item to draw  ??? what is the type
+        :param `f`: the font to use for text extent measuring ???
+        
+        """
         dc = wx.ClientDC(self)      # dummy dc for text extents 
         g = self.gstate
         x = g.textMatrix[4]
