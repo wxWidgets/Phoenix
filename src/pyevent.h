@@ -25,7 +25,7 @@
 // NOTE: This class is intentionally not exposed to SIP as there is no
 // need for it in Python code. Intead we just tell SIP that the __*attr__
 // methods are in the event classes. (See wxPyEvent and wxPyCommandEvent
-// below.)
+// below and in etg/pyevent.py.)
 
 class wxPyEvtDict
 {

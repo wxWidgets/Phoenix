@@ -5,11 +5,10 @@
 # Author:      Miki Tebeka <miki.tebeka@gmail.com>
 #
 # Created:     18-Sept-2006
-# RCS-ID:      $Id$
 # Copyright:   (c) 2006 by Total Control Software
 # Licence:     wxWindows license
-# Tags:        phoenix-port, documented
 #
+# Tags:        phoenix-port, documented
 #---------------------------------------------------------------------------
 
 """
@@ -60,13 +59,13 @@ Sample usage::
             b.Bind(wx.EVT_BUTTON, self.on_evt_click)
             b = wx.Button(self, ID_CMD1, "Generate GOO with %d" % ID_CMD1)
             sizer.Add(b, 1, wx.EXPAND)
-            b.bind(wx.EVT_BUTTON, self.on_cmd_click)
+            b.Bind(wx.EVT_BUTTON, self.on_cmd_click)
             b = wx.Button(self, ID_CMD2, "Generate GOO with %d" % ID_CMD2)
             sizer.Add(b, 1, wx.EXPAND)
             b.Bind(wx.EVT_BUTTON, self.on_cmd_click)
 
-            self.Bind(EVT_GOO, self.on_cmd1, ID_CMD1)
-            self.Bind(EVT_GOO, self.on_cmd2, ID_CMD2)
+            self.Bind(EVT_GOO, self.on_cmd1, id=ID_CMD1)
+            self.Bind(EVT_GOO, self.on_cmd2, id=ID_CMD2)
 
             self.SetSizer(sizer)
             self.SetAutoLayout(True)
@@ -122,11 +121,11 @@ def NewEvent():
 
     evttype = wx.NewEventType()
     
-    class _Event(wx.Event):
+    class _Event(wx.PyEvent):
         def __init__(self, **kw):
-            wx.Event.__init__(self)
+            wx.PyEvent.__init__(self)
             self.SetEventType(evttype)
-            self.__dict__.update(kw)
+            self._getAttrDict().update(kw)
 
     return _Event, wx.PyEventBinder(evttype)
 
@@ -143,10 +142,10 @@ def NewCommandEvent():
 
     evttype = wx.NewEventType()
 
-    class _Event(wx.CommandEvent):
+    class _Event(wx.PyCommandEvent):
         def __init__(self, id, **kw):
-            wx.CommandEvent.__init__(self, evttype, id)
-            self.__dict__.update(kw)
+            wx.PyCommandEvent.__init__(self, evttype, id)
+            self._getAttrDict().update(kw)
     
     return _Event, wx.PyEventBinder(evttype, 1)
 
@@ -155,8 +154,8 @@ def NewCommandEvent():
 
 def _test():
     """A little smoke test"""
-    from threading import Thread
-    from time import sleep
+    import time
+    import threading
 
     MooEvent, EVT_MOO = NewEvent()
     GooEvent, EVT_GOO = NewCommandEvent()
@@ -164,11 +163,11 @@ def _test():
     DELAY = 0.7
 
     def evt_thr(win):
-        sleep(DELAY)
+        time.sleep(DELAY)
         wx.PostEvent(win, MooEvent(moo=1))
 
     def cmd_thr(win, id):
-        sleep(DELAY)
+        time.sleep(DELAY)
         wx.PostEvent(win, GooEvent(id, goo=id))
 
     ID_CMD1 = wx.NewId()
@@ -178,31 +177,31 @@ def _test():
         def __init__(self):
             wx.Frame.__init__(self, None, -1, "MOO")
             sizer = wx.BoxSizer(wx.VERTICAL)
-            EVT_MOO(self, self.on_moo)
+            self.Bind(EVT_MOO, self.on_moo)
             b = wx.Button(self, -1, "Generate MOO")
             sizer.Add(b, 1, wx.EXPAND)
-            wx.EVT_BUTTON(self, b.GetId(), self.on_evt_click)
+            b.Bind(wx.EVT_BUTTON, self.on_evt_click)
             b = wx.Button(self, ID_CMD1, "Generate GOO with %d" % ID_CMD1)
             sizer.Add(b, 1, wx.EXPAND)
-            wx.EVT_BUTTON(self, ID_CMD1, self.on_cmd_click)
+            b.Bind(wx.EVT_BUTTON, self.on_cmd_click)
             b = wx.Button(self, ID_CMD2, "Generate GOO with %d" % ID_CMD2)
             sizer.Add(b, 1, wx.EXPAND)
-            wx.EVT_BUTTON(self, ID_CMD2, self.on_cmd_click)
+            b.Bind(wx.EVT_BUTTON, self.on_cmd_click)
 
-            EVT_GOO(self, ID_CMD1, self.on_cmd1)
-            EVT_GOO(self, ID_CMD2, self.on_cmd2)
+            self.Bind(EVT_GOO, self.on_cmd1, id=ID_CMD1)
+            self.Bind(EVT_GOO, self.on_cmd2, id=ID_CMD2)
 
             self.SetSizer(sizer)
             self.SetAutoLayout(True)
             sizer.Fit(self)
 
         def on_evt_click(self, e):
-            t = Thread(target=evt_thr, args=(self, ))
+            t = threading.Thread(target=evt_thr, args=(self, ))
             t.setDaemon(True)
             t.start()
 
         def on_cmd_click(self, e):
-            t = Thread(target=cmd_thr, args=(self, e.GetId()))
+            t = threading.Thread(target=cmd_thr, args=(self, e.GetId()))
             t.setDaemon(True)
             t.start()
 
