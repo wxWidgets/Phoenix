@@ -4706,7 +4706,7 @@ class AuiManager(wx.EvtHandler):
         if target in self._panes:
             return self.AddPane4(window, arg1, target)
 
-        if type(arg1) == type(1):
+        if isinstance(arg1, int):
             # This Is Addpane2
             if arg1 is None:
                 arg1 = wx.LEFT
