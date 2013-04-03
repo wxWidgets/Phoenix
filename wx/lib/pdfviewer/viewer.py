@@ -20,7 +20,7 @@
 """
 This module provides the :class:`pdfViewer` to view PDF files.
 """
-This module 
+
 import sys, os, time, types
 import copy, shutil, cStringIO
 
