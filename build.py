@@ -904,7 +904,7 @@ def cmd_touch(options, args):
     runcmd('touch etg/*.py')
     
     
-def test(options, args):
+def cmd_test(options, args):
     cmdTimer = CommandTimer('test')
     pwd = pushDir(phoenixDir())
     runcmd(PYTHON + ' unittests/runtests.py %s' % ('-v' if options.verbose else ''), fatal=False)
