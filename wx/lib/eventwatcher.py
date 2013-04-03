@@ -6,9 +6,10 @@
 # Author:      Robin Dunn
 #
 # Created:     21-Jan-2009
-# RCS-ID:      $Id: $
 # Copyright:   (c) 2009 by Total Control Software
 # Licence:     wxWindows license
+#
+# Tags:        phoenix-port
 #----------------------------------------------------------------------------
 
 """
@@ -203,8 +204,8 @@ class EventChooser(wx.Panel):
         self.lc = EventChooser.EventChooserLC(self)
         btn1 = wx.Button(self, -1, "All")
         btn2 = wx.Button(self, -1, "None")
-        btn1.SetToolTipString("Check all events")
-        btn2.SetToolTipString("Uncheck all events")
+        btn1.SetToolTip("Check all events")
+        btn2.SetToolTip("Uncheck all events")
 
         self.Bind(wx.EVT_BUTTON, self.onCheckAll, btn1)
         self.Bind(wx.EVT_BUTTON, self.onUncheckAll, btn2)        
@@ -310,10 +311,10 @@ class EventWatcher(wx.Frame):
         selectBtn = wx.ToggleButton(panel, -1, ">>>")
         self.selectBtn = selectBtn
         
-        clearBtn.SetToolTipString("Clear the event log")
-        addBtn.SetToolTipString("Add the event binders in an additional package or module to the watcher")
-        watchBtn.SetToolTipString("Toggle the watching of events")
-        selectBtn.SetToolTipString("Show/hide the list of events to be logged")
+        clearBtn.SetToolTip("Clear the event log")
+        addBtn.SetToolTip("Add the event binders in an additional package or module to the watcher")
+        watchBtn.SetToolTip("Toggle the watching of events")
+        selectBtn.SetToolTip("Show/hide the list of events to be logged")
         
         # Do the layout
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -419,7 +420,7 @@ class EventWatcher(wx.Frame):
 
     
     def onToggleSelectEvents(self, evt):
-        if evt.Checked():
+        if evt.IsChecked():
             self.selectBtn.SetLabel("<<<")
             self._selectList = EventChooser(self.splitter)
             self._selectList.setUpdateCallback(self.updateBindings)

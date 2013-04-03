@@ -740,7 +740,7 @@ class CheckListCtrlMixin:
         is used to determine the checkboxes state (see wx.CONTROL_*)
 
         """
-        bmp = wx.EmptyBitmap(*size)
+        bmp = wx.Bitmap(*size)
         dc = wx.MemoryDC(bmp)
         dc.Clear()
         wx.RendererNative.Get().DrawCheckBox(self, dc,
@@ -748,10 +748,8 @@ class CheckListCtrlMixin:
         dc.SelectObject(wx.NullBitmap)
         return bmp
 
-    # NOTE: if you use InsertItem, InsertImageItem or InsertImageStringItem,
-    #       you must set the image yourself.
     def __InsertStringItem_(self, index, label):
-        index = self.InsertImageStringItem(index, label, 0)
+        index = self.InsertItem(index, label, 0)
         return index
 
     def __OnLeftDown_(self, evt):

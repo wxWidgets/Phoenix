@@ -6,9 +6,10 @@
 # Author:      Robin Dunn
 #
 # Created:     26-Jan-2007
-# RCS-ID:      $Id$
 # Copyright:   (c) 2007 by Total Control Software
 # Licence:     wxWindows license
+#
+# Tags:        phoenix-port
 #----------------------------------------------------------------------------
 
 # NOTE: This class was originally based on ideas sent to the
@@ -203,25 +204,25 @@ class InspectionFrame(wx.Frame):
         
         toggleFillingBmp = ShowFilling.GetBitmap()
 
-        refreshTool = tbar.AddLabelTool(-1, 'Refresh', refreshBmp,
-                                        shortHelp = 'Refresh widget tree (F1)')
-        findWidgetTool = tbar.AddLabelTool(-1, 'Find', findWidgetBmp,
-                                           shortHelp='Find new target widget. (F2)  Click here and\nthen on another widget in the app.')
-        showSizersTool = tbar.AddLabelTool(-1, 'Sizers', showSizersBmp,
-                                           shortHelp='Include sizers in widget tree (F3)',
-                                           kind=wx.ITEM_CHECK)
-        expandTreeTool = tbar.AddLabelTool(-1, 'Expand', expandTreeBmp,
-                                           shortHelp='Expand all tree items (F4)')
-        collapseTreeTool = tbar.AddLabelTool(-1, 'Collapse', collapseTreeBmp,
-                                            shortHelp='Collapse all tree items (F5)')
-        highlightItemTool = tbar.AddLabelTool(-1, 'Highlight', highlightItemBmp,
-                                           shortHelp='Attempt to highlight live item (F6)')
-        evtWatcherTool = tbar.AddLabelTool(-1, 'Events', evtWatcherBmp,
-                                           shortHelp='Watch the events of the selected item (F7)')
+        refreshTool = tbar.AddTool(-1, 'Refresh', refreshBmp,
+                                   shortHelp = 'Refresh widget tree (F1)')
+        findWidgetTool = tbar.AddTool(-1, 'Find', findWidgetBmp,
+                                      shortHelp='Find new target widget. (F2)  Click here and\nthen on another widget in the app.')
+        showSizersTool = tbar.AddTool(-1, 'Sizers', showSizersBmp,
+                                      shortHelp='Include sizers in widget tree (F3)',
+                                      kind=wx.ITEM_CHECK)
+        expandTreeTool = tbar.AddTool(-1, 'Expand', expandTreeBmp,
+                                      shortHelp='Expand all tree items (F4)')
+        collapseTreeTool = tbar.AddTool(-1, 'Collapse', collapseTreeBmp,
+                                        shortHelp='Collapse all tree items (F5)')
+        highlightItemTool = tbar.AddTool(-1, 'Highlight', highlightItemBmp,
+                                         shortHelp='Attempt to highlight live item (F6)')
+        evtWatcherTool = tbar.AddTool(-1, 'Events', evtWatcherBmp,
+                                      shortHelp='Watch the events of the selected item (F7)')
         
-        toggleFillingTool = tbar.AddLabelTool(-1, 'Filling', toggleFillingBmp,
-                                              shortHelp='Show PyCrust \'filling\' (F8)',
-                                              kind=wx.ITEM_CHECK)
+        toggleFillingTool = tbar.AddTool(-1, 'Filling', toggleFillingBmp,
+                                         shortHelp='Show PyCrust \'filling\' (F8)',
+                                         kind=wx.ITEM_CHECK)
         tbar.Realize()
 
         self.Bind(wx.EVT_TOOL,      self.OnRefreshTree,     refreshTool)
@@ -347,7 +348,7 @@ class InspectionFrame(wx.Frame):
         
     def OnWatchEvents(self, evt):
         item = self.tree.GetSelection()
-        obj = self.tree.GetItemPyData(item)
+        obj = self.tree.GetItemData(item)
         if isinstance(obj, wx.Window):
             import wx.lib.eventwatcher as ew
             watcher = ew.EventWatcher(self)
@@ -357,7 +358,7 @@ class InspectionFrame(wx.Frame):
     def OnWatchEventsUI(self, evt):
         item = self.tree.GetSelection()
         if item:
-            obj = self.tree.GetItemPyData(item)
+            obj = self.tree.GetItemData(item)
             evt.Enable(isinstance(obj, wx.Window))
 
 
@@ -473,7 +474,7 @@ class InspectionTree(TreeBaseClass):
     def _AddWidget(self, parentItem, widget, includeSizers):
         text = self.GetTextForWidget(widget)
         item = self.AppendItem(parentItem, text)
-        self.SetItemPyData(item, widget)
+        self.SetItemData(item, widget)
 
         # Add the sizer and widgets in the sizer, if we're showing them
         widgetsInSizer = []
@@ -495,7 +496,7 @@ class InspectionTree(TreeBaseClass):
         widgets = []
         text = self.GetTextForSizer(sizer)
         item = self.AppendItem(parentItem, text)
-        self.SetItemPyData(item, sizer)
+        self.SetItemData(item, sizer)
         self.SetItemTextColour(item, "blue")
 
         for si in sizer.GetChildren():
@@ -509,7 +510,7 @@ class InspectionTree(TreeBaseClass):
                 ss._parentSizer = sizer
             else:
                 i = self.AppendItem(item, "Spacer")
-                self.SetItemPyData(i, si)
+                self.SetItemData(i, si)
                 self.SetItemTextColour(i, "blue")
         return widgets
 
@@ -525,7 +526,7 @@ class InspectionTree(TreeBaseClass):
         return None
 
     def _FindWidgetItem(self, widget, item):
-        if self.GetItemPyData(item) is widget:
+        if self.GetItemData(item) is widget:
             return item
         child, cookie = self.GetFirstChild(item)
         while child:
@@ -562,7 +563,7 @@ class InspectionTree(TreeBaseClass):
     def OnSelectionChanged(self, evt):
         item = evt.GetItem()
         if item:
-            obj = self.GetItemPyData(item)
+            obj = self.GetItemData(item)
             self.toolFrame.SetObj(obj)
 
 
@@ -819,7 +820,7 @@ class _InspectionHighlighter(object):
         current tree selection.
         """
         item = tree.GetSelection()
-        obj = tree.GetItemPyData(item)
+        obj = tree.GetItemData(item)
 
         if isinstance(obj, wx.Window):
             self.HighlightWindow(obj)
@@ -829,7 +830,7 @@ class _InspectionHighlighter(object):
 
         elif isinstance(obj, wx.SizerItem):   # Spacer
             pItem = tree.GetItemParent(item)
-            sizer = tree.GetItemPyData(pItem)
+            sizer = tree.GetItemData(pItem)
             self.HighlightSizerItem(obj, sizer)
 
         else:
@@ -866,7 +867,7 @@ class _InspectionHighlighter(object):
         tlw = win.GetTopLevelParent()
         pos = sizer.GetPosition()
         pos = self.FindHighlightPos(tlw, win.ClientToScreen(pos))
-        rect = wx.RectPS(pos, sizer.GetSize())
+        rect = wx.Rect(pos, sizer.GetSize())
         dc, dco = self.DoHighlight(tlw, rect, self.color1)
 
         # Now highlight the actual items within the sizer.  This may
@@ -881,11 +882,11 @@ class _InspectionHighlighter(object):
                 elif item.IsSizer():
                     p = item.GetSizer().GetPosition()
                     s = item.GetSizer().GetSize()
-                    r = wx.RectPS(p,s)
+                    r = wx.Rect(p,s)
                 else:
                     continue
                 r = self.AdjustRect(tlw, win, r)
-                dc.DrawRectangleRect(r)
+                dc.DrawRectangle(r)
                     
         # Next highlight the area allocated to each item in the sizer.
         # Each kind of sizer will need to be done a little
@@ -895,7 +896,7 @@ class _InspectionHighlighter(object):
         if isinstance(sizer, wx.WrapSizer):
             for item in sizer.GetChildren():
                 ir = self.AdjustRect(tlw, win, item.Rect)
-                dc.DrawRectangleRect(ir)
+                dc.DrawRectangle(ir)
         
         # wx.BoxSizer, wx.StaticBoxSizer
         elif isinstance(sizer, wx.BoxSizer):
@@ -916,7 +917,7 @@ class _InspectionHighlighter(object):
                         x -= item.Border
                     dc.DrawLine(x, y, x, y1)
                     if item.IsSizer():
-                        dc.DrawRectangleRect(ir)
+                        dc.DrawRectangle(ir)
 
             if sizer.Orientation == wx.VERTICAL:
                 x1 = x + rect.width
@@ -927,7 +928,7 @@ class _InspectionHighlighter(object):
                         y -= item.Border
                     dc.DrawLine(x, y, x1, y)
                     if item.IsSizer():
-                        dc.DrawRectangleRect(ir)
+                        dc.DrawRectangle(ir)
 
         # wx.FlexGridSizer, wx.GridBagSizer
         elif isinstance(sizer, wx.FlexGridSizer):
@@ -987,7 +988,7 @@ class _InspectionHighlighter(object):
     def AdjustRect(self, tlw, win,  rect):
         pos = self.FindHighlightPos(tlw, win.ClientToScreen(rect.Position))
         rect.Position = pos
-        return wx.RectPS(pos, rect.Size)
+        return wx.Rect(pos, rect.Size)
 
 
     def DoHighlight(self, tlw, rect, colour, penWidth=2):
@@ -1006,7 +1007,7 @@ class _InspectionHighlighter(object):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         drawRect = wx.Rect(*rect)
-        dc.DrawRectangleRect(drawRect)
+        dc.DrawRectangle(drawRect)
 
         drawRect.Inflate(2,2)
         if not self.useOverlay:
