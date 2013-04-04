@@ -40,9 +40,14 @@ def run():
     c = module.find('wxTextEntryDialog')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
+    
+    # We don't wrap wxTextValidator
+    for m in c.find('SetTextValidator').all():
+        m.ignore()    
+    
     module.addGlobalStr('wxGetTextFromUserPromptStr', c)
     module.addGlobalStr('wxGetPasswordFromUserPromptStr', c)
-    
+        
     
     c = module.find('wxPasswordEntryDialog')
     tools.fixTopLevelWindowClass(c)
