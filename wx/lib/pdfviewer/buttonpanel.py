@@ -13,8 +13,8 @@
 #
 #----------------------------------------------------------------------------
 """
-This module provides the :class:`pdfButtonPanel` which can be used together
-with the :class:`pdfViewer`.
+This module provides the :class:`~lib.pdfviewer.viewer.pdfButtonPanel` which can
+be used together with the :class:`~lib.pdfviewer.viewer.pdfViewer`.
 """
 import sys, os, time
 

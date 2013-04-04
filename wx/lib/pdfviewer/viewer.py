@@ -18,7 +18,8 @@
 #
 #----------------------------------------------------------------------------
 """
-This module provides the :class:`pdfViewer` to view PDF files.
+This module provides the :class:`~lib.pdfviewer.viewer.pdfViewer` to view PDF
+files.
 """
 
 import sys, os, time, types
