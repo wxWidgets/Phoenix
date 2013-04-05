@@ -27,48 +27,49 @@ class webview_Tests(wtc.WidgetTestCase):
     
     
     def test_webview5(self):
-        webview.WEB_VIEW_ZOOM_TINY
-        webview.WEB_VIEW_ZOOM_SMALL
-        webview.WEB_VIEW_ZOOM_MEDIUM
-        webview.WEB_VIEW_ZOOM_LARGE
-        webview.WEB_VIEW_ZOOM_LARGEST
-        webview.WEB_VIEW_ZOOM_TYPE_LAYOUT
-        webview.WEB_VIEW_ZOOM_TYPE_TEXT
-        webview.WEB_NAV_ERR_CONNECTION
-        webview.WEB_NAV_ERR_CERTIFICATE
-        webview.WEB_NAV_ERR_AUTH
-        webview.WEB_NAV_ERR_SECURITY
-        webview.WEB_NAV_ERR_NOT_FOUND
-        webview.WEB_NAV_ERR_REQUEST
-        webview.WEB_NAV_ERR_USER_CANCELLED
-        webview.WEB_NAV_ERR_OTHER
-        webview.WEB_VIEW_RELOAD_DEFAULT
-        webview.WEB_VIEW_RELOAD_NO_CACHE
-        webview.WEB_VIEW_FIND_WRAP
-        webview.WEB_VIEW_FIND_ENTIRE_WORD
-        webview.WEB_VIEW_FIND_MATCH_CASE
-        webview.WEB_VIEW_FIND_HIGHLIGHT_RESULT
-        webview.WEB_VIEW_FIND_BACKWARDS
-        webview.WEB_VIEW_FIND_DEFAULT
-        webview.WEB_VIEW_BACKEND_DEFAULT
-        webview.WEB_VIEW_BACKEND_WEBKIT
-        webview.WEB_VIEW_BACKEND_IE
+        webview.WEBVIEW_ZOOM_TINY
+        webview.WEBVIEW_ZOOM_SMALL
+        webview.WEBVIEW_ZOOM_MEDIUM
+        webview.WEBVIEW_ZOOM_LARGE
+        webview.WEBVIEW_ZOOM_LARGEST
+        webview.WEBVIEW_ZOOM_TYPE_LAYOUT
+        webview.WEBVIEW_ZOOM_TYPE_TEXT
+        webview.WEBVIEW_NAV_ERR_CONNECTION
+        webview.WEBVIEW_NAV_ERR_CERTIFICATE
+        webview.WEBVIEW_NAV_ERR_AUTH
+        webview.WEBVIEW_NAV_ERR_SECURITY
+        webview.WEBVIEW_NAV_ERR_NOT_FOUND
+        webview.WEBVIEW_NAV_ERR_REQUEST
+        webview.WEBVIEW_NAV_ERR_USER_CANCELLED
+        webview.WEBVIEW_NAV_ERR_OTHER
+        webview.WEBVIEW_RELOAD_DEFAULT
+        webview.WEBVIEW_RELOAD_NO_CACHE
+        webview.WEBVIEW_FIND_WRAP
+        webview.WEBVIEW_FIND_ENTIRE_WORD
+        webview.WEBVIEW_FIND_MATCH_CASE
+        webview.WEBVIEW_FIND_HIGHLIGHT_RESULT
+        webview.WEBVIEW_FIND_BACKWARDS
+        webview.WEBVIEW_FIND_DEFAULT
 
+        webview.WebViewBackendDefault
+        webview.WebViewBackendIE
+        webview.WebViewBackendWebKit
+        
 
     def test_webview6(self):
-        webview.wxEVT_COMMAND_WEB_VIEW_NAVIGATING
-        webview.wxEVT_COMMAND_WEB_VIEW_NAVIGATED
-        webview.wxEVT_COMMAND_WEB_VIEW_LOADED
-        webview.wxEVT_COMMAND_WEB_VIEW_ERROR
-        webview.wxEVT_COMMAND_WEB_VIEW_NEWWINDOW
-        webview.wxEVT_COMMAND_WEB_VIEW_TITLE_CHANGED
+        webview.wxEVT_COMMAND_WEBVIEW_NAVIGATING
+        webview.wxEVT_COMMAND_WEBVIEW_NAVIGATED
+        webview.wxEVT_COMMAND_WEBVIEW_LOADED
+        webview.wxEVT_COMMAND_WEBVIEW_ERROR
+        webview.wxEVT_COMMAND_WEBVIEW_NEWWINDOW
+        webview.wxEVT_COMMAND_WEBVIEW_TITLE_CHANGED
         
-        webview.EVT_WEB_VIEW_NAVIGATING
-        webview.EVT_WEB_VIEW_NAVIGATED
-        webview.EVT_WEB_VIEW_LOADED
-        webview.EVT_WEB_VIEW_ERROR
-        webview.EVT_WEB_VIEW_NEWWINDOW
-        webview.EVT_WEB_VIEW_TITLE_CHANGED
+        webview.EVT_WEBVIEW_NAVIGATING
+        webview.EVT_WEBVIEW_NAVIGATED
+        webview.EVT_WEBVIEW_LOADED
+        webview.EVT_WEBVIEW_ERROR
+        webview.EVT_WEBVIEW_NEWWINDOW
+        webview.EVT_WEBVIEW_TITLE_CHANGED
         
         
 
