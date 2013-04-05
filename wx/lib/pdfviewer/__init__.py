@@ -36,7 +36,7 @@ Additional details on pyPDF2 can be found:
 - home page: http://knowah.github.com/PyPDF2/
 - download: https://github.com/knowah/PyPDF2/
 
-There is an optional :class:`~lib.pdfviewer.viewer.pdfButtonPanel` class, derived from 
+There is an optional :class:`~lib.pdfviewer.buttonpanel.pdfButtonPanel` class, derived from 
 :class:`~lib.agw.buttonpanel`, that can be placed, for example, at the top of the
 scrolled viewer window, and which contains navigation and zoom controls.
 
@@ -88,16 +88,16 @@ Alternatively you can drive the viewer from controls in your own application.
 
 Externally callable methods are:
 
-:meth:`viewer.LoadFile(pathname) <~lib.pdfviewer.viewer.pdfViewer.LoadFile>`
+:meth:`~lib.pdfviewer.viewer.pdfViewer.LoadFile`
 
-:meth:`viewer.Save() <~lib.pdfviewer.viewer.pdfViewer.Save>`
+:meth:`~lib.pdfviewer.viewer.pdfViewer.Save`
 
-:meth:`viewer.Print() <~lib.pdfviewer.viewer.pdfViewer.Print>`
+:meth:`~lib.pdfviewer.viewer.pdfViewer.Print`
 
-:meth:`viewer.SetZoom(zoomscale) <~lib.pdfviewer.viewer.pdfViewer.SetZoom>`
+:meth:`~lib.pdfviewer.viewer.pdfViewer.SetZoom`
 
-:meth:`viewer.GoPage(pagenumber) <~lib.pdfviewer.viewer.pdfViewer.GoPage>`
- 
+:meth:`~lib.pdfviewer.viewer.pdfViewer.GoPage`
+  
 The viewer renders the pdf file content using Cairo if installed,
 otherwise :class:`GraphicsContext` is used. Printing is achieved by writing
 directly to a :class:`PrinterDC` and using :class:`Printer`.
@@ -109,10 +109,11 @@ produced by ReportLab that use Western languages. The biggest limitation is
 probably that it doesn't (yet?) support embedded fonts and will substitute one
 of the standard fonts instead.
 
-The icons used in :class:`~lib.pdfviewer.viewer.pdfButtonPanel` are Free Icons
+The icons used in :class:`~lib.pdfviewer.buttonpanel.pdfButtonPanel` are Free Icons
 by Axialis Software: http://www.axialis.com 
 
 You can freely use them in any project or website, commercially or not. 
+
 TERMS OF USE:
 
 You must keep the credits of the authors: "Axialis Team", even if you modify them. 
