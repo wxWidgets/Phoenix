@@ -32,7 +32,7 @@ def run():
     # customizing the generated code and docstrings.
     
     # We only need a couple items from this interface file, so ignore
-    # everythign and just enable the ones we want.
+    # everything and just enable the ones we want.
     for item in module:
         item.ignore()
         
