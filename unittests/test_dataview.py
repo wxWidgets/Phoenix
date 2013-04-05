@@ -35,6 +35,13 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.assertFalse(dv.NullDataViewItem)
 
 
+    def test_dataviewItem6(self):
+        dvi1 = dv.DataViewItem(111)
+        dvi2 = dv.DataViewItem(222)
+        self.assertTrue(int(dvi1.GetID()) == 111)
+        self.assertTrue(int(dvi2.ID) == 222)
+        
+
     #-------------------------------------------------------
     def test_dataviewItemAttr1(self):
         a = dv.DataViewItemAttr()

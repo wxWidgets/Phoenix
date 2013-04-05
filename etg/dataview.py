@@ -75,6 +75,11 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxDataViewItem')
     assert isinstance(c, etgtools.ClassDef)
+
+    c.addCppCtor('(wxIntPtr id)', """\
+        return new wxDataViewItem((void*)id);
+        """)
+    
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
         """)
@@ -87,6 +92,7 @@ def run():
         return 0;
         """)
     c.addAutoProperties()
+
 
     module.addItem(
         tools.wxArrayWrapperTemplate('wxDataViewItemArray', 'wxDataViewItem', module))
