@@ -9,7 +9,8 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
+from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef,\
+                     ClassDef, MethodDef, ParamDef
 
 PACKAGE   = "wx" 
 MODULE    = "_xrc"
@@ -151,18 +152,21 @@ def run():
     module.addPyFunction('XRCCTRL', '(window, str_id, *ignoreargs)',
         doc='Returns the child window associated with the string ID in an XML resource.',
         body='return window.FindWindowById(XRCID(str_id))')
-                         
-    
-    
-    module.addItem(etgtools.WigCode("""\
-        class wxXmlSubclassFactory
-        {
-        public:
-            wxXmlSubclassFactory();
-            virtual ~wxXmlSubclassFactory();
-            virtual wxObject *Create(const wxString& className) = 0;
-        };"""))
 
+
+
+    cls = ClassDef(name='wxXmlSubclassFactory', 
+        briefDoc="",
+        items=[
+            MethodDef(name='wxXmlSubclassFactory', isCtor=True),
+            MethodDef(name='~wxXmlSubclassFactory', isDtor=True),
+            MethodDef(name='Create', type='wxObject*', 
+                isVirtual=True, isPureVirtual=True,
+                items=[ParamDef(type='const wxString&', name='className')])
+            ])
+    module.addItem(cls)
+    
+    
 
     module.addPyCode("""\
         # Create a factory for handling the subclass property of XRC's 
