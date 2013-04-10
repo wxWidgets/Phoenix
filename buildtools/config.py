@@ -727,6 +727,7 @@ def macSetLoaderNames(filenames):
     for filename in filenames:
         if not os.path.isfile(filename):
             continue
+        # TODO: Change the -id too?
         for line in os.popen('otool -L %s' % filename, 'r').readlines():  # -arch all  ??
             if line.startswith('\t') and 'libwx_' in line:
                 line = line.strip()
