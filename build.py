@@ -1482,7 +1482,21 @@ def cmd_bdist(options, args):
                 
     msg("Binary release built at %s" % tarfilename)
 
+
     
+def cmd_setrev(options, args):
+    # Grab the current SVN revision number (if possible) and write it to a
+    # file we'll use later for building the package version number
+    cmdTimer = CommandTimer('setrev')
+    assert os.getcwd() == phoenixDir()
+
+    svnrev = getSvnRev()
+    f = open('REV.txt', 'w')
+    f.write(svnrev)
+    f.close()
+        
+    
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

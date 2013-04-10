@@ -17,6 +17,7 @@
 /dist
 /license
 /*.egg-info
+/REV.txt
 
 # /bin/
 /bin/sip-*
