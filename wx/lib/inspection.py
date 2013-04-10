@@ -9,13 +9,19 @@
 # Copyright:   (c) 2007 by Total Control Software
 # Licence:     wxWindows license
 #
-# Tags:        phoenix-port
+# Tags:        phoenix-port, documented
 #----------------------------------------------------------------------------
 
 # NOTE: This class was originally based on ideas sent to the
 # wxPython-users mail list by Dan Eloff.  See also
 # wx.lib.mixins.inspect for a class that can be mixed-in with wx.App
 # to provide Hot-Key access to the inspection tool.
+
+"""
+This modules provides the :class:`InspectionTool` and everything else needed to
+provide the Widget Inspection Tool (WIT).
+"""
+
 
 import wx
 import wx.py
@@ -30,8 +36,8 @@ import inspect
 
 class InspectionTool:
     """
-    The InspectionTool is a singleton that manages creating and
-    showing an InspectionFrame.
+    The :class:`InspectionTool` is a singleton that manages creating and
+    showing an :class:`InspectionFrame`.
     """
 
     # Note: This is the Borg design pattern which ensures that all
@@ -51,15 +57,15 @@ class InspectionTool:
         when the inspection tool is shown.  Suitable defaults will be
         used for all of these parameters if they are not provided.
 
-        :param pos:   The default position to show the frame at
-        :param size:  The default size of the frame
-        :param config: A wx.Config object to be used to store layout
+        :param `pos`:   The default position to show the frame at
+        :param `size`:  The default size of the frame
+        :param `config`: A :class:`Config` object to be used to store layout
             and other info to when the inspection frame is closed.
             This info will be restored the next time the inspection
             frame is used.
-        :param locals: A dictionary of names to be added to the PyCrust
+        :param `locals`: A dictionary of names to be added to the PyCrust
             namespace.
-        :param app:  A reference to the wx.App object.
+        :param `app`:  A reference to the :class:`App` object.
         """
         self._frame = None
         self._pos = pos
@@ -75,11 +81,12 @@ class InspectionTool:
     def Show(self, selectObj=None, refreshTree=False):
         """
         Creates the inspection frame if it hasn't been already, and
-        raises it if neccessary.  Pass a widget or sizer in selectObj
-        to have that object be preselected in widget tree.  If
-        refreshTree is True then the widget tree will be rebuilt,
-        otherwise if the tree has already been built it will be left
-        alone.
+        raises it if neccessary.
+        
+        :param `selectObj`: Pass a widget or sizer to have that object be
+                     preselected in widget tree.
+        :param boolean `refreshTree`: rebuild the widget tree, default False
+        
         """
         if not self.initialized:
             self.Init()
@@ -572,7 +579,7 @@ class InspectionTree(TreeBaseClass):
 class InspectionInfoPanel(wx.stc.StyledTextCtrl):
     """
     Used to display information about the currently selected items.
-    Currently just a read-only wx.stc.StyledTextCtrl with some plain
+    Currently just a read-only :class:`stc.StyledTextCtrl` with some plain
     text.  Should probably add some styles to make things easier to
     read.
     """
