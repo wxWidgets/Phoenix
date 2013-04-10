@@ -387,7 +387,8 @@ class FunctionDef(BaseDef, FixWxPrefix):
             # Just remove from the overloads list and insert it into the parent.
             self.overloads.remove(item)
             parent.insertItemAfter(self, item)
-        
+        return item
+    
     
     def ignore(self,  val=True):
         # If the item being ignored has overloads then try to reorder the

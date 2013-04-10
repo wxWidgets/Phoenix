@@ -32,7 +32,9 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxComboBox')
-    c.abstract = False
+    assert isinstance(c, etgtools.ClassDef)
+    tools.fixWindowClass(c)
+    
     c.find('wxComboBox').findOverload('wxString choices').ignore()
     c.find('wxComboBox').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
     c.find('wxComboBox').findOverload('wxArrayString').find('value').default = 'wxEmptyString'
@@ -41,15 +43,32 @@ def run():
     c.find('Create').findOverload('wxArrayString').find('choices').default = 'wxArrayString()'
     c.find('Create').findOverload('wxArrayString').find('value').default = 'wxEmptyString'
 
-    # We ignore this one because if from,to are set as output parameters the
-    # methods will be ambiguous. Maybe the names should just be changed
-    # instead?
-    c.find('GetSelection').findOverload('long *from, long *to').ignore()
-    
+    # When the from,to are set as output parameters the overloaded methods
+    # will be ambiguous, so let's give this one a new name.
+    m = c.find('GetSelection').renameOverload('long *from, long *to', 'GetTextSelection')
+    m.find('from').out = True
+    m.find('to').out = True    
+
+    # For SetSelection we want to keep the existing method since it is
+    # inherited from base classes and has no ambiguities, so just add a new
+    # method for SetTextSelection instead of renaming.
+    orig = c.find('SetSelection').findOverload('from')
+    orig.find('from').name = 'from_'
+    orig.find('to').name = 'to_'
+    m = etgtools.CppMethodDef.FromMethod(orig)
+    m.overloads = []
+    m.name = 'SetTextSelection'
+    m.argsString = '(long from_, long to_)'
+    m.body = "self->SetSelection(from_, to_);"
+    c.insertItemAfter(c.find('SetSelection'), m)
+
+   
     # The docs say to not use this one.
     c.find('IsEmpty').ignore()
 
-    tools.fixWindowClass(c)
+    c.addPyCode("ComboBox.SetMark = wx.deprecated(ComboBox.SetTextSelection, 'Use SetTextSelection instead.')")
+    c.addPyCode("ComboBox.GetMark = wx.deprecated(ComboBox.GetTextSelection, 'Use GetTextSelection instead.')")
+
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

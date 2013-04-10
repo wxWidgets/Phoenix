@@ -19,7 +19,20 @@ class ComboBoxTests(wtc.WidgetTestCase):
         c = wx.ComboBox()
         c.Create(self.frame, value="value", choices="one two three four".split())
 
-        
+    def test_comboboxHasCut(self):
+        c = wx.ComboBox(self.frame, value='value', choices="one two three four".split())
+        c.Cut  # is it there?  It was lost, once upon a time
+
+    def test_comboboxSetSelection(self):
+        c = wx.ComboBox(self.frame, value='value', choices="one two three four".split())
+        # Are both overloads present?
+        c.SetSelection(2)     # select an item
+        c.SetSelection(1,3)   # select a range of text
+
+    def test_comboboxTextSelection(self):
+        c = wx.ComboBox(self.frame, value='value', choices="one two three four".split())
+        c.SetTextSelection(2,4)  
+        self.assertEqual(c.GetTextSelection(), (2,4))
         
 #---------------------------------------------------------------------------
 
