@@ -1494,6 +1494,7 @@ def cmd_setrev(options, args):
     f = open('REV.txt', 'w')
     f.write(svnrev)
     f.close()
+    msg('REV.txt set to "%s"' % svnrev)    
         
     
 
