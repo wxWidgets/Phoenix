@@ -265,14 +265,16 @@ class InspectionFrame(wx.Frame):
 
 
     def OnClose(self, evt):
-        self.SaveSettings(self.config)
         evt.Skip()
+        if not self:
+            return
+        self.SaveSettings(self.config)
         if hasattr(self, 'mgr'):
             self.mgr.UnInit()
             del self.mgr
-            if self.Parent:
-                tlw = self.Parent.GetTopLevelParent()
-                tlw.Unbind(wx.EVT_CLOSE, handler=self.OnClose)
+        if self.Parent:
+            tlw = self.Parent.GetTopLevelParent()
+            tlw.Unbind(wx.EVT_CLOSE, handler=self.OnClose)
 
 
     def UpdateInfo(self):
