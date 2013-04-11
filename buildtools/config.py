@@ -91,27 +91,9 @@ class Configuration(object):
     
     def __init__(self, noWxConfig=False):
         self.CLEANUP = list()
-        # load the version numbers into this instance's namespace
-        versionfile = opj(os.path.split(__file__)[0], 'version.py')
-        myExecfile(versionfile, self.__dict__)
-
-        # Include the subversion revision in the version number? REV.txt can
-        # be created using the build.py setrev command. If it doesn't exist
-        # then the version number is built without a revision number. IOW, it
-        # is a release build.  (In theory)
-        if os.path.exists('REV.txt'):
-            f = open('REV.txt')
-            self.VER_FLAGS = '-' + f.read().strip()
-            f.close()
-            
-        self.VERSION = "%s.%s.%s.%s%s" % (self.VER_MAJOR, 
-                                          self.VER_MINOR, 
-                                          self.VER_RELEASE,
-                                          self.VER_SUBREL, 
-                                          self.VER_FLAGS)
         
-        self.WXDLLVER = '%d%d' % (self.VER_MAJOR, self.VER_MINOR)
-
+        self.resetVersion()
+        
         # change the PORT default for wxMac
         if sys.platform[:6] == "darwin":
             self.WXPORT = 'osx_cocoa'
@@ -341,6 +323,29 @@ class Configuration(object):
 
     # ---------------------------------------------------------------
     # Helper functions
+    
+    def resetVersion(self):
+        # load the version numbers into this instance's namespace
+        versionfile = opj(os.path.split(__file__)[0], 'version.py')
+        myExecfile(versionfile, self.__dict__)
+
+        # Include the subversion revision in the version number? REV.txt can
+        # be created using the build.py setrev command. If it doesn't exist
+        # then the version number is built without a revision number. IOW, it
+        # is a release build.  (In theory)
+        if os.path.exists('REV.txt'):
+            f = open('REV.txt')
+            self.VER_FLAGS = '-' + f.read().strip()
+            f.close()
+            
+        self.VERSION = "%s.%s.%s.%s%s" % (self.VER_MAJOR, 
+                                          self.VER_MINOR, 
+                                          self.VER_RELEASE,
+                                          self.VER_SUBREL, 
+                                          self.VER_FLAGS)
+        
+        self.WXDLLVER = '%d%d' % (self.VER_MAJOR, self.VER_MINOR)
+        
     
     def parseCmdLine(self):
         self.debug = '--debug' in sys.argv or '-g' in sys.argv

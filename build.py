@@ -1458,7 +1458,7 @@ def cmd_bdist(options, args):
     
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
-    msg("Archiving Phoenix binaries...")
+    msg("Archiving Phoenix binaries to %s..." % tarfilename)
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
     tarball.add('wx', opj(rootname, 'wx'), 
                 filter=lambda info: None if '.svn' in info.name \
@@ -1494,6 +1494,8 @@ def cmd_setrev(options, args):
     f = open('REV.txt', 'w')
     f.write(svnrev)
     f.close()
+    cfg = Config()
+    cfg.resetVersion()
     msg('REV.txt set to "%s"' % svnrev)    
         
     
