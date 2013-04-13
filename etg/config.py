@@ -162,12 +162,19 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxFileConfig')
     c.addPrivateCopyCtor()
-    c.find('wxFileConfig').findOverload('wxInputStream').ignore()
-    ctor = c.find('wxFileConfig').findOverload('wxString')
-    ctor.items.remove(ctor.find('conv'))
-    ctor = c.find('Save').ignore()
+    c.find('wxFileConfig').findOverload('wxInputStream').find('conv').ignore()
+    ctor = c.find('wxFileConfig').findOverload('wxString').find('conv').ignore()
+    #ctor.items.remove(ctor.find('conv'))
+    ctor = c.find('Save').find('conv').ignore()
     c.find('GetGlobalFile').ignore()
     c.find('GetLocalFile').ignore()
+
+    c.find('GetFirstGroup').ignore()
+    c.find('GetNextGroup').ignore()
+    c.find('GetFirstEntry').ignore()
+    c.find('GetNextEntry').ignore()
+    
+
     
     #-----------------------------------------------------------------
     # In C++ wxConfig is a #define to some other config class. We'll let our

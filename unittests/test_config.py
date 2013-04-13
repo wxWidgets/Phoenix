@@ -65,7 +65,7 @@ class ConfigTests(wtc.WidgetTestCase):
             os.remove(name)
 
 
-    def _test_Config4(self):  # disabled for now...
+    def test_Config4(self):  # disabled for now...
         null = wx.LogNull()
         name = cfgFilename + '_4'
         
@@ -98,6 +98,54 @@ class ConfigTests(wtc.WidgetTestCase):
         name = cfgFilename + '_5'
         
         cfg = wx.Config('unittest_ConfigTests', localFilename=name)
+        cfg.SetPath('/zero')
+        cfg.Write('key1', 'value')
+        cfg.Write('key2', 'value')
+        cfg.Write('key3', 'value')
+        
+        cfg.SetPath('/one')
+        cfg.Write('key1', 'value')
+        cfg.Write('key2', 'value')
+        cfg.Write('key3', 'value')
+
+        cfg.SetPath('/two')
+        cfg.Write('key1', 'value')
+        cfg.Write('key2', 'value')
+        cfg.Write('key3', 'value')
+
+        cfg.SetPath('/three')
+        cfg.Write('key1', 'value')
+        cfg.Write('key2', 'value')
+        cfg.Write('key3', 'value')
+
+        cfg.Flush()
+        
+        cfg.SetPath('/')
+        count = 0
+        more, group, index = cfg.GetFirstGroup()
+        while more:
+            count += 1
+            more, group, index = cfg.GetNextGroup(index)
+        self.assertEqual(count, 4)
+        
+        cfg.SetPath('/two')
+        count = 0
+        more, entry, index = cfg.GetFirstEntry()
+        while more:
+            count += 1
+            more, entry, index = cfg.GetNextEntry(index)
+        self.assertEqual(count, 3)
+                    
+        del cfg
+        if os.path.exists(name):
+            os.remove(name)
+
+
+    def test_Config6(self):
+        null = wx.LogNull()
+        name = cfgFilename + '_6'
+        
+        cfg = wx.FileConfig('unittest_ConfigTests', localFilename=name)
         cfg.SetPath('/zero')
         cfg.Write('key1', 'value')
         cfg.Write('key2', 'value')
