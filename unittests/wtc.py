@@ -14,6 +14,7 @@ class WidgetTestCase(unittest.TestCase):
     """
     def setUp(self):
         self.app = wx.App()
+        wx.Log.SetActiveTarget(wx.LogStderr())
         self.frame = wx.Frame(None, title='WTC: '+self.__class__.__name__)
         self.frame.Show()
 

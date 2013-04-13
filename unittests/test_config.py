@@ -65,7 +65,7 @@ class ConfigTests(wtc.WidgetTestCase):
             os.remove(name)
 
 
-    def test_Config4(self):  # disabled for now...
+    def test_Config4(self): 
         null = wx.LogNull()
         name = cfgFilename + '_4'
         
