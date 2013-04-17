@@ -14,6 +14,8 @@
 # be used to derive other "semantics-specific" classes, like masked.NumCtrl,
 # masked.TimeCtrl, and masked.IpAddrCtrl.
 #
+# Tags:        phoenix-port, unittest, documented
+#
 #----------------------------------------------------------------------------
 """
 Provides a generic, fully configurable masked edit text control, as well as
@@ -65,10 +67,28 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
                   pos = wx.DefaultPosition,
                   size = wx.DefaultSize,
                   style = wx.TE_PROCESS_TAB,
-                  validator=wx.DefaultValidator,     ## placeholder provided for data-transfer logic
+                  validator=wx.DefaultValidator,
                   name = 'maskedTextCtrl',
-                  setupEventHandling = True,        ## setup event handling by default
+                  setupEventHandling = True,
                   **kwargs):
+        """
+        Default class constructor.
+
+        :param Window `parent`: the window parent. Must not be ``None``;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param string `value`: value to be shown;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :type `pos`: tuple or :class:`Point`
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param integer `style`: the window style;
+        :param Validator `validator`: this is mainly provided for data-transfer, as control does
+          its own validation;
+        :param string `name`: the window name;
+        :param boolean `setupEventHandling`: setup event handling by default.
+
+        """       
 
         if not hasattr(self, 'this'):
             wx.TextCtrl.__init__(self, parent, id, value='',
@@ -181,24 +201,36 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
 
     def SetValue(self, value):
         """
-        This function redefines the externally accessible .SetValue() to be
-        a smart "paste" of the text in question, so as not to corrupt the
-        masked control.  NOTE: this must be done in the class derived
-        from the base wx control.
+        This function redefines the externally accessible :meth:`TextCtrl.SetValue`
+        to be a smart "paste" of the text in question, so as not to corrupt the
+        masked control.
+        
+        .. note::
+          
+          This must be done in the class derived from the base wx control.
         """
         self.ModifyValue(value, use_change_value=False)
 
     def ChangeValue(self, value):
         """
-        Provided to accomodate similar functionality added to base control in wxPython 2.7.1.1.
+        Provided to accomodate similar functionality added to base
+        control in wxPython 2.7.1.1.
+        
+        :param string `value`: new value for control, this will not fire an event
+        
         """
         self.ModifyValue(value, use_change_value=True)
 
 
     def ModifyValue(self, value, use_change_value=False):
         """
-        This factored function of common code does the bulk of the work for SetValue 
-        and ChangeValue.
+        This factored function of common code does the bulk of the work for
+        SetValue and ChangeValue.
+
+        :param string `value`: new value for control
+        :param boolean `use_change_value`: if True uses
+        :meth:`~lib.masked.textctrl.TextCtrl.ChangeValue`
+
         """
 ##        dbg('MaskedTextCtrl::ModifyValue("%(value)s", use_change_value=%(use_change_value)d)' % locals(), indent=1)
 
@@ -265,7 +297,11 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
 
 
     def SetFont(self, *args, **kwargs):
-        """ Set the font, then recalculate control size, if appropriate. """
+        """
+        Set the font, then recalculate control size, if appropriate.
+        
+        see :meth:`TextCtrl.SetFont` for valid arguements
+        """
         wx.TextCtrl.SetFont(self, *args, **kwargs)
         if self._autofit:
 ##            dbg('calculated size:', self._CalcSize())            
@@ -277,7 +313,9 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
 
 
     def Clear(self):
-        """ Blanks the current control value by replacing it with the default value."""
+        """
+        Blanks the current control value by replacing it with the default value.
+        """
 ##        dbg("MaskedTextCtrl::Clear - value reset to default value (template)")
         if self._mask:
             self.ClearValue()
@@ -297,9 +335,12 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
 
     def Refresh(self):
         """
-        This function redefines the externally accessible .Refresh() to
-        validate the contents of the masked control as it refreshes.
-        NOTE: this must be done in the class derived from the base wx control.
+        This function redefines the externally accessible :meth:`TextCtrl.Refresh`
+        to validate the contents of the masked control as it refreshes.
+        
+        .. note::
+          
+          This must be done in the class derived from the base wx control.
         """
 ##        dbg('MaskedTextCtrl::Refresh', indent=1)
         self._CheckValid()
@@ -317,10 +358,14 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
 
     def Cut(self):
         """
-        This function redefines the externally accessible .Cut to be
-        a smart "erase" of the text in question, so as not to corrupt the
-        masked control.  NOTE: this must be done in the class derived
-        from the base wx control.
+        This function redefines the externally accessible :meth:`TextCtrl.Cut`
+        to be a smart "erase" of the text in question, so as not to corrupt the
+        masked control.
+        
+        .. note::
+        
+          This must be done in the class derived from the base wx control.
+        
         """
         if self._mask:
             self._Cut()             # call the mixin's Cut method
@@ -330,10 +375,14 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
 
     def Paste(self):
         """
-        This function redefines the externally accessible .Paste to be
-        a smart "paste" of the text in question, so as not to corrupt the
-        masked control.  NOTE: this must be done in the class derived
-        from the base wx control.
+        This function redefines the externally accessible :meth:`TextCtrl.Paste`
+        to be a smart "paste" of the text in question, so as not to corrupt the
+        masked control.
+        
+        .. note:: 
+        
+          This must be done in the class derived from the base wx control.
+        
         """
         if self._mask:
             self._Paste()                   # call the mixin's Paste method
@@ -343,8 +392,8 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
 
     def Undo(self):
         """
-        This function defines the undo operation for the control. (The default
-        undo is 1-deep.)
+        This function defines the undo operation for the control.
+        (The default undo is 1-deep.)
         """
         if self._mask:
             self._Undo()
@@ -354,11 +403,11 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
 
     def IsModified(self):
         """
-        This function overrides the raw wx.TextCtrl method, because the
-        masked edit mixin uses SetValue to change the value, which doesn't
-        modify the state of this attribute.  So, the derived control keeps track
-        on each keystroke to see if the value changes, and if so, it's been
-        modified.
+        This function overrides the raw :meth:`TextCtrl.IsModified` method,
+        because the  masked edit mixin uses SetValue to change the value, which
+        doesn't modify the state of this attribute.  So, the derived control
+        keeps track on each keystroke to see if the value changes, and if so,
+        it's been modified.
         """
         return wx.TextCtrl.IsModified(self) or self.modified
 

@@ -6,7 +6,9 @@
 # Copyright:    (c) 2003 by Will Sadkin, 2003
 # RCS-ID:       $Id$
 # License:      wxWidgets license
-# Tags:        phoenix-port, py3-port
+#
+# Tags:        phoenix-port, py3-port, unittest, documented
+#
 #----------------------------------------------------------------------------
 # NOTE:
 #   Masked.IpAddrCtrl is a minor modification to masked.TextCtrl, that is
@@ -77,19 +79,36 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
     character, so that typing an IP address can be done naturally.
     """
 
-
-
     def __init__( self, parent, id=-1, value = '',
                   pos = wx.DefaultPosition,
                   size = wx.DefaultSize,
                   style = wx.TE_PROCESS_TAB,
                   validator = wx.DefaultValidator,
                   name = 'IpAddrCtrl',
-                  setupEventHandling = True,        ## setup event handling by default
+                  setupEventHandling = True,
                   **kwargs):
 
+        """
+        Default class constructor.
+
+        :param Window `parent`: the window parent. Must not be ``None``;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param string `value`: value to be shown;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :type `pos`: tuple or :class:`Point`
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param integer `style`: the window style;
+        :param Validator `validator`: this is mainly provided for data-transfer, as control does
+          its own validation;
+        :param string `name`: the window name;
+        :param boolean `setupEventHandling`: setup event handling by default.
+
+        """       
+
         if not kwargs.has_key('mask'):
-           kwargs['mask'] = mask = "###.###.###.###"
+            kwargs['mask'] = mask = "###.###.###.###"
         if not kwargs.has_key('formatcodes'):
             kwargs['formatcodes'] = 'F_Sr<>'
         if not kwargs.has_key('validRegex'):
@@ -144,7 +163,6 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         return self._OnChangeField(event)
 
 
-
     def GetAddress(self):
         """
         Returns the control value, with any spaces removed.
@@ -165,6 +183,9 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         splits it into an array of 4 fields, justifies it
         appropriately, and inserts it into the control.
         Invalid values will raise a ValueError exception.
+        
+        :param string `value`: the IP address in the form '000.000.000.000'
+        
         """
 ##        dbg('IpAddrCtrl::SetValue(%s)' % str(value), indent=1)
         if type(value) not in (types.StringType, types.UnicodeType):

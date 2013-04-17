@@ -2913,7 +2913,7 @@ class MaskedEditMixin:
         """ Set the control's font typeface -- pass the font name as str."""
 ####        dbg('MaskedEditMixin::_setFont', indent=1)
         if not self._useFixedWidthFont:
-            self._font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            self._font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         else:
             font = self.GetFont()   # get size, weight, etc from current font
             points = font.GetPointSize()

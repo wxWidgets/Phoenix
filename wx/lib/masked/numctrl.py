@@ -5,7 +5,9 @@
 # Copyright:   (c) 2003-2007 by Will Sadkin
 # RCS-ID:      $Id$
 # License:     wxWidgets license
-# Tags:        phoenix-port, py3-port
+#
+# Tags:        phoenix-port, py3-port, unittest, documented
+#
 #----------------------------------------------------------------------------
 # NOTE:
 #   This was written to provide a numeric edit control for wxPython that
@@ -518,7 +520,24 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 style = wx.TE_PROCESS_TAB, validator = wx.DefaultValidator,
                 name = "masked.num",
                 **kwargs ):
+        """
+        Default class constructor.
 
+        :param Window `parent`: the window parent. Must not be ``None``;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param integer `value`: value to be shown;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :type `pos`: tuple or :class:`Point`
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param integer `style`: the window style;
+        :param Validator `validator`: this is mainly provided for data-transfer, as control does
+          its own validation;
+        :param string `name`: the window name;
+
+        """       
+        
 ##        dbg('masked.NumCtrl::__init__', indent=1)
 
         # Set defaults for control:
@@ -634,7 +653,8 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
     def SetParameters(self, **kwargs):
         """
         This function is used to initialize and reconfigure the control.
-        See TimeCtrl module overview for available parameters.
+        See :class:`~lib.masked.timectrl.TimeCtrl` module overview for available
+        parameters.
         """
 ##        dbg('NumCtrl::SetParameters', indent=1)
         maskededit_kwargs = {}
@@ -919,7 +939,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
     def GetFraction(self, candidate=None):
         """
-        Returns the fractional portion of the value as a float.  If there is no
+        Returns the fractional portion of the value as a float. If there is no
         fractional portion, the value returned will be 0.0.
         """
         if not self._fractionWidth:
@@ -1230,10 +1250,12 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         """
         Handles an event indicating that the text control's value
         has changed, and issue EVT_NUM event.
-        NOTE: using wxTextCtrl.SetValue() to change the control's
-        contents from within a EVT_CHAR handler can cause double
-        text events.  So we check for actual changes to the text
-        before passing the events on.
+        
+        .. note:: 
+        
+          Using :meth:`TextCtrl.SetValue` to change the control's contents from
+          within a EVT_CHAR handler can cause double text events. So we check
+          for actual changes to the text before passing the events on.
         """
 ##        dbg('NumCtrl::OnTextChange', indent=1)
         if not BaseMaskedTextCtrl._OnTextChange(self, event):
@@ -1277,6 +1299,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         or colored if not limited but the value is out-of-bounds.
         A ValueError exception will be raised if an invalid value
         is specified.
+        
+        :param integer `value`: new value
+        
         """
 ##        dbg('NumCtrl::SetValue(%s)' % value, indent=1)
         BaseMaskedTextCtrl.SetValue( self, self._toGUI(value) )
@@ -1290,25 +1315,46 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         or colored if not limited but the value is out-of-bounds.
         A ValueError exception will be raised if an invalid value
         is specified.
+        
+        This method does not fire a change event.
+        
+        :param integer `value`: new value
+        
         """
 ##        dbg('NumCtrl::ChangeValue(%s)' % value, indent=1)
         BaseMaskedTextCtrl.ChangeValue( self, self._toGUI(value) )
 ##        dbg(indent=0)
 
 
-
-
     def SetIntegerWidth(self, value):
+        """
+        Set the integer width of the control
+        
+        :param integer `value`: the width value
+        
+        """
         self.SetParameters(integerWidth=value)
+
     def GetIntegerWidth(self):
+        """
+        Get the integer width.
+        """
         return self._integerWidth
 
     def SetFractionWidth(self, value):
+        """
+        Set the fraction width of the control
+        
+        :param integer `value`: the width value
+        
+        """
         self.SetParameters(fractionWidth=value)
+
     def GetFractionWidth(self):
+        """
+        Get the fraction width.
+        """
         return self._fractionWidth
-
-
 
     def SetMin(self, min=None):
         """
@@ -1325,6 +1371,10 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
         If min > the max value allowed by the width of the control,
         the function will return False, and the min will not be set.
+        
+        :param `min`: Minium value for the control
+        :type `min`: integer or None
+        
         """
 ##        dbg('NumCtrl::SetMin(%s)' % repr(min), indent=1)
         if( self._max is None
@@ -1347,7 +1397,6 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         """
         return self._min
 
-
     def SetMax(self, max=None):
         """
         Sets the maximum value of the control. If a value of None
@@ -1363,6 +1412,10 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
         If max > the max value allowed by the width of the control,
         the function will return False, and the max will not be set.
+
+        :param `max`: Minium value for the control
+        :type `max`: integer or None
+
         """
         if( self._min is None
             or max is None
@@ -1377,7 +1430,6 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
         return bRet
 
-
     def GetMax(self):
         """
         Gets the maximum value of the control.  It will return the current
@@ -1385,14 +1437,20 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         """
         return self._max
 
-
     def SetBounds(self, min=None, max=None):
         """
         This function is a convenience function for setting the min and max
         values at the same time.  The function only applies the maximum bound
         if setting the minimum bound is successful, and returns True
         only if both operations succeed.
-        NOTE: leaving out an argument will remove the corresponding bound.
+
+        .. note:: leaving out an argument will remove the corresponding bound.
+
+        :param `min`: Minium value for the control
+        :type `min`: integer or None
+        :param `max`: Minium value for the control
+        :type `max`: integer or None
+
         """
         ret = self.SetMin(min)
         return ret and self.SetMax(max)
@@ -1417,6 +1475,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         If called with a value of False, this function will disable value
         limiting, but coloring of out-of-bounds values will still take
         place if bounds have been set for the control.
+        
+        :param boolean `limited`: define value limiting
+        
         """
         self.SetParameters(limited = limited)
 
@@ -1442,6 +1503,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         If called with a value of False, this function will disable value
         limiting, but coloring of out-of-bounds values will still take
         place if bounds have been set for the control.
+
+        :param boolean `limit`: define value limiting
+
         """
         self.SetParameters(limitOnFieldChange = limit)
 
@@ -1464,6 +1528,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         of the control falls within the current bounds.  This function can
         also be called with a value to see if that value would fall within
         the current bounds of the given control.
+        
+        :param `value`: value to check
+        
         """
 ##        dbg('IsInBounds(%s)' % repr(value), indent=1)
         if value is None:
@@ -1502,6 +1569,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         of the control is currently None, and allow_none is False, the
         value of the control will be set to the minimum value of the
         control, or 0 if no lower bound is set.
+        
+        :param boolean `allow_none`: True if None is allowed
+        
         """
         self._allowNone = allow_none
         if not allow_none and self.GetValue() is None:
@@ -1512,49 +1582,56 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
     def IsNoneAllowed(self):
         return self._allowNone
+
     def GetAllowNone(self):
         """ (For regularization of property accessors) """
         return self.IsNoneAllowed()
 
     def SetAllowNegative(self, value):
         self.SetParameters(allowNegative=value)
+
     def IsNegativeAllowed(self):
         return self._allowNegative
+
     def GetAllowNegative(self):
         """ (For regularization of property accessors) """
         return self.IsNegativeAllowed()
 
     def SetGroupDigits(self, value):
         self.SetParameters(groupDigits=value)
+
     def IsGroupingAllowed(self):
         return self._groupDigits
+
     def GetGroupDigits(self):
         """ (For regularization of property accessors) """
         return self.IsGroupingAllowed()
 
     def SetGroupChar(self, value):
         self.SetParameters(groupChar=value)
+
     def GetGroupChar(self):
         return self._groupChar
 
     def SetDecimalChar(self, value):
         self.SetParameters(decimalChar=value)
+
     def GetDecimalChar(self):
         return self._decimalChar
 
     def SetSelectOnEntry(self, value):
         self.SetParameters(selectOnEntry=value)
+
     def GetSelectOnEntry(self):
         return self._selectOnEntry
 
     def SetAutoSize(self, value):
         self.SetParameters(autoSize=value)
+
     def GetAutoSize(self):
         return self._autoSize
 
-
     # (Other parameter accessors are inherited from base class)
-
 
     def _toGUI( self, value, apply_limits = True ):
         """
@@ -1676,13 +1753,13 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 except ValueError:
                     try:
 ##                       dbg(indent=0)
-                       return long( value )
+                        return long( value )
                     except ValueError:
 ##                       dbg("couldn't convert to long; returning None")
-                       return None
+                        return None
 
                     else:
-                       raise
+                        raise
                 else:
 ##                    dbg('exception occurred; returning None')
                     return None

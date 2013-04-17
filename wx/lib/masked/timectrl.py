@@ -5,6 +5,9 @@
 # Copyright:    (c) 2002 by Will Sadkin, 2002
 # RCS-ID:       $Id$
 # License:      wxWindows license
+#
+# Tags:        phoenix-port, unittest, documented
+#
 #----------------------------------------------------------------------------
 # NOTE:
 #   This was written way it is because of the lack of masked edit controls
@@ -360,6 +363,27 @@ class TimeCtrl(BaseMaskedTextCtrl):
                 name = "time",
                 **kwargs ):
 
+        """
+        Default class constructor.
+
+        :param Window `parent`: the window parent. Must not be ``None``;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param string `value`: value to be shown;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :type `pos`: tuple or :class:`Point`
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param boolean `fmt24hr`: True to use 24 hour format (sometimes called military format;
+        :param SpinButton `spinButton`: an instance of :class:`SpinButton` or
+          None;
+        :param integer `style`: the window style;
+        :param Validator `validator`: this is mainly provided for data-transfer, as control does
+          its own validation;
+        :param string `name`: the window name;
+
+        """       
+
         # set defaults for control:
 ##        dbg('setting defaults:')
 
@@ -485,7 +509,8 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
     def SetParameters(self, **kwargs):
         """
-        Function providing access to the parameters governing TimeCtrl display and bounds.
+        Function providing access to the parameters governing TimeCtrl display
+        and bounds.
         """
 ##        dbg('TimeCtrl::SetParameters(%s)' % repr(kwargs), indent=1)
         maskededit_kwargs = {}
@@ -606,8 +631,11 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
     def BindSpinButton(self, sb):
         """
-        This function binds an externally created spin button to the control, so that
-        up/down events from the button automatically change the control.
+        This function binds an externally created spin button to the control,
+        so that up/down events from the button automatically change the control.
+        
+        :param SpinButton `sb`: an instance of :class:`SpinButton`
+        
         """
 ##        dbg('TimeCtrl::BindSpinButton')
         self.__spinButton = sb
@@ -625,8 +653,11 @@ class TimeCtrl(BaseMaskedTextCtrl):
         """
         Validating SetValue function for time values:
         This function will do dynamic type checking on the value argument,
-        and convert wxDateTime, mxDateTime, or 12/24 format time string
+        and convert :class:`DateTime`, mxDateTime, or 12/24 format time string
         into the appropriate format string for the control.
+        
+        :param `value`: the time value
+        
         """
 ##        dbg('TimeCtrl::SetValue(%s)' % repr(value), indent=1)
         try:
@@ -643,8 +674,13 @@ class TimeCtrl(BaseMaskedTextCtrl):
         """
         Validating ChangeValue function for time values:
         This function will do dynamic type checking on the value argument,
-        and convert wxDateTime, mxDateTime, or 12/24 format time string
+        and convert :class:`DateTime`, mxDateTime, or 12/24 format time string
         into the appropriate format string for the control.
+        
+        No change event is fired by this method.
+        
+        :param `value`: the time value
+
         """
 ##        dbg('TimeCtrl::ChangeValue(%s)' % repr(value), indent=1)
         try:
@@ -663,11 +699,17 @@ class TimeCtrl(BaseMaskedTextCtrl):
                  as_wxTimeSpan = False,
                  as_mxDateTimeDelta = False):
         """
-        This function returns the value of the display as a string by default, but
-        supports return as a wx.DateTime, mx.DateTime, wx.TimeSpan, or mx.DateTimeDelta,
-        if requested. (Evaluated in the order above-- first one wins!)
+        This function returns the value of the display as a string by default,
+        but supports return as a :class:`DateTime`, mx.DateTime, :class:`TimeSpan`,
+        or mx.DateTimeDelta, if requested.
+        (Evaluated in the order above-- first one wins!)
+        
+        :param boolean `as_wxDateTime`: return value as :class:`DateTime`;
+        :param boolean `as_mxDateTime`: return value as mxDateTime;
+        :param boolean `as_wxTimeSpan`: return value as :class:`TimeSpan`;
+        :param boolean `as_mxDateTimeDelta`: return value as mxDateTimeDelta;
+        
         """
-
 
         if as_wxDateTime or as_mxDateTime or as_wxTimeSpan or as_mxDateTimeDelta:
             value = self.GetWxDateTime()
@@ -686,7 +728,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
     def SetWxDateTime(self, wxdt):
         """
-        Because SetValue can take a wx.DateTime, this is now just an alias.
+        Because SetValue can take a :class:`DateTime`, this is now just an alias.
         """
         self.SetValue(wxdt)
 
@@ -697,14 +739,14 @@ class TimeCtrl(BaseMaskedTextCtrl):
         one of the following types:
         
         * time string
-        * wx.DateTime
-        * wx.TimeSpan
+        * :class:`DateTime`
+        * :class:`TimeSpan`
         * mxDateTime
         * mxDateTimeDelta
         
-        and converts it to a wx.DateTime that always has Jan 1, 1970 as its date
-        portion, so that range comparisons around values can work using
-        wx.DateTime's built-in comparison function.  If a value is not
+        and converts it to a :class:`DateTime` that always has Jan 1, 1970 as
+        its date portion, so that range comparisons around values can work using
+        :class:`DateTime` built-in comparison function.  If a value is not
         provided to convert, the string value of the control will be used.
         If the value is not one of the accepted types, a ValueError will be
         raised.
@@ -808,6 +850,10 @@ class TimeCtrl(BaseMaskedTextCtrl):
         bound, if the control is limited, the value will be automatically
         adjusted to the new minimum value; if not limited, the value in the
         control will be colored as invalid.
+        
+        :param `min`: Minium value for the control
+        :type `min`: integer or None
+                
         """
 ##        dbg('TimeCtrl::SetMin(%s)'% repr(min), indent=1)
         if min is not None:
@@ -833,7 +879,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         """
         Gets the minimum value of the control.
         If None, it will return None.  Otherwise it will return
-        the current minimum bound on the control, as a wxDateTime
+        the current minimum bound on the control, as a :class:`DateTime`
         by default, or as a string if as_string argument is True.
         """
 ##        dbg(suspend=1)
@@ -868,6 +914,10 @@ class TimeCtrl(BaseMaskedTextCtrl):
         bound, if the control is limited the value will be automatically
         adjusted to this maximum value; if not limited, the value in the
         control will be colored as invalid.
+        
+        :param `max`: Minium value for the control
+        :type `max`: integer or None
+        
         """
 ##        dbg('TimeCtrl::SetMax(%s)' % repr(max), indent=1)
         if max is not None:
@@ -893,7 +943,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         """
         Gets the minimum value of the control.
         If None, it will return None.  Otherwise it will return
-        the current minimum bound on the control, as a wxDateTime
+        the current minimum bound on the control, as a :class:`DateTime`
         by default, or as a string if as_string argument is True.
         """
 ##        dbg(suspend=1)
@@ -922,7 +972,14 @@ class TimeCtrl(BaseMaskedTextCtrl):
         values at the same time.  The function only applies the maximum bound
         if setting the minimum bound is successful, and returns True
         only if both operations succeed.
-        **NOTE:** leaving out an argument will remove the corresponding bound.
+        
+        .. note:: Leaving out an argument will remove the corresponding bound.
+        
+        :param `min`: Minium value for the control
+        :type `min`: integer or None
+        :param `max`: Minium value for the control
+        :type `max`: integer or None
+        
         """
         ret = self.SetMin(min)
         return ret and self.SetMax(max)
@@ -947,6 +1004,9 @@ class TimeCtrl(BaseMaskedTextCtrl):
         If called with a value of 0, this function will disable value
         limiting, but coloring of out-of-bounds values will still take
         place if bounds have been set for the control.
+        
+        :param boolean `limited`: define value limiting
+
         """
 ##        dbg('TimeCtrl::SetLimited(%d)' % limited, indent=1)
         self.__limited = limited
@@ -1018,7 +1078,6 @@ class TimeCtrl(BaseMaskedTextCtrl):
 ##        dbg(indent=0)
 
 
-
     def IsLimited(self):
         """
         Returns True if the control is currently limiting the
@@ -1075,10 +1134,12 @@ class TimeCtrl(BaseMaskedTextCtrl):
         return ret
 
 
-    def IsValid( self, value ):
+    def IsValid(self, value):
         """
         Can be used to determine if a given value would be a legal and
         in-bounds value for the control.
+        
+        :param `value`: value to check
         """
         try:
             self.__validateValue(value)
