@@ -18,7 +18,10 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxTextAttr', 'wxTextCtrl', ]
+ITEMS  = [ 'wxTextAttr', 
+           'wxTextCtrl', 
+           'wxTextUrlEvent',
+           ]
     
 #---------------------------------------------------------------------------
 
@@ -61,6 +64,19 @@ def parseAndTweakModule():
     c.find('OnDropFiles').ignore()
 
     tools.fixWindowClass(c)
+    
+    
+    c = module.find('wxTextUrlEvent')
+    tools.fixEventClass(c)
+    
+    
+    c.addPyCode("""\
+        EVT_TEXT        = wx.PyEventBinder( wxEVT_COMMAND_TEXT_UPDATED, 1)
+        EVT_TEXT_ENTER  = wx.PyEventBinder( wxEVT_COMMAND_TEXT_ENTER, 1)
+        EVT_TEXT_URL    = wx.PyEventBinder( wxEVT_COMMAND_TEXT_URL, 1)
+        EVT_TEXT_MAXLEN = wx.PyEventBinder( wxEVT_COMMAND_TEXT_MAXLEN, 1)
+        """)
+    
     return module
 
 
