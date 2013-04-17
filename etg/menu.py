@@ -80,7 +80,7 @@ def run():
 
     c.find('FindChildItem.pos').out = True
     c.find('FindItem.menu').out = True
-    c.addCppMethod('wxMenuItem*', 'FindItembyId', '(int id)', isConst=True,
+    c.addCppMethod('wxMenuItem*', 'FindItemById', '(int id)', isConst=True,
         doc="""\
             FindItemById(id) -> MenuItem
 
@@ -97,7 +97,7 @@ def run():
     c.find('wxMenuBar').findOverload('wxMenu *menus[], const wxString titles[], long style=0)').ignore()
     
     c.find('FindItem.menu').out = True
-    c.addCppMethod('wxMenuItem*', 'FindItembyId', '(int id)', isConst=True,
+    c.addCppMethod('wxMenuItem*', 'FindItemById', '(int id)', isConst=True,
         doc="""\
             FindItemById(id) -> MenuItem
 
