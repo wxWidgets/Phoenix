@@ -1955,7 +1955,7 @@ class MaskedEditMixin:
                     'foregroundColour', 'signedForegroundColour'):
             if key in ctrl_kwargs:
                 if isinstance(ctrl_kwargs[key], (str, unicode)):
-                    c = wx.NamedColour(ctrl_kwargs[key])
+                    c = wx.Colour(ctrl_kwargs[key])
                     if c.Get() == (-1, -1, -1):
                         raise TypeError('%s not a legal color specification for %s' % (repr(ctrl_kwargs[key]), key))
                     else:

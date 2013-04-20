@@ -592,7 +592,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
     else:
         def GetMark(self):
 ##            dbg('MaskedComboBox::GetMark()', indent = 1)
-            ret = wx.ComboBox.GetMark(self)
+            ret = wx.ComboBox.GetTextSelection(self)
 ##            dbg('returned', ret, indent=0)
             return ret
 
