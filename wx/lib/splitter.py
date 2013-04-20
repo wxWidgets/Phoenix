@@ -686,7 +686,7 @@ class MultiSplitterWindow(wx.PyPanel):
             return
 
         # are there any pending size settings?
-        for window, spos in self._pending.items():
+        for window, spos in list(self._pending.items()):
             idx = self._windows.index(window)
             # TODO: this may need adjusted to make sure they all fit
             # in the current client size
