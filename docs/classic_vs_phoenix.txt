@@ -239,11 +239,34 @@ IsStockID                                                    ``MISSING``
 IsStockLabel                                                 ``MISSING``
 Joystick                                                     :class:`adv.Joystick`
 JPEGHandler                                                  ``MISSING``
+KeyEvent.m_altDown                                           :meth:`KeyEvent.GetModifiers`
+KeyEvent.m_controlDown                                       :meth:`KeyEvent.GetModifiers`
+KeyEvent.m_keyCode                                           :attr:`KeyEvent.KeyCode`
+KeyEvent.m_metaDown                                          :meth:`KeyEvent.GetModifiers`
+KeyEvent.m_shiftDown                                         :meth:`KeyEvent.GetModifiers`
+KeyEvent.m_x                                                 :attr:`KeyEvent.X`
+KeyEvent.m_y                                                 :attr:`KeyEvent.Y`JPEGHandler                                                  ``MISSING``
 LayoutAlgorithm                                              :class:`adv.LayoutAlgorithm`
 ListbookEvent                                                :class:`BookCtrlEvent`
 ListBox_GetClassDefaultAttributes                            :meth:`ListBox.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 ListCtrl_GetClassDefaultAttributes                           :meth:`ListCtrl.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 ListCtrl_HasColumnOrderSupport                               :meth:`ListCtrl.HasColumnOrderSupport`
+ListEvent.m_code                                             :attr:`ListEvent.KeyCode`
+ListEvent.m_col                                              :attr:`ListEvent.Column`
+ListEvent.m_item                                             :attr:`ListEvent.Item`
+ListEvent.m_itemIndex                                        :attr:`ListEvent.Index`
+ListEvent.m_oldItemIndex                                     :attr:`ListEvent.CacheFrom`
+ListEvent.m_pointDrag                                        :attr:`ListEvent.Point`
+ListItem.m_col                                               :attr:`ListItem.Column`
+ListItem.m_data                                              :attr:`ListItem.Data`
+ListItem.m_format                                            :attr:`ListItem.Align`
+ListItem.m_image                                             :attr:`ListItem.Image`
+ListItem.m_itemId                                            :attr:`ListItem.Id`
+ListItem.m_mask                                              :attr:`ListItem.Mask`
+ListItem.m_state                                             :attr:`ListItem.State`
+ListItem.m_stateMask                                         :attr:`ListItem.State`
+ListItem.m_text                                              :attr:`ListItem.Text`
+ListItem.m_width                                             :attr:`ListItem.Width`
 Locale_AddCatalogLookupPathPrefix                            :meth:`Locale.AddCatalogLookupPathPrefix`
 Locale_AddLanguage                                           :meth:`Locale.AddLanguage`
 Locale_FindLanguageInfo                                      :meth:`Locale.FindLanguageInfo`
