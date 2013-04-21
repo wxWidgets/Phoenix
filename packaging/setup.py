@@ -24,7 +24,7 @@ for wc in ['wxWidgets/configure',
            'wxWidgets/src/stc/gen_iface.py',
            'bin/waf-*', ]:
     for item in glob.glob(wc):
-        os.chmod(item, 0755)
+        os.chmod(item, 0o755)
 
 
 # Now execute the real setup.py that was copied here in order to do whatever
