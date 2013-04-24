@@ -19,12 +19,10 @@ class Frame(wx.Frame):
     def OnClose(self, event):
         self.Destroy()
 
+
 app = wx.App()
 top = Frame("wxpTest")
 top.Show()
-
-import wx.lib.inspection
-wx.lib.inspection.InspectionTool().Show()
-
 app.MainLoop()
+
 

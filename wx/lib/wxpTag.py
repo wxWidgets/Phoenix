@@ -105,6 +105,7 @@ class wxpTagHandler(wx.html.HtmlWinTagHandler):
     def __init__(self):
         wx.html.HtmlWinTagHandler.__init__(self)
         self.ctx = None
+        
 
     def GetSupportedTags(self):
         return WXPTAG+','+PARAMTAG
