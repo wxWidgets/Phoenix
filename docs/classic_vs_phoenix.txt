@@ -239,13 +239,13 @@ IsStockID                                                    ``MISSING``
 IsStockLabel                                                 ``MISSING``
 Joystick                                                     :class:`adv.Joystick`
 JPEGHandler                                                  ``MISSING``
-KeyEvent.m_altDown                                           :meth:`KeyEvent.GetModifiers`
-KeyEvent.m_controlDown                                       :meth:`KeyEvent.GetModifiers`
+KeyEvent.m_altDown                                           :meth:`~KeyboardState.GetModifiers`
+KeyEvent.m_controlDown                                       :meth:`~KeyboardState.GetModifiers`
 KeyEvent.m_keyCode                                           :attr:`KeyEvent.KeyCode`
-KeyEvent.m_metaDown                                          :meth:`KeyEvent.GetModifiers`
-KeyEvent.m_shiftDown                                         :meth:`KeyEvent.GetModifiers`
+KeyEvent.m_metaDown                                          :meth:`~KeyboardState.GetModifiers`
+KeyEvent.m_shiftDown                                         :meth:`~KeyboardState.GetModifiers`
 KeyEvent.m_x                                                 :attr:`KeyEvent.X`
-KeyEvent.m_y                                                 :attr:`KeyEvent.Y`JPEGHandler                                                  ``MISSING``
+KeyEvent.m_y                                                 :attr:`KeyEvent.Y`
 LayoutAlgorithm                                              :class:`adv.LayoutAlgorithm`
 ListbookEvent                                                :class:`BookCtrlEvent`
 ListBox_GetClassDefaultAttributes                            :meth:`ListBox.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
