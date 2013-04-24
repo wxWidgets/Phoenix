@@ -26,9 +26,21 @@ ITEMS  = [ "wxHtmlSelection",
            "wxHtmlLinkInfo",
            "wxHtmlColourCell",
            "wxHtmlWidgetCell",
+           "wxHtmlWordCell",
+           "wxHtmlWordWithTabsCell",
+           "wxHtmlFontCell",
            ]    
     
 #---------------------------------------------------------------------------
+
+def fixCellClass(klass):
+    klass.addItem(etgtools.WigCode("""\
+        virtual void Draw(wxDC& dc, int x, int y, int view_y1, int view_y2, wxHtmlRenderingInfo& info);
+        virtual void DrawInvisible(wxDC& dc, int x , int y, wxHtmlRenderingInfo& info);
+        virtual wxCursor GetMouseCursor(wxHtmlWindowInterface* window) const;
+        virtual void Layout(int w);
+        """))
+
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
@@ -54,6 +66,25 @@ def run():
 
     c = module.find('wxHtmlContainerCell')
     c.find('InsertCell.cell').transfer = True
+    fixCellClass(c)
+    
+    c = module.find('wxHtmlColourCell')
+    fixCellClass(c)
+
+    c = module.find('wxHtmlWidgetCell')
+    fixCellClass(c)
+    
+    c = module.find('wxHtmlWordCell')
+    fixCellClass(c)
+    
+    c = module.find('wxHtmlWordWithTabsCell')
+    fixCellClass(c)
+
+    c = module.find('wxHtmlFontCell')
+    fixCellClass(c)
+
+
+
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
