@@ -15,10 +15,16 @@ class Frame(wx.Frame):
         hwin = HtmlWindow(self, -1, size=(600,400))
         name = os.path.join(os.path.dirname(sys.argv[0]), 'widgetTest.html')
         hwin.LoadPage(name)
+        
+        hwin.Bind(wx.EVT_BUTTON, self.OnButton, id=wx.ID_OK)
+        
 
     def OnClose(self, event):
         self.Destroy()
 
+    def OnButton(self, event):
+        print('It works!')
+        
 
 app = wx.App()
 top = Frame("wxpTest")
