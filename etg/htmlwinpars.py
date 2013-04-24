@@ -82,6 +82,12 @@ def run():
                 PyObject* arg = PyTuple_New(0);
                 PyObject* obj = PyObject_CallObject(m_tagHandlerClass, arg);
                 Py_DECREF(arg);
+
+                // Make sure it succeeded
+                if (!obj) {
+                    PyErr_Print();
+                    return;
+                }
         
                 // now figure out where it's C++ object is...
                 if (! wxPyConvertWrappedPtr(obj, (void **)&thPtr, wxT("wxHtmlWinTagHandler"))) {
