@@ -1,12 +1,11 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.wxpTag
+# Name:        wx.lib.wxpTag
 # Purpose:     A wxHtmlTagHandler that knows how to build and place
 #              wxPython widgets onto web pages.
 #
 # Author:      Robin Dunn
 #
 # Created:     13-Sept-1999
-# RCS-ID:      $Id$
 # Copyright:   (c) 1999 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
@@ -16,7 +15,7 @@
 #
 
 '''
-wxPython.lib.wxpTag
+wx.lib.wxpTag
 
 This module contains a wxHtmlTagHandler that knows how to build
 and place wxPython widgets onto wxHtmlWindow web pages.
@@ -140,8 +139,8 @@ class wxpTagHandler(wx.html.HtmlWinTagHandler):
 
         className = tag.GetParam('CLASS')
         self.ctx.classObj = getattr(self.ctx.classMod, className)
-        if type(self.ctx.classObj) not in [ types.ClassType, types.TypeType]:
-            raise TypeError, "WXP tag attribute CLASS must name a class"
+        #if type(self.ctx.classObj) not in [ types.ClassType, types.TypeType]:
+        #    raise TypeError, "WXP tag attribute CLASS must name a class"
 
         # now look for width and height
         width = -1
@@ -162,13 +161,14 @@ class wxpTagHandler(wx.html.HtmlWinTagHandler):
 
         # create the object
         parent = self.GetParser().GetWindowInterface().GetHTMLWindow()
+        
         if parent:
             obj = self.ctx.classObj(parent, **self.ctx.kwargs)
             obj.Show(True)
 
             # add it to the HtmlWindow
-            self.GetParser().GetContainer().InsertCell(
-                wx.html.HtmlWidgetCell(obj, self.ctx.floatWidth))
+            cell = wx.html.HtmlWidgetCell(obj, self.ctx.floatWidth)
+            self.GetParser().GetContainer().InsertCell(cell)
             self.ctx = None
         return True
 

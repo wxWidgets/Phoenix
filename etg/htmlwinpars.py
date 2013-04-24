@@ -36,8 +36,7 @@ def run():
     
     c = module.find('wxHtmlWinTagHandler')
     assert isinstance(c, etgtools.ClassDef)
-    #c.addCppMethod('wxHtmlWinParser*', 'GetParser', '()',
-    #    body="""return self->m_WParser;""")
+    c.addPrivateCopyCtor()
 
 
     c = module.find('wxHtmlWinParser')

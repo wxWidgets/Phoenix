@@ -1,0 +1,33 @@
+<html>
+
+<head>
+<title>wxHTML does wxPython!</title>
+</head>
+<body bgcolor="#00CCFF">
+<h2>Mixing wxPython and wxHTML</h2>
+
+The widgets on this page were created dynamically on the fly by a
+custom wxTagHandler found in wx.lib.wxpTag.  You can look at the
+sources and doc-string in the wxPython library at wx/lib/wxpTag.py.
+
+<p>
+The button below is added to the page like this:
+
+<pre>
+&lt;center>&lt;wxp module="wx" class="Button" width="50%">
+    &lt;param name="label" value="It works!">
+    &lt;param name="id"    value="ID_OK">
+&lt;/wxp>&lt;/center>
+</pre>
+
+<hr>
+
+<center>
+<wxp module="wx" class="Button" width="50%">
+    <param name="label" value="It works!">
+    <param name="id"    value="ID_OK">
+</wxp>
+</center>
+
+</body></html>
+
