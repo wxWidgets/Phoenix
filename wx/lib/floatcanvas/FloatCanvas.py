@@ -290,7 +290,7 @@ class DrawObject:
             self.Pen = wx.TRANSPARENT_PEN
             self.LineStyle = 'Transparent'
         else:
-             self.Pen = self.PenList.setdefault( (LineColor,LineStyle,LineWidth),  wx.Pen(LineColor,LineWidth,self.LineStyleList[LineStyle]) )
+            self.Pen = self.PenList.setdefault( (LineColor,LineStyle,LineWidth),  wx.Pen(LineColor,LineWidth,self.LineStyleList[LineStyle]) )
 
     def SetHitBrush(self,HitColor):
         if not self.HitFill:
