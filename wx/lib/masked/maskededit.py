@@ -5,9 +5,9 @@
 # Created:      02/11/2003
 # Copyright:    (c) 2003 by Jeff Childers, Will Sadkin, 2003
 # Portions:     (c) 2002 by Will Sadkin, 2002-2007
-# RCS-ID:       $Id$
+# 
 # License:      wxWidgets license
-# Tags:        phoenix-port, py3-port
+# Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
 # NOTE:
 #   MaskedEdit controls are based on a suggestion made on [wxPython-Users] by
@@ -811,7 +811,8 @@ import  string
 import  sys
 
 import  wx
-
+import wx.lib.six as six
+ 
 if sys.version < '3':
     unicode = unicode
 else:
@@ -1645,14 +1646,14 @@ class Field:
                 right_signpos = -1
 
             intStr = intStr.replace(' ', '')                        # drop extra spaces
-            intStr = string.replace(intStr,self._fillChar,"")       # drop extra fillchars
-            intStr = string.replace(intStr,"-","")                  # drop sign, if any
-            intStr = string.replace(intStr, self._groupChar, "")    # lose commas/dots
+            intStr = intStr.replace(self._fillChar,"")       # drop extra fillchars
+            intStr = intStr.replace("-","")                  # drop sign, if any
+            intStr = intStr.replace(self._groupChar, "")    # lose commas/dots
 ####            dbg('intStr:"%s"' % intStr)
             start, end = self._extent
             field_len = end - start
             if not self._padZero and len(intStr) != field_len and intStr.strip():
-                intStr = str(long(intStr))
+                intStr = str(int(intStr))
 ####            dbg('raw int str: "%s"' % intStr)
 ####            dbg('self._groupdigits:', self._groupdigits, 'self._formatcodes:', self._formatcodes)
             if self._groupdigits:
@@ -1750,7 +1751,7 @@ class MaskedEditMixin:
 
         # Validate legitimate set of parameters:
         for key in kwargs.keys():
-            if key.replace('Color', 'Colour') not in MaskedEditMixin.valid_ctrl_params.keys() + Field.valid_params.keys():
+            if key.replace('Color', 'Colour') not in list(MaskedEditMixin.valid_ctrl_params.keys()) + list(Field.valid_params.keys()):
                 raise TypeError('%s: invalid parameter "%s"' % (name, key))
 
         ## Set up dictionary that can be used by subclasses to override or add to default
@@ -2354,7 +2355,7 @@ class MaskedEditMixin:
                 if 1 not in self._fields:
                     self._fields[1] = Field()
 
-                self._decimalpos = string.find( self._mask, '.')
+                self._decimalpos = self._mask.find('.')
 ##                dbg('decimal pos =', self._decimalpos)
 
                 formatcodes = self._fields[0]._GetParameter('formatcodes')
@@ -3063,15 +3064,22 @@ class MaskedEditMixin:
             if 'unicode' in wx.PlatformInfo:
                 if key < 256:
                     char = chr(key) # (must work if we got this far)
-                    char = char.decode(self._defaultEncoding)
+                    if not six.PY3:
+                        char = char.decode(self._defaultEncoding)
                 else:
                     char = unichr(event.GetUnicodeKey())
 ##                    dbg('unicode char:', char)
                 excludes = unicode()
                 if not isinstance(field._excludeChars, unicode):
-                    excludes += field._excludeChars.decode(self._defaultEncoding)
+                    if not six.PY3:
+                        excludes += field._excludeChars.decode(self._defaultEncoding)
+                    else:
+                        excludes += field._excludeChars
                 if not isinstance(self._ctrl_constraints, unicode):
-                    excludes += self._ctrl_constraints._excludeChars.decode(self._defaultEncoding)
+                    if not six.PY3:
+                        excludes += self._ctrl_constraints._excludeChars.decode(self._defaultEncoding)
+                    else:
+                        excludes += self._ctrl_constraints._excludeChars
             else:
                 char = chr(key) # (must work if we got this far)
                 excludes = field._excludeChars + self._ctrl_constraints._excludeChars
@@ -3104,7 +3112,7 @@ class MaskedEditMixin:
                             wx.CallAfter(self._SetInsertionPoint, self._decimalpos)
                     if not keep_processing:
 ##                        dbg("key disallowed by validation")
-                        if not wx.Validator_IsSilent() and orig_pos == pos:
+                        if not wx.Validator.IsSilent() and orig_pos == pos:
                             wx.Bell()
 
                 if keep_processing:
@@ -3150,7 +3158,7 @@ class MaskedEditMixin:
             elif keep_processing:
 ##                dbg('char not allowed')
                 keep_processing = False
-                if (not wx.Validator_IsSilent()) and orig_pos == pos:
+                if (not wx.Validator.IsSilent()) and orig_pos == pos:
                     wx.Bell()
 
         self._applyFormatting()
@@ -3321,7 +3329,7 @@ class MaskedEditMixin:
         else:
             if( (sel_to == self._fields[0]._extent[0] and keycode in (wx.WXK_LEFT, wx.WXK_NUMPAD_LEFT) )
                 or (sel_to == self._masklength and keycode in (wx.WXK_RIGHT, wx.WXK_NUMPAD_RIGHT) ) ):
-                if not wx.Validator_IsSilent():
+                if not wx.Validator.IsSilent():
                     wx.Bell()
             else:
                 # treat arrows as normal, allowing selection
@@ -3435,7 +3443,7 @@ class MaskedEditMixin:
                 and sel_start == sel_to
                 and sel_to == self._masklength - 1
                 and value[sel_to] == ' ' and key in (wx.WXK_DELETE, wx.WXK_NUMPAD_DELETE) and not field._insertRight) ):
-            if not wx.Validator_IsSilent():
+            if not wx.Validator.IsSilent():
                 wx.Bell()
 ##            dbg(indent=0)
             return False
@@ -3618,7 +3626,7 @@ class MaskedEditMixin:
 ##        dbg('field._validRequired?', field._validRequired)
 ##        dbg('field.IsValid("%s")?' % newstr[start:end], field.IsValid(newstr[start:end]))
         if field._validRequired and not field.IsValid(newstr[start:end]):
-            if not wx.Validator_IsSilent():
+            if not wx.Validator.IsSilent():
                 wx.Bell()
 ##            dbg(indent=0)
             return False
@@ -3632,7 +3640,7 @@ class MaskedEditMixin:
 
         # if erasure results in an invalid value, disallow it:
         if self._ctrl_constraints._validRequired and not self.IsValid(newstr):
-            if not wx.Validator_IsSilent():
+            if not wx.Validator.IsSilent():
                 wx.Bell()
 ##            dbg(indent=0)
             return False
@@ -3835,7 +3843,7 @@ class MaskedEditMixin:
         
         if field._stopFieldChangeIfInvalid and not field.IsValid(slice):
 ##            dbg('field invalid; field change disallowed')
-            if not wx.Validator_IsSilent():
+            if not wx.Validator.IsSilent():
                 wx.Bell()
 ##            dbg(indent=0)
             return False
@@ -3851,7 +3859,7 @@ class MaskedEditMixin:
 
             if pos < field_start:
 ##                dbg('cursor before 1st field; cannot change to a previous field')
-                if not wx.Validator_IsSilent():
+                if not wx.Validator.IsSilent():
                     wx.Bell()
 ##                dbg(indent=0)
                 return False
@@ -3968,7 +3976,7 @@ class MaskedEditMixin:
         slice = self._GetValue()[start:end]
         
         if field._stopFieldChangeIfInvalid and not field.IsValid(slice):
-            if not wx.Validator_IsSilent():
+            if not wx.Validator.IsSilent():
                 wx.Bell()
             return False
 
@@ -4079,7 +4087,7 @@ class MaskedEditMixin:
         groupchar = self._fields[0]._groupChar
         if not self._isCharAllowed(groupchar, pos, checkRegex=True):
             keep_processing = False
-            if not wx.Validator_IsSilent():
+            if not wx.Validator.IsSilent():
                 wx.Bell()
 
         if keep_processing:
@@ -4087,7 +4095,7 @@ class MaskedEditMixin:
 ##            dbg("str with '%s' inserted:" % groupchar, '"%s"' % newstr)
             if self._ctrl_constraints._validRequired and not self.IsValid(newstr):
                 keep_processing = False
-                if not wx.Validator_IsSilent():
+                if not wx.Validator.IsSilent():
                         wx.Bell()
 
         if keep_processing:
@@ -4439,7 +4447,7 @@ class MaskedEditMixin:
 ##        dbg('intStr "%(intStr)s"' % locals())
 ##        dbg('lenInt:', lenInt)
 
-        intStr = string.rjust( intStr[-lenInt:], lenInt)
+        intStr = intStr[-lenInt:].rjust(lenInt)
 ##        dbg('right-justifed intStr = "%(intStr)s"' % locals())
         newvalue = intStr + self._decimalChar + fracStr
 
@@ -4523,7 +4531,7 @@ class MaskedEditMixin:
             year_field = 2
 
 ##        dbg('getYear: "%s"' % _getYear(text, self._datestyle))
-        year    = string.replace( _getYear( text, self._datestyle),self._fields[year_field]._fillChar,"")  # drop extra fillChars
+        year    = _getYear( text, self._datestyle).replace(self._fields[year_field]._fillChar,"")  # drop extra fillChars
         month   = _getMonth( text, self._datestyle)
         day     = _getDay( text, self._datestyle)
 ##        dbg('self._datestyle:', self._datestyle, 'year:', year, 'Month', month, 'day:', day)
@@ -4629,7 +4637,7 @@ class MaskedEditMixin:
 
         # convert okchars to unicode if required; will force subsequent appendings to
         # result in unicode strings
-        if 'unicode' in wx.PlatformInfo and not isinstance(okchars, unicode):
+        if not six.PY3 and 'unicode' in wx.PlatformInfo and not isinstance(okchars, unicode):
             okchars = okchars.decode(self._defaultEncoding)
 
         field = self._FindField(pos)
@@ -5221,7 +5229,8 @@ class MaskedEditMixin:
             if 'unicode' in wx.PlatformInfo and not isinstance(char, unicode):
                 # convert the keyboard constant to a unicode value, to
                 # ensure it can be concatenated into the control value:
-                char = char.decode(self._defaultEncoding)
+                if not six.PY3:
+                    char = char.decode(self._defaultEncoding)
 
             newtext = left + char + right
 ####            dbg('left:    "%s"' % left)
@@ -5756,7 +5765,7 @@ class MaskedEditMixin:
         else:
             item = 'selection'
 ##        dbg('maxlength:', maxlength)
-        if 'unicode' in wx.PlatformInfo and not isinstance(paste_text, unicode):
+        if not six.PY3 and 'unicode' in wx.PlatformInfo and not isinstance(paste_text, unicode):
             paste_text = paste_text.decode(self._defaultEncoding)
 
         length_considered = len(paste_text)
@@ -5863,7 +5872,7 @@ class MaskedEditMixin:
 
         if paste_text is not None:
 
-            if 'unicode' in wx.PlatformInfo and not isinstance(paste_text, unicode):
+            if not six.PY3 and 'unicode' in wx.PlatformInfo and not isinstance(paste_text, unicode):
                 paste_text = paste_text.decode(self._defaultEncoding)
 
 ##            dbg('paste text: "%s"' % paste_text)
@@ -5960,7 +5969,7 @@ class MaskedEditMixin:
 
             if not valid_paste:
 ##                dbg('paste text not legal for the selection or portion of the control following the cursor;')
-                if not wx.Validator_IsSilent():
+                if not wx.Validator.IsSilent():
                     wx.Bell()
 ##                dbg(indent=0)
                 return None, -1
@@ -5969,7 +5978,7 @@ class MaskedEditMixin:
 
             new_text = text[:sel_start] + replacement_text + text[replace_to:]
             if new_text:
-                new_text = string.ljust(new_text,self._masklength)
+                new_text = new_text.ljust(self._masklength)
             if signed:
                 new_text, signpos, right_signpos = self._getSignedValue(candidate=new_text)
                 if new_text:

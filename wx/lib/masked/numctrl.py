@@ -3,11 +3,9 @@
 # Author:       Will Sadkin
 # Created:      09/06/2003
 # Copyright:   (c) 2003-2007 by Will Sadkin
-# RCS-ID:      $Id$
+# 
 # License:     wxWidgets license
-#
 # Tags:        phoenix-port, py3-port, unittest, documented
-#
 #----------------------------------------------------------------------------
 # NOTE:
 #   This was written to provide a numeric edit control for wxPython that
@@ -406,6 +404,8 @@ import  types
 
 import  wx
 
+import wx.lib.six as six
+
 from sys import maxsize
 MAXINT = maxsize     # (constants should be in upper case)
 MININT = -maxsize-1
@@ -563,15 +563,15 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##        dbg(indent=0)
 
         # Process initial fields for the control, as part of construction:
-        if type(init_args['integerWidth']) != types.IntType:
+        if not isinstance(init_args['integerWidth'], int):
             raise AttributeError('invalid integerWidth (%s) specified; expected integer' % repr(init_args['integerWidth']))
         elif init_args['integerWidth'] < 1:
             raise AttributeError('invalid integerWidth (%s) specified; must be > 0' % repr(init_args['integerWidth']))
 
         fields = {}
 
-        if init_args.has_key('fractionWidth'):
-            if type(init_args['fractionWidth']) != types.IntType:
+        if 'fractionWidth' in init_args:
+            if not isinstance(init_args['fractionWidth'], int):
                 raise AttributeError('invalid fractionWidth (%s) specified; expected integer' % repr(self._fractionWidth))
             elif init_args['fractionWidth'] < 0:
                 raise AttributeError('invalid fractionWidth (%s) specified; must be >= 0' % repr(init_args['fractionWidth']))
@@ -661,14 +661,14 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         reset_fraction_width = False
 
 
-        if( (kwargs.has_key('integerWidth') and kwargs['integerWidth'] != self._integerWidth)
-            or (kwargs.has_key('fractionWidth') and kwargs['fractionWidth'] != self._fractionWidth)
-            or (kwargs.has_key('groupDigits') and kwargs['groupDigits'] != self._groupDigits)
-            or (kwargs.has_key('autoSize') and kwargs['autoSize'] != self._autoSize) ):
+        if( ('integerWidth' in kwargs and kwargs['integerWidth'] != self._integerWidth)
+            or ('fractionWidth' in kwargs and kwargs['fractionWidth'] != self._fractionWidth)
+            or ('groupDigits' in kwargs and kwargs['groupDigits'] != self._groupDigits)
+            or ('autoSize' in kwargs and kwargs['autoSize'] != self._autoSize) ):
 
             fields = {}
 
-            if kwargs.has_key('fractionWidth'):
+            if 'fractionWidth' in kwargs:
                 if type(kwargs['fractionWidth']) != types.IntType:
                     raise AttributeError('invalid fractionWidth (%s) specified; expected integer' % repr(kwargs['fractionWidth']))
                 elif kwargs['fractionWidth'] < 0:
@@ -686,7 +686,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 fracmask = ''
 ##            dbg('fracmask:', fracmask)
 
-            if kwargs.has_key('integerWidth'):
+            if 'integerWidth' in kwargs:
                 if type(kwargs['integerWidth']) != types.IntType:
 ##                    dbg(indent=0)
                     raise AttributeError('invalid integerWidth (%s) specified; expected integer' % repr(kwargs['integerWidth']))
@@ -696,7 +696,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 else:
                     self._integerWidth = kwargs['integerWidth']
 
-            if kwargs.has_key('groupDigits'):
+            if 'groupDigits' in kwargs:
                 self._groupDigits = kwargs['groupDigits']
 
             if self._groupDigits:
@@ -710,14 +710,14 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
             maskededit_kwargs['fields'] = fields
 
             # don't bother to reprocess these arguments:
-            if kwargs.has_key('integerWidth'):
+            if 'integerWidth' in kwargs:
                 del kwargs['integerWidth']
-            if kwargs.has_key('fractionWidth'):
+            if 'fractionWidth' in kwargs:
                 del kwargs['fractionWidth']
 
             maskededit_kwargs['mask'] = intmask+fracmask
 
-        if kwargs.has_key('groupChar') or kwargs.has_key('decimalChar'):
+        if 'groupChar' in kwargs or 'decimalChar' in kwargs:
             old_groupchar = self._groupChar     # save so we can reformat properly
             old_decimalchar = self._decimalChar
 ##            dbg("old_groupchar: '%s'" % old_groupchar)
@@ -726,10 +726,10 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
             decimalchar = old_decimalchar
             old_numvalue = self._GetNumValue(self._GetValue())
 
-            if kwargs.has_key('groupChar'):
+            if 'groupChar' in kwargs:
                 maskededit_kwargs['groupChar'] = kwargs['groupChar']
                 groupchar = kwargs['groupChar']
-            if kwargs.has_key('decimalChar'):
+            if 'decimalChar' in kwargs:
                 maskededit_kwargs['decimalChar'] = kwargs['decimalChar']
                 decimalchar = kwargs['decimalChar']
 
@@ -754,7 +754,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
         # reprocess existing format codes to ensure proper resulting format:
         formatcodes = self.GetCtrlParameter('formatcodes')
-        if kwargs.has_key('allowNegative'):
+        if 'allowNegative' in kwargs:
             if kwargs['allowNegative'] and '-' not in formatcodes:
                 formatcodes += '-'
                 maskededit_kwargs['formatcodes'] = formatcodes
@@ -762,7 +762,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 formatcodes = formatcodes.replace('-','')
                 maskededit_kwargs['formatcodes'] = formatcodes
 
-        if kwargs.has_key('groupDigits'):
+        if 'groupDigits' in kwargs:
             if kwargs['groupDigits'] and ',' not in formatcodes:
                 formatcodes += ','
                 maskededit_kwargs['formatcodes'] = formatcodes
@@ -770,7 +770,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 formatcodes = formatcodes.replace(',','')
                 maskededit_kwargs['formatcodes'] = formatcodes
 
-        if kwargs.has_key('selectOnEntry'):
+        if 'selectOnEntry' in kwargs:
             self._selectOnEntry = kwargs['selectOnEntry']
 ##            dbg("kwargs['selectOnEntry']?", kwargs['selectOnEntry'], "'S' in formatcodes?", 'S' in formatcodes)
             if kwargs['selectOnEntry'] and 'S' not in formatcodes:
@@ -780,7 +780,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 formatcodes = formatcodes.replace('S','')
                 maskededit_kwargs['formatcodes'] = formatcodes
 
-        if kwargs.has_key('autoSize'):
+        if 'autoSize' in kwargs:
             self._autoSize = kwargs['autoSize']
             if kwargs['autoSize'] and 'F' not in formatcodes:
                 formatcodes += 'F'
@@ -798,14 +798,14 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
             maskededit_kwargs['formatcodes'] = formatcodes
 
 
-        if kwargs.has_key('limited'):
+        if 'limited' in kwargs:
             if kwargs['limited'] and not self._limited:
                 maskededit_kwargs['validRequired'] = True
             elif not kwargs['limited'] and self._limited:
                 maskededit_kwargs['validRequired'] = False
             self._limited = kwargs['limited']
 
-        if kwargs.has_key('limitOnFieldChange'):
+        if 'limitOnFieldChange' in kwargs:
             if kwargs['limitOnFieldChange'] and not self._limitOnFieldChange:
                 maskededit_kwargs['stopFieldChangeIfInvalid'] = True
             elif kwargs['limitOnFieldChange'] and self._limitOnFieldChange:
@@ -839,7 +839,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 
 
         # Set min and max as appropriate:
-        if kwargs.has_key('min'):
+        if 'min' in kwargs:
             min = kwargs['min']
             if( self._max is None
                 or min is None
@@ -858,7 +858,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 pass
 
 
-        if kwargs.has_key('max'):
+        if 'max' in kwargs:
             max = kwargs['max']
             if( self._min is None
                 or max is None
@@ -876,16 +876,16 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##                dbg('ignoring max')
                 pass
 
-        if kwargs.has_key('allowNegative'):
+        if 'allowNegative' in kwargs:
             self._allowNegative = kwargs['allowNegative']
 
         # Ensure current value of control obeys any new restrictions imposed:
         text = self._GetValue()
 ##        dbg('text value: "%s"' % text)
-        if kwargs.has_key('groupChar') and self._groupChar != old_groupchar and text.find(old_groupchar) != -1:
+        if 'groupChar' in kwargs and self._groupChar != old_groupchar and text.find(old_groupchar) != -1:
             text = old_numvalue
 ##            dbg('old_groupchar: "%s" newgroupchar: "%s"' % (old_groupchar, self._groupChar))
-        if kwargs.has_key('decimalChar') and self._decimalChar != old_decimalchar and text.find(old_decimalchar) != -1:
+        if 'decimalChar' in kwargs and self._decimalChar != old_decimalchar and text.find(old_decimalchar) != -1:
             text = old_numvalue
         
         if text != self._GetValue():
@@ -954,7 +954,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
             if not value:
                 return 0.0
             else:
-                return string.atof(fracstring)
+                return float(fracstring)
 
     def _OnChangeSign(self, event):
 ##        dbg('NumCtrl::_OnChangeSign', indent=1)
@@ -968,7 +968,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         # limited and -1 is out of bounds
         if self._typedSign:
             self._isNeg = False
-        if not wx.Validator_IsSilent():
+        if not wx.Validator.IsSilent():
             wx.Bell()
         sel_start, sel_to = self._GetSelection()
 ##        dbg('queuing reselection of (%d, %d)' % (sel_start, sel_to))
@@ -1049,7 +1049,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
             intstart, intend = self._fields[0]._extent
 ##            dbg('intstart, intend:', intstart, intend)
 ##            dbg('raw integer:"%s"' % value[intstart:intend])
-            int = self._GetNumValue(value[intstart:intend])
+            int_str = self._GetNumValue(value[intstart:intend])
             numval = self._fromGUI(value)
 
 ##            dbg('integer: "%s"' % int)
@@ -1075,11 +1075,11 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 # a limits check and see if the value is otherwise ok...
 
 ##                dbg('self._isNeg?', self._isNeg)
-                if int == '-' and self._oldvalue < 0 and not self._typedSign:
+                if int_str == '-' and self._oldvalue < 0 and not self._typedSign:
 ##                    dbg('just a negative sign; old value < 0; setting replacement of 0')
                     replacement = 0
                     self._isNeg = False
-                elif int[:2] == '-0': 
+                elif int_str[:2] == '-0': 
                     if self._oldvalue < 0:
 ##                        dbg('-0; setting replacement of 0')
                         replacement = 0
@@ -1094,7 +1094,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##                        dbg(indent=0)
                         return
 
-                elif int == '-' and (self._oldvalue >= 0 or self._typedSign):
+                elif int_str == '-' and (self._oldvalue >= 0 or self._typedSign):
                     if not self._limited or (self._min < -1 and self._max >= -1):
 ##                        dbg('just a negative sign; setting replacement of -1')
                         replacement = -1
@@ -1105,7 +1105,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                         return
 
                 elif( self._typedSign
-                      and int.find('-') != -1
+                      and int_str.find('-') != -1
                       and self._limited
                       and not self._min <= numval <= self._max):
                     # changed sign resulting in value that's now out-of-bounds;
@@ -1115,15 +1115,15 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                     return
 
             if replacement is None:
-                if int and int != '-':
+                if int_str and int_str != '-':
                     try:
-                        string.atol(int)
+                        int(int_str)
                     except ValueError:
                         # integer requested is not legal.  This can happen if the user
                         # is attempting to insert a digit in the middle of the control
                         # resulting in something like "   3   45". Disallow such actions:
 ##                        dbg('>>>>>>>>>>>>>>>> "%s" does not convert to a long!' % int)
-                        if not wx.Validator_IsSilent():
+                        if not wx.Validator.IsSilent():
                             wx.Bell()
                         sel_start, sel_to = self._GetSelection()
 ##                        dbg('queuing reselection of (%d, %d)' % (sel_start, sel_to))
@@ -1136,9 +1136,9 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                     # finally, (potentially re) verify that numvalue will pass any limits imposed:
                     try:
                         if self._fractionWidth:
-                            value = self._toGUI(string.atof(numvalue))
+                            value = self._toGUI(float(numvalue))
                         else:
-                            value = self._toGUI(string.atol(numvalue))
+                            value = self._toGUI(int(numvalue))
                     except ValueError as e:
 ##                        dbg('Exception:', e, 'must be out of bounds; disallow value')
                         self._disallowValue()
@@ -1644,7 +1644,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##            dbg(indent=0)
             return self._template
 
-        elif type(value) in (types.StringType, types.UnicodeType):
+        elif isinstance(value, six.string_types):
             value = self._GetNumValue(value)
 ##            dbg('cleansed num value: "%s"' % value)
             if value == "":
@@ -1664,7 +1664,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##                dbg('exception raised:', e, indent=0)
                 raise ValueError ('NumCtrl requires numeric value, passed %s'% repr(value) )
 
-        elif type(value) not in (types.IntType, types.LongType, types.FloatType):
+        elif not isinstance(value, (int, float)):
 ##            dbg(indent=0)
             raise ValueError (
                 'NumCtrl requires numeric value, passed %s'% repr(value) )
