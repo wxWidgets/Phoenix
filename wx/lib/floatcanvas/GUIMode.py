@@ -24,31 +24,31 @@ class Cursors(object):
     """
     def __init__(self):
         if "wxMac" in wx.PlatformInfo: # use 16X16 cursors for wxMac
-            self.HandCursor = wx.CursorFromImage(Resources.getHand16Image())
-            self.GrabHandCursor = wx.CursorFromImage(Resources.getGrabHand16Image())
+            self.HandCursor = wx.Cursor(Resources.getHand16Image())
+            self.GrabHandCursor = wx.Cursor(Resources.getGrabHand16Image())
         
             img = Resources.getMagPlus16Image()
-            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
-            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
-            self.MagPlusCursor = wx.CursorFromImage(img)
+            img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
+            img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
+            self.MagPlusCursor = wx.Cursor(img)
         
             img = Resources.getMagMinus16Image()
-            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
-            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
-            self.MagMinusCursor = wx.CursorFromImage(img)
+            img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 6)
+            img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 6)
+            self.MagMinusCursor = wx.Cursor(img)
         else: # use 24X24 cursors for GTK and Windows
-            self.HandCursor = wx.CursorFromImage(Resources.getHandImage())
-            self.GrabHandCursor = wx.CursorFromImage(Resources.getGrabHandImage())
+            self.HandCursor = wx.Cursor(Resources.getHandImage())
+            self.GrabHandCursor = wx.Cursor(Resources.getGrabHandImage())
         
             img = Resources.getMagPlusImage()
-            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
-            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
-            self.MagPlusCursor = wx.CursorFromImage(img)
+            img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
+            img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
+            self.MagPlusCursor = wx.Cursor(img)
         
             img = Resources.getMagMinusImage()
-            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
-            img.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
-            self.MagMinusCursor = wx.CursorFromImage(img)
+            img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 9)
+            img.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 9)
+            self.MagMinusCursor = wx.Cursor(img)
 
 
 class GUIBase(object):
@@ -224,7 +224,6 @@ class GUIMove(GUIBase):
         wh = self.Canvas.PanelSize
         xy_tl = xy1 - self.StartMove
         dc = wx.ClientDC(self.Canvas)
-        dc.BeginDrawing()
         x1,y1 = self.PrevMoveXY
         x2,y2 = xy_tl
         w,h = self.Canvas.PanelSize
@@ -272,10 +271,9 @@ class GUIMove(GUIBase):
         dc.DrawRectangle(xb, yb, wb, hb)
         self.PrevMoveXY = xy_tl
         if self.Canvas._ForeDrawList:
-            dc.DrawBitmapPoint(self.Canvas._ForegroundBuffer,xy_tl)
+            dc.DrawBitmap(self.Canvas._ForegroundBuffer,xy_tl)
         else:
-            dc.DrawBitmapPoint(self.Canvas._Buffer,xy_tl)
-        dc.EndDrawing()
+            dc.DrawBitmap(self.Canvas._Buffer,xy_tl)
         #self.Canvas.Update()
 
     def OnWheel(self, event):
@@ -327,15 +325,13 @@ class GUIZoomIn(GUIBase):
             wh[1] = int(wh[0] / self.Canvas.AspectRatio)
             xy_c = (xy0 + xy1) / 2
             dc = wx.ClientDC(self.Canvas)
-            dc.BeginDrawing()
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.SetLogicalFunction(wx.XOR)
             if self.PrevRBBox:
-                dc.DrawRectanglePointSize(*self.PrevRBBox)
+                dc.DrawRectangle(*self.PrevRBBox)
             self.PrevRBBox = ( xy_c - wh/2, wh )
-            dc.DrawRectanglePointSize( *self.PrevRBBox )
-            dc.EndDrawing()
+            dc.DrawRectangle( *self.PrevRBBox )
             
     def UpdateScreen(self):
         """

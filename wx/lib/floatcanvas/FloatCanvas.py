@@ -82,7 +82,7 @@ class _MouseEvent(wx.PyCommandEvent):
     """
 
     def __init__(self, EventType, NativeEvent, WinID, Coords = None):
-        wx.PyCommandEvent.__init__(self)
+        super(_MouseEvent, self).__init__()
 
         self.SetEventType( EventType )
         self._NativeEvent = NativeEvent
@@ -92,7 +92,11 @@ class _MouseEvent(wx.PyCommandEvent):
         return self.Coords
 
     def __getattr__(self, name):
+        d = self._getAttrDict()
+        if name in d:
+            return d[name]
         return getattr(self._NativeEvent, name)
+
 
 ## fixme: This should probably be re-factored into a class
 _testBitmap = None
@@ -111,7 +115,7 @@ def _cycleidxs(indexcount, maxvalue, step):
         if not mac:
             dc = _testDC
         if not B:
-            B = _testBitmap = wx.EmptyBitmap(1, 1)
+            B = _testBitmap = wx.Bitmap(1, 1)
             if not mac:
                 dc = _testDC = wx.MemoryDC()
         if mac:
@@ -1093,9 +1097,9 @@ class Rectangle(RectEllipse):
                                     HTdc)
         WH[N.abs(WH) < self.MinSize] = self.MinSize
         if not( self.DisappearWhenSmall and N.abs(WH).min() <=  self.MinSize) : # don't try to draw it too tiny
-            dc.DrawRectanglePointSize(XY, WH)
+            dc.DrawRectangle(XY, WH)
             if HTdc and self.HitAble:
-                HTdc.DrawRectanglePointSize(XY, WH)
+                HTdc.DrawRectangle(XY, WH)
 
 
 class Ellipse(RectEllipse):
@@ -1107,9 +1111,9 @@ class Ellipse(RectEllipse):
                                     HTdc)
         WH[N.abs(WH) < self.MinSize] = self.MinSize
         if not( self.DisappearWhenSmall and N.abs(WH).min() <=  self.MinSize) : # don't try to draw it too tiny
-            dc.DrawEllipsePointSize(XY, WH)
+            dc.DrawEllipse(XY, WH)
             if HTdc and self.HitAble:
-                HTdc.DrawEllipsePointSize(XY, WH)
+                HTdc.DrawEllipse(XY, WH)
 
 class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
     def __init__(self, XY, Diameter, 
@@ -1157,9 +1161,9 @@ class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
         
         WH[N.abs(WH) < self.MinSize] = self.MinSize
         if not( self.DisappearWhenSmall and N.abs(WH).min() <=  self.MinSize) : # don't try to draw it too tiny
-            dc.DrawCirclePoint(XY, WH[0])
+            dc.DrawCircle(XY, WH[0])
             if HTdc and self.HitAble:
-                HTdc.DrawCirclePoint(XY, WH[0])
+                HTdc.DrawCircle(XY, WH[0])
 
 
 class TextObjectMixin(XYObjectMixin):
@@ -1331,11 +1335,11 @@ class Text(TextObjectMixin, DrawObject, ):
         if self.TextWidth is None or self.TextHeight is None:
             (self.TextWidth, self.TextHeight) = dc.GetTextExtent(self.String)
         XY = self.ShiftFun(XY[0], XY[1], self.TextWidth, self.TextHeight)
-        dc.DrawTextPoint(self.String, XY)
+        dc.DrawText(self.String, XY)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
-            HTdc.DrawRectanglePointSize(XY, (self.TextWidth, self.TextHeight) )
+            HTdc.DrawRectangle(XY, (self.TextWidth, self.TextHeight) )
 
 class ScaledText(TextObjectMixin, DrawObject, ):
     ##fixme: this can be depricated and jsut use ScaledTextBox with different defaults.
@@ -1456,7 +1460,7 @@ class ScaledText(TextObjectMixin, DrawObject, ):
     def CalcBoundingBox(self):
         ## this isn't exact, as fonts don't scale exactly.
         dc = wx.MemoryDC()
-        bitmap = wx.EmptyBitmap(1, 1)
+        bitmap = wx.Bitmap(1, 1)
         dc.SelectObject(bitmap) #wxMac needs a Bitmap selected for GetTextExtent to work.
         DrawingSize = 40 # pts This effectively determines the resolution that the BB is computed to.
         ScaleFactor = float(self.Size) / DrawingSize
@@ -1494,13 +1498,12 @@ class ScaledText(TextObjectMixin, DrawObject, ):
             # This had to be put in here, because it changes with Zoom, as
             # fonts don't scale exactly.
             xy = self.ShiftFun(X, Y, w, h)
-
-            dc.DrawTextPoint(self.String, xy)
+            dc.DrawText(self.String, xy)
 
             if HTdc and self.HitAble:
                 HTdc.SetPen(self.HitPen)
                 HTdc.SetBrush(self.HitBrush)
-                HTdc.DrawRectanglePointSize(xy, (w, h) )
+                HTdc.DrawRectangle(xy, (w, h))
 
 class ScaledTextBox(TextObjectMixin, DrawObject):
     """
@@ -1648,7 +1651,7 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
 
     def WrapToWidth(self):
         dc = wx.MemoryDC()
-        bitmap = wx.EmptyBitmap(1, 1)
+        bitmap = wx.Bitmap(1, 1)
         dc.SelectObject(bitmap) #wxMac needs a Bitmap selected for GetTextExtent to work.
         DrawingSize = self.LayoutFontSize # pts This effectively determines the resolution that the BB is computed to.
         ScaleFactor = float(self.Size) / DrawingSize
@@ -1697,7 +1700,7 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
             self.WrapToWidth()
 
         dc = wx.MemoryDC()
-        bitmap = wx.EmptyBitmap(1, 1)
+        bitmap = wx.Bitmap(1, 1)
         dc.SelectObject(bitmap) #wxMac needs a Bitmap selected for GetTextExtent to work.
 
         DrawingSize = self.LayoutFontSize # pts This effectively determines the resolution that the BB is computed to.
@@ -1794,7 +1797,7 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
         if (self.LineStyle and self.LineColor) or self.BackgroundColor:
             dc.SetBrush(self.Brush)
             dc.SetPen(self.Pen)
-            dc.DrawRectanglePointSize(xy , wh)
+            dc.DrawRectangle(xy , wh)
 
         # Draw the Text
         if not( self.DisappearWhenSmall and Size <=  self.MinFontSize) : # don't try to draw a zero sized font!
@@ -1808,7 +1811,7 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
-            HTdc.DrawRectanglePointSize(xy, wh)
+            HTdc.DrawRectangle(xy, wh)
 
 class Bitmap(TextObjectMixin, DrawObject, ):
     """
@@ -1851,7 +1854,7 @@ class Bitmap(TextObjectMixin, DrawObject, ):
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
-            HTdc.DrawRectanglePointSize(XY, (self.Width, self.Height) )
+            HTdc.DrawRectangle(XY, (self.Width, self.Height) )
 
 class ScaledBitmap(TextObjectMixin, DrawObject, ):
     """
@@ -1916,7 +1919,7 @@ class ScaledBitmap(TextObjectMixin, DrawObject, ):
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
-            HTdc.DrawRectanglePointSize(XY, (W, H) )
+            HTdc.DrawRectangle(XY, (W, H) )
 
 class ScaledBitmap2(TextObjectMixin, DrawObject, ):
     """
@@ -2002,7 +2005,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
-            HTdc.DrawRectanglePointSize(XY, (W, H) )
+            HTdc.DrawRectangle(XY, (W, H) )
 
     def _DrawSubBitmap(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc):
         """
@@ -2073,7 +2076,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
-            HTdc.DrawRectanglePointSize(XYs, (Ws, Hs) )
+            HTdc.DrawRectangle(XYs, (Ws, Hs) )
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         BBworld = BBox.asBBox(self._Canvas.ViewPortBB)
@@ -2363,28 +2366,28 @@ class FloatCanvas(wx.Panel):
 
         self.Debug = Debug
 
-        wx.EVT_PAINT(self, self.OnPaint)
-        wx.EVT_SIZE(self, self.OnSize)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_SIZE, self.OnSize)
 
-        wx.EVT_LEFT_DOWN(self, self.LeftDownEvent)
-        wx.EVT_LEFT_UP(self, self.LeftUpEvent)
-        wx.EVT_LEFT_DCLICK(self, self.LeftDoubleClickEvent)
-        wx.EVT_MIDDLE_DOWN(self, self.MiddleDownEvent)
-        wx.EVT_MIDDLE_UP(self, self.MiddleUpEvent)
-        wx.EVT_MIDDLE_DCLICK(self, self.MiddleDoubleClickEvent)
-        wx.EVT_RIGHT_DOWN(self, self.RightDownEvent)
-        wx.EVT_RIGHT_UP(self, self.RightUpEvent)
-        wx.EVT_RIGHT_DCLICK(self, self.RightDoubleCLickEvent)
-        wx.EVT_MOTION(self, self.MotionEvent)
-        wx.EVT_MOUSEWHEEL(self, self.WheelEvent)
-        wx.EVT_KEY_DOWN(self, self.KeyDownEvent)
-        wx.EVT_KEY_UP(self, self.KeyUpEvent)
+        self.Bind(wx.EVT_LEFT_DOWN, self.LeftDownEvent)
+        self.Bind(wx.EVT_LEFT_UP, self.LeftUpEvent)
+        self.Bind(wx.EVT_LEFT_DCLICK, self.LeftDoubleClickEvent)
+        self.Bind(wx.EVT_MIDDLE_DOWN, self.MiddleDownEvent)
+        self.Bind(wx.EVT_MIDDLE_UP, self.MiddleUpEvent)
+        self.Bind(wx.EVT_MIDDLE_DCLICK, self.MiddleDoubleClickEvent)
+        self.Bind(wx.EVT_RIGHT_DOWN, self.RightDownEvent)
+        self.Bind(wx.EVT_RIGHT_UP, self.RightUpEvent)
+        self.Bind(wx.EVT_RIGHT_DCLICK, self.RightDoubleCLickEvent)
+        self.Bind(wx.EVT_MOTION, self.MotionEvent)
+        self.Bind(wx.EVT_MOUSEWHEEL, self.WheelEvent)
+        self.Bind(wx.EVT_KEY_DOWN, self.KeyDownEvent)
+        self.Bind(wx.EVT_KEY_UP, self.KeyUpEvent)
 
 
         ## CHB: I'm leaving these out for now.
-        #wx.EVT_ENTER_WINDOW(self, self. )
-        #wx.EVT_LEAVE_WINDOW(self, self. )
-
+        #self.Bind(wx.EVT_ENTER_WINDOW, self. )
+        #self.Bind(wx.EVT_LEAVE_WINDOW, self. )
+    
         self.SetProjectionFun(ProjectionFun)
         
         self.GUIMode = None # making sure the arrribute exists
@@ -2678,9 +2681,9 @@ class FloatCanvas(wx.Panel):
         ##fixme: this looks like tortured logic!
         self._BackgroundDirty = True
         # Make new offscreen bitmap:
-        self._Buffer = wx.EmptyBitmap(*self.PanelSize)
+        self._Buffer = wx.Bitmap(*self.PanelSize)
         if self._ForeDrawList:
-            self._ForegroundBuffer = wx.EmptyBitmap(*self.PanelSize)
+            self._ForegroundBuffer = wx.Bitmap(*self.PanelSize)
             if self.UseHitTest:
                 self.MakeNewForegroundHTBitmap()
             else:
@@ -2700,7 +2703,7 @@ class FloatCanvas(wx.Panel):
         Off screen Bitmap used for Hit tests on background objects
         
         """
-        self._HTBitmap = wx.EmptyBitmap(self.PanelSize[0],
+        self._HTBitmap = wx.Bitmap(self.PanelSize[0],
                                         self.PanelSize[1],
                                         depth=self.HitTestBitmapDepth)
 
@@ -2712,7 +2715,7 @@ class FloatCanvas(wx.Panel):
         Off screen Bitmap used for Hit tests on foreground objects
         
         """
-        self._ForegroundHTBitmap = wx.EmptyBitmap(self.PanelSize[0],
+        self._ForegroundHTBitmap = wx.Bitmap(self.PanelSize[0],
                                                   self.PanelSize[1],
                                                   depth=self.HitTestBitmapDepth)
 
@@ -2725,7 +2728,7 @@ class FloatCanvas(wx.Panel):
         self.Draw()
 
     def InitializePanel(self):
-        PanelSize  = N.array(self.GetClientSizeTuple(),  N.int32)
+        PanelSize  = N.array(self.GetClientSize(),  N.int32)
         self.PanelSize  = N.maximum(PanelSize, (2,2)) ## OS-X sometimes gives a Size event when the panel is size (0,0)
         self.HalfPanelSize = self.PanelSize / 2 # lrk: added for speed in WorldToPixel
         self.AspectRatio = float(self.PanelSize[0]) / self.PanelSize[1]
@@ -2802,7 +2805,7 @@ class FloatCanvas(wx.Panel):
         if self._ForeDrawList:
             ## If an object was just added to the Foreground, there might not yet be a buffer
             if self._ForegroundBuffer is None:
-                self._ForegroundBuffer = wx.EmptyBitmap(self.PanelSize[0],
+                self._ForegroundBuffer = wx.Bitmap(self.PanelSize[0],
                                                         self.PanelSize[1])
 
             dc = wx.MemoryDC() ## I got some strange errors (linewidths wrong) if I didn't make a new DC here
@@ -3091,7 +3094,6 @@ class FloatCanvas(wx.Panel):
         device context.
         """
         dc.SetBackground(self.BackgroundBrush)
-        dc.BeginDrawing()
         #i = 0
         PanelSize0, PanelSize1 = self.PanelSize # for speed
         WorldToPixel = self.WorldToPixel # for speed
@@ -3103,7 +3105,6 @@ class FloatCanvas(wx.Panel):
                 Object._Draw(dc, WorldToPixel, ScaleWorldToPixel, HTdc)
                 if (i+1) % NumBetweenBlits == 0:
                     Blit(0, 0, PanelSize0, PanelSize1, dc, 0, 0)
-        dc.EndDrawing()
 
     def SaveAsImage(self, filename, ImageType=wx.BITMAP_TYPE_PNG):
         """

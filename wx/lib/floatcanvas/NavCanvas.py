@@ -60,7 +60,9 @@ class NavCanvas(wx.Panel):
     def AddToolbarModeButtons(self, tb, Modes):
         self.ModesDict = {}
         for Mode in Modes:
-            tool = tb.AddRadioTool(wx.ID_ANY, shortHelp=Mode[0], bitmap=Mode[2])
+            tool = tb.AddTool(wx.ID_ANY, label=Mode[0],
+                              shortHelp=Mode[0], bitmap=Mode[2],
+                              kind=wx.ITEM_RADIO)
             self.Bind(wx.EVT_TOOL, self.SetMode, tool)
             self.ModesDict[tool.GetId()]=Mode[1]
         #self.ZoomOutTool = tb.AddRadioTool(wx.ID_ANY, bitmap=Resources.getMagMinusBitmap(), shortHelp = "Zoom Out")
