@@ -52,6 +52,9 @@ def run():
     c.addItem(etgtools.WigCode("""\
         virtual wxObject* GetProduct();
         """))
+
+    c.addCppMethod('wxHtmlWinParser*', 'GetParser', '()',
+        body="return (wxHtmlWinParser*)self->GetParser();")
     
     
     module.addCppCode("""\
