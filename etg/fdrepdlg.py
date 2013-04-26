@@ -38,11 +38,18 @@ def run():
     tools.fixEventClass(c)
     
     c.addPyCode("""\
-        EVT_FIND = wx.PyEventBinder( wxEVT_COMMAND_FIND, 1 )
-        EVT_FIND_NEXT = wx.PyEventBinder( wxEVT_COMMAND_FIND_NEXT, 1 )
-        EVT_FIND_REPLACE = wx.PyEventBinder( wxEVT_COMMAND_FIND_REPLACE, 1 )
-        EVT_FIND_REPLACE_ALL = wx.PyEventBinder( wxEVT_COMMAND_FIND_REPLACE_ALL, 1 )
-        EVT_FIND_CLOSE = wx.PyEventBinder( wxEVT_COMMAND_FIND_CLOSE, 1 )
+        EVT_FIND = wx.PyEventBinder( wxEVT_FIND, 1 )
+        EVT_FIND_NEXT = wx.PyEventBinder( wxEVT_FIND_NEXT, 1 )
+        EVT_FIND_REPLACE = wx.PyEventBinder( wxEVT_FIND_REPLACE, 1 )
+        EVT_FIND_REPLACE_ALL = wx.PyEventBinder( wxEVT_FIND_REPLACE_ALL, 1 )
+        EVT_FIND_CLOSE = wx.PyEventBinder( wxEVT_FIND_CLOSE, 1 )
+        
+        # deprecated wxEVT aliases
+        wxEVT_COMMAND_FIND              = wxEVT_FIND
+        wxEVT_COMMAND_FIND_NEXT         = wxEVT_FIND_NEXT
+        wxEVT_COMMAND_FIND_REPLACE      = wxEVT_FIND_REPLACE
+        wxEVT_COMMAND_FIND_REPLACE_ALL  = wxEVT_FIND_REPLACE_ALL
+        wxEVT_COMMAND_FIND_CLOSE        = wxEVT_FIND_CLOSE
         """)
     
     c = module.find('wxFindReplaceDialog')

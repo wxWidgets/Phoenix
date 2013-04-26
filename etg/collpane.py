@@ -34,8 +34,12 @@ def run():
     # customizing the generated code and docstrings.
     
     module.addHeaderCode("#include <wx/collpane.h>")
-    module.addPyCode(
-        "EVT_COLLAPSIBLEPANE_CHANGED = wx.PyEventBinder( wxEVT_COMMAND_COLLPANE_CHANGED )")
+    module.addPyCode("""\
+        EVT_COLLAPSIBLEPANE_CHANGED = wx.PyEventBinder( wxEVT_COLLAPSIBLEPANE_CHANGED )
+        
+        # deprecated wxEVT alias
+        wxEVT_COMMAND_COLLPANE_CHANGED  = wxEVT_COLLAPSIBLEPANE_CHANGED
+        """)
     
     c = module.find('wxCollapsiblePane')
     c.find('wxCollapsiblePane.label').default = 'wxEmptyString'

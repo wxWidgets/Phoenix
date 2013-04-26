@@ -63,7 +63,10 @@ def run():
     tools.fixEventClass(c)
     
     c.addPyCode("""\
-        EVT_COLOURPICKER_CHANGED = wx.PyEventBinder( wxEVT_COMMAND_COLOURPICKER_CHANGED, 1 )
+        EVT_COLOURPICKER_CHANGED = wx.PyEventBinder( wxEVT_COLOURPICKER_CHANGED, 1 )
+        
+        # deprecated wxEVT alias
+        wxEVT_COMMAND_COLOURPICKER_CHANGED  = wxEVT_COLOURPICKER_CHANGED
         """)
     
     
@@ -108,8 +111,12 @@ def run():
     tools.fixEventClass(c)
 
     c.addPyCode("""\
-        EVT_FILEPICKER_CHANGED = wx.PyEventBinder( wxEVT_COMMAND_FILEPICKER_CHANGED, 1 )
-        EVT_DIRPICKER_CHANGED = wx.PyEventBinder( wxEVT_COMMAND_DIRPICKER_CHANGED, 1 )
+        EVT_FILEPICKER_CHANGED = wx.PyEventBinder( wxEVT_FILEPICKER_CHANGED, 1 )
+        EVT_DIRPICKER_CHANGED = wx.PyEventBinder( wxEVT_DIRPICKER_CHANGED, 1 )
+        
+        # deprecated wxEVT aliases
+        wxEVT_COMMAND_FILEPICKER_CHANGED   = wxEVT_FILEPICKER_CHANGED
+        wxEVT_COMMAND_DIRPICKER_CHANGED    = wxEVT_DIRPICKER_CHANGED
         """)
     
     #-----------------------------------------------------------------
@@ -130,7 +137,10 @@ def run():
     tools.fixEventClass(c)
 
     c.addPyCode("""\
-        EVT_FONTPICKER_CHANGED = wx.PyEventBinder( wxEVT_COMMAND_FONTPICKER_CHANGED, 1 )
+        EVT_FONTPICKER_CHANGED = wx.PyEventBinder( wxEVT_FONTPICKER_CHANGED, 1 )
+        
+        # deprecated wxEVT alias
+        wxEVT_COMMAND_FONTPICKER_CHANGED  = wxEVT_FONTPICKER_CHANGED
         """)
 
     #-----------------------------------------------------------------

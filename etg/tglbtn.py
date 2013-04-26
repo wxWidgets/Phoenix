@@ -46,7 +46,11 @@ def run():
     tools.fixWindowClass(c)
     
     module.addPyCode("""\
-        EVT_TOGGLEBUTTON = PyEventBinder(wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, 1)""")
+        EVT_TOGGLEBUTTON = PyEventBinder(wxEVT_TOGGLEBUTTON, 1)
+
+        # deprecated wxEVT alias
+        wxEVT_COMMAND_TOGGLEBUTTON_CLICKED   = wxEVT_TOGGLEBUTTON
+        """)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

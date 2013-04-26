@@ -68,9 +68,14 @@ def run():
     tools.fixEventClass(c)
     
     module.addPyCode("""\
-        EVT_HTML_CELL_CLICKED = wx.PyEventBinder( wxEVT_COMMAND_HTML_CELL_CLICKED, 1 )
-        EVT_HTML_CELL_HOVER   = wx.PyEventBinder( wxEVT_COMMAND_HTML_CELL_HOVER, 1 )
-        EVT_HTML_LINK_CLICKED = wx.PyEventBinder( wxEVT_COMMAND_HTML_LINK_CLICKED, 1 )
+        EVT_HTML_CELL_CLICKED = wx.PyEventBinder( wxEVT_HTML_CELL_CLICKED, 1 )
+        EVT_HTML_CELL_HOVER   = wx.PyEventBinder( wxEVT_HTML_CELL_HOVER, 1 )
+        EVT_HTML_LINK_CLICKED = wx.PyEventBinder( wxEVT_HTML_LINK_CLICKED, 1 )
+        
+        # deprecated wxEVT aliases
+        wxEVT_COMMAND_HTML_CELL_CLICKED  = wxEVT_HTML_CELL_CLICKED
+        wxEVT_COMMAND_HTML_CELL_HOVER    = wxEVT_HTML_CELL_HOVER
+        wxEVT_COMMAND_HTML_LINK_CLICKED  = wxEVT_HTML_LINK_CLICKED        
         """)
     
     

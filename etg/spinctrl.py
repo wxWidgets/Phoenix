@@ -57,8 +57,12 @@ def run():
     tools.fixEventClass(c)
     
     module.addPyCode("""\
-        EVT_SPINCTRL = wx.PyEventBinder( wxEVT_COMMAND_SPINCTRL_UPDATED, 1)
-        EVT_SPINCTRLDOUBLE = wx.PyEventBinder( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, 1)
+        EVT_SPINCTRL = wx.PyEventBinder( wxEVT_SPINCTRL, 1)
+        EVT_SPINCTRLDOUBLE = wx.PyEventBinder( wxEVT_SPINCTRLDOUBLE, 1)
+        
+        # deprecated wxEVT aliases
+        wxEVT_COMMAND_SPINCTRL_UPDATED        = wxEVT_SPINCTRL
+        wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED  = wxEVT_SPINCTRLDOUBLE
         """)
 
     

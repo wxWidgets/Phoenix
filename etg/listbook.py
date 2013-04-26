@@ -39,8 +39,12 @@ def run():
     tools.fixBookctrlClass(c)
     
     module.addPyCode("""\
-        EVT_LISTBOOK_PAGE_CHANGED  = wx.PyEventBinder( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED, 1 )
-        EVT_LISTBOOK_PAGE_CHANGING = wx.PyEventBinder( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGING, 1 )
+        EVT_LISTBOOK_PAGE_CHANGED  = wx.PyEventBinder( wxEVT_LISTBOOK_PAGE_CHANGED, 1 )
+        EVT_LISTBOOK_PAGE_CHANGING = wx.PyEventBinder( wxEVT_LISTBOOK_PAGE_CHANGING, 1 )
+        
+        # deprecated wxEVT aliases
+        wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED   = wxEVT_LISTBOOK_PAGE_CHANGED
+        wxEVT_COMMAND_LISTBOOK_PAGE_CHANGING  = wxEVT_LISTBOOK_PAGE_CHANGING
         """)
      
     #-----------------------------------------------------------------

@@ -38,7 +38,10 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixEventClass(c)
     c.addPyCode("""\
-        EVT_HYPERLINK = wx.PyEventBinder( wxEVT_COMMAND_HYPERLINK, 1 )
+        EVT_HYPERLINK = wx.PyEventBinder( wxEVT_HYPERLINK, 1 )
+        
+        # deprecated wxEVT alias
+        wxEVT_COMMAND_HYPERLINK  = wxEVT_HYPERLINK
         """)
     
     c = module.find('wxHyperlinkCtrl')
@@ -48,7 +51,6 @@ def run():
     c.find('wxHyperlinkCtrl.url').default = 'wxEmptyString'
     c.find('Create.label').default = 'wxEmptyString'
     c.find('Create.url').default = 'wxEmptyString'
-
     
     module.addGlobalStr('wxHyperlinkCtrlNameStr', c)
     
