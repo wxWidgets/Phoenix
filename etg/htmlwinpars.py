@@ -38,6 +38,10 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
 
+    c.addCppMethod('wxHtmlWinParser*', 'GetParser', '()',
+        body="return (wxHtmlWinParser*)self->GetParser();")
+    
+
 
     c = module.find('wxHtmlWinParser')
     c.find('GetEncodingConverter').ignore()
@@ -53,9 +57,6 @@ def run():
         virtual wxObject* GetProduct();
         """))
 
-    c.addCppMethod('wxHtmlWinParser*', 'GetParser', '()',
-        body="return (wxHtmlWinParser*)self->GetParser();")
-    
     
     module.addCppCode("""\
         class wxPyHtmlTagsModule : public wxHtmlTagsModule {
