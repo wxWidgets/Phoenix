@@ -396,6 +396,32 @@ Frame for the content.
 
 
 
+wx.PyEvent and wx.PyCommandEvent
+--------------------------------
+
+Unlike some other wx.Py classes these two still exist in Phoenix, and are
+still the base classes that you should use when creating your own custom
+event classes. For the most part they work just like they did in Classic, and
+they take care of ensuring that any Python attributes that you assign to
+instances of the class will still be there when the event is delivered to an
+event handler. There is one main difference from Classic however, and that is
+that those attributes are now stored in a dictionary object owned by the C++
+instance, instead of being stored directly in the Python instance's
+dictionary. In most cases this won't matter to you at all, but if your
+derived class has a __getattr__ method (or __setattr__ or __delattr__) then
+you will need to get the attributes from that other dictionary instead. You
+can get a reference to that dictionary using _getAttrDict(). For example::
+
+    def __getattr__(self, name):
+        d = self._getAttrDict()
+        if name in d:
+            return d[name]
+        return getattr(self._someOtherThing, name)
+
+
+
+
+
 .. toctree::
    :maxdepth: 2
    :hidden:
