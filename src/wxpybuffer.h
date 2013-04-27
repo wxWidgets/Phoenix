@@ -52,7 +52,6 @@ public:
         return ptr;
     }
 
-
     void*       m_ptr;
     Py_ssize_t  m_len;
 };

@@ -290,8 +290,7 @@ methods which accept any object supporting the buffer protocol.  These
 are methods which allow you to set the raw RGB or Alpha data in the
 image in one step.  As a consequence of using the new APIs the objects
 passed must also implement the new buffer interface in order to be
-compatible.  Apparently arrays from the stock array module do not
-support the new protocol, but everything else I've tried so far do.
+compatible.  
 
 GetData and GetAlpha now return a copy of the image data as a
 bytearray object instead of a string object.  This means that since

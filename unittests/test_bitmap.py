@@ -174,6 +174,31 @@ class BitmapTests(wtc.WidgetTestCase):
         self.assertTrue(bmp.IsOk())
 
 
+    def test_bitmapBufferFactory4(self):
+        # The array.array object does not support the new buffer protocol,
+        # (at least as of 2.7) so this test shows if we can support the old
+        # one too.
+        import array
+        w = h = 10
+        buf = array.array('B', [123] * (w*h*4))
+        bmp = wx.Bitmap.FromBufferRGBA(w, h, buf)
+        self.assertTrue(bmp.IsOk())
+
+
+    def test_bitmapBufferFactory5(self):
+        # The array.array object does not support the new buffer protocol,
+        # (at least as of 2.7) so this test shows if we can support the old
+        # one too.
+        import array
+        w = h = 10
+        buf = array.array('B', [10, 20, 30] * (w*h))
+        bmp = wx.Bitmap.FromBuffer(w, h, buf)
+        self.assertTrue(bmp.IsOk())
+        img = bmp.ConvertToImage()
+        self.assertEqual( (img.GetRed(1,2), img.GetGreen(1,2), img.GetBlue(1,2)), 
+                          (10,20,30) )
+
+
     def test_bitmapEmptyFactory1(self):
         w = h = 10
         bmp = wx.Bitmap.FromRGBA(w, h)
