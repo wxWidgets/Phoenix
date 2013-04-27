@@ -420,6 +420,23 @@ can get a reference to that dictionary using _getAttrDict(). For example::
 
 
 
+MakeModal
+---------
+
+Since it is usually not a good idea to make arbitrary top-level windows be
+modal, (you should just use a wx.Dialog instead,) the MakeModal method has
+been removed. The recommended alternative is to use the wx.WindowDisabler
+class instead, but if you prefer the semenatics od having a method to call to
+turn on or off the modalness of a window then you can add a method like this
+to your classes to give you a way to do it::
+
+    def MakeModal(self, modal=True):
+        if modal and not hasattr(self, '_disabler'):
+            self._disabler = wx.WindowDisabler(self)
+        if not modal and hasattr(self, '_disabler'):
+            del self._disabler
+
+
 
 
 .. toctree::
