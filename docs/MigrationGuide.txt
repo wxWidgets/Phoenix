@@ -425,7 +425,7 @@ MakeModal
 Since it is usually not a good idea to make arbitrary top-level windows be
 modal, (you should just use a wx.Dialog instead,) the MakeModal method has
 been removed. The recommended alternative is to use the wx.WindowDisabler
-class instead, but if you prefer the semenatics od having a method to call to
+class instead, but if you prefer the semenatics of having a method to call to
 turn on or off the modalness of a window then you can add a method like this
 to your classes to give you a way to do it::
 
