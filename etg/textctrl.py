@@ -70,14 +70,14 @@ def parseAndTweakModule():
     tools.fixEventClass(c)
     
     
-    c.addPyCode("""\
+    module.addPyCode("""\
         EVT_TEXT        = wx.PyEventBinder( wxEVT_TEXT, 1)
         EVT_TEXT_ENTER  = wx.PyEventBinder( wxEVT_TEXT_ENTER, 1)
         EVT_TEXT_URL    = wx.PyEventBinder( wxEVT_TEXT_URL, 1)
         EVT_TEXT_MAXLEN = wx.PyEventBinder( wxEVT_TEXT_MAXLEN, 1)
-        EVT_TEXT_CUT   =  wx.PyEventBinder( wxEVT_TEXT_CUT )
-        EVT_TEXT_COPY  =  wx.PyEventBinder( wxEVT_TEXT_COPY )
-        EVT_TEXT_PASTE =  wx.PyEventBinder( wxEVT_TEXT_PASTE )
+        EVT_TEXT_CUT    = wx.PyEventBinder( wxEVT_TEXT_CUT )
+        EVT_TEXT_COPY   = wx.PyEventBinder( wxEVT_TEXT_COPY )
+        EVT_TEXT_PASTE  = wx.PyEventBinder( wxEVT_TEXT_PASTE )
 
         # deprecated wxEVT aliases
         wxEVT_COMMAND_TEXT_UPDATED   = wxEVT_TEXT
