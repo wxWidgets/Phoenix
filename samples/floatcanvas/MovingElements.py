@@ -16,6 +16,7 @@ ver = 'installed'
 if ver == 'installed': ## import the installed version
     from wx.lib.floatcanvas import NavCanvas, Resources
     from wx.lib.floatcanvas import FloatCanvas as FC
+    from wx.lib.floatcanvas.Utilities import BBox
     print "using installed version:", wx.lib.floatcanvas.__version__
 elif ver == 'local':
     ## import a local version
@@ -276,6 +277,6 @@ class DrawFrame(wx.Frame):
             self.Canvas.Draw(True)
 
 if __name__ == "__main__":
-    app = wx.PySimpleApp(0)
+    app = wx.App(0)
     DrawFrame(None, -1, "FloatCanvas Moving Object App", wx.DefaultPosition, (700,700) )
     app.MainLoop()

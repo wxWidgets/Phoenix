@@ -27,7 +27,7 @@ class DrawFrame(wx.Frame):
         MenuBar = wx.MenuBar()
 
         file_menu = wx.Menu()
-        item = file_menu.Append(wx.ID_ANY, "&Close","Close this frame")
+        item = file_menu.Append(wx.ID_EXIT, "", "Close this frame")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
         MenuBar.Append(file_menu, "&File")
 
@@ -50,7 +50,7 @@ class DrawFrame(wx.Frame):
         MenuBar.Append(view_menu, "&View")
 
         help_menu = wx.Menu()
-        item = help_menu.Append(wx.ID_ANY, "&About",
+        item = help_menu.Append(wx.ID_ABOUT, "",
                                 "More information About this program")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
         MenuBar.Append(help_menu, "&Help")
@@ -60,7 +60,7 @@ class DrawFrame(wx.Frame):
         self.CreateStatusBar()
         self.SetStatusText("")
 
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         # Add the Canvas
         self.Canvas = NavCanvas.NavCanvas(self,
@@ -289,21 +289,24 @@ class DrawFrame(wx.Frame):
                 
     def UnBindAllMouseEvents(self):
         ## Here is how you catch FloatCanvas mouse events
-        FloatCanvas.EVT_LEFT_DOWN(self.Canvas, None ) 
-        FloatCanvas.EVT_LEFT_UP(self.Canvas, None )
-        FloatCanvas.EVT_LEFT_DCLICK(self.Canvas, None) 
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DCLICK, self.dummyHandler) 
 
-        FloatCanvas.EVT_MIDDLE_DOWN(self.Canvas, None )
-        FloatCanvas.EVT_MIDDLE_UP(self.Canvas, None )
-        FloatCanvas.EVT_MIDDLE_DCLICK(self.Canvas, None )
+        self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DOWN, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_UP, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DCLICK, self.dummyHandler) 
 
-        FloatCanvas.EVT_RIGHT_DOWN(self.Canvas, None )
-        FloatCanvas.EVT_RIGHT_UP(self.Canvas, None )
-        FloatCanvas.EVT_RIGHT_DCLICK(self.Canvas, None )
+        self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DOWN, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_RIGHT_UP, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DCLICK, self.dummyHandler) 
 
-        FloatCanvas.EVT_MOUSEWHEEL(self.Canvas, None )
+        self.Canvas.Bind(FloatCanvas.EVT_MOUSEWHEEL, self.dummyHandler) 
 
         self.EventsAreBound = False
+        
+    def dummyHandler(self, evt):
+        evt.Skip()
 
 class DemoApp(wx.App):
     """

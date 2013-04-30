@@ -67,7 +67,7 @@ class DrawFrame(wx.Frame):
         self.Canvas = Canvas = NC.Canvas
         #self.Canvas.ScaleWorldToPixel = ScaleWorldToPixel
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
 
         self.Values = random.randint(0, MaxValue, (NumChannels,))
        

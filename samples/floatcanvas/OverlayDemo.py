@@ -72,7 +72,7 @@ class TextOverlay(FloatCanvas.Text):
         #if self.TextWidth is None or self.TextHeight is None:
         #    (self.TextWidth, self.TextHeight) = dc.GetTextExtent(self.String)
         #XY = self.ShiftFun(XY[0], XY[1], self.TextWidth, self.TextHeight)
-        dc.DrawTextPoint(self.String, self.XY)
+        dc.DrawText(self.String, self.XY)
 
 
 class DrawFrame(wx.Frame):
@@ -110,7 +110,7 @@ class DrawFrame(wx.Frame):
                                       BackgroundColor = 'Pink',
                                       )
 
-        FloatCanvas.EVT_MOTION(Canvas, self.OnMove ) 
+        Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
 
         self.Show()
         Canvas.ZoomToBB()

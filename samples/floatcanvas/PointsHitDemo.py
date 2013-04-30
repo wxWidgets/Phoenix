@@ -33,7 +33,7 @@ class DrawFrame(wx.Frame):
         
         self.Canvas = Canvas
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
 
         Pts = ((45,40), (20, 15), (10, 40), (30,30))
         

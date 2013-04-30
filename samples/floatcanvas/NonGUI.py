@@ -21,7 +21,7 @@ from wx.lib.floatcanvas import FloatCanvas
 #sys.path.append("../")
 #from floatcanvas import NavCanvas, FloatCanvas
 
-app = wx.PySimpleApp()
+app = wx.App()
 
 f = wx.Frame(None)
 Canvas = FloatCanvas.FloatCanvas(f,

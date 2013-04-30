@@ -54,7 +54,6 @@ class MyFrame(wx.Frame):
         # set up the Splitter
         sash_Position = 300
         splitter.SplitVertically(panel1, panel2, sash_Position)
-        splitter.SetSashSize(10)
         min_Pan_size = 40
         splitter.SetMinimumPaneSize(min_Pan_size)
         

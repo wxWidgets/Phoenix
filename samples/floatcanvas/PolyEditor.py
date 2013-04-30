@@ -18,9 +18,6 @@ from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 
 import wx
 
-ID_ABOUT_MENU = wx.ID_ABOUT
-ID_ZOOM_TO_FIT_MENU = wx.NewId()
-
 class DrawFrame(wx.Frame):
 
     """
@@ -35,20 +32,20 @@ class DrawFrame(wx.Frame):
         MenuBar = wx.MenuBar()
 
         FileMenu = wx.Menu()
-        FileMenu.Append(wx.NewId(), "&Close","Close Application")
-        wx.EVT_MENU(self, FileMenu.FindItem("Close"), self.OnQuit)
+        exit = FileMenu.Append(wx.ID_EXIT, "", "Close Application")
+        self.Bind(wx.EVT_MENU, self.OnQuit, exit)
 
         MenuBar.Append(FileMenu, "&File")
 
         view_menu = wx.Menu()
-        view_menu.Append(wx.NewId(), "Zoom to &Fit","Zoom to fit the window")
-        wx.EVT_MENU(self, view_menu.FindItem("Zoom to &Fit"), self.ZoomToFit)
+        zfit = view_menu.Append(wx.NewId(), "Zoom to &Fit", "Zoom to fit the window")
+        self.Bind(wx.EVT_MENU, self.ZoomToFit, zfit)
         MenuBar.Append(view_menu, "&View")
 
         help_menu = wx.Menu()
-        help_menu.Append(ID_ABOUT_MENU, "&About",
-                                "More information About this program")
-        wx.EVT_MENU(self, ID_ABOUT_MENU,      self.OnAbout)
+        about = help_menu.Append(wx.ID_ABOUT, "",
+                                 "More information About this program")
+        self.Bind(wx.EVT_MENU, self.OnAbout, about)
         MenuBar.Append(help_menu, "&Help")
 
         self.SetMenuBar(MenuBar)
@@ -60,11 +57,11 @@ class DrawFrame(wx.Frame):
                                           BackgroundColor = "DARK SLATE BLUE"
                                           ).Canvas
 
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
-        FloatCanvas.EVT_LEFT_UP(self.Canvas, self.OnLeftUp ) 
-        FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeftClick ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp) 
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftClick) 
 
         self.ResetSelections()
 

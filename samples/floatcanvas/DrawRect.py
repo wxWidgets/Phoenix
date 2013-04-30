@@ -17,7 +17,7 @@ import wx
 #from floatcanvas.Utilities import GUI
 
 ## import the installed version
-from wx.lib.floatcanvas import NavCanvas, FloatCanvas
+from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode
 from wx.lib.floatcanvas.Utilities import GUI
 
 import numpy as N
@@ -43,7 +43,7 @@ class DrawFrame(wx.Frame):
         
         self.Canvas = NC.Canvas
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
 
         # Add some buttons to the Toolbar
         tb = NC.ToolBar
@@ -99,7 +99,7 @@ class DrawFrame(wx.Frame):
         self.SetStatusText("%.4f, %.4f"%tuple(event.Coords))
         event.Skip()
 
-app = wx.PySimpleApp()
+app = wx.App()
 DrawFrame(None, -1, "FloatCanvas Rectangle Drawer", wx.DefaultPosition, (700,700) )
 app.MainLoop()
     

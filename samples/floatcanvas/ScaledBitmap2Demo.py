@@ -41,7 +41,7 @@ class DrawFrame(wx.Frame):
         Canvas.MaxScale=20 # sets the maximum zoom level
         self.Canvas = Canvas
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
 
         
         # create the image:

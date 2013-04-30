@@ -42,9 +42,9 @@ class PixelBitmap:
            'cr the center right, etc.
         
         """
-        if type(Bitmap) == wx._gdi.Bitmap:
+        if type(Bitmap) == wx.Bitmap:
             self.Bitmap = Bitmap
-        elif type(Bitmap) == wx._core.Image:
+        elif type(Bitmap) == wx.Image:
             self.Bitmap = wx.BitmapFromImage(Bitmap)
         else:
             raise FC.FloatCanvasError("PixelBitmap takes only a wx.Bitmap or a wx.Image as input")
@@ -68,7 +68,7 @@ class PixelBitmap:
         elif self.Position[1] == 'c':
             XY = (XY[0] + (w - self.Width)/2, XY[1])
 
-        dc.DrawBitmapPoint(self.Bitmap, XY, True)
+        dc.DrawBitmap(self.Bitmap, XY, True)
 
 class GridGroup:
     def __init__(self, grids=[]):

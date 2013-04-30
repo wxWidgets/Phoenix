@@ -14,7 +14,7 @@ import wx
 
 
 ## import the installed version
-from wx.lib.floatcanvas import NavCanvas, FloatCanvas
+from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources
 
 ## import a local version
 #import sys
@@ -58,9 +58,9 @@ class DrawFrame(wx.Frame):
         
         self.Canvas = Canvas
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
-        FloatCanvas.EVT_LEFT_UP(self.Canvas, self.OnLeftUp ) 
-        FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeftDown)
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp ) 
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
 
         Point = N.array((0,0), N.float)
 
@@ -210,7 +210,7 @@ class DrawFrame(wx.Frame):
         self.Handle1.SetPoint(self.Box.XY)
         
 
-app = wx.PySimpleApp()
+app = wx.App()
 DrawFrame(None, -1, "FloatCanvas TextBox Test App", wx.DefaultPosition, (700,700) )
 app.MainLoop()
     

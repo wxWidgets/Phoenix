@@ -68,7 +68,7 @@ class DrawFrame(wx.Frame):
         Pie1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Pie1Hit)
         Pie2.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Pie2Hit)
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
 
         self.Show()
         Canvas.ZoomToBB()

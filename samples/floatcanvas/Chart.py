@@ -39,8 +39,8 @@ class DrawFrame(wx.Frame):
         
         self.Canvas = Canvas
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
-        FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeft)
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeft)
 
 
         # Some default sizes:

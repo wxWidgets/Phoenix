@@ -63,7 +63,7 @@ class DrawFrame(wx.Frame):
         MenuBar = wx.MenuBar()
         
         file_menu = wx.Menu()
-        item = file_menu.Append(wx.ID_ANY, "E&xit","Terminate the program")
+        item = file_menu.Append(wx.ID_EXIT, "","Terminate the program")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
         MenuBar.Append(file_menu, "&File")
         
@@ -73,7 +73,7 @@ class DrawFrame(wx.Frame):
         self.CreateStatusBar()
         self.SetStatusText("")
         
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         # Add the  buttons
         ResetButton = wx.Button(self, label="Reset")
@@ -109,6 +109,7 @@ class DrawFrame(wx.Frame):
         self.Show(True)
         
     def OnQuit(self,event):
+        self.timer.Stop()
         self.Close(True)
         
     def OnCloseWindow(self, event):

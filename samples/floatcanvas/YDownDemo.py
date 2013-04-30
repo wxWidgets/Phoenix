@@ -64,7 +64,7 @@ class DrawFrame(wx.Frame):
         Canvas.AddText("%s"%(Point,), Point, Position="cr")
         Canvas.AddPoint(Point, Diameter=3, Color = "red")
         
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
 
         
         self.Show()

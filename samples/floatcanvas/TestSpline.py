@@ -65,7 +65,7 @@ class DrawFrame(wx.Frame):
 
         self.Canvas.Bind(FC.EVT_MOTION, self.OnMove) 
 
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         self.DrawTest()
         self.Show()

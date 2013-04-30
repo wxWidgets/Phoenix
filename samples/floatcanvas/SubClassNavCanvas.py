@@ -42,7 +42,7 @@ class NavPanel(NavCanvas.NavCanvas):
                                      )
         
         self.parent_frame = parent
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
         
         # create the image:
         self.Canvas.AddPolygon( ( (2,3),

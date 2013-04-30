@@ -97,13 +97,13 @@ class DrawFrame(wx.Frame):
 
         FileMenu = wx.Menu()
 
-        OpenMenu = FileMenu.Append(wx.ID_ANY, "&Open","Open BNA")
+        OpenMenu = FileMenu.Append(wx.ID_ANY, "&Open", "Open BNA")
         self.Bind(wx.EVT_MENU, self.OpenBNA, OpenMenu)
 
-        SaveMenu = FileMenu.Append(wx.ID_ANY, "&Save","Save BNA")
+        SaveMenu = FileMenu.Append(wx.ID_ANY, "&Save", "Save BNA")
         self.Bind(wx.EVT_MENU, self.SaveBNA, SaveMenu)
 
-        CloseMenu = FileMenu.Append(wx.ID_ANY, "&Close","Close Application")
+        CloseMenu = FileMenu.Append(wx.ID_EXIT, "", "Close Application")
         self.Bind(wx.EVT_MENU, self.OnQuit, CloseMenu)
 
         MenuBar.Append(FileMenu, "&File")
@@ -114,7 +114,7 @@ class DrawFrame(wx.Frame):
         MenuBar.Append(view_menu, "&View")
 
         help_menu = wx.Menu()
-        AboutMenu = help_menu.Append(wx.ID_ANY, "&About",
+        AboutMenu = help_menu.Append(wx.ID_ABOUT, "",
                                 "More information About this program")
         self.Bind(wx.EVT_MENU, self.OnAbout, AboutMenu)
         MenuBar.Append(help_menu, "&Help")
@@ -135,7 +135,7 @@ class DrawFrame(wx.Frame):
         FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeftDown)
 
         try:
-            self.FileDialog = wx.FileDialog(self, "Pick a BNA file",".","","*", wx.OPEN)
+            self.FileDialog = wx.FileDialog(self, "Pick a BNA file",".","","*", wx.FD_OPEN)
         except wx._core.PyAssertionError:
             self.FileDialog = None
 
@@ -178,7 +178,7 @@ class DrawFrame(wx.Frame):
             self.BNAFile.PointsData[i] = self.AllPolys[i].Points
         dlg = wx.FileDialog(self,
                                message="Pick a BNA file",
-                               style=wx.SAVE)
+                               style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
             filename = dlg.GetPath()
             self.BNAFile.Save(filename)

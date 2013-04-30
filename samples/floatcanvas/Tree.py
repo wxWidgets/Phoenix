@@ -10,7 +10,7 @@ It demonstrates moving objects around, etc, etc.
 import wx
 
 #ver = 'local'
-2ver = 'installed'
+ver = 'installed'
 
 if ver == 'installed': ## import the installed version
     from wx.lib.floatcanvas import NavCanvas, Resources
@@ -366,6 +366,6 @@ class DrawFrame(wx.Frame):
                 self.MoveTri = None
             self.Canvas.Draw(True)
 
-app = wx.PySimpleApp(0)
+app = wx.App(0)
 DrawFrame(None, -1, "FloatCanvas Tree Demo App", wx.DefaultPosition, (700,700) )
 app.MainLoop()

@@ -124,8 +124,6 @@ class DrawFrame(wx.Frame):
 
         self.Moving = False
 
-        return None
-
     def TriHit(self, object):
         print "In TriHit"
         if not self.Moving:
@@ -171,9 +169,11 @@ class DrawFrame(wx.Frame):
                 self.MoveTri = None
             self.Canvas.Draw(True)
 
-app = wx.PySimpleApp(0)
-DrawFrame(None, -1, "FloatCanvas TextBox Test App", wx.DefaultPosition, (700,700) )
-app.MainLoop()
+if __name__ == "__main__":
+    app = wx.App(0)
+    x = DrawFrame(None, -1, "FloatCanvas TextBox Test App", wx.DefaultPosition, (700,700) )
+    x.Show()
+    app.MainLoop()
     
     
     

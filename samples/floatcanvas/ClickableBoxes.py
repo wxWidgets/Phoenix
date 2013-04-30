@@ -43,7 +43,7 @@ class DrawFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
         # Add the Canvas
-        Canvas = FC.FloatCanvas(self,
+        Canvas = FloatCanvas.FloatCanvas(self,
                                          size = (500,500),
                                          ProjectionFun = None,
                                          Debug = 0,
@@ -67,9 +67,9 @@ class DrawFrame(wx.Frame):
                                               LineStyle=None)
                 Rect.indexes = (i,j)
                 Rect.outline = Outline
-                Rect.Bind(FC.EVT_FC_LEFT_DOWN, self.SquareHitLeft)
-                Rect.Bind(FC.EVT_FC_ENTER_OBJECT, self.SquareEnter)
-                Rect.Bind(FC.EVT_FC_LEAVE_OBJECT, self.SquareLeave)
+                Rect.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.SquareHitLeft)
+                Rect.Bind(FloatCanvas.EVT_FC_ENTER_OBJECT, self.SquareEnter)
+                Rect.Bind(FloatCanvas.EVT_FC_LEAVE_OBJECT, self.SquareLeave)
 
         self.Show()
         Canvas.ZoomToBB()

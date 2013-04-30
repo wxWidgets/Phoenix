@@ -36,7 +36,7 @@ class DrawFrame(wx.Frame):
                                           ).Canvas
         
         self.Canvas = Canvas
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
         
         Point = (45,40)
         Box = Canvas.AddScaledTextBox("A Two Line\nString",
@@ -284,7 +284,7 @@ class DrawFrame(wx.Frame):
     def binding2(self, event):
         print "I'm the TextBox"
 
-app = wx.PySimpleApp()
+app = wx.App()
 DrawFrame(None, -1, "FloatCanvas Demo App", wx.DefaultPosition, (700,700) )
 app.MainLoop()
     

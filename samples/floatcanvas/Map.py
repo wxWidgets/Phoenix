@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-TestFileName = "../data/TestMap.png"
+TestFileName = "data/TestMap.png"
 
 
 import wx
@@ -36,7 +36,7 @@ class DrawFrame(wx.Frame):
         
         self.LoadMap(TestFileName)
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
 
         self.Show()
         self.Canvas.ZoomToBB()

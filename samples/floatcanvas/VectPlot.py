@@ -49,7 +49,7 @@ class DrawFrame(wx.Frame):
         self.CreateStatusBar()
         self.SetStatusText("")
         
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         
         # Add the Canvas
         self.Canvas = NavCanvas.NavCanvas(self ,wx.ID_ANY ,(500,300),

@@ -36,7 +36,7 @@ class DrawFrame(wx.Frame):
         
         self.Canvas = Canvas
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
 
         Point = (45,40)
         Box = Canvas.AddScaledTextBox("A Two Line\nString",

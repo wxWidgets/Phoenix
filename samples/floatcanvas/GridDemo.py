@@ -52,7 +52,7 @@ class DrawFrame(wx.Frame):
         Canvas.GridUnder = Grid
         #Canvas.GridOver = Grid
 
-        FloatCanvas.EVT_MOTION(Canvas, self.OnMove ) 
+        Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
 
         self.Show()
         Canvas.ZoomToBB()

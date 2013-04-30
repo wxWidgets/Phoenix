@@ -9,6 +9,7 @@ this is very old-style code: don't imitate it!
 
 from time import clock
 import wx
+print wx.VERSION_STRING
 from numpy import *
 
 ## import local version:
@@ -37,16 +38,6 @@ ID_ZOOM_TO_FIT_BUTTON = 110
 ID_MOVE_MODE_BUTTON = 111
 ID_TEST_BUTTON = 112
 
-ID_ABOUT_MENU = 200           
-ID_EXIT_MENU  = 201   
-ID_ZOOM_IN_MENU = 202  
-ID_ZOOM_OUT_MENU = 203 
-ID_ZOOM_TO_FIT_MENU = 204
-ID_DRAWTEST_MENU = 205
-ID_DRAWMAP_MENU = 206
-ID_CLEAR_MENU = 207
-
-
 ID_TEST = 500
 
 
@@ -59,29 +50,32 @@ class DrawFrame(wx.Frame):
         MenuBar = wx.MenuBar()
         
         file_menu = wx.Menu()
-        file_menu.Append(ID_EXIT_MENU, "E&xit","Terminate the program")
-        wx.EVT_MENU(self, ID_EXIT_MENU,       self.OnQuit)
+        exit = file_menu.Append(wx.ID_EXIT, "", "Terminate the program")
+        self.Bind(wx.EVT_MENU, self.OnQuit, exit)
         MenuBar.Append(file_menu, "&File")
         
         draw_menu = wx.Menu()
-        draw_menu.Append(ID_DRAWTEST_MENU, "&Draw Test","Run a test of drawing random components")
-        wx.EVT_MENU(self, ID_DRAWTEST_MENU,self.DrawTest)
-        draw_menu.Append(ID_DRAWMAP_MENU, "Draw &Movie","Run a test of drawing a map")
-        wx.EVT_MENU(self, ID_DRAWMAP_MENU,self.RunMovie)
-        draw_menu.Append(ID_CLEAR_MENU, "&Clear","Clear the Canvas")
-        wx.EVT_MENU(self, ID_CLEAR_MENU,self.Clear)
+        draw = draw_menu.Append(wx.ID_ANY,
+                                "&Draw Test",
+                                "Run a test of drawing random components")
+        self.Bind(wx.EVT_MENU, self.DrawTest, draw)
+        amap = draw_menu.Append(wx.ID_ANY,
+                               "Draw &Movie","Run a test of drawing a map")
+        self.Bind(wx.EVT_MENU, self.RunMovie, amap)
+        clear = draw_menu.Append(wx.ID_ANY, "&Clear","Clear the Canvas")
+        self.Bind(wx.EVT_MENU, self.Clear, clear)
         MenuBar.Append(draw_menu, "&Draw")
         
         
         view_menu = wx.Menu()
-        view_menu.Append(ID_ZOOM_TO_FIT_MENU, "Zoom to &Fit","Zoom to fit the window")
-        wx.EVT_MENU(self, ID_ZOOM_TO_FIT_MENU,self.ZoomToFit)
+        zoom = view_menu.Append(wx.ID_ANY, "Zoom to &Fit","Zoom to fit the window")
+        self.Bind(wx.EVT_MENU, self.ZoomToFit, zoom)
         MenuBar.Append(view_menu, "&View")
         
         help_menu = wx.Menu()
-        help_menu.Append(ID_ABOUT_MENU, "&About",
-                                "More information About this program")
-        wx.EVT_MENU(self, ID_ABOUT_MENU,      self.OnAbout)
+        about = help_menu.Append(wx.ID_ABOUT, "",
+                                 "More information About this program")
+        self.Bind(wx.EVT_MENU, self.OnAbout, about)
         MenuBar.Append(help_menu, "&Help")
         
         self.SetMenuBar(MenuBar)
@@ -89,10 +83,10 @@ class DrawFrame(wx.Frame):
         self.CreateStatusBar()
         self.SetStatusText("")
         
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         
         # Other event handlers:
-        wx.EVT_RIGHT_DOWN(self, self.RightButtonEvent)
+        self.Bind(wx.EVT_RIGHT_DOWN, self.RightButtonEvent)
         
         # Add the Canvas
         self.Canvas = NavCanvas.NavCanvas(self,-1,(500,500),

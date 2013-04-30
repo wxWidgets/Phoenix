@@ -66,7 +66,7 @@ class DrawFrame(wx.Frame):
                              )
         self.Canvas.ZoomToBB()
 
-app = wx.PySimpleApp()
+app = wx.App()
 DrawFrame(None, -1, "FloatCanvas Demo App", wx.DefaultPosition, (700,700) )
 app.MainLoop()
     

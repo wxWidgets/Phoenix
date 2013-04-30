@@ -27,20 +27,20 @@ class DrawFrame(wx.Frame):
         MenuBar = wx.MenuBar()
 
         file_menu = wx.Menu()
-        item = file_menu.Append(wx.ID_ANY, "E&xit","Terminate the program")
+        item = file_menu.Append(wx.ID_EXIT, "", "Terminate the program")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
         MenuBar.Append(file_menu, "&File")
 
         draw_menu = wx.Menu()
-        item = draw_menu.Append(wx.ID_ANY, "&Run","Run the test")
+        item = draw_menu.Append(wx.ID_ANY, "&Run", "Run the test")
         self.Bind(wx.EVT_MENU, self.RunTest, item)
-        item = draw_menu.Append(wx.ID_ANY, "&Stop","Stop the test")
+        item = draw_menu.Append(wx.ID_ANY, "&Stop", "Stop the test")
         self.Bind(wx.EVT_MENU, self.Stop, item)
         MenuBar.Append(draw_menu, "&Plot")
 
 
         help_menu = wx.Menu()
-        item = help_menu.Append(wx.ID_ANY, "&About",
+        item = help_menu.Append(wx.ID_ABOUT, "",
                                 "More information About this program")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
         MenuBar.Append(help_menu, "&Help")
@@ -51,7 +51,7 @@ class DrawFrame(wx.Frame):
         self.CreateStatusBar()
         self.SetStatusText("")
 
-        wx.EVT_CLOSE(self, self.OnCloseWindow)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         # Add the Canvas
         NC = NavCanvas.NavCanvas(self ,wx.ID_ANY ,(500,300),
@@ -173,7 +173,7 @@ class DrawFrame(wx.Frame):
         self.timerID = wx.NewId()
         self.timer   = wx.Timer(self,self.timerID)
 
-        wx.EVT_TIMER(self,self.timerID,self.OnTimer)
+        self.Bind(wx.EVT_TIMER, self.OnTimer, id=self.timerID)
 
         self.count = 0
         self.timer.Start(int(self.dT*1000))
