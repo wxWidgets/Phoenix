@@ -17,7 +17,8 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [  'wxFont',
+ITEMS  = [  'wxFontInfo',
+            'wxFont',
             'wxFontList',
            ]    
     
@@ -39,17 +40,15 @@ def run():
     # FFont factory function for backwards compatibility
     module.addCppFunction('wxFont*', 'FFont', 
                           """(int pointSize,
-                          wxFontFamily family,
-                          int flags = wxFONTFLAG_DEFAULT,
-                          const wxString& faceName = wxEmptyString,
-                          wxFontEncoding encoding = wxFONTENCODING_DEFAULT)""",
+                              wxFontFamily family,
+                              int flags = wxFONTFLAG_DEFAULT,
+                              const wxString& faceName = wxEmptyString,
+                              wxFontEncoding encoding = wxFONTENCODING_DEFAULT)""",
         pyArgsString="(pointSize, family, flags=FONTFLAG_DEFAULT, faceName=EmptyString, encoding=FONTENCODING_DEFAULT)",
         body="""\
         wxFont* font = wxFont::New(pointSize, family, flags, *faceName, encoding);
         return font;
         """, factory=True)
-
-    c.find('wxFont.flags').default = 'wxFONTFLAG_DEFAULT'
     
     for item in c.findAll('New'):
         item.factory = True

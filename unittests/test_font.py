@@ -167,8 +167,19 @@ class font_Tests(wtc.WidgetTestCase):
         f4 = wx.Font(wx.Size(12,12), wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         f5 = wx.FFont(18, wx.FONTFAMILY_ROMAN)
         f6 = wx.Font.New(18, wx.FONTFAMILY_SWISS)
-        f7 = wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD|wx.FONTFLAG_ITALIC)
+        # this ctor was removed
+        #f7 = wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD|wx.FONTFLAG_ITALIC)
 
+        
+    def test_fontFontinfo1(self):
+        fi1 = wx.FontInfo().Family(wx.FONTFAMILY_ROMAN).Bold().Italic().Underlined().Strikethrough()
+        fi2 = wx.FontInfo(12).FaceName('Ariel').Light().Encoding(wx.FONTENCODING_ISO8859_1)
+        fi3 = wx.FontInfo((8,12)).AllFlags(wx.FONTFLAG_BOLD|wx.FONTFLAG_ITALIC)
+        
+        
+    def test_fontFontinfo2(self):
+        f1 = wx.Font(wx.FontInfo(12).Family(wx.FONTFAMILY_SWISS).Italic())
+        
         
     def test_fontOk(self):
         f1 = wx.Font()
