@@ -80,8 +80,12 @@ def run():
     
     c.find('GetPixel').ignore()  # We need to add a typcast
     c.addCppMethod('wxIntPtr', 'GetPixel', '()', """\
-        return (wxIntPtr)self->GetPixel();
-    """)
+        #ifdef __WXGTK3__
+            return 0;
+        #else
+            return (wxIntPtr)self->GetPixel();
+        #endif
+        """)
         
     # Set a flag on the return value and parameter types that are 'unsigned char'
     # such that they will be treated as an integer instead of a string. 
