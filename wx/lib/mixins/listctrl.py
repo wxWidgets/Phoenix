@@ -36,6 +36,11 @@ import  locale
 import  wx
 import wx.lib.six as six
 
+if six.PY3:
+    # python 3 lacks cmp:
+    def cmp(a, b):
+        return (a > b) - (a < b)
+
 #----------------------------------------------------------------------------
 
 class ColumnSorterMixin:
@@ -167,8 +172,8 @@ class ColumnSorterMixin:
 
         # If the items are equal then pick something else to make the sort value unique
         if cmpVal == 0:
-            cmpVal = apply(cmp, self.GetSecondarySortValues(col, key1, key2))
-
+            cmpVal = cmp(*self.GetSecondarySortValues(col, key1, key2))
+ 
         if ascending:
             return cmpVal
         else:
@@ -302,7 +307,7 @@ class ListCtrlAutoWidthMixin:
         listWidth = self.GetClientSize().width
         if wx.Platform != '__WXMSW__':
             if self.GetItemCount() > self.GetCountPerPage():
-                scrollWidth = wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
+                scrollWidth = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
                 listWidth = listWidth - scrollWidth
 
         totColWidth = 0 # Width of all columns except last one.
@@ -849,7 +854,7 @@ class ListRowHighlighter:
             if dohlight:
                 if self._color is None:
                     if wx.Platform in ['__WXGTK__', '__WXMSW__']:
-                        color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DLIGHT)
+                        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT)
                     else:
                         color = wx.Colour(237, 243, 254)
                 else:
