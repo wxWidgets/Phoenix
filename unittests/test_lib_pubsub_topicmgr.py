@@ -27,18 +27,15 @@ from wx.lib.pubsub.core.topicutils import \
      TopicNameInvalid, \
      validateName
 
-topicMgr = pub.getDefaultTopicMgr()
-
 from wx.lib.pubsub.utils.topictreeprinter import \
      printTreeDocs, ITopicTreeVisitor
 
 
-class lib_pubsub_TopicMgr0_Basic(wtc.WidgetTestCase):
+class lib_pubsub_TopicMgr0_Basic(wtc.PubsubTestCase):
     """
     Only tests TopicMgr methods. This must use some query methods on
     topic objects to validate that TopicMgr did it's job properly.
     """
-
     def failTopicName(self, name):
         self.assertRaises(TopicNameInvalid, validateName, name)
 
@@ -69,7 +66,7 @@ class lib_pubsub_TopicMgr0_Basic(wtc.WidgetTestCase):
         self.failTopicName( (ALL_TOPICS,) )
 
 
-class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.WidgetTestCase):
+class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.PubsubTestCase):
     """
     Only tests TopicMgr methods. This must use some query methods on
     topic objects to validate that TopicMgr did it's job properly.
@@ -79,6 +76,7 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.WidgetTestCase):
         #
         # Test the getOrCreateTopic without proto listener
         #
+        topicMgr = self.pub.getDefaultTopicMgr()
 
         def verifyNonSendable(topicObj, nameTuple, parent):
             """Any non-sendable topic will satisfy these conditions:"""
@@ -146,6 +144,7 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.WidgetTestCase):
         #
         # Test the getOrCreateTopic with proto listener
         #
+        topicMgr = self.pub.getDefaultTopicMgr()
 
         rootName = 'GetOrCreate_WithProtoListener'
         tName = rootName
@@ -186,7 +185,7 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.WidgetTestCase):
         assert subsubTopic.isValid(protoListener2)
 
 
-class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.WidgetTestCase):
+class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.PubsubTestCase):
     """
     Test TopicManager when one or more definition providers
     can provide for some topic definitions.
@@ -196,6 +195,7 @@ class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.WidgetTestCase):
         #
         # Test the addition and clearing of definition providers
         #
+        topicMgr = self.pub.getDefaultTopicMgr()
 
         class DefnProvider:
             pass
@@ -217,6 +217,7 @@ class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.WidgetTestCase):
         # two so we can check that more than one can work together.
         # One provides good definitions, one provides some with errors.
         #
+        topicMgr = self.pub.getDefaultTopicMgr()
 
         class DefnProvider(ITopicDefnProvider):
             """
@@ -317,6 +318,7 @@ class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.WidgetTestCase):
         #
         # Test topic deletion
         #
+        topicMgr = self.pub.getDefaultTopicMgr()
 
         topicMgr.getOrCreateTopic('delTopic.b.c.d.e')
         assert topicMgr.getTopic('delTopic.b.c.d.e') is not None
@@ -330,7 +332,7 @@ class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.WidgetTestCase):
         assert topicMgr.getTopic('delTopic.b.c', okIfNone=True) is None
 
 
-class lib_pubsub_TopicMgr3_TreeTraverser(wtc.WidgetTestCase):
+class lib_pubsub_TopicMgr3_TreeTraverser(wtc.PubsubTestCase):
     expectedOutput = '''\
 \-- Topic "a2"
     \-- Topic "a"
@@ -345,6 +347,7 @@ class lib_pubsub_TopicMgr3_TreeTraverser(wtc.WidgetTestCase):
         #
         # Test printing of topic tree
         #
+        topicMgr = self.pub.getDefaultTopicMgr()
 
         root = topicMgr.getOrCreateTopic('a2')
         topicMgr.getOrCreateTopic('a2.a.a')
@@ -361,8 +364,10 @@ class lib_pubsub_TopicMgr3_TreeTraverser(wtc.WidgetTestCase):
         #
         # Test traversing with and without filtering, breadth and depth
         #
+        topicMgr = self.pub.getDefaultTopicMgr()
+        
         class MyTraverser(ITopicTreeVisitor):
-            def __init__(self):
+            def __init__(self, pub):
                 self.traverser = pub.TopicTreeTraverser(self)
                 self.calls = ''
                 self.topics = []
@@ -401,7 +406,7 @@ class lib_pubsub_TopicMgr3_TreeTraverser(wtc.WidgetTestCase):
         topicMgr.getOrCreateTopic('traversal.b.D.bar')
 
         def exe(expectCalls, expectTopics, **kwargs):
-            traverser = MyTraverser()
+            traverser = MyTraverser(self.pub)
             traverser.traverse(root, **kwargs)
             self.assertEqual(traverser.topics, expectTopics)
             self.assertEqual(traverser.calls,  expectCalls)

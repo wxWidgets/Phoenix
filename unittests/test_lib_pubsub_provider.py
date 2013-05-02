@@ -11,8 +11,6 @@ import wtc
 
 from textwrap import dedent
 
-from wx.lib.pubsub import pub
-
 
 class my_topics:
     class rootTopic1:
@@ -49,11 +47,11 @@ class my_topics:
 #---------------------------------------------------------------------------
 
 
-class lib_pubsub_Except(wtc.WidgetTestCase):
+class lib_pubsub_Except(wtc.PubsubTestCase):
 
     def test1(self):
 
-        pub.importTopicTree(my_topics)
+        self.pub.importTopicTree(my_topics)
     
     
         provString = """
@@ -73,7 +71,7 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
     
                 """
     
-        pub.importTopicTree(provString, format=pub.TOPIC_TREE_FROM_STRING)
+        self.pub.importTopicTree(provString, format=self.pub.TOPIC_TREE_FROM_STRING)
     
     
         provFile = """
@@ -93,22 +91,22 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
         myTopicTree = file('myTopicTree.py', 'w')
         myTopicTree.write(dedent(provFile))
         myTopicTree.close()
-        pub.importTopicTree('myTopicTree', format=pub.TOPIC_TREE_FROM_MODULE, lazy=True)
+        self.pub.importTopicTree('myTopicTree', format=self.pub.TOPIC_TREE_FROM_MODULE, lazy=True)
         import os
         os.remove('myTopicTree.py')
         if os.path.exists('myTopicTree.pyc'):
             os.remove('myTopicTree.pyc')
             
-        assert not pub.getTopic('rootTopic1.subtopic_2', okIfNone=True)
+        assert not self.pub.getTopic('rootTopic1.subtopic_2', okIfNone=True)
         # the following should create all topic tree since parent
         # topics are automatically created
-        assert pub.getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_11')
-        assert pub.getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_12')
-        assert pub.getOrCreateTopic('rootTopic1.subtopic_2.subsubtopic_21')
+        assert self.pub.getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_11')
+        assert self.pub.getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_12')
+        assert self.pub.getOrCreateTopic('rootTopic1.subtopic_2.subsubtopic_21')
     
         # validate that topic specs were properly parsed
         def isValid(topicName, listener):
-            topic = pub.getTopic(topicName)
+            topic = self.pub.getTopic(topicName)
             assert topic.getDescription()
             assert topic.isSendable()
             return topic.isValid(listener)
@@ -123,12 +121,12 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
         assert isValid('rootTopic1.subtopic_1', sub_1)
         assert isValid('rootTopic1.subtopic_1.subsubtopic_11', sub_11)
         # no providers have spec for subtopic_2
-        assert not pub.getTopic('rootTopic1.subtopic_2').isSendable()
+        assert not self.pub.getTopic('rootTopic1.subtopic_2').isSendable()
     
         #printTreeSpec()
     
-        pub.exportTopicTree('newTopicTree')
-        root2Defn = pub.exportTopicTree(rootTopicName='rootTopic1')
+        self.pub.exportTopicTree('newTopicTree')
+        root2Defn = self.pub.exportTopicTree(rootTopicName='rootTopic1')
     
         import os
         os.remove('newTopicTree.py')
@@ -163,19 +161,19 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
                         '''
                         pass
             """
-        pub.clearTopicDefnProviders()
-        treeDoc = pub.importTopicTree(importStr, lazy = True,
-            format = pub.TOPIC_TREE_FROM_STRING)
+        self.pub.clearTopicDefnProviders()
+        treeDoc = self.pub.importTopicTree(importStr, lazy = True,
+            format = self.pub.TOPIC_TREE_FROM_STRING)
         assert treeDoc == '''Tree docs, can be anything you want.'''
-        root = pub.getOrCreateTopic('test_import_export_no_change.subtopic_1')
+        root = self.pub.getOrCreateTopic('test_import_export_no_change.subtopic_1')
         # few sanity checks
         def sub_1(arg1, arg2=None):
             pass
         assert root.isSendable()
-        assert pub.isValid(sub_1, 'test_import_export_no_change.subtopic_1')
+        assert self.pub.isValid(sub_1, 'test_import_export_no_change.subtopic_1')
     
         # export tree
-        exported = pub.exportTopicTree(rootTopicName='test_import_export_no_change', moduleDoc=treeDoc)
+        exported = self.pub.exportTopicTree(rootTopicName='test_import_export_no_change', moduleDoc=treeDoc)
         #print exported
     
         expectExport = """\
@@ -226,11 +224,11 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
         assert diffs == ['- ', '+         ']
     
         # now for module:
-        modDoc = pub.importTopicTree('lib_pubsub_provider_expect',
-                                     format=pub.TOPIC_TREE_FROM_MODULE,
+        modDoc = self.pub.importTopicTree('lib_pubsub_provider_expect',
+                                     format=self.pub.TOPIC_TREE_FROM_MODULE,
                                      lazy=False)
         assert modDoc.startswith('\nTree docs, can be anything you')
-        pub.exportTopicTree('lib_pubsub_provider_actual',
+        self.pub.exportTopicTree('lib_pubsub_provider_actual',
             rootTopicName='test_import_export_no_change2',
             moduleDoc=treeDoc)
         lines1 = file('lib_pubsub_provider_actual.py', 'r').readlines()
@@ -239,16 +237,16 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
         assert not list(diffs)
     
     def test_module_as_class(self):
-        assert pub.getTopic('root_topic1', True) is None
-        assert pub.getTopic('root_topic2.sub_topic21', True) is None
+        assert self.pub.getTopic('root_topic1', True) is None
+        assert self.pub.getTopic('root_topic2.sub_topic21', True) is None
     
         import lib_pubsub_provider_my_import_topics
-        pub.importTopicTree(lib_pubsub_provider_my_import_topics)
+        self.pub.importTopicTree(lib_pubsub_provider_my_import_topics)
     
-        assert pub.getTopic('root_topic1') is not None
-        assert pub.getTopic('root_topic2.sub_topic21') is not None
+        assert self.pub.getTopic('root_topic1') is not None
+        assert self.pub.getTopic('root_topic2.sub_topic21') is not None
     
-        pub.sendMessage(lib_pubsub_provider_my_import_topics.root_topic1)
+        self.pub.sendMessage(lib_pubsub_provider_my_import_topics.root_topic1)
 
 
 #---------------------------------------------------------------------------

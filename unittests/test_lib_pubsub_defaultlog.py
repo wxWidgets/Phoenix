@@ -9,23 +9,20 @@
 import imp_unittest, unittest
 import wtc
 
-from wx.lib.pubsub import pub
 from wx.lib.pubsub.utils import notification
 from StringIO import StringIO
-
 
 #---------------------------------------------------------------------------
 
 
-class lib_pubsub_DefaultLog(wtc.WidgetTestCase):
-    
+class lib_pubsub_DefaultLog(wtc.PubsubTestCase):
     
     def testNotifications(self):
         capture = StringIO()
         logger = notification.useNotifyByWriteFile(capture)
         def block():
             def listener(): pass
-            pub.subscribe(listener, 'testNotifications')
+            self.pub.subscribe(listener, 'testNotifications')
         block()
 
     

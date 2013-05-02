@@ -11,15 +11,11 @@ disabled, as it is more rigorous for testing purposes.
 import imp_unittest, unittest
 import wtc
 
-from wx.lib.pubsub import pub
-from wx.lib.pubsub.utils.notification import IgnoreNotificationsMixin
-
 
 #---------------------------------------------------------------------------
 
 
-class lib_pubsub_Except(wtc.WidgetTestCase):
-
+class lib_pubsub_Except(wtc.PubsubTestCase):
 
     def testDOAListenerPubsub(self):
         # Verify that a 'temporary' listener (one that will be garbage collected
@@ -34,13 +30,15 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
             def __call__(self):
                 pass
     
-        pub.subscribe( Wrapper(listener), 'testDOAListenerPubsub')
-        assert not pub.getTopic('testDOAListenerPubsub').hasListeners()
-        assert pub.isValid(listener, 'testDOAListenerPubsub')
+        self.pub.subscribe( Wrapper(listener), 'testDOAListenerPubsub')
+        assert not self.pub.getTopic('testDOAListenerPubsub').hasListeners()
+        assert self.pub.isValid(listener, 'testDOAListenerPubsub')
     
         
     def testDeadListener(self):
         # create a listener for listeners that have died
+        from wx.lib.pubsub.utils.notification import IgnoreNotificationsMixin
+
         class DeathListener(IgnoreNotificationsMixin):
             listenerStr = ''
             def notifyDeadListener(self, pubListener, topicObj):
@@ -48,8 +46,8 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
                 DeathListener.listenerStr = pubListener.name()
         dl = DeathListener()
         dl.assertEqual = self.assertEqual
-        pub.addNotificationHandler(dl)
-        pub.setNotificationFlags(deadListener=True)
+        self.pub.addNotificationHandler(dl)
+        self.pub.setNotificationFlags(deadListener=True)
         
         # define a topic, subscribe to it, and kill its listener:
         class TempListener:
@@ -58,61 +56,61 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
             def __del__(self):
                 pass #print 'being deleted'
         tempListener = TempListener()
-        expectLisrStr, _ = pub.getListenerID(tempListener)
-        pub.subscribe(tempListener, 'sadTopic')
+        expectLisrStr, _ = self.pub.getListenerID(tempListener)
+        self.pub.subscribe(tempListener, 'sadTopic')
         del tempListener
         
         # verify:
         assert DeathListener.listenerStr.startswith(expectLisrStr), \
             '"%s" !~ "%s"' % (DeathListener.listenerStr, expectLisrStr)
     
-        pub.addNotificationHandler(None)
-        pub.clearNotificationHandlers()
+        self.pub.addNotificationHandler(None)
+        self.pub.clearNotificationHandlers()
         
     
     def testSubscribe(self):
         topicName = 'testSubscribe'
         def proto(a, b, c=None):
             pass
-        pub.getOrCreateTopic(topicName, proto)
+        self.pub.getOrCreateTopic(topicName, proto)
     
         def listener(a, b, c=None): pass
-        # verify that pub.isValid() works too
-        pub.validate(listener, topicName)
-        assert pub.isValid(listener, topicName)
+        # verify that self.pub.isValid() works too
+        self.pub.validate(listener, topicName)
+        assert self.pub.isValid(listener, topicName)
     
-        self.assertEqual(pub.getTopic(topicName).getNumListeners(), 0)
-        self.assertEqual(pub.getAssociatedTopics(listener), [])
-        assert not pub.isSubscribed(listener, topicName)
-        assert pub.subscribe(listener, topicName)
-        assert pub.isSubscribed(listener, topicName)
+        self.assertEqual(self.pub.getTopic(topicName).getNumListeners(), 0)
+        self.assertEqual(self.pub.getAssociatedTopics(listener), [])
+        assert not self.pub.isSubscribed(listener, topicName)
+        assert self.pub.subscribe(listener, topicName)
+        assert self.pub.isSubscribed(listener, topicName)
         def topicNames(listener):
-            return [t.getName() for t in pub.getAssociatedTopics(listener)]
+            return [t.getName() for t in self.pub.getAssociatedTopics(listener)]
         self.assertEqual(topicNames(listener), [topicName])
         # should do nothing if already subscribed:
-        assert not pub.subscribe(listener, topicName)[1]
-        self.assertEqual(pub.getTopic(topicName).getNumListeners(), 1)
+        assert not self.pub.subscribe(listener, topicName)[1]
+        self.assertEqual(self.pub.getTopic(topicName).getNumListeners(), 1)
         
-        # test pub.getAssociatedTopics()
-        pub.subscribe(listener, 'lt2', )
+        # test self.pub.getAssociatedTopics()
+        self.pub.subscribe(listener, 'lt2', )
         self.assertEqual(set(topicNames(listener)), 
                          set([topicName,'lt2']))
-        pub.subscribe(listener, 'lt1.lst1')
+        self.pub.subscribe(listener, 'lt1.lst1')
         self.assertEqual(set(topicNames(listener)), 
                       set([topicName,'lt2','lt1.lst1']))
         
         # test ALL_TOPICS
         def listenToAll():
             pass
-        pub.subscribe(listenToAll, pub.ALL_TOPICS)
-        self.assertEqual(topicNames(listenToAll), [pub.ALL_TOPICS])
+        self.pub.subscribe(listenToAll, self.pub.ALL_TOPICS)
+        self.assertEqual(topicNames(listenToAll), [self.pub.ALL_TOPICS])
         
         
     def testMissingReqdArgs(self):
         def proto(a, b, c=None):
             pass
-        pub.getOrCreateTopic('missingReqdArgs', proto)
-        self.assertRaises(pub.SenderMissingReqdArgs, pub.sendMessage,
+        self.pub.getOrCreateTopic('missingReqdArgs', proto)
+        self.assertRaises(self.pub.SenderMissingReqdArgs, self.pub.sendMessage,
                           'missingReqdArgs', a=1)
     
     
@@ -127,23 +125,23 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
             def listen1(self, **kwarg): 
                 self.count += 1
                 self.heardTopic = True
-            def listen2(self, msgTopic=pub.AUTO_TOPIC, **kwarg):
+            def listen2(self, msgTopic=self.pub.AUTO_TOPIC, **kwarg):
                 self.listen2Topics.append(msgTopic.getName())
                 
         my = MyListener()
-        pub.subscribe(my.listen0, 'testSendTopic')
-        pub.subscribe(my.listen1, 'testSendTopic')
-        pub.subscribe(my.listen2, 'testSendTopic')
+        self.pub.subscribe(my.listen0, 'testSendTopic')
+        self.pub.subscribe(my.listen1, 'testSendTopic')
+        self.pub.subscribe(my.listen2, 'testSendTopic')
     
-        pub.sendMessage('testSendTopic')
+        self.pub.sendMessage('testSendTopic')
         self.assertEqual(my.count, 1)
         self.assertEqual(my.heardTopic, True)
     
-        pub.subscribe(my.listen0, 'testSendTopic.subtopic')
-        pub.subscribe(my.listen1, 'testSendTopic.subtopic')
-        pub.subscribe(my.listen2, 'testSendTopic.subtopic')
+        self.pub.subscribe(my.listen0, 'testSendTopic.subtopic')
+        self.pub.subscribe(my.listen1, 'testSendTopic.subtopic')
+        self.pub.subscribe(my.listen2, 'testSendTopic.subtopic')
     
-        pub.sendMessage('testSendTopic.subtopic')
+        self.pub.sendMessage('testSendTopic.subtopic')
         self.assertEqual(my.count, 3)
         self.assertEqual([], [topic for topic in my.listen2Topics 
             if topic not in ('testSendTopic', 'testSendTopic.subtopic')] )
@@ -154,16 +152,16 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
             pass
         def listenAllArgs(arg1=None, **kwargs):
             pass
-        def listenAllArgs2(arg1=None, msgTopic=pub.AUTO_TOPIC, **kwargs):
+        def listenAllArgs2(arg1=None, msgTopic=self.pub.AUTO_TOPIC, **kwargs):
             pass
     
-        pub.subscribe(listen,  'testAcceptAllArgs')
+        self.pub.subscribe(listen,  'testAcceptAllArgs')
     
-        pub.subscribe(listenAllArgs,  'testAcceptAllArgs')
-        pub.subscribe(listenAllArgs2, 'testAcceptAllArgs')
+        self.pub.subscribe(listenAllArgs,  'testAcceptAllArgs')
+        self.pub.subscribe(listenAllArgs2, 'testAcceptAllArgs')
         
-        pub.subscribe(listenAllArgs2, 'testAcceptAllArgs.subtopic')
-        pub.subscribe(listenAllArgs,  'testAcceptAllArgs.subtopic')
+        self.pub.subscribe(listenAllArgs2, 'testAcceptAllArgs.subtopic')
+        self.pub.subscribe(listenAllArgs,  'testAcceptAllArgs.subtopic')
     
     
     def testUnsubAll(self):
@@ -181,15 +179,15 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
         lisnr3 = MyListener()
         lisnr4 = lisnr3.meth
         def lisnrSub(listener=None, topic=None, newSub=None): pass
-        pub.subscribe(lisnrSub, 'pubsub.subscribe')
-        self.assertEqual(pub.getTopic('pubsub.subscribe').getNumListeners(), 1)
+        self.pub.subscribe(lisnrSub, 'pubsub.subscribe')
+        self.assertEqual(self.pub.getTopic('pubsub.subscribe').getNumListeners(), 1)
     
         def subAll():
-            pub.subscribe(lisnr1, 'testUnsubAll')
-            pub.subscribe(lisnr2, 'testUnsubAll')
-            pub.subscribe(lisnr3, 'testUnsubAll')
-            pub.subscribe(lisnr4, 'testUnsubAll')
-            self.assertEqual(pub.getTopic('testUnsubAll').getNumListeners(), 4)
+            self.pub.subscribe(lisnr1, 'testUnsubAll')
+            self.pub.subscribe(lisnr2, 'testUnsubAll')
+            self.pub.subscribe(lisnr3, 'testUnsubAll')
+            self.pub.subscribe(lisnr4, 'testUnsubAll')
+            self.assertEqual(self.pub.getTopic('testUnsubAll').getNumListeners(), 4)
     
         def filter(lisnr):
             passes = str(lisnr).endswith('meth')
@@ -197,23 +195,23 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
             
         # test unsub many non-pubsub topic listeners
         subAll()
-        pub.unsubAll('testUnsubAll')
-        self.assertEqual(pub.getTopic('testUnsubAll').getNumListeners(), 0)
-        self.assertEqual(pub.getTopic('pubsub.subscribe').getNumListeners(), 1)
+        self.pub.unsubAll('testUnsubAll')
+        self.assertEqual(self.pub.getTopic('testUnsubAll').getNumListeners(), 0)
+        self.assertEqual(self.pub.getTopic('pubsub.subscribe').getNumListeners(), 1)
         # now same but with filter:
         subAll()
-        unsubed = pub.unsubAll('testUnsubAll', listenerFilter=filter)
-        self.assertEqual(pub.getTopic('testUnsubAll').getNumListeners(), 3)
-        self.assertEqual(pub.getTopic('pubsub.subscribe').getNumListeners(), 1)
+        unsubed = self.pub.unsubAll('testUnsubAll', listenerFilter=filter)
+        self.assertEqual(self.pub.getTopic('testUnsubAll').getNumListeners(), 3)
+        self.assertEqual(self.pub.getTopic('pubsub.subscribe').getNumListeners(), 1)
         
         # test unsub all listeners of all topics
         subAll()
-        self.assertEqual(pub.getTopic('testUnsubAll').getNumListeners(), 4)
-        unsubed = pub.unsubAll(listenerFilter=filter)
+        self.assertEqual(self.pub.getTopic('testUnsubAll').getNumListeners(), 4)
+        unsubed = self.pub.unsubAll(listenerFilter=filter)
         self.assertEqual(unsubed, [lisnr4])
-        self.assertEqual(pub.getTopic('testUnsubAll').getNumListeners(), 3)
-        self.assertEqual(pub.getTopic('pubsub.subscribe').getNumListeners(), 1)
-        unsubed = set( pub.unsubAll() )
+        self.assertEqual(self.pub.getTopic('testUnsubAll').getNumListeners(), 3)
+        self.assertEqual(self.pub.getTopic('pubsub.subscribe').getNumListeners(), 1)
+        unsubed = set( self.pub.unsubAll() )
         expect = set([lisnr1, lisnrSub, lisnr3, lisnr2])
         # at least all the 'expected' ones were unsub'd; will be others if this
         # test is run after other unit tests in same nosetests run
@@ -221,29 +219,29 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
         
         
     def testSendForUndefinedTopic(self):
-        pub.sendMessage('testSendForUndefinedTopic')
-        assert pub.getTopic('testSendForUndefinedTopic')
-        self.assertEqual(pub.getTopic('testSendForUndefinedTopic').getArgs(),
+        self.pub.sendMessage('testSendForUndefinedTopic')
+        assert self.pub.getTopic('testSendForUndefinedTopic')
+        self.assertEqual(self.pub.getTopic('testSendForUndefinedTopic').getArgs(),
                          (None, None))
     
         # must also check for subtopics if parents have listeners since
         # filtering of args is affected
         def listener():
             pass
-        pub.subscribe(listener, 'testSendForUndefinedTopic')
-        pub.sendMessage('testSendForUndefinedTopic.subtopic', msg='something')
+        self.pub.subscribe(listener, 'testSendForUndefinedTopic')
+        self.pub.sendMessage('testSendForUndefinedTopic.subtopic', msg='something')
         
     def testTopicUnspecifiedError(self):
-        self.assertRaises(pub.ListenerSpecIncomplete, pub.setTopicUnspecifiedFatal)
-        pub.setTopicUnspecifiedFatal(checkExisting=False)
+        self.assertRaises(self.pub.ListenerSpecIncomplete, self.pub.setTopicUnspecifiedFatal)
+        self.pub.setTopicUnspecifiedFatal(checkExisting=False)
         def fn():
             pass
-        LSI = pub.ListenerSpecIncomplete
-        self.assertRaises(LSI, pub.sendMessage, 'testTopicUnspecifiedError')
-        self.assertRaises(LSI, pub.subscribe, fn, 'testTopicUnspecifiedError')
-        pub.setTopicUnspecifiedFatal(False)
-        pub.sendMessage('testTopicUnspecifiedError')
-        pub.subscribe(fn, 'testTopicUnspecifiedError')
+        LSI = self.pub.ListenerSpecIncomplete
+        self.assertRaises(LSI, self.pub.sendMessage, 'testTopicUnspecifiedError')
+        self.assertRaises(LSI, self.pub.subscribe, fn, 'testTopicUnspecifiedError')
+        self.pub.setTopicUnspecifiedFatal(False)
+        self.pub.sendMessage('testTopicUnspecifiedError')
+        self.pub.subscribe(fn, 'testTopicUnspecifiedError')
     
     
     def testArgSpecDerivation(self):
@@ -266,15 +264,15 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
     
         # with getOrCreateTopic(topic, proto), the 'required args' set
         # is garanteed to be a subset of 'all args'
-        pub.getOrCreateTopic('tasd',          ok_0)
-        pub.getOrCreateTopic('tasd.t_1',      ok_1)
-        self.assertRaises(pub.ListenerSpecInvalid, pub.getOrCreateTopic,
+        self.pub.getOrCreateTopic('tasd',          ok_0)
+        self.pub.getOrCreateTopic('tasd.t_1',      ok_1)
+        self.assertRaises(self.pub.ListenerSpecInvalid, self.pub.getOrCreateTopic,
                           'tasd.t_1.t_11',  err_11)
-        self.assertRaises(pub.ListenerSpecInvalid, pub.getOrCreateTopic,
+        self.assertRaises(self.pub.ListenerSpecInvalid, self.pub.getOrCreateTopic,
                           'tasd.t_1.t_12',  err_12)
-        pub.getOrCreateTopic('tasd.t_2',      ok_2)
-        pub.getOrCreateTopic('tasd.t_2.t_21', ok_21)
-        self.assertRaises(pub.ListenerSpecInvalid, pub.getOrCreateTopic,
+        self.pub.getOrCreateTopic('tasd.t_2',      ok_2)
+        self.pub.getOrCreateTopic('tasd.t_2.t_21', ok_21)
+        self.assertRaises(self.pub.ListenerSpecInvalid, self.pub.getOrCreateTopic,
                           'tasd.t_2.t_22', err_22)
     
         # with newTopic(), 'required args' specified separately so
@@ -282,19 +280,19 @@ class lib_pubsub_Except(wtc.WidgetTestCase):
         def check(subName, required=(), **args):
             tName = 'tasd.'+subName
             try:
-                pub.newTopic(tName, 'desc', required, **args)
-                msg = 'Should have raised pub.ListenerSpecInvalid for %s, %s, %s'
+                self.pub.newTopic(tName, 'desc', required, **args)
+                msg = 'Should have raised self.pub.ListenerSpecInvalid for %s, %s, %s'
                 assert False, msg % (tName, required, args)
-            except pub.ListenerSpecInvalid, exc:
+            except self.pub.ListenerSpecInvalid, exc:
                 #import traceback
                 #traceback.print_exc()
                 print 'As expected: ', exc
     
-        pub.newTopic('tasd.t_1.t_13', 'desc', ('arg1',), arg1='docs for arg1') # ok_1
+        self.pub.newTopic('tasd.t_1.t_13', 'desc', ('arg1',), arg1='docs for arg1') # ok_1
         check('t_1.t_14', arg1='docs for arg1')                                # err_11
         check('t_1.t_15', ('arg2',), arg2='docs for arg2')                     # err_12
     
-        pub.newTopic('tasd.t_2.t_23', 'desc', ('arg1',), arg1='docs for arg1') # ok_21
+        self.pub.newTopic('tasd.t_2.t_23', 'desc', ('arg1',), arg1='docs for arg1') # ok_21
         check('t_2.t_24', ('arg2',), arg2='docs for arg2')                     # err_22
     
         # check when no inheritence involved

@@ -19,7 +19,7 @@ from wx.lib.pubsub.core.topicargspec import \
 #---------------------------------------------------------------------------
 
 
-class lib_pubsub_Specs(wtc.WidgetTestCase):
+class lib_pubsub_Specs(wtc.PubsubTestCase):
 
 
     def test1_create(self):

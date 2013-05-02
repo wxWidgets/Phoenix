@@ -26,7 +26,7 @@ class ArgsInfoMock:
 #---------------------------------------------------------------------------
 
 
-class lib_pubsub_ArgsInfo(wtc.WidgetTestCase):
+class lib_pubsub_ArgsInfo(wtc.PubsubTestCase):
 
     def test0_ArgsInfo(self):
         def listener0(msgTopic = Listener.AUTO_TOPIC):

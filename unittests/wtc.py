@@ -104,3 +104,15 @@ def mybytes(text):
 #---------------------------------------------------------------------------
 
 
+class PubsubTestCase(unittest.TestCase):
+    """
+    A testcase that will create ?????
+    """
+    def setUp(self):
+        from wx.lib.pubsub import pub
+        self.pub = pub
+
+    def tearDown(self):
+        self.pub.unsubAll()
+        del self.pub
+

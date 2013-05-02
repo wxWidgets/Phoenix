@@ -21,7 +21,7 @@ from wx.lib.pubsub.core.topicexc     import ListenerSpecInvalid
 #---------------------------------------------------------------------------
 
 
-class lib_pubsub_Topic(wtc.WidgetTestCase):
+class lib_pubsub_Topic(wtc.PubsubTestCase):
 
     rootTopic = None
     treeConfig = TreeConfig()
