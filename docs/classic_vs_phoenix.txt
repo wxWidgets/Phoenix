@@ -499,6 +499,7 @@ SpinButton_GetClassDefaultAttributes                         :meth:`SpinButton.G
 SpinCtrl_GetClassDefaultAttributes                           :meth:`SpinCtrl.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 SplashScreen                                                 :class:`adv.SplashScreen`
 SplashScreenWindow                                           ``MISSING``
+SplitterWindow.SetSashSize                                   ``REMOVED``
 SplitterWindow_GetClassDefaultAttributes                     :meth:`SplitterWindow.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 StandardDialogLayoutAdapter                                  ``MISSING``
 StandardDialogLayoutAdapter_DoFitWithScrolling               ``MISSING``
