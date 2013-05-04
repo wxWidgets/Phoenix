@@ -5,7 +5,7 @@
 
 
 """
-
+import os
 import imp_unittest, unittest
 import wtc
 
@@ -228,12 +228,14 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                                      format=self.pub.TOPIC_TREE_FROM_MODULE,
                                      lazy=False)
         assert modDoc.startswith('\nTree docs, can be anything you')
-        self.pub.exportTopicTree('lib_pubsub_provider_actual',
+        basepath = os.path.dirname(__file__)
+        self.pub.exportTopicTree(os.path.join(basepath,'lib_pubsub_provider_actual'),
             rootTopicName='test_import_export_no_change2',
             moduleDoc=treeDoc)
-        lines1 = file('lib_pubsub_provider_actual.py', 'r').readlines()
-        lines2 = file('lib_pubsub_provider_expect.py', 'r').readlines()
+        lines1 = file(os.path.join(basepath,'lib_pubsub_provider_actual.py'), 'r').readlines()
+        lines2 = file(os.path.join(basepath,'lib_pubsub_provider_expect.py'), 'r').readlines()
         diffs = context_diff( lines1, lines2 )
+        os.unlink(os.path.join(basepath,'lib_pubsub_provider_actual.py'))
         assert not list(diffs)
     
     def test_module_as_class(self):
