@@ -101,8 +101,8 @@ import warnings
 
 import wx.lib.six as six
 
-import auibar
-import auibook
+from . import auibar
+from . import auibook
 
 from . import tabmdi
 from . import dockart
@@ -6053,8 +6053,10 @@ class AuiManager(wx.EvtHandler):
         for ii, dock in enumerate(docks):
             # sort the dock pane array by the pane's
             # dock position (dock_pos), in ascending order
-            dock.panes.sort(PaneSortFunc)
             dock_pane_count = len(dock.panes)
+            if dock_pane_count > 1:
+                #~ dock.panes.sort(PaneSortFunc)
+                dock.panes.sort(key = lambda pane: pane.dock_pos)
 
             # for newly created docks, set up their initial size
             if dock.size == 0:
@@ -6094,7 +6096,7 @@ class AuiManager(wx.EvtHandler):
                 # parameter specifies.  See SetDockSizeConstraint()
                 max_dock_x_size = int(self._dock_constraint_x*float(cli_size.x))
                 max_dock_y_size = int(self._dock_constraint_y*float(cli_size.y))
-                if cli_size <= wx.Size(20, 20):
+                if tuple(cli_size) <= tuple(wx.Size(20, 20)):
                     max_dock_x_size = 10000
                     max_dock_y_size = 10000
 

@@ -17,10 +17,10 @@ import wx
 from .aui_utilities import BitmapFromBits, StepColour, GetLabelSize
 from .aui_utilities import GetBaseColour, MakeDisabledBitmap
 
-import framemanager
-from .aui_constants import *
-
 import wx.lib.six as six
+
+from . import framemanager
+from .aui_constants import *
 
 # wxPython version string
 _VERSION_STRING = wx.VERSION_STRING
@@ -749,8 +749,8 @@ class AuiDefaultToolBarArt(object):
         self._gripper_size = 7
         self._overflow_size = 16
 
-        button_dropdown_bits = "\xe0\xf1\xfb"
-        overflow_bits = "\x80\xff\x80\xc1\xe3\xf7"
+        button_dropdown_bits = b"\xe0\xf1\xfb"
+        overflow_bits = b"\x80\xff\x80\xc1\xe3\xf7"
 
         self._button_dropdown_bmp = BitmapFromBits(button_dropdown_bits, 5, 3, wx.BLACK)
         self._disabled_button_dropdown_bmp = BitmapFromBits(button_dropdown_bits, 5, 3,

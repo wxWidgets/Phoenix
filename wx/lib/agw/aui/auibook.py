@@ -21,7 +21,7 @@ import datetime
 from wx.lib.expando import ExpandoTextCtrl
 import wx.lib.six as six
 
-import framemanager
+from . import framemanager
 from . import tabart as TA
 
 from .aui_utilities import LightColour, MakeDisabledBitmap, TabDragImage
