@@ -12,7 +12,7 @@ class MySimpleWizPage(wx.adv.WizardPageSimple):
     def __init__(self, parent, title):
         wx.adv.WizardPageSimple.__init__(self, parent)
         st = wx.StaticText(self, label='Wizard Page: %s' % title)
-        st.SetFont(wx.Font(24, wx.FONTFAMILY_SWISS))
+        st.SetFont(wx.FFont(24, wx.FONTFAMILY_SWISS))
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(st, 0, wx.ALIGN_CENTER)
         sizer.Add(wx.StaticLine(self), 0, wx.EXPAND)
