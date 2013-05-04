@@ -3,9 +3,9 @@ import wx
 ## import a local version of FloatCanvas
 
 
-from floatcanvas import FloatCanvas
-from floatcanvas.Utilities import BBox
-from floatcanvas.Utilities import Colors
+from wx.lib.floatcanvas import FloatCanvas
+from wx.lib.floatcanvas.Utilities import BBox
+from wx.lib.floatcanvas.Utilities import Colors
 
 import numpy as N
 
@@ -133,6 +133,6 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
                 radius = self.Diameter/2
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
-            HTdc.DrawCirclePoint(CenterXY, radius)
+            HTdc.DrawCircle(CenterXY, radius)
 
 

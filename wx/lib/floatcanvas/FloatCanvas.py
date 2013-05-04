@@ -1834,10 +1834,10 @@ class Bitmap(TextObjectMixin, DrawObject, ):
 
         DrawObject.__init__(self,InForeground)
 
-        if type(Bitmap) == wx._gdi.Bitmap:
+        if type(Bitmap) == wx.Bitmap:
             self.Bitmap = Bitmap
-        elif type(Bitmap) == wx._core.Image:
-            self.Bitmap = wx.BitmapFromImage(Bitmap)
+        elif type(Bitmap) == wx.Image:
+            self.Bitmap = wx.Bitmap(Bitmap)
 
         # Note the BB is just the point, as the size in World coordinates is not fixed
         self.BoundingBox = BBox.asBBox( (XY,XY) )
@@ -1850,7 +1850,7 @@ class Bitmap(TextObjectMixin, DrawObject, ):
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         XY = WorldToPixel(self.XY)
         XY = self.ShiftFun(XY[0], XY[1], self.Width, self.Height)
-        dc.DrawBitmapPoint(self.Bitmap, XY, True)
+        dc.DrawBitmap(self.Bitmap, XY, True)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
@@ -1884,9 +1884,9 @@ class ScaledBitmap(TextObjectMixin, DrawObject, ):
 
         DrawObject.__init__(self,InForeground)
 
-        if type(Bitmap) == wx._gdi.Bitmap:
+        if type(Bitmap) == wx.Bitmap:
             self.Image = Bitmap.ConvertToImage()
-        elif type(Bitmap) == wx._core.Image:
+        elif type(Bitmap) == wx.Image:
             self.Image = Bitmap
 
         self.XY = XY
@@ -1912,10 +1912,10 @@ class ScaledBitmap(TextObjectMixin, DrawObject, ):
         if (self.ScaledBitmap is None) or (H <> self.ScaledHeight) :
             self.ScaledHeight = H
             Img = self.Image.Scale(W, H)
-            self.ScaledBitmap = wx.BitmapFromImage(Img)
+            self.ScaledBitmap = wx.Bitmap(Img)
 
         XY = self.ShiftFun(XY[0], XY[1], W, H)
-        dc.DrawBitmapPoint(self.ScaledBitmap, XY, True)
+        dc.DrawBitmap(self.ScaledBitmap, XY, True)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
@@ -1995,7 +1995,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
             self.ScaledHeight = H
             #print "Scaling to:", W, H
             Img = self.Image.Scale(W, H)
-            bmp = wx.BitmapFromImage(Img)
+            bmp = wx.Bitmap(Img)
             self.ScaledBitmap = ((0, 0, self.bmpWidth, self.bmpHeight , W, H), bmp)# this defines the cached bitmap
         else:
             #print "Using Cached bitmap"
@@ -2062,7 +2062,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
             Img = self.Image.GetSubImage(wx.Rect(Xb, Yb, Wb, Hb))
             print "rescaling with High quality"
             Img.Rescale(Ws, Hs, quality=wx.IMAGE_QUALITY_HIGH)
-            bmp = wx.BitmapFromImage(Img)
+            bmp = wx.Bitmap(Img)
             self.ScaledBitmap = ((Xb, Yb, Wb, Hb, Ws, Ws), bmp)# this defines the cached bitmap
             #XY = self.ShiftFun(XY[0], XY[1], W, H)
             #fixme: get the shiftfun working!
@@ -2261,9 +2261,9 @@ class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
         EndXY = WorldToPixel(self.EndXY)
         CenterXY = WorldToPixel(self.CenterXY)
        
-        dc.DrawArcPoint(StartXY, EndXY, CenterXY)
+        dc.DrawArc(StartXY, EndXY, CenterXY)
         if HTdc and self.HitAble:
-            HTdc.DrawArcPoint(StartXY, EndXY, CenterXY)
+            HTdc.DrawArc(StartXY, EndXY, CenterXY)
 
     def CalcBoundingBox(self):
         self.BoundingBox = BBox.asBBox( N.array((self.XY, (self.XY + self.WH) ), N.float) )

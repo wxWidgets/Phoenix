@@ -66,9 +66,9 @@ class RubberBandBox(GUIMode.GUIBase):
                 dc.SetBrush(wx.TRANSPARENT_BRUSH)
                 dc.SetLogicalFunction(wx.XOR)
                 if self.RBRect:
-                    dc.DrawRectanglePointSize(*self.RBRect)
+                    dc.DrawRectangle(*self.RBRect)
                 self.RBRect = ((x, y), (w, h) )
-                dc.DrawRectanglePointSize(*self.RBRect)
+                dc.DrawRectangle(*self.RBRect)
         self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
                 
     def OnLeftDown(self, event):
