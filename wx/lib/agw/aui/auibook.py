@@ -21,7 +21,6 @@ import datetime
 from wx.lib.expando import ExpandoTextCtrl
 import wx.lib.six as six
 
-from . import framemanager
 from . import tabart as TA
 
 from .aui_utilities import LightColour, MakeDisabledBitmap, TabDragImage
@@ -2769,6 +2768,7 @@ class AuiNotebook(wx.Panel):
         self._click_tab = None
 
         wx.Panel.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL, name=name)
+        from . import framemanager
         self._mgr = framemanager.AuiManager()
         self._tabs = AuiTabContainer(self)
 
@@ -2840,6 +2840,8 @@ class AuiNotebook(wx.Panel):
 
         :see: :meth:`~AuiNotebook.__init__` for a list of available `agwStyle` bits.
         """
+
+        from . import framemanager
 
         self._agwFlags = agwStyle
 
@@ -2962,6 +2964,7 @@ class AuiNotebook(wx.Panel):
 
         :param string `layout`: a string which contains a saved :class:`AuiNotebook` layout.
         """
+        from . import framemanager
 
         # Remove all tab ctrls (but still keep them in main index)
         tab_count = self._tabs.GetPageCount()
@@ -3309,6 +3312,7 @@ class AuiNotebook(wx.Panel):
         :param Window `control`: almost any :class:`Window` -derived instance to be located
          inside a tab.
         """
+        from . import framemanager
 
         if not page:
             return False
@@ -4155,6 +4159,7 @@ class AuiNotebook(wx.Panel):
         Returns the active tab control. It is called to determine which control
         gets new windows being added.
         """
+        from . import framemanager
 
         if self._curpage >= 0 and self._curpage < self._tabs.GetPageCount():
 
@@ -4224,6 +4229,7 @@ class AuiNotebook(wx.Panel):
         :param integer `direction`: specifies where the pane should go, it should be one of the
          following: ``wx.TOP``, ``wx.BOTTOM``, ``wx.LEFT``, or ``wx.RIGHT``.
         """
+        from . import framemanager
 
         cli_size = self.GetClientSize()
 
@@ -4712,6 +4718,7 @@ class AuiNotebook(wx.Panel):
 
         :param `event`: a :class:`AuiNotebookEvent` event to be processed.
         """
+        from . import framemanager
 
         tabs = event.GetEventObject()
         if not tabs.GetEnabled(event.GetSelection()):
@@ -4968,7 +4975,8 @@ class AuiNotebook(wx.Panel):
            enough outside of the notebook to become floating pages.
            
         """
-
+        from . import framemanager
+        
         root_manager = framemanager.GetManager(self)
         page_title = self.GetPageText(page_index)
         page_contents = self.GetPage(page_index)
@@ -5038,6 +5046,7 @@ class AuiNotebook(wx.Panel):
 
         :param `event`: a :class:`CloseEvent` event to be processed.
         """
+        from . import framemanager
 
         root_manager = framemanager.GetManager(self)
         if root_manager and root_manager != self._mgr:
@@ -5070,6 +5079,7 @@ class AuiNotebook(wx.Panel):
 
         :param `pane`: an instance of :class:`~lib.agw.aui.framemanager.AuiPaneInfo`.
         """
+        from . import framemanager
 
         root_manager = framemanager.GetManager(self)
 

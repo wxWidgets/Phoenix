@@ -19,7 +19,6 @@ from .aui_utilities import GetBaseColour, MakeDisabledBitmap
 
 import wx.lib.six as six
 
-from . import framemanager
 from .aui_constants import *
 
 # wxPython version string
@@ -3690,6 +3689,7 @@ class AuiToolBar(wx.Control):
                         else:
                             pane = manager.GetPane(self)
                             
+                        from . import framemanager
                         e = framemanager.AuiManagerEvent(framemanager.wxEVT_AUI_PANE_MIN_RESTORE)
 
                         e.SetManager(manager)
