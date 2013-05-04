@@ -73,13 +73,13 @@ class menu_Tests(wtc.WidgetTestCase):
         i, m = mb.FindItem(item.GetId())
         self.assertTrue(i is item)
         self.assertTrue(m is menu)
-        i = mb.FindItembyId(item.GetId())
+        i = mb.FindItemById(item.GetId())
         self.assertTrue(i is item)
         
         i, m = menu.FindItem(item.GetId())
         self.assertTrue(i is item)
         self.assertTrue(m is menu)
-        i = menu.FindItembyId(item.GetId())
+        i = menu.FindItemById(item.GetId())
         self.assertTrue(i is item)
         
         
