@@ -93,34 +93,33 @@ Usage: ./build.py [command(s)] [options]
                     time the etg command is run.
       etg           Run the ETG scripts that are out of date to update their 
                     SIP files and their Sphinx input files
-      sip           Run sip
+      sip           Run sip to generate the C++ wrapper source
       
       wxlib         Build the Sphinx input files for wx.lib
       wxpy          Build the Sphinx input files for wx.py
       wxtools       Build the Sphinx input files for wx.tools
       sphinx        Run the documentation building process using Sphinx
       
-      test          Run the unit test suite
-      test_*        Run just one test module
-        
       build         Build both wxWidgets and wxPython
       build_wx      Do only the wxWidgets part of the build
       build_py      Build wxPython only
 
       install       Install both wxWidgets and wxPython
-      install_wx    Install wxWidgets (but only if this tool was 
-                    configured to build it)
+      install_wx    Install wxWidgets (but only if this tool was used to 
+                    build it)
       install_py    Install wxPython only
         
       sdist         Build a tarball containing all source files
-      bdist         Create a binary release of wxPython Phoenix
+      bdist         Create a binary tarball release of wxPython Phoenix
       docs_bdist    Build a tarball containing the documentation
       bdist_egg     Build a Python egg.  Requires magic.
+        
+      test          Run the unit test suite
+      test_*        Run just the one named test module
         
       clean_wx      Clean the wx parts of the build
       clean_py      Clean the wxPython parts of the build
       clean_sphinx  Clean the sphinx files
-      
       clean         Clean both wx and wxPython
       cleanall      Clean all and do a little extra scrubbing too
       """)
@@ -347,7 +346,7 @@ def makeOptionParser():
         ("debug",          (False, "Build wxPython with debug symbols")),
         ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
-        ("osx_carbon",     (False, "Build the OSX Carbon port on Mac")),
+        ("osx_carbon",     (False, "Build the OSX Carbon port on Mac (unsupported)")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
         ("mac_arch",       ("",    "Comma separated list of architectures to build on Mac")),
         
@@ -364,8 +363,8 @@ def makeOptionParser():
                                    "using an uninstalled wx/wxPython from the build dir, "
                                    "or when distributing wxPython as an egg.)  When using "
                                    "this flag you should either build with an already "
-                                   "installed wxWidgets, or allow this script to install "
-                                   "wxWidgets.")),
+                                   "installed wxWidgets, or allow this script to build and "
+                                   "install wxWidgets.")),
         
         ("build_dir",      ("",    "Directory to store wx build files. (Not used on Windows)")),
         ("prefix",         ("",    "Prefix value to pass to the wx build.")), 
@@ -380,7 +379,7 @@ def makeOptionParser():
         ("unicode",        (True,  "Build wxPython with unicode support (always on for wx2.9+)")),
         ("verbose",        (False, "Print out more information.")),
         ("nodoc",          (False, "Do not run the default docs generator")),
-        ("upload_package", (False, "Upload bdist and/or sdist packages to nightly server.")),
+        ("upload_package", (False, "Upload bdist and/or sdist packages to snapshot server.")),
         ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
         ("x64",            (False, "Use and build for the 64bit version of Python on Windows")),
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
