@@ -6,9 +6,9 @@ __revision__ = "$Revision$"[11:-2]
 
 import wx
 import os
-from version import VERSION
-import editwindow
-import dispatcher
+from .version import VERSION
+from . import editwindow
+from . import dispatcher
 
 ID_NEW = wx.ID_NEW
 ID_OPEN = wx.ID_OPEN
@@ -77,7 +77,7 @@ class Frame(wx.Frame):
         self.CreateStatusBar()
         self.SetStatusText('Frame')
         self.shellName=shellName
-        import images
+        from . import images
         self.SetIcon(images.getPyIcon(shellName=shellName))
         self.__createMenus()
 

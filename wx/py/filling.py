@@ -7,14 +7,14 @@ __revision__ = "$Revision$"[11:-2]
 
 import wx
 
-import dispatcher
-import editwindow
+from . import dispatcher
+from . import editwindow
 import inspect
-import introspect
+from . import introspect
 import keyword
 import sys
 import types
-from version import VERSION
+from .version import VERSION
 
 
 COMMONTYPES = [getattr(types, t) for t in dir(types) \
@@ -29,7 +29,7 @@ DOCTYPES = ('BuiltinFunctionType', 'BuiltinMethodType', 'ClassType',
 SIMPLETYPES = [getattr(types, t) for t in dir(types) \
                if not t.startswith('_') and t not in DOCTYPES]
 
-del t
+#del t
 
 try:
     COMMONTYPES.append(type(''.__repr__))  # Method-wrapper in version 2.2.x.
@@ -232,14 +232,14 @@ class FillingTree(wx.TreeCtrl):
 
         # This method will likely be replaced by the enclosing app to
         # do something more interesting, like write to a text control.
-        print text
+        print(text)
 
     def setStatusText(self, text):
         """Display status information."""
 
         # This method will likely be replaced by the enclosing app to
         # do something more interesting, like write to a status bar.
-        print text
+        print(text)
 
 
 class FillingText(editwindow.EditWindow):

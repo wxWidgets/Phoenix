@@ -6,13 +6,13 @@ __revision__ = "$Revision$"[11:-2]
 
 import wx
 
-from buffer import Buffer
-import crust
-import dispatcher
-import editwindow
-import frame
-from shell import Shell
-import version
+from .buffer import Buffer
+from . import crust
+from . import dispatcher
+from . import editwindow
+from . import frame
+from .shell import Shell
+from . import version
 
 
 class EditorFrame(frame.Frame):

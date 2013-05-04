@@ -12,8 +12,8 @@ import os
 import sys
 import time
 
-import dispatcher
-from version import VERSION
+from . import dispatcher
+from .version import VERSION
 
 
 if 'wxMSW' in wx.PlatformInfo:

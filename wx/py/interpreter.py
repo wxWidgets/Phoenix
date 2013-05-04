@@ -8,9 +8,10 @@ __revision__ = "$Revision$"[11:-2]
 import os
 import sys
 from code import InteractiveInterpreter, compile_command
-import dispatcher
-import introspect
+from . import dispatcher
+from . import introspect
 import wx
+import wx.lib.six
 
 class Interpreter(InteractiveInterpreter):
     """Interpreter based on code.InteractiveInterpreter."""
@@ -26,9 +27,9 @@ class Interpreter(InteractiveInterpreter):
         self.stdout = stdout
         self.stderr = stderr
         if rawin:
-            import __builtin__
-            __builtin__.raw_input = rawin
-            del __builtin__
+            from wx.lib.six.moves import builtins
+            builtins.raw_input = rawin
+            del builtins
         if showInterpIntro:
             copyright = 'Type "help", "copyright", "credits" or "license"'
             copyright += ' for more information.'
@@ -58,11 +59,12 @@ class Interpreter(InteractiveInterpreter):
         delete that last list."""
         
         # In case the command is unicode try encoding it
-        if type(command) == unicode:
-            try:
-                command = command.encode('utf-8')
-            except UnicodeEncodeError:
-                pass # otherwise leave it alone
+        if not wx.lib.six.PY3:
+            if type(command) == unicode:
+                try:
+                    command = command.encode('utf-8')
+                except UnicodeEncodeError:
+                    pass # otherwise leave it alone
                 
         if not self.more:
             try: del self.commandBuffer[-1]

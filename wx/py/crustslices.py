@@ -12,15 +12,15 @@ import pprint
 import re
 import sys
 
-import dispatcher
-import crust
-import document
-import editwindow
-import editor
-from filling import Filling
-import frame
-from sliceshell import SlicesShell
-from version import VERSION
+from . import dispatcher
+from . import crust
+from . import document
+from . import editwindow
+from . import editor
+from .filling import Filling
+from . import frame
+from .sliceshell import SlicesShell
+from .version import VERSION
 
 
 class CrustSlices(crust.Crust):

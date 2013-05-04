@@ -5,12 +5,12 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 __cvsid__ = "$Id$"
 __revision__ = "$Revision$"[11:-2]
 
-import cStringIO
-import inspect
 import sys
+import inspect
 import tokenize
 import types
 import wx
+from wx.lib.six import StringIO, PY3
 
 def getAutoCompleteList(command='', locals=None, includeMagic=1, 
                         includeSingle=1, includeDouble=1):
@@ -237,7 +237,7 @@ def getRoot(command, terminator=None):
     if not tokens:
         return ''
     if terminator == '.' and \
-           (tokens[-1][1] <> '.' or tokens[-1][0] is not tokenize.OP):
+           (tokens[-1][1] != '.' or tokens[-1][0] is not tokenize.OP):
         # Trap decimals in numbers, versus the dot operator.
         return ''
     else:
@@ -301,13 +301,13 @@ def getTokens(command):
     """Return list of token tuples for command."""
 
     # In case the command is unicode try encoding it
-    if type(command) == unicode:
+    if isinstance(command, str):
         try:
             command = command.encode('utf-8')
         except UnicodeEncodeError:
             pass # otherwise leave it alone
                 
-    f = cStringIO.StringIO(command)
+    f = StringIO(command)
     # tokens is a list of token tuples, each looking like: 
     # (type, string, (srow, scol), (erow, ecol), line)
     tokens = []
@@ -321,9 +321,12 @@ def getTokens(command):
 ##            tokens.append(token)
 
         # This works with Python 2.1.3 (with nested_scopes).
-        def eater(*args):
-            tokens.append(args)
-        tokenize.tokenize_loop(f.readline, eater)
+        if not PY3:
+            def eater(*args):
+                tokens.append(args)
+            tokenize.tokenize_loop(f.readline, eater)
+        else:
+            tokenize.tokenize(f.readline)
     except tokenize.TokenError:
         # This is due to a premature EOF, which we expect since we are
         # feeding in fragments of Python code.

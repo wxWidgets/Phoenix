@@ -16,16 +16,16 @@ import os
 import sys
 import time
 
-from buffer import Buffer
-import dispatcher
-import editwindow
-import frame
-from pseudo import PseudoFileIn
-from pseudo import PseudoFileOut
-from pseudo import PseudoFileErr
-from version import VERSION
-from magic import magic
-from path import ls,cd,pwd,sx
+from .buffer import Buffer
+from . import dispatcher
+from . import editwindow
+from . import frame
+from .pseudo import PseudoFileIn
+from .pseudo import PseudoFileOut
+from .pseudo import PseudoFileErr
+from .version import VERSION
+from .magic import magic
+from .path import ls,cd,pwd,sx
 
 sys.ps3 = '<-- '  # Input prompt.
 USE_MAGIC=True
@@ -182,7 +182,7 @@ class ShellFacade:
         if hasattr(self.other, name):
             return getattr(self.other, name)
         else:
-            raise AttributeError, name
+            raise AttributeError(name)
 
     def __setattr__(self, name, value):
         if self.__dict__.has_key(name):
@@ -190,7 +190,7 @@ class ShellFacade:
         elif hasattr(self.other, name):
             setattr(self.other, name, value)
         else:
-            raise AttributeError, name
+            raise AttributeError(name)
 
     def _getAttributeNames(self):
         """Return list of magic attributes to extend introspection."""
@@ -257,7 +257,7 @@ class Shell(editwindow.EditWindow):
 
         # Import a default interpreter class if one isn't provided.
         if InterpClass == None:
-            from interpreter import Interpreter
+            from .interpreter import Interpreter
         else:
             Interpreter = InterpClass
 
@@ -390,13 +390,13 @@ class Shell(editwindow.EditWindow):
 
         This sets "close", "exit" and "quit" to a helpful string.
         """
-        import __builtin__
-        __builtin__.close = __builtin__.exit = __builtin__.quit = \
+        from wx.lib.six.moves import builtins
+        builtins.close = builtins.exit = builtins.quit = \
             'Click on the close button to leave the application.'
-        __builtin__.cd = cd
-        __builtin__.ls = ls
-        __builtin__.pwd = pwd
-        __builtin__.sx = sx
+        builtins.cd = cd
+        builtins.ls = ls
+        builtins.pwd = pwd
+        builtins.sx = sx
 
 
     def quit(self):
@@ -845,7 +845,7 @@ class Shell(editwindow.EditWindow):
 
         # This method will likely be replaced by the enclosing app to
         # do something more interesting, like write to a status bar.
-        print text
+        print(text)
 
     def insertLineBreak(self):
         """Insert a new line break."""
@@ -1126,8 +1126,8 @@ class Shell(editwindow.EditWindow):
 
     def run(self, command, prompt=True, verbose=True):
         """Execute command as if it was typed in directly.
-        >>> shell.run('print "this"')
-        >>> print "this"
+        >>> shell.run('print("this")')
+        >>> print("this")
         this
         >>>
         """

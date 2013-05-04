@@ -11,12 +11,12 @@ import pprint
 import re
 import sys
 
-import dispatcher
-import editwindow
-from filling import Filling
-import frame
-from shell import Shell
-from version import VERSION
+from . import dispatcher
+from . import editwindow
+from .filling import Filling
+from . import frame
+from .shell import Shell
+from .version import VERSION
 
 
 class Crust(wx.SplitterWindow):

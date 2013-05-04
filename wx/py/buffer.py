@@ -4,12 +4,12 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 __cvsid__ = "$Id$"
 __revision__ = "$Revision$"[11:-2]
 
-from interpreter import Interpreter
+from .interpreter import Interpreter
 import imp
 import os
 import sys
 
-import document
+from . import document
 
 
 class Buffer:
@@ -122,7 +122,7 @@ class Buffer:
                 raise
 #                return False
             try:
-                exec code in newspace
+                exec(code, newspace)
             except:
                 raise
 #                return False

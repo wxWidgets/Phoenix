@@ -8,7 +8,7 @@ __author__ = "David N. Mashburn <david.n.mashburn@gmail.com>"
 
 import keyword
 
-from parse import testForContinuations
+from .parse import testForContinuations
 
 aliasDict = {}
 

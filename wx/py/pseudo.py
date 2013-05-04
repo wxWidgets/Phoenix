@@ -31,7 +31,7 @@ class PseudoKeyword:
         if callable(method):
             self.method = method
         else:
-            raise ValueError, 'method must be callable'
+            raise ValueError('method must be callable')
 
     def __call__(self, *args, **kwds):
         self.method(*args, **kwds)
@@ -69,7 +69,7 @@ class PseudoFileIn(PseudoFile):
         if callable(readline):
             self.readline = readline
         else:
-            raise ValueError, 'readline must be callable'
+            raise ValueError('readline must be callable')
         if callable(readlines):
             self.readlines = readlines
 
@@ -83,7 +83,7 @@ class PseudoFileOut(PseudoFile):
         if callable(write):
             self.write = write
         else:
-            raise ValueError, 'write must be callable'
+            raise ValueError('write must be callable')
 
     def isatty(self):
         return 1
@@ -95,7 +95,7 @@ class PseudoFileErr(PseudoFile):
         if callable(write):
             self.write = write
         else:
-            raise ValueError, 'write must be callable'
+            raise ValueError('write must be callable')
 
     def isatty(self):
         return 1

@@ -4,19 +4,19 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 __cvsid__ = "$Id$"
 __revision__ = "$Revision$"[11:-2]
 
-import buffer
-import crust
-import crustslices
-import dispatcher
-import document
-import editor
-import editwindow
-import filling
-import frame
-import images
-import interpreter
-import introspect
-import pseudo
-import shell
-import sliceshell
-import version
+from . import buffer
+from . import crust
+from . import crustslices
+from . import dispatcher
+from . import document
+from . import editor
+from . import editwindow
+from . import filling
+from . import frame
+from . import images
+from . import interpreter
+from . import introspect
+from . import pseudo
+from . import shell
+from . import sliceshell
+from . import version

@@ -4,12 +4,11 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 __cvsid__ = "$Id$"
 __revision__ = "$Revision$"[11:-2]
 
-import exceptions
 import types
 import weakref
 
 
-class DispatcherError(exceptions.Exception):
+class DispatcherError(Exception):
     def __init__(self, args=None):
         self.args = args
 
@@ -45,12 +44,12 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
     * If weak is true, weak references will be used.
     """
     if signal is None:
-        raise DispatcherError, 'signal cannot be None'
+        raise DispatcherError('signal cannot be None')
     if weak:
         receiver = safeRef(receiver)
     senderkey = id(sender)
     signals = {}
-    if connections.has_key(senderkey):
+    if senderkey in connections:
         signals = connections[senderkey]
     else:
         connections[senderkey] = signals
@@ -66,7 +65,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
             except:
                 pass
     receivers = []
-    if signals.has_key(signal):
+    if signal in signals:
         receivers = signals[signal]
     else:
         signals[signal] = receivers
@@ -82,21 +81,18 @@ def disconnect(receiver, signal=Any, sender=Any, weak=True):
     Disconnecting is not required. The use of disconnect is the same as for
     connect, only in reverse. Think of it as undoing a previous connection."""
     if signal is None:
-        raise DispatcherError, 'signal cannot be None'
+        raise DispatcherError('signal cannot be None')
     if weak:
         receiver = safeRef(receiver)
     senderkey = id(sender)
     try:
         receivers = connections[senderkey][signal]
     except KeyError:
-        raise DispatcherError, \
-              'No receivers for signal %r from sender %s' % (signal, sender)
+        raise DispatcherError('No receivers for signal %r from sender %s' % (signal, sender))
     try:
         receivers.remove(receiver)
     except ValueError:
-        raise DispatcherError, \
-              'No connection to receiver %s for signal %r from sender %s' % \
-              (receiver, signal, sender)
+        raise DispatcherError('No connection to receiver %s for signal %r from sender %s' % (receiver, signal, sender))
     _cleanupConnections(senderkey, signal)
 
 def send(signal, sender=Anonymous, **kwds):
@@ -171,7 +167,7 @@ def _call(receiver, **kwds):
         fc = receiver.func_code
         acceptable = fc.co_varnames[0:fc.co_argcount]
     else:
-        raise DispatcherError, 'Unknown receiver %s of type %s' % (receiver, type(receiver))
+        raise DispatcherError('Unknown receiver %s of type %s' % (receiver, type(receiver)))
     if not (fc.co_flags & 8):
         # fc does not have a **kwds type parameter, therefore 
         # remove unacceptable arguments.
@@ -189,9 +185,9 @@ def safeRef(object):
             # Keep track of these instances for lookup by disconnect().
             selfkey = object.im_self
             funckey = object.im_func
-            if not _boundMethods.has_key(selfkey):
+            if selfkey not in _boundMethods:
                 _boundMethods[selfkey] = weakref.WeakKeyDictionary()
-            if not _boundMethods[selfkey].has_key(funckey):
+            if funckey not in _boundMethods[selfkey]:
                 _boundMethods[selfkey][funckey] = \
                 BoundMethodWeakref(boundMethod=object)
             return _boundMethods[selfkey][funckey]
@@ -231,14 +227,16 @@ class BoundMethodWeakref:
 
 def _removeReceiver(receiver):
     """Remove receiver from connections."""
+    list_keys = []
     for senderkey in connections.keys():
         for signal in connections[senderkey].keys():
-            receivers = connections[senderkey][signal]
-            try:
-                receivers.remove(receiver)
-            except:
-                pass
-            _cleanupConnections(senderkey, signal)
+            list_keys.append((senderkey, signal))
+    for senderkey, signal in list_keys:
+        try:
+            connections[senderkey][signal].remove(receiver)
+        except:
+            pass
+        _cleanupConnections(senderkey, signal)
             
 def _cleanupConnections(senderkey, signal):
     """Delete any empty signals for senderkey. Delete senderkey if empty."""
