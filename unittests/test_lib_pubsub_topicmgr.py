@@ -9,8 +9,6 @@
 import imp_unittest, unittest
 import wtc
 
-from wx.lib.pubsub import pub
-
 from wx.lib.pubsub.pub import \
      ALL_TOPICS, \
      ListenerSpecInvalid, \

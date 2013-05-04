@@ -65,7 +65,6 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                 self.assertEqual(len(excTraceback.getFormattedList() ), len(tb)+1)
                 # finally the string for formatted traceback:
                 msg = excTraceback.getFormattedString()
-                #print 'Msg "%s"' % msg
                 assert msg.startswith('  File')
                 assert msg.endswith("global name 'RuntimeError2' is not defined\n")
     

@@ -29,7 +29,6 @@ class lib_pubsub_Notify(wtc.PubsubTestCase):
         capture = captureStdout()
 
     
-        print 'capture before sub: %s' % capture.read()
         def listener1(arg1):
             pass
         self.pub.subscribe(listener1, 'baz')
@@ -57,10 +56,6 @@ PUBSUB: Listener "listener2" of Topic "bar" has died
 PUBSUB: Topic "baz" destroyed
     '''.strip()
         captured = capture.getvalue().strip()
-        print "captured -----------------"
-        print captured
-        print "expected -----------------"
-        print expect
         # strip as other wise one has \n, at least on windows
         assert captured == expect, \
             '\n'.join( unified_diff(expect.splitlines(), captured.splitlines(), n=0) )

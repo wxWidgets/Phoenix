@@ -286,7 +286,7 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
             except self.pub.ListenerSpecInvalid, exc:
                 #import traceback
                 #traceback.print_exc()
-                print 'As expected: ', exc
+                pass
     
         self.pub.newTopic('tasd.t_1.t_13', 'desc', ('arg1',), arg1='docs for arg1') # ok_1
         check('t_1.t_14', arg1='docs for arg1')                                # err_11

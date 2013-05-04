@@ -106,13 +106,33 @@ def mybytes(text):
 
 class PubsubTestCase(unittest.TestCase):
     """
-    A testcase that will create ?????
+    A testcase specifically to test wx.lib.pubsub, as pub is a singleton
+    the tearDown removes it from sys.modules to force a reinitialization on 
+    each test.
     """
+
     def setUp(self):
-        from wx.lib.pubsub import pub
+        from wx.lib.pubsub import pub        
+        
         self.pub = pub
+        self.assertEqual(pub, self.pub)        
 
     def tearDown(self):
         self.pub.unsubAll()
+        self.pub.clearNotificationHandlers()
+        self.pub.clearTopicDefnProviders()
+        topicMgr = self.pub.getDefaultTopicMgr()
+        try:
+            # remove the test topic if present
+            if topicMgr.getTopic('pubsub'):
+                topicMgr.delTopic('pubsub')
+        except:
+            pass        
         del self.pub
+            
+        if 'wx.lib.pubsub.pub' in sys.modules.keys():
+            del sys.modules['wx.lib.pubsub.pub']
 
+        #skeys = sys.modules.keys()
+        #for name in skeys:
+            #del sys.modules[name]
