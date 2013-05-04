@@ -99,7 +99,8 @@ class wxPyEvent : public wxEvent, public wxPyEvtDict
 public:
     wxPyEvent(int id=0, wxEventType eventType = wxEVT_NULL)
         : wxEvent(id, eventType) {}
-        
+    
+    // NOTE: The default copy ctor is used here                
     virtual wxEvent* Clone() const  { return new wxPyEvent(*this); }
 };
 
@@ -114,6 +115,7 @@ public:
     wxPyCommandEvent(wxEventType eventType = wxEVT_NULL, int id=0)
         : wxCommandEvent(eventType, id) {}
         
+    // NOTE: The default copy ctor is used here                
     virtual wxEvent* Clone() const  { return new wxPyCommandEvent(*this); }
 };
 

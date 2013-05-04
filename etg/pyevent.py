@@ -46,9 +46,9 @@ def run():
         items=[
             MethodDef(name='wxPyEvent', isCtor=True, items=[
                 ParamDef(type='int', name='id', default='0'),
-                ParamDef(type='wxEventType', name='evenType', default='wxEVT_NULL'),
+                ParamDef(type='wxEventType', name='eventType', default='wxEVT_NULL'),
                 ]),
-            
+
             MethodDef(name='__getattr__', type='PyObject*', items=[
                 ParamDef(type='PyObject*', name='name'),],
                 cppCode=("sipRes = sipCpp->__getattr__(name);", "sip")),
@@ -65,6 +65,21 @@ def run():
             MethodDef(name='Clone', type='wxEvent*', isVirtual=True, isConst=True, factory=True),
             MethodDef(name='_getAttrDict', type='PyObject*'),
             ])
+    
+    cls.addPyMethod('Clone', '(self)', 
+        doc="""\
+            Make a new instance of the event that is a copy of self.  
+            
+            Through the magic of Python this implementation should work for
+            this and all derived classes.""",
+        body="""\
+            # Create a new instance
+            import copy
+            clone = copy.copy(self)
+            # and then invoke the C++ copy constructor to copy the C++ bits too.
+            wx.PyEvent.__init__(clone, self)
+            return clone
+            """)
     
     module.addItem(cls)
     cls.addCppCode("IMPLEMENT_DYNAMIC_CLASS(wxPyEvent, wxEvent);")
@@ -87,7 +102,7 @@ def run():
             :see: :class:`PyEvent`""",
         items=[
             MethodDef(name='wxPyCommandEvent', isCtor=True, items=[
-                ParamDef(type='wxEventType', name='evenType', default='wxEVT_NULL'),
+                ParamDef(type='wxEventType', name='eventType', default='wxEVT_NULL'),
                 ParamDef(type='int', name='id', default='0'),
                 ]),
             
@@ -107,6 +122,21 @@ def run():
             MethodDef(name='Clone', type='wxEvent*', isVirtual=True, isConst=True, factory=True),
             MethodDef(name='_getAttrDict', type='PyObject*'),
             ])
+    
+    cls.addPyMethod('Clone', '(self)', 
+        doc="""\
+            Make a new instance of the event that is a copy of self.  
+            
+            Through the magic of Python this implementation should work for
+            this and all derived classes.""",
+        body="""\
+            # Create a new instance
+            import copy
+            clone = copy.copy(self)
+            # and then invoke the C++ copy constructor to copy the C++ bits too.
+            wx.PyCommandEvent.__init__(clone, self)
+            return clone
+            """)
     
     module.addItem(cls)
     cls.addCppCode("IMPLEMENT_DYNAMIC_CLASS(wxPyCommandEvent, wxCommandEvent);")
