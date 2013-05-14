@@ -1,6 +1,10 @@
+#!/usr/bin/env python
 """
-A Panel that includes the FloatCanvas and Navigation controls
+Combines :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas` with Navigation
+controls onto a :class:`Panel`
 
+
+Tags: phoenix-port, documented, unittest
 """
 
 import wx
@@ -8,18 +12,25 @@ import FloatCanvas, Resources, GUIMode
 
 class NavCanvas(wx.Panel):
     """
-    NavCanvas.py
-
-    This is a high level window that encloses the FloatCanvas in a panel
-    and adds a Navigation toolbar.
-
+    :class:`~lib.floatcanvas.FloatCanvas.NavCanvas` encloses a
+    :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas` in a :class:`Panel` and
+    adds a Navigation toolbar.
+    
     """
 
     def __init__(self,
-                   parent,
-                   id = wx.ID_ANY,
-                   size = wx.DefaultSize,
-                   **kwargs): # The rest just get passed into FloatCanvas
+                 parent,
+                 id = wx.ID_ANY,
+                 size = wx.DefaultSize,
+                 **kwargs):
+        """
+        Default class constructor.
+
+        :param Window `parent`: parent window. Must not be ``None``;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param `size`: a tuple or :class:`Size`
+        :param `**kwargs`: will be passed on to :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas`
+        """
         wx.Panel.__init__(self, parent, id, size=size)
 
         self.Modes = [("Pointer",  GUIMode.GUIMouse(),   Resources.getPointerBitmap()),
@@ -46,7 +57,8 @@ class NavCanvas(wx.Panel):
 
     def BuildToolbar(self):
         """
-        This is here so it can be over-ridden in a ssubclass, to add extra tools, etc
+        Build the default tool bar, can be over-ridden in a subclass to add
+        extra tools etc.
         """
         tb = wx.ToolBar(self)
         self.ToolBar = tb
@@ -58,6 +70,13 @@ class NavCanvas(wx.Panel):
         #wx.CallAfter(self.HideShowHack) # this required on wxPython 2.8.3 on OS-X
     
     def AddToolbarModeButtons(self, tb, Modes):
+        """
+        Add the mode buttons to the tool bar.
+        
+        :param ToolBar `tb`: the toolbar instance
+        :param list `Modes`: a list of modes to add ??? what is valid ???
+        
+        """
         self.ModesDict = {}
         for Mode in Modes:
             tool = tb.AddTool(wx.ID_ANY, label=Mode[0],
@@ -69,6 +88,12 @@ class NavCanvas(wx.Panel):
         #self.Bind(wx.EVT_TOOL, lambda evt : self.SetMode(Mode=self.GUIZoomOut), self.ZoomOutTool)
 
     def AddToolbarZoomButton(self, tb):
+        """
+        Add the zoom button to the tool bar.
+        
+        :param ToolBar `tb`: the toolbar instance
+        
+        """
         tb.AddSeparator()
 
         self.ZoomButton = wx.Button(tb, label="Zoom To Fit")
@@ -86,10 +111,12 @@ class NavCanvas(wx.Panel):
         self.ZoomButton.Show()
 
     def SetMode(self, event):
+        """Event handler to set the mode."""
         Mode = self.ModesDict[event.GetId()]
         self.Canvas.SetMode(Mode)
 
-    def ZoomToFit(self,Event):
+    def ZoomToFit(self, event):
+        """Event handler to zoom to fit."""
         self.Canvas.ZoomToBB()
         self.Canvas.SetFocus() # Otherwise the focus stays on the Button, and wheel events are lost.
 

@@ -1,9 +1,13 @@
 """
-This is the floatcanvas package. It provides two primary modules, and a
-support module.
+This is the floatcanvas package, the main classes are 
+:class:`~lib.floatcanvas.FloatCanvas` and
+:class:`~lib.floatcanvas.NavCanvas`, in each class documentation there
+is at least one sample on how to use them and many more samples are provided
+in `wxPhoenix/samples` folder.
 
-FloatCanvas.py contains the main FloatCanvas class, and its supporting
-classes.  NavCanvas.py contains a wrapper for the FloatCanvas that
+FloatCanvas.py contains the main :class:`~lib.floatcanvas.FloatCanvas`
+class, and its supporting classes.  NavCanvas.py contains the
+:class:`~lib.floatcanvas.NavCanvas` wrapper for the FloatCanvas that
 provides the canvas and a toolbar with tools that allow you to navigate
 the canvas (zooming, panning, etc.)  Resources.py is a module that
 contains a few resources required by the FloatCanvas (icons, etc)
@@ -17,6 +21,7 @@ coordinates, knowing about wxWindows brushes, pens, and colors, etc. It
 also provides virtually unlimited zooming and scrolling
 
 I am using it for two things:
+
 1) general purpose drawing in floating point coordinates
 2) displaying map data in Lat-long coordinates
 
@@ -28,8 +33,8 @@ you are viewing. You can also pass in your own projection function.
 It is double buffered, so re-draws after the window is uncovered by
 something else are very quick.
 
-It relies on NumPy, which is needed for speed (maybe, I haven't profiled
-properly) and convenience. 
+It relies on `NumPy <http://www.numpy.org/>`_, which is needed for speed
+(maybe, I haven't profiled properly) and convenience. 
 
 Bugs and Limitations: Lots: patches, fixes welcome
 
@@ -44,10 +49,10 @@ doesn't seem to actually cause any problems other than weird output, at
 least when I have run it.
 
 Speed: I have done a couple of things to improve speed in this app. The
-one thing I have done is used NumPy Arrays to store the coordinates of
-the points of the objects. This allowed me to use array oriented
-functions when doing transformations, and should provide some speed
-improvement for objects with a lot of points (big polygons, polylines,
+one thing I have done is used `NumPy <http://www.numpy.org/>`_ Arrays to
+store the coordinates of the points of the objects. This allowed me to use
+array oriented functions when doing transformations, and should provide some
+speed improvement for objects with a lot of points (big polygons, polylines,
 pointsets).
 
 The real slowdown comes when you have to draw a lot of objects, because
@@ -64,7 +69,7 @@ Mouse Events:
 There are a full set of custom mouse events. They are just like the
 regular mouse events, but include an extra attribute: Event.GetCoords(),
 that returns the (x,y) position in world coordinates, as a length-2
-NumPy vector of Floats.
+`NumPy <http://www.numpy.org/>`_ vector of Floats.
 
 There are also a full set of bindings to mouse events on objects, so
 that you can specify a given function be called when an object is
@@ -76,21 +81,31 @@ Copyright: Christopher Barker
 License: Same as the version of wxPython you are using it with.
 
 TRAC site for some docs and updates:
+
 http://trac.paulmcnett.com/floatcanvas
 
 Mailing List:
+
 http://mail.paulmcnett.com/cgi-bin/mailman/listinfo/floatcanvas
 
 The latest code is in the main wx SVN:
 
+For classic:
+
 http://svn.wxwidgets.org/viewvc/wx/wxPython/3rdParty/FloatCanvas/
+
+For Phoenix:
+
+http://svn.wxwidgets.org/svn/wx/wxPython/Phoenix/trunk/wx/lib/floatcanvas
 
 Check for updates or answers to questions, send me an email.
 Please let me know if you're using this!!!
+
 Contact me at:
 
 Chris.Barker@noaa.gov
 
+Tags: phoenix-port, documented
 """
 
 __version__ = "0.9.18"

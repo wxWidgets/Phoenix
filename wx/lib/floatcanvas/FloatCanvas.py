@@ -1,5 +1,16 @@
 #!/usr/bin/env python
+"""
+This is the main class in the floatcanvas package, you can also use it via
+the :class:`~lib.floatcanvas.NavCanvas.NavCanvas`.
 
+
+Would be nice to have a very compact sample here::
+
+Additional samples are available in `wxPhoenix/samples/floatcanvas` folder.
+
+
+Tags: phoenix-port, documented, unittest
+"""
 
 from __future__ import division
 
@@ -144,6 +155,7 @@ def _cycleidxs(indexcount, maxvalue, step):
                 if not colormatch(color):
                     continue
                 yield color
+
 def _colorGenerator():
 
     """
@@ -157,22 +169,25 @@ class DrawObject:
     This is the base class for all the objects that can be drawn.
 
     One must subclass from this (and an assortment of Mixins) to create
-    a new DrawObject.
-
-      \note This class contain a series of static dictionaries:
-
-      * BrushList
-      * PenList
-      * FillStyleList
-      * LineStyleList
-
-      Is this still necessary?
+    a new DrawObject, see for example :class:`~lib.floatcanvas.FloatCanvas.Circle`.
 
     """
+    #This class contains a series of static dictionaries:
+
+    #* BrushList
+    #* PenList
+    #* FillStyleList
+    #* LineStyleList
+
 
     def __init__(self, InForeground  = False, IsVisible = True):
-        """! \param InForeground (bool)
-             \param IsVisible (Bool)
+        """
+        Default class constructor.
+        
+        :param boolean `InForeground`: Define if object should be in foreground
+         or not
+        :param boolean `IsVisible`: Define if object should be visible
+          
         """
         self.InForeground = InForeground
 
@@ -201,27 +216,27 @@ class DrawObject:
     # does that on it's own. Send me a note if you know!
 
     BrushList = {
-            ( None,"Transparent")  : wx.TRANSPARENT_BRUSH,
-            ("Blue","Solid")       : wx.BLUE_BRUSH,
-            ("Green","Solid")      : wx.GREEN_BRUSH,
-            ("White","Solid")      : wx.WHITE_BRUSH,
-            ("Black","Solid")      : wx.BLACK_BRUSH,
-            ("Grey","Solid")       : wx.GREY_BRUSH,
-            ("MediumGrey","Solid") : wx.MEDIUM_GREY_BRUSH,
-            ("LightGrey","Solid")  : wx.LIGHT_GREY_BRUSH,
-            ("Cyan","Solid")       : wx.CYAN_BRUSH,
-            ("Red","Solid")        : wx.RED_BRUSH
+            ( None, "Transparent")  : wx.TRANSPARENT_BRUSH,
+            ("Blue", "Solid")       : wx.BLUE_BRUSH,
+            ("Green", "Solid")      : wx.GREEN_BRUSH,
+            ("White", "Solid")      : wx.WHITE_BRUSH,
+            ("Black", "Solid")      : wx.BLACK_BRUSH,
+            ("Grey", "Solid")       : wx.GREY_BRUSH,
+            ("MediumGrey", "Solid") : wx.MEDIUM_GREY_BRUSH,
+            ("LightGrey", "Solid")  : wx.LIGHT_GREY_BRUSH,
+            ("Cyan", "Solid")       : wx.CYAN_BRUSH,
+            ("Red", "Solid")        : wx.RED_BRUSH
                     }
     PenList = {
-            (None,"Transparent",1)   : wx.TRANSPARENT_PEN,
-            ("Green","Solid",1)      : wx.GREEN_PEN,
-            ("White","Solid",1)      : wx.WHITE_PEN,
-            ("Black","Solid",1)      : wx.BLACK_PEN,
-            ("Grey","Solid",1)       : wx.GREY_PEN,
-            ("MediumGrey","Solid",1) : wx.MEDIUM_GREY_PEN,
-            ("LightGrey","Solid",1)  : wx.LIGHT_GREY_PEN,
-            ("Cyan","Solid",1)       : wx.CYAN_PEN,
-            ("Red","Solid",1)        : wx.RED_PEN
+            (None, "Transparent", 1)   : wx.TRANSPARENT_PEN,
+            ("Green", "Solid", 1)      : wx.GREEN_PEN,
+            ("White", "Solid", 1)      : wx.WHITE_PEN,
+            ("Black", "Solid", 1)      : wx.BLACK_PEN,
+            ("Grey", "Solid", 1)       : wx.GREY_PEN,
+            ("MediumGrey", "Solid", 1) : wx.MEDIUM_GREY_PEN,
+            ("LightGrey", "Solid", 1)  : wx.LIGHT_GREY_PEN,
+            ("Cyan", "Solid", 1)       : wx.CYAN_PEN,
+            ("Red", "Solid", 1)        : wx.RED_PEN
             }
 
     FillStyleList = {
@@ -245,6 +260,29 @@ class DrawObject:
             }
 
     def Bind(self, Event, CallBackFun):
+        """
+        Bind an event to the DrawObject
+        
+        :param `Event`: see below for supported event types ???
+
+         - EVT_FC_ENTER_WINDOW
+         - EVT_FC_LEAVE_WINDOW
+         - EVT_FC_LEFT_DOWN
+         - EVT_FC_LEFT_UP
+         - EVT_FC_LEFT_DCLICK
+         - EVT_FC_MIDDLE_DOWN
+         - EVT_FC_MIDDLE_UP
+         - EVT_FC_MIDDLE_DCLICK
+         - EVT_FC_RIGHT_DOWN
+         - EVT_FC_RIGHT_UP
+         - EVT_FC_RIGHT_DCLICK
+         - EVT_FC_MOTION
+         - EVT_FC_MOUSEWHEEL
+
+        :param `CallBackFun`: the call back function for the event
+
+        
+        """
         ##fixme: Way too much Canvas Manipulation here!
         self.CallBackFuncs[Event] = CallBackFun
         self.HitAble = True
@@ -266,6 +304,12 @@ class DrawObject:
         self._Canvas.HitDict[Event][self.HitColor] = (self) # put the object in the hit dict, indexed by its color
 
     def UnBindAll(self):
+        """
+        Unbind all events
+        
+        .. note:: Currently only removes one from each list
+        
+        """
         ## fixme: this only removes one from each list, there could be more.
         ## + patch by Tim Ansel
         if self._Canvas.HitDict:
@@ -278,27 +322,64 @@ class DrawObject:
 
 
     def SetBrush(self, FillColor, FillStyle):
+        """
+        Set the brush for this DrawObject
+        
+        :param `FillColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid entries
+        :param `FillStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetFillStyle`
+         for valid entries
+        """
         if FillColor is None or FillStyle is None:
             self.Brush = wx.TRANSPARENT_BRUSH
             ##fixme: should I really re-set the style?
             self.FillStyle = "Transparent"
         else:
-            self.Brush = self.BrushList.setdefault( (FillColor,FillStyle),  wx.Brush(FillColor,self.FillStyleList[FillStyle] ) )
+            self.Brush = self.BrushList.setdefault(
+                (FillColor, FillStyle),
+                wx.Brush(FillColor, self.FillStyleList[FillStyle]))
             #print "Setting Brush, BrushList length:", len(self.BrushList)
-    def SetPen(self,LineColor,LineStyle,LineWidth):
+
+    def SetPen(self, LineColor, LineStyle, LineWidth):
+        """
+        Set the Pen for this DrawObject
+        
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid entries
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+         for valid entries
+        :param integer `LineWidth`: the width in pixels ??? 
+        """
         if (LineColor is None) or (LineStyle is None):
             self.Pen = wx.TRANSPARENT_PEN
             self.LineStyle = 'Transparent'
         else:
-            self.Pen = self.PenList.setdefault( (LineColor,LineStyle,LineWidth),  wx.Pen(LineColor,LineWidth,self.LineStyleList[LineStyle]) )
+            self.Pen = self.PenList.setdefault(
+                (LineColor, LineStyle, LineWidth),
+                wx.Pen(LineColor, LineWidth, self.LineStyleList[LineStyle]))
 
-    def SetHitBrush(self,HitColor):
+    def SetHitBrush(self, HitColor):
+        """
+        Set the brush used for hit test
+        
+        :param `HitColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        
+        """
         if not self.HitFill:
             self.HitBrush = wx.TRANSPARENT_BRUSH
         else:
-            self.HitBrush = self.BrushList.setdefault( (HitColor,"solid"),  wx.Brush(HitColor,self.FillStyleList["Solid"] ) )
+            self.HitBrush = self.BrushList.setdefault(
+                (HitColor,"solid"),
+                wx.Brush(HitColor, self.FillStyleList["Solid"]))
 
-    def SetHitPen(self,HitColor,LineWidth):
+    def SetHitPen(self, HitColor, LineWidth):
+        """
+        Set the pen used for hit test
+        
+        :param `HitColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param integer `LineWidth`: the line width in pixels
+        
+        """
         if not self.HitLine:
             self.HitPen = wx.TRANSPARENT_PEN
         else:
@@ -307,19 +388,97 @@ class DrawObject:
     ## Just to make sure that they will always be there
     ##   the appropriate ones should be overridden in the subclasses
     def SetColor(self, Color):
+        """
+        Set the Color - this method is overridden in the subclasses
+        
+        :param `Color`: Use one of the following values or ``None`` :
+        
+         - ``Green``
+         - ``White``
+         - ``Black``
+         - ``Grey``
+         - ``MediumGrey``
+         - ``LightGrey``
+         - ``Cyan``
+         - ``Red``
+
+        """
+
         pass
+    
     def SetLineColor(self, LineColor):
+        """
+        Set the LineColor - this method is overridden in the subclasses
+        
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid values
+         
+        """
         pass
+    
     def SetLineStyle(self, LineStyle):
+        """
+        Set the LineStyle - this method is overridden in the subclasses
+        
+        :param `LineStyle`: Use one of the following values or ``None`` :
+        
+          ===================== =============================
+          Style                 Description
+          ===================== =============================
+          ``Solid``             Solid line 
+          ``Transparent``       A transparent line
+          ``Dot``               Dotted line
+          ``LongDash``          Dashed line (long)
+          ``ShortDash``         Dashed line (short)
+          ``DotDash``           Dash-dot-dash line
+          ===================== =============================
+
+        """
         pass
+        
     def SetLineWidth(self, LineWidth):
+        """
+        Set the LineWidth
+        
+        :param integer `LineWidth`: sets the line width in pixel
+        
+        """
         pass
+
     def SetFillColor(self, FillColor):
+        """
+        Set the FillColor - this method is overridden in the subclasses
+        
+        :param `FillColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid values
+         
+        """
         pass
+
     def SetFillStyle(self, FillStyle):
+        """
+        Set the FillStyle - this method is overridden in the subclasses
+        
+        :param string `FillStyle`: following is a list of valid values:
+        
+          ===================== =========================================
+          Style                 Description
+          ===================== =========================================
+          ``Transparent``       Transparent fill
+          ``Solid``             Solid fill
+          ``BiDiagonalHatch``   Bi Diagonal hatch fill
+          ``CrossDiagHatch``    Cross Diagonal hatch fill
+          ``FDiagonal_Hatch``   F Diagonal hatch fill
+          ``CrossHatch``        Cross hatch fill
+          ``HorizontalHatch``   Horizontal hatch fill
+          ``VerticalHatch``     Vertical hatch fill
+          ===================== =========================================
+
+        """
         pass
 
     def PutInBackground(self):
+        """Put the object in the background."""
         if self._Canvas and self.InForeground:
             self._Canvas._ForeDrawList.remove(self)
             self._Canvas._DrawList.append(self)
@@ -327,6 +486,7 @@ class DrawObject:
             self.InForeground = False
 
     def PutInForeground(self):
+        """Put the object in the foreground."""
         if self._Canvas and (not self.InForeground):
             self._Canvas._ForeDrawList.append(self)
             self._Canvas._DrawList.remove(self)
@@ -334,13 +494,11 @@ class DrawObject:
             self.InForeground = True
 
     def Hide(self):
-        """! \brief Make an object hidden.
-        """
+        """Hide the object."""
         self.Visible = False
 
     def Show(self):
-        """! \brief Make an object visible on the canvas.
-        """
+        """Show the object."""
         self.Visible = True
 
 class Group(DrawObject): 
@@ -432,55 +590,95 @@ class Group(DrawObject):
 
 class ColorOnlyMixin:
     """
-
     Mixin class for objects that have just one color, rather than a fill
     color and line color
 
     """
 
     def SetColor(self, Color):
+        """
+        Set the Color
+        
+        :param `Color`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid values
+         
+        """
         self.SetPen(Color,"Solid",1)
         self.SetBrush(Color,"Solid")
 
     SetFillColor = SetColor # Just to provide a consistant interface
 
+
 class LineOnlyMixin:
     """
-
     Mixin class for objects that have just a line, rather than a fill
     color and line color
 
     """
 
     def SetLineColor(self, LineColor):
+        """
+        Set the LineColor
+        
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid values
+         
+        """
         self.LineColor = LineColor
         self.SetPen(LineColor,self.LineStyle,self.LineWidth)
     SetColor = SetLineColor# so that it will do something reasonable
     
     def SetLineStyle(self, LineStyle):
+        """
+        Set the LineStyle
+        
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+         for valid values
+         
+        """
         self.LineStyle = LineStyle
         self.SetPen(self.LineColor,LineStyle,self.LineWidth)
 
     def SetLineWidth(self, LineWidth):
+        """
+        Set the LineWidth
+        
+        :param integer `LineWidth`: line width in pixels ???
+         
+        """
         self.LineWidth = LineWidth
         self.SetPen(self.LineColor,self.LineStyle,LineWidth)
 
+
 class LineAndFillMixin(LineOnlyMixin):
     """
-
     Mixin class for objects that have both a line and a fill color and
     style.
 
     """
     def SetFillColor(self, FillColor):
+        """
+        Set the FillColor
+        
+        :param `FillColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid values
+         
+        """
         self.FillColor = FillColor
         self.SetBrush(FillColor, self.FillStyle)
 
     def SetFillStyle(self, FillStyle):
+        """
+        Set the FillStyle
+        
+        :param `FillStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetFillStyle`
+         for valid values
+         
+        """
         self.FillStyle = FillStyle
         self.SetBrush(self.FillColor,FillStyle)
 
-    def SetUpDraw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc):
+    def SetUpDraw(self, dc, WorldToPixel, ScaleWorldToPixel, HTdc):
         dc.SetPen(self.Pen)
         dc.SetBrush(self.Brush)
         if HTdc and self.HitAble:
@@ -489,20 +687,21 @@ class LineAndFillMixin(LineOnlyMixin):
         return ( WorldToPixel(self.XY),
                  ScaleWorldToPixel(self.WH) )
 
+
 class XYObjectMixin:
     """
     This is a mixin class that provides some methods suitable for use
     with objects that have a single (x,y) coordinate pair.
     """
 
-    def Move(self, Delta ):
+    def Move(self, Delta):
         """
-
-        Move(Delta): moves the object by delta, where delta is a
-        (dx,dy) pair. Ideally a Numpy array of shape (2,)
+        Moves the object by delta, where delta is a (dx, dy) pair.
+        
+        :param `Delta`: is a (dx, dy) pair ideally a `NumPy <http://www.numpy.org/>`_ 
+         array of shape (2, )
 
         """
-
         Delta = N.asarray(Delta, N.float)
         self.XY += Delta
         self.BoundingBox += Delta
@@ -511,6 +710,7 @@ class XYObjectMixin:
             self._Canvas.BoundingBoxDirty = True
 
     def CalcBoundingBox(self):
+        """Calculate the bounding box."""
         ## This may get overwritten in some subclasses
         self.BoundingBox = BBox.asBBox((self.XY, self.XY))
 
@@ -526,18 +726,19 @@ class XYObjectMixin:
 
 class PointsObjectMixin:
     """
-
-    This is a mixin class that provides some methods suitable for use
-    with objects that have a set of (x,y) coordinate pairs.
+    A mixin class that provides some methods suitable for use
+    with objects that have a set of (x, y) coordinate pairs.
 
     """
 
     def Move(self, Delta):
         """
-        Move(Delta): moves the object by delta, where delta is an (dx,
-        dy) pair. Ideally a Numpy array of shape (2,)
-        """
+        Moves the object by delta, where delta is a (dx, dy) pair.
         
+        :param `Delta`: is a (dx, dy) pair ideally a `NumPy <http://www.numpy.org/>`_ 
+         array of shape (2, )
+
+        """
         Delta = N.asarray(Delta, N.float)
         Delta.shape = (2,)
         self.Points += Delta
@@ -546,45 +747,47 @@ class PointsObjectMixin:
             self._Canvas.BoundingBoxDirty = True
 
     def CalcBoundingBox(self):
+        """Calculate the bounding box."""
         self.BoundingBox = BBox.fromPoints(self.Points)
         if self._Canvas:
             self._Canvas.BoundingBoxDirty = True
 
-    def SetPoints(self, Points, copy = True):
+    def SetPoints(self, Points, copy=True):
         """
         Sets the coordinates of the points of the object to Points (NX2 array).
 
-        By default, a copy is made, if copy is set to False, a reference
-        is used, iff Points is a NumPy array of Floats. This allows you
-        to change some or all of the points without making any copies.
+        :param `Points`: takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param boolean `copy`: By default, a copy is made, if copy is set to
+         ``False``, a reference is used, if Points is a NumPy array of Floats.
+         This allows you to change some or all of the points without making
+         any copies.
 
-        For example:
+        For example::
 
         Points = Object.Points
-        Points += (5,10) # shifts the points 5 in the x dir, and 10 in the y dir.
-        Object.SetPoints(Points, False) # Sets the points to the same array as it was
+        # shifts the points 5 in the x dir, and 10 in the y dir.
+        Points += (5, 10)
+        # Sets the points to the same array as it was
+        Object.SetPoints(Points, False)
 
         """
         if copy:
             self.Points = N.array(Points, N.float)
-            self.Points.shape = (-1,2) # Make sure it is a NX2 array, even if there is only one point
+            self.Points.shape = (-1, 2) # Make sure it is a NX2 array, even if there is only one point
         else:
             self.Points = N.asarray(Points, N.float)
         self.CalcBoundingBox()
 
 
 class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
+    """Draws a polygon
 
-    """
-
-    The Polygon class takes a list of 2-tuples, or a NX2 NumPy array of
+    Points is a list of 2-tuples, or a NX2 NumPy array of
     point coordinates.  so that Points[N][0] is the x-coordinate of
     point N and Points[N][1] is the y-coordinate or Points[N,0] is the
     x-coordinate of point N and Points[N,1] is the y-coordinate for
     arrays.
-
-    The other parameters specify various properties of the Polygon, and
-    should be self explanatory.
 
     """
     def __init__(self,
@@ -595,6 +798,18 @@ class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
                  FillColor    = None,
                  FillStyle    = "Solid",
                  InForeground = False):
+        """Default class constructor.
+        
+        :param `Points`: start point, takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+        :param `LineWidth`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
+        :param `FillColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `FillStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetFillStyle`
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
         DrawObject.__init__(self, InForeground)
         self.Points = N.array(Points ,N.float) # this DOES need to make a copy
         self.CalcBoundingBox()
@@ -620,21 +835,28 @@ class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
             HTdc.SetBrush(self.HitBrush)
             HTdc.DrawPolygon(Points)
 
-class Line(PointsObjectMixin, LineOnlyMixin, DrawObject,):
-    """
-
-    The Line class takes a list of 2-tuples, or a NX2 NumPy Float array
-    of point coordinates.
+class Line(PointsObjectMixin, LineOnlyMixin, DrawObject):
+    """Draws a line
 
     It will draw a straight line if there are two points, and a polyline
     if there are more than two.
 
     """
-    def __init__(self,Points,
+    def __init__(self, Points,
                  LineColor = "Black",
                  LineStyle = "Solid",
                  LineWidth    = 1,
                  InForeground = False):
+        """Default class constructor.
+        
+        :param `Points`: takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+        :param `LineWidth`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
         DrawObject.__init__(self, InForeground)
 
 
@@ -659,8 +881,14 @@ class Line(PointsObjectMixin, LineOnlyMixin, DrawObject,):
             HTdc.DrawLines(Points)
 
 class Spline(Line):
+    """Draws a spline"""
     def __init__(self, *args, **kwargs):
-            Line.__init__(self, *args, **kwargs)
+        """Default class constructor.
+        
+        see :class:`~lib.floatcanvas.FloatCanvas.Line`
+        
+        """
+        Line.__init__(self, *args, **kwargs)
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         Points = WorldToPixel(self.Points)
@@ -672,24 +900,9 @@ class Spline(Line):
 
 
 class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
-    """
-    Arrow class definition.
-    
-    API definition::
+    """Draws an arrow
 
-        Arrow(XY, # coords of origin of arrow (x,y)
-              Length, # length of arrow in pixels
-              theta, # angle of arrow in degrees: zero is straight up
-                     # +angle is to the right
-              LineColor = "Black",
-              LineStyle = "Solid",
-              LineWidth    = 1,
-              ArrowHeadSize = 4, # size of arrowhead in pixels
-              ArrowHeadAngle = 45, # angle of arrow head in degrees
-              InForeground = False):
-
-
-    It will draw an arrow , starting at the point, (X,Y) pointing in
+    It will draw an arrow , starting at the point ``XY`` pointing in
     direction, theta.
 
     """
@@ -699,10 +912,25 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
                  Direction,
                  LineColor = "Black",
                  LineStyle = "Solid",
-                 LineWidth    = 2, # pixels
-                 ArrowHeadSize = 8, # pixels
-                 ArrowHeadAngle = 30, # degrees
+                 LineWidth    = 2,
+                 ArrowHeadSize = 8,
+                 ArrowHeadAngle = 30,
                  InForeground = False):
+        """Default class constructor.
+
+        :param `XY`: takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param integer `Length`: length of arrow in pixels
+        :param integer `Direction`: angle of arrow in degrees, zero is straight
+          up +angle is to the right (theta) ????
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+        :param `LineWidth`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
+        :param `ArrowHeadSize`: size of arrow head in pixels
+        :param `ArrowHeadAngle`: angle of arrow head in degrees
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
 
         DrawObject.__init__(self, InForeground)
 
@@ -726,14 +954,32 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
         self.HitLineWidth = max(LineWidth,self.MinHitLineWidth)
 
     def SetDirection(self, Direction):
+        """Set the direction
+        
+        :param integer `Direction`: angle of arrow in degrees, zero is straight
+          up +angle is to the right (theta) ????
+
+        """
         self.Direction = float(Direction)
         self.CalcArrowPoints()
 
     def SetLength(self, Length):
+        """Set the length
+        
+        :param integer `Length`: length of arrow in pixels
+            
+        """
         self.Length = Length
         self.CalcArrowPoints()
 
     def SetLengthDirection(self, Length, Direction):
+        """Set the lenght and direction
+        
+        :param integer `Length`: length of arrow in pixels
+        :param integer `Direction`: angle of arrow in degrees, zero is straight
+          up +angle is to the right (theta) ????
+
+        """
         self.Direction = float(Direction)
         self.Length = Length
         self.CalcArrowPoints()
@@ -754,6 +1000,7 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
 ##        self.ArrowPoints = N.transpose(ArrowPoints)
 
     def CalcArrowPoints(self):
+        """Calculate the arrow points."""
         L = self.Length
         S = self.ArrowHeadSize
         phi = self.ArrowHeadAngle * N.pi / 360
@@ -780,25 +1027,11 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
 
 
 class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
-    """
-    ArrowLine class definition.
-    
-    API definition::
-    
-        ArrowLine(Points, # coords of points
-                  LineColor = "Black",
-                  LineStyle = "Solid",
-                  LineWidth    = 1,
-                  ArrowHeadSize = 4, # in pixels
-                  ArrowHeadAngle = 45,
-                  InForeground = False):
-
+    """Draws an arrow line.
 
     It will draw a set of arrows from point to point.
 
-    It takes a list of 2-tuples, or a NX2 NumPy Float array
-    of point coordinates.
-
+    It takes a list of 2-tuples, or a NX2 NumPy Float array of point coordinates.
 
     """
 
@@ -806,10 +1039,22 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
                  Points,
                  LineColor = "Black",
                  LineStyle = "Solid",
-                 LineWidth    = 1, # pixels
-                 ArrowHeadSize = 8, # pixels
-                 ArrowHeadAngle = 30, # degrees
+                 LineWidth    = 1,
+                 ArrowHeadSize = 8,
+                 ArrowHeadAngle = 30,
                  InForeground = False):
+        """Default class constructor.
+
+        :param `Points`: takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+        :param `LineWidth`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
+        :param `ArrowHeadSize`: size of arrow head in pixels
+        :param `ArrowHeadAngle`: angle of arrow head in degrees
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
 
         DrawObject.__init__(self, InForeground)
 
@@ -830,6 +1075,7 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
         self.HitLineWidth = max(LineWidth,self.MinHitLineWidth)
 
     def CalcArrowPoints(self):
+        """Calculate the arrow points."""
         S = self.ArrowHeadSize
         phi = self.ArrowHeadAngle * N.pi / 360
         Points = self.Points
@@ -862,10 +1108,7 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
 
 
 class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
-    """
-
-    The PointSet class takes a list of 2-tuples, or a NX2 NumPy array of
-    point coordinates.
+    """Draws a set of points
 
     If Points is a sequence of tuples: Points[N][0] is the x-coordinate of
     point N and Points[N][1] is the y-coordinate.
@@ -883,8 +1126,17 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
     In the case of points, the HitLineWidth is used as diameter.
 
     """
-    def __init__(self, Points, Color = "Black", Diameter =  1, InForeground = False):
-        DrawObject.__init__(self,InForeground)
+    def __init__(self, Points, Color="Black", Diameter=1, InForeground=False):
+        """Default class constructor.
+        
+        :param `Points`: takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `Color`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param integer `Diameter`: the points diameter
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
+        DrawObject.__init__(self, InForeground)
 
         self.Points = N.array(Points,N.float)
         self.Points.shape = (-1,2) # Make sure it is a NX2 array, even if there is only one point
@@ -894,8 +1146,13 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
         self.HitLineWidth = min(self.MinHitLineWidth, Diameter)
         self.SetColor(Color)
 
-    def SetDiameter(self,Diameter):
-            self.Diameter = Diameter
+    def SetDiameter(self, Diameter):
+        """Sets the diameter
+        
+        :param integer `Diameter`: the points diameter
+        
+        """
+        self.Diameter = Diameter
 
     def FindClosestPoint(self, XY):
         """
@@ -907,6 +1164,8 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
         This can be used to figure out which point got hit in a mouse
         binding callback, for instance. It's a lot faster that using a
         lot of separate points.
+        
+        :param `XY`: takes a 2-tuple in World coordinates ???
 
         """
         d = self.Points - XY
@@ -955,19 +1214,26 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
                         HTdc.DrawCircle(xy[0],xy[1], radius)
 
 class Point(XYObjectMixin, ColorOnlyMixin, DrawObject):
-    """
+    """A point DrawObject
 
-    The Point class takes a 2-tuple, or a (2,) NumPy array of point
-    coordinates.
+    .. note::
+    
+       The Bounding box is just the point, and doesn't include the Diameter.
 
-    The Diameter is in screen points, not world coordinates, So the
-    Bounding box is just the point, and doesn't include the Diameter.
-
-    The HitLineWidth is used as diameter for the
-    Hit Test.
+       The HitLineWidth is used as diameter for the Hit Test.
 
     """
-    def __init__(self, XY, Color = "Black", Diameter =  1, InForeground = False):
+    def __init__(self, XY, Color="Black", Diameter=1, InForeground=False):
+        """Default class constructor.
+        
+        :param `XY`: takes a 2-tuple, or a (2,) `NumPy <http://www.numpy.org/>`_
+         array of point coordinates
+        :param `Color`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param integer `Diameter`: in screen points
+        :param `InForeground`: define if object is in foreground
+        
+        """
+        
         DrawObject.__init__(self, InForeground)
 
         self.XY = N.array(XY, N.float)
@@ -978,11 +1244,15 @@ class Point(XYObjectMixin, ColorOnlyMixin, DrawObject):
 
         self.HitLineWidth = self.MinHitLineWidth
 
-    def SetDiameter(self,Diameter):
-            self.Diameter = Diameter
+    def SetDiameter(self, Diameter):
+        """Set the diameter of the object.
+        
+        :param integer `Diameter`: in screen points
+        
+        """
+        self.Diameter = Diameter
 
-
-    def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
+    def _Draw(self, dc, WorldToPixel, ScaleWorldToPixel, HTdc=None):
         dc.SetPen(self.Pen)
         xy = WorldToPixel(self.XY)
         if self.Diameter <= 1:
@@ -1000,19 +1270,24 @@ class Point(XYObjectMixin, ColorOnlyMixin, DrawObject):
                 HTdc.DrawCircle(xy[0],xy[1], radius)
 
 class SquarePoint(XYObjectMixin, ColorOnlyMixin, DrawObject):
-    """
-
-    The SquarePoint class takes a 2-tuple, or a (2,) NumPy array of point
-    coordinates. It produces a square dot, centered on Point
+    """Draws a square point
 
     The Size is in screen points, not world coordinates, so the
     Bounding box is just the point, and doesn't include the Size.
 
-    The HitLineWidth is used as diameter for the
-    Hit Test.
+    The HitLineWidth is used as diameter for the  Hit Test.
 
     """
-    def __init__(self, Point, Color = "Black", Size =  4, InForeground = False):
+    def __init__(self, Point, Color="Black", Size=4, InForeground=False):
+        """Default class constructor.
+        
+        :param `Point`: takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `Color`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param integer `Size`: the size of the square point
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
         DrawObject.__init__(self, InForeground)
 
         self.XY = N.array(Point, N.float)
@@ -1023,8 +1298,13 @@ class SquarePoint(XYObjectMixin, ColorOnlyMixin, DrawObject):
 
         self.HitLineWidth = self.MinHitLineWidth
 
-    def SetSize(self,Size):
-            self.Size = Size
+    def SetSize(self, Size):
+        """Sets the size
+        
+        :param integer `Size`: the size of the square point
+        
+        """
+        self.Size = Size
 
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         Size = self.Size
@@ -1047,6 +1327,7 @@ class SquarePoint(XYObjectMixin, ColorOnlyMixin, DrawObject):
                 HTdc.DrawRectangle(x, y, Size, Size)
 
 class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
+    """A RectEllipse draw object."""
     def __init__(self, XY, WH,
                  LineColor = "Black",
                  LineStyle = "Solid",
@@ -1054,6 +1335,19 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
                  FillColor    = None,
                  FillStyle    = "Solid",
                  InForeground = False):
+        """Default class constructor.
+        
+        :param `XY`: takes a 2-tuple, or a (2,) `NumPy <http://www.numpy.org/>`_
+         array of point coordinates
+        :param `WH`: a tuple with the Width and Height for the object
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+        :param `LineWidth`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
+        :param `FillColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `FillStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetFillStyle`
+        :param `InForeground`: put object in foreground
+        
+        """
 
         DrawObject.__init__(self,InForeground)
 
@@ -1074,6 +1368,13 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.SetBrush(FillColor,FillStyle)
 
     def SetShape(self, XY, WH):
+        """Set the shape of the object.
+        
+        :param `XY`: takes a 2-tuple, or a (2,) `NumPy <http://www.numpy.org/>`_
+         array of point coordinates
+        :param `WH`: a tuple with the Width and Height for the object
+        
+        """
         self.XY = N.array( XY, N.float)
         self.XY.shape = (2,)
         self.WH = N.array( WH, N.float)
@@ -1081,6 +1382,7 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.CalcBoundingBox()
 
     def CalcBoundingBox(self):
+        """Calculate the bounding box."""
         # you need this in case Width or Height are negative
         corners = N.array((self.XY, (self.XY + self.WH) ), N.float)
         self.BoundingBox = BBox.fromPoints(corners)
@@ -1089,7 +1391,7 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
 
 
 class Rectangle(RectEllipse):
-
+    """Draws a rectangle see :class:`~lib.floatcanvas.FloatCanvas.RectEllipse`"""
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         ( XY, WH ) = self.SetUpDraw(dc,
                                     WorldToPixel,
@@ -1103,7 +1405,7 @@ class Rectangle(RectEllipse):
 
 
 class Ellipse(RectEllipse):
-
+    """Draws an ellipse see :class:`~lib.floatcanvas.FloatCanvas.RectEllipse`"""
     def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel, HTdc=None):
         ( XY, WH ) = self.SetUpDraw(dc,
                                     WorldToPixel,
@@ -1116,6 +1418,7 @@ class Ellipse(RectEllipse):
                 HTdc.DrawEllipse(XY, WH)
 
 class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
+    """Draws a circle"""
     def __init__(self, XY, Diameter, 
                  LineColor = "Black",
                  LineStyle = "Solid",
@@ -1123,6 +1426,19 @@ class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
                  FillColor    = None,
                  FillStyle    = "Solid",
                  InForeground = False):
+        """Default class constructor.
+        
+        :param `XY`: takes a 2-tuple, or a (2,) `NumPy <http://www.numpy.org/>`_
+         array of point coordinates
+        :param integer `Diameter`: the diameter for the object
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+        :param `LineWidth`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
+        :param `FillColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `FillStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetFillStyle`
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
         DrawObject.__init__(self, InForeground)
 
         self.XY = N.array(XY, N.float)
@@ -1145,9 +1461,15 @@ class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.SetBrush(FillColor,FillStyle)
 
     def SetDiameter(self, Diameter):
+        """Set the diameter of the object
+        
+        :param integer `Diameter`: the diameter for the object
+        
+        """
         self.WH = N.array((Diameter/2, Diameter/2), N.float) # just to keep it compatible with others
 
     def CalcBoundingBox(self):
+        """Calculate the bounding box of the object."""
         # you need this in case Width or Height are negative
         self.BoundingBox = BBox.fromPoints( (self.XY+self.WH, self.XY-self.WH) )
         if self._Canvas:
@@ -1240,8 +1562,11 @@ class TextObjectMixin(XYObjectMixin):
                     'bc': lambda x, y, w, h, world=0, pad=0: (x - w/2,     y - h + 2*world*h - pad + world*2*pad) ,
                     'br': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h + 2*world*h - pad + world*2*pad)}
 
-class Text(TextObjectMixin, DrawObject, ):
-    """
+class Text(TextObjectMixin, DrawObject):
+    """Draws a text object
+    
+    ??? do we integrate all this below or ...???
+    
     This class creates a text object, placed at the coordinates,
     x,y. the "Position" argument is a two charactor string, indicating
     where in relation to the coordinates the string should be oriented.
@@ -1282,7 +1607,7 @@ class Text(TextObjectMixin, DrawObject, ):
 
     """
 
-    def __init__(self,String, xy,
+    def __init__(self, String, xy,
                  Size =  14,
                  Color = "Black",
                  BackgroundColor = None,
@@ -1293,7 +1618,39 @@ class Text(TextObjectMixin, DrawObject, ):
                  Position = 'tl',
                  InForeground = False,
                  Font = None):
+        """Default class constructor.
+        
+        :param string `string`: the text to draw
+        :param `xy`: takes a 2-tuple ???
+        :param `Color`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `BackgroundColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param FontFamily `Family`: a valid :ref:`FontFamily` 
+        :param FontStyle `Style`: a valid :ref:`FontStyle`
+        :param FontWeight `Weight`: a valid :ref:`FontWeight`
+        :param boolean `Underlined`: underline the text
+        :param string `Position`: a two character string indicating where in
+         relation to the coordinates the box should be oriented
+         
+         ============== ==========================
+         1st character  Meaning
+         ============== ==========================
+         ``t``          top
+         ``c``          center
+         ``b``          bottom
+         ============== ==========================
 
+         ============== ==========================
+         2nd character  Meaning
+         ============== ==========================
+         ``l``          left
+         ``c``          center
+         ``r``          right
+         ============== ==========================
+
+        :param Font `Font`: a valid :class:`Font`
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
         DrawObject.__init__(self,InForeground)
 
         self.String = String
@@ -1341,7 +1698,7 @@ class Text(TextObjectMixin, DrawObject, ):
             HTdc.SetBrush(self.HitBrush)
             HTdc.DrawRectangle(XY, (self.TextWidth, self.TextHeight) )
 
-class ScaledText(TextObjectMixin, DrawObject, ):
+class ScaledText(TextObjectMixin, DrawObject):
     ##fixme: this can be depricated and jsut use ScaledTextBox with different defaults.
     
     """
@@ -1507,6 +1864,8 @@ class ScaledText(TextObjectMixin, DrawObject, ):
 
 class ScaledTextBox(TextObjectMixin, DrawObject):
     """
+    ??? what to do with this ??? should it be moved to the appropiate param???
+    
     This class creates a TextBox object that is scaled when zoomed.  It is
     placed at the coordinates, x,y.
 
@@ -1546,7 +1905,6 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
     * Weight: One of wx.NORMAL, wx.LIGHT and wx.BOLD.
     * Underlined: The value can be True or False. At present this may have an an
       effect on Windows only.
-
 
     Alternatively, you can set the kw arg: Font, to a wx.Font, and the
     above will be ignored. The size of the font you specify will be
@@ -1592,7 +1950,45 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
                  Font = None,
                  LineSpacing = 1.0,
                  InForeground = False):
+        """Default class constructor.
+        
+        :param `Point`: takes a 2-tuple ???
+        :param integer `Size`: size in World pixels ???
+        :param `Color`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `BackgroundColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `LineWidth`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
+        :param `Width`: width in pixels or ``None`` ???
+        :param `PadSize`: padding in pixles or ``None`` ???
+        :param FontFamily `Family`: a valid :ref:`FontFamily` 
+        :param FontStyle `Style`: a valid :ref:`FontStyle`
+        :param FontWeight `Weight`: a valid :ref:`FontWeight`
+        :param boolean `Underlined`: underline the text
+        :param string `Position`: a two character string indicating where in
+         relation to the coordinates the box should be oriented
+         
+         ============== ==========================
+         1st character  Meaning
+         ============== ==========================
+         ``t``          top
+         ``c``          center
+         ``b``          bottom
+         ============== ==========================
 
+         ============== ==========================
+         2nd character  Meaning
+         ============== ==========================
+         ``l``          left
+         ``c``          center
+         ``r``          right
+         ============== ==========================
+
+        :param `Alignment`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
+        :param Font `Font`: a valid :class:`Font`
+        :param float `LineSpacing`: the line space to be used
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
         DrawObject.__init__(self,InForeground)
 
         self.XY = N.array(Point, N.float)
@@ -1813,24 +2209,43 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
             HTdc.SetBrush(self.HitBrush)
             HTdc.DrawRectangle(xy, wh)
 
-class Bitmap(TextObjectMixin, DrawObject, ):
-    """
-    This class creates a bitmap object, placed at the coordinates,
-    x,y. the "Position" argument is a two charactor string, indicating
-    where in relation to the coordinates the bitmap should be oriented.
-
-    The first letter is: t, c, or b, for top, center and bottom The
-    second letter is: l, c, or r, for left, center and right The
-    position refers to the position relative to the text itself. It
-    defaults to "tl" (top left).
+class Bitmap(TextObjectMixin, DrawObject):
+    """Draws a bitmap
 
     The size is fixed, and does not scale with the drawing.
 
     """
 
-    def __init__(self,Bitmap,XY,
-                 Position = 'tl',
-                 InForeground = False):
+    def __init__(self, Bitmap, XY,
+                 Position='tl',
+                 InForeground=False):
+        """Default class constructor.
+        
+        :param Bitmap `Bitmap`: the bitmap to be drawn
+        :param `XY`: where to place it, takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param string `Position`: a two character string indicating where in relation to the coordinates
+         the bitmap should be oriented
+         
+         ============== ==========================
+         1st character  Meaning
+         ============== ==========================
+         ``t``          top
+         ``c``          center
+         ``b``          bottom
+         ============== ==========================
+
+         ============== ==========================
+         2nd character  Meaning
+         ============== ==========================
+         ``l``          left
+         ``c``          center
+         ``r``          right
+         ============== ==========================
+         
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
 
         DrawObject.__init__(self,InForeground)
 
@@ -1856,20 +2271,8 @@ class Bitmap(TextObjectMixin, DrawObject, ):
             HTdc.SetBrush(self.HitBrush)
             HTdc.DrawRectangle(XY, (self.Width, self.Height) )
 
-class ScaledBitmap(TextObjectMixin, DrawObject, ):
-    """
-
-    This class creates a bitmap object, placed at the coordinates, XY,
-    of Height, H, in World coordinates. The width is calculated from the
-    aspect ratio of the bitmap.
-
-    the "Position" argument is a two character string, indicating
-    where in relation to the coordinates the bitmap should be oriented.
-
-    The first letter is: t, c, or b, for top, center and bottom The
-    second letter is: l, c, or r, for left, center and right The
-    position refers to the position relative to the text itself. It
-    defaults to "tl" (top left).
+class ScaledBitmap(TextObjectMixin, DrawObject):
+    """Draws a scaled bitmap
 
     The size scales with the drawing
 
@@ -1881,6 +2284,34 @@ class ScaledBitmap(TextObjectMixin, DrawObject, ):
                  Height,
                  Position = 'tl',
                  InForeground = False):
+        """Default class constructor.
+        
+        :param wx.Bitmap `Bitmap`: the bitmap to be drawn
+        :param `XY`: where to place it in world coordinates, takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `Height`: height to be used, width is calculated from the aspect ratio of the bitmap
+        :param string `Position`: a two character string indicating where in relation to the coordinates
+         the bitmap should be oriented
+         
+         ============== ==========================
+         1st character  Meaning
+         ============== ==========================
+         ``t``          top
+         ``c``          center
+         ``b``          bottom
+         ============== ==========================
+
+         ============== ==========================
+         2nd character  Meaning
+         ============== ==========================
+         ``l``          left
+         ``c``          center
+         ``r``          right
+         ============== ==========================
+         
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
 
         DrawObject.__init__(self,InForeground)
 
@@ -1899,6 +2330,7 @@ class ScaledBitmap(TextObjectMixin, DrawObject, ):
         self.ScaledHeight = None
 
     def CalcBoundingBox(self):
+        """Calculate the bounding box."""
         ## this isn't exact, as fonts don't scale exactly.
         w, h = self.Width, self.Height
         x, y = self.ShiftFun(self.XY[0], self.XY[1], w, h, world = 1)
@@ -1922,7 +2354,7 @@ class ScaledBitmap(TextObjectMixin, DrawObject, ):
             HTdc.DrawRectangle(XY, (W, H) )
 
 class ScaledBitmap2(TextObjectMixin, DrawObject, ):
-    """
+    """Draws a scaled bitmap
 
     An alternative scaled bitmap that only scaled the required amount of
     the main bitmap when zoomed in: EXPERIMENTAL!
@@ -1936,12 +2368,41 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
                  Width=None,
                  Position = 'tl',
                  InForeground = False):
+        """Default class constructor.
+        
+        :param wx.Bitmap `Bitmap`: the bitmap to be drawn
+        :param `XY`: where to place it in world coordinates, takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `Height`: height to be used
+        :param `Width`: width to be used, if ``None`` width is calculated from the aspect ratio of the bitmap
+        :param string `Position`: a two character string indicating where in relation to the coordinates
+         the bitmap should be oriented
+         
+         ============== ==========================
+         1st character  Meaning
+         ============== ==========================
+         ``t``          top
+         ``c``          center
+         ``b``          bottom
+         ============== ==========================
+
+         ============== ==========================
+         2nd character  Meaning
+         ============== ==========================
+         ``l``          left
+         ``c``          center
+         ``r``          right
+         ============== ==========================
+         
+        :param boolean `InForeground`: should object be in foreground
+        
+        """
 
         DrawObject.__init__(self,InForeground)
 
-        if type(Bitmap) == wx._gdi.Bitmap:
+        if type(Bitmap) == wx.Bitmap:
             self.Image = Bitmap.ConvertToImage()
-        elif type(Bitmap) == wx._core.Image:
+        elif type(Bitmap) == wx.Image:
             self.Image = Bitmap
 
         self.XY = N.array(XY, N.float)
@@ -1964,15 +2425,14 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         self.ScaledBitmap = None # cache of the last existing scaled bitmap
 
     def CalcBoundingBox(self):
+        """Calculate the bounding box."""
         ## this isn't exact, as fonts don't scale exactly.
         w,h = self.Width, self.Height
         x, y = self.ShiftFun(self.XY[0], self.XY[1], w, h, world = 1)
         self.BoundingBox = BBox.asBBox( ((x, y-h ), (x + w, y)) )
 
     def WorldToBitmap(self, Pw):
-        """
-        computes bitmap coords from World coords
-        """
+        """Computes the bitmap coords from World coords."""
         delta = Pw - self.XY
         Pb = delta * self.BmpScale
         Pb *= (1, -1) ##fixme: this may only works for Yup projection!
@@ -2172,6 +2632,13 @@ class DotGrid:
                         dc.DrawCircle(xy[0],xy[1], radius)
 
 class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
+    """Draws an arc of a circle, centered on point ``CenterXY``, from
+    the first point ``StartXY`` to the second ``EndXY``.
+
+    The arc is drawn in an anticlockwise direction from the start point to
+    the end point.
+
+    """
     def __init__(self,
                  StartXY,
                  EndXY,
@@ -2182,23 +2649,20 @@ class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
                  FillColor    = None,
                  FillStyle    = "Solid",
                  InForeground = False):               
-        """
-        Draws an arc of a circle, centered on point CenterXY, from
-        the first point (StartXY) to the second (EndXY).
-
-        The arc is drawn in an anticlockwise direction from the start point to
-        the end point.
+        """Default class constructor.
         
-        Parameters:
-                 StartXY : start point
-                 EndXY : end point
-                 CenterXY: center point
-                 LineColor = "Black",
-                 LineStyle = "Solid",
-                 LineWidth    = 1,
-                 FillColor    = None,
-                 FillStyle    = "Solid",
-                 InForeground = False):               
+        :param `StartXY`: start point, takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `EndXY`: end point, takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `CenterXY`: center point, takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+        :param `LineWidth`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
+        :param `FillColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+        :param `FillStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetFillStyle`
+        :param boolean `InForeground`: should object be in foreground
         
         """
 
@@ -2237,11 +2701,11 @@ class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.SetPen(LineColor, LineStyle, LineWidth)
         self.SetBrush(FillColor, FillStyle)                  #Why isn't this working ???
 
-    def Move(self, Delta ):
-        """
-
-        Move(Delta): moves the object by delta, where delta is a
-        (dx,dy) pair. Ideally a Numpy array of shape (2,)
+    def Move(self, Delta):
+        """Move the object by delta
+        
+        :param `Delta`: delta is a (dx, dy) pair. Ideally a `NumPy <http://www.numpy.org/>`_
+         array of shape (2,)
 
         """
 
@@ -2266,7 +2730,9 @@ class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
             HTdc.DrawArc(StartXY, EndXY, CenterXY)
 
     def CalcBoundingBox(self):
-        self.BoundingBox = BBox.asBBox( N.array((self.XY, (self.XY + self.WH) ), N.float) )
+        """Calculate the bounding box."""
+        self.BoundingBox = BBox.asBBox( N.array((self.XY, (self.XY + self.WH) ),
+                                                N.float) )
         if self._Canvas:
             self._Canvas.BoundingBoxDirty = True
 
@@ -2274,78 +2740,106 @@ class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
 #---------------------------------------------------------------------------
 class FloatCanvas(wx.Panel):
     """
-    FloatCanvas.py
-
-    This is a high level window for drawing maps and anything else in an
-    arbitrary coordinate system.
-
+    Do we want this duplicated here???
+    
+    FloatCanvas.py contains the main :class:`~lib.floatcanvas.FloatCanvas`
+    class, and its supporting classes.  NavCanvas.py contains the
+    :class:`~lib.floatcanvas.NavCanvas` wrapper for the FloatCanvas that
+    provides the canvas and a toolbar with tools that allow you to navigate
+    the canvas (zooming, panning, etc.)  Resources.py is a module that
+    contains a few resources required by the FloatCanvas (icons, etc)
+    
+    The FloatCanvas is a high level window for drawing maps and anything
+    else in an arbitrary coordinate system.
+    
     The goal is to provide a convenient way to draw stuff on the screen
     without having to deal with handling OnPaint events, converting to pixel
     coordinates, knowing about wxWindows brushes, pens, and colors, etc. It
     also provides virtually unlimited zooming and scrolling
-
+    
     I am using it for two things:
+    
     1) general purpose drawing in floating point coordinates
     2) displaying map data in Lat-long coordinates
-
+    
     If the projection is set to None, it will draw in general purpose
     floating point coordinates. If the projection is set to 'FlatEarth', it
     will draw a FlatEarth projection, centered on the part of the map that
     you are viewing. You can also pass in your own projection function.
-
-    It is double buffered, so re-draws after the window is uncovered by something
-    else are very quick.
-
-    It relies on NumPy, which is needed for speed (maybe, I havn't profiled it)
-
-    Bugs and Limitations:
-        Lots: patches, fixes welcome
-
+    
+    It is double buffered, so re-draws after the window is uncovered by
+    something else are very quick.
+    
+    It relies on `NumPy <http://www.numpy.org/>`_, which is needed for speed
+    (maybe, I haven't profiled properly) and convenience. 
+    
+    Bugs and Limitations: Lots: patches, fixes welcome
+    
     For Map drawing: It ignores the fact that the world is, in fact, a
     sphere, so it will do strange things if you are looking at stuff near
     the poles or the date line. so far I don't have a need to do that, so I
     havn't bothered to add any checks for that yet.
-
-    Zooming:
-    I have set no zoom limits. What this means is that if you zoom in really
-    far, you can get integer overflows, and get wierd results. It
-    doesn't seem to actually cause any problems other than wierd output, at
+    
+    Zooming: I have set no zoom limits. What this means is that if you zoom
+    in really far, you can get integer overflows, and get weird results. It
+    doesn't seem to actually cause any problems other than weird output, at
     least when I have run it.
-
-    Speed:
-    I have done a couple of things to improve speed in this app. The one
-    thing I have done is used NumPy Arrays to store the coordinates of the
-    points of the objects. This allowed me to use array oriented functions
-    when doing transformations, and should provide some speed improvement
-    for objects with a lot of points (big polygons, polylines, pointsets).
-
+    
+    Speed: I have done a couple of things to improve speed in this app. The
+    one thing I have done is used `NumPy <http://www.numpy.org/>`_ Arrays to
+    store the coordinates of the points of the objects. This allowed me to use
+    array oriented functions when doing transformations, and should provide some
+    speed improvement for objects with a lot of points (big polygons, polylines,
+    pointsets).
+    
     The real slowdown comes when you have to draw a lot of objects, because
     you have to call the wx.DC.DrawSomething call each time. This is plenty
     fast for tens of objects, OK for hundreds of objects, but pretty darn
     slow for thousands of objects.
-
-    The solution is to be able to pass some sort of object set to the DC
-    directly. I've used DC.DrawPointList(Points), and it helped a lot with
-    drawing lots of points. I havn't got a LineSet type object, so I havn't
-    used DC.DrawLineList yet. I'd like to get a full set of DrawStuffList()
-    methods implimented, and then I'd also have a full set of Object sets
-    that could take advantage of them. I hope to get to it some day.
-
+    
+    If you are zoomed in, it checks the Bounding box of an object before
+    drawing it. This makes it a great deal faster when there are a lot of
+    objects and you are zoomed in so that only a few are shown.
+    
     Mouse Events:
-
-    At this point, there are a full set of custom mouse events. They are
-    just like the regular mouse events, but include an extra attribute:
-    Event.GetCoords(), that returns the (x,y) position in world
-    coordinates, as a length-2 NumPy vector of Floats.
-
+    
+    There are a full set of custom mouse events. They are just like the
+    regular mouse events, but include an extra attribute: Event.GetCoords(),
+    that returns the (x,y) position in world coordinates, as a length-2
+    `NumPy <http://www.numpy.org/>`_ vector of Floats.
+    
+    There are also a full set of bindings to mouse events on objects, so
+    that you can specify a given function be called when an object is
+    clicked, mouse-over'd, etc.
+    
+    See the Demo for what it can do, and how to use it.
+    
     Copyright: Christopher Barker
-
-    License: Same as the version of wxPython you are using it with
-
+    License: Same as the version of wxPython you are using it with.
+    
+    TRAC site for some docs and updates:
+    
+    http://trac.paulmcnett.com/floatcanvas
+    
+    Mailing List:
+    
+    http://mail.paulmcnett.com/cgi-bin/mailman/listinfo/floatcanvas
+    
+    The latest code is in the main wx SVN:
+    
+    For classic:
+    
+    http://svn.wxwidgets.org/viewvc/wx/wxPython/3rdParty/FloatCanvas/
+    
+    For Phoenix:
+    
+    http://svn.wxwidgets.org/svn/wx/wxPython/Phoenix/trunk/wx/lib/floatcanvas
+    
+    Check for updates or answers to questions, send me an email.
     Please let me know if you're using this!!!
-
+    
     Contact me at:
-
+    
     Chris.Barker@noaa.gov
 
     """
@@ -2357,12 +2851,23 @@ class FloatCanvas(wx.Panel):
                  Debug = False,
                  **kwargs):
 
+        """
+        Default class constructor.
+
+        :param Window `parent`: parent window. Must not be ``None``;
+        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param `size`: a tuple or :class:`Size`
+        :param `ProjectionFun`: a custom projection function ???
+        :param string `BackgroundColor`: any value accepted by :class:`Brush` 
+        :param `Debug`: activate debug ???
+        """
+
         wx.Panel.__init__( self, parent, id, wx.DefaultPosition, size, **kwargs)
 
         self.ComputeFontScale()
         self.InitAll()
 
-        self.BackgroundBrush = wx.Brush(BackgroundColor,wx.SOLID)
+        self.BackgroundBrush = wx.Brush(BackgroundColor, wx.SOLID)
 
         self.Debug = Debug
 
@@ -2402,7 +2907,10 @@ class FloatCanvas(wx.Panel):
 #        self.CreateCursors()
 
     def ComputeFontScale(self):
-        ## A global variable to hold the scaling from pixel size to point size.
+        """Compute the font style.
+        
+        A global variable to hold the scaling from pixel size to point size.
+        """
         global FontScale
         dc = wx.ScreenDC()
         dc.SetFont(wx.Font(16, wx.ROMAN, wx.NORMAL, wx.NORMAL))
@@ -2412,7 +2920,7 @@ class FloatCanvas(wx.Panel):
         
     def InitAll(self):
         """
-        InitAll() sets everything in the Canvas to default state.
+        Sets everything in the Canvas to default state.
 
         It can be used to reset the Canvas
 
@@ -2451,6 +2959,13 @@ class FloatCanvas(wx.Panel):
         self._BackgroundDirty = True
 
     def SetProjectionFun(self, ProjectionFun):
+        """Set a custom projection function
+        
+        :param `ProjectionFun`: valid entries are ``FlatEarth``, ``None``
+          or a callable object that takes the ``ViewPortCenter`` and returns
+          ``MapProjectionVector``
+        
+        """
         if ProjectionFun == 'FlatEarth':
             self.ProjectionFun = self.FlatEarthProjection
         elif callable(ProjectionFun):
@@ -2464,6 +2979,12 @@ class FloatCanvas(wx.Panel):
                                    'ViewPortCenter and returns a MapProjectionVector')
 
     def FlatEarthProjection(self, CenterPoint):
+        """Set the CenterPoint for FlatEarthProjection ???
+        
+        :param `CenterPoint`: takes a 2-tuple, or a (2,)
+         `NumPy <http://www.numpy.org/>`_ array of point coordinates???
+
+        """
         MaxLatitude = 75 # these were determined essentially arbitrarily
         MinLatitude = -75
         Lat = min(CenterPoint[1],MaxLatitude)
@@ -2471,17 +2992,19 @@ class FloatCanvas(wx.Panel):
         return N.array((N.cos(N.pi*Lat/180),1),N.float)
 
     def SetMode(self, Mode):
-            '''
-            Set the GUImode to any of the available mode.
-            '''
-            # Set mode
-            if self.GUIMode is not None:
-                self.GUIMode.UnSet() # this lets the old mode clean up.
-            Mode.Canvas = self # make sure the mode is linked to this canvas
-            self.GUIMode = Mode
-            self.SetCursor(self.GUIMode.Cursor)
+        """Set the GUImode to any of the available mode.
+        
+        :param `Mode`: a valid GUI Mode - valid defined where??
+        """
+        # Set mode
+        if self.GUIMode is not None:
+            self.GUIMode.UnSet() # this lets the old mode clean up.
+        Mode.Canvas = self # make sure the mode is linked to this canvas
+        self.GUIMode = Mode
+        self.SetCursor(self.GUIMode.Cursor)
 
     def MakeHitDict(self):
+        """Initialize the Hit dictonary."""
         ##fixme: Should this just be None if nothing has been bound?
         self.HitDict = {EVT_FC_LEFT_DOWN: {},
                         EVT_FC_LEFT_UP: {},
@@ -2528,10 +3051,9 @@ class FloatCanvas(wx.Panel):
                 dc.SelectObject(self._HTBitmap)
             hitcolor = dc.GetPixelPoint( xy )
             return hitcolor.Get()
+
     def UnBindAll(self):
-        """
-        Removes all bindings to Objects
-        """
+        """Removes all bindings to Objects."""
         self.HitDict = None
     
     def _CallHitCallback(self, Object, xy, HitEvent):
