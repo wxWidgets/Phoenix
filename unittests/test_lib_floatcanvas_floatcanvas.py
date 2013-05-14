@@ -5,6 +5,9 @@ import wx
 import wx.lib.floatcanvas.FloatCanvas as fc
 import wx.lib.floatcanvas.NavCanvas as nc
 
+import os
+pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
+
 #---------------------------------------------------------------------------
 
 class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
@@ -39,7 +42,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
     def test_lib_floatcanvas_fc_bitmap(self):
         fccanvas = fc.FloatCanvas(self.frame)
         
-        bmp = wx.Bitmap()
+        bmp = wx.Bitmap(pngFile)
         obj = fc.Bitmap(bmp, (2, 2))
         
         fccanvas.AddObject(obj)
@@ -96,7 +99,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
     def test_lib_floatcanvas_fc_scaledbitmap(self):
         fccanvas = fc.FloatCanvas(self.frame)
         
-        bmp = wx.Bitmap('smile.png')
+        bmp = wx.Bitmap(pngFile)
         obj = fc.ScaledBitmap(bmp, (2, 2), 100)
         
         fccanvas.AddObject(obj)
@@ -104,7 +107,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
     def test_lib_floatcanvas_fc_scaledbitmap2(self):
         fccanvas = fc.FloatCanvas(self.frame)
         
-        bmp = wx.Bitmap('smile.png')
+        bmp = wx.Bitmap(pngFile)
         obj = fc.ScaledBitmap2(bmp, (2, 2), 100)
         
         fccanvas.AddObject(obj)
