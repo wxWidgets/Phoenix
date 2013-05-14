@@ -56,25 +56,29 @@ preview snapshots. In other words, the wxWidgets build should use code from
 the wxWidgets source repository within a few days of when the Phoenix code
 was checked out.
 
-On the other hand, since the build tools will by default build wxWidgets in a
-way that allows it to be bundled with the wxPython extension modules as part
-of the wx Python package, meaning it can coexist with and wxWidgets libs you
-may already have installed, then it is probably best to just let Phoenix
-build and bundle wxWidgets. This bundling of the wx shared libraries works on
-Windows, OSX and Linux, and probably any other unix-like system using shared
-libraries based on the ELF standard. The libraries are build in such a way
-that they are relocatable, meaning that they do not have to be in a fixed
-location on the filesystem in order to be found by the wxPython extension
-modules. This also means that you can do things like use ``easy_install`` to
-install an egg in one or more virtual environments, move the wx package to a
-versioned folder, or even move it into your own project if desired.
+On the other hand, it is probably best to just let Phoenix build and bundle
+wxWidgets. The build tools will by default build wxWidgets in a way that
+allows it to be bundled with the wxPython extension modules as part of the
+wxPython package, meaning it can peacefully coexist with any wxWidgets
+libraries you may already have installed. This bundling of the wx shared
+libraries works on Windows, OSX and Linux, and probably any other unix-like
+system using shared libraries based on the ELF standard. The libraries are
+built in such a way that they are relocatable, meaning that they do not have
+to be in a fixed location on the filesystem in order to be found by the
+wxPython extension modules. This also means that you can do things like use
+``easy_install`` to install an egg in one or more virtual environments, move
+the wx package to a versioned folder, or even move it into your own project
+if desired, all without needing to rebuild the binaries. (Assuming that
+compatible Pythons are being used of course.)
 
-The build phase of the build.py script will copy the results to the wx folder
-in the Phoenix source tree. This will allow you to run and test Phoenix
-directly from the source tree without installing it, if desired. You just
-need to set ``PYTHONPATH`` appropriately, or you can use ``python setup.py
-develop`` to install an .egg-link file in your Python site-packages that will
-point to the folder where you built Phoenix.
+The build phase of the build.py script will copy the results into the wx
+folder in the Phoenix source tree. This will allow you to run and test
+Phoenix directly from the source tree without installing it, if desired. You
+just need to set ``PYTHONPATH`` appropriately, or you can use ``python
+setup.py develop`` to install an .egg-link file in your current Python
+site-packages folder that will point to the folder where you built Phoenix.
+When you are finished testing you can then use the install or one of the
+bdist commands like you normally would for other Python packages.
 
 
 
@@ -89,57 +93,64 @@ of build.py there is no need to run that command again in a later run, unless
 you've changed something which that command has the responsibility to
 process.
 
-  * **dox**: Builds the XML files from the wxWidgets documentation which will
-    be used as input for the etg command.
+* **dox**: Builds the XML files from the wxWidgets documentation source,
+  which will be used as input for the etg command.
 
-  * **etg**: Extracts information from the dox XML files, runs hand-written
-    tweaker code on the extracted data structures, and runs various generators
-    on the result to produce code for the next steps. The code being run for
-    each item in this step is located in the etg folder in the Phoenix source
-    tree.
+* **etg**: Extracts information from the dox XML files, runs hand-written
+  tweaker code on the extracted data structures, and runs various generators
+  on the result to produce code for the next steps. The code being run for
+  each item in this step is located in the etg folder in the Phoenix source
+  tree.
 
-  * **sip**: This command processes the files generated in the etg command
-    and produces the C++ code that will become the Python extension modules for
-    wxPython Phoenix.
+* **sip**: This command processes the files generated in the etg command
+  and produces the C++ code that will become the Python extension modules for
+  wxPython Phoenix.
 
-  * **build**: Build both wxWidgets and wxPython. There are additional
-    commands if you want to build just one or the other. The results will be
-    put in the Phoenix/wx folder, and can be used from there without
-    installation if desired.
+* **build**: Build both wxWidgets and wxPython. There are additional
+  commands if you want to build just one or the other. The results will be
+  put in the Phoenix/wx folder, and can be used from there without
+  installation if desired.
 
 Some other useful commands and options are:
 
-   * **clean**: Clean up the build products produced by prior runs of
-     build.py. There are additional clean commands that will let you clean up
-     just portions of the build if needed.
+* **clean**: Clean up the build products produced by prior runs of
+  build.py. There are additional clean commands that will let you clean up
+  just portions of the build if needed.
 
-   * **touch**: Updates the timestamp on all of the etg scripts, so they will
-     be forced to be run in the next build. This is useful when a change has
-     been made to the wxWidgets documentation that needs to be propagated
-     through the build since the etg command doesn't yet do full dependency
-     checking of the input.
+* **touch**: Updates the timestamp on all of the etg scripts, so they will
+  be forced to be run in the next build. This is useful when a change has
+  been made to the wxWidgets documentation that needs to be propagated
+  through the build since the etg command doesn't yet do full dependency
+  checking of the input.
 
-   * **M.N**: This is the Major.Minor version number of the Python that the
-     extension modules will be built for, such as "3.3". This allows you to run
-     build.py with a different Python than what you are building for, which is
-     handy for things like buildbots running in a virtualenv for one Python
-     that need to be able to run builds for other versions too. 
+* **M.N**: This is the Major.Minor version number of the Python that the
+  extension modules will be built for, such as "3.3". This allows you to run
+  build.py with a different Python than what you are building for, which is
+  handy for things like buildbots running in a virtualenv for one Python
+  that need to be able to run builds for other versions too. 
 
-     If build.py is still not able to find the correct Python given the M.N
-     on the command line then you can specify the full path to the python
-     executable you want to use with the ``--python`` option.
+  If build.py is still not able to find the correct Python given the M.N
+  on the command line then you can specify the full path to the python
+  executable you want to use with the ``--python`` option.
 
-   * **test**: Runs all of Phoenix's unittests.
+* **test**: Runs all of Phoenix's unittests.
 
-   * **--nodoc**: This option turns off the sphinx generator when running the
-     etg scripts. If you don't plan on generating the documentation then this
-     will speed up the proccessing of the etg command.
+* **--nodoc**: This option turns off the sphinx generator when running the
+  etg scripts. If you don't plan on generating the documentation then this
+  will speed up the proccessing of the etg command.
 
-Please see the output of ``python build.py --help`` to see information about
+Please see the output of ``python build.py --help`` for information about
 commands and options not mentioned here. And, as always, if there is any
 discrepancy between this document and the source code in the build.py script,
 then the source code is right. ;-)
 
+The build.py script will download doxygen, sip and waf for your platform as
+needed if they are not already in your Phoenix/bin folder. If prebuilt
+versions of these tools are not available for your platform then build.py
+will bail out with an error message. To continue with the build you will need
+to acquire copies of the tool that will work on your platform and can then
+tell build.py where to find it using an environment variable, as described in
+the error message.
 
 
 
@@ -149,45 +160,45 @@ Project directory structure
 There are a lot of subfolders in this directory, here is a brief
 explanation to help a newbie find their way around.
 
-  * **build**: Intermediate files produced by the build process are stored 
-    here. This folder should not be committed to a version repository.
+* **build**: Intermediate files produced by the build process are stored 
+  here. This folder should not be committed to a source repository.
 
-  * **buildtools**: This is a Python package containing modules that are used
-    from build.py and setup.py and which assist with configuring and running
-    the build.
+* **buildtools**: This is a Python package containing modules that are used
+  from build.py and setup.py and which assist with configuring and running
+  the build.
 
-  * **etg**: This is where the Extractor-Tweaker-Generator scripts are stored
-    (see the ProjectPhoenix link above.) These scripts are invoked by the build
-    and they will read the XML files produced by Doxygen and will produce
-    interface definition files for SIP.
+* **etg**: This is where the Extractor-Tweaker-Generator scripts are stored
+  (see the ProjectPhoenix link above.) These scripts are invoked by the build
+  and they will read the XML files produced by Doxygen and will produce
+  interface definition files for SIP.
 
-  * **etgtools**: This Python package contains modules which assist with the
-    parsing of the XML files, tweaking the collection of objects produced by
-    the parser, and also the backend generation of code or documentation.
+* **etgtools**: This Python package contains modules which assist with the
+  parsing of the XML files, tweaking the collection of objects produced by
+  the parser, and also the backend generation of code or documentation.
 
-  * **sip/gen**: The code (.sip files) produced by the ETG scripts is placed
-    in this folder.
+* **sip/gen**: The code (.sip files) produced by the ETG scripts is placed
+  in this folder.
 
-  * **sip/cpp**: The code produced when running SIP is put in this folder. It
-    will be C++ source and header files, and also some extra files with
-    information about the source files produced so the build knows what files
-    to compile.
+* **sip/cpp**: The code produced when running SIP is put in this folder. It
+  will be C++ source and header files, and also some extra files with
+  information about the source files produced so the build knows what files
+  to compile.
 
-  * **sip/siplib**: This is a copy of the SIP runtime library. We have our
-    own copy so it can be included with the wxPython build as an extension
-    module with a unique name (``wx.siplib``) and to not require a runtime
-    dependency on SIP being installed on the target system. 3rd party
-    extensions that want to integrate with wxPython should ensure that the
-    sip.h they ``#include`` is the one in this folder.
+* **sip/siplib**: This is a copy of the SIP runtime library. We have our
+  own copy so it can be included with the wxPython build as an extension
+  module with a unique name (``wx.siplib``) and to not require a runtime
+  dependency on SIP being installed on the target system. 3rd party
+  extensions that want to integrate with wxPython should ensure that the
+  sip.h they ``#include`` is the one in this folder.
 
-  * **src**: This folder is for any other source code (SIP, C++, Python, or
-    anything else) that is edited by hand instead of being generated by some
-    tool.
+* **src**: This folder is for any other source code (SIP, C++, Python, or
+  anything else) that is edited by hand instead of being generated by some
+  tool.
 
- * **wx**: This is the top of the wxPython package. For an in-place build the
-   extension modules and any associated files will be put into this folder.
-   Subfolders contain pure-python subpackages of the wx package, such as
-   wx.lib, etc.
+* **wx**: This is the top of the wxPython package. For an in-place build the
+  extension modules and any associated files will be put into this folder.
+  Subfolders contain pure-python subpackages of the wx package, such as
+  wx.lib, etc.
 
 
 
