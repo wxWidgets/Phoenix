@@ -39,7 +39,8 @@ def run():
     tools.fixTopLevelWindowClass(c)
     
     c.addPyCode("""\
-        EVT_DIRCTRL_CHANGED = wx.PyEventBinder( wxEVT_DIRCTRL_CHANGED, 1 )
+        EVT_DIRCTRL_SELECTIONCHANGED = wx.PyEventBinder( wxEVT_DIRCTRL_SELECTIONCHANGED, 1 )
+        EVT_DIRCTRL_FILEACTIVATED = wx.PyEventBinder( wxEVT_DIRCTRL_FILEACTIVATED, 1 )
         """)
     
     #-----------------------------------------------------------------
