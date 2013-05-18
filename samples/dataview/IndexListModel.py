@@ -38,6 +38,10 @@ class TestModel(dv.DataViewIndexListModel):
     def GetColumnCount(self):
         return len(self.data[0])
 
+    # Specify the data type for a column
+    def GetColumnType(self, col):
+        return "string"
+
     # Report the number of rows in the model
     def GetCount(self):
         #self.log.write('GetCount')

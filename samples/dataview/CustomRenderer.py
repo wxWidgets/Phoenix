@@ -13,12 +13,12 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
         self.value = None
 
     def SetValue(self, value):
-        #self.log.write('SetValue: %s' % value)
+        #self.log.write('MyCustomRenderer.SetValue: %s\n' % value)
         self.value = value
         return True
 
     def GetValue(self):
-        #self.log.write('GetValue')
+        #self.log.write('MyCustomRenderer.GetValue\n')
         return self.value
 
     def GetSize(self):
@@ -81,7 +81,7 @@ class MyCustomRenderer(dv.DataViewCustomRenderer):
     def GetValueFromEditorCtrl(self, editor):
         self.log.write('GetValueFromEditorCtrl: %s' % editor)
         value = editor.GetValue()
-        return value
+        return True, value
 
 
     # The LeftClick and Activate methods serve as notifications
