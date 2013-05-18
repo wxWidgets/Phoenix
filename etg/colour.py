@@ -216,7 +216,8 @@ def run():
         // Is it a string?
         else if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)) {
             wxString spec = Py2wxString(sipPy);
-            if (spec.GetChar(0) == '#' 
+            if (!spec.empty() 
+                && spec.GetChar(0) == '#' 
                 && (spec.length() == 7 || spec.length() == 9)) {  // It's  #RRGGBB[AA]
                 long red, green, blue;
                 red = green = blue = 0;
