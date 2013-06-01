@@ -35,7 +35,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     tools.removeVirtuals(c)
-    
+
+    c.find('SetSubMenu.menu').transfer = True
 
     # These are MSW only. Make them be empty stubs for the other ports
     c.find('GetBackgroundColour').type = 'wxColour*'
