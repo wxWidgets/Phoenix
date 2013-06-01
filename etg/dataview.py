@@ -382,6 +382,11 @@ def run():
             wxPyThreadBlocker blocker;
             return wxPyMakeBuffer(self->GetDataBuffer(), self->GetDataSize(), true);
             """)
+
+    # TODO: SetDataBuffer
+
+    c.find('SetDataObject.obj').transfer = True
+    
     
     module.addPyCode("""\
         EVT_DATAVIEW_SELECTION_CHANGED         = wx.PyEventBinder( wxEVT_DATAVIEW_SELECTION_CHANGED, 1)
