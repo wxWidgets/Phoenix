@@ -3,7 +3,7 @@ import wtc
 import wx
 import sys, os
 
-testscript = os.path.join(os.path.dirname(__file__), 'process_test.py')
+testscript = os.path.join(os.path.dirname(__file__), 'process_script.py')
 
 #---------------------------------------------------------------------------
 
