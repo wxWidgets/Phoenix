@@ -107,7 +107,7 @@ def run():
     c.find('Create').findOverload('const wxSize &sz, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
       
     c.addCppMethod('bool', 'Create', '(int width, int height, wxPyBuffer* data)', 
-        doc="",
+        doc="Create a new image initialized with the given RGB data.",
         body="""\
             if (! data->checkSize(width*height*3)) 
                 return false;
@@ -118,7 +118,7 @@ def run():
             """)
       
     c.addCppMethod('bool', 'Create', '(int width, int height, wxPyBuffer* data, wxPyBuffer* alpha)', 
-        doc="",
+        doc="Create a new image initialized with the given RGB data and Alpha data.",
         body="""\
             void* dcopy; void* acopy;
             if (!data->checkSize(width*height*3) || !alpha->checkSize(width*height))
@@ -129,7 +129,7 @@ def run():
             """)
       
     c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data)', 
-        doc="",
+        doc="Create a new image initialized with the given RGB data.",
         body="""\
             if (! data->checkSize(size->x*size->y*3)) 
                 return false;
@@ -140,7 +140,7 @@ def run():
             """)
       
     c.addCppMethod('bool', 'Create', '(const wxSize& size, wxPyBuffer* data, wxPyBuffer* alpha)', 
-        doc="",
+        doc="Create a new image initialized with the given RGB data and Alpha data.",
         body="""\
             void* dcopy; void* acopy;
             if (!data->checkSize(size->x*size->y*3) || !alpha->checkSize(size->x*size->y))
@@ -156,6 +156,7 @@ def run():
     bd, dd = m.briefDoc, m.detailedDoc
     m.ignore()
     c.addCppMethod('void', 'SetData', '(wxPyBuffer* data)',
+        briefDoc=bd, detailedDoc=dd,
         body="""\
         if (!data->checkSize(self->GetWidth()*self->GetHeight()*3))
             return;
@@ -180,6 +181,7 @@ def run():
     bd, dd = m.briefDoc, m.detailedDoc
     m.ignore()
     c.addCppMethod('void', 'SetAlpha', '(wxPyBuffer* alpha)',
+        briefDoc=bd, detailedDoc=dd,
         body="""\
         if (!alpha->checkSize(self->GetWidth()*self->GetHeight()))
             return;
@@ -192,7 +194,6 @@ def run():
 
     # GetData() and GetAlpha() return a copy of the image data/alpha bytes as
     # a bytearray object. 
-    # TODO: in Python 3.x a bytes object should be returned instead.
     c.find('GetData').ignore()
     c.addCppMethod('PyObject*', 'GetData', '()',
         doc="Returns a copy of the RGB bytes of the image.",
