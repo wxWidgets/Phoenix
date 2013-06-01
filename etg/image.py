@@ -164,7 +164,7 @@ def run():
         if (!copy)
             return;
         self->SetData((byte*)copy, false);
-        """, briefDoc=bd, detailedDoc=dd)
+        """)
 
     c.find('SetData').findOverload('int new_width').ignore()
     c.addCppMethod('void', 'SetData', '(wxPyBuffer* data, int new_width, int new_height)',

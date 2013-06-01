@@ -276,6 +276,14 @@ def run():
     c.addPyMethod('ConvertDialogPointToPixels', '(self, point)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
     c.addPyMethod('ConvertDialogSizeToPixels', '(self, size)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
 
+
+    # this is a nested class
+    c.find('ChildrenRepositioningGuard').addPrivateCopyCtor()
+    module.insertItem(0, 
+            etgtools.TypedefDef(type='wxWindow::ChildrenRepositioningGuard',
+                                name='ChildrenRepositioningGuard'))
+
+        
     #-----------------------------------------------------------------------
     # Other stuff
     
