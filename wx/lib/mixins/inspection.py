@@ -26,7 +26,8 @@ The Widget Inspection Tool (WIT) is very useful debugging tool provided with
 wxPython, especially useful to debug layout issues when using :class:`Sizer`.
 
 The :class:`InspectableApp` is a "pre-mixed" :class:`App` and the
-:class:`InspectionMixin` allows you to mix it with your custom :class:`App`.
+:class:`InspectionMixin` allows you to mix it with your custom :class:`App`
+class.
 
 
 Usage
@@ -35,13 +36,12 @@ Usage
 The following samples assume the default key sequence (*ctrl-alt-i*) to start
 the WIT, additional information can be found on the following wiki page.
 
-http://wiki.wxpython.org/Widget%20Inspection%20Tool
+http://wiki.wxpython.org/Widget_Inspection_Tool
 
 InspectableApp usage::
 
     import wx
     import wx.lib.sized_controls as sc
-    
     import wx.lib.mixins.inspection as wit
     
     app = wit.InspectableApp()
@@ -60,11 +60,10 @@ InspectableApp usage::
     app.MainLoop()
 
 
-InspectableApp usage::
+InspectionMixin usage::
 
     import wx
     import wx.lib.sized_controls as sc
-    
     import wx.lib.mixins.inspection as wit
     
     class MyApp(wx.App, wit.InspectionMixin):
@@ -86,7 +85,6 @@ InspectableApp usage::
     frame.Show()
     
     app.MainLoop()
-
 
 """
 
