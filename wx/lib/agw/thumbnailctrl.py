@@ -497,7 +497,7 @@ class PILImageHandler(object):
 
         alpha = False
         if "A" in pil.getbands():
-            img.SetAlphaData(pil.convert("RGBA").tostring()[3::4])
+            img.SetAlpha(pil.convert("RGBA").tostring()[3::4])
             alpha = True
 
         return img, originalsize, alpha
