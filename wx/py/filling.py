@@ -4,17 +4,16 @@ the local namespace or any object."""
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 __cvsid__ = "$Id$"
 __revision__ = "$Revision$"[11:-2]
+# Tags: py3-port
 
 import wx
+import wx.lib.six as six
 
 from . import dispatcher
 from . import editwindow
 import inspect
 from . import introspect
-import keyword
-import sys
 import types
-from .version import VERSION
 
 
 COMMONTYPES = [getattr(types, t) for t in dir(types) \
@@ -114,13 +113,13 @@ class FillingTree(wx.TreeCtrl):
         """Return dictionary with attributes or contents of object."""
         busy = wx.BusyCursor()
         otype = type(obj)
-        if otype is types.DictType \
-        or str(otype)[17:23] == 'BTrees' and hasattr(obj, 'keys'):
+        if isinstance(obj, dict) \
+          or 'BTrees' in six.text_type(type(obj)) and hasattr(obj, 'keys')) \:
             return obj
         d = {}
-        if otype is types.ListType or otype is types.TupleType:
+        if isinstance(obj, (list, tuple)):
             for n in range(len(obj)):
-                key = '[' + str(n) + ']'
+                key = '[' + six.text_type(n) + ']'
                 d[key] = obj[n]
         if otype not in COMMONTYPES:
             for key in introspect.getAttributeNames(obj):
@@ -129,7 +128,7 @@ class FillingTree(wx.TreeCtrl):
                 # module. So this is nested in a try block.
                 try:
                     d[key] = getattr(obj, key)
-                except:
+                except Exception:
                     pass
         return d
 
@@ -140,15 +139,15 @@ class FillingTree(wx.TreeCtrl):
         if not children:
             return
         keys = children.keys()
-        keys.sort(lambda x, y: cmp(str(x).lower(), str(y).lower()))
+        keys.sort(key=lambda x: six.text_type(x).lower())
         for key in keys:
-            itemtext = str(key)
+            itemtext = six.text_type(key)
             # Show string dictionary items with single quotes, except
             # for the first level of items, if they represent a
             # namespace.
-            if type(obj) is types.DictType \
-            and type(key) is types.StringType \
-            and (item != self.root \
+            if isinstance(obj, dict) \
+            and isinstance(key, six.string_types) \
+            and (item != self.root
                  or (item == self.root and not self.rootIsNamespace)):
                 itemtext = repr(key)
             child = children[key]
@@ -170,31 +169,31 @@ class FillingTree(wx.TreeCtrl):
         otype = type(obj)
         text = ''
         text += self.getFullName(item)
-        text += '\n\nType: ' + str(otype)
+        text += '\n\nType: ' + six.text_type(otype)
         try:
-            value = str(obj)
-        except:
+            value = six.text_type(obj)
+        except Exception:
             value = ''
-        if otype is types.StringType or otype is types.UnicodeType:
+        if isinstance(obj, six.string_types):
             value = repr(obj)
         text += u'\n\nValue: ' + value
         if otype not in SIMPLETYPES:
             try:
                 text += '\n\nDocstring:\n\n"""' + \
                         inspect.getdoc(obj).strip() + '"""'
-            except:
+            except Exception:
                 pass
-        if otype is types.InstanceType:
+        if isinstance(obj, six.class_types):
             try:
                 text += '\n\nClass Definition:\n\n' + \
                         inspect.getsource(obj.__class__)
-            except:
+            except Exception:
                 pass
         else:
             try:
                 text += '\n\nSource Code:\n\n' + \
                         inspect.getsource(obj)
-            except:
+            except Exception:
                 pass
         self.setText(text)
 
@@ -208,10 +207,10 @@ class FillingTree(wx.TreeCtrl):
             obj = self.GetItemData(parent)
         # Apply dictionary syntax to dictionary items, except the root
         # and first level children of a namepace.
-        if (type(obj) is types.DictType \
-            or str(type(obj))[17:23] == 'BTrees' \
+        if (isinstance(obj, dict)
+            or 'BTrees' in six.text_type(type(obj))
             and hasattr(obj, 'keys')) \
-        and ((item != self.root and parent != self.root) \
+        and ((item != self.root and parent != self.root)
             or (parent == self.root and not self.rootIsNamespace)):
             name = '[' + name + ']'
         # Apply dot syntax to multipart names.
