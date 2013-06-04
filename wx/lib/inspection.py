@@ -9,7 +9,7 @@
 # Copyright:   (c) 2007 by Total Control Software
 # Licence:     wxWindows license
 #
-# Tags:        phoenix-port, documented
+# Tags:        py3-port, phoenix-port, documented
 #----------------------------------------------------------------------------
 
 # NOTE: This class was originally based on ideas sent to the
@@ -28,6 +28,7 @@ import wx.py
 import wx.stc
 #import wx.aui as aui
 import wx.lib.agw.aui as aui
+import wx.lib.six as six
 import wx.lib.utils as utils
 import sys
 import inspect
@@ -627,7 +628,7 @@ class InspectionInfoPanel(wx.stc.StyledTextCtrl):
 
 
     def Fmt(self, name, value):
-        if isinstance(value, (str, unicode)):
+        if isinstance(value, six.string_types):
             return "    %s = '%s'" % (name, value)
         else:
             return "    %s = %s" % (name, value)

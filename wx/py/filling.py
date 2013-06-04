@@ -111,10 +111,10 @@ class FillingTree(wx.TreeCtrl):
 
     def objGetChildren(self, obj):
         """Return dictionary with attributes or contents of object."""
-        busy = wx.BusyCursor()
         otype = type(obj)
-        if isinstance(obj, dict) \
-          or 'BTrees' in six.text_type(type(obj)) and hasattr(obj, 'keys')) \:
+        if (isinstance(obj, dict)
+            or 'BTrees' in six.text_type(otype)
+            and hasattr(obj, 'keys')):
             return obj
         d = {}
         if isinstance(obj, (list, tuple)):
@@ -209,8 +209,8 @@ class FillingTree(wx.TreeCtrl):
         # and first level children of a namepace.
         if (isinstance(obj, dict)
             or 'BTrees' in six.text_type(type(obj))
-            and hasattr(obj, 'keys')) \
-        and ((item != self.root and parent != self.root)
+            and hasattr(obj, 'keys')
+            and (item != self.root and parent != self.root)
             or (parent == self.root and not self.rootIsNamespace)):
             name = '[' + name + ']'
         # Apply dot syntax to multipart names.
