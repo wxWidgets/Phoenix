@@ -42,6 +42,14 @@ def run():
 
     c.find('ConvertToDisabled').ignore()
 
+    c.addCppCtor('(const wxBitmap& bmp)',
+        doc="Construct an Icon from a Bitmap.",
+        body="""\
+            wxIcon* icon = new wxIcon();
+            icon->CopyFromBitmap(*bmp);
+            return icon;
+            """)
+    
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();""")
         
