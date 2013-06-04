@@ -823,7 +823,7 @@ class ArtManager(wx.EvtHandler):
         g = colour.Green() + ((i*gd*100)/high)/100
         b = colour.Blue() + ((i*bd*100)/high)/100
 
-        return wx.Colour(r, g, b)
+        return wx.Colour(int(r), int(g), int(b))
 
 
     def DarkColour(self, colour, percent):
@@ -849,7 +849,7 @@ class ArtManager(wx.EvtHandler):
         g = colour.Green() + ((i*gd*100)/high)/100
         b = colour.Blue() + ((i*bd*100)/high)/100
 
-        return wx.Colour(r, g, b)
+        return wx.Colour(int(r), int(g), int(b))
 
 
     def PaintStraightGradientBox(self, dc, rect, startColour, endColour, vertical=True):
