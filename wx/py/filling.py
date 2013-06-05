@@ -210,8 +210,8 @@ class FillingTree(wx.TreeCtrl):
         if (isinstance(obj, dict)
             or 'BTrees' in six.text_type(type(obj))
             and hasattr(obj, 'keys')
-            and (item != self.root and parent != self.root)
-            or (parent == self.root and not self.rootIsNamespace)):
+            and ((item != self.root and parent != self.root)
+            or (parent == self.root and not self.rootIsNamespace))):
             name = '[' + name + ']'
         # Apply dot syntax to multipart names.
         if partial:
