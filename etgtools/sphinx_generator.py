@@ -3245,7 +3245,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 arguments, after = line.strip().split("->")
                 return_type = self.ReturnSection(after)
             else:
-                docstrings += line
+                docstrings += line + '\n'
                 
         docstrings = ConvertToPython(docstrings)
 
