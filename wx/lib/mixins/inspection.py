@@ -15,8 +15,9 @@
 # NOTE: This class was originally based on ideas sent to the
 # wxPython-users mail list by Dan Eloff.
 """
-This module provides the :class:`InspectableApp` and :class:`InspectionMixin` 
-which make it easy to use the Widget Inspection Tool (WIT).
+This module provides the :class:`~lib.inspection.InspectableApp` and
+:class:`~lib.inspection.InspectionMixin` which make it easy to use the Widget
+Inspection Tool (WIT).
 
 
 Description
@@ -109,7 +110,7 @@ class InspectionMixin(object):
 
     To use this class simply derive a class from :class:`App` and
     :class:`InspectionMixin` and then call the
-    :meth:`~lib.mixins.inspection.InspectionMixin.Init` method from the app's
+    :meth:`InspectionMixin.Init` method from the app's
     :meth:`App.OnInit` method.
     """
     def InitInspection(self, pos=wx.DefaultPosition, size=wx.Size(850,700),
