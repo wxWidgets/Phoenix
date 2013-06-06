@@ -59,6 +59,12 @@ class GUIBase(object):
 
     """
     def __init__(self, Canvas=None):
+        """
+        Default class constructor.
+
+        :param `Canvas`: the canvas the GUI mode is attached too
+        
+        """
         self.Canvas = Canvas # set the FloatCanvas for the mode
                              # it gets set when the Mode is set on the Canvas.
         self.Cursors = Cursors()
@@ -286,7 +292,10 @@ class GUIMove(GUIBase):
             self.Canvas.Zoom(1.1)
 
 class GUIZoomIn(GUIBase):
- 
+    """
+    Mode to zoom in.
+    """
+
     def __init__(self, canvas=None):
         GUIBase.__init__(self, canvas)
         self.StartRBBox = None
@@ -356,6 +365,9 @@ class GUIZoomIn(GUIBase):
             self.Canvas.Zoom(1.1)
 
 class GUIZoomOut(GUIBase):
+    """
+    Mode to zoom out.
+    """
 
     def __init__(self, Canvas=None):
         GUIBase.__init__(self, Canvas)

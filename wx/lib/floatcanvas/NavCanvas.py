@@ -4,7 +4,33 @@ Combines :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas` with Navigation
 controls onto a :class:`Panel`
 
 
-Tags: phoenix-port, documented, unittest
+In the following very simple sample ``self`` is a frame, but it could be another
+container type control::
+
+    from wx.lib.floatcanvas import NavCanvas, FloatCanvas
+
+    #Add the Canvas
+    self.Canvas = NavCanvas.NavCanvas(self, -1,
+                                 size=(500, 500),
+                                 ProjectionFun=None,
+                                 Debug=0,
+                                 BackgroundColor="White",
+                                 ).Canvas
+
+    # add a circle
+    cir = FloatCanvas.Circle((10, 10), 100)
+    self.Canvas.AddObject(cir)
+    
+    # add a rectangle
+    rect = FloatCanvas.Rectangle((110, 10), (100, 100), FillColor='Red')
+    self.Canvas.AddObject(rect)
+    
+    self.Canvas.Draw()
+    
+
+Many samples are available in the `wxPhoenix/samples/floatcanvas` folder.
+        
+
 """
 
 import wx
@@ -12,7 +38,7 @@ import FloatCanvas, Resources, GUIMode
 
 class NavCanvas(wx.Panel):
     """
-    :class:`~lib.floatcanvas.FloatCanvas.NavCanvas` encloses a
+    :class:`~lib.floatcanvas.NavCanvas.NavCanvas` encloses a
     :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas` in a :class:`Panel` and
     adds a Navigation toolbar.
     
@@ -74,7 +100,9 @@ class NavCanvas(wx.Panel):
         Add the mode buttons to the tool bar.
         
         :param ToolBar `tb`: the toolbar instance
-        :param list `Modes`: a list of modes to add ??? what is valid ???
+        :param list `Modes`: a list of modes to add, out of the box valid modes
+         are subclassed from :class:`~lib.floatcanvas.GUIMode.GUIBase` or modes
+         can also be user defined.
         
         """
         self.ModesDict = {}

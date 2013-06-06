@@ -105,7 +105,7 @@ Contact me at:
 
 Chris.Barker@noaa.gov
 
-Tags: phoenix-port, documented
+Tags: phoenix-port, documented, unittest
 """
 
 __version__ = "0.9.18"
