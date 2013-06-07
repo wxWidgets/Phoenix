@@ -274,7 +274,7 @@ def setDevModeOptions(args):
     myDevModeOptions = [
             #'--build_dir=../bld',
             #'--prefix=/opt/wx/2.9',
-            '--jobs=%s' % numCPUs(),
+            '--jobs=6', #  % numCPUs(),
 
             # These will be ignored on the other platforms so it is okay to
             # include them unconditionally
