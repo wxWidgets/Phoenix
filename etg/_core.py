@@ -220,6 +220,7 @@ INCLUDES = [  # base and core stuff
               'cmdproc',
               'fswatcher',
               'preferences',
+              'modalhook',
               ]
 
 
