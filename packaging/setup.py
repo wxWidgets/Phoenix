@@ -2,7 +2,7 @@
 # This setup file is placed in the root folder of the source dist tarball, 
 # and will be used to help do automated builds from tools like easy_install 
 # or pip.  These tools expect to find at least the setup.py in the root 
-# folder, so let's accomodate them...
+# folder, so let's accommodate them...
 #---------------------------------------------------------------------------
  
 import sys, os, glob
