@@ -128,6 +128,9 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXXRC')
         conf.env.LIB_WXXRC += cfg.makeLibName('xrc')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXRICHTEXT')
+        conf.env.LIB_WXRICHTEXT += cfg.makeLibName('richtext')
+
         # ** Add code for new modules here
 
 
@@ -192,6 +195,10 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs xrc,xml,core,net' + rpath, 
                        uselib_store='WXXRC', mandatory=True)
+
+        conf.check_cfg(path=conf.options.wx_config, package='', 
+                       args='--cxxflags --libs richtext,core,net' + rpath, 
+                       uselib_store='WXRICHTEXT', mandatory=True)
 
         # ** Add code for new modules here
 
@@ -514,6 +521,16 @@ def build(bld):
         uselib   = 'WXXRC WXPY',
         )
     makeExtCopyRule(bld, '_xrc')
+
+
+    etg = loadETG('etg/_richtext.py')
+    bld(features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_richtext'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXRICHTEXT WXPY',
+        )
+    makeExtCopyRule(bld, '_richtext')
+
 
 
     # ** Add code for new modules here
