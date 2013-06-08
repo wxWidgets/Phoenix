@@ -159,22 +159,91 @@ def run():
 
 
     #-------------------------------------------------------
+    def _fixDrawObject(c, addMissingVirtuals=True):
+        assert isinstance(c, etgtools.ClassDef)
+        if c.findItem('HitTest'):
+            c.find('HitTest.textPosition').out = True
+            c.find('HitTest.obj').out = True
+            c.find('HitTest.contextObj').out = True
+    
+        if c.findItem('FindPosition'):
+            c.find('FindPosition.pt').out = True
+            c.find('FindPosition.height').out = True
+    
+        if c.findItem('GetBoxRects'):
+            c.find('GetBoxRects.marginRect').out = True
+            c.find('GetBoxRects.borderRect').out = True
+            c.find('GetBoxRects.contentRect').out = True
+            c.find('GetBoxRects.paddingRect').out = True
+            c.find('GetBoxRects.outlineRect').out = True
+    
+        if c.findItem('GetTotalMargin'):
+            c.find('GetTotalMargin.leftMargin').out = True
+            c.find('GetTotalMargin.rightMargin').out = True
+            c.find('GetTotalMargin.topMargin').out = True
+            c.find('GetTotalMargin.bottomMargin').out = True
+    
+        if c.findItem('CalculateRange'):
+            c.find('CalculateRange.end').out = True  # TODO: should it be an inOut?
+    
+    
+        # This are the pure virtuals in the base class. SIP needs to see that
+        # all the drived classes have an implementation, otherwise it will
+        # consider them to be ABCs/
+        if not c.findItem('Draw') and addMissingVirtuals:
+            c.addItem(etgtools.WigCode("""\
+                virtual bool Draw(wxDC& dc, wxRichTextDrawingContext& context, 
+                                  const wxRichTextRange& range,
+                                  const wxRichTextSelection& selection, 
+                                  const wxRect& rect, int descent, int style);"""))
+        if not c.findItem('Layout') and addMissingVirtuals:
+            c.addItem(etgtools.WigCode("""\
+                virtual bool Layout(wxDC& dc, wxRichTextDrawingContext& context, 
+                                    const wxRect& rect, const wxRect& parentRect, 
+                                    int style);"""))
+            
+        # TODO: Some of these args are output parameters.  How should they be dealt with?
+        if not c.findItem('GetRangeSize') and addMissingVirtuals:
+            c.addItem(etgtools.WigCode("""\
+                virtual bool GetRangeSize(const wxRichTextRange& range, wxSize& size, 
+                              int& descent,
+                              wxDC& dc, wxRichTextDrawingContext& context, int flags,
+                              const wxPoint& position = wxPoint(0,0),
+                              const wxSize& parentSize = wxDefaultSize,
+                              wxArrayInt* partialExtents = NULL) const;"""))
+
+
+    #-------------------------------------------------------
     c = module.find('wxRichTextObject')
     #c.find('ImportFromXML').ignore()
     tools.ignoreConstOverloads(c)
-
-
+    _fixDrawObject(c)
+    
+    
     #-------------------------------------------------------
     c = module.find('wxRichTextCompositeObject')
     tools.ignoreConstOverloads(c)
-
+    _fixDrawObject(c, addMissingVirtuals=False)
+    
 
     #-------------------------------------------------------
     c = module.find('wxRichTextParagraphLayoutBox')
+    tools.ignoreConstOverloads(c)
+    _fixDrawObject(c)
+
     c.find('MoveAnchoredObjectToParagraph.from').name = 'from_'
     c.find('MoveAnchoredObjectToParagraph.to').name = 'to_'
     c.find('DoNumberList.def').name = 'styleDef'
     c.find('SetListStyle.def').name = 'styleDef'
+
+    #-------------------------------------------------------
+    c = module.find('wxRichTextBox')
+    _fixDrawObject(c)
+
+    #-------------------------------------------------------
+    c = module.find('wxRichTextField')
+    _fixDrawObject(c)
+
 
     #-------------------------------------------------------
     c = module.find('wxRichTextLine')
@@ -185,6 +254,7 @@ def run():
 
     #-------------------------------------------------------
     c = module.find('wxRichTextParagraph')
+    _fixDrawObject(c)
     
     # These methods use an untyped wxList, but since we know what is in it
     # we'll make a fake typed list for wxPython so we can know what kinds of
@@ -197,8 +267,17 @@ def run():
     
     
     #-------------------------------------------------------
+    c = module.find('wxRichTextPlainText')
+    _fixDrawObject(c)
+    
+    #-------------------------------------------------------
+    c = module.find('wxRichTextImage')
+    _fixDrawObject(c)
+    
+    #-------------------------------------------------------
     c = module.find('wxRichTextBuffer')
     tools.ignoreConstOverloads(c)
+    _fixDrawObject(c)
 
     # More untyped wxLists
     module.addItem(
@@ -216,10 +295,22 @@ def run():
     # TODO: Need a template to wrap STRING_HASH_MAP
     c.find('GetFieldTypes').ignore()
     
+    c.find('AddHandler.handler').transfer = True
+    c.find('InsertHandler.handler').transfer = True
 
+    c.find('AddDrawingHandler.handler').transfer = True
+    c.find('InsertDrawingHandler.handler').transfer = True
+
+    c.find('AddFieldType.fieldType').transfer = True
+
+    
+    # TODO:  Transfer ownership with AddEventHandler?  TransferBack with Remove?
+    
+    
     #-------------------------------------------------------
     c = module.find('wxRichTextTable')
     tools.ignoreConstOverloads(c)
+    _fixDrawObject(c)
     
     
     #-------------------------------------------------------
@@ -235,7 +326,9 @@ def run():
                                     fakeListClassName='wxRichTextActionList'))
     c.find('GetActions').type = 'wxRichTextActionList&'
     c.find('GetActions').noCopy = True
-       
+     
+    c.find('AddAction.action').transfer = True
+    
     
     #-------------------------------------------------------
     c = module.find('wxRichTextAction')

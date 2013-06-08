@@ -182,21 +182,92 @@ class richtextbuffer_Tests(wtc.WidgetTestCase):
         s2 = wx.richtext.RichTextSelection(s1)
 
 
-    @unittest.expectedFailure
     def test_richtextbuffer16(self):
-        c = wx.richtext.RichTextDrawingContext()
-        # TODO
+        c = wx.richtext.RichTextDrawingContext(None)
         
 
     @unittest.expectedFailure    
     def test_richtextbuffer17(self):
         o1 = wx.richtext.RichTextObject()  # It's an ABC
         
-        
+    @unittest.expectedFailure            
     def test_richtextbuffer18(self):
-        o1 = wx.richtext.RichTextCompositeObject()  
+        o1 = wx.richtext.RichTextCompositeObject()  # It's an ABC
         
+    def test_richtextbuffer19(self):
+        o1 = wx.richtext.RichTextParagraphLayoutBox()
         
+    def test_richtextbuffer20(self):
+        o1 = wx.richtext.RichTextBox()
+        
+    def test_richtextbuffer21(self):
+        o1 = wx.richtext.RichTextField()
+
+    @unittest.expectedFailure            
+    def test_richtextbuffer22(self):
+        o1 = wx.richtext.RichTextFieldType('foo')  # It's an ABC
+
+    def test_richtextbuffer23(self):
+        o1 = wx.richtext.RichTextFieldTypeStandard()
+        
+    def test_richtextbuffer24(self):
+        o1 = wx.richtext.RichTextFieldTypeStandard('foo', 'bar')
+
+    def test_richtextbuffer25(self):
+        o1 = wx.richtext.RichTextLine(None)
+        
+    def test_richtextbuffer26(self):
+        o1 = wx.richtext.RichTextLineList()
+        
+    def test_richtextbuffer27(self):
+        o1 = wx.richtext.RichTextParagraph()
+        
+    def test_richtextbuffer28(self):
+        o1 = wx.richtext.RichTextPlainText()
+        
+    def test_richtextbuffer29(self):
+        o1 = wx.richtext.RichTextPlainText('some text')
+
+    def test_richtextbuffer30(self):
+        o1 = wx.richtext.RichTextImageBlock()
+
+    def test_richtextbuffer31(self):
+        o1 = wx.richtext.RichTextImage()
+
+    def test_richtextbuffer32(self):
+        o1 = wx.richtext.RichTextImage(wx.Image(100,75))
+
+    def test_richtextbuffer33(self):
+        o1 = wx.richtext.RichTextImage()
+        o2 = wx.richtext.RichTextImage(o1)
+                
+    def test_richtextbuffer34(self):
+        o1 = wx.richtext.RichTextBuffer()
+
+    def test_richtextbuffer35(self):
+        o1 = wx.richtext.RichTextObjectAddress()
+
+    def test_richtextbuffer36(self):
+        o1 = wx.richtext.RichTextCommand('name')
+
+    def test_richtextbuffer37(self):
+        c = wx.richtext.RichTextCommand('name')
+        b = wx.richtext.RichTextBuffer()
+        # TODO: finish this   a = wx.richtext.RichTextAction(c, 'name', 1234, b, )
+
+    def test_richtextbuffer38(self):
+        o1 = wx.richtext.RichTextBufferDataObject()
+
+    def test_richtextbuffer39(self):
+        o1 = wx.richtext.RichTextRenderer()
+
+    def test_richtextbuffer39(self):
+        o1 = wx.richtext.RichTextStdRenderer()
+
+
+
+
+
         
 #---------------------------------------------------------------------------
 
