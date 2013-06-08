@@ -27,6 +27,8 @@ ITEMS  = [ ]
 INCLUDES = [  
              'richtextbuffer',
              'richtextctrl',
+             'richtexthtml',
+             'richtextxml',
              ]
 
 

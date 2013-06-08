@@ -81,7 +81,7 @@ def run():
     module.addItem(
         tools.wxListWrapperTemplate('wxRichTextLineList', 'wxRichTextLine', module))
     
-    # Can this even work?
+    # Can this even work?  Apparently it does.
     module.addItem(
         tools.wxArrayPtrWrapperTemplate('wxRichTextObjectPtrArray', 'wxRichTextObject', module))     
     module.addItem(
@@ -102,7 +102,6 @@ def run():
         // forward declarations
         class wxRichTextStyleDefinition;
         class wxRichTextListStyleDefinition;
-        class wxRichTextXMLHandler;
         class wxRichTextStyleSheet;
         class wxRichTextFloatCollector;
         """))
