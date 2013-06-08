@@ -85,18 +85,18 @@ def run():
     module.addItem(
         tools.wxArrayPtrWrapperTemplate('wxRichTextObjectPtrArray', 'wxRichTextObject', module))     
     module.addItem(
-        tools.wxArrayWrapperTemplate('wxRichTextObjectPtrArrayArray', 'wxRichTextObjectPtrArray', module))     
-    
-        
+        tools.wxArrayWrapperTemplate('wxRichTextObjectPtrArrayArray', 'wxRichTextObjectPtrArray', module))
+
     
     module.find('wxRICHTEXT_ALL').ignore()
     module.find('wxRICHTEXT_NONE').ignore()
     module.find('wxRICHTEXT_NO_SELECTION').ignore()
-    module.addPyCode("""\
+    code = etgtools.PyCodeDef("""\
         RICHTEXT_ALL = RichTextRange(-2, -2)
         RICHTEXT_NONE = RichTextRange(-1, -1)
         RICHTEXT_NO_SELECTION = RichTextRange(-2, -2)
         """)
+    module.insertItemAfter(module.find('wxRichTextRange'), code)
     
     module.insertItem(0, etgtools.WigCode("""\
         // forward declarations
@@ -108,25 +108,30 @@ def run():
     c = module.find('wxTextAttrDimension')
     assert isinstance(c, etgtools.ClassDef)
     c.find('SetValue').findOverload('units').ignore()
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
     
     #-------------------------------------------------------
     c = module.find('wxTextAttrDimensions')
     tools.ignoreConstOverloads(c)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
     
     #-------------------------------------------------------
     c = module.find('wxTextAttrSize')
     tools.ignoreConstOverloads(c)
     c.find('SetWidth').findOverload('units').ignore()
     c.find('SetHeight').findOverload('units').ignore()
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
     
     #-------------------------------------------------------
     c = module.find('wxTextAttrBorder')
     tools.ignoreConstOverloads(c)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
 
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrBorders')
     tools.ignoreConstOverloads(c)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
 
 
     #-------------------------------------------------------
@@ -144,11 +149,13 @@ def run():
     tools.ignoreConstOverloads(c)
 
     c.find('SetProperty').findOverload('bool').ignore()
-    
+    c.find('operator[]').ignore()
     
     #-------------------------------------------------------
     c = module.find('wxRichTextSelection')
     tools.ignoreConstOverloads(c)
+    c.addCppMethod('int', '__nonzero__', '()', "return self->IsValid();")
+    c.find('operator[]').ignore()
 
 
     #-------------------------------------------------------
@@ -163,8 +170,17 @@ def run():
 
 
     #-------------------------------------------------------
+    c = module.find('wxRichTextParagraphLayoutBox')
+    c.find('MoveAnchoredObjectToParagraph.from').name = 'from_'
+    c.find('MoveAnchoredObjectToParagraph.to').name = 'to_'
+    c.find('DoNumberList.def').name = 'styleDef'
+    c.find('SetListStyle.def').name = 'styleDef'
+
+    #-------------------------------------------------------
     c = module.find('wxRichTextLine')
     tools.ignoreConstOverloads(c)
+    c.find('SetRange.from').name = 'from_'
+    c.find('SetRange.to').name = 'to_'
 
 
     #-------------------------------------------------------

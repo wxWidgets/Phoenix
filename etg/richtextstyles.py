@@ -47,12 +47,13 @@ def run():
     
     c = module.find('wxRichTextStyleListBox')
     tools.fixWindowClass(c)
+    c.piBases = ['wx.html.HtmlListBox']
     c.find('OnGetItem').ignore(False)
+    c.find('CreateHTML.def').name = 'styleDef'
     
     
     c = module.find('wxRichTextStyleComboCtrl')
     tools.fixWindowClass(c)
-
 
     
     c = module.find('wxRichTextStyleDefinition')
@@ -67,6 +68,10 @@ def run():
     c.find('AddParagraphStyle.def').transfer = True
     c.find('AddStyle.def').transfer = True
 
+    # Change def --> styleDef
+    for item in c.allItems():
+        if isinstance(item, etgtools.ParamDef) and item.name == 'def':
+            item.name = 'styleDef'
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -17,7 +17,8 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ "wxRichTextContextMenuPropertiesInfo",
+ITEMS  = [ "interface_2wx_2richtext_2richtextctrl_8h.xml",
+           "wxRichTextContextMenuPropertiesInfo",
            "wxRichTextCtrl",
            "wxRichTextEvent",
            ]    
@@ -33,6 +34,15 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
+    
+    #-----------------------------------------------------------------
+    # ignore some macros since most of this set are not simple numbers
+    for item in module.items:
+        if item.name.startswith('wxRICHTEXT_DEFAULT'):
+            item.ignore()
+    
+    
+    #-----------------------------------------------------------------
     c = module.find('wxRichTextContextMenuPropertiesInfo')
     assert isinstance(c, etgtools.ClassDef)
     tools.ignoreConstOverloads(c)
@@ -54,6 +64,18 @@ def run():
     c.find('HitTest.row').out = True
     c.find('HitTest').renameOverload('row', 'HitTestXY')
 
+    c.find('GetRange.from').name = 'from_'
+    c.find('GetRange.to').name = 'to_'
+    c.find('Remove.from').name = 'from_'
+    c.find('Remove.to').name = 'to_'
+    c.find('Replace.from').name = 'from_'
+    c.find('Replace.to').name = 'to_'
+    c.find('SetSelection.from').name = 'from_'
+    c.find('SetSelection.to').name = 'to_'
+
+    c.find('SetListStyle.def').name = 'styleDef'
+    c.find('ApplyStyle.def').name = 'styleDef'
+    
 
     # Make sure that all the methods from wxTextEntry are included. This is
     # needed because we are pretending that this class only derives from
