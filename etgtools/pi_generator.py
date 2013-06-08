@@ -344,11 +344,16 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if klass.ignored:
             return
         
-        # check if it's a template with the template parameter as the base class
-        bases = klass.bases[:]
-        for tp in klass.templateParams:
-            if tp in bases:
-                bases.remove(tp)
+        # check if there is a pi-customized version of the base class names
+        if hasattr(klass, 'piBases'):
+            bases = klass.piBases
+            
+        else:
+            # check if it's a template with the template parameter as the base class
+            bases = klass.bases[:]
+            for tp in klass.templateParams:
+                if tp in bases:
+                    bases.remove(tp)
         
         # write class declaration
         klassName = klass.pyName or klass.name
@@ -454,7 +459,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         name = name or method.pyName or method.name
         if name in magicMethods:
             name = magicMethods[name]
-            
+
         # write the method declaration
         if method.isStatic:
             stream.write('\n%s@staticmethod' % indent)
@@ -469,7 +474,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             if not argsString:
                 argsString = '()'
             if '->' in argsString:
-                pos = argsString.find(')')
+                pos = argsString.find(') ->')
                 argsString = argsString[:pos+1]
             if '(' != argsString[0]:
                 pos = argsString.find('(')
