@@ -972,6 +972,69 @@ del _{ArrayClass_pyName}___repr__
 
 
 
+# Same as the above, but for use with  WX_DEFINE_ARRAY_PTR
+def wxArrayPtrWrapperTemplate(ArrayClass, ItemClass, module):
+    moduleName = module.module        
+    ArrayClass_pyName = removeWxPrefix(ArrayClass)
+    
+    # *** TODO: This can probably be done in a way that is not SIP-specfic.
+    # Try creating extractor objects from scratch and attach cppMethods to
+    # them as needed, etc..
+        
+    return extractors.WigCode('''\
+class {ArrayClass} 
+{{
+public:
+    SIP_SSIZE_T __len__();
+    %MethodCode
+        sipRes = sipCpp->GetCount();
+    %End
+
+    {ItemClass}* __getitem__(size_t index);
+    %MethodCode
+        if (index < sipCpp->GetCount()) {{
+            sipRes = sipCpp->Item(index);
+        }}
+        else {{
+            wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
+            sipError = sipErrorFail;
+        }}
+    %End
+
+    int __contains__({ItemClass}* obj);
+    %MethodCode
+        int idx = sipCpp->Index(obj, false);
+        sipRes = idx != wxNOT_FOUND;
+    %End
+
+    void append({ItemClass}* obj);
+    %MethodCode
+        sipCpp->Add(obj);
+    %End
+
+    // TODO:  add support for index(value, [start, [stop]])
+    int index({ItemClass}* obj);
+    %MethodCode
+        int idx = sipCpp->Index(obj, false);
+        if (idx == wxNOT_FOUND) {{
+            sipError = sipErrorFail;
+            wxPyErr_SetString(PyExc_ValueError,
+                              "sequence.index(x): x not in sequence");
+            }}
+        sipRes = idx;
+    %End
+}};
+
+%Extract(id=pycode{moduleName})
+def _{ArrayClass_pyName}___repr__(self):
+    return "{ArrayClass_pyName}: " + repr(list(self))
+{ArrayClass_pyName}.__repr__ = _{ArrayClass_pyName}___repr__
+del _{ArrayClass_pyName}___repr__
+%End
+'''.format(**locals()))
+
+
+
 
 def ObjArrayHelperTemplate(objType, sipType, errmsg):
     """
@@ -985,7 +1048,7 @@ def ObjArrayHelperTemplate(objType, sipType, errmsg):
     (like a wxList or wxArray) being used. If there is an overloaded method
     that uses one of those types then the C array overload should just be
     ignored. But for those cases where the C array is the only option then this
-    helper can be used to make the array.
+    helper can be used to make the array from a sequence.
     """
     
     cppCode = """\

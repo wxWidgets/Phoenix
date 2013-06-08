@@ -83,7 +83,7 @@ def run():
     
     # Can this even work?
     module.addItem(
-        tools.wxArrayWrapperTemplate('wxRichTextObjectPtrArray', 'wxRichTextObject', module))     
+        tools.wxArrayPtrWrapperTemplate('wxRichTextObjectPtrArray', 'wxRichTextObject', module))     
     module.addItem(
         tools.wxArrayWrapperTemplate('wxRichTextObjectPtrArrayArray', 'wxRichTextObjectPtrArray', module))     
     

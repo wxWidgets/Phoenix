@@ -196,8 +196,9 @@ def configure(conf):
                        args='--cxxflags --libs xrc,xml,core,net' + rpath, 
                        uselib_store='WXXRC', mandatory=True)
 
+        libname = '' if cfg.MONOLITHIC else 'richtext,' # workaround bug in wx-config
         conf.check_cfg(path=conf.options.wx_config, package='', 
-                       args='--cxxflags --libs richtext,core,net' + rpath, 
+                       args='--cxxflags --libs %score,net' % libname + rpath, 
                        uselib_store='WXRICHTEXT', mandatory=True)
 
         # ** Add code for new modules here
