@@ -26,6 +26,7 @@ ITEMS  = [ ]
 # the wxWidgets "html" library in a multi-lib build.
 INCLUDES = [  
              'richtextbuffer',
+             'richtextctrl',
              ]
 
 
