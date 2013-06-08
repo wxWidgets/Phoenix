@@ -55,6 +55,10 @@ class PIImportTest(unittest.TestCase):
     def test_xrc_pi(self):
         self.runPI('xrc.pi')
 
+    def test_richtext_pi(self):
+        self.runPI('richtext.pi')
+
+
 
         
 #---------------------------------------------------------------------------

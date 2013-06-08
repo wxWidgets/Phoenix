@@ -100,9 +100,6 @@ def run():
     
     module.insertItem(0, etgtools.WigCode("""\
         // forward declarations
-        class wxRichTextStyleDefinition;
-        class wxRichTextListStyleDefinition;
-        class wxRichTextStyleSheet;
         class wxRichTextFloatCollector;
         """))
     

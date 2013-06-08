@@ -24,13 +24,15 @@ ITEMS  = [ ]
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
 # the wxWidgets "html" library in a multi-lib build.
-INCLUDES = [  
-             'richtextbuffer',
+INCLUDES = [ 'richtextbuffer',
              'richtextctrl',
              'richtexthtml',
              'richtextxml',
              'richtextprint',
-             
+             'richtextstyles',
+             'richtextstyledlg',
+             'richtextsymboldlg',
+             #'richtextformatdlg',             TODO: Needs wxPropertySheetDialog
              ]
 
 
@@ -59,6 +61,8 @@ def run():
     module.addPyCode("import wx", order=10)
     module.addImport('_xml')
     module.addPyCode("import wx.xml", order=10)
+    module.addImport('_html')
+    module.addPyCode("import wx.html", order=10)
     
     module.addInclude(INCLUDES)
           
