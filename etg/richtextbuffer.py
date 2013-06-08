@@ -103,7 +103,6 @@ def run():
         class wxRichTextStyleDefinition;
         class wxRichTextListStyleDefinition;
         class wxRichTextXMLHandler;
-        class wxRichTextCtrl;
         class wxRichTextStyleSheet;
         class wxRichTextFloatCollector;
         """))
@@ -116,109 +115,60 @@ def run():
     
     #-------------------------------------------------------
     c = module.find('wxTextAttrDimensions')
-    # There are const and non-const versions of each of these, get rid of one
-    # of each pair.
-    c.find('GetLeft').ignore()
-    c.find('GetRight').ignore()
-    c.find('GetTop').ignore()
-    c.find('GetBottom').ignore()
-
+    tools.ignoreConstOverloads(c)
     
     #-------------------------------------------------------
     c = module.find('wxTextAttrSize')
-    c.find('GetWidth').ignore()
-    c.find('GetHeight').ignore()
+    tools.ignoreConstOverloads(c)
     c.find('SetWidth').findOverload('units').ignore()
     c.find('SetHeight').findOverload('units').ignore()
     
     #-------------------------------------------------------
     c = module.find('wxTextAttrBorder')
-    c.find('GetWidth').ignore()
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
     c = module.find('wxTextAttrBorders')
-    c.find('GetLeft').ignore()
-    c.find('GetRight').ignore()
-    c.find('GetTop').ignore()
-    c.find('GetBottom').ignore()
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
     c = module.find('wxTextBoxAttr')
-    c.find('GetMargins').ignore()
-    c.find('GetLeftMargin').ignore()
-    c.find('GetRightMargin').ignore()
-    c.find('GetTopMargin').ignore()
-    c.find('GetBottomMargin').ignore()
-    
-    c.find('GetPosition').ignore()
-    
-    c.find('GetLeft').ignore()
-    c.find('GetRight').ignore()
-    c.find('GetTop').ignore()
-    c.find('GetBottom').ignore()
-
-    c.find('GetPadding').ignore()
-    c.find('GetLeftPadding').ignore()
-    c.find('GetRightPadding').ignore()
-    c.find('GetTopPadding').ignore()
-    c.find('GetBottomPadding').ignore()
-    
-    c.find('GetBorder').ignore()
-    c.find('GetLeftBorder').ignore()
-    c.find('GetRightBorder').ignore()
-    c.find('GetTopBorder').ignore()
-    c.find('GetBottomBorder').ignore()
-
-    c.find('GetOutline').ignore()
-    c.find('GetLeftOutline').ignore()
-    c.find('GetRightOutline').ignore()
-    c.find('GetTopOutline').ignore()
-    c.find('GetBottomOutline').ignore()
-
-    c.find('GetSize').ignore()
-    c.find('GetMinSize').ignore()
-    c.find('GetMaxSize').ignore()
-    c.find('GetWidth').ignore()
-    c.find('GetHeight').ignore()
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
     c = module.find('wxRichTextAttr')
-    c.find('GetTextBoxAttr').ignore()
+    tools.ignoreConstOverloads(c)
     
 
     #-------------------------------------------------------
     c = module.find('wxRichTextProperties')
-    c.find('operator[]').ignore()
-    c.find('GetProperties').ignore()
+    tools.ignoreConstOverloads(c)
 
     c.find('SetProperty').findOverload('bool').ignore()
     
     
     #-------------------------------------------------------
     c = module.find('wxRichTextSelection')
-    c.find('GetRanges').ignore()
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
     c = module.find('wxRichTextObject')
     #c.find('ImportFromXML').ignore()
-    c.find('GetRange').ignore()
-    c.find('GetOwnRange').ignore()
-    c.find('GetAttributes').ignore()
-    c.find('GetProperties').ignore()
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
     c = module.find('wxRichTextCompositeObject')
-    c.find('GetChildren').ignore()
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
     c = module.find('wxRichTextLine')
-    c.find('GetRange').ignore()
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
@@ -236,7 +186,7 @@ def run():
     
     #-------------------------------------------------------
     c = module.find('wxRichTextBuffer')
-    c.find('GetFontTable').ignore()
+    tools.ignoreConstOverloads(c)
 
     # More untyped wxLists
     module.addItem(
@@ -257,12 +207,12 @@ def run():
 
     #-------------------------------------------------------
     c = module.find('wxRichTextTable')
-    c.find('GetCells').ignore()
+    tools.ignoreConstOverloads(c)
     
     
     #-------------------------------------------------------
     c = module.find('wxRichTextObjectAddress')
-    c.find('GetAddress').ignore()
+    tools.ignoreConstOverloads(c)
 
 
     #-------------------------------------------------------
@@ -277,7 +227,7 @@ def run():
     
     #-------------------------------------------------------
     c = module.find('wxRichTextAction')
-    c.find('GetContainerAddress').ignore()
+    tools.ignoreConstOverloads(c)
 
     
     #-------------------------------------------------------

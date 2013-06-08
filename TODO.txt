@@ -138,10 +138,7 @@ other dev stuff
   * Reimplement the classes in the valgen, valnum and valtext headers as
     Python code, and make them visible in the core wx namespace?  
     
-  * It would be nice to have a way to automatically ignore one overload if it
-    only differs from another overload by constness.  See etg/richtextbuffer.py 
-    for why.
-
+  
 
   
   

@@ -149,6 +149,36 @@ def ignoreAllOperators(node):
         if isinstance(item, extractors.MethodDef) and item.name.startswith('operator'):
             item.ignore()
 
+
+def ignoreConstOverloads(node):
+    """
+    If a method is overloaded and one of them only differs by const-ness,
+    then ignore it.
+    """
+    def _checkOverloads(item):
+        overloads = item.all()
+        for i in range(len(overloads)):
+            for j in range(len(overloads)):
+                if i == j:
+                    continue
+                item1 = overloads[i]
+                item2 = overloads[j]
+                if item1.ignored or item2.ignored:
+                    continue
+                if (item1.argsString.replace(' const', '').strip() == 
+                    item2.argsString.replace(' const', '').strip()):
+                    if item1.isConst:
+                        item1.ignore()
+                        return
+                    elif item2.isConst:
+                        item2.ignore()
+                        return
+        
+    for item in node.items:
+        if isinstance(item, extractors.MethodDef) and item.overloads:
+            _checkOverloads(item)
+            
+            
             
 def addAutoProperties(node):
     """
