@@ -68,13 +68,26 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
+    module.addHeaderCode('#include <wx/richtext/richtextbuffer.h>')
+    
     module.addItem(
         tools.wxArrayWrapperTemplate('wxRichTextRangeArray', 'wxRichTextRange', module))
     module.addItem(
         tools.wxArrayWrapperTemplate('wxRichTextAttrArray', 'wxRichTextAttr', module))
     module.addItem(
-        tools.wxArrayWrapperTemplate('wxRichTextVariantArray', 'wxVariant', module))
-         
+        tools.wxArrayWrapperTemplate('wxRichTextVariantArray', 'wxVariant', module))     
+    module.addItem(
+        tools.wxListWrapperTemplate('wxRichTextObjectList', 'wxRichTextObject', module))
+    module.addItem(
+        tools.wxListWrapperTemplate('wxRichTextLineList', 'wxRichTextLine', module))
+    
+    # Can this even work?
+    module.addItem(
+        tools.wxArrayWrapperTemplate('wxRichTextObjectPtrArray', 'wxRichTextObject', module))     
+    module.addItem(
+        tools.wxArrayWrapperTemplate('wxRichTextObjectPtrArrayArray', 'wxRichTextObjectPtrArray', module))     
+    
+        
     
     module.find('wxRICHTEXT_ALL').ignore()
     module.find('wxRICHTEXT_NONE').ignore()
@@ -84,6 +97,16 @@ def run():
         RICHTEXT_NONE = RichTextRange(-1, -1)
         RICHTEXT_NO_SELECTION = RichTextRange(-2, -2)
         """)
+    
+    module.insertItem(0, etgtools.WigCode("""\
+        // forward declarations
+        class wxRichTextStyleDefinition;
+        class wxRichTextListStyleDefinition;
+        class wxRichTextXMLHandler;
+        class wxRichTextCtrl;
+        class wxRichTextStyleSheet;
+        class wxRichTextFloatCollector;
+        """))
     
     
     #-------------------------------------------------------
@@ -180,9 +203,112 @@ def run():
 
 
     #-------------------------------------------------------
+    c = module.find('wxRichTextObject')
+    #c.find('ImportFromXML').ignore()
+    c.find('GetRange').ignore()
+    c.find('GetOwnRange').ignore()
+    c.find('GetAttributes').ignore()
+    c.find('GetProperties').ignore()
+
+
+    #-------------------------------------------------------
+    c = module.find('wxRichTextCompositeObject')
+    c.find('GetChildren').ignore()
+
+
+    #-------------------------------------------------------
+    c = module.find('wxRichTextLine')
+    c.find('GetRange').ignore()
+
+
+    #-------------------------------------------------------
+    c = module.find('wxRichTextParagraph')
+    
+    # These methods use an untyped wxList, but since we know what is in it
+    # we'll make a fake typed list for wxPython so we can know what kinds of
+    # values to get from it.
+    module.addItem(
+        tools.wxListWrapperTemplate('wxList', 'wxRichTextObject', module, 
+                                    fakeListClassName='wxRichTextObjectList_'))
+    c.find('MoveToList.list').type = 'wxRichTextObjectList_&'
+    c.find('MoveFromList.list').type = 'wxRichTextObjectList_&'
+    
+    
+    #-------------------------------------------------------
+    c = module.find('wxRichTextBuffer')
+    c.find('GetFontTable').ignore()
+
+    # More untyped wxLists
+    module.addItem(
+        tools.wxListWrapperTemplate('wxList', 'wxRichTextFileHandler', module, 
+                                    fakeListClassName='wxRichTextFileHandlerList'))
+    c.find('GetHandlers').type = 'wxRichTextFileHandlerList&'
+    c.find('GetHandlers').noCopy = True
+    
+    module.addItem(
+        tools.wxListWrapperTemplate('wxList', 'wxRichTextDrawingHandler', module, 
+                                    fakeListClassName='wxRichTextDrawingHandlerList'))
+    c.find('GetDrawingHandlers').type = 'wxRichTextDrawingHandlerList&'
+    c.find('GetDrawingHandlers').noCopy = True
+
+    # TODO: Need a template to wrap STRING_HASH_MAP
+    c.find('GetFieldTypes').ignore()
+    
+
+    #-------------------------------------------------------
+    c = module.find('wxRichTextTable')
+    c.find('GetCells').ignore()
+    
+    
+    #-------------------------------------------------------
+    c = module.find('wxRichTextObjectAddress')
+    c.find('GetAddress').ignore()
+
+
+    #-------------------------------------------------------
+    c = module.find('wxRichTextCommand')
+    
+    module.addItem(
+        tools.wxListWrapperTemplate('wxList', 'wxRichTextAction', module, 
+                                    fakeListClassName='wxRichTextActionList'))
+    c.find('GetActions').type = 'wxRichTextActionList&'
+    c.find('GetActions').noCopy = True
+       
+    
+    #-------------------------------------------------------
+    c = module.find('wxRichTextAction')
+    c.find('GetContainerAddress').ignore()
+
+    
+    #-------------------------------------------------------
+    c = module.find('wxRichTextFileHandler')
+    c.find('DoLoadFile').ignore(False)
+    c.find('DoSaveFile').ignore(False)
+    
+    c = module.find('wxRichTextPlainTextHandler')
+    c.find('DoLoadFile').ignore(False)
+    c.find('DoSaveFile').ignore(False)
+
+    
+    #-------------------------------------------------------
+    #-------------------------------------------------------
     #-------------------------------------------------------
     #-------------------------------------------------------
 
+
+    
+    
+    #-------------------------------------------------------
+    # Ignore all Dump() methods since we don't wrap wxTextOutputStream.
+    
+    # TODO: try swithcing the parameter type to wxOutputStream and then in
+    # the wrapper code create a wxTextOutputStream from that to pass on to
+    # Dump.
+    
+    for m in module.findAll('Dump'):
+        if m.findItem('stream'):
+            m.ignore()
+    
 
     
     #-----------------------------------------------------------------
