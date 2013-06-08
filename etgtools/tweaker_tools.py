@@ -57,9 +57,12 @@ def removeWxPrefixes(node):
             
 
 def removeWxPrefix(name):
+    if name.startswith('wx.') or name.startswith('``wx.'):
+        return name
+    
     if name.startswith('wx') and not name.startswith('wxEVT_'):
         name = name[2:]
-
+    
     if name.startswith('``wx') and not name.startswith('``wxEVT_'):
         name = name[0:2] + name[4:]
         
