@@ -29,6 +29,8 @@ INCLUDES = [
              'richtextctrl',
              'richtexthtml',
              'richtextxml',
+             'richtextprint',
+             
              ]
 
 
