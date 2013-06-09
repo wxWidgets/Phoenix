@@ -528,7 +528,7 @@ def build(bld):
     bld(features = 'c cxx cxxshlib pyext',
         target   = makeTargetName(bld, '_richtext'),
         source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXRICHTEXT WXPY',
+        uselib   = 'WXHTML WXRICHTEXT WXPY',
         )
     makeExtCopyRule(bld, '_richtext')
 
