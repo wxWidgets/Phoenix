@@ -80,6 +80,7 @@ MODULENAME_REPLACE = {'_core'    : '',
                       '_xml'     : 'xml.',
                       '_xrc'     : 'xrc.',
                       '_grid'    : 'grid.',
+                      '_richtext': 'richtext.',
                       }
 
 NO_MODULE = {
