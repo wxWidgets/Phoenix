@@ -41,7 +41,7 @@ class PeakMeterCtrlDemo(wx.Panel):
         colour = self.mainPanel.GetBackgroundColour()
         self.backColour = wx.ColourPickerCtrl(self.mainPanel, colour=colour)
         self.lowColour = wx.ColourPickerCtrl(self.mainPanel, colour=wx.GREEN)
-        self.mediumColour = wx.ColourPickerCtrl(self.mainPanel, colour=YELLOW)
+        self.mediumColour = wx.ColourPickerCtrl(self.mainPanel, colour=wx.YELLOW)
         self.highColour = wx.ColourPickerCtrl(self.mainPanel, colour=wx.RED)
 
         self.timer = wx.Timer(self)
