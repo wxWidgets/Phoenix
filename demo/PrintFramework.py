@@ -125,7 +125,7 @@ class TestPrintPanel(wx.Panel):
     def OnPageSetup(self, evt):
         psdd = wx.PageSetupDialogData(self.printData)
         psdd.EnablePrinter(True)
-        psdd.CalculatePaperSizeFromId()
+        # psdd.CalculatePaperSizeFromId()
         dlg = wx.PageSetupDialog(self, psdd)
         dlg.ShowModal()
 
@@ -142,7 +142,7 @@ class TestPrintPanel(wx.Panel):
         printout2 = MyPrintout(self.canvas, self.log)
         self.preview = wx.PrintPreview(printout, printout2, data)
 
-        if not self.preview.Ok():
+        if not self.preview.IsOk():
             self.log.WriteText("Houston, we have a problem...\n")
             return
 
