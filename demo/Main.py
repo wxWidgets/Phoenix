@@ -73,8 +73,8 @@ images = None
 
 # For debugging
 ##wx.Trap();
-##print "wx.VERSION_STRING = %s (%s)" % (wx.VERSION_STRING, wx.USE_UNICODE and 'unicode' or 'ansi')
-##print "pid:", os.getpid()
+##print("wx.VERSION_STRING = %s (%s)" % (wx.VERSION_STRING, wx.USE_UNICODE and 'unicode' or 'ansi'))
+##print("pid:", os.getpid())
 ##raw_input("Press Enter...")
 
 #---------------------------------------------------------------------------
@@ -2482,7 +2482,7 @@ class wxPythonDemo(wx.Frame):
 
         self.StopDownload()
         self.ovr.SetPage(text)
-        #print "load time: ", time.time() - start
+        #print("load time: ", time.time() - start)
 
     # Menu methods
     def OnFileExit(self, *event):
@@ -2492,10 +2492,10 @@ class wxPythonDemo(wx.Frame):
         app = wx.GetApp()
         if event.Checked():
             app.RedirectStdio()
-            print "Print statements and other standard output will now be directed to this window."
+            print("Print statements and other standard output will now be directed to this window.")
         else:
             app.RestoreStdio()
-            print "Print statements and other standard output will now be sent to the usual location."
+            print("Print statements and other standard output will now be sent to the usual location.")
 
 
     def OnAllowDownload(self, event):

@@ -20,7 +20,7 @@ class MyMiniFrame(wx.MiniFrame):
         self.Close(True)
 
     def OnCloseWindow(self, event):
-        print "OnCloseWindow"
+        # print("OnCloseWindow")
         self.Destroy()
 
 #---------------------------------------------------------------------------
