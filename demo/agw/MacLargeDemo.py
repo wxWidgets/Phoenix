@@ -110,27 +110,27 @@ class MacRenderer(object):
 
     DONE_BITMAP = None
     REMAINING_BITMAP = None
-    
+
     def __init__(self, parent):
 
         self.progressValue = random.randint(1, 99)
-        
+
 
     def DrawSubItem(self, dc, rect, line, highlighted, enabled):
         """Draw a custom progress bar using double buffering to prevent flicker"""
 
-        canvas = wx.EmptyBitmap(rect.width, rect.height)
+        canvas = wx.Bitmap(rect.width, rect.height)
         mdc = wx.MemoryDC()
         mdc.SelectObject(canvas)
 
         if highlighted:
-            mdc.SetBackground(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
+            mdc.SetBackground(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
             mdc.SetTextForeground(wx.WHITE)
         else:
-            mdc.SetBackground(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW)))
+            mdc.SetBackground(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW)))
         mdc.Clear()
 
-        mdc.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        mdc.SetFont(wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
 
         if line == 0:
             text1 = "Apple Ads"
@@ -147,7 +147,7 @@ class MacRenderer(object):
         xtext, ytext = mdc.GetTextExtent(text1)
         mdc.DrawText(text1, 0, ypos)
         ypos += ytext + 5
-        
+
         mdc.SetFont(wx.Font(7, wx.SWISS, wx.NORMAL, wx.NORMAL, False))
 
         xtext, ytext = mdc.GetTextExtent(text2)
@@ -155,35 +155,35 @@ class MacRenderer(object):
         ypos += ytext + 5
 
         self.DrawProgressBar(mdc, 0, ypos, rect.width, 20, progress)
-        
+
         mdc.SetFont(wx.Font(7, wx.SWISS, wx.NORMAL, wx.NORMAL, False))
         ypos += 25
 
         mdc.DrawText(text3, 0, ypos)
         dc.Blit(rect.x+3, rect.y, rect.width-6, rect.height, mdc, 0, 0)
-        
+
 
     def GetLineHeight(self):
 
         dc = wx.MemoryDC()
-        dc.SelectObject(wx.EmptyBitmap(1, 1))
-        dc.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        dc.SelectObject(wx.Bitmap(1, 1))
+        dc.SetFont(wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         dummy, ytext1 = dc.GetTextExtent("Agw")
-        dc.SetFont(wx.Font(7, wx.SWISS, wx.NORMAL, wx.NORMAL, False))
+        dc.SetFont(wx.Font(7, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False))
         dummy, ytext2 = dc.GetTextExtent("Agw")
 
         dc.SelectObject(wx.NullBitmap)
         return ytext1 + 2*ytext2 + 40
-    
+
 
     def GetSubItemWidth(self):
 
         return 250
-    
+
 
     def DrawHorizontalPipe(self, dc, x, y, w, colour):
         """Draws a horizontal 3D-looking pipe."""
-        
+
         for r in range(PIPE_HEIGHT):
             red = int(colour.Red() * math.sin((math.pi/PIPE_HEIGHT)*r))
             green = int(colour.Green() * math.sin((math.pi/PIPE_HEIGHT)*r))
@@ -194,26 +194,26 @@ class MacRenderer(object):
 
     def DrawProgressBar(self, dc, x, y, w, h, percent):
         """
-        Draws a progress bar in the (x,y,w,h) box that represents a progress of 
-        'percent'. The progress bar is only horizontal and it's height is constant 
-        (PIPE_HEIGHT). The 'h' parameter is used to vertically center the progress 
+        Draws a progress bar in the (x,y,w,h) box that represents a progress of
+        'percent'. The progress bar is only horizontal and it's height is constant
+        (PIPE_HEIGHT). The 'h' parameter is used to vertically center the progress
         bar in the allotted space.
-        
+
         The drawing is speed-optimized. Two bitmaps are created the first time this
         function runs - one for the done (green) part of the progress bar and one for
         the remaining (white) part. During normal operation the function just cuts
         the necessary part of the two bitmaps and draws them.
         """
-                
+
         # Create two pipes
         if self.DONE_BITMAP is None:
-            self.DONE_BITMAP = wx.EmptyBitmap(PIPE_WIDTH, PIPE_HEIGHT)
+            self.DONE_BITMAP = wx.Bitmap(PIPE_WIDTH, PIPE_HEIGHT)
             mdc = wx.MemoryDC()
             mdc.SelectObject(self.DONE_BITMAP)
             self.DrawHorizontalPipe(mdc, 0, 0, PIPE_WIDTH, wx.GREEN)
             mdc.SelectObject(wx.NullBitmap)
 
-            self.REMAINING_BITMAP = wx.EmptyBitmap(PIPE_WIDTH, PIPE_HEIGHT)
+            self.REMAINING_BITMAP = wx.Bitmap(PIPE_WIDTH, PIPE_HEIGHT)
             mdc = wx.MemoryDC()
             mdc.SelectObject(self.REMAINING_BITMAP)
             self.DrawHorizontalPipe(mdc, 0, 0, PIPE_WIDTH, wx.RED)
@@ -221,7 +221,7 @@ class MacRenderer(object):
             mdc.SelectObject(wx.NullBitmap)
 
         # Center the progress bar vertically in the box supplied
-        y = y + (h - PIPE_HEIGHT)/2 
+        y = y + (h - PIPE_HEIGHT)/2
 
         if percent == 0:
             middle = 0
@@ -230,7 +230,7 @@ class MacRenderer(object):
 
         if w < 1:
             return
-        
+
         if middle == 0: # not started
             bitmap = self.REMAINING_BITMAP.GetSubBitmap((1, 0, w, PIPE_HEIGHT))
             dc.DrawBitmap(bitmap, x, y, False)
@@ -242,30 +242,30 @@ class MacRenderer(object):
             dc.DrawBitmap(doneBitmap, x, y, False)
             remainingBitmap = self.REMAINING_BITMAP.GetSubBitmap((0, 0, w - middle, PIPE_HEIGHT))
             dc.DrawBitmap(remainingBitmap, x + middle, y, False)
-    
+
 
 class TestUltimateListCtrl(ULC.UltimateListCtrl, listmix.ListCtrlAutoWidthMixin):
-    
+
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, agwStyle=0):
-        
+
         ULC.UltimateListCtrl.__init__(self, parent, id, pos, size, style, agwStyle)
         listmix.ListCtrlAutoWidthMixin.__init__(self)
-        
-        
+
+
 class UltimateListCtrlPanel(wx.Panel):
-    
+
     def __init__(self, parent, log):
 
         wx.Panel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.log = log        
+        self.log = log
         self.il = wx.ImageList(32, 32)
 
         self.il.Add(folder.GetBitmap())
         self.il.Add(movie.GetBitmap())
-        
+
         self.list = TestUltimateListCtrl(self, -1,
                                          agwStyle=wx.LC_REPORT
                                          | wx.BORDER_SUNKEN
@@ -276,7 +276,7 @@ class UltimateListCtrlPanel(wx.Panel):
                                          | wx.LC_HRULES
                                          #| wx.LC_SINGLE_SEL
                                          | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
-        
+
         self.list.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         sizer.Add(self.list, 1, wx.EXPAND)
 
@@ -285,25 +285,25 @@ class UltimateListCtrlPanel(wx.Panel):
         self.SetAutoLayout(True)
 
         self.Bind(wx.EVT_LIST_COL_BEGIN_DRAG, self.OnColBeginDrag, self.list)
-        
+
 
     def PopulateList(self):
 
         self.list.Freeze()
 
         info = ULC.UltimateListItem()
-        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
-        info._format = 0
-        info._text = ""
-        
+        info.Mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
+        info.Align = 0
+        info.Text = ""
+
         self.list.InsertColumnInfo(0, info)
 
         info = ULC.UltimateListItem()
-        info._format = wx.LIST_FORMAT_LEFT
-        info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
-        info._image = []
-        info._text = "Some useful info here"
-        
+        info.Align = wx.LIST_FORMAT_LEFT
+        info.Mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_FORMAT
+        info.Image = []
+        info.Text = "Some useful info here"
+
         self.list.InsertColumnInfo(1, info)
 
         for i in xrange(2):
@@ -325,7 +325,7 @@ class UltimateListCtrlPanel(wx.Panel):
             return
 
         event.Skip()
-        
+
 
 #---------------------------------------------------------------------------
 
@@ -338,11 +338,11 @@ class TestFrame(wx.Frame):
         self.log = log
         # Create the CustomTreeCtrl, using a derived class defined below
         self.ulc = UltimateListCtrlPanel(self, self.log)
-    
+
         self.SetIcon(images.Mondrian.GetIcon())
         self.CenterOnScreen()
         self.Show()
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
