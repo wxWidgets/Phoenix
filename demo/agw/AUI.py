@@ -1539,7 +1539,7 @@ class AuiFrame(wx.Frame):
 
         try:
             self.gauge.Pulse()
-        except wx.PyDeadObjectError:
+        except:
             self.timer.Stop()
 
 
@@ -2339,19 +2339,19 @@ class AuiFrame(wx.Frame):
 
             m1 =  wx.MenuItem(menuPopup, 10001, "Drop Down Item 1")
             m1.SetBitmap(bmp)
-            menuPopup.AppendItem(m1)
+            menuPopup.Append(m1)
 
             m2 =  wx.MenuItem(menuPopup, 10002, "Drop Down Item 2")
             m2.SetBitmap(bmp)
-            menuPopup.AppendItem(m2)
+            menuPopup.Append(m2)
 
             m3 =  wx.MenuItem(menuPopup, 10003, "Drop Down Item 3")
             m3.SetBitmap(bmp)
-            menuPopup.AppendItem(m3)
+            menuPopup.Append(m3)
 
             m4 =  wx.MenuItem(menuPopup, 10004, "Drop Down Item 4")
             m4.SetBitmap(bmp)
-            menuPopup.AppendItem(m4)
+            menuPopup.Append(m4)
 
             # line up our menu with the button
             rect = tb.GetToolRect(event.GetId())
@@ -2518,7 +2518,8 @@ class AuiFrame(wx.Frame):
                                wx.OK | wx.ICON_INFORMATION)
 
         if wx.Platform != '__WXMAC__':
-            dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False))
+            dlg.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL,
+                                False, '', wx.FONTENCODING_DEFAULT))
 
         dlg.ShowModal()
         dlg.Destroy()
