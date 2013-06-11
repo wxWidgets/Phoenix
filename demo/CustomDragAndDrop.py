@@ -45,7 +45,7 @@ class DoodlePad(wx.Window):
             self.StartDragOpperation()
         elif self.mode == "Draw":
             self.curLine = []
-            self.x, self.y = event.GetPositionTuple()
+            self.x, self.y = event.GetPosition()
             self.CaptureMouse()
         else:
             wx.Bell()
@@ -64,13 +64,14 @@ class DoodlePad(wx.Window):
     def OnMotion(self, event):
         if self.HasCapture() and event.Dragging() and not self.mode == "Drag":
             dc = wx.ClientDC(self)
-            dc.BeginDrawing()
+            # dc.BeginDrawing()
             dc.SetPen(wx.Pen(wx.BLUE, 3))
-            coords = (self.x, self.y) + event.GetPositionTuple()
+            evtPos = event.GetPosition()
+            coords = (self.x, self.y) + (evtPos.x, evtPos.y)
             self.curLine.append(coords)
             dc.DrawLine(*coords)
-            self.x, self.y = event.GetPositionTuple()
-            dc.EndDrawing()
+            self.x, self.y = event.GetPosition()
+            # dc.EndDrawing()
 
     def StartDragOpperation(self):
         # pickle the lines list
@@ -83,7 +84,7 @@ class DoodlePad(wx.Window):
 
         # Also create a Bitmap version of the drawing
         size = self.GetSize()
-        bmp = wx.EmptyBitmap(size.width, size.height)
+        bmp = wx.Bitmap(size.width, size.height)
         dc = wx.MemoryDC()
         dc.SelectObject(bmp)
         dc.SetBackground(wx.WHITE_BRUSH)

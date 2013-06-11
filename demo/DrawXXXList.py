@@ -132,7 +132,7 @@ def makeRandomColors(num):
 
     for i in range(num):
         c = random.choice(colours)
-        colors.append(wx.NamedColour(c))
+        colors.append(wx.Colour(c))
     return colors
 
 
