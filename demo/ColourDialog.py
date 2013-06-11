@@ -1,5 +1,5 @@
 
-import  wx
+import wx
 
 #---------------------------------------------------------------------------
 
@@ -27,7 +27,10 @@ class TestPanel(wx.Panel):
 
             # ... then do something with it. The actual colour data will be
             # returned as a three-tuple (r, g, b) in this particular case.
-            self.log.WriteText('You selected: %s\n' % str(data.GetColour().Get()))
+            color = data.GetColour().Get()
+            self.log.WriteText('You selected: %s\n' % str(color))
+            self.SetBackgroundColour(color)
+            self.Refresh()
 
         # Once the dialog is destroyed, Mr. wx.ColourData is no longer your
         # friend. Don't use it again!
