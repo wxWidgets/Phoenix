@@ -135,7 +135,7 @@ class TestHtmlPanel(wx.Panel):
         dlg = wx.FileDialog(self, style=wx.FD_OPEN,
                             wildcard='HTML Files|*.htm;*.html', )
 
-        if dlg.ShowModal():
+        if dlg.ShowModal() == wx.OK:
             path = dlg.GetPath()
             self.html.LoadPage(path)
 
@@ -145,7 +145,7 @@ class TestHtmlPanel(wx.Panel):
     def OnLoadURL(self, event):
         dlg = wx.TextEntryDialog(self, "Enter a URL")
 
-        if dlg.ShowModal():
+        if dlg.ShowModal() == wx.OK:
             url = dlg.GetValue()
             self.html.LoadPage(url)
 
