@@ -1,0 +1,73 @@
+Each of the leaf items in the tree is a separate demo.  Click and learn!
+Use the source Luke!
+Many of the demos have some helpful overview text associated with them.  Simply click on the first tab in the notebook control after selecting the demo.  You can switch back and forth to the demo page as often as you like.
+You can also view the source code for each demo by clicking on the second notebook tab.
+This demo is a teaching tool.  The source code for each sample can be modified and you can see the results immediately!
+Be sure to subscribe to the mail list.  Go to http://wxpython.org/maillist.php today!
+The wxPyWiki is a place where wxPython users can help other users, and is a colaborative documentation system.  See http://wiki.wxpython.org.
+You shouldn't pee on an electric fence!
+The whole world is a tuxedo and you are a pair of brown shoes.
+Cold hands, no gloves.
+Learn to pause -- or nothing worthwhile can catch up to you.
+Don't kiss an elephant on the lips today.
+Grief can take care of itself; but to get the full value of a joy you must have somebody to divide it with. -- Mark Twain
+Stay away from hurricanes for a while.
+Beware of a dark-haired man with a loud tie.
+Don't ask Robin what these quotes mean, he doesn't remember.
+Your lucky number has been disconnected.
+You single-handedly fought your way into this hopeless mess.
+A few hours grace before the madness begins again.
+Your fly might be open (but don't check it just now).
+Never commit yourself!  Let someone else commit you.
+Noise proves nothing.  Often a hen who has merely laid an egg cackles as if she laid an asteroid.   -- Mark Twain
+The very ink with which all history is written is merely fluid prejudice.   -- Mark Twain
+Excellent time to become a missing person.
+Stay away from flying saucers today.
+Look afar and see the end from the beginning.
+Tomorrow, this will be part of the unchangeable past but fortunately, it can still be changed today.
+It has long been an axiom of mine that the little things are infinitely the most important.  -- Sir Arthur Conan Doyle
+I don't know half of you half as well as I should like; and I like less than half of you half as well as you deserve.  -- J. R. R. Tolkien
+You are only young once, but you can stay immature indefinitely.
+You look like a million dollars.  All green and wrinkled.
+The difference between the right word and the almost right word is the difference between lightning and the lightning bug.  -- Mark Twain
+The countdown had stalled at 'T' minus 69 seconds when Desiree, the first female ape to go up in space, winked at me slyly and pouted her thick, rubbery lips unmistakably -- the first of many such advances during what would prove to be the longest, and most memorable, space voyage of my career.                -- Winning sentence, 1985 Bulwer-Lytton bad fiction contest.
+Q: Why haven't you graduated yet?  A: Well, Dad, I could have finished years ago, but I wanted my dissertation to rhyme.
+You are scrupulously honest, frank, and straightforward.  Therefore you have few friends.
+Don't you wish you had more energy... or less ambition?
+Are you making all this up as you go along?  I am.
+Kindness is a language which the deaf can hear and the blind can read.                -- Mark Twain
+Don't let your mind wander -- it's too little to be let out alone.
+Change your thoughts and you change your world.
+Don't you feel more like you do now than you did when you came in?
+Today is the tomorrow you worried about yesterday.
+Caution: breathing may be hazardous to your health.
+You will soon forget this.
+Go not to the elves for counsel, for they will say both yes and no.                -- J.R.R. Tolkien
+Today is the first day of the rest of your life.
+Cheer Up!  Things are getting worse at a slower rate.
+You are the only person to ever get this message.
+You're almost as happy as you think you are.
+Ships are safe in harbor, but they were never meant to stay there.
+I must have a prodigious quantity of mind; it takes me as much as a week sometimes to make it up.                -- Mark Twain
+If you stand on your head, you will get footprints in your hair.
+All generalizations are false, including this one.                -- Mark Twain
+You have the body of a 19 year old.  Please return it before it gets wrinkled.
+Your ignorance cramps my conversation.
+The brain is a wonderful organ; it starts working the moment you get up in the morning and does not stop until you get into the office. -- Robert Frost
+By working faithfully eight hours a day, you may get to be a boss and work twelve hours a day.  -- Robert Frost
+In three words I can sum up everything I've learned about life: it goes on. -- Robert Frost
+If we get involved in a nuclear war, would the electromagnetic pulses from exploding bombs damage my videotapes? 
+The earth? Oh the earth will be gone in a few seconds...I'm going to blow it up. It's obstructing my view of Venus.  -- Marvin the Martian
+There's that word again, 'heavy'. Why are things so heavy in the future? Is there a problem with the earth's gravitational pull? -- Dr Emmet Brown, "Back To The Future"
+I'm Luke Skywalker, I'm here to rescue you.
+It is good to have an end to journey towards; but it is the journey that matters, in the end.     -- Ursula K. Le Guin, "The Left Hand of Darkness"
+I was ready for everything -- except what actually happened.
+Flying is simple. You just throw yourself at the ground and miss. -- Douglas Adams, "So Long, and Thanks for the Fish"
+Man has always assumed that he is more intelligent than dolphins because he has achieved so much--the wheel, New York, wars and so on -- while all the dolphins had ever done was muck about in the water having a good time. But, conversely, the dolphins had always believed that they were far more intelligent than man -- for precisely the same reasons. -- Douglas Adams, "So Long, and Thanks for the Fish"
+I think animal testing is a terrible idea; they get all nervous and give the wrong answers. --A Bit of Fry and Laurie
+All right, brain. You don't like me and I don't like you, but let's just do this and I can get back to killing you with beer. -- Homer Simpson
+The most exciting phrase to hear in science, the one that heralds new discoveries, is not 'Eureka!' (I found it!) but 'That's funny ...' --Isaac Asimov
+Always listen to experts. They'll tell you what can't be done and why. Then do it. --Robert Heinlein
+Still waters run deep.
+Premature optimization is the root of all evil.  -- Donald Knuth
+If at first you don't succeed, you must be a programmer.
