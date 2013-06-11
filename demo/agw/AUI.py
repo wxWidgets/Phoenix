@@ -362,12 +362,12 @@ ID_NotebookMultiLine = ID_PaneBorderSize + 18
 # -- SizeReportCtrl --
 # (a utility control that always reports it's client size)
 
-class SizeReportCtrl(wx.PyControl):
+class SizeReportCtrl(wx.Control):
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                 size=wx.DefaultSize, mgr=None):
 
-        wx.PyControl.__init__(self, parent, id, pos, size, style=wx.NO_BORDER)
+        wx.Control.__init__(self, parent, id, pos, size, style=wx.NO_BORDER)
         self._mgr = mgr
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -557,7 +557,7 @@ class SettingsPanel(wx.Panel):
         s15.Add((1, 1), 1, wx.EXPAND)
         s15.SetItemMinSize(1, (180, 20))
 
-        grid_sizer = wx.GridSizer(0, 2)
+        grid_sizer = wx.GridSizer(rows=0, cols=2, vgap=5, hgap=5)
         grid_sizer.SetHGap(5)
         grid_sizer.Add(s1)
         grid_sizer.Add(s4)
@@ -607,14 +607,14 @@ class SettingsPanel(wx.Panel):
 
     def CreateColourBitmap(self, c):
 
-        image = wx.EmptyImage(25, 14)
+        image = wx.Image(25, 14)
         for x in xrange(25):
             for y in xrange(14):
                 pixcol = c
                 if x == 0 or x == 24 or y == 0 or y == 13:
                     pixcol = wx.BLACK
 
-                image.SetRGB(x, y, pixcol.Red(), pixcol.Green(), pixcol.Blue())
+                image.SetRGB(wx.Rect(wx.Size(25, 14)), pixcol.Red(), pixcol.Green(), pixcol.Blue())
 
         return image.ConvertToBitmap()
 
@@ -726,13 +726,13 @@ class SettingsPanel(wx.Panel):
 # Class ProgressGauge
 # ---------------------------------------------------------------------------- #
 
-class ProgressGauge(wx.PyWindow):
+class ProgressGauge(wx.Window):
     """ This class provides a visual alternative for wx.Gauge."""
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=(-1,30)):
         """ Default class constructor. """
 
-        wx.PyWindow.__init__(self, parent, id, pos, size, style=wx.BORDER_NONE)
+        wx.Window.__init__(self, parent, id, pos, size, style=wx.BORDER_NONE)
 
         self._value = 0
         self._steps = 16
@@ -786,8 +786,8 @@ class ProgressGauge(wx.PyWindow):
         self.DrawProgress(dc, xsize, ysize, increment)
 
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRADIENTINACTIVECAPTION)))
-        dc.DrawRectangleRect(self.GetClientRect())
+        dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRADIENTINACTIVECAPTION)))
+        dc.DrawRectangle(self.GetClientRect())
 
 
     def LightColour(self, colour, percent):
@@ -1050,10 +1050,10 @@ class AuiFrame(wx.Frame):
         guides_menu.AppendRadioItem(ID_AeroGuides, "Aero-Style Docking Guides")
         guides_menu.AppendRadioItem(ID_WhidbeyGuides, "Whidbey-Style Docking Guides")
 
-        perspectives_menu.AppendMenu(wx.ID_ANY, "Frame Perspectives", self._perspectives_menu)
-        perspectives_menu.AppendMenu(wx.ID_ANY, "AuiNotebook Perspectives", self._nb_perspectives_menu)
+        perspectives_menu.Append(wx.ID_ANY, "Frame Perspectives", self._perspectives_menu)
+        perspectives_menu.Append(wx.ID_ANY, "AuiNotebook Perspectives", self._nb_perspectives_menu)
         perspectives_menu.AppendSeparator()
-        perspectives_menu.AppendMenu(wx.ID_ANY, "Docking Guides", guides_menu)
+        perspectives_menu.Append(wx.ID_ANY, "Docking Guides", guides_menu)
 
         action_menu = wx.Menu()
         action_menu.AppendCheckItem(ID_VetoTree, "Veto Floating Of Tree Pane")
@@ -1072,7 +1072,7 @@ class AuiFrame(wx.Frame):
             self._requestPanes[ids] = pane.name
             attention_menu.Append(ids, pane.caption)
 
-        action_menu.AppendMenu(wx.ID_ANY, "Request User Attention For", attention_menu)
+        action_menu.Append(wx.ID_ANY, "Request User Attention For", attention_menu)
 
         help_menu = wx.Menu()
         help_menu.Append(wx.ID_ABOUT, "About...")
@@ -2608,7 +2608,7 @@ class AuiFrame(wx.Frame):
         ctrl.AddPage(self.CreateHTMLCtrl(ctrl), "Welcome to AUI", False, page_bmp)
 
         panel = wx.Panel(ctrl, -1)
-        flex = wx.FlexGridSizer(0, 2)
+        flex = wx.FlexGridSizer(rows=0, cols=2, vgap=2, hgap=2)
         flex.Add((5, 5))
         flex.Add((5, 5))
         flex.Add(wx.StaticText(panel, -1, "wxTextCtrl:"), 0, wx.ALL|wx.ALIGN_CENTRE, 5)
