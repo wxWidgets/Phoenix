@@ -272,7 +272,8 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
 
         UniChr = ''
         if "unicode" in wx.PlatformInfo:
-            UniChr = "\"" + unichr(evt.GetUnicodeKey()) + "\""
+            # UniChr = "\"" + unichr(evt.GetUnicodeKey()) + "\""
+            UniChr = "\"" + unichr(keycode) + "\""
 
         modifiers = ""
         for mod, ch in [(evt.ControlDown(),    'C'),
@@ -285,14 +286,15 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
             else:
                 modifiers += '-'
 
-        id = self.InsertStringItem(self.GetItemCount(), evType)
-        self.SetStringItem(id, 1, keyname)
-        self.SetStringItem(id, 2, str(keycode))
-        self.SetStringItem(id, 3, modifiers)
-        self.SetStringItem(id, 4, str(evt.GetUnicodeKey()))
-        self.SetStringItem(id, 5, UniChr)
-        self.SetStringItem(id, 6, str(evt.GetRawKeyCode()))
-        self.SetStringItem(id, 7, str(evt.GetRawKeyFlags()))
+        id = self.InsertItem(self.GetItemCount(), evType)
+        self.SetItem(id, 1, keyname)
+        self.SetItem(id, 2, str(keycode))
+        self.SetItem(id, 3, modifiers)
+        # self.SetItem(id, 4, str(evt.GetUnicodeKey()))
+        self.SetItem(id, 4, unicode(unichr(keycode)))
+        self.SetItem(id, 5, UniChr)
+        self.SetItem(id, 6, str(evt.GetRawKeyCode()))
+        self.SetItem(id, 7, str(evt.GetRawKeyFlags()))
 
         #print ( id, evType, keyname, str(keycode), modifiers, str(evt.GetRawKeyCode()), str(evt.GetRawKeyFlags()))
 

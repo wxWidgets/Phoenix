@@ -4,10 +4,10 @@
 # o wx.TheClipboard.Flush() generates a warning on program exit.
 #
 
-import  wx
-import  wx.stc  as  stc
+import wx
+import wx.stc as stc
 
-import  images
+import images
 
 #----------------------------------------------------------------------
 
@@ -268,27 +268,27 @@ def runTest(frame, nb, log):
 
     # some test stuff...
     if debug:
-        print "GetTextLength(): ", ed.GetTextLength(), len(ed.GetText())
-        print "GetText(): ", repr(ed.GetText())
-        print
-        print "GetStyledText(98, 104): ", repr(ed.GetStyledText(98, 104)), len(ed.GetStyledText(98, 104))
-        print
-        print "GetCurLine(): ", repr(ed.GetCurLine())
+        print("GetTextLength(): ", ed.GetTextLength(), len(ed.GetText()))
+        print("GetText(): ", repr(ed.GetText()))
+        print()
+        print("GetStyledText(98, 104): ", repr(ed.GetStyledText(98, 104)), len(ed.GetStyledText(98, 104)))
+        print()
+        print("GetCurLine(): ", repr(ed.GetCurLine()))
         ed.GotoPos(5)
-        print "GetCurLine(): ", repr(ed.GetCurLine())
-        print
-        print "GetLine(1): ", repr(ed.GetLine(1))
-        print
+        print("GetCurLine(): ", repr(ed.GetCurLine()))
+        print()
+        print("GetLine(1): ", repr(ed.GetLine(1)))
+        print()
         ed.SetSelection(25, 35)
-        print "GetSelectedText(): ", repr(ed.GetSelectedText())
-        print "GetTextRange(25, 35): ", repr(ed.GetTextRange(25, 35))
-        print "FindText(0, max, 'indicators'): ",
-        print ed.FindText(0, ed.GetTextLength(), "indicators")
+        print("GetSelectedText(): ", repr(ed.GetSelectedText()))
+        print("GetTextRange(25, 35): ", repr(ed.GetTextRange(25, 35)))
+        print("FindText(0, max, 'indicators'): ",)
+        print(ed.FindText(0, ed.GetTextLength(), "indicators")
         # if wx.USE_UNICODE:
         end = ed.GetLength()
         start = ed.PositionFromLine(uniline)
-        print "GetTextRange(%d, %d): " % (start, end),
-        print repr(ed.GetTextRange(start, end))
+        print("GetTextRange(%d, %d): " % (start, end),)
+        print(repr(ed.GetTextRange(start, end)))
 
 
     wx.CallAfter(ed.GotoPos, 0)
