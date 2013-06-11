@@ -386,11 +386,11 @@ class RulerCtrlDemo(wx.Frame):
 
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
-        fileMenu.AppendItem(item)
+        fileMenu.Append(item)
 
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
-        helpMenu.AppendItem(item)
+        helpMenu.Append(item)
 
         menuBar.Append(fileMenu, "&File")
         menuBar.Append(helpMenu, "&Help")

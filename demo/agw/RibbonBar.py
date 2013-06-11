@@ -765,7 +765,7 @@ class RibbonFrame(wx.Frame):
         item = None
 
         if colour != "Default":
-            c = wx.NamedColour(colour)
+            c = wx.Colour(colour)
 
         if value is not None:
             c = value
@@ -775,7 +775,7 @@ class RibbonFrame(wx.Frame):
             iWidth = 64
             iHeight = 40
 
-            bitmap = wx.EmptyBitmap(iWidth, iHeight)
+            bitmap = wx.Bitmap(iWidth, iHeight)
             dc.SelectObject(bitmap)
             b = wx.Brush(c)
             dc.SetPen(wx.BLACK_PEN)
