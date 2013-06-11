@@ -269,7 +269,7 @@ class SettingsPanel(wx.MiniFrame):
 
     def CreateColourBitmap(self, c):
 
-        image = wx.EmptyImage(25, 14)
+        image = wx.Image(25, 14)
 
         for x in xrange(25):
             for y in xrange(14):
@@ -277,7 +277,7 @@ class SettingsPanel(wx.MiniFrame):
                 if x == 0 or x == 24 or y == 0 or y == 13:
                     pixcol = wx.BLACK
 
-                image.SetRGB(x, y, pixcol.Red(), pixcol.Green(), pixcol.Blue())
+                image.SetRGB(wx.Rect(0, 0, 25, 14), pixcol.Red(), pixcol.Green(), pixcol.Blue())
 
         return image.ConvertToBitmap()
 
@@ -500,13 +500,13 @@ class ButtonPanelDemo(wx.Frame):
         file_menu = wx.Menu()
 
         item = wx.MenuItem(file_menu, wx.ID_ANY, "&Quit")
-        file_menu.AppendItem(item)
+        file_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnClose, item)
 
         edit_menu = wx.Menu()
 
         item = wx.MenuItem(edit_menu, wx.ID_ANY, "Set Bar Text")
-        edit_menu.AppendItem(item)
+        edit_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnSetBarText, item)
 
         edit_menu.AppendSeparator()
@@ -514,57 +514,57 @@ class ButtonPanelDemo(wx.Frame):
         submenu = wx.Menu()
 
         item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_LEFT", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         item.Check(True)
         self.Bind(wx.EVT_MENU, self.OnAlignment, item)
 
         item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_RIGHT", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnAlignment, item)
 
         item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_TOP", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnAlignment, item)
 
         item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_BOTTOM", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnAlignment, item)
 
-        edit_menu.AppendMenu(wx.ID_ANY, "&Alignment", submenu)
+        edit_menu.Append(wx.ID_ANY, "&Alignment", submenu)
 
         submenu = wx.Menu()
 
         item = wx.MenuItem(submenu, wx.ID_ANY, "Default Style", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnDefaultStyle, item)
 
         item = wx.MenuItem(submenu, wx.ID_ANY, "Gradient Style", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         item.Check(True)
         self.Bind(wx.EVT_MENU, self.OnGradientStyle, item)
 
-        edit_menu.AppendMenu(wx.ID_ANY, "&Styles", submenu)
+        edit_menu.Append(wx.ID_ANY, "&Styles", submenu)
 
         edit_menu.AppendSeparator()
 
         item = wx.MenuItem(submenu, wx.ID_ANY, "Settings Panel")
-        edit_menu.AppendItem(item)
+        edit_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnSettingsPanel, item)
 
         demo_menu = wx.Menu()
 
         item = wx.MenuItem(demo_menu, wx.ID_ANY, "Default Demo", kind=wx.ITEM_RADIO)
-        demo_menu.AppendItem(item)
+        demo_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnDefaultDemo, item)
 
         item = wx.MenuItem(demo_menu, wx.ID_ANY, "Button Only Demo", kind=wx.ITEM_RADIO)
-        demo_menu.AppendItem(item)
+        demo_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnButtonOnly, item)
 
         help_menu = wx.Menu()
 
         item = wx.MenuItem(help_menu, wx.ID_ANY, "&About...")
-        help_menu.AppendItem(item)
+        help_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
 
         mb.Append(file_menu, "&File")
@@ -877,15 +877,12 @@ def runTest(frame, nb, log):
 #----------------------------------------------------------------------
 
 
-
 overview = bp.__doc__
-
 
 
 if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])
-
 
 
