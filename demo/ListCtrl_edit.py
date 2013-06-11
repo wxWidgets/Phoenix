@@ -106,7 +106,7 @@ class TestListCtrlPanel(wx.Panel):
 
 
     def OnUseNative(self, event):
-        wx.SystemOptions.SetOptionInt("mac.listctrl.always_use_generic", not event.IsChecked())
+        wx.SystemOptions.SetOption("mac.listctrl.always_use_generic", not event.IsChecked())
         wx.GetApp().GetTopWindow().LoadDemo("ListCtrl_edit")
 
 
