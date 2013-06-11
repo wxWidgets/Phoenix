@@ -16,7 +16,7 @@
 #
 # o Ugh. AFter updating to the Bind() method, things lock up
 #   on various control clicks. Will have to debug. Only seems
-#   to happen on windows with calendar controls, though. 
+#   to happen on windows with calendar controls, though.
 #
 # 11/30/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -27,7 +27,7 @@
 import  os
 
 import  wx
-import  wx.lib.calendar 
+import  wx.lib.calendar
 
 import  images
 
@@ -637,13 +637,13 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-This control provides a Calendar control class for displaying and selecting dates.  
+This control provides a Calendar control class for displaying and selecting dates.
 In addition, the class is extended and can be used for printing/previewing.
 
-Additional features include weekend highlighting and business type Monday-Sunday 
+Additional features include weekend highlighting and business type Monday-Sunday
 format.
 
-See example for various methods used to set display month, year, and highlighted 
+See example for various methods used to set display month, year, and highlighted
 dates (different font and background colours).
 
 by Lorne White
