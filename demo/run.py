@@ -23,9 +23,9 @@ import wx.lib.mixins.inspection
 import sys, os
 
 # stuff for debugging
-print "Python", sys.version
-print "wx.version:", wx.version()
-print "pid:", os.getpid()
+print("Python " + sys.version)
+print("wx.version: " + wx.version())
+print("pid: " + str(os.getpid()))
 ##print "executable:", sys.executable; raw_input("Press Enter...")
 
 assertMode = wx.APP_ASSERT_DIALOG
@@ -149,9 +149,12 @@ def main(argv):
         print "Please specify a demo module name on the command-line"
         raise SystemExit
 
+    # ensure the CWD is the demo folder
+    demoFolder = os.path.dirname(__file__)
+    os.chdir(demoFolder)
+        
     name, ext  = os.path.splitext(argv[1])
     module = __import__(name)
-
 
     app = RunDemoApp(name, module, useShell)
     app.MainLoop()
