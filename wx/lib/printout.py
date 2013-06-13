@@ -21,7 +21,7 @@
 # o Generalize for non-2-dimensional sequences and non-text data
 #   (can use as a simple text printer by supplying a list of strings.)
 # o Add a small _main_ for self test
- 
+
 import  copy
 import  types
 import  wx
@@ -543,7 +543,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
 
             brush = wx.Brush(colour, wx.SOLID)
             self.DC.SetBrush(brush)
-            self.DC.SetPen(wx.Pen(wx.NamedColour('WHITE'), 0))
+            self.DC.SetPen(wx.Pen(wx.WHITE, 0))
 
             start_x = self.column[col]
             width = self.column[col+1] - start_x + 2
@@ -655,9 +655,9 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
         size = DC.GetSize()
         self.DC = DC
 
-        DC.BeginDrawing()
+        # DC.BeginDrawing()
         self.DrawText()
-        DC.EndDrawing()
+        # DC.EndDrawing()
 
         self.sizew = DC.MaxY()
         self.sizeh = DC.MaxX()
@@ -714,14 +714,14 @@ class PrintTable(object):
         self.printData.SetOrientation(orient)
 
     def SetColors(self):
-        self.row_def_line_colour = wx.NamedColour('BLACK')
+        self.row_def_line_colour = wx.BLACK
         self.row_def_line_size = 1
 
-        self.column_def_line_colour = wx.NamedColour('BLACK')
+        self.column_def_line_colour = wx.BLACK
         self.column_def_line_size = 1
-        self.column_colour = wx.NamedColour('WHITE')
+        self.column_colour = wx.WHITE
 
-        self.label_colour = wx.NamedColour('LIGHT GREY')
+        self.label_colour = wx.LIGHT_GREY
 
     def SetFonts(self):
         self.label_font = { "Name": self.default_font_name, "Size": 12, "Colour": [0, 0, 0], "Attr": [0, 0, 0] }
@@ -914,7 +914,7 @@ class PrintTable(object):
         printout = SetPrintout(self)
         printout2 = SetPrintout(self)
         self.preview = wx.PrintPreview(printout, printout2, data)
-        if not self.preview.Ok():
+        if not self.preview.IsOk():
             wx.MessageBox("There was a problem printing!", "Printing", wx.OK)
             return
 
@@ -942,7 +942,7 @@ class PrintTable(object):
 
     def DoDrawing(self, DC):
         size = DC.GetSize()
-        DC.BeginDrawing()
+        # DC.BeginDrawing()
 
         table = PrintTableDraw(self, DC, size)
         table.data = self.data
@@ -967,7 +967,7 @@ class PrintTable(object):
         table.OutCanvas()
         self.page_total = table.total_pages     # total display pages
 
-        DC.EndDrawing()
+        # DC.EndDrawing()
 
         self.ymax = DC.MaxY()
         self.xmax = DC.MaxX()
