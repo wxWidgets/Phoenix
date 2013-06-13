@@ -1,13 +1,13 @@
-# 
+#
 # 11/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o wx.TheClipboard.Flush() generates a warning on program exit.
-# 
+#
 
-import  wx
-import  wx.stc  as  stc
+import wx
+import wx.stc as stc
 
-import  images
+import images
 
 #----------------------------------------------------------------------
 
@@ -174,7 +174,7 @@ def runTest(frame, nb, log):
     #ed.StyleClearAll()
     #ed.SetScrollWidth(800)
     #ed.SetWrapMode(True)
-    #ed.SetUseAntiAliasing(False)    
+    #ed.SetUseAntiAliasing(False)
     #ed.SetViewEOL(True)
 
     #ed.CmdKeyClear(stc.STC_KEY_BACK,
@@ -185,19 +185,19 @@ def runTest(frame, nb, log):
 
     ed.SetText(demoText)
 
-    if wx.USE_UNICODE:
-        import codecs
-        decode = codecs.lookup("utf-8")[1]
+    # if wx.USE_UNICODE:
+    import codecs
+    decode = codecs.lookup("utf-8")[1]
 
-        ed.GotoPos(ed.GetLength())
-        ed.AddText("\n\nwx.StyledTextCtrl can also do Unicode:\n")
-        uniline = ed.GetCurrentLine()
-        unitext, l = decode('\xd0\x9f\xd0\xb8\xd1\x82\xd0\xbe\xd0\xbd - '
-                            '\xd0\xbb\xd1\x83\xd1\x87\xd1\x88\xd0\xb8\xd0\xb9 '
-                            '\xd1\x8f\xd0\xb7\xd1\x8b\xd0\xba \xd0\xbf\xd1\x80\xd0\xbe\xd0\xb3\xd1\x80\xd0\xb0\xd0\xbc\xd0\xbc\xd0\xb8\xd1\x80\xd0\xbe\xd0\xb2\xd0\xb0\xd0\xbd\xd0\xb8\xd1\x8f!\n\n')
-        ed.AddText('\tRussian: ')
-        ed.AddText(unitext)
-        ed.GotoPos(0)
+    ed.GotoPos(ed.GetLength())
+    ed.AddText("\n\nwx.StyledTextCtrl can also do Unicode:\n")
+    uniline = ed.GetCurrentLine()
+    unitext, l = decode('\xd0\x9f\xd0\xb8\xd1\x82\xd0\xbe\xd0\xbd - '
+                        '\xd0\xbb\xd1\x83\xd1\x87\xd1\x88\xd0\xb8\xd0\xb9 '
+                        '\xd1\x8f\xd0\xb7\xd1\x8b\xd0\xba \xd0\xbf\xd1\x80\xd0\xbe\xd0\xb3\xd1\x80\xd0\xb0\xd0\xbc\xd0\xbc\xd0\xb8\xd1\x80\xd0\xbe\xd0\xb2\xd0\xb0\xd0\xbd\xd0\xb8\xd1\x8f!\n\n')
+    ed.AddText('\tRussian: ')
+    ed.AddText(unitext)
+    ed.GotoPos(0)
     #else:
     #    #ed.StyleSetFontEncoding(stc.STC_STYLE_DEFAULT, wx.FONTENCODING_KOI8)
     #    #text = u'\u041f\u0438\u0442\u043e\u043d - \u043b\u0443\u0447\u0448\u0438\u0439 \u044f\u0437\u044b\u043a \n\u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f!'
@@ -207,7 +207,7 @@ def runTest(frame, nb, log):
     #    #text = text.encode('big5')
     #    ed.GotoPos(ed.GetLength())
     #    ed.AddText('\n\n' + text)
-        
+
     ed.EmptyUndoBuffer()
 
     # make some styles
@@ -217,8 +217,7 @@ def runTest(frame, nb, log):
     ed.StyleSetSpec(2, "face:%s,italic,fore:#FF0000,size:%d" % (face2, pb))
     ed.StyleSetSpec(3, "face:%s,bold,size:%d" % (face2, pb))
     ed.StyleSetSpec(4, "face:%s,size:%d" % (face1, pb-1))
-    ed.StyleSetSpec(5, "back:#FFF0F0")
-    
+
     # Now set some text to those styles...  Normally this would be
     # done in an event handler that happens when text needs displayed.
     ed.StartStyling(98, 0xff)
@@ -253,7 +252,7 @@ def runTest(frame, nb, log):
     ed.MarkerAdd(20, 0)
 
 
-    # and an indicator or two
+    # and finally, an indicator or two
     ed.IndicatorSetStyle(0, stc.STC_INDIC_SQUIGGLE)
     ed.IndicatorSetForeground(0, wx.RED)
     ed.IndicatorSetStyle(1, stc.STC_INDIC_DIAGONAL)
@@ -266,34 +265,30 @@ def runTest(frame, nb, log):
     ed.SetStyling(8, stc.STC_INDIC1_MASK)
     ed.SetStyling(10, stc.STC_INDIC2_MASK | stc.STC_INDIC1_MASK)
 
-    # add some annotations
-    ed.AnnotationSetText(23, "\nThis is an annotaion, it is not part of \nthe document's text.\n")
-    ed.AnnotationSetVisible(stc.STC_ANNOTATION_BOXED)
-    ed.AnnotationSetStyle(23, 5)  # line number, style number
 
     # some test stuff...
     if debug:
-        print "GetTextLength(): ", ed.GetTextLength(), len(ed.GetText())
-        print "GetText(): ", repr(ed.GetText())
-        print
-        print "GetStyledText(98, 104): ", repr(ed.GetStyledText(98, 104)), len(ed.GetStyledText(98, 104))
-        print
-        print "GetCurLine(): ", repr(ed.GetCurLine())
+        print("GetTextLength(): ", ed.GetTextLength(), len(ed.GetText()))
+        print("GetText(): ", repr(ed.GetText()))
+        print()
+        print("GetStyledText(98, 104): ", repr(ed.GetStyledText(98, 104)), len(ed.GetStyledText(98, 104)))
+        print()
+        print("GetCurLine(): ", repr(ed.GetCurLine()))
         ed.GotoPos(5)
-        print "GetCurLine(): ", repr(ed.GetCurLine())
-        print
-        print "GetLine(1): ", repr(ed.GetLine(1))
-        print
+        print("GetCurLine(): ", repr(ed.GetCurLine()))
+        print()
+        print("GetLine(1): ", repr(ed.GetLine(1)))
+        print()
         ed.SetSelection(25, 35)
-        print "GetSelectedText(): ", repr(ed.GetSelectedText())
-        print "GetTextRange(25, 35): ", repr(ed.GetTextRange(25, 35))
-        print "FindText(0, max, 'indicators'): ",
-        print ed.FindText(0, ed.GetTextLength(), "indicators")
-        if wx.USE_UNICODE:
-            end = ed.GetLength()
-            start = ed.PositionFromLine(uniline)
-            print "GetTextRange(%d, %d): " % (start, end),
-            print repr(ed.GetTextRange(start, end))
+        print("GetSelectedText(): ", repr(ed.GetSelectedText()))
+        print("GetTextRange(25, 35): ", repr(ed.GetTextRange(25, 35)))
+        print("FindText(0, max, 'indicators'): ",)
+        print(ed.FindText(0, ed.GetTextLength(), "indicators")
+        # if wx.USE_UNICODE:
+        end = ed.GetLength()
+        start = ed.PositionFromLine(uniline)
+        print("GetTextRange(%d, %d): " % (start, end),)
+        print(repr(ed.GetTextRange(start, end)))
 
 
     wx.CallAfter(ed.GotoPos, 0)

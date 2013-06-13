@@ -11,74 +11,73 @@ class TestAdjustChannels(wx.Panel):
     def __init__(self, parent, log):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
-        
+
         topsizer= wx.BoxSizer(wx.HORIZONTAL) # left controls, right image output
-        
+
         # slider controls controls
         ctrlsizer= wx.BoxSizer(wx.VERTICAL)
-        
+
         label= wx.StaticText(self, -1, "Factor red in %")
         label.SetForegroundColour("RED")
         ctrlsizer.Add(label, 0, wx.ALL, 5)
         sliderred= wx.Slider(self, wx.NewId(), 100, 0, 200, size=(150, -1), style = wx.SL_HORIZONTAL | wx.SL_AUTOTICKS | wx.SL_LABELS)
         sliderred.SetForegroundColour("RED")
-        sliderred.SetTickFreq(50, 5)
+        sliderred.SetTickFreq(50)
         ctrlsizer.Add(sliderred)
         ctrlsizer.AddSpacer(15)
-        
+
         label= wx.StaticText(self, -1, "Factor green in %")
         label.SetForegroundColour("GREEN")
         ctrlsizer.Add(label, 0, wx.ALL, 5)
         slidergreen= wx.Slider(self, wx.NewId(), 100, 0, 200, size=(150, -1), style = wx.SL_HORIZONTAL | wx.SL_AUTOTICKS | wx.SL_LABELS)
         slidergreen.SetForegroundColour("GREEN")
-        slidergreen.SetTickFreq(50, 5)
+        slidergreen.SetTickFreq(50)
         ctrlsizer.Add(slidergreen)
         ctrlsizer.AddSpacer(15)
-        
+
         label= wx.StaticText(self, -1, "Factor blue in %")
         label.SetForegroundColour("BLUE")
         ctrlsizer.Add(label, 0, wx.ALL, 5)
         sliderblue= wx.Slider(self, wx.NewId(), 100, 0, 200, size=(150, -1), style = wx.SL_HORIZONTAL | wx.SL_AUTOTICKS | wx.SL_LABELS)
         sliderblue.SetForegroundColour("BLUE")
-        sliderblue.SetTickFreq(50, 5)
+        sliderblue.SetTickFreq(50)
         ctrlsizer.Add(sliderblue)
         ctrlsizer.AddSpacer(20)
-        
+
         label= wx.StaticText(self, -1, "Factor alpha in %")
         ctrlsizer.Add(label, 0, wx.ALL, 5)
         slideralpha= wx.Slider(self, wx.NewId(), 100, 0, 200, size=(150, -1), style = wx.SL_HORIZONTAL | wx.SL_AUTOTICKS | wx.SL_LABELS)
-        slideralpha.SetTickFreq(50, 1)
+        slideralpha.SetTickFreq(50)
         ctrlsizer.Add(slideralpha)
-        
+
         topsizer.Add(ctrlsizer, 0, wx.ALL, 10)
-        
+
         # image window
         self.images= ImageWindow(self)
         topsizer.Add(self.images, 1, wx.EXPAND)
-    
+
         self.SetSizer(topsizer)
         topsizer.Layout()
-        
+
         # forward the slider change events to the image window
         sliderred.Bind(wx.EVT_SCROLL, self.images.OnScrollRed)
         slidergreen.Bind(wx.EVT_SCROLL, self.images.OnScrollGreen)
         sliderblue.Bind(wx.EVT_SCROLL, self.images.OnScrollBlue)
         slideralpha.Bind(wx.EVT_SCROLL, self.images.OnScrollAlpha)
-        
-        
+
 
 class ImageWindow(wx.Window):
     def __init__(self, parent):
         wx.Window.__init__(self, parent)
         self.image1= wx.Image(opj('bitmaps/image.bmp'), wx.BITMAP_TYPE_BMP)
         self.image2= wx.Image(opj('bitmaps/toucan.png'), wx.BITMAP_TYPE_PNG)
-        
+
         # the factors -- 1.0 does not not modify the image
         self.factorred=   1.0
         self.factorgreen= 1.0
         self.factorblue=  1.0
         self.factoralpha= 1.0
-    
+
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -106,30 +105,30 @@ class ImageWindow(wx.Window):
     def OnPaint(self, event):
         dc= wx.PaintDC(self)
         dc= wx.BufferedDC(dc)
-        
+
         # paint a background to show the alpha manipulation
         dc.SetBackground(wx.Brush("WHITE"))
         dc.Clear()
         dc.SetBrush(wx.Brush("GREY", wx.CROSSDIAG_HATCH))
-        windowsize= self.GetSizeTuple()
+        windowsize= self.GetSize()
         dc.DrawRectangle(0, 0, windowsize[0], windowsize[1])
-        
+
         # apply correction to the image channels via wx.Image.AdjustChannels
         image= self.image1.AdjustChannels(self.factorred, self.factorgreen, self.factorblue, self.factoralpha)
-        bitmap= wx.BitmapFromImage(image)
+        bitmap= wx.Bitmap(image)
         dc.DrawBitmap(bitmap, 10, 10, True)
 
         image= self.image2.AdjustChannels(self.factorred, self.factorgreen, self.factorblue, self.factoralpha)
-        bitmap= wx.BitmapFromImage(image)
+        bitmap= wx.Bitmap(image)
         dc.DrawBitmap(bitmap, 10, 110, True)
 
     def OnSize(self, event):
         self.Refresh()
-    
-    def OnEraseBackground(self, event):
-        pass 
 
-    
+    def OnEraseBackground(self, event):
+        pass
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

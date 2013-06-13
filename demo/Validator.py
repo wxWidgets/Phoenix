@@ -7,11 +7,12 @@ import  wx
 ALPHA_ONLY = 1
 DIGIT_ONLY = 2
 
-class MyValidator(wx.PyValidator):
+class MyValidator(wx.Validator):
     def __init__(self, flag=None, pyVar=None):
-        wx.PyValidator.__init__(self)
+        wx.Validator.__init__(self)
         self.flag = flag
         self.Bind(wx.EVT_CHAR, self.OnChar)
+
 
     def Clone(self):
         return MyValidator(self.flag)
@@ -19,7 +20,7 @@ class MyValidator(wx.PyValidator):
     def Validate(self, win):
         tc = self.GetWindow()
         val = tc.GetValue()
-        
+
         if self.flag == ALPHA_ONLY:
             for x in val:
                 if x not in string.letters:
@@ -31,7 +32,6 @@ class MyValidator(wx.PyValidator):
                     return False
 
         return True
-
 
     def OnChar(self, event):
         key = event.GetKeyCode()
@@ -48,7 +48,7 @@ class MyValidator(wx.PyValidator):
             event.Skip()
             return
 
-        if not wx.Validator_IsSilent():
+        if not wx.Validator.IsSilent():
             wx.Bell()
 
         # Returning without calling even.Skip eats the event before it
@@ -102,15 +102,14 @@ class TestValidatorPanel(wx.Panel):
 
 #----------------------------------------------------------------------
 
-class TextObjectValidator(wx.PyValidator):
+class TextObjectValidator(wx.Validator):
     """ This validator is used to ensure that the user has entered something
         into the text object editor dialog's text field.
     """
     def __init__(self):
         """ Standard constructor.
         """
-        wx.PyValidator.__init__(self)
-
+        wx.Validator.__init__(self)
 
 
     def Clone(self):
@@ -119,7 +118,6 @@ class TextObjectValidator(wx.PyValidator):
             Note that every validator must implement the Clone() method.
         """
         return TextObjectValidator()
-
 
     def Validate(self, win):
         """ Validate the contents of the given text control.
@@ -135,10 +133,9 @@ class TextObjectValidator(wx.PyValidator):
             return False
         else:
             textCtrl.SetBackgroundColour(
-                wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
+                wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
             textCtrl.Refresh()
             return True
-
 
     def TransferToWindow(self):
         """ Transfer data from validator to window.
@@ -147,7 +144,6 @@ class TextObjectValidator(wx.PyValidator):
             occurred.  We simply return True, as we don't do any data transfer.
         """
         return True # Prevent wxDialog from complaining.
-
 
     def TransferFromWindow(self):
         """ Transfer data from window to validator.
@@ -216,7 +212,7 @@ def runTest(frame, nb, log):
 overview = """\
 <html>
 <body>
-wx.Validator is the base class for a family of validator classes that mediate 
+wx.Validator is the base class for a family of validator classes that mediate
 between a class of control, and application data.
 
 <p>A validator has three major roles:

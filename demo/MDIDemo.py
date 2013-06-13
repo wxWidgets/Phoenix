@@ -1,9 +1,9 @@
 
 import  wx
 
-# Importing ScrolledWindow demo to make use of the MyCanvas 
+# Importing ScrolledWindow demo to make use of the MyCanvas
 # class defined within.
-import  ScrolledWindow 
+import  ScrolledWindow
 import  images
 
 SHOW_BACKGROUND = 1
@@ -42,23 +42,24 @@ class MyParentFrame(wx.MDIParentFrame):
     def OnExit(self, evt):
         self.Close(True)
 
-
     def OnNewWindow(self, evt):
         self.winCount = self.winCount + 1
         win = wx.MDIChildFrame(self, -1, "Child Window: %d" % self.winCount)
         canvas = ScrolledWindow.MyCanvas(win)
         win.Show(True)
 
-
     def OnEraseBackground(self, evt):
         dc = evt.GetDC()
 
         # tile the background bitmap
-        sz = self.GetClientSize()
+        try:
+            sz = self.GetClientSize()
+        except RuntimeError:#closing demo
+            return
         w = self.bg_bmp.GetWidth()
         h = self.bg_bmp.GetHeight()
         x = 0
-        
+
         while x < sz.width:
             y = 0
 
@@ -74,14 +75,12 @@ class MyParentFrame(wx.MDIParentFrame):
 if __name__ == '__main__':
     class MyApp(wx.App):
         def OnInit(self):
+            wx.InitAllImageHandlers()
             frame = MyParentFrame()
             frame.Show(True)
             self.SetTopWindow(frame)
             return True
 
-
     app = MyApp(False)
     app.MainLoop()
-
-
 

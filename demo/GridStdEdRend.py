@@ -6,15 +6,15 @@ import  wx.grid as  gridlib
 
 #---------------------------------------------------------------------------
 
-class MyCustomRenderer(gridlib.PyGridCellRenderer):
+class MyCustomRenderer(gridlib.GridCellRenderer):
     def __init__(self):
-        gridlib.PyGridCellRenderer.__init__(self)
+        gridlib.GridCellRenderer.__init__(self)
 
     def Draw(self, grid, attr, dc, rect, row, col, isSelected):
         dc.SetBackgroundMode(wx.SOLID)
         dc.SetBrush(wx.Brush(wx.BLACK, wx.SOLID))
         dc.SetPen(wx.TRANSPARENT_PEN)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
         dc.SetBackgroundMode(wx.TRANSPARENT)
         dc.SetFont(attr.GetFont())

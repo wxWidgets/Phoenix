@@ -3,9 +3,9 @@ import  wx
 
 #----------------------------------------------------------------------
 
-class MyURLDropTarget(wx.PyDropTarget):
+class MyURLDropTarget(wx.DropTarget):
     def __init__(self, window):
-        wx.PyDropTarget.__init__(self)
+        wx.DropTarget.__init__(self)
         self.window = window
 
         self.data = wx.URLDataObject();
@@ -93,7 +93,6 @@ class TestPanel(wx.Panel):
             dropSource = wx.DropSource(self.dragText)
             dropSource.SetData(data)
             result = dropSource.DoDragDrop()
-
 
     def OnStartDrag2(self, evt):
         if evt.Dragging():

@@ -16,9 +16,9 @@ class TestPanel(wx.Panel):
 
         isz = (16,16)
         il = wx.ImageList(*isz)
-        fldridx     = il.AddIcon(wx.ArtProvider.GetIcon(wx.ART_FOLDER,      wx.ART_OTHER, isz))
-        fldropenidx = il.AddIcon(wx.ArtProvider.GetIcon(wx.ART_FOLDER_OPEN, wx.ART_OTHER, isz))
-        fileidx     = il.AddIcon(wx.ArtProvider.GetIcon(wx.ART_NORMAL_FILE, wx.ART_OTHER, isz))
+        fldridx     = il.Add(wx.ArtProvider.GetIcon(wx.ART_FOLDER,      wx.ART_OTHER, isz))
+        fldropenidx = il.Add(wx.ArtProvider.GetIcon(wx.ART_FOLDER_OPEN, wx.ART_OTHER, isz))
+        fileidx     = il.Add(wx.ArtProvider.GetIcon(wx.ART_NORMAL_FILE, wx.ART_OTHER, isz))
         dvtc.SetImageList(il)
 
         self.root = dvtc.AppendContainer(dv.NullDataViewItem,
@@ -41,8 +41,8 @@ class TestPanel(wx.Panel):
         # Set the layout so the treectrl fills the panel
         self.Sizer = wx.BoxSizer()
         self.Sizer.Add(dvtc, 1, wx.EXPAND)
-        
-        
+
+
 
 #----------------------------------------------------------------------
 

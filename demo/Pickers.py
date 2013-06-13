@@ -14,9 +14,9 @@ class TestPanel(wx.Panel):
         title.SetForegroundColour("navy")
         box.Add(title, 0, wx.ALIGN_CENTER|wx.ALL, 5)
         #print title.GetBestSize(), title.GetMinSize(), title.GetSize()
-        
+
         box.Add(wx.StaticLine(self), 0, wx.EXPAND)
-        
+
         fgs = wx.FlexGridSizer(cols=4, hgap=5, vgap=5)
         fgs.AddGrowableCol(3)
         fgs.Add((10,10))  # spacer
@@ -32,7 +32,7 @@ class TestPanel(wx.Panel):
         cp1 = wx.ColourPickerCtrl(self)
         fgs.Add(cp1, 0, wx.ALIGN_CENTER)
         fgs.Add((10,10))  # spacer
-        cp2 = wx.ColourPickerCtrl(self, style=wx.CLRP_USE_TEXTCTRL) 
+        cp2 = wx.ColourPickerCtrl(self, style=wx.CLRP_USE_TEXTCTRL)
         cp2.SetTextCtrlProportion(5)
         fgs.Add(cp2, 0, wx.EXPAND)
         fgs.Add(wx.StaticText(self, -1, "        with label:"), 0, wx.ALIGN_CENTER_VERTICAL)
@@ -86,9 +86,9 @@ class TestPanel(wx.Panel):
         self.log.write("You chose: %s\n" % repr(evt.GetPath()))
 
     def OnPickFont(self, evt):
-        font = evt.GetFont()        
+        font = evt.GetFont()
         self.log.write("You chose: %s\n" % font.GetNativeFontInfoUserDesc())
-                       
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

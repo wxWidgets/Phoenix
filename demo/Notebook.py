@@ -15,7 +15,7 @@ class TestNB(wx.Notebook):
     def __init__(self, parent, id, log):
         wx.Notebook.__init__(self, parent, id, size=(21,21), style=
                              wx.BK_DEFAULT
-                             #wx.BK_TOP 
+                             #wx.BK_TOP
                              #wx.BK_BOTTOM
                              #wx.BK_LEFT
                              #wx.BK_RIGHT
@@ -62,10 +62,10 @@ class TestNB(wx.Notebook):
         win = self.makeColorPanel(wx.CYAN)
         self.AddPage(win, "Cyan")
 
-        win = self.makeColorPanel(wx.NamedColour('Midnight Blue'))
+        win = self.makeColorPanel(wx.Colour('Midnight Blue'))
         self.AddPage(win, "Midnight Blue")
 
-        win = self.makeColorPanel(wx.NamedColour('Indian Red'))
+        win = self.makeColorPanel(wx.Colour('Indian Red'))
         self.AddPage(win, "Indian Red")
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)

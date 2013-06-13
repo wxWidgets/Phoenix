@@ -438,7 +438,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas = self.Canvas
             Canvas.InitAll()
 
-            ## Random tests of everything:
+            ##          Random tests of everything:
             colors = self.colors
             # Rectangles
             for i in range(3):
@@ -1847,6 +1847,7 @@ if __name__ == "__main__":
             wx.App.__init__(self, *args, **kwargs)
 
         def OnInit(self):
+            wx.InitAllImageHandlers()
             DrawFrame = BuildDrawFrame()
             frame = DrawFrame(None, -1, "FloatCanvas Demo App",wx.DefaultPosition,(700,700))
 

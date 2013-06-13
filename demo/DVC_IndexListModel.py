@@ -17,9 +17,9 @@ import wx.dataview as dv
 # For this example our data is stored in a simple list of lists.  In
 # real life you can use whatever you want or need to hold your data.
 
-class TestModel(dv.PyDataViewIndexListModel):
+class TestModel(dv.DataViewIndexListModel):
     def __init__(self, data, log):
-        dv.PyDataViewIndexListModel.__init__(self, len(data))
+        dv.DataViewIndexListModel.__init__(self, len(data))
         self.data = data
         self.log = log
 
@@ -46,7 +46,7 @@ class TestModel(dv.PyDataViewIndexListModel):
     def GetCount(self):
         #self.log.write('GetCount')
         return len(self.data)
-    
+
     # Called to check if non-standard attributes should be used in the
     # cell at (row, col)
     def GetAttrByRow(self, row, col, attr):
@@ -74,28 +74,28 @@ class TestModel(dv.PyDataViewIndexListModel):
         else:
             return cmp(self.data[row1][col], self.data[row2][col])
 
-        
+
     def DeleteRows(self, rows):
         # make a copy since we'll be sorting(mutating) the list
         rows = list(rows)
         # use reverse order so the indexes don't change as we remove items
         rows.sort(reverse=True)
-        
+
         for row in rows:
             # remove it from our data structure
             del self.data[row]
             # notify the view(s) using this model that it has been removed
             self.RowDeleted(row)
-            
-            
+
+
     def AddRow(self, value):
         # update data structure
         self.data.append(value)
         # notify views
         self.RowAppended()
 
-        
-            
+
+
 class TestPanel(wx.Panel):
     def __init__(self, parent, log, model=None, data=None):
         self.log = log
@@ -109,12 +109,12 @@ class TestPanel(wx.Panel):
                                    | dv.DV_VERT_RULES
                                    | dv.DV_MULTIPLE
                                    )
-        
+
         # Create an instance of our simple model...
         if model is None:
             self.model = TestModel(data, log)
         else:
-            self.model = model            
+            self.model = model
 
         # ...and associate it with the dataview control.  Models can
         # be shared between multiple DataViewCtrls, so this does not
@@ -158,9 +158,9 @@ class TestPanel(wx.Panel):
         c0.Reorderable = False
 
         # set the Sizer property (same as SetSizer)
-        self.Sizer = wx.BoxSizer(wx.VERTICAL) 
+        self.Sizer = wx.BoxSizer(wx.VERTICAL)
         self.Sizer.Add(self.dvc, 1, wx.EXPAND)
-        
+
         # Add some buttons to help out with the tests
         b1 = wx.Button(self, label="New View", name="newView")
         self.Bind(wx.EVT_BUTTON, self.OnNewView, b1)
@@ -196,7 +196,7 @@ class TestPanel(wx.Panel):
         rows = [self.model.GetRow(item) for item in items]
         self.model.DeleteRows(rows)
 
-        
+
     def OnAddRow(self, evt):
         # Add some bogus data to a new row in the model's data
         id = len(self.model.data) + 1
@@ -205,7 +205,7 @@ class TestPanel(wx.Panel):
                  'new title %d' % id,
                  'genre %d' % id]
         self.model.AddRow(value)
-                
+
 
     def OnEditingDone(self, evt):
         self.log.write("OnEditingDone\n")
@@ -213,7 +213,7 @@ class TestPanel(wx.Panel):
     def OnValueChanged(self, evt):
         self.log.write("OnValueChanged\n")
 
-        
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

@@ -38,11 +38,11 @@ class SuperToolTipDemo(wx.Frame):
         self.stylesCombo = wx.ComboBox(self.mainPanel, -1, choices=STT.GetStyleKeys(),
                                        style=wx.CB_DROPDOWN|wx.CB_READONLY)
         self.customStyles = wx.RadioButton(self.mainPanel, -1, "Custom     ")
-        self.topColourPicker = wx.ColourPickerCtrl(self.mainPanel, col=wx.WHITE)
-        system = wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
-        r, g, b = system
-        self.middleColourPicker = wx.ColourPickerCtrl(self.mainPanel, col=wx.Colour((255-r)/2, (255-g)/2, (255-b)/2))
-        self.bottomColourPicker = wx.ColourPickerCtrl(self.mainPanel, col=system)
+        self.topColourPicker = wx.ColourPickerCtrl(self.mainPanel, colour=wx.WHITE)
+        system = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        r, g, b, a = system
+        self.middleColourPicker = wx.ColourPickerCtrl(self.mainPanel, colour=wx.Colour((255-r)/2, (255-g)/2, (255-b)/2))
+        self.bottomColourPicker = wx.ColourPickerCtrl(self.mainPanel, colour=system)
         self.headerCheck = wx.CheckBox(self.mainPanel, -1, "Show Header")
         self.headerText = wx.TextCtrl(self.mainPanel, -1, "Merge And Center")
         self.headerBitmap = wx.StaticBitmap(self.mainPanel, -1,
@@ -55,7 +55,7 @@ class SuperToolTipDemo(wx.Frame):
                                           wx.Bitmap(os.path.normpath(os.path.join(bitmapDir, "sttfont.png")),
                                                     wx.BITMAP_TYPE_PNG))
         msg = "</b>A Bold Title\n\nJoins the selected cells into one larger cell\nand centers the contents in the new cell.\n" \
-              "This is often used to create labels that span\nmultiple columns.\n\n<hr>draw a horizontal line - text on same line will be ignored\n\n</l>I am a link{http://xoomer.alice.it/infinity77}"
+              "This is often used to create labels that span\nmultiple columns.\n\n</l>I am a link{http://xoomer.alice.it/infinity77}"
         self.bodyText = wx.TextCtrl(self.mainPanel, -1, msg, style=wx.TE_MULTILINE)
         self.includeCheck = wx.CheckBox(self.mainPanel, -1, "Include Body Image")
         self.footerCheck = wx.CheckBox(self.mainPanel, -1, "Show Footer")
@@ -69,7 +69,7 @@ class SuperToolTipDemo(wx.Frame):
         self.dropShadow = wx.CheckBox(self.mainPanel, -1, "Rounded Corners And Drop Shadow (Windows XP Only)")
         self.useFade = wx.CheckBox(self.mainPanel, -1, "Fade In/Fade Out Effects (Windows XP Only)")
         self.endTimer = wx.SpinCtrl(self.mainPanel, -1, "5")
-        
+
         btnBmp = wx.Bitmap(os.path.normpath(os.path.join(bitmapDir,"sttbutton.png")), wx.BITMAP_TYPE_PNG)
         self.toolTipButton = buttons.ThemedGenBitmapTextButton(self.mainPanel, -1, btnBmp, " Big Test Button ",
                                                                size=(-1, 130))
@@ -87,7 +87,7 @@ class SuperToolTipDemo(wx.Frame):
         self.generateTip.Bind(wx.EVT_BUTTON, self.OnGenerateTip)
         self.Bind(wx.EVT_FILEPICKER_CHANGED, self.OnPickBitmap, self.headerFilePicker)
         self.Bind(wx.EVT_FILEPICKER_CHANGED, self.OnPickBitmap, self.footerFilePicker)
-        
+
         self.enableWidgets = {}
 
         self.enableWidgets[self.headerCheck] = [self.headerBitmap, self.headerFilePicker,
@@ -109,15 +109,15 @@ class SuperToolTipDemo(wx.Frame):
         menuBar = wx.MenuBar(wx.MB_DOCKABLE)
         fileMenu = wx.Menu()
         helpMenu = wx.Menu()
-        
+
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit", "Exit demo")
         self.Bind(wx.EVT_MENU, self.OnClose, item)
-        fileMenu.AppendItem(item)
+        fileMenu.Append(item)
 
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About...", "Shows The About Dialog")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
-        helpMenu.AppendItem(item)
-        
+        helpMenu.Append(item)
+
         menuBar.Append(fileMenu, "&File")
         menuBar.Append(helpMenu, "&Help")
 
@@ -149,7 +149,7 @@ class SuperToolTipDemo(wx.Frame):
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         topSizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        otherSizer = wx.StaticBoxSizer(self.otherSizer_staticbox, wx.VERTICAL)        
+        otherSizer = wx.StaticBoxSizer(self.otherSizer_staticbox, wx.VERTICAL)
         toolTipSizer = wx.StaticBoxSizer(self.toolTipSizer_staticbox, wx.HORIZONTAL)
         toolTipSizer_1 = wx.BoxSizer(wx.VERTICAL)
         footerSizer = wx.StaticBoxSizer(self.footerSizer_staticbox, wx.VERTICAL)
@@ -172,13 +172,13 @@ class SuperToolTipDemo(wx.Frame):
         colourSizer_2.Add(self.topColourPicker, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
         label_2 = wx.StaticText(self.mainPanel, -1, "Middle:")
         colourSizer_2.Add(label_2, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 3)
-        colourSizer_2.Add(self.middleColourPicker, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)        
+        colourSizer_2.Add(self.middleColourPicker, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
         label_3 = wx.StaticText(self.mainPanel, -1, "Bottom:")
         colourSizer_2.Add(label_3, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 3)
         colourSizer_2.Add(self.bottomColourPicker, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
         colourSizer.Add(colourSizer_2, 1, wx.EXPAND, 0)
         mainSizer.Add(colourSizer, 0, wx.ALL|wx.EXPAND, 5)
-        
+
         headerSizer.Add(self.headerCheck, 0, wx.ALL, 5)
         label_4 = wx.StaticText(self.mainPanel, -1, "Header Text:")
         headerSizer_1.Add(label_4, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
@@ -206,7 +206,7 @@ class SuperToolTipDemo(wx.Frame):
         topSizer.Add(headerSizer, 1, wx.EXPAND|wx.ALL, 5)
         topSizer.Add(footerSizer, 1, wx.EXPAND|wx.ALL, 5)
         mainSizer.Add(topSizer, 0, wx.TOP|wx.BOTTOM|wx.EXPAND, 5)
-        
+
         bodySizer.Add(self.bodyBitmap, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
         bodySizer_2.Add(self.bodyText, 1, wx.EXPAND, 0)
         bodySizer_2.Add(self.includeCheck, 0, wx.RIGHT|wx.TOP, 5)
@@ -221,7 +221,7 @@ class SuperToolTipDemo(wx.Frame):
         otherSizer.Add((0, 2))
         otherSizer.Add(self.endTimer, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, 5)
         mainSizer.Add(otherSizer, 0, wx.ALL|wx.EXPAND, 5)
-        
+
         toolTipSizer.Add(self.toolTipButton, 1, wx.ALL|wx.EXPAND, 5)
         toolTipSizer_1.Add(self.generateTip, 0, wx.ALL, 5)
         toolTipSizer.Add(toolTipSizer_1, 0, wx.EXPAND, 0)
@@ -234,7 +234,7 @@ class SuperToolTipDemo(wx.Frame):
         frameSizer.Fit(self)
         self.Layout()
 
-        wx.CallAfter(mainSizer.Layout)        
+        wx.CallAfter(mainSizer.Layout)
 
 
     def OnRadioColours(self, event):
@@ -278,7 +278,7 @@ class SuperToolTipDemo(wx.Frame):
         else:
             self.footerBitmap.SetBitmap(bmp)
             self.footerBitmap.Refresh()
-            
+
 
     def OnGenerateTip(self, event):
 
@@ -302,7 +302,7 @@ class SuperToolTipDemo(wx.Frame):
             bodyImage = self.bodyBitmap.GetBitmap()
         else:
             bodyImage = wx.NullBitmap
-                    
+
         if self.footerCheck.GetValue() == 0:
             footerText, footerBmp, drawFLine = "", wx.NullBitmap, False
         else:
@@ -310,7 +310,7 @@ class SuperToolTipDemo(wx.Frame):
             footerBmp = self.footerBitmap.GetBitmap()
             drawFLine = self.footerLineCheck.GetValue()
 
-        if not hasattr(self, "tip"):            
+        if not hasattr(self, "tip"):
             self.tip = STT.SuperToolTip(message)
         else:
             self.tip.SetMessage(message)
@@ -320,7 +320,7 @@ class SuperToolTipDemo(wx.Frame):
         self.tip.SetHeaderBitmap(headerBmp)
         self.tip.SetFooter(footerText)
         self.tip.SetFooterBitmap(footerBmp)
-                    
+
         self.tip.SetTarget(self.toolTipButton)
         self.tip.SetDrawHeaderLine(drawHLine)
         self.tip.SetDrawFooterLine(drawFLine)
@@ -328,7 +328,7 @@ class SuperToolTipDemo(wx.Frame):
         self.tip.SetDropShadow(self.dropShadow.GetValue())
         self.tip.SetUseFade(self.useFade.GetValue())
         self.tip.SetEndDelay(self.endTimer.GetValue())
-        
+
         if self.stylesRadio.GetValue():
             self.tip.ApplyStyle(styleKey)
         else:
@@ -339,7 +339,7 @@ class SuperToolTipDemo(wx.Frame):
     def OnClose(self, event):
 
         wx.CallAfter(self.Destroy)
-        
+
 
     def OnAbout(self, event):
 
@@ -349,17 +349,17 @@ class SuperToolTipDemo(wx.Frame):
               "to me at the following addresses:\n\n" + \
               "andrea.gavana@gmail.com\n" + "andrea.gavana@maerskoil.com\n\n" + \
               "Welcome to wxPython " + wx.VERSION_STRING + "!!"
-              
+
         dlg = wx.MessageDialog(self, msg, "SuperToolTip wxPython Demo",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
-        dlg.Destroy()        
-        
+        dlg.Destroy()
+
 
 class TestPanel(wx.Panel):
 
     def __init__(self, parent, log):
-        
+
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 

@@ -5,8 +5,8 @@
 #
 
 import wx
-import wx.lib.scrolledpanel    as scrolled
-import wx.lib.masked           as masked
+import wx.lib.scrolledpanel as scrolled
+import wx.lib.masked as masked
 
 #----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ class TestPanel( scrolled.ScrolledPanel ):
 
         box_label = wx.StaticBox( self, -1, "Change Controls through API" )
         buttonbox = wx.StaticBoxSizer( box_label, wx.HORIZONTAL )
-        
+
         text1 = wx.StaticText( self, -1, "12-hour format:")
         self.time12 = masked.TimeCtrl( self, -1, name="12 hour control" )
         h = self.time12.GetSize().height
@@ -73,7 +73,7 @@ class TestPanel( scrolled.ScrolledPanel ):
         radio_vbox.Add( self.radio24to12, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
         radio_vbox.Add( self.radioWx, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
         radio_vbox.Add( self.radioMx, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-        
+
         buttonbox.Add( buttonChange, 0, wx.ALIGN_CENTRE|wx.ALL, 5 )
         buttonbox.Add( radio_vbox, 0, wx.ALIGN_CENTRE|wx.ALL, 5 )
 
@@ -168,7 +168,7 @@ class TestPanel( scrolled.ScrolledPanel ):
             self.time12.SetValue( self.time24.GetValue() )
 
         elif self.radioWx.GetValue():
-            now = wx.DateTime_Now()
+            now = wx.DateTime.Now()
             self.time12.SetValue( now )
             # (demonstrates that G/SetValue returns/takes a wx.DateTime)
             self.time24.SetValue( self.time12.GetValue(as_wxDateTime=True) )

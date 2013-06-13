@@ -34,7 +34,7 @@ then these squares should be transparent.
             dc.SetPen(wx.Pen(penclr))
             dc.SetBrush(wx.Brush(brushclr))
             rect.SetPosition(pos)
-            dc.DrawRoundedRectangleRect(rect, 8)
+            dc.DrawRoundedRectangle(rect, 8)
 
         # some additional testing stuff
         #dc.SetPen(wx.Pen(wx.Colour(0,0,255, 196)))

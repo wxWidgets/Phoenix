@@ -5,11 +5,11 @@ import  wx
 #----------------------------------------------------------------------
 
 text = """\
-Right-click on the panel above the line to get a menu.  This menu will 
-be managed by a FileHistory object and so the files you select will 
-automatically be added to the end of the menu and will be selectable 
-the next time the menu is viewed.  The filename selected, either via the 
-Open menu item, or from the history, will be displayed in the log 
+Right-click on the panel above the line to get a menu.  This menu will
+be managed by a FileHistory object and so the files you select will
+automatically be added to the end of the menu and will be selectable
+the next time the menu is viewed.  The filename selected, either via the
+Open menu item, or from the history, will be displayed in the log
 window below.
 """
 
@@ -77,16 +77,14 @@ class TestPanel(wx.Panel):
         del self.filehistory
         self.menu.Destroy()
 
-
     def OnRightClick(self, evt):
         self.PopupMenu(self.menu)
-
 
     def OnFileOpenDialog(self, evt):
         dlg = wx.FileDialog(self,
                            defaultDir = os.getcwd(),
                            wildcard = "All Files|*",
-                           style = wx.OPEN | wx.CHANGE_DIR)
+                           style = wx.FD_OPEN | wx.FD_CHANGE_DIR)
 
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
@@ -96,7 +94,6 @@ class TestPanel(wx.Panel):
             self.filehistory.AddFileToHistory(path)
 
         dlg.Destroy()
-
 
     def OnFileHistory(self, evt):
         # get the file based on the menu ID
@@ -128,7 +125,7 @@ list appended to a menu, such as the File menu.
 
 <p>Note that this inclusion is not automatic; as illustrated in this example,
 you must add files (and remove them) as deemed necessary within the framework
-of your program. 
+of your program.
 
 <p>Note also the additional cleanup required for this class, namely trapping the
 enclosing window's Destroy event and deleting the file history control and its

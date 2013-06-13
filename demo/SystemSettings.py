@@ -17,8 +17,8 @@ element sizes.</p>
 """
 
 __author__ = "Cody Precord <cprecord@editra.org>"
-__svnid__ = "$Id$"
-__revision__ = "$Revision$"
+__svnid__ = "$Id: SystemSettings.py 64744 2010-06-25 21:59:08Z RD $"
+__revision__ = "$Revision: 64744 $"
 
 #-----------------------------------------------------------------------------#
 # Imports
@@ -59,9 +59,9 @@ class TestPanel(wx.Panel):
 
 #----------------------------------------------------------------------
 
-class SysPanelBase(wx.PyPanel):
+class SysPanelBase(wx.Panel):
     def __init__(self, parent, log):
-        wx.PyPanel.__init__(self, parent)#, size=(500, 500))
+        wx.Panel.__init__(self, parent)#, size=(500, 500))
 
         # Attributes
         self.log = log
@@ -95,7 +95,7 @@ class SysPanelBase(wx.PyPanel):
         dc.SetFont(self.GetFont())
         dc.SetBrush(wx.WHITE_BRUSH)
         dc.Clear()
-        dc.DrawRectangleRect(self.GetClientRect())
+        dc.DrawRectangle(self.GetClientRect())
 
         dc.SetPen(wx.BLACK_PEN)
         dc.SetTextForeground(wx.BLACK)
@@ -158,10 +158,15 @@ class SysFontPanel(SysPanelBase):
 
         # Attributes:
         self._maxw = 0
-        self._vals = ['SYS_ANSI_FIXED_FONT', 'SYS_ANSI_VAR_FONT',
-                      'SYS_DEFAULT_GUI_FONT', 'SYS_DEVICE_DEFAULT_FONT',
-                      'SYS_ICONTITLE_FONT', 'SYS_OEM_FIXED_FONT',
-                      'SYS_SYSTEM_FIXED_FONT', 'SYS_SYSTEM_FONT']
+        self._vals = ['SYS_ANSI_FIXED_FONT', 
+                      'SYS_ANSI_VAR_FONT',
+                      'SYS_DEFAULT_GUI_FONT', 
+                      'SYS_DEVICE_DEFAULT_FONT',
+                      # 'SYS_ICONTITLE_FONT', 
+                      'SYS_OEM_FIXED_FONT',
+                      # 'SYS_SYSTEM_FIXED_FONT', 
+                      'SYS_SYSTEM_FONT'
+                      ]
 
 
     def OnPaint(self, evt):

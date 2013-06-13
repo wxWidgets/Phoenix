@@ -6,7 +6,7 @@
 #              .wdr-derived demo
 #
 # Created:     02-Jan-2004
-# RCS-ID:      $Id$
+# RCS-ID:      $Id: Joystick.py 71447 2012-05-17 02:41:08Z RD $
 # Copyright:
 # Licence:     wxWindows license
 #----------------------------------------------------------------------------
@@ -14,6 +14,7 @@
 
 import  math
 import  wx
+import wx.adv
 
 haveJoystick = True
 if wx.Platform == "__WXMAC__":
@@ -45,40 +46,37 @@ class JoyGauge(wx.Panel):
 
         self.stick = stick
         size = (100,100)
-        
+
         wx.Panel.__init__(self, parent, -1, size=size)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_ERASE_BACKGROUND, lambda e: None)
 
-        self.buffer = wx.EmptyBitmap(*size)
+        self.buffer = wx.Bitmap(*size)
         dc = wx.BufferedDC(None, self.buffer)
         self.DrawFace(dc)
         self.DrawJoystick(dc)
-       
+
 
     def OnSize(self, event):
         # The face Bitmap init is done here, to make sure the buffer is always
         # the same size as the Window
         w, h  = self.GetClientSize()
-        self.buffer = wx.EmptyBitmap(w,h)
+        self.buffer = wx.Bitmap(w,h)
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         self.DrawFace(dc)
         self.DrawJoystick(dc)
 
-
     def DrawFace(self, dc):
         dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
         dc.Clear()
-
 
     def OnPaint(self, evt):
         # When dc is destroyed it will blit self.buffer to the window,
         # since no other drawing is needed we'll just return and let it
         # do it's thing
         dc = wx.BufferedPaintDC(self, self.buffer)
-
 
     def DrawJoystick(self, dc):
         # draw the guage as a maxed square in the center of this window.
@@ -94,7 +92,7 @@ class JoyGauge(wx.Panel):
         dc.SetClippingRegion(xorigin, yorigin, edgeSize, edgeSize)
 
         # Optimize drawing a bit (for Win)
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
 
         dc.SetBrush(wx.Brush(wx.Colour(251, 252, 237)))
         dc.DrawRectangle(xorigin, yorigin, edgeSize, edgeSize)
@@ -143,8 +141,7 @@ class JoyGauge(wx.Panel):
             dc.CrossHair(x, y)
 
         # Turn off drawing optimization
-        dc.EndDrawing()
-
+        # dc.EndDrawing()
 
     def Update(self):
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
@@ -201,7 +198,7 @@ class POVGauge(wx.Panel):
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_ERASE_BACKGROUND, lambda e: None)
 
-        self.buffer = wx.EmptyBitmap(*self.size)
+        self.buffer = wx.Bitmap(*self.size)
         dc = wx.BufferedDC(None, self.buffer)
         self.DrawFace(dc)
         self.DrawPOV(dc)
@@ -212,23 +209,20 @@ class POVGauge(wx.Panel):
         w, h  = self.GetClientSize()
         s = min(w, h)
         self.size = (s, s)
-        self.buffer = wx.EmptyBitmap(w,h)
+        self.buffer = wx.Bitmap(w,h)
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         self.DrawFace(dc)
         self.DrawPOV(dc)
 
-    
     def DrawFace(self, dc):
         dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
         dc.Clear()
-
 
     def OnPaint(self, evt):
         # When dc is destroyed it will blit self.buffer to the window,
         # since no other drawing is needed we'll just return and let it
         # do it's thing
         dc = wx.BufferedPaintDC(self, self.buffer)
-
 
     def DrawPOV(self, dc):
         # draw the guage as a maxed circle in the center of this window.
@@ -241,7 +235,7 @@ class POVGauge(wx.Panel):
         ycenter = yorigin + diameter / 2
 
         # Optimize drawing a bit (for Win)
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
 
         # our 'raster'.
         dc.SetBrush(wx.Brush(wx.WHITE))
@@ -297,14 +291,12 @@ class POVGauge(wx.Panel):
                 dc.DrawCircle(nx, ny, 8)
 
         # Turn off drawing optimization
-        dc.EndDrawing()
-
+        # dc.EndDrawing()
 
     def Update(self):
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         self.DrawFace(dc)
         self.DrawPOV(dc)
-
 
     def Calibrate(self):
         s = self.stick
@@ -327,7 +319,7 @@ class POVStatus(wx.Panel):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add((20,20))
-        
+
         self.avail = wx.CheckBox(self, -1, "Available")
         sizer.Add(self.avail, 0, wx.ALL | wx.EXPAND | wx.ALIGN_LEFT, 2)
 
@@ -364,7 +356,7 @@ class POVPanel(wx.Panel):
         gsizer = wx.BoxSizer(wx.VERTICAL)
 
         sizer.Add((25,25))
-        
+
         fn = parent.GetFont()
         fn.SetPointSize(fn.GetPointSize() + 3)
         fn.SetWeight(wx.BOLD)
@@ -372,11 +364,11 @@ class POVPanel(wx.Panel):
         t = wx.StaticText(self, -1, "POV Control", style = wx.ALIGN_CENTER)
         t.SetFont(fn)
         gsizer.Add(t, 0, wx.ALL | wx.EXPAND, 1)
-        
+
         self.display = POVGauge(self, stick)
         gsizer.Add(self.display, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 1)
         sizer.Add(gsizer, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 1)
-        
+
         self.status = POVStatus(self, stick)
         sizer.Add(self.status, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 1)
 
@@ -406,14 +398,14 @@ class LED(wx.Panel):
         fn.SetPointSize(fn.GetPointSize() - 1)
         fn.SetWeight(wx.BOLD)
         self.fn = fn
-        
+
         wx.Panel.__init__(self, parent, -1, size=self.size)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_ERASE_BACKGROUND, lambda e: None)
 
-        self.buffer = wx.EmptyBitmap(*self.size)
+        self.buffer = wx.Bitmap(*self.size)
         dc = wx.BufferedDC(None, self.buffer)
         self.DrawFace(dc)
         self.DrawLED(dc)
@@ -424,7 +416,7 @@ class LED(wx.Panel):
         w, h  = self.GetClientSize()
         s = min(w, h)
         self.size = (s, s)
-        self.buffer = wx.EmptyBitmap(*self.size)
+        self.buffer = wx.Bitmap(*self.size)
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
         self.DrawFace(dc)
         self.DrawLED(dc)
@@ -454,7 +446,7 @@ class LED(wx.Panel):
         yorigin = center - (bh / 2)
 
         # Optimize drawing a bit (for Win)
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
 
         # our 'raster'.
         if self.state == 0:
@@ -488,7 +480,8 @@ class LED(wx.Panel):
         dc.DrawText(txt, tx, ty)
 
         # Turn off drawing optimization
-        dc.EndDrawing()
+        # dc.EndDrawing()
+        # dc.EndDrawing()
 
 
     def Update(self):
@@ -815,9 +808,9 @@ class Axis(wx.Panel):
         if min < 0:
             max += abs(min)
             val += abs(min)
-            min = 0        
+            min = 0
         range = float(max - min)
-        
+
         #
         # The relative value is used by the derived wx.Gauge since it is a
         # positive-only control.
@@ -905,7 +898,7 @@ class JoystickDemoPanel(wx.Panel):
         # Try to grab the control. If we get it, capture the stick.
         # Otherwise, throw up an exception message and play stupid.
         try:
-            self.stick = wx.Joystick()
+            self.stick = wx.adv.Joystick()
             self.stick.SetCapture(self)
             # Calibrate our controls
             wx.CallAfter(self.Calibrate)
@@ -924,10 +917,10 @@ class JoystickDemoPanel(wx.Panel):
 
         self.joy = JoyPanel(self, self.stick)
         sizer.Add(self.joy, (1, 0), (1, 1), wx.ALL | wx.GROW, 2)
-                  
+
         self.pov = POVPanel(self, self.stick)
         sizer.Add(self.pov, (1, 1), (1, 2), wx.ALL | wx.GROW, 2)
-        
+
         self.axes = AxisPanel(self, self.stick)
         sizer.Add(self.axes, (2, 0), (1, 3), wx.ALL | wx.GROW, 2)
 
@@ -968,7 +961,7 @@ class JoystickDemoPanel(wx.Panel):
         if self.stick:
             self.stick.ReleaseCapture()
         self.stick = None
-        
+
 #----------------------------------------------------------------------------
 
 def runTest(frame, nb, log):
@@ -980,7 +973,7 @@ def runTest(frame, nb, log):
         win = MessagePanel(nb, 'wx.Joystick is not available on this platform.',
                            'Sorry', wx.ICON_WARNING)
         return win
-    
+
 
 #----------------------------------------------------------------------------
 
@@ -1009,13 +1002,13 @@ a regular basis.
 <h2>Data types</h2>
 
 Data from the joystick comes in two flavors: that which defines the boundaries, and that
-which defines the current state of the stick. Thus, we have Get*Max() and Get*Min() 
+which defines the current state of the stick. Thus, we have Get*Max() and Get*Min()
 methods for all axes, the max number of axes, the max number of buttons, and so on. In
 general, this data can be read once and stored to speed computation up.
 
 <h3>Analog Input</h3>
 
-Analog input (the axes) is delivered as a whole, positive number. If you need to know 
+Analog input (the axes) is delivered as a whole, positive number. If you need to know
 if the axis is at zero (centered) or not, you will first have to calculate that center
 based on the max and min values. The demo shows a bar graph for each axis expressed
 in native numerical format, plus a 'centered' X-Y axis compass showing the relationship
@@ -1031,29 +1024,29 @@ Button state is retrieved as one int that contains each button state mapped to a
 You get the state of a button by AND-ing its bit against the returned value, in the form
 
 <pre>
-     # assume buttonState is what the stick returned, and buttonBit 
+     # assume buttonState is what the stick returned, and buttonBit
      # is the bit you want to examine
-     
+
      if (buttonState & ( 1 &lt;&lt; buttonBit )) :
          # button pressed, do something with it
 </pre>
 
-<p>The problem here is that some OSs return a 32-bit value for up to 32 buttons 
-(imagine <i>that</i> stick!). Python V2.3 will generate an exception for bit 
+<p>The problem here is that some OSs return a 32-bit value for up to 32 buttons
+(imagine <i>that</i> stick!). Python V2.3 will generate an exception for bit
 values over 30. For that reason, this demo is limited to 16 buttons.
 
 <p>Note that more than one button can be pressed at a time, so be sure to check all of them!
-     
+
 
 <h3>POV Input</h3>
 
 POV hats come in two flavors: four-way, and continuous. four-way POVs are restricted to
 the cardinal points of the compass; continuous, or CTS POV hats can deliver input in
 .01 degree increments, theoreticaly. The data is returned as a whole number; the last
-two digits are considered to be to the right of the decimal point, so in order to 
-use this information, you need to divide by 100 right off the bat. 
+two digits are considered to be to the right of the decimal point, so in order to
+use this information, you need to divide by 100 right off the bat.
 
-<p>Different methods are provided to retrieve the POV data for a CTS hat 
+<p>Different methods are provided to retrieve the POV data for a CTS hat
 versus a four-way hat.
 
 <h2>Caveats</h2>
@@ -1072,9 +1065,9 @@ rely on wx.JoystickEvents to tell you when something has changed, necessarilly.
 <p>Fortunately, there is an easy workaround. In the top level frame, create a wx.Timer
 that will poll the stick at a set interval. Of course, if you do this, you might as
 well forgo catching wxEVT_JOYSTICK_* events at all and rely on the timer to do the
-polling. 
+polling.
 
-<p>Ideally, the timer should be a one-shot; after it fires, collect and process data as 
+<p>Ideally, the timer should be a one-shot; after it fires, collect and process data as
 needed, then re-start the timer, possibly using wx.CallAfter().
 
 </body>

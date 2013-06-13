@@ -89,15 +89,15 @@ class TestPanel(wx.Panel):
             image = images.Pointy.GetImage()
 
             # since this image didn't come from a .cur file, tell it where the hotspot is
-            image.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 1)
-            image.SetOptionInt(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 1)
+            image.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_X, 1)
+            image.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 1)
 
             # make the image into a cursor
             cursor = wx.CursorFromImage(image)
 
         else:
             # create one of the stock (built-in) cursors
-            cursor = wx.StockCursor(cnum)
+            cursor = wx.Cursor(cnum)
 
         # set the cursor for the window
         self.win.SetCursor(cursor)

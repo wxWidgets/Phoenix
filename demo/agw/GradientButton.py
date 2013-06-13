@@ -33,19 +33,19 @@ class GradientButtonDemo(wx.Panel):
         bitmap = wx.Bitmap(os.path.normpath(bitmapDir+"gradientbutton.png"), wx.BITMAP_TYPE_PNG)
         self.btn2 = GB.GradientButton(self.mainPanel, -1, bitmap, "GradientButton")
 
-        self.topStartColour = wx.ColourPickerCtrl(self.mainPanel, col=self.btn2.GetTopStartColour(),
+        self.topStartColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetTopStartColour(),
                                                   name="Top Start")
-        self.topEndColour = wx.ColourPickerCtrl(self.mainPanel, col=self.btn2.GetTopEndColour(),
+        self.topEndColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetTopEndColour(),
                                                 name="Top End")
-        self.bottomStartColour = wx.ColourPickerCtrl(self.mainPanel, col=self.btn2.GetBottomStartColour(),
+        self.bottomStartColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetBottomStartColour(),
                                                      name="Bottom Start")
-        self.bottomEndColour = wx.ColourPickerCtrl(self.mainPanel, col=self.btn2.GetBottomEndColour(),
+        self.bottomEndColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetBottomEndColour(),
                                                    name="Bottom End")
-        self.pressedTopColour = wx.ColourPickerCtrl(self.mainPanel, col=self.btn2.GetPressedTopColour(),
+        self.pressedTopColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetPressedTopColour(),
                                                     name="Pressed Top")
-        self.pressedBottomColour = wx.ColourPickerCtrl(self.mainPanel, col=self.btn2.GetPressedBottomColour(),
+        self.pressedBottomColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetPressedBottomColour(),
                                                        name="Pressed Bottom")
-        self.textColour = wx.ColourPickerCtrl(self.mainPanel, col=self.btn2.GetForegroundColour(),
+        self.textColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetForegroundColour(),
                                               name="Text Colour")
 
         self.DoLayout()
@@ -85,14 +85,14 @@ class GradientButtonDemo(wx.Panel):
         btnSizer.Add((10, 0))
         mainSizer.Add(btnSizer, 0, wx.EXPAND|wx.ALL, 10)
 
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont.SetWeight(wx.BOLD)
         
         for child in self.mainPanel.GetChildren():
             if isinstance(child, wx.StaticText):
                 child.SetFont(boldFont)
 
-        buttonFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        buttonFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         buttonFont.SetWeight(wx.BOLD)
         try:
             buttonFont.SetFaceName("Tahoma")

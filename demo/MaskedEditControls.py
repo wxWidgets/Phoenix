@@ -218,7 +218,7 @@ has a legal range specified.
        ("Integer (signed)",         "#{6}",          "", 'F-_',       "",                                 '','', ' 0    '),
        ("Integer (unsigned)\n(1-399)","######",      "", 'F_',        "",                                 (1,399),'', '1     '),
        ("Float (signed)",           "#{6}.#{9}",     "", 'F-_R',      "",                                 '','', '000000.000000000'),
-       ("Date (MDY) + Time",        "##/##/#### ##:##:## AM",  'BCDEFGHIJKLMNOQRSTUVWXYZ','DF!',"",          '','', wx.DateTime_Now().Format("%m/%d/%Y %I:%M:%S %p")),
+       ("Date (MDY) + Time",        "##/##/#### ##:##:## AM",  'BCDEFGHIJKLMNOQRSTUVWXYZ','DF!',"",          '','', wx.DateTime.Now().Format("%m/%d/%Y %I:%M:%S %p")),
        ]
         self.layoutGeneralTable( controls, grid )
 

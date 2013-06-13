@@ -230,7 +230,7 @@ class GradientPanel(wx.Panel):
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
         gc = wx.GraphicsContext.Create(dc)
-        col1 = wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DSHADOW)
+        col1 = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DSHADOW)
         col2 = platebtn.AdjustColour(col1, -90)
         col1 = platebtn.AdjustColour(col1, 90)
         rect = self.GetClientRect()

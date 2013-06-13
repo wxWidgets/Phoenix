@@ -6,7 +6,7 @@
 # Author:       Robin Dunn
 #
 # Created:      A long time ago, in a galaxy far, far away...
-# RCS-ID:       $Id$
+# RCS-ID:       $Id: Main.py 71772 2012-06-14 22:37:10Z RD $
 # Copyright:    (c) 1999 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
@@ -56,11 +56,13 @@ import cPickle, cStringIO, re, urllib2
 import shutil
 from threading import Thread
 
-import wx              
-import wx.aui
+import wx
+import wx.adv
+import wx.lib.agw.aui as aui
 import wx.html
 from wx.lib.msgpanel import MessagePanel
-
+from wx.adv import TaskBarIcon as TaskBarIcon
+from wx.adv import SplashScreen as SplashScreen
 import wx.lib.mixins.inspection
 
 import version
@@ -71,8 +73,8 @@ images = None
 
 # For debugging
 ##wx.Trap();
-##print "wx.VERSION_STRING = %s (%s)" % (wx.VERSION_STRING, wx.USE_UNICODE and 'unicode' or 'ansi')
-##print "pid:", os.getpid()
+##print("wx.VERSION_STRING = %s (%s)" % (wx.VERSION_STRING, wx.USE_UNICODE and 'unicode' or 'ansi'))
+##print("pid:", os.getpid())
 ##raw_input("Press Enter...")
 
 #---------------------------------------------------------------------------
@@ -89,6 +91,7 @@ _demoPngs = ["overview", "recent", "frame", "dialog", "moredialog", "core",
 _treeList = [
     # new stuff
     ('Recent Additions/Updates', [
+        'BannerWindow',
         'PropertyGrid',
         'SystemSettings',
         'GridLabelRenderer',
@@ -171,7 +174,7 @@ _treeList = [
         'RadioButton',
         'SashWindow',
         'ScrolledWindow',
-        'SearchCtrl',        
+        'SearchCtrl',
         'Slider',
         'SpinButton',
         'SpinCtrl',
@@ -188,7 +191,7 @@ _treeList = [
         'TreeCtrl',
         'Validator',
         ]),
-    
+
     ('"Book" Controls', [
         'AUI_Notebook',
         'Choicebook',
@@ -233,13 +236,13 @@ _treeList = [
         'ExpandoTextCtrl',
         'FancyText',
         'FileBrowseButton',
-        'FloatBar',  
+        'FloatBar',
         'FloatCanvas',
         'HtmlWindow',
         'HTML2_WebView',
         'InfoBar',
         'IntCtrl',
-        'MVCTree',   
+        'MVCTree',
         'MaskedEditControls',
         'MaskedNumCtrl',
         'MediaCtrl',
@@ -263,7 +266,7 @@ _treeList = [
         'TreeMixin',
         'VListBox',
         ]),
-    
+
     # How to lay out the controls in a frame/dialog
     ('Window Layout', [
         'GridBagSizer',
@@ -331,7 +334,7 @@ _treeList = [
         'GraphicsContext',
         'GraphicsGradient',
         'GLCanvas',
-        'I18N',        
+        'I18N',
         'Joystick',
         'MimeTypesManager',
         'MouseGestures',
@@ -348,7 +351,6 @@ _treeList = [
         'UIActionSimulator',
         'Unicode',
         ]),
-
 
     ('Check out the samples dir too', [] ),
 
@@ -367,7 +369,7 @@ _eventTable = '<h3>Events</h3>\n' \
 _appearanceTable = '<h3>Appearance</h3>\n' \
                    '<p>Control appearance on various platform:\n' \
                    '<p><table bgcolor=\"#ffffff\" cellspacing=20>'
-              
+
 _styleHeaders = ["Style Name", "Description"]
 _eventHeaders = ["Event Name", "Description"]
 _headerTable = '<td><b>%s</b></td>'
@@ -387,7 +389,7 @@ _importList = ["wx.aui", "wx.calendar", "wx.html", "wx.media", "wx.wizard",
                "wx.combo", "wx.animate", "wx.gizmos", "wx.glcanvas", "wx.grid",
                "wx.richtext", "wx.stc"]
 
-_dirWX = dir(wx)           
+_dirWX = dir(wx)
 for mod in _importList:
     try:
         module = __import__(mod)
@@ -405,7 +407,7 @@ def ReplaceCapitals(string):
 
     * `string`: the string to be analyzed.
     """
-    
+
     newString = ""
     for char in string:
         if char.isupper():
@@ -415,7 +417,7 @@ def ReplaceCapitals(string):
 
     return newString
 
-    
+
 def RemoveHTMLTags(data):
     """
     Removes all the HTML tags from a string.
@@ -440,7 +442,7 @@ def FormatDocs(keyword, values, num):
         text = "<br>" + table%(keyword.lower(), keyword.lower()) + "\n<tr>\n"
     else:
         text = "<br>" + table
-    
+
     for indx in xrange(2):
         text += _headerTable%headers[indx]
 
@@ -449,16 +451,16 @@ def FormatDocs(keyword, values, num):
     for name in names:
 
         text += "<tr>\n"
-        
+
         description = values[name].strip()
         pythonValue = name.replace("wx", "wx.")
 
         if num == 3:
-            
+
             colour = "#ff0000"
             value = "Unavailable"
             cutValue = pythonValue[3:]
-            
+
             if cutValue in _dirWX:
                 try:
                     val = eval(pythonValue)
@@ -475,19 +477,19 @@ def FormatDocs(keyword, values, num):
                         pythonValue = "%s.%s"%(packages, cutValue)
                         break
 
-            text += _styleTag%pythonValue + "\n"                        
+            text += _styleTag%pythonValue + "\n"
 
         else:
 
             text += _eventTag%pythonValue + "\n"
-            
+
         text += _description%FormatDescription(description) + "\n"
         text += "</tr>\n"
 
     text += "\n</table>\n\n<p>"
     return text
 
-    
+
 def FormatDescription(description):
     """
     Formats a wxWidgets C++ description in a more wxPython-based way.
@@ -506,7 +508,7 @@ def FormatDescription(description):
 
 def FormatImages(appearance):
 
-    text = "<p><br>" + _appearanceTable 
+    text = "<p><br>" + _appearanceTable
 
     for indx in xrange(2):
         text += "\n<tr>\n"
@@ -523,7 +525,7 @@ def FormatImages(appearance):
     text += "\n</table>\n\n<p>"
     return text
 
-    
+
 def FindWindowStyles(text, originalText, widgetName):
     """
     Finds the windows styles and events in the input text.
@@ -538,12 +540,12 @@ def FindWindowStyles(text, originalText, widgetName):
 
     winStyles, winEvents, winExtra, winAppearance = {}, {}, {}, {}
     inStyle = inExtra = inEvent = False
-    
+
     for line in text:
         if "following styles:" in line:
             inStyle = True
             continue
-            
+
         elif "Event macros" in line:
             inEvent = True
             continue
@@ -555,25 +557,25 @@ def FindWindowStyles(text, originalText, widgetName):
         if "Appearance:" in line:
             winAppearance = FindImages(originalText, widgetName)
             continue
-            
+
         elif not line.strip():
             inStyle = inEvent = inExtra = False
             continue
 
         if inStyle:
             start = line.index(':')
-            windowStyle = line[0:start]            
+            windowStyle = line[0:start]
             styleDescription = line[start+1:]
             winStyles[windowStyle] = styleDescription
         elif inEvent:
             start = line.index(':')
             eventName = line[0:start]
-            eventDescription = line[start+1:]            
+            eventDescription = line[start+1:]
             winEvents[eventName] = eventDescription
         elif inExtra:
             start = line.index(':')
             styleName = line[0:start]
-            styleDescription = line[start+1:]            
+            styleDescription = line[start+1:]
             winExtra[styleName] = styleDescription
 
     return winStyles, winEvents, winExtra, winAppearance
@@ -592,7 +594,7 @@ def FindImages(text, widgetName):
 
     winAppearance = {}
     start = text.find("class='appearance'")
-    
+
     if start < 0:
         return winAppearance
 
@@ -609,7 +611,7 @@ def FindImages(text, widgetName):
             possibleImage = possibleImage.replace("'", "")
             f = urllib2.urlopen(_trunkURL + possibleImage)
             stream = f.read()
-            
+
         elif "alt=" in items:
             plat = items.replace("alt=", "").replace("'", "").strip()
             path = os.path.join(imagesDir, plat, widgetName + ".png")
@@ -618,7 +620,7 @@ def FindImages(text, widgetName):
                 image.SaveFile(path, wx.BITMAP_TYPE_PNG)
 
             winAppearance[plat] = path
-        
+
     return winAppearance
 
 
@@ -628,9 +630,9 @@ def FindImages(text, widgetName):
 
 class InternetThread(Thread):
     """ Worker thread class to attempt connection to the internet. """
-    
+
     def __init__(self, notifyWindow, selectedClass):
-        
+
         Thread.__init__(self)
 
         self.notifyWindow = notifyWindow
@@ -639,11 +641,11 @@ class InternetThread(Thread):
         self.setDaemon(True)
 
         self.start()
-        
+
 
     def run(self):
         """ Run the worker thread. """
-        
+
         # This is the code executing in the new thread. Simulation of
         # a long process as a simple urllib2 call
 
@@ -657,7 +659,7 @@ class InternetThread(Thread):
 
             if not self.keepRunning:
                 return
-            
+
             wx.CallAfter(self.notifyWindow.LoadDocumentation, data)
         except (IOError, urllib2.HTTPError):
             # Unable to get to the internet
@@ -674,9 +676,9 @@ class InternetThread(Thread):
 #---------------------------------------------------------------------------
 # Show how to derive a custom wxLog class
 
-class MyLog(wx.PyLog):
+class MyLog(wx.Log):
     def __init__(self, textCtrl, logTime=0):
-        wx.PyLog.__init__(self)
+        wx.Log.__init__(self)
         self.tc = textCtrl
         self.logTime = logTime
 
@@ -704,8 +706,8 @@ try:
 
         # Some methods to make it compatible with how the wxTextCtrl is used
         def SetValue(self, value):
-            if wx.USE_UNICODE:
-                value = value.decode('iso8859_1')
+            # if wx.USE_UNICODE:
+                # value = value.decode('iso8859_1')
             val = self.GetReadOnly()
             self.SetReadOnly(False)
             self.SetText(value)
@@ -751,31 +753,31 @@ try:
             start = self.PositionFromLine(line)
             end = self.GetLineEndPosition(line)
             self.SetSelection(start, end)
-            
+
         def SetUpEditor(self):
             """
-            This method carries out the work of setting up the demo editor.            
+            This method carries out the work of setting up the demo editor.
             It's seperate so as not to clutter up the init code.
             """
             import keyword
-            
+
             self.SetLexer(stc.STC_LEX_PYTHON)
             self.SetKeyWords(0, " ".join(keyword.kwlist))
-    
+
             # Enable folding
-            self.SetProperty("fold", "1" ) 
+            self.SetProperty("fold", "1" )
 
             # Highlight tab/space mixing (shouldn't be any)
             self.SetProperty("tab.timmy.whinge.level", "1")
 
             # Set left and right margins
             self.SetMargins(2,2)
-    
+
             # Set up the numbers in the margin for margin #1
             self.SetMarginType(1, wx.stc.STC_MARGIN_NUMBER)
             # Reasonable value for, say, 4-5 digits using a mono font (40 pix)
             self.SetMarginWidth(1, 40)
-    
+
             # Indentation and tab stuff
             self.SetIndent(4)               # Proscribed indent size for wx
             self.SetIndentationGuides(True) # Show indent guides
@@ -783,25 +785,25 @@ try:
             self.SetTabIndents(True)        # Tab key indents
             self.SetTabWidth(4)             # Proscribed tab size for wx
             self.SetUseTabs(False)          # Use spaces rather than tabs, or
-                                            # TabTimmy will complain!    
+                                            # TabTimmy will complain!
             # White space
             self.SetViewWhiteSpace(False)   # Don't view white space
-    
+
             # EOL: Since we are loading/saving ourselves, and the
             # strings will always have \n's in them, set the STC to
-            # edit them that way.            
+            # edit them that way.
             self.SetEOLMode(wx.stc.STC_EOL_LF)
             self.SetViewEOL(False)
-            
+
             # No right-edge mode indicator
             self.SetEdgeMode(stc.STC_EDGE_NONE)
-    
+
             # Setup a margin to hold fold markers
             self.SetMarginType(2, stc.STC_MARGIN_SYMBOL)
             self.SetMarginMask(2, stc.STC_MASK_FOLDERS)
             self.SetMarginSensitive(2, True)
             self.SetMarginWidth(2, 12)
-    
+
             # and now set up the fold markers
             self.MarkerDefine(stc.STC_MARKNUM_FOLDEREND,     stc.STC_MARK_BOXPLUSCONNECTED,  "white", "black")
             self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPENMID, stc.STC_MARK_BOXMINUSCONNECTED, "white", "black")
@@ -810,21 +812,21 @@ try:
             self.MarkerDefine(stc.STC_MARKNUM_FOLDERSUB,     stc.STC_MARK_VLINE,    "white", "black")
             self.MarkerDefine(stc.STC_MARKNUM_FOLDER,        stc.STC_MARK_BOXPLUS,  "white", "black")
             self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPEN,    stc.STC_MARK_BOXMINUS, "white", "black")
-    
+
             # Global default style
             if wx.Platform == '__WXMSW__':
-                self.StyleSetSpec(stc.STC_STYLE_DEFAULT, 
+                self.StyleSetSpec(stc.STC_STYLE_DEFAULT,
                                   'fore:#000000,back:#FFFFFF,face:Courier New')
             elif wx.Platform == '__WXMAC__':
-                # TODO: if this looks fine on Linux too, remove the Mac-specific case 
+                # TODO: if this looks fine on Linux too, remove the Mac-specific case
                 # and use this whenever OS != MSW.
-                self.StyleSetSpec(stc.STC_STYLE_DEFAULT, 
+                self.StyleSetSpec(stc.STC_STYLE_DEFAULT,
                                   'fore:#000000,back:#FFFFFF,face:Monaco')
             else:
                 defsize = wx.SystemSettings.GetFont(wx.SYS_ANSI_FIXED_FONT).GetPointSize()
-                self.StyleSetSpec(stc.STC_STYLE_DEFAULT, 
+                self.StyleSetSpec(stc.STC_STYLE_DEFAULT,
                                   'fore:#000000,back:#FFFFFF,face:Courier,size:%d'%defsize)
-    
+
             # Clear styles and revert to default.
             self.StyleClearAll()
 
@@ -832,14 +834,14 @@ try:
             # The rest remains unchanged.
 
             # Line numbers in margin
-            self.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,'fore:#000000,back:#99A9C2')    
+            self.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,'fore:#000000,back:#99A9C2')
             # Highlighted brace
             self.StyleSetSpec(wx.stc.STC_STYLE_BRACELIGHT,'fore:#00009D,back:#FFFF00')
             # Unmatched brace
             self.StyleSetSpec(wx.stc.STC_STYLE_BRACEBAD,'fore:#00009D,back:#FF0000')
             # Indentation guide
             self.StyleSetSpec(wx.stc.STC_STYLE_INDENTGUIDE, "fore:#CDCDCD")
-    
+
             # Python styles
             self.StyleSetSpec(wx.stc.STC_P_DEFAULT, 'fore:#000000')
             # Comments
@@ -870,8 +872,8 @@ try:
             # Selection background
             self.SetSelBackground(1, '#66CCFF')
 
-            self.SetSelBackground(True, wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT))
-            self.SetSelForeground(True, wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
+            self.SetSelBackground(True, wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
+            self.SetSelForeground(True, wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
 
         def RegisterModifiedEvent(self, eventHandler):
             self.Bind(wx.stc.EVT_STC_CHANGE, eventHandler)
@@ -889,7 +891,7 @@ except ImportError:
         def SetReadOnly(self, flag):
             self.SetEditable(not flag)
             # NOTE: STC already has this method
-    
+
         def GetText(self):
             return self.GetValue()
 
@@ -942,7 +944,7 @@ class DemoCodePanel(wx.Panel):
             self.controlBox.Add(radioButton, 0, wx.EXPAND | wx.RIGHT, 5)
             radioButton.modID = modID # makes it easier for the event handler
             radioButton.Bind(wx.EVT_RADIOBUTTON, self.OnRadioButton)
-            
+
         self.controlBox.Add(self.btnSave, 0, wx.RIGHT, 5)
         self.controlBox.Add(self.btnRestore, 0)
 
@@ -950,7 +952,7 @@ class DemoCodePanel(wx.Panel):
         self.box.Add(self.controlBox, 0, wx.EXPAND)
         self.box.Add(wx.StaticLine(self), 0, wx.EXPAND)
         self.box.Add(self.editor, 1, wx.EXPAND)
-        
+
         self.box.Fit(self)
         self.SetSizer(self.box)
 
@@ -969,11 +971,11 @@ class DemoCodePanel(wx.Panel):
     def ActiveModuleChanged(self):
         self.LoadDemoSource(self.demoModules.GetSource())
         self.UpdateControlState()
-        self.mainFrame.pnl.Freeze()        
+        self.mainFrame.pnl.Freeze()
         self.ReloadDemo()
         self.mainFrame.pnl.Thaw()
 
-        
+
     def LoadDemoSource(self, source):
         self.editor.Clear()
         self.editor.SetValue(source)
@@ -986,8 +988,8 @@ class DemoCodePanel(wx.Panel):
         self.editor.SetFocus()
         if highlight:
             self.editor.SelectLine(line)
-        
-       
+
+
     def UpdateControlState(self):
         active = self.demoModules.GetActiveID()
         # Update the radio/restore buttons
@@ -1007,7 +1009,7 @@ class DemoCodePanel(wx.Panel):
                 if moduleID == modModified:
                     self.btnRestore.Enable(False)
 
-                    
+
     def OnRadioButton(self, event):
         radioSelected = event.GetEventObject()
         modSelected = radioSelected.modID
@@ -1021,11 +1023,11 @@ class DemoCodePanel(wx.Panel):
         if self.demoModules.name != __name__:
             self.mainFrame.RunModule()
 
-                
+
     def OnCodeModified(self, event):
         self.btnSave.Enable(self.editor.IsModified())
 
-        
+
     def OnSave(self, event):
         if self.demoModules.Exists(modModified):
             if self.demoModules.GetActiveID() == modOriginal:
@@ -1037,7 +1039,7 @@ class DemoCodePanel(wx.Panel):
                 if result == wx.ID_NO:
                     return
                 dlg.Destroy()
-            
+
         self.demoModules.SetActive(modModified)
         modifiedFilename = GetModifiedFilename(self.demoModules.name)
 
@@ -1053,7 +1055,7 @@ class DemoCodePanel(wx.Panel):
                 return
             else:
                 wx.LogMessage("Created directory for modified demos: %s" % GetModifiedDirectory())
-            
+
         # Save
         f = open(modifiedFilename, "wt")
         source = self.editor.GetText()
@@ -1061,7 +1063,7 @@ class DemoCodePanel(wx.Panel):
             f.write(source)
         finally:
             f.close()
-            
+
         busy = wx.BusyInfo("Reloading demo module...")
         self.demoModules.LoadFromFile(modModified, modifiedFilename)
         self.ActiveModuleChanged()
@@ -1074,7 +1076,7 @@ class DemoCodePanel(wx.Panel):
         self.demoModules.Delete(modModified)
         os.unlink(modifiedFilename) # Delete the modified copy
         busy = wx.BusyInfo("Reloading demo module...")
-        
+
         self.ActiveModuleChanged()
 
         self.mainFrame.SetTreeModified(False)
@@ -1125,7 +1127,7 @@ def GetOriginalFilename(name):
 
     if os.path.isfile(name):
         return name
-    
+
     originalDir = os.getcwd()
     listDir = os.listdir(originalDir)
     # Loop over the content of the demo directory
@@ -1135,7 +1137,7 @@ def GetOriginalFilename(name):
             continue
         dirFile = os.listdir(item)
         # See if a file called "name" is there
-        if name in dirFile:        
+        if name in dirFile:
             return os.path.join(item, name)
 
     # We must return a string...
@@ -1167,14 +1169,14 @@ def MakeDocDirs():
 
     for plat in _platformNames:
         imageDir = os.path.join(docDir, "images", plat)
-        if not os.path.exists(imageDir):        
+        if not os.path.exists(imageDir):
             os.makedirs(imageDir)
 
-    
+
 def GetDocFile():
-            
+
     docFile = os.path.join(GetDataDir(), "docs", "TrunkDocs.pkl")
-    
+
     return docFile
 
 
@@ -1189,14 +1191,14 @@ def SearchDemo(name, keyword):
     fid = open(GetOriginalFilename(name), "rt")
     fullText = fid.read()
     fid.close()
-    
+
     fullText = fullText.decode("iso-8859-1")
 
     if fullText.find(keyword) >= 0:
         return True
 
-    return False    
-        
+    return False
+
 
 def HuntExternalDemos():
     """
@@ -1277,14 +1279,14 @@ def LookForExternals(externalDemos, demoName):
 
     # No match found, return None for both
     return pkg, overview
-    
+
 #---------------------------------------------------------------------------
 
 class ModuleDictWrapper(object):
     """Emulates a module with a dynamically compiled __dict__"""
     def __init__(self, dict):
         self.dict = dict
-        
+
     def __getattr__(self, name):
         if name in self.dict:
             return self.dict[name]
@@ -1299,16 +1301,16 @@ class DemoModules(object):
     def __init__(self, name):
         self.modActive = -1
         self.name = name
-        
-        #              (dict , source ,  filename , description   , error information )        
-        #              (  0  ,   1    ,     2     ,      3        ,          4        )        
+
+        #              (dict , source ,  filename , description   , error information )
+        #              (  0  ,   1    ,     2     ,      3        ,          4        )
         self.modules = [[dict(),  ""    ,    ""     , "<original>"  ,        None],
                         [dict(),  ""    ,    ""     , "<modified>"  ,        None]]
-        
+
         for i in [modOriginal, modModified]:
             self.modules[i][0]['__file__'] = \
                 os.path.join(os.getcwdu(), GetOriginalFilename(name))
-            
+
         # load original module
         self.LoadFromFile(modOriginal, GetOriginalFilename(name))
         self.SetActive(modOriginal)
@@ -1335,9 +1337,9 @@ class DemoModules(object):
             source = self.modules[modID][1]
             description = self.modules[modID][2]
             description = description.encode(sys.getfilesystemencoding())
-            
+
             try:
-                code = compile(source, description, "exec")        
+                code = compile(source, description, "exec")
                 exec code in self.modules[modID][0]
             except:
                 self.modules[modID][4] = DemoError(sys.exc_info())
@@ -1364,7 +1366,7 @@ class DemoModules(object):
     def GetActiveID(self):
         return self.modActive
 
-    
+
     def GetSource(self, modID = None):
         if modID is None:
             modID = self.modActive
@@ -1396,7 +1398,7 @@ class DemoModules(object):
         source = self.modules[modID][1]
         filename = self.modules[modID][2]
 
-        try:        
+        try:
             file = open(filename, "wt")
             file.write(source)
         finally:
@@ -1418,7 +1420,7 @@ class DemoError(object):
     """Wraps and stores information about the current exception"""
     def __init__(self, exc_info):
         import copy
-        
+
         excType, excValue = exc_info[:2]
         # traceback list entries: (filename, line number, function name, text)
         self.traceback = traceback.extract_tb(exc_info[2])
@@ -1448,7 +1450,7 @@ class DemoError(object):
             self.exception_details = "<unprintable %s object>" & type(excValue).__name__
 
         del exc_info
-        
+
     def __str__(self):
         ret = "Type %s \n \
         Traceback: %s \n \
@@ -1483,7 +1485,7 @@ class DemoErrorPanel(wx.Panel):
         boxInfoGrid.Add(wx.StaticText(self, -1, demoError.exception_details) , 0, textFlags, 5 )
         boxInfoSizer.Add(boxInfoGrid, 0, wx.ALIGN_CENTRE | wx.ALL, 5 )
         self.box.Add(boxInfoSizer, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-       
+
         # Set up the traceback list
         # This one automatically resizes last column to take up remaining space
         from ListCtrl import TestListCtrl
@@ -1512,11 +1514,11 @@ class DemoErrorPanel(wx.Panel):
         #Add the traceback data
         for x in range(len(traceback)):
             data = traceback[x]
-            list.InsertStringItem(x, os.path.basename(data[0])) # Filename
-            list.SetStringItem(x, 1, str(data[1]))              # Line
-            list.SetStringItem(x, 2, str(data[2]))              # Function
-            list.SetStringItem(x, 3, str(data[3]))              # Code
-            
+            list.InsertItem(x, os.path.basename(data[0])) # Filename
+            list.SetItem(x, 1, str(data[1]))              # Line
+            list.SetItem(x, 2, str(data[2]))              # Function
+            list.SetItem(x, 3, str(data[3]))              # Code
+
             # Check whether this entry is from the demo module
             if data[0] == "<original>" or data[0] == "<modified>": # FIXME: make more generalised
                 self.list.SetItemData(x, int(data[1]))   # Store line number for easy access
@@ -1526,15 +1528,15 @@ class DemoErrorPanel(wx.Panel):
                 self.list.SetItem(item)
             else:
                 self.list.SetItemData(x, -1)        # Editor can't jump into this one's code
-       
+
 
     def OnItemSelected(self, event):
         # This occurs before OnDoubleClick and can be used to set the
         # currentItem. OnDoubleClick doesn't get a wxListEvent....
-        self.currentItem = event.m_itemIndex
+        self.currentItem = event.Index
         event.Skip()
 
-        
+
     def OnDoubleClick(self, event):
         # If double-clicking on a demo's entry, jump to the line number
         line = self.list.GetItemData(self.currentItem)
@@ -1542,42 +1544,42 @@ class DemoErrorPanel(wx.Panel):
             self.nb.SetSelection(1) # Switch to the code viewer tab
             wx.CallAfter(self.codePanel.JumpToLine, line-1, True)
         event.Skip()
-        
+
 
 #---------------------------------------------------------------------------
 
 class MainPanel(wx.Panel):
     """
-    Just a simple derived panel where we override Freeze and Thaw so they are
-    only used on wxMSW.    
+    Just a simple derived panel where we override Freeze and Thaw to work
+    around an issue on wxGTK.
     """
     def Freeze(self):
-        if 'wxMSW' in wx.PlatformInfo:
+        if not 'wxGTK' in wx.PlatformInfo:
             return super(MainPanel, self).Freeze()
-                         
+
     def Thaw(self):
-        if 'wxMSW' in wx.PlatformInfo:
+        if not 'wxGTK' in wx.PlatformInfo:
             return super(MainPanel, self).Thaw()
-                         
+
 #---------------------------------------------------------------------------
 
-class DemoTaskBarIcon(wx.TaskBarIcon):
+class DemoTaskBarIcon(TaskBarIcon):
     TBMENU_RESTORE = wx.NewId()
     TBMENU_CLOSE   = wx.NewId()
     TBMENU_CHANGE  = wx.NewId()
     TBMENU_REMOVE  = wx.NewId()
-    
+
     def __init__(self, frame):
-        wx.TaskBarIcon.__init__(self, wx.TBI_DOCK) # wx.TBI_CUSTOM_STATUSITEM
+        TaskBarIcon.__init__(self, wx.adv.TBI_DOCK) # wx.adv.TBI_CUSTOM_STATUSITEM
         self.frame = frame
 
         # Set the image
         icon = self.MakeIcon(images.WXPdemo.GetImage())
         self.SetIcon(icon, "wxPython Demo")
         self.imgidx = 1
-        
+
         # bind some events
-        self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarActivate)
+        self.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarActivate)
         self.Bind(wx.EVT_MENU, self.OnTaskBarActivate, id=self.TBMENU_RESTORE)
         self.Bind(wx.EVT_MENU, self.OnTaskBarClose, id=self.TBMENU_CLOSE)
         self.Bind(wx.EVT_MENU, self.OnTaskBarChange, id=self.TBMENU_CHANGE)
@@ -1610,9 +1612,9 @@ class DemoTaskBarIcon(wx.TaskBarIcon):
         elif "wxGTK" in wx.PlatformInfo:
             img = img.Scale(22, 22)
         # wxMac can be any size upto 128x128, so leave the source img alone....
-        icon = wx.IconFromBitmap(img.ConvertToBitmap() )
+        icon = wx.IconFromBitmap(img.ConvertToBitmap())
         return icon
-    
+
 
     def OnTaskBarActivate(self, evt):
         if self.frame.IsIconized():
@@ -1627,14 +1629,14 @@ class DemoTaskBarIcon(wx.TaskBarIcon):
 
 
     def OnTaskBarChange(self, evt):
-        names = [ "WXPdemo", "Mondrian", "Pencil", "Carrot" ]                  
+        names = [ "WXPdemo", "Mondrian", "Pencil", "Carrot" ]
         name = names[self.imgidx]
-        
+
         eImg = getattr(images, name)
         self.imgidx += 1
         if self.imgidx >= len(names):
             self.imgidx = 0
-            
+
         icon = self.MakeIcon(eImg.Image)
         self.SetIcon(icon, "This is a new icon: " + name)
 
@@ -1646,7 +1648,7 @@ class DemoTaskBarIcon(wx.TaskBarIcon):
 #---------------------------------------------------------------------------
 class wxPythonDemo(wx.Frame):
 
-    overviewText = "wxPython Demo"
+    overviewText = "wxPython Overview"
 
     def __init__(self, parent, title):
         wx.Frame.__init__(self, parent, -1, title, size = (970, 720),
@@ -1655,8 +1657,8 @@ class wxPythonDemo(wx.Frame):
         self.SetMinSize((640,480))
 
         self.pnl = pnl = MainPanel(self)
-        
-        self.mgr = wx.aui.AuiManager()
+
+        self.mgr = aui.AuiManager()
         self.mgr.SetManagedWindow(pnl)
 
         self.loaded = False
@@ -1675,9 +1677,9 @@ class wxPythonDemo(wx.Frame):
             self.tbicon = DemoTaskBarIcon(self)
         except:
             self.tbicon = None
-            
+
         self.otherWin = None
-        
+
         self.allowDocs = False
         self.downloading = False
         self.internetThread = None
@@ -1693,31 +1695,31 @@ class wxPythonDemo(wx.Frame):
 
         self.Centre(wx.BOTH)
 
-        self.statusBar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        self.statusBar = self.CreateStatusBar(2)#, wx.ST_SIZEGRIP
         self.statusBar.SetStatusWidths([-2, -1])
 
         statusText = "Welcome to wxPython %s"%version.VERSION_STRING
         self.statusBar.SetStatusText(statusText, 0)
-        
-        self.downloadGauge = wx.Gauge(self.statusBar, -1, 50)
-        self.downloadGauge.SetToolTipString("Downloading Docs...")
+
+        self.downloadGauge = wx.Gauge(self.statusBar, wx.ID_ANY, 50)
+        self.downloadGauge.SetToolTip("Downloading Docs...")
         self.downloadGauge.Hide()
 
         self.sizeChanged = False
         self.Reposition()
-        
+
         self.statusBar.Bind(wx.EVT_SIZE, self.OnStatusBarSize)
         self.statusBar.Bind(wx.EVT_IDLE, self.OnStatusBarIdle)
 
         self.dying = False
         self.skipLoad = False
         self.allowAuiFloating = False
-        
+
         def EmptyHandler(evt): pass
 
         self.ReadConfigurationFile()
-        self.externalDemos = HuntExternalDemos()        
-        
+        self.externalDemos = HuntExternalDemos()
+
         # Create a Notebook
         self.nb = wx.Notebook(pnl, -1, style=wx.CLIP_CHILDREN)
         imgList = wx.ImageList(16, 16)
@@ -1727,11 +1729,11 @@ class wxPythonDemo(wx.Frame):
         for indx in xrange(9):
             bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
             imgList.Add(bmp)
-            
+
         self.nb.AssignImageList(imgList)
 
         self.BuildMenuBar()
-        
+
         self.finddata = wx.FindReplaceData()
         self.finddata.SetFlags(wx.FR_DOWN)
 
@@ -1739,9 +1741,9 @@ class wxPythonDemo(wx.Frame):
         leftPanel = wx.Panel(pnl, style=wx.TAB_TRAVERSAL|wx.CLIP_CHILDREN)
         self.treeMap = {}
         self.searchItems = {}
-        
+
         self.tree = wxPythonDemoTree(leftPanel)
-        
+
         self.filter = wx.SearchCtrl(leftPanel, style=wx.TE_PROCESS_ENTER)
         self.filter.ShowCancelButton(True)
         self.filter.Bind(wx.EVT_TEXT, self.RecreateTree)
@@ -1762,12 +1764,12 @@ class wxPythonDemo(wx.Frame):
         self.tree.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed)
         self.tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged)
         self.tree.Bind(wx.EVT_LEFT_DOWN, self.OnTreeLeftDown)
-        
+
         # Set up a wx.html.HtmlWindow on the Overview Notebook page
         # we put it in a panel first because there seems to be a
         # refresh bug of some sort (wxGTK) when it is directly in
         # the notebook...
-        
+
         if 0:  # the old way
             self.ovr = wx.html.HtmlWindow(self.nb, -1, size=(400, 400))
             self.nb.AddPage(self.ovr, self.overviewText, imageId=0)
@@ -1797,8 +1799,8 @@ class wxPythonDemo(wx.Frame):
         #wx.Log_SetActiveTarget(wx.LogTextCtrl(self.log))
 
         # But instead of the above we want to show how to use our own wx.Log class
-        wx.Log_SetActiveTarget(MyLog(self.log))
-        
+        wx.Log.SetActiveTarget(MyLog(self.log))
+
         # for serious debugging
         #wx.Log_SetActiveTarget(wx.LogStderr())
         #wx.Log_SetTraceMask(wx.TraceMessages)
@@ -1834,9 +1836,9 @@ class wxPythonDemo(wx.Frame):
                 self.tree.EnsureVisible(selectedDemo)
 
         # Use the aui manager to set up everything
-        self.mgr.AddPane(self.nb, wx.aui.AuiPaneInfo().CenterPane().Name("Notebook"))
+        self.mgr.AddPane(self.nb, aui.AuiPaneInfo().CenterPane().Name("Notebook"))
         self.mgr.AddPane(leftPanel,
-                         wx.aui.AuiPaneInfo().
+                         aui.AuiPaneInfo().
                          Left().Layer(2).BestSize((240, -1)).
                          MinSize((240, -1)).
                          Floatable(self.allowAuiFloating).FloatingSize((240, 700)).
@@ -1844,7 +1846,7 @@ class wxPythonDemo(wx.Frame):
                          CloseButton(False).
                          Name("DemoTree"))
         self.mgr.AddPane(self.log,
-                         wx.aui.AuiPaneInfo().
+                         aui.AuiPaneInfo().
                          Bottom().BestSize((-1, 150)).
                          MinSize((-1, 140)).
                          Floatable(self.allowAuiFloating).FloatingSize((500, 160)).
@@ -1855,8 +1857,8 @@ class wxPythonDemo(wx.Frame):
         self.auiConfigurations[DEFAULT_PERSPECTIVE] = self.mgr.SavePerspective()
         self.mgr.Update()
 
-        self.mgr.SetFlags(self.mgr.GetFlags() ^ wx.aui.AUI_MGR_TRANSPARENT_DRAG)
-        
+        self.mgr.SetAGWFlags(self.mgr.GetAGWFlags() ^ aui.AUI_MGR_TRANSPARENT_DRAG)
+
 
     def ReadConfigurationFile(self):
 
@@ -1892,9 +1894,9 @@ class wxPythonDemo(wx.Frame):
             self.pickledData = cPickle.load(fid)
         except:
             self.pickledData = {}
-            
+
         fid.close()
-        
+
 
     def BuildMenuBar(self):
 
@@ -1905,11 +1907,11 @@ class wxPythonDemo(wx.Frame):
                            'Redirect print statements to a window',
                            wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnToggleRedirect, item)
- 
+
         wx.App.SetMacExitMenuItemId(9123)
         exitItem = wx.MenuItem(menu, 9123, 'E&xit\tCtrl-Q', 'Get the heck outta here!')
         exitItem.SetBitmap(images.catalog['exit'].GetBitmap())
-        menu.AppendItem(exitItem)
+        menu.Append(exitItem)
         self.Bind(wx.EVT_MENU, self.OnFileExit, exitItem)
         self.mainmenu.Append(menu, '&File')
 
@@ -1923,64 +1925,64 @@ class wxPythonDemo(wx.Frame):
                 self.Bind(wx.EVT_MENU, self.OnDemoMenu, mi)
             menuItem.SetBitmap(images.catalog[_demoPngs[indx+1]].GetBitmap())
             menuItem.SetSubMenu(submenu)
-            menu.AppendItem(menuItem)
+            menu.Append(menuItem)
         self.mainmenu.Append(menu, '&Demo')
 
         # Make an Option menu
 
         menu = wx.Menu()
         item = wx.MenuItem(menu, -1, 'Allow download of docs', 'Docs for window styles and events from the web', wx.ITEM_CHECK)
-        menu.AppendItem(item)
+        menu.Append(item)
         item.Check(self.allowDocs)
         self.Bind(wx.EVT_MENU, self.OnAllowDownload, item)
 
         item = wx.MenuItem(menu, -1, 'Delete saved docs', 'Deletes the cPickle file where docs are stored')
         item.SetBitmap(images.catalog['deletedocs'].GetBitmap())
-        menu.AppendItem(item)
+        menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnDeleteDocs, item)
-        
+
         menu.AppendSeparator()
         item = wx.MenuItem(menu, -1, 'Allow floating panes', 'Allows the demo panes to be floated using wxAUI', wx.ITEM_CHECK)
-        menu.AppendItem(item)
+        menu.Append(item)
         item.Check(self.allowAuiFloating)
         self.Bind(wx.EVT_MENU, self.OnAllowAuiFloating, item)
-                
+
         auiPerspectives = self.auiConfigurations.keys()
         auiPerspectives.sort()
         perspectivesMenu = wx.Menu()
         item = wx.MenuItem(perspectivesMenu, -1, DEFAULT_PERSPECTIVE, "Load startup default perspective", wx.ITEM_RADIO)
         self.Bind(wx.EVT_MENU, self.OnAUIPerspectives, item)
-        perspectivesMenu.AppendItem(item)
+        perspectivesMenu.Append(item)
         for indx, key in enumerate(auiPerspectives):
             if key == DEFAULT_PERSPECTIVE:
                 continue
             item = wx.MenuItem(perspectivesMenu, -1, key, "Load user perspective %d"%indx, wx.ITEM_RADIO)
-            perspectivesMenu.AppendItem(item)
+            perspectivesMenu.Append(item)
             self.Bind(wx.EVT_MENU, self.OnAUIPerspectives, item)
 
-        menu.AppendMenu(wx.ID_ANY, "&AUI Perspectives", perspectivesMenu)
+        menu.Append(wx.ID_ANY, "&AUI Perspectives", perspectivesMenu)
         self.perspectives_menu = perspectivesMenu
 
         item = wx.MenuItem(menu, -1, 'Save Perspective', 'Save AUI perspective')
         item.SetBitmap(images.catalog['saveperspective'].GetBitmap())
-        menu.AppendItem(item)
+        menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnSavePerspective, item)
 
         item = wx.MenuItem(menu, -1, 'Delete Perspective', 'Delete AUI perspective')
         item.SetBitmap(images.catalog['deleteperspective'].GetBitmap())
-        menu.AppendItem(item)
+        menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnDeletePerspective, item)
 
         menu.AppendSeparator()
 
         item = wx.MenuItem(menu, -1, 'Restore Tree Expansion', 'Restore the initial tree expansion state')
         item.SetBitmap(images.catalog['expansion'].GetBitmap())
-        menu.AppendItem(item)
+        menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnTreeExpansion, item)
 
         self.mainmenu.Append(menu, '&Options')
         self.options_menu = menu
-        
+
         # Make a Help menu
         menu = wx.Menu()
         findItem = wx.MenuItem(menu, -1, '&Find\tCtrl-F', 'Find in the Demo Code')
@@ -1990,18 +1992,18 @@ class wxPythonDemo(wx.Frame):
         else:
             findNextItem = wx.MenuItem(menu, -1, 'Find &Next\tCtrl-G', 'Find Next')
         findNextItem.SetBitmap(images.catalog['findnext'].GetBitmap())
-        menu.AppendItem(findItem)
-        menu.AppendItem(findNextItem)
+        menu.Append(findItem)
+        menu.Append(findNextItem)
         menu.AppendSeparator()
 
         shellItem = wx.MenuItem(menu, -1, 'Open Py&Shell Window\tF5',
                                 'An interactive interpreter window with the demo app and frame objects in the namesapce')
         shellItem.SetBitmap(images.catalog['pyshell'].GetBitmap())
-        menu.AppendItem(shellItem)
+        menu.Append(shellItem)
         inspToolItem = wx.MenuItem(menu, -1, 'Open &Widget Inspector\tF6',
                                    'A tool that lets you browse the live widgets and sizers in an application')
         inspToolItem.SetBitmap(images.catalog['inspect'].GetBitmap())
-        menu.AppendItem(inspToolItem)
+        menu.Append(inspToolItem)
         if 'wxMac' not in wx.PlatformInfo:
             menu.AppendSeparator()
         helpItem = menu.Append(wx.ID_ABOUT, '&About wxPython Demo', 'wxPython RULES!!!')
@@ -2019,7 +2021,7 @@ class wxPythonDemo(wx.Frame):
         self.mainmenu.Append(menu, '&Help')
         self.SetMenuBar(self.mainmenu)
 
-        self.EnableAUIMenu()        
+        self.EnableAUIMenu()
 
         if False:
             # This is another way to set Accelerators, in addition to
@@ -2031,14 +2033,14 @@ class wxPythonDemo(wx.Frame):
                                           (wx.ACCEL_NORMAL, wx.WXK_F9, shellItem.GetId()),
                                           ])
             self.SetAcceleratorTable(aTable)
-            
 
-    #---------------------------------------------    
+
+    #---------------------------------------------
     def RecreateTree(self, evt=None):
         # Catch the search type (name or content)
         searchMenu = self.filter.GetMenu().GetMenuItems()
         fullSearch = searchMenu[1].IsChecked()
-            
+
         if evt:
             if fullSearch:
                 # Do not`scan all the demo files for every char
@@ -2054,12 +2056,12 @@ class wxPythonDemo(wx.Frame):
             if prnt:
                 current = (self.tree.GetItemText(item),
                            self.tree.GetItemText(prnt))
-                    
+
         self.tree.Freeze()
         self.tree.DeleteAllItems()
         self.root = self.tree.AddRoot("wxPython Overview")
         self.tree.SetItemImage(self.root, 0)
-        self.tree.SetItemPyData(self.root, 0)
+        self.tree.SetItemData(self.root, 0)
 
         treeFont = self.tree.GetFont()
         catFont = self.tree.GetFont()
@@ -2070,16 +2072,16 @@ class wxPythonDemo(wx.Frame):
         # was the size of the same label in the default font.
         if USE_CUSTOMTREECTRL or 'wxMSW' not in wx.PlatformInfo:
             treeFont.SetPointSize(treeFont.GetPointSize()+2)
-            
+
         treeFont.SetWeight(wx.BOLD)
         catFont.SetWeight(wx.BOLD)
         self.tree.SetItemFont(self.root, treeFont)
-        
+
         firstChild = None
         selectItem = None
         filter = self.filter.GetValue()
         count = 0
-        
+
         for category, items in _treeList:
             count += 1
             if filter:
@@ -2090,19 +2092,19 @@ class wxPythonDemo(wx.Frame):
             if items:
                 child = self.tree.AppendItem(self.root, category, image=count)
                 self.tree.SetItemFont(child, catFont)
-                self.tree.SetItemPyData(child, count)
+                self.tree.SetItemData(child, count)
                 if not firstChild: firstChild = child
                 for childItem in items:
                     image = count
                     if DoesModifiedExist(childItem):
                         image = len(_demoPngs)
                     theDemo = self.tree.AppendItem(child, childItem, image=image)
-                    self.tree.SetItemPyData(theDemo, count)
+                    self.tree.SetItemData(theDemo, count)
                     self.treeMap[childItem] = theDemo
                     if current and (childItem, category) == current:
                         selectItem = theDemo
-                        
-                    
+
+
         self.tree.Expand(self.root)
         if firstChild:
             self.tree.Expand(firstChild)
@@ -2114,7 +2116,7 @@ class wxPythonDemo(wx.Frame):
             self.skipLoad = True
             self.tree.SelectItem(selectItem)
             self.skipLoad = False
-        
+
         self.tree.Thaw()
         self.searchItems = {}
 
@@ -2135,9 +2137,9 @@ class wxPythonDemo(wx.Frame):
 
     # reposition the download gauge
     def Reposition(self):
-        rect = self.statusBar.GetFieldRect(1)
-        self.downloadGauge.SetPosition((rect.x+2, rect.y+2))
-        self.downloadGauge.SetSize((rect.width-4, rect.height-4))
+        # rect = self.statusBar.GetFieldRect(1)
+        # self.downloadGauge.SetPosition((rect.x+2, rect.y+2))
+        # self.downloadGauge.SetSize((rect.width-4, rect.height-4))
         self.sizeChanged = False
 
 
@@ -2146,12 +2148,12 @@ class wxPythonDemo(wx.Frame):
         # Catch the search type (name or content)
         searchMenu = self.filter.GetMenu().GetMenuItems()
         fullSearch = searchMenu[1].IsChecked()
-        
+
         if fullSearch:
             self.OnSearch()
         else:
             self.RecreateTree()
-            
+
 
     def OnSearch(self, event=None):
 
@@ -2161,7 +2163,7 @@ class wxPythonDemo(wx.Frame):
             return
 
         wx.BeginBusyCursor()
-        
+
         for category, items in _treeList:
             self.searchItems[category] = []
             for childItem in items:
@@ -2169,7 +2171,7 @@ class wxPythonDemo(wx.Frame):
                     self.searchItems[category].append(childItem)
 
         wx.EndBusyCursor()
-        self.RecreateTree()            
+        self.RecreateTree()
 
 
     def SetTreeModified(self, modified):
@@ -2179,8 +2181,8 @@ class wxPythonDemo(wx.Frame):
         else:
             image = self.tree.GetItemPyData(item)
         self.tree.SetItemImage(item, image)
-        
-        
+
+
     def WriteText(self, text):
         if text[-1:] == '\n':
             text = text[:-1]
@@ -2220,7 +2222,7 @@ class wxPythonDemo(wx.Frame):
         item = event.GetItem()
         itemText = self.tree.GetItemText(item)
         self.LoadDemo(itemText)
-        
+
         self.StartDownload()
 
     #---------------------------------------------
@@ -2228,7 +2230,7 @@ class wxPythonDemo(wx.Frame):
         try:
             wx.BeginBusyCursor()
             self.pnl.Freeze()
-            
+
             os.chdir(self.cwd)
             self.ShutdownDemoModule()
 
@@ -2272,7 +2274,7 @@ class wxPythonDemo(wx.Frame):
         self.codePage = None
         self.codePage = DemoCodePanel(self.nb, self)
         self.codePage.LoadDemo(self.demoModules)
-        
+
     #---------------------------------------------
     def RunModule(self):
         """Runs the active module"""
@@ -2280,11 +2282,11 @@ class wxPythonDemo(wx.Frame):
         module = self.demoModules.GetActive()
         self.ShutdownDemoModule()
         overviewText = ""
-        
+
         # o The RunTest() for all samples must now return a window that can
         #   be palced in a tab in the main notebook.
         # o If an error occurs (or has occurred before) an error tab is created.
-        
+
         if module is not None:
             wx.LogMessage("Running demo module...")
             if hasattr(module, "overview"):
@@ -2301,12 +2303,12 @@ class wxPythonDemo(wx.Frame):
                 self.demoPage.SetBackgroundColour(bg)
 
             assert self.demoPage is not None, "runTest must return a window!"
-            
+
         else:
             # There was a previous error in compiling or exec-ing
             self.demoPage = DemoErrorPanel(self.nb, self.codePage,
                                            self.demoModules.GetErrorInfo(), self)
-            
+
         self.SetOverview(self.demoModules.name + " Overview", overviewText)
 
         if self.firstTime:
@@ -2325,13 +2327,13 @@ class wxPythonDemo(wx.Frame):
                 self.demoPage.ShutdownDemo()
 ##            wx.YieldIfNeeded() # in case the page has pending events
             self.demoPage = None
-            
+
     #---------------------------------------------
     def UpdateNotebook(self, select = -1):
         nb = self.nb
         debug = False
         self.pnl.Freeze()
-        
+
         def UpdatePage(page, pageText):
             pageExists = False
             pagePos = -1
@@ -2340,7 +2342,7 @@ class wxPythonDemo(wx.Frame):
                     pageExists = True
                     pagePos = i
                     break
-                
+
             if page:
                 if not pageExists:
                     # Add a new page
@@ -2361,7 +2363,7 @@ class wxPythonDemo(wx.Frame):
                 if debug: wx.LogMessage("DBG: DELETED %s" % pageText)
             else:
                 if debug: wx.LogMessage("DBG: STILL GONE - %s" % pageText)
-                
+
         if select == -1:
             select = nb.GetSelection()
 
@@ -2372,15 +2374,15 @@ class wxPythonDemo(wx.Frame):
             nb.SetSelection(select)
 
         self.pnl.Thaw()
-        
+
     #---------------------------------------------
     def SetOverview(self, name, text):
         self.curOverview = text
         lead = text[:6]
         if lead != '<html>' and lead != '<HTML>':
             text = '<br>'.join(text.split('\n'))
-        if wx.USE_UNICODE:
-            text = text.decode('iso8859_1')  
+        # if wx.USE_UNICODE:
+            # text = text.decode('iso8859_1')
         self.ovr.SetPage(text)
         self.nb.SetPageText(0, os.path.split(name)[1])
 
@@ -2394,7 +2396,7 @@ class wxPythonDemo(wx.Frame):
         item = self.tree.GetSelection()
         if self.tree.ItemHasChildren(item):
             return
-        
+
         itemText = self.tree.GetItemText(item)
 
         if itemText in self.pickledData:
@@ -2421,7 +2423,7 @@ class wxPythonDemo(wx.Frame):
     def StopDownload(self, error=None):
 
         self.downloadTimer.Stop()
-                
+
         if not self.downloading:
             return
 
@@ -2436,7 +2438,7 @@ class wxPythonDemo(wx.Frame):
 
         self.internetThread.keepRunning = False
         self.internetThread = None
-        
+
         self.downloading = False
         self.downloadGauge.Hide()
         self.Reposition()
@@ -2446,16 +2448,16 @@ class wxPythonDemo(wx.Frame):
         lead = text[:6]
         if lead != '<html>' and lead != '<HTML>':
             text = '<br>'.join(text.split('\n'))
-        
+
         self.ovr.SetPage(text)
 
     #---------------------------------------------
 
     def LoadDocumentation(self, data):
-        
+
         text = self.curOverview
         addHtml = False
-        
+
         if '<html>' not in text and '<HTML>' not in text:
             text = '<br>'.join(text.split('\n'))
 
@@ -2463,7 +2465,7 @@ class wxPythonDemo(wx.Frame):
 
         if appearance:
             text += FormatImages(appearance)
-            
+
         for names, values in zip(["Styles", "Extra Styles", "Events"], [styles, extra, events]):
             if not values:
                 continue
@@ -2477,12 +2479,12 @@ class wxPythonDemo(wx.Frame):
         self.pickledData[itemText] = data
 
         if wx.USE_UNICODE:
-            text = text.decode('iso8859_1')  
+            text = text.decode('iso8859_1')
 
         self.StopDownload()
         self.ovr.SetPage(text)
-        #print "load time: ", time.time() - start
-        
+        #print("load time: ", time.time() - start)
+
     # Menu methods
     def OnFileExit(self, *event):
         self.Close()
@@ -2491,10 +2493,10 @@ class wxPythonDemo(wx.Frame):
         app = wx.GetApp()
         if event.Checked():
             app.RedirectStdio()
-            print "Print statements and other standard output will now be directed to this window."
+            print("Print statements and other standard output will now be directed to this window.")
         else:
             app.RestoreStdio()
-            print "Print statements and other standard output will now be sent to the usual location."
+            print("Print statements and other standard output will now be sent to the usual location.")
 
 
     def OnAllowDownload(self, event):
@@ -2516,22 +2518,22 @@ class wxPythonDemo(wx.Frame):
         if result == wx.ID_NO:
             dlg.Destroy()
             return
-        
+
         dlg.Destroy()
 
         busy = wx.BusyInfo("Deleting downloaded data...")
         wx.SafeYield()
-        
+
         pickledFile = GetDocFile()
         docDir = os.path.split(pickledFile)[0]
-        
+
         if os.path.exists(docDir):
             shutil.rmtree(docDir, ignore_errors=True)
 
         self.pickledData = {}
         del busy
         self.sendDownloadError = True
-        
+
 
     def OnAllowAuiFloating(self, event):
 
@@ -2550,8 +2552,8 @@ class wxPythonDemo(wx.Frame):
         for indx in xrange(4, len(menuItems)-1):
             item = menuItems[indx]
             item.Enable(self.allowAuiFloating)
-        
-        
+
+
     def OnAUIPerspectives(self, event):
         perspective = self.perspectives_menu.GetLabel(event.GetId())
         self.mgr.LoadPerspective(self.auiConfigurations[perspective])
@@ -2560,7 +2562,7 @@ class wxPythonDemo(wx.Frame):
 
     def OnSavePerspective(self, event):
         dlg = wx.TextEntryDialog(self, "Enter a name for the new perspective:", "AUI Configuration")
-        
+
         dlg.SetValue(("Perspective %d")%(len(self.auiConfigurations)+1))
         if dlg.ShowModal() != wx.ID_OK:
             return
@@ -2572,11 +2574,11 @@ class wxPythonDemo(wx.Frame):
                 wx.MessageBox("The selected perspective name:\n\n%s\n\nAlready exists."%perspectiveName,
                               "Error", style=wx.ICON_ERROR)
                 return
-                
+
         item = wx.MenuItem(self.perspectives_menu, -1, dlg.GetValue(),
                            "Load user perspective %d"%(len(self.auiConfigurations)+1),
                            wx.ITEM_RADIO)
-        self.Bind(wx.EVT_MENU, self.OnAUIPerspectives, item)                
+        self.Bind(wx.EVT_MENU, self.OnAUIPerspectives, item)
         self.perspectives_menu.AppendItem(item)
         item.Check(True)
         self.auiConfigurations.update({dlg.GetValue(): self.mgr.SavePerspective()})
@@ -2586,12 +2588,12 @@ class wxPythonDemo(wx.Frame):
         menuItems = self.perspectives_menu.GetMenuItems()
         lst = []
         loadDefault = False
-        
+
         for indx, item in enumerate(menuItems):
             if indx > 0:
                 lst.append(item.GetLabel())
-            
-        dlg = wx.MultiChoiceDialog(self, 
+
+        dlg = wx.MultiChoiceDialog(self,
                                    "Please select the perspectives\nyou would like to delete:",
                                    "Delete AUI Perspectives", lst)
 
@@ -2614,8 +2616,8 @@ class wxPythonDemo(wx.Frame):
 
     def OnTreeExpansion(self, event):
         self.tree.SetExpansionState(self.expansionState)
-        
- 
+
+
     def OnHelpAbout(self, event):
         from About import MyAboutBox
         about = MyAboutBox(self)
@@ -2625,7 +2627,7 @@ class wxPythonDemo(wx.Frame):
     def OnHelpFind(self, event):
         if self.finddlg != None:
             return
-        
+
         self.nb.SetSelection(1)
         self.finddlg = wx.FindReplaceDialog(self, self.finddata, "Find",
                         wx.FR_NOMATCHCASE | wx.FR_NOWHOLEWORD)
@@ -2705,7 +2707,7 @@ class wxPythonDemo(wx.Frame):
             self.shell.Show()
 
             # Hook the close event of the main frame window so that we
-            # close the shell at the same time if it still exists            
+            # close the shell at the same time if it still exists
             def CloseShell(evt):
                 if self.shell:
                     self.shell.Close()
@@ -2726,7 +2728,7 @@ class wxPythonDemo(wx.Frame):
             wnd = self
         InspectionTool().Show(wnd, True)
 
-        
+
     #---------------------------------------------
     def OnCloseWindow(self, event):
         self.mgr.UnInit()
@@ -2735,16 +2737,16 @@ class wxPythonDemo(wx.Frame):
         self.codePage = None
         self.mainmenu = None
         self.StopDownload()
-        
-        if self.tbicon is not None:
-            self.tbicon.Destroy()
+
+        # if self.tbicon is not None:
+            # self.tbicon.Destroy()
 
         config = GetConfig()
         config.Write('ExpansionState', str(self.tree.GetExpansionState()))
         config.Write('AUIPerspectives', str(self.auiConfigurations))
         config.Write('AllowDownloads', str(self.allowDocs))
         config.Write('AllowAUIFloating', str(self.allowAuiFloating))
-        
+
         config.Flush()
 
         MakeDocDirs()
@@ -2769,16 +2771,16 @@ class wxPythonDemo(wx.Frame):
     def OnDownloadTimer(self, event):
 
         self.downloadGauge.Pulse()
-        
+
         self.downloadImage += 1
         if self.downloadImage > 9:
             self.downloadImage = 3
-            
+
         self.nb.SetPageImage(0, self.downloadImage)
 ##        wx.SafeYield()
-        
+
     #---------------------------------------------
-            
+
     def ShowTip(self):
         config = GetConfig()
         showTipText = config.Read("tips")
@@ -2786,13 +2788,13 @@ class wxPythonDemo(wx.Frame):
             showTip, index = eval(showTipText)
         else:
             showTip, index = (1, 0)
-            
-        if showTip:
-            tp = wx.CreateFileTipProvider(opj("data/tips.txt"), index)
-            showTip = wx.ShowTip(self, tp)
-            index = tp.GetCurrentTip()
-            config.Write("tips", str( (showTip, index) ))
-            config.Flush()
+
+        # if showTip:
+            # tp = wx.CreateFileTipProvider(opj("data/tips.txt"), index)
+            # showTip = wx.ShowTip(self, tp)
+            # index = tp.GetCurrentTip()
+            # config.Write("tips", str( (showTip, index) ))
+            # config.Flush()
 
     #---------------------------------------------
     def OnDemoMenu(self, event):
@@ -2828,14 +2830,14 @@ class wxPythonDemo(wx.Frame):
 #---------------------------------------------------------------------------
 #---------------------------------------------------------------------------
 
-class MySplashScreen(wx.SplashScreen):
+class MySplashScreen(SplashScreen):
     def __init__(self):
         bmp = wx.Image(opj("bitmaps/splash.png")).ConvertToBitmap()
-        wx.SplashScreen.__init__(self, bmp,
-                                 wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
+        SplashScreen.__init__(self, bmp,
+                                 wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
                                  5000, None, -1)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        self.fc = wx.FutureCall(2000, self.ShowMain)
+        self.fc = wx.CallLater(2000, self.ShowMain)
 
 
     def OnClose(self, evt):
@@ -2843,7 +2845,7 @@ class MySplashScreen(wx.SplashScreen):
         # destroyed
         evt.Skip()
         self.Hide()
-        
+
         # if the timer is still running then go ahead and show the
         # main frame now
         if self.fc.IsRunning():
@@ -2869,7 +2871,7 @@ if USE_CUSTOMTREECTRL:
     TreeBaseClass = CT.CustomTreeCtrl
 else:
     TreeBaseClass = wx.TreeCtrl
-    
+
 
 class wxPythonDemoTree(ExpansionState, TreeBaseClass):
     def __init__(self, parent):
@@ -2881,35 +2883,29 @@ class wxPythonDemoTree(ExpansionState, TreeBaseClass):
             self.SetWindowStyle(self.GetWindowStyle() & ~wx.TR_LINES_AT_ROOT)
 
         self.SetInitialSize((100,80))
-        
-            
+
+
     def AppendItem(self, parent, text, image=-1, wnd=None):
         if USE_CUSTOMTREECTRL:
             item = TreeBaseClass.AppendItem(self, parent, text, image=image, wnd=wnd)
         else:
             item = TreeBaseClass.AppendItem(self, parent, text, image=image)
         return item
-            
+
     def BuildTreeImageList(self):
         imgList = wx.ImageList(16, 16)
         for png in _demoPngs:
             imgList.Add(images.catalog[png].GetBitmap())
-            
+
         # add the image for modified demos.
         imgList.Add(images.catalog["custom"].GetBitmap())
 
         self.AssignImageList(imgList)
 
-    def GetItemIdentity(self, item):
-        return self.GetPyData(item)
 
-    def Freeze(self):
-        if 'wxMSW' in wx.PlatformInfo:
-            return super(wxPythonDemoTree, self).Freeze()
-                         
-    def Thaw(self):
-        if 'wxMSW' in wx.PlatformInfo:
-            return super(wxPythonDemoTree, self).Thaw()
+    def GetItemIdentity(self, item):
+        return self.GetItemData(item)
+
 
 #---------------------------------------------------------------------------
 
@@ -2934,9 +2930,9 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         # For debugging
         #self.SetAssertMode(wx.PYAPP_ASSERT_DIALOG|wx.PYAPP_ASSERT_EXCEPTION)
 
-        wx.SystemOptions.SetOptionInt("mac.window-plain-transition", 1)
+        wx.SystemOptions.SetOption("mac.window-plain-transition", 1)
         self.SetAppName("wxPyDemo")
-                
+
         # Create and show the splash screen.  It will then create and
         # show the main frame when it is time to do so.  Normally when
         # using a SplashScreen you would create it, show it and then
@@ -3006,4 +3002,4 @@ if __name__ == '__main__':
     main()
 
 #----------------------------------------------------------------------------
-    
+

@@ -1,7 +1,9 @@
 
-import  wx
-import  wx.wizard as wiz
-import  images
+import wx
+import wx.adv
+from wx.adv import Wizard as wiz
+from wx.adv import WizardPage, WizardPageSimple
+import images
 
 #----------------------------------------------------------------------
 
@@ -16,17 +18,17 @@ def makePageTitle(wizPg, title):
 
 #----------------------------------------------------------------------
 
-class TitledPage(wiz.WizardPageSimple):
+class TitledPage(wx.adv.WizardPageSimple):
     def __init__(self, parent, title):
-        wiz.WizardPageSimple.__init__(self, parent)
+        WizardPageSimple.__init__(self, parent)
         self.sizer = makePageTitle(self, title)
 
 
 #----------------------------------------------------------------------
 
-class SkipNextPage(wiz.PyWizardPage):
+class SkipNextPage(wx.adv.WizardPage):
     def __init__(self, parent, title):
-        wiz.PyWizardPage.__init__(self, parent)
+        WizardPage.__init__(self, parent)
         self.next = self.prev = None
         self.sizer = makePageTitle(self, title)
 
@@ -59,9 +61,9 @@ class SkipNextPage(wiz.PyWizardPage):
 
 #----------------------------------------------------------------------
 
-class UseAltBitmapPage(wiz.PyWizardPage):
+class UseAltBitmapPage(WizardPage):
     def __init__(self, parent, title):
-        wiz.PyWizardPage.__init__(self, parent)
+        WizardPage.__init__(self, parent)
         self.next = self.prev = None
         self.sizer = makePageTitle(self, title)
 
@@ -103,9 +105,9 @@ class TestPanel(wx.Panel):
         b = wx.Button(self, -1, "Run Dynamic Wizard", pos=(50, 100))
         self.Bind(wx.EVT_BUTTON, self.OnRunDynamicWizard, b)
 
-        self.Bind(wiz.EVT_WIZARD_PAGE_CHANGED, self.OnWizPageChanged)
-        self.Bind(wiz.EVT_WIZARD_PAGE_CHANGING, self.OnWizPageChanging)
-        self.Bind(wiz.EVT_WIZARD_CANCEL, self.OnWizCancel)
+        self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGED, self.OnWizPageChanged)
+        self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGING, self.OnWizPageChanging)
+        self.Bind(wx.adv.EVT_WIZARD_CANCEL, self.OnWizCancel)
 
 
     def OnWizPageChanged(self, evt):
@@ -145,7 +147,7 @@ class TestPanel(wx.Panel):
 
     def OnRunSimpleWizard(self, evt):
         # Create the wizard and the pages
-        wizard = wiz.Wizard(self, -1, "Simple Wizard", images.WizTest1.GetBitmap())
+        wizard = wiz(self, -1, "Simple Wizard", images.WizTest1.GetBitmap())
         page1 = TitledPage(wizard, "Page 1")
         page2 = TitledPage(wizard, "Page 2")
         page3 = TitledPage(wizard, "Page 3")
@@ -161,9 +163,9 @@ wxWizardPageSimple class can easily be used for the pages."""))
         page4.sizer.Add(wx.StaticText(page4, -1, "\nThis is the last page."))
 
         # Use the convenience Chain function to connect the pages
-        wiz.WizardPageSimple.Chain(page1, page2)
-        wiz.WizardPageSimple.Chain(page2, page3)
-        wiz.WizardPageSimple.Chain(page3, page4)
+        WizardPageSimple.Chain(page1, page2)
+        WizardPageSimple.Chain(page2, page3)
+        WizardPageSimple.Chain(page3, page4)
 
         wizard.GetPageAreaSizer().Add(page1)
         if wizard.RunWizard(page1):
@@ -172,14 +174,13 @@ wxWizardPageSimple class can easily be used for the pages."""))
             wx.MessageBox("Wizard was cancelled", "That's all folks!")
 
 
-
     def OnRunDynamicWizard(self, evt):
         # Create the wizard and the pages
         #wizard = wx.PreWizard()
         #wizard.SetExtraStyle(wx.WIZARD_EX_HELPBUTTON)
         #wizard.Create(self, self.ID_wiz, "Simple Wizard",
         #              images.WizTest1.GetBitmap())
-        wizard = wiz.Wizard(self, -1, "Dynamic Wizard", images.WizTest1.GetBitmap())
+        wizard = wiz(self, -1, "Dynamic Wizard", images.WizTest1.GetBitmap())
 
         page1 = TitledPage(wizard, "Page 1")
         page2 = SkipNextPage(wizard, "Page 2")

@@ -12,7 +12,10 @@ class TestPanel(wx.Panel):
         wx.StaticText(self, -1, "This example shows the wx.Gauge control.", (45, 15))
 
         self.g1 = wx.Gauge(self, -1, 50, (110, 50), (250, 25))
-        self.g2 = wx.Gauge(self, -1, 50, (110, 95), (250, 25))
+        self.g2 = wx.Gauge(self, -1, 75, (110, 95), (250, 25))
+        self.g3 = wx.Gauge(self, -1, 100, (110, 135), (25, 100), wx.GA_VERTICAL)
+        # self.g3.SetBezelFace(12)
+        # self.g3.SetShadowWidth(8)
 
         self.Bind(wx.EVT_TIMER, self.TimerHandler)
         self.timer = wx.Timer(self)
@@ -29,6 +32,7 @@ class TestPanel(wx.Panel):
 
         self.g1.SetValue(self.count)
         self.g2.Pulse()
+        self.g3.Pulse()
     
 
 #----------------------------------------------------------------------

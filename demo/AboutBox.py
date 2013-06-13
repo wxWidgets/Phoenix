@@ -1,5 +1,5 @@
-
 import wx
+import wx.adv
 from wx.lib.wordwrap import wordwrap
 
 #----------------------------------------------------------------------
@@ -15,7 +15,7 @@ class TestPanel(wx.Panel):
 
     def OnButton(self, evt):
         # First we create and fill the info object
-        info = wx.AboutDialogInfo()
+        info = wx.adv.AboutDialogInfo()
         info.Name = "Hello World"
         info.Version = "1.2.3"
         info.Copyright = "(C) 2006 Programmers and Coders Everywhere"
@@ -23,7 +23,7 @@ class TestPanel(wx.Panel):
             "A \"hello world\" program is a software program that prints out "
             "\"Hello world!\" on a display device. It is used in many introductory "
             "tutorials for teaching a programming language."
-            
+
             "\n\nSuch a program is typically one of the simplest programs possible "
             "in a computer language. A \"hello world\" program can be a useful "
             "sanity test to make sure that a language's compiler, development "
@@ -37,8 +37,8 @@ class TestPanel(wx.Panel):
         info.License = wordwrap(licenseText, 500, wx.ClientDC(self))
 
         # Then we call wx.AboutBox giving it that info object
-        wx.AboutBox(info)
-        
+        wx.adv.AboutBox(info)
+
 
 #----------------------------------------------------------------------
 

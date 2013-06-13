@@ -6,17 +6,21 @@ import  wx
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
+
         self.log = log
 
         txt1 = wx.StaticText(self, -1, "style=0")
         dir1 = wx.GenericDirCtrl(self, -1, size=(200,225), style=0)
 
         txt2 = wx.StaticText(self, -1, "wx.DIRCTRL_DIR_ONLY")
-        dir2 = wx.GenericDirCtrl(self, -1, size=(200,225), style=wx.DIRCTRL_DIR_ONLY|wx.DIRCTRL_MULTIPLE)
+        dir2 = wx.GenericDirCtrl(self, -1, size=(200,225), style=wx.DIRCTRL_DIR_ONLY)
 
-        txt3 = wx.StaticText(self, -1, "wx.DIRCTRL_SHOW_FILTERS")
-        dir3 = wx.GenericDirCtrl(self, -1, size=(200,225), style=wx.DIRCTRL_SHOW_FILTERS,
-                                filter="All files (*.*)|*.*|Python files (*.py)|*.py")
+        txt3 = wx.StaticText(self, -1, "wx.DIRCTRL_SHOW_FILTERS\nwx.DIRCTRL_3D_INTERNAL\nwx.DIRCTRL_MULTIPLE")
+        dir3 = wx.GenericDirCtrl(self, -1, size=(200,225),
+                                 style=wx.DIRCTRL_SHOW_FILTERS |
+                                       wx.DIRCTRL_3D_INTERNAL |
+                                       wx.DIRCTRL_MULTIPLE,
+                                 filter="All files (*.*)|*.*|Python files (*.py)|*.py")
 
         sz = wx.FlexGridSizer(cols=3, hgap=5, vgap=5)
         sz.Add((35, 35))  # some space above
@@ -53,8 +57,8 @@ def runTest(frame, nb, log):
 
 overview = """\
 This control can be used to place a directory listing (with optional files)
-on an arbitrary window. The control contains a TreeCtrl window representing 
-the directory hierarchy, and optionally, a Choice window containing a list 
+on an arbitrary window. The control contains a TreeCtrl window representing
+the directory hierarchy, and optionally, a Choice window containing a list
 of filters.
 
 The filters work in the same manner as in FileDialog.

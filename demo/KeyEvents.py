@@ -141,7 +141,7 @@ if 'wxMac' in wx.PlatformInfo:
 else:
     keyMap[wx.WXK_COMMAND] = "WXK_COMMAND"
     keyMap[wx.WXK_CONTROL] = "WXK_CONTROL"
-    
+
 
 #----------------------------------------------------------------------
 
@@ -230,14 +230,14 @@ class KeySink(wx.Window):
 
 class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
     colHeaders = [ "Event Type",
-                   "Key Name", 
-                   "Key Code",   
+                   "Key Name",
+                   "Key Code",
                    "Modifiers",
                    "Unicode",
                    "UniChr",
                    "RawKeyCode",
                    "RawKeyFlags",
-                   ]     
+                   ]
 
     def __init__(self, parent):
         wx.ListCtrl.__init__(self, parent, -1,
@@ -272,8 +272,9 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
 
         UniChr = ''
         if "unicode" in wx.PlatformInfo:
-            UniChr = "\"" + unichr(evt.GetUnicodeKey()) + "\""
-            
+            # UniChr = "\"" + unichr(evt.GetUnicodeKey()) + "\""
+            UniChr = "\"" + unichr(keycode) + "\""
+
         modifiers = ""
         for mod, ch in [(evt.ControlDown(),    'C'),
                         (evt.AltDown(),        'A'),
@@ -285,14 +286,15 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
             else:
                 modifiers += '-'
 
-        id = self.InsertStringItem(self.GetItemCount(), evType)
-        self.SetStringItem(id, 1, keyname)
-        self.SetStringItem(id, 2, str(keycode))
-        self.SetStringItem(id, 3, modifiers)
-        self.SetStringItem(id, 4, str(evt.GetUnicodeKey()))
-        self.SetStringItem(id, 5, UniChr)
-        self.SetStringItem(id, 6, str(evt.GetRawKeyCode()))
-        self.SetStringItem(id, 7, str(evt.GetRawKeyFlags()))
+        id = self.InsertItem(self.GetItemCount(), evType)
+        self.SetItem(id, 1, keyname)
+        self.SetItem(id, 2, str(keycode))
+        self.SetItem(id, 3, modifiers)
+        # self.SetItem(id, 4, str(evt.GetUnicodeKey()))
+        self.SetItem(id, 4, unicode(unichr(keycode)))
+        self.SetItem(id, 5, UniChr)
+        self.SetItem(id, 6, str(evt.GetRawKeyCode()))
+        self.SetItem(id, 7, str(evt.GetRawKeyFlags()))
 
         #print ( id, evType, keyname, str(keycode), modifiers, str(evt.GetRawKeyCode()), str(evt.GetRawKeyFlags()))
 
@@ -325,8 +327,8 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
             wx.TheClipboard.Close()
         else:
             wx.MessageBox("Unable to open the clipboard", "Error")
-       
-        
+
+
 
 
 #----------------------------------------------------------------------
@@ -342,12 +344,12 @@ class TestPanel(wx.Panel):
 
         btn = wx.Button(self, -1, "Clear", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnClearBtn, btn)
-        btn.SetToolTipString(
+        btn.SetToolTip(
             "Clear the items from the log window")
 
         btn2 = wx.Button(self, -1, "Copy", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnCopyBtn, btn2)
-        btn2.SetToolTipString(
+        btn2.SetToolTip(
             "Copy the contents of the log window to the clipboard")
 
         cb1 = wx.CheckBox(self, -1, "Call evt.Skip in Key* events")

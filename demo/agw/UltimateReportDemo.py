@@ -194,21 +194,21 @@ class UltimateRenderer_1(object):
     def __init__(self, parent):
 
         self.progressValue = random.randint(1, 99)
-        
+
 
     def DrawSubItem(self, dc, rect, line, highlighted, enabled):
         """Draw a custom progress bar using double buffering to prevent flicker"""
 
-        canvas = wx.EmptyBitmap(rect.width, rect.height)
+        canvas = wx.Bitmap(rect.width, rect.height)
         mdc = wx.MemoryDC()
         mdc.SelectObject(canvas)
 
         if highlighted:
-            mdc.SetBackground(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
+            mdc.SetBackground(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
         else:
-            mdc.SetBackground(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW)))
+            mdc.SetBackground(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW)))
         mdc.Clear()
-        
+
         self.DrawProgressBar(mdc, 0, 0, rect.width, rect.height, self.progressValue)
 
         mdc.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD))
@@ -218,17 +218,17 @@ class UltimateRenderer_1(object):
         dc.SetClippingRegion(rect.x, rect.y, rect.width, rect.height)
         dc.Blit(rect.x+3, rect.y, rect.width-6, rect.height, mdc, 0, 0)
         dc.DestroyClippingRegion()
-        
+
 
     def GetLineHeight(self):
 
         return PIPE_HEIGHT + 6
-    
+
 
     def GetSubItemWidth(self):
 
         return 130
-    
+
 
     def UpdateValue(self):
 
@@ -239,7 +239,7 @@ class UltimateRenderer_1(object):
 
     def DrawHorizontalPipe(self, dc, x, y, w, colour):
         """Draws a horizontal 3D-looking pipe."""
-        
+
         for r in range(PIPE_HEIGHT):
             red = int(colour.Red() * math.sin((math.pi/PIPE_HEIGHT)*r))
             green = int(colour.Green() * math.sin((math.pi/PIPE_HEIGHT)*r))
@@ -250,26 +250,26 @@ class UltimateRenderer_1(object):
 
     def DrawProgressBar(self, dc, x, y, w, h, percent):
         """
-        Draws a progress bar in the (x,y,w,h) box that represents a progress of 
-        'percent'. The progress bar is only horizontal and it's height is constant 
-        (PIPE_HEIGHT). The 'h' parameter is used to vertically center the progress 
+        Draws a progress bar in the (x,y,w,h) box that represents a progress of
+        'percent'. The progress bar is only horizontal and it's height is constant
+        (PIPE_HEIGHT). The 'h' parameter is used to vertically center the progress
         bar in the allotted space.
-        
+
         The drawing is speed-optimized. Two bitmaps are created the first time this
         function runs - one for the done (green) part of the progress bar and one for
         the remaining (white) part. During normal operation the function just cuts
         the necessary part of the two bitmaps and draws them.
         """
-                
+
         # Create two pipes
         if self.DONE_BITMAP is None:
-            self.DONE_BITMAP = wx.EmptyBitmap(PIPE_WIDTH, PIPE_HEIGHT)
+            self.DONE_BITMAP = wx.Bitmap(PIPE_WIDTH, PIPE_HEIGHT)
             mdc = wx.MemoryDC()
             mdc.SelectObject(self.DONE_BITMAP)
             self.DrawHorizontalPipe(mdc, 0, 0, PIPE_WIDTH, wx.GREEN)
             mdc.SelectObject(wx.NullBitmap)
 
-            self.REMAINING_BITMAP = wx.EmptyBitmap(PIPE_WIDTH, PIPE_HEIGHT)
+            self.REMAINING_BITMAP = wx.Bitmap(PIPE_WIDTH, PIPE_HEIGHT)
             mdc = wx.MemoryDC()
             mdc.SelectObject(self.REMAINING_BITMAP)
             self.DrawHorizontalPipe(mdc, 0, 0, PIPE_WIDTH, wx.RED)
@@ -277,7 +277,7 @@ class UltimateRenderer_1(object):
             mdc.SelectObject(wx.NullBitmap)
 
         # Center the progress bar vertically in the box supplied
-        y = y + (h - PIPE_HEIGHT)/2 
+        y = y + (h - PIPE_HEIGHT)/2
 
         if percent == 0:
             middle = 0
@@ -300,7 +300,7 @@ class UltimateRenderer_1(object):
 class UltimateRenderer_2(object):
 
     def __init__(self, parent):
-        
+
         e = wx.FontEnumerator()
         e.EnumerateFacenames()
         fontList = e.GetFacenames()
@@ -318,19 +318,19 @@ class UltimateRenderer_2(object):
         self.width, self.height, descent, el = dc.GetFullTextExtent(self.text)
 
         self.height += descent
-        
+
 
     def DrawSubItem(self, dc, rect, line, highlighted, enabled):
-        
+
         dc.SetBackgroundMode(wx.SOLID)
         dc.SetBrush(wx.Brush(wx.BLACK, wx.SOLID))
         dc.SetPen(wx.TRANSPARENT_PEN)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
-        dc.SetBackgroundMode(wx.TRANSPARENT)        
+        dc.SetBackgroundMode(wx.TRANSPARENT)
         dc.SetFont(self.randomFont)
 
-        colours = [wx.RED, wx.WHITE, wx.GREEN, wx.NamedColour("SKY BLUE")]
+        colours = [wx.RED, wx.WHITE, wx.GREEN, wx.Colour("SKY BLUE")]
         w, h = dc.GetTextExtent("Hg")
         x = rect.x + 1
         y = rect.y + rect.height/2 - h/2
@@ -347,7 +347,7 @@ class UltimateRenderer_2(object):
     def GetLineHeight(self):
 
         return self.height + 5
-    
+
 
     def GetSubItemWidth(self):
 
@@ -363,13 +363,13 @@ class UltimateRenderer_3(object):
         lenCDB = len(colourList)
         colourIndex = random.randint(0, lenCDB-1)
         self.colour = colourList[colourIndex]
-        
+
 
     def DrawSubItem(self, dc, rect, line, highlighted, enabled):
 
         centerX, centerY = rect.width/2, rect.height/2
         dc.GradientFillConcentric(rect, self.colour, wx.WHITE, (centerX, centerY))
-        
+
 
     def GetLineHeight(self):
 
@@ -379,59 +379,59 @@ class UltimateRenderer_3(object):
     def GetSubItemWidth(self):
 
         return 40
-    
-    
+
+
 class UltimateHeaderRenderer(object):
 
     def __init__(self, parent):
         self._hover = False
         self._pressed = False
-        
+
     def DrawHeaderButton(self, dc, rect, flags):
-        
+
         self._hover = False
         self._pressed = False
-        
+
         color = wx.Colour(150,150,150)
         if flags & wx.CONTROL_DISABLED:
             color = wx.Colour(wx.WHITE)
         elif flags & wx.CONTROL_SELECTED:
             color = wx.Colour(wx.BLUE)
-                
+
         if flags & wx.CONTROL_PRESSED:
             self._pressed = True
             color = cutils.AdjustColour(color,-50)
         elif flags & wx.CONTROL_CURRENT:
             self._hover = True
             color = cutils.AdjustColour(color,50)
-            
+
         dc.SetBrush(wx.Brush(color, wx.SOLID))
         dc.SetBackgroundMode(wx.SOLID)
         dc.SetPen(wx.TRANSPARENT_PEN)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
-        dc.SetBackgroundMode(wx.TRANSPARENT)        
+        dc.SetBackgroundMode(wx.TRANSPARENT)
 
 
     def GetForegroundColour(self):
-       
+
         if self._hover:
             return wx.Colour(30,30,30)
         else:
             return wx.Colour(230,230,230)
-        
-    
+
+
 
 class TestUltimateListCtrl(ULC.UltimateListCtrl):
-    
+
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0, agwStyle=0):
-        
+
         ULC.UltimateListCtrl.__init__(self, parent, id, pos, size, style, agwStyle)
 ##        listmix.TextEditMixin.__init__(self)
 
-        
+
 class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
-    
+
     def __init__(self, parent, log):
 
         wx.Panel.__init__(self, parent, -1, style=wx.WANTS_CHARS|wx.SUNKEN_BORDER)
@@ -442,7 +442,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.colourList = cdb.getColourList()
         self.count = 0
         self.log = log
-        
+
         self.il = ULC.PyImageList(16, 16)
 
         self.idx1 = self.il.Add(images.Smiles.GetBitmap())
@@ -454,7 +454,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.il.Add(images.expansion.GetBitmap())
         self.il.Add(decryptedBitmap.GetBitmap())
         self.il.Add(coloursBitmap.GetBitmap())
-        
+
         self.list = TestUltimateListCtrl(self, -1,
                                          agwStyle=wx.LC_REPORT
                                          #| wx.BORDER_SUNKEN
@@ -466,7 +466,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
                                          | wx.LC_HRULES
                                          #| wx.LC_SINGLE_SEL
                                          | ULC.ULC_HAS_VARIABLE_ROW_HEIGHT)
-        
+
         self.list.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         sizer.Add(self.list, 1, wx.EXPAND)
 
@@ -503,25 +503,25 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         self.Bind(wx.EVT_IDLE, self.OnIdle)
         self.Bind(wx.EVT_TIMER, self.OnTimer)
-        
+
 
     def PopulateList(self):
 
         self.list.Freeze()
 
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldfont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldfont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldfont.SetWeight(wx.BOLD)
         boldfont.SetPointSize(12)
         boldfont.SetUnderlined(True)
-            
+
         info = ULC.UltimateListItem()
         info._mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT | ULC.ULC_MASK_CHECK
         info._image = [1, 2]
         info._format = 0
         info._kind = 1
         info._text = "Artist\nName"
-         
+
         self.list.InsertColumnInfo(0, info)
 
         info = ULC.UltimateListItem()
@@ -530,7 +530,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         info._image = []
         info._text = "Title"
         info._font = boldfont
-        
+
         self.list.InsertColumnInfo(1, info)
 
         info = ULC.UltimateListItem()
@@ -546,18 +546,18 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         info._format = 0
         info._text = "Custom Renderer"
         info._colour = wx.RED
-        
+
         # Add our custom renderer for the header of column 3, we can also use
         # SetHeaderCustomRenderer to set the renderer for all the columns.
         klass = UltimateHeaderRenderer(self)
-        info.SetCustomRenderer(klass) 
-        
+        info.SetCustomRenderer(klass)
+
         self.list.InsertColumnInfo(3, info)
-        
+
         # The custom renderer can also be set for all columns on the header and/or footer
         # self.list.SetHeaderCustomRenderer(klass)
-        
-        # We must first have a footer in order to set its custom renderer: 
+
+        # We must first have a footer in order to set its custom renderer:
         # style = self.list.GetAGWWindowStyleFlag() | ULC.ULC_FOOTER
         # if self.list.GetAGWWindowStyleFlag() != style:
             # self.list.SetAGWWindowStyleFlag(style)
@@ -565,7 +565,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         items = musicdata.items()
         renderers = {}
-        
+
         for key, data in items:
             if key == 3:
                 index = self.list.InsertImageStringItem(sys.maxint, data[0], [3, 4, 7], it_kind=1)
@@ -589,7 +589,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
             if random.randint(0, 2) == 2:
                 # set some radiobutton-like item on the 3rd column
                 it_kind = 2
-                
+
             self.list.SetStringItem(index, 2, data[2], it_kind=it_kind)
             self.list.SetStringItem(index, 3, data[3])
 
@@ -605,7 +605,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
             else:
                 klass = UltimateRenderer_3()
                 self.list.SetItemCustomRenderer(index, 3, klass)
-            
+
             self.list.SetItemData(index, key)
 
         self.renderers = renderers
@@ -618,7 +618,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         item.SetTextColour(wx.BLUE)
         pyData = datetime.date(2009, 1, 1)
         item.SetPyData(pyData)
-        
+
         self.list.SetItem(item)
         item = self.list.GetItem(4)
         item.SetTextColour(wx.RED)
@@ -647,48 +647,48 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         item = self.list.GetItem(11, 0)
         textctrl = wx.TextCtrl(self.list, -1, "I Am A Simple\nMultiline wx.TexCtrl", style=wx.TE_MULTILINE)
         item.SetWindow(textctrl)
-        self.list.SetItem(item)        
+        self.list.SetItem(item)
 
         # Put an item with overflow
         self.list.SetItemOverFlow(10, 0, True)
-       
+
         self.currentItem = 0
 
         fontMask = ULC.ULC_MASK_FONTCOLOUR|ULC.ULC_MASK_FONT
         fullMask = fontMask|ULC.ULC_MASK_BACKCOLOUR
 
-        customRow, customCol, colours = [0, 3], [2, 1], [wx.RED, wx.NamedColour("Yellow")]
-        
+        customRow, customCol, colours = [0, 3], [2, 1], [wx.RED, wx.Colour("Yellow")]
+
         for row, col, colour in zip(customRow, customCol, colours):
             item = self.list.GetItem(row, col)
             item.SetMask(fullMask)
             item.SetTextColour(wx.GREEN)
-            font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+            font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
             font.SetWeight(wx.BOLD)
             item.SetFont(font)
             item.SetBackgroundColour(colour)
             self.list.SetItem(item)
 
-        standardFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        italicFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        standardFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        italicFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         italicFont.SetStyle(wx.FONTSTYLE_ITALIC)
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont.SetWeight(wx.BOLD)
 
         lenCDB = len(self.colourList)
-        
+
         for indx in xrange(11, 20):
             for col in xrange(self.list.GetColumnCount()):
                 result = random.randint(0, 2)
                 colourIndex = random.randint(0, lenCDB-1)
-                
+
                 if result == 0:
                     fnt = standardFont
                 elif result == 1:
                     fnt = boldFont
                 else:
                     fnt = italicFont
-                    
+
                 item = self.list.GetItem(indx, col)
                 item.SetMask(fontMask)
                 item.SetFont(fnt)
@@ -718,10 +718,10 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         for check in checks:
             if check.GetValue() == 1:
                 style = style | eval("ULC." + check.GetLabel())
-        
+
         if self.list.GetAGWWindowStyleFlag() != style:
             self.list.SetAGWWindowStyleFlag(style)
-            
+
 
     # Used by the ColumnSorterMixin, see wx/lib/mixins/listctrl.py
     def GetListCtrl(self):
@@ -737,8 +737,8 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         for key, renderer in self.renderers.items():
             renderer.UpdateValue()
             self.list.RefreshItem(key)
-        
-    
+
+
     def OnIdle(self, event):
 
         if self.gauge:
@@ -762,7 +762,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         y = event.GetY()
 
         self.log.write("x, y = %s\n" % str((x, y)))
-        
+
         item, flags = self.list.HitTest((x, y))
 
         if item != wx.NOT_FOUND and flags & wx.LIST_HITTEST_ONITEM:
@@ -837,11 +837,11 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
     def OnColEndDrag(self, event):
         self.log.write("OnColEndDrag\n")
 
-    def OnBeginDrag(self, event):        
+    def OnBeginDrag(self, event):
         self.log.write("OnBeginDrag\n")
-                
 
-    def OnEndDrag(self, event):        
+
+    def OnEndDrag(self, event):
         self.log.write("OnEndDrag\n")
 
     def OnDoubleClick(self, event):
@@ -902,7 +902,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.log.write("Popup three")
         self.list.ClearAll()
         wx.CallAfter(self.PopulateList)
-        
+
 
     def OnPopupFour(self, event):
         self.list.DeleteAllItems()
@@ -932,21 +932,21 @@ class TestFrame(wx.Frame):
         self.leftpanel = wx.ScrolledWindow(splitter, -1, style=wx.SUNKEN_BORDER)
         self.leftpanel.SetScrollRate(20, 20)
         width = self.PopulateLeftPanel()
-        
+
         # add the windows to the splitter and split it.
         splitter.SplitVertically(self.leftpanel, self.ulc, width+5)
         splitter.SetMinimumPaneSize(width+5)
-        
+
         sizer = wx.BoxSizer()
         sizer.Add(splitter, 1, wx.EXPAND)
         self.SetSizer(sizer)
         self.SetIcon(images.Mondrian.GetIcon())
         self.CenterOnScreen()
         self.Show()
-        
+
 
     def PopulateLeftPanel(self):
-        
+
         pnl = wx.Panel(self.leftpanel)
         mainsizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -963,16 +963,16 @@ class TestFrame(wx.Frame):
 
         sorted_styles.sort(key=operator.itemgetter(1))
 
-        count = 0        
+        count = 0
         for styleName, styleVal in sorted_styles:
 
             if styleName in ["ULC_VIRTUAL", "ULC_TILE", "ULC_LIST", "ULC_ICON",
                              "ULC_SMALL_ICON", "ULC_AUTOARRANGE"]:
                 continue
-            
+
             if "SORT" in styleName or "ALIGN" in styleName or "VIEWS" in styleName:
                 continue
-            
+
             if count == 0:
                 tags = wx.ALL
             else:
@@ -980,12 +980,12 @@ class TestFrame(wx.Frame):
 
             check = wx.CheckBox(pnl, -1, styleName)
             stylesizer.Add(check, 0, tags, 3)
-            
+
             if self.ulc.list.HasAGWFlag(styleVal):
                 check.SetValue(1)
             else:
                 check.SetValue(0)
-                    
+
             if styleName in ["ULC_HAS_VARIABLE_ROW_HEIGHT", "ULC_REPORT"]:
                 check.SetValue(1)
                 check.Enable(False)
@@ -998,7 +998,7 @@ class TestFrame(wx.Frame):
         self.checknormal = wx.CheckBox(pnl, -1, "Standard Colours")
         self.checknormal.Bind(wx.EVT_CHECKBOX, self.OnCheckNormal)
         sizera.Add(self.checknormal, 0, wx.ALL, 3)
-        
+
         sizerb = wx.BoxSizer(wx.VERTICAL)
         self.checkgradient = wx.CheckBox(pnl, -1, "Gradient Theme")
         self.checkgradient.Bind(wx.EVT_CHECKBOX, self.OnCheckGradient)
@@ -1028,7 +1028,7 @@ class TestFrame(wx.Frame):
 
         self.checkvista = wx.CheckBox(pnl, -1, "Windows Vista Theme")
         self.checkvista.Bind(wx.EVT_CHECKBOX, self.OnVista)
-        
+
         themessizer.Add(sizera, 0, wx.EXPAND)
         themessizer.Add(sizerb, 0, wx.EXPAND)
         themessizer.Add((0, 5))
@@ -1053,7 +1053,7 @@ class TestFrame(wx.Frame):
         self.secondcolour.Enable(False)
 
         return mainsizer.CalcMin().width + wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
-    
+
 
     def OnCheckStyle(self, event):
 
@@ -1085,10 +1085,10 @@ class TestFrame(wx.Frame):
         self.ulc.list.SetGradientStyle(self.radiovertical.GetValue())
         self.ulc.list.EnableSelectionVista(False)
         self.ulc.list.EnableSelectionGradient(True)
-        
+
         event.Skip()
-        
-        
+
+
     def OnHorizontal(self, event):
 
         self.ulc.list.SetGradientStyle(self.radiovertical.GetValue())
@@ -1103,14 +1103,14 @@ class TestFrame(wx.Frame):
 
     def OnFirstColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.ulc.list.SetFirstGradientColour(wx.Colour(col1[0], col1[1], col1[2]))
         event.Skip()
 
 
     def OnSecondColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.ulc.list.SetSecondGradientColour(wx.Colour(col1[0], col1[1], col1[2]))
         event.Skip()
 
@@ -1125,7 +1125,7 @@ class TestFrame(wx.Frame):
         self.checkgradient.SetValue(0)
         self.ulc.list.EnableSelectionGradient(False)
         self.ulc.list.EnableSelectionVista(True)
-        
+
         event.Skip()
 
 

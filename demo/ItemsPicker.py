@@ -24,7 +24,7 @@ class TestPanel(wx.Panel):
         b.Bind(wx.EVT_BUTTON,self.Go)
         sizer.Add(b,0,wx.ALL,10)
         self.SetSizer(sizer)
-    
+
     def Go(self,e):
         style = 0
         if self.sortChoices.GetValue():
@@ -35,17 +35,17 @@ class TestPanel(wx.Panel):
             style |= IP_REMOVE_FROM_CHOICES
         d = ItemsPickerDialog(self, style, self.log)
         d.ShowModal()
-        
-        
+
+
 class ItemsPickerDialog(wx.Dialog):
     def __init__(self,parent, style, log):
         wx.Dialog.__init__(self,parent)
         self.log = log
-        sizer =wx.BoxSizer(wx.VERTICAL)
+        sizer = wx.BoxSizer(wx.VERTICAL)
         b = wx.Button(self, -1, "Add Item")
         b.Bind(wx.EVT_BUTTON, self.OnAdd)
         sizer.Add(b, 0, wx.ALL, 5)
-        self.ip = ItemsPicker(self,-1, 
+        self.ip = ItemsPicker(self,-1,
                           ['ThisIsItem3','ThisIsItem2','ThisIsItem1'],
                           'Stuff:', 'Selected stuff:',ipStyle = style)
         self.ip.Bind(EVT_IP_SELECTION_CHANGED, self.OnSelectionChange)
@@ -54,13 +54,13 @@ class ItemsPickerDialog(wx.Dialog):
         self.SetSizer(sizer)
         self.itemCount = 3
         self.Fit()
-            
+
     def OnAdd(self,e):
         items = self.ip.GetItems()
         self.itemCount += 1
         newItem = "item%d" % self.itemCount
         self.ip.SetItems(items + [newItem])
-        
+
     def OnSelectionChange(self, e):
         self.log.write("EVT_IP_SELECTION_CHANGED %s\n" % \
                         ",".join(e.GetItems()))
@@ -76,14 +76,14 @@ def runTest(frame, nb, log):
 
 
 overview = """<html><body>
-<h2><center>ItemsPicker </center></h2> 
-    
+<h2><center>ItemsPicker </center></h2>
+
 ItemsPicker is a widget that allows the user to choose a set of picked
 items out of a given list
 
 </body></html>
 """
-        
+
 
 if __name__ == '__main__':
     import sys,os

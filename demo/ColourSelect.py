@@ -15,7 +15,7 @@
 #              - use sizers
 #              - other minor "improvements"
 #----------------------------------------------------------------------------
-# 
+#
 
 import  wx
 import  wx.lib.colourselect as  csel
@@ -44,7 +44,7 @@ class TestColourSelect(wx.Panel):
         self.colourDefaults = csel.ColourSelect(self, -1)
 
         self.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour, id=self.colourDefaults.GetId())
-        
+
         buttonSizer.AddMany([
             (wx.StaticText(self, -1, "Default Colour/Size"), 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL),
             (self.colourDefaults, 0, wx.ALL, 3),

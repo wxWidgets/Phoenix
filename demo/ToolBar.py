@@ -14,7 +14,7 @@ TBFLAGS = ( wx.TB_HORIZONTAL
 
 class TestSearchCtrl(wx.SearchCtrl):
     maxSearches = 5
-    
+
     def __init__(self, parent, id=-1, value="",
                  pos=wx.DefaultPosition, size=wx.DefaultSize, style=0,
                  doSearch=None):
@@ -31,13 +31,13 @@ class TestSearchCtrl(wx.SearchCtrl):
             self.searches.append(text)
             if len(self.searches) > self.maxSearches:
                 del self.searches[0]
-            self.SetMenu(self.MakeMenu())            
+            self.SetMenu(self.MakeMenu())
         self.SetValue("")
 
     def OnMenuItem(self, evt):
         text = self.searches[evt.GetId()-1]
         self.doSearch(text)
-        
+
     def MakeMenu(self):
         menu = wx.Menu()
         item = menu.Append(-1, "Recent Searches")
@@ -45,7 +45,6 @@ class TestSearchCtrl(wx.SearchCtrl):
         for idx, txt in enumerate(self.searches):
             menu.Append(1+idx, txt)
         return menu
-    
 
 
 class TestToolBar(wx.Frame):
@@ -56,7 +55,7 @@ class TestToolBar(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         client = wx.Panel(self)
-        client.SetBackgroundColour(wx.NamedColour("WHITE"))
+        client.SetBackgroundColour(wx.WHITE)
 
         if FRAMETB:
             # Use the wxFrame internals to create the toolbar and
@@ -79,7 +78,6 @@ class TestToolBar(wx.Frame):
             sizer = wx.BoxSizer(wx.VERTICAL)
             sizer.Add(tb, 0, wx.EXPAND)
             client.SetSizer(sizer)
-            
 
         log.write("Default toolbar tool size: %s\n" % tb.GetToolBitmapSize())
 
@@ -92,31 +90,31 @@ class TestToolBar(wx.Frame):
         paste_bmp= wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, tsize)
 
         tb.SetToolBitmapSize(tsize)
-        
-        #tb.AddSimpleTool(10, new_bmp, "New", "Long help for 'New'")
-        tb.AddLabelTool(10, "New", new_bmp, shortHelp="New", longHelp="Long help for 'New'")
+
+        #tb.AddTool(10, new_bmp, "New", "Long help for 'New'")
+        tb.AddTool(10, "New", new_bmp, wx.NullBitmap, wx.ITEM_NORMAL, "New", "Long help for 'New'", None)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=10)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=10)
 
-        #tb.AddSimpleTool(20, open_bmp, "Open", "Long help for 'Open'")
-        tb.AddLabelTool(20, "Open", open_bmp, shortHelp="Open", longHelp="Long help for 'Open'")
+        #tb.AddTool(20, open_bmp, "Open", "Long help for 'Open'")
+        tb.AddTool(20, "Open", open_bmp, wx.NullBitmap, wx.ITEM_NORMAL, "Open", "Long help for 'Open'", None)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=20)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=20)
 
         tb.AddSeparator()
-        tb.AddSimpleTool(30, copy_bmp, "Copy", "Long help for 'Copy'")
+        tb.AddTool(30, "Copy", copy_bmp, wx.NullBitmap, wx.ITEM_NORMAL, "Copy", "Long help for 'Copy'", None)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=30)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=30)
 
-        tb.AddSimpleTool(40, paste_bmp, "Paste", "Long help for 'Paste'")
+        tb.AddTool(40, "Paste", paste_bmp, wx.NullBitmap, wx.ITEM_NORMAL, "Paste", "Long help for 'Paste'", None)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=40)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=40)
 
         tb.AddSeparator()
 
         #tool = tb.AddCheckTool(50, images.Tog1.GetBitmap(), shortHelp="Toggle this")
-        tool = tb.AddCheckLabelTool(50, "Checkable", images.Tog1.GetBitmap(),
-                                    shortHelp="Toggle this")
+        tool = tb.AddTool(50, "Checkable", images.Tog1.GetBitmap(),
+                          shortHelp="Toggle this",  kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=50)
 
         self.Bind(wx.EVT_TOOL_ENTER, self.OnToolEnter)
@@ -147,7 +145,6 @@ class TestToolBar(wx.Frame):
         self.log.WriteText("DoSearch: %s\n" % text)
         # return true to tell the search ctrl to remember the text
         return True
-    
 
     def OnToolClick(self, event):
         self.log.WriteText("tool %s clicked\n" % event.GetId())
@@ -173,12 +170,10 @@ class TestToolBar(wx.Frame):
         self.timer.Start(2000)
         event.Skip()
 
-
     def OnClearSB(self, event):  # called for the timer event handler
         self.SetStatusText("")
         self.timer.Stop()
         self.timer = None
-
 
     def OnCloseWindow(self, event):
         if self.timer is not None:
@@ -227,7 +222,7 @@ must be called to render it.
 
 wx.Toolbar events are also propogated as Menu events; this is especially handy when
 you have a menu bar that contains items that carry out the same function. For example,
-it is not uncommon to have a little 'floppy' toolbar icon to 'save' the current file 
+it is not uncommon to have a little 'floppy' toolbar icon to 'save' the current file
 (whatever it is) as well as a FILE/SAVE menu item that does the same thing. In this
 case, both events can be captured and acted upon using the same event handler
 with no ill effects.
@@ -235,7 +230,7 @@ with no ill effects.
 If there are cases where a toolbar icon should *not* be associated with a menu item,
 use a unique ID to trap it.
 
-There are a number of ways to create a toolbar for a wx.Frame. wx.Frame.CreateToolBar() 
+There are a number of ways to create a toolbar for a wx.Frame. wx.Frame.CreateToolBar()
 does all the work except it adds no buttons at all unless you override the virtual method
 OnCreateToolBar(). On the other hand, you can just subclass wx.ToolBar and then use
 wx.Frame.SetToolBar() instead.

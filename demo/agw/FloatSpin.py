@@ -22,7 +22,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 class FloatSpinDemo(wx.Panel):
 
     def __init__(self, parent, log):
-       
+
         wx.Panel.__init__(self, parent)
         self.log = log
 
@@ -32,12 +32,12 @@ class FloatSpinDemo(wx.Panel):
         self.sizer_8_staticbox = wx.StaticBox(self.mainpanel, -1, "Example 4")
         self.sizer_4_staticbox = wx.StaticBox(self.mainpanel, -1, "Example 1")
         self.helptext = wx.StaticText(self.mainpanel, -1, "Welcome to the FloatSpin Demo")
-        
+
         self.floatspin1 = FS.FloatSpin(self.mainpanel, -1, min_val=0, max_val=1,
                                        increment=0.01, value=0.1, agwStyle=FS.FS_LEFT)
         self.floatspin1.SetFormat("%f")
         self.floatspin1.SetDigits(2)
-        
+
         self.setvalue1 = wx.Button(self.mainpanel, -1, "Set Value")
         self.textctrlvalue1 = wx.TextCtrl(self.mainpanel, -1, "0.0")
         self.setdigits1 = wx.Button(self.mainpanel, -1, "Set Digits")
@@ -53,7 +53,7 @@ class FloatSpinDemo(wx.Panel):
                                        increment=0.1, agwStyle=FS.FS_RIGHT)
         self.floatspin2.SetFormat("%e")
         self.floatspin2.SetDigits(4)
-        
+
         self.setvalue2 = wx.Button(self.mainpanel, -1, "Set Value")
         self.textctrlvalue2 = wx.TextCtrl(self.mainpanel, -1, "0.0")
         self.setdigits2 = wx.Button(self.mainpanel, -1, "Set Digits")
@@ -69,7 +69,7 @@ class FloatSpinDemo(wx.Panel):
                                        increment=0.0001, agwStyle=FS.FS_CENTRE)
         self.floatspin3.SetFormat("%f")
         self.floatspin3.SetDigits(5)
-        
+
         self.setvalue3 = wx.Button(self.mainpanel, -1, "Set Value")
         self.textctrlvalue3 = wx.TextCtrl(self.mainpanel, -1, "0.01")
         self.setdigits3 = wx.Button(self.mainpanel, -1, "Set Digits")
@@ -85,7 +85,7 @@ class FloatSpinDemo(wx.Panel):
                                        increment=0.1, agwStyle=FS.FS_READONLY)
         self.floatspin4.SetFormat("%G")
         self.floatspin4.SetDigits(3)
-        
+
         self.setvalue4 = wx.Button(self.mainpanel, -1, "Set Value")
         self.textctrlvalue4 = wx.TextCtrl(self.mainpanel, -1, "0.0")
         self.setdigits4 = wx.Button(self.mainpanel, -1, "Set Digits")
@@ -118,19 +118,19 @@ class FloatSpinDemo(wx.Panel):
         self.SetProperties()
         self.DoLayout()
         self.BindEvents()
-        
+
 
     def SetProperties(self):
-        
+
         self.helptext.SetFont(wx.Font(10, wx.MODERN, wx.NORMAL, wx.BOLD, 0, "Verdana"))
         self.radioformat1.SetSelection(0)
         self.radioformat2.SetSelection(2)
         self.radioformat3.SetSelection(0)
         self.radioformat4.SetSelection(5)
-        
+
 
     def DoLayout(self):
-        
+
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         panelsizer = wx.BoxSizer(wx.VERTICAL)
         sizer_6 = wx.BoxSizer(wx.HORIZONTAL)
@@ -185,7 +185,7 @@ class FloatSpinDemo(wx.Panel):
                        wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 0)
         subright13.Add(self.textctrlincr1, 1, wx.LEFT|wx.RIGHT|wx.ALIGN_CENTER_HORIZONTAL|
                        wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
-        right1.Add(subright13, 0, wx.EXPAND, 0)        
+        right1.Add(subright13, 0, wx.EXPAND, 0)
         right1.Add((0, 5), 0, wx.ADJUST_MINSIZE, 0)
         right1.Add(self.setfont1, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         right1.Add((0,1), 1, wx.EXPAND)
@@ -217,7 +217,7 @@ class FloatSpinDemo(wx.Panel):
                        wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 0)
         subright23.Add(self.textctrlincr2, 1, wx.LEFT|wx.RIGHT|wx.ALIGN_CENTER_HORIZONTAL|
                        wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
-        right2.Add(subright23, 0, wx.EXPAND, 0)     
+        right2.Add(subright23, 0, wx.EXPAND, 0)
         right2.Add((0, 5), 0, wx.ADJUST_MINSIZE, 0)
         right2.Add(self.setfont2, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         right2.Add((0,1), 1, wx.EXPAND)
@@ -250,7 +250,7 @@ class FloatSpinDemo(wx.Panel):
                        wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 0)
         subright33.Add(self.textctrlincr3, 1, wx.LEFT|wx.RIGHT|wx.ALIGN_CENTER_HORIZONTAL|
                        wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
-        right3.Add(subright33, 0, wx.EXPAND, 0)     
+        right3.Add(subright33, 0, wx.EXPAND, 0)
         right3.Add((0, 5), 0, wx.ADJUST_MINSIZE, 0)
         right3.Add(self.setfont3, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         right3.Add((0,1), 1, wx.EXPAND)
@@ -282,7 +282,7 @@ class FloatSpinDemo(wx.Panel):
                        wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 0)
         subright43.Add(self.textctrlincr4, 1, wx.LEFT|wx.RIGHT|wx.ALIGN_CENTER_HORIZONTAL|
                        wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 3)
-        right4.Add(subright43, 0, wx.EXPAND, 0)     
+        right4.Add(subright43, 0, wx.EXPAND, 0)
         right4.Add((0, 5), 0, wx.ADJUST_MINSIZE, 0)
         right4.Add(self.setfont4, 0, wx.LEFT|wx.TOP|wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         right4.Add((0,1), 1, wx.EXPAND)
@@ -296,7 +296,7 @@ class FloatSpinDemo(wx.Panel):
         mainsizer.Add(self.mainpanel, 1, wx.EXPAND, 0)
         self.SetSizer(mainsizer)
         mainsizer.Layout()
-        
+
 
     def BindEvents(self):
 
@@ -325,7 +325,7 @@ class FloatSpinDemo(wx.Panel):
         self.floatspin2.Bind(FS.EVT_FLOATSPIN, self.OnFloatSpin)
         self.floatspin3.Bind(FS.EVT_FLOATSPIN, self.OnFloatSpin)
         self.floatspin4.Bind(FS.EVT_FLOATSPIN, self.OnFloatSpin)
-        
+
 
     def OnSetValue(self, event):
 
@@ -345,9 +345,9 @@ class FloatSpinDemo(wx.Panel):
             return
 
         floatspin.SetValue(value)
-        
+
         event.Skip()
-        
+
 
     def OnSetDigits(self, event):
 
@@ -367,9 +367,9 @@ class FloatSpinDemo(wx.Panel):
             return
 
         floatspin.SetDigits(value)
-        
+
         event.Skip()
-        
+
 
     def OnChangeFormat(self, event):
 
@@ -379,9 +379,9 @@ class FloatSpinDemo(wx.Panel):
 
         fmt = radio.GetStringSelection()
         floatspin.SetFormat(fmt)
-        
+
         event.Skip()
-        
+
 
     def OnSetIncrement(self, event):
 
@@ -410,7 +410,7 @@ class FloatSpinDemo(wx.Panel):
             dlg.ShowModal()
             dlg.Destroy()
             return
-        
+
         event.Skip()
 
 
@@ -419,13 +419,13 @@ class FloatSpinDemo(wx.Panel):
         btn = event.GetEventObject()
         indx = self.fontbuttons.index(btn)
         floatspin = self.floatspins[indx]
-        
+
         data = wx.FontData()
         data.EnableEffects(True)
         data.SetInitialFont(floatspin.GetFont())
 
         dlg = wx.FontDialog(self, data)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetFontData()
             font = data.GetChosenFont()
@@ -433,17 +433,17 @@ class FloatSpinDemo(wx.Panel):
             floatspin.SetFont(font)
             floatspin.GetTextCtrl().SetForegroundColour(colour)
             floatspin.Refresh()
-        
+
         # Don't destroy the dialog until you get everything you need from the
         # dialog!
         dlg.Destroy()
-        
+
 
     def OnFloatSpin(self, event):
 
         floatspin = event.GetEventObject()
         self.log.write("FloatSpin event: Value = %s\n"%floatspin.GetValue())
-        
+
         indx = self.floatspins.index(floatspin)
 
         fmt = floatspin.GetFormat()
@@ -451,10 +451,10 @@ class FloatSpinDemo(wx.Panel):
         currenttext = self.textvalues[indx]
 
         strs = ("%100." + str(dgt) + fmt[1])%floatspin.GetValue()
-        
+
         currenttext.SetValue(strs.strip())
         currenttext.Refresh()
-    
+
 
 #----------------------------------------------------------------------
 

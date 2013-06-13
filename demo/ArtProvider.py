@@ -107,7 +107,7 @@ class MyArtProvider(wx.ArtProvider):
         elif artid == wx.ART_TICK_MARK:
             bmp = makeBitmap(tick_png)
 
-        if bmp.Ok():
+        if bmp.IsOk():
             self.log.write("MyArtProvider: providing %s:%s at %s\n" %(artid, client, size))
         return bmp
 
@@ -150,7 +150,7 @@ class TestPanel(wx.Panel):
         fgs.Add((10, 10), 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
         box = wx.BoxSizer(wx.VERTICAL)
-        bmp = wx.EmptyBitmap(16,16)
+        bmp = wx.Bitmap(16,16)
         self.bmp16 = wx.StaticBitmap(self, -1, bmp)
         box.Add(self.bmp16, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         text = wx.StaticText(self, -1, "16x16")
@@ -159,7 +159,7 @@ class TestPanel(wx.Panel):
         fgs.Add(box, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
         box = wx.BoxSizer(wx.VERTICAL)
-        bmp = wx.EmptyBitmap(32,32)
+        bmp = wx.Bitmap(32,32)
         self.bmp32 = wx.StaticBitmap(self, -1, bmp)
         box.Add(self.bmp32, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         text = wx.StaticText(self, -1, "32x32")
@@ -168,7 +168,7 @@ class TestPanel(wx.Panel):
         fgs.Add(box, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
         box = wx.BoxSizer(wx.VERTICAL)
-        bmp = wx.EmptyBitmap(48,48)
+        bmp = wx.Bitmap(48,48)
         self.bmp48 = wx.StaticBitmap(self, -1, bmp)
         box.Add(self.bmp48, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
         text = wx.StaticText(self, -1, "48x48")
@@ -210,24 +210,24 @@ class TestPanel(wx.Panel):
 
         bmp = wx.ArtProvider.GetBitmap(self.artid, self.client, (16,16))
 
-        if not bmp.Ok():
-            bmp = wx.EmptyBitmap(16,16)
+        if not bmp.IsOk():
+            bmp = wx.Bitmap(16,16)
             self.clearBmp(bmp)
 
         self.bmp16.SetBitmap(bmp)
 
         bmp = wx.ArtProvider.GetBitmap(self.artid, self.client, (32,32))
 
-        if not bmp.Ok():
-            bmp = wx.EmptyBitmap(32,32)
+        if not bmp.IsOk():
+            bmp = wx.Bitmap(32,32)
             self.clearBmp(bmp)
 
         self.bmp32.SetBitmap(bmp)
 
         bmp = wx.ArtProvider.GetBitmap(self.artid, self.client, (48,48))
 
-        if not bmp.Ok():
-            bmp = wx.EmptyBitmap(48,48)
+        if not bmp.IsOk():
+            bmp = wx.Bitmap(48,48)
             self.clearBmp(bmp)
 
         self.bmp48.SetBitmap(bmp)
@@ -238,7 +238,7 @@ class TestPanel(wx.Panel):
         dc.SelectObject(bmp)
         dc.SetBackground(wx.Brush("white"))
         dc.Clear()
-        
+
 
 #----------------------------------------------------------------------
 
@@ -276,7 +276,7 @@ provided by wx.ArtProvider.GetBitmap or wx.ArtProvider.GetIcon methods.
 
 def makeBitmap(data):
     stream = cStringIO.StringIO(data)
-    return wx.BitmapFromImage(wx.ImageFromStream(stream))
+    return wx.Bitmap(wx.Image(stream))
 
 
 back_png = \

@@ -55,7 +55,9 @@ a file in a variety of formats, and is extensible to new formats via image
 format handlers. Functions are available to set and get image bits, so it can 
 be used for basic image manipulation.
 
-<p>The following image handlers are available. 
+<p>The following image handlers are available. wxBMPHandler is always installed 
+by default. To use other image formats, install the appropriate handler or use
+<code>wx.InitAllImageHandlers()</code>.
 
 <p>
 <table>    

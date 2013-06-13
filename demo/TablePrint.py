@@ -69,14 +69,14 @@ class TablePanel(wx.Panel):
         prt.SetLandscape()
 
         prt.SetColumnLineSize(2, 3)
-        prt.SetColumnLineColour(3, wx.NamedColour('RED'))
+        prt.SetColumnLineColour(3, wx.RED)
 
         prt.SetRowLineSize(1, 3)
-        prt.SetRowLineColour(5, wx.NamedColour('RED'))
+        prt.SetRowLineColour(5, wx.RED)
 
         prt.SetHeader("wx.Windows Applications")
         prt.SetFooter()
-        prt.SetFooter("Date: ", type = "Date", align=wx.ALIGN_RIGHT, indent = -1, colour = wx.NamedColour('RED'))
+        prt.SetFooter("Date: ", type = "Date", align=wx.ALIGN_RIGHT, indent = -1, colour = wx.RED)
         prt.Preview()
 
     def PreviewNarrow(self):
@@ -93,21 +93,21 @@ class TablePanel(wx.Panel):
         prt.set_column = [ 1, 1, 1, 1, 2]
         prt.label = new_header
         prt.SetColAlignment(1, wx.ALIGN_CENTRE)
-        prt.SetColBackgroundColour(0, wx.NamedColour('RED'))
-        prt.SetColTextColour(0, wx.NamedColour('WHITE'))
-        prt.SetCellColour(4, 0, wx.NamedColour('LIGHT BLUE'))
-        prt.SetCellColour(4, 1, wx.NamedColour('LIGHT BLUE'))
-        prt.SetCellColour(17, 1, wx.NamedColour('LIGHT BLUE'))
+        prt.SetColBackgroundColour(0, wx.RED)
+        prt.SetColTextColour(0, wx.WHITE)
+        prt.SetCellColour(4, 0, wx.Colour('LIGHT BLUE'))
+        prt.SetCellColour(4, 1, wx.Colour('LIGHT BLUE'))
+        prt.SetCellColour(17, 1, wx.Colour('LIGHT BLUE'))
 
-        prt.SetColBackgroundColour(2, wx.NamedColour('LIGHT BLUE'))
-        prt.SetCellText(4, 2, wx.NamedColour('RED'))
+        prt.SetColBackgroundColour(2, wx.Colour('LIGHT BLUE'))
+        prt.SetCellText(4, 2, wx.RED)
 
-        prt.SetColTextColour(3, wx.NamedColour('RED'))
-        prt.label_font_colour = wx.NamedColour('WHITE')
-        prt.SetHeader("wxWindows Applications", colour = wx.NamedColour('RED'))
+        prt.SetColTextColour(3, wx.RED)
+        prt.label_font_colour = wx.WHITE
+        prt.SetHeader("wxWindows Applications", colour = wx.RED)
 
-        prt.SetHeader("Printed: ", type = "Date & Time", align=wx.ALIGN_RIGHT, indent = -1, colour = wx.NamedColour('BLUE'))
-        prt.SetFooter("Page No", colour = wx.NamedColour('RED'), type ="Num")
+        prt.SetHeader("Printed: ", type = "Date & Time", align=wx.ALIGN_RIGHT, indent = -1, colour = wx.BLUE)
+        prt.SetFooter("Page No", colour = wx.RED, type ="Num")
         prt.Preview()
 
     def OnPreviewMatrix(self):

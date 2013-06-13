@@ -1,6 +1,6 @@
 
 import wx
-import wx.animate
+from wx.adv import Animation, AnimationCtrl
 from Main import opj
 
 GIFNames = [
@@ -21,14 +21,14 @@ class TestPanel(wx.Panel):
 
         sizer = wx.FlexGridSizer(cols=3, hgap=5, vgap=5)
         for name in GIFNames:
-            ani = wx.animate.Animation(opj(name))
-            ctrl = wx.animate.AnimationCtrl(self, -1, ani)
-            ctrl.SetUseWindowBackgroundColour()
+            ani = Animation(opj(name))
+            ctrl = AnimationCtrl(self, -1, ani)
+            ctrl.SetBackgroundColour(self.GetBackgroundColour())
             ctrl.Play()
-            sizer.AddF(ctrl, wx.SizerFlags().Border(wx.ALL, 10))
+            sizer.Add(ctrl, 0, wx.ALL, 10)
 
         border = wx.BoxSizer()
-        border.AddF(sizer, wx.SizerFlags(1).Expand().Border(wx.ALL, 20))
+        border.Add(sizer, 1, wx.EXPAND | wx.ALL, 20)
         self.SetSizer(border)
         
 

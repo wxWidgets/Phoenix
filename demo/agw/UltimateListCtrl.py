@@ -45,14 +45,14 @@ class ButtonPanel(wx.Panel):
 
         self.SetSizer(box)
         box.Fit(self)
-        
+
 
     def OnButton(self, event):
-        
+
         event.Skip()
 
         wx.BeginBusyCursor()
-        
+
         modName = buttonDefs[event.GetId()][0]
         module = __import__(modName)
         frame = module.TestFrame(None, self.log)

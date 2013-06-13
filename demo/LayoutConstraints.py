@@ -9,7 +9,7 @@ class TestLayoutConstraints(wx.Panel):
         self.SetAutoLayout(True)
         self.Bind(wx.EVT_BUTTON, self.OnButton, id=100)
 
-        self.SetBackgroundColour(wx.NamedColour("MEDIUM ORCHID"))
+        self.SetBackgroundColour(wx.Colour("MEDIUM ORCHID"))
 
         self.panelA = wx.Window(self, -1, style=wx.SIMPLE_BORDER)
         self.panelA.SetBackgroundColour(wx.BLUE)

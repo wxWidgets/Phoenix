@@ -49,7 +49,7 @@ else:
 class PythonSTC(stc.StyledTextCtrl):
 
     fold_symbols = 2
-    
+
     def __init__(self, parent, ID,
                  pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=0):
@@ -70,7 +70,7 @@ class PythonSTC(stc.StyledTextCtrl):
         #self.SetViewEOL(True)
         #self.SetEOLMode(stc.STC_EOL_CRLF)
         #self.SetUseAntiAliasing(True)
-        
+
         self.SetEdgeMode(stc.STC_EDGE_BACKGROUND)
         self.SetEdgeColumn(78)
 
@@ -90,7 +90,7 @@ class PythonSTC(stc.StyledTextCtrl):
             self.MarkerDefine(stc.STC_MARKNUM_FOLDEREND,     stc.STC_MARK_EMPTY,     "white", "black")
             self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPENMID, stc.STC_MARK_EMPTY,     "white", "black")
             self.MarkerDefine(stc.STC_MARKNUM_FOLDERMIDTAIL, stc.STC_MARK_EMPTY,     "white", "black")
-            
+
         elif self.fold_symbols == 1:
             # Plus for contracted folders, minus for expanded
             self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPEN,    stc.STC_MARK_MINUS, "white", "black")
@@ -142,7 +142,7 @@ class PythonSTC(stc.StyledTextCtrl):
         self.StyleSetSpec(stc.STC_STYLE_BRACEBAD,    "fore:#000000,back:#FF0000,bold")
 
         # Python styles
-        # Default 
+        # Default
         self.StyleSetSpec(stc.STC_P_DEFAULT, "fore:#000000,face:%(helv)s,size:%(size)d" % faces)
         # Comments
         self.StyleSetSpec(stc.STC_P_COMMENTLINE, "fore:#007F00,face:%(other)s,size:%(size)d" % faces)
@@ -176,9 +176,9 @@ class PythonSTC(stc.StyledTextCtrl):
 
         # register some images for use in the AutoComplete box.
         self.RegisterImage(1, images.Smiles.GetBitmap())
-        self.RegisterImage(2, 
+        self.RegisterImage(2,
             wx.ArtProvider.GetBitmap(wx.ART_NEW, size=(16,16)))
-        self.RegisterImage(3, 
+        self.RegisterImage(3,
             wx.ArtProvider.GetBitmap(wx.ART_COPY, size=(16,16)))
 
 

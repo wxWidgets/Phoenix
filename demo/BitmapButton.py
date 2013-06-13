@@ -34,22 +34,22 @@ class TestPanel(wx.Panel):
         bmp.SetMask(mask)
         b = wx.BitmapButton(self, -1, bmp, (20, 20),
                        (bmp.GetWidth()+10, bmp.GetHeight()+10))
-        b.SetToolTipString("This is a bitmap button.")
+        b.SetToolTip("This is a bitmap button.")
         self.Bind(wx.EVT_BUTTON, self.OnClick, b)
 
         b = wx.BitmapButton(self, -1, bmp, (20, 120),
                             style = wx.NO_BORDER)
-        
+
         # hide a little surprise in the button...
         img = images.Robin.GetImage()
         # we need to make it be the same size as the primary image, so
         # grab a subsection of this new image
         cropped = img.GetSubImage((20, 20, bmp.GetWidth(), bmp.GetHeight()))
-        b.SetBitmapSelected(cropped.ConvertToBitmap())
+        b.SetBitmapPressed(cropped.ConvertToBitmap())
 
-        b.SetToolTipString("This is a bitmap button with \nwx.NO_BORDER style.")
+        b.SetToolTip("This is a bitmap button with \nwx.NO_BORDER style.")
         self.Bind(wx.EVT_BUTTON, self.OnClick, b)
-        
+
 
     def OnClick(self, event):
         self.log.write("Click! (%d)\n" % event.GetId())
@@ -69,7 +69,7 @@ overview = """<html><body>
 
 <p>A BitmapButton control displays a bitmap. It can have a separate bitmap for each button state: normal, selected, disabled.</p>
 
-<p>The bitmaps to be displayed should have a small number of colours, such as 16, 
+<p>The bitmaps to be displayed should have a small number of colours, such as 16,
 to avoid palette problems.</p>
 
 <p>A bitmap can be derived from most image formats using the wx.Image class.</p>

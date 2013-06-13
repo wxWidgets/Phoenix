@@ -3,7 +3,6 @@ import  wx
 
 #----------------------------------------------------------------------
 
-
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
@@ -35,12 +34,11 @@ class TestPanel(wx.Panel):
 
         self.lb1.SetSelection(0)
         self.OnSelect(None)
-        wx.FutureCall(300, self.SetTextSize)
+        wx.CallLater(300, self.SetTextSize)
 
 
     def SetTextSize(self):
         self.txt.SetSize(self.txt.GetBestSize())
-
 
     def OnSelect(self, evt):
         face = self.lb1.GetStringSelection()

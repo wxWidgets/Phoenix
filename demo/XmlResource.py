@@ -31,8 +31,8 @@ class TestPanel(wx.Panel):
 
         elif 1:
             # or from a Virtual FileSystem:
-            wx.FileSystem_AddHandler(wx.MemoryFSHandler())
-            wx.MemoryFSHandler_AddFile("XRC_Resources/data_file", resourceText)
+            wx.FileSystem.AddHandler(wx.MemoryFSHandler())
+            wx.MemoryFSHandler().AddFile("XRC_Resources/data_file", resourceText)
             res = xrc.XmlResource("memory:XRC_Resources/data_file")
 
         else:

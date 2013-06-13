@@ -53,9 +53,9 @@ class TestPanel(wx.Panel):
             log.write("Timing...\n")
             num = 100
             tm = t.timeit(num)
-            log.write("%d passes in %f seconds ==  %f seconds per pass " % 
+            log.write("%d passes in %f seconds ==  %f seconds per pass " %
                   (num, tm, tm/num))
-            
+
         if not USE_NUMPY:
             log.write("using raw access\n")
             self.redBmp   = self.MakeBitmap(178,  34,  34)
@@ -85,7 +85,7 @@ class TestPanel(wx.Panel):
     def MakeBitmap(self, red, green, blue, alpha=128):
         # Create the bitmap that we will stuff pixel values into using
         # the raw bitmap access classes.
-        bmp = wx.EmptyBitmap(DIM, DIM, 32)
+        bmp = wx.Bitmap(DIM, DIM, 32)
 
         # Create an object that facilitates access to the bitmap's
         # pixel buffer
@@ -126,7 +126,7 @@ class TestPanel(wx.Panel):
             pixels.Set(red, green, blue, wx.ALPHA_OPAQUE)
             pixels.MoveTo(pixelData, DIM-1, y)
             pixels.Set(red, green, blue, wx.ALPHA_OPAQUE)
-            
+
         return bmp
 
 
@@ -153,9 +153,9 @@ class TestPanel(wx.Panel):
         # finally, use the array to create a bitmap
         bmp = wx.BitmapFromBufferRGBA(DIM, DIM, arr)
         return bmp
-    
-           
-        
+
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

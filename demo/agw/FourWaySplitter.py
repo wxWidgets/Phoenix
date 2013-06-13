@@ -53,7 +53,7 @@ class ControlPane(wx.Panel):
                             style=wx.CB_READONLY|wx.CB_DROPDOWN)
         combo.SetStringSelection("None")
 
-        self.Bind(wx.EVT_COMBOBOX, self.OnExpandWindow)        
+        self.Bind(wx.EVT_COMBOBOX, self.OnExpandWindow)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(luCheck, 0, wx.TOP, 5)
@@ -148,7 +148,7 @@ class FWSPanel(wx.Panel):
 
     def OnChanging(self, event):
 
-        idx = self.GetSashIdx(event)            
+        idx = self.GetSashIdx(event)
         self.log.write("Changing sash: %s  %s\n" %(idx, event.GetSashPosition()))
 
         # This is one way to control the sash limits
@@ -160,7 +160,7 @@ class FWSPanel(wx.Panel):
 
     def OnChanged(self, event):
 
-        idx = self.GetSashIdx(event)        
+        idx = self.GetSashIdx(event)
         self.log.write("Changed sash: %s  %s\n" %(idx, event.GetSashPosition()))
 
         event.Skip()
@@ -185,7 +185,7 @@ class FWSPanel(wx.Panel):
 
         win1 = self.splitter.GetWindow(0)
         win3 = self.splitter.GetWindow(2)
-        self.splitter.ExchangeWindows(win1, win3)        
+        self.splitter.ExchangeWindows(win1, win3)
 
 
     def ExpandWindow(self, selection):
@@ -203,12 +203,12 @@ class FourWaySplitterDemo(wx.Frame):
         self.log = log
         panel = FWSPanel(self, log)
 
-        sizer = wx.BoxSizer(wx.VERTICAL)        
+        sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(panel, 1, wx.EXPAND)
         self.SetSizer(sizer)
         sizer.Layout()
 
-        statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        statusbar = self.CreateStatusBar(2)
         statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
         statusbar_fields = [("FourWaySplitter wxPython Demo, Andrea Gavana @ 03 Nov 2006"),
@@ -219,7 +219,7 @@ class FourWaySplitterDemo(wx.Frame):
 
         self.CreateMenu()
 
-        self.SetIcon(images.Mondrian.GetIcon())  
+        self.SetIcon(images.Mondrian.GetIcon())
         self.CenterOnScreen()
 
 
@@ -231,11 +231,11 @@ class FourWaySplitterDemo(wx.Frame):
 
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
-        fileMenu.AppendItem(item)
+        fileMenu.Append(item)
 
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
-        helpMenu.AppendItem(item)
+        helpMenu.Append(item)
 
         menuBar.Append(fileMenu, "&File")
         menuBar.Append(helpMenu, "&Help")

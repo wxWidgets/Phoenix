@@ -6,7 +6,7 @@
 # Author:       Robin Dunn
 #
 # Created:      6-March-2000
-# RCS-ID:       $Id$
+# RCS-ID:       $Id: run.py 68888 2011-08-25 18:45:24Z RD $
 # Copyright:    (c) 2000 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
@@ -28,8 +28,8 @@ print "wx.version:", wx.version()
 print "pid:", os.getpid()
 ##print "executable:", sys.executable; raw_input("Press Enter...")
 
-assertMode = wx.PYAPP_ASSERT_DIALOG
-##assertMode = wx.PYAPP_ASSERT_EXCEPTION
+assertMode = wx.APP_ASSERT_DIALOG
+##assertMode = wx.APP_ASSERT_EXCEPTION
 
 
 #----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         ns['app'] = self
         ns['module'] = self.demoModule
         ns['frame'] = frame
-        
+
         frame.SetMenuBar(menuBar)
         frame.Show(True)
         frame.Bind(wx.EVT_CLOSE, self.OnCloseFrame)
@@ -117,7 +117,7 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
                     shell.Close()
                 evt.Skip()
             frame.Bind(wx.EVT_CLOSE, CloseShell)
-                    
+
         return True
 
 
@@ -132,7 +132,7 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
 
     def OnWidgetInspector(self, evt):
         wx.lib.inspection.InspectionTool().Show()
-    
+
 
 #----------------------------------------------------------------------------
 
@@ -144,7 +144,7 @@ def main(argv):
             useShell = True
             del sys.argv[x]
             break
-            
+
     if len(argv) < 2:
         print "Please specify a demo module name on the command-line"
         raise SystemExit

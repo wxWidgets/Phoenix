@@ -41,9 +41,9 @@ class ButtonPanel(wx.Panel):
             self.Bind(wx.EVT_BUTTON, self.OnButton, btn)
 
         #** Enable this to show putting a GLCanvas on the wx.Panel
-        if 1:
+        if 0:
             c = CubeCanvas(self)
-            c.SetMinSize((200, 200))
+            c.SetSize((200, 200))
             box.Add(c, 0, wx.ALIGN_CENTER|wx.ALL, 15)
 
         self.SetAutoLayout(True)

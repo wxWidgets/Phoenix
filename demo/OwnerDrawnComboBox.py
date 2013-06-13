@@ -1,13 +1,13 @@
 
 import wx
-import wx.combo
+import wx.adv
 
 #----------------------------------------------------------------------
 # This ComboBox class graphically displays the various pen styles that
 # are available, making it easy for the user to choose the style they
 # want.
 
-class PenStyleComboBox(wx.combo.OwnerDrawnComboBox):
+class PenStyleComboBox(wx.adv.OwnerDrawnComboBox):
 
     # Overridden from OwnerDrawnComboBox, called to draw each
     # item in the list
@@ -42,11 +42,11 @@ class PenStyleComboBox(wx.combo.OwnerDrawnComboBox):
             penStyle = wx.HORIZONTAL_HATCH
         elif item == 11:
             penStyle = wx.VERTICAL_HATCH
-            
+
         pen = wx.Pen(dc.GetTextForeground(), 3, penStyle)
         dc.SetPen(pen)
 
-        if flags & wx.combo.ODCB_PAINTING_CONTROL:
+        if flags & wx.adv.ODCB_PAINTING_CONTROL:
             # for painting the control itself
             dc.DrawLine( r.x+5, r.y+r.height/2, r.x+r.width - 5, r.y+r.height/2 )
 
@@ -58,22 +58,22 @@ class PenStyleComboBox(wx.combo.OwnerDrawnComboBox):
                         )
             dc.DrawLine( r.x+5, r.y+((r.height/4)*3)+1, r.x+r.width - 5, r.y+((r.height/4)*3)+1 )
 
-           
+
     # Overridden from OwnerDrawnComboBox, called for drawing the
     # background area of each item.
     def OnDrawBackground(self, dc, rect, item, flags):
         # If the item is selected, or its item # iseven, or we are painting the
         # combo control itself, then use the default rendering.
-        if (item & 1 == 0 or flags & (wx.combo.ODCB_PAINTING_CONTROL |
-                                      wx.combo.ODCB_PAINTING_SELECTED)):
-            wx.combo.OwnerDrawnComboBox.OnDrawBackground(self, dc, rect, item, flags)
+        if (item & 1 == 0 or flags & (wx.adv.ODCB_PAINTING_CONTROL |
+                                      wx.adv.ODCB_PAINTING_SELECTED)):
+            wx.adv.OwnerDrawnComboBox.OnDrawBackground(self, dc, rect, item, flags)
             return
 
         # Otherwise, draw every other background with different colour.
         bgCol = wx.Colour(240,240,250)
         dc.SetBrush(wx.Brush(bgCol))
         dc.SetPen(wx.Pen(bgCol))
-        dc.DrawRectangleRect(rect);
+        dc.DrawRectangle(rect);
 
 
 
@@ -90,9 +90,9 @@ class PenStyleComboBox(wx.combo.OwnerDrawnComboBox):
     # -1 for default/undetermined
     def OnMeasureItemWidth(self, item):
         return -1; # default - will be measured from text width
-    
 
-        
+
+
 
 #----------------------------------------------------------------------
 

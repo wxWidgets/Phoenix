@@ -62,7 +62,7 @@ class PieCtrlDemo(wx.Panel):
         self._incr = 1
         self._hiddenlegend = False
         
-        panel.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNFACE))
+        panel.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE))
 
         # Create A Simple PieCtrl With 3 Sectors
         self._pie = PieCtrl(panel, -1, wx.DefaultPosition, wx.Size(180,270))

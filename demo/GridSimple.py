@@ -94,7 +94,7 @@ class SimpleGrid(gridlib.Grid): ##, mixins.GridAutoEditMixin):
         self.Bind(gridlib.EVT_GRID_COL_SIZE, self.OnColSize)
 
         self.Bind(gridlib.EVT_GRID_RANGE_SELECT, self.OnRangeSelect)
-        self.Bind(gridlib.EVT_GRID_CELL_CHANGE, self.OnCellChange)
+        self.Bind(gridlib.EVT_GRID_CELL_CHANGED, self.OnCellChange)
         self.Bind(gridlib.EVT_GRID_SELECT_CELL, self.OnSelectCell)
 
         self.Bind(gridlib.EVT_GRID_EDITOR_SHOWN, self.OnEditorShown)

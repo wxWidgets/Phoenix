@@ -34,7 +34,6 @@ class FindPrefixListBox(wx.ListBox):
         self.log.WriteText('Prefix %s is not found.\n' % prefix)
         return -1
 
-
     def OnKey(self, evt):
         key = evt.GetKeyCode()
 
@@ -101,18 +100,18 @@ class TestListBox(wx.Panel):
 
 
     def EvtListBox(self, event):
-        self.log.WriteText('EvtListBox: %s, %s, %s, %s\n' %
+        self.log.WriteText('EvtListBox: %s, %s, %s\n' %
                            (event.GetString(),
                             event.IsSelection(),
-                            event.GetSelection(),
-                            event.GetClientData()))
+                            event.GetSelection()
+                            # event.GetClientData()
+                            ))
 
         lb = event.GetEventObject()
-        data = lb.GetClientData(lb.GetSelection())
+        # data = lb.GetClientData(lb.GetSelection())
 
-        if data is not None:
-            self.log.WriteText('\tdata: %s\n' % data)
-
+        # if data is not None:
+            # self.log.WriteText('\tdata: %s\n' % data)
 
     def EvtListBoxDClick(self, event):
         self.log.WriteText('EvtListBoxDClick: %s\n' % self.lb1.GetSelection())
@@ -139,7 +138,6 @@ def runTest(frame, nb, log):
     return win
 
 #---------------------------------------------------------------------------
-
 
 
 

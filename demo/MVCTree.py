@@ -37,13 +37,13 @@ def runTest(frame, nb, log):
 #    p.AddEditor(FileEditor(p))
 
     p.SetMultiSelect(True)
-    tree.EVT_MVCTREE_SEL_CHANGING(p, p.GetId(), selchanging)
-    tree.EVT_MVCTREE_SEL_CHANGED(p, p.GetId(), selchanged)
-    tree.EVT_MVCTREE_ITEM_EXPANDED(p, p.GetId(), expanded)
-    tree.EVT_MVCTREE_ITEM_COLLAPSED(p, p.GetId(), closed)
-    tree.EVT_MVCTREE_ADD_ITEM(p, p.GetId(), add)
-    tree.EVT_MVCTREE_DELETE_ITEM(p, p.GetId(), delitem)
-    tree.EVT_MVCTREE_KEY_DOWN(p, p.GetId(), key)
+    p.Bind(tree.EVT_MVCTREE_SEL_CHANGING, selchanging)
+    p.Bind(tree.EVT_MVCTREE_SEL_CHANGED, selchanged)
+    p.Bind(tree.EVT_MVCTREE_ITEM_EXPANDED, expanded)
+    p.Bind(tree.EVT_MVCTREE_ITEM_COLLAPSED, closed)
+    p.Bind(tree.EVT_MVCTREE_ADD_ITEM, add)
+    p.Bind(tree.EVT_MVCTREE_DELETE_ITEM, delitem)
+    p.Bind(tree.EVT_MVCTREE_KEY_DOWN, key)
 
     return p
     #frame.otherWin = f

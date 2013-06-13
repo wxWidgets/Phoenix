@@ -14,15 +14,13 @@ brush_styles = ["wx.SOLID", "wx.TRANSPARENT", "wx.STIPPLE", "wx.BDIAGONAL_HATCH"
                 "wx.HORIZONTAL_HATCH", "wx.VERTICAL_HATCH"]
 
 
-
-
 class BasePanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER|wx.WANTS_CHARS)
 
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
-        self.Bind(wx.EVT_SIZE, self.OnSize)        
+        self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
 
@@ -36,7 +34,7 @@ class PenPanel(BasePanel):
     def __init__(self, parent, pen_name):
         BasePanel.__init__(self, parent)
         self.pen_name = pen_name
-        
+
 
     def OnPaint(self, event):
         width, height = self.GetClientSize()
@@ -49,8 +47,8 @@ class PenPanel(BasePanel):
         font.MakeSmaller()
         dc.SetFont(font)
         w, labelHeight = dc.GetTextExtent('Wy')
-        
-        name = self.pen_name        
+
+        name = self.pen_name
 
         if "STIPPLE" in name:
             bmp = images.Smiles.GetBitmap()
@@ -67,7 +65,7 @@ class PenPanel(BasePanel):
             # dash values represent units on, off, on. off...
             pen.SetDashes([2, 5, 2, 2])
             name += " ([2, 5, 2, 2])"
-        
+
         dc.SetTextForeground(wx.BLACK)
         dc.DrawText(name, 1, 1)
 
@@ -80,7 +78,7 @@ class BrushPanel(BasePanel):
     def __init__(self, parent, brush_name):
         BasePanel.__init__(self, parent)
         self.brush_name = brush_name
-        
+
 
     def OnPaint(self, event):
         width, height = self.GetClientSize()
@@ -94,16 +92,16 @@ class BrushPanel(BasePanel):
         dc.SetFont(font)
         w, labelHeight = dc.GetTextExtent('Wy')
 
-        dc.SetPen(wx.TRANSPARENT_PEN)        
+        dc.SetPen(wx.TRANSPARENT_PEN)
         name = self.brush_name
-        
+
         if "STIPPLE" in name:
             bmp = images.Smiles.GetBitmap()
             bmp.SetMask(None)
-            brush = wx.BrushFromBitmap(bmp)
+            brush = wx.Brush(bmp)
         else:
             brush = wx.Brush(wx.BLUE, eval(name))
-        
+
         dc.SetTextForeground(wx.BLACK)
         dc.DrawText(name, 1, 1)
 
@@ -124,7 +122,7 @@ class TestPanel(wx.Panel):
         label1.SetFont(font)
 
         mainSizer.Add(label1, 0, wx.EXPAND|wx.ALL, 10)
-        
+
         gs1 = wx.GridSizer(4, 4, 3, 3)  # rows, cols, vgap, hgap
 
         for pen_name in pen_styles:
@@ -137,7 +135,7 @@ class TestPanel(wx.Panel):
         label2.SetFont(font)
 
         mainSizer.Add(label2, 0, wx.EXPAND|wx.ALL, 10)
-        
+
         gs2 = wx.GridSizer(3, 3, 3, 3)  # rows, cols, vgap, hgap
 
         for brush_name in brush_styles:
@@ -145,9 +143,9 @@ class TestPanel(wx.Panel):
             gs2.Add(small, 0, wx.EXPAND)
 
         mainSizer.Add(gs2, 1, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.BOTTOM, 10)
-        
+
         self.SetSizer(mainSizer)
-       
+
 
 
 

@@ -6,7 +6,7 @@ import  images
 
 #---------------------------------------------------------------------------
 
-class MegaTable(Grid.PyGridTableBase):
+class MegaTable(Grid.GridTableBase):
     """
     A custom wx.Grid Table using user supplied data
     """
@@ -17,7 +17,7 @@ class MegaTable(Grid.PyGridTableBase):
         colname
         """
         # The base class must be initialized *first*
-        Grid.PyGridTableBase.__init__(self)
+        Grid.GridTableBase.__init__(self)
         self.data = data
         self.colnames = colnames
         self.plugins = plugins or {}
@@ -187,14 +187,14 @@ class MegaTable(Grid.PyGridTableBase):
 # --------------------------------------------------------------------
 # Sample wx.Grid renderers
 
-class MegaImageRenderer(Grid.PyGridCellRenderer):
+class MegaImageRenderer(Grid.GridCellRenderer):
     def __init__(self, table):
         """
         Image Renderer Test.  This just places an image in a cell
         based on the row index.  There are N choices and the
         choice is made by  choice[row%N]
         """
-        Grid.PyGridCellRenderer.__init__(self)
+        Grid.GridCellRenderer.__init__(self)
         self.table = table
         self._choices = [images.Smiles.GetBitmap,
                          images.Mondrian.GetBitmap,
@@ -236,10 +236,10 @@ class MegaImageRenderer(Grid.PyGridCellRenderer):
                 0, 0, wx.COPY, True)
 
 
-class MegaFontRenderer(Grid.PyGridCellRenderer):
+class MegaFontRenderer(Grid.GridCellRenderer):
     def __init__(self, table, color="blue", font="ARIAL", fontsize=8):
         """Render data in the specified color and font and fontsize"""
-        Grid.PyGridCellRenderer.__init__(self)
+        Grid.GridCellRenderer.__init__(self)
         self.table = table
         self.color = color
         self.font = wx.Font(fontsize, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, font)
@@ -257,7 +257,7 @@ class MegaFontRenderer(Grid.PyGridCellRenderer):
 
         # clear the background
         dc.SetBackgroundMode(wx.SOLID)
-        
+
         if isSelected:
             dc.SetBrush(wx.Brush(wx.BLUE, wx.SOLID))
             dc.SetPen(wx.Pen(wx.BLUE, 1, wx.SOLID))
@@ -288,7 +288,7 @@ class MegaFontRenderer(Grid.PyGridCellRenderer):
         # when the text is larger than the grid cell
 
         width, height = dc.GetTextExtent(text)
-        
+
         if width > rect.width-2:
             width, height = dc.GetTextExtent("...")
             x = rect.x+1 + rect.width-2 - width

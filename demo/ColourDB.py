@@ -28,10 +28,10 @@ class TestWindow(wx.ScrolledWindow):
 
         # Using GetFullTextExtent(), we calculate a basic 'building block'
         # that will be used to draw a depiction of the color list. We're
-        # using 'Wy' as the model becuase 'W' is a wide character and 'y' 
+        # using 'Wy' as the model becuase 'W' is a wide character and 'y'
         # has a descender. This constitutes a 'worst case' scenario, which means
         # that no matter what we draw later, text-wise, we'll have room for it
-        w,h,d,e = dc.GetFullTextExtent("Wy") 
+        w,h,d,e = dc.GetFullTextExtent("Wy")
 
         # Height plus descender
         self.textHeight = h + d
@@ -44,12 +44,12 @@ class TestWindow(wx.ScrolledWindow):
 
         # jmg 11/8/03: why 24?
         numCells = 24
-        
+
         # 'prep' our scroll bars.
         self.SetScrollbars(
             self.cellWidth, self.lineHeight, numCells, len(self.clrList) + 2
             )
-            
+
         # Bind event handlers
         self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -103,7 +103,7 @@ class TestWindow(wx.ScrolledWindow):
         numColours = len(colours)
 
         if rgn:
-            # determine the subset of the color list that has been exposed 
+            # determine the subset of the color list that has been exposed
             # and needs drawn. This is based on all the precalculation we
             # did in __init__()
             rect = rgn.GetBox()
@@ -125,14 +125,14 @@ class TestWindow(wx.ScrolledWindow):
             dc.SetBrush(brush)
             dc.DrawRectangle(10 * self.cellWidth, y,
                              6 * self.cellWidth, self.textHeight)
-            
+
             dc.DrawText(str(tuple(colours[line][1:])),
                         18 * self.cellWidth, y)
 
             hexstr = "#%02X%02X%02X" % tuple(colours[line][1:])
             dc.DrawText(hexstr, 25 * self.cellWidth, y)
 
-            
+
 # On wxGTK there needs to be a panel under wx.ScrolledWindows if they are
 # going to be in a wxNotebook. And, in this demo, we are.
 class TestPanel(wx.Panel):
@@ -170,9 +170,9 @@ overview = """
 <body>
 <B><font size=+2>ColourDB</font></b>
 
-<p>wxWindows maintains a database of standard RGB colours for a predefined 
-set of named colours (such as "BLACK'', "LIGHT GREY''). The application 
-may add to this set if desired by using Append. There is only one instance 
+<p>wxWindows maintains a database of standard RGB colours for a predefined
+set of named colours (such as "BLACK'', "LIGHT GREY''). The application
+may add to this set if desired by using Append. There is only one instance
 of this class: <b>TheColourDatabase</b>.
 
 <p>The <code>colourdb</code> library is a lightweight API that pre-defines
@@ -188,7 +188,7 @@ font data to generate a "building block" type of construct for repetitive use.
 
 <p>
 With implementation of V2.5 and later, it is required to have a wx.App already
-initialized before <b><code>wx.updateColourDB()</code></b> can be called. 
+initialized before <b><code>wx.updateColourDB()</code></b> can be called.
 Trying to do otherwise will cause an exception to be raised.
 </body>
 </html>

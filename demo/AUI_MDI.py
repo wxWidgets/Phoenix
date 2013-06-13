@@ -30,7 +30,7 @@ class ParentFrame(wx.aui.AuiMDIParentFrame):
     def OnNewChild(self, evt):
         self.count += 1
         child = ChildFrame(self, self.count)
-        child.Activate()
+        child.Show()
 
     def OnDoClose(self, evt):
         # Close all ChildFrames first else Python crashes

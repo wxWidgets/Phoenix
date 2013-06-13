@@ -21,7 +21,7 @@ class MyCanvas(wx.ScrolledWindow):
         self.drawing = False
 
         self.SetBackgroundColour("WHITE")
-        self.SetCursor(wx.StockCursor(wx.CURSOR_PENCIL))
+        self.SetCursor(wx.Cursor(wx.CURSOR_PENCIL))
         bmp = images.Test2.GetBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
@@ -32,7 +32,7 @@ class MyCanvas(wx.ScrolledWindow):
 
         if BUFFERED:
             # Initialize the buffer bitmap.  No real DC is needed at this point.
-            self.buffer = wx.EmptyBitmap(self.maxWidth, self.maxHeight)
+            self.buffer = wx.Bitmap(self.maxWidth, self.maxHeight)
             dc = wx.BufferedDC(None, self.buffer)
             dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
             dc.Clear()
@@ -69,7 +69,7 @@ class MyCanvas(wx.ScrolledWindow):
 
 
     def DoDrawing(self, dc, printing=False):
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
         dc.SetPen(wx.Pen('RED'))
         dc.DrawRectangle(5, 5, 50, 50)
 
@@ -142,8 +142,7 @@ class MyCanvas(wx.ScrolledWindow):
         dc.GradientFillConcentric((20, 325, 50, 50),
                                   "red", "blue", (25,25))
         self.DrawSavedLines(dc)
-        dc.EndDrawing()
-
+        # dc.EndDrawing()
 
     def DrawSavedLines(self, dc):
         dc.SetPen(wx.Pen('MEDIUM FOREST GREEN', 4))

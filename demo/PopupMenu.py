@@ -52,7 +52,7 @@ class TestPanel(wx.Panel):
         #
         # Yet another anternate way to do IDs. Some prefer them up top to
         # avoid clutter, some prefer them close to the object of interest
-        # for clarity. 
+        # for clarity.
         if not hasattr(self, "popupID1"):
             self.popupID1 = wx.NewId()
             self.popupID2 = wx.NewId()
@@ -80,7 +80,7 @@ class TestPanel(wx.Panel):
         item = wx.MenuItem(menu, self.popupID1,"One")
         bmp = images.Smiles.GetBitmap()
         item.SetBitmap(bmp)
-        menu.AppendItem(item)
+        menu.Append(item)
         # add some other items
         menu.Append(self.popupID2, "Two")
         menu.Append(self.popupID3, "Three")
@@ -91,7 +91,7 @@ class TestPanel(wx.Panel):
         sm = wx.Menu()
         sm.Append(self.popupID8, "sub item 1")
         sm.Append(self.popupID9, "sub item 1")
-        menu.AppendMenu(self.popupID7, "Test Submenu", sm)
+        menu.Append(self.popupID7, "Test Submenu", sm)
 
 
         # Popup the menu.  If an item is selected then its handler
@@ -126,8 +126,6 @@ class TestPanel(wx.Panel):
 
     def OnPopupNine(self, event):
         self.log.WriteText("Popup nine\n")
-
-
 
 
 

@@ -18,12 +18,12 @@ class TestFrame(wx.Frame):
         self.hasShape = False
         self.delta = (0,0)
 
-        self.Bind(wx.EVT_LEFT_DCLICK,   self.OnDoubleClick)
-        self.Bind(wx.EVT_LEFT_DOWN,     self.OnLeftDown)
-        self.Bind(wx.EVT_LEFT_UP,       self.OnLeftUp)
-        self.Bind(wx.EVT_MOTION,        self.OnMouseMove)
-        self.Bind(wx.EVT_RIGHT_UP,      self.OnExit)
-        self.Bind(wx.EVT_PAINT,         self.OnPaint)
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
+        self.Bind(wx.EVT_LEFT_DOWN,   self.OnLeftDown)
+        self.Bind(wx.EVT_LEFT_UP,     self.OnLeftUp)
+        self.Bind(wx.EVT_MOTION,      self.OnMouseMove)
+        self.Bind(wx.EVT_RIGHT_UP,    self.OnExit)
+        self.Bind(wx.EVT_PAINT,       self.OnPaint)
 
         self.bmp = images.Vippi.GetBitmap()
         w, h = self.bmp.GetWidth(), self.bmp.GetHeight()
@@ -31,8 +31,8 @@ class TestFrame(wx.Frame):
 
         if wx.Platform != "__WXMAC__":
             # wxMac clips the tooltip to the window shape, YUCK!!!
-            self.SetToolTipString("Right-click to close the window\n"
-                                  "Double-click the image to set/unset the window shape")
+            self.SetToolTip("Right-click to close the window\n"
+                            "Double-click the image to set/unset the window shape")
 
         if wx.Platform == "__WXGTK__":
             # wxGTK requires that the window be created before you can
@@ -49,9 +49,8 @@ class TestFrame(wx.Frame):
 
     def SetWindowShape(self, *evt):
         # Use the bitmap's mask to determine the region
-        r = wx.RegionFromBitmap(self.bmp)
+        r = wx.Region(self.bmp)
         self.hasShape = self.SetShape(r)
-
 
     def OnDoubleClick(self, evt):
         if self.hasShape:
@@ -60,14 +59,12 @@ class TestFrame(wx.Frame):
         else:
             self.SetWindowShape()
 
-
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
         dc.DrawBitmap(self.bmp, 0,0, True)
 
     def OnExit(self, evt):
         self.Close()
-
 
     def OnLeftDown(self, evt):
         self.CaptureMouse()
@@ -77,11 +74,9 @@ class TestFrame(wx.Frame):
         dy = y - originy
         self.delta = ((dx, dy))
 
-
     def OnLeftUp(self, evt):
         if self.HasCapture():
             self.ReleaseMouse()
-
 
     def OnMouseMove(self, evt):
         if evt.Dragging() and evt.LeftIsDown():

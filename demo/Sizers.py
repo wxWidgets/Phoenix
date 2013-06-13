@@ -15,13 +15,13 @@ import  wx
 
 #----------------------------------------------------------------------
 
-class SampleWindow(wx.PyWindow):
+class SampleWindow(wx.Window):
     """
     A simple window that is used as sizer items in the tests below to
     show how the various sizers work.
     """
     def __init__(self, parent, text, pos=wx.DefaultPosition, size=wx.DefaultSize):
-        wx.PyWindow.__init__(self, parent, -1,
+        wx.Window.__init__(self, parent, -1,
                              #style=wx.RAISED_BORDER
                              #style=wx.SUNKEN_BORDER
                              style=wx.SIMPLE_BORDER
@@ -32,11 +32,11 @@ class SampleWindow(wx.PyWindow):
         else:
             self.bestsize = (80,25)
         self.SetSize(self.GetBestSize())
-        
+
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_LEFT_UP, self.OnCloseParent)
-        
+
 
     def OnPaint(self, evt):
         sz = self.GetSize()
@@ -51,11 +51,11 @@ class SampleWindow(wx.PyWindow):
     def OnCloseParent(self, evt):
         p = wx.GetTopLevelParent(self)
         if p:
-            p.Close()            
+            p.Close()
 
     def DoGetBestSize(self):
         return self.bestsize
-    
+
 
 #----------------------------------------------------------------------
 
@@ -539,7 +539,7 @@ class TestFrame(wx.Frame):
         self.Fit()
 
     def OnCloseWindow(self, event):
-        self.MakeModal(False)
+        # self.MakeModal(False)
         self.Destroy()
 
 
@@ -550,27 +550,35 @@ class TestSelectionPanel(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         self.list = wx.ListBox(self, -1,
-                              wx.DLG_PNT(self, 10, 10), wx.DLG_SZE(self, 100, 100),
+                              (-1, -1), (-1, -1),
                               [])
+        self.list.Fit()
         self.Bind(wx.EVT_LISTBOX, self.OnSelect, self.list)
         self.Bind(wx.EVT_LISTBOX_DCLICK, self.OnDClick, self.list)
 
-        wx.Button(self, -1, "Try it!", wx.DLG_PNT(self, 120, 10)).SetDefault()
-        self.Bind(wx.EVT_BUTTON, self.OnDClick)
+        btn = wx.Button(self, -1, "Try it!", (120, 10))
+        btn.Bind(wx.EVT_BUTTON, self.OnDClick)
 
         self.text = wx.TextCtrl(self, -1, "",
-                               wx.DLG_PNT(self, 10, 115),
-                               wx.DLG_SZE(self, 200, 50),
+                               (10, 115),
+                               (200, 50),
                                wx.TE_MULTILINE | wx.TE_READONLY)
 
         for item in theTests:
             self.list.Append(item[0])
 
+        hsizer = wx.BoxSizer(wx.HORIZONTAL)
+        hsizer.Add(self.list, 1, wx.ALL, 8)
+        hsizer.Add(btn, 0, wx.ALL, 8)
+        vsizer = wx.BoxSizer(wx.VERTICAL)
+        vsizer.Add(hsizer)
+        vsizer.Add(self.text, 1, wx.EXPAND | wx.ALL, 8)
+        self.SetSizerAndFit(vsizer)
+
 
     def OnSelect(self, event):
         pos = self.list.GetSelection()
         self.text.SetValue(theTests[pos][2])
-
 
     def OnDClick(self, event):
         pos = self.list.GetSelection()

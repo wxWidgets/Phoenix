@@ -47,34 +47,26 @@ class TestPanel(wx.Panel):
 
         box = wx.BoxSizer(wx.VERTICAL)
 
-        if not wx.USE_UNICODE:
-            self.AddLine(box)
-            self.AddText(box, "Sorry, this wxPython was not built with Unicode support.",
-                         font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD))
-            self.AddLine(box)
+        font = self.GetFont()
+        font.SetPointSize(14)
+        font.SetWeight(wx.BOLD)
 
-        else:
-            font = self.GetFont()
-            font.SetPointSize(14)
-            font.SetWeight(wx.BOLD)
-            
-            self.AddLine(box)
-            self.AddText(box, chi_uni[0], chi_uni[1], 'Chinese:', font)
-            self.AddLine(box)
+        self.AddLine(box)
+        self.AddText(box, chi_uni[0], chi_uni[1], 'Chinese:', font)
+        self.AddLine(box)
 
-            self.AddText(box, lt1_uni[0], lt1_uni[1], 'Lithuanian:', font)
-            self.AddLine(box)
-            self.AddText(box, lt2_uni[0], lt2_uni[1], 'Lithuanian:', font)
-            self.AddLine(box)
+        self.AddText(box, lt1_uni[0], lt1_uni[1], 'Lithuanian:', font)
+        self.AddLine(box)
+        self.AddText(box, lt2_uni[0], lt2_uni[1], 'Lithuanian:', font)
+        self.AddLine(box)
 
-            self.AddText(box, kor_uni[0], kor_uni[1], 'Korean:', font)
-            self.AddLine(box)
+        self.AddText(box, kor_uni[0], kor_uni[1], 'Korean:', font)
+        self.AddLine(box)
 
-            self.AddText(box, bul_uni[0], bul_uni[1], 'Bulgarian:', font)
-            self.AddLine(box)
-            self.AddText(box, rus_uni[0], rus_uni[1], 'Russian:', font)
-            self.AddLine(box)
-
+        self.AddText(box, bul_uni[0], bul_uni[1], 'Bulgarian:', font)
+        self.AddLine(box)
+        self.AddText(box, rus_uni[0], rus_uni[1], 'Russian:', font)
+        self.AddLine(box)
 
         border = wx.BoxSizer(wx.VERTICAL)
         border.Add(box, 1, wx.EXPAND|wx.ALL, 10)
@@ -123,15 +115,15 @@ This demo shows how Unicode can be used to support text in many different
 languages using one locale when Unicode is enabled.</p>
 
 <p>So what is the difference between the ANSI and Unicode builds?</p>
- 
-<p>If ANSI is used, Python strings (bytes) are always used, and you can only 
+
+<p>If ANSI is used, Python strings (bytes) are always used, and you can only
 display strings that use either the ASCII encoding, or the system's default
-encoding. Any attempt to display other strings will result in garbled 
+encoding. Any attempt to display other strings will result in garbled
 characters.<p>
 
 <p>When unicode is enabled, then all functions and methods in wxPython
-that return a wxString will return an Python unicode object, and parameters 
-that expect a wxString can accept either a Python string or unicode object. (<b>NOTE:</b> If you aren't familiar with the difference between Python 
+that return a wxString will return an Python unicode object, and parameters
+that expect a wxString can accept either a Python string or unicode object. (<b>NOTE:</b> If you aren't familiar with the difference between Python
 strings and Unicode objects, you should view this <a href="http://effbot.org/zone/unicode-objects.htm">Python Unicode Object introduction</a>.)
 If a string object is passed then it will be decoded into unicode using the
 converter pointed to by wxConvCurrent, which will use the default

@@ -1,14 +1,15 @@
 
-import  wx
-import  wx.lib.popupctl as  pop
-import  wx.calendar     as  cal
+import wx
+import wx.adv
+import wx.lib.popupctl as pop
+from wx.adv import CalendarCtrl
 
 class TestDateControl(pop.PopupControl):
     def __init__(self,*_args,**_kwargs):
         pop.PopupControl.__init__(self, *_args, **_kwargs)
 
         self.win = wx.Window(self,-1,pos = (0,0),style = 0)
-        self.cal = cal.CalendarCtrl(self.win,-1,pos = (0,0))
+        self.cal = CalendarCtrl(self.win,-1,pos = (0,0))
 
         bz = self.cal.GetBestSize()
         self.win.SetSize(bz)
@@ -18,7 +19,7 @@ class TestDateControl(pop.PopupControl):
         self.SetPopupContent(self.win)
 
         # Event registration for date selection
-        self.cal.Bind(cal.EVT_CALENDAR,     self.OnCalSelected)
+        self.cal.Bind(wx.adv.EVT_CALENDAR,     self.OnCalSelected)
 
 
     # Method called when a day is selected in the calendar
@@ -52,7 +53,7 @@ class TestDateControl(pop.PopupControl):
             if d > 0 and d < 31:
                 if m >= 0 and m < 12:
                     if y > 1000:
-                        self.cal.SetDate(wx.DateTimeFromDMY(d,m,y))
+                        self.cal.SetDate(wx.DateTime.FromDMY(d,m,y))
                         didSet = True
 
         if not didSet:

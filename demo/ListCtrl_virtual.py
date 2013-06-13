@@ -7,7 +7,7 @@ import  images
 class TestVirtualList(wx.ListCtrl):
     def __init__(self, parent, log):
         wx.ListCtrl.__init__(
-            self, parent, -1, 
+            self, parent, -1,
             style=wx.LC_REPORT|wx.LC_VIRTUAL|wx.LC_HRULES|wx.LC_VRULES
             )
 
@@ -41,17 +41,16 @@ class TestVirtualList(wx.ListCtrl):
 
 
     def makeBlank(self):
-        empty = wx.EmptyBitmap(16,16,32)
+        empty = wx.Bitmap(16,16,32)
         dc = wx.MemoryDC(empty)
         dc.SetBackground(wx.Brush((0,0,0,0)))
         dc.Clear()
         del dc
         empty.SetMaskColour((0,0,0))
         return empty
-    
 
     def OnItemSelected(self, event):
-        self.currentItem = event.m_itemIndex
+        self.currentItem = event.Index
         self.log.WriteText('OnItemSelected: "%s", "%s", "%s", "%s"\n' %
                            (self.currentItem,
                             self.GetItemText(self.currentItem),
@@ -59,7 +58,7 @@ class TestVirtualList(wx.ListCtrl):
                             self.getColumnText(self.currentItem, 2)))
 
     def OnItemActivated(self, event):
-        self.currentItem = event.m_itemIndex
+        self.currentItem = event.Index
         self.log.WriteText("OnItemActivated: %s\nTopItem: %s\n" %
                            (self.GetItemText(self.currentItem), self.GetTopItem()))
 
@@ -68,7 +67,7 @@ class TestVirtualList(wx.ListCtrl):
         return item.GetText()
 
     def OnItemDeselected(self, evt):
-        self.log.WriteText("OnItemDeselected: %s" % evt.m_itemIndex)
+        self.log.WriteText("OnItemDeselected: %s" % evt.Index)
 
 
     #-----------------------------------------------------------------
@@ -97,24 +96,24 @@ class TestVirtualList(wx.ListCtrl):
 class TestVirtualListPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
-        
+
         self.log = log
         sizer = wx.BoxSizer(wx.VERTICAL)
-        
+
         if wx.Platform == "__WXMAC__" and \
                hasattr(wx.GetApp().GetTopWindow(), "LoadDemo"):
             self.useNative = wx.CheckBox(self, -1, "Use native listctrl")
-            self.useNative.SetValue( 
+            self.useNative.SetValue(
                 not wx.SystemOptions.GetOptionInt("mac.listctrl.always_use_generic") )
             self.Bind(wx.EVT_CHECKBOX, self.OnUseNative, self.useNative)
             sizer.Add(self.useNative, 0, wx.ALL | wx.ALIGN_RIGHT, 4)
-            
+
         self.list = TestVirtualList(self, self.log)
         sizer.Add(self.list, 1, wx.EXPAND)
-        
+
         self.SetSizer(sizer)
         self.SetAutoLayout(True)
-        
+
     def OnUseNative(self, event):
         wx.SystemOptions.SetOptionInt("mac.listctrl.always_use_generic", not event.IsChecked())
         wx.GetApp().GetTopWindow().LoadDemo("ListCtrl_virtual")

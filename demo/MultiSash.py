@@ -1,7 +1,7 @@
 
-import  wx
-import  wx.lib.multisash    as  sash
-import  wx.stc              as  stc
+import wx
+import wx.lib.multisash as sash
+import wx.stc as stc
 
 #---------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ class TestWindow(stc.StyledTextCtrl):
 
     # shared document reference
     doc = None
-    
+
     def __init__(self, parent):
         stc.StyledTextCtrl.__init__(self, parent, -1, style=wx.NO_BORDER)
         self.SetMarginWidth(1,0)
@@ -43,21 +43,21 @@ class TestWindow(stc.StyledTextCtrl):
 
         self.StyleSetFont(
             stc.STC_STYLE_DEFAULT,
-            wx.Font(fSize, wx.MODERN, wx.NORMAL, wx.NORMAL)
+            wx.Font(fSize, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
             )
 
-        if self.doc:
-            self.SetDocPointer(self.doc)
-        else:
-            self.SetText(sampleText)
-            TestWindow.doc = self.GetDocPointer()
-            
+        ## if self.doc:
+            ## self.SetDocPointer(self.doc)
+        ## else:
+        self.SetText(sampleText)
+        TestWindow.doc = self.GetDocPointer()
+
 
     def ShutDownDemo(self):
         # Reset doc reference in case this demo is run again
         TestWindow.doc = None
 
-        
+
 #---------------------------------------------------------------------------
 
 

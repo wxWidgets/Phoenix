@@ -5,11 +5,11 @@ import  wx
 
 class TestComboBox(wx.Panel):
     def OnSetFocus(self, evt):
-        print "OnSetFocus"
+        # print("OnSetFocus")
         evt.Skip()
 
     def OnKillFocus(self, evt):
-        print "OnKillFocus"
+        # print("OnKillFocus")
         evt.Skip()
 
     def __init__(self, parent, log):
@@ -24,7 +24,7 @@ class TestComboBox(wx.Panel):
         wx.StaticText(self, -1, "Select one:", (15, 50), (75, 18))
 
         # This combobox is created with a preset list of values.
-        cb = wx.ComboBox(self, 500, "default value", (90, 50), 
+        cb = wx.ComboBox(self, 500, "default value", (90, 50),
                          (160, -1), sampleList,
                          wx.CB_DROPDOWN
                          #| wx.TE_PROCESS_ENTER
@@ -80,13 +80,13 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-A ComboBox is like a combination of an edit control and a listbox. It can be 
-displayed as static list with editable or read-only text field; or a drop-down 
+A ComboBox is like a combination of an edit control and a listbox. It can be
+displayed as static list with editable or read-only text field; or a drop-down
 list with text field; or a drop-down list without a text field.
 
 This example shows both a preset ComboBox and one that is dynamically created
-(that is, it is initially empty but then we 'grow' it out of program-supplied 
-data). The former is common for read-only controls. 
+(that is, it is initially empty but then we 'grow' it out of program-supplied
+data). The former is common for read-only controls.
 
 This example also shows the two form factors for the ComboBox. The first is more
 common, and resembles a Choice control. The latter, although less common, shows

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import wx
+import wx.adv
 
 import ScrolledWindow
 
@@ -42,7 +43,7 @@ class MyParentFrame(wx.MDIParentFrame):
         self.Bind(wx.EVT_MENU, self.OnExit, id=ID_Menu_Exit)
 
         self.Bind(
-            wx.EVT_SASH_DRAGGED_RANGE, self.OnSashDrag, id=ID_WINDOW_TOP, 
+            wx.adv.EVT_SASH_DRAGGED_RANGE, self.OnSashDrag, id=ID_WINDOW_TOP,
             id2=ID_WINDOW_BOTTOM
             )
 
@@ -51,34 +52,34 @@ class MyParentFrame(wx.MDIParentFrame):
 
         # Create some layout windows
         # A window like a toolbar
-        win = wx.SashLayoutWindow(self, ID_WINDOW_TOP, style=wx.NO_BORDER|wx.SW_3D)
+        win = wx.adv.SashLayoutWindow(self, ID_WINDOW_TOP, style=wx.NO_BORDER|wx.adv.SW_3D)
         win.SetDefaultSize((1000, 30))
-        win.SetOrientation(wx.LAYOUT_HORIZONTAL)
-        win.SetAlignment(wx.LAYOUT_TOP)
+        win.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
+        win.SetAlignment(wx.adv.LAYOUT_TOP)
         win.SetBackgroundColour(wx.Colour(255, 0, 0))
-        win.SetSashVisible(wx.SASH_BOTTOM, True)
+        win.SetSashVisible(wx.adv.SASH_BOTTOM, True)
 
         self.topWindow = win
 
 
         # A window like a statusbar
-        win = wx.SashLayoutWindow(self, ID_WINDOW_BOTTOM, style=wx.NO_BORDER|wx.SW_3D)
+        win = wx.adv.SashLayoutWindow(self, ID_WINDOW_BOTTOM, style=wx.NO_BORDER|wx.adv.SW_3D)
         win.SetDefaultSize((1000, 30))
-        win.SetOrientation(wx.LAYOUT_HORIZONTAL)
-        win.SetAlignment(wx.LAYOUT_BOTTOM)
+        win.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
+        win.SetAlignment(wx.adv.LAYOUT_BOTTOM)
         win.SetBackgroundColour(wx.Colour(0, 0, 255))
-        win.SetSashVisible(wx.SASH_TOP, True)
+        win.SetSashVisible(wx.adv.SASH_TOP, True)
 
         self.bottomWindow = win
 
 
         # A window to the left of the client window
-        win =  wx.SashLayoutWindow(self, ID_WINDOW_LEFT1, style=wx.NO_BORDER|wx.SW_3D)
+        win =  wx.adv.SashLayoutWindow(self, ID_WINDOW_LEFT1, style=wx.NO_BORDER|wx.adv.SW_3D)
         win.SetDefaultSize((120, 1000))
-        win.SetOrientation(wx.LAYOUT_VERTICAL)
-        win.SetAlignment(wx.LAYOUT_LEFT)
+        win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
+        win.SetAlignment(wx.adv.LAYOUT_LEFT)
         win.SetBackgroundColour(wx.Colour(0, 255, 0))
-        win.SetSashVisible(wx.SASH_RIGHT, True)
+        win.SetSashVisible(wx.adv.SASH_RIGHT, True)
         win.SetExtraBorderSize(10)
         textWindow = wx.TextCtrl(win, -1, "", style=wx.TE_MULTILINE|wx.SUNKEN_BORDER)
         textWindow.SetValue("A sub window")
@@ -87,22 +88,22 @@ class MyParentFrame(wx.MDIParentFrame):
 
 
         # Another window to the left of the client window
-        win = wx.SashLayoutWindow(self, ID_WINDOW_LEFT2, style=wx.NO_BORDER|wx.SW_3D)
+        win = wx.adv.SashLayoutWindow(self, ID_WINDOW_LEFT2, style=wx.NO_BORDER|wx.adv.SW_3D)
         win.SetDefaultSize((120, 1000))
-        win.SetOrientation(wx.LAYOUT_VERTICAL)
-        win.SetAlignment(wx.LAYOUT_LEFT)
+        win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
+        win.SetAlignment(wx.adv.LAYOUT_LEFT)
         win.SetBackgroundColour(wx.Colour(0, 255, 255))
-        win.SetSashVisible(wx.SASH_RIGHT, True)
+        win.SetSashVisible(wx.adv.SASH_RIGHT, True)
 
         self.leftWindow2 = win
 
 
     def OnSashDrag(self, event):
-        if event.GetDragStatus() == wx.SASH_STATUS_OUT_OF_RANGE:
+        if event.GetDragStatus() == wx.adv.SASH_STATUS_OUT_OF_RANGE:
             return
 
         eID = event.GetId()
-        
+
         if eID == ID_WINDOW_TOP:
             self.topWindow.SetDefaultSize((1000, event.GetDragRect().height))
 
@@ -115,12 +116,12 @@ class MyParentFrame(wx.MDIParentFrame):
         elif eID == ID_WINDOW_BOTTOM:
             self.bottomWindow.SetDefaultSize((1000, event.GetDragRect().height))
 
-        wx.LayoutAlgorithm().LayoutMDIFrame(self)
+        wx.adv.LayoutAlgorithm().LayoutMDIFrame(self)
         self.GetClientWindow().Refresh()
 
 
     def OnSize(self, event):
-        wx.LayoutAlgorithm().LayoutMDIFrame(self)
+        wx.adv.LayoutAlgorithm().LayoutMDIFrame(self)
 
 
     def OnExit(self, evt):
@@ -139,6 +140,7 @@ class MyParentFrame(wx.MDIParentFrame):
 if __name__ == '__main__':
     class MyApp(wx.App):
         def OnInit(self):
+            wx.InitAllImageHandlers()
             frame = MyParentFrame()
             frame.Show(True)
             self.SetTopWindow(frame)

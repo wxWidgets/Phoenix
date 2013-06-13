@@ -1,5 +1,5 @@
 #
-# Note: this module is not a demo per se, but is used by many of 
+# Note: this module is not a demo per se, but is used by many of
 # the demo modules for various purposes.
 #
 

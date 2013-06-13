@@ -25,7 +25,7 @@ class PeakMeterCtrlDemo(wx.Panel):
         self.log = log
 
         self.mainPanel = wx.Panel(self)
-        
+
         # Initialize Peak Meter control 1
         self.vertPeak = PM.PeakMeterCtrl(self.mainPanel, -1, style=wx.SIMPLE_BORDER, agwStyle=PM.PM_VERTICAL)
         # Initialize Peak Meter control 2
@@ -39,19 +39,19 @@ class PeakMeterCtrlDemo(wx.Panel):
         self.falloffCheck = wx.CheckBox(self.mainPanel, -1, "Show Falloff Effect")
 
         colour = self.mainPanel.GetBackgroundColour()
-        self.backColour = wx.ColourPickerCtrl(self.mainPanel, col=colour)
-        self.lowColour = wx.ColourPickerCtrl(self.mainPanel, col=wx.GREEN)
-        self.mediumColour = wx.ColourPickerCtrl(self.mainPanel, col=wx.NamedColour("yellow"))
-        self.highColour = wx.ColourPickerCtrl(self.mainPanel, col=wx.RED)
-        
+        self.backColour = wx.ColourPickerCtrl(self.mainPanel, colour=colour)
+        self.lowColour = wx.ColourPickerCtrl(self.mainPanel, colour=wx.GREEN)
+        self.mediumColour = wx.ColourPickerCtrl(self.mainPanel, colour=wx.YELLOW)
+        self.highColour = wx.ColourPickerCtrl(self.mainPanel, colour=wx.RED)
+
         self.timer = wx.Timer(self)
 
         self.SetProperties()
         self.DoLayout()
         self.BindEvents()
-        
 
-    def SetProperties(self):        
+
+    def SetProperties(self):
 
         self.vertPeak.SetMeterBands(10, 15)
         self.horzPeak.SetMeterBands(10, 15)
@@ -78,7 +78,7 @@ class PeakMeterCtrlDemo(wx.Panel):
 
         mainSizer.Add(horzSizer, 0, wx.EXPAND)
         mainSizer.Add(self.staticLine, 0, wx.EXPAND|wx.ALL, 5)
-        
+
         checkSizer.Add(self.gridCheck, 0, wx.EXPAND|wx.ALL, 5)
         checkSizer.Add(self.falloffCheck, 0, wx.EXPAND|wx.LEFT|wx.BOTTOM, 5)
 
@@ -102,7 +102,7 @@ class PeakMeterCtrlDemo(wx.Panel):
         bottomSizer.Add(colourSizer, 0, wx.EXPAND|wx.ALL, 5)
         bottomSizer.Add((0, 5))
         mainSizer.Add(bottomSizer, 0, wx.EXPAND|wx.BOTTOM|wx.RIGHT, 5)
-        
+
         self.mainPanel.SetSizer(mainSizer)
         mainSizer.Layout()
         frameSizer.Add(self.mainPanel, 1, wx.EXPAND)
@@ -126,7 +126,7 @@ class PeakMeterCtrlDemo(wx.Panel):
         # generate 15 random number and set them as data for the meter
         nElements = 15
         arrayData = []
-        
+
         for i in xrange(nElements):
             nRandom = random.randint(0, 100)
             arrayData.append(nRandom)
@@ -158,7 +158,7 @@ class PeakMeterCtrlDemo(wx.Panel):
         self.timer.Stop()
         self.vertPeak.Stop()
         self.horzPeak.Stop()
-        
+
 
     def OnPickColour(self, event):
 
@@ -172,7 +172,7 @@ class PeakMeterCtrlDemo(wx.Panel):
             high = self.highColour.GetColour()
             self.horzPeak.SetBandsColour(low, med, high)
 
-            
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

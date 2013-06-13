@@ -127,7 +127,7 @@ class LabelBookDemo(wx.Frame):
         self.Bind(LB.EVT_IMAGENOTEBOOK_PAGE_CLOSED, self.OnPageClosed)
 
 
-        statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        statusbar = self.CreateStatusBar(2)
         statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
         statusbar_fields = [("LabelBook & FlatImageBook wxPython Demo, Andrea Gavana @ 03 Nov 2006"),
@@ -483,25 +483,25 @@ class LabelBookDemo(wx.Frame):
 
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
-        fileMenu.AppendItem(item)
+        fileMenu.Append(item)
 
         item = wx.MenuItem(editMenu, wx.ID_ANY, "Add Page")
         self.Bind(wx.EVT_MENU, self.OnAddPage, item)
-        editMenu.AppendItem(item)
+        editMenu.Append(item)
 
         editMenu.AppendSeparator()
 
         item = wx.MenuItem(editMenu, wx.ID_ANY, "Delete Page")
         self.Bind(wx.EVT_MENU, self.OnDeletePage, item)
-        editMenu.AppendItem(item)
+        editMenu.Append(item)
 
         item = wx.MenuItem(editMenu, wx.ID_ANY, "Delete All Pages")
         self.Bind(wx.EVT_MENU, self.OnDeleteAllPages, item)
-        editMenu.AppendItem(item)
+        editMenu.Append(item)
 
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
-        helpMenu.AppendItem(item)
+        helpMenu.Append(item)
 
         menuBar.Append(fileMenu, "&File")
         menuBar.Append(editMenu, "&Edit")

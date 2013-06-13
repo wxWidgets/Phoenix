@@ -28,7 +28,7 @@ if 'mac-cg' in wx.PlatformInfo:
         ('wx.COPY', wx.COPY),
         ('wx.INVERT', wx.INVERT),
         ('wx.XOR', wx.XOR),
-    ]    
+    ]
 
 import images
 
@@ -118,9 +118,9 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-This class encapsulates a monochrome mask bitmap, where the masked area is black 
-and the unmasked area is white. When associated with a bitmap and drawn in a device 
-context, the unmasked area of the bitmap will be drawn, and the masked area will 
+This class encapsulates a monochrome mask bitmap, where the masked area is black
+and the unmasked area is white. When associated with a bitmap and drawn in a device
+context, the unmasked area of the bitmap will be drawn, and the masked area will
 not be drawn.
 
 This example shows not only how to create a Mask, but the effects of the Device

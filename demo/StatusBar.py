@@ -2,6 +2,8 @@
 import  time
 import  wx
 
+RELATIVEWIDTHS = False
+
 #---------------------------------------------------------------------------
 
 class CustomStatusBar(wx.StatusBar):
@@ -10,8 +12,11 @@ class CustomStatusBar(wx.StatusBar):
 
         # This status bar has three fields
         self.SetFieldsCount(3)
-        # Sets the three fields to be relative widths to each other.
-        self.SetStatusWidths([-2, -1, -2])
+        if RELATIVEWIDTHS:
+            # Sets the three fields to be relative widths to each other.
+            self.SetStatusWidths([-2, -1, -2])
+        else:
+            self.SetStatusWidths([-2, 90, 140])
         self.log = log
         self.sizeChanged = False
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -28,8 +33,7 @@ class CustomStatusBar(wx.StatusBar):
         # set the initial position of the checkbox
         self.Reposition()
 
-        # We're going to use a timer to drive a 'clock' in the last
-        # field.
+        # We're going to use a timer to drive a 'clock' in the last field.
         self.timer = wx.PyTimer(self.Notify)
         self.timer.Start(1000)
         self.Notify()
@@ -70,12 +74,12 @@ class CustomStatusBar(wx.StatusBar):
 
     # reposition the checkbox
     def Reposition(self):
-        rect = self.GetFieldRect(1)
-        rect.x += 1
-        rect.y += 1
-        self.cb.SetRect(rect)
+        # sw0 = self.GetStatusWidth(0)
+        sw1 = self.GetStatusWidth(1)
+        sw2 = self.GetStatusWidth(2)
+        sz = self.GetSize()
+        self.cb.SetPosition((sz[0] - sw2 - sw1 - 25, 4))
         self.sizeChanged = False
-
 
 
 class TestCustomStatusBar(wx.Frame):
@@ -124,7 +128,7 @@ overview = """\
 A status bar is a narrow window that can be placed along the bottom of
 a frame to give small amounts of status information. It can contain
 one or more fields, one or more of which can be variable length
-according to the size of the window.  
+according to the size of the window.
 
 This example demonstrates how to create a custom status bar with actual
 gadgets embedded in it. In this case, the first field is just plain text,

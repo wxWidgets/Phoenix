@@ -24,35 +24,32 @@ class DoodlePad(wx.Window):
     def SetMode(self, mode):
         self.mode = mode
         if self.mode == "Draw":
-            self.SetCursor(wx.StockCursor(wx.CURSOR_PENCIL))
+            self.SetCursor(wx.Cursor(wx.CURSOR_PENCIL))
         else:
             self.SetCursor(wx.STANDARD_CURSOR)
-
 
     def OnPaint(self, event):
         dc = wx.PaintDC(self)
         self.DrawSavedLines(dc)
 
     def DrawSavedLines(self, dc):
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
         dc.SetPen(wx.Pen(wx.BLUE, 3))
         for line in self.lines:
             for coords in line:
                 dc.DrawLine(*coords)
-        dc.EndDrawing()
-
+        # dc.EndDrawing()
 
     def OnLeftDown(self, event):
         if self.mode == "Drag":
             self.StartDragOpperation()
         elif self.mode == "Draw":
             self.curLine = []
-            self.x, self.y = event.GetPositionTuple()
+            self.x, self.y = event.GetPosition()
             self.CaptureMouse()
         else:
             wx.Bell()
             self.log.write("unknown mode!\n")
-
 
     def OnLeftUp(self, event):
         if self.HasCapture():
@@ -67,14 +64,14 @@ class DoodlePad(wx.Window):
     def OnMotion(self, event):
         if self.HasCapture() and event.Dragging() and not self.mode == "Drag":
             dc = wx.ClientDC(self)
-            dc.BeginDrawing()
+            # dc.BeginDrawing()
             dc.SetPen(wx.Pen(wx.BLUE, 3))
-            coords = (self.x, self.y) + event.GetPositionTuple()
+            evtPos = event.GetPosition()
+            coords = (self.x, self.y) + (evtPos.x, evtPos.y)
             self.curLine.append(coords)
             dc.DrawLine(*coords)
-            self.x, self.y = event.GetPositionTuple()
-            dc.EndDrawing()
-
+            self.x, self.y = event.GetPosition()
+            # dc.EndDrawing()
 
     def StartDragOpperation(self):
         # pickle the lines list
@@ -87,7 +84,7 @@ class DoodlePad(wx.Window):
 
         # Also create a Bitmap version of the drawing
         size = self.GetSize()
-        bmp = wx.EmptyBitmap(size.width, size.height)
+        bmp = wx.Bitmap(size.width, size.height)
         dc = wx.MemoryDC()
         dc.SelectObject(bmp)
         dc.SetBackground(wx.WHITE_BRUSH)
@@ -153,7 +150,6 @@ class DoodleDropTarget(wx.DropTarget):
         return d
 
 
-
     # Called when OnDrop returns True.  We need to get the data and
     # do something with it.
     def OnData(self, x, y, d):
@@ -165,12 +161,11 @@ class DoodleDropTarget(wx.DropTarget):
             linesdata = self.data.GetData()
             lines = cPickle.loads(linesdata)
             self.dv.SetLines(lines)
-            
+
         # what is returned signals the source what to do
         # with the original data (move, copy, etc.)  In this
         # case we just return the suggested value given to us.
-        return d  
-        
+        return d
 
 
 class DoodleViewer(wx.Window):
@@ -194,13 +189,13 @@ class DoodleViewer(wx.Window):
         self.DrawSavedLines(dc)
 
     def DrawSavedLines(self, dc):
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
         dc.SetPen(wx.Pen(wx.RED, 3))
 
         for line in self.lines:
             for coords in line:
                 dc.DrawLine(*coords)
-        dc.EndDrawing()
+        # dc.EndDrawing()
 
 #----------------------------------------------------------------------
 
@@ -300,13 +295,14 @@ def runTest(frame, nb, log):
 
 if __name__ == '__main__':
     import sys
-    
+
     class DummyLog:
         def WriteText(self, text):
             sys.stdout.write(text)
 
     class TestApp(wx.App):
         def OnInit(self):
+            wx.InitAllImageHandlers()
             self.MakeFrame()
             return True
 

@@ -46,9 +46,9 @@ class TestPanel(wx.Panel):
         b.SetMinSize(wx.DefaultSize)
         b.SetBackgroundColour("Navy")
         b.SetForegroundColour(wx.WHITE)
-        b.SetToolTipString("This is a BIG button...")
+        b.SetToolTip("This is a BIG button...")
         # let the sizer set best size
-        sizer.Add(b, flag=wx.ADJUST_MINSIZE) 
+        sizer.Add(b, flag=wx.ADJUST_MINSIZE)
 
         # An image button
         bmp = images.Test2.GetBitmap()
@@ -138,8 +138,8 @@ class TestPanel(wx.Panel):
         b = buttons.ThemedGenToggleButton(self, -1, 'native renderered toggle')
         self.Bind(wx.EVT_BUTTON, self.OnButton, b)
         vbox.Add(b, 0, wx.ALL, 5)
-        
-        
+
+
 
         border = wx.BoxSizer(wx.VERTICAL)
         border.Add(sizer, 0, wx.ALL, 25)

@@ -29,7 +29,7 @@ class TestPanel(wx.Panel):
         box.Add(ch, 0,  wx.ALIGN_CENTER_VERTICAL)
         box.Add((50,10))
 
-        bmp = wx.EmptyBitmap(32,22)
+        bmp = wx.Bitmap(32,22)
         self.bmpFlag = wx.StaticBitmap(self, -1, bmp)
         box.Add(self.bmpFlag, 0, wx.ALIGN_CENTER_VERTICAL)
         
@@ -53,8 +53,8 @@ class TestPanel(wx.Panel):
 
     def getArt(self):
         bmp = wx.ArtProvider.GetBitmap('wx.ART_'+self.country, wx.ART_OTHER, (32,22))
-        if not bmp.Ok():
-            bmp = wx.EmptyBitmap(32,22)
+        if not bmp.IsOk():
+            bmp = wx.Bitmap(32,22)
             self.clearBmp(bmp)
         self.bmpFlag.SetBitmap(bmp)
         

@@ -40,7 +40,7 @@ class TestPanel(wx.Panel):
                   style = wx.DEFAULT_FRAME_STYLE)
         win.Show(True)
 
-        
+
 
 #---------------------------------------------------------------------------
 
@@ -54,14 +54,14 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-A Frame is a window whose size and position can (usually) be changed by 
-the user. It usually has thick borders and a title bar, and can optionally 
-contain a menu bar, toolbar and status bar. A frame can contain any window 
-that is not a Frame or Dialog. It is one of the most fundamental of the 
-wxWindows components. 
+A Frame is a window whose size and position can (usually) be changed by
+the user. It usually has thick borders and a title bar, and can optionally
+contain a menu bar, toolbar and status bar. A frame can contain any window
+that is not a Frame or Dialog. It is one of the most fundamental of the
+wxWindows components.
 
-A Frame that has a status bar and toolbar created via the 
-<code>CreateStatusBar</code> / <code>CreateToolBar</code> functions manages 
+A Frame that has a status bar and toolbar created via the
+<code>CreateStatusBar</code> / <code>CreateToolBar</code> functions manages
 these windows, and adjusts the value returned by <code>GetClientSize</code>
 to reflect the remaining size available to application windows.
 

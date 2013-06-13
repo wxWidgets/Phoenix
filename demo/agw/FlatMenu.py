@@ -27,7 +27,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 import images
 
 if wx.VERSION >= (2,7,0,0):
-    import wx.aui as AUI
+    import wx.lib.agw.aui as AUI
     AuiPaneInfo = AUI.AuiPaneInfo
     AuiManager = AUI.AuiManager
     _hasAUI = True
@@ -76,14 +76,14 @@ def switchRGBtoBGR(colour):
 def CreateBackgroundBitmap():
 
     mem_dc = wx.MemoryDC()
-    bmp = wx.EmptyBitmap(200, 300)
+    bmp = wx.Bitmap(200, 300)
     mem_dc.SelectObject(bmp)
 
     mem_dc.Clear()
-    
+
     # colour the menu face with background colour
-    top = wx.NamedColour("blue")
-    bottom = wx.NamedColour("light blue")
+    top = wx.Colour("blue")
+    bottom = wx.Colour("light blue")
     filRect = wx.Rect(0, 0, 200, 300)
     mem_dc.GradientFillConcentric(filRect, top, bottom, wx.Point(100, 150))
 
@@ -96,7 +96,7 @@ def CreateBackgroundBitmap():
 
 class FM_MyRenderer(FM.FMRenderer):
     """ My custom style. """
-    
+
     def __init__(self):
 
         FM.FMRenderer.__init__(self)
@@ -104,13 +104,13 @@ class FM_MyRenderer(FM.FMRenderer):
 
     def DrawMenuButton(self, dc, rect, state):
         """Draws the highlight on a FlatMenu"""
-        
+
         self.DrawButton(dc, rect, state)
-        
-        
+
+
     def DrawMenuBarButton(self, dc, rect, state):
         """Draws the highlight on a FlatMenuBar"""
-        
+
         self.DrawButton(dc, rect, state)
 
 
@@ -172,17 +172,17 @@ class FlatMenuDemo(wx.Frame):
                           wx.NO_FULL_REPAINT_ON_RESIZE)
 
         self.SetIcon(images.Mondrian.GetIcon())
-        wx.SystemOptions_SetOption("msw.remap", "0")
+        wx.SystemOptions.SetOption("msw.remap", "0")
         self.SetTitle("FlatMenu wxPython Demo ;-D")
 
         if _hasAUI:
             self._mgr = AuiManager()
             self._mgr.SetManagedWindow(self)
-            
+
         self._popUpMenu = None
 
         mainSizer = wx.BoxSizer(wx.VERTICAL)
-        
+
         # Create a main panel and place some controls on it
         mainPanel = wx.Panel(self, wx.ID_ANY)
 
@@ -198,7 +198,7 @@ class FlatMenuDemo(wx.Frame):
 
         # Add log window
         self.log = log
-        
+
         hs = wx.BoxSizer(wx.HORIZONTAL)
         btn = wx.Button(mainPanel, wx.ID_ANY, "Press me for pop up menu!")
         hs.Add(btn, 0, wx.ALL, 5)
@@ -210,11 +210,11 @@ class FlatMenuDemo(wx.Frame):
         hs.Add(btn, 0, wx.ALL, 5)
 
         panelSizer.Add(hs, 0, wx.ALL, 5)
-        
+
         # Connect a button
         btn.Bind(wx.EVT_BUTTON, self.OnLongButtonClicked)
 
-        statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        statusbar = self.CreateStatusBar(2)
         statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
         statusbar_fields = [("FlatMenu wxPython Demo, Andrea Gavana @ 01 Nov 2006"),
@@ -222,7 +222,7 @@ class FlatMenuDemo(wx.Frame):
 
         for i in range(len(statusbar_fields)):
             statusbar.SetStatusText(statusbar_fields[i], i)
-            
+
         self.CreateMenu()
         self.ConnectEvents()
 
@@ -235,14 +235,14 @@ class FlatMenuDemo(wx.Frame):
             # AUI support
             self._mgr.AddPane(mainPanel, AuiPaneInfo().Name("main_panel").
                               CenterPane())
-            
+
             self._mgr.AddPane(minibarPanel, AuiPaneInfo().Name("minibar_panel").
                               Caption("Minibar Preview").Right().
                               MinSize(wx.Size(150, 200)))
-            
+
             self._mb.PositionAUI(self._mgr)
             self._mgr.Update()
-       
+
         ArtManager.Get().SetMBVerticalGradient(True)
         ArtManager.Get().SetRaiseToolbar(False)
 
@@ -250,8 +250,8 @@ class FlatMenuDemo(wx.Frame):
         self._mtb.Refresh()
 
         self.CenterOnScreen()
-        
-        
+
+
     def CreateMinibar(self, parent):
         # create mini toolbar
         self._mtb = FM.FlatMenuBar(parent, wx.ID_ANY, 16, 6, options = FM_OPT_SHOW_TOOLBAR|FM_OPT_MINIBAR)
@@ -270,7 +270,7 @@ class FlatMenuDemo(wx.Frame):
         self._mtb.AddRadioTool(wx.ID_ANY, "Zoom In", viewMagZoomBmp)
         self._mtb.AddRadioTool(wx.ID_ANY, "Zoom Out", viewMagZoomOutBmp)
 
-        
+
     def CreateMenu(self):
 
         # Create the menubar
@@ -302,7 +302,7 @@ class FlatMenuDemo(wx.Frame):
         view2Bmp = wx.Bitmap(os.path.join(bitmapDir, "view_detailed.png"), wx.BITMAP_TYPE_PNG)
         view3Bmp = wx.Bitmap(os.path.join(bitmapDir, "view_icon.png"), wx.BITMAP_TYPE_PNG)
         view4Bmp = wx.Bitmap(os.path.join(bitmapDir, "view_multicolumn.png"), wx.BITMAP_TYPE_PNG)
-        
+
         # Set an icon to the exit/help/transparency menu item
         exitImg = wx.Bitmap(os.path.join(bitmapDir, "exit-16.png"), wx.BITMAP_TYPE_PNG)
         helpImg = wx.Bitmap(os.path.join(bitmapDir, "help-16.png"), wx.BITMAP_TYPE_PNG)
@@ -324,26 +324,26 @@ class FlatMenuDemo(wx.Frame):
         item = FM.FlatMenuItem(fileMenu, MENU_SAVE, "&Save File\tCtrl+S", "Save File", wx.ITEM_NORMAL)
         fileMenu.AppendItem(item)
         self._mb.AddTool(MENU_SAVE, "Save File", save_bmp)
-        
+
         item = FM.FlatMenuItem(fileMenu, MENU_OPEN_FILE, "&Open File\tCtrl+O", "Open File", wx.ITEM_NORMAL)
         fileMenu.AppendItem(item)
         self._mb.AddTool(MENU_OPEN_FILE, "Open File", open_folder_bmp)
         self._mb.AddSeparator()   # Toolbar separator
-        
+
         item = FM.FlatMenuItem(fileMenu, MENU_NEW_FOLDER, "N&ew Folder\tCtrl+E", "New Folder", wx.ITEM_NORMAL)
         fileMenu.AppendItem(item)
 
         self._mb.AddTool(MENU_NEW_FOLDER, "New Folder",new_folder_bmp)
         self._mb.AddSeparator()   # Toobar separator
-        
+
         item = FM.FlatMenuItem(fileMenu, MENU_COPY, "&Copy\tCtrl+C", "Copy", wx.ITEM_NORMAL)
         fileMenu.AppendItem(item)
         self._mb.AddTool(MENU_COPY, "Copy", copy_bmp)
-        
+
         item = FM.FlatMenuItem(fileMenu, MENU_CUT, "Cut\tCtrl+X", "Cut", wx.ITEM_NORMAL)
         fileMenu.AppendItem(item)
         self._mb.AddTool(MENU_CUT, "Cut", cut_bmp)
-        
+
         item = FM.FlatMenuItem(fileMenu, MENU_PASTE, "Paste\tCtrl+V", "Paste", wx.ITEM_NORMAL, subMenuExit)
         fileMenu.AppendItem(item)
         self._mb.AddTool(MENU_PASTE, "Paste", paste_bmp)
@@ -353,14 +353,14 @@ class FlatMenuDemo(wx.Frame):
         # Add a wx.ComboBox to FlatToolbar
         combo = wx.ComboBox(self._mb, -1, choices=["Hello", "World", "wxPython"])
         self._mb.AddControl(combo)
-        
+
         self._mb.AddSeparator()   # Separator
-        
+
         stext = wx.StaticText(self._mb, -1, "Hello")
         #stext.SetBackgroundStyle(wx.BG_STYLE_CUSTOM )
-        
+
         self._mb.AddControl(stext)
-        
+
         self._mb.AddSeparator()   # Separator
 
         # Add another couple of bitmaps
@@ -368,7 +368,7 @@ class FlatMenuDemo(wx.Frame):
         self._mb.AddRadioTool(wx.ID_ANY, "View Icons", view2Bmp)
         self._mb.AddRadioTool(wx.ID_ANY, "View Details", view3Bmp)
         self._mb.AddRadioTool(wx.ID_ANY, "View Multicolumn", view4Bmp)
-        
+
         # Add non-toolbar item
         item = FM.FlatMenuItem(subMenuExit, wx.ID_EXIT, "E&xit\tAlt+X", "Exit demo", wx.ITEM_NORMAL, None, exitImg)
         subMenuExit.AppendItem(item)
@@ -380,11 +380,11 @@ class FlatMenuDemo(wx.Frame):
         item = FM.FlatMenuItem(styleMenu, MENU_STYLE_DEFAULT, "Menu style Default\tAlt+N", "Menu style Default", wx.ITEM_RADIO)
         styleMenu.AppendItem(item)
         item.Check(True)
-        
+
         item = FM.FlatMenuItem(styleMenu, MENU_STYLE_MY, "Menu style Custom \tAlt+C", "Menu style Custom", wx.ITEM_RADIO)
         styleMenu.AppendItem(item)
 
-        item = FM.FlatMenuItem(styleMenu, MENU_STYLE_XP, "Menu style XP\tAlt+P", "Menu style XP", wx.ITEM_RADIO)        
+        item = FM.FlatMenuItem(styleMenu, MENU_STYLE_XP, "Menu style XP\tAlt+P", "Menu style XP", wx.ITEM_RADIO)
         styleMenu.AppendItem(item)
 
         item = FM.FlatMenuItem(styleMenu, MENU_STYLE_2007, "Menu style 2007\tAlt+O", "Menu style 2007", wx.ITEM_RADIO)
@@ -399,21 +399,21 @@ class FlatMenuDemo(wx.Frame):
         # Demonstrate how to set custom font and text colour to a FlatMenuItem
         item.SetFont(wx.Font(10, wx.SWISS, wx.ITALIC, wx.BOLD, False, "Courier New"))
         item.SetTextColour(wx.RED)
-        
+
         item.Check(True)
         styleMenu.AppendItem(item)
-        
+
         styleMenu.AppendSeparator()
         item = FM.FlatMenuItem(styleMenu, MENU_LCD_MONITOR, "Use LCD monitors option", "Instructs FlatMenu to use LCD drawings", wx.ITEM_CHECK)
         styleMenu.AppendItem(item)
-        
+
         # Add some radio items
         styleMenu.AppendSeparator()
         # Add sub-menu to main menu
         item = FM.FlatMenuItem(styleMenu, wx.ID_ANY, "Sub-&menu radio items", "", wx.ITEM_NORMAL, subMenu1)
         styleMenu.AppendItem(item)
         item.SetContextMenu(context_menu)
-        
+
         item = FM.FlatMenuItem(subMenu1, wx.ID_ANY, "Radio Item 1", "Radio Item 1", wx.ITEM_RADIO)
         subMenu1.AppendItem(item)
 
@@ -431,10 +431,10 @@ class FlatMenuDemo(wx.Frame):
         editMenu.AppendItem(item)
 
         editMenu.AppendSeparator()
-        
+
         item = FM.FlatMenuItem(editMenu, MENU_TRANSPARENCY, "Set FlatMenu transparency...", "Sets the FlatMenu transparency",
                                wx.ITEM_NORMAL, None, ghostBmp)
-        
+
         editMenu.AppendItem(item)
 
         # Add some dummy entries to the sub menu
@@ -442,7 +442,7 @@ class FlatMenuDemo(wx.Frame):
         item = FM.FlatMenuItem(editMenu, 9001, "Sub-&menu items", "", wx.ITEM_NORMAL, subMenu)
         editMenu.AppendItem(item)
 
-        # Create the submenu items and add them 
+        # Create the submenu items and add them
         item = FM.FlatMenuItem(subMenu, 9002, "&Sub-menu Item 1", "", wx.ITEM_NORMAL)
         subMenu.AppendItem(item)
 
@@ -471,7 +471,7 @@ class FlatMenuDemo(wx.Frame):
                 col = random.randint(0, 2)
                 item.SetFont(fnt)
                 item.SetTextColour(colours[col])
-                
+
             multipleMenu.AppendItem(item)
 
         multipleMenu.SetNumberColumns(2)
@@ -487,7 +487,7 @@ class FlatMenuDemo(wx.Frame):
         helpMenu.AppendItem(item)
 
         fileMenu.SetBackgroundBitmap(CreateBackgroundBitmap())
-        
+
         # Add menu to the menu bar
         self._mb.Append(fileMenu, "&File")
         self._mb.Append(styleMenu, "&Style")
@@ -513,25 +513,25 @@ class FlatMenuDemo(wx.Frame):
 
         self.Bind(FM.EVT_FLAT_MENU_ITEM_MOUSE_OVER, self.OnMouseOver, id=MENU_NEW_FILE)
         self.Bind(FM.EVT_FLAT_MENU_ITEM_MOUSE_OUT, self.OnMouseOut, id=MENU_NEW_FILE)
-        
+
         self.Bind(wx.EVT_UPDATE_UI, self.OnFlatMenuCmdUI, id=20001, id2=20013)
         if "__WXMAC__" in wx.Platform:
             self.Bind(wx.EVT_SIZE, self.OnSize)
 
         self.Bind(FM.EVT_FLAT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE9+1)
-        
-        
+
+
     def OnSize(self, event):
-        
+
         self._mgr.Update()
         self.Layout()
 
-        
+
     def OnQuit(self, event):
 
         if _hasAUI:
             self._mgr.UnInit()
-            
+
         self.Destroy()
 
 
@@ -548,19 +548,19 @@ class FlatMenuDemo(wx.Frame):
         btnSize = btn.GetSize()
         btnPt = btn.GetPosition()
 
-        # Since the btnPt (button position) is in client coordinates, 
+        # Since the btnPt (button position) is in client coordinates,
         # and the menu coordinates is relative to screen we convert
         # the coords
         btnPt = btn.GetParent().ClientToScreen(btnPt)
 
-        # A nice feature with the Popup menu, is the ability to provide an 
+        # A nice feature with the Popup menu, is the ability to provide an
         # object that we wish to handle the menu events, in this case we
         # pass 'self'
         # if we wish the menu to appear under the button, we provide its height
         self._popUpMenu.SetOwnerHeight(btnSize.y)
         self._popUpMenu.Popup(wx.Point(btnPt.x, btnPt.y), self)
 
-            
+
     def OnLongButtonClicked(self, event):
 
         # Demonstrate using the wxFlatMenu without a menu bar
@@ -573,20 +573,20 @@ class FlatMenuDemo(wx.Frame):
         # The menu should be positioned at the bottom left corner of the button.
         btnSize = btn.GetSize()
 
-        # btnPt is returned relative to its parent 
-        # so, we need to convert it to screen 
+        # btnPt is returned relative to its parent
+        # so, we need to convert it to screen
         btnPt  = btn.GetPosition()
         btnPt = btn.GetParent().ClientToScreen(btnPt)
 
         # if we wish the menu to appear under the button, we provide its height
         self._longPopUpMenu.SetOwnerHeight(btnSize.y)
         self._longPopUpMenu.Popup(wx.Point(btnPt.x, btnPt.y), self)
-        
+
 
     def CreatePopupMenu(self):
 
         if not self._popUpMenu:
-        
+
             self._popUpMenu = FM.FlatMenu()
             #-----------------------------------------------
             # Flat Menu test
@@ -616,10 +616,10 @@ class FlatMenuDemo(wx.Frame):
             menuItem = FM.FlatMenuItem(self._popUpMenu, 20004, "Sub-&menu item", "", wx.ITEM_NORMAL, subMenu)
             self._popUpMenu.AppendItem(menuItem)
 
-            # Create the submenu items and add them 
+            # Create the submenu items and add them
             menuItem = FM.FlatMenuItem(subMenu, 20005, "&Sub-menu Item 1", "", wx.ITEM_NORMAL)
             subMenu.AppendItem(menuItem)
-        
+
             menuItem = FM.FlatMenuItem(subMenu, 20006, "Su&b-menu Item 2", "", wx.ITEM_NORMAL)
             subMenu.AppendItem(menuItem)
 
@@ -629,10 +629,10 @@ class FlatMenuDemo(wx.Frame):
             menuItem = FM.FlatMenuItem(subMenu, 20008, "Sub-menu Item 4", "", wx.ITEM_NORMAL)
             subMenu.AppendItem(menuItem)
 
-            # Create the submenu items and add them 
+            # Create the submenu items and add them
             menuItem = FM.FlatMenuItem(subSubMenu, 20009, "Sub-menu Item 1", "", wx.ITEM_NORMAL)
             subSubMenu.AppendItem(menuItem)
-        
+
             menuItem = FM.FlatMenuItem(subSubMenu, 20010, "Sub-menu Item 2", "", wx.ITEM_NORMAL)
             subSubMenu.AppendItem(menuItem)
 
@@ -654,11 +654,11 @@ class FlatMenuDemo(wx.Frame):
 
         self._longPopUpMenu = FM.FlatMenu()
         sub = FM.FlatMenu()
-        
+
         #-----------------------------------------------
         # Flat Menu test
         #-----------------------------------------------
-        
+
         for ii in xrange(30):
             if ii == 0:
                 menuItem = FM.FlatMenuItem(self._longPopUpMenu, wx.ID_ANY, "Menu Item #%ld"%(ii+1), "", wx.ITEM_NORMAL, sub)
@@ -673,7 +673,7 @@ class FlatMenuDemo(wx.Frame):
 
                 menuItem = FM.FlatMenuItem(self._longPopUpMenu, wx.ID_ANY, "Menu Item #%ld"%(ii+1))
                 self._longPopUpMenu.AppendItem(menuItem)
-        
+
 # ------------------------------------------
 # Event handlers
 # ------------------------------------------
@@ -681,7 +681,7 @@ class FlatMenuDemo(wx.Frame):
     def OnStyle(self, event):
 
         eventId = event.GetId()
-        
+
         if eventId == MENU_STYLE_DEFAULT:
             self._mb.GetRendererManager().SetTheme(FM.StyleDefault)
         elif eventId == MENU_STYLE_2007:
@@ -698,17 +698,17 @@ class FlatMenuDemo(wx.Frame):
         self._mb.Refresh()
         self._mtb.Refresh()
         self.Update()
-        
+
 
     def OnShowCustom(self, event):
 
         self._mb.ShowCustomize(event.IsChecked())
-        
+
 
     def OnLCDMonitor(self, event):
 
         self._mb.SetLCDMonitor(event.IsChecked())
-        
+
 
     def OnTransparency(self, event):
 
@@ -722,7 +722,7 @@ class FlatMenuDemo(wx.Frame):
 
         value = dlg.GetValue()
         dlg.Destroy()
-        
+
         try:
             value = int(value)
         except:
@@ -736,20 +736,20 @@ class FlatMenuDemo(wx.Frame):
                                    wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
-            
+
         ArtManager.Get().SetTransparency(value)
-    
+
 
     def OnMouseOver(self, event):
 
         self.log.write("Received Flat menu mouse enter ID: %d\n"%(event.GetId()))
-        
+
 
     def OnMouseOut(self, event):
-        
+
         self.log.write("Received Flat menu mouse leave ID: %d\n"%(event.GetId()))
-        
-    
+
+
     def OnFlatMenuCmd(self, event):
 
         self.log.write("Received Flat menu command event ID: %d\n"%(event.GetId()))
@@ -767,9 +767,9 @@ class FlatMenuDemo(wx.Frame):
         userString = ""
         if dlg.ShowModal() == wx.ID_OK:
             userString = dlg.GetValue()
-        
+
         dlg.Destroy()
-        
+
         return userString
 
 
@@ -798,12 +798,12 @@ class FlatMenuDemo(wx.Frame):
 
 
     def OnEdit(self, event):
-        
+
         if event.GetId() == MENU_REMOVE_MENU:
 
             idxStr = self.GetStringFromUser("Insert menu index to remove:")
             if idxStr.strip() != "":
-            
+
                 idx = int(idxStr)
                 self._mb.Remove(idx)
 
@@ -826,7 +826,7 @@ class FlatMenuDemo(wx.Frame):
               "to Andrea Gavana at the following email addresses:\n\n" + \
               "andrea.gavana@gmail.com\nandrea.gavana@maerskoil.com\n\n" + \
               "Welcome to wxPython " + wx.VERSION_STRING + "!!"
-              
+
         dlg = wx.MessageDialog(self, msg, "FlatMenu wxPython Demo",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()

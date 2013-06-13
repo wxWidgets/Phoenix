@@ -24,13 +24,13 @@ class TestPanel(wx.Panel):
         
         self.recordBtn = buttons.GenToggleButton(self, -1, "Record")
         self.Bind(wx.EVT_BUTTON, self.OnToggleRecordKeys, self.recordBtn)
-        self.recordBtn.SetToolTipString(
+        self.recordBtn.SetToolTip(
             "Click this button and then type some keys in the\n"
             "textctrl.  Click here again when done.")
         
         self.playbackKeysBtn = buttons.GenButton(self, -1, "Playback")
         self.Bind(wx.EVT_BUTTON, self.OnPlaybackKeys, self.playbackKeysBtn)
-        self.playbackKeysBtn.SetToolTipString(
+        self.playbackKeysBtn.SetToolTip(
             "Record some key events and then click here to\n"
             "replay the recorded events.")
         self.playbackKeysBtn.Disable()
@@ -98,7 +98,7 @@ class TestPanel(wx.Panel):
             return
         evtInfo = ( evtType,
                     evt.KeyCode,
-                    evt.Modifiers,
+                    evt.GetModifiers(),
                     self.stopwatchKeys.Time(),
                     )
         self.keyEvents.append(evtInfo)

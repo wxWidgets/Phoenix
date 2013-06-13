@@ -10,7 +10,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.width, self.height = 120,120
-        
+
         self.MakeBitmapRGB(self.width, self.height)
         self.MakeBitmapRGBA(self.width, self.height)
         self.MakeBitmapRGBpA(self.width, self.height)
@@ -28,7 +28,6 @@ class TestPanel(wx.Panel):
         else:
             return r, g, b
 
-
     def MakeBitmapRGB(self, width, height):
         # Make a bitmap using an array of RGB bytes
         bpp = 3  # bytes per pixel
@@ -42,9 +41,7 @@ class TestPanel(wx.Panel):
                 bytes[offset + 1] = g
                 bytes[offset + 2] = b
 
-        self.rgbBmp = wx.BitmapFromBuffer(width, height, bytes)
-        
-
+        self.rgbBmp = wx.Bitmap().FromBuffer(width, height, bytes)
 
     def MakeBitmapRGBA(self, width, height):
         # Make a bitmap using an array of RGBA bytes
@@ -60,8 +57,7 @@ class TestPanel(wx.Panel):
                 bytes[offset + 2] = b
                 bytes[offset + 3] = a
 
-        self.rgbaBmp = wx.BitmapFromBufferRGBA(width, height, bytes)
-
+        self.rgbaBmp = wx.Bitmap().FromBufferRGBA(width, height, bytes)
 
     def MakeBitmapRGBpA(self, width, height):
         # Make a bitmap using an array of RGB bytes plus a separate
@@ -81,8 +77,7 @@ class TestPanel(wx.Panel):
         # pixels for this example, it could just as easily have
         # varying alpha values like the other sample.
         alpha = array.array('B', [128]*width*height)
-        self.rgbaBmp2 = wx.BitmapFromBuffer(width, height, bytes, alpha)
-
+        self.rgbaBmp2 = wx.Bitmap().FromBufferAndAlpha(width, height, bytes, alpha)
 
     def DrawBitmapAndMessage(self, dc, bmp, msg, x_, y_):
         x, y = x_, y_
@@ -96,7 +91,6 @@ class TestPanel(wx.Panel):
         # draw the bitmap over the text
         dc.DrawBitmap(bmp, x+15,y_+15, True)
 
-        
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
         self.DrawBitmapAndMessage(dc, self.rgbBmp,  "No alpha channel in this image", 30,35)
@@ -104,9 +98,6 @@ class TestPanel(wx.Panel):
         self.DrawBitmapAndMessage(dc, self.rgbaBmp2,"This one made with RGB+A", 180,220)
 
 
-        
-        
-        
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

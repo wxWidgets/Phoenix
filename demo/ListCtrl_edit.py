@@ -49,9 +49,9 @@ class TestListCtrl(wx.ListCtrl,
 
         items = listctrldata.items()
         for key, data in items:
-            index = self.InsertStringItem(sys.maxint, data[0])
-            self.SetStringItem(index, 1, data[1])
-            self.SetStringItem(index, 2, data[2])
+            index = self.InsertItem(sys.maxint, data[0])
+            self.SetItem(index, 1, data[1])
+            self.SetItem(index, 2, data[2])
             self.SetItemData(index, key)
 
         self.SetColumnWidth(0, wx.LIST_AUTOSIZE)
@@ -60,22 +60,20 @@ class TestListCtrl(wx.ListCtrl,
 
         self.currentItem = 0
 
-
     def SetStringItem(self, index, col, data):
         if col in range(3):
-            wx.ListCtrl.SetStringItem(self, index, col, data)
-            wx.ListCtrl.SetStringItem(self, index, 3+col, str(len(data)))
+            wx.ListCtrl.SetItem(self, index, col, data)
+            wx.ListCtrl.SetItem(self, index, 3+col, str(len(data)))
         else:
             try:
                 datalen = int(data)
             except:
                 return
 
-            wx.ListCtrl.SetStringItem(self, index, col, data)
+            wx.ListCtrl.SetItem(self, index, col, data)
 
             data = self.GetItem(index, col-3).GetText()
-            wx.ListCtrl.SetStringItem(self, index, col-3, data[0:datalen])
-
+            wx.ListCtrl.SetItem(self, index, col-3, data[0:datalen])
 
 
 
@@ -87,11 +85,11 @@ class TestListCtrlPanel(wx.Panel):
         tID = wx.NewId()
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        
+
         if wx.Platform == "__WXMAC__" and \
                hasattr(wx.GetApp().GetTopWindow(), "LoadDemo"):
             self.useNative = wx.CheckBox(self, -1, "Use native listctrl")
-            self.useNative.SetValue( 
+            self.useNative.SetValue(
                 not wx.SystemOptions.GetOptionInt("mac.listctrl.always_use_generic") )
             self.Bind(wx.EVT_CHECKBOX, self.OnUseNative, self.useNative)
             sizer.Add(self.useNative, 0, wx.ALL | wx.ALIGN_RIGHT, 4)
@@ -108,7 +106,7 @@ class TestListCtrlPanel(wx.Panel):
 
 
     def OnUseNative(self, event):
-        wx.SystemOptions.SetOptionInt("mac.listctrl.always_use_generic", not event.IsChecked())
+        wx.SystemOptions.SetOption("mac.listctrl.always_use_generic", not event.IsChecked())
         wx.GetApp().GetTopWindow().LoadDemo("ListCtrl_edit")
 
 

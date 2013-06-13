@@ -1,5 +1,5 @@
 import wx
-
+import wx.adv
 import os
 import sys
 
@@ -51,12 +51,12 @@ zzW\xcff&\xb8,\x89\xa8@Q\xd6\xaaf\xdfRm,\xee\xb1BDxr#\xae\xf5|\xddo\xd6\xe2H\
 \x00\x00\x00IEND\xaeB`\x82' 
 
 def GetCollapsedIconBitmap():
-    return wx.BitmapFromImage(GetCollapsedIconImage())
+    return wx.Bitmap(GetCollapsedIconImage())
 
 def GetCollapsedIconImage():
     import cStringIO
     stream = cStringIO.StringIO(GetCollapsedIconData())
-    return wx.ImageFromStream(stream)
+    return wx.Image(stream)
 
 #----------------------------------------------------------------------
 def GetExpandedIconData():
@@ -83,12 +83,12 @@ def GetExpandedIconData():
 `\x82' 
 
 def GetExpandedIconBitmap():
-    return wx.BitmapFromImage(GetExpandedIconImage())
+    return wx.Bitmap(GetExpandedIconImage())
 
 def GetExpandedIconImage():
     import cStringIO
     stream = cStringIO.StringIO(GetExpandedIconData())
-    return wx.ImageFromStream(stream)
+    return wx.Image(stream)
 
 #----------------------------------------------------------------------
 def GetMondrianData():
@@ -102,15 +102,15 @@ o\xda\x84pB2\x1f\x81Fa\x8c\x9c\x08\x04Z{\xcf\xa72\xbcv\xfa\xc5\x08 \x80r\x80\
 \x04\x10@\xf9X\xbe\x00\xc9 \x14K\xc1<={\x00\x00\x00\x00IEND\xaeB`\x82' 
 
 def GetMondrianBitmap():
-    return wx.BitmapFromImage(GetMondrianImage())
+    return wx.Bitmap(GetMondrianImage())
 
 def GetMondrianImage():
     import cStringIO
     stream = cStringIO.StringIO(GetMondrianData())
-    return wx.ImageFromStream(stream)
+    return wx.Image(stream)
 
 def GetMondrianIcon():
-    icon = wx.EmptyIcon()
+    icon = wx.Icon()
     icon.CopyFromBitmap(GetMondrianBitmap())
     return icon
 
@@ -130,19 +130,19 @@ class Extended(wx.Frame):
         self.SetIcon(GetMondrianIcon())
         self.SetMenuBar(self.CreateMenuBar())
 
-        self.statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-4, -3])
         self.statusbar.SetStatusText("Andrea Gavana @ 23 Mar 2005", 0)
         self.statusbar.SetStatusText("Welcome to wxPython!", 1)
 
-        self._leftWindow1 = wx.SashLayoutWindow(self, 101, wx.DefaultPosition,
+        self._leftWindow1 = wx.adv.SashLayoutWindow(self, 101, wx.DefaultPosition,
                                                 wx.Size(200, 1000), wx.NO_BORDER |
-                                                wx.SW_3D | wx.CLIP_CHILDREN)
+                                                wx.adv.SW_3D | wx.CLIP_CHILDREN)
 
         self._leftWindow1.SetDefaultSize(wx.Size(220, 1000))
-        self._leftWindow1.SetOrientation(wx.LAYOUT_VERTICAL)
-        self._leftWindow1.SetAlignment(wx.LAYOUT_LEFT)
-        self._leftWindow1.SetSashVisible(wx.SASH_RIGHT, True)
+        self._leftWindow1.SetOrientation(wx.adv.LAYOUT_VERTICAL)
+        self._leftWindow1.SetAlignment(wx.adv.LAYOUT_LEFT)
+        self._leftWindow1.SetSashVisible(wx.adv.SASH_RIGHT, True)
         self._leftWindow1.SetExtraBorderSize(10)
 
         self._pnl = 0
@@ -158,7 +158,7 @@ class Extended(wx.Frame):
         self.ID_WINDOW_RIGHT1 = 102
         self.ID_WINDOW_BOTTOM = 103
     
-        self._leftWindow1.Bind(wx.EVT_SASH_DRAGGED_RANGE, self.OnFoldPanelBarDrag,
+        self._leftWindow1.Bind(wx.adv.EVT_SASH_DRAGGED_RANGE, self.OnFoldPanelBarDrag,
                                id=100, id2=103)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_SCROLL, self.OnSlideColour)
@@ -168,7 +168,7 @@ class Extended(wx.Frame):
 
     def OnSize(self, event):
 
-        wx.LayoutAlgorithm().LayoutWindow(self, self.remainingSpace)
+        wx.adv.LayoutAlgorithm().LayoutWindow(self, self.remainingSpace)
         event.Skip()
         
 
@@ -646,7 +646,7 @@ class Collapsed(wx.Frame):
         self.SetIcon(GetMondrianIcon())
         self.SetMenuBar(self.CreateMenuBar())
 
-        self.statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-4, -3])
         self.statusbar.SetStatusText("Andrea Gavana @ 23 Mar 2005", 0)
         self.statusbar.SetStatusText("Welcome to wxPython!", 1)
@@ -715,7 +715,7 @@ class Collapsed(wx.Frame):
         self.pnl = bar
 
         size = self.GetClientSize()
-        self.pnl.SetDimensions(0, 0, size.GetWidth(), size.GetHeight())
+        self.pnl.SetSize(0, 0, size.GetWidth(), size.GetHeight())
 
 
     def CreateMenuBar(self):
@@ -793,7 +793,7 @@ class NotCollapsed(wx.Frame):
         self.SetIcon(GetMondrianIcon())
         self.SetMenuBar(self.CreateMenuBar())
 
-        self.statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-4, -3])
         self.statusbar.SetStatusText("Andrea Gavana @ 23 Mar 2005", 0)
         self.statusbar.SetStatusText("Welcome to wxPython!", 1)

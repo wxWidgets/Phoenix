@@ -24,20 +24,20 @@ exampleStrings = [
 ]
 
 
-[wxID_LANGUAGESELECTPANEL, wxID_LANGUAGESELECTPANELENGLISHBASECH, 
- wxID_LANGUAGESELECTPANELLANGCTRLCONTAINER, 
- wxID_LANGUAGESELECTPANELLANGFILTERRB, wxID_LANGUAGESELECTPANELSTATICLINE1, 
- wxID_LANGUAGESELECTPANELSTATICTEXT1, wxID_LANGUAGESELECTPANELSTATICTEXT2, 
- wxID_LANGUAGESELECTPANELSTATICTEXT3, wxID_LANGUAGESELECTPANELTRANSLATEDST, 
+[wxID_LANGUAGESELECTPANEL, wxID_LANGUAGESELECTPANELENGLISHBASECH,
+ wxID_LANGUAGESELECTPANELLANGCTRLCONTAINER,
+ wxID_LANGUAGESELECTPANELLANGFILTERRB, wxID_LANGUAGESELECTPANELSTATICLINE1,
+ wxID_LANGUAGESELECTPANELSTATICTEXT1, wxID_LANGUAGESELECTPANELSTATICTEXT2,
+ wxID_LANGUAGESELECTPANELSTATICTEXT3, wxID_LANGUAGESELECTPANELTRANSLATEDST,
 ] = [wx.NewId() for _init_ctrls in range(9)]
 
 class LanguageSelectPanel(wx.Panel):
     def _init_coll_boxSizer3_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.langCtrlContainer, 1, border=0, flag=wx.GROW)
-        parent.AddSpacer(wx.Size(8, 8), border=0, flag=0)
-        parent.AddWindow(self.langFilterRB, 0, border=0, flag=0)
+        parent.Add(self.langCtrlContainer, 1, flag=wx.GROW, border=0)
+        parent.Add(wx.Size(8, 8), flag=0, border=0)
+        parent.Add(self.langFilterRB, 0, flag=0, border=0)
 
     def _init_coll_flexGridSizer1_Growables(self, parent):
         # generated method, don't edit
@@ -48,18 +48,18 @@ class LanguageSelectPanel(wx.Panel):
     def _init_coll_boxSizer1_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.staticText1, 0, border=8, flag=wx.ALL)
-        parent.AddSizer(self.boxSizer3, 1, border=8, flag=wx.ALL | wx.GROW)
-        parent.AddSizer(self.boxSizer2, 0, border=8, flag=wx.GROW | wx.ALL)
+        parent.Add(self.staticText1, 0, border=8, flag=wx.ALL)
+        parent.Add(self.boxSizer3, 1, flag=wx.ALL | wx.GROW, border=8)
+        parent.Add(self.boxSizer2, 0, flag=wx.GROW | wx.ALL, border=8)
 
     def _init_coll_boxSizer2_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.staticText2, 0, border=8, flag=wx.ALL)
-        parent.AddWindow(self.englishBaseCh, 0, border=8, flag=wx.GROW | wx.ALL)
-        parent.AddWindow(self.staticLine1, 0, border=8, flag=wx.GROW | wx.ALL)
-        parent.AddWindow(self.staticText3, 0, border=8, flag=wx.ALL)
-        parent.AddWindow(self.translatedST, 0, border=8, flag=wx.GROW | wx.ALL)
+        parent.Add(self.staticText2, 0, flag=wx.ALL, border=8)
+        parent.Add(self.englishBaseCh, 0, flag=wx.GROW | wx.ALL, border=8)
+        parent.Add(self.staticLine1, 0, flag=wx.GROW | wx.ALL, border=8)
+        parent.Add(self.staticText3, 0, flag=wx.ALL, border=8)
+        parent.Add(self.translatedST, 0, flag=wx.GROW | wx.ALL, border=8)
 
     def _init_sizers(self):
         # generated method, don't edit
@@ -81,9 +81,9 @@ class LanguageSelectPanel(wx.Panel):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Panel.__init__(self, id=wxID_LANGUAGESELECTPANEL,
-              name='LanguageSelectPanel', parent=prnt, 
+              name='LanguageSelectPanel', parent=prnt,
               style=wx.RESIZE_BORDER | wx.DEFAULT_DIALOG_STYLE)
-        
+
         self.staticText1 = wx.StaticText(id=wxID_LANGUAGESELECTPANELSTATICTEXT1,
               label='Choose a language that will be used for example translation.',
               name='staticText1', parent=self, style=0)
@@ -126,14 +126,14 @@ class LanguageSelectPanel(wx.Panel):
     def __init__(self, parent, log):
         self.choices = []
         self.choices = exampleStrings
-        
+
         self._init_ctrls(parent)
 
         self.log = log
 
         lang = wx.LANGUAGE_DEFAULT
         filter = 'demo'
-        langs = (wx.LANGUAGE_AFRIKAANS, wx.LANGUAGE_ENGLISH, wx.LANGUAGE_DEFAULT, 
+        langs = (wx.LANGUAGE_AFRIKAANS, wx.LANGUAGE_ENGLISH, wx.LANGUAGE_DEFAULT,
                  wx.LANGUAGE_SPANISH, wx.LANGUAGE_GERMAN, wx.LANGUAGE_ITALIAN,
                  wx.LANGUAGE_FRENCH)
 
@@ -144,23 +144,23 @@ class LanguageSelectPanel(wx.Panel):
         wx.Locale.AddCatalogLookupPathPrefix(opj('data/locale'))
         self.updateLanguage(wx.LANGUAGE_DEFAULT)
 
-        
-        self.filterMap = {'demo': langlistctrl.LC_ONLY, 
-                          'available': langlistctrl.LC_AVAILABLE, 
+
+        self.filterMap = {'demo': langlistctrl.LC_ONLY,
+                          'available': langlistctrl.LC_AVAILABLE,
                           'all': langlistctrl.LC_ALL}
-                        
-        self.filterIdxMap = {0: 'demo', 
-                             1: 'available', 
+
+        self.filterIdxMap = {0: 'demo',
+                             1: 'available',
                              2: 'all'}
         self.langs = langs
-        self.langCtrl = langlistctrl.LanguageListCtrl(self.langCtrlContainer, -1, 
+        self.langCtrl = langlistctrl.LanguageListCtrl(self.langCtrlContainer, -1,
               filter=self.filterMap[filter], only=langs, select=lang)
-        
+
         self.langCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnLangSelectAndTranslate)
         self.langCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnClearTranslatedText)
-              
+
         self.OnLangCtrlContainerSize()
-        
+
         self.englishBaseCh.Select(0)
         self.OnLangSelectAndTranslate()
 
@@ -174,7 +174,7 @@ class LanguageSelectPanel(wx.Panel):
         if self.locale:
             assert sys.getrefcount(self.locale) <= 2
             del self.locale
-        
+
         # create a locale object for this language
         self.locale = wx.Locale(lang)
         if self.locale.IsOk():
@@ -196,22 +196,22 @@ class LanguageSelectPanel(wx.Panel):
 
     def OnLangSelectAndTranslate(self, event=None):
         lang = self.langCtrl.GetLanguage()
-        
+
         if lang is not None:
             # set to the selected language
             self.updateLanguage(lang)
 
             self.translateExample()
-            
+
             # set back to default
             self.updateLanguage(wx.LANGUAGE_DEFAULT)
 
     def OnClearTranslatedText(self, event):
-        self.translatedST.SetLabel('')        
+        self.translatedST.SetLabel('')
 
 
 def runTest(frame, nb, log):
-    win = LanguageSelectPanel(nb, log) 
+    win = LanguageSelectPanel(nb, log)
     return win
 
 #-------------------------------------------------------------------------------
@@ -221,13 +221,13 @@ overview = """<html><body>
 <p>
 This demo demonstrates how to setup and use the wx.Locale object to translate text.
 <p>
-It also shows the langlistctrl.LanguageListCtrl that can be used to display 
+It also shows the langlistctrl.LanguageListCtrl that can be used to display
 languages with their associated countries flags, e.g. for setting the language
 in your application.
 
 </body></html>
 """
-  
+
 if __name__ == '__main__':
     import sys,os
     import run

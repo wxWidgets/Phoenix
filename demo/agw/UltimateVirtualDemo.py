@@ -25,12 +25,12 @@ def GenerateRandomList(imgList):
 
     numImages = random.randint(1, 3)
     listSize = imgList.GetImageCount()
-    
+
     for i in xrange(numImages):
         rList.append(random.randint(0, listSize-1))
 
-    return rList    
-    
+    return rList
+
 
 class TestUltimateListCtrl(ULC.UltimateListCtrl):
 
@@ -40,7 +40,7 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
                                       agwStyle=wx.LC_REPORT|wx.LC_VIRTUAL|wx.LC_HRULES|wx.LC_VRULES|ULC.ULC_SHOW_TOOLTIPS)
 
         self.log = log
-        
+
         self.il = wx.ImageList(16, 16)
         self.il.Add(images.Smiles.GetBitmap())
         self.il.Add(images.core.GetBitmap())
@@ -60,28 +60,28 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
         self.SetColumnToolTip(1,"Second Column Tooltip!")
         self.SetColumnToolTip(2,"Third Column Tooltip!")
 
-        # After setting the column width you can specify that 
+        # After setting the column width you can specify that
         # this column expands to fill the window. Only one
         # column may be specified.
         self.SetColumnWidth(2, ULC.ULC_AUTOSIZE_FILL)
 
         self.SetItemCount(1000000)
-        
+
         self.attr1 = ULC.UltimateListItemAttr()
-        self.attr1.SetBackgroundColour(wx.NamedColour("yellow"))
+        self.attr1.SetBackgroundColour(wx.Colour("yellow"))
 
         self.attr2 = ULC.UltimateListItemAttr()
-        self.attr2.SetBackgroundColour(wx.NamedColour("light blue"))
+        self.attr2.SetBackgroundColour(wx.Colour("light blue"))
 
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated)
         self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnItemDeselected)
 
-        self.randomLists = [GenerateRandomList(self.il) for i in xrange(5)]        
+        self.randomLists = [GenerateRandomList(self.il) for i in xrange(5)]
 
 
     def OnItemSelected(self, event):
-        
+
         self.currentItem = event.m_itemIndex
         self.log.write("OnItemSelected: %s, %s, %s, %s\n" %(self.currentItem,
                                                           self.GetItemText(self.currentItem),
@@ -93,7 +93,7 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
         self.log.write("OnItemActivated: %s\nTopItem: %s\n" %(self.GetItemText(self.currentItem), self.GetTopItem()))
 
     def getColumnText(self, index, col):
-        
+
         item = self.GetItem(index, col)
         return item.GetText()
 
@@ -107,10 +107,10 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
     # determine the text, attributes and/or image based
     # on values from some external data source, but for
     # this demo we'll just calculate them
-    
+
     def OnGetItemText(self, item, col):
         return "Item %d, column %d" % (item, col)
-    
+
     def OnGetItemToolTip(self, item, col):
         if item == 0:
             return "Tooltip: Item %d, column %d" % (item, col)
@@ -130,12 +130,12 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
     def OnGetItemColumnImage(self, item, column):
 
         return self.randomLists[item%5]
-        
+
 
     def OnGetItemImage(self, item):
 
         return self.randomLists[item%5]
-    
+
 
     def OnGetItemAttr(self, item):
         if item % 3 == 1:
@@ -169,7 +169,7 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
         elif item%3 == 1:
             return 1
 
-        return 0        
+        return 0
 
 
 #---------------------------------------------------------------------------

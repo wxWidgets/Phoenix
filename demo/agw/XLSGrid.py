@@ -13,11 +13,11 @@ _isStandalone = False
 
 try:
     from agw import xlsgrid as XG
+    dataDir = os.path.join(dirName, "data")
     _isStandalone = True
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.xlsgrid as XG
-
-dataDir = os.path.join(dirName, "data")
+    dataDir = os.path.join(dirName, "agw", "data")
 
 _hasXLRD = True
 

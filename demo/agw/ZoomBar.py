@@ -30,10 +30,10 @@ _buttonStatus = {True: "Disable First Button",
 class TestPanel(wx.Panel):
 
     def __init__(self, parent, log):
-        
+
         self.log = log
         self.enabled = True
-        
+
         wx.Panel.__init__(self, parent, -1)
 
         self.sizer_1_staticbox = wx.StaticBox(self, -1, "ZoomBar Options")
@@ -42,12 +42,12 @@ class TestPanel(wx.Panel):
         self.colourzoom = csel.ColourSelect(self, colour=wx.Colour(97, 97, 97))
         self.buttonSize = masked.NumCtrl(self, value=32, allowNegative=False,
                                          min=32, max=72)
-        
+
         self.centerZoom = wx.CheckBox(self, -1, "Center Zoom")
         self.showReflections = wx.CheckBox(self, -1, "Show Reflections")
         self.showLabels = wx.CheckBox(self, -1, "Show Labels")
         self.enableButton = wx.Button(self, -1, "Disable First Button")
-        
+
         self.zbp = ZB.ZoomBar(self, -1)
 
         standard = glob.glob(bitmapDir + "/*96.png")
@@ -56,17 +56,17 @@ class TestPanel(wx.Panel):
         separatorImage = bitmapDir + "/separator.gif"
         separatorReflection = bitmapDir + "/separatorFlip.png"
         count = 0
-        
+
         for std, ref in zip(standard, reflections):
             if random.randint(0, 1) == 1 and count > 0:
                 sep1 = wx.Bitmap(separatorImage, wx.BITMAP_TYPE_GIF)
                 sep2 = wx.Bitmap(separatorReflection, wx.BITMAP_TYPE_PNG)
                 self.zbp.AddSeparator(sep1, sep2)
-                
+
             bname = os.path.split(std)[1][0:-6]
             self.zbp.AddButton(wx.Bitmap(std, wx.BITMAP_TYPE_PNG), wx.Bitmap(ref, wx.BITMAP_TYPE_PNG), bname)
             count += 1
-            
+
         self.zbp.ResetSize()
 
         self.SetProperties()
@@ -77,11 +77,11 @@ class TestPanel(wx.Panel):
         self.Bind(wx.EVT_CHECKBOX, self.OnShowReflections, self.showReflections)
         self.Bind(wx.EVT_CHECKBOX, self.OnShowLabels, self.showLabels)
         self.Bind(wx.EVT_BUTTON, self.OnEnable, self.enableButton)
-        
+
         self.Bind(masked.EVT_NUM, self.OnButtonSize, self.buttonSize)
 
         self.colourzoom.Bind(csel.EVT_COLOURSELECT, self.OnZoomColour)
-        
+
         self.Bind(ZB.EVT_ZOOMBAR, self.OnZoomBar)
 
 
@@ -121,7 +121,7 @@ class TestPanel(wx.Panel):
         sizer_3.Add(self.buttonSize, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
         sizer_2.Add(sizer_3, 0, wx.EXPAND|wx.ALL, 5)
-        
+
         sizer_2.Add(self.centerZoom, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
         sizer_2.Add(self.showReflections, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
         sizer_2.Add(self.showLabels, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
@@ -139,27 +139,27 @@ class TestPanel(wx.Panel):
     def OnZoomBar(self, event):
 
         self.log.write("Selected button index and label: %d, %s\n"%(event.GetSelection(), event.GetLabel()))
-                       
+
 
     def OnZoomFactor(self, event):
 
         value = event.GetInt()
         self.zbp.SetZoomFactor(value)
-        
+
         event.Skip()
 
 
     def OnZoomColour(self, event):
 
-        colour = event.GetValue()        
+        colour = event.GetValue()
         self.zbp.SetBarColour(colour)
 
-        
+
     def OnCenterZoom(self, event):
 
         self.zbp.SetCenterZoom(event.IsChecked())
         wx.CallAfter(self.ReLayout)
-        
+
 
     def OnShowReflections(self, event):
 
@@ -171,7 +171,7 @@ class TestPanel(wx.Panel):
         else:
             self.centerZoom.Enable(True)
             self.zbp.SetShowReflections(False)
-            
+
         wx.CallAfter(self.ReLayout)
 
 
@@ -189,8 +189,8 @@ class TestPanel(wx.Panel):
         obj = event.GetEventObject()
         obj.SetLabel(_buttonStatus[self.enabled])
         obj.Refresh()
-            
-        
+
+
     def OnButtonSize(self, event):
 
         value = event.GetValue()
@@ -198,17 +198,17 @@ class TestPanel(wx.Panel):
 
         if value < 32 or value > 72:
             return
-        
+
         self.zbp.SetButtonSize(value)
         wx.CallAfter(self.ReLayout)
 
-        
+
     def ReLayout(self):
 
         self.Layout()
         self.Refresh()
         self.Update()
-        
+
 
 #----------------------------------------------------------------------
 

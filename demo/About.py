@@ -66,7 +66,7 @@ demo item so you can learn how to use the classes yourself.</p>
 
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     dlg = MyAboutBox(None)
     dlg.ShowModal()
     dlg.Destroy()

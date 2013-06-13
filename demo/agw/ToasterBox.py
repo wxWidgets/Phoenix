@@ -23,7 +23,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 # In case of TB_COMPLEX style, create a panel that contains an image, some
 # text, an hyperlink and a ticker.
 
-import wx.lib.hyperlink as hyperlink
+from wx.adv import HyperlinkCtrl as hyperlink
 from wx.lib.ticker import Ticker
 
 # ------------------------------------------------------------------------------ #
@@ -327,7 +327,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         if os.path.isfile(bmp):
             dummybmp = wx.Bitmap(bmp)
 
-        if dummybmp.Ok():
+        if dummybmp.IsOk():
             tb.SetPopupBitmap(bmp)
         else:
             tb.SetPopupBitmap()

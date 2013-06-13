@@ -27,7 +27,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.SetIcon(images.Mondrian.GetIcon())
         self.SetTitle("ThumbnailCtrl wxPython Demo ;-)")
 
-        self.statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
         statusbar_fields = [("ThumbnailCtrl Demo, Andrea Gavana @ 10 Dec 2005"),
@@ -37,14 +37,14 @@ class ThumbnailCtrlDemo(wx.Frame):
             self.statusbar.SetStatusText(statusbar_fields[i], i)
 
         self.SetMenuBar(self.CreateMenuBar())
-        
+
         splitter = wx.SplitterWindow(self, -1, style=wx.CLIP_CHILDREN |
                                      wx.SP_3D | wx.WANTS_CHARS | wx.SP_LIVE_UPDATE)
         self.panel = wx.Panel(splitter, -1)
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         scroll = TC.ThumbnailCtrl(splitter, -1, imagehandler=TC.NativeImageHandler)
-        
+
         scroll.ShowFileNames()
         if os.path.isdir("../bitmaps"):
             scroll.ShowDir(os.path.normpath(os.getcwd() + "/../bitmaps"))
@@ -53,7 +53,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         self.TC = scroll
         self.log = log
-        
+
         self.thumbsizer_staticbox = wx.StaticBox(self.panel, -1, "Thumb Style")
         self.customsizer_staticbox = wx.StaticBox(self.panel, -1, "Thumb Customization")
         self.optionsizer_staticbox = wx.StaticBox(self.panel, -1, "More Options")
@@ -79,13 +79,13 @@ class ThumbnailCtrlDemo(wx.Frame):
                        self.radiostyle4]
         self.thumbstyles = ["THUMB_OUTLINE_NONE", "THUMB_OUTLINE_FULL", "THUMB_OUTLINE_RECT",
                             "THUMB_OUTLINE_IMAGE"]
-        
+
         self.SetProperties()
         self.DoLayout()
 
         self.panel.SetSizer(sizer)
         sizer.Layout()
-    
+
         self.Bind(wx.EVT_RADIOBUTTON, self.OnChangeOutline, self.radiostyle1)
         self.Bind(wx.EVT_RADIOBUTTON, self.OnChangeOutline, self.radiostyle2)
         self.Bind(wx.EVT_RADIOBUTTON, self.OnChangeOutline, self.radiostyle3)
@@ -105,14 +105,14 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.TC.Bind(TC.EVT_THUMBNAILS_SEL_CHANGED, self.OnSelChanged)
         self.TC.Bind(TC.EVT_THUMBNAILS_POINTED, self.OnPointed)
         self.TC.Bind(TC.EVT_THUMBNAILS_DCLICK, self.OnDClick)
-        
+
         splitter.SplitVertically(scroll, self.panel, 180)
 
-        splitter.SetMinimumPaneSize(140)        
+        splitter.SetMinimumPaneSize(140)
         self.SetMinSize((700, 590))
         self.CenterOnScreen()
 
-        
+
     def SetProperties(self):
 
         self.radiostyle4.SetValue(1)
@@ -125,7 +125,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
 
     def DoLayout(self):
-        
+
         splitsizer = wx.BoxSizer(wx.VERTICAL)
         optionsizer = wx.StaticBoxSizer(self.optionsizer_staticbox, wx.VERTICAL)
         zoomsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -158,32 +158,32 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.panel.SetAutoLayout(True)
         self.panel.SetSizer(splitsizer)
         splitsizer.Fit(self.panel)
-        
+
 
     def CreateMenuBar(self):
 
         file_menu = wx.Menu()
-        
-        AS_EXIT = wx.NewId()        
+
+        AS_EXIT = wx.NewId()
         file_menu.Append(AS_EXIT, "&Exit")
         self.Bind(wx.EVT_MENU, self.OnClose, id=AS_EXIT)
 
         help_menu = wx.Menu()
 
-        AS_ABOUT = wx.NewId()        
+        AS_ABOUT = wx.NewId()
         help_menu.Append(AS_ABOUT, "&About...")
         self.Bind(wx.EVT_MENU, self.OnAbout, id=AS_ABOUT)
 
         menu_bar = wx.MenuBar()
 
         menu_bar.Append(file_menu, "&File")
-        menu_bar.Append(help_menu, "&Help")        
+        menu_bar.Append(help_menu, "&Help")
 
-        return menu_bar        
+        return menu_bar
 
 
     def OnClose(self, event):
-        
+
         self.Destroy()
 
 
@@ -195,10 +195,10 @@ class ThumbnailCtrlDemo(wx.Frame):
               "To Me At The Following Adresses:\n\n" + \
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-              
+
         dlg = wx.MessageDialog(self, msg, "ThumbnailCtrl Demo",
                                wx.OK | wx.ICON_INFORMATION)
-        
+
         dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False))
         dlg.ShowModal()
         dlg.Destroy()
@@ -212,15 +212,15 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         # If the user selects OK, then we process the dialog's data.
         # This is done by getting the path data from the dialog - BEFORE
-        # we destroy it. 
+        # we destroy it.
         if dlg.ShowModal() == wx.ID_OK:
             self.TC.ShowDir(dlg.GetPath())
             self.log.write("OnSetDirectory: directory changed to: %s\n"%dlg.GetPath())
 
         # Only destroy a dialog after you're done with it.
         dlg.Destroy()
-        
-        
+
+
     def OnChangeOutline(self, event): # wxGlade: MyFrame.<event_handler>
 
         radio = event.GetEventObject()
@@ -236,7 +236,7 @@ class ThumbnailCtrlDemo(wx.Frame):
             self.TC.SetThumbOutline(TC.THUMB_OUTLINE_IMAGE)
 
         self.TC.Refresh()
-        
+
         self.log.write("OnChangeOutline: Outline changed to: %s\n"%self.thumbstyles[pos])
         event.Skip()
 
@@ -249,7 +249,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         else:
             self.TC.SetHighlightPointed(False)
             self.log.write("OnHighlight: Don't Highlight thumbs on pointing\n")
-            
+
         event.Skip()
 
 
@@ -263,7 +263,7 @@ class ThumbnailCtrlDemo(wx.Frame):
             self.log.write("OnShowFiles: Thumbs file names not shown\n")
 
         self.TC.Refresh()
-        
+
         event.Skip()
 
 
@@ -277,9 +277,9 @@ class ThumbnailCtrlDemo(wx.Frame):
             self.log.write("OnEnableDragging: Thumbs drag and drop disabled\n")
 
         self.TC.Refresh()
-        
+
         event.Skip()
-        
+
 
     def OnSetPopup(self, event): # wxGlade: MyFrame.<event_handler>
 
@@ -290,7 +290,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         else:
             self.TC.SetPopupMenu(None)
             self.log.write("OnSetPopup: Popups disabled on thumbs\n")
-        
+
         event.Skip()
 
 
@@ -303,7 +303,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         else:
             self.TC.SetGlobalPopupMenu(None)
             self.log.write("OnSetGlobalPopup: Popups disabled globally (no selection needed)\n")
-            
+
         event.Skip()
 
 
@@ -329,8 +329,8 @@ class ThumbnailCtrlDemo(wx.Frame):
             self.TC.EnableToolTips(False)
 
         event.Skip()
-        
-        
+
+
     def OnSetZoom(self, event): # wxGlade: MyFrame.<event_handler>
 
         val = self.textzoom.GetValue().strip()
@@ -357,7 +357,7 @@ class ThumbnailCtrlDemo(wx.Frame):
             return
 
         self.TC.SetZoomFactor(val)
-        
+
         event.Skip()
 
 
@@ -377,7 +377,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         self.log.write("OnDClick: Thumb double-clicked: %s\n"%self.TC.GetSelection())
         event.Skip()
-        
+
 
     def OnSetFont(self, event): # wxGlade: MyFrame.<event_handler>
 
@@ -386,17 +386,17 @@ class ThumbnailCtrlDemo(wx.Frame):
         data.SetInitialFont(self.TC.GetCaptionFont())
 
         dlg = wx.FontDialog(self, data)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetFontData()
             font = data.GetChosenFont()
             self.TC.SetCaptionFont(font)
             self.TC.Refresh()
             self.log.write("OnSetFont: Caption font changed\n")
-            
+
         # Don't destroy the dialog until you get everything you need from the
         # dialog!
-        dlg.Destroy()        
+        dlg.Destroy()
         event.Skip()
 
 
@@ -404,7 +404,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         dlg = wx.ColourDialog(self)
 
-        # Ensure the full colour dialog is displayed, 
+        # Ensure the full colour dialog is displayed,
         # not the abbreviated version.
         dlg.GetColourData().SetChooseFull(True)
 
@@ -424,7 +424,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         # Once the dialog is destroyed, Mr. wx.ColourData is no longer your
         # friend. Don't use it again!
         dlg.Destroy()
-        
+
 
     def CreatePopups(self):
 
@@ -451,15 +451,15 @@ class ThumbnailCtrlDemo(wx.Frame):
             self.Bind(wx.EVT_MENU, self.OnPopupSeven, id=self.popupID7)
             self.Bind(wx.EVT_MENU, self.OnPopupEight, id=self.popupID8)
             self.Bind(wx.EVT_MENU, self.OnPopupNine, id=self.popupID9)
-            
+
         menu = wx.Menu()
         item = wx.MenuItem(menu, self.popupID1, "One")
         img = images.Mondrian.GetImage()
         img.Rescale(16, 16)
         bmp = img.ConvertToBitmap()
         item.SetBitmap(bmp)
-        menu.AppendItem(item)
-        
+        menu.Append(item)
+
         # add some other items
         menu.Append(self.popupID2, "Two")
         menu.Append(self.popupID3, "Three")
@@ -470,7 +470,7 @@ class ThumbnailCtrlDemo(wx.Frame):
         sm = wx.Menu()
         sm.Append(self.popupID8, "Sub Item 1")
         sm.Append(self.popupID9, "Sub Item 1")
-        menu.AppendMenu(self.popupID7, "Test Submenu", sm)
+        menu.Append(self.popupID7, "Test Submenu", sm)
 
         return menu
 
@@ -485,10 +485,10 @@ class ThumbnailCtrlDemo(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnPopupTen, id=self.popupID10)
         self.Bind(wx.EVT_MENU, self.OnPopupEleven, id=self.popupID11)
         self.Bind(wx.EVT_MENU, self.OnPopupTwelve, id=self.popupID12)
-        
+
         menu = wx.Menu()
         item = wx.MenuItem(menu, self.popupID10, "Select all")
-        menu.AppendItem(item)
+        menu.Append(item)
         menu.AppendSeparator()
 
         item = wx.MenuItem(menu, self.popupID11, "Say Hello!")
@@ -496,13 +496,13 @@ class ThumbnailCtrlDemo(wx.Frame):
         img.Rescale(16, 16)
         bmp = img.ConvertToBitmap()
         item.SetBitmap(bmp)
-        menu.AppendItem(item)
+        menu.Append(item)
         menu.AppendSeparator()
-        
+
         menu.Append(self.popupID12, "Get thumbs count")
 
         return menu
-    
+
 
     def OnPopupOne(self, event):
         self.log.write("OnPopupMenu: Popup One\n")
@@ -538,7 +538,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
     def OnPopupNine(self, event):
         self.log.write("OnPopupMenu: Popup Nine\n")
-        
+
 
     def OnPopupTen(self, event):
 
@@ -548,14 +548,14 @@ class ThumbnailCtrlDemo(wx.Frame):
             self.TC.SetSelection(ii)
 
         self.log.write("OnGlobalPopupMenu: all thumbs selected\n")
-        
+
         event.Skip()
 
 
     def OnPopupEleven(self, event):
 
         self.log.write("OnGlobalPopupMenu: say hello message...\n")
-        
+
         msgstr = "Info: let's say hello to wxPython! "
         dlg = wx.MessageDialog(self, msgstr, "ThumbnailCtrlDemo Info",
                                wx.OK | wx.ICON_INFORMATION)
@@ -569,7 +569,7 @@ class ThumbnailCtrlDemo(wx.Frame):
 
         items = self.TC.GetItemCount()
         self.log.write("OnGlobalPopupMenu: number of thumbs: %d\n"%items)
-        
+
         msgstr = "Info: number of thumbs: %d"%items
         dlg = wx.MessageDialog(self, msgstr, "ThumbnailCtrlDemo Info",
                                wx.OK | wx.ICON_INFORMATION)
@@ -577,8 +577,8 @@ class ThumbnailCtrlDemo(wx.Frame):
         dlg.Destroy()
 
         event.Skip()
-        
-        
+
+
 
 #---------------------------------------------------------------------------
 

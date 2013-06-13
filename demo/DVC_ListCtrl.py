@@ -25,17 +25,17 @@ class TestPanel(wx.Panel):
         dvlc.AppendTextColumn('artist', width=170)
         dvlc.AppendTextColumn('title', width=260)
         dvlc.AppendTextColumn('genre', width=80)
-        
+
         # Load the data. Each item (row) is added as a sequence of values
         # whose order matches the columns
         for itemvalues in musicdata:
             dvlc.AppendItem(itemvalues)
-        
+
         # Set the layout so the listctrl fills the panel
         self.Sizer = wx.BoxSizer()
         self.Sizer.Add(dvlc, 1, wx.EXPAND)
-        
-        
+
+
 
 #----------------------------------------------------------------------
 

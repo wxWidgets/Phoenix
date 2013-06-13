@@ -5,7 +5,7 @@
 # Author:       Robin Dunn & Gary Dumer
 #
 # Created:
-# RCS-ID:       $Id$
+# RCS-ID:       $Id: ListCtrl.py 70188 2011-12-29 23:25:41Z RD $
 # Copyright:    (c) 1998 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
@@ -90,17 +90,17 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         self.log = log
         tID = wx.NewId()
-        
+
         sizer = wx.BoxSizer(wx.VERTICAL)
-        
+
         if wx.Platform == "__WXMAC__" and \
                hasattr(wx.GetApp().GetTopWindow(), "LoadDemo"):
             self.useNative = wx.CheckBox(self, -1, "Use native listctrl")
-            self.useNative.SetValue( 
+            self.useNative.SetValue(
                 not wx.SystemOptions.GetOptionInt("mac.listctrl.always_use_generic") )
             self.Bind(wx.EVT_CHECKBOX, self.OnUseNative, self.useNative)
             sizer.Add(self.useNative, 0, wx.ALL | wx.ALIGN_RIGHT, 4)
-            
+
         self.il = wx.ImageList(16, 16)
 
         self.idx1 = self.il.Add(images.Smiles.GetBitmap())
@@ -108,7 +108,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.sm_dn = self.il.Add(images.SmallDnArrow.GetBitmap())
 
         self.list = TestListCtrl(self, tID,
-                                 style=wx.LC_REPORT 
+                                 style=wx.LC_REPORT
                                  #| wx.BORDER_SUNKEN
                                  | wx.BORDER_NONE
                                  | wx.LC_EDIT_LABELS
@@ -118,7 +118,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
                                  #| wx.LC_HRULES
                                  #| wx.LC_SINGLE_SEL
                                  )
-        
+
         self.list.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         sizer.Add(self.list, 1, wx.EXPAND)
 
@@ -153,7 +153,6 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         # for wxGTK
         self.list.Bind(wx.EVT_RIGHT_UP, self.OnRightClick)
 
-
     def OnUseNative(self, event):
         wx.SystemOptions.SetOptionInt("mac.listctrl.always_use_generic", not event.IsChecked())
         wx.GetApp().GetTopWindow().LoadDemo("ListCtrl")
@@ -167,25 +166,25 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         else:
             # but since we want images on the column header we have to do it the hard way:
             info = wx.ListItem()
-            info.m_mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT
-            info.m_image = -1
-            info.m_format = 0
-            info.m_text = "Artist"
-            self.list.InsertColumnInfo(0, info)
+            info.Mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT
+            info.Image = -1
+            info.Align = 0
+            info.Text = "Artist"
+            self.list.InsertColumn(0, info)
 
-            info.m_format = wx.LIST_FORMAT_RIGHT
-            info.m_text = "Title"
-            self.list.InsertColumnInfo(1, info)
+            info.Align = wx.LIST_FORMAT_RIGHT
+            info.Text = "Title"
+            self.list.InsertColumn(1, info)
 
-            info.m_format = 0
-            info.m_text = "Genre"
-            self.list.InsertColumnInfo(2, info)
+            info.Align = 0
+            info.Text = "Genre"
+            self.list.InsertColumn(2, info)
 
         items = musicdata.items()
         for key, data in items:
-            index = self.list.InsertImageStringItem(sys.maxint, data[0], self.idx1)
-            self.list.SetStringItem(index, 1, data[1])
-            self.list.SetStringItem(index, 2, data[2])
+            index = self.list.InsertItem(sys.maxint, data[0], self.idx1)
+            self.list.SetItem(index, 1, data[1])
+            self.list.SetItem(index, 2, data[2])
             self.list.SetItemData(index, key)
 
         self.list.SetColumnWidth(0, wx.LIST_AUTOSIZE)
@@ -205,7 +204,6 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         self.currentItem = 0
 
-
     # Used by the ColumnSorterMixin, see wx/lib/mixins/listctrl.py
     def GetListCtrl(self):
         return self.list
@@ -213,7 +211,6 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
     # Used by the ColumnSorterMixin, see wx/lib/mixins/listctrl.py
     def GetSortImages(self):
         return (self.sm_dn, self.sm_up)
-
 
     def OnRightDown(self, event):
         x = event.GetX()
@@ -226,15 +223,13 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         event.Skip()
 
-
     def getColumnText(self, index, col):
         item = self.list.GetItem(index, col)
         return item.GetText()
 
-
     def OnItemSelected(self, event):
         ##print event.GetItem().GetTextColour()
-        self.currentItem = event.m_itemIndex
+        self.currentItem = event.Index
         self.log.WriteText("OnItemSelected: %s, %s, %s, %s\n" %
                            (self.currentItem,
                             self.list.GetItemText(self.currentItem),
@@ -249,18 +244,16 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         event.Skip()
 
-
     def OnItemDeselected(self, evt):
         item = evt.GetItem()
-        self.log.WriteText("OnItemDeselected: %d" % evt.m_itemIndex)
+        self.log.WriteText("OnItemDeselected: %d" % evt.Index)
 
         # Show how to reselect something we don't want deselected
-        if evt.m_itemIndex == 11:
+        if evt.Index == 11:
             wx.CallAfter(self.list.SetItemState, 11, wx.LIST_STATE_SELECTED, wx.LIST_STATE_SELECTED)
 
-
     def OnItemActivated(self, event):
-        self.currentItem = event.m_itemIndex
+        self.currentItem = event.Index
         self.log.WriteText("OnItemActivated: %s\nTopItem: %s" %
                            (self.list.GetItemText(self.currentItem), self.list.GetTopItem()))
 
@@ -289,7 +282,6 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         ## Show how to not allow a column to be resized
         #if event.GetColumn() == 0:
         #    event.Veto()
-
 
     def OnColDragging(self, event):
         self.log.WriteText("OnColDragging\n")
@@ -335,18 +327,18 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.PopupMenu(menu)
         menu.Destroy()
 
-
     def OnPopupOne(self, event):
         self.log.WriteText("Popup one\n")
-        print "FindItem:", self.list.FindItem(-1, "Roxette")
-        print "FindItemData:", self.list.FindItemData(-1, 11)
+        print("FindItem:", self.list.FindItem(-1, "Roxette"))
+        print("FindItemData:", self.list.FindItemData(-1, 11))
 
     def OnPopupTwo(self, event):
         self.log.WriteText("Selected items:\n")
         index = self.list.GetFirstSelected()
 
         while index != -1:
-            self.log.WriteText("      %s: %s\n" % (self.list.GetItemText(index), self.getColumnText(index, 1)))
+            self.log.WriteText("      %s: %s\n" % (self.list.GetItemText(index),
+                                                   self.getColumnText(index, 1)))
             index = self.list.GetNextSelected(index)
 
     def OnPopupThree(self, event):
@@ -359,7 +351,9 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def OnPopupFive(self, event):
         item = self.list.GetItem(self.currentItem)
-        print item.m_text, item.m_itemId, self.list.GetItemData(self.currentItem)
+        self.log.WriteText("Text:%s, Id:%s, Data:%s" %(item.Text,
+                                                       item.Id,
+                                                       self.list.GetItemData(self.currentItem)))
 
     def OnPopupSix(self, event):
         self.list.EditLabel(self.currentItem)
@@ -377,12 +371,12 @@ def runTest(frame, nb, log):
 overview = """\
 <html>
 <body>
-A list control presents lists in a number of formats: list view, report view, 
-icon view and small icon view. In any case, elements are numbered from zero. 
-For all these modes (but not for virtual list controls), the items are stored 
+A list control presents lists in a number of formats: list view, report view,
+icon view and small icon view. In any case, elements are numbered from zero.
+For all these modes (but not for virtual list controls), the items are stored
 in the control and must be added to it using InsertItem method.
 
-<p>To intercept events from a list control, use the event table macros described in 
+<p>To intercept events from a list control, use the event table macros described in
 <code>wxListEvent.</code>
 
 <h3>Mix-ins</h3>
@@ -392,22 +386,22 @@ This example demonstrates how to use mixins. The following mixins are available.
 
 <code><b>ColumnSorterMixin(numColumns)</b></code>
 
-<p>A mixin class that handles sorting of a wxListCtrl in REPORT mode when the column 
+<p>A mixin class that handles sorting of a wxListCtrl in REPORT mode when the column
 header is clicked on.
 
 <p>There are a few requirments needed in order for this to work genericly:
 <p><ol>
-    <li>The combined class must have a <code>GetListCtrl</code> method that returns 
-    the ListCtrl to be sorted, and the list control must exist at the time the 
-    <code>ColumnSorterMixin.__init__()</code>method is called because it uses 
+    <li>The combined class must have a <code>GetListCtrl</code> method that returns
+    the ListCtrl to be sorted, and the list control must exist at the time the
+    <code>ColumnSorterMixin.__init__()</code>method is called because it uses
     <code>GetListCtrl</code>.
 
-    <li>Items in the list control must have a unique data value set with 
+    <li>Items in the list control must have a unique data value set with
     <code>list.SetItemData</code>.
 
     <li>The combined class must have an attribute named <code>itemDataMap</code>
-    that is a dictionary mapping the data values to a sequence of objects 
-    representing the values in each column.  These valuesare compared in 
+    that is a dictionary mapping the data values to a sequence of objects
+    representing the values in each column.  These valuesare compared in
     the column sorter to determine sort order.
 </ol>
 
@@ -424,11 +418,11 @@ set, it also sets up an event handler for <code>EVT_LIST_COL_CLICK</code> events
 <dd>Sort the list on demand.  Can also be used to set the sort column and order.
 
 <dt><code>GetColumnWidths()</code>
-<dd>Returns a list of column widths.  Can be used to help restore the current 
+<dd>Returns a list of column widths.  Can be used to help restore the current
 view later.
 
 <dt><code>GetSortImages()</code>
-<dd>Returns a tuple of image list indexes the indexes in the image list for an 
+<dd>Returns a tuple of image list indexes the indexes in the image list for an
 image to be put on the column header when sorting in descending order
 
 <dt><code>GetColumnSorter()</code>
@@ -436,7 +430,7 @@ image to be put on the column header when sorting in descending order
 
 <dt><code>GetSecondarySortValues(col, key1, key2)</code>
 <dd>Returns a tuple of 2 values to use for secondary sort values when the
-items in the selected column match equal.  The default just returns the 
+items in the selected column match equal.  The default just returns the
 item data values.
 
 </dl>
@@ -445,17 +439,17 @@ item data values.
 
 <code><b>ListCtrlAutoWidthMixin()</b></code>
 
-<p>A mix-in class that automatically resizes the last column to take up the 
+<p>A mix-in class that automatically resizes the last column to take up the
 remaining width of the ListCtrl.
 
-<p>This causes the ListCtrl to automatically take up the full width of the list, 
-without either a horizontal scroll bar (unless absolutely necessary) or empty 
+<p>This causes the ListCtrl to automatically take up the full width of the list,
+without either a horizontal scroll bar (unless absolutely necessary) or empty
 space to the right of the last column.
 
 <p><b>NOTE:</b> This only works for report-style lists.
 
-<p><b>WARNING:</b> If you override the <code>EVT_SIZE</code> event in your ListCtrl, 
-make sure you call event.Skip() to ensure that the mixin's _OnResize method is 
+<p><b>WARNING:</b> If you override the <code>EVT_SIZE</code> event in your ListCtrl,
+make sure you call event.Skip() to ensure that the mixin's _OnResize method is
 called.
 
 <p>This mix-in class was written by <a href='mailto:ewestra@wave.co.nz'>Erik Westra </a>
@@ -464,12 +458,12 @@ called.
 <dl>
 
 <dt><code>resizeLastColumn(minWidth)</code>
-<dd>Resize the last column appropriately. If the list's columns are too wide to 
-fit within the window, we use a horizontal scrollbar.  Otherwise, we expand the 
-right-most column to take up the remaining free space in the list. This method is 
-called automatically when the ListCtrl is resized; you can also call it yourself 
-whenever you want the last column to be resized appropriately (eg, when adding, 
-removing or resizing columns).  'minWidth' is the preferred minimum width for 
+<dd>Resize the last column appropriately. If the list's columns are too wide to
+fit within the window, we use a horizontal scrollbar.  Otherwise, we expand the
+right-most column to take up the remaining free space in the list. This method is
+called automatically when the ListCtrl is resized; you can also call it yourself
+whenever you want the last column to be resized appropriately (eg, when adding,
+removing or resizing columns).  'minWidth' is the preferred minimum width for
 the last column.
 
 </dl>
@@ -481,7 +475,7 @@ the last column.
 
 <p>Mixin that defines a platform independent selection policy
 
-<p>As selection single and multi-select list return the item index or a 
+<p>As selection single and multi-select list return the item index or a
 list of item indexes respectively.
 
 <h5>Methods</h5>
@@ -497,7 +491,7 @@ list of item indexes respectively.
 <dd>Override to implement dynamic menus (destroy).
 
 <dt><code>getSelection()</code>
-<dd>Returns the current selection (or selections  as a Python list if extended 
+<dd>Returns the current selection (or selections  as a Python list if extended
 selection is enabled)
 
 

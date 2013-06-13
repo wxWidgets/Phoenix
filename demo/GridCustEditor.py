@@ -5,7 +5,7 @@ import  wx
 import  wx.grid as gridlib
 
 #---------------------------------------------------------------------------
-class MyCellEditor(gridlib.PyGridCellEditor):
+class MyCellEditor(gridlib.GridCellEditor):
     """
     This is a sample GridCellEditor that shows you how to make your own custom
     grid editors.  All the methods that can be overridden are shown here.  The
@@ -15,7 +15,7 @@ class MyCellEditor(gridlib.PyGridCellEditor):
     def __init__(self, log):
         self.log = log
         self.log.write("MyCellEditor ctor\n")
-        gridlib.PyGridCellEditor.__init__(self)
+        gridlib.GridCellEditor.__init__(self)
 
 
     def Create(self, parent, id, evtHandler):
@@ -39,7 +39,7 @@ class MyCellEditor(gridlib.PyGridCellEditor):
         PaintBackground and do something meaningful there.
         """
         self.log.write("MyCellEditor: SetSize %s\n" % rect)
-        self._tc.SetDimensions(rect.x, rect.y, rect.width+2, rect.height+2,
+        self._tc.SetSize(rect.x, rect.y, rect.width+2, rect.height+2,
                                wx.SIZE_ALLOW_MINUS_ONE)
 
 
@@ -93,7 +93,7 @@ class MyCellEditor(gridlib.PyGridCellEditor):
             return val
         else:
             return None
-        
+
 
     def ApplyEdit(self, row, col, grid):
         """
@@ -108,7 +108,7 @@ class MyCellEditor(gridlib.PyGridCellEditor):
 
         self.startValue = ''
         self._tc.SetValue('')
-        
+
 
     def Reset(self):
         """
@@ -144,8 +144,8 @@ class MyCellEditor(gridlib.PyGridCellEditor):
         self.log.write("MyCellEditor: StartingKey %d\n" % evt.GetKeyCode())
         key = evt.GetKeyCode()
         ch = None
-        if key in [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, 
-                    wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, 
+        if key in [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3,
+                    wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7,
                     wx.WXK_NUMPAD8, wx.WXK_NUMPAD9
                     ]:
 

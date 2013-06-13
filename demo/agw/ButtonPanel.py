@@ -44,7 +44,7 @@ class SettingsPanel(wx.MiniFrame):
         self.targetTitleBar = parent.titleBar
         self.parent = parent
         self.panel = wx.Panel(self, -1)
-        
+
         self.coloursizer_staticbox = wx.StaticBox(self.panel, -1, "Colour Options")
         self.bottomsizer_staticbox = wx.StaticBox(self.panel, -1, "Size Options")
         self.stylesizer_staticbox = wx.StaticBox(self.panel, -1, "ButtonPanel Styles")
@@ -54,7 +54,7 @@ class SettingsPanel(wx.MiniFrame):
         self.horizontalgradient = wx.RadioButton(self.panel, -1, "Horizontal Gradient")
 
         b = self.CreateColourBitmap(wx.BLACK)
-        
+
         self.bakbrush = wx.BitmapButton(self.panel, ID_BackgroundColour, b, size=wx.Size(50,25))
         self.gradientfrom = wx.BitmapButton(self.panel, ID_GradientFrom, b, size=wx.Size(50,25))
         self.gradientto = wx.BitmapButton(self.panel, ID_GradientTo, b, size=wx.Size(50,25))
@@ -90,13 +90,13 @@ class SettingsPanel(wx.MiniFrame):
         self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_SelectionBrush)
         self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_SelectionPen)
         self.Bind(wx.EVT_BUTTON, self.OnSetColour, id=ID_SeparatorColour)
-        
+
         self.Bind(wx.EVT_SPINCTRL, self.OnSeparator, self.separatorspin)
         self.Bind(wx.EVT_SPINCTRL, self.OnMargins, self.marginspin)
         self.Bind(wx.EVT_SPINCTRL, self.OnPadding, self.paddingspin)
         self.Bind(wx.EVT_SPINCTRL, self.OnBorder, self.borderspin)
 
-        self.Bind(wx.EVT_CLOSE, self.OnClose)        
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
 
 
     def __set_properties(self):
@@ -118,8 +118,8 @@ class SettingsPanel(wx.MiniFrame):
         self.marginspin.SetValue(self.targetTitleBar.GetBPArt().GetMetric(bp.BP_MARGINS_SIZE).x)
         self.paddingspin.SetValue(self.targetTitleBar.GetBPArt().GetMetric(bp.BP_PADDING_SIZE).x)
 
-        self.UpdateColours()        
-        
+        self.UpdateColours()
+
 
     def __do_layout(self):
 
@@ -145,7 +145,7 @@ class SettingsPanel(wx.MiniFrame):
         stylesizer = wx.StaticBoxSizer(self.stylesizer_staticbox, wx.VERTICAL)
         tophsizer = wx.BoxSizer(wx.HORIZONTAL)
         tophsizer2 = wx.BoxSizer(wx.VERTICAL)
-        
+
         stylesizer.Add(self.defaultstyle, 0, wx.ALL|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
 
         tophsizer.Add(self.gradientstyle, 0, wx.LEFT|wx.RIGHT|wx.EXPAND|
@@ -153,7 +153,7 @@ class SettingsPanel(wx.MiniFrame):
 
         tophsizer2.Add(self.verticalgradient, 0, wx.BOTTOM|wx.ADJUST_MINSIZE, 3)
         tophsizer2.Add(self.horizontalgradient, 0, wx.ADJUST_MINSIZE, 0)
-        
+
         tophsizer.Add(tophsizer2, 1, wx.LEFT|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10)
 
         stylesizer.Add(tophsizer, 1, wx.EXPAND, 0)
@@ -197,7 +197,7 @@ class SettingsPanel(wx.MiniFrame):
 
         coloursizer.Add(leftsizer, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
         coloursizer.Add((20, 20), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
-        
+
         label_6 = wx.StaticText(self.panel, -1, "Text Button Colour:")
         sizer_6.Add(label_6, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
         sizer_6.Add((0, 0), 1, wx.EXPAND|wx.ADJUST_MINSIZE, 0)
@@ -268,25 +268,25 @@ class SettingsPanel(wx.MiniFrame):
 
 
     def CreateColourBitmap(self, c):
-    
-        image = wx.EmptyImage(25, 14)
-        
+
+        image = wx.Image(25, 14)
+
         for x in xrange(25):
             for y in xrange(14):
                 pixcol = c
                 if x == 0 or x == 24 or y == 0 or y == 13:
                     pixcol = wx.BLACK
-                    
-                image.SetRGB(x, y, pixcol.Red(), pixcol.Green(), pixcol.Blue())
-            
+
+                image.SetRGB(wx.Rect(0, 0, 25, 14), pixcol.Red(), pixcol.Green(), pixcol.Blue())
+
         return image.ConvertToBitmap()
 
 
     def UpdateColours(self):
-    
+
         bk = self.targetTitleBar.GetBPArt().GetColour(bp.BP_BACKGROUND_COLOUR)
         self.bakbrush.SetBitmapLabel(self.CreateColourBitmap(bk))
-        
+
         capfrom = self.targetTitleBar.GetBPArt().GetColour(bp.BP_GRADIENT_COLOUR_FROM)
         self.gradientfrom.SetBitmapLabel(self.CreateColourBitmap(capfrom))
 
@@ -298,7 +298,7 @@ class SettingsPanel(wx.MiniFrame):
 
         bor = self.targetTitleBar.GetBPArt().GetColour(bp.BP_BORDER_COLOUR)
         self.bordercolour.SetBitmapLabel(self.CreateColourBitmap(bor))
-        
+
         btntext = self.targetTitleBar.GetBPArt().GetColour(bp.BP_BUTTONTEXT_COLOUR)
         self.textbuttoncolour.SetBitmapLabel(self.CreateColourBitmap(btntext))
 
@@ -307,7 +307,7 @@ class SettingsPanel(wx.MiniFrame):
 
         selp = self.targetTitleBar.GetBPArt().GetColour(bp.BP_SELECTION_PEN_COLOUR)
         self.selectionpen.SetBitmapLabel(self.CreateColourBitmap(selp))
-        
+
         sepc = self.targetTitleBar.GetBPArt().GetColour(bp.BP_SEPARATOR_COLOUR)
         self.separatorcolour.SetBitmapLabel(self.CreateColourBitmap(sepc))
 
@@ -321,15 +321,15 @@ class SettingsPanel(wx.MiniFrame):
         self.targetTitleBar.Refresh()
 
         event.Skip()
-        
 
-    def OnGradientStyle(self, event): 
+
+    def OnGradientStyle(self, event):
 
         self.verticalgradient.Enable(True)
         self.horizontalgradient.Enable(True)
         self.targetTitleBar.SetStyle(bp.BP_USE_GRADIENT)
         self.targetTitleBar.Refresh()
-        
+
         event.Skip()
 
 
@@ -338,28 +338,28 @@ class SettingsPanel(wx.MiniFrame):
         self.targetTitleBar.GetBPArt().SetGradientType(bp.BP_GRADIENT_VERTICAL)
         self.targetTitleBar.SetStyle(bp.BP_USE_GRADIENT)
         self.targetTitleBar.Refresh()
-        
+
         event.Skip()
-        
+
 
     def OnHorizontalGradient(self, event):
 
         self.targetTitleBar.GetBPArt().SetGradientType(bp.BP_GRADIENT_HORIZONTAL)
         self.targetTitleBar.SetStyle(bp.BP_USE_GRADIENT)
         self.targetTitleBar.Refresh()
-        
+
         event.Skip()
-        
+
 
     def OnSetColour(self, event):
 
         dlg = wx.ColourDialog(self.parent)
-        
+
         dlg.SetTitle("Colour Picker")
-        
+
         if dlg.ShowModal() != wx.ID_OK:
             return
-        
+
         var = 0
         if event.GetId() == ID_BackgroundColour:
             var = bp.BP_BACKGROUND_COLOUR
@@ -380,8 +380,8 @@ class SettingsPanel(wx.MiniFrame):
         elif event.GetId() == ID_SeparatorColour:
             var = bp.BP_SEPARATOR_COLOUR
         else:
-            return        
-        
+            return
+
         self.targetTitleBar.GetBPArt().SetColour(var, dlg.GetColourData().GetColour())
         self.targetTitleBar.Refresh()
         self.UpdateColours()
@@ -410,7 +410,7 @@ class SettingsPanel(wx.MiniFrame):
         self.parent.mainPanel.Layout()
 
         self.parent.useredited = True
-        
+
         event.Skip()
 
 
@@ -422,7 +422,7 @@ class SettingsPanel(wx.MiniFrame):
         self.targetTitleBar.DoLayout()
         self.parent.mainPanel.Layout()
         self.parent.useredited = True
-        
+
         event.Skip()
 
 
@@ -435,7 +435,7 @@ class SettingsPanel(wx.MiniFrame):
         self.parent.mainPanel.Layout()
 
         self.parent.useredited = True
-        
+
         event.Skip()
 
 
@@ -451,7 +451,7 @@ class ButtonPanelDemo(wx.Frame):
 
     def __init__(self, parent, id=wx.ID_ANY, title="ButtonPanel wxPython Demo ;-)",
                  pos=wx.DefaultPosition, size=(640, 400), style=wx.DEFAULT_FRAME_STYLE):
-        
+
         wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
         self.useredited = False
@@ -460,7 +460,7 @@ class ButtonPanelDemo(wx.Frame):
         self.SetIcon(images.Mondrian.GetIcon())
         self.CreateMenuBar()
 
-        self.statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
         statusbar_fields = [("ButtonPanel wxPython Demo, Andrea Gavana @ 02 Oct 2006"),
@@ -468,18 +468,18 @@ class ButtonPanelDemo(wx.Frame):
 
         for i in range(len(statusbar_fields)):
             self.statusbar.SetStatusText(statusbar_fields[i], i)
-        
+
         self.mainPanel = wx.Panel(self, -1)
         self.logtext = wx.TextCtrl(self.mainPanel, -1, "", style=wx.TE_MULTILINE|wx.TE_READONLY)
-        
-        vSizer = wx.BoxSizer(wx.VERTICAL) 
-        self.mainPanel.SetSizer(vSizer) 
+
+        vSizer = wx.BoxSizer(wx.VERTICAL)
+        self.mainPanel.SetSizer(vSizer)
 
         self.alignments = [bp.BP_ALIGN_LEFT, bp.BP_ALIGN_RIGHT, bp.BP_ALIGN_TOP, bp.BP_ALIGN_BOTTOM]
-        
+
         self.alignment = bp.BP_ALIGN_LEFT
         self.agwStyle = bp.BP_USE_GRADIENT
-        
+
         self.titleBar = bp.ButtonPanel(self.mainPanel, -1, "A Simple Test & Demo",
                                        agwStyle=self.agwStyle, alignment=self.alignment)
 
@@ -491,87 +491,87 @@ class ButtonPanelDemo(wx.Frame):
                       ]
         self.CreateButtons()
         self.SetProperties()
-                
-        
+
+
     def CreateMenuBar(self):
 
         mb = wx.MenuBar()
-        
+
         file_menu = wx.Menu()
-        
+
         item = wx.MenuItem(file_menu, wx.ID_ANY, "&Quit")
-        file_menu.AppendItem(item)
+        file_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnClose, item)
 
         edit_menu = wx.Menu()
 
         item = wx.MenuItem(edit_menu, wx.ID_ANY, "Set Bar Text")
-        edit_menu.AppendItem(item)
+        edit_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnSetBarText, item)
 
-        edit_menu.AppendSeparator()        
+        edit_menu.AppendSeparator()
 
         submenu = wx.Menu()
-        
+
         item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_LEFT", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         item.Check(True)
         self.Bind(wx.EVT_MENU, self.OnAlignment, item)
-        
+
         item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_RIGHT", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
-        self.Bind(wx.EVT_MENU, self.OnAlignment, item)
-        
-        item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_TOP", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
-        self.Bind(wx.EVT_MENU, self.OnAlignment, item)
-        
-        item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_BOTTOM", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnAlignment, item)
 
-        edit_menu.AppendMenu(wx.ID_ANY, "&Alignment", submenu)
-                
+        item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_TOP", kind=wx.ITEM_RADIO)
+        submenu.Append(item)
+        self.Bind(wx.EVT_MENU, self.OnAlignment, item)
+
+        item = wx.MenuItem(submenu, wx.ID_ANY, "BP_ALIGN_BOTTOM", kind=wx.ITEM_RADIO)
+        submenu.Append(item)
+        self.Bind(wx.EVT_MENU, self.OnAlignment, item)
+
+        edit_menu.Append(wx.ID_ANY, "&Alignment", submenu)
+
         submenu = wx.Menu()
 
         item = wx.MenuItem(submenu, wx.ID_ANY, "Default Style", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnDefaultStyle, item)
-        
+
         item = wx.MenuItem(submenu, wx.ID_ANY, "Gradient Style", kind=wx.ITEM_RADIO)
-        submenu.AppendItem(item)
+        submenu.Append(item)
         item.Check(True)
         self.Bind(wx.EVT_MENU, self.OnGradientStyle, item)
-        
-        edit_menu.AppendMenu(wx.ID_ANY, "&Styles", submenu)
+
+        edit_menu.Append(wx.ID_ANY, "&Styles", submenu)
 
         edit_menu.AppendSeparator()
-        
+
         item = wx.MenuItem(submenu, wx.ID_ANY, "Settings Panel")
-        edit_menu.AppendItem(item)
+        edit_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnSettingsPanel, item)
 
         demo_menu = wx.Menu()
-        
+
         item = wx.MenuItem(demo_menu, wx.ID_ANY, "Default Demo", kind=wx.ITEM_RADIO)
-        demo_menu.AppendItem(item)
+        demo_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnDefaultDemo, item)
 
         item = wx.MenuItem(demo_menu, wx.ID_ANY, "Button Only Demo", kind=wx.ITEM_RADIO)
-        demo_menu.AppendItem(item)
+        demo_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnButtonOnly, item)
-        
+
         help_menu = wx.Menu()
 
         item = wx.MenuItem(help_menu, wx.ID_ANY, "&About...")
-        help_menu.AppendItem(item)
+        help_menu.Append(item)
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
-      
+
         mb.Append(file_menu, "&File")
         mb.Append(edit_menu, "&Edit")
         mb.Append(demo_menu, "&Demo")
         mb.Append(help_menu, "&Help")
-        
+
         self.SetMenuBar(mb)
 
 
@@ -588,30 +588,30 @@ class ButtonPanelDemo(wx.Frame):
             self.titleBar = bp.ButtonPanel(self.mainPanel, -1, "A Simple Test & Demo",
                                            agwStyle=self.agwStyle, alignment=self.alignment)
             self.SetProperties()
-                    
+
         self.indices = []
-        
+
         for count, png in enumerate(self.pngs):
 
             shortHelp = "Button %d"%(count+1)
-            
+
             if count < 2:
                 # First 2 buttons are togglebuttons
                 kind = wx.ITEM_CHECK
                 longHelp = "ButtonPanel Toggle Button No %d"%(count+1)
             else:
                 kind = wx.ITEM_NORMAL
-                longHelp = "Simple Button without label No %d"%(count+1)                
+                longHelp = "Simple Button without label No %d"%(count+1)
 
             btn = bp.ButtonInfo(self.titleBar, wx.NewId(),
                                 png[0], kind=kind,
                                 shortHelp=shortHelp, longHelp=longHelp)
-            
+
             self.titleBar.AddButton(btn)
             self.Bind(wx.EVT_BUTTON, self.OnButton, id=btn.GetId())
-            
+
             self.indices.append(btn.GetId())
-            
+
             if count < 2:
                 # First 2 buttons have also a text
                 btn.SetText(png[1])
@@ -619,30 +619,30 @@ class ButtonPanelDemo(wx.Frame):
             if count == 2:
                 # Append a separator after the second button
                 self.titleBar.AddSeparator()
-            
+
             if count == 1:
                 # Add a wx.TextCtrl to ButtonPanel
                 self.titleBar.AddControl(wx.TextCtrl(self.titleBar, -1, "Hello wxPython!"))
                 btn.SetTextAlignment(bp.BP_BUTTONTEXT_ALIGN_RIGHT)
 
-        # Add a wx.Choice to ButtonPanel                        
+        # Add a wx.Choice to ButtonPanel
         self.titleBar.AddControl(wx.Choice(self.titleBar, -1,
                                            choices=["Hello", "From", "wxPython!"]))
-        
+
         self.strings = ["First", "Second", "Third", "Fourth"]
 
-        self.ChangeLayout()              
+        self.ChangeLayout()
         self.Thaw()
         self.titleBar.DoLayout()
 
         self.created = True
-        
+
 
     def ButtonOnly(self):
-        
+
         # Here we (re)create the buttons for the button-only demo
         self.Freeze()
-        
+
         if self.created:
             sizer = self.mainPanel.GetSizer()
             sizer.Detach(0)
@@ -654,15 +654,15 @@ class ButtonPanelDemo(wx.Frame):
 
         # Buttons are created completely random, with random images, toggle behavior
         # and text
-        
+
         self.indices = []
-        
+
         for count in xrange(8):
 
             itemImage = random.randint(0, 3)
             hasText = random.randint(0, 1)
             itemKind = random.randint(0, 1)
-                            
+
             btn = bp.ButtonInfo(self.titleBar, wx.NewId(), self.pngs[itemImage][0],
                                 kind=itemKind)
 
@@ -674,30 +674,30 @@ class ButtonPanelDemo(wx.Frame):
 
             self.titleBar.AddButton(btn)
             self.Bind(wx.EVT_BUTTON, self.OnButton, id=btn.GetId())
-            
+
             self.indices.append(btn.GetId())
 
             if count in [0, 3, 5]:
                 self.titleBar.AddSeparator()
-                    
+
         self.strings = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"]
 
-        self.ChangeLayout()              
+        self.ChangeLayout()
         self.Thaw()
         self.titleBar.DoLayout()
-        
+
 
     def ChangeLayout(self):
-        
+
         # Change the layout after a switch in ButtonPanel alignment
         self.Freeze()
-        
+
         if self.alignment in [bp.BP_ALIGN_LEFT, bp.BP_ALIGN_RIGHT]:
             vSizer = wx.BoxSizer(wx.VERTICAL)
         else:
             vSizer = wx.BoxSizer(wx.HORIZONTAL)
-            
-        self.mainPanel.SetSizer(vSizer) 
+
+        self.mainPanel.SetSizer(vSizer)
 
         vSizer.Add(self.titleBar, 0, wx.EXPAND)
         vSizer.Add((20, 20))
@@ -706,18 +706,18 @@ class ButtonPanelDemo(wx.Frame):
         vSizer.Layout()
         self.mainPanel.Layout()
         self.Thaw()
-                
+
 
     def SetProperties(self):
 
         # No resetting if the user is using the Settings Panel
         if self.useredited:
             return
-        
+
         # Sets the colours for the two demos: called only if the user didn't
         # modify the colours and sizes using the Settings Panel
         bpArt = self.titleBar.GetBPArt()
-        
+
         if self.agwStyle & bp.BP_USE_GRADIENT:
             # set the colour the text is drawn with
             bpArt.SetColour(bp.BP_TEXT_COLOUR, wx.WHITE)
@@ -733,11 +733,11 @@ class ButtonPanelDemo(wx.Frame):
             bpArt.SetColour(bp.BP_SEPARATOR_COLOUR,
                             bp.BrightenColour(wx.Colour(60, 11, 112), 0.85))
             bpArt.SetColour(bp.BP_SELECTION_BRUSH_COLOUR, wx.Colour(225, 225, 255))
-            bpArt.SetColour(bp.BP_SELECTION_PEN_COLOUR, wx.SystemSettings_GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
+            bpArt.SetColour(bp.BP_SELECTION_PEN_COLOUR, wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
 
         else:
 
-            background = self.titleBar.GetBackgroundColour()            
+            background = self.titleBar.GetBackgroundColour()
             bpArt.SetColour(bp.BP_TEXT_COLOUR, wx.BLUE)
             bpArt.SetColour(bp.BP_BORDER_COLOUR,
                             bp.BrightenColour(background, 0.85))
@@ -748,30 +748,30 @@ class ButtonPanelDemo(wx.Frame):
             bpArt.SetColour(bp.BP_SELECTION_PEN_COLOUR, wx.Colour(206, 206, 195))
 
         self.titleBar.SetStyle(self.agwStyle)
-        
-        
+
+
     def OnAlignment(self, event):
-        
+
         # Here we change the alignment property of ButtonPanel
         current = event.GetId()
         item = self.GetMenuBar().FindItemById(current)
         alignment = getattr(bp, item.GetLabel())
         self.alignment = alignment
 
-        self.ChangeLayout()    
+        self.ChangeLayout()
         self.titleBar.SetAlignment(alignment)
         self.mainPanel.Layout()
-        
+
         event.Skip()
 
 
     def OnDefaultStyle(self, event):
-        
+
         # Restore the ButtonPanel default style (no gradient)
         self.agwStyle = bp.BP_DEFAULT_STYLE
         self.SetProperties()
 
-        event.Skip()        
+        event.Skip()
 
 
     def OnGradientStyle(self, event):
@@ -780,11 +780,11 @@ class ButtonPanelDemo(wx.Frame):
         self.agwStyle = bp.BP_USE_GRADIENT
         self.SetProperties()
 
-        event.Skip()        
+        event.Skip()
 
 
     def OnDefaultDemo(self, event):
-        
+
         # Reload the default startup demo
         self.CreateButtons()
         event.Skip()
@@ -795,13 +795,13 @@ class ButtonPanelDemo(wx.Frame):
         # Reload the button-only demo
         self.ButtonOnly()
         event.Skip()
-        
-        
+
+
     def OnButton(self, event):
 
         btn = event.GetId()
         indx = self.indices.index(btn)
-        
+
         self.logtext.AppendText("Event Fired From " + self.strings[indx] + " Button\n")
         event.Skip()
 
@@ -810,9 +810,9 @@ class ButtonPanelDemo(wx.Frame):
 
         dlg = wx.TextEntryDialog(self, "Enter The Text You Wish To Display On The Bar (Clear If No Text):",
                                  "Set Text", self.titleBar.GetBarText())
-        
+
         if dlg.ShowModal() == wx.ID_OK:
-        
+
             val = dlg.GetValue()
             self.titleBar.SetBarText(val)
             self.titleBar.DoLayout()
@@ -831,7 +831,7 @@ class ButtonPanelDemo(wx.Frame):
 
 
     def OnClose(self, event):
-        
+
         self.Destroy()
         event.Skip()
 
@@ -845,11 +845,11 @@ class ButtonPanelDemo(wx.Frame):
               "andrea.gavana@gmail.com\n" + "andrea.gavana@maerskoil.com\n\n" + \
               "Based On Eran C++ Implementation (wxWidgets Forum).\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-              
+
         dlg = wx.MessageDialog(self, msg, "ButtonPanel wxPython Demo",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
-        dlg.Destroy()        
+        dlg.Destroy()
 
 
 #----------------------------------------------------------------------
@@ -877,15 +877,12 @@ def runTest(frame, nb, log):
 #----------------------------------------------------------------------
 
 
-
 overview = bp.__doc__
-
 
 
 if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])
-    
 
 

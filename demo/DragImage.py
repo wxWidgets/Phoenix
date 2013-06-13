@@ -21,7 +21,7 @@ class DragShape:
                       self.bmp.GetWidth(), self.bmp.GetHeight())
 
     def Draw(self, dc, op = wx.COPY):
-        if self.bmp.Ok():
+        if self.bmp.IsOk():
             memDC = wx.MemoryDC()
             memDC.SelectObject(self.bmp)
 

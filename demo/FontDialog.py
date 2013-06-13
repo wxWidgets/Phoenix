@@ -73,9 +73,9 @@ class TestPanel(wx.Panel):
         self.sampleText.SetFont(self.curFont)
         self.sampleText.SetForegroundColour(self.curClr)
         self.ps.SetLabel(str(self.curFont.GetPointSize()))
-        self.family.SetLabel(self.curFont.GetFamilyString())
-        self.style.SetLabel(self.curFont.GetStyleString())
-        self.weight.SetLabel(self.curFont.GetWeightString())
+        self.family.SetLabel('%s' %self.curFont.GetFamily())
+        self.style.SetLabel('%s' %self.curFont.GetStyle())
+        self.weight.SetLabel('%s' %self.curFont.GetWeight())
         self.face.SetLabel(self.curFont.GetFaceName())
         self.nfi.SetLabel(self.curFont.GetNativeFontInfo().ToString())
         self.Layout()
@@ -88,7 +88,7 @@ class TestPanel(wx.Panel):
         data.SetInitialFont(self.curFont)
 
         dlg = wx.FontDialog(self, data)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetFontData()
             font = data.GetChosenFont()
@@ -117,15 +117,15 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-This class allows you to use the system font selection dialog 
+This class allows you to use the system font selection dialog
 from within your program. Generally speaking, this allows you
-to select a font by its name, font size, and weight, and 
+to select a font by its name, font size, and weight, and
 on some systems such things as strikethrough and underline.
 
 As with other dialogs used in wxPython, it is important to
 use the class' methods to extract the information you need
 about the font <b>before</b> you destroy the dialog. Failure
-to observe this almost always leads to a program failure of 
+to observe this almost always leads to a program failure of
 some sort, often ugly.
 
 This demo serves two purposes; it shows how to use the dialog

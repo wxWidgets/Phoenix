@@ -82,7 +82,7 @@ class PythonSTC(stc.StyledTextCtrl):
         self.StyleSetSpec(stc.STC_STYLE_BRACEBAD,    "fore:#000000,back:#FF0000,bold")
 
         # Python styles
-        # Default 
+        # Default
         self.StyleSetSpec(stc.STC_P_DEFAULT, "fore:#000000,face:%(helv)s,size:%(size)d" % faces)
         # Comments
         self.StyleSetSpec(stc.STC_P_COMMENTLINE, "fore:#007F00,face:%(other)s,size:%(size)d" % faces)
@@ -116,8 +116,8 @@ class PythonSTC(stc.StyledTextCtrl):
 
     # Some methods to make it compatible with how the wxTextCtrl is used
     def SetValue(self, value):
-        if wx.USE_UNICODE:
-            value = value.decode('iso8859_1')
+        # if wx.USE_UNICODE:
+            # value = value.decode('iso8859_1')
 
         self.SetReadOnly(False)
         self.SetText(value)
@@ -131,7 +131,7 @@ class RulerCtrlDemo(wx.Frame):
         wx.Frame.__init__(self, parent)
         self.panel = wx.Panel(self, -1)
 
-        statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        statusbar = self.CreateStatusBar(2)
         statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
         statusbar_fields = [("RulerCtrl wxPython Demo, Andrea Gavana @ 03 Nov 2006"),
@@ -144,8 +144,8 @@ class RulerCtrlDemo(wx.Frame):
         self.LayoutItems()
 
         self.SetIcon(images.Mondrian.GetIcon())
-        sizex = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_X)
-        sizey = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_Y)
+        sizex = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
+        sizey = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
 
         self.SetSize((3*sizex/4, 3*sizey/4))
         self.SendSizeEvent()
@@ -312,7 +312,7 @@ class RulerCtrlDemo(wx.Frame):
 
         event.Skip()
 
-        # Try to emulate the rulers inside a text editor        
+        # Try to emulate the rulers inside a text editor
         wx.CallAfter(self.SizeRulers)
 
 
@@ -323,9 +323,9 @@ class RulerCtrlDemo(wx.Frame):
 
     def SizeRulers(self):
 
-        dc = wx.MemoryDC()        
+        dc = wx.MemoryDC()
         width, height = self.stc.GetSize()
-        dc.SelectObject(wx.EmptyBitmap(width, height))
+        dc.SelectObject(wx.Bitmap(width, height))
         widthMM, heightMM = dc.GetSizeMM()
         dc.SelectObject(wx.NullBitmap)
 
@@ -351,7 +351,7 @@ class RulerCtrlDemo(wx.Frame):
         event.Skip()
 
 
-    def OnLabelMinor(self, event): 
+    def OnLabelMinor(self, event):
 
         self.ruler3.LabelMinor(event.IsChecked())
         event.Skip()
@@ -370,12 +370,12 @@ class RulerCtrlDemo(wx.Frame):
 
     def OnTickColour(self, event):
 
-        self.ruler3.SetTickPenColour(event.GetValue())        
+        self.ruler3.SetTickPenColour(event.GetValue())
 
 
     def OnLabelColour(self, event):
 
-        self.ruler3.SetLabelColour(event.GetValue())        
+        self.ruler3.SetLabelColour(event.GetValue())
 
 
     def CreateMenu(self):
@@ -386,11 +386,11 @@ class RulerCtrlDemo(wx.Frame):
 
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
-        fileMenu.AppendItem(item)
+        fileMenu.Append(item)
 
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
-        helpMenu.AppendItem(item)
+        helpMenu.Append(item)
 
         menuBar.Append(fileMenu, "&File")
         menuBar.Append(helpMenu, "&Help")

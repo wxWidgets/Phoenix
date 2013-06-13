@@ -38,13 +38,15 @@ class TestPanel(wx.Panel):
         # dialog is set up to change the current working directory to the path chosen.
         dlg = wx.FileDialog(
             self, message="Choose a file",
-            defaultDir=os.getcwd(), 
+            defaultDir=os.getcwd(),
             defaultFile="",
             wildcard=wildcard,
-            style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR
+            style=wx.FD_OPEN | wx.FD_MULTIPLE |
+                  wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST |
+                  wx.FD_PREVIEW
             )
 
-        # Show the dialog and retrieve the user response. If it is the OK response, 
+        # Show the dialog and retrieve the user response. If it is the OK response,
         # process the data.
         if dlg.ShowModal() == wx.ID_OK:
             # This returns a Python list of files that were selected.
@@ -63,7 +65,6 @@ class TestPanel(wx.Panel):
         dlg.Destroy()
 
 
-
     def OnButton2(self, evt):
         self.log.WriteText("CWD: %s\n" % os.getcwd())
 
@@ -75,15 +76,15 @@ class TestPanel(wx.Panel):
         # force the current working directory to change if the user chooses a different
         # directory than the one initially set.
         dlg = wx.FileDialog(
-            self, message="Save file as ...", defaultDir=os.getcwd(), 
-            defaultFile="", wildcard=wildcard, style=wx.SAVE
+            self, message="Save file as ...", defaultDir=os.getcwd(),
+            defaultFile="", wildcard=wildcard, style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT
             )
 
         # This sets the default filter that the user will initially see. Otherwise,
         # the first filter in the list will be used by default.
         dlg.SetFilterIndex(2)
 
-        # Show the dialog and retrieve the user response. If it is the OK response, 
+        # Show the dialog and retrieve the user response. If it is the OK response,
         # process the data.
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
@@ -92,7 +93,7 @@ class TestPanel(wx.Panel):
             # Normally, at this point you would save your data using the file and path
             # data that the user provided to you, but since we didn't actually start
             # with any data to work with, that would be difficult.
-            # 
+            #
             # The code to do so would be similar to this, assuming 'data' contains
             # the data you want to save:
             #
@@ -111,7 +112,6 @@ class TestPanel(wx.Panel):
         # BAD things can happen otherwise!
         dlg.Destroy()
 
-        
 
 #---------------------------------------------------------------------------
 
@@ -125,12 +125,12 @@ def runTest(frame, nb, log):
 
 overview = """\
 This class provides the file selection dialog. It incorporates OS-native features
-depending on the OS in use, and can be used both for open and save operations. 
+depending on the OS in use, and can be used both for open and save operations.
 The files displayed can be filtered by setting up a wildcard filter, multiple files
 can be selected (open only), and files can be forced in a read-only mode.
 
 There are two ways to get the results back from the dialog. GetFiles() returns only
-the file names themselves, in a Python list. GetPaths() returns the full path and 
+the file names themselves, in a Python list. GetPaths() returns the full path and
 filenames combined as a Python list.
 
 """

@@ -94,9 +94,9 @@ class ClipTextPanel(wx.Panel):
 
 #----------------------------------------------------------------------
 
-class OtherDropTarget(wx.PyDropTarget):
+class OtherDropTarget(wx.DropTarget):
     def __init__(self, window, log):
-        wx.PyDropTarget.__init__(self)
+        wx.DropTarget.__init__(self)
         self.log = log
         self.do = wx.FileDataObject()
         self.SetDataObject(self.do)

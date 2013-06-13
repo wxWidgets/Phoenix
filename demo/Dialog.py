@@ -11,22 +11,16 @@ wx.HelpProvider.Set(provider)
 
 class TestDialog(wx.Dialog):
     def __init__(
-            self, parent, ID, title, size=wx.DefaultSize, pos=wx.DefaultPosition, 
-            style=wx.DEFAULT_DIALOG_STYLE,
+            self, parent, id, title, size=wx.DefaultSize, pos=wx.DefaultPosition, 
+            style=wx.DEFAULT_DIALOG_STYLE, name='dialog'
             ):
 
         # Instead of calling wx.Dialog.__init__ we precreate the dialog
         # so we can set an extra style that must be set before
         # creation, and then we create the GUI object using the Create
         # method.
-        pre = wx.PreDialog()
-        pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
-        pre.Create(parent, ID, title, pos, size, style)
-
-        # This next step is the most important, it turns this Python
-        # object into the real wrapper of the dialog (instead of pre)
-        # as far as the wxPython extension is concerned.
-        self.PostCreate(pre)
+        wx.Dialog.__init__(self, parent, id, title, pos, size, style, name)
+        self.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
 
         # Now continue with the normal construction of the dialog
         # contents

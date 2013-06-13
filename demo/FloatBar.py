@@ -22,7 +22,7 @@ class TestFloatBar(wx.Frame):
         win = wx.Window(self, -1)
         win.SetBackgroundColour("WHITE")
         wx.StaticText(
-            win, -1, "Drag the toolbar to float it,\n"  
+            win, -1, "Drag the toolbar to float it,\n"
             "Toggle the last tool to remove\nthe title.", (15,15)
             )
 
@@ -38,26 +38,26 @@ class TestFloatBar(wx.Frame):
         copy_bmp = wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, tsize)
         paste_bmp= wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, tsize)
 
-        tb.AddSimpleTool(10, new_bmp, "New", "Long help for 'New'")
+        tb.AddTool(10, "New", new_bmp, "Long help for 'New'")
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=10)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=10)
 
-        tb.AddSimpleTool(20, open_bmp, "Open")
+        tb.AddTool(20, "Open", open_bmp)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=20)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=20)
 
         tb.AddSeparator()
-        tb.AddSimpleTool(30, copy_bmp, "Copy")
+        tb.AddTool(30, "Copy",  copy_bmp)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=30)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=30)
 
-        tb.AddSimpleTool(40, paste_bmp, "Paste")
+        tb.AddTool(40, "Paste", paste_bmp)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=40)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=40)
 
         tb.AddSeparator()
 
-        tb.AddCheckTool(60, images.Tog1.GetBitmap(), images.Tog2.GetBitmap())
+        tb.AddCheckTool(60, "Check", images.Tog1.GetBitmap(), images.Tog2.GetBitmap(), "Check", "Long Help: Check", None)
         self.Bind(wx.EVT_TOOL, self.OnToolClick, id=60)
         self.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick, id=60)
 
@@ -74,7 +74,7 @@ class TestFloatBar(wx.Frame):
         self.log.WriteText("tool %s clicked\n" % event.GetId())
 
         if event.GetId() == 60:
-            print event.GetExtraLong(), event.IsChecked(), event.GetInt(), self.tb.GetToolState(60)
+            print(event.GetExtraLong(), event.IsChecked(), event.GetInt(), self.tb.GetToolState(60))
 
             if event.GetExtraLong():
                 self.tb.SetTitle("")
@@ -130,16 +130,4 @@ if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -36,31 +36,31 @@ class ShapedButtonDemo(wx.Frame):
         wx.Frame.__init__(self, parent, title="ShapedButton wxPython Demo ;-)")
 
         # Create Some Maquillage For The Demo: Icon, StatusBar, MenuBar...
-        
+
         self.SetIcon(images.Mondrian.GetIcon())
-        self.statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        self.statusbar = self.CreateStatusBar(2)
 
         self.statusbar.SetStatusWidths([-2, -1])
-        
+
         statusbar_fields = [("wxPython ShapedButton Demo, Andrea Gavana @ 18 Oct 2005"),
                             ("Welcome To wxPython!")]
-        
+
         for i in range(len(statusbar_fields)):
             self.statusbar.SetStatusText(statusbar_fields[i], i)
-        
+
         self.SetMenuBar(self.CreateMenuBar())
-        
+
         framesizer = wx.BoxSizer(wx.VERTICAL)
         self.panel = wx.Panel(self, -1)
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         hsizer0 = wx.BoxSizer(wx.HORIZONTAL)
-        
-        sb0 = wx.StaticBox(self.panel, -1)        
+
+        sb0 = wx.StaticBox(self.panel, -1)
         recordsizer = wx.StaticBoxSizer(sb0, wx.HORIZONTAL)
 
         # Make A ToolBar-Like Audio Control With Round Buttons/Toggles
         self.BuildAudioToolBar()
-        
+
         recordsizer.Add(self.rewind, 0, wx.LEFT, 3)
         recordsizer.Add(self.play, 0, wx.LEFT, 3)
         recordsizer.Add(self.record, 0, wx.LEFT, 3)
@@ -82,42 +82,42 @@ class ShapedButtonDemo(wx.Frame):
         smallsizer.Add((0, 1), 1, wx.EXPAND)
         smallsizer.Add(self.eventtext, 1, wx.EXPAND)
         smallsizer.Add((0, 1), 1, wx.EXPAND)
-        
+
         hsizer0.Add(recordsizer, 1, wx.EXPAND)
         hsizer0.Add(smallsizer, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 5)
         mainsizer.Add(hsizer0, 0, wx.BOTTOM, 5)
 
         mainsizer.Add((0, 10), 0, wx.EXPAND)
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
-        
+
         # Make 9 SBitmapButtons With Text Rotation And Different Colours
         sb1 = wx.StaticBox(self.panel, -1, "Some Buttons")
         vsizer1 = wx.StaticBoxSizer(sb1, wx.VERTICAL)
 
         bsizer = self.BuildNineButtons()
-        vsizer1.Add((0, 10), 0)        
+        vsizer1.Add((0, 10), 0)
         vsizer1.Add(bsizer, 1, wx.EXPAND)
         vsizer1.Add((0, 10), 0)
-        hsizer.Add(vsizer1, 3, wx.EXPAND)        
+        hsizer.Add(vsizer1, 3, wx.EXPAND)
 
         # Make Some Mixed SButton/SToggle With Bitmap And Text Rotation
-        sb2 = wx.StaticBox(self.panel, -1, "Other Buttons")        
+        sb2 = wx.StaticBox(self.panel, -1, "Other Buttons")
         vsizer2 = wx.StaticBoxSizer(sb2, wx.VERTICAL)
         btsizer = self.BuildMixedButtons()
-        vsizer2.Add((0, 10), 0)        
+        vsizer2.Add((0, 10), 0)
         vsizer2.Add(btsizer, 1, wx.EXPAND)
         vsizer2.Add((0, 10), 0)
         hsizer.Add(vsizer2, 2, wx.EXPAND)
 
         # Build Buttons With Elliptic Shape
-        sb3 = wx.StaticBox(self.panel, -1, "Elliptic Buttons")        
+        sb3 = wx.StaticBox(self.panel, -1, "Elliptic Buttons")
         vsizer3 = wx.StaticBoxSizer(sb3, wx.VERTICAL)
         esizer = self.BuildEllipticButtons()
-        vsizer3.Add((0, 10), 0)        
+        vsizer3.Add((0, 10), 0)
         vsizer3.Add(esizer, 1, wx.EXPAND)
         vsizer3.Add((0, 10), 0)
         hsizer.Add(vsizer3, 2, wx.EXPAND)
-        
+
         mainsizer.Add(hsizer, 1, wx.EXPAND | wx.ALL, 5)
 
         self.panel.SetSizer(mainsizer)
@@ -130,7 +130,7 @@ class ShapedButtonDemo(wx.Frame):
 
         self.Layout()
         self.CenterOnParent()
-        
+
 
     def BuildAudioToolBar(self):
 
@@ -141,8 +141,8 @@ class ShapedButtonDemo(wx.Frame):
         self.rewind.SetUseFocusIndicator(False)
         self.rewind.SetBitmapDisabled(disbmp)
 
-        self.rewind.Bind(wx.EVT_BUTTON, self.OnRewind)        
-        
+        self.rewind.Bind(wx.EVT_BUTTON, self.OnRewind)
+
         # The Play Button Is A Toggle Bitmap Button (SBitmapToggleButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "play.png"), wx.BITMAP_TYPE_PNG)
         disbmp = wx.Bitmap(os.path.join(bitmapDir, "playdisabled.png"), wx.BITMAP_TYPE_PNG)
@@ -150,7 +150,7 @@ class ShapedButtonDemo(wx.Frame):
         self.play.SetUseFocusIndicator(False)
         self.play.SetBitmapDisabled(disbmp)
 
-        self.play.Bind(wx.EVT_BUTTON, self.OnPlay)        
+        self.play.Bind(wx.EVT_BUTTON, self.OnPlay)
 
         # The Record Button Is A Toggle Bitmap Button (SBitmapToggleButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "record.png"), wx.BITMAP_TYPE_PNG)
@@ -159,7 +159,7 @@ class ShapedButtonDemo(wx.Frame):
         self.record.SetUseFocusIndicator(False)
         self.record.SetBitmapDisabled(disbmp)
 
-        self.record.Bind(wx.EVT_BUTTON, self.OnRecord)        
+        self.record.Bind(wx.EVT_BUTTON, self.OnRecord)
 
         # The Pause Button Is A Toggle Bitmap Button (SBitmapToggleButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "pause.png"), wx.BITMAP_TYPE_PNG)
@@ -179,7 +179,7 @@ class ShapedButtonDemo(wx.Frame):
         self.stop.SetBitmapDisabled(disbmp)
         self.stop.Enable(False)
 
-        self.stop.Bind(wx.EVT_BUTTON, self.OnStop)        
+        self.stop.Bind(wx.EVT_BUTTON, self.OnStop)
 
         # The FFWD Button Is A Simple Bitmap Button (SBitmapButton)
         upbmp = wx.Bitmap(os.path.join(bitmapDir, "ffwd.png"), wx.BITMAP_TYPE_PNG)
@@ -188,22 +188,22 @@ class ShapedButtonDemo(wx.Frame):
         self.ffwd.SetUseFocusIndicator(False)
         self.ffwd.SetBitmapDisabled(disbmp)
 
-        self.ffwd.Bind(wx.EVT_BUTTON, self.OnFFWD)        
+        self.ffwd.Bind(wx.EVT_BUTTON, self.OnFFWD)
 
 
     def BuildNineButtons(self):
 
         # We Build 9 Buttons With Different Colours And A Nice Text Rotation
 
-        colours = [None, wx.BLUE, wx.RED, wx.GREEN, wx.NamedColour("Gold"),
-                   wx.NamedColour("Cyan"), wx.NamedColour("Yellow"),
-                   wx.NamedColour("Orange"), wx.NamedColour("Magenta")]
+        colours = [None, wx.BLUE, wx.RED, wx.GREEN, wx.Colour("Gold"),
+                   wx.CYAN, wx.YELLOW,
+                   wx.Colour("Orange"), wx.Colour("Magenta")]
 
         labels = ["These", "Are", "Some", "Nice", "Text", "Appended",
                   "To Different", "Buttons", "Nice Eh?"]
 
         fnt = self.GetFont()
-        
+
         fonts = [fnt, wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD),
                  wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL),
                  wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, True),
@@ -211,14 +211,14 @@ class ShapedButtonDemo(wx.Frame):
                  wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Tahoma"),
                  fnt, wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, True, "Verdana")]
 
-        lcolours = [None, wx.WHITE, wx.NamedColour("Yellow"), wx.WHITE,
+        lcolours = [None, wx.WHITE, wx.Colour("Yellow"), wx.WHITE,
                     None, None, wx.BLUE, wx.WHITE, wx.WHITE]
 
         bsizer = wx.FlexGridSizer(3, 3, 5, 5)
         rotation = []
 
         for ii in xrange(9):
-            
+
             btn = SButton(self.panel, -1, labels[ii])
             btn.SetButtonColour(colours[ii])
             btn.SetFont(fonts[ii])
@@ -239,8 +239,8 @@ class ShapedButtonDemo(wx.Frame):
 
         self.buttonlabels = labels
         self.buttonrotation = rotation
-        
-        return bsizer            
+
+        return bsizer
 
 
     def BuildMixedButtons(self):
@@ -248,28 +248,28 @@ class ShapedButtonDemo(wx.Frame):
         # Here We Build Some Buttons/Toggles With Different Properties
         # Notice That We Put Some Images Also For The "Selected" State
         # For A Button
-        
+
         btsizer = wx.FlexGridSizer(2, 2, 5, 5)
 
-        bmp = wx.Bitmap(os.path.join(bitmapDir, "italy.gif"), wx.BITMAP_TYPE_GIF)    
+        bmp = wx.Bitmap(os.path.join(bitmapDir, "italy.gif"), wx.BITMAP_TYPE_GIF)
         btn1 = SBitmapButton(self.panel, -1, bmp)
-        bmp = wx.Bitmap(os.path.join(bitmapDir, "canada.gif"), wx.BITMAP_TYPE_GIF) 
+        bmp = wx.Bitmap(os.path.join(bitmapDir, "canada.gif"), wx.BITMAP_TYPE_GIF)
         btn1.SetBitmapSelected(bmp)
-        btn1.Bind(wx.EVT_BUTTON, self.OnItalyCanada)        
+        btn1.Bind(wx.EVT_BUTTON, self.OnItalyCanada)
 
-        bmp = wx.Bitmap(os.path.join(bitmapDir, "stop.png"), wx.BITMAP_TYPE_PNG)        
+        bmp = wx.Bitmap(os.path.join(bitmapDir, "stop.png"), wx.BITMAP_TYPE_PNG)
         btn2 = SBitmapTextToggleButton(self.panel, -1, bmp, "Toggle!")
-        bmp = wx.Bitmap(os.path.join(bitmapDir, "play.png"), wx.BITMAP_TYPE_PNG)  
+        bmp = wx.Bitmap(os.path.join(bitmapDir, "play.png"), wx.BITMAP_TYPE_PNG)
         btn2.SetBitmapSelected(bmp)
         btn2.Bind(wx.EVT_BUTTON, self.OnTogglePlayStop)
 
         btn3 = SButton(self.panel, -1, "Rotated")
-        btn3.SetButtonColour(wx.NamedColour("Cyan"))
+        btn3.SetButtonColour(wx.Colour("Cyan"))
         btn3.SetLabelColour(wx.WHITE)
         btn3.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, False))
         btn3.SetAngleOfRotation(90)
         btn3.Bind(wx.EVT_BUTTON, self.OnRotated1)
- 
+
         btn4 = SButton(self.panel, -1, "Button!")
         btn4.SetAngleOfRotation(45)
         btn4.Bind(wx.EVT_BUTTON, self.OnRotated1)
@@ -285,14 +285,14 @@ class ShapedButtonDemo(wx.Frame):
         btsizer.AddGrowableCol(1)
 
         return btsizer
-    
+
 
     def BuildEllipticButtons(self):
 
         # Here We Build Elliptic Buttons. Elliptic Buttons Are Somewhat
         # More Hostiles To Handle, Probably Because My Implementation
         # Is Lacking Somewhere, But They Look Nice However.
-        
+
         esizer = wx.FlexGridSizer(2, 2, 5, 5)
 
         btn1 = SButton(self.panel, -1, "Ellipse 1")
@@ -309,18 +309,18 @@ class ShapedButtonDemo(wx.Frame):
         btn2.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, True))
         btn2.Bind(wx.EVT_BUTTON, self.OnEllipse)
 
-        bmp = wx.Bitmap(os.path.join(bitmapDir, "ffwd.png"), wx.BITMAP_TYPE_PNG)   
+        bmp = wx.Bitmap(os.path.join(bitmapDir, "ffwd.png"), wx.BITMAP_TYPE_PNG)
         btn3 = SBitmapTextToggleButton(self.panel, -1, bmp, "FFWD")
         bmp = wx.Bitmap(os.path.join(bitmapDir, "rewind.png"), wx.BITMAP_TYPE_PNG)
         btn3.SetBitmapSelected(bmp)
         btn3.SetEllipseAxis(1.4, 1)
         btn3.Bind(wx.EVT_BUTTON, self.OnFFWDRewind)
 
-        bmp = wx.Bitmap(os.path.join(bitmapDir, "round.png"), wx.BITMAP_TYPE_PNG)   
+        bmp = wx.Bitmap(os.path.join(bitmapDir, "round.png"), wx.BITMAP_TYPE_PNG)
         btn4 = SBitmapButton(self.panel, -1, bmp)
         btn4.SetEllipseAxis(1, 1.4)
         btn4.Bind(wx.EVT_BUTTON, self.OnRound)
-        
+
         esizer.Add(btn1, 1, wx.EXPAND | wx.ALL, 5)
         esizer.Add(btn2, 1, wx.EXPAND | wx.ALL, 5)
         esizer.Add(btn3, 1, wx.EXPAND | wx.ALL, 5)
@@ -332,32 +332,32 @@ class ShapedButtonDemo(wx.Frame):
         esizer.AddGrowableCol(1)
 
         return esizer
-    
+
 
     def CreateMenuBar(self):
 
         file_menu = wx.Menu()
-        
-        AS_EXIT = wx.NewId()        
+
+        AS_EXIT = wx.NewId()
         file_menu.Append(AS_EXIT, "&Exit")
         self.Bind(wx.EVT_MENU, self.OnClose, id=AS_EXIT)
 
         help_menu = wx.Menu()
 
-        AS_ABOUT = wx.NewId()        
+        AS_ABOUT = wx.NewId()
         help_menu.Append(AS_ABOUT, "&About...")
         self.Bind(wx.EVT_MENU, self.OnAbout, id=AS_ABOUT)
 
         menu_bar = wx.MenuBar()
 
         menu_bar.Append(file_menu, "&File")
-        menu_bar.Append(help_menu, "&Help")        
+        menu_bar.Append(help_menu, "&Help")
 
-        return menu_bar        
+        return menu_bar
 
 
     def OnClose(self, event):
-        
+
         self.Destroy()
 
 
@@ -369,19 +369,19 @@ class ShapedButtonDemo(wx.Frame):
               "To Me At The Following Adresses:\n\n" + \
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-              
+
         dlg = wx.MessageDialog(self, msg, "ShapedButton Demo",
                                wx.OK | wx.ICON_INFORMATION)
-        
+
         dlg.ShowModal()
         dlg.Destroy()
-        
+
 
     def OnRewind(self, event):
 
         self.eventtext.SetLabel("Rewind Button!")
         self.eventtext.Refresh()
-        
+
         event.Skip()
 
 
@@ -401,7 +401,7 @@ class ShapedButtonDemo(wx.Frame):
         self.rewind.Enable(False)
         self.ffwd.Enable(False)
         self.record.Enable(False)
-                
+
         event.Skip()
 
 
@@ -418,7 +418,7 @@ class ShapedButtonDemo(wx.Frame):
 
             event.Skip()
             return
-  
+
         self.eventtext.SetLabel("What Are You Recording? ;-)")
         self.eventtext.Refresh()
         self.stop.Enable(True)
@@ -426,7 +426,7 @@ class ShapedButtonDemo(wx.Frame):
         self.rewind.Enable(False)
         self.ffwd.Enable(False)
         self.play.Enable(False)
-        
+
         event.Skip()
 
 
@@ -436,9 +436,9 @@ class ShapedButtonDemo(wx.Frame):
             self.eventtext.SetLabel("Pausing Play Or Recording...")
         else:
             self.eventtext.SetLabel("Playing After A Pause...")
-            
+
         self.eventtext.Refresh()
-                
+
         event.Skip()
 
 
@@ -446,7 +446,7 @@ class ShapedButtonDemo(wx.Frame):
 
         self.eventtext.SetLabel("Everything Stopped")
         self.eventtext.Refresh()
-        
+
         self.stop.Enable(False)
         self.pause.Enable(False)
         self.rewind.Enable(True)
@@ -456,7 +456,7 @@ class ShapedButtonDemo(wx.Frame):
         self.play.SetToggle(False)
         self.pause.SetToggle(False)
         self.record.SetToggle(False)
-        
+
         event.Skip()
 
 
@@ -464,10 +464,10 @@ class ShapedButtonDemo(wx.Frame):
 
         self.eventtext.SetLabel("Fast Forward Button!")
         self.eventtext.Refresh()
-        
+
         event.Skip()
-        
-        
+
+
     def OnNineButtons(self, event):
 
         btn = event.GetEventObject()
@@ -475,10 +475,10 @@ class ShapedButtonDemo(wx.Frame):
 
         mystr = "Button: " + label + ", Rotation: " + \
                 str(int(btn.GetAngleOfRotation())) + " Degrees"
-        
+
         self.eventtext.SetLabel(mystr)
         self.eventtext.Refresh()
-        
+
         event.Skip()
 
 
@@ -486,7 +486,7 @@ class ShapedButtonDemo(wx.Frame):
 
         self.eventtext.SetLabel("Italy VS Canada ;-)")
         self.eventtext.Refresh()
-        
+
         event.Skip()
 
 
@@ -500,7 +500,7 @@ class ShapedButtonDemo(wx.Frame):
         self.eventtext.SetLabel(label)
         self.eventtext.Refresh()
 
-        event.Skip()        
+        event.Skip()
 
 
     def OnRotated1(self, event):
@@ -513,10 +513,10 @@ class ShapedButtonDemo(wx.Frame):
         self.eventtext.SetLabel(mystr)
         self.eventtext.Refresh()
 
-        btn.SetAngleOfRotation(random.randint(0, 359))        
-        
+        btn.SetAngleOfRotation(random.randint(0, 359))
+
         event.Skip()
-        
+
 
     def OnEllipse(self, event):
 
@@ -529,12 +529,12 @@ class ShapedButtonDemo(wx.Frame):
         self.eventtext.Refresh()
 
         event.Skip()
-        
+
 
     def OnFFWDRewind(self, event):
 
         btn = event.GetEventObject()
-        
+
         if event.GetIsDown():
             label = "Let's Rewind Everything"
             btn.SetLabel("REW")
@@ -544,7 +544,7 @@ class ShapedButtonDemo(wx.Frame):
 
         self.eventtext.SetLabel(label)
         self.eventtext.Refresh()
-        
+
         event.Skip()
 
 
@@ -594,7 +594,7 @@ def runTest(frame, nb, log):
 overview = docs
 
 
-if __name__ == '__main__':        
+if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])

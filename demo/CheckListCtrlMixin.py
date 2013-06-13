@@ -15,7 +15,7 @@ class CheckListCtrl(wx.ListCtrl, CheckListCtrlMixin):
 
 
     def OnItemActivated(self, evt):
-        self.ToggleItem(evt.m_itemIndex)
+        self.ToggleItem(evt.Index)
 
 
     # this is called by the base class when an item is checked/unchecked
@@ -46,10 +46,10 @@ class TestPanel(wx.Panel):
 
         for key, data in musicdata.iteritems():
             index = self.list.InsertStringItem(sys.maxint, data[0])
-            self.list.SetStringItem(index, 1, data[1])
-            self.list.SetStringItem(index, 2, data[2])
+            self.list.SetItem(index, 1, data[1])
+            self.list.SetItem(index, 2, data[2])
             self.list.SetItemData(index, key)
-      
+
         self.list.SetColumnWidth(0, wx.LIST_AUTOSIZE)
         self.list.SetColumnWidth(1, wx.LIST_AUTOSIZE)
         self.list.SetColumnWidth(2, 100)
@@ -60,13 +60,13 @@ class TestPanel(wx.Panel):
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected, self.list)
         self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnItemDeselected, self.list)
 
-        
+
     def OnItemSelected(self, evt):
-        self.log.write('item selected: %s\n' % evt.m_itemIndex)
-        
+        self.log.write('item selected: %s\n' % evt.Index)
+
     def OnItemDeselected(self, evt):
-        self.log.write('item deselected: %s\n' % evt.m_itemIndex)
-        
+        self.log.write('item deselected: %s\n' % evt.Index)
+
 
 #----------------------------------------------------------------------
 

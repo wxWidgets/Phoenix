@@ -35,7 +35,7 @@ _sampleText2 = "wx.Frame, wx.SplitterWindow, wx.TreeCtrl, wx.Notebook, " \
 
 _sampleList = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight']
 _sampleList2 = _sampleList + ['nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen']
-              
+
 _title = "PersistentControls for wxPython :-D "
 _configFile1 = os.path.join(dirName, "Example1")
 _configFile2 = os.path.join(dirName, "Example2")
@@ -52,7 +52,7 @@ class PersistentPanel(wx.Panel):
 
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         sizer = wx.FlexGridSizer(3, 2, 10, 10)
-        
+
         btn1 = wx.Button(self, -1, "Example 1")
         text1 = ExpandoTextCtrl(self, -1, _sampleText1, size=(300,-1), style=wx.TE_READONLY)
 
@@ -61,7 +61,7 @@ class PersistentPanel(wx.Panel):
 
         sizer.Add(btn1, 0, wx.ALIGN_CENTER)
         sizer.Add(text1, 1, wx.EXPAND)
-        
+
         sizer.Add(btn2, 0, wx.ALIGN_CENTER)
         sizer.Add(text2, 1, wx.EXPAND)
 
@@ -69,7 +69,7 @@ class PersistentPanel(wx.Panel):
         mainSizer.Add(sizer, 1, wx.EXPAND|wx.ALL, 20)
         self.SetSizer(mainSizer)
         mainSizer.Layout()
-        
+
         btn1.Bind(wx.EVT_BUTTON, self.OnExample1)
         btn2.Bind(wx.EVT_BUTTON, self.OnExample2)
 
@@ -82,14 +82,14 @@ class PersistentPanel(wx.Panel):
     def OnExample2(self, event):
 
         frame = PersistentFrame2(self, _title + "- Example 2", (700, 500))
-        
+
 
 class PersistentFrame1(wx.Frame):
 
     def __init__(self, parent, title, size):
 
         wx.Frame.__init__(self, parent, -1, title, size=size, name="Example1")
-        
+
         self._auiMgr = AUI.AuiManager()
         self._auiMgr.SetManagedWindow(self)
 
@@ -105,10 +105,10 @@ class PersistentFrame1(wx.Frame):
         self.CenterOnParent()
         self.Show()
 
-        self.Bind(wx.EVT_CLOSE, self.OnClose) 
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
         wx.CallAfter(self.RegisterControls)
-        
-        
+
+
     def CreateMenuBar(self):
 
         # Prepare the menu bar
@@ -121,7 +121,7 @@ class PersistentFrame1(wx.Frame):
         menu1.Append(102, "wx.F&ontDialog")
         menu1.AppendSeparator()
         menu1.Append(103, "wx.&TextEntryDialog")
-        menu1.AppendSeparator()        
+        menu1.AppendSeparator()
         menu1.Append(105, "&Close", "Close this frame")
         # Add menu to the menu bar
         menuBar.Append(menu1, "&Dialogs")
@@ -154,7 +154,7 @@ class PersistentFrame1(wx.Frame):
         tb3 = AUI.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, AUI.AUI_TB_DEFAULT_STYLE)
         tb3.SetName("AuiToolBar")
         tb3.SetToolBitmapSize(wx.Size(16, 16))
-        
+
         tb3_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16, 16))
         tb3.AddSimpleTool(ID_AuiToolBar, "Check 1", tb3_bmp1, "Check 1", AUI.ITEM_CHECK)
         tb3.AddSimpleTool(ID_AuiToolBar+1, "Check 2", tb3_bmp1, "Check 2", AUI.ITEM_CHECK)
@@ -203,7 +203,7 @@ class PersistentFrame1(wx.Frame):
         box1.Add(fgs, 1, wx.EXPAND|wx.ALL, 5)
         pickerPanel.SetSizer(box1)
         box1.Layout()
-        
+
         otherPanel = wx.Panel(self)
         box2 = wx.BoxSizer(wx.VERTICAL)
 
@@ -214,7 +214,7 @@ class PersistentFrame1(wx.Frame):
                             name="ComboBox1")
 
         boldFont = wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, "")
-        
+
         box2 = wx.BoxSizer(wx.HORIZONTAL)
         box2.Add((0, 0), 1)
         box2.Add(radiobox, 0, wx.ALL|wx.ALIGN_CENTER, 5)
@@ -232,11 +232,11 @@ class PersistentFrame1(wx.Frame):
         box2.Add(sizer_1, 1, wx.EXPAND|wx.ALIGN_CENTER, 0)
         box2.Add((0, 0), 1, 1)
 
-        otherPanel.SetSizer(box2)        
+        otherPanel.SetSizer(box2)
 
         otherPanel2 = wx.Panel(self)
         box3 = wx.BoxSizer(wx.VERTICAL)
-        
+
         gs1 = wx.FlexGridSizer(2, 3, 5, 10)
 
         slider = wx.Slider(otherPanel2, -1, 3, 0, 10, style=wx.SL_HORIZONTAL|wx.SL_LABELS,
@@ -280,14 +280,14 @@ class PersistentFrame1(wx.Frame):
 
 
     def Register(self, children=None):
-        
+
         if children is None:
             self._persistMgr.RegisterAndRestore(self)
             self._persistMgr.RegisterAndRestore(self.GetMenuBar())
             children = self.GetChildren()
-            
+
         for child in children:
-            
+
             name = child.GetName()
 
             if name not in PM.BAD_DEFAULT_NAMES and "widget" not in name and \
@@ -297,7 +297,7 @@ class PersistentFrame1(wx.Frame):
 
             if child.GetChildren():
                 self.Register(child.GetChildren())
-                
+
 
     def CloseWindow(self, event):
 
@@ -308,7 +308,7 @@ class PersistentFrame1(wx.Frame):
 
         self._persistMgr.SaveAndUnregister()
         event.Skip()
-        
+
 
     def OnDialogs(self, event):
 
@@ -319,7 +319,7 @@ class PersistentFrame1(wx.Frame):
             data = wx.ColourData()
             dlg = wx.ColourDialog(self, data)
             dlg.SetName("ColourDialog1")
-            
+
         elif evId == 102:
             # wx.FontDialog
             data = wx.FontData()
@@ -340,7 +340,7 @@ class PersistentFrame1(wx.Frame):
 
         self._persistMgr.Unregister(dlg)
         dlg.Destroy()
-        
+
 
 # The wx.HtmlListBox derives from wx.VListBox, but draws each item
 # itself as a wx.HtmlCell.
@@ -354,7 +354,7 @@ class MyHtmlListBox(wx.HtmlListBox):
 
 
 class PersistentFrame2(wx.Frame):
-    
+
     def __init__(self, parent, title, size):
 
         wx.Frame.__init__(self, parent, -1, title, size=size, name="Example2")
@@ -365,11 +365,11 @@ class PersistentFrame2(wx.Frame):
 
         self.split1 = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER, name="Splitter1")
         self.treectrl = self.CreateTreeListCtrl(False)
-        
+
         self.split2 = wx.SplitterWindow(self.split1, -1, style=wx.SP_3D|wx.SP_BORDER, name="Splitter2")
         self.notebook = wx.Notebook(self.split2, name="Notebook1")
         dummyPanel = wx.Panel(self.split2)
-        
+
         text = "Hello world!\nI am a simple wx.TextCtrl" \
                "I will remember my value if you change it!"
 
@@ -385,14 +385,14 @@ class PersistentFrame2(wx.Frame):
 
         self.DoLayout(dummyPanel)
         self.SetIcon(images.Mondrian.Icon)
-        
-        self.Bind(wx.EVT_CLOSE, self.OnClose) 
+
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
         wx.CallAfter(self.RegisterControls)
 
         self.CenterOnParent()
         self.Show()
 
-        
+
     def DoLayout(self, dummyPanel):
 
         sizer_5 = wx.BoxSizer(wx.HORIZONTAL)
@@ -441,7 +441,7 @@ class PersistentFrame2(wx.Frame):
 
         il = wx.ImageList(16, 16)
         il.Add(images.Smiles.GetBitmap())
-        
+
         listCtrl = wx.ListCtrl(self.notebook, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER, name="ListCtrl1")
         for col in xrange(6):
             listCtrl.InsertColumn(col, "Column %d"%col)
@@ -453,7 +453,7 @@ class PersistentFrame2(wx.Frame):
                 idx = listCtrl.InsertImageStringItem(sys.maxint, text%(row+1, 1), 0)
             else:
                 idx = listCtrl.InsertStringItem(sys.maxint, text%(row+1, 1))
-            
+
             for col in xrange(1, 6):
                 listCtrl.SetStringItem(idx, col, text%(row+1, col+1), random.randint(0, 1)-1)
 
@@ -525,9 +525,9 @@ class PersistentFrame2(wx.Frame):
         hlb.SetItemCount(300)
         hlb.SetSelection(0)
 
-        return hlb        
+        return hlb
 
-        
+
     def OnClose(self, event):
 
         self._persistMgr.SaveAndUnregister()
@@ -546,11 +546,11 @@ class PersistentFrame2(wx.Frame):
         if children is None:
             self._persistMgr.RegisterAndRestore(self)
             children = self.GetChildren()
-            
+
         for child in children:
-            
+
             name = child.GetName()
-            
+
             if name not in PM.BAD_DEFAULT_NAMES and "wxtreelist" not in name and \
                "AuiTabCtrl" not in name:
                 self._persistMgr.RegisterAndRestore(child)
@@ -558,7 +558,7 @@ class PersistentFrame2(wx.Frame):
             if child.GetChildren():
                 self.Register(child.GetChildren())
 
-        
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
@@ -570,7 +570,7 @@ def runTest(frame, nb, log):
 
 overview = PM.__doc__
 
-if __name__ == '__main__':        
+if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])

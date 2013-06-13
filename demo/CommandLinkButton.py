@@ -1,5 +1,6 @@
 
 import wx
+import wx.adv
 
 #----------------------------------------------------------------------
 
@@ -8,7 +9,7 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
-        cmd = wx.CommandLinkButton(self, -1,
+        cmd = wx.adv.CommandLinkButton(self, -1,
                                    "wx.CommandLinkButton",
                                    """\
 This type of button includes both a main label and a 'note' that is meant to

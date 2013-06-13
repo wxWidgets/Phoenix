@@ -61,7 +61,7 @@ class MyPrintout(wx.Printout):
         maxY = maxY + (2 * marginY)
 
         # Get the size of the DC in pixels
-        (w, h) = dc.GetSizeTuple()
+        (w, h) = dc.GetSize()
 
         # Calculate a suitable scaling factor
         scaleX = float(w) / maxX
@@ -98,7 +98,7 @@ class TestPrintPanel(wx.Panel):
         self.printData = wx.PrintData()
         self.printData.SetPaperId(wx.PAPER_LETTER)
         self.printData.SetPrintMode(wx.PRINT_MODE_PRINTER)
-        
+
         self.box = wx.BoxSizer(wx.VERTICAL)
         self.canvas = ScrolledWindow.MyCanvas(self)
         self.box.Add(self.canvas, 1, wx.GROW)
@@ -122,11 +122,10 @@ class TestPrintPanel(wx.Panel):
         self.SetSizer(self.box)
 
 
-
     def OnPageSetup(self, evt):
         psdd = wx.PageSetupDialogData(self.printData)
         psdd.EnablePrinter(True)
-        psdd.CalculatePaperSizeFromId()
+        # psdd.CalculatePaperSizeFromId()
         dlg = wx.PageSetupDialog(self, psdd)
         dlg.ShowModal()
 
@@ -143,7 +142,7 @@ class TestPrintPanel(wx.Panel):
         printout2 = MyPrintout(self.canvas, self.log)
         self.preview = wx.PrintPreview(printout, printout2, data)
 
-        if not self.preview.Ok():
+        if not self.preview.IsOk():
             self.log.WriteText("Houston, we have a problem...\n")
             return
 
@@ -153,8 +152,6 @@ class TestPrintPanel(wx.Panel):
         pfrm.SetPosition(self.frame.GetPosition())
         pfrm.SetSize(self.frame.GetSize())
         pfrm.Show(True)
-
-
 
     def OnDoPrint(self, event):
         pdd = wx.PrintDialogData(self.printData)
@@ -180,8 +177,6 @@ def runTest(frame, nb, log):
 
 
 
-
-
 overview = """\
 <html>
 <body>
@@ -193,26 +188,26 @@ setup dialog.
 
 <p>Classes demonstrated here:<P>
 <ul>
-    <li><b>wx.Printout()</b> - This class encapsulates the functionality of printing out 
-        an application document. A new class must be derived and members overridden 
-        to respond to calls such as OnPrintPage and HasPage. Instances of this class 
-        are passed to wx.Printer.Print() or a wx.PrintPreview object to initiate 
+    <li><b>wx.Printout()</b> - This class encapsulates the functionality of printing out
+        an application document. A new class must be derived and members overridden
+        to respond to calls such as OnPrintPage and HasPage. Instances of this class
+        are passed to wx.Printer.Print() or a wx.PrintPreview object to initiate
         printing or previewing.<P><p>
-        
-    <li><b>wx.PrintData()</b> - This class holds a variety of information related to 
-        printers and printer device contexts. This class is used to create a 
-        wx.PrinterDC and a wx.PostScriptDC. It is also used as a data member of 
-        wx.PrintDialogData and wx.PageSetupDialogData, as part of the mechanism for 
+
+    <li><b>wx.PrintData()</b> - This class holds a variety of information related to
+        printers and printer device contexts. This class is used to create a
+        wx.PrinterDC and a wx.PostScriptDC. It is also used as a data member of
+        wx.PrintDialogData and wx.PageSetupDialogData, as part of the mechanism for
         transferring data between the print dialogs and the application.<p><p>
 
-    <li><b>wx.PrintDialog()</b> - This class represents the print and print setup 
-        common dialogs. You may obtain a wx.PrinterDC device context from a 
+    <li><b>wx.PrintDialog()</b> - This class represents the print and print setup
+        common dialogs. You may obtain a wx.PrinterDC device context from a
         successfully dismissed print dialog.<p><p>
-        
-    <li><b>wx.PrintPreview()</b> - Objects of this class manage the print preview 
-        process. The object is passed a wx.Printout object, and the wx.PrintPreview 
-        object itself is passed to a wx.PreviewFrame object. Previewing is started by 
-        initializing and showing the preview frame. Unlike wxPrinter.Print, flow of 
+
+    <li><b>wx.PrintPreview()</b> - Objects of this class manage the print preview
+        process. The object is passed a wx.Printout object, and the wx.PrintPreview
+        object itself is passed to a wx.PreviewFrame object. Previewing is started by
+        initializing and showing the preview frame. Unlike wxPrinter.Print, flow of
         control returns to the application immediately after the frame is shown.<p><p>
 </ul>
 

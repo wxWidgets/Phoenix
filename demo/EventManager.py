@@ -9,8 +9,8 @@
 # Licence:     wxWindows license
 #---------------------------------------------------------------------------
 
-import  wx
-import  wx.lib.evtmgr   as  em
+import wx
+import wx.lib.evtmgr as em
 
 #----------------------------------------------------------------------
 
@@ -20,9 +20,9 @@ class TestPanel(wx.Panel):
         self.log = log
 
         fsize    = self.GetFont().GetPointSize()
-        f1 = wx.Font(fsize+0, wx.SWISS, wx.NORMAL, wx.NORMAL)
-        f2 = wx.Font(fsize+2, wx.SWISS, wx.NORMAL, wx.BOLD)
-        f3 = wx.Font(fsize+6, wx.SWISS, wx.NORMAL, wx.BOLD)
+        f1 = wx.Font(fsize+0, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        f2 = wx.Font(fsize+2, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
+        f3 = wx.Font(fsize+6, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
 
         title1 = wx.StaticText(self, -1, 'EventManager')
         title1.SetFont(f3)
@@ -111,7 +111,7 @@ class Tile(wx.Window):
 
     def doLayout(self, event):
         self.Layout()
-        
+
 
     def setHover(self, event):
         self.SetBackgroundColour(Tile.hover)
@@ -126,7 +126,6 @@ class Tile(wx.Window):
     def setNormal(self, event):
         self.SetBackgroundColour(Tile.normal)
         self.Refresh()
-
 
 
 class InnerTile(wx.Window):
@@ -181,7 +180,7 @@ class InnerTile(wx.Window):
 
 
     def makeColor(self, mouseEvent):
-        self.makeColorFromTuple(mouseEvent.GetPositionTuple())
+        self.makeColorFromTuple(mouseEvent.GetPosition())
 
 
     def makeColorFromTuple(self, (x, y)):
@@ -192,8 +191,6 @@ class InnerTile(wx.Window):
         g = InnerTile.START_COLOR_TUPLE[1] + (InnerTile.DELTAS[1] * percent)
         b = InnerTile.START_COLOR_TUPLE[2] + (InnerTile.DELTAS[2] * percent)
         self.setColor(wx.Colour(int(r), int(g), int(b)))
-
-
 
 
 #----------------------------------------------------------------------

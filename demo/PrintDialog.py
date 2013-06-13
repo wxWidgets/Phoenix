@@ -20,7 +20,7 @@ class TestPanel(wx.Panel):
         data.EnablePageNumbers(True)
         data.SetMinPage(1)
         data.SetMaxPage(5)
-        data.SetAllPages(True)
+        # data.SetAllPages(True)
 
         dlg = wx.PrintDialog(self, data)
 
@@ -29,7 +29,6 @@ class TestPanel(wx.Panel):
             self.log.WriteText('GetAllPages: %d\n' % data.GetAllPages())
 
         dlg.Destroy()
-
 
 
 #---------------------------------------------------------------------------
@@ -43,7 +42,7 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-This class represents the print and print setup common dialogs. You may obtain 
+This class represents the print and print setup common dialogs. You may obtain
 a wx.PrinterDC device context from a successfully dismissed print dialog.
 
 User information is stored in a wx.PrintDialogData object that is passed to the

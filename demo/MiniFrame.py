@@ -5,7 +5,7 @@ import  wx
 class MyMiniFrame(wx.MiniFrame):
     def __init__(
         self, parent, title, pos=wx.DefaultPosition, size=wx.DefaultSize,
-        style=wx.DEFAULT_FRAME_STYLE 
+        style=wx.DEFAULT_FRAME_STYLE
         ):
 
         wx.MiniFrame.__init__(self, parent, -1, title, pos, size, style)
@@ -20,7 +20,7 @@ class MyMiniFrame(wx.MiniFrame):
         self.Close(True)
 
     def OnCloseWindow(self, event):
-        print "OnCloseWindow"
+        # print("OnCloseWindow")
         self.Destroy()
 
 #---------------------------------------------------------------------------
@@ -36,12 +36,12 @@ class TestPanel(wx.Panel):
 
     def OnButton(self, evt):
         win = MyMiniFrame(self, "This is a wx.MiniFrame",
-                          style=wx.DEFAULT_FRAME_STYLE | wx.TINY_CAPTION_HORIZ)
+                          style=wx.DEFAULT_FRAME_STYLE | wx.TINY_CAPTION)
         win.SetSize((200, 200))
         win.CenterOnParent(wx.BOTH)
         win.Show(True)
 
-        
+
 #---------------------------------------------------------------------------
 
 
@@ -54,8 +54,8 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-A MiniFrame is a Frame with a small title bar. It is suitable for floating 
-toolbars that must not take up too much screen area. In other respects, it's the 
+A MiniFrame is a Frame with a small title bar. It is suitable for floating
+toolbars that must not take up too much screen area. In other respects, it's the
 same as a wx.Frame.
 """
 

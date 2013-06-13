@@ -12,11 +12,11 @@ class TestPanel(wx.Panel):
         wx.StaticText(self, -1, "This is a wx.Slider.", (45, 15))
 
         slider = wx.Slider(
-            self, 100, 25, 1, 100, (30, 60), (250, -1), 
-            wx.SL_HORIZONTAL | wx.SL_AUTOTICKS | wx.SL_LABELS 
+            self, 100, 25, 1, 100, (30, 60), (250, -1),
+            wx.SL_HORIZONTAL | wx.SL_AUTOTICKS | wx.SL_LABELS
             )
 
-        slider.SetTickFreq(5, 1)
+        slider.SetTickFreq(5)
 
 
 
@@ -32,10 +32,10 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-A slider is a control with a handle which can be pulled back and forth to 
+A slider is a control with a handle which can be pulled back and forth to
 change the value.
 
-In Windows versions below Windows 95, a scrollbar is used to simulate the slider. 
+In Windows versions below Windows 95, a scrollbar is used to simulate the slider.
 In Windows 95, the track bar control is used.
 
 """

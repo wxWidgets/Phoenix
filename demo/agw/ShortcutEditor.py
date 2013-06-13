@@ -260,7 +260,7 @@ class ShortcutEditorDemo(wx.Frame):
                 
                 recursive = ''
                 
-            top_menu.AppendItem(sub_menu)
+            top_menu.Append(sub_menu)
 
             if random.randint(0, 1) == 1 and index < num_menus - 1:
                 # Append a separator

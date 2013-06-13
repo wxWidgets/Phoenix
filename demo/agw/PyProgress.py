@@ -45,13 +45,13 @@ class PyProgressDemo(wx.Panel):
         static1 = wx.StaticText(self.panel, -1, "Gauge Proportion (%): ")
         self.slider1 = wx.Slider(self.panel, -1, 20, 1, 99, style=wx.SL_HORIZONTAL|
                                  wx.SL_AUTOTICKS|wx.SL_LABELS)
-        self.slider1.SetTickFreq(10, 1)
+        self.slider1.SetTickFreq(10)
         self.slider1.SetValue(20)
         
         static2 = wx.StaticText(self.panel, -1, "Gauge Steps: ")
         self.slider2 = wx.Slider(self.panel, -1, 50, 2, 100, style=wx.SL_HORIZONTAL|
                                  wx.SL_AUTOTICKS|wx.SL_LABELS)
-        self.slider2.SetTickFreq(10, 1)
+        self.slider2.SetTickFreq(10)
         self.slider2.SetValue(50)
 
         static3 = wx.StaticText(self.panel, -1, "Gauge Background Colour: ")

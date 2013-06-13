@@ -6,8 +6,8 @@
 #              .wdr-derived demo
 #
 # Created:     12/31/03
-# RCS-ID:      $Id$
-# Copyright:   
+# RCS-ID:      $Id: MimeTypesManager.py 71035 2012-03-28 19:16:31Z RD $
+# Copyright:
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 #
@@ -28,18 +28,18 @@ if 'unicode' in wx.PlatformInfo:
 
 class MimeTypesDemoPanel(wx.Panel):
     def __init__(self, parent, log):
-        
+
         self.log = log
-        
+
         wx.Panel.__init__(self, parent, -1)
 
         # This will be used for all of the labels that follow (bold label)
         bfont = self.GetFont()
         bfont.SetWeight(wx.BOLD)
-        
+
         # Contains everything
         tsizer = wx.BoxSizer(wx.VERTICAL)
-        
+
         # Contains upper controls
         usizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -159,7 +159,7 @@ class MimeTypesDemoPanel(wx.Panel):
         # multi-line) so the sizer can then expand it to whatever
         # space is available
         self.allcommands.SetSize((-1, 20))
-        
+
         llsizer.Add(self.allcommands, (7, 1), (1, 3), wx.ALL | wx.GROW | wx.ALIGN_CENTER, 2)
 
         # Tell the sizer to expand this row as needed
@@ -169,7 +169,7 @@ class MimeTypesDemoPanel(wx.Panel):
         #----------------------------------------------------------------------------
 
         lrsizer = wx.BoxSizer(wx.VERTICAL)
-        
+
         #------- List box with known MIME types
 
         t = wx.StaticText(self, -1, 'Known MIME types')
@@ -194,13 +194,13 @@ class MimeTypesDemoPanel(wx.Panel):
 
         self.SetSizer(tsizer)
         tsizer.Fit(self)
-        
+
         # Populate the Known MIME types list with what is in the database
         try:
             mtypes = wx.TheMimeTypesManager.EnumAllFileTypes()
         except wx.PyAssertionError:
             mtypes = []
-        
+
         # TODO: On wxMac, EnumAllFileTypes produces tons of dupes, which
         # causes quirky behavior because the list control doesn't expect
         # dupes, and simply wastes space. So remove the dupes for now,
@@ -213,7 +213,7 @@ class MimeTypesDemoPanel(wx.Panel):
         if mimes:
             mimes.sort()
             self.mimelist.AppendItems(mimes)
-            
+
         # Do a lookup of *.wav for a starting position
         self.OnLookup()
 
@@ -238,7 +238,7 @@ class MimeTypesDemoPanel(wx.Panel):
             if fileType:
                 if self.mimelist.FindString(txt) != -1:
                     self.mimelist.SetSelection(self.mimelist.FindString(txt))
-        
+
         # Must be an extension lookup
         else:
             fileType = wx.TheMimeTypesManager.GetFileTypeFromExtension(txt)
@@ -274,7 +274,7 @@ class MimeTypesDemoPanel(wx.Panel):
                 self.icon.SetIcon(icon)
             else:
                 bmp = images.NoIcon.GetBitmap()
-                self.icon.SetBitmap(bmp)                
+                self.icon.SetBitmap(bmp)
             self.iconsource.SetValue(file)
             self.iconoffset.SetValue(convert(idx))
 
@@ -309,14 +309,14 @@ class MimeTypesDemoPanel(wx.Panel):
 
         #------- All commands
         all = ft.GetAllCommands(filename, mime)
-        
+
         if all is None:
             self.allcommands.SetValue("")
         else:
             verbs, commands = all
             text = pprint.pformat(map(None, verbs, commands))
             self.allcommands.SetValue(text)
-            
+
 
 #----------------------------------------------------------------------
 
@@ -328,16 +328,16 @@ def runTest(frame, nb, log):
 
 overview = """\
 
-The <b>wx.MimeTypesManager</b> class allows the application to retrieve the 
-information about all known MIME types from a system-specific location and the 
-filename extensions to the MIME types and vice versa. After initialization the 
-methods <b>GetFileTypeFromMimeType()</b> and <b>GetFileTypeFromExtension()</b> 
-may be called: they will return a <b>wx.FileType</b> object which may be further 
+The <b>wx.MimeTypesManager</b> class allows the application to retrieve the
+information about all known MIME types from a system-specific location and the
+filename extensions to the MIME types and vice versa. After initialization the
+methods <b>GetFileTypeFromMimeType()</b> and <b>GetFileTypeFromExtension()</b>
+may be called: they will return a <b>wx.FileType</b> object which may be further
 queried for file description, icon and other attributes.
 
 A global instance of <b>wx.MimeTypesManager</b> is always available as
-<b>wx.TheMimeTypesManager</b>. It is recommended to use this instance instead 
-of creating your own because gathering MIME information may take quite a long 
+<b>wx.TheMimeTypesManager</b>. It is recommended to use this instance instead
+of creating your own because gathering MIME information may take quite a long
 on Unix systems.
 
 This demo shows how to use wx.TheMimeTypesManager to list all known MIME types

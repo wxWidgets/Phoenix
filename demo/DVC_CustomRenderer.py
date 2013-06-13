@@ -38,7 +38,7 @@ class MyCustomRenderer(dv.PyDataViewCustomRenderer):
             dc.SetBrush(wx.Brush('light grey'))
             dc.SetPen(wx.TRANSPARENT_PEN)
             rect.Deflate(1, 1)
-            dc.DrawRoundedRectangleRect(rect, 2)
+            dc.DrawRoundedRectangle(rect, 2)
 
         # And then finish up with this helper function that draws the
         # text for us, dealing with alignment, font and color

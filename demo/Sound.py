@@ -1,6 +1,6 @@
 
 import  wx
-
+import wx.adv
 from Main import opj
 
 #----------------------------------------------------------------------
@@ -22,9 +22,9 @@ class TestPanel(wx.Panel):
 
     def OnButton1(self, evt):
         try:
-            sound = wx.Sound(opj('data/anykey.wav'))
+            sound = wx.adv.Sound(opj('data/anykey.wav'))
             self.log.write("before Play...\n")
-            sound.Play(wx.SOUND_SYNC)
+            sound.Play(wx.adv.SOUND_SYNC)
             self.log.write("...after Play\n")
         except NotImplementedError, v:
             wx.MessageBox(str(v), "Exception Message")
@@ -33,16 +33,16 @@ class TestPanel(wx.Panel):
     def OnButton2(self, evt):
         try:
             if True:
-                sound = wx.Sound(opj('data/plan.wav'))
+                sound = wx.adv.Sound(opj('data/plan.wav'))
             else:
                 # sounds can also be loaded from a buffer object
                 data = open(opj('data/plan.wav'), 'rb').read()
                 sound = wx.SoundFromData(data)
                 
             self.log.write("before Play...\n")
-            sound.Play(wx.SOUND_ASYNC)
+            sound.Play(wx.adv.SOUND_ASYNC)
             self.sound = sound  # save a reference (This shoudln't be needed, but there seems to be a bug...)
-            wx.YieldIfNeeded()
+            # wx.YieldIfNeeded()
             self.log.write("...after Play\n")
         except NotImplementedError, v:
             wx.MessageBox(str(v), "Exception Message")
@@ -52,14 +52,14 @@ class TestPanel(wx.Panel):
         dlg = wx.FileDialog(wx.GetTopLevelParent(self),
                             "Choose a sound file",
                             wildcard="WAV files (*.wav)|*.wav",
-                            style=wx.OPEN)
+                            style=wx.FD_OPEN)
         if dlg.ShowModal() == wx.ID_OK:
             try:
-                #sound = wx.Sound(dlg.GetPath(), wx.SOUND_SYNC)
+                #sound = wx.adv.Sound(dlg.GetPath(), wx.SOUND_SYNC)
                 #sound.Play()
 
                 # another way to do it.
-                wx.Sound.PlaySound(dlg.GetPath(), wx.SOUND_SYNC)
+                wx.adv.Sound.PlaySound(dlg.GetPath(), wx.adv.SOUND_SYNC)
                 
             except NotImplementedError, v:
                 wx.MessageBox(str(v), "Exception Message")

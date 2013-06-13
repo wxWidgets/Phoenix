@@ -69,7 +69,7 @@ class TestHtmlPanel(wx.Panel):
         if frame:
             self.titleBase = frame.GetTitle()
 
-        html.HtmlWindow_AddFilter(MyHtmlFilter(log))
+        html.HtmlWindow.AddFilter(MyHtmlFilter(log))
 
         self.html = MyHtmlWindow(self, -1, log)
         self.html.SetRelatedFrame(frame, self.titleBase + " -- %s")
@@ -132,10 +132,10 @@ class TestHtmlPanel(wx.Panel):
 
 
     def OnLoadFile(self, event):
-        dlg = wx.FileDialog(self, style=wx.OPEN,
+        dlg = wx.FileDialog(self, style=wx.FD_OPEN,
                             wildcard='HTML Files|*.htm;*.html', )
 
-        if dlg.ShowModal():
+        if dlg.ShowModal() == wx.OK:
             path = dlg.GetPath()
             self.html.LoadPage(path)
 
@@ -145,7 +145,7 @@ class TestHtmlPanel(wx.Panel):
     def OnLoadURL(self, event):
         dlg = wx.TextEntryDialog(self, "Enter a URL")
 
-        if dlg.ShowModal():
+        if dlg.ShowModal() == wx.OK:
             url = dlg.GetValue()
             self.html.LoadPage(url)
 

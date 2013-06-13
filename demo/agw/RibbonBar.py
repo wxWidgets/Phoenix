@@ -12,10 +12,10 @@ except:
 
 sys.path.append(os.path.split(dirName)[0])
 
-##try:
-from agw import ribbon as RB
-##except ImportError: # if it's not there locally, try the wxPython lib.
-##    import wx.lib.agw.ribbon as RB
+try:
+    from agw import ribbon as RB
+except ImportError: # if it's not there locally, try the wxPython lib.
+   import wx.lib.agw.ribbon as RB
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
@@ -230,7 +230,7 @@ triangle = PyEmbeddedImage(
 def CreateBitmap(xpm):
 
     bmp = eval(xpm).Bitmap
-    
+
     return bmp
 
 
@@ -239,7 +239,7 @@ def CreateBitmap(xpm):
 class ColourClientData(object):
 
     def __init__(self, name, colour):
-        
+
         self._name = name
         self._colour = colour
 
@@ -248,7 +248,7 @@ class ColourClientData(object):
 
         return self._name
 
-    
+
     def GetColour(self):
 
         return self._colour
@@ -264,16 +264,16 @@ class RibbonFrame(wx.Frame):
         wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
         panel = wx.Panel(self)
-        
+
         self._ribbon = RB.RibbonBar(panel, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
 
         self._bitmap_creation_dc = wx.MemoryDC()
         self._colour_data = wx.ColourData()
-        
+
         home = RB.RibbonPage(self._ribbon, wx.ID_ANY, "Examples", CreateBitmap("ribbon"))
         toolbar_panel = RB.RibbonPanel(home, wx.ID_ANY, "Toolbar", wx.NullBitmap, wx.DefaultPosition,
                                        wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE|RB.RIBBON_PANEL_EXT_BUTTON)
-        
+
         toolbar = RB.RibbonToolBar(toolbar_panel, ID_MAIN_TOOLBAR)
         toolbar.AddTool(wx.ID_ANY, CreateBitmap("align_left"))
         toolbar.AddTool(wx.ID_ANY, CreateBitmap("align_center"))
@@ -338,7 +338,7 @@ class RibbonFrame(wx.Frame):
         sizer_panelsizer.Add(sizer_panelcombo2, 0, wx.ALL|wx.EXPAND, 2)
         sizer_panelsizer.AddStretchSpacer(1)
         sizer_panel.SetSizer(sizer_panelsizer)
-        
+
         label_font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT)
         self._bitmap_creation_dc.SetFont(label_font)
 
@@ -352,13 +352,13 @@ class RibbonFrame(wx.Frame):
                                      wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(32, 32)), "")
         provider_bar.AddSimpleButton(ID_AUI_PROVIDER, "AUI Provider", CreateBitmap("aui_style"), "")
         provider_bar.AddSimpleButton(ID_MSW_PROVIDER, "MSW Provider", CreateBitmap("msw_style"), "")
-        
+
         primary_panel = RB.RibbonPanel(scheme, wx.ID_ANY, "Primary Colour", CreateBitmap("colours"))
         self._primary_gallery = self.PopulateColoursPanel(primary_panel, self._default_primary, ID_PRIMARY_COLOUR)
 
         secondary_panel = RB.RibbonPanel(scheme, wx.ID_ANY, "Secondary Colour", CreateBitmap("colours"))
         self._secondary_gallery = self.PopulateColoursPanel(secondary_panel, self._default_secondary, ID_SECONDARY_COLOUR)
-    
+
         dummy_2 = RB.RibbonPage(self._ribbon, wx.ID_ANY, "Empty Page", CreateBitmap("empty"))
         dummy_3 = RB.RibbonPage(self._ribbon, wx.ID_ANY, "Another Page", CreateBitmap("empty"))
 
@@ -369,7 +369,7 @@ class RibbonFrame(wx.Frame):
 
         self._togglePanels = wx.ToggleButton(panel, ID_TOGGLE_PANELS, "&Toggle panels")
         self._togglePanels.SetValue(True)
-    
+
         s = wx.BoxSizer(wx.VERTICAL)
 
         s.Add(self._ribbon, 0, wx.EXPAND)
@@ -384,12 +384,12 @@ class RibbonFrame(wx.Frame):
         self.SetIcon(images.Mondrian.Icon)
         self.CenterOnScreen()
         self.Show()
-                                
+
 
     def BindEvents(self, bars):
 
         selection, shapes, provider_bar, toolbar_panel = bars
-        
+
         provider_bar.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnDefaultProvider, id=ID_DEFAULT_PROVIDER)
         provider_bar.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnAUIProvider, id=ID_AUI_PROVIDER)
         provider_bar.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnMSWProvider, id=ID_MSW_PROVIDER)
@@ -428,48 +428,48 @@ class RibbonFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnPositionTopBoth, id=ID_POSITION_TOP_BOTH)
 
         self._togglePanels.Bind(wx.EVT_TOGGLEBUTTON, self.OnTogglePanels, id=ID_TOGGLE_PANELS)
-        
+
 
     def SetBarStyle(self, agwStyle):
 
         self._ribbon.Freeze()
         self._ribbon.SetAGWWindowStyleFlag(agwStyle)
-        
+
         pTopSize = self.panel.GetSizer()
         pToolbar = wx.FindWindowById(ID_MAIN_TOOLBAR)
 
         if agwStyle & RB.RIBBON_BAR_FLOW_VERTICAL:
-        
+
             self._ribbon.SetTabCtrlMargins(10, 10)
             pTopSize.SetOrientation(wx.HORIZONTAL)
             if pToolbar:
                 pToolbar.SetRows(3, 5)
-        
+
         else:
-        
+
             self._ribbon.SetTabCtrlMargins(50, 20)
             pTopSize.SetOrientation(wx.VERTICAL)
             if pToolbar:
                 pToolbar.SetRows(2, 3)
-        
+
         self._ribbon.Realize()
         self._ribbon.Thaw()
         self.panel.Layout()
-        
+
 
     def PopulateColoursPanel(self, panel, defc, gallery_id):
 
         gallery = wx.FindWindowById(gallery_id, panel)
-        
+
         if gallery:
             gallery.Clear()
         else:
             gallery = RB.RibbonGallery(panel, gallery_id)
-            
+
         dc = self._bitmap_creation_dc
         def_item = self.AddColourToGallery(gallery, "Default", dc, defc)
         gallery.SetSelection(def_item)
-        
+
         self.AddColourToGallery(gallery, "BLUE", dc)
         self.AddColourToGallery(gallery, "BLUE VIOLET", dc)
         self.AddColourToGallery(gallery, "BROWN", dc)
@@ -514,10 +514,10 @@ class RibbonFrame(wx.Frame):
     def GetGalleryColour(self, gallery, item, name=None):
 
         data = gallery.GetItemClientData(item)
-        
+
         if name != None:
             name = data.GetName()
-            
+
         return data.GetColour(), name
 
 
@@ -529,19 +529,19 @@ class RibbonFrame(wx.Frame):
         gallery = event.GetGallery()
         provider = gallery.GetArtProvider()
 
-        if event.GetGalleryItem() != None:        
+        if event.GetGalleryItem() != None:
             if provider == self._ribbon.GetArtProvider():
                 provider = provider.Clone()
                 gallery.SetArtProvider(provider)
-            
+
             provider.SetColour(RB.RIBBON_ART_GALLERY_HOVER_BACKGROUND_COLOUR,
                                self.GetGalleryColour(event.GetGallery(), event.GetGalleryItem(), None)[0])
-        
-        else:        
-            if provider != self._ribbon.GetArtProvider():            
+
+        else:
+            if provider != self._ribbon.GetArtProvider():
                 gallery.SetArtProvider(self._ribbon.GetArtProvider())
                 del provider
-            
+
 
     def OnPrimaryColourSelect(self, event):
 
@@ -558,7 +558,7 @@ class RibbonFrame(wx.Frame):
 
         colour, name = self.GetGalleryColour(event.GetGallery(), event.GetGalleryItem(), "")
         self.AddText("Colour %s selected as secondary."%name)
-        
+
         primary, dummy, tertiary = self._ribbon.GetArtProvider().GetColourScheme(1, None, 1)
         self._ribbon.GetArtProvider().SetColourScheme(primary, colour, tertiary)
         self.ResetGalleryArtProviders()
@@ -569,10 +569,10 @@ class RibbonFrame(wx.Frame):
 
         if self._primary_gallery.GetArtProvider() != self._ribbon.GetArtProvider():
             self._primary_gallery.SetArtProvider(self._ribbon.GetArtProvider())
-        
-        if self._secondary_gallery.GetArtProvider() != self._ribbon.GetArtProvider():        
+
+        if self._secondary_gallery.GetArtProvider() != self._ribbon.GetArtProvider():
             self._secondary_gallery.SetArtProvider(self._ribbon.GetArtProvider())
-    
+
 
     def OnSelectionExpandHButton(self, event):
 
@@ -595,7 +595,7 @@ class RibbonFrame(wx.Frame):
 
 
     def OnCrossButton(self, event):
-        
+
         self.AddText("Cross button clicked.")
 
 
@@ -751,8 +751,8 @@ class RibbonFrame(wx.Frame):
     def OnExtButton(self, event):
 
         wx.MessageBox("Extended button activated")
-        
-    
+
+
     def AddText(self, msg):
 
         self._logwindow.AppendText(msg)
@@ -765,17 +765,17 @@ class RibbonFrame(wx.Frame):
         item = None
 
         if colour != "Default":
-            c = wx.NamedColour(colour)
-            
+            c = wx.Colour(colour)
+
         if value is not None:
             c = value
-        
+
         if c.IsOk():
-            
+
             iWidth = 64
             iHeight = 40
 
-            bitmap = wx.EmptyBitmap(iWidth, iHeight)
+            bitmap = wx.Bitmap(iWidth, iHeight)
             dc.SelectObject(bitmap)
             b = wx.Brush(c)
             dc.SetPen(wx.BLACK_PEN)
@@ -789,20 +789,20 @@ class RibbonFrame(wx.Frame):
             notcblue = min(abs(~c.Blue()), 255)
 
             foreground = wx.Colour(notcred, notcgreen, notcblue)
-            
+
             if abs(foreground.Red() - c.Red()) + abs(foreground.Blue() - c.Blue()) + abs(foreground.Green() - c.Green()) < 64:
                 # Foreground too similar to background - use a different
                 # strategy to find a contrasting colour
                 foreground = wx.Colour((c.Red() + 64) % 256, 255 - c.Green(),
                                        (c.Blue() + 192) % 256)
-            
+
             dc.SetTextForeground(foreground)
             dc.DrawText(colour, (iWidth - size.GetWidth() + 1) / 2, (iHeight - size.GetHeight()) / 2)
             dc.SelectObjectAsSource(wx.NullBitmap)
 
             item = gallery.Append(bitmap, wx.ID_ANY)
             gallery.SetItemClientData(item, ColourClientData(colour, c))
-        
+
         return item
 
 
@@ -815,11 +815,11 @@ class RibbonFrame(wx.Frame):
         self._ribbon.DismissExpandedPanel()
         if gallery.GetSelection():
             self._colour_data.SetColour(self.GetGalleryColour(gallery, gallery.GetSelection(), None)[0])
-            
+
         dlg = wx.ColourDialog(self, self._colour_data)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
-        
+
             self._colour_data = dlg.GetColourData()
             clr = self._colour_data.GetColour()
 
@@ -831,13 +831,13 @@ class RibbonFrame(wx.Frame):
                     break
                 else:
                     item = None
-            
+
             # Colour not in gallery - add it
-            if item == None:            
+            if item == None:
                 item = self.AddColourToGallery(gallery, clr.GetAsString(wx.C2S_HTML_SYNTAX), self._bitmap_creation_dc,
                                                clr)
                 gallery.Realize()
-            
+
             # Set selection
             gallery.EnsureVisible(item)
             gallery.SetSelection(item)
@@ -848,7 +848,7 @@ class RibbonFrame(wx.Frame):
             dummy.SetGallery(gallery)
             dummy.SetGalleryItem(item)
             self.GetEventHandler().ProcessEvent(dummy)
-        
+
 
     def OnDefaultProvider(self, event):
 
@@ -915,7 +915,7 @@ def runTest(frame, nb, log):
 overview = RB.__doc__
 
 
-if __name__ == '__main__':        
+if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])

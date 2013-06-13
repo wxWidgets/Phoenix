@@ -28,7 +28,7 @@ class TestPanel(wx.Panel):
         # the new size of the window.
         self.InitBuffer()
         evt.Skip()
-        
+
 
     def OnPaint(self, evt):
         if USE_BUFFER:
@@ -49,14 +49,14 @@ class TestPanel(wx.Panel):
         sz = self.GetClientSize()
         sz.width = max(1, sz.width)
         sz.height = max(1, sz.height)
-        self._buffer = wx.EmptyBitmap(sz.width, sz.height, 32)
+        self._buffer = wx.Bitmap(sz.width, sz.height, 32)
 
         dc = wx.MemoryDC(self._buffer)
         dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
         dc.Clear()
         gc = self.MakeGC(dc)
         self.Draw(gc)
-        
+
 
     def MakeGC(self, dc):
         try:
@@ -76,19 +76,19 @@ class TestPanel(wx.Panel):
                 # backend, (GDI+ on Windows, CoreGraphics on Mac, or
                 # Cairo on GTK).
                 gc = wx.GraphicsContext.Create(dc)
-                
+
         except NotImplementedError:
             dc.DrawText("This build of wxPython does not support the wx.GraphicsContext "
                         "family of classes.",
                         25, 25)
             return None
         return gc
-        
-        
+
+
     def Draw(self, gc):
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.BOLD)
-        gc.SetFont(font)
+        gc.SetFont(font, wx.BLACK)
 
         # make a path that contains a circle and some lines, centered at 0,0
         path = gc.CreatePath()
@@ -102,7 +102,7 @@ class TestPanel(wx.Panel):
 
 
         # Now use that path to demonstrate various capbilites of the grpahics context
-        gc.PushState()             # save current translation/scale/other state 
+        gc.PushState()             # save current translation/scale/other state
         gc.Translate(60, 75)       # reposition the context origin
 
         gc.SetPen(wx.Pen("navy", 1))
@@ -113,16 +113,16 @@ class TestPanel(wx.Panel):
                                 ("FillPath",   gc.FillPath),
                                 ("DrawPath",   gc.DrawPath)]:
             w, h = gc.GetTextExtent(label)
-            
+
             gc.DrawText(label, -w/2, -BASE2-h-4)
             PathFunc(path)
             gc.Translate(2*BASE, 0)
 
-            
+
         gc.PopState()              # restore saved state
         gc.PushState()             # save it again
         gc.Translate(60, 200)      # offset to the lower part of the window
-        
+
         gc.DrawText("Scale", 0, -BASE2)
         gc.Translate(0, 20)
 
@@ -132,11 +132,11 @@ class TestPanel(wx.Panel):
         #                            (100,100), (0,100), (0,0)  ])
         #gc.ClipRegion(rgn)
         #gc.ResetClip()
-        
+
         gc.SetBrush(wx.Brush(wx.Colour(178,  34,  34, 128)))   # 128 == half transparent
         for cnt in range(8):
             gc.Scale(1.08, 1.08)    # increase scale by 8%
-            gc.Translate(5,5)     
+            gc.Translate(5,5)
             gc.DrawPath(path)
 
 
@@ -151,12 +151,12 @@ class TestPanel(wx.Panel):
         # draw our path again, rotating it about the central point,
         # and changing colors as we go
         for angle in range(0, 360, 30):
-            gc.PushState()         # save this new current state so we can 
+            gc.PushState()         # save this new current state so we can
                                    # pop back to it at the end of the loop
             r, g, b = [int(c * 255) for c in colorsys.hsv_to_rgb(float(angle)/360, 1, 1)]
             gc.SetBrush(wx.Brush(wx.Colour(r, g, b, 64)))
             gc.SetPen(wx.Pen(wx.Colour(r, g, b, 128)))
-            
+
             # use translate to artfully reposition each drawn path
             gc.Translate(1.5 * BASE2 * cos(radians(angle)),
                          1.5 * BASE2 * sin(radians(angle)))
@@ -172,12 +172,12 @@ class TestPanel(wx.Panel):
         bmp = wx.Bitmap(opj('bitmaps/toucan.png'))
         bsz = bmp.GetSize()
         gc.DrawBitmap(bmp,
-                      #-bsz.width, 
+                      #-bsz.width,
                       #-bsz.height/2,
 
-                      -bsz.width/2.5, 
+                      -bsz.width/2.5,
                       -bsz.height/2.5,
-                      
+
                       bsz.width, bsz.height)
 
 

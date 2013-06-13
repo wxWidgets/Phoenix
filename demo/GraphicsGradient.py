@@ -21,8 +21,8 @@ class GradientPanel(wx.Panel):
         
         # create a simple default brush we can use until a gradient
         # brush is given to us
-        ctx = g.GraphicsContext.CreateMeasuringContext()
-        self.brush = ctx.CreateBrush(wx.Brush('white'))
+        ctx = g.GraphicsContext.Create()
+        self.brush = wx.WHITE_BRUSH
 
     def DrawWithBrush(self, brush):
         self.brush = brush
@@ -37,7 +37,6 @@ class GradientPanel(wx.Panel):
         gc.DrawRectangle(0,0,w,h)
 
 
-
 class GradientStopPanel(wx.Panel):
     """
     Contains the controls for editing each gradient stop. (Colour,
@@ -49,13 +48,13 @@ class GradientStopPanel(wx.Panel):
         # make some widgets
         self.pos = wx.SpinCtrlDouble(self, value='%2f' % posVal, size=(65,-1),
                                      min=0.0, max=1.0, initial=posVal, inc=0.01)
-        self.pos.SetToolTipString(
+        self.pos.SetToolTip(
             "A value between 0 and 1 representing the distance between (x1,y1) "
             "and (x2,y2) for this gradient stop.")
-        self.colour = wx.ColourPickerCtrl(self, col=colour)
-        self.colour.SetToolTipString("The colour for this gradient stop")
+        self.colour = wx.ColourPickerCtrl(self, colour=colour)
+        self.colour.SetToolTip("The colour for this gradient stop")
         self.minusBtn = wx.Button(self, -1, " - ", style=wx.BU_EXACTFIT)
-        self.minusBtn.SetToolTipString("Remove this gradient stop")
+        self.minusBtn.SetToolTip("Remove this gradient stop")
 
         # put them in a sizer
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -230,7 +229,7 @@ class TestPanel(wx.Panel):
                 s.colour.GetColour(), s.pos.GetValue())
             gstops.Add(gs)
             
-        ctx = g.GraphicsContext.CreateMeasuringContext()
+        ctx = g.GraphicsContext.Create()
         brush = ctx.CreateLinearGradientBrush(x1,y1, x2,y2, gstops)
         self.gpanel.DrawWithBrush(brush)
         

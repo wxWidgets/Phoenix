@@ -1,6 +1,6 @@
 
 import wx
-import wx.combo
+import wx.adv
 
 import images
 
@@ -11,8 +11,8 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
-        bcb1 = wx.combo.BitmapComboBox(self, pos=(25,25), size=(200,-1))
-        bcb2 = wx.combo.BitmapComboBox(self, pos=(250,25), size=(200,-1))
+        bcb1 = wx.adv.BitmapComboBox(self, pos=(25,25), size=(200,-1))
+        bcb2 = wx.adv.BitmapComboBox(self, pos=(250,25), size=(200,-1))
 
         for bcb in [bcb1, bcb2]:
             for x in range(12):
@@ -32,7 +32,7 @@ class TestPanel(wx.Panel):
         cd  = bcb.GetClientData(idx)
         self.log.write("EVT_COMBOBOX: Id %d, string '%s', clientData '%s'" % (idx, st, cd))
 
-        
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

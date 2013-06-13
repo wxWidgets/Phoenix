@@ -73,7 +73,7 @@ class TestPanel(wx.Panel):
         else:
             replaceTxt = ""
 
-        self.log.write("%s -- Find text: %s  %s  Flags: %d  \n" %
+        self.log.write("%s -- Find text: %s   Replace text: %s  Flags: %d  \n" %
                        (evtType, evt.GetFindString(), replaceTxt, evt.GetFlags()))
 
 

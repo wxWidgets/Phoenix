@@ -15,17 +15,17 @@ class TestPanel(wx.Panel):
         b.SetDefault()
         b.SetSize(b.GetBestSize())
 
-        b = wx.Button(self, 20, "HELLO AGAIN!", (20, 80)) 
+        b = wx.Button(self, 20, "HELLO AGAIN!", (20, 80))
         self.Bind(wx.EVT_BUTTON, self.OnClick, b)
-        b.SetToolTipString("This is a Hello button...")
+        b.SetToolTip("This is a Hello button...")
 
         b = wx.Button(self, 40, "Flat Button?", (20,160), style=wx.NO_BORDER)
-        b.SetToolTipString("This button has a style flag of wx.NO_BORDER.\n"
+        b.SetToolTip("This button has a style flag of wx.NO_BORDER.\n"
                            "On some platforms that will give it a flattened look.")
         self.Bind(wx.EVT_BUTTON, self.OnClick, b)
 
         b = wx.Button(self, 50, "wx.Button with icon", (20, 220))
-        b.SetToolTipString("wx.Button can how have an icon on the left, right,\n"
+        b.SetToolTip("wx.Button can how have an icon on the left, right,\n"
                            "above or below the label.")
         self.Bind(wx.EVT_BUTTON, self.OnClick, b)
 
@@ -36,16 +36,16 @@ class TestPanel(wx.Panel):
                     #wx.BOTTOM
                     )
         b.SetBitmapMargins((2,2)) # default is 4 but that seems too big to me.
-        
+
         # Setting the bitmap and margins changes the best size, so
         # reset the initial size since we're not using a sizer in this
         # example which would have taken care of this for us.
-        b.SetInitialSize()  
+        b.SetInitialSize()
 
         #b = wx.Button(self, 60, "Multi-line\nbutton", (20, 280))
         #b = wx.Button(self, 70, pos=(160, 280))
         #b.SetLabel("Another\nmulti-line")
-        
+
     def OnClick(self, event):
         self.log.write("Click! (%d)\n" % event.GetId())
 

@@ -9,6 +9,7 @@
 import wx
 from wx.lib.stattext import GenStaticText as StaticText
 from wx.lib.buttons import GenBitmapButton as BitmapButton
+from wx.adv import TaskBarIcon as TaskBarIcon
 
 import os
 import sys
@@ -35,7 +36,7 @@ ArtIDs = [ "wx.ART_HELP_PAGE",
            "wx.ART_QUESTION",
            "wx.ART_WARNING",
            "wx.ART_INFORMATION",
-           "wx.ART_HELP", 
+           "wx.ART_HELP",
            ]
 
 
@@ -49,18 +50,18 @@ class BalloonTipDemo(wx.Frame):
 
         wx.Frame.__init__(self, parent, title="BalloonTip wxPython Demo ;-)")
 
-        self.statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
         statusbar_fields = [("Welcome To WxPython " + wx.VERSION_STRING),
                             ("BalloonTip Demo")]
-        
+
         for i in range(len(statusbar_fields)):
             self.statusbar.SetStatusText(statusbar_fields[i], i)
 
         self.SetIcon(images.Mondrian.GetIcon())
         self.SetMenuBar(self.CreateMenuBar())
-        
+
         panel = wx.Panel(self, -1)
 
         mainsizer = wx.FlexGridSizer(3, 4, hgap=2, vgap=2)
@@ -81,40 +82,40 @@ class BalloonTipDemo(wx.Frame):
         # Add A ListBox
         listbox = wx.ListBox(panel, -1, choices=samplelist, style=wx.LB_SINGLE)
         # Add A TreeCtrl
-        isz = (16,16)        
+        isz = (16,16)
         treecontrol = wx.TreeCtrl(panel, -1)
         il = wx.ImageList(isz[0], isz[1])
-        fldridx = il.Add(wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, isz))
-        fldropenidx = il.Add(wx.ArtProvider_GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, isz))
-        fileidx = il.Add(wx.ArtProvider_GetBitmap(wx.ART_REPORT_VIEW, wx.ART_OTHER, isz))
+        fldridx = il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, isz))
+        fldropenidx = il.Add(wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, isz))
+        fileidx = il.Add(wx.ArtProvider.GetBitmap(wx.ART_REPORT_VIEW, wx.ART_OTHER, isz))
         treecontrol.SetImageList(il)
         self.il = il
         root = treecontrol.AddRoot("ROOT")
-        treecontrol.SetPyData(root, None)
+        treecontrol.SetItemData(root, None)
         treecontrol.SetItemImage(root, fldridx, wx.TreeItemIcon_Normal)
         treecontrol.SetItemImage(root, fldropenidx, wx.TreeItemIcon_Expanded)
         for ii in range(11):
             child = treecontrol.AppendItem(root, samplelist[ii])
-            treecontrol.SetPyData(child, None)
+            treecontrol.SetItemData(child, None)
             treecontrol.SetItemImage(child, fldridx, wx.TreeItemIcon_Normal)
             treecontrol.SetItemImage(child, fldropenidx, wx.TreeItemIcon_Selected)
 
-        # Add A Slider            
-        slider = wx.Slider(panel, -1, 25, 1, 100, 
+        # Add A Slider
+        slider = wx.Slider(panel, -1, 25, 1, 100,
             style=wx.SL_HORIZONTAL | wx.SL_AUTOTICKS)# | wx.SL_LABELS)
-        slider.SetTickFreq(5, 1)
+        slider.SetTickFreq(5)
         # Add Another TextCtrl
         textctrl2 = wx.TextCtrl(panel, -1, "Another TextCtrl")
         # Add A GenStaticText
         statictext = StaticText(panel, -1, "Hello World!")
         statictext.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False))
-        bmp = wx.ArtProvider_GetBitmap(wx.ART_INFORMATION,
+        bmp = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION,
                                        wx.ART_TOOLBAR, (16,16))
         # Add A GenBitmapButton
         bitmapbutton = BitmapButton(panel, -1, bmp)
         button2 = wx.Button(panel, -1, "Disable BalloonTip")
 
-        tbicon = wx.TaskBarIcon()
+        tbicon = TaskBarIcon()
         tbicon.SetIcon(images.Mondrian.GetIcon())
 
         controls = list(panel.GetChildren())
@@ -134,7 +135,7 @@ class BalloonTipDemo(wx.Frame):
         mainsizer.Add(statictext, 0, wx.EXPAND | wx.ALIGN_CENTER | wx.ALL, 10)
         mainsizer.Add(bitmapbutton, 0, wx.ALL, 10)
         mainsizer.Add(button2, 0, wx.ALL, 10)
-        
+
         panel.SetSizer(mainsizer)
         mainsizer.Layout()
 
@@ -145,13 +146,13 @@ class BalloonTipDemo(wx.Frame):
         # Declare The BalloonTip Top-Left Icons
         icons = []
         for ii in xrange(4):
-            bmp = wx.ArtProvider_GetBitmap(eval(ArtIDs[ii]), wx.ART_TOOLBAR, (16,16))
+            bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[ii]), wx.ART_TOOLBAR, (16,16))
             icons.append(bmp)
-            
+
         icons.extend([None]*5)
 
         for ii in xrange(4, 9):
-            bmp = wx.ArtProvider_GetBitmap(eval(ArtIDs[ii]), wx.ART_TOOLBAR, (16,16))
+            bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[ii]), wx.ART_TOOLBAR, (16,16))
             icons.append(bmp)
 
         # Declare The BalloonTip Top Titles
@@ -164,12 +165,12 @@ class BalloonTipDemo(wx.Frame):
         fontthree = wx.Font(9, wx.SWISS, wx.ITALIC, wx.NORMAL, False)
         fontfour = wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, True)
 
-        # Declare The BalloonTip Top Titles Fonts    
+        # Declare The BalloonTip Top Titles Fonts
         titlefonts = [None, None, fontone, None, fonttwo, fontthree, None, None,
                       None, fontfour, fontthree, None, None]
 
         # Declare The BalloonTip Top Titles Colours
-        titlecolours = [None, None, wx.WHITE, wx.NamedColour("YELLOW"), None, wx.WHITE,
+        titlecolours = [None, None, wx.WHITE, wx.YELLOW, None, wx.WHITE,
                         wx.BLUE, wx.RED, None, None, wx.LIGHT_GREY, None, None]
 
         # Declare The BalloonTip Messages
@@ -250,11 +251,11 @@ class BalloonTipDemo(wx.Frame):
 
         # Store The Last BalloonTip Reference To Enable/Disable Globall The
         # BalloonTip. You Can Store Any Of Them, Not Necessarily The Last One.
-        self.lasttip = tipballoon          
+        self.lasttip = tipballoon
         self.gauge = gauge
         self.count = 0
-        
-        button2.Bind(wx.EVT_BUTTON, self.OnActivateBalloon)        
+
+        button2.Bind(wx.EVT_BUTTON, self.OnActivateBalloon)
         self.Bind(wx.EVT_IDLE, self.IdleHandler)
 
         frameSizer = wx.BoxSizer(wx.VERTICAL)
@@ -263,28 +264,28 @@ class BalloonTipDemo(wx.Frame):
         frameSizer.Layout()
         self.Fit()
 
-        self.CenterOnParent()        
+        self.CenterOnParent()
 
 
     def IdleHandler(self, event):
-        
+
         self.count = self.count + 1
 
         if self.count >= 50:
             self.count = 0
 
         self.gauge.SetValue(self.count)
-        
+
 
     def CreateMenuBar(self):
 
         # Make a menubar
         file_menu = wx.Menu()
         help_menu = wx.Menu()
-        
+
         TEST_QUIT = wx.NewId()
         TEST_ABOUT = wx.NewId()
-        
+
         file_menu.Append(TEST_QUIT, "&Exit")
         help_menu.Append(TEST_ABOUT, "&About")
 
@@ -315,30 +316,30 @@ class BalloonTipDemo(wx.Frame):
               "to me at the following adresses:\n\n" + \
               "andrea.gavana@agip.it\n" + "andrea_gavana@tin.it\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-              
+
         dlg = wx.MessageDialog(self, msg, "BalloonTip Demo",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False, "Verdana"))
         dlg.ShowModal()
         dlg.Destroy()
-        
+
 
     def OnActivateBalloon(self, event):
 
         button = event.GetEventObject()
         label = button.GetLabel()
         tips = self.lasttip
-        
+
         if label == "Disable BalloonTip":
             button.SetLabel("Enable BalloonTip")
             tips.EnableTip(False)
         else:
             button.SetLabel("Disable BalloonTip")
             tips.EnableTip(True)
-            
+
         event.Skip()
 
-        
+
 #---------------------------------------------------------------------------
 
 

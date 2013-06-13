@@ -43,7 +43,7 @@ check the source for this sample to see how to implement them.
         submenu.Append(2031,"Lanthanium")
         submenu.Append(2032,"Cerium")
         submenu.Append(2033,"Praseodymium")
-        menu2.AppendMenu(203, "Lanthanides", submenu)
+        menu2.Append(203, "Lanthanides", submenu)
         # Append 2nd menu
         menuBar.Append(menu2, "&Elements")
 
@@ -65,10 +65,23 @@ check the source for this sample to see how to implement them.
         menuBar.Append(menu4, "Chec&k")
 
         menu5 = wx.Menu()
-        # Show how to put an icon in the menu
+        # Show how to put an icon in the menu item
         item = wx.MenuItem(menu5, 500, "&Smile!\tCtrl+S", "This one has an icon")
         item.SetBitmap(images.Smiles.GetBitmap())
-        menu5.AppendItem(item)
+        menu5.Append(item)
+
+        menuitemwithbmp = wx.MenuItem(menu5, wx.ID_ANY, "Submenu with Bitmap")
+        # Show how to change the background colour of the menu item
+        menuitemwithbmp.SetBackgroundColour(wx.YELLOW)
+        # Show how to change the menu item's text colour
+        menuitemwithbmp.SetTextColour(wx.BLUE)
+        # Show how to change the menu item's font
+        menuitemwithbmp.SetFont(wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, ''))
+        submenu = wx.Menu(style=wx.MENU_TEAROFF)
+        submenu.Append(wx.MenuItem(menu5, wx.ID_ANY, "Woot!"))
+        menuitemwithbmp.SetBitmap(images.book.GetBitmap())
+        menuitemwithbmp.SetSubMenu(submenu)
+        menu5.Append(menuitemwithbmp)
 
         # Shortcuts
         menu5.Append(501, "Interesting thing\tCtrl+A", "Note the shortcut!")
@@ -78,7 +91,7 @@ check the source for this sample to see how to implement them.
         menu5.Append(503, "remove the submenu")
         menu6 = wx.Menu()
         menu6.Append(601, "Submenu Item")
-        menu5.AppendMenu(504, "submenu", menu6)
+        menu5.Append(504, "submenu", menu6)
         menu5.Append(505, "remove this menu")
         menu5.Append(506, "this is updated")
         menu5.Append(507, "insert after this...")
@@ -131,7 +144,7 @@ check the source for this sample to see how to implement them.
             help = item.GetHelp()
 
         # but in this case just call Skip so the default is done
-        event.Skip() 
+        event.Skip()
 
 
     def Menu101(self, event):
@@ -198,10 +211,10 @@ check the source for this sample to see how to implement them.
         #menu.Remove(504)
 
         # this also works
-        menu.RemoveItem(mb.FindItemById(504))  
+        menu.RemoveItem(mb.FindItemById(504))
 
-        # This doesn't work, as expected since submenuItem is not on menu        
-        #menu.RemoveItem(submenuItem)   
+        # This doesn't work, as expected since submenuItem is not on menu
+        #menu.RemoveItem(submenuItem)
 
 
     def TestRemove2(self, evt):
@@ -265,29 +278,29 @@ def runTest(frame, nb, log):
 overview = """\
 A demo of using wx.MenuBar and wx.Menu in various ways.
 
-A menu is a popup (or pull down) list of items, one of which may be selected 
-before the menu goes away (clicking elsewhere dismisses the menu). Menus may be 
+A menu is a popup (or pull down) list of items, one of which may be selected
+before the menu goes away (clicking elsewhere dismisses the menu). Menus may be
 used to construct either menu bars or popup menus.
 
-A menu item has an integer ID associated with it which can be used to identify 
-the selection, or to change the menu item in some way. A menu item with a special 
-identifier -1 is a separator item and doesn't have an associated command but just 
+A menu item has an integer ID associated with it which can be used to identify
+the selection, or to change the menu item in some way. A menu item with a special
+identifier -1 is a separator item and doesn't have an associated command but just
 makes a separator line appear in the menu.
 
-Menu items may be either normal items, check items or radio items. Normal items 
-don't have any special properties while the check items have a boolean flag associated 
-to them and they show a checkmark in the menu when the flag is set. wxWindows 
-automatically toggles the flag value when the item is clicked and its value may 
-be retrieved using either IsChecked method of wx.Menu or wx.MenuBar itself or by 
+Menu items may be either normal items, check items or radio items. Normal items
+don't have any special properties while the check items have a boolean flag associated
+to them and they show a checkmark in the menu when the flag is set. wxWindows
+automatically toggles the flag value when the item is clicked and its value may
+be retrieved using either IsChecked method of wx.Menu or wx.MenuBar itself or by
 using wxEvent.IsChecked when you get the menu notification for the item in question.
 
-The radio items are similar to the check items except that all the other items 
-in the same radio group are unchecked when a radio item is checked. The radio group 
-is formed by a contiguous range of radio items, i.e. it starts at the first item of 
-this kind and ends with the first item of a different kind (or the end of the menu). 
-Notice that because the radio groups are defined in terms of the item positions 
-inserting or removing the items in the menu containing the radio items risks to not 
-work correctly. Finally note that the radio items are only supported under Windows 
+The radio items are similar to the check items except that all the other items
+in the same radio group are unchecked when a radio item is checked. The radio group
+is formed by a contiguous range of radio items, i.e. it starts at the first item of
+this kind and ends with the first item of a different kind (or the end of the menu).
+Notice that because the radio groups are defined in terms of the item positions
+inserting or removing the items in the menu containing the radio items risks to not
+work correctly. Finally note that the radio items are only supported under Windows
 and GTK+ currently.
 
 """
