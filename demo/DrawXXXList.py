@@ -187,7 +187,6 @@ def Init(w, h, n):
 
 
 def TestPoints(dc,log):
-    # dc.BeginDrawing()
     start = time.time()
     dc.SetPen(wx.Pen("BLACK", 4))
 
@@ -195,7 +194,6 @@ def TestPoints(dc,log):
     dc.DrawPointList(points, wx.Pen("RED", 2))
     dc.DrawPointList(points, pens)
 
-    # dc.EndDrawing()
     log.write("DrawTime: %s seconds with DrawPointList\n" % (time.time() - start))
 
 
@@ -203,7 +201,6 @@ def TestArrayPoints(dc,log):
     try:
         import Numeric
 
-        # dc.BeginDrawing()
         start = time.time()
         dc.SetPen(wx.Pen("BLACK", 1))
 
@@ -212,7 +209,6 @@ def TestArrayPoints(dc,log):
 
         #dc.DrawPointList(Apoints, wx.Pen("RED", 2))
         #dc.DrawPointList(Apoints, pens)
-        # dc.EndDrawing()
         log.write("DrawTime: %s seconds with DrawPointList an Numpy Array\n" % (time.time() - start))
     except ImportError:
         log.write("Couldn't import Numeric")
@@ -220,7 +216,6 @@ def TestArrayPoints(dc,log):
 
 
 def TestLines(dc,log):
-    # dc.BeginDrawing()
     start = time.time()
 
     dc.SetPen(wx.Pen("BLACK", 2))
@@ -228,12 +223,10 @@ def TestLines(dc,log):
     dc.DrawLineList(lines, wx.Pen("RED", 2))
     dc.DrawLineList(lines, pens)
 
-    # dc.EndDrawing()
     log.write("DrawTime: %s seconds with DrawLineList\n" % (time.time() - start))
 
 
 def TestRectangles(dc,log):
-    # dc.BeginDrawing()
     start = time.time()
 
     dc.SetPen( wx.Pen("BLACK",1) )
@@ -248,12 +241,10 @@ def TestRectangles(dc,log):
 ##        #dc.DrawRectangleList(rectangles,pens,brushes)
 ##        dc.DrawRectangleList(rectangles)
 
-    # dc.EndDrawing()
     log.write("DrawTime: %s seconds with DrawRectanglesList\n" % (time.time() - start))
 
 
 def TestEllipses(dc,log):
-    # dc.BeginDrawing()
     start = time.time()
 
     dc.SetPen( wx.Pen("BLACK",1) )
@@ -266,7 +257,6 @@ def TestEllipses(dc,log):
     dc.DrawEllipseList(rectangles,None,brushes)
     dc.DrawEllipseList(rectangles,pens,brushes)
 
-    # dc.EndDrawing()
     log.write("DrawTime: %s seconds with DrawEllipsesList\n" % (time.time() - start))
 
 
@@ -275,7 +265,6 @@ def TestRectanglesArray(dc,log):
         import Numeric
         Apoints = Numeric.array(rectangles)
 
-        # dc.BeginDrawing()
         start = time.time()
         dc.SetPen(wx.Pen("BLACK", 1))
         dc.DrawRectangleList(rectangles)
@@ -287,7 +276,6 @@ def TestRectanglesArray(dc,log):
 ##            #dc.DrawRectangleList(rectangles,pens,brushes)
 ##            dc.DrawRectangleList(rectangles)
 
-        # dc.EndDrawing()
         log.write("DrawTime: %s seconds with DrawRectangleList and Numpy Array\n" % (time.time() - start))
     except ImportError:
         log.write("Couldn't import Numeric")
@@ -295,7 +283,6 @@ def TestRectanglesArray(dc,log):
 
 
 def TestRectanglesLoop(dc,log):
-    # dc.BeginDrawing()
 
     start = time.time()
     dc.DrawRectangleList(rectangles,pens,brushes)
@@ -308,12 +295,10 @@ def TestRectanglesLoop(dc,log):
         dc.SetBrush( brushes[i]  )
         dc.DrawRectangle(rectangles[i][0],rectangles[i][1],rectangles[i][2],rectangles[i][3])
 
-    # dc.EndDrawing()
     log.write("DrawTime: %s seconds with Python loop\n" % (time.time() - start))
 
 
 def TestPolygons(dc,log):
-    # dc.BeginDrawing()
 
     start = time.time()
     dc.SetPen(wx.Pen("BLACK", 1))
@@ -324,11 +309,9 @@ def TestPolygons(dc,log):
     dc.DrawPolygonList(polygons,None,brushes)
     log.write("DrawTime: %s seconds with DrawPolygonList\n" % (time.time() - start))
 
-    # dc.EndDrawing()
 
 
 def TestText(dc,log):
-    # dc.BeginDrawing()
 
     start = time.time()
 
@@ -340,7 +323,6 @@ def TestText(dc,log):
 
     log.write("DrawTime: %s seconds with DrawTextList\n" % (time.time() - start))
 
-    # dc.EndDrawing()
 
 
 

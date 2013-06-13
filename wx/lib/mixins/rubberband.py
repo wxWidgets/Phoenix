@@ -328,7 +328,6 @@ class RubberBand:
         Draw one box shape and possibly erase another.
         """
         dc = wx.ClientDC(self.drawingSurface)
-        dc.BeginDrawing()
         dc.SetPen(wx.Pen(wx.WHITE, 1, wx.DOT))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetLogicalFunction(wx.XOR)
@@ -338,7 +337,6 @@ class RubberBand:
 
         r = wx.Rect(*boxToDraw)
         dc.DrawRectangleRect(r)
-        dc.EndDrawing()
 
     def __dumpMouseEvent(self, event):
         print 'Moving:          ',event.Moving()

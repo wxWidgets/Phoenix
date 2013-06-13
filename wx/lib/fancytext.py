@@ -364,9 +364,7 @@ def RenderToBitmap(str, background=None, enclose=1):
         dc.SetBackground(background) 
     dc.Clear()
     renderer = DCRenderer(dc, y=dy)
-    dc.BeginDrawing()
     RenderToRenderer(str, renderer, enclose)
-    dc.EndDrawing()
     dc.SelectObject(wx.NullBitmap)
     if background is None:
         img = wx.ImageFromBitmap(bmp)

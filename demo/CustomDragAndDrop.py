@@ -33,12 +33,10 @@ class DoodlePad(wx.Window):
         self.DrawSavedLines(dc)
 
     def DrawSavedLines(self, dc):
-        # dc.BeginDrawing()
         dc.SetPen(wx.Pen(wx.BLUE, 3))
         for line in self.lines:
             for coords in line:
                 dc.DrawLine(*coords)
-        # dc.EndDrawing()
 
     def OnLeftDown(self, event):
         if self.mode == "Drag":
@@ -64,14 +62,12 @@ class DoodlePad(wx.Window):
     def OnMotion(self, event):
         if self.HasCapture() and event.Dragging() and not self.mode == "Drag":
             dc = wx.ClientDC(self)
-            # dc.BeginDrawing()
             dc.SetPen(wx.Pen(wx.BLUE, 3))
             evtPos = event.GetPosition()
             coords = (self.x, self.y) + (evtPos.x, evtPos.y)
             self.curLine.append(coords)
             dc.DrawLine(*coords)
             self.x, self.y = event.GetPosition()
-            # dc.EndDrawing()
 
     def StartDragOpperation(self):
         # pickle the lines list
@@ -189,13 +185,11 @@ class DoodleViewer(wx.Window):
         self.DrawSavedLines(dc)
 
     def DrawSavedLines(self, dc):
-        # dc.BeginDrawing()
         dc.SetPen(wx.Pen(wx.RED, 3))
 
         for line in self.lines:
             for coords in line:
                 dc.DrawLine(*coords)
-        # dc.EndDrawing()
 
 #----------------------------------------------------------------------
 

@@ -164,7 +164,6 @@ class MyCanvas(wx.ScrolledWindow):
         random.seed()
         self.objids = []
         self.boundsdict = {}
-        dc.BeginDrawing()
         for i in range(SHAPE_COUNT):
             id = wx.NewId()
             dc.SetId(id)
@@ -252,7 +251,7 @@ class MyCanvas(wx.ScrolledWindow):
                 dc.DrawBitmap(self.bmp,x,y,True)
                 dc.SetIdBounds(id,wx.Rect(x,y,w,h))
                 self.objids.append(id)
-        dc.EndDrawing()
+
 
 class ControlPanel(wx.Panel):
     def __init__(self, parent, id, pos=wx.DefaultPosition,

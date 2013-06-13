@@ -985,8 +985,7 @@ class Calendar( wx.Control ):
         self.DoDrawing(DC)
 
     def DoDrawing(self, DC):
-        #DC = wx.PaintDC(self)
-        # DC.BeginDrawing()
+        DC = wx.PaintDC(self)
 
         try:
             cal = self.caldraw
@@ -1031,7 +1030,6 @@ class Calendar( wx.Control ):
         if self.set_day != None:
             self.SetDay(self.set_day)
 
-        # DC.EndDrawing()
 
     # draw the selection rectangle
     def DrawFocusIndicator(self, draw):
@@ -1049,7 +1047,6 @@ class Calendar( wx.Control ):
             return
 
         DC = wx.ClientDC(self)
-        # DC.BeginDrawing()
 
         brush = wx.Brush(MakeColor(bgcolor))
         DC.SetBrush(brush)
@@ -1061,14 +1058,12 @@ class Calendar( wx.Control ):
 
         self.caldraw.DrawDayText(DC,key)
 
-        # DC.EndDrawing()
 
     def DrawRectOrg(self, key, fgcolor = 'BLACK', width = 0):
         if key == None:
             return
 
         DC = wx.ClientDC(self)
-        # DC.BeginDrawing()
 
         brush = wx.Brush(wx.Colour(0, 0xFF, 0x80), wx.TRANSPARENT)
         DC.SetBrush(brush)
@@ -1081,7 +1076,6 @@ class Calendar( wx.Control ):
         rect = self.rg[key]
         DC.DrawRectangle(rect)
 
-        # DC.EndDrawing()
 
     # set the day selection
 

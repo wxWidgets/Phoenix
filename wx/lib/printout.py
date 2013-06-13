@@ -655,9 +655,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
         size = DC.GetSize()
         self.DC = DC
 
-        # DC.BeginDrawing()
         self.DrawText()
-        # DC.EndDrawing()
 
         self.sizew = DC.MaxY()
         self.sizeh = DC.MaxX()
@@ -942,7 +940,6 @@ class PrintTable(object):
 
     def DoDrawing(self, DC):
         size = DC.GetSize()
-        # DC.BeginDrawing()
 
         table = PrintTableDraw(self, DC, size)
         table.data = self.data
@@ -966,8 +963,6 @@ class PrintTable(object):
 
         table.OutCanvas()
         self.page_total = table.total_pages     # total display pages
-
-        # DC.EndDrawing()
 
         self.ymax = DC.MaxY()
         self.xmax = DC.MaxX()

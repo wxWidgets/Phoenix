@@ -69,7 +69,6 @@ class MyCanvas(wx.ScrolledWindow):
 
 
     def DoDrawing(self, dc, printing=False):
-        # dc.BeginDrawing()
         dc.SetPen(wx.Pen('RED'))
         dc.DrawRectangle(5, 5, 50, 50)
 
@@ -142,7 +141,7 @@ class MyCanvas(wx.ScrolledWindow):
         dc.GradientFillConcentric((20, 325, 50, 50),
                                   "red", "blue", (25,25))
         self.DrawSavedLines(dc)
-        # dc.EndDrawing()
+
 
     def DrawSavedLines(self, dc):
         dc.SetPen(wx.Pen('MEDIUM FOREST GREEN', 4))

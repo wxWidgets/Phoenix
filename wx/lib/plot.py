@@ -1165,7 +1165,6 @@ class PlotCanvas(wx.Panel):
         dc.SetTextForeground(self.GetForegroundColour())
         dc.SetTextBackground(self.GetBackgroundColour())
 
-        # dc.BeginDrawing()
         # dc.Clear()
 
         # set font size for every thing but title and legend
@@ -1264,7 +1263,6 @@ class PlotCanvas(wx.Panel):
         # print "entire graphics drawing took: %f second"%(_time.clock() - start)
         # remove the clipping region
         dc.DestroyClippingRegion()
-        # dc.EndDrawing()
 
         self._adjustScrollbars()
 
@@ -1528,9 +1526,7 @@ class PlotCanvas(wx.Panel):
         else:
             tmp_Buffer = self._Buffer.GetSubBitmap((0, 0, width, height))
             dcs = wx.MemoryDC(self._Buffer)
-        # dcs.BeginDrawing()
         self._pointLabelFunc(dcs,mDataDict)  #custom user pointLabel function
-        # dcs.EndDrawing()
 
         dc = wx.ClientDC( self.canvas )
         #this will erase if called twice
@@ -1607,13 +1603,11 @@ class PlotCanvas(wx.Panel):
         ptx,pty,rectWidth,rectHeight= self._point2ClientCoord(corner1, corner2)
         # draw rectangle
         dc = wx.ClientDC( self.canvas )
-        # dc.BeginDrawing()
         dc.SetPen(wx.Pen(wx.BLACK))
         dc.SetBrush(wx.Brush( wx.WHITE, wx.TRANSPARENT ) )
         dc.SetLogicalFunction(wx.INVERT)
         dc.DrawRectangle( ptx,pty, rectWidth,rectHeight)
         dc.SetLogicalFunction(wx.COPY)
-        # dc.EndDrawing()
 
     def _getFont(self,size):
         """Take font size, adjusts if printing and returns wx.Font"""

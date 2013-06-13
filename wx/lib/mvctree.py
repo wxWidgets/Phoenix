@@ -603,7 +603,6 @@ class TreePainter(Painter):
         treesize = self.tree.GetSize()
         size = self.tree.transform.GetSize()
         size = (max(treesize.width, size[0]+50), max(treesize.height, size[1]+50))
-        # dc.BeginDrawing()
         if doubleBuffered:
             mem_dc = wx.MemoryDC()
             if not self.GetBuffer():
@@ -635,7 +634,6 @@ class TreePainter(Painter):
                 #whole background, we have to paint in parts to undo selection coloring.
                 pb = paintBackground
                 self.paintWalk(node, dc, not pb)
-        # dc.EndDrawing()
 
     def GetDashPen(self):
         return self.dashpen

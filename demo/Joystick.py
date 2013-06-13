@@ -91,9 +91,6 @@ class JoyGauge(wx.Panel):
         # above.
         dc.SetClippingRegion(xorigin, yorigin, edgeSize, edgeSize)
 
-        # Optimize drawing a bit (for Win)
-        # dc.BeginDrawing()
-
         dc.SetBrush(wx.Brush(wx.Colour(251, 252, 237)))
         dc.DrawRectangle(xorigin, yorigin, edgeSize, edgeSize)
 
@@ -140,8 +137,6 @@ class JoyGauge(wx.Panel):
             dc.SetPen(wx.Pen(wx.RED, 2))
             dc.CrossHair(x, y)
 
-        # Turn off drawing optimization
-        # dc.EndDrawing()
 
     def Update(self):
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
@@ -234,9 +229,6 @@ class POVGauge(wx.Panel):
         xcenter = xorigin + diameter / 2
         ycenter = yorigin + diameter / 2
 
-        # Optimize drawing a bit (for Win)
-        # dc.BeginDrawing()
-
         # our 'raster'.
         dc.SetBrush(wx.Brush(wx.WHITE))
         dc.DrawCircle(xcenter, ycenter, diameter/2)
@@ -290,8 +282,6 @@ class POVGauge(wx.Panel):
                 dc.SetBrush(wx.Brush(wx.BLUE))
                 dc.DrawCircle(nx, ny, 8)
 
-        # Turn off drawing optimization
-        # dc.EndDrawing()
 
     def Update(self):
         dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
@@ -445,9 +435,6 @@ class LED(wx.Panel):
         xorigin = center - (bw / 2)
         yorigin = center - (bh / 2)
 
-        # Optimize drawing a bit (for Win)
-        # dc.BeginDrawing()
-
         # our 'raster'.
         if self.state == 0:
             dc.SetBrush(wx.Brush(wx.RED))
@@ -479,9 +466,6 @@ class LED(wx.Panel):
         dc.SetTextForeground(wx.WHITE)
         dc.DrawText(txt, tx, ty)
 
-        # Turn off drawing optimization
-        # dc.EndDrawing()
-        # dc.EndDrawing()
 
 
     def Update(self):
