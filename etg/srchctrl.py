@@ -99,6 +99,7 @@ def run():
 
     searchCtrl.find('LoadFile').ignore()
     searchCtrl.find('SaveFile').ignore()
+    searchCtrl.find('MacCheckSpelling').ignore()
     
     
     # Add some properties that autoProperties would not see because they are

@@ -64,6 +64,17 @@ def parseAndTweakModule():
     c.find('OnDropFiles').ignore()
 
     tools.fixWindowClass(c)
+
+    c.addCppMethod('void', 'MacCheckSpelling', '(bool check)',
+        doc="""\
+            Turn on the native spell checking for the text widget on 
+            OSX.  Ignored on other platforms.
+            """,
+        body="""\
+            #ifdef __WXMAC__
+                self->MacCheckSpelling(check);
+            #endif
+            """)
     
     
     c = module.find('wxTextUrlEvent')
