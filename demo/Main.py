@@ -1554,11 +1554,11 @@ class MainPanel(wx.Panel):
     around an issue on wxGTK.
     """
     def Freeze(self):
-        if not 'wxGTK' in wx.PlatformInfo:
+        if 'wxMSW' in wx.PlatformInfo:
             return super(MainPanel, self).Freeze()
 
     def Thaw(self):
-        if not 'wxGTK' in wx.PlatformInfo:
+        if 'wxMSW' in wx.PlatformInfo:
             return super(MainPanel, self).Thaw()
 
 #---------------------------------------------------------------------------
