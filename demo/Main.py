@@ -1698,7 +1698,7 @@ class wxPythonDemo(wx.Frame):
         self.statusBar = self.CreateStatusBar(2)#, wx.ST_SIZEGRIP
         self.statusBar.SetStatusWidths([-2, -1])
 
-        statusText = "Welcome to wxPython %s"%version.VERSION_STRING
+        statusText = "Welcome to wxPython %s" % wx.VERSION_STRING
         self.statusBar.SetStatusText(statusText, 0)
 
         self.downloadGauge = wx.Gauge(self.statusBar, wx.ID_ANY, 50)
@@ -2206,7 +2206,7 @@ class wxPythonDemo(wx.Frame):
     #---------------------------------------------
     def OnTreeLeftDown(self, event):
         # reset the overview text if the tree item is clicked on again
-        pt = event.GetPosition();
+        pt = event.GetPosition()
         item, flags = self.tree.HitTest(pt)
         if item == self.tree.GetSelection():
             self.SetOverview(self.tree.GetItemText(item)+" Overview", self.curOverview)

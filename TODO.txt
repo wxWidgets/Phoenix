@@ -139,7 +139,11 @@ other dev stuff
     Python code, and make them visible in the core wx namespace?  
     
   
-
+  * Should the demo/version.py file be maintained in the source repository?
+    Or just let it always be generated like wx/__version__.py?  
+    
+  * Should demo/Main.py ignore anything in the version strings after the '-' 
+    when comparing?
   
   
 
