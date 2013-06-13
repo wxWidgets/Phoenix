@@ -16,7 +16,7 @@
 #
 #
 # Created:     15-Dec-1999
-# RCS-ID:      $Id$
+# RCS-ID:      $Id: editor.py 73251 2012-12-22 08:01:03Z RD $
 # Copyright:   (c) 1999 by Dirk Holtwick, 1999
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
@@ -89,7 +89,7 @@ class Editor(wx.ScrolledWindow):
                                   style|wx.WANTS_CHARS)
 
         self.isDrawing = False
-        
+
         self.InitCoords()
         self.InitFonts()
         self.SetColors()
@@ -131,9 +131,9 @@ class Editor(wx.ScrolledWindow):
 
     def NiceFontForPlatform(self):
         if wx.Platform == "__WXMSW__":
-            font = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL)
+            font = wx.Font(10, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         else:
-            font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, False)
+            font = wx.Font(12, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         if wx.Platform == "__WXMAC__":
             font.SetNoAntiAliasing()
         return font
@@ -168,19 +168,19 @@ class Editor(wx.ScrolledWindow):
         else:
             self.sh = self.bh / self.fh
             if self.LinesInFile() >= self.sh:
-                self.bw = self.bw - wx.SystemSettings_GetMetric(wx.SYS_VSCROLL_X)
+                self.bw = self.bw - wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
                 self.sw = (self.bw / self.fw) - 1
 
             self.sw = (self.bw / self.fw) - 1
             if self.CalcMaxLineLen() >= self.sw:
-                self.bh = self.bh - wx.SystemSettings_GetMetric(wx.SYS_HSCROLL_Y)
+                self.bh = self.bh - wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y)
                 self.sh = self.bh / self.fh
 
 
     def UpdateView(self, dc = None):
         if dc is None:
             dc = wx.ClientDC(self)
-        if dc.Ok():
+        if dc.IsOk():
             self.SetCharDimensions()
             self.KeepCursorOnScreen()
             self.DrawSimpleCursor(0,0, dc, True)
@@ -208,8 +208,8 @@ class Editor(wx.ScrolledWindow):
         self.fh = dc.GetCharHeight()
 
     def SetColors(self):
-        self.fgColor = wx.NamedColour('black')
-        self.bgColor = wx.NamedColour('white')
+        self.fgColor = wx.BLACK
+        self.bgColor = wx.WHITE
         self.selectColor = wx.Colour(238, 220, 120)  # r, g, b = emacsOrange
 
     def InitDoubleBuffering(self):
@@ -411,7 +411,7 @@ class Editor(wx.ScrolledWindow):
 
     def OnTimer(self, event):
         screenX, screenY = wx.GetMousePosition()
-        x, y = self.ScreenToClientXY(screenX, screenY)
+        x, y = self.ScreenToClient((screenX, screenY))
         self.MouseToRow(y)
         self.MouseToCol(x)
         self.SelectUpdate()
