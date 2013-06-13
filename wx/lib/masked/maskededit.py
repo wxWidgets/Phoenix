@@ -5,7 +5,7 @@
 # Created:      02/11/2003
 # Copyright:    (c) 2003 by Jeff Childers, Will Sadkin, 2003
 # Portions:     (c) 2002 by Will Sadkin, 2002-2007
-# 
+#
 # License:      wxWidgets license
 # Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ masked.Ctrl:
     provides a single "unified" interface for masked controls.
 
 What follows is a description of how to configure the generic masked.TextCtrl
-and masked.ComboBox;  masked.NumCtrl and masked.TimeCtrl have their own demo 
+and masked.ComboBox;  masked.NumCtrl and masked.TimeCtrl have their own demo
 pages and interface descriptions.
 
 =========================
@@ -138,7 +138,7 @@ mask
     by use of the * mask character, including unicode characters above
     the standard ANSI keycode range.
     Note:  As string.punctuation doesn't typically include all unicode
-    symbols, you will have to use includechars to get some of these into 
+    symbols, you will have to use includechars to get some of these into
     otherwise restricted positions in your control, such as those specified
     with &.
 
@@ -150,7 +150,7 @@ mask
 
 
   .. note::
-  
+
       Masks containing only # characters and one optional decimal point
       character are handled specially, as "numeric" controls.  Such
       controls have special handling for typing the '-' key, handling
@@ -163,7 +163,7 @@ mask
 
 
   .. note::
-  
+
       Changing the mask for a control deletes any previous field classes
       (and any associated validation or formatting constraints) for them.
 
@@ -174,7 +174,7 @@ useFixedWidthFont
   subsequent modifications to the value.  Set to False if having
   the control font be the same as other controls is required. (This is
   a control-level parameter.)
-  
+
   .. versionchanged::  2.9.5
      The default is changed to False for numctrl only
 
@@ -188,7 +188,7 @@ formatcodes
   These other properties can be passed to the class when instantiating it:
     Formatcodes are specified as a string of single character formatting
     codes that modify  behavior of the control::
-    
+
             _  Allow spaces
             !  Force upper
             ^  Force lower
@@ -374,7 +374,7 @@ fields
   Eg::
 
     fields = [ Field(formatcodes='_r'), Field('choices=['a', 'b', 'c']) ]
-    
+
   Or::
 
     fields = {
@@ -702,7 +702,7 @@ Event Handling
                             self._SetKeyHandler('-', self._OnChangeSign)
 
         (Setting a func of None removes any keyhandler for the given key.)
-        
+
         "Navigation" keys are assumed to change the cursor position, and
         therefore don't cause automatic motion of the cursor as insertable
         characters do.
@@ -812,7 +812,7 @@ import  sys
 
 import  wx
 import wx.lib.six as six
- 
+
 if sys.version < '3':
     unicode = unicode
 else:
@@ -855,12 +855,12 @@ control = (
 # visible characters:
 wx_control_keycodes = list(range(32)) + list(nav) + list(control) + [
     wx.WXK_START, wx.WXK_LBUTTON, wx.WXK_RBUTTON, wx.WXK_CANCEL, wx.WXK_MBUTTON,
-    wx.WXK_CLEAR, wx.WXK_SHIFT, wx.WXK_CONTROL, wx.WXK_MENU, wx.WXK_PAUSE, 
+    wx.WXK_CLEAR, wx.WXK_SHIFT, wx.WXK_CONTROL, wx.WXK_MENU, wx.WXK_PAUSE,
     wx.WXK_CAPITAL, wx.WXK_SELECT, wx.WXK_PRINT, wx.WXK_EXECUTE, wx.WXK_SNAPSHOT,
     wx.WXK_HELP, wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3,
     wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, wx.WXK_NUMPAD8,
     wx.WXK_NUMPAD9, wx.WXK_MULTIPLY, wx.WXK_ADD, wx.WXK_SEPARATOR, wx.WXK_SUBTRACT,
-    wx.WXK_DECIMAL, wx.WXK_DIVIDE, wx.WXK_F1, wx.WXK_F2, wx.WXK_F3, wx.WXK_F4, 
+    wx.WXK_DECIMAL, wx.WXK_DIVIDE, wx.WXK_F1, wx.WXK_F2, wx.WXK_F3, wx.WXK_F4,
     wx.WXK_F5, wx.WXK_F6, wx.WXK_F7, wx.WXK_F8, wx.WXK_F9, wx.WXK_F10, wx.WXK_F11,
     wx.WXK_F12, wx.WXK_F13, wx.WXK_F14, wx.WXK_F15, wx.WXK_F16, wx.WXK_F17,
     wx.WXK_F18, wx.WXK_F19, wx.WXK_F20, wx.WXK_F21, wx.WXK_F22, wx.WXK_F23,
@@ -879,7 +879,7 @@ wx_control_keycodes = list(range(32)) + list(nav) + list(control) + [
     wx.WXK_SPECIAL11, wx.WXK_SPECIAL12, wx.WXK_SPECIAL13, wx.WXK_SPECIAL14, wx.WXK_SPECIAL15,
     wx.WXK_SPECIAL16, wx.WXK_SPECIAL17, wx.WXK_SPECIAL18, wx.WXK_SPECIAL19, wx.WXK_SPECIAL20
     ]
-    
+
 
 ## ---------- ---------- ---------- ---------- ---------- ---------- ----------
 
@@ -977,7 +977,7 @@ masktags = {
            },
        "USSTATENAME": {
            'mask': "ACCCCCCCCCCCCCCCCCCC",
-           'formatcodes': 'F_',                                                  
+           'formatcodes': 'F_',
            'validRegex': "([ACDFGHIKLMNOPRSTUVW] |%s)" % '|'.join(state_names),
            'choices': state_names,
            'choiceRequired': True,
@@ -1790,7 +1790,7 @@ class MaskedEditMixin:
             wx.WXK_NUMPAD_DELETE:   self._OnDelete,
             wx.WXK_INSERT:          self._OnInsert,
             wx.WXK_NUMPAD_INSERT:   self._OnInsert,
-            
+
             WXK_CTRL_A:             self._OnCtrl_A,
             WXK_CTRL_C:             self._OnCtrl_C,
             WXK_CTRL_S:             self._OnCtrl_S,
@@ -2150,7 +2150,7 @@ class MaskedEditMixin:
 
                 if self._autofit:
                     # this is tricky, because, as Robin explains:
-                    # "Basically there are two sizes to deal with, that are potentially 
+                    # "Basically there are two sizes to deal with, that are potentially
                     #  different.  The client size is the inside size and may, depending
                     #  on platform, exclude the borders and such.  The normal size is
                     #  the outside size that does include the borders.  What you are
@@ -2807,7 +2807,7 @@ class MaskedEditMixin:
             # leaves cursor after decimal point if floating point, otherwise at 0.
             if ord(self._decimalChar) not in self._keyhandlers or self._keyhandlers[ord(self._decimalChar)] != self._OnDecimalPoint:
                 self._SetKeyHandler(self._decimalChar, self._OnDecimalPoint)
-    
+
             if ord(self._shiftDecimalChar) not in self._keyhandlers or self._keyhandlers[ord(self._shiftDecimalChar)] != self._OnChangeField:
                 self._SetKeyHandler(self._shiftDecimalChar, self._OnChangeField)   # (Shift-'.' == '>' on US keyboards)
 
@@ -2866,7 +2866,7 @@ class MaskedEditMixin:
             # sizing of numctrl when using proportional font and
             # wxPython 2.9 is not working when using "M"
             # GetTextExtent returns a width which is way to large
-            # instead we use '9' for numctrl and a selection of 
+            # instead we use '9' for numctrl and a selection of
             # characters instead of just 'M' for textctrl and combobox
             # where the mask is larger then 10 characters long
             if isinstance(self, wx.lib.masked.numctrl.NumCtrl):
@@ -2876,7 +2876,7 @@ class MaskedEditMixin:
                 if self._masklength > 10:
                     tC, sC = divmod(self._masklength, 10.0)
                     sizing_text = 'FDSJKLREUI' * int(tC)
-                    sizing_text += 'M' * int(sC)                    
+                    sizing_text += 'M' * int(sC)
                     wAdjust = 26
                 else:
                     sizing_text = ""
@@ -3631,7 +3631,7 @@ class MaskedEditMixin:
 ##            dbg(indent=0)
             return False
 
-        # If the caller just wants the erased value without validation 
+        # If the caller just wants the erased value without validation
         # (because a just pressed key might make this string valid again)
         # then return it.
         if just_return_value:
@@ -3840,7 +3840,7 @@ class MaskedEditMixin:
 
 ##        dbg('field._stopFieldChangeIfInvalid?', field._stopFieldChangeIfInvalid)
 ##        dbg('field.IsValid(slice)?', field.IsValid(slice))
-        
+
         if field._stopFieldChangeIfInvalid and not field.IsValid(slice):
 ##            dbg('field invalid; field change disallowed')
             if not wx.Validator.IsSilent():
@@ -3974,7 +3974,7 @@ class MaskedEditMixin:
         field = self._FindField(self._GetInsertionPoint())
         start, end = field._extent
         slice = self._GetValue()[start:end]
-        
+
         if field._stopFieldChangeIfInvalid and not field.IsValid(slice):
             if not wx.Validator.IsSilent():
                 wx.Bell()
@@ -4184,7 +4184,7 @@ class MaskedEditMixin:
                 self._CheckValid()  # recolor as appopriate
 
 
-        if keycode in (wx.WXK_UP, wx.WXK_DOWN, wx.WXK_LEFT, wx.WXK_RIGHT, 
+        if keycode in (wx.WXK_UP, wx.WXK_DOWN, wx.WXK_LEFT, wx.WXK_RIGHT,
                        wx.WXK_NUMPAD_UP, wx.WXK_NUMPAD_DOWN, wx.WXK_NUMPAD_LEFT, wx.WXK_NUMPAD_RIGHT):
             # treat as left right arrow if unshifted, tab/shift tab if shifted.
             if event.ShiftDown():
@@ -4398,7 +4398,7 @@ class MaskedEditMixin:
                         pos = self._fields[0]._extent[0]
 ##                        dbg('adjusting field to ', pos)
                         self._SetInsertionPoint(pos)
-                        # but keep original selection, to allow replacement of any sign: 
+                        # but keep original selection, to allow replacement of any sign:
                         self._SetSelection(0, sel_to)
                     else:
                         pass    # leave position/selection alone
@@ -4409,10 +4409,10 @@ class MaskedEditMixin:
                 if( (not field._moveOnFieldFull
                      and (not self._signOk
                           or (self._signOk and field._index == 0 and pos > 0) ) )
-                    
+
                     or (field._stopFieldChangeIfInvalid
                         and not field.IsValid(self._GetValue()[start:end]) ) ):
-                    
+
                     # don't move to next field without explicit cursor movement
                     pass
                 else:
@@ -5333,7 +5333,7 @@ class MaskedEditMixin:
         """
 ##        dbg('MaskedEditMixin::_OnFocus')
         if self.IsBeingDeleted() or self.GetParent().IsBeingDeleted():
-            return 
+            return
         wx.CallAfter(self._fixSelection)
         event.Skip()
         self.Refresh()
@@ -5513,7 +5513,7 @@ class MaskedEditMixin:
                 month -= 1
                 try:
 ##                    dbg("trying to create date from values day=%d, month=%d, year=%d" % (day,month,year))
-                    dateHandler = wx.DateTimeFromDMY(day,month,year)
+                    dateHandler = wx.DateTime.FromDMY(day,month,year)
 ##                    dbg("succeeded")
                     dateOk = True
                 except:
@@ -5553,7 +5553,7 @@ class MaskedEditMixin:
 ##        dbg('value = "%s"' % value)
         valid = True   # assume True until proven otherwise
 
-        dateHandler = wx.DateTime_Today()
+        dateHandler = wx.DateTime.Today()
         try:
             checkTime    = dateHandler.ParseTime(value)
 ##            dbg('checkTime:', checkTime, 'len(value)', len(value))
@@ -5574,7 +5574,7 @@ class MaskedEditMixin:
         """
 ##        dbg('MaskedEditMixin::_OnKillFocus', 'isDate=',self._isDate, indent=1)
         if self.IsBeingDeleted() or self.GetParent().IsBeingDeleted():
-            return 
+            return
         if self._mask and self._IsEditable():
             self._AdjustField(self._GetInsertionPoint())
             self._CheckValid()   ## Call valid handler
@@ -5599,7 +5599,7 @@ class MaskedEditMixin:
         the control, and deselect.
         """
 ##        dbg('MaskedEditMixin::_fixSelection', indent=1)
-        # can get here if called with wx.CallAfter after underlying 
+        # can get here if called with wx.CallAfter after underlying
         # control has been destroyed on close, but after focus
         # events
         if not self or not self._mask or not self._IsEditable():
@@ -6826,9 +6826,9 @@ __i=0
 ## CHANGELOG:
 ## ====================
 ##  Version 1.13
-##  1. Added parameter option stopFieldChangeIfInvalid, which can be used to relax the 
-##     validation rules for a control, but make best efforts to stop navigation out of 
-##     that field should its current value be invalid.  Note: this does not prevent the 
+##  1. Added parameter option stopFieldChangeIfInvalid, which can be used to relax the
+##     validation rules for a control, but make best efforts to stop navigation out of
+##     that field should its current value be invalid.  Note: this does not prevent the
 ##     value from remaining invalid if focus for the control is lost, via mousing etc.
 ##
 ##  Version 1.12
@@ -6840,12 +6840,12 @@ __i=0
 ##     so one doesn't have to subclass the controls simply to force generation of
 ##     a ValueError on a bad paste operation.
 ##  2. Fixed handling of unicode charsets by converting to explicit control char
-##     set testing for passing those keystrokes to the base control, and then 
+##     set testing for passing those keystrokes to the base control, and then
 ##     changing the semantics of the * maskchar to indicate any visible char.
 ##  3. Added '|' mask specification character, which allows splitting of contiguous
 ##     mask characters into separate fields, allowing finer control of behavior
 ##     of a control.
-##     
+##
 ##
 ##  Version 1.10
 ##  1. Added handling for WXK_DELETE and WXK_INSERT, such that shift-delete
@@ -6856,7 +6856,7 @@ __i=0
 ##  2. Added missing call to set insertion point on changing fields.
 ##  3. Modified SetKeyHandler() to accept None as means of removing one.
 ##  4. Fixed keyhandler processing for group and decimal character changes.
-##  5. Fixed a problem that prevented input into the integer digit of a 
+##  5. Fixed a problem that prevented input into the integer digit of a
 ##     integerwidth=1 numctrl, if the current value was 0.
 ##  6. Fixed logic involving processing of "_signOk" flag, to remove default
 ##     sign key handlers if false, so that SetAllowNegative(False) in the

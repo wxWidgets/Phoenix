@@ -3,7 +3,7 @@
 # Author:       Will Sadkin
 # Created:      09/19/2002
 # Copyright:    (c) 2002 by Will Sadkin, 2002
-# RCS-ID:       $Id$
+# RCS-ID:       $Id: timectrl.py 73818 2013-04-17 02:52:09Z RD $
 # License:      wxWindows license
 #
 # Tags:        phoenix-port, unittest, documented
@@ -100,28 +100,28 @@ The ! or c key sets the value of the control to the current time.
     By default, TimeCtrl just uses the default (empty) validator, as all
     of its validation for entry control is handled internally.  However, a validator
     can be supplied to provide data transfer capability to the control.
-    
+
   format
     This parameter can be used instead of the fmt24hr and displaySeconds
     parameters, respectively; it provides a shorthand way to specify the time
     format you want.  Accepted values are 'HHMMSS', 'HHMM', '24HHMMSS', and
     '24HHMM'.  If the format is specified, the other two arguments will be ignored.
-    
+
   fmt24hr
     If True, control will display time in 24 hour time format; if False, it will
     use 12 hour AM/PM format.  SetValue() will adjust values accordingly for the
     control, based on the format specified.  (This value is ignored if the *format*
     parameter is specified.)
-    
+
   displaySeconds
     If True, control will include a seconds field; if False, it will
     just show hours and minutes. (This value is ignored if the *format*
     parameter is specified.)
-    
+
   spinButton
     If specified, this button's events will be bound to the behavior of the
     TimeCtrl, working like up/down cursor key events.  (See BindSpinButton.)
-    
+
   min
     Defines the lower bound for "valid" selections in the control.
     By default, TimeCtrl doesn't have bounds.  You must set both upper and lower
@@ -136,7 +136,7 @@ The ! or c key sets the value of the control to the current time.
   limited
     If True, the control will not permit entry of values that fall outside the
     set bounds.
-    
+
   oob_color
     Sets the background color used to indicate out-of-bounds values for the control
     when the control is not limited.  This is set to "Yellow" by default.
@@ -382,13 +382,13 @@ class TimeCtrl(BaseMaskedTextCtrl):
           its own validation;
         :param string `name`: the window name;
 
-        """       
+        """
 
         # set defaults for control:
 ##        dbg('setting defaults:')
 
         self.__fmt24hr = False
-        wxdt = wx.DateTimeFromDMY(1, 0, 1970)
+        wxdt = wx.DateTime.FromDMY(1, 0, 1970)
         try:
             if wxdt.Format('%p') != 'AM':
                 TimeCtrl.valid_ctrl_params['format'] = '24HHMMSS'
@@ -528,7 +528,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
                 raise AttributeError('invalid keyword argument "%s"' % key)
 
             if key == 'format':
-                wxdt = wx.DateTimeFromDMY(1, 0, 1970)
+                wxdt = wx.DateTime.FromDMY(1, 0, 1970)
                 try:
                     if wxdt.Format('%p') != 'AM':
                         require24hr = True
@@ -633,9 +633,9 @@ class TimeCtrl(BaseMaskedTextCtrl):
         """
         This function binds an externally created spin button to the control,
         so that up/down events from the button automatically change the control.
-        
+
         :param SpinButton `sb`: an instance of :class:`SpinButton`
-        
+
         """
 ##        dbg('TimeCtrl::BindSpinButton')
         self.__spinButton = sb
@@ -655,9 +655,9 @@ class TimeCtrl(BaseMaskedTextCtrl):
         This function will do dynamic type checking on the value argument,
         and convert :class:`DateTime`, mxDateTime, or 12/24 format time string
         into the appropriate format string for the control.
-        
+
         :param `value`: the time value
-        
+
         """
 ##        dbg('TimeCtrl::SetValue(%s)' % repr(value), indent=1)
         try:
@@ -676,9 +676,9 @@ class TimeCtrl(BaseMaskedTextCtrl):
         This function will do dynamic type checking on the value argument,
         and convert :class:`DateTime`, mxDateTime, or 12/24 format time string
         into the appropriate format string for the control.
-        
+
         No change event is fired by this method.
-        
+
         :param `value`: the time value
 
         """
@@ -703,12 +703,12 @@ class TimeCtrl(BaseMaskedTextCtrl):
         but supports return as a :class:`DateTime`, mx.DateTime, :class:`TimeSpan`,
         or mx.DateTimeDelta, if requested.
         (Evaluated in the order above-- first one wins!)
-        
+
         :param boolean `as_wxDateTime`: return value as :class:`DateTime`;
         :param boolean `as_mxDateTime`: return value as mxDateTime;
         :param boolean `as_wxTimeSpan`: return value as :class:`TimeSpan`;
         :param boolean `as_mxDateTimeDelta`: return value as mxDateTimeDelta;
-        
+
         """
 
         if as_wxDateTime or as_mxDateTime or as_wxTimeSpan or as_mxDateTimeDelta:
@@ -737,13 +737,13 @@ class TimeCtrl(BaseMaskedTextCtrl):
         """
         This function is the conversion engine for TimeCtrl; it takes
         one of the following types:
-        
+
         * time string
         * :class:`DateTime`
         * :class:`TimeSpan`
         * mxDateTime
         * mxDateTimeDelta
-        
+
         and converts it to a :class:`DateTime` that always has Jan 1, 1970 as
         its date portion, so that range comparisons around values can work using
         :class:`DateTime` built-in comparison function.  If a value is not
@@ -766,7 +766,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         if type(value) == types.StringType:
 
             # Construct constant wxDateTime, then try to parse the string:
-            wxdt = wx.DateTimeFromDMY(1, 0, 1970)
+            wxdt = wx.DateTime.FromDMY(1, 0, 1970)
 ##            dbg('attempting conversion')
             value = value.strip()    # (parser doesn't like leading spaces)
             valid = wxdt.ParseTime(value)
@@ -805,7 +805,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 ##                dbg(indent=0, suspend=0)
                 raise ValueError(error)
 
-            wxdt = wx.DateTimeFromDMY(1, 0, 1970)
+            wxdt = wx.DateTime.FromDMY(1, 0, 1970)
             wxdt.SetHour(hour)
             wxdt.SetMinute(minute)
             wxdt.SetSecond(second)
@@ -850,10 +850,10 @@ class TimeCtrl(BaseMaskedTextCtrl):
         bound, if the control is limited, the value will be automatically
         adjusted to the new minimum value; if not limited, the value in the
         control will be colored as invalid.
-        
+
         :param `min`: Minium value for the control
         :type `min`: integer or None
-                
+
         """
 ##        dbg('TimeCtrl::SetMin(%s)'% repr(min), indent=1)
         if min is not None:
@@ -914,10 +914,10 @@ class TimeCtrl(BaseMaskedTextCtrl):
         bound, if the control is limited the value will be automatically
         adjusted to this maximum value; if not limited, the value in the
         control will be colored as invalid.
-        
+
         :param `max`: Minium value for the control
         :type `max`: integer or None
-        
+
         """
 ##        dbg('TimeCtrl::SetMax(%s)' % repr(max), indent=1)
         if max is not None:
@@ -972,14 +972,14 @@ class TimeCtrl(BaseMaskedTextCtrl):
         values at the same time.  The function only applies the maximum bound
         if setting the minimum bound is successful, and returns True
         only if both operations succeed.
-        
+
         .. note:: Leaving out an argument will remove the corresponding bound.
-        
+
         :param `min`: Minium value for the control
         :type `min`: integer or None
         :param `max`: Minium value for the control
         :type `max`: integer or None
-        
+
         """
         ret = self.SetMin(min)
         return ret and self.SetMax(max)
@@ -1004,7 +1004,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         If called with a value of 0, this function will disable value
         limiting, but coloring of out-of-bounds values will still take
         place if bounds have been set for the control.
-        
+
         :param boolean `limited`: define value limiting
 
         """
@@ -1121,7 +1121,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         min = self.GetMin()
         max = self.GetMax()
 
-        midnight = wx.DateTimeFromDMY(1, 0, 1970)
+        midnight = wx.DateTime.FromDMY(1, 0, 1970)
         if min <= max:   # they don't span midnight
             ret = min <= value <= max
 
@@ -1138,7 +1138,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         """
         Can be used to determine if a given value would be a legal and
         in-bounds value for the control.
-        
+
         :param `value`: value to check
         """
         try:
@@ -1324,7 +1324,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
             # adjusting this field is trickier, as its value can affect the
             # am/pm setting.  So, we use wxDateTime to generate a new value for us:
             # (Use a fixed date not subject to DST variations:)
-            converter = wx.DateTimeFromDMY(1, 0, 1970)
+            converter = wx.DateTime.FromDMY(1, 0, 1970)
 ##            dbg('text: "%s"' % text)
             converter.ParseTime(text.strip())
             currenthour = converter.GetHour()
