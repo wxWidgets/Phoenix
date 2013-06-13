@@ -14,7 +14,7 @@ can continue unencumbered.
 # Thanks to Harald Massa <harald.massa@suedvers.de> for
 # suggestions and sample code.
 #
-# $Id$
+# $Id: throbber.py 36607 2005-12-30 23:02:03Z RD $
 #
 # 12/12/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -37,7 +37,7 @@ class UpdateThrobberEvent(wx.PyEvent):
 
 # ------------------------------------------------------------------------------
 
-class Throbber(wx.PyPanel):
+class Throbber(wx.Panel):
     """
     The first argument is either the name of a file that will be split into frames
     (a composite image) or a list of  strings of image names that will be treated
@@ -65,7 +65,7 @@ class Throbber(wx.PyPanel):
                  direction = 1,
                  sequence = None
                  ):
-        wx.PyPanel.__init__(self, parent, id, pos, size, style, name)
+        wx.Panel.__init__(self, parent, id, pos, size, style, name)
         self.name = name
         self.label = label
         self.running = (1 != 1)

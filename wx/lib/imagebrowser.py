@@ -23,7 +23,7 @@
 # o Fixed zooming logic to show shrunken images at correct aspect ratio
 # o Added different background modes for preview (white/grey/dark/checkered)
 # o Added framing modes for preview (no frame/box frame/tinted border)
-# 
+#
 #----------------------------------------------------------------------------
 #
 # 12/08/2003 - Jeff Grimmett (grimmtooth@softhome.net)
@@ -31,7 +31,7 @@
 # o Updated for wx namespace
 # o Corrected a nasty bug or two - see comments below.
 # o There was a duplicate ImageView.DrawImage() method. Que?
-# 
+#
 #----------------------------------------------------------------------------
 # 1.0 Release - Lorne White
 # Date:         January 29, 2002
@@ -60,16 +60,16 @@ A simple usage would be::
     import wx
     import wx.lib.mixins.inspection as wit
     import wx.lib.imagebrowser as ib
-    
+
     app = wit.InspectableApp()
-    
+
     with ib.ImageDialog(None) as dlg:
         if dlg.ShowModal() == wx.ID_OK:
             # show the selected file
             print "You Selected File: " + dlg.GetFile()
         else:
             print "You pressed Cancel\n"
-    
+
     app.MainLoop()
 
 """
@@ -94,7 +94,7 @@ ID_CROP_FRAME = wx.NewId()
 def ConvertBMP(file_nm):
     """
     Convert file
-    
+
     :param string `file_nm`: path to file
 
     :return: :class:`Image`: or BAD_IMAGE
@@ -128,7 +128,7 @@ def GetCheckeredBitmap(blocksize=8, ntiles=4, rgb0='\xFF', rgb1='\xCC'):
     :param `rgb1`: the second color, as 3-byte strings.
       If only 1 byte is provided, it is treated as a grey value.
     :return: :class:`BitmapFromBuffer`
-    
+
     """
     size = blocksize*ntiles*2
 
@@ -141,18 +141,18 @@ def GetCheckeredBitmap(blocksize=8, ntiles=4, rgb0='\xFF', rgb1='\xCC'):
     strip1 = (rgb1*blocksize + rgb0*blocksize)*(ntiles*blocksize)
     band = strip0 + strip1
     data = band * ntiles
-    return wx.BitmapFromBuffer(size, size, data)
+    return wx.Bitmap.FromBuffer(size, size, data)
 
 def GetNamedBitmap(name):
     return IMG_CATALOG[name].getBitmap()
 
 
 class ImageView(wx.Window):
-    def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize, 
+    def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=wx.BORDER_SUNKEN
                  ):
         wx.Window.__init__(self, parent, id, pos, size, style=style)
-        
+
         self.image = None
 
         self.check_bmp = None
@@ -177,7 +177,7 @@ class ImageView(wx.Window):
         image = ConvertBMP(file_nm)
         self.image = image
         self.Refresh()
-    
+
     def SetBackgroundMode(self, mode):
         self.bg_mode = mode
         self._updateBGInfo()
@@ -267,7 +267,7 @@ class ImageView(wx.Window):
             dc.DrawRectangle(pos.x-1,pos.y-1,sz.width+2,sz.height+2)
         else:
             self.TileBackground(dc, painter, pos.x,pos.y,sz.width,sz.height)
-        
+
 
     def TileBackground(self, dc, bmp, x,y,w,h):
         """Tile bmp into the specified rectangle"""
@@ -301,7 +301,7 @@ class ImageView(wx.Window):
         if not hasattr(self,'image') or self.image is None:
             return
 
-        wwidth,wheight = self.GetSize() 
+        wwidth,wheight = self.GetSize()
         image = self.image
         bmp = None
         if image != BAD_IMAGE and image.IsOk():
@@ -344,7 +344,7 @@ class ImageView(wx.Window):
 
 
 class ImagePanel(wx.Panel):
-    def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize, 
+    def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize,
                  style=wx.NO_BORDER
                  ):
         wx.Panel.__init__(self, parent, id, pos, size, style=style)
@@ -390,7 +390,7 @@ class ImagePanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
         btn.SetToolTip(_("No framing around image"))
         hbox_ctrls.Add(btn, 0, wx.ALIGN_LEFT|wx.LEFT, 4)
-        
+
         bmp = GetNamedBitmap('BoxFrame')
         btn = wx.BitmapButton(self, ID_BOX_FRAME, bmp, style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnSetBorderMode, btn)
@@ -434,7 +434,7 @@ class ImageDialog(wx.Dialog):
 
         :param Window `parent`: parent window.
         :param string `set_dir`: path to set as working directory
-        
+
         """
         wx.Dialog.__init__(self, parent, -1, _("Image Browser"),
                            wx.DefaultPosition, (400, 400),
@@ -500,7 +500,7 @@ class ImageDialog(wx.Dialog):
         self.set_type,self.fl_ext = self.fl_ext_types[0]  # initial file filter setting
         self.fl_types = [ x[0] for x in self.fl_ext_types ]
         self.sel_type = wx.ComboBox( self, -1, self.set_type,
-                                     wx.DefaultPosition, wx.DefaultSize, self.fl_types, 
+                                     wx.DefaultPosition, wx.DefaultSize, self.fl_types,
                                      wx.CB_DROPDOWN )
         # after this we don't care about the order any more
         self.fl_ext_types = dict(self.fl_ext_types)
@@ -511,7 +511,7 @@ class ImageDialog(wx.Dialog):
         splitter = wx.SplitterWindow( self, -1, wx.DefaultPosition, wx.Size(100, 100), 0 )
         splitter.SetMinimumPaneSize(100)
 
-        split_left = wx.Panel( splitter, -1, wx.DefaultPosition, wx.DefaultSize, 
+        split_left = wx.Panel( splitter, -1, wx.DefaultPosition, wx.DefaultSize,
                                wx.NO_BORDER|wx.TAB_TRAVERSAL )
         vbox_left = wx.BoxSizer(wx.VERTICAL)
         split_left.SetSizer(vbox_left)
@@ -544,7 +544,7 @@ class ImageDialog(wx.Dialog):
         #ok_btn.SetDefault()
         hbox_btns.Add(ok_btn, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
 
-        cancel_btn = wx.Button( self, wx.ID_CANCEL, "", 
+        cancel_btn = wx.Button( self, wx.ID_CANCEL, "",
                                 wx.DefaultPosition, wx.DefaultSize, 0 )
         hbox_btns.Add(cancel_btn, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
 
@@ -553,7 +553,7 @@ class ImageDialog(wx.Dialog):
     def ChangeFileTypes(self, ft_tuple):
         """
         Change list of file types to be supported
-        
+
         :param tuple `ft_tuple`: tuple of files types, e.g. to support just
            .gif and .png you would use:
 
@@ -561,7 +561,7 @@ class ImageDialog(wx.Dialog):
             ("PNG (*.png)", "*.png"))
 
         """
-        
+
         self.fl_ext_types = ft_tuple
         self.set_type, self.fl_ext = self.fl_ext_types[0]  # initial file filter setting
         self.fl_types = [ x[0] for x in self.fl_ext_types ]
@@ -645,12 +645,12 @@ class ImageDialog(wx.Dialog):
                 pass
 
         wx.Bell()
-    
+
     def OnUpDirectory(self, event):
         sdir = os.path.split(self.set_dir)[0]
         self.set_dir = sdir
         self.ResetFiles()
-        
+
     def OnChooseDirectory(self, event):
         # set the new directory
         dlg = wx.DirDialog(self)
@@ -671,7 +671,7 @@ class ImageDialog(wx.Dialog):
         #
         # o Clear listbox first
         # o THEN check to see if there are any valid files of the selected
-        #   type, 
+        #   type,
         # o THEN if we have any files to display, set the listbox up,
         #
         # OTHERWISE
@@ -682,7 +682,7 @@ class ImageDialog(wx.Dialog):
         # This avoids a nasty assert error.
         #
         self.tb.Clear()
-        
+
         if len(self.fl_list):
             self.tb.Set(self.fl_list)
 
@@ -703,7 +703,7 @@ class ImageDialog(wx.Dialog):
     def GetFile(self):
         """
         Get selected file
-        
+
         :return: File selected or None
         """
         return self.set_file
@@ -711,9 +711,9 @@ class ImageDialog(wx.Dialog):
     def GetDirectory(self):
         """
         Get directory
-        
+
         :return: get the current directory
-        
+
         """
         return self.set_dir
 
@@ -724,7 +724,7 @@ class ImageDialog(wx.Dialog):
     def OnOk(self, event):
         if os.path.isdir(self.set_file):
             sdir = os.path.split(self.set_file)
-    
+
             #os.path.normapth?
             if sdir and sdir[-1]=='..':
                 sdir = os.path.split(sdir[0])[0]
