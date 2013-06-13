@@ -33,7 +33,7 @@
 #
 # o wxIntUpdateEvent -> IntUpdateEvent
 # o wxIntValidator -> IntValidator
-# o wxIntCtrl -> IntCtrl 
+# o wxIntCtrl -> IntCtrl
 #
 
 import  string
@@ -80,13 +80,13 @@ class IntUpdatedEvent(wx.PyCommandEvent):
 
 #----------------------------------------------------------------------------
 
-class IntValidator( wx.PyValidator ):
+class IntValidator(wx.Validator):
     """
     Validator class used with IntCtrl; handles all validation of input
     prior to changing the value of the underlying wx.TextCtrl.
     """
     def __init__(self):
-        wx.PyValidator.__init__(self)
+        wx.Validator.__init__(self)
         self.Bind(wx.EVT_CHAR, self.OnChar)
 
     def Clone (self):
@@ -328,7 +328,7 @@ class IntValidator( wx.PyValidator ):
             elif not internally_set:
                 event.Skip()    # allow base wxTextCtrl to finish processing
 
-        elif not wx.Validator_IsSilent():
+        elif not wx.Validator.IsSilent():
             wx.Bell()
 
 
@@ -508,7 +508,7 @@ class IntCtrl(wx.TextCtrl):
         self.__oldvalue = self.GetValue() # record for next event
         self._colorValue()
 
-        
+
     def SetMin(self, min=None):
         """
         Sets the minimum value of the control.  If a value of None
