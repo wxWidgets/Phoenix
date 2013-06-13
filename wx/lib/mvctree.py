@@ -168,11 +168,11 @@ class Painter:
     """
     def __init__(self, tree):
         self.tree = tree
-        self.textcolor = wx.NamedColour("BLACK")
-        self.bgcolor = wx.NamedColour("WHITE")
-        self.fgcolor = wx.NamedColour("BLUE")
-        self.linecolor = wx.NamedColour("GREY")
-        self.font = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False)
+        self.textcolor = wx.BLACK
+        self.bgcolor = wx.WHITE
+        self.fgcolor = wx.BLUE
+        self.linecolor = wx.Colour("GREY")
+        self.font = wx.Font(9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         self.bmp = None
 
     def GetFont(self):
@@ -603,13 +603,13 @@ class TreePainter(Painter):
         treesize = self.tree.GetSize()
         size = self.tree.transform.GetSize()
         size = (max(treesize.width, size[0]+50), max(treesize.height, size[1]+50))
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
         if doubleBuffered:
             mem_dc = wx.MemoryDC()
             if not self.GetBuffer():
                 self.knobs = []
                 self.rectangles = []
-                self.bmp = wx.EmptyBitmap(size[0], size[1])
+                self.bmp = wx.Bitmap(size[0], size[1])
                 mem_dc.SelectObject(self.GetBuffer())
                 mem_dc.SetPen(self.GetBackgroundPen())
                 mem_dc.SetBrush(self.GetBackgroundBrush())
@@ -619,7 +619,7 @@ class TreePainter(Painter):
             else:
                 mem_dc.SelectObject(self.GetBuffer())
             xstart, ystart = self.tree.CalcUnscrolledPosition(0,0)
-            size = self.tree.GetClientSizeTuple()
+            size = self.tree.GetClientSize()
             dc.Blit(xstart, ystart, size[0], size[1], mem_dc, xstart, ystart)
         else:
             if node == self.tree.currentRoot:
@@ -635,7 +635,7 @@ class TreePainter(Painter):
                 #whole background, we have to paint in parts to undo selection coloring.
                 pb = paintBackground
                 self.paintWalk(node, dc, not pb)
-        dc.EndDrawing()
+        # dc.EndDrawing()
 
     def GetDashPen(self):
         return self.dashpen
@@ -688,7 +688,7 @@ class TreeNodePainter(NodePainter):
         if node.selected:
             dc.SetPen(self.painter.GetLinePen())
             dc.SetBrush(self.painter.GetForegroundBrush())
-            dc.SetTextForeground(wx.NamedColour("WHITE"))
+            dc.SetTextForeground(wx.WHITE)
             dc.DrawRectangle(node.projx -1, node.projy -1, node.width + 3, node.height + 3)
         else:
             if drawRects:
