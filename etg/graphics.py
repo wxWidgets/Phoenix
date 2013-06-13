@@ -66,34 +66,23 @@ def run():
     tools.removeVirtuals(c)
     c.abstract = True
 
-    # Ensure that the target DC lives as long as the GC does.
-    # NOTE: Since the Creates are static methods there is no self to
-    # associate the extra reference with, so we can't use SIP's KeepReference
-    # without leaking the ref's. Instead we'll rename the Creates and then
-    # wrap a little Python code around it to deal with holding the ref to the
-    # target.
+    # Ensure that the target DC or image lives as long as the GC does. NOTE:
+    # Since the Creates are static methods there is no self to associate the
+    # extra reference with, but since they are factories then that extra
+    # reference will be held by the return value of the factory instead.
     for m in c.find('Create').all():
-        m.pyName = '_Create'
-        #for p in m.items:
-        #    if 'DC' in p.name or p.name == 'image':
-        #        p.keepReference = True
-    c.addPyMethod('Create', '(target)',
-        isStatic=True,
-        doc="""\
-            Create(target) -> GraphicsContext\n
-            Create a GraphicsContext with a :class:`Window`, :class:`WindowDC`, 
-            :class:`MemoryDC`, :class:`PrinterDC` or :class:`Image` as the target 
-            of the drawing operations.
-            """,
-        body="""\
-            gc = GraphicsContext._Create(target)
-            gc._target = target
-            return gc
-            """)
+        for p in m.items:
+            if 'DC' in p.name or p.name == 'image':
+                p.keepReference = True
     
     
     # FIXME: Handle wxEnhMetaFileDC?
     c.find('Create').findOverload('wxEnhMetaFileDC').ignore()
+
+    c.find('GetSize.width').out = True
+    c.find('GetSize.height').out = True
+    c.find('GetDPI.dpiX').out = True
+    c.find('GetDPI.dpiY').out = True
     
     m = c.find('GetPartialTextExtents')
     m.find('widths').ignore()
@@ -110,7 +99,7 @@ def run():
     m.find('width').out = True
     m.find('height').out = True
     m.find('descent').out = True
-    m.find('externalLeading').out = True
+    m.find('externalLeading').out = True    
     
     c.addCppMethod('PyObject*', 'GetTextExtent', '(const wxString& text)', 
         pyArgsString="(text) -> (width, height)",
@@ -188,6 +177,12 @@ def run():
     tools.removeVirtuals(c)
     markFactories(c)
     c.abstract = True
+    
+    for m in c.find('CreateContext').all():
+        for p in m.items:
+            if 'DC' in p.name or p.name == 'image':
+                p.keepReference = True
+    c.find('CreateContextFromImage.image').keepReference = True
     
     # FIXME: Handle wxEnhMetaFileDC?
     c.find('CreateContext').findOverload('wxEnhMetaFileDC').ignore()

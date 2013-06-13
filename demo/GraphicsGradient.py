@@ -15,14 +15,14 @@ class GradientPanel(wx.Panel):
     """
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, -1)
+        # Create a simple default brush we can use until a gradient
+        # brush is given to us
+        self.brush = wx.WHITE_BRUSH
+
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.SetInitialSize((600,100))
         
-        # create a simple default brush we can use until a gradient
-        # brush is given to us
-        ctx = g.GraphicsContext.Create()
-        self.brush = wx.WHITE_BRUSH
 
     def DrawWithBrush(self, brush):
         self.brush = brush
