@@ -46,7 +46,7 @@ class DragScroller:
             raise Exception, 'No ScrollWindow defined'
         
         self.pos = pos
-        self.scrollwin.SetCursor(wx.StockCursor(wx.CURSOR_SIZING))
+        self.scrollwin.SetCursor(wx.Cursor(wx.CURSOR_SIZING))
         if not self.scrollwin.HasCapture():
             self.scrollwin.CaptureMouse()
 
