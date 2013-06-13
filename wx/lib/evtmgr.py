@@ -61,19 +61,19 @@ class EventManager:
         Registers a listener function (or any callable object) to
         receive events of type event coming from the source window.
         For example::
-        
+
             eventManager.Register(self.OnButton, EVT_BUTTON, theButton)
 
         Alternatively, the specific window where the event is
         delivered, and/or the ID of the event source can be specified.
         For example::
-        
+
             eventManager.Register(self.OnButton, EVT_BUTTON, win=self, id=ID_BUTTON)
-            
+
         or::
-        
+
             eventManager.Register(self.OnButton, EVT_BUTTON, theButton, self)
-            
+
         """
 
         # 1. Check if the 'event' is actually one of the multi-
@@ -88,11 +88,11 @@ class EventManager:
         # the natural way of doing things.)
         if source is not None:
             id  = source.GetId()
-            
+
         if win is None:
             # Some widgets do not function as their own windows.
             win = self._determineWindow(source)
-            
+
         topic = ".".join([str(event.typeId), str(win.GetId()), str(id)])
 
         #  Create an adapter from the PS system back to wxEvents, and
@@ -407,10 +407,10 @@ class EventAdapter:
 
         # Register myself with the wxWindows event system
         try:
-            func(win, id, self.handleEvent)
+            win.Bind(func, self.handleEvent, id)
             self.callStyle = 3
         except (TypeError, AssertionError):
-            func(win, self.handleEvent)
+            win.Bind(func, self.handleEvent)
             self.callStyle = 2
 
 
@@ -464,7 +464,7 @@ class MessageAdapter:
 
     def deliverEvent(self, message):
         # the message is the event object
-        self.eventHandler(message) 
+        self.eventHandler(message)
 
     def Destroy(self):
         pub.unsubscribe(self.deliverEvent, self.topicPattern)
