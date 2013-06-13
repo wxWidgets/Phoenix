@@ -44,20 +44,20 @@ _RWLayoutNeededEvent, EVT_RW_LAYOUT_NEEDED = wx.lib.newevent.NewCommandEvent()
 
 #-----------------------------------------------------------------------------
 
-class ResizeWidget(wx.PyPanel):
+class ResizeWidget(wx.Panel):
     def __init__(self, *args, **kw):
-        wx.PyPanel.__init__(self, *args, **kw)
+        wx.Panel.__init__(self, *args, **kw)
         self._init()
 
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
         self.Bind(wx.EVT_MOTION,  self.OnMouseMove)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnMouseLeave)
-        
+
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
-        
-        
+
+
     def _init(self):
         self._managedChild = None
         self._bestSize = wx.Size(100,25)
@@ -66,24 +66,24 @@ class ResizeWidget(wx.PyPanel):
         self._dragPos = None
         self._resizeEnabled = True
         self._reparenting = False
-        
-        
+
+
     def SetManagedChild(self, child):
         self._reparenting = True
         child.Reparent(self)  # This calls AddChild, so do the rest of the init there
         self._reparenting = False
         self.AdjustToChild()
-     
+
     def GetManagedChild(self):
         return self._managedChild
-     
+
     ManagedChild = property(GetManagedChild, SetManagedChild)
-     
-        
+
+
     def AdjustToChild(self):
         self.AdjustToSize(self._managedChild.GetEffectiveMinSize())
 
-        
+
     def AdjustToSize(self, size):
         size = wx.Size(*size)
         self._bestSize = size + (RW_THICKNESS, RW_THICKNESS)
@@ -98,33 +98,33 @@ class ResizeWidget(wx.PyPanel):
 
     def IsResizeEnabled(self):
         return self._resizeEnabled
-    
+
 
     #=== Event handler methods ===
-    def OnLeftDown(self, evt): 
+    def OnLeftDown(self, evt):
         if self._hitTest(evt.GetPosition()) and self._resizeEnabled:
             self.CaptureMouse()
             self._dragPos = evt.GetPosition()
-    
-            
+
+
     def OnLeftUp(self, evt):
         if self.HasCapture():
             self.ReleaseMouse()
         self._dragPos = None
-            
-    
+
+
     def OnMouseMove(self, evt):
         # set or reset the drag cursor
         pos = evt.GetPosition()
         if self._hitTest(pos) and self._resizeEnabled:
             if not self._resizeCursor:
-                self.SetCursor(wx.StockCursor(wx.CURSOR_SIZENWSE))
+                self.SetCursor(wx.Cursor(wx.CURSOR_SIZENWSE))
                 self._resizeCursor = True
         else:
             if self._resizeCursor:
-                self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
                 self._resizeCursor = False
-    
+
         # determine if a new size is needed
         if evt.Dragging() and self._dragPos is not None:
             delta = self._dragPos - pos
@@ -136,20 +136,20 @@ class ResizeWidget(wx.PyPanel):
                 self._bestSize = newSize
                 self.InvalidateBestSize()
                 self._sendEvent()
-                
-                
+
+
     def _sendEvent(self):
         event = _RWLayoutNeededEvent(self.GetId())
         event.SetEventObject(self)
         self.GetEventHandler().ProcessEvent(event)
-                
+
 
     def _adjustNewSize(self, newSize):
         if newSize.width < RW_LENGTH:
             newSize.width = RW_LENGTH
         if newSize.height < RW_LENGTH:
             newSize.height = RW_LENGTH
-            
+
         if self._managedChild:
             minsize = self._managedChild.GetMinSize()
             if minsize.width != -1 and newSize.width - RW_THICKNESS < minsize.width:
@@ -161,28 +161,28 @@ class ResizeWidget(wx.PyPanel):
                 newSize.width = maxsize.width + RW_THICKNESS
             if maxsize.height != -1 and newSize.height - RW_THICKNESS > maxsize.height:
                 newSize.height = maxsize.height + RW_THICKNESS
-    
-                
+
+
     def OnMouseLeave(self, evt):
         if self._resizeCursor:
-            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
             self._resizeCursor = False
-                        
-            
-    def OnSize(self, evt): 
+
+
+    def OnSize(self, evt):
         if not self._managedChild:
             return
-        sz = self.GetSize() 
-        cr = wx.RectPS((0,0), sz - (RW_THICKNESS, RW_THICKNESS))
+        sz = self.GetSize()
+        cr = wx.Rect((0,0), sz - (RW_THICKNESS, RW_THICKNESS))
         self._managedChild.SetRect(cr)
         r1 = wx.Rect(0, cr.height, sz.width, RW_THICKNESS)
         r2 = wx.Rect(cr.width, 0, RW_THICKNESS, sz.height)
         self.RefreshRect(r1)
         self.RefreshRect(r2)
-        
-        
-        
-    def OnPaint(self, evt): 
+
+
+
+    def OnPaint(self, evt):
         # draw the resize handle
         dc = wx.PaintDC(self)
         w,h = self.GetSize()
@@ -201,26 +201,26 @@ class ResizeWidget(wx.PyPanel):
             fill = RW_FILL2
         dc.SetBrush(wx.Brush(fill))
         dc.DrawPolygon(points)
-        
-        
+
+
     def _hitTest(self, pos):
         # is the position in the area to be used for the resize handle?
         w, h = self.GetSize()
-        if ( w - RW_THICKNESS <= pos.x <= w 
+        if ( w - RW_THICKNESS <= pos.x <= w
              and h - RW_LENGTH <= pos.y <= h ):
             return True
-        if ( w - RW_LENGTH <= pos.x <= w 
+        if ( w - RW_LENGTH <= pos.x <= w
              and h - RW_THICKNESS <= pos.y <= h ):
             return True
         return False
 
-    
+
     #=== Overriden virtuals from the base class ===
     def AddChild(self, child):
         assert self._managedChild is None, "Already managing a child widget, can only do one"
         self._managedChild = child
-        wx.PyPanel.AddChild(self, child)
-        
+        wx.Panel.AddChild(self, child)
+
         # This little hack is needed because if this AddChild was called when
         # the widget was first created, then the OOR values will get reset
         # after this function call, and so the Python proxy object saved in
@@ -237,14 +237,14 @@ class ResizeWidget(wx.PyPanel):
             _doAfterAddChild(self, child.GetId())
         else:
             wx.CallAfter(_doAfterAddChild, self, child.GetId())
-        
+
     def RemoveChild(self, child):
         self._init()
-        wx.PyPanel.RemoveChild(self, child)
-        
-        
+        wx.Panel.RemoveChild(self, child)
+
+
     def DoGetBestSize(self):
         return self._bestSize
-        
-    
+
+
 #-----------------------------------------------------------------------------
