@@ -12,11 +12,11 @@
 # 12/10/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o 2.5 compatability update.
-# o There appears to be a prob with the wx.PySizer.GetSize() method.
+# o There appears to be a prob with the wx.Sizer.GetSize() method.
 #
 # 12/23/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o wx.PySizer.GetSize() method working right now.
+# o wx.Sizer.GetSize() method working right now.
 #
 
 """
@@ -53,14 +53,14 @@ import  wx
 
 #----------------------------------------------------------------------
 
-class RowColSizer(wx.PySizer):
+class RowColSizer(wx.Sizer):
 
     # default sizes for cells with no item
     col_w = 10
     row_h = 22
 
     def __init__(self):
-        wx.PySizer.__init__(self)
+        wx.Sizer.__init__(self)
         self.growableRows = []
         self.growableCols = []
 
@@ -72,14 +72,13 @@ class RowColSizer(wx.PySizer):
         self.growableCols.append(idx)
 
 
-
     #--------------------------------------------------
     def Add(self, item, option=0, flag=0, border=0,
             # row, col and spanning can be specified individually...
-            row=-1, col=-1,       
+            row=-1, col=-1,
             rowspan=1, colspan=1,
             # or as tuples (row,col) and (rowspan,colspan)
-            pos=None, size=None,  
+            pos=None, size=None,
             ):
 
         if pos is not None:
@@ -94,7 +93,7 @@ class RowColSizer(wx.PySizer):
         #if rowspan > 1 or colspan > 1:
         #    flag = flag | wx.EXPAND
 
-        return wx.PySizer.Add(self, item, option, flag, border,
+        return wx.Sizer.Add(self, item, option, flag, border,
                               userData=(row, col, row+rowspan, col+colspan))
 
     #AddWindow = Add
@@ -113,7 +112,7 @@ class RowColSizer(wx.PySizer):
         assert row != -1, "Row must be specified"
         assert col != -1, "Column must be specified"
 
-        return wx.PySizer.Add(self, (width, height), option, flag, border,
+        return wx.Sizer.Add(self, (width, height), option, flag, border,
                               userData=(row, col, row+rowspan, col+colspan))
 
     #--------------------------------------------------
