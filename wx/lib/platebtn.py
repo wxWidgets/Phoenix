@@ -115,7 +115,7 @@ PlateBtnDropArrowPressed, EVT_PLATEBTN_DROPARROW_PRESSED = wx.lib.newevent.NewEv
 
 #-----------------------------------------------------------------------------#
 
-class PlateButton(wx.PyControl):
+class PlateButton(wx.Control):
     """PlateButton is a custom type of flat button with support for
     displaying bitmaps and having an attached dropdown menu.
 
@@ -142,7 +142,7 @@ class PlateButton(wx.PyControl):
             self._bmp['enable'] = bmp
             img = bmp.ConvertToImage()
             img = img.ConvertToGreyscale(.795, .073, .026) #(.634, .224, .143)
-            self._bmp['disable'] = wx.BitmapFromImage(img)
+            self._bmp['disable'] = wx.Bitmap(img)
 
         self._menu = None
         self.SetLabel(label)
@@ -483,7 +483,7 @@ class PlateButton(wx.PyControl):
     GetBitmapHover = GetBitmapLabel
     
     # Alias for GetLabel
-    GetLabelText = wx.PyControl.GetLabel
+    GetLabelText = wx.Control.GetLabel
 
     def GetMenu(self):
         """Return the menu associated with this button or None if no
