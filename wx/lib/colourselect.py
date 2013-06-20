@@ -85,7 +85,7 @@ import functools
 
 wxEVT_COMMAND_COLOURSELECT = wx.NewEventType()
 
-class ColourSelectEvent(wx.CommandEvent):
+class ColourSelectEvent(wx.PyCommandEvent):
     """
     :class:`ColourSelectEvent` is a special subclassing of :class:`CommandEvent` and it
     provides for a custom event sent every time the user chooses a colour.
@@ -99,7 +99,7 @@ class ColourSelectEvent(wx.CommandEvent):
         :param Colour `value`: the colour currently selected.
         """
 
-        wx.CommandEvent.__init__(self, id = id)
+        wx.PyCommandEvent.__init__(self, id = id)
         self.SetEventType(wxEVT_COMMAND_COLOURSELECT)
         self.value = value
 
@@ -211,10 +211,7 @@ class ColourSelect(wx.BitmapButton):
         :type `colour`: tuple or string or :class:`Colour`
         """
 
-        if not isinstance(colour, wx.Colour):
-            colour = wx.Colour(colour)
-            
-        self.colour = colour
+        self.colour = wx.Colour(colour)  # use the typmap or copy an existing colour object
         bmp = self.MakeBitmap()
         self.SetBitmap(bmp)
 
