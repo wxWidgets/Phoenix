@@ -6,6 +6,13 @@
 
 import wx
 
+USE_WIT = False
+
+AppBaseClass = wx.App
+if USE_WIT:
+    from wx.lib.mixins.inspection import InspectableApp
+    AppBaseClass = InspectableApp
+
 
 class MyFrame(wx.Frame):
     """
@@ -78,12 +85,15 @@ class MyFrame(wx.Frame):
         print("Having fun yet?")
 
 
-class MyApp(wx.App):
+class MyApp(AppBaseClass):
     def OnInit(self):
         frame = MyFrame(None, "Simple wxPython App")
         self.SetTopWindow(frame)
 
         print("Print statements go to this stdout window by default.")
+        if USE_WIT:
+            print("Press Ctrl-Alt-I (Cmd-Opt-I on Mac) to launch the WIT.")
+            self.InitInspection()
 
         frame.Show(True)
         return True
