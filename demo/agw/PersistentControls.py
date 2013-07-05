@@ -1,4 +1,5 @@
 import wx
+import wx.adv
 import os
 import sys
 import images
@@ -344,7 +345,7 @@ class PersistentFrame1(wx.Frame):
 
 # The wx.HtmlListBox derives from wx.VListBox, but draws each item
 # itself as a wx.HtmlCell.
-class MyHtmlListBox(wx.HtmlListBox):
+class MyHtmlListBox(wx.html.HtmlListBox):
 
     def OnGetItem(self, n):
         if n % 2 == 0:
@@ -377,7 +378,7 @@ class PersistentFrame2(wx.Frame):
         self.textctrl = wx.TextCtrl(dummyPanel, -1, text, style=wx.TE_MULTILINE, name="TextCtrl1")
         self.searchctrl = wx.SearchCtrl(dummyPanel, -1, "", name="SearchCtrl1")
         self.checkbox = wx.CheckBox(dummyPanel, -1, "CheckBox", name="CheckBox1")
-        self.datepickerctrl = wx.DatePickerCtrl(dummyPanel, style=wx.DP_DROPDOWN, name="DatePicker1")
+        self.datepickerctrl = wx.adv.DatePickerCtrl(dummyPanel, style=wx.adv.DP_DROPDOWN, name="DatePicker1")
         self.choice = wx.Choice(dummyPanel, -1, choices=_sampleList, name="Choice1")
 
         self.split2.SplitHorizontally(self.notebook, dummyPanel)
@@ -463,31 +464,34 @@ class PersistentFrame2(wx.Frame):
     def CreateTreeListCtrl(self, isTreeList):
 
         if isTreeList:
-            treeList = wx.gizmos.TreeListCtrl(self.notebook, style=wx.TR_DEFAULT_STYLE|wx.TR_FULL_ROW_HIGHLIGHT|
+            treeList = wx.adv.TreeListCtrl(self.notebook, style=wx.TR_DEFAULT_STYLE|wx.TR_FULL_ROW_HIGHLIGHT|
                                               wx.SUNKEN_BORDER|wx.TR_MULTIPLE, name="TreeList1")
         else:
             treeList = wx.TreeCtrl(self.split1, style=wx.TR_DEFAULT_STYLE|wx.SUNKEN_BORDER|wx.TR_MULTIPLE,
                                    name="TreeCtrl1")
 
         il = wx.ImageList(16, 16)
-        fldridx = il.Add(wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16, 16)))
+        fldridx = il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16, 16)))
         smileidx = il.Add(images.Smiles.GetBitmap())
 
         treeList.AssignImageList(il)
 
         if isTreeList:
             # create some columns
-            treeList.AddColumn("Main column")
-            treeList.AddColumn("Column 1")
-            treeList.AddColumn("Column 2")
-            treeList.SetMainColumn(0) # the one with the tree in it...
+            treeList.AppendColumn("Main column")
+            treeList.AppendColumn("Column 1")
+            treeList.AppendColumn("Column 2")
+            ##treeList.SetMainColumn(0) # the one with the tree in it...
             treeList.SetColumnWidth(0, 175)
 
-        root = treeList.AddRoot("The Root Item")
+        if isTreeList:
+            root = treeList.InsertItem(treeList.GetRootItem(), wx.adv.TLI_FIRST, "The Root Item")
+        else:
+            root = treeList.AddRoot("The Root Item")
 
         if isTreeList:
-            treeList.SetItemText(root, "col 1 root", 1)
-            treeList.SetItemText(root, "col 2 root", 2)
+            treeList.SetItemText(root, 1, "col 1 root")
+            treeList.SetItemText(root, 2, "col 2 root")
 
         treeList.SetItemImage(root, fldridx)
 
@@ -496,24 +500,24 @@ class PersistentFrame2(wx.Frame):
             child = treeList.AppendItem(root, txt)
             treeList.SetItemImage(child, smileidx)
             if isTreeList:
-                treeList.SetItemText(child, txt + "(c1)", 1)
-                treeList.SetItemText(child, txt + "(c2)", 2)
+                treeList.SetItemText(child, 1, txt + "(c1)")
+                treeList.SetItemText(child, 2, txt + "(c2)")
 
             for y in range(5):
                 txt = "item %d-%s" % (x, chr(ord("a")+y))
                 last = treeList.AppendItem(child, txt)
                 treeList.SetItemImage(last, fldridx)
                 if isTreeList:
-                    treeList.SetItemText(last, txt + "(c1)", 1)
-                    treeList.SetItemText(last, txt + "(c2)", 2)
+                    treeList.SetItemText(last, 1, txt + "(c1)")
+                    treeList.SetItemText(last, 2, txt + "(c2)")
 
                 for z in range(5):
                     txt = "item %d-%s-%d" % (x, chr(ord("a")+y), z)
                     item = treeList.AppendItem(last,  txt)
                     treeList.SetItemImage(item, smileidx)
                     if isTreeList:
-                        treeList.SetItemText(item, txt + "(c1)", 1)
-                        treeList.SetItemText(item, txt + "(c2)", 2)
+                        treeList.SetItemText(item, 1, txt + "(c1)")
+                        treeList.SetItemText(item, 2, txt + "(c2)")
 
         treeList.Expand(root)
         return treeList
