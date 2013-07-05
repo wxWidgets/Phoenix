@@ -40,11 +40,6 @@ Common Dialogs Demos
 More Dialogs Demos
 ==================
 [X] ImageBrowser
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\imagebrowser.py:144: wxPyD
-        eprecationWarning: Call to deprecated item BitmapFromBuffer. Use :meth:`Bitmap.F
-        romBuffer` or :meth:`Bitmap.FromBufferAndAlpha` instead.
-          return wx.BitmapFromBuffer(size, size, data)
 [X] ScrolledMessageDialog
 
 Core Windows/Controls Demos
@@ -64,22 +59,15 @@ Core Windows/Controls Demos
 [X] DVC_ListCtrl
 [X] DVC_TreeCtrl
 [X] Gauge
-[ ] Grid
+[X] Grid
+        TODO
+        button that launch No.3,4,7,8
 [ ] Grid_MegaExample
 [ ] GridLabelRenderer
 [X] ListBox
 [X] ListCtrl
 [X] ListCtrl_virtual
 [X] ListCtrl_edit
-        TODO
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\mixins\listctrl.py
-        ", line 561, in OnLeftDown
-            self.OpenEditor(col, row)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\mixins\listctrl.py
-        ", line 572, in OpenEditor
-            evt.m_item.SetId(item.GetId())
-        AttributeError: 'ListEvent' object has no attribute 'm_item'
 [X] Menu
 [X] PopupMenu
 [X] PopupWindow
@@ -96,7 +84,7 @@ Core Windows/Controls Demos
 [X] StaticBitmap
 [X] StaticBox
 [X] StaticText
-[ ] StatusBar
+[X] StatusBar
 [X] StockButtons
 [X] TextCtrl
         TODO
@@ -144,63 +132,17 @@ Custom Controls Demos
         eprecationWarning: Call to deprecated item. The TreeItemData class no longer exi
         sts, just pass your object directly to the tree instead.
           data=wx.TreeItemData(clientData))
-[ ] Editor
-        TODO
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\editor\editor.py",
-         line 194, in OnPaint
-            self.UpdateView(dc)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\editor\editor.py",
-         line 183, in UpdateView
-            if dc.Ok():
-        AttributeError: 'PaintDC' object has no attribute 'Ok'
+[X] Editor
 [X] GenericButtons
 [X] GenericDirCtrl
         NOTE
         Slow
 [X] ItemsPicker
 [ ] LEDNumberCtrl
-[ ] MultiSash
-        TODO
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\multisash.py", lin
-        e 617, in OnPaint
-            highlight = wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT),
-        1, wx.SOLID)
-        AttributeError: 'module' object has no attribute 'SystemSettings_GetColour'
-
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\multisash.py:659: wxPyDepr
-        ecationWarning: Using deprecated class. Use Cursor instead.
-          self.SetCursor(wx.StockCursor(wx.CURSOR_BULLSEYE))
-
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\multisash.py:655: wxPyDepr
-        ecationWarning: Using deprecated class. Use Cursor instead.
-          self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+[X] MultiSash
 [X] PlateButton
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\platebtn.py:135: wxPyDepre
-        cationWarning: Using deprecated class. Use Control instead.
-          name=name)
-
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\platebtn.py:145: wxPyDepre
-        cationWarning: Call to deprecated item BitmapFromImage. Use :class:`Bitmap` inst
-        ead
-          self._bmp['disable'] = wx.BitmapFromImage(img)
 [X] PopupControl
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\popupctl.py:157: wxPyDepre
-        cationWarning: Using deprecated class. Use Control instead.
-          wx.PyControl.__init__(self, *_args, **_kwargs)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\popupctl.py:32: wxPyDeprec
-        ationWarning: Using deprecated class. Use Control instead.
-          wx.PyControl.__init__(self, *_args, **_kwargs)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\popupctl.py:181: wxPyDepre
-        cationWarning: Call to deprecated item. Use SetSize instead.
-          self.textCtrl.SetDimensions(0, 0, w - self.marginWidth - self.buttonWidth, h)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\popupctl.py:182: wxPyDepre
-        cationWarning: Call to deprecated item. Use SetSize instead.
-          self.bCtrl.SetDimensions(w - self.buttonWidth, 0, self.buttonWidth, h)
-[ ] PyColourChooser
+[X] PyColourChooser
 [ ] TreeListCtrl
 
 AGW Demos
@@ -211,9 +153,7 @@ AGW Demos
 [X] BalloonTip
 [X] ButtonPanel
 [X] CubeColourDialog
-[ ] CustomTreeCtrl
-        TODO
-        wx.WXK_PRIOR
+[X] CustomTreeCtrl
 [ ] FlatMenu
         TODO
         Crashes on opening menu
@@ -224,9 +164,9 @@ AGW Demos
 [X] GenericMessageDialog
 [X] GradientButton
 [X] HyperLinkCtrl
-[ ] HyperTreeList
+[X] HyperTreeList
         TODO
-        wx.WXK_PRIOR
+        still needs more work
 [X] AGWInfoBar
 [X] KnobCtrl
         TODO
@@ -333,37 +273,6 @@ More Windows/Controls Demos
 [ ] ActiveX_PDFWindow
 [X] BitmapComboBox
 [X] Calendar
-        TODO
-        File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\calendar.py"
-        #replaceall wx.PyControl with wx.Control
-        #replaceall DrawRectangleRect with DrawRectangle
-        #replaceall DrawRectanglePointSize with DrawRectangle
-        #replaceall DrawLinePoint with DrawLine
-        #replaceall DrawTextPoint with DrawText
-        #replaceall SystemSettings_ with SystemSettings.
-
-        #Commented out dc BeginDrawing() and EndDrawing() stuff
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\calendar.py", line
-         985, in OnPaint
-            self.DoDrawing(DC)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\calendar.py", line
-         989, in DoDrawing
-            DC.BeginDrawing()
-        AttributeError: 'PaintDC' object has no attribute 'BeginDrawing'
-
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\calendar.py", line
-         768, in OnLeftEvent
-            self.ProcessClick(event)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\calendar.py", line
-         761, in ProcessClick
-            key = self.GetDayHit(self.x, self.y)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\calendar.py", line
-         949, in GetDayHit
-            if wx.IntersectRect(ms_rect, val) is not None:
-        AttributeError: 'module' object has no attribute 'IntersectRect'
-        
 [X] CalendarCtrl
         TODO
         could use some work/cleanup
@@ -382,19 +291,6 @@ More Windows/Controls Demos
         AttributeError: 'module' object has no attribute 'NumberEntryDialog'
 [X] FancyText
 [X] FileBrowseButton
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\filebrowsebutton.py:132: w
-        xPyDeprecationWarning: Call to deprecated item. Use SetToolTip instead.
-          textControl.SetToolTipString( self.toolTip )
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\filebrowsebutton.py:145: w
-        xPyDeprecationWarning: Call to deprecated item. Use SetToolTip instead.
-          button.SetToolTipString( self.toolTip )
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\filebrowsebutton.py:109: w
-        xPyDeprecationWarning: Call to deprecated item. Use SetSize instead.
-          self.SetDimensions(-1, -1, size.width, size.height, wx.SIZE_USE_EXISTING)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\filebrowsebutton.py:245: w
-        xPyDeprecationWarning: Call to deprecated item. Use SetToolTip instead.
-          textControl.SetToolTipString( self.toolTip )
 [X] FloatBar
 [X] FloatCanvas
 [X] HtmlWindow
@@ -405,47 +301,8 @@ More Windows/Controls Demos
         AttributeError: 'MyHtmlWindow' object has no attribute 'GetParser'
 [X] HTML2_WebView
 [X] InfoBar
-[ ] IntCtrl
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\intctrl.py:89: wxPyDepreca
-        tionWarning: Using deprecated class. Use Validator instead.
-          wx.PyValidator.__init__(self)
-[ ] MVCTree
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\mvctree.py:171: wxPyDeprec
-        ationWarning: Using deprecated class. Use Colour instead.
-          self.textcolor = wx.NamedColour("BLACK")
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\mvctree.py:172: wxPyDeprec
-        ationWarning: Using deprecated class. Use Colour instead.
-          self.bgcolor = wx.NamedColour("WHITE")
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\mvctree.py:173: wxPyDeprec
-        ationWarning: Using deprecated class. Use Colour instead.
-          self.fgcolor = wx.NamedColour("BLUE")
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\mvctree.py:174: wxPyDeprec
-        ationWarning: Using deprecated class. Use Colour instead.
-          self.linecolor = wx.NamedColour("GREY")
-        <string>:40: wxPyDeprecationWarning: Call to deprecated item __call__. Use :meth
-        :`EvtHandler.Bind` instead.
-        <string>:41: wxPyDeprecationWarning: Call to deprecated item __call__. Use :meth
-        :`EvtHandler.Bind` instead.
-        <string>:42: wxPyDeprecationWarning: Call to deprecated item __call__. Use :meth
-        :`EvtHandler.Bind` instead.
-        <string>:43: wxPyDeprecationWarning: Call to deprecated item __call__. Use :meth
-        :`EvtHandler.Bind` instead.
-        <string>:44: wxPyDeprecationWarning: Call to deprecated item __call__. Use :meth
-        :`EvtHandler.Bind` instead.
-        <string>:45: wxPyDeprecationWarning: Call to deprecated item __call__. Use :meth
-        :`EvtHandler.Bind` instead.
-        <string>:46: wxPyDeprecationWarning: Call to deprecated item __call__. Use :meth
-        :`EvtHandler.Bind` instead.
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\mvctree.py", line
-        1145, in OnPaint
-            self.painter.Paint(dc, self.currentRoot, self.doubleBuffered)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\mvctree.py", line
-        606, in Paint
-            dc.BeginDrawing()
-        AttributeError: 'PaintDC' object has no attribute 'BeginDrawing'
+[X] IntCtrl
+[X] MVCTree
 [X] MaskedEditControls
         TODO
         C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\combobox.py:266: wx
@@ -454,220 +311,32 @@ More Windows/Controls Demos
 [X] MaskedNumCtrl
 [ ] MediaCtrl
 [X] MultiSplitterWindow
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\splitter.py:68: wxPyDeprec
-        ationWarning: Using deprecated class. Use Panel instead.
-          wx.PyPanel.__init__(self, parent, id, pos, size, style, name)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\splitter.py:83: wxPyDeprec
-        ationWarning: Using deprecated class. Use Cursor instead.
-          self._sashCursorWE = wx.StockCursor(wx.CURSOR_SIZEWE)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\splitter.py:84: wxPyDeprec
-        ationWarning: Using deprecated class. Use Cursor instead.
-          self._sashCursorNS = wx.StockCursor(wx.CURSOR_SIZENS)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\splitter.py:709: wxPyDepre
-        cationWarning: Call to deprecated item. Use SetSize instead.
-          cw - 2*border, ch - 2*border)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\splitter.py:717: wxPyDepre
-        cationWarning: Call to deprecated item. Use SetSize instead.
-          self._windows[idx].SetDimensions(x, y, spos, h)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\splitter.py:721: wxPyDepre
-        cationWarning: Call to deprecated item. Use SetSize instead.
-          self._windows[idx+1].SetDimensions(x, y, last, h)
 [X] OwnerDrawnComboBox
 [X] Pickers
 [ ] PropertyGrid
 [X] PyCrust
-[ ] PyPlot
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\plot.py:586: wxPyDeprecati
-        onWarning: Using deprecated class. Use Cursor instead.
-          self.HandCursor = wx.CursorFromImage(Hand.GetImage())
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\plot.py:587: wxPyDeprecati
-        onWarning: Using deprecated class. Use Cursor instead.
-          self.GrabHandCursor = wx.CursorFromImage(GrabHand.GetImage())
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\plot.py:588: wxPyDeprecati
-        onWarning: Using deprecated class. Use Cursor instead.
-          self.MagCursor = wx.CursorFromImage(MagPlus.GetImage())
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\plot.py:1462: wxPyDeprecat
-        ionWarning: Call to deprecated item EmptyBitmap. Use :class:`Bitmap` instead
-          self._Buffer = wx.EmptyBitmap(Size.width, Size.height)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\plot.py:659: wxPyDeprecati
-        onWarning: Using deprecated class. Use Colour instead.
-          self._gridColour = wx.NamedColour('black')
+[X] PyPlot
 [X] PyShell
 [X] ResizeWidget
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\resizewidget.py:49: wxPyDe
-        precationWarning: Using deprecated class. Use Panel instead.
-          wx.PyPanel.__init__(self, *args, **kw)
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\resizewidget.py",
-        line 176, in OnSize
-            cr = wx.RectPS((0,0), sz - (RW_THICKNESS, RW_THICKNESS))
-        AttributeError: 'module' object has no attribute 'RectPS'
 [ ] RichTextCtrl
 [X] ScrolledPanel
 [ ] SplitTree
 [X] StyledTextCtrl_1
 [X] StyledTextCtrl_2
-[ ] TablePrint
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\printout.py:717: wxPyDepre
-        cationWarning: Using deprecated class. Use Colour instead.
-          self.row_def_line_colour = wx.NamedColour('BLACK')
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\printout.py:720: wxPyDepre
-        cationWarning: Using deprecated class. Use Colour instead.
-          self.column_def_line_colour = wx.NamedColour('BLACK')
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\printout.py:722: wxPyDepre
-        cationWarning: Using deprecated class. Use Colour instead.
-          self.column_colour = wx.NamedColour('WHITE')
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\printout.py:724: wxPyDepre
-        cationWarning: Using deprecated class. Use Colour instead.
-          self.label_colour = wx.NamedColour('LIGHT GREY')
-        <string>:72: wxPyDeprecationWarning: Using deprecated class. Use Colour instead.
-
-        <string>:75: wxPyDeprecationWarning: Using deprecated class. Use Colour instead.
-
-        <string>:79: wxPyDeprecationWarning: Using deprecated class. Use Colour instead.
-
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\printout.py:917: wxPyDepre
-        cationWarning: Call to deprecated item. Use IsOk instead.
-          if not self.preview.Ok():
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\printout.py", line
-         1134, in OnPrintPage
-            self.canvas.DoDrawing(dc)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\printout.py", line
-         945, in DoDrawing
-            DC.BeginDrawing()
-        AttributeError: 'DC' object has no attribute 'BeginDrawing'
+[X] TablePrint
 [X] Throbber
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\throbber.py:68: wxPyDeprec
-        ationWarning: Using deprecated class. Use Panel instead.
-          wx.PyPanel.__init__(self, parent, id, pos, size, style, name)
-[ ] Ticker
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\ticker.py:45: wxPyDeprecat
-        ionWarning: Using deprecated class. Use Control instead.
-          wx.PyControl.__init__(self, parent, id=id, pos=pos, size=size, style=style, na
-        me=name)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\ticker.py:56: wxPyDeprecat
-        ionWarning: Call to deprecated item __call__. Use :meth:`EvtHandler.Bind` instea
-        d.
-          wx.EVT_TIMER(self, -1, self.OnTick)
+[X] Ticker
 [X] TimeCtrl
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\timectrl.py:391: wx
-        PyDeprecationWarning: Call to deprecated item DateTimeFromDMY. Use :meth:`DateTi
-        me.FromDMY` instead.
-          wxdt = wx.DateTimeFromDMY(1, 0, 1970)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\timectrl.py:531: wx
-        PyDeprecationWarning: Call to deprecated item DateTimeFromDMY. Use :meth:`DateTi
-        me.FromDMY` instead.
-          wxdt = wx.DateTimeFromDMY(1, 0, 1970)
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\timectrl.py:769: wx
-        PyDeprecationWarning: Call to deprecated item DateTimeFromDMY. Use :meth:`DateTi
-        me.FromDMY` instead.
-          wxdt = wx.DateTimeFromDMY(1, 0, 1970)
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\timectrl.py
-        ", line 1177, in __OnTextChange
-            if not BaseMaskedTextCtrl._OnTextChange(self, event):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 2966, in _OnTextChange
-            self._CheckValid()  # Recolor control as appropriate
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5362, in _CheckValid
-            valid = self._validateTime(value)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5556, in _validateTime
-            dateHandler = wx.DateTime_Today()
-        AttributeError: 'module' object has no attribute 'DateTime_Today'
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\timectrl.py
-        ", line 1177, in __OnTextChange
-            if not BaseMaskedTextCtrl._OnTextChange(self, event):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 2966, in _OnTextChange
-            self._CheckValid()  # Recolor control as appropriate
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5362, in _CheckValid
-            valid = self._validateTime(value)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5556, in _validateTime
-            dateHandler = wx.DateTime_Today()
-        AttributeError: 'module' object has no attribute 'DateTime_Today'
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\timectrl.py
-        ", line 1177, in __OnTextChange
-            if not BaseMaskedTextCtrl._OnTextChange(self, event):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 2966, in _OnTextChange
-            self._CheckValid()  # Recolor control as appropriate
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5362, in _CheckValid
-            valid = self._validateTime(value)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5556, in _validateTime
-            dateHandler = wx.DateTime_Today()
-        AttributeError: 'module' object has no attribute 'DateTime_Today'
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\timectrl.py
-        ", line 1177, in __OnTextChange
-            if not BaseMaskedTextCtrl._OnTextChange(self, event):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 2966, in _OnTextChange
-            self._CheckValid()  # Recolor control as appropriate
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5362, in _CheckValid
-            valid = self._validateTime(value)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5556, in _validateTime
-            dateHandler = wx.DateTime_Today()
-        AttributeError: 'module' object has no attribute 'DateTime_Today'
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\timectrl.py
-        ", line 1177, in __OnTextChange
-            if not BaseMaskedTextCtrl._OnTextChange(self, event):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 2966, in _OnTextChange
-            self._CheckValid()  # Recolor control as appropriate
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5362, in _CheckValid
-            valid = self._validateTime(value)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5556, in _validateTime
-            dateHandler = wx.DateTime_Today()
-        AttributeError: 'module' object has no attribute 'DateTime_Today'
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\timectrl.py
-        ", line 1177, in __OnTextChange
-            if not BaseMaskedTextCtrl._OnTextChange(self, event):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 2966, in _OnTextChange
-            self._CheckValid()  # Recolor control as appropriate
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5362, in _CheckValid
-            valid = self._validateTime(value)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\maskededit.
-        py", line 5556, in _validateTime
-            dateHandler = wx.DateTime_Today()
-        AttributeError: 'module' object has no attribute 'DateTime_Today'
 [ ] TreeMixin
 [ ] VListBox
 
 Window Layout Demos
 ===================
-[ ] GridBagSizer
+[X] GridBagSizer
 [X] LayoutAnchors
 [X] LayoutConstraints
 [X] Layoutf
-[ ] RowColSizer
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\rcsizer.py:63: wxPyDepreca
-        tionWarning: Using deprecated class. Use Sizer instead.
-          wx.PySizer.__init__(self)
+[X] RowColSizer
 [X] ScrolledPanel
 [X] SizedControls
 [X] Sizers
@@ -679,26 +348,6 @@ Window Layout Demos
 Process and Events Demos
 [X] DelayedResult
 [X] EventManager
-        TODO
-            self._publish(msgKwargs)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\pubsub\core\topico
-        bj.py", line 340, in _publish
-            self.__sendMessage(data, self, iterState)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\pubsub\core\topico
-        bj.py", line 359, in __sendMessage
-            self._mix_callListener(listener, data, iterState)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\pubsub\core\kwargs
-        \publishermixin.py", line 64, in _mix_callListener
-            listener(iterState.filteredArgs, self, msgKwargs)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\pubsub\core\kwargs
-        \listenerimpl.py", line 27, in __call__
-            cb(**kwargs)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\evtmgr.py", line 4
-        67, in deliverEvent
-            self.eventHandler(message)
-          File "EventManager.py", line 184, in makeColor
-            self.makeColorFromTuple(mouseEvent.GetPositionTuple())
-        AttributeError: 'MouseEvent' object has no attribute 'GetPositionTuple'
 [X] KeyEvents
 [X] Process
 [X] PythonEvents
@@ -724,18 +373,14 @@ Using Images Demos
 [X] ArtProvider
 [X] BitmapFromBuffer
 [X] Cursor
-[ ] DragImage
+[X] DragImage
 [X] Image
 [X] ImageAlpha
 [X] ImageFromStream
 [X] Img2PyArtProvider
-[ ] Mask
+[X] Mask
 [X] RawBitmapAccess
 [X] Throbber
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\throbber.py:68: wxPyDeprec
-        ationWarning: Using deprecated class. Use Panel instead.
-          wx.PyPanel.__init__(self, parent, id, pos, size, style, name)
         
 Miscellaneous Demos
 ===================
@@ -745,21 +390,13 @@ Miscellaneous Demos
 [X] ColourDB
 [ ] #'DialogUnits   # needs more explanations
 [X] DragScroller
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\dragscroller.py:49: wxPyDe
-        precationWarning: Using deprecated class. Use Cursor instead.
-          self.scrollwin.SetCursor(wx.StockCursor(wx.CURSOR_SIZING))
 [X] DrawXXXList
 [X] FileHistory
 [X] FontEnumerator
 [X] GraphicsContext
-[ ] GraphicsGradient
+[X] GraphicsGradient
 [ ] GLCanvas
 [X] I18N
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\langlistctrl.py:375: wxPyD
-        eprecationWarning: Call to deprecated item. Use InsertItem instead.
-          self.InsertImageStringItem(i, self.choices[i], i)
 [X] Joystick
         TODO
         Needs more work and tested with a joystick. I dont have one.
