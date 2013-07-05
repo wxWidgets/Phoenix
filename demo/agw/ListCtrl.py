@@ -167,18 +167,18 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         else:
             # but since we want images on the column header we have to do it the hard way:
             info = wx.ListItem()
-            info.m_mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT
-            info.m_image = -1
-            info.m_format = 0
-            info.m_text = "Artist"
+            info.Mask = wx.LIST_MASK_TEXT | wx.LIST_MASK_IMAGE | wx.LIST_MASK_FORMAT
+            info.Image = -1
+            info.Align = 0
+            info.Text = "Artist"
             self.list.InsertColumnInfo(0, info)
 
-            info.m_format = wx.LIST_FORMAT_RIGHT
-            info.m_text = "Title"
+            info.Align = wx.LIST_FORMAT_RIGHT
+            info.Text = "Title"
             self.list.InsertColumnInfo(1, info)
 
-            info.m_format = 0
-            info.m_text = "Genre"
+            info.Align = 0
+            info.Text = "Genre"
             self.list.InsertColumnInfo(2, info)
 
         items = musicdata.items()
