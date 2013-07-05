@@ -30,7 +30,7 @@ class SpeedMeterDemo(wx.Panel):
         wx.Panel.__init__(self, parent, style=wx.TAB_TRAVERSAL|wx.NO_FULL_REPAINT_ON_RESIZE)
 
         panel = wx.Panel(self, -1)
-        sizer = wx.FlexGridSizer(2, 3, 2, 5)
+        sizer = wx.FlexGridSizer(rows=2, cols=3, vgap=2, hgap=5)
 
         # 6 Panels To Hold The SpeedMeters ;-)
 
@@ -77,14 +77,14 @@ class SpeedMeterDemo(wx.Panel):
         self.SpeedWindow1.SetNumberOfSecondaryTicks(5)
 
         # Set The Font For The Ticks Markers
-        self.SpeedWindow1.SetTicksFont(wx.Font(7, wx.SWISS, wx.NORMAL, wx.NORMAL))
+        self.SpeedWindow1.SetTicksFont(wx.Font(7, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
 
         # Set The Text In The Center Of SpeedMeter
         self.SpeedWindow1.SetMiddleText("Km/h")
         # Assign The Colour To The Center Text
         self.SpeedWindow1.SetMiddleTextColour(wx.WHITE)
         # Assign A Font To The Center Text
-        self.SpeedWindow1.SetMiddleTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD))
+        self.SpeedWindow1.SetMiddleTextFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
         # Set The Colour For The Hand Indicator
         self.SpeedWindow1.SetHandColour(wx.Colour(255, 50, 0))
@@ -132,7 +132,7 @@ class SpeedMeterDemo(wx.Panel):
         ticks[0] = "12"
         self.SpeedWindow2.SetTicks(ticks)
         self.SpeedWindow2.SetTicksColour(wx.BLUE)
-        self.SpeedWindow2.SetTicksFont(wx.Font(11, wx.SCRIPT, wx.NORMAL, wx.BOLD, True))
+        self.SpeedWindow2.SetTicksFont(wx.Font(11, wx.FONTFAMILY_SCRIPT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True))
         self.SpeedWindow2.SetNumberOfSecondaryTicks(4)
 
         # Set The Colour For The External Arc
@@ -228,7 +228,7 @@ class SpeedMeterDemo(wx.Panel):
         ticks = [str(interval) + "C" for interval in intervals]
         self.SpeedWindow4.SetTicks(ticks)
         self.SpeedWindow4.SetTicksColour(wx.BLACK)
-        self.SpeedWindow4.SetTicksFont(wx.Font(7, wx.TELETYPE, wx.NORMAL, wx.BOLD))
+        self.SpeedWindow4.SetTicksFont(wx.Font(7, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
         self.SpeedWindow4.SetHandColour(wx.Colour(0, 0, 255))
 
@@ -285,7 +285,7 @@ class SpeedMeterDemo(wx.Panel):
         ticks = [str(interval) for interval in intervals]
         self.SpeedWindow5.SetTicks(ticks)
         self.SpeedWindow5.SetTicksColour(wx.WHITE)
-        self.SpeedWindow5.SetTicksFont(wx.Font(7, wx.SWISS, wx.NORMAL, wx.NORMAL))
+        self.SpeedWindow5.SetTicksFont(wx.Font(7, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
 
         self.SpeedWindow5.SetHandColour(wx.Colour(255, 50, 0))
 
@@ -297,7 +297,7 @@ class SpeedMeterDemo(wx.Panel):
 
         self.SpeedWindow5.SetMiddleText("rpm")
         self.SpeedWindow5.SetMiddleTextColour(wx.WHITE)
-        self.SpeedWindow5.SetMiddleTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD))
+        self.SpeedWindow5.SetMiddleTextFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         self.SpeedWindow5.SetSpeedBackground(wx.Colour(160, 160, 160))
 
         self.SpeedWindow5.SetSpeedValue(5.6)
@@ -334,7 +334,7 @@ class SpeedMeterDemo(wx.Panel):
         ticks = ["0", "<pi/>/6", "sq(<pi/>)", "2<pi/>/3", "<pi/><sup>2</sup>/4", "<pi/>", "7<pi/>/6", "4<pi/>/3"]
         self.SpeedWindow6.SetTicks(ticks)
         self.SpeedWindow6.SetTicksColour(wx.Colour(0, 90, 0))
-        self.SpeedWindow6.SetTicksFont(wx.Font(6, wx.ROMAN, wx.NORMAL, wx.BOLD))
+        self.SpeedWindow6.SetTicksFont(wx.Font(6, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
         self.SpeedWindow6.SetHandColour(wx.Colour(60, 60, 60))
 
@@ -604,7 +604,7 @@ class SpeedMeterDemo(wx.Panel):
             msg = msg + "Is Not A Valid Integer/Float Number."
             dlg = wx.MessageDialog(self, msg, "SpeedMeter Demo Error",
                                    wx.OK | wx.ICON_ERROR)
-            dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False, "Verdana"))
+            dlg.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Verdana"))
             dlg.ShowModal()
             dlg.Destroy()
             return
@@ -628,7 +628,7 @@ class SpeedMeterDemo(wx.Panel):
         if error:
             dlg = wx.MessageDialog(self, msg, "SpeedMeter Demo Error",
                                    wx.OK | wx.ICON_ERROR)
-            dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False, "Verdana"))
+            dlg.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Verdana"))
             dlg.ShowModal()
             dlg.Destroy()
             return
