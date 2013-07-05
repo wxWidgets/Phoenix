@@ -17,8 +17,7 @@ and also for the code that calls this script via subprocess.
 import sys
 import os
 import unittest
-import unittest.runner
-from wx.lib.six import PY3, BytesIO
+import wx.lib.six as six
 import pickle
     
 g_testResult = None
@@ -55,7 +54,7 @@ class MyTestRunner(unittest.TextTestRunner):
     def _makeResult(self):
         global g_testResult
         if g_testResult is None:
-            self.stream = unittest.runner._WritelnDecorator(BytesIO())
+            self.stream = unittest.runner._WritelnDecorator(six.StringIO())
             g_testResult = MyTestResult(self.stream, self.descriptions, self.verbosity)
         return g_testResult
     
@@ -64,7 +63,7 @@ if __name__ == '__main__':
     unittest.main(module=None, exit=False, testRunner=MyTestRunner)
     msg = g_testResult.getResultsMsg()
     text = pickle.dumps(msg)
-    if PY3:
+    if six.PY3:
         sys.stdout.buffer.write(text)
     else:
         sys.stdout.write(text)

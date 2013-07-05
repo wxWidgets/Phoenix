@@ -4619,7 +4619,7 @@ class MaskedEditMixin:
 
         # convert okchars to unicode if required; will force subsequent appendings to
         # result in unicode strings
-        if not six.PY3 and not isinstance(okchars, six.string_types):
+        if not six.PY3 and not isinstance(okchars, six.text_type):
             okchars = okchars.decode(self._defaultEncoding)
 
         field = self._FindField(pos)
@@ -5208,7 +5208,7 @@ class MaskedEditMixin:
                 left  = text[0:pos]
                 right   = text[pos+1:]
 
-            if not isinstance(char, six.string_types):
+            if not isinstance(char, six.text_type):
                 # convert the keyboard constant to a unicode value, to
                 # ensure it can be concatenated into the control value:
                 if not six.PY3:
@@ -5747,7 +5747,7 @@ class MaskedEditMixin:
         else:
             item = 'selection'
 ##        dbg('maxlength:', maxlength)
-        if not six.PY3 and not isinstance(paste_text, six.string_types):
+        if not six.PY3 and not isinstance(paste_text, six.text_type):
             paste_text = paste_text.decode(self._defaultEncoding)
 
         length_considered = len(paste_text)
@@ -5854,7 +5854,7 @@ class MaskedEditMixin:
 
         if paste_text is not None:
 
-            if not six.PY3 and not isinstance(paste_text, six.string_types):
+            if not six.PY3 and not isinstance(paste_text, six.text_type):
                 paste_text = paste_text.decode(self._defaultEncoding)
 
 ##            dbg('paste text: "%s"' % paste_text)
