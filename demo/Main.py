@@ -92,6 +92,7 @@ _treeList = [
     # new stuff
     ('Recent Additions/Updates', [
         'BannerWindow',
+        'RichToolTip',
         'NotificationMessage',
         'PropertyGrid',
         'SystemSettings',
