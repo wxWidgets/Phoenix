@@ -89,6 +89,7 @@ class MyTestSuite(unittest.TestSuite):
             #    output = output.decode('ascii') 
             output = output.rstrip()
             rval = sp.wait()
+            sp.stdout.close()
             if rval:
                 print("Command '%s' failed with exit code %d." % (cmd, rval))
                 sys.exit(rval)
