@@ -23,8 +23,10 @@ class TestPanel(wx.Panel):
 
 
     def OnPaint(self, evt):
-        #dc = wx.PaintDC(self)
-        dc = wx.BufferedPaintDC(self)
+        if self.IsDoubleBuffered():
+            dc = wx.PaintDC(self)
+        else:
+            dc = wx.BufferedPaintDC(self)
         dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
 
