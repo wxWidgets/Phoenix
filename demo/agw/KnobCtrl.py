@@ -1,5 +1,4 @@
 import wx
-import wx.lib.colourselect as csel
 
 import os
 import sys
@@ -25,8 +24,8 @@ class KnobCtrlDemo(wx.Panel):
 
         wx.Panel.__init__(self, parent)
         self.log = log
-        
-        self.panel = wx.Panel(self, -1)        
+
+        self.panel = wx.Panel(self, -1)
         self.LayoutItems()
 
 
@@ -51,10 +50,10 @@ class KnobCtrlDemo(wx.Panel):
 
         knobslider = wx.Slider(self.panel, -1, 4, 1, 10, style=wx.SL_HORIZONTAL|wx.SL_AUTOTICKS|wx.SL_LABELS)
         tickslider = wx.Slider(self.panel, -1, 16, 3, 20, style=wx.SL_HORIZONTAL|wx.SL_AUTOTICKS|wx.SL_LABELS)
-        tagscolour = csel.ColourSelect(self.panel, -1, "Choose...", wx.BLACK)
-        boundingcolour = csel.ColourSelect(self.panel, -1, "Choose...", wx.WHITE)
-        firstcolour = csel.ColourSelect(self.panel, -1, "Choose...", wx.WHITE)
-        secondcolour = csel.ColourSelect(self.panel, -1, "Choose...", wx.Colour(170, 170, 150))
+        tagscolour = wx.ColourPickerCtrl(self.panel, -1, wx.BLACK, style=wx.CLRP_USE_TEXTCTRL)
+        boundingcolour = wx.ColourPickerCtrl(self.panel, -1, wx.WHITE, style=wx.CLRP_USE_TEXTCTRL)
+        firstcolour = wx.ColourPickerCtrl(self.panel, -1, wx.WHITE, style=wx.CLRP_USE_TEXTCTRL)
+        secondcolour = wx.ColourPickerCtrl(self.panel, -1, wx.Colour(170, 170, 150), style=wx.CLRP_USE_TEXTCTRL)
 
         knobslider.SetValue(4)
         tickslider.SetValue(16)
@@ -65,7 +64,7 @@ class KnobCtrlDemo(wx.Panel):
         leftsizer = wx.BoxSizer(wx.VERTICAL)
         leftbottomsizer = wx.StaticBoxSizer(leftbottomsizer_staticbox, wx.VERTICAL)
         lefttopsizer = wx.StaticBoxSizer(lefttopsizer_staticbox, wx.VERTICAL)
-        
+
         lefttopsizer.Add(self.knob1, 1, wx.ALL|wx.EXPAND, 5)
         lefttopsizer.Add(self.knobtracker1, 0, wx.ALL, 5)
         leftsizer.Add(lefttopsizer, 1, wx.ALL|wx.EXPAND, 5)
@@ -73,7 +72,7 @@ class KnobCtrlDemo(wx.Panel):
         leftbottomsizer.Add(self.knobtracker2, 0, wx.ALL, 5)
         leftsizer.Add(leftbottomsizer, 1, wx.ALL|wx.EXPAND, 5)
         panelsizer.Add(leftsizer, 1, wx.EXPAND|wx.ALL, 20)
-        
+
         label_1 = wx.StaticText(self.panel, -1, "Knob Radius: ")
         rightsizer.Add(label_1, 0, wx.ALIGN_CENTER_VERTICAL, 5)
         rightsizer.Add(knobslider, 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 5)
@@ -100,15 +99,15 @@ class KnobCtrlDemo(wx.Panel):
         mainsizer.Add(self.panel, 1, wx.EXPAND)
         self.SetSizer(mainsizer)
         mainsizer.Layout()
-        
+
         self.Bind(wx.EVT_COMMAND_SCROLL, self.OnKnobRadius, knobslider)
         self.Bind(wx.EVT_COMMAND_SCROLL, self.OnTicks, tickslider)
         self.Bind(KC.EVT_KC_ANGLE_CHANGED, self.OnAngleChanged1, self.knob1)
         self.Bind(KC.EVT_KC_ANGLE_CHANGED, self.OnAngleChanged2, self.knob2)
-        tagscolour.Bind(csel.EVT_COLOURSELECT, self.OnTagsColour)
-        boundingcolour.Bind(csel.EVT_COLOURSELECT, self.OnBoundingColour)
-        firstcolour.Bind(csel.EVT_COLOURSELECT, self.OnFirstColour)
-        secondcolour.Bind(csel.EVT_COLOURSELECT, self.OnSecondColour)
+        tagscolour.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnTagsColour)
+        boundingcolour.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnBoundingColour)
+        firstcolour.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnFirstColour)
+        secondcolour.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnSecondColour)
 
 
     def OnAngleChanged1(self, event):
@@ -125,16 +124,16 @@ class KnobCtrlDemo(wx.Panel):
         self.knobtracker2.SetLabel("Value = " + str(value))
         self.log.write("KnobCtrl 2 changed value to %s\n"%value)
         self.knobtracker2.Refresh()
-        
 
-    def OnKnobRadius(self, event): 
+
+    def OnKnobRadius(self, event):
 
         value = event.GetPosition()
         self.knob1.SetKnobRadius(value)
         event.Skip()
 
 
-    def OnTicks(self, event): 
+    def OnTicks(self, event):
 
         minvalue = self.knob1.GetMinValue()
         maxvalue = self.knob1.GetMaxValue()
@@ -142,30 +141,30 @@ class KnobCtrlDemo(wx.Panel):
         therange = (maxvalue-minvalue)/(event.GetPosition()-1)
         tickrange = range(minvalue, maxvalue+1, therange)
         self.knob1.SetTags(tickrange)
-        
+
         event.Skip()
 
 
     def OnTagsColour(self, event):
 
-        self.knob1.SetTagsColour(event.GetValue())
+        self.knob1.SetTagsColour(event.GetEventObject().GetColour())
 
 
     def OnBoundingColour(self, event):
 
-        self.knob1.SetBoundingColour(event.GetValue())
+        self.knob1.SetBoundingColour(event.GetEventObject().GetColour())
 
 
     def OnFirstColour(self, event):
 
-        self.knob1.SetFirstGradientColour(event.GetValue())        
+        self.knob1.SetFirstGradientColour(event.GetEventObject().GetColour())
 
 
     def OnSecondColour(self, event):
 
-        self.knob1.SetSecondGradientColour(event.GetValue())        
+        self.knob1.SetSecondGradientColour(event.GetEventObject().GetColour())
 
-        
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
