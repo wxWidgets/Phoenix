@@ -78,7 +78,8 @@ class TestColourSelect(wx.Panel):
         self.Layout()
 
     def OnSelectColour(self, event):
-        self.log.WriteText("Colour selected: %s" % str(event.GetValue()))
+        event.Skip()
+        self.log.WriteText("Colour selected: %s" % str(event.GetEventObject().GetValue()))
 
     def OnShowAll(self, event):
         # show the state of each button
