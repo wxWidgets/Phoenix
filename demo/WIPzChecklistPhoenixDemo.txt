@@ -122,10 +122,7 @@ Custom Controls Demos
 [ ] AnalogClock
 [X] ColourSelect
         TODO
-        Traceback (most recent call last):
-          File "ColourSelect.py", line 81, in OnSelectColour
-            self.log.WriteText("Colour selected: %s" % str(event.GetValue()))
-        AttributeError: 'CommandEvent' object has no attribute 'GetValue'
+        Crashing on second colour select
 [X] ComboTreeBox
         TODO
         C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\combotreebox.py:532: wxPyD
@@ -143,7 +140,9 @@ Custom Controls Demos
 [X] PlateButton
 [X] PopupControl
 [X] PyColourChooser
-[ ] TreeListCtrl
+[X] TreeListCtrl
+        TODO
+        still need to adjust for selected image: smiley
 
 AGW Demos
 =========
@@ -169,17 +168,12 @@ AGW Demos
         still needs more work
 [X] AGWInfoBar
 [X] KnobCtrl
-        TODO
-        Traceback (most recent call last):
-          File "agw\KnobCtrl.py", line 166, in OnSecondColour
-            self.knob1.SetSecondGradientColour(event.GetValue())
-        AttributeError: 'CommandEvent' object has no attribute 'GetValue'
 [X] LabelBook
 [X] MultiDirDialog
 [X] PeakMeter
-[ ] PersistentControls
+[X] PersistentControls
         TODO
-        wx.HtmlListBox
+        Example2 still needs more work
 [X] PieCtrl
         TODO
         Traceback (most recent call last):
@@ -214,11 +208,6 @@ AGW Demos
             raise Exception("exception")
         Exception: exception
 [X] RulerCtrl
-        TODO
-        Traceback (most recent call last):
-          File "agw\RulerCtrl.py", line 378, in OnLabelColour
-            self.ruler3.SetLabelColour(event.GetValue())
-        AttributeError: 'CommandEvent' object has no attribute 'GetValue'
 [X] ShapedButton
 [X] ShortcutEditor
 [X] SpeedMeter
@@ -260,11 +249,6 @@ AGW Demos
         Windows7ExplorerContents
 [ ] XLSGrid
 [X] ZoomBar
-        TODO
-        Traceback (most recent call last):
-          File "agw\ZoomBar.py", line 154, in OnZoomColour
-            colour = event.GetValue()
-        AttributeError: 'CommandEvent' object has no attribute 'GetValue'
 
 More Windows/Controls Demos
 ===========================
@@ -279,10 +263,12 @@ More Windows/Controls Demos
 [X] CheckListCtrlMixin
 [X] CollapsiblePane
 [X] ComboCtrl
-[ ] ContextHelp
+[X] ContextHelp
+        TODO
+        ContextHelp doesn't seem to be working yet tho...
 [X] DatePickerCtrl
 [ ] DynamicSashWindow
-[ ] EditableListBox
+[X] EditableListBox
 [X] ExpandoTextCtrl
         TODO
         Traceback (most recent call last):
@@ -304,10 +290,6 @@ More Windows/Controls Demos
 [X] IntCtrl
 [X] MVCTree
 [X] MaskedEditControls
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\masked\combobox.py:266: wx
-        PyDeprecationWarning: Call to deprecated item. Use SetTextSelection instead.
-          return self.SetMark( sel_start, sel_to )
 [X] MaskedNumCtrl
 [ ] MediaCtrl
 [X] MultiSplitterWindow
@@ -327,8 +309,13 @@ More Windows/Controls Demos
 [X] Throbber
 [X] Ticker
 [X] TimeCtrl
-[ ] TreeMixin
-[ ] VListBox
+[X] TreeMixin
+[X] VListBox
+        TODO
+        Traceback (most recent call last):
+          File "VListBox.py", line 131, in OnCellMouseHover
+            self.log.WriteText('     %s\n' % cell.ConvertToText(sel))
+        AttributeError: 'HtmlWordCell' object has no attribute 'ConvertToText'
 
 Window Layout Demos
 ===================
