@@ -1,8 +1,8 @@
 
-import  sys
+import sys
 
-import  wx
-import  wx.lib.infoframe
+import wx
+import wx.lib.infoframe
 
 #----------------------------------------------------------------------
 
@@ -27,13 +27,13 @@ class MyFrame(wx.Frame):
 
         # Attach the menu to our menu bar
         menubar.Append(menu, "&Output")
-        
+
         # Attach menu bar to frame
         self.SetMenuBar(menubar)
-        
+
         # Point to ourselves as the output object's parent.
         output.SetParent(self)
-        
+
         # Associate menu bar with output object
         output.SetOtherMenuBar(menubar, menuname="Output")
 
@@ -51,9 +51,9 @@ class MyFrame(wx.Frame):
         # Now point to the output object for stdout
         sys.stdout = self.output = output
         # ... and use it.
-        print "Hello!"
+        print("Hello!")
 
-    def OnClose(self,event):
+    def OnClose(self, event):
         # We stored a pointer to the original stdout above in .__init__(), and
         # here we restore it before closing the window.
         sys.stdout = self.save_stdout
@@ -67,7 +67,7 @@ class MyFrame(wx.Frame):
 
     # Event handler for timer events.
     def OnTimer(self, evt):
-        print "This was printed with \"print\""
+        print("This was printed with \"print\"")
 
 
 #----------------------------------------------------------------------
@@ -108,13 +108,13 @@ if __name__ == "__main__":
 ##             self.Destroy()
 
     class MyApp(wx.App):
-        
+
         # Override the default output window and point it to the
         # custom class.
         outputWindowClass = wx.lib.infoframe.PyInformationalMessagesFrame
-        
+
         def OnInit(self):
-            
+
             # At this point, we should probably check to see if self.stdioWin
             # is actually pointed to something. By default, wx.App() sets this
             # attribute to None. This causes problems when setting up the menus
@@ -123,23 +123,23 @@ if __name__ == "__main__":
             # an error handler directly into MyFrame().
             #
             # That's in practice. In the case of this demo, the whole point
-            # of the exercise is to demonstrate the window, so we're being 
+            # of the exercise is to demonstrate the window, so we're being
             # just a little lazy for clarity's sake. But do be careful in
             # a 'real world' implementation :-)
-            
+
             frame = MyFrame(self.stdioWin)
             frame.Show(True)
             self.SetTopWindow(frame)
-            
+
             # Associate the frame with stdout.
             if isinstance(sys.stdout, wx.lib.infoframe.PyInformationalMessagesFrame):
                 sys.stdout.SetParent(frame)
 
-            print "Starting.\n",
+            print("Starting.\n")
             return True
 
     # *extremely important*
-    # 
+    #
     # In this demo, if the redirect flag is set to False, the infoframe will not
     # be created or used. All output will go to the default stdout, which in this
     # case will cause the app to throw an exception. In a real app, you should
