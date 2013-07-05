@@ -87,8 +87,6 @@ keyMap = {
     wx.WXK_MENU : "WXK_MENU",
     wx.WXK_PAUSE : "WXK_PAUSE",
     wx.WXK_CAPITAL : "WXK_CAPITAL",
-    wx.WXK_PRIOR : "WXK_PRIOR",
-    wx.WXK_NEXT : "WXK_NEXT",
     wx.WXK_END : "WXK_END",
     wx.WXK_HOME : "WXK_HOME",
     wx.WXK_LEFT : "WXK_LEFT",
@@ -157,9 +155,7 @@ keyMap = {
     wx.WXK_NUMPAD_UP : "WXK_NUMPAD_UP",
     wx.WXK_NUMPAD_RIGHT : "WXK_NUMPAD_RIGHT",
     wx.WXK_NUMPAD_DOWN : "WXK_NUMPAD_DOWN",
-    wx.WXK_NUMPAD_PRIOR : "WXK_NUMPAD_PRIOR",
     wx.WXK_NUMPAD_PAGEUP : "WXK_NUMPAD_PAGEUP",
-    wx.WXK_NUMPAD_NEXT : "WXK_NUMPAD_NEXT",
     wx.WXK_NUMPAD_PAGEDOWN : "WXK_NUMPAD_PAGEDOWN",
     wx.WXK_NUMPAD_END : "WXK_NUMPAD_END",
     wx.WXK_NUMPAD_BEGIN : "WXK_NUMPAD_BEGIN",
@@ -180,21 +176,21 @@ keyMap = {
 # Just A Dialog To Select Pen Styles
 #---------------------------------------------------------------------------
 class PenDialog(wx.Dialog):
-    
+
     def __init__(self, parent=None, id=-1, title="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE, oldpen=None,
                  pentype=0):
 
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
-        
+
         self.colourbutton = csel.ColourSelect(self)
         self.spinwidth = wx.SpinCtrl(self, -1, "1", min=1, max=3, style=wx.SP_ARROW_KEYS)
-        
+
         self.combostyle = wx.ComboBox(self, -1, choices=penstyle, style=wx.CB_DROPDOWN|wx.CB_READONLY)
-        
+
         choices = ["[1, 1]", "[2, 2]", "[3, 3]", "[4, 4]"]
         self.combodash = wx.ComboBox(self, -1, choices=choices, style=wx.CB_DROPDOWN|wx.CB_READONLY)
-        
+
         self.okbutton = wx.Button(self, wx.ID_OK)
         self.cancelbutton = wx.Button(self, wx.ID_CANCEL)
 
@@ -218,7 +214,7 @@ class PenDialog(wx.Dialog):
 
         style = self.oldpen.GetStyle()
         for count, st in enumerate(penstyle):
-            if eval(st) == style:                
+            if eval(st) == style:
                 self.combostyle.SetSelection(count)
                 if count == 5:
                     self.combodash.Enable(True)
@@ -289,13 +285,13 @@ class PenDialog(wx.Dialog):
         colour = self.colourbutton.GetColour()
         style = eval(self.combostyle.GetValue())
         width = int(self.spinwidth.GetValue())
-        
+
         dashes = None
         if self.combostyle.GetSelection() == 5:
             dashes = eval(self.combodash.GetValue())
 
         pen = wx.Pen(colour, width, style)
-        
+
         if dashes:
             pen.SetDashes(dashes)
 
@@ -305,14 +301,14 @@ class PenDialog(wx.Dialog):
             self.parent.SetConnectionPen(pen)
         else:
             self.parent.SetBorderPen(pen)
-            
+
         self.Destroy()
         event.Skip()
 
 
-    def OnCancel(self, event): 
+    def OnCancel(self, event):
 
-        self.Destroy()    
+        self.Destroy()
         event.Skip()
 
 
@@ -320,10 +316,10 @@ class PenDialog(wx.Dialog):
 # Just A Dialog To Select Tree Buttons Icons
 #---------------------------------------------------------------------------
 class TreeButtonsDialog(wx.Dialog):
-    
+
     def __init__(self, parent=None, id=-1, title="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE, oldicons=None):
-        
+
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
         self.listicons = wx.ListBox(self, -1, choices=["Set 1", "Set 2", "Set 3", "Set 4", "Set 5"], style=wx.LB_SINGLE)
@@ -337,14 +333,14 @@ class TreeButtonsDialog(wx.Dialog):
         bitmap_minus = wx.Image(bitmap_minus, wx.BITMAP_TYPE_ICO)
         bitmap_minus.Rescale(24, 24)
         bitmap_minus = bitmap_minus.ConvertToBitmap()
-        
+
         self.bitmap_plus = wx.StaticBitmap(self, -1, bitmap_plus)
         self.bitmap_minus = wx.StaticBitmap(self, -1, bitmap_minus)
 
         self.okbutton = wx.Button(self, wx.ID_OK)
         self.cancelbutton = wx.Button(self, wx.ID_CANCEL)
 
-        self.parent = parent        
+        self.parent = parent
 
         self.SetProperties()
         self.DoLayout()
@@ -408,14 +404,14 @@ class TreeButtonsDialog(wx.Dialog):
         bitmap_minus = wx.Image(bitmap_minus, wx.BITMAP_TYPE_ICO)
         bitmap_minus.Rescale(24, 24)
         bitmap_minus = bitmap_minus.ConvertToBitmap()
-        
-        self.bitmap_plus.SetBitmap(bitmap_plus)        
+
+        self.bitmap_plus.SetBitmap(bitmap_plus)
         self.bitmap_minus.SetBitmap(bitmap_minus)
 
         self.bitmap_plus.Refresh()
         self.bitmap_minus.Refresh()
         event.Skip()
-        
+
 
     def OnOk(self, event):
 
@@ -435,10 +431,10 @@ class TreeButtonsDialog(wx.Dialog):
 # Just A Dialog To Select Tree Check/Radio Item Icons
 #---------------------------------------------------------------------------
 class CheckDialog(wx.Dialog):
-    
+
     def __init__(self, parent=None, id=-1, title="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE):
-        
+
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
         self.listicons = wx.ListBox(self, -1, choices=["Set 1", "Set 2"], style=wx.LB_SINGLE)
@@ -456,7 +452,7 @@ class CheckDialog(wx.Dialog):
         self.okbutton = wx.Button(self, wx.ID_OK)
         self.cancelbutton = wx.Button(self, wx.ID_CANCEL)
 
-        self.parent = parent        
+        self.parent = parent
 
         self.SetProperties()
         self.DoLayout()
@@ -507,7 +503,7 @@ class CheckDialog(wx.Dialog):
         sizer_4.Add((20, 20), 1, wx.ADJUST_MINSIZE, 0)
         sizer_4.Add(self.bitmap_unflag, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 10)
         rightsizer.Add(sizer_4, 0, wx.EXPAND, 0)
-        
+
         topsizer.Add(rightsizer, 0, wx.ALL|wx.EXPAND, 5)
         mainsizer.Add(topsizer, 1, wx.EXPAND, 0)
         bottomsizer.Add(self.okbutton, 0, wx.ALL|wx.ADJUST_MINSIZE, 20)
@@ -540,19 +536,19 @@ class CheckDialog(wx.Dialog):
         bitmap_uncheck = wx.Bitmap(bitmap_uncheck, wx.BITMAP_TYPE_ICO)
         bitmap_flag = wx.Bitmap(bitmap_flag, wx.BITMAP_TYPE_ICO)
         bitmap_unflag = wx.Bitmap(bitmap_unflag, wx.BITMAP_TYPE_ICO)
-        
+
         self.bitmap_uncheck.SetBitmap(bitmap_uncheck)
         self.bitmap_check.SetBitmap(bitmap_check)
         self.bitmap_unflag.SetBitmap(bitmap_unflag)
         self.bitmap_flag.SetBitmap(bitmap_flag)
-        
+
         self.bitmap_check.Refresh()
         self.bitmap_uncheck.Refresh()
         self.bitmap_flag.Refresh()
         self.bitmap_unflag.Refresh()
-        
+
         event.Skip()
-        
+
 
     def OnOk(self, event):
 
@@ -580,9 +576,9 @@ class TreeIcons(wx.Dialog):
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
         self.bitmaps = [None, None, None, None]
-        empty = wx.EmptyBitmap(16, 16)
+        empty = wx.Bitmap(16, 16)
         self.parent = parent
-        
+
         self.bitmaps[0] = wx.StaticBitmap(self, -1, empty)
         self.combonormal = wx.ComboBox(self, -1, choices=ArtIDs, style=wx.CB_DROPDOWN|wx.CB_READONLY)
         self.bitmaps[1] = wx.StaticBitmap(self, -1, empty)
@@ -600,7 +596,7 @@ class TreeIcons(wx.Dialog):
         self.comboselectedexpanded.SetSelection(bitmaps[3] >= 0 and bitmaps[3]+1 or 0)
 
         self.GetBitmaps(bitmaps)
-    
+
         self.SetProperties()
         self.DoLayout()
 
@@ -698,7 +694,7 @@ class TreeIcons(wx.Dialog):
                    (expanded > 0 and expanded or -1), (selexp > 0 and selexp or -1)]
 
         newbitmaps = []
-        
+
         for bmp in bitmaps:
             if bmp > 0:
                 newbitmaps.append(bmp-1)
@@ -711,7 +707,7 @@ class TreeIcons(wx.Dialog):
         event.Skip()
 
 
-    def OnCancel(self, event): 
+    def OnCancel(self, event):
 
         self.Destroy()
         event.Skip()
@@ -720,19 +716,19 @@ class TreeIcons(wx.Dialog):
     def GetBitmap(self, input, which):
 
         if input == 0:
-            bmp = wx.EmptyBitmap(16,16)
+            bmp = wx.Bitmap(16,16)
             self.ClearBmp(bmp)
         elif input > 36:
             bmp = images.Smiles.GetBitmap()
         else:
-            bmp = wx.ArtProvider_GetBitmap(eval(ArtIDs[input]), wx.ART_OTHER, (16,16))
+            bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[input]), wx.ART_OTHER, (16,16))
             if not bmp.Ok():
-                bmp = wx.EmptyBitmap(16,16)
+                bmp = wx.Bitmap(16,16)
                 self.ClearBmp(bmp)
 
         self.bitmaps[which].SetBitmap(bmp)
         self.bitmaps[which].Refresh()
-        
+
 
     def GetBitmaps(self, bitmaps):
 
@@ -740,14 +736,14 @@ class TreeIcons(wx.Dialog):
 
         for count, input in enumerate(bitmaps):
             if input < 0:
-                bmp = wx.EmptyBitmap(16,16)
+                bmp = wx.Bitmap(16,16)
                 self.ClearBmp(bmp)
             elif input > 35:
                 bmp = images.Smiles.GetBitmap()
             else:
-                bmp = wx.ArtProvider_GetBitmap(eval(ArtIDs[input+1]), wx.ART_OTHER, (16,16))
+                bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[input+1]), wx.ART_OTHER, (16,16))
                 if not bmp.Ok():
-                    bmp = wx.EmptyBitmap(16,16)
+                    bmp = wx.Bitmap(16,16)
                     self.ClearBmp(bmp)
 
             self.bitmaps[count].SetBitmap(bmp)
@@ -760,7 +756,7 @@ class TreeIcons(wx.Dialog):
         dc.SetBackground(wx.Brush("white"))
         dc.Clear()
 
-                
+
 #---------------------------------------------------------------------------
 # CustomTreeCtrl Demo Implementation
 #---------------------------------------------------------------------------
@@ -768,37 +764,37 @@ class CustomTreeCtrlDemo(wx.Panel):
 
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent)
-        
+
         self.log = log
-        self.oldicons = 0        
+        self.oldicons = 0
 
         splitter = wx.SplitterWindow(self, -1, style=wx.CLIP_CHILDREN | wx.SP_LIVE_UPDATE | wx.SP_3D)
 
         # Create the CustomTreeCtrl, using a derived class defined below
-        self.tree = CustomTreeCtrl(splitter, -1, log=self.log, 
+        self.tree = CustomTreeCtrl(splitter, -1, log=self.log,
                                    style=wx.SUNKEN_BORDER,
-                                   agwStyle=CT.TR_HAS_BUTTONS | CT.TR_HAS_VARIABLE_ROW_HEIGHT)           
+                                   agwStyle=CT.TR_HAS_BUTTONS | CT.TR_HAS_VARIABLE_ROW_HEIGHT)
 
         self.leftpanel = wx.ScrolledWindow(splitter, -1, style=wx.SUNKEN_BORDER)
         self.leftpanel.SetScrollRate(20,20)
         width = self.PopulateLeftPanel(self.tree.styles, self.tree.events)
-        
+
         # add the windows to the splitter and split it.
         splitter.SplitVertically(self.leftpanel, self.tree, 300)
         splitter.SetMinimumPaneSize(width+5)
-        
+
         sizer = wx.BoxSizer()
         sizer.Add(splitter, 1, wx.EXPAND)
         self.SetSizer(sizer)
 
         self.leftimagelist = wx.ImageList(12, 12)
         for ids in xrange(1, len(ArtIDs)-1):
-            bmp = wx.ArtProvider_GetBitmap(eval(ArtIDs[ids]), wx.ART_OTHER, (12, 12))
+            bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[ids]), wx.ART_OTHER, (12, 12))
             self.leftimagelist.Add(bmp)
-        
+
 
     def PopulateLeftPanel(self, styles, events):
-        
+
         pnl = wx.Panel(self.leftpanel)
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         recreatetree = wx.Button(pnl, -1, "Recreate CustomTreeCtrl")
@@ -816,9 +812,9 @@ class CustomTreeCtrlDemo(wx.Panel):
 
         self.treestyles = []
         self.treeevents = []
-        
+
         for count, style in enumerate(styles):
-            
+
             if count == 0:
                 tags = wx.ALL
             else:
@@ -827,7 +823,7 @@ class CustomTreeCtrlDemo(wx.Panel):
             if style != "TR_DEFAULT_STYLE":
                 check = wx.CheckBox(pnl, -1, style)
                 stylesizer.Add(check, 0, tags, 3)
-                        
+
                 if style in ["TR_HAS_BUTTONS", "TR_HAS_VARIABLE_ROW_HEIGHT"]:
                     check.SetValue(1)
 
@@ -838,7 +834,7 @@ class CustomTreeCtrlDemo(wx.Panel):
                 self.treestyles.append(check)
 
         for count, event in enumerate(events):
-            
+
             if count == 0:
                 tags = wx.ALL
             else:
@@ -847,10 +843,10 @@ class CustomTreeCtrlDemo(wx.Panel):
             if count not in [6, 17, 22, 23]:
                 check = wx.CheckBox(pnl, -1, event)
                 eventssizer.Add(check, 0, tags, 3)
-                        
+
                 if event in ["EVT_TREE_ITEM_EXPANDED", "EVT_TREE_ITEM_COLLAPSED",
                              "EVT_TREE_SEL_CHANGED", "EVT_TREE_SEL_CHANGING"]:
-                    
+
                     check.SetValue(1)
 
                 check.Bind(wx.EVT_CHECKBOX, self.OnCheckEvent)
@@ -866,7 +862,7 @@ class CustomTreeCtrlDemo(wx.Panel):
         sizer1.Add(label, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer1.Add((1,0), 1, wx.EXPAND)
         sizer1.Add(buttonconnection, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
-        
+
         sizer2 = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(pnl, -1, "Border Pen")
         font = label.GetFont()
@@ -916,11 +912,11 @@ class CustomTreeCtrlDemo(wx.Panel):
         self.backbutton.Bind(csel.EVT_COLOURSELECT, self.OnChooseBackground)
         sizer6.Add(radiobackground, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer6.Add((1,0), 1, wx.EXPAND)
-        sizer6.Add(self.backbutton, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)        
+        sizer6.Add(self.backbutton, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
 
         leftimagelist = wx.CheckBox(pnl, -1, "Use Left ImageList")
         leftimagelist.Bind(wx.EVT_CHECKBOX, self.OnLeftImageList)
-        
+
         colourssizer.Add(sizer1, 0, wx.EXPAND)
         colourssizer.Add(sizer2, 0, wx.EXPAND)
         colourssizer.Add(sizer3, 0, wx.EXPAND)
@@ -974,7 +970,7 @@ class CustomTreeCtrlDemo(wx.Panel):
 
         self.checkvista = wx.CheckBox(pnl, -1, "Windows Vista Theme")
         self.checkvista.Bind(wx.EVT_CHECKBOX, self.OnVista)
-        
+
         themessizer.Add(sizera, 0, wx.EXPAND)
         themessizer.Add(sizerb, 0, wx.EXPAND)
         themessizer.Add((0, 5))
@@ -1002,7 +998,7 @@ class CustomTreeCtrlDemo(wx.Panel):
         self.imagebutton.Enable(False)
 
         return mainsizer.CalcMin().width + wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
-    
+
 
     def OnRecreateTree(self, event):
 
@@ -1012,7 +1008,7 @@ class CustomTreeCtrlDemo(wx.Panel):
         self.tree.Destroy()
         self.tree = newtree
         # Todo:  The settings in the leftpanel should be reset too
-        
+
 
     def OnCheckStyle(self, event):
 
@@ -1024,7 +1020,7 @@ class CustomTreeCtrlDemo(wx.Panel):
 
         obj = event.GetEventObject()
         self.tree.BindEvents(obj)
-        
+
         event.Skip()
 
 
@@ -1034,14 +1030,14 @@ class CustomTreeCtrlDemo(wx.Panel):
         dlg = PenDialog(self, -1, oldpen=pen, pentype=0)
 
         dlg.ShowModal()
-                
+
         event.Skip()
 
 
     def SetConnectionPen(self, pen):
 
         self.tree.SetConnectionPen(pen)
-        
+
 
     def OnButtonBorder(self, event):
 
@@ -1055,13 +1051,13 @@ class CustomTreeCtrlDemo(wx.Panel):
     def SetBorderPen(self, pen):
 
         self.tree.SetBorderPen(pen)
-        
+
 
     def OnButtonTree(self, event):
 
         dlg = TreeButtonsDialog(self, -1, oldicons=self.oldicons)
         dlg.ShowModal()
-        
+
         event.Skip()
 
 
@@ -1069,26 +1065,26 @@ class CustomTreeCtrlDemo(wx.Panel):
 
         dlg = CheckDialog(self, -1)
         dlg.ShowModal()
-        
+
         event.Skip()
-    
+
 
     def SetTreeButtons(self, selection):
 
         bitmap_plus = os.path.normpath(os.path.join(bitmapDir, "plus" + str(selection+1) + ".ico"))
         bitmap_minus = os.path.normpath(os.path.join(bitmapDir, "minus" + str(selection+1) + ".ico"))
-        
+
         bitmap = wx.Bitmap(bitmap_plus, wx.BITMAP_TYPE_ICO)
         width = bitmap.GetWidth()
-        
+
         il = wx.ImageList(width, width)
-        
+
         il.Add(wx.Bitmap(bitmap_plus, wx.BITMAP_TYPE_ICO))
         il.Add(wx.Bitmap(bitmap_plus, wx.BITMAP_TYPE_ICO))
         il.Add(wx.Bitmap(bitmap_minus, wx.BITMAP_TYPE_ICO))
         il.Add(wx.Bitmap(bitmap_minus, wx.BITMAP_TYPE_ICO))
 
-        self.il = il                
+        self.il = il
         self.tree.SetButtonsImageList(il)
 
 
@@ -1103,12 +1099,12 @@ class CustomTreeCtrlDemo(wx.Panel):
             bitmap_unflag = os.path.normpath(os.path.join(bitmapDir, "aquanotflagged.ico"))
 
             il = wx.ImageList(16, 16)
-        
+
             il.Add(wx.Bitmap(bitmap_check, wx.BITMAP_TYPE_ICO))
             il.Add(wx.Bitmap(bitmap_uncheck, wx.BITMAP_TYPE_ICO))
             il.Add(wx.Bitmap(bitmap_flag, wx.BITMAP_TYPE_ICO))
             il.Add(wx.Bitmap(bitmap_unflag, wx.BITMAP_TYPE_ICO))
-            self.tree.SetImageListCheck(16, 16, il)        
+            self.tree.SetImageListCheck(16, 16, il)
 
 
     def OnBackgroundImage(self, event):
@@ -1118,7 +1114,7 @@ class CustomTreeCtrlDemo(wx.Panel):
 
         self.backbutton.Enable(False)
         self.imagebutton.Enable(True)
-        
+
         event.Skip()
 
 
@@ -1130,8 +1126,8 @@ class CustomTreeCtrlDemo(wx.Panel):
                    "Icon Files (*.ico)|*.ico|"        \
                    "GIF Files (*.gif)|*.gif|"        \
                    "All files (*.*)|*.*"
-        
-        dlg = wx.FileDialog(self, "Choose An Image File", ".", "", wildcard, wx.OPEN)
+
+        dlg = wx.FileDialog(self, "Choose An Image File", ".", "", wildcard, wx.FD_OPEN)
 
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
@@ -1148,18 +1144,18 @@ class CustomTreeCtrlDemo(wx.Panel):
 
 
     def OnBackgroundColour(self, event):
-        
+
         self.imagebutton.Enable(False)
         self.backbutton.Enable(True)
         self.tree.SetBackgroundImage(None)
-        
+
         event.Skip()
 
 
     def OnChooseBackground(self, event):
 
-        col1 = event.GetValue()        
-        self.tree.SetBackgroundColour(col1)        
+        col1 = event.GetValue()
+        self.tree.SetBackgroundColour(col1)
         event.Skip()
 
 
@@ -1173,7 +1169,7 @@ class CustomTreeCtrlDemo(wx.Panel):
 
         self.tree.CalculateLineHeight()
         self.tree.Refresh()
-        
+
 
     def OnCheckNormal(self, event):
 
@@ -1192,17 +1188,17 @@ class CustomTreeCtrlDemo(wx.Panel):
 
     def OnFocusColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.tree.SetHilightFocusColour(col1)
         event.Skip()
 
 
     def OnNonFocusColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.tree.SetHilightNonFocusColour(col1)
         event.Skip()
-        
+
 
     def OnCheckGradient(self, event):
 
@@ -1217,10 +1213,10 @@ class CustomTreeCtrlDemo(wx.Panel):
         self.tree.SetGradientStyle(self.radiovertical.GetValue())
         self.tree.EnableSelectionVista(False)
         self.tree.EnableSelectionGradient(True)
-        
+
         event.Skip()
-        
-        
+
+
     def OnHorizontal(self, event):
 
         self.tree.SetGradientStyle(self.radiovertical.GetValue())
@@ -1235,14 +1231,14 @@ class CustomTreeCtrlDemo(wx.Panel):
 
     def OnFirstColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.tree.SetFirstGradientColour(wx.Colour(col1[0], col1[1], col1[2]))
         event.Skip()
 
 
     def OnSecondColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.tree.SetSecondGradientColour(wx.Colour(col1[0], col1[1], col1[2]))
         event.Skip()
 
@@ -1259,7 +1255,7 @@ class CustomTreeCtrlDemo(wx.Panel):
         self.unfocus.Enable(False)
         self.tree.EnableSelectionGradient(False)
         self.tree.EnableSelectionVista(True)
-        
+
         event.Skip()
 
 
@@ -1277,7 +1273,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         CT.CustomTreeCtrl.__init__(self, parent, id, pos, size, style, agwStyle)
 
         self.SetBackgroundColour(wx.WHITE)
-        
+
         alldata = dir(CT)
 
         treestyles = []
@@ -1291,11 +1287,11 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         self.events = events
         self.styles = treestyles
         self.item = None
-        
+
         il = wx.ImageList(16, 16)
 
         for items in ArtIDs[1:-1]:
-            bmp = wx.ArtProvider_GetBitmap(eval(items), wx.ART_TOOLBAR, (16, 16))
+            bmp = wx.ArtProvider.GetBitmap(eval(items), wx.ART_TOOLBAR, (16, 16))
             il.Add(bmp)
 
         smileidx = il.Add(images.Smiles.GetBitmap())
@@ -1349,14 +1345,14 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                     last = self.AppendItem(child, "Item %d-%s" % (x, chr(ord("a")+y)), ct_type=1, wnd=textctrl)
                     if random.randint(0, 3) == 1:
                         self.SetItem3State(last, True)
-                        
+
                 elif 2 < y < 4:
                     last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)))
                 elif y == 4 and x == 1:
                     last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), wnd=combobox)
                 else:
                     last = self.AppendItem(child, "item %d-%s" % (x, chr(ord("a")+y)), ct_type=2)
-                    
+
                 self.SetPyData(last, None)
                 self.SetItemImage(last, 24, CT.TreeItemIcon_Normal)
                 self.SetItemImage(last, 13, CT.TreeItemIcon_Expanded)
@@ -1366,7 +1362,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
                 if random.randint(0, 5) == 0:
                     self.AppendSeparator(child)
-                    
+
                 for z in range(5):
                     if z > 2:
                         item = self.AppendItem(last,  "item %d-%s-%d" % (x, chr(ord("a")+y), z), ct_type=1)
@@ -1402,7 +1398,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                           'EVT_TREE_SEL_CHANGING': self.OnSelChanging, "EVT_TREE_ITEM_HYPERLINK": self.OnHyperLink}
 
         mainframe = wx.GetTopLevelParent(self)
-        
+
         if not hasattr(mainframe, "leftpanel"):
             self.Bind(CT.EVT_TREE_ITEM_EXPANDED, self.OnItemExpanded)
             self.Bind(CT.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed)
@@ -1426,7 +1422,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         value = choice.GetValue()
         text = choice.GetLabel()
-        
+
         evt = "CT." + text
         binder = self.eventdict[text]
 
@@ -1451,13 +1447,13 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         if self.GetAGWWindowStyleFlag() != style:
             self.SetAGWWindowStyleFlag(style)
-            
+
 
     def OnCompareItems(self, item1, item2):
-        
+
         t1 = self.GetItemText(item1)
         t2 = self.GetItemText(item2)
-        
+
         self.log.write('compare: ' + t1 + ' <> ' + t2 + "\n")
 
         if t1 < t2:
@@ -1467,7 +1463,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         return 1
 
-    
+
     def OnIdle(self, event):
 
         if self.gauge:
@@ -1487,7 +1483,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
 
     def OnRightDown(self, event):
-        
+
         pt = event.GetPosition()
         item, flags = self.HitTest(pt)
 
@@ -1500,7 +1496,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
     def OnRightUp(self, event):
 
         item = self.item
-        
+
         if not item:
             event.Skip()
             return
@@ -1534,14 +1530,14 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         text = self.GetItemText(item)
         pydata = self.GetPyData(item)
         separator = self.IsItemSeparator(item)
-        
+
         self.current = item
         self.itemdict = {"ishtml": ishtml, "back": back, "fore": fore, "isbold": isbold,
                          "font": font, "normal": normal, "selected": selected, "expanded": expanded,
                          "selexp": selexp, "haswin": haswin, "children": children,
                          "itemtype": itemtype, "text": text, "pydata": pydata, "enabled": enabled,
                          "separator": separator}
-        
+
         menu = wx.Menu()
 
         item1 = menu.Append(wx.ID_ANY, "Change item background colour")
@@ -1561,13 +1557,13 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
             strs = "Set item as non-hyperlink"
         else:
             strs = "Set item as hyperlink"
-            
+
         item5 = menu.Append(wx.ID_ANY, strs)
         menu.AppendSeparator()
 
         item13 = menu.Append(wx.ID_ANY, "Insert separator")
         menu.AppendSeparator()
-        
+
         if haswin:
             enabled = self.GetItemWindowEnabled(item)
             if enabled:
@@ -1576,14 +1572,14 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                 strs = "Enable associated widget"
         else:
             strs = "Enable associated widget"
-            
+
         item6 = menu.Append(wx.ID_ANY, strs)
 
         if not haswin:
             item6.Enable(False)
 
         item7 = menu.Append(wx.ID_ANY, "Disable item")
-        
+
         menu.AppendSeparator()
         item8 = menu.Append(wx.ID_ANY, "Change item icons")
         menu.AppendSeparator()
@@ -1594,7 +1590,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         if item == self.GetRootItem():
             item10.Enable(False)
             item13.Enable(False)
-            
+
         item11 = menu.Append(wx.ID_ANY, "Prepend an item")
         item12 = menu.Append(wx.ID_ANY, "Append an item")
 
@@ -1611,17 +1607,17 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         self.Bind(wx.EVT_MENU, self.OnItemPrepend, item11)
         self.Bind(wx.EVT_MENU, self.OnItemAppend, item12)
         self.Bind(wx.EVT_MENU, self.OnSeparatorInsert, item13)
-        
+
         self.PopupMenu(menu)
         menu.Destroy()
-        
+
 
     def OnItemBackground(self, event):
 
         colourdata = wx.ColourData()
         colourdata.SetColour(self.itemdict["back"])
         dlg = wx.ColourDialog(self, colourdata)
-        
+
         dlg.GetColourData().SetChooseFull(True)
 
         if dlg.ShowModal() == wx.ID_OK:
@@ -1636,7 +1632,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         colourdata = wx.ColourData()
         colourdata.SetColour(self.itemdict["fore"])
         dlg = wx.ColourDialog(self, colourdata)
-        
+
         dlg.GetColourData().SetChooseFull(True)
 
         if dlg.ShowModal() == wx.ID_OK:
@@ -1655,21 +1651,21 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         data = wx.FontData()
         font = self.itemdict["font"]
-        
+
         if font is None:
             font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-            
+
         data.SetInitialFont(font)
 
         dlg = wx.FontDialog(self, data)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetFontData()
             font = data.GetChosenFont()
             self.SetItemFont(self.current, font)
 
         dlg.Destroy()
-        
+
 
     def OnItemHyperText(self, event):
 
@@ -1685,14 +1681,14 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
     def OnDisableItem(self, event):
 
         self.EnableItem(self.current, False)
-        
+
 
     def OnItemIcons(self, event):
 
         bitmaps = [self.itemdict["normal"], self.itemdict["selected"],
                    self.itemdict["expanded"], self.itemdict["selexp"]]
 
-        wx.BeginBusyCursor()        
+        wx.BeginBusyCursor()
         dlg = TreeIcons(self, -1, bitmaps=bitmaps)
         wx.EndBusyCursor()
         dlg.ShowModal()
@@ -1728,8 +1724,8 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         dlg = wx.MessageDialog(self, strs, "CustomTreeCtrlDemo Info", wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
-                
-        
+
+
 
     def OnItemDelete(self, event):
 
@@ -1745,7 +1741,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         self.DeleteChildren(self.current)
         self.Delete(self.current)
         self.current = None
-        
+
 
 
     def OnItemPrepend(self, event):
@@ -1770,7 +1766,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
             self.EnsureVisible(newitem)
 
         dlg.Destroy()
-        
+
 
     def OnSeparatorInsert(self, event):
 
@@ -1779,7 +1775,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
 
     def OnBeginEdit(self, event):
-        
+
         self.log.write("OnBeginEdit" + "\n")
         # show how to prevent edit...
         item = event.GetItem()
@@ -1800,7 +1796,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
 
     def OnEndEdit(self, event):
-        
+
         self.log.write("OnEndEdit: %s %s" %(event.IsEditCancelled(), event.GetLabel()))
         # show how to reject edit, we'll not allow any digits
         for x in event.GetLabel():
@@ -1808,12 +1804,12 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                 self.log.write(", You can't enter digits..." + "\n")
                 event.Veto()
                 return
-            
+
         self.log.write("\n")
 
 
     def OnLeftDClick(self, event):
-        
+
         pt = event.GetPosition()
         item, flags = self.HitTest(pt)
         if item and (flags & CT.TREE_HITTEST_ONITEMLABEL):
@@ -1823,41 +1819,41 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
             else:
                 self.log.write("OnLeftDClick: Cannot Start Manual Editing, Missing Style TR_EDIT_LABELS\n")
 
-        event.Skip()                
-        
+        event.Skip()
+
 
     def OnItemExpanded(self, event):
-        
+
         item = event.GetItem()
         if item:
             self.log.write("OnItemExpanded: %s" % self.GetItemText(item) + "\n")
 
 
     def OnItemExpanding(self, event):
-        
+
         item = event.GetItem()
         if item:
             self.log.write("OnItemExpanding: %s" % self.GetItemText(item) + "\n")
-            
+
         event.Skip()
 
-        
+
     def OnItemCollapsed(self, event):
 
         item = event.GetItem()
         if item:
             self.log.write("OnItemCollapsed: %s" % self.GetItemText(item) + "\n")
-            
+
 
     def OnItemCollapsing(self, event):
 
         item = event.GetItem()
         if item:
             self.log.write("OnItemCollapsing: %s" % self.GetItemText(item) + "\n")
-    
+
         event.Skip()
 
-        
+
     def OnSelChanged(self, event):
 
         self.item = event.GetItem()
@@ -1867,7 +1863,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                 self.log.write(", BoundingRect: %s" % self.GetBoundingRect(self.item, True) + "\n")
             else:
                 self.log.write("\n")
-                
+
         event.Skip()
 
 
@@ -1875,14 +1871,14 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         item = event.GetItem()
         olditem = event.GetOldItem()
-        
+
         if item:
             if not olditem:
                 olditemtext = "None"
             else:
                 olditemtext = self.GetItemText(olditem)
             self.log.write("OnSelChanging: From %s" % olditemtext + " To %s" % self.GetItemText(item) + "\n")
-                
+
         event.Skip()
 
 
@@ -1902,7 +1898,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
             self.log.write("Beginning Right Drag..." + "\n")
 
             event.Allow()
-        
+
 
     def OnEndDrag(self, event):
 
@@ -1910,7 +1906,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         if self.item:
             self.log.write("Ending Drag!" + "\n")
 
-        event.Skip()            
+        event.Skip()
 
 
     def OnDeleteItem(self, event):
@@ -1922,7 +1918,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         self.log.write("Deleting Item: %s" % self.GetItemText(item) + "\n")
         event.Skip()
-        
+
 
     def OnItemCheck(self, event):
 
@@ -1936,7 +1932,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         item = event.GetItem()
         self.log.write("Item " + self.GetItemText(item) + " Is Being Checked...\n")
         event.Skip()
-        
+
 
     def OnToolTip(self, event):
 
@@ -1950,7 +1946,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
         item = event.GetItem()
         if item:
             self.log.write("OnItemMenu: %s" % self.GetItemText(item) + "\n")
-    
+
         event.Skip()
 
 
@@ -1958,7 +1954,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
 
         keycode = event.GetKeyCode()
         keyname = keyMap.get(keycode, None)
-                
+
         if keycode == wx.WXK_BACK:
             self.log.write("OnKeyDown: HAHAHAHA! I Vetoed Your Backspace! HAHAHAHA\n")
             return
@@ -1971,7 +1967,7 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                 keyname = "\"" + unichr(event.GetUnicodeKey()) + "\""
                 if keycode < 27:
                     keyname = "Ctrl-%s" % chr(ord('A') + keycode-1)
-                
+
             elif keycode < 256:
                 if keycode == 0:
                     keyname = "NUL"
@@ -1981,26 +1977,26 @@ class CustomTreeCtrl(CT.CustomTreeCtrl):
                     keyname = "\"%s\"" % chr(keycode)
             else:
                 keyname = "unknown (%s)" % keycode
-                
+
         self.log.write("OnKeyDown: You Pressed '" + keyname + "'\n")
 
         event.Skip()
-        
-        
+
+
     def OnActivate(self, event):
-        
+
         if self.item:
             self.log.write("OnActivate: %s" % self.GetItemText(self.item) + "\n")
 
         event.Skip()
 
-        
+
     def OnHyperLink(self, event):
 
         item = event.GetItem()
         if item:
             self.log.write("OnHyperLink: %s" % self.GetItemText(self.item) + "\n")
-            
+
 
     def OnTextCtrl(self, event):
 
