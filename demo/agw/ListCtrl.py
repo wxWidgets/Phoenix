@@ -233,8 +233,8 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
 
     def OnItemSelected(self, event):
-        ##print event.GetItem().GetTextColour()
-        self.currentItem = event.m_itemIndex
+        ##print(event.GetItem().GetTextColour())
+        self.currentItem = event.Index
         self.log.WriteText("OnItemSelected: %s, %s, %s, %s\n" %
                            (self.currentItem,
                             self.list.GetItemText(self.currentItem),
@@ -252,15 +252,15 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def OnItemDeselected(self, evt):
         item = evt.GetItem()
-        self.log.WriteText("OnItemDeselected: %d" % evt.m_itemIndex)
+        self.log.WriteText("OnItemDeselected: %d" % evt.Index)
 
         # Show how to reselect something we don't want deselected
-        if evt.m_itemIndex == 11:
+        if evt.Index == 11:
             wx.CallAfter(self.list.SetItemState, 11, wx.LIST_STATE_SELECTED, wx.LIST_STATE_SELECTED)
 
 
     def OnItemActivated(self, event):
-        self.currentItem = event.m_itemIndex
+        self.currentItem = event.Index
         self.log.WriteText("OnItemActivated: %s\nTopItem: %s" %
                            (self.list.GetItemText(self.currentItem), self.list.GetTopItem()))
 
@@ -356,7 +356,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def OnPopupFive(self, event):
         item = self.list.GetItem(self.currentItem)
-        print item.m_text, item.m_itemId, self.list.GetItemData(self.currentItem)
+        print item.Text, item.Id, self.list.GetItemData(self.currentItem)
 
     def OnPopupSix(self, event):
         self.list.EditLabel(self.currentItem)
