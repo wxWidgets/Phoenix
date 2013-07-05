@@ -21,8 +21,8 @@ except ImportError:
 
 
 buttonDefs = {
-    wx.NewId() : ('CubeCanvas',      'Cube'),
-    wx.NewId() : ('ConeCanvas',      'Cone'),
+    wx.NewId() : ('CubeCanvas', 'Cube'),
+    wx.NewId() : ('ConeCanvas', 'Cone'),
     }
 
 class ButtonPanel(wx.Panel):
@@ -79,7 +79,7 @@ class MyCanvasBase(glcanvas.GLCanvas):
         glcanvas.GLCanvas.__init__(self, parent, -1)
         self.init = False
         self.context = glcanvas.GLContext(self)
-        
+
         # initial mouse position
         self.lastx = self.x = 30
         self.lasty = self.y = 30
@@ -100,11 +100,11 @@ class MyCanvasBase(glcanvas.GLCanvas):
         wx.CallAfter(self.DoSetViewport)
         event.Skip()
 
+
     def DoSetViewport(self):
         size = self.size = self.GetClientSize()
         self.SetCurrent(self.context)
         glViewport(0, 0, size.width, size.height)
-        
 
 
     def OnPaint(self, event):
@@ -130,8 +130,6 @@ class MyCanvasBase(glcanvas.GLCanvas):
             self.lastx, self.lasty = self.x, self.y
             self.x, self.y = evt.GetPosition()
             self.Refresh(False)
-
-
 
 
 class CubeCanvas(MyCanvasBase):
@@ -209,9 +207,6 @@ class CubeCanvas(MyCanvasBase):
         self.SwapBuffers()
 
 
-
-
-
 class ConeCanvas(MyCanvasBase):
     def InitGL( self ):
         glMatrixMode(GL_PROJECTION)
@@ -260,15 +255,12 @@ class ConeCanvas(MyCanvasBase):
 
 
 
-
 #----------------------------------------------------------------------
 
 
 def runTest(frame, nb, log):
     win = ButtonPanel(nb, log)
     return win
-
-
 
 
 
@@ -282,9 +274,4 @@ if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])
-
-
-
-
-#----------------------------------------------------------------------
 
