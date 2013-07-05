@@ -1,6 +1,8 @@
-import wx, wx.lib.customtreectrl, wx.gizmos
+import wx
+import wx.adv
+import wx.lib.agw.customtreectrl
 try:
-    import treemixin 
+    import treemixin
 except ImportError:
     from wx.lib.mixins import treemixin
 
@@ -9,7 +11,7 @@ overview = treemixin.__doc__
 class TreeModel(object):
     ''' TreeModel holds the domain objects that are shown in the different
     tree controls. Each domain object is simply a two-tuple consisting of
-    a label and a list of child tuples, i.e. (label, [list of child tuples]). 
+    a label and a list of child tuples, i.e. (label, [list of child tuples]).
     '''
     def __init__(self, *args, **kwargs):
         self.items = []
@@ -47,7 +49,7 @@ class TreeModel(object):
         oldParentChildren.remove(itemToMove)
 
 
-class DemoTreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop, 
+class DemoTreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop,
                     treemixin.ExpansionState):
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop('treemodel')
@@ -59,7 +61,7 @@ class DemoTreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop,
         size = (16, 16)
         self.imageList = wx.ImageList(*size)
         for art in wx.ART_FOLDER, wx.ART_FILE_OPEN, wx.ART_NORMAL_FILE:
-            self.imageList.Add(wx.ArtProvider.GetBitmap(art, wx.ART_OTHER, 
+            self.imageList.Add(wx.ArtProvider.GetBitmap(art, wx.ART_OTHER,
                                                         size))
         self.AssignImageList(self.imageList)
 
@@ -93,8 +95,8 @@ class DemoTreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop,
         # background colour of each third item is green.
         if indices[-1] == 2:
             return wx.GREEN
-        else: 
-            return super(DemoTreeMixin, 
+        else:
+            return super(DemoTreeMixin,
                          self).OnGetItemBackgroundColour(indices)
 
     def OnGetItemImage(self, indices, which):
@@ -122,14 +124,14 @@ class VirtualTreeCtrl(DemoTreeMixin, wx.TreeCtrl):
     pass
 
 
-class VirtualTreeListCtrl(DemoTreeMixin, wx.gizmos.TreeListCtrl):
+class VirtualTreeListCtrl(DemoTreeMixin, wx.adv.TreeListCtrl):
     def __init__(self, *args, **kwargs):
         kwargs['style'] = wx.TR_DEFAULT_STYLE | wx.TR_FULL_ROW_HIGHLIGHT
         super(VirtualTreeListCtrl, self).__init__(*args, **kwargs)
-        self.AddColumn('Column 0')
-        self.AddColumn('Column 1')
+        self.AppendColumn('Column 0')
+        self.AppendColumn('Column 1')
         for art in wx.ART_TIP, wx.ART_WARNING:
-            self.imageList.Add(wx.ArtProvider.GetBitmap(art, wx.ART_OTHER, 
+            self.imageList.Add(wx.ArtProvider.GetBitmap(art, wx.ART_OTHER,
                                                         (16, 16)))
 
     def OnGetItemText(self, indices, column=0):
@@ -138,10 +140,10 @@ class VirtualTreeListCtrl(DemoTreeMixin, wx.gizmos.TreeListCtrl):
             (super(VirtualTreeListCtrl, self).OnGetItemText(indices), column)
 
     def OnGetItemImage(self, indices, which, column=0):
-        # Also change the image of the other columns when the item has 
+        # Also change the image of the other columns when the item has
         # children.
         if column == 0:
-            return super(VirtualTreeListCtrl, self).OnGetItemImage(indices, 
+            return super(VirtualTreeListCtrl, self).OnGetItemImage(indices,
                                                                    which)
         elif self.OnGetChildrenCount(indices):
             return 4
@@ -149,14 +151,14 @@ class VirtualTreeListCtrl(DemoTreeMixin, wx.gizmos.TreeListCtrl):
             return 3
 
 
-class VirtualCustomTreeCtrl(DemoTreeMixin, 
-                            wx.lib.customtreectrl.CustomTreeCtrl):
+class VirtualCustomTreeCtrl(DemoTreeMixin,
+                            wx.lib.agw.customtreectrl.CustomTreeCtrl):
     def __init__(self, *args, **kwargs):
         self.checked = {}
         kwargs['style'] = wx.TR_HIDE_ROOT | \
             wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT
         super(VirtualCustomTreeCtrl, self).__init__(*args, **kwargs)
-        self.Bind(wx.lib.customtreectrl.EVT_TREE_ITEM_CHECKED,
+        self.Bind(wx.lib.agw.customtreectrl.EVT_TREE_ITEM_CHECKED,
                   self.OnItemChecked)
 
     def OnGetItemType(self, indices):
@@ -173,7 +175,7 @@ class VirtualCustomTreeCtrl(DemoTreeMixin,
     def OnItemChecked(self, event):
         item = event.GetItem()
         itemIndex = self.GetIndexOfItem(item)
-        if self.GetItemType(item) == 2: 
+        if self.GetItemType(item) == 2:
             # It's a radio item; reset other items on the same level
             for nr in range(self.GetChildrenCount(self.GetItemParent(item))):
                 self.checked[itemIndex[:-1]+(nr,)] = False
@@ -224,7 +226,7 @@ class TestPanel(wx.Panel):
         self.LayoutControls()
 
     def CreateControls(self):
-        self.notebook = TreeNotebook(self, treemodel=self.treemodel, 
+        self.notebook = TreeNotebook(self, treemodel=self.treemodel,
                                      log=self.log)
         self.label = wx.StaticText(self, label='Number of children: ')
         self.childrenCountCtrl = wx.SpinCtrl(self, value='0', max=10000)
