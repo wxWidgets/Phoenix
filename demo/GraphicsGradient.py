@@ -2,6 +2,8 @@
 import wx
 g = wx
 
+import wx.lib.scrolledpanel as scrolled
+
 # To test compatibility of gradients with the generic GraphicsContext classes
 # uncomment this line
 #import wx.lib.graphics as g
@@ -22,12 +24,12 @@ class GradientPanel(wx.Panel):
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.SetInitialSize((600,100))
-        
+
 
     def DrawWithBrush(self, brush):
         self.brush = brush
         self.Refresh()
-               
+
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
         gc = g.GraphicsContext.Create(dc)
@@ -67,19 +69,19 @@ class GradientStopPanel(wx.Panel):
 
         self.Bind(wx.EVT_BUTTON, self.OnMinusButton, self.minusBtn)
 
-        
+
     def OnMinusButton(self, evt):
         wx.CallAfter(self.Parent.RemoveStop, self)
-        
-        
-    
-class TestPanel(wx.Panel):
+
+
+
+class TestPanel(scrolled.ScrolledPanel):
     """
     The main panel for this sample
     """
     def __init__(self, parent, log):
         self.log = log
-        wx.Panel.__init__(self, parent, -1)
+        scrolled.ScrolledPanel.__init__(self, parent, -1)
 
         # make the panel that will display the gradient
         self.gpanel = GradientPanel(self)
@@ -102,14 +104,14 @@ class TestPanel(wx.Panel):
         self.stops = [firstStop, lastStop]
         addStopBtn = wx.Button(self, -1, " + ", style=wx.BU_EXACTFIT)
 
-        
+
         # bind some events
         self.Bind(wx.EVT_BUTTON, self.OnAddStop, addStopBtn)
         self.Bind(wx.EVT_SPINCTRLDOUBLE, self.OnPositionUpdated)
         self.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnColourChanged)
         self.Bind(wx.EVT_TEXT, self.OnGeometryChanged)
-        
-        
+
+
         # do the layout
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.gpanel)
@@ -130,7 +132,7 @@ class TestPanel(wx.Panel):
                       (wx.StaticText(self, -1, "y2:"), 0, wx.ALIGN_CENTER_VERTICAL),
                       self.y2] )
         sizer.Add(fgs, 0, wx.LEFT, 25)
-        
+
         sizer.Add((1,15))
         sizer.Add(label2)
         sizer.Add((1, 5))
@@ -139,22 +141,24 @@ class TestPanel(wx.Panel):
         self.stopSizer.Add(lastStop)
         self.stopSizer.Add(addStopBtn, 0, wx.TOP, 10)
         sizer.Add(self.stopSizer, 0, wx.LEFT, 25)
-        
+
         border = wx.BoxSizer()
         border.Add(sizer, 1, wx.EXPAND|wx.ALL, 15)
         self.SetSizer(border)
 
         self.SetLimits()
         self.UpdateBrush()
-        
-        
+
+        self.SetupScrolling()
+
     def RemoveStop(self, stop):
         self.stops.remove(stop)
         stop.Destroy()
         self.Layout()
         self.SetLimits()
         self.UpdateBrush()
-        
+        self.SetupScrolling()
+
 
     def OnAddStop(self, evt):
         newstop = GradientStopPanel(self, 1.0)
@@ -163,14 +167,15 @@ class TestPanel(wx.Panel):
         self.Layout()
         self.SetLimits()
         self.UpdateBrush()
+        self.SetupScrolling()
 
-        
+
     def OnPositionUpdated(self, evt):
         # called when any of the spinctrls in the nested panels are updated
         self.SetLimits()
         self.UpdateBrush()
 
-        
+
     def OnColourChanged(self, evt):
         # called when any of the color pickers are updated
         self.UpdateBrush()
@@ -179,30 +184,30 @@ class TestPanel(wx.Panel):
         # called for changes to x1,y1 or x2,y2
         self.UpdateBrush()
 
-        
+
     def SetLimits(self):
         # Tweak the panels in self.stops to set limits on the allowed
         # positions, and to disable those that should not be changed or
         # removed.
         first = self.stops[0]
         last = self.stops[-1]
-        
+
         first.pos.Disable()
         first.minusBtn.Disable()
         last.pos.Disable()
         last.minusBtn.Disable()
-        
+
         for idx in range(1, len(self.stops)-1):
             prev = self.stops[idx-1]
             next = self.stops[idx+1]
             stop = self.stops[idx]
-            
+
             stop.pos.SetMin(prev.pos.GetValue())
             stop.pos.SetMax(next.pos.GetValue())
             stop.pos.Enable()
             stop.minusBtn.Enable()
 
-            
+
     def UpdateBrush(self):
         """
         This is where the magic happens. We convert all the values from the
@@ -215,12 +220,12 @@ class TestPanel(wx.Panel):
                 return float(value)
             except ValueError:
                 return 0.0
-            
+
         x1 = floatOrZero(self.x1.Value)
         y1 = floatOrZero(self.y1.Value)
         x2 = floatOrZero(self.x2.Value)
         y2 = floatOrZero(self.y2.Value)
-        
+
         gstops = g.GraphicsGradientStops()
         gstops.SetStartColour(self.stops[0].colour.GetColour())
         gstops.SetEndColour(self.stops[-1].colour.GetColour())
@@ -228,13 +233,13 @@ class TestPanel(wx.Panel):
             gs = g.GraphicsGradientStop(
                 s.colour.GetColour(), s.pos.GetValue())
             gstops.Add(gs)
-            
+
         ctx = g.GraphicsContext.Create()
         brush = ctx.CreateLinearGradientBrush(x1,y1, x2,y2, gstops)
         self.gpanel.DrawWithBrush(brush)
-        
-        
-        
+
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
