@@ -23,13 +23,11 @@ class TestPanel(wx.Panel):
 
 
     def OnPaint(self, evt):
-        if self.IsDoubleBuffered():
-            dc = wx.PaintDC(self)
-        else:
-            dc = wx.BufferedPaintDC(self)
-        dc.SetBackground(wx.Brush('white'))
+        #dc = wx.PaintDC(self)
+        dc = wx.BufferedPaintDC(self)
+        dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
-        
+
         self.Render(dc)
 
 
@@ -42,7 +40,7 @@ class TestPanel(wx.Panel):
             x += 20
             y += 20
             dc.DrawLine(x, 0, 0, y)
-        
+
         # now draw something with cairo
         ctx = wx.lib.wxcairo.ContextFromDC(dc)
         ctx.set_line_width(15)
@@ -71,7 +69,7 @@ class TestPanel(wx.Panel):
 
         # Draw some text
         face = wx.lib.wxcairo.FontFaceFromFont(
-            wx.FFont(10, wx.SWISS, wx.FONTFLAG_BOLD))
+            wx.FFont(10, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
         ctx.set_font_face(face)
         ctx.set_font_size(60)
         ctx.move_to(360, 180)
@@ -113,15 +111,15 @@ class TestPanel(wx.Panel):
         bmp = wx.Bitmap(opj('bitmaps/toucan.png'))
         #bmp = wx.Bitmap(opj('bitmaps/splash.png'))
         img = wx.lib.wxcairo.ImageSurfaceFromBitmap(bmp)
-        
+
         ctx.set_source_surface(img, 70, 230)
         ctx.paint()
 
         # this is how to convert an image surface to a wx.Bitmap
         bmp2 = wx.lib.wxcairo.BitmapFromImageSurface(img)
         dc.DrawBitmap(bmp2, 280, 300)
-        
-        
+
+
     def warpPath(self, ctx, tw, th, dx, dy):
         def f(x, y):
             xn = x - tw/2
@@ -148,7 +146,7 @@ class TestPanel(wx.Panel):
 
             elif type == cairo.PATH_CLOSE_PATH:
                 ctx.close_path()
-        
+
 #----------------------------------------------------------------------
 
 if not haveCairo:
@@ -159,7 +157,7 @@ if not haveCairo:
                        'Sorry', wx.ICON_WARNING)
         return win
 else:
-    
+
     def runTest(frame, nb, log):
         win = TestPanel(nb, log)
         return win

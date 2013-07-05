@@ -25,7 +25,7 @@ class DisplayPanel(wx.Panel):
 
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
-        
+
         if self.curr_snippet:
             width, height = self.GetClientSize()
             cr = wx.lib.wxcairo.ContextFromDC(dc)
@@ -36,7 +36,7 @@ class DisplayPanel(wx.Panel):
         self.curr_snippet = text
         self.Refresh()
 
-        
+
 
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
@@ -47,7 +47,7 @@ class TestPanel(wx.Panel):
         self.canvas = DisplayPanel(self)
         self.editor = DemoCodeEditor(self, style=wx.BORDER_SIMPLE)
         self.editor.SetEditable(False)
-        
+
         self.Bind(wx.EVT_LISTBOX, self.OnListBoxSelect, self.lb)
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -62,14 +62,14 @@ class TestPanel(wx.Panel):
         border.Add(sizer, 1, wx.EXPAND|wx.ALL, 30)
         self.SetSizer(border)
 
-        
+
     def OnListBoxSelect(self, evt):
         snippet_file = opj('snippets/%s.py' % evt.GetString())
         text = file(snippet_file).read()
         self.canvas.SetSnippet(text)
         self.editor.SetValue(text)
-        
-        
+
+
 #----------------------------------------------------------------------
 
 if not haveCairo:
@@ -77,10 +77,10 @@ if not haveCairo:
     def runTest(frame, nb, log):
         win = MessagePanel(nb, 'This demo requires the Pycairo package,\n'
                            'or there is some other unmet dependency.',
-                       'Sorry', wx.ICON_WARNING)
+                           'Sorry', wx.ICON_WARNING)
         return win
 else:
-    
+
     def runTest(frame, nb, log):
         win = TestPanel(nb, log)
         return win
@@ -93,7 +93,7 @@ if haveCairo:
 else:
     extra = '\n<p>See the docstring in the wx.lib.wxcairo module for details about installing dependencies.'
 
-    
+
 overview = """<html><body>
 <h2><center>Cairo Integration</center></h2>
 
