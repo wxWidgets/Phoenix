@@ -51,11 +51,11 @@ class MyVListBox(wx.VListBox):
 
 # The wx.HtmlListBox derives from wx.VListBox, but draws each item
 # itself as a wx.HtmlCell.
-class MyHtmlListBox(wx.HtmlListBox):
+class MyHtmlListBox(wx.html.HtmlListBox):
 
     def __init__(self, *args, **kw):
         self.log = kw.pop('log')
-        wx.HtmlListBox.__init__(self, *args, **kw)
+        wx.html.HtmlListBox.__init__(self, *args, **kw)
 
     def OnGetItem(self, n):
         if n == 1:
