@@ -3,6 +3,7 @@ from wx.lib.itemspicker import ItemsPicker, \
                                EVT_IP_SELECTION_CHANGED, \
                                IP_SORT_CHOICES, IP_SORT_SELECTED,\
                                IP_REMOVE_FROM_CHOICES
+from images import _bp_btn1, _bp_btn2
 
 #----------------------------------------------------------------------
 
@@ -50,6 +51,10 @@ class ItemsPickerDialog(wx.Dialog):
                           'Stuff:', 'Selected stuff:',ipStyle = style)
         self.ip.Bind(EVT_IP_SELECTION_CHANGED, self.OnSelectionChange)
         self.ip._source.SetMinSize((-1,150))
+        self.ip.bAdd.SetBitmap(_bp_btn2.GetBitmap(), dir=wx.RIGHT)
+        self.ip.bAdd.SetLabel('Add')
+        self.ip.bRemove.SetBitmap(_bp_btn1.GetBitmap(), dir=wx.LEFT)
+        self.ip.bRemove.SetLabel('Remove')
         sizer.Add(self.ip, 0, wx.ALL, 10)
         self.SetSizer(sizer)
         self.itemCount = 3
