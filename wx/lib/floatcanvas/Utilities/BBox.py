@@ -5,11 +5,7 @@ A Bounding Box object and assorted utilities , subclassed from a numpy array
 
 """
 
-try:
-    import numpy as N
-except ImportError:
-    pass
-    # raise ImportError("I could not import numpy")
+import numpy as N
 
 class BBox(N.ndarray):
     """
