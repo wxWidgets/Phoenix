@@ -44,7 +44,7 @@ class TestPanel(wx.Panel):
         t3.SetInsertionPoint(0)
         self.Bind(wx.EVT_TEXT, self.EvtText, t3)
         self.Bind(wx.EVT_TEXT_ENTER, self.EvtTextEnter, t3)
-        
+
         b = wx.Button(self, -1, "Test Replace")
         self.Bind(wx.EVT_BUTTON, self.OnTestReplace, b)
         b2 = wx.Button(self, -1, "Test GetSelection")
@@ -145,12 +145,19 @@ class TestPanel(wx.Panel):
         text = self.t5.GetValue()
         ip = self.t5.GetInsertionPoint()
         lp = self.t5.GetLastPosition()
-        self.log.write("LogT5Position:\n"
-                       "\tGetInsertionPoint:\t%d\n"
-                       "\ttext[insertionpoint]:\t%s\n"
-                       "\tGetLastPosition:\t%d\n"
-                       "\tlen(text):\t\t%d\n"
-                       % (ip, text[ip], lp, len(text)))
+        try:
+            self.log.write("LogT5Position:\n"
+                           "\tGetInsertionPoint:\t%d\n"
+                           "\ttext[insertionpoint]:\t%s\n"
+                           "\tGetLastPosition:\t%d\n"
+                           "\tlen(text):\t\t%d\n"
+                           % (ip, text[ip], lp, len(text)))
+        except:#last position eol or eof
+            self.log.write("LogT5Position:\n"
+                           "\tGetInsertionPoint:\t%d\n"
+                           "\tGetLastPosition:\t%d\n"
+                           "\tlen(text):\t\t%d\n"
+                           % (ip, lp, len(text)))
 
 
 #---------------------------------------------------------------------------
@@ -163,7 +170,7 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-A TextCtrl allows text to be displayed and (possibly) edited. It may be single 
+A TextCtrl allows text to be displayed and (possibly) edited. It may be single
 line or multi-line, support styles or not, be read-only or not, and even supports
 text masking for such things as passwords.
 
