@@ -17,8 +17,8 @@ class TestFrame(wx.Frame):
                      | wx.FULL_REPAINT_ON_RESIZE
                      )
         p.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
-        
-        gbs = self.gbs = wx.GridBagSizer(5, 5)
+
+        gbs = self.gbs = wx.GridBagSizer(vgap=5, hgap=5)
 
         gbs.Add( wx.StaticText(p, -1, gbsDescription),
                  (0,0), (1,7), wx.ALIGN_CENTER | wx.ALL, 5)
@@ -27,28 +27,28 @@ class TestFrame(wx.Frame):
         gbs.Add( wx.TextCtrl(p, -1, "pos(1,1)"), (1,1) )
         gbs.Add( wx.TextCtrl(p, -1, "pos(2,0)"), (2,0) )
         gbs.Add( wx.TextCtrl(p, -1, "pos(2,1)"), (2,1) )
-        
+
         gbs.Add( wx.TextCtrl(p, -1, "pos(3,2), span(1,2)\nthis row and col are growable", style=wx.TE_MULTILINE),
                  (3,2), (1,2), flag=wx.EXPAND )
-        
+
         gbs.Add( wx.TextCtrl(p, -1, "pos(4,3), span(3,1)", style=wx.TE_MULTILINE),
                  (4,3), (3,1), wx.EXPAND)
-        
+
         gbs.Add( wx.TextCtrl(p, -1, "pos(5,4)"), (5,4), flag=wx.EXPAND )
         gbs.Add( wx.TextCtrl(p, -1, "pos(6,5)"), (6,5), flag=wx.EXPAND )
         gbs.Add( wx.TextCtrl(p, -1, "pos(7,6)"), (7,6) )
-        
+
         moveBtn1 = wx.Button(p, -1, "Move this to (3,6)")
         moveBtn2 = wx.Button(p, -1, "Move this to (3,6)");
         gbs.Add( moveBtn1, (10,2) )
         gbs.Add( moveBtn2, (10,3) )
-    
+
         hideBtn = wx.Button(p, -1, "Hide this item -->")
         gbs.Add(hideBtn, (12, 3))
 
         hideTxt = wx.TextCtrl(p, -1, "pos(12,4), size(150, -1)", size = (150,-1))
         gbs.Add( hideTxt, (12,4) )
-    
+
         showBtn = wx.Button(p, -1, "<-- Show it again")
         gbs.Add(showBtn, (12, 5))
         showBtn.Disable()
@@ -60,16 +60,13 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.OnShowButton, showBtn)
         self.Bind(wx.EVT_BUTTON, self.OnMoveButton, moveBtn1)
         self.Bind(wx.EVT_BUTTON, self.OnMoveButton, moveBtn2)
-        
-        # Add a spacer at the end to ensure some extra space at the bottom
-        gbs.Add((10,10), (14,7))
-  
+
         gbs.AddGrowableRow(3)
         gbs.AddGrowableCol(2)
 
         box = wx.BoxSizer()
         box.Add(gbs, 0, wx.ALL, 10)
-        
+
         p.SetSizerAndFit(box)
         self.SetClientSize(p.GetSize())
 
@@ -80,14 +77,14 @@ class TestFrame(wx.Frame):
         self.showBtn.Enable()
         self.gbs.Layout()
 
-    
+
     def OnShowButton(self, evt):
         self.gbs.Show(self.hideTxt)
         self.hideBtn.Enable()
         self.showBtn.Disable()
         self.gbs.Layout()
 
-    
+
     def OnMoveButton(self, evt):
         btn = evt.GetEventObject()
         curPos = self.gbs.GetItemPosition(btn)
@@ -110,9 +107,9 @@ assert when compiled in debug mode.""",
                     btn.SetLabel("Move it back")
             except wx.PyAssertionError:
                 pass
-        
+
         self.gbs.Layout()
-       
+
 
     def OnLeftDown(self, evt):
         pt = evt.GetPosition()
@@ -122,7 +119,7 @@ assert when compiled in debug mode.""",
         else:
             print "item found: ", `item.GetPos()`, "--", `item.GetSpan()`
 
-        
+
 #---------------------------------------------------------------------------
 
 class TestPanel(wx.Panel):
