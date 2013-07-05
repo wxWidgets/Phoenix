@@ -5,7 +5,6 @@ import sys
 import glob
 import random
 
-import wx.lib.colourselect as csel
 from  wx.lib import masked
 
 try:
@@ -39,7 +38,7 @@ class TestPanel(wx.Panel):
         self.sizer_1_staticbox = wx.StaticBox(self, -1, "ZoomBar Options")
         self.zoomSpin = wx.SpinCtrl(self, -1, "3", min=1, max=5)
 
-        self.colourzoom = csel.ColourSelect(self, colour=wx.Colour(97, 97, 97))
+        self.colourzoom = wx.ColourPickerCtrl(self, colour=wx.Colour(97, 97, 97))
         self.buttonSize = masked.NumCtrl(self, value=32, allowNegative=False,
                                          min=32, max=72)
 
@@ -80,7 +79,7 @@ class TestPanel(wx.Panel):
 
         self.Bind(masked.EVT_NUM, self.OnButtonSize, self.buttonSize)
 
-        self.colourzoom.Bind(csel.EVT_COLOURSELECT, self.OnZoomColour)
+        self.colourzoom.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnZoomColour)
 
         self.Bind(ZB.EVT_ZOOMBAR, self.OnZoomBar)
 
@@ -151,7 +150,7 @@ class TestPanel(wx.Panel):
 
     def OnZoomColour(self, event):
 
-        colour = event.GetValue()
+        colour = event.GetEventObject().GetColour()
         self.zbp.SetBarColour(colour)
 
 
