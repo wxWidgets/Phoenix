@@ -18,8 +18,8 @@ def getNextImageID(count):
         imID += 1
         if imID == count:
             imID = 0
-    
-    
+
+
 class TestTB(wx.Treebook):
     def __init__(self, parent, id, log):
         wx.Treebook.__init__(self, parent, id, style=
@@ -39,7 +39,7 @@ class TestTB(wx.Treebook):
             il.Add(bmp)
         self.AssignImageList(il)
         imageIdGenerator = getNextImageID(il.GetImageCount())
-        
+
         # Now make a bunch of panels for the list book
         first = True
         for colour in colourList:
@@ -61,14 +61,10 @@ class TestTB(wx.Treebook):
         self.Bind(wx.EVT_TREEBOOK_PAGE_CHANGING, self.OnPageChanging)
 
         # This is a workaround for a sizing bug on Mac...
-        wx.FutureCall(100, self.AdjustSize)
+        wx.CallLater(100, self.AdjustSize)
 
     def AdjustSize(self):
-        #print self.GetTreeCtrl().GetBestSize()
-        self.GetTreeCtrl().InvalidateBestSize()
-        self.SendSizeEvent()
-        #print self.GetTreeCtrl().GetBestSize()
-        
+        self.SendSizeEvent(1)
 
     def makeColorPanel(self, color):
         p = wx.Panel(self, -1)
@@ -79,7 +75,6 @@ class TestTB(wx.Treebook):
             win.SetSize(evt.GetSize())
         p.Bind(wx.EVT_SIZE, OnCPSize)
         return p
-
 
     def OnPageChanged(self, event):
         old = event.GetOldSelection()
@@ -114,11 +109,8 @@ wx.TreeCtrl instead of a set of tabs.
 """
 
 
-
 if __name__ == '__main__':
     import sys,os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])
-
-
 
