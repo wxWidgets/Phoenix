@@ -6,9 +6,9 @@ import  wx
 # would do this in your app's OnInit or in other startup code...
 
 provider = wx.SimpleHelpProvider()
-wx.HelpProvider_Set(provider)
+wx.HelpProvider.Set(provider)
 
-# This panel is chock full of controls about which we can demonstrate the 
+# This panel is chock full of controls about which we can demonstrate the
 # help system.
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
@@ -18,7 +18,7 @@ class TestPanel(wx.Panel):
         # This help text, set for the panel itself, will be used if context
         # sensitive help cannot be found for any particular control.
         self.SetHelpText("This is a wx.Panel.")
-        
+
         sizer = wx.BoxSizer(wx.VERTICAL)
 
         # Init the context help button.
@@ -26,7 +26,7 @@ class TestPanel(wx.Panel):
         cBtn = wx.ContextHelpButton(self)
         cBtn.SetHelpText("wx.ContextHelpButton")
 
-        cBtnText = wx.StaticText(self, -1, 
+        cBtnText = wx.StaticText(self, -1,
             "This is a wx.ContextHelpButton.  Clicking it puts the\n"
             "app into context sensitive help mode."
             )
@@ -47,7 +47,7 @@ class TestPanel(wx.Panel):
         sizer.Add((20,20))
         sizer.Add(text)
 
-        # Same thing, but this time to demonstrate how the help event can be 
+        # Same thing, but this time to demonstrate how the help event can be
         # intercepted.
         text = wx.TextCtrl(self, -1, "You can also intercept the help event if you like.  Watch the log window when you click here...",
                           size=(240, 60), style = wx.TE_MULTILINE)
@@ -61,7 +61,7 @@ class TestPanel(wx.Panel):
         sizer.Add((20,20))
         sizer.Add(text)
         text.Bind(wx.EVT_HELP, self.OnCtxHelp2, text)
-        
+
 
         border = wx.BoxSizer(wx.VERTICAL)
         border.Add(sizer, 0, wx.ALL, 25)
@@ -78,8 +78,8 @@ class TestPanel(wx.Panel):
         self.log.write("OnCtxHelp: %s" % evt)
         evt.Skip()
 
-    # On the third text control above, we intercept the help event. 
-    # Here, we print a note about it, generate our own tip window, and, 
+    # On the third text control above, we intercept the help event.
+    # Here, we print a note about it, generate our own tip window, and,
     # unlike last time, we don't pass it on to the underlying provider.
     def OnCtxHelp2(self, evt):
          self.log.write("OnCtxHelp2: %s\n" % evt)
