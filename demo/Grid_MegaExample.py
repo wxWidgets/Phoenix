@@ -116,7 +116,7 @@ class MegaTable(Grid.GridTableBase):
     # ------------------------------------------------------
     # begin the added code to manipulate the table (non wx related)
     def AppendRow(self, row):
-        #print 'append'
+        #print('append')
         entry = {}
 
         for name in self.colnames:

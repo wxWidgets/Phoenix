@@ -142,7 +142,6 @@ class MyCanvas(wx.ScrolledWindow):
                                   "red", "blue", (25,25))
         self.DrawSavedLines(dc)
 
-
     def DrawSavedLines(self, dc):
         dc.SetPen(wx.Pen('MEDIUM FOREST GREEN', 4))
         for line in self.lines:
@@ -218,7 +217,7 @@ class MyCanvas(wx.ScrolledWindow):
 ##         delta = evt.GetWheelDelta()
 ##         rot = evt.GetWheelRotation()
 ##         linesPer = evt.GetLinesPerAction()
-##         print delta, rot, linesPer
+##         print(delta, rot, linesPer)
 ##         ws = self.wheelScroll
 ##         ws = ws + rot
 ##         lines = ws / delta

@@ -53,7 +53,7 @@ class TestPanel(wx.Panel):
 
 
     def OnFind(self, evt):
-        #print repr(evt.GetFindString()), repr(self.findData.GetFindString())
+        #print(repr(evt.GetFindString()), repr(self.findData.GetFindString()))
         map = {
             wx.wxEVT_COMMAND_FIND : "FIND",
             wx.wxEVT_COMMAND_FIND_NEXT : "FIND_NEXT",

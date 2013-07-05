@@ -4,9 +4,9 @@ import  wx.grid as gridlib
 
 #---------------------------------------------------------------------------
 
-class CustomDataTable(gridlib.PyGridTableBase):
+class CustomDataTable(gridlib.GridTableBase):
     def __init__(self, log):
-        gridlib.PyGridTableBase.__init__(self)
+        gridlib.GridTableBase.__init__(self)
         self.log = log
 
         self.colLabels = ['ID', 'Description', 'Severity', 'Priority', 'Platform',
@@ -72,7 +72,7 @@ class CustomDataTable(gridlib.PyGridTableBase):
                         )
 
                 self.GetView().ProcessTableMessage(msg)
-        innerSetValue(row, col, value) 
+        innerSetValue(row, col, value)
 
     #--------------------------------------------------
     # Some optional methods
@@ -101,11 +101,7 @@ class CustomDataTable(gridlib.PyGridTableBase):
         return self.CanGetValueAs(row, col, typeName)
 
 
-
-
-
 #---------------------------------------------------------------------------
-
 
 
 class CustTableGrid(gridlib.Grid):
@@ -154,17 +150,17 @@ class TestFrame(wx.Frame):
         p.SetSizer(bs)
 
     def OnButton(self, evt):
-        print "button selected"
+        print("button selected")
 
     def OnButtonFocus(self, evt):
-        print "button focus"
+        print("button focus")
 
 
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
     import sys
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = TestFrame(None, sys.stdout)
     frame.Show(True)
     app.MainLoop()

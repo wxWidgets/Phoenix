@@ -205,7 +205,7 @@ class TestPanel( scrolled.ScrolledPanel ):
             min, max = None, None
 
         cur_min, cur_max = self.target_ctrl.GetBounds()
-        print cur_min, min
+        print(cur_min, min)
         if min and (min != cur_min): self.target_ctrl.SetMin( min )
         if max and (max != cur_max): self.target_ctrl.SetMax( max )
 

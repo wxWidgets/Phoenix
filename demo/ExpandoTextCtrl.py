@@ -110,9 +110,9 @@ class TestFrame(wx.Frame):
 
     def OnOtherBtn(self, evt):
         # just for testing...
-        #print self.eom.numLines,
+        #print(self.eom.numLines)
         self.eom._adjustCtrl()
-        #print self.eom.numLines
+        #print(self.eom.numLines)
         
 #----------------------------------------------------------------------
 

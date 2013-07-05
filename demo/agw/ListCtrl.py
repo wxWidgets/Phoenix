@@ -335,8 +335,8 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def OnPopupOne(self, event):
         self.log.WriteText("Popup one\n")
-        print "FindItem:", self.list.FindItem(-1, "Roxette")
-        print "FindItemData:", self.list.FindItemData(-1, 11)
+        print("FindItem:", self.list.FindItem(-1, "Roxette"))
+        print("FindItemData:", self.list.FindItemData(-1, 11))
 
     def OnPopupTwo(self, event):
         self.log.WriteText("Selected items:\n")
@@ -356,7 +356,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
     def OnPopupFive(self, event):
         item = self.list.GetItem(self.currentItem)
-        print item.Text, item.Id, self.list.GetItemData(self.currentItem)
+        print(item.Text, item.Id, self.list.GetItemData(self.currentItem))
 
     def OnPopupSix(self, event):
         self.list.EditLabel(self.currentItem)

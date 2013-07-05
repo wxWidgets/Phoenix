@@ -6,13 +6,13 @@ import  wx
 
 class TestPanel(wx.Panel):
     # def OnSetFocus(self, evt):
-    #     print "OnSetFocus"
+    #     print("OnSetFocus")
     #     evt.Skip()
     # def OnKillFocus(self, evt):
-    #     print "OnKillFocus"
+    #     print("OnKillFocus")
     #     evt.Skip()
     # def OnWindowDestroy(self, evt):
-    #     print "OnWindowDestroy"
+    #     print("OnWindowDestroy")
     #     evt.Skip()
 
 

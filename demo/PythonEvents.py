@@ -32,7 +32,7 @@ class MyEvent(wx.PyCommandEvent):
         self.myVal = None
 
     #def __del__(self):
-    #    print '__del__'
+    #    print('__del__')
     #    wx.PyCommandEvent.__del__(self)
 
     def SetMyVal(self, val):
@@ -51,9 +51,9 @@ class MyButton(wx.Button):
         pt = event.GetPosition()
         evt = MyEvent(myEVT_BUTTON_CLICKPOS, self.GetId())
         evt.SetMyVal(pt)
-        #print id(evt), sys.getrefcount(evt)
+        #print(id(evt), sys.getrefcount(evt))
         self.GetEventHandler().ProcessEvent(evt)
-        #print id(evt), sys.getrefcount(evt)
+        #print(id(evt), sys.getrefcount(evt))
         event.Skip()
 
 
@@ -79,7 +79,7 @@ class TestPanel(wx.Panel):
         self.log.WriteText("OnClick\n")
 
     def OnMyEvent(self, event):
-        #print id(event), sys.getrefcount(event)
+        #print(id(event), sys.getrefcount(event))
         self.log.WriteText("MyEvent: %s\n" % (event.GetMyVal(), ) )
 
 

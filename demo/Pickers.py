@@ -13,7 +13,7 @@ class TestPanel(wx.Panel):
         title.SetFont(wx.FFont(24, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
         title.SetForegroundColour("navy")
         box.Add(title, 0, wx.ALIGN_CENTER|wx.ALL, 5)
-        #print title.GetBestSize(), title.GetMinSize(), title.GetSize()
+        #print(title.GetBestSize(), title.GetMinSize(), title.GetSize())
 
         box.Add(wx.StaticLine(self), 0, wx.EXPAND)
 

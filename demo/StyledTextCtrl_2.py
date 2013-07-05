@@ -202,7 +202,7 @@ class PythonSTC(stc.StyledTextCtrl):
                 #for x in range(50000):
                 #    lst.append('%05d' % x)
                 #st = " ".join(lst)
-                #print len(st)
+                #print(len(st))
                 #self.AutoCompShow(0, st)
 
                 kw = keyword.kwlist[:]
@@ -259,7 +259,7 @@ class PythonSTC(stc.StyledTextCtrl):
             self.BraceHighlight(braceAtCaret, braceOpposite)
             #pt = self.PointFromPosition(braceOpposite)
             #self.Refresh(True, wxRect(pt.x, pt.y, 5,5))
-            #print pt
+            #print(pt)
             #self.Refresh(False)
 
 

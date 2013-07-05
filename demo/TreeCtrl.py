@@ -166,7 +166,7 @@ class TestTreeCtrlPanel(wx.Panel):
                 self.log.WriteText("BoundingRect: %s\n" %
                                    self.tree.GetBoundingRect(self.item, True))
             #items = self.tree.GetSelections()
-            #print map(self.tree.GetItemText, items)
+            #print(map(self.tree.GetItemText, items))
         event.Skip()
 
     def OnActivate(self, event):

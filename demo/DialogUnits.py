@@ -49,8 +49,8 @@ class MyFrame(wx.Frame):
                             wx.DLG_SZE(panel, (36, -1)),
                             wx.TE_READONLY)
 
-        #print wx.DLG_PNT(panel, (24, 4)), wx.DLG_SZE(panel, (36, -1))
-        #print wx.DLG_PNT(panel, (24, 16)),wx.DLG_SZE(panel, (36, -1))
+        #print(wx.DLG_PNT(panel, (24, 4)), wx.DLG_SZE(panel, (36, -1)))
+        #print(wx.DLG_PNT(panel, (24, 16)),wx.DLG_SZE(panel, (36, -1)))
 
     # This method is called automatically when the CLOSE event is
     # sent to this window

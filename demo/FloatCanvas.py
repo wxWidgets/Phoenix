@@ -4,7 +4,7 @@ try:
     import numpy as N
     import numpy.random as RandomArray
     haveNumpy = True
-    #print "Using numpy, version:", N.__version__
+    #print("Using numpy, version:", N.__version__)
 except ImportError:
             # numpy isn't there
             haveNumpy = False
@@ -438,7 +438,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas = self.Canvas
             Canvas.InitAll()
 
-            ##          Random tests of everything:
+            ## Random tests of everything:
             colors = self.colors
             # Rectangles
             for i in range(3):
@@ -540,7 +540,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.NumTimeSteps = 200
             self.TimeStep = 1
             self.Timer.Start(self.FrameDelay)
-            #print "Did %i frames in %f seconds"%(N, (time.time() - start) )
+            #print("Did %i frames in %f seconds"%(N, (time.time() - start) ))
 
         def TestHitTest(self, event=None):
             wx.GetApp().Yield(True)
@@ -1302,14 +1302,14 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Log("Loading Map from a File")
             wx.GetApp().Yield(True) # so log text will get displayed now.
             Shorelines = self.Read_MapGen(os.path.join("data",'world.dat'),stats = 0)
-            #print "It took %f seconds to load %i shorelines"%(time.clock() - start,len(Shorelines) )
+            #print("It took %f seconds to load %i shorelines"%(time.clock() - start,len(Shorelines) ))
             #start = time.clock()
             for segment in Shorelines:
                 self.Canvas.AddLine(segment)
-            #print "It took %f seconds to add %i shorelines"%(time.clock() - start,len(Shorelines) )
+            #print("It took %f seconds to add %i shorelines"%(time.clock() - start,len(Shorelines) ))
             #start = time.clock()
             self.Canvas.ZoomToBB()
-            #print "It took %f seconds to draw %i shorelines"%(time.clock() - start,len(Shorelines) )
+            #print("It took %f seconds to draw %i shorelines"%(time.clock() - start,len(Shorelines) ))
 
 
 
@@ -1336,10 +1336,10 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                 linecolors.append(random.randint(0,len(colors)-1) )
             for (points,color,width) in zip(linepoints,linecolors,linewidths):
                 Canvas.AddLine((points[0:2],points[2:4]), LineWidth = width, LineColor = colors[color])
-            #print "It took %f seconds to add %i lines"%(time.clock() - start,len(linepoints) )
+            #print("It took %f seconds to add %i lines"%(time.clock() - start,len(linepoints) ))
             #start = time.clock()
             Canvas.ZoomToBB()
-            #print "It took %f seconds to draw %i lines"%(time.clock() - start,len(linepoints) )
+            #print("It took %f seconds to draw %i lines"%(time.clock() - start,len(linepoints) ))
 
         def ArrowLineTest(self,event = None):
             wx.GetApp().Yield(True)
@@ -1384,11 +1384,11 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             for i in range(1000):
                 Point = (random.uniform(BigRange[0],BigRange[1]),random.uniform(BigRange[0],BigRange[1]))
                 coords.append( (Point) )
-            print "Drawing the Points"
+            print("Drawing the Points")
             start = time.clock()
             for Point in coords:
                 Canvas.AddPoint(Point, Diameter = 4)
-            print "It took %s seconds to add the points"%(time.clock() - start)
+            print("It took %s seconds to add the points"%(time.clock() - start))
             Canvas.ZoomToBB()
 
         def PropertiesChangeTest(self,event=None):
@@ -1571,7 +1571,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Log("The Arrow was Clicked")
 
         def RotateArrow(self,event):
-            ##print "The Changeable Arrow was Clicked"
+            ##print("The Changeable Arrow was Clicked")
             ## You can do them either one at a time, or both at once
             ## Doing them both at once prevents the arrow points from being calculated twice
             #self.RotArrow.SetDirection(self.RotArrow.Direction + random.uniform(-90,90))
@@ -1742,8 +1742,8 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                 for segment in Shorelines:
                     NumPoints = NumPoints + len(segment)
                 AvgPoints = NumPoints / NumSegments
-                print "Number of Segments: ", NumSegments
-                print "Average Number of Points per segment: ",AvgPoints
+                print("Number of Segments: ", NumSegments)
+                print("Average Number of Points per segment: ", AvgPoints)
             if AllLines:
                 Lines = []
                 for segment in Shorelines:

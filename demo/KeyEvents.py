@@ -296,7 +296,7 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
         self.SetItem(id, 6, str(evt.GetRawKeyCode()))
         self.SetItem(id, 7, str(evt.GetRawKeyFlags()))
 
-        #print ( id, evType, keyname, str(keycode), modifiers, str(evt.GetRawKeyCode()), str(evt.GetRawKeyFlags()))
+        #print(id, evType, keyname, str(keycode), modifiers, str(evt.GetRawKeyCode()), str(evt.GetRawKeyFlags()))
 
         self.EnsureVisible(id)
 

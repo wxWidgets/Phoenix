@@ -61,8 +61,8 @@ class HugeTableGrid(gridlib.Grid):
         self.Bind(gridlib.EVT_GRID_CELL_RIGHT_CLICK, self.OnRightDown)  
 
     def OnRightDown(self, event):
-        print "hello"
-        print self.GetSelectedRows()
+        print("hello")
+        print(self.GetSelectedRows())
 
 
 #---------------------------------------------------------------------------
