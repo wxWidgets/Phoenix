@@ -23,7 +23,8 @@ limits of IP Addresses, and allows automatic field navigation as the
 user hits '.' when typing.
 """
 
-import  wx, types, string
+import  wx
+import  wx.lib.six as six
 from wx.lib.masked import BaseMaskedTextCtrl
 
 # jmg 12/9/03 - when we cut ties with Py 2.2 and earlier, this would
@@ -107,11 +108,11 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
 
         """       
 
-        if not kwargs.has_key('mask'):
+        if 'mask' not in kwargs:
             kwargs['mask'] = mask = "###.###.###.###"
-        if not kwargs.has_key('formatcodes'):
+        if 'formatcodes' not in kwargs:
             kwargs['formatcodes'] = 'F_Sr<>'
-        if not kwargs.has_key('validRegex'):
+        if 'validRegex' not in kwargs:
             kwargs['validRegex'] = "(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))(\.(  \d| \d\d|(1\d\d|2[0-4]\d|25[0-5]))){3}"
 
 
@@ -188,9 +189,9 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
         
         """
 ##        dbg('IpAddrCtrl::SetValue(%s)' % str(value), indent=1)
-        if type(value) not in (types.StringType, types.UnicodeType):
+        if not isinstance(value, six.string_types):
 ##            dbg(indent=0)
-            raise ValueError('%s must be a string', str(value))
+            raise ValueError('%s must be a string' % str(value))
 
         bValid = True   # assume True
         parts = value.split('.')
@@ -205,13 +206,13 @@ class IpAddrCtrl( BaseMaskedTextCtrl, IpAddrCtrlAccessorsMixin ):
                     break
                 elif part.strip():  # non-empty part
                     try:
-                        j = string.atoi(part)
+                        j = int(part)
                         if not 0 <= j <= 255:
                             bValid = False
                             break
                         else:
                             parts[i] = '%3d' % j
-                    except:
+                    except Exception:
                         bValid = False
                         break
                 else:

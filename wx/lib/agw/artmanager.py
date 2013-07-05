@@ -1331,9 +1331,9 @@ class ArtManager(wx.EvtHandler):
                 winxpgui.SetLayeredWindowAttributes(hwnd, 0, amount, 2)
     
             elif _libimported == "ctypes":
-                style = self._winlib.GetWindowLongA(hwnd, 0xffffffecL)
+                style = self._winlib.GetWindowLongA(hwnd, 0xffffffec)
                 style |= 0x00080000
-                self._winlib.SetWindowLongA(hwnd, 0xffffffecL, style)
+                self._winlib.SetWindowLongA(hwnd, 0xffffffec, style)
                 self._winlib.SetLayeredWindowAttributes(hwnd, 0, amount, 2)                
         else:
             if not wnd.CanSetTransparent():

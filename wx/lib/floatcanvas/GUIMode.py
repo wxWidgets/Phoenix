@@ -13,8 +13,8 @@ version of the code.
 import wx
 ## fixme: events should live in their own module, so all of FloatCanvas
 ##        wouldn't have to be imported here.
-import FloatCanvas, Resources
-from Utilities import BBox
+from . import FloatCanvas, Resources
+from .Utilities import BBox
 import numpy as N
 
 class Cursors(object):

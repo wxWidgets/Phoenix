@@ -5,7 +5,11 @@ A Bounding Box object and assorted utilities , subclassed from a numpy array
 
 """
 
-import numpy as N
+try:
+    import numpy as N
+except ImportError:
+    pass
+    # raise ImportError("I could not import numpy")
 
 class BBox(N.ndarray):
     """
@@ -267,7 +271,7 @@ class RectBBox(BBox):
         return BBox.__new__(self, data)
 
     def __init__(self, data, edges=None):
-        ''' assume edgepoints are ordered such you can walk along all edges with left rotation sense
+        """ assume edgepoints are ordered such you can walk along all edges with left rotation sense
             This may be:
             left-top
             left-bottom
@@ -275,11 +279,11 @@ class RectBBox(BBox):
             right-top
 
             or any rotation.
-        '''
+        """
         BBox.BBox(data)
         self.edges = np.asarray(edges)
 
-        print "new rectbbox created"
+        print("new rectbbox created")
 
 
     def ac_leftOf_ab(self, a, b, c):
@@ -289,7 +293,7 @@ class RectBBox(BBox):
         return (ac[0]*ab[1] - ac[1]*ab[0]) <= 0
 
     def PointInside(self, point):
-        print "point inside called"
+        print("point inside called")
 
         for edge in xrange(4):
             if self.ac_leftOf_ab(self.edges[edge],

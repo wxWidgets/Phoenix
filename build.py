@@ -2,7 +2,7 @@
 #---------------------------------------------------------------------------
 # This script is used to run through the commands used for the various stages
 # of building Phoenix, and can also be a front-end for building wxWidgets and
-# the Python extension mocdules.
+# the Python extension modules.
 #---------------------------------------------------------------------------
 
 from __future__ import absolute_import
@@ -22,7 +22,6 @@ if sys.version_info < (3,):
     from urllib2 import urlopen
 else:
     from urllib.request import urlopen
-    
 
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
@@ -198,7 +197,7 @@ def setPythonVersion(args):
             else:
                 PYTHON = args[idx+1]
                 del args[idx:idx+2]
-            PYVER = runcmd('%s -c "import sys; print(sys.version[:3])"' % PYTHON, 
+            PYVER = runcmd('"%s" -c "import sys; print(sys.version[:3]"' % PYTHON,
                            getOutput=True, echoCmd=False)
             PYSHORTVER = PYVER[0] + PYVER[2]
             break
@@ -249,10 +248,10 @@ def setPythonVersion(args):
         PYSHORTVER = PYVER[0] + PYVER[2]
         
     PYTHON = os.path.abspath(PYTHON)
-    msg('Build using: %s' % PYTHON)
+    msg('Build using: "%s"' % PYTHON)
         
-    msg(runcmd('%s -c "import sys; print(sys.version)"' % PYTHON, True, False))
-    PYTHON_ARCH = runcmd('%s -c "import platform; print(platform.architecture()[0])"' 
+    msg(runcmd('"%s" -c "import sys; print(sys.version)"' % PYTHON, True, False))
+    PYTHON_ARCH = runcmd('"%s" -c "import platform; print(platform.architecture()[0])"'
                          % PYTHON, True, False)
     msg('Python\'s architecture is %s' % PYTHON_ARCH)
     os.environ['PYTHON'] = PYTHON
@@ -431,7 +430,7 @@ def deleteIfExists(deldir, verbose=True):
             if verbose:
                 msg("Removing folder: %s" % deldir)
             shutil.rmtree(deldir)
-        except:
+        except Exception:
             if verbose:
                 import traceback
                 msg("Error: %s" % traceback.format_exc(1))
@@ -480,7 +479,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
             msg('Connection successful...')
             data = connection.read()
             msg('Data downloaded...')
-        except:
+        except Exception:
             print('ERROR: Unable to download ' + url)
             print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
             import traceback
@@ -595,7 +594,7 @@ def checkCompiler(quiet=False):
               "mc = msvc.MSVCCompiler(); " \
               "mc.initialize(); " \
               "print(mc.cc)"
-        CC = runcmd('%s -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False)
+        CC = runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False)
         if not quiet:
             msg("MSVC: %s" % CC)
         
@@ -606,7 +605,7 @@ def checkCompiler(quiet=False):
               "arch = msvc.PLAT_TO_VCVARS[msvc.get_platform()]; " \
               "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
               "print(env)"
-        env = eval(runcmd('%s -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
+        env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
         os.environ['PATH'] = bytes(env['path'])
         os.environ['INCLUDE'] = bytes(env['include'])
         os.environ['LIB'] = bytes(env['lib'])
@@ -692,7 +691,7 @@ def cmd_etg(options, args):
         
         # run the script only if any dependencies are newer
         if newer_group(deps, sipfile):
-            runcmd('%s %s %s' % (PYTHON, script, flags))
+            runcmd('"%s" %s %s' % (PYTHON, script, flags))
 
     
 def cmd_sphinx(options, args):
@@ -905,13 +904,13 @@ def cmd_touch(options, args):
 def cmd_test(options, args):
     cmdTimer = CommandTimer('test')
     pwd = pushDir(phoenixDir())
-    runcmd(PYTHON + ' unittests/runtests.py %s' % ('-v' if options.verbose else ''), fatal=False)
+    runcmd('"%s" unittests/runtests.py %s' % (PYTHON, '-v' if options.verbose else ''), fatal=False)
 
     
 def testOne(name, options, args):
     cmdTimer = CommandTimer('test %s:' % name)
     pwd = pushDir(phoenixDir())
-    runcmd(PYTHON + ' unittests/%s.py %s' % (name, '-v' if options.verbose else ''), fatal=False)
+    runcmd('"%s" unittests/%s.py %s' % (PYTHON, name, '-v' if options.verbose else ''), fatal=False)
     
     
 def cmd_build(options, args):
@@ -1014,7 +1013,7 @@ def cmd_build_wx(options, args):
             print('wxWidgets build options: ' + str(build_options))
             wxbuild.main(wxscript, build_options)
             
-    except:
+    except Exception:
         print("ERROR: failed building wxWidgets")
         import traceback
         traceback.print_exc()
@@ -1135,7 +1134,7 @@ def cmd_build_py(options, args):
     if options.jobs:
         build_options.append('--jobs=%s' % options.jobs)
 
-    build_options.append('--python=%s' % PYTHON)
+    build_options.append('--python="%s"' % PYTHON)
     build_options.append('--out=%s' % wafBuildDir)
         
     if not isWindows and not isDarwin and not options.no_magic and not options.use_syswx:
@@ -1147,7 +1146,7 @@ def cmd_build_py(options, args):
         
     # Run waf to perform the builds
     pwd = pushDir(phoenixDir())
-    cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
+    cmd = '"%s" %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
     runcmd(cmd)
 
     if isWindows and options.both:
@@ -1155,7 +1154,7 @@ def cmd_build_py(options, args):
         del build_options[-1]
         wafBuildDir = posixjoin(wafBuildBase, 'release')
         build_options.append('--out=%s' % wafBuildDir)
-        cmd = '%s %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
+        cmd = '"%s" %s %s configure build %s' % (PYTHON, waf, ' '.join(build_options), options.extra_waf)
         runcmd(cmd)
 
     copyWxDlls(options)
@@ -1202,7 +1201,7 @@ def cmd_install_py(options, args):
     cmdTimer = CommandTimer('install_py')
     DESTDIR = '' if not options.destdir else '--root=' + options.destdir
     VERBOSE = '--verbose' if options.verbose else ''
-    cmd = "%s setup.py install --skip-build  %s %s %s" % (
+    cmd = '"%s" setup.py install --skip-build  %s %s %s' % (
         PYTHON, DESTDIR, VERBOSE, options.extra_setup)
     runcmd(cmd)
 
@@ -1210,7 +1209,7 @@ def cmd_install_py(options, args):
 def _doSimpleSetupCmd(options, args, setupCmd):
     cmdTimer = CommandTimer(setupCmd)
     VERBOSE = '--verbose' if options.verbose else ''
-    cmd = "%s setup.py %s --skip-build  %s %s" % (PYTHON, setupCmd, VERBOSE, options.extra_setup)
+    cmd = '"%s" setup.py %s --skip-build  %s %s' % (PYTHON, setupCmd, VERBOSE, options.extra_setup)
     runcmd(cmd)
      
 
@@ -1230,7 +1229,7 @@ def cmd_egg_info(options, args, egg_base=None):
     cmdTimer = CommandTimer('egg_info')
     VERBOSE = '--verbose' if options.verbose else ''
     BASE = '--egg-base '+egg_base if egg_base is not None else ''
-    cmd = "%s setup.py egg_info %s %s" % (PYTHON, VERBOSE, BASE)
+    cmd = '"%s" setup.py egg_info %s %s' % (PYTHON, VERBOSE, BASE)
     runcmd(cmd)
 
 

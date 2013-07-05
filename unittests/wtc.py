@@ -71,7 +71,7 @@ class WidgetTestCase(unittest.TestCase):
     
     
     def myExecfile(self, filename, ns):
-        if sys.version_info < (3,):
+        if not six.PY3:
             execfile(filename, ns)
         else:
             with open(filename, 'r') as f:

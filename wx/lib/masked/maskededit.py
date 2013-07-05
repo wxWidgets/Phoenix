@@ -811,12 +811,7 @@ import  string
 import  sys
 
 import  wx
-import wx.lib.six as six
-
-if sys.version < '3':
-    unicode = unicode
-else:
-    unicode = str
+import  wx.lib.six as six
 
 # jmg 12/9/03 - when we cut ties with Py 2.2 and earlier, this would
 # be a good place to implement the 2.3 logger class
@@ -1493,7 +1488,7 @@ class Field:
                 raise TypeError('%s: choices must be a sequence of strings' % str(self._index))
             elif len( self._choices) > 0:
                 for choice in self._choices:
-                    if not isinstance(choice, (str, unicode)):
+                    if not isinstance(choice, six.string_types):
 ##                        dbg(indent=0, suspend=0)
                         raise TypeError('%s: choices must be a sequence of strings' % str(self._index))
 
@@ -1522,7 +1517,7 @@ class Field:
                             raise ve
                 self._hasList = True
 
-####        dbg("kwargs.has_key('fillChar')?", kwargs.has_key('fillChar'), "len(self._choices) > 0?", len(self._choices) > 0)
+####        dbg("'fillChar' in kwargs?", 'fillChar' in kwargs, "len(self._choices) > 0?", len(self._choices) > 0)
 ####        dbg("self._old_fillChar:'%s'" % self._old_fillChar, "self._fillChar: '%s'" % self._fillChar)
         if 'fillChar' in kwargs and len(self._choices) > 0:
             if kwargs['fillChar'] != ' ':
@@ -1955,7 +1950,7 @@ class MaskedEditMixin:
         for key in ('emptyBackgroundColour', 'invalidBackgroundColour', 'validBackgroundColour',
                     'foregroundColour', 'signedForegroundColour'):
             if key in ctrl_kwargs:
-                if isinstance(ctrl_kwargs[key], (str, unicode)):
+                if isinstance(ctrl_kwargs[key], six.string_types):
                     c = wx.Colour(ctrl_kwargs[key])
                     if c.Get() == (-1, -1, -1):
                         raise TypeError('%s not a legal color specification for %s' % (repr(ctrl_kwargs[key]), key))
@@ -1974,7 +1969,7 @@ class MaskedEditMixin:
             # Build dictionary of any changing parameters which should be propagated to the
             # component fields:
             for arg in Field.propagating_params:
-####                dbg('kwargs.has_key(%s)?' % arg, kwargs.has_key(arg))
+####                dbg('%s in kwargs?' % arg, arg in kwargs)
 ####                dbg('getattr(self._ctrl_constraints, _%s)?' % arg, getattr(self._ctrl_constraints, '_'+arg))
                 reset_args[arg] = arg in kwargs and kwargs[arg] != getattr(self._ctrl_constraints, '_'+arg)
 ####                dbg('reset_args[%s]?' % arg, reset_args[arg])
@@ -2410,7 +2405,7 @@ class MaskedEditMixin:
 ####                        dbg('edit_end =', i)
                         edit_end = i
                         self._lookupField[i] = field_index
-####                        dbg('self._fields.has_key(%d)?' % field_index, self._fields.has_key(field_index))
+####                        dbg('%d in self._fields?' % field_index, field_index in self._fields)
                         if field_index not in self._fields:
                             kwargs = Field.valid_params.copy()
                             kwargs['index'] = field_index
@@ -2610,8 +2605,8 @@ class MaskedEditMixin:
                 inherit_args['defaultValue'] = ""   # (reset for field)
 
             for param in Field.propagating_params:
-####                dbg('reset_args.has_key(%s)?' % param, reset_args.has_key(param))
-####                dbg('reset_args.has_key(%(param)s) and reset_args[%(param)s]?' % locals(), reset_args.has_key(param) and reset_args[param])
+####                dbg('%s in reset_args?' % param, param in reset_args)
+####                dbg('%(param)s in reset_args and reset_args[%(param)s]?' % locals(), param in reset_args and reset_args[param])
                 if param in reset_args:
                     inherit_args[param] = self.GetCtrlParameter(param)
 ####                    dbg('inherit_args[%s]' % param, inherit_args[param])
@@ -3061,34 +3056,21 @@ class MaskedEditMixin:
         else:
             field = self._FindField(pos)
 
-            if 'unicode' in wx.PlatformInfo:
-                if key < 256:
-                    char = chr(key) # (must work if we got this far)
-                    if not six.PY3:
-                        char = char.decode(self._defaultEncoding)
-                else:
-                    char = unichr(event.GetUnicodeKey())
-##                    dbg('unicode char:', char)
-                excludes = unicode()
-                if not isinstance(field._excludeChars, unicode):
-                    if not six.PY3:
-                        excludes += field._excludeChars.decode(self._defaultEncoding)
-                    else:
-                        excludes += field._excludeChars
-                if not isinstance(self._ctrl_constraints, unicode):
-                    if not six.PY3:
-                        excludes += self._ctrl_constraints._excludeChars.decode(self._defaultEncoding)
-                    else:
-                        excludes += self._ctrl_constraints._excludeChars
-            else:
+            if key < 256:
                 char = chr(key) # (must work if we got this far)
-                excludes = field._excludeChars + self._ctrl_constraints._excludeChars
+                if not six.PY3:
+                    char = char.decode(self._defaultEncoding)
+            else:
+                char = unichr(event.GetUnicodeKey())
+##                dbg('unicode char:', char)
 
-##                dbg("key ='%s'" % chr(key))
-                if chr(key) == ' ':
-##                dbg('okSpaces?', field._okSpaces)
-                    pass
-
+            excludes = six.text_type()
+            if not isinstance(field._excludeChars, six.text_type):
+                excludes += field._excludeChars.decode(self._defaultEncoding)
+            if not isinstance(self._ctrl_constraints, six.text_type):
+                excludes += self._ctrl_constraints._excludeChars.decode(self._defaultEncoding)
+            else:
+                excludes += self._ctrl_constraints._excludeChars
 
             if char in excludes:
                 keep_processing = False
@@ -4555,7 +4537,7 @@ class MaskedEditMixin:
             if len(year) == 2:
                 # Fix year adjustment to be less "20th century" :-) and to adjust heuristic as the
                 # years pass...
-                now = wx.DateTime_Now()
+                now = wx.DateTime.Now()
                 century = (now.GetYear() /100) * 100        # "this century"
                 twodig_year = now.GetYear() - century       # "this year" (2 digits)
                 # if separation between today's 2-digit year and typed value > 50,
@@ -4637,7 +4619,7 @@ class MaskedEditMixin:
 
         # convert okchars to unicode if required; will force subsequent appendings to
         # result in unicode strings
-        if not six.PY3 and 'unicode' in wx.PlatformInfo and not isinstance(okchars, unicode):
+        if not six.PY3 and not isinstance(okchars, six.string_types):
             okchars = okchars.decode(self._defaultEncoding)
 
         field = self._FindField(pos)
@@ -4891,7 +4873,7 @@ class MaskedEditMixin:
 
             groupchar = self._fields[0]._groupChar
             try:
-                value = long(text.replace(groupchar,'').replace('(','-').replace(')','').replace(' ', ''))
+                value = int(text.replace(groupchar,'').replace('(','-').replace(')','').replace(' ', ''))
             except:
 ##                dbg('invalid number', indent=0)
                 return None, signpos, right_signpos
@@ -5226,7 +5208,7 @@ class MaskedEditMixin:
                 left  = text[0:pos]
                 right   = text[pos+1:]
 
-            if 'unicode' in wx.PlatformInfo and not isinstance(char, unicode):
+            if not isinstance(char, six.string_types):
                 # convert the keyboard constant to a unicode value, to
                 # ensure it can be concatenated into the control value:
                 if not six.PY3:
@@ -5413,7 +5395,7 @@ class MaskedEditMixin:
             if self._isFloat:
                 number = float(value.replace(groupchar, '').replace(self._decimalChar, '.').replace('(', '-').replace(')', ''))
             else:
-                number = long( value.replace(groupchar, '').replace('(', '-').replace(')', ''))
+                number = int( value.replace(groupchar, '').replace('(', '-').replace(')', ''))
                 if value.strip():
                     if self._fields[0]._alignRight:
                         require_digit_at = self._fields[0]._extent[1]-1
@@ -5765,7 +5747,7 @@ class MaskedEditMixin:
         else:
             item = 'selection'
 ##        dbg('maxlength:', maxlength)
-        if not six.PY3 and 'unicode' in wx.PlatformInfo and not isinstance(paste_text, unicode):
+        if not six.PY3 and not isinstance(paste_text, six.string_types):
             paste_text = paste_text.decode(self._defaultEncoding)
 
         length_considered = len(paste_text)
@@ -5872,7 +5854,7 @@ class MaskedEditMixin:
 
         if paste_text is not None:
 
-            if not six.PY3 and 'unicode' in wx.PlatformInfo and not isinstance(paste_text, unicode):
+            if not six.PY3 and not isinstance(paste_text, six.string_types):
                 paste_text = paste_text.decode(self._defaultEncoding)
 
 ##            dbg('paste text: "%s"' % paste_text)

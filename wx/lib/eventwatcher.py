@@ -107,7 +107,10 @@ def _makeAttribString(evt):
                 pass
         
     return attribs.rstrip()
-    
+
+def cmp(a, b):
+    return (a > b) - (a < b)
+
 #----------------------------------------------------------------------------
 
 class EventLog(wx.ListCtrl):
@@ -273,7 +276,6 @@ class EventChooser(wx.Panel):
         self.doUpdate = True
         self.updateCallback()
 
-    
     def sortCompare(self, data1, data2):
         item1 = self.watchList[data1][0]
         item2 = self.watchList[data2][0]
@@ -411,7 +413,7 @@ class EventWatcher(wx.Frame):
     
             
     def onToggleWatch(self, evt):
-        if evt.Checked():
+        if evt.IsChecked():
             self.watch(self._unwatchedWidget)
             self._unwatchedWidget = None
         else:
@@ -437,7 +439,7 @@ class EventWatcher(wx.Frame):
             self._selectList.Destroy()
             cs = self.GetClientSize()
             self.SetClientSize((sashPos, cs.height))
-        
+
 #----------------------------------------------------------------------------
         
 if __name__ == '__main__':

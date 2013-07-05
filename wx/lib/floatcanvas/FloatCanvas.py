@@ -44,8 +44,8 @@ except ImportError:
 from time import clock
 import wx
 
-from Utilities import BBox
-import GUIMode
+from .Utilities import BBox
+from . import GUIMode
 
 
 ## A global variable to hold the Pixels per inch that wxWindows thinks is in use
@@ -2398,7 +2398,7 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
         XY = WorldToPixel(self.XY)
         H = ScaleWorldToPixel(self.Height)[0]
         W = H * (self.bmpWidth / self.bmpHeight)
-        if (self.ScaledBitmap is None) or (H <> self.ScaledHeight) :
+        if (self.ScaledBitmap is None) or (H != self.ScaledHeight) :
             self.ScaledHeight = H
             Img = self.Image.Scale(W, H)
             self.ScaledBitmap = wx.Bitmap(Img)
@@ -2577,14 +2577,14 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         Hs = int(scale * Hb + 0.5)
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (Xb, Yb, Wb, Hb, Ws, Ws) ):
             Img = self.Image.GetSubImage(wx.Rect(Xb, Yb, Wb, Hb))
-            print "rescaling with High quality"
+            print("rescaling with High quality")
             Img.Rescale(Ws, Hs, quality=wx.IMAGE_QUALITY_HIGH)
             bmp = wx.Bitmap(Img)
             self.ScaledBitmap = ((Xb, Yb, Wb, Hb, Ws, Ws), bmp)# this defines the cached bitmap
             #XY = self.ShiftFun(XY[0], XY[1], W, H)
             #fixme: get the shiftfun working!
         else:
-            #print "Using cached bitmap"
+            #print("Using cached bitmap")
             ##fixme: The cached bitmap could be used if the one needed is the same scale, but
             ##       a subset of the cached one.
             bmp = self.ScaledBitmap[1]
@@ -3362,7 +3362,7 @@ class FloatCanvas(wx.Panel):
             self.GUIMode.UpdateScreen()
 
         if self.Debug:
-            print "Drawing took %f seconds of CPU time"%(clock()-start)
+            print("Drawing took %f seconds of CPU time")%(clock()-start)
             if self._HTBitmap is not None:
                 self._HTBitmap.SaveFile('junk.png', wx.BITMAP_TYPE_PNG)
         

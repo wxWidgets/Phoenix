@@ -276,10 +276,9 @@ IsLimited()
 """
 
 import  copy
-import  string
-import  types
 
 import  wx
+import  wx.lib.six as six
 
 from wx.tools.dbg import Logger
 from wx.lib.masked import Field, BaseMaskedTextCtrl
@@ -413,28 +412,28 @@ class TimeCtrl(BaseMaskedTextCtrl):
         limited = self.__limited
         self.__posCurrent = 0
         # handle deprecated keword argument name:
-        if kwargs.has_key('display_seconds'):
+        if 'display_seconds' in kwargs:
             kwargs['displaySeconds'] = kwargs['display_seconds']
             del kwargs['display_seconds']
-        if not kwargs.has_key('displaySeconds'):
+        if 'displaySeconds' not in kwargs:
             kwargs['displaySeconds'] = True
 
         # (handle positional arg (from original release) differently from rest of kwargs:)
-        if not kwargs.has_key('format'):
+        if 'format' not in kwargs:
             if fmt24hr:
-                if kwargs.has_key('displaySeconds') and kwargs['displaySeconds']:
+                if 'displaySeconds' in kwargs and kwargs['displaySeconds']:
                     kwargs['format'] = '24HHMMSS'
                     del kwargs['displaySeconds']
                 else:
                     kwargs['format'] = '24HHMM'
             else:
-                if kwargs.has_key('displaySeconds') and kwargs['displaySeconds']:
+                if 'displaySeconds' in kwargs and kwargs['displaySeconds']:
                     kwargs['format'] = 'HHMMSS'
                     del kwargs['displaySeconds']
                 else:
                     kwargs['format'] = 'HHMM'
 
-        if not kwargs.has_key('useFixedWidthFont'):
+        if 'useFixedWidthFont' not in kwargs:
             # allow control over font selection:
             kwargs['useFixedWidthFont'] = self.__useFixedWidthFont
 
@@ -516,10 +515,10 @@ class TimeCtrl(BaseMaskedTextCtrl):
         maskededit_kwargs = {}
         reset_format = False
 
-        if kwargs.has_key('display_seconds'):
+        if 'display_seconds' in kwargs:
             kwargs['displaySeconds'] = kwargs['display_seconds']
             del kwargs['display_seconds']
-        if kwargs.has_key('format') and kwargs.has_key('displaySeconds'):
+        if 'format' in kwargs and 'displaySeconds' in kwargs:
             del kwargs['displaySeconds']    # always apply format if specified
 
         # assign keyword args as appropriate:
@@ -534,7 +533,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
                         require24hr = True
                     else:
                         require24hr = False
-                except:
+                except Exception:
                     require24hr = True
 
                 # handle both local or generic 'maskededit' autoformat codes:
@@ -558,7 +557,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 
                 reset_format = True
 
-            elif key in ("displaySeconds",  "display_seconds") and not kwargs.has_key('format'):
+            elif key in ("displaySeconds",  "display_seconds") and 'format' not in kwargs:
                 self.__displaySeconds = param_value
                 reset_format = True
 
@@ -759,11 +758,9 @@ class TimeCtrl(BaseMaskedTextCtrl):
             value = self.GetValue()
 ##            dbg('value = "%s"' % value)
 
-        if type(value) == types.UnicodeType:
-            value = str(value)  # convert to regular string
-
         valid = True    # assume true
-        if type(value) == types.StringType:
+        if isinstance(value, six.string_types):
+            value = six.text_type(value)  # convert to regular string
 
             # Construct constant wxDateTime, then try to parse the string:
             wxdt = wx.DateTime.FromDMY(1, 0, 1970)
@@ -885,7 +882,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 ##        dbg(suspend=1)
 ##        dbg('TimeCtrl::GetMin, as_string?', as_string, indent=1)
         if self.__min is None:
-##            dbg('(min == None)')
+##            dbg('(min is None)')
             ret = self.__min
         elif as_string:
             ret = self.__min
@@ -949,7 +946,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 ##        dbg(suspend=1)
 ##        dbg('TimeCtrl::GetMin, as_string?', as_string, indent=1)
         if self.__max is None:
-##            dbg('(max == None)')
+##            dbg('(max is None)')
             ret = self.__max
         elif as_string:
             ret = self.__max
@@ -1385,7 +1382,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         if self.IsLimited() and not self.IsInBounds(value):
 ##            dbg(indent=0)
             raise ValueError (
-                'value %s is not within the bounds of the control' % str(value) )
+                'value %s is not within the bounds of the control' % six.text_type(value) )
 ##        dbg(indent=0)
         return value
 

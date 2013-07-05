@@ -7,7 +7,7 @@
 # RCS-ID:       $Id$
 # License:      wxWidgets license
 #
-# Tags:        phoenix-port, unittest, documented
+# Tags:         py3-port, phoenix-port, unittest, documented
 #
 #----------------------------------------------------------------------------
 #
@@ -22,7 +22,7 @@ a base class from which you can derive masked comboboxes tailored to a specific
 function.  See maskededit module overview for how to configure the control.
 """
 
-import  wx, types, string
+import  wx
 from wx.lib.masked import *
 
 # jmg 12/9/03 - when we cut ties with Py 2.2 and earlier, this would
@@ -115,7 +115,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         self._prevSelection = (-1, -1)
 
         ## Since combobox completion is case-insensitive, always validate same way
-        if not kwargs.has_key('compareNoCase'):
+        if 'compareNoCase' not in kwargs:
             kwargs['compareNoCase'] = True
 
         MaskedEditMixin.__init__( self, name, **kwargs )
@@ -151,13 +151,13 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         if not hasattr(self, 'controlInitialized'):
             
             self.controlInitialized = True          ## must have been called via XRC, therefore base class is constructed
-            if not kwargs.has_key('choices'):
+            if 'choices' not in kwargs:
                 choices=[]
                 kwargs['choices'] = choices         ## set up maskededit to work with choice list too
             self._choices = []
 
             ## Since combobox completion is case-insensitive, always validate same way
-            if not kwargs.has_key('compareNoCase'):
+            if 'compareNoCase' not in kwargs:
                 kwargs['compareNoCase'] = True
 
             MaskedEditMixin.__init__( self, name, **kwargs )
@@ -263,7 +263,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         """
 ##        dbg('MaskedComboBox::_SetSelection: setting mark to (%d, %d)' % (sel_start, sel_to))
         if not self.__readonly:
-            return self.SetMark( sel_start, sel_to )
+            return self.SetTextSelection( sel_start, sel_to )
 
 
     def _GetInsertionPoint(self):
@@ -372,7 +372,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
             if self._isDate and self._4digityear:
                 dateparts = value.split(' ')
                 dateparts[0] = self._adjustDate(dateparts[0], fixcentury=True)
-                value = string.join(dateparts, ' ')
+                value = ' '.join(dateparts)
                 value = self._Paste(value, raise_on_invalid=True, just_return_value=True)
             else:
                 raise
@@ -479,7 +479,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
         penalty.
         """
         if self._mask:
-            if type(choice) not in (types.StringType, types.UnicodeType):
+            if not isinstance(choice, six.string_types):
                 raise TypeError('%s: choices must be a sequence of strings' % str(self._index))
             elif not self.IsValid(choice):
                 raise ValueError('%s: "%s" is not a valid value for the control as specified.' % (str(self._index), choice))
@@ -631,7 +631,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
                 # WANTS_CHARS with CB_READONLY apparently prevents navigation on WXK_TAB;
                 # ensure we can still navigate properly, as maskededit mixin::OnChar assumes
                 # that event.Skip() will just work, but it doesn't:
-                if self._keyhandlers.has_key(key):
+                if key in self._keyhandlers:
                     self._keyhandlers[key](event)
                 # else pass
             else:
@@ -732,7 +732,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
             # work around bug in wx 2.5
             wx.CallAfter(self.SetInsertionPoint, 0)
             wx.CallAfter(self.SetInsertionPoint, end)
-        elif isinstance(match_index, str) or isinstance(match_index, unicode):
+        elif isinstance(match_index, six.string_types):
 ##            dbg('CallAfter SetValue')
             #  Preserve the textbox contents
             #  See commentary in _OnReturn docstring.
@@ -800,8 +800,7 @@ class PreMaskedComboBox( BaseMaskedComboBox, MaskedEditAccessorsMixin ):
     _firstEventType = wx.EVT_SIZE
 
     def __init__(self):
-        pre = wx.PreComboBox()
-        self.PostCreate(pre)
+        wx.ComboBox.__init__(self)
         self.Bind(self._firstEventType, self.OnCreate)
 
 

@@ -278,7 +278,7 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
             if self._isDate and self._4digityear:
                 dateparts = value.split(' ')
                 dateparts[0] = self._adjustDate(dateparts[0], fixcentury=True)
-                value = string.join(dateparts, ' ')
+                value = ' '.join(dateparts)
 ##                dbg('adjusted value: "%s"' % value)
                 value, replace_to = self._Paste(value, raise_on_invalid=True, just_return_value=True)
             else:
@@ -443,8 +443,7 @@ class PreMaskedTextCtrl( BaseMaskedTextCtrl, MaskedEditAccessorsMixin ):
     _firstEventType = wx.EVT_SIZE
 
     def __init__(self):
-        pre = wx.PreTextCtrl()
-        self.PostCreate(pre)
+        wx.TextCtrl.__init__(self)
         self.Bind(self._firstEventType, self.OnCreate)
 
 

@@ -34,7 +34,7 @@ Many samples are available in the `wxPhoenix/samples/floatcanvas` folder.
 """
 
 import wx
-import FloatCanvas, Resources, GUIMode
+from . import FloatCanvas, Resources, GUIMode
 
 class NavCanvas(wx.Panel):
     """

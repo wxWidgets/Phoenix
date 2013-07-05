@@ -399,12 +399,9 @@ GetAutoSize()
 """
 
 import  copy
-import  string
-import  types
 
 import  wx
-
-import wx.lib.six as six
+import  wx.lib.six as six
 
 from sys import maxsize
 MAXINT = maxsize     # (constants should be in upper case)
@@ -669,7 +666,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
             fields = {}
 
             if 'fractionWidth' in kwargs:
-                if type(kwargs['fractionWidth']) != types.IntType:
+                if not isinstance(kwargs['fractionWidth'], int):
                     raise AttributeError('invalid fractionWidth (%s) specified; expected integer' % repr(kwargs['fractionWidth']))
                 elif kwargs['fractionWidth'] < 0:
                     raise AttributeError('invalid fractionWidth (%s) specified; must be >= 0' % repr(kwargs['fractionWidth']))
@@ -687,7 +684,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##            dbg('fracmask:', fracmask)
 
             if 'integerWidth' in kwargs:
-                if type(kwargs['integerWidth']) != types.IntType:
+                if not isinstance(kwargs['integerWidth'], int):
 ##                    dbg(indent=0)
                     raise AttributeError('invalid integerWidth (%s) specified; expected integer' % repr(kwargs['integerWidth']))
                 elif kwargs['integerWidth'] < 0:
@@ -1546,7 +1543,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
             elif self._fractionWidth:
                 value = float(value)
             else:
-                value = long(value)
+                value = int(value)
 
         min = self.GetMin()
         max = self.GetMax()
@@ -1554,7 +1551,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         if max is None: max = value
 
         # if bounds set, and value is None, return False
-        if value == None and (min is not None or max is not None):
+        if value is None and (min is not None or max is not None):
 ##            dbg('finished IsInBounds', indent=0)
             return 0
         else:
@@ -1659,7 +1656,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 if self._fractionWidth or value.find('.') != -1:
                     value = float(value)
                 else:
-                    value = long(value)
+                    value = int(value)
             except Exception as e:
 ##                dbg('exception raised:', e, indent=0)
                 raise ValueError ('NumCtrl requires numeric value, passed %s'% repr(value) )
@@ -1690,7 +1687,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##        dbg('adjustwidth - groupSpace:', adjustwidth - self._groupSpace)
 ##        dbg('adjustwidth:', adjustwidth)
         if self._fractionWidth == 0:
-            s = str(long(value)).rjust(self._integerWidth)
+            s = str(int(value)).rjust(self._integerWidth)
         else:
             format = '%' + '%d.%df' % (self._integerWidth+self._fractionWidth+1, self._fractionWidth)
             s = format % float(value)
@@ -1745,7 +1742,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
 ##                    dbg("couldn't convert to float; returning None")
                     return None
                 else:
-                    raise
+                    raise ValueError
             else:
                 try:
 ##                    dbg(indent=0)
@@ -1753,13 +1750,13 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
                 except ValueError:
                     try:
 ##                       dbg(indent=0)
-                        return long( value )
+                        return int( value )
                     except ValueError:
 ##                       dbg("couldn't convert to long; returning None")
                         return None
 
                     else:
-                        raise
+                        raise ValueError
                 else:
 ##                    dbg('exception occurred; returning None')
                     return None

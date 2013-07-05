@@ -11,6 +11,7 @@ import wx.lib.six as six
 
 from . import dispatcher
 from . import editwindow
+from . import images
 import inspect
 from . import introspect
 import types
@@ -139,8 +140,7 @@ class FillingTree(wx.TreeCtrl):
         children = self.objGetChildren(obj)
         if not children:
             return
-        keys = children.keys()
-        keys.sort(key=lambda x: six.text_type(x).lower())
+        keys = sorted(children.keys(), key=lambda x: six.text_type(x).lower())
         for key in keys:
             itemtext = six.text_type(key)
             # Show string dictionary items with single quotes, except
@@ -337,7 +337,6 @@ class FillingFrame(wx.Frame):
         intro = 'PyFilling - The Tastiest Namespace Inspector'
         self.CreateStatusBar()
         self.SetStatusText(intro)
-        import images
         self.SetIcon(images.getPyIcon())
         self.filling = Filling(parent=self, rootObject=rootObject,
                                rootLabel=rootLabel,

@@ -108,7 +108,7 @@ def getAllAttributeNames(object):
         # This could(?) fail if the type is poorly defined without
         # even a name.
         key = type(object).__name__
-    except:
+    except Exception:
         key = 'anonymous'
     # Wake up sleepy objects - a hack for ZODB objects in "ghost" state.
     wakeupcall = dir(object)
@@ -118,9 +118,8 @@ def getAllAttributeNames(object):
     attrdict[(key, 'dir', len(attributes))] = attributes
     # Get attributes from the object's dictionary, if it has one.
     try:
-        attributes = object.__dict__.keys()
-        attributes.sort()
-    except:  # Must catch all because object might have __getattr__.
+        attributes = sorted(object.__dict__.keys())
+    except Exception:  # Must catch all because object might have __getattr__.
         pass
     else:
         attrdict[(key, '__dict__', len(attributes))] = attributes
