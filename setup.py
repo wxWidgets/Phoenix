@@ -15,7 +15,7 @@ import glob
 try:
     import setuptools
 except ImportError:
-    from distribute_setup import use_setuptools
+    from ez_setup import use_setuptools
     use_setuptools()
 
 from setuptools                     import setup, Extension, find_packages
