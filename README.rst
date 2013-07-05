@@ -210,7 +210,7 @@ worked on, the file names in the Phoenix project will mirror the names of the
 files in the wxWidgets interface headers folder. For example, if there is a
 interface/wx/FOO.h and we are processing the XML produced for that file then
 the ETG script for the classes and other items will be named etg/FOO.py and it
-will produce sip/gen/FOO.sip, unit tests will be in unittests/test_FOO.py, and
+will produce sip/gen/FOO.sip, unit tests will be in unittests/test_FOO.py,
 and so on.
 
 In most cases more than one ETG/SIP file will be used to create a single
