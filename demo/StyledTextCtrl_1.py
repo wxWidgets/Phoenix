@@ -282,8 +282,8 @@ def runTest(frame, nb, log):
         ed.SetSelection(25, 35)
         print("GetSelectedText(): ", repr(ed.GetSelectedText()))
         print("GetTextRange(25, 35): ", repr(ed.GetTextRange(25, 35)))
-        print("FindText(0, max, 'indicators'): ",)
-        print(ed.FindText(0, ed.GetTextLength(), "indicators")
+        print("FindText(0, max, 'indicators'): ", 
+              ed.FindText(0, ed.GetTextLength(), "indicators"))
         # if wx.USE_UNICODE:
         end = ed.GetLength()
         start = ed.PositionFromLine(uniline)
