@@ -2180,7 +2180,7 @@ class wxPythonDemo(wx.Frame):
         if modified:
             image = len(_demoPngs)
         else:
-            image = self.tree.GetItemPyData(item)
+            image = self.tree.GetItemData(item)
         self.tree.SetItemImage(item, image)
 
 
