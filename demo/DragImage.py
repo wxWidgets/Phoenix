@@ -14,7 +14,8 @@ class DragShape:
 
     def HitTest(self, pt):
         rect = self.GetRect()
-        return rect.InsideXY(pt.x, pt.y)
+        return rect.Contains(pt.x, pt.y)
+        # return rect.InsideXY(pt.x, pt.y)
 
     def GetRect(self):
         return wx.Rect(self.pos[0], self.pos[1],
@@ -45,12 +46,11 @@ class DragCanvas(wx.ScrolledWindow):
         self.dragShape = None
         self.hiliteShape = None
 
-        self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+        self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         self.bg_bmp = images.Background.GetBitmap()
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 
-        # Make a shape from an image and mask.  This one will demo
-        # dragging outside the window
+        # Make a shape from an image and mask.  This one will demo dragging outside the window
         bmp = images.TestStar.GetBitmap()
         #bmp = wx.Bitmap('bitmaps/toucan.png')
         shape = DragShape(bmp)
@@ -66,11 +66,11 @@ class DragCanvas(wx.ScrolledWindow):
         # Make a shape from some text
         text = "Some Text"
         bg_colour = wx.Colour(57, 115, 57)  # matches the bg image
-        font = wx.Font(15, wx.ROMAN, wx.NORMAL, wx.BOLD)
+        font = wx.Font(15, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         textExtent = self.GetFullTextExtent(text, font)
 
         # create a bitmap the same size as our text
-        bmp = wx.EmptyBitmap(textExtent[0], textExtent[1])
+        bmp = wx.Bitmap(textExtent[0], textExtent[1])
 
         # 'draw' the text onto the bitmap
         dc = wx.MemoryDC()
@@ -89,14 +89,14 @@ class DragCanvas(wx.ScrolledWindow):
         self.shapes.append(shape)
 
 
-        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+        ##self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
         self.Bind(wx.EVT_MOTION, self.OnMotion)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
 
-    
+
     # We're not doing anything here, but you might have reason to.
     # for example, if you were dragging something, you might elect to
     # 'drop it' when the cursor left the window.
@@ -120,6 +120,7 @@ class DragCanvas(wx.ScrolledWindow):
                 y = y + h
 
             x = x + w
+        print('TileBackground')
 
 
     # Go through our list of shapes and draw them in whatever place they are.
@@ -139,19 +140,21 @@ class DragCanvas(wx.ScrolledWindow):
 
     # Clears the background, then redraws it. If the DC is passed, then
     # we only do so in the area so designated. Otherwise, it's the whole thing.
-    def OnEraseBackground(self, evt):
-        dc = evt.GetDC()
-        if not dc:
-            dc = wx.ClientDC(self)
-            rect = self.GetUpdateRegion().GetBox()
-            dc.SetClippingRect(rect)
-        self.TileBackground(dc)
+    ##def OnEraseBackground(self, evt):
+    ##    dc = evt.GetDC()
+    ##    if not dc:
+    ##        dc = wx.ClientDC(self)
+    ##        rect = self.GetUpdateRegion().GetBox()
+    ##        dc.SetClippingRect(rect)
+    ##    self.TileBackground(dc)
 
     # Fired whenever a paint event occurs
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
         self.PrepareDC(dc)
+        self.TileBackground(dc)
         self.DrawShapes(dc)
+        print('OnPaint')
 
     # Left mouse button is down.
     def OnLeftDown(self, evt):
@@ -183,7 +186,7 @@ class DragCanvas(wx.ScrolledWindow):
 
         # reposition and draw the shape
 
-        # Note by jmg 11/28/03 
+        # Note by jmg 11/28/03
         # Here's the original:
         #
         # self.dragShape.pos = self.dragShape.pos + evt.GetPosition() - self.dragStartPos
@@ -195,12 +198,12 @@ class DragCanvas(wx.ScrolledWindow):
         #
         # There must be a better way to do this :-)
         #
-        
+
         self.dragShape.pos = (
             self.dragShape.pos[0] + evt.GetPosition()[0] - self.dragStartPos[0],
             self.dragShape.pos[1] + evt.GetPosition()[1] - self.dragStartPos[1]
             )
-            
+
         self.dragShape.shown = True
         self.RefreshRect(self.dragShape.GetRect())
         self.dragShape = None
@@ -229,12 +232,12 @@ class DragCanvas(wx.ScrolledWindow):
             self.RefreshRect(self.dragShape.GetRect(), True)
             self.Update()
 
-            if self.dragShape.text:
-                self.dragImage = wx.DragString(self.dragShape.text,
-                                              wx.StockCursor(wx.CURSOR_HAND))
-            else:
-                self.dragImage = wx.DragImage(self.dragShape.bmp,
-                                             wx.StockCursor(wx.CURSOR_HAND))
+            ##if self.dragShape.text:
+            ##    self.dragImage = wx.DragString(self.dragShape.text,
+            ##                                  wx.Cursor(wx.CURSOR_HAND))
+            ##else:
+            self.dragImage = wx.DragImage(self.dragShape.bmp,
+                                         wx.Cursor(wx.CURSOR_HAND))
 
             hotspot = self.dragStartPos - self.dragShape.pos
             self.dragImage.BeginDrag(hotspot, self, self.dragShape.fullscreen)
@@ -284,7 +287,7 @@ def runTest(frame, nb, log):
     win = wx.Panel(nb, -1)
     canvas = DragCanvas(win, -1)
 
-    def onSize(evt, panel=win, canvas=canvas): 
+    def onSize(evt, panel=win, canvas=canvas):
         canvas.SetSize(panel.GetSize())
 
     win.Bind(wx.EVT_SIZE, onSize)
@@ -295,28 +298,28 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-DragImage is used when you wish to drag an object on the screen, and a simple 
+DragImage is used when you wish to drag an object on the screen, and a simple
 cursor is not enough.
 
-On Windows, the WIN32 API is used to do achieve smooth dragging. On other 
-platforms, <code>GenericDragImage</code> is used. Applications may also prefer to use 
+On Windows, the WIN32 API is used to do achieve smooth dragging. On other
+platforms, <code>GenericDragImage</code> is used. Applications may also prefer to use
 <code>GenericDragImage</code> on Windows, too.
 
-<b>wxPython note</b>: wxPython uses <code>GenericDragImage</code> on all 
+<b>wxPython note</b>: wxPython uses <code>GenericDragImage</code> on all
 platforms, but uses the <code>DragImage</code> name.
 
-To use this class, when you wish to start dragging an image, create a 
-<code>DragImage</code> object and store it somewhere you can access it as the 
-drag progresses. Call BeginDrag to start, and EndDrag to stop the drag. To move 
-the image, initially call Show and then Move. If you wish to update the screen 
-contents during the drag (for example, highlight an item as in the example), first 
+To use this class, when you wish to start dragging an image, create a
+<code>DragImage</code> object and store it somewhere you can access it as the
+drag progresses. Call BeginDrag to start, and EndDrag to stop the drag. To move
+the image, initially call Show and then Move. If you wish to update the screen
+contents during the drag (for example, highlight an item as in the example), first
 call Hide, update the screen, call Move, and then call Show.
 
-You can drag within one window, or you can use full-screen dragging either across 
-the whole screen, or just restricted to one area of the screen to save resources. 
-If you want the user to drag between two windows, then you will need to use 
+You can drag within one window, or you can use full-screen dragging either across
+the whole screen, or just restricted to one area of the screen to save resources.
+If you want the user to drag between two windows, then you will need to use
 full-screen dragging.
- 
+
 """
 
 

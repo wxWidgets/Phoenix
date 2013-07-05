@@ -43,11 +43,11 @@ class TestMaskWindow(wx.ScrolledWindow):
         # One that we will
         self.bmp_withmask  = images.TestStar2.GetBitmap()
 
-        # this mask comes from a monochrome bitmap
-        self.bmp_themask = images.TestMask.GetBitmap()
+        # This mask comes from a monochrome bitmap
+        self.bmp_themask = images.TestMask.GetImage().ConvertToMonoBitmap(red=255, green=255, blue=255)
         mask = wx.Mask(self.bmp_themask)
 
-        # set the mask on our bitmap
+        # Set the mask on our bitmap
         self.bmp_withmask.SetMask(mask)
 
         # Now we'll create a mask in a bit of an easier way, by picking a
@@ -67,12 +67,12 @@ class TestMaskWindow(wx.ScrolledWindow):
         self.PrepareDC(dc)
         dc.SetTextForeground(wx.WHITE)
 
-        # make an interesting background...
+        # Make an interesting background...
         dc.SetPen(wx.MEDIUM_GREY_PEN)
         for i in range(100):
             dc.DrawLine(0,i*10, i*10,0)
 
-        # draw raw image, mask, and masked images
+        # Draw raw image, mask, and masked images
         dc.DrawText('original image', 0,0)
         dc.DrawBitmap(self.bmp_nomask, 0,20, 0)
         dc.DrawText('with colour mask', 0,100)
@@ -84,7 +84,7 @@ class TestMaskWindow(wx.ScrolledWindow):
 
         cx,cy = self.bmp_themask.GetWidth(), self.bmp_themask.GetHeight()
 
-        # draw array of assorted blit operations
+        # Draw array of assorted blit operations
         mdc = wx.MemoryDC()
         i = 0
 
