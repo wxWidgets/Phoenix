@@ -14,8 +14,7 @@ class DragShape:
 
     def HitTest(self, pt):
         rect = self.GetRect()
-        return rect.Contains(pt.x, pt.y)
-        # return rect.InsideXY(pt.x, pt.y)
+        return rect.Contains(pt)
 
     def GetRect(self):
         return wx.Rect(self.pos[0], self.pos[1],
@@ -48,7 +47,7 @@ class DragCanvas(wx.ScrolledWindow):
 
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         self.bg_bmp = images.Background.GetBitmap()
-        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
 
         # Make a shape from an image and mask.  This one will demo dragging outside the window
         bmp = images.TestStar.GetBitmap()
@@ -89,7 +88,6 @@ class DragCanvas(wx.ScrolledWindow):
         self.shapes.append(shape)
 
 
-        ##self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
@@ -120,7 +118,7 @@ class DragCanvas(wx.ScrolledWindow):
                 y = y + h
 
             x = x + w
-        print('TileBackground')
+        # print('TileBackground')
 
 
     # Go through our list of shapes and draw them in whatever place they are.
@@ -138,23 +136,13 @@ class DragCanvas(wx.ScrolledWindow):
         return None
 
 
-    # Clears the background, then redraws it. If the DC is passed, then
-    # we only do so in the area so designated. Otherwise, it's the whole thing.
-    ##def OnEraseBackground(self, evt):
-    ##    dc = evt.GetDC()
-    ##    if not dc:
-    ##        dc = wx.ClientDC(self)
-    ##        rect = self.GetUpdateRegion().GetBox()
-    ##        dc.SetClippingRect(rect)
-    ##    self.TileBackground(dc)
-
     # Fired whenever a paint event occurs
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
         self.PrepareDC(dc)
         self.TileBackground(dc)
         self.DrawShapes(dc)
-        print('OnPaint')
+        # print('OnPaint')
 
     # Left mouse button is down.
     def OnLeftDown(self, evt):
@@ -232,11 +220,8 @@ class DragCanvas(wx.ScrolledWindow):
             self.RefreshRect(self.dragShape.GetRect(), True)
             self.Update()
 
-            ##if self.dragShape.text:
-            ##    self.dragImage = wx.DragString(self.dragShape.text,
-            ##                                  wx.Cursor(wx.CURSOR_HAND))
-            ##else:
-            self.dragImage = wx.DragImage(self.dragShape.bmp,
+            item = self.dragShape.text if self.dragShape.text else self.dragShape.bmp
+            self.dragImage = wx.DragImage(item,
                                          wx.Cursor(wx.CURSOR_HAND))
 
             hotspot = self.dragStartPos - self.dragShape.pos

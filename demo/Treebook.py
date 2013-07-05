@@ -64,7 +64,7 @@ class TestTB(wx.Treebook):
         wx.CallLater(100, self.AdjustSize)
 
     def AdjustSize(self):
-        self.SendSizeEvent(1)
+        self.PostSizeEvent()
 
     def makeColorPanel(self, color):
         p = wx.Panel(self, -1)

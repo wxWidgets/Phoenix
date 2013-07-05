@@ -443,7 +443,6 @@ class PrintCalend:
 
     def DoDrawing(self, DC):
         size = DC.GetSize()
-        DC.BeginDrawing()
 
         cal = wx.lib.calendar.PrtCalDraw(self)
 
@@ -495,8 +494,6 @@ class PrintCalend:
                 y = y + 3.5
 
             x = x + 4.0     # next column
-
-        DC.EndDrawing()
 
         self.ymax = DC.MaxY()
         self.xmax = DC.MaxX()

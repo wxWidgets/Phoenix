@@ -77,11 +77,11 @@ class TestPanel(wx.Panel):
 
 
     def OnButton1(self, evt):
-        win = WrapSizerTest1(self, -1, "wx.WrapSizer Demo1", size=(640, 480))
+        win = WrapSizerTest1(self, -1, "wx.WrapSizer HORIZONTAL Demo", size=(640, 480))
         win.Show(True)
 
     def OnButton2(self, evt):
-        win = WrapSizerTest2(self, -1, "wx.WrapSizer Demo2", size=(640, 480))
+        win = WrapSizerTest2(self, -1, "wx.WrapSizer VERTICAL Demo", size=(640, 480))
         win.Show(True)
 
 #----------------------------------------------------------------------

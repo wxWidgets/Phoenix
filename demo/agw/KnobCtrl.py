@@ -147,22 +147,22 @@ class KnobCtrlDemo(wx.Panel):
 
     def OnTagsColour(self, event):
 
-        self.knob1.SetTagsColour(event.GetEventObject().GetColour())
+        self.knob1.SetTagsColour(event.GetColour())
 
 
     def OnBoundingColour(self, event):
 
-        self.knob1.SetBoundingColour(event.GetEventObject().GetColour())
+        self.knob1.SetBoundingColour(event.GetColour())
 
 
     def OnFirstColour(self, event):
 
-        self.knob1.SetFirstGradientColour(event.GetEventObject().GetColour())
+        self.knob1.SetFirstGradientColour(event.GetColour())
 
 
     def OnSecondColour(self, event):
 
-        self.knob1.SetSecondGradientColour(event.GetEventObject().GetColour())
+        self.knob1.SetSecondGradientColour(event.GetColour())
 
 
 #----------------------------------------------------------------------

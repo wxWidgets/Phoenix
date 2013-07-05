@@ -152,7 +152,8 @@ class TestPanel(wx.Panel):
                            "\tGetLastPosition:\t%d\n"
                            "\tlen(text):\t\t%d\n"
                            % (ip, text[ip], lp, len(text)))
-        except:#last position eol or eof
+        except Exception as e:#last position eol or eof
+            # print('Exception', e)
             self.log.write("LogT5Position:\n"
                            "\tGetInsertionPoint:\t%d\n"
                            "\tGetLastPosition:\t%d\n"
