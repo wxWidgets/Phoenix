@@ -89,8 +89,6 @@ keyMap = {
     wx.WXK_MENU : "WXK_MENU",
     wx.WXK_PAUSE : "WXK_PAUSE",
     wx.WXK_CAPITAL : "WXK_CAPITAL",
-    wx.WXK_PRIOR : "WXK_PRIOR",
-    wx.WXK_NEXT : "WXK_NEXT",
     wx.WXK_END : "WXK_END",
     wx.WXK_HOME : "WXK_HOME",
     wx.WXK_LEFT : "WXK_LEFT",
@@ -159,9 +157,7 @@ keyMap = {
     wx.WXK_NUMPAD_UP : "WXK_NUMPAD_UP",
     wx.WXK_NUMPAD_RIGHT : "WXK_NUMPAD_RIGHT",
     wx.WXK_NUMPAD_DOWN : "WXK_NUMPAD_DOWN",
-    wx.WXK_NUMPAD_PRIOR : "WXK_NUMPAD_PRIOR",
     wx.WXK_NUMPAD_PAGEUP : "WXK_NUMPAD_PAGEUP",
-    wx.WXK_NUMPAD_NEXT : "WXK_NUMPAD_NEXT",
     wx.WXK_NUMPAD_PAGEDOWN : "WXK_NUMPAD_PAGEDOWN",
     wx.WXK_NUMPAD_END : "WXK_NUMPAD_END",
     wx.WXK_NUMPAD_BEGIN : "WXK_NUMPAD_BEGIN",
@@ -186,18 +182,18 @@ ATX\x85\xed\xd6;\n\x800\x10E\xd1{\xc5\x8d\xb9r\x97\x16\x0b\xad$\x8a\x82:\x16\
 o\xda\x84pB2\x1f\x81Fa\x8c\x9c\x08\x04Z{\xcf\xa72\xbcv\xfa\xc5\x08 \x80r\x80\
 \xfc\xa2\x0e\x1c\xe4\xba\xfaX\x1d\xd0\xde]S\x07\x02\xd8>\xe1wa-`\x9fQ\xe9\
 \x86\x01\x04\x10\x00\\(Dk\x1b-\x04\xdc\x1d\x07\x14\x98;\x0bS\x7f\x7f\xf9\x13\
-\x04\x10@\xf9X\xbe\x00\xc9 \x14K\xc1<={\x00\x00\x00\x00IEND\xaeB`\x82' 
+\x04\x10@\xf9X\xbe\x00\xc9 \x14K\xc1<={\x00\x00\x00\x00IEND\xaeB`\x82'
 
 def GetMondrianBitmap():
-    return wx.BitmapFromImage(GetMondrianImage())
+    return wx.Bitmap(GetMondrianImage())
 
 def GetMondrianImage():
     import cStringIO
     stream = cStringIO.StringIO(GetMondrianData())
-    return wx.ImageFromStream(stream)
+    return wx.Image(stream)
 
 def GetMondrianIcon():
-    icon = wx.EmptyIcon()
+    icon = wx.Icon()
     icon.CopyFromBitmap(GetMondrianBitmap())
     return icon
 
@@ -233,15 +229,15 @@ def GetSmilesData():
 \xd0\x7f\xcb4\xfd\xe4\xb9\xe58\xc3tw\xc3\xd8\x18\xcc\xce\x82_q\xf0+6\xb3\xef\
 W\x18\xbb\xfb\x95\xee\xb3/p\xb6\xf61\xfd\xec\xad\xb5\x11\x8b\xcdV4\x97K+\x91\
 \xd8.\xe3"\xe3\xa2\xc4\x9e\x0e\xe52W6]\xe7?\xc6#-\xf1\x056\x98<\x00\x00\x00\
-\x00IEND\xaeB`\x82' 
+\x00IEND\xaeB`\x82'
 
 def GetSmilesBitmap():
-    return wx.BitmapFromImage(GetSmilesImage())
+    return wx.Bitmap(GetSmilesImage())
 
 def GetSmilesImage():
     import cStringIO
     stream = cStringIO.StringIO(GetSmilesData())
-    return wx.ImageFromStream(stream)
+    return wx.Image(stream)
 
 
 #-----------------------------------------------------------------------------
@@ -262,21 +258,21 @@ def opj(path):
 # Just A Dialog To Select Pen Styles
 #---------------------------------------------------------------------------
 class PenDialog(wx.Dialog):
-    
+
     def __init__(self, parent=None, id=-1, title="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE, oldpen=None,
                  pentype=0):
 
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
-        
+
         self.colourbutton = wx.Button(self, -1, "")
         self.spinwidth = wx.SpinCtrl(self, -1, "1", min=1, max=3, style=wx.SP_ARROW_KEYS)
-        
+
         self.combostyle = wx.ComboBox(self, -1, choices=penstyle, style=wx.CB_DROPDOWN|wx.CB_READONLY)
-        
+
         choices = ["[1, 1]", "[2, 2]", "[3, 3]", "[4, 4]"]
         self.combodash = wx.ComboBox(self, -1, choices=choices, style=wx.CB_DROPDOWN|wx.CB_READONLY)
-        
+
         self.okbutton = wx.Button(self, -1, "Ok")
         self.cancelbutton = wx.Button(self, -1, "Cancel")
 
@@ -301,7 +297,7 @@ class PenDialog(wx.Dialog):
 
         style = self.oldpen.GetStyle()
         for count, st in enumerate(penstyle):
-            if eval(st) == style:                
+            if eval(st) == style:
                 self.combostyle.SetSelection(count)
                 if count == 5:
                     self.combodash.Enable(True)
@@ -329,7 +325,7 @@ class PenDialog(wx.Dialog):
         widthsizer = wx.BoxSizer(wx.HORIZONTAL)
         coloursizer = wx.BoxSizer(wx.HORIZONTAL)
         label_1 = wx.StaticText(self, -1, "Please Choose The Pen Settings:")
-        label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         mainsizer.Add(label_1, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
         label_2 = wx.StaticText(self, -1, "Pen Colour")
         coloursizer.Add(label_2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
@@ -367,7 +363,7 @@ class PenDialog(wx.Dialog):
         colourdata = wx.ColourData()
         colourdata.SetColour(old)
         dlg = wx.ColourDialog(self, colourdata)
-        
+
         dlg.GetColourData().SetChooseFull(True)
 
         if dlg.ShowModal() == wx.ID_OK:
@@ -383,7 +379,7 @@ class PenDialog(wx.Dialog):
         # Once the dialog is destroyed, Mr. wx.ColourData is no longer your
         # friend. Don't use it again!
         dlg.Destroy()
-        
+
         event.Skip()
 
 
@@ -399,13 +395,13 @@ class PenDialog(wx.Dialog):
         colour = self.colourbutton.GetBackgroundColour()
         style = eval(self.combostyle.GetValue())
         width = int(self.spinwidth.GetValue())
-        
+
         dashes = None
         if self.combostyle.GetSelection() == 5:
             dashes = eval(self.combodash.GetValue())
 
         pen = wx.Pen(colour, width, style)
-        
+
         if dashes:
             pen.SetDashes(dashes)
 
@@ -415,14 +411,14 @@ class PenDialog(wx.Dialog):
             self.parent.SetConnectionPen(pen)
         else:
             self.parent.SetBorderPen(pen)
-            
+
         self.Destroy()
         event.Skip()
 
 
-    def OnCancel(self, event): 
+    def OnCancel(self, event):
 
-        self.Destroy()    
+        self.Destroy()
         event.Skip()
 
 
@@ -430,10 +426,10 @@ class PenDialog(wx.Dialog):
 # Just A Dialog To Select Tree Buttons Icons
 #---------------------------------------------------------------------------
 class TreeDialog(wx.Dialog):
-    
+
     def __init__(self, parent=None, id=-1, title="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE, oldicons=None):
-        
+
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
         self.listicons = wx.ListBox(self, -1, choices=["Set 1", "Set 2", "Set 3", "Set 4", "Set 5"], style=wx.LB_SINGLE)
@@ -447,14 +443,14 @@ class TreeDialog(wx.Dialog):
         bitmap_minus = wx.Image(bitmap_minus, wx.BITMAP_TYPE_ICO)
         bitmap_minus.Rescale(24, 24)
         bitmap_minus = bitmap_minus.ConvertToBitmap()
-        
+
         self.bitmap_plus = wx.StaticBitmap(self, -1, bitmap_plus)
         self.bitmap_minus = wx.StaticBitmap(self, -1, bitmap_minus)
 
         self.okbutton = wx.Button(self, -1, "Ok")
         self.cancelbutton = wx.Button(self, -1, "Cancel")
 
-        self.parent = parent        
+        self.parent = parent
 
         self.__set_properties()
         self.__do_layout()
@@ -480,7 +476,7 @@ class TreeDialog(wx.Dialog):
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_1 = wx.BoxSizer(wx.HORIZONTAL)
         label_1 = wx.StaticText(self, -1, "Please Choose One Of These Sets Of Icons:")
-        label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         mainsizer.Add(label_1, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
         topsizer.Add(self.listicons, 0, wx.ALL|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
         label_2 = wx.StaticText(self, -1, "Collapsed")
@@ -518,14 +514,14 @@ class TreeDialog(wx.Dialog):
         bitmap_minus = wx.Image(bitmap_minus, wx.BITMAP_TYPE_ICO)
         bitmap_minus.Rescale(24, 24)
         bitmap_minus = bitmap_minus.ConvertToBitmap()
-        
-        self.bitmap_plus.SetBitmap(bitmap_plus)        
+
+        self.bitmap_plus.SetBitmap(bitmap_plus)
         self.bitmap_minus.SetBitmap(bitmap_minus)
 
         self.bitmap_plus.Refresh()
         self.bitmap_minus.Refresh()
         event.Skip()
-        
+
 
     def OnOk(self, event):
 
@@ -545,10 +541,10 @@ class TreeDialog(wx.Dialog):
 # Just A Dialog To Select Tree Cehck/Radio Item Icons
 #---------------------------------------------------------------------------
 class CheckDialog(wx.Dialog):
-    
+
     def __init__(self, parent=None, id=-1, title="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE):
-        
+
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
         self.listicons = wx.ListBox(self, -1, choices=["Set 1", "Set 2"], style=wx.LB_SINGLE)
@@ -566,7 +562,7 @@ class CheckDialog(wx.Dialog):
         self.okbutton = wx.Button(self, -1, "Ok")
         self.cancelbutton = wx.Button(self, -1, "Cancel")
 
-        self.parent = parent        
+        self.parent = parent
 
         self.__set_properties()
         self.__do_layout()
@@ -594,7 +590,7 @@ class CheckDialog(wx.Dialog):
         sizer_3 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_4 = wx.BoxSizer(wx.HORIZONTAL)
         label_1 = wx.StaticText(self, -1, "Please Choose One Of These Sets Of Icons:")
-        label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         mainsizer.Add(label_1, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
         topsizer.Add(self.listicons, 0, wx.ALL|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
         label_2 = wx.StaticText(self, -1, "Checked")
@@ -617,7 +613,7 @@ class CheckDialog(wx.Dialog):
         sizer_4.Add((20, 20), 1, wx.ADJUST_MINSIZE, 0)
         sizer_4.Add(self.bitmap_unflag, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 10)
         rightsizer.Add(sizer_4, 0, wx.EXPAND, 0)
-        
+
         topsizer.Add(rightsizer, 0, wx.ALL|wx.EXPAND, 5)
         mainsizer.Add(topsizer, 1, wx.EXPAND, 0)
         bottomsizer.Add(self.okbutton, 0, wx.ALL|wx.ADJUST_MINSIZE, 20)
@@ -650,19 +646,19 @@ class CheckDialog(wx.Dialog):
         bitmap_uncheck = wx.Bitmap(bitmap_uncheck, wx.BITMAP_TYPE_ICO)
         bitmap_flag = wx.Bitmap(bitmap_flag, wx.BITMAP_TYPE_ICO)
         bitmap_unflag = wx.Bitmap(bitmap_unflag, wx.BITMAP_TYPE_ICO)
-        
+
         self.bitmap_uncheck.SetBitmap(bitmap_uncheck)
         self.bitmap_check.SetBitmap(bitmap_check)
         self.bitmap_unflag.SetBitmap(bitmap_unflag)
         self.bitmap_flag.SetBitmap(bitmap_flag)
-        
+
         self.bitmap_check.Refresh()
         self.bitmap_uncheck.Refresh()
         self.bitmap_flag.Refresh()
         self.bitmap_unflag.Refresh()
-        
+
         event.Skip()
-        
+
 
     def OnOk(self, event):
 
@@ -690,9 +686,9 @@ class TreeIcons(wx.Dialog):
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
         self.bitmaps = [None, None, None, None]
-        empty = wx.EmptyBitmap(16, 16)
+        empty = wx.Bitmap(16, 16)
         self.parent = parent
-        
+
         self.bitmaps[0] = wx.StaticBitmap(self, -1, empty)
         self.combonormal = wx.ComboBox(self, -1, choices=ArtIDs, style=wx.CB_DROPDOWN|wx.CB_READONLY)
         self.bitmaps[1] = wx.StaticBitmap(self, -1, empty)
@@ -710,7 +706,7 @@ class TreeIcons(wx.Dialog):
         self.comboselectedexpanded.SetSelection(bitmaps[3] >= 0 and bitmaps[3]+1 or 0)
 
         self.GetBitmaps(bitmaps)
-    
+
         self.__set_properties()
         self.__do_layout()
 
@@ -734,7 +730,7 @@ class TreeIcons(wx.Dialog):
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
         gridsizer = wx.FlexGridSizer(cols=3, hgap=5, vgap=5)
         label_1 = wx.StaticText(self, -1, "Please Choose The Icons For This Item (All Are Optional):")
-        label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         mainsizer.Add(label_1, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
         label_2 = wx.StaticText(self, -1, "TreeIcon_Normal:")
         gridsizer.Add(label_2, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
@@ -808,7 +804,7 @@ class TreeIcons(wx.Dialog):
                    (expanded > 0 and expanded or -1), (selexp > 0 and selexp or -1)]
 
         newbitmaps = []
-        
+
         for bmp in bitmaps:
             if bmp > 0:
                 newbitmaps.append(bmp-1)
@@ -821,7 +817,7 @@ class TreeIcons(wx.Dialog):
         event.Skip()
 
 
-    def OnCancel(self, event): 
+    def OnCancel(self, event):
 
         self.Destroy()
         event.Skip()
@@ -830,19 +826,19 @@ class TreeIcons(wx.Dialog):
     def GetBitmap(self, input, which):
 
         if input == 0:
-            bmp = wx.EmptyBitmap(16,16)
+            bmp = wx.Bitmap(16,16)
             self.ClearBmp(bmp)
         elif input > 36:
             bmp = GetSmilesBitmap()
         else:
-            bmp = wx.ArtProvider_GetBitmap(eval(ArtIDs[input]), wx.ART_OTHER, (16,16))
+            bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[input]), wx.ART_OTHER, (16,16))
             if not bmp.Ok():
-                bmp = wx.EmptyBitmap(16,16)
+                bmp = wx.Bitmap(16,16)
                 self.ClearBmp(bmp)
 
         self.bitmaps[which].SetBitmap(bmp)
         self.bitmaps[which].Refresh()
-        
+
 
     def GetBitmaps(self, bitmaps):
 
@@ -850,14 +846,14 @@ class TreeIcons(wx.Dialog):
 
         for count, input in enumerate(bitmaps):
             if input < 0:
-                bmp = wx.EmptyBitmap(16,16)
+                bmp = wx.Bitmap(16,16)
                 self.ClearBmp(bmp)
             elif input > 35:
                 bmp = GetSmilesBitmap()
             else:
-                bmp = wx.ArtProvider_GetBitmap(eval(ArtIDs[input+1]), wx.ART_OTHER, (16,16))
+                bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[input+1]), wx.ART_OTHER, (16,16))
                 if not bmp.Ok():
-                    bmp = wx.EmptyBitmap(16,16)
+                    bmp = wx.Bitmap(16,16)
                     self.ClearBmp(bmp)
 
             self.bitmaps[count].SetBitmap(bmp)
@@ -876,12 +872,12 @@ class TreeIcons(wx.Dialog):
 #---------------------------------------------------------------------------
 class HyperTreeHeaderRenderer(object):
     """
-    Draws the column headers as a solid color (self.color) 
+    Draws the column headers as a solid color (self.color)
     """
 
     def __init__(self, parent):
         self.color = wx.Colour(150,150,150)
-        
+
     def DrawTextFormatted(self, dc, text, rect):
         """
         Draws the item text, correctly formatted.
@@ -894,13 +890,13 @@ class HyperTreeHeaderRenderer(object):
         # determine if the string can fit inside the current width
         w, h, dummy = dc.GetMultiLineTextExtent(text)
         width = rect.width
-        
+
         if w <= width:
-            
+
             dc.DrawLabel(text, rect, wx.ALIGN_CENTER_VERTICAL)
 
         else:
-            
+
             # determine the base width
             ellipsis = "..."
             base_w, h = dc.GetTextExtent(ellipsis)
@@ -911,7 +907,7 @@ class HyperTreeHeaderRenderer(object):
             theText = ""
 
             for text in newText:
-            
+
                 lenText = len(text)
                 drawntext = text
                 w, dummy = dc.GetTextExtent(text)
@@ -925,7 +921,7 @@ class HyperTreeHeaderRenderer(object):
                     drawntext = drawntext[0:-1]
                     lenText -= 1
                     w -= w_c
-                
+
                 # if still not enough space, remove ellipsis characters
                 while len(ellipsis) > 0 and w + base_w > width:
                     ellipsis = ellipsis[0:-1]
@@ -935,20 +931,20 @@ class HyperTreeHeaderRenderer(object):
 
             theText = theText.rstrip()
             dc.DrawLabel(theText, rect, wx.ALIGN_CENTER_VERTICAL)
-    
 
-        
+
+
     def DrawHeaderButton(self, dc, rect, flags=0, params=None):
-      
+
         if params != None:
             text_align = params.m_labelAlignment
             bitmap     = params.m_labelBitmap
             text_color = params.m_labelColour
             text_font  = params.m_labelFont
             text       = params.m_labelText
-            
+
         color = self.color
-       
+
         if flags & wx.CONTROL_DISABLED:
             color = wx.Colour(wx.WHITE)
         elif flags & wx.CONTROL_SELECTED:
@@ -959,13 +955,13 @@ class HyperTreeHeaderRenderer(object):
         elif flags & wx.CONTROL_CURRENT:
             self._hover = True
             color = cutils.AdjustColour(color,50)
-       
+
         # Draw a solid background in self.color
         dc.SetBrush(wx.Brush(color, wx.SOLID))
         dc.SetBackgroundMode(wx.SOLID)
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangleRect(rect)
-      
+
         # Draw the column divider on the right
         x = rect.width + rect.x - 2
         dc.SetPen(wx.Pen(cutils.AdjustColour(color,-30)))
@@ -974,15 +970,15 @@ class HyperTreeHeaderRenderer(object):
         dc.SetPen(wx.Pen(cutils.AdjustColour(color,30)))
         dc.DrawLine(x,2,x,rect.height-2)
 
-        dc.SetBackgroundMode(wx.TRANSPARENT)        
-      
+        dc.SetBackgroundMode(wx.TRANSPARENT)
+
         if params == None:
             return
-       
+
         # We need to draw the text and/or icon bitmap
         dc.SetFont(text_font)
         dc.SetTextForeground(text_color)
-        
+
         # Determine the width of the text
         wLabel, hLabel, dummy = dc.GetMultiLineTextExtent(text)
         wLabel += 4  # 2 pixel margin either side
@@ -990,31 +986,31 @@ class HyperTreeHeaderRenderer(object):
         # and the width of the icon, if any
         if bitmap:
             wLabel += bitmap.GetWidth() + 2  # 2 is a margin between the image and text
-           
-        # ALIGN_LEFT if the label is larger than the available space 
+
+        # ALIGN_LEFT if the label is larger than the available space
         text_align = (wLabel < rect.width and [text_align] or [wx.ALIGN_LEFT])[0]
-        
+
         x = rect.x + 2
 
         if text_align == wx.ALIGN_LEFT:
-            xAligned = x 
+            xAligned = x
 
         elif text_align == wx.ALIGN_RIGHT:
             xAligned = x + rect.width - wLabel - 1
 
         elif text_align == wx.ALIGN_CENTER:
             xAligned = x + (rect.width - wLabel)/2
-           
-        if bitmap: 
+
+        if bitmap:
             dc.DrawBitmap(bitmap, xAligned + wLabel - bitmap.GetWidth() , 2, True)
 
         dc.SetClippingRegion(x, 1, rect.width-2, rect.height - 2)
         self.DrawTextFormatted(dc, text, wx.Rect(xAligned+2, 1, rect.width-2, rect.height-2))
         dc.DestroyClippingRegion()
-        
 
 
-                
+
+
 #---------------------------------------------------------------------------
 # HyperTreeList Demo Implementation
 #---------------------------------------------------------------------------
@@ -1030,7 +1026,7 @@ class HyperTreeListDemo(wx.Frame):
 
         self.CenterOnParent()
 
-        statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        statusbar = self.CreateStatusBar(2)
         statusbar.SetStatusWidths([-2, -1])
         # statusbar fields
         statusbar_fields = [("HyperTreeList Demo, Andrea Gavana @ 08 May 2007"),
@@ -1038,10 +1034,10 @@ class HyperTreeListDemo(wx.Frame):
 
         for i in range(len(statusbar_fields)):
             statusbar.SetStatusText(statusbar_fields[i], i)
-            
+
         self.CreateMenuBar()
 
-        self.oldicons = 0        
+        self.oldicons = 0
 
         splitter = wx.SplitterWindow(self, -1, style=wx.CLIP_CHILDREN | wx.SP_LIVE_UPDATE | wx.SP_3D)
         panel = wx.Panel(splitter, -1, style=wx.WANTS_CHARS)
@@ -1059,7 +1055,7 @@ class HyperTreeListDemo(wx.Frame):
 
         self.leftpanel = wx.ScrolledWindow(splitter, -1, style=wx.SUNKEN_BORDER)
         self.PopulateLeftPanel(self.tree.styles, self.tree.events)
-        
+
         splitter.SplitVertically(self.leftpanel, panel, 300)
 
         splitter.SetMinimumPaneSize(120)
@@ -1070,27 +1066,27 @@ class HyperTreeListDemo(wx.Frame):
     def CreateMenuBar(self):
 
         file_menu = wx.Menu()
-        
-        AS_EXIT = wx.NewId()        
+
+        AS_EXIT = wx.NewId()
         file_menu.Append(AS_EXIT, "&Exit")
         self.Bind(wx.EVT_MENU, self.OnClose, id=AS_EXIT)
 
         help_menu = wx.Menu()
 
-        AS_ABOUT = wx.NewId()        
+        AS_ABOUT = wx.NewId()
         help_menu.Append(AS_ABOUT, "&About...")
         self.Bind(wx.EVT_MENU, self.OnAbout, id=AS_ABOUT)
 
         menu_bar = wx.MenuBar()
 
         menu_bar.Append(file_menu, "&File")
-        menu_bar.Append(help_menu, "&Help")        
+        menu_bar.Append(help_menu, "&Help")
 
         self.SetMenuBar(menu_bar)
 
 
     def OnClose(self, event):
-        
+
         self.Destroy()
 
 
@@ -1102,16 +1098,16 @@ class HyperTreeListDemo(wx.Frame):
               "To Me At The Following Adresses:\n\n" + \
               "andrea.gavana@maerskoil.com\n" + "andrea.gavana@gmail.com\n\n" + \
               "Welcome To wxPython " + wx.VERSION_STRING + "!!"
-              
+
         dlg = wx.MessageDialog(self, msg, "HyperTreeList Demo",
                                wx.OK | wx.ICON_INFORMATION)
 
         if wx.Platform != '__WXMAC__':
-            dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False))
-            
+            dlg.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False))
+
         dlg.ShowModal()
         dlg.Destroy()
-    
+
 
     def PopulateLeftPanel(self, styles, events):
 
@@ -1123,7 +1119,7 @@ class HyperTreeListDemo(wx.Frame):
         staticboxstyles = wx.StaticBox(self.leftpanel, -1, "HyperTreeList Styles")
         stylesizer = wx.StaticBoxSizer(staticboxstyles, wx.VERTICAL)
         staticboxcolumns = wx.StaticBox(self.leftpanel, -1, "HyperTreeList Columns")
-        columnssizer = wx.StaticBoxSizer(staticboxcolumns, wx.VERTICAL)        
+        columnssizer = wx.StaticBoxSizer(staticboxcolumns, wx.VERTICAL)
         staticboxevents = wx.StaticBox(self.leftpanel, -1, "HyperTreeList Events")
         eventssizer = wx.StaticBoxSizer(staticboxevents, wx.VERTICAL)
         staticboxcolours = wx.StaticBox(self.leftpanel, -1, "HyperTreeList Images/Colours")
@@ -1133,9 +1129,9 @@ class HyperTreeListDemo(wx.Frame):
 
         self.treestyles = []
         self.treeevents = []
-        
+
         for count, style in enumerate(styles):
-            
+
             if count == 0:
                 tags = wx.ALL
             else:
@@ -1144,7 +1140,7 @@ class HyperTreeListDemo(wx.Frame):
             if style != "TR_DEFAULT_STYLE":
                 check = wx.CheckBox(self.leftpanel, -1, style)
                 stylesizer.Add(check, 0, tags, 3)
-                        
+
                 if style in ["TR_HAS_BUTTONS", "TR_HAS_VARIABLE_ROW_HEIGHT"]:
                     check.SetValue(1)
 
@@ -1157,49 +1153,49 @@ class HyperTreeListDemo(wx.Frame):
         flexgridcolumn = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
         flexgridcolumn.AddGrowableCol(0)
         label = wx.StaticText(self.leftpanel, -1, "Text Font")
-        label.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         self.buttonfont = wx.Button(self.leftpanel, -1, "Choose...")
         self.buttonfont.Bind(wx.EVT_BUTTON, self.OnColumnFont)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(self.buttonfont, 0)
 
         label = wx.StaticText(self.leftpanel, -1, "Text Colour")
-        label.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         self.columncolour = csel.ColourSelect(self.leftpanel, -1, "Choose...", wx.BLACK)
         self.columncolour.Bind(csel.EVT_COLOURSELECT, self.OnColumnColour)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(self.columncolour, 0)
 
         label = wx.StaticText(self.leftpanel, -1, "Alignment")
-        label.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         alignment = wx.Choice(self.leftpanel, -1, choices=["wx.LEFT", "wx.CENTER", "wx.RIGHT"])
         alignment.Bind(wx.EVT_CHOICE, self.OnColumnAlignment)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(alignment, 0)
 
         label = wx.StaticText(self.leftpanel, -1, "Width Options")
-        label.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         widthoptions = wx.Choice(self.leftpanel, -1, choices=["USEHEADER", "AUTOSIZE"])
         widthoptions.Bind(wx.EVT_CHOICE, self.OnColumnWidth)
         flexgridcolumn.Add(label, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add(widthoptions, 0)
 
         columnimages = wx.CheckBox(self.leftpanel, -1, "Images On Columns", style=wx.ALIGN_RIGHT)
-        columnimages.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        columnimages.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         columnimages.Bind(wx.EVT_CHECKBOX, self.OnColumnImages)
         flexgridcolumn.Add(columnimages, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add((20,20), 0)
 
         columnimages = wx.CheckBox(self.leftpanel, -1, "Custom Renderer", style=wx.ALIGN_RIGHT)
-        columnimages.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        columnimages.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         columnimages.Bind(wx.EVT_CHECKBOX, self.OnCustomRenderer)
         flexgridcolumn.Add(columnimages, 0, wx.ALIGN_CENTER_VERTICAL)
         flexgridcolumn.Add((20,20), 0)
-        
-        columnssizer.Add(flexgridcolumn, 1, wx.EXPAND)        
-        
+
+        columnssizer.Add(flexgridcolumn, 1, wx.EXPAND)
+
         for count, event in enumerate(events):
-            
+
             if count == 0:
                 tags = wx.ALL
             else:
@@ -1208,10 +1204,10 @@ class HyperTreeListDemo(wx.Frame):
             if count not in [6, 17, 22, 23]:
                 check = wx.CheckBox(self.leftpanel, -1, event)
                 eventssizer.Add(check, 0, tags, 3)
-                        
+
                 if event in ["EVT_TREE_ITEM_EXPANDED", "EVT_TREE_ITEM_COLLAPSED",
                              "EVT_TREE_SEL_CHANGED", "EVT_TREE_SEL_CHANGING"]:
-                    
+
                     check.SetValue(1)
 
                 check.Bind(wx.EVT_CHECKBOX, self.OnCheckEvent)
@@ -1227,7 +1223,7 @@ class HyperTreeListDemo(wx.Frame):
         sizer1.Add(label, 0, wx.ALL|wx.ALIGN_CENTER, 5)
         sizer1.Add((1,0), 1, wx.EXPAND)
         sizer1.Add(buttonconnection, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_RIGHT, 5)
-        
+
         sizer2 = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(self.leftpanel, -1, "Border Pen")
         font = label.GetFont()
@@ -1277,7 +1273,7 @@ class HyperTreeListDemo(wx.Frame):
         self.backbutton.Bind(csel.EVT_COLOURSELECT, self.OnChooseBackground)
         sizer6.Add(radiobackground, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
         sizer6.Add((1,0), 1, wx.EXPAND)
-        sizer6.Add(self.backbutton, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)        
+        sizer6.Add(self.backbutton, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.ALIGN_CENTER, 5)
 
         colourssizer.Add(sizer1, 0, wx.EXPAND)
         colourssizer.Add(sizer2, 0, wx.EXPAND)
@@ -1331,7 +1327,7 @@ class HyperTreeListDemo(wx.Frame):
 
         self.checkvista = wx.CheckBox(self.leftpanel, -1, "Windows Vista Theme")
         self.checkvista.Bind(wx.EVT_CHECKBOX, self.OnVista)
-        
+
         themessizer.Add(sizera, 0, wx.EXPAND)
         themessizer.Add(sizerb, 0, wx.EXPAND)
         themessizer.Add((0, 5))
@@ -1353,14 +1349,14 @@ class HyperTreeListDemo(wx.Frame):
         self.firstcolour.Enable(False)
         self.secondcolour.Enable(False)
         self.imagebutton.Enable(False)
-        
+
 
     def OnRecreateTree(self, event):
 
         panelparent = self.tree.GetParent()
         panelsizer = panelparent.GetSizer()
         panelparent.Freeze()
-        
+
         panelsizer.Detach(self.tree)
         self.tree.Destroy()
         del self.tree
@@ -1368,8 +1364,8 @@ class HyperTreeListDemo(wx.Frame):
         panelsizer.Add(self.tree, 1, wx.EXPAND)
         panelsizer.Layout()
 
-        panelparent.Thaw()        
-        
+        panelparent.Thaw()
+
 
     def OnCheckStyle(self, event):
 
@@ -1381,7 +1377,7 @@ class HyperTreeListDemo(wx.Frame):
 
         obj = event.GetEventObject()
         self.tree.BindEvents(obj)
-        
+
         event.Skip()
 
 
@@ -1391,7 +1387,7 @@ class HyperTreeListDemo(wx.Frame):
         dlg = PenDialog(self, -1, oldpen=pen, pentype=0)
 
         dlg.ShowModal()
-                
+
         event.Skip()
 
 
@@ -1399,10 +1395,10 @@ class HyperTreeListDemo(wx.Frame):
 
         font = self.tree.GetColumn(0).GetFont()
 
-        data = wx.FontData()        
+        data = wx.FontData()
         data.SetInitialFont(font)
         dlg = wx.FontDialog(self, data)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetFontData()
             font = data.GetChosenFont()
@@ -1418,8 +1414,8 @@ class HyperTreeListDemo(wx.Frame):
         col1 = event.GetValue()
         for i in xrange(0, self.tree.GetMainWindow().GetColumnCount()):
             self.tree.SetColumnColour(i, col1)
-            
-        event.Skip()        
+
+        event.Skip()
 
 
     def OnColumnAlignment(self, event):
@@ -1434,8 +1430,8 @@ class HyperTreeListDemo(wx.Frame):
 
         for i in xrange(1, self.tree.GetMainWindow().GetColumnCount()):
             self.tree.SetColumnAlignment(i, alignment)
-            
-        event.Skip()        
+
+        event.Skip()
 
 
     def OnColumnImages(self, event):
@@ -1444,23 +1440,23 @@ class HyperTreeListDemo(wx.Frame):
             randimage = random.randint(1, len(ArtIDs))
             img = (event.IsChecked() and [randimage] or [-1])[0]
             self.tree.SetColumnImage(i, img)
-            
-        event.Skip()        
+
+        event.Skip()
 
     def OnCustomRenderer(self, event):
 
         if event.IsChecked():
-            renderer = HyperTreeHeaderRenderer(self) 
+            renderer = HyperTreeHeaderRenderer(self)
             renderer.color = wx.Colour(211,227,247)
             renderer.text_color = wx.Colour(30,30,30)
             self.tree.SetHeaderCustomRenderer(renderer)
         else:
             renderer = None
             self.tree.SetHeaderCustomRenderer(renderer)
-            
+
         self.Refresh()
-            
-        event.Skip()        
+
+        event.Skip()
 
 
 
@@ -1476,12 +1472,12 @@ class HyperTreeListDemo(wx.Frame):
             self.tree.SetColumnWidth(i, choice)
 
         event.Skip()
-        
+
 
     def SetConnectionPen(self, pen):
 
         self.tree.SetConnectionPen(pen)
-        
+
 
     def OnButtonBorder(self, event):
 
@@ -1495,13 +1491,13 @@ class HyperTreeListDemo(wx.Frame):
     def SetBorderPen(self, pen):
 
         self.tree.SetBorderPen(pen)
-        
+
 
     def OnButtonTree(self, event):
 
         dlg = TreeDialog(self, -1, oldicons=self.oldicons)
         dlg.ShowModal()
-        
+
         event.Skip()
 
 
@@ -1509,26 +1505,26 @@ class HyperTreeListDemo(wx.Frame):
 
         dlg = CheckDialog(self, -1)
         dlg.ShowModal()
-        
+
         event.Skip()
-    
+
 
     def SetTreeButtons(self, selection):
 
         bitmap_plus = opj(bitmapDir + "plus" + str(selection+1) + ".ico")
         bitmap_minus = opj(bitmapDir + "minus" + str(selection+1) + ".ico")
-        
+
         bitmap = wx.Bitmap(bitmap_plus, wx.BITMAP_TYPE_ICO)
         width = bitmap.GetWidth()
-        
+
         il = wx.ImageList(width, width)
-        
+
         il.Add(wx.Bitmap(bitmap_plus, wx.BITMAP_TYPE_ICO))
         il.Add(wx.Bitmap(bitmap_plus, wx.BITMAP_TYPE_ICO))
         il.Add(wx.Bitmap(bitmap_minus, wx.BITMAP_TYPE_ICO))
         il.Add(wx.Bitmap(bitmap_minus, wx.BITMAP_TYPE_ICO))
 
-        self.il = il                
+        self.il = il
         self.tree.SetButtonsImageList(il)
 
 
@@ -1543,12 +1539,12 @@ class HyperTreeListDemo(wx.Frame):
             bitmap_unflag = opj(bitmapDir + "aquanotflagged.ico")
 
             il = wx.ImageList(16, 16)
-        
+
             il.Add(wx.Bitmap(bitmap_check, wx.BITMAP_TYPE_ICO))
             il.Add(wx.Bitmap(bitmap_uncheck, wx.BITMAP_TYPE_ICO))
             il.Add(wx.Bitmap(bitmap_flag, wx.BITMAP_TYPE_ICO))
             il.Add(wx.Bitmap(bitmap_unflag, wx.BITMAP_TYPE_ICO))
-            self.tree.SetImageListCheck(16, 16, il)        
+            self.tree.SetImageListCheck(16, 16, il)
 
 
     def OnBackgroundImage(self, event):
@@ -1558,7 +1554,7 @@ class HyperTreeListDemo(wx.Frame):
 
         self.backbutton.Enable(False)
         self.imagebutton.Enable(True)
-        
+
         event.Skip()
 
 
@@ -1570,7 +1566,7 @@ class HyperTreeListDemo(wx.Frame):
                    "Icon Files (*.ico)|*.ico|"        \
                    "GIF Files (*.gif)|*.gif|"        \
                    "All files (*.*)|*.*"
-        
+
         dlg = wx.FileDialog(self, "Choose An Image File", ".", "", wildcard, wx.OPEN)
 
         if dlg.ShowModal() == wx.ID_OK:
@@ -1588,18 +1584,18 @@ class HyperTreeListDemo(wx.Frame):
 
 
     def OnBackgroundColour(self, event):
-        
+
         self.imagebutton.Enable(False)
         self.backbutton.Enable(True)
         self.tree.SetBackgroundImage(None)
-        
+
         event.Skip()
 
 
     def OnChooseBackground(self, event):
 
-        col1 = event.GetValue()        
-        self.tree.SetBackgroundColour(col1)        
+        col1 = event.GetValue()
+        self.tree.SetBackgroundColour(col1)
         event.Skip()
 
 
@@ -1620,17 +1616,17 @@ class HyperTreeListDemo(wx.Frame):
 
     def OnFocusColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.tree.SetHilightFocusColour(col1)
         event.Skip()
 
 
     def OnNonFocusColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.tree.SetHilightNonFocusColour(col1)
         event.Skip()
-        
+
 
     def OnCheckGradient(self, event):
 
@@ -1645,10 +1641,10 @@ class HyperTreeListDemo(wx.Frame):
         self.tree.SetGradientStyle(self.radiovertical.GetValue())
         self.tree.EnableSelectionVista(False)
         self.tree.EnableSelectionGradient(True)
-        
+
         event.Skip()
-        
-        
+
+
     def OnHorizontal(self, event):
 
         self.tree.SetGradientStyle(self.radiovertical.GetValue())
@@ -1663,14 +1659,14 @@ class HyperTreeListDemo(wx.Frame):
 
     def OnFirstColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.tree.SetFirstGradientColour(wx.Colour(col1[0], col1[1], col1[2]))
         event.Skip()
 
 
     def OnSecondColour(self, event):
 
-        col1 = event.GetValue()  
+        col1 = event.GetValue()
         self.tree.SetSecondGradientColour(wx.Colour(col1[0], col1[1], col1[2]))
         event.Skip()
 
@@ -1687,7 +1683,7 @@ class HyperTreeListDemo(wx.Frame):
         self.unfocus.Enable(False)
         self.tree.EnableSelectionGradient(False)
         self.tree.EnableSelectionVista(True)
-        
+
         event.Skip()
 
 
@@ -1713,12 +1709,12 @@ class HyperTreeList(HTL.HyperTreeList):
                 treestyles.append(data)
             elif data.startswith("EVT_"):
                 events.append(data)
-                
+
         events = events + [i for i in dir(wx) if i.startswith("EVT_TREE_")]
         for evt in ["EVT_TREE_GET_INFO", "EVT_TREE_SET_INFO", "EVT_TREE_ITEM_MIDDLE_CLICK",
                     "EVT_TREE_STATE_IMAGE_CLICK"]:
             events.remove(evt)
-            
+
         treestyles = treestyles + [i for i in dir(wx) if i.startswith("TR_")]
         treeset = {}
         treestyles = [treeset.setdefault(e,e) for e in treestyles if e not in treeset]
@@ -1728,11 +1724,11 @@ class HyperTreeList(HTL.HyperTreeList):
         self.events = events
         self.styles = treestyles
         self.item = None
-        
+
         il = wx.ImageList(16, 16)
 
         for items in ArtIDs[1:-1]:
-            bmp = wx.ArtProvider_GetBitmap(eval(items), wx.ART_TOOLBAR, (16, 16))
+            bmp = wx.ArtProvider.GetBitmap(eval(items), wx.ART_TOOLBAR, (16, 16))
             il.Add(bmp)
 
         smileidx = il.Add(images.Smiles.GetBitmap())
@@ -1773,7 +1769,7 @@ class HyperTreeList(HTL.HyperTreeList):
         button2.SetSize(button2.GetBestSize())
         listctrl = ListCtrl.TestListCtrlPanel(self.GetMainWindow(), self.log)
         listctrl.SetSize((500, 200))
-        
+
         textctrl.Bind(wx.EVT_CHAR, self.OnTextCtrl)
         combobox.Bind(wx.EVT_COMBOBOX, self.OnComboBox)
 
@@ -1790,7 +1786,7 @@ class HyperTreeList(HTL.HyperTreeList):
             self.SetItemText(child, txt + " (c2)", 2)
             self.SetItemImage(child, 24, which=wx.TreeItemIcon_Normal)
             self.SetItemImage(child, 13, which=wx.TreeItemIcon_Expanded)
-                
+
             for y in range(5):
                 txt = "item %d-%s" % (x, chr(ord("a")+y))
                 if y == 0 and x == 1:
@@ -1805,7 +1801,7 @@ class HyperTreeList(HTL.HyperTreeList):
                     last = self.AppendItem(child, txt, wnd=combobox)
                 else:
                     last = self.AppendItem(child, txt, ct_type=2)
-                    
+
                 self.SetPyData(last, None)
                 self.SetItemText(last, txt + " (c1)", 1)
                 self.SetItemText(last, txt + " (c2)", 2)
@@ -1816,7 +1812,7 @@ class HyperTreeList(HTL.HyperTreeList):
                     self.SetItemWindow(last, button1, 1)
                     self.SetItemWindow(last, button2, 2)
 
-                for z in range(5):                    
+                for z in range(5):
                     txt = "item %d-%s-%d" % (x, chr(ord("a")+y), z)
                     if z > 2:
                         item = self.AppendItem(last, txt, ct_type=1)
@@ -1826,7 +1822,7 @@ class HyperTreeList(HTL.HyperTreeList):
                         item = self.AppendItem(last, txt, ct_type=2)
                     elif z == 0:
                         item = self.AppendItem(last, txt)
-                        
+
                     self.SetPyData(item, None)
 
                     if x == 0 and y == 0 and z == 0:
@@ -1842,7 +1838,7 @@ class HyperTreeList(HTL.HyperTreeList):
                         self.SetItemText(item, txt + " (c2)", 2)
                         if z == 0:
                             self.SetItemHyperText(item, True)
-                        
+
                     self.SetItemImage(item, 28, which=wx.TreeItemIcon_Normal)
                     self.SetItemImage(item, numicons-1, which=wx.TreeItemIcon_Selected)
 
@@ -1861,7 +1857,7 @@ class HyperTreeList(HTL.HyperTreeList):
                           'EVT_TREE_SEL_CHANGING': self.OnSelChanging, "EVT_TREE_ITEM_HYPERLINK": self.OnHyperLink}
 
         mainframe = wx.GetTopLevelParent(self)
-        
+
         if not hasattr(mainframe, "leftpanel"):
             self.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.OnItemExpanded)
             self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed)
@@ -1879,18 +1875,18 @@ class HyperTreeList(HTL.HyperTreeList):
         if not(self.GetAGWWindowStyleFlag() & wx.TR_HIDE_ROOT):
             self.SelectItem(self.root)
             self.Expand(self.root)
-            
+
 
     def CreateTreeCtrl(self):
 
         tree = wx.TreeCtrl(self.GetMainWindow(), -1, wx.Point(0, 0), wx.Size(160, 200),
                            wx.TR_DEFAULT_STYLE)
-        
+
         items = []
 
         imglist = wx.ImageList(16, 16, True, 2)
-        imglist.Add(wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16,16)))
-        imglist.Add(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16,16)))
+        imglist.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16,16)))
+        imglist.Add(wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16,16)))
         tree.AssignImageList(imglist)
 
         root = tree.AddRoot("HyperTreeList :-D", image=0)
@@ -1902,19 +1898,19 @@ class HyperTreeList(HTL.HyperTreeList):
         items.append(tree.AppendItem(root, "Item 5", 0))
 
         for ii in xrange(len(items)):
-        
+
             id = items[ii]
             tree.AppendItem(id, "Subitem 1", 1)
             tree.AppendItem(id, "Subitem 2", 1)
             tree.AppendItem(id, "Subitem 3", 1)
             tree.AppendItem(id, "Subitem 4", 1)
             tree.AppendItem(id, "Subitem 5", 1)
-        
+
         tree.Expand(root)
         tree.Expand(items[1])
         tree.Expand(items[3])
         tree.SelectItem(root)
-        
+
         return tree
 
 
@@ -1922,7 +1918,7 @@ class HyperTreeList(HTL.HyperTreeList):
 
         value = choice.GetValue()
         text = choice.GetLabel()
-        
+
         evt = "wx." + text
         binder = self.eventdict[text]
 
@@ -1960,13 +1956,13 @@ class HyperTreeList(HTL.HyperTreeList):
 
         if self.GetAGWWindowStyleFlag() != style:
             self.SetAGWWindowStyleFlag(style)
-            
+
 
     def OnCompareItems(self, item1, item2):
-        
+
         t1 = self.GetItemText(item1)
         t2 = self.GetItemText(item2)
-        
+
         self.log.write('compare: ' + t1 + ' <> ' + t2 + "\n")
 
         if t1 < t2:
@@ -1976,7 +1972,7 @@ class HyperTreeList(HTL.HyperTreeList):
 
         return 1
 
-    
+
     def OnIdle(self, event):
 
         if self.gauge:
@@ -1991,14 +1987,14 @@ class HyperTreeList(HTL.HyperTreeList):
                     self.gauge.SetValue(self.count)
 
             except:
-                
+
                 self.gauge = None
 
         event.Skip()
 
 
     def OnRightDown(self, event):
-        
+
         pt = event.GetPosition()
         item, flags, column = self.HitTest(pt)
 
@@ -2011,7 +2007,7 @@ class HyperTreeList(HTL.HyperTreeList):
     def OnRightUp(self, event):
 
         item = self.item
-        
+
         if not item:
             event.Skip()
             return
@@ -2032,7 +2028,7 @@ class HyperTreeList(HTL.HyperTreeList):
         selected = self.GetItemImage(item, wx.TreeItemIcon_Selected)
         expanded = self.GetItemImage(item, wx.TreeItemIcon_Expanded)
         selexp = self.GetItemImage(item, wx.TreeItemIcon_SelectedExpanded)
-        
+
         # Enabling/Disabling Windows Associated To An Item
         haswin = self.GetItemWindow(item)
 
@@ -2044,13 +2040,13 @@ class HyperTreeList(HTL.HyperTreeList):
         itemtype = self.GetItemType(item)
         text = self.GetItemText(item)
         pydata = self.GetPyData(item)
-        
+
         self.current = item
         self.itemdict = {"ishtml": ishtml, "back": back, "fore": fore, "isbold": isbold,
                          "font": font, "normal": normal, "selected": selected, "expanded": expanded,
                          "selexp": selexp, "haswin": haswin, "children": children,
                          "itemtype": itemtype, "text": text, "pydata": pydata, "enabled": enabled}
-        
+
         menu = wx.Menu()
 
         item2 = menu.Append(wx.ID_ANY, "Modify Item Text Colour")
@@ -2071,7 +2067,7 @@ class HyperTreeList(HTL.HyperTreeList):
         menu.AppendSeparator()
 
         item7 = menu.Append(wx.ID_ANY, "Disable Item")
-        
+
         menu.AppendSeparator()
         item8 = menu.Append(wx.ID_ANY, "Change Item Icons")
         menu.AppendSeparator()
@@ -2095,18 +2091,18 @@ class HyperTreeList(HTL.HyperTreeList):
         self.Bind(wx.EVT_MENU, self.OnItemPrepend, item11)
         self.Bind(wx.EVT_MENU, self.OnItemAppend, item12)
         self.Bind(wx.EVT_MENU, self.OnItemBackground, item13)
-        
+
         self.PopupMenu(menu)
         menu.Destroy()
         event.Skip()
-        
+
 
     def OnItemForeground(self, event):
 
         colourdata = wx.ColourData()
         colourdata.SetColour(self.itemdict["fore"])
         dlg = wx.ColourDialog(self, colourdata)
-        
+
         dlg.GetColourData().SetChooseFull(True)
 
         if dlg.ShowModal() == wx.ID_OK:
@@ -2127,14 +2123,14 @@ class HyperTreeList(HTL.HyperTreeList):
 
         data = wx.FontData()
         font = self.itemdict["font"]
-        
+
         if font is None:
             font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-            
+
         data.SetInitialFont(font)
 
         dlg = wx.FontDialog(self, data)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetFontData()
             font = data.GetChosenFont()
@@ -2142,7 +2138,7 @@ class HyperTreeList(HTL.HyperTreeList):
 
         dlg.Destroy()
         event.Skip()
-        
+
 
     def OnItemHyperText(self, event):
 
@@ -2154,14 +2150,14 @@ class HyperTreeList(HTL.HyperTreeList):
 
         self.EnableItem(self.current, False)
         event.Skip()
-        
+
 
     def OnItemIcons(self, event):
 
         bitmaps = [self.itemdict["normal"], self.itemdict["selected"],
                    self.itemdict["expanded"], self.itemdict["selexp"]]
 
-        wx.BeginBusyCursor()        
+        wx.BeginBusyCursor()
         dlg = TreeIcons(self, -1, bitmaps=bitmaps)
         wx.EndBusyCursor()
         dlg.ShowModal()
@@ -2198,9 +2194,9 @@ class HyperTreeList(HTL.HyperTreeList):
         dlg = wx.MessageDialog(self, strs, "HyperTreeListDemo Info", wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
-                
+
         event.Skip()
-        
+
 
     def OnItemDelete(self, event):
 
@@ -2216,8 +2212,8 @@ class HyperTreeList(HTL.HyperTreeList):
         self.DeleteChildren(self.current)
         self.Delete(self.current)
         self.current = None
-        
-        event.Skip()        
+
+        event.Skip()
 
 
     def OnItemPrepend(self, event):
@@ -2244,27 +2240,27 @@ class HyperTreeList(HTL.HyperTreeList):
 
         dlg.Destroy()
         event.Skip()
-        
+
 
     def OnItemBackground(self, event):
 
         colourdata = wx.ColourData()
         colourdata.SetColour(self.itemdict["back"])
         dlg = wx.ColourDialog(self, colourdata)
-        
+
         dlg.GetColourData().SetChooseFull(True)
 
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetColourData()
             col1 = data.GetColour().Get()
             self.SetItemBackgroundColour(self.current, col1)
-            
+
         dlg.Destroy()
         event.Skip()
-        
+
 
     def OnBeginEdit(self, event):
-        
+
         self.log.write("OnBeginEdit\n")
         # show how to prevent edit...
         item = event.GetItem()
@@ -2285,7 +2281,7 @@ class HyperTreeList(HTL.HyperTreeList):
 
 
     def OnEndEdit(self, event):
-        
+
         self.log.write("OnEndEdit: %s %s\n" %(event.IsEditCancelled(), event.GetLabel()))
         # show how to reject edit, we'll not allow any digits
         for x in event.GetLabel():
@@ -2293,10 +2289,10 @@ class HyperTreeList(HTL.HyperTreeList):
                 self.log.write("You can't enter digits...\n")
                 event.Veto()
                 return
-            
+
 
     def OnLeftDClick(self, event):
-        
+
         pt = event.GetPosition()
         item, flags, column = self.HitTest(pt)
         if item and (flags & wx.TREE_HITTEST_ONITEMLABEL):
@@ -2306,41 +2302,41 @@ class HyperTreeList(HTL.HyperTreeList):
             else:
                 self.log.write("OnLeftDClick: Cannot Start Manual Editing, Missing Style TR_EDIT_LABELS\n")
 
-        event.Skip()                
-        
+        event.Skip()
+
 
     def OnItemExpanded(self, event):
-        
+
         item = event.GetItem()
         if item:
             self.log.write("OnItemExpanded: %s\n" % self.GetItemText(item))
 
 
     def OnItemExpanding(self, event):
-        
+
         item = event.GetItem()
         if item:
             self.log.write("OnItemExpanding: %s\n" % self.GetItemText(item))
-            
+
         event.Skip()
 
-        
+
     def OnItemCollapsed(self, event):
 
         item = event.GetItem()
         if item:
             self.log.write("OnItemCollapsed: %s" % self.GetItemText(item))
-            
+
 
     def OnItemCollapsing(self, event):
 
         item = event.GetItem()
         if item:
             self.log.write("OnItemCollapsing: %s\n" % self.GetItemText(item))
-    
+
         event.Skip()
 
-        
+
     def OnSelChanged(self, event):
 
         self.item = event.GetItem()
@@ -2350,7 +2346,7 @@ class HyperTreeList(HTL.HyperTreeList):
                 self.log.write(", BoundingRect: %s\n" % self.GetBoundingRect(self.item, True))
             else:
                 self.log.write("\n")
-                
+
         event.Skip()
 
 
@@ -2358,14 +2354,14 @@ class HyperTreeList(HTL.HyperTreeList):
 
         item = event.GetItem()
         olditem = event.GetOldItem()
-        
+
         if item:
             if not olditem:
                 olditemtext = "None"
             else:
                 olditemtext = self.GetItemText(olditem)
             self.log.write("OnSelChanging: From %s To %s\n" %(olditemtext, self.GetItemText(item)))
-                
+
         event.Skip()
 
 
@@ -2385,7 +2381,7 @@ class HyperTreeList(HTL.HyperTreeList):
             self.log.write("Beginning Right Drag...\n")
 
             event.Allow()
-        
+
 
     def OnEndDrag(self, event):
 
@@ -2393,7 +2389,7 @@ class HyperTreeList(HTL.HyperTreeList):
         if self.item:
             self.log.write("Ending Drag!\n")
 
-        event.Skip()            
+        event.Skip()
 
 
     def OnDeleteItem(self, event):
@@ -2405,7 +2401,7 @@ class HyperTreeList(HTL.HyperTreeList):
 
         self.log.write("Deleting Item: %s\n" % self.GetItemText(item))
         event.Skip()
-        
+
 
     def OnItemCheck(self, event):
 
@@ -2419,7 +2415,7 @@ class HyperTreeList(HTL.HyperTreeList):
         item = event.GetItem()
         self.log.write("Item " + self.GetItemText(item) + " Is Being Checked...\n")
         event.Skip()
-        
+
 
     def OnToolTip(self, event):
 
@@ -2433,7 +2429,7 @@ class HyperTreeList(HTL.HyperTreeList):
         item = event.GetItem()
         if item:
             self.log.write("OnItemMenu: %s\n" % self.GetItemText(item))
-    
+
         event.Skip()
 
 
@@ -2441,7 +2437,7 @@ class HyperTreeList(HTL.HyperTreeList):
 
         keycode = event.GetKeyCode()
         keyname = keyMap.get(keycode, None)
-                
+
         if keycode == wx.WXK_BACK:
             self.log.write("OnKeyDown: HAHAHAHA! I Vetoed Your Backspace! HAHAHAHA\n")
             return
@@ -2454,7 +2450,7 @@ class HyperTreeList(HTL.HyperTreeList):
                 keyname = "\"" + unichr(event.GetUnicodeKey()) + "\""
                 if keycode < 27:
                     keyname = "Ctrl-%s" % chr(ord('A') + keycode-1)
-                
+
             elif keycode < 256:
                 if keycode == 0:
                     keyname = "NUL"
@@ -2464,26 +2460,26 @@ class HyperTreeList(HTL.HyperTreeList):
                     keyname = "\"%s\"" % chr(keycode)
             else:
                 keyname = "unknown (%s)" % keycode
-                
+
         self.log.write("OnKeyDown: You Pressed '" + keyname + "'\n")
 
         event.Skip()
-        
-        
+
+
     def OnActivate(self, event):
-        
+
         if self.item:
             self.log.write("OnActivate: %s\n" % self.GetItemText(self.item))
 
         event.Skip()
 
-        
+
     def OnHyperLink(self, event):
 
         item = event.GetItem()
         if item:
             self.log.write("OnHyperLink: %s\n" % self.GetItemText(self.item))
-            
+
 
     def OnTextCtrl(self, event):
 
