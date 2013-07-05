@@ -198,7 +198,7 @@ class Extended(wx.Frame):
         
         self._leftWindow1.Show(not self._leftWindow1.IsShown())
         # Leaves bits of itself behind sometimes
-        wx.LayoutAlgorithm().LayoutWindow(self, self.remainingSpace)
+        wx.adv.LayoutAlgorithm().LayoutWindow(self, self.remainingSpace)
         self.remainingSpace.Refresh()
 
         event.Skip()
@@ -214,7 +214,7 @@ class Extended(wx.Frame):
 
 
         # Leaves bits of itself behind sometimes
-        wx.LayoutAlgorithm().LayoutWindow(self, self.remainingSpace)
+        wx.adv.LayoutAlgorithm().LayoutWindow(self, self.remainingSpace)
         self.remainingSpace.Refresh()
 
         event.Skip()
