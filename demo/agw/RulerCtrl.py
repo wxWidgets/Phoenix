@@ -1,5 +1,4 @@
 import wx
-import wx.lib.colourselect as csel
 import wx.stc as stc
 import keyword
 
@@ -177,9 +176,9 @@ class RulerCtrlDemo(wx.Frame):
         self.logscale = wx.CheckBox(self.panel, -1, "Log Scale")
         self.labelminor = wx.CheckBox(self.panel, -1, "Label")
         self.alwayslabel = wx.CheckBox(self.panel, -1, "Always Label")
-        self.csel1 = csel.ColourSelect(self.panel, -1, "Choose...", wx.WHITE)
-        self.csel2 = csel.ColourSelect(self.panel, -1, "Choose...", wx.BLACK)
-        self.csel3 = csel.ColourSelect(self.panel, -1, "Choose...", wx.BLACK)
+        self.csel1 = wx.ColourPickerCtrl(self.panel, -1, wx.WHITE, style=wx.CLRP_USE_TEXTCTRL)
+        self.csel2 = wx.ColourPickerCtrl(self.panel, -1, wx.BLACK, style=wx.CLRP_USE_TEXTCTRL)
+        self.csel3 = wx.ColourPickerCtrl(self.panel, -1, wx.BLACK, style=wx.CLRP_USE_TEXTCTRL)
         self.messages = wx.TextCtrl(self.panel, -1, "Here You'll See GUI Messages\n",
                                     style=wx.TE_READONLY|wx.TE_MULTILINE)
 
@@ -191,9 +190,9 @@ class RulerCtrlDemo(wx.Frame):
         self.Bind(wx.EVT_CHECKBOX, self.OnLogScale, self.logscale)
         self.Bind(wx.EVT_CHECKBOX, self.OnLabelMinor, self.labelminor)
         self.Bind(wx.EVT_CHECKBOX, self.OnAlwaysLabel, self.alwayslabel)
-        self.Bind(csel.EVT_COLOURSELECT, self.OnBackgroundColour, self.csel1)
-        self.Bind(csel.EVT_COLOURSELECT, self.OnTickColour, self.csel2)
-        self.Bind(csel.EVT_COLOURSELECT, self.OnLabelColour, self.csel3)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnBackgroundColour, self.csel1)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnTickColour, self.csel2)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnLabelColour, self.csel3)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
         self.Bind(RC.EVT_INDICATOR_CHANGING, self.OnIndicatorChanging, id=103)
@@ -365,17 +364,17 @@ class RulerCtrlDemo(wx.Frame):
 
     def OnBackgroundColour(self, event):
 
-        self.ruler3.SetBackgroundColour(event.GetValue())
+        self.ruler3.SetBackgroundColour(event.GetEventObject().GetColour())
 
 
     def OnTickColour(self, event):
 
-        self.ruler3.SetTickPenColour(event.GetValue())
+        self.ruler3.SetTickPenColour(event.GetEventObject().GetColour())
 
 
     def OnLabelColour(self, event):
 
-        self.ruler3.SetLabelColour(event.GetValue())
+        self.ruler3.SetLabelColour(event.GetEventObject().GetColour())
 
 
     def CreateMenu(self):
