@@ -36,11 +36,7 @@ from __future__ import division
 import sys
 mac = sys.platform.startswith("darwin")
  
-try:
-    import numpy as N
-except ImportError:
-    raise ImportError("I could not import numpy")
-
+import numpy as N
 from time import clock
 import wx
 
