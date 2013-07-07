@@ -31,6 +31,10 @@ def run():
     # customizing the generated code and docstrings.
 
     c = module.find('wxStandardPaths')
+    assert isinstance(c, etgtools.ClassDef)
+    c.find('wxStandardPaths').ignore()
+    c.abstract = True
+    
     c.find('IgnoreAppSubDir').ignore()
     c.find('DontIgnoreAppSubDir').ignore()
     c.find('IgnoreAppBuildSubDirs').ignore()
