@@ -18,7 +18,12 @@ __date__ = "31 March 2009"
 import wx
 
 if wx.Platform == '__WXMAC__':
-    import Carbon.Appearance
+    try:
+        import Carbon.Appearance
+    except ImportError:
+        CARBON = False
+    else:
+        CARBON = True
 
 from .aui_utilities import BitmapFromBits, StepColour, IndentPressedBitmap, ChopText
 from .aui_utilities import GetBaseColour, DrawMACCloseButton, LightColour, TakeScreenShot
@@ -139,14 +144,15 @@ class AuiDefaultTabArt(object):
         self._disabled_windowlist_bmp = BitmapFromBits(nb_list_bits, 16, 16, wx.Colour(128, 128, 128))
 
         if wx.Platform == "__WXMAC__":
+            k = Carbon.Appearance.kThemeBrushFocusHighlight if CARBON else 19
             # Get proper highlight colour for focus rectangle from the
             # current Mac theme.  kThemeBrushFocusHighlight is
             # available on Mac OS 8.5 and higher
             if hasattr(wx, 'MacThemeColour'):
-                c = wx.MacThemeColour(Carbon.Appearance.kThemeBrushFocusHighlight)
+                c = wx.MacThemeColour(k)
             else:
                 brush = wx.Brush(wx.BLACK)
-                brush.MacSetTheme(Carbon.Appearance.kThemeBrushFocusHighlight)
+                brush.MacSetTheme(k)
                 c = brush.GetColour()
             self._focusPen = wx.Pen(c, 2, wx.SOLID)
         else:

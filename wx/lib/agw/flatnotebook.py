@@ -196,7 +196,12 @@ import wx.lib.six as six
 
 # Used on OSX to get access to carbon api constants
 if wx.Platform == '__WXMAC__':
-    import Carbon.Appearance
+    try:
+        import Carbon.Appearance
+    except ImportError:
+        CARBON = False
+    else:
+        CARBON = True
 
 # Check for the new method in 2.7 (not present in 2.6.3.3)
 if wx.VERSION_STRING < "2.7":
@@ -1711,14 +1716,15 @@ class FNBRenderer(object):
         self._tabHeight = None
 
         if wx.Platform == "__WXMAC__":
+            k = Carbon.Appearance.kThemeBrushFocusHighlight if CARBON else 19
             # Get proper highlight colour for focus rectangle from the
             # current Mac theme.  kThemeBrushFocusHighlight is
             # available on Mac OS 8.5 and higher
             if hasattr(wx, 'MacThemeColour'):
-                c = wx.MacThemeColour(Carbon.Appearance.kThemeBrushFocusHighlight)
+                c = wx.MacThemeColour(k)
             else:
                 brush = wx.Brush(wx.BLACK)
-                brush.MacSetTheme(Carbon.Appearance.kThemeBrushFocusHighlight)
+                brush.MacSetTheme(k)
                 c = brush.GetColour()
             self._focusPen = wx.Pen(c, 2, wx.SOLID)
         else:

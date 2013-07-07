@@ -41,7 +41,12 @@ from . import bar as BAR, panel as PANEL
 from .art import *
 
 if wx.Platform == "__WXMAC__":
-    import Carbon.Appearance
+    try:
+        import Carbon.Appearance
+    except ImportError:
+        CARBON = False
+    else:
+        CARBON = True
 
 
 def FontFromFont(original):
@@ -60,12 +65,12 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         RibbonMSWArtProvider.__init__(self)
         
         if wx.Platform == "__WXMAC__":
-
+            k = Carbon.Appearance.kThemeBrushToolbarBackground if CARBON else 52
             if hasattr(wx, 'MacThemeColour'):
-                base_colour = wx.MacThemeColour(Carbon.Appearance.kThemeBrushToolbarBackground)
+                base_colour = wx.MacThemeColour(k)
             else:
                 brush = wx.Brush(wx.BLACK)
-                brush.MacSetTheme(Carbon.Appearance.kThemeBrushToolbarBackground)
+                brush.MacSetTheme(k)
                 base_colour = brush.GetColour()
         else:
             
