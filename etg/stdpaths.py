@@ -32,8 +32,12 @@ def run():
 
     c = module.find('wxStandardPaths')
     assert isinstance(c, etgtools.ClassDef)
-    c.find('wxStandardPaths').ignore()
+    c.find('wxStandardPaths').ignore(False)
     c.abstract = True
+    
+    # Since the ctor is protected we need to tell SIP how to get a default
+    # instance of this class
+    c.instanceCode = 'sipCpp = & wxStandardPaths::Get();'
     
     c.find('IgnoreAppSubDir').ignore()
     c.find('DontIgnoreAppSubDir').ignore()
