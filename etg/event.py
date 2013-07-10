@@ -311,7 +311,7 @@ def run():
             """,
         body="""\
             assert isinstance(event, wx.PyEventBinder)
-            assert callable(handler)
+            assert callable(handler) or handler is None
             assert source is None or hasattr(source, 'GetId')
             if source is not None:
                 id  = source.GetId()
