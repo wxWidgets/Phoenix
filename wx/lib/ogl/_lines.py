@@ -9,6 +9,7 @@
 # RCS-ID:       $Id$
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 
 import sys
@@ -1208,7 +1209,7 @@ class LineShape(Shape):
             self.SetBrush(old_brush)
 
         if pt._type == CONTROL_POINT_ENDPOINT_FROM or pt._type == CONTROL_POINT_ENDPOINT_TO:
-            self._canvas.SetCursor(wx.StockCursor(wx.CURSOR_BULLSEYE))
+            self._canvas.SetCursor(wx.Cursor(wx.CURSOR_BULLSEYE))
             pt._oldCursor = wx.STANDARD_CURSOR
 
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):

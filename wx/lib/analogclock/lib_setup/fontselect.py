@@ -3,6 +3,7 @@
 #   http://j.domaindlx.com/elements28/wxpython/
 #   15 Fev 2006, 22:00 GMT-03:00
 # Distributed under the wxWidgets license.
+# Tags:     phoenix-port
 
 import wx
 from wx.lib.newevent import NewEvent
@@ -54,8 +55,3 @@ class FontSelect(GenButton):
         if changed:
             nevt = FontSelectEvent(id=self.GetId(), obj=self, val=self.value)
             wx.PostEvent(self.parent, nevt)
-
-
-#
-##
-### eof

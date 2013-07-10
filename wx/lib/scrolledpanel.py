@@ -5,6 +5,7 @@
 # Copyright:    (c) 2003 by Will Sadkin
 # RCS-ID:       $Id$
 # License:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 # 12/11/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -219,5 +220,5 @@ class ScrolledPanel(wx.ScrolledWindow):
 
         # if we need to adjust
         if new_vs_x != -1 or new_vs_y != -1:
-            #print "%s: (%s, %s)" % (self.GetName(), new_vs_x, new_vs_y)
+            #print("%s: (%s, %s)" % (self.GetName(), new_vs_x, new_vs_y))
             self.Scroll(new_vs_x, new_vs_y)

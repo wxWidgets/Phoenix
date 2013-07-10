@@ -1,5 +1,16 @@
 #!/usr/bin/env python
-
+#----------------------------------------------------------------------------
+# Name:         BBox.py
+# Purpose:
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 A Bounding Box object and assorted utilities , subclassed from a numpy array
 
@@ -300,4 +311,3 @@ class RectBBox(BBox):
                 return False
         return True 
     
-   

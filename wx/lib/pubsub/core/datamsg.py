@@ -1,3 +1,10 @@
+#----------------------------------------------------------------------
+# Name:         datamsg.py
+#
+# Copyright:    Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+# License:      BSD, see LICENSE.txt for details.
+# Tags:         phoenix-port
+#----------------------------------------------------------------------
 '''
 
 :copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
@@ -13,9 +20,9 @@ class Message:
     via Message.data, while the topic name is available in Message.topic::
     
         def listener(msg):
-            print "data is ", msg.data
-            print "topic name is ", msg.topic
-            print msg
+            print("data is ", msg.data)
+            print("topic name is ", msg.topic)
+            print(msg)
             
     The example shows how a message can be converted to string.
     """

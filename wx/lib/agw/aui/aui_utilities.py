@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         aui_utilities.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         31 March 2009
+# Licence:      wxWindows license
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 This module contains some common functions used by :mod:`lib.agw.aui` to
 manipulate colours, bitmaps, text, gradient shadings and custom dragging images
@@ -237,7 +249,7 @@ def LightColour(colour, percent):
     r = colour.Red() + ((i*rd*100)/high)/100
     g = colour.Green() + ((i*gd*100)/high)/100
     b = colour.Blue() + ((i*bd*100)/high)/100
-    return wx.Colour(r, g, b)
+    return wx.Colour(int(r), int(g), int(b))
 
 
 def PaneCreateStippleBitmap():

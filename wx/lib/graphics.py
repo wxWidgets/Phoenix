@@ -8,6 +8,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2008 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 
 """
@@ -1246,7 +1247,7 @@ class GraphicsContext(GraphicsObject):
         used.
         """
         if isinstance(pen, wx.Pen):
-            if not pen.Ok() or pen.Style == wx.TRANSPARENT:
+            if not pen.IsOk() or pen.Style == wx.TRANSPARENT:
                 pen = None
             else:
                 pen = GraphicsPen.CreateFromPen(pen)
@@ -1263,7 +1264,7 @@ class GraphicsContext(GraphicsObject):
         be used.
         """
         if isinstance(brush, wx.Brush):
-            if not brush.Ok() or brush.Style == wx.TRANSPARENT:
+            if not brush.IsOk() or brush.Style == wx.TRANSPARENT:
                 brush = None
             else:
                 brush = GraphicsBrush.CreateFromBrush(brush)

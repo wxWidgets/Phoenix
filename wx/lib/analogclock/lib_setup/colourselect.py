@@ -3,6 +3,7 @@
 #   http://j.domaindlx.com/elements28/wxpython/
 #   15 Fev 2006, 22:00 GMT-03:00
 # Distributed under the wxWidgets license.
+# Tags:     phoenix-port
 
 import wx
 from wx.lib.newevent import NewEvent
@@ -17,7 +18,7 @@ from wx.lib.buttons import GenBitmapButton
 class ColourSelect(GenBitmapButton):
     def __init__(self, parent, size=(21, 21), value=wx.BLACK):
         w, h = size[0] - 5, size[1] - 5
-        GenBitmapButton.__init__(self, parent, wx.ID_ANY, wx.EmptyBitmap(w, h),
+        GenBitmapButton.__init__(self, parent, wx.ID_ANY, wx.Bitmap(w, h),
                                  size=size)
         self.SetBezelWidth(1)
 
@@ -29,7 +30,7 @@ class ColourSelect(GenBitmapButton):
 
     def _makeBitmap(self):
         bdr = 8; w, h = self.GetSize()
-        bmp = wx.EmptyBitmap(w - bdr, h - bdr)
+        bmp = wx.Bitmap(w - bdr, h - bdr)
 
         dc = wx.MemoryDC()
         dc.SelectObject(bmp)
@@ -73,8 +74,3 @@ class ColourSelect(GenBitmapButton):
         if changed:
             nevt = ColourSelectEvent(id=self.GetId(), obj=self, val=self.value)
             wx.PostEvent(self.parent, nevt)
-
-
-#
-##
-### eof

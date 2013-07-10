@@ -1,5 +1,11 @@
-
-#---------------------------------------------------------------------------
+#----------------------------------------------------------------------
+# Name:         pub.py
+#
+# Author:       Oliver Schoenborn
+# Copyright:    Copyright 2006 by Oliver Schoenborn, all rights reserved.
+# License:      BSD, see LICENSE.txt for details.
+# Tags:         phoenix-port
+#----------------------------------------------------------------------
 """
 Provides "version 1" of pubsub's publish-subscribe API. 
 
@@ -12,7 +18,7 @@ parameter. Example use::
  
     from pubsub import Publisher
     def aCallable(msg):
-        print 'data received', msg.data
+        print('data received', msg.data)
     Publisher.subscribe(aCallable, 'some_topic')
     Publisher.sendMessage('some_topic', data=123)
     // should see 'data received 123'
@@ -323,7 +329,7 @@ class _TopicTreeNode:
         
     def __notifyDead(self, dead):
         """Gets called when a listener dies, thanks to WeakRef"""
-        #print 'TreeNODE', `self`, 'received death certificate for ', dead
+        #print('TreeNODE', `self`, 'received death certificate for ', dead)
         self.__cleanupDead()
         if self.__onDeadListenerWeakCB is not None:
             cb = self.__onDeadListenerWeakCB()
@@ -484,7 +490,7 @@ class _TopicTreeRoot(_TopicTreeNode):
     callbackDeadLimit = 10
 
     def __rootNotifyDead(self, dead):
-        #print 'TreeROOT received death certificate for ', dead
+        #print('TreeROOT received death certificate for ', dead)
         self.__callbackDictCleanup += 1
         if self.__callbackDictCleanup > _TopicTreeRoot.callbackDeadLimit:
             self.__callbackDictCleanup = 0

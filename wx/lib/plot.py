@@ -8,6 +8,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2002
 # Licence:     Use as you wish.
+# Tags:        phoenix-port
 #-----------------------------------------------------------------------------
 # 12/15/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -500,7 +501,7 @@ class PlotGraphics:
             o._pointSize = self._pointSize
             o.draw(dc, self.printerScale)
             #dt= _time.clock()-t
-            #print o, "time=", dt
+            #print(o, "time=", dt)
 
     def getSymExtent(self, printerScale):
         """Get max width and height of lines and markers symbols for legend"""
@@ -775,7 +776,7 @@ class PlotCanvas(wx.Panel):
         printout = PlotPrintout(self)
         printout2 = PlotPrintout(self)
         self.preview = wx.PrintPreview(printout, printout2, self.print_data)
-        if not self.preview.Ok():
+        if not self.preview.IsOk():
             wx.MessageDialog(self, "Print Preview failed.\n" \
                                "Check that default printer is configured\n", \
                                "Print error", wx.OK|wx.CENTRE).ShowModal()
@@ -1260,7 +1261,7 @@ class PlotCanvas(wx.Panel):
         # Draw the lines and markers
         #start = _time.clock()
         graphics.draw(dc)
-        # print "entire graphics drawing took: %f second"%(_time.clock() - start)
+        # print("entire graphics drawing took: %f second"%(_time.clock() - start))
         # remove the clipping region
         dc.DestroyClippingRegion()
 
@@ -1428,7 +1429,7 @@ class PlotCanvas(wx.Panel):
             # Give a little time for the click to be totally finished
             # before (possibly) removing the scrollbars and trigering
             # size events, etc.
-            wx.FutureCall(200,self.Reset)
+            wx.CallLater(200,self.Reset)
 
     def OnMouseRightDown(self,event):
         if self._zoomEnabled:
@@ -1754,7 +1755,7 @@ class PlotCanvas(wx.Panel):
 
     def _logticks(self, lower, upper):
         #lower,upper = map(_Numeric.log10,[lower,upper])
-        #print 'logticks',lower,upper
+        #print('logticks',lower,upper)
         ticks = []
         mag = _Numeric.power(10,_Numeric.floor(lower))
         if upper-lower > 6:
@@ -1903,10 +1904,10 @@ class PlotPrintout(wx.Printout):
 
     def OnPrintPage(self, page):
         dc = self.GetDC()  # allows using floats for certain functions
-##        print "PPI Printer",self.GetPPIPrinter()
-##        print "PPI Screen", self.GetPPIScreen()
-##        print "DC GetSize", dc.GetSize()
-##        print "GetPageSizePixels", self.GetPageSizePixels()
+##        print("PPI Printer",self.GetPPIPrinter())
+##        print("PPI Screen", self.GetPPIScreen())
+##        print("DC GetSize", dc.GetSize())
+##        print("GetPageSizePixels", self.GetPageSizePixels())
         # Note PPIScreen does not give the correct number
         # Calulate everything for printer and then scale for preview
         PPIPrinter= self.GetPPIPrinter()        # printer dots/inch (w,h)
@@ -2293,7 +2294,7 @@ class TestFrame(wx.Frame):
 ##        start = _time.clock()
 ##        for x in range(10):
 ##            self.client.Draw(drawObj)
-##        print "10 plots of Draw4 took: %f sec."%(_time.clock() - start)
+##        print("10 plots of Draw4 took: %f sec."%(_time.clock() - start))
 ##        # profile end
 
     def OnPlotDraw5(self, event):

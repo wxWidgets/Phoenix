@@ -9,6 +9,7 @@
 # RCS-ID:       $Id$
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 
 import sys
@@ -1414,7 +1415,7 @@ class DivisionShape(CompositeShape):
         return True
     
     def EditEdge(self, side):
-        print "EditEdge() not implemented."
+        print("EditEdge() not implemented.")
 
     def PopupMenu(self, x, y):
         menu = PopupDivisionMenu()

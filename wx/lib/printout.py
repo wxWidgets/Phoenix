@@ -8,6 +8,7 @@
 # Version       0.75
 # Date:         May 15, 2002
 # Licence:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 # Release Notes
 
@@ -320,16 +321,16 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
                 self.column.append(pos_x)   # position of each column
 
         if pos_x > self.page_width * self.pwidth:    # check if it fits in page
-            print "Warning, Too Wide for Page"
+            print("Warning, Too Wide for Page")
             return
 
         if self.label != []:
             if len(self.column) -1 != len(self.label):
-                print "Column Settings Incorrect", "\nColumn Value: " + str(self.column), "\nLabel Value: " + str(self.label)
+                print("Column Settings Incorrect", "\nColumn Value: " + str(self.column), "\nLabel Value: " + str(self.label))
                 return
 
         if column_total != len(self.column) -1:
-            print "Cannot fit", first_value, 'in', len(self.column)-1, 'columns.'
+            print("Cannot fit", first_value, 'in', len(self.column)-1, 'columns.')
             return
 
         for col in range(column_total):
@@ -1130,7 +1131,7 @@ class SetPrintout(wx.Printout):
         return True
 
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = wx.Frame(None, -1, "Dummy wx frame for testing printout.py")
     frame.Show(True)
     ptbl = PrintTable(frame)

@@ -5,6 +5,7 @@
 # Copyright:   (c) 2003 by Will Sadkin
 # RCS-ID:      $Id$
 # License:     wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 # NOTE:
 #   This was written to provide a standard integer edit control for wxPython.
@@ -127,11 +128,11 @@ class IntValidator(wx.Validator):
         select_len = sel_to - sel_start
 
 # (Uncomment for debugging:)
-##        print 'keycode:', key
-##        print 'pos:', pos
-##        print 'sel_start, sel_to:', sel_start, sel_to
-##        print 'select_len:', select_len
-##        print 'textval:', textval
+##        print('keycode:', key)
+##        print('pos:', pos)
+##        print('sel_start, sel_to:', sel_start, sel_to)
+##        print('select_len:', select_len)
+##        print('textval:', textval)
 
         # set defaults for processing:
         allow_event = 1
@@ -299,16 +300,16 @@ class IntValidator(wx.Validator):
 
 # (Uncomment for debugging:)
 ##        if allow_event:
-##            print 'new value:', new_value
+##            print('new value:', new_value)
 ##            if paste: print 'paste'
 ##            if set_to_none: print 'set_to_none'
 ##            if set_to_zero: print 'set_to_zero'
 ##            if set_to_minus_one: print 'set_to_minus_one'
 ##            if internally_set: print 'internally_set'
 ##        else:
-##            print 'new text:', new_text
-##            print 'disallowed'
-##        print
+##            print('new text:', new_text)
+##            print('disallowed')
+##        print()
 
         if allow_event:
             if set_to_none:
@@ -886,7 +887,7 @@ if __name__ == '__main__':
             self.Bind(EVT_INT, self.OnInt, self.int_ctrl)
 
         def OnInt(self, event):
-            print 'int now', event.GetValue()
+            print('int now', event.GetValue())
 
     class TestApp(wx.App):
         def OnInit(self):
@@ -906,7 +907,7 @@ if __name__ == '__main__':
             dlg.int_ctrl.SetInsertionPoint(1)
             dlg.int_ctrl.SetSelection(1,2)
             rc = dlg.ShowModal()
-            print 'final value', dlg.int_ctrl.GetValue()
+            print('final value', dlg.int_ctrl.GetValue())
             del dlg
             self.frame.Destroy()
 

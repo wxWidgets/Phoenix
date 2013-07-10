@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         auibar.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         31 March 2009
+# Licence:      wxWindows license
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 `auibar.py` contains an implementation of :class:`AuiToolBar`, which is a completely owner-drawn
 toolbar perfectly integrated with the AUI layout system. This allows drag and drop of
@@ -1421,7 +1433,7 @@ class AuiDefaultToolBarArt(object):
 
                 item.SetOrientation(orientation)                    
                     
-                menuPopup.AppendItem(m)
+                menuPopup.Append(m)
                 if kind in [ITEM_CHECK, ITEM_RADIO]:            
                     state = (item.state & AUI_BUTTON_STATE_CHECKED and [True] or [False])[0]
                     m.Check(state)

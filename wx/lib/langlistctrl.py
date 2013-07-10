@@ -8,6 +8,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2006 Riaan Booysen
 # License:     wxPython
+# Tags:        phoenix-port
 #-----------------------------------------------------------------------------
 """ ListCtrl and functions to display languages and the flags of their countries
 """
@@ -296,7 +297,7 @@ def CreateLanguagesResourceLists(filter=LC_AVAILABLE, only=()):
         icons.Add(bmp)
         name = wx.Locale.GetLanguageName(wxli)
         if wxli == wx.LANGUAGE_DEFAULT:
-            #print cnt, name, lc, wxli
+            #print(cnt, name, lc, wxli)
             name = 'Default: '+name
         
         names.append(name)
@@ -398,9 +399,9 @@ class LanguageListCtrl(wx.ListCtrl):
 
 
 if __name__ == '__main__':
-    a = wx.PySimpleApp()
+    a = wx.App()
     
-    print GetLanguageFlag(wx.LANGUAGE_AFRIKAANS)
+    print(GetLanguageFlag(wx.LANGUAGE_AFRIKAANS))
     
     f=wx.Frame(None, -1)
     f.p=wx.Panel(f, -1)

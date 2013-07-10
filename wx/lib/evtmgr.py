@@ -10,6 +10,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2003 by db-X Corporation
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #---------------------------------------------------------------------------
 # 12/02/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -431,9 +432,9 @@ class EventAdapter:
     def Destroy(self):
         try:
             if not self.disconnect():
-                print 'disconnect failed'
-        except wx.PyDeadObjectError:
-            print 'disconnect failed: dead object'              ##????
+                print('disconnect failed')
+        except RuntimeError:
+            print('disconnect failed: dead object')              ##????
 
 
 #---------------------------------------------------------------------------
@@ -485,7 +486,7 @@ eventManager  = EventManager()
 
 
 if __name__ == '__main__':
-    app    = wx.PySimpleApp()
+    app    = wx.App()
     frame  = wx.Frame(None, -1, 'Event Test', size=(300,300))
     button = wx.ToggleButton(frame, -1, 'Listen for Mouse Events')
     sizer  = wx.BoxSizer(wx.HORIZONTAL)
@@ -499,16 +500,16 @@ if __name__ == '__main__':
     #
 
     def printEvent(event):
-        print 'Name:',event.GetClassName(),'Timestamp',event.GetTimestamp()
+        print('Name:',event.GetClassName(),'Timestamp',event.GetTimestamp())
 
     def enableFrameEvents(event):
         # Turn the output of mouse events on and off
         if event.IsChecked():
-            print '\nEnabling mouse events...'
+            print('\nEnabling mouse events...')
             eventManager.Register(printEvent, wx.EVT_MOTION,    frame)
             eventManager.Register(printEvent, wx.EVT_LEFT_DOWN, frame)
         else:
-            print '\nDisabling mouse events...'
+            print('\nDisabling mouse events...')
             eventManager.DeregisterWindow(frame)
 
     # Send togglebutton events to both the on/off code as well

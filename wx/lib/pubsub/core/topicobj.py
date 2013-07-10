@@ -1,3 +1,10 @@
+#----------------------------------------------------------------------
+# Name:         topicobj.py
+#
+# Copyright:    Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+# License:      BSD, see LICENSE.txt for details.
+# Tags:         phoenix-port
+#----------------------------------------------------------------------
 '''
 Represent topics in pubsub. Topic objects contain all information about
 a topic, including documentation about the topic, the listener protocol
@@ -370,7 +377,7 @@ class Topic(PublisherMixin):
                     handler( listener.name(), topicObj )
                     self.__handlingUncaughtListenerExc = False
                 except Exception, exc:
-                    #print 'exception raised', exc
+                    #print('exception raised', exc)
                     self.__handlingUncaughtListenerExc = False
                     raise ExcHandlerError(listener.name(), topicObj, exc)
 
@@ -398,13 +405,13 @@ class Topic(PublisherMixin):
         '''Unsubscribe all our listeners, remove all subtopics from self,
         then detach from parent. Parent is not notified, because method
         assumes it has been called by parent'''
-        #print 'Remove %s listeners (%s)' % (self.getName(), self.getNumListeners())
+        #print('Remove %s listeners (%s)' % (self.getName(), self.getNumListeners()))
         self.unsubscribeAllListeners()
         self.__parentTopic = None
 
         for subName, subObj in self.__subTopics.iteritems():
             assert isinstance(subObj, Topic)
-            #print 'Unlinking %s from parent' % subObj.getName()
+            #print('Unlinking %s from parent' % subObj.getName())
             subObj.__undefineBranch(topicsMap)
 
         self.__subTopics = {}

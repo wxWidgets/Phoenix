@@ -1,5 +1,16 @@
 #!/usr/bin/env python
-
+#----------------------------------------------------------------------------
+# Name:         BBoxTest.py
+# Purpose:      Test code for the BBox Object
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 
 """
 Test code for the BBox Object
@@ -509,7 +520,7 @@ class testInfBBox(unittest.TestCase):
         self.failUnless( (self.B1 == self.B2) == True )
     
     def testNotEquals(self):
-        print (self.B1 == self.B3) == False
+        print((self.B1 == self.B3) == False)
         self.failUnless ( (self.B1 == self.B3) == False,
                           "NotEquals failed for\n%s,\n %s:%s"%(self.B1, self.B3, (self.B1 == self.B3)) )    
 

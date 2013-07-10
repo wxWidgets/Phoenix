@@ -218,7 +218,7 @@ class TableSizer(wx.PySizer):
         
         print("cols %d, rows %d" % (self.cols, self.rows))
         print("fixed_height %d, fixed_width %d" % (self.fixed_height, self.fixed_width))
-        #print "self.GetSize() = " + `self.GetSize()`
+        #print("self.GetSize() = " + `self.GetSize()`)
         
         row_widths = [0 for x in range(0, numrows)]
         col_heights = [0 for x in range(0, numcols)]
@@ -251,7 +251,7 @@ class TableSizer(wx.PySizer):
                 #    growable_width = self.GetSize()[0] - self.row_widths[currentRow]
                 #    growable_height = self.GetSize()[1] - self.col_heights[currentCol]
                 
-                #print "grow_height %d, grow_width %d" % (growable_height, growable_width)
+                #print("grow_height %d, grow_width %d" % (growable_height, growable_width))
                 
                 item_vgrow = 0
                 item_hgrow = 0
@@ -302,7 +302,7 @@ class TableSizer(wx.PySizer):
                     
                 colstart = itempos[1]
                 for col in range(0, currentCol):
-                    #print "numcols = %d, currentCol = %d, col = %d" % (numcols, currentCol, col)
+                    #print("numcols = %d, currentCol = %d, col = %d" % (numcols, currentCol, col))
                     colstart += col_heights[col]
                     
                 itempos[0] += rowstart
@@ -763,7 +763,7 @@ class SizedPanel(wx.Panel, SizedParent):
         if wx.VERSION < (2,8):
             wx.PyPanel.base_AddChild(self, child)
         else:
-            wx.PyPanel.AddChild(self, child)
+            wx.Panel.AddChild(self, child)
 
         SizedParent.AddChild(self, child)
 
@@ -773,7 +773,10 @@ class SizedPanel(wx.Panel, SizedParent):
         to new sizer.
         """
         props = self._DetachFromSizer(sizer)
+        if wx.VERSION < (2,8):
         wx.PyPanel.SetSizer(self, sizer)
+        else:
+            wx.Panel.SetSizer(self, sizer)
         self._AddToNewSizer(sizer, props)
 
 

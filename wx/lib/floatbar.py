@@ -5,6 +5,7 @@
 # Author:       Bryn Keller
 #
 # Created:      10/4/99
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 # 12/02/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -132,7 +133,7 @@ else:
 
 
         def SetTitle(self, title):
-            print 'SetTitle', title
+            print('SetTitle', title)
             self.title = title
             if self.IsFloating():
                 self.floatframe.SetTitle(self.title)
@@ -176,7 +177,7 @@ else:
             "Floats or docks the toolbar programmatically."
             if bool:
                 self.parentframe = self.GetParent()
-                print self.title
+                print(self.title)
                 if self.title:
                     useStyle = wx.DEFAULT_FRAME_STYLE
                 else:
@@ -231,9 +232,9 @@ else:
             if (abs(homepos.x - floatpos.x) < _DOCKTHRESHOLD and
                 abs(homepos.y - floatpos.y) < _DOCKTHRESHOLD):
                 self.Float(0)
-            #homepos = self.parentframe.GetPositionTuple()
+            #homepos = self.parentframe.GetPosition()
             #homepos = homepos[0], homepos[1] + self.titleheight
-            #floatpos = self.floatframe.GetPositionTuple()
+            #floatpos = self.floatframe.GetPosition()
             #if abs(homepos[0] - floatpos[0]) < 35 and abs(homepos[1] - floatpos[1]) < 35:
             #    self._SetFauxBarVisible(True)
             #else:
@@ -283,23 +284,23 @@ else:
                 if self.parentframe.GetToolBar() == None:
                     if not hasattr(self, 'nullbar'):
                         self.nullbar = wx.ToolBar(self.parentframe, -1)
-                    print "Adding fauxbar."
+                    print("Adding fauxbar.")
                     self.nullbar.Reparent(self.parentframe)
-                    print "Reparented."
+                    print("Reparented.")
                     self.parentframe.SetToolBar(self.nullbar)
-                    print "Set toolbar"
+                    print("Set toolbar")
                     col = wx.NamedColour("GREY")
                     self.nullbar.SetBackgroundColour(col)
-                    print "Set color"
+                    print("Set color")
                     size = self.parentframe.GetSize()
                     self.parentframe.SetSize((0,0))
                     self.parentframe.SetSize(size)
-                    print "Set size"
+                    print("Set size")
                 else:
-                    print self.parentframe.GetToolBar()
+                    print(self.parentframe.GetToolBar())
             else:
                 if self.parentframe.GetToolBar() != None:
-                    print "Removing fauxbar"
+                    print("Removing fauxbar")
                     self.nullbar.Reparent(self.floatframe)
                     self.parentframe.SetToolBar(None)
                     size = self.parentframe.GetSize()

@@ -2,6 +2,7 @@
 # CSheet - A wxPython spreadsheet class.
 # This is free software.  Feel free to adapt it as you like.
 # Author: Mark F. Russo (russomf@hotmail.com) 2002/01/31
+# Tags: phoenix-port
 #---------------------------------------------------------------------------
 # 12/11/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -59,7 +60,7 @@ class CCellEditor(wx.grid.PyGridCellEditor):
     def SetSize(self, rect):
         """ Position/size the edit control within the cell rectangle. """
         # Size text control to exactly overlay in-cell editing
-        self._tc.SetDimensions(rect.x+3, rect.y+3, rect.width-2, rect.height-2)
+        self._tc.SetSize(rect.x+3, rect.y+3, rect.width-2, rect.height-2)
 
     def Show(self, show, attr):
         """ Show or hide the edit control.  Use the attr (if not None)

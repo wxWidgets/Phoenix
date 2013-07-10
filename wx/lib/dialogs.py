@@ -8,7 +8,7 @@
 # Created:     3-January-2002
 # Copyright:   (c) 2002 by Total Control Software
 # Licence:     wxWindows license
-# Tags:        
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 # 12/01/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -377,7 +377,7 @@ class MultiMessageDialog(wx.Dialog):
             if isinstance(icon, wx.Icon):
                 bitmap = wx.BitmapFromIcon(icon)
             elif isinstance(icon, wx.Image):
-                bitmap = wx.BitmapFromImage(icon)
+                bitmap = wx.Bitmap(icon)
             else:
                 assert isinstance(icon, wx.Bitmap)
                 bitmap = icon
@@ -429,7 +429,7 @@ class MultiMessageDialog(wx.Dialog):
             # with good maximums
             dc = wx.ClientDC(t)
             dc.SetFont(t.GetFont())
-            w,h = dc.GetMultiLineTextExtent(msg2)
+            w,h = dc.GetFullMultiLineTextExtent(msg2)
             w = min(self.CONTENT_MAX_W, 10 + w + wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X))
             h = min(self.CONTENT_MAX_H, 10 + h)
             t.SetMinSize((w,h))
@@ -508,4 +508,3 @@ if __name__ == '__main__':
     app = wx.App()
     MultiMessageBox("Hello World", "howdy", "This is a MultiMessageBox \ntest. With a multi-line message.")
     app.MainLoop()
-    

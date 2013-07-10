@@ -5,9 +5,10 @@
 # Author:       Lorne White (email: lorne.white@telusplanet.net)
 #
 # Created:
-# Version       0.92
+# Version:      0.92
 # Date:         Nov 26, 2001
 # Licence:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 # 12/01/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -830,7 +831,7 @@ class Calendar( wx.Control ):
 
         if delta <> None:
             curDate = wx.DateTime.FromDMY(int(self.cal_days[self.sel_key]),self.month - 1,self.year)
-            timeSpan = wx.TimeSpan_Days(delta)
+            timeSpan = wx.TimeSpan.Days(delta)
             newDate = curDate + timeSpan
 
             if curDate.GetMonth() == newDate.GetMonth():

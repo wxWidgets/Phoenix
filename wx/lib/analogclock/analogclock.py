@@ -5,6 +5,7 @@
 # Distributed under the wxWidgets license.
 #
 # For more info please see the __init__.py file.
+# Tags:     phoenix-port
 
 import wx
 
@@ -14,7 +15,7 @@ from setup import Setup
 
 #----------------------------------------------------------------------
 
-class AnalogClock(wx.PyWindow):
+class AnalogClock(wx.Window):
     """An analog clock."""
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
@@ -22,7 +23,7 @@ class AnalogClock(wx.PyWindow):
                  clockStyle=DEFAULT_CLOCK_STYLE,
                  minutesStyle=TICKS_CIRCLE, hoursStyle=TICKS_POLY):
 
-        wx.PyWindow.__init__(self, parent, id, pos, size, style, name)
+        wx.Window.__init__(self, parent, id, pos, size, style, name)
 
         # Base size for scale calc purposes.
         self.basesize = wx.Size(348, 348)
@@ -166,7 +167,7 @@ class AnalogClock(wx.PyWindow):
         to make sure the buffer is always the same size as the window.
         """
 
-        self.faceBitmap = wx.EmptyBitmap(*size.Get())
+        self.faceBitmap = wx.Bitmap(*size.Get())
 
         # Recalc all coords.
         scale = min([float(size.width) / self.basesize.width,
@@ -614,7 +615,7 @@ class AnalogClockWindow(AnalogClock):
 # Test stuff ----------------------------------------------------------
 
 if __name__ == "__main__":
-    print wx.VERSION_STRING
+    print(wx.VERSION_STRING)
 
     class AcDemoApp(wx.App):
         def OnInit(self):
@@ -627,7 +628,3 @@ if __name__ == "__main__":
     acApp = AcDemoApp(0)
     acApp.MainLoop()
 
-
-#
-##
-### eof

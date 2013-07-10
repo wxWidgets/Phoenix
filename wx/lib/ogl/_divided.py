@@ -9,6 +9,7 @@
 # RCS-ID:       $Id$
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 
 import sys
@@ -393,7 +394,7 @@ class DividedShape(RectangleShape):
                 
     def EditRegions(self):
         """Edit the region colours and styles. Not implemented."""
-        print "EditRegions() is unimplemented"
+        print("EditRegions() is unimplemented")
         
     def OnRightClick(self, x, y, keys = 0, attachment = 0):
         if keys & KEY_CTRL:

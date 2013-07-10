@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         FloatCanvas.py
+# Purpose:
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 This is the main module of the floatcanvas package, it contains the :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas`
 and all the all the different objects which are sub-classed from :class:`~lib.floatcanvas.FloatCanvas.DrawObject`.
@@ -352,7 +364,7 @@ class DrawObject:
             self.Brush = self.BrushList.setdefault(
                 (FillColor, FillStyle),
                 wx.Brush(FillColor, self.FillStyleList[FillStyle]))
-            #print "Setting Brush, BrushList length:", len(self.BrushList)
+            #print("Setting Brush, BrushList length:", len(self.BrushList))
 
     def SetPen(self, LineColor, LineStyle, LineWidth):
         """
@@ -2470,9 +2482,9 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         ##fixme: should this have a y = -1 to shift to y-up?
         self.BmpScale = self.bmpWH / self.WH
 
-        #print "bmpWH:", self.bmpWH
-        #print "Width, Height:", self.WH
-        #print "self.BmpScale", self.BmpScale
+        #print("bmpWH:", self.bmpWH)
+        #print("Width, Height:", self.WH)
+        #print("self.BmpScale", self.BmpScale)
         self.ShiftFun = self.ShiftFunDict[Position]
         self.CalcBoundingBox()
         self.ScaledBitmap = None # cache of the last existing scaled bitmap
@@ -2506,15 +2518,15 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (0, 0, self.bmpWidth, self.bmpHeight, W, H) ):
         #if True: #fixme: (self.ScaledBitmap is None) or (H <> self.ScaledHeight) :
             self.ScaledHeight = H
-            #print "Scaling to:", W, H
+            #print("Scaling to:", W, H)
             Img = self.Image.Scale(W, H)
             bmp = wx.Bitmap(Img)
             self.ScaledBitmap = ((0, 0, self.bmpWidth, self.bmpHeight , W, H), bmp)# this defines the cached bitmap
         else:
-            #print "Using Cached bitmap"
+            #print("Using Cached bitmap")
             bmp = self.ScaledBitmap[1]
         XY = self.ShiftFun(XY[0], XY[1], W, H)
-        dc.DrawBitmapPoint(bmp, XY, True)
+        dc.DrawBitmap(bmp, XY, True)
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
@@ -2584,7 +2596,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
             ##fixme: The cached bitmap could be used if the one needed is the same scale, but
             ##       a subset of the cached one.
             bmp = self.ScaledBitmap[1]
-        dc.DrawBitmapPoint(bmp, XYs, True)
+        dc.DrawBitmap(bmp, XYs, True)
 
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
@@ -2595,15 +2607,15 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         BBworld = BBox.asBBox(self._Canvas.ViewPortBB)
         ## first see if entire bitmap is displayed:
         if  BBworld.Inside(self.BoundingBox):
-            #print "Drawing entire bitmap with old code"
+            #print("Drawing entire bitmap with old code")
             self._DrawEntireBitmap(dc , WorldToPixel, ScaleWorldToPixel, HTdc)
             return None
         elif BBworld.Overlaps(self.BoundingBox):
             #BBbitmap = BBox.fromPoints(self.WorldToBitmap(BBworld))
-            #print "Drawing a sub-bitmap"
+            #print("Drawing a sub-bitmap")
             self._DrawSubBitmap(dc , WorldToPixel, ScaleWorldToPixel, HTdc)
         else:
-            #print "Not Drawing -- no part of image is showing"
+            #print("Not Drawing -- no part of image is showing")
             pass
 
 class DotGrid:
@@ -3001,7 +3013,7 @@ class FloatCanvas(wx.Panel):
 
     if wx.__version__ >= "2.8":
         HitTestBitmapDepth = 32
-        #print "Using hit test code for 2.8"
+        #print("Using hit test code for 2.8")
         def GetHitTestColor(self, xy):
             """
             Get the hit test colour
@@ -3019,7 +3031,7 @@ class FloatCanvas(wx.Panel):
             return pacc.Get()[:3]
     else:
         HitTestBitmapDepth = 24
-        #print "using pre-2.8 hit test code"
+        #print("using pre-2.8 hit test code")
         def GetHitTestColor(self,  xy ):
             """
             Get the hit test colour
@@ -3031,7 +3043,7 @@ class FloatCanvas(wx.Panel):
                 dc.SelectObject(self._ForegroundHTBitmap)
             else:
                 dc.SelectObject(self._HTBitmap)
-            hitcolor = dc.GetPixelPoint( xy )
+            hitcolor = dc.GetPixel( xy )
             return hitcolor.Get()
 
     def UnBindAll(self):
@@ -3358,7 +3370,7 @@ class FloatCanvas(wx.Panel):
             self.GUIMode.UpdateScreen()
 
         if self.Debug:
-            print("Drawing took %f seconds of CPU time")%(clock()-start)
+            print("Drawing took %f seconds of CPU time"%(clock()-start))
             if self._HTBitmap is not None:
                 self._HTBitmap.SaveFile('junk.png', wx.BITMAP_TYPE_PNG)
         

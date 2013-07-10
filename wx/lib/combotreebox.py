@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         combotreebox.py
+# Purpose:
+#
+# Author:       Frank Niessink <frank@niessink.com>
+#
+# Created:
+# Version:      1.1
+# Date:         August 1, 2010
+# Licence:      wxWidgets license
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """ 
 ComboTreeBox provides a ComboBox that pops up a tree instead of a list. 
 
@@ -447,7 +459,7 @@ class BaseComboTreeBox(object):
         y += comboBoxSize[1]
         width = comboBoxSize[0]
         height = 300
-        self._popupFrame.SetDimensions(x, y, width, height)
+        self._popupFrame.SetSize(x, y, width, height)
         # On wxGTK, when the Combobox width has been increased a call 
         # to SetMinSize is needed to force a resize of the popupFrame: 
         self._popupFrame.SetMinSize((width, height)) 
@@ -529,7 +541,7 @@ class BaseComboTreeBox(object):
         if parent is None:
             parent = self._tree.GetRootItem()
         item = self._tree.AppendItem(parent, itemText, 
-                                     data=wx.TreeItemData(clientData))
+                                     data=clientData)
         if self._sort:
             self._tree.SortChildren(parent)
         return item
@@ -837,7 +849,7 @@ class MSWComboTreeBox(NativeComboTreeBox):
         # result of GetLastPosition and the length of the value. If they
         # match, all is fine. If they don't match, we don't call SetMark.
         if self._text.GetLastPosition() == len(value):
-            self._text.SetMark(0, self._text.GetLastPosition())
+            self._text.SetTextSelection(0, self._text.GetLastPosition())
 
     def Popup(self, *args, **kwargs):
         """

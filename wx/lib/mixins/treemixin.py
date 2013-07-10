@@ -1,3 +1,18 @@
+#---------------------------------------------------------------------------
+# Name:        treemixin.py
+# Purpose:     This module provides three mixin classes that can be used with tree
+#              controls
+#
+# Author:
+#
+# Created:
+# RCS-ID:
+# Date:        24 September 2007
+# Copyright:
+# Version:     1.1
+# Licence:     wxWidgets license
+# Tags:        phoenix-port
+#---------------------------------------------------------------------------
 """
 treemixin.py 
 
@@ -554,10 +569,10 @@ class DragAndDrop(TreeAPIHarmonizer, TreeHelper):
         self.SelectItem(self._dragItem)
 
     def SetCursorToDragging(self):
-        self.GetMainWindow().SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        self.GetMainWindow().SetCursor(wx.Cursor(wx.CURSOR_HAND))
         
     def SetCursorToDroppingImpossible(self):
-        self.GetMainWindow().SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+        self.GetMainWindow().SetCursor(wx.Cursor(wx.CURSOR_NO_ENTRY))
         
     def ResetCursor(self):
         self.GetMainWindow().SetCursor(wx.NullCursor)

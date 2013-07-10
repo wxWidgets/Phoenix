@@ -1,3 +1,12 @@
+#----------------------------------------------------------------------
+# Name:         pub.py
+#
+# Author:       Oliver Schoenborn
+# Copyright:    (c) 2007-2009 Oliver Schoenborn
+# Version:      2.01
+# License:      see LICENSE.txt
+# Tags:         phoenix-port
+#----------------------------------------------------------------------
 '''
 This module provides publish-subscribe functions that allow
 your methods, functions, and any other callable object to subscribe to 
@@ -13,7 +22,7 @@ carrying data 'some data' (in this case, a string, but could be anything)::
     class MsgType(ps.Message):
         pass
     def listener(msg, data):
-        print 'got msg', data
+        print('got msg', data)
     ps.subscribe(listener, MsgType)
     ps.sendMessage(MsgType('some data'))
 

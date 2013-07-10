@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         dockart.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         31 March 2009
+# Licence:      wxWindows license
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 Dock art provider code - a dock provider provides all drawing functionality to
 the AUI dock manager. This allows the dock manager to have a plugable look-and-feel.
@@ -145,7 +157,7 @@ class AuiDefaultDockArt(object):
         if isMac:
             self._caption_font = wx.SMALL_FONT
         else:
-            self._caption_font = wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False)
+            self._caption_font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
 
         self.SetDefaultPaneBitmaps(isMac)
         self._restore_bitmap = wx.Bitmap(restore_xpm)

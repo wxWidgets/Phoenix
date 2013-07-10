@@ -46,9 +46,9 @@ def setMsgDataArgName(stage, listenerArgName, senderArgNameAny=False):
     policies.senderKwargNameAny = senderArgNameAny
     policies.msgDataArgName = listenerArgName
     policies.msgProtocolTransStage = stage
-    #print `policies.msgProtocolTransStage`, `policies.msgDataProtocol`, \
-    #      `policies.senderKwargNameAny`, `policies.msgDataArgName`
-    #print 'override "arg1" protocol arg name:', argName
+    #print(`policies.msgProtocolTransStage`, `policies.msgDataProtocol`, \
+    #      `policies.senderKwargNameAny`, `policies.msgDataArgName`)
+    #print('override "arg1" protocol arg name:', argName)
 
 
 def _replaceModulePath0(dirname):

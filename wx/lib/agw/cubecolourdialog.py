@@ -91,8 +91,8 @@ Usage example::
         # returned as a three-tuple (r, g, b) in this particular case.
         colour = colourData.GetColour()
         r, g, b, alpha = colour.Red(), colour.Green(), colour.Blue(), colour.Alpha()
-        print "You selected (RGBA): %d, %d, %d, %d"%(r, g, b, alpha)
-        print "You selected (HSVA): %d, %d, %d, %d"%(h, s, v, a)
+        print("You selected (RGBA): %d, %d, %d, %d"%(r, g, b, alpha))
+        print("You selected (HSVA): %d, %d, %d, %d"%(h, s, v, a))
 
     # Once the dialog is destroyed, Mr. wx.ColourData is no longer your
     # friend. Don't use it again!

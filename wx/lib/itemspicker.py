@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         itemspicker.py
+# Purpose:
+#
+# Author:       Daphna Rosenbom, Gitty Zinger, Moshe Cohavi and Yoav Glazner
+#
+# Created:      Oct 3, 2010
+# Version:
+# Date:
+# Licence:      wxPython license
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 '''
 Created on Oct 3, 2010
 
@@ -219,7 +231,7 @@ class ItemsPicker(wx.Panel):
         
 
 if __name__ == '__main__':
-    test = wx.PySimpleApp(0)
+    test = wx.App(0)
     frame = wx.Frame(None, -1)
     d = wx.Dialog(frame, style = wx.RESIZE_BORDER|wx.DEFAULT_DIALOG_STYLE)
     
@@ -234,7 +246,7 @@ if __name__ == '__main__':
     d.SetSizer(d.sizer)
     test.SetTopWindow(frame)
     def callback(e):
-        print 'selected items', e.GetItems()
+        print('selected items', e.GetItems())
     d.Bind(EVT_IP_SELECTION_CHANGED, callback)
     d.ShowModal()
     d.Destroy()

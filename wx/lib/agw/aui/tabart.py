@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         tabart.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         31 March 2009
+# Licence:      wxWindows license
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 Tab art provider code - a tab provider provides all drawing functionality to
 the :class:`~lib.agw.aui.auibook.AuiNotebook`. This allows the
@@ -114,7 +126,7 @@ class AuiDefaultTabArt(object):
 
         self._normal_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._selected_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._selected_font.SetWeight(wx.BOLD)
+        self._selected_font.SetWeight(wx.FONTWEIGHT_BOLD)
         self._measuring_font = self._selected_font
 
         self._fixed_tab_width = 100
@@ -949,7 +961,7 @@ class AuiDefaultTabArt(object):
                 if page.bitmap:
                     menuItem.SetBitmap(page.bitmap)
 
-                menuPopup.AppendItem(menuItem)
+                menuPopup.Append(menuItem)
                 
             else:
                 
@@ -999,7 +1011,7 @@ class AuiSimpleTabArt(object):
 
         self._normal_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._selected_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._selected_font.SetWeight(wx.BOLD)
+        self._selected_font.SetWeight(wx.FONTWEIGHT_BOLD)
         self._measuring_font = self._selected_font
 
         self._agwFlags = 0
@@ -1483,7 +1495,7 @@ class AuiSimpleTabArt(object):
                 if page.bitmap:
                     menuItem.SetBitmap(page.bitmap)
 
-                menuPopup.AppendItem(menuItem)
+                menuPopup.Append(menuItem)
                 
             else:
                 

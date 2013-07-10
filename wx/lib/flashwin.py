@@ -9,6 +9,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2008 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 
 import wx

@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         fmcustomizeddlg.py
+# Purpose:
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:      wxWindows license
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 This module contains a custom dialog class used to personalize the appearance of a
 :class:`~lib.agw.flatmenu.FlatMenu` on the fly, allowing also the user of your application to do the same.
@@ -138,7 +150,7 @@ class FMTitlePanel(wx.Panel):
 
         # Draw the text
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         dc.SetFont(font)
         dc.SetTextForeground(wx.BLACK)
         dc.DrawText(self._title, 5, 5)

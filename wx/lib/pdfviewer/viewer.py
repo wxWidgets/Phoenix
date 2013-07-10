@@ -67,7 +67,7 @@ if USE_CAIRO and wx.VERSION_STRING > '2.8.10.1':      # Cairo DrawBitmap bug fix
         from wx.lib.graphics import GraphicsContext
         FONTSCALE = 1.0
         have_cairo = True
-        if VERBOSE: print 'Using Cairo'
+        if VERBOSE: print('Using Cairo')
     except ImportError:
         pass
 if not have_cairo:    
@@ -75,7 +75,7 @@ if not have_cairo:
     if wx.PlatformInfo[1] == 'wxMSW':   # for Windows only    
         FONTSCALE = 72.0 / 96.0         # wx.GraphicsContext fonts are too big in the ratio
                                         # of screen pixels per inch to points per inch 
-    if VERBOSE: print 'Using wx.GraphicsContext'
+    if VERBOSE: print('Using wx.GraphicsContext')
 
 """ If reportlab is installed, use its stringWidth metric. For justifying text,
     where widths are cumulative, dc.GetTextExtent consistently underestimates,
@@ -417,13 +417,13 @@ class pdfViewer(wx.ScrolledWindow):
                     ttr = time.time()-t1 
                     if CACHE_LATE_PAGES and ttr * 1000 > LATE_THRESHOLD:
                         self.CachePage(pageno)      # save page out of buffer
-                    #print 'Page %d rendered in %.3f seconds' % (pageno+1, ttr)
+                    #print('Page %d rendered in %.3f seconds' % (pageno+1, ttr))
             gc.PushState()    
             gc.Translate(0-self.x0, 0-self.page_y0)
             self.RenderPageBoundaries(gc)
             gc.PopState()
         self.Refresh(0)     # Blit appropriate area of new or existing page buffer to screen
-        #print 'Cached pages:', self.cachedpages.keys()
+        #print('Cached pages:', self.cachedpages.keys())
         #self.pagebuffer.SaveFile('pagemap.png', wx.BITMAP_TYPE_PNG)
 
     def RenderPage(self, gc, pagedrawings):
@@ -530,8 +530,8 @@ class pdfViewer(wx.ScrolledWindow):
                                     self.page.extractOperators(), pdf_fonts)    
             if rp: self.Progress('progress', numpages_generated)
 
-        ## print 'Pages %d to %d. %d pages created in %.2f seconds' % (
-        ##           frompage, topage, numpages_generated,(time.time()-t0))
+        ## print('Pages %d to %d. %d pages created in %.2f seconds' % (
+        ##           frompage, topage, numpages_generated,(time.time()-t0)))
         if rp: self.Progress('end', None)
         self.GoPage(frompage)
 
@@ -630,7 +630,7 @@ class pdfViewer(wx.ScrolledWindow):
                 drawlist.extend(self.InlineImage(operand))
             else:                       # report once
                 if operator not in self.unimplemented:
-                    if VERBOSE: print 'PDF operator %s is not implemented' % operator
+                    if VERBOSE: print('PDF operator %s is not implemented' % operator)
                     self.unimplemented[operator] = 1
 
         # Fix bitmap transform. Remove the scaling from any transform matrix that precedes
@@ -665,7 +665,7 @@ class pdfViewer(wx.ScrolledWindow):
             family = wx.FONTFAMILY_DEFAULT 
             font = 'Wingdings'
         else:
-            if VERBOSE: print 'Unknown font %s' % pdfont
+            if VERBOSE: print('Unknown font %s' % pdfont)
             self.knownfont = False
             family = wx.FONTFAMILY_SWISS 
             font = 'Arial'
@@ -843,8 +843,8 @@ class pdfViewer(wx.ScrolledWindow):
             data = FlateDecode.decode(data, None)
         if '/DCT' in filters or '/DCTDecode' in filters:
             stream = cStringIO.StringIO(data)
-            image = wx.ImageFromStream(stream, wx.BITMAP_TYPE_JPEG)
-            bitmap = wx.BitmapFromImage(image)
+            image = wx.Image(stream, wx.BITMAP_TYPE_JPEG)
+            bitmap = wx.Bitmap(image)
         else:    
             bitmap = wx.BitmapFromBuffer(width, height, data)
         return ['DrawBitmap', (bitmap, 0, 0-height, width, height), {}]
@@ -1030,7 +1030,7 @@ def _AsciiBase85DecodePYTHON(input):
     stripped = stripped.replace('z','!!!!!')
     # special rules apply if not a multiple of five bytes.
     whole_word_count, remainder_size = divmod(len(stripped), 5)
-    #print '%d words, %d leftover' % (whole_word_count, remainder_size)
+    #print('%d words, %d leftover' % (whole_word_count, remainder_size))
     #assert remainder_size <> 1, 'invalid Ascii 85 stream!'
     cut = 5 * whole_word_count
     body, lastbit = stripped[0:cut], stripped[cut:]
@@ -1071,8 +1071,8 @@ def _AsciiBase85DecodePYTHON(input):
         temp, b3 = divmod(temp,256)
         b1, b2 = divmod(temp, 256)
         assert  num == 16777216 * b1 + 65536 * b2 + 256 * b3 + b4, 'dodgy code!'
-        #print 'decoding: %d %d %d %d %d -> %d -> %d %d %d %d' % (
-        #    c1,c2,c3,c4,c5,num,b1,b2,b3,b4)
+        #print('decoding: %d %d %d %d %d -> %d -> %d %d %d %d' % (
+        #    c1,c2,c3,c4,c5,num,b1,b2,b3,b4))
 
         #the last character needs 1 adding; the encoding loses
         #data by rounding the number to x bytes, and when

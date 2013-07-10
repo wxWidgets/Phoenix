@@ -764,7 +764,7 @@ class BaseMaskedComboBox( wx.ComboBox, MaskedEditMixin ):
             # down is showing. Not all masked comboboxes require choices from an autocomplete list.
             self.replace_next_combobox_event = True
             self.correct_selection = self._GetValue()
-        event.m_keyCode = wx.WXK_TAB
+        event.KeyCode = wx.WXK_TAB
         event.Skip()
 ##        dbg(indent=0)
 

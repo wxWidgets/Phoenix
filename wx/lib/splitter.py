@@ -9,6 +9,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2005 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 """
 This module provides the `MultiSplitterWindow` class, which is very
@@ -112,7 +113,7 @@ class MultiSplitterWindow(wx.Panel):
         return self._orient
 
     def SetBackgroundColour(self,color):
-        wx.PyPanel.SetBackgroundColour(self,color)
+        wx.Panel.SetBackgroundColour(self,color)
         self._drawSashInBackgroundColour = True
         if  wx.NullColour == color:
             self._drawSashInBackgroundColour = False
@@ -646,8 +647,8 @@ class MultiSplitterWindow(wx.Panel):
                 y1 = 0
                 y2 = 0
 
-        x1, y1 = self.ClientToScreenXY(x1, y1)
-        x2, y2 = self.ClientToScreenXY(x2, y2)
+        x1, y1 = self.ClientToScreen(x1, y1)
+        x2, y2 = self.ClientToScreen(x2, y2)
 
         dc.SetLogicalFunction(wx.INVERT)
         dc.SetPen(self._sashTrackerPen)

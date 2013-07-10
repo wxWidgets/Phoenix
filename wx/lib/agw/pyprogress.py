@@ -911,4 +911,3 @@ if __name__ == '__main__':
     dlg.Destroy()
 
     app.MainLoop()
-    

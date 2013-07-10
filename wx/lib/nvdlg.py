@@ -8,6 +8,7 @@
 # RCS-ID:      $Id: $
 # Copyright:   (c) 2009 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 
 
@@ -148,7 +149,7 @@ if __name__ == '__main__':
                                 captionTitle="Login",
                                 captionDescr="Enter your testing credentials")
     if dlg.ShowModal() == wx.ID_OK:
-        print dlg.username, dlg.passwd
+        print(dlg.username, dlg.passwd)
     dlg.Destroy()
     app.MainLoop()
     

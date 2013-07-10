@@ -9,6 +9,7 @@
 # RCS-ID:       $Id$
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # License:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 
 import os.path
@@ -408,7 +409,7 @@ class PseudoMetaFile(object):
         if not os.path.exist(filename):
             return False
 
-        print "LoadFromMetaFile not implemented yet."
+        print("LoadFromMetaFile not implemented yet.")
         return False # TODO
 
     # Scale to fit size

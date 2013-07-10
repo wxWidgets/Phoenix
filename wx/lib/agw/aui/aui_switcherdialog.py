@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         aui_switcherdialog.py
+# Purpose: 
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:      wxWindows license
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 Description
 ===========
@@ -1161,7 +1173,7 @@ class SwitcherDialog(wx.Dialog):
     # Convert a colour to a 6-digit hex string
     def ColourToHexString(self, col):
 
-        hx = '%02x%02x%02x' % tuple([int(c) for c in col])
+        hx = '%02x%02x%02x%02x' % tuple([int(c) for c in col])
         return hx
 
 
@@ -1212,4 +1224,3 @@ class SwitcherDialog(wx.Dialog):
 
         self._borderColour = colour
 
-        

@@ -28,7 +28,7 @@ def convert(file, maskClr, outputDir, outputName, outType, outExt):
     else:
         img = wx.Bitmap(file, wx.BITMAP_TYPE_ANY)
 
-    if not img.Ok():
+    if not img.IsOk():
         return 0, file + " failed to load!"
     else:
         if maskClr:

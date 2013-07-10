@@ -26,6 +26,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:         phoenix-port
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -2425,17 +2426,17 @@ class ScrolledThumbnail(wx.ScrolledWindow):
          (6) ``-`` key zooms out.
         """
 
-        if event.m_keyCode == ord("s"):
+        if event.KeyCode == ord("s"):
             self.Rotate()
-        elif event.m_keyCode == ord("d"):
+        elif event.KeyCode == ord("d"):
             self.Rotate(270)
-        elif event.m_keyCode == ord("a"):
+        elif event.KeyCode == ord("a"):
             self.Rotate(180)
-        elif event.m_keyCode == wx.WXK_DELETE:
+        elif event.KeyCode == wx.WXK_DELETE:
             self.DeleteFiles()
-        elif event.m_keyCode in [wx.WXK_ADD, wx.WXK_NUMPAD_ADD]:
+        elif event.KeyCode in [wx.WXK_ADD, wx.WXK_NUMPAD_ADD]:
             self.ZoomIn()
-        elif event.m_keyCode in [wx.WXK_SUBTRACT, wx.WXK_NUMPAD_SUBTRACT]:
+        elif event.KeyCode in [wx.WXK_SUBTRACT, wx.WXK_NUMPAD_SUBTRACT]:
             self.ZoomOut()
             
         event.Skip()

@@ -7,6 +7,7 @@
 # Version:      2.0
 # Date:         June 16, 2007
 # Licence:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 # 2.0 Release - Bill Baxter (wbaxter@gmail.com)
 # Date:         June 16, 2007
@@ -66,9 +67,9 @@ A simple usage would be::
     with ib.ImageDialog(None) as dlg:
         if dlg.ShowModal() == wx.ID_OK:
             # show the selected file
-            print "You Selected File: " + dlg.GetFile()
+            print("You Selected File: " + dlg.GetFile())
         else:
-            print "You pressed Cancel\n"
+            print("You pressed Cancel\n")
 
     app.MainLoop()
 
@@ -581,7 +582,7 @@ class ImageDialog(wx.Dialog):
                 allTypes = self.fl_types[1:]
             for ftypes in allTypes:    # get list of all
                 filter = self.fl_ext_types[ftypes]
-                #print "filter = ", filter
+                #print("filter = ", filter)
                 self.fl_val = FindFiles(self, self.set_dir, filter)
                 all_files = all_files + self.fl_val.files   # add to list of files
 

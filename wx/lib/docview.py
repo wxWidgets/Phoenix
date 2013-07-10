@@ -8,6 +8,7 @@
 # CVS-ID:       $Id$
 # Copyright:    (c) 2003-2006 ActiveGrid, Inc. (Port of wxWindows classes by Julian Smart et al)
 # License:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 
 
@@ -1560,7 +1561,7 @@ class DocManager(wx.EvtHandler):
             data = wx.PrintDialogData(self.printData)
             # Pass two printout objects: for preview, and possible printing.
             preview = wx.PrintPreview(printout, view.OnCreatePrintout(), data)
-            if not preview.Ok():
+            if not preview.IsOk():
                 wx.MessageBox(_("Unable to display print preview."))
                 return
             # wxWindows source doesn't use base frame's pos, size, and icon, but did it this way so it would work like MS Office etc.
@@ -2141,7 +2142,7 @@ class DocManager(wx.EvtHandler):
         focus or if there is no current focus the application's top frame.
         """
         parent = wx.GetApp().GetTopWindow()
-        focusWindow = wx.Window_FindFocus()
+        focusWindow = wx.Window.FindFocus()
         if focusWindow:
             while focusWindow and not isinstance(focusWindow, wx.Dialog) and not isinstance(focusWindow, wx.Frame):
                 focusWindow = focusWindow.GetParent()

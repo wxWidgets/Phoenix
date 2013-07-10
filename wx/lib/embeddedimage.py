@@ -38,7 +38,7 @@ class PyEmbeddedImage(object):
     from some other source at runtime, such as over the network or
     from a database.  In this case pass False for isBase64 (unless the
     data actually is base64 encoded.)  Any image type that
-    wx.ImageFromStream can handle should be okay.
+    wx.Image can handle should be okay.
     """
 
     def __init__(self, data, isBase64=True):

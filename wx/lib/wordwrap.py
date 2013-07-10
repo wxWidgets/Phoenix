@@ -8,6 +8,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2006 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 
 def wordwrap(text, width, dc, breakLongWords=True, margin=0):
@@ -71,7 +72,7 @@ if __name__ == '__main__':
         def OnDoUpdate(self, evt):
             WIDTH = self.GetSize().width - 220
             HEIGHT = 200
-            bmp = wx.EmptyBitmap(WIDTH, HEIGHT)
+            bmp = wx.Bitmap(WIDTH, HEIGHT)
             mdc = wx.MemoryDC(bmp)
             mdc.SetBackground(wx.Brush("white"))
             mdc.Clear()
@@ -80,7 +81,7 @@ if __name__ == '__main__':
             mdc.DrawRectangle(0,0, WIDTH, HEIGHT)
 
             text = wordwrap(self.tc.GetValue(), WIDTH-2, mdc, False)
-            #print repr(text)
+            #print(repr(text))
             mdc.DrawLabel(text, (1,1, WIDTH-2, HEIGHT-2))
 
             del mdc

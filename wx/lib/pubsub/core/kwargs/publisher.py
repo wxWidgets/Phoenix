@@ -1,3 +1,10 @@
+#----------------------------------------------------------------------
+# Name:         publisher.py
+#
+# Copyright:    Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+# License:      BSD, see LICENSE.txt for details.
+# Tags:         phoenix-port
+#----------------------------------------------------------------------
 '''
 Mixin for publishing messages to a topic's listeners. This will be
 mixed into topicobj.Topic so that a user can use a Topic object to
@@ -76,6 +83,6 @@ if policies.msgProtocolTransStage is None:
     Publisher = PublisherKwargs
 else:
     Publisher = PublisherArg1Stage2
-    #print 'Using protocol', Publisher
+    #print('Using protocol', Publisher)
     
 

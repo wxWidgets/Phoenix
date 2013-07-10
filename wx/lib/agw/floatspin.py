@@ -1252,12 +1252,12 @@ class FixedPoint(object):
     Example::
 
         >>> x = FixedPoint("5.55")  # precision defaults to 2
-        >>> print x
+        >>> print(x)
         5.55
         >>> x.set_precision(1)      # round to one fraction digit
-        >>> print x
+        >>> print(x)
         5.6
-        >>> print FixedPoint("5.55", 1)  # same thing setting to 1 in constructor
+        >>> print(FixedPoint("5.55", 1))  # same thing setting to 1 in constructor
         5.6
         >>> repr(x) #  returns constructor string that reproduces object exactly
         "FixedPoint('5.6', 1)"
@@ -1278,9 +1278,9 @@ class FixedPoint(object):
     is carried out using -- and the result inherits -- the :class:`FixedPoint`'s
     precision. Example::
 
-        >>> print FixedPoint(1) / 7
+        >>> print(FixedPoint(1) / 7)
         0.14
-        >>> print FixedPoint(1, 30) / 7
+        >>> print(FixedPoint(1, 30) / 7)
         0.142857142857142857142857142857
         >>>
 
@@ -1302,9 +1302,9 @@ class FixedPoint(object):
     (up to final rounding to the requested precision), so is greatly
     preferred. Example::
 
-        >>> print FixedPoint(1.1e30)
+        >>> print(FixedPoint(1.1e30))
         1099999999999999993725589651456.00
-        >>> print FixedPoint("1.1e30")
+        >>> print(FixedPoint("1.1e30"))
         1100000000000000000000000000000.00
         >>>
 

@@ -5,6 +5,7 @@
 # Author: Cody Precord <cprecord@editra.org>                                  #
 # Copyright: (c) 2007 Cody Precord <staff@editra.org>                         #
 # Licence: wxWindows Licence                                                  #
+# Tags: phoenix-port
 ###############################################################################
 
 """
@@ -564,9 +565,9 @@ class PlateButton(wx.Control):
         if (self._style & PB_STYLE_TOGGLE):
             self._pressed = not self._pressed
 
-        pos = evt.GetPositionTuple()
+        pos = evt.GetPosition()
         self._SetState(PLATE_PRESSED)
-        size = self.GetSizeTuple()
+        size = self.GetSize()
         if pos[0] >= size[0] - 16:
             if self._menu is not None:
                 self.ShowMenu()
@@ -585,8 +586,8 @@ class PlateButton(wx.Control):
 
         """
         if self._state['cur'] == PLATE_PRESSED:
-            pos = evt.GetPositionTuple()
-            size = self.GetSizeTuple()
+            pos = evt.GetPosition()
+            size = self.GetSize()
             if not (self._style & PB_STYLE_DROPARROW and pos[0] >= size[0] - 16):
                 self.__PostEvent()
 
@@ -746,7 +747,7 @@ class PlateButton(wx.Control):
     def ShowMenu(self):
         """Show the dropdown menu if one is associated with this control"""
         if self._menu is not None:
-            size = self.GetSizeTuple()
+            size = self.GetSize()
             adj = wx.Platform == '__WXMAC__' and 3 or 0
 
             if self._style & PB_STYLE_SQUARE:

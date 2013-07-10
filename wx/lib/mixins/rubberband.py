@@ -8,6 +8,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2002 by db-X Corporation
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #---------------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -142,7 +143,7 @@ class RubberBand:
         return self.__enabled
 
     def __handleOnPaint(self, event):
-        #print 'paint'
+        #print('paint')
         event.Skip()
 
     def __isMovingCursor(self):
@@ -302,7 +303,7 @@ class RubberBand:
         """
         if self.__currentCursor != id:  # Avoid redundant calls
             if id:
-                self.drawingSurface.SetCursor(wx.StockCursor(id))
+                self.drawingSurface.SetCursor(wx.Cursor(id))
             else:
                 self.drawingSurface.SetCursor(wx.NullCursor)
             self.__currentCursor = id
@@ -333,20 +334,20 @@ class RubberBand:
         dc.SetLogicalFunction(wx.XOR)
         if boxToErase:
             r = wx.Rect(*boxToErase)
-            dc.DrawRectangleRect(r)
+            dc.DrawRectangle(r)
 
         r = wx.Rect(*boxToDraw)
-        dc.DrawRectangleRect(r)
+        dc.DrawRectangle(r)
 
     def __dumpMouseEvent(self, event):
-        print 'Moving:          ',event.Moving()
-        print 'Dragging:        ',event.Dragging()
-        print 'LeftDown:        ',event.LeftDown()
-        print 'LeftisDown:      ',event.LeftIsDown()
-        print 'LeftUp:          ',event.LeftUp()
-        print 'Position:        ',event.GetPosition()
-        print 'x,y:             ',event.GetX(),event.GetY()
-        print
+        print('Moving:          ',event.Moving())
+        print('Dragging:        ',event.Dragging())
+        print('LeftDown:        ',event.LeftDown())
+        print('LeftisDown:      ',event.LeftIsDown())
+        print('LeftUp:          ',event.LeftUp())
+        print('Position:        ',event.GetPosition())
+        print('x,y:             ',event.GetX(),event.GetY())
+        print()
 
 
     #
@@ -377,7 +378,7 @@ class RubberBand:
 
 
 if __name__ == '__main__':
-    app   = wx.PySimpleApp()
+    app   = wx.App()
     frame = wx.Frame(None, -1, title='RubberBand Test', size=(300,300))
 
     # Add a panel that the rubberband will work on.

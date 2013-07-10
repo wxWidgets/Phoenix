@@ -1,3 +1,8 @@
+#----------------------------------------------------------------------
+# Name:        editor.py
+# Author:      Patrick K. O'Brien <pobrien@orbtech.com>
+# Tags:        phoenix-port
+#----------------------------------------------------------------------
 """PyAlaCarte and PyAlaMode editors."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
@@ -335,7 +340,7 @@ class EditorNotebookFrame(EditorFrame):
     def bufferDestroy(self):
         """Destroy the current buffer."""
         selection = self.notebook.GetSelection()
-##         print "Destroy Selection:", selection
+##         print("Destroy Selection:", selection)
         if selection > 0:  # Don't destroy the PyCrust tab.
             if self.buffer:
                 del self.buffers[self.buffer.id]
@@ -480,7 +485,7 @@ class EditorShellNotebookFrame(EditorNotebookFrame):
             self.notebook = None
         else:
             selection = self.notebook.GetSelection()
-##             print "Destroy Selection:", selection
+##             print("Destroy Selection:", selection)
             self.notebook.DeletePage(selection)
 
     def bufferNew(self):

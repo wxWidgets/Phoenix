@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         buttontreectrlpanel.py
+# Purpose:
+#
+# Author:       E. A. Tacao <e.a.tacao |at| estadao.com.br>
+#
+# Created:
+# Version:      0.03
+# Date:         12 Fev 2006, 22:00 GMT-03:00
+# Licence:
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 __author__  = "E. A. Tacao <e.a.tacao |at| estadao.com.br>"
 __date__    = "12 Fev 2006, 22:00 GMT-03:00"
 __version__ = "0.03"
@@ -285,6 +297,3 @@ ButtonTreeCtrlPanel.checkbox_tri = PyEmbeddedImage(
     "wFOt4bZug2PfxDNdARosBvBlC1YNGnSH52UV30c9wQOLAXzZglWDBj3BaoAXBliRvlQ6XGWK"
     "fucKTYUl4c5UOHYAAAAASUVORK5CYII=")
 
-#
-##
-### eof

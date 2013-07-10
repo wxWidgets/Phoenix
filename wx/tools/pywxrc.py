@@ -14,6 +14,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2004 by Total Control Software, 2000 Vaclav Slavik
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 
 """
@@ -864,20 +865,20 @@ def main(args=None):
                                        "hpgevo:",
                                        "help python gettext embed novar output=".split())
     except getopt.GetoptError, e:
-        print "\nError : %s\n" % str(e)
-        print __doc__
+        print("\nError : %s\n" % str(e))
+        print(__doc__)
         sys.exit(1)
 
     # If there is no input file argument, show help and exit
     if not args:
-        print __doc__
-        print "No xrc input file was specified."
+        print(__doc__)
+        print("No xrc input file was specified.")
         sys.exit(1)
 
     # Parse options and arguments
     for opt, val in opts:
         if opt in ["-h", "--help"]:
-            print __doc__
+            print(__doc__)
             sys.exit(1)
 
         if opt in ["-p", "--python"]:
@@ -918,16 +919,16 @@ def main(args=None):
             comp.MakeGetTextOutput(inputFiles, outputFilename)
 
         else:
-            print __doc__
-            print "One or both of -p, -g must be specified."
+            print(__doc__)
+            print("One or both of -p, -g must be specified.")
             sys.exit(1)
             
             
     except IOError, e:
-        print >>sys.stderr, "%s." % str(e)
+        print(>>sys.stderr, "%s." % str(e))
     else:
         if outputFilename != "-":
-            print >>sys.stderr, "Resources written to %s." % outputFilename
+            print(>>sys.stderr, "Resources written to %s." % outputFilename)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

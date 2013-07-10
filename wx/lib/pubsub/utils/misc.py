@@ -1,3 +1,11 @@
+#----------------------------------------------------------------------
+# Name:         misc.py
+#
+# Author:       Oliver Schoenborn
+# Copyright:    Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
+# License:      BSD, see LICENSE.txt for details.
+# Tags:         phoenix-port
+#----------------------------------------------------------------------
 """
 Provides useful functions and classes. Most useful are probably 
 printTreeDocs and printTreeSpec. 
@@ -16,7 +24,7 @@ def printImported():
     import sys
     ll = [mod for mod in sys.modules.keys() if mod.find('pubsub') >= 0]
     ll.sort()
-    print '\n'.join(ll)
+    print('\n'.join(ll))
 
 
 class StructMsg:

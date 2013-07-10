@@ -1,3 +1,15 @@
+#----------------------------------------------------------------------------
+# Name:         fancytext.py
+# Purpose:      Methods for rendering XML specified text
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 # 12/02/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for 2.5 compatability.
@@ -354,9 +366,9 @@ def RenderToBitmap(str, background=None, enclose=1):
     dc = wx.MemoryDC()
     # Chicken and egg problem, we need a bitmap in the DC in order to
     # measure how big the bitmap should be...
-    dc.SelectObject(wx.EmptyBitmap(1,1))
+    dc.SelectObject(wx.Bitmap(1,1))
     width, height, dy = GetFullExtent(str, dc, enclose)
-    bmp = wx.EmptyBitmap(width, height)
+    bmp = wx.Bitmap(width, height)
     dc.SelectObject(bmp)
     if background is None:
         dc.SetBackground(wx.WHITE_BRUSH)
@@ -443,7 +455,7 @@ We can use doctest/guitest to display this string in all its marked up glory.
 </font></font>
 The End"""
 
-    app = wx.PySimpleApp()
+    app = wx.App()
     box = wx.BoxSizer(wx.VERTICAL)
     frame = wx.Frame(None, -1, "FancyText demo", wx.DefaultPosition)
     frame.SetBackgroundColour("light grey")

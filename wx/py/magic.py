@@ -1,3 +1,9 @@
+#----------------------------------------------------------------------
+# Name:        magic.py
+# Author:      David N. Mashburn <david.n.mashburn@gmail.com>
+# Created:     07/01/2009
+# Tags:        phoenix-port
+#----------------------------------------------------------------------
 """magic.py is a utility that allows a simple line from the interpreter
 be translated from a more bash-like form to a python form.
 For instance, 'plot a' is transformed to 'plot(a)'
@@ -35,7 +41,7 @@ def magicSingle(command):
     elif command[:6] == 'alias ':
         c = command[6:].lstrip().split(' ')
         if len(c)<2:
-            #print 'Not enough arguments for alias!'
+            #print('Not enough arguments for alias!')
             command = ''
         else:
             n,v = c[0],' '.join(c[1:])

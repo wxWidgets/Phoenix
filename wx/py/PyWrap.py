@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+#----------------------------------------------------------------------
+# Name:        PyWrap.py
+# Purpose:     PyWrap is a command line utility that runs a wxPython program with
+#              additional runtime-tools, such as PyCrust.
+# Tags:        phoenix-port
+#----------------------------------------------------------------------
 """PyWrap is a command line utility that runs a wxPython program with
 additional runtime-tools, such as PyCrust."""
 
@@ -24,7 +30,7 @@ def main(modulename=None):
     sys.path.insert(0, os.curdir)
     if not modulename:
         if len(sys.argv) < 2:
-            print "Please specify a module name."
+            print("Please specify a module name.")
             raise SystemExit
         modulename = sys.argv[1]
         if modulename.endswith('.py'):
@@ -40,7 +46,7 @@ def main(modulename=None):
         except (NameError, TypeError):
             pass
     if App is None:
-        print "No App class was found."
+        print("No App class was found.")
         raise SystemExit
     app = App()
     wrap(app)

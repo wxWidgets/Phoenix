@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         GUIMode.py
+# Purpose:
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 
 Module that holds the GUI modes used by FloatCanvas
@@ -353,7 +365,7 @@ class GUIZoomIn(GUIBase):
             dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
             dc.SetLogicalFunction(wx.XOR)
-            dc.DrawRectanglePointSize(*self.PrevRBBox)
+            dc.DrawRectangle(*self.PrevRBBox)
 
     def OnRightDown(self, event):
         self.Canvas.Zoom(1/1.5, event.GetPosition(), centerCoords="pixel")

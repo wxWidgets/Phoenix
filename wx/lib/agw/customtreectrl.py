@@ -2491,11 +2491,12 @@ class GenericTreeItem(object):
             # evaluate the item
             h = theCtrl.GetLineHeight(self)
 
-            if point.y > self._y and point.y < self._y + h:
+            pointX, pointY = point[0], point[1]
+            if pointY > self._y and pointY < self._y + h:
 
                 y_mid = self._y + h//2
 
-                if point.y < y_mid:
+                if pointY < y_mid:
                     flags |= TREE_HITTEST_ONITEMUPPERPART
                 else:
                     flags |= TREE_HITTEST_ONITEMLOWERPART
@@ -2505,20 +2506,20 @@ class GenericTreeItem(object):
                 if wx.Platform == "__WXMAC__":
                     # according to the drawing code the triangels are drawn
                     # at -4 , -4  from the position up to +10/+10 max
-                    if point.x > xCross-4 and point.x < xCross+10 and point.y > y_mid-4 and \
-                       point.y < y_mid+10 and self.HasPlus() and theCtrl.HasButtons():
+                    if pointX > xCross-4 and pointX < xCross+10 and pointY > y_mid-4 and \
+                       pointY < y_mid+10 and self.HasPlus() and theCtrl.HasButtons():
 
                         flags |= TREE_HITTEST_ONITEMBUTTON
                         return self, flags
                 else:
                     # 5 is the size of the plus sign
-                    if point.x > xCross-6 and point.x < xCross+6 and point.y > y_mid-6 and \
-                       point.y < y_mid+6 and self.HasPlus() and theCtrl.HasButtons():
+                    if pointX > xCross-6 and pointX < xCross+6 and pointY > y_mid-6 and \
+                       pointY < y_mid+6 and self.HasPlus() and theCtrl.HasButtons():
 
                         flags |= TREE_HITTEST_ONITEMBUTTON
                         return self, flags
 
-                if point.x >= self._x and point.x <= self._x + self._width:
+                if pointX >= self._x and pointX <= self._x + self._width:
 
                     image_w = -1
                     wcheck = 0
@@ -2530,23 +2531,23 @@ class GenericTreeItem(object):
                     if self.GetCheckedImage() is not None:
                         wcheck, hcheck = theCtrl._imageListCheck.GetSize(self.GetCheckedImage())
 
-                    if wcheck and point.x <= self._x + wcheck + 1:
+                    if wcheck and pointX <= self._x + wcheck + 1:
                         flags |= TREE_HITTEST_ONITEMCHECKICON
                         return self, flags
 
-                    if image_w != -1 and point.x <= self._x + wcheck + image_w + 1:
+                    if image_w != -1 and pointX <= self._x + wcheck + image_w + 1:
                         flags |= TREE_HITTEST_ONITEMICON
                     else:
                         flags |= TREE_HITTEST_ONITEMLABEL
 
                     return self, flags
 
-                if point.x < self._x:
+                if pointX < self._x:
                     if theCtrl.HasAGWFlag(TR_FULL_ROW_HIGHLIGHT):
                         flags |= TREE_HITTEST_ONITEM
                     else:
                         flags |= TREE_HITTEST_ONITEMINDENT
-                if point.x > self._x + self._width:
+                if pointX > self._x + self._width:
                     if theCtrl.HasAGWFlag(TR_FULL_ROW_HIGHLIGHT):
                         flags |= TREE_HITTEST_ONITEM
                     else:
@@ -7454,13 +7455,14 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         w, h = self.GetSize()
         flags = 0
 
-        if point.x < 0:
+        pointX, pointY = point[0], point[1]
+        if pointX < 0:
             flags |= TREE_HITTEST_TOLEFT
-        if point.x > w:
+        if pointX > w:
             flags |= TREE_HITTEST_TORIGHT
-        if point.y < 0:
+        if pointY < 0:
             flags |= TREE_HITTEST_ABOVE
-        if point.y > h:
+        if pointY > h:
             flags |= TREE_HITTEST_BELOW
 
         if flags:
@@ -7973,6 +7975,9 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 ##                        if item.HasPlus():
                         self.Toggle(item)
 
+        #TODO/Bug?: Temp Hack - MCow. Phoenix after rightclick menu item gets set to white or background colour
+        # and becomes invisible. Set to black in meantime
+        self.SetItemTextColour(thisItem, wx.BLACK) #self.GetItemTextColour(thisItem)
 
     def OnInternalIdle(self):
         """

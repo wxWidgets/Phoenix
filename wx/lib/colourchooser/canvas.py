@@ -21,6 +21,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # o wxPyColorChooser -> PyColorChooser
 # o wxPyColourChooser -> PyColourChooser
 #
+# Tags:     phoenix-port
 
 import  wx
 
@@ -39,7 +40,7 @@ class BitmapBuffer(wx.MemoryDC):
         self.height = height
         self.colour = colour
 
-        self.bitmap = wx.EmptyBitmap(self.width, self.height)
+        self.bitmap = wx.Bitmap(self.width, self.height)
         self.SelectObject(self.bitmap)
 
         # Initialize the buffer to the background colour

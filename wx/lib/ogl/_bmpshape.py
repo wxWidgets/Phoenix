@@ -9,6 +9,7 @@
 # RCS-ID:       $Id$
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 
 from _basic import RectangleShape
@@ -21,7 +22,7 @@ class BitmapShape(RectangleShape):
         self._filename = ""
 
     def OnDraw(self, dc):
-        if not self._bitmap.Ok():
+        if not self._bitmap.IsOk():
             return
 
         x = self._xpos - self._bitmap.GetWidth() / 2.0
@@ -29,7 +30,7 @@ class BitmapShape(RectangleShape):
         dc.DrawBitmap(self._bitmap, x, y, True)
 
     def SetSize(self, w, h, recursive = True):
-        if self._bitmap.Ok():
+        if self._bitmap.IsOk():
             w = self._bitmap.GetWidth()
             h = self._bitmap.GetHeight()
 
@@ -52,7 +53,7 @@ class BitmapShape(RectangleShape):
         data.
         """
         self._bitmap = bitmap
-        if self._bitmap.Ok():
+        if self._bitmap.IsOk():
             self.SetSize(self._bitmap.GetWidth(), self._bitmap.GetHeight())
             
     def SetFilename(self, f):

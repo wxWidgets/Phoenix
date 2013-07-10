@@ -3,6 +3,7 @@
 #   http://j.domaindlx.com/elements28/wxpython/
 #   15 Fev 2006, 22:00 GMT-03:00
 # Distributed under the wxWidgets license.
+# Tags:     phoenix-port
 
 from time import strftime, localtime
 import math
@@ -657,7 +658,7 @@ class TickSet:
         if a_tick.text is not None:
             self.font.SetPointSize(size)
             dc = wx.MemoryDC()
-            dc.SelectObject(wx.EmptyBitmap(*clocksize.Get()))
+            dc.SelectObject(wx.Bitmap(*clocksize.Get()))
             dc.SetFont(self.font)
             maxsize = size
             for tick in self.ticks.values():

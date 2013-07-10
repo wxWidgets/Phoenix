@@ -16,6 +16,7 @@
 #
 # Copyright:   (c) 2000, 2001 by Greg Landrum and Rational Discovery LLC
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 # 12/11/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -415,7 +416,7 @@ if __name__ == '__main__':
   app.MainLoop()
   # give the threads time to shut down
   if threading.activeCount() > nT:
-    print 'waiting for all threads to terminate'
+    print('waiting for all threads to terminate')
     while threading.activeCount() > nT:
       time.sleep(0.5)
 

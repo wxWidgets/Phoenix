@@ -23,6 +23,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # o Added wx.InitAllImageHandlers() to test code since
 #   that's where it belongs.
 #
+# Tags:     phoenix-port
 
 import  wx
 
@@ -129,7 +130,7 @@ class PyColourChooser(wx.Panel):
 
         # Create the basic colours palette
         self.colour_boxs = [ ]
-        colour_grid = wx.GridSizer(6, 8)
+        colour_grid = wx.GridSizer(rows=6, cols=8, vgap=0, hgap=0)
         for name in self.colour_names:
             new_id = wx.NewId()
             box = pycolourbox.PyColourBox(self, new_id)
@@ -141,7 +142,7 @@ class PyColourChooser(wx.Panel):
 
         # Create the custom colours palette
         self.custom_boxs = [ ]
-        custom_grid = wx.GridSizer(2, 8)
+        custom_grid = wx.GridSizer(rows=2, cols=8, vgap=0, hgap=0)
         for wxcolour, slidepos in self.custom_colours:
             new_id = wx.NewId()
             custom = pycolourbox.PyColourBox(self, new_id)
@@ -200,7 +201,7 @@ class PyColourChooser(wx.Panel):
         vlabel = wx.StaticText(self, -1, _("V:"))
         self.ventry = wx.TextCtrl(self, -1)
         self.ventry.SetSize((40, -1))
-        hsvgrid = wx.FlexGridSizer(1, 6, 2, 2)
+        hsvgrid = wx.FlexGridSizer(rows=1, cols=6, vgap=2, hgap=2)
         hsvgrid.AddMany ([
             (hlabel, 0, wx.ALIGN_CENTER_VERTICAL), (self.hentry, 0, wx.FIXED_MINSIZE),
             (slabel, 0, wx.ALIGN_CENTER_VERTICAL), (self.sentry, 0, wx.FIXED_MINSIZE),
@@ -216,14 +217,14 @@ class PyColourChooser(wx.Panel):
         blabel = wx.StaticText(self, -1, _("B:"))
         self.bentry = wx.TextCtrl(self, -1)
         self.bentry.SetSize((40, -1))
-        lgrid = wx.FlexGridSizer(1, 6, 2, 2)
+        lgrid = wx.FlexGridSizer(rows=1, cols=6, vgap=2, hgap=2)
         lgrid.AddMany([
             (rlabel, 0, wx.ALIGN_CENTER_VERTICAL), (self.rentry, 0, wx.FIXED_MINSIZE),
             (glabel, 0, wx.ALIGN_CENTER_VERTICAL), (self.gentry, 0, wx.FIXED_MINSIZE),
             (blabel, 0, wx.ALIGN_CENTER_VERTICAL), (self.bentry, 0, wx.FIXED_MINSIZE),
         ])
 
-        gsizer = wx.GridSizer(2, 1)
+        gsizer = wx.GridSizer(rows=2, cols=1, vgap=0, hgap=0)
         gsizer.SetVGap (10)
         gsizer.SetHGap (2)
         gsizer.Add(hsvgrid, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL)
@@ -342,7 +343,7 @@ class PyColourChooser(wx.Panel):
         the selected colour values."""
         self.mouse_down = True
         self.palette.ReDraw()
-        self.doPaletteClick(event.X, event.Y)
+        self.doPaletteClick(event.GetX(), event.GetY())
 
     def onPaletteUp(self, event):
         """Stores state that the mouse is no longer depressed."""
@@ -352,7 +353,7 @@ class PyColourChooser(wx.Panel):
         """Updates the colour values during mouse motion while the
         mouse button is depressed."""
         if self.mouse_down:
-            self.doPaletteClick(event.X, event.Y)
+            self.doPaletteClick(event.GetX(), event.GetY())
 
     def doPaletteClick(self, m_x, m_y):
         """Updates the colour values based on the mouse location

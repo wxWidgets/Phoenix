@@ -63,13 +63,13 @@ Usage example::
                              agwStyle=MDD.DD_MULTIPLE|MDD.DD_DIR_MUST_EXIST)
         
     if dlg.ShowModal() != wx.ID_OK:
-        print "You Cancelled The Dialog!"
+        print("You Cancelled The Dialog!")
         dlg.Destroy()
         return
 
     paths = dlg.GetPaths()
     for indx, path in enumerate(paths):
-        print "Path %d: %s"%(indx+1, path)
+        print("Path %d: %s"%(indx+1, path))
         
     dlg.Destroy()
 
@@ -613,4 +613,3 @@ if __name__ == '__main__':
 
     app.MainLoop()
 
-    

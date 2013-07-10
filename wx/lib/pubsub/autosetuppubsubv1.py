@@ -1,3 +1,8 @@
+#----------------------------------------------------------------------------
+# Name:         autosetuppubsubv1.py
+#
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 '''
 If this module is named autosetuppubsubv1, and it is in the pubsub
 package's folder, it will cause pubsub to default to "version 1" (v1)
@@ -19,7 +24,7 @@ def testWxPython():
         # this is not the pubsub in wxPython
         return
 
-    # print 'PubSub from wx.lib.pubsub'
+    # print('PubSub from wx.lib.pubsub')
         
     # if wx >= 2.9, use latest pubsub API ie kwargs
     # this is done by raising ImportError which will make
@@ -30,8 +35,8 @@ def testWxPython():
         raise ImportError
     if wx.MAJOR_VERSION == 2 and wx.MINOR_VERSION >= 9: 
         raise ImportError
-    # print '   Found wx version < 2.9'
+    # print('   Found wx version < 2.9')
     
 testWxPython()
-# print 'Using pubsub API v1'
+# print('Using pubsub API v1')
     

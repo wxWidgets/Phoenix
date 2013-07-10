@@ -10,6 +10,7 @@
 # RCS-ID:      $Id$
 # Copyright:   (c) 2000 by Total Control Software
 # Licence:     wxWindows license
+# Tags:        phoenix-port
 #----------------------------------------------------------------------
 # 12/02/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -106,7 +107,7 @@ class FileBrowseButton(wx.Panel):
         self.Layout()
         if type( size ) == types.TupleType:
             size = apply( wx.Size, size)
-        self.SetDimensions(-1, -1, size.width, size.height, wx.SIZE_USE_EXISTING)
+        self.SetSize(-1, -1, size.width, size.height, wx.SIZE_USE_EXISTING)
 
 #        if size.width != -1 or size.height != -1:
 #            self.SetSize(size)
@@ -374,7 +375,7 @@ if __name__ == "__main__":
         def __init__( self, tag ):
             self.tag = tag
         def __call__( self, event ):
-            print self.tag, event.GetString()
+            print(self.tag, event.GetString())
     class DemoFrame( wx.Frame ):
         def __init__(self, parent):
             wx.Frame.__init__(self, parent, -1, "File entry with browse", size=(500,260))
@@ -453,7 +454,7 @@ if __name__ == "__main__":
     def test( ):
         app = DemoApp(0)
         app.MainLoop()
-    print 'Creating dialog'
+    print('Creating dialog')
     test( )
 
 

@@ -8,6 +8,7 @@
 # Version:      0.1
 # RCS-ID:       $Id$
 # License:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------
 # 11/24/2007 - Cody Precord
 #
@@ -195,13 +196,13 @@ class PopupControl(wx.Control):
                 self.pop = PopupDialog(self,self.content)
                 del self.content
             else:
-                print 'No Content to pop'
+                print('No Content to pop')
         if self.pop:
             self.pop.Display()
 
 
     def Enable(self, flag):
-        wx.PyControl.Enable(self,flag)
+        wx.Control.Enable(self,flag)
         self.textCtrl.Enable(flag)
         self.bCtrl.Enable(flag)
 

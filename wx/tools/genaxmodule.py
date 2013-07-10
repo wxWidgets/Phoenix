@@ -1,3 +1,7 @@
+#----------------------------------------------------------------------------
+# Name:         genaxmodule.py
+# Tags:         phoenix-port
+#----------------------------------------------------------------------------
 """
 
 
@@ -24,7 +28,7 @@ def main(args=None):
         args = sys.argv
         
     if len(args) < 3:
-        print __doc__
+        print(__doc__)
         sys.exit(1)
 
     # unfortunatly we need to make an app, frame and an instance of

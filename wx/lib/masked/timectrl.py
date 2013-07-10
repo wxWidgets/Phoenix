@@ -1274,7 +1274,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
         This is the key handler for '!' and 'c'; this allows the user to
         quickly set the value of the control to the current time.
         """
-        self.SetValue(wx.DateTime_Now().FormatTime())
+        self.SetValue(wx.DateTime.Now().FormatTime())
         keep_processing = False
         return keep_processing
 

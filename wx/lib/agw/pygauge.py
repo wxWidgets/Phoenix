@@ -493,7 +493,7 @@ class PyGauge(wx.Window):
             self._update_value.append(value[i] + v)
             self._update_step.append(float(value[i])/(time/50.0))
             
-        #print self._update_
+        #print(self._update_)
 
         if not self._timer:       
             self._timer = wx.Timer(self, self._timerId)
@@ -567,4 +567,3 @@ if __name__ == '__main__':
 
     app.MainLoop()
 
-    

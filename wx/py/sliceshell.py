@@ -1,3 +1,8 @@
+#----------------------------------------------------------------------
+# Name:        sliceshell.py
+# Author:      David N. Mashburn, Patrick K. O'Brien
+# Tags:        phoenix-port
+#----------------------------------------------------------------------
 """Slices is an interactive text control in which a user types in
 commands to be sent to the interpreter.  This particular shell is
 based on wxPython's wxStyledTextCtrl.
@@ -7,8 +12,8 @@ Slices is a version of shell modified by David Mashburn."""
 
 __author__ = "David N. Mashburn <david.n.mashburn@gmail.com> / "
 __author__ += "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id: sliceshell.py 60100 2009-04-12 02:56:29Z RD $"
-__revision__ = "$Revision: 60100 $"[11:-2]
+__cvsid__ = "$Id$"
+__revision__ = "$Revision$"[11:-2]
 
 import wx
 from wx import stc
@@ -106,7 +111,7 @@ Commands in slices can be on more than one line, as with Sage or Mathematica.
 For example, the command:
 a=1
 b=2
-print a+b
+print(a+b)
 will all run in sequence, much like a script.
 Try running the above Input Slice by clicking somewhere in its text and
 using Ctrl-Return, Shift-Return, or Numpad Enter to execute.
@@ -1145,7 +1150,7 @@ class SlicesShell(editwindow.EditWindow):
             self.MarkerAdd(start,OUTPUT_START_FOLDED)
             self.MarkerAdd(start,OUTPUT_BG)
         else:
-            pass #print 'Bad Markers!!!'
+            pass #print('Bad Markers!!!')
     def FoldIOSlice(self,line_num=None):
         if line_num==None:
             line_num=self.GetCurrentLine()
@@ -1165,7 +1170,7 @@ class SlicesShell(editwindow.EditWindow):
             self.MarkerAdd(start,OUTPUT_START_FOLDED)
             self.MarkerAdd(start,OUTPUT_BG)
         else:
-            pass #print 'Bad Markers!!!'
+            pass #print('Bad Markers!!!')
     def UnFoldGroupingSlice(self,line_num=None):
         if line_num==None:
             line_num=self.GetCurrentLine()
@@ -1211,7 +1216,7 @@ class SlicesShell(editwindow.EditWindow):
         num_lines=self.GetLineCount()
         
         if self.MarkerGet(line_num) & OUTPUT_MASK:
-            #print 'You can only run "DeleteOutputSlicesAfter" from an Input slice!'
+            #print('You can only run "DeleteOutputSlicesAfter" from an Input slice!')
             return
         
         startIn,endIn=self.GetIOSlice(line_num)
@@ -1370,7 +1375,7 @@ class SlicesShell(editwindow.EditWindow):
                 break
         
         if started==False:
-            #print 'No Selection!!'
+            #print('No Selection!!')
             self.SliceSelection=False
         
         return start,end
@@ -1912,7 +1917,7 @@ class SlicesShell(editwindow.EditWindow):
         
         #Open and Save now work when using CrustSlicesFrames
         elif controlDown and key in (ord('L'), ord('l')):
-            #print 'Load it'
+            #print('Load it')
             file=wx.FileSelector("Load File As New Slice")
             if file!=u'':
                 fid=open(file,'r')
@@ -2077,7 +2082,7 @@ class SlicesShell(editwindow.EditWindow):
             for i in range(start,end+1):
                 toggle(i,IO_SELECTING)
             
-            #print start,end
+            #print(start, end)
             
         elif margin==4:
             # TODO : Folding ??
@@ -2237,7 +2242,7 @@ class SlicesShell(editwindow.EditWindow):
         # The text up to the cursor is what we search for.
         numCharsAfterCursor = self.GetTextLength() - startpos
         searchText = self.getCommand(rstrip=False)
-        #print 'history search', startpos,numCharsAfterCursor,searchText
+        #print('history search', startpos, numCharsAfterCursor, searchText)
         if numCharsAfterCursor > 0:
             searchText = searchText[:-numCharsAfterCursor]
         if not searchText:

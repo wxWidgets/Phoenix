@@ -6,6 +6,7 @@
 # Created:      07/11/2002
 # Copyright:    (c) 2002 by Will Sadkin, 2002
 # License:      wxWindows license
+# Tags:         phoenix-port
 #----------------------------------------------------------------------------
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -231,7 +232,7 @@ if __name__ == "__main__":
     import  sys
     import  wx
     
-    wx.Log_SetActiveTarget( wx.LogStderr() )
+    wx.Log.SetActiveTarget(wx.LogStderr())
     logger = Logger('module')
     dbg = logger.dbg
     dbg(enable=1)

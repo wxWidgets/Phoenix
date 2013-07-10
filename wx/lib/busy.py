@@ -139,7 +139,6 @@ laborum."""
             wx.Sleep(2)
 
 
-if __name__ == '__main__':
     app = wx.App(False)
     frm = wx.Frame(None, title="BusyInfoTest")
     wx.CallLater(1000, test1, frm)

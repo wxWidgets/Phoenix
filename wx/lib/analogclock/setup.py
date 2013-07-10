@@ -3,6 +3,7 @@
 #   http://j.domaindlx.com/elements28/wxpython/
 #   15 Fev 2006, 22:00 GMT-03:00
 # Distributed under the wxWidgets license.
+# Tags:     phoenix-port
 
 import wx
 
@@ -155,7 +156,7 @@ class _Group_1(_GroupBase):
 
         box = wx.StaticBoxSizer(wx.StaticBox(self, label=title), wx.VERTICAL)
 
-        sizer = self.sizer = wx.GridBagSizer(2, 6)
+        sizer = self.sizer = wx.GridBagSizer(vgap=2, hgap=6)
 
         p = wx.StaticText(self, label="Border:")
         sizer.Add(p, pos=(0, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
@@ -467,7 +468,3 @@ class Setup(wx.Dialog):
 
         wx.EndBusyCursor()
 
-
-#
-#
-### eof

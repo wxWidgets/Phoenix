@@ -613,7 +613,7 @@ class TextEditMixin:
         y0 = self.GetItemRect(row)[1]
 
         editor = self.editor
-        editor.SetDimensions(x0-scrolloffset,y0, x1,-1)
+        editor.SetSize(x0-scrolloffset,y0, x1,-1)
 
         editor.SetValue(self.GetItem(row, col).GetText())
         editor.Show()
@@ -678,7 +678,7 @@ class TextEditMixin:
 FILENAME: CheckListCtrlMixin.py
 AUTHOR:   Bruce Who (bruce.who.hk at gmail.com)
 DATE:     2006-02-09
-$Revision$
+$Revision: 74209 $
 DESCRIPTION:
     This script provide a mixin for ListCtrl which add a checkbox in the first
     column of each row. It is inspired by limodou's CheckList.py(which can be
