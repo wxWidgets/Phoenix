@@ -6,7 +6,7 @@ This module contains drawing routines and customizations for the AGW widgets
 import wx
 import random
 
-from wx.lib.six import StringIO
+from wx.lib.six import BytesIO
 
 from .fmresources import *
 
@@ -709,7 +709,7 @@ class ArtManager(wx.EvtHandler):
                     
         else:
 
-            stream = StringIO(xpm)
+            stream = BytesIO(xpm)
             img = wx.Image(stream)
             
         return wx.Bitmap(img)
