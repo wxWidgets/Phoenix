@@ -519,7 +519,7 @@ class ImageContainerBase(wx.Panel):
 
     def HasAGWFlag(self, flag):
         """
-        Tests for existance of flag in the style.
+        Tests for existence of flag in the style.
 
         :param `flag`: a window style. This can be a combination of the following bits:
 
@@ -560,7 +560,7 @@ class ImageContainerBase(wx.Panel):
 
         parent = self.GetParent()
         agwStyle = parent.GetAGWWindowStyleFlag()
-        agwStyle &= ~(flag)
+        agwStyle &= ~flag
         parent.SetAGWWindowStyleFlag(agwStyle)
 
 
@@ -1281,12 +1281,12 @@ class ImageContainer(ImageContainerBase):
                 
             textWidth, textHeight = dc.GetTextExtent(self._pagesInfoVec[i].GetCaption())
 
-            # Default values for the surronounding rectangle 
+            # Default values for the surrounding rectangle
             # around a button
-            rectWidth = self._nImgSize * 2  # To avoid the recangle to 'touch' the borders
+            rectWidth = self._nImgSize * 2  # To avoid the rectangle to 'touch' the borders
             rectHeight = self._nImgSize * 2
 
-            # Incase the style requires non-fixed button (fit to text)
+            # In case the style requires non-fixed button (fit to text)
             # recalc the rectangle width
             if style & INB_FIT_BUTTON and \
                not ((style & INB_LEFT) or (style & INB_RIGHT)) and \
@@ -1566,9 +1566,9 @@ class LabelContainer(ImageContainerBase):
         style = self.GetParent().GetAGWWindowStyleFlag()
 
         dc = wx.BufferedPaintDC(self)
-        backBrush = wx.Brush(self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR])
+        backBrush = wx.Brush(self._coloursMap['INB_TAB_AREA_BACKGROUND_COLOUR'])
         if self.HasAGWFlag(INB_BORDER):
-            borderPen = wx.Pen(self._coloursMap[INB_TABS_BORDER_COLOUR])
+            borderPen = wx.Pen(self._coloursMap['INB_TABS_BORDER_COLOUR'])
         else:
             borderPen = wx.TRANSPARENT_PEN
             
@@ -1578,7 +1578,7 @@ class LabelContainer(ImageContainerBase):
         dc.SetBrush(backBrush)
         dc.SetPen(borderPen)
         
-        # Incase user set both flags, we override them to display both
+        # In case user set both flags, we override them to display both
         # INB_SHOW_ONLY_TEXT and INB_SHOW_ONLY_IMAGES
         if style & INB_SHOW_ONLY_TEXT and style & INB_SHOW_ONLY_IMAGES:
         
@@ -1588,9 +1588,9 @@ class LabelContainer(ImageContainerBase):
 
         if self.HasAGWFlag(INB_GRADIENT_BACKGROUND) and not self._skin.IsOk():
         
-            # Draw graident in the background area
-            startColour = self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR]
-            endColour   = ArtManager.Get().LightColour(self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR], 50)
+            # Draw gradient in the background area
+            startColour = self._coloursMap['INB_TAB_AREA_BACKGROUND_COLOUR']
+            endColour   = ArtManager.Get().LightColour(self._coloursMap['INB_TAB_AREA_BACKGROUND_COLOUR'], 50)
             ArtManager.Get().PaintStraightGradientBox(dc, wx.Rect(0, 0, size.x / 2, size.y), startColour, endColour, False)
             ArtManager.Get().PaintStraightGradientBox(dc, wx.Rect(size.x / 2, 0, size.x / 2, size.y), endColour, startColour, False)
         
@@ -1632,7 +1632,7 @@ class LabelContainer(ImageContainerBase):
         
         for i in range(len(self._pagesInfoVec)):
             count = count+1        
-            # Default values for the surronounding rectangle 
+            # Default values for the surrounding rectangle
             # around a button
             rectWidth = self._nTabAreaWidth  
             
@@ -1919,8 +1919,8 @@ class LabelContainer(ImageContainerBase):
             # Right line (white)
             dc.DrawLine(rect.x + rect.width, rect.y, rect.x + rect.width, rect.y + rect.height)
 
-            # Bottom diagnol - we change pen
-            dc.SetPen(wx.Pen(self._coloursMap[INB_TABS_BORDER_COLOUR]))
+            # Bottom diagonal - we change pen
+            dc.SetPen(wx.Pen(self._coloursMap['INB_TABS_BORDER_COLOUR']))
 
             # Bottom line
             dc.DrawLine(rect.x + rect.width, rect.y + rect.height, rect.x, rect.y + rect.height)
@@ -1934,8 +1934,8 @@ class LabelContainer(ImageContainerBase):
             # Left line
             dc.DrawLine(rect.x, rect.y, rect.x, rect.y + rect.height)
 
-            # Bottom diagnol, we change the pen
-            dc.SetPen(wx.Pen(self._coloursMap[INB_TABS_BORDER_COLOUR]))
+            # Bottom diagonal, we change the pen
+            dc.SetPen(wx.Pen(self._coloursMap['INB_TABS_BORDER_COLOUR']))
 
             # Bottom line
             dc.DrawLine(rect.x, rect.y + rect.height, rect.x + rect.width, rect.y + rect.height)
@@ -2004,18 +2004,18 @@ class LabelContainer(ImageContainerBase):
         """ Initializes the colours map to be used for this control. """
 
         # Initialize map colours
-        self._coloursMap.update({INB_TAB_AREA_BACKGROUND_COLOUR: ArtManager.Get().LightColour(ArtManager.Get().FrameColour(), 50)})
-        self._coloursMap.update({INB_ACTIVE_TAB_COLOUR: ArtManager.Get().GetMenuFaceColour()})
-        self._coloursMap.update({INB_TABS_BORDER_COLOUR: wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DSHADOW)})
-        self._coloursMap.update({INB_HILITE_TAB_COLOUR: wx.Colour("LIGHT BLUE")})
-        self._coloursMap.update({INB_TEXT_COLOUR: wx.WHITE})
-        self._coloursMap.update({INB_ACTIVE_TEXT_COLOUR: wx.BLACK})
+        self._coloursMap.update({'INB_TAB_AREA_BACKGROUND_COLOUR': ArtManager.Get().LightColour(ArtManager.Get().FrameColour(), 50)})
+        self._coloursMap.update({'INB_ACTIVE_TAB_COLOUR': ArtManager.Get().GetMenuFaceColour()})
+        self._coloursMap.update({'INB_TABS_BORDER_COLOUR': wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DSHADOW)})
+        self._coloursMap.update({'INB_HILITE_TAB_COLOUR': wx.Colour("LIGHT BLUE")})
+        self._coloursMap.update({'INB_TEXT_COLOUR': wx.WHITE})
+        self._coloursMap.update({'INB_ACTIVE_TEXT_COLOUR': wx.BLACK})
 
         # dont allow bright colour one on the other
-        if not ArtManager.Get().IsDark(self._coloursMap[INB_TAB_AREA_BACKGROUND_COLOUR]) and \
-           not ArtManager.Get().IsDark(self._coloursMap[INB_TEXT_COLOUR]):
+        if not ArtManager.Get().IsDark(self._coloursMap['INB_TAB_AREA_BACKGROUND_COLOUR']) and \
+           not ArtManager.Get().IsDark(self._coloursMap['INB_TEXT_COLOUR']):
         
-            self._coloursMap[INB_TEXT_COLOUR] = ArtManager.Get().DarkColour(self._coloursMap[INB_TEXT_COLOUR], 100)
+            self._coloursMap['INB_TEXT_COLOUR'] = ArtManager.Get().DarkColour(self._coloursMap['INB_TEXT_COLOUR'], 100)
         
 
     def DrawLabel(self, dc, rect, text, bmp, imgInfo, orientationLeft, imgIdx, selected, hover):
@@ -2093,12 +2093,12 @@ class LabelContainer(ImageContainerBase):
         if selected:
         
             # First we colour the tab
-            dc.SetBrush(wx.Brush(self._coloursMap[INB_ACTIVE_TAB_COLOUR]))
+            dc.SetBrush(wx.Brush(self._coloursMap['INB_ACTIVE_TAB_COLOUR']))
 
             if self.HasAGWFlag(INB_BORDER):
-                dc.SetPen(wx.Pen(self._coloursMap[INB_TABS_BORDER_COLOUR]))
+                dc.SetPen(wx.Pen(self._coloursMap['INB_TABS_BORDER_COLOUR']))
             else: 
-                dc.SetPen(wx.Pen(self._coloursMap[INB_ACTIVE_TAB_COLOUR]))
+                dc.SetPen(wx.Pen(self._coloursMap['INB_ACTIVE_TAB_COLOUR']))
             
             labelRect = wx.Rect(*rect)
 
@@ -2118,9 +2118,9 @@ class LabelContainer(ImageContainerBase):
         if caption != "":
         
             if selected:
-                dc.SetTextForeground(self._coloursMap[INB_ACTIVE_TEXT_COLOUR])
+                dc.SetTextForeground(self._coloursMap['INB_ACTIVE_TEXT_COLOUR'])
             else:
-                dc.SetTextForeground(self._coloursMap[INB_TEXT_COLOUR])
+                dc.SetTextForeground(self._coloursMap['INB_TEXT_COLOUR'])
                 
             dc.DrawText(caption, textRect.x, textRect.y)
             imgInfo.SetTextRect(textRect)
