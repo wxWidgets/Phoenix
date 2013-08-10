@@ -148,9 +148,6 @@ def run():
     c.find('GetTmNow').ignore()
     c.find('GetTmNow').ignore()
     
-    # Link error??
-    c.find('IsGregorianDate').ignore()
-
     # output the am/pm parameter values
     c.find('GetAmPmStrings.am').out = True
     c.find('GetAmPmStrings.pm').out = True
