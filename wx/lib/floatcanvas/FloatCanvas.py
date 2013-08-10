@@ -53,7 +53,6 @@ from time import clock
 import wx
 
 from .Utilities import BBox
-from . import GUIMode
 
 
 ## A global variable to hold the Pixels per inch that wxWindows thinks is in use
@@ -2869,6 +2868,7 @@ class FloatCanvas(wx.Panel):
     
         self.SetProjectionFun(ProjectionFun)
         
+        from . import GUIMode        
         self.GUIMode = None # making sure the arrribute exists
         self.SetMode(GUIMode.GUIMouse()) # make the default Mouse Mode.
 
