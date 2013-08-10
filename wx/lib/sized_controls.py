@@ -774,7 +774,7 @@ class SizedPanel(wx.Panel, SizedParent):
         """
         props = self._DetachFromSizer(sizer)
         if wx.VERSION < (2,8):
-        wx.PyPanel.SetSizer(self, sizer)
+            wx.PyPanel.SetSizer(self, sizer)
         else:
             wx.Panel.SetSizer(self, sizer)
         self._AddToNewSizer(sizer, props)
