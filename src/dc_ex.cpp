@@ -317,19 +317,16 @@ PyObject* wxPyDrawTextList(wxDC& dc, PyObject* textList, PyObject* pyPoints, PyO
                 Py_DECREF(obj);
             goto err0;
         }
+        if (!isFastText)
+            Py_DECREF(obj);
+
         if (PyErr_Occurred()) {
             retval = NULL;
-            if (!isFastSeq)
-                Py_DECREF(obj);
             goto exit;
         }
 
-
         // Now draw the text
         dc.DrawText(string, x1, y1);
-
-        if (!isFastText)
-            Py_DECREF(obj);
     }
 
     Py_INCREF(Py_None);
