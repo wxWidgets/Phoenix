@@ -47,7 +47,7 @@ Usage example::
 
     class TestPanel(scrolled.ScrolledPanel):
 
-        def __init__(self, parent, log):
+        def __init__(self, parent):
 
             scrolled.ScrolledPanel.__init__(self, parent, -1)
 
