@@ -44,6 +44,10 @@ def run():
     # PocketPC only, don't think we'll need these ;)
     c.find('DoOK').ignore() 
     c.find('GetToolBar').ignore()
+
+    # Uses a template, but it would be easier to reimplement it in Python if
+    # it is ever needed so don't bother complexifying the wrapper for it.
+    c.find('ShowWindowModalThenDo').ignore()
     
     # Release the GIL for potentially blocking or long-running functions
     c.find('ShowModal').releaseGIL()
