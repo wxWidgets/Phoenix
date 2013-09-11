@@ -11,8 +11,8 @@
 #----------------------------------------------------------------------
 
 
-VER_MAJOR        = 2      # The first three must match wxWidgets
-VER_MINOR        = 9
-VER_RELEASE      = 5
-VER_SUBREL       = 81     # wxPython release num for x.y.z release of wxWidgets
+VER_MAJOR        = 3      # The first three must match wxWidgets
+VER_MINOR        = 0
+VER_RELEASE      = 0
+VER_SUBREL       = 0      # wxPython release num for x.y.z release of wxWidgets
 VER_FLAGS        = ""     # release flags, such as prerelease or RC num, etc.
