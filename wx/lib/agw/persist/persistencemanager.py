@@ -630,7 +630,7 @@ class PersistenceManager(object):
         if children is None:
             if HasCtrlHandler(window):
                 # Control has persist support
-                self._hasRestored = self.RegisterAndRestore(window)
+                self.HasRestoredProp = self.RegisterAndRestore(window)
 
             children = window.GetChildren()
 
@@ -640,11 +640,11 @@ class PersistenceManager(object):
             if name not in BAD_DEFAULT_NAMES:
                 if HasCtrlHandler(child):
                     # Control has persist support
-                    self._hasRestored = self.RegisterAndRestore(child)
+                    self.HasRestoredProp = self.RegisterAndRestore(child)
 
             self.RegisterAndRestoreAll(window, child.GetChildren())
 
-        return self._hasRestored
+        return self.HasRestoredProp
 
 
     def RestoreAll(self, window, children=None):
@@ -659,7 +659,7 @@ class PersistenceManager(object):
         if children is None:
             if HasCtrlHandler(window):
                 # Control has persist support
-                self._hasRestored = self.Restore(window)
+                self.HasRestoredProp = self.Restore(window)
 
             children = window.GetChildren()
 
@@ -669,11 +669,11 @@ class PersistenceManager(object):
             if name not in BAD_DEFAULT_NAMES:
                 if HasCtrlHandler(child):
                     # Control has persist support
-                    self._hasRestored = self.Restore(child)
+                    self.HasRestoredProp = self.Restore(child)
 
             self.RestoreAll(window, child.GetChildren())
 
-        return self._hasRestored
+        return self.HasRestoredProp
 
 
     def HasRestored(self):
@@ -686,7 +686,34 @@ class PersistenceManager(object):
         .. versionadded:: 0.9.7
         """
 
+        return self.HasRestoredProp
+
+
+    @property
+    def HasRestoredProp(self):
+        """
+        This property returns ``True`` if any of the windows managed by
+        :class:`PersistenceManager` has had its settings restored.
+
+        :returns: ``True`` if any window was restored, ``False`` otherwise.
+
+        .. versionadded:: 0.9.7
+        """
+
         return self._hasRestored
+
+    
+    @HasRestoredProp.setter
+    def HasRestoredProp(self, flag):
+        """
+        This property keeps track if any of the windows managed by
+        :class:`PersistenceManager` has had its settings restored.
+        
+        :param boolean `flag`: True will be remembered
+        """
+
+        if flag:
+            self._hasRestored = flag
 
 
     def GetKey(self, obj, keyName):

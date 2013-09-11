@@ -339,7 +339,7 @@ class AUIHandler(AbstractHandler):
                                                  restorecaption=True)
                 else:
                     eventHandler.LoadPerspective(perspective)
-                return False
+                return True
             
         return True
 
@@ -958,6 +958,8 @@ class ScrolledWindowHandler(AbstractHandler):
             scroll.SetScrollPos(wx.HORIZONTAL, hpos)
         if vpos:
             scroll.SetScrollPos(wx.VERTICAL, vpos, True)
+            
+        return True
 
 
     def GetKind(self):
