@@ -380,7 +380,7 @@ class ToolTipWindowBase(object):
                     self._storeHyperLinkInfo(xText, yText, textWidth, textHeight, hl)
 
         toAdd = 0
-        if bmpHeight > textHeight:
+        if bmpHeight > messageHeight:
             yPos += 2*self._spacing + bmpHeight
             toAdd = self._spacing
         else:
