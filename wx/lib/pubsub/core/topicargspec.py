@@ -1,22 +1,26 @@
 '''
-Definitions related to listener signature specification.
+Definitions related to message data specification.
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 '''
 
 
-from listener import getArgs as getListenerArgs
-from validatedefnargs import ListenerSpecInvalid
-from topicargspecimpl import SenderMissingReqdArgs, SenderUnknownOptArgs, ArgsInfo
+from .listener import getArgs as getListenerArgs
+from .validatedefnargs import MessageDataSpecError
+from .topicargspecimpl import (
+    SenderMissingReqdMsgDataError, 
+    SenderUnknownMsgDataError, 
+    ArgsInfo
+)
 
 
 def topicArgsFromCallable(_callable):
-    '''Get the topic arguments and list of those that are required, 
-    by introspecting given listener. Returns a pair, (args, required)
-    where args is a dictionary of allowed arguments, and required
-    states which args are required rather than optional.'''
+    '''Get the topic message data names and list of those that are required, 
+    by introspecting given callable. Returns a pair, (args, required)
+    where args is a dictionary of allowed message data names vs docstring,
+    and required states which ones are required rather than optional.'''
     argsInfo = getListenerArgs(_callable)
     required = argsInfo.getRequiredArgs()
     defaultDoc = 'UNDOCUMENTED'
@@ -26,13 +30,12 @@ def topicArgsFromCallable(_callable):
 
 class ArgSpecGiven:
     '''
-    The listener protocol specification (LPS) given for a topic
-    *by an application* (user).
+    The message data specification (MDS) for a topic.
     This consists of each argument name that listener should have in its
     call protocol, plus which ones are required in any sendMessage(), and a
     documentation string for each argument. This instance will be transformed
     into an ArgsInfo object which is basically a superset of that information,
-    needed to make sure the arguments specifications satisfy
+    needed to ensure that the arguments specifications satisfy
     pubsub policies for chosen API version.
     '''
 
@@ -50,10 +53,10 @@ class ArgSpecGiven:
             self.argsDocs = argsDocs
 
             # check that all args marked as required are in argsDocs
-            missingArgs = set(self.reqdArgs).difference(self.argsDocs.keys())
+            missingArgs = set(self.reqdArgs).difference(self.argsDocs.keys()) # py3: iter keys ok
             if missingArgs:
-                msg = 'Params [%s] missing inherited required args [%%s]' % ','.join(argsDocs.keys())
-                raise ListenerSpecInvalid(msg, missingArgs)
+                msg = 'Params [%s] missing inherited required args [%%s]' % ','.join(argsDocs.keys()) # iter keys ok
+                raise MessageDataSpecError(msg, missingArgs)
 
     def setAll(self, allArgsDocs, reqdArgs = None):
         self.argsDocs     = allArgsDocs

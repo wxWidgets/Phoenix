@@ -1,17 +1,20 @@
-"""The _resolve_name and _import_module were taken from the backport of 
+'''
+The _resolve_name and _import_module were taken from the backport of 
 importlib.import_module from 3.x to 2.7. Thanks to the Python developers
 for making this available as a standalone module. This makes it possible
-to have a more an import module that mimics the "import" statement more
-closely. """
+to have an import module that mimics the "import" statement more
+closely.
+'''
 
 import sys
+from .. import py2and3
 
 def _resolve_name(name, package, level):
-    """Return the absolute name of the module to be imported."""
+    '''Return the absolute name of the module to be imported.'''
     if not hasattr(package, 'rindex'):
         raise ValueError("'package' not set to a string")
     dot = len(package)
-    for x in xrange(level, 1, -1):
+    for x in py2and3.xrange(level, 1, -1):
         try:
             dot = package.rindex('.', 0, dot)
         except ValueError:
@@ -21,13 +24,12 @@ def _resolve_name(name, package, level):
 
 
 def _import_module(name, package=None):
-    """Import a module.
+    '''Import a module.
 
     The 'package' argument is required when performing a relative import. It
     specifies the package to use as the anchor point from which to resolve the
     relative import to an absolute import.
-
-    """
+    '''
     if name.startswith('.'):
         if not package:
             raise TypeError("relative imports require the 'package' argument")

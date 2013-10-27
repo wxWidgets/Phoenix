@@ -1,42 +1,34 @@
-#----------------------------------------------------------------------
-# Name:         misc.py
-#
-# Author:       Oliver Schoenborn
-# Copyright:    Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-# License:      BSD, see LICENSE.txt for details.
-# Tags:         phoenix-port
-#----------------------------------------------------------------------
 """
-Provides useful functions and classes. Most useful are probably 
-printTreeDocs and printTreeSpec. 
+Provides useful functions and classes. Most useful are probably
+printTreeDocs and printTreeSpec.
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-
+import sys
+from .. import py2and3
 
 __all__ = ('printImported', 'StructMsg', 'Callback', 'Enum' )
 
 
 def printImported():
     '''Output a list of pubsub modules imported so far'''
-    import sys
-    ll = [mod for mod in sys.modules.keys() if mod.find('pubsub') >= 0]
+    ll = [mod for mod in sys.modules.keys() if mod.find('pubsub') >= 0] # iter keys ok
     ll.sort()
-    print('\n'.join(ll))
+    py2and3.print_('\n'.join(ll))
 
 
 class StructMsg:
     '''
-    This *can* be used to package message data. Each of the keyword 
-    args given at construction will be stored as a member of the 'data' 
-    member of instance. E.g. "m=Message2(a=1, b='b')" would succeed 
-    "assert m.data.a==1" and "assert m.data.b=='b'". However, use of 
-    Message2 makes your messaging code less documented and harder to 
-    debug. 
+    This *can* be used to package message data. Each of the keyword
+    args given at construction will be stored as a member of the 'data'
+    member of instance. E.g. "m=Message2(a=1, b='b')" would succeed
+    "assert m.data.a==1" and "assert m.data.b=='b'". However, use of
+    Message2 makes your messaging code less documented and harder to
+    debug.
     '''
-    
+
     def __init__(self, **kwargs):
         class Data: pass
         self.data = Data()
@@ -44,27 +36,27 @@ class StructMsg:
 
 
 class Callback:
-    '''This can be used to wrap functions that are referenced by class 
-    data if the data should be called as a function. E.g. given 
-    >>> def func(): pass 
-    >>> class A: 
+    '''This can be used to wrap functions that are referenced by class
+    data if the data should be called as a function. E.g. given
+    >>> def func(): pass
+    >>> class A:
     ....def __init__(self): self.a = func
-    then doing 
+    then doing
     >>> boo=A(); boo.a()
-    will fail since Python will try to call a() as a method of boo, 
-    whereas a() is a free function. But if you have instead 
-    "self.a = Callback(func)", then "boo.a()" works as expected.  
+    will fail since Python will try to call a() as a method of boo,
+    whereas a() is a free function. But if you have instead
+    "self.a = Callback(func)", then "boo.a()" works as expected.
     '''
     def __init__(self, callable_):
         self.__callable = callable_
     def __call__(self, *args, **kwargs):
         return self.__callable(*args, **kwargs)
-    
+
 
 class Enum:
-    '''Used only internally. Represent one value out of an enumeration 
-    set.  It is meant to be used as:: 
-    
+    '''Used only internally. Represent one value out of an enumeration
+    set.  It is meant to be used as::
+
         class YourAllowedValues:
             enum1 = Enum()
             # or:
@@ -73,7 +65,7 @@ class Enum:
             enum3 = Enum(value, 'descriptionLine1')
             # or:
             enum3 = Enum(None, 'descriptionLine1', 'descriptionLine2', ...)
-            
+
         val = YourAllowedValues.enum1
         ...
         if val is YourAllowedValues.enum1:
@@ -81,7 +73,7 @@ class Enum:
     '''
     nextValue = 0
     values = set()
-    
+
     def __init__(self, value=None, *desc):
         '''Use value if given, otherwise use next integer.'''
         self.desc = '\n'.join(desc)
@@ -89,12 +81,12 @@ class Enum:
             assert Enum.nextValue not in Enum.values
             self.value = Enum.nextValue
             Enum.values.add(self.value)
-            
+
             Enum.nextValue += 1
             # check that we haven't run out of integers!
             if Enum.nextValue == 0:
                 raise RuntimeError('Ran out of enumeration values?')
-            
+
         else:
             try:
                 value + Enum.nextValue

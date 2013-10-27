@@ -1,21 +1,20 @@
 '''
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 '''
 
 class TopicTreeTraverser:
     '''
-    Topic tree traverser. Provides the traverse() method
-    which traverses a topic tree and calls self._onTopic() for
-    each topic in the tree that satisfies self._accept().
-    Additionally it calls self._startChildren() whenever it
-    starts traversing the subtopics of a topic, and
-    self._endChildren() when it is done with the subtopics.
-    Finally, it calls self._doneTraversal() when traversal
-    has been completed.'''
-
+    Supports taking action on every topic in the topic tree. The traverse() method 
+    traverses a topic tree and calls visitor._onTopic() for each topic in the tree 
+    that satisfies visitor._accept(). Additionally it calls visitor._startChildren() 
+    whenever it starts traversing the subtopics of a topic, and 
+    visitor._endChildren() when it is done with the subtopics. Finally, it calls 
+    visitor._doneTraversal() when traversal has been completed. The visitor must 
+    therefore adhere to the ITopicTreeVisitor interface.
+    ''' 
     DEPTH   = 'Depth first through topic tree'
     BREADTH = 'Breadth first through topic tree'
     MAP     = 'Sequential through topic manager\'s topics map'
@@ -106,18 +105,9 @@ class TopicTreeTraverser:
 
 class ITopicTreeVisitor:
     '''
-    Topic tree traverser. Provides the traverse() method
-    which traverses a topic tree and calls self._onTopic() for
-    each topic in the tree that satisfies self._accept().
-    Additionally it calls self._startChildren() whenever it
-    starts traversing the subtopics of a topic, and
-    self._endChildren() when it is done with the subtopics.
-    Finally, it calls self._doneTraversal() when traversal
-    has been completed.
-
     Derive from ITopicTreeVisitor and override one or more of the
-    four self._*() methods described above. Give an instance to
-    an instance of pub.TopicTreeTraverser.
+    self._*() methods. Give an instance to an instance of 
+    TopicTreeTraverser.
     '''
 
     def _accept(self, topicObj):

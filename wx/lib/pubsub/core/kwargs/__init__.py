@@ -6,8 +6,8 @@ part of pubsub.core via pubsub.core's __path__. Hence, this should not
 be imported directly, it is part of pubsub.core when the messaging
 protocol is "kwargs" (and not usable otherwise).
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 '''
 

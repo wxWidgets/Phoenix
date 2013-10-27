@@ -1,87 +1,54 @@
 '''
-
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
-
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
-from topicutils import stringize
 
 
-class ListenerNotValidatable(RuntimeError):
+class TopicNameError(ValueError):
+    '''Raised when the topic name is not properly formatted or 
+    no corresponding Topic object found. '''
+    def __init__(self, name, msg):
+        ValueError.__init__(self, 'Topic name "%s": %s' % (name, msg))
+
+
+class TopicDefnError(RuntimeError):
     '''
-    Raised when an attempt is made to validate a listener relative to a 
-    topic that doesn't have (yet) a Listener Protocol Specification.
-    '''
-    def __init__(self):
-        msg = 'Topics args not set yet, cannot validate listener'
-        RuntimeError.__init__(self, msg)
-
-
-class UndefinedTopic(RuntimeError):
-    '''
-    Raised when an attempt is made to retrieve a Topic object
-    for a topic name that hasn't yet been created.
-    '''
-    def __init__(self, topicName, msgFormat=None):
-        if msgFormat is None:
-            msgFormat = 'Topic "%s" doesn\'t exist'
-        RuntimeError.__init__(self, msgFormat % topicName)
-
-
-class UndefinedSubtopic(UndefinedTopic):
-    '''
-    Raised when an attempt is made to retrieve a Topic object
-    for a subtopic name that hasn't yet been created within
-    its parent topic.
-    '''
-    def __init__(self, parentName, subName):
-        msgFormat = 'Topic "%s" doesn\'t have "%%s" as subtopic' % parentName
-        UndefinedTopic.__init__(self, subName, msgFormat)
-
-
-class ListenerSpecIncomplete(RuntimeError):
-    '''
-    Raised when an attempt is made to create a topic for which
-    a specification is not available, but pub.setTopicUnspecifiedFatal()
-    was called.
+    Raised when an operation requires a topic have an MDS, but it doesn't. 
+    See also pub.setTopicUnspecifiedFatal().
     '''
     def __init__(self, topicNameTuple):
         msg = "No topic specification for topic '%s'."  \
-            % stringize(topicNameTuple)
+            % '.'.join(topicNameTuple)
         RuntimeError.__init__(self, msg +
-            " See pub.getOrCreateTopic(), pub.addTopicDefnProvider(), and/or pub.setTopicUnspecifiedFatal()")
+            " See pub.addTopicDefnProvider() and/or pub.setTopicUnspecifiedFatal()")
 
 
-class ListenerSpecInvalid(RuntimeError):
+class MessageDataSpecError(RuntimeError):
     '''
-    Raised when an attempt is made to define a topic's Listener Protocol
-    Specification to something that is not valid.
+    Raised when an attempt is made to define a topic's Message Data
+    Specification (MDS) to something that is not valid.
 
-    The argument names that are invalid can be put in the 'args' list,
-    and the msg should say what is the problem and contain "%s" for the
-    args, such as ListenerSpecInvalid('duplicate args %s', ('arg1', 'arg2')).
+    The keyword names for invalid data go in the 'args' list,
+    and the msg should state the problem and contain "%s" for the
+    args, such as MessageDataSpecError('duplicate args %s', ('arg1', 'arg2')).
     '''
 
     def __init__(self, msg, args):
         argsMsg = msg % ','.join(args)
-        RuntimeError.__init__(self, 'Invalid listener spec: ' + argsMsg)
+        RuntimeError.__init__(self, 'Invalid message data spec: ' + argsMsg)
 
 
 class ExcHandlerError(RuntimeError):
     '''
-    When an exception gets raised within some listener during a
-    sendMessage(), the registered handler (see pub.setListenerExcHandler())
-    gets called (via its __call__ method) and the send operation can
-    resume on remaining listeners.  However, if the handler itself
-    raises an exception while it is being called, the send operation
-    must be aborted: an ExcHandlerError exception gets raised.
+    Raised when a listener exception handler (see pub.setListenerExcHandler())
+    raises an exception. The original exception is contained.
     '''
 
     def __init__(self, badExcListenerID, topicObj, origExc=None):
         '''The badExcListenerID is the name of the listener that raised
         the original exception that handler was attempting to handle.
-        The topicObj is the pub.Topic object for the topic of the
+        The topicObj is the Topic object for the topic of the
         sendMessage that had an exception raised. 
         The origExc is currently not used. '''
         self.badExcListenerID = badExcListenerID
@@ -94,3 +61,12 @@ class ExcHandlerError(RuntimeError):
         RuntimeError.__init__(self, msg)
 
 
+class UnrecognizedSourceFormatError(ValueError): 
+    '''
+    Raised when a topic definition provider doesn't recognize the format 
+    of source input it was given. 
+    '''
+    def __init__(self): 
+        ValueError.__init__(self, 'Source format not recognized')
+        
+        

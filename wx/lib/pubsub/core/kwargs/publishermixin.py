@@ -1,22 +1,22 @@
 '''
-Mixin for publishing messages to a topic's listeners. This will be
-mixed into topicobj.Topic so that a user can use a Topic object to
-send a message to the topic's listeners via a publish() method.
-
-Note that it is important that the PublisherMixin NOT modify any
-state data during message sending, because in principle it could
-happen that a listener causes another message of same topic to be
-sent (presumably, the listener has a way of preventing infinite
-loop).
-
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
-
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
 
-
 class PublisherMixin:
+    '''
+    Mixin for publishing messages to a topic's listeners. This will be
+    mixed into topicobj.Topic so that a user can use a Topic object to
+    send a message to the topic's listeners via a publish() method.
+
+    Note that it is important that the PublisherMixin NOT modify any
+    state data during message sending, because in principle it could
+    happen that a listener causes another message of same topic to be
+    sent (presumably, the listener has a way of preventing infinite
+    loop).
+    '''
+
     def __init__(self):
         pass
 
@@ -45,7 +45,7 @@ class PublisherMixin:
         if iterState is None:
             # do a first check that all args are there, costly so only do once
             iterState = self.IterState(msgKwargs)
-            if self.isSendable():
+            if self.hasMDS():
                 iterState.checkMsgArgs( self._getListenerSpec() )
             else:
                 assert not self.hasListeners()

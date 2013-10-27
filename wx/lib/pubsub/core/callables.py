@@ -1,8 +1,3 @@
-#----------------------------------------------------------------------------
-# Name:         callables.py
-#
-# Tags:         phoenix-port
-#----------------------------------------------------------------------------
 '''
 Low level functions and classes related to callables.
 
@@ -12,13 +7,14 @@ is sent to those callables, the topic object for that message should be
 added to the data sent via the call arguments. See the docs in
 CallArgsInfo regarding its autoTopicArgName data member.
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 '''
 
 from inspect import getargspec, ismethod, isfunction
 
+from .. import py2and3 
 
 AUTO_TOPIC    = '## your listener wants topic name ## (string unlikely to be used by caller)'
 
@@ -41,8 +37,8 @@ def getID(callable_):
     defined in module a.b. '''
     sc = callable_
     if ismethod(sc):
-        module = getModule(sc.im_self)
-        id = '%s.%s' % (sc.im_self.__class__.__name__, sc.im_func.func_name)
+        module = getModule(sc.__self__)
+        id = '%s.%s' % (sc.__self__.__class__.__name__, sc.__func__.__name__)
     elif isfunction(sc):
         module = getModule(sc)
         id = sc.__name__
@@ -61,16 +57,16 @@ def getRawFunction(callable_):
     recognized type (function, method or has __call__ method).'''
     firstArg = 0
     if isfunction(callable_):
-        #print('Function', getID(callable_))
+        #print 'Function', getID(callable_)
         func = callable_
     elif ismethod(callable_):
-        #print('Method', getID(callable_))
+        #print 'Method', getID(callable_)
         func = callable_
-        if func.im_self is not None:
+        if func.__self__ is not None:
             # Method is bound, don't care about the self arg
             firstArg = 1
     elif hasattr(callable_, '__call__'):
-        #print('Functor', getID(callable_))
+        #print 'Functor', getID(callable_)
         func = callable_.__call__
         firstArg = 1  # don't care about the self arg
     else:
@@ -80,19 +76,19 @@ def getRawFunction(callable_):
     return func, firstArg
 
     
-class ListenerInadequate(TypeError):
+class ListenerMismatchError(ValueError):
     '''
     Raised when an attempt is made to subscribe a listener to 
-    a topic, but listener does not satisfy the topic's listener protocol
-    specification (LPS). This specification is inferred from the first
+    a topic, but listener does not satisfy the topic's message data
+    specification (MDS). This specification is inferred from the first
     listener subscribed to a topic, or from an imported topic tree
-    specification (see pub.importTopicTree()).
+    specification (see pub.addTopicDefnProvider()).
     '''
     
     def __init__(self, msg, listener, *args):
         idStr, module = getID(listener)
         msg = 'Listener "%s" (from module "%s") inadequate: %s' % (idStr, module, msg)
-        TypeError.__init__(self, msg)
+        ValueError.__init__(self, msg)
         self.msg    = msg
         self.args   = args
         self.module = module
@@ -179,14 +175,16 @@ class CallArgsInfo:
                 break
         
 
-def getArgs(listener):
-    '''Returns an instance of CallArgsInfo for the given listener.
-    Raises ListenerInadequate if listener is not a callable.'''
+def getArgs(callable_):
+    '''Returns an instance of CallArgsInfo for the given callable_.
+    Raises ListenerMismatchError if callable_ is not a callable.'''
     # figure out what is the actual function object to inspect:
     try:
-        func, firstArgIdx = getRawFunction(listener)
-    except ValueError, exc:
-        raise ListenerInadequate(str(exc), listener)
+        func, firstArgIdx = getRawFunction(callable_)
+    except ValueError:
+        from .. import py2and3
+        exc = py2and3.getexcobj()
+        raise ListenerMismatchError(str(exc), callable_)
 
     return CallArgsInfo(func, firstArgIdx)
 

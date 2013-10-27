@@ -1,19 +1,19 @@
 '''
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 '''
 
 import weakref
 
-from topicutils import stringize, WeakNone
-from validatedefnargs import verifySubset
-
+from .topicutils import (stringize, WeakNone)
+from .validatedefnargs import verifySubset
+from .. import py2and3
 
 ### Exceptions raised during check() from sendMessage()
 
-class SenderMissingReqdArgs(RuntimeError):
+class SenderMissingReqdMsgDataError(RuntimeError):
     '''
     Raised when a sendMessage() is missing arguments tagged as
     'required' by pubsub topic of message.
@@ -23,14 +23,14 @@ class SenderMissingReqdArgs(RuntimeError):
         argsStr = ','.join(argNames)
         missStr = ','.join(missing)
         msg = "Some required args missing in call to sendMessage('%s', %s): %s" \
-            % (topicName, argsStr, missStr)
+            % (stringize(topicName), argsStr, missStr)
         RuntimeError.__init__(self, msg)
 
 
-class SenderUnknownOptArgs(RuntimeError):
+class SenderUnknownMsgDataError(RuntimeError):
     '''
     Raised when a sendMessage() has arguments not listed among the topic's
-    listener specification.
+    message data specification (MDS).
     '''
 
     def __init__(self, topicName, argNames, extra):
@@ -43,7 +43,7 @@ class SenderUnknownOptArgs(RuntimeError):
 
 class ArgsInfo:
     '''
-    Encode the Listener Protocol Specification (LPS) for a given
+    Encode the Message Data Specification (MDS) for a given
     topic. ArgsInfos form a tree identical to that of Topics in that
     ArgInfos have a reference to their parent and children ArgInfos,
     created for the parent and children topics.
@@ -56,7 +56,7 @@ class ArgsInfo:
     specification of each of its children. Also, the instance
     can be used to check validity and filter arguments.
 
-    The LPS can be created "empty", ie "incomplete", meaning it cannot
+    The MDS can be created "empty", ie "incomplete", meaning it cannot
     yet be used to validate listener subscriptions to topics.
     '''
 
@@ -101,28 +101,28 @@ class ArgsInfo:
         '''docs is a mapping from arg names to their documentation'''
         if not self.isComplete():
             raise
-        for arg, doc in docs.iteritems():
+        for arg, doc in py2and3.iteritems(docs):
             self.allDocs[arg] = doc
 
     def check(self, msgKwargs):
-        '''Check that the message arguments given satisfy the topic arg
-        specification. Raises SenderMissingReqdArgs if some required
-        args are missing or not known, and raises SenderUnknownOptArgs if some
+        '''Check that the message arguments given satisfy the topic message
+        data specification (MDS). Raises SenderMissingReqdMsgDataError if some required
+        args are missing or not known, and raises SenderUnknownMsgDataError if some
         optional args are unknown. '''
         all = set(msgKwargs)
         # check that it has all required args
         needReqd = set(self.allRequired)
         hasReqd = (needReqd <= all)
         if not hasReqd:
-            raise SenderMissingReqdArgs(
-                self.topicNameTuple, msgKwargs.keys(), needReqd - all)
+            raise SenderMissingReqdMsgDataError(
+                self.topicNameTuple, py2and3.keys(msgKwargs), needReqd - all)
 
         # check that all other args are among the optional spec
         optional = all - needReqd
         ok = (optional <= set(self.allOptional))
         if not ok:
-            raise SenderUnknownOptArgs( self.topicNameTuple,
-                msgKwargs.keys(), optional - set(self.allOptional) )
+            raise SenderUnknownMsgDataError( self.topicNameTuple,
+                py2and3.keys(msgKwargs), optional - set(self.allOptional) )
 
     def filterArgs(self, msgKwargs):
         '''Returns a dict which contains only those items of msgKwargs

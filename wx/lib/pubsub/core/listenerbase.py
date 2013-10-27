@@ -1,46 +1,22 @@
 '''
-Higher-level classes and functions related to listening of pubsub messages.
-Listeners are callable objects that get subscribed to a pubsub
-topic. Listeners are deemed "invalid" or "inadequate" (used interchangeably)
-by pubsub if they wouldn't be able to receive all message data of a topic
-message. This module includes this validation functionality, which varies
-based on the pubsub messaging protocol used. 
-
-Note that a Listener instance holds its callable listener only by weak
-reference so it doesn't prevent the callable from being garbage collected
-when callable is no longer in use by the application.
-
-In order for a listener to subscribe to a topic, it must adhere to that
-topic's "listener protocol specification" (LPS). A subscription will
-fail (via a ListenerInadequate exception) if this is not the case. For
-instance, if topic A has an LPS "arg1, arg2=None"", then only listeners
-of the form callable([self,] arg1, arg2=something) will be accepted.
-
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
-
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
-import weakmethod
-from callables import \
-    getID, getArgs,\
-    ListenerInadequate, \
-    CallArgsInfo, \
+from . import weakmethod
+
+from .callables import (
+    getID, 
+    getArgs,
+    ListenerMismatchError, 
+    CallArgsInfo, 
     AUTO_TOPIC as _AUTO_ARG
+)
 
 
 class ListenerBase:
     '''
-    Any listener that is subscribed to pubsub topics is stored by weak
-    reference into a Listener (derived from this class). This class uses
-    introspection on the wrapped listener to determine various properties of
-    interest to pubsub. Anytime a listener is returned from a pubsub
-    function/method, it is in fact the Listener wrapping it that is
-    returned.
-
-    Note that listeners that have 'argName=pub.AUTO_TOPIC' as a kwarg will
-    be given the Topic object for the message sent by sendMessage().
-    Such a listener will cause self.wantsTopicObjOnCall() to return True.
+    Base class for listeners, ie. callables subscribed to pubsub. 
     '''
     
     AUTO_TOPIC = _AUTO_ARG
@@ -70,12 +46,12 @@ class ListenerBase:
     
     def name(self):
         '''Return a human readable name for listener, based on the 
-        listener's type name and its id (as obtained
-        from id(listener)). If caller just needs name based on 
-        type info, specify instance=False. Note that the listener's id()
-        was saved at construction time (since it may get garbage collected
-        at any time) so the return value of name() is not necessarily unique if the callable has
-        died (because id's can be re-used after garbage collection).'''
+        listener's type name and its id (as obtained from id(listener)). If 
+        caller just needs name based on type info, specify instance=False. 
+        Note that the listener's id() was saved at construction time (since 
+        it may get garbage collected at any time) so the return value of 
+        name() is not necessarily unique if the callable has died (because 
+        id's can be re-used after garbage collection).'''
         return '%s_%s'  % (self.__nameID, self.__id)
 
     def typeName(self):
@@ -99,7 +75,12 @@ class ListenerBase:
         return self._callable() is None
 
     def wantsTopicObjOnCall(self):
+        '''True if this listener wants topic object: it has a arg=pub.AUTO_TOPIC'''
         return self._autoTopicArgName is not None
+
+    def wantsAllMessageData(self):
+        '''True if this listener wants all message data: it has a \**kwargs argument'''
+        return self.acceptsAllKwargs
     
     def _unlinkFromTopic_(self):
         '''Tell self that it is no longer used by a Topic. This allows 
@@ -172,7 +153,7 @@ class ValidatorBase:
         '''Validate that listener satisfies the requirements of 
         being a topic listener, if topic's kwargs keys are topicKwargKeys
         (so only the list of keyword arg names for topic are necessary). 
-        Raises ListenerInadequate if listener not usable for topic. 
+        Raises ListenerMismatchError if listener not usable for topic. 
         
         Otherwise, returns an CallArgsInfo object containing information about
         the listener's call arguments, such as whether listener wants topic
@@ -193,7 +174,7 @@ class ValidatorBase:
         try:
             self.validate(listener)
             return True
-        except ListenerInadequate:
+        except ListenerMismatchError:
             return False
 
     

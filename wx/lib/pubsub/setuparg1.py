@@ -1,43 +1,33 @@
 '''
-Import this file before the first 'from pubsub import pub' statement
-to make pubsub use the *arg1* messaging protocol::
+Setup pubsub for the *arg1* message protocol. In a default pubsub installation
+the default protocol is *kargs*.
 
-    from pubsub import setuparg1
-    from pubsub import pub
+This module must be imported before the first ``from pubsub import pub``
+statement in the application. Once :mod:pub has been imported, the messaging 
+protocol cannot be changed (i.e., importing it after the first 
+``from pubsub import pub`` statement has undefined behavior). 
+::
 
-This could be necessary in at least two situations: 
+    from .. import setuparg1
+    from .. import pub
 
-1. with a default pubsub installation, where *kwargs* messaging protocol
-   is the default, but an application developer requires the less
-   stringent *arg1* messaging protocol.
-2. with a pubsub installation that has been configured to provide the 
-   legacy v1 API as the default (such as in some versions of wxPython), 
-   but an application developer wants to use the latest API, but with 
-   the messaging protocol closest to that used in the legacy v1 API.
-
-See the setupkwargs module for a description of the default pubsub
-messaging protocol, defined as 'kwargs'.
-
-Note that once :mod:pub has been imported, the messaging protocol
-cannot be changed. Also, if migrating an application from 'arg1' to 'kwargs'
-style messaging, see :func:enforceArgName().
-
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
-
+The *arg1* protocol is identical to the legacy messaging protocol from 
+first version of pubsub (when it was still part of wxPython) and 
+is *deprecated*. This module is therefore *deprecated*. 
 '''
 
-import pubsubconf
-pubsubconf.setVersion(3)
-import core
-core.setMsgProtocol('arg1')
+'''
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
+'''
+
+from . import policies
+policies.msgDataProtocol = 'arg1'
 
 
 def enforceArgName(commonName):
-    '''This will require that all listeners use the same argument
-    name (commonName) as first parameter. This could be a ueful
-    first step in transition an application that has been using *arg1*
-    protocol to the default *kwargs* protocol, see the docs for
-    details. '''
-    import core
-    core.setMsgDataArgName(1, commonName)
+    '''This will configure pubsub to require that all listeners use 
+    the same argument name (*commonName*) as first parameter. This  
+    is a ueful first step in migrating an application that has been 
+    using *arg1* protocol to the more powerful *kwargs* protocol. '''
+    policies.setMsgDataArgName(1, commonName)

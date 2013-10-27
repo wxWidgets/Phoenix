@@ -1,51 +1,29 @@
 '''
-Import this file before the first 'from pubsub import pub' statement
-to make pubsub use the *kwargs* messaging protocol::
+Setup pubsub for the kwargs message protocol. In a default installation
+this is the default protocol so this module is only needed if setupkargs
+utility functions are used, or in a custom installation where kwargs 
+is not the default messaging protocol (such as in some versions of 
+wxPython). 
 
-    from pubsub import setupkwargs
-    from pubsub import pub
-
-Note that in a default pubsub installation, this protocol is
-the default, such that importing setupkwargs would rarely be
-required. But some pubsub installations (such as pubsub in
-some versions of wxPython) use the legacy v1 API as the default.
-For an application based on such an installation, but requiring
-the more advanced *kwargs* protocol, this module can be imported as
-described above.
-
-See the setuparg1 module for using the same messaging protocol
-as the legacy v1 API, but using the latest (ie non legacy) API.
-
-Note that once :mod:pub has been imported, the messaging protocol
-cannot be changed. Also, if migrating an application from 'arg1' to 'kwargs'
-style messaging, see :func:transitionFromArg1() in this module and the
-:func:enforceArgName() of setuparg1 module.
-
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
-
+This module must be imported before the first ``from pubsub import pub``
+statement in the application. Once :mod:pub has been imported, the messaging 
+protocol cannot be changed (i.e., importing it after the first 
+``from pubsub import pub`` statement has undefined behavior). 
 '''
 
-import pubsubconf
-pubsubconf.setVersion(3)
-import core
-core.setMsgProtocol('kwargs')
+'''
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
+'''
+
+from . import policies
+policies.msgDataProtocol = 'kwargs'
 
 
 def transitionFromArg1(commonName):
-    '''This will require that all calls to pub.sendMessage() use the
-    kwargs protocol, ie named arguments for the message data. This is
-    a useful step after setuparg1.enforceArgName(commonName) was used
-    and the application debugged. Replace the latter with ::
-
-        setupkwargs.transitionFromArg1(commonName)
-
-    After this stage tested and debugged, this function call
-    can be removed, and all reference to the .data attribute of the message
-    object received can be removed in all listeners, allowing the
-    application to run in the default messaging protocol (kwargs) used by
-    pubsub version >= 3.
+    '''Utility function to assist migrating an application from using 
+    the arg1 messaging protocol to using the kwargs protocol. Call this 
+    after having run and debugged your application with ``setuparg1.enforceArgName(commonName)``. See the migration docs
+    for more detais. 
     '''
-
-    import core
-    core.setMsgDataArgName(2, commonName)
+    policies.setMsgDataArgName(2, commonName)

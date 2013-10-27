@@ -1,13 +1,16 @@
 '''
-Various little utilities used by topic-related modules. 
+Various utilities used by topic-related modules. 
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 '''
 
 from textwrap import TextWrapper, dedent
 
+from .topicexc import TopicNameError
+
+from .. import py2and3
 
 __all__ = []
 
@@ -40,42 +43,35 @@ def smartDedent(paragraph):
     return para
 
 
-class TopicNameInvalid(RuntimeError):
-    '''Except raised when the topic name is not properly formatted. '''
-    def __init__(self, name, reason):
-        msg = 'Topic name %s invalid: %s' % (name, reason)
-        RuntimeError.__init__(self, msg)
-
-
 import re
 _validNameRE = re.compile(r'[-0-9a-zA-Z]\w*')
 
 
 def validateName(topicName):
-    '''Raise TopicNameInvalid if nameTuple not valid as topic name.'''
+    '''Raise TopicNameError if nameTuple not valid as topic name.'''
     topicNameTuple = tupleize(topicName)
     if not topicNameTuple:
         reason = 'name tuple must have at least one item!'
-        raise TopicNameInvalid(None, reason)
+        raise TopicNameError(None, reason)
 
     class topic: pass
     for subname in topicNameTuple:
         if not subname:
             reason = 'can\'t contain empty string or None'
-            raise TopicNameInvalid(topicNameTuple, reason)
+            raise TopicNameError(topicNameTuple, reason)
 
         if subname.startswith(UNDERSCORE):
             reason = 'must not start with "%s"' % UNDERSCORE
-            raise TopicNameInvalid(topicNameTuple, reason)
+            raise TopicNameError(topicNameTuple, reason)
 
         if subname == ALL_TOPICS:
             reason = 'string "%s" is reserved for root topic' % ALL_TOPICS
-            raise TopicNameInvalid(topicNameTuple, reason)
+            raise TopicNameError(topicNameTuple, reason)
 
         if _validNameRE.match(subname) is None:
             reason = 'element #%s ("%s") has invalid characters' % \
                 (1+list(topicNameTuple).index(subname), subname)
-            raise TopicNameInvalid(topicNameTuple, reason)
+            raise TopicNameError(topicNameTuple, reason)
 
 
 def stringize(topicName):
@@ -85,7 +81,7 @@ def stringize(topicName):
     topic. Otherwise, assume topicName is a tuple and convert it to to a 
     dotted name i.e. ('a','b','c') => 'a.b.c'. Empty name is not allowed 
     (ValueError). The reverse operation is tupleize(topicName).'''
-    if isinstance(topicName, str):
+    if py2and3.isstring(topicName):
         return topicName
     
     if hasattr(topicName, "msgDataSpec"): 
@@ -93,8 +89,9 @@ def stringize(topicName):
 
     try:
         name = '.'.join(topicName)
-    except Exception, exc:
-        raise TopicNameInvalid(topicName, str(exc))
+    except Exception:
+        exc = py2and3.getexcobj()
+        raise TopicNameError(topicName, str(exc))
     
     return name
 
@@ -108,13 +105,13 @@ def tupleize(topicName):
     # then better use isinstance(name, tuple)
     if hasattr(topicName, "msgDataSpec"): 
         topicName = topicName._topicNameStr
-    if isinstance(topicName, str): 
+    if py2and3.isstring(topicName): 
         topicTuple = tuple(topicName.split('.'))
     else:
         topicTuple = tuple(topicName) # assume already tuple of strings
         
     if not topicTuple:
-        raise TopicNameInvalid(topicTuple, "Topic name can't be empty!")
+        raise TopicNameError(topicTuple, "Topic name can't be empty!")
                 
     return topicTuple
 

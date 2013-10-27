@@ -1,44 +1,41 @@
 '''
-This module provides a basic "weak method" implementation. It is necessary
-because the weakref module does not support weak methods (in the sense that,
-counter-intuitively, a user who creates a weakref.ref(obj.method), a reasonable
-action, get a weak ref that is None. 
+This module provides a basic "weak method" implementation, WeakMethod. It uses 
+weakref.WeakRef which, used on its own, produces weak methods that are dead on 
+creation, not very useful. Use the getWeakRef(object) module function to create the 
+proper type of weak reference (weakref.WeakRef or WeakMethod) for given object.
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 '''
 
 # for function and method parameter counting:
 from inspect import ismethod
 # for weakly bound methods:
-from new     import instancemethod as InstanceMethod
+from types import MethodType
 from weakref import ref as WeakRef
 
 
 class WeakMethod:
     """Represent a weak bound method, i.e. a method which doesn't keep alive the 
-    object that it is bound to. It uses WeakRef which, used on its own, 
-    produces weak methods that are dead on creation, not very useful. 
-    Typically, you will use the getWeakRef() module function instead of using
-    this class directly. """
+    object that it is bound to. """
     
     def __init__(self, method, notifyDead = None):
         """The method must be bound. notifyDead will be called when 
         object that method is bound to dies. """
         assert ismethod(method)
-        if method.im_self is None:
+        if method.__self__ is None:
             raise ValueError('Unbound methods cannot be weak-referenced.')
             
         self.notifyDead = None
         if notifyDead is None:
-            self.objRef = WeakRef(method.im_self)
+            self.objRef = WeakRef(method.__self__)
         else:
             self.notifyDead = notifyDead
-            self.objRef = WeakRef(method.im_self, self.__onNotifyDeadObj)
+            self.objRef = WeakRef(method.__self__, self.__onNotifyDeadObj)
             
-        self.fun = method.im_func
-        self.cls = method.im_class
+        self.fun = method.__func__
+        self.cls = method.__self__.__class__
         
     def __onNotifyDeadObj(self, ref):
         if self.notifyDead:
@@ -49,8 +46,8 @@ class WeakMethod:
                 traceback.print_exc()
 
     def __call__(self):
-        """Returns a new.instancemethod if object for method still alive. 
-        Otherwise return None. Note that instancemethod causes a 
+        """Returns a MethodType if object for method still alive. 
+        Otherwise return None. Note that MethodType causes a 
         strong reference to object to be created, so shouldn't save 
         the return value of this call. Note also that this __call__
         is required only for compatibility with WeakRef.ref(), otherwise
@@ -58,7 +55,7 @@ class WeakMethod:
         if self.objRef() is None:
             return None
         else:
-            return InstanceMethod(self.fun, self.objRef(), self.cls)
+            return MethodType(self.fun, self.objRef())
         
     def __eq__(self, method2):
         """Two WeakMethod objects compare equal if they refer to the same method

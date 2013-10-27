@@ -1,34 +1,24 @@
-#----------------------------------------------------------------------
-# Name:         publisher.py
-#
-# Copyright:    Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-# License:      BSD, see LICENSE.txt for details.
-# Tags:         phoenix-port
-#----------------------------------------------------------------------
 '''
-Mixin for publishing messages to a topic's listeners. This will be
-mixed into topicobj.Topic so that a user can use a Topic object to
-send a message to the topic's listeners via a publish() method.
-
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
-
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
 
-from publisherbase import PublisherBase
-import policies
+from .publisherbase import PublisherBase
+from .datamsg import Message
+from .. import (policies, py2and3)
 
 
-class PublisherKwargs(PublisherBase):
+
+class Publisher(PublisherBase):
     '''
     Publisher used for kwargs protocol, ie when sending message data
     via keyword arguments.
     '''
 
     def sendMessage(self, topicName, **kwargs):
-        '''Send a message. 
-        
+        '''Send a message.
+
         :param topicName: name of message topic (dotted or tuple format)
         :param kwargs: message data (must satisfy the topic's MDS)
         '''
@@ -40,17 +30,19 @@ class PublisherKwargs(PublisherBase):
         return 'kwargs'
 
 
-class PublisherArg1Stage2(PublisherKwargs):
+class PublisherArg1Stage2(Publisher):
     '''
     This is used when transitioning from arg1 to kwargs
     messaging protocol.
     '''
 
+    _base = Publisher
+    
     class SenderTooManyKwargs(RuntimeError):
         def __init__(self, kwargs, commonArgName):
             extra = kwargs.copy()
             del extra[commonArgName]
-            msg = 'Sender has too many kwargs (%s)' % (extra.keys(),)
+            msg = 'Sender has too many kwargs (%s)' % ( py2and3.keys(extra),)
             RuntimeError.__init__(self, msg)
 
     class SenderWrongKwargName(RuntimeError):
@@ -60,29 +52,26 @@ class PublisherArg1Stage2(PublisherKwargs):
             RuntimeError.__init__(self, msg)
 
     def __init__(self, treeConfig = None):
-        PublisherKwargs.__init__(self, treeConfig)
-        from datamsg import Message
+        self._base.__init__(self, treeConfig)
         self.Msg = Message
 
     def sendMessage(self, _topicName, **kwarg):
         commonArgName = policies.msgDataArgName
         if len(kwarg) > 1:
             raise self.SenderTooManyKwargs(kwarg, commonArgName)
-        elif len(kwarg) == 1 and not kwarg.has_key(commonArgName):
-            raise self.SenderWrongKwargName(kwarg.keys()[0], commonArgName)
-        
+        elif len(kwarg) == 1 and commonArgName not in kwarg:
+            raise self.SenderWrongKwargName( py2and3.keys(kwarg)[0], commonArgName)
+
         data = kwarg.get(commonArgName, None)
         kwargs = { commonArgName: self.Msg( _topicName, data) }
-        PublisherKwargs.sendMessage( self, _topicName, **kwargs )
+        self._base.sendMessage( self, _topicName, **kwargs )
 
     def getMsgProtocol(self):
         return 'kwarg1'
 
 
-if policies.msgProtocolTransStage is None:
-    Publisher = PublisherKwargs
-else:
+if policies.msgProtocolTransStage is not None:
     Publisher = PublisherArg1Stage2
-    #print('Using protocol', Publisher)
-    
+    #print 'Using protocol', Publisher
+
 

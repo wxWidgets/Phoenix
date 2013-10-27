@@ -1,19 +1,17 @@
 '''
-
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
-
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 '''
 
-from listenerbase import ListenerBase, ValidatorBase, ListenerInadequate
-from callables import ListenerInadequate
-import policies
+from .listenerbase import (ListenerBase, ValidatorBase)
+from .callables import ListenerMismatchError
+from .. import policies
 
 
 class Message:
     """
     A simple container object for the two components of a topic messages
-    in the pubsub API v1: the
+    in the pubsub legacy API: the
     topic and the user data. An instance of Message is given to your
     listener when called by sendMessage(topic). The data is accessed
     via the 'data' attribute, and can be type of object.
@@ -23,12 +21,24 @@ class Message:
         self.data  = data
 
     def __str__(self):
-        return '[Topic: '+`self.topic`+',  Data: '+`self.data`+']'
+        return '[Topic: '+repr(self.topic)+',  Data: '+repr(self.data)+']'
 
 
 class Listener(ListenerBase):
+    '''
+    Wraps a callable so it can be stored by weak reference and introspected
+    to verify that it adheres to a topic's MDS. 
+    
+    A Listener instance has the same hash value as the callable that it wraps. 
+
+    A callable will be given data when a message is sent to it. In the arg1 
+    protocol only one object can be sent via sendMessage, it is put in a 
+    Message object in its "data" field, the listener receives the Message 
+    object. 
+    '''
+    
     def __call__(self, actualTopic, data):
-        '''Call the listener with data. Note that it raises RuntimeError 
+        '''Call the listener with data. Note that it raises RuntimeError
         if listener is dead. Should always return True (False would require
         the callable_ be dead but self hasn't yet been notified of it...).'''
         kwargs = {}
@@ -44,11 +54,11 @@ class Listener(ListenerBase):
 
 class ListenerValidator(ValidatorBase):
     '''
-    Accept one arg or *args; accept any **kwarg, 
-    and require that the Listener have at least all the kwargs (can 
+    Accept one arg or *args; accept any **kwarg,
+    and require that the Listener have at least all the kwargs (can
     have extra) of Topic.
     '''
-    
+
     def _validateArgs(self, listener, paramsInfo):
         # accept **kwargs
         # accept *args
@@ -59,17 +69,17 @@ class ListenerValidator(ValidatorBase):
 
         if paramsInfo.getAllArgs() == ():
             msg = 'Must have at least one parameter (any name, with or without default value, or *arg)'
-            raise ListenerInadequate(msg, listener, [])
+            raise ListenerMismatchError(msg, listener, [])
 
         assert paramsInfo.getAllArgs()
         #assert not paramsInfo.acceptsAllUnnamedArgs
-        
+
         # verify at most one required arg
         numReqdArgs = paramsInfo.numRequired
         if numReqdArgs > 1:
             allReqd = paramsInfo.getRequiredArgs()
             msg = 'only one of %s can be a required agument' % (allReqd,)
-            raise ListenerInadequate(msg, listener, allReqd)
+            raise ListenerMismatchError(msg, listener, allReqd)
 
         # if no required args but listener has *args, then we
         # don't care about anything else:
@@ -82,6 +92,6 @@ class ListenerValidator(ValidatorBase):
         if (needArgName is not None) and firstArgName != needArgName:
             msg = 'listener arg name must be "%s" (is "%s")' % (needArgName, firstArgName)
             effTopicArgs = [needArgName]
-            raise ListenerInadequate(msg, listener, effTopicArgs)
-        
+            raise ListenerMismatchError(msg, listener, effTopicArgs)
+
 

@@ -1,12 +1,12 @@
 '''
 The root topic of all topics is different based on messaging protocol.
 
-:copyright: Copyright 2006-2009 by Oliver Schoenborn, all rights reserved.
-:license: BSD, see LICENSE.txt for details.
+:copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+:license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 '''
 
-import policies
+from .. import policies
 
 
 def getRootTopicSpec():
