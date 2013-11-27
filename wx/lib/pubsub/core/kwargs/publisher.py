@@ -1,7 +1,7 @@
-'''
+"""
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-'''
+"""
 
 
 from .publisherbase import PublisherBase
@@ -11,17 +11,17 @@ from .. import (policies, py2and3)
 
 
 class Publisher(PublisherBase):
-    '''
+    """
     Publisher used for kwargs protocol, ie when sending message data
     via keyword arguments.
-    '''
+    """
 
     def sendMessage(self, topicName, **kwargs):
-        '''Send a message.
+        """Send a message.
 
         :param topicName: name of message topic (dotted or tuple format)
         :param kwargs: message data (must satisfy the topic's MDS)
-        '''
+        """
         topicMgr = self.getTopicMgr()
         topicObj = topicMgr.getOrCreateTopic(topicName)
         topicObj.publish(**kwargs)
@@ -31,10 +31,10 @@ class Publisher(PublisherBase):
 
 
 class PublisherArg1Stage2(Publisher):
-    '''
+    """
     This is used when transitioning from arg1 to kwargs
     messaging protocol.
-    '''
+    """
 
     _base = Publisher
     

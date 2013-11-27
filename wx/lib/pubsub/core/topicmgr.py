@@ -1,10 +1,10 @@
-'''
+"""
 Code related to the concept of topic tree and its management: creating 
 and removing topics, getting info about a particular topic, etc. 
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-'''
+"""
 
 __all__ = [
     'TopicManager',
@@ -52,7 +52,7 @@ ARGS_SPEC_NONE    = ArgSpecGiven.SPEC_GIVEN_NONE
 # ---------------------------------------------------------
 
 class TopicManager:
-    '''
+    """
     Manages the registry of all topics and creation/deletion
     of topics. 
 
@@ -60,7 +60,7 @@ class TopicManager:
     'dotted' format such as ``'a.b.c.'`` or in tuple format such as 
     ``('a', 'b', 'c')``. Any such method will raise a ValueError
     if name not valid (empty, invalid characters, etc). 
-    '''
+    """
     
     # Allowed return values for isTopicSpecified()
     TOPIC_SPEC_NOT_SPECIFIED   = 0 # false
@@ -69,10 +69,10 @@ class TopicManager:
 
 
     def __init__(self, treeConfig=None):
-        '''The optional treeConfig is an instance of TreeConfig, used to 
+        """The optional treeConfig is an instance of TreeConfig, used to
         configure the topic tree such as notification settings, etc. A
         default config is created if not given. This method should only be 
-        called by an instance of Publisher (see Publisher.getTopicManager()).'''
+        called by an instance of Publisher (see Publisher.getTopicManager())."""
         self.__allTopics = None # root of topic tree
         self._topicsMap = {} # registry of all topics
         self.__treeConfig = treeConfig or TreeConfig()
@@ -86,7 +86,7 @@ class TopicManager:
         self.__allTopics = self.__createTopic((ALL_TOPICS,), desc, specGiven=specGiven)
 
     def getRootAllTopics(self):
-        '''Get the topic that is parent of all root (ie top-level) topics, 
+        """Get the topic that is parent of all root (ie top-level) topics,
         for default TopicManager instance created when this module is imported. 
         Some notes:
 
@@ -94,11 +94,11 @@ class TopicManager:
           getParent() is None;
         - all root-level topics satisfy isAll()==False, isRoot()==True, and
           getParent() is getDefaultTopicTreeRoot();
-        - all other topics satisfy neither. '''
+        - all other topics satisfy neither. """
         return self.__allTopics
     
     def addDefnProvider(self, providerOrSource, format=None):
-        '''Register a topic definition provider. After this method is called, whenever a topic must be created, 
+        """Register a topic definition provider. After this method is called, whenever a topic must be created,
         the first definition provider that has a definition
         for the required topic is used to instantiate the topic. 
         
@@ -107,7 +107,7 @@ class TopicManager:
         instance of TopicDefnProvider(providerOrSource, format). In that case, 
         if format is not given, it defaults to TOPIC_TREE_FROM_MODULE. Either
         way, returns the instance of ITopicDefnProvider registered.
-        '''
+        """
         if isinstance(providerOrSource, ITopicDefnProvider):
             provider = providerOrSource
         else:
@@ -118,17 +118,17 @@ class TopicManager:
         return provider
     
     def clearDefnProviders(self):
-        '''Remove all registered topic definition providers'''
+        """Remove all registered topic definition providers"""
         self.__defnProvider.clear()
 
     def getNumDefnProviders(self):
-        '''Get how many topic definitions providers are registered.'''
+        """Get how many topic definitions providers are registered."""
         return self.__defnProvider.getNumProviders()
 
     def getTopic(self, name, okIfNone=False):
-        '''Get the Topic instance for the given topic name. By default, raises 
+        """Get the Topic instance for the given topic name. By default, raises
         an TopicNameError exception if a topic with given name doesn't exist. If
-        okIfNone=True, returns None instead of raising an exception.'''
+        okIfNone=True, returns None instead of raising an exception."""
         topicNameDotted = stringize(name)
         #if not name:
         #    raise TopicNameError(name, 'Empty topic name not allowed')
@@ -152,11 +152,11 @@ class TopicManager:
         raise TopicNameError(name, msg)
 
     def newTopic(self, _name, _desc, _required=(), **_argDocs):
-        '''Deprecated legacy method. 
+        """Deprecated legacy method.
         If topic _name already exists, just returns it and does nothing else.
         Otherwise, uses getOrCreateTopic() to create it, then sets its
         description (_desc) and its message data specification (_argDocs
-        and _required). Replaced by getOrCreateTopic().'''
+        and _required). Replaced by getOrCreateTopic()."""
         topic = self.getTopic(_name, True)
         if topic is None:
             topic = self.getOrCreateTopic(_name)
@@ -165,7 +165,7 @@ class TopicManager:
         return topic
 
     def getOrCreateTopic(self, name, protoListener=None):
-        '''Get the Topic instance for topic of given name, creating it 
+        """Get the Topic instance for topic of given name, creating it
         (and any of its missing parent topics) as necessary. Pubsub 
         functions such as subscribe() use this to obtain the Topic object
         corresponding to a topic name. 
@@ -201,7 +201,7 @@ class TopicManager:
             
         The MDS can also be defined via a call to subscribe(listener, topicName), 
         which indirectly calls getOrCreateTopic(topicName, listener).
-        '''
+        """
         obj = self.getTopic(name, okIfNone=True)
         if obj:
             # if object is not sendable but a proto listener was given,
@@ -229,17 +229,17 @@ class TopicManager:
         return self.__createTopic(nameTuple, desc, parent = parentObj, specGiven = specGiven)
 
     def isTopicInUse(self, name):
-        '''Determine if topic 'name' is in use. True if a Topic object exists
+        """Determine if topic 'name' is in use. True if a Topic object exists
         for topic name (i.e. message has already been sent for that topic, or a 
         least one listener subscribed), false otherwise. Note: a topic may be in use 
         but not have a definition (MDS and docstring); or a topic may have a
-        definition, but not be in use.'''
+        definition, but not be in use."""
         return self.getTopic(name, okIfNone=True) is not None
         
     def hasTopicDefinition(self, name):
-        '''Determine if there is a definition avaiable for topic 'name'. Return
+        """Determine if there is a definition avaiable for topic 'name'. Return
         true if there is, false otherwise. Note: a topic may have a
-        definition without being in use, and vice versa.'''
+        definition without being in use, and vice versa."""
         # in already existing Topic object:
         alreadyCreated = self.getTopic(name, okIfNone=True)
         if alreadyCreated is not None and alreadyCreated.hasMDS():
@@ -253,16 +253,16 @@ class TopicManager:
         return False
 
     def checkAllTopicsHaveMDS(self):
-        '''Check that all topics that have been created for their MDS. 
-        Raise a TopicDefnError if one is found that does not have one.'''
+        """Check that all topics that have been created for their MDS.
+        Raise a TopicDefnError if one is found that does not have one."""
         for topic in py2and3.itervalues(self._topicsMap):
             if not topic.hasMDS():
                 raise TopicDefnError(topic.getNameTuple())
 
     def delTopic(self, name):
-        '''Delete the named topic, including all sub-topics. Returns False 
+        """Delete the named topic, including all sub-topics. Returns False
         if topic does not exist; True otherwise. Also unsubscribe any listeners 
-        of topic and all subtopics. '''
+        of topic and all subtopics. """
         # find from which parent the topic object should be removed
         dottedName = stringize(name)
         try:
@@ -283,9 +283,9 @@ class TopicManager:
         return True
 
     def getTopicsSubscribed(self, listener):
-        '''Get the list of Topic objects that have given listener 
+        """Get the list of Topic objects that have given listener
         subscribed. Note: the listener can also get messages from any 
-        sub-topic of returned list.'''
+        sub-topic of returned list."""
         assocTopics = []
         for topicObj in py2and3.itervalues(self._topicsMap):
             if topicObj.hasListener(listener):
@@ -293,7 +293,7 @@ class TopicManager:
         return assocTopics        
         
     def __getClosestParent(self, topicNameDotted):
-        '''Returns a pair, (closest parent, tuple path from parent). The
+        """Returns a pair, (closest parent, tuple path from parent). The
         first item is the closest parent Topic that exists.
         The second one is the list of topic name elements that have to be 
         created to create the given topic.
@@ -303,7 +303,7 @@ class TopicManager:
         Note that if none of the branch exists (not even A), then return
         will be [root topic, ['A',B','C','D']). Note also that if A.B.C
         exists, the return will be (A.B.C, ['D']) regardless of whether
-        A.B.C.D exists. '''
+        A.B.C.D exists. """
         subtopicNames = []
         headTail = topicNameDotted.rsplit('.', 1)
         while len(headTail) > 1:
@@ -319,9 +319,9 @@ class TopicManager:
         return self.__allTopics, subtopicNames
     
     def __createParentTopics(self, topicName):
-        '''This will find which parents need to be created such that
+        """This will find which parents need to be created such that
         topicName can be created (but doesn't create given topic),
-        and creates them. Returns the parent object.'''
+        and creates them. Returns the parent object."""
         assert self.getTopic(topicName, okIfNone=True) is None
         parentObj, subtopicNames = self.__getClosestParent(stringize(topicName))
         
@@ -341,9 +341,9 @@ class TopicManager:
         return parentObj
     
     def __createTopic(self, nameTuple, desc, specGiven, parent=None):
-        '''Actual topic creation step. Adds new Topic instance to topic map, 
+        """Actual topic creation step. Adds new Topic instance to topic map,
         and sends notification message (see ``Publisher.addNotificationMgr()``) 
-        regarding topic creation.'''
+        regarding topic creation."""
         if specGiven is None:
             specGiven = ArgSpecGiven()
         parentAI = None
@@ -373,9 +373,9 @@ class TopicManager:
 
 
 def validateNameHierarchy(topicTuple):
-    '''Check that names in topicTuple are valid: no spaces, not empty.
+    """Check that names in topicTuple are valid: no spaces, not empty.
     Raise ValueError if fails check. E.g. ('',) and ('a',' ') would
-    both fail, but ('a','b') would be ok. '''
+    both fail, but ('a','b') would be ok. """
     if not topicTuple:
         topicName = stringize(topicTuple)
         errMsg = 'empty topic name'
@@ -401,38 +401,38 @@ def validateNameHierarchy(topicTuple):
 
 
 class _MasterTopicDefnProvider:
-    '''
+    """
     Stores a list of topic definition providers. When queried for a topic
     definition, queries each provider (registered via addProvider()) and
     returns the first complete definition provided, or (None,None).
 
     The providers must follow the ITopicDefnProvider protocol.
-    '''
+    """
 
     def __init__(self, treeConfig):
         self.__providers = []
         self.__treeConfig = treeConfig
 
     def addProvider(self, provider):
-        '''Add given provider IF not already added. '''
+        """Add given provider IF not already added. """
         assert(isinstance(provider, ITopicDefnProvider))
         if provider not in self.__providers:
             self.__providers.append(provider)
 
     def clear(self):
-        '''Remove all providers added.'''
+        """Remove all providers added."""
         self.__providers = []
 
     def getNumProviders(self):
-        '''Return how many providers added.'''
+        """Return how many providers added."""
         return len(self.__providers)
 
     def getDefn(self, topicNameTuple):
-        '''Returns a pair (docstring, MDS) for the topic. The first item is 
+        """Returns a pair (docstring, MDS) for the topic. The first item is
         a string containing the topic's "docstring", i.e. a description string 
         for the topic, or None if no docstring available for the topic. The 
         second item is None or an instance of ArgSpecGiven specifying the
-        required and optional message data for listeners of this topic. '''
+        required and optional message data for listeners of this topic. """
         desc, defn = None, None
         for provider in self.__providers:
             tmpDesc, tmpDefn = provider.getDefn(topicNameTuple)
@@ -444,8 +444,8 @@ class _MasterTopicDefnProvider:
         return desc, defn
 
     def isDefined(self, topicNameTuple):
-        '''Returns True only if a complete definition exists, ie topic
-        has a description and a complete message data specification (MDS).'''
+        """Returns True only if a complete definition exists, ie topic
+        has a description and a complete message data specification (MDS)."""
         desc, defn = self.getDefn(topicNameTuple)
         if desc is None or defn is None:
             return False

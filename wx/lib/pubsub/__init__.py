@@ -1,14 +1,14 @@
-'''
+"""
 Pubsub package initialization. 
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
 Last change info:
-- $Date: 2013-10-10 01:15:37 -0400 (Thu, 10 Oct 2013) $
-- $Revision: 329 $
+- $Date: 2013-11-17 13:09:24 -0500 (Sun, 17 Nov 2013) $
+- $Revision: 340 $
 
-'''
+"""
 
 LAST_RELEASE_DATE = "2013-09-15"
 LAST_RELEASE_VER = "3.2.1b"

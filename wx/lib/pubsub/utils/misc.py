@@ -13,21 +13,21 @@ __all__ = ('printImported', 'StructMsg', 'Callback', 'Enum' )
 
 
 def printImported():
-    '''Output a list of pubsub modules imported so far'''
+    """Output a list of pubsub modules imported so far"""
     ll = [mod for mod in sys.modules.keys() if mod.find('pubsub') >= 0] # iter keys ok
     ll.sort()
     py2and3.print_('\n'.join(ll))
 
 
 class StructMsg:
-    '''
+    """
     This *can* be used to package message data. Each of the keyword
     args given at construction will be stored as a member of the 'data'
     member of instance. E.g. "m=Message2(a=1, b='b')" would succeed
     "assert m.data.a==1" and "assert m.data.b=='b'". However, use of
     Message2 makes your messaging code less documented and harder to
     debug.
-    '''
+    """
 
     def __init__(self, **kwargs):
         class Data: pass
@@ -36,7 +36,7 @@ class StructMsg:
 
 
 class Callback:
-    '''This can be used to wrap functions that are referenced by class
+    """This can be used to wrap functions that are referenced by class
     data if the data should be called as a function. E.g. given
     >>> def func(): pass
     >>> class A:
@@ -46,7 +46,7 @@ class Callback:
     will fail since Python will try to call a() as a method of boo,
     whereas a() is a free function. But if you have instead
     "self.a = Callback(func)", then "boo.a()" works as expected.
-    '''
+    """
     def __init__(self, callable_):
         self.__callable = callable_
     def __call__(self, *args, **kwargs):
@@ -54,7 +54,7 @@ class Callback:
 
 
 class Enum:
-    '''Used only internally. Represent one value out of an enumeration
+    """Used only internally. Represent one value out of an enumeration
     set.  It is meant to be used as::
 
         class YourAllowedValues:
@@ -70,12 +70,12 @@ class Enum:
         ...
         if val is YourAllowedValues.enum1:
             ...
-    '''
+    """
     nextValue = 0
     values = set()
 
     def __init__(self, value=None, *desc):
-        '''Use value if given, otherwise use next integer.'''
+        """Use value if given, otherwise use next integer."""
         self.desc = '\n'.join(desc)
         if value is None:
             assert Enum.nextValue not in Enum.values

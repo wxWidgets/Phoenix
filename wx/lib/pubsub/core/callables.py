@@ -1,4 +1,4 @@
-'''
+"""
 Low level functions and classes related to callables.
 
 The AUTO_TOPIC
@@ -10,7 +10,7 @@ CallArgsInfo regarding its autoTopicArgName data member.
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
-'''
+"""
 
 from inspect import getargspec, ismethod, isfunction
 
@@ -20,9 +20,9 @@ AUTO_TOPIC    = '## your listener wants topic name ## (string unlikely to be use
 
 
 def getModule(obj):
-    '''Get the module in which an object was defined. Returns '__main__' 
+    """Get the module in which an object was defined. Returns '__main__'
     if no module defined (which usually indicates either a builtin, or
-    a definition within main script). '''
+    a definition within main script). """
     if hasattr(obj, '__module__'):
         module = obj.__module__
     else:
@@ -31,10 +31,10 @@ def getModule(obj):
 
 
 def getID(callable_):
-    '''Get name and module name for a callable, ie function, bound 
+    """Get name and module name for a callable, ie function, bound
     method or callable instance, by inspecting the callable. E.g. 
     getID(Foo.bar) returns ('Foo.bar', 'a.b') if Foo.bar was
-    defined in module a.b. '''
+    defined in module a.b. """
     sc = callable_
     if ismethod(sc):
         module = getModule(sc.__self__)
@@ -50,11 +50,11 @@ def getID(callable_):
 
 
 def getRawFunction(callable_):
-    '''Given a callable, return (offset, func) where func is the
+    """Given a callable, return (offset, func) where func is the
     function corresponding to callable, and offset is 0 or 1 to 
     indicate whether the function's first argument is 'self' (1)
     or not (0). Raises ValueError if callable_ is not of a
-    recognized type (function, method or has __call__ method).'''
+    recognized type (function, method or has __call__ method)."""
     firstArg = 0
     if isfunction(callable_):
         #print 'Function', getID(callable_)
@@ -77,13 +77,13 @@ def getRawFunction(callable_):
 
     
 class ListenerMismatchError(ValueError):
-    '''
+    """
     Raised when an attempt is made to subscribe a listener to 
     a topic, but listener does not satisfy the topic's message data
     specification (MDS). This specification is inferred from the first
     listener subscribed to a topic, or from an imported topic tree
     specification (see pub.addTopicDefnProvider()).
-    '''
+    """
     
     def __init__(self, msg, listener, *args):
         idStr, module = getID(listener)
@@ -99,13 +99,13 @@ class ListenerMismatchError(ValueError):
 
 
 class CallArgsInfo:
-    '''
+    """
     Represent the "signature" or protocol of a listener in the context of 
     topics. 
-    '''
+    """
     
     def __init__(self, func, firstArgIdx): #args, firstArgIdx, defaultVals, acceptsAllKwargs=False):
-        '''Inputs: 
+        """Inputs:
         - Args and defaultVals are the complete set of arguments and
           default values as obtained form inspect.getargspec();
         - The firstArgIdx points to the first item in
@@ -130,7 +130,7 @@ class CallArgsInfo:
         self.autoTopicArgName = 'arg2', whereas
         listener(self, arg1, arg3=None) will have
         self.allParams = (arg1, arg3), self.numRequired=1, and
-        self.autoTopicArgName = None.'''
+        self.autoTopicArgName = None."""
 
         #args, firstArgIdx, defaultVals, acceptsAllKwargs
         (allParams, varParamName, varOptParamName, defaultVals) = getargspec(func)
@@ -160,13 +160,13 @@ class CallArgsInfo:
         return tuple( self.allParams[self.numRequired:] )
 
     def getRequiredArgs(self):
-        '''Return a tuple of names indicating which call arguments
-        are required to be present when pub.sendMessage(...) is called. '''
+        """Return a tuple of names indicating which call arguments
+        are required to be present when pub.sendMessage(...) is called. """
         return tuple( self.allParams[:self.numRequired] )
 
     def __setupAutoTopic(self, defaults):
-        '''Does the listener want topic of message? Returns < 0 if not, 
-        otherwise return index of topic kwarg within args.'''
+        """Does the listener want topic of message? Returns < 0 if not,
+        otherwise return index of topic kwarg within args."""
         for indx, defaultVal in enumerate(defaults):
             if defaultVal == AUTO_TOPIC:
                 #del self.defaults[indx]
@@ -176,8 +176,8 @@ class CallArgsInfo:
         
 
 def getArgs(callable_):
-    '''Returns an instance of CallArgsInfo for the given callable_.
-    Raises ListenerMismatchError if callable_ is not a callable.'''
+    """Returns an instance of CallArgsInfo for the given callable_.
+    Raises ListenerMismatchError if callable_ is not a callable."""
     # figure out what is the actual function object to inspect:
     try:
         func, firstArgIdx = getRawFunction(callable_)

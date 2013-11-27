@@ -1,11 +1,11 @@
-'''
+"""
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-'''
+"""
 
 
 class PublisherMixin:
-    '''
+    """
     Mixin for publishing messages to a topic's listeners. This will be
     mixed into topicobj.Topic so that a user can use a Topic object to
     send a message to the topic's listeners via a publish() method.
@@ -15,7 +15,7 @@ class PublisherMixin:
     happen that a listener causes another message of same topic to be
     sent (presumably, the listener has a way of preventing infinite
     loop).
-    '''
+    """
 
     def __init__(self):
         pass
@@ -57,9 +57,9 @@ class PublisherMixin:
         return iterState
 
     def _mix_callListener(self, listener, msgKwargs, iterState):
-        '''Send the message for given topic with data in msgKwargs.
+        """Send the message for given topic with data in msgKwargs.
         This sends message to listeners of parent topics as well.
         Note that at each level, msgKwargs is filtered so only those
-        args that are defined for the topic are sent to listeners. '''
+        args that are defined for the topic are sent to listeners. """
         listener(iterState.filteredArgs, self, msgKwargs)
 

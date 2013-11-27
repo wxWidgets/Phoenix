@@ -1,16 +1,16 @@
-'''
+"""
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
-'''
+"""
 
 from .listenerbase import ListenerBase, ValidatorBase
 from .callables import ListenerMismatchError
 
 
 class Listener(ListenerBase):
-    '''
+    """
     Wraps a callable so it can be stored by weak reference and introspected
     to verify that it adheres to a topic's MDS. 
     
@@ -24,12 +24,12 @@ class Listener(ListenerBase):
     Callables that have a '\**kargs' argument will receive all message
     data, not just that for the topic they are subscribed to. Such a listener
     will have wantsAllMessageData() True. 
-    '''
+    """
     
     def __call__(self, kwargs, actualTopic, allKwargs=None):
-        '''Call the listener with **kwargs. Note that it raises RuntimeError 
+        """Call the listener with **kwargs. Note that it raises RuntimeError
         if listener is dead. Should always return True (False would require
-        the callable_ be dead but self hasn't yet been notified of it...).'''
+        the callable_ be dead but self hasn't yet been notified of it...)."""
         if self.acceptsAllKwargs:
             kwargs = allKwargs or kwargs # if allKwargs is None then use kwargs
 
@@ -46,11 +46,11 @@ class Listener(ListenerBase):
 
 
 class ListenerValidator(ValidatorBase):
-    '''
+    """
     Do not accept any required args or *args; accept any **kwarg, 
     and require that the Listener have at least all the kwargs (can 
     have extra) of Topic.
-    '''
+    """
     
     def _validateArgs(self, listener, paramsInfo):
         # accept **kwargs

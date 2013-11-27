@@ -1,7 +1,7 @@
-'''
+"""
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-'''
+"""
 
 from .listenerbase import (ListenerBase, ValidatorBase)
 from .callables import ListenerMismatchError
@@ -25,7 +25,7 @@ class Message:
 
 
 class Listener(ListenerBase):
-    '''
+    """
     Wraps a callable so it can be stored by weak reference and introspected
     to verify that it adheres to a topic's MDS. 
     
@@ -35,12 +35,12 @@ class Listener(ListenerBase):
     protocol only one object can be sent via sendMessage, it is put in a 
     Message object in its "data" field, the listener receives the Message 
     object. 
-    '''
+    """
     
     def __call__(self, actualTopic, data):
-        '''Call the listener with data. Note that it raises RuntimeError
+        """Call the listener with data. Note that it raises RuntimeError
         if listener is dead. Should always return True (False would require
-        the callable_ be dead but self hasn't yet been notified of it...).'''
+        the callable_ be dead but self hasn't yet been notified of it...)."""
         kwargs = {}
         if self._autoTopicArgName is not None:
             kwargs[self._autoTopicArgName] = actualTopic
@@ -53,11 +53,11 @@ class Listener(ListenerBase):
 
 
 class ListenerValidator(ValidatorBase):
-    '''
+    """
     Accept one arg or *args; accept any **kwarg,
     and require that the Listener have at least all the kwargs (can
     have extra) of Topic.
-    '''
+    """
 
     def _validateArgs(self, listener, paramsInfo):
         # accept **kwargs

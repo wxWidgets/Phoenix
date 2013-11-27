@@ -1,4 +1,4 @@
-'''
+"""
 This is not really a package init file, it is only here to simplify the
 packaging and installation of pubsub.core's protocol-specific subfolders
 by setuptools.  The python modules in this folder are automatically made
@@ -9,7 +9,7 @@ protocol is "arg1" (and not usable otherwise).
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
-'''
+"""
 
 
 msg = 'Should not import this directly, used by pubsub.core if applicable'

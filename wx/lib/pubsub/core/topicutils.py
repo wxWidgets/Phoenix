@@ -1,10 +1,10 @@
-'''
+"""
 Various utilities used by topic-related modules. 
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
-'''
+"""
 
 from textwrap import TextWrapper, dedent
 
@@ -21,19 +21,19 @@ ALL_TOPICS = 'ALL_TOPICS'
 
 
 class WeakNone:
-    '''Pretend to be a weak reference to nothing. Used by ArgsInfos to
-    refer to parent when None so no if-else blocks needed. '''
+    """Pretend to be a weak reference to nothing. Used by ArgsInfos to
+    refer to parent when None so no if-else blocks needed. """
     def __call__(self):
         return None
 
 
 def smartDedent(paragraph):
-    '''Dedent paragraph using textwrap.dedent(), but properly dedents 
+    """Dedent paragraph using textwrap.dedent(), but properly dedents
     even if the first line of paragraph does not contain blanks. 
     This handles the case where a user types a documentation string as 
-        """A long string spanning
-        several lines."""
-    '''
+        '''A long string spanning
+        several lines.'''
+    """
     if paragraph.startswith(' '):
         para = dedent(paragraph)
     else:
@@ -48,7 +48,7 @@ _validNameRE = re.compile(r'[-0-9a-zA-Z]\w*')
 
 
 def validateName(topicName):
-    '''Raise TopicNameError if nameTuple not valid as topic name.'''
+    """Raise TopicNameError if nameTuple not valid as topic name."""
     topicNameTuple = tupleize(topicName)
     if not topicNameTuple:
         reason = 'name tuple must have at least one item!'
@@ -75,12 +75,12 @@ def validateName(topicName):
 
 
 def stringize(topicName):
-    '''If topicName is a string, just return it 
+    """If topicName is a string, just return it
     as is. If it is a topic definition object (ie an object that has 
     'msgDataSpec' as data member), return the dotted name of corresponding
     topic. Otherwise, assume topicName is a tuple and convert it to to a 
     dotted name i.e. ('a','b','c') => 'a.b.c'. Empty name is not allowed 
-    (ValueError). The reverse operation is tupleize(topicName).'''
+    (ValueError). The reverse operation is tupleize(topicName)."""
     if py2and3.isstring(topicName):
         return topicName
     
@@ -97,10 +97,10 @@ def stringize(topicName):
 
 
 def tupleize(topicName):
-    '''If topicName is a tuple of strings, just return it as is. Otherwise, 
+    """If topicName is a tuple of strings, just return it as is. Otherwise,
     convert it to tuple, assuming dotted notation used for topicName. I.e. 
     'a.b.c' => ('a','b','c'). Empty topicName is not allowed (ValueError). 
-    The reverse operation is stringize(topicNameTuple).'''
+    The reverse operation is stringize(topicNameTuple)."""
     # assume name is most often str; if more often tuple, 
     # then better use isinstance(name, tuple)
     if hasattr(topicName, "msgDataSpec"): 

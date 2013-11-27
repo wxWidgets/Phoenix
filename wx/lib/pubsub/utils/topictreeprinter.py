@@ -1,9 +1,9 @@
-'''
+"""
 Output various aspects of topic tree to string or file.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-'''
+"""
 
 from textwrap import TextWrapper
 
@@ -11,7 +11,7 @@ from ..core.topictreetraverser import (ITopicTreeVisitor, TopicTreeTraverser)
 
 
 class TopicTreePrinter(ITopicTreeVisitor):
-    '''
+    """
     Example topic tree visitor that prints a prettified representation
     of topic tree by doing a depth-first traversal of topic tree and
     print information at each (topic) node of tree. Extra info to be
@@ -38,19 +38,19 @@ class TopicTreePrinter(ITopicTreeVisitor):
               > arg1: (required) its description
               > arg2: some other description
 
-    '''
+    """
 
     allowedExtras = frozenset('DAaL') # must NOT change
     ALL_TOPICS_NAME = 'ALL_TOPICS'    # output for name of 'all topics' topic
 
     def __init__(self, extra=None, width=70, indentStep=4,
         bulletTopic='\\--', bulletTopicItem='|==', bulletTopicArg='-', fileObj=None):
-        '''Topic tree printer will print listeners for each topic only
+        """Topic tree printer will print listeners for each topic only
         if printListeners is True. The width will be used to limit
         the width of text output, while indentStep is the number of
         spaces added each time the text is indented further. The
         three bullet parameters define the strings used for each
-        item (topic, topic items, and kwargs). '''
+        item (topic, topic items, and kwargs). """
         self.__contentMeth = dict(
             D = self.__printTopicDescription,
             A = self.__printTopicArgsAll,
@@ -83,7 +83,7 @@ class TopicTreePrinter(ITopicTreeVisitor):
             self.__destination.write(self.getOutput())
 
     def _onTopic(self, topicObj):
-        '''This gets called for each topic. Print as per specified content.'''
+        """This gets called for each topic. Print as per specified content."""
 
         # topic name
         self.__wrapper.width = self.__width
@@ -102,17 +102,17 @@ class TopicTreePrinter(ITopicTreeVisitor):
             function(indent, topicObj)
 
     def _startChildren(self):
-        '''Increase the indent'''
+        """Increase the indent"""
         self.__indent += self.__indentStep
 
     def _endChildren(self):
-        '''Decrease the indent'''
+        """Decrease the indent"""
         self.__indent -= self.__indentStep
 
     def __formatDefn(self, indent, item, defn='', sep=': '):
-        '''Print a definition: a block of text at a certain indent,
+        """Print a definition: a block of text at a certain indent,
         has item name, and an optional definition separated from
-        item by sep. '''
+        item by sep. """
         if defn:
             prefix = '%s%s%s' % (' '*indent, item, sep)
             self.__wrapper.initial_indent = prefix
@@ -162,7 +162,7 @@ class TopicTreePrinter(ITopicTreeVisitor):
 
 
 def printTreeDocs(rootTopic=None, topicMgr=None, **kwargs):
-    '''Print out the topic tree to a file (or file-like object like a
+    """Print out the topic tree to a file (or file-like object like a
     StringIO), starting at rootTopic. If root topic should be root of
     whole tree, get it from pub.getDefaultTopicTreeRoot().
     The treeVisitor is an instance of pub.TopicTreeTraverser.
@@ -182,7 +182,7 @@ def printTreeDocs(rootTopic=None, topicMgr=None, **kwargs):
 
     The kwargs are the same as for TopicTreePrinter constructor:
     extra(None), width(70), indentStep(4), bulletTopic, bulletTopicItem,
-    bulletTopicArg, fileObj(stdout). If fileObj not given, stdout is used.'''
+    bulletTopicArg, fileObj(stdout). If fileObj not given, stdout is used."""
     if rootTopic is None:
         if topicMgr is None:
             from .. import pub

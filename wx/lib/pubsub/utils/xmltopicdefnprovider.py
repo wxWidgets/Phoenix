@@ -1,4 +1,4 @@
-'''
+"""
 Contributed by Joshua R English, adapted by Oliver Schoenborn to be 
 consistent with pubsub API. 
 
@@ -8,7 +8,7 @@ Python nested class format.
 
 To use:
 
-    xml = """
+    xml = '''
         <topicdefntree>
         <description>Test showing topic hierarchy and inheritance</description>
         <topic id="parent">
@@ -26,7 +26,7 @@ To use:
             </topic>
         </topic>
         </topicdefntree>
-    """
+    '''
 
 These topic definitions are loaded through an XmlTopicDefnProvider:
 
@@ -43,7 +43,7 @@ of the XML tree.
 
 :copyright: Copyright since 2013 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-'''
+"""
 
 __author__ = 'Joshua R English'
 __revision__ = 6
@@ -249,9 +249,9 @@ def indent(elem, level=0):
 
 
 def exportTopicTreeSpecXml(moduleName=None, rootTopic=None, bak='bak', moduleDoc=None):
-    '''
+    """
     If rootTopic is None, then pub.getDefaultTopicTreeRoot() is assumed.
-    '''
+    """
 
     if rootTopic is None:
         from .. import pub

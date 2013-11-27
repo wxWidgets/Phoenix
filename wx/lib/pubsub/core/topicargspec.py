@@ -1,10 +1,10 @@
-'''
+"""
 Definitions related to message data specification.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
-'''
+"""
 
 
 from .listener import getArgs as getListenerArgs
@@ -17,10 +17,10 @@ from .topicargspecimpl import (
 
 
 def topicArgsFromCallable(_callable):
-    '''Get the topic message data names and list of those that are required, 
+    """Get the topic message data names and list of those that are required,
     by introspecting given callable. Returns a pair, (args, required)
     where args is a dictionary of allowed message data names vs docstring,
-    and required states which ones are required rather than optional.'''
+    and required states which ones are required rather than optional."""
     argsInfo = getListenerArgs(_callable)
     required = argsInfo.getRequiredArgs()
     defaultDoc = 'UNDOCUMENTED'
@@ -29,7 +29,7 @@ def topicArgsFromCallable(_callable):
 
 
 class ArgSpecGiven:
-    '''
+    """
     The message data specification (MDS) for a topic.
     This consists of each argument name that listener should have in its
     call protocol, plus which ones are required in any sendMessage(), and a
@@ -37,7 +37,7 @@ class ArgSpecGiven:
     into an ArgsInfo object which is basically a superset of that information,
     needed to ensure that the arguments specifications satisfy
     pubsub policies for chosen API version.
-    '''
+    """
 
     SPEC_GIVEN_NONE     = 1 # specification not given
     SPEC_GIVEN_ALL      = 3 # all args specified
@@ -64,7 +64,7 @@ class ArgSpecGiven:
         self.argsSpecType = ArgSpecGiven.SPEC_GIVEN_ALL
 
     def isComplete(self):
-        '''Returns True if the definition is usable, false otherwise.'''
+        """Returns True if the definition is usable, false otherwise."""
         return self.argsSpecType == ArgSpecGiven.SPEC_GIVEN_ALL
 
     def getOptional(self):

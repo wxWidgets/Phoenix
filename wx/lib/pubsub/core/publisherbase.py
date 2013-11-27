@@ -1,7 +1,7 @@
-'''
+"""
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-'''
+"""
 
 from .topicmgr import (
     TopicManager, 
@@ -12,45 +12,45 @@ from .. import py2and3
 
 
 class PublisherBase:
-    '''
+    """
     Represent the class that send messages to listeners of given
     topics and that knows how to subscribe/unsubscribe listeners
     from topics.
-    '''
+    """
     
     def __init__(self, treeConfig = None):
-        '''If treeConfig is None, a default one is created from an
-        instance of TreeConfig.'''
+        """If treeConfig is None, a default one is created from an
+        instance of TreeConfig."""
         self.__treeConfig = treeConfig or TreeConfig()
         self.__topicMgr = TopicManager(self.__treeConfig)
 
     def getTopicMgr(self):
-        '''Get the topic manager created for this publisher.'''
+        """Get the topic manager created for this publisher."""
         return self.__topicMgr
 
     def getListenerExcHandler(self):
-        '''Get the listener exception handler that was registered
-        via setListenerExcHandler(), or None of none registered.'''
+        """Get the listener exception handler that was registered
+        via setListenerExcHandler(), or None of none registered."""
         return self.__treeConfig.listenerExcHandler
 
     def setListenerExcHandler(self, handler):
-        '''Set the function to call when a listener raises an exception
+        """Set the function to call when a listener raises an exception
         during a sendMessage(). The handler must adhere to the 
-        IListenerExcHandler API. '''
+        IListenerExcHandler API. """
         self.__treeConfig.listenerExcHandler = handler
 
     def addNotificationHandler(self, handler):
-        '''Add a handler for tracing pubsub activity. The handler should be 
-        a class that adheres to the API of INotificationHandler. '''
+        """Add a handler for tracing pubsub activity. The handler should be
+        a class that adheres to the API of INotificationHandler. """
         self.__treeConfig.notificationMgr.addHandler(handler)
 
     def clearNotificationHandlers(self):
-        '''Remove all notification handlers that were added via
-        self.addNotificationHandler(). '''
+        """Remove all notification handlers that were added via
+        self.addNotificationHandler(). """
         self.__treeConfig.notificationMgr.clearHandlers()
 
     def setNotificationFlags(self, **kwargs):
-        '''Set the notification flags on or off for each type of
+        """Set the notification flags on or off for each type of
         pubsub activity. The kwargs keys can be any of the following:
         
         - subscribe:    if True, get notified whenever a listener subscribes to a topic;
@@ -69,15 +69,15 @@ class PublisherBase:
 
         will toggle all notifications on, but will turn off the 'delTopic'
         notification.
-        '''
+        """
         self.__treeConfig.notificationMgr.setFlagStates(**kwargs)
 
     def getNotificationFlags(self):
-        '''Return a dictionary with the notification flag states.'''
+        """Return a dictionary with the notification flag states."""
         return self.__treeConfig.notificationMgr.getFlagStates()
 
     def setTopicUnspecifiedFatal(self, newVal=True, checkExisting=True):
-        '''Changes the creation policy for topics.
+        """Changes the creation policy for topics.
 
         By default, pubsub will accept topic names for topics that 
         don't have a message data specification (MDS). This default behavior 
@@ -114,7 +114,7 @@ class PublisherBase:
         3. Use it as in #1 during app development, and once stable, use
            #2. This is easiest to do in combination with
            pub.exportTopicTreeSpec().
-         '''
+         """
         oldVal = self.__treeConfig.raiseOnTopicUnspecified
         self.__treeConfig.raiseOnTopicUnspecified = newVal
 
@@ -124,14 +124,14 @@ class PublisherBase:
         return oldVal
 
     def sendMessage(self, topicName, *args, **kwargs):
-        '''Send a message for topic name with given data (args and kwargs). 
+        """Send a message for topic name with given data (args and kwargs).
         This will be overridden by derived classes that implement
         message-sending for different messaging protocols; not all 
-        parameters may be accepted.'''
+        parameters may be accepted."""
         raise NotImplementedError
 
     def subscribe(self, listener, topicName):
-        '''Subscribe listener to named topic. Raises ListenerMismatchError
+        """Subscribe listener to named topic. Raises ListenerMismatchError
         if listener isn't compatible with the topic's MDS. Returns
         (pubsub.core.Listener, success), where success is False if listener 
         was already subscribed. The pub.core.Listener wraps the callable 
@@ -139,18 +139,18 @@ class PublisherBase:
         the callable.
 
         Note that if 'subscribe' notification is on, the handler's
-        'notifySubscribe' method is called after subscription.'''
+        'notifySubscribe' method is called after subscription."""
         topicObj = self.__topicMgr.getOrCreateTopic(topicName)
         subscribedListener, success = topicObj.subscribe(listener)
         return subscribedListener, success
 
     def unsubscribe(self, listener, topicName):
-        '''Unsubscribe from given topic. Returns the pubsub.core.Listener
+        """Unsubscribe from given topic. Returns the pubsub.core.Listener
         instance that was used to wrap listener at subscription
         time. Raises an TopicNameError if topicName doesn't exist.
 
         Note that if 'unsubscribe' notification is on, the handler's
-        notifyUnsubscribe() method will be called after unsubscribing. '''
+        notifyUnsubscribe() method will be called after unsubscribing. """
         topicObj = self.__topicMgr.getTopic(topicName)
         unsubdLisnr = topicObj.unsubscribe(listener)
 
@@ -158,7 +158,7 @@ class PublisherBase:
 
     def unsubAll(self, topicName = None,
         listenerFilter = None, topicFilter = None):
-        '''By default (no args given), unsubscribe all listeners from all
+        """By default (no args given), unsubscribe all listeners from all
         topics. A listenerFilter can be given so that only the listeners
         that satisfy listenerFilter(listener) == True will be unsubscribed
         (with listener being a pub.Listener wrapper instance for each listener
@@ -171,7 +171,7 @@ class PublisherBase:
         were unsubscribed from the topic tree).
 
         Note: this method will generate one 'unsubcribe' notification message
-        (see pub.setNotificationFlags()) for each listener unsubscribed.'''
+        (see pub.setNotificationFlags()) for each listener unsubscribed."""
         unsubdListeners = []
 
         if topicName is None:

@@ -1,11 +1,11 @@
-'''
+"""
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-'''
+"""
 import sys
 
 class NotificationMgr:
-    '''
+    """
     Manages notifications for tracing pubsub activity. When pubsub takes a 
     certain action such as sending a message or creating a topic, and 
     the notification flag for that activity is True, all registered
@@ -23,7 +23,7 @@ class NotificationMgr:
     collecting everything, which could lead to various pubsub notifications
     -- by then they should be of no interest -- such as dead
     listeners, etc. 
-    '''
+    """
 
     def __init__(self, notificationHandler = None):
         self.__notifyOnSend = False
@@ -82,7 +82,7 @@ class NotificationMgr:
                 handler.notifyDeadListener(*args, **kwargs)
 
     def getFlagStates(self):
-        '''Return state of each notification flag, as a dict.'''
+        """Return state of each notification flag, as a dict."""
         return dict(
             subscribe    = self.__notifyOnSubscribe,
             unsubscribe  = self.__notifyOnUnsubscribe,
@@ -95,7 +95,7 @@ class NotificationMgr:
     def setFlagStates(self, subscribe=None, unsubscribe=None,
         deadListener=None, sendMessage=None, newTopic=None,
         delTopic=None, all=None):
-        '''Set the notification flag on/off for various aspects of pubsub.
+        """Set the notification flag on/off for various aspects of pubsub.
         The kwargs that are None are left at their current value. The 'all',
         if not None, is set first. E.g.
 
@@ -103,7 +103,7 @@ class NotificationMgr:
 
         will toggle all notifications on, but will turn off the 'delTopic'
         notification.
-        '''
+        """
         if all is not None:
             # ignore all other arg settings, and set all of them to true:
             numArgs = 7 # how many args in this method
@@ -132,54 +132,54 @@ class NotificationMgr:
 
 
 class INotificationHandler:
-    '''
+    """
     Defines the interface expected by pubsub for pubsub activity 
     notifications. Any instance that supports the same methods, or 
     derives from this class, will work as a notification handler
     for pubsub events (see pub.addNotificationHandler).
-    '''
+    """
     
     def notifySubscribe(self, pubListener, topicObj, newSub):
-        '''Called when a listener is subscribed to a topic. 
+        """Called when a listener is subscribed to a topic.
         :param pubListener: the pubsub.core.Listener that wraps subscribed listener.
         :param topicObj: the pubsub.core.Topic object subscribed to.
-        :param newSub: false if pubListener was already subscribed. '''
+        :param newSub: false if pubListener was already subscribed. """
         raise NotImplementedError
         
     def notifyUnsubscribe(self, pubListener, topicObj):
-        '''Called when a listener is unsubscribed from given topic. 
+        """Called when a listener is unsubscribed from given topic.
         :param pubListener: the pubsub.core.Listener that wraps unsubscribed listener.
-        :param topicObj: the pubsub.core.Topic object unsubscribed from.'''
+        :param topicObj: the pubsub.core.Topic object unsubscribed from."""
         raise NotImplementedError
         
     def notifyDeadListener(self, pubListener, topicObj):
-        '''Called when a listener has been garbage collected.
+        """Called when a listener has been garbage collected.
         :param pubListener: the pubsub.core.Listener that wraps GC'd listener.
-        :param topicObj: the pubsub.core.Topic object it was subscribed to.'''
+        :param topicObj: the pubsub.core.Topic object it was subscribed to."""
         raise NotImplementedError
         
     def notifySend(self, stage, topicObj, pubListener=None):
-        '''Called multiple times during a sendMessage: once before message 
+        """Called multiple times during a sendMessage: once before message
         sending has started (pre), once for each listener about to be sent the 
         message, and once after all listeners have received the message (post).
         :param stage: 'pre', 'post', or 'loop'.
         :param topicObj: the Topic object for the message.
         :param pubListener: None for pre and post stages; for loop, the listener
-            that is about to be sent the message.'''
+            that is about to be sent the message."""
         raise NotImplementedError
     
     def notifyNewTopic(self, topicObj, description, required, argsDocs):
-        '''Called whenever a new topic is added to the topic tree. 
+        """Called whenever a new topic is added to the topic tree.
         :param topicObj: the Topic object for the message.
         :param description: docstring for the topic.
         :param required: list of message data names (keys in argsDocs) that are required.
         :param argsDocs: dictionary of all message data names, with the 
-        corresponding docstring. '''
+        corresponding docstring. """
         raise NotImplementedError
         
     def notifyDelTopic(self, topicName):
-        '''Called whenever a topic is removed from topic tree. 
-        :param topicName: name of topic removed.'''
+        """Called whenever a topic is removed from topic tree.
+        :param topicName: name of topic removed."""
         raise NotImplementedError
 
 

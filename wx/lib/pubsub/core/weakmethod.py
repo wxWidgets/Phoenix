@@ -1,4 +1,4 @@
-'''
+"""
 This module provides a basic "weak method" implementation, WeakMethod. It uses 
 weakref.WeakRef which, used on its own, produces weak methods that are dead on 
 creation, not very useful. Use the getWeakRef(object) module function to create the 
@@ -7,7 +7,7 @@ proper type of weak reference (weakref.WeakRef or WeakMethod) for given object.
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
-'''
+"""
 
 # for function and method parameter counting:
 from inspect import ismethod

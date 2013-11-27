@@ -1,10 +1,10 @@
-'''
+"""
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-'''
+"""
 
 class Message:
-    '''
+    """
     A simple container object for the two components of a message in the 
     arg1 messaging protocol: the 
     topic and the user data. Each listener called by sendMessage(topic, data)
@@ -17,7 +17,7 @@ class Message:
             print msg
             
     The example also shows (last line) how a message is convertible to a string.
-    '''
+    """
     def __init__(self, topic, data):
         self.topic = topic
         self.data  = data

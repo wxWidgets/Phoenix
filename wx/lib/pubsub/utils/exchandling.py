@@ -1,4 +1,4 @@
-'''
+"""
 Some utility classes for exception handling of exceptions raised
 within listeners:
 
@@ -11,7 +11,7 @@ within listeners:
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
-'''
+"""
 
 
 import sys, traceback
@@ -20,7 +20,7 @@ from ..core.listener import IListenerExcHandler
 
 
 class TracebackInfo:
-    '''
+    """
     Represent the traceback information for when an exception is
     raised -- but not caught -- in a listener. The complete
     traceback cannot be stored since this leads to circular
@@ -38,7 +38,7 @@ class TracebackInfo:
      * self.traceback: list of quadruples as returned by traceback.extract_tb()
 
     Normally you just need to call one of the two getFormatted() methods.
-    '''
+    """
     def __init__(self):
         tmpInfo = sys.exc_info()
         self.ExcClass = tmpInfo[0]
@@ -50,15 +50,15 @@ class TracebackInfo:
         del tmpInfo
 
     def getFormattedList(self):
-        '''Get a list of strings as returned by the traceback module's
-        format_list() and format_exception_only() functions.'''
+        """Get a list of strings as returned by the traceback module's
+        format_list() and format_exception_only() functions."""
         tmp = traceback.format_list(self.traceback)
         tmp.extend( traceback.format_exception_only(self.ExcClass, self.excArg) )
         return tmp
 
     def getFormattedString(self):
-        '''Get a string similar to the stack trace that gets printed
-        to stdout by Python interpreter when an exception is not caught.'''
+        """Get a string similar to the stack trace that gets printed
+        to stdout by Python interpreter when an exception is not caught."""
         return ''.join(self.getFormattedList())
 
     def __str__(self):
@@ -66,24 +66,24 @@ class TracebackInfo:
 
 
 class ExcPublisher(IListenerExcHandler):
-    '''
+    """
     Example exception handler that simply publishes the exception traceback
     as a message of topic name given by topicUncaughtExc.
-    '''
+    """
 
     # name of the topic
     topicUncaughtExc = 'uncaughtExcInListener'
 
     def __init__(self, topicMgr=None):
-        '''If topic manager is specified, will automatically call init().
+        """If topic manager is specified, will automatically call init().
         Otherwise, caller must call init() after pubsub imported. See
-        pub.setListenerExcHandler().'''
+        pub.setListenerExcHandler()."""
         if topicMgr is not None:
             self.init(topicMgr)
 
     def init(self, topicMgr):
-        '''Must be called only after pubsub has been imported since this
-        handler creates a pubsub topic.'''
+        """Must be called only after pubsub has been imported since this
+        handler creates a pubsub topic."""
         obj = topicMgr.getOrCreateTopic(self.topicUncaughtExc)
         obj.setDescription('generated when a listener raises an exception')
         obj.setMsgArgSpec( dict(
@@ -92,8 +92,8 @@ class ExcPublisher(IListenerExcHandler):
         self.__topicObj = obj
 
     def __call__(self, listenerID, topicObj):
-        '''Handle the exception raised by given listener. Send the
-        Traceback to all subscribers of topic self.topicUncaughtExc. '''
+        """Handle the exception raised by given listener. Send the
+        Traceback to all subscribers of topic self.topicUncaughtExc. """
         tbInfo = TracebackInfo()
         self.__topicObj.publish(listenerStr=listenerID, excTraceback=tbInfo)
 

@@ -1,4 +1,4 @@
-'''
+"""
 Core package of pubsub, holding the publisher, listener, and topic
 object modules. Functions defined here are used internally by
 pubsub so that the right modules can be found later, based on the
@@ -26,13 +26,13 @@ _prependModulePath() at end of this file.
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 
-'''
+"""
     
 
 def _prependModulePath(extra):
-    '''Insert extra at beginning of package's path list. Should only be
+    """Insert extra at beginning of package's path list. Should only be
     called once, at package load time, to set the folder used for
-    implementation specific to the default message protocol.'''
+    implementation specific to the default message protocol."""
     corepath = __path__
     initpyLoc = corepath[-1]
     import os
