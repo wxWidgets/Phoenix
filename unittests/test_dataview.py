@@ -40,8 +40,17 @@ class dataview_Tests(wtc.WidgetTestCase):
         dvi2 = dv.DataViewItem(222)
         self.assertTrue(int(dvi1.GetID()) == 111)
         self.assertTrue(int(dvi2.ID) == 222)
-        
 
+    def test_dataviewItem7(self):
+        # max integer size on platforms where long is 64-bit 
+        n = 2**63 - 1  
+        assert type(n) is long
+        dvi = dv.DataViewItem(n)
+        self.assertTrue(dvi)
+        self.assertTrue(int(dvi.GetID()) == n)
+
+
+        
     #-------------------------------------------------------
     def test_dataviewItemAttr1(self):
         a = dv.DataViewItemAttr()

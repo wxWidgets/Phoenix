@@ -144,8 +144,13 @@ def run():
             PyFunctionDef('ObjectToItem', '(self, obj)',
                 doc="Create a :class:`DataViewItem` for the object, and remember the ID-->obj mapping.",
                 body="""\
+                    import sys
+                    maxoid = sys.maxint  # 2**63 - 1  ??
                     oid = id(obj)
-                    self.mapper[oid] = obj
+                    while oid > maxoid:
+                        # risk of conflict here... May need some more thought.
+                        oid -= maxoid
+                    self.mapper[oid] = obj 
                     return DataViewItem(oid)
                     """),
 

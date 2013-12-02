@@ -36,8 +36,8 @@ def run():
     module.find('wxInt16').type = 'short'
     module.find('wxInt64').type = 'long long'
     module.find('wxUint64').type = 'unsigned long long'
-    module.find('wxIntPtr').type =  'long'           #'ssize_t'
-    module.find('wxUIntPtr').type = 'unsigned long'  #'size_t'
+    module.find('wxIntPtr').type =  'long long'           #'ssize_t'
+    module.find('wxUIntPtr').type = 'unsigned long long'  #'size_t'
     module.find('wxInt8').pyInt = True
     module.find('wxUint8').pyInt = True
     module.find('wxByte').pyInt = True
