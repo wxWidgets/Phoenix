@@ -116,6 +116,8 @@ def run():
         """)
 
     
+    c.find('GetAccel').factory = True
+    
     module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem', module))
     
 
