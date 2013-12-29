@@ -1478,7 +1478,7 @@ class FixedPoint(object):
         if (other == None):
             return 1
         xn, yn, p = _norm(self, other)
-        return cmp(xn, yn)
+        return _cmp(xn, yn)
 
 
     def __hash__(self):
@@ -1669,11 +1669,16 @@ def _mkFP(n, p, FixedPoint=FixedPoint):
 def _roundquotient(x, y):
     assert y > 0
     n, leftover = divmod(x, y)
-    c = cmp(leftover << 1, y)
+    c = _cmp(leftover << 1, y)
     # c < 0 <-> leftover < y/2, etc
     if c > 0 or (c == 0 and (n & 1) == 1):
         n = n + 1
     return n
+
+
+def _cmp(a, b):
+    return a - b
+
 
 # crud for parsing strings
 import re
