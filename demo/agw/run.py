@@ -23,12 +23,13 @@ import wx.lib.mixins.inspection
 import sys, os
 
 # stuff for debugging
+print("Python", sys.version)
 print("wx.version:", wx.version())
 print("pid:", os.getpid())
-##raw_input("Press Enter...")
+##print("executable:", sys.executable; raw_input("Press Enter..."))
 
-assertMode = wx.PYAPP_ASSERT_DIALOG
-##assertMode = wx.PYAPP_ASSERT_EXCEPTION
+assertMode = wx.APP_ASSERT_DIALOG
+##assertMode = wx.APP_ASSERT_EXCEPTION
 
 
 #----------------------------------------------------------------------------
@@ -50,7 +51,7 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
 
 
     def OnInit(self):
-        wx.Log_SetActiveTarget(wx.LogStderr())
+        wx.Log.SetActiveTarget(wx.LogStderr())
 
         self.SetAssertMode(assertMode)
         self.InitInspection()  # for the InspectionMixin base class
@@ -63,7 +64,7 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
         menu = wx.Menu()
         item = menu.Append(-1, "&Widget Inspector\tF6", "Show the wxPython Widget Inspection Tool")
         self.Bind(wx.EVT_MENU, self.OnWidgetInspector, item)
-        item = menu.Append(-1, "E&xit\tCtrl-Q", "Exit demo")
+        item = menu.Append(wx.ID_EXIT, "E&xit\tCtrl-Q", "Exit demo")
         self.Bind(wx.EVT_MENU, self.OnExitApp, item)
         menuBar.Append(menu, "&File")
 
@@ -147,6 +148,10 @@ def main(argv):
     if len(argv) < 2:
         print("Please specify a demo module name on the command-line")
         raise SystemExit
+
+    # ensure the CWD is the demo folder
+    demoFolder = os.path.dirname(__file__)
+    os.chdir(demoFolder)
 
     name, ext  = os.path.splitext(argv[1])
     module = __import__(name)
