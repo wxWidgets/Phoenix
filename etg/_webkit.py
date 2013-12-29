@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------
-# Name:        etg/_html2.py
+# Name:        etg/_webkit.py
 # Author:      Robin Dunn
 #
-# Created:     20-Nov-2012
+# Created:     22-Aug-2013
 # Copyright:   (c) 2013 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
