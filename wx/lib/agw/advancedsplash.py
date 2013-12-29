@@ -263,11 +263,11 @@ class AdvancedSplash(wx.Frame):
         else:
             self.SetSplashShape()
 
-        w = self.bmp.GetWidth()
-        h = self.bmp.GetHeight()
+        w = self.bmp.GetWidth() + 1
+        h = self.bmp.GetHeight() + 1
 
         # Set The AdvancedSplash Size To The Bitmap Size
-        self.SetSize((w, h))
+        self.SetClientSize((w, h))
 
         if agwStyle & AS_CENTER_ON_SCREEN:
             self.CenterOnScreen()
@@ -287,6 +287,8 @@ class AdvancedSplash(wx.Frame):
         self.Bind(wx.EVT_CHAR, self.OnCharEvents)
 
         self.Show()
+        if wx.Platform == "__WXMAC__":
+            wx.SafeYield(self, True)
 
 
     def SetSplashShape(self, event=None):
@@ -342,10 +344,6 @@ class AdvancedSplash(wx.Frame):
         dc.SetFont(textfont[0])
         dc.SetTextForeground(textcolour)
         dc.DrawText(text, textpos[0], textpos[1])
-
-        # Seems like this only helps on OS X.
-        if wx.Platform == "__WXMAC__":
-            wx.SafeYield(self, True)
 
 
     def OnNotify(self, event):
