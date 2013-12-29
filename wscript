@@ -122,6 +122,9 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXWEBVIEW')
         conf.env.LIB_WXWEBVIEW += cfg.makeLibName('webview')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXWEBKIT')
+        conf.env.LIB_WXWEBKIT += cfg.makeLibName('webkit')
+
         _copyEnvGroup(conf.env, '_WX', '_WXXML')
         conf.env.LIB_WXXML += cfg.makeLibName('xml', isMSWBase=True)
 
@@ -187,6 +190,10 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs webview,core,net' + rpath, 
                        uselib_store='WXWEBVIEW', mandatory=True)
+
+        conf.check_cfg(path=conf.options.wx_config, package='', 
+                       args='--cxxflags --libs core,net' + rpath, 
+                       uselib_store='WXWEBKIT', mandatory=True)
 
         conf.check_cfg(path=conf.options.wx_config, package='', 
                        args='--cxxflags --libs xml,core,net' + rpath, 
@@ -511,6 +518,13 @@ def build(bld):
         )
     makeExtCopyRule(bld, '_html2')
 
+    etg = loadETG('etg/_webkit.py')
+    bld(features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_webkit'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WXWEBKIT WXPY',
+        )
+    makeExtCopyRule(bld, '_webkit')
 
     etg = loadETG('etg/_xml.py')
     bld(features = 'c cxx cxxshlib pyext',
