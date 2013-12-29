@@ -16,7 +16,7 @@ NAME      = "webkit"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxWebKitCtrl',
            'wxWebKitBeforeLoadEvent',
            'wxWebKitStateChangedEvent',
@@ -37,9 +37,12 @@ def run():
     module.addHeaderCode('#include <wx/html/webkit.h>')
 
     c = module.find('wxWebKitCtrl')
-    c.addPrivateCopyCtor()
     assert isinstance(c, etgtools.ClassDef)
+    c.addPrivateCopyCtor()
     tools.fixWindowClass(c)
+    c.find('wxWebKitCtrl.strURL').default = '""'
+    c.find('Create.strURL').default = '""'
+    
 
     module.addGlobalStr('wxWebKitCtrlNameStr', c)
     
