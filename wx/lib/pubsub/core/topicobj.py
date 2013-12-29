@@ -260,7 +260,13 @@ class Topic(PublisherMixin):
         return bool(self.__listeners)
 
     def getListeners(self):
-        """Get an iterator of listeners subscribed to this topic."""
+        """Get a copy of list of listeners subscribed to this topic. Safe to iterate over while listeners
+        get un/subscribed from this topics (such as while sending a message)."""
+        return py2and3.keys(self.__listeners)
+
+    def getListenersIter(self):
+        """Get an iterator over listeners subscribed to this topic. Do not use if listeners can be
+        un/subscribed while iterating. """
         return py2and3.iterkeys(self.__listeners)
 
     def validate(self, listener):
@@ -382,7 +388,9 @@ class Topic(PublisherMixin):
         self._treeConfig.notificationMgr.notifySend('post', self)
 
     def __sendMessage(self, data, topicObj, iterState):
-        # now send message data to each listener for current topic:
+        # now send message data to each listener for current topic;
+        # use list of listeners rather than iterator, so that if listeners added/removed during
+        # send loop, no runtime exception:
         for listener in topicObj.getListeners():
             try:
                 self._treeConfig.notificationMgr.notifySend('in', topicObj, pubListener=listener)

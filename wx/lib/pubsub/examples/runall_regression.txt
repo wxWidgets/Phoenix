@@ -1,0 +1,152 @@
+Will use Python 2.6. To use other, put version ID as command line arg
+Example: for Python 2.7 put 27, for 3.0 put 30, etc.
+python exe is python
+
+
+######################## basic - kwargs - console #########################
+
+Using "kwargs" messaging protocol of pubsub v3
+--- SENDING topic1.subtopic11 message ---
+Method Listener.onTopic11 received:  'message for 11' 123
+Function listenerFn received:  'message for 11' 123
+Method Listener.onTopic1 received "topic1.subtopic11" message: 'message for 11'
+Listener instance received:  {'msg': 'message for 11', 'extra': 123}
+---- SENT topic1.subtopic11 message ----
+--- SENDING topic1 message ---
+Method Listener.onTopic1 received "topic1" message: 'message for 1'
+Listener instance received:  {'msg': 'message for 1'}
+---- SENT topic1 message ----
+Press any key to continue . . .
+
+
+######################## basic - kwargs - wx #########################
+
+pubsub version 3.1.2.201112.r243
+PUBSUB: New topic "money_changed" created
+PUBSUB: Subscribed listener "View.setMoney" to topic "money_changed"
+PUBSUB: New topic "money_changing" created
+PUBSUB: Subscribed listener "Controller.changeMoney" to topic "money_changing"
+---- Starting main event loop ----
+-----
+PUBSUB: Start sending message of topic "money_changing"
+PUBSUB: Sending message of topic "money_changing" to listener Controller.changeMoney
+PUBSUB: Start sending message of topic "money_changed"
+PUBSUB: Sending message of topic "money_changed" to listener View.setMoney
+PUBSUB: Done sending message of topic "money_changed"
+PUBSUB: Done sending message of topic "money_changing"
+-----
+PUBSUB: Start sending message of topic "money_changing"
+PUBSUB: Sending message of topic "money_changing" to listener Controller.changeMoney
+PUBSUB: Start sending message of topic "money_changed"
+PUBSUB: Sending message of topic "money_changed" to listener View.setMoney
+PUBSUB: Done sending message of topic "money_changed"
+PUBSUB: Done sending message of topic "money_changing"
+---- Exited main event loop ----
+Press any key to continue . . .
+
+
+######################## basic - arg1 - console #########################
+
+Using "arg1" messaging protocol of pubsub v3
+--- SENDING topic1.subtopic11 message ---
+Function listenerFn received:  'message for 11' 123
+Method Listener.onTopic11 received:  'message for 11' 123
+Method Listener.onTopic1 received "topic1.subtopic11" message: 'message for 11'
+Listener instance received:  <pubsub.core.listenerimpl.Message instance at 0x018B7AD0>
+---- SENT topic1.subtopic11 message ----
+--- SENDING topic1 message ---
+Method Listener.onTopic1 received "topic1" message: 'message for 1'
+Listener instance received:  <pubsub.core.listenerimpl.Message instance at 0x018B7AD0>
+---- SENT topic1 message ----
+Press any key to continue . . .
+
+
+######################## basic - arg1 - wx #########################
+
+Press any key to continue . . .
+
+
+######################## advanced - kwargs - console #########################
+
+Using "kwargs" messaging protocol of pubsub v3
+------- init ----------
+NotifyByWriteFile: New topic "topic_2" created
+NotifyByWriteFile: New topic "topic_2.subtopic_21" created
+NotifyByWriteFile: New topic "topic_1" created
+NotifyByWriteFile: New topic "topic_1.subtopic_11" created
+MyPubsubNotifHandler: listener Listener_8304 subscribed to ALL_TOPICS
+NotifyByWriteFile: Subscribed listener "Listener" to topic "ALL_TOPICS"
+MyPubsubNotifHandler: listener listenerFn_2464 subscribed to topic_1.subtopic_11
+NotifyByWriteFile: Subscribed listener "listenerFn" to topic "topic_1.subtopic_11"
+MyPubsubNotifHandler: listener Listener.onTopic11_8736 subscribed to topic_1.subtopic_11
+NotifyByWriteFile: Subscribed listener "Listener.onTopic11" to topic "topic_1.subtopic_11"
+MyPubsubNotifHandler: listener Listener.onTopic1_8736 subscribed to topic_1
+NotifyByWriteFile: Subscribed listener "Listener.onTopic1" to topic "topic_1"
+-----------------------
+NotifyByWriteFile: Start sending message of topic "topic_1.subtopic_11"
+NotifyByWriteFile: Sending message of topic "topic_1.subtopic_11" to listener Listener.onTopic11
+Method Listener.onTopic11 received:  'message for subtopic 11' 'other message' 123
+NotifyByWriteFile: Sending message of topic "topic_1.subtopic_11" to listener listenerFn
+Function listenerFn received:  'message for subtopic 11' 'other message' 123
+NotifyByWriteFile: Sending message of topic "topic_1" to listener Listener.onTopic1
+Method Listener.onTopic1 received "topic_1.subtopic_11" message: 'message for subtopic 11'
+NotifyByWriteFile: Sending message of topic "ALL_TOPICS" to listener Listener
+Listener instance received:  {'msg': 'message for subtopic 11', 'extra': 123, 'msg2': 'other message'}
+NotifyByWriteFile: Done sending message of topic "topic_1.subtopic_11"
+NotifyByWriteFile: Start sending message of topic "topic_1"
+NotifyByWriteFile: Sending message of topic "topic_1" to listener Listener.onTopic1
+Method Listener.onTopic1 received "topic_1" message: 'message for topic 1'
+NotifyByWriteFile: Sending message of topic "ALL_TOPICS" to listener Listener
+Listener instance received:  {'msg': 'message for topic 1'}
+NotifyByWriteFile: Done sending message of topic "topic_1"
+NotifyByWriteFile: Start sending message of topic "topic_2.subtopic_21"
+NotifyByWriteFile: Sending message of topic "ALL_TOPICS" to listener Listener
+Listener instance received:  {'msg': 'message for subtopic 2'}
+NotifyByWriteFile: Done sending message of topic "topic_2.subtopic_21"
+------- done ----------
+Exporting topic tree to kwargs_topics
+------ exiting --------
+Press any key to continue . . .
+
+
+######################## advanced - arg1 - console #########################
+
+Using "arg1" messaging protocol of pubsub v3
+------- init ----------
+NotifyByWriteFile: New topic "topic_2" created
+NotifyByWriteFile: New topic "topic_2.subtopic_21" created
+NotifyByWriteFile: New topic "topic_1" created
+NotifyByWriteFile: New topic "topic_1.subtopic_11" created
+MyPubsubNotifHandler: listener Listener_2608 subscribed to ALL_TOPICS
+NotifyByWriteFile: Subscribed listener "Listener" to topic "ALL_TOPICS"
+MyPubsubNotifHandler: listener listenerFn_1024 subscribed to topic_1.subtopic_11
+NotifyByWriteFile: Subscribed listener "listenerFn" to topic "topic_1.subtopic_11"
+MyPubsubNotifHandler: listener Listener.onTopic11_8808 subscribed to topic_1.subtopic_11
+NotifyByWriteFile: Subscribed listener "Listener.onTopic11" to topic "topic_1.subtopic_11"
+MyPubsubNotifHandler: listener Listener.onTopic1_8808 subscribed to topic_1
+NotifyByWriteFile: Subscribed listener "Listener.onTopic1" to topic "topic_1"
+-----------------------
+NotifyByWriteFile: Start sending message of topic "topic_1.subtopic_11"
+NotifyByWriteFile: Sending message of topic "topic_1.subtopic_11" to listener Listener.onTopic11
+Method Listener.onTopic11 received:  ('message for subtopic 11', 'other message', 123)
+NotifyByWriteFile: Sending message of topic "topic_1.subtopic_11" to listener listenerFn
+Function listenerFn received:  ('message for subtopic 11', 'other message', 123)
+NotifyByWriteFile: Sending message of topic "topic_1" to listener Listener.onTopic1
+Method Listener.onTopic1 received "topic_1.subtopic_11" message: ('message for subtopic 11', 'other message', 123)
+NotifyByWriteFile: Sending message of topic "ALL_TOPICS" to listener Listener
+Listener instance received:  ('message for subtopic 11', 'other message', 123)
+NotifyByWriteFile: Done sending message of topic "topic_1.subtopic_11"
+NotifyByWriteFile: Start sending message of topic "topic_1"
+NotifyByWriteFile: Sending message of topic "topic_1" to listener Listener.onTopic1
+Method Listener.onTopic1 received "topic_1" message: 'message for topic 1'
+NotifyByWriteFile: Sending message of topic "ALL_TOPICS" to listener Listener
+Listener instance received:  message for topic 1
+NotifyByWriteFile: Done sending message of topic "topic_1"
+NotifyByWriteFile: Start sending message of topic "topic_2.subtopic_21"
+NotifyByWriteFile: Sending message of topic "ALL_TOPICS" to listener Listener
+Listener instance received:  message for subtopic 2
+NotifyByWriteFile: Done sending message of topic "topic_2.subtopic_21"
+------- done ----------
+Exporting topic tree to arg1_topics
+------ exiting --------
+Press any key to continue . . .

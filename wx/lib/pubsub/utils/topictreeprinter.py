@@ -152,11 +152,10 @@ class TopicTreePrinter(ITopicTreeVisitor):
 
     def __printTopicListeners(self, indent, topicObj):
         if topicObj.hasListeners():
-            listeners = topicObj.getListeners()
             item = '%s Listeners:' % self.__topicItemsBullet
             self.__output.append( self.__formatDefn(indent, item) )
             tmpIndent = indent + self.__indentStep
-            for listener in listeners:
+            for listener in topicObj.getListenersIter():
                 item = '%s %s (from %s)' % (self.__topicArgsBullet, listener.name(), listener.module())
                 self.__output.append( self.__formatDefn(tmpIndent, item) )
 
