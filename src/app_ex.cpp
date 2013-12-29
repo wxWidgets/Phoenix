@@ -69,6 +69,7 @@ public:
     virtual void MacOpenURL(const wxString &) {}
     virtual void MacPrintFile(const wxString &) {}
     virtual void MacReopenApp() {}
+    virtual bool OSXIsGUIApplication() { return true; }
 #endif
 
 #ifdef __WXMAC__
