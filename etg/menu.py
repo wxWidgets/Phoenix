@@ -125,6 +125,15 @@ def run():
         return NULL;
     #endif
     """)
+
+    mac_gcmb = c.find('OSXGetAppleMenu')
+    mac_gcmb.setCppCode("""\
+    #ifdef __WXMAC__
+        return self->OSXGetAppleMenu();
+    #else
+        return NULL;
+    #endif
+    """)
     
     # don't transfer on other platforms, as this is a no-op there.
     import sys
