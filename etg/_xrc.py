@@ -180,7 +180,7 @@ def run():
                 mod = __import__(name)
             except ImportError:
                 import traceback
-                print traceback.format_exc()
+                print(traceback.format_exc())
                 raise
             components = name.split('.')
             for comp in components[1:]:
