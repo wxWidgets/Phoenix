@@ -117,6 +117,7 @@ def run():
 
     
     c.find('GetAccel').factory = True
+    c.find('GetAccelFromString').ignore()  # Not implemented anywere?
     
     module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem', module))
     
