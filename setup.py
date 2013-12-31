@@ -30,21 +30,24 @@ from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 
 #----------------------------------------------------------------------
 
-NAME             = "wxPython-Phoenix"
+NAME             = "wxPython_Phoenix"
 DESCRIPTION      = "Cross platform GUI toolkit for Python"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
 URL              = "http://wxPython.org/"
-DOWNLOAD_URL     = "http://wxPython.org/download.php"
+#DOWNLOAD_URL     = "http://wxPython.org/download.php"
+DOWNLOAD_URL     = "http://wxpython.org/Phoenix/snapshot-builds/"
 LICENSE          = "wxWidgets Library License (LGPL derivative)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,awesome"
 
 LONG_DESCRIPTION = """\
-wxPython is a GUI toolkit for Python that is a wrapper around the
-wxWidgets C++ GUI library.  wxPython provides a large variety of
-window types and controls, all implemented with a native look and
-feel, by using the native widgets where possible.
+wxPython_Phoenix is a is a new implementation of wxPython focused on
+improving speed, maintainability and extensibility. Just like "Classic"
+wxPython it wraps the wxWidgets C++ toolkit and provides access to the user
+interface portions of the wx API, enabling Python applications to have a GUI
+on Windows, Macs or Unix systems with a native look and feel and requiring
+very little (if any) platform specific code.
 """
 
 CLASSIFIERS      = """\
