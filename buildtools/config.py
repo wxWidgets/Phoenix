@@ -335,7 +335,7 @@ class Configuration(object):
         # is a release build.  (In theory)
         if os.path.exists('REV.txt'):
             f = open('REV.txt')
-            self.VER_FLAGS = '-' + f.read().strip()
+            self.VER_FLAGS = '_' + f.read().strip()
             f.close()
             
         self.VERSION = "%s.%s.%s.%s%s" % (self.VER_MAJOR, 
