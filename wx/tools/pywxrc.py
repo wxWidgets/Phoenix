@@ -925,10 +925,11 @@ def main(args=None):
             
             
     except IOError, e:
-        print(>>sys.stderr, "%s." % str(e))
+        sys.stderr.write("%s.\n" % str(e))
     else:
         if outputFilename != "-":
-            print(>>sys.stderr, "Resources written to %s." % outputFilename)
+            sys.stderr.write("Resources written to %s.\n" % outputFilename)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
