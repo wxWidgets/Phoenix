@@ -1,3 +1,13 @@
+#----------------------------------------------------------------------
+# Name:        setup.py
+# Purpose:     Distutils build script for wxPython (phoenix)
+#
+# Author:      Robin Dunn
+#
+# Created:     27-Mar-2013
+# Copyright:   (c) 2013 by Total Control Software
+# License:     wxWindows License
+#----------------------------------------------------------------------
 #---------------------------------------------------------------------------
 # This setup file is placed in the root folder of the source dist tarball, 
 # and will be used to help do automated builds from tools like easy_install 
