@@ -1414,7 +1414,7 @@ def cmd_sdist(options, args):
             
     # build the tarball
     msg('Archiving Phoenix source...')
-    rootname = "%s-%s-src" % (baseName, cfg.VERSION)
+    rootname = "%s-%s" % (baseName, cfg.VERSION)
     tarfilename = "dist/%s.tar.gz" % rootname
     if os.path.exists(tarfilename):
         os.remove(tarfilename)

@@ -59,12 +59,13 @@ CLASSIFIERS      = """\
 Development Status :: 6 - Mature
 Environment :: MacOS X :: Cocoa
 Environment :: Win32 (MS Windows)
-Environment :: Win64 (MS Windows)
 Environment :: X11 Applications :: GTK
 Intended Audience :: Developers
 License :: OSI Approved
 Operating System :: MacOS :: MacOS X
-Operating System :: Microsoft :: Windows :: Windows 2000/XP/Vista/7/8
+Operating System :: Microsoft :: Windows :: Windows XP
+Operating System :: Microsoft :: Windows :: Windows Vista
+Operating System :: Microsoft :: Windows :: Windows 7
 Operating System :: POSIX
 Programming Language :: Python
 Topic :: Software Development :: User Interfaces
@@ -186,8 +187,15 @@ class wx_sdist(orig_sdist):
         cmd = [sys.executable, '-u', 'build.py', 'sdist']
         cmd = ' '.join(cmd)
         runcmd(cmd)
+        
+        # Put the filename in dist_files in case the upload command is used.
+        # On the other hand, PyPI's upload size limit is waaaaaaaaay too
+        # small so it probably doesn't matter too much...
+        sdist_file = opj(self.dist_dir, self.distribution.get_fullname()+'.tar.gz')
+        self.distribution.dist_files.append(('sdist', '', sdist_file))
 
-    
+
+   
 
 # Map these new classes to the appropriate distutils command names.
 CMDCLASS = {
