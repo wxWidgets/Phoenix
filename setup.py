@@ -24,6 +24,11 @@ from setuptools.command.install     import install as orig_install
 from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
 from setuptools.command.build_py    import build_py as orig_build_py
 from setuptools.command.sdist       import sdist as orig_sdist
+try:
+    from wheel.bdist_wheel import bdist_wheel as orig_bdist_wheel
+    haveWheel = True
+except ImportError:
+    haveWheel = False
 
 from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName 
 
@@ -106,53 +111,68 @@ class wx_build(orig_build):
         orig_build.run(self)
 
 
+def _cleanup_symlinks(cmd):
+    # Clean out any libwx* symlinks in the build_lib folder, as they will
+    # turn into copies in the egg since zip files can't handle symlinks.
+    # The links are not really needed since the extensions link to
+    # specific soname, and they could bloat the egg too much if they were
+    # left in.
+    #        
+    # TODO: can eggs have post-install scripts that would allow us to 
+    # restore the links?
+    #
+    build_lib = cmd.get_finalized_command('build').build_lib
+    build_lib = opj(build_lib, 'wx')
+    for libname in glob.glob(opj(build_lib, 'libwx*')):
+        
+        if os.path.islink(libname):
+            if isDarwin:
+                # On Mac the name used by the extension module is the real
+                # file, so we can just get rid of all the links.
+                os.unlink(libname)
+                
+            elif canGetSOName():
+                # On linux the soname used in the extension modules may
+                # be (probably is) one of the symlinks, so we have to be
+                # more tricky here. If the named file is a link and it is
+                # the soname, then remove the link and rename the
+                # linked-to file to this name.
+                soname = getSOName(libname)
+                if soname == os.path.basename(libname):
+                    realfile = os.path.join(build_lib, os.readlink(libname))
+                    os.unlink(libname)
+                    os.rename(realfile, libname)
+                else:
+                    os.unlink(libname)
+            else:
+                # Otherwise just leave the symlink there since we don't
+                # know what to do with it.
+                pass
+    
 
 class wx_bdist_egg(orig_bdist_egg):
     def run(self):
         # Ensure that there is a basic library build for bdist_egg to pull from.
         self.run_command("build")
         
-        # Clean out any libwx* symlinks in the build_lib folder, as they will
-        # turn into copies in the egg since zip files can't handle symlinks.
-        # The links are not really needed since the extensions link to
-        # specific soname, and they could bloat the egg too much if they were
-        # left in.
-        #        
-        # TODO: can eggs have post-install scripts that would allow us to 
-        # restore the links?
-        #
-        build_lib = self.get_finalized_command('build').build_lib
-        build_lib = opj(build_lib, 'wx')
-        for libname in glob.glob(opj(build_lib, 'libwx*')):
-            
-            if os.path.islink(libname):
-                if isDarwin:
-                    # On Mac the name used by the extension module is the real
-                    # file, so we can just get rid of all the links.
-                    os.unlink(libname)
-                    
-                elif canGetSOName():
-                    # On linux the soname used in the extension modules may
-                    # be (probably is) one of the symlinks, so we have to be
-                    # more tricky here. If the named file is a link and it is
-                    # the soname, then remove the link and rename the
-                    # linked-to file to this name.
-                    soname = getSOName(libname)
-                    if soname == os.path.basename(libname):
-                        realfile = os.path.join(build_lib, os.readlink(libname))
-                        os.unlink(libname)
-                        os.rename(realfile, libname)
-                    else:
-                        os.unlink(libname)
-                else:
-                    # Otherwise just leave the symlink there since we don't
-                    # know what to do with it.
-                    pass
+        _cleanup_symlinks(self)
         
         # Run the default bdist_egg command
         orig_bdist_egg.run(self)
     
 
+if haveWheel:
+    class wx_bdist_wheel(orig_bdist_wheel):
+        def run(self):
+            # Ensure that there is a basic library build for bdist_egg to pull from.
+            self.run_command("build")
+            
+            _cleanup_symlinks(self)
+            
+            # Run the default bdist_wheel command
+            orig_bdist_wheel.run(self)
+
+    
 class wx_install(orig_install):
     def run(self):
         self.run_command("build")
@@ -171,12 +191,13 @@ class wx_sdist(orig_sdist):
 
 # Map these new classes to the appropriate distutils command names.
 CMDCLASS = {
-    'build'     : wx_build,
-    'bdist_egg' : wx_bdist_egg,
-    'install'   : wx_install,
-    'sdist'     : wx_sdist,
+    'build'       : wx_build,
+    'bdist_egg'   : wx_bdist_egg,
+    'install'     : wx_install,
+    'sdist'       : wx_sdist,
     }
-
+if haveWheel:
+    CMDCLASS['bdist_wheel'] = wx_bdist_wheel
 
 
 

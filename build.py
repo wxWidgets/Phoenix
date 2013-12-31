@@ -111,6 +111,7 @@ Usage: ./build.py [command(s)] [options]
       bdist         Create a binary tarball release of wxPython Phoenix
       docs_bdist    Build a tarball containing the documentation
       bdist_egg     Build a Python egg.  Requires magic.
+      bdist_wheel   Build a Python wheel.  Requires magic.
         
       test          Run the unit test suite
       test_*        Run just the one named test module
@@ -1215,7 +1216,10 @@ def _doSimpleSetupCmd(options, args, setupCmd):
 
 def cmd_bdist_egg(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_egg')
-    
+
+def cmd_bdist_wheel(options, args):
+    _doSimpleSetupCmd(options, args, 'bdist_wheel')
+        
 def cmd_bdist_wininst(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_wininst')
 
