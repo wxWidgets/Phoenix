@@ -254,7 +254,7 @@ class ButtonTreeCtrlPanel(wx.Panel):
 
                 self._doLogicTest(style, value, item)
 
-                if value <> data[0]:
+                if value != data[0]:
                     nevt = ButtonTreeCtrlPanelEvent(obj=self, id=self.GetId(),
                                                     item=item, val=value)
                     wx.PostEvent(self, nevt)

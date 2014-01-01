@@ -106,7 +106,7 @@ class Ticker(wx.Control):
     def SetDirection(self, dir):
         """Sets the direction of the ticker: right to left(rtl) or left to right (ltr)"""
         if dir == "ltr" or dir == "rtl":
-            if self._offset <> 0:
+            if self._offset != 0:
                 #Change the offset so it's correct for the new direction
                 self._offset = self._extent[0] + self.GetSize()[0] - self._offset
             self._dir = dir

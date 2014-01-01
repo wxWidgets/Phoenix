@@ -138,7 +138,7 @@ class pdfButtonPanel(bp.ButtonPanel):
         """
         self.pageno = pagenum + 1
         self.page.SetValue('%d' % self.pageno)
-        if numpages <> self.numpages:
+        if numpages != self.numpages:
             self.maxlabel.SetLabel('of %d' % numpages)
             self.numpages = numpages
         self.percentzoom = zoomscale * 100
@@ -197,7 +197,7 @@ class pdfButtonPanel(bp.ButtonPanel):
         try:
             newpage = int(self.page.GetValue())
             if 1 <= newpage <= self.numpages:
-                if newpage <> self.pageno:
+                if newpage != self.pageno:
                     self.pageno = newpage
                     self.ChangePage()
         except ValueError:

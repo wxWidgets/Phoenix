@@ -221,7 +221,7 @@ class dcGraphicsContext(object):
         g = self.gstate
         a, b, c, d, e, f = map(float, matrix.Get())
         g.Translate(e, f)
-        if d == a and c == -b and b <> 0:
+        if d == a and c == -b and b != 0:
             g.Rotate(a, b)
         else:    
             g.Scale(a, d)
@@ -390,7 +390,7 @@ class dcGraphicsPath(object):
         if parent:
             self.gstate = parent.gstate
         self.fillcolour = parent._context.GetBrush().GetColour()
-        self.isfilled = parent._context.GetBrush().GetStyle() <> wx.TRANSPARENT
+        self.isfilled = parent._context.GetBrush().GetStyle() != wx.TRANSPARENT
 
     def AddCurveToPoint(self, cx1, cy1, cx2, cy2, x, y):
         """

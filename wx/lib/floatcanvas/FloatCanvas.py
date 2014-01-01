@@ -2515,7 +2515,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         H = ScaleWorldToPixel(self.Height)[0]
         W = H * (self.bmpWidth / self.bmpHeight)
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (0, 0, self.bmpWidth, self.bmpHeight, W, H) ):
-        #if True: #fixme: (self.ScaledBitmap is None) or (H <> self.ScaledHeight) :
+        #if True: #fixme: (self.ScaledBitmap is None) or (H != self.ScaledHeight) :
             self.ScaledHeight = H
             #print("Scaling to:", W, H)
             Img = self.Image.Scale(W, H)

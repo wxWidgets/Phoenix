@@ -36,7 +36,7 @@ def leapdays(y1, y2):
 
 # Return 1 for leap years, 0 for non-leap years
 def isleap(year):
-    return year % 4 == 0 and (year % 100 <> 0 or year % 400 == 0)
+    return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
 
 def FillDate(val):
     s = str(val)

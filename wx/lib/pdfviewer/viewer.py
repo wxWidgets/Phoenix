@@ -366,7 +366,7 @@ class pdfViewer(wx.ScrolledWindow):
             self.cur_frompage = self.frompage
             self.cur_topage = self.topage
         else:   # page range unchanged? whole visible area will always be inside page buffer
-            if self.frompage <> self.cur_frompage or self.topage <> self.cur_topage:  
+            if self.frompage != self.cur_frompage or self.topage != self.cur_topage:  
                 force = True    # due to page buffer change
                 self.cur_frompage = self.frompage
                 self.cur_topage = self.topage
@@ -1031,7 +1031,7 @@ def _AsciiBase85DecodePYTHON(input):
     # special rules apply if not a multiple of five bytes.
     whole_word_count, remainder_size = divmod(len(stripped), 5)
     #print('%d words, %d leftover' % (whole_word_count, remainder_size))
-    #assert remainder_size <> 1, 'invalid Ascii 85 stream!'
+    #assert remainder_size != 1, 'invalid Ascii 85 stream!'
     cut = 5 * whole_word_count
     body, lastbit = stripped[0:cut], stripped[cut:]
 

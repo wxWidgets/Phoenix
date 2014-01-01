@@ -829,7 +829,7 @@ class Calendar( wx.Control ):
             ts = newDate - curDate
             delta =  ts.GetDays()
 
-        if delta <> None:
+        if delta != None:
             curDate = wx.DateTime.FromDMY(int(self.cal_days[self.sel_key]),self.month - 1,self.year)
             timeSpan = wx.TimeSpan.Days(delta)
             newDate = curDate + timeSpan
