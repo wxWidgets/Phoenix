@@ -151,7 +151,9 @@ def main(args):
         # ensure that each command starts with the CWD being the phoenix dir.
         os.chdir(phoenixDir())
         cmd = commands.pop(0)
-        if cmd.startswith('test_'):
+        if not cmd:
+            continue # ignore empty command-line args (possible with the buildbot)
+        elif cmd.startswith('test_'):
             testOne(cmd, options, args)
         elif 'cmd_'+cmd in globals():
             function = globals()['cmd_'+cmd]  
