@@ -1424,6 +1424,10 @@ def cmd_sdist(options, args):
     # Also add the waf executable
     copyFile('bin/waf-%s' % wafCurrentVersion, os.path.join(PDEST, 'bin'))
 
+    # and the REV.txt if there is one
+    if os.path.exists('REV.txt'):
+        copyFile('REV.txt', PDEST)
+
     # Add some extra stuff to the root folder
     copyFile('packaging/setup.py', ADEST)
     copyFile('packaging/README-sdist.txt', opj(ADEST, 'README.txt'))
