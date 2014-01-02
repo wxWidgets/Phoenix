@@ -71,24 +71,18 @@ def run():
         class wxExecuteEnv;
         """))
     
-    
-    # TBD: I've always disliked the WXK_* names. Should I rename all the items
-    # in the wxKeyCode enum to be KEY_* names?
-
-    
+   
     # Add some code for getting the version numbers
     module.addCppCode("""
         #include <wx/version.h>
         const int MAJOR_VERSION = wxMAJOR_VERSION;
         const int MINOR_VERSION = wxMINOR_VERSION;           
         const int RELEASE_NUMBER = wxRELEASE_NUMBER;     
-        const int SUBRELEASE_NUMBER = wxSUBRELEASE_NUMBER;
         """)
     module.addItem(etgtools.WigCode("""
         const int MAJOR_VERSION;
         const int MINOR_VERSION;
         const int RELEASE_NUMBER;
-        const int SUBRELEASE_NUMBER;
         """))
 
     module.addPyCode("BG_STYLE_CUSTOM = BG_STYLE_PAINT")

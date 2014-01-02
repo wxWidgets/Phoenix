@@ -19,6 +19,29 @@ general patterns of the changes will be documented.  Most proggrammers
 should then be able to work out the details for themselves.
 
 
+Version Numbers
+---------------
+
+Classic wxPython used version numbers with 4 components, in order to be able
+to specify the exact version of wxWidgets used (3 version number components)
+and an additional component to allow for multiple wxPython releases for each
+wxWidgets release. While this version numbering works okay and solves a
+specific need that wxPython had, it does not follow the common version
+numbering pattern that probably 99% of other software packages use and so it
+is non-intuitive for most users, and probably more importantly, it does not
+fit well with the standards set by setuptools or PEP 0386.
+
+So Pheonix will be moving to a 3 component version number, possibly with an
+added version tag on the end. Once again the 3 componenets of the version
+number will match the wxWidgets version number, and the version tag will be
+used to convey additional information specific to the wxPython Phoenix build,
+including development snapshots, alpha or beta reelases, and "numbered post
+release builds". The latter is what will take the place of Classic's 4
+version number component and is what will be used to version any wxPython
+Phoenix builds that may happen in bewtween official wxWidgets releases. See
+buildtools/version.py in the Phoenix build tree for more details.
+
+
 
 Overloaded Functions
 --------------------

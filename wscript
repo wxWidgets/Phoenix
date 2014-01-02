@@ -407,9 +407,8 @@ def build(bld):
         "VERSION_STRING    = '%(VERSION)s'\n"
         "MAJOR_VERSION     = %(VER_MAJOR)s\n"
         "MINOR_VERSION     = %(VER_MINOR)s\n"
-        "RELEASE_NUMBER    = %(VER_RELEASE)s\n"
-        "SUBRELEASE_NUMBER = %(VER_SUBREL)s\n\n"
-        "VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER, SUBRELEASE_NUMBER, '%(VER_FLAGS)s')\n"
+        "RELEASE_NUMBER    = %(VER_RELEASE)s\n\n"
+        "VERSION = (MAJOR_VERSION, MINOR_VERSION, RELEASE_NUMBER, '%(VER_FLAGS)s')\n"
         % cfg.__dict__)
     # and one for the demo folder too
     open('demo/version.py', 'w').write(
