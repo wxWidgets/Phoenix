@@ -376,6 +376,8 @@ The handler is derived from :class:`~html.HtmlWinTagHandler` (or directly from
 :class:`~html.HtmlTagHandler`).
 
 
+.. _tags supported by wxhtml:
+
 Tags supported by :mod:`html`
 -----------------------------
 

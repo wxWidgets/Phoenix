@@ -183,7 +183,10 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    html.1classindex
    html.functions
    html2.1classindex
+   richtext.1classindex
+   richtext.functions
    stc.1classindex
+   webkit.1classindex
    xml.1classindex
    xrc.1classindex
    xrc.functions

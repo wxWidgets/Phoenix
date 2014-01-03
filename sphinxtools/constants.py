@@ -145,6 +145,7 @@ NO_MODULE = {
              
              # -- wxXRC -- #
              # Widgets
+             'XmlSubclassFactory'      : 'xrc.',
              
              # Enums/constants
              'XmlResourceFlags'        : 'xrc.',
