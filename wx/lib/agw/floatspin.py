@@ -3,7 +3,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 16 Nov 2005
-# Latest Revision: 28 Feb 2013, 21.00 GMT
+# Latest Revision: 03 Jan 2014, 23.00 GMT
 #
 #
 # TODO List/Caveats
@@ -136,7 +136,7 @@ License And Version
 
 :class:`FloatSpin` control is distributed under the wxPython license.
 
-Latest revision: Andrea Gavana @ 28 Feb 2013, 21.00 GMT
+Latest revision: Andrea Gavana @ 03 Jan 2014, 23.00 GMT
 
 Version 1.0
 
@@ -759,7 +759,7 @@ class FloatSpin(wx.Control):
 
         text_width = event_width - (spin_width + self._gap + self._text_left)
 
-        self._textctrl.SetSize(wx.Size(text_width, text_height))
+        self._textctrl.SetSize(wx.Size(text_width, event.GetSize().height))
 
         # The spin button is always snug against the right edge of the
         # control.
