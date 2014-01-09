@@ -1066,9 +1066,9 @@ class ModernDockArt(AuiDefaultDockArt):
             rc.bottom = rect.y + rect.height
 
             if active:
-                winxptheme.DrawThemeBackground(self.hTheme1, dc.GetHandle(), 5, 1, (rc.top, rc.left, rc.right, rc.bottom), None)
+                winxptheme.DrawThemeBackground(self.hTheme1, int(dc.GetHandle()), 5, 1, (rc.top, rc.left, rc.right, rc.bottom), None)
             else:
-                winxptheme.DrawThemeBackground(self.hTheme1, dc.GetHandle(), 5, 2, (rc.top, rc.left, rc.right, rc.bottom), None)
+                winxptheme.DrawThemeBackground(self.hTheme1, int(dc.GetHandle()), 5, 2, (rc.top, rc.left, rc.right, rc.bottom), None)
 
         else:
 
@@ -1181,7 +1181,7 @@ class ModernDockArt(AuiDefaultDockArt):
                     raise Exception("ERROR: Unknown State.")
 
             try:
-                winxptheme.DrawThemeBackground(hTheme, dc.GetHandle(), btntype, state, (rc.top, rc.left, rc.right, rc.bottom), None)
+                winxptheme.DrawThemeBackground(hTheme, int(dc.GetHandle()), btntype, state, (rc.top, rc.left, rc.right, rc.bottom), None)
             except TypeError:
                 return
 

@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 03 Jan 2014, 23.00 GMT
+# Latest Revision: 09 Jan 2014, 23.00 GMT
 #
 #
 # TODO List
@@ -299,7 +299,7 @@ License And Version
 
 :class:`CustomTreeCtrl` is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 03 Jan 2014, 23.00 GMT
+Latest Revision: Andrea Gavana @ 09 Jan 2014, 23.00 GMT
 
 Version 2.6
 
@@ -900,7 +900,7 @@ class TreeItemAttr(object):
         :return: ``True`` if the text colour attribute has been set, ``False`` otherwise.
         """
 
-        return self._colText != wx.NullColour
+        return self._colText != wx.NullColour and self._colText.IsOk()
 
 
     def HasBackgroundColour(self):
@@ -910,7 +910,7 @@ class TreeItemAttr(object):
         :return: ``True`` if the background colour attribute has been set, ``False`` otherwise.
         """
 
-        return self._colBack != wx.NullColour
+        return self._colBack != wx.NullColour and self._colBack.IsOk()
 
 
     def HasBorderColour(self):
@@ -922,7 +922,7 @@ class TreeItemAttr(object):
         .. versionadded:: 0.9.6
         """
 
-        return self._colBorder != wx.NullColour
+        return self._colBorder != wx.NullColour and self._colBorder.IsOk()
 
 
     def HasFont(self):
@@ -932,7 +932,7 @@ class TreeItemAttr(object):
         :return: ``True`` if the font attribute has been set, ``False`` otherwise.
         """
 
-        return self._font != wx.NullFont
+        return self._font != wx.NullFont and self._font.IsOk()
 
 
     # getters
