@@ -4974,6 +4974,7 @@ class AuiManager(wx.EvtHandler):
                     notebook = self._notebooks[p.notebook_id]
                     id = notebook.GetPageIndex(p.window)
                     notebook.RemovePage(id)
+                    p.window.Reparent(self._frame)
 
                 # make sure there are no references to this pane in our uiparts,
                 # just in case the caller doesn't call Update() immediately after
