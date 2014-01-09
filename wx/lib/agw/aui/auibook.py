@@ -1211,7 +1211,7 @@ class AuiTabContainer(object):
         wnd.Enable(enable)
 
 
-    def AddButton(self, id, location, normal_bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap):
+    def AddButton(self, id, location, normal_bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap, help_string=''):
         """
         Adds a button in the tab area.
 
@@ -1228,7 +1228,8 @@ class AuiTabContainer(object):
 
         :param integer `location`: the button location. Can be ``wx.LEFT`` or ``wx.RIGHT``;
         :param Bitmap `normal_bitmap`: the bitmap for an enabled tab;
-        :param Bitmap `disabled_bitmap`: the bitmap for a disabled tab.
+        :param Bitmap `disabled_bitmap`: the bitmap for a disabled tab;
+        :param string `help_string`: the string to display when the mouse hover over a button.
         """
 
         button = AuiTabContainerButton()
@@ -1237,6 +1238,7 @@ class AuiTabContainer(object):
         button.dis_bitmap = disabled_bitmap
         button.location = location
         button.cur_state = AUI_BUTTON_STATE_NORMAL
+        button.help_string = help_string
 
         self._buttons.append(button)
 
@@ -1260,6 +1262,7 @@ class AuiTabContainer(object):
                 new_button.bitmap = button.bitmap
                 new_button.dis_bitmap = button.dis_bitmap
                 new_button.location = button.location
+                new_button.help_string = button.help_string
                 clones.append(new_button)
 
         return clones
@@ -2178,12 +2181,16 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
                 self._hover_button = None
                 self.Refresh()
                 self.Update()
+                if self.GetToolTip():
+                    self.SetToolTip('')
 
             if button.cur_state != AUI_BUTTON_STATE_HOVER:
                 button.cur_state = AUI_BUTTON_STATE_HOVER
                 self.Refresh()
                 self.Update()
                 self._hover_button = button
+                if button.help_string:
+                    self.SetToolTip(button.help_string)
                 return
 
         else:
@@ -2193,6 +2200,8 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
                 self._hover_button = None
                 self.Refresh()
                 self.Update()
+                if self.GetToolTip():
+                    self.SetToolTip('')
 
         if not event.LeftIsDown() or self._click_pt == wx.Point(-1, -1):
             return
@@ -4277,7 +4286,7 @@ class AuiNotebook(wx.Panel):
 
         cloned_buttons = self.CloneTabAreaButtons()
         for clone in cloned_buttons:
-            dest_tabs.AddButton(clone.id, clone.location, clone.bitmap, clone.dis_bitmap)
+            dest_tabs.AddButton(clone.id, clone.location, clone.bitmap, clone.dis_bitmap, clone.help_string)
         # create a pane info structure with the information
         # about where the pane should be added
         pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False)
@@ -4892,7 +4901,7 @@ class AuiNotebook(wx.Panel):
 
                 cloned_buttons = self.CloneTabAreaButtons()
                 for clone in cloned_buttons:
-                    dest_tabs.AddButton(clone.id, clone.location, clone.bitmap, clone.dis_bitmap)
+                    dest_tabs.AddButton(clone.id, clone.location, clone.bitmap, clone.dis_bitmap, clone.help_string)
             # remove the page from the source tabs
             page_info = src_tabs.GetPage(event.GetSelection())
 
@@ -5680,7 +5689,7 @@ class AuiNotebook(wx.Panel):
             return False
 
 
-    def AddTabAreaButton(self, id, location, normal_bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap):
+    def AddTabAreaButton(self, id, location, normal_bitmap=wx.NullBitmap, disabled_bitmap=wx.NullBitmap, help_string=''):
         """
         Adds a button in the tab area.
 
@@ -5697,11 +5706,12 @@ class AuiNotebook(wx.Panel):
 
         :param integer `location`: the button location. Can be ``wx.LEFT`` or ``wx.RIGHT``;
         :param Bitmap `normal_bitmap`: the bitmap for an enabled tab;
-        :param Bitmap `disabled_bitmap`: the bitmap for a disabled tab.
+        :param Bitmap `disabled_bitmap`: the bitmap for a disabled tab;
+        :param string `help_string`: the string to display when the mouse hover over a button.
         """
 
         active_tabctrl = self.GetActiveTabCtrl()
-        active_tabctrl.AddButton(id, location, normal_bitmap, disabled_bitmap)
+        active_tabctrl.AddButton(id, location, normal_bitmap, disabled_bitmap, help_string)
 
 
     def RemoveTabAreaButton(self, id):
