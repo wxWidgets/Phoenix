@@ -128,7 +128,7 @@ class TreeAPIHarmonizer(object):
     def UnselectAll(self):
         # Unselect all items, regardless of whether we are in multiple 
         # selection mode or not.
-        if self.HasFlag(wx.TR_MULTIPLE):
+        if self.HasFlag(wx.TR_MULTIPLE) or (hasattr(self, 'HasAGWFlag') and self.HasAGWFlag(wx.TR_MULTIPLE)):
             super(TreeAPIHarmonizer, self).UnselectAll()
         else:
             # CustomTreeCtrl Unselect() doesn't seem to work in all cases,
@@ -140,14 +140,15 @@ class TreeAPIHarmonizer(object):
         # TreeListCtrl correctly ignores the root item when it is hidden,
         # but doesn't count the root item when it is visible
         itemCount = super(TreeAPIHarmonizer, self).GetCount()
-        if self.GetColumnCount() and not self.HasFlag(wx.TR_HIDE_ROOT):
+        has_flag =  self.HasFlag(wx.TR_HIDE_ROOT) or (hasattr(self, 'HasAGWFlag') and self.HasAGWFlag(wx.TR_HIDE_ROOT))
+        if self.GetColumnCount() and not has_flag:
             itemCount += 1
         return itemCount
 
     def GetSelections(self):
         # Always return a list of selected items, regardless of whether
         # we are in multiple selection mode or not.
-        if self.HasFlag(wx.TR_MULTIPLE):
+        if self.HasFlag(wx.TR_MULTIPLE) or (hasattr(self, 'HasAGWFlag') and self.HasAGWFlag(wx.TR_MULTIPLE)):
             selections = super(TreeAPIHarmonizer, self).GetSelections()
         else:
             selection = self.GetSelection()
@@ -157,7 +158,7 @@ class TreeAPIHarmonizer(object):
                 selections = []
         # If the root item is hidden, it should never be selected, 
         # unfortunately, CustomTreeCtrl allows it to be selected.
-        if self.HasFlag(wx.TR_HIDE_ROOT):
+        if self.HasFlag(wx.TR_HIDE_ROOT) or (hasattr(self, 'HasAGWFlag') and self.HasAGWFlag(wx.TR_HIDE_ROOT)):
             rootItem = self.GetRootItem()
             if rootItem and rootItem in selections:
                 selections.remove(rootItem)
@@ -173,8 +174,9 @@ class TreeAPIHarmonizer(object):
 
     def SelectItem(self, item, *args, **kwargs):
         # Prevent the hidden root from being selected, otherwise TreeCtrl
-        # crashes 
-        if self.HasFlag(wx.TR_HIDE_ROOT) and item == self.GetRootItem():
+        # crashes
+        has_flag = self.HasFlag(wx.TR_HIDE_ROOT) or (hasattr(self, 'HasAGWFlag') and self.HasAGWFlag(wx.TR_HIDE_ROOT))
+        if has_flag and item == self.GetRootItem():
             return
         else:
             return super(TreeAPIHarmonizer, self).SelectItem(item, *args, 
@@ -197,7 +199,7 @@ class TreeAPIHarmonizer(object):
         # TreeListCtrl wants an item as argument. That's an inconsistency with
         # the TreeCtrl API. Also, TreeCtrl doesn't allow invoking ExpandAll 
         # on a tree with hidden root node, so prevent that.
-        if self.HasFlag(wx.TR_HIDE_ROOT):
+        if self.HasFlag(wx.TR_HIDE_ROOT) or (hasattr(self, 'HasAGWFlag') and self.HasAGWFlag(wx.TR_HIDE_ROOT)):
             rootItem = self.GetRootItem()
             if rootItem:
                 child, cookie = self.GetFirstChild(rootItem)
@@ -632,7 +634,7 @@ class ExpansionState(TreeAPIHarmonizer, TreeHelper):
         root = self.GetRootItem()
         if not root:
             return []
-        if self.HasFlag(wx.TR_HIDE_ROOT):
+        if self.HasFlag(wx.TR_HIDE_ROOT) or (hasattr(self, 'HasAGWFlag') and self.HasAGWFlag(wx.TR_HIDE_ROOT)):
             return self.GetExpansionStateOfChildren(root)
         else:
             return self.GetExpansionStateOfItem(root)
@@ -644,7 +646,7 @@ class ExpansionState(TreeAPIHarmonizer, TreeHelper):
         root = self.GetRootItem()
         if not root:
             return
-        if self.HasFlag(wx.TR_HIDE_ROOT):
+        if self.HasFlag(wx.TR_HIDE_ROOT) or (hasattr(self, 'HasAGWFlag') and self.HasAGWFlag(wx.TR_HIDE_ROOT)):
             self.SetExpansionStateOfChildren(listOfExpandedItems, root)
         else:
             self.SetExpansionStateOfItem(listOfExpandedItems, root)
