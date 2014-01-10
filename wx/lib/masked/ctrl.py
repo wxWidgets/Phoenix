@@ -43,8 +43,8 @@ controlType can be one of::
 These constants are also available individually, ie, you can
 use either of the following::
 
-    from wxPython.wx.lib.masked import Ctrl, COMBO, TEXT, NUMBER, TIME
-    from wxPython.wx.lib.masked import Ctrl, controlTypes
+    from wx.lib.masked import Ctrl, COMBO, TEXT, NUMBER, TIME
+    from wx.lib.masked import Ctrl, controlTypes
 
 If not specified as a keyword argument, the default controlType is
 controlTypes.TEXT.

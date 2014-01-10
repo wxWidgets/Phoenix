@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.tools.img2py
+# Name:        wx.tools.img2py
 # Purpose:     Convert an image to Python code.
 #
 # Author:      Robin Dunn

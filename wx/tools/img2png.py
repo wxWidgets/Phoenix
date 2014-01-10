@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.tools.img2png
+# Name:        wx.tools.img2png
 # Purpose:     Convert an image to PNG format
 #
 # Author:      Robin Dunn

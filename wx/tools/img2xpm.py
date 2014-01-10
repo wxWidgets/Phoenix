@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.tools.img2xpm
+# Name:        wx.tools.img2xpm
 # Purpose:     Convert an image to XPM format
 #
 # Author:      Robin Dunn

@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.tools.img2img
+# Name:        wx.tools.img2img
 # Purpose:     Common routines for the image converter utilities.
 #
 # Author:      Robin Dunn
