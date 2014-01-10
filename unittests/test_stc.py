@@ -181,6 +181,7 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.wxEVT_STC_ZOOM
         stc.wxEVT_STC_HOTSPOT_CLICK
         stc.wxEVT_STC_HOTSPOT_DCLICK
+        stc.wxEVT_STC_HOTSPOT_RELEASE_CLICK
         stc.wxEVT_STC_CALLTIP_CLICK
         stc.wxEVT_STC_AUTOCOMP_SELECTION
         stc.wxEVT_STC_INDICATOR_CLICK
@@ -214,6 +215,7 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.EVT_STC_ZOOM
         stc.EVT_STC_HOTSPOT_CLICK
         stc.EVT_STC_HOTSPOT_DCLICK
+        stc.EVT_STC_HOTSPOT_RELEASE_CLICK
         stc.EVT_STC_CALLTIP_CLICK
         stc.EVT_STC_AUTOCOMP_SELECTION
         stc.EVT_STC_INDICATOR_CLICK
