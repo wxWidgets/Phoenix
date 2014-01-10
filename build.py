@@ -1525,6 +1525,7 @@ def cmd_setrev(options, args):
     cfg = Config()
     cfg.resetVersion()
     msg('REV.txt set to "%s"' % svnrev)    
+    msg('cfg.VERSION: %s' % cfg.VERSION)
         
     
 
