@@ -22,6 +22,24 @@ class sizer_Tests(wtc.WidgetTestCase):
         fgs1 = wx.FlexGridSizer(4, 5, 6)
         fgs2 = wx.FlexGridSizer(4, (5,6))
         fgs3 = wx.FlexGridSizer(cols=4, hgap=5, vgap=6)
+
+    def test_sizerFlexGrid2(self):
+        fgs = wx.FlexGridSizer(cols=4, hgap=5, vgap=6)
+        for x in range(20):
+            fgs.Add(wx.StaticText(self.frame, -1, str(x)))
+        fgs.AddGrowableCol(1, 1)
+        fgs.AddGrowableCol(3, 2)
+        fgs.AddGrowableRow(2)
+        fgs.RemoveGrowableRow(2)
+        
+        self.frame.SetSizer(fgs)
+        self.frame.Layout()
+        
+        widths = fgs.GetColWidths()
+        heights = fgs.GetRowHeights()
+        self.assertEqual(4, len(widths))
+        self.assertEqual(5, len(heights))
+       
         
     def test_sizer2(self):
         s = wx.BoxSizer(wx.VERTICAL)
