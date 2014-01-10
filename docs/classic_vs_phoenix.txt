@@ -11,8 +11,8 @@ Introduction
 ------------
 
 This document contains a list of the most common wxPython functions, classes and :class:`Window` / :class:`Sizer`
-methods which need to be changed to a new syntax in Phoenix; it presents the modification in a 2-columns, 
-space-separated table containing the old wxPython (Classic) name on the left and the new (if it exists) 
+methods which need to be changed to a new syntax in Phoenix; it presents the modification in a 2-columns,
+space-separated table containing the old wxPython (Classic) name on the left and the new (if it exists)
 Phoenix name on the right. I found it impressively useful while porting AGW to Phoenix.
 
 
@@ -40,6 +40,7 @@ ArtProvider_Insert                                           :meth:`ArtProvider.
 ArtProvider_Pop                                              :meth:`ArtProvider.Pop`
 ArtProvider_Push                                             :meth:`ArtProvider.Push`
 ArtProvider_PushBack                                         :meth:`ArtProvider.PushBack`
+Bitmap.SetBitmapSelected                                     :meth:`Bitmap.SetBitmapPressed`
 BitmapFromBits                                               :class:`Bitmap`
 BitmapFromIcon                                               :class:`Bitmap`
 BitmapFromImage                                              :class:`Bitmap`
@@ -484,6 +485,7 @@ ScrollHelper                                                 :class:`VarHVScroll
 SearchCtrlBase                                               :class:`SearchCtrl`
 SetCursor                                                    ``MISSING``
 SetDefaultPyEncoding                                         ``REMOVED``
+SetBitmapSelected                                            :meth:`AnyButton.SetBitmapPressed`
 ShowTip                                                      :func:`adv.ShowTip <ShowTip>`
 SimpleHtmlListBox                                            ``MISSING``
 SizerFlags_GetDefaultBorder                                  :meth:`SizerFlags.GetDefaultBorder`
@@ -520,6 +522,7 @@ StockGDI_GetCursor                                           :meth:`StockGDI.Get
 StockGDI_GetPen                                              :meth:`StockGDI.GetPen`
 StockGDI_instance                                            :meth:`StockGDI.instance`
 StopWatch                                                    ``MISSING``
+StyledTextCtrl.SetUseAntiAliasing						     ``REMOVED``
 SystemOptions_GetOption                                      :meth:`SystemOptions.GetOption`
 SystemOptions_GetOptionInt                                   :meth:`SystemOptions.GetOptionInt`
 SystemOptions_HasOption                                      :meth:`SystemOptions.HasOption`
@@ -633,7 +636,7 @@ GetLogicalOriginTuple                                        :meth:`~DC.GetLogic
 GetMultiLineTextExtent                                       :meth:`~DC.GetFullMultiLineTextExtent`
 GetOptimization                                              ``REMOVED``
 GetPixelPoint                                                :meth:`~DC.GetPixel`
-GetResolution                                                :meth:`~DC.GetPPI`  
+GetResolution                                                :meth:`~DC.GetPPI`
 GetSizeMMTuple                                               :meth:`~DC.GetSizeMM`
 Ok                                                           :meth:`~DC.IsOk`
 SetClippingRect                                              :meth:`~DC.SetClippingRegion`
@@ -727,4 +730,25 @@ wx.lib.rightalign                                            ``REMOVED``
 wx.lib.shell                                                 ``REMOVED``
 wx.lib.splashscreen                                          ``REMOVED``
 wx.lib.wxPlotCanvas                                          ``REMOVED``
+===========================================================  ===========================================================
+
+
+
+
+Modules which have moved
+------------------------
+
+===========================================================  ===========================================================
+`Classic` Name                                               `Phoenix` Name
+===========================================================  ===========================================================
+wx.calendar.CalendarCtrl                                     :mod:`adv.CalendarCtrl`
+wx.combo.OwnerDrawnComboBox                                  :mod:`adv.OwnerDrawnComboBox`
+wx.gizmos.EditableListBox                                    :mod:`adv.EditableListBox`
+wx.gizmos.TreeListCtrl                                       :mod:`adv.TreeListCtrl`
+wx.AboutBox                                                  :mod:`adv.AboutBox`
+wx.AboutDialogInfo                                           :mod:`adv.AboutDialogInfo`
+wx.DatePickerCtrl                                            :mod:`adv.DatePickerCtrl`
+wx.TaskBarIcon                                               :mod:`adv.TaskBarIcon`
+wx.SplashScreen                                              :mod:`adv.SplashScreen`
+wx.wizard.Wizard                                             :mod:`adv.Wizard`
 ===========================================================  ===========================================================
