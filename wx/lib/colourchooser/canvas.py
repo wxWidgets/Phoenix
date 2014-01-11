@@ -44,7 +44,7 @@ class BitmapBuffer(wx.MemoryDC):
         self.SelectObject(self.bitmap)
 
         # Initialize the buffer to the background colour
-        self.SetBackground(wx.Brush(self.colour, wx.SOLID))
+        self.SetBackground(wx.Brush(self.colour, wx.BRUSHSTYLE_SOLID))
         self.Clear()
 
         # Make each logical unit of the buffer equal to 1 pixel

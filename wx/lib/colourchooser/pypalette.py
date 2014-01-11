@@ -137,8 +137,8 @@ class PyPalette(canvas.Canvas):
         """Highlights an area of the palette with a little circle around
         the coordinate point"""
         colour = wx.Colour(0, 0, 0)
-        self.buffer.SetPen(wx.Pen(colour, 1, wx.SOLID))
-        self.buffer.SetBrush(wx.Brush(colour, wx.TRANSPARENT))
+        self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
+        self.buffer.SetBrush(wx.Brush(colour, wx.BRUSHSTYLE_TRANSPARENT))
         self.buffer.DrawCircle(x, y, 3)
         self.Refresh()
 
@@ -165,8 +165,8 @@ class PyPalette(canvas.Canvas):
                 hue = float(x) / float(width)
                 r,g,b = colorsys.hsv_to_rgb(hue, saturation, value)
                 colour = wx.Colour(int(r * 255.0), int(g * 255.0), int(b * 255.0))
-                self.buffer.SetPen(wx.Pen(colour, 1, wx.SOLID))
-                self.buffer.SetBrush(wx.Brush(colour, wx.SOLID))
+                self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
+                self.buffer.SetBrush(wx.Brush(colour, wx.BRUSHSTYLE_SOLID))
                 self.buffer.DrawRectangle(x, y,
                                           self.HORIZONTAL_STEP, self.vertical_step)
 

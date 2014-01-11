@@ -87,6 +87,6 @@ class PyColourSlider(canvas.Canvas):
         for y_pos in range(0, self.HEIGHT):
             r,g,b = [c * 255.0 for c in colorsys.hsv_to_rgb(h,s,v)]
             colour = wx.Colour(int(r), int(g), int(b))
-            self.buffer.SetPen(wx.Pen(colour, 1, wx.SOLID))
+            self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
             self.buffer.DrawRectangle(0, y_pos, 15, 1)
             v = v - vstep
