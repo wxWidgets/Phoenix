@@ -329,7 +329,7 @@ class RubberBand:
         Draw one box shape and possibly erase another.
         """
         dc = wx.ClientDC(self.drawingSurface)
-        dc.SetPen(wx.Pen(wx.WHITE, 1, wx.DOT))
+        dc.SetPen(wx.Pen(wx.WHITE, 1, wx.PENSTYLE_DOT))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetLogicalFunction(wx.XOR)
         if boxToErase:
