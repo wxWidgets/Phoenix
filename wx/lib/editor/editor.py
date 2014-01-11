@@ -16,7 +16,6 @@
 #
 #
 # Created:     15-Dec-1999
-# RCS-ID:      $Id: editor.py 73251 2012-12-22 08:01:03Z RD $
 # Copyright:   (c) 1999 by Dirk Holtwick, 1999
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
@@ -861,7 +860,7 @@ class Editor(wx.ScrolledWindow):
         action = {}
         keySettingFunction(action)
 
-        if not action.has_key(key):
+        if not key in action:
             return False
 
         if event.ShiftDown():
@@ -890,7 +889,7 @@ class Editor(wx.ScrolledWindow):
     def Dispatch(self, keySettingFunction, key, event):
         action = {}
         keySettingFunction(action)
-        if action.has_key(key):
+        if key in action:
             action[key](event)
             self.UpdateView()
             return True
@@ -903,7 +902,7 @@ class Editor(wx.ScrolledWindow):
         key = self.UnixKeyHack(key)
         try:
             key = chr(key)
-        except:
+        except Exception:
             return False
         if not self.Dispatch(MappingFunc, key, event):
             wx.Bell()
