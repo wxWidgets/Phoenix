@@ -34,7 +34,7 @@ class ColourSelect(GenBitmapButton):
 
         dc = wx.MemoryDC()
         dc.SelectObject(bmp)
-        dc.SetBackground(wx.Brush(self.value, wx.SOLID))
+        dc.SetBackground(wx.Brush(self.value, wx.BRUSHSTYLE_SOLID))
         dc.Clear()
         dc.SelectObject(wx.NullBitmap)
 

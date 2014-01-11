@@ -408,12 +408,12 @@ class Dyer:
         """Selects the current settings into the dc."""
 
         if not shadow:
-            dc.SetPen(wx.Pen(self.border, self.width, wx.SOLID))
-            dc.SetBrush(wx.Brush(self.fill, wx.SOLID))
+            dc.SetPen(wx.Pen(self.border, self.width, wx.PENSTYLE_SOLID))
+            dc.SetBrush(wx.Brush(self.fill, wx.BRUSHSTYLE_SOLID))
             dc.SetTextForeground(self.fill)
         else:
-            dc.SetPen(wx.Pen(self.shadow, self.width, wx.SOLID))
-            dc.SetBrush(wx.Brush(self.shadow, wx.SOLID))
+            dc.SetPen(wx.Pen(self.shadow, self.width, wx.PENSTYLE_SOLID))
+            dc.SetBrush(wx.Brush(self.shadow, wx.BRUSHSTYLE_SOLID))
             dc.SetTextForeground(self.shadow)
 
 

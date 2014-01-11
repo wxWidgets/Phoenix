@@ -189,7 +189,7 @@ class AnalogClock(wx.Window):
     def _drawBox(self):
         """Draws clock face and tick marks onto the faceBitmap."""
         dc = wx.BufferedDC(None, self.faceBitmap)
-        dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.SOLID))
+        dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
         dc.Clear()
         self.Box.Draw(dc)
 
