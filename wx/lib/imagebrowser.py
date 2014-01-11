@@ -687,6 +687,8 @@ class ImageDialog(wx.Dialog):
         if len(self.fl_list):
             self.tb.Set(self.fl_list)
 
+            if sys.version_info[0] == 3:
+                xrange = range
             for idir in xrange(self.fl_ndirs):
                 d = self.fl_list[idir]
                 # mark directories as 'True' with client data
@@ -696,7 +698,7 @@ class ImageDialog(wx.Dialog):
             try:
                 self.tb.SetSelection(0)
                 self.SetListValue(0)
-            except:
+            except Exception:
                 self.image_view.SetValue(None)
         else:
             self.image_view.SetValue(None)

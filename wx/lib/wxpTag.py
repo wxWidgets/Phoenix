@@ -105,7 +105,7 @@ class wxpTagHandler(wx.html.HtmlWinTagHandler):
     def __init__(self):
         wx.html.HtmlWinTagHandler.__init__(self)
         self.ctx = None
-        
+
 
     def GetSupportedTags(self):
         return WXPTAG+','+PARAMTAG
@@ -118,7 +118,7 @@ class wxpTagHandler(wx.html.HtmlWinTagHandler):
         elif name == PARAMTAG:
             return self.HandleParamTag(tag)
         else:
-            raise ValueError, 'unknown tag: ' + name
+            raise ValueError('unknown tag: ' + name)
 
 
     def HandleWxpTag(self, tag):
@@ -136,12 +136,12 @@ class wxpTagHandler(wx.html.HtmlWinTagHandler):
 
         # find and verify the class
         if not tag.HasParam('CLASS'):
-            raise AttributeError, "WXP tag requires a CLASS attribute"
+            raise AttributeError("WXP tag requires a CLASS attribute")
 
         className = tag.GetParam('CLASS')
         self.ctx.classObj = getattr(self.ctx.classMod, className)
         #if type(self.ctx.classObj) not in [ types.ClassType, types.TypeType]:
-        #    raise TypeError, "WXP tag attribute CLASS must name a class"
+        #    raise TypeError("WXP tag attribute CLASS must name a class")
 
         # now look for width and height
         width = -1
@@ -162,7 +162,7 @@ class wxpTagHandler(wx.html.HtmlWinTagHandler):
 
         # create the object
         parent = self.GetParser().GetWindowInterface().GetHTMLWindow()
-        
+
         if parent:
             obj = self.ctx.classObj(parent, **self.ctx.kwargs)
             obj.Show(True)

@@ -301,11 +301,11 @@ class IntValidator(wx.Validator):
 # (Uncomment for debugging:)
 ##        if allow_event:
 ##            print('new value:', new_value)
-##            if paste: print 'paste'
-##            if set_to_none: print 'set_to_none'
-##            if set_to_zero: print 'set_to_zero'
-##            if set_to_minus_one: print 'set_to_minus_one'
-##            if internally_set: print 'internally_set'
+##            if paste: print('paste')
+##            if set_to_none: print('set_to_none')
+##            if set_to_zero: print('set_to_zero')
+##            if set_to_minus_one: print('set_to_minus_one')
+##            if internally_set: print('internally_set')
 ##        else:
 ##            print('new text:', new_text)
 ##            print('disallowed')

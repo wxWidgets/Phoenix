@@ -680,7 +680,7 @@ class InspectionInfoPanel(wx.stc.StyledTextCtrl):
         if hasattr(obj, 'GetValue'):
             try:
                 st.append(self.Fmt('value',   obj.GetValue()))
-            except:
+            except Exception:
                 pass
         st.append('    child count = %d (direct)  %d (recursive)  %d (include TLWs)' %
                   (count, rcount, tlwcount))

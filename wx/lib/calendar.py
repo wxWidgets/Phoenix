@@ -122,8 +122,8 @@ def GetMonthList():
 
 def MakeColor(in_color):
     try:
-        color = wxNamedColour(in_color)
-    except:
+        color = wx.Colour(in_color)
+    except Exception:
         color = in_color
     return color
 
@@ -152,7 +152,7 @@ class CalDraw:
         self.pheight = 1
         try:
             self.scale = parent.scale
-        except:
+        except Exception:
             self.scale = 1
 
         self.gridx = []
@@ -176,8 +176,9 @@ class CalDraw:
 
         self.colors = DefaultColors()
 
-        self.font = wx.SWISS
-        self.bold = wx.NORMAL
+        self.fontfamily = wx.FONTFAMILY_SWISS
+        self.fontstyle = wx.FONTSTYLE_NORMAL
+        self.fontweight = wx.FONTWEIGHT_NORMAL
 
         self.hide_title = False
         self.hide_grid = False
@@ -262,7 +263,7 @@ class CalDraw:
     def DrawBorder(self, DC, transparent = False):
         if self.outer_border is True:
             if transparent == False:
-                brush = wx.Brush(MakeColor(self.colors[COLOR_BACKGROUND]), wx.SOLID)
+                brush = wx.Brush(MakeColor(self.colors[COLOR_BACKGROUND]), wx.BRUSHSTYLE_SOLID)
             else:
                 brush = wx.TRANSPARENT_BRUSH
             DC.SetBrush(brush)
@@ -274,7 +275,7 @@ class CalDraw:
     def DrawFocusIndicator(self, DC):
         if self.outer_border is True:
             DC.SetBrush(wx.TRANSPARENT_BRUSH)
-            DC.SetPen(wx.Pen(MakeColor(self.colors[COLOR_HIGHLIGHT_BACKGROUND]), style=wx.DOT))
+            DC.SetPen(wx.Pen(MakeColor(self.colors[COLOR_HIGHLIGHT_BACKGROUND]), style=wx.PENSTYLE_DOT))
             # full display window area
             rect = wx.Rect(self.cx_st, self.cy_st, self.sizew, self.sizeh)
             DC.DrawRectangle(rect)
@@ -378,7 +379,7 @@ class CalDraw:
         if self.sizeh < _MIDSIZE:
             sizef = 10
 
-        f = wx.Font(sizef, self.font, wx.NORMAL, self.bold)
+        f = wx.Font(sizef, self.fontfamily, self.fontstyle, self.fontweight)
         DC.SetFont(f)
 
         tw,th = DC.GetTextExtent(month)
@@ -391,7 +392,7 @@ class CalDraw:
 
         self.title_offset = th * 2
 
-        f = wx.Font(sizef, self.font, wx.NORMAL, self.bold)
+        f = wx.Font(sizef, self.fontfamily, self.fontstyle, self.fontweight)
         DC.SetFont(f)
         DC.DrawText(year, self.cx_st + adjust, self.cy_st + th)
 
@@ -401,7 +402,7 @@ class CalDraw:
         height = self.gridy[1] - self.gridy[0] + 1
         rect_w = self.gridx[-1] - self.gridx[0]
 
-        f = wx.Font(10, self.font, wx.NORMAL, self.bold)      # initial font setting
+        f = wx.Font(10, self.fontfamily, self.fontstyle, self.fontweight) # initial font setting
 
         if self.week_auto == True:
             test_size = self.max_week_size      # max size
@@ -424,7 +425,7 @@ class CalDraw:
         cnt_x = 0
         cnt_y = 0
 
-        brush = wx.Brush(MakeColor(self.colors[COLOR_HEADER_BACKGROUND]), wx.SOLID)
+        brush = wx.Brush(MakeColor(self.colors[COLOR_HEADER_BACKGROUND]), wx.BRUSHSTYLE_SOLID)
         DC.SetBrush(brush)
 
         if self.cal_type == "NORMAL":
@@ -451,15 +452,15 @@ class CalDraw:
             pointXY = (x, y)
             pointWH = (width, height)
             if self.hide_grid == False:
-                pen = wx.Pen(MakeColor(self.GetColor(COLOR_GRID_LINES)), 1, wx.SOLID)
+                pen = wx.Pen(MakeColor(self.GetColor(COLOR_GRID_LINES)), 1, wx.PENSTYLE_SOLID)
             else:
-                pen = wx.Pen(MakeColor(self.GetColor(COLOR_BACKGROUND)), 1, wx.SOLID)
+                pen = wx.Pen(MakeColor(self.GetColor(COLOR_BACKGROUND)), 1, wx.PENSTYLE_SOLID)
             DC.SetPen(pen)
             DC.DrawRectangle( pointXY, pointWH)
 
             old_pen = DC.GetPen()
 
-            pen = wx.Pen(MakeColor(self.colors[COLOR_3D_LIGHT]), 1, wx.SOLID)
+            pen = wx.Pen(MakeColor(self.colors[COLOR_3D_LIGHT]), 1, wx.PENSTYLE_SOLID)
             DC.SetPen(pen)
             # draw the horizontal hilight
             startPoint = wx.Point(x + 1 , y + 1)
@@ -471,7 +472,7 @@ class CalDraw:
             endPoint   = wx.Point(x + 1, y + height - 2)
             DC.DrawLine(startPoint, endPoint )
 
-            pen = wx.Pen(MakeColor(self.colors[COLOR_3D_DARK]), 1, wx.SOLID)
+            pen = wx.Pen(MakeColor(self.colors[COLOR_3D_DARK]), 1, wx.PENSTYLE_SOLID)
             DC.SetPen(pen)
 
             # draw the horizontal lowlight
@@ -484,7 +485,7 @@ class CalDraw:
             endPoint   = wx.Point(x + width - 2, y + height - 2)
             DC.DrawLine(startPoint, endPoint )
 
-            pen = wx.Pen(MakeColor(self.colors[COLOR_FONT]), 1, wx.SOLID)
+            pen = wx.Pen(MakeColor(self.colors[COLOR_FONT]), 1, wx.PENSTYLE_SOLID)
 
             DC.SetPen(pen)
 
@@ -512,7 +513,7 @@ class CalDraw:
 
     # draw the day numbers
     def DrawNum(self, DC):
-        f = wx.Font(10, self.font, wx.NORMAL, self.bold)      # initial font setting
+        f = wx.Font(10, self.fontfamily, self.fontstyle, self.fontweight) # initial font setting
         self._CalcFontSize(DC, f)
 
         cnt_x = 0
@@ -534,7 +535,7 @@ class CalDraw:
         try:
             num_val = int(text)
             num_color = self.cal_sel[num_val][0]
-        except:
+        except Exception:
             num_color = self.colors[COLOR_FONT]
 
         DC.SetTextForeground(MakeColor(num_color))
@@ -563,7 +564,7 @@ class CalDraw:
         DC.DrawText(text, (x+adj_h, y+adj_v))
 
     def DrawDayText(self, DC, key):
-        f = wx.Font(10, self.font, wx.NORMAL, self.bold)      # initial font setting
+        f = wx.Font(10, self.fontfamily, self.fontstyle, self.fontweight) # initial font setting
         self._CalcFontSize(DC, f)
 
         if key > self.end_pos:
@@ -602,7 +603,7 @@ class CalDraw:
 
         for key in self.cal_sel.keys():
             sel_color = self.cal_sel[key][1]
-            brush = wx.Brush(MakeColor(sel_color), wx.SOLID)
+            brush = wx.Brush(MakeColor(sel_color), wx.BRUSHSTYLE_SOLID)
             DC.SetBrush(brush)
 
             if self.hide_grid is False:
@@ -925,7 +926,7 @@ class Calendar( wx.Control ):
     def TestDay(self, key):
         try:
             self.day = int(self.cal_days[key])
-        except:
+        except Exception:
             return None
 
         if self.day == "":
@@ -990,7 +991,7 @@ class Calendar( wx.Control ):
 
         try:
             cal = self.caldraw
-        except:
+        except Exception:
             self.caldraw = CalDraw(self)
             cal = self.caldraw
 
@@ -1040,7 +1041,7 @@ class Calendar( wx.Control ):
                 self.caldraw.DrawFocusIndicator(DC)
             else:
                 self.caldraw.DrawBorder(DC,True)
-        except:
+        except Exception:
             pass
 
     def DrawRect(self, key, bgcolor = 'WHITE', fgcolor= 'PINK',width = 0):
@@ -1071,7 +1072,7 @@ class Calendar( wx.Control ):
 
         try:
             DC.SetPen(wx.Pen(MakeColor(fgcolor), width))
-        except:
+        except Exception:
             DC.SetPen(wx.Pen(MakeColor(self.GetColor(COLOR_GRID_LINES)), width))
 
         rect = self.rg[key]
@@ -1093,7 +1094,7 @@ class Calendar( wx.Control ):
 
             if day % 7 == 6 or day % 7 == 0:
                 return True
-        except:
+        except Exception:
             return False
 
     def SelectDay(self, key):
@@ -1123,7 +1124,7 @@ class Calendar( wx.Control ):
         try:
             dayIdx = int(self.cal_days[key])
             (cfont, bgcolor) = self.caldraw.cal_sel[dayIdx]
-        except:
+        except Exception:
             pass
 
         return (cfont, bgcolor)

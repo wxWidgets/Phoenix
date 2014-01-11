@@ -22,6 +22,7 @@
 
 import wx
 
+import wx.lib.six as six
 MV_HOR = 0
 MV_VER = not MV_HOR
 
@@ -32,7 +33,7 @@ CR_SIZE = SH_SIZE * 3
 
 class MultiSash(wx.Window):
     def __init__(self, *_args,**_kwargs):
-        apply(wx.Window.__init__,(self,) + _args,_kwargs)
+        wx.Window.__init__(self, *_args, **_kwargs)
         self._defChild = EmptyChild
         self.child = MultiSplit(self,self,(0,0),self.GetSize())
         self.Bind(wx.EVT_SIZE,self.OnMultiSize)
@@ -63,7 +64,7 @@ class MultiSash(wx.Window):
     def SetSaveData(self,data):
         mod = data['_defChild_mod']
         dChild = mod + '.' + data['_defChild_class']
-        exec 'import %s' % mod
+        six.exec_('import %s' % mod)
         self._defChild = eval(dChild)
         old = self.child
         self.child = MultiSplit(self,self,wx.Point(0,0),self.GetSize())
@@ -327,7 +328,7 @@ class MultiViewLeaf(wx.Window):
     def SetSaveData(self,data):
         mod = data['detailClass_mod']
         dChild = mod + '.' + data['detailClass_class']
-        exec 'import %s' % mod
+        six.exec_('import %s' % mod)
         detClass = eval(dChild)
         self.SetSize(data['x'],data['y'],data['w'],data['h'])
         old = self.detail
@@ -611,12 +612,12 @@ class MultiCreator(wx.Window):
 
     def OnPaint(self,evt):
         dc = wx.PaintDC(self)
-        dc.SetBackground(wx.Brush(self.GetBackgroundColour(),wx.SOLID))
+        dc.SetBackground(wx.Brush(self.GetBackgroundColour(),wx.BRUSHSTYLE_SOLID))
         dc.Clear()
 
-        highlight = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT), 1, wx.SOLID)
-        shadow = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW), 1, wx.SOLID)
-        black = wx.Pen(wx.BLACK,1,wx.SOLID)
+        highlight = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT), 1, wx.PENSTYLE_SOLID)
+        shadow = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW), 1, wx.PENSTYLE_SOLID)
+        black = wx.Pen(wx.BLACK,1,wx.PENSTYLE_SOLID)
         w,h = self.GetSize()
         w -= 1
         h -= 1
@@ -672,7 +673,7 @@ class MultiCloser(wx.Window):
 
     def OnPaint(self,evt):
         dc = wx.PaintDC(self)
-        dc.SetBackground(wx.Brush(wx.RED,wx.SOLID))
+        dc.SetBackground(wx.Brush(wx.RED,wx.BRUSHSTYLE_SOLID))
         dc.Clear()
 
     def CalcSizePos(self,parent):

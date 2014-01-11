@@ -89,21 +89,20 @@ else:
             toolbar's frame when it is floating.  floatable(bool): whether
             user actions (i.e., dragging) can float the toolbar or not.
             """
-            args = (self,) + _args
-            apply(wx.ToolBar.__init__, args, _kwargs)
-            if _kwargs.has_key('floatable'):
+            wx.ToolBar.__init__(self, *_args, **_kwargs)
+            if 'floatable' in _kwargs:
                 self.floatable = _kwargs['floatable']
                 assert type(self.floatable) == type(0)
             else:
                 self.floatable = 0
             self.floating = 0
-            if _kwargs.has_key('title'):
+            if 'title' in _kwargs:
                 self.title = _kwargs['title']
                 assert type(self.title) == type("")
             else:
                 self.title = ""
             self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
-            self.parentframe = args[1]
+            self.parentframe = _args[1]
 
 
         def IsFloatable(self):
@@ -289,7 +288,7 @@ else:
                     print("Reparented.")
                     self.parentframe.SetToolBar(self.nullbar)
                     print("Set toolbar")
-                    col = wx.NamedColour("GREY")
+                    col = wx.Colour("GREY")
                     self.nullbar.SetBackgroundColour(col)
                     print("Set color")
                     size = self.parentframe.GetSize()

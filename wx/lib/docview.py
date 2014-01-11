@@ -413,7 +413,7 @@ class Document(wx.EvtHandler):
                                    FileNameFromPath(self.GetFilename()),
                                    docTemplate.GetDefaultExtension(),
                                    wildcard = descr,
-                                   flags = wx.SAVE | wx.OVERWRITE_PROMPT,
+                                   flags = wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
                                    parent = self.GetDocumentWindow())
         if filename == "":
             return False
@@ -2176,7 +2176,7 @@ class DocManager(wx.EvtHandler):
         dlg = wx.FileDialog(self.FindSuitableParent(),
                                _("Select a File"),
                                wildcard=descr,
-                               style=wx.OPEN|wx.FILE_MUST_EXIST|wx.CHANGE_DIR)
+                               style=wx.FD_OPEN|wx.FD_FILE_MUST_EXIST|wx.FD_CHANGE_DIR)
         # dlg.CenterOnParent()  # wxBug: caused crash with wx.FileDialog
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()

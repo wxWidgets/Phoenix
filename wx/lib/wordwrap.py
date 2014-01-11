@@ -77,7 +77,7 @@ if __name__ == '__main__':
             mdc.SetBackground(wx.Brush("white"))
             mdc.Clear()
             mdc.SetPen(wx.Pen("black"))
-            mdc.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL))
+            mdc.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
             mdc.DrawRectangle(0,0, WIDTH, HEIGHT)
 
             text = wordwrap(self.tc.GetValue(), WIDTH-2, mdc, False)

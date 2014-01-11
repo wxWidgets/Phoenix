@@ -43,7 +43,7 @@ as greek letters in both upper case (*Alpha* *Beta*... *Omega*) and
 lower case (*alpha* *beta*... *omega*).
 
 >>> frame = wx.Frame(wx.NULL, -1, "FancyText demo", wx.DefaultPosition)
->>> sft = StaticFancyText(frame, -1, testText, wx.Brush("light grey", wx.SOLID))
+>>> sft = StaticFancyText(frame, -1, testText, wx.Brush("light grey", wx.BRUSHSTYLE_SOLID))
 >>> frame.SetClientSize(sft.GetSize())
 >>> didit = frame.Show()
 >>> from guitest import PauseTests; PauseTests()
@@ -100,9 +100,9 @@ class Renderer:
 
     """
     defaultSize = None
-    defaultFamily = wx.DEFAULT
-    defaultStyle = wx.NORMAL
-    defaultWeight = wx.NORMAL
+    defaultFamily = wx.FONTFAMILY_DEFAULT
+    defaultStyle = wx.FONTSTYLE_NORMAL
+    defaultWeight = wx.FONTWEIGHT_NORMAL
     defaultEncoding = None
     defaultColor = "black"
 
@@ -227,7 +227,7 @@ class Renderer:
         return wx.TheColourDatabase.FindColour(font.get("color", self.defaultColor))
         
     def getCurrentPen(self):
-        return wx.Pen(self.getCurrentColor(), 1, wx.SOLID)
+        return wx.Pen(self.getCurrentColor(), 1, wx.PENSTYLE_SOLID)
         
     def renderCharacterData(self, data, x, y):
         raise NotImplementedError()
@@ -341,7 +341,7 @@ def RenderToRenderer(str, renderer, enclose=True):
         p.EndElementHandler = renderer.endElement
         p.CharacterDataHandler = renderer.characterData
         p.Parse(str, 1)
-    except xml.parsers.expat.error, err:
+    except xml.parsers.expat.error as err:
         raise ValueError('error parsing text text "%s": %s' % (str, err)) 
 
 
@@ -402,7 +402,7 @@ class StaticFancyText(wx.StaticBitmap):
         elif args:
             background = args.pop(0)
         else:
-            background = wx.Brush(window.GetBackgroundColour(), wx.SOLID)
+            background = wx.Brush(window.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID)
         
         bmp = RenderToBitmap(text, background)
         wx.StaticBitmap.__init__(self, window, id, bmp, *args, **kargs)
@@ -447,7 +447,7 @@ upper case (<Alpha/><Beta/>...<Omega/>) and lower case (<alpha/><beta/>...<omega
 We can use doctest/guitest to display this string in all its marked up glory.
 <font family="fixed">
 >>> frame = wx.Frame(wx.NULL, -1, "FancyText demo", wx.DefaultPosition)
->>> sft = StaticFancyText(frame, -1, __doc__, wx.Brush("light grey", wx.SOLID))
+>>> sft = StaticFancyText(frame, -1, __doc__, wx.Brush("light grey", wx.BRUSHSTYLE_SOLID))
 >>> frame.SetClientSize(sft.GetSize())
 >>> didit = frame.Show()
 >>> from guitest import PauseTests; PauseTests()

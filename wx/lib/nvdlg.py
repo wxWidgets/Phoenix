@@ -43,7 +43,7 @@ class SimpleNameValueDialog(wx.Dialog):
         
         if captionTitle:
             titleTxt = wx.StaticText(self, -1, captionTitle)
-            titleTxt.SetFont(wx.FFont(18, wx.SWISS, wx.FONTFLAG_BOLD))
+            titleTxt.SetFont(wx.FFont(18, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
             self.Sizer.Add(titleTxt, 0, wx.ALL, MARGIN)
         if captionDescr:
             descTxt = wx.StaticText(self, -1, captionDescr)

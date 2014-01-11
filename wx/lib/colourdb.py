@@ -13,13 +13,13 @@
 #----------------------------------------------------------------------
 
 """
-This module loads additional colour names/values into the :class:`ColourDatabase`. 
+This module loads additional colour names/values into the :class:`ColourDatabase`.
 
 
 Description
 ===========
 
-This module loads additional colour names/values into the :class:`ColourDatabase`. 
+This module loads additional colour names/values into the :class:`ColourDatabase`.
 
 The :mod:`colourdb` will update the wxPython :class:`ColourDatabase` using a pre-defined
 set of colour names/colour tuples, hard-coded in this module source code.
@@ -44,7 +44,7 @@ Sample usage::
             colour_list = wx.lib.colourdb.getColourList()
 
             # create a choice widget
-            self.choice = wx.Choice(self, -1, choices=colour_list)
+            self.choice = wx.Choice(self.panel, -1, choices=colour_list)
             # select item 0 (first item) in choice list to show
             self.choice.SetSelection(0)
             # set the current frame colour to the choice
@@ -75,7 +75,7 @@ def getColourList():
 
     :rtype: list of strings
     """
-    
+
     return [ x[0] for x in getColourInfoList() ]
 
 
@@ -85,7 +85,7 @@ def getColourInfoList():
 
     :rtype: list of tuples
     """
-    
+
     return [
         ("SNOW", 255, 250, 250),
         ("GHOST WHITE", 248, 248, 255),
@@ -724,16 +724,16 @@ _haveUpdated = False
 
 def updateColourDB():
     """ Updates the :class:`ColourDatabase` by adding new colour names and RGB values. """
-    
+
     global _haveUpdated
     if not _haveUpdated:
         import wx
         assert wx.GetApp() is not None, "You must have a wx.App object before you can use the colour database."
         cl = getColourInfoList()
-        
+
         for info in cl:
             name, colour = info[0], wx.Colour(*info[1:])
             wx.TheColourDatabase.AddColour(name, colour)
-            
+
         _haveUpdated = True
 

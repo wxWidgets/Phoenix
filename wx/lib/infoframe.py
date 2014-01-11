@@ -331,7 +331,7 @@ class PyInformationalMessagesFrame(object):
 
             if  not hasattr(self,"no__debug__"):
                 for m in sys.modules.values():
-                    if m is  not None:# and m.__dict__.has_key("__debug__"):
+                    if m is not None:# and "__debug__" in m.__dict__:
                         m.__dict__["__debug__"] = 1
 
             if hasattr(self,"othermenu") and self.othermenu is not None:
@@ -359,7 +359,7 @@ class PyInformationalMessagesFrame(object):
 
         if  not hasattr(self,"no__debug__"):
             for m in sys.modules.values():
-                if m is  not None:# and m.__dict__.has_key("__debug__"):
+                if m is not None:# and "__debug__" in m.__dict__:
                     m.__dict__["__debug__"] = 0
 
         if self.frame is not None: # typically True, but, e.g., allows

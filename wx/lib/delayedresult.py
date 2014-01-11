@@ -267,7 +267,7 @@ class Producer(threading.Thread):
                 result = workerFn(*args, **kwargs)
             except AbortedException:
                 pass
-            except Exception, exc:
+            except Exception as exc:
                 originalTb = traceback.format_exc()
                 extraInfo = self._extraInfo(exc)
                 sender.sendException(exc, extraInfo, originalTb)

@@ -93,12 +93,12 @@ minsize = {   "fixed":    wx.FIXED_MINSIZE,
 misc_flags = {   "expand": wx.EXPAND, }
 
 
-class TableSizer(wx.PySizer):
+class TableSizer(wx.Sizer):
     """
     An attempt at creating a more intuitive replacement for nesting box sizers.
     """
     def __init__(self, rows=0, cols=0):
-        wx.PySizer.__init__(self)
+        wx.Sizer.__init__(self)
         self.rows = rows
         self.cols = cols
         self.fixed_width = 0
@@ -658,37 +658,37 @@ class SizedParent:
             
         elif type == "table":
             rows = cols = 0
-            if options.has_key('rows'):
+            if 'rows' in options:
                 rows = int(options['rows'])
 
-            if options.has_key('cols'):
+            if 'cols' in options:
                 cols = int(options['cols'])
         
             sizer = TableSizer(rows, cols)
         
         elif type == "grid":
             sizer = wx.FlexGridSizer(0, 0, 0, 0)
-            if options.has_key('rows'):
+            if 'rows' in options:
                 sizer.SetRows(int(options['rows']))
             else:
                 sizer.SetRows(0)
-            if options.has_key('cols'):
+            if 'cols' in options:
                 sizer.SetCols(int(options['cols']))
             else:
                 sizer.SetCols(0)
     
-            if options.has_key('growable_row'):
+            if 'growable_row' in options:
                 row, proportion = options['growable_row']
                 sizer.SetGrowableRow(row, proportion)
             
-            if options.has_key('growable_col'):
+            if 'growable_col' in options:
                 col, proportion = options['growable_col']
                 sizer.SetGrowableCol(col, proportion)
             
-            if options.has_key('hgap'):
+            if 'hgap' in options:
                 sizer.SetHGap(options['hgap'])
                 
-            if options.has_key('vgap'):
+            if 'vgap' in options:
                 sizer.SetVGap(options['vgap'])
         if sizer:
             self._SetNewSizer(sizer)
@@ -759,12 +759,7 @@ class SizedPanel(wx.Panel, SizedParent):
         """
         Called automatically by wx, do not call it from user code.
         """
-
-        if wx.VERSION < (2,8):
-            wx.PyPanel.base_AddChild(self, child)
-        else:
-            wx.Panel.AddChild(self, child)
-
+        wx.Panel.AddChild(self, child)
         SizedParent.AddChild(self, child)
 
     def _SetNewSizer(self, sizer):
@@ -773,10 +768,7 @@ class SizedPanel(wx.Panel, SizedParent):
         to new sizer.
         """
         props = self._DetachFromSizer(sizer)
-        if wx.VERSION < (2,8):
-            wx.PyPanel.SetSizer(self, sizer)
-        else:
-            wx.Panel.SetSizer(self, sizer)
+        wx.Panel.SetSizer(self, sizer)
         self._AddToNewSizer(sizer, props)
 
 
@@ -812,12 +804,7 @@ class SizedScrolledPanel(sp.ScrolledPanel, SizedParent):
 
         :param `child`: child (window or another sizer) to be added to sizer.
         """
-
-        if wx.VERSION < (2,8):
-            sp.ScrolledPanel.base_AddChild(self, child)
-        else:
-            sp.ScrolledPanel.AddChild(self, child)
-
+        sp.ScrolledPanel.AddChild(self, child)
         SizedParent.AddChild(self, child)
 
     def _SetNewSizer(self, sizer):

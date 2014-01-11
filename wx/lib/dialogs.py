@@ -411,7 +411,7 @@ class MultiMessageDialog(wx.Dialog):
         messageSizer = wx.BoxSizer(wx.VERTICAL)
         if 'wxMac' in wx.PlatformInfo and caption:
             caption = wx.StaticText(self, -1, caption)
-            caption.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
+            caption.SetFont(wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
             messageSizer.Add(caption)
             messageSizer.Add((10,10))
         

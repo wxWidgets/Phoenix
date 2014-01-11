@@ -46,7 +46,7 @@ class MessagePanel(wx.Panel):
 
         if caption:
             caption = wx.StaticText(self, -1, caption)
-            caption.SetFont(wx.Font(24, wx.SWISS, wx.NORMAL, wx.BOLD))
+            caption.SetFont(wx.Font(24, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
         message = wx.StaticText(self, -1, message)
 

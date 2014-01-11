@@ -42,7 +42,7 @@ class FoldOutWindow(wx.PopupWindow):
     def OnBtnClick(self,event):
         id=event.GetEventObject().GetId()
 
-        if self.handlers.has_key(id):
+        if id in self.handlers:
             self.handlers[id](event)
 
         self.Hide()

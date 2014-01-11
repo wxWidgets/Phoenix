@@ -141,7 +141,7 @@ class MouseGestures:
         '''If the gesture is in the array of registered gestures, run the associated function.'''
         if gesture in self.gestures:
             i = self.gestures.index(gesture)
-            apply(self.actions[i], self.actionarguments[i])
+            self.actions[i](self.actionarguments[i])
 
     def End(self):
         '''Stops recording the points to create the mouse gesture from,

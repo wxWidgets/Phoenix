@@ -345,7 +345,7 @@ def GetWxIdentifierForLanguage(lang):
     for n in dir(wx):
         if n.startswith('LANGUAGE_') and getattr(wx, n) == lang:
             return n
-    raise Exception, 'Language %s not found'%lang
+    raise Exception('Language %s not found'%lang)
 
 
 #-------------------------------------------------------------------------------

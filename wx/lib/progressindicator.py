@@ -42,7 +42,7 @@ class ProgressIndicator(wx.Panel):
         self.Sizer.Add(self.gauge, 1, wx.EXPAND)
 
         size = wx.DefaultSize
-        if kw.has_key('size'):
+        if 'size' in kw:
             size = kw['size']
         elif len(args) >= 4:
             size=args[3] # parent, id, pos, size, style, name

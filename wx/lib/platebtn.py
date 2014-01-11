@@ -298,7 +298,7 @@ class PlateButton(wx.Control):
         elif self._state['cur'] == PLATE_PRESSED:
             gc.SetTextForeground(self._color['htxt'])
             if wx.Platform == '__WXMAC__':
-                pen = wx.Pen(GetHighlightColour(), 1, wx.SOLID)
+                pen = wx.Pen(GetHighlightColour(), 1, wx.PENSTYLE_SOLID)
             else:
                 pen = wx.Pen(AdjustColour(self._color['press'], -80, 220), 1)
             gc.SetPen(pen)
@@ -453,14 +453,14 @@ class PlateButton(wx.Control):
             return wx.TRANSPARENT_BRUSH
 
         bkgrd = self.GetBackgroundColour()
-        brush = wx.Brush(bkgrd, wx.SOLID)
+        brush = wx.Brush(bkgrd, wx.BRUSHSTYLE_SOLID)
         my_attr = self.GetDefaultAttributes()
         p_attr = self.Parent.GetDefaultAttributes()
         my_def = bkgrd == my_attr.colBg
         p_def = self.Parent.GetBackgroundColour() == p_attr.colBg
         if my_def and not p_def:
             bkgrd = self.Parent.GetBackgroundColour()
-            brush = wx.Brush(bkgrd, wx.SOLID)
+            brush = wx.Brush(bkgrd, wx.BRUSHSTYLE_SOLID)
         return brush
 
     def GetBitmapDisabled(self):

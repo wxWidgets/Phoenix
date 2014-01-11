@@ -24,7 +24,7 @@ class PyClickableHtmlWindow(html.HtmlWindow):
     to the clipboard.
     """
     def __init__(self,parent,ID,**kw):
-        apply(html.HtmlWindow.__init__,(self,parent,ID),kw)
+        html.HtmlWindow.__init__(self, parent, ID, **kw)
 
     def OnLinkClicked(self,link):
         self.link = wx.TextDataObject(link.GetHref())

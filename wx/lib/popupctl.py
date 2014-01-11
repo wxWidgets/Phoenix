@@ -149,7 +149,7 @@ class PopupDialog(wx.Dialog):
 
 class PopupControl(wx.Control):
     def __init__(self,*_args,**_kwargs):
-        if _kwargs.has_key('value'):
+        if 'value' in _kwargs:
             del _kwargs['value']
         style = _kwargs.get('style', 0)
         if (style & wx.BORDER_MASK) == 0:

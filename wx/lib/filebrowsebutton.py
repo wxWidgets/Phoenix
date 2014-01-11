@@ -17,10 +17,10 @@
 # o 2.5 Compatability changes
 #
 
-import  os
-import  types
+import os
+import types
 
-import  wx
+import wx
 
 #----------------------------------------------------------------------
 
@@ -105,8 +105,8 @@ class FileBrowseButton(wx.Panel):
         self.SetAutoLayout(True)
         self.SetSizer( outsidebox )
         self.Layout()
-        if type( size ) == types.TupleType:
-            size = apply( wx.Size, size)
+        if type(size) == tuple:
+            size = wx.Size(size)
         self.SetSize(-1, -1, size.width, size.height, wx.SIZE_USE_EXISTING)
 
 #        if size.width != -1 or size.height != -1:

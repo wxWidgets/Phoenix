@@ -274,7 +274,7 @@ class GenStaticText(wx.Control):
                 themeColour = wx.MacThemeColour(kThemeBrushDialogBackgroundActive)
                 backBrush = wx.Brush(themeColour)
             else:
-                backBrush = wx.Brush(clr, wx.SOLID)
+                backBrush = wx.Brush(clr, wx.BRUSHSTYLE_SOLID)
             dc.SetBackground(backBrush)
             dc.Clear()
 

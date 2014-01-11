@@ -824,7 +824,7 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
                     icon.SetWidth(16)
                     if wx.GetApp().GetDebug():
                         print("Warning: icon for '%s' isn't 16x16, not crossplatform" % template._docTypeName)
-                iconIndex = iconList.AddIcon(icon)
+                iconIndex = iconList.Add(icon)
                 self._iconIndexLookup.append((template, iconIndex))
 
         icon = Blank.GetIcon()
@@ -833,7 +833,7 @@ class DocTabbedParentFrame(wx.Frame, DocFrameMixIn, DocMDIParentFrameMixIn):
             icon.SetWidth(16)
             if wx.GetApp().GetDebug():
                 print("Warning: getBlankIcon isn't 16x16, not crossplatform")
-        self._blankIconIndex = iconList.AddIcon(icon)
+        self._blankIconIndex = iconList.Add(icon)
         self._notebook.AssignImageList(iconList)
 
 
@@ -2174,7 +2174,7 @@ class DocApp(wx.PySimpleApp):
             splash_bmp = image
         else:
             splash_bmp = wx.Image(image).ConvertToBitmap()
-        self._splash = wx.SplashScreen(splash_bmp, wx.SPLASH_CENTRE_ON_SCREEN|wx.SPLASH_NO_TIMEOUT, 0, None, -1, style=wx.SIMPLE_BORDER|wx.FRAME_NO_TASKBAR)
+        self._splash = wx.adv.SplashScreen(splash_bmp, wx.adv.SPLASH_CENTRE_ON_SCREEN|wx.adv.SPLASH_NO_TIMEOUT, 0, None, -1, style=wx.SIMPLE_BORDER|wx.FRAME_NO_TASKBAR)
         self._splash.Show()
 
 

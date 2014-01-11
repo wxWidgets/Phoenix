@@ -106,7 +106,7 @@ class EventManager:
                 self.messageAdapterDict[topic] = {}
                 self.messageAdapterDict[topic][listener] = messageAdapter
 
-            if not self.eventAdapterDict.has_key(topic):
+            if not topic in self.eventAdapterDict:
                 self.eventAdapterDict[topic] = EventAdapter(event, win, id)
         else:
             # Throwing away a duplicate request
@@ -170,7 +170,7 @@ class EventManager:
         for topic in topicList:
             topicDict = self.messageAdapterDict[topic]
 
-            if topicDict.has_key(listener):
+            if listener in topicDict:
                 topicDict[listener].Destroy()
                 del topicDict[listener]
 
@@ -285,7 +285,7 @@ class EventManager:
         with these specs.
         """
         try:
-            return self.messageAdapterDict[topicPattern].has_key(eventHandler)
+            return eventHandler in self.messageAdapterDict[topicPattern]
         except KeyError:
             return 0
 

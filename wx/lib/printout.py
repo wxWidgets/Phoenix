@@ -31,20 +31,20 @@ class PrintBase(object):
     def SetPrintFont(self, font):      # set the DC font parameters
         fattr = font["Attr"]
         if fattr[0] == 1:
-            weight = wx.BOLD
+            weight = wx.FONTWEIGHT_BOLD
         else:
-            weight = wx.NORMAL
+            weight = wx.FONTWEIGHT_NORMAL
 
         if fattr[1] == 1:
-            set_style = wx.ITALIC
+            set_style = wx.FONTSTYLE_ITALIC
         else:
-            set_style = wx.NORMAL
+            set_style = wx.FONTSTYLE_NORMAL
 
         underline = fattr[2]
         fcolour = self.GetFontColour(font)
         self.DC.SetTextForeground(fcolour)
 
-        setfont = wx.Font(font["Size"], wx.SWISS, set_style, weight, underline)
+        setfont = wx.Font(font["Size"], wx.FONTFAMILY_SWISS, set_style, weight, underline)
         setfont.SetFaceName(font["Name"])
         self.DC.SetFont(setfont)
 
@@ -354,7 +354,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
 
 
     def SetPointAdjust(self):
-        f = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)     # setup using 10 point
+        f = wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)     # setup using 10 point
         self.DC.SetFont(f)
         f.SetFaceName(self.text_font["Name"])
         x, y = self.DC.GetTextExtent("W")
@@ -526,7 +526,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
 
 
     def LabelColorRow(self, colour):
-        brush = wx.Brush(colour, wx.SOLID)
+        brush = wx.Brush(colour, wx.BRUSHSTYLE_SOLID)
         self.DC.SetBrush(brush)
         height = self.label_space + self.label_pt_space_before + self.label_pt_space_after
         self.DC.DrawRectangle(self.column[0], self.y,
@@ -542,7 +542,7 @@ class PrintTableDraw(wx.ScrolledWindow, PrintBase):
             if cellcolour is not None:
                 colour = cellcolour
 
-            brush = wx.Brush(colour, wx.SOLID)
+            brush = wx.Brush(colour, wx.BRUSHSTYLE_SOLID)
             self.DC.SetBrush(brush)
             self.DC.SetPen(wx.Pen(wx.WHITE, 0))
 

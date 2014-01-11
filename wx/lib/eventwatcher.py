@@ -103,7 +103,7 @@ def _makeAttribString(evt):
             try:
                 value = getattr(evt, name)()
                 attribs += "%s : %s\n" % (name, value)
-            except:
+            except Exception:
                 pass
         
     return attribs.rstrip()

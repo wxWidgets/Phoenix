@@ -145,7 +145,7 @@ class ItemsPicker(wx.Panel):
             
     def _MoveItems(self,source,dest):
         selections = source.GetSelections()
-        selectedItems = map(source.GetString, selections)
+        selectedItems = list(map(source.GetString, selections))
         dest.SetItems(dest.GetItems() + selectedItems)
         selections = set(selections)
         source.SetItems([item for i, item in enumerate(source.GetItems())\
@@ -153,7 +153,7 @@ class ItemsPicker(wx.Panel):
         self._FireIpSelectionChanged()
             
     def _AddSelectedItems(self):
-        newItems = map(self._source.GetString, self._source.GetSelections())
+        newItems = list(map(self._source.GetString, self._source.GetSelections()))
         items = self._dest.GetItems()
         oldItems = set(items)
         for newItem in newItems:
