@@ -172,7 +172,7 @@ class %(subclass)s(wx.%(windowClass)s):
 #!XRCED:begin-block:xrc%(windowName)s.%(eventHandler)s
     def %(eventHandler)s(self, evt):
         # Replace with event handler code
-        print \"%(eventHandler)s()\"
+        print(\"%(eventHandler)s()\")
 #!XRCED:end-block:xrc%(windowName)s.%(eventHandler)s        
 """
 
@@ -292,7 +292,7 @@ class XmlResourceCompiler:
                 gettextStrings += self.FindStringsInNode(resourceDocument.firstChild)
                 
         # now write it all out
-        print >>outputFile, self.templates.FILE_HEADER
+        print(self.templates.FILE_HEADER, file=outputFile)
 
         # Note: Technically it is not legal to have anything other
         # than ascii for class and variable names, but since the user
@@ -301,22 +301,22 @@ class XmlResourceCompiler:
         # later when they try to run the program.
         if subclasses:
             subclasses = self.ReplaceBlocks(u"\n".join(subclasses))
-            print >>outputFile, subclasses.encode("UTF-8")
+            print(subclasses.encode("UTF-8"), file=outputFile)
         if classes:
             classes = self.ReplaceBlocks(u"\n".join(classes))
-            print >>outputFile, classes.encode("UTF-8")
+            print(classes.encode("UTF-8"), file=outputFile)
 
-        print >>outputFile, self.templates.INIT_RESOURE_HEADER
+        print(self.templates.INIT_RESOURE_HEADER, file=outputFile)
         if embedResources:
-            print >>outputFile, self.templates.PREPARE_MEMFS
+            print(self.templates.PREPARE_MEMFS, file=outputFile)
         resources = u"\n".join(resources)
-        print >>outputFile, resources.encode("UTF-8")
+        print(resources.encode("UTF-8"), file=outputFile)
 
         if generateGetText:
             # These have already been converted to utf-8...
             gettextStrings = ['    _("%s")' % s for s in gettextStrings]
             gettextStrings = "\n".join(gettextStrings)
-            print >>outputFile, self.templates.GETTEXT_DUMMY_FUNC % gettextStrings
+            print(self.templates.GETTEXT_DUMMY_FUNC % gettextStrings, file=outputFile)
 
     #-------------------------------------------------------------------
 
@@ -331,7 +331,7 @@ class XmlResourceCompiler:
             resource = resourceDocument.firstChild
             strings = self.FindStringsInNode(resource)
             strings = ['_("%s");' % s for s in strings]
-            print >>outputFile, "\n".join(strings)
+            print("\n".join(strings), file=outputFile)
 
     #-------------------------------------------------------------------
 
@@ -510,9 +510,8 @@ class XmlResourceCompiler:
                     bases[subclass] = klass
                 else:
                     if klass != bases[subclass]:
-                        print 'pywxrc: error: conflicting base classes for subclass %(subclass)s' \
-                              % subclass
-            
+                        print('pywxrc: error: conflicting base classes for subclass %(subclass)s' % subclass)
+
         # Generate subclasses
         for subclass in subclasses:
             windowClass = bases[subclass]
@@ -807,7 +806,7 @@ class XmlResourceCompiler:
                 mo = reEndBlock.match(l)
                 if mo:
                     if mo.groups()[0] != block:
-                        print "pywxrc: error: block mismatch: %s != %s" % (block, mo.groups()[0])
+                        print("pywxrc: error: block mismatch: %s != %s" % (block, mo.groups()[0]))
                     block = None
         return ''.join(output)
 
@@ -833,7 +832,7 @@ class XmlResourceCompiler:
                         mo = reEndBlock.match(l)
                         if mo:
                             if mo.groups()[0] != block:
-                                print "pywxrc: error: block mismatch: %s != %s" % (block, mo.groups()[0])
+                                print("pywxrc: error: block mismatch: %s != %s" % (block, mo.groups()[0]))
                             self.blocks[block] = "".join(blockLines)
                             block = None
             
@@ -864,8 +863,8 @@ def main(args=None):
         opts, args = getopt.gnu_getopt(args,
                                        "hpgevo:",
                                        "help python gettext embed novar output=".split())
-    except getopt.GetoptError, e:
-        print("\nError : %s\n" % str(e))
+    except getopt.GetoptError as exc:
+        print("\nError : %s\n" % str(exc))
         print(__doc__)
         sys.exit(1)
 
@@ -924,12 +923,11 @@ def main(args=None):
             sys.exit(1)
             
             
-    except IOError, e:
-        sys.stderr.write("%s.\n" % str(e))
+    except IOError as exc:
+        print("%s." % str(exc), file=sys.stderr)
     else:
         if outputFilename != "-":
-            sys.stderr.write("Resources written to %s.\n" % outputFilename)
-
+            print("Resources written to %s." % outputFilename, file=outputFilename)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
