@@ -53,6 +53,7 @@ from time import clock
 import wx
 
 from .Utilities import BBox
+from . import GUIMode
 
 
 ## A global variable to hold the Pixels per inch that wxWindows thinks is in use
@@ -267,23 +268,23 @@ class DrawObject:
             }
 
     FillStyleList = {
-            "Transparent"    : wx.TRANSPARENT,
-            "Solid"          : wx.SOLID,
-            "BiDiagonalHatch": wx.BDIAGONAL_HATCH,
-            "CrossDiagHatch" : wx.CROSSDIAG_HATCH,
-            "FDiagonal_Hatch": wx.FDIAGONAL_HATCH,
-            "CrossHatch"     : wx.CROSS_HATCH,
-            "HorizontalHatch": wx.HORIZONTAL_HATCH,
-            "VerticalHatch"  : wx.VERTICAL_HATCH
+            "Transparent"    : wx.BRUSHSTYLE_TRANSPARENT,
+            "Solid"          : wx.BRUSHSTYLE_SOLID,
+            "BiDiagonalHatch": wx.BRUSHSTYLE_BDIAGONAL_HATCH,
+            "CrossDiagHatch" : wx.BRUSHSTYLE_CROSSDIAG_HATCH,
+            "FDiagonal_Hatch": wx.BRUSHSTYLE_FDIAGONAL_HATCH,
+            "CrossHatch"     : wx.BRUSHSTYLE_CROSS_HATCH,
+            "HorizontalHatch": wx.BRUSHSTYLE_HORIZONTAL_HATCH,
+            "VerticalHatch"  : wx.BRUSHSTYLE_VERTICAL_HATCH
             }
 
     LineStyleList = {
-            "Solid"      : wx.SOLID,
-            "Transparent": wx.TRANSPARENT,
-            "Dot"        : wx.DOT,
-            "LongDash"   : wx.LONG_DASH,
-            "ShortDash"  : wx.SHORT_DASH,
-            "DotDash"    : wx.DOT_DASH,
+            "Solid"      : wx.PENSTYLE_SOLID,
+            "Transparent": wx.PENSTYLE_TRANSPARENT,
+            "Dot"        : wx.PENSTYLE_DOT,
+            "LongDash"   : wx.PENSTYLE_LONG_DASH,
+            "ShortDash"  : wx.PENSTYLE_SHORT_DASH,
+            "DotDash"    : wx.PENSTYLE_DOT_DASH,
             }
 
     def Bind(self, Event, CallBackFun):
@@ -1712,9 +1713,9 @@ class Text(TextObjectMixin, DrawObject):
                  Size =  14,
                  Color = "Black",
                  BackgroundColor = None,
-                 Family = wx.MODERN,
-                 Style = wx.NORMAL,
-                 Weight = wx.NORMAL,
+                 Family = wx.FONTFAMILY_MODERN,
+                 Style = wx.FONTSTYLE_NORMAL,
+                 Weight = wx.FONTWEIGHT_NORMAL,
                  Underlined = False,
                  Position = 'tl',
                  InForeground = False,
@@ -1823,17 +1824,17 @@ class ScaledText(TextObjectMixin, DrawObject):
     * Family: Font family, a generic way of referring to fonts without
       specifying actual facename. One of:
       
-            * wx.DEFAULT:  Chooses a default font.
-            * wx.DECORATI: A decorative font.
-            * wx.ROMAN: A formal, serif font.
-            * wx.SCRIPT: A handwriting font.
-            * wx.SWISS: A sans-serif font.
-            * wx.MODERN: A fixed pitch font.
+            * wx.FONTFAMILY_DEFAULT:  Chooses a default font.
+            * wx.FONTFAMILY_DECORATIVE: A decorative font.
+            * wx.FONTFAMILY_ROMAN: A formal, serif font.
+            * wx.FONTFAMILY_SCRIPT: A handwriting font.
+            * wx.FONTFAMILY_SWISS: A sans-serif font.
+            * wx.FONTFAMILY_MODERN: A fixed pitch font.
             
       .. note:: these are only as good as the wxWindows defaults, which aren't so good.
       
-    * Style: One of wx.NORMAL, wx.SLANT and wx.ITALIC.
-    * Weight: One of wx.NORMAL, wx.LIGHT and wx.BOLD.
+    * Style: One of wx.FONTSTYLE_NORMAL, wx.FONTSTYLE_SLANT and wx.FONTSTYLE_ITALIC.
+    * Weight: One of wx.FONTWEIGHT_NORMAL, wx.FONTWEIGHT_LIGHT and wx.FONTWEIGHT_BOLD.
     * Underlined: The value can be True or False. At present this may have an an
       effect on Windows only.
 
@@ -1869,9 +1870,9 @@ class ScaledText(TextObjectMixin, DrawObject):
                  Size,
                  Color = "Black",
                  BackgroundColor = None,
-                 Family = wx.MODERN,
-                 Style = wx.NORMAL,
-                 Weight = wx.NORMAL,
+                 Family = wx.FONTFAMILY_MODERN,
+                 Style = wx.FONTSTYLE_NORMAL,
+                 Weight = wx.FONTWEIGHT_NORMAL,
                  Underlined = False,
                  Position = 'tl',
                  Font = None,
@@ -2001,9 +2002,9 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
                  LineWidth = 1,
                  Width = None,
                  PadSize = None,
-                 Family = wx.MODERN,
-                 Style = wx.NORMAL,
-                 Weight = wx.NORMAL,
+                 Family = wx.FONTFAMILY_MODERN,
+                 Style = wx.FONTSTYLE_NORMAL,
+                 Weight = wx.FONTWEIGHT_NORMAL,
                  Underlined = False,
                  Position = 'tl',
                  Alignment = "left",
@@ -2868,7 +2869,6 @@ class FloatCanvas(wx.Panel):
     
         self.SetProjectionFun(ProjectionFun)
         
-        from . import GUIMode        
         self.GUIMode = None # making sure the arrribute exists
         self.SetMode(GUIMode.GUIMouse()) # make the default Mouse Mode.
 
@@ -2888,7 +2888,7 @@ class FloatCanvas(wx.Panel):
         """
         global FontScale
         dc = wx.ScreenDC()
-        dc.SetFont(wx.Font(16, wx.ROMAN, wx.NORMAL, wx.NORMAL))
+        dc.SetFont(wx.Font(16, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         E = dc.GetTextExtent("X")
         FontScale = 16/E[1]
         del dc
