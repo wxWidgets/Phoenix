@@ -23,13 +23,13 @@ def OGLInitialize():
     global WhiteBackgroundPen, WhiteBackgroundBrush, TransparentPen
     global BlackForegroundPen, NormalFont
     
-    WhiteBackgroundPen = wx.Pen(wx.WHITE, 1, wx.SOLID)
-    WhiteBackgroundBrush = wx.Brush(wx.WHITE, wx.SOLID)
+    WhiteBackgroundPen = wx.Pen(wx.WHITE, 1, wx.PENSTYLE_SOLID)
+    WhiteBackgroundBrush = wx.Brush(wx.WHITE, wx.BRUSHSTYLE_SOLID)
 
-    TransparentPen = wx.Pen(wx.WHITE, 1, wx.TRANSPARENT)
-    BlackForegroundPen = wx.Pen(wx.BLACK, 1, wx.SOLID)
+    TransparentPen = wx.Pen(wx.WHITE, 1, wx.PENSTYLE_TRANSPARENT)
+    BlackForegroundPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_SOLID)
 
-    NormalFont = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
+    NormalFont = wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
 
 
 def OGLCleanUp():
@@ -1011,7 +1011,7 @@ class Shape(ShapeEvtHandler):
         self.GetCanvas().PrepareDC(dc)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1046,7 +1046,7 @@ class Shape(ShapeEvtHandler):
         xx, yy = self._canvas.Snap(xx, yy)
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1895,13 +1895,13 @@ class Shape(ShapeEvtHandler):
     def GetBackgroundPen(self):
         """Return pen of the right colour for the background."""
         if self.GetCanvas():
-            return wx.Pen(self.GetCanvas().GetBackgroundColour(), 1, wx.SOLID)
+            return wx.Pen(self.GetCanvas().GetBackgroundColour(), 1, wx.PENSTYLE_SOLID)
         return WhiteBackgroundPen
 
     def GetBackgroundBrush(self):
         """Return brush of the right colour for the background."""
         if self.GetCanvas():
-            return wx.Brush(self.GetCanvas().GetBackgroundColour(), wx.SOLID)
+            return wx.Brush(self.GetCanvas().GetBackgroundColour(), wx.BRUSHSTYLE_SOLID)
         return WhiteBackgroundBrush
 
     def GetX(self):
@@ -2090,7 +2090,7 @@ class Shape(ShapeEvtHandler):
 
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -2195,7 +2195,7 @@ class Shape(ShapeEvtHandler):
         pt._controlPointDragStartWidth = bound_x
         pt._controlPointDragStartHeight = bound_y
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -2744,7 +2744,7 @@ class PolygonShape(Shape):
 
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -2773,7 +2773,7 @@ class PolygonShape(Shape):
         if pt._originalDistance == 0:
             pt._originalDistance = 0.0001
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -2987,7 +2987,7 @@ class ShapeRegion(object):
             self._regionName = ""
             self._textColour = "BLACK"
             self._penColour = "BLACK"
-            self._penStyle = wx.SOLID
+            self._penStyle = wx.PENSTYLE_SOLID
             self._actualColourObject = wx.TheColourDatabase.Find("BLACK")
             self._actualPenObject = None
 

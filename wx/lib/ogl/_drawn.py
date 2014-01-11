@@ -91,7 +91,7 @@ class OpSetGDI(DrawOp):
             if self._gdiIndex in self._image._outlineColours:
                 # Need to construct a brush to match the outline pen's colour
                 if self._image._outlinePen:
-                    br = wx.Brush(self._image._outlinePen, wx.SOLID)
+                    br = wx.Brush(self._image._outlinePen, wx.BRUSHSTYLE_SOLID)
                     if br:
                         dc.SetBrush(br)
             elif self._gdiIndex in self._image._fillColours:
@@ -638,7 +638,7 @@ class DrawnShape(RectangleShape):
         if self._shadowMode != SHADOW_NONE:
             if self._shadowBrush:
                 self._metafiles[self._currentAngle]._fillBrush = self._shadowBrush
-            self._metafiles[self._currentAngle]._outlinePen = wx.Pen(wx.WHITE, 1, wx.TRANSPARENT)
+            self._metafiles[self._currentAngle]._outlinePen = wx.Pen(wx.WHITE, 1, wx.PENSTYLE_TRANSPARENT)
             self._metafiles[self._currentAngle].Draw(dc, self._xpos + self._shadowOffsetX, self._ypos + self._shadowOffsetY)
 
         self._metafiles[self._currentAngle]._outlinePen = self._pen

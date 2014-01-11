@@ -397,7 +397,7 @@ class CompositeShape(RectangleShape):
         if self._shadowMode != SHADOW_NONE:
             if self._shadowBrush:
                 dc.SetBrush(self._shadowBrush)
-            dc.SetPen(wx.Pen(wx.WHITE, 1, wx.TRANSPARENT))
+            dc.SetPen(wx.Pen(wx.WHITE, 1, wx.PENSTYLE_TRANSPARENT))
 
             if self._cornerRadius:
                 dc.DrawRoundedRectangle(x1 + self._shadowOffsetX, y1 + self._shadowOffsetY, self._width, self._height, self._cornerRadius)
@@ -438,7 +438,7 @@ class CompositeShape(RectangleShape):
         self.GetCanvas().PrepareDC(dc)
 
         dc.SetLogicalFunction(OGLRBLF)
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -456,7 +456,7 @@ class CompositeShape(RectangleShape):
         #self.Erase(dc)
         
         dc.SetLogicalFunction(OGLRBLF)
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         self._canvas.CaptureMouse()

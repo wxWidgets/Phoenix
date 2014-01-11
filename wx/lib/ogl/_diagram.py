@@ -87,7 +87,7 @@ class Diagram(object):
 
     def DrawOutline(self, dc, x1, y1, x2, y2):
         """Draw an outline rectangle on the current device context."""
-        dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT))
+        dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         dc.DrawLines([[x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, y1]])

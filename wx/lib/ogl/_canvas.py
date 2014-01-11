@@ -69,7 +69,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         dc = wx.PaintDC(self)
         self.PrepareDC(dc)
         
-        dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.SOLID))
+        dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
         dc.Clear()
 
         if self.GetDiagram():

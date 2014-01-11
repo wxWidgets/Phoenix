@@ -132,7 +132,7 @@ class LabelShape(RectangleShape):
         RectangleShape.__init__(self, w, h)
         self._lineShape = parent
         self._shapeRegion = region
-        self.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT))
+        self.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT))
 
     def OnDraw(self, dc):
         if self._lineShape and not self._lineShape.GetDrawHandles():
@@ -867,7 +867,7 @@ class LineShape(Shape):
         old_pen = self._pen
         old_brush = self._brush
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         self.SetPen(dottedPen)
         self.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1027,8 +1027,8 @@ class LineShape(Shape):
 
         # Problem with pen - if not a solid pen, does strange things
         # to the arrowhead. So make (get) a new pen that's solid.
-        if self._pen and self._pen.GetStyle() != wx.SOLID:
-            solid_pen = wx.Pen(self._pen.GetColour(), 1, wx.SOLID)
+        if self._pen and self._pen.GetStyle() != wx.PENSTYLE_SOLID:
+            solid_pen = wx.Pen(self._pen.GetColour(), 1, wx.PENSTYLE_SOLID)
             if solid_pen:
                 dc.SetPen(solid_pen)
 
@@ -1148,7 +1148,7 @@ class LineShape(Shape):
 
         dc.SetLogicalFunction(OGLRBLF)
 
-        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+        dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1199,7 +1199,7 @@ class LineShape(Shape):
             old_pen = self.GetPen()
             old_brush = self.GetBrush()
 
-            dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.DOT)
+            dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
             self.SetPen(dottedPen)
             self.SetBrush(wx.TRANSPARENT_BRUSH)
 
