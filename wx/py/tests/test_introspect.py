@@ -694,7 +694,7 @@ class GetAttributeNamesTestCase(GetAttributeTestCase):
     def test_getAttributeNames(self):
         for item in self.items:
             self._checkAttributeNames(item)
-        if __builtins__.has_key('object'):
+        if 'object' in __builtins__:
             self._checkAttributeNames(object)
 
     def test_getAttributeNames_NoSingle(self):
@@ -800,7 +800,7 @@ class C1(A1):
 class D1(C1, B1):
     pass
 
-if __builtins__.has_key('object'):
+if 'object' in __builtins__:
     class A2(object):
         def __init__(self, a):
             self.a = a
@@ -851,7 +851,7 @@ class GetConstructorTestCase(unittest.TestCase):
         args = ('self', 'a')
         varnames = introspect.getConstructor(D1).func_code.co_varnames
         self.assertEqual(varnames, args)
-        if __builtins__.has_key('object'):
+        if 'object' in __builtins__:
             # Test new style inheritance rules as well.
             args = ('self', 'b')
             varnames = introspect.getConstructor(D2).func_code.co_varnames

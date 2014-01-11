@@ -59,9 +59,9 @@ def main():
     # Create an application instance.
     app = App(0)
     # Cleanup the main namespace some more.
-    if md.has_key('App') and md['App'] is App:
+    if 'App' in md and md['App'] is App:
         del md['App']
-    if md.has_key('__main__') and md['__main__'] is __main__:
+    if '__main__' in md and md['__main__'] is __main__:
         del md['__main__']
     # Mimic the contents of the standard Python shell's sys.path.
     import sys

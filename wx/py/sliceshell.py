@@ -560,7 +560,7 @@ class SlicesShellFacade:
             raise AttributeError(name)
 
     def __setattr__(self, name, value):
-        if self.__dict__.has_key(name):
+        if name in self.__dict__:
             self.__dict__[name] = value
         elif hasattr(self.other, name):
             setattr(self.other, name, value)
@@ -1001,7 +1001,7 @@ class SlicesShell(editwindow.EditWindow):
         """Execute the user's PYTHONSTARTUP script if they have one."""
         if startupScript and os.path.isfile(startupScript):
             text = 'Startup script executed: ' + startupScript
-            self.push('print %r; execfile(%r)' % (text, startupScript))
+            self.push('print(%r); execfile(%r)' % (text, startupScript))
             self.interp.startupScript = startupScript
         else:
             self.push('')

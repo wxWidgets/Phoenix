@@ -177,7 +177,7 @@ def getCallTip(command='', locals=None):
         pass
     elif inspect.isfunction(object):
         # tip1 is a string like: "getCallTip(command='', locals=None)"
-        argspec = apply(inspect.formatargspec, inspect.getargspec(object))
+        argspec = inspect.formatargspec(inspect.getargspec(object))
         if dropSelf:
             # The first parameter to a method is a reference to an
             # instance, usually coded as "self", and is usually passed

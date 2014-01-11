@@ -204,7 +204,7 @@ class Calltip(wx.TextCtrl):
         dispatcher.connect(receiver=self.display, signal=self.ShellClassName+'.calltip')
 
         df = self.GetFont()
-        font = wx.Font(df.GetPointSize(), wx.TELETYPE, wx.NORMAL, wx.NORMAL)
+        font = wx.Font(df.GetPointSize(), wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self.SetFont(font)
 
     def display(self, calltip):
@@ -231,7 +231,7 @@ class SessionListing(wx.TextCtrl):
                            signal=ShellClassName+".loadHistory")
 
         df = self.GetFont()
-        font = wx.Font(df.GetPointSize(), wx.TELETYPE, wx.NORMAL, wx.NORMAL)
+        font = wx.Font(df.GetPointSize(), wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self.SetFont(font)
 
     def loadHistory(self, history):
@@ -260,7 +260,7 @@ class DispatcherListing(wx.TextCtrl):
         dispatcher.connect(receiver=self.spy)
 
         df = self.GetFont()
-        font = wx.Font(df.GetPointSize(), wx.TELETYPE, wx.NORMAL, wx.NORMAL)
+        font = wx.Font(df.GetPointSize(), wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self.SetFont(font)
 
     def spy(self, signal, sender):

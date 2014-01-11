@@ -792,7 +792,7 @@ class ShellFrameMixin:
 
         dlg = wx.lib.dialogs.ScrolledMessageDialog(self, text, title,
                                                    size = ((700, 540)))
-        fnt = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL)
+        fnt = wx.Font(10, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         dlg.GetChildren()[0].SetFont(fnt)
         dlg.GetChildren()[0].SetInsertionPoint(0)
         dlg.ShowModal()
