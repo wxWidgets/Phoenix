@@ -37,12 +37,12 @@ class Img2PyArtProvider(wx.ArtProvider):
         try:
             self.catalog.update(imageModule.catalog)
         except AttributeError:
-            raise Exception, 'No catalog dictionary defined for the image module'
+            raise Exception('No catalog dictionary defined for the image module')
 
         try:
             self.index.extend(imageModule.index)
         except AttributeError:
-            raise Exception, 'No index list defined for the image module'
+            raise Exception('No index list defined for the image module')
 
     def GenerateArtIdList(self):
         return [self.artIdPrefix+name for name in self.index]
