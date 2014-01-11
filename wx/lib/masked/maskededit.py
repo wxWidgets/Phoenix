@@ -2919,7 +2919,7 @@ class MaskedEditMixin:
 
             # Set to teletype font (guaranteed to be mappable to all wxWindows
             # platforms:
-            self._font = wx.Font( points, wx.TELETYPE, font.GetStyle(),
+            self._font = wx.Font( points, wx.FONTFAMILY_TELETYPE, font.GetStyle(),
                                  font.GetWeight(), font.GetUnderlined())
 ####            dbg('font string: "%s"' % font.GetNativeFontInfo().ToString())
 
@@ -6545,11 +6545,11 @@ Try entering nonsensical or partial values in validated fields to see what happe
             self.label7 = wx.StaticText( self.panel, -1, label2)
             self.label7.SetForegroundColour("Blue")
             self.label1.SetForegroundColour("Blue")
-            self.label2.SetFont(wx.Font(9,wx.SWISS,wx.NORMAL,wx.BOLD))
-            self.label3.SetFont(wx.Font(9,wx.SWISS,wx.NORMAL,wx.BOLD))
-            self.label4.SetFont(wx.Font(9,wx.SWISS,wx.NORMAL,wx.BOLD))
-            self.label5.SetFont(wx.Font(9,wx.SWISS,wx.NORMAL,wx.BOLD))
-            self.label6.SetFont(wx.Font(9,wx.SWISS,wx.NORMAL,wx.BOLD))
+            self.label2.SetFont(wx.Font(9,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD))
+            self.label3.SetFont(wx.Font(9,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD))
+            self.label4.SetFont(wx.Font(9,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD))
+            self.label5.SetFont(wx.Font(9,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD))
+            self.label6.SetFont(wx.Font(9,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD))
 
             self.sizer.Add( self.label1, row=1,col=0,colspan=7, flag=wx.ALL,border=5)
             self.sizer.Add( self.label7, row=2,col=0,colspan=7, flag=wx.ALL,border=5)
@@ -6680,9 +6680,9 @@ To see a great example of validations in action, try entering a bad email addres
             self.label3 = wx.StaticText( self.panel, -1, "AutoFormat Code")
             self.label4 = wx.StaticText( self.panel, -1, "MaskedEdit Control")
             self.label1.SetForegroundColour("Blue")
-            self.label2.SetFont(wx.Font(9,wx.SWISS,wx.NORMAL,wx.BOLD))
-            self.label3.SetFont(wx.Font(9,wx.SWISS,wx.NORMAL,wx.BOLD))
-            self.label4.SetFont(wx.Font(9,wx.SWISS,wx.NORMAL,wx.BOLD))
+            self.label2.SetFont(wx.Font(9,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD))
+            self.label3.SetFont(wx.Font(9,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD))
+            self.label4.SetFont(wx.Font(9,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD))
 
             self.sizer.Add( self.label1, row=1,col=0,colspan=3, flag=wx.ALL,border=5)
             self.sizer.Add( self.label2, row=3,col=0, flag=wx.ALL,border=5)
