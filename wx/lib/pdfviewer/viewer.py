@@ -741,9 +741,9 @@ class pdfViewer(wx.ScrolledWindow):
 
         if stroke:
             if g.lineDashArray:
-                style = wx.USER_DASH
+                style = wx.PENSTYLE_USER_DASH
             else:
-                style = wx.SOLID
+                style = wx.PENSTYLE_SOLID
             cpen = wx.Pen(g.strokeRGB, g.lineWidth, style)
             cpen.SetCap(g.lineCapStyle)
             cpen.SetJoin(g.lineJoinStyle)

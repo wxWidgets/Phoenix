@@ -390,7 +390,7 @@ class dcGraphicsPath(object):
         if parent:
             self.gstate = parent.gstate
         self.fillcolour = parent._context.GetBrush().GetColour()
-        self.isfilled = parent._context.GetBrush().GetStyle() != wx.TRANSPARENT
+        self.isfilled = parent._context.GetBrush().GetStyle() <> wx.BRUSHSTYLE_TRANSPARENT
 
     def AddCurveToPoint(self, cx1, cy1, cx2, cy2, x, y):
         """
