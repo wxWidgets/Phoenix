@@ -409,7 +409,7 @@ class Topic(PublisherMixin):
                     self.__handlingUncaughtListenerExc = False
                 except Exception:
                     exc = py2and3.getexcobj()
-                    #print 'exception raised', exc
+                    #print('exception raised', exc)
                     self.__handlingUncaughtListenerExc = False
                     raise ExcHandlerError(listener.name(), topicObj, exc)
 
@@ -437,13 +437,13 @@ class Topic(PublisherMixin):
         """Unsubscribe all our listeners, remove all subtopics from self,
         then detach from parent. Parent is not notified, because method
         assumes it has been called by parent"""
-        #print 'Remove %s listeners (%s)' % (self.getName(), self.getNumListeners())
+        #print('Remove %s listeners (%s)' % (self.getName(), self.getNumListeners()))
         self.unsubscribeAllListeners()
         self.__parentTopic = None
 
         for subName, subObj in py2and3.iteritems(self.__subTopics):
             assert isinstance(subObj, Topic)
-            #print 'Unlinking %s from parent' % subObj.getName()
+            #print('Unlinking %s from parent' % subObj.getName())
             subObj.__undefineBranch(topicsMap)
 
         self.__subTopics = {}

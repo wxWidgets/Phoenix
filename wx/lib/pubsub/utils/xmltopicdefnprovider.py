@@ -79,7 +79,7 @@ def _get_elem(elem):
     if not ET.iselement(elem):
         try:
             elem = ET.fromstring(elem)
-        except:
+        except Exception:
             py2and3.print_("Value Error", elem)
             raise ValueError("Cannot convert to element")
     return elem
