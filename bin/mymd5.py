@@ -7,9 +7,8 @@ def main():
         for name in glob.glob(arg):
             m = hashlib.md5()
             m.update(open(name, 'rb').read())
-            print '%-45s %s' % (name, m.hexdigest())
-                
-    
+            print('%-45s %s' % (name, m.hexdigest()))
+
+
 if __name__ == '__main__':
     main()
-    
