@@ -182,6 +182,10 @@ def run():
             klass.find('EndEdit').ignore()
             pureVirtual = True
             
+        # The Python version of EndEdit has a different signature than the
+        # C++ version, so we need to take care of mapping between them so the
+        # C++ compiler still recognizes this as a match for the virtual
+        # method in the base class.
         klass.addCppMethod('PyObject*', 'EndEdit', '(int row, int col, const wxGrid* grid, const wxString& oldval)',
             cppSignature='bool (int row, int col, const wxGrid* grid, const wxString& oldval, wxString* newval)',
             pyArgsString='(row, col, grid, oldval)',
@@ -223,7 +227,8 @@ def run():
                 // VirtualCatcherCode for wx.grid.GridCellEditor.EndEdit
                 PyObject *result;
                 result = sipCallMethod(0, sipMethod, "iiDN", row, col,
-                                       const_cast<wxGrid *>(grid),sipType_wxGrid,NULL);
+                                       const_cast<wxGrid *>(grid),sipType_wxGrid,NULL,
+                                       new wxString(oldval),sipType_wxString,NULL);
                 if (result == Py_None) {
                     sipRes = false;
                 } 
@@ -259,6 +264,8 @@ def run():
     c.find('GetNonDefaultAlignment.hAlign').out = True
     c.find('GetNonDefaultAlignment.vAlign').out = True
 
+    c.find('SetEditor.editor').transfer = True
+    c.find('SetRenderer.renderer').transfer = True
 
     
     #----------------------------------------------------------------- 

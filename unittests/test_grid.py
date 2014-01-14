@@ -89,8 +89,12 @@ class grid_Tests(wtc.WidgetTestCase):
             def GetValue(self): return ""
             
         e = MyEditor()
-        
-
+        return e
+    
+    def test_grid17a(self):
+        e = self.test_grid17()
+        e.GetControl
+        e.SetControl
             
             
     def test_grid18(self):
