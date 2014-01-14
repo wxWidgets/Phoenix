@@ -264,8 +264,8 @@ ENTRY_POINTS = {
         "img2py = wx.tools.img2py:main",
         "img2xpm = wx.tools.img2xpm:main",
         "pywxrc = wx.tools.pywxrc:main",
-        ],
-    'gui_scripts' : [ 
+#        ],
+#    'gui_scripts' : [ 
         "helpviewer = wx.tools.helpviewer:main",
         "pycrust = wx.py.PyCrust:main",
         "pyshell = wx.py.PyShell:main",
