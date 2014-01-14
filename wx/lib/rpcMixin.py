@@ -87,6 +87,9 @@ rpcPENDING = 0
 rpcDONE = 1
 rpcEXCEPT = 2
 
+class RPCMixinError(Exception):
+    pass
+
 class RPCRequest:
     """A wrapper to use for handling requests and their responses"""
     status = rpcPENDING
@@ -262,7 +265,7 @@ class rpcMixin:
                 self.rpcPort = -1
 
         if self.rpcPort == -1:
-            raise 'RPCMixinError','Cannot initialize server'
+            raise RPCMixinError('Cannot initialize server')
         self.servThread = _ServerThread(xmlServ,verbose=self.verbose)
         self.servThread.setName('XML-RPC Server')
         self.servThread.start()

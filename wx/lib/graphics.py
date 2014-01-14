@@ -1072,7 +1072,7 @@ class GraphicsContext(GraphicsObject):
             c2 = _makeColour(c2)
             stops = GraphicsGradientStops(c1, c2)
         else:
-            raise ValueError, "Invalid args passed to CreateLinearGradientBrush"
+            raise ValueError("Invalid args passed to CreateLinearGradientBrush")
         
         pattern = cairo.LinearGradient(x1, y1, x2, y2)
         for stop in stops:
@@ -1097,7 +1097,7 @@ class GraphicsContext(GraphicsObject):
             cColour = _makeColour(cColour)
             stops = GraphicsGradientStops(oColour, cColour)
         else:
-            raise ValueError, "Invalid args passed to CreateLinearGradientBrush"
+            raise ValueError("Invalid args passed to CreateLinearGradientBrush")
         
         pattern = cairo.RadialGradient(xo, yo, 0.0, xc, yc, radius)
         for stop in stops:
