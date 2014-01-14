@@ -409,7 +409,7 @@ class Topic(PublisherMixin):
                     self.__handlingUncaughtListenerExc = False
                 except Exception:
                     exc = py2and3.getexcobj()
-                    #print('exception raised', exc)
+                    #print('Exception raised\n%s' % exc)
                     self.__handlingUncaughtListenerExc = False
                     raise ExcHandlerError(listener.name(), topicObj, exc)
 

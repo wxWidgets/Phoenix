@@ -19,8 +19,8 @@ def setMsgDataArgName(stage, listenerArgName, senderArgNameAny=False):
     senderKwargNameAny = senderArgNameAny
     msgDataArgName = listenerArgName
     msgProtocolTransStage = stage
-    #print(repr(policies.msgProtocolTransStage),
-    #      repr(policies.msgDataProtocol),
-    #      repr(policies.senderKwargNameAny),
-    #      repr(policies.msgDataArgName))
-    #print('override "arg1" protocol arg name:', argName)
+    #print('%s' % repr(policies.msgProtocolTransStage))
+    #print('%s' % repr(policies.msgDataProtocol))
+    #print('%s' % repr(policies.senderKwargNameAny))
+    #print('%s' % repr(policies.msgDataArgName))
+    #print('override "arg1" protocol arg name: %s' % argName)

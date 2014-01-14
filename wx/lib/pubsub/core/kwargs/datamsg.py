@@ -12,8 +12,8 @@ class Message:
     via Message.data, while the topic name is available in Message.topic::
     
         def listener(msg):
-            print("data is ", msg.data)
-            print("topic name is ", msg.topic)
+            print("data is %s" % msg.data)
+            print("topic name is %s" % msg.topic)
             print(msg)
             
     The example also shows (last line) how a message is convertible to a string.
