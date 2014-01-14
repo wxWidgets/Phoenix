@@ -1,4 +1,5 @@
-#----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-#
+# #----------------------------------------------------------------------------
 # Name:         calendar.py
 # Purpose:      Calendar display control
 #
@@ -84,11 +85,13 @@
 
 
 import wx
+_ = wx.GetTranslation
 
 from CDate import *
 
 CalDays = [6, 0, 1, 2, 3, 4, 5]
-AbrWeekday = {6:"Sun", 0:"Mon", 1:"Tue", 2:"Wed", 3:"Thu", 4:"Fri", 5:"Sat"}
+AbrWeekday = {6: _("Sun"), 0: _("Mon"), 1: _("Tue"), 2: _("Wed"), 3: _("Thu"),
+              4: _("Fri"), 5: _("Sat")}
 _MIDSIZE = 180
 
 COLOR_GRID_LINES = "grid_lines"

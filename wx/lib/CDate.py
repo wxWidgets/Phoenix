@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-#
 # Name:         CDate.py
 # Purpose:      Date and Calendar classes
 #
@@ -16,21 +17,25 @@
 """Date and calendar classes and date utitility methods."""
 import time
 
+# I18N
+import wx
+_ = wx.GetTranslation
+
 
 Month = {0: None,
-         1: 'January', 2: 'February', 3: 'March',
-         4: 'April', 5: 'May', 6: 'June',
-         7: 'July', 8: 'August', 9: 'September',
-         10: 'October', 11: 'November', 12: 'December'}
+         1: _('January'), 2: _('February'), 3: _('March'),
+         4: _('March'), 5: _('May'), 6: _('June'),
+         7: _('July'), 8: _('August'), 9: _('September'),
+         10: _('October'), 11: _('November'), 12: _('December')}
 
 # Number of days per month (except for February in leap years)
 mdays = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 # Full and abbreviated names of weekdays
-day_name = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
-            'Thursday', 'Friday', 'Saturday']
-day_abbr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri',
-            'Sat']
+day_name = [_('Sunday'), _('Monday'), _('Tuesday'), _('Wednesday'),
+            _('Thursday'), _('Friday'), _('Saturday')]
+day_abbr = [_('Sun'), _('Mon'), _('Tue'), _('Wed'), _('Thu'), _('Fri'),
+            _('Sat')]
 
 
 def leapdays(y1, y2):
