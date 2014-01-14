@@ -147,7 +147,7 @@ class TestFrame(wx.Frame):
         pnl = wx.Panel(self)
 
         # Create a ComboCtrl
-        cc = self.cc = wx.ComboCtrl(self, pos=(10,10), size=(275,-1))
+        cc = self.cc = wx.ComboCtrl(pnl, pos=(10,10), size=(275,-1))
         cc.SetHint('Click the button -->')
         
         # Create a Popup
