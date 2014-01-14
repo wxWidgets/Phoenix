@@ -118,7 +118,7 @@ def main():
         print_('Main interrupted, stopping aux thread')
         thread.stop()
 
-    except Exception, exc:
+    except Exception as exc:
         from pubsub import py2and3
         exc = py2and3.getexcobj()
         print_(exc)

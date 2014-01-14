@@ -943,7 +943,7 @@ class GraphicsGradientStops(object):
         elif len(args) == 1:
             stop = args[0]
         else:
-            raise ValueError, "Invalid parameters passed to Add"
+            raise ValueError("Invalid parameters passed to Add")
         assert isinstance(stop, GraphicsGradientStop)
         
         self._stops.append(stop)

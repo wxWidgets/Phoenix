@@ -163,7 +163,7 @@ class Handler(xmlrpcserver.RequestHandler):
             # The GUI threw an exception, release the status lock
             #  and re-raise the exception
             evt.rpcStatusLock.release()
-            raise evt.rpcStatus.result[0],evt.rpcStatus.result[1]
+            raise evt.rpcStatus.result[0](evt.rpcStatus.result[1])
         else:
             # everything went through without problems
             s = evt.rpcStatus.result

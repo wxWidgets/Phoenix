@@ -80,7 +80,7 @@ class EventManager:
         # 1. Check if the 'event' is actually one of the multi-
         #    event macros.
         if _macroInfo.isMultiEvent(event):
-            raise 'Cannot register the macro, '+`event`+'.  Register instead the individual events.'
+            raise Exception('Cannot register the macro, ' + repr(event) + '.  Register instead the individual events.')
 
         # Support a more OO API.  This allows the GUI widget itself to
         # be specified, and the id to be retrieved from the system,

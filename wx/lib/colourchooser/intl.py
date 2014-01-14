@@ -18,7 +18,7 @@ try:
     gettext.bindtextdomain('pycolourchooser')
     gettext.textdomain('pycolourchooser')
     _ = gettext.gettext
-except Exception, strerror:
+except Exception as strerror:
     print("Warning: Couldn't import translation function: %(str)s" %{ 'str' : strerror })
     print("Defaulting to En")
     _ = lambda x: x

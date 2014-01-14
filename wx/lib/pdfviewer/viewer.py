@@ -1044,7 +1044,7 @@ def _AsciiBase85DecodePYTHON(input):
         c4 = ord(body[offset+3]) - 33
         c5 = ord(body[offset+4]) - 33
 
-        num = ((85L**4) * c1) + ((85**3) * c2) + ((85**2) * c3) + (85*c4) + c5
+        num = ((85**4) * c1) + ((85**3) * c2) + ((85**2) * c3) + (85*c4) + c5
 
         temp, b4 = divmod(num,256)
         temp, b3 = divmod(temp,256)
@@ -1065,7 +1065,7 @@ def _AsciiBase85DecodePYTHON(input):
         c3 = ord(lastbit[2]) - 33
         c4 = ord(lastbit[3]) - 33
         c5 = ord(lastbit[4]) - 33
-        num = (((85*c1+c2)*85+c3)*85+c4)*85L + (c5
+        num = (((85*c1+c2)*85+c3)*85+c4)*85 + (c5
                  +(0,0,0xFFFFFF,0xFFFF,0xFF)[remainder_size])
         temp, b4 = divmod(num,256)
         temp, b3 = divmod(temp,256)
