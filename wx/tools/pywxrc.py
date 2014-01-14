@@ -36,6 +36,7 @@ import sys, os, getopt, glob, re, cPickle
 import xml.dom.minidom as minidom
 import wx
 import wx.xrc
+from wx.lib.six import print_
 
 #----------------------------------------------------------------------
 
@@ -292,7 +293,7 @@ class XmlResourceCompiler:
                 gettextStrings += self.FindStringsInNode(resourceDocument.firstChild)
                 
         # now write it all out
-        print(self.templates.FILE_HEADER, file=outputFile)
+        print_(self.templates.FILE_HEADER, file=outputFile)
 
         # Note: Technically it is not legal to have anything other
         # than ascii for class and variable names, but since the user
@@ -301,22 +302,22 @@ class XmlResourceCompiler:
         # later when they try to run the program.
         if subclasses:
             subclasses = self.ReplaceBlocks(u"\n".join(subclasses))
-            print(subclasses.encode("UTF-8"), file=outputFile)
+            print_(subclasses.encode("UTF-8"), file=outputFile)
         if classes:
             classes = self.ReplaceBlocks(u"\n".join(classes))
-            print(classes.encode("UTF-8"), file=outputFile)
+            print_(classes.encode("UTF-8"), file=outputFile)
 
-        print(self.templates.INIT_RESOURE_HEADER, file=outputFile)
+        print_(self.templates.INIT_RESOURE_HEADER, file=outputFile)
         if embedResources:
-            print(self.templates.PREPARE_MEMFS, file=outputFile)
+            print_(self.templates.PREPARE_MEMFS, file=outputFile)
         resources = u"\n".join(resources)
-        print(resources.encode("UTF-8"), file=outputFile)
+        print_(resources.encode("UTF-8"), file=outputFile)
 
         if generateGetText:
             # These have already been converted to utf-8...
             gettextStrings = ['    _("%s")' % s for s in gettextStrings]
             gettextStrings = "\n".join(gettextStrings)
-            print(self.templates.GETTEXT_DUMMY_FUNC % gettextStrings, file=outputFile)
+            print_(self.templates.GETTEXT_DUMMY_FUNC % gettextStrings, file=outputFile)
 
     #-------------------------------------------------------------------
 
@@ -331,7 +332,7 @@ class XmlResourceCompiler:
             resource = resourceDocument.firstChild
             strings = self.FindStringsInNode(resource)
             strings = ['_("%s");' % s for s in strings]
-            print("\n".join(strings), file=outputFile)
+            print_("\n".join(strings), file=outputFile)
 
     #-------------------------------------------------------------------
 
@@ -924,10 +925,10 @@ def main(args=None):
             
             
     except IOError as exc:
-        print("%s." % str(exc), file=sys.stderr)
+        print_("%s." % str(exc), file=sys.stderr)
     else:
         if outputFilename != "-":
-            print("Resources written to %s." % outputFilename, file=outputFilename)
+            print_("Resources written to %s." % outputFilename, file=outputFilename)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
