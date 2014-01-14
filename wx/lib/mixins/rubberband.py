@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        wxPython.lib.mixins.rubberband
+# Name:        wx.lib.mixins.rubberband
 # Purpose:     A mixin class for doing "RubberBand"-ing on a window.
 #
 # Author:      Robb Shecter and members of wxPython-users

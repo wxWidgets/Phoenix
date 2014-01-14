@@ -109,7 +109,7 @@ rev 3:
 
 rev 2:
 - All dialog classes have been replaced by function wrappers
-- Changed arg lists to more closely match wxWindows docs and wxPython.lib.dialogs
+- Changed arg lists to more closely match wxWindows docs and wx.lib.dialogs
 - changed 'returned' value to the actual button id the user clicked on
 - added a returnedString value for the string version of the return value
 - reworked colorDialog and fontDialog so you can pass in just a color or font

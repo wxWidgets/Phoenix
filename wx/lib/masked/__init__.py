@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.masked
+# Name:        wx.lib.masked
 # Purpose:     A package containing the masked edit controls
 #
 # Author:      Will Sadkin, Jeff Childers

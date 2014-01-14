@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.editor
+# Name:        wx.lib.editor
 # Purpose:     A package containing a colourizable text editror
 #
 # Author:      Robin Dunn

@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.editor.Editor
+# Name:        wx.lib.editor.Editor
 # Purpose:     An intelligent text editor with colorization capabilities.
 #
 # Original

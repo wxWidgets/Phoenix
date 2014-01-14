@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.filebrowsebutton
+# Name:        wx.lib.filebrowsebutton
 # Purpose:     Composite controls that provide a Browse button next to
 #              either a wxTextCtrl or a wxComboBox.  The Browse button
 #              launches a wxFileDialog and loads the result into the

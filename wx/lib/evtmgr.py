@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Name:        wxPython.lib.evtmgr
+# Name:        wx.lib.evtmgr
 # Purpose:     An easier, more "Pythonic" and more OO method of registering
 #              handlers for wxWindows events using the Publish/Subscribe
 #              pattern.

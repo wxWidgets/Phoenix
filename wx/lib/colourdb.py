@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.colourdb.py
+# Name:        wx.lib.colourdb.py
 # Purpose:     Adds a bunch of colour names and RGB values to the
 #              colour database so they can be found by name
 #

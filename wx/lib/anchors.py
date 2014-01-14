@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.anchors
+# Name:        wx.lib.anchors
 # Purpose:     A class that provides an easy to use interface over layout
 #              constraints for anchored layout.
 #

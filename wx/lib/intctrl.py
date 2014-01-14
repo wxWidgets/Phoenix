@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------------
-# Name:         wxPython.lib.intctrl.py
+# Name:         wx.lib.intctrl.py
 # Author:       Will Sadkin
 # Created:      01/16/2003
 # Copyright:   (c) 2003 by Will Sadkin

@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.mixins
+# Name:        wx.lib.mixins
 # Purpose:     A package for helpful wxPython mix-in classes
 #
 # Author:      Robin Dunn

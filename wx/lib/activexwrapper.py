@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.activexwrapper
+# Name:        wx.lib.activexwrapper
 # Purpose:     a wxWindow derived class that can hold an ActiveX control
 #
 # Author:      Robin Dunn

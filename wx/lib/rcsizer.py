@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------
-# Name:        wxPython.lib.rcsizer
+# Name:        wx.lib.rcsizer
 # Purpose:     RowColSizer:
 #
 # Author:      Robin Dunn, adapted from code by Niki Spahiev

@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------------
-# Name:         wxPython.lib.masked.numctrl.py
+# Name:         wx.lib.masked.numctrl.py
 # Author:       Will Sadkin
 # Created:      09/06/2003
 # Copyright:   (c) 2003-2007 by Will Sadkin
