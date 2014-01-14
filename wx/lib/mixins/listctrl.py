@@ -842,27 +842,28 @@ class ListRowHighlighter:
 
     def RefreshRows(self):
         """Re-color all the rows"""
+        if self._color is None:
+            if wx.Platform in ('__WXGTK__', '__WXMSW__'):
+                color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT)
+            else:
+                color = wx.Colour(237, 243, 254)
+        else:
+            color = self._color
+        local_defaultb = self._defaultb
+        local_mode = self._mode
         for row in xrange(self.GetItemCount()):
-            if self._defaultb is None:
-                self._defaultb = self.GetItemBackgroundColour(row)
-
-            if self._mode & HIGHLIGHT_EVEN:
+            if local_mode & HIGHLIGHT_EVEN:
                 dohlight = not row % 2
             else:
                 dohlight = row % 2
 
             if dohlight:
-                if self._color is None:
-                    if wx.Platform in ['__WXGTK__', '__WXMSW__']:
-                        color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT)
-                    else:
-                        color = wx.Colour(237, 243, 254)
-                else:
-                    color = self._color
-            else:
-                color = self._defaultb
-
-            self.SetItemBackgroundColour(row, color)
+                self.SetItemBackgroundColour(row, color)
+            elif local_defaultb:
+                self.SetItemBackgroundColour(row, local_defaultb)
+            else: # This part of the loop should only happen once if self._defaultb is None.
+                local_defaultb = self._defaultb = self.GetItemBackgroundColour(row)
+                self.SetItemBackgroundColour(row, local_defaultb)
 
     def SetHighlightColor(self, color):
         """Set the color used to highlight the rows. Call :meth:`RefreshRows` after
