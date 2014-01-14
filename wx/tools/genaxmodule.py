@@ -33,7 +33,7 @@ def main(args=None):
 
     # unfortunatly we need to make an app, frame and an instance of
     # the ActiceX control in order to get the TypeInfo about it...
-    app = wx.PySimpleApp()
+    app = wx.App()
     f = wx.Frame(None, -1, "")
     clsid = wx.activex.CLSID(args[1])
     axw = wx.activex.ActiveXWindow(f, clsid)

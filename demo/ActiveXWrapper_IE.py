@@ -171,7 +171,7 @@ if __name__ == '__main__':
             self.tp.Destroy()
             self.Destroy()
 
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = TestFrame()
     frame.Show(True)
 

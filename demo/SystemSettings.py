@@ -318,7 +318,7 @@ if __name__ == '__main__':
         import sys
         import run
     except ImportError:
-        app = wx.PySimpleApp(False)
+        app = wx.App(False)
         frame = wx.Frame(None, title="SystemSettings Demo", size=(500, 500))
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(TestPanel(frame, TestLog()), 1, wx.EXPAND)

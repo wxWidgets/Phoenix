@@ -121,7 +121,7 @@ if __name__ == '__main__':
             self.tp = TestPanel(self, sys.stdout)
 
 
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = TestFrame()
     frame.Show(True)
     app.MainLoop()

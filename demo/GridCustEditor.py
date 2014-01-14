@@ -217,6 +217,9 @@ class GridEditorTest(gridlib.Grid):
         attr.SetEditor(MyCellEditor(self.log))
         self.SetColAttr(2, attr)
         self.SetCellValue(1, 2, "or any in this column")
+        self.SetCellValue(2, 2, "and watch the log.")
+        self.SetCellValue(4, 0, "(The log shows if the custom cell editor is being used.)")
+        
 
         self.SetColSize(0, 150)
         self.SetColSize(1, 150)
@@ -235,7 +238,7 @@ class TestFrame(wx.Frame):
 
 if __name__ == '__main__':
     import sys
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = TestFrame(None, sys.stdout)
     frame.Show(True)
     app.MainLoop()

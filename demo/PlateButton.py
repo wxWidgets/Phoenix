@@ -415,7 +415,7 @@ if __name__ == '__main__':
         import sys
         import run
     except ImportError:
-        app = wx.PySimpleApp(False)
+        app = wx.App(False)
         frame = wx.Frame(None, title="PlateButton Test")
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(TestPanel(frame, TestLog()), 1, wx.EXPAND)

@@ -44,7 +44,7 @@ def main():
     # some bitmap related things need to have a wxApp initialized...
     if wx.GetApp() is None:
         global app
-        app = wx.PySimpleApp()
+        app = wx.App()
     img2img.main(sys.argv[1:], wx.BITMAP_TYPE_XPM, ".xpm", __doc__)
 
 

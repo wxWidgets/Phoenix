@@ -626,11 +626,12 @@ def runTest(frame, nb, log):
     return testWin
 
 def RunStandalone():
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = wx.Frame(None, -1, "Test MaskedEditCtrls", size=(640, 480))
     win = TestMaskedTextCtrls(frame, -1, sys.stdout)
     frame.Show(True)
     app.MainLoop()
+    
 #----------------------------------------------------------------------------
 import wx.lib.masked.maskededit as maskededit
 # strip out module header used for pydoc:

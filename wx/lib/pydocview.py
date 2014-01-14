@@ -1655,7 +1655,7 @@ class GeneralOptionsPanel(wx.Panel):
         return wx.GetApp().GetDefaultIcon()
 
 
-class DocApp(wx.PySimpleApp):
+class DocApp(wx.App):
     """
     The DocApp class serves as the base class for pydocview applications and offers
     functionality such as services, creation of SDI and MDI frames, show tips,
