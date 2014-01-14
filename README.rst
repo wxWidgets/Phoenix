@@ -2,6 +2,8 @@
 wxPython Project Phoenix
 =========================
 
+.. image:: demo/bitmaps/splash.png
+
 Welcome to wxPython's Project Phoenix! This project is a new implementation
 of wxPython focused on improving speed, maintainability and extensibility.
 Just like "Classic" wxPython it wraps the wxWidgets C++ toolkit and provides
