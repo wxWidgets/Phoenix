@@ -1,6 +1,6 @@
 import imp_unittest, unittest
+import wtc
 import wx
-
 
 #---------------------------------------------------------------------------
 
@@ -294,7 +294,23 @@ class Rect(unittest.TestCase):
         
         
 #---------------------------------------------------------------------------
+
+class intersectRect_Tests(wtc.WidgetTestCase):
+    def test_intersectRect01(self):
+        r1 = wx.Rect(0,0,10,10)
+        r2 = wx.Rect(50,50,10,10)
+        r3 = wx.IntersectRect(r1, r2)
+        self.assertEqual(r3, None)
         
+    def test_intersectRect02(self):
+        r1 = wx.Rect(0,0,55,55)
+        r2 = wx.Rect(50,50,10,10)
+        r3 = wx.IntersectRect(r1, r2)
+        self.assertEqual(r3, wx.Rect(50,50,5,5))
+        
+        
+        
+#---------------------------------------------------------------------------
 
 if __name__ == '__main__':
     unittest.main()

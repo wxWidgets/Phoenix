@@ -333,6 +333,31 @@ def run():
         
                                
     #-----------------------------------------------------------------
+    module.addCppFunction('PyObject*', 'IntersectRect', '(wxRect* r1, wxRect* r2)',
+        doc="""\
+            Calculate and return the intersection of r1 and r2.  Returns None if there 
+            is no intersection.""",
+        body="""\
+            wxRegion  reg1(*r1);
+            wxRegion  reg2(*r2);
+            wxRect    dest(0,0,0,0);
+            PyObject* obj;
+
+            reg1.Intersect(reg2);
+            dest = reg1.GetBox();
+
+            wxPyThreadBlocker blocker;
+            if (dest != wxRect(0,0,0,0)) {
+                wxRect* newRect = new wxRect(dest);
+                obj = wxPyConstructObject((void*)newRect, wxT("wxRect"), true);
+                return obj;
+            }
+            Py_INCREF(Py_None);
+            return Py_None;
+            """
+        )
+
+    #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
     
