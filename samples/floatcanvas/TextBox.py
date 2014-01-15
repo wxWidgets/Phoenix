@@ -279,10 +279,10 @@ class DrawFrame(wx.Frame):
 
 
     def binding(self, event):
-        print "I'm the Rectangle"
+        print("I'm the Rectangle")
 
     def binding2(self, event):
-        print "I'm the TextBox"
+        print("I'm the TextBox")
 
 app = wx.App()
 DrawFrame(None, -1, "FloatCanvas Demo App", wx.DefaultPosition, (700,700) )

@@ -75,19 +75,19 @@ class DrawFrame(wx.Frame):
         Canvas.ZoomToBB()
 
     def SquareHitLeft(self, square):
-        print "square hit:", square.indexes
+        print("square hit:", square.indexes)
         # set a random color
         c = random.sample(colors, 1)[0]
         square.SetFillColor( c )
         self.Canvas.Draw(True)
 
     def SquareEnter(self, square):
-        print "entering square:", square.indexes
+        print("entering square:", square.indexes)
         square.outline.SetLineStyle("Solid")
         self.Canvas.Draw(True)
 
     def SquareLeave(self, square):
-        print "leaving square:", square.indexes
+        print("leaving square:", square.indexes)
         square.outline.SetLineStyle(None)
         self.Canvas.Draw(True)
 
@@ -97,7 +97,7 @@ class DrawFrame(wx.Frame):
         re-zooms the canvas to fit the window
 
         """
-        print "in OnSize"
+        print("in OnSize")
         self.Canvas.ZoomToBB()
         event.Skip()
 

@@ -48,20 +48,20 @@ class DrawFrame(wx.Frame):
         Canvas.ZoomToBB()
 
     def OnOverPoints(self, obj):
-        print "Mouse over point: ", obj.FindClosestPoint(obj.HitCoords)
+        print("Mouse over point: %s" % obj.FindClosestPoint(obj.HitCoords))
 
     def OnLeavePoints(self, obj):
-        print "Mouse left point: ", obj.FindClosestPoint(obj.HitCoords)
+        print("Mouse left point: %s" % obj.FindClosestPoint(obj.HitCoords))
 
     def OnLeftDown(self, obj):
-        print "Mouse left down on point: ", obj.FindClosestPoint(obj.HitCoords)
+        print("Mouse left down on point: %s" % obj.FindClosestPoint(obj.HitCoords))
 
     def OnMove(self, event):
         """
         Updates the status bar with the world coordinates
 
         """
-        self.SetStatusText("%.2f, %.2f"%tuple(event.Coords))
+        self.SetStatusText("%.2f, %.2f" % tuple(event.Coords))
 
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )

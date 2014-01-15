@@ -198,7 +198,7 @@ class DrawFrame(wx.Frame):
 
     def SelectPointHit(self, PointSet):
         PointSet.Index = PointSet.FindClosestPoint(PointSet.HitCoords)
-        print "point #%i hit"%PointSet.Index
+        print("point #%i hit"%PointSet.Index)
         #Index = PointSet.Index
         self.PointSelected = True
 

@@ -2,7 +2,7 @@ import sys
 import wx
 import wx.dataview as dv
 
-#import os; print 'PID:', os.getpid(); raw_input("Press enter...")
+#import os; print('PID:'+str(os.getpid())); raw_input("Press enter...")
 
 #----------------------------------------------------------------------
 

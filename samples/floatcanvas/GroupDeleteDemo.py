@@ -91,13 +91,13 @@ class DrawFrame(wx.Frame):
         self.SetStatusText("%.2f, %.2f"%tuple(event.Coords))
 
     def RemoveGroup(self, evt, group=""):
-        print "removing group:", group
+        print("removing group:", group)
         G = self.Groups[group]
         self.Canvas.RemoveObject(G)
         self.Canvas.Draw(Force=True)
 
     def ReplaceGroup(self, evt, group=""):
-        print "replacing group:", group
+        print("replacing group:", group)
         G = self.Groups[group]
         self.Canvas.AddObject(G)
         self.Canvas.Draw(Force=True)

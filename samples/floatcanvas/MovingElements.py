@@ -17,7 +17,7 @@ if ver == 'installed': ## import the installed version
     from wx.lib.floatcanvas import NavCanvas, Resources
     from wx.lib.floatcanvas import FloatCanvas as FC
     from wx.lib.floatcanvas.Utilities import BBox
-    print "using installed version:", wx.lib.floatcanvas.__version__
+    print("using installed version: %s" % wx.lib.floatcanvas.__version__)
 elif ver == 'local':
     ## import a local version
     import sys

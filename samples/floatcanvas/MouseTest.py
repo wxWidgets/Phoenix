@@ -39,7 +39,7 @@ class TestFrame(wx.Frame):
         wx.CallAfter(self.canvas.ZoomToBB)
                         
     def OnLeftDown(self, event):
-        print 'Left Button clicked at:', event.Coords
+        print('Left Button clicked at: %s' % event.Coords)
 
 frame = TestFrame(None, title="Mouse Event Tester")
 #self.SetTopWindow(frame)

@@ -42,18 +42,18 @@ class DrawFrame(wx.Frame):
         self.MakeHexagons()
 
         self.Show(True)
-        print "Drawing the Hexagons"
+        print("Drawing the Hexagons")
         self.Canvas.ZoomToBB()
 
         return None
 
     def MakeHexagons(self):
-        print "Building %i Hexagons"%NumHexagons
+        print("Building %i Hexagons"%NumHexagons)
         # get a list of colors for random colors
         
         wx.lib.colourdb.updateColourDB()
         self.colors = wx.lib.colourdb.getColourList()
-        print "Max colors:", len(self.colors) 
+        print("Max colors:", len(self.colors))
         Canvas = self.Canvas
         D = 1.0
         h = D *N.sqrt(3)/2
@@ -68,19 +68,19 @@ class DrawFrame(wx.Frame):
         for center in Centers:
             # scale the hexagon
             Points = Hex * uniform(5,20)
-            #print Points
+            #print(Points)
             # shift the hexagon
             Points = Points + center
-            #print Points
+            #print(Points)
             cf = random.randint(0,len(self.colors)-1)
             #cf = 55
             H = Canvas.AddPolygon(Points, LineColor = None, FillColor = self.colors[cf])
-            #print "BrushList is: %i long"%len(H.BrushList)
+            #print("BrushList is: %i long"%len(H.BrushList))
             H.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.HexHit)
-            print "BrushList is: %i long"%len(H.BrushList)
+            print("BrushList is: %i long"%len(H.BrushList))
 
     def HexHit(self, Hex):
-        print "A %s Hex was hit, obj ID: %i"%(Hex.FillColor, id(Hex))
+        print("A %s Hex was hit, obj ID: %i"%(Hex.FillColor, id(Hex)))
 
 
 

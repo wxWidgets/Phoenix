@@ -55,9 +55,9 @@ class DrawFrame(wx.Frame):
         self.Canvas.MaxScale = 1.0
 
     def Binding(self, event):
-        print "Writing a png file:"
+        print("Writing a png file:")
         self.Canvas.SaveAsImage("junk.png")
-        print "Writing a jpeg file:"
+        print("Writing a jpeg file:")
         self.Canvas.SaveAsImage("junk.jpg",wx.BITMAP_TYPE_JPEG)
 
     def OnMove(self, event):

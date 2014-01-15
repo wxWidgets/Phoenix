@@ -74,10 +74,10 @@ class DrawFrame(wx.Frame):
         Canvas.ZoomToBB()
 
     def Pie1Hit(self, obj):
-        print "Pie1 hit!"
+        print("Pie1 hit!")
 
     def Pie2Hit(self, obj):
-        print "Pie2 hit!"
+        print("Pie2 hit!")
 
     def OnMove(self, event):
         """

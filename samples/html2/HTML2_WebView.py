@@ -122,12 +122,12 @@ class TestPanel(wx.Panel):
 
     def OnPrevPageButton(self, event):
         for i in self.wv.GetBackwardHistory():
-            print i.Url, i.Title
+            print("%s %s" % (i.Url, i.Title))
         self.wv.GoBack()
 
     def OnNextPageButton(self, event):
         for i in self.wv.GetForwardHistory():
-            print i.URL, i.Title
+            print("%s %s" % (i.Url, i.Title))
         self.wv.GoForward()
 
     def OnCheckCanGoBack(self, event):

@@ -1,5 +1,5 @@
 import wx
-print wx.version()
+print(wx.version())
 
 class TestPanel(wx.PyPanel):
     def __init__(self, *args, **kw):

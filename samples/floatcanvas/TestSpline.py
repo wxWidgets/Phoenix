@@ -72,7 +72,7 @@ class DrawFrame(wx.Frame):
         self.Canvas.ZoomToBB()
         
     def OnAbout(self, event):
-        print "OnAbout called"
+        print("OnAbout called")
 
         dlg = wx.MessageDialog(self, "This is a small program to demonstrate\n"
                                                   "the use of the FloatCanvas\n",

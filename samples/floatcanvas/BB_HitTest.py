@@ -106,7 +106,7 @@ class DrawFrame(wx.Frame):
         Canvas.ZoomToBB()
 
     def OnLeft(self, object):
-        print "Rect %s got hit"%object.Name
+        print("Rect %s got hit"%object.Name)
 
     def OnMove(self, event):
         """

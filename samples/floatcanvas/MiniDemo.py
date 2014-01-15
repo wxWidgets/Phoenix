@@ -183,7 +183,7 @@ class DrawFrame(wx.Frame):
         self.Canvas.ZoomToBB()
 
     def MoveTest(self,event=None):
-        print "Running: TestHitTestForeground"
+        print("Running: TestHitTestForeground")
         wx.GetApp().Yield()
 
         self.UnBindAllMouseEvents()

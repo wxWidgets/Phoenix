@@ -105,7 +105,7 @@ class DrawFrame(wx.Frame):
         Prints various info about the state of the canvas to stdout
 
         """
-        print "Scale is:", self.Canvas.Scale
+        print("Scale is:", self.Canvas.Scale)
 
 
 app = wx.App(False)

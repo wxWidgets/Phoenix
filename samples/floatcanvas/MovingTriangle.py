@@ -13,7 +13,7 @@ ver = 'installed'
 if ver == 'installed': ## import the installed version
     from wx.lib.floatcanvas import NavCanvas, Resources
     from wx.lib.floatcanvas import FloatCanvas as FC
-    print "using installed version:", wx.lib.floatcanvas.__version__
+    print("using installed version: %s" % wx.lib.floatcanvas.__version__)
 elif ver == 'local':
     ## import a local version
     import sys
@@ -125,7 +125,7 @@ class DrawFrame(wx.Frame):
         self.Moving = False
 
     def TriHit(self, object):
-        print "In TriHit"
+        print("In TriHit")
         if not self.Moving:
             self.Moving = True
             self.StartPoint = object.HitCoordsPixel

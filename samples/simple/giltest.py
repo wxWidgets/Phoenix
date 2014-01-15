@@ -9,7 +9,7 @@ import threading
 import time
 import random
 
-print wx.version()
+print(wx.version())
 
 
 class ThreadedTask(threading.Thread):
@@ -23,7 +23,7 @@ class ThreadedTask(threading.Thread):
         while not self.timeToDie:
             time.sleep(self.sleepTime)
             self.counter += 1
-            print 'thread: %5s count: %d' % (self.name, self.counter)
+            print('thread: %5s count: %d' % (self.name, self.counter))
             
             
 

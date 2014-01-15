@@ -57,7 +57,7 @@ class BNAData:
                 file.write("%.12f,%.12f\n"%(tuple(p)))
 
     def Load(self, filename):
-        #print "Loading:", filename
+        #print("Loading:", filename)
         file = open(filename,'rU')
 
         self.Filename = filename
@@ -279,7 +279,7 @@ class DrawFrame(wx.Frame):
         try:
             AllPolys = []
             self.BNAFile  = BNAData(filename)
-            print "loaded BNAFile:", self.BNAFile.Filename
+            print("loaded BNAFile:", self.BNAFile.Filename)
             for i, shoreline in enumerate(self.BNAFile.PointsData):
                 Poly = self.Canvas.AddPolygon(shoreline,
                                        LineWidth = 1,

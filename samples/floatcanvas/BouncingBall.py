@@ -19,7 +19,7 @@ ver = 'installed'
 if ver == 'installed': ## import the installed version
     from wx.lib.floatcanvas import NavCanvas
     from wx.lib.floatcanvas import FloatCanvas
-    print "using installed version:", wx.lib.floatcanvas.__version__
+    print("using installed version:", wx.lib.floatcanvas.__version__)
 elif ver == 'local':
     ## import a local version
     import sys
@@ -134,7 +134,7 @@ class DrawFrame(wx.Frame):
         wx.CallAfter(Canvas.ZoomToBB)
 
     def BallHit(self, object):
-        print "the ball was clicked"
+        print("the ball was clicked")
         self.Ball.Moving = True
 
     def OnMove(self, event):

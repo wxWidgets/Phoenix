@@ -20,10 +20,10 @@ try: # see if there is a local FloatCanvas to use
     import sys
     sys.path.append("../")
     from floatcanvas import NavCanvas, FloatCanvas
-    print "Using local FloatCanvas"
+    print("Using local FloatCanvas")
 except ImportError: # Use the wxPython lib one
     from wx.lib.floatcanvas import NavCanvas, FloatCanvas
-    print "Using installed FloatCanvas"
+    print("Using installed FloatCanvas")
 
 
 class DrawFrame(wx.Frame):

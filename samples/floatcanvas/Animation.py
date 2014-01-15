@@ -9,7 +9,7 @@ this is very old-style code: don't imitate it!
 
 from time import clock
 import wx
-print wx.VERSION_STRING
+print(wx.VERSION_STRING)
 from numpy import *
 
 ## import local version:
@@ -21,7 +21,7 @@ ver = 'installed'
 if ver == 'installed': ## import the installed version
     from wx.lib.floatcanvas import NavCanvas
     from wx.lib.floatcanvas import FloatCanvas
-    print "using installed version:", wx.lib.floatcanvas.__version__
+    print("using installed version: %s" % wx.lib.floatcanvas.__version__)
 elif ver == 'local':
     ## import a local version
     import sys
@@ -99,8 +99,8 @@ class DrawFrame(wx.Frame):
         return None
         
     def RightButtonEvent(self,event):
-        print "Right Button has been clicked in DrawFrame"
-        print "coords are: %i, %i"%(event.GetX(),event.GetY())
+        print("Right Button has been clicked in DrawFrame")
+        print("coords are: %i, %i"%(event.GetX(),event.GetY()))
         event.Skip()
         
     def OnAbout(self, event):
@@ -163,7 +163,7 @@ class DrawFrame(wx.Frame):
                                    InForeground = False)
             
         ## Pointset
-        print "Adding Points to Foreground" 
+        print("Adding Points to Foreground" )
         for i in range(1):
             points = RandomArray.uniform(-100,100,(1000,2))
             D = 2
@@ -183,7 +183,7 @@ class DrawFrame(wx.Frame):
             self.LEs.SetPoints(points)
             self.Canvas.Draw()
             wx.GetApp().Yield(True)
-        print "running the movie took %f seconds"%(clock() - start)
+        print("running the movie took %f seconds"%(clock() - start))
         
 class DemoApp(wx.App):
     """
@@ -277,8 +277,8 @@ def Read_MapGen(filename,stats = False):
         for segment in Shorelines:
             NumPoints = NumPoints + len(segment)
         AvgPoints = NumPoints / NumSegments
-        print "Number of Segments: ", NumSegments
-        print "Average Number of Points per segment: ",AvgPoints
+        print("Number of Segments: ", NumSegments)
+        print("Average Number of Points per segment: ",AvgPoints)
         
     return Shorelines
     

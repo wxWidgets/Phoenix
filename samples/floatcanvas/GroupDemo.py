@@ -74,7 +74,7 @@ class DrawFrame(wx.Frame):
         for Group in self.Groups.keys():
             Button = wx.Button(tb, wx.ID_ANY, "Hide/Show%s"%Group)
             tb.AddControl(Button)
-            print Group
+            print(Group)
             Button.Bind(wx.EVT_BUTTON, lambda evt, group=Group: self.HideGroup(evt, group))
         tb.Realize()
 

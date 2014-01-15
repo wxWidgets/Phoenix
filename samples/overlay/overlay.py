@@ -3,7 +3,7 @@ A simple sample of using a wx.Overlay to draw a rubberband effect
 """
 
 import wx
-print wx.version()
+print(wx.version())
 
 class TestPanel(wx.Panel):
     def __init__(self, *args, **kw):

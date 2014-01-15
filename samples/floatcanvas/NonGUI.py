@@ -38,6 +38,6 @@ Canvas.AddRectangle((1,10.5), (6,8.5))
 Canvas.ZoomToBB()
 
 
-print "Saving the image:", "junk.png"
+print("Saving the image: junk.png")
 Canvas.SaveAsImage("junk.png")
 
