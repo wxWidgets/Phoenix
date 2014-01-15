@@ -120,7 +120,7 @@ class wx_install_headers(distutils.command.install_headers.install_headers):
 
         cfg = Config()
         root = self.root
-        #print "WXPREFIX is %s, root is %s" % (WXPREFIX, root)
+        #print("WXPREFIX is %s, root is %s" % (WXPREFIX, root))
         # hack for universal builds, which append i386/ppc
         # to the root
         if root is None or cfg.WXPREFIX.startswith(os.path.dirname(root)):
