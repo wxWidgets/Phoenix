@@ -344,6 +344,21 @@ def run():
     for n in ['GetColGridLinePen', 'GetDefaultGridLinePen', 'GetRowGridLinePen']:
         c.find(n).isVirtual = True
 
+        
+    # The SetTable method can optionally pass ownership of the table
+    # object to the grid, so we need to optionally update the
+    # ownership of the Python proxy object to match.
+    c.find('SetTable').pyName = '_SetTable'
+    c.addPyMethod('SetTable', '(self, table, takeOwnership=False, selmode=Grid.GridSelectCells)',
+        doc="Set the Grid Table to be used by this grid.",
+        body="""\
+            val = self._SetTable(table, takeOwnership, selmode)
+            if takeOwnership:
+                import wx.siplib
+                wx.siplib.transferto(table, self)
+            return val
+        """)
+    
     #-----------------------------------------------------------------
     c = module.find('wxGridUpdateLocker')
     c.addPrivateCopyCtor()

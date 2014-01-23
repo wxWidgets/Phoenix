@@ -7,7 +7,7 @@ import  wx.grid as  gridlib
 class HugeTable(gridlib.PyGridTableBase):
 
     def __init__(self, log):
-        gridlib.PyGridTableBase.__init__(self)
+        gridlib.GridTableBase.__init__(self)
         self.log = log
 
         self.odd=gridlib.GridCellAttr()
@@ -53,11 +53,12 @@ class HugeTableGrid(gridlib.Grid):
 
         table = HugeTable(log)
 
-        # The second parameter means that the grid is to take ownership of the
-        # table and will destroy it when done.  Otherwise you would need to keep
-        # a reference to it and call it's Destroy method later.
+        # The second parameter means that the grid is to take
+        # ownership of the table and will destroy it when done.
+        # Otherwise you would need to keep a reference to it, but that
+        # would allow other grids to use the same table.
         self.SetTable(table, True)
-
+        
         self.Bind(gridlib.EVT_GRID_CELL_RIGHT_CLICK, self.OnRightDown)  
 
     def OnRightDown(self, event):
