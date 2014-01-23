@@ -235,7 +235,6 @@ ImageFromMime                                                :class:`Image`
 ImageFromStream                                              :class:`Image`
 ImageFromStreamMime                                          :class:`Image`
 ImageHistogram_MakeKey                                       :meth:`ImageHistogram.MakeKey`
-IntersectRect                                                ``MISSING``
 IsStockID                                                    ``MISSING``
 IsStockLabel                                                 ``MISSING``
 Joystick                                                     :class:`adv.Joystick`
