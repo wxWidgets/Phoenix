@@ -44,13 +44,20 @@ def run():
         EVT_CALENDAR_WEEKDAY_CLICKED = wx.PyEventBinder( wxEVT_CALENDAR_WEEKDAY_CLICKED, 1)
         EVT_CALENDAR_PAGE_CHANGED =    wx.PyEventBinder( wxEVT_CALENDAR_PAGE_CHANGED, 1)
         """)
-    # These are deprecated...
+    
+    # These are deprecated, get rid of them later...
     c.addPyCode("""\
         EVT_CALENDAR_DAY =             wx.PyEventBinder( wxEVT_CALENDAR_DAY_CHANGED, 1)
         EVT_CALENDAR_MONTH =           wx.PyEventBinder( wxEVT_CALENDAR_MONTH_CHANGED, 1)
         EVT_CALENDAR_YEAR =            wx.PyEventBinder( wxEVT_CALENDAR_YEAR_CHANGED, 1)
         """)
-
+    otherEvtTypes = etgtools.WigCode("""\
+        wxEventType wxEVT_CALENDAR_DAY_CHANGED   /PyName=wxEVT_CALENDAR_DAY_CHANGED/;
+        wxEventType wxEVT_CALENDAR_MONTH_CHANGED /PyName=wxEVT_CALENDAR_MONTH_CHANGED/;
+        wxEventType wxEVT_CALENDAR_YEAR_CHANGED  /PyName=wxEVT_CALENDAR_YEAR_CHANGED/;
+        """)
+    module.insertItemAfter(module.find('wxEVT_CALENDAR_WEEK_CLICKED'), otherEvtTypes)
+    
     
     cc = module.find('wxCalendarCtrl')
     gcc = tools.copyClassDef(cc, 'wxGenericCalendarCtrl')
