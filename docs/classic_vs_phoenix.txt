@@ -745,7 +745,7 @@ wx.calendar.CalendarCtrl                                     :mod:`adv.CalendarC
 wx.combo.OwnerDrawnComboBox                                  :mod:`adv.OwnerDrawnComboBox`
 wx.gizmos.EditableListBox                                    :mod:`adv.EditableListBox`
 wx.gizmos.TreeListCtrl                                       :mod:`adv.TreeListCtrl`
-wx.AboutBox                                                  :mod:`adv.AboutBox`
+wx.AboutBox                                                  :meth:`adv.AboutBox`
 wx.AboutDialogInfo                                           :mod:`adv.AboutDialogInfo`
 wx.DatePickerCtrl                                            :mod:`adv.DatePickerCtrl`
 wx.TaskBarIcon                                               :mod:`adv.TaskBarIcon`
