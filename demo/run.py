@@ -23,10 +23,10 @@ import wx.lib.mixins.inspection
 import sys, os
 
 # stuff for debugging
-print("Python", sys.version)
-print("wx.version:", wx.version())
-print("pid:", os.getpid())
-##print("executable:", sys.executable; raw_input("Press Enter..."))
+print("Python %s" % sys.version)
+print("wx.version: %s" % wx.version())
+print("pid: %s" % os.getpid())
+##print("executable: %s" % sys.executable); raw_input("Press Enter..."))
 
 assertMode = wx.APP_ASSERT_DIALOG
 ##assertMode = wx.APP_ASSERT_EXCEPTION
