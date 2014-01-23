@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  os
-import  wx
+import os
+import wx
 
 #---------------------------------------------------------------------------
 

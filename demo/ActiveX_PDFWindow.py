@@ -1,5 +1,7 @@
-import  sys
-import  wx
+#!/usr/bin/env python
+
+import sys
+import wx
 
 if wx.Platform == '__WXMSW__':
     from wx.lib.pdfwin import PDFWindow

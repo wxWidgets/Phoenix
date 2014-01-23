@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 
-import  wx
+import wx
 
 #---------------------------------------------------------------------------
 # Create and set a help provider.  Normally you would do this in

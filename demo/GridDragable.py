@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.grid             as  gridlib
-import  wx.lib.gridmovers   as  gridmovers
+import wx
+import wx.grid as gridlib
+import wx.lib.gridmovers as gridmovers
 
 #---------------------------------------------------------------------------
 

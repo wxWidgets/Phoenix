@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import  os
 import  wx
@@ -6,11 +7,11 @@ import  wx.lib.printout as  printout
 #---------------------------------------------------------------------------
 
 buttonDefs = {
-    814 : ('PreviewWide',      'Preview print of a wide table'),
-    815 : ('PreviewNarrow',   'Preview print of a narrow table with color highlights'),
-    816 : ('PreviewText',    'Preview print of a text file'),
-    818 : ('OnPreviewMatrix',   'Preview print of a narrow column grid without a table header'),
-    817 : ('PreviewLine',   'Preview print to demonstrate the use of line breaks'),
+    814 : ('PreviewWide', 'Preview print of a wide table'),
+    815 : ('PreviewNarrow', 'Preview print of a narrow table with color highlights'),
+    816 : ('PreviewText', 'Preview print of a text file'),
+    818 : ('OnPreviewMatrix', 'Preview print of a narrow column grid without a table header'),
+    817 : ('PreviewLine', 'Preview print to demonstrate the use of line breaks'),
     819 : ('PrintWide', 'Direct print (no preview) of a wide table'),
     }
 

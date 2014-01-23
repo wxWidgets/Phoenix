@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import  random
 import  time
@@ -36,7 +37,7 @@ class CalcBarThread:
             # no manipulation of UI objects from the worker thread.
             evt = UpdateBarEvent(barNum = self.barNum, value = int(self.val))
             wx.PostEvent(self.win, evt)
- 
+
             sleeptime = (random.random() * 2) + 0.5
             time.sleep(sleeptime/4)
 
@@ -124,8 +125,6 @@ class GraphWindow(wx.Window):
 
     def OnEraseBackground(self, evt):
         pass
-
-
 
 
 #----------------------------------------------------------------------
@@ -229,8 +228,6 @@ def runTest(frame, nb, log):
     return win
 
 #----------------------------------------------------------------------
-
-
 
 
 

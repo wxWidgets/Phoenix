@@ -1,10 +1,11 @@
+#!/usr/bin/env python
 
-import  string
-import  sys
-import  traceback
+import string
+import sys
+import traceback
 
-import  wx
-from    wx.lib import masked
+import wx
+from wx.lib import masked
 
 #----------------------------------------------------------------------
 

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 import wx.html2 as webview

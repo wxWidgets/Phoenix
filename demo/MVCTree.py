@@ -1,9 +1,10 @@
+#!/usr/bin/env python
 
-import  os
-import  sys
+import os
+import sys
 
-import  wx
-import  wx.lib.mvctree  as  tree
+import wx
+import wx.lib.mvctree as tree
 
 logger = None
 def selchanging(evt):

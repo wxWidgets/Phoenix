@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 
-import  wx
+import wx
 
 #---------------------------------------------------------------------------
 
@@ -15,7 +16,7 @@ class TestPanel(wx.Panel):
     def OnButton(self, evt):
         dlg = wx.SingleChoiceDialog(
                 self, 'Test Single Choice', 'The Caption',
-                ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'], 
+                ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'],
                 wx.CHOICEDLG_STYLE
                 )
 

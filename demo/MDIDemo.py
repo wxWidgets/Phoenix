@@ -1,10 +1,11 @@
+#!/usr/bin/env python
 
-import  wx
+import wx
 
 # Importing ScrolledWindow demo to make use of the MyCanvas
 # class defined within.
-import  ScrolledWindow
-import  images
+import ScrolledWindow
+import images
 
 SHOW_BACKGROUND = 1
 

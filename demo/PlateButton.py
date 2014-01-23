@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 ###############################################################################
 # Name: PlateButtonDemo.py                                                    #
 # Purpose: PlateButton Test and Demo File                                     #

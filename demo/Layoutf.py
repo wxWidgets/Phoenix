@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.lib.layoutf  as layoutf
+import wx
+import wx.lib.layoutf as layoutf
 
 #---------------------------------------------------------------------------
 

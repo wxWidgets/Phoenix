@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.lib.scrolledpanel as scrolled
+import wx
+import wx.lib.scrolledpanel as scrolled
 
 #----------------------------------------------------------------------
 

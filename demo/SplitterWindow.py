@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import  wx
 
@@ -9,7 +10,7 @@ class MySplitter(wx.SplitterWindow):
                                    style = wx.SP_LIVE_UPDATE
                                    )
         self.log = log
-        
+
         self.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.OnSashChanged)
         self.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.OnSashChanging)
 
@@ -30,7 +31,7 @@ def runTest(frame, nb, log):
     #sty = wx.BORDER_NONE
     #sty = wx.BORDER_SIMPLE
     sty = wx.BORDER_SUNKEN
-    
+
     p1 = wx.Window(splitter, style=sty)
     p1.SetBackgroundColour("pink")
     wx.StaticText(p1, -1, "Panel One", (5,5))

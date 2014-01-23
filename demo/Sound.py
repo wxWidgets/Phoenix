@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 
-import  wx
+import wx
 import wx.adv
 from Main import opj
 

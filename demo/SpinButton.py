@@ -1,9 +1,11 @@
+#!/usr/bin/env python
+
 # 11/30/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o EVT_SPIN events (or something about them) freezes up the app.
-# 
 
-import  wx
+
+import wx
 
 #----------------------------------------------------------------------
 

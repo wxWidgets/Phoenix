@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # 11/17/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
@@ -7,7 +9,7 @@
 # o Changed the event binding slightly.
 
 
-import  wx
+import wx
 
 #---------------------------------------------------------------------------
 

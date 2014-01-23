@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 This demonstrates a simple use of delayedresult: get/compute 
 something that takes a long time, without hanging the GUI while this

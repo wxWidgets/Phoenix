@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.lib.throbber as  throb
+import wx
+import wx.lib.throbber as throb
 
-import throbImages 
+import throbImages
 
 from wx.lib.throbber import __doc__ as docString
 
@@ -35,7 +36,7 @@ class TestPanel(wx.Panel):
 
         self.throbbers['plain']['throbber'] = \
             throb.Throbber(self, -1, images, size=(36, 36),frameDelay = 0.1)
-                                                
+
         self.throbbers['reverse']['throbber'] = \
             throb.Throbber(self, -1, images, frameDelay = 0.07)
 
@@ -55,13 +56,13 @@ class TestPanel(wx.Panel):
 
         self.throbbers['overlay']['throbber'] = \
             throb.Throbber(
-                self, -1, images, frameDelay = 0.1, 
+                self, -1, images, frameDelay = 0.1,
                 overlay = throbImages.catalog['logo'].GetBitmap()
                 )
 
         self.throbbers['overlay+text']['throbber'] = \
             throb.Throbber(
-                self, -1, images, frameDelay = 0.1, 
+                self, -1, images, frameDelay = 0.1,
                 overlay = throbImages.catalog['logo'].GetBitmap(), label = "Python!"
                 )
 
@@ -75,7 +76,7 @@ class TestPanel(wx.Panel):
                            rest = 4,
                            sequence = [ 1, 5, 2, 7, 3, 6, 4, 4, 4, 4, 7, 2, 2, 0 ]
                            )
-                                                
+
         box = wx.BoxSizer(wx.VERTICAL)
         sizer = wx.GridBagSizer()
         box.Add(sizer, 1, wx.EXPAND|wx.ALL, 5)
@@ -85,12 +86,12 @@ class TestPanel(wx.Panel):
         # use a list so we can keep our order
         for t in ['plain', 'reverse', 'autoreverse', 'label', 'overlay', 'overlay+text']:
             sizer.Add(
-                self.throbbers[t]['throbber'], (row, 0), (1, 1), 
+                self.throbbers[t]['throbber'], (row, 0), (1, 1),
                 flag = wx.ALIGN_CENTER|wx.ALL, border=2
                 )
 
             sizer.Add(
-                wx.StaticText(self, -1, self.throbbers[t]['text']), 
+                wx.StaticText(self, -1, self.throbbers[t]['text']),
                 (row, 1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT
                 )
 
@@ -99,12 +100,12 @@ class TestPanel(wx.Panel):
         # Add custom throbber to sizer.
         row += 2
         sizer.Add(
-            self.customThrobber, (row, 0), (1, 1), 
+            self.customThrobber, (row, 0), (1, 1),
             flag = wx.ALIGN_CENTER|wx.ALL, border=2
             )
 
         sizer.Add(
-            wx.StaticText(self, -1, 'with custom & manual sequences'), 
+            wx.StaticText(self, -1, 'with custom & manual sequences'),
             (row, 1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT
             )
 

@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 
-import  random
+import random
 
-import  wx
-import  wx.grid as  gridlib
+import wx
+import wx.grid as gridlib
 
 #---------------------------------------------------------------------------
 

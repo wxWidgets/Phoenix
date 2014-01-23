@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 from wx.animate import GIFAnimationCtrl

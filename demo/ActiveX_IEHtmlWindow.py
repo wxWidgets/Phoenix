@@ -1,9 +1,11 @@
+#!/usr/bin/env python
+
 # 11/18/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
-# 
 
-import  wx
+
+import wx
 
 if wx.Platform == '__WXMSW__':
     import wx.lib.iewin as iewin

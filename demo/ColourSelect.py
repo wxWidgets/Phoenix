@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #----------------------------------------------------------------------------
 # Name:         ColourSelect.py
 # Purpose:      Colour Selection control display testing on panel for wxPython demo
@@ -15,10 +17,10 @@
 #              - use sizers
 #              - other minor "improvements"
 #----------------------------------------------------------------------------
-#
 
-import  wx
-import  wx.lib.colourselect as  csel
+
+import wx
+import wx.lib.colourselect as csel
 
 #----------------------------------------------------------------------------
 

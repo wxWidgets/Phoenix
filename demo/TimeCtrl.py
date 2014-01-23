@@ -1,8 +1,9 @@
-#
+#!/usr/bin/env python
+
 # 11/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o presense of spin control causing probs (see spin ctrl demo for details)
-#
+
 
 import wx
 import wx.lib.scrolledpanel as scrolled

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 import wx.lib.sized_controls as sc
 
@@ -101,14 +103,14 @@ in action.
 
 <tr>
 <td><i>expand</i></td> <td>True/False</td>
-<td>Whether or not the control should grow to fill free space if 
+<td>Whether or not the control should grow to fill free space if
 free space is available.</td>
 </tr>
 
 <tr>
-<td><i>proportion</i></td> <td>Number (typically 0-10)</td> 
-<td>How much of the free space the control should take up. Note that this value is 
-<i>relative</i> to other controls, so a proportion of 2 means take up 
+<td><i>proportion</i></td> <td>Number (typically 0-10)</td>
+<td>How much of the free space the control should take up. Note that this value is
+<i>relative</i> to other controls, so a proportion of 2 means take up
 'twice as much' space as controls with a proportion of 1.</td>
 </tr>
 
@@ -140,48 +142,48 @@ it is not currently possible to assign different border sizes to each direction.
 
 class FormDialog(sc.SizedDialog):
     def __init__(self, parent, id):
-        sc.SizedDialog.__init__(self, None, -1, "SizedForm Dialog", 
+        sc.SizedDialog.__init__(self, None, -1, "SizedForm Dialog",
                         style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
-        
+
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
-        
+
         # row 1
         wx.StaticText(pane, -1, "Name")
         textCtrl = wx.TextCtrl(pane, -1, "Your name here")
         textCtrl.SetSizerProps(expand=True)
-        
+
         # row 2
         wx.StaticText(pane, -1, "Email")
         emailCtrl = wx.TextCtrl(pane, -1, "")
         emailCtrl.SetSizerProps(expand=True)
-        
+
         # row 3
         wx.StaticText(pane, -1, "Gender")
         wx.Choice(pane, -1, choices=["male", "female"])
-        
+
         # row 4
         wx.StaticText(pane, -1, "State")
         wx.TextCtrl(pane, -1, size=(60, -1)) # two chars for state
-        
+
         # row 5
         wx.StaticText(pane, -1, "Title")
-        
+
         # here's how to add a 'nested sizer' using sized_controls
         radioPane = sc.SizedPanel(pane, -1)
         radioPane.SetSizerType("horizontal")
         radioPane.SetSizerProps(expand=True)
-        
+
         # make these children of the radioPane to have them use
         # the horizontal layout
         wx.RadioButton(radioPane, -1, "Mr.")
         wx.RadioButton(radioPane, -1, "Mrs.")
         wx.RadioButton(radioPane, -1, "Dr.")
         # end row 5
-        
+
         # add dialog buttons
         self.SetButtonSizer(self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL))
-        
+
         # a little trick to make sure that you can't resize the dialog to
         # less screen space than the controls need
         self.Fit()
@@ -190,77 +192,77 @@ class FormDialog(sc.SizedDialog):
 
 class ScrolledFormDialog(sc.SizedDialog):
     def __init__(self, parent, id):
-        sc.SizedDialog.__init__(self, None, -1, "SizedForm Dialog with a scolled panel", 
+        sc.SizedDialog.__init__(self, None, -1, "SizedForm Dialog with a scolled panel",
                         style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
                         size=wx.Size(-1, 220))
-        
+
         cPane = self.GetContentsPane()
         pane = sc.SizedScrolledPanel(cPane, wx.ID_ANY)
         pane.SetSizerProps(expand=True, proportion=1)
         pane.SetSizerType("form")
-        
+
         # row 1
         wx.StaticText(pane, -1, "Name")
         textCtrl = wx.TextCtrl(pane, -1, "Your name here")
         textCtrl.SetSizerProps(expand=True)
-        
+
         # row 2
         wx.StaticText(pane, -1, "Email")
         emailCtrl = wx.TextCtrl(pane, -1, "")
         emailCtrl.SetSizerProps(expand=True)
-        
+
         # row 3
         wx.StaticText(pane, -1, "Gender")
         wx.Choice(pane, -1, choices=["male", "female"])
-        
+
         # row 4
         wx.StaticText(pane, -1, "State")
         wx.TextCtrl(pane, -1, size=(60, -1)) # two chars for state
-        
+
         # row 5
         wx.StaticText(pane, -1, "Title")
-        
+
         # here's how to add a 'nested sizer' using sized_controls
         radioPane = sc.SizedPanel(pane, -1)
         radioPane.SetSizerType("horizontal")
         radioPane.SetSizerProps(expand=True)
-        
+
         # make these children of the radioPane to have them use
         # the horizontal layout
         wx.RadioButton(radioPane, -1, "Mr.")
         wx.RadioButton(radioPane, -1, "Mrs.")
         wx.RadioButton(radioPane, -1, "Dr.")
         # end row 5
-        
+
         # add dialog buttons
         self.SetButtonSizer(self.CreateStdDialogButtonSizer(wx.OK | wx.CANCEL))
-        
+
 
 class ErrorDialog(sc.SizedDialog):
     def __init__(self, parent, id):
-        sc.SizedDialog.__init__(self, parent, id, "Error log viewer", 
+        sc.SizedDialog.__init__(self, parent, id, "Error log viewer",
                                 style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
-        
+
         # Always use self.GetContentsPane() - this ensures that your dialog
         # automatically adheres to HIG spacing requirements on all platforms.
         # pane here is a sc.SizedPanel with a vertical sizer layout. All children
         # should be added to this pane, NOT to self.
         pane = self.GetContentsPane()
-        
+
         # first row
         self.listCtrl = wx.ListCtrl(pane, -1, size=(300, -1), style=wx.LC_REPORT)
         self.listCtrl.SetSizerProps(expand=True, proportion=1)
         self.ConfigureListCtrl()
-        
+
         # second row
         self.lblDetails = wx.StaticText(pane, -1, "Error Details")
-        
+
         # third row
         self.details = wx.TextCtrl(pane, -1, style=wx.TE_MULTILINE)
         self.details.SetSizerProps(expand=True, proportion=1)
 
         # final row
-        # since we want to use a custom button layout, we won't use the 
+        # since we want to use a custom button layout, we won't use the
         # CreateStdDialogBtnSizer here, we'll just create our own panel with
         # a horizontal layout and add the buttons to that.
         btnpane = sc.SizedPanel(pane, -1)
@@ -275,42 +277,42 @@ class ErrorDialog(sc.SizedDialog):
 
         self.Fit()
         self.SetMinSize(self.GetSize())
-        
+
     def ConfigureListCtrl(self):
         self.listCtrl.InsertColumn(0, "Time")
         self.listCtrl.InsertColumn(1, "Error Message")
         self.listCtrl.SetColumnWidth(0, 100)
         self.listCtrl.SetColumnWidth(1, 280)
-        
+
 
 class GridFrame(sc.SizedFrame):
     def __init__(self, parent, id):
         sc.SizedFrame.__init__(self, parent, id, "Grid Layout Demo Frame")
-        
+
         pane = self.GetContentsPane()
         pane.SetSizerType("grid", {"cols":3}) # 3-column grid layout
-        
+
         # row 1
         wx.TextCtrl(pane, -1).SetSizerProps(halign="left")
         wx.TextCtrl(pane, -1).SetSizerProps(halign="center")
         wx.TextCtrl(pane, -1).SetSizerProps(halign="right")
-        
+
         # row 2
         wx.TextCtrl(pane, -1).SetSizerProps(valign="center")
         wx.TextCtrl(pane, -1).SetSizerProps(expand=True, proportion=1)
         wx.TextCtrl(pane, -1).SetSizerProps(valign="center")
-        
+
         # row 3
         wx.TextCtrl(pane, -1).SetSizerProps(halign="left")
         wx.TextCtrl(pane, -1).SetSizerProps(halign="center")
         wx.TextCtrl(pane, -1).SetSizerProps(halign="right")
-        
+
         self.CreateStatusBar() # should always do this when there's a resize border
-        
+
         self.Fit()
         self.SetMinSize(self.GetSize())
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 class TestPanel(sc.SizedScrolledPanel):
@@ -330,11 +332,11 @@ class TestPanel(sc.SizedScrolledPanel):
         b2 = wx.Button(self, -1, "Sized Controls Error Dialog")
         b2.SetSizerProps({'halign': 'center', 'border': ('all', 15)})
         self.Bind(wx.EVT_BUTTON, self.OnErrorButton, b2)
-        
+
         b3 = wx.Button(self, -1, "Sized Controls Grid Layout Demo")
         b3.SetSizerProps({'halign': 'center', 'border': ('all', 15)})
-        self.Bind(wx.EVT_BUTTON, self.OnGridButton, b3)    
-        
+        self.Bind(wx.EVT_BUTTON, self.OnGridButton, b3)
+
 
     def OnFormButton(self, evt):
 
@@ -343,14 +345,14 @@ class TestPanel(sc.SizedScrolledPanel):
 
         # this does not return until the dialog is closed.
         val = dlg.ShowModal()
-    
+
         if val == wx.ID_OK:
             self.log.WriteText("You pressed OK\n")
         else:
             self.log.WriteText("You pressed Cancel\n")
 
         dlg.Destroy()
-        
+
     def OnFormScrolledButton(self, evt):
 
         dlg = ScrolledFormDialog(self, -1)
@@ -358,7 +360,7 @@ class TestPanel(sc.SizedScrolledPanel):
 
         # this does not return until the dialog is closed.
         val = dlg.ShowModal()
-    
+
         if val == wx.ID_OK:
             self.log.WriteText("You pressed OK\n")
         else:
@@ -367,27 +369,27 @@ class TestPanel(sc.SizedScrolledPanel):
         dlg.Destroy()
 
     def OnErrorButton(self, evt):
-            
+
         dlg = ErrorDialog(self, -1)
         dlg.CenterOnScreen()
 
         # this does not return until the dialog is closed.
         val = dlg.ShowModal()
-    
+
         if val == wx.ID_OK:
             self.log.WriteText("You pressed OK\n")
         else:
             self.log.WriteText("You pressed Cancel\n")
 
         dlg.Destroy()
-        
+
     def OnGridButton(self, evt):
-            
+
         dlg = GridFrame(self, -1)
         dlg.CenterOnScreen()
 
         dlg.Show()
-        
+
 def runTest(frame, nb, log):
     win = TestPanel(nb, log)
     return win

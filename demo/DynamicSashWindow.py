@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.gizmos   as  gizmos
-import  wx.stc      as  stc
+import wx
+import wx.gizmos as  gizmos
+import wx.stc as stc
 
 #----------------------------------------------------------------------
 # This is an example of the complex view that manages its own scrollbars

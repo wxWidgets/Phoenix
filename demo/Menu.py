@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 
-import  time
-import  wx
-import  images
+import time
+import wx
+import images
 
 #-------------------------------------------------------------------
 

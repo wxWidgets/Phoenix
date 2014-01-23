@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.lib.editor    as  editor
+import wx
+import wx.lib.editor as editor
 
 #----------------------------------------------------------------------
 

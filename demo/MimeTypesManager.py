@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #----------------------------------------------------------------------
 # Name:        wxMimeTypesManager
 # Purpose:     Demonstrate use of wx.MimeTypesManager, wx.FileType
@@ -10,12 +12,11 @@
 # Copyright:
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
-#
 
 
-import  pprint
-import  wx
-import  images
+import pprint
+import wx
+import images
 
 
 # helper function to make sure we don't convert unicode objects to strings

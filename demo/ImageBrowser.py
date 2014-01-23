@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #----------------------------------------------------------------------------
 # Name:         ImageBrowser.py
 # Purpose:      Image Selection dialog for wxPython demo
@@ -9,10 +11,10 @@
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
 
-import  os
+import os
 
-import  wx
-import  wx.lib.imagebrowser    as  ib
+import wx
+import wx.lib.imagebrowser as ib
 
 
 #---------------------------------------------------------------------------

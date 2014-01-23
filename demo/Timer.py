@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import  time
 import  wx
 import  wx.lib.scrolledpanel as sp

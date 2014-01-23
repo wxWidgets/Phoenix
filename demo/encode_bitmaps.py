@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 """
 This is a way to save the startup time when running img2py on lots of

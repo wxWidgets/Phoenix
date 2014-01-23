@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 from wx.lib.expando import ExpandoTextCtrl, EVT_ETC_LAYOUT_NEEDED

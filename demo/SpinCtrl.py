@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import  wx
 
@@ -16,14 +17,14 @@ class TestPanel(wx.Panel):
 
         self.Bind(wx.EVT_SPINCTRL, self.OnSpin, sc)
         self.Bind(wx.EVT_TEXT, self.OnText, sc)
-        
+
 
     def OnSpin(self, evt):
         self.log.write('OnSpin: %d\n' % self.sc.GetValue())
 
     def OnText(self, evt):
         self.log.write('OnText: %d\n' % self.sc.GetValue())
-        
+
 
 #----------------------------------------------------------------------
 
@@ -37,12 +38,12 @@ def runTest(frame, nb, log):
 overview = """\
 wx.SpinCtrl combines wx.TextCtrl and wx.SpinButton in one control.
 
-Portable programs should try to use this control as wx.SpinButton is not 
+Portable programs should try to use this control as wx.SpinButton is not
 implemented for all platforms (Win32 and GTK only currently).
 
-NB: the range supported by this control depends on the platform 
-but is at least -0x8000 to 0x7fff. Under GTK and Win32 with sufficiently new version 
-of comctrl32.dll (at least 4.71 is required, 5.80 is recommended) the full 32 bit 
+NB: the range supported by this control depends on the platform
+but is at least -0x8000 to 0x7fff. Under GTK and Win32 with sufficiently new version
+of comctrl32.dll (at least 4.71 is required, 5.80 is recommended) the full 32 bit
 range is supported.
 
 

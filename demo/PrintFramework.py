@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  ScrolledWindow
+import wx
+import ScrolledWindow
 
 #----------------------------------------------------------------------
 

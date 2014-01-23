@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 import wx.adv
 from wx.lib.wordwrap import wordwrap

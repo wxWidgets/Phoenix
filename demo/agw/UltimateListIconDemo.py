@@ -1,5 +1,8 @@
+#!/usr/bin/env python
+
 import wx
-import os, sys
+import os
+import sys
 import images
 
 from wx.lib.embeddedimage import PyEmbeddedImage

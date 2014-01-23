@@ -1,5 +1,8 @@
+#!/usr/bin/env python
+
 import wx
-import sys, os
+import os
+import sys
 
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))

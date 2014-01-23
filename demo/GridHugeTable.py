@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.grid as  gridlib
+import wx
+import wx.grid as gridlib
 
 #---------------------------------------------------------------------------
 

@@ -1,6 +1,7 @@
+#!/usr/bin/env python
   
-import  wx
-import  wx.lib.fancytext as fancytext
+import wx
+import wx.lib.fancytext as fancytext
 
 #----------------------------------------------------------------------
 

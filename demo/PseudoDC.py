@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 import images
@@ -55,7 +56,7 @@ class MyCanvas(wx.ScrolledWindow):
 
         self.SetVirtualSize((self.maxWidth, self.maxHeight))
         self.SetScrollRate(20,20)
-        
+
         # create a PseudoDC to record our drawing
         self.pdc = wx.PseudoDC()
         self.pen_cache = {}
@@ -66,11 +67,11 @@ class MyCanvas(wx.ScrolledWindow):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, lambda x:None)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
-        
+
         # vars for handling mouse clicks
         self.dragid = -1
         self.lastpos = (0,0)
-    
+
     def ConvertEventCoords(self, event):
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
@@ -141,7 +142,7 @@ class MyCanvas(wx.ScrolledWindow):
     def OnPaint(self, event):
         # Create a buffered paint DC.  It will create the real
         # wx.PaintDC and then blit the bitmap to it when dc is
-        # deleted.  
+        # deleted.
         dc = wx.BufferedPaintDC(self)
         # use PrepateDC to set position correctly
         self.PrepareDC(dc)
@@ -276,7 +277,7 @@ class ControlPanel(wx.Panel):
     def OnChange(self, event):
         global hitradius
         hitradius = self.sc.GetValue()
-    
+
 
 #---------------------------------------------------------------------------
 
@@ -318,7 +319,7 @@ again.  The PseudoDC also supports object level clipping.  To enable this use:<p
 for each object that should be clipped.  Then use:<pre>
     DrawToDCClipped(dc, clippingRect)
 </pre>
-To draw the PseudoDC to a real dc. This is useful for large scrolled windows 
+To draw the PseudoDC to a real dc. This is useful for large scrolled windows
 where many objects are offscreen.
 
 Objects can be moved around without re-drawing using:<pre>

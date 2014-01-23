@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # AnalogClock demo
 #   E. A. Tacao <e.a.tacao |at| estadao.com.br>
 #   http://j.domaindlx.com/elements28/wxpython/

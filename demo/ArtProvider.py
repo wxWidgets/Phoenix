@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  cStringIO
-import  wx
+import cStringIO
+import wx
 
 #----------------------------------------------------------------------
 

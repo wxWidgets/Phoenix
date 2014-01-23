@@ -1,11 +1,12 @@
+#!/usr/bin/env python
 
-import  string
-import  sys
-import  traceback
+import string
+import sys
+import traceback
 
-import  wx
-import  wx.lib.masked             as  masked
-import  wx.lib.scrolledpanel      as  scroll
+import wx
+import wx.lib.masked as masked
+import wx.lib.scrolledpanel as scroll
 
 
 class demoMixin:

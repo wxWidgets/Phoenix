@@ -1,12 +1,13 @@
-# 
+#!/usr/bin/env python
+
 # 11/30/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Some issues with the listbox example; I tried correcting
 #   it but it's still not working the way it should. Commented
 #   out for now, as I found it.
-# 
 
-import  wx
+
+import wx
 
 #---------------------------------------------------------------------------
 

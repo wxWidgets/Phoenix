@@ -1,9 +1,10 @@
+#!/usr/bin/env python
 
-import  wx
+import wx
 
 hadImportError = False
 try:
-    import  wx.lib.plot
+    import wx.lib.plot
 except ImportError:
     hadImportError = True
     

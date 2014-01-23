@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  images
+import wx
+import images
 
 #----------------------------------------------------------------------
 

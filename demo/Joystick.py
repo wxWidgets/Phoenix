@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #----------------------------------------------------------------------------
 # Name:        Joystick.py
 # Purpose:     Demonstrate use of wx.Joystick
@@ -10,10 +12,10 @@
 # Copyright:
 # Licence:     wxWindows license
 #----------------------------------------------------------------------------
-#
 
-import  math
-import  wx
+
+import math
+import wx
 import wx.adv
 
 haveJoystick = True

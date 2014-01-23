@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.grid             as  gridlib
-#import  wx.lib.mixins.grid  as  mixins
+import wx
+import wx.grid as gridlib
+#import wx.lib.mixins.grid as mixins
 
 #---------------------------------------------------------------------------
 

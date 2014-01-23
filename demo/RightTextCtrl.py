@@ -1,11 +1,13 @@
+#!/usr/bin/env python
+
 #####################################################################\
 # Note: This control is deprecated because wx.TextCtrl now supports  |
 # the wx.TE_RIGHT style flag, which makes this control completely    |
 # superfluous.                                                       |
 #####################################################################/
 
-import  wx
-import  wx.lib.rightalign as right
+import wx
+import wx.lib.rightalign as right
 
 #----------------------------------------------------------------------
 
@@ -18,8 +20,8 @@ class TestPanel(wx.Panel):
         txt = wx.StaticText(
                 self, -1,
                 "These text controls will align their contents to\n"
-                "the right (on wxMSW) when they don't have focus.", 
-                style=wx.ALIGN_RIGHT 
+                "the right (on wxMSW) when they don't have focus.",
+                style=wx.ALIGN_RIGHT
                 )
 
         fgs.Add(txt)

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 import wx.stc as stc
 import keyword

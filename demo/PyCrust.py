@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 
-import  wx.py   as  py
+import wx.py as  py
 
 #----------------------------------------------------------------------
 

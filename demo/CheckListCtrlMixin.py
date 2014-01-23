@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import wx
 from wx.lib.mixins.listctrl import CheckListCtrlMixin

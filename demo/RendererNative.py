@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 import os
 
@@ -39,7 +41,7 @@ class TestPanel(wx.Panel):
         render.DrawRadioBitmap(self, dc, (405, 35, 16, 16), wx.CONTROL_CHECKABLE)
         render.DrawRadioBitmap(self, dc, (425, 35, 16, 16))
         render.DrawRadioBitmap(self, dc, (445, 35, 16, 16), wx.CONTROL_CHECKED | wx.CONTROL_DISABLED)
-    
+
         # Draw ComboBoxDropButton
         xpos = self.GetTextExtent(cb_lbl)[0] + 40
         cb_lbl = "DrawComboBoxDropButton:"
@@ -126,24 +128,24 @@ def runTest(frame, nb, log):
 
 overview = """<html><body>
 <h2><center>wx.RendererNative</center></h2>
-<p>wx.RendererNative is a class which virtualizes drawing. It abstracts the 
-operations of drawing controls and allows you to draw say, a button, without 
-caring about exactly how it is done, in a native and platform independant way. 
+<p>wx.RendererNative is a class which virtualizes drawing. It abstracts the
+operations of drawing controls and allows you to draw say, a button, without
+caring about exactly how it is done, in a native and platform independant way.
 </p>
 
 <p>All drawing functions take some standard parameters:<p>
 <ul>
 <li><b>win</b>: is the window being drawn.</li>
-<li><b>dc</b>: is the wxDC to draw on. Only this device context should be used 
+<li><b>dc</b>: is the wxDC to draw on. Only this device context should be used
                for drawing.</li>
 <li><b>rect</b>: The bounding rectangle for the element to be drawn.</li>
-<li><b>flags</b>: The optional flags (none by default) which can be a 
+<li><b>flags</b>: The optional flags (none by default) which can be a
                   combination of the wx.CONTROL_XXX constants.</li>
 </ul>
 
-<p><b>Note</b>: Each drawing function restores the wxDC attributes if it 
-changes them, so it is safe to assume that the same pen, brush and colours 
-that were active before the call to this function are still in effect 
+<p><b>Note</b>: Each drawing function restores the wxDC attributes if it
+changes them, so it is safe to assume that the same pen, brush and colours
+that were active before the call to this function are still in effect
 after it.</p>
 </body></html>
 """

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import  wx
 import  wx.xrc  as  xrc

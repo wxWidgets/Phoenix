@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 
@@ -42,15 +43,15 @@ class TestPanel(wx.Panel):
         self.Bind(wx.EVT_SEARCHCTRL_SEARCH_BTN, self.OnSearch, self.search)
         self.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self.OnCancel, self.search)
         self.Bind(wx.EVT_TEXT_ENTER, self.OnDoSearch, self.search)
-        ##self.Bind(wx.EVT_TEXT, self.OnDoSearch, self.search)        
+        ##self.Bind(wx.EVT_TEXT, self.OnDoSearch, self.search)
 
 
     def OnToggleSearchButton(self, evt):
         self.search.ShowSearchButton( evt.GetInt() )
-            
+
     def OnToggleCancelButton(self, evt):
         self.search.ShowCancelButton( evt.GetInt() )
-        
+
     def OnToggleSearchMenu(self, evt):
         if evt.GetInt():
             self.search.SetMenu( self.MakeMenu() )
@@ -60,13 +61,13 @@ class TestPanel(wx.Panel):
 
     def OnSearch(self, evt):
         self.log.write("OnSearch")
-            
+
     def OnCancel(self, evt):
         self.log.write("OnCancel")
 
     def OnDoSearch(self, evt):
         self.log.write("OnDoSearch: " + self.search.GetValue())
-        
+
 
     def MakeMenu(self):
         menu = wx.Menu()
@@ -79,7 +80,7 @@ class TestPanel(wx.Panel):
                      "catch their selections" ]:
             menu.Append(-1, txt)
         return menu
-         
+
 
 #----------------------------------------------------------------------
 

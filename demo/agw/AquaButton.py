@@ -1,7 +1,6 @@
-import wx
+#!/usr/bin/env python
 
-if wx.VERSION < (2, 8, 9, 0):
-    raise Exception("This demo requires wxPython version greater than 2.8.9.0")
+import wx
 
 import os
 import sys

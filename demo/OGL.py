@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 # 11/20/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
@@ -11,12 +13,12 @@
 # 20040830 - Pierre Hjälm
 #
 # o Added DrawnShape
-#
+
 
 import wx
 import wx.lib.ogl as ogl
 
-import  images
+import images
 
 #----------------------------------------------------------------------
 

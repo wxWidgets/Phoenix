@@ -1,6 +1,8 @@
+#!/usr/bin/env python
+
 import sys
 
-import wx                  # This module uses the new wx namespace
+import wx
 import wx.html
 import wx.lib.wxpTag
 

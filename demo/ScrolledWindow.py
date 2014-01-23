@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  images
+import wx
+import images
 
 # There are two different approaches to drawing, buffered or direct.
 # This sample shows both approaches so you can easily compare and
@@ -161,7 +162,7 @@ class MyCanvas(wx.ScrolledWindow):
     def OnLeftButtonEvent(self, event):
         if self.IsAutoScrolling():
             self.StopAutoScrolling()
-        
+
         if event.LeftDown():
             self.SetFocus()
             self.SetXY(event)
@@ -187,7 +188,7 @@ class MyCanvas(wx.ScrolledWindow):
             self.curLine.append(coords)
             dc.DrawLine(*coords)
             self.SetXY(event)
-            
+
             if BUFFERED:
                 # figure out what part of the window to refresh, based
                 # on what parts of the buffer we just updated
@@ -211,7 +212,7 @@ class MyCanvas(wx.ScrolledWindow):
 
 ## This is an example of what to do for the EVT_MOUSEWHEEL event,
 ## but since wx.ScrolledWindow does this already it's not
-## necessary to do it ourselves. You would need to add an event table 
+## necessary to do it ourselves. You would need to add an event table
 ## entry to __init__() to direct wheelmouse events to this handler.
 
 ##     wheelScroll = 0
@@ -244,8 +245,8 @@ def runTest(frame, nb, log):
 overview = """
 <html>
 <body>
-The wx.ScrolledWindow class manages scrolling for its client area, transforming the 
-coordinates according to the scrollbar positions, and setting the scroll positions, 
+The wx.ScrolledWindow class manages scrolling for its client area, transforming the
+coordinates according to the scrollbar positions, and setting the scroll positions,
 thumb sizes and ranges according to the area in view.
 </body>
 </html>

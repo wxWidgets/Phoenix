@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 
-import  random
-import  time
+import random
+import time
 
-import  wx
+import wx
 
 #----------------------------------------------------------------------
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # 11/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
@@ -6,9 +8,8 @@
 #
 # o wx.ProgressDialog appears to be broken. No abort button
 #   and it's not possible to dismiss it otherwise.
-# 
 
-import  wx
+import wx
 
 #---------------------------------------------------------------------------
 

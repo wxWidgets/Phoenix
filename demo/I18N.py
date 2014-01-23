@@ -1,5 +1,8 @@
+#!/usr/bin/env python
+
 #Boa:FramePanel:LanguageSelectPanel
-import os, sys
+import os
+import sys
 import wx
 from wx.lib import langlistctrl
 from Main import opj

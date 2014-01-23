@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.lib.anchors as anchors
+import wx
+import wx.lib.anchors as anchors
 
 #----------------------------------------------------------------------
 

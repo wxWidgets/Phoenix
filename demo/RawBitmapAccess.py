@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 
 # use the numpy code instead of the raw access code for comparison

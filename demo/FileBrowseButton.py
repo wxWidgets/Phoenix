@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 """ Demonstrate filebrowsebutton module of the wxPython.lib Library.
 
@@ -5,8 +6,8 @@
     Added demo for DirBrowseButton and improved overview text.
 """
 
-import  wx
-import  wx.lib.filebrowsebutton as filebrowse
+import wx
+import wx.lib.filebrowsebutton as filebrowse
 
 #----------------------------------------------------------------------
 

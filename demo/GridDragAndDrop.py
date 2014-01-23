@@ -1,11 +1,12 @@
+#!/usr/bin/env python
 
 """
 Example showing how to make a grid a drop target for files.
 
 """
 
-import  wx
-import  wx.grid as gridlib
+import wx
+import wx.grid as gridlib
 
 #---------------------------------------------------------------------------
 # Set VIRTUAL to 1 to use a virtual grid

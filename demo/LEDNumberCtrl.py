@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 
-import  time
+import time
 
-import  wx
-import  wx.gizmos   as  gizmos
+import wx
+import wx.gizmos as gizmos
 
 #----------------------------------------------------------------------
 

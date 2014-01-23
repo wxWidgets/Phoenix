@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 g = wx

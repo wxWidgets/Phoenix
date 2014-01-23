@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #----------------------------------------------------------------------------
 # Name:         ListCtrl.py
 # Purpose:      Testing lots of stuff, controls, window types, etc.
@@ -11,10 +13,10 @@
 #----------------------------------------------------------------------------
 
 import sys
-import  wx
-import  wx.lib.mixins.listctrl  as  listmix
+import wx
+import wx.lib.mixins.listctrl as listmix
 
-import  images
+import images
 
 #---------------------------------------------------------------------------
 

@@ -1,5 +1,10 @@
+#!/usr/bin/env python
 
-import sys, time, math, os, os.path
+import sys
+import time
+import math
+import os
+import os.path
 
 import wx
 _ = wx.GetTranslation

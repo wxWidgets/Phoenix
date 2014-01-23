@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 
 import wx
 from wx.lib.ticker import Ticker
-import wx.lib.colourselect as  csel     #for easy color selection
+import wx.lib.colourselect as  csel #for easy color selection
 
 #----------------------------------------------------------------------
 
@@ -12,7 +13,7 @@ class TestPanel(wx.Panel):
 
         self.ticker = Ticker(self)
 
-        #       Controls for ...controlling... the ticker.
+        # Controls for ...controlling... the ticker.
         self.txt = wx.TextCtrl(self, value="I am a scrolling ticker!!!!", size=(200,-1))
         wx.CallAfter(self.txt.SetInsertionPoint, 0)
         txtl = wx.StaticText(self, label="Ticker text:")
@@ -34,7 +35,7 @@ class TestPanel(wx.Panel):
                         size=(150,-1),
                         style=wx.SL_HORIZONTAL|wx.SL_AUTOTICKS|wx.SL_LABELS)
 
-        #       Do layout
+        # Do layout
         sz = wx.FlexGridSizer(cols=2, hgap=4, vgap=4)
 
         sz.Add(txtl, flag=wx.ALIGN_CENTER_VERTICAL)
@@ -64,7 +65,7 @@ class TestPanel(wx.Panel):
         self.SetSizer(sz2)
         sz2.SetSizeHints(self)
 
-        #       Bind events
+        # Bind events
         self.Bind(wx.EVT_BUTTON, self.OnChangeTickDirection, dirb)
         self.Bind(wx.EVT_BUTTON, self.OnChangeTickFont, fontb)
         self.Bind(wx.EVT_TEXT, self.OnText, self.txt)
@@ -73,7 +74,7 @@ class TestPanel(wx.Panel):
         self.Bind(wx.EVT_SCROLL, self.ChangeFPS, fps)
         self.Bind(wx.EVT_SCROLL, self.ChangePPF, ppf)
 
-        #       Set defaults
+        # Set defaults
         self.SetTickDirection("rtl")
         self.SetTickFont(self.ticker.GetFont())
         self.ticker.SetText(self.txt.GetValue())

@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 
 import string
 
-import  wx
-import  wx.grid as gridlib
+import wx
+import wx.grid as gridlib
 
 #---------------------------------------------------------------------------
 class MyCellEditor(gridlib.GridCellEditor):

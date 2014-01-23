@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 
-import  wx
+import wx
 
 #---------------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ class TestRadioBox(wx.Panel):
                 self, -1, "wx.RadioBox", wx.DefaultPosition, wx.DefaultSize,
                 sampleList, 2, wx.RA_SPECIFY_COLS
                 )
-        
+
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
         #rb.SetBackgroundColour(wx.BLUE)
         rb.SetToolTip(wx.ToolTip("This is a ToolTip!"))
@@ -30,7 +31,7 @@ class TestRadioBox(wx.Panel):
                 self, -1, "", wx.DefaultPosition, wx.DefaultSize,
                 sampleList, 3, wx.RA_SPECIFY_COLS | wx.NO_BORDER
                 )
-        
+
         self.Bind(wx.EVT_RADIOBOX, self.EvtRadioBox, rb)
         rb.SetToolTip(wx.ToolTip("This box has no label"))
 
@@ -53,7 +54,7 @@ def runTest(frame, nb, log):
 overview = """\
 A RadioBox is used to select one of a number of mutually exclusive
 choices.  It is displayed as a vertical column or horizontal row of
-labelled buttons, surrounded by a box that can optionally have a 
+labelled buttons, surrounded by a box that can optionally have a
 label.
 
 """

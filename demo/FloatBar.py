@@ -1,14 +1,15 @@
-#
+#!/usr/bin/env python
+
 # Please note that wx.lib.floatbar is not formally supported as
 # part of wxPython. If it works, fine. If not, unfortunate.
 # GTK users can use the wx.TB_DOCKABLE flag with a regular
 # wx.ToolBar, but everyone else has to take their chances.
-#
 
-import  wx
-import  wx.lib.floatbar
 
-import  images
+import wx
+import wx.lib.floatbar
+
+import images
 
 
 class TestFloatBar(wx.Frame):

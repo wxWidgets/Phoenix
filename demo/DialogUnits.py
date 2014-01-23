@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 #----------------------------------------------------------------------------
 # Name:         DialogUnits.py
 # Purpose:      A minimal wxPython program that is a bit smarter than test1.
@@ -10,9 +11,9 @@
 # Copyright:    (c) 1998 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------
-#
 
-import  wx
+
+import wx
 
 #---------------------------------------------------------------------------
 

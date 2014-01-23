@@ -1,10 +1,11 @@
+#!/usr/bin/env python
 
-import  os
-import  sys
+import os
+import sys
 
-import  wx
-import  wx.html as  html
-import  wx.lib.wxpTag
+import wx
+import wx.html as html
+import wx.lib.wxpTag
 
 from Main import opj
 

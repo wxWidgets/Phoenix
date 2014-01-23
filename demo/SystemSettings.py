@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ###############################################################################
 # Name: SystemSettingsDemo.py                                                 #
 # Purpose: SystemSettings Test and Demo File                                  #
@@ -73,7 +74,7 @@ class SysPanelBase(wx.Panel):
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
 
-       
+
     def DoGetBestSize(self):
         """Return the best size for this panel"""
         maxw = 0
@@ -125,8 +126,8 @@ class SysColorPanel(SysPanelBase):
         self._box = (50, 15) # Color box dimensions
         self._maxw = 0
         self._vals = [ color for color in dir(wx)
-                       if color.startswith('SYS_COLOUR_') ]               
-        
+                       if color.startswith('SYS_COLOUR_') ]
+
     def OnPaint(self, evt):
         dc = wx.AutoBufferedPaintDCFactory(self)
         self.SetupPaintDC(dc)
@@ -158,13 +159,13 @@ class SysFontPanel(SysPanelBase):
 
         # Attributes:
         self._maxw = 0
-        self._vals = ['SYS_ANSI_FIXED_FONT', 
+        self._vals = ['SYS_ANSI_FIXED_FONT',
                       'SYS_ANSI_VAR_FONT',
-                      'SYS_DEFAULT_GUI_FONT', 
+                      'SYS_DEFAULT_GUI_FONT',
                       'SYS_DEVICE_DEFAULT_FONT',
-                      # 'SYS_ICONTITLE_FONT', 
+                      # 'SYS_ICONTITLE_FONT',
                       'SYS_OEM_FIXED_FONT',
-                      # 'SYS_SYSTEM_FIXED_FONT', 
+                      # 'SYS_SYSTEM_FIXED_FONT',
                       'SYS_SYSTEM_FONT'
                       ]
 

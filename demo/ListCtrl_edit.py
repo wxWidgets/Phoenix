@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #----------------------------------------------------------------------------
 # Name:         ListCtrl_edit.py
 # Purpose:      Testing editing a ListCtrl
@@ -10,8 +12,8 @@
 #----------------------------------------------------------------------------
 
 import sys
-import  wx
-import  wx.lib.mixins.listctrl  as  listmix
+import wx
+import wx.lib.mixins.listctrl as listmix
 
 #---------------------------------------------------------------------------
 

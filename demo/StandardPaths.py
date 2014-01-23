@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 
@@ -44,7 +45,7 @@ class TestPanel(wx.Panel):
             btn = wx.Button(self, wx.ID_HELP)
             sizer.Add(btn)
             self.help[btn] = func.__doc__
-            
+
         for x in ['GetConfigDir',
                   'GetUserConfigDir',
                   'GetDataDir',
@@ -80,8 +81,8 @@ class TestPanel(wx.Panel):
             lines.append(line.strip())
         doc = '\n'.join(lines)
         wx.TipWindow(self, doc, 500)
-        
-        
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

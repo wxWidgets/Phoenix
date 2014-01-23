@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 <html><body>
 This demo shows how to embed an ActiveX control in a wxPython application, (Win32 only.)

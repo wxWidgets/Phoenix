@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 import wx.richtext as rt
@@ -179,7 +180,7 @@ class RichTextFrame(wx.Frame):
         self.rtc.Newline()
         self.rtc.WriteText("I find some of the RichTextCtrl method names, as used above, to be misleading.  Some character styles are stacked in the RichTextCtrl, and they are removed in the reverse order from how they are added, regardless of the method called.  Allow me to demonstrate what I mean.")
         self.rtc.Newline()
-        
+
         self.rtc.WriteText('Start with plain text. ')
         self.rtc.BeginBold()
         self.rtc.WriteText('BeginBold() makes it bold. ')
@@ -233,7 +234,7 @@ class RichTextFrame(wx.Frame):
 
         self.rtc.EndSuppressUndo()
         self.rtc.Thaw()
-        
+
 
     def SetFontStyle(self, fontColor = None, fontBgColor = None, fontFace = None, fontSize = None,
                      fontBold = None, fontItalic = None, fontUnderline = None):
@@ -264,7 +265,7 @@ class RichTextFrame(wx.Frame):
 
     def OnURL(self, evt):
         wx.MessageBox(evt.GetString(), "URL Clicked")
-        
+
 
     def OnFileOpen(self, evt):
         # This gives us a string suitable for the file dialog based on
@@ -280,14 +281,14 @@ class RichTextFrame(wx.Frame):
                 self.rtc.LoadFile(path, fileType)
         dlg.Destroy()
 
-        
+
     def OnFileSave(self, evt):
         if not self.rtc.GetFilename():
             self.OnFileSaveAs(evt)
             return
         self.rtc.SaveFile()
 
-        
+
     def OnFileSaveAs(self, evt):
         wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
 
@@ -303,8 +304,8 @@ class RichTextFrame(wx.Frame):
                     path += '.' + ext
                 self.rtc.SaveFile(path, fileType)
         dlg.Destroy()
-        
-                
+
+
     def OnFileViewHTML(self, evt):
         # Get an instance of the html file handler, use it to save the
         # document to a StringIO stream, and then display the
@@ -332,31 +333,31 @@ class RichTextFrame(wx.Frame):
         dlg.ShowModal()
 
         handler.DeleteTemporaryImages()
-        
 
-    
+
+
     def OnFileExit(self, evt):
         self.Close(True)
 
-      
+
     def OnBold(self, evt):
         self.rtc.ApplyBoldToSelection()
-        
-    def OnItalic(self, evt): 
+
+    def OnItalic(self, evt):
         self.rtc.ApplyItalicToSelection()
-        
+
     def OnUnderline(self, evt):
         self.rtc.ApplyUnderlineToSelection()
-        
+
     def OnAlignLeft(self, evt):
         self.rtc.ApplyAlignmentToSelection(wx.TEXT_ALIGNMENT_LEFT)
-        
+
     def OnAlignRight(self, evt):
         self.rtc.ApplyAlignmentToSelection(wx.TEXT_ALIGNMENT_RIGHT)
-        
+
     def OnAlignCenter(self, evt):
         self.rtc.ApplyAlignmentToSelection(wx.TEXT_ALIGNMENT_CENTRE)
-        
+
     def OnIndentMore(self, evt):
         attr = wx.TextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
@@ -369,8 +370,8 @@ class RichTextFrame(wx.Frame):
             attr.SetLeftIndent(attr.GetLeftIndent() + 100)
             attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
             self.rtc.SetStyle(r, attr)
-       
-        
+
+
     def OnIndentLess(self, evt):
         attr = wx.TextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
@@ -385,7 +386,7 @@ class RichTextFrame(wx.Frame):
             attr.SetFlags(wx.TEXT_ATTR_LEFT_INDENT)
             self.rtc.SetStyle(r, attr)
 
-        
+
     def OnParagraphSpacingMore(self, evt):
         attr = wx.TextAttr()
         attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)
@@ -399,7 +400,7 @@ class RichTextFrame(wx.Frame):
             attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)
             self.rtc.SetStyle(r, attr)
 
-        
+
     def OnParagraphSpacingLess(self, evt):
         attr = wx.TextAttr()
         attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)
@@ -414,8 +415,8 @@ class RichTextFrame(wx.Frame):
                 attr.SetFlags(wx.TEXT_ATTR_PARA_SPACING_AFTER)
                 self.rtc.SetStyle(r, attr)
 
-        
-    def OnLineSpacingSingle(self, evt): 
+
+    def OnLineSpacingSingle(self, evt):
         attr = wx.TextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LINE_SPACING)
         ip = self.rtc.GetInsertionPoint()
@@ -427,8 +428,8 @@ class RichTextFrame(wx.Frame):
             attr.SetFlags(wx.TEXT_ATTR_LINE_SPACING)
             attr.SetLineSpacing(10)
             self.rtc.SetStyle(r, attr)
- 
-                
+
+
     def OnLineSpacingHalf(self, evt):
         attr = wx.TextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LINE_SPACING)
@@ -442,7 +443,7 @@ class RichTextFrame(wx.Frame):
             attr.SetLineSpacing(15)
             self.rtc.SetStyle(r, attr)
 
-        
+
     def OnLineSpacingDouble(self, evt):
         attr = wx.TextAttr()
         attr.SetFlags(wx.TEXT_ATTR_LINE_SPACING)
@@ -500,28 +501,28 @@ class RichTextFrame(wx.Frame):
                     attr.SetTextColour(colour)
                     self.rtc.SetStyle(r, attr)
         dlg.Destroy()
-        
+
 
 
     def OnUpdateBold(self, evt):
         evt.Check(self.rtc.IsSelectionBold())
-    
-    def OnUpdateItalic(self, evt): 
+
+    def OnUpdateItalic(self, evt):
         evt.Check(self.rtc.IsSelectionItalics())
-    
-    def OnUpdateUnderline(self, evt): 
+
+    def OnUpdateUnderline(self, evt):
         evt.Check(self.rtc.IsSelectionUnderlined())
-    
+
     def OnUpdateAlignLeft(self, evt):
         evt.Check(self.rtc.IsSelectionAligned(wx.TEXT_ALIGNMENT_LEFT))
-        
+
     def OnUpdateAlignCenter(self, evt):
         evt.Check(self.rtc.IsSelectionAligned(wx.TEXT_ALIGNMENT_CENTRE))
-        
+
     def OnUpdateAlignRight(self, evt):
         evt.Check(self.rtc.IsSelectionAligned(wx.TEXT_ALIGNMENT_RIGHT))
 
-    
+
     def ForwardEvent(self, evt):
         # The RichTextCtrl can handle menu and update events for undo,
         # redo, cut, copy, paste, delete, and select all, so just
@@ -534,7 +535,7 @@ class RichTextFrame(wx.Frame):
             self.Bind(wx.EVT_MENU, handler, item)
             if updateUI is not None:
                 self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
-            
+
         fileMenu = wx.Menu()
         doBind( fileMenu.Append(-1, "&Open\tCtrl+O", "Open a file"),
                 self.OnFileOpen )
@@ -548,7 +549,7 @@ class RichTextFrame(wx.Frame):
         fileMenu.AppendSeparator()
         doBind( fileMenu.Append(-1, "E&xit\tCtrl+Q", "Quit this program"),
                 self.OnFileExit )
-        
+
         editMenu = wx.Menu()
         doBind( editMenu.Append(wx.ID_UNDO, "&Undo\tCtrl+Z"),
                 self.ForwardEvent, self.ForwardEvent)
@@ -566,7 +567,7 @@ class RichTextFrame(wx.Frame):
         editMenu.AppendSeparator()
         doBind( editMenu.Append(wx.ID_SELECTALL, "Select A&ll\tCtrl+A"),
                 self.ForwardEvent, self.ForwardEvent )
-        
+
         #doBind( editMenu.AppendSeparator(),  )
         #doBind( editMenu.Append(-1, "&Find...\tCtrl+F"),  )
         #doBind( editMenu.Append(-1, "&Replace...\tCtrl+R"),  )
@@ -597,7 +598,7 @@ class RichTextFrame(wx.Frame):
         doBind( formatMenu.Append(-1, "Double Line Spacing"), self.OnLineSpacingDouble)
         formatMenu.AppendSeparator()
         doBind( formatMenu.Append(-1, "&Font..."), self.OnFont)
-        
+
         mb = wx.MenuBar()
         mb.Append(fileMenu, "&File")
         mb.Append(editMenu, "&Edit")
@@ -610,7 +611,7 @@ class RichTextFrame(wx.Frame):
             self.Bind(wx.EVT_TOOL, handler, item)
             if updateUI is not None:
                 self.Bind(wx.EVT_UPDATE_UI, updateUI, item)
-        
+
         tbar = self.CreateToolBar()
         doBind( tbar.AddTool(-1, images._rt_open.GetBitmap(),
                             shortHelpString="Open"), self.OnFileOpen)
@@ -655,7 +656,7 @@ class RichTextFrame(wx.Frame):
 
         tbar.Realize()
 
-       
+
 
 #----------------------------------------------------------------------
 
@@ -675,7 +676,7 @@ class TestPanel(wx.Panel):
         # make sure we haven't already added them.
         if rt.RichTextBuffer.FindHandlerByType(rt.RICHTEXT_TYPE_HTML) is not None:
             return
-        
+
         # This would normally go in your app's OnInit method.  I'm
         # not sure why these file handlers are not loaded by
         # default by the C++ richtext code, I guess it's so you

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 import wx.html
 import wx.grid

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # 11/26/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Had to do a bit of rework for the demo; there was no panel attached
@@ -5,13 +7,13 @@
 #   dark gray. I have no idea why this didn't break before. Robin,
 #   please examine my changes to ensure you approve. It's rather
 #   hackish looking.
-#
+
 
 #----------------------------------------------------------------------
 # sizer test code
 #----------------------------------------------------------------------
 
-import  wx
+import wx
 
 #----------------------------------------------------------------------
 
@@ -22,10 +24,10 @@ class SampleWindow(wx.Window):
     """
     def __init__(self, parent, text, pos=wx.DefaultPosition, size=wx.DefaultSize):
         wx.Window.__init__(self, parent, -1,
-                             #style=wx.RAISED_BORDER
-                             #style=wx.SUNKEN_BORDER
-                             style=wx.SIMPLE_BORDER
-                             )
+                           #style=wx.RAISED_BORDER
+                           #style=wx.SUNKEN_BORDER
+                           style=wx.SIMPLE_BORDER
+                           )
         self.text = text
         if size != wx.DefaultSize:
             self.bestsize = size

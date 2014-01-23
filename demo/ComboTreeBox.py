@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 from wx.lib.combotreebox import ComboTreeBox
 

@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 
-import  wx
+import wx
 
 #----------------------------------------------------------------------
 
@@ -51,7 +52,7 @@ class TestPanel( wx.Panel ):
         self.group2_ctrls.append((radio4, text4))
         self.group2_ctrls.append((radio5, text5))
         self.group2_ctrls.append((radio6, text6))
-        
+
         for radio, text in self.group2_ctrls:
             grid2.Add( radio, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
             grid2.Add( text, 0, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT|wx.TOP, 5 )

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 import wx.lib.buttons as buttons
 

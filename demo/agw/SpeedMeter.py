@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 import wx.lib.buttons
 from math import pi, sqrt

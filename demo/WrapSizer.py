@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 import wx
 from wx.lib.buttons import GenButton
 

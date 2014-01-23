@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  images
+import wx
+import images
 
 #import wx.lib.buttons
 #wx.BitmapButton = wx.lib.buttons.GenBitmapButton

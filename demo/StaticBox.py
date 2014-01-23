@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 
@@ -18,7 +19,7 @@ class TestPanel(wx.Panel):
         border = wx.BoxSizer()
         border.Add(bsizer, 1, wx.EXPAND|wx.ALL, 25)
         self.SetSizer(border)
-        
+
 
 #----------------------------------------------------------------------
 

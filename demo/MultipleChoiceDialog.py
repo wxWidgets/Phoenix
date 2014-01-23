@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.lib.dialogs
+import wx
+import wx.lib.dialogs
 
 #---------------------------------------------------------------------------
 

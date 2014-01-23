@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #---------------------------------------------------------------------------
 # Name:        EventManager.py
 # Purpose:     A module to demonstrate wxPython.lib.evtmgr.EventManager.

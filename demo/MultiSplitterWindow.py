@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import wx
 from wx.lib.splitter import MultiSplitterWindow

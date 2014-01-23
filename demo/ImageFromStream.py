@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 
-import  cStringIO
+import cStringIO
 
-import  wx
+import wx
 
 from Main import opj
 

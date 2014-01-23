@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #*******************
 #By Daniel Pozmanter
 
@@ -8,7 +10,8 @@
 
 #This is a hacked version of DragAndDrop.py from the wxPython demo 2.5.2.8
 
-import wx, wx.lib.dialogs
+import wx
+import wx.lib.dialogs
 from wx.lib.gestures import MouseGestures
 
 #ToDo:

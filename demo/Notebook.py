@@ -1,13 +1,14 @@
+#!/usr/bin/env python
 
-import  sys
+import sys
 
-import  wx
+import wx
 
-import  ColorPanel
-import  GridSimple
-import  ListCtrl
-import  ScrolledWindow
-import  images
+import ColorPanel
+import GridSimple
+import ListCtrl
+import ScrolledWindow
+import images
 
 #----------------------------------------------------------------------------
 

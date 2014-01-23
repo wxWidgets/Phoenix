@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.grid as  Grid
+import wx
+import wx.grid as Grid
 
-import  images
+import images
 
 #---------------------------------------------------------------------------
 

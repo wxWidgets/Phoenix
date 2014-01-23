@@ -1,5 +1,7 @@
-import  os
-import  wx
+#!/usr/bin/env python
+
+import os
+import wx
 
 if wx.Platform == '__WXMSW__':
     from wx.lib.flashwin import FlashWindow

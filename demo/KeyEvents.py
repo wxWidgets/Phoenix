@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.lib.mixins.listctrl  as  listmix
+import wx
+import wx.lib.mixins.listctrl as listmix
 
 #----------------------------------------------------------------------
 

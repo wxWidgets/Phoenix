@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 This module contains the meta data needed for integrating the samples
 in the AGW subdir into the wxPython demo framework. Once imported,

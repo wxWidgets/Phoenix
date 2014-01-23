@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 
 import os
@@ -5,7 +7,7 @@ import sys
 import glob
 import random
 
-from  wx.lib import masked
+from wx.lib import masked
 
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))

@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  wx
-import  wx.lib.dialogs
+import wx
+import wx.lib.dialogs
 
 #---------------------------------------------------------------------------
 
@@ -40,7 +41,7 @@ overview = """\
 
 This class represents a message dialog that uses a wxTextCtrl to display the
 message. This allows more flexible information display without having to be
-as much concerned with layout requirements. A text file can simply be used 
+as much concerned with layout requirements. A text file can simply be used
 
 This dialog offers no special attributes or methods beyond those supported
 by wxDialog.

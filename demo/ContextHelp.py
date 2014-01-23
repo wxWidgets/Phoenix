@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 
-import  wx
+import wx
 
 #----------------------------------------------------------------------
 # We first have to set an application-wide help provider.  Normally you

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #----------------------------------------------------------------------------
 # Name:         Calendar.py
 # Purpose:      Calendar control display testing on panel for wxPython demo
@@ -24,12 +26,12 @@
 #   the culprit.
 #
 
-import  os
+import os
 
-import  wx
-import  wx.lib.calendar
+import wx
+import wx.lib.calendar
 
-import  images
+import images
 
 
 # highlighted days in month

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 from wx.lib.itemspicker import ItemsPicker, \
                                EVT_IP_SELECTION_CHANGED, \

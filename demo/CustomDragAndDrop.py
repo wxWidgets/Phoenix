@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 
-import  cPickle
-import  wx
+import cPickle
+import wx
 
 #----------------------------------------------------------------------
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Hello, and welcome to this test of the wxTreeItemData
 class.
@@ -23,10 +25,10 @@ sample not because it's used, but because it's so
 beautifully documented...
 """
 
-import  string  # Used for demo purposes, nothing more. :-)
-import  sys
+import string  # Used for demo purposes, nothing more. :-)
+import sys
 
-import  wx
+import wx
 
 #----------------------------------------------------------------------
 
