@@ -24,9 +24,11 @@ import images
 #---------------------------------------------------------------------------
 
 
-penstyle = ["wx.SOLID", "wx.TRANSPARENT", "wx.DOT", "wx.LONG_DASH", "wx.DOT_DASH", "wx.USER_DASH",
-           "wx.BDIAGONAL_HATCH", "wx.CROSSDIAG_HATCH", "wx.FDIAGONAL_HATCH", "wx.CROSS_HATCH",
-           "wx.HORIZONTAL_HATCH", "wx.VERTICAL_HATCH"]
+penstyle = ["wx.PENSTYLE_SOLID", "wx.PENSTYLE_TRANSPARENT", "wx.PENSTYLE_DOT",
+            "wx.PENSTYLE_LONG_DASH", "wx.PENSTYLE_DOT_DASH", "wx.PENSTYLE_USER_DASH",
+            "wx.PENSTYLE_BDIAGONAL_HATCH", "wx.PENSTYLE_CROSSDIAG_HATCH",
+            "wx.PENSTYLE_FDIAGONAL_HATCH", "wx.PENSTYLE_CROSS_HATCH",
+            "wx.PENSTYLE_HORIZONTAL_HATCH", "wx.PENSTYLE_VERTICAL_HATCH"]
 
 ArtIDs = [ "None",
            "wx.ART_ADD_BOOKMARK",
@@ -242,7 +244,7 @@ class PenDialog(wx.Dialog):
         widthsizer = wx.BoxSizer(wx.HORIZONTAL)
         coloursizer = wx.BoxSizer(wx.HORIZONTAL)
         label_1 = wx.StaticText(self, -1, "Please Choose The Pen Settings:")
-        label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         mainsizer.Add(label_1, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
         label_2 = wx.StaticText(self, -1, "Pen Colour")
         coloursizer.Add(label_2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)
@@ -366,7 +368,7 @@ class TreeButtonsDialog(wx.Dialog):
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_1 = wx.BoxSizer(wx.HORIZONTAL)
         label_1 = wx.StaticText(self, -1, "Please Choose One Of These Sets Of Icons:")
-        label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         mainsizer.Add(label_1, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
         topsizer.Add(self.listicons, 0, wx.ALL|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
         label_2 = wx.StaticText(self, -1, "Collapsed")
@@ -480,7 +482,7 @@ class CheckDialog(wx.Dialog):
         sizer_3 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_4 = wx.BoxSizer(wx.HORIZONTAL)
         label_1 = wx.StaticText(self, -1, "Please Choose One Of These Sets Of Icons:")
-        label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         mainsizer.Add(label_1, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
         topsizer.Add(self.listicons, 0, wx.ALL|wx.EXPAND|wx.ADJUST_MINSIZE, 5)
         label_2 = wx.StaticText(self, -1, "Checked")
@@ -620,7 +622,7 @@ class TreeIcons(wx.Dialog):
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
         gridsizer = wx.FlexGridSizer(4, 3, 5, 5)
         label_1 = wx.StaticText(self, -1, "Please Choose The Icons For This Item (All Are Optional):")
-        label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         mainsizer.Add(label_1, 0, wx.ALL|wx.ADJUST_MINSIZE, 10)
         label_2 = wx.StaticText(self, -1, "TreeIcon_Normal:")
         gridsizer.Add(label_2, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL|wx.ADJUST_MINSIZE, 5)

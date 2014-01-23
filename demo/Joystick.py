@@ -35,7 +35,7 @@ class Label(wx.StaticText):
         wx.StaticText.__init__(self, parent, -1, label, style=wx.ALIGN_RIGHT)
 
         f = parent.GetFont()
-        f.SetWeight(wx.BOLD)
+        f.SetWeight(wx.FONTWEIGHT_BOLD)
         self.SetFont(f)
 
 #----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ class JoyGauge(wx.Panel):
         dc.SetBrush(wx.Brush(wx.Colour(251, 252, 237)))
         dc.DrawRectangle(xorigin, yorigin, edgeSize, edgeSize)
 
-        dc.SetPen(wx.Pen(wx.BLACK, 1, wx.DOT_DASH))
+        dc.SetPen(wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT_DASH))
 
         dc.DrawLine(xorigin, yorigin + center, xorigin + edgeSize, yorigin + center)
         dc.DrawLine(xorigin + center, yorigin, xorigin + center, yorigin + edgeSize)
@@ -157,7 +157,7 @@ class JoyPanel(wx.Panel):
 
         fn = parent.GetFont()
         fn.SetPointSize(fn.GetPointSize() + 3)
-        fn.SetWeight(wx.BOLD)
+        fn.SetWeight(wx.FONTWEIGHT_BOLD)
 
         t = wx.StaticText(self, -1, "X - Y Axes", style = wx.ALIGN_CENTRE)
         t.SetFont(fn)
@@ -236,7 +236,7 @@ class POVGauge(wx.Panel):
         dc.DrawCircle(xcenter, ycenter, 10)
 
         # fancy decorations
-        dc.SetPen(wx.Pen(wx.BLACK, 1, wx.DOT_DASH))
+        dc.SetPen(wx.Pen(wx.BLACK, 1, wx.PENSTYLE_DOT_DASH))
         dc.DrawLine(xorigin, ycenter, xorigin + diameter, ycenter)
         dc.DrawLine(xcenter, yorigin, xcenter, yorigin + diameter)
 
@@ -349,7 +349,7 @@ class POVPanel(wx.Panel):
 
         fn = parent.GetFont()
         fn.SetPointSize(fn.GetPointSize() + 3)
-        fn.SetWeight(wx.BOLD)
+        fn.SetWeight(wx.FONTWEIGHT_BOLD)
 
         t = wx.StaticText(self, -1, "POV Control", style = wx.ALIGN_CENTER)
         t.SetFont(fn)
@@ -386,7 +386,7 @@ class LED(wx.Panel):
 
         fn = parent.GetFont()
         fn.SetPointSize(fn.GetPointSize() - 1)
-        fn.SetWeight(wx.BOLD)
+        fn.SetWeight(wx.FONTWEIGHT_BOLD)
         self.fn = fn
 
         wx.Panel.__init__(self, parent, -1, size=self.size)
@@ -488,7 +488,7 @@ class JoyButtons(wx.Panel):
 
         fn = parent.GetFont()
         fn.SetPointSize(fn.GetPointSize() + 3)
-        fn.SetWeight(wx.BOLD)
+        fn.SetWeight(wx.FONTWEIGHT_BOLD)
 
         t = wx.StaticText(self, -1, "Buttons", style = wx.ALIGN_LEFT)
         t.SetFont(fn)
@@ -659,7 +659,7 @@ class AxisBar(wx.Gauge):
 
         # Copy the default font, make it bold.
         fn = self.GetParent().GetFont()
-        fn.SetWeight(wx.BOLD)
+        fn.SetWeight(wx.FONTWEIGHT_BOLD)
 
         # Set the font for the DC ...
         dc.SetFont(fn)

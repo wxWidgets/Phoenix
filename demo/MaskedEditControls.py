@@ -19,11 +19,11 @@ class demoMixin:
         regex       = wx.StaticText( self, -1, "Regexp Validator(opt.)" )
         ctrl        = wx.StaticText( self, -1, "Masked TextCtrl" )
 
-        description.SetFont( wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD))
-        mask.SetFont( wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD))
-        formatcode.SetFont( wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD) )
-        regex.SetFont( wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD))
-        ctrl.SetFont( wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD))
+        description.SetFont( wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+        mask.SetFont( wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+        formatcode.SetFont( wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD) )
+        regex.SetFont( wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+        ctrl.SetFont( wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
         sizer.Add(description)
         sizer.Add(mask)
@@ -164,9 +164,9 @@ Many of these already do complicated validation; To see some examples, try
         autofmt     = wx.StaticText( self, -1, "AutoFormat Code")
         ctrl        = wx.StaticText( self, -1, "Masked Ctrl")
 
-        description.SetFont( wx.Font( 9, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-        autofmt.SetFont( wx.Font( 9, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-        ctrl.SetFont( wx.Font( 9, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+        description.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD ) )
+        autofmt.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD ) )
+        ctrl.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD ) )
 
         grid = wx.FlexGridSizer( cols=3, vgap=10, hgap=5 )
         grid.Add( description, 0, wx.ALIGN_LEFT )
@@ -257,10 +257,10 @@ Page Up and Shift-Up arrow will similarly cycle backwards through the list.
         fields       = wx.StaticText( self, -1, "Field Objects" )
         ctrl         = wx.StaticText( self, -1, "Masked TextCtrl" )
 
-        description.SetFont( wx.Font( 9, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-        autofmt.SetFont( wx.Font( 9, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-        fields.SetFont( wx.Font( 9, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-        ctrl.SetFont( wx.Font( 9, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+        description.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD ) )
+        autofmt.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD ) )
+        fields.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD ) )
+        ctrl.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD ) )
 
         grid = wx.FlexGridSizer( cols=4, vgap=10, hgap=10 )
         grid.Add( description, 0, wx.ALIGN_LEFT )

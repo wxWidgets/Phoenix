@@ -15,7 +15,7 @@ class TestPanel(wx.Panel):
 
         # make the components
         label = wx.StaticText(self, -1, "The lower panel was built from this XML:")
-        label.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD))
+        label.SetFont(wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
         resourceText = open(RESFILE).read()
         text = wx.TextCtrl(self, -1, resourceText,

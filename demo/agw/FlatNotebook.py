@@ -897,8 +897,8 @@ class LogoPanel(wx.Panel):
         self.SetBackgroundColour(wx.WHITE)
         self.bmp = images.Vippi.GetBitmap()
 
-        self.bigfont = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD, False)
-        self.normalfont = wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD, True)
+        self.bigfont = wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
+        self.normalfont = wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True)
 
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 

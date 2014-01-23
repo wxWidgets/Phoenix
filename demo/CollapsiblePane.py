@@ -16,7 +16,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         title = wx.StaticText(self, label="wx.CollapsiblePane")
-        title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
+        title.SetFont(wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         title.SetForegroundColour("blue")
 
         self.cp = cp = wx.CollapsiblePane(self, label=label1,

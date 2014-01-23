@@ -91,7 +91,7 @@ class TestPanel(wx.Panel):
     def OnLoadFile(self, evt):
         dlg = wx.FileDialog(self, message="Choose a media file",
                             defaultDir=os.getcwd(), defaultFile="",
-                            style=wx.OPEN | wx.CHANGE_DIR )
+                            style=wx.FD_OPEN | wx.FD_CHANGE_DIR )
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.DoLoadFile(path)

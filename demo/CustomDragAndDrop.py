@@ -197,7 +197,7 @@ class CustomDnDPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
 
-        self.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
 
         # Make the controls
         text1 = wx.StaticText(self, -1,
@@ -266,7 +266,7 @@ class TestPanel(wx.Panel):
 
         msg = "Custom Drag-And-Drop"
         text = wx.StaticText(self, -1, "", style=wx.ALIGN_CENTRE)
-        text.SetFont(wx.Font(24, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        text.SetFont(wx.Font(24, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         text.SetLabel(msg)
         w,h = text.GetTextExtent(msg)
         text.SetSize(wx.Size(w,h+1))

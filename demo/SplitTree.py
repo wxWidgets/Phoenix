@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # 11/13/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
@@ -7,11 +9,10 @@
 # o Bigtime errors on startup. Blows up with a program error.
 #   Error:
 #
-#   21:04:11: Debug: ..\..\src\msw\treectrl.cpp(1508): assert "IsVisible(item)" 
+#   21:04:11: Debug: ..\..\src\msw\treectrl.cpp(1508): assert "IsVisible(item)"
 #   failed: The item you call GetNextVisible() for must be visible itself!
 #
 #   I suspect this error is in the lib itself.
-#
 
 import  wx
 import  wx.gizmos as gizmos
@@ -62,12 +63,12 @@ class TestValueWindow(gizmos.TreeCompanionWindow):
 
             text = text + tree.GetItemText(itemId)
             pen = wx.Pen(
-                wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DLIGHT), 
-                1, wx.SOLID
+                wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DLIGHT),
+                1, wx.PENSTYLE_SOLID
                 )
 
             dc.SetPen(pen)
-            dc.SetBrush(wx.Brush(self.GetBackgroundColour(), wx.SOLID))
+            dc.SetBrush(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(rect.x, rect.y, rect.width+1, rect.height+1)
             dc.SetTextForeground("BLACK")
             dc.SetBackgroundMode(wx.TRANSPARENT)
@@ -90,7 +91,7 @@ class TestPanel(wx.Panel):
         splitter = gizmos.ThinSplitterWindow(
             scroller, -1, style=wx.SP_3DBORDER | wx.CLIP_CHILDREN
             )
-            
+
         splitter.SetSashSize(2)
         tree = TestTree(splitter, style = wx.TR_HAS_BUTTONS |
                                           wx.TR_NO_LINES |
@@ -131,7 +132,7 @@ def runTest(frame, nb, log):
 overview = """\
 This demo shows a collection of classes that were designed to operate
 together and provide a tree control with additional columns for each
-item.  The classes are wx.RemotelyScrolledTreeCtrl, wx.TreeCompanionWindow,
+item. The classes are wx.RemotelyScrolledTreeCtrl, wx.TreeCompanionWindow,
 wx.ThinSplitterWindow, and wx.SplitterScrolledWindow, some of which may
 also be useful by themselves.
 """

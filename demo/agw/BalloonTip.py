@@ -108,7 +108,8 @@ class BalloonTipDemo(wx.Frame):
         textctrl2 = wx.TextCtrl(panel, -1, "Another TextCtrl")
         # Add A GenStaticText
         statictext = StaticText(panel, -1, "Hello World!")
-        statictext.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        statictext.SetFont(wx.Font(9, wx.FONTFAMILY_SWISS,
+                                      wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         bmp = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION,
                                        wx.ART_TOOLBAR, (16,16))
         # Add A GenBitmapButton
@@ -160,10 +161,10 @@ class BalloonTipDemo(wx.Frame):
                   "Gauge Help", "", "", "Read Me Carefully!", "SpinCtrl Help",
                   "StaticText Help", "BitmapButton Help", "Button Help", "Taskbar Help"]
 
-        fontone = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, True)
-        fonttwo = wx.Font(14, wx.SCRIPT, wx.NORMAL, wx.BOLD, False)
-        fontthree = wx.Font(9, wx.SWISS, wx.ITALIC, wx.NORMAL, False)
-        fontfour = wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, True)
+        fontone = wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True)
+        fonttwo = wx.Font(14, wx.FONTFAMILY_SCRIPT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
+        fontthree = wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, False)
+        fontfour = wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True)
 
         # Declare The BalloonTip Top Titles Fonts
         titlefonts = [None, None, fontone, None, fonttwo, fontthree, None, None,
@@ -208,9 +209,9 @@ class BalloonTipDemo(wx.Frame):
                           None, wx.BLUE, None, None, wx.RED, wx.GREEN,
                           wx.BLUE, None]
 
-        fontone = wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, True)
-        fonttwo = wx.Font(8, wx.SWISS, wx.ITALIC, wx.NORMAL, False)
-        fontthree = wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, True)
+        fontone = wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, True)
+        fonttwo = wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, False)
+        fontthree = wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True)
 
         # Declare The BalloonTip Tip Messages Fonts
         messagefonts = [None, None, None, fontone, None, None, fonttwo, None,
@@ -319,7 +320,7 @@ class BalloonTipDemo(wx.Frame):
 
         dlg = wx.MessageDialog(self, msg, "BalloonTip Demo",
                                wx.OK | wx.ICON_INFORMATION)
-        dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False, "Verdana"))
+        dlg.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Verdana"))
         dlg.ShowModal()
         dlg.Destroy()
 

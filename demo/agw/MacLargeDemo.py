@@ -148,7 +148,7 @@ class MacRenderer(object):
         mdc.DrawText(text1, 0, ypos)
         ypos += ytext + 5
 
-        mdc.SetFont(wx.Font(7, wx.SWISS, wx.NORMAL, wx.NORMAL, False))
+        mdc.SetFont(wx.Font(7, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False))
 
         xtext, ytext = mdc.GetTextExtent(text2)
         mdc.DrawText(text2, 0, ypos)
@@ -156,7 +156,7 @@ class MacRenderer(object):
 
         self.DrawProgressBar(mdc, 0, ypos, rect.width, 20, progress)
 
-        mdc.SetFont(wx.Font(7, wx.SWISS, wx.NORMAL, wx.NORMAL, False))
+        mdc.SetFont(wx.Font(7, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False))
         ypos += 25
 
         mdc.DrawText(text3, 0, ypos)

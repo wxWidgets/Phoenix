@@ -2075,8 +2075,8 @@ class wxPythonDemo(wx.Frame):
         if USE_CUSTOMTREECTRL or 'wxMSW' not in wx.PlatformInfo:
             treeFont.SetPointSize(treeFont.GetPointSize()+2)
 
-        treeFont.SetWeight(wx.BOLD)
-        catFont.SetWeight(wx.BOLD)
+        treeFont.SetWeight(wx.FONTWEIGHT_BOLD)
+        catFont.SetWeight(wx.FONTWEIGHT_BOLD)
         self.tree.SetItemFont(self.root, treeFont)
 
         firstChild = None

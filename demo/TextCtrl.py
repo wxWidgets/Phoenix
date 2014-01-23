@@ -60,7 +60,7 @@ class TestPanel(wx.Panel):
         t4.SetInsertionPoint(0)
         t4.SetStyle(44, 47, wx.TextAttr("RED", "YELLOW"))
         points = t4.GetFont().GetPointSize()  # get the current size
-        f = wx.Font(points+3, wx.ROMAN, wx.ITALIC, wx.BOLD, True)
+        f = wx.Font(points+3, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_BOLD, True)
         t4.SetStyle(63, 77, wx.TextAttr("BLUE", wx.NullColour, f))
 
         l5 = wx.StaticText(self, -1, "Test Positions")

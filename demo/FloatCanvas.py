@@ -198,7 +198,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             import os
             dlg = wx.FileDialog(
                 self, message="Save file as ...", defaultDir=os.getcwd(), 
-                defaultFile="", wildcard="*.png", style=wx.SAVE
+                defaultFile="", wildcard="*.png", style=wx.FD_SAVE
                 )
             if dlg.ShowModal() == wx.ID_OK:
                 path = dlg.GetPath()
@@ -917,15 +917,15 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Canvas.AddText("20 Pixels", (-10,5), Size = 20)
             self.Canvas.AddText("10 Pixels", (-10,3), Size = 10)
 
-            self.Canvas.AddText("MODERN Font", (-10, 0), Family = wx.MODERN)
-            self.Canvas.AddText("DECORATIVE Font", (-10, -1), Family = wx.DECORATIVE)
-            self.Canvas.AddText("ROMAN Font", (-10, -2), Family = wx.ROMAN)
-            self.Canvas.AddText("SCRIPT Font", (-10, -3), Family = wx.SCRIPT)
-            self.Canvas.AddText("ROMAN BOLD Font", (-10, -4), Family = wx.ROMAN, Weight=wx.BOLD)
-            self.Canvas.AddText("ROMAN ITALIC BOLD Font", (-10, -5), Family = wx.ROMAN, Weight=wx.BOLD, Style=wx.ITALIC)
+            self.Canvas.AddText("MODERN Font", (-10, 0), Family = wx.FONTFAMILY_MODERN)
+            self.Canvas.AddText("DECORATIVE Font", (-10, -1), Family = wx.FONTFAMILY_DECORATIVE)
+            self.Canvas.AddText("ROMAN Font", (-10, -2), Family = wx.FONTFAMILY_ROMAN)
+            self.Canvas.AddText("SCRIPT Font", (-10, -3), Family = wx.FONTFAMILY_SCRIPT)
+            self.Canvas.AddText("ROMAN BOLD Font", (-10, -4), Family = wx.FONTFAMILY_ROMAN, Weight=wx.FONTWEIGHT_BOLD)
+            self.Canvas.AddText("ROMAN ITALIC BOLD Font", (-10, -5), Family = wx.FONTFAMILY_ROMAN, Weight=wx.FONTWEIGHT_BOLD, Style=wx.FONTSTYLE_ITALIC)
 
             # NOTE: this font exists on my Linux box..who knows were else you'll find it!
-            Font = wx.Font(20, wx.DEFAULT, wx.ITALIC, wx.NORMAL, False, "helvetica")
+            Font = wx.Font(20, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, False, "helvetica")
             self.Canvas.AddText("Helvetica Italic", (-10, -6), Font = Font)
 
             self.Canvas.ZoomToBB()
@@ -965,22 +965,22 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
             x = -200
 
-            self.Canvas.AddScaledText("MODERN Font", (x, 0), Size = 7, Family = wx.MODERN, Color = (0,0,0))
-            self.Canvas.AddScaledText("DECORATIVE Font", (x, -10), Size = 7, Family = wx.DECORATIVE, Color = (0,0,1))
-            self.Canvas.AddScaledText("ROMAN Font", (x, -20), Size = 7, Family = wx.ROMAN)
-            self.Canvas.AddScaledText("SCRIPT Font", (x, -30), Size = 7, Family = wx.SCRIPT)
-            self.Canvas.AddScaledText("ROMAN BOLD Font", (x, -40), Size = 7, Family = wx.ROMAN, Weight=wx.BOLD)
-            self.Canvas.AddScaledText("ROMAN ITALIC BOLD Font", (x, -50), Size = 7, Family = wx.ROMAN, Weight=wx.BOLD, Style=wx.ITALIC)
+            self.Canvas.AddScaledText("MODERN Font", (x, 0), Size = 7, Family = wx.FONTFAMILY_MODERN, Color = (0,0,0))
+            self.Canvas.AddScaledText("DECORATIVE Font", (x, -10), Size = 7, Family = wx.FONTFAMILY_DECORATIVE, Color = (0,0,1))
+            self.Canvas.AddScaledText("ROMAN Font", (x, -20), Size = 7, Family = wx.FONTFAMILY_ROMAN)
+            self.Canvas.AddScaledText("SCRIPT Font", (x, -30), Size = 7, Family = wx.FONTFAMILY_SCRIPT)
+            self.Canvas.AddScaledText("ROMAN BOLD Font", (x, -40), Size = 7, Family = wx.FONTFAMILY_ROMAN, Weight=wx.FONTWEIGHT_BOLD)
+            self.Canvas.AddScaledText("ROMAN ITALIC BOLD Font", (x, -50), Size = 7, Family = wx.FONTFAMILY_ROMAN, Weight=wx.FONTWEIGHT_BOLD, Style=wx.FONTSTYLE_ITALIC)
             Canvas.AddPointSet((x,0), Color = "White", Diameter = 4)
 
 
             # NOTE: this font exists on my OS-X.who knows were else you'll find it!
             Point = (-100, 50)
-            Font = wx.Font(12, wx.DEFAULT, wx.ITALIC, wx.NORMAL, False, "helvetica")
+            Font = wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, False, "helvetica")
             T = self.Canvas.AddScaledText("Helvetica Italic", Point, Size = 20, Font = Font, Position = 'bc')
 
             Point = (-50, -50)
-            Font = wx.Font(12, wx.DEFAULT, wx.ITALIC, wx.NORMAL, False, "times")
+            Font = wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, False, "times")
             T = self.Canvas.AddScaledText("Times Font", Point, Size = 8, Font = Font)
 
             self.Canvas.ZoomToBB()
@@ -1003,9 +1003,9 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineWidth = 1,
                                           Width = None,
                                           PadSize = 5,
-                                          Family = wx.ROMAN,
-                                          Style = wx.NORMAL,
-                                          Weight = wx.NORMAL,
+                                          Family = wx.FONTFAMILY_ROMAN,
+                                          Style = wx.FONTSTYLE_NORMAL,
+                                          Weight = wx.FONTWEIGHT_NORMAL,
                                           Underlined = False,
                                           Position = 'br',
                                           Alignment = "left",
@@ -1023,7 +1023,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineColor = "Red",
                                           LineStyle = "Solid",
                                           PadSize = 5,
-                                          Family = wx.TELETYPE,
+                                          Family = wx.FONTFAMILY_TELETYPE,
                                           Position = 'bl')
 
             Box = Canvas.AddScaledTextBox("A String\nThis box is clickable",
@@ -1033,7 +1033,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineColor = "Red",
                                           LineStyle = "Solid",
                                           PadSize = 5,
-                                          Family = wx.TELETYPE,
+                                          Family = wx.FONTFAMILY_TELETYPE,
                                           Position = 'tr')
 
             Box.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.binding2)
@@ -1051,9 +1051,9 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineWidth = 2,
                                           Width = None,
                                           PadSize = 5,
-                                          Family = wx.TELETYPE,
-                                          Style = wx.NORMAL,
-                                          Weight = wx.NORMAL,
+                                          Family = wx.FONTFAMILY_TELETYPE,
+                                          Style = wx.FONTSTYLE_NORMAL,
+                                          Weight = wx.FONTWEIGHT_NORMAL,
                                           Underlined = False,
                                           Position = 'cr',
                                           Alignment = "left",
@@ -1069,9 +1069,9 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineWidth = 2,
                                           Width = None,
                                           PadSize = 5,
-                                          Family = wx.TELETYPE,
-                                          Style = wx.NORMAL,
-                                          Weight = wx.NORMAL,
+                                          Family = wx.FONTFAMILY_TELETYPE,
+                                          Style = wx.FONTSTYLE_NORMAL,
+                                          Weight = wx.FONTWEIGHT_NORMAL,
                                           Underlined = False,
                                           Position = 'cl',
                                           Alignment = "left",
@@ -1090,9 +1090,9 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineWidth = 2,
                                           Width = None,
                                           PadSize = 3,
-                                          Family = wx.TELETYPE,
-                                          Style = wx.NORMAL,
-                                          Weight = wx.NORMAL,
+                                          Family = wx.FONTFAMILY_TELETYPE,
+                                          Style = wx.FONTSTYLE_NORMAL,
+                                          Weight = wx.FONTWEIGHT_NORMAL,
                                           Underlined = False,
                                           Position = 'tc',
                                           Alignment = "left",
@@ -1108,9 +1108,9 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineWidth = 2,
                                           Width = None,
                                           PadSize = 0.5,
-                                          Family = wx.TELETYPE,
-                                          Style = wx.NORMAL,
-                                          Weight = wx.NORMAL,
+                                          Family = wx.FONTFAMILY_TELETYPE,
+                                          Style = wx.FONTSTYLE_NORMAL,
+                                          Weight = wx.FONTWEIGHT_NORMAL,
                                           Underlined = False,
                                           Position = 'bc',
                                           Alignment = "left",
@@ -1126,7 +1126,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineWidth = 2,
                                           Width = 20,
                                           PadSize = 0.5,
-                                          Family = wx.TELETYPE,
+                                          Family = wx.FONTFAMILY_TELETYPE,
                                           )
 
             Box = Canvas.AddScaledTextBox("Some more auto wrapped text. Wrapped to a different width.\n\nThis is another paragraph.",
@@ -1136,7 +1136,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineWidth = 2,
                                           Width = 40,
                                           PadSize = 0.5,
-                                          Family = wx.ROMAN,
+                                          Family = wx.FONTFAMILY_ROMAN,
                                           Alignment = "right"
                                           )
             Point = N.array((100, -20), N.float_)
@@ -1147,7 +1147,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineWidth = 1,
                                           Width = 40,
                                           PadSize = 0.0,
-                                          Family = wx.ROMAN,
+                                          Family = wx.FONTFAMILY_ROMAN,
                                           Position = "cc",
                                           LineSpacing = 0.8
                                           )
@@ -1166,7 +1166,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineColor = "White",
                                           Width = None,
                                           PadSize = 2,
-                                          Family = wx.ROMAN,
+                                          Family = wx.FONTFAMILY_ROMAN,
                                           Position = Position,
                                           LineSpacing = 0.8
                                           )
@@ -1182,7 +1182,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineColor = "White",
                                           Width = None,
                                           PadSize = 2,
-                                          Family = wx.ROMAN,
+                                          Family = wx.FONTFAMILY_ROMAN,
                                           Position = "tl",
                                           Alignment = "center",
                                           LineSpacing = 0.8
@@ -1197,7 +1197,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineColor = None,
                                           Width = None,
                                           PadSize = 2,
-                                          Family = wx.ROMAN,
+                                          Family = wx.FONTFAMILY_ROMAN,
                                           Position = "tl",
                                           Alignment = "right",
                                           LineSpacing = 0.8
@@ -1211,7 +1211,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                           LineWidth = 1,
                                           Width = 40,
                                           PadSize = 2.0,
-                                          Family = wx.ROMAN,
+                                          Family = wx.FONTFAMILY_ROMAN,
                                           Position = "cc",
                                           LineSpacing = 0.8,
                                           Alignment = 'center',

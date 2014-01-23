@@ -87,7 +87,7 @@ class TestPanel(wx.Panel):
 
     def Draw(self, gc):
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         gc.SetFont(font, wx.BLACK)
 
         # make a path that contains a circle and some lines, centered at 0,0

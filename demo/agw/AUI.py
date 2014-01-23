@@ -748,7 +748,7 @@ class ProgressGauge(wx.Window):
         self._topStartColour = self.LightColour(self._bottomStartColour, 80)
         self._topEndColour = self.LightColour(self._bottomStartColour, 40)
 
-        self._background = wx.Brush(wx.WHITE, wx.SOLID)
+        self._background = wx.Brush(wx.WHITE, wx.BRUSHSTYLE_SOLID)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)

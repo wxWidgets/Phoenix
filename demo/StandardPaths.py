@@ -12,7 +12,7 @@ class TestPanel(wx.Panel):
         sizer.AddGrowableCol(1)
         box = wx.BoxSizer(wx.VERTICAL)
         fs = self.GetFont().GetPointSize()
-        bf = wx.Font(fs+4, wx.SWISS, wx.NORMAL, wx.BOLD)
+        bf = wx.Font(fs+4, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
 
         t = wx.StaticText(self, -1, "StandardPaths")
         t.SetFont(bf)

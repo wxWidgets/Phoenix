@@ -26,9 +26,11 @@ import ListCtrl
 import images
 
 
-penstyle = ["wx.SOLID", "wx.TRANSPARENT", "wx.DOT", "wx.LONG_DASH", "wx.DOT_DASH", "wx.USER_DASH",
-           "wx.BDIAGONAL_HATCH", "wx.CROSSDIAG_HATCH", "wx.FDIAGONAL_HATCH", "wx.CROSS_HATCH",
-           "wx.HORIZONTAL_HATCH", "wx.VERTICAL_HATCH"]
+penstyle = ["wx.PENSTYLE_SOLID", "wx.PENSTYLE_TRANSPARENT", "wx.PENSTYLE_DOT",
+            "wx.PENSTYLE_LONG_DASH", "wx.PENSTYLE_DOT_DASH", "wx.PENSTYLE_USER_DASH",
+            "wx.PENSTYLE_BDIAGONAL_HATCH", "wx.PENSTYLE_CROSSDIAG_HATCH",
+            "wx.PENSTYLE_FDIAGONAL_HATCH", "wx.PENSTYLE_CROSS_HATCH",
+            "wx.PENSTYLE_HORIZONTAL_HATCH", "wx.PENSTYLE_VERTICAL_HATCH"]
 
 ArtIDs = [ "None",
            "wx.ART_ADD_BOOKMARK",
@@ -957,7 +959,7 @@ class HyperTreeHeaderRenderer(object):
             color = cutils.AdjustColour(color,50)
 
         # Draw a solid background in self.color
-        dc.SetBrush(wx.Brush(color, wx.SOLID))
+        dc.SetBrush(wx.Brush(color, wx.BRUSHSTYLE_SOLID))
         dc.SetBackgroundMode(wx.SOLID)
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangleRect(rect)
@@ -1567,7 +1569,7 @@ class HyperTreeListDemo(wx.Frame):
                    "GIF Files (*.gif)|*.gif|"        \
                    "All files (*.*)|*.*"
 
-        dlg = wx.FileDialog(self, "Choose An Image File", ".", "", wildcard, wx.OPEN)
+        dlg = wx.FileDialog(self, "Choose An Image File", ".", "", wildcard, wx.FD_OPEN)
 
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()

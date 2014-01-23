@@ -41,7 +41,7 @@ class TestPanel(wx.Panel):
         # Also, this one is fancier, with custom colors and bezel size.
         b = buttons.GenButton(self, -1, 'bigger')
         self.Bind(wx.EVT_BUTTON, self.OnBiggerButton, b)
-        b.SetFont(wx.Font(20, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        b.SetFont(wx.Font(20, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         b.SetBezelWidth(5)
         b.SetMinSize(wx.DefaultSize)
         b.SetBackgroundColour("Navy")

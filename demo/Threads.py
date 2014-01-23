@@ -62,7 +62,7 @@ class GraphWindow(wx.Window):
         for label in labels:
             self.values.append((label, 0))
 
-        font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD)
+        font = wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         self.SetFont(font)
 
         self.colors = [ wx.RED, wx.GREEN, wx.BLUE, wx.CYAN,
@@ -98,7 +98,7 @@ class GraphWindow(wx.Window):
         dc.SetTextForeground(wx.BLUE)
         dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
         dc.Clear()
-        dc.SetPen(wx.Pen(wx.BLACK, 3, wx.SOLID))
+        dc.SetPen(wx.Pen(wx.BLACK, 3, wx.PENSTYLE_SOLID))
         dc.DrawLine(self.linePos, 0, self.linePos, size.height-10)
 
         bh = ypos = self.barHeight
@@ -138,7 +138,7 @@ class TestFrame(wx.Frame):
         #self.CenterOnParent()
 
         panel = wx.Panel(self, -1)
-        panel.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD))
+        panel.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         wx.StaticText(panel, -1,
                      "This demo shows multiple threads interacting with this\n"
                      "window by sending events to it, one thread for each bar.",

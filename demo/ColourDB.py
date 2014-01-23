@@ -20,7 +20,7 @@ class TestWindow(wx.ScrolledWindow):
         # This could also be done by getting the window's default font;
         # either way, we need to have a font loaded for later on.
         #self.SetBackgroundColour("WHITE")
-        self.font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        self.font = wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
 
         # Create drawing area and set its font
         dc = wx.ClientDC(self)
@@ -97,7 +97,7 @@ class TestWindow(wx.ScrolledWindow):
 
     def Draw(self, dc, rgn=None, vs=None):
         dc.SetTextForeground("BLACK")
-        dc.SetPen(wx.Pen("BLACK", 1, wx.SOLID))
+        dc.SetPen(wx.Pen("BLACK", 1, wx.PENSTYLE_SOLID))
         dc.SetFont(self.font)
         colours = self.clrList
         numColours = len(colours)
@@ -121,7 +121,7 @@ class TestWindow(wx.ScrolledWindow):
 
             dc.DrawText(clr, self.cellWidth, y)
 
-            brush = wx.Brush(clr, wx.SOLID)
+            brush = wx.Brush(clr, wx.BRUSHSTYLE_SOLID)
             dc.SetBrush(brush)
             dc.DrawRectangle(10 * self.cellWidth, y,
                              6 * self.cellWidth, self.textHeight)

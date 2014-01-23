@@ -30,7 +30,7 @@ class TestPanel(wx.Panel):
         fgs.Add(wx.StaticText(self, -1, "PointSize:"))
         self.ps = wx.StaticText(self, -1, "")
         font = self.ps.GetFont()
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         self.ps.SetFont(font)
         fgs.Add(self.ps, 0, wx.ADJUST_MINSIZE)
 

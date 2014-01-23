@@ -22,30 +22,30 @@ class TestPanel(wx.Panel):
     def __init__(self, parent, log):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
-        self.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL, False))
+        self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False))
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        self.SetSizer(sizer)        
-        
+        self.SetSizer(sizer)
+
         # Creator credits
         text1 = wx.StaticText(self, -1, "HyperLinkCtrl Example By Andrea Gavana")
-        text1.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False, 'Verdana'))
-        
+        text1.SetFont(wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, 'Verdana'))
+
         sizer.Add((0,10))
         sizer.Add(text1, 0, wx.LEFT | wx.TOP | wx.BOTTOM, 10)
-        
+
         text2 = wx.StaticText(self, -1, "Latest Revision: 11 May 2005")
-        text2.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Verdana'))
+        text2.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, 'Verdana'))
         sizer.Add(text2, 0, wx.LEFT, 10)
-       
+
         sizer.Add((0,25))
 
         # Default Web links:
         self._hyper1 = hl.HyperLinkCtrl(self, wx.ID_ANY, "wxPython Main Page",
                                         URL="http://www.wxpython.org/")
         sizer.Add(self._hyper1, 0, wx.ALL, 10)
-        
-        
+
+
         # Web link with underline rollovers, opens in window
         self._hyper2 = hl.HyperLinkCtrl(self, wx.ID_ANY, "My Home Page",
                                         URL="http://xoomer.virgilio.it/infinity77/")
@@ -66,7 +66,7 @@ class TestPanel(wx.Panel):
                                         URL="http://lists.wxwidgets.org/")
         sizer.Add(self._hyper3, 0, wx.ALL, 10)
         self._hyper3.Bind(hl.EVT_HYPERLINK_RIGHT, self.OnRightLink)
-        
+
         self._hyper3.SetLinkCursor(wx.CURSOR_QUESTION_ARROW)
         self._hyper3.SetColours("DARK GREEN", "RED", "NAVY")
         self._hyper3.SetUnderlines(False, False, False)
@@ -85,7 +85,7 @@ class TestPanel(wx.Panel):
         self._hyper4.AutoBrowse(False)
 
 
-        
+
 
 
     def OnLink(self, event):
@@ -100,8 +100,8 @@ class TestPanel(wx.Panel):
         elif nResult == wx.NO:
             self._hyper4.GotoURL("http://www.google.com", True, False)
 
-        
-        
+
+
     def OnRightLink(self, event):
         pos = self._hyper3.GetPosition() + event.GetPosition()
         menuPopUp = wx.Menu("Having a nice day?")
@@ -111,7 +111,7 @@ class TestPanel(wx.Panel):
         menuPopUp.Append(ID_MENU_NO,  "I've had better")
         self.PopupMenu(menuPopUp)
         menuPopUp.Destroy()
-        
+
 
 
     def OnMiddleLink(self, event):

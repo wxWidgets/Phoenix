@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import wx
 import random
 
@@ -68,15 +70,15 @@ class ShapedButtonDemo(wx.Frame):
         recordsizer.Add(self.stop, 0, wx.LEFT, 3)
         recordsizer.Add(self.ffwd, 0, wx.LEFT | wx.RIGHT, 3)
 
-        for ii in xrange(6):
+        for ii in range(6):
             recordsizer.SetItemMinSize(ii, 48, 48)
 
         self.eventtext = wx.StaticText(self.panel, -1, "Event Recorder",
                                        style=wx.ST_NO_AUTORESIZE)
         self.eventtext.SetBackgroundColour(wx.BLUE)
         self.eventtext.SetForegroundColour(wx.WHITE)
-        self.eventtext.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD,
-                                       False, "Verdana"))
+        self.eventtext.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD,
+                                       False, "Verdana", wx.FONTENCODING_DEFAULT))
 
         smallsizer = wx.BoxSizer(wx.VERTICAL)
         smallsizer.Add((0, 1), 1, wx.EXPAND)
@@ -204,12 +206,12 @@ class ShapedButtonDemo(wx.Frame):
 
         fnt = self.GetFont()
 
-        fonts = [fnt, wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD),
-                 wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL),
-                 wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, True),
-                 fnt, wx.Font(9, wx.DECORATIVE, wx.NORMAL, wx.BOLD),
-                 wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Tahoma"),
-                 fnt, wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, True, "Verdana")]
+        fonts = [fnt, wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD),
+                 wx.Font(10, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL),
+                 wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, True),
+                 fnt, wx.Font(9, wx.FONTFAMILY_DECORATIVE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD),
+                 wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Tahoma"),
+                 fnt, wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, True, "Verdana")]
 
         lcolours = [None, wx.WHITE, wx.Colour("Yellow"), wx.WHITE,
                     None, None, wx.BLUE, wx.WHITE, wx.WHITE]
@@ -217,7 +219,7 @@ class ShapedButtonDemo(wx.Frame):
         bsizer = wx.FlexGridSizer(3, 3, 5, 5)
         rotation = []
 
-        for ii in xrange(9):
+        for ii in range(9):
 
             btn = SButton(self.panel, -1, labels[ii])
             btn.SetButtonColour(colours[ii])
@@ -266,7 +268,7 @@ class ShapedButtonDemo(wx.Frame):
         btn3 = SButton(self.panel, -1, "Rotated")
         btn3.SetButtonColour(wx.Colour("Cyan"))
         btn3.SetLabelColour(wx.WHITE)
-        btn3.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        btn3.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         btn3.SetAngleOfRotation(90)
         btn3.Bind(wx.EVT_BUTTON, self.OnRotated1)
 
@@ -299,14 +301,14 @@ class ShapedButtonDemo(wx.Frame):
         btn1.SetEllipseAxis(2, 1)
         btn1.SetButtonColour(wx.RED)
         btn1.SetLabelColour(wx.WHITE)
-        btn1.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        btn1.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         btn1.Bind(wx.EVT_BUTTON, self.OnEllipse)
 
         btn2 = SButton(self.panel, -1, "Ellipse 2")
         btn2.SetEllipseAxis(2, 3)
         btn2.SetAngleOfRotation(90)
         btn2.SetLabelColour(wx.BLUE)
-        btn2.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD, True))
+        btn2.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True))
         btn2.Bind(wx.EVT_BUTTON, self.OnEllipse)
 
         bmp = wx.Bitmap(os.path.join(bitmapDir, "ffwd.png"), wx.BITMAP_TYPE_PNG)

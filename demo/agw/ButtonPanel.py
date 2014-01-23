@@ -101,9 +101,9 @@ class SettingsPanel(wx.MiniFrame):
 
     def __set_properties(self):
 
-        self.defaultstyle.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        self.defaultstyle.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         self.defaultstyle.SetValue(1)
-        self.gradientstyle.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        self.gradientstyle.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         self.verticalgradient.SetValue(1)
 
         if self.targetTitleBar.GetStyle() & bp.BP_DEFAULT_STYLE:

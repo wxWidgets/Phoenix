@@ -50,7 +50,7 @@ class PyCollapsiblePaneDemo(wx.Panel):
         self.label2 = "Click here to hide pane"
 
         title = wx.StaticText(self, label="PyCollapsiblePane")
-        title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
+        title.SetFont(wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         title.SetForegroundColour("blue")
 
         self.cpStyle = wx.CP_NO_TLW_RESIZE

@@ -367,8 +367,8 @@ class PrintCalend:
         self.back_color = 'WHITE'
         self.sel_color = 'RED'
         self.high_color = 'LIGHT BLUE'
-        self.font = wx.SWISS
-        self.bold = wx.NORMAL
+        self.font = wx.FONTFAMILY_SWISS
+        self.bold = wx.FONTWEIGHT_NORMAL
 
         self.sel_key = None      # last used by
         self.sel_lst = []        # highlighted selected days

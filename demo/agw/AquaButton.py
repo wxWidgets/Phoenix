@@ -79,7 +79,7 @@ class AquaButtonDemo(wx.Panel):
         mainSizer.Add(btnSizer, 1, wx.EXPAND|wx.ALL, 30)
 
         boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont.SetWeight(wx.BOLD)
+        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         for child in self.mainPanel.GetChildren():
             if isinstance(child, wx.StaticText):

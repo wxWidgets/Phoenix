@@ -211,7 +211,7 @@ class UltimateRenderer_1(object):
 
         self.DrawProgressBar(mdc, 0, 0, rect.width, rect.height, self.progressValue)
 
-        mdc.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.BOLD))
+        mdc.SetFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         text = "%d Mb"%self.progressValue
         textWidth, dummy = mdc.GetTextExtent(text)
         mdc.DrawText(text, rect.width/2 - textWidth/2, rect.height/2 - dummy/2)
@@ -323,7 +323,7 @@ class UltimateRenderer_2(object):
     def DrawSubItem(self, dc, rect, line, highlighted, enabled):
 
         dc.SetBackgroundMode(wx.SOLID)
-        dc.SetBrush(wx.Brush(wx.BLACK, wx.SOLID))
+        dc.SetBrush(wx.Brush(wx.BLACK, wx.BRUSHSTYLE_SOLID))
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangle(rect)
 
@@ -405,7 +405,7 @@ class UltimateHeaderRenderer(object):
             self._hover = True
             color = cutils.AdjustColour(color,50)
 
-        dc.SetBrush(wx.Brush(color, wx.SOLID))
+        dc.SetBrush(wx.Brush(color, wx.BRUSHSTYLE_SOLID))
         dc.SetBackgroundMode(wx.SOLID)
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangle(rect)
@@ -511,7 +511,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldfont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldfont.SetWeight(wx.BOLD)
+        boldfont.SetWeight(wx.FONTWEIGHT_BOLD)
         boldfont.SetPointSize(12)
         boldfont.SetUnderlined(True)
 
@@ -664,7 +664,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
             item.SetMask(fullMask)
             item.SetTextColour(wx.GREEN)
             font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-            font.SetWeight(wx.BOLD)
+            font.SetWeight(wx.FONTWEIGHT_BOLD)
             item.SetFont(font)
             item.SetBackgroundColour(colour)
             self.list.SetItem(item)
@@ -673,7 +673,7 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         italicFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         italicFont.SetStyle(wx.FONTSTYLE_ITALIC)
         boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont.SetWeight(wx.BOLD)
+        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         lenCDB = len(self.colourList)
 

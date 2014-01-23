@@ -35,7 +35,7 @@ class TestPanel(wx.Panel):
 
         msg = "Drag-And-Drop of URLs"
         text = wx.StaticText(self, -1, "", style=wx.ALIGN_CENTRE)
-        text.SetFont(wx.Font(24, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        text.SetFont(wx.Font(24, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         text.SetLabel(msg)
         w,h = text.GetTextExtent(msg)
         text.SetSize(wx.Size(w,h+1))
@@ -44,7 +44,7 @@ class TestPanel(wx.Panel):
         outsideSizer.Add(wx.StaticLine(self, -1), 0, wx.EXPAND)
         outsideSizer.Add((20,20))
 
-        self.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
 
         inSizer = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
         inSizer.AddGrowableCol(0)

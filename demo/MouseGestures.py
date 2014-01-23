@@ -55,7 +55,7 @@ class TestPanel(wx.Panel):
         
         msg = "Mouse Gestures"
         text = wx.StaticText(self, -1, "", style=wx.ALIGN_CENTRE)
-        text.SetFont(wx.Font(24, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        text.SetFont(wx.Font(24, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         text.SetLabel(msg)
 
         w,h = text.GetTextExtent(msg)

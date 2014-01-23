@@ -74,7 +74,7 @@ class DragCanvas(wx.ScrolledWindow):
         # 'draw' the text onto the bitmap
         dc = wx.MemoryDC()
         dc.SelectObject(bmp)
-        dc.SetBackground(wx.Brush(bg_colour, wx.SOLID))
+        dc.SetBackground(wx.Brush(bg_colour, wx.BRUSHSTYLE_SOLID))
         dc.Clear()
         dc.SetTextForeground(wx.RED)
         dc.SetFont(font)

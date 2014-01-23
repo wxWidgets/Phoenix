@@ -86,14 +86,14 @@ class GradientButtonDemo(wx.Panel):
         mainSizer.Add(btnSizer, 0, wx.EXPAND|wx.ALL, 10)
 
         boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont.SetWeight(wx.BOLD)
+        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
         
         for child in self.mainPanel.GetChildren():
             if isinstance(child, wx.StaticText):
                 child.SetFont(boldFont)
 
         buttonFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        buttonFont.SetWeight(wx.BOLD)
+        buttonFont.SetWeight(wx.FONTWEIGHT_BOLD)
         try:
             buttonFont.SetFaceName("Tahoma")
             self.btn1.SetFont(buttonFont)

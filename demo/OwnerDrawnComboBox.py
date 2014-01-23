@@ -19,29 +19,29 @@ class PenStyleComboBox(wx.adv.OwnerDrawnComboBox):
         r = wx.Rect(*rect)  # make a copy
         r.Deflate(3, 5)
 
-        penStyle = wx.SOLID
+        penStyle = wx.PENSTYLE_SOLID
         if item == 1:
-            penStyle = wx.TRANSPARENT
+            penStyle = wx.PENSTYLE_TRANSPARENT
         elif item == 2:
-            penStyle = wx.DOT
+            penStyle = wx.PENSTYLE_DOT
         elif item == 3:
-            penStyle = wx.LONG_DASH
+            penStyle = wx.PENSTYLE_LONG_DASH
         elif item == 4:
-            penStyle = wx.SHORT_DASH
+            penStyle = wx.PENSTYLE_SHORT_DASH
         elif item == 5:
-            penStyle = wx.DOT_DASH
+            penStyle = wx.PENSTYLE_DOT_DASH
         elif item == 6:
-            penStyle = wx.BDIAGONAL_HATCH
+            penStyle = wx.PENSTYLE_BDIAGONAL_HATCH
         elif item == 7:
-            penStyle = wx.CROSSDIAG_HATCH
+            penStyle = wx.PENSTYLE_CROSSDIAG_HATCH
         elif item == 8:
-            penStyle = wx.FDIAGONAL_HATCH
+            penStyle = wx.PENSTYLE_FDIAGONAL_HATCH
         elif item == 9:
-            penStyle = wx.CROSS_HATCH
+            penStyle = wx.PENSTYLE_CROSS_HATCH
         elif item == 10:
-            penStyle = wx.HORIZONTAL_HATCH
+            penStyle = wx.PENSTYLE_HORIZONTAL_HATCH
         elif item == 11:
-            penStyle = wx.VERTICAL_HATCH
+            penStyle = wx.PENSTYLE_VERTICAL_HATCH
 
         pen = wx.Pen(dc.GetTextForeground(), 3, penStyle)
         dc.SetPen(pen)

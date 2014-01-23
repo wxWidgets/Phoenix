@@ -272,7 +272,7 @@ class RichTextFrame(wx.Frame):
         wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=False)
         dlg = wx.FileDialog(self, "Choose a filename",
                             wildcard=wildcard,
-                            style=wx.OPEN)
+                            style=wx.FD_OPEN)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             if path:
@@ -293,7 +293,7 @@ class RichTextFrame(wx.Frame):
 
         dlg = wx.FileDialog(self, "Choose a filename",
                             wildcard=wildcard,
-                            style=wx.SAVE)
+                            style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             if path:

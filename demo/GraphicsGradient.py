@@ -88,7 +88,7 @@ class TestPanel(scrolled.ScrolledPanel):
 
         # and the other widgets for collecting data about the gradient
         label1 = wx.StaticText(self, -1, "Geometry")
-        label1.SetFont(wx.FFont(15, wx.SWISS, wx.FONTFLAG_BOLD))
+        label1.SetFont(wx.FFont(15, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
         x1 = 0
         x2 = self.gpanel.Size.width
         y0 = self.gpanel.Size.height / 2
@@ -98,7 +98,7 @@ class TestPanel(scrolled.ScrolledPanel):
         self.y2 = wx.TextCtrl(self, value=str(y0), size=(50,-1))
 
         label2 = wx.StaticText(self, -1, "Stops")
-        label2.SetFont(wx.FFont(15, wx.SWISS, wx.FONTFLAG_BOLD))
+        label2.SetFont(wx.FFont(15, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
         firstStop = GradientStopPanel(self, 0.0)
         lastStop =  GradientStopPanel(self, 1.0, wx.WHITE)
         self.stops = [firstStop, lastStop]

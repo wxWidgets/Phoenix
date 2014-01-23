@@ -42,7 +42,7 @@ class TestPanel(wx.Panel):
 
     def OnSelect(self, evt):
         face = self.lb1.GetStringSelection()
-        font = wx.Font(28, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, face)
+        font = wx.Font(28, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, face)
         self.txt.SetLabel(face)
         self.txt.SetFont(font)
         if wx.Platform == "__WXMAC__": self.Refresh()

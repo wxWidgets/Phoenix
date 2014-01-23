@@ -35,7 +35,7 @@ class MimeTypesDemoPanel(wx.Panel):
 
         # This will be used for all of the labels that follow (bold label)
         bfont = self.GetFont()
-        bfont.SetWeight(wx.BOLD)
+        bfont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         # Contains everything
         tsizer = wx.BoxSizer(wx.VERTICAL)
@@ -70,7 +70,7 @@ class MimeTypesDemoPanel(wx.Panel):
 
         f = self.GetFont()
         f.SetPointSize(f.GetPointSize() * 2)
-        f.SetWeight(wx.BOLD)
+        f.SetWeight(wx.FONTWEIGHT_BOLD)
         lbox.SetFont(f)
 
         lsizer = wx.StaticBoxSizer(lbox, wx.HORIZONTAL)

@@ -122,7 +122,7 @@ class FloatSpinDemo(wx.Panel):
 
     def SetProperties(self):
 
-        self.helptext.SetFont(wx.Font(10, wx.MODERN, wx.NORMAL, wx.BOLD, 0, "Verdana"))
+        self.helptext.SetFont(wx.Font(10, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, "Verdana"))
         self.radioformat1.SetSelection(0)
         self.radioformat2.SetSelection(2)
         self.radioformat3.SetSelection(0)

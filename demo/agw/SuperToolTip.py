@@ -131,12 +131,12 @@ class SuperToolTipDemo(wx.Frame):
         self.headerCheck.SetValue(1)
         self.footerCheck.SetValue(1)
         self.stylesCombo.SetValue("Office 2007 Blue")
-        font = wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, "")
+        font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, "")
         self.generateTip.SetFont(font)
         self.headerCheck.SetFont(font)
         self.footerCheck.SetFont(font)
         self.endTimer.SetRange(1, 100)
-        self.toolTipButton.SetFont(wx.Font(16, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        self.toolTipButton.SetFont(wx.Font(16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         for widgets in [self.topColourPicker, self.middleColourPicker, self.bottomColourPicker]:
             widgets.Enable(False)
 

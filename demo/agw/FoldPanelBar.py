@@ -189,7 +189,7 @@ class Extended(wx.Frame):
               
         dlg = wx.MessageDialog(self, msg, "FoldPanelBar Extended Demo",
                                wx.OK | wx.ICON_INFORMATION)
-        dlg.SetFont(wx.Font(8, wx.NORMAL, wx.NORMAL, wx.NORMAL, False, "Verdana"))
+        dlg.SetFont(wx.Font(8, wx.FONTFAMILY_NORMAL, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Verdana"))
         dlg.ShowModal()
         dlg.Destroy()
 

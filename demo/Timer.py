@@ -56,7 +56,7 @@ class TestPanel(sp.ScrolledPanel):
         outsideSizer = wx.BoxSizer(wx.VERTICAL)
 
         text = wx.StaticText(self, -1, "wx.Timer", style=wx.ALIGN_CENTRE)
-        text.SetFont(wx.Font(24, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        text.SetFont(wx.Font(24, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         text.SetSize(text.GetBestSize())
         text.SetForegroundColour(wx.BLUE)
         outsideSizer.Add(text, 0, wx.EXPAND|wx.ALL, 5)

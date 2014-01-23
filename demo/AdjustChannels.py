@@ -109,7 +109,7 @@ class ImageWindow(wx.Window):
         # paint a background to show the alpha manipulation
         dc.SetBackground(wx.Brush("WHITE"))
         dc.Clear()
-        dc.SetBrush(wx.Brush("GREY", wx.CROSSDIAG_HATCH))
+        dc.SetBrush(wx.Brush("GREY", wx.BRUSHSTYLE_CROSSDIAG_HATCH))
         windowsize= self.GetSize()
         dc.DrawRectangle(0, 0, windowsize[0], windowsize[1])
 

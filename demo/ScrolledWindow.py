@@ -76,7 +76,7 @@ class MyCanvas(wx.ScrolledWindow):
         dc.SetPen(wx.Pen('BLUE', 4))
         dc.DrawRectangle(15, 15, 50, 50)
 
-        dc.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.NORMAL))
+        dc.SetFont(wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         dc.SetTextForeground(wx.Colour(0xFF, 0x20, 0xFF))
         te = dc.GetTextExtent("Hello World")
         dc.DrawText("Hello World", 60, 65)
@@ -95,7 +95,7 @@ class MyCanvas(wx.ScrolledWindow):
         dc.SetTextForeground(wx.Colour(0, 0xFF, 0x80))
         dc.DrawText("a bitmap", 200, 85)
 
-        font = wx.Font(20, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        font = wx.Font(20, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         dc.SetFont(font)
         dc.SetTextForeground(wx.BLACK)
 
@@ -116,9 +116,11 @@ class MyCanvas(wx.ScrolledWindow):
             # it does...
             y = 20
 
-            for style in [wx.DOT, wx.LONG_DASH, wx.SHORT_DASH, wx.DOT_DASH, wx.USER_DASH]:
+            for style in [wx.PENSTYLE_DOT, wx.PENSTYLE_LONG_DASH, 
+                          wx.PENSTYLE_SHORT_DASH, wx.PENSTYLE_DOT_DASH, 
+                          wx.PENSTYLE_USER_DASH]:
                 pen = wx.Pen("DARK ORCHID", 1, style)
-                if style == wx.USER_DASH:
+                if style == wx.PENSTYLE_USER_DASH:
                     pen.SetCap(wx.CAP_BUTT)
                     pen.SetDashes([1,2])
                     pen.SetColour("RED")
@@ -127,7 +129,7 @@ class MyCanvas(wx.ScrolledWindow):
                 y = y + 10
 
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.SetPen(wx.Pen(wx.Colour(0xFF, 0x20, 0xFF), 1, wx.SOLID))
+        dc.SetPen(wx.Pen(wx.Colour(0xFF, 0x20, 0xFF), 1, wx.PENSTYLE_SOLID))
         dc.DrawRectangle(450,50,  100,100)
         old_pen = dc.GetPen()
         new_pen = wx.Pen("BLACK", 5)

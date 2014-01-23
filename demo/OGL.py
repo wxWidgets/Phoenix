@@ -38,7 +38,7 @@ class DrawnShape(ogl.DrawnShape):
         self.DrawEllipse((-30, 25, 60, 20))
 
         self.SetDrawnTextColour(wx.BLACK)
-        self.SetDrawnFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL))
+        self.SetDrawnFont(wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         self.DrawText("DrawText", (-26, 28))
 
         self.SetDrawnBrush(wx.GREEN_BRUSH)
@@ -282,8 +282,8 @@ class TestWindow(ogl.ShapeCanvas):
         self.shapes = []
         self.save_gdi = []
 
-        rRectBrush = wx.Brush("MEDIUM TURQUOISE", wx.SOLID)
-        dsBrush = wx.Brush("WHEAT", wx.SOLID)
+        rRectBrush = wx.Brush("MEDIUM TURQUOISE", wx.BRUSHSTYLE_SOLID)
+        dsBrush = wx.Brush("WHEAT", wx.BRUSHSTYLE_SOLID)
 
         self.MyAddShape(
             CompositeDivisionShape(self), 
@@ -322,7 +322,7 @@ class TestWindow(ogl.ShapeCanvas):
 
         self.MyAddShape(
             DiamondShape(90, 90), 
-            355, 260, wx.Pen(wx.BLUE, 3, wx.DOT), wx.RED_BRUSH, "Polygon"
+            355, 260, wx.Pen(wx.BLUE, 3, wx.PENSTYLE_DOT), wx.RED_BRUSH, "Polygon"
             )
             
         self.MyAddShape(

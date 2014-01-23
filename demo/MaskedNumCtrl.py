@@ -66,7 +66,7 @@ The controls at the top reconfigure the resulting control at the bottom.
 
         label = wx.StaticText( panel, -1, "Resulting numeric control:" )
         font = label.GetFont()
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         label.SetFont(font)
 
         self.target_ctl = masked.NumCtrl( panel, -1, name="target control" )

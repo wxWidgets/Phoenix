@@ -24,7 +24,7 @@ class SimpleGrid(gridlib.Grid): ##, mixins.GridAutoEditMixin):
         self.SetCellValue(1, 1, "Another cell")
         self.SetCellValue(2, 2, "Yet another cell")
         self.SetCellValue(3, 3, "This cell is read-only")
-        self.SetCellFont(0, 0, wx.Font(12, wx.ROMAN, wx.ITALIC, wx.NORMAL))
+        self.SetCellFont(0, 0, wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL))
         self.SetCellTextColour(1, 1, wx.RED)
         self.SetCellBackgroundColour(2, 2, wx.CYAN)
         self.SetReadOnly(3, 3, True)
@@ -45,7 +45,7 @@ class SimpleGrid(gridlib.Grid): ##, mixins.GridAutoEditMixin):
         attr = gridlib.GridCellAttr()
         attr.SetTextColour(wx.BLACK)
         attr.SetBackgroundColour(wx.RED)
-        attr.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD))
+        attr.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
         # you can set cell attributes for the whole row (or column)
         self.SetRowAttr(5, attr)

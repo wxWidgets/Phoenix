@@ -12,7 +12,7 @@ class MyCustomRenderer(gridlib.GridCellRenderer):
 
     def Draw(self, grid, attr, dc, rect, row, col, isSelected):
         dc.SetBackgroundMode(wx.SOLID)
-        dc.SetBrush(wx.Brush(wx.BLACK, wx.SOLID))
+        dc.SetBrush(wx.Brush(wx.BLACK, wx.BRUSHSTYLE_SOLID))
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangle(rect)
 
@@ -138,7 +138,7 @@ Renderers used together.
             row = row + 2
 
         font = self.GetFont()
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         attr = gridlib.GridCellAttr()
         attr.SetFont(font)
         attr.SetBackgroundColour(wx.LIGHT_GREY)

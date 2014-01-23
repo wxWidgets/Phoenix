@@ -15,7 +15,7 @@ class TestPanel(wx.Panel):
         self.SetSizer(sizer)
         
         title = wx.StaticText(self, -1, "Img2PyArtProvider")
-        title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
+        title.SetFont(wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         sizer.Add(title, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
 
         line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)

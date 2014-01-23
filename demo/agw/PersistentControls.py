@@ -214,7 +214,7 @@ class PersistentFrame1(wx.Frame):
         combo = wx.ComboBox(otherPanel, -1, choices=_sampleList, style=wx.CB_DROPDOWN|wx.CB_READONLY,
                             name="ComboBox1")
 
-        boldFont = wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, "")
+        boldFont = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, "")
 
         box2 = wx.BoxSizer(wx.HORIZONTAL)
         box2.Add((0, 0), 1)

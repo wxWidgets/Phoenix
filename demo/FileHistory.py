@@ -23,8 +23,8 @@ class TestPanel(wx.Panel):
 
         # Make and layout the controls
         fs = self.GetFont().GetPointSize()
-        bf = wx.Font(fs+4, wx.SWISS, wx.NORMAL, wx.BOLD)
-        nf = wx.Font(fs+2, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        bf = wx.Font(fs+4, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
+        nf = wx.Font(fs+2, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
 
         t = wx.StaticText(self, -1, "FileHistory")
         t.SetFont(bf)

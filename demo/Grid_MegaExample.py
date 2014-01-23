@@ -214,11 +214,11 @@ class MegaImageRenderer(Grid.GridCellRenderer):
         dc.SetBackgroundMode(wx.SOLID)
 
         if isSelected:
-            dc.SetBrush(wx.Brush(wx.BLUE, wx.SOLID))
-            dc.SetPen(wx.Pen(wx.BLUE, 1, wx.SOLID))
+            dc.SetBrush(wx.Brush(wx.BLUE, wx.BRUSHSTYLE_SOLID))
+            dc.SetPen(wx.Pen(wx.BLUE, 1, wx.PENSTYLE_SOLID))
         else:
-            dc.SetBrush(wx.Brush(wx.WHITE, wx.SOLID))
-            dc.SetPen(wx.Pen(wx.WHITE, 1, wx.SOLID))
+            dc.SetBrush(wx.Brush(wx.WHITE, wx.BRUSHSTYLE_SOLID))
+            dc.SetPen(wx.Pen(wx.WHITE, 1, wx.PENSTYLE_SOLID))
         dc.DrawRectangleRect(rect)
 
 
@@ -242,9 +242,9 @@ class MegaFontRenderer(Grid.GridCellRenderer):
         Grid.GridCellRenderer.__init__(self)
         self.table = table
         self.color = color
-        self.font = wx.Font(fontsize, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, font)
-        self.selectedBrush = wx.Brush("blue", wx.SOLID)
-        self.normalBrush = wx.Brush(wx.WHITE, wx.SOLID)
+        self.font = wx.Font(fontsize, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, font)
+        self.selectedBrush = wx.Brush("blue", wx.BRUSHSTYLE_SOLID)
+        self.normalBrush = wx.Brush(wx.WHITE, wx.BRUSHSTYLE_SOLID)
         self.colSize = None
         self.rowSize = 50
 
@@ -259,11 +259,11 @@ class MegaFontRenderer(Grid.GridCellRenderer):
         dc.SetBackgroundMode(wx.SOLID)
 
         if isSelected:
-            dc.SetBrush(wx.Brush(wx.BLUE, wx.SOLID))
-            dc.SetPen(wx.Pen(wx.BLUE, 1, wx.SOLID))
+            dc.SetBrush(wx.Brush(wx.BLUE, wx.BRUSHSTYLE_SOLID))
+            dc.SetPen(wx.Pen(wx.BLUE, 1, wx.PENSTYLE_SOLID))
         else:
-            dc.SetBrush(wx.Brush(wx.WHITE, wx.SOLID))
-            dc.SetPen(wx.Pen(wx.WHITE, 1, wx.SOLID))
+            dc.SetBrush(wx.Brush(wx.WHITE, wx.BRUSHSTYLE_SOLID))
+            dc.SetPen(wx.Pen(wx.WHITE, 1, wx.PENSTYLE_SOLID))
         dc.DrawRectangleRect(rect)
 
         text = self.table.GetValue(row, col)

@@ -1,18 +1,47 @@
+#!/usr/bin/env python
+
 import wx
 import images
 
 
-pen_styles = ["wx.SOLID", "wx.TRANSPARENT", "wx.DOT", "wx.LONG_DASH",
-              "wx.SHORT_DASH", "wx.DOT_DASH", "wx.BDIAGONAL_HATCH",
-              "wx.CROSSDIAG_HATCH", "wx.FDIAGONAL_HATCH", "wx.CROSS_HATCH",
-              "wx.HORIZONTAL_HATCH", "wx.VERTICAL_HATCH", "wx.USER_DASH"]
+pen_styles = [#"wx.PENSTYLE_INVALID",
+              "wx.PENSTYLE_SOLID",
+              "wx.PENSTYLE_DOT",
+              "wx.PENSTYLE_LONG_DASH",
+              "wx.PENSTYLE_SHORT_DASH",
+              "wx.PENSTYLE_DOT_DASH",
+              "wx.PENSTYLE_USER_DASH",
+              "wx.PENSTYLE_TRANSPARENT",
+              "wx.PENSTYLE_BDIAGONAL_HATCH",
+              "wx.PENSTYLE_CROSSDIAG_HATCH",
+              "wx.PENSTYLE_FDIAGONAL_HATCH",
+              "wx.PENSTYLE_CROSS_HATCH",
+              "wx.PENSTYLE_HORIZONTAL_HATCH",
+              "wx.PENSTYLE_VERTICAL_HATCH",
+              "wx.PENSTYLE_FIRST_HATCH",
+              "wx.PENSTYLE_LAST_HATCH"
+              ]
+
 if 'wxMSW' in wx.PlatformInfo:
-    pen_styles.append("wx.STIPPLE")
-
-brush_styles = ["wx.SOLID", "wx.TRANSPARENT", "wx.STIPPLE", "wx.BDIAGONAL_HATCH",
-                "wx.CROSSDIAG_HATCH", "wx.FDIAGONAL_HATCH", "wx.CROSS_HATCH",
-                "wx.HORIZONTAL_HATCH", "wx.VERTICAL_HATCH"]
-
+    pen_styles.append("wx.PENSTYLE_STIPPLE_MASK_OPAQUE")
+    pen_styles.append("wx.PENSTYLE_STIPPLE_MASK")
+    pen_styles.append("wx.PENSTYLE_STIPPLE")
+    
+brush_styles = [#"wx.BRUSHSTYLE_INVALID",
+                "wx.BRUSHSTYLE_SOLID",
+                "wx.BRUSHSTYLE_TRANSPARENT",
+                "wx.BRUSHSTYLE_STIPPLE_MASK_OPAQUE",
+                "wx.BRUSHSTYLE_STIPPLE_MASK",
+                "wx.BRUSHSTYLE_STIPPLE",
+                "wx.BRUSHSTYLE_BDIAGONAL_HATCH",
+                "wx.BRUSHSTYLE_CROSSDIAG_HATCH",
+                "wx.BRUSHSTYLE_FDIAGONAL_HATCH",
+                "wx.BRUSHSTYLE_CROSS_HATCH",
+                "wx.BRUSHSTYLE_HORIZONTAL_HATCH",
+                "wx.BRUSHSTYLE_VERTICAL_HATCH",
+                "wx.BRUSHSTYLE_FIRST_HATCH",
+                "wx.BRUSHSTYLE_LAST_HATCH"
+                ]
 
 class BasePanel(wx.Panel):
     def __init__(self, parent):
@@ -115,7 +144,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, *args, **kw)
 
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
 
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         label1 = wx.StaticText(self, -1, "Pen Styles:")
@@ -123,7 +152,7 @@ class TestPanel(wx.Panel):
 
         mainSizer.Add(label1, 0, wx.EXPAND|wx.ALL, 10)
 
-        gs1 = wx.GridSizer(4, 4, 3, 3)  # rows, cols, vgap, hgap
+        gs1 = wx.GridSizer(rows=5, cols=4, vgap=3, hgap=3)
 
         for pen_name in pen_styles:
             small = PenPanel(self, pen_name)
@@ -136,7 +165,7 @@ class TestPanel(wx.Panel):
 
         mainSizer.Add(label2, 0, wx.EXPAND|wx.ALL, 10)
 
-        gs2 = wx.GridSizer(3, 3, 3, 3)  # rows, cols, vgap, hgap
+        gs2 = wx.GridSizer(rows=4, cols=4, vgap=3, hgap=3)
 
         for brush_name in brush_styles:
             small = BrushPanel(self, brush_name)

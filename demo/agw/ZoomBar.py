@@ -86,9 +86,9 @@ class TestPanel(wx.Panel):
 
     def SetProperties(self):
 
-        self.centerZoom.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
-        self.showReflections.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
-        self.showLabels.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        self.centerZoom.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
+        self.showReflections.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
+        self.showLabels.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
 
         self.centerZoom.Enable(False)
         self.showLabels.SetValue(1)
@@ -105,17 +105,17 @@ class TestPanel(wx.Panel):
         mainSizer.Add((20, 20), 1, wx.EXPAND, 0)
         centerSizer.Add((20, 20), 1, 0, 0)
         label_1 = wx.StaticText(self, -1, "Zoom Factor:")
-        label_1.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_1.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         sizer_3.Add(label_1, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
         sizer_3.Add(self.zoomSpin, 1, wx.ALIGN_CENTER_VERTICAL, 0)
 
         label_2 = wx.StaticText(self, -1, "Bar Colour:")
-        label_2.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_2.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         sizer_3.Add(label_2, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
         sizer_3.Add(self.colourzoom, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
         label_3 = wx.StaticText(self, -1, "Button Size:")
-        label_3.SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
+        label_3.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
         sizer_3.Add(label_3, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 5)
         sizer_3.Add(self.buttonSize, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 

@@ -30,7 +30,7 @@ class MyCustomPanel(wx.Panel):
         self.Bind(wx.EVT_SIZE, self.OnSize)
         t = wx.StaticText(self, -1, "MyCustomPanel")
         f = t.GetFont()
-        f.SetWeight(wx.BOLD)
+        f.SetWeight(wx.FONTWEIGHT_BOLD)
         f.SetPointSize(f.GetPointSize()+2)
         t.SetFont(f)
         self.t = t
@@ -55,7 +55,7 @@ class PreMyCustomPanel(wx.Panel):
         self.Bind(wx.EVT_SIZE, self.OnSize)
         t = wx.StaticText(self, -1, "MyCustomPanel")
         f = t.GetFont()
-        f.SetWeight(wx.BOLD)
+        f.SetWeight(wx.FONTWEIGHT_BOLD)
         f.SetPointSize(f.GetPointSize()+2)
         t.SetFont(f)
         self.t = t
@@ -146,7 +146,7 @@ class TestPanel(wx.Panel):
 
         # make the components
         label = wx.StaticText(self, -1, "The lower panel was built from this XML:")
-        label.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD))
+        label.SetFont(wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
         text = wx.TextCtrl(self, -1, resourceText,
                           style=wx.TE_READONLY|wx.TE_MULTILINE)

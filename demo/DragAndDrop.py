@@ -14,7 +14,7 @@ class ClipTextPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
         self.log = log
 
-        #self.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        #self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(
@@ -155,7 +155,7 @@ class FileDropPanel(wx.Panel):
     def __init__(self, parent, log):
         wx.Panel.__init__(self, parent, -1)
 
-        #self.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        #self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(
@@ -209,7 +209,7 @@ class TestPanel(wx.Panel):
 
         msg = "Clipboard / Drag-And-Drop"
         text = wx.StaticText(self, -1, "", style=wx.ALIGN_CENTRE)
-        text.SetFont(wx.Font(24, wx.SWISS, wx.NORMAL, wx.BOLD, False))
+        text.SetFont(wx.Font(24, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
         text.SetLabel(msg)
 
         w,h = text.GetTextExtent(msg)

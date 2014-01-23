@@ -34,7 +34,7 @@ class TestPanel(wx.Panel):
 
         str = "This is a different font."
         text = StaticText(self, -1, str, (20, 120))
-        font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        font = wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         text.SetFont(font)
 
         StaticText(self, -1,

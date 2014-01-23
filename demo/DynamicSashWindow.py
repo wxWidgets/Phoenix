@@ -16,7 +16,7 @@ class TestView(stc.StyledTextCtrl):
         self.SetMarginWidth(1,0)
 
         self.StyleSetFont(stc.STC_STYLE_DEFAULT,
-                          wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL))
+                          wx.Font(10, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
 
         self.Bind(gizmos.EVT_DYNAMIC_SASH_SPLIT, self.OnSplit)
         self.Bind(gizmos.EVT_DYNAMIC_SASH_UNIFY, self.OnUnify)
@@ -103,7 +103,7 @@ def runTest(frame, nb, log):
                                   #| wxDS_DRAG_CORNER
                                   )
 
-        win.SetFont(wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL))
+        win.SetFont(wx.Font(10, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         view = TestView(win, -1, log)
         view.SetText(sampleText)
     else:

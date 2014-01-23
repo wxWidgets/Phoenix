@@ -97,7 +97,7 @@ class PyGaugeDemo(wx.Panel):
 
 
         boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont.SetWeight(wx.BOLD)
+        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         for child in self.mainPanel.GetChildren():
             if isinstance(child, wx.StaticText):

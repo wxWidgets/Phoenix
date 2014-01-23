@@ -397,7 +397,7 @@ class FlatMenuDemo(wx.Frame):
         item = FM.FlatMenuItem(styleMenu, MENU_USE_CUSTOM, "Show Customize DropDown", "Shows the customize drop down arrow", wx.ITEM_CHECK)
 
         # Demonstrate how to set custom font and text colour to a FlatMenuItem
-        item.SetFont(wx.Font(10, wx.SWISS, wx.ITALIC, wx.BOLD, False, "Courier New"))
+        item.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_BOLD, False, "Courier New"))
         item.SetTextColour(wx.RED)
 
         item.Check(True)
@@ -459,7 +459,7 @@ class FlatMenuDemo(wx.Frame):
         numCols = 2
         switch = int(math.ceil(maxItems/float(numCols)))
 
-        fnt = wx.Font(9, wx.SWISS, wx.ITALIC, wx.BOLD, False, "Courier New")
+        fnt = wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_BOLD, False, "Courier New")
         colours = [wx.RED, wx.GREEN, wx.BLUE]
         for i in xrange(17):
             row, col = i%switch, i/switch

@@ -51,7 +51,7 @@ class TestPanel(wx.Panel):
             c4.SetForegroundColour(colour)
             colour = wx.Colour(0, 132, 132)
             c4.SetShadowColour(colour)
-            c4.SetTickFont(wx.Font(10, wx.FONTFAMILY_MODERN, wx.NORMAL, wx.BOLD))
+            c4.SetTickFont(wx.Font(10, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
             c4.SetBackgroundColour(wx.BLACK)
             c4.SetFaceBorderColour(wx.BLACK)
             c4.SetFaceFillColour(wx.BLACK)
@@ -101,7 +101,7 @@ class TestPanel(wx.Panel):
             c6.SetFaceFillColour(colour)
             colour = wx.Colour(255, 213, 213)
             c6.SetShadowColour(colour)
-            c6.SetTickFont(wx.Font(10, wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.BOLD))
+            c6.SetTickFont(wx.Font(10, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
             # layout the clocks in a grid
             gs = wx.GridSizer(2, 3, 4, 4)

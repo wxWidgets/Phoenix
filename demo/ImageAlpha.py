@@ -20,7 +20,7 @@ class TestPanel(wx.Panel):
         dc.SetBackground(wx.Brush("WHITE"))
         dc.Clear()
 
-        dc.SetFont(wx.Font(16, wx.SWISS, wx.NORMAL, wx.BOLD, True))
+        dc.SetFont(wx.Font(16, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True))
         dc.DrawText("Bitmap alpha blending (on all ports but gtk+ 1.2)",
                     25,25)
         

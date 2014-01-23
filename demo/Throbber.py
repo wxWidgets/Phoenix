@@ -50,7 +50,7 @@ class TestPanel(wx.Panel):
             throb.Throbber(self, -1, images, frameDelay = 0.1, label = 'Label')
 
         self.throbbers['label']['throbber'].SetFont(wx.Font(
-            pointSize = 10, family = wx.DEFAULT, style = wx.NORMAL, weight = wx.BOLD
+            pointSize = 10, family = wx.FONTFAMILY_DEFAULT, style = wx.FONTSTYLE_NORMAL, weight = wx.FONTWEIGHT_BOLD
             ))
 
         self.throbbers['overlay']['throbber'] = \
@@ -66,7 +66,7 @@ class TestPanel(wx.Panel):
                 )
 
         self.throbbers['overlay+text']['throbber'].SetFont(wx.Font(
-            pointSize = 8, family = wx.DEFAULT, style = wx.NORMAL, weight = wx.BOLD
+            pointSize = 8, family = wx.FONTFAMILY_DEFAULT, style = wx.FONTSTYLE_NORMAL, weight = wx.FONTWEIGHT_BOLD
             ))
 
         self.customThrobber = \
