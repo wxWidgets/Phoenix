@@ -1597,7 +1597,7 @@ class AuiFrame(wx.Frame):
         for pane in panes:
             if checked:
                 randimage = random.randint(0, len(ArtIDs) - 1)
-                bmp = wx.ArtProvider_GetBitmap(eval(ArtIDs[randimage]), wx.ART_OTHER, (16, 16))
+                bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[randimage]), wx.ART_OTHER, (16, 16))
             else:
                 bmp = None
 

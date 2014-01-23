@@ -1798,14 +1798,14 @@ class wxPythonDemo(wx.Frame):
             self.log.MacCheckSpelling(False)
 
         # Set the wxWindows log target to be this textctrl
-        #wx.Log_SetActiveTarget(wx.LogTextCtrl(self.log))
+        #wx.Log.SetActiveTarget(wx.LogTextCtrl(self.log))
 
         # But instead of the above we want to show how to use our own wx.Log class
         wx.Log.SetActiveTarget(MyLog(self.log))
 
         # for serious debugging
-        #wx.Log_SetActiveTarget(wx.LogStderr())
-        #wx.Log_SetTraceMask(wx.TraceMessages)
+        #wx.Log.SetActiveTarget(wx.LogStderr())
+        #wx.Log.SetTraceMask(wx.TraceMessages)
 
         self.Bind(wx.EVT_ACTIVATE, self.OnActivate)
         wx.GetApp().Bind(wx.EVT_ACTIVATE_APP, self.OnAppActivate)
@@ -2581,7 +2581,7 @@ class wxPythonDemo(wx.Frame):
                            "Load user perspective %d"%(len(self.auiConfigurations)+1),
                            wx.ITEM_RADIO)
         self.Bind(wx.EVT_MENU, self.OnAUIPerspectives, item)
-        self.perspectives_menu.AppendItem(item)
+        self.perspectives_menu.Append(item)
         item.Check(True)
         self.auiConfigurations.update({dlg.GetValue(): self.mgr.SavePerspective()})
 

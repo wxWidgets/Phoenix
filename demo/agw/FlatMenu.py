@@ -145,7 +145,7 @@ class FM_MyRenderer(FM.FMRenderer):
 
         dc.SetPen(wx.Pen(endColour))
         dc.SetBrush(wx.Brush(endColour))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
 
     def DrawToolBarBg(self, dc, rect):
@@ -775,7 +775,7 @@ class FlatMenuDemo(wx.Frame):
 
     def OnFileOpenDialog(self, evt):
         dlg = wx.FileDialog(self, defaultDir = os.getcwd(),
-                            wildcard = "All Files|*", style = wx.OPEN | wx.CHANGE_DIR)
+                            wildcard = "All Files|*", style = wx.FD_OPEN | wx.FD_CHANGE_DIR)
 
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()

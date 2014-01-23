@@ -98,8 +98,8 @@ class RunDemoApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
 
         self.SetTopWindow(frame)
         self.frame = frame
-        #wx.Log_SetActiveTarget(wx.LogStderr())
-        #wx.Log_SetTraceMask(wx.TraceMessages)
+        #wx.Log.SetActiveTarget(wx.LogStderr())
+        #wx.Log.SetTraceMask(wx.TraceMessages)
 
         if self.useShell:
             # Make a PyShell window, and position it below our test window

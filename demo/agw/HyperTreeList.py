@@ -890,7 +890,7 @@ class HyperTreeHeaderRenderer(object):
         """
 
         # determine if the string can fit inside the current width
-        w, h, dummy = dc.GetMultiLineTextExtent(text)
+        w, h, dummy = dc.GetFullMultiLineTextExtent(text)
         width = rect.width
 
         if w <= width:
@@ -982,7 +982,7 @@ class HyperTreeHeaderRenderer(object):
         dc.SetTextForeground(text_color)
 
         # Determine the width of the text
-        wLabel, hLabel, dummy = dc.GetMultiLineTextExtent(text)
+        wLabel, hLabel, dummy = dc.GetFullMultiLineTextExtent(text)
         wLabel += 4  # 2 pixel margin either side
 
         # and the width of the icon, if any

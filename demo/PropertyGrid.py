@@ -543,7 +543,7 @@ class LargeImagePickerCtrl(wx.Panel):
 
         image = wx.Image(path)
         image.Rescale(64, 64)
-        self.bmp = wx.BitmapFromImage(image)
+        self.bmp = wx.Bitmap(image)
 
     def SetProperty(self, property):
         self.property = property
@@ -739,7 +739,7 @@ class TestPanel( wx.Panel ):
                                          "Text Not in List") )
 
         pg.Append( wxpg.PropertyCategory("3 - Advanced Properties") )
-        pg.Append( wxpg.DateProperty("Date",value=wx.DateTime_Now()) )
+        pg.Append( wxpg.DateProperty("Date",value=wx.DateTime.Now()) )
         pg.Append( wxpg.FontProperty("Font",value=panel.GetFont()) )
         pg.Append( wxpg.ColourProperty("Colour",
                                        value=panel.GetBackgroundColour()) )

@@ -153,18 +153,18 @@ class PyAUIFrame(wx.Frame):
         tb1 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER)
         tb1.SetToolBitmapSize(wx.Size(48,48))
-        tb1.AddLabelTool(101, "Test", wx.ArtProvider_GetBitmap(wx.ART_ERROR))
+        tb1.AddLabelTool(101, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
         tb1.AddSeparator()
-        tb1.AddLabelTool(102, "Test", wx.ArtProvider_GetBitmap(wx.ART_QUESTION))
-        tb1.AddLabelTool(103, "Test", wx.ArtProvider_GetBitmap(wx.ART_INFORMATION))
-        tb1.AddLabelTool(103, "Test", wx.ArtProvider_GetBitmap(wx.ART_WARNING))
-        tb1.AddLabelTool(103, "Test", wx.ArtProvider_GetBitmap(wx.ART_MISSING_IMAGE))
+        tb1.AddLabelTool(102, "Test", wx.ArtProvider.GetBitmap(wx.ART_QUESTION))
+        tb1.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_INFORMATION))
+        tb1.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_WARNING))
+        tb1.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE))
         tb1.Realize()
 
         tb2 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER)
         tb2.SetToolBitmapSize(wx.Size(16,16))
-        tb2_bmp1 = wx.ArtProvider_GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(16, 16))
+        tb2_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(16, 16))
         tb2.AddLabelTool(101, "Test", tb2_bmp1)
         tb2.AddLabelTool(101, "Test", tb2_bmp1)
         tb2.AddLabelTool(101, "Test", tb2_bmp1)
@@ -182,7 +182,7 @@ class PyAUIFrame(wx.Frame):
         tb3 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER)
         tb3.SetToolBitmapSize(wx.Size(16,16))
-        tb3_bmp1 = wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16, 16))
+        tb3_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16, 16))
         tb3.AddLabelTool(101, "Test", tb3_bmp1)
         tb3.AddLabelTool(101, "Test", tb3_bmp1)
         tb3.AddLabelTool(101, "Test", tb3_bmp1)
@@ -195,7 +195,7 @@ class PyAUIFrame(wx.Frame):
         tb4 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER | wx.TB_HORZ_TEXT)
         tb4.SetToolBitmapSize(wx.Size(16,16))
-        tb4_bmp1 = wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
+        tb4_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
         tb4.AddLabelTool(101, "Item 1", tb4_bmp1)
         tb4.AddLabelTool(101, "Item 2", tb4_bmp1)
         tb4.AddLabelTool(101, "Item 3", tb4_bmp1)
@@ -210,12 +210,12 @@ class PyAUIFrame(wx.Frame):
         tb5 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER | wx.TB_VERTICAL)
         tb5.SetToolBitmapSize(wx.Size(48, 48))
-        tb5.AddLabelTool(101, "Test", wx.ArtProvider_GetBitmap(wx.ART_ERROR)) 
+        tb5.AddLabelTool(101, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
         tb5.AddSeparator()
-        tb5.AddLabelTool(102, "Test", wx.ArtProvider_GetBitmap(wx.ART_QUESTION))
-        tb5.AddLabelTool(103, "Test", wx.ArtProvider_GetBitmap(wx.ART_INFORMATION))
-        tb5.AddLabelTool(103, "Test", wx.ArtProvider_GetBitmap(wx.ART_WARNING))
-        tb5.AddLabelTool(103, "Test", wx.ArtProvider_GetBitmap(wx.ART_MISSING_IMAGE))
+        tb5.AddLabelTool(102, "Test", wx.ArtProvider.GetBitmap(wx.ART_QUESTION))
+        tb5.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_INFORMATION))
+        tb5.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_WARNING))
+        tb5.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE))
         tb5.Realize()
 
         # add a bunch of panes
@@ -687,8 +687,8 @@ class PyAUIFrame(wx.Frame):
         items = []
 
         imglist = wx.ImageList(16, 16, True, 2)
-        imglist.Add(wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16,16)))
-        imglist.Add(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16,16)))
+        imglist.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16,16)))
+        imglist.Add(wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16,16)))
         tree.AssignImageList(imglist)
 
         items.append(tree.AppendItem(root, "Item 1", 0))
@@ -985,7 +985,7 @@ class SettingsPanel(wx.Panel):
     
     
     def CreateColorBitmap(self, c):
-        image = wx.EmptyImage(25, 14)
+        image = wx.Image(25, 14)
         
         for x in xrange(25):
             for y in xrange(14):
