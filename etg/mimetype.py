@@ -142,6 +142,33 @@ def run():
     c.find('GetAllCommands.verbs').out = True
     c.find('GetAllCommands.commands').out = True
 
+    c.addCppMethod('PyObject*', 'GetIconInfo', '()',
+        doc="""\
+            Returns a tuple containing the Icon for this file type, the file where the 
+            icon is found, and the index of the image in that file, if applicable.
+            """,
+        body="""\
+            wxIconLocation loc;
+            if (self->GetIcon(&loc)) {
+                wxString iconFile = loc.GetFileName();
+                int iconIndex     = -1;
+            #ifdef __WXMSW__
+                iconIndex = loc.GetIndex();
+            #endif
+                // Make a tuple and put the values in it
+                wxPyThreadBlocker blocker;
+                PyObject* tuple = PyTuple_New(3);
+                PyTuple_SetItem(tuple, 0, 
+                    wxPyConstructObject(new wxIcon(loc), wxT("wxIcon"), true));
+                PyTuple_SetItem(tuple, 1, wx2PyString(iconFile));
+                PyTuple_SetItem(tuple, 2, wxPyInt_FromLong(iconIndex));
+                return tuple;
+            }
+            else
+                RETURN_NONE();
+            """)
+    
+    
     
     #-----------------------------------------------------------------
     c = module.find('wxFileTypeInfo')

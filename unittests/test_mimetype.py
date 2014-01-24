@@ -39,7 +39,17 @@ class mimetype_Tests(wtc.WidgetTestCase):
         self.assertEqual(fti.GetDescription(), 'desc')
         self.assertEqual(fti.GetExtensions(), ['ext1', 'ext2', 'ext3'])
         self.assertEqual(fti.GetExtensionsCount(), 3)
-        
+
+    def test_mimetype5(self):
+        ft = wx.TheMimeTypesManager.GetFileTypeFromMimeType('image/png')
+        if ft:
+            info = ft.GetIconInfo()
+            if info is not None:
+                self.assertTrue(isinstance(info, tuple))
+                self.assertTrue(len(info) == 3)
+                self.assertTrue(isinstance(info[0], wx.Icon))
+            
+            
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
