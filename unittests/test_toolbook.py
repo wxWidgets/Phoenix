@@ -41,6 +41,8 @@ class toolbook_Tests(wtc.WidgetTestCase):
         book.AddPage(wx.Panel(book), 'three', imageId=2)
         book.AddPage(wx.Panel(book), 'four', imageId=3)
 
+        book.GetToolBar()
+
         self.myYield()
 
         

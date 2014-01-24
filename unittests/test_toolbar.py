@@ -108,6 +108,16 @@ class toolbar_Tests(wtc.WidgetTestCase):
         tool.Style
         tool.ToolBar
 
+
+    def test_toolbarTools2(self):
+        tb = self.frame.CreateToolBar()
+        tools = self._populateToolBar(tb)        
+        tool = tools[0]
+        self.assertEqual(tool.GetToolBar(), tb)
+        
+        tool = tb.FindById(tools[1].GetId())
+        self.assertEqual(tool.GetToolBar(), tb)
+        
         
 #---------------------------------------------------------------------------
 

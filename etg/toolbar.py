@@ -32,10 +32,6 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    module.insertItem(0, etgtools.WigCode("""\
-        // forward declarations
-        class wxToolBarBase;
-        """))
 
     # Use wxPyUserData for the clientData values instead of a plain wxObject
     def _fixClientData(c):
@@ -49,7 +45,20 @@ def run():
     c = module.find('wxToolBarToolBase')
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
+    tools.removeVirtuals(c)
     _fixClientData(c)
+
+    # Switch all wxToolBarBase to wxToolBar
+    for item in c.allItems():
+        if isinstance(item, etgtools.ParamDef) and item.name == 'tbar':
+            item.type = 'wxToolBar*'
+    
+    c.find('GetToolBar').ignore()
+    c.addCppMethod('wxToolBar*', 'GetToolBar', '()',
+        doc="Return the toolbar this tool is a member of.",
+        body="""\
+            return (wxToolBar*)self->GetToolBar();
+            """)
 
     gcd = c.find('GetClientData')
     gcd.type = 'wxPyUserData*'

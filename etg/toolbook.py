@@ -38,6 +38,13 @@ def run():
     tools.fixWindowClass(c)
     tools.fixBookctrlClass(c)
     
+    c.find('GetToolBar').ignore()
+    c.addCppMethod('wxToolBar*', 'GetToolBar', '()',
+        doc="Return the toolbar used for page selection.",
+        body="""\
+            return (wxToolBar*)self->GetToolBar();
+            """)
+    
     module.addPyCode("""\
         EVT_TOOLBOOK_PAGE_CHANGED  = wx.PyEventBinder( wxEVT_TOOLBOOK_PAGE_CHANGED, 1 )
         EVT_TOOLBOOK_PAGE_CHANGING = wx.PyEventBinder( wxEVT_TOOLBOOK_PAGE_CHANGING, 1 )
