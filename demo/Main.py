@@ -51,8 +51,8 @@
 # Please see the __demo__.py file in the demo/agw/ folder for an example.
 # Last updated: Andrea Gavana, 20 Oct 2008, 18.00 GMT
 
-import sys, os, time, traceback, types
-import cPickle, cStringIO, re, urllib2
+import sys, os, time, traceback
+import re
 import shutil
 from threading import Thread
 
@@ -64,6 +64,11 @@ from wx.lib.msgpanel import MessagePanel
 from wx.adv import TaskBarIcon as TaskBarIcon
 from wx.adv import SplashScreen as SplashScreen
 import wx.lib.mixins.inspection
+
+import wx.lib.six as six
+from wx.lib.six import exec_, BytesIO
+from wx.lib.six.moves import cPickle
+from wx.lib.six.moves import urllib
 
 import version
 
@@ -435,7 +440,7 @@ def RemoveHTMLTags(data):
 
 def FormatDocs(keyword, values, num):
 
-    names = values.keys()
+    names = list(values.keys())
     names.sort()
 
     headers = (num == 2 and [_eventHeaders] or [_styleHeaders])[0]
@@ -445,7 +450,7 @@ def FormatDocs(keyword, values, num):
     else:
         text = "<br>" + table
 
-    for indx in xrange(2):
+    for indx in range(2):
         text += _headerTable%headers[indx]
 
     text += "\n</tr>\n"
@@ -512,7 +517,7 @@ def FormatImages(appearance):
 
     text = "<p><br>" + _appearanceTable
 
-    for indx in xrange(2):
+    for indx in range(2):
         text += "\n<tr>\n"
         for key in _platformNames:
             if indx == 0:
@@ -611,14 +616,14 @@ def FindImages(text, widgetName):
         if "src=" in items:
             possibleImage = items.replace("src=", "").strip()
             possibleImage = possibleImage.replace("'", "")
-            f = urllib2.urlopen(_trunkURL + possibleImage)
+            f = urllib.request.urlopen(_trunkURL + possibleImage)
             stream = f.read()
 
         elif "alt=" in items:
             plat = items.replace("alt=", "").replace("'", "").strip()
             path = os.path.join(imagesDir, plat, widgetName + ".png")
             if not os.path.isfile(path):
-                image = wx.ImageFromStream(cStringIO.StringIO(stream))
+                image = wx.ImageFromStream(BytesIO(stream))
                 image.SaveFile(path, wx.BITMAP_TYPE_PNG)
 
             winAppearance[plat] = path
@@ -649,11 +654,11 @@ class InternetThread(Thread):
         """ Run the worker thread. """
 
         # This is the code executing in the new thread. Simulation of
-        # a long process as a simple urllib2 call
+        # a long process as a simple urllib call
 
         try:
             url = _docsURL % ReplaceCapitals(self.selectedClass)
-            fid = urllib2.urlopen(url)
+            fid = urllib.request.urlopen(url)
 
             originalText = fid.read()
             text = RemoveHTMLTags(originalText).split("\n")
@@ -663,7 +668,7 @@ class InternetThread(Thread):
                 return
 
             wx.CallAfter(self.notifyWindow.LoadDocumentation, data)
-        except (IOError, urllib2.HTTPError):
+        except (IOError, urllib.error.HTTPError):
             # Unable to get to the internet
             t, v = sys.exc_info()[:2]
             message = traceback.format_exception_only(t, v)
@@ -1088,7 +1093,7 @@ class DemoCodePanel(wx.Panel):
 
 def opj(path):
     """Convert paths to the platform-specific separator"""
-    st = apply(os.path.join, tuple(path.split('/')))
+    st = os.path.join(*tuple(path.split('/')))
     # HACK: on Linux, a leading / gets lost...
     if path.startswith('/'):
         st = '/' + st
@@ -1239,7 +1244,7 @@ def HuntExternalDemos():
 
     # Sort and reverse the external demos keys so that they
     # come back in alphabetical order
-    keys = externalDemos.keys()
+    keys = list(externalDemos.keys())
     keys.sort()
     keys.reverse()
 
@@ -1309,9 +1314,10 @@ class DemoModules(object):
         self.modules = [[dict(),  ""    ,    ""     , "<original>"  ,        None],
                         [dict(),  ""    ,    ""     , "<modified>"  ,        None]]
 
+        getcwd = os.getcwd if six.PY3 else os.getcwdu
         for i in [modOriginal, modModified]:
             self.modules[i][0]['__file__'] = \
-                os.path.join(os.getcwdu(), GetOriginalFilename(name))
+                os.path.join(getcwd(), GetOriginalFilename(name))
 
         # load original module
         self.LoadFromFile(modOriginal, GetOriginalFilename(name))
@@ -1342,7 +1348,7 @@ class DemoModules(object):
 
             try:
                 code = compile(source, description, "exec")
-                exec code in self.modules[modID][0]
+                exec_(code, self.modules[modID][0])
             except:
                 self.modules[modID][4] = DemoError(sys.exc_info())
                 self.modules[modID][0] = None
@@ -1428,7 +1434,7 @@ class DemoError(object):
         self.traceback = traceback.extract_tb(exc_info[2])
 
         # --Based on traceback.py::format_exception_only()--
-        if type(excType) == types.ClassType:
+        if isinstance(excType, type):
             self.exception_type = excType.__name__
         else:
             self.exception_type = excType
@@ -1728,7 +1734,7 @@ class wxPythonDemo(wx.Frame):
         for png in ["overview", "code", "demo"]:
             bmp = images.catalog[png].GetBitmap()
             imgList.Add(bmp)
-        for indx in xrange(9):
+        for indx in range(9):
             bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
             imgList.Add(bmp)
 
@@ -1949,7 +1955,7 @@ class wxPythonDemo(wx.Frame):
         item.Check(self.allowAuiFloating)
         self.Bind(wx.EVT_MENU, self.OnAllowAuiFloating, item)
 
-        auiPerspectives = self.auiConfigurations.keys()
+        auiPerspectives = list(self.auiConfigurations.keys())
         auiPerspectives.sort()
         perspectivesMenu = wx.Menu()
         item = wx.MenuItem(perspectivesMenu, -1, DEFAULT_PERSPECTIVE, "Load startup default perspective", wx.ITEM_RADIO)
@@ -2551,7 +2557,7 @@ class wxPythonDemo(wx.Frame):
     def EnableAUIMenu(self):
 
         menuItems = self.options_menu.GetMenuItems()
-        for indx in xrange(4, len(menuItems)-1):
+        for indx in range(4, len(menuItems)-1):
             item = menuItems[indx]
             item.Enable(self.allowAuiFloating)
 
