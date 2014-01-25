@@ -14,8 +14,9 @@
 #----------------------------------------------------------------------
 
 import base64
-from wx.lib.six import BytesIO
+
 import wx
+from wx.lib.six import BytesIO
 
 try:
     b64decode = base64.b64decode
@@ -64,13 +65,13 @@ class PyEmbeddedImage(object):
         return wx.Image(stream)
 
     # added for backwards compatibility
-    getBitmap = GetBitmap
-    getData = GetData
-    getIcon = GetIcon
-    getImage = GetImage
+    getBitmap = wx.deprecated(GetBitmap)
+    getData = wx.deprecated(GetData)
+    getIcon = wx.deprecated(GetIcon)
+    getImage = wx.deprecated(GetImage)
 
     # define properties, for convenience
     Bitmap = property(GetBitmap)
+    Data = property(GetData)
     Icon = property(GetIcon)
     Image = property(GetImage)
-
