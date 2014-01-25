@@ -89,7 +89,7 @@ import sys
 import tempfile
 
 import wx
-import img2img
+from . import img2img
 
 try:
     b64encode = base64.b64encode
