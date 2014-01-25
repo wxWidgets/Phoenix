@@ -45,22 +45,22 @@ def GetDemoBitmap():
 
     # Get the image as PyEmbeddedImage    
     image = PyEmbeddedImage(
-        "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAvdJ"
-        "REFUOI2NkX1I3HUcx1/f7+/B85yXpXa38o+ltIdzGRUUs4fpClaYi5iFERpkG6yQtkEEBZ0Q"
-        "QkW1GotVFEEQGcFkOIK2Nq1mszqJdeKdDzsU9fS86dx5nre78/vtj3ViBtH73/f7/eLzIFij"
-        "A8fHm6evmU/3+q1sbLT0efrEfM7Tvg9dZJOHVSi8V0Yj21VscViGB942c4Gd+/0lgaWyur4e"
-        "STaGyUSoFJgH0K2tLianT2UvnLzXTA21YSmHjBtNlKrXVwEu75bG7m4KsuMqSKHchr3VDQwB"
-        "MBY/TODMgyI/9III8/n1xkobgAlQu/9sRWRpw67E4MKCXZ7/c8bK26Znlm8DfgLgz9BelsOY"
-        "Y9fL+tlDZ5idg4s9WQlQoS74HCfuqK3fWPnE196HjhTSX4DJxtXjRMObIQPAZ08aV6b8R2s5"
-        "3/EI9sRF+VrdlmOVMV+Tac5aBim+DfrLqyvvq9lZ1PRUrj/uupwgo1m+wQq2zOyuK66v/oW8"
-        "QqY8Wos9XjMbtJpHRiI1x4g1f/TSA489PrjQ3ZlXmjLf32V8PBUke3VCt9RHVVwlpVvaHmUb"
-        "xo/xhsjdfyyoIU4fkHrA57XXvvNsMxWzHTK92G/o/n2G+v4Zu551Gus0TwfeknNyeobMrZ7R"
-        "PWvNh7/k0uQPso0eKLuTFYeRHlgPsG1uTsdJmoNR0eH5XX0x90FBqPjg0oDwceqmiLNoLnWt"
-        "6tdunbIPKsdXl8Vwxz6jutGTdTgkrxZNO1eMRLpqZEgcFQCv7BDfbS4Ruzfkyyvtvcql08ps"
-        "rJI9b+xQgXK/9eimmsztx++RHOnTVwOzwmotEc4bJ3Wg9xZ1l8iN1LIdtzBkwzdl1nMJrzWv"
-        "nca7aP0yAmHFlX1oMpk8Nybud1kkG4p1+4td6lMAsX43fK53AC/oMRBlwCiwFU0UgRulP+HN"
-        "xa5cXP4LsCqxCfT5vwEgcKP1IknnubWp/wAAWdH5T6Y4yXvRpf8L+I32+CUQwwBoVkjkd60P"
-        "/QWR0DSJqhvOegAAAABJRU5ErkJggg==")
+        b"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAvdJ"
+        b"REFUOI2NkX1I3HUcx1/f7+/B85yXpXa38o+ltIdzGRUUs4fpClaYi5iFERpkG6yQtkEEBZ0Q"
+        b"QkW1GotVFEEQGcFkOIK2Nq1mszqJdeKdDzsU9fS86dx5nre78/vtj3ViBtH73/f7/eLzIFij"
+        b"A8fHm6evmU/3+q1sbLT0efrEfM7Tvg9dZJOHVSi8V0Yj21VscViGB942c4Gd+/0lgaWyur4e"
+        b"STaGyUSoFJgH0K2tLianT2UvnLzXTA21YSmHjBtNlKrXVwEu75bG7m4KsuMqSKHchr3VDQwB"
+        b"MBY/TODMgyI/9III8/n1xkobgAlQu/9sRWRpw67E4MKCXZ7/c8bK26Znlm8DfgLgz9BelsOY"
+        b"Y9fL+tlDZ5idg4s9WQlQoS74HCfuqK3fWPnE196HjhTSX4DJxtXjRMObIQPAZ08aV6b8R2s5"
+        b"3/EI9sRF+VrdlmOVMV+Tac5aBim+DfrLqyvvq9lZ1PRUrj/uupwgo1m+wQq2zOyuK66v/oW8"
+        b"QqY8Wos9XjMbtJpHRiI1x4g1f/TSA489PrjQ3ZlXmjLf32V8PBUke3VCt9RHVVwlpVvaHmUb"
+        b"xo/xhsjdfyyoIU4fkHrA57XXvvNsMxWzHTK92G/o/n2G+v4Zu551Gus0TwfeknNyeobMrZ7R"
+        b"PWvNh7/k0uQPso0eKLuTFYeRHlgPsG1uTsdJmoNR0eH5XX0x90FBqPjg0oDwceqmiLNoLnWt"
+        b"6tdunbIPKsdXl8Vwxz6jutGTdTgkrxZNO1eMRLpqZEgcFQCv7BDfbS4Ruzfkyyvtvcql08ps"
+        b"rJI9b+xQgXK/9eimmsztx++RHOnTVwOzwmotEc4bJ3Wg9xZ1l8iN1LIdtzBkwzdl1nMJrzWv"
+        b"nca7aP0yAmHFlX1oMpk8Nybud1kkG4p1+4td6lMAsX43fK53AC/oMRBlwCiwFU0UgRulP+HN"
+        b"xa5cXP4LsCqxCfT5vwEgcKP1IknnubWp/wAAWdH5T6Y4yXvRpf8L+I32+CUQwwBoVkjkd60P"
+        b"/QWR0DSJqhvOegAAAABJRU5ErkJggg==")
 
     # Return the AGW bitmap to use in
     # the wxPython demo tree control
