@@ -204,16 +204,21 @@ def run():
     
     
     c.addPyMethod('__repr__', '(self)', """\
+        from wx.lib.six import PY2
         if self.IsValid():
-            f = self.Format().encode('utf-8')
-            return '<wx.DateTime: \"%s\">' % f
+            f = self.Format()
+            if PY2: f = f.encode('utf-8')
+            return '<wx.DateTime: "%s">' % f
         else:
             return '<wx.DateTime: \"INVALID\">'
         """)
     
     c.addPyMethod('__str__', '(self)', """\
+        from wx.lib.six import PY2
         if self.IsValid():
-            return self.Format().encode('utf-8')
+            f = self.Format()
+            if PY2: f = f.encode('utf-8')
+            return f
         else:
             return "INVALID DateTime"
         """)
