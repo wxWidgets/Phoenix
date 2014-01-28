@@ -10,9 +10,10 @@
 # RCS-ID:       $Id: ListCtrl.py 51049 2008-01-06 21:38:01Z RD $
 # Copyright:    (c) 1998 by Total Control Software
 # Licence:      wxWindows license
+#	Tags: phoenix-port, py3-port
 #----------------------------------------------------------------------------
 
-import sys
+import wx.lib.six as six
 import wx
 import wx.lib.mixins.listctrl as listmix
 
@@ -173,21 +174,21 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
             info.Image = -1
             info.Align = 0
             info.Text = "Artist"
-            self.list.InsertColumnInfo(0, info)
+            self.list.InsertColumn(0, info)
 
             info.Align = wx.LIST_FORMAT_RIGHT
             info.Text = "Title"
-            self.list.InsertColumnInfo(1, info)
+            self.list.InsertColumn(1, info)
 
             info.Align = 0
             info.Text = "Genre"
-            self.list.InsertColumnInfo(2, info)
+            self.list.InsertColumn(2, info)
 
         items = musicdata.items()
         for key, data in items:
-            index = self.list.InsertImageStringItem(sys.maxint, data[0], self.idx1)
-            self.list.SetStringItem(index, 1, data[1])
-            self.list.SetStringItem(index, 2, data[2])
+            index = self.list.InsertItem(six.MAXSIZE, data[0], self.idx1)
+            self.list.SetItem(index, 1, data[1])
+            self.list.SetItem(index, 2, data[2])
             self.list.SetItemData(index, key)
 
         self.list.SetColumnWidth(0, wx.LIST_AUTOSIZE)
@@ -506,7 +507,7 @@ selection is enabled)
 
 
 if __name__ == '__main__':
-    import sys,os
+    import sys, os
     import run
     run.main(['', os.path.basename(sys.argv[0])] + sys.argv[1:])
 

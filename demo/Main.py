@@ -9,6 +9,7 @@
 # RCS-ID:       $Id: Main.py 71772 2012-06-14 22:37:10Z RD $
 # Copyright:    (c) 1999 by Total Control Software
 # Licence:      wxWindows license
+# Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
 
 # FIXME List:
@@ -615,10 +616,9 @@ def FindImages(text, widgetName):
 
         if "src=" in items:
             possibleImage = items.replace("src=", "").strip()
-            possibleImage = possibleImage.replace("'", "")
+            possibleImage = possibleImage.replace('"', "")
             f = urllib.request.urlopen(_trunkURL + possibleImage)
             stream = f.read()
-
         elif "alt=" in items:
             plat = items.replace("alt=", "").replace("'", "").strip()
             path = os.path.join(imagesDir, plat, widgetName + ".png")
@@ -660,7 +660,10 @@ class InternetThread(Thread):
             url = _docsURL % ReplaceCapitals(self.selectedClass)
             fid = urllib.request.urlopen(url)
 
-            originalText = fid.read()
+            if six.PY2:
+                originalText = fid.read()
+            else:
+                originalText = fid.read().decode("utf-8")
             text = RemoveHTMLTags(originalText).split("\n")
             data = FindWindowStyles(text, originalText, self.selectedClass)
 
@@ -1344,7 +1347,8 @@ class DemoModules(object):
         if self.name != __name__:
             source = self.modules[modID][1]
             description = self.modules[modID][2]
-            description = description.encode(sys.getfilesystemencoding())
+            if six.PY2:
+                description = description.encode(sys.getfilesystemencoding())
 
             try:
                 code = compile(source, description, "exec")
@@ -1438,7 +1442,7 @@ class DemoError(object):
             self.exception_type = excType.__name__
         else:
             self.exception_type = excType
-
+        
         # If it's a syntax error, extra information needs
         # to be added to the traceback
         if excType is SyntaxError:
@@ -2437,9 +2441,9 @@ class wxPythonDemo(wx.Frame):
 
         if error:
             if self.sendDownloadError:
-                self.log.write("Warning: problems in downloading documentation from the wxWidgets website.\n")
-                self.log.write("Error message from the documentation downloader was:\n")
-                self.log.write("\n".join(error))
+                self.log.AppendText("Warning: problems in downloading documentation from the wxWidgets website.\n")
+                self.log.AppendText("Error message from the documentation downloader was:\n")
+                self.log.AppendText("\n".join(error))
                 self.sendDownloadError = False
 
         self.nb.SetPageImage(0, 0)
@@ -2486,7 +2490,8 @@ class wxPythonDemo(wx.Frame):
 
         self.pickledData[itemText] = data
 
-        if wx.USE_UNICODE:
+        if six.PY2:
+            # TODO: verify that this encoding is correct
             text = text.decode('iso8859_1')
 
         self.StopDownload()
@@ -2509,7 +2514,7 @@ class wxPythonDemo(wx.Frame):
 
     def OnAllowDownload(self, event):
 
-        self.allowDocs = event.Checked()
+        self.allowDocs = event.IsChecked()
         if self.allowDocs:
             self.StartDownload()
         else:

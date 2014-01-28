@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#	Tags: phoenix-port, py3-port
 
 import os
 import string
@@ -9,6 +10,8 @@ import wx.lib.colourselect as csel
 import wx.lib.colourutils as cutils
 
 import sys
+
+from wx.lib.six import BytesIO
 
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))
@@ -192,8 +195,7 @@ def GetMondrianBitmap():
     return wx.Bitmap(GetMondrianImage())
 
 def GetMondrianImage():
-    import cStringIO
-    stream = cStringIO.StringIO(GetMondrianData())
+    stream = BytesIO(GetMondrianData())
     return wx.Image(stream)
 
 def GetMondrianIcon():
@@ -239,8 +241,7 @@ def GetSmilesBitmap():
     return wx.Bitmap(GetSmilesImage())
 
 def GetSmilesImage():
-    import cStringIO
-    stream = cStringIO.StringIO(GetSmilesData())
+    stream = BytesIO(GetSmilesData())
     return wx.Image(stream)
 
 
@@ -1901,7 +1902,7 @@ class HyperTreeList(HTL.HyperTreeList):
         items.append(tree.AppendItem(root, "Item 4", 0))
         items.append(tree.AppendItem(root, "Item 5", 0))
 
-        for ii in xrange(len(items)):
+        for ii in range(len(items)):
 
             id = items[ii]
             tree.AppendItem(id, "Subitem 1", 1)

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#	Tags: phoenix-port, py3-port
 
 import wx
 import images
@@ -48,8 +49,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         # create a list of choices from the dictionary above
-        choices = cursors.keys()
-        choices.sort()
+        choices = sorted(cursors.keys())
 
         # create the controls
         self.cb = wx.ComboBox(self, -1, "wx.CURSOR_DEFAULT", choices=choices,

@@ -5,7 +5,7 @@ import wx.grid as gridlib
 
 #---------------------------------------------------------------------------
 
-class HugeTable(gridlib.PyGridTableBase):
+class HugeTable(gridlib.GridTableBase):
 
     def __init__(self, log):
         gridlib.GridTableBase.__init__(self)

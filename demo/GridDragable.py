@@ -6,9 +6,9 @@ import wx.lib.gridmovers as gridmovers
 
 #---------------------------------------------------------------------------
 
-class CustomDataTable(gridlib.PyGridTableBase):
+class CustomDataTable(gridlib.GridTableBase):
     def __init__(self, log):
-        gridlib.PyGridTableBase.__init__(self)
+        gridlib.GridTableBase.__init__(self)
         self.log = log
 
         self.identifiers = ['id','ds','sv','pr','pl','op','fx','ts']

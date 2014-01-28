@@ -71,15 +71,13 @@ class MyTreeListModel(dv.PyDataViewModel):
         self.data = data
         self.log = log
 
-        # The objmapper is an instance of DataViewItemObjectMapper and is used
-        # to help associate Python objects with DataViewItem objects. Normally
-        # a dictionary is used so any Python object can be used as data nodes.
-        # If the data nodes are weak-referencable then the objmapper can use a
-        # WeakValueDictionary instead. Each PyDataViewModel automagically has
-        # an instance of DataViewItemObjectMapper preassigned. This
-        # self.objmapper is used by the self.ObjectToItem and
-        # self.ItemToObject methods used below.
-        self.objmapper.UseWeakRefs(True)
+        # The PyDataViewModel derives from both DataViewModel and from
+        # DataViewItemObjectMapper, which has methods that help associate
+        # data view items with Python objects. Normally a dictionary is used
+        # so any Python object can be used as data nodes. If the data nodes
+        # are weak-referencable then the objmapper can use a
+        # WeakValueDictionary instead.
+        self.UseWeakRefs(True)
 
 
     # Report how many columns this model provides data for.
@@ -305,8 +303,7 @@ def runTest(frame, nb, log):
     # Reuse the music data in the ListCtrl sample, and put it in a
     # hierarchical structure so we can show it as a tree
     import ListCtrl
-    musicdata = ListCtrl.musicdata.items()
-    musicdata.sort()
+    musicdata = sorted(ListCtrl.musicdata.items())
 
     ## For testing Unicode
     #musicdata = {

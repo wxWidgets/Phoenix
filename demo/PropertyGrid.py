@@ -7,6 +7,7 @@ import os
 import os.path
 
 import wx
+from wx.lib.six import exec_
 _ = wx.GetTranslation
 import wx.propgrid as wxpg
 
@@ -873,7 +874,7 @@ class TestPanel( wx.Panel ):
                 sandbox = {'obj':ValueObject(),
                            'wx':wx,
                            'datetime':datetime}
-                exec dlg.tc.GetValue() in sandbox
+                exec_(dlg.tc.GetValue(), sandbox)
                 t_start = time.time()
                 #print(sandbox['obj'].__dict__)
                 self.pg.SetPropertyValues(sandbox['obj'])
@@ -919,7 +920,7 @@ class TestPanel( wx.Panel ):
             dlg = MemoDialog(self,"Enter Content for Object Used for AutoFill",default_object_content1)
             if dlg.ShowModal() == wx.ID_OK:
                 sandbox = {'object':ValueObject(),'wx':wx}
-                exec dlg.tc.GetValue() in sandbox
+                exec_(dlg.tc.GetValue(), sandbox)
                 t_start = time.time()
                 self.pg.AutoFill(sandbox['object'])
                 t_end = time.time()

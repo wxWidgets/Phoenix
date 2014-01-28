@@ -21,9 +21,8 @@ import images
 
 # helper function to make sure we don't convert unicode objects to strings
 # or vice versa when converting lists and None values to text.
-convert = str
-if 'unicode' in wx.PlatformInfo:
-   convert = unicode
+import wx.lib.six as six
+convert = six.text_type
 
 #----------------------------------------------------------------------------
 
@@ -271,7 +270,7 @@ class MimeTypesDemoPanel(wx.Panel):
             self.iconoffset.SetValue("")
         else:
             icon, file, idx = info
-            if icon.Ok():
+            if icon.IsOk():
                 self.icon.SetIcon(icon)
             else:
                 bmp = images.NoIcon.GetBitmap()

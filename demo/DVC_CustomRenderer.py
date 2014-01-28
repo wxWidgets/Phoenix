@@ -1,13 +1,14 @@
 #!/usr/bin/env python
+#	Tags: phoenix-port, py3-port
 
 import wx
 import wx.dataview as dv
 
 #----------------------------------------------------------------------
 
-class MyCustomRenderer(dv.PyDataViewCustomRenderer):
+class MyCustomRenderer(dv.DataViewCustomRenderer):
     def __init__(self, log, *args, **kw):
-        dv.PyDataViewCustomRenderer.__init__(self, *args, **kw)
+        dv.DataViewCustomRenderer.__init__(self, *args, **kw)
         self.log = log
         self.value = None
         
@@ -51,6 +52,7 @@ class MyCustomRenderer(dv.PyDataViewCustomRenderer):
                         state # wxDataViewCellRenderState flags
                         )
 
+        return True
 
     # The HasEditorCtrl, CreateEditorCtrl and GetValueFromEditorCtrl
     # methods need to be implemented if this renderer is going to
@@ -154,7 +156,7 @@ def runTest(frame, nb, log):
     # as the first element of each sublist.
     import ListCtrl
     musicdata = ListCtrl.musicdata.items()
-    musicdata.sort()
+    musicdata = sorted(musicdata)
     musicdata = [[str(k)] + list(v) for k,v in musicdata]
 
     win = TestPanel(nb, log, data=musicdata)

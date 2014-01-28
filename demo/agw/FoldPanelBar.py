@@ -1,9 +1,12 @@
 #!/usr/bin/env python
+#	Tags: phoenix-port, py3-port
 
 import wx
 import wx.adv
 import os
 import sys
+
+from wx.lib.six import BytesIO
 
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))
@@ -33,7 +36,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 
 def GetCollapsedIconData():
     return \
-'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x06\
+b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x06\
 \x00\x00\x00\x1f\xf3\xffa\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\
 \x00\x01\x8eIDAT8\x8d\xa5\x93-n\xe4@\x10\x85?g\x03\n6lh)\xc4\xd2\x12\xc3\x81\
 \xd6\xa2I\x90\x154\xb9\x81\x8f1G\xc8\x11\x16\x86\xcd\xa0\x99F\xb3A\x91\xa1\
@@ -56,14 +59,13 @@ def GetCollapsedIconBitmap():
     return wx.Bitmap(GetCollapsedIconImage())
 
 def GetCollapsedIconImage():
-    import cStringIO
-    stream = cStringIO.StringIO(GetCollapsedIconData())
+    stream = BytesIO(GetCollapsedIconData())
     return wx.Image(stream)
 
 #----------------------------------------------------------------------
 def GetExpandedIconData():
     return \
-'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x06\
+b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x10\x00\x00\x00\x10\x08\x06\
 \x00\x00\x00\x1f\xf3\xffa\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\
 \x00\x01\x9fIDAT8\x8d\x95\x93\xa1\x8e\xdc0\x14EO\xb2\xc4\xd0\xd2\x12\xb7(mI\
 \xa4%V\xd1lQT4[4-\x9a\xfe\xc1\xc2|\xc6\xc2~BY\x83:A3E\xd3\xa0*\xa4\xd2\x90H!\
@@ -88,27 +90,25 @@ def GetExpandedIconBitmap():
     return wx.Bitmap(GetExpandedIconImage())
 
 def GetExpandedIconImage():
-    import cStringIO
-    stream = cStringIO.StringIO(GetExpandedIconData())
+    stream = BytesIO(GetExpandedIconData())
     return wx.Image(stream)
 
 #----------------------------------------------------------------------
 def GetMondrianData():
     return \
-'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00 \x00\x00\x00 \x08\x06\x00\
+b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00 \x00\x00\x00 \x08\x06\x00\
 \x00\x00szz\xf4\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\x00qID\
 ATX\x85\xed\xd6;\n\x800\x10E\xd1{\xc5\x8d\xb9r\x97\x16\x0b\xad$\x8a\x82:\x16\
 o\xda\x84pB2\x1f\x81Fa\x8c\x9c\x08\x04Z{\xcf\xa72\xbcv\xfa\xc5\x08 \x80r\x80\
 \xfc\xa2\x0e\x1c\xe4\xba\xfaX\x1d\xd0\xde]S\x07\x02\xd8>\xe1wa-`\x9fQ\xe9\
 \x86\x01\x04\x10\x00\\(Dk\x1b-\x04\xdc\x1d\x07\x14\x98;\x0bS\x7f\x7f\xf9\x13\
-\x04\x10@\xf9X\xbe\x00\xc9 \x14K\xc1<={\x00\x00\x00\x00IEND\xaeB`\x82' 
+\x04\x10@\xf9X\xbe\x00\xc9 \x14K\xc1<={\x00\x00\x00\x00IEND\xaeB`\x82'
 
 def GetMondrianBitmap():
     return wx.Bitmap(GetMondrianImage())
 
 def GetMondrianImage():
-    import cStringIO
-    stream = cStringIO.StringIO(GetMondrianData())
+    stream = BytesIO(GetMondrianData())
     return wx.Image(stream)
 
 def GetMondrianIcon():
@@ -191,7 +191,7 @@ class Extended(wx.Frame):
               
         dlg = wx.MessageDialog(self, msg, "FoldPanelBar Extended Demo",
                                wx.OK | wx.ICON_INFORMATION)
-        dlg.SetFont(wx.Font(8, wx.FONTFAMILY_NORMAL, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Verdana"))
+        dlg.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Verdana"))
         dlg.ShowModal()
         dlg.Destroy()
 

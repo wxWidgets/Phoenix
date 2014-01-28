@@ -22,8 +22,14 @@ This module provides the :class:`~lib.pdfviewer.viewer.pdfViewer` to view PDF
 files.
 """
 
-import sys, os, time, types
-import copy, shutil, cStringIO
+import sys
+import os
+import time
+import types
+import copy
+import shutil
+
+from wx.lib.six import BytesIO
 
 USE_CAIRO = True
 FONTSCALE = 1.0
@@ -842,7 +848,7 @@ class pdfViewer(wx.ScrolledWindow):
         if '/Fl' in filters or '/FlateDecode' in filters:
             data = FlateDecode.decode(data, None)
         if '/DCT' in filters or '/DCTDecode' in filters:
-            stream = cStringIO.StringIO(data)
+            stream = BytesIO(data)
             image = wx.Image(stream, wx.BITMAP_TYPE_JPEG)
             bitmap = wx.Bitmap(image)
         else:    

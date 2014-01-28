@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#	Tags: phoenix-port, py3-port
 
 import wx
 import wx.dataview as dv
@@ -222,8 +223,7 @@ def runTest(frame, nb, log):
     # from a dictionary to a list of lists, including the dictionary key
     # as the first element of each sublist.
     import ListCtrl
-    musicdata = ListCtrl.musicdata.items()
-    musicdata.sort()
+    musicdata = sorted(ListCtrl.musicdata.items())
     musicdata = [[str(k)] + list(v) for k,v in musicdata]
 
     win = TestPanel(nb, log, data=musicdata)

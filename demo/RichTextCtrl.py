@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from wx.lib.six import BytesIO
+
 import wx
 import wx.richtext as rt
 import images
@@ -314,8 +316,7 @@ class RichTextFrame(wx.Frame):
         handler.SetFlags(rt.RICHTEXT_HANDLER_SAVE_IMAGES_TO_MEMORY)
         handler.SetFontSizeMapping([7,9,11,12,14,22,100])
 
-        import cStringIO
-        stream = cStringIO.StringIO()
+        stream = BytesIO()
         if not handler.SaveStream(self.rtc.GetBuffer(), stream):
             return
 

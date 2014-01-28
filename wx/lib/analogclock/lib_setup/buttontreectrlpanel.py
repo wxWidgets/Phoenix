@@ -29,8 +29,6 @@ please drop me an e-mail.
 For updates please visit <http://j.domaindlx.com/elements28/wxpython/>.
 """
 
-import cStringIO
-
 import wx
 from wx.lib.newevent import NewEvent
 

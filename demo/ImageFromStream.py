@@ -1,6 +1,7 @@
 #!/usr/bin/env python
+#	Tags: phoenix-port, py3-port
 
-import cStringIO
+from wx.lib.six import BytesIO
 
 import wx
 
@@ -13,7 +14,7 @@ class TestPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
 
         data = open(opj('bitmaps/image.png'), "rb").read()
-        stream = cStringIO.StringIO(data)
+        stream = BytesIO(data)
 
         bmp = wx.Bitmap(wx.Image(stream))
 

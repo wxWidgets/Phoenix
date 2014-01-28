@@ -1,7 +1,9 @@
 #!/usr/bin/env python
+#	Tags: phoenix-port, py3-port
 
-import cStringIO
-import wx
+from wx.lib.six import BytesIO
+
+import  wx
 
 #----------------------------------------------------------------------
 
@@ -276,7 +278,7 @@ provided by wx.ArtProvider.GetBitmap or wx.ArtProvider.GetIcon methods.
 
 
 def makeBitmap(data):
-    stream = cStringIO.StringIO(data)
+    stream = BytesIO(data)
     return wx.Bitmap(wx.Image(stream))
 
 

@@ -19,7 +19,7 @@ class MyRowLabelRenderer(glr.GridLabelRenderer):
     def Draw(self, grid, dc, rect, row):
         dc.SetBrush(wx.Brush(self._bgcolor))
         dc.SetPen(wx.TRANSPARENT_PEN)
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
         hAlign, vAlign = grid.GetRowLabelAlignment()
         text = grid.GetRowLabelValue(row)
         self.DrawBorder(grid, dc, rect)

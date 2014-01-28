@@ -34,9 +34,9 @@ class GridFileDropTarget(wx.FileDropTarget):
 
 
 
-class FooTable(gridlib.PyGridTableBase):
+class FooTable(gridlib.GridTableBase):
     def __init__(self):
-        gridlib.PyGridTableBase.__init__(self)
+        gridlib.GridTableBase.__init__(self)
         self.dropTargets = {(0,0):"Drag",
                             (1,0):"A",
                             (2,0):"File",

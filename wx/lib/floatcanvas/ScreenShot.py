@@ -4,7 +4,8 @@
 from wx import Image as ImageFromStream
 from wx import BitmapFromImage
 
-import cStringIO, zlib
+from wx.lib.six import BytesIO
+import zlib
 
 
 def getScreenShotData():
@@ -1782,6 +1783,6 @@ def getScreenShotBitmap():
     return BitmapFromImage(getScreenShotImage())
 
 def getScreenShotImage():
-    stream = cStringIO.StringIO(getScreenShotData())
+    stream = BytesIO(getScreenShotData())
     return ImageFromStream(stream)
 

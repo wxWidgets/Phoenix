@@ -120,7 +120,7 @@ class CustTableGrid(gridlib.Grid):
         self.SetMargins(0,0)
         self.AutoSizeColumns(False)
 
-        gridlib.EVT_GRID_CELL_LEFT_DCLICK(self, self.OnLeftDClick)
+        self.Bind(gridlib.EVT_GRID_CELL_LEFT_DCLICK, self.OnLeftDClick)
 
 
     # I do this because I don't like the default behaviour of not starting the
