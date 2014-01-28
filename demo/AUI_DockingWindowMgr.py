@@ -212,7 +212,7 @@ class PyAUIFrame(wx.Frame):
         tb5 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER | wx.TB_VERTICAL)
         tb5.SetToolBitmapSize(wx.Size(48, 48))
-        tb5.AddLabelTool(101, "Test", wx.ArtProvider_GetBitmap(wx.ART_ERROR))
+        tb5.AddLabelTool(101, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
         tb5.AddSeparator()
         tb5.AddLabelTool(102, "Test", wx.ArtProvider.GetBitmap(wx.ART_QUESTION))
         tb5.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_INFORMATION))
