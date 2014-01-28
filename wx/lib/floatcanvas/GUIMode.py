@@ -23,11 +23,10 @@ version of the code.
 """
 
 import wx
-## fixme: events should live in their own module, so all of FloatCanvas
-##        wouldn't have to be imported here.
-from . import FloatCanvas, Resources
-from .Utilities import BBox
 import numpy as N
+
+from . import FCEvents, Resources
+from .Utilities import BBox
 
 class Cursors(object):
     """
@@ -134,58 +133,58 @@ class GUIMouse(GUIBase):
 
     # Handlers
     def OnLeftDown(self, event):
-        EventType = FloatCanvas.EVT_FC_LEFT_DOWN
+        EventType = FCEvents.EVT_FC_LEFT_DOWN
         if not self.Canvas.HitTest(event, EventType):
             self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnLeftUp(self, event):
-        EventType = FloatCanvas.EVT_FC_LEFT_UP
+        EventType = FCEvents.EVT_FC_LEFT_UP
         if not self.Canvas.HitTest(event, EventType):
             self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnLeftDouble(self, event):
-        EventType = FloatCanvas.EVT_FC_LEFT_DCLICK
+        EventType = FCEvents.EVT_FC_LEFT_DCLICK
         if not self.Canvas.HitTest(event, EventType):
                 self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnMiddleDown(self, event):
-        EventType = FloatCanvas.EVT_FC_MIDDLE_DOWN
+        EventType = FCEvents.EVT_FC_MIDDLE_DOWN
         if not self.Canvas.HitTest(event, EventType):
             self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnMiddleUp(self, event):
-        EventType = FloatCanvas.EVT_FC_MIDDLE_UP
+        EventType = FCEvents.EVT_FC_MIDDLE_UP
         if not self.Canvas.HitTest(event, EventType):
             self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnMiddleDouble(self, event):
-        EventType = FloatCanvas.EVT_FC_MIDDLE_DCLICK
+        EventType = FCEvents.EVT_FC_MIDDLE_DCLICK
         if not self.Canvas.HitTest(event, EventType):
             self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnRightDown(self, event):
-        EventType = FloatCanvas.EVT_FC_RIGHT_DOWN
+        EventType = FCEvents.EVT_FC_RIGHT_DOWN
         if not self.Canvas.HitTest(event, EventType):
             self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnRightUp(self, event):
-        EventType = FloatCanvas.EVT_FC_RIGHT_UP
+        EventType = FCEvents.EVT_FC_RIGHT_UP
         if not self.Canvas.HitTest(event, EventType):
             self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnRightDouble(self, event):
-        EventType = FloatCanvas.EVT_FC_RIGHT_DCLICK
+        EventType = FCEvents.EVT_FC_RIGHT_DCLICK
         if not self.Canvas.HitTest(event, EventType):
             self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnWheel(self, event):
-        EventType = FloatCanvas.EVT_FC_MOUSEWHEEL
+        EventType = FCEvents.EVT_FC_MOUSEWHEEL
         self.Canvas._RaiseMouseEvent(event, EventType)
 
     def OnMove(self, event):
         ## The Move event always gets raised, even if there is a hit-test
         self.Canvas.MouseOverTest(event)
-        self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+        self.Canvas._RaiseMouseEvent(event,FCEvents.EVT_FC_MOTION)
 
 
 class GUIMove(GUIBase):
@@ -220,7 +219,7 @@ class GUIMove(GUIBase):
 
     def OnMove(self, event):
         # Always raise the Move event.
-        self.Canvas._RaiseMouseEvent(event, FloatCanvas.EVT_FC_MOTION)
+        self.Canvas._RaiseMouseEvent(event, FCEvents.EVT_FC_MOTION)
         if event.Dragging() and event.LeftIsDown() and not self.StartMove is None:
             self.EndMove = N.array(event.GetPosition())
             self.MoveImage(event)
@@ -337,7 +336,7 @@ class GUIZoomIn(GUIBase):
 
     def OnMove(self, event):
         # Always raise the Move event.
-        self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+        self.Canvas._RaiseMouseEvent(event,FCEvents.EVT_FC_MOTION)
         if event.Dragging() and event.LeftIsDown() and not (self.StartRBBox is None):
             xy0 = self.StartRBBox
             xy1 = N.array( event.GetPosition() )
@@ -399,5 +398,5 @@ class GUIZoomOut(GUIBase):
 
     def OnMove(self, event):
         # Always raise the Move event.
-        self.Canvas._RaiseMouseEvent(event,FloatCanvas.EVT_FC_MOTION)
+        self.Canvas._RaiseMouseEvent(event,FCEvents.EVT_FC_MOTION)
 
