@@ -1,0 +1,316 @@
+#!/usr/bin/env python
+
+# main_globals.py
+
+"""
+Globals for the main.py wxPython demo.
+"""
+
+#-------------------------------------------------------------------------------
+#
+# _demoPngs
+#
+# These are the images names used in the demo treectrl.
+# These come from images.py or bitmaps/imagename.ext
+#
+# _demoPngs = ["imagename1", "imagename2", "etc"]
+#
+#-------------------------------------------------------------------------------
+
+_demoPngs = ["overview", "recent", "frame", "dialog", "moredialog", "core",
+             "book", "customcontrol", "morecontrols", "layout", "process",
+             "clipboard", "images", "miscellaneous"]
+
+
+#-------------------------------------------------------------------------------
+#
+# _treeList
+#
+# These are the Demo Catagory Headers
+# and Demo Module Names(Ex: Frame.py without ext)
+#
+# ('Demo Catagory Name String', [
+#       'DemoModuleName1',
+#       'DemoModuleName2',
+#       'Etc',
+#       ]),
+#
+#-------------------------------------------------------------------------------
+
+_treeList = [
+    # new stuff
+    ('Recent Additions/Updates', [
+        'BannerWindow',
+        'ToolTip',
+        'RichToolTip',
+        'NotificationMessage',
+        'RearrangeDialog',
+        'MouseState',
+        'RichMessageDialog',
+        'FileCtrl',
+        'Overlay',
+        'TimePickerCtrl',
+        'PropertyGrid',
+        'SystemSettings',
+        'GridLabelRenderer',
+        'InfoBar',
+        'WrapSizer',
+        'UIActionSimulator',
+        'GraphicsGradient',
+        'PDFViewer',
+        'ItemsPicker',
+        'CommandLinkButton',
+        'DVC_DataViewModel',
+        'DVC_IndexListModel',
+        'DVC_ListCtrl',
+        'DVC_TreeCtrl',
+        'DVC_CustomRenderer',
+        'PenAndBrushStyles',
+        'HTML2_WebView',
+    ]),
+
+    # managed windows == things with a (optional) caption you can close
+    ('Frames and Dialogs', [
+        'AUI_DockingWindowMgr',
+        'AUI_MDI',
+        'Dialog',
+        'Frame',
+        'MDIWindows',
+        'MiniFrame',
+        'Wizard',
+    ]),
+
+    # the common dialogs
+    ('Common Dialogs', [
+        'AboutBox',
+        'ColourDialog',
+        'DirDialog',
+        'FileDialog',
+        'FindReplaceDialog',
+        'FontDialog',
+        'MessageDialog',
+        'MultiChoiceDialog',
+        'PageSetupDialog',
+        'PrintDialog',
+        'ProgressDialog',
+        'SingleChoiceDialog',
+        'TextEntryDialog',
+    ]),
+
+    # dialogs from libraries
+    ('More Dialogs', [
+        'ImageBrowser',
+        'ScrolledMessageDialog',
+    ]),
+
+    # core controls
+    ('Core Windows/Controls', [
+        'BitmapButton',
+        'Button',
+        'CheckBox',
+        'CheckListBox',
+        'Choice',
+        'ComboBox',
+        'CommandLinkButton',
+        'DVC_CustomRenderer',
+        'DVC_DataViewModel',
+        'DVC_IndexListModel',
+        'DVC_ListCtrl',
+        'DVC_TreeCtrl',
+        'Gauge',
+        'Grid',
+        'Grid_MegaExample',
+        'GridLabelRenderer',
+        'ListBox',
+        'ListCtrl',
+        'ListCtrl_virtual',
+        'ListCtrl_edit',
+        'Menu',
+        'PopupMenu',
+        'PopupWindow',
+        'RadioBox',
+        'RadioButton',
+        'SashWindow',
+        'ScrolledWindow',
+        'SearchCtrl',
+        'Slider',
+        'SpinButton',
+        'SpinCtrl',
+        'SpinCtrlDouble',
+        'SplitterWindow',
+        'StaticBitmap',
+        'StaticBox',
+        'StaticText',
+        'StatusBar',
+        'StockButtons',
+        'TextCtrl',
+        'ToggleButton',
+        'ToolBar',
+        'TreeCtrl',
+        'Validator',
+    ]),
+
+    ('"Book" Controls', [
+        'AUI_Notebook',
+        'Choicebook',
+        'FlatNotebook',
+        'Listbook',
+        'Notebook',
+        'Toolbook',
+        'Treebook',
+    ]),
+
+    ('Custom Controls', [
+        'AnalogClock',
+        'ColourSelect',
+        'ComboTreeBox',
+        'Editor',
+        'GenericButtons',
+        'GenericDirCtrl',
+        'ItemsPicker',
+        'LEDNumberCtrl',
+        'MultiSash',
+        'PlateButton',
+        'PopupControl',
+        'PyColourChooser',
+        'TreeListCtrl',
+    ]),
+
+    # controls coming from other libraries
+    ('More Windows/Controls', [
+        'ActiveX_FlashWindow',
+        'ActiveX_IEHtmlWindow',
+        'ActiveX_PDFWindow',
+        'BitmapComboBox',
+        'Calendar',
+        'CalendarCtrl',
+        'CheckListCtrlMixin',
+        'CollapsiblePane',
+        'ComboCtrl',
+        'ContextHelp',
+        'DatePickerCtrl',
+        'DynamicSashWindow',
+        'EditableListBox',
+        'ExpandoTextCtrl',
+        'FancyText',
+        'FileBrowseButton',
+        'FloatBar',
+        'FloatCanvas',
+        'HtmlWindow',
+        'HTML2_WebView',
+        'InfoBar',
+        'IntCtrl',
+        'MVCTree',
+        'MaskedEditControls',
+        'MaskedNumCtrl',
+        'MediaCtrl',
+        'MultiSplitterWindow',
+        'OwnerDrawnComboBox',
+        'Pickers',
+        'PropertyGrid',
+        'PyCrust',
+        'PyPlot',
+        'PyShell',
+        'ResizeWidget',
+        'RichTextCtrl',
+        'ScrolledPanel',
+        'SplitTree',
+        'StyledTextCtrl_1',
+        'StyledTextCtrl_2',
+        'TablePrint',
+        'Throbber',
+        'Ticker',
+        'TimeCtrl',
+        'TreeMixin',
+        'VListBox',
+    ]),
+
+    # How to lay out the controls in a frame/dialog
+    ('Window Layout', [
+        'GridBagSizer',
+        'LayoutAnchors',
+        'LayoutConstraints',
+        'Layoutf',
+        'RowColSizer',
+        'ScrolledPanel',
+        'SizedControls',
+        'Sizers',
+        'WrapSizer',
+        'XmlResource',
+        'XmlResourceHandler',
+        'XmlResourceSubclass',
+    ]),
+
+    # ditto
+    ('Process and Events', [
+        'DelayedResult',
+        'EventManager',
+        'KeyEvents',
+        'Process',
+        'PythonEvents',
+        'Threads',
+        'Timer',
+        ##'infoframe',    # needs better explanation and some fixing
+    ]),
+
+    # Clipboard and DnD
+    ('Clipboard and DnD', [
+        'CustomDragAndDrop',
+        'DragAndDrop',
+        'URLDragAndDrop',
+    ]),
+
+    # Images
+    ('Using Images', [
+        'AdjustChannels',
+        'AlphaDrawing',
+        'AnimateCtrl',
+        'ArtProvider',
+        'BitmapFromBuffer',
+        'Cursor',
+        'DragImage',
+        'Image',
+        'ImageAlpha',
+        'ImageFromStream',
+        'Img2PyArtProvider',
+        'Mask',
+        'RawBitmapAccess',
+        'Throbber',
+    ]),
+
+    # Other stuff
+    ('Miscellaneous', [
+        'AlphaDrawing',
+        'Cairo',
+        'Cairo_Snippets',
+        'ColourDB',
+        ##'DialogUnits',   # needs more explanations
+        'DragScroller',
+        'DrawXXXList',
+        'FileHistory',
+        'FontEnumerator',
+        'GetMouseState',
+        'GraphicsContext',
+        'GraphicsGradient',
+        'GLCanvas',
+        'I18N',
+        'Joystick',
+        'MimeTypesManager',
+        'MouseGestures',
+        'OGL',
+        'PDFViewer',
+        'PenAndBrushStyles',
+        'PrintFramework',
+        'PseudoDC',
+        'RendererNative',
+        'ShapedWindow',
+        'Sound',
+        'StandardPaths',
+        'SystemSettings',
+        'UIActionSimulator',
+        'Unicode',
+    ]),
+
+    ('Check out the samples dir too', []),
+
+]
