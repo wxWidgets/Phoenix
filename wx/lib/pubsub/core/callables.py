@@ -14,7 +14,7 @@ CallArgsInfo regarding its autoTopicArgName data member.
 
 from inspect import getargspec, ismethod, isfunction
 
-from .. import py2and3 
+from .. import py2and3
 
 AUTO_TOPIC    = '## your listener wants topic name ## (string unlikely to be used by caller)'
 
@@ -32,7 +32,7 @@ def getModule(obj):
 
 def getID(callable_):
     """Get name and module name for a callable, ie function, bound
-    method or callable instance, by inspecting the callable. E.g. 
+    method or callable instance, by inspecting the callable. E.g.
     getID(Foo.bar) returns ('Foo.bar', 'a.b') if Foo.bar was
     defined in module a.b. """
     sc = callable_
@@ -45,13 +45,13 @@ def getID(callable_):
     else: # must be a functor (instance of a class that has __call__ method)
         module = getModule(sc)
         id = sc.__class__.__name__
-        
+
     return id, module
 
 
 def getRawFunction(callable_):
     """Given a callable, return (offset, func) where func is the
-    function corresponding to callable, and offset is 0 or 1 to 
+    function corresponding to callable, and offset is 0 or 1 to
     indicate whether the function's first argument is 'self' (1)
     or not (0). Raises ValueError if callable_ is not of a
     recognized type (function, method or has __call__ method)."""
@@ -72,19 +72,19 @@ def getRawFunction(callable_):
     else:
         msg = 'type "%s" not supported' % type(callable_).__name__
         raise ValueError(msg)
-    
+
     return func, firstArg
 
-    
+
 class ListenerMismatchError(ValueError):
     """
-    Raised when an attempt is made to subscribe a listener to 
+    Raised when an attempt is made to subscribe a listener to
     a topic, but listener does not satisfy the topic's message data
     specification (MDS). This specification is inferred from the first
     listener subscribed to a topic, or from an imported topic tree
     specification (see pub.addTopicDefnProvider()).
     """
-    
+
     def __init__(self, msg, listener, *args):
         idStr, module = getID(listener)
         msg = 'Listener "%s" (from module "%s") inadequate: %s' % (idStr, module, msg)
@@ -93,17 +93,17 @@ class ListenerMismatchError(ValueError):
         self.args   = args
         self.module = module
         self.idStr  = idStr
-        
+
     def __str__(self):
         return self.msg
 
 
 class CallArgsInfo:
     """
-    Represent the "signature" or protocol of a listener in the context of 
-    topics. 
+    Represent the "signature" or protocol of a listener in the context of
+    topics.
     """
-    
+
     def __init__(self, func, firstArgIdx): #args, firstArgIdx, defaultVals, acceptsAllKwargs=False):
         """Inputs:
         - Args and defaultVals are the complete set of arguments and
@@ -112,8 +112,8 @@ class CallArgsInfo:
           args that is of use, so it is typically 0 if listener is a function,
           and 1 if listener is a method.
         - The acceptsAllKwargs should be true
-          if the listener has **kwargs in its protocol. 
-        
+          if the listener has **kwargs in its protocol.
+
         After construction,
         - self.allParams will contain the subset of 'args' without first
           firstArgIdx items,
@@ -121,7 +121,7 @@ class CallArgsInfo:
           (ie self.allParams[:self.numRequired] are the required args names);
         - self.acceptsAllKwargs = acceptsAllKwargs
         - self.autoTopicArgName will be the name of argument
-          in which to put the topic object for which pubsub message is 
+          in which to put the topic object for which pubsub message is
           sent, or None. This is identified by the argument that has a
           default value of AUTO_TOPIC.
 
@@ -141,7 +141,7 @@ class CallArgsInfo:
 
         self.acceptsAllKwargs      = (varOptParamName is not None)
         self.acceptsAllUnnamedArgs = (varParamName    is not None)
-        
+
         self.allParams = allParams
         del self.allParams[0:firstArgIdx] # does nothing if firstArgIdx == 0
 
@@ -173,7 +173,7 @@ class CallArgsInfo:
                 firstKwargIdx = self.numRequired
                 self.autoTopicArgName = self.allParams.pop(firstKwargIdx + indx)
                 break
-        
+
 
 def getArgs(callable_):
     """Returns an instance of CallArgsInfo for the given callable_.
