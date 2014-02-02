@@ -91,12 +91,20 @@ body {
   background-color: rgb(230,230,230);
 }
 
+div.headerimage {
+	text-align: center;
+}
+
+div.headerimage-noshow {
+	display:none;
+}
+
 div.document { 
   background-color: rgb(230,230,230);
   position: relative;
   margin-left: 240px;
   z-index: 0;
-  top: 30px;
+  top: 50px;
 }
 
 div.sphinxsidebar {
@@ -110,16 +118,19 @@ div.sphinxsidebar {
     height: auto;
     z-index: 1;
     left: 0;
-    top: 33px;
+    top: 50px;
     bottom: 0;  
 }
 
 div.related {
+    background-image: url('../images/sphinxdocs/navigation.png');
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     font-size: 1em;
     position: fixed;
-    line-height: 30px;
+    line-height: normal;
     position: fixed;
-    height: 30px;
+    height: auto;
     z-index: 1;
     left: 0;
     right: 0;
@@ -127,30 +138,45 @@ div.related {
 }
 
 div.related ul {
-    background-image: url('../images/sphinxdocs/navigation.png');
-    height: 2em;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
     color: rgb(100, 100, 100);
+}
+
+div.related ul.row1 {
+    height: 30px;
+}
+
+div.related ul.row2 {
+    height: 20px;
 }
 
 div.related ul li {
     margin: 0;
+    margin-top: 7px;
     padding: 0;
-    height: 2em;
     float: left;
 }
 
 div.related ul li.right {
+    font-size: small;
     float: right;
     margin-right: 5px;
+    margin-top: 0;
 }
 
+div.related ul li#searchbox.right {
+    float: right;
+    margin-right: 5px;
+    margin-top:  7px;
+}
 div.related ul li a {
     margin: 0;
     padding: 0 5px 0 5px;
-    line-height: 1.75em;
+    line-height: normal;
     color: #EE9816;
+}
+
+div.related ul li.reltitle {
+    padding: 0 5px 0 5px;
 }
 
 div.related ul li a:hover {
@@ -179,6 +205,12 @@ div.sphinxsidebar a {
 
 div.sphinxsidebar ul.want-points {
   list-style: disc;
+}
+
+div.footer {
+    padding: 80px 0 9px 0;
+    text-align: center;
+    font-size: 75%;
 }
 
 .field-list th {

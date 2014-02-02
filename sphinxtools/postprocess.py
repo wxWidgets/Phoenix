@@ -622,11 +622,6 @@ def PostProcess(folder):
 
     fileNames = glob.glob(folder + "/*.html")
 
-    phoenix_image = '<div class="floatcenter" style="background-color: white; text-align: middle; align: middle; padding: 40px 10px 15px 15px">\n' \
-                    '<img src="_static/images/sphinxdocs/phoenix_top.png" alt="Phoenix Logo" align="middle" />\n' \
-                    '</div>'
-
-
     enum_files = glob.glob(folder + '/*.enumeration.html')
 
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
@@ -657,9 +652,8 @@ def PostProcess(folder):
         if split in ['index.html', 'main.html']:
             text = ChangeSVNRevision(text)
         else:
-            text = text.replace(phoenix_image, '')
+            text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
         
-##        text = AddPrettyTable(text)
         text = text.replace('&#8211; <p>', '&#8211; ')
         text = text.replace('<p><img alt="overload"', '<br><p><img alt="overload"')
         text = text.replace('<strong>Overloaded Implementations</strong>', '<em><strong>Overloaded Implementations</strong></em>')
@@ -678,8 +672,6 @@ def PostProcess(folder):
             if '<div class="admonition-availability admonition' in line:
                 line = '<div class="admonition-availability admonition availability">'
                 
-##            line = ClassToFile(line)
-
             if index < len_split - 1:
 
                 if line.strip() == '<br><hr />' or line.strip() == '<dd><br><hr />':                    
