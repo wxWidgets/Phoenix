@@ -98,6 +98,8 @@ Usage: ./build.py [command(s)] [options]
       wxtools       Build the Sphinx input files for wx.tools
       sphinx        Run the documentation building process using Sphinx
       
+      docset        Build Dash or Zeal compatible docsets
+      
       build         Build both wxWidgets and wxPython
       build_wx      Do only the wxWidgets part of the build
       build_py      Build wxPython only
@@ -661,6 +663,55 @@ def cmd_doxhtml(options, args):
     _doDox('chm')
     
     
+def cmd_docset_wx(options, args):
+    cmdTimer = CommandTimer('docset_wx')
+    cfg = Config()
+    
+    # Use Doxygen to generate the docset
+    _doDox('docset')
+    
+    # Remove any existing docset in the dist dir and move the new docset in
+    srcname = posixjoin(wxDir(), 'docs/doxygen/out/docset', 
+                        'wxWidgets-%s.docset' % cfg.VERSION[:3])
+    destname = 'dist/wxWidgets-%s.docset' % cfg.VERSION[:3]
+    if not os.path.isdir(srcname):
+        msg('ERROR: %s not found' % srcname)
+        sys.exit(1)
+    if os.path.isdir(destname):
+        shutil.rmtree(destname)
+    shutil.move(srcname, destname)
+    
+    
+def cmd_docset_py(options, args):
+    cmdTimer = CommandTimer('docset_py')
+    if not os.path.isdir('docs/html'):
+        msg('ERROR: No docs/html, has the sphinx build command been run?')
+        sys.exit(1)
+
+    # run the docset generator
+    name = 'wxPython Phoenix'
+    if os.path.isdir(posixjoin('dist', '{}.docset'.format(name))):
+        shutil.rmtree(posixjoin('dist', '{}.docset'.format(name)))
+    
+    VERBOSE = '--verbose' if options.verbose else ''    
+    runcmd('doc2dash {} --name "{}" --destination dist docs/html'.format(VERBOSE, name))
+
+    # move it to the name we want to use
+    destname = os.path.join(os.getcwd(), 'dist/wxPython-Phoenix.docset')
+    if os.path.isdir(destname):
+        shutil.rmtree(destname)
+    shutil.move('dist/{}.docset'.format(name), destname)
+    
+    # update its Info.plist file
+    runcmd('defaults write {}/Contents/Info isJavaScriptEnabled true'.format(destname))
+    runcmd('defaults write {}/Contents/Info dashIndexFilePath main.html'.format(destname))
+    runcmd('defaults write {}/Contents/Info DocSetPlatformFamily wxpy'.format(destname))
+    
+    
+def cmd_docset(options, args):
+    cmd_docset_wx(options, args)
+    cmd_docset_py(options, args)
+
 
 def cmd_etg(options, args):
     cmdTimer = CommandTimer('etg')
