@@ -174,7 +174,7 @@ class MyTreeListModel(dv.PyDataViewModel):
                        1 : "",
                        2 : "",
                        3 : "",
-                       4 : wx.DateTimeFromTimeT(0),  # TODO: There should be some way to indicate a null value...
+                       4 : wx.DateTime.FromTimeT(0),  # TODO: There should be some way to indicate a null value...
                        5 : False,
                        }
             return mapper[col]
@@ -223,7 +223,8 @@ class MyTreeListModel(dv.PyDataViewModel):
                 node.date = value
             elif col == 5:
                 node.like = value
-
+        return True
+    
 
 #----------------------------------------------------------------------
 
@@ -254,13 +255,15 @@ class TestPanel(wx.Panel):
         # parameter which tells the view which col in the data model to pull
         # values from for each view column.
         if 1:
-            self.tr = tr = dv.DataViewTextRenderer()
+            # here is an example of adding a column with full control over the renderer, etc.
+            tr = dv.DataViewTextRenderer()
             c0 = dv.DataViewColumn("Genre",   # title
                                    tr,        # renderer
                                    0,         # data model column
                                    width=80)
             self.dvc.AppendColumn(c0)
         else:
+            # otherwise there are convenience methods for the simple cases
             self.dvc.AppendTextColumn("Genre",   0, width=80)
 
         c1 = self.dvc.AppendTextColumn("Artist",   1, width=170, mode=dv.DATAVIEW_CELL_EDITABLE)

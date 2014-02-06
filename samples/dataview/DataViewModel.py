@@ -9,7 +9,7 @@ import random
 def makeBlank(self):
     # Just a little helper function to make an empty image for our
     # model to use.
-    empty = wx.EmptyBitmap(16,16,32)
+    empty = wx.Bitmap(16,16,32)
     dc = wx.MemoryDC(empty)
     dc.SetBackground(wx.Brush((0,0,0,0)))
     dc.Clear()
