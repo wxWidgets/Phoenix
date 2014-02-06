@@ -140,12 +140,11 @@ def run():
             PyFunctionDef('ObjectToItem', '(self, obj)',
                 doc="Create a :class:`DataViewItem` for the object, and remember the ID-->obj mapping.",
                 body="""\
-                    from wx.lib import six
-                    maxoid = six.MAXSIZE  # 2**63 - 1  ??
+                    import sys
                     oid = id(obj)
-                    while oid > maxoid:
+                    while oid > sys.maxsize:
                         # risk of conflict here... May need some more thought.
-                        oid -= maxoid
+                        oid -= sys.maxsize
                     self.mapper[oid] = obj 
                     return DataViewItem(oid)
                     """),
