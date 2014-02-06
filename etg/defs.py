@@ -7,6 +7,8 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
+import sys
+
 import etgtools
 import etgtools.tweaker_tools as tools
 
@@ -32,12 +34,19 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
         
-    # tweaks for defs.h
+    # tweaks for defs.h to help SIP understand the types better
     module.find('wxInt16').type = 'short'
     module.find('wxInt64').type = 'long long'
     module.find('wxUint64').type = 'unsigned long long'
-    module.find('wxIntPtr').type =  'long long'           #'ssize_t'
-    module.find('wxUIntPtr').type = 'unsigned long long'  #'size_t'
+    
+    # NOTE: this is better, but probably still not totally correct...
+    if sys.maxsize > 2**32:
+        module.find('wxIntPtr').type =  'long long'           #'ssize_t'
+        module.find('wxUIntPtr').type = 'unsigned long long'  #'size_t'
+    else:
+        module.find('wxIntPtr').type =  'long'                #'ssize_t'
+        module.find('wxUIntPtr').type = 'unsigned long'       #'size_t'
+        
     module.find('wxInt8').pyInt = True
     module.find('wxUint8').pyInt = True
     module.find('wxByte').pyInt = True
