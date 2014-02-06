@@ -9,12 +9,12 @@ import imp_unittest, unittest
 import wtc
 
 
-from wx.lib.pubsub.core.topicargspec import \
-     ArgsInfo, \
-     ArgSpecGiven, \
-     SenderMissingReqdArgs, \
-     SenderUnknownOptArgs
-
+from wx.lib.pubsub.core.topicargspec import (
+     ArgsInfo, 
+     ArgSpecGiven, 
+     #SenderMissingReqdArgs, 
+     #SenderUnknownOptArgs
+     )
 
 #---------------------------------------------------------------------------
 

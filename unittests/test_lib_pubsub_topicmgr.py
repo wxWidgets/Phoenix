@@ -9,25 +9,26 @@
 import imp_unittest, unittest
 import wtc
 
-from wx.lib.pubsub.pub import \
-     ALL_TOPICS, \
-     ListenerSpecInvalid, \
-     ITopicDefnProvider, \
-     TopicTreeTraverser, \
-     UndefinedTopic, \
-     UndefinedSubtopic, \
-     ListenerNotValidatable
+from wx.lib.pubsub.pub import (
+     ALL_TOPICS, 
+     #ListenerSpecInvalid, 
+     #ITopicDefnProvider, 
+     TopicTreeTraverser, 
+     #UndefinedTopic, 
+     #UndefinedSubtopic, 
+     #ListenerNotValidatable
+     )
 
 from wx.lib.pubsub.core.topicmgr import \
      ArgSpecGiven
 
-from wx.lib.pubsub.core.topicutils import \
-     TopicNameInvalid, \
+from wx.lib.pubsub.core.topicutils import (
+     #TopicNameInvalid, 
      validateName
+     )
 
 from wx.lib.pubsub.utils.topictreeprinter import \
      printTreeDocs, ITopicTreeVisitor
-
 
 class lib_pubsub_TopicMgr0_Basic(wtc.PubsubTestCase):
     """

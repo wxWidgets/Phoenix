@@ -10,11 +10,11 @@ import wtc
 
 from wx.lib.pubsub.core.weakmethod import WeakMethod
 from wx.lib.pubsub.core import listener
-from wx.lib.pubsub.core.listener import   \
-     Listener, ListenerValidator, \
-     ListenerInadequate, \
-     CallArgsInfo, \
-     getArgs
+from wx.lib.pubsub.core.listener import ( 
+     Listener, ListenerValidator,
+     #ListenerInadequate,
+     CallArgsInfo,
+     getArgs)
 
 #---------------------------------------------------------------------------
 

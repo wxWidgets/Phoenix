@@ -13,8 +13,8 @@ from wx.lib.pubsub.core.topicobj     import Topic
 from wx.lib.pubsub.core.treeconfig   import TreeConfig
 from wx.lib.pubsub.core.topicutils   import ALL_TOPICS
 from wx.lib.pubsub.core.topicargspec import ArgsInfo, ArgSpecGiven
-from wx.lib.pubsub.core.listener     import ListenerInadequate
-from wx.lib.pubsub.core.topicexc     import ListenerSpecInvalid
+#from wx.lib.pubsub.core.listener     import ListenerInadequate
+#from wx.lib.pubsub.core.topicexc     import ListenerSpecInvalid
 
 
 
