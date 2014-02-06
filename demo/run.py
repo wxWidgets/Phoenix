@@ -26,8 +26,7 @@ import sys, os
 # stuff for debugging
 print("Python %s" % sys.version)
 print("wx.version: %s" % wx.version())
-print("pid: %s" % os.getpid())
-##print("executable: %s" % sys.executable); raw_input("Press Enter..."))
+##print("pid: %s" % os.getpid()); raw_input("Press Enter...")
 
 assertMode = wx.APP_ASSERT_DIALOG
 ##assertMode = wx.APP_ASSERT_EXCEPTION
