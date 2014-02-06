@@ -377,7 +377,8 @@ def addWindowVirtuals(klass):
                                      'wxWindow *GetMainWindowOfCompositeControl()'),
         ('InformFirstDirection',     'bool InformFirstDirection(int direction, int size, int availableOtherDir)'),
         ('SetCanFocus',              'void SetCanFocus(bool canFocus)'),
-        
+        ('Destroy',                  'bool Destroy()'),
+
         ## What about these?
         #bool HasMultiplePages() const 
         #void UpdateWindowUI(long flags = wxUPDATE_UI_NONE);
