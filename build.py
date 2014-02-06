@@ -387,6 +387,7 @@ def makeOptionParser():
         ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
         ("x64",            (False, "Use and build for the 64bit version of Python on Windows")),
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
+        ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -1099,6 +1100,8 @@ def copyWxDlls(options):
         dlls = list()
         if not options.debug or options.both:
             dlls += glob.glob(os.path.join(msw.dllDir, "wx*%su_*.dll" % ver))
+            if options.relwithdebug:
+                dlls += glob.glob(os.path.join(msw.dllDir, "wx*%su_*.pdb" % ver))
         if options.debug or options.both:
             dlls += glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.dll" % ver))
             dlls += glob.glob(os.path.join(msw.dllDir, "wx*%sud_*.pdb" % ver))
@@ -1187,9 +1190,11 @@ def cmd_build_py(options, args):
         build_options.append('--verbose')
     if options.jobs:
         build_options.append('--jobs=%s' % options.jobs)
-
+    if options.relwithdebug:
+        build_options.append('--msvc_relwithdebug')
+        
     build_options.append('--python="%s"' % PYTHON)
-    build_options.append('--out=%s' % wafBuildDir)
+    build_options.append('--out=%s' % wafBuildDir) # this needs to be the last option
         
     if not isWindows and not isDarwin and not options.no_magic and not options.use_syswx:
         # Using $ORIGIN in the rpath will cause the dynamic linker to look

@@ -57,6 +57,8 @@ def options(opt):
     # already. We should just switch to those instead of adding our own
     # option names...
 
+    opt.add_option('--msvc_relwithdebug', dest='msvc_relwithdebug', action='store_true', default=False,
+                   help='Turn on debug info for release builds for MSVC builds.')
 
 
 
@@ -131,8 +133,7 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXRICHTEXT')
         conf.env.LIB_WXRICHTEXT += cfg.makeLibName('richtext')
 
-        # ** Add code for new modules here
-
+        # ** Add code for new modules here (and below for non-MSW)
 
         # tweak the PYEXT compile and link flags if making a --debug build
         if conf.env.debug:
@@ -147,6 +148,14 @@ def configure(conf):
 
             conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
             conf.env['LIB_PYEXT'][0] += '_d'
+
+        # And similar tweaks for non-debug builds with the relwithdebug flag
+        # turned on.
+        elif conf.options.msvc_relwithdebug:
+            for listname in ['CFLAGS_PYEXT', 'CXXFLAGS_PYEXT']:
+                lst = conf.env[listname]
+                lst[1:1] = ['/Z7']
+            conf.env['LINKFLAGS_PYEXT'].append('/DEBUG')
 
     else: 
         # Configuration stuff for non-Windows ports using wx-config
