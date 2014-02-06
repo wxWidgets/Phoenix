@@ -996,6 +996,7 @@ static int vp_convertor(PyObject *arg, struct vp_values *vp)
 #endif
     else
     {
+        PyErr_Clear();
         ptr = PyLong_AsVoidPtr(arg);
 
         if (PyErr_Occurred())
