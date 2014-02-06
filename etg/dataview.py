@@ -36,8 +36,8 @@ ITEMS  = [
             'wxDataViewProgressRenderer',
             'wxDataViewSpinRenderer',
             'wxDataViewToggleRenderer',
-            #'wxDataViewChoiceRenderer',         only available in generic dvc
-            #'wxDataViewChoiceByIndexRenderer',  ditto
+            'wxDataViewChoiceRenderer',         
+            #'wxDataViewChoiceByIndexRenderer',  # only available in generic dvc
             'wxDataViewDateRenderer',           
             'wxDataViewBitmapRenderer',
             
@@ -260,7 +260,7 @@ def run():
                   'wxDataViewProgressRenderer',
                   'wxDataViewSpinRenderer',
                   'wxDataViewToggleRenderer',
-                  #'wxDataViewChoiceRenderer',
+                  'wxDataViewChoiceRenderer',
                   #'wxDataViewChoiceByIndexRenderer',
                   'wxDataViewDateRenderer',
                   'wxDataViewBitmapRenderer',

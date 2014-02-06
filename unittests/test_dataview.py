@@ -163,6 +163,9 @@ class dataview_Tests(wtc.WidgetTestCase):
             
         r = MyCustomRenderer()
         
+    def test_dataviewRenderer12(self):
+        r = dv.DataViewChoiceRenderer("one two three".split())
+    
     
     #-------------------------------------------------------
     def test_dataviewColumn(self):
