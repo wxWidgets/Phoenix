@@ -144,20 +144,21 @@ if __name__ == '__main__':
 
     else:
         # The discover option doesn't use my my custom loader or suite
-        # classes, so we'll do the finding of the test files in this case.
-        #names = ['test_gdicmn', 'test_panel', 'test_msgdlg', 'test_uiaction']
-        names = glob.glob(os.path.join('unittests', 'test_*.py'))
+        # classes, so we'll do the finding of the test files in this case. If
+        # there aren't already some in argv then get all of them in unittests
+        # folder.
+        for arg in sys.argv[1:]:
+            if arg.startswith('unittests'):
+                names = sys.argv[1:]
+                sys.argv = sys.argv[:1]
+                break
+        else:
+            names = glob.glob(os.path.join('unittests', 'test_*.py'))
+        
         names = [os.path.splitext(os.path.basename(n))[0] for n in names]
         args = sys.argv + names
+        
         unittest.main(argv=args, module=None, 
                       testRunner=MyTestRunner, testLoader=MyTestLoader())
 
 
-        
-    #loader = MyTestLoader()
-    #suite = unittest.TestSuite()
-    #for name in ['test_panel', 'test_msgdlg']:
-    #    suite.addTests(loader.loadTestsFromName(name))
-    #runner = MyTestRunner()
-    #runner.run(suite)
-    

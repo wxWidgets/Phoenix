@@ -161,6 +161,11 @@ def main(args):
         elif 'cmd_'+cmd in globals():
             function = globals()['cmd_'+cmd]  
             function(options, args)
+            if cmd == 'test':
+                # Any additional cmd-line args are assumed to be tests, which
+                # will have already been taken care of, so bail out of the
+                # loop.
+                break  
         else:
             print('*** Unknown command: ' + cmd)
             usage()
@@ -954,18 +959,26 @@ def cmd_touch(options, args):
     cmdTimer = CommandTimer('touch')
     pwd = pushDir(phoenixDir())
     runcmd('touch etg/*.py')
+
     
-    
+
 def cmd_test(options, args):
     cmdTimer = CommandTimer('test')
     pwd = pushDir(phoenixDir())
-    runcmd('"%s" unittests/runtests.py %s' % (PYTHON, '-v' if options.verbose else ''), fatal=False)
+    cmd = '"%s" unittests/runtests.py %s ' % (PYTHON, '-v' if options.verbose else '')
+    if len(args) > 1:
+        if options.verbose:
+            args.remove('--verbose')
+        cmd += ' '.join(args[1:])
+    runcmd(cmd, fatal=False)
 
+    
     
 def testOne(name, options, args):
     cmdTimer = CommandTimer('test %s:' % name)
     pwd = pushDir(phoenixDir())
     runcmd('"%s" unittests/%s.py %s' % (PYTHON, name, '-v' if options.verbose else ''), fatal=False)
+
     
     
 def cmd_build(options, args):
