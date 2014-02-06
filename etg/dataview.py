@@ -76,10 +76,6 @@ def run():
     c = module.find('wxDataViewItem')
     assert isinstance(c, etgtools.ClassDef)
 
-    c.addCppCtor('(wxIntPtr id)', """\
-        return new wxDataViewItem((void*)id);
-        """)
-    
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
         """)
