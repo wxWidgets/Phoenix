@@ -19,7 +19,12 @@ class splitter_Tests(wtc.WidgetTestCase):
         sw.SetMinimumPaneSize(25)
         sw.SetSashPosition(150)
         sw.SetSashGravity(0.75)
+
+
+    def test_splitterProperties(self):
+        sw = wx.SplitterWindow(self.frame)
         
+        # just checks if they exist
         sw.MinimumPaneSize
         sw.SashGravity
         sw.SashPosition
@@ -27,6 +32,7 @@ class splitter_Tests(wtc.WidgetTestCase):
         sw.SplitMode
         sw.Window1
         sw.Window2
+        sw.SashInvisible
         
         
     def test_splitterFlags(self):

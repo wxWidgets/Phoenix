@@ -44,6 +44,9 @@ def run():
     c.find('OnDoubleClickSash').ignore()
     c.find('OnSashPositionChange').ignore()
     c.find('OnUnsplit').ignore()
+
+    c.addAutoProperties()
+    c.addProperty('SashInvisible', 'IsSashInvisible', 'SetSashInvisible')
     
     
     c = module.find('wxSplitterEvent')
