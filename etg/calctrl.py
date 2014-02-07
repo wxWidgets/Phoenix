@@ -51,12 +51,11 @@ def run():
         EVT_CALENDAR_MONTH =           wx.PyEventBinder( wxEVT_CALENDAR_MONTH_CHANGED, 1)
         EVT_CALENDAR_YEAR =            wx.PyEventBinder( wxEVT_CALENDAR_YEAR_CHANGED, 1)
         """)
-    otherEvtTypes = etgtools.WigCode("""\
-        wxEventType wxEVT_CALENDAR_DAY_CHANGED   /PyName=wxEVT_CALENDAR_DAY_CHANGED/;
-        wxEventType wxEVT_CALENDAR_MONTH_CHANGED /PyName=wxEVT_CALENDAR_MONTH_CHANGED/;
-        wxEventType wxEVT_CALENDAR_YEAR_CHANGED  /PyName=wxEVT_CALENDAR_YEAR_CHANGED/;
-        """)
-    module.insertItemAfter(module.find('wxEVT_CALENDAR_WEEK_CLICKED'), otherEvtTypes)
+    for name in ['wxEVT_CALENDAR_DAY_CHANGED', 
+                 'wxEVT_CALENDAR_MONTH_CHANGED', 
+                 'wxEVT_CALENDAR_YEAR_CHANGED']:
+        item = etgtools.GlobalVarDef(name=name, pyName=name, type='wxEventType')
+        module.insertItemAfter(module.find('wxEVT_CALENDAR_WEEK_CLICKED'), item)   
     
     
     cc = module.find('wxCalendarCtrl')
