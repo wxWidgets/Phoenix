@@ -310,6 +310,11 @@ def run():
         virtual bool IsSortKey() const;
         virtual void SetSortOrder(bool ascending);
         virtual bool IsSortOrderAscending() const;
+        
+        virtual void SetResizeable(bool resizable);
+        virtual void SetSortable(bool sortable);
+        virtual void SetReorderable(bool reorderable);
+        virtual void SetHidden(bool hidden);
         """))
     
     c.addAutoProperties()
