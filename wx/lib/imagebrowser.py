@@ -145,7 +145,7 @@ def GetCheckeredBitmap(blocksize=8, ntiles=4, rgb0='\xFF', rgb1='\xCC'):
     return wx.Bitmap.FromBuffer(size, size, data)
 
 def GetNamedBitmap(name):
-    return IMG_CATALOG[name].getBitmap()
+    return IMG_CATALOG[name].GetBitmap()
 
 
 class ImageView(wx.Window):
@@ -687,9 +687,7 @@ class ImageDialog(wx.Dialog):
         if len(self.fl_list):
             self.tb.Set(self.fl_list)
 
-            if sys.version_info[0] == 3:
-                xrange = range
-            for idir in xrange(self.fl_ndirs):
+            for idir in range(self.fl_ndirs):
                 d = self.fl_list[idir]
                 # mark directories as 'True' with client data
                 self.tb.SetClientData(idir, True)
