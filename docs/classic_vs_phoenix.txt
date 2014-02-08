@@ -743,7 +743,7 @@ Modules which have moved
 wx.calendar.CalendarCtrl                                     :mod:`adv.CalendarCtrl`
 wx.combo.OwnerDrawnComboBox                                  :mod:`adv.OwnerDrawnComboBox`
 wx.gizmos.EditableListBox                                    :mod:`adv.EditableListBox`
-wx.gizmos.TreeListCtrl                                       :mod:`adv.TreeListCtrl`
+wx.gizmos.TreeListCtrl                                       :mod:`dataview.TreeListCtrl`
 wx.AboutBox                                                  :meth:`adv.AboutBox`
 wx.AboutDialogInfo                                           :mod:`adv.AboutDialogInfo`
 wx.DatePickerCtrl                                            :mod:`adv.DatePickerCtrl`

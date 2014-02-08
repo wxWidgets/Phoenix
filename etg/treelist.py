@@ -11,7 +11,7 @@ import etgtools
 import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"   
-MODULE    = "_adv"
+MODULE    = "_dataview"
 NAME      = "treelist"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 

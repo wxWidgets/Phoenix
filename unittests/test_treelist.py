@@ -1,7 +1,7 @@
 import imp_unittest, unittest
 import wtc
 import wx
-import wx.adv
+import wx.dataview
 
 #---------------------------------------------------------------------------
 
@@ -9,32 +9,32 @@ class treelist_Tests(wtc.WidgetTestCase):
 
 
     def test_treelist1(self):
-        wx.adv.TL_SINGLE       
-        wx.adv.TL_MULTIPLE     
-        wx.adv.TL_CHECKBOX     
-        wx.adv.TL_3STATE       
-        wx.adv.TL_USER_3STATE  
-        wx.adv.TL_DEFAULT_STYLE 
-        wx.adv.TL_STYLE_MASK    
+        wx.dataview.TL_SINGLE       
+        wx.dataview.TL_MULTIPLE     
+        wx.dataview.TL_CHECKBOX     
+        wx.dataview.TL_3STATE       
+        wx.dataview.TL_USER_3STATE  
+        wx.dataview.TL_DEFAULT_STYLE 
+        wx.dataview.TL_STYLE_MASK    
                   
-        wx.adv.EVT_TREELIST_SELECTION_CHANGED 
-        wx.adv.EVT_TREELIST_ITEM_EXPANDING 
-        wx.adv.EVT_TREELIST_ITEM_EXPANDED
-        wx.adv.EVT_TREELIST_ITEM_CHECKED 
-        wx.adv.EVT_TREELIST_ITEM_ACTIVATED
-        wx.adv.EVT_TREELIST_ITEM_CONTEXT_MENU
-        wx.adv.EVT_TREELIST_COLUMN_SORTED 
-        wx.adv.wxEVT_COMMAND_TREELIST_SELECTION_CHANGED
-        wx.adv.wxEVT_COMMAND_TREELIST_ITEM_EXPANDING 
-        wx.adv.wxEVT_COMMAND_TREELIST_ITEM_EXPANDED 
-        wx.adv.wxEVT_COMMAND_TREELIST_ITEM_CHECKED 
-        wx.adv.wxEVT_COMMAND_TREELIST_ITEM_ACTIVATED 
-        wx.adv.wxEVT_COMMAND_TREELIST_ITEM_CONTEXT_MENU
-        wx.adv.wxEVT_COMMAND_TREELIST_COLUMN_SORTED   
+        wx.dataview.EVT_TREELIST_SELECTION_CHANGED 
+        wx.dataview.EVT_TREELIST_ITEM_EXPANDING 
+        wx.dataview.EVT_TREELIST_ITEM_EXPANDED
+        wx.dataview.EVT_TREELIST_ITEM_CHECKED 
+        wx.dataview.EVT_TREELIST_ITEM_ACTIVATED
+        wx.dataview.EVT_TREELIST_ITEM_CONTEXT_MENU
+        wx.dataview.EVT_TREELIST_COLUMN_SORTED 
+        wx.dataview.wxEVT_COMMAND_TREELIST_SELECTION_CHANGED
+        wx.dataview.wxEVT_COMMAND_TREELIST_ITEM_EXPANDING 
+        wx.dataview.wxEVT_COMMAND_TREELIST_ITEM_EXPANDED 
+        wx.dataview.wxEVT_COMMAND_TREELIST_ITEM_CHECKED 
+        wx.dataview.wxEVT_COMMAND_TREELIST_ITEM_ACTIVATED 
+        wx.dataview.wxEVT_COMMAND_TREELIST_ITEM_CONTEXT_MENU
+        wx.dataview.wxEVT_COMMAND_TREELIST_COLUMN_SORTED   
 
 
     def _populateTree(self, tlc):
-        assert isinstance(tlc, wx.adv.TreeListCtrl)
+        assert isinstance(tlc, wx.dataview.TreeListCtrl)
         tlc.AppendColumn('Column 1')
         tlc.AppendColumn('Column 2', align=wx.ALIGN_RIGHT)
         
@@ -51,7 +51,7 @@ class treelist_Tests(wtc.WidgetTestCase):
     
 
     def test_treelist2(self):
-        tlc = wx.adv.TreeListCtrl(self.frame)
+        tlc = wx.dataview.TreeListCtrl(self.frame)
         root = self._populateTree(tlc)
 
         s = tlc.GetSelections()
@@ -64,11 +64,11 @@ class treelist_Tests(wtc.WidgetTestCase):
         s = tlc.GetSelections()
         self.assertTrue(isinstance(s, list))
         self.assertEqual(len(s), 1)
-        self.assertTrue(isinstance(s[0], wx.adv.TreeListItem))
+        self.assertTrue(isinstance(s[0], wx.dataview.TreeListItem))
         
         
     def test_treelist3(self):
-        tlc = wx.adv.TreeListCtrl(self.frame, style=wx.adv.TL_MULTIPLE)
+        tlc = wx.dataview.TreeListCtrl(self.frame, style=wx.dataview.TL_MULTIPLE)
         root = self._populateTree(tlc)
 
         tlc.Select(root)        
@@ -79,7 +79,7 @@ class treelist_Tests(wtc.WidgetTestCase):
         
                 
     def test_treelist4(self):
-        tlc = wx.adv.TreeListCtrl(self.frame, style=wx.adv.TL_MULTIPLE)
+        tlc = wx.dataview.TreeListCtrl(self.frame, style=wx.dataview.TL_MULTIPLE)
         root = self._populateTree(tlc)
         
         # test if embedded DataViewCtrl is returned as the correct type
