@@ -38,11 +38,6 @@ def run():
     module.find('wxTreeListEventHandler').ignore()
     module.find('wxTreeListItems').ignore()
     
-    module.insertItem(0, etgtools.WigCode("""\
-        // forward declare
-        class wxDataViewCtrl;
-        """))
-    
 
     #-----------------------------------------------------------------
     c = module.find('wxTreeListItem')

@@ -77,6 +77,15 @@ class treelist_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(s, list))
         self.assertEqual(len(s), 2)
         
+                
+    def test_treelist4(self):
+        tlc = wx.adv.TreeListCtrl(self.frame, style=wx.adv.TL_MULTIPLE)
+        root = self._populateTree(tlc)
+        
+        # test if embedded DataViewCtrl is returned as the correct type
+        dvc = tlc.GetChildren()[0]
+        self.assertTrue(hasattr(dvc, 'IsTopLevel'))
+        self.assertEqual(dvc.__class__.__module__, 'wx._dataview')
         
         
         
