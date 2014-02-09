@@ -162,6 +162,7 @@ The new wxPython API documentation is available `in this page <main.html>`_.
    log_classes_overview
    printing_framework_overview
    refcount_overview
+   richtextctrl_overview
    scrolling_overview
    sizers_overview
    splitterwindow_overview
