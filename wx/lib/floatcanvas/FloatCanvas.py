@@ -871,11 +871,11 @@ class PointsObjectMixin:
 
         For example::
 
-        Points = Object.Points
-        # shifts the points 5 in the x dir, and 10 in the y dir.
-        Points += (5, 10)
-        # Sets the points to the same array as it was
-        Object.SetPoints(Points, False)
+            Points = Object.Points
+            # shifts the points 5 in the x dir, and 10 in the y dir.
+            Points += (5, 10)
+            # Sets the points to the same array as it was
+            Object.SetPoints(Points, False)
 
         """
         if copy:
