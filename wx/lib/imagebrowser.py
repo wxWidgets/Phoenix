@@ -69,7 +69,7 @@ A simple usage would be::
             # show the selected file
             print("You Selected File: " + dlg.GetFile())
         else:
-            print("You pressed Cancel\n")
+            print("You pressed Cancel")
 
     app.MainLoop()
 
@@ -98,7 +98,7 @@ def ConvertBMP(file_nm):
 
     :param string `file_nm`: path to file
 
-    :return: :class:`Image`: or BAD_IMAGE
+    :return: :class:`Image` or BAD_IMAGE
     """
     if file_nm is None:
         return None
@@ -124,10 +124,10 @@ def GetCheckeredBitmap(blocksize=8, ntiles=4, rgb0='\xFF', rgb1='\xCC'):
     The bitmap returned will have width = height = blocksize*ntiles*2
 
     :param int `blocksize`:  the number of pixels in each solid color square
-    :param int `ntiles1:  the number of tiles along width and height.  Each tile is 2x2 blocks.
+    :param int `ntiles1`:  the number of tiles along width and height.  Each tile is 2x2 blocks.
     :param `rbg0`: the first color, as 3-byte strings.
-    :param `rgb1`: the second color, as 3-byte strings.
-      If only 1 byte is provided, it is treated as a grey value.
+    :param `rgb1`: the second color, as 3-byte strings. If only 1 byte is provided, it is treated as a grey value.
+    
     :return: :class:`BitmapFromBuffer`
 
     """
