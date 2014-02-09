@@ -228,8 +228,7 @@ class BaseMaskedTextCtrl( wx.TextCtrl, MaskedEditMixin ):
         SetValue and ChangeValue.
 
         :param string `value`: new value for control
-        :param boolean `use_change_value`: if True uses
-        :meth:`~lib.masked.textctrl.TextCtrl.ChangeValue`
+        :param boolean `use_change_value`: if True uses :meth:`~lib.masked.textctrl.TextCtrl.ChangeValue`
 
         """
 ##        dbg('MaskedTextCtrl::ModifyValue("%(value)s", use_change_value=%(use_change_value)d)' % locals(), indent=1)
