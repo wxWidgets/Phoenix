@@ -62,7 +62,7 @@ class dcGraphicsState:
         """
         Return y co-ordinate wrt top of current page
         
-        :param integer `y`: y co-ordinate ????
+        :param integer `y`: y co-ordinate **TBW** (?)
         """
         return self.Yoffset + y
 
@@ -70,8 +70,8 @@ class dcGraphicsState:
         """
         Move the origin from the current point to (dx, dy).
         
-        :param `dx`: x co-ordiante to move to ????
-        :param `dy`: y co-ordiante to move to ????
+        :param `dx`: x co-ordinate to move to **TBW** (?)
+        :param `dy`: y co-ordinate to move to **TBW** (?)
         
         """
         self.Xtrans += (dx * self.Xscale)
@@ -81,8 +81,8 @@ class dcGraphicsState:
         """
         Scale the current co-ordinates.
         
-        :param `sx`: x co-ordiante to scale to ????
-        :param `sy`: y co-ordiante to scale to ????
+        :param `sx`: x co-ordinate to scale to **TBW** (?)
+        :param `sy`: y co-ordinate to scale to **TBW** (?)
 
         """
         self.Xscale *= sx
@@ -95,8 +95,8 @@ class dcGraphicsState:
         pdfviewer.drawfile that was introduced because of the difference
         in y direction between pdf and GraphicsContext co-ordinates.
         
-        :param `cosA`: ????
-        :param `sinA`: ????
+        :param `cosA`: **TBW** (?)
+        :param `sinA`: **TBW** (?)
         
         """
         self.cosA = cosA
@@ -105,10 +105,10 @@ class dcGraphicsState:
 
     def Skew(self, tanAlpha, tanBeta):
         """
-        ????
+        **TBW** (?)
         
-        :param `tanAlpha`: ????
-        :param `tanBeta`: ????
+        :param `tanAlpha`: **TBW** (?)
+        :param `tanBeta`: **TBW** (?)
         """
         self.tanAlpha = tanAlpha
         self.tanBeta = tanBeta
@@ -153,7 +153,7 @@ class dcGraphicsContext(object):
         printed fonts need to be scaled but if :class:`GCDC` was used, they are
         already scaled.
         
-        :param `context`: ????
+        :param `context`: **TBW** (?)
         :param integer `yoffset`: informs us of the page height
         :param boolean `have_cairo`: is Cairo used
         
@@ -207,8 +207,8 @@ class dcGraphicsContext(object):
         """
         Sets the dc userscale factor.
         
-        :param `xScale`: ????
-        :param `yScale`: ????
+        :param `xScale`: **TBW** (?)
+        :param `yScale`: **TBW** (?)
         
         """
         self._context.SetUserScale(xScale, yScale)
@@ -353,12 +353,12 @@ class dcGraphicsMatrix(object):
         Set the componenets of the matrix by value, default values
         are the identity matrix.
         
-        :param `a`: ????
-        :param `b`: ????
-        :param `c`: ????
-        :param `d`: ????
-        :param `tx`: ????
-        :param `ty`: ????
+        :param `a`: **TBW** (?)
+        :param `b`: **TBW** (?)
+        :param `c`: **TBW** (?)
+        :param `d`: **TBW** (?)
+        :param `tx`: **TBW** (?)
+        :param `ty`: **TBW** (?)
         
         
         """
@@ -397,12 +397,12 @@ class dcGraphicsPath(object):
         Adds a cubic Bezier curve from the current point, using two
         control points and an end point.
 
-        :param `cx1`: ????
-        :param `cy1`: ????
-        :param `cx2`: ????
-        :param `cy2`: ????
-        :param `x`: ????
-        :param `y`: ????
+        :param `cx1`: **TBW** (?)
+        :param `cy1`: **TBW** (?)
+        :param `cx2`: **TBW** (?)
+        :param `cy2`: **TBW** (?)
+        :param `x`: **TBW** (?)
+        :param `y`: **TBW** (?)
         
         """
         g = self.gstate
@@ -422,8 +422,8 @@ class dcGraphicsPath(object):
         """
         Adds a straight line from the current point to (x, y)
         
-        :param `x`: ????
-        :param `y`: ????
+        :param `x`: **TBW** (?)
+        :param `y`: **TBW** (?)
 
         """
         x2 = self.gstate.Get_x(x, y)
@@ -439,10 +439,10 @@ class dcGraphicsPath(object):
         """
         Adds a new rectangle as a closed sub-path.
         
-        :param `x`: ????
-        :param `y`: ????
-        :param `w`: ????
-        :param `h`: ????
+        :param `x`: **TBW** (?)
+        :param `y`: **TBW** (?)
+        :param `w`: **TBW** (?)
+        :param `h`: **TBW** (?)
         
         """
         g = self.gstate

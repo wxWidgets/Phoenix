@@ -126,15 +126,15 @@ class pdfButtonPanel(bp.ButtonPanel):
     def Update(self, pagenum, numpages, zoomscale):
         """
         Called from viewer to initialize and update controls.
-        
-        :note:
-        In the viewer, page range is from 0 to numpages-1, in button controls it
-        is from 1 to numpages.
-        
+                
         :param integer `pagenum`: the page to show
         :param integer `numpages`: the total pages
         :param integer `zoomscale`: the zoom factor
-        
+
+        :note:
+            In the viewer, page range is from 0 to numpages-1, in button controls it
+            is from 1 to numpages.
+
         """
         self.pageno = pagenum + 1
         self.page.SetValue('%d' % self.pageno)
