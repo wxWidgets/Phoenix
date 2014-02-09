@@ -51,6 +51,8 @@ isDarwin = sys.platform == "darwin"
 baseName = 'wxPython_Phoenix'
 eggInfoName = baseName + '.egg-info'
 
+pyICON = 'docs/sphinx/_static/images/sphinxdocs/phoenix_title.png'
+wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
@@ -686,6 +688,7 @@ def cmd_docset_wx(options, args):
     if os.path.isdir(destname):
         shutil.rmtree(destname)
     shutil.move(srcname, destname)
+    shutil.copyfile(wxICON, posixjoin(destname, 'icon.png'))
     
     
 def cmd_docset_py(options, args):
@@ -694,24 +697,22 @@ def cmd_docset_py(options, args):
         msg('ERROR: No docs/html, has the sphinx build command been run?')
         sys.exit(1)
 
+    # clear out any old docset build
+    name = 'wxPython-{}'.format(version2)
+    docset = posixjoin('dist', '{}.docset'.format(name))
+    if os.path.isdir(docset):
+        shutil.rmtree(docset)
+    
     # run the docset generator
-    name = 'wxPython Phoenix'
-    if os.path.isdir(posixjoin('dist', '{}.docset'.format(name))):
-        shutil.rmtree(posixjoin('dist', '{}.docset'.format(name)))
-    
     VERBOSE = '--verbose' if options.verbose else ''    
-    runcmd('doc2dash {} --name "{}" --destination dist docs/html'.format(VERBOSE, name))
+    runcmd('doc2dash {} --name "{}" --icon {} --destination dist docs/html'
+           .format(VERBOSE, name, pyICON))
 
-    # move it to the name we want to use
-    destname = os.path.join(os.getcwd(), 'dist/wxPython-Phoenix.docset')
-    if os.path.isdir(destname):
-        shutil.rmtree(destname)
-    shutil.move('dist/{}.docset'.format(name), destname)
-    
     # update its Info.plist file
-    runcmd('defaults write {}/Contents/Info isJavaScriptEnabled true'.format(destname))
-    runcmd('defaults write {}/Contents/Info dashIndexFilePath main.html'.format(destname))
-    runcmd('defaults write {}/Contents/Info DocSetPlatformFamily wxpy'.format(destname))
+    docset = os.path.abspath(docset)
+    runcmd('defaults write {}/Contents/Info isJavaScriptEnabled true'.format(docset))
+    runcmd('defaults write {}/Contents/Info dashIndexFilePath main.html'.format(docset))
+    runcmd('defaults write {}/Contents/Info DocSetPlatformFamily wxpy'.format(docset))
     
     
 def cmd_docset(options, args):
