@@ -119,7 +119,12 @@ EVT_CALENDAR = wx.PyEventBinder(wxEVT_COMMAND_PYCALENDAR_DAY_CLICKED, 1)
 
 
 def GetMonthList():
-    """Get a list of the defined month names"""
+    """
+    Get a list of the defined month names.
+
+    rtype: `list`
+    """
+    
     monthlist = []
     for i in range(13):
         name = Month[i]
@@ -130,9 +135,9 @@ def GetMonthList():
 
 def MakeColor(in_color):
     """
-    Try and create a :class:`wx.Colour
+    Try and create a :class:`Colour`.
 
-    :returns: a :class:`wx.Colour` instance to in_colour
+    :returns: a :class:`Colour` instance to `in_colour`
     """
     try:
         color = wx.Colour(in_color)
@@ -216,10 +221,8 @@ class CalDraw:
         """
         Set the font and background color of the week title.
 
-        :param `font_color`: the font color, a value as is accepted by
-           :class:`wx.Colour`
-        :param `week_color`: the week color, a value as is accepted by
-           :class:`wx.Colour`
+        :param `font_color`: the font color, a value as is accepted by :class:`Colour`
+        :param `week_color`: the week color, a value as is accepted by :class:`Colour`
         """
         self.colors[COLOR_HEADER_FONT] = MakeColor(font_color)
         self.colors[COLOR_HEADER_BACKGROUND] = MakeColor(week_color)
@@ -286,7 +289,7 @@ class CalDraw:
         """
         Draw the calendar.
 
-        :param `DC`: the :class:`wx.DC` to use to draw on.
+        :param `DC`: the :class:`DC` to use to draw on.
         :param `sel_list`: a list of days to override the weekend highlight.
         """
         self.InitScale()
@@ -330,8 +333,8 @@ class CalDraw:
         """
         Draw a border around the outside of the main display rectangle.
 
-        :param `DC`: the :class:`wx.DC` to use
-        :param `transparent`: use a transparent brush, default=False
+        :param `DC`: the :class:`DC` to use
+        :param `transparent`: use a transparent brush, default is ``False``.
 
         """
         if self.outer_border is True:
@@ -349,7 +352,7 @@ class CalDraw:
         """
         Draw the focus indicator
 
-        :param `DC`: the :class:`wx.DC` to use
+        :param `DC`: the :class:`DC` to use
 
         """
         if self.outer_border is True:
@@ -408,8 +411,8 @@ class CalDraw:
         """
         Set the weekend backgrounds.
 
-        :param `font_color`: the font color to use, if None the default is used.
-        :param `backgrd`: the background color to use, if None the default is used.
+        :param `font_color`: the font color to use, if ``None`` the default is used.
+        :param `backgrd`: the background color to use, if ``None`` the default is used.
 
         """
         if font_color is not None:
@@ -470,7 +473,7 @@ class CalDraw:
         """
         Draw the month and year titles.
 
-        :param `DC`: the :class:`wx.DC` to use.
+        :param `DC`: the :class:`DC` to use.
 
         """
         month = Month[self.month]
@@ -500,7 +503,7 @@ class CalDraw:
         """
         Draw the week days.
 
-        :param `DC`: the :class:`wx.DC` to use.
+        :param `DC`: the :class:`DC` to use.
 
         """
         # increase by 1 to include all gridlines
@@ -621,7 +624,7 @@ class CalDraw:
         """
         Draw the day numbers
 
-        :param `DC`: the :class:`wx.DC` to use.
+        :param `DC`: the :class:`DC` to use.
 
         """
         f = wx.Font(10, self.fontfamily, self.fontstyle, self.fontweight)  # initial font setting
@@ -678,7 +681,7 @@ class CalDraw:
         """
         Draw the day text.
 
-        :param `DC`: the :class:`wx.DC` to use.
+        :param `DC`: the :class:`DC` to use.
         :param `key`: the day to draw
 
         """
@@ -721,7 +724,7 @@ class CalDraw:
         """
         Highlight selected days.
 
-        :param `DC`: the :class:`wx.DC` to use
+        :param `DC`: the :class:`DC` to use
 
         """
         for key in self.cal_sel.keys():
@@ -743,7 +746,7 @@ class CalDraw:
         """
         Calculate and draw the grid lines.
 
-        :param `DC`: the :class:`wx.DC` to use
+        :param `DC`: the :class:`DC` to use
 
         """
         DC.SetPen(wx.Pen(MakeColor(self.colors[COLOR_GRID_LINES]), 0))
@@ -802,7 +805,7 @@ class CalDraw:
         Set a color.
 
         :param `name`: the name to assign the color too.
-        :param `value`: the color to use, see :class:`wx.Colour`
+        :param `value`: the color to use, see :class:`Colour`
 
         """
         self.colors[name] = MakeColor(value)
@@ -919,7 +922,7 @@ class Calendar(wx.Control):
         Set a color.
 
         :param `name`: the name to be assigned to the color.
-        :param `value`: the color value, see :class:`wx.Colour` for valid values
+        :param `value`: the color value, see :class:`Colour` for valid values
 
         """
         self.colors[name] = MakeColor(value)
@@ -1260,7 +1263,7 @@ class Calendar(wx.Control):
         """
         Do the drawing.
 
-        :param `DC`: the :class:`wx.DC` to draw
+        :param `DC`: the :class:`DC` to draw
 
         """
         DC = wx.PaintDC(self)
