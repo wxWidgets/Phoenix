@@ -6,7 +6,6 @@
 # Author:      Robin Dunn
 #
 # Created:     22-March-2004
-# RCS-ID:      $Id: iewin.py 41669 2006-10-06 23:21:07Z RD $
 # Copyright:   (c) 2004 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------

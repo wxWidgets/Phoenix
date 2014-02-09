@@ -678,7 +678,6 @@ class TextEditMixin:
 FILENAME: CheckListCtrlMixin.py
 AUTHOR:   Bruce Who (bruce.who.hk at gmail.com)
 DATE:     2006-02-09
-$Revision: 74209 $
 DESCRIPTION:
     This script provide a mixin for ListCtrl which add a checkbox in the first
     column of each row. It is inspired by limodou's CheckList.py(which can be

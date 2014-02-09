@@ -74,8 +74,6 @@ Requirements:
 """
 
 __author__ = "Cody Precord <cprecord@editra.org>"
-__svnid__ = "$Id: platebtn.py 69230 2011-09-29 15:23:52Z CJP $"
-__revision__ = "$Revision: 69230 $"
 
 __all__ = ["PlateButton",
            "PLATE_NORMAL", "PLATE_PRESSED", "PLATE_HIGHLIGHT", 

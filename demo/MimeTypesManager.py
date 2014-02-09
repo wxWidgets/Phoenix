@@ -8,7 +8,6 @@
 #              .wdr-derived demo
 #
 # Created:     12/31/03
-# RCS-ID:      $Id: MimeTypesManager.py 71035 2012-03-28 19:16:31Z RD $
 # Copyright:
 # Licence:     wxWindows license
 #----------------------------------------------------------------------

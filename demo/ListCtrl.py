@@ -7,7 +7,6 @@
 # Author:       Robin Dunn & Gary Dumer
 #
 # Created:
-# RCS-ID:       $Id: ListCtrl.py 70188 2011-12-29 23:25:41Z RD $
 # Copyright:    (c) 1998 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------

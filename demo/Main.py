@@ -6,7 +6,6 @@
 # Author:       Robin Dunn
 #
 # Created:      A long time ago, in a galaxy far, far away...
-# RCS-ID:       $Id: Main.py 71772 2012-06-14 22:37:10Z RD $
 # Copyright:    (c) 1999 by Total Control Software
 # Licence:      wxWindows license
 # Tags:         phoenix-port, py3-port

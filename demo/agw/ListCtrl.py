@@ -7,10 +7,9 @@
 # Author:       Robin Dunn & Gary Dumer
 #
 # Created:
-# RCS-ID:       $Id: ListCtrl.py 51049 2008-01-06 21:38:01Z RD $
 # Copyright:    (c) 1998 by Total Control Software
 # Licence:      wxWindows license
-#	Tags: phoenix-port, py3-port
+# Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
 
 import wx.lib.six as six

@@ -6,7 +6,6 @@
 # Author:       Robin Dunn
 #
 # Created:      6-March-2000
-# RCS-ID:       $Id: run.py 52991 2008-04-03 06:52:35Z RD $
 # Copyright:    (c) 2000 by Total Control Software
 # Licence:      wxWindows license
 #----------------------------------------------------------------------------

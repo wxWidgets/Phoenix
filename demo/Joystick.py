@@ -8,7 +8,6 @@
 #              .wdr-derived demo
 #
 # Created:     02-Jan-2004
-# RCS-ID:      $Id: Joystick.py 71447 2012-05-17 02:41:08Z RD $
 # Copyright:
 # Licence:     wxWindows license
 #----------------------------------------------------------------------------

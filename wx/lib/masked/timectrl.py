@@ -3,7 +3,6 @@
 # Author:       Will Sadkin
 # Created:      09/19/2002
 # Copyright:    (c) 2002 by Will Sadkin, 2002
-# RCS-ID:       $Id: timectrl.py 73818 2013-04-17 02:52:09Z RD $
 # License:      wxWindows license
 #
 # Tags:        phoenix-port, unittest, documented

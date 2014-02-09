@@ -18,8 +18,6 @@ element sizes.</p>
 """
 
 __author__ = "Cody Precord <cprecord@editra.org>"
-__svnid__ = "$Id: SystemSettings.py 64744 2010-06-25 21:59:08Z RD $"
-__revision__ = "$Revision: 64744 $"
 
 #-----------------------------------------------------------------------------#
 # Imports

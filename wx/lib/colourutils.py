@@ -5,7 +5,6 @@
 # Author:      Cody Precord
 #
 # Created:     13-March-2001
-# RCS-ID:      $Id: colourutils.py 72102 2012-07-15 15:01:29Z AG $
 # Copyright:   (c) 2001 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, documented
@@ -16,8 +15,6 @@ Some useful colour-related utility functions.
 """
 
 __author__ = "Cody Precord <cprecord@editra.org>"
-__svnid__ = "$Id:  $"
-__revision__ = "$Revision:  $"
 
 import wx
 
