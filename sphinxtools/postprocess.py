@@ -452,7 +452,10 @@ def MakeClassIndex(sphinxDir, file):
     text += 80*'=' + ' ' + 80*'=' + '\n'
 
     for cls in names:
-        text += '%-80s %s\n'%(':ref:`%s`'%Wx2Sphinx(cls)[1], classes[cls])
+        out = classes[cls]
+        if '=====' in out:
+            out = ''
+        text += '%-80s %s\n'%(':ref:`%s`'%Wx2Sphinx(cls)[1], out)
 
     text += 80*'=' + ' ' + 80*'=' + '\n\n'
 
