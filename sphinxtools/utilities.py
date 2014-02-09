@@ -549,6 +549,10 @@ def MakeSummary(class_name, item_list, template, kind, add_tilde=True):
 
         if '===' in new_docs:
             new_docs = ''
+            
+        elif new_docs.rstrip().endswith(':'):
+            # Avoid Sphinx warnings
+            new_docs = new_docs.rstrip(':')
                             
         summary += format%(substr, new_docs) + '\n'
 
