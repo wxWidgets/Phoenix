@@ -53,14 +53,15 @@ Usage example::
 
             vbox = wx.BoxSizer(wx.VERTICAL)
 
-            desc = wx.StaticText(self, -1,
-                                 "ScrolledPanel extends wx.ScrolledWindow, adding all " \
-                                 "the necessary bits to set up scroll handling for you.\n\n" \
-                                 "Here are three fixed size examples of its use. The " \
-                                 "demo panel for this sample is also using it -- the \nwx.StaticLine " \
-                                 "below is intentionally made too long so a scrollbar will be " \
-                                 "activated."
-                                )
+            text  = "ScrolledPanel extends wx.ScrolledWindow, adding all\n"
+            text += "the necessary bits to set up scroll handling for you.\n\n" 
+
+            text += "Here are three fixed size examples of its use. The\n" 
+            text += "demo panel for this sample is also using it -- the\n" 
+            text += "wx.StaticLine below is intentionally made too long so a scrollbar will be\n" 
+            text += "activated."
+
+            desc = wx.StaticText(self, -1, text)
                                 
             desc.SetForegroundColour("Blue")
             vbox.Add(desc, 0, wx.ALIGN_LEFT | wx.ALL, 5)
