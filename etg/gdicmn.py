@@ -86,7 +86,7 @@ def run():
     # sequences.    
     c.addCppMethod('bool', '__eq__', '(const wxPoint& other)',
         body="return *self == *other;")
-    c.addCppMethod('bool', '__neq__', '(const wxPoint& other)',
+    c.addCppMethod('bool', '__ne__', '(const wxPoint& other)',
         body="return *self != *other;")
     
     c.addItem(etgtools.WigCode("""\
@@ -153,7 +153,7 @@ def run():
         
     c.addCppMethod('bool', '__eq__', '(const wxSize& other)',
         body="return *self == *other;")
-    c.addCppMethod('bool', '__neq__', '(const wxSize& other)',
+    c.addCppMethod('bool', '__ne__', '(const wxSize& other)',
         body="return *self != *other;")
     
     c.addItem(etgtools.WigCode("""\
@@ -219,7 +219,7 @@ def run():
                 
     c.addCppMethod('bool', '__eq__', '(const wxRect& other)',
         body="return *self == *other;")
-    c.addCppMethod('bool', '__neq__', '(const wxRect& other)',
+    c.addCppMethod('bool', '__ne__', '(const wxRect& other)',
         body="return *self != *other;")
     
     c.addItem(etgtools.WigCode("""\
@@ -288,7 +288,7 @@ def run():
                 
     c.addCppMethod('bool', '__eq__', '(const wxRealPoint& other)',
         body="return *self == *other;")
-    c.addCppMethod('bool', '__neq__', '(const wxRealPoint& other)',
+    c.addCppMethod('bool', '__ne__', '(const wxRealPoint& other)',
         body="return *self != *other;")
     
     c.addItem(etgtools.WigCode("""\

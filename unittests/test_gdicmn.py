@@ -69,6 +69,16 @@ class Point(unittest.TestCase):
         p = p1 / 5
         p1 += p2
         p1 -= p2
+
+    def test_operators2(self):
+        p1 = wx.Point(4,5)
+        p2 = wx.Point(4,5)
+        p3 = wx.Point(9,9)
+        self.assertTrue(p1 == p2)
+        self.assertFalse(p1 != p2)
+        self.assertFalse(p1 == p3)
+        self.assertTrue(p1 != p3)
+        
         
     def test_magic(self):
         p = wx.Point(5,6)
