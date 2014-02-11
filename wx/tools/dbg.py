@@ -1,6 +1,5 @@
 #----------------------------------------------------------------------------
 # Name:         dbg.py
-# RCS-ID:       $Id$
 # Author:       Will Sadkin
 # Email:        wsadkin@nameconnector.com
 # Created:      07/11/2002

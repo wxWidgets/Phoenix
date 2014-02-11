@@ -6,7 +6,6 @@
 # Author:      Robin Dunn
 #
 # Created:     9-June-2005
-# RCS-ID:      $Id$
 # Copyright:   (c) 2005 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port

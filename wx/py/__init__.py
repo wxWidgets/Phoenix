@@ -1,8 +1,6 @@
 """The py package, formerly the PyCrust package."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 
 from . import buffer
 from . import crust

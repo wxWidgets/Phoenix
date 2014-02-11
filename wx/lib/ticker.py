@@ -5,7 +5,6 @@
 # Author:      Chris Mellon
 #
 # Created:     29-Aug-2004
-# RCS-ID:      $Id$
 # Copyright:   (c) 2004 by Chris Mellon
 # Licence:     wxWindows license
 #----------------------------------------------------------------------

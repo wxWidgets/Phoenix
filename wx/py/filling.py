@@ -2,8 +2,6 @@
 the local namespace or any object."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 # Tags: py3-port
 
 import wx
@@ -41,7 +39,6 @@ class FillingTree(wx.TreeCtrl):
     """FillingTree based on TreeCtrl."""
     
     name = 'Filling Tree'
-    revision = __revision__
 
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.TR_DEFAULT_STYLE,
@@ -246,7 +243,6 @@ class FillingText(editwindow.EditWindow):
     """FillingText based on StyledTextCtrl."""
 
     name = 'Filling Text'
-    revision = __revision__
 
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.CLIP_CHILDREN,
@@ -274,7 +270,6 @@ class Filling(wx.SplitterWindow):
     """Filling based on wxSplitterWindow."""
 
     name = 'Filling'
-    revision = __revision__
 
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.SP_3D|wx.SP_LIVE_UPDATE,
@@ -326,7 +321,6 @@ class FillingFrame(wx.Frame):
     """Frame containing the namespace tree component."""
 
     name = 'Filling Frame'
-    revision = __revision__
 
     def __init__(self, parent=None, id=-1, title='PyFilling',
                  pos=wx.DefaultPosition, size=(600, 400),

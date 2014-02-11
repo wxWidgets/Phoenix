@@ -12,8 +12,6 @@ Slices is a version of shell modified by David Mashburn."""
 
 __author__ = "David N. Mashburn <david.n.mashburn@gmail.com> / "
 __author__ += "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 
 import wx
 from wx import stc
@@ -146,7 +144,6 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
     """Frame containing the sliceshell component."""
 
     name = 'SlicesShell Frame'
-    revision = __revision__
 
     def __init__(self, parent=None, id=-1, title='PySlicesShell',
                  pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -207,8 +204,6 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
                'Yet another Python shell, only flakier.\n\n' + \
                'Half-baked by Patrick K. O\'Brien,\n' + \
                'the other half is still in the oven.\n\n' + \
-               'Shell Revision: %s\n' % self.shell.revision + \
-               'Interpreter Revision: %s\n\n' % self.shell.interp.revision + \
                'Platform: %s\n' % sys.platform + \
                'Python Version: %s\n' % sys.version.split()[0] + \
                'wxPython Version: %s\n' % wx.VERSION_STRING + \
@@ -541,7 +536,6 @@ class SlicesShellFacade:
     are accessible, even though only some are visible to the user."""
 
     name = 'SlicesShell Interface'
-    revision = __revision__
 
     def __init__(self, other):
         """Create a SlicesShellFacade instance."""
@@ -598,8 +592,6 @@ class SlicesShellFacade:
 DISPLAY_TEXT="""
 Author: %r
 Py Version: %s
-Py Slices Shell Revision: %s
-Py Interpreter Revision: %s
 Python Version: %s
 wxPython Version: %s
 wxPython PlatformInfo: %s
@@ -609,7 +601,6 @@ class SlicesShell(editwindow.EditWindow):
     """Notebook Shell based on StyledTextCtrl."""
 
     name = 'SlicesShell'
-    revision = __revision__
 
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.CLIP_CHILDREN,
@@ -1010,7 +1001,7 @@ class SlicesShell(editwindow.EditWindow):
     def about(self):
         """Display information about Py."""
         text = DISPLAY_TEXT % \
-        (__author__, VERSION, self.revision, self.interp.revision,
+        (__author__, VERSION, 
          sys.version.split()[0], wx.VERSION_STRING, str(wx.PlatformInfo),
          sys.platform)
         self.write(text.strip(),type='Output')

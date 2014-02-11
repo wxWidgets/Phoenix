@@ -5,7 +5,6 @@
 # Author:      Riaan Booysen
 #
 # Created:     2006
-# RCS-ID:      $Id$
 # Copyright:   (c) 2006 Riaan Booysen
 # License:     wxPython
 # Tags:        phoenix-port

@@ -5,7 +5,6 @@
 # Author:       Peter Yared, Morgan Hua, Matt Fryer
 #
 # Created:      5/15/03
-# CVS-ID:       $Id$
 # Copyright:    (c) 2003-2006 ActiveGrid, Inc.
 # License:      wxWindows license
 # Tags:         phoenix-port

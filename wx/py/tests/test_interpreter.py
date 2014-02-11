@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 
 import unittest
 
@@ -32,8 +30,6 @@ class ModuleTestCase(unittest.TestCase):
     def test_module(self):
         module = interpreter
         self.assert_(module.__author__)
-        self.assert_(module.__cvsid__)
-        self.assert_(module.__revision__)
         self.assert_(module.Interpreter)
         self.assert_(module.Interpreter.push)
         self.assert_(module.Interpreter.runsource)

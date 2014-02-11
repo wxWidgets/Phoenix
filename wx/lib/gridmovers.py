@@ -6,7 +6,6 @@
 #
 # Version       0.1
 # Date:         Nov 19, 2002
-# RCS-ID:       $Id$
 # Licence:      wxWindows license
 # Tags:         phoenix-port
 #----------------------------------------------------------------------------

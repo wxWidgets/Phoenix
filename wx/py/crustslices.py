@@ -25,7 +25,6 @@ class CrustSlices(crust.Crust):
     """Slices based on SplitterWindow."""
 
     name = 'Slices'
-    revision = __revision__
     sashoffset = 300
 
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
@@ -103,7 +102,6 @@ class CrustSlicesFrame(crust.CrustFrame):
     """Frame containing all the PySlices components."""
 
     name = 'SliceFrame'
-    revision = __revision__
 
 
     def __init__(self, parent=None, id=-1, title='PySlices',
@@ -165,8 +163,6 @@ class CrustSlicesFrame(crust.CrustFrame):
                'Yet another Python shell, only flakier.\n\n' + \
                'Half-baked by Patrick K. O\'Brien,\n' + \
                'the other half is still in the oven.\n\n' + \
-               'Shell Revision: %s\n' % self.sliceshell.revision + \
-               'Interpreter Revision: %s\n\n' % self.sliceshell.interp.revision + \
                'Platform: %s\n' % sys.platform + \
                'Python Version: %s\n' % sys.version.split()[0] + \
                'wxPython Version: %s\n' % wx.VERSION_STRING + \

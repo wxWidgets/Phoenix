@@ -3,7 +3,6 @@
 # Author:       Will Sadkin
 # Created:      09/24/2003
 # Copyright:   (c) 2003 by Will Sadkin
-# RCS-ID:      $Id$
 # License:     wxWindows license
 # Tags:        py3-port
 #----------------------------------------------------------------------------

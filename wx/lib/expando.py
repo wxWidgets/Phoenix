@@ -6,7 +6,6 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Sept-2006
-# RCS-ID:      $Id$
 # Copyright:   (c) 2006 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, unittest, documented

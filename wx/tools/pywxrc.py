@@ -11,7 +11,6 @@
 #
 #              Editable blocks by Roman Rolinsky
 #
-# RCS-ID:      $Id$
 # Copyright:   (c) 2004 by Total Control Software, 2000 Vaclav Slavik
 # Licence:     wxWindows license
 # Tags:        phoenix-port

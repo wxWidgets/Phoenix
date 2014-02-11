@@ -5,8 +5,6 @@ based on wxPython's wxStyledTextCtrl.
 Sponsored by Orbtech - Your source for Python programming expertise."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 
 import wx
 from wx import stc
@@ -40,7 +38,6 @@ class ShellFrame(frame.Frame, frame.ShellFrameMixin):
     """Frame containing the shell component."""
 
     name = 'Shell Frame'
-    revision = __revision__
 
     def __init__(self, parent=None, id=-1, title='PyShell',
                  pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -88,8 +85,6 @@ class ShellFrame(frame.Frame, frame.ShellFrameMixin):
                'Yet another Python shell, only flakier.\n\n' + \
                'Half-baked by Patrick K. O\'Brien,\n' + \
                'the other half is still in the oven.\n\n' + \
-               'Shell Revision: %s\n' % self.shell.revision + \
-               'Interpreter Revision: %s\n\n' % self.shell.interp.revision + \
                'Platform: %s\n' % sys.platform + \
                'Python Version: %s\n' % sys.version.split()[0] + \
                'wxPython Version: %s\n' % wx.VERSION_STRING + \
@@ -166,7 +161,6 @@ class ShellFacade:
     are accessible, even though only some are visible to the user."""
 
     name = 'Shell Interface'
-    revision = __revision__
 
     def __init__(self, other):
         """Create a ShellFacade instance."""
@@ -225,8 +219,6 @@ class ShellFacade:
 DISPLAY_TEXT="""
 Author: %r
 Py Version: %s
-Py Shell Revision: %s
-Py Interpreter Revision: %s
 Python Version: %s
 wxPython Version: %s
 wxPython PlatformInfo: %s
@@ -236,7 +228,6 @@ class Shell(editwindow.EditWindow):
     """Shell based on StyledTextCtrl."""
 
     name = 'Shell'
-    revision = __revision__
 
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.CLIP_CHILDREN,
@@ -428,7 +419,7 @@ class Shell(editwindow.EditWindow):
         """Display information about Py."""
         #DNM
         text = DISPLAY_TEXT % \
-        (__author__, VERSION, self.revision, self.interp.revision,
+        (__author__, VERSION, 
          sys.version.split()[0], wx.VERSION_STRING, str(wx.PlatformInfo),
          sys.platform)
         self.write(text.strip())

@@ -2,8 +2,7 @@
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com> / "
 __author__ += "David N. Mashburn <david.n.mashburn@gmail.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
+
 
 import os
 import sys
@@ -16,7 +15,6 @@ import wx.lib.six
 class Interpreter(InteractiveInterpreter):
     """Interpreter based on code.InteractiveInterpreter."""
     
-    revision = __revision__
     
     def __init__(self, locals=None, rawin=None, 
                  stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr,

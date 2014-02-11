@@ -75,9 +75,3 @@ As a matter of fact, we do. Join the PyCrust mailing lists at:
 http://sourceforge.net/mail/?group_id=31263
 
 
-What is the CVS information for this README file?
--------------------------------------------------
-
-$Date$
-$Revision$
-$Id$

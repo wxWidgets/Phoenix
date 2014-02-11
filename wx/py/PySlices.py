@@ -10,8 +10,6 @@ original = __main__.__dict__.keys()
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com> / "
 __author__ += "David N. Mashburn <david.n.mashburn@gmail.com>"
-__cvsid__ = "$Id$" # Hmmm...
-__revision__ = "$Revision$"[11:-2] #Hmmm...
 
 import wx
 import os

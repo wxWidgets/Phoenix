@@ -5,7 +5,6 @@
 # Author:      Robb Shecter
 #
 # Created:     7-Nov-2002
-# RCS-ID:      $Id$
 # Copyright:   (c) 2002 by
 # Licence:     wxWindows license
 # Tags:        phoenix-port, unittest, documented

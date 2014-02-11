@@ -1,8 +1,6 @@
 """Support for icons."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com> / David Mashburn <david.n.mashburn@gmail.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 
 import wx
 from wx.lib.six import StringIO

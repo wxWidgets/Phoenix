@@ -4,7 +4,6 @@
 # Email:        wsadkin@nameconnector.com
 # Created:      02/11/2003
 # Copyright:    (c) 2003 by Will Sadkin, 2003
-# RCS-ID:       $Id$
 # License:      wxWidgets license
 #
 # Tags:         py3-port, phoenix-port, unittest, documented

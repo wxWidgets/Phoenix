@@ -5,7 +5,6 @@
 # Author:       Peter Yared
 #
 # Created:      5/15/03
-# CVS-ID:       $Id$
 # Copyright:    (c) 2003-2006 ActiveGrid, Inc. (Port of wxWindows classes by Julian Smart et al)
 # License:      wxWindows license
 # Tags:         phoenix-port

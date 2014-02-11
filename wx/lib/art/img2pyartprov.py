@@ -4,7 +4,6 @@
 #
 # Author:      Riaan Booysen
 #
-# RCS-ID:      $Id$
 # Copyright:   (c) 2006
 # Licence:     wxPython
 #-----------------------------------------------------------------------------

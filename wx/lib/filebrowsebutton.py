@@ -7,7 +7,6 @@
 #
 # Author:      Mike Fletcher
 #
-# RCS-ID:      $Id$
 # Copyright:   (c) 2000 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port

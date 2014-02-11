@@ -4,7 +4,6 @@
 #
 # Author:      Robin Dunn
 #
-# RCS-ID:      $Id$
 # Copyright:   (c) 2002 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, py3-port

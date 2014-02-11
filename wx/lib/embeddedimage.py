@@ -7,7 +7,6 @@
 # Author:      Anthony Tuininga
 #
 # Created:     26-Nov-2007
-# RCS-ID:      $Id$
 # Copyright:   (c) 2007 by Anthony Tuininga
 # Licence:     wxWindows license
 # Tags:        phoenix-port

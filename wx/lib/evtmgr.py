@@ -7,7 +7,6 @@
 # Author:      Robb Shecter and Robin Dunn
 #
 # Created:     12-December-2002
-# RCS-ID:      $Id$
 # Copyright:   (c) 2003 by db-X Corporation
 # Licence:     wxWindows license
 # Tags:        phoenix-port

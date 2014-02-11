@@ -2,8 +2,6 @@
 """PyFilling is a python namespace inspection application."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 
 # We use this object to get more introspection when run standalone.
 app = None

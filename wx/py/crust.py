@@ -1,8 +1,6 @@
 """Crust combines the shell and filling into one control."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 
 import wx
 
@@ -23,7 +21,6 @@ class Crust(wx.SplitterWindow):
     """Crust based on SplitterWindow."""
 
     name = 'Crust'
-    revision = __revision__
     sashoffset = 300
 
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
@@ -278,7 +275,6 @@ class CrustFrame(frame.Frame, frame.ShellFrameMixin):
     """Frame containing all the PyCrust components."""
 
     name = 'CrustFrame'
-    revision = __revision__
 
 
     def __init__(self, parent=None, id=-1, title='PyCrust',
@@ -334,8 +330,6 @@ class CrustFrame(frame.Frame, frame.ShellFrameMixin):
                'Yet another Python shell, only flakier.\n\n' + \
                'Half-baked by Patrick K. O\'Brien,\n' + \
                'the other half is still in the oven.\n\n' + \
-               'Shell Revision: %s\n' % self.shell.revision + \
-               'Interpreter Revision: %s\n\n' % self.shell.interp.revision + \
                'Platform: %s\n' % sys.platform + \
                'Python Version: %s\n' % sys.version.split()[0] + \
                'wxPython Version: %s\n' % wx.VERSION_STRING + \

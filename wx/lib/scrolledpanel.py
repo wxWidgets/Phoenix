@@ -3,7 +3,6 @@
 # Author:       Will Sadkin
 # Created:      03/21/2003
 # Copyright:    (c) 2003 by Will Sadkin
-# RCS-ID:       $Id$
 # License:      wxWindows license
 # Tags:         phoenix-port
 #----------------------------------------------------------------------------

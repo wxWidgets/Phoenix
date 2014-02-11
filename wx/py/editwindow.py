@@ -1,8 +1,6 @@
 """EditWindow class."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 
 import wx
 from wx import stc
@@ -69,7 +67,6 @@ else: # GTK1, etc.
 class EditWindow(stc.StyledTextCtrl):
     """EditWindow based on StyledTextCtrl."""
 
-    revision = __revision__
 
     def __init__(self, parent, id=-1, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.CLIP_CHILDREN | wx.SUNKEN_BORDER):

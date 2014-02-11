@@ -5,7 +5,6 @@
 # Author:      Robin Dunn, adapted from code by Niki Spahiev
 #
 # Created:     26-Feb-2002
-# RCS-ID:      $Id$
 # Copyright:   (c) 2002 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------

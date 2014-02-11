@@ -5,7 +5,6 @@
 # Author:      Will Sadkin, Jeff Childers
 #
 # Created:     6-Mar-2004
-# RCS-ID:      $Id$
 # Copyright:   (c) 2004
 # License:     wxWidgets license
 # Tags:        phoenix-port, py3-port

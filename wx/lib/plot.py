@@ -5,7 +5,6 @@
 # Author:      Gordon Williams
 #
 # Created:     2003/11/03
-# RCS-ID:      $Id$
 # Copyright:   (c) 2002
 # Licence:     Use as you wish.
 # Tags:        phoenix-port

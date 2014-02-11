@@ -1,8 +1,6 @@
 """Base frame with menu."""
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id$"
-__revision__ = "$Revision$"[11:-2]
 
 import wx
 import os
@@ -67,7 +65,6 @@ ID_HIDEFOLDINGMARGIN = wx.NewId()
 class Frame(wx.Frame):
     """Frame with standard menu items."""
 
-    revision = __revision__
 
     def __init__(self, parent=None, id=-1, title='Editor',
                  pos=wx.DefaultPosition, size=wx.DefaultSize, 

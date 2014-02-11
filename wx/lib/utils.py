@@ -5,7 +5,6 @@
 # Author:      Robin Dunn
 #
 # Created:     18-Jan-2009
-# RCS-ID:      $Id$
 # Copyright:   (c) 2009 Total Control Software
 # Licence:     wxWidgets license
 #
