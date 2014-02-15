@@ -1838,7 +1838,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         width = self.GetClientSize().GetWidth()
         self._cols = (width - self._tBorder)/(self._tWidth + self._tBorder)
         
-        if self._cols == 0:
+        if self._cols <= 0:
             self._cols = 1
 
         tmpvar = (len(self._items)%self._cols and [1] or [0])[0]
