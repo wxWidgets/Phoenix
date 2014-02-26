@@ -10,7 +10,7 @@ import imp_unittest, unittest
 import wtc
 
 from wx.lib.pubsub.utils import notification
-from StringIO import StringIO
+from wx.lib.six import StringIO
 
 #---------------------------------------------------------------------------
 

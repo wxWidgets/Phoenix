@@ -285,7 +285,7 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                 self.pub.getDefaultTopicMgr().newTopic(tName, 'desc', required, **args)
                 msg = 'Should have raised self.pub.MessageDataSpecError for %s, %s, %s'
                 assert False, msg % (tName, required, args)
-            except self.pub.MessageDataSpecError, exc:
+            except self.pub.MessageDataSpecError as exc:
                 #import traceback
                 #traceback.print_exc()
                 pass

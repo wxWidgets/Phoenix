@@ -300,7 +300,7 @@ class lib_pubsub_ArgsInfo(wtc.PubsubTestCase):
         self.assertRaises(ListenerMismatchError, getArgs, 1)
         try:
             getArgs(1)
-        except ListenerMismatchError, exc:
+        except ListenerMismatchError as exc:
             msg = 'Listener "int" (from module "__main__") inadequate: type "int" not supported'
             self.assertEqual(str(exc), msg)
 

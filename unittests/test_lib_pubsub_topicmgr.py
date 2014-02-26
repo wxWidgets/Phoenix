@@ -305,7 +305,7 @@ class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.PubsubTestCase):
                               topicName)
             try:
                 assert topicMgr.getOrCreateTopic(topicName) is None
-            except MessageDataSpecError, exc:
+            except MessageDataSpecError as exc:
                 # ok, did raise but is it correct message?
                 try:
                     str(exc).index(expectMsg)
@@ -359,7 +359,7 @@ class lib_pubsub_TopicMgr3_TreeTraverser(wtc.PubsubTestCase):
         topicMgr.getOrCreateTopic('a2.b.a')
         topicMgr.getOrCreateTopic('a2.b.b')
 
-        from StringIO import StringIO
+        from wx.lib.six import StringIO
         buffer = StringIO()
         printTreeDocs(rootTopic=root, width=70, fileObj=buffer)
         self.assertEqual( buffer.getvalue(), self.expectedOutput )

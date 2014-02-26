@@ -11,7 +11,6 @@ import wtc
 
 from difflib import ndiff, unified_diff, context_diff
 
-import wx.lib.six as six
 
 #---------------------------------------------------------------------------
 
@@ -23,7 +22,7 @@ class lib_pubsub_Notify(wtc.PubsubTestCase):
         from wx.lib.pubsub.utils.notification import useNotifyByWriteFile
 
         def captureStdout():
-            from six import StringIO
+            from wx.lib.six import StringIO
             capture = StringIO()
             useNotifyByWriteFile( fileObj = capture )
             return capture

@@ -89,7 +89,7 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                             pass
             """
 
-        myTopicTree = file('myTopicTree.py', 'w')
+        myTopicTree = open('myTopicTree.py', 'w')
         myTopicTree.write(dedent(provFile))
         myTopicTree.close()
         self.pub.addTopicDefnProvider('myTopicTree',
@@ -236,8 +236,10 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
         self.pub.exportTopicTreeSpec(os.path.join(basepath,'lib_pubsub_provider_actual'),
                                      rootTopic='test_import_export_no_change2',
                                      moduleDoc=treeDoc)
-        lines1 = open(os.path.join(basepath,'lib_pubsub_provider_actual.py'), 'r').readlines()
-        lines2 = open(os.path.join(basepath,'lib_pubsub_provider_expect.py'), 'r').readlines()
+        with open(os.path.join(basepath,'lib_pubsub_provider_actual.py'), 'r') as f:
+            lines1 = f.readlines()
+        with open(os.path.join(basepath,'lib_pubsub_provider_expect.py'), 'r') as f:
+            lines2 = f.readlines()
         diffs = ndiff( lines1, lines2 )
         diffs = [d for d in diffs if not d.startswith(' ')]
         assert not list(diffs) or list(diffs) == ['- # - fileObj: TextIOWrapper\n', '+ # - fileObj: file\n']
