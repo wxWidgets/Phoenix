@@ -671,6 +671,8 @@ def cmd_doxhtml(options, args):
     _doDox('chm')
     
     
+# NOTE: Because of the use of defaults and plutil the following docset
+# commands will only work correctly on OSX.
 def cmd_docset_wx(options, args):
     cmdTimer = CommandTimer('docset_wx')
     cfg = Config()
@@ -689,6 +691,7 @@ def cmd_docset_wx(options, args):
         shutil.rmtree(destname)
     shutil.move(srcname, destname)
     shutil.copyfile(wxICON, posixjoin(destname, 'icon.png'))
+    runcmd('plutil -convert xml1 {}/Contents/Info.plist'.format(destname))
     
     
 def cmd_docset_py(options, args):
@@ -713,11 +716,13 @@ def cmd_docset_py(options, args):
     runcmd('defaults write {}/Contents/Info isJavaScriptEnabled true'.format(docset))
     runcmd('defaults write {}/Contents/Info dashIndexFilePath main.html'.format(docset))
     runcmd('defaults write {}/Contents/Info DocSetPlatformFamily wxpy'.format(docset))
+    runcmd('plutil -convert xml1 {}/Contents/Info.plist'.format(docset))
     
     
 def cmd_docset(options, args):
     cmd_docset_wx(options, args)
     cmd_docset_py(options, args)
+
 
 
 def cmd_etg(options, args):
