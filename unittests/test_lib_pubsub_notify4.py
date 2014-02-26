@@ -9,18 +9,19 @@
 import imp_unittest, unittest
 import wtc
 
+import wx.lib.six as six
 from difflib import ndiff, unified_diff, context_diff
 
 
 #---------------------------------------------------------------------------
 
-        
-        
+
+
 class lib_pubsub_NotifyN(wtc.PubsubTestCase):
-        
+
     def testNotifications(self):
         from wx.lib.pubsub.utils.notification import INotificationHandler
-        
+
         class Handler(INotificationHandler):
             def __init__(self):
                 self.resetCounts()
@@ -38,44 +39,44 @@ class lib_pubsub_NotifyN(wtc.PubsubTestCase):
                 self.counts['newt'] += 1
             def notifyDelTopic(self, topicName):
                 self.counts['delt'] += 1
-    
+
         notifiee = Handler()
         self.pub.addNotificationHandler(notifiee)
         self.pub.setNotificationFlags(all=True)
-    
+
         def verify(**ref):
-            for key, val in notifiee.counts.iteritems():
+            for key, val in six.iteritems(notifiee.counts):
                 if key in ref:
                     self.assertEqual(val, ref[key], "\n%s\n%s" % (notifiee.counts, ref) )
                 else:
                     self.assertEqual(val, 0, "%s = %s, expected 0" % (key, val))
             notifiee.resetCounts()
-    
+
         verify()
         def testListener():
             pass
         def testListener2():
             pass
-    
-        self.pub.getOrCreateTopic('newTopic')
+
+        self.pub.getDefaultTopicMgr().getOrCreateTopic('newTopic')
         verify(newt=1)
-    
+
         self.pub.subscribe(testListener, 'newTopic')
         self.pub.subscribe(testListener2, 'newTopic')
         verify(sub=2)
-    
+
         self.pub.sendMessage('newTopic')
         verify(send=1)
-    
+
         del testListener
         verify(dead=1)
-    
+
         self.pub.unsubscribe(testListener2,'newTopic')
         verify(unsub=1)
-    
-        self.pub.delTopic('newTopic')
+
+        self.pub.getDefaultTopicMgr().delTopic('newTopic')
         verify(delt=1)
-    
+
 
 #---------------------------------------------------------------------------
 

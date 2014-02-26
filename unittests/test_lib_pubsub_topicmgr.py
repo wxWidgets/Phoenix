@@ -10,22 +10,19 @@ import imp_unittest, unittest
 import wtc
 
 from wx.lib.pubsub.pub import (
-     ALL_TOPICS, 
-     #ListenerSpecInvalid, 
-     #ITopicDefnProvider, 
-     TopicTreeTraverser, 
-     #UndefinedTopic, 
-     #UndefinedSubtopic, 
-     #ListenerNotValidatable
+     ALL_TOPICS,
+     MessageDataSpecError,
+     TopicTreeTraverser,
+     TopicNameError,
+     TopicDefnError
      )
+
+from wx.lib.pubsub.core import ITopicDefnProvider
 
 from wx.lib.pubsub.core.topicmgr import \
      ArgSpecGiven
 
-from wx.lib.pubsub.core.topicutils import (
-     #TopicNameInvalid, 
-     validateName
-     )
+from wx.lib.pubsub.core.topicutils import validateName
 
 from wx.lib.pubsub.utils.topictreeprinter import \
      printTreeDocs, ITopicTreeVisitor
@@ -36,7 +33,7 @@ class lib_pubsub_TopicMgr0_Basic(wtc.PubsubTestCase):
     topic objects to validate that TopicMgr did it's job properly.
     """
     def failTopicName(self, name):
-        self.assertRaises(TopicNameInvalid, validateName, name)
+        self.assertRaises(TopicNameError, validateName, name)
 
     def test10_GoodTopicNames(self):
         #
@@ -79,8 +76,8 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.PubsubTestCase):
 
         def verifyNonSendable(topicObj, nameTuple, parent):
             """Any non-sendable topic will satisfy these conditions:"""
-            self.assertEqual(0, topicMgr.isTopicSpecified(nameTuple))
-            assert not topicObj.isSendable()
+            self.assertEqual(0, topicMgr.hasTopicDefinition(nameTuple))
+            assert not topicObj.hasMDS()
             assert topicObj.getListeners() == []
             assert topicObj.getNameTuple() == nameTuple
             assert topicObj.getNumListeners() == 0
@@ -92,8 +89,8 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.PubsubTestCase):
             assert not topicObj.hasListeners()
             assert not topicObj.hasSubtopic('asdfafs')
             assert not topicObj.isAll()
-            self.assertRaises(ListenerNotValidatable, topicObj.isValid, foobar)
-            self.assertRaises(ListenerNotValidatable, topicObj.validate, foobar)
+            self.assertRaises(TopicDefnError, topicObj.isValid, foobar)
+            self.assertRaises(TopicDefnError, topicObj.validate, foobar)
             # check that getTopic and getOrCreateTopic won't create again:
             assert topicMgr.getOrCreateTopic(nameTuple) is topicObj
             assert topicMgr.getTopic(nameTuple) is topicObj
@@ -105,7 +102,7 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.PubsubTestCase):
         assert topicMgr.getTopic(tName, True) is None
         # ok create it, unsendable
         rootTopic = topicMgr.getOrCreateTopic(tName)
-        verifyNonSendable(rootTopic, (rootName,), topicMgr.getRootTopic())
+        verifyNonSendable(rootTopic, (rootName,), topicMgr.getRootAllTopics())
         DESC_NO_SPEC = 'UNDOCUMENTED: created without spec'
         assert rootTopic.getDescription() == DESC_NO_SPEC
         assert rootTopic.isRoot()
@@ -135,9 +132,9 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.PubsubTestCase):
 
         # check that getTopic raises expected exception when undefined topic:
         tName = 'Undefined'
-        self.assertRaises(UndefinedTopic, topicMgr.getTopic, tName)
+        self.assertRaises(TopicNameError, topicMgr.getTopic, tName)
         tName = rootName + '.Undefined'
-        self.assertRaises(UndefinedSubtopic, topicMgr.getTopic, tName)
+        self.assertRaises(TopicNameError, topicMgr.getTopic, tName)
 
     def test20_WithProtoListener(self):
         #
@@ -156,8 +153,8 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.PubsubTestCase):
         # check that getTopic and getOrCreateTopic won't create again:
         assert topicMgr.getOrCreateTopic(tName) is rootTopic
         assert topicMgr.getTopic(tName) is rootTopic
-        assert rootTopic.isSendable()
-        assert topicMgr.isTopicSpecified(tName)
+        assert rootTopic.hasMDS()
+        assert topicMgr.hasTopicDefinition(tName)
         expectDesc = 'UNDOCUMENTED: created from protoListener "protoListener" in module test_lib_pubsub_topicmgr'
         assert rootTopic.getDescription() == expectDesc
 
@@ -179,8 +176,8 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.PubsubTestCase):
         tName = (tName, 'stA', 'sstB')
         subsubTopic = topicMgr.getOrCreateTopic(tName, protoListener2)
         subTopic = topicMgr.getTopic( tName[:-1] )
-        assert not topicMgr.isTopicSpecified( tName[:-1] )
-        assert topicMgr.isTopicSpecified( tName )
+        assert not topicMgr.hasTopicDefinition( tName[:-1] )
+        assert topicMgr.hasTopicDefinition( tName )
         assert subsubTopic.isValid(protoListener2)
 
 
@@ -196,18 +193,26 @@ class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.PubsubTestCase):
         #
         topicMgr = self.pub.getDefaultTopicMgr()
 
-        class DefnProvider:
+        class DefnProvider(ITopicDefnProvider):
             pass
         dp1 = DefnProvider()
         dp2 = DefnProvider()
-        assert 1 == topicMgr.addDefnProvider(dp1)
-        assert 1 == topicMgr.addDefnProvider(dp1)
-        assert 2 == topicMgr.addDefnProvider(dp2)
-        assert 2 == topicMgr.addDefnProvider(dp2)
-        assert 2 == topicMgr.addDefnProvider(dp1)
+        topicMgr.addDefnProvider(dp1)
+        assert 1 == topicMgr.getNumDefnProviders()
+        topicMgr.addDefnProvider(dp1)
+        assert 1 == topicMgr.getNumDefnProviders()
+        topicMgr.addDefnProvider(dp2)
+        assert 2 == topicMgr.getNumDefnProviders()
+        topicMgr.addDefnProvider(dp2)
+        assert 2 == topicMgr.getNumDefnProviders()
+        topicMgr.addDefnProvider(dp1)
+        assert 2 == topicMgr.getNumDefnProviders()
+
         topicMgr.clearDefnProviders()
+        topicMgr.getNumDefnProviders()
         assert 0 == topicMgr.getNumDefnProviders()
-        assert 1 == topicMgr.addDefnProvider(dp1)
+        topicMgr.addDefnProvider(dp1)
+        assert 1 == topicMgr.getNumDefnProviders()
         topicMgr.clearDefnProviders()
 
     def test20_UseProvider(self):
@@ -278,36 +283,36 @@ class lib_pubsub_TopicMgr2_GetOrCreate_DefnProv(wtc.PubsubTestCase):
         # create some topics that will use defn provider
         topic = topicMgr.getOrCreateTopic('a')
         assert topic.getDescription() == 'a desc'
-        assert topic.isSendable()
+        assert topic.hasMDS()
         topic = topicMgr.getOrCreateTopic('a.b')
         assert topic.getDescription() == 'a.b desc'
-        assert topic.isSendable()
+        assert topic.hasMDS()
         topic = topicMgr.getOrCreateTopic('a.c.d')
         assert topic.getDescription() == 'a.c.d desc'
-        assert topic.isSendable()
-        assert not topicMgr.isTopicSpecified('a.c')
+        assert topic.hasMDS()
+        assert not topicMgr.hasTopicDefinition('a.c')
         # check
         parent = topicMgr.getTopic('a.c')
-        assert not parent.isSendable()
+        assert not parent.hasMDS()
         def protoListener(arg1, arg3, arg2=None, arg4=None): pass
         parent = topicMgr.getOrCreateTopic('a.c', protoListener)
-        assert parent.isSendable()
-        assert topic.isSendable()
+        assert parent.hasMDS()
+        assert topic.hasMDS()
 
         # now the erroneous ones:
         def testRaises(topicName, expectMsg):
-            self.assertRaises(ListenerSpecInvalid, topicMgr.getOrCreateTopic,
+            self.assertRaises(MessageDataSpecError, topicMgr.getOrCreateTopic,
                               topicName)
             try:
                 assert topicMgr.getOrCreateTopic(topicName) is None
-            except ListenerSpecInvalid, exc:
+            except MessageDataSpecError, exc:
                 # ok, did raise but is it correct message?
                 try:
                     str(exc).index(expectMsg)
                 except ValueError:
                     msg = 'Wrong message, expected \n  "%s", got \n  "%s"'
                     raise RuntimeError(msg % (expectMsg, str(exc)) )
-                
+
         testRaises('a.err1', 'Params [arg1] missing inherited [arg2] for topic "a.err1"')
         testRaises('a.err2', 'Params [arg2] missing inherited [arg1] for topic "a.err2"')
         testRaises('a.err3', 'Params [] missing inherited [arg1] for topic "a.err3" required args')
@@ -364,7 +369,7 @@ class lib_pubsub_TopicMgr3_TreeTraverser(wtc.PubsubTestCase):
         # Test traversing with and without filtering, breadth and depth
         #
         topicMgr = self.pub.getDefaultTopicMgr()
-        
+
         class MyTraverser(ITopicTreeVisitor):
             def __init__(self, pub):
                 self.traverser = pub.TopicTreeTraverser(self)

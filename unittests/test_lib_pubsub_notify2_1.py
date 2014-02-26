@@ -15,14 +15,14 @@ import wtc
 #---------------------------------------------------------------------------
 
 
-class lib_pubsub_Notify2_1(wtc.PubsubTestCase):    
-        
-        
+class lib_pubsub_Notify2_1(wtc.PubsubTestCase):
+
+
     def test1_SubscribeNotify(self):
         from wx.lib.pubsub.utils.notification import useNotifyByPubsubMessage
-        
+
         useNotifyByPubsubMessage()
-       
+
         class MyListener:
             countSub = 0
             countUnsub = 0
@@ -40,12 +40,12 @@ class lib_pubsub_Notify2_1(wtc.PubsubTestCase):
                     self.countUnsub += 1
             def listenerTest(self):
                 raise NotImplementedError # should never get here
-    
+
         self.pub.setNotificationFlags(subscribe=True, unsubscribe=True)
-        self.pub.getOrCreateTopic('testSubscribeNotify')
+        self.pub.getDefaultTopicMgr().getOrCreateTopic('testSubscribeNotify')
         tmp = MyListener()
         tmp.assertEqual = self.assertEqual
-    
+
         self.pub.subscribe(tmp.listenerSub, 'pubsub.subscribe')
         self.assertEqual(tmp.countSub, 0)   # don't notify of self subscription
         self.assertEqual(tmp.countUnsub, 0)
@@ -53,20 +53,20 @@ class lib_pubsub_Notify2_1(wtc.PubsubTestCase):
         assert ok
         self.assertEqual(tmp.countSub, 1)
         self.assertEqual(tmp.countUnsub, 0)
-    
+
         self.pub.subscribe(tmp.listenerTest, 'testSubscribeNotify')
         self.assertEqual(tmp.countUnsub, 0)
         self.pub.unsubscribe(tmp.listenerTest, 'testSubscribeNotify')
         self.assertEqual(tmp.countUnsub, 1)
-    
+
         self.pub.unsubscribe(tmp.listenerSub,   'pubsub.subscribe')
         self.assertEqual(tmp.countSub, 2)
         self.assertEqual(tmp.countUnsub, 2)
         self.pub.unsubscribe(tmp.listenerUnsub, 'pubsub.unsubscribe')
         self.assertEqual(tmp.countSub, 2)
         self.assertEqual(tmp.countUnsub, 2) # don't notify of self unsubscription
-    
-    
+
+
 
 #---------------------------------------------------------------------------
 

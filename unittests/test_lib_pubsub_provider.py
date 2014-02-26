@@ -51,9 +51,9 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
 
     def test1(self):
 
-        self.pub.importTopicTree(my_topics)
-    
-    
+        self.pub.addTopicDefnProvider(my_topics, self.pub.TOPIC_TREE_FROM_CLASS)
+
+
         provString = """
             class rootTopic1:
                 class subtopic_1:
@@ -68,12 +68,13 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                             - arg4: doc for arg4
                             '''
                             pass
-    
+
                 """
-    
-        self.pub.importTopicTree(provString, format=self.pub.TOPIC_TREE_FROM_STRING)
-    
-    
+
+        self.pub.addTopicDefnProvider(provString,
+                                      format=self.pub.TOPIC_TREE_FROM_STRING)
+
+
         provFile = """
             class rootTopic1:
                 class subtopic_2:
@@ -87,30 +88,31 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                             '''
                             pass
             """
-    
+
         myTopicTree = file('myTopicTree.py', 'w')
         myTopicTree.write(dedent(provFile))
         myTopicTree.close()
-        self.pub.importTopicTree('myTopicTree', format=self.pub.TOPIC_TREE_FROM_MODULE, lazy=True)
+        self.pub.addTopicDefnProvider('myTopicTree',
+                                      format=self.pub.TOPIC_TREE_FROM_MODULE)
         import os
         os.remove('myTopicTree.py')
         if os.path.exists('myTopicTree.pyc'):
             os.remove('myTopicTree.pyc')
-            
-        assert not self.pub.getTopic('rootTopic1.subtopic_2', okIfNone=True)
+
+        assert not self.pub.getDefaultTopicMgr().getTopic('rootTopic1.subtopic_2', okIfNone=True)
         # the following should create all topic tree since parent
         # topics are automatically created
-        assert self.pub.getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_11')
-        assert self.pub.getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_12')
-        assert self.pub.getOrCreateTopic('rootTopic1.subtopic_2.subsubtopic_21')
-    
+        assert self.pub.getDefaultTopicMgr().getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_11')
+        assert self.pub.getDefaultTopicMgr().getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_12')
+        assert self.pub.getDefaultTopicMgr().getOrCreateTopic('rootTopic1.subtopic_2.subsubtopic_21')
+
         # validate that topic specs were properly parsed
         def isValid(topicName, listener):
-            topic = self.pub.getTopic(topicName)
+            topic = self.pub.getDefaultTopicMgr().getTopic(topicName)
             assert topic.getDescription()
-            assert topic.isSendable()
+            assert topic.hasMDS()
             return topic.isValid(listener)
-    
+
         def sub():
             pass
         def sub_1(arg1, arg2=123):
@@ -121,13 +123,13 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
         assert isValid('rootTopic1.subtopic_1', sub_1)
         assert isValid('rootTopic1.subtopic_1.subsubtopic_11', sub_11)
         # no providers have spec for subtopic_2
-        assert not self.pub.getTopic('rootTopic1.subtopic_2').isSendable()
-    
+        assert not self.pub.getDefaultTopicMgr().getTopic('rootTopic1.subtopic_2').hasMDS()
+
         #printTreeSpec()
-    
-        self.pub.exportTopicTree('newTopicTree')
-        root2Defn = self.pub.exportTopicTree(rootTopicName='rootTopic1')
-    
+
+        self.pub.exportTopicTreeSpec('newTopicTree')
+        root2Defn = self.pub.exportTopicTreeSpec(rootTopic='rootTopic1')
+
         import os
         os.remove('newTopicTree.py')
         if os.path.exists('newTopicTree.pyc'):
@@ -138,116 +140,120 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
         #
         # Test that import/export/import does not change the import
         #
-        
-        importStr = """
-            '''Tree docs, can be anything you want.'''
-    
-            class test_import_export_no_change:
-                '''Root topic 1.'''
-    
-                class subtopic_1:
-                    '''
-                    Sub topic 1 of root topic. Docs rely on one
-                    blank line for topic doc, and indentation for
-                    each argument doc.
-                    '''
-    
-                    def msgDataSpec(arg1, arg2=None):
-                        '''
-                        - arg1: some multiline doc
-                            for arg1
-                        - arg2: some multiline doc
-                            for arg2
-                        '''
-                        pass
-            """
+
+        importStr = '''
+        """Tree docs, can be anything you want."""
+
+        class test_import_export_no_change:
+            """Root topic 1."""
+
+            class subtopic_1:
+                """
+                Sub topic 1 of root topic. Docs rely on one
+                blank line for topic doc, and indentation for
+                each argument doc.
+                """
+
+                def msgDataSpec(arg1, arg2=None):
+                    """
+                    - arg1: some multiline doc
+                        for arg1
+                    - arg2: some multiline doc
+                        for arg2
+                    """
+                    pass
+            '''
         self.pub.clearTopicDefnProviders()
-        treeDoc = self.pub.importTopicTree(importStr, lazy = True,
-            format = self.pub.TOPIC_TREE_FROM_STRING)
+        provider = self.pub.addTopicDefnProvider(importStr,
+                                                 self.pub.TOPIC_TREE_FROM_STRING)
+        treeDoc = provider.getTreeDoc()
         assert treeDoc == '''Tree docs, can be anything you want.'''
-        root = self.pub.getOrCreateTopic('test_import_export_no_change.subtopic_1')
+        root = self.pub.getDefaultTopicMgr().getOrCreateTopic('test_import_export_no_change.subtopic_1')
         # few sanity checks
         def sub_1(arg1, arg2=None):
             pass
-        assert root.isSendable()
+        assert root.hasMDS()
         assert self.pub.isValid(sub_1, 'test_import_export_no_change.subtopic_1')
-    
+
         # export tree
-        exported = self.pub.exportTopicTree(rootTopicName='test_import_export_no_change', moduleDoc=treeDoc)
+        exported = self.pub.exportTopicTreeSpec(rootTopic='test_import_export_no_change', moduleDoc=treeDoc)
         #print exported
-    
-        expectExport = """\
-            # Automatically generated by TopicTreeAsSpec(**kwargs).
-            # The kwargs were:
-            # - fileObj: StringIO
-            # - width: 70
-            # - treeDoc: 'Tree docs, can be anything you want....'
-            # - indentStep: 4
-            # - footer: '# End of topic tree definition. Note that application may l...'
-    
-    
-            '''
-            Tree docs, can be anything you want.
-            '''
-    
-    
-            class test_import_export_no_change:
-                '''
-                Root topic 1.
-                '''
-    
-                class subtopic_1:
-                    '''
-                    Sub topic 1 of root topic. Docs rely on one
-                    blank line for topic doc, and indentation for
-                    each argument doc.
-                    '''
-    
-                    def msgDataSpec(arg1, arg2=None):
-                        '''
-                        - arg1: some multiline doc
-                            for arg1
-                        - arg2: some multiline doc
-                            for arg2
-                        '''
-    
-    
-            # End of topic tree definition. Note that application may load
-            # more than one definitions provider.
+
+        expectExport = '''\
+        # Automatically generated by TopicTreeSpecPrinter(**kwargs).
+        # The kwargs were:
+        # - fileObj: StringIO
+        # - footer: '# End of topic tree definition. Note that application may l...'
+        # - indentStep: 4
+        # - treeDoc: 'Tree docs, can be anything you want....'
+        # - width: 70
+
+
+        """
+        Tree docs, can be anything you want.
+        """
+
+
+        class test_import_export_no_change:
             """
-    
+            Root topic 1.
+            """
+
+            class subtopic_1:
+                """
+                Sub topic 1 of root topic. Docs rely on one
+                blank line for topic doc, and indentation for
+                each argument doc.
+                """
+
+                def msgDataSpec(arg1, arg2=None):
+                    """
+                    - arg1: some multiline doc
+                        for arg1
+                    - arg2: some multiline doc
+                        for arg2
+                    """
+
+
+        # End of topic tree definition. Note that application may load
+        # more than one definitions provider.
+        '''
+
         # check there are no differences
         from difflib import context_diff, ndiff
         diffs = ndiff( dedent(expectExport).splitlines(), exported.splitlines())
         diffs = [d for d in diffs if not d.startswith(' ')]
         #print '\n'.join(diffs)
         assert diffs == ['- ', '+         ']
-    
+
         # now for module:
-        modDoc = self.pub.importTopicTree('lib_pubsub_provider_expect',
-                                     format=self.pub.TOPIC_TREE_FROM_MODULE,
-                                     lazy=False)
+        provider = self.pub.addTopicDefnProvider('lib_pubsub_provider_expect',
+                                                 self.pub.TOPIC_TREE_FROM_MODULE)
+        self.pub.instantiateAllDefinedTopics(provider)
+        modDoc = provider.getTreeDoc()
         assert modDoc.startswith('\nTree docs, can be anything you')
         basepath = os.path.dirname(__file__)
-        self.pub.exportTopicTree(os.path.join(basepath,'lib_pubsub_provider_actual'),
-            rootTopicName='test_import_export_no_change2',
-            moduleDoc=treeDoc)
-        lines1 = file(os.path.join(basepath,'lib_pubsub_provider_actual.py'), 'r').readlines()
-        lines2 = file(os.path.join(basepath,'lib_pubsub_provider_expect.py'), 'r').readlines()
-        diffs = context_diff( lines1, lines2 )
-        os.unlink(os.path.join(basepath,'lib_pubsub_provider_actual.py'))
-        assert not list(diffs)
-    
+        self.pub.exportTopicTreeSpec(os.path.join(basepath,'lib_pubsub_provider_actual'),
+                                     rootTopic='test_import_export_no_change2',
+                                     moduleDoc=treeDoc)
+        lines1 = open(os.path.join(basepath,'lib_pubsub_provider_actual.py'), 'r').readlines()
+        lines2 = open(os.path.join(basepath,'lib_pubsub_provider_expect.py'), 'r').readlines()
+        diffs = ndiff( lines1, lines2 )
+        diffs = [d for d in diffs if not d.startswith(' ')]
+        assert not list(diffs) or list(diffs) == ['- # - fileObj: TextIOWrapper\n', '+ # - fileObj: file\n']
+
     def test_module_as_class(self):
-        assert self.pub.getTopic('root_topic1', True) is None
-        assert self.pub.getTopic('root_topic2.sub_topic21', True) is None
-    
+        assert self.pub.getDefaultTopicMgr().getTopic('root_topic1', True) is None
+        assert self.pub.getDefaultTopicMgr().getTopic('root_topic2.sub_topic21', True) is None
+
         import lib_pubsub_provider_my_import_topics
-        self.pub.importTopicTree(lib_pubsub_provider_my_import_topics)
-    
-        assert self.pub.getTopic('root_topic1') is not None
-        assert self.pub.getTopic('root_topic2.sub_topic21') is not None
-    
+        provider = self.pub.addTopicDefnProvider(lib_pubsub_provider_my_import_topics,
+                                      self.pub.TOPIC_TREE_FROM_CLASS)
+        self.pub.instantiateAllDefinedTopics(provider)
+
+        assert self.pub.getDefaultTopicMgr().getTopic('root_topic1') is not None
+        assert self.pub.getDefaultTopicMgr().getTopic('root_topic2.sub_topic21') is not None
+
         self.pub.sendMessage(lib_pubsub_provider_my_import_topics.root_topic1)
 
 
@@ -257,4 +263,3 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
 if __name__ == '__main__':
     unittest.main()
 
-            

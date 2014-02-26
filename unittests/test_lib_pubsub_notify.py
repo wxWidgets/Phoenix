@@ -11,6 +11,7 @@ import wtc
 
 from difflib import ndiff, unified_diff, context_diff
 
+import wx.lib.six as six
 
 #---------------------------------------------------------------------------
 
@@ -22,27 +23,27 @@ class lib_pubsub_Notify(wtc.PubsubTestCase):
         from wx.lib.pubsub.utils.notification import useNotifyByWriteFile
 
         def captureStdout():
-            from StringIO import StringIO
+            from six import StringIO
             capture = StringIO()
             useNotifyByWriteFile( fileObj = capture )
             return capture
         capture = captureStdout()
 
-    
+
         def listener1(arg1):
             pass
         self.pub.subscribe(listener1, 'baz')
         self.pub.sendMessage('baz', arg1=123)
         self.pub.unsubscribe(listener1, 'baz')
-    
+
         def doa():
             def listener2():
                 pass
             self.pub.subscribe(listener2, 'bar')
         doa()
-    
-        self.pub.delTopic('baz')
-    
+
+        self.pub.getDefaultTopicMgr().delTopic('baz')
+
         expect = '''\
 PUBSUB: New topic "baz" created
 PUBSUB: Subscribed listener "listener1" to topic "baz"
@@ -59,8 +60,8 @@ PUBSUB: Topic "baz" destroyed
         # strip as other wise one has \n, at least on windows
         assert captured == expect, \
             '\n'.join( unified_diff(expect.splitlines(), captured.splitlines(), n=0) )
-    
-            
+
+
 
 #---------------------------------------------------------------------------
 

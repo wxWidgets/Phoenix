@@ -15,13 +15,13 @@ import wtc
 #---------------------------------------------------------------------------
 
 
-class lib_pubsub_Notify2_2(wtc.PubsubTestCase): 
+class lib_pubsub_Notify2_2(wtc.PubsubTestCase):
 
-    def test2_SendNotify(self):        
-        from wx.lib.pubsub.utils.notification import useNotifyByPubsubMessage 
-        
+    def test2_SendNotify(self):
+        from wx.lib.pubsub.utils.notification import useNotifyByPubsubMessage
+
         useNotifyByPubsubMessage()
-        
+
         # trap the pubsub.sendMessage topic:
         class SendHandler:
             def __init__(self):
@@ -38,18 +38,18 @@ class lib_pubsub_Notify2_2(wtc.PubsubTestCase):
 
         sh = SendHandler()
         sh.assertEqual = self.assertEqual
-        
+
         self.pub.subscribe(sh, 'pubsub.sendMessage')
         self.pub.setNotificationFlags(sendMessage=True)
-    
+
         # generate a message that will cause pubsub.sendMessage to be generated too
         assert sh.pre == 0
         assert sh.post == 0
-        self.pub.getOrCreateTopic('testSendNotify')
+        self.pub.getDefaultTopicMgr().getOrCreateTopic('testSendNotify')
         self.pub.sendMessage('testSendNotify')
         assert sh.pre == 1
         assert sh.post == 1
-    
+
 
 
 #---------------------------------------------------------------------------
