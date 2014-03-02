@@ -75,11 +75,10 @@ class CustomStatusBar(wx.StatusBar):
 
     # reposition the checkbox
     def Reposition(self):
-        # sw0 = self.GetStatusWidth(0)
-        sw1 = self.GetStatusWidth(1)
-        sw2 = self.GetStatusWidth(2)
-        sz = self.GetSize()
-        self.cb.SetPosition((sz[0] - sw2 - sw1 - 25, 4))
+        rect = self.GetFieldRect(1)
+        rect.x += 1
+        rect.y += 1
+        self.cb.SetRect(rect)
         self.sizeChanged = False
 
 

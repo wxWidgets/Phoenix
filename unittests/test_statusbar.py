@@ -89,6 +89,16 @@ class statusbar_Tests(wtc.WidgetTestCase):
         widths = [sb.GetStatusWidth(i) for i in range(sb.GetFieldsCount())]
         self.assertEqual(widths, [200, -1, 100])
         
+        
+    def test_statusbarGetFielRect(self):
+        # Test that GetFieldRect has been tweaked to be compatible with Classic
+        sb = self.frame.CreateStatusBar(3)
+        self.frame.SetStatusWidths([200, -1, 100])
+
+        r = sb.GetFieldRect(1)
+        self.assertTrue(isinstance(r, wx.Rect))
+        
+        
 #---------------------------------------------------------------------------
 
 

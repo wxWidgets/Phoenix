@@ -31,6 +31,7 @@ def run():
     # customizing the generated code and docstrings.
     
     c = module.find('wxStatusBar')
+    assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
     module.addGlobalStr('wxStatusBarNameStr', c)
 
@@ -45,6 +46,17 @@ def run():
         const int* ptr = &widths->front();
         self->SetStatusWidths(widths->size(), ptr);
         """)
+    
+    # Change GetFieldRect to return the rectangle (for Pythonicity and Classic compatibility)
+    c.find('GetFieldRect').ignore()
+    c.addCppMethod('wxRect*', 'GetFieldRect', '(int i)',
+        doc="Returns the size and position of a field's internal bounding rectangle.",
+        body="""\
+            wxRect* r = new wxRect;
+            self->GetFieldRect(i, *r);
+            return r;
+            """)
+    
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
