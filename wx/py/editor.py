@@ -276,8 +276,7 @@ class EditorNotebookFrame(EditorFrame):
         intro = 'Py %s' % version.VERSION
         import imp
         module = imp.new_module('__main__')
-        import __builtin__
-        module.__dict__['__builtins__'] = __builtin__
+        module.__dict__['__builtins__'] = __builtins__
         namespace = module.__dict__.copy()
         self.crust = crust.Crust(parent=self.notebook, intro=intro, locals=namespace)
         self.shell = self.crust.shell

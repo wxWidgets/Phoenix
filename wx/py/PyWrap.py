@@ -17,7 +17,6 @@ import os
 import sys
 
 def wrap(app):
-    wx.InitAllImageHandlers()
     frame = py.crust.CrustFrame()
     frame.SetSize((750, 525))
     frame.Show(True)

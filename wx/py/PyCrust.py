@@ -6,7 +6,7 @@
 # main namespace to look as much as possible like the regular Python
 # shell environment.
 import __main__
-original = __main__.__dict__.keys()
+original = list(__main__.__dict__.keys())
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 
@@ -53,7 +53,7 @@ def main():
     md = __main__.__dict__
     keepers = original
     keepers.append('App')
-    for key in md.keys():
+    for key in list(md.keys()):
         if key not in keepers:
             del md[key]
     # Create an application instance.

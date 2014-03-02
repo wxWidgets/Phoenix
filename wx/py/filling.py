@@ -344,7 +344,6 @@ class App(wx.App):
     """PyFilling standalone application."""
 
     def OnInit(self):
-        wx.InitAllImageHandlers()
         self.fillingFrame = FillingFrame()
         self.fillingFrame.Show(True)
         self.SetTopWindow(self.fillingFrame)

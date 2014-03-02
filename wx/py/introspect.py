@@ -8,7 +8,7 @@ import inspect
 import tokenize
 import types
 import wx
-from wx.lib.six import StringIO, PY3
+from wx.lib.six import BytesIO, PY3
 
 def getAutoCompleteList(command='', locals=None, includeMagic=1, 
                         includeSingle=1, includeDouble=1):
@@ -80,7 +80,7 @@ def getAttributeNames(object, includeMagic=1, includeSingle=1,
     # e.g. ITK http://www.itk.org/
     attributes = [attribute for attribute in attributes \
                   if type(attribute) == str]
-    attributes.sort(lambda x, y: cmp(x.upper(), y.upper()))
+    attributes.sort(key=lambda x: x.upper())
     if not includeSingle:
         attributes = filter(lambda item: item[0]!='_' \
                             or item[1:2]=='_', attributes)
@@ -139,9 +139,9 @@ def getAllAttributeNames(object):
     except:  # Must catch all because object might have __getattr__.
         pass
     else:
-        if isinstance(bases, types.TupleType):
+        if isinstance(bases, tuple):
             for base in bases:
-                if type(base) is types.TypeType:
+                if type(base) is type:
                     # Break a circular reference. Happens in Python 2.2.
                     pass
                 else:
@@ -304,7 +304,7 @@ def getTokens(command):
         except UnicodeEncodeError:
             pass # otherwise leave it alone
                 
-    f = StringIO(command)
+    f = BytesIO(command)
     # tokens is a list of token tuples, each looking like: 
     # (type, string, (srow, scol), (erow, ecol), line)
     tokens = []

@@ -17,7 +17,6 @@ class App(wx.App):
         wx.App.__init__(self, redirect=False)
 
     def OnInit(self):
-        wx.InitAllImageHandlers()
         self.frame = py.editor.EditorShellNotebookFrame(filename=self.filename)
         self.frame.Show()
         self.SetTopWindow(self.frame)

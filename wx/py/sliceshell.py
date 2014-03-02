@@ -15,6 +15,7 @@ __author__ += "Patrick K. O'Brien <pobrien@orbtech.com>"
 
 import wx
 from wx import stc
+from wx.lib.six import PY3
 
 import keyword
 import os
@@ -622,7 +623,7 @@ class SlicesShell(editwindow.EditWindow):
 
         # Import a default interpreter class if one isn't provided.
         if InterpClass == None:
-            from interpreter import Interpreter
+            from .interpreter import Interpreter
         else:
             Interpreter = InterpClass
 
@@ -963,13 +964,18 @@ class SlicesShell(editwindow.EditWindow):
 
         This sets "close", "exit" and "quit" to a helpful string.
         """
-        import __builtin__
-        __builtin__.close = __builtin__.exit = __builtin__.quit = \
+        from wx.lib.six import PY3
+        if PY3:
+            import builtins
+        else:
+            import __builtin__
+            builtins = __builtin__
+        builtins.close = builtins.exit = builtins.quit = \
             'Click on the close button to leave the application.'
-        __builtin__.cd = cd
-        __builtin__.ls = ls
-        __builtin__.pwd = pwd
-        __builtin__.sx = sx
+        builtins.cd = cd
+        builtins.ls = ls
+        builtins.pwd = pwd
+        builtins.sx = sx
 
 
     def quit(self):
@@ -992,7 +998,12 @@ class SlicesShell(editwindow.EditWindow):
         """Execute the user's PYTHONSTARTUP script if they have one."""
         if startupScript and os.path.isfile(startupScript):
             text = 'Startup script executed: ' + startupScript
-            self.push('print(%r); execfile(%r)' % (text, startupScript))
+            if PY3:
+                self.push('print(%r)' % text)
+                self.push('with open(%r, "r") as f:\n'
+                          '    exec(f.read())\n' % (startupScript))
+            else:
+                self.push('print(%r); execfile(%r)' % (text, startupScript))
             self.interp.startupScript = startupScript
         else:
             self.push('')
