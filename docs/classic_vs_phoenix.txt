@@ -747,6 +747,7 @@ wx.gizmos.TreeListCtrl                                       :mod:`dataview.Tree
 wx.AboutBox                                                  :meth:`adv.AboutBox`
 wx.AboutDialogInfo                                           :mod:`adv.AboutDialogInfo`
 wx.DatePickerCtrl                                            :mod:`adv.DatePickerCtrl`
+wx.GenericDatePickerCtrl                                     :mod:`adv.GenericPickerCtrl`
 wx.TaskBarIcon                                               :mod:`adv.TaskBarIcon`
 wx.SplashScreen                                              :mod:`adv.SplashScreen`
 wx.wizard.Wizard                                             :mod:`adv.Wizard`
