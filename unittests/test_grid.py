@@ -274,7 +274,9 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.EVT_GRID_CMD_COL_SORT
         wx.grid.EVT_GRID_CMD_TABBING
  
-    
+
+    def test_grid41(self):
+        wx.grid.Grid.SetCellHighlightPenWidth  # Does it exist
         
                         
 #---------------------------------------------------------------------------
