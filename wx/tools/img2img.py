@@ -21,11 +21,7 @@ import  sys
 import  wx
 
 def convert(file, maskClr, outputDir, outputName, outType, outExt):
-    if os.path.splitext(file)[1].lower() == ".ico":
-        icon = wx.Icon(file, wx.BITMAP_TYPE_ICO)
-        img = wx.BitmapFromIcon(icon)
-    else:
-        img = wx.Bitmap(file, wx.BITMAP_TYPE_ANY)
+    img = wx.Bitmap(file, wx.BITMAP_TYPE_ANY)
 
     if not img.IsOk():
         return 0, file + " failed to load!"
