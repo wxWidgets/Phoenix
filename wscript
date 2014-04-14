@@ -70,7 +70,8 @@ def configure(conf):
         # Python to know what version of the compiler to use.
         # TODO: Fix this
         msvc_version = '9.0' #conf.options.msvc_ver
-        if conf.options.python and '33' in conf.options.python:
+        if conf.options.python and ('33' in conf.options.python or
+                                    '34' in conf.options.python):
             msvc_version = '10.0'
 
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
