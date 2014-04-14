@@ -35,7 +35,7 @@ So Pheonix will be moving to a 3 component version number, possibly with an
 added version tag on the end. Once again the 3 componenets of the version
 number will match the wxWidgets version number, and the version tag will be
 used to convey additional information specific to the wxPython Phoenix build,
-including development snapshots, alpha or beta reelases, and "numbered post
+including development snapshots, alpha or beta releases, and "numbered post
 release builds". The latter is what will take the place of Classic's 4
 version number component and is what will be used to version any wxPython
 Phoenix builds that may happen in bewtween official wxWidgets releases. See
@@ -59,14 +59,14 @@ been removed and you can call the function with the same name as the
 C++ API.
 
 This also includes the default constructor for all widget classes,
-used for the 2-phase create. Previously they were renamed to to be the
+used for the 2-phase create. Previously they were renamed to be the
 class name with "Pre" prepended to it.  For example, wx.PreWindow(),
 wx.PreFrame(), etc.  Now in the Phoenix build of wxPython that is no
 longer neccessary and you can just call the class with no parameters
 like normal.
 
 For those renamed items that are more commonly used in the old
-wxPython I'll add some alias that will issue a DeprecationWarning for
+wxPython I'll add some aliases that will issue a DeprecationWarning for
 the first release or two after we switch over to the Phoenix version
 of the code, and then remove them in a later release.
 
@@ -107,7 +107,7 @@ Starting with the wxPython 2.9 release series, there are no longer
 separate ansi/Unicode builds of wxPython.  All wxPython builds are now
 essentially the same as the old Unicode builds. This means that all
 string objects passed to wx API functions or methods are converted to
-Unicode before calling the C++ function or method.  By default CLassic
+Unicode before calling the C++ function or method.  By default Classic
 wxPython would use the encoding specified by the locale that was
 current at the time of the import of the wx module.
 
@@ -229,7 +229,8 @@ longer there. They will have to be used by importing a wx submodule. Most of
 them will be in the wx.adv module. One nice advantage of doing this is that
 if your application is not using any of these lesser used classes then you
 will not have to bundle the new modules (nor the associated wx DLLs) with
-your application when you use py2exe or other executable builder.
+your application when you use py2exe or other executable builder. See
+the :ref:`Classic vs. Phoenix <classic vs phoenix>` document for details.
 
 
 
@@ -350,7 +351,7 @@ wx.DataObject and derived classes
 ---------------------------------
 
 The wx.DataObject and wx.DataObjectSimple classes can now be
-subclassed in Python.  wx.DataObject will let you proivide complex
+subclassed in Python.  wx.DataObject will let you provide complex
 multi-format data objects that do not need to copy the data until one
 of the formats is requested from the clipboard or a DnD operation.
 wx.DataObjectSimple is a simplification that only deals with one data
@@ -421,7 +422,7 @@ Frame for the content.
 wx.PyEvent and wx.PyCommandEvent
 --------------------------------
 
-Unlike some other wx.Py classes these two still exist in Phoenix, and are
+Unlike most other wx.Py classes these two still exist in Phoenix, and are
 still the base classes that you should use when creating your own custom
 event classes. For the most part they work just like they did in Classic, and
 they take care of ensuring that any Python attributes that you assign to
