@@ -93,6 +93,10 @@ class wx_build(orig_build):
         orig_build.initialize_options(self)
         self.skip_build = '--skip-build' in sys.argv
     
+    def finalize_options(self):
+        orig_build.finalize_options(self)
+        self.build_lib = self.build_platlib
+        
     def run(self):        
         if not self.skip_build:
             # Run build.py to do the actual building of the extension modules
@@ -115,7 +119,7 @@ class wx_build(orig_build):
 def _cleanup_symlinks(cmd):
     # Clean out any libwx* symlinks in the build_lib folder, as they will
     # turn into copies in the egg since zip files can't handle symlinks.
-    # The links are not really needed since the extensions link to
+    # The links are not really needed since the extensions link to the
     # specific soname, and they could bloat the egg too much if they were
     # left in.
     #        
@@ -150,8 +154,24 @@ def _cleanup_symlinks(cmd):
                 # know what to do with it.
                 pass
     
-
+    
 class wx_bdist_egg(orig_bdist_egg):
+    def finalize_options(self):
+        orig_bdist_egg.finalize_options(self)
+        
+        # Redo the calculation of the egg's filename since we always have
+        # extension modules, but they are not built by setuptools so it
+        # doesn't know about them.
+        from pkg_resources import Distribution
+        from sysconfig import get_python_version
+        basename = Distribution(
+            None, None, self.ei_cmd.egg_name, self.ei_cmd.egg_version,
+            get_python_version(),
+            self.plat_name
+        ).egg_name()
+        self.egg_output = os.path.join(self.dist_dir, basename+'.egg')
+
+        
     def run(self):
         # Ensure that there is a basic library build for bdist_egg to pull from.
         self.run_command("build")
@@ -164,6 +184,19 @@ class wx_bdist_egg(orig_bdist_egg):
 
 if haveWheel:
     class wx_bdist_wheel(orig_bdist_wheel):
+        def finalize_options(self):
+            # Do a bit of monkey-patching to let bdist_wheel know that there
+            # really are extension modules in this build, eventhough they are
+            # not built here.
+            def _has_ext_modules(self):
+                return True
+            from setuptools.dist import Distribution
+            #Distribution.is_pure = _is_pure
+            Distribution.has_ext_modules = _has_ext_modules
+            
+            orig_bdist_wheel.finalize_options(self)
+
+
         def run(self):
             # Ensure that there is a basic library build for bdist_egg to pull from.
             self.run_command("build")
@@ -175,6 +208,10 @@ if haveWheel:
 
     
 class wx_install(orig_install):
+    def finalize_options(self):
+        orig_install.finalize_options(self)
+        self.install_lib = self.install_platlib
+        
     def run(self):
         self.run_command("build")
         orig_install.run(self)
@@ -304,12 +341,6 @@ if __name__ == '__main__':
           include_package_data = True,
           
           packages         = WX_PKGLIST,
-          
-          # Add a bogus extension module (will never be built here since we
-          # are overriding the build command to do it from build.py) so
-          # things like bdist_egg will know that there are extension modules
-          # and will name the dist with the full platform info.          
-          ext_modules      = [Extension('siplib', [])],           
           ext_package      = cfg.PKGDIR,
 
           options          = { 'build'     : BUILD_OPTIONS },
