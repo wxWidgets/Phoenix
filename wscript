@@ -36,7 +36,7 @@ def options(opt):
     opt.add_option('--debug', dest='debug', action='store_true', default=False,
                    help='Turn on debug compile options.')        
     opt.add_option('--python', dest='python', default='', action='store',
-                   help='Full path to the Python executrable to use.')
+                   help='Full path to the Python executable to use.')
     opt.add_option('--wx_config', dest='wx_config', default='wx-config', action='store',
                    help='Full path to the wx-config script to be used for this build.')
     opt.add_option('--no_magic', dest='no_magic', action='store_true', default=False,
