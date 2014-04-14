@@ -148,5 +148,27 @@ other dev stuff
   
 
 
+  * Finish richtext module
 
+  * Find and fix problem in PyShell or STC where the AutoComplete box is not
+    being shown when running with Python3.  It may be due to a Py3
+    specific exception that is happening somewhere but being ignored.
+
+  * Add missing methods to wx.MenuItem  (Those that are MSW only with
+    empty stubs for the other platforms, such as SetDisabledBitmap.)
+
+  * Find and fix issue with wx.TheClipboard. Pasting text from the clipboard
+    is failing, as if the data in the clipboard is not text. It may be an issue
+    with the wx.TextDataObject class.
+
+  * Potential reference count issue with wxGridCellCoordsArray?  Code
+    like this::
+
+        theGrid.GetSelectedCells()[0][0]
+
+    evaluates to garbage values, but this works fine::
+
+    	a = theGrid.GetSelectedCells()
+	a[0]
+	a[0][0]
 
