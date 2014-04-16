@@ -152,24 +152,25 @@ def _call(receiver, **kwds):
     """Call receiver with only arguments it can accept."""
 ##    if type(receiver) is types.InstanceType:
     if hasattr(receiver, '__call__') and \
-       (hasattr(receiver.__call__, 'im_func') or hasattr(receiver.__call__, 'im_code')):
+       (hasattr(receiver.__call__, '__func__') or hasattr(receiver.__call__, '__code__')):
         # receiver is a class instance; assume it is callable.
         # Reassign receiver to the actual method that will be called.
         receiver = receiver.__call__
-    if hasattr(receiver, 'im_func'):
+    if hasattr(receiver, '__func__'):
         # receiver is a method. Drop the first argument, usually 'self'.
-        fc = receiver.im_func.func_code
+        fc = receiver.__func__.__code__
         acceptable = fc.co_varnames[1:fc.co_argcount]
-    elif hasattr(receiver, 'func_code'):
+    elif hasattr(receiver, '__code__'):
         # receiver is a function.
-        fc = receiver.func_code
+        fc = receiver.__code__
         acceptable = fc.co_varnames[0:fc.co_argcount]
     else:
         raise DispatcherError('Unknown receiver %s of type %s' % (receiver, type(receiver)))
     if not (fc.co_flags & 8):
         # fc does not have a **kwds type parameter, therefore 
         # remove unacceptable arguments.
-        for arg in kwds.keys():
+        keys = list(kwds.keys())
+        for arg in keys:
             if arg not in acceptable:
                 del kwds[arg]
     return receiver(**kwds)
@@ -177,12 +178,12 @@ def _call(receiver, **kwds):
 
 def safeRef(object):
     """Return a *safe* weak reference to a callable object."""
-    if hasattr(object, 'im_self'):
-        if object.im_self is not None:
+    if hasattr(object, '__self__'):
+        if object.__self__ is not None:
             # Turn a bound method into a BoundMethodWeakref instance.
             # Keep track of these instances for lookup by disconnect().
-            selfkey = object.im_self
-            funckey = object.im_func
+            selfkey = object.__self__
+            funckey = object.__func__
             if selfkey not in _boundMethods:
                 _boundMethods[selfkey] = weakref.WeakKeyDictionary()
             if funckey not in _boundMethods[selfkey]:
@@ -202,8 +203,8 @@ class BoundMethodWeakref:
             """Set self.isDead to true when method or instance is destroyed."""
             self.isDead = 1
             _removeReceiver(receiver=self)
-        self.weakSelf = weakref.ref(boundMethod.im_self, remove)
-        self.weakFunc = weakref.ref(boundMethod.im_func, remove)
+        self.weakSelf = weakref.ref(boundMethod.__self__, remove)
+        self.weakFunc = weakref.ref(boundMethod.__func__, remove)
 
     def __repr__(self):
         """Return the closest representation."""

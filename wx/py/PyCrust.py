@@ -29,8 +29,6 @@ class App(wx.App):
         self.config.SetRecordDefaults(True)
         
         self.frame = py.crust.CrustFrame(config=self.config, dataDir=confDir)
-##        self.frame.startupFileName = os.path.join(confDir,'pycrust_startup')
-##        self.frame.historyFileName = os.path.join(confDir,'pycrust_history')
         self.frame.Show()
         self.SetTopWindow(self.frame)
         return True
