@@ -24,7 +24,7 @@ VER_FLAGS        = ""     # wxPython release flags
 #
 #   "-1"           for numbered post releases, such as when there are 
 #                  additional wxPython releases for the same wxWidgets 
-#                  release.  TDB: use - or .post or ? 
+#                  release.  TBD: use - or .post or ? 
 #
 #   ".dev12345"    for daily snapshot builds, by default this is automatically
 #                  pulled from the REV.txt file made by the setrev command,

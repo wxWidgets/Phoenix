@@ -127,7 +127,7 @@ other dev stuff
 
   * Add _propdlg module
   
-  * Add _aui module ??  (or go with only agw aui)
+  * Add _aui module ??  (or go with only agw aui?)
   
   * Add _ribbon module
   
