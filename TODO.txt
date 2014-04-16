@@ -150,10 +150,6 @@ other dev stuff
 
   * Finish richtext module
 
-  * Find and fix problem in PyShell or STC where the AutoComplete box is not
-    being shown when running with Python3.  It may be due to a Py3
-    specific exception that is happening somewhere but being ignored.
-
   * Add missing methods to wx.MenuItem  (Those that are MSW only with
     empty stubs for the other platforms, such as SetDisabledBitmap.)
 
