@@ -1236,13 +1236,15 @@ def cmd_build_py(options, args):
         runcmd(cmd)
 
     copyWxDlls(options)
-    
+    if isWindows or isDarwin:
+        cfg = Config()    
+        cfg.build_locale_dir(opj(cfg.PKGDIR, 'locale'))
+        
     print("\n------------ BUILD FINISHED ------------")
     print("To use wxPython from the build folder (without installing):")
     print(" - Set your PYTHONPATH variable to %s." % phoenixDir())
     if not isWindows:
-        print(" - You may also need to set your (DY)LD_LIBRARY_PATH to %s/lib, or wherever the wxWidgets libs have been installed." % BUILD_DIR)
-    #print(" - Run python demo/demo.py")
+        print(" - You may also need to set your (DY)LD_LIBRARY_PATH to %s/lib,\n   or wherever the wxWidgets libs have been installed." % BUILD_DIR)
     print("")
 
 
