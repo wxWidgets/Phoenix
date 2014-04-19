@@ -237,6 +237,8 @@ class InheritanceDiagram(object):
         """
 
         static_root = INHERITANCEROOT
+        if not os.path.exists(static_root):
+            os.makedirs(static_root)
 
         if self.main_class is not None:
             filename = self.main_class.name

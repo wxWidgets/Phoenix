@@ -1401,7 +1401,10 @@ class Snippet(Node):
         """
         
         docstrings = ''
-        
+
+        if not os.path.exists(os.path.dirname(self.cpp_file)):
+            os.makedirs(os.path.dirname(self.cpp_file))
+            
         fid = open(self.cpp_file, 'wt')
         fid.write(self.snippet)
         fid.close()
