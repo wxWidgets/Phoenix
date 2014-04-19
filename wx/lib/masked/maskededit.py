@@ -50,6 +50,8 @@
 # o wxIpAddrCtrl -> IpAddrCtrl
 # o wxTimeCtrl -> TimeCtrl
 #
+# Tags:        phoenix-port, unittest, documented, py3-port
+#
 
 __doc__ = r"""\
 contains MaskedEditMixin class that drives all the other masked controls.
@@ -3066,9 +3068,15 @@ class MaskedEditMixin:
 
             excludes = six.text_type()
             if not isinstance(field._excludeChars, six.text_type):
-                excludes += field._excludeChars.decode(self._defaultEncoding)
+                if six.PY3:
+                    excludes += field._excludeChars
+                else:
+                    excludes += field._excludeChars.decode(self._defaultEncoding)
             if not isinstance(self._ctrl_constraints, six.text_type):
-                excludes += self._ctrl_constraints._excludeChars.decode(self._defaultEncoding)
+                if six.PY3: 
+                    excludes += field._excludeChars
+                else:
+                    excludes += self._ctrl_constraints._excludeChars.decode(self._defaultEncoding)
             else:
                 excludes += self._ctrl_constraints._excludeChars
 

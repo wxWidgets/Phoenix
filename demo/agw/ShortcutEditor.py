@@ -31,9 +31,9 @@ HTML_HELP = os.path.join(SE_DIR, 'data', 'default_help_text.html')
 TOP_MENUS = ['File', 'Edit', 'View', 'Options', 'Window', 'Help']
 
 COMBINATIONS = string.ascii_uppercase + string.digits
-COMBINATIONS = [c for c in COMBINATIONS] + SE.KEYMAP.values()
+COMBINATIONS = [c for c in COMBINATIONS] + list(SE.KEYMAP.values())
 
-ACCEL_IDS = [wx.NewId() for i in xrange(6)]
+ACCEL_IDS = [wx.NewId() for i in range(6)]
 
 _ = wx.GetTranslation
 
@@ -202,9 +202,9 @@ class ShortcutEditorDemo(wx.Frame):
         table = []
         saved_table = []
 
-        for i in xrange(6):
+        for i in range(6):
             name = 'Accelerator %d'%(i+1)
-            choice = random.choice(SE.ACCELERATORS.keys())
+            choice = random.choice(list(SE.ACCELERATORS.keys()))
             
             if choice == wx.ACCEL_ALT:
                 letter = random.choice(COMBINATIONS)
@@ -216,7 +216,7 @@ class ShortcutEditorDemo(wx.Frame):
                     wxk = ord(letter)
                 
             else:
-                wxk = random.choice(SE.KEYMAP.keys())
+                wxk = random.choice(list(SE.KEYMAP.keys()))
 
             accel = (choice, wxk, ACCEL_IDS[i])
             saved_accel = (name, choice, wxk, ACCEL_IDS[i])
@@ -234,7 +234,7 @@ class ShortcutEditorDemo(wx.Frame):
 
         num_menus = random.randint(2, 7)
 
-        for index in xrange(num_menus):
+        for index in range(num_menus):
             shortcut = self.CreateShortcut()
 
             sub_menu = wx.MenuItem(top_menu, -1, '%s%sItem %d%s'%(recursive, title, index+1, shortcut),

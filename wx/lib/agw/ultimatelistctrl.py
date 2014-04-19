@@ -28,6 +28,7 @@
 #
 # Or, obviously, to the wxPython mailing list!!!
 #
+# Tags:         phoenix-port, documented, unittest, py3-port
 #
 # End Of Comments
 # --------------------------------------------------------------------------------- #
@@ -628,7 +629,7 @@ def GetdragcursorData():
     """ Returns the drag and drop cursor image as a decompressed stream of characters. """
 
     return zlib.decompress(
-"x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xa2@,\xcf\xc1\
+b"x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xa2@,\xcf\xc1\
 \x06$9z\xda>\x00)\xce\x02\x8f\xc8b\x06\x06na\x10fd\x985G\x02(\xd8W\xe2\x1aQ\
 \xe2\x9c\x9f\x9b\x9b\x9aW\xc2\x90\xec\x11\xe4\xab\x90\x9cQ\x9a\x97\x9d\x93\
 \x9a\xa7`l\xa4\x90\x99\x9e\x97_\x94\x9a\xc2\xeb\x18\xec\xec\xe9i\xa5\xa0\xa7\
@@ -654,7 +655,7 @@ def GetdragcursorBitmap():
 def GetdragcursorImage():
     """ Returns the drag and drop cursor image as a :class:`Image`. """
 
-    stream = six.StringIO(GetdragcursorData())
+    stream = six.BytesIO(GetdragcursorData())
     return wx.Image(stream)
 
 
@@ -7493,7 +7494,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         if self.InReportView():
             if not self.HasAGWFlag(ULC_HAS_VARIABLE_ROW_HEIGHT):
-                current = y/self.GetLineHeight()
+                current = y // self.GetLineHeight()
                 if current < count:
                     newItem, hitResult = self.HitTestLine(current, x, y)
                 else:
@@ -9662,7 +9663,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                 if entireHeight > self.GetClientSize()[1]:
                     decrement = SCROLL_UNIT_X
 
-                self._linesPerPage = clientHeight/lineHeight
+                self._linesPerPage = clientHeight//lineHeight
 
                 self.SetScrollbars(SCROLL_UNIT_X, lineHeight,
                                    (self.GetHeaderWidth()-decrement)/SCROLL_UNIT_X,

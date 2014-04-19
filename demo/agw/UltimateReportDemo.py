@@ -570,12 +570,12 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         for key, data in items:
             if key == 3:
-                index = self.list.InsertImageStringItem(sys.maxint, data[0], [3, 4, 7], it_kind=1)
+                index = self.list.InsertImageStringItem(sys.maxsize, data[0], [3, 4, 7], it_kind=1)
             elif key == 4:
                 dt = "\n".join(data[0].split())
-                index = self.list.InsertImageStringItem(sys.maxint, dt, [self.idx1, 8, 7])
+                index = self.list.InsertImageStringItem(sys.maxsize, dt, [self.idx1, 8, 7])
             else:
-                index = self.list.InsertImageStringItem(sys.maxint, data[0], self.idx1)
+                index = self.list.InsertImageStringItem(sys.maxsize, data[0], self.idx1)
 
             if key == 6:
                 self.list.SetStringItem(index, 1, data[1], it_kind=1)
@@ -679,8 +679,8 @@ class UltimateListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         lenCDB = len(self.colourList)
 
-        for indx in xrange(11, 20):
-            for col in xrange(self.list.GetColumnCount()):
+        for indx in range(11, 20):
+            for col in range(self.list.GetColumnCount()):
                 result = random.randint(0, 2)
                 colourIndex = random.randint(0, lenCDB-1)
 

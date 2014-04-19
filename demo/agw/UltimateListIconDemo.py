@@ -850,7 +850,7 @@ class TestFrame(wx.Frame):
 
         # load some images into an image list
         il = wx.ImageList(64, 64, True)
-        imgs = catalog.keys()
+        imgs = list(catalog.keys())
         imgs.sort()
         
         for img in imgs:
@@ -886,7 +886,7 @@ class TestFrame(wx.Frame):
 
         self.list.InsertColumnInfo(2, info)
 
-        for i in xrange(3):
+        for i in range(3):
             self.list.SetColumnWidth(i, 130)
         
         # create some items for the list

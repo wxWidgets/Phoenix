@@ -19,6 +19,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
+# Tags:         phoenix-port, documented, unittest, py3-port
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -262,9 +263,7 @@ class ToasterBox(wx.Timer):
  
         self._tb = ToasterBoxWindow(self._parent, self, self._tbstyle, self._windowstyle,
                                     self._closingstyle, scrollType=self._scrollType)
-
-
-        
+                        
     def SetPopupPosition(self, pos):
         """
         Sets the :class:`ToasterBox` position on screen.

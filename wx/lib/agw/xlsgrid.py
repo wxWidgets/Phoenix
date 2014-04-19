@@ -30,6 +30,7 @@
 #
 # Or, obviously, to the wxPython mailing list!!!
 #
+# Tags:         phoenix-port, documented, unittest, py3-port
 #
 # End of comments
 # --------------------------------------------------------------------------------- #
@@ -670,7 +671,7 @@ class XLSText(object):
         name = font.name
         size = int(font.height/20.0)
 
-        if font.escapement_type > 0:
+        if font.escapement > 0:
             # subscript/superscript
             size = int(size*0.7)
 
@@ -1049,7 +1050,7 @@ class XLSRichText(XLSText):
             text_colour = book.colour_map[font.colour_index]
             colour = self.CreateTextColour(text_colour)
 
-            ffont.escapement = font.escapement_type
+            ffont.escapement = font.escapement
             attributes.append([chunk, ffont, colour])
 
         self.attributes = attributes            
@@ -1183,7 +1184,7 @@ class XLSBackground(object):
         if fill_pattern <= 0:
             return
 
-        r, g, b = pattern_colour
+        r, g, b, a = pattern_colour
 
         fill_image = eval("_xls_background_%02d.GetImage()"%fill_pattern)
         fill_image.Replace(0, 0, 0, r, g, b)
@@ -1662,7 +1663,7 @@ class XLSCell(object):
         return self.comment
     
 
-class XLSRenderer(gridlib.PyGridCellRenderer):
+class XLSRenderer(gridlib.GridCellRenderer):
     """
     This class is responsible for actually drawing the cell in the grid.
     
@@ -1675,7 +1676,7 @@ class XLSRenderer(gridlib.PyGridCellRenderer):
         :param `cell`: an instance of :class:`XLSCell`.        
         """
 
-        gridlib.PyGridCellRenderer.__init__(self)        
+        gridlib.GridCellRenderer.__init__(self)        
         self.cell = cell
 
 
@@ -1721,7 +1722,7 @@ class XLSRenderer(gridlib.PyGridCellRenderer):
             gdc.DrawRectangle(rect)
             
 
-class XLSTable(gridlib.PyGridTableBase):
+class XLSTable(gridlib.GridTableBase):
     """
     The almost abstract base class for grid tables.
 
@@ -1742,7 +1743,7 @@ class XLSTable(gridlib.PyGridTableBase):
         """
 
         # The base class must be initialized *first*
-        gridlib.PyGridTableBase.__init__(self)
+        gridlib.GridTableBase.__init__(self)
         
         self.cells = cells
         self.dimens = (rows, cols)

@@ -19,7 +19,7 @@ try:
     _isStandalone = True
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.xlsgrid as XG
-    dataDir = os.path.join(dirName, "agw", "data")
+    dataDir = os.path.join(dirName, "data")
 
 _hasXLRD = True
 
@@ -81,24 +81,24 @@ class XLSGridFrame(wx.Frame):
         
         item = wx.MenuItem(fileMenu, wx.ID_ANY, "E&xit", "Exit XLSGrid demo")
         self.Bind(wx.EVT_MENU, self.OnClose, item)
-        fileMenu.AppendItem(item)
+        fileMenu.Append(item)
 
         item = wx.MenuItem(helpMenu, wx.ID_ANY, "About...", "Shows the about dialog")
         self.Bind(wx.EVT_MENU, self.OnAbout, item)
-        helpMenu.AppendItem(item)
+        helpMenu.Append(item)
         
         menuBar.Append(fileMenu, "&File")
         menuBar.Append(helpMenu, "&Help")
 
         self.SetMenuBar(menuBar)
 
-        statusbar = self.CreateStatusBar(2, wx.ST_SIZEGRIP)
+        statusbar = self.CreateStatusBar(2, wx.STB_SIZEGRIP)
         statusbar.SetStatusWidths([-2, -1])
         
         statusbar_fields = [("wxPython XLSGrid Demo, Andrea Gavana @ 08 Aug 2011"),
                             ("Welcome To wxPython!")]
         
-        for i in xrange(len(statusbar_fields)):
+        for i in range(len(statusbar_fields)):
             statusbar.SetStatusText(statusbar_fields[i], i)
 
 

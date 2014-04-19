@@ -26,7 +26,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
-# Tags:         phoenix-port
+# Tags:         phoenix-port, documented, unittest, py3-port
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -183,7 +183,7 @@ else:
 def GetMondrianData():
     """ Returns a default image placeholder as a decompressed stream of characters. """
     return \
-'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00 \x00\x00\x00 \x08\x06\x00\
+b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00 \x00\x00\x00 \x08\x06\x00\
 \x00\x00szz\xf4\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\x00qID\
 ATX\x85\xed\xd6;\n\x800\x10E\xd1{\xc5\x8d\xb9r\x97\x16\x0b\xad$\x8a\x82:\x16\
 o\xda\x84pB2\x1f\x81Fa\x8c\x9c\x08\x04Z{\xcf\xa72\xbcv\xfa\xc5\x08 \x80r\x80\
@@ -207,78 +207,78 @@ def GetMondrianImage():
 
 #----------------------------------------------------------------------
 file_broken = PyEmbeddedImage(
-    "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"
-    "nA3/D+/OyD/Ur3BPAAAAAElFTkSuQmCC")
+    b"iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAAK/INwWK6QAADU9J"
+    b"REFUeJzNWn1QE2cefja7yRI+lAKiAgKCVIqegUYMFMsM4kfvzk7nmFrnvHGcOT3bq3P/OJ1p"
+    b"b+zYf+r0HGxt6VVFqpYqWq9TW23RVnp6R7FXiq0UPAGhyFeQSCQJISHZ7Mf9gZuGkE02IeA9"
+    b"M5k3u/vuu+/z/H7v7/297y4BPzh//vxfSJIsIgjC5a/eTIPn+UnHgiDIqisIAsUwTNfmzZtf"
+    b"A8D7qk/5e3B0dPS6wsLCp/09MFTIbdO7ntR9vs5HRESgvr6+E0AlAD2AKZX8CsDzvEKtVsvq"
+    b"aKjw7LggCO7jcJQqlQoMw6gBpAIYRAgCECGxCgDPTsohEopI4n+e5xXww1MRHkry4d1Zf9fk"
+    b"uv90MOsCeMKfGN51pO6ZrmizKsBsWt976EjhoQ+BYMQItpSDWRNAjptPZ4xLCfl/PQTCaX2p"
+    b"+wNhVgSYbet7tumdRXpj1ofAbFhfqn1fmHEBHpb1AYAgAudxMy4AQRB+LReuSB/MGsETMyqA"
+    b"2WyG1WqVZQl/CDUZeuge0NvbKwwODk7bC7zryYFI/qF6QGNj42BnZ6dZ6rocQtNNhQNhxgQw"
+    b"Go24fPnyDy0tLTcFQfDpBZ7/w2198RcIMyZAW1vb+KVLlxoGBwfr7927B4Vi8qO8CfnqbCjW"
+    b"D4Y8MEMCCIKA77777me73d7a1tb25dDQkNXzmud/giDgdDrBsqzkuA1l7CuVSgCA0+n0y3FG"
+    b"BBgYGMCVK1eub926dRFN04aBgYH/el73JKRUKjE4OIi+vj5QFDWtaVG0fGRkJHiex7lz5xyn"
+    b"T59uBMBI9TWsAoidaW1tNTc1Nd1cv379zuzs7F91dHT8x+l0TooDnuju7h779ttvjdOdLlUq"
+    b"FaKjo9HV1YX9+/d379q16+QXX3xxFsAAMHU7DAgggNw1tQiCIOByuXDt2rWbK1asUOfk5KxM"
+    b"SUlZW19f39LX18eTJDmpbbG8cePGndra2mtDQ0NQKpUhJUPR0dHgeR6ffvqpbdeuXV+9/vrr"
+    b"R4eGhs4A+ArA3ZAECAXd3d24dOnSD2VlZavy8vKQmppaUFdXN2gwGO561yVJEmazGR0dHV3n"
+    b"z5//+NatW0MU5XebcgooikJMTAy6urqwb9++zp07d1ZfvXq1GsAn8+bNa6qsrEyGxJY4EGBT"
+    b"lCAIhVR0ZhgGTqcTTqcTDocDDocDgiDgm2++0Y+MjNxbuXLl7wmCQFpaWtbcuXMje3p6fly9"
+    b"enWyeL8gCCBJEj09PUJLS0s7z/PXWlpavigoKNhBURRYlnU/S6qMjIwEwzD47LPPbIcOHWq4"
+    b"cuXKPwF8D+DHF154QV1cXFxpsVjiAGwGYIUPL/ArgNFoNNbV1dmtVqvdarW6LBaLY2xszOFw"
+    b"OBiLxWKz2WxOs9lsHx0ddZhMJpvZbB7v7u7+effu3elZWVmJAJCUlBS1bt26nNbW1kaj0fj0"
+    b"I4884iYHAHfu3Lnf2dnZDWC4oaHhH08++eRWrVZLe9bxJk9RFNRqNTo6OvDhhx92Hj16tG5k"
+    b"ZKQBwHUAneXl5cVarfaQVqtddurUqesAUgC0BysAsWfPngOjo6ONY2NjUQzDOACMA7ADcGAi"
+    b"sjoBuB6U4jFTWlp6Kj4+HjzPIzExEbm5uSuPHz9+csuWLfaEhIRIl8sFgiDA8zxu3rz585Yt"
+    b"W3SpqanX9u7d+93GjRuv5eXlrRGvT+oQQUCtVsPhcODcuXO2w4cPi1ZvAnADgP3EiRN7NBrN"
+    b"ntzcXDXHcXA6nREAJF9u+BNA6OnpuQ1gGAD5gCjrUXIPFOUflAIA7siRI8Xp6ekaYOI1lVKp"
+    b"RGZmpqatre2QXq/v1mg0y4EJKxoMBrS1tQ2UlJQ8abPZjAD23Lhx46Pi4uI1aWlp7mEl1qdp"
+    b"Grdu3UJNTU1nVVVV3cjIyDUAPwJof+WVVzJ0Ol1NQUHBbxMTEyHOOoEQKOKMP/jJxoIFC/6Q"
+    b"mZlJidYTBAHp6emp2dnZCV1dXY0MwywnCAIkSUKv1zu7u7uNu3fvTh8aGtoE4Pj7779/ec2a"
+    b"NZ0ZGRlZwC9Wt9vt+Pzzz22VlZUNV69eFa3+EwDTkSNHynJyct5ZtWpVikKhgMPhgEKhkJx2"
+    b"gxFgSv1t27ZRUVFRFMuyZGZmZmJcXNwcpVIZT9N0tMvlWpiSklKmVConBbGkpCRq3bp1Kxsb"
+    b"G69v3Lhxe3p6OgRBQHt7u2Hx4sVRycnJ9Ny5czO3bdv2VHV19XvNzc2frF69+pXY2FgoFAop"
+    b"q3ds2rQp6plnnnkzLy9v99KlS8EwDDiOC2r5LSnAiRMnIubNm/dHkiSzaZqOIUkygabpGIqi"
+    b"4iiKmkuSZDRJkiqVSkWRJKmkaZqMiIhAZGQkOI5zk+c4DnFxccjOztZWVVV9+eKLLw5nZGTM"
+    b"YxgGzc3Ndx577LGF8fHxiI2NhU6n+111dfWZixcvnispKfmzTqebe+HCBW+rtwK4/8Ybb+Rp"
+    b"NJojBQUFq2JiYuB0OgH8kgqLpdiXoAVobW2NfvbZZ/cWFhbOly3ngwf6yvczMzNzWJZV9Pb2"
+    b"/lRUVLR2cHAQt2/fvrt9+3YtSZJQKBRYtmxZYXFx8ar6+vqrTU1NF7/++mtdZWXll0ajsQET"
+    b"Qa4TE3HmBY1Gsz8/P3+Oy+Vyj3dP8nK9QFKA/v5+Cn7GfzBZmiAISE5OTiwqKsq4fft2k91u"
+    b"X9vf3283GAyWtLS0ZNFTsrOzI0pKSsrq6+v//c477/xNr9evwMRr7ZsAhl966aUFOp3uzfz8"
+    b"/C2LFi3C+Pj4JMLeAsjJYiUFYFk2oIRyReA4DikpKSgqKlpZW1t7saysjOvo6NAvXbo0NjEx"
+    b"MZLneXAchzlz5kCj0TwVGxu7RK/Xt2Mihx8DwBw4cGBDbm5uRWFh4aNKpRJ2u30S8VCsD8hY"
+    b"CwRzXqouz/OIiopCVlaWtrm5+X57e/tAS0uLPicnJzEhIcE9TnmeR05OTvJzzz33a0xMtyNa"
+    b"rVY4fvz4a6WlpRdKSkoeFZfPYpSXIi93SyzYWWASMTmlZ/2MjIys+Pj4mI6Ojoa+vj5h/fr1"
+    b"xaKrikIlJyfj8ccfLwNw7NVXX43TarV/LyoqWhsXF4fx8XF3TPFF2Pv/tPIAu93ul7g/+BJD"
+    b"EAQsXLgwqrS0NLexsfE8RVHLFi1atNn7PpVKhdzc3OUvv/zyvg0bNvwmPz8/WeyPt8sHEkLO"
+    b"anZaQyCYDUmO47BgwQIsX758VW1t7bc6nU5ISkpSeuYLHMeBYRhkZWWpd+zY8afCwsJklmXB"
+    b"MMwUlw9EXjwOhIDL4dHRUQwMDMBms4Hn+YCuJSUKz/NQqVRYsmTJcgDzlixZsnzOnDlu1xfj"
+    b"AMdxoGkaqampsNvtEATBvZ8olzxBEO57whIDxsbGMD4+DrVajaioKERGRoKiKMmdXn9IT09P"
+    b"Li4ufiIxMVEHACzLThGW47gp54IhHwz8CiCSEt3P4XDA6XTCYrGApmnQNA2VSuUWwzvyescA"
+    b"l8uF+fPnK59//vm/zp8/f6FoebF98VlSBOWS99WXkATwfrhnw+JmiEKhgEKhAEmSEDM6KTEI"
+    b"gkBcXBwRExOTkpCQAJfLNSPkg4EsD/Algncs4Hl+ktv6+onjOS0tDTRNT1q4hJN8MCKE5AFS"
+    b"nQx0DQAYhkFqaqpbrJkmH5YPJMJFXqFQTBmTM0E+LB5gt9slXTpU8t4E5JKXSnsDkfV+HReU"
+    b"AJ6YLnlf1pNLXhAEmM1msCw7KSZ598/7PEEQ4DgOLMv6VSHQt8JhIS/HG/y5vV6vh9FohFqt"
+    b"ducN3r8pxCgKJpMJvb29o/hlzzI4AUSEk7yUtfyJwTAMMjMzsXjxYr/zuuf7wbt376K8vLz/"
+    b"7NmzlzCxpA5NgHCTl1vHFzkAPjNE774aDAaUl5f3V1RU1HAc9y9MbKr4RMA8QIr4TJP3LEU3"
+    b"5zjOnTtItWUwGLB//36R/CVMbKXZQhbAV2dnk7zYD3G1KI537/oURbndvqKi4hTHcV9iYvd4"
+    b"zB/HkFPh6ZL3JurvHIBJXuB9XfzG4MCBA/3vvvtujVzysgTwR2I65KVmAl/3iUtmlmUnDQGR"
+    b"/P3793H48GH9A/Ki2wckH1AAzxjgS4yZJO/dD899A7EORVEYGRlBVVWV8b333vs4GMvLEsAT"
+    b"oQ4Ff+Q92/YniGcMEAUQ5/ljx44Nv/XWWx9ZrdaLAJqDIR9QAO/9gHCTlxsERRFEAZRKJUwm"
+    b"E6qrq4cPHjx4xmq11mLi1bglGPIBBfBF8mGQFyHmACaTCSdPnhx+++23z4yOjtZi4pWZKVjy"
+    b"sgTwFiIU8v7GuVzyIsxmM06fPj188ODBjx5Y/nsAkl+jBoLsPECEryDl7ziQMHLJkyQJi8WC"
+    b"mpqa4YqKCtHtmzAN8oCM9wJKpRIRERGyyAQi6CvwyeokRcFsNqOurm64oqLijMVimZbbT2pb"
+    b"6gJN04TNZlNZLBYwDOOeEgNtMsqpF+y1sbEx1NbWDn/wwQdhJQ8AkmZYsWJFVEZGxtZ79+49"
+    b"wbIsDa/VlBQJqS0of6QD3UMQBHp7e++YTKYrCIPbe8KfHyoALACwGIAqXA8MEQImPnO7A2Ak"
+    b"nA3/D+/OyD/Ur3BPAAAAAElFTkSuQmCC")
 
 
 def getDataSH():
     """ Return the first part of the shadow dropped behind thumbnails. """
     
     return zlib.decompress(
-'x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2_A\x98\x83\rHvl\
+b'x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2_A\x98\x83\rHvl\
 \xdc\x9c\n\xa4X\x8a\x9d<C8\x80\xa0\x86#\xa5\x83\x81\x81y\x96\xa7\x8bcH\xc5\
 \x9c\xb7\xd7\xd7\xf6\x85D2\xb4^\xbc\x1b\xd0\xd0p\xa6\x85\x9d\xa1\xf1\xc0\xc7\
 \x7f\xef\x8d\x98\xf89_:p]\xaew\x0c\xe9\x16[\xbc\x8bSt\xdf\x9aT\xad\xef\xcb\
@@ -300,7 +300,7 @@ def getDataBL():
     """ Return the second part of the shadow dropped behind thumbnails. """
 
     return zlib.decompress(
-"x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xac \xcc\xc1\
+b"x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xac \xcc\xc1\
 \x06${\xf3\xd5\x9e\x02)\x96b'\xcf\x10\x0e \xa8\xe1H\xe9\x00\xf2\xed=]\x1cC8f\
 \xea\x9e\xde\xcb\xd9` \xc2\xf0P\xdf~\xc9y\xaeu\x0f\xfe1\xdf\xcc\x14\x1482A\
 \xe9\xfd\x83\x1d\xaf\x84\xac\xf8\xe6\\\x8c3\xfc\x98\xf8\xa0\xb1\xa9K\xec\x9f\
@@ -312,7 +312,7 @@ def getDataTR():
     """ Return the third part of the shadow dropped behind thumbnails. """
 
     return zlib.decompress(
-'x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xac \xcc\xc1\
+b'x\xda\xeb\x0c\xf0s\xe7\xe5\x92\xe2b``\xe0\xf5\xf4p\t\x02\xd2\xac \xcc\xc1\
 \x06${\xf3\xd5\x9e\x02)\x96b\'\xcf\x10\x0e \xa8\xe1H\xe9\x00\xf2m=]\x1cC8f\
 \xe6\x9e\xd9\xc8\xd9` \xc2p\x91\xbd\xaei\xeeL\x85\xdcUo\xf6\xf7\xd6\xb2\x88\
 \x0bp\x9a\x89i\x16=-\x94\xe16\x93\xb9!\xb8y\xcd\t\x0f\x89\n\xe6\xb7\xfcV~6\
@@ -323,9 +323,9 @@ def getDataTR():
 def getShadow():
     """ Creates a shadow behind every thumbnail. """
     
-    sh_tr = wx.Image(six.StringIO(getDataTR())).ConvertToBitmap()
-    sh_bl = wx.Image(six.StringIO(getDataBL())).ConvertToBitmap()
-    sh_sh = wx.Image(six.StringIO(getDataSH())).Rescale(500, 500, wx.IMAGE_QUALITY_HIGH)
+    sh_tr = wx.Image(six.BytesIO(getDataTR())).ConvertToBitmap()
+    sh_bl = wx.Image(six.BytesIO(getDataBL())).ConvertToBitmap()
+    sh_sh = wx.Image(six.BytesIO(getDataSH())).Rescale(500, 500, wx.IMAGE_QUALITY_HIGH)
     return (sh_tr, sh_bl, sh_sh.ConvertToBitmap())
 
 
@@ -415,21 +415,11 @@ TIME_FMT = '%d %b %Y, %H:%M:%S'
 """ Time format string for the :class:`Thumb` representation on screen. """
 
 
-def CmpThumb(first, second):
+def KeyThumb(item):
     """
-    Compares two thumbnails in terms of file names and ids.
-
-    :param `first`: an instance of :class:`Thumb`;
-    :param `second`: another instance of :class:`Thumb`.
+    Return the key to be used for sorting???
     """
-    
-    if first.GetFileName() < second.GetFileName():
-        return -1
-    elif first.GetFullFileName() == second.GetFullFileName():
-        return first.GetId() - second.GetId()
-    
-    return 1
-
+    return item.GetFileName()
 
 def SortFiles(items, sorteditems, filenames):
     """
@@ -849,7 +839,7 @@ class Thumb(object):
         if len(self._caption) == 0:
             return
 
-        pos = width/16
+        pos = width//16
         beg = 0
         end = 0
 
@@ -878,7 +868,7 @@ class Thumb(object):
                     self._captionbreaks.append(pos)
                     beg = pos
               
-                pos = beg + width/16
+                pos = beg + width//16
                 end = 0
 
             if pos < len(self._caption) and self._caption[pos] in [" ", "-", ",", ".", "_"]:
@@ -1285,7 +1275,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
     def SortItems(self):
         """ Sorts the items accordingly to the :func:`~CmpThumb` function. """
 
-        self._items.sort(CmpThumb)        
+        self._items.sort(key=KeyThumb)        
 
 
     def GetThumbWidth(self):
@@ -1558,7 +1548,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         myfiles = [thumb.GetFullFileName() for thumb in thumbs]
         
         items = self._items[:]
-        self._items.sort(CmpThumb)
+        self._items.sort(key=KeyThumb)
 
         newfiles = SortFiles(items, self._items, myfiles)
         self._isrunning = True
@@ -1836,13 +1826,13 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
 
         width = self.GetClientSize().GetWidth()
-        self._cols = (width - self._tBorder)/(self._tWidth + self._tBorder)
+        self._cols = (width - self._tBorder)//(self._tWidth + self._tBorder)
         
         if self._cols <= 0:
             self._cols = 1
 
         tmpvar = (len(self._items)%self._cols and [1] or [0])[0]
-        self._rows = len(self._items)/self._cols + tmpvar
+        self._rows = len(self._items)//self._cols + tmpvar
         
         self._tCaptionHeight = []
 

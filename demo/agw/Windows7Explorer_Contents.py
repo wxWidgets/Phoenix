@@ -3,6 +3,7 @@
 import sys
 import os
 import wx
+import wx.lib.six as six
 import time
 import datetime
 import operator
@@ -29,8 +30,9 @@ sys.path.append(os.path.split(dirName)[0])
 # helper function to make sure we don't convert unicode objects to strings
 # or vice versa when converting lists and None values to text.
 convert = str
-if 'unicode' in wx.PlatformInfo:
-   convert = unicode
+if six.PY2:
+    if 'unicode' in wx.PlatformInfo:
+        convert = unicode
 
 
 def FormatFileSize(size):
@@ -282,7 +284,7 @@ class Windows7Explorer(ULC.UltimateListCtrl):
         dummy_log = wx.LogNull()
 
         for kind, file, lower in files:
-            index = self.InsertStringItem(sys.maxint, "")
+            index = self.InsertStringItem(sys.maxsize, "")
 
             klass = FirstColumnRenderer(self, file)
             self.SetItemCustomRenderer(index, 0, klass)

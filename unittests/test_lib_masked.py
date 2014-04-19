@@ -56,10 +56,11 @@ class MaskedTextCtrlTests(wtc.WidgetTestCase):
 class MaskedNumCtrlTests(wtc.WidgetTestCase):
 
     def test_numctrlCtor(self):
-        t = m.NumCtrl(self.frame)
-        t = m.NumCtrl(self.frame, -1, "10")
-        t = m.NumCtrl(self.frame, style=wx.TE_READONLY)
-
+        t1 = m.NumCtrl(self.frame)
+        t2 = m.NumCtrl(self.frame, -1, "10")
+        t3 = m.NumCtrl(self.frame, value='32',style=wx.TE_READONLY, min=32, max=72)
+        t3.ChangeValue("16")
+        self.assertTrue(not t3.IsValid())
 
     #def test_numctrlDefaultCtor(self):
         #t = m.TextCtrl()

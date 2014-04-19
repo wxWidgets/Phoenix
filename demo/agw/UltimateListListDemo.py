@@ -89,7 +89,7 @@ class TestFrame(wx.Frame):
 
         # load some images into an image list
         il = wx.ImageList(16, 16, True)
-        imgs = catalog.keys()
+        imgs = list(catalog.keys())
         imgs.sort()
         
         for img in imgs:

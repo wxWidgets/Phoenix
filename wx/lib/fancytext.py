@@ -8,7 +8,7 @@
 # Version:
 # Date:
 # Licence:
-# Tags:         phoenix-port
+# Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
 # 12/02/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
@@ -58,6 +58,8 @@ import math
 import sys
 
 import wx
+import wx.lib.six as six
+
 import xml.parsers.expat
 
 __all__ = "GetExtent", "GetFullExtent", "RenderToBitmap", "RenderToDC", "StaticFancyText"
@@ -336,7 +338,8 @@ def RenderToRenderer(str, renderer, enclose=True):
         if enclose:
             str = '<?xml version="1.0"?><FancyText>%s</FancyText>' % str
         p = xml.parsers.expat.ParserCreate()
-        p.returns_unicode = 0
+        if six.PY2:
+            p.returns_unicode = 0
         p.StartElementHandler = renderer.startElement
         p.EndElementHandler = renderer.endElement
         p.CharacterDataHandler = renderer.characterData
@@ -379,7 +382,7 @@ def RenderToBitmap(str, background=None, enclose=1):
     RenderToRenderer(str, renderer, enclose)
     dc.SelectObject(wx.NullBitmap)
     if background is None:
-        img = wx.ImageFromBitmap(bmp)
+        img = bmp.ConvertToImage()
         bg = dc.GetBackground().GetColour()
         img.SetMaskColour(bg.Red(), bg.Green(), bg.Blue())
         bmp = img.ConvertToBitmap()

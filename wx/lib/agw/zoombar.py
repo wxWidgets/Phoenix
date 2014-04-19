@@ -1,3 +1,22 @@
+# --------------------------------------------------------------------------------- #
+# ZoomBar wxPython IMPLEMENTATION
+#
+# Andrea Gavana @ 19 Dec 2012, 21.00 GMT
+#
+#
+# For all kind of problems, requests of enhancements and bug reports, please write
+# to me at:
+#
+# andrea.gavana@gmail.com
+# andrea.gavana@maerskoil.com
+#
+# Or, obviously, to the wxPython mailing list!!!
+#
+# Tags:         phoenix-port, documented, unittest, py3-port
+#
+# End of comments
+# --------------------------------------------------------------------------------- #
+
 """
 :class:`ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
 inside a :class:`Panel`.

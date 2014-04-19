@@ -308,8 +308,8 @@ class UltimateListCtrlPanel(wx.Panel):
 
         self.list.InsertColumnInfo(1, info)
 
-        for i in xrange(2):
-            index = self.list.InsertImageStringItem(sys.maxint, "", [i])
+        for i in range(2):
+            index = self.list.InsertImageStringItem(sys.maxsize, "", [i])
             self.list.SetStringItem(index, 1, "")
             klass = MacRenderer(self)
             self.list.SetItemCustomRenderer(index, 1, klass)

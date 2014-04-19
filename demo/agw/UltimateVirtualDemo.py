@@ -28,7 +28,7 @@ def GenerateRandomList(imgList):
     numImages = random.randint(1, 3)
     listSize = imgList.GetImageCount()
 
-    for i in xrange(numImages):
+    for i in range(numImages):
         rList.append(random.randint(0, listSize-1))
 
     return rList
@@ -79,7 +79,7 @@ class TestUltimateListCtrl(ULC.UltimateListCtrl):
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated)
         self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnItemDeselected)
 
-        self.randomLists = [GenerateRandomList(self.il) for i in xrange(5)]
+        self.randomLists = [GenerateRandomList(self.il) for i in range(5)]
 
 
     def OnItemSelected(self, event):
