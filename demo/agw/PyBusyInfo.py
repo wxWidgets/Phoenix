@@ -40,7 +40,7 @@ class TestPanel(wx.Panel):
 
         wx.Yield()
         
-        for indx in xrange(5):
+        for indx in range(5):
             wx.MilliSleep(1000)
 
         del busy

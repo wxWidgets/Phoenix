@@ -17,7 +17,7 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
-# Tags:        phoenix-port, unittest, documented
+# Tags:        phoenix-port, unittest, documented, py3-port
 #
 # End Of Comments
 # --------------------------------------------------------------------------------- #
@@ -198,7 +198,7 @@ def GetIndicatorData():
     """ Returns the image indicator as a decompressed stream of characters. """
     
     return zlib.decompress(
-'x\xda\x01x\x01\x87\xfe\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\n\x00\
+b'x\xda\x01x\x01\x87\xfe\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\n\x00\
 \x00\x00\n\x08\x06\x00\x00\x00\x8d2\xcf\xbd\x00\x00\x00\x04sBIT\x08\x08\x08\
 \x08|\x08d\x88\x00\x00\x01/IDAT\x18\x95m\xceO(\x83q\x1c\xc7\xf1\xf7\xef\xf9\
 \xcd\xf6D6\xca\x1c\xc8\x9f\x14\'J-\xc4A9(9(-\xe5 \xed\xe4\xe2\xe2\xb2\x928\
@@ -225,7 +225,7 @@ def GetIndicatorBitmap():
 def GetIndicatorImage():
     """ Returns the image indicator as a :class:`Image`. """
     
-    stream = six.StringIO(GetIndicatorData())
+    stream = six.BytesIO(GetIndicatorData())
     return wx.Image(stream)
 
 

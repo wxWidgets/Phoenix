@@ -43,13 +43,13 @@ from .art_internal import RibbonHSLColour
 from .art import *
 
 
-gallery_up_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", "     ", "  x  ", " xxx ", "xxxxx", "     "]
-gallery_down_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", "     ", "xxxxx", " xxx ", "  x  ", "     "]
-gallery_left_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", "   x ", "  xx ", " xxx ", "  xx ", "   x "]
-gallery_right_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", " x   ", " xx  ", " xxx ", " xx  ", " x   "]
-gallery_extension_xpm = ["5 5 2 1", "  c None", "x c #FF00FF", "xxxxx", "     ", "xxxxx", " xxx ", "  x  "]
-panel_extension_xpm = ["7 7 2 1", "  c None", "x c #FF00FF", "xxxxxx ", "x      ", "x      ",
-                       "x  x  x", "x   xxx", "x   xxx", "   xxxx"]
+gallery_up_xpm = [b"5 5 2 1", b"  c None", b"x c #FF00FF", b"     ", b"  x  ", b" xxx ", b"xxxxx", b"     "]
+gallery_down_xpm = [b"5 5 2 1", b"  c None", b"x c #FF00FF", b"     ", b"xxxxx", b" xxx ", b"  x  ", b"     "]
+gallery_left_xpm = [b"5 5 2 1", b"  c None", b"x c #FF00FF", b"   x ", b"  xx ", b" xxx ", b"  xx ", b"   x "]
+gallery_right_xpm = [b"5 5 2 1", b"  c None", b"x c #FF00FF", b" x   ", b" xx  ", b" xxx ", b" xx  ", b" x   "]
+gallery_extension_xpm = [b"5 5 2 1", b"  c None", b"x c #FF00FF", b"xxxxx", b"     ", b"xxxxx", b" xxx ", b"  x  "]
+panel_extension_xpm = [b"7 7 2 1", b"  c None", b"x c #FF00FF", b"xxxxxx ", b"x      ", b"x      ",
+                       b"x  x  x", b"x   xxx", b"x   xxx", b"   xxxx"]
 
 
 def LikePrimary(primary_hsl, is_gray, h, s, l):

@@ -1,3 +1,24 @@
+# --------------------------------------------------------------------------------- #
+# ribbon wxPython IMPLEMENTATION
+#
+# Andrea Gavana, @ 03 Nov 2006
+#
+#
+# TODO List
+#
+#
+# For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
+# Write To Me At:
+#
+# andrea.gavana@maerskoil.com
+# andrea.gavana@gmail.com
+#
+# Or, Obviously, To The wxPython Mailing List!!!
+#
+# Tags:        phoenix-port, unittest, documented, py3-port
+#
+# End Of Comments
+# --------------------------------------------------------------------------------- #
 """
 The `RibbonBar` library is a set of classes for writing a ribbon user interface.
 
