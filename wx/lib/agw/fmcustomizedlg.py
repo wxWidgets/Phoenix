@@ -8,7 +8,7 @@
 # Version:
 # Date:
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
 """
 This module contains a custom dialog class used to personalize the appearance of a
@@ -16,8 +16,13 @@ This module contains a custom dialog class used to personalize the appearance of
 """
 
 import wx
-from UserDict import UserDict
+import wx.lib.six as six
 
+if six.PY2:
+    from UserDict import UserDict
+else:
+    from collections import UserDict
+    
 from .artmanager import ArtManager
 from .fmresources import *
 from .labelbook import LabelBook

@@ -148,13 +148,13 @@ class BalloonTipDemo(wx.Frame):
 
         # Declare The BalloonTip Top-Left Icons
         icons = []
-        for ii in xrange(4):
+        for ii in range(4):
             bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[ii]), wx.ART_TOOLBAR, (16,16))
             icons.append(bmp)
 
         icons.extend([None]*5)
 
-        for ii in xrange(4, 9):
+        for ii in range(4, 9):
             bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[ii]), wx.ART_TOOLBAR, (16,16))
             icons.append(bmp)
 

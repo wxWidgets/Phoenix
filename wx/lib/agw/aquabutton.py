@@ -18,7 +18,7 @@
 #
 # Or, obviously, to the wxPython mailing list!!!
 #
-# Tags:        phoenix-port, unittest, documented
+# Tags:        phoenix-port, unittest, documented, py3-port
 #
 # End Of Comments
 # --------------------------------------------------------------------------------- #

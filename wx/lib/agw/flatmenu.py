@@ -19,7 +19,7 @@
 # Or, Obviously, To The wxPython Mailing List!!!
 #
 #
-# End Of Comments
+# Tags:     phoenix-port, py3-port, unittest, documented
 # --------------------------------------------------------------------------------- #
 
 """
@@ -590,7 +590,7 @@ class FMRenderer(object):
                     
         else:
 
-            stream = six.StringIO(xpm)
+            stream = six.BytesIO(xpm)
             img = wx.Image(stream)
             
         return wx.Bitmap(img)

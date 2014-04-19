@@ -463,7 +463,7 @@ class FlatMenuDemo(wx.Frame):
 
         fnt = wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_BOLD, False, "Courier New")
         colours = [wx.RED, wx.GREEN, wx.BLUE]
-        for i in xrange(17):
+        for i in range(17):
             row, col = i%switch, i/switch
             result = random.randint(0, 1) == 1
             bmp = (result and [colBmp] or [wx.NullBitmap])[0]
@@ -661,12 +661,12 @@ class FlatMenuDemo(wx.Frame):
         # Flat Menu test
         #-----------------------------------------------
 
-        for ii in xrange(30):
+        for ii in range(30):
             if ii == 0:
                 menuItem = FM.FlatMenuItem(self._longPopUpMenu, wx.ID_ANY, "Menu Item #%ld"%(ii+1), "", wx.ITEM_NORMAL, sub)
                 self._longPopUpMenu.AppendItem(menuItem)
 
-                for k in xrange(5):
+                for k in range(5):
 
                     menuItem = FM.FlatMenuItem(sub, wx.ID_ANY, "Sub Menu Item #%ld"%(k+1))
                     sub.AppendItem(menuItem)

@@ -792,7 +792,7 @@ class CustomTreeCtrlDemo(wx.Panel):
         self.SetSizer(sizer)
 
         self.leftimagelist = wx.ImageList(12, 12)
-        for ids in xrange(1, len(ArtIDs)-1):
+        for ids in range(1, len(ArtIDs)-1):
             bmp = wx.ArtProvider.GetBitmap(eval(ArtIDs[ids]), wx.ART_OTHER, (12, 12))
             self.leftimagelist.Add(bmp)
 
