@@ -7,6 +7,8 @@ import sys
 import images
 import random
 
+import wx.dataview as dv
+
 from wx.lib.expando import ExpandoTextCtrl
 import wx.lib.agw.aui as AUI
 import wx.lib.agw.floatspin as FS
@@ -446,19 +448,19 @@ class PersistentFrame2(wx.Frame):
         il.Add(images.Smiles.GetBitmap())
 
         listCtrl = wx.ListCtrl(self.notebook, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER, name="ListCtrl1")
-        for col in xrange(6):
+        for col in range(6):
             listCtrl.InsertColumn(col, "Column %d"%col)
 
         listCtrl.AssignImageList(il, wx.IMAGE_LIST_SMALL)
         text = "Row: %d, Col: %d"
-        for row in xrange(30):
+        for row in range(30):
             if random.randint(0, 1):
-                idx = listCtrl.InsertImageStringItem(sys.maxint, text%(row+1, 1), 0)
+                idx = listCtrl.InsertItem(sys.maxsize, text%(row+1, 1), 0)
             else:
-                idx = listCtrl.InsertStringItem(sys.maxint, text%(row+1, 1))
+                idx = listCtrl.InsertItem(sys.maxsize, text%(row+1, 1))
 
-            for col in xrange(1, 6):
-                listCtrl.SetStringItem(idx, col, text%(row+1, col+1), random.randint(0, 1)-1)
+            for col in range(1, 6):
+                listCtrl.SetItem(idx, col, text%(row+1, col+1), random.randint(0, 1)-1)
 
         return listCtrl
 
@@ -466,7 +468,7 @@ class PersistentFrame2(wx.Frame):
     def CreateTreeListCtrl(self, isTreeList):
 
         if isTreeList:
-            treeList = wx.adv.TreeListCtrl(self.notebook, style=wx.TR_DEFAULT_STYLE|wx.TR_FULL_ROW_HIGHLIGHT|
+            treeList = dv.TreeListCtrl(self.notebook, style=wx.TR_DEFAULT_STYLE|wx.TR_FULL_ROW_HIGHLIGHT|
                                               wx.SUNKEN_BORDER|wx.TR_MULTIPLE, name="TreeList1")
         else:
             treeList = wx.TreeCtrl(self.split1, style=wx.TR_DEFAULT_STYLE|wx.SUNKEN_BORDER|wx.TR_MULTIPLE,
@@ -487,7 +489,7 @@ class PersistentFrame2(wx.Frame):
             treeList.SetColumnWidth(0, 175)
 
         if isTreeList:
-            root = treeList.InsertItem(treeList.GetRootItem(), wx.adv.TLI_FIRST, "The Root Item")
+            root = treeList.InsertItem(treeList.GetRootItem(), dv.TLI_FIRST, "The Root Item")
         else:
             root = treeList.AddRoot("The Root Item")
 

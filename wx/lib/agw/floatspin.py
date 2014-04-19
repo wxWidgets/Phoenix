@@ -1472,14 +1472,23 @@ class FixedPoint(object):
 
     __copy__ = __deepcopy__ = copy
 
-
-    def __cmp__(self, other):
-
+    def __eq__(self, other):
         if (other == None):
-            return 1
+            return False
         xn, yn, p = _norm(self, other)
-        return _cmp(xn, yn)
+        return not _cmp(xn, yn)
 
+    def __ge__(self, other):
+        if other is None:
+            return False
+        xn, yn, p = _norm(self, other)
+        return xn >= yn
+
+    def __le__(self, other):
+        if other is None:
+            return False
+        xn, yn, p = _norm(self, other)
+        return xn <= yn
 
     def __hash__(self):
         # caution!  == values must have equal hashes, and a FixedPoint

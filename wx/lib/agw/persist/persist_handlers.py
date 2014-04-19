@@ -11,6 +11,9 @@ import datetime
 import wx.adv
 import wx.html
 
+# use this instead of wx.gizmos.TreeListCtrl
+import wx.dataview as dv
+
 # Will likely not be wrapped
 # import wx.aui
 
@@ -46,8 +49,6 @@ except:
     pass
 
 import wx.lib.agw.ultimatelistctrl as ULC
-
-import persistencemanager as PM
 
 from .persist_constants import *
 
@@ -120,6 +121,9 @@ class AbstractHandler(object):
         self._pObject = pObject
         self._window = pObject.GetWindow()
 
+        # need to move the import to here, otherwise we error in Python 3
+        from . import persistencemanager as PM
+        self._manager = PM.PersistenceManager.Get()
 
     def Save(self):
         """
@@ -184,8 +188,7 @@ class BookHandler(AbstractHandler):
         obj.SaveValue(PERSIST_BOOK_SELECTION, book.GetSelection())
 
         if issubclass(book.__class__, AUI.AuiNotebook):
-            manager = PM.PersistenceManager.Get()
-            if manager.GetManagerStyle() & PM_SAVE_RESTORE_AUI_PERSPECTIVES:
+            if self._manager.GetManagerStyle() & PM_SAVE_RESTORE_AUI_PERSPECTIVES:
                 # Allowed to save and restore perspectives
                 perspective = book.SavePerspective()                    
                 obj.SaveValue(PERSIST_BOOK_AGW_AUI_PERSPECTIVE, perspective)
@@ -198,8 +201,7 @@ class BookHandler(AbstractHandler):
 
         retVal = True
         if issubclass(book.__class__, AUI.AuiNotebook):
-            manager = PM.PersistenceManager.Get()
-            if manager.GetManagerStyle() & PM_SAVE_RESTORE_AUI_PERSPECTIVES:
+            if self._manager.GetManagerStyle() & PM_SAVE_RESTORE_AUI_PERSPECTIVES:
                 retVal = False
                 # Allowed to save and restore perspectives
                 perspective = obj.RestoreValue(PERSIST_BOOK_AGW_AUI_PERSPECTIVE)
@@ -298,8 +300,7 @@ class AUIHandler(AbstractHandler):
         if not isAGWAui:
             return True
         
-        manager = PM.PersistenceManager.Get()
-        if manager.GetManagerStyle() & PM_SAVE_RESTORE_AUI_PERSPECTIVES:
+        if self._manager.GetManagerStyle() & PM_SAVE_RESTORE_AUI_PERSPECTIVES:
             # Allowed to save and restore perspectives
             perspective = eventHandler.SavePerspective()
             if isAGWAui:
@@ -322,12 +323,11 @@ class AUIHandler(AbstractHandler):
         if not isAGWAui:
             return True
         
-        manager = PM.PersistenceManager.Get()
-        if manager.GetManagerStyle() & PM_SAVE_RESTORE_AUI_PERSPECTIVES:
+        if self._manager.GetManagerStyle() & PM_SAVE_RESTORE_AUI_PERSPECTIVES:
             # Allowed to save and restore perspectives
             if isAGWAui:
                 name = PERSIST_AGW_AUI_PERSPECTIVE
-                restoreCodeCaption = manager.GetManagerStyle()
+                restoreCodeCaption = self._manager.GetManagerStyle()
                 restoreCodeCaption &= ~(PM_RESTORE_CAPTION_FROM_CODE)
             else:
                 name = PERSIST_AUI_PERSPECTIVE
@@ -580,8 +580,7 @@ class ListBoxHandler(AbstractHandler):
 
     def Save(self):
 
-        manager = PM.PersistenceManager.Get()
-        if manager.GetManagerStyle() & PM_SAVE_RESTORE_TREE_LIST_SELECTIONS == 0:
+        if self._manager.GetManagerStyle() & PM_SAVE_RESTORE_TREE_LIST_SELECTIONS == 0:
             # We don't want to save selected items
             return True
         
@@ -598,8 +597,7 @@ class ListBoxHandler(AbstractHandler):
 
     def Restore(self):
 
-        manager = PM.PersistenceManager.Get()
-        if manager.GetManagerStyle() & PM_SAVE_RESTORE_TREE_LIST_SELECTIONS == 0:
+        if self._manager.GetManagerStyle() & PM_SAVE_RESTORE_TREE_LIST_SELECTIONS == 0:
             # We don't want to save selected items
             return True
 
@@ -1577,8 +1575,7 @@ class TreeCtrlHandler(AbstractHandler):
         if issubclass(tree.__class__, (HTL.HyperTreeList, CT.CustomTreeCtrl)):
             obj.SaveCtrlValue(PERSIST_TREECTRL_CHECKED_ITEMS, self.GetCheckedState())
             
-        manager = PM.PersistenceManager.Get()
-        if manager.GetManagerStyle() & PM_SAVE_RESTORE_TREE_LIST_SELECTIONS == 0:
+        if self._manager.GetManagerStyle() & PM_SAVE_RESTORE_TREE_LIST_SELECTIONS == 0:
             # We don't want to save selected items
             return True
     
@@ -1595,8 +1592,7 @@ class TreeCtrlHandler(AbstractHandler):
         if expansion is not None:
             self.SetExpansionState(expansion)
 
-        manager = PM.PersistenceManager.Get()
-        if manager.GetManagerStyle() & PM_SAVE_RESTORE_TREE_LIST_SELECTIONS:
+        if self._manager.GetManagerStyle() & PM_SAVE_RESTORE_TREE_LIST_SELECTIONS:
             # We want to restore selected items
             if selections is not None:
                 self.SetSelectionState(selections)
@@ -2507,7 +2503,7 @@ HANDLERS = [
                     LBK.LabelBook, LBK.FlatImageBook)),
     ("TLWHandler", (wx.TopLevelWindow, )),
     ("CheckBoxHandler", (wx.CheckBox, )), 
-    ("TreeCtrlHandler", (wx.TreeCtrl, wx.GenericDirCtrl, CT.CustomTreeCtrl)), 
+    ("TreeCtrlHandler", (wx.TreeCtrl, wx.GenericDirCtrl, CT.CustomTreeCtrl, dv.TreeListCtrl)), 
     ("MenuBarHandler", (wx.MenuBar, FM.FlatMenuBar)), 
     ("ToolBarHandler", (AUI.AuiToolBar, )),
     ("ListBoxHandler", (wx.ListBox, wx.VListBox, wx.html.HtmlListBox, wx.html.SimpleHtmlListBox,

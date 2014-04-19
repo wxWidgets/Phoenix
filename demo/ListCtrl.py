@@ -183,7 +183,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         items = musicdata.items()
         for key, data in items:
-            index = self.list.InsertItem(sys.maxint, data[0], self.idx1)
+            index = self.list.InsertItem(sys.maxsize, data[0], self.idx1)
             self.list.SetItem(index, 1, data[1])
             self.list.SetItem(index, 2, data[2])
             self.list.SetItemData(index, key)

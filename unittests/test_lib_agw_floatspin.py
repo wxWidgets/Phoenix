@@ -51,6 +51,22 @@ class lib_agw_floatspin_Tests(wtc.WidgetTestCase):
     def test_lib_agw_floatspinEvents(self):
         FS.EVT_FLOATSPIN
         FS.wxEVT_FLOATSPIN
+        
+    def test_lib_agw_floatspin_fixedpoint(self):
+        f1 = FS.FixedPoint(20)
+        f2 = FS.FixedPoint(30)
+        f3 = FS.FixedPoint("20", 20)
+        f4 = FS.FixedPoint("20", 20)
+        
+        self.assertEqual(f1, 20)
+        self.assertEqual(f2, 30)
+        self.assertEqual(f3, f4)
+        self.assertGreaterEqual(f2, f1)
+        self.assertGreaterEqual(f2, 20)
+        self.assertGreater(f2, 20)
+        self.assertLessEqual(f1, f2)
+        self.assertLessEqual(f1, 30)
+        self.assertLess(f1, 30)
 
 #---------------------------------------------------------------------------
 

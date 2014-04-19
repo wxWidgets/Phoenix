@@ -129,7 +129,7 @@ class PeakMeterCtrlDemo(wx.Panel):
         nElements = 15
         arrayData = []
 
-        for i in xrange(nElements):
+        for i in range(nElements):
             nRandom = random.randint(0, 100)
             arrayData.append(nRandom)
 

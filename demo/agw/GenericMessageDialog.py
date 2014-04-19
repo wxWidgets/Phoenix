@@ -32,7 +32,7 @@ _msg = "This is the about dialog of GenericMessageDialog demo.\n\n" + \
 ART_ICONS = []
 for d in dir(wx):
     if d.startswith('ART_'):
-        if not eval('wx.%s'%d).endswith('_C'):
+        if not eval('wx.%s'%d).endswith(b'_C'):
             ART_ICONS.append(eval('wx.%s'%d))
             
 
