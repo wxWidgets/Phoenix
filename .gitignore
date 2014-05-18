@@ -59,3 +59,4 @@
 /wx/libwx_*
 /wx/locale
 /unittests/lib_pubsub_provider_actual.py
+wingdbstub.py

@@ -155,7 +155,13 @@ other dev stuff
 
   * Find and fix issue with wx.TheClipboard. Pasting text from the clipboard
     is failing, as if the data in the clipboard is not text. It may be an issue
-    with the wx.TextDataObject class.
+    with the wx.TextDataObject class. 
+    
+    It's a problem with OSX dataobject code.
+    See https://groups.google.com/d/topic/wx-dev/wFxevpvbhvQ/discussion
+
+    There are also reports of issues on Windows too...
+    http://trac.wxwidgets.org/ticket/15488
 
   * Potential reference count issue with wxGridCellCoordsArray?  Code
     like this::
