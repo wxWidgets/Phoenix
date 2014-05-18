@@ -20,8 +20,11 @@ class WidgetTestCase(unittest.TestCase):
 
     def tearDown(self):
         def _cleanup():
-            self.frame.Close()
-            self.app.ExitMainLoop()   
+            for tlw in wx.GetTopLevelWindows():
+                if tlw:
+                    tlw.Destroy()
+            wx.WakeUpIdle()
+            #self.app.ExitMainLoop()   
         wx.CallLater(50, _cleanup)
         self.app.MainLoop()
         del self.app
