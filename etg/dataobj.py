@@ -102,6 +102,46 @@ def addGetAllFormats(klass, pureVirtual=False):
             Py_XDECREF(resObj);            
             """ if pureVirtual else "")
 
+
+def addBaseVirtuals(c):
+    # The overloading of SetData in wxDataObjectSimple and derived classes
+    # really confuses things, so in case SetData is overridden in a Python
+    # class then assume they want the one in DataObjectSimple without the
+    # format arg, and make the base class version always call the C++
+    # implementation instead of trying to call the Python method.
+    c.addCppMethod('bool', 'SetData', '(const wxDataFormat& format, wxPyBuffer* buf)',
+        cppSignature='bool (const wxDataFormat& format, size_t len, const void* buf)',
+        isVirtual=True,
+        doc="",
+        body="return self->SetData(*format, buf->m_len, buf->m_ptr);",
+        virtualCatcherCode="""\
+            {0}* self = ({0}*)sipPySelf->data;
+            sipRes = self->{0}::SetData(format, len, buf);
+            """.format(c.name))
+
+    # We need to let SIP know that the pure virtuals in the base class have
+    # impelmentations in C even though they will not be used much (if at
+    # all.)     
+    if not c.findItem('GetFormatCount'):
+        c.addItem(
+            etgtools.WigCode(code="virtual size_t GetFormatCount(Direction dir = Get) const;"))
+
+    c.addItem(etgtools.WigCode(code="""\
+        virtual wxDataFormat GetPreferredFormat(Direction dir = Get) const;
+        private:
+        virtual size_t GetDataSize(const wxDataFormat& format) const;
+        virtual bool   GetDataHere(const wxDataFormat& format, void* buf) const;
+        """))
+
+
+def addSimpleVirtuals(c):
+    # Same thing for classes derived from wxDataObjectSimple.
+    c.addItem(etgtools.WigCode(code="""\
+        virtual bool GetDataHere(void* buf) const;
+        virtual size_t GetDataSize() const;
+        virtual bool SetData(size_t len, const void *buf);
+        """))
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -272,22 +312,9 @@ def run():
             """)
 
     addGetAllFormats(c)
+    addBaseVirtuals(c)
 
-    # We need to let SIP know that the pure virtuals in the base class have
-    # impelmentations here even though they will not be used much (if at
-    # all.) Those that are overridden in this class with different signatures
-    # we'll just mark as private to help avoid confusion.
-    c.addItem(etgtools.WigCode(code="""\
-        virtual size_t GetFormatCount(Direction dir = Get) const;
-        virtual wxDataFormat GetPreferredFormat(Direction dir = Get) const;
-        private:
-        virtual size_t GetDataSize(const wxDataFormat& format) const;
-        virtual bool GetDataHere(const wxDataFormat& format, void* buf) const;
-        virtual bool SetData(const wxDataFormat& format, size_t len, const void* buf);
-        """))
-
-    
-    
+       
     #------------------------------------------------------------
     c = module.find('wxCustomDataObject')
     tools.removeVirtuals(c)
@@ -312,7 +339,9 @@ def run():
         doc="Copies data from the provided buffer to this data object's buffer",
         body="return self->SetData(buf->m_len, buf->m_ptr);")
 
-
+    addGetAllFormats(c)
+    addBaseVirtuals(c)
+    addSimpleVirtuals(c)    
 
     #------------------------------------------------------------
     c = module.find('wxDataObjectComposite')
@@ -320,22 +349,15 @@ def run():
     c.find('Add.dataObject').transfer = True
     
     addGetAllFormats(c)
+    addBaseVirtuals(c)
     
-    # The pure virtuals from wxDataObject have implementations here
-    c.addItem(etgtools.WigCode(code="""\
-        virtual size_t GetFormatCount(Direction dir = Get) const;
-        virtual wxDataFormat GetPreferredFormat(Direction dir = Get) const;
-        private:
-        virtual size_t GetDataSize(const wxDataFormat& format) const;
-        virtual bool GetDataHere(const wxDataFormat& format, void* buf) const;
-        virtual bool SetData(const wxDataFormat& format, size_t len, const void* buf);
-        """))
-
     
     
     #------------------------------------------------------------
     c = module.find('wxTextDataObject')
     addGetAllFormats(c)
+    addBaseVirtuals(c)      
+    addSimpleVirtuals(c)    
     
     
     #------------------------------------------------------------
@@ -347,14 +369,27 @@ def run():
     c.bases = ['wxDataObject']
     
     addGetAllFormats(c)
-    c.addItem(etgtools.WigCode(code="""\
-        virtual size_t GetFormatCount(Direction dir = Get) const;
-        virtual wxDataFormat GetPreferredFormat(Direction dir = Get) const;
-        private:
-        virtual size_t GetDataSize(const wxDataFormat& format) const;
-        virtual bool GetDataHere(const wxDataFormat& format, void* buf) const;
-        virtual bool SetData(const wxDataFormat& format, size_t len, const void* buf);
-        """))
+    addBaseVirtuals(c)
+    addSimpleVirtuals(c)    
+    
+
+    #------------------------------------------------------------
+    c = module.find('wxBitmapDataObject')
+    addGetAllFormats(c)
+    addBaseVirtuals(c)      
+    addSimpleVirtuals(c)    
+
+    #------------------------------------------------------------
+    c = module.find('wxFileDataObject')
+    addGetAllFormats(c)
+    addBaseVirtuals(c)      
+    addSimpleVirtuals(c)    
+
+    #------------------------------------------------------------
+    c = module.find('wxHTMLDataObject')
+    addGetAllFormats(c)
+    addBaseVirtuals(c)      
+    addSimpleVirtuals(c)    
 
     
 

@@ -77,19 +77,28 @@ class DataObjTests(wtc.WidgetTestCase):
                 return len(self.myFormats)  
             def GetPreferredFormat(self, d):
                 return self.myFormats[0]
+
             def GetDataSize(self, format):
-                return len(self.myData)
+                # On windows strlen is used internally for stock string types
+                # to calculate the size, so we need to make room for and add
+                # a null character at the end for our custom format using
+                # wx.DF_TEXT.
+                return len(self.myData)+1
             
             def GetDataHere(self, format, buf):
                 # copy our local data value to buf
                 assert isinstance(buf, memoryview)
-                buf[:] = self.myData
+                assert len(buf) == len(self.myData)+1
+                buf[:] = (self.myData + b'\0')  # add the extra byte
                 return True
                             
             def SetData(self, format, buf):
                 # copy from buf to our local data value
                 assert isinstance(buf, memoryview)
                 self.myData = buf.tobytes()
+                if self.myData[-1] in [b'\0', 0]:
+                    # strip off the extra byte at the end
+                    self.myData = self.myData[:-1] 
                 return True
             
         # copy
@@ -168,18 +177,22 @@ class DataObjTests(wtc.WidgetTestCase):
                 self.myData = wtc.mybytes(value)
                 
             def GetDataSize(self):
-                return len(self.myData)
+                # See notes above about the need for a null terminator when
+                # using wx.DF_TEXT on Windows.
+                return len(self.myData)+1
             
             def GetDataHere(self, buf):
                 # copy our local data value to buf
                 assert isinstance(buf, memoryview)
-                buf[:] = self.myData
+                buf[:] = (self.myData + b'\0')
                 return True
                             
             def SetData(self, buf):
                 # copy from buf to our local data value
                 assert isinstance(buf, memoryview)
                 self.myData = buf.tobytes()
+                if self.myData[-1] in [b'\0', 0]:
+                    self.myData = self.myData[:-1]                 
                 return True
             
         # copy
