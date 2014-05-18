@@ -37,9 +37,6 @@ def run():
     c.find('AddData.data').transfer = True
     c.find('SetData.data').transfer = True
 
-    # context manager methods
-    c.addPyMethod('__enter__', '(self)', 'return self')
-    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Close()')
     
     # TODO: This init wrapper class may be useful elsewhere...
     module.addPyCode("""\
@@ -66,6 +63,15 @@ def run():
                 self._checkInstance()
                 return repr(self._instance)
 
+            # context manager methods
+            def __enter__(self):
+                self._checkInstance()
+                if not self.Open():
+                    raise RuntimeError('Unable to open clipboard.')
+                return self
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                self.Close()
+    
         TheClipboard = _wxPyDelayedInitWrapper(Clipboard.Get)
         """)
     

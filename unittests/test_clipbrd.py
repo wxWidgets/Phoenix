@@ -20,6 +20,24 @@ class clipbrd_Tests(wtc.WidgetTestCase):
             wx.TheClipboard.Close()
         
         self.assertEqual(data2.GetText(), 'This is some data.')
+        self.assertEqual(data2.Text, 'This is some data.')
+        
+    
+    def test_clpbrd2(self):
+        # same, but with the context manager
+        
+        # copy
+        data1 = wx.TextDataObject('This is some data.')
+        with wx.TheClipboard as cb:
+            cb.SetData(data1)
+                      
+        # paste  
+        data2 = wx.TextDataObject()
+        with wx.TheClipboard as cb:
+            wx.TheClipboard.GetData(data2)
+        
+        self.assertEqual(data2.GetText(), 'This is some data.')
+        self.assertEqual(data2.Text, 'This is some data.')
         
 #---------------------------------------------------------------------------
 

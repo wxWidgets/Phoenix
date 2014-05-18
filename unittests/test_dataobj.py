@@ -63,7 +63,7 @@ class DataObjTests(wtc.WidgetTestCase):
             data._testGetAllFormats()
         
     # TODO: Get this fixed!  See https://groups.google.com/d/topic/wx-dev/wFxevpvbhvQ/discussion
-    @unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
+    #@unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
     def test_DataObject(self):
         class MyDataObject(wx.DataObject):
             def __init__(self, value=''):
@@ -159,7 +159,7 @@ class DataObjTests(wtc.WidgetTestCase):
 
         
     # TODO: Get this fixed!  See https://groups.google.com/d/topic/wx-dev/wFxevpvbhvQ/discussion
-    @unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
+    #@unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
     def test_DataObjectSimple2(self):
         class MyDataObject(wx.DataObjectSimple):
             def __init__(self, value=''):
@@ -275,6 +275,23 @@ class DataObjTests(wtc.WidgetTestCase):
         self.assertAlmostEqual(do.TextLength, len(data), delta=1)
         
         
+    def test_TextDataObjectClipboard(self):            
+        # copy
+        text = 'This is some MORE data.'
+        data1 = wx.TextDataObject(text)
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.SetData(data1)
+            wx.TheClipboard.Close()
+               
+        # paste 
+        data2 = wx.TextDataObject()
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.GetData(data2)
+            wx.TheClipboard.Close()
+        
+        self.assertEqual(text, data2.Text)
+
+        
     def test_URLDataObject(self):
         url = 'http://wxPython.org/'
         do = wx.URLDataObject()
@@ -301,6 +318,7 @@ class DataObjTests(wtc.WidgetTestCase):
         self.assertEqual(do.GetHTML(), data)
         self.assertEqual(do.HTML, data)
         
+
         
 #---------------------------------------------------------------------------
 
