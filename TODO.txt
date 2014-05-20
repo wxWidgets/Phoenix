@@ -150,9 +150,6 @@ other dev stuff
 
   * Finish richtext module
 
-  * Add missing methods to wx.MenuItem  (Those that are MSW only with
-    empty stubs for the other platforms, such as SetDisabledBitmap.)
-
   * Potential reference count issue with wxGridCellCoordsArray?  Code
     like this::
 
@@ -164,6 +161,7 @@ other dev stuff
 	a[0]
 	a[0][0]
 
-   * In a Py3 build strings like wx.TreeCtrlNameStr are being generated as bytes
-     objects, they should probably be string objects.
+   * In a Py3 build strings like wx.TreeCtrlNameStr are being generated as
+     bytes objects, they should probably be string objects. Or not, sip's
+     default might be best... See ModuleDef.addGlobalStr if I change my mind.
 

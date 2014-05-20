@@ -98,6 +98,15 @@ def run():
         #endif
         """)
 
+
+    c.find('GetBitmap').type = 'const wxBitmap*'
+    c.find('GetBitmap').setCppCode("""\
+        #ifdef __WXMSW__
+            return &self->GetBitmap(checked);
+        #else
+            return &self->GetBitmap();
+        #endif
+        """)
     
     c.find('SetBitmap').setCppCode("""\
         #ifdef __WXMSW__
@@ -112,6 +121,22 @@ def run():
             self->SetBitmaps(*checked, *unchecked);
         #else
             self->SetBitmap(*checked);
+        #endif
+        """)
+
+
+    c.find('GetDisabledBitmap').type = 'const wxBitmap*'
+    c.find('GetDisabledBitmap').setCppCode("""\
+        #ifdef __WXMSW__
+            return &self->GetDisabledBitmap();
+        #else
+            return &wxNullBitmap;
+        #endif
+        """)
+    
+    c.find('SetDisabledBitmap').setCppCode("""\
+        #ifdef __WXMSW__
+            self->SetDisabledBitmap(*disabled);
         #endif
         """)
 
