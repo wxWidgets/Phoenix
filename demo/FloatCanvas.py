@@ -1514,11 +1514,11 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                 Object.SetFillColor(colors[random.randint(0,len(colors)-1)])
                 Object.SetLineColor(colors[random.randint(0,len(colors)-1)])
                 Object.SetLineWidth(random.randint(1,7))
-                Object.SetLineStyle(FloatCanvas.DrawObject.LineStyleList.keys()[random.randint(0,5)])
+                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList.keys())[random.randint(0,5)])
             for Object in self.ColorObjectsLine:
                 Object.SetLineColor(colors[random.randint(0,len(colors)-1)])
                 Object.SetLineWidth(random.randint(1,7))
-                Object.SetLineStyle(FloatCanvas.DrawObject.LineStyleList.keys()[random.randint(0,5)])
+                Object.SetLineStyle(list(FloatCanvas.DrawObject.LineStyleList.keys())[random.randint(0,5)])
             for Object in self.ColorObjectsColor:
                 Object.SetColor(colors[random.randint(0,len(colors)-1)])
             for Object in self.ColorObjectsText:
@@ -1720,10 +1720,9 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             shorelines of the whole world, in MapGen format.
 
             """
-            import string
             file = open(filename,'rt')
             data = file.readlines()
-            data = map(string.strip,data)
+            data = [s.strip() for s in data]
 
             Shorelines = []
             segment = []
@@ -1733,7 +1732,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                         if segment: Shorelines.append(N.array(segment))
                         segment = []
                     else:
-                        segment.append(map(float,string.split(line)))
+                        segment.append([float(e) for e in line.split()])
             if segment: Shorelines.append(N.array(segment))
 
             if stats:

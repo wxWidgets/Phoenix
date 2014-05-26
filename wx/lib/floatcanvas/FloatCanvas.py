@@ -9,7 +9,7 @@
 # Version:
 # Date:
 # Licence:
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
 This is the main module of the floatcanvas package, it contains the :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas`
@@ -51,6 +51,7 @@ mac = sys.platform.startswith("darwin")
 import numpy as N
 from time import clock
 import wx
+from wx.lib import six
 
 from .Utilities import BBox
 from . import GUIMode
@@ -146,7 +147,7 @@ def _cycleidxs(indexcount, maxvalue, step):
     if indexcount == 0:
         yield ()
     else:
-        for idx in xrange(0, maxvalue, step):
+        for idx in range(0, maxvalue, step):
             for tail in _cycleidxs(indexcount - 1, maxvalue, step):
                 color = (idx, ) + tail
                 if not colormatch(color):
@@ -288,9 +289,16 @@ class DrawObject:
             self._Canvas.MakeNewHTBitmap()
         if not self.HitColor:
             if not self._Canvas.HitColorGenerator:
+                 # first call to prevent the background color from being used.
                 self._Canvas.HitColorGenerator = _colorGenerator()
-                self._Canvas.HitColorGenerator.next() # first call to prevent the background color from being used.
-            self.HitColor = self._Canvas.HitColorGenerator.next()
+                if six.PY3:
+                    next(self._Canvas.HitColorGenerator)
+                else:
+                    self._Canvas.HitColorGenerator.next()
+            if six.PY3:
+                self.HitColor = next(self._Canvas.HitColorGenerator)
+            else:
+                self.HitColor = self._Canvas.HitColorGenerator.next()
             self.SetHitPen(self.HitColor,self.HitLineWidth)
             self.SetHitBrush(self.HitColor)
         # put the object in the hit dict, indexed by it's color
@@ -1187,7 +1195,7 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
         Points = self.Points
         n = Points.shape[0]
         self.ArrowPoints = N.zeros((n-1, 3, 2), N.float)
-        for i in xrange(n-1):
+        for i in range(n-1):
             dx, dy = self.Points[i] - self.Points[i+1]
             theta = N.arctan2(dy, dx)
             AP = N.array( (
