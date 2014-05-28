@@ -35,6 +35,7 @@ class lib_agw_aquabutton_Tests(wtc.WidgetTestCase):
         btn2.SetShadowColour(wx.Colour('grey'))
         btn2.SetRectColour(wx.WHITE)
         btn2.SetHoverColour(wx.BLACK)
+        btn2.SetFocusColour(wx.GREEN)
 
         btn3 = AB.AquaToggleButton(self.frame, -1, None, 'Toggle')
         btn3.SetToggle(True)
