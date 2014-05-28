@@ -64,13 +64,21 @@ def run():
     # ignore some overloads that will be ambiguous afer wrapping
     c.find('GetChildren').overloads = []
     c.find('GetChildren').noCopy = True
-    c.find('GetClientSize').findOverload('int *').ignore()
-    c.find('GetSize').findOverload('int *').ignore()
-    c.find('GetVirtualSize').findOverload('int *').ignore()
-    c.find('GetPosition').findOverload('int *').ignore()
-    c.find('GetScreenPosition').findOverload('int *').ignore()
-    c.find('ClientToScreen').findOverload('int *').ignore()
-    c.find('ScreenToClient').findOverload('int *').ignore()
+    for name in ['GetVirtualSize',
+                 'GetPosition',
+                 'GetScreenPosition',
+                 'ClientToScreen',
+                 'ScreenToClient', ]:
+        c.find(name).findOverload('int *').ignore()
+
+    # Like the above, but these also need to transplant the docs from the
+    # ignored item to the non-ignored overload.
+    for name in ['GetClientSize', 'GetSize']:
+        c.find(name).findOverload('int *').ignore()
+        item = c.find(name)
+        ov = item.overloads[0]
+        item.briefDoc = ov.briefDoc
+        item.detailedDoc = ov.detailedDoc
 
     # Release the GIL for potentially blocking or long-running functions
     c.find('PopupMenu').releaseGIL()
