@@ -165,3 +165,8 @@ other dev stuff
      bytes objects, they should probably be string objects. Or not, sip's
      default might be best... See ModuleDef.addGlobalStr if I change my mind.
 
+   * If a function or method has overloads but they are all ignored then the doc
+     generator should not use the "*args, **kw" form of output and just use the 
+     args string of the remaining function or method definition like for those 
+     that do not have overloads.  For example, see Window.GetClientSize
+
