@@ -210,7 +210,7 @@ def setPythonVersion(args):
             else:
                 PYTHON = args[idx+1]
                 del args[idx:idx+2]
-            PYVER = runcmd('"%s" -c "import sys; print(sys.version[:3]"' % PYTHON,
+            PYVER = runcmd('"%s" -c "import sys; print(sys.version[:3])"' % PYTHON,
                            getOutput=True, echoCmd=False)
             PYSHORTVER = PYVER[0] + PYVER[2]
             break
