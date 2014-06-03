@@ -149,7 +149,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
 
     def test_lib_floatcanvas_floatcanvasEvents(self):
 
-        fc.EVT_ENTER_WINDOW
+        fc.EVT_FC_ENTER_WINDOW
         fc.EVT_FC_LEAVE_WINDOW
         fc.EVT_FC_LEFT_DOWN
         fc.EVT_FC_LEFT_UP
@@ -162,6 +162,9 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         fc.EVT_FC_RIGHT_DCLICK
         fc.EVT_FC_MOTION
         fc.EVT_FC_MOUSEWHEEL
+        
+        fc.EVT_FC_ENTER_OBJECT
+        fc.EVT_FC_LEAVE_OBJECT
         
 #---------------------------------------------------------------------------
 
