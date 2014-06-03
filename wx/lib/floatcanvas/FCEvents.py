@@ -10,9 +10,10 @@
 # Version:
 # Date:
 # Licence:
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
+This is where FloatCanvas defines its event types and binders.
 """
 
 import wx
