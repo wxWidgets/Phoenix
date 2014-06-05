@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         auibook.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         31 March 2009
+# Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 """
 `auibook.py` contains a notebook control which implements many features common in
 applications with dockable panes. Specifically, :class:`AuiNotebook` implements functionality

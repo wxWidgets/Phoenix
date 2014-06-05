@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         auimdi.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         31 March 2009
+# Licence:      wxWindows license
+# Tags:         phoenix-port, documented
+#----------------------------------------------------------------------------
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
 __date__ = "31 March 2009"
 

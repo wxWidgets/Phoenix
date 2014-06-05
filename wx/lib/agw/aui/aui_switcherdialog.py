@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         aui_switcherdialog.py
 # Purpose: 
@@ -8,7 +10,7 @@
 # Version:
 # Date:
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, documented, py3-port
 #----------------------------------------------------------------------------
 """
 Description

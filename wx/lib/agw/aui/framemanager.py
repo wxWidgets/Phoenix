@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 # --------------------------------------------------------------------------- #
 # AUI Library wxPython IMPLEMENTATION
 #
@@ -22,6 +24,8 @@
 # andrea.gavana@maerskoil.com
 #
 # Or, Obviously, To The wxPython Mailing List!!!
+#
+# Tags:        phoenix-port, unittest, documented, py3-port
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
