@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         buttonbar.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         
+# Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 """
 A ribbon button bar is similar to a traditional toolbar.
 

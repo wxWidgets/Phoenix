@@ -1,3 +1,20 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         art.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         
+# Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
+"""
+Contains the constants used by the ribbon package.
+"""
 # RibbonArtSetting
 RIBBON_ART_TAB_SEPARATION_SIZE = 1
 RIBBON_ART_PAGE_BORDER_LEFT_SIZE = 2

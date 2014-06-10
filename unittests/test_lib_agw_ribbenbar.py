@@ -51,6 +51,58 @@ class lib_agw_ribbon_Tests(wtc.WidgetTestCase):
         toolbar.AddSeparator()
         toolbar.AddDropdownTool(wx.ID_UNDO, wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_OTHER, wx.Size(16, 15)))
                                  
+    def test_lib_agw_ribbonControlCtor(self):
+        rib = RB.RibbonBar(self.frame, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
+        RB.RibbonControl(rib)
+
+    def test_lib_agw_ribbonGalleryCtor(self):
+        rib = RB.RibbonBar(self.frame, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
+        page = RB.RibbonPage(rib, wx.ID_ANY, "Appearance")
+        primary_panel = RB.RibbonPanel(page, wx.ID_ANY, "Primary Colour")
+        RB.RibbonGallery(primary_panel)
+
+    def test_lib_agw_ribbonPageCtor(self):
+        rib = RB.RibbonBar(self.frame, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
+        RB.RibbonPage(rib)
+
+    def test_lib_agw_ribbonPanelCtor(self):
+        rib = RB.RibbonBar(self.frame, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
+        page = RB.RibbonPage(rib, wx.ID_ANY, "Appearance")    
+        RB.RibbonPanel(page)
+
+    def test_lib_agw_ribbonArtProviders(self):
+        rib = RB.RibbonBar(self.frame, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
+        rib.SetArtProvider(RB.RibbonDefaultArtProvider())
+        rib.SetArtProvider(RB.RibbonAUIArtProvider())
+        rib.SetArtProvider(RB.RibbonMSWArtProvider())
+        rib.SetArtProvider(RB.RibbonOSXArtProvider())
+        
+    def test_lib_agw_ribbonEvents(self):
+        RB.EVT_RIBBONBAR_PAGE_CHANGED
+        RB.EVT_RIBBONBAR_PAGE_CHANGING
+        RB.EVT_RIBBONBAR_TAB_LEFT_DCLICK
+        RB.EVT_RIBBONBAR_TAB_MIDDLE_DOWN
+        RB.EVT_RIBBONBAR_TAB_MIDDLE_UP
+        RB.EVT_RIBBONBAR_TAB_RIGHT_DOWN
+        RB.EVT_RIBBONBAR_TAB_RIGHT_UP
+        RB.EVT_RIBBONBUTTONBAR_CLICKED
+        RB.EVT_RIBBONGALLERY_HOVER_CHANGED
+        RB.EVT_RIBBONGALLERY_SELECTED
+        RB.EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED
+        RB.EVT_RIBBONTOOLBAR_CLICKED
+        RB.EVT_RIBBONTOOLBAR_DROPDOWN_CLICKED
+
+    def test_lib_agw_ribbonStyles(self):
+        RB.RIBBON_BAR_DEFAULT_STYLE
+        RB.RIBBON_BAR_FOLDBAR_STYLE
+        RB.RIBBON_BAR_SHOW_PAGE_LABELS
+        RB.RIBBON_BAR_SHOW_PAGE_ICONS
+        RB.RIBBON_BAR_FLOW_HORIZONTAL
+        RB.RIBBON_BAR_FLOW_VERTICAL
+        RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS
+        RB.RIBBON_BAR_SHOW_PANEL_MINIMISE_BUTTONS
+        RB.RIBBON_BAR_ALWAYS_SHOW_TABS
+        
     def test_lib_agw_pyprogressConstantsExists(self):
         RB.RIBBON_ART_TAB_SEPARATION_SIZE
         RB.RIBBON_ART_PAGE_BORDER_LEFT_SIZE
