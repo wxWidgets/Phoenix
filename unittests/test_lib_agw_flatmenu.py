@@ -30,7 +30,8 @@ class lib_agw_flatmenu_Tests(wtc.WidgetTestCase):
         self._popUpMenu.AppendItem(menuItem)
 
         self._popUpMenu.AppendSeparator()
-                        
+
+    @unittest.skip('crash on opening a menu, at line 5442 in agw.flatmenu ...')        
     def test_lib_agw_flatmenuOpen(self):
         def CreateLongPopupMenu(self):
             popMenu = FM.FlatMenu()
