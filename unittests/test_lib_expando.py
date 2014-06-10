@@ -20,8 +20,8 @@ class lib_expando_Tests(wtc.WidgetTestCase):
         # All we can test here is that we have more lines than we started
         # with, since different platforms may wrap at different spots in the
         # string.
-        self.assertTrue(w.GetNumberOfLines() > 2)
-        self.assertTrue(bs2.height > bs1.height)
+        self.assertGreaterEqual(w.GetNumberOfLines(), 2)
+        self.assertGreater(bs2.height, bs1.height)
         
 #---------------------------------------------------------------------------
 
