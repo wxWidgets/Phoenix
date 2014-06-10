@@ -4276,7 +4276,8 @@ class FlatMenuBase(ShadowPopupWindow):
         """
 
         # some controls update themselves from OnIdle() call - let them do it
-        wx.GetApp().GetMainLoop().ProcessIdle()
+        if wx.GetApp().GetMainLoop():
+            wx.GetApp().GetMainLoop().ProcessIdle()
 
         # The mouse was pressed in the parent coordinates, 
         # e.g. pressing on the left top of a text ctrl
