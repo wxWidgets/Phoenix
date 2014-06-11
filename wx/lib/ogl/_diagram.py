@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         diagram.py
 # Purpose:      Diagram class
@@ -8,8 +9,11 @@
 # Created:      2004-05-08
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
-
+"""
+The OGL diagram class.
+"""
 import wx
 
 DEFAULT_MOUSE_TOLERANCE = 3

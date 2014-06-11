@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         lines.py
 # Purpose:      LineShape class
@@ -8,14 +9,16 @@
 # Created:      2004-05-08
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
-
+"""
+The OGL line shape class.
+"""
 import sys
 import math
 
-from _basic import Shape, ShapeRegion, ShapeTextLine, ControlPoint, RectangleShape
-from _oglmisc import *
+from ._basic import Shape, ShapeRegion, ShapeTextLine, ControlPoint, RectangleShape
+from ._oglmisc import *
 
 # Line alignment flags
 # Vertical by default

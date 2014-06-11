@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         drawn.py
 # Purpose:      DrawnShape class
@@ -8,13 +9,15 @@
 # Created:      2004-08-25
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # License:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
-
+"""
+The OGL drawn shape class.
+"""
 import os.path
 
-from _basic import RectangleShape
-from _oglmisc import *
+from ._basic import RectangleShape
+from ._oglmisc import *
 
 METAFLAGS_OUTLINE         = 1
 METAFLAGS_ATTACHMENTS     = 2

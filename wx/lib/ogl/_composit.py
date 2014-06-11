@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         composit.py
 # Purpose:      Composite class
@@ -8,14 +9,16 @@
 # Created:      2004-05-08
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
-
+"""
+The OGL composite class.
+"""
 import sys
 import wx
 
-from _basic import RectangleShape, Shape, ControlPoint
-from _oglmisc import *
+from ._basic import RectangleShape, Shape, ControlPoint
+from ._oglmisc import *
 
 KEY_SHIFT, KEY_CTRL = 1, 2
 
@@ -40,25 +43,6 @@ CONSTRAINT_MIDALIGNED_TOP       = 12
 CONSTRAINT_MIDALIGNED_BOTTOM    = 13
 CONSTRAINT_MIDALIGNED_LEFT      = 14
 CONSTRAINT_MIDALIGNED_RIGHT     = 15
-
-
-# Backwards compatibility names.  These should be removed eventually.
-gyCONSTRAINT_CENTRED_VERTICALLY   = CONSTRAINT_CENTRED_VERTICALLY   
-gyCONSTRAINT_CENTRED_HORIZONTALLY = CONSTRAINT_CENTRED_HORIZONTALLY 
-gyCONSTRAINT_CENTRED_BOTH         = CONSTRAINT_CENTRED_BOTH         
-gyCONSTRAINT_LEFT_OF              = CONSTRAINT_LEFT_OF              
-gyCONSTRAINT_RIGHT_OF             = CONSTRAINT_RIGHT_OF             
-gyCONSTRAINT_ABOVE                = CONSTRAINT_ABOVE                
-gyCONSTRAINT_BELOW                = CONSTRAINT_BELOW                
-gyCONSTRAINT_ALIGNED_TOP          = CONSTRAINT_ALIGNED_TOP          
-gyCONSTRAINT_ALIGNED_BOTTOM       = CONSTRAINT_ALIGNED_BOTTOM       
-gyCONSTRAINT_ALIGNED_LEFT         = CONSTRAINT_ALIGNED_LEFT         
-gyCONSTRAINT_ALIGNED_RIGHT        = CONSTRAINT_ALIGNED_RIGHT        
-gyCONSTRAINT_MIDALIGNED_TOP       = CONSTRAINT_MIDALIGNED_TOP       
-gyCONSTRAINT_MIDALIGNED_BOTTOM    = CONSTRAINT_MIDALIGNED_BOTTOM    
-gyCONSTRAINT_MIDALIGNED_LEFT      = CONSTRAINT_MIDALIGNED_LEFT      
-gyCONSTRAINT_MIDALIGNED_RIGHT     = CONSTRAINT_MIDALIGNED_RIGHT     
-
 
 
 class ConstraintType(object):

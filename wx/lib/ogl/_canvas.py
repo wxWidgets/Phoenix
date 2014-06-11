@@ -1,6 +1,7 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
-# Name:         canvas.py
+# Name:         _canvas.py
 # Purpose:      The canvas class
 #
 # Author:       Pierre Hjälm (from C++ original by Julian Smart)
@@ -8,11 +9,14 @@
 # Created:      2004-05-08
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
-
+"""
+The OGL canvas class
+"""
 import wx
-from _lines import LineShape
-from _composit import *
+from ._lines import LineShape
+from ._composit import *
 
 NoDragging, StartDraggingLeft, ContinueDraggingLeft, StartDraggingRight, ContinueDraggingRight = 0, 1, 2, 3, 4
 
@@ -55,8 +59,8 @@ class ShapeCanvas(wx.ScrolledWindow):
         self._firstDragY = 0
         self._checkTolerance = True
 
-        wx.EVT_PAINT(self, self.OnPaint)
-        wx.EVT_MOUSE_EVENTS(self, self.OnMouseEvent)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvent)
 
     def SetDiagram(self, diag):
         self._shapeDiagram = diag

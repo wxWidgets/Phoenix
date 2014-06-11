@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         divided.py
 # Purpose:      DividedShape class
@@ -8,14 +9,16 @@
 # Created:      2004-05-08
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
-
+"""
+The OGL divided shape class.
+"""
 import sys
 import wx
 
-from _basic import ControlPoint, RectangleShape, Shape
-from _oglmisc import *
+from ._basic import ControlPoint, RectangleShape, Shape
+from ._oglmisc import *
 
 
 

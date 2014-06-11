@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         bmpshape.py
 # Purpose:      Bitmap shape
@@ -8,10 +9,12 @@
 # Created:      2004-05-08
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
-
-from _basic import RectangleShape
+"""
+The OGL Bitmap shape
+"""
+from ._basic import RectangleShape
 
 
 class BitmapShape(RectangleShape):

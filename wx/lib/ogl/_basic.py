@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         basic.py
 # Purpose:      The basic OGL shapes
@@ -8,12 +9,16 @@
 # Created:      2004-05-08
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
+"""
+The basic shapes for OGL
+"""
 
 import wx
 import math
 
-from _oglmisc import *
+from ._oglmisc import *
 
 DragOffsetX = 0.0
 DragOffsetY = 0.0
@@ -3173,6 +3178,6 @@ class PolygonControlPoint(ControlPoint):
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
         self._shape.GetEventHandler().OnSizingEndDragLeft(self, x, y, keys, attachment)
 
-from _canvas import *
-from _lines import *
-from _composit import *
+from ._canvas import *
+from ._lines import *
+from ._composit import *
