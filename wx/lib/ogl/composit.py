@@ -17,8 +17,8 @@ The OGL composite class.
 import sys
 import wx
 
-from ._basic import RectangleShape, Shape, ControlPoint
-from ._oglmisc import *
+from .basic import RectangleShape, Shape, ControlPoint
+from .oglmisc import *
 
 KEY_SHIFT, KEY_CTRL = 1, 2
 

@@ -18,7 +18,7 @@ The basic shapes for OGL
 import wx
 import math
 
-from ._oglmisc import *
+from .oglmisc import *
 
 DragOffsetX = 0.0
 DragOffsetY = 0.0
@@ -3178,6 +3178,6 @@ class PolygonControlPoint(ControlPoint):
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
         self._shape.GetEventHandler().OnSizingEndDragLeft(self, x, y, keys, attachment)
 
-from ._canvas import *
-from ._lines import *
-from ._composit import *
+from .canvas import *
+from .lines import *
+from .composit import *

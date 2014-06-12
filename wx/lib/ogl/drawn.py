@@ -16,8 +16,8 @@ The OGL drawn shape class.
 """
 import os.path
 
-from ._basic import RectangleShape
-from ._oglmisc import *
+from .basic import RectangleShape
+from .oglmisc import *
 
 METAFLAGS_OUTLINE         = 1
 METAFLAGS_ATTACHMENTS     = 2

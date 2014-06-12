@@ -17,8 +17,8 @@ The OGL divided shape class.
 import sys
 import wx
 
-from ._basic import ControlPoint, RectangleShape, Shape
-from ._oglmisc import *
+from .basic import ControlPoint, RectangleShape, Shape
+from .oglmisc import *
 
 
 

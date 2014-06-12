@@ -15,8 +15,8 @@
 The OGL canvas class
 """
 import wx
-from ._lines import LineShape
-from ._composit import *
+from .lines import LineShape
+from .composit import *
 
 NoDragging, StartDraggingLeft, ContinueDraggingLeft, StartDraggingRight, ContinueDraggingRight = 0, 1, 2, 3, 4
 

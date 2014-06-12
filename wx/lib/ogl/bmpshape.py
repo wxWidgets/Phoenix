@@ -14,7 +14,7 @@
 """
 The OGL Bitmap shape
 """
-from ._basic import RectangleShape
+from .basic import RectangleShape
 
 
 class BitmapShape(RectangleShape):

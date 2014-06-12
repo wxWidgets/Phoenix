@@ -3,11 +3,11 @@ The Object Graphics Library provides for simple drawing and manipulation
 of 2D objects.
 """
 
-from ._basic import *
-from ._diagram import *
-from ._canvas import *
-from ._lines import *
-from ._bmpshape import *
-from ._divided import *
-from ._composit import *
-from ._drawn import *
+from .basic import *
+from .diagram import *
+from .canvas import *
+from .lines import *
+from .bmpshape import *
+from .divided import *
+from .composit import *
+from .drawn import *

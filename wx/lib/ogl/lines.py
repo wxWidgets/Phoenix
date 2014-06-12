@@ -17,8 +17,8 @@ The OGL line shape class.
 import sys
 import math
 
-from ._basic import Shape, ShapeRegion, ShapeTextLine, ControlPoint, RectangleShape
-from ._oglmisc import *
+from .basic import Shape, ShapeRegion, ShapeTextLine, ControlPoint, RectangleShape
+from .oglmisc import *
 
 # Line alignment flags
 # Vertical by default
