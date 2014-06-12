@@ -1145,9 +1145,8 @@ class LineShape(Shape):
     # Control points ('handles') redirect control to the actual shape, to
     # make it easier to override sizing behaviour.
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
-
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -1174,8 +1173,8 @@ class LineShape(Shape):
             self.SetBrush(old_brush)
 
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         if pt._type == CONTROL_POINT_LINE:
             pt._originalPos = pt._point
@@ -1215,8 +1214,8 @@ class LineShape(Shape):
             pt._oldCursor = wx.STANDARD_CURSOR
 
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         self.SetDisableLabel(False)
 

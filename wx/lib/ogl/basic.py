@@ -392,8 +392,8 @@ class Shape(ShapeEvtHandler):
           Shadow on the right side.
         """
         if redraw and self.GetCanvas():
-            dc = wx.ClientDC(self.GetCanvas())
-            self.GetCanvas().PrepareDC(dc)
+            dc = wx.MemoryDC()
+            dc.SelectObject(self.GetCanvas()._Buffer)
             self.Erase(dc)
             self._shadowMode = mode
             self.Draw(dc)
@@ -939,8 +939,8 @@ class Shape(ShapeEvtHandler):
 
         self.ApplyAttachmentOrdering(ordering)
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         self.MoveLinks(dc)
 
         if not self.GetCanvas().GetQuickEditMode():
@@ -1011,11 +1011,15 @@ class Shape(ShapeEvtHandler):
                 self._parent.GetEventHandler().OnDragLeft(draw, x, y, keys, attachment)
             return
 
+        # use the DCOverlay stuff, note that we still draw to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
+        odc.Clear()        
+
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
+        
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
@@ -1040,15 +1044,17 @@ class Shape(ShapeEvtHandler):
         DragOffsetX = self._xpos - x
         DragOffsetY = self._ypos - y
 
+        # use the DCOverlay stuff, note that we still draw to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
+        odc.Clear()        
         
         # New policy: don't erase shape until end of drag.
         # self.Erase(dc)
         xx = x + DragOffsetX
         yy = y + DragOffsetY
         xx, yy = self._canvas.Snap(xx, yy)
-        dc.SetLogicalFunction(OGLRBLF)
+        #dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
@@ -1069,8 +1075,10 @@ class Shape(ShapeEvtHandler):
                 self._parent.GetEventHandler().OnEndDragLeft(x, y, keys, attachment)
             return
 
+        # use the DCOverlay stuff, note that we still draw to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
+        odc.Clear()        
 
         dc.SetLogicalFunction(wx.COPY)
         xx = x + DragOffsetX
@@ -1154,6 +1162,7 @@ class Shape(ShapeEvtHandler):
         Do not override this function: override OnDraw, which is called
         by this function.
         """
+        print('shape draw')
         if self._visible:
             self.GetEventHandler().OnDraw(dc)
             self.GetEventHandler().OnDrawContents(dc)
@@ -1163,9 +1172,8 @@ class Shape(ShapeEvtHandler):
     def Flash(self):
         """Flash the shape."""
         if self.GetCanvas():
-            dc = wx.ClientDC(self.GetCanvas())
-            self.GetCanvas().PrepareDC(dc)
-
+            dc = wx.MemoryDC()
+            dc.SelectObject(self.GetCanvas()._Buffer)
             dc.SetLogicalFunction(OGLRBLF)
             self.Draw(dc)
             dc.SetLogicalFunction(wx.COPY)
@@ -1265,8 +1273,8 @@ class Shape(ShapeEvtHandler):
         line.SetTo(other)
         line.SetAttachments(attachFrom, attachTo)
 
-        dc = wx.ClientDC(self._canvas)
-        self._canvas.PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         self.MoveLinks(dc)
         
     def RemoveLine(self, line):
@@ -2089,9 +2097,8 @@ class Shape(ShapeEvtHandler):
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
         bound_x, bound_y = self.GetBoundingBoxMin()
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
-
+        dc = wx.OverMemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -2170,9 +2177,8 @@ class Shape(ShapeEvtHandler):
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
         self._canvas.CaptureMouse()
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
-
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
 
         bound_x, bound_y = self.GetBoundingBoxMin()
@@ -2271,8 +2277,8 @@ class Shape(ShapeEvtHandler):
             self.GetEventHandler().OnDrawOutline(dc, pt._controlPointDragPosX, pt._controlPointDragPosY, newWidth, newHeight)
             
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         if self._canvas.HasCapture():
             self._canvas.ReleaseMouse()
@@ -2743,9 +2749,8 @@ class PolygonShape(Shape):
     # Control points ('handles') redirect control to the actual shape, to
     # make it easier to override sizing behaviour.
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
-
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -2759,13 +2764,12 @@ class PolygonShape(Shape):
         self.GetEventHandler().OnDrawOutline(dc, self.GetX(), self.GetY(), pt.GetNewSize()[0], pt.GetNewSize()[1])
 
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
+        dc.SetLogicalFunction(OGLRBLF)
 
         self.Erase(dc)
         
-        dc.SetLogicalFunction(OGLRBLF)
-
         bound_x, bound_y = self.GetBoundingBoxMin()
 
         dist = math.sqrt((x - self.GetX()) * (x - self.GetX()) + (y - self.GetY()) * (y - self.GetY()))
@@ -2790,8 +2794,8 @@ class PolygonShape(Shape):
         self._canvas.CaptureMouse()
 
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         if self._canvas.HasCapture():
             self._canvas.ReleaseMouse()

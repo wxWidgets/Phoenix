@@ -29,10 +29,10 @@ class DividedShapeControlPoint(ControlPoint):
 
     # Implement resizing of divided object division
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
-
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
+
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -46,10 +46,10 @@ class DividedShapeControlPoint(ControlPoint):
         dc.DrawLine(x1, y1, x2, y2)
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
-
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
+
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -65,8 +65,8 @@ class DividedShapeControlPoint(ControlPoint):
         self._canvas.CaptureMouse()
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         dividedObject = self._shape
         if not dividedObject.GetRegions()[self.regionId]:

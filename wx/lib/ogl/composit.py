@@ -147,8 +147,8 @@ class Constraint(object):
         x = self._constrainingObject.GetX()
         y = self._constrainingObject.GetY()
 
-        dc = wx.ClientDC(self._constrainingObject.GetCanvas())
-        self._constrainingObject.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self._constrainingObject.GetCanvas()._Buffer)
 
         if self._constraintType == CONSTRAINT_CENTRED_VERTICALLY:
             n = len(self._constrainedObjects)
@@ -417,8 +417,8 @@ class CompositeShape(RectangleShape):
         offsetX = xx - _objectStartX
         offsetY = yy - _objectStartY
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         dc.SetLogicalFunction(OGLRBLF)
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -433,12 +433,10 @@ class CompositeShape(RectangleShape):
         _objectStartX = x
         _objectStartY = y
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
-
-        #self.Erase(dc)
-        
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
+
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -451,8 +449,8 @@ class CompositeShape(RectangleShape):
         self.GetEventHandler().OnDrawOutline(dc, self.GetX() + offsetX, self.GetY() + offsetY, self.GetWidth(), self.GetHeight())
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         if self._canvas.HasCapture():
             self._canvas.ReleaseMouse()
@@ -498,8 +496,8 @@ class CompositeShape(RectangleShape):
         if not recursive:
             return
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         for object in self._children:
             # Scale the position first
@@ -687,8 +685,8 @@ class CompositeShape(RectangleShape):
 
         division.SetSize(self._width, self._height)
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         
         division.Move(dc, self.GetX(), self.GetY())
         self.Recompute()
@@ -772,8 +770,8 @@ class DivisionControlPoint(ControlPoint):
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
         ControlPoint.OnEndDragLeft(self, x, y, keys, attachment)
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         division = self._shape
         divisionParent = division.GetParent()
@@ -1054,9 +1052,8 @@ class DivisionShape(CompositeShape):
                 self._parent.GetEventHandler().OnEndDragLeft(x, y, keys, attachment)
             return
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
-
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(wx.COPY)
 
         self._xpos, self._ypos = self._canvas.Snap(self._xpos, self._ypos)
@@ -1105,8 +1102,8 @@ class DivisionShape(CompositeShape):
         if self.Selected():
             self.Select(False)
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         if direction == wx.VERTICAL:
             # Dividing vertically means notionally putting a horizontal
@@ -1270,8 +1267,8 @@ class DivisionShape(CompositeShape):
         newX = left + newW / 2.0
         self.SetSize(newW, self.GetHeight())
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         self.Move(dc, newX, self.GetY())
         return True
@@ -1294,8 +1291,8 @@ class DivisionShape(CompositeShape):
         newY = top + newH / 2.0
         self.SetSize(self.GetWidth(), newH)
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         self.Move(dc, self.GetX(), newY)
         return True
@@ -1318,8 +1315,8 @@ class DivisionShape(CompositeShape):
         newX = x1 + newW / 2.0
         self.SetSize(newW, self.GetHeight())
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         self.Move(dc, newX, self.GetY())
         return True
@@ -1342,8 +1339,8 @@ class DivisionShape(CompositeShape):
         newY = y1 + newH / 2.0
         self.SetSize(self.GetWidth(), newH)
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         self.Move(dc, self.GetX(), newY)
         return True
@@ -1415,8 +1412,8 @@ class DivisionShape(CompositeShape):
         x1, y1 = self._canvas.GetViewStart()
         unit_x, unit_y = self._canvas.GetScrollPixelsPerUnit()
 
-        dc = wx.ClientDC(self.GetCanvas())
-        self.GetCanvas().PrepareDC(dc)
+        dc = wx.MemoryDC()
+        dc.SelectObject(self.GetCanvas()._Buffer)
 
         mouse_x = dc.LogicalToDeviceX(x - x1 * unit_x)
         mouse_y = dc.LogicalToDeviceY(y - y1 * unit_y)

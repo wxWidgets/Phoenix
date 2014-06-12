@@ -49,6 +49,8 @@ def WhollyContains(contains, contained):
 class ShapeCanvas(wx.ScrolledWindow):
     def __init__(self, parent = None, id = -1, pos = wx.DefaultPosition, size = wx.DefaultSize, style = wx.BORDER, name = "ShapeCanvas"):
         wx.ScrolledWindow.__init__(self, parent, id, pos, size, style, name)
+        
+        self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
 
         self._shapeDiagram = None
         self._dragState = NoDragging
@@ -58,10 +60,41 @@ class ShapeCanvas(wx.ScrolledWindow):
         self._firstDragX = 0
         self._firstDragY = 0
         self._checkTolerance = True
+        
+        self._Overlay = wx.Overlay()
+        self._Buffer = None
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvent)
 
+    def Draw(self):
+        """
+        Update the buffer with the background and redraw the full diagram.
+        """
+        print('canvas draw')
+        # update the buffer
+        dc = wx.MemoryDC()
+        dc.SelectObject(self._Buffer)
+
+        dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
+        dc.Clear() # make sure you clear the bitmap!
+
+        if self.GetDiagram():
+            self.GetDiagram().Redraw(dc)
+    
+    def OnSize(self, evt):
+        """
+        Initialize the buffer to the size of the window.
+        """
+        print('canvas onsize')
+        Size  = self.GetClientSize()
+
+        # Make sure we don't try to create a 0 size bitmap
+        Size = (max(Size[0], 1), max(Size[1], 1))
+        self._Buffer = wx.Bitmap(Size[0], Size[1])
+        self.Draw()
+        
     def SetDiagram(self, diag):
         self._shapeDiagram = diag
 
@@ -69,20 +102,20 @@ class ShapeCanvas(wx.ScrolledWindow):
         return self._shapeDiagram
     
     def OnPaint(self, evt):
-        dc = wx.PaintDC(self)
-        self.PrepareDC(dc)
-        
-        dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
-        dc.Clear()
-
-        if self.GetDiagram():
-            self.GetDiagram().Redraw(dc)
+        print('canvas onpaint')
+        dc = wx.BufferedPaintDC(self)
+        dc.DrawBitmap(self._Buffer, 0, 0)
 
     def OnMouseEvent(self, evt):
+        # we just get position, so is using CliendDC fine here?
         dc = wx.ClientDC(self)
-        self.PrepareDC(dc)
-        
         x, y = evt.GetLogicalPosition(dc)
+        # del it so we don't get tempted to use it for something else
+        del dc
+        ## result seems to be the same using either here, but not sure which is correct
+        #dc = wx.MemoryDC()
+        #dc.SelectObject(self._Buffer)
+        #x, y = evt.GetLogicalPosition(dc)
 
         keys = 0
         if evt.ShiftDown():
@@ -102,6 +135,7 @@ class ShapeCanvas(wx.ScrolledWindow):
                 dy = abs(y - self._firstDragY)
                 toler = self.GetDiagram().GetMouseTolerance()
                 if (dx <= toler) and (dy <= toler):
+                    print('canvas mouseevent - return')
                     return
             # If we've ignored the tolerance once, then ALWAYS ignore
             # tolerance in this drag, even if we come back within
@@ -263,6 +297,9 @@ class ShapeCanvas(wx.ScrolledWindow):
                     self.OnRightClick(x, y, keys)
                     self._draggedShape = None
                     self._dragState = NoDragging
+              
+            print('canvas mouseevent draw')      
+            self.Draw()
 
     def FindShape(self, x, y, info = None, notObject = None):
         nearest = 100000.0
@@ -336,6 +373,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         return self.GetDiagram().GetQuickEditMode()
     
     def Redraw(self, dc):
+        print('canvas redraw')
         self.GetDiagram().Redraw(dc)
 
     def Snap(self, x, y):
