@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-#
+# -*- coding: utf-8 -*-
 #!/usr/bin/env python
 """
 This module contains different classes which handle different kind of saving/restoring

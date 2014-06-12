@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-#
+# -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
 """The sample I18N application"""
