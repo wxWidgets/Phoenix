@@ -72,7 +72,6 @@ class ShapeCanvas(wx.ScrolledWindow):
         """
         Update the buffer with the background and redraw the full diagram.
         """
-        print('canvas draw')
         # update the buffer
         dc = wx.MemoryDC()
         dc.SelectObject(self._Buffer)
@@ -87,7 +86,6 @@ class ShapeCanvas(wx.ScrolledWindow):
         """
         Initialize the buffer to the size of the window.
         """
-        print('canvas onsize')
         Size  = self.GetClientSize()
 
         # Make sure we don't try to create a 0 size bitmap
@@ -102,7 +100,6 @@ class ShapeCanvas(wx.ScrolledWindow):
         return self._shapeDiagram
     
     def OnPaint(self, evt):
-        print('canvas onpaint')
         dc = wx.BufferedPaintDC(self)
         dc.DrawBitmap(self._Buffer, 0, 0)
 
@@ -135,7 +132,6 @@ class ShapeCanvas(wx.ScrolledWindow):
                 dy = abs(y - self._firstDragY)
                 toler = self.GetDiagram().GetMouseTolerance()
                 if (dx <= toler) and (dy <= toler):
-                    print('canvas mouseevent - return')
                     return
             # If we've ignored the tolerance once, then ALWAYS ignore
             # tolerance in this drag, even if we come back within
@@ -298,8 +294,7 @@ class ShapeCanvas(wx.ScrolledWindow):
                     self._draggedShape = None
                     self._dragState = NoDragging
               
-            print('canvas mouseevent draw')      
-            self.Draw()
+        self.Draw()
 
     def FindShape(self, x, y, info = None, notObject = None):
         nearest = 100000.0
@@ -373,7 +368,6 @@ class ShapeCanvas(wx.ScrolledWindow):
         return self.GetDiagram().GetQuickEditMode()
     
     def Redraw(self, dc):
-        print('canvas redraw')
         self.GetDiagram().Redraw(dc)
 
     def Snap(self, x, y):
