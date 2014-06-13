@@ -14,7 +14,7 @@ class lib_ogl_Tests(wtc.WidgetTestCase):
         self.diagram = ogl.Diagram()
         osc.SetDiagram(self.diagram)
         self.diagram.SetCanvas(osc)
-        
+
         aShape = ogl.RectangleShape(w=50, h=50)
         aShape.SetCanvas(osc)
         self.diagram.AddShape(aShape)
@@ -24,8 +24,8 @@ class lib_ogl_Tests(wtc.WidgetTestCase):
         region1.SetProportions(0.0, 0.2)
         region1.SetFormatMode(ogl.FORMAT_CENTRE_HORIZ)
         aShape.AddRegion(region1)
-        
-        
+
+
     def test_lib_ogl_Constants(self):
         ogl.CONSTRAINT_CENTRED_VERTICALLY
         ogl.CONSTRAINT_CENTRED_HORIZONTALLY
@@ -38,7 +38,7 @@ class lib_ogl_Tests(wtc.WidgetTestCase):
         ogl.CONSTRAINT_ALIGNED_BOTTOM
         ogl.CONSTRAINT_ALIGNED_LEFT
         ogl.CONSTRAINT_ALIGNED_RIGHT
-        
+
         # Like aligned, but with the objects centred on the respective edge
         # of the reference object.
         ogl.CONSTRAINT_MIDALIGNED_TOP
@@ -49,12 +49,12 @@ class lib_ogl_Tests(wtc.WidgetTestCase):
         # from _drawn
         ogl.METAFLAGS_OUTLINE
         ogl.METAFLAGS_ATTACHMENTS
-        
+
         ogl.DRAWN_ANGLE_0
         ogl.DRAWN_ANGLE_90
         ogl.DRAWN_ANGLE_180
         ogl.DRAWN_ANGLE_270
-        
+
         # Drawing operations
         ogl.DRAWOP_SET_PEN
         ogl.DRAWOP_SET_BRUSH
@@ -64,7 +64,7 @@ class lib_ogl_Tests(wtc.WidgetTestCase):
         ogl.DRAWOP_SET_BK_MODE
         ogl.DRAWOP_SET_CLIPPING_RECT
         ogl.DRAWOP_DESTROY_CLIPPING_RECT
-        
+
         ogl.DRAWOP_DRAW_LINE
         ogl.DRAWOP_DRAW_POLYLINE
         ogl.DRAWOP_DRAW_POLYGON
@@ -76,7 +76,14 @@ class lib_ogl_Tests(wtc.WidgetTestCase):
         ogl.DRAWOP_DRAW_TEXT
         ogl.DRAWOP_DRAW_SPLINE
         ogl.DRAWOP_DRAW_ELLIPTIC_ARC
-        
+
+        # Line alignment flags
+        # Vertical by default
+        ogl.LINE_ALIGNMENT_HORIZ
+        ogl.LINE_ALIGNMENT_VERT
+        ogl.LINE_ALIGNMENT_TO_NEXT_HANDLE
+        ogl.LINE_ALIGNMENT_NONE
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
