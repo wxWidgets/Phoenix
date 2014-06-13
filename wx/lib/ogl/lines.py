@@ -1403,7 +1403,7 @@ class LineShape(Shape):
                 return True
         return False
     
-    def DeleteArrowHeadId(self, id):
+    def DeleteArrowHeadId(self, arrowId):
         """Delete arrowhead by id."""
         for arrow in self._arcArrows:
             if arrowId == arrow.GetId():
@@ -1421,7 +1421,7 @@ class LineShape(Shape):
         for arrowHead in self._arcArrows:
             minWidth += arrowHead.GetSize()
             if arrowHead != self._arcArrows[-1]:
-                minWidth += arrowHead + GetSpacing
+                minWidth += arrowHead + arrowHead.GetSpacing()
 
         # We have ABSOLUTE minimum now. So
         # scale it to give it reasonable aesthetics
