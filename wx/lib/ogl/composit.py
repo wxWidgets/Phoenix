@@ -417,7 +417,7 @@ class CompositeShape(RectangleShape):
         offsetX = xx - _objectStartX
         offsetY = yy - _objectStartY
 
-        # use the DCOverlay stuff, note that we still draw to the ClientDC
+        # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(OGLRBLF)
@@ -434,7 +434,7 @@ class CompositeShape(RectangleShape):
         _objectStartX = x
         _objectStartY = y
 
-        # use the DCOverlay stuff, note that we still draw to the ClientDC
+        # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(OGLRBLF)
@@ -459,7 +459,7 @@ class CompositeShape(RectangleShape):
                 self._parent.GetEventHandler().OnEndDragLeft(x, y, keys, 0)
             return
             
-        # use the DCOverlay stuff, note that we still draw to the ClientDC
+        # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(wx.COPY)
