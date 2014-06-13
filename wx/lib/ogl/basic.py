@@ -158,6 +158,7 @@ class ShapeEvtHandler(object):
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
         if self._previousHandler:
             self._previousHandler.OnEndDragLeft(x, y, keys, attachment)
+            print('ShapeEvtHandler - onenddragleft')
         
     def OnDragRight(self, draw, x, y, keys = 0, attachment = 0):
         if self._previousHandler:
@@ -170,6 +171,7 @@ class ShapeEvtHandler(object):
     def OnEndDragRight(self, x, y, keys = 0, attachment = 0):
         if self._previousHandler:
             self._previousHandler.OnEndDragRight(x, y, keys, attachment)
+            print('ShapeEvtHandler - onenddragright')
 
     # Control points ('handles') redirect control to the actual shape,
     # to make it easier to override sizing behaviour.
@@ -202,6 +204,7 @@ class ShapeEvtHandler(object):
     def OnEraseControlPoints(self, dc):
         if self._previousHandler:
             self._previousHandler.OnEraseControlPoints(dc)
+            print('ShapeEvtHandler - onerasecontrolpoints')
 
     # Can override this to prevent or intercept line reordering.
     def OnChangeAttachment(self, attachment, line, ordering):
@@ -1075,8 +1078,8 @@ class Shape(ShapeEvtHandler):
         # use the DCOverlay stuff, note that we still draw to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
-
         dc.SetLogicalFunction(wx.COPY)
+
         xx = x + DragOffsetX
         yy = y + DragOffsetY
         xx, yy = self._canvas.Snap(xx, yy)

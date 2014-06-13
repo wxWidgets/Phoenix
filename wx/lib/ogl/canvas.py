@@ -107,7 +107,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         dc.DrawBitmap(self._Buffer, 0, 0)
 
     def OnMouseEvent(self, evt):
-        # we just get position, so is using CliendDC fine here?
+        # we just get position, so is using ClientDC fine here?
         dc = wx.ClientDC(self)
         x, y = evt.GetLogicalPosition(dc)
         # del it so we don't get tempted to use it for something else
