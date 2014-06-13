@@ -12,7 +12,9 @@
 # Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
 """
-The OGL miscellaneous support functions.
+Miscellaneous support functions for OGL.
+
+params marked with '???' need review!
 """
 import math
 
@@ -76,10 +78,28 @@ LINE_ALIGNMENT_TO_NEXT_HANDLE     = 2
 LINE_ALIGNMENT_NONE               = 0
 
 
-
-# Format a string to a list of strings that fit in the given box.
-# Interpret %n and 10 or 13 as a new line.
 def FormatText(dc, text, width, height, formatMode):
+    """
+    Format a text
+
+    :param `dc`: the :class:`wx.MemoryDC`
+    :param `text`: the text to format
+    :param `width`: the width of the box???
+    :param `height`: the height of the box??? it is not used in the code!
+    :param `formatMode`: one of the format modes, can be combined in a bit list
+
+      ======================================== ==================================
+      Format mode name                         Description
+      ======================================== ==================================
+      `FORMAT_NONE`                            Left justification
+      `FORMAT_CENTRE_HORIZ`                    Centre horizontally
+      `FORMAT_CENTRE_VERT`                     Centre vertically
+      `FORMAT_SIZE_TO_CONTENTS`                Resize shape to contents
+      ======================================== ==================================
+
+    :returns: a list of strings fitting in the box
+
+    """
     i = 0
     word = ""
     word_list = []
@@ -149,8 +169,20 @@ def FormatText(dc, text, width, height, formatMode):
     return string_list
 
 
+def GetCentredTextExtent(dc, text_list, xpos=0, ypos=0, width=0, height=0):
+    """
+    Get the centred text extend
 
-def GetCentredTextExtent(dc, text_list, xpos = 0, ypos = 0, width = 0, height = 0):
+    :param `dc`: the :class:`wx.MemoryDC`
+    :param `text_list`: a list of text lines
+    :param `xpos`: unused
+    :param `ypos`: unused
+    :param `width`: unused
+    :param `height`: unused
+
+    :returns: maximum width and the height
+
+    """
     if not text_list:
         return 0, 0
 
@@ -163,8 +195,28 @@ def GetCentredTextExtent(dc, text_list, xpos = 0, ypos = 0, width = 0, height = 
     return max_width, len(text_list) * char_height
 
 
-
 def CentreText(dc, text_list, xpos, ypos, width, height, formatMode):
+    """
+    Centre a text
+
+    :param `dc`: the :class:`wx.MemoryDC`
+    :param `text_list`: a list of texts
+    :param `xpos`: the x position
+    :param `ypos`: the y position
+    :param `width`: the width of the box???
+    :param `height`: the height of the box???
+    :param `formatMode`: one of the format modes, can be combined in a bit list
+
+      ======================================== ==================================
+      Format mode name                         Description
+      ======================================== ==================================
+      `FORMAT_NONE`                            Left justification
+      `FORMAT_CENTRE_HORIZ`                    Centre horizontally
+      `FORMAT_CENTRE_VERT`                     Centre vertically
+      `FORMAT_SIZE_TO_CONTENTS`                Resize shape to contents
+      ======================================== ==================================
+
+    """
     if not text_list:
         return
 
@@ -209,10 +261,30 @@ def CentreText(dc, text_list, xpos, ypos, width, height, formatMode):
 
         line.SetX(x - xOffset)
         line.SetY(y - yOffset)
-        
 
 
 def DrawFormattedText(dc, text_list, xpos, ypos, width, height, formatMode):
+    """
+    Draw formated text
+
+    :param `dc`: the :class:`wx.MemoryDC`
+    :param `text_list`: a list of texts
+    :param `xpos`: the x position
+    :param `ypos`: the y position
+    :param `width`: the width of the box???
+    :param `height`: the height of the box???
+    :param `formatMode`: one of the format modes, can be combined in a bit list
+
+      ======================================== ==================================
+      Format mode name                         Description
+      ======================================== ==================================
+      `FORMAT_NONE`                            Left justification
+      `FORMAT_CENTRE_HORIZ`                    Centre horizontally
+      `FORMAT_CENTRE_VERT`                     Centre vertically
+      `FORMAT_SIZE_TO_CONTENTS`                Resize shape to contents
+      ======================================== ==================================
+
+    """
     if formatMode & FORMAT_CENTRE_HORIZ:
         xoffset = xpos
     else:
@@ -232,22 +304,57 @@ def DrawFormattedText(dc, text_list, xpos, ypos, width, height, formatMode):
     dc.DestroyClippingRegion()
 
 
+def RoughlyEqual(val1, val2, tol=0.00001):
+    """
+    Check if values are roughtly equal
 
-def RoughlyEqual(val1, val2, tol = 0.00001):
+    :param `val1`: the first value to check
+    :param `val2`: the second value to check
+    :param `tol`: the tolerance, defaults to 0.00001
+
+    :returns: True or False
+
+    """
     return val1 < (val2 + tol) and val1 > (val2 - tol) and \
            val2 < (val1 + tol) and val2 > (val1 - tol)
 
 
-
 def FindEndForBox(width, height, x1, y1, x2, y2):
+    """
+    Find the end for a box
+
+    :param `width`: the width of the box
+    :param `height`: the height of the box
+    :param `x1`: x1 position
+    :param `y1`: y1 position
+    :param `x2`: x2 position
+    :param `y2`: y2 position
+
+    :returns: the end position
+
+    """
     xvec = [x1 - width / 2.0, x1 - width / 2.0, x1 + width / 2.0, x1 + width / 2.0, x1 - width / 2.0]
     yvec = [y1 - height / 2.0, y1 + height / 2.0, y1 + height / 2.0, y1 - height / 2.0, y1 - height / 2.0]
 
     return FindEndForPolyline(xvec, yvec, x2, y2, x1, y1)
 
 
-
 def CheckLineIntersection(x1, y1, x2, y2, x3, y3, x4, y4):
+    """
+    Check for line intersection
+
+    :param `x1`: x1 position
+    :param `y1`: y1 position
+    :param `x2`: x2 position
+    :param `y2`: y2 position
+    :param `x3`: x3 position
+    :param `y3`: y3 position
+    :param `x4`: x4 position
+    :param `y4`: y4 position
+
+    :returns: a lenght ratio and a k line???
+
+    """
     denominator_term = (y4 - y3) * (x2 - x1) - (y2 - y1) * (x4 - x3)
     numerator_term = (x3 - x1) * (y4 - y3) + (x4 - x3) * (y1 - y3)
 
@@ -275,8 +382,20 @@ def CheckLineIntersection(x1, y1, x2, y2, x3, y3, x4, y4):
     return length_ratio, k_line
 
 
-
 def FindEndForPolyline(xvec, yvec, x1, y1, x2, y2):
+    """
+    Find the end for a polyline
+
+    :param `xvec`: x vector ???
+    :param `yvec`: y vector ???
+    :param `x1`: x1 position
+    :param `y1`: y1 position
+    :param `x2`: x2 position
+    :param `y2`: y2 position
+
+    :returns: the end position
+
+    """
     lastx = xvec[0]
     lasty = yvec[0]
 
@@ -299,8 +418,20 @@ def FindEndForPolyline(xvec, yvec, x1, y1, x2, y2):
     return x1 + (x2 - x1) * min_ratio, y1 + (y2 - y1) * min_ratio
 
 
-
 def PolylineHitTest(xvec, yvec, x1, y1, x2, y2):
+    """
+    Hittest for a polyline
+
+    :param `xvec`: x vector ???
+    :param `yvec`: y vector ???
+    :param `x1`: x1 position
+    :param `y1`: y1 position
+    :param `x2`: x2 position
+    :param `y2`: y2 position
+
+    :returns: True or False
+
+    """
     isAHit = False
     lastx = xvec[0]
     lasty = yvec[0]
@@ -326,8 +457,14 @@ def PolylineHitTest(xvec, yvec, x1, y1, x2, y2):
     return isAHit
 
 
-
 def GraphicsStraightenLine(point1, point2):
+    """
+    Straighten a line in graphics
+
+    :param `point1`: a point list???
+    :param `point2`: a point list???
+
+    """
     dx = point2[0] - point1[0]
     dy = point2[1] - point1[1]
 
@@ -339,8 +476,19 @@ def GraphicsStraightenLine(point1, point2):
         point2[1] = point1[1]
 
 
-
 def GetPointOnLine(x1, y1, x2, y2, length):
+    """
+    Get point on a line
+
+    :param `x1`: x1 position
+    :param `y1`: y1 position
+    :param `x2`: x2 position
+    :param `y2`: y2 position
+    :param `length`: length ???
+
+    :returns: point on line
+
+    """
     l = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
     if l < 0.01:
         l = 0.01
@@ -351,8 +499,20 @@ def GetPointOnLine(x1, y1, x2, y2, length):
     return -length * i_bar + x2, -length * j_bar + y2
 
 
-
 def GetArrowPoints(x1, y1, x2, y2, length, width):
+    """
+    Get point on arrow
+
+    :param `x1`: x1 position
+    :param `y1`: y1 position
+    :param `x2`: x2 position
+    :param `y2`: y2 position
+    :param `length`: length ???
+    :param `width`: width ???
+
+    :returns: point on line
+
+    """
     l = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
     if l < 0.01:
@@ -360,15 +520,29 @@ def GetArrowPoints(x1, y1, x2, y2, length, width):
 
     i_bar = (x2 - x1) / l
     j_bar = (y2 - y1) / l
-    
+
     x3 = -length * i_bar + x2
     y3 = -length * j_bar + y2
 
     return x2, y2, width * -j_bar + x3, width * i_bar + y3, -width * -j_bar + x3, -width * i_bar + y3
 
 
-
 def DrawArcToEllipse(x1, y1, width1, height1, x2, y2, x3, y3):
+    """
+    Draw arc to ellipse
+
+    :param `x1`: x1 position
+    :param `y1`: y1 position
+    :param `width1`: width
+    :param `height1`: height
+    :param `x2`: x2 position
+    :param `y2`: y2 position
+    :param `x3`: x3 position
+    :param `y3`: y3 position
+
+    :returns: ellipse points ???
+
+    """
     a1 = width1 / 2.0
     b1 = height1 / 2.0
 
@@ -408,8 +582,19 @@ def DrawArcToEllipse(x1, y1, width1, height1, x2, y2, x3, y3):
     return ellipse1_x, ellipse1_y
 
 
-
 def FindEndForCircle(radius, x1, y1, x2, y2):
+    """
+    Find end for a circle
+
+    :param `radius`: radius
+    :param `x1`: x1 position
+    :param `y1`: y1 position
+    :param `x2`: x2 position
+    :param `y2`: y2 position
+
+    :returns: end position
+
+    """
     H = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
     if H == 0:
