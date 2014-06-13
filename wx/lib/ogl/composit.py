@@ -417,10 +417,11 @@ class CompositeShape(RectangleShape):
         offsetX = xx - _objectStartX
         offsetY = yy - _objectStartY
 
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
-
+        # use the DCOverlay stuff, note that we still draw to the ClientDC
+        dc = wx.ClientDC(self.GetCanvas())
+        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(OGLRBLF)
+
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -433,8 +434,9 @@ class CompositeShape(RectangleShape):
         _objectStartX = x
         _objectStartY = y
 
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
+        # use the DCOverlay stuff, note that we still draw to the ClientDC
+        dc = wx.ClientDC(self.GetCanvas())
+        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -449,9 +451,6 @@ class CompositeShape(RectangleShape):
         self.GetEventHandler().OnDrawOutline(dc, self.GetX() + offsetX, self.GetY() + offsetY, self.GetWidth(), self.GetHeight())
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
-
         if self._canvas.HasCapture():
             self._canvas.ReleaseMouse()
 
@@ -460,9 +459,12 @@ class CompositeShape(RectangleShape):
                 self._parent.GetEventHandler().OnEndDragLeft(x, y, keys, 0)
             return
             
-        self.Erase(dc)
-        
+        # use the DCOverlay stuff, note that we still draw to the ClientDC
+        dc = wx.ClientDC(self.GetCanvas())
+        odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(wx.COPY)
+
+        self.Erase(dc)
         
         xx, yy = self._canvas.Snap(x, y)
         offsetX = xx - _objectStartX
