@@ -62,7 +62,7 @@ class ShapeCanvas(wx.ScrolledWindow):
         self._checkTolerance = True
         
         self._Overlay = wx.Overlay()
-        self._Buffer = None
+        self._Buffer = wx.Bitmap(10, 10)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
