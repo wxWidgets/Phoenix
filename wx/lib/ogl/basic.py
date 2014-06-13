@@ -1014,8 +1014,6 @@ class Shape(ShapeEvtHandler):
         # use the DCOverlay stuff, note that we still draw to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
-        odc.Clear()        
-
         dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
@@ -1047,14 +1045,13 @@ class Shape(ShapeEvtHandler):
         # use the DCOverlay stuff, note that we still draw to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
-        odc.Clear()        
+        dc.SetLogicalFunction(OGLRBLF)
         
         # New policy: don't erase shape until end of drag.
         # self.Erase(dc)
         xx = x + DragOffsetX
         yy = y + DragOffsetY
         xx, yy = self._canvas.Snap(xx, yy)
-        #dc.SetLogicalFunction(OGLRBLF)
 
         dottedPen = wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT)
         dc.SetPen(dottedPen)
@@ -1078,7 +1075,6 @@ class Shape(ShapeEvtHandler):
         # use the DCOverlay stuff, note that we still draw to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
-        odc.Clear()        
 
         dc.SetLogicalFunction(wx.COPY)
         xx = x + DragOffsetX
@@ -1090,6 +1086,7 @@ class Shape(ShapeEvtHandler):
 
         self.Move(dc, xx, yy)
         if self._canvas and not self._canvas.GetQuickEditMode():
+            print('shape onenddragleft')
             self._canvas.Redraw(dc)
 
     def OnDragRight(self, draw, x, y, keys = 0, attachment = 0):
@@ -1162,7 +1159,6 @@ class Shape(ShapeEvtHandler):
         Do not override this function: override OnDraw, which is called
         by this function.
         """
-        print('shape draw')
         if self._visible:
             self.GetEventHandler().OnDraw(dc)
             self.GetEventHandler().OnDrawContents(dc)
