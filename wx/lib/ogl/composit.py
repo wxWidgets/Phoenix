@@ -20,8 +20,6 @@ import wx
 from .basic import RectangleShape, Shape, ControlPoint
 from .oglmisc import *
 
-KEY_SHIFT, KEY_CTRL = 1, 2
-
 _objectStartX = 0.0
 _objectStartY = 0.0
 

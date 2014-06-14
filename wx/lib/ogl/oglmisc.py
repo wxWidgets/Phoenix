@@ -77,6 +77,11 @@ LINE_ALIGNMENT_VERT               = 0
 LINE_ALIGNMENT_TO_NEXT_HANDLE     = 2
 LINE_ALIGNMENT_NONE               = 0
 
+# was defined in canvas and in composit
+KEY_SHIFT = 1
+KEY_CTRL = 2
+
+
 
 def FormatText(dc, text, width, height, formatMode):
     """

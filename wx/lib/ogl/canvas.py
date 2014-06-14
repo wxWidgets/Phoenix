@@ -17,10 +17,9 @@ The OGL canvas class
 import wx
 from .lines import LineShape
 from .composit import *
+from .oglmisc import *
 
 NoDragging, StartDraggingLeft, ContinueDraggingLeft, StartDraggingRight, ContinueDraggingRight = 0, 1, 2, 3, 4
-
-KEY_SHIFT, KEY_CTRL = 1, 2
 
 
 

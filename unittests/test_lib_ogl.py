@@ -83,6 +83,11 @@ class lib_ogl_Tests(wtc.WidgetTestCase):
         ogl.LINE_ALIGNMENT_VERT
         ogl.LINE_ALIGNMENT_TO_NEXT_HANDLE
         ogl.LINE_ALIGNMENT_NONE
+        
+        # keys
+        ogl.KEY_SHIFT
+        ogl.KEY_CTRL
+        
 
 #---------------------------------------------------------------------------
 
