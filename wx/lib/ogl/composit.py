@@ -1275,30 +1275,6 @@ class DivisionShape(CompositeShape):
         self.Move(dc, newX, self.GetY())
         return True
 
-    def AdjustTop(self, top, test):
-        """Adjust a side.
-
-        Returns FALSE if it's not physically possible to adjust it to
-        this point.
-        """
-        y2 = self.GetY() + self.GetHeight() / 2.0
-
-        if top >= y2:
-            return False
-
-        if test:
-            return True
-
-        newH = y2 - top
-        newY = top + newH / 2.0
-        self.SetSize(self.GetWidth(), newH)
-
-        dc = wx.MemoryDC()
-        dc.SelectObject(self.GetCanvas()._Buffer)
-
-        self.Move(dc, self.GetX(), newY)
-        return True
-
     def AdjustRight(self, right, test):
         """Adjust a side.
 
@@ -1331,13 +1307,13 @@ class DivisionShape(CompositeShape):
         """
         y1 = self.GetY() - self.GetHeight() / 2.0
 
-        if bottom <= y1:
+        if top <= y1:
             return False
 
         if test:
             return True
 
-        newH = bottom - y1
+        newH = top - y1
         newY = y1 + newH / 2.0
         self.SetSize(self.GetWidth(), newH)
 
@@ -1378,7 +1354,7 @@ class DivisionShape(CompositeShape):
                 if division._rightSide == self:
                     success = division.AdjustRight(newPos, test)
                     if not success and test:
-                        return false
+                        return False
             elif side == DIVISION_SIDE_TOP:
                 if division._bottomSide == self:
                     success = division.AdjustBottom(newPos, test)
