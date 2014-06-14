@@ -2092,7 +2092,7 @@ class Shape(ShapeEvtHandler):
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
         bound_x, bound_y = self.GetBoundingBoxMin()
 
-        dc = wx.OverMemoryDC()
+        dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
 
