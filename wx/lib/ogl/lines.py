@@ -12,7 +12,7 @@
 # Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
 """
-The OGL line shape class.
+The class :class:`LineShape` may have arrowheads at the beginning and end.
 """
 import sys
 import math
@@ -30,7 +30,29 @@ LINE_ALIGNMENT_NONE =               0
 
 
 class LineControlPoint(ControlPoint):
+    """
+    The line control point class.
+    """
     def __init__(self, theCanvas = None, object = None, size = 0.0, x = 0.0, y = 0.0, the_type = 0):
+        """
+        Default class constructor.
+        
+        :param `theCanvas`: a :class:`~lib.ogl.Canvas`
+        :param `object`: not used
+        :param float `size`: the size
+        :param float `x`: the x position
+        :param float `y`: the y position
+        :param int `the_type`: one of the following types
+        
+         ======================================== ==================================
+         Control point type                       Description
+         ======================================== ==================================
+         `CONTROL_POINT_VERTICAL`                 Vertical
+         `CONTROL_POINT_HORIZONTAL`               Horizontal
+         `CONTROL_POINT_DIAGONAL`                 Diagonal
+         ======================================== ==================================
+        
+        """
         ControlPoint.__init__(self, theCanvas, object, size, x, y, the_type)
         self._xpos = x
         self._ypos = y
@@ -39,22 +61,53 @@ class LineControlPoint(ControlPoint):
         self._originalPos = None
 
     def OnDraw(self, dc):
+        """The draw handler."""
         RectangleShape.OnDraw(self, dc)
 
     # Implement movement of Line point
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag left handler."""
         self._shape.GetEventHandler().OnSizingDragLeft(self, draw, x, y, keys, attachment)
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The begin drag left handler."""
         self._shape.GetEventHandler().OnSizingBeginDragLeft(self, x, y, keys, attachment)
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The end drag left handler."""
         self._shape.GetEventHandler().OnSizingEndDragLeft(self, x, y, keys, attachment)
 
 
 
 class ArrowHead(object):
+    """
+    The arrow head class.
+    """
     def __init__(self, type = 0, end = 0, size = 0.0, dist = 0.0, name = "", mf = None, arrowId = -1):
+        """
+        Default class constructor.
+        
+        :param int `type`: the type
+
+         ======================================== ==================================
+         Arrow head type                          Description
+         ======================================== ==================================
+         `ARROW_HOLLOW_CIRCLE`                    a hollow circle
+         `ARROW_FILLED_CIRCLE`                    a filled circle
+         `ARROW_ARROW`                            an arrow
+         `ARROW_SINGLE_OBLIQUE`                   a single oblique
+         `ARROW_DOUBLE_OBLIQUE`                   a double oblique
+         `ARROW_METAFILE`                         custom, define in metafile
+         ======================================== ==================================
+
+        :param int `end`: end of arrow head ???
+        :param float `size`: size of arrow head
+        :param float `dist`: dist ???
+        :param string `name`: name of arrow head
+        :param `mf`: mf ???
+        :param `arrowId`: id of arrow head
+        
+        """
         if isinstance(type, ArrowHead):
             pass
         else:
@@ -75,24 +128,39 @@ class ArrowHead(object):
         return self._arrowType
 
     def GetPosition(self):
+        """Get end position."""
         return self._arrowEnd
 
     def SetPosition(self, pos):
+        """Set end position.
+        
+        :param `pos`: position to set it to
+        """
         self._arrowEnd = pos
 
     def GetXOffset(self):
+        """Get the X offset."""
         return self._xOffset
 
     def GetYOffset(self):
+        """Get the Y offset."""
         return self._yOffset
     
     def GetSpacing(self):
+        """Get the spacing."""
         return self._spacing
 
     def GetSize(self):
+        """Get the arrow size."""
         return self._arrowSize
 
     def SetSize(self, size):
+        """Set the arrow size.
+        
+        :param `size`: size in points??? 
+        
+        :note: if a custom arrow is used size is used to scale the arrow???
+        """
         self._arrowSize = size
         if self._arrowType == ARROW_METAFILE and self._metaFile:
             oldWidth = self._metaFile._width
@@ -104,39 +172,69 @@ class ArrowHead(object):
                 self._metaFile.Scale(scale, scale)
                 
     def GetName(self):
+        """Get the arrow name."""
         return self._arrowName
 
     def SetXOffset(self, x):
+        """Set the X offset.
+        
+        :param `x`: value to set the offset to???
+        """
         self._xOffset = x
 
     def SetYOffset(self, y):
+        """Set the Y offset.
+        
+        :param `y`: value to set the offset to???
+        """
         self._yOffset = y
 
     def GetMetaFile(self):
+        """Get the metafile."""
         return self._metaFile
 
     def GetId(self):
+        """Get the id."""
         return self._id
 
     def GetArrowEnd(self):
+        """Get the arrow end position."""
         return self._arrowEnd
 
     def GetArrowSize(self):
+        """Get the arrow size."""
         return self._arrowSize
 
     def SetSpacing(self, sp):
+        """Set the spacing.
+        
+        :param `sp`: the new spacing value
+        """
         self._spacing = sp
 
 
 
 class LabelShape(RectangleShape):
+    """
+    The label shape class.
+    """
     def __init__(self, parent, region, w, h):
+        """
+        Default class constructor.
+        
+        :param `parent`: the parent an instance of :class:`Line`
+        :param `region`: the shape region an instance of :class:`~lib.ogl.ShapeRegion`
+        :param `w`: width in points
+        :param `h`: heigth in points
+        
+        """
         RectangleShape.__init__(self, w, h)
         self._lineShape = parent
         self._shapeRegion = region
         self.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT))
 
     def OnDraw(self, dc):
+        """The draw handler."""
         if self._lineShape and not self._lineShape.GetDrawHandles():
             return
 
@@ -156,39 +254,48 @@ class LabelShape(RectangleShape):
             dc.DrawRectangle(x1, y1, self._width, self._height)
 
     def OnDrawContents(self, dc):
+        """The draw content handler - just a place holder."""
         pass
 
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag left handler."""
         RectangleShape.OnDragLeft(self, draw, x, y, keys, attachment)
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The begin drag left handler."""
         RectangleShape.OnBeginDragLeft(self, x, y, keys, attachment)
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The end drag left handler."""
         RectangleShape.OnEndDragLeft(self, x, y, keys, attachment)
 
     def OnMovePre(self, dc, x, y, old_x, old_y, display):
+        """The move 'pre' handler.???"""
         return self._lineShape.OnLabelMovePre(dc, self, x, y, old_x, old_y, display)
 
     # Divert left and right clicks to line object
     def OnLeftClick(self, x, y, keys = 0, attachment = 0):
+        """The left click handler."""
         self._lineShape.GetEventHandler().OnLeftClick(x, y, keys, attachment)
 
     def OnRightClick(self, x, y, keys = 0, attachment = 0):
+        """The right click handler."""
         self._lineShape.GetEventHandler().OnRightClick(x, y, keys, attachment)
         
 
 
 class LineShape(Shape):
-    """LineShape may be attached to two nodes;
-    it may be segmented, in which case a control point is drawn for each joint.
+    """
+    The LineShape class may be attached to two nodes, it may be segmented,
+    in which case a control point is drawn for each joint.
 
-    A wxLineShape may have arrows at the beginning, end and centre.
-
-    Derived from:
-      Shape
+    A :class:`LineShape` may have arrows at the beginning, end and centre.
     """
     def __init__(self):
+        """
+        Default class constructor.
+        
+        """
         Shape.__init__(self)
 
         self._sensitivity = OP_CLICK_LEFT | OP_CLICK_RIGHT
@@ -222,30 +329,35 @@ class LineShape(Shape):
         self._arcArrows = []
 
     def GetFrom(self):
-        """Return the 'from' object."""
+        """Get the 'from' object."""
         return self._from
     
     def GetTo(self):
-        """Return the 'to' object."""
+        """Get the 'to' object."""
         return self._to
 
     def GetAttachmentFrom(self):
-        """Return the attachment point on the 'from' node."""
+        """Get the attachment point on the 'from' node."""
         return self._attachmentFrom
 
     def GetAttachmentTo(self):
-        """Return the attachment point on the 'to' node."""
+        """Get the attachment point on the 'to' node."""
         return self._attachmentTo
 
     def GetLineControlPoints(self):
+        """Get the line control points."""
         return self._lineControlPoints
 
     def SetSpline(self, spline):
-        """Specifies whether a spline is to be drawn through the control points."""
+        """Specifies whether a spline is to be drawn through the control points.
+        
+        :param boolean `spline`: True draw a spline through control points.
+        
+        """
         self._isSpline = spline
 
     def IsSpline(self):
-        """TRUE if a spline is drawn through the control points."""
+        """If `True` a spline is drawn through the control points."""
         return self._isSpline
 
     def SetAttachmentFrom(self, attach):
@@ -256,10 +368,14 @@ class LineShape(Shape):
         """Set the 'to' shape attachment."""
         self._attachmentTo = attach
 
-    # This is really to distinguish between lines and other images.
-    # For lines, want to pass drag to canvas, since lines tend to prevent
-    # dragging on a canvas (they get in the way.)
     def Draggable(self):
+        """Line is not draggable.
+        
+        :note: This is really to distinguish between lines and other images.
+         For lines we want to pass drag to canvas, since lines tend to prevent
+         dragging on a canvas (they get in the way.)
+        
+        """
         return False
 
     def SetIgnoreOffsets(self, ignore):
@@ -267,20 +383,28 @@ class LineShape(Shape):
         self._ignoreArrowOffsets = ignore
 
     def GetArrows(self):
+        """Get the defined arrows."""
         return self._arcArrows
 
     def GetAlignmentStart(self):
+        """Get alignment start"""
         return self._alignmentStart
 
     def GetAlignmentEnd(self):
+        """Get alignment end."""
         return self._alignmentEnd
 
     def IsEnd(self, nodeObject):
-        """TRUE if shape is at the end of the line."""
+        """`True` if shape is at the end of the line."""
         return self._to == nodeObject
 
     def MakeLineControlPoints(self, n):
-        """Make a given number of control points (minimum of two)."""
+        """
+        Make a given number of control points.
+        
+        :param int `n`: number of control points, minimum of two
+        
+        """
         self._lineControlPoints = []
         
         for _ in range(n):
@@ -292,7 +416,13 @@ class LineShape(Shape):
         self._initialised = False
         
     def InsertLineControlPoint(self, dc = None, point = None):
-        """Insert a control point at an optional given position."""
+        """
+        Insert a control point at an optional given position.
+        
+        :param `dc`: an instance of :class:`wx.MemoryDC`
+        :param `point`: an optional point, otherwise will use _lineControlPoints
+        
+        """
         if dc:
             self.Erase(dc)
 
@@ -346,8 +476,14 @@ class LineShape(Shape):
             self._initialised = True
                     
     def FormatText(self, dc, s, i):
-        """Format a text string according to the region size, adding
+        """
+        Format a text string according to the region size, adding
         strings with positions to region text list.
+        
+        :param `dc`: an instance of :class:`wx.MemoryDC`
+        :param str `s`: the text string
+        :param int `i`: index to the region to be used???
+        
         """
         self.ClearText(i)
 
@@ -391,7 +527,15 @@ class LineShape(Shape):
         self._formatted = True
 
     def DrawRegion(self, dc, region, x, y):
-        """Format one region at this position."""
+        """
+        Format one region at this position.
+        
+        :param `dc`: an instance of :class:`wx.MemoryDC`
+        :param `dc`: an instance of :class:`~lib.ogl.ShapeRegion`
+        :param `x`: the x position
+        :param `y`: the y position
+        
+        """
         if self.GetDisableLabel():
             return
 
@@ -420,7 +564,15 @@ class LineShape(Shape):
                 DrawFormattedText(dc, region.GetFormattedText(), xp, yp, w, h, region.GetFormatMode())
 
     def EraseRegion(self, dc, region, x, y):
-        """Erase one region at this position."""
+        """
+        Erase one region at this position.
+        
+        :param `dc`: an instance of :class:`wx.MemoryDC`
+        :param `dc`: an instance of :class:`~lib.ogl.ShapeRegion`
+        :param `x`: the x position
+        :param `y`: the y position
+        
+        """
         if self.GetDisableLabel():
             return
 
@@ -439,10 +591,11 @@ class LineShape(Shape):
             dc.DrawRectangle(xp - w / 2.0, yp - h / 2.0, w, h)
 
     def GetLabelPosition(self, position):
-        """Get the reference point for a label.
+        """
+        Get the reference point for a label.
 
-        Region x and y are offsets from this.
-        position is 0 (middle), 1 (start), 2 (end).
+        :param `position`: 0 = middle, 1 = start, 2 = end, Region x and y are offsets from this.
+
         """
         if position == 0:
             # Want to take the middle section for the label
@@ -462,7 +615,12 @@ class LineShape(Shape):
             return self._lineControlPoints[-1][0], self._lineControlPoints[-1][1]
 
     def Straighten(self, dc = None):
-        """Straighten verticals and horizontals."""
+        """
+        Straighten verticals and horizontals.
+        
+        :param `dc`: an instance of :class:`wx.MemoryDC` or None
+        
+        """
         if len(self._lineControlPoints) < 3:
             return
 
@@ -491,13 +649,22 @@ class LineShape(Shape):
                 self._labelObjects[i].RemoveFromCanvas(self._canvas)
         self.ClearArrowsAtPosition(-1)
 
-    # Override Delete to unlink before deleting 
-    def Delete(self): 
+    def Delete(self):
+        """Delete the line, unlink it first."""
         self.Unlink() 
         Shape.Delete(self)
         
     def SetEnds(self, x1, y1, x2, y2):
-        """Set the end positions of the line."""
+        """
+        Set the end positions of the line.
+        
+        :param: `x1`: x1 position
+        :param: `y1`: y1 position
+        :param: `x2`: x2 position
+        :param: `y2`: y2 position
+        
+        
+        """
         self._lineControlPoints[0] = wx.RealPoint(x1, y1)
         self._lineControlPoints[-1] = wx.RealPoint(x2, y2)
 
@@ -514,13 +681,24 @@ class LineShape(Shape):
         return first_point[0], first_point[1], last_point[0], last_point[1]
 
     def SetAttachments(self, from_attach, to_attach):
-        """Specify which object attachment points should be used at each end
-        of the line.
+        """
+        Specify which object attachment points should be used at each end of the line.
+        
+        :param `from_attach`: the from points ???
+        :param `to_attach`: the to points ???
+        
         """
         self._attachmentFrom = from_attach
         self._attachmentTo = to_attach
 
     def HitTest(self, x, y):
+        """
+        Line hit test.
+        
+        :param `x`: x position
+        :param `y`: y position
+        
+        """
         if not self._lineControlPoints:
             return False
 
@@ -597,7 +775,15 @@ class LineShape(Shape):
                     middleArrowPos += arrow.GetSize() + arrow.GetSpacing()
 
     def DrawArrow(self, dc, arrow, XOffset, proportionalOffset):
-        """Draw the given arrowhead (or annotation)."""
+        """
+        Draw the given arrowhead (or annotation).
+        
+        :param `dc`: an instance of :class:`wx.MemoryDC`
+        :param `arrow`: an instannce of :class:`ArrowHead`
+        :param `XOffset`: the x offset ???
+        :param `proportionalOffset`: ???
+        
+        """
         first_line_point = self._lineControlPoints[0]
         second_line_point = self._lineControlPoints[1]
 
@@ -772,6 +958,7 @@ class LineShape(Shape):
                     arrow.GetMetaFile().Draw(dc, x + deltaX, y + deltaY)
 
     def OnErase(self, dc):
+        """The erase handler."""
         old_pen = self._pen
         old_brush = self._brush
 
@@ -811,6 +998,7 @@ class LineShape(Shape):
             self.SetBrush(old_brush)
 
     def GetBoundingBoxMin(self):
+        """Get the minimum bounding box."""
         x1, y1 = 10000, 10000
         x2, y2 = -10000, -10000
 
@@ -830,10 +1018,17 @@ class LineShape(Shape):
     # amongst all the arcs which are attached to THIS SIDE of the node image,
     # and the number of same.
     def FindNth(self, image, incoming):
-        """Find the position of the line on the given object.
+        """
+        Find the position of the line on the given object.
 
         Specify whether incoming or outgoing lines are being considered
         with incoming.
+        
+        :param `image`: a node image
+        :param `incoming`: True to get incoming lines ???
+        
+        :returns: nth line, number of lines ???
+        
         """
         n = -1
         num = 0
@@ -866,6 +1061,7 @@ class LineShape(Shape):
         return n, num
 
     def OnDrawOutline(self, dc, x, y, w, h):
+        """The draw outline handler."""
         old_pen = self._pen
         old_brush = self._brush
 
@@ -885,6 +1081,7 @@ class LineShape(Shape):
             self.SetBrush(None)
 
     def OnMovePre(self, dc, x, y, old_x, old_y, display = True):
+        """The move 'pre' handler. ???"""
         x_offset = x - old_x
         y_offset = y - old_y
 
@@ -906,8 +1103,8 @@ class LineShape(Shape):
         return True
 
     def OnMoveLink(self, dc, moveControlPoints = True):
-        """Called when a connected object has moved, to move the link to
-        correct position
+        """The move linke handler, called when a connected object has moved, to move the link to
+        correct position.
         """
         if not self._from or not self._to:
             return
@@ -949,7 +1146,8 @@ class LineShape(Shape):
         self.Move(dc, self._xpos, self._ypos)
 
     def FindLineEndPoints(self):
-        """Finds the x, y points at the two ends of the line.
+        """
+        Finds the x, y points at the two ends of the line.
 
         This function can be used by e.g. line-routing routines to
         get the actual points on the two node images where the lines will be
@@ -1003,8 +1201,8 @@ class LineShape(Shape):
 
         return end_x, end_y, other_end_x, other_end_y
 
-
     def OnDraw(self, dc):
+        """The draw handler."""
         if not self._lineControlPoints:
             return
 
@@ -1037,6 +1235,7 @@ class LineShape(Shape):
         self.DrawArrows(dc)
 
     def OnDrawControlPoints(self, dc):
+        """The draw control points handler."""
         if not self._drawHandles:
             return
 
@@ -1048,6 +1247,7 @@ class LineShape(Shape):
         Shape.OnDrawControlPoints(self, dc)
 
     def OnEraseControlPoints(self, dc):
+        """The erase control points handler."""
         # Erase temporary label rectangles if necessary
         
         for i in range(3):
@@ -1057,15 +1257,19 @@ class LineShape(Shape):
         Shape.OnEraseControlPoints(self, dc)
 
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag left handler - just a place holder."""
         pass
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The begin drag left handler - just a place holder."""
         pass
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The end drag left handler - just a place holder."""
         pass
 
     def OnDrawContents(self, dc):
+        """The draw contents handler."""
         if self.GetDisableLabel():
             return
 
@@ -1105,6 +1309,7 @@ class LineShape(Shape):
             self._controlPoints.append(control)
 
     def ResetControlPoints(self):
+        """Reset the control points."""
         if self._canvas and self._lineControlPoints and self._controlPoints:
             for i in range(min(len(self._controlPoints), len(self._lineControlPoints))):
                 point = self._lineControlPoints[i]
@@ -1112,8 +1317,8 @@ class LineShape(Shape):
                 control.SetX(point[0])
                 control.SetY(point[1])
 
-    # Override select, to create / delete temporary label-moving objects
     def Select(self, select, dc = None):
+        """Overridden select, to create / delete temporary label-moving objects."""
         Shape.Select(self, select, dc)
         if select:
             for i in range(3):
@@ -1145,6 +1350,7 @@ class LineShape(Shape):
     # Control points ('handles') redirect control to the actual shape, to
     # make it easier to override sizing behaviour.
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
+        """The sizing drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
@@ -1173,6 +1379,7 @@ class LineShape(Shape):
             self.SetBrush(old_brush)
 
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
+        """The sizing begin drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
 
@@ -1214,6 +1421,7 @@ class LineShape(Shape):
             pt._oldCursor = wx.STANDARD_CURSOR
 
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
+        """The sizing end drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
 
@@ -1252,6 +1460,7 @@ class LineShape(Shape):
 
     # This is called only when a non-end control point is moved
     def OnMoveMiddleControlPoint(self, dc, lpt, pt):
+        """The move middle control point handler."""
         lpt._xpos = pt[0]
         lpt._ypos = pt[1]
 
@@ -1263,40 +1472,38 @@ class LineShape(Shape):
         return True
 
     def AddArrow(self, type, end = ARROW_POSITION_END, size = 10.0, xOffset = 0.0, name = "", mf = None, arrowId = -1):
-        """Add an arrow (or annotation) to the line.
+        """
+        Add an arrow (or annotation) to the line.
+        
+        :param `type`: an arrow head type, one of the following
+        
+         ======================================== ==================================
+         Arrow head type                          Description
+         ======================================== ==================================
+         `ARROW_HOLLOW_CIRCLE`                    a hollow circle
+         `ARROW_FILLED_CIRCLE`                    a filled circle
+         `ARROW_ARROW`                            an arrow
+         `ARROW_SINGLE_OBLIQUE`                   a single oblique
+         `ARROW_DOUBLE_OBLIQUE`                   a double oblique
+         `ARROW_METAFILE`                         custom, define in metafile
+         ======================================== ==================================
 
-        type may currently be one of:
+        :param `end`: may be one of the following
 
-        ARROW_HOLLOW_CIRCLE
-          Hollow circle. 
-        ARROW_FILLED_CIRCLE
-          Filled circle. 
-        ARROW_ARROW
-          Conventional arrowhead. 
-        ARROW_SINGLE_OBLIQUE
-          Single oblique stroke. 
-        ARROW_DOUBLE_OBLIQUE
-          Double oblique stroke. 
-        ARROW_DOUBLE_METAFILE
-          Custom arrowhead. 
+         ======================================== ==================================
+         Arrow head type                          Description
+         ======================================== ==================================
+         `ARROW_POSITION_END`                     arrow appears at the end
+         `ARROW_POSITION_START`                   arrow appears at the start
+         ======================================== ==================================
 
-        end may currently be one of:
-
-        ARROW_POSITION_END
-          Arrow appears at the end. 
-        ARROW_POSITION_START
-          Arrow appears at the start. 
-
-        arrowSize specifies the length of the arrow.
-
-        xOffset specifies the offset from the end of the line.
-
-        name specifies a name for the arrow.
-
-        mf can be a wxPseduoMetaFile, perhaps loaded from a simple Windows
-        metafile.
-
-        arrowId is the id for the arrow.
+        :param `size`: specifies the lenght of the arrow 
+        :param `xOffset`: specifies the offset from the end of the line
+        :param `name`: specifies a name
+        :param `mf`: mf can be a wxPseduoMetaFile, perhaps loaded from a simple Windows
+          metafile.
+        :param `arrowId`: the id for the arrow
+        
         """
         arrow = ArrowHead(type, end, size, xOffset, name, mf, arrowId)
         self._arcArrows.append(arrow)
@@ -1304,7 +1511,8 @@ class LineShape(Shape):
 
     # Add arrowhead at a particular position in the arrowhead list
     def AddArrowOrdered(self, arrow, referenceList, end):
-        """Add an arrowhead in the position indicated by the reference list
+        """
+        Add an arrowhead in the position indicated by the reference list
         of arrowheads, which contains all legal arrowheads for this line, in
         the correct order. E.g.
 
@@ -1317,6 +1525,11 @@ class LineShape(Shape):
         is for one end only, since it potentially defines the ordering for
         any one of the 3 positions. So we don't check the reference list for
         arrowhead position.
+        
+        :param `arrow`: an instance of :class:`ArrowHead`
+        :param `referenceList`: ???
+        :param `end`: ???
+        
         """
         if not referenceList:
             return False
@@ -1354,8 +1567,11 @@ class LineShape(Shape):
         return True
 
     def ClearArrowsAtPosition(self, end):
-        """Delete the arrows at the specified position, or at any position
-        if position is -1.
+        """
+        Delete the arrows at the specified position, or at any position if position is -1.
+        
+        :param `end`: position to clear arrow from
+        
         """
         if end == -1:
             self._arcArrows = []
@@ -1366,7 +1582,12 @@ class LineShape(Shape):
                 self._arcArrows.remove(arrow)
 
     def ClearArrow(self, name):
-        """Delete the arrow with the given name."""
+        """
+        Delete the arrow with the given name.
+        
+        :param `name`: name of arrow to delete
+        
+        """
         for arrow in self._arcArrows:
             if arrow.GetName() == name:
                 self._arcArrows.remove(arrow)
@@ -1374,9 +1595,14 @@ class LineShape(Shape):
         return False
 
     def FindArrowHead(self, position, name):
-        """Find arrowhead by position and name.
+        """
+        Find arrowhead by position and name.
 
         if position is -1, matches any position.
+        
+        :param `position`: position of arrow to find or -1
+        :param `name`: name of arrow to find
+        
         """
         for arrow in self._arcArrows:
             if (position == -1 or position == arrow.GetArrowEnd()) and arrow.GetName() == name:
@@ -1385,7 +1611,12 @@ class LineShape(Shape):
         return None
 
     def FindArrowHeadId(self, arrowId):
-        """Find arrowhead by id."""
+        """
+        Find arrowhead by id.
+        
+        :param `arrowId`: id of arrow to find
+        
+        """
         for arrow in self._arcArrows:
             if arrowId == arrow.GetId():
                 return arrow
@@ -1393,9 +1624,14 @@ class LineShape(Shape):
         return None
 
     def DeleteArrowHead(self, position, name):
-        """Delete arrowhead by position and name.
+        """
+        Delete arrowhead by position and name.
 
         if position is -1, matches any position.
+
+        :param `position`: position of arrow to delete or -1
+        :param `name`: name of arrow to delete
+        
         """
         for arrow in self._arcArrows:
             if (position == -1 or position == arrow.GetArrowEnd()) and arrow.GetName() == name:
@@ -1404,7 +1640,12 @@ class LineShape(Shape):
         return False
     
     def DeleteArrowHeadId(self, arrowId):
-        """Delete arrowhead by id."""
+        """
+        Delete arrowhead by id.
+        
+        :param `arrowId`: id of arrow to delete
+        
+        """
         for arrow in self._arcArrows:
             if arrowId == arrow.GetId():
                 self._arcArrows.remove(arrow)
@@ -1414,7 +1655,8 @@ class LineShape(Shape):
     # Calculate the minimum width a line
     # occupies, for the purposes of drawing lines in tools.
     def FindMinimumWidth(self):
-        """Find the horizontal width for drawing a line with arrows in
+        """
+        Find the horizontal width for drawing a line with arrows in
         minimum space. Assume arrows at end only.
         """
         minWidth = 0.0
@@ -1437,9 +1679,13 @@ class LineShape(Shape):
         return minWidth
 
     def FindLinePosition(self, x, y):
-        """Find which position we're talking about at this x, y.
+        """
+        Find which position we're talking about.
+        
+        :param `x`: x position
+        :param `y`: y position
 
-        Returns ARROW_POSITION_START, ARROW_POSITION_MIDDLE, ARROW_POSITION_END.
+        :returns: ARROW_POSITION_START or ARROW_POSITION_MIDDLE or ARROW_POSITION_END.
         """
         startX, startY, endX, endY = self.GetEnds()
 
@@ -1456,6 +1702,13 @@ class LineShape(Shape):
             return ARROW_POSITION_END
 
     def SetAlignmentOrientation(self, isEnd, isHoriz):
+        """
+        Set the alignment orientation.
+        
+        :param `isEnd`: True or False ???
+        :param `isHoriz`: True of False ???
+        
+        """
         if isEnd:
             if isHoriz and self._alignmentEnd & LINE_ALIGNMENT_HORIZ != LINE_ALIGNMENT_HORIZ:
                 self._alignmentEnd != LINE_ALIGNMENT_HORIZ
@@ -1468,6 +1721,22 @@ class LineShape(Shape):
                 self._alignmentStart -= LINE_ALIGNMENT_HORIZ
             
     def SetAlignmentType(self, isEnd, alignType):
+        """
+        Set the alignment type.
+        
+        :param `isEnd`: if True set the type for the begin, else for the end ???
+        :param `alignType`: one of the following
+        
+         ======================================== ==================================
+         Arrow head type                          Description
+         ======================================== ==================================
+         `LINE_ALIGNMENT_HORIZ`                   Align horizontally
+         `LINE_ALIGNMENT_VERT`                    Align vertically
+         `LINE_ALIGNMENT_TO_NEXT_HANDLE`          Align to next handle
+         `LINE_ALIGNMENT_NONE`                    vertical by default        
+         ======================================== ==================================
+        
+        """
         if isEnd:
             if alignType == LINE_ALIGNMENT_TO_NEXT_HANDLE:
                 if self._alignmentEnd & LINE_ALIGNMENT_TO_NEXT_HANDLE != LINE_ALIGNMENT_TO_NEXT_HANDLE:
@@ -1482,12 +1751,24 @@ class LineShape(Shape):
                 self._alignmentStart -= LINE_ALIGNMENT_TO_NEXT_HANDLE
             
     def GetAlignmentOrientation(self, isEnd):
+        """
+        Get the alignment orientation.
+        
+        :param `isEnd`: if True get the type for the begin, else for the end ???
+        
+        """
         if isEnd:
             return self._alignmentEnd & LINE_ALIGNMENT_HORIZ == LINE_ALIGNMENT_HORIZ
         else:
             return self._alignmentStart & LINE_ALIGNMENT_HORIZ == LINE_ALIGNMENT_HORIZ
 
     def GetAlignmentType(self, isEnd):
+        """
+        Get the alignment type.
+        
+        :param `isEnd`: if True get the type for the begin, else for the end ???
+        
+        """
         if isEnd:
             return self._alignmentEnd & LINE_ALIGNMENT_TO_NEXT_HANDLE
         else:
@@ -1496,6 +1777,8 @@ class LineShape(Shape):
     def GetNextControlPoint(self, shape):
         """Find the next control point in the line after the start / end point,
         depending on whether the shape is at the start or end.
+        
+        :param `shape`: an instance of :class:`~lib.ogl.Shape` ???
         """
         n = len(self._lineControlPoints)
         if self._to == shape:
@@ -1509,10 +1792,12 @@ class LineShape(Shape):
         return None
 
     def OnCreateLabelShape(self, parent, region, w, h):
+        """Create label shape handler."""
         return LabelShape(parent, region, w, h)
 
     
     def OnLabelMovePre(self, dc, labelShape, x, y, old_x, old_y, display):
+        """Label move 'pre' handler. ???"""
         labelShape._shapeRegion.SetSize(labelShape.GetWidth(), labelShape.GetHeight())
 
         # Find position in line's region list
