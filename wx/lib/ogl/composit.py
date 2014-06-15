@@ -690,8 +690,8 @@ class CompositeShape(RectangleShape):
         :param `cId`: The constraint id to find.
 
         :returns: None or a tuple of the constraint and the actual composite the
-        constraint was in, in case that composite was a descendant of
-        this composit.
+         constraint was in, in case that composite was a descendant of
+         this composit.
         
         """
         for constraint in self._constraints:
@@ -1407,7 +1407,7 @@ class DivisionShape(CompositeShape):
         :param `left`: desired left position ???
         :param `test`: if `True` just a test
         :returns: `False` if it's not physically possible to adjust it to
-        this point.
+         this point.
         """
         x2 = self.GetX() + self.GetWidth() / 2.0
 
@@ -1434,7 +1434,7 @@ class DivisionShape(CompositeShape):
         :param `right`: desired right position ???
         :param `test`: if `True` just a test
         :returns: `False` if it's not physically possible to adjust it to
-        this point.
+         this point.
         
         """
         x1 = self.GetX() - self.GetWidth() / 2.0
@@ -1462,7 +1462,7 @@ class DivisionShape(CompositeShape):
         :param `top`: desired top position ???
         :param `test`: if `True` just a test
         :returns: `False` if it's not physically possible to adjust it to
-        this point.
+         this point.
 
         """
         y1 = self.GetY() - self.GetHeight() / 2.0
@@ -1499,19 +1499,20 @@ class DivisionShape(CompositeShape):
         Resize adjoining divisions at the given side.
 
         :param `side`: can be one of
-         =======================
-         Side option
-         =======================
-         `DIVISION_SIDE_NONE`
-         `DIVISION_SIDE_LEFT`
-         `DIVISION_SIDE_TOP`
-         `DIVISION_SIDE_RIGHT`
-         `DIVISION_SIDE_BOTTOM`
-         =======================
+
+        ======================= =======================
+        Side option             Description
+        ======================= =======================
+        `DIVISION_SIDE_NONE`    no side
+        `DIVISION_SIDE_LEFT`    Left side
+        `DIVISION_SIDE_TOP`     Top side
+        `DIVISION_SIDE_RIGHT`   Right side
+        `DIVISION_SIDE_BOTTOM`  Bottom side
+        ======================= =======================
         
         :param `newPos`: new position
         :param `test`: if `True`, just see whether it's possible for each
-        adjoining region, returning `False` if it's not.
+         adjoining region, returning `False` if it's not.
 
         """
         divisionParent = self.GetParent()

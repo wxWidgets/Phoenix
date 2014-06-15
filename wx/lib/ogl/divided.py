@@ -12,7 +12,7 @@
 # Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
 """
-The class :class:`DividedShape`.
+The :class:`DividedShape` class.
 """
 import sys
 import wx
