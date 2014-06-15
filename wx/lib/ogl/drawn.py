@@ -12,7 +12,10 @@
 # Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
 """
-The OGL drawn shape class.
+The class :class:`DrawnShape`.
+
+THIS DOES NOT SEEM TO BE USED ANYWHERE
+
 """
 import os.path
 
@@ -48,6 +51,7 @@ DRAWOP_DRAW_ARC              = 27
 DRAWOP_DRAW_TEXT             = 28
 DRAWOP_DRAW_SPLINE           = 29
 DRAWOP_DRAW_ELLIPTIC_ARC     = 30
+
 
 class DrawOp(object):
     def __init__(self, theOp):

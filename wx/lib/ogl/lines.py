@@ -31,14 +31,14 @@ LINE_ALIGNMENT_NONE =               0
 
 class LineControlPoint(ControlPoint):
     """
-    The line control point class.
+    The :class:`LineControlPoint` class.
     """
     def __init__(self, theCanvas = None, object = None, size = 0.0, x = 0.0, y = 0.0, the_type = 0):
         """
         Default class constructor.
         
         :param `theCanvas`: a :class:`~lib.ogl.Canvas`
-        :param `object`: not used
+        :param `object`: not used ???
         :param float `size`: the size
         :param float `x`: the x position
         :param float `y`: the y position
