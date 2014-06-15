@@ -12,7 +12,7 @@
 # Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
 """
-The OGL divided shape class.
+The class :class:`DividedShape`.
 """
 import sys
 import wx
@@ -21,14 +21,34 @@ from .basic import ControlPoint, RectangleShape, Shape
 from .oglmisc import *
 
 
-
 class DividedShapeControlPoint(ControlPoint):
+    """The class:`DividedShapeControlPoint` class."""
     def __init__(self, the_canvas, object, region, size, the_m_xoffset, the_m_yoffset, the_type):
+        """
+        Default class constructor.
+        
+        :param `theCanvas`: a :class:`~lib.ogl.Canvas`
+        :param `object`: not used ???
+        :param `region`: an instance of :class:`~lib.ogl.ShapeRegion`
+        :param float `size`: the size
+        :param float `the_m_xoffset`: the the_m_xoffset position ???
+        :param float `the_m_yoffset`: the the_m_yoffset position ???
+        :param int `the_type`: one of the following types
+        
+         ======================================== ==================================
+         Control point type                       Description
+         ======================================== ==================================
+         `CONTROL_POINT_VERTICAL`                 Vertical
+         `CONTROL_POINT_HORIZONTAL`               Horizontal
+         `CONTROL_POINT_DIAGONAL`                 Diagonal
+         ======================================== ==================================
+        
+        """
         ControlPoint.__init__(self, the_canvas, object, size, the_m_xoffset, the_m_yoffset, the_type)
         self.regionId = region
 
-    # Implement resizing of divided object division
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
@@ -46,6 +66,7 @@ class DividedShapeControlPoint(ControlPoint):
         dc.DrawLine(x1, y1, x2, y2)
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The begin drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
@@ -65,6 +86,7 @@ class DividedShapeControlPoint(ControlPoint):
         self._canvas.CaptureMouse()
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The end drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
 
@@ -135,23 +157,29 @@ class DividedShapeControlPoint(ControlPoint):
         dividedObject.GetEventHandler().OnMoveLinks(dc)
         
 
-
 class DividedShape(RectangleShape):
-    """A DividedShape is a rectangle with a number of vertical divisions.
+    """
+    A :class:`DividedShape` is a rectangle with a number of vertical divisions.
     Each division may have its text formatted with independent characteristics,
     and the size of each division relative to the whole image may be specified.
-
-    Derived from:
-      RectangleShape
     """
     def __init__(self, w, h):
+        """
+        Default class constructor.
+        
+        :param `w`: width of rectangle
+        :param `h`: heigth of rectangle
+        
+        """
         RectangleShape.__init__(self, w, h)
         self.ClearRegions()
 
     def OnDraw(self, dc):
+        """The draw handler."""
         RectangleShape.OnDraw(self, dc)
 
     def OnDrawContents(self, dc):
+        """The draw contents handler."""
         if self.GetRegions():
             defaultProportion = 1.0 / len(self.GetRegions())
         else:
@@ -206,13 +234,22 @@ class DividedShape(RectangleShape):
             currentY = actualY
 
     def SetSize(self, w, h, recursive = True):
+        """
+        Set the size.
+        
+        :param `w`: width of rectangle
+        :param `h`: heigth of rectangle
+        :param `recursive`: not implemented
+        
+        """
         self.SetAttachmentSize(w, h)
         self._width = w
         self._height = h
         self.SetRegionSizes()
 
     def SetRegionSizes(self):
-        """Set all region sizes according to proportions and this object
+        """
+        Set all region sizes according to proportions and this object
         total size.
         """
         if not self.GetRegions():
@@ -242,8 +279,18 @@ class DividedShape(RectangleShape):
 
             currentY = actualY
 
-    # Attachment points correspond to regions in the divided box
     def GetAttachmentPosition(self, attachment, nth = 0, no_arcs = 1, line = None):
+        """
+        Get the attachment position.
+        
+        Attachment points correspond to regions in the divided box.
+        
+        :param `attachment`: the attachment ???
+        :param `nth`: get nth attachment ???
+        :param `no_arcs`: ???
+        :param `line`: ???
+        
+        """
         totalNumberAttachments = len(self.GetRegions()) * 2 + 2
         if self.GetAttachmentMode() == ATTACHMENT_MODE_NONE or attachment >= totalNumberAttachments:
             return Shape.GetAttachmentPosition(self, attachment, nth, no_arcs)
@@ -328,8 +375,12 @@ class DividedShape(RectangleShape):
         return x, y
 
     def GetNumberOfAttachments(self):
-        # There are two attachments for each region (left and right),
-        # plus one on the top and one on the bottom.
+        """
+        Get the number of attachments.
+        
+        There are two attachments for each region (left and right),
+        plus one on the top and one on the bottom.
+        """
         n = len(self.GetRegions()) * 2 + 2
 
         maxN = n - 1
@@ -340,6 +391,12 @@ class DividedShape(RectangleShape):
         return maxN + 1
 
     def AttachmentIsValid(self, attachment):
+        """
+        Is the attachment valid?
+        
+        :param `attachment`: the attachment
+        
+        """
         totalNumberAttachments = len(self.GetRegions()) * 2 + 2
         if attachment >= totalNumberAttachments:
             return Shape.AttachmentIsValid(self, attachment)
@@ -347,10 +404,16 @@ class DividedShape(RectangleShape):
             return attachment >= 0
 
     def MakeControlPoints(self):
+        """
+        Make the control points.
+        """
         RectangleShape.MakeControlPoints(self)
         self.MakeMandatoryControlPoints()
 
     def MakeMandatoryControlPoints(self):
+        """
+        Make the mandatory control points.
+        """
         currentY = self.GetY() - self._height / 2.0
         maxY = self.GetY() + self._height / 2.0
 
@@ -368,13 +431,22 @@ class DividedShape(RectangleShape):
             currentY = actualY
 
     def ResetControlPoints(self):
-        # May only have the region handles, (n - 1) of them
+        """
+        Reset the control points.
+        
+        :note: May only have the region handles, (n - 1) of them
+        
+        """
+
         if len(self._controlPoints) > len(self.GetRegions()) - 1:
             RectangleShape.ResetControlPoints(self)
 
         self.ResetMandatoryControlPoints()
 
     def ResetMandatoryControlPoints(self):
+        """
+        Reset the mandatory control points.
+        """
         currentY = self.GetY() - self._height / 2.0
         maxY = self.GetY() + self._height / 2.0
 
@@ -395,10 +467,13 @@ class DividedShape(RectangleShape):
                 i += 1
                 
     def EditRegions(self):
-        """Edit the region colours and styles. Not implemented."""
+        """
+        Edit the region colours and styles. Not implemented.
+        """
         print("EditRegions() is unimplemented")
         
     def OnRightClick(self, x, y, keys = 0, attachment = 0):
+        """The right click handler."""
         if keys & KEY_CTRL:
             self.EditRegions()
         else:
