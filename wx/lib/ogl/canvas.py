@@ -12,7 +12,7 @@
 # Tags:         phoenix-port, unittest, py3-port
 #----------------------------------------------------------------------------
 """
-The OGL canvas class
+The :class:`ShapeCanvas` class.
 """
 import wx
 from .lines import LineShape
@@ -22,9 +22,14 @@ from .oglmisc import *
 NoDragging, StartDraggingLeft, ContinueDraggingLeft, StartDraggingRight, ContinueDraggingRight = 0, 1, 2, 3, 4
 
 
-
-# Helper function: True if 'contains' wholly contains 'contained'.
 def WhollyContains(contains, contained):
+    """Helper function.
+    
+    :param `contains`: the containing shape
+    :param `contained`: the contained shape
+    :returns: `True` if 'contains' wholly contains 'contained'
+    
+    """
     xp1, yp1 = contains.GetX(), contains.GetY()
     xp2, yp2 = contained.GetX(), contained.GetY()
     
@@ -42,11 +47,29 @@ def WhollyContains(contains, contained):
     bottom2 = yp2 + h2 / 2.0
     
     return ((left1 <= left2) and (top1 <= top2) and (right1 >= right2) and (bottom1 >= bottom2))
-    
 
 
 class ShapeCanvas(wx.ScrolledWindow):
+    """The :class:`ShapeCanvas` class."""
     def __init__(self, parent = None, id = -1, pos = wx.DefaultPosition, size = wx.DefaultSize, style = wx.BORDER, name = "ShapeCanvas"):
+        """Default class constructor.
+        
+        Default class constructor.
+
+        :param `parent`: parent window
+        :param integer `id`: window identifier. A value of -1 indicates a default value
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform
+        :param integer `style`: the underlying :class:`Window` style
+        :param str `name`: the window name
+        
+        :type parent: :class:`Window`
+        :type pos: tuple or :class:`Point`
+        :type size: tuple or :class:`Size`
+        
+        """
         wx.ScrolledWindow.__init__(self, parent, id, pos, size, style, name)
         
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
@@ -71,7 +94,6 @@ class ShapeCanvas(wx.ScrolledWindow):
         """
         Update the buffer with the background and redraw the full diagram.
         """
-        # update the buffer
         dc = wx.MemoryDC()
         dc.SelectObject(self._Buffer)
 
@@ -83,7 +105,7 @@ class ShapeCanvas(wx.ScrolledWindow):
     
     def OnSize(self, evt):
         """
-        Initialize the buffer to the size of the window.
+        The size handler, it initializes the buffer to the size of the window.
         """
         Size  = self.GetClientSize()
 
@@ -93,16 +115,27 @@ class ShapeCanvas(wx.ScrolledWindow):
         self.Draw()
         
     def SetDiagram(self, diag):
+        """Set the diagram associated with this canvas.
+        
+        :param `diag`: an instance of :class:`~lib.ogl.Diagram`
+        
+        """
         self._shapeDiagram = diag
 
     def GetDiagram(self):
+        """Get the diagram associated with this canvas."""
         return self._shapeDiagram
     
     def OnPaint(self, evt):
+        """
+        The paint handler, uses :class:`BufferedPaintDC` to draw the 
+        buffer to the screen.
+        """
         dc = wx.BufferedPaintDC(self)
         dc.DrawBitmap(self._Buffer, 0, 0)
 
     def OnMouseEvent(self, evt):
+        """The mouse event handler."""
         # we just get position, so is using ClientDC fine here?
         dc = wx.ClientDC(self)
         x, y = evt.GetLogicalPosition(dc)
@@ -296,6 +329,15 @@ class ShapeCanvas(wx.ScrolledWindow):
         self.Draw()
 
     def FindShape(self, x, y, info = None, notObject = None):
+        """
+        Find shape at given position.
+        
+        :param `x`: the x position
+        :param `y`: the y position
+        :param `info`: ???
+        :param `notObject`: ???
+        
+        """
         nearest = 100000.0
         nearest_attachment = 0
         nearest_object = None
@@ -355,21 +397,49 @@ class ShapeCanvas(wx.ScrolledWindow):
         return nearest_object, nearest_attachment
 
     def AddShape(self, object, addAfter = None):
+        """
+        Add a shape to canvas.
+        
+        :param `object`: the :class:`~lib.ogl.Shape` instance to add
+        :param `addAfter`: None or the :class:`~lib.ogl.Shape` after which
+         above shape is to be added.
+        
+        """
         self.GetDiagram().AddShape(object, addAfter)
 
     def InsertShape(self, object):
+        """
+        Insert a shape to canvas.
+        
+        :param `object`: the :class:`~lib.ogl.Shape` instance to insert
+        
+        """
         self.GetDiagram().InsertShape(object)
 
     def RemoveShape(self, object):
+        """
+        Remove a shape from canvas.
+        
+        :param `object`: the :class:`~lib.ogl.Shape` instance to be removed
+        
+        """
         self.GetDiagram().RemoveShape(object)
 
     def GetQuickEditMode(self):
+        """Get quick edit mode."""
         return self.GetDiagram().GetQuickEditMode()
     
     def Redraw(self, dc):
+        """Redraw the diagram."""
         self.GetDiagram().Redraw(dc)
 
     def Snap(self, x, y):
+        """Snap ???
+        
+        :param `x`: the x position
+        :param `y`: the y position
+        
+        """
         return self.GetDiagram().Snap(x, y)
 
     def OnLeftClick(self, x, y, keys = 0):
