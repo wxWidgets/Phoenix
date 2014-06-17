@@ -23,7 +23,14 @@ from .oglmisc import *
 DragOffsetX = 0.0
 DragOffsetY = 0.0
 
+
 def OGLInitialize():
+    """Initialize OGL.
+    
+    :note: This creates some pens and brushes that the OGL library uses.
+     It should be called after the app object has been created, but
+     before OGL is used.
+    """
     global WhiteBackgroundPen, WhiteBackgroundBrush, TransparentPen
     global BlackForegroundPen, NormalFont
     
@@ -37,193 +44,280 @@ def OGLInitialize():
 
 
 def OGLCleanUp():
+    """not implemented???"""
     pass
 
 
 class ShapeTextLine(object):
+    """The :class:`ShapeTextLine` class."""
     def __init__(self, the_x, the_y, the_line):
+        """
+        Default class constructor.
+        
+        :param int `the_x`: the x position
+        :param int `the_y`: the y position
+        :param str `the_line:` the text
+        
+        """
         self._x = the_x
         self._y = the_y
         self._line = the_line
 
     def GetX(self):
+        """Get the x position."""
         return self._x
 
     def GetY(self):
+        """Get the y position."""
         return self._y
 
     def SetX(self, x):
+        """
+        Set the x position.
+        
+        :param int `x`: the x position
+        
+        """
         self._x = x
 
     def SetY(self, y):
+        """
+        Set the y position.
+        
+        :param int `y`: the x position
+        
+        """
         self._y = y
 
     def SetText(self, text):
+        """
+        Set the text.
+        
+        :param str `text`: the text
+        
+        """
         self._line = text
 
     def GetText(self):
+        """Get the text."""
         return self._line
 
 
-    
 class ShapeEvtHandler(object):
+    """The :class:`ShapeEvtHandler` class."""
     def __init__(self, prev = None, shape = None):
+        """
+        Default class constructor.
+        
+        :param `pref`: the previous event handler, an instance of
+         :class:`ShapeEvtHandler` ???
+        :param `shape`: the shape, an instance of :class:`Shape`
+
+        """
         self._previousHandler = prev
         self._handlerShape = shape
 
     def SetShape(self, sh):
+        """
+        Set associated shape
+        
+        :param `sh`:  the shape, an instance of :class:`Shape`
+        
+        """
         self._handlerShape = sh
 
     def GetShape(self):
+        """Get associated shape."""
         return self._handlerShape
 
     def SetPreviousHandler(self, handler):
+        """
+        Set previous event handler.
+        
+        :param `handler`: the previous handler, an instance of
+         :class:`ShapeEvtHandler` ???
+
+        """
         self._previousHandler = handler
 
     def GetPreviousHandler(self):
+        """Get previous event handler."""
         return self._previousHandler
 
     def OnDelete(self):
+        """The delete handler."""
         if self!=self.GetShape():
             del self
             
     def OnDraw(self, dc):
+        """The draw handler."""
         if self._previousHandler:
             self._previousHandler.OnDraw(dc)
 
     def OnMoveLinks(self, dc):
+        """The move links handler."""
         if self._previousHandler:
             self._previousHandler.OnMoveLinks(dc)
             
     def OnMoveLink(self, dc, moveControlPoints = True):
+        """The move link handler."""
         if self._previousHandler:
             self._previousHandler.OnMoveLink(dc, moveControlPoints)
             
     def OnDrawContents(self, dc):
+        """The draw contents handler."""
         if self._previousHandler:
             self._previousHandler.OnDrawContents(dc)
             
     def OnDrawBranches(self, dc, erase = False):
+        """The draw branches handler."""
         if self._previousHandler:
             self._previousHandler.OnDrawBranches(dc, erase = erase)
 
     def OnSize(self, x, y):
+        """The size handler."""
         if self._previousHandler:
             self._previousHandler.OnSize(x, y)
             
     def OnMovePre(self, dc, x, y, old_x, old_y, display = True):
+        """The pre move handler."""
         if self._previousHandler:
             return self._previousHandler.OnMovePre(dc, x, y, old_x, old_y, display)
         else:
             return True
 
     def OnMovePost(self, dc, x, y, old_x, old_y, display = True):
+        """The post move handler."""
         if self._previousHandler:
             return self._previousHandler.OnMovePost(dc, x, y, old_x, old_y, display)
         else:
             return True
 
     def OnErase(self, dc):
+        """The erase handler."""
         if self._previousHandler:
             self._previousHandler.OnErase(dc)
 
     def OnEraseContents(self, dc):
+        """The erase contents handler."""
         if self._previousHandler:
             self._previousHandler.OnEraseContents(dc)
 
     def OnHighlight(self, dc):
+        """The highlight handler."""
         if self._previousHandler:
             self._previousHandler.OnHighlight(dc)
 
     def OnLeftClick(self, x, y, keys, attachment):
+        """The left click handler."""
         if self._previousHandler:
             self._previousHandler.OnLeftClick(x, y, keys, attachment)
             
     def OnLeftDoubleClick(self, x, y, keys = 0, attachment = 0):
+        """The left double click handler."""
         if self._previousHandler:
             self._previousHandler.OnLeftDoubleClick(x, y, keys, attachment)
 
     def OnRightClick(self, x, y, keys = 0, attachment = 0):
+        """The right click handler."""
         if self._previousHandler:
             self._previousHandler.OnRightClick(x, y, keys, attachment)
 
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag left handler."""
         if self._previousHandler:
             self._previousHandler.OnDragLeft(draw, x, y, keys, attachment)
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The begin drag left handler."""
         if self._previousHandler:
             self._previousHandler.OnBeginDragLeft(x, y, keys, attachment)
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The end drag left handler."""
         if self._previousHandler:
             self._previousHandler.OnEndDragLeft(x, y, keys, attachment)
         
     def OnDragRight(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag right handler."""
         if self._previousHandler:
             self._previousHandler.OnDragRight(draw, x, y, keys, attachment)
 
     def OnBeginDragRight(self, x, y, keys = 0, attachment = 0):
+        """The begin drag right handler."""
         if self._previousHandler:
             self._previousHandler.OnBeginDragRight(x, y, keys, attachment)
 
     def OnEndDragRight(self, x, y, keys = 0, attachment = 0):
+        """The end drag right handler."""
         if self._previousHandler:
             self._previousHandler.OnEndDragRight(x, y, keys, attachment)
 
     # Control points ('handles') redirect control to the actual shape,
     # to make it easier to override sizing behaviour.
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
+        """The sizing drag left handler."""
         if self._previousHandler:
             self._previousHandler.OnSizingDragLeft(pt, draw, x, y, keys, attachment)
 
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
+        """The sizing begin drag left handler."""
         if self._previousHandler:
             self._previousHandler.OnSizingBeginDragLeft(pt, x, y, keys, attachment)
             
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
+        """The sizing end drag left handler."""
         if self._previousHandler:
             self._previousHandler.OnSizingEndDragLeft(pt, x, y, keys, attachment)
 
     def OnBeginSize(self, w, h):
+        """not implemented???"""
         pass
     
     def OnEndSize(self, w, h):
+        """not implemented???"""
         pass
     
     def OnDrawOutline(self, dc, x, y, w, h):
+        """The drag outline handler."""
         if self._previousHandler:
             self._previousHandler.OnDrawOutline(dc, x, y, w, h)
 
     def OnDrawControlPoints(self, dc):
+        """The draw control points handler."""
         if self._previousHandler:
             self._previousHandler.OnDrawControlPoints(dc)
 
     def OnEraseControlPoints(self, dc):
+        """The erase control points handler."""
         if self._previousHandler:
             self._previousHandler.OnEraseControlPoints(dc)
 
     # Can override this to prevent or intercept line reordering.
     def OnChangeAttachment(self, attachment, line, ordering):
+        """The change attachment handler."""
         if self._previousHandler:
             self._previousHandler.OnChangeAttachment(attachment, line, ordering)
 
 
-            
 class Shape(ShapeEvtHandler):
-    """OGL base class
-
-    Shape(canvas = None)
-    
-    The wxShape is the top-level, abstract object that all other objects
-    are derived from. All common functionality is represented by wxShape's
-    members, and overriden members that appear in derived classes and have
-    behaviour as documented for wxShape, are not documented separately.
     """
-    
+    The :class:`Shape` is the base class for OGL shapes.
+
+    The :class:`Shape` is the top-level, abstract object that all other objects
+    are derived from. All common functionality is represented by :class:`Shape`
+    members, and overriden members that appear in derived classes and have
+    behaviour as documented for :class:`Shape`, are not documented separately.
+    """
     GraphicsInSizeToContents = False
     
     def __init__(self, canvas = None):
+        """
+        Default class constructor.
+        
+        :param `canvas`: an instance of :class:`~lib.ogl.Canvas`
+        
+        """
         ShapeEvtHandler.__init__(self)
         
         self._eventHandler = self
@@ -313,10 +407,19 @@ class Shape(ShapeEvtHandler):
         self._eventHandler = None
         
     def Draggable(self):
-        """TRUE if the shape may be dragged by the user."""
+        """
+        Is shape draggable?
+        
+        :returns: `True` if the shape may be dragged by the user.
+        """
         return True
     
     def SetShape(self, sh):
+        """Set shape ???
+        
+        :param `sh`: an instance of :class:`Shape`
+        
+        """
         self._handlerShape = sh
 
     def GetCanvas(self):
@@ -324,6 +427,7 @@ class Shape(ShapeEvtHandler):
         return self._canvas
 
     def GetBranchStyle(self):
+        """Get the branch style."""
         return self._branchStyle
 
     def GetRotation(self):
@@ -331,6 +435,11 @@ class Shape(ShapeEvtHandler):
         return self._rotation
 
     def SetRotation(self, rotation):
+        """Set rotation
+        
+        :param int `rotation`: rotation
+        
+        """
         self._rotation = rotation
         
     def SetHighlight(self, hi, recurse = False):
@@ -341,16 +450,24 @@ class Shape(ShapeEvtHandler):
                 shape.SetHighlight(hi, recurse)
 
     def SetSensitivityFilter(self, sens = OP_ALL, recursive = False):
-        """Set the shape to be sensitive or insensitive to specific mouse
+        """
+        Set the shape to be sensitive or insensitive to specific mouse
         operations.
 
-        sens is a bitlist of the following:
+        :param `sens`: is a bitlist of the following:
 
-        * OP_CLICK_LEFT
-        * OP_CLICK_RIGHT
-        * OP_DRAG_LEFT
-        * OP_DRAG_RIGHT
-        * OP_ALL (equivalent to a combination of all the above).
+        ========================== ===================
+        Mouse operation            Description
+        ========================== ===================
+        `OP_CLICK_LEFT`            left clicked
+        `OP_CLICK_RIGHT`           right clicked
+        `OP_DRAG_LEFT`             left drag
+        `OP_DRAG_RIGHT`            right drag
+        `OP_ALL`                   all of the above
+        ========================== ===================
+        
+        :param `recursive`: if `True ` recurse through children
+        
         """
         self._draggable = sens & OP_DRAG_LEFT
 
@@ -360,7 +477,12 @@ class Shape(ShapeEvtHandler):
                 shape.SetSensitivityFilter(sens, True)
 
     def SetDraggable(self, drag, recursive = False):
-        """Set the shape to be draggable or not draggable."""
+        """Set the shape to be draggable or not draggable.
+        
+        :param `drag`: if `True` make shape draggable
+        :param `recursive`: if `True` recurse through children
+        
+        """
         self._draggable = drag
         if drag:
             self._sensitivity |= OP_DRAG_LEFT
@@ -372,24 +494,31 @@ class Shape(ShapeEvtHandler):
                 shape.SetDraggable(drag, True)
 
     def SetDrawHandles(self, drawH):
-        """Set the drawHandles flag for this shape and all descendants.
-        If drawH is TRUE (the default), any handles (control points) will
-        be drawn. Otherwise, the handles will not be drawn.
+        """
+        Set the drawHandles flag for this shape and all descendants.
+        
+        :param `drawH`: if `True` (the default), any handles (control points)
+         will be drawn. Otherwise, the handles will not be drawn.
+
         """
         self._drawHandles = drawH
         for shape in self._children:
             shape.SetDrawHandles(drawH)
 
     def SetShadowMode(self, mode, redraw = False):
-        """Set the shadow mode (whether a shadow is drawn or not).
-        mode can be one of the following:
+        """
+        Set the shadow mode (whether a shadow is drawn or not).
+        
+        :param `mode`: can be one of the following:
 
-        SHADOW_NONE
-          No shadow (the default). 
-        SHADOW_LEFT
-          Shadow on the left side. 
-        SHADOW_RIGHT
-          Shadow on the right side.
+        =============================== ===========================
+        Shadow mode                     Description
+        =============================== ===========================
+        `SHADOW_NONE`                   No shadow (the default) 
+        `SHADOW_LEFT`                   Shadow on the left side 
+        `SHADOW_RIGHT`                  Shadow on the right side
+        =============================== ===========================
+        
         """
         if redraw and self.GetCanvas():
             dc = wx.MemoryDC()
@@ -401,18 +530,27 @@ class Shape(ShapeEvtHandler):
             self._shadowMode = mode
 
     def GetShadowMode(self):
-        """Return the current shadow mode setting"""
+        """Get the current shadow mode setting."""
         return self._shadowMode
 
     def SetCanvas(self, theCanvas):
-        """Identical to Shape.Attach."""
+        """
+        Set the canvas, identical to Shape.Attach.
+        
+        :param `theCanvas`: an instance of :class:`~lib.ogl.Canvas`
+        
+        """
         self._canvas = theCanvas
         for shape in self._children:
             shape.SetCanvas(theCanvas)
 
     def AddToCanvas(self, theCanvas, addAfter = None):
-        """Add the shape to the canvas's shape list.
-        If addAfter is non-NULL, will add the shape after this one.
+        """
+        Add the shape to the canvas's shape list.
+
+        :param `theCanvas`: an instance of :class:`~lib.ogl.Canvas`
+        :param `addAfter`: if non-NULL, will add the shape after this shape
+        
         """
         theCanvas.AddShape(self, addAfter)
 
@@ -422,7 +560,12 @@ class Shape(ShapeEvtHandler):
             lastImage = object
 
     def InsertInCanvas(self, theCanvas):
-        """Insert the shape at the front of the shape list of canvas."""
+        """
+        Insert the shape at the front of the shape list of canvas.
+        
+        :param `theCanvas`: an instance of :class:`~lib.ogl.Canvas`
+        
+        """
         theCanvas.InsertShape(self)
 
         lastImage = self
@@ -431,7 +574,12 @@ class Shape(ShapeEvtHandler):
             lastImage = object
 
     def RemoveFromCanvas(self, theCanvas):
-        """Remove the shape from the canvas."""
+        """
+        Remove the shape from the canvas.
+
+        :param `theCanvas`: an instance of :class:`~lib.ogl.Canvas`        
+
+        """
         if self.Selected():
             self.Select(False)
         
@@ -442,12 +590,17 @@ class Shape(ShapeEvtHandler):
 
     def ClearAttachments(self):
         """Clear internal custom attachment point shapes (of class
-        wxAttachmentPoint).
+        :class:`~lib.ogl.AttachmentPoint`)
         """
         self._attachmentPoints = []
 
     def ClearText(self, regionId = 0):
-        """Clear the text from the specified text region."""
+        """
+        Clear the text from the specified text region.
+        
+        :param `regionId`: the region identifier
+        
+        """
         if regionId == 0:
             self._text = ""
         if regionId < len(self._regions):
@@ -469,9 +622,14 @@ class Shape(ShapeEvtHandler):
         self._regions[0].SetSize(w, h)
 
     def HitTest(self, x, y):
-        """Given a point on a canvas, returns TRUE if the point was on the
+        """
+        Given a point on a canvas, returns `True` if the point was on the
         shape, and returns the nearest attachment point and distance from
         the given point and target.
+        
+        :param `x`: the x position
+        :param `y`: the y position
+        
         """
         width, height = self.GetBoundingBoxMax()
         if abs(width) < 4:
@@ -514,8 +672,14 @@ class Shape(ShapeEvtHandler):
     # strings with positions to region text list
     
     def FormatText(self, dc, s, i = 0):
-        """Reformat the given text region; defaults to formatting the
+        """
+        Reformat the given text region; defaults to formatting the
         default region.
+        
+        :param `dc`: the device contexr
+        :param str `s`: the text string
+        :param int `i`: the region identifier
+        
         """
         self.ClearText(i)
 
@@ -576,16 +740,25 @@ class Shape(ShapeEvtHandler):
         self._formatted = True
 
     def Recentre(self, dc):
-        """Do recentring (or other formatting) for all the text regions
-        for this shape.
+        """
+        Recentre (or other formatting) all the text regions for this shape.
         """
         w, h = self.GetBoundingBoxMin()
         for region in self._regions:
             CentreText(dc, region.GetFormattedText(), self._xpos, self._ypos, w - 2 * self._textMarginX, h - 2 * self._textMarginY, region.GetFormatMode())
 
     def GetPerimeterPoint(self, x1, y1, x2, y2):
-        """Get the point at which the line from (x1, y1) to (x2, y2) hits
-        the shape. Returns False if the line doesn't hit the perimeter.
+        """
+        Get the point at which the line from (x1, y1) to (x2, y2) hits
+        the shape.
+        
+        :param `x1`: the x1 position
+        :param `y1`: the y1 position
+        :param `x2`: the x2 position
+        :param `y2`: the y2 position
+        
+        :returns: `False` if the line doesn't hit the perimeter.
+        
         """
         return False
 
@@ -599,7 +772,8 @@ class Shape(ShapeEvtHandler):
 
     # Get the top - most (non-division) ancestor, or self
     def GetTopAncestor(self):
-        """Return the top-most ancestor of this shape (the root of
+        """
+        Return the top-most ancestor of this shape (the root of
         the composite).
         """
         if not self.GetParent():
@@ -611,38 +785,68 @@ class Shape(ShapeEvtHandler):
 
     # Region functions
     def SetFont(self, the_font, regionId = 0):
-        """Set the font for the specified text region."""
+        """
+        Set the font for the specified text region.
+        
+        :param `the_font`: an instance of :class:`Font` ???
+        :param `regionId`: the region identifier
+        
+        """
         self._font = the_font
         if regionId < len(self._regions):
             self._regions[regionId].SetFont(the_font)
 
     def GetFont(self, regionId = 0):
-        """Get the font for the specified text region."""
+        """
+        Get the font for the specified text region.
+        
+        :param `regionId`: the region identifier
+        
+        """
         if regionId >= len(self._regions):
             return None
         return self._regions[regionId].GetFont()
 
     def SetFormatMode(self, mode, regionId = 0):
-        """Set the format mode of the default text region. The argument
-        can be a bit list of the following:
-
-        FORMAT_NONE
-          No formatting. 
-        FORMAT_CENTRE_HORIZ
-          Horizontal centring. 
-        FORMAT_CENTRE_VERT
-          Vertical centring.
+        """
+        Set the format mode of the region.
+        
+        :param `mode`: can be a bit list of the following
+        
+        ============================== ==============================
+        Format mode                    Description
+        ============================== ==============================
+        `FORMAT_NONE`                  No formatting
+        `FORMAT_CENTRE_HORIZ`          Horizontal centring
+        `FORMAT_CENTRE_VERT`           Vertical centring
+        ============================== ==============================
+        
+        :param `regionId`: the region identifier, default=0
+        
         """
         if regionId < len(self._regions):
             self._regions[regionId].SetFormatMode(mode)
 
     def GetFormatMode(self, regionId = 0):
+        """
+        Get the format mode.
+        
+        :param `regionId`: the region identifier, default=0
+        
+        """
         if regionId >= len(self._regions):
             return 0
         return self._regions[regionId].GetFormatMode()
 
     def SetTextColour(self, the_colour, regionId = 0):
-        """Set the colour for the specified text region."""
+        """
+        Set the colour for the specified text region.
+        
+        :param str `the_colour`: a valid colour name,
+         see :class:`ColourDatabase`
+        :param `regionId`: the region identifier
+        
+        """
         self._textColour = wx.TheColourDatabase.Find(the_colour)
         self._textColourName = the_colour
 
@@ -650,32 +854,54 @@ class Shape(ShapeEvtHandler):
             self._regions[regionId].SetColour(the_colour)
             
     def GetTextColour(self, regionId = 0):
-        """Get the colour for the specified text region."""
+        """
+        Get the colour for the specified text region.
+        
+        :param `regionId`: the region identifier
+        
+        """
         if regionId >= len(self._regions):
             return ""
         return self._regions[regionId].GetColour()
 
     def SetRegionName(self, name, regionId = 0):
-        """Set the name for this region.
-        The name for a region is unique within the scope of the whole
-        composite, whereas a region id is unique only for a single image.
+        """
+        Set the name for this region.
+        
+        :param str `name`: the name to set
+        :param `regionId`: the region identifier
+        
+        :note: The name for a region is unique within the scope of the whole
+         composite, whereas a region id is unique only for a single image.
+         
         """
         if regionId < len(self._regions):
             self._regions[regionId].SetName(name)
 
     def GetRegionName(self, regionId = 0):
-        """Get the region's name.
-        A region's name can be used to uniquely determine a region within
-        an entire composite image hierarchy. See also Shape.SetRegionName.
+        """
+        Get the region's name.
+
+        :param `regionId`: the region identifier
+
+        :note: A region's name can be used to uniquely determine a region within
+         an entire composite image hierarchy. See also
+         :meth:`~lib.ogl.Shape.SetRegionName`.
+         
         """
         if regionId >= len(self._regions):
             return ""
         return self._regions[regionId].GetName()
 
     def GetRegionId(self, name):
-        """Get the region's identifier by name.
-        This is not unique for within an entire composite, but is unique
-        for the image.
+        """
+        Get the region's identifier by name.
+        
+        :param str `name`: the regions name
+        
+        :note: This is not unique for within an entire composite, but is unique
+         for the image.
+        
         """
         for i, r in enumerate(self._regions):
             if r.GetName() == name:
@@ -684,7 +910,12 @@ class Shape(ShapeEvtHandler):
 
     # Name all _regions in all subimages recursively
     def NameRegions(self, parentName=""):
-        """Make unique names for all the regions in a shape or composite shape."""
+        """
+        Make unique names for all the regions in a shape or composite shape.
+        
+        :param str `parentName`: a prefix for the region names
+        
+        """
         n = self.GetNumberOfTextRegions()
         for i in range(n):
             if parentName:
@@ -702,8 +933,12 @@ class Shape(ShapeEvtHandler):
 
     # Get a region by name, possibly looking recursively into composites
     def FindRegion(self, name):
-        """Find the actual image ('this' if non-composite) and region id
+        """
+        Find the actual image ('this' if non-composite) and region id
         for the given region name.
+        
+        :param str `name`: the region name
+        
         """
         id = self.GetRegionId(name)
         if id > -1:
@@ -736,9 +971,11 @@ class Shape(ShapeEvtHandler):
             child.AssignNewIds()
 
     def OnDraw(self, dc):
+        """not implemented???"""
         pass
 
     def OnMoveLinks(self, dc):
+        """The move links handler."""
         # Want to set the ends of all attached links
         # to point to / from this object
 
@@ -746,6 +983,7 @@ class Shape(ShapeEvtHandler):
             line.GetEventHandler().OnMoveLink(dc)
 
     def OnDrawContents(self, dc):
+        """The draw contents handler."""
         if not self._regions:
             return
         
@@ -767,9 +1005,9 @@ class Shape(ShapeEvtHandler):
             if not self.GetDisableLabel():
                 DrawFormattedText(dc, region.GetFormattedText(), self._xpos, self._ypos, bound_x - 2 * self._textMarginX, bound_y - 2 * self._textMarginY, region.GetFormatMode())
             
-
     def DrawContents(self, dc):
-        """Draw the internal graphic of the shape (such as text).
+        """
+        Draw the internal graphic of the shape (such as text).
 
         Do not override this function: override OnDrawContents, which
         is called by this function.
@@ -777,12 +1015,14 @@ class Shape(ShapeEvtHandler):
         self.GetEventHandler().OnDrawContents(dc)
 
     def OnSize(self, x, y):
+        """not implemented???"""
         pass
 
     def OnMovePre(self, dc, x, y, old_x, old_y, display = True):
         return True
 
     def OnErase(self, dc):
+        """The erase handler."""
         if not self._visible:
             return
 
@@ -793,6 +1033,7 @@ class Shape(ShapeEvtHandler):
         self.GetEventHandler().OnEraseContents(dc)
 
     def OnEraseContents(self, dc):
+        """The erase contents handler."""
         if not self._visible:
             return
 
@@ -813,8 +1054,14 @@ class Shape(ShapeEvtHandler):
         dc.DrawRectangle(topLeftX - penWidth, topLeftY - penWidth, maxX + penWidth * 2 + 4, maxY + penWidth * 2 + 4)
 
     def EraseLinks(self, dc, attachment = -1, recurse = False):
-        """Erase links attached to this shape, but do not repair damage
+        """
+        Erase links attached to this shape, but do not repair damage
         caused to other shapes.
+        
+        :param `dc`: the device context
+        :param `attachment`: ???
+        :param `recurse`: if `True` recurse through the children
+        
         """
         if not self._visible:
             return
@@ -828,7 +1075,14 @@ class Shape(ShapeEvtHandler):
                 child.EraseLinks(dc, attachment, recurse)
 
     def DrawLinks(self, dc, attachment = -1, recurse = False):
-        """Draws any lines linked to this shape."""
+        """
+        Draws any lines linked to this shape.
+        
+        :param `dc`: the device context
+        :param `attachment`: ???
+        :param `recurse`: if `True` recurse through the children
+
+        """
         if not self._visible:
             return
 
@@ -846,7 +1100,8 @@ class Shape(ShapeEvtHandler):
 
     # This is the default, rectangular implementation.
     def AttachmentSortTest(self, attachmentPoint, pt1, pt2):
-        """Return TRUE if pt1 is less than or equal to pt2, in the sense
+        """
+        Return TRUE if pt1 is less than or equal to pt2, in the sense
         that one point comes before another on an edge of the shape.
 
         attachment is the attachment point (side) in question.
@@ -863,7 +1118,8 @@ class Shape(ShapeEvtHandler):
         return False
 
     def MoveLineToNewAttachment(self, dc, to_move, x, y):
-        """Move the given line (which must already be attached to the shape)
+        """
+        Move the given line (which must already be attached to the shape)
         to a different attachment point on the shape, or a different order
         on the same attachment.
 
@@ -932,6 +1188,7 @@ class Shape(ShapeEvtHandler):
         return True
 
     def OnChangeAttachment(self, attachment, line, ordering):
+        """Change attachment handler."""
         if line.GetTo() == self:
             line.SetAttachmentTo(attachment)
         else:
@@ -948,7 +1205,8 @@ class Shape(ShapeEvtHandler):
 
     # Reorders the lines according to the given list
     def ApplyAttachmentOrdering(self, linesToSort):
-        """Apply the line ordering in linesToSort to the shape, to reorder
+        """
+        Apply the line ordering in linesToSort to the shape, to reorder
         the way lines are attached.
         """
         linesStore = self._lines[:]
@@ -964,7 +1222,8 @@ class Shape(ShapeEvtHandler):
         self._lines += linesStore
 
     def SortLines(self, attachment, linesToSort):
-        """ Reorder the lines coming into the node image at this attachment
+        """
+        Reorder the lines coming into the node image at this attachment
         position, in the order in which they appear in linesToSort.
 
         Any remaining lines not in the list will be added to the end.
@@ -989,20 +1248,24 @@ class Shape(ShapeEvtHandler):
         self._lines += linesAtThisAttachment
 
     def OnHighlight(self, dc):
+        """not implemented???"""
         pass
 
     def OnLeftClick(self, x, y, keys = 0, attachment = 0):
+        """The left click handler."""
         if self._sensitivity & OP_CLICK_LEFT != OP_CLICK_LEFT:
             if self._parent:
                 attachment, dist = self._parent.HitTest(x, y)
                 self._parent.GetEventHandler().OnLeftClick(x, y, keys, attachment)
 
     def OnRightClick(self, x, y, keys = 0, attachment = 0):
+        """The right click handler."""
         if self._sensitivity & OP_CLICK_RIGHT != OP_CLICK_RIGHT:
             attachment, dist = self._parent.HitTest(x, y)
             self._parent.GetEventHandler().OnRightClick(x, y, keys, attachment)
             
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag left handler."""
         if self._sensitivity & OP_DRAG_LEFT != OP_DRAG_LEFT:
             if self._parent:
                 hit = self._parent.HitTest(x, y)
@@ -1029,6 +1292,7 @@ class Shape(ShapeEvtHandler):
         self.GetEventHandler().OnDrawOutline(dc, xx, yy, w, h)
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The begin drag left handler."""
         global DragOffsetX, DragOffsetY
         
         if self._sensitivity & OP_DRAG_LEFT != OP_DRAG_LEFT:
@@ -1062,6 +1326,7 @@ class Shape(ShapeEvtHandler):
         self._canvas.CaptureMouse()
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The end drag left handler."""
         if self._canvas.HasCapture():
             self._canvas.ReleaseMouse()
         if self._sensitivity & OP_DRAG_LEFT != OP_DRAG_LEFT:
@@ -1089,6 +1354,7 @@ class Shape(ShapeEvtHandler):
             self._canvas.Redraw(dc)
 
     def OnDragRight(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag right handler."""
         if self._sensitivity & OP_DRAG_RIGHT != OP_DRAG_RIGHT:
             if self._parent:
                 attachment, dist = self._parent.HitTest(x, y)
@@ -1096,6 +1362,7 @@ class Shape(ShapeEvtHandler):
             return
 
     def OnBeginDragRight(self, x, y, keys = 0, attachment = 0):
+        """The begin drag right handler."""
         if self._sensitivity & OP_DRAG_RIGHT != OP_DRAG_RIGHT:
             if self._parent:
                 attachment, dist = self._parent.HitTest(x, y)
@@ -1103,6 +1370,7 @@ class Shape(ShapeEvtHandler):
             return
 
     def OnEndDragRight(self, x, y, keys = 0, attachment = 0):
+        """The end drag right handler."""
         if self._sensitivity & OP_DRAG_RIGHT != OP_DRAG_RIGHT:
             if self._parent:
                 attachment, dist = self._parent.HitTest(x, y)
@@ -1110,6 +1378,7 @@ class Shape(ShapeEvtHandler):
             return
 
     def OnDrawOutline(self, dc, x, y, w, h):
+        """The draw outline handler."""
         points = [[x - w / 2.0, y - h / 2.0],
                 [x + w / 2.0, y - h / 2.0],
                 [x + w / 2.0, y + h / 2.0],
@@ -1128,8 +1397,14 @@ class Shape(ShapeEvtHandler):
         self._canvas = None
 
     def Move(self, dc, x, y, display = True):
-        """Move the shape to the given position.
-        Redraw if display is TRUE.
+        """
+        Move the shape to the given position.
+        
+        :param `dc`: the device context
+        :param `x`: the x position
+        :param `y`: the y position
+        :param `display`: if `True` redraw
+        
         """
         old_x = self._xpos
         old_y = self._ypos
@@ -1153,7 +1428,8 @@ class Shape(ShapeEvtHandler):
         self.GetEventHandler().OnMoveLinks(dc)
 
     def Draw(self, dc):
-        """Draw the whole shape and any lines attached to it.
+        """
+        Draw the whole shape and any lines attached to it.
 
         Do not override this function: override OnDraw, which is called
         by this function.
@@ -1181,7 +1457,9 @@ class Shape(ShapeEvtHandler):
             child.Show(show)
 
     def Erase(self, dc):
-        """Erase the shape.
+        """
+        Erase the shape.
+        
         Does not repair damage caused to other shapes.
         """
         self.GetEventHandler().OnErase(dc)
@@ -1189,7 +1467,8 @@ class Shape(ShapeEvtHandler):
         self.GetEventHandler().OnDrawBranches(dc, erase = True)
 
     def EraseContents(self, dc):
-        """Erase the shape contents, that is, the area within the shape's
+        """
+        Erase the shape contents, that is, the area within the shape's
         minimum bounding box.
         """
         self.GetEventHandler().OnEraseContents(dc)
@@ -1208,11 +1487,24 @@ class Shape(ShapeEvtHandler):
         self._formatted = False
 
     def SetSize(self, x, y, recursive = True):
-        """Set the shape's size."""
+        """Set the shape's size.
+        
+        :param `x`: the x position
+        :param `y`: the y position
+        :param `recursive`: not used
+        
+        """
         self.SetAttachmentSize(x, y)
         self.SetDefaultRegionSize()
 
     def SetAttachmentSize(self, w, h):
+        """
+        Set the attachment size.
+        
+        :param `w`: width
+        :param `h`: height
+        
+        """
         width, height = self.GetBoundingBoxMin()
         if width == 0:
             scaleX = 1.0
@@ -1229,12 +1521,21 @@ class Shape(ShapeEvtHandler):
 
     # Add line FROM this object
     def AddLine(self, line, other, attachFrom = 0, attachTo = 0, positionFrom = -1, positionTo = -1):
-        """Add a line between this shape and the given other shape, at the
+        """
+        Add a line between this shape and the given other shape, at the
         specified attachment points.
+        
+        :param `line`: the line an instance of :class:`~lib.ogl.LineShape`
+        :param `other`: the other shape, an instance of :class:`Shape`
+        :param `attachFrom`: the attachment from point ???
+        :param `attachTo`: the attachment to point ???
+        :param `positionFrom`: the from position
+        :param `positionTo`: the to position
 
-        The position in the list of lines at each end can also be specified,
-        so that the line will be drawn at a particular point on its attachment
-        point.
+        :note: The position in the list of lines at each end can also be
+         specified, so that the line will be drawn at a particular point on 
+         its attachment point.
+         
         """
         if positionFrom == -1:
             if not line in self._lines:
@@ -1273,7 +1574,12 @@ class Shape(ShapeEvtHandler):
         self.MoveLinks(dc)
         
     def RemoveLine(self, line):
-        """Remove the given line from the shape's list of attached lines."""
+        """
+        Remove the given line from the shape's list of attached lines.
+        
+        :param `line`: an instance of :class:`~lib.ogl.LineShape`
+        
+        """
         if line.GetFrom() == self:
             line.GetTo()._lines.remove(line)
         else:
@@ -1283,7 +1589,8 @@ class Shape(ShapeEvtHandler):
 
     # Default - make 6 control points
     def MakeControlPoints(self):
-        """Make a list of control points (draggable handles) appropriate to
+        """
+        Make a list of control points (draggable handles) appropriate to
         the shape.
         """
         maxX, maxY = self.GetBoundingBoxMax()
@@ -1331,7 +1638,8 @@ class Shape(ShapeEvtHandler):
         self._controlPoints.append(control)
 
     def MakeMandatoryControlPoints(self):
-        """Make the mandatory control points.
+        """
+        Make the mandatory control points.
 
         For example, the control point on a dividing line should appear even
         if the divided rectangle shape's handles should not appear (because
@@ -1346,7 +1654,8 @@ class Shape(ShapeEvtHandler):
             child.ResetMandatoryControlPoints()
 
     def ResetControlPoints(self):
-        """Reset the positions of the control points (for instance when the
+        """
+        Reset the positions of the control points (for instance when the
         shape's shape has changed).
         """
         self.ResetMandatoryControlPoints()
@@ -1391,7 +1700,8 @@ class Shape(ShapeEvtHandler):
         self._controlPoints[7]._yoffset = 0
 
     def DeleteControlPoints(self, dc = None):
-        """Delete the control points (or handles) for the shape.
+        """
+        Delete the control points (or handles) for the shape.
 
         Does not redraw the shape.
         """
@@ -1409,6 +1719,7 @@ class Shape(ShapeEvtHandler):
                 child.DeleteControlPoints(dc)
 
     def OnDrawControlPoints(self, dc):
+        """The draw control points handler."""
         if not self._drawHandles:
             return
 
@@ -1428,6 +1739,7 @@ class Shape(ShapeEvtHandler):
                 child.GetEventHandler().OnDrawControlPoints(dc)
 
     def OnEraseControlPoints(self, dc):
+        """The erase control points handler."""
         for control in self._controlPoints:
             control.Erase(dc)
 
@@ -1436,8 +1748,13 @@ class Shape(ShapeEvtHandler):
                 child.GetEventHandler().OnEraseControlPoints(dc)
 
     def Select(self, select, dc = None):
-        """Select or deselect the given shape, drawing or erasing control points
+        """
+        Select or deselect the given shape, drawing or erasing control points
         (handles) as necessary.
+        
+        :param `select`: `True` to select
+        :param `dc`: the device context
+        
         """
         self._selected = select
         if select:
@@ -1456,11 +1773,11 @@ class Shape(ShapeEvtHandler):
                     child.DeleteControlPoints(dc)
 
     def Selected(self):
-        """TRUE if the shape is currently selected."""
+        """`True` if the shape is currently selected."""
         return self._selected
 
     def AncestorSelected(self):
-        """TRUE if the shape's ancestor is currently selected."""
+        """`True` if the shape's ancestor is currently selected."""
         if self._selected:
             return True
         if not self.GetParent():
@@ -1483,7 +1800,7 @@ class Shape(ShapeEvtHandler):
             return maxN + 1
 
     def AttachmentIsValid(self, attachment):
-        """TRUE if attachment is a valid attachment point."""
+        """`True` if attachment is a valid attachment point."""
         if len(self._attachmentPoints) == 0:
             return attachment in range(4)
 
@@ -1493,7 +1810,13 @@ class Shape(ShapeEvtHandler):
         return False
 
     def GetAttachmentPosition(self, attachment, nth = 0, no_arcs = 1, line = None):
-        """Get the position at which the given attachment point should be drawn.
+        """
+        Get the position at which the given attachment point should be drawn.
+
+        :param `attachment`: the attachment ???
+        :param `nth`: get nth attachment ???
+        :param `no_arcs`: ???
+        :param `line`: ???
 
         If attachment isn't found among the attachment points of the shape,
         returns None.
@@ -1537,7 +1860,8 @@ class Shape(ShapeEvtHandler):
         return None
 
     def GetBoundingBoxMax(self):
-        """Get the maximum bounding box for the shape, taking into account
+        """
+        Get the maximum bounding box for the shape, taking into account
         external features such as shadows.
         """
         ww, hh = self.GetBoundingBoxMin()
@@ -1547,7 +1871,8 @@ class Shape(ShapeEvtHandler):
         return ww, hh
 
     def GetBoundingBoxMin(self):
-        """Get the minimum bounding box for the shape, that defines the area
+        """
+        Get the minimum bounding box for the shape, that defines the area
         available for drawing the contents (such as text).
 
         Must be overridden.
@@ -1555,7 +1880,13 @@ class Shape(ShapeEvtHandler):
         return 0, 0
     
     def HasDescendant(self, image):
-        """TRUE if image is a descendant of this composite."""
+        """
+        Is image a descendant of this composite.
+        
+        :param `image`: the image, is this a shape???
+        :returns: `True` if it is a descendant
+        
+        """
         if image == self:
             return True
         for child in self._children:
@@ -1566,31 +1897,22 @@ class Shape(ShapeEvtHandler):
     # Assuming the attachment lies along a vertical or horizontal line,
     # calculate the position on that point.
     def CalcSimpleAttachment(self, pt1, pt2, nth, noArcs, line):
-        """Assuming the attachment lies along a vertical or horizontal line,
+        """
+        Assuming the attachment lies along a vertical or horizontal line,
         calculate the position on that point.
 
-        Parameters:
+        :param `pt1`: The first point of the line repesenting the edge of
+         the shape
+        :param `pt2`: The second point of the line representing the edge of
+         the shape
+        :param `nth`: The position on the edge (for example there may be 6
+         lines at this attachment point, and this may be the 2nd line.
+        :param `noArcs`: The number of lines at this edge.
+        :param `line`: The line shape.
 
-        pt1
-            The first point of the line repesenting the edge of the shape.
-
-        pt2
-            The second point of the line representing the edge of the shape.
-
-        nth
-            The position on the edge (for example there may be 6 lines at
-            this attachment point, and this may be the 2nd line.
-
-        noArcs
-            The number of lines at this edge.
-
-        line
-            The line shape.
-
-        Remarks
-
-        This function expects the line to be either vertical or horizontal,
-        and determines which.
+        :note: This function expects the line to be either vertical or horizontal,
+         and determines which.
+         
         """
         isEnd = line and line.IsEnd(self)
 
@@ -1648,10 +1970,13 @@ class Shape(ShapeEvtHandler):
 
         return x, y
 
-    # Return the zero-based position in m_lines of line
     def GetLinePosition(self, line):
-        """Get the zero-based position of line in the list of lines
+        """
+        Get the zero-based position of line in the list of lines
         for this shape.
+        
+        :param `line`: line to find position for
+        
         """
         try:
             return self._lines.index(line)
@@ -1667,9 +1992,11 @@ class Shape(ShapeEvtHandler):
     #                      <- branching attachment point N-1
 
     def GetBranchingAttachmentInfo(self, attachment):
-        """Get information about where branching connections go.
+        """
+        Get information about where branching connections go.
         
-        Returns FALSE if there are no lines at this attachment.
+        :param `attachment`: ???
+        :returns: `False` if there are no lines at this attachment.
         """
         physicalAttachment = self.LogicalToPhysicalAttachment(attachment)
 
@@ -1728,6 +2055,13 @@ class Shape(ShapeEvtHandler):
         return root, neck, shoulder1, shoulder2
 
     def GetBranchingAttachmentPoint(self, attachment, n):
+        """
+        Get branching attachment point.
+        
+        :param `attachment`: ???
+        :param `n`: ???
+        
+        """
         physicalAttachment = self.LogicalToPhysicalAttachment(attachment)
 
         root, neck, shoulder1, shoulder2 = self.GetBranchingAttachmentInfo(attachment)
@@ -1764,7 +2098,13 @@ class Shape(ShapeEvtHandler):
         return pt, stemPt
 
     def GetAttachmentLineCount(self, attachment):
-        """Get the number of lines at this attachment position."""
+        """
+        Get the number of lines at this attachment position.
+        
+        :param `attachment`: ???
+        :returns: the count of lines at this position
+        
+        """
         count = 0
         for lineShape in self._lines:
             if lineShape.GetFrom() == self and lineShape.GetAttachmentFrom() == attachment:
@@ -1774,7 +2114,12 @@ class Shape(ShapeEvtHandler):
         return count
     
     def GetBranchingAttachmentRoot(self, attachment):
-        """Get the root point at the given attachment."""
+        """
+        Get the root point at the given attachment.
+        
+        :param `attachment`: ???
+        
+        """
         physicalAttachment = self.LogicalToPhysicalAttachment(attachment)
 
         root = wx.RealPoint()
@@ -1801,6 +2146,7 @@ class Shape(ShapeEvtHandler):
 
     # Draw or erase the branches (not the actual arcs though)
     def OnDrawBranchesAttachment(self, dc, attachment, erase = False):
+        """The draw branches attachment handler."""
         count = self.GetAttachmentLineCount(attachment)
         if count == 0:
             return
@@ -1830,15 +2176,23 @@ class Shape(ShapeEvtHandler):
                 dc.DrawEllipse(stemPt[0] - blobSize / 2.0, stemPt[1] - blobSize / 2.0, blobSize, blobSize)
 
     def OnDrawBranches(self, dc, erase = False):
+        """The draw branches handler."""
         if self._attachmentMode != ATTACHMENT_MODE_BRANCHING:
             return
         for i in range(self.GetNumberOfAttachments()):
             self.OnDrawBranchesAttachment(dc, i, erase)
 
     def GetAttachmentPositionEdge(self, attachment, nth = 0, no_arcs = 1, line = None):
-        """ Only get the attachment position at the _edge_ of the shape,
+        """
+        Only get the attachment position at the _edge_ of the shape,
         ignoring branching mode. This is used e.g. to indicate the edge of
         interest, not the point on the attachment branch.
+        
+        :param `attachment`: the attachment ???
+        :param `nth`: get nth attachment ???
+        :param `no_arcs`: ???
+        :param `line`: ???
+        
         """
         oldMode = self._attachmentMode
 
@@ -1851,8 +2205,12 @@ class Shape(ShapeEvtHandler):
         return res
 
     def PhysicalToLogicalAttachment(self, physicalAttachment):
-        """ Rotate the standard attachment point from physical
+        """
+        Rotate the standard attachment point from physical
         (0 is always North) to logical (0 -> 1 if rotated by 90 degrees)
+        
+        :param `physicalAttachment`: ???
+        
         """
         if RoughlyEqual(self.GetRotation(), 0):
             i = physicalAttachment
@@ -1872,8 +2230,12 @@ class Shape(ShapeEvtHandler):
         return i
 
     def LogicalToPhysicalAttachment(self, logicalAttachment):
-        """Rotate the standard attachment point from logical
+        """
+        Rotate the standard attachment point from logical
         to physical (0 is always North).
+
+        :param `logicalAttachment`: ???
+
         """
         if RoughlyEqual(self.GetRotation(), 0):
             i = logicalAttachment
@@ -1892,7 +2254,14 @@ class Shape(ShapeEvtHandler):
         return i
 
     def Rotate(self, x, y, theta):
-        """Rotate about the given axis by the given amount in radians."""
+        """
+        Rotate about the given axis by the given amount in radians.
+
+        :param `x`: the x position
+        :param `y`: the y position
+        :param `theta`: the theta
+        
+        """
         self._rotation = theta
         if self._rotation < 0:
             self._rotation += 2 * math.pi
@@ -1920,38 +2289,57 @@ class Shape(ShapeEvtHandler):
         return self._ypos
 
     def SetX(self, x):
-        """Set the x position of the shape."""
+        """
+        Set the x position of the shape.
+        
+        :param `x`: the x position
+        """
         self._xpos = x
 
     def SetY(self, y):
-        """Set the y position of the shape."""
+        """
+        Set the y position of the shape.
+        
+        :param `y`: the y position
+        
+        """
         self._ypos = y
 
     def GetParent(self):
-        """Return the parent of this shape, if it is part of a composite."""
+        """Get the parent of this shape, if it is part of a composite."""
         return self._parent
 
     def SetParent(self, p):
+        """Set the parent
+        
+        :param `p`: the parent
+        
+        """
         self._parent = p
 
     def GetChildren(self):
-        """Return the list of children for this shape."""
+        """Get the list of children for this shape."""
         return self._children
 
     def GetDrawHandles(self):
-        """Return the list of drawhandles."""
+        """Get the list of drawhandles."""
         return self._drawHandles
 
     def GetEventHandler(self):
-        """Return the event handler for this shape."""
+        """Get the event handler for this shape."""
         return self._eventHandler
 
     def SetEventHandler(self, handler):
-        """Set the event handler for this shape."""
+        """Set the event handler for this shape.
+        
+        :param `handler`: an instance of :class:`ShapeEvtHandler`
+        
+        """
         self._eventHandler = handler
 
     def Recompute(self):
-        """Recomputes any constraints associated with the shape.
+        """
+        Recomputes any constraints associated with the shape.
 
         Normally applicable to CompositeShapes only, but harmless for
         other classes of Shape.
@@ -1959,71 +2347,92 @@ class Shape(ShapeEvtHandler):
         return True
 
     def IsHighlighted(self):
-        """TRUE if the shape is highlighted. Shape highlighting is unimplemented."""
+        """
+        `True` if the shape is highlighted. Shape highlighting is unimplemented.
+        """
         return self._highlighted
 
     def GetSensitivityFilter(self):
-        """Return the sensitivity filter, a bitlist of values.
+        """
+        Get the sensitivity filter, a bitlist of values.
 
-        See Shape.SetSensitivityFilter.
+        See :meth:`Shape.SetSensitivityFilter`
+        
         """
         return self._sensitivity
 
     def SetFixedSize(self, x, y):
-        """Set the shape to be fixed size."""
+        """
+        Set the shape to be fixed size.
+        
+        :param `x`: the width
+        :param `y`: the height
+        
+        """
         self._fixedWidth = x
         self._fixedHeight = y
 
     def GetFixedSize(self):
-        """Return flags indicating whether the shape is of fixed size in
+        """
+        Return flags indicating whether the shape is of fixed size in
         either direction.
         """
         return self._fixedWidth, self._fixedHeight
 
     def GetFixedWidth(self):
-        """TRUE if the shape cannot be resized in the horizontal plane."""
+        """`True` if the shape cannot be resized in the horizontal plane."""
         return self._fixedWidth
 
     def GetFixedHeight(self):
-        """TRUE if the shape cannot be resized in the vertical plane."""
+        """`True` if the shape cannot be resized in the vertical plane."""
         return self._fixedHeight
     
     def SetSpaceAttachments(self, sp):
-        """Indicate whether lines should be spaced out evenly at the point
-        they touch the node (sp = True), or whether they should join at a single
-        point (sp = False).
+        """
+        Indicate whether lines should be spaced out evenly at the point
+        they touch the node.
+        
+        :param `sp`: if `True` space out evently, else they should join at a
+         single point.
+         
         """
         self._spaceAttachments = sp
 
     def GetSpaceAttachments(self):
-        """Return whether lines should be spaced out evenly at the point they
+        """
+        Get whether lines should be spaced out evenly at the point they
         touch the node (True), or whether they should join at a single point
         (False).
         """
         return self._spaceAttachments
 
     def SetCentreResize(self, cr):
-        """Specify whether the shape is to be resized from the centre (the
+        """
+        Specify whether the shape is to be resized from the centre (the
         centre stands still) or from the corner or side being dragged (the
         other corner or side stands still).
         """
         self._centreResize = cr
 
     def GetCentreResize(self):
-        """TRUE if the shape is to be resized from the centre (the centre stands
-        still), or FALSE if from the corner or side being dragged (the other
+        """
+        `True` if the shape is to be resized from the centre (the centre stands
+        still), or `False` if from the corner or side being dragged (the other
         corner or side stands still)
+        
         """
         return self._centreResize
 
     def SetMaintainAspectRatio(self, ar):
-        """Set whether a shape that resizes should not change the aspect ratio
+        """
+        Set whether a shape that resizes should not change the aspect ratio
         (width and height should be in the original proportion).
+        
         """
         self._maintainAspectRatio = ar
 
     def GetMaintainAspectRatio(self):
-        """TRUE if shape keeps aspect ratio during resize."""
+        """`True` if shape keeps aspect ratio during resize."""
         return self._maintainAspectRatio
 
     def GetLines(self):
@@ -2031,26 +2440,29 @@ class Shape(ShapeEvtHandler):
         return self._lines
 
     def SetDisableLabel(self, flag):
-        """Set flag to TRUE to stop the default region being shown."""
+        """Set flag to `True` to stop the default region being shown."""
         self._disableLabel = flag
 
     def GetDisableLabel(self):
-        """TRUE if the default region will not be shown, FALSE otherwise."""
+        """`True` if the default region will not be shown, `False` otherwise."""
         return self._disableLabel
 
     def SetAttachmentMode(self, mode):
-        """Set the attachment mode.
+        """
+        Set the attachment mode.
 
-        If TRUE, attachment points will be significant when drawing lines to
-        and from this shape.
-        If FALSE, lines will be drawn as if to the centre of the shape.
+        :param `mode`: if `True` attachment points will be significant when
+         drawing lines to and from this shape. If `False` lines will be drawn
+         as if to the centre of the shape.
+         
         """
         self._attachmentMode = mode
 
     def GetAttachmentMode(self):
-        """Return the attachment mode.
+        """
+        Get the attachment mode.
 
-        See Shape.SetAttachmentMode.
+        See :meth:`Shape.SetAttachmentMode`
         """
         return self._attachmentMode
 
@@ -2059,37 +2471,40 @@ class Shape(ShapeEvtHandler):
         self._id = i
 
     def GetId(self):
-        """Return the integer identifier for this shape."""
+        """Get the integer identifier for this shape."""
         return self._id
 
     def IsShown(self):
-        """TRUE if the shape is in a visible state, FALSE otherwise.
+        """
+        `True` if the shape is in a visible state, `False` otherwise.
 
-        Note that this has nothing to do with whether the window is hidden
-        or the shape has scrolled off the canvas; it refers to the internal
-        visibility flag.
+        :note: That this has nothing to do with whether the window is hidden
+         or the shape has scrolled off the canvas; it refers to the internal
+         visibility flag.
+         
         """
         return self._visible
 
     def GetPen(self):
-        """Return the pen used for drawing the shape's outline."""
+        """Get the pen used for drawing the shape's outline."""
         return self._pen
 
     def GetBrush(self):
-        """Return the brush used for filling the shape."""
+        """Get the brush used for filling the shape."""
         return self._brush
 
     def GetNumberOfTextRegions(self):
-        """Return the number of text regions for this shape."""
+        """Get the number of text regions for this shape."""
         return len(self._regions)
 
     def GetRegions(self):
-        """Return the list of ShapeRegions."""
+        """Get the list of ShapeRegions."""
         return self._regions
 
     # Control points ('handles') redirect control to the actual shape, to
     # make it easier to override sizing behaviour.
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
+        """The sizing drag left handler."""
         bound_x, bound_y = self.GetBoundingBoxMin()
 
         dc = wx.MemoryDC()
@@ -2170,6 +2585,7 @@ class Shape(ShapeEvtHandler):
             self.GetEventHandler().OnDrawOutline(dc, pt._controlPointDragPosX, pt._controlPointDragPosY, newWidth, newHeight)
 
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
+        """The sizing begin drag left handler."""
         self._canvas.CaptureMouse()
 
         dc = wx.MemoryDC()
@@ -2272,6 +2688,7 @@ class Shape(ShapeEvtHandler):
             self.GetEventHandler().OnDrawOutline(dc, pt._controlPointDragPosX, pt._controlPointDragPosY, newWidth, newHeight)
             
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
+        """The sizing end drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
 
@@ -2306,16 +2723,19 @@ class Shape(ShapeEvtHandler):
         if not self._canvas.GetQuickEditMode() and pt._eraseObject:
             self._canvas.Redraw(dc)
 
-
             
 class RectangleShape(Shape):
     """
-    The wxRectangleShape has rounded or square corners.
-
-    Derived from:
-      Shape
+    The :class:`RectangleShape` class has rounded or square corners.
     """
     def __init__(self, w = 0.0, h = 0.0):
+        """
+        Default class constructor
+        
+        :param float `w`: the width
+        :param float `h`: the height
+        
+        """
         Shape.__init__(self)
         self._width = w
         self._height = h
@@ -2323,6 +2743,7 @@ class RectangleShape(Shape):
         self.SetDefaultRegionSize()
 
     def OnDraw(self, dc):
+        """The draw handler."""
         x1 = self._xpos - self._width / 2.0
         y1 = self._ypos - self._height / 2.0
 
@@ -2350,9 +2771,18 @@ class RectangleShape(Shape):
             dc.DrawRectangle(x1, y1, self._width, self._height)
 
     def GetBoundingBoxMin(self):
+        """Get the bounding box minimum."""
         return self._width, self._height
 
     def SetSize(self, x, y, recursive = False):
+        """
+        Set the size.
+        
+        :param `x`: the width
+        :param `y`: the height
+        :param `recursive`: not used
+        
+        """
         self.SetAttachmentSize(x, y)
         self._width = max(x, 1)
         self._height = max(y, 1)
@@ -2363,46 +2793,79 @@ class RectangleShape(Shape):
         return self._cornerRadius
     
     def SetCornerRadius(self, rad):
-        """Set the radius of the rectangle's rounded corners.
+        """
+        Set the radius of the rectangle's rounded corners.
 
-        If the radius is zero, a non-rounded rectangle will be drawn.
-        If the radius is negative, the value is the proportion of the smaller
-        dimension of the rectangle.
+        :param `rad`: If the radius is zero, a non-rounded rectangle will be
+         drawn. If the radius is negative, the value is the proportion of the
+         smaller dimension of the rectangle.
+         
         """
         self._cornerRadius = rad
 
     # Assume (x1, y1) is centre of box (most generally, line end at box)
     def GetPerimeterPoint(self, x1, y1, x2, y2):
+        """
+        Get the perimeter point.
+        
+        :param `x1`: ???
+        :param `y1`: ???
+        :param `x2`: ???
+        :param `y2`: ???
+        
+        """
         bound_x, bound_y = self.GetBoundingBoxMax()
         return FindEndForBox(bound_x, bound_y, self._xpos, self._ypos, x2, y2)
 
     def GetWidth(self):
+        """Get the width."""
         return self._width
 
     def GetHeight(self):
+        """Get the height."""
         return self._height
 
     def SetWidth(self, w):
+        """
+        Set the width.
+        
+        :param `w`: width to be set
+        
+        """
         self._width = w
 
     def SetHeight(self, h):
+        """
+        Set the heigth.
+        
+        :param `h`: heigth to be set
+        
+        """
         self._height = h
-
 
         
 class PolygonShape(Shape):
-    """A PolygonShape's shape is defined by a number of points passed to
-    the object's constructor. It can be used to create new shapes such as
-    diamonds and triangles.
+    """
+    The :class:`PolygonShape` class shape is defined by a number of points
+    passed to the object's constructor. It can be used to create new shapes
+    such as diamonds and triangles.
     """
     def __init__(self):
+        """
+        Default class constructor
+        
+        Does not follow above statement, should it? or is Create called 
+        automagically?
+        
+        """
         Shape.__init__(self)
         
         self._points = None
         self._originalPoints = None
 
     def Create(self, the_points = None):
-        """Takes a list of wx.RealPoints or tuples; each point is an offset
+        """
+        Takes a list of :class:`Points` or tuples; each point is an offset
         from the centre.
         """
         self.ClearPoints()
@@ -2424,11 +2887,13 @@ class PolygonShape(Shape):
             self.SetDefaultRegionSize()
 
     def ClearPoints(self):
+        """Clear the points."""
         self._points = []
         self._originalPoints = []
 
     # Width and height. Centre of object is centre of box
     def GetBoundingBoxMin(self):
+        """Get minimum bounding box."""
         return self._boundWidth, self._boundHeight
 
     def GetPoints(self):
@@ -2436,22 +2901,37 @@ class PolygonShape(Shape):
         return self._points
 
     def GetOriginalPoints(self):
+        """Get the original points."""
         return self._originalPoints
 
     def GetOriginalWidth(self):
+        """Get the original width."""
         return self._originalWidth
 
     def GetOriginalHeight(self):
+        """Get the original height."""
         return self._originalHeight
 
     def SetOriginalWidth(self, w):
+        """
+        Set the original width.
+        
+        :param `w`: the width
+        
+        """
         self._originalWidth = w
 
     def SetOriginalHeight(self, h):
+        """
+        Set the original height.
+        
+        :param `w`: the height
+        
+        """
         self._originalHeight = h
         
     def CalculateBoundingBox(self):
-        # Calculate bounding box at construction (and presumably resize) time
+        """Calculate the bounding box."""
         left = 10000
         right = -10000
         top = 10000
@@ -2472,7 +2952,8 @@ class PolygonShape(Shape):
         self._boundHeight = bottom - top
 
     def CalculatePolygonCentre(self):
-        """Recalculates the centre of the polygon, and
+        """
+        Recalculates the centre of the polygon, and
         readjusts the point offsets accordingly.
         Necessary since the centre of the polygon
         is expected to be the real centre of the bounding
@@ -2506,6 +2987,12 @@ class PolygonShape(Shape):
         self._ypos += newCentreY
 
     def HitTest(self, x, y):
+        """Hit text
+        
+        :param `x`: the x position
+        :param `y`: the y position
+        
+        """
         # Imagine four lines radiating from this point. If all of these lines
         # hit the polygon, we're inside it, otherwise we're not. Obviously
         # we'd need more radiating lines to be sure of correct results for
@@ -2550,6 +3037,14 @@ class PolygonShape(Shape):
     # Really need to be able to reset the shape! Otherwise, if the
     # points ever go to zero, we've lost it, and can't resize.
     def SetSize(self, new_width, new_height, recursive = True):
+        """
+        Set the size
+        
+        :param `new_width`: the width
+        :param `new_height`: the height
+        :param `recursive`: not used
+        
+        """
         self.SetAttachmentSize(new_width, new_height)
 
         # Multiply all points by proportion of new size to old size
@@ -2565,8 +3060,10 @@ class PolygonShape(Shape):
 
     # Make the original points the same as the working points
     def UpdateOriginalPoints(self):
-        """If we've changed the shape, must make the original points match the
+        """
+        If we've changed the shape, must make the original points match the
         working points with this function.
+        
         """
         self._originalPoints = []
 
@@ -2579,7 +3076,12 @@ class PolygonShape(Shape):
         self._originalHeight = self._boundHeight
 
     def AddPolygonPoint(self, pos):
-        """Add a control point after the given point."""
+        """
+        Add a control point after the given point.
+        
+        :param `pos`: position of point
+        
+        """
         try:
             firstPoint = self._points[pos]
         except ValueError:
@@ -2606,7 +3108,13 @@ class PolygonShape(Shape):
             self.MakeControlPoints()
 
     def DeletePolygonPoint(self, pos):
-        """Delete the given control point."""
+        """
+        
+        Delete the given control point.
+
+        :param `pos`: position of point
+        
+        """
         if pos < len(self._points):
             del self._points[pos]
             self.UpdateOriginalPoints()
@@ -2616,6 +3124,15 @@ class PolygonShape(Shape):
 
     # Assume (x1, y1) is centre of box (most generally, line end at box)
     def GetPerimeterPoint(self, x1, y1, x2, y2):
+        """
+        Get the perimeter point.
+        
+        :param `x1`: the x1 position
+        :param `y1`: the y1 position
+        :param `x2`: the x2 position
+        :param `y2`: the y2 position
+        
+        """
         # First check for situation where the line is vertical,
         # and we would want to connect to a point on that vertical --
         # oglFindEndForPolyline can't cope with this (the arrow
@@ -2639,6 +3156,7 @@ class PolygonShape(Shape):
         return FindEndForPolyline(xpoints, ypoints, x1, y1, x2, y2)
 
     def OnDraw(self, dc):
+        """The draw handler."""
         if self._shadowMode != SHADOW_NONE:
             if self._shadowBrush:
                 dc.SetBrush(self._shadowBrush)
@@ -2656,6 +3174,7 @@ class PolygonShape(Shape):
         dc.DrawPolygon(self._points, self._xpos, self._ypos)
 
     def OnDrawOutline(self, dc, x, y, w, h):
+        """The draw outline handler."""
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         # Multiply all points by proportion of new size to old size
         x_proportion = abs(float(w) / self._originalWidth)
@@ -2668,12 +3187,14 @@ class PolygonShape(Shape):
 
     # Make as many control points as there are vertices
     def MakeControlPoints(self):
+        """Make control points."""
         for point in self._points:
             control = PolygonControlPoint(self._canvas, self, CONTROL_POINT_SIZE, point, point[0], point[1])
             self._canvas.AddShape(control)
             self._controlPoints.append(control)
 
     def ResetControlPoints(self):
+        """Reset control points."""
         for i in range(min(len(self._points), len(self._controlPoints))):
             point = self._points[i]
             self._controlPoints[i]._xoffset = point[0]
@@ -2681,6 +3202,7 @@ class PolygonShape(Shape):
             self._controlPoints[i].polygonVertex = point
 
     def GetNumberOfAttachments(self):
+        """Get number of attachments."""
         maxN = max(len(self._points) - 1, 0)
         for point in self._attachmentPoints:
             if point._id > maxN:
@@ -2688,12 +3210,27 @@ class PolygonShape(Shape):
         return maxN + 1
 
     def GetAttachmentPosition(self, attachment, nth = 0, no_arcs = 1, line = None):
+        """
+        Get attachment position.
+        
+        :param `attachment`: the attachment ???
+        :param `nth`: get nth attachment ???
+        :param `no_arcs`: ???
+        :param `line`: ???
+        
+        """
         if self._attachmentMode == ATTACHMENT_MODE_EDGE and self._points and attachment < len(self._points):
             point = self._points[0]
             return point[0] + self._xpos, point[1] + self._ypos
         return Shape.GetAttachmentPosition(self, attachment, nth, no_arcs, line)
 
     def AttachmentIsValid(self, attachment):
+        """
+        Is attachment valid?
+        
+        :param `attachment`: ???
+        
+        """
         if not self._points:
             return False
 
@@ -2706,8 +3243,16 @@ class PolygonShape(Shape):
 
         return False
 
-    # Rotate about the given axis by the given amount in radians
     def Rotate(self, x, y, theta):
+        """
+        Rotate about the given axis by the given amount in radians.
+
+        :param `x`: the x position
+        :param `y`: the y position
+        :param `theta`: the theta
+        
+        """
+        
         actualTheta = theta - self._rotation
 
         # Rotate attachment points
@@ -2744,6 +3289,7 @@ class PolygonShape(Shape):
     # Control points ('handles') redirect control to the actual shape, to
     # make it easier to override sizing behaviour.
     def OnSizingDragLeft(self, pt, draw, x, y, keys = 0, attachment = 0):
+        """The sizing drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
@@ -2759,6 +3305,7 @@ class PolygonShape(Shape):
         self.GetEventHandler().OnDrawOutline(dc, self.GetX(), self.GetY(), pt.GetNewSize()[0], pt.GetNewSize()[1])
 
     def OnSizingBeginDragLeft(self, pt, x, y, keys = 0, attachment = 0):
+        """The sizing begin drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
         dc.SetLogicalFunction(OGLRBLF)
@@ -2789,6 +3336,7 @@ class PolygonShape(Shape):
         self._canvas.CaptureMouse()
 
     def OnSizingEndDragLeft(self, pt, x, y, keys = 0, attachment = 0):
+        """The sizing end drag left handler."""
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
 
@@ -2810,41 +3358,71 @@ class PolygonShape(Shape):
             self._canvas.Redraw(dc)
 
 
-
 class EllipseShape(Shape):
-    """The EllipseShape behaves similarly to the RectangleShape but is
-    elliptical.
+    """
+    The :class:`EllipseShape` class behaves similarly to the 
+    :class`RectangleShape` but is elliptical.
 
-    Derived from:
-      wxShape
     """
     def __init__(self, w, h):
+        """
+        Default class constructor
+        
+        :param `w`: the width
+        :param `h`: the height
+        
+        """
         Shape.__init__(self)
         self._width = w
         self._height = h
         self.SetDefaultRegionSize()
 
     def GetBoundingBoxMin(self):
+        """Get the minimum bounding box."""
         return self._width, self._height
 
     def GetPerimeterPoint(self, x1, y1, x2, y2):
+        """
+        Get the perimeter point.
+        
+        :param `x1`: the x1 position
+        :param `y1`: the y1 position
+        :param `x2`: the x2 position
+        :param `y2`: the y2 position
+        
+        """
         bound_x, bound_y = self.GetBoundingBoxMax()
 
         return DrawArcToEllipse(self._xpos, self._ypos, bound_x, bound_y, x2, y2, x1, y1)
 
     def GetWidth(self):
+        """Get the width."""
         return self._width
 
     def GetHeight(self):
+        """Get the height."""
         return self._height
 
     def SetWidth(self, w):
+        """
+        Set the width.
+        
+        :param `w`: the width
+        
+        """
         self._width = w
 
     def SetHeight(self, h):
+        """
+        Set the height.
+        
+        :param `h`: the height
+        
+        """
         self._height = h
         
     def OnDraw(self, dc):
+        """The draw handler."""
         if self._shadowMode != SHADOW_NONE:
             if self._shadowBrush:
                 dc.SetBrush(self._shadowBrush)
@@ -2863,17 +3441,35 @@ class EllipseShape(Shape):
         dc.DrawEllipse(self._xpos - self.GetWidth() / 2.0, self._ypos - self.GetHeight() / 2.0, self.GetWidth(), self.GetHeight())
 
     def SetSize(self, x, y, recursive = True):
+        """
+        Set the size.
+        
+        :param `x`: the width
+        :param `y`: the height
+        :recursive: not used
+        
+        """
         self.SetAttachmentSize(x, y)
         self._width = x
         self._height = y
         self.SetDefaultRegionSize()
 
     def GetNumberOfAttachments(self):
+        """Get number of attachments."""
         return Shape.GetNumberOfAttachments(self)
 
     # There are 4 attachment points on an ellipse - 0 = top, 1 = right,
     # 2 = bottom, 3 = left.
     def GetAttachmentPosition(self, attachment, nth = 0, no_arcs = 1, line = None):
+        """
+        Get attachment position.
+        
+        :param `attachment`: the attachment ???
+        :param `nth`: get nth attachment ???
+        :param `no_arcs`: ???
+        :param `line`: ???
+        
+        """
         if self._attachmentMode == ATTACHMENT_MODE_BRANCHING:
             return Shape.GetAttachmentPosition(self, attachment, nth, no_arcs, line)
 
@@ -2924,31 +3520,64 @@ class EllipseShape(Shape):
             return self._xpos, self._ypos
 
 
-
 class CircleShape(EllipseShape):
-    """An EllipseShape whose width and height are the same."""
+    """
+    The :class:`CircleShape` class is an :class:`EllipseShape` whose width
+    and height are the same.
+    """
     def __init__(self, diameter):
+        """
+        Default class constructor
+        
+        :param `diameter`: the diameter
+        
+        """
         EllipseShape.__init__(self, diameter, diameter)
         self.SetMaintainAspectRatio(True)
 
     def GetPerimeterPoint(self, x1, y1, x2, y2):
+        """
+        Get the perimeter point.
+        
+        :param `x1`: ???
+        :param `y1`: ???
+        :param `x2`: ???
+        :param `y2`: ???
+        :returns: ???
+        
+        """
         return FindEndForCircle(self._width / 2.0, self._xpos, self._ypos, x2, y2)
 
 
-
 class TextShape(RectangleShape):
-    """As wxRectangleShape, but only the text is displayed."""
+    """
+    The :class:`TextShape` class like :class:`RectangleShape` but only the
+    text is displayed.
+    """
     def __init__(self, width, height):
+        """
+        Default class constructor
+        
+        :param `width`: the width
+        :param `height`: the height
+        
+        """
         RectangleShape.__init__(self, width, height)
 
     def OnDraw(self, dc):
+        """not implemented???"""
         pass
 
 
-
 class ShapeRegion(object):
-    """Object region."""
+    """The :class:`ShapeRegion` class."""
     def __init__(self, region = None):
+        """
+        Default class constructor
+        
+        :param `region`: a parent region or None???
+        
+        """
         if region:
             self._regionText = region._regionText
             self._regionName = region._regionName
@@ -2997,46 +3626,114 @@ class ShapeRegion(object):
             self._formattedText = []
 
     def ClearText(self):
+        """Clear the text."""
         self._formattedText = []
 
     def SetFont(self, f):
+        """
+        Set the font.
+        
+        :param `f`: an instance of :class:`Font`
+        """
         self._font = f
 
     def SetMinSize(self, w, h):
+        """
+        Set the minumum size.
+        
+        :param `w`: the minimum width
+        :Param `h`: the minimum height
+        
+        """
         self._minWidth = w
         self._minHeight = h
 
     def SetSize(self, w, h):
+        """
+        Set the size.
+        
+        :param `w`: the width
+        :Param `h`: the jeight
+        
+        """
         self._width = w
         self._height = h
 
     def SetPosition(self, xp, yp):
+        """
+        Set the position.
+        
+        :param `xp`: the x position
+        :Param `yp`: the y position
+        
+        """
         self._x = xp
         self._y = yp
 
     def SetProportions(self, xp, yp):
+        """
+        Set the proportions.
+        
+        :param `xp`: the x region proportion
+        :Param `yp`: the y region proportion
+        
+        """
         self._regionProportionX = xp
         self._regionProportionY = yp
 
     def SetFormatMode(self, mode):
+        """
+        Set the format mode of the region.
+        
+        :param `mode`: can be a bit list of the following
+        
+        ============================== ==============================
+        Format mode                    Description
+        ============================== ==============================
+        `FORMAT_NONE`                  No formatting
+        `FORMAT_CENTRE_HORIZ`          Horizontal centring
+        `FORMAT_CENTRE_VERT`           Vertical centring
+        ============================== ==============================
+        
+        """
         self._formatMode = mode
 
     def SetColour(self, col):
+        """
+        Set the colour.
+        
+        :param str `col`: a valid colour name,
+         see :class:`ColourDatabase`
+        
+        """
         self._textColour = col
         self._actualColourObject = col
 
     def GetActualColourObject(self):
+        """Get the actual colour object from the :class:`ColourDatabase`."""
         self._actualColourObject = wx.TheColourDatabase.Find(self.GetColour())
         return self._actualColourObject
 
     def SetPenColour(self, col):
+        """
+        Set the pen colour.
+        
+        :param str `col`: a valid colour name,
+         see :class:`ColourDatabase`
+        
+        """
         self._penColour = col
         self._actualPenObject = None
 
-    # Returns NULL if the pen is invisible
-    # (different to pen being transparent; indicates that
-    # region boundary should not be drawn.)
     def GetActualPen(self):
+        """
+        Get actual pen.
+        
+        :note: Returns NULL if the pen is invisible
+         (different to pen being transparent; indicates that
+         region boundary should not be drawn.)
+
+         """
         if self._actualPenObject:
             return self._actualPenObject
 
@@ -3048,61 +3745,112 @@ class ShapeRegion(object):
         return self._actualPenObject
 
     def SetText(self, s):
+        """
+        Set the text.
+        
+        :param str `s`: the text
+        
+        """
         self._regionText = s
 
     def SetName(self, s):
+        """
+        Set the name.
+        
+        :param str `s`: the name
+        
+        """
         self._regionName = s
 
     def GetText(self):
+        """Get the text."""
         return self._regionText
 
     def GetFont(self):
+        """Get the font."""
         return self._font
 
     def GetMinSize(self):
+        """Get the minimum size."""
         return self._minWidth, self._minHeight
 
     def GetProportion(self):
+        """Get the proportion."""
         return self._regionProportionX, self._regionProportionY
 
     def GetSize(self):
+        """Get the size."""
         return self._width, self._height
 
     def GetPosition(self):
+        """Get the position."""
         return self._x, self._y
 
     def GetFormatMode(self):
+        """Get the format mode."""
         return self._formatMode
 
     def GetName(self):
+        """Get the name."""
         return self._regionName
 
     def GetColour(self):
+        """Get the colour."""
         return self._textColour
 
     def GetFormattedText(self):
+        """Get the formatted text."""
         return self._formattedText
 
     def GetPenColour(self):
+        """Get the pen colour"""
         return self._penColour
 
     def GetPenStyle(self):
+        """Get the pen style."""
         return self._penStyle
 
     def SetPenStyle(self, style):
+        """
+        Set the pen style.
+        
+        :param `style`: the style, see :class:`Pen`
+        
+        """
         self._penStyle = style
         self._actualPenObject = None
 
     def GetWidth(self):
+        """Get the width."""
         return self._width
 
     def GetHeight(self):
+        """Get the height."""
         return self._height
 
 
-
 class ControlPoint(RectangleShape):
+    """The :class:`ControlPoint` class."""
     def __init__(self, theCanvas, object, size, the_xoffset, the_yoffset, the_type):
+        """
+        Default class constructor
+        
+        :param `theCanvas`: a :class:`~lib.ogl.Canvas`
+        :param `object`: the shape, instance of :class:`~lib.ogl.Shape`
+        :param float `size`: the size
+        :param float `the_xoffset`: the x position
+        :param float `the_yoffset`: the y position
+        :param int `the_type`: one of the following types ???
+        
+         ======================================== ==================================
+         Control point type                       Description
+         ======================================== ==================================
+         `CONTROL_POINT_VERTICAL`                 Vertical
+         `CONTROL_POINT_HORIZONTAL`               Horizontal
+         `CONTROL_POINT_DIAGONAL`                 Diagonal
+         ======================================== ==================================
+        
+        """
         RectangleShape.__init__(self, size, size)
 
         self._canvas = theCanvas
@@ -3118,38 +3866,81 @@ class ControlPoint(RectangleShape):
         
     # Don't even attempt to draw any text - waste of time
     def OnDrawContents(self, dc):
+        """not implemented???"""
         pass
 
     def OnDraw(self, dc):
+        """The draw handler."""
         self._xpos = self._shape.GetX() + self._xoffset
         self._ypos = self._shape.GetY() + self._yoffset
         RectangleShape.OnDraw(self, dc)
 
     def OnErase(self, dc):
+        """The erase handler."""
         RectangleShape.OnErase(self, dc)
 
     # Implement resizing of canvas object
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag left handler."""
         self._shape.GetEventHandler().OnSizingDragLeft(self, draw, x, y, keys, attachment)
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The begin drag left handler."""
         self._shape.GetEventHandler().OnSizingBeginDragLeft(self, x, y, keys, attachment)
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The end drag left handler."""
         self._shape.GetEventHandler().OnSizingEndDragLeft(self, x, y, keys, attachment)
 
     def GetNumberOfAttachments(self):
+        """Get the number of attachments."""
         return 1
 
     def GetAttachmentPosition(self, attachment, nth = 0, no_arcs = 1, line = None):
+        """
+        Get the attachment position.
+
+        :param `attachment`: the attachment ???
+        :param `nth`: get nth attachment ???
+        :param `no_arcs`: ???
+        :param `line`: ???
+        
+        """
         return self._xpos, self._ypos
 
     def SetEraseObject(self, er):
+        """
+        Set the erase object ???
+        
+        :param `er`: the object
+        
+        """
         self._eraseObject = er
 
         
 class PolygonControlPoint(ControlPoint):
+    """The :class:`PolygonControlPoint` class."""
     def __init__(self, theCanvas, object, size, vertex, the_xoffset, the_yoffset):
+        """
+        Default class constructor
+        
+        :param `theCanvas`: a :class:`~lib.ogl.Canvas`
+        :param `object`: the shape, instance of :class:`~lib.ogl.Shape`
+        :param float `size`: the size
+        :param `vertext`: the vertex
+        :param float `the_xoffset`: the x position
+        :param float `the_yoffset`: the y position
+        :param int `the_type`: one of the following types ???
+        
+         ======================================== ==================================
+         Control point type                       Description
+         ======================================== ==================================
+         `CONTROL_POINT_VERTICAL`                 Vertical
+         `CONTROL_POINT_HORIZONTAL`               Horizontal
+         `CONTROL_POINT_DIAGONAL`                 Diagonal
+         ======================================== ==================================
+        
+        """
         ControlPoint.__init__(self, theCanvas, object, size, the_xoffset, the_yoffset, 0)
         self._polygonVertex = vertex
         self._originalDistance = 0.0
@@ -3157,10 +3948,17 @@ class PolygonControlPoint(ControlPoint):
         self._originalSize = wx.RealPoint()
 
     def GetNewSize(self):
+        """Get the new size."""
         return self._newSize
     
-    # Calculate what new size would be, at end of resize
     def CalculateNewSize(self, x, y):
+        """
+        Calculate what new size would be, at end of resize.
+        
+        :param `x`: x ???
+        :param `y`: y ???
+        
+        """
         bound_x, bound_y = self.GetShape().GetBoundingBoxMax()
         dist = math.sqrt((x - self._shape.GetX()) * (x - self._shape.GetX()) + (y - self._shape.GetY()) * (y - self._shape.GetY()))
 
@@ -3169,12 +3967,15 @@ class PolygonControlPoint(ControlPoint):
 
     # Implement resizing polygon or moving the vertex
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
+        """The drag left handler."""
         self._shape.GetEventHandler().OnSizingDragLeft(self, draw, x, y, keys, attachment)
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The begin drag left handler."""
         self._shape.GetEventHandler().OnSizingBeginDragLeft(self, x, y, keys, attachment)
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
+        """The end drag left handler."""
         self._shape.GetEventHandler().OnSizingEndDragLeft(self, x, y, keys, attachment)
 
 from .canvas import *
