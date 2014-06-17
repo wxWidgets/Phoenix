@@ -1218,6 +1218,7 @@ class DivisionShape(CompositeShape):
         RectangleShape.SetSize(self, w, h, recursive)
 
     def CalculateSize(self):
+        """not implemented???"""    
         pass
 
     # Experimental

@@ -64,12 +64,15 @@ class DrawOp(object):
         return False
 
     def Scale(self,scaleX, scaleY):
+        """not implemented???"""
         pass
 
     def Translate(self, x, y):
+        """not implemented???"""
         pass
 
     def Rotate(self, x, y, theta, sinTheta, cosTheta):
+        """not implemented???"""
         pass
     
 class OpSetGDI(DrawOp):

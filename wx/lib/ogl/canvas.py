@@ -443,25 +443,33 @@ class ShapeCanvas(wx.ScrolledWindow):
         return self.GetDiagram().Snap(x, y)
 
     def OnLeftClick(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnRightClick(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnDragLeft(self, draw, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnBeginDragLeft(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnEndDragLeft(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnDragRight(self, draw, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnBeginDragRight(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnEndDragRight(self, x, y, keys = 0):
+        """not implemented???"""
         pass

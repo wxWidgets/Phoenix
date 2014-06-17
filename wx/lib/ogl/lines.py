@@ -254,7 +254,7 @@ class LabelShape(RectangleShape):
             dc.DrawRectangle(x1, y1, self._width, self._height)
 
     def OnDrawContents(self, dc):
-        """The draw content handler - just a place holder."""
+        """not implemented???"""
         pass
 
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
@@ -369,7 +369,8 @@ class LineShape(Shape):
         self._attachmentTo = attach
 
     def Draggable(self):
-        """Line is not draggable.
+        """
+        Line is not draggable.
         
         :note: This is really to distinguish between lines and other images.
          For lines we want to pass drag to canvas, since lines tend to prevent
@@ -1257,15 +1258,15 @@ class LineShape(Shape):
         Shape.OnEraseControlPoints(self, dc)
 
     def OnDragLeft(self, draw, x, y, keys = 0, attachment = 0):
-        """The drag left handler - just a place holder."""
+        """not implemented???"""
         pass
 
     def OnBeginDragLeft(self, x, y, keys = 0, attachment = 0):
-        """The begin drag left handler - just a place holder."""
+        """not implemented???"""
         pass
 
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
-        """The end drag left handler - just a place holder."""
+        """not implemented???"""
         pass
 
     def OnDrawContents(self, dc):
