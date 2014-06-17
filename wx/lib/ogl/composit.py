@@ -1237,7 +1237,7 @@ class DivisionShape(CompositeShape):
         """Divide this division into two further divisions.
         
         :param `direction`: `wx.HORIZONTAL` for horizontal or `wx.VERTICAL` for
-        vertical division.
+         vertical division.
         
         """
         # Calculate existing top-left, bottom-right

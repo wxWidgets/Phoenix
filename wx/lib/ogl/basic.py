@@ -56,7 +56,7 @@ class ShapeTextLine(object):
         
         :param int `the_x`: the x position
         :param int `the_y`: the y position
-        :param str `the_line:` the text
+        :param str `the_line`: the text
         
         """
         self._x = the_x
@@ -466,7 +466,7 @@ class Shape(ShapeEvtHandler):
         `OP_ALL`                   all of the above
         ========================== ===================
         
-        :param `recursive`: if `True ` recurse through children
+        :param `recursive`: if `True` recurse through children
         
         """
         self._draggable = sens & OP_DRAG_LEFT
