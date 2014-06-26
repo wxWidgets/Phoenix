@@ -95,7 +95,6 @@ class MaskedTimeCtrlTests(wtc.WidgetTestCase):
         #t = m.TextCtrl()
         #t.Create(self.frame)
         
-        
     def test_timectrlIsValid(self):
         t = m.TimeCtrl(self.frame, -1, "18:25:18")
 
@@ -105,7 +104,7 @@ class MaskedTimeCtrlTests(wtc.WidgetTestCase):
         self.assertEqual(theTime.second, 18, "Seconds: %s instead of '18'" % theTime.second)
 
         self.assertEqual(t.IsInBounds(), True)
-
+        self.assertEqual(t.GetCtrlParameter('validBackgroundColour'), t.GetBackgroundColour())
 
     def test_timectrlProperties(self):
         t = m.TimeCtrl(self.frame)
