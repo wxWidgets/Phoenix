@@ -1254,7 +1254,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
     def __OnChar(self, event):
         """
         Handler to explicitly look for ':' keyevents, and if found,
-        clear the m_shiftDown field, so it will behave as forward tab.
+        clear the shiftDown field, so it will behave as forward tab.
         It then calls the base control's _OnChar routine with the modified
         event instance.
         """
@@ -1263,7 +1263,7 @@ class TimeCtrl(BaseMaskedTextCtrl):
 ##        dbg('keycode:', keycode)
         if keycode == ord(':'):
 ##            dbg('colon seen! removing shift attribute')
-            event.m_shiftDown = False
+            event.shiftDown = False
         BaseMaskedTextCtrl._OnChar(self, event )              ## handle each keypress
 ##        dbg(indent=0)
 
