@@ -170,3 +170,4 @@ other dev stuff
      args string of the remaining function or method definition like for those 
      that do not have overloads.  For example, see Window.GetClientSize
 
+   * Check gui_scripts entry points.
