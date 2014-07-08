@@ -13,7 +13,7 @@
 
 VER_MAJOR        = 3      # The first three must match wxWidgets
 VER_MINOR        = 0
-VER_RELEASE      = 1
+VER_RELEASE      = 2
 VER_FLAGS        = ""     # wxPython release flags
 
 # Set the VER_FLAGS component according to the following patterns. These
