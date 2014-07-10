@@ -493,7 +493,7 @@ class NumCtrl(BaseMaskedTextCtrl, NumCtrlAccessorsMixin):
         'decimalChar': '.',                 # by default, use '.' for decimal point
         'allowNegative': True,              # by default, allow negative numbers
         'useParensForNegatives': False,     # by default, use '-' to indicate negatives
-        'groupDigits': True,                # by default, don't insert grouping
+        'groupDigits': False,               # by default, don't insert grouping
         'groupChar': ',',                   # by default, use ',' for grouping
         'min': None,                        # by default, no bounds set
         'max': None,
