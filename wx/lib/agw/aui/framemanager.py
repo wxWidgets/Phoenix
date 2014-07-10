@@ -4754,8 +4754,8 @@ class AuiManager(wx.EvtHandler):
 
         # if the pane's name identifier is blank, create a random string
         if pinfo.name == "" or already_exists:
-            pinfo.name = ("%s%08x%08x%08x")%(pinfo.window.GetName(), time.time(),
-                                             time.clock(), len(self._panes))
+            pinfo.name = ("%s%08x%08x%08x") % (pinfo.window.GetName(), int(time.time()),
+                                               int(time.clock()), len(self._panes))
 
         # set initial proportion (if not already set)
         if pinfo.dock_proportion == 0:
