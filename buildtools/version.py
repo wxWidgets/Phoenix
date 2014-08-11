@@ -12,9 +12,9 @@
 
 
 VER_MAJOR        = 3      # The first three must match wxWidgets
-VER_MINOR        = 0
-VER_RELEASE      = 2
-VER_FLAGS        = ""     # wxPython release flags
+VER_MINOR        = 1
+VER_RELEASE      = 0
+VER_FLAGS        = "a0"   # wxPython release flags
 
 # Set the VER_FLAGS component according to the following patterns. These
 # should help us to better conform to the setuptools and/or PEP-0386 notions
