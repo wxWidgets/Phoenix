@@ -272,7 +272,9 @@ def run():
     
     #-------------------------------------------------------
     c = module.find('wxRichTextImage')
+    tools.ignoreConstOverloads(c)
     _fixDrawObject(c)
+    
     
     #-------------------------------------------------------
     c = module.find('wxRichTextBuffer')

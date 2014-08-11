@@ -46,6 +46,17 @@ def run():
     
     # Pure virtuals inherited from wxHtmlWindowInterface
     c.addItem(etgtools.WigCode("""\
+    
+        enum HTMLCursor
+    {
+        /// Standard mouse cursor (typically an arrow)
+        HTMLCursor_Default,
+        /// Cursor shown over links
+        HTMLCursor_Link,
+        /// Cursor shown over selectable text
+        HTMLCursor_Text
+    };
+    
         virtual void SetHTMLWindowTitle(const wxString& title);
         virtual void OnHTMLLinkClicked(const wxHtmlLinkInfo& link);
         virtual wxHtmlOpeningStatus OnHTMLOpeningURL(wxHtmlURLType type,

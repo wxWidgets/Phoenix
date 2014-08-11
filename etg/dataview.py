@@ -361,6 +361,8 @@ def run():
         body="return [self.GetColumn(i) for i in range(self.GetColumnCount())]")
     
     c.find('GetSelections').ignore()
+    c.find('GetSortingColumns').ignore()         # TODO: fix <wxVector> issue
+    c.find('IsMultiColumnSortAllowed').ignore()  # TODO: fix const issue
     c.addCppMethod('wxDataViewItemArray*', 'GetSelections', '()', 
         isConst=True, factory=True,
         doc="Returns a list of the currently selected items.",
