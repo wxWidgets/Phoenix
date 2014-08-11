@@ -264,6 +264,8 @@ def run():
                 port = 'gtk'
                 if 'gtk2' in wx.PlatformInfo:
                     port = 'gtk2'
+            elif wx.Port == '__WXQT__':
+                port = 'qt'            
             else:
                 port = '???'
             return "%s %s (phoenix)" % (wx.VERSION_STRING, port)
