@@ -128,6 +128,10 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 #define wxPort "__WXMAC__"
 #define wxPortName "wxMac"
 #endif
+#ifdef __WXQT__
+#define wxPort "__WXQT__"
+#define wxPortName "wxQt"
+#endif
 
     wxInitAllImageHandlers();
 
@@ -173,6 +177,9 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 #else
     _AddInfoString("gtk1");
 #endif
+#endif
+#ifdef __WXQT__
+    _AddInfoString("qt");
 #endif
 #ifdef __WXDEBUG__
     _AddInfoString("wx-assertions-on");
