@@ -331,7 +331,7 @@ bool wxPyApp::IsDisplayAvailable()
     return rv;
 #endif
 
-#ifdef __WXMSW__
+#if defined(__WXMSW__) || defined(__WXQT__)
     // TODO...
     return true;
 #endif
