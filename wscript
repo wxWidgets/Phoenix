@@ -516,14 +516,15 @@ def build(bld):
         )
     makeExtCopyRule(bld, '_glcanvas')
 
-
-    etg = loadETG('etg/_html2.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_html2'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXWEBVIEW WXPY',
-        )
-    makeExtCopyRule(bld, '_html2')
+    # do not build html2 (webview webkit) if not supported
+    if isWindows or cfg.getWxConfigValue('--optional-libs webview'):
+        etg = loadETG('etg/_html2.py')
+        bld(features = 'c cxx cxxshlib pyext',
+            target   = makeTargetName(bld, '_html2'),
+            source   = getEtgSipCppFiles(etg) + rc,
+            uselib   = 'WXWEBVIEW WXPY',
+            )
+        makeExtCopyRule(bld, '_html2')
 
     if isDarwin:
         etg = loadETG('etg/_webkit.py')
