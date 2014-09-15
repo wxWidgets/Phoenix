@@ -69,9 +69,9 @@ three text controls in a frame window::
                                 wx.NO_BORDER | wx.TE_MULTILINE)
             
             # add the panes to the manager
-            self._mgr.AddPane(text1, AuiPaneInfo().Left().Caption("Pane Number One"))
-            self._mgr.AddPane(text2, AuiPaneInfo().Bottom().Caption("Pane Number Two"))
-            self._mgr.AddPane(text3, AuiPaneInfo().CenterPane())
+            self._mgr.AddPane(text1, aui.AuiPaneInfo().Left().Caption("Pane Number One"))
+            self._mgr.AddPane(text2, aui.AuiPaneInfo().Bottom().Caption("Pane Number Two"))
+            self._mgr.AddPane(text3, aui.AuiPaneInfo().CenterPane())
                                   
             # tell the manager to "commit" all the changes just made
             self._mgr.Update()
