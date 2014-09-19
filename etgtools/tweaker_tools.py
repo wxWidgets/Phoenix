@@ -248,7 +248,7 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
 
     if hideVirtuals:
         # There is no need to make all the C++ virtuals overridable in Python, and
-        # hiding the fact that they are virtual from the back end generator will
+        # hiding the fact that they are virtual from the backend generator will
         # greatly reduce the amount of code that needs to be generated. Remove all
         # the virtual flags, and then add it back to a select few.
         removeVirtuals(klass)
