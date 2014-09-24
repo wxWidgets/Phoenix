@@ -2653,7 +2653,7 @@ class TabFrame(wx.Window):
         self._tab_rect = wx.Rect()
         self._parent = parent
 
-        self.Create(parent)
+        self.Create(parent, size=(0, 0))
 
 
     def SetTabCtrlHeight(self, h):
