@@ -253,13 +253,12 @@ void wxPyApp::_BootstrapApp()
     // Call the Python wxApp's OnPreInit and OnInit functions if they exist
     OnPreInit();
 
-#ifdef __WXOSX_COCOA__
-    // Only use CallOnInit the first time, otherwise it will block on [NSApp run];
+    // Only use CallOnInit the first time, otherwise it will block on [NSApp run] in wxOSX_Cocoa;
     if (! haveInitialized)
         result = CallOnInit();
     else
-#endif
         result = OnInit();
+        
 //#ifdef __WXOSX_COCOA__
 //    OSXSetInitWasCalled(true);  TODO: consider adding this method to wxApp
 //#endif
