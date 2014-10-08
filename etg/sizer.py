@@ -141,6 +141,16 @@ def run():
         doc="Insert a spacer using a :class:`Size` object.",
         body="return self->Insert(index, size->x, size->y, *flags);")
 
+    c.addPyMethod('__nonzero__', '(self)',
+        doc="Can be used to test if the C++ part of the sizer still exists, with \n"
+            "code like this::\n\n"
+            "    if theSizer:\n"
+            "        doSomething()",
+        body="""\
+        import wx.siplib
+        return not wx.siplib.isdeleted(self)
+        """)
+    c.addPyCode('Sizer.__bool__ = Sizer.__nonzero__') # For Python 3
 
 
     
