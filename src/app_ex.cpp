@@ -253,11 +253,12 @@ void wxPyApp::_BootstrapApp()
 
     // Call the Python wxApp's OnPreInit and OnInit functions if they exist
     OnPreInit();
-    result = OnInit();
+    result = CallOnInit();
 
     if (! result) {
         wxPyErr_SetString(PyExc_SystemExit, "OnInit returned false, exiting...");
     }
+    
 error:
     return;
 }
