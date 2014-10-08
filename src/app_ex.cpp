@@ -242,7 +242,6 @@ void wxPyApp::_BootstrapApp()
                 );
             goto error;
         }
-        haveInitialized = true;
     }
     else {
         this->argc = 0;
@@ -253,11 +252,23 @@ void wxPyApp::_BootstrapApp()
 
     // Call the Python wxApp's OnPreInit and OnInit functions if they exist
     OnPreInit();
-    result = CallOnInit();
 
+#ifdef __WXOSX_COCOA__
+    // Only use CallOnInit the first time, otherwise it will block on [NSApp run];
+    if (! haveInitialized)
+        result = CallOnInit();
+    else
+#endif
+        result = OnInit();
+//#ifdef __WXOSX_COCOA__
+//    OSXSetInitWasCalled(true);  TODO: consider adding this method to wxApp
+//#endif
+    
     if (! result) {
         wxPyErr_SetString(PyExc_SystemExit, "OnInit returned false, exiting...");
     }
+
+    haveInitialized = true;
     
 error:
     return;
