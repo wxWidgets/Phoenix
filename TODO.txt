@@ -171,3 +171,5 @@ other dev stuff
      that do not have overloads.  For example, see Window.GetClientSize
 
    * Check gui_scripts entry points.
+
+   * Add build support for gtk3
