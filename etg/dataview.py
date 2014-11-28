@@ -370,6 +370,37 @@ def run():
             return selections;
             """)
 
+    # Pythonize HitTest
+    c.find('HitTest').ignore()
+    c.addCppMethod('PyObject*', 'HitTest', '(const wxPoint& point)',
+        isConst=True,
+        doc="""\
+            HitTest(point) -> (item, col)\n
+            Returns the item and column located at point, as a 2 element tuple.
+            """,
+        body="""\
+            wxDataViewItem*   item = new wxDataViewItem();;
+            wxDataViewColumn* col = NULL;
+            
+            self->HitTest(*point, *item, col);
+            
+            wxPyThreadBlocker blocker;
+            PyObject* value = PyTuple_New(2);
+            PyObject* item_obj =
+                wxPyConstructObject((void*)item, wxT("wxDataViewItem"), 1);   // owned
+            PyObject* col_obj;
+            if (col) {
+                col_obj = wxPyConstructObject((void*)col, wxT("wxDataViewColumn"), 0);  // not owned
+            } else {
+                col_obj = Py_None;
+                Py_INCREF(Py_None);
+            }
+            PyTuple_SET_ITEM(value, 0, item_obj);
+            PyTuple_SET_ITEM(value, 1, col_obj);
+            // PyTuple steals a reference, so we don't need to decref the items here
+            return value;
+            """)
+    
     
     #-----------------------------------------------------------------
     c = module.find('wxDataViewEvent')
