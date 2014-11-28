@@ -737,6 +737,7 @@ class PeakMeterCtrl(wx.Control):
         rectBand.Offset(0, rect.height-size.y*self._numBands)
         xDecal = (self._ledBands > 1 and [1] or [0])[0]
         yDecal = (self._numBands > 1 and [1] or [0])[0]
+        rectPrev = wx.Rect(*rectBand)
 
         for vert in range(self._numBands):
         
