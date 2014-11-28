@@ -612,7 +612,8 @@ class ImageBar(object):
 
     def GetBitmap(self):
         """ Returns the background button bar on which the buttons float. """
-
+        if isinstance(self._bitmap, wx.Image):
+            return wx.Bitmap(self._bitmap)
         return self._bitmap
 
 
