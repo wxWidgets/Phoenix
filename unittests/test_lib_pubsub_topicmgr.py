@@ -155,8 +155,8 @@ class lib_pubsub_TopicMgr1_GetOrCreate_NoDefnProv(wtc.PubsubTestCase):
         assert topicMgr.getTopic(tName) is rootTopic
         assert rootTopic.hasMDS()
         assert topicMgr.hasTopicDefinition(tName)
-        expectDesc = 'UNDOCUMENTED: created from protoListener "protoListener" in module test_lib_pubsub_topicmgr'
-        assert rootTopic.getDescription() == expectDesc
+        expectDesc = 'UNDOCUMENTED: created from protoListener "protoListener" in module'
+        assert rootTopic.getDescription().startswith(expectDesc)
 
         # check that topic created can discern between good and bad listener
         assert rootTopic.isValid(protoListener)

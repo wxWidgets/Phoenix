@@ -989,7 +989,7 @@ def testOne(name, options, args):
     if name.endswith('.py') or name.endswith('.pyc'):
         i = name.rfind('.')
         name = name[:i]
-    runcmd('"%s" unittests/%s.py %s' % (PYTHON, name, '-v' if options.verbose else ''), fatal=False)
+    runcmd('"%s" unittests/%s.py %s' % (PYTHON, name, '-v' if options.verbose else ''), fatal=True)
 
     
     
