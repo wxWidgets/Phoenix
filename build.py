@@ -592,8 +592,9 @@ def uploadPackage(fileName, KEEP=50):
     
     # leave the last KEEP builds, including this new one, on the server
     for name in allFiles[:-KEEP]:
-        msg("Deleting %s" % name)
-        ftp.delete(name)
+        if not name.startswith('README'):
+            msg("Deleting %s" % name)
+            ftp.delete(name)
 
     ftp.close()
     msg("Upload complete!")
