@@ -2,7 +2,7 @@
 #---------------------------------------------------------------------------
 # This script is used to run through the commands used for the various stages
 # of building Phoenix, and can also be a front-end for building wxWidgets and
-# the Python extension modules.
+# the wxPython distribution files.
 #---------------------------------------------------------------------------
 
 from __future__ import absolute_import
@@ -31,6 +31,7 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                getVisCVersion
 
 import buildtools.version as version
+
 
 # defaults
 PYVER = '2.7'
@@ -567,37 +568,37 @@ def uploadPackage(fileName, KEEP=50):
     end of the list will be the newest files.
     """
     msg("Preparing to upload %s..." % fileName)
-    configfile = os.path.join(os.getenv("HOME"), "phoenix_package_server.cfg")
-    if not os.path.exists(configfile):
-        msg("ERROR: Can not upload, server configuration not set.")
-        return
-        
-    import ConfigParser
-    parser = ConfigParser.ConfigParser()
-    parser.read(configfile)
+    snapshotDir = 'snapshot-builds'
     
-    msg("Connecting to FTP server...")
-    from ftplib import FTP
-    ftp = FTP(parser.get("FTP", "host"))
-    ftp.login(parser.get("FTP", "user"), parser.get("FTP", "pass"))
-    ftp_dir = parser.get("FTP", "dir")
-    ftp_path = '%s/%s' % (ftp_dir, os.path.basename(fileName))
-    msg("Uploading package (this may take some time)...")
-    f = open(fileName, 'rb')
-    ftp.storbinary('STOR %s' % ftp_path, f)
-    f.close()
-    
-    allFiles = ftp.nlst(ftp_dir)
-    allFiles.sort()  # <== if an alpha sort is not the correct order, pass a cmp function!
-    
-    # leave the last KEEP builds, including this new one, on the server
-    for name in allFiles[:-KEEP]:
-        if os.path.basename(name).startswith('README'):
-            continue
-        msg("Deleting %s" % name)
-        ftp.delete(name)
+    try:
+        import plumbum as pb
+    except ImportError:
+        msg("ERROR: The plumbum module not was not found, unable to upload.")
+        sys.exit(1)
 
-    ftp.close()
+    # NOTE: It is expected that there will be a host entry defined in
+    # ~/.ssh/config named wxpyhton-rbot, with the proper host, user,
+    # idenity file, etc needed for making an SSH connection to the
+    # snapshots server.
+    rem = pb.SshMachine('wxpython-rbot')
+    rls = rem['ls']
+    with rem.cwd(snapshotDir):
+        # copy the new file
+        pb.path.utils.copy(fileName, rem.cwd)
+
+        # get the list of files
+        allFiles = rls()
+        allFiles = allFiles.strip().split('\n')
+        allFiles.sort()  # <== if an alpha sort is not the correct order, pass a cmp function!
+    
+        # leave the last KEEP builds, including this new one, on the server
+        for name in allFiles[:-KEEP]:
+            if os.path.basename(name).startswith('README'):
+                continue
+            msg("Deleting %s" % name)
+            pb.path.utils.delete(rem.cwd // name)
+
+    rem.close()    
     msg("Upload complete!")
 
 
