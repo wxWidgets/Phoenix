@@ -46,7 +46,8 @@ def run():
         assert isinstance(m, etgtools.MethodDef)
         if 'void *' in m.argsString or \
            'wxClientData **' in m.argsString or \
-           'wxString *' in m.argsString:
+           'wxString *' in m.argsString or \
+           'std::vector< T > &' in m.argsString:
             m.ignore() 
 
     for m in c.findAll('Append'):
