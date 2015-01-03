@@ -328,18 +328,18 @@ class lib_pubsub_ArgsInfo(wtc.PubsubTestCase):
 
         ll = Listener(fn, aiMock)
         self.assertEqual(ll.typeName(), "fn")
-        self.assertEqual(ll.module(), "test_lib_pubsub_listener")
+        self.assertEqual(ll.module(), __name__)
         assert not ll.wantsTopicObjOnCall()
 
         foo = Foo()
         ll = Listener(foo, aiMock)
         self.assertEqual(ll.typeName(), "Foo")
-        self.assertEqual(ll.module(), "test_lib_pubsub_listener")
+        self.assertEqual(ll.module(), __name__)
         assert not ll.wantsTopicObjOnCall()
 
         ll = Listener(foo.meth, ArgsInfoMock('argName'))
         self.assertEqual(ll.typeName(), "Foo.meth")
-        self.assertEqual(ll.module(), "test_lib_pubsub_listener")
+        self.assertEqual(ll.module(), __name__)
         assert ll.wantsTopicObjOnCall()
 
 #---------------------------------------------------------------------------

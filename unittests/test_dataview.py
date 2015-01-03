@@ -315,7 +315,14 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.frame.SendSizeEvent()
         dlc.Refresh()
         self.myYield()
-        
+
+
+    def test_dataviewHitTest(self):
+        dlc = dv.DataViewListCtrl(self.frame)
+        self.doListCtrlTest(dlc)
+        item, col = dlc.HitTest((10,50))
+        self.assertTrue(isinstance(item, dv.DataViewItem))
+        self.assertTrue(isinstance(col, dv.DataViewColumn) or col is None)
             
     #-------------------------------------------------------
     # DataViewTreeCtrl
@@ -467,7 +474,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         dv.EVT_DATAVIEW_CACHE_HINT               
     
     
-    
+        
     
 #---------------------------------------------------------------------------
 

@@ -181,7 +181,9 @@ Supported Platforms
 ===================
 
 :class:`HyperTreeList` has been tested on the following platforms:
-  * Windows (Windows XP);
+  * Windows (Windows XP), Vista, 7;
+  * Linux
+  * Mac
 
 
 Window Styles

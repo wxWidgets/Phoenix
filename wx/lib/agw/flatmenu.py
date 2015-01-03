@@ -5208,9 +5208,16 @@ class FlatMenuItem(object):
     def GetAcceleratorEntry(self):
         """ Returns the accelerator entry associated to this menu item. """
 
-        accel = wx.AcceleratorEntry()
-        accel.FromString(self.GetText())
-        return accel
+        if '\t' in self.GetText():
+            accel = wx.AcceleratorEntry()
+            accel.FromString(self.GetText())
+            return accel            
+        elif self.GetAccelString():
+            accel = wx.AcceleratorEntry()
+            accel.FromString(self.GetAccelString())
+            return accel
+        else:
+            return None
 
 
     def GetMnemonicChar(self):
@@ -6657,7 +6664,7 @@ class FlatMenu(FlatMenuBase):
             del item
 
 
-    def Destroy(self, item):
+    def DestroyItem(self, item):
         """
         Deletes the menu item from the menu. If the item is a submenu, it will be
         deleted. Use :meth:`~FlatMenu.Remove` if you want to keep the submenu (for example, to reuse
@@ -7064,7 +7071,7 @@ class FlatMenu(FlatMenuBase):
 
         lenItems = len(self._itemsArr)
         for ii in range(lenItems):
-            self.Destroy(self._itemsArr[0].GetId())
+            self.DestroyItem(self._itemsArr[0].GetId())
 
         # Now we can resize the menu
         self._resizeMenu = True

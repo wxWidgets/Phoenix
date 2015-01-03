@@ -160,6 +160,8 @@ def main(args):
             continue # ignore empty command-line args (possible with the buildbot)
         elif cmd.startswith('test_'):
             testOne(cmd, options, args)
+        elif cmd.startswith('unittests/test_'):
+            testOne(os.path.basename(cmd), options, args)            
         elif 'cmd_'+cmd in globals():
             function = globals()['cmd_'+cmd]  
             function(options, args)
@@ -590,6 +592,8 @@ def uploadPackage(fileName, KEEP=50):
     
     # leave the last KEEP builds, including this new one, on the server
     for name in allFiles[:-KEEP]:
+        if os.path.basename(name).startswith('README'):
+            continue
         msg("Deleting %s" % name)
         ftp.delete(name)
 
@@ -983,7 +987,10 @@ def cmd_test(options, args):
 def testOne(name, options, args):
     cmdTimer = CommandTimer('test %s:' % name)
     pwd = pushDir(phoenixDir())
-    runcmd('"%s" unittests/%s.py %s' % (PYTHON, name, '-v' if options.verbose else ''), fatal=False)
+    if name.endswith('.py') or name.endswith('.pyc'):
+        i = name.rfind('.')
+        name = name[:i]
+    runcmd('"%s" unittests/%s.py %s' % (PYTHON, name, '-v' if options.verbose else ''), fatal=True)
 
     
     
