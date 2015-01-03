@@ -50,6 +50,9 @@ def run():
         self->SetStatusWidths(widths->size(), ptr);
         """)
     
+    # provisionally ignore new features features in 3.1.0
+    c.find("MSWGetTaskBarButton").ignore();   # missing wxTaskBarButton
+    
     c.addProperty('MenuBar GetMenuBar SetMenuBar')
     c.addProperty('StatusBar GetStatusBar SetStatusBar')
     c.addProperty('StatusBarPane GetStatusBarPane SetStatusBarPane')
