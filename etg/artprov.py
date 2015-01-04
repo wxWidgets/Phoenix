@@ -42,9 +42,11 @@ def run():
     # deal with ownership transfers
     c.find('Push.provider').transfer = True
     c.find('PushBack.provider').transfer = True
-    c.find('Insert.provider').transfer = True
     c.find('Remove.provider').transferBack = True
-
+    
+    # replacements for backward compatibility:
+    c.find("Insert").ignore()
+    c.addPyCode("Insert = wx.deprecated(PushBack, 'Use PushBack instead.')")
 
     # Change the types of the art constants from wxString to const char*
     # since that is what they really are.
