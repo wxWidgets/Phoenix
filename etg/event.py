@@ -553,7 +553,8 @@ def run():
     
     #---------------------------------------
     # wxIconizeEvent
-    module.find('wxIconizeEvent.Iconized').deprecated = True
+    # remove deprecated methods (available only with WXWIN_COMPATIBILITY_2_8)
+    module.find('wxIconizeEvent.Iconized').ignore()
     
     
     # Apply common fixups for all the event classes
