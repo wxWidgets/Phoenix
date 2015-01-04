@@ -38,6 +38,8 @@ def run():
     
     
     c = module.find('wxComboCtrl')
+    for name in ['SetTextIndent', 'GetTextIndent']:
+        c.find(name).ignore()    # deprectated
     tools.fixWindowClass(c)
 
     module.addGlobalStr('wxComboBoxNameStr', c)
