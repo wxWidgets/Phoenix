@@ -47,7 +47,8 @@ def run():
     c.find('LoadFile.type').default = 'wxBITMAP_TYPE_ANY'
 
     c.find('wxBitmap').findOverload('(const char *const *bits)').ignore()
-
+    # note that wxBitmap(const wxCursor& cursor) is not implemented in all ports
+    
     c.addCppCtor('(PyObject* listOfBytes)',
         doc="Construct a Bitmap from a list of strings formatted as XPM data.",
         body="""\
