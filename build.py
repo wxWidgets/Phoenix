@@ -582,11 +582,15 @@ def uploadPackage(fileName, KEEP=50):
     # snapshots server.
     rem = pb.SshMachine('wxpython-rbot')
     rls = rem['ls']
+    rchmod = rem['chmod']
     with rem.cwd(snapshotDir):
         # copy the new file
         pb.path.utils.copy(fileName, rem.cwd)
 
-        # get the list of files
+        # Make sure it is readable by all
+        rchmod('a+r', os.path.basename(fileName))
+
+        # get the list of files in the folder
         allFiles = rls()
         allFiles = allFiles.strip().split('\n')
         allFiles.sort()  # <== if an alpha sort is not the correct order, pass a cmp function!
