@@ -744,40 +744,36 @@ def getSvnRev():
     # Some helpers for the code below
     def _getDate():
         import datetime
-        today = datetime.date.today()
-        return "%d%02d%02d" % (today.year, today.month, today.day)
+        now = datetime.datetime.now()
+        return "%d%02d%02d.%02d%02d" % (now.year, now.month, now.day, now.hour, now.minute)
     
     def _getSvnRevision():
+        if not os.path.exists('.svn'):
+            return None            
         svnrev = None
         try:
             rev = runcmd('svnversion', getOutput=True, echoCmd=False)
         except:
             return None
-        if rev != 'exported':
-            svnrev = rev.split(':')[0]
+        svnrev = rev.split(':')[0]
         return svnrev
-    
-    def _getGitSvnRevision():
-        svnrev = None
+            
+    def _getGitRevision():
         try:
-            info = runcmd('git svn info', getOutput=True, echoCmd=False)
+            revcount = runcmd('git rev-list --count HEAD', getOutput=True, echoCmd=False)
+            revhash  = runcmd('git rev-parse --short HEAD', getOutput=True, echoCmd=False)
         except:
             return None
-        for line in info.splitlines():
-            if line.startswith('Revision:'):
-                svnrev = line.split(' ')[-1]
-                break
-        return svnrev
-        
-    # Try getting the revision number from SVN, or GIT SVN, or just fall back
+        return "{}.{}".format(revcount, revhash)
+            
+    # Try getting the revision number from SVN, or GIT, or just fall back
     # to the date.
     svnrev = _getSvnRevision()
     if not svnrev:
-        svnrev = _getGitSvnRevision()
+        svnrev = _getGitRevision()
     if not svnrev:
         svnrev = _getDate()
         msg('WARNING: Unable to determine SVN revision, using date (%s) instead.' % svnrev)
-    
     return svnrev
 
 
