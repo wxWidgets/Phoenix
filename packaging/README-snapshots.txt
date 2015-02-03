@@ -38,14 +38,14 @@ File naming conventions:
    (https://www.python.org/dev/peps/pep-0427/#file-name-convention). For
    example:
 
-      wxPython_Phoenix-3.0.3.dev78396-cp33-cp33m-macosx_10_6_intel.whl
+      wxPython_Phoenix-3.0.3.dev1549.fa6f31f-cp33-cp33m-macosx_10_6_intel.whl
 
    means:
 
    - This is the wxPython_Phoenix package
 
-   - It is version 3.0.3.dev78396 (development version, with the number 
-     derived from the source control system.)
+   - It is version 3.0.3.dev1549.fa6f31f (development version, with
+     the number derived from the source control system.)
 
    - It is built for CPython version 3.3
 
