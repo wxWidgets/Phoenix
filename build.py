@@ -27,7 +27,7 @@ from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macFixDependencyInstallName, macSetLoaderNames, \
-                               getSvnRev, runcmd, textfile_open, getSipFiles, \
+                               getVcsRev, runcmd, textfile_open, getSipFiles, \
                                getVisCVersion
 
 import buildtools.version as version
@@ -566,6 +566,7 @@ def uploadPackage(fileName, KEEP=50):
     consumed. It is assumed that if the files are in sorted order then the
     end of the list will be the newest files.
     """
+    fileName = fileName.replace('\\', '/')
     msg("Uploading %s..." % fileName)
     snapshotDir = 'snapshot-builds'
 
@@ -1588,12 +1589,13 @@ def cmd_bdist(options, args):
 
     
 def cmd_setrev(options, args):
-    # Grab the current SVN revision number (if possible) and write it to a
-    # file we'll use later for building the package version number
+    # Grab the current revision number from the version control system
+    # (if possible) and write it to a file we'll use later for
+    # building the package version number
     cmdTimer = CommandTimer('setrev')
     assert os.getcwd() == phoenixDir()
 
-    svnrev = getSvnRev()
+    svnrev = getVcsRev()
     f = open('REV.txt', 'w')
     svnrev = '.dev'+svnrev
     f.write(svnrev)

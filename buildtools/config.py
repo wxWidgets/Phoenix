@@ -737,7 +737,7 @@ def macSetLoaderNames(filenames):
                 os.system(cmd)
         
 
-def getSvnRev():
+def getVcsRev():
     # Some helpers for the code below
     def _getDate():
         import datetime
