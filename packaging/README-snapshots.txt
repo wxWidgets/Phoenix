@@ -1,15 +1,65 @@
 wxPython Phoenix Snapshot Builds
 ================================
 
-This directory contains a (nearly) daily set of snapshot builds for
-the wxPython Phoenix project. Each time there is a successful daily
-build from the buildbot the results are uploaded here, in addition to
-the source and documentation tarballs.  Currently binaries for Windows
-and OSX are included, for a few versions of Python.  The source
-tarball can be used to build wxPython Phoenix for other platforms.
-See Phoenix/README.rst in the source tarball for more information.
 
-The binaries in this directory are provided using Python's "wheel"
+  +-----------------------------------------------------+
+  | NOTE: There are some changes in progress that will  | 
+  | cause some differences in the development/build     | 
+  | number for the snapshot builds, so the existing     | 
+  | snapshots with the old numbering scheme have been   | 
+  | moved to the "old" subfolder. Once this folder      | 
+  | starts filling again with the new style builds      | 
+  | then that subfolderr will be removed and this       | 
+  | README will be updated.                             | 
+  +-----------------------------------------------------+
+
+
+This directory contains a set of snapshot builds for the wxPython Phoenix
+project. Each time there is a successful daily build from the buildbot the
+results are uploaded here, in addition to the source and documentation
+tarballs. Currently binaries for Windows and OSX are included, for a few
+versions of Python. The source tarball can be used to build wxPython Phoenix
+for other platforms. See Phoenix/README.rst in the source tarball for more
+information.
+
+
+File naming conventions:
+------------------------
+
+ - Files with the "*.whl" extension are binary wheel files
+   (https://wheel.readthedocs.org/en/latest/). See below for more info.
+
+ - Files with the "*.tar.gz" extension are compressed tar archives of the
+   Phoenix and wxWidgets source code.
+
+ - The "*.docs.tar.gz" files are cmpressed archives of the documentation.
+
+ - The bulk of the filename follows the convensions for naming wheels
+   (https://www.python.org/dev/peps/pep-0427/#file-name-convention). For
+   example:
+
+      wxPython_Phoenix-3.0.3.dev78396-cp33-cp33m-macosx_10_6_intel.whl
+
+   means:
+
+   - This is the wxPython_Phoenix package
+
+   - It is version 3.0.3.dev78396 (development version, with the number 
+     derived from the source control system.)
+
+   - It is built for CPython version 3.3
+
+   - It is built for the macosx operating system
+
+   - It is built for OS version 10.6 or greater
+
+   - It is built for Intel processors.
+
+
+Installing Wheels
+------------------
+
+The *.whl binaries in this directory are provided using Python's "wheel"
 format, which is an archive format with some extra meta-data that can
 be used by some Python tools to track installs, do uninstalls, etc.
 In addition to the tools provided by the wheel package, the commonly
@@ -44,6 +94,7 @@ like this:
     python get-pip.py
 
 See https://pip.pypa.io/en/latest/index.html for more info.
+
 
 Happy Hacking!
 Robin
