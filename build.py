@@ -33,6 +33,9 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
 import buildtools.version as version
 
 
+import wingdbstub
+
+
 # defaults
 PYVER = '2.7'
 PYSHORTVER = '27'
@@ -559,50 +562,44 @@ class CommandTimer(object):
         msg('Finished command: %s (%s)' % (self.name, time))            
 
 
-
 def uploadPackage(fileName, KEEP=50):
     """
     Upload the given filename to the configured package server location. Only
-    the KEEP most recent files will be kept so the server spece is not overly
+    the KEEP most recent files will be kept so the server space is not overly
     consumed. It is assumed that if the files are in sorted order then the
     end of the list will be the newest files.
     """
-    msg("Preparing to upload %s..." % fileName)
+    msg("Uploading %s..." % fileName)
     snapshotDir = 'snapshot-builds'
-    
-    try:
-        import plumbum as pb
-    except ImportError:
-        msg("ERROR: The plumbum module not was not found, unable to upload.")
-        sys.exit(1)
 
     # NOTE: It is expected that there will be a host entry defined in
-    # ~/.ssh/config named wxpyhton-rbot, with the proper host, user,
+    # ~/.ssh/config named wxpython-rbot, with the proper host, user,
     # idenity file, etc needed for making an SSH connection to the
     # snapshots server.
-    rem = pb.SshMachine('wxpython-rbot')
-    rls = rem['ls']
-    rchmod = rem['chmod']
-    with rem.cwd(snapshotDir):
-        # copy the new file
-        pb.path.utils.copy(fileName, rem.cwd)
-
-        # Make sure it is readable by all
-        rchmod('a+r', os.path.basename(fileName))
-
-        # get the list of files in the folder
-        allFiles = rls()
-        allFiles = allFiles.strip().split('\n')
-        allFiles.sort()  # <== if an alpha sort is not the correct order, pass a cmp function!
+    host = 'wxpython-rbot'
     
-        # leave the last KEEP builds, including this new one, on the server
-        for name in allFiles[:-KEEP]:
-            if os.path.basename(name).startswith('README'):
-                continue
-            msg("Deleting %s" % name)
-            pb.path.utils.delete(rem.cwd // name)
+    # copy the new file to the server
+    cmd = 'scp {} {}:{}'.format(fileName, host, snapshotDir)
+    runcmd(cmd, echoCmd=True)
 
-    rem.close()    
+    # Make sure it is readable by all
+    cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, snapshotDir, os.path.basename(fileName))
+    runcmd(cmd, echoCmd=True)
+    
+    # get the list of all snapshot files on the server
+    cmd = 'ssh {} "cd {}; ls"'.format(host, snapshotDir)
+    allFiles = runcmd(cmd, getOutput=True, echoCmd=True)
+    allFiles = allFiles.strip().split('\n')
+    allFiles.sort()  
+
+    # leave the last KEEP builds, including this new one, on the server
+    rmFiles = [name for name in allFiles[:-KEEP] 
+                   if not name.startswith('README')]
+    if rmFiles:
+        msg("Deleting %s" % ", ".join(rmFiles))
+        cmd = 'ssh {} "cd {}; rm {}"'.format(host, snapshotDir, " ".join(rmFiles))
+        runcmd(cmd, echoCmd=True)
+    
     msg("Upload complete!")
 
 
