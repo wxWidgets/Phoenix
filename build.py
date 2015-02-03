@@ -580,15 +580,16 @@ def uploadPackage(fileName, KEEP=50):
     
     # copy the new file to the server
     cmd = 'scp {} {}:{}'.format(fileName, host, snapshotDir)
-    runcmd(cmd, echoCmd=True)
+    msg(cmd)
+    runcmd(cmd)
 
     # Make sure it is readable by all
     cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, snapshotDir, os.path.basename(fileName))
-    runcmd(cmd, echoCmd=True)
+    runcmd(cmd)
     
     # get the list of all snapshot files on the server
     cmd = 'ssh {} "cd {}; ls"'.format(host, snapshotDir)
-    allFiles = runcmd(cmd, getOutput=True, echoCmd=True)
+    allFiles = runcmd(cmd, getOutput=True)
     allFiles = allFiles.strip().split('\n')
     allFiles.sort()  
 
@@ -598,7 +599,7 @@ def uploadPackage(fileName, KEEP=50):
     if rmFiles:
         msg("Deleting %s" % ", ".join(rmFiles))
         cmd = 'ssh {} "cd {}; rm {}"'.format(host, snapshotDir, " ".join(rmFiles))
-        runcmd(cmd, echoCmd=True)
+        runcmd(cmd)
     
     msg("Upload complete!")
 
@@ -1468,19 +1469,17 @@ def cmd_sdist(options, args):
     cfg = Config()
 
     isGit = os.path.exists('.git')
-    isSvn = os.path.exists('.svn')
-    if not isGit and not isSvn:
-        msg("Sorry, I don't know what to do in this source tree, no git or svn workspace found.")
+    if not isGit:
+        msg("Sorry, I don't know what to do in this source tree, no git workspace found.")
         return
             
     # make a tree for building up the archive files
-    ADEST = 'build/sdist'
-    PDEST = posixjoin(ADEST, 'Phoenix')
-    WDEST = posixjoin(ADEST, 'wxWidgets')
+    PDEST = 'build/sdist'
+    WDEST = posixjoin(PDEST, 'ext/wxWidgets')
     if not os.path.exists(PDEST):
         os.makedirs(PDEST)
-    if not os.path.exists(WDEST):
-        os.makedirs(WDEST)
+    #if not os.path.exists(WDEST):
+    #    os.makedirs(WDEST)
     
     # and a place to put the final tarball
     if not os.path.exists('dist'):
@@ -1492,12 +1491,6 @@ def cmd_sdist(options, args):
         runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
         msg('Exporting wxWidgets...')
         runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (wxDir(), WDEST), echoCmd=False)
-    elif isSvn:
-        msg('Exporting Phoenix...')
-        runcmd('svn export --force . %s' % PDEST, echoCmd=False)
-        msg('Exporting wxWidgets...')
-        runcmd('(cd %s; svn export --force . %s)' % (wxDir(), os.path.abspath(WDEST)), echoCmd=False)
-        
         
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
@@ -1518,11 +1511,11 @@ def cmd_sdist(options, args):
         copyFile('REV.txt', PDEST)
 
     # Add some extra stuff to the root folder
-    copyFile('packaging/setup.py', ADEST)
-    copyFile('packaging/README-sdist.txt', opj(ADEST, 'README.txt'))
-    cmd_egg_info(options, args, egg_base=ADEST)
-    copyFile(opj(ADEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
-             opj(ADEST, 'PKG-INFO'))
+    #copyFile('packaging/setup.py', ADEST)
+    #copyFile('packaging/README-sdist.txt', opj(ADEST, 'README.txt'))
+    cmd_egg_info(options, args, egg_base=PDEST)
+    copyFile(opj(PDEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
+             opj(PDEST, 'PKG-INFO'))
             
     # build the tarball
     msg('Archiving Phoenix source...')
@@ -1531,13 +1524,13 @@ def cmd_sdist(options, args):
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
-    pwd = pushDir(ADEST)
+    pwd = pushDir(PDEST)
     for name in glob.glob('*'):
         tarball.add(name, os.path.join(rootname, name)) 
     tarball.close()
     msg('Cleaning up...')
     del pwd
-    shutil.rmtree(ADEST)
+    shutil.rmtree(PDEST)
 
     if options.upload:
         uploadPackage(tarfilename)

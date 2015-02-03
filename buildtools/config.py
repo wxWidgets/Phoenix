@@ -652,12 +652,9 @@ def phoenixDir():
 def wxDir():
     WXWIN = os.environ.get('WXWIN')
     if not WXWIN:
-        for rel in ['../wxWidgets', '../wx', './wxWidgets', '..']:
-            path = os.path.join(phoenixDir(), rel)
-            if path and os.path.exists(path) and os.path.isdir(path):
-                WXWIN = os.path.abspath(os.path.join(phoenixDir(), rel))
-                break
+        WXWIN = os.path.abspath(os.path.join(phoenixDir(), 'ext/wxWidgets'))
     assert WXWIN not in [None, '']
+    assert os.path.exists(WXWIN) and os.path.isdir(WXWIN)
     return WXWIN
 
 
