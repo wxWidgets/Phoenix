@@ -22,9 +22,27 @@ To learn more about git submodules, please see the following:
 Notes to self
 =============
 
-To use a different repo URL for a submodule than what others will see (in
-order to make and test local changes to the submodule) then you can set that
-with a command like:
+ * To clone repos with submodules:
 
-    git config submodule.MODULE_NAME.url PRIVATE_URL
+       git clone <repourl>
+       git submodule init
+
+ * To update a submodule from its upstream:
+
+       git submodule update --remote <submodule>
+
+   Or you can go into the submodule's folder and use normal git
+   fetch/merge or pull operations to update the files in the
+   submodule's workspace.  Commit the change in the main repo.
+
+ * To set the submodule to track a specific branch from upstream:
+
+       git config -f .gitmodules submodule.<name>.branch <branch name>
+
+ * To use a different repo URL for a submodule than what others will
+   see (in order to make and test local changes to the submodule that
+   may be pushed to a different URL) then you can set that with a
+   command like:
+
+       git config submodule.MODULE_NAME.url PRIVATE_URL
 
