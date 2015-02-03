@@ -33,9 +33,6 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
 import buildtools.version as version
 
 
-import wingdbstub
-
-
 # defaults
 PYVER = '2.7'
 PYSHORTVER = '27'
