@@ -24,7 +24,7 @@ else:
     import pickle
 
 # Phoenix-specific imports
-from buildtools.config import copyIfNewer, writeIfChanged, newer, getSvnRev, textfile_open
+from buildtools.config import copyIfNewer, writeIfChanged, newer, getVcsRev, textfile_open
 
 from . import templates
 from .utilities import Wx2Sphinx
@@ -709,7 +709,7 @@ def PostProcess(folder):
 # ----------------------------------------------------------------------- #
 
 def ChangeSVNRevision(text):
-    SVN_REVISION = getSvnRev()
+    SVN_REVISION = getVcsRev()
     text = text.replace('|TODAY|', TODAY)
     text = text.replace('|SVN|', SVN_REVISION)
     return text
