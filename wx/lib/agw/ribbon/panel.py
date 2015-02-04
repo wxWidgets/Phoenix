@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         panel.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         
+# Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 """
 Serves as a container for a group of (ribbon) controls.
 

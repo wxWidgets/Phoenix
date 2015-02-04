@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         dockart.py
 # Purpose:
@@ -8,7 +10,7 @@
 # Version:
 # Date:         31 March 2009
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
 Dock art provider code - a dock provider provides all drawing functionality to

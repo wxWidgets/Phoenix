@@ -1,4 +1,11 @@
-# --------------------------------------------------------------------------- #
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         bar.py
+# Licence:      wxWindows license
+#
+# Tags:         phoenix-port, unittest, documented, py3-port
+#
 # RIBBONBAR Library wxPython IMPLEMENTATION
 #
 # Original C++ Code From Peter Cawley.
@@ -11,7 +18,7 @@
 # Andrea Gavana, @ 15 Oct 2009
 # Latest Revision: 27 Dec 2012, 21.00 GMT
 #
-# For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
+# For All Kind Of Problems, Requests Or Enhancements And Bug Reports, Please
 # Write To Me At:
 #
 # andrea.gavana@gmail.com
@@ -20,7 +27,7 @@
 # Or, Obviously, To The wxPython Mailing List!!!
 #
 # End Of Comments
-# --------------------------------------------------------------------------- #
+#---------------------------------------------------------------------------
 
 """
 Top-level control in a ribbon user interface.

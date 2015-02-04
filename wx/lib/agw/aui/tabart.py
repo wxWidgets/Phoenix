@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-#
+#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         tabart.py
 # Purpose:
@@ -8,7 +10,7 @@
 # Version:
 # Date:         31 March 2009
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
 Tab art provider code - a tab provider provides all drawing functionality to
