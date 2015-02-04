@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-#
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #----------------------------------------------------------------------------
 # Name:         bar.py
 # Licence:      wxWindows license
