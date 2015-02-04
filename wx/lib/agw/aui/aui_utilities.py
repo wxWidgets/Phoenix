@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #----------------------------------------------------------------------------
 # Name:         aui_utilities.py
 # Purpose:
@@ -8,7 +9,7 @@
 # Version:
 # Date:         31 March 2009
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
 This module contains some common functions used by :mod:`lib.agw.aui` to

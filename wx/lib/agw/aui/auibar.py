@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #----------------------------------------------------------------------------
 # Name:         auibar.py
 # Purpose:
@@ -8,7 +9,7 @@
 # Version:
 # Date:         31 March 2009
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
 `auibar.py` contains an implementation of :class:`AuiToolBar`, which is a completely owner-drawn

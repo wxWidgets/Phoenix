@@ -1,3 +1,16 @@
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Name:         art_aui.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         
+# Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 """
 `art_aui` is responsible for drawing all the components of the ribbon
 interface using an AUI-compatible appearance.

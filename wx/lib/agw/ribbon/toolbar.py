@@ -1,3 +1,16 @@
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Name:         toolbar.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         
+# Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 """
 A ribbon tool bar is similar to a traditional toolbar which has no labels.
 
