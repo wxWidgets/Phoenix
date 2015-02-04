@@ -285,6 +285,26 @@ def run():
     c.addPyMethod('ConvertDialogSizeToPixels', '(self, size)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
 
 
+    # TODO: the C++ DoEraseBackground is protected in wxMSW. We need a way to
+    # unprotect it, like adding a shim in the sip class...    
+    #c.addHeaderCode("""\
+    #    #ifdef __WXMSW__
+    #    #include <wx/msw/dc.h>
+    #    #endif
+    #    """)
+    #c.addCppMethod('bool', 'DoEraseBackground', '(wxDC* dc)', 
+    #    doc="Default erase background implementation.",
+    #    body="""\
+    #    #ifdef __WXMSW__
+    #        return self->DoEraseBackground(((wxMSWDCImpl*)dc->GetImpl())->GetHDC());
+    #    #else
+    #        dc->SetBackground(wxBrush(self->GetBackgroundColour()));
+    #        dc->Clear();
+    #        return true;
+    #    #endif
+    #    """)
+
+
     # this is a nested class
     c.find('ChildrenRepositioningGuard').addPrivateCopyCtor()
     module.insertItem(0, 
