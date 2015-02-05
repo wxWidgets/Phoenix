@@ -59,13 +59,24 @@ class ResizeWidget(wx.Panel):
 
     def _init(self):
         self._managedChild = None
-        self._bestSize = wx.Size(100,25)
+        self._bestSize = wx.Size(100, 25)
         self.InvalidateBestSize()
         self._resizeCursor = False
         self._dragPos = None
         self._resizeEnabled = True
         self._reparenting = False
 
+        self.SetDimensions()
+        self.SetColors()
+
+    def SetDimensions(self, thickness=RW_THICKNESS, length=RW_LENGTH):
+        self.RW_THICKNESS = thickness
+        self.RW_LENGTH = length
+
+    def SetColors(self, pen='black', fill='#A0A0A0', fill2='#E0E0E0'):
+        self.RW_PEN   = pen
+        self.RW_FILL  = fill
+        self.RW_FILL2 = fill2
 
     def SetManagedChild(self, child):
         self._reparenting = True
@@ -85,7 +96,7 @@ class ResizeWidget(wx.Panel):
 
     def AdjustToSize(self, size):
         size = wx.Size(*size)
-        self._bestSize = size + (RW_THICKNESS, RW_THICKNESS)
+        self._bestSize = size + (self.RW_THICKNESS, self.RW_THICKNESS)
         self.InvalidateBestSize()
         self.SetSize(self._bestSize)
 
@@ -144,22 +155,22 @@ class ResizeWidget(wx.Panel):
 
 
     def _adjustNewSize(self, newSize):
-        if newSize.width < RW_LENGTH:
-            newSize.width = RW_LENGTH
-        if newSize.height < RW_LENGTH:
-            newSize.height = RW_LENGTH
+        if newSize.width < self.RW_LENGTH:
+            newSize.width = self.RW_LENGTH
+        if newSize.height < self.RW_LENGTH:
+            newSize.height = self.RW_LENGTH
 
         if self._managedChild:
             minsize = self._managedChild.GetMinSize()
-            if minsize.width != -1 and newSize.width - RW_THICKNESS < minsize.width:
-                newSize.width = minsize.width + RW_THICKNESS
-            if minsize.height != -1 and newSize.height - RW_THICKNESS < minsize.height:
-                newSize.height = minsize.height + RW_THICKNESS
+            if minsize.width != -1 and newSize.width - self.RW_THICKNESS < minsize.width:
+                newSize.width = minsize.width + self.RW_THICKNESS
+            if minsize.height != -1 and newSize.height - self.RW_THICKNESS < minsize.height:
+                newSize.height = minsize.height + self.RW_THICKNESS
             maxsize = self._managedChild.GetMaxSize()
-            if maxsize.width != -1 and newSize.width - RW_THICKNESS > maxsize.width:
-                newSize.width = maxsize.width + RW_THICKNESS
-            if maxsize.height != -1 and newSize.height - RW_THICKNESS > maxsize.height:
-                newSize.height = maxsize.height + RW_THICKNESS
+            if maxsize.width != -1 and newSize.width - self.RW_THICKNESS > maxsize.width:
+                newSize.width = maxsize.width + self.RW_THICKNESS
+            if maxsize.height != -1 and newSize.height - self.RW_THICKNESS > maxsize.height:
+                newSize.height = maxsize.height + self.RW_THICKNESS
 
 
     def OnMouseLeave(self, evt):
@@ -172,32 +183,31 @@ class ResizeWidget(wx.Panel):
         if not self._managedChild:
             return
         sz = self.GetSize()
-        cr = wx.Rect((0,0), sz - (RW_THICKNESS, RW_THICKNESS))
+        cr = wx.Rect((0, 0), sz - (self.RW_THICKNESS, self.RW_THICKNESS))
         self._managedChild.SetRect(cr)
-        r1 = wx.Rect(0, cr.height, sz.width, RW_THICKNESS)
-        r2 = wx.Rect(cr.width, 0, RW_THICKNESS, sz.height)
+        r1 = wx.Rect(0, cr.height, sz.width, self.RW_THICKNESS)
+        r2 = wx.Rect(cr.width, 0, self.RW_THICKNESS, sz.height)
         self.RefreshRect(r1)
         self.RefreshRect(r2)
-
 
 
     def OnPaint(self, evt):
         # draw the resize handle
         dc = wx.PaintDC(self)
-        w,h = self.GetSize()
-        points = [ (w - 1,            h - RW_LENGTH),
-                   (w - RW_THICKNESS, h - RW_LENGTH),
-                   (w - RW_THICKNESS, h - RW_THICKNESS),
-                   (w - RW_LENGTH,    h - RW_THICKNESS),
-                   (w - RW_LENGTH,    h - 1),
-                   (w - 1,            h - 1),
-                   (w - 1,            h - RW_LENGTH),
+        w, h = self.GetSize()
+        points = [ (w - 1,                 h - self.RW_LENGTH),
+                   (w - self.RW_THICKNESS, h - self.RW_LENGTH),
+                   (w - self.RW_THICKNESS, h - self.RW_THICKNESS),
+                   (w - self.RW_LENGTH,    h - self.RW_THICKNESS),
+                   (w - self.RW_LENGTH,    h - 1),
+                   (w - 1,                 h - 1),
+                   (w - 1,                 h - self.RW_LENGTH),
                    ]
-        dc.SetPen(wx.Pen(RW_PEN, 1))
+        dc.SetPen(wx.Pen(self.RW_PEN, 1))
         if self._resizeEnabled:
-            fill = RW_FILL
+            fill = self.RW_FILL
         else:
-            fill = RW_FILL2
+            fill = self.RW_FILL2
         dc.SetBrush(wx.Brush(fill))
         dc.DrawPolygon(points)
 
@@ -205,11 +215,11 @@ class ResizeWidget(wx.Panel):
     def _hitTest(self, pos):
         # is the position in the area to be used for the resize handle?
         w, h = self.GetSize()
-        if ( w - RW_THICKNESS <= pos.x <= w
-             and h - RW_LENGTH <= pos.y <= h ):
+        if ( w - self.RW_THICKNESS <= pos.x <= w
+             and h - self.RW_LENGTH <= pos.y <= h ):
             return True
-        if ( w - RW_LENGTH <= pos.x <= w
-             and h - RW_THICKNESS <= pos.y <= h ):
+        if ( w - self.RW_LENGTH <= pos.x <= w
+             and h - self.RW_THICKNESS <= pos.y <= h ):
             return True
         return False
 
