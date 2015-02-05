@@ -174,5 +174,6 @@ other dev stuff
 
    * Add build support for gtk3
 
-
+   * wx.Window.DoEraseBackground?
+   
 
