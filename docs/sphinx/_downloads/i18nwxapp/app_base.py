@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
 #
 # Author:   Werner F. Bruhin
 # Purpose:  how to I18N enable an application
