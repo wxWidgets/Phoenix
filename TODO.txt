@@ -176,4 +176,15 @@ other dev stuff
 
    * wx.Window.DoEraseBackground?
    
+   * In etg/wxdatetime.py fix the Parse*() methods to be like they were in
+     Classic, returning a -1 on failure, or the number of characters parsed.
+     Something like this:
 
+	int ParseDateTime(const wxString& datetime)
+	{
+	    wxString::const_iterator begin = datetime.begin();
+	    wxString::const_iterator end;
+	    if (!self->ParseDateTime(datetime, &end))
+		return -1;
+	    return end - begin;
+	}
