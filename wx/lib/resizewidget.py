@@ -26,7 +26,7 @@ import wx.lib.newevent
 RW_THICKNESS = 4
 RW_LENGTH = 12
 
-# colors for the handle
+# default colors for the handle
 RW_PEN   = 'black'
 RW_FILL  = '#A0A0A0'
 RW_FILL2 = '#E0E0E0'
@@ -73,7 +73,7 @@ class ResizeWidget(wx.Panel):
         self.RW_THICKNESS = thickness
         self.RW_LENGTH = length
 
-    def SetColors(self, pen='black', fill='#A0A0A0', fill2='#E0E0E0'):
+    def SetColors(self, pen=RW_PEN, fill=RW_FILL, fill2=RW_FILL2):
         self.RW_PEN   = pen
         self.RW_FILL  = fill
         self.RW_FILL2 = fill2

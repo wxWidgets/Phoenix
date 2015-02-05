@@ -188,3 +188,11 @@ other dev stuff
 		return -1;
 	    return end - begin;
 	}
+
+   * The sphinxtools are too agressive at ignoring content beyond a #. If the hash
+     happens to be inside a string then syntax related errors can happen.  For example:
+  
+          def SetColors(self, pen='black', fill='#A0A0A0', fill2='#E0E0E0'):
+              ...
+	  
+	  
