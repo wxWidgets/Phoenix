@@ -8,7 +8,7 @@
 # Created:      2004-08-25
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # License:      wxWindows license
-# Tags:         phoenix-port, unittest, py3-port
+# Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
 """
 The class :class:`DrawnShape`.
