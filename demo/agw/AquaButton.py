@@ -39,6 +39,7 @@ class AquaButtonDemo(wx.Panel):
 
         self.backColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetBackgroundColour())
         self.hoverColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetHoverColour())
+        self.focusColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetHoverColour())
         self.textColour = wx.ColourPickerCtrl(self.mainPanel, colour=self.btn2.GetForegroundColour())
         self.pulseCheck = wx.CheckBox(self.mainPanel, -1, "Pulse On Focus")
 
@@ -52,7 +53,7 @@ class AquaButtonDemo(wx.Panel):
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         btnSizer = wx.FlexGridSizer(2, 2, 15, 15)
 
-        colourSizer = wx.FlexGridSizer(2, 3, 1, 10)
+        colourSizer = wx.FlexGridSizer(2, 4, 1, 10)
 
         btnSizer.Add(self.btn1, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
         btnSizer.Add(self.pulseCheck, 0, wx.ALIGN_CENTER_VERTICAL)
@@ -61,14 +62,17 @@ class AquaButtonDemo(wx.Panel):
 
         labelBack = wx.StaticText(self.mainPanel, -1, "Background Colour")
         labelHover = wx.StaticText(self.mainPanel, -1, "Hover Colour")
+        labelFocus = wx.StaticText(self.mainPanel, -1, "Focus Colour")
         labelText = wx.StaticText(self.mainPanel, -1, "Text Colour")
 
         colourSizer.Add(labelBack)
         colourSizer.Add(labelHover)
+        colourSizer.Add(labelFocus)
         colourSizer.Add(labelText)
 
         colourSizer.Add(self.backColour, 0, wx.EXPAND)
         colourSizer.Add(self.hoverColour, 0, wx.EXPAND)
+        colourSizer.Add(self.focusColour, 0, wx.EXPAND)
         colourSizer.Add(self.textColour, 0, wx.EXPAND)
 
         btnSizer.Add(colourSizer, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
@@ -112,6 +116,8 @@ class AquaButtonDemo(wx.Panel):
             self.btn2.SetBackgroundColour(colour)
         elif obj == self.hoverColour:
             self.btn2.SetHoverColour(colour)
+        elif obj == self.focusColour:
+            self.btn2.SetFocusColour(colour)
         else:
             self.btn2.SetForegroundColour(colour)
 

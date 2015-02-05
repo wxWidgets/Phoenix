@@ -125,6 +125,13 @@ class sizer_Tests(wtc.WidgetTestCase):
         self.assertEqual(bs.GetOrientation(), wx.HORIZONTAL)
         bs.SetOrientation(wx.VERTICAL)
         self.assertEqual(bs.Orientation, wx.VERTICAL)
+
+    def test_sizerBool(self):
+        # Test if deleted sizers evaluate to False
+        bs = wx.BoxSizer()
+        self.assertTrue(bs)
+        bs.Destroy()
+        self.assertFalse(bs)
         
         
 #---------------------------------------------------------------------------

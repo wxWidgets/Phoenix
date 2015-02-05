@@ -518,7 +518,7 @@ class GenButton(wx.Control):
                         c = wx.MacThemeColour(1) # 1 == kThemeBrushDialogBackgroundActive
                         brush = wx.Brush(c)
                     elif wx.Platform == "__WXMSW__":
-                        if self.DoEraseBackground(dc):
+                        if hasattr(self, 'DoEraseBackground') and self.DoEraseBackground(dc):
                             brush = None
                 elif myDef and not parDef:
                     colBg = self.GetParent().GetBackgroundColour()

@@ -41,6 +41,16 @@ Usage
 
 Usage example::
 
+
+    text = '''
+    ScrolledPanel extends wx.ScrolledWindow, adding all
+    the necessary bits to set up scroll handling for you. 
+
+    Here are three fixed size examples of its use. The
+    demo panel for this sample is also using it -- the 
+    wx.StaticLine below is intentionally made too long so a scrollbar will be
+    activated.'''
+
     import wx
     import wx.lib.scrolledpanel as scrolled
 
@@ -52,13 +62,6 @@ Usage example::
 
             vbox = wx.BoxSizer(wx.VERTICAL)
 
-            text  = "ScrolledPanel extends wx.ScrolledWindow, adding all\n"
-            text += "the necessary bits to set up scroll handling for you.\n\n" 
-
-            text += "Here are three fixed size examples of its use. The\n" 
-            text += "demo panel for this sample is also using it -- the\n" 
-            text += "wx.StaticLine below is intentionally made too long so a scrollbar will be\n" 
-            text += "activated."
 
             desc = wx.StaticText(self, -1, text)
                                 

@@ -64,18 +64,18 @@ def run():
         public:
         virtual int Run();
         virtual void Exit(int rc = 0);
+        virtual void ScheduleExit(int rc = 0);
         virtual bool Pending() const;
         virtual bool Dispatch();
         virtual int DispatchTimeout(unsigned long timeout);
         virtual void WakeUp();
-
-        virtual bool ProcessIdle();        
+        virtual bool YieldFor(long eventsToProcess);
         """))
     
     module.addPyCode("""\
         @wx.deprecatedMsg('Use GUIEventLoop instead.')
         class EventLoop(GUIEventLoop):
-            '''Class using the old name for compatibility.'''
+            '''A class using the old name for compatibility.'''
             def __init__(self):
                 GUIEventLoop.__init__(self)
         """)

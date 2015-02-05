@@ -610,8 +610,8 @@ class SettingsPanel(wx.Panel):
     def CreateColourBitmap(self, c):
 
         image = wx.Image(25, 14)
-        for x in xrange(25):
-            for y in xrange(14):
+        for x in range(25):
+            for y in range(14):
                 pixcol = c
                 if x == 0 or x == 24 or y == 0 or y == 13:
                     pixcol = wx.BLACK

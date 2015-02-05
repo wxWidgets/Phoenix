@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # --------------------------------------------------------------------------- #
 # AUI Library wxPython IMPLEMENTATION
 #
@@ -22,6 +23,8 @@
 # andrea.gavana@maerskoil.com
 #
 # Or, Obviously, To The wxPython Mailing List!!!
+#
+# Tags:        phoenix-port, unittest, documented, py3-port
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -4750,8 +4753,8 @@ class AuiManager(wx.EvtHandler):
 
         # if the pane's name identifier is blank, create a random string
         if pinfo.name == "" or already_exists:
-            pinfo.name = ("%s%08x%08x%08x")%(pinfo.window.GetName(), time.time(),
-                                             time.clock(), len(self._panes))
+            pinfo.name = ("%s%08x%08x%08x") % (pinfo.window.GetName(), int(time.time()),
+                                               int(time.clock()), len(self._panes))
 
         # set initial proportion (if not already set)
         if pinfo.dock_proportion == 0:

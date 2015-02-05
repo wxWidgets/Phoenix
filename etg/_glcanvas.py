@@ -67,7 +67,7 @@ def run():
     
 
     c = module.find('wxGLCanvas')
-    tools.fixWindowClass(c, False)
+    tools.fixWindowClass(c)
 
     # We already have a MappedType for wxArrayInt, so just tweak the
     # interfaces to use that instead of a const int pointer.
