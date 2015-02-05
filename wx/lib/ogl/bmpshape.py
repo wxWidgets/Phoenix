@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         bmpshape.py
 # Purpose:      Bitmap shape

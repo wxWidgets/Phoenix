@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         _canvas.py
 # Purpose:      The canvas class
