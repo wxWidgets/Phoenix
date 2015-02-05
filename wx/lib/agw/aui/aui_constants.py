@@ -1,3 +1,16 @@
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Name:         aui_constants.py
+# Purpose:
+#
+# Author:       Andrea Gavana <andrea.gavana@gmail.com>
+#
+# Created:
+# Version:
+# Date:         31 March 2009
+# Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 """
 This module contains all the constants used by wxPython-AUI.
 

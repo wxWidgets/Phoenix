@@ -532,9 +532,12 @@ class PyProgress(wx.Dialog):
         if self._elapsed:
             self.SetTimeLabel(0, self._elapsed)
 
-        if not wx.GUIEventLoop().GetActive():
-            self.evtloop = wx.GUIEventLoop()
-            wx.GUIEventLoop.SetActive(self.evtloop)
+        self.evtloop = None
+        
+        # This is causing the unittests to hang, investigate it later.
+        #if not wx.EventLoopBase.GetActive():
+        #    self.evtloop = wx.GetApp().GetTraits().CreateEventLoop()
+        #    wx.EventLoopBase.SetActive(self.evtloop)
         
         self.Update()
 
@@ -781,7 +784,8 @@ class PyProgress(wx.Dialog):
 
         :param `event`: a :class:`WindowDestroyEvent` event to be processed.
         """
-        
+        if self.evtloop:
+            wx.EventLoopBase.SetActive(None)
         self.ReenableOtherWindows()
         event.Skip()
 

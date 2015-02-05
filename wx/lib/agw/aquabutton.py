@@ -215,6 +215,7 @@ class AquaButton(wx.Control):
         if "__WXMAC__" in wx.PlatformInfo:
             self._backColour = wx.Colour(147, 202, 255)
             self._hoverColour = self.LightColour(self._backColour, 30)
+            self._focusColour = self.LightColour(self._backColour, 40)
             self._disableColour = self.LightColour(self._backColour, 70)
             self._textColour = wx.BLACK
             self._shadowColour = wx.Colour("grey")
@@ -222,6 +223,7 @@ class AquaButton(wx.Control):
         else:
             self._backColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
             self._hoverColour = self.LightColour(self._backColour, 30)
+            self._focusColour = self.LightColour(self._backColour, 40)
             self._disableColour = self.LightColour(self._backColour, 70)
             self._textColour = wx.WHITE
             self._shadowColour = wx.Colour("grey")
@@ -293,6 +295,9 @@ class AquaButton(wx.Control):
 
         elif self._mouseAction == HOVER:
             clr = self._hoverColour
+            
+        elif self._hasFocus:
+            clr = self._focusColour
             
         elif not self.IsEnabled():
             clr = self._disableColour
@@ -825,6 +830,27 @@ class AquaButton(wx.Control):
         """
 
         return self._textColour
+
+
+    def SetFocusColour(self, colour):
+        """
+        Sets the button colour when the button has focus.
+
+        :param `colour`: a valid :class:`Colour` object.
+        """
+
+        self._focusColour = colour
+        self.Invalidate()
+
+
+    def GetFocusColour(self):
+        """
+        Returns the button colour when the button has focus.
+
+        :return: An instance of :class:`Colour`.
+        """
+
+        return self._hoverColour
 
 
     def Invalidate(self):

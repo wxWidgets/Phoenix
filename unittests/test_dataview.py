@@ -1,6 +1,7 @@
 import imp_unittest, unittest
 import wtc
 import wx
+from wx.lib import six
 import wx.dataview as dv
 import os
 
@@ -43,8 +44,11 @@ class dataview_Tests(wtc.WidgetTestCase):
 
     def test_dataviewItem7(self):
         # max integer size on platforms where long is 64-bit 
-        n = 2**63 - 1  
-        assert type(n) is long
+        n = 2**63 - 1
+        if six.PY3:
+            assert type(n) is int
+        else:
+            assert type(n) is long
         dvi = dv.DataViewItem(n)
         self.assertTrue(dvi)
         self.assertTrue(int(dvi.GetID()) == n)
@@ -315,7 +319,14 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.frame.SendSizeEvent()
         dlc.Refresh()
         self.myYield()
-        
+
+
+    def test_dataviewHitTest(self):
+        dlc = dv.DataViewListCtrl(self.frame)
+        self.doListCtrlTest(dlc)
+        item, col = dlc.HitTest((10,50))
+        self.assertTrue(isinstance(item, dv.DataViewItem))
+        self.assertTrue(isinstance(col, dv.DataViewColumn) or col is None)
             
     #-------------------------------------------------------
     # DataViewTreeCtrl
@@ -467,7 +478,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         dv.EVT_DATAVIEW_CACHE_HINT               
     
     
-    
+        
     
 #---------------------------------------------------------------------------
 

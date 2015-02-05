@@ -22,8 +22,7 @@ import  wx
 
 def convert(file, maskClr, outputDir, outputName, outType, outExt):
     if os.path.splitext(file)[1].lower() == ".ico":
-        icon = wx.Icon(file, wx.BITMAP_TYPE_ICO)
-        img = wx.BitmapFromIcon(icon)
+        img = wx.Bitmap(file, wx.BITMAP_TYPE_ICO)
     else:
         img = wx.Bitmap(file, wx.BITMAP_TYPE_ANY)
 
@@ -44,7 +43,7 @@ def convert(file, maskClr, outputDir, outputName, outType, outExt):
         if img.SaveFile(newname, outType):
             return 1, file + " converted to " + newname
         else:
-            img = wx.ImageFromBitmap(img)
+            img = img.ConvertToImage()
             if img.SaveFile(newname, outType):
                 return 1, "ok"
             else:

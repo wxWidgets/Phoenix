@@ -64,13 +64,21 @@ def run():
     # ignore some overloads that will be ambiguous afer wrapping
     c.find('GetChildren').overloads = []
     c.find('GetChildren').noCopy = True
-    c.find('GetClientSize').findOverload('int *').ignore()
-    c.find('GetSize').findOverload('int *').ignore()
-    c.find('GetVirtualSize').findOverload('int *').ignore()
-    c.find('GetPosition').findOverload('int *').ignore()
-    c.find('GetScreenPosition').findOverload('int *').ignore()
-    c.find('ClientToScreen').findOverload('int *').ignore()
-    c.find('ScreenToClient').findOverload('int *').ignore()
+    for name in ['GetVirtualSize',
+                 'GetPosition',
+                 'GetScreenPosition',
+                 'ClientToScreen',
+                 'ScreenToClient', ]:
+        c.find(name).findOverload('int *').ignore()
+
+    # Like the above, but these also need to transplant the docs from the
+    # ignored item to the non-ignored overload.
+    for name in ['GetClientSize', 'GetSize']:
+        c.find(name).findOverload('int *').ignore()
+        item = c.find(name)
+        ov = item.overloads[0]
+        item.briefDoc = ov.briefDoc
+        item.detailedDoc = ov.detailedDoc
 
     # Release the GIL for potentially blocking or long-running functions
     c.find('PopupMenu').releaseGIL()
@@ -275,6 +283,26 @@ def run():
     c.addPyMethod('SetToolTipString',  '(self, string)', 'return self.SetToolTip(string)', deprecated='Use SetToolTip instead.')
     c.addPyMethod('ConvertDialogPointToPixels', '(self, point)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
     c.addPyMethod('ConvertDialogSizeToPixels', '(self, size)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
+
+
+    # TODO: the C++ DoEraseBackground is protected in wxMSW. We need a way to
+    # unprotect it, like adding a shim in the sip class...    
+    #c.addHeaderCode("""\
+    #    #ifdef __WXMSW__
+    #    #include <wx/msw/dc.h>
+    #    #endif
+    #    """)
+    #c.addCppMethod('bool', 'DoEraseBackground', '(wxDC* dc)', 
+    #    doc="Default erase background implementation.",
+    #    body="""\
+    #    #ifdef __WXMSW__
+    #        return self->DoEraseBackground(((wxMSWDCImpl*)dc->GetImpl())->GetHDC());
+    #    #else
+    #        dc->SetBackground(wxBrush(self->GetBackgroundColour()));
+    #        dc->Clear();
+    #        return true;
+    #    #endif
+    #    """)
 
 
     # this is a nested class

@@ -2,7 +2,7 @@
 #---------------------------------------------------------------------------
 # This script is used to run through the commands used for the various stages
 # of building Phoenix, and can also be a front-end for building wxWidgets and
-# the Python extension modules.
+# the wxPython distribution files.
 #---------------------------------------------------------------------------
 
 from __future__ import absolute_import
@@ -27,10 +27,11 @@ from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macFixDependencyInstallName, macSetLoaderNames, \
-                               getSvnRev, runcmd, textfile_open, getSipFiles, \
+                               getVcsRev, runcmd, textfile_open, getSipFiles, \
                                getVisCVersion
 
 import buildtools.version as version
+
 
 # defaults
 PYVER = '2.7'
@@ -160,6 +161,8 @@ def main(args):
             continue # ignore empty command-line args (possible with the buildbot)
         elif cmd.startswith('test_'):
             testOne(cmd, options, args)
+        elif cmd.startswith('unittests/test_'):
+            testOne(os.path.basename(cmd), options, args)            
         elif 'cmd_'+cmd in globals():
             function = globals()['cmd_'+cmd]  
             function(options, args)
@@ -556,44 +559,46 @@ class CommandTimer(object):
         msg('Finished command: %s (%s)' % (self.name, time))            
 
 
-
 def uploadPackage(fileName, KEEP=50):
     """
     Upload the given filename to the configured package server location. Only
-    the KEEP most recent files will be kept so the server spece is not overly
+    the KEEP most recent files will be kept so the server space is not overly
     consumed. It is assumed that if the files are in sorted order then the
     end of the list will be the newest files.
     """
-    msg("Preparing to upload %s..." % fileName)
-    configfile = os.path.join(os.getenv("HOME"), "phoenix_package_server.cfg")
-    if not os.path.exists(configfile):
-        msg("ERROR: Can not upload, server configuration not set.")
-        return
-        
-    import ConfigParser
-    parser = ConfigParser.ConfigParser()
-    parser.read(configfile)
-    
-    msg("Connecting to FTP server...")
-    from ftplib import FTP
-    ftp = FTP(parser.get("FTP", "host"))
-    ftp.login(parser.get("FTP", "user"), parser.get("FTP", "pass"))
-    ftp_dir = parser.get("FTP", "dir")
-    ftp_path = '%s/%s' % (ftp_dir, os.path.basename(fileName))
-    msg("Uploading package (this may take some time)...")
-    f = open(fileName, 'rb')
-    ftp.storbinary('STOR %s' % ftp_path, f)
-    f.close()
-    
-    allFiles = ftp.nlst(ftp_dir)
-    allFiles.sort()  # <== if an alpha sort is not the correct order, pass a cmp function!
-    
-    # leave the last KEEP builds, including this new one, on the server
-    for name in allFiles[:-KEEP]:
-        msg("Deleting %s" % name)
-        ftp.delete(name)
+    fileName = fileName.replace('\\', '/')
+    msg("Uploading %s..." % fileName)
+    snapshotDir = 'snapshot-builds'
 
-    ftp.close()
+    # NOTE: It is expected that there will be a host entry defined in
+    # ~/.ssh/config named wxpython-rbot, with the proper host, user,
+    # idenity file, etc needed for making an SSH connection to the
+    # snapshots server.
+    host = 'wxpython-rbot'
+    
+    # copy the new file to the server
+    cmd = 'scp {} {}:{}'.format(fileName, host, snapshotDir)
+    msg(cmd)
+    runcmd(cmd)
+
+    # Make sure it is readable by all
+    cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, snapshotDir, os.path.basename(fileName))
+    runcmd(cmd)
+    
+    # get the list of all snapshot files on the server
+    cmd = 'ssh {} "cd {}; ls"'.format(host, snapshotDir)
+    allFiles = runcmd(cmd, getOutput=True)
+    allFiles = allFiles.strip().split('\n')
+    allFiles.sort()  
+
+    # leave the last KEEP builds, including this new one, on the server
+    rmFiles = [name for name in allFiles[:-KEEP] 
+                   if not name.startswith('README')]
+    if rmFiles:
+        msg("Deleting %s" % ", ".join(rmFiles))
+        cmd = 'ssh {} "cd {}; rm {}"'.format(host, snapshotDir, " ".join(rmFiles))
+        runcmd(cmd)
+    
     msg("Upload complete!")
 
 
@@ -983,7 +988,10 @@ def cmd_test(options, args):
 def testOne(name, options, args):
     cmdTimer = CommandTimer('test %s:' % name)
     pwd = pushDir(phoenixDir())
-    runcmd('"%s" unittests/%s.py %s' % (PYTHON, name, '-v' if options.verbose else ''), fatal=False)
+    if name.endswith('.py') or name.endswith('.pyc'):
+        i = name.rfind('.')
+        name = name[:i]
+    runcmd('"%s" unittests/%s.py %s' % (PYTHON, name, '-v' if options.verbose else ''), fatal=True)
 
     
     
@@ -1459,19 +1467,17 @@ def cmd_sdist(options, args):
     cfg = Config()
 
     isGit = os.path.exists('.git')
-    isSvn = os.path.exists('.svn')
-    if not isGit and not isSvn:
-        msg("Sorry, I don't know what to do in this source tree, no git or svn workspace found.")
+    if not isGit:
+        msg("Sorry, I don't know what to do in this source tree, no git workspace found.")
         return
             
     # make a tree for building up the archive files
-    ADEST = 'build/sdist'
-    PDEST = posixjoin(ADEST, 'Phoenix')
-    WDEST = posixjoin(ADEST, 'wxWidgets')
+    PDEST = 'build/sdist'
+    WDEST = posixjoin(PDEST, 'ext/wxWidgets')
     if not os.path.exists(PDEST):
         os.makedirs(PDEST)
-    if not os.path.exists(WDEST):
-        os.makedirs(WDEST)
+    #if not os.path.exists(WDEST):
+    #    os.makedirs(WDEST)
     
     # and a place to put the final tarball
     if not os.path.exists('dist'):
@@ -1483,12 +1489,6 @@ def cmd_sdist(options, args):
         runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
         msg('Exporting wxWidgets...')
         runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (wxDir(), WDEST), echoCmd=False)
-    elif isSvn:
-        msg('Exporting Phoenix...')
-        runcmd('svn export --force . %s' % PDEST, echoCmd=False)
-        msg('Exporting wxWidgets...')
-        runcmd('(cd %s; svn export --force . %s)' % (wxDir(), os.path.abspath(WDEST)), echoCmd=False)
-        
         
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
@@ -1509,11 +1509,11 @@ def cmd_sdist(options, args):
         copyFile('REV.txt', PDEST)
 
     # Add some extra stuff to the root folder
-    copyFile('packaging/setup.py', ADEST)
-    copyFile('packaging/README-sdist.txt', opj(ADEST, 'README.txt'))
-    cmd_egg_info(options, args, egg_base=ADEST)
-    copyFile(opj(ADEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
-             opj(ADEST, 'PKG-INFO'))
+    #copyFile('packaging/setup.py', ADEST)
+    #copyFile('packaging/README-sdist.txt', opj(ADEST, 'README.txt'))
+    cmd_egg_info(options, args, egg_base=PDEST)
+    copyFile(opj(PDEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
+             opj(PDEST, 'PKG-INFO'))
             
     # build the tarball
     msg('Archiving Phoenix source...')
@@ -1522,13 +1522,13 @@ def cmd_sdist(options, args):
     if os.path.exists(tarfilename):
         os.remove(tarfilename)
     tarball = tarfile.open(name=tarfilename, mode="w:gz")
-    pwd = pushDir(ADEST)
+    pwd = pushDir(PDEST)
     for name in glob.glob('*'):
         tarball.add(name, os.path.join(rootname, name)) 
     tarball.close()
     msg('Cleaning up...')
     del pwd
-    shutil.rmtree(ADEST)
+    shutil.rmtree(PDEST)
 
     if options.upload:
         uploadPackage(tarfilename)
@@ -1589,12 +1589,13 @@ def cmd_bdist(options, args):
 
     
 def cmd_setrev(options, args):
-    # Grab the current SVN revision number (if possible) and write it to a
-    # file we'll use later for building the package version number
+    # Grab the current revision number from the version control system
+    # (if possible) and write it to a file we'll use later for
+    # building the package version number
     cmdTimer = CommandTimer('setrev')
     assert os.getcwd() == phoenixDir()
 
-    svnrev = getSvnRev()
+    svnrev = getVcsRev()
     f = open('REV.txt', 'w')
     svnrev = '.dev'+svnrev
     f.write(svnrev)

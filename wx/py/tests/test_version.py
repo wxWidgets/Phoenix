@@ -4,8 +4,6 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 
 import unittest
 
-import types
-
 # Import from this module's parent directory.
 import os
 import sys
@@ -38,7 +36,7 @@ class ModuleTestCase(unittest.TestCase):
 class VersionTestCase(unittest.TestCase):
 
     def test_VERSION(self):
-        self.assert_(type(version.VERSION) is types.StringType)
+        self.assert_(isinstance(version.VERSION, str))
 
 
 if __name__ == '__main__':

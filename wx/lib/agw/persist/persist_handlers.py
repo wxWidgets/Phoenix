@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
+# --------------------------------------------------------------------------- #
+#
+# Tags:        phoenix-port, unittest, documented, py3-port
+#
+# End Of Comments
+# --------------------------------------------------------------------------- #
 """
 This module contains different classes which handle different kind of saving/restoring
 actions depending on the widget kind.

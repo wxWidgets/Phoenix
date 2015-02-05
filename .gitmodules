@@ -1,0 +1,4 @@
+[submodule "ext/wxWidgets"]
+	path = ext/wxWidgets
+	url = https://github.com/wxWidgets/wxWidgets.git
+	branch = WX_3_0_BRANCH
