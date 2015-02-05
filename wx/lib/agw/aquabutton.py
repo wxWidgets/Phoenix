@@ -215,6 +215,7 @@ class AquaButton(wx.Control):
         if "__WXMAC__" in wx.PlatformInfo:
             self._backColour = wx.Colour(147, 202, 255)
             self._hoverColour = self.LightColour(self._backColour, 30)
+            self._focusColour = self.LightColour(self._backColour, 40)
             self._disableColour = self.LightColour(self._backColour, 70)
             self._textColour = wx.BLACK
             self._shadowColour = wx.Colour("grey")
