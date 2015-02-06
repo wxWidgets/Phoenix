@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
 """
-The :class:`CompositeShape` class.
+The :class:`~lib.ogl.composit.CompositeShape` class.
 """
 import sys
 import wx

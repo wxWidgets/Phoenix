@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
 """
-The :class:`BitmapShape` class.
+The :class:`~lib.ogl.bmpshape.BitmapShape` class.
 """
 from .basic import RectangleShape
 

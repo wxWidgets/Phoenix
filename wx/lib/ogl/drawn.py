@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
 """
-The class :class:`DrawnShape`.
+The class :class:`~lib.ogl.drawn.DrawnShape`.
 
 THIS DOES NOT SEEM TO BE USED ANYWHERE
 
