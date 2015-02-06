@@ -761,7 +761,7 @@ def getVcsRev():
             revhash  = runcmd('git rev-parse --short HEAD', getOutput=True, echoCmd=False)
         except:
             return None
-        return "{}.{}".format(revcount, revhash)
+        return "{}+{}".format(revcount, revhash)
             
     # Try getting the revision number from SVN, or GIT, or just fall back
     # to the date.

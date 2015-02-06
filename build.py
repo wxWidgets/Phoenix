@@ -688,7 +688,7 @@ def cmd_docset_wx(options, args):
     # Remove any existing docset in the dist dir and move the new docset in
     srcname = posixjoin(wxDir(), 'docs/doxygen/out/docset', 
                         'wxWidgets-%s.docset' % cfg.VERSION[:3])
-    destname = 'dist/wxWidgets-%s.docset' % cfg.VERSION[:3]
+    destname = 'dist/wxWidgets-%s.docset' % version3
     if not os.path.isdir(srcname):
         msg('ERROR: %s not found' % srcname)
         sys.exit(1)
@@ -706,7 +706,7 @@ def cmd_docset_py(options, args):
         sys.exit(1)
 
     # clear out any old docset build
-    name = 'wxPython-{}'.format(version2)
+    name = 'wxPython-{}'.format(version3)
     docset = posixjoin('dist', '{}.docset'.format(name))
     if os.path.isdir(docset):
         shutil.rmtree(docset)
@@ -869,7 +869,7 @@ def cmd_docs_bdist(options, args):
 
     cfg = Config()
         
-    rootname = "%s-%s-docs" % (baseName, cfg.VERSION)
+    rootname = "%s-docs-%s" % (baseName, cfg.VERSION)
     tarfilename = "dist/%s.tar.gz" % rootname
 
     if not os.path.exists('dist'):
