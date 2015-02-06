@@ -818,7 +818,7 @@ class MSWComboTreeBox(NativeComboTreeBox):
         return events
 
     def OnSelectionChangedInTree(self, event):
-        if self.IsBeingDeleted():
+        if not self:
             return
         item = event.GetItem()
         if item:
