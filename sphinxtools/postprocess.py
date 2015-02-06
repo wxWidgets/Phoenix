@@ -708,9 +708,9 @@ def PostProcess(folder):
 # ----------------------------------------------------------------------- #
 
 def ChangeSVNRevision(text):
-    SVN_REVISION = getVcsRev()
+    REVISION = getVcsRev()
     text = text.replace('|TODAY|', TODAY)
-    text = text.replace('|SVN|', SVN_REVISION)
+    text = text.replace('|VCSREV|', REVISION)
     return text
 
 
