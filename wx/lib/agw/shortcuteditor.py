@@ -2606,11 +2606,11 @@ class ShortcutEditor(wx.Dialog):
            over the application's main event loop (see :class:`EventLoopBase`) and which is
            destroyed when the dialog is dismissed. This also results in a call to
            :meth:`AppConsole.ProcessPendingEvents` ().
-           
-        """        
+
+        """
 
         self.PreShow()
-        wx.Dialog.ShowModal(self)        
+        return wx.Dialog.ShowModal(self)
 
 
     def Show(self, show=True):
