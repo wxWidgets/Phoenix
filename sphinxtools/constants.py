@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
 
 #---------------------------------------------------------------------------
 # Name:        sphinxtools/constants.py
