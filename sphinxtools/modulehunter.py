@@ -607,8 +607,6 @@ def ModuleHunter(init_name, import_name, version):
     directory, module_name = os.path.split(init_name)
     path = list(sys.path)
     
-    sys.path.insert(0, os.path.dirname(directory))
-    
     mainmod = Import(init_name, import_name)
 
     if mainmod is None:
