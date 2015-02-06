@@ -8,19 +8,25 @@
 # Created:      2004-05-08
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
-
-from _basic import RectangleShape
+"""
+The :class:`BitmapShape` class.
+"""
+from .basic import RectangleShape
 
 
 class BitmapShape(RectangleShape):
-    """Draws a bitmap (non-resizable)."""
+    """The :class:`BitmapShape` class draws a bitmap (non-resizable)."""
     def __init__(self):
+        """
+        Default class constructor.
+        """
         RectangleShape.__init__(self, 100, 50)
         self._filename = ""
 
     def OnDraw(self, dc):
+        """The draw handler."""
         if not self._bitmap.IsOk():
             return
 
@@ -29,6 +35,15 @@ class BitmapShape(RectangleShape):
         dc.DrawBitmap(self._bitmap, x, y, True)
 
     def SetSize(self, w, h, recursive = True):
+        """
+        Set the size.
+        
+        :param `w`: the width
+        :param `h`: the heigth
+        :param `recursive`: not used
+        
+        """
+
         if self._bitmap.IsOk():
             w = self._bitmap.GetWidth()
             h = self._bitmap.GetHeight()
@@ -41,22 +56,29 @@ class BitmapShape(RectangleShape):
         self.SetDefaultRegionSize()
 
     def GetBitmap(self):
-        """Return a the bitmap associated with this shape."""
+        """Get the associated bitmap."""
         return self._bitmap
     
     def SetBitmap(self, bitmap):
-        """Set the bitmap associated with this shape.
+        """Set the associated bitmap.
+        
+        :param `bitmap`: a :class:`wx.Bitmap` instance
 
-        You can delete the bitmap from the calling application, since
-        reference counting will take care of holding on to the internal bitmap
-        data.
+        :note: You can delete the bitmap from the calling application, since
+         reference counting will take care of holding on to the internal bitmap
+         data.
+
         """
         self._bitmap = bitmap
         if self._bitmap.IsOk():
             self.SetSize(self._bitmap.GetWidth(), self._bitmap.GetHeight())
             
     def SetFilename(self, f):
-        """Set the bitmap filename."""
+        """Set the bitmap filename.
+        
+        :param str `f`: the bitmap file name
+        
+        """
         self._filename = f
 
     def GetFilename(self):

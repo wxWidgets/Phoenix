@@ -8,13 +8,18 @@
 # Created:      2004-08-25
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # License:      wxWindows license
-# Tags:         phoenix-port
+# Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
+"""
+The class :class:`DrawnShape`.
 
+THIS DOES NOT SEEM TO BE USED ANYWHERE
+
+"""
 import os.path
 
-from _basic import RectangleShape
-from _oglmisc import *
+from .basic import RectangleShape
+from .oglmisc import *
 
 METAFLAGS_OUTLINE         = 1
 METAFLAGS_ATTACHMENTS     = 2
@@ -46,6 +51,7 @@ DRAWOP_DRAW_TEXT             = 28
 DRAWOP_DRAW_SPLINE           = 29
 DRAWOP_DRAW_ELLIPTIC_ARC     = 30
 
+
 class DrawOp(object):
     def __init__(self, theOp):
         self._op = theOp
@@ -57,12 +63,15 @@ class DrawOp(object):
         return False
 
     def Scale(self,scaleX, scaleY):
+        """not implemented???"""
         pass
 
     def Translate(self, x, y):
+        """not implemented???"""
         pass
 
     def Rotate(self, x, y, theta, sinTheta, cosTheta):
+        """not implemented???"""
         pass
     
 class OpSetGDI(DrawOp):
@@ -798,6 +807,7 @@ class DrawnShape(RectangleShape):
         if flags and METAFLAGS_ATTACHMENTS:
             self.ClearAttachments()
             for i in range(len(pts)):
+                # TODO: AttachmentPoint does not excist as per PyLint, what should it be???
                 self._attachmentPoints.append(AttachmentPoint(i,pts[i][0],pts[i][1]))
         self._metafiles[self._currentAngle].DrawPolygon(pts, flags)
 

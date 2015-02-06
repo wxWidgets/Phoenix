@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #----------------------------------------------------------------------------
-# Name:         canvas.py
+# Name:         _canvas.py
 # Purpose:      The canvas class
 #
 # Author:       Pierre Hjälm (from C++ original by Julian Smart)
@@ -8,20 +8,27 @@
 # Created:      2004-05-08
 # Copyright:    (c) 2004 Pierre Hjälm - 1998 Julian Smart
 # Licence:      wxWindows license
+# Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
-
+"""
+The :class:`ShapeCanvas` class.
+"""
 import wx
-from _lines import LineShape
-from _composit import *
+from .lines import LineShape
+from .composit import *
+from .oglmisc import *
 
 NoDragging, StartDraggingLeft, ContinueDraggingLeft, StartDraggingRight, ContinueDraggingRight = 0, 1, 2, 3, 4
 
-KEY_SHIFT, KEY_CTRL = 1, 2
 
-
-
-# Helper function: True if 'contains' wholly contains 'contained'.
 def WhollyContains(contains, contained):
+    """Helper function.
+    
+    :param `contains`: the containing shape
+    :param `contained`: the contained shape
+    :returns: `True` if 'contains' wholly contains 'contained'
+    
+    """
     xp1, yp1 = contains.GetX(), contains.GetY()
     xp2, yp2 = contained.GetX(), contained.GetY()
     
@@ -39,12 +46,32 @@ def WhollyContains(contains, contained):
     bottom2 = yp2 + h2 / 2.0
     
     return ((left1 <= left2) and (top1 <= top2) and (right1 >= right2) and (bottom1 >= bottom2))
-    
 
 
 class ShapeCanvas(wx.ScrolledWindow):
+    """The :class:`ShapeCanvas` class."""
     def __init__(self, parent = None, id = -1, pos = wx.DefaultPosition, size = wx.DefaultSize, style = wx.BORDER, name = "ShapeCanvas"):
+        """Default class constructor.
+        
+        Default class constructor.
+
+        :param `parent`: parent window
+        :param integer `id`: window identifier. A value of -1 indicates a default value
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform
+        :param integer `style`: the underlying :class:`Window` style
+        :param str `name`: the window name
+        
+        :type parent: :class:`Window`
+        :type pos: tuple or :class:`Point`
+        :type size: tuple or :class:`Size`
+        
+        """
         wx.ScrolledWindow.__init__(self, parent, id, pos, size, style, name)
+        
+        self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
 
         self._shapeDiagram = None
         self._dragState = NoDragging
@@ -54,31 +81,69 @@ class ShapeCanvas(wx.ScrolledWindow):
         self._firstDragX = 0
         self._firstDragY = 0
         self._checkTolerance = True
-
-        wx.EVT_PAINT(self, self.OnPaint)
-        wx.EVT_MOUSE_EVENTS(self, self.OnMouseEvent)
-
-    def SetDiagram(self, diag):
-        self._shapeDiagram = diag
-
-    def GetDiagram(self):
-        return self._shapeDiagram
-    
-    def OnPaint(self, evt):
-        dc = wx.PaintDC(self)
-        self.PrepareDC(dc)
         
+        self._Overlay = wx.Overlay()
+        self._Buffer = wx.Bitmap(10, 10)
+
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvent)
+
+    def Draw(self):
+        """
+        Update the buffer with the background and redraw the full diagram.
+        """
+        dc = wx.MemoryDC()
+        dc.SelectObject(self._Buffer)
+
         dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
-        dc.Clear()
+        dc.Clear() # make sure you clear the bitmap!
 
         if self.GetDiagram():
             self.GetDiagram().Redraw(dc)
+    
+    def OnSize(self, evt):
+        """
+        The size handler, it initializes the buffer to the size of the window.
+        """
+        Size  = self.GetClientSize()
+
+        # Make sure we don't try to create a 0 size bitmap
+        Size = (max(Size[0], 1), max(Size[1], 1))
+        self._Buffer = wx.Bitmap(Size[0], Size[1])
+        self.Draw()
+        
+    def SetDiagram(self, diag):
+        """Set the diagram associated with this canvas.
+        
+        :param `diag`: an instance of :class:`~lib.ogl.Diagram`
+        
+        """
+        self._shapeDiagram = diag
+
+    def GetDiagram(self):
+        """Get the diagram associated with this canvas."""
+        return self._shapeDiagram
+    
+    def OnPaint(self, evt):
+        """
+        The paint handler, uses :class:`BufferedPaintDC` to draw the 
+        buffer to the screen.
+        """
+        dc = wx.BufferedPaintDC(self)
+        dc.DrawBitmap(self._Buffer, 0, 0)
 
     def OnMouseEvent(self, evt):
+        """The mouse event handler."""
+        # we just get position, so is using ClientDC fine here?
         dc = wx.ClientDC(self)
-        self.PrepareDC(dc)
-        
         x, y = evt.GetLogicalPosition(dc)
+        # del it so we don't get tempted to use it for something else
+        del dc
+        ## result seems to be the same using either here, but not sure which is correct
+        #dc = wx.MemoryDC()
+        #dc.SelectObject(self._Buffer)
+        #x, y = evt.GetLogicalPosition(dc)
 
         keys = 0
         if evt.ShiftDown():
@@ -259,8 +324,19 @@ class ShapeCanvas(wx.ScrolledWindow):
                     self.OnRightClick(x, y, keys)
                     self._draggedShape = None
                     self._dragState = NoDragging
+              
+        self.Draw()
 
     def FindShape(self, x, y, info = None, notObject = None):
+        """
+        Find shape at given position.
+        
+        :param `x`: the x position
+        :param `y`: the y position
+        :param `info`: ???
+        :param `notObject`: ???
+        
+        """
         nearest = 100000.0
         nearest_attachment = 0
         nearest_object = None
@@ -320,43 +396,79 @@ class ShapeCanvas(wx.ScrolledWindow):
         return nearest_object, nearest_attachment
 
     def AddShape(self, object, addAfter = None):
+        """
+        Add a shape to canvas.
+        
+        :param `object`: the :class:`~lib.ogl.Shape` instance to add
+        :param `addAfter`: None or the :class:`~lib.ogl.Shape` after which
+         above shape is to be added.
+        
+        """
         self.GetDiagram().AddShape(object, addAfter)
 
     def InsertShape(self, object):
+        """
+        Insert a shape to canvas.
+        
+        :param `object`: the :class:`~lib.ogl.Shape` instance to insert
+        
+        """
         self.GetDiagram().InsertShape(object)
 
     def RemoveShape(self, object):
+        """
+        Remove a shape from canvas.
+        
+        :param `object`: the :class:`~lib.ogl.Shape` instance to be removed
+        
+        """
         self.GetDiagram().RemoveShape(object)
 
     def GetQuickEditMode(self):
+        """Get quick edit mode."""
         return self.GetDiagram().GetQuickEditMode()
     
     def Redraw(self, dc):
+        """Redraw the diagram."""
         self.GetDiagram().Redraw(dc)
 
     def Snap(self, x, y):
+        """Snap ???
+        
+        :param `x`: the x position
+        :param `y`: the y position
+        
+        """
         return self.GetDiagram().Snap(x, y)
 
     def OnLeftClick(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnRightClick(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnDragLeft(self, draw, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnBeginDragLeft(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnEndDragLeft(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnDragRight(self, draw, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnBeginDragRight(self, x, y, keys = 0):
+        """not implemented???"""
         pass
 
     def OnEndDragRight(self, x, y, keys = 0):
+        """not implemented???"""
         pass

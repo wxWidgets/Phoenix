@@ -183,7 +183,6 @@ class DividedShape(ogl.DividedShape):
 
 
     def OnSizingEndDragLeft(self, pt, x, y, keys, attch):
-        print "***", self
         ogl.DividedShape.OnSizingEndDragLeft(self, pt, x, y, keys, attch)
         self.SetRegionSizes()
         self.ReformatRegions()
