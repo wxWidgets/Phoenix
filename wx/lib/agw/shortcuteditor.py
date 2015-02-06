@@ -1809,13 +1809,15 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         if shortcut is None:
             shortcut = self.manager
             index = 0
-        
+
         for child in shortcut.children:
             bitmap = child.GetBitmap()
-            
+
             if bitmap.IsOk():
+                if bitmap.GetSize() != (16, 16):
+                    bitmap = bitmap.ConvertToImage().Scale(16, 16, wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
                 self.imageList.Add(bitmap)
-                child.imageIndex = index                
+                child.imageIndex = index
                 index += 1
 
             index = self.BuildImageList(child, index)
