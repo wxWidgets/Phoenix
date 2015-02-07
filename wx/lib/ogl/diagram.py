@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
 """
-The :class:`Diagram` class.
+The :class:`~lib.ogl.diagram.Diagram` class.
 """
 import wx
 

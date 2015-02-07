@@ -11,7 +11,8 @@
 # Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
 """
-The :class:`LineShape` class may have arrowheads at the beginning and end.
+The :class:`~lib.ogl.lines.LineShape` class may have arrowheads at the
+beginning and end.
 """
 import sys
 import math

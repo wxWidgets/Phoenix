@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
 """
-The :class:`DividedShape` class.
+The :class:`~lib.ogl.divided.DividedShape` class.
 """
 import sys
 import wx

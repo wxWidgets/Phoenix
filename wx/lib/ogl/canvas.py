@@ -11,7 +11,7 @@
 # Tags:         phoenix-port, unittest, py3-port, documented
 #----------------------------------------------------------------------------
 """
-The :class:`ShapeCanvas` class.
+The :class:`~lib.ogl.canvas.ShapeCanvas` class.
 """
 import wx
 from .lines import LineShape
