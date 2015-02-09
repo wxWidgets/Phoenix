@@ -1809,13 +1809,15 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         if shortcut is None:
             shortcut = self.manager
             index = 0
-        
+
         for child in shortcut.children:
             bitmap = child.GetBitmap()
-            
+
             if bitmap.IsOk():
+                if bitmap.GetSize() != (16, 16):
+                    bitmap = bitmap.ConvertToImage().Scale(16, 16, wx.IMAGE_QUALITY_HIGH).ConvertToBitmap()
                 self.imageList.Add(bitmap)
-                child.imageIndex = index                
+                child.imageIndex = index
                 index += 1
 
             index = self.BuildImageList(child, index)
@@ -2606,11 +2608,11 @@ class ShortcutEditor(wx.Dialog):
            over the application's main event loop (see :class:`EventLoopBase`) and which is
            destroyed when the dialog is dismissed. This also results in a call to
            :meth:`AppConsole.ProcessPendingEvents` ().
-           
-        """        
+
+        """
 
         self.PreShow()
-        wx.Dialog.ShowModal(self)        
+        return wx.Dialog.ShowModal(self)
 
 
     def Show(self, show=True):
