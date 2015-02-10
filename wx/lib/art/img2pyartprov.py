@@ -12,11 +12,11 @@
 Image modules must be generated with the -u and -n <name> parameters.
 
 Typical usage::
->>> import wx, wx.lib.art.img2pyartprov, myimagemodule
->>> wx.ArtProvider.PushProvider(wx.lib.art.img2pyartprov.Img2PyArtProvider(myimagemodule))
+    >>> import wx, wx.lib.art.img2pyartprov, myimagemodule
+    >>> wx.ArtProvider.PushProvider(wx.lib.art.img2pyartprov.Img2PyArtProvider(myimagemodule))
 
 If myimagemodule.catalog['MYIMAGE'] is defined, it can be accessed as::
->>> wx.ArtProvider.GetBitmap('wxART_MYIMAGE')
+    >>> wx.ArtProvider.GetBitmap('wxART_MYIMAGE')
 
 """
 
