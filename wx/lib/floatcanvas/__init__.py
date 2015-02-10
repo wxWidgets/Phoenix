@@ -1,3 +1,16 @@
+#!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         __init__.py
+# Purpose:		The FloatCanvas package
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 """
 This is the floatcanvas package, the main classes are 
 :class:`~lib.floatcanvas.FloatCanvas` and
@@ -105,7 +118,6 @@ Contact me at:
 
 Chris.Barker@noaa.gov
 
-Tags: phoenix-port, documented, unittest
 """
 
 __version__ = "0.9.18"

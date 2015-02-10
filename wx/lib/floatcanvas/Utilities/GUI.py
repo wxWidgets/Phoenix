@@ -1,3 +1,16 @@
+#!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         GUI.py
+# Purpose:      Contains GUI related utilities for FloatCanvas
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 """
 
 Part of the floatcanvas.Utilities package.

@@ -237,7 +237,6 @@ class DemoApp(wx.App):
     """
     
     def OnInit(self):
-        wx.InitAllImageHandlers()
         frame = DrawFrame(None, -1, "Simple Drawing Window",wx.DefaultPosition, (700,700) )
 
         self.SetTopWindow(frame)
@@ -255,12 +254,11 @@ def Read_MapGen(filename,stats = False):
     shorelines of the whole worls, in MapGen format.
     
     """
-    import string
     from numpy import array
     file = open(filename,'rt')
     data = file.readlines()
-    data = map(string.strip,data)
-    
+    data = [s.strip() for s in data]    
+
     Shorelines = []
     segment = []
     for line in data:

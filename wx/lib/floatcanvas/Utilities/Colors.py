@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         Colors.py
+# Purpose:      Contains color lists used in FloatCanvas
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 
 """
 Colors.py

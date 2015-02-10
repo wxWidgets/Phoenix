@@ -1,27 +1,12 @@
-#!/usr/bin/env python
-#----------------------------------------------------------------------------
-# Name:         BBoxTest.py
-# Purpose:      Test code for the BBox Object
-#
-# Author:
-#
-# Created:
-# Version:
-# Date:
-# Licence:
-# Tags:         phoenix-port
-#----------------------------------------------------------------------------
+import imp_unittest, unittest
+import wtc
+import wx
 
-"""
-Test code for the BBox Object
+from wx.lib.floatcanvas.Utilities.BBox import *
 
-"""
+#---------------------------------------------------------------------------
 
-import unittest
-
-from BBox import *
-
-class testCreator(unittest.TestCase):
+class testCreator(wtc.WidgetTestCase):
     def testCreates(self):
         B = BBox(((0,0),(5,5)))
         self.failUnless(isinstance(B, BBox))
@@ -74,7 +59,7 @@ class testCreator(unittest.TestCase):
         # Should catch tiny difference
         self.failUnlessRaises(ValueError, BBox, ((0,0), (-1e-20,5)) )
 
-class testAsBBox(unittest.TestCase):
+class testAsBBox(wtc.WidgetTestCase):
 
     def testPassThrough(self):
         B = BBox(((0,0),(5,5)))
@@ -99,7 +84,7 @@ class testAsBBox(unittest.TestCase):
         A[0,0] = -10
         self.failUnless(C[0,0] == A[0,0])
     
-class testIntersect(unittest.TestCase):
+class testIntersect(wtc.WidgetTestCase):
 
     def testSame(self):
         B = BBox(((-23.5, 456),(56, 532.0)))
@@ -188,7 +173,7 @@ class testIntersect(unittest.TestCase):
 
 
 
-class testEquality(unittest.TestCase):
+class testEquality(wtc.WidgetTestCase):
     def testSame(self):
         B = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
         C = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
@@ -218,7 +203,7 @@ class testEquality(unittest.TestCase):
         C = N.array( ( (1.01, 2.0), (5.0, 10.0) ) )
         self.failIf(C == B)
         
-class testInside(unittest.TestCase):
+class testInside(wtc.WidgetTestCase):
     def testSame(self):
         B = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
         C = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
@@ -274,7 +259,7 @@ class testInside(unittest.TestCase):
         C = BBox( ( (17.1, 8),(17.95, 32) ) )
         self.failIf(B.Inside(C) )
 
-class testPointInside(unittest.TestCase):
+class testPointInside(wtc.WidgetTestCase):
     def testPointIn(self):
         B = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
         P = (3.0, 4.0)
@@ -350,7 +335,7 @@ class testPointInside(unittest.TestCase):
         P = (-1, -10.0)
         self.failUnless(B.PointInside(P))
 
-class testFromPoints(unittest.TestCase):
+class testFromPoints(wtc.WidgetTestCase):
 
     def testCreate(self):
         Pts = N.array( ((5,2),
@@ -398,7 +383,7 @@ class testFromPoints(unittest.TestCase):
                         B[1,0] == 65.0 and
                         B[1,1] == 43.2
                         )
-class testMerge(unittest.TestCase):
+class testMerge(wtc.WidgetTestCase):
     A = BBox( ((-23.5, 456), (56, 532.0)) )
     B = BBox( ((-20.3, 460), (54, 465  )) )# B should be completely inside A
     C = BBox( ((-23.5, 456), (58, 540.0)) )# up and to the right or A
@@ -424,7 +409,7 @@ class testMerge(unittest.TestCase):
         A.Merge(self.D)
         self.failUnless(A[0] == self.D[0] and A[1] == self.A[1])
 
-class testWidthHeight(unittest.TestCase):
+class testWidthHeight(wtc.WidgetTestCase):
     B = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
     def testWidth(self):
         self.failUnless(self.B.Width == 4.0)
@@ -444,7 +429,7 @@ class testWidthHeight(unittest.TestCase):
     def testSetH(self):
         self.failUnlessRaises(AttributeError, self.attemptSetHeight)
         
-class testCenter(unittest.TestCase):
+class testCenter(wtc.WidgetTestCase):
     B = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
     def testCenter(self):
         self.failUnless( (self.B.Center == (3.0, 6.0)).all() )
@@ -456,7 +441,7 @@ class testCenter(unittest.TestCase):
         self.failUnlessRaises(AttributeError, self.attemptSetCenter)
         
 
-class testBBarray(unittest.TestCase):
+class testBBarray(wtc.WidgetTestCase):
     BBarray = N.array( ( ((-23.5, 456), (56, 532.0)),
                          ((-20.3, 460), (54, 465  )),
                          ((-23.5, 456), (58, 540.0)),
@@ -469,7 +454,7 @@ class testBBarray(unittest.TestCase):
         BB = fromBBArray(self.BBarray)
         self.failUnless(BB == self.BB, "Wrong BB was created. It was:\n%s \nit should have been:\n%s"%(BB, self.BB))
 
-class testNullBBox(unittest.TestCase):
+class testNullBBox(wtc.WidgetTestCase):
     B1 = NullBBox()
     B2 = NullBBox()
     B3 = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
@@ -504,7 +489,7 @@ class testNullBBox(unittest.TestCase):
         self.failUnless( self.B3.Overlaps(self.B1) == False)
 
 
-class testInfBBox(unittest.TestCase):
+class testInfBBox(wtc.WidgetTestCase):
     B1 = InfBBox()
     B2 = InfBBox()
     B3 = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
@@ -556,7 +541,7 @@ class testInfBBox(unittest.TestCase):
         self.failUnless( self.NB.Overlaps(self.B1) == True)
     
 
-class testSides(unittest.TestCase):
+class testSides(wtc.WidgetTestCase):
     B = BBox( ( (1.0, 2.0), (5.0, 10.0) ) )
 
     def testLeft(self):
@@ -568,7 +553,8 @@ class testSides(unittest.TestCase):
     def testTop(self):
         self.failUnless( self.B.Top == 10.0  )    
 
+        
+#---------------------------------------------------------------------------
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

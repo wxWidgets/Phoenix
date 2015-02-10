@@ -10,7 +10,7 @@
 # Licence:     wxWindows license
 #
 #
-# Tags:        phoenix-port, unittest, documented
+# Tags:        phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------
 """
 The sized controls default HIG compliant sizers under the hood and provides

@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+#----------------------------------------------------------------------------
+# Name:         NavCanvas.py
+# Purpose:      Combines FloatCanvas with Navigation controls
+#
+# Author:
+#
+# Created:
+# Version:
+# Date:
+# Licence:
+# Tags:         phoenix-port, unittest, documented, py3-port
+#----------------------------------------------------------------------------
 """
 Combines :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas` with Navigation
 controls onto a :class:`Panel`

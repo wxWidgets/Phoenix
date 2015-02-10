@@ -5,7 +5,7 @@ import wx
 
 ## import the installed version
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas
-from wx.lib.floatcanvas.SpecialObjects import PieChart
+from wx.lib.floatcanvas.FCObjects import PieChart
 
 ## import a local version
 #import sys
