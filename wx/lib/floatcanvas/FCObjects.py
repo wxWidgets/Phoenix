@@ -46,7 +46,8 @@ def ComputeFontScale():
     FontScale = 16/E[1]
     del dc
 
-ComputeFontScale()    
+# why do we do this here, causes a Sphinx build crash
+#ComputeFontScale()    
 
 ## fixme: This should probably be re-factored into a class
 _testBitmap = None
