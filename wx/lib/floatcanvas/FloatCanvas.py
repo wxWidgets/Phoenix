@@ -328,6 +328,7 @@ class FloatCanvas(wx.Panel):
 
         wx.Panel.__init__( self, parent, id, wx.DefaultPosition, size, **kwargs)
 
+        ComputeFontScale()
         self.InitAll()
 
         self.BackgroundBrush = wx.Brush(BackgroundColor, wx.SOLID)
