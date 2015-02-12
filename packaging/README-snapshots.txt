@@ -1,19 +1,6 @@
 wxPython Phoenix Snapshot Builds
 ================================
 
-
-  +-----------------------------------------------------+
-  | NOTE: There are some changes in progress that will  | 
-  | cause some differences in the development/build     | 
-  | number for the snapshot builds, so the existing     | 
-  | snapshots with the old numbering scheme have been   | 
-  | moved to the "old" subfolder. Once this folder      | 
-  | starts filling again with the new style builds      | 
-  | then that subfolderr will be removed and this       | 
-  | README will be updated.                             | 
-  +-----------------------------------------------------+
-
-
 This directory contains a set of snapshot builds for the wxPython Phoenix
 project. Each time there is a successful daily build from the buildbot the
 results are uploaded here, in addition to the source and documentation
