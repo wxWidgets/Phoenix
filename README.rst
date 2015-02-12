@@ -4,7 +4,8 @@ wxPython Project Phoenix
 
 .. image:: demo/bitmaps/splash.png
    :align: center
-   
+
+
 Welcome to wxPython's Project Phoenix! This project is a new implementation
 of wxPython focused on improving speed, maintainability and extensibility.
 Just like "Classic" wxPython it wraps the wxWidgets C++ toolkit and provides
@@ -278,17 +279,17 @@ should be installed in order to build Phoenix. Other debian-like distros
 will probably also have these or similarly named packages available.
 Extrapolate accordingly for other linux distributions or other unixes.
 
-  * dpkg-dev 
-  * build-essential 
-  * python2.7-dev     # use appropriate Python version
-  * libwebkitgtk-dev
-  * libjpeg-dev 
-  * libtiff-dev
-  * libgtk2.0-dev
-  * libsdl1.2-dev 
-  * libgstreamer-plugins-base0.10-dev
-  * freeglut3 
-  * freeglut3-dev
+* dpkg-dev 
+* build-essential 
+* python2.7-dev     # use appropriate Python version
+* libwebkitgtk-dev
+* libjpeg-dev 
+* libtiff-dev
+* libgtk2.0-dev
+* libsdl1.2-dev 
+* libgstreamer-plugins-base0.10-dev
+* freeglut3 
+* freeglut3-dev
 
 **Mac OSX**
 
