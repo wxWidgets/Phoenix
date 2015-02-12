@@ -46,7 +46,8 @@ def ComputeFontScale():
     FontScale = 16/E[1]
     del dc
 
-ComputeFontScale()    
+# why do we do this here, causes a Sphinx build crash
+#ComputeFontScale()    
 
 ## fixme: This should probably be re-factored into a class
 _testBitmap = None
@@ -650,7 +651,8 @@ class PointsObjectMixin:
 
 
 class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
-    """Draws a polygon
+    """
+    Draws a polygon
 
     Points is a list of 2-tuples, or a NX2 NumPy array of
     point coordinates.  so that Points[N][0] is the x-coordinate of
@@ -667,7 +669,8 @@ class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
                  FillColor    = None,
                  FillStyle    = "Solid",
                  InForeground = False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param `Points`: start point, takes a 2-tuple, or a (2,)
          `NumPy <http://www.numpy.org/>`_ array of point coordinates
@@ -705,7 +708,8 @@ class Polygon(PointsObjectMixin, LineAndFillMixin, DrawObject):
             HTdc.DrawPolygon(Points)
 
 class Line(PointsObjectMixin, LineOnlyMixin, DrawObject):
-    """Draws a line
+    """
+    Draws a line
 
     It will draw a straight line if there are two points, and a polyline
     if there are more than two.
@@ -716,7 +720,8 @@ class Line(PointsObjectMixin, LineOnlyMixin, DrawObject):
                  LineStyle = "Solid",
                  LineWidth    = 1,
                  InForeground = False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param `Points`: takes a 2-tuple, or a (2,)
          `NumPy <http://www.numpy.org/>`_ array of point coordinates
@@ -752,7 +757,8 @@ class Line(PointsObjectMixin, LineOnlyMixin, DrawObject):
 class Spline(Line):
     """Draws a spline"""
     def __init__(self, *args, **kwargs):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         see :class:`~lib.floatcanvas.FloatCanvas.Line`
         
@@ -769,7 +775,8 @@ class Spline(Line):
 
 
 class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
-    """Draws an arrow
+    """
+    Draws an arrow
 
     It will draw an arrow , starting at the point ``XY`` points at an angle
     defined by ``Direction``.
@@ -785,7 +792,8 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
                  ArrowHeadSize = 8,
                  ArrowHeadAngle = 30,
                  InForeground = False):
-        """Default class constructor.
+        """
+        Default class constructor.
 
         :param `XY`: the (x, y) coordinate of the starting point, or a 2-tuple,
          or a (2,) `NumPy <http://www.numpy.org/>`_ array
@@ -823,7 +831,8 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
         self.HitLineWidth = max(LineWidth,self.MinHitLineWidth)
 
     def SetDirection(self, Direction):
-        """Set the direction
+        """
+        Set the direction
         
         :param integer `Direction`: angle of arrow in degrees, zero is straight
           up `+` angle is to the right
@@ -833,7 +842,8 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
         self.CalcArrowPoints()
 
     def SetLength(self, Length):
-        """Set the length
+        """
+        Set the length
         
         :param integer `Length`: length of arrow in pixels
             
@@ -842,7 +852,8 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
         self.CalcArrowPoints()
 
     def SetLengthDirection(self, Length, Direction):
-        """Set the lenght and direction
+        """
+        Set the lenght and direction
         
         :param integer `Length`: length of arrow in pixels
         :param integer `Direction`: angle of arrow in degrees, zero is straight
@@ -896,7 +907,8 @@ class Arrow(XYObjectMixin, LineOnlyMixin, DrawObject):
 
 
 class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
-    """Draws an arrow line.
+    """
+    Draws an arrow line.
 
     It will draw a set of arrows from point to point.
 
@@ -912,7 +924,8 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
                  ArrowHeadSize = 8,
                  ArrowHeadAngle = 30,
                  InForeground = False):
-        """Default class constructor.
+        """
+        Default class constructor.
 
         :param `Points`: takes a 2-tuple, or a (2,)
          `NumPy <http://www.numpy.org/>`_ array of point coordinates
@@ -977,7 +990,8 @@ class ArrowLine(PointsObjectMixin, LineOnlyMixin, DrawObject):
 
 
 class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
-    """Draws a set of points
+    """
+    Draws a set of points
 
     If Points is a sequence of tuples: Points[N][0] is the x-coordinate of
     point N and Points[N][1] is the y-coordinate.
@@ -996,7 +1010,8 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
 
     """
     def __init__(self, Points, Color="Black", Diameter=1, InForeground=False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param `Points`: takes a 2-tuple, or a (2,)
          `NumPy <http://www.numpy.org/>`_ array of point coordinates
@@ -1016,7 +1031,8 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
         self.SetColor(Color)
 
     def SetDiameter(self, Diameter):
-        """Sets the diameter
+        """
+        Sets the diameter
         
         :param integer `Diameter`: the points diameter
         
@@ -1025,7 +1041,6 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
 
     def FindClosestPoint(self, XY):
         """
-
         Returns the index of the closest point to the point, XY, given
         in World coordinates. It's essentially random which you get if
         there are more than one that are the same.
@@ -1084,7 +1099,8 @@ class PointSet(PointsObjectMixin, ColorOnlyMixin, DrawObject):
                         HTdc.DrawCircle(xy[0],xy[1], radius)
 
 class Point(XYObjectMixin, ColorOnlyMixin, DrawObject):
-    """A point DrawObject
+    """
+    A point DrawObject
 
     .. note::
     
@@ -1094,7 +1110,8 @@ class Point(XYObjectMixin, ColorOnlyMixin, DrawObject):
 
     """
     def __init__(self, XY, Color="Black", Diameter=1, InForeground=False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param `XY`: the (x, y) coordinate of the center of the point, or a
          2-tuple, or a (2,) `NumPy <http://www.numpy.org/>`_ array
@@ -1115,7 +1132,8 @@ class Point(XYObjectMixin, ColorOnlyMixin, DrawObject):
         self.HitLineWidth = self.MinHitLineWidth
 
     def SetDiameter(self, Diameter):
-        """Set the diameter of the object.
+        """
+        Set the diameter of the object.
         
         :param integer `Diameter`: in screen points
         
@@ -1140,7 +1158,8 @@ class Point(XYObjectMixin, ColorOnlyMixin, DrawObject):
                 HTdc.DrawCircle(xy[0],xy[1], radius)
 
 class SquarePoint(XYObjectMixin, ColorOnlyMixin, DrawObject):
-    """Draws a square point
+    """
+    Draws a square point
 
     The Size is in screen points, not world coordinates, so the
     Bounding box is just the point, and doesn't include the Size.
@@ -1149,7 +1168,8 @@ class SquarePoint(XYObjectMixin, ColorOnlyMixin, DrawObject):
 
     """
     def __init__(self, Point, Color="Black", Size=4, InForeground=False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param `Point`: takes a 2-tuple, or a (2,)
          `NumPy <http://www.numpy.org/>`_ array of point coordinates
@@ -1169,7 +1189,8 @@ class SquarePoint(XYObjectMixin, ColorOnlyMixin, DrawObject):
         self.HitLineWidth = self.MinHitLineWidth
 
     def SetSize(self, Size):
-        """Sets the size
+        """
+        Sets the size
         
         :param integer `Size`: the size of the square point
         
@@ -1205,7 +1226,8 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
                  FillColor    = None,
                  FillStyle    = "Solid",
                  InForeground = False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param `XY`: the (x, y) coordinate of the corner of RectEllipse, or a 2-tuple,
          or a (2,) `NumPy <http://www.numpy.org/>`_ array
@@ -1238,7 +1260,8 @@ class RectEllipse(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.SetBrush(FillColor,FillStyle)
 
     def SetShape(self, XY, WH):
-        """Set the shape of the object.
+        """
+        Set the shape of the object.
         
         :param `XY`: takes a 2-tuple, or a (2,) `NumPy <http://www.numpy.org/>`_
          array of point coordinates
@@ -1296,7 +1319,8 @@ class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
                  FillColor    = None,
                  FillStyle    = "Solid",
                  InForeground = False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param `XY`: the (x, y) coordinate of the center of the circle, or a 2-tuple,
          or a (2,) `NumPy <http://www.numpy.org/>`_ array
@@ -1331,7 +1355,8 @@ class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.SetBrush(FillColor,FillStyle)
 
     def SetDiameter(self, Diameter):
-        """Set the diameter of the object
+        """
+        Set the diameter of the object
         
         :param integer `Diameter`: the diameter for the object
         
@@ -1360,7 +1385,6 @@ class Circle(XYObjectMixin, LineAndFillMixin, DrawObject):
 
 class TextObjectMixin(XYObjectMixin):
     """
-
     A mix in class that holds attributes and methods that are needed by
     the Text objects
 
@@ -1433,7 +1457,8 @@ class TextObjectMixin(XYObjectMixin):
                     'br': lambda x, y, w, h, world=0, pad=0: (x - w - pad, y - h + 2*world*h - pad + world*2*pad)}
 
 class Text(TextObjectMixin, DrawObject):
-    """Draws a text object
+    """
+    Draws a text object
     
     The size is fixed, and does not scale with the drawing.
 
@@ -1452,7 +1477,8 @@ class Text(TextObjectMixin, DrawObject):
                  Position = 'tl',
                  InForeground = False,
                  Font = None):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param string `string`: the text to draw
         :param `XY`: the (x, y) coordinate of the corner of the text, or a 2-tuple,
@@ -1702,7 +1728,8 @@ class ScaledText(TextObjectMixin, DrawObject):
                 HTdc.DrawRectangle(xy, (w, h))
 
 class ScaledTextBox(TextObjectMixin, DrawObject):
-    """Draws a text object
+    """
+    Draws a text object
     
     The object is scaled when zoomed.
 
@@ -1743,7 +1770,8 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
                  Font = None,
                  LineSpacing = 1.0,
                  InForeground = False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param `Point`: takes a 2-tuple, or a (2,) `NumPy <http://www.numpy.org/>`_
          array of point coordinates
@@ -1879,7 +1907,6 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
 
     def LayoutText(self):
         """
-
         Calculates the positions of the words of text.
 
         This isn't exact, as fonts don't scale exactly.
@@ -1952,13 +1979,7 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
         self.CalcBoundingBox()
 
     def CalcBoundingBox(self):
-
-        """
-
-        Calculates the Bounding Box
-
-        """
-
+        """Calculates the Bounding Box"""
         w, h = self.BoxWidth, self.BoxHeight
         x, y = self.ShiftFun(self.XY[0], self.XY[1], w, h, world=1)
         self.BoundingBox = BBox.asBBox(((x, y-h ),(x + w, y)))
@@ -2007,7 +2028,8 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
             HTdc.DrawRectangle(xy, wh)
 
 class Bitmap(TextObjectMixin, DrawObject):
-    """Draws a bitmap
+    """
+    Draws a bitmap
 
     The size is fixed, and does not scale with the drawing.
 
@@ -2016,7 +2038,8 @@ class Bitmap(TextObjectMixin, DrawObject):
     def __init__(self, Bitmap, XY,
                  Position='tl',
                  InForeground=False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param Bitmap `Bitmap`: the bitmap to be drawn
         :param `XY`: the (x, y) coordinate of the corner of the bitmap, or a 2-tuple,
@@ -2069,7 +2092,8 @@ class Bitmap(TextObjectMixin, DrawObject):
             HTdc.DrawRectangle(XY, (self.Width, self.Height) )
 
 class ScaledBitmap(TextObjectMixin, DrawObject):
-    """Draws a scaled bitmap
+    """
+    Draws a scaled bitmap
 
     The size scales with the drawing
 
@@ -2081,7 +2105,8 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
                  Height,
                  Position = 'tl',
                  InForeground = False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param wx.Bitmap `Bitmap`: the bitmap to be drawn
         :param `XY`: the (x, y) coordinate of the corner of the scaled bitmap,
@@ -2151,7 +2176,8 @@ class ScaledBitmap(TextObjectMixin, DrawObject):
             HTdc.DrawRectangle(XY, (W, H) )
 
 class ScaledBitmap2(TextObjectMixin, DrawObject, ):
-    """Draws a scaled bitmap
+    """
+    Draws a scaled bitmap
 
     An alternative scaled bitmap that only scaled the required amount of
     the main bitmap when zoomed in: EXPERIMENTAL!
@@ -2165,7 +2191,8 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
                  Width=None,
                  Position = 'tl',
                  InForeground = False):
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param wx.Bitmap `Bitmap`: the bitmap to be drawn
         :param `XY`: the (x, y) coordinate of the corner of the scaled bitmap,
@@ -2317,7 +2344,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
         Hs = int(scale * Hb + 0.5)
         if (self.ScaledBitmap is None) or (self.ScaledBitmap[0] != (Xb, Yb, Wb, Hb, Ws, Ws) ):
             Img = self.Image.GetSubImage(wx.Rect(Xb, Yb, Wb, Hb))
-            print("rescaling with High quality")
+            #print("rescaling with High quality")
             Img.Rescale(Ws, Hs, quality=wx.IMAGE_QUALITY_HIGH)
             bmp = wx.Bitmap(Img)
             self.ScaledBitmap = ((Xb, Yb, Wb, Hb, Ws, Ws), bmp)# this defines the cached bitmap
@@ -2352,7 +2379,7 @@ class ScaledBitmap2(TextObjectMixin, DrawObject, ):
 
 class DotGrid:
     """
-    An example of a Grid Object -- it is set on the FloatCanvas with one of: 
+    An example of a Grid Object -- it is set on the FloatCanvas with one of:: 
     
     FloatCanvas.GridUnder = Grid
     FloatCanvas.GridOver = Grid
@@ -2429,7 +2456,8 @@ class DotGrid:
                         dc.DrawCircle(xy[0],xy[1], radius)
 
 class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
-    """Draws an arc of a circle, centered on point ``CenterXY``, from
+    """
+    Draws an arc of a circle, centered on point ``CenterXY``, from
     the first point ``StartXY`` to the second ``EndXY``.
 
     The arc is drawn in an anticlockwise direction from the start point to
@@ -2446,7 +2474,8 @@ class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
                  FillColor    = None,
                  FillStyle    = "Solid",
                  InForeground = False):               
-        """Default class constructor.
+        """
+        Default class constructor.
         
         :param `StartXY`: start point, takes a 2-tuple, or a (2,)
          `NumPy <http://www.numpy.org/>`_ array of point coordinates
@@ -2499,7 +2528,8 @@ class Arc(XYObjectMixin, LineAndFillMixin, DrawObject):
         self.SetBrush(FillColor, FillStyle)                  #Why isn't this working ???
 
     def Move(self, Delta):
-        """Move the object by delta
+        """
+        Move the object by delta
         
         :param `Delta`: delta is a (dx, dy) pair. Ideally a `NumPy <http://www.numpy.org/>`_
          array of shape (2,)
@@ -2541,25 +2571,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
     You can pass in a bunch of values, and it will draw a pie chart for
     you, and it will make the chart, scaling the size of each "slice" to
     match your values.
-    
-    The parameters are:
-    
-     XY : The (x,y) coords of the center of the chart
-     Diameter : The diamter of the chart in worls coords, unless you set
-                "Scaled" to False, in which case it's in pixel coords.
-     Values : sequence of values you want to make the chart of.
-     FillColors=None : sequence of colors you want the slices. If
-                       None, it will choose (no guarantee youll like them!)
-     FillStyles=None : Fill style you want ("Solid", "Hash", etc)
-     LineColor = None : Color of lines separating the slices
-     LineStyle = "Solid" : style of lines separating the slices
-     LineWidth    = 1 : With of lines separating the slices
-     Scaled = True : Do you want the pie to scale when zooming? or stay the same size in pixels?
-     InForeground = False: Should it be on the foreground?             
-    
-
     """
-    
     
     ##fixme: this should be a longer and better designed set.
     ##       Maybe one from: http://geography.uoregon.edu/datagraphics/color_scales.htm
@@ -2577,6 +2589,23 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
                  LineWidth    = 1,
                  Scaled = True,
                  InForeground = False):               
+        """
+        Default class constructor.
+    
+        :param `XY`: The (x,y) coords of the center of the chart
+        :param `Diameter`: The diamter of the chart in worls coords, unless you
+                 set "Scaled" to False, in which case it's in pixel coords.
+        :param `Values`: sequence of values you want to make the chart of.
+        :param `FillColors`: sequence of colors you want the slices. If
+                 None, it will choose (no guarantee you'll like them!)
+        :param `FillStyles`: Fill style you want ("Solid", "Hash", etc)
+        :param `LineColor`: Color of lines separating the slices
+        :param `LineStyle`: style of lines separating the slices
+        :param `LineWidth`: With of lines separating the slices
+        :param `Scaled`: Do you want the pie to scale when zooming?
+                 or stay the same size in pixels?
+        :param `InForeground`: Should it be on the foreground?             
+        """
         DrawObject.__init__(self, InForeground)
 
         self.XY = N.asarray(XY, N.float).reshape( (2,) )
@@ -2599,25 +2628,42 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
         self.CalculatePoints()
 
     def SetFillColors(self, FillColors):
+        """
+        Set the FillColors and update the Brushes.
+        
+        :param `FillColors`: sequence of colors
+        """
         self.FillColors = FillColors
         self.SetBrushes()
 
     def SetFillStyles(self, FillStyles):
+        """
+        Set te FillStyles and update the Brushes.
+        
+        :param `FillStyles`: Fill style you want ("Solid", "Hash", etc)
+        """
         self.FillStyles = FillStyles
         self.SetBrushed()
 
     def SetValues(self, Values):
+        """
+        Set the values and calculate the points.
+        
+        :param `Values`: sequence of values you want to use for the chart
+        """
         Values = N.asarray(Values, dtype=N.float).reshape((-1,1))
         self.Values = Values
         self.CalculatePoints()
 
     def CalculatePoints(self):
+        """Calculate the points."""
         # add the zero point to start
         Values = N.vstack( ( (0,), self.Values) )
         self.Angles = 360. * Values.cumsum()/Values.sum()
         self.CalcBoundingBox()
         
     def SetBrushes(self):
+        """Set the Brushes."""
         self.Brushes = []
         for FillColor, FillStyle in zip(self.FillColors, self.FillStyles):
             if FillColor is None or FillStyle is None:
@@ -2628,6 +2674,7 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
                                                               )
                                     )
     def CalcBoundingBox(self):
+        """Calculate the bounding box."""
         if self.Scaled:
             self.BoundingBox = BBox.asBBox( ((self.XY-self.Diameter),(self.XY+self.Diameter)) )
         else:

@@ -38,23 +38,14 @@ class RubberBandBox(GUIMode.GUIBase):
     def __init__(self, CallBack, Tol=5):
 
         """
-        To initialize:
-        
-        RubberBandBox(CallBack, Tol=5)
+        Default class constructor.
 
-        CallBack: is the method you want called when the mouse is
+        :param `CallBack`: is the method you want called when the mouse is
                   released. That method will be called, passing in a rect
                   parameter, where rect is: (Point, WH) of the rect in
                   world coords.
-
-        Tol: The tolerance for the smallest rectangle allowed. defaults
-             to 5. In pixels
-
-        
-        Attributes:
-
-        CallBack: The callback function.
-                  
+        :param `Tol`: The tolerance for the smallest rectangle allowed. defaults
+                  to 5. In pixels
         """
 
         self.Canvas = None # this will be set when the mode is set on a Canvas

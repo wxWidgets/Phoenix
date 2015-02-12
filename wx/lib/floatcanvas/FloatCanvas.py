@@ -80,7 +80,7 @@ class _MouseEvent(wx.PyCommandEvent):
 
     It adds the method:
 
-    GetCoords() , which returns and (x,y) tuple in world coordinates.
+    GetCoords() , which returns an (x,y) tuple in world coordinates.
 
     Another difference is that it is a CommandEvent, which propagates up
     the window hierarchy until it is handled.
@@ -328,6 +328,7 @@ class FloatCanvas(wx.Panel):
 
         wx.Panel.__init__( self, parent, id, wx.DefaultPosition, size, **kwargs)
 
+        ComputeFontScale()
         self.InitAll()
 
         self.BackgroundBrush = wx.Brush(BackgroundColor, wx.SOLID)
@@ -988,7 +989,8 @@ class FloatCanvas(wx.Panel):
             self.Draw()
 
     def RemoveObjects(self, Objects):
-        """"Remove objects from canvas
+        """"
+        Remove objects from canvas
         
         :param list `Objects`: a list of :class:`DrawObjects` to remove
         
@@ -998,7 +1000,8 @@ class FloatCanvas(wx.Panel):
         self.BoundingBoxDirty = True
 
     def RemoveObject(self, Object, ResetBB=True):
-        """"Remove object from canvas
+        """"
+        Remove object from canvas
         
         :param DrawObject `Object`: a :class:`DrawObjects` to remove
         :param boolean `ResetBB`: reset the bounding box

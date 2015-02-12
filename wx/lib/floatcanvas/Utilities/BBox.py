@@ -23,10 +23,12 @@ class BBox(N.ndarray):
     A Bounding Box object:
     
     Takes Data as an array. Data is any python sequence that can be turned into a 
-    2x2 numpy array of floats:
+    2x2 numpy array of floats::
 
-    [[MinX, MinY ],
-     [MaxX, MaxY ]]
+    [
+    [MinX, MinY ],
+    [MaxX, MaxY ]
+    ]
 
     It is a subclass of numpy.ndarray, so for the most part it can be used as 
     an array, and arrays that fit the above description can be used in its place.
@@ -42,13 +44,16 @@ class BBox(N.ndarray):
     """
     def __new__(subtype, data):
         """
-        Takes Data as an array. Data is any python sequence that can be turned into a 
-        2x2 numpy array of floats:
+        Takes Data as an array. Data is any python sequence that can be turned
+        into a 2x2 numpy array of floats::
 
-        [[MinX, MinY ],
-        [MaxX, MaxY ]]
+        [
+        [MinX, MinY ],
+        [MaxX, MaxY ]
+        ]
 
-        You don't usually call this directly. BBox objects are created with the factory functions:
+        You don't usually call this directly. BBox objects are created with
+        the factory functions:
         
         asBBox
         
@@ -197,10 +202,12 @@ def asBBox(data):
 
     If object is a numpy array, a BBox object is returned that shares a
     view of the data with that array. The numpy array should be of the correct
-    format: a 2x2 numpy array of floats:
+    format: a 2x2 numpy array of floats::
 
-    [[MinX, MinY ],
-     [MaxX, MaxY ]]
+    [
+    [MinX, MinY ],
+    [MaxX, MaxY ]
+    ]
     
     """
 
@@ -225,22 +232,22 @@ def fromPoints(Points):
     return N.ndarray.__new__(BBox, shape=arr.shape, dtype=arr.dtype, buffer=arr)
 
 def fromBBArray(BBarray):
-   """
-   Builds a BBox object from an array of Bounding Boxes. 
-   The resulting Bounding Box encompases all the included BBs.
-   
-   The BBarray is in the shape: (Nx2x2) where BBarray[n] is a 2x2 array that represents a BBox
-   """
-   
-   #upperleft = N.minimum.reduce(BBarray[:,0])
-   #lowerright = N.maximum.reduce(BBarray[:,1])
-
-#   BBarray = N.asarray(BBarray, N.float).reshape(-1,2)
-#   arr = N.vstack( (BBarray.min(0), BBarray.max(0)) )
-   BBarray = N.asarray(BBarray, N.float).reshape(-1,2,2)
-   arr = N.vstack( (BBarray[:,0,:].min(0), BBarray[:,1,:].max(0)) )
-   return asBBox(arr)
-   #return asBBox( (upperleft, lowerright) ) * 2
+    """
+    Builds a BBox object from an array of Bounding Boxes. 
+    The resulting Bounding Box encompases all the included BBs.
+    
+    The BBarray is in the shape: (Nx2x2) where BBarray[n] is a 2x2 array that represents a BBox
+    """
+    
+    #upperleft = N.minimum.reduce(BBarray[:,0])
+    #lowerright = N.maximum.reduce(BBarray[:,1])
+ 
+ #   BBarray = N.asarray(BBarray, N.float).reshape(-1,2)
+ #   arr = N.vstack( (BBarray.min(0), BBarray.max(0)) )
+    BBarray = N.asarray(BBarray, N.float).reshape(-1,2,2)
+    arr = N.vstack( (BBarray[:,0,:].min(0), BBarray[:,1,:].max(0)) )
+    return asBBox(arr)
+    #return asBBox( (upperleft, lowerright) ) * 2
    
 def NullBBox():
     """
@@ -290,9 +297,6 @@ class RectBBox(BBox):
         BBox.BBox(data)
         self.edges = np.asarray(edges)
 
-        print("new rectbbox created")
-
-
     def ac_leftOf_ab(self, a, b, c):
         ab = np.array(b) - np.array(a)
         ac = np.array(c) - np.array(a)
@@ -300,8 +304,6 @@ class RectBBox(BBox):
         return (ac[0]*ab[1] - ac[1]*ab[0]) <= 0
 
     def PointInside(self, point):
-        print("point inside called")
-
         for edge in xrange(4):
             if self.ac_leftOf_ab(self.edges[edge],
                                  self.edges[(edge+1)%4],
@@ -310,4 +312,3 @@ class RectBBox(BBox):
             else:
                 return False
         return True 
-    
