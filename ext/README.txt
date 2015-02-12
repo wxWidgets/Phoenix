@@ -9,6 +9,7 @@ fetching the correct version of the code on their own.
 When you first checkout the Phoenix source using git you will need to tell git
 to also fetch the submodules, like this:
 
+    cd Phoenix
     git submodule init
     git submodule update
 
@@ -22,12 +23,14 @@ To learn more about git submodules, please see the following:
 Notes to self
 =============
 
- * To clone repos with submodules:
+ * To clone repositories with submodules:
 
        git clone <repourl>
+       cd <repo>
        git submodule init
+       git submodule update
 
- * To update a submodule from its upstream:
+ * To update an existing submodule from its upstream:
 
        git submodule update --remote <submodule>
 
