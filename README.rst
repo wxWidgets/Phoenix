@@ -182,17 +182,17 @@ explanation to help a newbie find their way around.
   parsing of the XML files, tweaking the collection of objects produced by
   the parser, and also the backend generation of code or documentation.
 
- * **ext**: This folder holds the source for external projects used by
-   Phoenix, (currently just wxWidgets) as git submodules. This allows Phoenix
-   to use a specific revision of the code in the other projects and not depend
-   on the developer fetching the correct version of the code on their own.
+* **ext**: This folder holds the source for external projects used by
+  Phoenix, (currently just wxWidgets) as git submodules. This allows Phoenix
+  to use a specific revision of the code in the other projects and not depend
+  on the developer fetching the correct version of the code on their own.
 
-   When you first checkout the Phoenix source using git you will need to tell
-   git to also fetch the submodules, like this:
+  When you first checkout the Phoenix source using git you will need to tell
+  git to also fetch the submodules, like this::
 
-      cd Phoenix
-      git submodule init
-      git submodule update
+    cd Phoenix
+    git submodule init
+    git submodule update
 
 * **sip/gen**: The code (.sip files) produced by the ETG scripts is placed
   in this folder.
@@ -250,67 +250,67 @@ a PR for updating this document.
 
 **Windows**
 
-    All the source code needed for wxWidgets and wxPython Phoenix are
-    included in the wxWidgets and Phoenix source trees. In addition to a
-    stock Python installation you will also need a copy of Visual Studio 2008
-    (for Python2.7 compatibility) or Visual Studio 2010 (for Python 3.x
-    support). It should also be possible to build using Mingw32, but there
-    will need to be some changes made to the build scripts to support that.
+All the source code needed for wxWidgets and wxPython Phoenix are
+included in the wxWidgets and Phoenix source trees. In addition to a
+stock Python installation you will also need a copy of Visual Studio 2008
+(for Python2.7 compatibility) or Visual Studio 2010 (for Python 3.x
+support). It should also be possible to build using Mingw32, but there
+will need to be some changes made to the build scripts to support that.
     
-    You may also want to get a copy of the MS SDK in order to have newer
-    definitions of the Windows API. I typically use 7.0 or 7.1 with Visual
-    Studio 2008.
+You may also want to get a copy of the MS SDK in order to have newer
+definitions of the Windows API. I typically use 7.0 or 7.1 with Visual
+Studio 2008.
 
-    Unfortunately Microsoft no longer distributes Visual Studio 2008. But
-    don't panic! They have recently made available a "Microsoft Visual C++
-    Compiler for Python 2.7" package. I haven't tried it but I expect it will
-    work fine for building Phoenix. Plus it's free! You can get it at:
-    http://www.microsoft.com/en-us/download/details.aspx?id=44266
+Unfortunately Microsoft no longer distributes Visual Studio 2008. But
+don't panic! They have recently made available a "Microsoft Visual C++
+Compiler for Python 2.7" package. I haven't tried it but I expect it will
+work fine for building Phoenix. Plus it's free! You can get it at:
+http://www.microsoft.com/en-us/download/details.aspx?id=44266
 
-    If you want to build Phoenix with debug info then you will need to first
-    build a debug version of Python, and then use that Python (python_d.exe) to
-    build Phoenix.
+If you want to build Phoenix with debug info then you will need to first
+build a debug version of Python, and then use that Python (python_d.exe) to
+build Phoenix.
     
 **Linux**
 
-    On Ubuntu the following development packages and their dependencies
-    should be installed in order to build Phoenix. Other debian-like distros
-    will probably also have these or similarly named packages available.
-    Extrapolate accordingly for other linux distributions or other unixes.
+On Ubuntu the following development packages and their dependencies
+should be installed in order to build Phoenix. Other debian-like distros
+will probably also have these or similarly named packages available.
+Extrapolate accordingly for other linux distributions or other unixes.
 
-        * dpkg-dev 
-        * build-essential 
-        * python2.7-dev     # use appropriate Python version
-        * libwebkitgtk-dev
-        * libjpeg-dev 
-        * libtiff-dev
-        * libgtk2.0-dev
-        * libsdl1.2-dev 
-        * libgstreamer-plugins-base0.10-dev
-        * freeglut3 
-        * freeglut3-dev
+  * dpkg-dev 
+  * build-essential 
+  * python2.7-dev     # use appropriate Python version
+  * libwebkitgtk-dev
+  * libjpeg-dev 
+  * libtiff-dev
+  * libgtk2.0-dev
+  * libsdl1.2-dev 
+  * libgstreamer-plugins-base0.10-dev
+  * freeglut3 
+  * freeglut3-dev
 
 **Mac OSX**
 
-    Like the Windows platform all the source and libs you need for building
-    Phoenix on OSX are included in the wxWidgets and Phoenix source trees, or
-    by default on the system. In addition you will need to get the Xcode
-    compiler and SDKs, if you don't already have it, from
-    https://developer.apple.com/ (free registration required). You should
-    also install the command line tools for your version of Xcode and OSX.
-    This can usually be done from within Xcode or via a separate installer
-    package.
+Like the Windows platform all the source and libs you need for building
+Phoenix on OSX are included in the wxWidgets and Phoenix source trees, or
+by default on the system. In addition you will need to get the Xcode
+compiler and SDKs, if you don't already have it, from
+https://developer.apple.com/ (free registration required). You should
+also install the command line tools for your version of Xcode and OSX.
+This can usually be done from within Xcode or via a separate installer
+package.
 
-    Also like on Windows, using the same or similar compiler that was used to
-    build Python usually helps things to work better and have a better chance
-    for success. For example, the stock Python 2.7 will try to use "gcc-4.2"
-    when building extensions, but newer versions of Xcode may not have that
-    command available. I am currently using Xcode 4.6.3, and I have symlinks
-    in ``/usr/local/bin`` pointing to the ``/usr/bin/llvm-*-4.2`` executables.
-    
-    If all else fails it is not too hard to build Python yourself using
-    whatever Xcode you have installed, and then use that Python when buildign
-    Phoenix.
+Also like on Windows, using the same or similar compiler that was used to
+build Python usually helps things to work better and have a better chance
+for success. For example, the stock Python 2.7 will try to use "gcc-4.2"
+when building extensions, but newer versions of Xcode may not have that
+command available. I am currently using Xcode 4.6.3, and I have symlinks
+in ``/usr/local/bin`` pointing to the ``/usr/bin/llvm-*-4.2`` executables.
+ 
+If all else fails it is not too hard to build Python yourself using
+whatever Xcode you have installed, and then use that Python when building
+Phoenix.
 
 
 .. image:: docs/phoenix-fire-md.png
