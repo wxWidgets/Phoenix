@@ -1561,6 +1561,35 @@ def flattenNode(node, rstrip=True):
     return text
 
 
+def appendText(node, text):
+    """
+    Append some text to a docstring element, such as an item's briefDoc or
+    detailedDoc attributes.
+    """
+    ele = makeTextElement(text)
+    node.append(ele) # will work for either briefDoc (an Element) or detailedDoc (a list)
+
+def prependText(node, text):
+    """
+    Prepend some text to a docstring element, such as an item's briefDoc or
+    detailedDoc attributes.
+    """
+    # If the node has text then just insert the new bti as a string
+    if hasattr(node, 'text') and node.text:
+        node.text = text + node.text
+        
+    # otherwise insert it as an element
+    else:
+        ele = makeTextElement(text)
+        node.insert(0, ele)
+        
+    
+def makeTextElement(text):
+    element = et.Element('para')
+    element.text = text
+    return element
+
+
 class ExtractorError(RuntimeError):
     pass
 

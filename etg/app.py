@@ -35,10 +35,15 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-        
-    c = module.find('wxAppConsole')
+            
     module.find('wxDISABLE_DEBUG_SUPPORT').ignore()
+
+    c = module.find('wxAppConsole')
     assert isinstance(c, etgtools.ClassDef)
+
+    etgtools.prependText(c.detailedDoc, 
+         "Note that it is not intended for this class to be used directly from "
+         "Python. It is wrapped just for inheriting its methods in :class:`App`.")
     
     # There's no need for the command line stuff as Python has its own ways to
     # deal with that
