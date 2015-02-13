@@ -6,7 +6,7 @@ just wxWidgets) as git submodules.  This allows Phoenix to use a specific
 revision of the code in the other projects and not depend on the developer
 fetching the correct version of the code on their own.
 
-When you first checkout the Phoenix source using git you will need to tell git
+When you first check out the Phoenix source using git you will need to tell git
 to also fetch the submodules, like this:
 
     cd Phoenix
