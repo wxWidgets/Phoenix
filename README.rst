@@ -314,6 +314,15 @@ whatever Xcode you have installed, and then use that Python when building
 Phoenix.
 
 
+Help and Helping
+----------------
+
+Most discussions about Phoenix happen on the wxPython-dev google group
+(a.k.a. the wxPython-dev mail list.) If you have questions or would like to
+get involved please subscribe to the group at
+https://groups.google.com/forum/#!forum/wxpython-dev and join in.
+
+
 .. image:: docs/phoenix-fire-md.png
    :width: 100%
 
