@@ -51,6 +51,7 @@ isDarwin = sys.platform == "darwin"
 
 baseName = 'wxPython_Phoenix'
 eggInfoName = baseName + '.egg-info'
+defaultMask='%s-%s*' % (baseName, version.VER_MAJOR)
 
 pyICON = 'docs/sphinx/_static/images/sphinxdocs/phoenix_title.png'
 wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
@@ -559,22 +560,22 @@ class CommandTimer(object):
         msg('Finished command: %s (%s)' % (self.name, time))            
 
 
-def uploadPackage(fileName, KEEP=50):
+def uploadPackage(fileName, mask=defaultMask, keep=50):
     """
     Upload the given filename to the configured package server location. Only
-    the KEEP most recent files will be kept so the server space is not overly
-    consumed. It is assumed that if the files are in sorted order then the
-    end of the list will be the newest files.
+    the `keep` most recent files matching `mask` will be kept so the server
+    space is not overly consumed. It is assumed that if the files are in
+    sorted order then the end of the list will be the newest files.
     """
     fileName = fileName.replace('\\', '/')
     msg("Uploading %s..." % fileName)
-    snapshotDir = 'snapshot-builds'
 
     # NOTE: It is expected that there will be a host entry defined in
     # ~/.ssh/config named wxpython-rbot, with the proper host, user,
     # idenity file, etc needed for making an SSH connection to the
     # snapshots server.
     host = 'wxpython-rbot'
+    snapshotDir = 'snapshot-builds'
     
     # copy the new file to the server
     cmd = 'scp {} {}:{}'.format(fileName, host, snapshotDir)
@@ -586,14 +587,14 @@ def uploadPackage(fileName, KEEP=50):
     runcmd(cmd)
     
     # get the list of all snapshot files on the server
-    cmd = 'ssh {} "cd {}; ls"'.format(host, snapshotDir)
+    cmd = 'ssh {} "cd {}; ls {}"'.format(host, snapshotDir, mask)
     allFiles = runcmd(cmd, getOutput=True)
     allFiles = allFiles.strip().split('\n')
     allFiles.sort()  
 
-    # leave the last KEEP builds, including this new one, on the server
-    rmFiles = [name for name in allFiles[:-KEEP] 
-                   if not name.startswith('README')]
+    # Leave the last keep builds, including this new one, on the server.
+    # Delete the rest.
+    rmFiles = allFiles[:-keep] 
     if rmFiles:
         msg("Deleting %s" % ", ".join(rmFiles))
         cmd = 'ssh {} "cd {}; rm {}"'.format(host, snapshotDir, " ".join(rmFiles))
@@ -884,7 +885,8 @@ def cmd_docs_bdist(options, args):
     tarball.close()
     
     if options.upload:
-        uploadPackage(tarfilename)    
+        uploadPackage(tarfilename, keep=5, 
+                      mask='%s-docs-%s*' % (baseName, cfg.VER_MAJOR))
     
     msg('Documentation tarball built at %s' % tarfilename)
     
@@ -1319,6 +1321,7 @@ def cmd_bdist_wheel(options, args):
         filenames = glob.glob(filemask)
         assert len(filenames) == 1
         uploadPackage(filenames[0])
+        
         
 def cmd_bdist_wininst(options, args):
     _doSimpleSetupCmd(options, args, 'bdist_wininst')
