@@ -43,7 +43,7 @@ def run():
 
     etgtools.prependText(c.detailedDoc, 
          "Note that it is not intended for this class to be used directly from "
-         "Python. It is wrapped just for inheriting its methods in :class:`App`.")
+         "Python. It is wrapped just for inheriting its methods from :class:`App`.")
     
     # There's no need for the command line stuff as Python has its own ways to
     # deal with that

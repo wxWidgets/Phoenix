@@ -52,7 +52,7 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxRichTextCtrl')
     tools.fixWindowClass(c)
-    c.bases = ['wxControl']  # wxTextctrlIface, wxScrollHelper are also bases...
+    c.bases = ['wxControl']  # wxTextCtrlIface, wxScrollHelper are also bases...
     c.find('GetSelection').findOverload('from').ignore()
     tools.ignoreConstOverloads(c)
 

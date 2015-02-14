@@ -187,9 +187,9 @@ def run():
             c.find('CalculateRange.end').out = True  # TODO: should it be an inOut?
     
     
-        # This are the pure virtuals in the base class. SIP needs to see that
-        # all the drived classes have an implementation, otherwise it will
-        # consider them to be ABCs/
+        # These are the pure virtuals in the base class. SIP needs to see that
+        # all the derived classes have an implementation, otherwise it will
+        # consider them to be ABCs.
         if not c.findItem('Draw') and addMissingVirtuals:
             c.addItem(etgtools.WigCode("""\
                 virtual bool Draw(wxDC& dc, wxRichTextDrawingContext& context, 

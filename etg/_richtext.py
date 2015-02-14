@@ -23,7 +23,7 @@ ITEMS  = [ ]
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
-# the wxWidgets "html" library in a multi-lib build.
+# the wxWidgets "richtext" library in a multi-lib build.
 INCLUDES = [ 'richtextbuffer',
              'richtextctrl',
              'richtexthtml',
