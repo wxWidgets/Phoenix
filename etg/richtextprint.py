@@ -38,7 +38,16 @@ def run():
     tools.ignoreAllOperators(c)
     
     
+    c = module.find('wxRichTextPrintout')
+    assert isinstance(c, etgtools.ClassDef)
+    c.find('GetPageInfo.minPage').out = True
+    c.find('GetPageInfo.maxPage').out = True
+    c.find('GetPageInfo.selPageFrom').out = True
+    c.find('GetPageInfo.selPageTo').out = True
+    
+    
     c = module.find('wxRichTextPrinting')
+    assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
     
     

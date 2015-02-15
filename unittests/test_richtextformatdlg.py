@@ -1,14 +1,27 @@
 import imp_unittest, unittest
 import wtc
 import wx
+import wx.richtext
 
 #---------------------------------------------------------------------------
 
 class richtextformatdlg_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
+    @unittest.expectedFailure  # richtextformatdlg not implemented yet
     def test_richtextformatdlg1(self):
-        self.fail("Unit tests for richtextformatdlg not implemented yet.")
+        wx.richtext.RICHTEXT_FORMAT_FONT           
+        wx.richtext.RICHTEXT_FORMAT_TABS           
+        wx.richtext.RICHTEXT_FORMAT_STYLE_EDITOR   
+        wx.richtext.RICHTEXT_FORMAT_BULLETS        
+        wx.richtext.RICHTEXT_FORMAT_INDENTS_SPACING
+        
+
+    @unittest.expectedFailure  # richtextformatdlg not implemented yet
+    def test_richtextformatdlg2(self):
+        dlg = wx.richtext.RichTextFormattingDialog(
+            wx.richtext.RICHTEXT_FORMAT_FONT,
+            self.frame)
+        self.runDialog(dlg)
         
 #---------------------------------------------------------------------------
 

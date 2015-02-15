@@ -32,9 +32,15 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    #c = module.find('wxRichTextHTMLHandler')
-    #assert isinstance(c, etgtools.ClassDef)
+    c = module.find('wxRichTextHTMLHandler')
+    assert isinstance(c, etgtools.ClassDef)
     
+    # Let SIP know that the pure virtuals have implementations in this class
+    c.addItem(etgtools.WigCode("""\
+        protected:
+        virtual bool DoLoadFile(wxRichTextBuffer *buffer, wxInputStream& stream);
+        virtual bool DoSaveFile(wxRichTextBuffer *buffer, wxOutputStream& stream);
+        """))
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
