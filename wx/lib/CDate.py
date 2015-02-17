@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-#
+# -*- coding: utf-8 -*-
 # Name:         CDate.py
 # Purpose:      Date and Calendar classes
 #
