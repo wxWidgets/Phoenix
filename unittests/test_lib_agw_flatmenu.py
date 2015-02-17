@@ -31,7 +31,7 @@ class lib_agw_flatmenu_Tests(wtc.WidgetTestCase):
 
         self._popUpMenu.AppendSeparator()
 
-    @unittest.skip('crash on opening a menu, at line 5442 in agw.flatmenu ...')        
+    
     def test_lib_agw_flatmenuOpen(self):
         def CreateLongPopupMenu(self):
             popMenu = FM.FlatMenu()
@@ -63,6 +63,11 @@ class lib_agw_flatmenu_Tests(wtc.WidgetTestCase):
         fPt = self.frame.GetPosition()
         popMenu.Popup(wx.Point(fPt.x, fPt.y), self.frame)
     
+        # Clear the capture since the test won't do a normal shudown of the flatmenu
+        cap = wx.Window.GetCapture()
+        if cap:
+            cap.ReleaseMouse()
+            
 
     def test_lib_agw_flatmenuConstantsExist(self):
 
