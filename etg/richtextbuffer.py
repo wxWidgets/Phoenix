@@ -302,9 +302,15 @@ def run():
     c.find('InsertDrawingHandler.handler').transfer = True
 
     c.find('AddFieldType.fieldType').transfer = True
-
-    
+   
     # TODO:  Transfer ownership with AddEventHandler?  TransferBack with Remove?
+
+
+    c.find('FindHandler').renameOverload('name', 'FindHandlerByName')
+    c.find('FindHandler').renameOverload('extension', 'FindHandlerByExtension')
+    c.find('FindHandler').pyName = 'FindHandlerByType'
+    
+    c.find('FindHandlerFilenameOrType').pyName = 'FindHandlerByFilename'
     
     
     #-------------------------------------------------------
