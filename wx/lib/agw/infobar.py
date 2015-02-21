@@ -394,7 +394,7 @@ class InfoBar(wx.Control):
         #     and being preceded by a spacer
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(self._icon, wx.SizerFlags().Centre().Border())
-        sizer.Add(self._text, 2000000, wx.ALIGN_CENTER_VERTICAL)
+        sizer.Add(self._text, 200, wx.ALIGN_CENTER_VERTICAL)
         sizer.AddStretchSpacer()
         sizer.Add(self._button, wx.SizerFlags().Centre().Border())
         self.SetSizer(sizer)
