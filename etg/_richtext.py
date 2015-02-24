@@ -1,9 +1,9 @@
 #---------------------------------------------------------------------------
-# Name:        etg/_html.py
+# Name:        etg/_richtext.py
 # Author:      Robin Dunn
 #
 # Created:     27-Oct-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2015 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

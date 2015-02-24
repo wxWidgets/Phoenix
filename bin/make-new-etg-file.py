@@ -4,7 +4,7 @@
 # Author:      Kevin Ollivier
 #
 # Created:     24-Sept-2011
-# Copyright:   (c) 2013 by Kevin Ollivier, Robin Dunn
+# Copyright:   (c) 2015 by Kevin Ollivier, Robin Dunn
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -104,7 +104,7 @@ def main():
     
     item_str = ""
     for item in options.items.split(","):
-        item_str += '"%s",\n' % item
+        item_str += "'%s',\n" % item
     
     values = {
         "author"    : options.author,
