@@ -996,7 +996,7 @@ class AuiDefaultToolBarArt(object):
     def DrawButton(self, dc, wnd, item, rect):
         """
         Draws a toolbar item button.
-        
+
         :param `dc`: a :class:`DC` device context;
         :param `wnd`: a :class:`Window` derived window;
         :param `item`: an instance of :class:`AuiToolBarItem`;
@@ -1004,17 +1004,17 @@ class AuiDefaultToolBarArt(object):
         """
 
         bmp_rect, text_rect = self.GetToolsPosition(dc, item, rect)
-        
+
         if not item.GetState() & AUI_BUTTON_STATE_DISABLED:
-        
+
             if item.GetState() & AUI_BUTTON_STATE_PRESSED:
-            
+
                 dc.SetPen(wx.Pen(self._highlight_colour))
                 dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 150)))
                 dc.DrawRectangle(rect)
-            
+
             elif item.GetState() & AUI_BUTTON_STATE_HOVER or item.IsSticky():
-            
+
                 dc.SetPen(wx.Pen(self._highlight_colour))
                 dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 170)))
 
@@ -1024,17 +1024,22 @@ class AuiDefaultToolBarArt(object):
                     dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 180)))
 
                 dc.DrawRectangle(rect)
-            
+
             elif item.GetState() & AUI_BUTTON_STATE_CHECKED:
-            
+
                 # it's important to put this code in an else statment after the
                 # hover, otherwise hovers won't draw properly for checked items
                 dc.SetPen(wx.Pen(self._highlight_colour))
                 dc.SetBrush(wx.Brush(StepColour(self._highlight_colour, 170)))
                 dc.DrawRectangle(rect)
-            
+
         if item.GetState() & AUI_BUTTON_STATE_DISABLED:
             bmp = item.GetDisabledBitmap()
+        elif item.GetState() & AUI_BUTTON_STATE_HOVER or \
+                item.GetState() & AUI_BUTTON_STATE_PRESSED:
+            bmp = item.GetHoverBitmap()
+            if not bmp:
+                bmp = item.GetBitmap()
         else:
             bmp = item.GetBitmap()
 
@@ -1048,7 +1053,7 @@ class AuiDefaultToolBarArt(object):
 
         if self._agwFlags & AUI_TB_TEXT and item.GetLabel() != "":
             self.DrawLabel(dc, wnd, item, text_rect)
-        
+
 
     def DrawDropDownButton(self, dc, wnd, item, rect):
         """
