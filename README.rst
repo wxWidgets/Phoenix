@@ -23,7 +23,7 @@ project and information about how you can help out.
 How to build Phoenix
 --------------------
 
-First of all, review the section below about prerequisites.  
+First of all, review the section below about prerequisites.
 
 All aspects of the Phoenix build are managed through a series of commands
 provided by the build.py script. There is also a setup.py script available
@@ -50,17 +50,27 @@ want to build from a source repository checkout, or need to make changes
 and/or to regenerate some of the generated source files, then please continue
 reading.
 
-Since build.py will, by default, build both wxWidgets and Phoenix you should
-have both source trees checked out from Subverison (or one of the git mirrors
-at github). I find that it works best when the two source trees are siblings
-within the same parent folder, but other configurations can work too. If you
-would rather use an already built and installed wxWidgets then that is
+Building wxWidgets itself
+---------------------------
+
+Since build.py will, by default, build both wxWidgets and Phoenix you need the
+wxWidgets code as well. The gitHub repository is setup to bring in the
+wxWidgets code as a "submodule". After cloning the Phoenix repo, you can bring
+in the wxWidgets source with::
+
+  $ git submodule init
+  $ git submodule update
+
+This will clone the wxWidgets repo into: ``Phoenix/ext/wxWidgets`` Once the
+submodule is updated, the build script should be able to build wxWidgets.
+
+If you would rather use an already built and installed wxWidgets then that is
 possible as well by changing some options, see ``python build.py --help`` for
 details. However be aware that doing so will require a wxWidgets that is
-**very** close to the same age as the Phoenix code, at least for the unreleased
-preview snapshots. In other words, the wxWidgets build should use code from
-the wxWidgets source repository within a few days of when the Phoenix code
-was checked out.
+**very** close to the same age as the Phoenix code, at least for the
+unreleased preview snapshots. In other words, the wxWidgets build should use
+code from the wxWidgets source repository within a few days of when the
+Phoenix code was checked out.
 
 On the other hand, it is probably best to just let Phoenix build and bundle
 wxWidgets. The build tools will by default build wxWidgets in a way that
@@ -72,7 +82,7 @@ system using shared libraries based on the ELF standard. The libraries are
 built in such a way that they are relocatable, meaning that they do not have
 to be in a fixed location on the filesystem in order to be found by the
 wxPython extension modules. This also means that you can do things like use
-``easy_install`` to install an egg in one or more virtual environments, move
+``pip`` to install a wheel in one or more virtual environments, move
 the wx package to a versioned folder, or even move it into your own project
 if desired, all without needing to rebuild the binaries. (Assuming that
 compatible Pythons are being used of course.)
@@ -92,9 +102,9 @@ Important build.py commands
 ---------------------------
 
 The following commands are required to be able to build Phoenix from scratch.
-In other words, from a pristine source tree with none of the generated code 
-present yet. They can be run individually or you can specify all of them on a 
-single command line, in the order given. Once a command has succeded in one run 
+In other words, from a pristine source tree with none of the generated code
+present yet. They can be run individually or you can specify all of them on a
+single command line, in the order given. Once a command has succeded in one run
 of build.py there is no need to run that command again in a later run, unless
 you've changed something which that command has the responsibility to
 process.
@@ -115,7 +125,7 @@ process.
 * **build**: Build both wxWidgets and wxPython. There are additional
   commands if you want to build just one or the other. The results will be
   put in the Phoenix/wx folder, and can be used from there without
-  installation if desired, by setting PYTHONPATH so the Phoenix/wx package 
+  installation if desired, by setting PYTHONPATH so the Phoenix/wx package
   dir is found by Python.
 
 Some other useful commands and options are:
@@ -134,7 +144,7 @@ Some other useful commands and options are:
   extension modules will be built for, such as "3.3". This allows you to run
   build.py with a different Python than what you are building for, which is
   handy for things like buildbots running in a virtualenv for one Python
-  that need to be able to run builds for other versions too. 
+  that need to be able to run builds for other versions too.
 
   If build.py is still not able to find the correct Python given the M.N
   on the command line then you can specify the full path to the python
@@ -167,7 +177,7 @@ Project directory structure
 There are a lot of subfolders in this directory, here is a brief
 explanation to help a newbie find their way around.
 
-* **build**: Intermediate files produced by the build process are stored 
+* **build**: Intermediate files produced by the build process are stored
   here. This folder should not be committed to a source repository.
 
 * **buildtools**: This is a Python package containing modules that are used
@@ -257,7 +267,7 @@ stock Python installation you will also need a copy of Visual Studio 2008
 (for Python2.7 compatibility) or Visual Studio 2010 (for Python 3.x
 support). It should also be possible to build using Mingw32, but there
 will need to be some changes made to the build scripts to support that.
-    
+
 You may also want to get a copy of the MS SDK in order to have newer
 definitions of the Windows API. I typically use 7.0 or 7.1 with Visual
 Studio 2008.
@@ -271,7 +281,7 @@ http://www.microsoft.com/en-us/download/details.aspx?id=44266
 If you want to build Phoenix with debug info then you will need to first
 build a debug version of Python, and then use that Python (python_d.exe) to
 build Phoenix.
-    
+
 **Linux**
 
 On Ubuntu the following development packages and their dependencies
@@ -279,16 +289,16 @@ should be installed in order to build Phoenix. Other debian-like distros
 will probably also have these or similarly named packages available.
 Extrapolate accordingly for other linux distributions or other unixes.
 
-* dpkg-dev 
-* build-essential 
+* dpkg-dev
+* build-essential
 * python2.7-dev     # use appropriate Python version
 * libwebkitgtk-dev
-* libjpeg-dev 
+* libjpeg-dev
 * libtiff-dev
 * libgtk2.0-dev
-* libsdl1.2-dev 
+* libsdl1.2-dev
 * libgstreamer-plugins-base0.10-dev
-* freeglut3 
+* freeglut3
 * freeglut3-dev
 
 **Mac OSX**
@@ -308,7 +318,7 @@ for success. For example, the stock Python 2.7 will try to use "gcc-4.2"
 when building extensions, but newer versions of Xcode may not have that
 command available. I am currently using Xcode 4.6.3, and I have symlinks
 in ``/usr/local/bin`` pointing to the ``/usr/bin/llvm-*-4.2`` executables.
- 
+
 If all else fails it is not too hard to build Python yourself using
 whatever Xcode you have installed, and then use that Python when building
 Phoenix.
