@@ -236,9 +236,20 @@ def run():
         return end - begin;
         """)
 
-
-
-
+    # Fiddle with the docstrings for ParseFormat to make them refect the new
+    # reality. The other Parse*() docs refer the reader to this one, so we
+    # don't have to change all of them.
+    
+    # find the <simplesect kind="return"> node in the last paragraph
+    para = pf1.detailedDoc[-1]
+    elem = para.find("simplesect[@kind='return']")
+    # it has a child paragraph containing the text we need to replace
+    elem[0].text = '-1 if the parse failed, the number of characters parse otherwise.'
+    
+    pf2.briefDoc = "This version of the :meth:`ParseFormat` method works the same, but with missing values filled in from :meth:`Today`."
+    pf3.briefDoc = "This version uses \"%c\" as the format code, which is the same default used by :meth:`Format`."
+    
+    
     
     
     c.addPyMethod('__repr__', '(self)', """\
