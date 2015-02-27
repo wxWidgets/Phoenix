@@ -1541,6 +1541,7 @@ def flattenNode(node, rstrip=True):
     Extract just the text from a node and its children, tossing out any child
     node tags and attributes.
     """
+    # TODO: can we just use ElementTree.tostring for this function?
     if node is None:
         return ""
     if sys.version_info < (3,):
@@ -1559,6 +1560,18 @@ def flattenNode(node, rstrip=True):
     if rstrip:
         text = text.rstrip()
     return text
+
+
+def prettifyNode(elem):
+    """
+    Return a pretty-printed XML string for the Element. Useful for debugging
+    or better understanding of xml trees.
+    """
+    from xml.etree import ElementTree
+    from xml.dom import minidom
+    rough_string = ElementTree.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ")    
 
 
 def appendText(node, text):
@@ -1583,6 +1596,7 @@ def prependText(node, text):
         ele = makeTextElement(text)
         node.insert(0, ele)
         
+    
     
 def makeTextElement(text):
     element = et.Element('para')
