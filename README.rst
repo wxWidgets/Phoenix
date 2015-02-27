@@ -6,6 +6,9 @@ wxPython Project Phoenix
    :align: center
 
 
+Introduction
+------------
+
 Welcome to wxPython's Project Phoenix! This project is a new implementation
 of wxPython focused on improving speed, maintainability and extensibility.
 Just like "Classic" wxPython it wraps the wxWidgets C++ toolkit and provides
@@ -38,30 +41,33 @@ or building an egg.
 Using the build.py script allows for greater control over the build process
 than setup.py does, including commands for performing the various
 code-generation steps. So developers working on Phoenix itself or building
-from a Subversion checkout, instead of just building it from a source
-snapshot, should be using the build.py script. Build.py provides a fairly
-simple command-line interface consisting of commands and options. To see the
-full list run ``python build.py --help``. The most important commands are
-listed below.
+from a Git checkout, instead of just building it from a source snapshot,
+should be using the build.py script. Build.py provides a fairly simple
+command-line interface consisting of commands and options. To see the full
+list run ``python build.py --help``. The most important commands are listed
+below.
 
 If you just want to do a standard setuptools-style build using setup.py and
-using a full source tarball, then you can stop reading at this point. If you
-want to build from a source repository checkout, or need to make changes
+are using a full source tarball, then you can stop reading at this point. If
+you want to build from a source repository checkout, or need to make changes
 and/or to regenerate some of the generated source files, then please continue
 reading.
 
-Building wxWidgets itself
----------------------------
+Building wxWidgets
+------------------
 
-Since build.py will, by default, build both wxWidgets and Phoenix you need the
-wxWidgets code as well. The gitHub repository is setup to bring in the
-wxWidgets code as a "submodule". After cloning the Phoenix repo, you can bring
-in the wxWidgets source with::
+Since build.py will, by default, build both wxWidgets and Phoenix you will
+need the wxWidgets code as well. The source tarballs already include both
+wxWidgets and the Phoenix source code, so if you are getting your copy of the
+source code that way then you are all set. If you are fetching it from GitHub
+you will need to do an additional step. The git repository is set up to bring
+in the wxWidgets code as a git "submodule" so after cloning the Phoenix
+repository, you can get the wxWidgets source with these commands::
 
   $ git submodule init
   $ git submodule update
 
-This will clone the wxWidgets repo into: ``Phoenix/ext/wxWidgets`` Once the
+This will clone the wxWidgets repo into: ``Phoenix/ext/wxWidgets``. Once the
 submodule is updated, the build script should be able to build wxWidgets.
 
 If you would rather use an already built and installed wxWidgets then that is
@@ -70,7 +76,8 @@ details. However be aware that doing so will require a wxWidgets that is
 **very** close to the same age as the Phoenix code, at least for the
 unreleased preview snapshots. In other words, the wxWidgets build should use
 code from the wxWidgets source repository within a few days of when the
-Phoenix code was checked out.
+Phoenix code was checked out. Currently Phoenix is expecting to be used with
+a wxWidgets built from the ``WX_3_0_BRANCH`` git branch.
 
 On the other hand, it is probably best to just let Phoenix build and bundle
 wxWidgets. The build tools will by default build wxWidgets in a way that
@@ -82,19 +89,20 @@ system using shared libraries based on the ELF standard. The libraries are
 built in such a way that they are relocatable, meaning that they do not have
 to be in a fixed location on the filesystem in order to be found by the
 wxPython extension modules. This also means that you can do things like use
-``pip`` to install a wheel in one or more virtual environments, move
+``pip`` to install a wxPython wheel in one or more virtual environments, move
 the wx package to a versioned folder, or even move it into your own project
 if desired, all without needing to rebuild the binaries. (Assuming that
-compatible Pythons are being used of course.)
+compatible Pythons are being used in all cases of course.)
 
-The build phase of the build.py script will copy the results into the wx
-folder in the Phoenix source tree. This will allow you to run and test
-Phoenix directly from the source tree without installing it, if desired. You
-just need to set ``PYTHONPATH`` appropriately, or you can use ``python
-setup.py develop`` to install an .egg-link file in your current Python
-site-packages folder that will point to the folder where you built Phoenix.
-When you are finished testing you can then use the install or one of the
-bdist commands like you normally would for other Python packages.
+The build phase of the build.py script will copy the results of the wxWidgets
+and Phoenix builds into the wx folder in the Phoenix source tree. This will
+allow you to run and test Phoenix directly from the source tree without
+installing it, if desired. You just need to set ``PYTHONPATH`` appropriately,
+or you can use ``python setup.py develop`` to install an .egg-link file in
+your current Python site-packages folder that will point to the folder where
+you built Phoenix. When you are finished testing you can then use the install
+or one of the bdist commands like you normally would for other Python
+packages.
 
 
 
