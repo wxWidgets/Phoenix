@@ -159,48 +159,97 @@ def run():
     c.find('Subtract').findOverload('wxDateSpan', isConst=True).ignore()
     c.find('Subtract').findOverload('wxTimeSpan', isConst=True).ignore()
 
-    # Ignore the end parameter for the parse methods, and provide replacement
-    # implementations that don't need them.
-    c.find('ParseDate.end').ignore()
-    c.find('ParseTime.end').ignore()
-    c.find('ParseDateTime.end').ignore()
-    c.find('ParseRfc822Date.end').ignore()
-    for m in c.find('ParseFormat').all():
+
+    # Ignore the end parameter for the Parse*() methods, and provide
+    # replacement implementations that don't need them. Change them to be
+    # like they were in Classic, returning a -1 on failure, or the number of
+    # characters parsed otherwise.
+    def fixParseMethod(m, code):
+        assert isinstance(m, etgtools.MethodDef)
         m.find('end').ignore()
+        m.type = 'int'
+        m.setCppCode(code)
+        return m
     
-    c.find('ParseDate').setCppCode("""\
+        
+    fixParseMethod(c.find('ParseDate'), """\
+        wxString::const_iterator begin = date->begin();
         wxString::const_iterator end;
-        return self->ParseDate(*date, &end);
-        """)
-    c.find('ParseTime').setCppCode("""\
-        wxString::const_iterator end;
-        return self->ParseTime(*time, &end);
-        """)
-    c.find('ParseDateTime').setCppCode("""\
-        wxString::const_iterator end;
-        return self->ParseDateTime(*datetime, &end);
-        """)        
-    c.find('ParseRfc822Date').setCppCode("""\
-        wxString::const_iterator end;
-        return self->ParseRfc822Date(*date, &end);
+        if (! self->ParseDate(*date, &end))
+            return -1;
+        return end - begin;
         """)
     
+    fixParseMethod(c.find('ParseDateTime'), """\
+        wxString::const_iterator begin = datetime->begin();
+        wxString::const_iterator end;
+        if (! self->ParseDateTime(*datetime, &end))
+            return -1;
+        return end - begin;
+        """)
+    
+    fixParseMethod(c.find('ParseTime'), """\
+        wxString::const_iterator begin = time->begin();
+        wxString::const_iterator end;
+        if (! self->ParseTime(*time, &end))
+            return -1;
+        return end - begin;
+        """)
+    
+    fixParseMethod(c.find('ParseRfc822Date'), """\
+        wxString::const_iterator begin = date->begin();
+        wxString::const_iterator end;
+        if (! self->ParseRfc822Date(*date, &end))
+            return -1;
+        return end - begin;
+        """)
+
+
     pf = c.find('ParseFormat')
-    pf.findOverload('const wxString &date, const wxString &format, const wxDateTime &dateDef, wxString::').setCppCode(
+    pf1 = fixParseMethod(
+        pf.findOverload('const wxString &date, const wxString &format, const wxDateTime &dateDef, wxString::'),
         """\
+        wxString::const_iterator begin = date->begin();
         wxString::const_iterator end;
-        return self->ParseFormat(*date, *format, *dateDef, &end);
+        if (! self->ParseFormat(*date, *format, *dateDef, &end))
+            return -1;
+        return end - begin;
         """)
-    pf.findOverload('const wxString &date, const wxString &format, wxString::').setCppCode(
+        
+    pf2 = fixParseMethod(
+        pf.findOverload('const wxString &date, const wxString &format, wxString::'),
         """\
+        wxString::const_iterator begin = date->begin();
         wxString::const_iterator end;
-        return self->ParseFormat(*date, *format, &end);
+        if (! self->ParseFormat(*date, *format, &end))
+            return -1;
+        return end - begin;
         """)
-    pf.findOverload('const wxString &date, wxString::').setCppCode(
+
+    pf3 = fixParseMethod(
+        pf.findOverload('const wxString &date, wxString::'),
         """\
+        wxString::const_iterator begin = date->begin();
         wxString::const_iterator end;
-        return self->ParseFormat(*date, &end);
+        if (! self->ParseFormat(*date, &end))
+            return -1;
+        return end - begin;
         """)
+
+    # Fiddle with the docstrings for ParseFormat to make them refect the new
+    # reality. The other Parse*() docs refer the reader to this one, so we
+    # don't have to change all of them.
+    
+    # find the <simplesect kind="return"> node in the last paragraph
+    para = pf1.detailedDoc[-1]
+    elem = para.find("simplesect[@kind='return']")
+    # it has a child paragraph containing the text we need to replace
+    elem[0].text = '-1 if the parse failed, the number of characters parse otherwise.'
+    
+    pf2.briefDoc = "This version of the :meth:`ParseFormat` method works the same, but with missing values filled in from :meth:`Today`."
+    pf3.briefDoc = "This version uses \"%c\" as the format code, which is the same default used by :meth:`Format`."
+    
+    
     
     
     c.addPyMethod('__repr__', '(self)', """\

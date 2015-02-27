@@ -140,8 +140,93 @@ class datetime_Tests(wtc.WidgetTestCase):
         d2 = wx.pydate2wxdate(pd)
         self.assertTrue(isinstance(pd, datetime.datetime))
         self.assertEqual(d1, d2)
+
         
-                                   
+    def test_datetimeParseDate1(self):        
+        d = wx.DateTime()
+        val = d.ParseDate('bogus')
+        self.assertEqual(val, -1)
+
+    def test_datetimeParseDate2(self):        
+        d = wx.DateTime()
+        val = d.ParseDate('10/25/2015')
+        self.assertEqual(val, 10)
+        self.assertEqual(d.year, 2015)
+        self.assertEqual(d.month, wx.DateTime.Oct)
+        self.assertEqual(d.day, 25)
+        
+    def test_datetimeParseDate3(self):        
+        d = wx.DateTime()
+        val = d.ParseDate('10/25/2015   non-date text')
+        self.assertEqual(val, 13)
+
+
+    def test_datetimeParseDateTime1(self):        
+        d = wx.DateTime()
+        val = d.ParseDateTime('bogus')
+        self.assertEqual(val, -1)
+
+    def test_datetimeParseDateTime2(self):        
+        d = wx.DateTime()
+        val = d.ParseDateTime('10/25/2015 12:25')
+        self.assertEqual(val, 16)
+        self.assertEqual(d.year, 2015)
+        self.assertEqual(d.month, wx.DateTime.Oct)
+        self.assertEqual(d.day, 25)
+        self.assertEqual(d.hour, 12)
+        self.assertEqual(d.minute, 25)
+
+    def test_datetimeParseDateTime3(self):        
+        d = wx.DateTime()
+        val = d.ParseDateTime('10/25/2015 12:25 non-date text')
+        self.assertEqual(val, 16)
+
+
+    def test_datetimeParseTime1(self):        
+        d = wx.DateTime()
+        val = d.ParseTime('12:25')
+        self.assertEqual(val, 5)
+        self.assertEqual(d.hour, 12)
+        self.assertEqual(d.minute, 25)
+
+
+    def test_datetimeParseRfc822Date(self):        
+        d = wx.DateTime()
+        val = d.ParseRfc822Date('Wed, 25 Feb 2015 13:34:45 -0800')
+        self.assertEqual(val, 31)
+        self.assertEqual(d.hour, 13)
+        self.assertEqual(d.minute, 34)
+
+
+
+    def test_datetimeParseFormat1(self):
+        d = wx.DateTime()
+        defDate = wx.DateTime.FromHMS(1,2,3,4)
+        val = d.ParseFormat('2015-10-11', '%Y-%m-%d', defDate)
+        self.assertEqual(val, 10)
+        self.assertEqual(d.year, 2015)
+        self.assertEqual(d.month, wx.DateTime.Oct)
+        self.assertEqual(d.day, 11)
+        self.assertEqual(d.hour, 1)
+        self.assertEqual(d.minute, 2)
+        self.assertEqual(d.second, 3)
+        self.assertEqual(d.millisecond, 4)
+
+
+    def test_datetimeParseFormat2(self):
+        d = wx.DateTime()
+        val = d.ParseFormat('2015-10-11', '%Y-%m-%d')
+        self.assertEqual(val, 10)
+        self.assertEqual(d.year, 2015)
+        self.assertEqual(d.month, wx.DateTime.Oct)
+        self.assertEqual(d.day, 11)
+        
+        
+        
+        
+
+
+
 #---------------------------------------------------------------------------
 
 
