@@ -244,7 +244,7 @@ def run():
     para = pf1.detailedDoc[-1]
     elem = para.find("simplesect[@kind='return']")
     # it has a child paragraph containing the text we need to replace
-    elem[0].text = '-1 if the parse failed, the number of characters parse otherwise.'
+    elem[0].text = '-1 if the parse failed, the number of characters parsed otherwise.'
     
     pf2.briefDoc = "This version of the :meth:`ParseFormat` method works the same, but with missing values filled in from :meth:`Today`."
     pf3.briefDoc = "This version uses \"%c\" as the format code, which is the same default used by :meth:`Format`."
