@@ -116,8 +116,8 @@ class InheritanceDiagram(object):
         'shape': 'box',
         'fontsize': 10,
         'height': 0.3,
-        'fontname': 'Vera Sans, DejaVu Sans, Liberation Sans, '
-                    'Arial, Helvetica, sans',
+        'fontname': '"Vera Sans, DejaVu Sans, Liberation Sans, '
+                    'Arial, Helvetica, sans"',
         'style': '"setlinewidth(0.5)"',
     }
     default_edge_attrs = {
@@ -142,10 +142,10 @@ class InheritanceDiagram(object):
         """
 
         inheritance_graph_attrs = dict(fontsize=9, ratio='auto', size='""', rankdir="TB")
-        inheritance_node_attrs = {"align": "center", 'shape': 'box',
+        inheritance_node_attrs = {'align': 'center', 'shape': 'box',
                                   'fontsize': 10, 'height': 0.3,
-                                  'fontname': 'Vera Sans, DejaVu Sans, Liberation Sans, '
-                                  'Arial, Helvetica, sans', 'style': '"setlinewidth(0.5)"',
+                                  'fontname': '"Vera Sans, DejaVu Sans, Liberation Sans, '
+                                  'Arial, Helvetica, sans"', 'style': '"setlinewidth(0.5)"',
                                   'labelloc': 'c', 'fontcolor': 'grey45'}
 
         inheritance_edge_attrs = {'arrowsize': 0.5, 
@@ -182,13 +182,13 @@ class InheritanceDiagram(object):
 
             if class_summary is None:
                 # Phoenix base classes, assume there is always a link
-                this_node_attrs['URL'] = '"%s.html"'%fullname
+                this_node_attrs['URL'] = '"%s.html"' % fullname
             else:
                 if 'wx.' in fullname:
                     fullname = fullname[3:]
                 
                 if fullname in class_summary:
-                    this_node_attrs['URL'] = '"%s.html"'%fullname
+                    this_node_attrs['URL'] = '"%s.html"' % fullname
                 else:
                     full_page = FormatExternalLink(fullname, inheritance=True)
                     if full_page:
@@ -270,7 +270,6 @@ class InheritanceDiagram(object):
         dot_args.extend(['-Tcmapx', '-o' + mapfile])
 
         try:
-
             p = Popen(dot_args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
 
         except OSError as err:
@@ -278,13 +277,13 @@ class InheritanceDiagram(object):
             if err.errno != ENOENT:   # No such file or directory
                 raise
 
-            print('\nERROR: Graphviz command `dot` cannot be run (needed for Graphviz output), check your ``PATH`` setting')
+            print('\nERROR: Graphviz command `dot` cannot be run (needed for Graphviz output), check \
+                    if `Graphiz` is present on your system and check your ``PATH`` setting')
 
         try:
             # Graphviz may close standard input when an error occurs,
             # resulting in a broken pipe on communicate()
             stdout, stderr = p.communicate(code)
-
         except OSError as err:
 
             # in this case, read the standard output and standard error streams
