@@ -677,6 +677,16 @@ class AquaButton(wx.Control):
         return wx.Size(retWidth+constant, retHeight+constant)
 
 
+    def DoEnable(self, enable):
+        """
+        Overridden base class virtual.
+        
+        Need to Refresh otherwise Enable state change done from a 
+        `wx.EVT_UPDATE_UI` will not show.
+        """
+        self.Refresh() 
+
+
     def SetBackgroundColour(self, colour):
         """
         Sets the :class:`AquaButton` background colour.
