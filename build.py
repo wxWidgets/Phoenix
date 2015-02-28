@@ -68,11 +68,11 @@ sipMD5 = {
 wafCurrentVersion = '1.7.15-p1'
 wafMD5 = 'e44003373c965f4221bbdc4c9b846128'
 
-doxygenCurrentVersion = '1.8.2'
+doxygenCurrentVersion = '1.8.8'
 doxygenMD5 = {
-    'darwin' : '96a3012d97893f4e05387cda544de0e8',
-    'win32'  : '71f97ebaa87171c824a7742de5bf3381', 
-    'linux'  : '6fca3d2016f8019a7737716eee4d5377', 
+    'darwin' : '71c590e6cab47100f23919a2696cc7fd',
+    'win32'  : 'a3dcff227458e423c132f16f57e26510', 
+    'linux'  : '083b3d8f614b538696041c7364e0f334', 
 }
 
 # And the location where they can be downloaded from

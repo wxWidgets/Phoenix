@@ -582,7 +582,8 @@ class ParameterList(Node):
         name = xml_item.name or xml_item.pyName
         name = RemoveWxPrefix(name)
 
-        is_overload = self.GetTopLevelParent().is_overload
+        parent = self.GetTopLevelParent()
+        is_overload = parent.is_overload if parent else False
         
         if xml_item.overloads and not is_overload:
             return
