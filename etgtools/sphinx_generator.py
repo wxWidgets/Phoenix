@@ -24,12 +24,9 @@ import textwrap
 import glob
 
 if sys.version_info < (3, ):
-
     from StringIO import StringIO
     string_base = basestring
-
 else:
-    
     from io import StringIO
     string_base = str
     
@@ -1959,7 +1956,7 @@ class XMLDocString(object):
         else:
             raise Exception('Unhandled docstring kind for %s'%xml_item.__class__.__name__)
 
-        if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, basestring):
+        if hasattr(xml_item, 'deprecated') and xml_item.deprecated and isinstance(xml_item.deprecated, string_base):
             element = et.Element('deprecated', kind='deprecated')
             element.text = VERSION
             
@@ -2609,7 +2606,7 @@ class XMLDocString(object):
 
         if hasattr(method, 'deprecated') and method.deprecated:
             text = method.deprecated
-            if isinstance(text, basestring):
+            if isinstance(text, string_base):
                 text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, text.replace('\n', ' '))
                 stream.write(text)
 
