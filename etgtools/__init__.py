@@ -27,6 +27,8 @@ cfg = Config(noWxConfig=True)
 phoenixRoot = cfg.ROOT_DIR
 XMLSRC = cfg.DOXY_XML_DIR
 
+class DoxyXMLError(Exception):
+    pass
 
 #---------------------------------------------------------------------------
 
@@ -42,15 +44,17 @@ def parseDoxyXML(module, class_or_filename_list):
     Doxygen XML output folder.
     """
     
-    def _classToDoxyName(name, base='class'):
+    def _classToDoxyName(name, attempts, base='class'):
         import string
         filename = base
         for c in name:
             if c in string.ascii_uppercase:
                 filename += '_' + c.lower()
             else:
-                filename += c                
-        return os.path.join(XMLSRC, filename) + '.xml'
+                filename += c          
+        filename = os.path.join(XMLSRC, filename) + '.xml'
+        attempts.append(filename)
+        return filename
     
     def _includeToDoxyName(name):
         name = os.path.basename(name)
@@ -63,12 +67,20 @@ def parseDoxyXML(module, class_or_filename_list):
             return os.path.join(XMLSRC, name) + '.xml', name + '.xml'
         
     for class_or_filename in class_or_filename_list:
-        pathname = _classToDoxyName(class_or_filename)
+        attempts = []
+        pathname = _classToDoxyName(class_or_filename, attempts)
 
         if not os.path.exists(pathname):
-            pathname = _classToDoxyName(class_or_filename, 'struct')
+            pathname = _classToDoxyName(class_or_filename, attempts, 'struct')
             if not os.path.exists(pathname):
                 pathname = os.path.join(XMLSRC, class_or_filename)
+                attempts.append(pathname)
+                if not os.path.exists(pathname):
+                    msg = "Unable to find xml file for ITEM: %s" % class_or_filename
+                    print(msg)
+                    print("Tried: %s" % ('\n       '.join(attempts)))
+                    raise DoxyXMLError(msg)
+                
         if verbose():
             print("Loading %s..." % pathname)
         _filesparsed.add(pathname)
