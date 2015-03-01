@@ -13,6 +13,7 @@ class lib_agw_persist_persistencemanager_Tests(wtc.WidgetTestCase):
     def test_lib_agw_persist_persistencemanagerCtor(self):
 
         self._persistMgr = PM.PersistenceManager.Get()
+        self._persistMgr.SetManagerStyle(PM.PM_SAVE_RESTORE_AUI_PERSPECTIVES)
         
         dirName, fileName = os.path.split(os.path.abspath(__file__))
         _configFile1 = os.path.join(dirName, "PersistTest1")
@@ -20,6 +21,9 @@ class lib_agw_persist_persistencemanager_Tests(wtc.WidgetTestCase):
         
         # give the frame a Name for below
         self.frame.SetName('PersistTestFrame')
+        cb = wx.CheckBox(self.frame, name='PersistCheck')
+        cb.persistValue = True
+        cb.SetValue(False)
         
         self._persistMgr.RegisterAndRestoreAll(self.frame)
         
@@ -40,6 +44,26 @@ class lib_agw_persist_persistencemanager_Tests(wtc.WidgetTestCase):
         self._persistMgr.RegisterAndRestoreAll(self.frame)
                 
         self.assertEqual(self._persistMgr.HasRestored(), True, "Persistence should be there, as it was created in CTOR test.")
+
+    def test_lib_agw_persist_persistencemanagerPersistValue(self):
+
+        self._persistMgr = PM.PersistenceManager.Get()
+        self._persistMgr.SetManagerStyle(PM.PM_SAVE_RESTORE_AUI_PERSPECTIVES)        
+        
+        dirName, fileName = os.path.split(os.path.abspath(__file__))
+        _configFile1 = os.path.join(dirName, "PersistTest1")
+        self._persistMgr.SetPersistenceFile(_configFile1)
+        
+        # give the frame a Name for below
+        self.frame.SetName('PersistTestFrame')
+        cb = wx.CheckBox(self.frame, name='PersistCheck')
+        cb.persistValue = True 
+        
+        self._persistMgr.RegisterAndRestoreAll(self.frame)
+                
+        self.assertEqual(self._persistMgr.HasRestored(), True, "Persistence should be there, as it was created in CTOR test.")
+        self.assertEqual(cb.GetValue(), False, "Should be False as set in CTOR test")
+        
 
     def test_lib_agw_persist_persistencemanagerConstantsExist(self):
         # PersistenceManager styles

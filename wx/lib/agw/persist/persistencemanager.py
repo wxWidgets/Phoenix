@@ -245,6 +245,10 @@ class PersistenceManager(object):
           ``PM_DEFAULT_STYLE``                     Same as ``PM_SAVE_RESTORE_AUI_PERSPECTIVES``
           ======================================== ==================================
 
+        :note: An individual window can also set the variable `persistValue` to
+         indicate that its value should be saved/restored even so the style
+         `PM_PERSIST_CONTROL_VALUE` is not set.
+
         :note: UI settings are stored as dictionaries key <=> tuple: the tuple value
          contains two items. The first is the value *type* (i.e., float, int, bool etc...)
          while the second is the actual key value.
@@ -734,7 +738,10 @@ class PersistenceManager(object):
 
     def SaveCtrlValue(self, obj, keyName, value):
         """
-        Check if we persist the widget value, if so pass it to :meth:`~PersistenceManager.DoSaveValue`.
+        Check if we persist the widget value, if so pass it to :meth:`~PersistenceManager.DoSaveValue`,
+        this method checks the style `PM_PERSIST_CONTROL_VALUE` and if it is not
+        set it will also check the variable `persistValue` of the individual
+        window.
 
         :param `obj`: an instance of :class:`PersistentObject`;
         :param `keyName`: a string specifying the key name;
@@ -742,6 +749,9 @@ class PersistenceManager(object):
         """
 
         if self._style & PM_PERSIST_CONTROL_VALUE:
+            return self.DoSaveValue(obj, keyName, value)
+        elif obj._window.persistValue:
+            # an individual control wants to be saved
             return self.DoSaveValue(obj, keyName, value)
 
 
@@ -784,13 +794,19 @@ class PersistenceManager(object):
 
     def RestoreCtrlValue(self, obj, keyName):
         """
-        Check if we persist the widget value, if so pass it to :meth:`~PersistenceManager.DoRestoreValue`.
-
+        Check if we should restore the widget value, if so pass it to :meth:`~PersistenceManager.DoRestoreValue`,
+        this method checks the style `PM_PERSIST_CONTROL_VALUE` and if if it is
+        not set it will also check the variable `persistValue` of the individual
+        window.
+ 
         :param `obj`: an instance of :class:`PersistentObject`;
         :param `keyName`: a string specifying the key name.
         """
 
         if self._style & PM_PERSIST_CONTROL_VALUE:
+            return self.DoRestoreValue(obj, keyName)
+        elif obj._window.persistValue:
+            # an individual control wants to be saved
             return self.DoRestoreValue(obj, keyName)
 
 
