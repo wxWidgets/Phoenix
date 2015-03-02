@@ -125,6 +125,8 @@ class AbstractHandler(object):
         object.__init__(self)
         self._pObject = pObject
         self._window = pObject.GetWindow()
+        if not hasattr(self._window, 'persistValue'):
+            self._window.persistValue = None        
 
         # need to move the import to here, otherwise we error in Python 3
         from . import persistencemanager as PM
