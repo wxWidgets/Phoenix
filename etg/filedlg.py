@@ -40,6 +40,7 @@ def run():
     # TODO: add this back. We'll need a way to pass it a callable that can be
     # called from a C ExtraControlCreatorFunction function
     c.find('SetExtraControlCreator').ignore()
+    c.find('ExtraControlCreatorFunction').ignore()
 
 
     c.find('GetFilenames').ignore()
