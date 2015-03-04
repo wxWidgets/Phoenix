@@ -3132,6 +3132,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             extractors.EnumDef          : (self.generateEnum,       0),
             extractors.PyCodeDef        : (self.generatePyCode,     3),
             extractors.WigCode          : (self.generateWigCode,    4),
+            extractors.TypedefDef       : (lambda a: None,          5),
             }
 
         # Build a list to check if there are any properties

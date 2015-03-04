@@ -205,6 +205,7 @@ class TypedefDef(VariableDef):
         self.noTypeName = False
         self.docAsClass = False
         self.bases = []
+        self.protection = 'public'
         self.__dict__.update(**kw)
         if element is not None:
             self.extract(element)
@@ -725,8 +726,8 @@ class ClassDef(BaseDef):
                 e = EnumDef(node, [self])
                 self.items.append(e)
             elif kind == 'typedef':
-                # callback function prototype, see wx/filedlg.h for an instance of this
-                continue
+                t = TypedefDef(node)
+                self.items.append(t)
             elif kind == 'friend':
                 continue
             else:

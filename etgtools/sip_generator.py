@@ -273,11 +273,11 @@ from .%s import *
         
         
     #-----------------------------------------------------------------------
-    def generateTypedef(self, typedef, stream):
+    def generateTypedef(self, typedef, stream, indent=''):
         assert isinstance(typedef, extractors.TypedefDef)
         if typedef.ignored:
             return
-        stream.write('typedef %s %s' % (typedef.type, typedef.name))
+        stream.write('%stypedef %s %s' % (indent, typedef.type, typedef.name))
         stream.write('%s;\n\n' % self.annotate(typedef))
         
         
@@ -520,6 +520,7 @@ from .%s import *
         
     def dispatchClassItem(self, klass, item, stream, indent):
         dispatch = {
+            extractors.TypedefDef       : self.generateTypedef,
             extractors.MemberVarDef     : self.generateMemberVar,
             extractors.PropertyDef      : self.generateProperty,
             extractors.PyPropertyDef    : self.generatePyProperty,

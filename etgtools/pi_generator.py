@@ -390,6 +390,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
         dispatch = {
             extractors.MemberVarDef     : self.generateMemberVar,
+            extractors.TypedefDef       : lambda a,b,c: None,
             extractors.PropertyDef      : self.generateProperty,
             extractors.PyPropertyDef    : self.generatePyProperty,
             extractors.MethodDef        : self.generateMethod,
