@@ -17,11 +17,15 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxPGProperty',
-           'wxPGCell',
-           'wxPGChoices',
-           'wxPGPaintData',
+ITEMS  = [ 'wxPGPaintData',
            'wxPGCellRenderer',
+           'wxPGDefaultRenderer',
+           'wxPGCellData',
+           'wxPGProperty',
+           'wxPGCell',
+           'wxPGChoiceEntry',
+           'wxPGChoicesData',
+           'wxPGChoices',
            ]    
     
 #---------------------------------------------------------------------------
@@ -37,6 +41,16 @@ def run():
 
     c = module.find('wxPGProperty')
     assert isinstance(c, etgtools.ClassDef)
+    tools.ignoreConstOverloads(c)
+
+
+    c = module.find('wxPGChoicesData')
+    tools.ignoreConstOverloads(c)
+    
+
+    c = module.find('wxPGChoices')
+    c.find('wxPGChoices').findOverload('wxChar **').ignore()
+    tools.ignoreConstOverloads(c)
     
     
     #-----------------------------------------------------------------

@@ -17,7 +17,15 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxPGEditor',
+ITEMS  = [ 'wxPGWindowList',
+           'wxPGEditor',
+           'wxPGTextCtrlEditor',
+           'wxPGChoiceEditor',
+           'wxPGComboBoxEditor',
+           'wxPGChoiceAndButtonEditor',
+           'wxPGTextCtrlAndButtonEditor',
+           'wxPGCheckBoxEditor',           
+           'wxPGEditorDialogAdapter',
            'wxPGMultiButton',
            ]    
     
@@ -32,8 +40,10 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
     
-    #c = module.find('')
-    #assert isinstance(c, etgtools.ClassDef)
+    c = module.find('wxPGMultiButton')
+    assert isinstance(c, etgtools.ClassDef)
+    tools.fixWindowClass(c)
+   
     
     
     #-----------------------------------------------------------------

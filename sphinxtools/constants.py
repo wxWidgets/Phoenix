@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2010-2016 by Total Control Software
+# Copyright:   (c) 2013 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -84,6 +84,7 @@ MODULENAME_REPLACE = {'_core'    : 'wx.',
                       '_media'   : 'wx.media.',
                       '_msw'     : 'wx.msw.',
                       '_ribbon'  : 'wx.ribbon.',
+                      '_propgrid': 'wx.propgrid.',
                       }
 
 
