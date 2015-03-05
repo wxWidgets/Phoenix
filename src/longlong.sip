@@ -9,13 +9,15 @@
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
+typedef long long wxLongLong_t;
+typedef unsigned long long wxULongLong_t;
 
 %MappedType wxLongLong {
 
     %TypeHeaderCode
     #include <wx/longlong.h>
-    %End  
-  
+    %End
+
     %ConvertToTypeCode
         // Code to test a PyObject for compatibility
         if (!sipIsErr) {
@@ -33,7 +35,7 @@
         return sipGetState(sipTransferObj);
 
     %End
-    
+
     %ConvertFromTypeCode
         #if wxUSE_LONGLONG_NATIVE
             return PyLong_FromLongLong(sipCpp->GetValue());
