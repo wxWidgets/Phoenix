@@ -21,8 +21,11 @@ ITEMS  = [ 'wxPGPaintData',
            'wxPGCellRenderer',
            'wxPGDefaultRenderer',
            'wxPGCellData',
-           'wxPGProperty',
            'wxPGCell',
+           'wxPGAttributeStorage',
+
+           'wxPGProperty',
+           'wxPropertyCategory',
            'wxPGChoiceEntry',
            'wxPGChoicesData',
            'wxPGChoices',
@@ -39,8 +42,16 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxPGProperty')
+    c = module.find('wxPGAttributeStorage')
     assert isinstance(c, etgtools.ClassDef)
+    
+    # TODO: Add methods to add a Python iterator using these methods
+    c.find('StartIteration').ignore()
+    c.find('GetNext').ignore()
+    c.find('const_iterator').ignore()
+
+
+    c = module.find('wxPGProperty')
     tools.ignoreConstOverloads(c)
 
 
