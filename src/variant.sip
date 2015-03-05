@@ -14,30 +14,78 @@
 %MappedType wxVariant
 {
     %ConvertToTypeCode
-        // Code to test a PyObject for compatibility.  
+        // Code to test a PyObject for compatibility.
         if (!sipIsErr) {
-            // Any type should work since we'll just use the PyObject directly 
+            // Any type should work since we'll just use the PyObject directly
             // if the type is not one that is explicitly supported.
             return TRUE;
         }
-        
+
         // Code to create a new wxVariant from the PyObject
-        wxVariant* value =  new wxVariant(wxVariant_in_helper(sipPy));            
+        wxVariant* value =  new wxVariant(wxVariant_in_helper(sipPy));
         *sipCppPtr = value;
         return sipGetState(sipTransferObj);
     %End
 
-         
+
     %ConvertFromTypeCode
         // Code to convert a wxVariant to a PyObject.
         if (sipCpp == NULL) {
             return Py_None;
-        } else {        
+        } else {
             return wxVariant_out_helper(*sipCpp);
         }
     %End
-    
 };
+
+
+
+
+// Add a typemap for wxVariantList
+%MappedType wxVariantList
+{
+    %ConvertToTypeCode
+        // Code to test a PyObject for compatibility.
+        if (!sipIsErr) {
+            // Any type sequence type is okay.
+            int success = PySequence_Check(sipPy);
+            if (!success)
+                PyErr_SetString(PyExc_TypeError, "Sequence type expected.");
+            return success;
+        }
+
+        // Code to create a new wxVariantList from the PyObject sequence
+        wxVariantList* value =  new wxVariantList();
+        Py_ssize_t len = PySequence_Length(sipPy);
+        Py_ssize_t idx = 0;
+        while (idx < len) {
+            PyObject* item = PySequence_GetItem(sipPy, idx);
+            value->Append(new wxVariant(wxVariant_in_helper(item)));
+            Py_DECREF(item);
+        }
+        *sipCppPtr = value;
+        return sipGetState(sipTransferObj);
+    %End
+
+
+    %ConvertFromTypeCode
+        // Code to convert a wxVariantList to a Python list.
+        if (sipCpp == NULL) {
+            return Py_None;
+        } else {
+            size_t idx = 0;
+            PyObject* value = PyList_New(0);
+            for (idx=0; idx < sipCpp->GetCount(); idx++) {
+                PyObject* item = wxVariant_out_helper(sipCpp->Item(idx));
+                PyList_Append(value, item);
+            }
+            return value;
+        }
+    %End
+};
+
+
+
 
 // Used just for unittesting the MappedType code, it can be removed later
 %ModuleCode
