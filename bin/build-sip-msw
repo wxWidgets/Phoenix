@@ -36,7 +36,7 @@ echo "The MD5:"
 $PYTHON mymd5.py sip-$SIPVER-win32.exe
 echo ""
 echo "If ready to upload then do these commands now:"
-echo "    bzip2 $MYBINDIR/sip-$SIPVER-win32.exe"
+echo "    bzip2 -9 $MYBINDIR/sip-$SIPVER-win32.exe"
 echo "    scp $MYBINDIR/sip-$SIPVER-win32.exe.bz2 robind@riobu.com:/home/robind/domains/wxpython.org/htdocs/Phoenix/tools"
 
 

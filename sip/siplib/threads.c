@@ -133,22 +133,6 @@ PyObject *sipWrapSimpleInstance(void *cppPtr, const sipTypeDef *td,
 
 
 /*
- * This is called from a newly created thread to initialise some thread local
- * storage.
- */
-#if SIP_API_MAJOR_NR != 9
-#error Remove deprecated sip_api_start_thread().
-#endif
-void sip_api_start_thread(void)
-{
-    /*
-     * The thread local storage allocation now happens when it is needed, so
-     * this is now redundant.
-     */
-}
-
-
-/*
  * Handle the termination of a thread.
  */
 void sip_api_end_thread(void)

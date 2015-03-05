@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040e04
-#define SIP_VERSION_STR     "4.14.4"
+#define SIP_VERSION         0x040e07
+#define SIP_VERSION_STR     "4.14.7"
 
 
 /*
@@ -67,6 +67,11 @@ extern "C" {
  * to 0.
  *
  * History:
+ *
+ * 10.0 Added sip_api_set_destroy_on_exit().
+ *      Added sip_api_enable_autoconversion().
+ *      Removed sip_api_call_error_handler_old().
+ *      Removed sip_api_start_thread().
  *
  * 9.2  Added sip_gilstate_t and SIP_RELEASE_GIL to the public API.
  *      Renamed sip_api_call_error_handler() to
@@ -190,8 +195,8 @@ extern "C" {
  *
  * 0.0  Original version.
  */
-#define SIP_API_MAJOR_NR    9
-#define SIP_API_MINOR_NR    2
+#define SIP_API_MAJOR_NR    10
+#define SIP_API_MINOR_NR    0
 
 
 /* The name of the sip module. */
@@ -350,7 +355,6 @@ typedef int (*sipConvertToFunc)(PyObject *, void **, int *, PyObject *);
 typedef PyObject *(*sipConvertFromFunc)(void *, PyObject *);
 typedef void (*sipVirtErrorHandlerFunc)(struct _sipSimpleWrapper *,
         sip_gilstate_t);
-typedef void (*sipVirtErrorHandlerFuncOld)(struct _sipSimpleWrapper *);
 typedef int (*sipVirtHandlerFunc)(sip_gilstate_t, sipVirtErrorHandlerFunc,
         struct _sipSimpleWrapper *, PyObject *, ...);
 typedef void (*sipAssignFunc)(void *, SIP_SSIZE_T, const void *);
@@ -857,6 +861,9 @@ typedef struct _sipClassTypeDef {
 
     /* The optional convert to function. */
     sipConvertToFunc ctd_cto;
+
+    /* The optional convert from function. */
+    sipConvertFromFunc ctd_cfrom;
 
     /* The next namespace extender. */
     struct _sipClassTypeDef *ctd_nsextender;
@@ -1380,6 +1387,8 @@ typedef struct _sipAPIDef {
     int (*api_is_api_enabled)(const char *name, int from, int to);
     sipErrorState (*api_bad_callable_arg)(int arg_nr, PyObject *arg);
     void *(*api_get_address)(struct _sipSimpleWrapper *w);
+    void (*api_set_destroy_on_exit)(int);
+    int (*api_enable_autoconversion)(const sipTypeDef *td, int enable);
 
     /*
      * The following are deprecated parts of the public API.
@@ -1426,7 +1435,6 @@ typedef struct _sipAPIDef {
     PyObject *(*api_is_py_method)(sip_gilstate_t *gil, char *pymc,
             sipSimpleWrapper *sipSelf, const char *cname, const char *mname);
     void (*api_call_hook)(const char *hookname);
-    void (*api_start_thread)(void);
     void (*api_end_thread)(void);
     void (*api_raise_unknown_exception)(void);
     void (*api_raise_type_exception)(const sipTypeDef *td, void *ptr);
@@ -1461,8 +1469,6 @@ typedef struct _sipAPIDef {
     int (*api_parse_result_ex)(sip_gilstate_t, sipVirtErrorHandlerFunc,
             sipSimpleWrapper *, PyObject *method, PyObject *res,
             const char *fmt, ...);
-    void (*api_call_error_handler_old)(sipVirtErrorHandlerFuncOld,
-            sipSimpleWrapper *);
     void (*api_call_error_handler)(sipVirtErrorHandlerFunc,
             sipSimpleWrapper *, sip_gilstate_t);
 } sipAPIDef;
