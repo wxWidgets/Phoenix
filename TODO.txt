@@ -51,7 +51,7 @@ Checklist for all new etg files
       every non-abstract class can be constructed, and should also
       have tests for things that are added or tweaked in the etg
       script.  Other things that needed no tweaks are ok to be left
-      untested for the time being, although porting over some of the 
+      untested for the time being, although porting over some of the
       the old unitest code from Classic would also be a good idea, but
       priority should be given to testing those things that had to be
       tweaked or added.
@@ -89,7 +89,7 @@ Exceptions
 WAF Build
 ---------
     * Add support for using the cygwin and mingw32 compilers.
-    
+
 
 
 
@@ -102,12 +102,12 @@ other dev stuff
     created/used that should not be done before there is an application
     object.
 
-  * Locate and/or add items for the various functions and things in Classic's 
+  * Locate and/or add items for the various functions and things in Classic's
     _functions.i module.
 
-  * Add ETG scripts for these items in _core:      
-      
-      * PseudoDC 
+  * Add ETG scripts for these items in _core:
+
+      * PseudoDC
       * msgout
       * quantize
       * dialup  ??
@@ -115,9 +115,9 @@ other dev stuff
       * docview ??
       * palette ??
       * persist ??
-  
+
   * Add a _msw module that will contain classes and such that are only
-    available in the Windows port:  
+    available in the Windows port:
 
       * axbase  (ActiveX.)
       * wxCHMHelpController
@@ -126,26 +126,28 @@ other dev stuff
       * Any others?
 
   * Add _propdlg module
-  
+
   * Add _aui module ??  (or go with only agw aui?)
-  
+
   * Add _ribbon module
-  
+
+  * Add _propgrid (in progress)
+
   * Add _media module
-  
+
   * Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py) to StyledTextCtrl
-  
+
   * Reimplement the classes in the valgen, valnum and valtext headers as
-    Python code, and make them visible in the core wx namespace?  
-    
-  
+    Python code, and make them visible in the core wx namespace?
+
+
   * Should the demo/version.py file be maintained in the source repository?
-    Or just let it always be generated like wx/__version__.py?  
-    
-  * Should demo/Main.py ignore anything in the version strings after the '-' 
+    Or just let it always be generated like wx/__version__.py?
+
+  * Should demo/Main.py ignore anything in the version strings after the '-'
     when comparing?
-  
-  
+
+
 
 
   * Potential reference count issue with wxGridCellCoordsArray?  Code
@@ -164,8 +166,8 @@ other dev stuff
      default might be best... See ModuleDef.addGlobalStr if I change my mind.
 
    * If a function or method has overloads but all but one all ignored then the doc
-     generator should not use the "*args, **kw" form of output and just use the 
-     args string of the remaining function or method definition like for those 
+     generator should not use the "*args, **kw" form of output and just use the
+     args string of the remaining function or method definition like for those
      that do not have overloads.  For example, see Window.GetClientSize
 
    * Check gui_scripts entry points.
@@ -173,14 +175,14 @@ other dev stuff
    * Add build support for gtk3
 
    * wx.Window.DoEraseBackground?
-   
+
    * The sphinxtools are too agressive at ignoring content beyond a #. If the hash
      happens to be inside a string then syntax related errors can happen.  For example:
-  
+
           def SetColors(self, pen='black', fill='#A0A0A0', fill2='#E0E0E0'):
               ...
-	  
-	  
+
+
     * Add tests and/or demo for DnD in DataViewCtrl. Since the DnD is done
       internaly and the DataViewEvent is used for passing the data objects
       around we may need to do something to help convert the raw data to python
