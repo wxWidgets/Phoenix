@@ -272,11 +272,16 @@ def run():
     c.find('SetClientObject').ignore()
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
-    
-    # The only virtual we care about overriding is ProcessEvent, ignore the rest
+
+    # We only care about overriding a few virtuals, ignore the rest.
     tools.removeVirtuals(c)
     c.find('ProcessEvent').isVirtual = True
-           
+    c.find('TryBefore').isVirtual = True
+    c.find('TryAfter').isVirtual = True
+    c.find('TryBefore').ignore(False)
+    c.find('TryAfter').ignore(False)
+
+
     # Release the GIL for potentially blocking or long-running functions
     c.find('ProcessEvent').releaseGIL()
     c.find('ProcessEventLocally').releaseGIL()
