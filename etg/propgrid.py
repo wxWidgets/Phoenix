@@ -48,6 +48,12 @@ def run():
     module.find('wxPGSortCallback').ignore()
 
 
+    # See note in propgridiface.py
+    for item in module.allItems():
+        if hasattr(item, 'type') and item.type == 'wxPGPropArg':
+            item.type = 'const wxPGPropArgCls &'
+
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

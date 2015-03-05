@@ -52,6 +52,16 @@ def run():
         tools.wxArrayPtrWrapperTemplate('wxArrayPGProperty', 'wxPGProperty', module))
 
 
+    # wxPGPropArg is a typedef for "const wxPGPropArgCls&" so having the
+    # wrappers treat it as a normal type can be problematic. ("new cannot be
+    # applied to a reference type", etc.) Let's just ignore it an replace it
+    # everywhere for the real type.
+    module.find('wxPGPropArg').ignore()
+    for item in module.allItems():
+        if hasattr(item, 'type') and item.type == 'wxPGPropArg':
+            item.type = 'const wxPGPropArgCls &'
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

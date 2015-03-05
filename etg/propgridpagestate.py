@@ -49,6 +49,9 @@ def run():
     tools.ignoreConstOverloads(c)
 
 
+    module.find('wxPG_IT_CHILDREN').ignore()
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

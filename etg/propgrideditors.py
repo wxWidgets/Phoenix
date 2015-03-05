@@ -24,7 +24,7 @@ ITEMS  = [ 'wxPGWindowList',
            'wxPGComboBoxEditor',
            'wxPGChoiceAndButtonEditor',
            'wxPGTextCtrlAndButtonEditor',
-           'wxPGCheckBoxEditor',           
+           #'wxPGCheckBoxEditor',            This needs #define wxPG_INCLUDE_CHECKBOX 1
            'wxPGEditorDialogAdapter',
            'wxPGMultiButton',
            ]    
