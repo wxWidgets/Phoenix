@@ -62,7 +62,7 @@ sipCurrentVersion = '4.14.7'
 sipMD5 = {
     'darwin' : '836e78f3c2bf9f8233b32c1a3599efec',
     'win32'  : '208e8472342c07c2679868602d96a42b', 
-    'linux'  : 'b9fa64b1f6f5a6407777a0dda0de5778', 
+    'linux'  : '382c01bae24ace03ec8ae1ba6d76351a', 
 }
 
 wafCurrentVersion = '1.7.15-p1'
@@ -72,7 +72,7 @@ doxygenCurrentVersion = '1.8.8'
 doxygenMD5 = {
     'darwin' : '71c590e6cab47100f23919a2696cc7fd',
     'win32'  : 'a3dcff227458e423c132f16f57e26510', 
-    'linux'  : '382c01bae24ace03ec8ae1ba6d76351a', 
+    'linux'  : '083b3d8f614b538696041c7364e0f334', 
 }
 
 # And the location where they can be downloaded from
