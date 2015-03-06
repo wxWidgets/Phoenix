@@ -187,3 +187,6 @@ other dev stuff
       internaly and the DataViewEvent is used for passing the data objects
       around we may need to do something to help convert the raw data to python
       DataObjects.
+
+    * Pythonize wx.StatusBar.SetStatusStyles like is done for SetStatusWidths.
+    
