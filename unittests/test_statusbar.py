@@ -97,6 +97,20 @@ class statusbar_Tests(wtc.WidgetTestCase):
 
         r = sb.GetFieldRect(1)
         self.assertTrue(isinstance(r, wx.Rect))
+
+
+    def test_statusbarStyles(self):
+        sb = wx.StatusBar(self.frame)
+        sb.SetFieldsCount(4)
+        styles = [wx.SB_NORMAL, wx.SB_FLAT, wx.SB_RAISED, wx.SB_SUNKEN]
+        sb.SetStatusStyles(styles)
+        self.frame.SetStatusBar(sb)
+        
+        self.frame.SendSizeEvent()
+        self.myYield()
+        
+        current = [sb.GetStatusStyle(i) for i in range(sb.GetFieldsCount())]
+        self.assertEqual(current, styles)
         
         
 #---------------------------------------------------------------------------

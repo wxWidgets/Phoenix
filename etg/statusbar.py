@@ -47,6 +47,17 @@ def run():
         self->SetStatusWidths(widths->size(), ptr);
         """)
     
+    # Same thing for SetStatusStyles
+    m = c.find('SetStatusStyles')
+    m.find('n').ignore()
+    m.find('styles').type = 'const wxArrayInt&'
+    m.argsString = '(int n, const wxArrayInt& styles)'
+    m.setCppCode("""\
+        const int* ptr = &styles->front();
+        self->SetStatusStyles(styles->size(), ptr);
+        """)
+    
+    
     # Change GetFieldRect to return the rectangle (for Pythonicity and Classic compatibility)
     c.find('GetFieldRect').ignore()
     c.addCppMethod('wxRect*', 'GetFieldRect', '(int i)',

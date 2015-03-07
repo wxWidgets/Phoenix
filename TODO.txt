@@ -188,5 +188,4 @@ other dev stuff
       around we may need to do something to help convert the raw data to python
       DataObjects.
 
-    * Pythonize wx.StatusBar.SetStatusStyles like is done for SetStatusWidths.
     
