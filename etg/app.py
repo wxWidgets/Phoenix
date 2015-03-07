@@ -150,13 +150,18 @@ def run():
     # TODO: Add them as etg method objects instead of a WigCode block so the
     # documentation generators will see them too
     c.addItem(etgtools.WigCode("""\
+        protected:
+        virtual bool TryBefore(wxEvent& event);
+        virtual bool TryAfter(wxEvent& event);
+
+        public:
         virtual int  MainLoop() /ReleaseGIL/;
         virtual void OnPreInit();
         virtual bool OnInit();
         virtual bool OnInitGui();
         virtual int  OnRun();
         virtual int  OnExit();
-        
+
         void         _BootstrapApp();
 
         static long GetMacAboutMenuItemId();

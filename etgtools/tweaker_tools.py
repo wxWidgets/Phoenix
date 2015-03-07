@@ -404,6 +404,8 @@ def addWindowVirtuals(klass):
         ('DoFreeze',                  'void DoFreeze()'),
         ('DoThaw',                    'void DoThaw()'),
         ('HasTransparentBackground',  'bool HasTransparentBackground()'),
+        ('TryBefore',                 'bool TryBefore(wxEvent& event)'),
+        ('TryAfter',                  'bool TryAfter(wxEvent& event)'),
 
         ## What about these?
         #('DoGetScreenPosition', 'void DoGetScreenPosition(int *x, int *y) const'),
