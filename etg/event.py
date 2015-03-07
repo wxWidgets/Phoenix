@@ -181,13 +181,13 @@ def run():
 
     c.includeCppCode('src/event_ex.cpp')
     
-    # Ignore the Connect/Disconnect and Bind/Unbind methods (and overloads) for now. 
+    # Ignore the Connect/Disconnect and Bind/Unbind methods (and all overloads) for now. 
     for item in c.allItems():
         if item.name in ['Connect', 'Disconnect', 'Bind', 'Unbind']:
             item.ignore()
     
     
-    # Connect and disconnect methods for wxPython. Hold a reference to the
+    # Connect and Disconnect methods for wxPython. Hold a reference to the
     # event handler function in the event table, so we can fetch it later when
     # it is time to handle the event.
     c.addCppMethod(
