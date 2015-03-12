@@ -1080,7 +1080,7 @@ class Shell(editwindow.EditWindow):
         self.prompt()
         try:
             while not reader.input:
-                wx.YieldIfNeeded()
+                wx.GetApp().Yield(onlyIfNeeded=True)
             input = reader.input
         finally:
             reader.input = ''

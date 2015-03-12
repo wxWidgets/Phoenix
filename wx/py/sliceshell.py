@@ -2973,7 +2973,7 @@ class SlicesShell(editwindow.EditWindow):
         
         try:
             while not reader.input:
-                wx.YieldIfNeeded()
+                wx.GetApp().Yield(onlyIfNeeded=True)
             input = reader.input
         finally:
             start,end = self.GetIOSlice()

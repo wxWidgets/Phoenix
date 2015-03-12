@@ -597,7 +597,7 @@ Window_GetClassDefaultAttributes                             :meth:`Window.GetCl
 Window_NewControlId                                          :meth:`Window.NewControlId`
 Window_UnreserveControlId                                    :meth:`Window.UnreserveControlId`
 XPMHandler                                                   ``MISSING``
-YieldIfNeeded                                                ``MISSING``
+YieldIfNeeded                                                :meth:`App.Yield` wx.GetApp().Yield(onlyIfNeeded=True) 
 ===========================================================  ===========================================================
 
 
