@@ -159,6 +159,35 @@ def run():
 
 
     #-------------------------------------------------------
+    c = module.find('wxRichTextRange')
+    tools.addAutoProperties(c)
+        
+    # wxRichTextRange typemap
+    c.convertFromPyObject = tools.convertTwoIntegersTemplate('wxRichTextRange')
+    
+    c.addCppMethod('PyObject*', 'Get', '()', """\
+        return sipBuildResult(0, "(ii)", self->GetStart(), self->GetEnd());
+        """,
+        pyArgsString="() -> (start, end)",
+        briefDoc="Return the start and end properties as a tuple.")
+    
+    # Add sequence protocol methods and other goodies
+    c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
+    c.addPyMethod('__repr__', '(self)',            'return "RichTextRange"+str(self.Get())')
+    c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
+    c.addPyMethod('__nonzero__', '(self)',         'return self.Get() != (0,0)')
+    c.addPyMethod('__reduce__', '(self)',          'return (RichTextRange, self.Get())')
+    c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
+    c.addPyMethod('__setitem__', '(self, idx, val)',
+                  """\
+                  if idx == 0: self.width = val
+                  elif idx == 1: self.height = val
+                  else: raise IndexError
+                  """) 
+    c.addPyCode('RichTextRange.__safe_for_unpickling__ = True')
+
+
+    #-------------------------------------------------------
     def _fixDrawObject(c, addMissingVirtuals=True):
         assert isinstance(c, etgtools.ClassDef)
         if c.findItem('HitTest'):

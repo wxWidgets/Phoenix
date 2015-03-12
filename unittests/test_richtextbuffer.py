@@ -165,16 +165,31 @@ class richtextbuffer_Tests(wtc.WidgetTestCase):
         t = wx.richtext.RichTextFontTable()
         
         
-    def test_richtextbuffer14(self):
+    def test_richtextbuffer14a(self):
         r1 = wx.richtext.RichTextRange()
         r2 = wx.richtext.RichTextRange(111, 222)
         r3 = wx.richtext.RichTextRange(r2)
         r3.Start
         r3.End
         
+    def test_richtextbuffer14b(self):
         wx.richtext.RICHTEXT_ALL
         wx.richtext.RICHTEXT_NONE
         wx.richtext.RICHTEXT_NO_SELECTION
+
+    def test_richtextbuffer14c(self):
+        r = wx.richtext.RichTextRange(111, 222)
+        start = r[0]
+        end = r[1]
+        self.assertEqual(start, 111)
+        self.assertEqual(end, 222)
+        
+    def test_richtextbuffer14d(self):
+        r = wx.richtext.RichTextRange(111, 222)
+        start, end = r.Get()
+        self.assertEqual(start, 111)
+        self.assertEqual(end, 222)
+        
         
         
     def test_richtextbuffer15(self):
