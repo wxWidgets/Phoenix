@@ -75,6 +75,9 @@ def run():
 
     c.find('SetListStyle.def').name = 'styleDef'
     c.find('ApplyStyle.def').name = 'styleDef'
+
+    c.addPyMethod('GetDefaultStyle', '(self)', 'return self.GetDefaultStyleEx()',
+                  deprecated='Use GetDefaultStyleEx instead')
     
 
     # Make sure that all the methods from wxTextEntry are included. This is
