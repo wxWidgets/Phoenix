@@ -149,7 +149,6 @@ other dev stuff
 
 
 
-
   * Potential reference count issue with wxGridCellCoordsArray?  Code
     like this::
 
@@ -183,9 +182,10 @@ other dev stuff
               ...
 
 
-    * Add tests and/or demo for DnD in DataViewCtrl. Since the DnD is done
-      internaly and the DataViewEvent is used for passing the data objects
-      around we may need to do something to help convert the raw data to python
-      DataObjects.
+   * Add tests and/or demo for DnD in DataViewCtrl. Since the DnD is done
+     internaly and the DataViewEvent is used for passing the data objects
+     around we may need to do something to help convert the raw data to python
+     DataObjects.
 
+   * Add meaningful __hash__ methods for wx.Colour, wx.Point, etc.?
     
