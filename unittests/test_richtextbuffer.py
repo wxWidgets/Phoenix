@@ -190,6 +190,12 @@ class richtextbuffer_Tests(wtc.WidgetTestCase):
         self.assertEqual(start, 111)
         self.assertEqual(end, 222)
         
+    def test_richtextbuffer14e(self):
+        r = wx.richtext.RichTextRange()
+        self.assertEqual(r.Get(), (0,0))
+        r[0] = 111
+        r[1] = 222
+        self.assertEqual(r.Get(), (111,222))
         
         
     def test_richtextbuffer15(self):

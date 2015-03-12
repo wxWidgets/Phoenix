@@ -180,8 +180,8 @@ def run():
     c.addPyMethod('__getitem__', '(self, idx)',    'return self.Get()[idx]')
     c.addPyMethod('__setitem__', '(self, idx, val)',
                   """\
-                  if idx == 0: self.width = val
-                  elif idx == 1: self.height = val
+                  if idx == 0: self.Start = val
+                  elif idx == 1: self.End = val
                   else: raise IndexError
                   """) 
     c.addPyCode('RichTextRange.__safe_for_unpickling__ = True')
