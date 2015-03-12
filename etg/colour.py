@@ -154,8 +154,9 @@ def run():
             return sipBuildResult(0, "(iiii)", red, green, blue, alpha);
         else
             return sipBuildResult(0, "(iii)", red, green, blue);
-    """, briefDoc="""\
-        Get(includeAlpha=False) -> (r,g,b) or (r,g,b,a)\n
+        """, 
+        pyArgsString="(includeAlpha=True) -> (r,g,b) or (r,g,b,a)",
+        briefDoc="""\
         Returns the RGB intensity values as a tuple, optionally the alpha value as well.""")
     
         
