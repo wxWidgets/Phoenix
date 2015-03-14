@@ -1,7 +1,7 @@
 /*
  * The implementation of the supprt for setting API versions.
  *
- * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -185,6 +185,8 @@ PyObject *sipGetAPI(PyObject *self, PyObject *args)
     const char *api;
     const apiVersionDef *avd;
 
+    (void)self;
+
     if (!PyArg_ParseTuple(args, "s:getapi", &api))
         return NULL;
 
@@ -210,6 +212,8 @@ PyObject *sipSetAPI(PyObject *self, PyObject *args)
     const char *api;
     int version_nr;
     const apiVersionDef *avd;
+
+    (void)self;
 
     if (!PyArg_ParseTuple(args, "si:setapi", &api, &version_nr))
         return NULL;
