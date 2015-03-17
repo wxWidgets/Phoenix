@@ -48,6 +48,7 @@ unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or ev
     
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
+devMode = False
 
 baseName = 'wxPython_Phoenix'
 eggInfoName = baseName + '.egg-info'
@@ -306,6 +307,8 @@ def setDevModeOptions(args):
         myDevModeOptions.append('--cairo')
         
     if '--dev' in args:
+        global devMode
+        devMode = True
         idx = args.index('--dev')
         # replace the --dev item with the items from the list
         args[idx:idx+1] = myDevModeOptions
@@ -481,6 +484,12 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
 
         msg('Checking for %s...' % cmd)
         if os.path.exists(cmd):
+            if devMode and md5 is None: 
+                # skip the md5 check, only useful while building or testing
+                # new builds of the tools to save time having to always copy
+                # the newest md5 value
+                return cmd
+                
             m = hashlib.md5()
             m.update(open(cmd, 'rb').read())
             if m.hexdigest() != md5:
