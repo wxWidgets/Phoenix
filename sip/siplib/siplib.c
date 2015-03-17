@@ -3720,7 +3720,8 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                 if (nr_kwd_args_used == 0 && unused != NULL)
                 {
                     Py_INCREF(sipKwdArgs);
-                    *unused = sipKwdArgs;
+                    *unused = sipKwdArgs;  
+                    failure.reason = TooMany;
                 }
                 else
                 {
