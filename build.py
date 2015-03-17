@@ -48,6 +48,7 @@ unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or ev
     
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
+devMode = False
 
 baseName = 'wxPython_Phoenix'
 eggInfoName = baseName + '.egg-info'
@@ -58,9 +59,9 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.16.7-snapshot-f652446e2462'
+sipCurrentVersion = '4.16.7-snapshot-9e11298be101'  # '4.14.7' #
 sipMD5 = {
-    'darwin' : '72f61157902148d067eed3145d22990d',
+    'darwin' : None, #'50e563860bc83c0ec913d5cb0a0e5536',
     'win32'  : '208e8472342c07c2679868602d96a42b', 
     'linux'  : '382c01bae24ace03ec8ae1ba6d76351a', 
 }
@@ -306,6 +307,8 @@ def setDevModeOptions(args):
         myDevModeOptions.append('--cairo')
         
     if '--dev' in args:
+        global devMode
+        devMode = True
         idx = args.index('--dev')
         # replace the --dev item with the items from the list
         args[idx:idx+1] = myDevModeOptions
@@ -481,6 +484,12 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
 
         msg('Checking for %s...' % cmd)
         if os.path.exists(cmd):
+            if devMode and md5 is None: 
+                # skip the md5 check, only useful while building or testing
+                # new builds of the tools to save time having to always copy
+                # the newest md5 value
+                return cmd
+                
             m = hashlib.md5()
             m.update(open(cmd, 'rb').read())
             if m.hexdigest() != md5:
