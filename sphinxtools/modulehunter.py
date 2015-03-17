@@ -11,17 +11,17 @@ import types
 import imp
 import traceback
 import pkgutil
+from .utilities import IsPython3
 
-import __builtin__
-
-if sys.version_info < (3,):
-    import cPickle as pickle
-else:
+if IsPython3():
     import pickle
+else:
+    import cPickle as pickle
+    import __builtin__
 
 from buildtools.config import phoenixDir
 
-from inspect import getargspec, ismodule, getdoc, getmodule, getcomments, isfunction
+from inspect import getargspec, getfullargspec, ismodule, getdoc, getmodule, getcomments, isfunction
 from inspect import ismethoddescriptor, getsource, ismemberdescriptor, isgetsetdescriptor
 from inspect import isbuiltin, isclass, getfile, ismethod
 
@@ -30,12 +30,13 @@ from .librarydescription import Method, Property, Attribute
 
 from . import inheritance
 
-from .utilities import IsPython3
 from .constants import object_types, EXCLUDED_ATTRS, MODULE_TO_ICON
 from .constants import CONSTANT_RE
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# see my comments in librarydescripton.py for details
+if IsPython3() is False:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 try:
     import wx
@@ -126,7 +127,10 @@ def analyze_params(obj, signature):
         return signature, param_tuple
 
     try:
-        arginfo = getargspec(obj)
+        if IsPython3() is False:
+            arginfo = getargspec(obj)
+        else:
+            arginfo = getfullargspec(obj)
     except TypeError:
         arginfo = None
 
@@ -295,7 +299,7 @@ def describe_func(obj, parent_class, module_name):
                 code = obj.im_func.func_code
         else:
             if IsPython3():
-                obj.__code__
+                code = obj.__code__
             else:
                 code = obj.func_code
     except AttributeError:

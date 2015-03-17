@@ -2,25 +2,30 @@ import sys
 import os
 import operator
 import re
+from .utilities import IsPython3
 
-if sys.version_info < (3,):
-    import cPickle as pickle
-    from StringIO import StringIO
-else:
+if IsPython3():
     import pickle
     from io import StringIO
+else:
+    import cPickle as pickle
+    from StringIO import StringIO
 
 from inspect import getmro, getclasstree, getdoc, getcomments
 
 from .utilities import MakeSummary, ChopDescription, WriteSphinxOutput
-from .utilities import FindControlImages, FormatExternalLink, IsPython3
+from .utilities import FindControlImages, FormatExternalLink
 from .constants import object_types, MODULE_TO_ICON, DOXY_2_REST, SPHINXROOT
 from . import templates
 
 EPYDOC_PATTERN = re.compile(r'\S+{\S+}', re.DOTALL)
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# on Python3 'utf-8' still is the default
+# and an sys.setdefaultencoding doesn't exists there
+# even not using reload() function that moved to the imp module
+if IsPython3() is False:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 
 def make_class_tree(tree):

@@ -466,9 +466,17 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
     # checked with an MD5 hash.
     if os.environ.get(envVar):
         # Setting a a value in the environment overrides other options
+        print('INFO: Using local "{}".'.format(cmdName))
+        print('      {}={}'.format(envVar, os.environ.get(envVar)))
         return os.environ.get(envVar)
     else:
         if platformBinary:
+            # If doxygen for 32bit is requested print an error and exit.
+            # Because it is not available at the download location.
+            if cmdName is 'doxygen' and PYTHON_ARCH is not '64bit':
+                print('ERROR: This plattform architecture is %s. But %s is available only for 64bit.' % (PYTHON_ARCH, cmdName))
+                print('       Set the enviroment variable %s to use a local build of %s instead' % (envVar, cmdName))
+                sys.exit(1)
             platform = 'linux' if sys.platform.startswith('linux') else sys.platform
             ext = ''
             if platform == 'win32':
@@ -486,7 +494,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
             if m.hexdigest() != md5:
                 print('ERROR: MD5 mismatch, got "%s"' % m.hexdigest())
                 print('       expected          "%s"' % md5)
-                print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
+                print('       Set the enviroment variable %s to use a local build of %s instead' % (envVar, cmdName))
                 sys.exit(1)
             return cmd
             
@@ -499,7 +507,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
             msg('Data downloaded...')
         except Exception:
             print('ERROR: Unable to download ' + url)
-            print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
+            print('       Set the enviroment variable %s to use a local build of %s instead' % (envVar, cmdName))
             import traceback
             traceback.print_exc()
             sys.exit(1)
