@@ -481,22 +481,27 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
 
         msg('Checking for %s...' % cmd)
         if os.path.exists(cmd):
-            m = hashlib.md5()
-            m.update(open(cmd, 'rb').read())
-            if m.hexdigest() != md5:
-                print('ERROR: MD5 mismatch, got "%s"' % m.hexdigest())
-                print('       expected          "%s"' % md5)
-                print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
-                sys.exit(1)
-            if platformBinary:
-                try:
-                    p = subprocess.Popen([cmd, '--help'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=os.environ)
-                    p.wait()
-                except OSError, e:
-                    print('ERROR: Could not execute %s, got "%s"' % (cmd, e))
-                    print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
-                    sys.exit(1)
-            return cmd
+            if not os.path.isfile(cmd):
+                print('ERROR: %s is not a standard file' % cmd)
+            elif not os.access(cmd, os.R_OK | os.X_OK):
+                print('ERROR: Cannot execute %s: permissions error' % cmd)
+            elif not platformBinary:
+                return cmd
+            else:
+                m = hashlib.md5()
+                m.update(open(cmd, 'rb').read())
+                if m.hexdigest() != md5:
+                    print('ERROR: MD5 mismatch, got "%s"' % m.hexdigest())
+                    print('       expected          "%s"' % md5)
+                else:
+                    try:
+                        p = subprocess.Popen([cmd, '--help'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=os.environ)
+                        p.wait()
+                        return cmd
+                    except OSError, e:
+                        print('ERROR: Could not execute %s, got "%s"' % (cmd, e))
+            print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
+            sys.exit(1)
             
         msg('Not found.  Attempting to download...')
         url = '%s/%s.bz2' % (toolsURL, os.path.basename(cmd))
