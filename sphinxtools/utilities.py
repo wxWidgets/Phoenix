@@ -198,9 +198,10 @@ def ReplaceCppItems(line):
     :rtype: `string`
     """
 
+    items = RE_KEEP_SPACES.split(line)
     newstr = []
 
-    for item in RE_KEEP_SPACES.split(line):
+    for n, item in enumerate(items):
 
         if item in CPP_ITEMS:
             continue
@@ -210,7 +211,8 @@ def ReplaceCppItems(line):
         elif item == 'char':
             item = 'int'
         elif item == 'double':
-            item = 'float'
+            if len(items) > n+2 and not items[n+2].lower().startswith("click"):
+                item = 'float'
 
         if len(item.replace('``', '')) > 2:
             if '*' in item:
