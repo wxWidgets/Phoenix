@@ -116,8 +116,8 @@ class InheritanceDiagram(object):
         'shape': 'box',
         'fontsize': 10,
         'height': 0.3,
-        'fontname': 'Vera Sans, DejaVu Sans, Liberation Sans, '
-                    'Arial, Helvetica, sans',
+        'fontname': '"Vera Sans, DejaVu Sans, Liberation Sans, '
+                    'Arial, Helvetica, sans"',
         'style': '"setlinewidth(0.5)"',
     }
     default_edge_attrs = {
@@ -144,8 +144,8 @@ class InheritanceDiagram(object):
         inheritance_graph_attrs = dict(fontsize=9, ratio='auto', size='""', rankdir="TB")
         inheritance_node_attrs = {"align": "center", 'shape': 'box',
                                   'fontsize': 10, 'height': 0.3,
-                                  'fontname': 'Vera Sans, DejaVu Sans, Liberation Sans, '
-                                  'Arial, Helvetica, sans', 'style': '"setlinewidth(0.5)"',
+                                  'fontname': '"Vera Sans, DejaVu Sans, Liberation Sans, '
+                                  'Arial, Helvetica, sans"', 'style': '"setlinewidth(0.5)"',
                                   'labelloc': 'c', 'fontcolor': 'grey45'}
 
         inheritance_edge_attrs = {'arrowsize': 0.5, 

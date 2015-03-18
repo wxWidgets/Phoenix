@@ -497,6 +497,13 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
                 print('       expected          "%s"' % md5)
                 print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
                 sys.exit(1)
+            try:
+                p = subprocess.Popen([cmd, '--help'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=os.environ)
+                p.wait()
+            except OSError, e:
+                print('ERROR: Could not execute %s, got "%s"' % (cmd, e))
+                print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
+                sys.exit(1)
             return cmd
             
         msg('Not found.  Attempting to download...')
