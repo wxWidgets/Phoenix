@@ -501,7 +501,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
                 try:
                     p = subprocess.Popen([cmd, '--help'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=os.environ)
                     p.wait()
-                except OSError, e:
+                except OSError as e:
                     print('ERROR: Could not execute %s, got "%s"' % (cmd, e))
                     print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
                     sys.exit(1)
