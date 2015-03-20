@@ -4793,7 +4793,7 @@ class AuiManager(wx.EvtHandler):
 
         if pinfo.window:
             if pinfo.best_size == wx.Size(-1, -1):
-                pinfo.best_size = pinfo.window.GetClientSize()
+                pinfo.best_size = pinfo.window.GetBestSize()
 
             if isinstance(pinfo.window, wx.ToolBar):
                 # GetClientSize() doesn't get the best size for
@@ -6342,6 +6342,15 @@ class AuiManager(wx.EvtHandler):
 
 
     def Update(self):
+        if '__WXGTK__' in wx.PlatformInfo:
+            self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
+        else:
+            self.DoUpdate()
+
+    def DoUpdateEvt(self, evt):
+        wx.CallAfter(self.DoUpdate)
+
+    def DoUpdate(self):
         """
         This method is called after any number of changes are made to any of the
         managed panes. :meth:`Update` must be invoked after :meth:`AddPane`
@@ -6352,7 +6361,8 @@ class AuiManager(wx.EvtHandler):
         must be called. This construction allows pane flicker to be avoided by updating
         the whole layout at one time.
         """
-
+        if '__WXGTK__' in wx.PlatformInfo:
+            self.GetManagedWindow().Freeze()
         self._hover_button = None
         self._action_part = None
 
@@ -6528,6 +6538,9 @@ class AuiManager(wx.EvtHandler):
 
         if not self._masterManager:
             e = self.FireEvent(wxEVT_AUI_PERSPECTIVE_CHANGED, None, canVeto=False)
+
+        if '__WXGTK__' in wx.PlatformInfo:
+            self.GetManagedWindow().Thaw()
 
 
     def UpdateNotebook(self):
