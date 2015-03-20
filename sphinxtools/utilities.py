@@ -301,7 +301,7 @@ def PythonizeType(ptype, is_param):
 
     else:
         if is_param and '.' in ptype:
-            modules = MODULENAME_REPLACE.values()
+            modules = list(MODULENAME_REPLACE.values())
             modules.sort()
             modules = modules[1:]
             if ptype.split('.')[0] + '.' in modules:
