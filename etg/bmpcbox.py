@@ -75,6 +75,14 @@ def run():
         virtual void SetString(unsigned int n, const wxString& s);
         virtual int GetSelection() const;
         virtual void SetSelection(int n);
+        
+        virtual wxString GetStringSelection() const;
+        %MethodCode
+        sipRes = new wxString(sipCpp->wxItemContainerImmutable::GetStringSelection());
+        %End
+        %VirtualCallCode
+        sipRes = new wxString(wxItemContainerImmutable::GetStringSelection());
+        %End
         """))
     
     #-----------------------------------------------------------------
