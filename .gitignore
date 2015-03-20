@@ -42,6 +42,7 @@
 /sip/cpp/*.sbf
 /sip/cpp/*.h
 /sip/cpp/*.cpp
+/sip/cpp-*
 
 # /sip/gen/
 /sip/gen/*.sip
