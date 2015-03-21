@@ -471,6 +471,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
         # Setting a a value in the environment overrides other options
         return os.environ.get(envVar)
     else:
+        # setup
         if platformBinary:
             platform = 'linux' if sys.platform.startswith('linux') else sys.platform
             ext = ''
@@ -482,30 +483,50 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
             cmd = opj(phoenixDir(), 'bin', '%s-%s' % (cmdName, version))
             md5 = MD5
 
+
+        def _error_msg(txt):
+            msg('ERROR: ' + txt)
+            msg('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
+            
+        
         msg('Checking for %s...' % cmd)
         if os.path.exists(cmd):
-            if devMode and md5 is None: 
-                # skip the md5 check, only useful while building or testing
-                # new builds of the tools to save time having to always copy
-                # the newest md5 value
-                return cmd
-                
-            m = hashlib.md5()
-            m.update(open(cmd, 'rb').read())
-            if m.hexdigest() != md5:
-                print('ERROR: MD5 mismatch, got "%s"' % m.hexdigest())
-                print('       expected          "%s"' % md5)
-                print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
+            # if the file exists run some verification checks on it
+            
+            # first make sure it is a normal file
+            if not os.path.isfile(cmd):
+                _error_msg('%s exists but is not a regular file.' % cmd)
                 sys.exit(1)
-            if platformBinary:
-                try:
-                    p = subprocess.Popen([cmd, '--help'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=os.environ)
-                    p.wait()
-                except OSError as e:
-                    print('ERROR: Could not execute %s, got "%s"' % (cmd, e))
-                    print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
+            
+            # now check the MD5 if not in dev mode and it's set to None
+            if not (devMode and md5 is None):
+                m = hashlib.md5()
+                m.update(open(cmd, 'rb').read())
+                if m.hexdigest() != md5:
+                    _error_msg('MD5 mismatch, got "%s"\n       '
+                               'expected          "%s"' % (m.hexdigest(), md5))
                     sys.exit(1)
+                    
+            # If the cmd is a script run by some interpreter, or similar,
+            # then we don't need to check anything else
+            if not platformBinary:
+                return cmd
+            
+            # Ensure that commands that are platform binaries are executable
+            if not os.access(cmd, os.R_OK | os.X_OK):
+                _error_msg('Cannot execute %s due to permissions error' % cmd)            
+                sys.exit(1)
+            
+            try:
+                p = subprocess.Popen([cmd, '--help'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=os.environ)
+                p.wait()
+            except OSError as e:
+                _error_msg('Could not execute %s, got "%s"' % (cmd, e))
+                sys.exit(1)
+                
+            # if we get this far then all is well, the cmd is good to go
             return cmd
+        
             
         msg('Not found.  Attempting to download...')
         url = '%s/%s.bz2' % (toolsURL, os.path.basename(cmd))
@@ -515,8 +536,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
             data = connection.read()
             msg('Data downloaded...')
         except Exception:
-            print('ERROR: Unable to download ' + url)
-            print('       Set %s in the environment to use a local build of %s instead' % (envVar, cmdName))
+            _error_msg('Unable to download ' + url)
             import traceback
             traceback.print_exc()
             sys.exit(1)
