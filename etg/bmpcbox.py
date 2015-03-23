@@ -78,10 +78,10 @@ def run():
         
         virtual wxString GetStringSelection() const;
         %MethodCode
-        sipRes = new wxString(sipCpp->wxItemContainerImmutable::GetStringSelection());
+            sipRes = new wxString(sipCpp->wxItemContainerImmutable::GetStringSelection());
         %End
         %VirtualCallCode
-        sipRes = new wxString(wxItemContainerImmutable::GetStringSelection());
+            sipRes = wxItemContainerImmutable::GetStringSelection();
         %End
         """))
     

@@ -3720,8 +3720,7 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                 if (nr_kwd_args_used == 0 && unused != NULL)
                 {
                     Py_INCREF(sipKwdArgs);
-                    *unused = sipKwdArgs;  
-                    failure.reason = TooMany;
+                    *unused = sipKwdArgs;
                 }
                 else
                 {
@@ -9632,7 +9631,7 @@ static int sipSimpleWrapper_init(sipSimpleWrapper *self, PyObject *args,
     sipTypeDef *td = wt->type;
     sipClassTypeDef *ctd = (sipClassTypeDef *)td;
     PyObject *unused = NULL;
-    sipFinalFunc final_func;
+    sipFinalFunc final_func = find_finalisation(ctd);
 
     /* Check for an existing C++ instance waiting to be wrapped. */
     if (sipGetPending(&sipNew, &owner, &sipFlags) < 0)
@@ -9640,12 +9639,16 @@ static int sipSimpleWrapper_init(sipSimpleWrapper *self, PyObject *args,
 
     if (sipNew == NULL)
     {
-        PyObject *parseErr = NULL;
+        PyObject *parseErr = NULL, **unused_p = NULL;
+
+        /* See if we are interested in any unused keyword arguments. */
+        if (sipTypeCallSuperInit(&ctd->ctd_base) || final_func != NULL || kw_handler != NULL)
+            unused_p = &unused;
 
         /* Call the C++ ctor. */
         owner = NULL;
 
-        sipNew = ctd->ctd_init(self, args, kwds, &unused, (PyObject **)&owner,
+        sipNew = ctd->ctd_init(self, args, kwds, unused_p, (PyObject **)&owner,
                 &parseErr);
 
         if (sipNew != NULL)
