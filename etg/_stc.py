@@ -62,6 +62,7 @@ def run():
     
     c = module.find('wxStyledTextCtrl')
     assert isinstance(c, etgtools.ClassDef)
+    c.piBases = ['wx.Control', 'wx.TextEntry']
     tools.fixWindowClass(c, False)
     module.addGlobalStr('wxSTCNameStr', c)
     

@@ -83,6 +83,7 @@ def run():
     
         
     c = module.find('wxXmlDocument')
+    c.piBases = ['wx.Object']
     c.find('GetEncoding').ignore()
     c.find('SetEncoding').ignore()
     
