@@ -34,10 +34,6 @@ def run():
     c = module.find('wxMouseEventsManager')
     assert isinstance(c, etgtools.ClassDef)
 
-    # ownership of this object is transfered to the window it is attached to
-    c.find('wxMouseEventsManager.win').transferThis = True
-    c.find('Create.win').transferThis = True
-        
     c.find('MouseHitTest').ignore(False)
     c.find('MouseClicked').ignore(False)
     c.find('MouseDragBegin').ignore(False)
