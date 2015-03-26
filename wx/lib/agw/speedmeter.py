@@ -365,17 +365,11 @@ class BufferedWindow(wx.Window):
         # Make new off screen bitmap: this bitmap will always have the
         # current drawing in it, so it can be used to save the image to
         # a file, or whatever.
-
-        # This seems required on MacOS, it doesn't like wx.Bitmap with
-        # size = (0, 0)
-        # Thanks to Gerard Grazzini
-
-        if "__WXMAC__" in wx.Platform:
-            if self.Width == 0:
-                self.Width = 1
-            if self.Height == 0:
-                self.Height = 1
-
+        
+        # Some platforms object to creating bitmaps with size < (1,1)
+        self.Width = max(self.Width, 1)
+        self.Height = max(self.Height, 1)
+        
         self._Buffer = wx.Bitmap(self.Width, self.Height)
         self.UpdateDrawing()
 

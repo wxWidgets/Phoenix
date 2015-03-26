@@ -31,6 +31,9 @@ class SpeedMeterDemo(wx.Panel):
 
         wx.Panel.__init__(self, parent, style=wx.TAB_TRAVERSAL|wx.NO_FULL_REPAINT_ON_RESIZE)
 
+        wx.CallLater(50, self.laterStuff)
+
+    def laterStuff(self):
         panel = wx.Panel(self, -1)
         sizer = wx.FlexGridSizer(rows=2, cols=3, vgap=2, hgap=5)
 
@@ -516,6 +519,8 @@ class SpeedMeterDemo(wx.Panel):
         self.SetSizer(mainSizer)
         mainSizer.Layout()
 
+        self.SendSizeEvent()
+        
         self.timer.Start(1000)
         self.timer3.Start(500)
 
