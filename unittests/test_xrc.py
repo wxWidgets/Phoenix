@@ -59,7 +59,7 @@ class xrc_Tests(wtc.WidgetTestCase):
     # the resource before filling it with widgets or etc. See also the next
     # test and try to keep the two of them in sync as much as possible.
     def test_xrc5(self):
-        resource = '''<?xml version="1.0"?>
+        resource = b'''<?xml version="1.0"?>
             <resource>
             <object class="wxFrame" name="MainFrame">
                 <size>400,250</size>
@@ -146,7 +146,7 @@ class xrc_Tests(wtc.WidgetTestCase):
     # allowing the instance to be created before loading the content.
     
     def test_xrc6(self):
-        resource = '''<?xml version="1.0"?>
+        resource = b'''<?xml version="1.0"?>
             <resource>
             <object class="wxFrame" name="MainFrame">
                 <size>400,250</size>
@@ -233,7 +233,7 @@ class xrc_Tests(wtc.WidgetTestCase):
     #---------------------------------------------------------------------------        
     # Tests for the Subclass Factory
     def test_xrc7(self):
-        resource = '''<?xml version="1.0"?>
+        resource = b'''<?xml version="1.0"?>
             <resource>
                 <!-- Notice that the class IS a standard wx class and that a subclass is specified -->        
                 <object class="wxPanel" name="MyPanel" subclass="xrcfactorytest.MyCustomPanel">

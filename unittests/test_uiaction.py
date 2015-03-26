@@ -3,6 +3,8 @@ import wtc
 import wx
 import sys, os
 
+WAIT=50
+
 #---------------------------------------------------------------------------
 
 class MouseEventsPanel(wx.Panel):
@@ -43,11 +45,11 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         self.assertTrue(p.Size.Get() > (20,20))
         
         uia = wx.UIActionSimulator()
-        uia.MouseMove(p.ClientToScreen((1,1)));   self.myYield()
-        uia.MouseMove(p.ClientToScreen((5,5)));   self.myYield()
+        uia.MouseMove(p.ClientToScreen((1,1)));   self.waitFor(WAIT)
+        uia.MouseMove(p.ClientToScreen((5,5)));   self.waitFor(WAIT)
         uia.MouseMove(p.ClientToScreen((10,10)).x, p.ClientToScreen((10,10)).y)
-        self.myYield()
-        self.myYield()
+        self.waitFor(WAIT)
+        self.waitFor(WAIT)
         
         if sys.platform == 'darwin':
             # The events do seem to be happening, but I just can't seem to
@@ -65,10 +67,10 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         p = MouseEventsPanel(self.frame, [wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP])
         
         uia = wx.UIActionSimulator()
-        uia.MouseMove(p.ClientToScreen((10,10)));   self.myYield()
-        uia.MouseDown();                            self.myYield()
-        uia.MouseUp();                              self.myYield()
-        self.myYield()
+        uia.MouseMove(p.ClientToScreen((10,10)));   self.waitFor(WAIT)
+        uia.MouseDown();                            self.waitFor(WAIT)
+        uia.MouseUp();                              self.waitFor(WAIT)
+        self.waitFor(WAIT)
 
         self.assertTrue(len(p.events) == 2)
         self.assertTrue(self.cmp(p.events[0], wx.wxEVT_LEFT_DOWN, (10,10)))
@@ -79,10 +81,10 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         p = MouseEventsPanel(self.frame, [wx.EVT_RIGHT_DOWN, wx.EVT_RIGHT_UP])
         
         uia = wx.UIActionSimulator()
-        uia.MouseMove(p.ClientToScreen((10,10)));  self.myYield()
-        uia.MouseDown(wx.MOUSE_BTN_RIGHT);         self.myYield()
-        uia.MouseUp(wx.MOUSE_BTN_RIGHT);           self.myYield()
-        self.myYield()
+        uia.MouseMove(p.ClientToScreen((10,10)));  self.waitFor(WAIT)
+        uia.MouseDown(wx.MOUSE_BTN_RIGHT);         self.waitFor(WAIT)
+        uia.MouseUp(wx.MOUSE_BTN_RIGHT);           self.waitFor(WAIT)
+        self.waitFor(WAIT)
 
         self.assertTrue(len(p.events) == 2)
         self.assertTrue(self.cmp(p.events[0], wx.wxEVT_RIGHT_DOWN, (10,10)))
@@ -93,9 +95,9 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         p = MouseEventsPanel(self.frame, [wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP])
         
         uia = wx.UIActionSimulator()
-        uia.MouseMove(p.ClientToScreen((10,10)));  self.myYield()
-        uia.MouseClick();                          self.myYield()
-        self.myYield()
+        uia.MouseMove(p.ClientToScreen((10,10)));  self.waitFor(WAIT)
+        uia.MouseClick();                          self.waitFor(WAIT)
+        self.waitFor(WAIT)
 
         self.assertTrue(len(p.events) == 2)
         self.assertTrue(self.cmp(p.events[0], wx.wxEVT_LEFT_DOWN, (10,10)))
@@ -107,9 +109,9 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         p = MouseEventsPanel(self.frame, [wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP, wx.EVT_LEFT_DCLICK])
         
         uia = wx.UIActionSimulator()
-        uia.MouseMove(p.ClientToScreen((10,10)));  self.myYield()
-        uia.MouseDblClick();                       self.myYield()
-        self.myYield()
+        uia.MouseMove(p.ClientToScreen((10,10)));  self.waitFor(WAIT)
+        uia.MouseDblClick();                       self.waitFor(WAIT)
+        self.waitFor(WAIT)
 
         #print p.events
         self.assertTrue(len(p.events) == 4)
@@ -128,8 +130,8 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         y2 = y1 + 20
         
         uia = wx.UIActionSimulator()
-        uia.MouseDragDrop(x1,y1, x2,y2);  self.myYield()
-        self.myYield()
+        uia.MouseDragDrop(x1,y1, x2,y2);  self.waitFor(WAIT)
+        self.waitFor(WAIT)
 
         if sys.platform == 'darwin':
             # The events do seem to be happening, but I just can't seem to
@@ -154,18 +156,18 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
         super(uiaction_KeyboardTests, self).setUp()
         self.tc = wx.TextCtrl(self.frame)
         self.tc.SetFocus()
-        self.myYield()
+        self.waitFor(WAIT)
             
     
     def test_uiactionKeyboardKeyDownUp(self):
         uia = wx.UIActionSimulator()
         for c in "This is a test":
             if c.isupper():
-                uia.KeyDown(wx.WXK_SHIFT);  self.myYield()
-            uia.KeyDown(ord(c));            self.myYield()
-            uia.KeyUp(ord(c));              self.myYield()
+                uia.KeyDown(wx.WXK_SHIFT);  self.waitFor(WAIT)
+            uia.KeyDown(ord(c));            self.waitFor(WAIT)
+            uia.KeyUp(ord(c));              self.waitFor(WAIT)
             if c.isupper():
-                uia.KeyUp(wx.WXK_SHIFT);    self.myYield()
+                uia.KeyUp(wx.WXK_SHIFT);    self.waitFor(WAIT)
         self.waitFor(200)
                 
         self.assertEqual(self.tc.GetValue(), "This is a test")
@@ -177,7 +179,7 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
             mod = wx.MOD_NONE
             if c.isupper():
                 mod = wx.MOD_SHIFT
-            uia.Char(ord(c), mod);  self.myYield()
+            uia.Char(ord(c), mod);  self.waitFor(WAIT)
         self.waitFor(200)
                         
         self.assertEqual(self.tc.GetValue(), "This is a test")

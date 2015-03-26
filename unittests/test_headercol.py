@@ -35,6 +35,24 @@ class headercol_Tests(wtc.WidgetTestCase):
         self.assertTrue(hc.Hidden == hc.IsHidden())
         self.assertTrue(hc.Shown == hc.IsShown())
         
+        
+    def test_headercolConstants(self):
+        wx.COL_WIDTH_DEFAULT
+        wx.COL_WIDTH_AUTOSIZE
+        wx.COL_RESIZABLE   
+        wx.COL_SORTABLE    
+        wx.COL_REORDERABLE 
+        wx.COL_HIDDEN      
+        wx.COL_DEFAULT_FLAGS
+        
+    @unittest.expectedFailure
+    def test_headercolAbsClass1(self):
+        hc = wx.HeaderColumn()
+        
+    @unittest.expectedFailure
+    def test_headercolAbsClass2(self):
+        hc = wx.SettableHeaderColumn()
+        
 #---------------------------------------------------------------------------
 
 

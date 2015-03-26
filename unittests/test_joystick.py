@@ -29,12 +29,7 @@ class joystick_Tests(wtc.WidgetTestCase):
 
     
     def test_joystick2(self):
-        # Creating a Joystick object should fail on Mac.
-        if 'wxMac' in wx.PlatformInfo:
-            with self.assertRaises(NotImplementedError):
-                j = wx.adv.Joystick()
-        else:
-            j = wx.adv.Joystick()  
+        j = wx.adv.Joystick()  
         
         
 #---------------------------------------------------------------------------

@@ -30,7 +30,8 @@ class htmlcell_Tests(wtc.WidgetTestCase):
         obj = wx.html.HtmlColourCell(wx.BLACK)
         
     def test_htmlcell8(self):
-        obj = wx.html.HtmlWidgetCell(self.frame)
+        hw = wx.html.HtmlWindow(self.frame)
+        obj = wx.html.HtmlWidgetCell(hw)
         
 #---------------------------------------------------------------------------
 

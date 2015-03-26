@@ -31,22 +31,22 @@ class mousemanager_Tests(wtc.WidgetTestCase):
             def MouseClickCancelled(self, item):
                 pass
         
-        pnl = wx.Panel(self.frame, size=(50,50))
-        mm = MyMEM(pnl)
-        self.myYield()
+        pnl = wx.Panel(self.frame)
+        self.frame.SendSizeEvent()  # make sure it fills the frame
         
-        if sys.platform == 'darwin' and not runningStandalone:
-            return
+        mm = MyMEM(pnl)
+        self.waitFor(100)
         
         uia = wx.UIActionSimulator()
         uia.MouseMove(pnl.ClientToScreen((10,10)))
-        self.myYield()
+        self.waitFor(100)
         uia.MouseClick()
-        self.myYield()
+        self.waitFor(100)
         
         self.assertTrue(hasattr(mm, 'hitTest'))
         self.assertTrue(hasattr(mm, 'mouseClicked'))
         
+        del mm
         
 #---------------------------------------------------------------------------
 

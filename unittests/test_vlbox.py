@@ -22,7 +22,7 @@ class vlbox_Tests(wtc.WidgetTestCase):
         lb = MyVListBox(panel, pos=(10,10), size=(100,150), style=wx.BORDER_THEME)
         lb.data = ['zero', 'one two', 'three four', 'five six', 'seven eight', 'nine ten']
         lb.SetItemCount(len(lb.data))
-        self.myYield()
+        self.waitFor(50)
         
         # check the ItemCount property
         self.assertEqual(len(lb.data), lb.ItemCount)
@@ -34,7 +34,7 @@ class vlbox_Tests(wtc.WidgetTestCase):
         self.assertTrue(len(lb.measureItemCalls) > 0)
 
         lb.SetSelection(2)
-        self.myYield()
+        self.waitFor(50)
         self.assertEqual(lb.GetSelectedCount(), 1)
         self.assertEqual(lb.GetSelection(), 2)
         self.assertTrue(lb.IsSelected(2))
@@ -50,13 +50,13 @@ class vlbox_Tests(wtc.WidgetTestCase):
                         style=wx.BORDER_SIMPLE|wx.LB_MULTIPLE)
         lb.data = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
         lb.SetItemCount(len(lb.data))
-        self.myYield()
+        self.waitFor(50)
         
         lb.Select(2)
         lb.Select(5)
         lb.Select(7)
         lb.Select(8)
-        self.myYield()
+        self.waitFor(50)
 
         self.assertTrue(lb.IsSelected(2))
         self.assertTrue(lb.IsSelected(8))

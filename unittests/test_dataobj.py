@@ -63,7 +63,7 @@ class DataObjTests(wtc.WidgetTestCase):
             data._testGetAllFormats()
         
     # TODO: Get this fixed!  See https://groups.google.com/d/topic/wx-dev/wFxevpvbhvQ/discussion
-    #@unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
+    @unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
     def test_DataObject(self):
         class MyDataObject(wx.DataObject):
             def __init__(self, value=''):
@@ -168,7 +168,7 @@ class DataObjTests(wtc.WidgetTestCase):
 
         
     # TODO: Get this fixed!  See https://groups.google.com/d/topic/wx-dev/wFxevpvbhvQ/discussion
-    #@unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
+    @unittest.skipIf(sys.platform == 'darwin', 'Using wx.DF_TEXT currently fails on Mac')  
     def test_DataObjectSimple2(self):
         class MyDataObject(wx.DataObjectSimple):
             def __init__(self, value=''):
