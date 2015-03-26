@@ -2,7 +2,7 @@
  * This module implements a hash table class for mapping C/C++ addresses to the
  * corresponding wrapped Python object.
  *
- * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -197,7 +197,7 @@ static void add_aliases(sipObjectMap *om, void *addr, sipSimpleWrapper *val,
             /* Recurse up the hierachy for the remaining super-classes. */
             add_aliases(om, addr, val, base_ctd, sup_ctd);
 
-            sup_addr = (*base_ctd->ctd_cast)(addr, sup_ctd);
+            sup_addr = (*base_ctd->ctd_cast)(addr, (sipTypeDef *)sup_ctd);
 
             if (sup_addr != addr)
             {
@@ -403,7 +403,7 @@ static void remove_aliases(sipObjectMap *om, void *addr, sipSimpleWrapper *val,
             /* Recurse up the hierachy for the remaining super-classes. */
             remove_aliases(om, addr, val, base_ctd, sup_ctd);
 
-            sup_addr = (*base_ctd->ctd_cast)(addr, sup_ctd);
+            sup_addr = (*base_ctd->ctd_cast)(addr, (sipTypeDef *)sup_ctd);
 
             if (sup_addr != addr)
                 remove_object(om, sup_addr, val);

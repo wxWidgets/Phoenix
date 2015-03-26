@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from etgtools import WigCode
 
 PACKAGE   = "wx"   
 MODULE    = "_core"
@@ -25,7 +26,8 @@ ITEMS  = [ "wxVarScrollHelperBase",
            "wxHScrolledWindow",
            "wxHVScrolledWindow",
            ]    
-    
+
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -36,21 +38,23 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     
     c = module.find('wxVarScrollHelperBase')
     assert isinstance(c, etgtools.ClassDef)
+    c.abstract = True
+    
     c.find('OnGetUnitsSizeHint').ignore(False)
     c.find('EstimateTotalSize').ignore(False)
     c.find('OnGetUnitSize').ignore(False)
-
-
-    # SIP apparently has some issues when generating code for calling
-    # virtuals in the base class when there is diamond inheritance going on,
-    # it seems to confuse the compiler. By telling SIP that the methods are
-    # reimplemented in the branches of the diamond (which they are in this
-    # case) then that version of the generated code works better. We'll add
-    # this block of declarations to each of the two helper classes below.
+    
+    c.find('GetTargetWindow').isVirtual = False
+    c.find('SetTargetWindow').isVirtual = False
+    c.find('RefreshAll').isVirtual = False
+    c.find('UpdateScrollbar').isVirtual = False
+    
+    # Ensure that SIP knows that there are implementations of these base
+    # class virtual methods in each of the two helper classes below.
     baseVirtuals = """\
     virtual void OnGetUnitsSizeHint(size_t unitMin, size_t unitMax) const;
     virtual wxCoord EstimateTotalSize() const;
@@ -61,24 +65,30 @@ def run():
     """
 
     c = module.find('wxVarVScrollHelper')
+    c.addItem(WigCode(baseVirtuals, protection='protected'))
     c.find('EstimateTotalHeight').ignore(False)
     c.find('OnGetRowsHeightHint').ignore(False)
     c.find('OnGetRowHeight').ignore(False)
-    c.addItem(etgtools.WigCode(baseVirtuals, protection='protected'))
     c.find('RefreshRows.from').name = 'from_'
     c.find('RefreshRows.to').name = 'to_'
 
     c = module.find('wxVarHScrollHelper')
+    c.addItem(WigCode(baseVirtuals, protection='protected'))
     c.find('EstimateTotalWidth').ignore(False)
     c.find('OnGetColumnsWidthHint').ignore(False)
     c.find('OnGetColumnWidth').ignore(False)
-    c.addItem(etgtools.WigCode(baseVirtuals, protection='protected'))
     c.find('RefreshColumns.from').name = 'from_'
     c.find('RefreshColumns.to').name = 'to_'
 
 
-
     c = module.find('wxVarHVScrollHelper')
+    # For this class those base methods shouldn't be overridden, (since there
+    # are orientation-specfic versions in the 2 superclasses) so tell SIP
+    # that they are private so it won't add support for them and end up with
+    # multiple inheritance ambiguities.
+    c.addItem(WigCode(baseVirtuals, protection='private'))
+
+
 
     c = module.find('wxVScrolledWindow')
     tools.fixWindowClass(c)
@@ -88,7 +98,7 @@ def run():
    
     c = module.find('wxHVScrolledWindow')
     tools.fixWindowClass(c)
-    
+        
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

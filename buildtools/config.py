@@ -120,7 +120,7 @@ class Configuration(object):
         self.SIPOPTS  = ' '.join(['-w',    # enable warnings
                          '-o',    # turn on auto-docstrings
                          #'-e',   # turn on exceptions support
-                         '-T',    # turn off writing the timestamp to the generated files                         '-g',    # always release and reaquire the GIL
+                         #'-T',    # turn off writing the timestamp to the generated files                         '-g',    # always release and reaquire the GIL
                          #'-r',   # turn on function call tracing
                          '-I', os.path.join(phoenixDir(), 'src'),
                          '-I', os.path.join(phoenixDir(), 'sip', 'gen'),

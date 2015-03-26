@@ -3,7 +3,7 @@
  * C++ classes that provide a thread interface to interact properly with the
  * Python threading infrastructure.
  *
- * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -71,6 +71,9 @@ int sipGetPending(void **pp, sipWrapper **op, int *fp)
     *op = pd->owner;
     *fp = pd->flags;
 
+    /* Clear in case we execute Python code before finishing this wrapping. */
+    pd->cpp = NULL;
+
     return 0;
 }
 
@@ -92,18 +95,13 @@ int sipIsPending()
 /*
  * Convert a new C/C++ pointer to a Python instance.
  */
-PyObject *sipWrapSimpleInstance(void *cppPtr, const sipTypeDef *td,
+PyObject *sipWrapInstance(void *cpp, PyTypeObject *py_type, PyObject *args,
         sipWrapper *owner, int flags)
 {
-    static PyObject *nullargs = NULL;
-
     pendingDef old_pending, *pd;
     PyObject *self;
 
-    if (nullargs == NULL && (nullargs = PyTuple_New(0)) == NULL)
-        return NULL;
-
-    if (cppPtr == NULL)
+    if (cpp == NULL)
     {
         Py_INCREF(Py_None);
         return Py_None;
@@ -120,11 +118,11 @@ PyObject *sipWrapSimpleInstance(void *cppPtr, const sipTypeDef *td,
 
     old_pending = *pd;
 
-    pd->cpp = cppPtr;
+    pd->cpp = cpp;
     pd->owner = owner;
     pd->flags = flags;
 
-    self = PyObject_Call((PyObject *)sipTypeAsPyTypeObject(td), nullargs, NULL);
+    self = PyObject_Call((PyObject *)py_type, args, NULL);
 
     *pd = old_pending;
 

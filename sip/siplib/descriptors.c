@@ -1,7 +1,7 @@
 /*
  * The implementation of the different descriptors.
  *
- * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -25,7 +25,8 @@
 
 /*****************************************************************************
  * A method descriptor.  We don't use the similar Python descriptor because it
- * doesn't support a method having static and non-static overloads.
+ * doesn't support a method having static and non-static overloads, and we
+ * handle mixins via a delegate.
  *****************************************************************************/
 
 
@@ -33,6 +34,9 @@
 static PyObject *sipMethodDescr_descr_get(PyObject *self, PyObject *obj,
         PyObject *type);
 static PyObject *sipMethodDescr_repr(PyObject *self);
+static int sipMethodDescr_traverse(PyObject *self, visitproc visit, void *arg);
+static int sipMethodDescr_clear(PyObject *self);
+static void sipMethodDescr_dealloc(PyObject *self);
 
 
 /*
@@ -43,6 +47,9 @@ typedef struct _sipMethodDescr {
 
     /* The method definition. */
     PyMethodDef *pmd;
+
+    /* The mixin name, if any. */
+    PyObject *mixin_name;
 } sipMethodDescr;
 
 
@@ -54,7 +61,7 @@ PyTypeObject sipMethodDescr_Type = {
     "sip.methoddescriptor", /* tp_name */
     sizeof (sipMethodDescr),    /* tp_basicsize */
     0,                      /* tp_itemsize */
-    0,                      /* tp_dealloc */
+    sipMethodDescr_dealloc, /* tp_dealloc */
     0,                      /* tp_print */
     0,                      /* tp_getattr */
     0,                      /* tp_setattr */
@@ -69,10 +76,10 @@ PyTypeObject sipMethodDescr_Type = {
     0,                      /* tp_getattro */
     0,                      /* tp_setattro */
     0,                      /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,     /* tp_flags */
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_GC,  /* tp_flags */
     0,                      /* tp_doc */
-    0,                      /* tp_traverse */
-    0,                      /* tp_clear */
+    sipMethodDescr_traverse,/* tp_traverse */
+    sipMethodDescr_clear,   /* tp_clear */
     0,                      /* tp_richcompare */
     0,                      /* tp_weaklistoffset */
     0,                      /* tp_iter */
@@ -83,6 +90,25 @@ PyTypeObject sipMethodDescr_Type = {
     0,                      /* tp_base */
     0,                      /* tp_dict */
     sipMethodDescr_descr_get,   /* tp_descr_get */
+    0,                      /* tp_descr_set */
+    0,                      /* tp_dictoffset */
+    0,                      /* tp_init */
+    0,                      /* tp_alloc */
+    0,                      /* tp_new */
+    0,                      /* tp_free */
+    0,                      /* tp_is_gc */
+    0,                      /* tp_bases */
+    0,                      /* tp_mro */
+    0,                      /* tp_cache */
+    0,                      /* tp_subclasses */
+    0,                      /* tp_weaklist */
+    0,                      /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    0,                      /* tp_version_tag */
+#endif
+#if PY_VERSION_HEX >= 0x03040000
+    0,                      /* tp_finalize */
+#endif
 };
 
 
@@ -94,7 +120,28 @@ PyObject *sipMethodDescr_New(PyMethodDef *pmd)
     PyObject *descr = PyType_GenericAlloc(&sipMethodDescr_Type, 0);
 
     if (descr != NULL)
+    {
         ((sipMethodDescr *)descr)->pmd = pmd;
+        ((sipMethodDescr *)descr)->mixin_name = NULL;
+    }
+
+    return descr;
+}
+
+
+/*
+ * Return a new method descriptor based on an existing one and a mixin name.
+ */
+PyObject *sipMethodDescr_Copy(PyObject *orig, PyObject *mixin_name)
+{
+    PyObject *descr = PyType_GenericAlloc(&sipMethodDescr_Type, 0);
+
+    if (descr != NULL)
+    {
+        ((sipMethodDescr *)descr)->pmd = ((sipMethodDescr *)orig)->pmd;
+        ((sipMethodDescr *)descr)->mixin_name = mixin_name;
+        Py_INCREF(mixin_name);
+    }
 
     return descr;
 }
@@ -108,8 +155,12 @@ static PyObject *sipMethodDescr_descr_get(PyObject *self, PyObject *obj,
 {
     sipMethodDescr *md = (sipMethodDescr *)self;
 
+    (void)type;
+
     if (obj == Py_None)
         obj = NULL;
+    else if (md->mixin_name != NULL)
+        obj = PyObject_GetAttr(obj, md->mixin_name);
 
     return PyCFunction_New(md->pmd, obj);
 }
@@ -133,6 +184,47 @@ static PyObject *sipMethodDescr_repr(PyObject *self)
 }
 
 
+/*
+ * The descriptor's traverse slot.
+ */
+static int sipMethodDescr_traverse(PyObject *self, visitproc visit, void *arg)
+{
+    if (((sipMethodDescr *)self)->mixin_name != NULL)
+    {
+        int vret = visit(((sipMethodDescr *)self)->mixin_name, arg);
+
+        if (vret != 0)
+            return vret;
+    }
+
+    return 0;
+}
+
+
+/*
+ * The descriptor's clear slot.
+ */
+static int sipMethodDescr_clear(PyObject *self)
+{
+    PyObject *tmp = ((sipMethodDescr *)self)->mixin_name;
+
+    ((sipMethodDescr *)self)->mixin_name = NULL;
+    Py_XDECREF(tmp);
+
+    return 0;
+}
+
+
+/*
+ * The descriptor's dealloc slot.
+ */
+static void sipMethodDescr_dealloc(PyObject *self)
+{
+    sipMethodDescr_clear(self);
+    Py_TYPE(self)->tp_free(self);
+}
+
+
 /*****************************************************************************
  * A variable descriptor.  We don't use the similar Python descriptor because
  * it doesn't support static variables.
@@ -144,6 +236,10 @@ static PyObject *sipVariableDescr_descr_get(PyObject *self, PyObject *obj,
         PyObject *type);
 static int sipVariableDescr_descr_set(PyObject *self, PyObject *obj,
         PyObject *value);
+static int sipVariableDescr_traverse(PyObject *self, visitproc visit,
+        void *arg);
+static int sipVariableDescr_clear(PyObject *self);
+static void sipVariableDescr_dealloc(PyObject *self);
 
 
 /*
@@ -160,6 +256,9 @@ typedef struct _sipVariableDescr {
 
     /* The generated container definition. */
     const sipContainerDef *cod;
+
+    /* The mixin name, if any. */
+    PyObject *mixin_name;
 } sipVariableDescr;
 
 
@@ -171,7 +270,7 @@ PyTypeObject sipVariableDescr_Type = {
     "sip.variabledescriptor",   /* tp_name */
     sizeof (sipVariableDescr),  /* tp_basicsize */
     0,                      /* tp_itemsize */
-    0,                      /* tp_dealloc */
+    sipVariableDescr_dealloc,   /* tp_dealloc */
     0,                      /* tp_print */
     0,                      /* tp_getattr */
     0,                      /* tp_setattr */
@@ -186,10 +285,10 @@ PyTypeObject sipVariableDescr_Type = {
     0,                      /* tp_getattro */
     0,                      /* tp_setattro */
     0,                      /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT,     /* tp_flags */
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_GC,  /* tp_flags */
     0,                      /* tp_doc */
-    0,                      /* tp_traverse */
-    0,                      /* tp_clear */
+    sipVariableDescr_traverse,  /* tp_traverse */
+    sipVariableDescr_clear, /* tp_clear */
     0,                      /* tp_richcompare */
     0,                      /* tp_weaklistoffset */
     0,                      /* tp_iter */
@@ -201,6 +300,24 @@ PyTypeObject sipVariableDescr_Type = {
     0,                      /* tp_dict */
     sipVariableDescr_descr_get, /* tp_descr_get */
     sipVariableDescr_descr_set, /* tp_descr_set */
+    0,                      /* tp_dictoffset */
+    0,                      /* tp_init */
+    0,                      /* tp_alloc */
+    0,                      /* tp_new */
+    0,                      /* tp_free */
+    0,                      /* tp_is_gc */
+    0,                      /* tp_bases */
+    0,                      /* tp_mro */
+    0,                      /* tp_cache */
+    0,                      /* tp_subclasses */
+    0,                      /* tp_weaklist */
+    0,                      /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    0,                      /* tp_version_tag */
+#endif
+#if PY_VERSION_HEX >= 0x03040000
+    0,                      /* tp_finalize */
+#endif
 };
 
 
@@ -222,6 +339,27 @@ PyObject *sipVariableDescr_New(sipVariableDef *vd, const sipTypeDef *td,
         ((sipVariableDescr *)descr)->vd = vd;
         ((sipVariableDescr *)descr)->td = td;
         ((sipVariableDescr *)descr)->cod = cod;
+        ((sipVariableDescr *)descr)->mixin_name = NULL;
+    }
+
+    return descr;
+}
+
+
+/*
+ * Return a new variable descriptor based on an existing one and a mixin name.
+ */
+PyObject *sipVariableDescr_Copy(PyObject *orig, PyObject *mixin_name)
+{
+    PyObject *descr = PyType_GenericAlloc(&sipVariableDescr_Type, 0);
+
+    if (descr != NULL)
+    {
+        ((sipVariableDescr *)descr)->vd = ((sipVariableDescr *)orig)->vd;
+        ((sipVariableDescr *)descr)->td = ((sipVariableDescr *)orig)->td;
+        ((sipVariableDescr *)descr)->cod = ((sipVariableDescr *)orig)->cod;
+        ((sipVariableDescr *)descr)->mixin_name = mixin_name;
+        Py_INCREF(mixin_name);
     }
 
     return descr;
@@ -294,6 +432,9 @@ static int get_instance_address(sipVariableDescr *vd, PyObject *obj,
             return -1;
         }
 
+        if (vd->mixin_name != NULL)
+            obj = PyObject_GetAttr(obj, vd->mixin_name);
+
         /* Get the C++ instance. */
         if ((addr = sip_api_get_cpp_ptr((sipSimpleWrapper *)obj, vd->td)) == NULL)
             return -1;
@@ -302,4 +443,45 @@ static int get_instance_address(sipVariableDescr *vd, PyObject *obj,
     *addrp = addr;
 
     return 0;
+}
+
+
+/*
+ * The descriptor's traverse slot.
+ */
+static int sipVariableDescr_traverse(PyObject *self, visitproc visit, void *arg)
+{
+    if (((sipVariableDescr *)self)->mixin_name != NULL)
+    {
+        int vret = visit(((sipVariableDescr *)self)->mixin_name, arg);
+
+        if (vret != 0)
+            return vret;
+    }
+
+    return 0;
+}
+
+
+/*
+ * The descriptor's clear slot.
+ */
+static int sipVariableDescr_clear(PyObject *self)
+{
+    PyObject *tmp = ((sipVariableDescr *)self)->mixin_name;
+
+    ((sipVariableDescr *)self)->mixin_name = NULL;
+    Py_XDECREF(tmp);
+
+    return 0;
+}
+
+
+/*
+ * The descriptor's dealloc slot.
+ */
+static void sipVariableDescr_dealloc(PyObject *self)
+{
+    sipVariableDescr_clear(self);
+    Py_TYPE(self)->tp_free(self);
 }

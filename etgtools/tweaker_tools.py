@@ -226,14 +226,14 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Do common tweaks for a window class.
     """
-    # The ctor and Create method transfer ownership of the this pointer
+    # The ctor and Create method transfer ownership of the this pointer to the parent
     for func in klass.findAll(klass.name) + klass.findAll('Create'):
         if isinstance(func, extractors.MethodDef):
             # if a class has an empty ctor it might not have this
             parent = func.findItem('parent')
             if parent:
                 parent.transferThis = True
-            # give the id param a default value if it has one
+            # if there is an id param give it a default
             id = func.findItem('id') or func.findItem('winid')
             if id:
                 id.default = 'wxID_ANY'

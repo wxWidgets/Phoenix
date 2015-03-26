@@ -359,6 +359,16 @@ def run():
             return val
         """)
     
+
+    # SIP will normally try to add support for overriding this method since
+    # it is inherited from super classes, but in this case we want it to be
+    # ignored (because IRL it is private in one of the intermediate classes)
+    # so we'll tell SIP that it is private here instead.
+    c.addItem(etgtools.WigCode("""\
+        wxSize GetSizeAvailableForScrollTarget(const wxSize& size);
+        """, protection='private'))
+              
+    
     #-----------------------------------------------------------------
     c = module.find('wxGridUpdateLocker')
     c.addPrivateCopyCtor()
