@@ -82,11 +82,12 @@ def run():
     c.addCppMethod('long', '__hash__', '()', """\
         return (long)self->GetID();
         """)
-    c.addCppMethod('int', '__cmp__', '(wxDataViewItem* other)', """\
-        if ( self->GetID() < other->GetID() ) return -1;
-        if ( self->GetID() > other->GetID() ) return  1;
-        return 0;
-        """)
+    c.addCppMethod('bool', '__lt__', '(wxDataViewItem* other)', "return (self->GetID() <  other->GetID());")
+    c.addCppMethod('bool', '__le__', '(wxDataViewItem* other)', "return (self->GetID() <= other->GetID());")
+    c.addCppMethod('bool', '__eq__', '(wxDataViewItem* other)', "return (self->GetID() == other->GetID());")
+    c.addCppMethod('bool', '__ne__', '(wxDataViewItem* other)', "return (self->GetID() != other->GetID());")
+    c.addCppMethod('bool', '__ge__', '(wxDataViewItem* other)', "return (self->GetID() >= other->GetID());")
+    c.addCppMethod('bool', '__gt__', '(wxDataViewItem* other)', "return (self->GetID() >  other->GetID());")
     c.addAutoProperties()
 
 
