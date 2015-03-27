@@ -119,7 +119,7 @@ Bleeding-edge source
 --------------------
 
 If you are a very keen developer, you can access the SVN repository directly for this
-project in the `wxWidgets SVN <http://svn.wxwidgets.org/viewvc/wx/wxPython>`_.
+project in the `wxWidgets Phoenix Github <https://github.com/wxWidgets/Phoenix>`_.
 
 
 
