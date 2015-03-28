@@ -783,10 +783,10 @@ class PersistenceManager(object):
         kind = repr(value.__class__).split("'")[1]
 
         if self._customConfigHandler is not None:
-            result = self._customConfigHandler.SaveValue(self.GetKey(obj, keyName), repr((kind, str(value))))
+            result = self._customConfigHandler.SaveValue(self.GetKey(obj, keyName), repr((kind, unicode(value))))
         else:
             config = self.GetPersistenceFile()
-            result = config.Write(self.GetKey(obj, keyName), repr((kind, str(value))))
+            result = config.Write(self.GetKey(obj, keyName), repr((kind, unicode(value))))
             config.Flush()
 
         return result
