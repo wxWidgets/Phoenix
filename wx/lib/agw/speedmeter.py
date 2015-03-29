@@ -29,7 +29,6 @@
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
-# Tags:        phoenix-port, unittest, documented, py3-port
 #
 # End Of Comments
 # --------------------------------------------------------------------------- #
@@ -324,12 +323,14 @@ class BufferedWindow(wx.Window):
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_ERASE_BACKGROUND, lambda x: None)
 
-        # OnSize called to make sure the buffer is initialized.
-        # This might result in OnSize getting called twice on some
-        # platforms at initialization, but little harm done.
-        self.OnSize(None)
-
-
+        if '__WXGTK__' in wx.PlatformInfo:
+            self.Bind(wx.EVT_WINDOW_CREATE, self.OnSize)
+        else:
+            # OnSize called to make sure the buffer is initialized.
+            # This might result in OnSize getting called twice on some
+            # platforms at initialization, but little harm done.
+            self.OnSize(None)
+    
     def Draw(self, dc):
         """
         This method should be overridden when sub-classed.
