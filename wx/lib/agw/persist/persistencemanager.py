@@ -28,13 +28,13 @@
 This module contains the definitions of `PersistentObject` and `PersistenceManager` objects.
 """
 
-import six
-import wx
 import os
 import warnings
 import datetime
 
+import wx
 import wx.adv
+from wx.lib import six
 
 from .persist_handlers import FindHandler, HasCtrlHandler
 
