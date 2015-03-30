@@ -324,10 +324,23 @@ class BufferedWindow(wx.Window):
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_ERASE_BACKGROUND, lambda x: None)
 
-        # OnSize called to make sure the buffer is initialized.
-        # This might result in OnSize getting called twice on some
-        # platforms at initialization, but little harm done.
-        self.OnSize(None)
+        self._isWindowCreated = False
+        if '__WXGTK__' in wx.PlatformInfo:
+            self.Bind(wx.EVT_WINDOW_CREATE, self.doOnSize)
+        else:
+            # OnSize called to make sure the buffer is initialized.
+            # This might result in OnSize getting called twice on some
+            # platforms at initialization, but little harm done.
+            self._isWindowCreated = True
+            self.OnSize(None)
+
+
+    def doOnSize(self, evt):
+        """
+        Method to call OnSize on GTK when window is created.
+        """
+        self._isWindowCreated = True
+        self.OnSize(evt)
 
 
     def Draw(self, dc):
@@ -372,7 +385,8 @@ class BufferedWindow(wx.Window):
         self.Height = max(self.Height, 1)
         
         self._Buffer = wx.Bitmap(self.Width, self.Height)
-        self.UpdateDrawing()
+        if self._isWindowCreated:
+            self.UpdateDrawing()
 
 
     def UpdateDrawing(self):
@@ -489,7 +503,6 @@ class SpeedMeter(BufferedWindow):
         if self._agwStyle & SM_DRAW_FANCY_TICKS:
             wx.lib.colourdb.updateColourDB()
 
-
         self.SetAngleRange()
         self.SetIntervals()
         self.SetSpeedValue()
@@ -515,7 +528,6 @@ class SpeedMeter(BufferedWindow):
         BufferedWindow.__init__(self, parent, id, pos, size,
                                 style=wx.NO_FULL_REPAINT_ON_RESIZE,
                                 bufferedstyle=bufferedstyle)
-
         if self._mousestyle & SM_MOUSE_TRACK:
             self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseMotion)
 
