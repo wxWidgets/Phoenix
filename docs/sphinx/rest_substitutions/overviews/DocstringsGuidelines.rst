@@ -235,7 +235,7 @@ applications, they are simply meant to show a particular/clever/unusual way of u
 or a function.
 
 Please do send your sample snippets to me at `this <andrea.gavana@gmail.com>`_ e-mail address or, if
-you have commit rights in the current Phoenix SVN area, feel free to upload them yourself under the
+you have commit rights in the current Phoenix Github area, feel free to upload them yourself under the
 following folder:
 
 ``/trunk/docs/sphinx/rest_substitutions/snippets/python/contrib``
@@ -261,7 +261,7 @@ these conventions:
 
 
 Please do send your screenshots to me at `this <andrea.gavana@gmail.com>`_ e-mail address or, if
-you have commit rights in the current Phoenix SVN area, feel free to upload them yourself under the
+you have commit rights in the current Phoenix Github area, feel free to upload them yourself under the
 following folder:
 
 ``/trunk/docs/sphinx/_static/images/widgets/fullsize``
