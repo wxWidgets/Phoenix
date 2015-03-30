@@ -333,14 +333,16 @@ class BufferedWindow(wx.Window):
             # platforms at initialization, but little harm done.
             self._isWindowCreated = True
             self.OnSize(None)
-            
+
+
     def doOnSize(self, evt):
         """
         Method to call OnSize on GTK when window is created.
         """
         self._isWindowCreated = True
         self.OnSize(evt)
-    
+
+
     def Draw(self, dc):
         """
         This method should be overridden when sub-classed.
@@ -385,6 +387,7 @@ class BufferedWindow(wx.Window):
         self._Buffer = wx.Bitmap(self.Width, self.Height)
         if self._isWindowCreated:
             self.UpdateDrawing()
+
 
     def UpdateDrawing(self):
         """
@@ -525,9 +528,9 @@ class SpeedMeter(BufferedWindow):
         BufferedWindow.__init__(self, parent, id, pos, size,
                                 style=wx.NO_FULL_REPAINT_ON_RESIZE,
                                 bufferedstyle=bufferedstyle)
-    
         if self._mousestyle & SM_MOUSE_TRACK:
             self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseMotion)
+
 
     def Draw(self, dc):
         """
