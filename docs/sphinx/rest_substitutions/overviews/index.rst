@@ -118,15 +118,17 @@ Don't forget to download the wxPython demo and the documentation!
 Bleeding-edge source
 --------------------
 
-If you are a very keen developer, you can access the SVN repository directly for this
-project in the `wxWidgets Phoenix Github <https://github.com/wxWidgets/Phoenix>`_.
+If you are a very keen developer, you can get the source code and other
+project files from the `wxWidgets/Phoenix Github repository <https://github.com/wxWidgets/Phoenix>`_.
+Be sure to read the README.rst file there to learn how to build wxWidgets 
+and Phoenix for yourself.
 
 
 
 wxPython Documentation
 ----------------------
 
-The new wxPython API documentation is available `in this page <main.html>`_.
+The new wxPython API documentation is available `here <main.html>`_.
 
 
 .. toctree::

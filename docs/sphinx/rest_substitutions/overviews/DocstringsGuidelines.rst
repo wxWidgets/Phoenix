@@ -234,11 +234,11 @@ Please keep the snippets as short as possible: they don't need to be fully-runna
 applications, they are simply meant to show a particular/clever/unusual way of using a method, a class
 or a function.
 
-Please do send your sample snippets to me at `this <andrea.gavana@gmail.com>`_ e-mail address or, if
-you have commit rights in the current Phoenix Github area, feel free to upload them yourself under the
-following folder:
+Please do send your sample snippets to me at `this <andrea.gavana@gmail.com>`_ e-mail address or 
+you can submit the sample snippets to the `wxWidgets/Phoenix Github repository <https://github.com/wxWidgets/Phoenix>`_.
+The snippets should be placed in the source tree in this folder:
 
-``/trunk/docs/sphinx/rest_substitutions/snippets/python/contrib``
+``Phoenix/docs/sphinx/rest_substitutions/snippets/python/contrib``
 
 
 .. _contributing screenshots:
@@ -260,12 +260,12 @@ these conventions:
   2) `wx.aui.AuiManager` ==> `aui.auimanager.png`
 
 
-Please do send your screenshots to me at `this <andrea.gavana@gmail.com>`_ e-mail address or, if
-you have commit rights in the current Phoenix Github area, feel free to upload them yourself under the
-following folder:
+Please do send your screenshots to me at `this <andrea.gavana@gmail.com>`_ e-mail address or 
+you can submit the screenshots to the `wxWidgets/Phoenix Github repository <https://github.com/wxWidgets/Phoenix>`_.
+The screenshots should be placed in the source tree in this folder:
 
-``/trunk/docs/sphinx/_static/images/widgets/fullsize``
+``Phoenix/trunk/docs/sphinx/_static/images/widgets/fullsize``
 
-Please make sure to upload your images in the appropriate sub-folder, depending on the platform you
+Please make sure to put your images in the appropriate sub-folder, depending on the platform you
 chose to take the screenshots on.
 
