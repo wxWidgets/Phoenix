@@ -326,23 +326,20 @@ class BufferedWindow(wx.Window):
 
         self._isWindowCreated = False
         if '__WXGTK__' in wx.PlatformInfo:
-            self.Bind(wx.EVT_WINDOW_CREATE, self.doOnSize)
+            self.Bind(wx.EVT_WINDOW_CREATE, self.doSetWindowCreated)
         else:
             # OnSize called to make sure the buffer is initialized.
             # This might result in OnSize getting called twice on some
             # platforms at initialization, but little harm done.
-            self._isWindowCreated = True
-            self.OnSize(None)
-
-
-    def doOnSize(self, evt):
+            self.doSetWindowCreated(None)
+            
+    def doSetWindowCreated(self, evt):
         """
         Method to call OnSize on GTK when window is created.
         """
         self._isWindowCreated = True
-        self.OnSize(evt)
-
-
+        self.OnSize(None)
+    
     def Draw(self, dc):
         """
         This method should be overridden when sub-classed.
