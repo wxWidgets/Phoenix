@@ -539,7 +539,7 @@ class SpeedMeter(BufferedWindow):
 
         size  = self.GetClientSize()
 
-        if size.x < 21 or size.y < 21:
+        if size.x < 2 or size.y < 2:
             return
 
         new_dim = size.Get()
