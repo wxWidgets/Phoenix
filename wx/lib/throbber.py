@@ -19,6 +19,7 @@ can continue unencumbered.
 #
 # o 2.5 compatability update.
 #
+# Tags:        phoenix-port, unittest, py3-port
 
 
 import os
@@ -48,23 +49,48 @@ class Throbber(wx.Panel):
     animation. A label may also be specified to show on top of the animation.
     """
     def __init__(self, parent, id,
-                 bitmap,          # single (composite) bitmap or list of bitmaps
+                 bitmap,
                  pos = wx.DefaultPosition,
                  size = wx.DefaultSize,
-                 frameDelay = 0.1,# time between frames
-                 frames = 0,      # number of frames (only necessary for composite image)
-                 frameWidth = 0,  # width of each frame (only necessary for composite image)
-                 label = None,    # optional text to be displayed
-                 overlay = None,  # optional image to overlay on animation
-                 reverse = 0,     # reverse direction at end of animation
-                 style = 0,       # window style
+                 frameDelay = 0.1,
+                 frames = 0,
+                 frameWidth = 0,
+                 label = None,
+                 overlay = None,
+                 reverse = 0,
+                 style = 0,
                  name = "throbber",
                  rest = 0,
                  current = 0,
                  direction = 1,
                  sequence = None
                  ):
-        wx.Panel.__init__(self, parent, id, pos, size, style, name)
+        """
+        Default class constructor.
+
+        :param `parent`: parent window, must not be ``None``
+        :param integer `id`: window identifier. A value of -1 indicates a default value
+        :param `bitmap`: a :class:`Bitmap` to be used
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform
+        :param `frameDelay`: time delay between frames
+        :param `frames`: number of frames (only necessary for composite image)
+        :param `frameWidth`: width of each frame (only necessary for composite image)
+        :param string `label`: optional text to be displayed
+        :param `overlay`: optional :class:`Bitmap` to overlay on animation
+        :param boolean `reverse`: reverse direction at end of animation
+        :param integer `style`: the underlying :class:`Control` style
+        :param string `name`: the widget name.
+        :param `rest`: ???
+        :param `current`: ???
+        :param `direction`: ???
+        :param `sequence`: ???
+
+        """
+        
+        super(Throbber, self).__init__(parent, id, pos, size, style, name)
         self.name = name
         self.label = label
         self.running = (1 != 1)
