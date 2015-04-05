@@ -45,7 +45,11 @@ class TestPanel(wx.Panel):
         self.throbbers['autoreverse']['throbber'] = \
             throb.Throbber(self, -1, images, frameDelay = 0.1, reverse = True)
 
-        self.throbbers['autoreverse']['throbber'].sequence.append(0)
+        seq = self.throbbers['autoreverse']['throbber'].sequence
+        if isinstance(seq, range):
+            seq = list(seq).append(0)
+        else:
+            seq.append(0)
 
         self.throbbers['label']['throbber'] = \
             throb.Throbber(self, -1, images, frameDelay = 0.1, label = 'Label')
