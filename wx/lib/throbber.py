@@ -83,10 +83,10 @@ class Throbber(wx.Panel):
         :param boolean `reverse`: reverse direction at end of animation
         :param integer `style`: the underlying :class:`Control` style
         :param string `name`: the widget name.
-        :param `rest`: ???
-        :param `current`: ???
-        :param `direction`: ???
-        :param `sequence`: ???
+        :param `rest`: the rest frame
+        :param `current`: the current frame
+        :param `direction`: 1 advances = -1 reverses
+        :param `sequence`: sequence of frames, defaults to range(self.frames)
 
         """
         
