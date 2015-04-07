@@ -19,7 +19,7 @@ can continue unencumbered.
 #
 # o 2.5 compatability update.
 #
-# Tags:        phoenix-port, unittest, py3-port
+# Tags:        phoenix-port, unittest, py3-port, documented
 
 
 import os
@@ -161,19 +161,33 @@ class Throbber(wx.Panel):
 
 
     def DoGetBestSize(self):
+        """
+        Get the best size of the widget.
+        
+        :returns: the width and height
+        
+        """
         return (self.width, self.height)
     
 
     def OnTimer(self, event):
+        """The timer handler, post event to update throbber."""
         wx.PostEvent(self, UpdateThrobberEvent())
 
 
     def OnDestroyWindow(self, event):
+        """The destory handler, stop the animation on destroying the window."""
         self.Stop()
         event.Skip()
 
 
     def Draw(self, dc):
+        """
+        Draw the widget.
+        
+        :param `dc`: the :class:`DC` to draw on
+        
+        """
         dc.DrawBitmap(self.submaps[self.sequence[self.current]], 0, 0, True)
         if self.overlay and self.showOverlay:
             dc.DrawBitmap(self.overlay, self.overlayX, self.overlayY, True)
@@ -184,15 +198,18 @@ class Throbber(wx.Panel):
 
 
     def OnPaint(self, event):
+        """The paint handler."""
         self.Draw(wx.PaintDC(self))
         event.Skip()
 
 
     def Update(self, event):
+        """The update handler."""
         self.Next()
 
 
     def Wrap(self):
+        """Wrap the throbber around."""
         if self.current >= len(self.sequence):
             if self.autoReverse:
                 self.Reverse()
@@ -210,45 +227,55 @@ class Throbber(wx.Panel):
 
     # --------- public methods ---------
     def SetFont(self, font):
-        """Set the font for the label"""
+        """
+        Set the font for the label.
+        
+        :param `font`: the :class:`Font` to use
+        
+        """
         wx.Panel.SetFont(self, font)
         self.SetLabel(self.label)
         self.Draw(wx.ClientDC(self))
 
 
     def Rest(self):
-        """Stop the animation and return to frame 0"""
+        """Stop the animation and return to frame 0."""
         self.Stop()
         self.current = self.rest
         self.Draw(wx.ClientDC(self))
 
 
     def Reverse(self):
-        """Change the direction of the animation"""
+        """Change the direction of the animation."""
         self.direction = -self.direction
 
 
     def Running(self):
-        """Returns True if the animation is running"""
+        """Returns True if the animation is running."""
         return self.running
 
 
     def Start(self):
-        """Start the animation"""
+        """Start the animation."""
         if not self.running:
             self.running = not self.running
             self.timer.Start(int(self.frameDelay * 1000))
 
 
     def Stop(self):
-        """Stop the animation"""
+        """Stop the animation."""
         if self.running:
             self.timer.Stop()
             self.running = not self.running
 
 
     def SetCurrent(self, current):
-        """Set current image"""
+        """
+        Set current image.
+        
+        :param int `current`: the index to the current image
+        
+        """
         running = self.Running()
         if not running:
             #FIXME: need to make sure value is within range!!!
@@ -257,12 +284,22 @@ class Throbber(wx.Panel):
 
 
     def SetRest(self, rest):
-        """Set rest image"""
+        """
+        Set rest image.
+        
+        :param int `rest`: the index for the rest frame.
+        
+        """
         self.rest = rest
 
 
     def SetSequence(self, sequence = None):
-        """Order to display images"""
+        """
+        Order to display images in.
+        
+        :param `sequence`: a sequence containing the order to display images in.
+        
+        """
 
         # self.sequence can be changed, but it's not recommended doing it
         # while the throbber is running.  self.sequence[0] should always
@@ -283,31 +320,36 @@ class Throbber(wx.Panel):
             
 
     def Increment(self):
-        """Display next image in sequence"""
+        """Display next image in sequence."""
         self.current += 1
         self.Wrap()
 
 
     def Decrement(self):
-        """Display previous image in sequence"""
+        """Display previous image in sequence."""
         self.current -= 1
         self.Wrap()
 
 
     def Next(self):
-        """Display next image in sequence according to direction"""
+        """Display next image in sequence according to direction."""
         self.current += self.direction
         self.Wrap()
 
 
     def Previous(self):
-        """Display previous image in sequence according to direction"""
+        """Display previous image in sequence according to direction."""
         self.current -= self.direction
         self.Wrap()
 
 
     def SetFrameDelay(self, frameDelay = 0.05):
-        """Delay between each frame"""
+        """
+        Delay between each frame.
+        
+        :param float `frameDelay`: the delay between frames.
+        
+        """
         self.frameDelay = frameDelay
         if self.running:
             self.Stop()
@@ -315,7 +357,12 @@ class Throbber(wx.Panel):
 
 
     def ToggleOverlay(self, state = None):
-        """Toggle the overlay image"""
+        """
+        Toggle the overlay image.
+        
+        :param boolean `state`: set the overlay state or if None toggle state.
+        
+        """
         if state is None:
             self.showOverlay = not self.showOverlay
         else:
@@ -324,7 +371,12 @@ class Throbber(wx.Panel):
 
 
     def ToggleLabel(self, state = None):
-        """Toggle the label"""
+        """
+        Toggle the label.
+        
+        :param boolean `state`: set the label state or if None toggle state.
+        
+        """
         if state is None:
             self.showLabel = not self.showLabel
         else:
@@ -333,7 +385,12 @@ class Throbber(wx.Panel):
 
 
     def SetLabel(self, label):
-        """Change the text of the label"""
+        """
+        Change the text of the label.
+        
+        :param string `label`: the label text.
+        
+        """
         self.label = label
         if label:
             extentX, extentY = self.GetTextExtent(label)
