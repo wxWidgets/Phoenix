@@ -164,7 +164,7 @@ class ResizeWidget(wx.Panel):
         """
         Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`ResizeWidget`.
     
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `evt`: a :class:`MouseEvent` event to be processed.
         
         """
         if self._hitTest(evt.GetPosition()) and self._resizeEnabled:
@@ -176,7 +176,7 @@ class ResizeWidget(wx.Panel):
         """
         Handles the ``wx.EVT_LEFT_UP`` event for :class:`ResizeWidget`.
         
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `evt`: a :class:`MouseEvent` event to be processed.
         
         """
         if self.HasCapture():
@@ -188,7 +188,7 @@ class ResizeWidget(wx.Panel):
         """
         Handles the ``wx.EVT_MOTION`` event for :class:`ResizeWidget`.
     
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `evt`: a :class:`MouseEvent` event to be processed.
     
         """
         # set or reset the drag cursor
@@ -244,7 +244,7 @@ class ResizeWidget(wx.Panel):
         """
         Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`ResizeWidget`.
     
-        :param `event`: a :class:`MouseEvent` event to be processed.
+        :param `evt`: a :class:`MouseEvent` event to be processed.
     
         """
         if self._resizeCursor:
@@ -256,7 +256,7 @@ class ResizeWidget(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ResizeWidget`.
     
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `evt`: a :class:`SizeEvent` event to be processed.
     
         """
         if not self._managedChild:
@@ -274,7 +274,7 @@ class ResizeWidget(wx.Panel):
         """
         Handles the ``wx.EVT_PAINT`` event for :class:`ResizeWidget`.
     
-        :param `event`: a :class:`PaintEvent` event to be processed.
+        :param `evt`: a :class:`PaintEvent` event to be processed.
     
         """
         # draw the resize handle
