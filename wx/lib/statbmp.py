@@ -7,7 +7,7 @@
 # Created:     12-May-2004
 # Copyright:   (c) 2004 by Total Control Software
 # Licence:     wxWindows license
-# Tags:        phoenix-port, unittest, documented
+# Tags:        phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------
 
 """
