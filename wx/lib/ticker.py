@@ -213,7 +213,12 @@ class Ticker(wx.Control):
 
 
     def OnTick(self, evt):
-        """The on tick handler."""
+        """
+        Handles the ``wx.EVT_TIMER`` event for :class:`Ticker`.
+      
+        :param `evt`: a :class:`TimerEvent` event to be processed.
+
+        """
         self._offset += self._ppf
         w1 = self.GetSize()[0]
         w2 = self._extent[0]
@@ -223,7 +228,12 @@ class Ticker(wx.Control):
 
 
     def OnPaint(self, evt):
-        """The on paint handler."""
+        """
+        Handles the ``wx.EVT_PAINT`` event for :class:`Ticker`.
+    
+        :param `evt`: a :class:`PaintEvent` event to be processed.
+    
+        """
         dc = wx.BufferedPaintDC(self)
         brush = wx.Brush(self.GetBackgroundColour())
         dc.SetBackground(brush)
@@ -232,7 +242,14 @@ class Ticker(wx.Control):
 
 
     def OnErase(self, evt):
-        """Noop because of double buffering"""
+        """
+        Noop because of double buffering
+        
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`Ticker`.
+    
+        :param `evt`: a :class:`EraseEvent` event to be processed.
+    
+        """
         pass
 
 
