@@ -171,12 +171,22 @@ class Throbber(wx.Panel):
     
 
     def OnTimer(self, event):
-        """The timer handler, post event to update throbber."""
+        """
+        Handles the ``wx.EVT_TIMER`` event for :class:`Throbber`.
+    
+        :param `event`: a :class:`TimerEvent` event to be processed.
+    
+        """
         wx.PostEvent(self, UpdateThrobberEvent())
 
 
     def OnDestroyWindow(self, event):
-        """The destory handler, stop the animation on destroying the window."""
+        """
+        Handles the ``wx.EVT_WINDOW_DESTROY`` event for :class:`Throbber`.
+    
+        :param `event`: a :class:`WindowDestroyEvent` event to be processed.
+    
+        """
         self.Stop()
         event.Skip()
 
@@ -198,13 +208,23 @@ class Throbber(wx.Panel):
 
 
     def OnPaint(self, event):
-        """The paint handler."""
+        """
+        Handles the ``wx.EVT_PAINT`` event for :class:`Throbber`.
+    
+        :param `event`: a :class:`PaintEvent` event to be processed.
+    
+        """
         self.Draw(wx.PaintDC(self))
         event.Skip()
 
 
     def Update(self, event):
-        """The update handler."""
+        """
+        Handles the ``EVT_UPDATE_THROBBER`` event for :class:`ResizeWidget`.
+    
+        :param `event`: a :class:`UpdateThrobberEvent` event to be processed.
+    
+        """
         self.Next()
 
 
