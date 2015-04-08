@@ -115,7 +115,8 @@ present yet. They can be run individually or you can specify all of them on a
 single command line, in the order given. Once a command has succeded in one run
 of build.py there is no need to run that command again in a later run, unless
 you've changed something which that command has the responsibility to
-process.
+process. The commands depend on the success of their commands before. If you
+want to build you have to use all commands in the given order.
 
 * **dox**: Builds the XML files from the wxWidgets documentation source,
   which will be used as input for the etg command.
