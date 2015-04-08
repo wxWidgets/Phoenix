@@ -161,21 +161,36 @@ class ResizeWidget(wx.Panel):
 
     #=== Event handler methods ===
     def OnLeftDown(self, evt):
-        """Left down event handler."""
+        """
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`ResizeWidget`.
+    
+        :param `event`: a :class:`MouseEvent` event to be processed.
+        
+        """
         if self._hitTest(evt.GetPosition()) and self._resizeEnabled:
             self.CaptureMouse()
             self._dragPos = evt.GetPosition()
 
 
     def OnLeftUp(self, evt):
-        """Left up event handler."""
+        """
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`ResizeWidget`.
+        
+        :param `event`: a :class:`MouseEvent` event to be processed.
+        
+        """
         if self.HasCapture():
             self.ReleaseMouse()
         self._dragPos = None
 
 
     def OnMouseMove(self, evt):
-        """Mouse move event handler."""
+        """
+        Handles the ``wx.EVT_MOTION`` event for :class:`ResizeWidget`.
+    
+        :param `event`: a :class:`MouseEvent` event to be processed.
+    
+        """
         # set or reset the drag cursor
         pos = evt.GetPosition()
         if self._hitTest(pos) and self._resizeEnabled:
@@ -226,14 +241,24 @@ class ResizeWidget(wx.Panel):
 
 
     def OnMouseLeave(self, evt):
-        """Mouse leave event handler."""
+        """
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`ResizeWidget`.
+    
+        :param `event`: a :class:`MouseEvent` event to be processed.
+    
+        """
         if self._resizeCursor:
             self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
             self._resizeCursor = False
 
 
     def OnSize(self, evt):
-        """Size event handler."""
+        """
+        Handles the ``wx.EVT_SIZE`` event for :class:`ResizeWidget`.
+    
+        :param `event`: a :class:`SizeEvent` event to be processed.
+    
+        """
         if not self._managedChild:
             return
         sz = self.GetSize()
@@ -246,7 +271,12 @@ class ResizeWidget(wx.Panel):
 
 
     def OnPaint(self, evt):
-        """Paint event handler."""
+        """
+        Handles the ``wx.EVT_PAINT`` event for :class:`ResizeWidget`.
+    
+        :param `event`: a :class:`PaintEvent` event to be processed.
+    
+        """
         # draw the resize handle
         dc = wx.PaintDC(self)
         w, h = self.GetSize()
