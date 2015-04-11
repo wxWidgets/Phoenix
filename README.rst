@@ -109,13 +109,16 @@ packages.
 Important build.py commands
 ---------------------------
 
-The following commands are required to be able to build Phoenix from scratch.
-In other words, from a pristine source tree with none of the generated code
-present yet. They can be run individually or you can specify all of them on a
-single command line, in the order given. Once a command has succeded in one run
-of build.py there is no need to run that command again in a later run, unless
-you've changed something which that command has the responsibility to
-process.
+The following ``build.py`` commands are required to be able to build Phoenix
+from scratch. In other words, from a pristine source tree with none of the
+generated code present yet. They can be run individually or you can specify
+all of them on a single command line, in the order given. Once a command has
+succeded in one run of build.py there is no need to run that command again in
+a later run, unless you've changed something which that command has the
+responsibility to process. Many of the commands require the results of the
+earlier commands, so at least the first time you run the build you will need
+to use all 4 of the commands (or their equivalents for composite commands) in
+the given order.
 
 * **dox**: Builds the XML files from the wxWidgets documentation source,
   which will be used as input for the etg command.
