@@ -90,6 +90,18 @@ class statusbar_Tests(wtc.WidgetTestCase):
         self.assertEqual(widths, [200, -1, 100])
         
         
+    def test_statusbarWidths3(self):
+        sb = wx.StatusBar(self.frame)
+        sb.SetFieldsCount(3, [200, -1, 100])
+        self.frame.SetStatusBar(sb)
+    
+        self.frame.SendSizeEvent()
+        self.myYield()
+    
+        widths = [sb.GetStatusWidth(i) for i in range(sb.GetFieldsCount())]
+        self.assertEqual(widths, [200, -1, 100])
+    
+        
     def test_statusbarGetFielRect(self):
         # Test that GetFieldRect has been tweaked to be compatible with Classic
         sb = self.frame.CreateStatusBar(3)

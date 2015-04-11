@@ -57,6 +57,23 @@ def run():
         self->SetStatusStyles(styles->size(), ptr);
         """)
     
+    # For SetFieldsCount just accept the number arg, and let the user set the
+    # widths with SetStatusWidths like in Classic
+    # TODO:
+    #c.find('SetFieldsCount.widths').ignore()
+
+    m = c.find('SetFieldsCount')
+    m.find('widths').type = 'const wxArrayInt*'
+    m.argsString = '(int number = 1, const wxArrayInt* widths = NULL)'
+    m.setCppCode("""\
+        if (widths) {
+            const int* ptr = &widths->front();
+            self->SetFieldsCount(number, ptr);
+            }
+        else {
+            self->SetFieldsCount(number);
+            }
+        """)
     
     # Change GetFieldRect to return the rectangle (for Pythonicity and Classic compatibility)
     c.find('GetFieldRect').ignore()
