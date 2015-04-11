@@ -62,7 +62,6 @@ Usage example::
 
             vbox = wx.BoxSizer(wx.VERTICAL)
 
-
             desc = wx.StaticText(self, -1, text)
                                 
             desc.SetForegroundColour("Blue")
@@ -71,7 +70,6 @@ Usage example::
             vbox.Add((20, 20))
 
             self.SetSizer(vbox)
-            self.SetAutoLayout(1)
             self.SetupScrolling()
 
 
