@@ -5616,8 +5616,6 @@ class UltimateListHeaderWindow(wx.Control):
                     colItem.Check(not isChecked)
 
                 self._owner.SetColumn(column, colItem)
-                evt = (self._isFooter and [wxEVT_COMMAND_LIST_FOOTER_CHECKED] or [wxEVT_COMMAND_LIST_COL_CHECKED])[0]
-                self.SendListEvent(evt, pos)
                 self.RefreshRect(rect)
 
                 if self._isFooter:
@@ -5628,6 +5626,9 @@ class UltimateListHeaderWindow(wx.Control):
                 elif parent.HasAGWFlag(ULC_AUTO_TOGGLE_CHILD):
                     self._owner.AutoToggleChild(self._column)
 
+                evt = (self._isFooter and [wxEVT_COMMAND_LIST_FOOTER_CHECKED] or [wxEVT_COMMAND_LIST_COL_CHECKED])[0]
+                self.SendListEvent(evt, pos)
+                
                 return True
 
         return False
