@@ -7,9 +7,11 @@
 # Created:     29-Aug-2004
 # Copyright:   (c) 2004 by Chris Mellon
 # Licence:     wxWindows license
+# Tags:        phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------
 
-"""News-ticker style scrolling text control
+"""
+News-ticker style scrolling text control
 
     * Can scroll from right to left or left to right.
 
@@ -31,16 +33,33 @@ class Ticker(wx.Control):
     def __init__(self,
             parent,
             id=-1,
-            text=wx.EmptyString,  #text in the ticker
-            fgcolor = wx.BLACK,   #text/foreground color
-            bgcolor = wx.WHITE,   #background color
-            start=True,           #if True, the ticker starts immediately
-            ppf=2,                #pixels per frame
-            fps=20,               #frames per second
-            direction="rtl",      #direction of ticking, rtl or ltr
+            text=wx.EmptyString,
+            fgcolor = wx.BLACK,
+            bgcolor = wx.WHITE,
+            start=True,
+            ppf=2,
+            fps=20,
+            direction="rtl",
             pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.NO_BORDER,
             name="Ticker"
         ):
+        """
+        Default class constructor.
+
+        :param Window `parent`: the parent
+        :param integer `id`: an identifier for the control: a value of -1 is taken to mean a default
+        :param string `text`: text in the ticker
+        :param Colour `fgcolor`: text/foreground color
+        :param Colour `bgcolor`: background color
+        :param boolean `start`: if True, the ticker starts immediately
+        :param int `ppf`: pixels per frame
+        :param int `fps`: frames per second
+        :param `direction`: direction of ticking, 'rtl' or 'ltr'
+        :param Point `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform
+        :param `name`: the control name
+            
+        """
         wx.Control.__init__(self, parent, id=id, pos=pos, size=size, style=style, name=name)
         self.timer = wx.Timer(owner=self)
         self._extent = (-1, -1)  #cache value for the GetTextExtent call
@@ -76,34 +95,59 @@ class Ticker(wx.Control):
 
 
     def SetFPS(self, fps):
-        """Adjust the update speed of the ticker"""
+        """
+        Adjust the update speed of the ticker.
+        
+        :param int `fps`: frames per second.
+        
+        """
         self._fps = fps
         self.Stop()
         self.Start()
 
 
     def GetFPS(self):
-        """Update speed of the ticker"""
+        """
+        Get the frames per second speed of the ticker.
+        """
         return self._fps
 
 
     def SetPPF(self, ppf):
-        """Set the number of pixels per frame the ticker moves - ie, how "jumpy" it is"""
+        """
+        Set the number of pixels per frame the ticker moves - ie,
+        how "jumpy" it is.
+        
+        :param int `ppf`: the pixels per frame setting.
+        
+        """
         self._ppf = ppf
 
 
     def GetPPF(self):
-        """Pixels per frame"""
+        """Get pixels per frame setting."""
         return self._ppf
 
 
     def SetFont(self, font):
+        """
+        Set the font for the control.
+        
+        :param Font `font`: the font to be used.
+        
+        """
         self._extent = (-1, -1)
         wx.Control.SetFont(self, font)
 
 
     def SetDirection(self, dir):
-        """Sets the direction of the ticker: right to left(rtl) or left to right (ltr)"""
+        """
+        Sets the direction of the ticker: right to left (rtl) or
+        left to right (ltr).
+        
+        :param `dir`: the direction 'rtl' or 'ltr'
+        
+        """
         if dir == "ltr" or dir == "rtl":
             if self._offset != 0:
                 #Change the offset so it's correct for the new direction
@@ -114,11 +158,17 @@ class Ticker(wx.Control):
 
 
     def GetDirection(self):
+        """Get the set direction."""
         return self._dir
 
 
     def SetText(self, text):
-        """Set the ticker text."""
+        """
+        Set the ticker text.
+        
+        :param string `text`: the ticker text
+        
+        """
         self._text = text
         self._extent = (-1, -1)
         if not self._text:
@@ -126,11 +176,17 @@ class Ticker(wx.Control):
 
 
     def GetText(self):
+        """Get the current ticker text."""
         return self._text
 
 
     def UpdateExtent(self, dc):
-        """Updates the cached text extent if needed"""
+        """
+        Updates the cached text extent if needed.
+        
+        :param DC `dc`: the dc to use.
+        
+        """
         if not self._text:
             self._extent = (-1, -1)
             return
@@ -139,7 +195,12 @@ class Ticker(wx.Control):
 
 
     def DrawText(self, dc):
-        """Draws the ticker text at the current offset using the provided DC"""
+        """
+        Draws the ticker text at the current offset using the provided DC.
+        
+        :param DC `dc`: the dc to use.
+        
+        """
         dc.SetTextForeground(self.GetForegroundColour())
         dc.SetFont(self.GetFont())
         self.UpdateExtent(dc)
@@ -152,6 +213,12 @@ class Ticker(wx.Control):
 
 
     def OnTick(self, evt):
+        """
+        Handles the ``wx.EVT_TIMER`` event for :class:`Ticker`.
+      
+        :param `evt`: a :class:`TimerEvent` event to be processed.
+
+        """
         self._offset += self._ppf
         w1 = self.GetSize()[0]
         w2 = self._extent[0]
@@ -161,6 +228,12 @@ class Ticker(wx.Control):
 
 
     def OnPaint(self, evt):
+        """
+        Handles the ``wx.EVT_PAINT`` event for :class:`Ticker`.
+    
+        :param `evt`: a :class:`PaintEvent` event to be processed.
+    
+        """
         dc = wx.BufferedPaintDC(self)
         brush = wx.Brush(self.GetBackgroundColour())
         dc.SetBackground(brush)
@@ -169,7 +242,14 @@ class Ticker(wx.Control):
 
 
     def OnErase(self, evt):
-        """Noop because of double buffering"""
+        """
+        Noop because of double buffering
+        
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`Ticker`.
+    
+        :param `evt`: a :class:`EraseEvent` event to be processed.
+    
+        """
         pass
 
 
@@ -179,7 +259,8 @@ class Ticker(wx.Control):
 
 
     def DoGetBestSize(self):
-        """Width we don't care about, height is either -1, or the character
+        """
+        Width we don't care about, height is either -1, or the character
         height of our text with a little extra padding
         """
         if self._extent == (-1, -1):
@@ -193,7 +274,7 @@ class Ticker(wx.Control):
 
 
     def ShouldInheritColours(self):
-        """Don't get colours from our parent..."""
+        """Don't get colours from our parent."""
         return False
 
 
