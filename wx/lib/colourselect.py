@@ -34,7 +34,7 @@
 #
 
 """
-Provides a :class:`ColourSelect` button that, when clicked, will display a
+Provides a :class:`~lib.colourselect.ColourSelect` button that, when clicked, will display a
 colour selection dialog.
 
 

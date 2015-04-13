@@ -13,7 +13,7 @@
 #---------------------------------------------------------------------------
 
 """
-This module contains the :class:`ExpandoTextCtrl`, which is a multi-line
+This module contains the :class:`~lib.expando.ExpandoTextCtrl`, which is a multi-line
 text control that will expand its height on the fly to be able to show
 all the lines of the content of the control.
 

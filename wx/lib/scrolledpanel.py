@@ -20,7 +20,7 @@
 #
 
 """
-:class:`ScrolledPanel` extends :class:`ScrolledWindow`, adding all
+:class:`~lib.scrolledpanel.ScrolledPanel` extends :class:`ScrolledWindow`, adding all
 the necessary bits to set up scroll handling for you.
 
 Description

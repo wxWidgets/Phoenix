@@ -11,8 +11,8 @@
 # Tags:        phoenix-port, unittest, documentation, py3-port
 #----------------------------------------------------------------------
 """
-This module provides the `MultiSplitterWindow` class, which is very
-similar to the standard `wx.SplitterWindow` except it can be split
+This module provides the :class:`~lib.splitter.MultiSplitterWindow` class, which is very
+similar to the standard :class:`SplitterWindow` except it can be split
 more than once.
 """
 

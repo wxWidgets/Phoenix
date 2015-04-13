@@ -18,7 +18,7 @@
 #
 
 """
-:class:`GenStaticText` is a generic implementation of :class:`StaticText`.
+:class:`~lib.stattext.GenStaticText` is a generic implementation of :class:`StaticText`.
 
 
 Description
