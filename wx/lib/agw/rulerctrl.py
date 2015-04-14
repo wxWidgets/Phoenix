@@ -23,7 +23,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`RulerCtrl` implements a ruler window that can be placed on top, bottom, left or right
+:class:`~lib.agw.rulerctrl.RulerCtrl` implements a ruler window that can be placed on top, bottom, left or right
 to any wxPython widget.
 
 

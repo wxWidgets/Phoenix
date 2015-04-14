@@ -41,7 +41,7 @@
 
 
 """
-`ShapedButton` tries to fill the lack of "custom shaped" controls in wxPython
+:class:`~lib.agw.shapedbutton.SButton` tries to fill the lack of "custom shaped" controls in wxPython
 and it can be used to build round or elliptic-shaped buttons.
 
 

@@ -37,7 +37,7 @@
 
 
 """
-:class:`XLSGrid` is a class based on :class:`grid.Grid` that can be used to faithfully
+:class:`~lib.agw.xlsgrid.XLSGrid` is a class based on :class:`grid.Grid` that can be used to faithfully
 reproduce the appearance of a Microsoft Excel spreadsheet (one worksheet per
 every instance of :class:`XLSGrid`).
 

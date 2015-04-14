@@ -40,7 +40,7 @@
 
 
 """
-:class:`CustomTreeCtrl` is a class that mimics the behaviour of :class:`TreeCtrl`, with some more
+:class:`~lib.agw.customtreectrl.CustomTreeCtrl` is a class that mimics the behaviour of :class:`TreeCtrl`, with some more
 enhancements.
 
 

@@ -24,7 +24,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`GradientButton` is another custom-drawn button class which mimics Windows CE mobile
+:class:`~lib.agw.gradientbutton.GradientButton` is another custom-drawn button class which mimics Windows CE mobile
 gradient buttons.
 
 

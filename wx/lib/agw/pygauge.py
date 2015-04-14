@@ -26,7 +26,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`PyGauge` is a generic :class:`Gauge` implementation.
+:class:`~lib.agw.pygauge.PyGauge` is a generic :class:`Gauge` implementation.
 
 
 Description

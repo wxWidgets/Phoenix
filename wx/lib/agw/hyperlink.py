@@ -27,7 +27,7 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`HyperLinkCtrl` is a control for wxPython that acts like a hyper link
+:class:`~lib.agw.hyperlink.HyperLinkCtrl` is a control for wxPython that acts like a hyper link
 in a typical browser.
 
 
