@@ -3,11 +3,11 @@
 import wx
 
 try:
-    import pyPdf
+    import PyPDF2
     from wx.lib.pdfviewer import pdfViewer, pdfButtonPanel
-    havePyPdf = True
+    havePyPdf2 = True
 except ImportError:
-    havePyPdf = False
+    havePyPdf2 = False
 
 #----------------------------------------------------------------------
 
@@ -47,14 +47,14 @@ class TestPanel(wx.Panel):
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
-    if havePyPdf:
+    if havePyPdf2:
         win = TestPanel(nb, log)
         return win
     else:
         from Main import MessagePanel
         win = MessagePanel(nb, 
-                           'This demo requires the pyPdf package to be installed.\n'
-                           'See: http://pybrary.net/pyPdf/', 
+                           'This demo requires the PyPDF2 package to be installed.\n'
+                           'See: https://pypi.python.org/pypi/PyPDF2', 
                            'Sorry', wx.ICON_WARNING)
         return win
 
