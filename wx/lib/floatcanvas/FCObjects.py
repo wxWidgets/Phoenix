@@ -2381,8 +2381,8 @@ class DotGrid:
     """
     An example of a Grid Object -- it is set on the FloatCanvas with one of:: 
     
-    FloatCanvas.GridUnder = Grid
-    FloatCanvas.GridOver = Grid
+        FloatCanvas.GridUnder = Grid
+        FloatCanvas.GridOver = Grid
     
     It will be drawn every time, regardless of the viewport.
     
