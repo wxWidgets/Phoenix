@@ -15,7 +15,7 @@ samplePdf = os.path.join(dataDir, "sample.pdf")
 
 #---------------------------------------------------------------------------
 
-@unittest.skip('crashing on OSX...')  # problem with a nested yield in GenericProgressDialog?
+@unittest.skipIf('wxMAC' in wx.PlatformInfo, 'crashing on OSX...')  # problem with a nested yield in GenericProgressDialog?
 class lib_pdfviewer_pdfviewer_Tests(wtc.WidgetTestCase):
         
     @unittest.skipIf(not havePyPDF, "pyPdf required")
