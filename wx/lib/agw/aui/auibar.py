@@ -12,7 +12,7 @@
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
-`auibar.py` contains an implementation of :class:`AuiToolBar`, which is a completely owner-drawn
+`auibar.py` contains an implementation of :class:`~lib.agw.aui.auibar.AuiToolBar`, which is a completely owner-drawn
 toolbar perfectly integrated with the AUI layout system. This allows drag and drop of
 toolbars, docking/floating behaviour and the possibility to define "overflow" items
 in the toolbar itself.

@@ -25,7 +25,8 @@
 # --------------------------------------------------------------------------- #
 
 """
-This module contains the definitions of `PersistentObject` and `PersistenceManager` objects.
+This module contains the definitions of :class:`~lib.agw.persist.persitencemanager.PersistentObject`
+and :class:`~lib.agw.persist.persitencemanager.PersistenceManager` objects.
 """
 
 import os
