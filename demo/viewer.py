@@ -52,13 +52,17 @@
         catcher window has event handlers that actually create the
         new window.
 """
+from wx.lib import six
 
 class viewer_thread:
     def start(self):
         """ start the GUI thread
         """
         import  time
-        import  thread
+        if six.PY2:
+            import  thread
+        else:
+            import _thread as thread
         thread.start_new_thread(self.run, ())
 
     def run(self):

@@ -18,7 +18,7 @@ This module is used to compute Bezier curves for PDF rendering.
 """
 
 import wx
-from vec2d import *
+from .vec2d import *
  
 def calculate_bezier(p, steps = 30):
     """
