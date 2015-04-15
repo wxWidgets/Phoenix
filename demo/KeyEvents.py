@@ -2,6 +2,7 @@
 
 import wx
 import wx.lib.mixins.listctrl as listmix
+from wx.lib.six import unichr
 
 #----------------------------------------------------------------------
 
@@ -273,9 +274,8 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
 
         UniChr = ''
         if "unicode" in wx.PlatformInfo:
-            # UniChr = "\"" + unichr(evt.GetUnicodeKey()) + "\""
-            UniChr = "\"" + unichr(keycode) + "\""
-
+            UniChr = "\"" + unichr(evt.GetUnicodeKey()) + "\""
+            
         modifiers = ""
         for mod, ch in [(evt.ControlDown(),    'C'),
                         (evt.AltDown(),        'A'),
@@ -291,13 +291,10 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
         self.SetItem(id, 1, keyname)
         self.SetItem(id, 2, str(keycode))
         self.SetItem(id, 3, modifiers)
-        # self.SetItem(id, 4, str(evt.GetUnicodeKey()))
-        self.SetItem(id, 4, unicode(unichr(keycode)))
+        self.SetItem(id, 4, str(evt.GetUnicodeKey()))
         self.SetItem(id, 5, UniChr)
         self.SetItem(id, 6, str(evt.GetRawKeyCode()))
         self.SetItem(id, 7, str(evt.GetRawKeyFlags()))
-
-        #print(id, evType, keyname, str(keycode), modifiers, str(evt.GetRawKeyCode()), str(evt.GetRawKeyFlags()))
 
         self.EnsureVisible(id)
 

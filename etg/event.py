@@ -377,6 +377,7 @@ def run():
     c = module.find('wxKeyEvent')
     
     c.find('GetPosition').findOverload('wxCoord').ignore()
+    c.find('GetUnicodeKey').type = 'int'
     
     c.addProperty('X GetX')
     c.addProperty('Y GetY')
