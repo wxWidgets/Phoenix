@@ -560,10 +560,15 @@ class pdfViewer(wx.ScrolledWindow):
         path = []
         for operand, operator in opslist :
             g = self.gstate
+            if six.PY3:
+                operator = operator.decode()
             if operator == 'cm':        # new transformation matrix
                 # some operands need inverting because directions of y axis
                 # in pdf and graphics context are opposite
-                a, b, c, d, e, f = map(float, operand)
+                if six.PY3:
+                    a, b, c, d, e, f = list(map(float, operand))
+                else:
+                    a, b, c, d, e, f = map(float, operand)
                 drawlist.append(['ConcatTransform', (a, -b, -c, d, e, -f), {}])
             elif operator == 'q':       # save state
                 self.saved_state.append(copy.deepcopy(g))
@@ -572,10 +577,16 @@ class pdfViewer(wx.ScrolledWindow):
                 self.gstate = self.saved_state.pop()
                 drawlist.append(['PopState', (), {}])
             elif operator == 'RG':      # Stroke RGB
-                rs, gs, bs = [int(v*255) for v in map(float, operand)]
+                if six.PY3:
+                    rs, gs, bs = [int(v*255) for v in list(map(float, operand))]
+                else:
+                    rs, gs, bs = [int(v*255) for v in map(float, operand)]
                 g.strokeRGB = wx.Colour(rs, gs, bs)
             elif operator == 'rg':      # Fill RGB
-                rf, gf, bf = [int(v*255) for v in map(float, operand)]
+                if six.PY3:
+                    rf, gf, bf = [int(v*255) for v in list(map(float, operand))]
+                else:
+                    rf, gf, bf = [int(v*255) for v in map(float, operand)]
                 g.fillRGB = wx.Colour(rf, gf, bf)
             elif operator == 'K':       # Stroke CMYK
                 rs, gs, bs = self.ConvertCMYK(operand)
@@ -594,10 +605,16 @@ class pdfViewer(wx.ScrolledWindow):
                 g.lineJoinStyle = {0: wx.JOIN_MITER, 1: wx.JOIN_ROUND,
                                               2: wx.JOIN_BEVEL}[ix]
             elif operator == 'd':       # Line dash pattern
-                g.lineDashArray = map(int, operand[0])
+                if six.PY3:
+                    g.lineDashArray = list(map(int, operand[0]))
+                else:
+                    g.lineDashArray = map(int, operand[0])
                 g.lineDashPhase = int(operand[1])
             elif operator in ('m', 'c', 'l', 're', 'v', 'y', 'h'):    # path defining ops
-                path.append([map(float, operand), operator])
+                if six.PY3:
+                    path.append([list(map(float, operand)), operator])
+                else:
+                    path.append([map(float, operand), operator])
             elif operator in ('b', 'B', 'b*', 'B*', 'f', 'F', 'f*',
                                            's', 'S', 'n'):    # path drawing ops
                 drawlist.extend(self.DrawPath(path, operator))
@@ -608,8 +625,12 @@ class pdfViewer(wx.ScrolledWindow):
             elif operator == 'ET':      # end text object
                 continue
             elif operator == 'Tm':      # text matrix
-                g.textMatrix = map(float, operand)
-                g.textLineMatrix = map(float, operand)
+                if six.PY3:
+                    g.textMatrix = list(map(float, operand))
+                    g.textLineMatrix = list(map(float, operand))
+                else:
+                    g.textMatrix = map(float, operand)
+                    g.textLineMatrix = map(float, operand)
             elif operator == 'TL':      # text leading
                 g.leading = float(operand[0])
             #elif operator == 'Tc':     # character spacing
