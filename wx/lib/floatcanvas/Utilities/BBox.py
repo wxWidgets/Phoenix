@@ -25,10 +25,10 @@ class BBox(N.ndarray):
     Takes Data as an array. Data is any python sequence that can be turned into a 
     2x2 numpy array of floats::
 
-    [
-    [MinX, MinY ],
-    [MaxX, MaxY ]
-    ]
+        [
+        [MinX, MinY ],
+        [MaxX, MaxY ]
+        ]
 
     It is a subclass of numpy.ndarray, so for the most part it can be used as 
     an array, and arrays that fit the above description can be used in its place.
@@ -47,10 +47,10 @@ class BBox(N.ndarray):
         Takes Data as an array. Data is any python sequence that can be turned
         into a 2x2 numpy array of floats::
 
-        [
-        [MinX, MinY ],
-        [MaxX, MaxY ]
-        ]
+            [
+            [MinX, MinY ],
+            [MaxX, MaxY ]
+            ]
 
         You don't usually call this directly. BBox objects are created with
         the factory functions:
@@ -204,10 +204,10 @@ def asBBox(data):
     view of the data with that array. The numpy array should be of the correct
     format: a 2x2 numpy array of floats::
 
-    [
-    [MinX, MinY ],
-    [MaxX, MaxY ]
-    ]
+        [
+        [MinX, MinY ],
+        [MaxX, MaxY ]
+        ]
     
     """
 

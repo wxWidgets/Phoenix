@@ -42,7 +42,7 @@
 
 
 """
-:class:`HyperTreeList` is a class that mimics the behaviour of :class:`adv.TreeListCtrl`, with
+:class:`~lib.agw.hypertreelist.HyperTreeList` is a class that mimics the behaviour of :class:`~adv.TreeListCtrl`, with
 some more functionalities.
 
 

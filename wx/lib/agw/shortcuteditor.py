@@ -29,7 +29,7 @@
 
 
 """
-:class:`ShortcutEditor` is a widget that allows the user to customize and change keyboard
+:class:`~lib.agw.shortcuteditor.ShortcutEditor` is a widget that allows the user to customize and change keyboard
 shortcuts via a dialog. It can be used to edit :class:`MenuItem` shortcuts or accelerators
 defined in a :class:`AcceleratorTable`.
 

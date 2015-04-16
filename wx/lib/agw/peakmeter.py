@@ -24,7 +24,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`PeakMeterCtrl` mimics the behaviour of equalizers that are usually found in stereos
+:class:`~lib.agw.peakmeter.PeakMeterCtrl` mimics the behaviour of equalizers that are usually found in stereos
 and MP3 players.
 
 

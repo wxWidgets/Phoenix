@@ -18,7 +18,7 @@
 # to provide Hot-Key access to the inspection tool.
 
 """
-This modules provides the :class:`InspectionTool` and everything else needed to
+This modules provides the :class:`~lib.inspection.InspectionTool` and everything else needed to
 provide the Widget Inspection Tool (WIT).
 """
 

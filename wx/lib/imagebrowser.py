@@ -44,7 +44,7 @@
 # Tags:        phoenix-port, documented, unittest
 #---------------------------------------------------------------------------
 """
-This module provides the :class:`ImageDialog` which allows to view and select
+This module provides the :class:`~lib.imagebrowser.ImageDialog` which allows to view and select
 an image.
 
 

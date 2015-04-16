@@ -30,7 +30,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`SuperToolTip` is a class that mimics the behaviour of :class:`TipWindow` and generic tooltip
+:class:`~lib.agw.supertooltip.SuperToolTip` is a class that mimics the behaviour of :class:`TipWindow` and generic tooltip
 windows, although it is a custom-drawn widget.
 
 

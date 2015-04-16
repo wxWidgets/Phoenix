@@ -23,7 +23,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`KnobCtrl` lets the user select a numerical value by rotating it.
+:class:`~lib.agw.knobctrl.KnobCtrl` lets the user select a numerical value by rotating it.
 
 
 Description

@@ -23,7 +23,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`FlatMenu` is a generic menu implementation.
+:class:`~lib.agw.flatmenu.FlatMenu` is a generic menu implementation.
 
 
 Description

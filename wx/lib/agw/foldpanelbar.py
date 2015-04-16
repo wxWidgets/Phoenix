@@ -60,7 +60,7 @@
 
 
 """
-:class:`FoldPanelBar` is a control that contains multiple panels, which can be expanded
+:class:`~lib.agw.foldpanelbar.FoldPanelBar` is a control that contains multiple panels, which can be expanded
 or collapsed.
 
 

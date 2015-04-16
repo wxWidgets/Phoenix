@@ -28,7 +28,7 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`FlatNotebook` is a full, generic and owner-drawn implementation of :class:`Notebook`.
+:class:`~lib.agw.flatnotebook.FlatNotebook` is a full, generic and owner-drawn implementation of :class:`Notebook`.
 
 
 Description

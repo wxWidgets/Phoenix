@@ -29,7 +29,7 @@
 
 
 """
-:class:`PieCtrl` and :class:`ProgressPie` are simple classes that reproduce the behavior of a pie
+:class:`~lib.agw.piectrl.PieCtrl` and :class:`~lib.agw.piectrl.ProgressPie` are simple classes that reproduce the behavior of a pie
 chart.
 
 

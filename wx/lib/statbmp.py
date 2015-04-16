@@ -11,7 +11,7 @@
 #----------------------------------------------------------------------
 
 """
-:class:`GenStaticBitmap` is a generic implementation of :class:`StaticBitmap`.
+:class:`~lib.statbmp.GenStaticBitmap` is a generic implementation of :class:`StaticBitmap`.
 
 
 Description

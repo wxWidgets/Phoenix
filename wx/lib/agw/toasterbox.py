@@ -26,7 +26,7 @@
 
 
 """
-ToasterBox is a cross-platform widget to make the creation of MSN style "toaster"
+:class:`~lib.agw.toasterbox.ToasterBox` is a cross-platform widget to make the creation of MSN style "toaster"
 popups easier.
 
 
