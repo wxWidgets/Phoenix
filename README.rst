@@ -33,7 +33,7 @@ provided by the build.py script. There is also a setup.py script available
 for those who are used to the standard distutils or setuptools types of
 builds. The setup.py script assumes that all of the code generation steps
 have already been performed, and so it is suitable for use when building from
-a source snapshot tarball or when using easy_install or pip. The seup.py
+a source snapshot tarball or when using easy_install or pip. The setup.py
 script will delegate to build.py for the actual build, and build.py will
 delegate to setup.py when doing setuptoolsy things like performing an install
 or building an egg.
@@ -292,6 +292,17 @@ http://www.microsoft.com/en-us/download/details.aspx?id=44266
 If you want to build Phoenix with debug info then you will need to first
 build a debug version of Python, and then use that Python (python_d.exe) to
 build Phoenix.
+
+You will also need to:
+
+- Install Cygwin_ into ``C:\cygwin`` and add ``C:\cygwin\bin`` to your
+  ``PATH`` environment variable.
+- Install Graphviz_ and add its ``\bin`` directory
+  (e.g. ``C:\Program Files (x86)\Graphviz2.38\bin``) to your ``PATH``
+  environment variable.
+
+.. _Cygwin: https://www.cygwin.com/
+.. _Graphviz: http://www.graphviz.org/
 
 **Linux**
 

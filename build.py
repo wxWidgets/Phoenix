@@ -694,7 +694,8 @@ def _doDox(arg):
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
-        cmd = 'c:/cygwin/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (d, arg)
+        pwd = pushDir(d)
+        cmd = '.\\regen.bat %s' % arg
     else:
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
