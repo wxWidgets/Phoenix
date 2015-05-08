@@ -136,5 +136,5 @@ For updates please visit <http://j.domaindlx.com/elements28/wxpython/>.
 
 #----------------------------------------------------------------------
 
-from analogclock import AnalogClock, AnalogClockWindow
-from styles import *
+from .analogclock import AnalogClock, AnalogClockWindow
+from .styles import *

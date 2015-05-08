@@ -28,10 +28,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
 
 import  wx
-
-import  canvas
 import  colorsys
-
+from . import canvas
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 Image = PyEmbeddedImage(

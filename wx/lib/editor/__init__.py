@@ -21,4 +21,4 @@
 
 
 # import the main classes into the package namespace.
-from editor    import Editor
+from .editor import Editor

@@ -13,7 +13,7 @@ class StaticText(wx.StaticText):
     updated very frequently otherwise.
     """
     def SetLabel(self, label):
-        if label <> self.GetLabel():
+        if label != self.GetLabel():
             wx.StaticText.SetLabel(self, label)
 
 #----------------------------------------------------------------------

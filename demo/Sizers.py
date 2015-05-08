@@ -283,13 +283,13 @@ def makeGrid1(win):
 #----------------------------------------------------------------------
 
 def makeGrid2(win):
-    gs = wx.GridSizer(3, 3)  # rows, cols, vgap, hgap
+    gs = wx.GridSizer(rows=3, cols=3, vgap=0, hgap=0)
 
     box = wx.BoxSizer(wx.VERTICAL)
     box.Add(SampleWindow(win, 'A'), 0, wx.EXPAND)
     box.Add(SampleWindow(win, 'B'), 1, wx.EXPAND)
 
-    gs2 = wx.GridSizer(2,2, 4, 4)
+    gs2 = wx.GridSizer(2, 2, 4, 4)
     gs2.AddMany([ (SampleWindow(win, 'C'), 0, wx.EXPAND),
                   (SampleWindow(win, 'E'), 0, wx.EXPAND),
                   (SampleWindow(win, 'F'), 0, wx.EXPAND),

@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # o wxPyColourChooser -> PyColourChooser
 #
 
-from pycolourchooser import *
+from .pycolourchooser import *
 
 # For the American in you
 PyColorChooser = PyColourChooser

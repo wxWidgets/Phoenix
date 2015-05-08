@@ -26,14 +26,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # Tags:     phoenix-port
 
 import  wx
+import colorsys
 
-import  pycolourbox
-import  pypalette
-import  pycolourslider
-import  colorsys
-import  intl
+from . import pycolourbox
+from . import pypalette
+from . import pycolourslider
+from . import intl
 
-from intl import _ # _
+from .intl import _ # _
 
 class PyColourChooser(wx.Panel):
     """A Pure-Python implementation of the colour chooser dialog.
