@@ -51,7 +51,7 @@ def run():
                                             "extra control creator function disappeared");
             else {
                 PyObject* pycw = PyObject_CallFunction(ccf, "O", pyw);
-                if (pycw != Py_None) {
+                if (pycw != NULL && pycw != Py_None) {
                     if (!sipCanConvertToType(pycw, sipType_wxWindow, SIP_NOT_NONE))
                         PyErr_Format(PyExc_ValueError,
                                             "control creator did not return wxWindow: %R", pycw);
