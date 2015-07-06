@@ -2881,7 +2881,7 @@ class MySplashScreen(SplashScreen):
 
 from wx.lib.mixins.treemixin import ExpansionState
 if USE_CUSTOMTREECTRL:
-    import wx.lib.customtreectrl as CT
+    import wx.lib.agw.customtreectrl as CT
     TreeBaseClass = CT.CustomTreeCtrl
 else:
     TreeBaseClass = wx.TreeCtrl
