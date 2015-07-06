@@ -220,7 +220,7 @@ class MegaImageRenderer(Grid.GridCellRenderer):
         else:
             dc.SetBrush(wx.Brush(wx.WHITE, wx.BRUSHSTYLE_SOLID))
             dc.SetPen(wx.Pen(wx.WHITE, 1, wx.PENSTYLE_SOLID))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
 
         # copy the image but only to the size of the grid cell
@@ -265,7 +265,7 @@ class MegaFontRenderer(Grid.GridCellRenderer):
         else:
             dc.SetBrush(wx.Brush(wx.WHITE, wx.BRUSHSTYLE_SOLID))
             dc.SetPen(wx.Pen(wx.WHITE, 1, wx.PENSTYLE_SOLID))
-        dc.DrawRectangleRect(rect)
+        dc.DrawRectangle(rect)
 
         text = self.table.GetValue(row, col)
         dc.SetBackgroundMode(wx.SOLID)
