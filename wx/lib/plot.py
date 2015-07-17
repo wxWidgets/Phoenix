@@ -566,13 +566,12 @@ class PlotCanvas(wx.Panel):
         sizer.Add(self.sb_hor, 0, wx.EXPAND)
         sizer.Add((0, 0))
 
-        sizer.AddGrowableRow(0, 1)
-        sizer.AddGrowableCol(0, 1)
-
         self.sb_vert.Show(False)
         self.sb_hor.Show(False)
 
         self.SetSizer(sizer)
+        sizer.AddGrowableRow(0, 1)
+        sizer.AddGrowableCol(0, 1)        
         self.Fit()
 
         self.border = (1, 1)
