@@ -151,7 +151,7 @@ def main(args):
 
     if not args or 'help' in args or '--help' in args or '-h' in args:
         usage()
-        sys.exit(1)
+        sys.exit(0)
     
     options, commands = parseArgs(args)
     
