@@ -4,7 +4,7 @@
 # Created:      01/16/2003
 # Copyright:   (c) 2003 by Will Sadkin
 # License:     wxWindows license
-# Tags:         phoenix-port
+# Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------------
 # NOTE:
 #   This was written to provide a standard integer edit control for wxPython.
@@ -40,12 +40,17 @@ import  string
 import  types
 
 import  wx
+import wx.lib.six as six
 
 #----------------------------------------------------------------------------
 
-from sys import maxint
-MAXINT = maxint     # (constants should be in upper case)
-MININT = -maxint-1
+MAXINT = six.MAXSIZE     # (constants should be in upper case)
+MININT = -six.MAXSIZE-1
+
+if six.PY2:
+    LONGTYPE = long
+else:
+    LONGTYPE = int
 
 #----------------------------------------------------------------------------
 
@@ -648,7 +653,7 @@ class IntCtrl(wx.TextCtrl):
             value = self.GetValue()
 
         if( not (value is None and self.IsNoneAllowed())
-            and type(value) not in (types.IntType, types.LongType) ):
+            and type(value) not in six.integer_types ):
             raise ValueError (
                 'IntCtrl requires integer values, passed %s'% repr(value) )
 
@@ -693,7 +698,7 @@ class IntCtrl(wx.TextCtrl):
         for positive and negative values, respectively.
         """
         current_value = self.GetValue()
-        if not allow_long and type(current_value) is types.LongType:
+        if not allow_long and type(current_value) is LONGTYPE:
             if current_value > 0:
                 self.SetValue(MAXINT)
             else:
@@ -745,10 +750,10 @@ class IntCtrl(wx.TextCtrl):
         """
         if value is None and self.IsNoneAllowed():
             return ''
-        elif type(value) == types.LongType and not self.IsLongAllowed():
+        elif type(value) == LONGTYPE and not self.IsLongAllowed():
             raise ValueError (
                 'IntCtrl requires integer value, passed long' )
-        elif type(value) not in (types.IntType, types.LongType):
+        elif type(value) not in six.integer_types:
             raise ValueError (
                 'IntCtrl requires integer value, passed %s'% repr(value) )
 
