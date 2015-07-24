@@ -4,7 +4,7 @@
 # Created:      01/16/2003
 # Copyright:   (c) 2003 by Will Sadkin
 # License:     wxWindows license
-# Tags:        phoenix-port, py3-port
+# Tags:        phoenix-port, py3-port, unittest
 #----------------------------------------------------------------------------
 # NOTE:
 #   This was written to provide a standard integer edit control for wxPython.
@@ -443,7 +443,10 @@ class IntCtrl(wx.TextCtrl):
         self.__default_color = wx.BLACK
         self.__oob_color = wx.RED
         self.__allow_none = 0
-        self.__allow_long = 0
+        if six.PY2:
+            self.__allow_long = 0
+        else:
+            self.__allow_long = 1
         self.__oldvalue = None
 
         if validator == wx.DefaultValidator:
@@ -462,7 +465,10 @@ class IntCtrl(wx.TextCtrl):
         self.SetLimited(limited)
         self.SetColors(default_color, oob_color)
         self.SetNoneAllowed(allow_none)
-        self.SetLongAllowed(allow_long)
+        if six.PY2:
+            self.SetLongAllowed(allow_long)
+        else:
+            self.SetLongAllowed(1)
         self.SetValue(value)
         self.__oldvalue = 0
 
