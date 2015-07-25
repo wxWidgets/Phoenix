@@ -36,6 +36,7 @@
 # o wxIntCtrl -> IntCtrl
 #
 
+import sys
 import  string
 import  types
 
@@ -44,8 +45,8 @@ import wx.lib.six as six
 
 #----------------------------------------------------------------------------
 
-MAXINT = six.MAXSIZE     # (constants should be in upper case)
-MININT = -six.MAXSIZE-1
+MAXSIZE = sys.maxsize     # (constants should be in upper case)
+MINSIXE = -sys.maxsize-1
 
 if six.PY2:
     LONGTYPE = long
@@ -431,16 +432,16 @@ class IntCtrl(wx.TextCtrl):
         :param int `min`: The minimum value that the control should allow.  This
           can be adjusted with SetMin().  If the control is not limited, any
           value below this bound will be colored with the current out-of-bounds
-          color. If min < -sys.maxint-1 and the control is configured to not
+          color. If min < -sys.maxsize-1 and the control is configured to not
           allow long values, the minimum bound will still be set to the long
-          value, but the implicit bound will be -sys.maxint-1.
+          value, but the implicit bound will be -sys.maxsize-1.
     
         :param int `max`: The maximum value that the control should allow.  This
           can be adjusted with SetMax().  If the control is not limited, any
           value above this bound will be colored with the current out-of-bounds
-          color.  if max > sys.maxint and the control is configured to not
+          color.  if max > sys.maxsize and the control is configured to not
           allow long values, the maximum bound will still be set to the long
-          value, but the implicit bound will be sys.maxint.
+          value, but the implicit bound will be sys.maxsize.
 
         :param bool `limited`: Boolean indicating whether the control
           prevents values from exceeding the currently set minimum and maximum
@@ -566,7 +567,7 @@ class IntCtrl(wx.TextCtrl):
         adjusted to the new minimum value; if not limited, the value in the
         control will be colored with the current out-of-bounds color.
 
-        If min > -sys.maxint-1 and the control is configured to not allow longs,
+        If min > -sys.maxsize-1 and the control is configured to not allow longs,
         the function will return 0, and the min will not be set.
         
         :param int `min`: The value to be set as minimum
@@ -607,7 +608,7 @@ class IntCtrl(wx.TextCtrl):
         adjusted to this maximum value; if not limited, the value in the
         control will be colored with the current out-of-bounds color.
 
-        If max > sys.maxint and the control is configured to not allow longs,
+        If max > sys.maxsize and the control is configured to not allow longs,
         the function will return 0, and the max will not be set.
         
         :param int `max`: The value to be set as maximum
@@ -763,9 +764,9 @@ class IntCtrl(wx.TextCtrl):
         current_value = self.GetValue()
         if not allow_long and type(current_value) is LONGTYPE:
             if current_value > 0:
-                self.SetValue(MAXINT)
+                self.SetValue(MAXSIZE)
             else:
-                self.SetValue(MININT)
+                self.SetValue(MINSIZE)
         self.__allow_long = allow_long
 
 
