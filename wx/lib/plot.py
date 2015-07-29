@@ -227,7 +227,9 @@ class PolyLine(PolyPoints):
     _attributes = {'colour': 'black',
                    'width': 1,
                    'style': wx.PENSTYLE_SOLID,
-                   'legend': ''}
+                   'legend': '',
+                   'drawstyle': 'line',
+                   }
 
     def __init__(self, points, **attr):
         """
@@ -241,7 +243,23 @@ class PolyLine(PolyPoints):
          'width'= 1                  Pen width
          'style'= wx.PENSTYLE_SOLID  wx.Pen style
          'legend'= ''                Line Legend to display
+         'drawstyle'= 'line'         How points are joined.
          ==========================  ================================
+
+        Valid 'drawstyle' values are:
+
+            'line'          Draws an straight line between consecutive points
+            'steps-pre'     Draws a line down from point A and then right to
+                            point B
+            'steps-post'    Draws a line right from point A and then down
+                            to point B
+            'steps-mid-x'   Draws a line right to half way between A and B,
+                            then draws a line vertically, then again right
+                            to point B.
+            'steps-mid-y'   Draws a line vertically to half way between A
+                            and B, then draws a line horizonatally, then
+                            again vertically to point B.
+                            *Note: This typically does not look very good*
 
         """
         PolyPoints.__init__(self, points, attr)
@@ -250,6 +268,8 @@ class PolyLine(PolyPoints):
         colour = self.attributes['colour']
         width = self.attributes['width'] * printerScale * self._pointSize[0]
         style = self.attributes['style']
+        drawstyle = self.attributes['drawstyle']
+
         if not isinstance(colour, wx.Colour):
             colour = wx.Colour(colour)
         pen = wx.Pen(colour, width, style)
@@ -257,7 +277,12 @@ class PolyLine(PolyPoints):
         dc.SetPen(pen)
         if coord == None:
             if len(self.scaled):  # bugfix for Mac OS X
-                dc.DrawLines(self.scaled)
+#                dc.DrawLines(self.scaled)
+                if drawstyle != 'line':
+                    for c1, c2 in zip(self.scaled, self.scaled[1:]):
+                        self.path(dc, c1, c2, drawstyle)
+                else:
+                    dc.DrawLines(self.scaled)
         else:
             dc.DrawLines(coord)  # draw legend line
 
@@ -266,6 +291,35 @@ class PolyLine(PolyPoints):
         h = self.attributes['width'] * printerScale * self._pointSize[0]
         w = 5 * h
         return (w, h)
+
+    def path(self, dc, coord1, coord2, drawstyle):
+        """ calculates the path from coord1 to coord 2 along X and Y """
+
+        if drawstyle == 'steps-pre':
+            # Y first, then X
+            intermediate = [coord1[0], coord2[1]]
+            line = [coord1, intermediate, coord2]
+        elif drawstyle == 'steps-post':
+            intermediate = [coord2[0], coord1[1]]
+            line = [coord1, intermediate, coord2]
+        elif drawstyle == 'steps-mid-x':
+            # need 3 lines between points.
+            mid_x = ((coord2[0] - coord1[0]) / 2) + coord1[0]
+            intermediate1 = [mid_x, coord1[1]]
+            intermediate2 = [mid_x, coord2[1]]
+            line = [coord1, intermediate1, intermediate2, coord2]
+        elif drawstyle == 'steps-mid-y':
+            # need 3 lines between points
+            mid_y = ((coord2[1] - coord1[1]) / 2) + coord1[1]
+            intermediate1 = [coord1[0], mid_y]
+            intermediate2 = [coord2[0], mid_y]
+            line = [coord1, intermediate1, intermediate2, coord2]
+            print(line)
+        else:
+            # just draw a line between all the points.
+            raise ValueError("Invalid line spec")
+
+        dc.DrawLines(line)
 
 
 class PolySpline(PolyLine):
@@ -571,7 +625,7 @@ class PlotCanvas(wx.Panel):
 
         self.SetSizer(sizer)
         sizer.AddGrowableRow(0, 1)
-        sizer.AddGrowableCol(0, 1)        
+        sizer.AddGrowableCol(0, 1)
         self.Fit()
 
         self.border = (1, 1)
