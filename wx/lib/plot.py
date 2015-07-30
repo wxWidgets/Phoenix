@@ -115,6 +115,7 @@ import string as _string
 import time as _time
 import sys
 import wx
+from contextlib import ContextDecorator
 
 # Needs NumPy
 try:
@@ -128,6 +129,46 @@ except:
     binaries."""
     raise ImportError("NumPy not found.\n" + msg)
 
+
+#
+# Helper Decorator / Contect Manager which sets a pen back to the ogiginal
+#     state after a function.
+#
+class savePen(ContextDecorator):
+    """
+    Decorator that saves and reverts a wx.Pen after a function completes.
+
+    The advantage of using this decorator is both reducing code duplication
+    and ensuring that the per is reset after the function completes, even if
+    the function raises an exception.
+
+    Decorated function must have a parameter named `dc`.
+
+    Example Usage:
+    --------------
+    ::
+
+        @savePen
+        def func():
+            print("hello")
+
+    is equivalent to::
+
+        def func():
+            prevPen = dc.GetPen()
+            print("hello")
+            dc.SetPen(prevPen)
+
+    """
+    def __enter__(self):
+        print(dir(self))
+        print(self.__dict__)
+        self.prevPen = self.dc.GetPen()
+        return self
+
+    def __exit__(self, *exc):
+        self.dc.SetPen(self.prevPen)
+        return False
 
 #
 # Plotting classes...
@@ -278,7 +319,7 @@ class PolyLine(PolyPoints):
         pen = wx.Pen(colour, width, style)
         pen.SetCap(wx.CAP_BUTT)
         dc.SetPen(pen)
-        if coord == None:
+        if coord is None:
             if len(self.scaled):  # bugfix for Mac OS X
 #                dc.DrawLines(self.scaled)
                 if drawstyle != 'line':
@@ -361,7 +402,7 @@ class PolySpline(PolyLine):
         pen = wx.Pen(colour, width, style)
         pen.SetCap(wx.CAP_ROUND)
         dc.SetPen(pen)
-        if coord == None:
+        if coord is None:
             if len(self.scaled):  # bugfix for Mac OS X
                 dc.DrawSpline(self.scaled)
         else:
@@ -430,7 +471,7 @@ class PolyMarker(PolyPoints):
             dc.SetBrush(wx.Brush(fillcolour, fillstyle))
         else:
             dc.SetBrush(wx.Brush(colour, fillstyle))
-        if coord == None:
+        if coord is None:
             if len(self.scaled):  # bugfix for Mac OS X
                 self._drawmarkers(dc, self.scaled, marker, size)
         else:
@@ -692,6 +733,9 @@ class PlotCanvas(wx.Panel):
         self._titleEnabled = True
         self._centerLinesEnabled = False
         self._diagonalsEnabled = False
+        self._ticksEnabled = False
+        self._frameEnabled = False
+        self._axesValuesEnabled = False
 
         # Fonts
         self._fontCache = {}
@@ -724,7 +768,27 @@ class PlotCanvas(wx.Panel):
         # platforms at initialization, but little harm done.
         self.OnSize(None)  # sets the initial size based on client size
 
+        # default styles and colors
         self._gridColour = wx.BLACK
+        self._gridStyle = wx.PENSTYLE_SOLID
+        self._gridWidth = self._pointSize[0]
+
+        self._centerLineColour = wx.BLACK
+        self._centerLineStyle = wx.PENSTYLE_SOLID
+        self._centerLineWidth = self._pointSize[0]
+
+        self._frameColour = wx.BLACK
+        self._frameStyle = wx.PENSTYLE_SOLID
+        self._frameWidth = self._pointSize[0]
+
+        self._tickColour = wx.BLACK
+        self._tickStyle = wx.PENSTYLE_SOLID
+        self._tickWidth = self._pointSize[0]
+        self._tickLength = self._pointSize
+
+        self._diagonalColour = wx.BLACK
+        self._diagonalStyle = wx.PENSTYLE_SOLID
+        self._diagonalWidth = self._pointSize[0]
 
     def SetCursor(self, cursor):
         self.canvas.SetCursor(cursor)
@@ -737,6 +801,15 @@ class PlotCanvas(wx.Panel):
             self._gridColour = colour
         else:
             self._gridColour = wx.Colour(colour)
+
+    def GetGridStyle(self):
+        return self._gridStyle
+
+    def SetGridStyle(self, style):
+        if isinstance(style, wx.PenStyle):
+            self._gridStyle = style
+        else:
+            raise TypeError("`style` must be an instance of wx.PenStyle")
 
     # SaveFile
     def SaveFile(self, fileName=''):
@@ -1039,6 +1112,39 @@ class PlotCanvas(wx.Panel):
         """True if pointLabel enabled."""
         return self._pointLabelEnabled
 
+    def SetEnableFrame(self, value):
+        """ """
+        if value not in [True, False]:
+            raise TypeError("Value should be True or False")
+        self._frameEnabled = value
+        self.Redraw()
+
+    def GetEnableFrame(self):
+        """ True if frame is enabled. """
+        return self._frameEnabled
+
+    def SetEnableAxesValues(self, value):
+        """ """
+        if value not in [True, False]:
+            raise TypeError("Value should be True or False")
+        self._axesValuesEnabled = value
+        self.Redraw()
+
+    def GetEnableAxesValues(self):
+        """ True if axes values are enabled. """
+        return self._axesValuesEnabled
+
+    def SetEnableTicks(self, value):
+        """ """
+        if value not in [True, False]:
+            raise TypeError("Value should be True or False")
+        self._ticksEnabled = value
+        self.Redraw()
+
+    def GetEnableTicks(self):
+        """ True if axes values are enabled. """
+        return self._ticksEnabled
+
     def SetPointLabelFunc(self, func):
         """Sets the function with custom code for pointLabel drawing
             ******** more info needed ***************
@@ -1209,7 +1315,7 @@ class PlotCanvas(wx.Panel):
         If it's not, the offscreen buffer is used
         """
 
-        if dc == None:
+        if dc is None:
             # sets new dc and clears it
             dc = wx.BufferedDC(wx.ClientDC(self.canvas), self._Buffer)
             bbr = wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID)
@@ -1253,13 +1359,13 @@ class PlotCanvas(wx.Panel):
 
         # sizes axis to axis type, create lower left and upper right corners of
         # plot
-        if xAxis == None or yAxis == None:
+        if xAxis is None or yAxis is None:
             # One or both axis not specified in Draw
             p1, p2 = graphics.boundingBox()     # min, max points of graphics
-            if xAxis == None:
+            if xAxis is None:
                 xAxis = self._axisInterval(
                     self._xSpec, p1[0], p2[0])  # in user units
-            if yAxis == None:
+            if yAxis is None:
                 yAxis = self._axisInterval(self._ySpec, p1[1], p2[1])
             # Adjust bounding box for axis spec
             # lower left corner user scale (xmin,ymin)
@@ -1351,7 +1457,7 @@ class PlotCanvas(wx.Panel):
         # make available for mouse events
         self._pointScale = scale / self._pointSize
         self._pointShift = shift / self._pointSize
-        self._drawAxes(dc, p1, p2, scale, shift, xticks, yticks)
+        self._drawPlotAreaItems(dc, p1, p2, scale, shift, xticks, yticks)
 
         graphics.scaleAndShift(scale, shift)
         # thicken up lines and markers if printing
@@ -1419,7 +1525,7 @@ class PlotCanvas(wx.Panel):
             if pointScaled == True based on screen coords
             if pointScaled == False based on user coords
         """
-        if self.last_draw == None:
+        if self.last_draw is None:
             # no graph available
             return []
         graphics, xAxis, yAxis = self.last_draw
@@ -1606,7 +1712,7 @@ class PlotCanvas(wx.Panel):
     # Private Methods **************************************************
     def _setSize(self, width=None, height=None):
         """DC width and height."""
-        if width == None:
+        if width is None:
             (self.width, self.height) = self.canvas.GetClientSize()
         else:
             self.width, self.height = width, height
@@ -1791,28 +1897,30 @@ class PlotCanvas(wx.Panel):
         else:
             raise ValueError(str(spec) + ': illegal axis specification')
 
-    def _drawAxes(self, dc, p1, p2, scale, shift, xticks, yticks):
+    def _drawGrid(self, dc, p1, p2, scale, shift, xticks, yticks):
+        """ Draws the gridlines """
+        prevPen = dc.GetPen()
+
+        self._gridColour = wx.Colour(0, 128, 255)
+        self._gridWidth = 1.0
+        self._gridStyle = wx.PENSTYLE_SHORT_DASH
 
         # increases thickness for printing only
-        penWidth = self.printerScale * self._pointSize[0]
-        dc.SetPen(wx.Pen(self._gridColour, penWidth))
+        penWidth = self.printerScale * self._gridWidth
+        dc.SetPen(wx.Pen(self._gridColour, penWidth, self._gridStyle))
 
         # set length of tick marks--long ones make grid
-        if self._gridEnabled:
-            x, y, width, height = self._point2ClientCoord(p1, p2)
-            if self._gridEnabled == 'Horizontal':
-                yTickLength = (width / 2.0 + 1) * self._pointSize[1]
-                xTickLength = 3 * self.printerScale * self._pointSize[0]
-            elif self._gridEnabled == 'Vertical':
-                yTickLength = 3 * self.printerScale * self._pointSize[1]
-                xTickLength = (height / 2.0 + 1) * self._pointSize[0]
-            else:
-                yTickLength = (width / 2.0 + 1) * self._pointSize[1]
-                xTickLength = (height / 2.0 + 1) * self._pointSize[0]
-        else:
-            # lengthens lines for printing
-            yTickLength = 3 * self.printerScale * self._pointSize[1]
+        x, y, width, height = self._point2ClientCoord(p1, p2)
+        if self._gridEnabled == 'Horizontal':
+            yTickLength = (width / 2.0 + 1) * self._pointSize[1]
             xTickLength = 3 * self.printerScale * self._pointSize[0]
+        elif self._gridEnabled == 'Vertical':
+            yTickLength = 3 * self.printerScale * self._pointSize[1]
+            xTickLength = (height / 2.0 + 1) * self._pointSize[0]
+        else:
+            yTickLength = (width / 2.0 + 1) * self._pointSize[1]
+            xTickLength = (height / 2.0 + 1) * self._pointSize[0]
+
 
         if self._xSpec is not 'none':
             lower, upper = p1[0], p2[0]
@@ -1823,13 +1931,10 @@ class PlotCanvas(wx.Panel):
                     pt = scale * np.array([x, y]) + shift
                     # draws tick mark d units
                     dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + d)
-                    if text:
-                        dc.DrawText(
-                            label, pt[0], pt[1] + 2 * self._pointSize[1])
                 a1 = scale * np.array([lower, y]) + shift
                 a2 = scale * np.array([upper, y]) + shift
                 # draws upper and lower axis line
-                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+#                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
                 text = 0  # axis values not drawn on top side
 
         if self._ySpec is not 'none':
@@ -1840,35 +1945,190 @@ class PlotCanvas(wx.Panel):
                 for y, label in yticks:
                     pt = scale * np.array([x, y]) + shift
                     dc.DrawLine(pt[0], pt[1], pt[0] - d, pt[1])
-                    if text:
-                        dc.DrawText(label, pt[0] - dc.GetTextExtent(label)[0] - 3 * self._pointSize[0],
-                                    pt[1] - 0.75 * h)
+                a1 = scale * np.array([x, lower]) + shift
+                a2 = scale * np.array([x, upper]) + shift
+#                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+                text = 0    # axis values not drawn on right side
+
+
+        dc.SetPen(prevPen)
+
+        return xTickLength, yTickLength
+
+    def _drawTicks(self, dc, p1, p2, scale, shift, xticks, yticks):
+        """ Draw the tick marks """
+        prevPen = dc.GetPen()
+
+        self._tickColour = wx.Colour(0, 128, 255)
+        self._tickWidth = 1.0
+        self._tickStyle = wx.PENSTYLE_SHORT_DASH
+        self._tickLength = (3.0, 3.0)
+
+        # increases thickness for printing only
+        penWidth = self.printerScale * self._tickWidth
+        dc.SetPen(wx.Pen(self._tickColour, penWidth, self._tickStyle))
+
+        # lengthen lines for printing
+        yTickLength = 3 * self.printerScale * self._tickLength[1]
+        xTickLength = 3 * self.printerScale * self._tickLength[0]
+
+        if self._xSpec is not 'none':
+            lower, upper = p1[0], p2[0]
+            text = 1
+            # miny, maxy and tick lengths
+            for y, d in [(p1[1], -xTickLength), (p2[1], xTickLength)]:
+                for x, label in xticks:
+                    pt = scale * np.array([x, y]) + shift
+                    # draws tick mark d units
+                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + d)
+#                    if text:
+#                        dc.DrawText(
+#                            label, pt[0], pt[1] + 2 * self._pointSize[1])
+                a1 = scale * np.array([lower, y]) + shift
+                a2 = scale * np.array([upper, y]) + shift
+                text = 0  # axis values not drawn on top side
+
+        if self._ySpec is not 'none':
+            lower, upper = p1[1], p2[1]
+            text = 1
+            h = dc.GetCharHeight()
+            for x, d in [(p1[0], -yTickLength), (p2[0], yTickLength)]:
+                for y, label in yticks:
+                    pt = scale * np.array([x, y]) + shift
+                    dc.DrawLine(pt[0], pt[1], pt[0] - d, pt[1])
+#                    if text:
+#                        dc.DrawText(label, pt[0] - dc.GetTextExtent(label)[0] - 3 * self._pointSize[0],
+#                                    pt[1] - 0.75 * h)
+                a1 = scale * np.array([x, lower]) + shift
+                a2 = scale * np.array([x, upper]) + shift
+                text = 0    # axis values not drawn on right side
+
+        dc.SetPen(prevPen)
+
+#    @savePen()
+    def _drawCenterLines(self, dc, p1, p2, scale, shift):
+        """ Draws the center lines """
+        prevPen = dc.GetPen()
+
+        self._centerLineColour = wx.Colour(0, 128, 128)
+        self._centerLineWidth = 3.0
+        self._centerLineStyle = wx.PENSTYLE_DOT_DASH
+
+        # increases thickness for printing only
+        penWidth = self.printerScale * self._centerLineWidth
+        dc.SetPen(wx.Pen(self._centerLineColour, penWidth, self._centerLineStyle))
+
+        if self._centerLinesEnabled in ('Horizontal', True):
+            y1 = scale[1] * p1[1] + shift[1]
+            y2 = scale[1] * p2[1] + shift[1]
+            y = (y1 - y2) / 2.0 + y2
+            dc.DrawLine(
+                scale[0] * p1[0] + shift[0], y, scale[0] * p2[0] + shift[0], y)
+        if self._centerLinesEnabled in ('Vertical', True):
+            x1 = scale[0] * p1[0] + shift[0]
+            x2 = scale[0] * p2[0] + shift[0]
+            x = (x1 - x2) / 2.0 + x2
+            dc.DrawLine(
+                x, scale[1] * p1[1] + shift[1], x, scale[1] * p2[1] + shift[1])
+
+        dc.SetPen(prevPen)
+
+    def _drawDiagonals(self, dc, p1, p2, scale, shift):
+        """ Draws the diagonal lines """
+        prevPen = dc.GetPen()
+        self._diagonalColour = wx.Colour(255, 0, 0)
+        self._diagonalWidth = 2.0
+        self._diagonalStyle = wx.PENSTYLE_DOT
+
+        penWidth = self.printerScale * self._diagonalWidth
+        dc.SetPen(wx.Pen(self._diagonalColour, penWidth, self._diagonalStyle))
+
+        if self._diagonalsEnabled in ('Bottomleft-Topright', True):
+            dc.DrawLine(scale[0] * p1[0] + shift[0], scale[1] * p1[1] +
+                        shift[1], scale[0] * p2[0] + shift[0], scale[1] * p2[1] + shift[1])
+        if self._diagonalsEnabled in ('Bottomright-Topleft', True):
+            dc.DrawLine(scale[0] * p1[0] + shift[0], scale[1] * p2[1] +
+                        shift[1], scale[0] * p2[0] + shift[0], scale[1] * p1[1] + shift[1])
+
+        dc.SetPen(prevPen)
+
+    def _drawFrame(self, dc, p1, p2, scale, shift):
+        """ Draw the frame lines """
+        # TODO: add option to not draw certain axes
+        prevPen = dc.GetPen()
+
+        self._frameColour = wx.Colour(255, 0, 255)
+        self._frameWidth = 1.0
+        self._frameStyle = wx.PENSTYLE_SOLID
+
+        # increases thickness for printing only
+        penWidth = self.printerScale * self._frameWidth
+        dc.SetPen(wx.Pen(self._frameColour, penWidth, self._frameStyle))
+
+        if self._xSpec is not 'none':
+            lower, upper = p1[0], p2[0]
+            for y in (p1[1], p2[1]):
+                a1 = scale * np.array([lower, y]) + shift
+                a2 = scale * np.array([upper, y]) + shift
+                # draws upper and lower axis line
+                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+
+        if self._ySpec is not 'none':
+            lower, upper = p1[1], p2[1]
+            for x in (p1[0], p2[0]):
                 a1 = scale * np.array([x, lower]) + shift
                 a2 = scale * np.array([x, upper]) + shift
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+
+        dc.SetPen(prevPen)
+
+    def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
+        """ Draws the axes values """
+        # TODO: Add option for left and right grids
+
+        if self._xSpec is not 'none':
+            text = 1
+            # miny, maxy and tick lengths
+            for y in (p1[1], p2[1]):
+                for x, label in xticks:
+                    pt = scale * np.array([x, y]) + shift
+                    # draws tick mark d units
+                    if text:
+                        dc.DrawText(
+                            label, pt[0], pt[1] + 2 * self._pointSize[1])
+                text = 0  # axis values not drawn on top side
+
+        if self._ySpec is not 'none':
+            text = 1
+            h = dc.GetCharHeight()
+            for x in (p1[0], p2[0]):
+                for y, label in yticks:
+                    pt = scale * np.array([x, y]) + shift
+                    if text:
+                        dc.DrawText(label, pt[0] - dc.GetTextExtent(label)[0] - 3 * self._pointSize[0],
+                                    pt[1] - 0.75 * h)
                 text = 0    # axis values not drawn on right side
 
+    def _drawPlotAreaItems(self, dc, p1, p2, scale, shift, xticks, yticks):
+        """ Draws each frame element """
+        if self._ticksEnabled:
+            self._drawTicks(dc, p1, p2, scale, shift, xticks, yticks)
+
+        if self._gridEnabled:
+            self._drawGrid(dc, p1, p2, scale, shift, xticks, yticks)
+
         if self._centerLinesEnabled:
-            if self._centerLinesEnabled in ('Horizontal', True):
-                y1 = scale[1] * p1[1] + shift[1]
-                y2 = scale[1] * p2[1] + shift[1]
-                y = (y1 - y2) / 2.0 + y2
-                dc.DrawLine(
-                    scale[0] * p1[0] + shift[0], y, scale[0] * p2[0] + shift[0], y)
-            if self._centerLinesEnabled in ('Vertical', True):
-                x1 = scale[0] * p1[0] + shift[0]
-                x2 = scale[0] * p2[0] + shift[0]
-                x = (x1 - x2) / 2.0 + x2
-                dc.DrawLine(
-                    x, scale[1] * p1[1] + shift[1], x, scale[1] * p2[1] + shift[1])
+            self._drawCenterLines(dc, p1, p2, scale, shift)
 
         if self._diagonalsEnabled:
-            if self._diagonalsEnabled in ('Bottomleft-Topright', True):
-                dc.DrawLine(scale[0] * p1[0] + shift[0], scale[1] * p1[1] +
-                            shift[1], scale[0] * p2[0] + shift[0], scale[1] * p2[1] + shift[1])
-            if self._diagonalsEnabled in ('Bottomright-Topleft', True):
-                dc.DrawLine(scale[0] * p1[0] + shift[0], scale[1] * p2[1] +
-                            shift[1], scale[0] * p2[0] + shift[0], scale[1] * p1[1] + shift[1])
+            self._drawDiagonals(dc, p1, p2, scale, shift)
+
+        if self._frameEnabled:
+            self._drawFrame(dc, p1, p2, scale, shift)
+
+        if self._axesValuesEnabled:
+            self._drawAxesValues(dc, p1, p2, scale, shift, xticks, yticks)
+
 
     def _xticks(self, *args):
         if self._logscale[0]:
@@ -2349,6 +2609,17 @@ class TestFrame(wx.Frame):
         menu.Append(235, '&Plot Reset', 'Reset to original plot')
         self.Bind(wx.EVT_MENU, self.OnReset, id=235)
 
+        menu.AppendSeparator()
+        menu.Append(240, 'Enable Frame',
+                    'Enables the display of the frame', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableFrame, id=240)
+        menu.Append(245, 'Enable Axes Values',
+                    'Enables the display of the axes values', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesValues, id=245)
+        menu.Append(250, 'Enable Ticks',
+                    'Enables the display of the ticks', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableTicks, id=250)
+
         self.mainmenu.Append(menu, '&Plot')
 
         menu = wx.Menu()
@@ -2520,6 +2791,15 @@ class TestFrame(wx.Frame):
 
     def OnEnableHiRes(self, event):
         self.client.SetEnableHiRes(event.IsChecked())
+
+    def OnEnableFrame(self, event):
+        self.client.SetEnableFrame(event.IsChecked())
+
+    def OnEnableTicks(self, event):
+        self.client.SetEnableTicks(event.IsChecked())
+
+    def OnEnableAxesValues(self, event):
+        self.client.SetEnableAxesValues(event.IsChecked())
 
     def OnEnableCenterLines(self, event):
         self.client.SetEnableCenterLines(event.IsChecked())
