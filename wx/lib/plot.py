@@ -57,6 +57,7 @@
 # July 29, 2015  Douglas Thor (doug.thor@gmail.com)
 #   - Implemented a drawstyle option to PolyLine that mimics matplotlib's
 #     Line2dD.drawstyle option.
+#   - Added significant customization options to PlotCanvas
 #
 
 """
@@ -335,7 +336,6 @@ class PolyLine(PolyPoints):
         dc.SetPen(pen)
         if coord is None:
             if len(self.scaled):  # bugfix for Mac OS X
-#                dc.DrawLines(self.scaled)
                 if drawstyle != 'line':
                     for c1, c2 in zip(self.scaled, self.scaled[1:]):
                         self.path(dc, c1, c2, drawstyle)
@@ -794,12 +794,16 @@ class PlotCanvas(wx.Panel):
         self._axesColour = wx.BLACK
         self._axesStyle = wx.PENSTYLE_SOLID
         self._axesWidth = self._pointSize[0]
+        # TODO: different name for _axesLocation?
+        # TODO: different API for _axesLocation?
         self._axesLocation = (1, 1, 1, 1)    # Bottom, Left, Top, Right)
 
         self._tickColour = wx.BLACK
         self._tickStyle = wx.PENSTYLE_SOLID
         self._tickWidth = self._pointSize[0]
-        self._tickLength = self._pointSize * 3
+        self._tickLength = tuple(x * 3 for x in self._pointSize)
+        # TODO: different name for _tickLocation?
+        # TODO: different API for _tickLocation?
         self._tickLocation = (1, 1, 1, 1)    # Bottom, Left, Top, Right)
 
         self._diagonalColour = wx.BLACK
@@ -812,18 +816,22 @@ class PlotCanvas(wx.Panel):
     ### Plot Attribute Getters/Setters
 
     def GetGridColour(self):
+        """Returns the grid colour."""
         return self._gridColour
 
     def SetGridColour(self, colour):
+        """Sets the grid colour. `colour` must be a valid wx.Colour"""
         if isinstance(colour, wx.Colour):
             self._gridColour = colour
         else:
             self._gridColour = wx.Colour(colour)
 
     def GetGridStyle(self):
+        """Gets the grid style"""
         return self._gridStyle
 
     def SetGridStyle(self, style):
+        """Sets the grid style. `style` must be a valid wx.PenStyle"""
         if isinstance(style, wx.PenStyle):
             self._gridStyle = style
         else:
@@ -860,7 +868,7 @@ class PlotCanvas(wx.Panel):
         return self._centerLineStyle
 
     def SetCenterLineStyle(self, style):
-        """ Sets the center line colour. """
+        """Sets the center line colour."""
         if isinstance(style, wx.PenStyle):
             self._centerLineStyle = style
         else:
@@ -876,8 +884,6 @@ class PlotCanvas(wx.Panel):
             self._centerLineWidth = width
         else:
             raise TypeError("`width` must be an integer or float")
-
-
 
     def GetAxesColour(self):
         """Gets the axes color."""
@@ -954,8 +960,6 @@ class PlotCanvas(wx.Panel):
             raise ValueError("Value must be lenght 4")
         self._axesLocation = value
 
-
-
     def GetTickColour(self):
         """Gets the tick color."""
         return self._tickColour
@@ -976,7 +980,7 @@ class PlotCanvas(wx.Panel):
         return self._tickStyle
 
     def SetTickStyle(self, style):
-        """ Sets the tick colour. """
+        """Sets the tick colour."""
         if isinstance(style, wx.PenStyle):
             self._tickStyle = style
         else:
@@ -1042,8 +1046,6 @@ class PlotCanvas(wx.Panel):
             raise ValueError("Value must be lenght 4")
         self._tickLocation = value
 
-
-
     def GetDiagonalColour(self):
         """Gets the diagonal line color."""
         return self._diagonalColour
@@ -1064,7 +1066,7 @@ class PlotCanvas(wx.Panel):
         return self._diagonalStyle
 
     def SetDiagonalStyle(self, style):
-        """ Sets the diagonal line colour. """
+        """Sets the diagonal line colour."""
         if isinstance(style, wx.PenStyle):
             self._diagonalStyle = style
         else:
@@ -1385,36 +1387,36 @@ class PlotCanvas(wx.Panel):
         return self._pointLabelEnabled
 
     def SetEnableAxes(self, value):
-        """ """
+        """Set True to enable axes."""
         if value not in [True, False]:
             raise TypeError("Value should be True or False")
         self._axesEnabled = value
         self.Redraw()
 
     def GetEnableAxes(self):
-        """ True if frame is enabled. """
+        """True if axes enabled."""
         return self._axesEnabled
 
     def SetEnableAxesValues(self, value):
-        """ """
+        """Set True to enable axes values."""
         if value not in [True, False]:
             raise TypeError("Value should be True or False")
         self._axesValuesEnabled = value
         self.Redraw()
 
     def GetEnableAxesValues(self):
-        """ True if axes values are enabled. """
+        """True if axes values are enabled."""
         return self._axesValuesEnabled
 
     def SetEnableTicks(self, value):
-        """ """
+        """Set True to enable tick marks."""
         if value not in [True, False]:
             raise TypeError("Value should be True or False")
         self._ticksEnabled = value
         self.Redraw()
 
     def GetEnableTicks(self):
-        """ True if axes values are enabled. """
+        """True if tick marks are enabled."""
         return self._ticksEnabled
 
     def SetPointLabelFunc(self, func):
@@ -2171,12 +2173,13 @@ class PlotCanvas(wx.Panel):
 
     @savePen
     def _drawGrid(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """ Draws the gridlines """
+        """Draws the gridlines"""
         # increases thickness for printing only
         penWidth = self.printerScale * self._gridWidth
         dc.SetPen(wx.Pen(self._gridColour, penWidth, self._gridStyle))
 
-        # set length of tick marks--long ones make grid
+        # TODO: rename TickLength - these aren't ticks anymore
+        # TODO: figure out if I can remove this calculation stuff.
         x, y, width, height = self._point2ClientCoord(p1, p2)
         if self._gridEnabled == 'Horizontal':
             yTickLength = (width / 2.0 + 1) * self._pointSize[1]
@@ -2202,7 +2205,10 @@ class PlotCanvas(wx.Panel):
 
     @savePen
     def _drawTicks(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """ Draw the tick marks """
+        """Draw the tick marks"""
+        # TODO: add option for ticks to extend outside of graph
+        #       - done via negative ticklength values?
+        #           + works but the axes values cut off the ticks.
         # increases thickness for printing only
         penWidth = self.printerScale * self._tickWidth
         dc.SetPen(wx.Pen(self._tickColour, penWidth, self._tickStyle))
@@ -2211,6 +2217,7 @@ class PlotCanvas(wx.Panel):
         yTickLength = 3 * self.printerScale * self._tickLength[1]
         xTickLength = 3 * self.printerScale * self._tickLength[0]
 
+        # TODO: This is code duplication
         if self._xSpec is not 'none':
             # miny, maxy and tick lengths
             for y, d in [(p1[1], -xTickLength), (p2[1], xTickLength)]:
@@ -2224,13 +2231,20 @@ class PlotCanvas(wx.Panel):
                     pt = scale * np.array([x, y]) + shift
                     dc.DrawLine(pt[0], pt[1], pt[0] - d, pt[1])
 
+# TODO: create own dc.SetPen() function
+#       There is a lot of instances of:
+#           penWidth = self.printerScale * itemWidth
+#           dc.SetPen(wx.Pen(itemColour, penWidth, itemStyle)
+#       and it could be replaced with a simpler function call.
 
     @savePen
     def _drawCenterLines(self, dc, p1, p2, scale, shift):
-        """ Draws the center lines """
+        """Draws the center lines"""
         # increases thickness for printing only
         penWidth = self.printerScale * self._centerLineWidth
-        dc.SetPen(wx.Pen(self._centerLineColour, penWidth, self._centerLineStyle))
+        dc.SetPen(wx.Pen(self._centerLineColour,
+                         penWidth,
+                         self._centerLineStyle))
 
         if self._centerLinesEnabled in ('Horizontal', True):
             y1 = scale[1] * p1[1] + shift[1]
@@ -2251,7 +2265,7 @@ class PlotCanvas(wx.Panel):
 
     @savePen
     def _drawDiagonals(self, dc, p1, p2, scale, shift):
-        """ Draws the diagonal lines """
+        """Draws the diagonal lines"""
         penWidth = self.printerScale * self._diagonalWidth
         dc.SetPen(wx.Pen(self._diagonalColour, penWidth, self._diagonalStyle))
 
@@ -2268,7 +2282,7 @@ class PlotCanvas(wx.Panel):
 
     @savePen
     def _drawAxes(self, dc, p1, p2, scale, shift):
-        """ Draw the frame lines """
+        """Draw the frame lines"""
         # TODO: add option to not draw certain axes
         # increases thickness for printing only
         penWidth = self.printerScale * self._axesWidth
@@ -2292,7 +2306,11 @@ class PlotCanvas(wx.Panel):
     def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
         """ Draws the axes values """
         # TODO: Add option for left and right values
+        # TODO: When drawing right or top values, draw text *outside* of plot.
+        # TODO: negative tick lengths get cut off by the text.
+        #       - transparent text background needed?
 
+        # TODO: More code duplication? Same as _drawGrid and _drawTicks?
         if self._xSpec is not 'none':
             text = 1
             # miny, maxy and tick lengths
@@ -2319,7 +2337,7 @@ class PlotCanvas(wx.Panel):
                 text = 0    # axis values not drawn on right side
 
     def _drawPlotAreaItems(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """ Draws each frame element """
+        """Draws each frame element"""
         if self._ticksEnabled:
             self._drawTicks(dc, p1, p2, scale, shift, xticks, yticks)
 
@@ -2337,7 +2355,6 @@ class PlotCanvas(wx.Panel):
 
         if self._axesValuesEnabled:
             self._drawAxesValues(dc, p1, p2, scale, shift, xticks, yticks)
-
 
     def _xticks(self, *args):
         if self._logscale[0]:
