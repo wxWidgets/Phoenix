@@ -54,6 +54,9 @@
 #     which appear on stderr on some Linux systems until printing functionality
 #     is actually used.
 #
+# July 29, 2015  Douglas Thor (doug.thor@gmail.com)
+#   - Implemented a drawstyle option to PolyLine that mimics matplotlib's
+#     Line2dD.drawstyle option.
 #
 
 """
@@ -314,7 +317,6 @@ class PolyLine(PolyPoints):
             intermediate1 = [coord1[0], mid_y]
             intermediate2 = [coord2[0], mid_y]
             line = [coord1, intermediate1, intermediate2, coord2]
-            print(line)
         else:
             # just draw a line between all the points.
             raise ValueError("Invalid line spec")
