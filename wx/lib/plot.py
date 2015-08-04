@@ -174,7 +174,7 @@ class SavePen(object):
         dc = args[0]
         prevPen = dc.GetPen()
         try:
-            retval =  self.func(*args, **kwargs)
+            retval = self.func(*args, **kwargs)
         finally:
             dc.SetPen(prevPen)
         return retval
@@ -213,7 +213,6 @@ class PendingDeprecation(object):
     def __init__(self, new_func):
         self.new_func = new_func
 
-
     def __call__(self, func):
         """Support for functions"""
         self.func = func
@@ -246,8 +245,8 @@ class PolyPoints(object):
         self.attributes.update(self._attributes)
         for name, value in attr.items():
             if name not in self._attributes.keys():
-                raise KeyError(
-                    "Style attribute incorrect. Should be one of %s" % self._attributes.keys())
+                err_txt = "Style attribute incorrect. Should be one of {}"
+                raise KeyError(err_txt.format(self._attributes.keys()))
             self.attributes[name] = value
 
     def setLogScale(self, logscale):
@@ -287,6 +286,7 @@ class PolyPoints(object):
         if len(self.points) == 0:
             # no curves to draw
             return
+        # TODO: should this be '!=' rather than 'is not'?
         if (scale is not self.currentScale) or (shift is not self.currentShift):
             # update point scaling
             self.scaled = scale * self.points + shift
@@ -298,12 +298,13 @@ class PolyPoints(object):
         return self.attributes['legend']
 
     def getClosestPoint(self, pntXY, pointScaled=True):
-        """Returns the index of closest point on the curve, pointXY, scaledXY, distance
-            x, y in user coords
-            if pointScaled == True based on screen coords
-            if pointScaled == False based on user coords
+        """Returns the index of closest point on the curve, pointXY,
+        scaledXY, distance x, y in user coords.
+
+        if pointScaled == True, then based on screen coords
+        if pointScaled == False, then based on user coords
         """
-        if pointScaled == True:
+        if pointScaled:
             # Using screen coords
             p = self.scaled
             pxy = self.currentScale * np.array(pntXY) + self.currentShift
@@ -315,7 +316,10 @@ class PolyPoints(object):
         d = np.sqrt(np.add.reduce((p - pxy) ** 2, 1))  # sqrt(dx^2+dy^2)
         pntIndex = np.argmin(d)
         dist = d[pntIndex]
-        return [pntIndex, self.points[pntIndex], self.scaled[pntIndex] / self._pointSize, dist]
+        return [pntIndex,
+                self.points[pntIndex],
+                self.scaled[pntIndex] / self._pointSize,
+                dist]
 
 
 class PolyLine(PolyPoints):
@@ -335,7 +339,8 @@ class PolyLine(PolyPoints):
         """
         Creates PolyLine object
 
-        :param `points`: sequence (array, tuple or list) of (x,y) points making up line
+        :param `points`: sequence (array, tuple or list) of (x,y) points
+                         making up line
         :keyword `attr`: keyword attributes, default to:
 
          ==========================  ================================
@@ -435,7 +440,8 @@ class PolySpline(PolyLine):
         """
         Creates PolyLine object
 
-        :param `points`: sequence (array, tuple or list) of (x,y) points making up spline
+        :param `points`: sequence (array, tuple or list) of (x,y) points
+                         making up spline
         :keyword `attr`: keyword attributes, default to:
 
          ==========================  ================================
@@ -490,7 +496,9 @@ class PolyMarker(PolyPoints):
          'width'= 1                       Pen width
          'size'= 2                        Marker size
          'fillcolour'= same as colour     wx.Brush Colour any wx.Colour
-         'fillstyle'= wx.BRUSHSTYLE_SOLID wx.Brush fill style (use wx.BRUSHSTYLE_TRANSPARENT for no fill)
+         'fillstyle'= wx.BRUSHSTYLE_SOLID wx.Brush fill style (use
+                                          wx.BRUSHSTYLE_TRANSPARENT for
+                                          no fill)
          'style'= wx.FONTFAMILY_SOLID     wx.Pen style
          'marker'= 'circle'               Marker shape
          'legend'= ''                     Line Legend to display
@@ -881,7 +889,7 @@ class PlotCanvas(wx.Panel):
                                wx.PENSTYLE_SOLID)
         # TODO: different name for _axesLocation?
         # TODO: different API for _axesLocation?
-        self._axesLocation = (1, 1, 1, 1)    # Bottom, Left, Top, Right)
+        self._axesLocation = (1, 1, 1, 1)    # (Bottom, Left, Top, Right)
 
         self._tickPen = wx.Pen(wx.BLACK,
                                self._pointSize[0],
@@ -889,7 +897,7 @@ class PlotCanvas(wx.Panel):
         self._tickLength = tuple(x * 3 for x in self._pointSize)
         # TODO: different name for _tickLocation?
         # TODO: different API for _tickLocation?
-        self._tickLocation = (1, 1, 1, 1)    # Bottom, Left, Top, Right)
+        self._tickLocation = (1, 1, 1, 1)    # (Bottom, Left, Top, Right)
 
         self._diagonalPen = wx.Pen(wx.BLUE,
                                    self._pointSize[0],
@@ -1102,22 +1110,31 @@ class PlotCanvas(wx.Panel):
         dlg1 = None
         while fType not in extensions:
 
+            msg_txt = ('File name extension\n'  # implicit str concat
+                       'must be one of\nbmp, xbm, xpm, png, or jpg')
+
             if dlg1:                   # FileDialog exists: Check for extension
-                dlg2 = wx.MessageDialog(self, 'File name extension\n'
-                                        'must be one of\nbmp, xbm, xpm, png, or jpg',
-                                        'File Name Error', wx.OK | wx.ICON_ERROR)
+                dlg2 = wx.MessageDialog(self, msg_txt, 'File Name Error',
+                                        wx.OK | wx.ICON_ERROR)
                 try:
                     dlg2.ShowModal()
                 finally:
                     dlg2.Destroy()
             # FileDialog doesn't exist: just check one
             else:
-                dlg1 = wx.FileDialog(
-                    self,
-                    "Choose a file with extension bmp, gif, xbm, xpm, png, or jpg", ".", "",
-                    "BMP files (*.bmp)|*.bmp|XBM files (*.xbm)|*.xbm|XPM file (*.xpm)|*.xpm|PNG files (*.png)|*.png|JPG files (*.jpg)|*.jpg",
-                    wx.SAVE | wx.OVERWRITE_PROMPT
-                )
+                msg_txt = ("Choose a file with extension bmp, "
+                           "gif, xbm, xpm, png, or jpg")
+                wildcard_str = ("BMP files (*.bmp)|*.bmp|XBM files (*.xbm)|"
+                                "*.xbm|XPM file (*.xpm)|*.xpm|"
+                                "PNG files (*.png)|*.png|"
+                                "JPG files (*.jpg)|*.jpg")
+                dlg1 = wx.FileDialog(self,
+                                     msg_txt,
+                                     ".",
+                                     "",
+                                     wildcard_str,
+                                     wx.SAVE | wx.OVERWRITE_PROMPT,
+                                     )
 
             if dlg1.ShowModal() == wx.ID_OK:
                 fileName = dlg1.GetPath()
@@ -1170,7 +1187,7 @@ class PlotCanvas(wx.Panel):
 
     def Printout(self, paper=None):
         """Print current plot."""
-        if paper != None:
+        if paper is not None:
             self.print_data.SetPaperId(paper)
         pdd = wx.PrintDialogData(self.print_data)
         printer = wx.Printer(pdd)
@@ -1468,7 +1485,9 @@ class PlotCanvas(wx.Panel):
     def EnableDiagonals(self, value):
         """Set True, 'Bottomleft-Topright' or 'Bottomright-Topleft' to enable
         center line(s)."""
-        if value not in [True, False, 'Bottomleft-Topright', 'Bottomright-Topleft']:
+        # TODO: Rename Bottomleft-TopRight, Bottomright-Topleft
+        if value not in [True, False,
+                         'Bottomleft-Topright', 'Bottomright-Topleft']:
             raise TypeError(
                 "Value should be True, False, Bottomleft-Topright or Bottomright-Topleft")
         self._diagonalsEnabled = value
@@ -1699,7 +1718,7 @@ class PlotCanvas(wx.Panel):
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
             raise TypeError("XSpec must be 'none', 'min', 'auto', or a number")
-        self._xSpec=  value
+        self._xSpec = value
 
     @property
     def YSpec(self):
@@ -1718,7 +1737,7 @@ class PlotCanvas(wx.Panel):
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
             raise TypeError("YSpec must be 'none', 'min', 'auto', or a number")
-        self._ySpec=  value
+        self._ySpec = value
 
     @PendingDeprecation("self.XMaxRange property")
     def GetXMaxRange(self):
@@ -1768,7 +1787,8 @@ class PlotCanvas(wx.Panel):
         return xAxis
 
     def _getXCurrentRange(self):
-        """Returns (minX, maxX) x-axis for currently displayed portion of graph"""
+        """Returns (minX, maxX) x-axis for currently displayed
+        portion of graph"""
         return self.last_draw[1]
 
     @PendingDeprecation("self.YCurrentRange property")
@@ -1783,7 +1803,8 @@ class PlotCanvas(wx.Panel):
         return yAxis
 
     def _getYCurrentRange(self):
-        """Returns (minY, maxY) y-axis for currently displayed portion of graph"""
+        """Returns (minY, maxY) y-axis for currently displayed
+        portion of graph"""
         return self.last_draw[2]
 
     def Draw(self, graphics, xAxis=None, yAxis=None, dc=None):
@@ -1800,12 +1821,12 @@ class PlotCanvas(wx.Panel):
                 "yAxis should be None or (minY,maxY)" + str(type(xAxis)))
 
         # check case for axis = (a,b) where a==b caused by improper zooms
-        if xAxis != None:
+        if xAxis is not None:
             if xAxis[0] == xAxis[1]:
                 return
             if self.LogScale[0]:
                 xAxis = np.log10(xAxis)
-        if yAxis != None:
+        if yAxis is not None:
             if yAxis[0] == yAxis[1]:
                 return
             if self.LogScale[1]:
@@ -1848,8 +1869,9 @@ class PlotCanvas(wx.Panel):
         if (sys.platform in ("darwin", "win32") or not isinstance(dc, wx.GCDC) or wx.VERSION >= (2, 9)):
             self._fontScale = sum(self._pointSize) / 2.0
         else:
-            # on Linux, we need to correct the font size by a certain factor if wx.GCDC is used,
-            # to make text the same size as if wx.GCDC weren't used
+            # on Linux, we need to correct the font size by a certain
+            # factor if wx.GCDC is used, to make text the same size as
+            # if wx.GCDC weren't used
             screenppi = map(float, wx.ScreenDC().GetPPI())
             ppi = dc.GetPPI()
             self._fontScale = (screenppi[
@@ -1925,8 +1947,7 @@ class PlotCanvas(wx.Panel):
         # use larger of number width or legend width
         rhsW = max(xTextExtent[0], legendBoxWH[0]) + 5 * self._pointSize[0]
         lhsW = yTextExtent[0] + yLabelWH[1] + 3 * self._pointSize[0]
-        bottomH = max(
-            xTextExtent[1], yTextExtent[1] / 2.) + xLabelWH[1] + 2 * self._pointSize[1]
+        bottomH = max(xTextExtent[1], yTextExtent[1] / 2.) + xLabelWH[1] + 2 * self._pointSize[1]
         topH = yTextExtent[1] / 2. + titleWH[1]
         # make plot area smaller by text size
         textSize_scale = np.array([rhsW + lhsW, bottomH + topH])
@@ -1953,8 +1974,13 @@ class PlotCanvas(wx.Panel):
 
         # drawing legend makers and text
         if self._legendEnabled:
-            self._drawLegend(
-                dc, graphics, rhsW, topH, legendBoxWH, legendSymExt, legendTextExt)
+            self._drawLegend(dc,
+                             graphics,
+                             rhsW,
+                             topH,
+                             legendBoxWH,
+                             legendSymExt,
+                             legendTextExt)
 
         # allow for scaling and shifting plotted points
         scale = (self.plotbox_size - textSize_scale) / \
@@ -1973,8 +1999,10 @@ class PlotCanvas(wx.Panel):
         # set clipping area so drawing does not occur outside axis box
         ptx, pty, rectWidth, rectHeight = self._point2ClientCoord(p1, p2)
         # allow graph to overlap axis lines by adding units to width and height
-        dc.SetClippingRegion(ptx * self._pointSize[0], pty * self._pointSize[
-                             1], rectWidth * self._pointSize[0] + 2, rectHeight * self._pointSize[1] + 1)
+        dc.SetClippingRegion(ptx * self._pointSize[0],
+                             pty * self._pointSize[1],
+                             rectWidth * self._pointSize[0] + 2,
+                             rectHeight * self._pointSize[1] + 1)
         # Draw the lines and markers
         #start = _time.clock()
         graphics.draw(dc)
@@ -2014,7 +2042,7 @@ class PlotCanvas(wx.Panel):
         """
         self.last_PointLabel = None  # reset maker
         x, y = Center
-        if self.last_draw != None:
+        if self.last_draw is not None:
             (graphics, xAxis, yAxis) = self.last_draw
             w = (xAxis[1] - xAxis[0]) * Ratio[0]
             h = (yAxis[1] - yAxis[0]) * Ratio[1]
@@ -2024,7 +2052,8 @@ class PlotCanvas(wx.Panel):
 
     def GetClosestPoints(self, pntXY, pointScaled=True):
         """Returns list with
-            [curveNumber, legend, index of closest point, pointXY, scaledXY, distance]
+            [curveNumber, legend, index of closest point,
+            pointXY, scaledXY, distance]
             list for each curve.
             Returns [] if no curves are being plotted.
 
@@ -2041,7 +2070,7 @@ class PlotCanvas(wx.Panel):
             # check there are points in the curve
             if len(obj.points) == 0:
                 continue  # go to next obj
-            #[curveNumber, legend, index of closest point, pointXY, scaledXY, distance]
+            #[curveNum, legend, closest pt index, pointXY, scaledXY, dist]
             cn = [curveNum] + \
                 [obj.getLegend()] + obj.getClosestPoint(pntXY, pointScaled)
             l.append(cn)
@@ -2049,7 +2078,8 @@ class PlotCanvas(wx.Panel):
 
     def GetClosestPoint(self, pntXY, pointScaled=True):
         """Returns list with
-            [curveNumber, legend, index of closest point, pointXY, scaledXY, distance]
+            [curveNumber, legend, index of closest point,
+            pointXY, scaledXY, distance]
             list for only the closest curve.
             Returns [] if no curves are being plotted.
 
@@ -2080,7 +2110,7 @@ class PlotCanvas(wx.Panel):
             This function can be called from parent window with onClick,
             onMotion events etc.
         """
-        if self.last_PointLabel != None:
+        if self.last_PointLabel is not None:
             # compare pointXY
             if np.sometrue(mDataDict["pointXY"] != self.last_PointLabel["pointXY"]):
                 # closest changed
@@ -2125,7 +2155,7 @@ class PlotCanvas(wx.Panel):
 
     def OnMouseLeftUp(self, event):
         if self._zoomEnabled:
-            if self._hasDragged == True:
+            if self._hasDragged is True:
                 self._drawRubberBand(
                     self._zoomCorner1, self._zoomCorner2)  # remove old
                 self._zoomCorner2[0], self._zoomCorner2[1] = self._getXY(event)
@@ -2133,7 +2163,7 @@ class PlotCanvas(wx.Panel):
                 minX, minY = np.minimum(self._zoomCorner1, self._zoomCorner2)
                 maxX, maxY = np.maximum(self._zoomCorner1, self._zoomCorner2)
                 self.last_PointLabel = None  # reset pointLabel
-                if self.last_draw != None:
+                if self.last_draw is not None:
                     self._Draw(
                         self.last_draw[0], xAxis=(minX, maxX), yAxis = (minY, maxY), dc = None)
             # else: # A box has not been drawn, zoom in on a point
@@ -2159,7 +2189,7 @@ class PlotCanvas(wx.Panel):
 
     def OnPaint(self, event):
         # All that is needed here is to draw the buffer to screen
-        if self.last_PointLabel != None:
+        if self.last_PointLabel is not None:
             self._drawPointLabel(self.last_PointLabel)  # erase old
             self.last_PointLabel = None
         dc = wx.BufferedPaintDC(self.canvas, self._Buffer)
@@ -2192,7 +2222,7 @@ class PlotCanvas(wx.Panel):
 
     def OnLeave(self, event):
         """Used to erase pointLabel when mouse outside window"""
-        if self.last_PointLabel != None:
+        if self.last_PointLabel is not None:
             self._drawPointLabel(self.last_PointLabel)  # erase old
             self.last_PointLabel = None
 
@@ -2235,7 +2265,7 @@ class PlotCanvas(wx.Panel):
 
     def _printDraw(self, printDC):
         """Used for printing."""
-        if self.last_draw != None:
+        if self.last_draw is not None:
             graphics, xSpec, ySpec = self.last_draw
             self._Draw(graphics, xSpec, ySpec, printDC)
 
@@ -2310,7 +2340,7 @@ class PlotCanvas(wx.Panel):
 
     def _legendWH(self, dc, graphics):
         """Returns the size in screen units for legend box"""
-        if self._legendEnabled != True:
+        if self._legendEnabled is not True:
             legendBoxWH = symExt = txtExt = (0, 0)
         else:
             # find max symbol size
@@ -2358,7 +2388,8 @@ class PlotCanvas(wx.Panel):
             return font
 
     def _point2ClientCoord(self, corner1, corner2):
-        """Converts user point coords to client screen int coords x,y,width,height"""
+        """Converts user point coords to client screen int
+        coords x,y,width,height"""
         c1 = np.array(corner1)
         c2 = np.array(corner2)
         # convert to screen coords
@@ -2393,7 +2424,8 @@ class PlotCanvas(wx.Panel):
             if mod != 0:
                 upper = upper - mod + grid
             return lower, upper
-        elif type(spec) == type(()):
+#        elif type(spec) == type(()):
+        elif isinstance(spec, tuple):
             lower, upper = spec
             if lower <= upper:
                 return lower, upper
@@ -2771,10 +2803,10 @@ class PlotPrintout(wx.Printout):
 
     def OnPrintPage(self, page):
         dc = self.GetDC()  # allows using floats for certain functions
-##        print("PPI Printer",self.GetPPIPrinter())
-##        print("PPI Screen", self.GetPPIScreen())
-##        print("DC GetSize", dc.GetSize())
-##        print("GetPageSizePixels", self.GetPageSizePixels())
+#        print("PPI Printer",self.GetPPIPrinter())
+#        print("PPI Screen", self.GetPPIScreen())
+#        print("DC GetSize", dc.GetSize())
+#        print("GetPageSizePixels", self.GetPageSizePixels())
         # Note PPIScreen does not give the correct number
         # Calulate everything for printer and then scale for preview
         PPIPrinter = self.GetPPIPrinter()        # printer dots/inch (w,h)
@@ -2826,8 +2858,8 @@ class PlotPrintout(wx.Printout):
         aveScale = (ratioW + ratioH) / 2
         if self.graph._antiAliasingEnabled and not self.IsPreview():
             scale = dc.GetUserScale()
-            dc.SetUserScale(
-                scale[0] / self.graph._pointSize[0], scale[1] / self.graph._pointSize[1])
+            dc.SetUserScale(scale[0] / self.graph._pointSize[0],
+                            scale[1] / self.graph._pointSize[1])
         self.graph._setPrinterScale(aveScale)  # tickens up pens for printing
 
         self.graph._printDraw(dc)
@@ -2902,7 +2934,10 @@ def _draw1Objects():
                           marker='cross',
                           )
 
-    return PlotGraphics([markers1, lines, markers2], "Graph Title", "X Axis", "Y Axis")
+    return PlotGraphics([markers1, lines, markers2],
+                        "Graph Title",
+                        "X Axis",
+                        "Y Axis")
 
 
 def _draw2Objects():
@@ -2910,15 +2945,21 @@ def _draw2Objects():
     data1 = 2. * np.pi * np.arange(200) / 200.
     data1.shape = (100, 2)
     data1[:, 1] = np.sin(data1[:, 0])
-    line1 = PolySpline(
-        data1, legend='Green Line', colour='green', width=6, style=wx.PENSTYLE_DOT)
+    line1 = PolySpline(data1,
+                       legend='Green Line',
+                       colour='green',
+                       width=6,
+                       style=wx.PENSTYLE_DOT)
 
     # 50 points cos function, plotted as red dot-dash
     data1 = 2. * np.pi * np.arange(100) / 100.
     data1.shape = (50, 2)
     data1[:, 1] = np.cos(data1[:, 0])
-    line2 = PolySpline(
-        data1, legend='Red Line', colour='red', width=3, style=wx.PENSTYLE_DOT_DASH)
+    line2 = PolySpline(data1,
+                       legend='Red Line',
+                       colour='red',
+                       width=3,
+                       style=wx.PENSTYLE_DOT_DASH)
 
     # A few more points...
     pi = np.pi
@@ -2933,7 +2974,8 @@ def _draw2Objects():
                           marker='square',
                           )
 
-    return PlotGraphics([markers1, line1, line2], "Big Markers with Different Line Styles")
+    return PlotGraphics([markers1, line1, line2],
+                        "Big Markers with Different Line Styles")
 
 
 def _draw3Objects():
@@ -2941,8 +2983,11 @@ def _draw3Objects():
                   'cross', 'plus', 'circle']
     m = []
     for i in range(len(markerList)):
-        m.append(PolyMarker([(2 * i + .5, i + .5)], legend=markerList[i], colour='blue',
-                            marker=markerList[i]))
+        m.append(PolyMarker([(2 * i + .5, i + .5)],
+                            legend=markerList[i],
+                            colour='blue',
+                            marker=markerList[i])
+                 )
     return PlotGraphics(m, "Selection of Markers", "Minimal Axis", "No Axis")
 
 
@@ -2962,7 +3007,10 @@ def _draw5Objects():
     # Empty graph with axis defined but no points/lines
     points = []
     line1 = PolyLine(points, legend='Wide Line', colour='green', width=5)
-    return PlotGraphics([line1], "Empty Plot With Just Axes", "Value X", "Value Y")
+    return PlotGraphics([line1],
+                        "Empty Plot With Just Axes",
+                        "Value X",
+                        "Value Y")
 
 
 def _draw6Objects():
@@ -2982,7 +3030,9 @@ def _draw6Objects():
     line2b = PolyLine(points2b, colour='brown', legend='July', width=10)
 
     return PlotGraphics([line1, line1g, line1b, line2, line2g, line2b],
-                        "Bar Graph - (Turn on Grid, Legend)", "Months", "Number of Students")
+                        "Bar Graph - (Turn on Grid, Legend)",
+                        "Months",
+                        "Number of Students")
 
 
 def _draw7Objects():
@@ -2994,7 +3044,10 @@ def _draw7Objects():
     points2 = np.transpose([x, y2])
     line1 = PolyLine(points1, legend='quadratic', colour='blue', width=1)
     line2 = PolyLine(points2, legend='cubic', colour='red', width=1)
-    return PlotGraphics([line1, line2], "double log plot", "Value X", "Value Y")
+    return PlotGraphics([line1, line2],
+                        "double log plot",
+                        "Value X",
+                        "Value Y")
 
 
 class TestFrame(wx.Frame):
@@ -3045,46 +3098,46 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnPlotClear, id=212)
         menu.Append(213, '&Scale', 'Scale canvas')
         self.Bind(wx.EVT_MENU, self.OnPlotScale, id=213)
-        menu.Append(
-            214, 'Enable &Zoom', 'Enable Mouse Zoom', kind=wx.ITEM_CHECK)
+        menu.Append(214, 'Enable &Zoom',
+                    'Enable Mouse Zoom', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableZoom, id=214)
         menu.Append(215, 'Enable &Grid', 'Turn on Grid', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableGrid, id=215)
-        menu.Append(
-            217, 'Enable &Drag', 'Activates dragging mode', kind=wx.ITEM_CHECK)
+        menu.Append(217, 'Enable &Drag',
+                    'Activates dragging mode', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableDrag, id=217)
-        menu.Append(
-            220, 'Enable &Legend', 'Turn on Legend', kind=wx.ITEM_CHECK)
+        menu.Append(220, 'Enable &Legend',
+                    'Turn on Legend', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableLegend, id=220)
-        menu.Append(
-            222, 'Enable &Point Label', 'Show Closest Point', kind=wx.ITEM_CHECK)
+        menu.Append(222, 'Enable &Point Label',
+                    'Show Closest Point', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnablePointLabel, id=222)
 
-        menu.Append(
-            223, 'Enable &Anti-Aliasing', 'Smooth output', kind=wx.ITEM_CHECK)
+        menu.Append(223, 'Enable &Anti-Aliasing',
+                    'Smooth output', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableAntiAliasing, id=223)
         menu.Append(224, 'Enable &High-Resolution AA',
                     'Draw in higher resolution', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableHiRes, id=224)
 
-        menu.Append(
-            226, 'Enable Center Lines', 'Draw center lines', kind=wx.ITEM_CHECK)
+        menu.Append(226, 'Enable Center Lines',
+                    'Draw center lines', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableCenterLines, id=226)
-        menu.Append(
-            227, 'Enable Diagonal Lines', 'Draw diagonal lines', kind=wx.ITEM_CHECK)
+        menu.Append(227, 'Enable Diagonal Lines',
+                    'Draw diagonal lines', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableDiagonals, id=227)
 
-        menu.Append(
-            231, 'Set Gray Background', 'Change background colour to gray')
+        menu.Append(231, 'Set Gray Background',
+                    'Change background colour to gray')
         self.Bind(wx.EVT_MENU, self.OnBackgroundGray, id=231)
-        menu.Append(
-            232, 'Set &White Background', 'Change background colour to white')
+        menu.Append(232, 'Set &White Background',
+                    'Change background colour to white')
         self.Bind(wx.EVT_MENU, self.OnBackgroundWhite, id=232)
-        menu.Append(
-            233, 'Set Red Label Text', 'Change label text colour to red')
+        menu.Append(233, 'Set Red Label Text',
+                    'Change label text colour to red')
         self.Bind(wx.EVT_MENU, self.OnForegroundRed, id=233)
-        menu.Append(
-            234, 'Set &Black Label Text', 'Change label text colour to black')
+        menu.Append(234, 'Set &Black Label Text',
+                    'Change label text colour to black')
         self.Bind(wx.EVT_MENU, self.OnForegroundBlack, id=234)
 
         menu.Append(225, 'Scroll Up 1', 'Move View Up 1 Unit')
@@ -3101,7 +3154,8 @@ class TestFrame(wx.Frame):
         menu.Check(240, True)
 
         menu.Append(245, 'Enable Axes Values',
-                    'Enables the display of the axes values', kind=wx.ITEM_CHECK)
+                    'Enables the display of the axes values',
+                    kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableAxesValues, id=245)
         menu.Check(245, True)
 
@@ -3134,7 +3188,8 @@ class TestFrame(wx.Frame):
     def DrawPointLabel(self, dc, mDataDict):
         """This is the fuction that defines how the pointLabels are plotted
             dc - DC that will be passed
-            mDataDict - Dictionary of data that you want to use for the pointLabel
+            mDataDict - Dictionary of data that you want to use
+                        for the pointLabel
 
             As an example I have decided I want a box at the curve point
             with some text information about the curve plotted below.
@@ -3174,8 +3229,11 @@ class TestFrame(wx.Frame):
                 curveNum, legend, pIndex, pointXY, scaledXY, distance = dlst
                 # make up dictionary to pass to my user function (see
                 # DrawPointLabel)
-                mDataDict = {"curveNum": curveNum, "legend": legend, "pIndex": pIndex,
-                             "pointXY": pointXY, "scaledXY": scaledXY}
+                mDataDict = {"curveNum": curveNum,
+                             "legend": legend,
+                             "pIndex": pIndex,
+                             "pointXY": pointXY,
+                             "scaledXY": scaledXY}
                 # pass dict to update the pointLabel
                 self.client.UpdatePointLabel(mDataDict)
         event.Skip()  # go to next handler
@@ -3205,8 +3263,11 @@ class TestFrame(wx.Frame):
 
     def OnPlotDraw3(self, event):
         self.resetDefaults()
-        self.client.SetFont(
-            wx.Font(10, wx.FONTFAMILY_SCRIPT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+        self.client.SetFont(wx.Font(10,
+                                    wx.FONTFAMILY_SCRIPT,
+                                    wx.FONTSTYLE_NORMAL,
+                                    wx.FONTWEIGHT_NORMAL)
+                            )
         self.client.FontSizeAxis = 20
         self.client.FontSizeLegend = 12
         self.client.XSpec = 'min'
@@ -3230,7 +3291,7 @@ class TestFrame(wx.Frame):
         drawObj = _draw5Objects()
         # make the axis X= (0,5), Y=(0,10)
         # (default with None is X= (-1,1), Y= (-1,1))
-        self.client.Draw(drawObj, xAxis=(0, 5), yAxis= (0, 10))
+        self.client.Draw(drawObj, xAxis=(0, 5), yAxis=(0, 10))
 
     def OnPlotDraw6(self, event):
         # Bar Graph Example
@@ -3254,7 +3315,7 @@ class TestFrame(wx.Frame):
         self.client.Clear()
 
     def OnPlotScale(self, event):
-        if self.client.last_draw != None:
+        if self.client.last_draw is not None:
             graphics, xAxis, yAxis = self.client.last_draw
             self.client.Draw(graphics, (1, 3.05), (0, 1))
 
@@ -3330,8 +3391,11 @@ class TestFrame(wx.Frame):
 
     def resetDefaults(self):
         """Just to reset the fonts back to the PlotCanvas defaults"""
-        self.client.SetFont(
-            wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+        self.client.SetFont(wx.Font(10,
+                                    wx.FONTFAMILY_SWISS,
+                                    wx.FONTSTYLE_NORMAL,
+                                    wx.FONTWEIGHT_NORMAL)
+                            )
         self.client.FontSizeAxis = 10
         self.client.FontSizeLegend = 7
         self.client.LogScale = (False, False)
