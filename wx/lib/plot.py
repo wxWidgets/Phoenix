@@ -63,6 +63,7 @@
 #   - TODO: Move all getters and setters to deprecation warnings, add new
 #     decorated properties. See http://stackoverflow.com/q/31796584/1354930
 #   - TODO: Fix printer scaling.
+#   - Documentation updates
 
 """
 This is a simple light weight plotting module that can be used with
@@ -75,7 +76,7 @@ but consume huge amounts of computer resources for simple plots.
 They can be found at http://scipy.com
 
 This file contains two parts; first the re-usable library stuff, then,
-after a "if __name__=='__main__'" test, a simple frame and a few default
+after a ``if __name__ == '__main__'`` test, a simple frame and a few default
 plots for examples and testing.
 
 Based on wxPlotCanvas
@@ -83,30 +84,40 @@ Written by K.Hinsen, R. Srinivasan;
 Ported to wxPython Harm van der Heijden, feb 1999
 
 Major Additions Gordon Williams Feb. 2003 (g_will@cyberus.ca)
-    -More style options
-    -Zooming using mouse "rubber band"
-    -Scroll left, right
-    -Grid(graticule)
-    -Printing, preview, and page set up (margins)
-    -Axis and title labels
-    -Cursor xy axis values
-    -Doc strings and lots of comments
-    -Optimizations for large number of points
-    -Legends
+
+- More style options
+- Zooming using mouse "rubber band"
+- Scroll left, right
+- Grid(graticule)
+- Printing, preview, and page set up (margins)
+- Axis and title labels
+- Cursor xy axis values
+- Doc strings and lots of comments
+- Optimizations for large number of points
+- Legends
 
 Did a lot of work here to speed markers up. Only a factor of 4
 improvement though. Lines are much faster than markers, especially
 filled markers.  Stay away from circles and triangles unless you
 only have a few thousand points.
 
-Times for 25,000 points
-Line - 0.078 sec
-Markers
-Square -                   0.22 sec
-dot -                      0.10
-circle -                   0.87
-cross,plus -               0.28
-triangle, triangle_down -  0.90
++-----------------------------------+
+| Times for 25,000 points           |
++===================================+
+| Line                    | 0.078 s |
++-------------------------+---------+
+| Markers                           |
++-------------------------+---------+
+| Square                  | 0.22 s  |
++-------------------------+---------+
+| dot                     | 0.10    |
++-------------------------+---------+
+| circle                  | 0.87    |
++-------------------------+---------+
+| cross, plus             | 0.28    |
++-------------------------+---------+
+| triangle, triangle_down | 0.90    |
++-------------------------+---------+
 
 Thanks to Chris Barker for getting this version working on Linux.
 
@@ -115,14 +126,15 @@ Zooming controls with mouse (when enabled):
     Left mouse double click - reset zoom.
     Right mouse click - zoom out centred on click location.
 """
+__docformat__ = "restructuredtext en"
 
 import string as _string
 import time as _time
 import sys
 import wx
 import functools
+import warnings
 from warnings import warn as _warn
-from warnings import simplefilter as _simplefilter
 
 # Needs NumPy
 try:
@@ -137,7 +149,7 @@ except:
     raise ImportError("NumPy not found.\n" + msg)
 
 
-_simplefilter('default')
+warnings.simplefilter('default')
 
 #
 # Helper Decorator / Contect Manager which sets a pen back to the ogiginal
@@ -150,7 +162,7 @@ class SavePen(object):
 
     The DC to paint on **must** be the first argument of the function.
 
-    Example:
+    Usage:
     -------
     ::
 
@@ -170,7 +182,9 @@ class SavePen(object):
         self.func = func
 
     def __call__(self, *args, **kwargs):
-        """This provides support for functions """
+        """
+        This provides support for functions
+        """
         dc = args[0]
         prevPen = dc.GetPen()
         try:
@@ -180,7 +194,9 @@ class SavePen(object):
         return retval
 
     def __get__(self, obj, objtype):
-        """ And this provides support for instance methods """
+        """
+        And this provides support for instance methods
+        """
         @functools.wraps(self.func)
         def wrapper(*args, **kwargs):
             dc = args[0]
@@ -203,9 +219,13 @@ class PendingDeprecation(object):
 
     ::
 
-        @PendingDeprecation("new_funcion_to_use")
-        def old_function(self):
-            stuff
+        @PendingDeprecation("new_func")
+        def old_func():
+            pass
+
+    prints the warning::
+
+        ``old_func`` is pending deprecation. Please use new_func instead.
 
     """
     _warn_txt = "`{}` is pending deprecation. Please use {} instead."
@@ -234,9 +254,10 @@ class PendingDeprecation(object):
 # Plotting classes...
 #
 class PolyPoints(object):
+    """
+    Base Class for lines and markers.
 
-    """Base Class for lines and markers
-        - All methods are private.
+    All methods are private.
     """
 
     def __init__(self, points, attr):
@@ -303,7 +324,8 @@ class PolyPoints(object):
         return self.attributes['legend']
 
     def getClosestPoint(self, pntXY, pointScaled=True):
-        """Returns the index of closest point on the curve, pointXY,
+        """
+        Returns the index of closest point on the curve, pointXY,
         scaledXY, distance x, y in user coords.
 
         if pointScaled == True, then based on screen coords
@@ -328,9 +350,10 @@ class PolyPoints(object):
 
 
 class PolyLine(PolyPoints):
+    """
+    Class to define line type and style
 
-    """Class to define line type and style
-        - All methods except __init__ are private.
+    All methods except ``__init__`` are private.
     """
 
     _attributes = {'colour': 'black',
@@ -431,9 +454,10 @@ class PolyLine(PolyPoints):
 
 
 class PolySpline(PolyLine):
+    """
+    Class to define line type and style.
 
-    """Class to define line type and style
-        - All methods except __init__ are private.
+    All methods except ``__init__`` are private.
     """
 
     _attributes = {'colour': 'black',
@@ -476,9 +500,10 @@ class PolySpline(PolyLine):
 
 
 class PolyMarker(PolyPoints):
+    """
+    Class to define marker type and style
 
-    """Class to define marker type and style
-        - All methods except __init__ are private.
+    All methods except __init__ are private.
     """
 
     _attributes = {'colour': 'black',
@@ -601,9 +626,10 @@ class PolyMarker(PolyPoints):
 
 
 class PlotGraphics(object):
+    """
+    Container to hold PolyXXX objects and graph labels
 
-    """Container to hold PolyXXX objects and graph labels
-        - All methods except __init__ are private.
+    All methods except __init__ are private.
     """
 
     def __init__(self, objects, title='', xLabel='', yLabel=''):
@@ -748,11 +774,12 @@ class PlotGraphics(object):
 # Main window that you will want to import into your application.
 
 class PlotCanvas(wx.Panel):
-
     """
     Subclass of a wx.Panel which holds two scrollbars and the actual
     plotting canvas (self.canvas). It allows for simple general plotting
-    of data with zoom, labels, and automatic axis scaling."""
+    of data with zoom, labels, and automatic axis scaling.
+
+    """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=0, name="plotCanvas"):
@@ -978,7 +1005,8 @@ class PlotCanvas(wx.Panel):
 
     @property
     def AxesLocation(self):
-        """Returns the axes locations.
+        """
+        Returns the axes locations.
 
         Returns a 4-tuple of values in the format: (bottom, left, top, right)
 
@@ -991,7 +1019,8 @@ class PlotCanvas(wx.Panel):
 
     @AxesLocation.setter
     def AxesLocation(self, value):
-        """Sets the axes location.
+        """
+        Sets the axes location.
 
         `value` must be a 4-tuple of binary (0 or 1) values:
 
@@ -1042,7 +1071,8 @@ class PlotCanvas(wx.Panel):
 
     @property
     def TickLocation(self):
-        """Returns the tick locations.
+        """
+        Returns the tick locations.
 
         Returns a 4-tuple of values in the format: (bottom, left, top, right)
 
@@ -1050,12 +1080,14 @@ class PlotCanvas(wx.Panel):
         --------
         >>> self.GetTickLocation()
         (1, 1, 0, 0)        # only bottom and left ticks are displayed
+
         """
         return self._axesLocation
 
     @TickLocation.setter
     def TickLocation(self, value):
-        """Sets the tick location.
+        """
+        Sets the tick location.
 
         `value` must be a 4-tuple of binary (0 or 1) values:
 
@@ -1068,6 +1100,7 @@ class PlotCanvas(wx.Panel):
 
         # turns on all ticks:
         >>> self.SetTickLocation((1, 1, 1, 1))
+
         """
         # TODO: come up with better API.
         #       I don't like this API very much. Perhaps arbitrary length args?
@@ -1095,7 +1128,8 @@ class PlotCanvas(wx.Panel):
 
     # SaveFile
     def SaveFile(self, fileName=''):
-        """Saves the file to the type specified in the extension. If no file
+        """
+        Saves the file to the type specified in the extension. If no file
         name is specified a dialog box is provided.  Returns True if sucessful,
         otherwise False.
 
@@ -1104,6 +1138,7 @@ class PlotCanvas(wx.Panel):
         .xpm  Save an XPM bitmap file.
         .png  Save a Portable Network Graphics file.
         .jpg  Save a Joint Photographic Experts Group file.
+
         """
         extensions = {
             "bmp": wx.BITMAP_TYPE_BMP,       # Save a Windows bitmap file.
@@ -1428,12 +1463,6 @@ class PlotCanvas(wx.Panel):
     @PendingDeprecation("self.EnableGrid property")
     def SetEnableGrid(self, value):
         self.EnableGrid = value
-#        """Set True, 'Horizontal' or 'Vertical' to enable grid."""
-#        if value not in [True, False, 'Horizontal', 'Vertical']:
-#            raise TypeError(
-#                "Value should be True, False, Horizontal or Vertical")
-#        self._gridEnabled = value
-#        self.Redraw()
 
     @PendingDeprecation("self.EnableGrid property")
     def GetEnableGrid(self):
@@ -1720,25 +1749,29 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.XSpec property")
     def SetXSpec(self, type='auto'):
-        """xSpec- defines x axis type. Can be 'none', 'min' or 'auto'
+        """
+        xSpec- defines x axis type. Can be 'none', 'min' or 'auto'
         where:
 
         * 'none' - shows no axis or tick mark values
         * 'min' - shows min bounding box values
         * 'auto' - rounds axis range to sensible values
         * <number> - like 'min', but with <number> tick marks
+
         """
         self.XSpec = type
 
     @PendingDeprecation("self.YSpec property")
     def SetYSpec(self, type='auto'):
-        """ySpec- defines x axis type. Can be 'none', 'min' or 'auto'
+        """
+        ySpec- defines x axis type. Can be 'none', 'min' or 'auto'
         where:
 
         * 'none' - shows no axis or tick mark values
         * 'min' - shows min bounding box values
         * 'auto' - rounds axis range to sensible values
         * <number> - like 'min', but with <number> tick marks
+
         """
         self.YSpec = type
 
@@ -1758,13 +1791,15 @@ class PlotCanvas(wx.Panel):
 
     @XSpec.setter
     def XSpec(self, value):
-        """xSpec- defines x axis type. Can be 'none', 'min' or 'auto'
+        """
+        xSpec- defines x axis type. Can be 'none', 'min' or 'auto'
         where:
 
         * 'none' - shows no axis or tick mark values
         * 'min' - shows min bounding box values
         * 'auto' - rounds axis range to sensible values
         * <number> - like 'min', but with <number> tick marks
+
         """
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
@@ -1777,13 +1812,15 @@ class PlotCanvas(wx.Panel):
 
     @YSpec.setter
     def YSpec(self, value):
-        """ySpec- defines x axis type. Can be 'none', 'min' or 'auto'
+        """
+        ySpec- defines x axis type. Can be 'none', 'min' or 'auto'
         where:
 
         * 'none' - shows no axis or tick mark values
         * 'min' - shows min bounding box values
         * 'auto' - rounds axis range to sensible values
         * <number> - like 'min', but with <number> tick marks
+
         """
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
@@ -2073,9 +2110,10 @@ class PlotCanvas(wx.Panel):
         self.last_draw = None
 
     def Zoom(self, Center, Ratio):
-        """ Zoom on the plot
-            Centers on the X,Y coords given in Center
-            Zooms by the Ratio = (Xratio, Yratio) given
+        """
+        Zoom on the plot
+        Centers on the X,Y coords given in Center
+        Zooms by the Ratio = (Xratio, Yratio) given
         """
         self.last_PointLabel = None  # reset maker
         x, y = Center
@@ -2088,15 +2126,16 @@ class PlotCanvas(wx.Panel):
             self._Draw(graphics, xAxis, yAxis)
 
     def GetClosestPoints(self, pntXY, pointScaled=True):
-        """Returns list with
-            [curveNumber, legend, index of closest point,
-            pointXY, scaledXY, distance]
-            list for each curve.
-            Returns [] if no curves are being plotted.
+        """
+        Returns list with
+        [curveNumber, legend, index of closest point,
+        pointXY, scaledXY, distance]
+        list for each curve.
+        Returns [] if no curves are being plotted.
 
-            x, y in user coords
-            if pointScaled == True based on screen coords
-            if pointScaled == False based on user coords
+        x, y in user coords
+        if pointScaled == True based on screen coords
+        if pointScaled == False based on user coords
         """
         if self.last_draw is None:
             # no graph available
@@ -2114,15 +2153,16 @@ class PlotCanvas(wx.Panel):
         return l
 
     def GetClosestPoint(self, pntXY, pointScaled=True):
-        """Returns list with
-            [curveNumber, legend, index of closest point,
-            pointXY, scaledXY, distance]
-            list for only the closest curve.
-            Returns [] if no curves are being plotted.
+        """
+        Returns list with
+        [curveNumber, legend, index of closest point,
+        pointXY, scaledXY, distance]
+        list for only the closest curve.
+        Returns [] if no curves are being plotted.
 
-            x, y in user coords
-            if pointScaled == True based on screen coords
-            if pointScaled == False based on user coords
+        x, y in user coords
+        if pointScaled == True based on screen coords
+        if pointScaled == False based on user coords
         """
         # closest points on screen based on screen scaling (pointScaled= True)
         # list [curveNumber, index, pointXY, scaledXY, distance] for each curve
@@ -2136,16 +2176,17 @@ class PlotCanvas(wx.Panel):
         return closestPts[i]  # this is the closest point on closest curve
 
     def UpdatePointLabel(self, mDataDict):
-        """Updates the pointLabel point on screen with data contained in
-            mDataDict.
+        """
+        Updates the pointLabel point on screen with data contained in
+        mDataDict.
 
-            mDataDict will be passed to your function set by
-            SetPointLabelFunc.  It can contain anything you
-            want to display on the screen at the scaledXY point
-            you specify.
+        mDataDict will be passed to your function set by
+        SetPointLabelFunc.  It can contain anything you
+        want to display on the screen at the scaledXY point
+        you specify.
 
-            This function can be called from parent window with onClick,
-            onMotion events etc.
+        This function can be called from parent window with onClick,
+        onMotion events etc.
         """
         if self.last_PointLabel is not None:
             # compare pointXY
@@ -2840,7 +2881,6 @@ class PlotCanvas(wx.Panel):
 
 
 class PlotPrintout(wx.Printout):
-
     """Controls how the plot is made in printing and previewing"""
     # Do not change method names in this class,
     # we have to override wx.Printout methods here!
@@ -3109,7 +3149,6 @@ def _draw7Objects():
 
 
 class TestFrame(wx.Frame):
-
     def __init__(self, parent, id, title):
         wx.Frame.__init__(self, parent, id, title,
                           wx.DefaultPosition, (600, 400))
@@ -3255,14 +3294,17 @@ class TestFrame(wx.Frame):
         self.Show(True)
 
     def DrawPointLabel(self, dc, mDataDict):
-        """This is the fuction that defines how the pointLabels are plotted
-            dc - DC that will be passed
-            mDataDict - Dictionary of data that you want to use
-                        for the pointLabel
+        """
+        This is the fuction that defines how the pointLabels are plotted
 
-            As an example I have decided I want a box at the curve point
-            with some text information about the curve plotted below.
-            Any wxDC method can be used.
+        :param dc: DC that will be passed
+        :param mDataDict: Dictionary of data that you want to use
+                          for the pointLabel
+
+        As an example I have decided I want a box at the curve point
+        with some text information about the curve plotted below.
+        Any wxDC method can be used.
+
         """
         # ----------
         dc.SetPen(wx.Pen(wx.BLACK))
