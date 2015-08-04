@@ -216,6 +216,7 @@ class PendingDeprecation(object):
     def __call__(self, func):
         """Support for functions"""
         self.func = func
+        self._update_docs()
 
         @functools.wraps(self.func)
         def wrapper(*args, **kwargs):
@@ -223,6 +224,10 @@ class PendingDeprecation(object):
                   PendingDeprecationWarning)
             return self.func(*args, **kwargs)
         return wrapper
+
+    def _update_docs(self):
+        self.__name__ = self.func.__name__
+        self.__doc__ = self.func.__doc__
 
 
 #
@@ -710,11 +715,10 @@ class PlotGraphics(object):
 
     def draw(self, dc):
         for o in self.objects:
-            # t=_time.clock()          # profile info
+#            t=_time.perf_counter()          # profile info
             o._pointSize = self._pointSize
             o.draw(dc, self._printerScale)
-            #dt= _time.clock()-t
-            #print(o, "time=", dt)
+#            print(o, "time=", _time.perf_counter()-t)
 
     def getSymExtent(self, printerScale):
         """Get max width and height of lines and markers symbols for legend"""
@@ -837,6 +841,9 @@ class PlotCanvas(wx.Panel):
         self._gridEnabled = False
         self._legendEnabled = False
         self._titleEnabled = True
+        self._xAxisLabelEnabled = True
+        self._yAxisLabelEnabled = True
+        self._axesLabelsEnabled = True
         self._centerLinesEnabled = False
         self._diagonalsEnabled = False
         self._ticksEnabled = False
@@ -1596,6 +1603,50 @@ class PlotCanvas(wx.Panel):
         self._ticksEnabled = value
         self.Redraw()
 
+    @property
+    def EnablePlotTitle(self):
+        return self._titleEnabled
+
+    @EnablePlotTitle.setter
+    def EnablePlotTitle(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("`value` must be boolean True or False")
+        self._titleEnabled = value
+        self.Redraw()
+
+    @property
+    def EnableXAxisLabel(self):
+        return self._xAxisLabelEnabled
+
+    @EnableXAxisLabel.setter
+    def EnableXAxisLabel(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("`value` must be boolean True or False")
+        self._xAxisLabelEnabled = value
+        self.Redraw()
+
+    @property
+    def EnableYAxisLabel(self):
+        return self._yAxisLabelEnabled
+
+    @EnableYAxisLabel.setter
+    def EnableYAxisLabel(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("`value` must be boolean True or False")
+        self._yAxisLabelEnabled = value
+        self.Redraw()
+
+    @property
+    def EnableAxesLabels(self):
+        return self._axesLabelsEnabled
+
+    @EnableAxesLabels.setter
+    def EnableAxesLabels(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("`value` must be boolean True or False")
+        self._axesLabelsEnabled = value
+        self.Redraw()
+
     @PendingDeprecation("self.PointLabelFunc property")
     def SetPointLabelFunc(self, func):
         """Sets the function with custom code for pointLabel drawing
@@ -1954,23 +2005,9 @@ class PlotCanvas(wx.Panel):
         # shift plot area by this amount
         textSize_shift = np.array([lhsW, bottomH])
 
-        # draw title if requested
-        if self._titleEnabled:
-            dc.SetFont(self._getFont(self._fontSizeTitle))
-            titlePos = (self.plotbox_origin[0] + lhsW + (self.plotbox_size[0] - lhsW - rhsW) / 2. - titleWH[0] / 2.,
-                        self.plotbox_origin[1] - self.plotbox_size[1])
-            dc.DrawText(graphics.Title, titlePos[0], titlePos[1])
-
-        # draw label text
-        dc.SetFont(self._getFont(self._fontSizeAxis))
-        xLabelPos = (self.plotbox_origin[0] + lhsW + (self.plotbox_size[0] - lhsW - rhsW) / 2. - xLabelWH[0] / 2.,
-                     self.plotbox_origin[1] - xLabelWH[1])
-        dc.DrawText(graphics.XLabel, xLabelPos[0], xLabelPos[1])
-        yLabelPos = (self.plotbox_origin[0] - 3 * self._pointSize[0],
-                     self.plotbox_origin[1] - bottomH - (self.plotbox_size[1] - bottomH - topH) / 2. + yLabelWH[0] / 2.)
-        if graphics.YLabel:  # bug fix for Linux
-            dc.DrawRotatedText(
-                graphics.YLabel, yLabelPos[0], yLabelPos[1], 90)
+        # Draw the labels (title, axes labels)
+        self._drawPlotAreaLabels(dc, graphics, lhsW, rhsW, titleWH,
+                                 bottomH, topH, xLabelWH, yLabelWH)
 
         # drawing legend makers and text
         if self._legendEnabled:
@@ -2004,9 +2041,9 @@ class PlotCanvas(wx.Panel):
                              rectWidth * self._pointSize[0] + 2,
                              rectHeight * self._pointSize[1] + 1)
         # Draw the lines and markers
-        #start = _time.clock()
+#        start = _time.perf_counter()
         graphics.draw(dc)
-        # print("entire graphics drawing took: %f second"%(_time.clock() - start))
+#        print("entire graphics drawing took: %f second"%(_time.perf_counter() - start))
         # remove the clipping region
         dc.DestroyClippingRegion()
 
@@ -2445,6 +2482,7 @@ class PlotCanvas(wx.Panel):
 
         # TODO: rename TickLength - these aren't ticks anymore
         # TODO: figure out if I can remove this calculation stuff.
+        #       replace with something like XMaxRange, YMaxRange
         x, y, width, height = self._point2ClientCoord(p1, p2)
         if self._gridEnabled == 'Horizontal':
             yTickLength = (width / 2.0 + 1) * self._pointSize[1]
@@ -2497,15 +2535,6 @@ class PlotCanvas(wx.Panel):
                 for y, label in yticks:
                     pt = scale * np.array([x, y]) + shift
                     dc.DrawLine(pt[0], pt[1], pt[0] - d, pt[1])
-
-# TODO: create own dc.SetPen() function?
-#       There is a lot of instances of:
-#           penWidth = self.printerScale * itemWidth
-#           dc.SetPen(wx.Pen(itemColour, penWidth, itemStyle)
-#       and it could be replaced with a simpler function call.
-#
-#       Alternative: instead of having separate color, width, style properties
-#       for each graph element, just have a wx.Pen property
 
     @SavePen
     def _drawCenterLines(self, dc, p1, p2, scale, shift):
@@ -2610,6 +2639,7 @@ class PlotCanvas(wx.Panel):
                                     pt[1] - 0.75 * h)
                 text = 0    # axis values not drawn on right side
 
+    @SavePen
     def _drawPlotAreaItems(self, dc, p1, p2, scale, shift, xticks, yticks):
         """Draws each frame element"""
         if self._ticksEnabled:
@@ -2630,9 +2660,37 @@ class PlotCanvas(wx.Panel):
         if self._axesValuesEnabled:
             self._drawAxesValues(dc, p1, p2, scale, shift, xticks, yticks)
 
-        # TODO: Add this
-#        if self._axesLabels:
-#            self._drawAxesLabesl(dc, p1, p2, scale, shift, xticks, yticks)
+    @SavePen
+    def _drawPlotTitle(self, dc, graphics, lhsW, rhsW, titleWH):
+        """Draws the plot title"""
+        # TODO: Clean up math
+        dc.SetFont(self._getFont(self._fontSizeTitle))
+        titlePos = (self.plotbox_origin[0] + lhsW + (self.plotbox_size[0] - lhsW - rhsW) / 2. - titleWH[0] / 2.,
+                    self.plotbox_origin[1] - self.plotbox_size[1])
+        dc.DrawText(graphics.Title, titlePos[0], titlePos[1])
+
+    def _drawAxesLabels(self, dc, graphics, lhsW, rhsW, bottomH, topH, xLabelWH, yLabelWH):
+        """Draws the axes labels"""
+        # TODO: axes values get big when this is turned off
+        # TODO: clean up math
+        dc.SetFont(self._getFont(self._fontSizeAxis))
+        xLabelPos = (self.plotbox_origin[0] + lhsW + (self.plotbox_size[0] - lhsW - rhsW) / 2. - xLabelWH[0] / 2.,
+                     self.plotbox_origin[1] - xLabelWH[1])
+        dc.DrawText(graphics.XLabel, xLabelPos[0], xLabelPos[1])
+        yLabelPos = (self.plotbox_origin[0] - 3 * self._pointSize[0],
+                     self.plotbox_origin[1] - bottomH - (self.plotbox_size[1] - bottomH - topH) / 2. + yLabelWH[0] / 2.)
+        if graphics.YLabel:  # bug fix for Linux
+            dc.DrawRotatedText(
+                graphics.YLabel, yLabelPos[0], yLabelPos[1], 90)
+
+    @SavePen
+    def _drawPlotAreaLabels(self, dc, graphics, lhsW, rhsW, titleWH, bottomH, topH, xLabelWH, yLabelWH):
+        # TODO: clean up call signature.
+        if self._titleEnabled:
+            self._drawPlotTitle(dc, graphics, lhsW, rhsW, titleWH)
+
+        if self._axesLabelsEnabled:
+            self._drawAxesLabels(dc, graphics, lhsW, rhsW, bottomH, topH, xLabelWH, yLabelWH)
 
     def _xticks(self, *args):
         if self._logscale[0]:
@@ -3163,6 +3221,16 @@ class TestFrame(wx.Frame):
                     'Enables the display of the ticks', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableTicks, id=250)
 
+        menu.Append(255, 'Enable Plot Title',
+                    'Enables the plot title', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnablePlotTitle, id=255)
+        menu.Check(255, True)
+
+        menu.Append(270, 'Enable Axes Labels',
+                    'Enables the X and Y axes labels', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesLabels, id=270)
+        menu.Check(270, True)
+
         self.mainmenu.Append(menu, '&Plot')
 
         menu = wx.Menu()
@@ -3177,7 +3245,8 @@ class TestFrame(wx.Frame):
 
         self.client = PlotCanvas(self)
         # define the function for drawing pointLabels
-        self.client.SetPointLabelFunc(self.DrawPointLabel)
+#        self.client.SetPointLabelFunc(self.DrawPointLabel)
+        self.client.PointLabelFunc = self.DrawPointLabel
         # Create mouse event for showing cursor coords in status bar
         self.client.canvas.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
         # Show closest point when enabled
@@ -3279,10 +3348,10 @@ class TestFrame(wx.Frame):
         drawObj = _draw4Objects()
         self.client.Draw(drawObj)
 # profile
-##        start = _time.clock()
+#        start = _time.perf_counter()
 # for x in range(10):
 # self.client.Draw(drawObj)
-##        print("10 plots of Draw4 took: %f sec."%(_time.clock() - start))
+##        print("10 plots of Draw4 took: %f sec."%(_time.perf_counter() - start))
 # profile end
 
     def OnPlotDraw5(self, event):
@@ -3352,6 +3421,12 @@ class TestFrame(wx.Frame):
 
     def OnEnableAxesValues(self, event):
         self.client.EnableAxesValues = event.IsChecked()
+
+    def OnEnablePlotTitle(self, event):
+        self.client.EnablePlotTitle = event.IsChecked()
+
+    def OnEnableAxesLabels(self, event):
+        self.client.EnableAxesLabels = event.IsChecked()
 
     def OnEnableCenterLines(self, event):
         self.client.EnableCenterLines = event.IsChecked()
