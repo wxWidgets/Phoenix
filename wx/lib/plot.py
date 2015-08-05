@@ -424,6 +424,7 @@ class PolyLine(PolyPoints):
         w = 5 * h
         return (w, h)
 
+    # TODO: possibly rename?
     def path(self, dc, coord1, coord2, drawstyle):
         """ calculates the path from coord1 to coord 2 along X and Y """
 
@@ -3174,19 +3175,19 @@ class TestFrame(wx.Frame):
         self.mainmenu.Append(menu, '&File')
 
         menu = wx.Menu()
-        menu.Append(206, 'Draw1', 'Draw plots1')
+        menu.Append(206, 'Draw1 - sin, cos', 'Draw plots1')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw1, id=206)
-        menu.Append(207, 'Draw2', 'Draw plots2')
+        menu.Append(207, 'Draw2 - sin, cos, large markers', 'Draw plots2')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw2, id=207)
-        menu.Append(208, 'Draw3', 'Draw plots3')
+        menu.Append(208, 'Draw3 - various markers', 'Draw plots3')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw3, id=208)
-        menu.Append(209, 'Draw4', 'Draw plots4')
+        menu.Append(209, 'Draw4 - 25k pts', 'Draw plots4')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw4, id=209)
-        menu.Append(210, 'Draw5', 'Draw plots5')
+        menu.Append(210, 'Draw5 - empty plot', 'Draw plots5')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw5, id=210)
-        menu.Append(260, 'Draw6', 'Draw plots6')
+        menu.Append(260, 'Draw6 - bar graph', 'Draw plots6')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw6, id=260)
-        menu.Append(261, 'Draw7', 'Draw plots7')
+        menu.Append(261, 'Draw7 - log-log', 'Draw plots7')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw7, id=261)
 
         menu.Append(211, '&Redraw', 'Redraw plots')
