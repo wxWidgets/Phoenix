@@ -96,7 +96,7 @@ label to go with it automatically.  Additionally on the platforms that
 have a native concept of a stock button (currently only GTK2) then the
 native stock button will be used.
 
-<p>This sample shows buttons for all of the currenlty available stock
+<p>This sample shows buttons for all of the currently available stock
 IDs.  Notice that when the button is created that no label is given,
 and compare that with the button that is created.
 
