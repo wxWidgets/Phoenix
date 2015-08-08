@@ -134,6 +134,7 @@ import sys
 import wx
 import functools
 import warnings
+from collections import namedtuple
 from warnings import warn as _warn
 
 # Needs NumPy
@@ -577,7 +578,7 @@ class PolyMarker(PolyPoints):
         return (s, s)
 
     def _drawmarkers(self, dc, coords, marker, size=1):
-        f = eval('self._' + marker)
+        f = eval('self._' + marker)     # XXX: look into changing this
         f(dc, coords, size)
 
     def _circle(self, dc, coords, size=1):
@@ -624,6 +625,242 @@ class PolyMarker(PolyPoints):
         for f in [[-fact, 0, fact, 0], [0, -fact, 0, fact]]:
             lines = np.concatenate((coords, coords), axis=1) + f
             dc.DrawLineList(lines.astype(np.int32))
+
+
+class BoxPlot(PolyPoints):
+    """
+    Class to contain box plots
+
+    This class takes care of calculating the box plots.
+    """
+    _attributes = {'colour': 'black',
+                   'width': 1,
+                   'style': wx.PENSTYLE_SOLID,
+                   'legend': '',
+                   'drawstyle': 'line',
+                   }
+
+    def __init__(self, points, **attr):
+        """
+        :param data: 1D data to plot.
+
+        """
+
+        points = np.array([(i, x) for i, x in enumerate(points)])
+
+        self._points = np.array(points).astype(np.float64)
+        self._logscale = (False, False)
+        self._pointSize = (1.0, 1.0)
+        self.currentScale = (1, 1)
+        self.currentShift = (0, 0)
+        self.scaled = self.points
+        self.attributes = {}
+        self.attributes.update(self._attributes)
+        for name, value in attr.items():
+            if name not in self._attributes.keys():
+                err_txt = "Style attribute incorrect. Should be one of {}"
+                raise KeyError(err_txt.format(self._attributes.keys()))
+            self.attributes[name] = value
+
+
+#        PolyPoints.__init__(self, points, attr)
+        self._bpdata = self.calcBpData()
+
+    def boundingBox(self):
+        """
+        Returns bounding box for the plot.
+
+        Override method.
+        """
+        minXY = np.array([.75, self._bpdata.min * 0.95])
+        maxXY = np.array([1.25, self._bpdata.max * 1.05])
+        return minXY, maxXY
+
+    def scaleAndShift(self, scale=(1, 1), shift=(0, 0)):
+        """override method"""
+#        return
+        if len(self.points) == 0:
+            # no curves to draw
+            return
+        # TODO: should this be '!=' rather than 'is not'?
+        if (scale is not self.currentScale) or (shift is not self.currentShift):
+            # update point scaling
+            self.scaled = scale * self.points + shift
+            self.currentScale = scale
+            self.currentShift = shift
+        # else unchanged use the current scaling
+
+    def calcBpData(self, data=None):
+        """
+        Box plot points:
+
+        Median (50%)
+        75%
+        25%
+        low_whisker = lowest value that's >= (25% - (IQR * 1.5))
+        high_whisker = highest value that's <= 75% + (IQR * 1.5)
+
+        outliers are outside of 1.5 * IQR
+
+        Parameters:
+        -----------
+        data : array-like
+            The data to plot
+
+        Returns:
+        --------
+        bpdata : collections.namedtuple
+            Descriptive statistics for data:
+            (min_data, low_whisker, q25, median, q75, high_whisker, max_data)
+
+        Notes:
+        ------
+        # TODO: Verify how NaN is handled then decide how I want to handle it.
+
+        """
+        if data is None:
+            data = self.points[:, 1]
+
+        min_data = float(np.min(data))
+        max_data = float(np.max(data))
+        q25 = float(np.percentile(data, 25))
+        q75 = float(np.percentile(data, 75))
+
+        iqr = q75 - q25
+
+        low_whisker = float(data[data >= q25 - 1.5 * iqr].min())
+        high_whisker = float(data[data <= q75 + 1.5 * iqr].max())
+
+        median = float(np.median(data))
+
+        BPData = namedtuple("bpdata", ("min", "low_whisker", "q25", "median",
+                                       "q75", "high_whisker", "max"))
+
+        bpdata = BPData(min_data, low_whisker, q25, median,
+                        q75, high_whisker, max_data)
+
+        print(bpdata)
+        return bpdata
+
+    def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
+        """same as override method, but retuns a value."""
+        scaled = scale * data + shift
+        return scaled
+
+    def draw(self, dc, printerScale, coord=None):
+        """
+        Draws a box plot on the DC.
+
+        TODO:
+        -----
+        + Separate out each draw into individual methods
+        + Fix the median line extending outside of the box on the right
+        + Allow for multiple box plots side-by-side
+        + change the X axis to some labels.
+        + Add getLegend method
+        + Add getClosestPoint method - links to box plot or outliers
+        + Add customization
+          - Pens and Fills for elements
+          - outlier sizes
+          - box width
+
+        """
+
+        xpos = 1
+        box_w = 0.5
+
+        # Wisker line ######################################################
+        # We draw it as one line and then hide the middle part with
+        # the IQR rectangle
+        whisker_line = np.array([[xpos, self._bpdata.low_whisker],
+                                 [xpos, self._bpdata.high_whisker]])
+
+        whisker_line = self._scaleAndShift(whisker_line,
+                                           self.currentScale,
+                                           self.currentShift)
+
+        whisker_pen = wx.Pen(wx.BLACK, 2, wx.PENSTYLE_DOT)
+        dc.SetPen(whisker_pen)
+        dc.DrawLines(whisker_line)
+
+        # IQR Rectangle ####################################################
+        iqr_box = [[xpos - box_w / 2, self._bpdata.q75],  # top, left
+                   [xpos + box_w / 2, self._bpdata.q25]]  # W, H
+
+        # Scale it to the plot area
+        iqr_box = self._scaleAndShift(iqr_box,
+                                      self.currentScale,
+                                      self.currentShift)
+        # rectangles are drawn (left, top, width, heigh) so adjust
+        iqr_box = [iqr_box[0][0],                   # X (left)
+                   iqr_box[0][1],                   # Y (top)
+                   iqr_box[1][0] - iqr_box[0][0],   # Width
+                   iqr_box[1][1] - iqr_box[0][1]]   # Height
+
+        box_pen = wx.Pen(wx.BLACK, 3, wx.PENSTYLE_SOLID)
+        box_brush = wx.Brush(wx.GREEN, wx.BRUSHSTYLE_SOLID)
+        dc.SetPen(box_pen)
+        dc.SetBrush(box_brush)
+
+        dc.DrawRectangleList([iqr_box])
+
+        # Median Line ######################################################
+        # Last so that it's on top of things.
+        median_line = np.array([[xpos - box_w / 2, self._bpdata.median],
+                                [xpos + box_w / 2, self._bpdata.median]])
+
+        median_line = self._scaleAndShift(median_line,
+                                          self.currentScale,
+                                          self.currentShift)
+
+        median_pen = wx.Pen(wx.BLACK, 4, wx.PENSTYLE_SOLID)
+        dc.SetPen(median_pen)
+        dc.DrawLines(median_line)
+
+        # Whisker Fence ####################################################
+        fence_top = np.array([[xpos - box_w * 0.2, self._bpdata.high_whisker],
+                              [xpos + box_w * 0.2, self._bpdata.high_whisker]])
+
+        fence_top = self._scaleAndShift(fence_top,
+                                        self.currentScale,
+                                        self.currentShift)
+
+        fence_bottom = np.array([[xpos - box_w * 0.2, self._bpdata.low_whisker],
+                                 [xpos + box_w * 0.2, self._bpdata.low_whisker]])
+
+        fence_bottom = self._scaleAndShift(fence_bottom,
+                                           self.currentScale,
+                                           self.currentShift)
+
+        fence_pen = wx.Pen(wx.BLACK, 2, wx.PENSTYLE_SOLID)
+        dc.SetPen(fence_pen)
+        dc.DrawLines(fence_top)
+        dc.DrawLines(fence_bottom)
+
+        # Outlier Points ###################################################
+        # First figure out which points are outliers
+        outliers = self.points[:, 1]
+        outlier_bool = np.logical_or(outliers > self._bpdata.high_whisker,
+                                     outliers < self._bpdata.low_whisker)
+        outliers = outliers[outlier_bool]
+
+        # Then create a jitter.
+        jitter = 0.05 * np.random.random_sample(len(outliers)) + 1 - 0.025
+
+        pt_data = np.array([jitter, outliers]).T
+        pt_data = self._scaleAndShift(pt_data,
+                                      self.currentScale,
+                                      self.currentShift)
+
+        outlier_pen = wx.Pen(wx.BLUE, 5, wx.PENSTYLE_SOLID)
+        dc.SetPen(outlier_pen)
+
+        size = 0.5
+        fact = 2.5 * size
+        wh = 5.0 * size
+        rect = np.zeros((len(pt_data), 4), np.float) + [0.0, 0.0, wh, wh]
+        rect[:, 0:2] = pt_data - [fact, fact]
+        dc.DrawRectangleList(rect.astype(np.int32))
 
 
 class PlotGraphics(object):
@@ -3072,8 +3309,13 @@ def _draw2Objects():
                           fillstyle=wx.CROSSDIAG_HATCH,
                           marker='square',
                           )
+    marker_line = PolyLine(pts,
+                           legend='Cross Hatch Square',
+                           colour='blue',
+                           width=3,
+                           )
 
-    return PlotGraphics([markers1, line1, line2],
+    return PlotGraphics([markers1, line1, line2, marker_line],
                         "Big Markers with Different Line Styles")
 
 
@@ -3149,6 +3391,22 @@ def _draw7Objects():
                         "Value Y")
 
 
+def _draw8Objects():
+    """
+    Box plot
+    """
+    data = np.array([912, 337, 607, 583, 512, 531, 558, 381, 621, 574,
+                     538, 577, 679, 415, 454, 417, 635, 319, 350, 183,
+                     863, 337, 607, 583, 512, 531, 558, 381, 621, 574,
+                     538, 577, 679, 415, 454, 417, 635, 319, 350, 97])
+
+    boxplot = BoxPlot(data)
+    return PlotGraphics([boxplot],
+                        "Box Plot",
+                        "",
+                        "Value")
+
+
 class TestFrame(wx.Frame):
     def __init__(self, parent, id, title):
         wx.Frame.__init__(self, parent, id, title,
@@ -3177,7 +3435,7 @@ class TestFrame(wx.Frame):
         menu = wx.Menu()
         menu.Append(206, 'Draw1 - sin, cos', 'Draw plots1')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw1, id=206)
-        menu.Append(207, 'Draw2 - sin, cos, large markers', 'Draw plots2')
+        menu.Append(207, 'Draw2 - sin, cos, large joined markers', 'Draw plots2')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw2, id=207)
         menu.Append(208, 'Draw3 - various markers', 'Draw plots3')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw3, id=208)
@@ -3189,6 +3447,8 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnPlotDraw6, id=260)
         menu.Append(261, 'Draw7 - log-log', 'Draw plots7')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw7, id=261)
+        menu.Append(262, 'Draw8 - Box Plots', 'Draw plots8')
+        self.Bind(wx.EVT_MENU, self.OnPlotDraw8, id=262)
 
         menu.Append(211, '&Redraw', 'Redraw plots')
         self.Bind(wx.EVT_MENU, self.OnPlotRedraw, id=211)
@@ -3419,6 +3679,12 @@ class TestFrame(wx.Frame):
         self.resetDefaults()
         self.client.LogScale = (True, True)
         self.client.Draw(_draw7Objects())
+
+    def OnPlotDraw8(self, event):
+        """Box Plot example"""
+        self.resetDefaults()
+#        self.client.EnableAxesValues([False, True])
+        self.client.Draw(_draw8Objects())
 
     def OnPlotRedraw(self, event):
         self.client.Redraw()
