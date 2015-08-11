@@ -6,7 +6,7 @@ language: python
     
 python: 
     - "2.7"
-    # TODO: Can we add "3.4" here and have travis do both?
+    - "3.4"
     
 sudo: false
     
