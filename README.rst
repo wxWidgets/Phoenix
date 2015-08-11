@@ -309,6 +309,7 @@ Extrapolate accordingly for other linux distributions or other unixes.
 * libgtk2.0-dev
 * libsdl1.2-dev
 * libgstreamer-plugins-base0.10-dev
+* libnotify-dev
 * freeglut3
 * freeglut3-dev
 
