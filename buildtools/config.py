@@ -20,6 +20,7 @@ import tempfile
 import shutil
 import codecs
 import subprocess
+import platform
 
 from distutils.file_util import copy_file
 from distutils.dir_util  import mkpath
@@ -869,3 +870,11 @@ def getSOName(filename):
         return result.group(1)    
     return None
 
+
+def getToolsPlatformName(useLinuxBits=False):
+    name = sys.platform
+    if name.startswith('linux'):
+        name = 'linux'
+        if useLinuxBits:
+            name += platform.architecture()[0][:2]
+    return name

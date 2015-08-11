@@ -61,9 +61,10 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 # MD5s of the tool binaries currently in use.
 sipCurrentVersion = '4.16.7'
 sipMD5 = {
-    'darwin' : '29874bb82327e556554e3ca8ddf8fa16',
-    'win32'  : 'd19030b397034742694a6d229f056ad0', 
-    'linux'  : '6f70956abd8f837b1d55dc5cfa9f6201', 
+    'darwin'   : '29874bb82327e556554e3ca8ddf8fa16',
+    'win32'    : 'd19030b397034742694a6d229f056ad0', 
+    'linux32'  : '6f70956abd8f837b1d55dc5cfa9f6201', 
+    'linux64'  : '6ac7653c331462516abbc38c5b93e0ac', 
 }
 
 wafCurrentVersion = '1.7.15-p1'
@@ -463,7 +464,7 @@ def delFiles(fileList, verbose=True):
         os.remove(afile)
 
 
-def getTool(cmdName, version, MD5, envVar, platformBinary):
+def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
     # Check in the bin dir for the specified version of the tool command. If
     # it's not there then attempt to download it. Validity of the binary is
     # checked with an MD5 hash.
@@ -473,7 +474,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
     else:
         # setup
         if platformBinary:
-            platform = 'linux' if sys.platform.startswith('linux') else sys.platform
+            platform = getToolsPlatformName(linuxBits)
             ext = ''
             if platform == 'win32':
                 ext = '.exe'
@@ -549,7 +550,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary):
         
         # Recursive call so the MD5 value will be double-checked on what was
         # just downloaded
-        return getTool(cmdName, version, MD5, envVar, platformBinary)
+        return getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits)
 
 
             
@@ -559,7 +560,7 @@ _sipCmd = None
 def getSipCmd():
     global _sipCmd
     if _sipCmd is None:
-        _sipCmd = getTool('sip', sipCurrentVersion, sipMD5, 'SIP', True)
+        _sipCmd = getTool('sip', sipCurrentVersion, sipMD5, 'SIP', True, True)
     return _sipCmd
 
 
