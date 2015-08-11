@@ -187,12 +187,8 @@ class SavePen(object):
         This provides support for functions
         """
         dc = args[0]
-        prevPen = dc.GetPen()
-        try:
-            retval = self.func(*args, **kwargs)
-        finally:
-            dc.SetPen(prevPen)
-        return retval
+        with SavedPen(dc):
+            return self.func(*args, **kwargs)
 
     def __get__(self, obj, objtype):
         """
@@ -201,13 +197,39 @@ class SavePen(object):
         @functools.wraps(self.func)
         def wrapper(*args, **kwargs):
             dc = args[0]
-            prevPen = dc.GetPen()
-            try:
-                retval = self.func(obj, *args, **kwargs)
-            finally:
-                dc.SetPen(prevPen)
-            return retval
+            with SavedPen(dc):
+                return self.func(obj, *args, **kwargs)
         return wrapper
+
+
+class SavedPen(object):
+    """
+    Context Manager for saving the previous wx.Pen and resetting it after.
+
+    Usage:
+    ------
+
+    ::
+
+        with SavedPen(my_dc):
+            # do stuff
+
+    """
+    def __init__(self, dc):
+        self.dc = dc
+        self.prevPen = None
+
+    def __enter__(self):
+        """ Save the pen """
+        self.prevPen = self.dc.GetPen()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """ Set the pen back, even if the function errored """
+        self.dc.SetPen(self.prevPen)
+
+#    def __repr__(self):
+#        return "{}".format(self.__class__.__name__)
 
 
 class PendingDeprecation(object):
@@ -264,6 +286,7 @@ class PolyPoints(object):
     def __init__(self, points, attr):
         self._points = np.array(points).astype(np.float64)
         self._logscale = (False, False)
+        self._absScale = (False, False)
         self._pointSize = (1.0, 1.0)
         self.currentScale = (1, 1)
         self.currentShift = (0, 0)
@@ -276,26 +299,55 @@ class PolyPoints(object):
                 raise KeyError(err_txt.format(self._attributes.keys()))
             self.attributes[name] = value
 
+    @property
+    def LogScale(self):
+        return self._logscale
+
+    @LogScale.setter
+    def LogScale(self, logscale):
+        self._logscale = logscale
+
+    @PendingDeprecation("self.LogScale property")
     def setLogScale(self, logscale):
         self._logscale = logscale
 
-    def __getattr__(self, name):
-        if name == 'points':
-            if len(self._points) > 0:
-                data = np.array(self._points, copy=True)
-                if self._logscale[0]:
-                    data = self.log10(data, 0)
-                if self._logscale[1]:
-                    data = self.log10(data, 1)
-                return data
-            else:
-                return self._points
-        else:
-            raise AttributeError(name)
+    @property
+    def AbsScale(self):
+        return self._absScale
 
-    def log10(self, data, ind):
-        data = np.compress(data[:, ind] > 0, data, 0)
-        data[:, ind] = np.log10(data[:, ind])
+    @AbsScale.setter
+    def AbsScale(self, value):
+        self._absScale = value
+
+    @property
+    def points(self):
+        """Returns the points, adjusting for log scale if LogScale is set"""
+        data = np.array(self._points, copy=True)    # need the copy
+
+        # TODO: I can make this better... move logic to self._log10
+        # work on X:
+        if self.AbsScale[0]:
+            data[:, 0] = np.abs(data[:, 0])
+        if self.LogScale[0]:
+            data = np.compress(data[:, 0] > 0, data, 0)
+            data[:, 0] = np.log10(data[:, 0])
+
+        # work on Y:
+        if self.AbsScale[1]:
+            data[:, 1] = np.abs(data[:, 1])
+        if self.LogScale[1]:
+            data = np.compress(data[:, 1] > 0, data, 0)
+            data[:, 1] = np.log10(data[:, 1])
+
+        return data
+
+    @points.setter
+    def points(self, points):
+        self._points = points
+
+    def _log10(self, data, index):
+        data = np.compress(data[:, index] > 0, data, 0)
+        data[:, index] = np.log10(data[:, index])
         return data
 
     def boundingBox(self):
@@ -313,7 +365,6 @@ class PolyPoints(object):
         if len(self.points) == 0:
             # no curves to draw
             return
-        # TODO: should this be '!=' rather than 'is not'?
         if (scale is not self.currentScale) or (shift is not self.currentShift):
             # update point scaling
             self.scaled = scale * self.points + shift
@@ -632,38 +683,46 @@ class BoxPlot(PolyPoints):
     Class to contain box plots
 
     This class takes care of calculating the box plots.
+
+    TODO:
+    -----
+    + [x] Separate out each draw into individual methods
+    + [ ] Fix the median line extending outside of the box on the right
+    + [x] Allow for multiple box plots side-by-side
+          - It's a hack, but it works.
+    + [ ] change the X axis to some labels.
+    + [x] Add getLegend method
+          - Not Needed since we inherit from PolyPoints
+    + [?] Add getClosestPoint method - links to box plot or outliers
+          - Current method works and hits every point. Is that good enough?
+    + [ ] Add customization
+          - [ ] Pens and Fills for elements
+          - [ ] outlier shapes(?) and sizes
+          - [ ] box width
+
     """
     _attributes = {'colour': 'black',
                    'width': 1,
                    'style': wx.PENSTYLE_SOLID,
                    'legend': '',
                    'drawstyle': 'line',
+                   'size': 5,
                    }
 
-    def __init__(self, points, **attr):
+    def __init__(self, points, pos=1, **attr):
         """
         :param data: 1D data to plot.
 
         """
+        self.box_width = 0.5
+        self.xpos = pos
 
-        points = np.array([(i, x) for i, x in enumerate(points)])
-
-        self._points = np.array(points).astype(np.float64)
-        self._logscale = (False, False)
-        self._pointSize = (1.0, 1.0)
-        self.currentScale = (1, 1)
-        self.currentShift = (0, 0)
-        self.scaled = self.points
-        self.attributes = {}
-        self.attributes.update(self._attributes)
-        for name, value in attr.items():
-            if name not in self._attributes.keys():
-                err_txt = "Style attribute incorrect. Should be one of {}"
-                raise KeyError(err_txt.format(self._attributes.keys()))
-            self.attributes[name] = value
+        # need to make the data a 2D array for all the override methods
+        # such as boundingBox and scaleAndShift
+        points = np.array([(self.xpos, x) for x in points])
 
 
-#        PolyPoints.__init__(self, points, attr)
+        PolyPoints.__init__(self, points, attr)
         self._bpdata = self.calcBpData()
 
     def boundingBox(self):
@@ -672,23 +731,22 @@ class BoxPlot(PolyPoints):
 
         Override method.
         """
-        minXY = np.array([.75, self._bpdata.min * 0.95])
-        maxXY = np.array([1.25, self._bpdata.max * 1.05])
+        minXY = np.array([self.xpos - self.box_width / 2, self._bpdata.min * 0.95])
+        maxXY = np.array([self.xpos + self.box_width / 2, self._bpdata.max * 1.05])
         return minXY, maxXY
 
-    def scaleAndShift(self, scale=(1, 1), shift=(0, 0)):
-        """override method"""
-#        return
-        if len(self.points) == 0:
-            # no curves to draw
-            return
-        # TODO: should this be '!=' rather than 'is not'?
-        if (scale is not self.currentScale) or (shift is not self.currentShift):
-            # update point scaling
-            self.scaled = scale * self.points + shift
-            self.currentScale = scale
-            self.currentShift = shift
-        # else unchanged use the current scaling
+    # XXX: Parent method seems works just fine
+#    def scaleAndShift(self, scale=(1, 1), shift=(0, 0)):
+#        pass
+
+    # TODO: create different override method?
+#    def getClosestPoint(self, pntXY, pointScaled=True):
+#        pass
+
+#    def getSymExtent(self, printerScale):
+#        """Width and Height of Marker"""
+#        s = 5 * self.attributes['size'] * printerScale * 1
+#        return (s, s)
 
     def calcBpData(self, data=None):
         """
@@ -739,7 +797,6 @@ class BoxPlot(PolyPoints):
         bpdata = BPData(min_data, low_whisker, q25, median,
                         q75, high_whisker, max_data)
 
-        print(bpdata)
         return bpdata
 
     def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
@@ -747,29 +804,37 @@ class BoxPlot(PolyPoints):
         scaled = scale * data + shift
         return scaled
 
+    @SavePen
     def draw(self, dc, printerScale, coord=None):
         """
         Draws a box plot on the DC.
 
-        TODO:
-        -----
-        + Separate out each draw into individual methods
-        + Fix the median line extending outside of the box on the right
-        + Allow for multiple box plots side-by-side
-        + change the X axis to some labels.
-        + Add getLegend method
-        + Add getClosestPoint method - links to box plot or outliers
-        + Add customization
-          - Pens and Fills for elements
-          - outlier sizes
-          - box width
+        Notes:
+        ------
+        The following draw order is required:
 
+        1. First the whisker line
+        2. Then the IQR box
+        3. Lasly the median line.
+
+        This is because
+
+        + The whiskers are drawn as single line rather than two lines
+        + The median line must be visable over the box if the box has a fill.
+
+        Other than that, the draw order can be changed.
         """
+        self._draw_whisker(dc, printerScale, coord)
+        self._draw_iqr_box(dc, printerScale, coord)
+        self._draw_median(dc, printerScale, coord)     # median after box
+        self._draw_whisker_ends(dc, printerScale, coord)
+        self._draw_outliers(dc, printerScale, coord)
 
-        xpos = 1
-        box_w = 0.5
+    @SavePen
+    def _draw_whisker(self, dc, printerScale, coord=None):
+        """Draws the whiskers as a single line"""
+        xpos = self.xpos
 
-        # Wisker line ######################################################
         # We draw it as one line and then hide the middle part with
         # the IQR rectangle
         whisker_line = np.array([[xpos, self._bpdata.low_whisker],
@@ -783,15 +848,21 @@ class BoxPlot(PolyPoints):
         dc.SetPen(whisker_pen)
         dc.DrawLines(whisker_line)
 
-        # IQR Rectangle ####################################################
-        iqr_box = [[xpos - box_w / 2, self._bpdata.q75],  # top, left
-                   [xpos + box_w / 2, self._bpdata.q25]]  # W, H
+    @SavePen
+    def _draw_iqr_box(self, dc, printerScale, coord=None):
+        """Draws the Inner Quartile Range box"""
+        xpos = self.xpos
+        box_w = self.box_width
+
+        iqr_box = [[xpos - box_w / 2, self._bpdata.q75],  # left, top
+                   [xpos + box_w / 2, self._bpdata.q25]]  # right, bottom
 
         # Scale it to the plot area
         iqr_box = self._scaleAndShift(iqr_box,
                                       self.currentScale,
                                       self.currentShift)
-        # rectangles are drawn (left, top, width, heigh) so adjust
+
+        # rectangles are drawn (left, top, width, height) so adjust
         iqr_box = [iqr_box[0][0],                   # X (left)
                    iqr_box[0][1],                   # Y (top)
                    iqr_box[1][0] - iqr_box[0][0],   # Width
@@ -804,10 +875,13 @@ class BoxPlot(PolyPoints):
 
         dc.DrawRectangleList([iqr_box])
 
-        # Median Line ######################################################
-        # Last so that it's on top of things.
-        median_line = np.array([[xpos - box_w / 2, self._bpdata.median],
-                                [xpos + box_w / 2, self._bpdata.median]])
+    @SavePen
+    def _draw_median(self, dc, printerScale, coord=None):
+        """Draws the median line"""
+        xpos = self.xpos
+
+        median_line = np.array([[xpos - self.box_width / 2, self._bpdata.median],
+                                [xpos + self.box_width / 2, self._bpdata.median]])
 
         median_line = self._scaleAndShift(median_line,
                                           self.currentScale,
@@ -817,16 +891,19 @@ class BoxPlot(PolyPoints):
         dc.SetPen(median_pen)
         dc.DrawLines(median_line)
 
-        # Whisker Fence ####################################################
-        fence_top = np.array([[xpos - box_w * 0.2, self._bpdata.high_whisker],
-                              [xpos + box_w * 0.2, self._bpdata.high_whisker]])
+    @SavePen
+    def _draw_whisker_ends(self, dc, printerScale, coord=None):
+        """Draws the end caps of the whiskers"""
+        xpos = self.xpos
+        fence_top = np.array([[xpos - self.box_width * 0.2, self._bpdata.high_whisker],
+                              [xpos + self.box_width * 0.2, self._bpdata.high_whisker]])
 
         fence_top = self._scaleAndShift(fence_top,
                                         self.currentScale,
                                         self.currentShift)
 
-        fence_bottom = np.array([[xpos - box_w * 0.2, self._bpdata.low_whisker],
-                                 [xpos + box_w * 0.2, self._bpdata.low_whisker]])
+        fence_bottom = np.array([[xpos - self.box_width * 0.2, self._bpdata.low_whisker],
+                                 [xpos + self.box_width * 0.2, self._bpdata.low_whisker]])
 
         fence_bottom = self._scaleAndShift(fence_bottom,
                                            self.currentScale,
@@ -837,7 +914,9 @@ class BoxPlot(PolyPoints):
         dc.DrawLines(fence_top)
         dc.DrawLines(fence_bottom)
 
-        # Outlier Points ###################################################
+    @SavePen
+    def _draw_outliers(self, dc, printerScale, coord=None):
+        """Draws dots for the outliers"""
         # First figure out which points are outliers
         outliers = self.points[:, 1]
         outlier_bool = np.logical_or(outliers > self._bpdata.high_whisker,
@@ -845,7 +924,8 @@ class BoxPlot(PolyPoints):
         outliers = outliers[outlier_bool]
 
         # Then create a jitter.
-        jitter = 0.05 * np.random.random_sample(len(outliers)) + 1 - 0.025
+        # TODO: jitter should not be recalculated on each redraw.
+        jitter = 0.05 * np.random.random_sample(len(outliers)) + self.xpos - 0.025
 
         pt_data = np.array([jitter, outliers]).T
         pt_data = self._scaleAndShift(pt_data,
@@ -861,6 +941,348 @@ class BoxPlot(PolyPoints):
         rect = np.zeros((len(pt_data), 4), np.float) + [0.0, 0.0, wh, wh]
         rect[:, 0:2] = pt_data - [fact, fact]
         dc.DrawRectangleList(rect.astype(np.int32))
+
+
+#class Chart(object):
+#    """
+#    Base class for all plots where the X axis is discrete:
+#    BarChart, ParetoChart, BoxPlot
+#
+#    Implements the same methods as PolyPoints, but only acts on 1 dimension
+#    of data. Makes it so that no funny tricks need to be applied to the data.
+#    For example, faking a bar chart by using many PolyLine objets together
+#    (see _draw6Objects)
+#
+#    """
+#    def __init__(self, data, attr):
+#        self._data = np.array(data, dtype=np.float64)
+#        self._logscale = False
+#        self._pointSize = 1.0
+#        self.currentScale = 1
+#        self.currentShift = 0
+#        self.scaled = self.data
+#        self.attributes = {}
+#        self.attributes.update(self._attributes)
+#        for name, value in attr.items():
+#            if name not in self._attributes.keys():
+#                err_txt = "Style attribute incorrect. Should be one of {}"
+#                raise KeyError(err_txt.format(self._attributes.keys()))
+#            self.attributes[name] = value
+#
+#    @property
+#    def data(self):
+#        """Returns the points, adjusting for log scale if LogScale is set"""
+#        if self._logscale:
+#            return np.log10(self._data)
+#        else:
+#            return self._data
+#
+#    @data.setter
+#    def data(self, data):
+#        self._data = data
+#
+#    @property
+#    def LogScale(self):
+#        return self._logscale
+#
+#    @LogScale.setter
+#    def LogScale(self, logscale):
+#        if not isinstance(logscale, bool):
+#            raise TypeError("logscale must be boolean 'True' or 'False'.")
+#        self._logscscale = logscale
+#
+#    @PendingDeprecation("self.LogScale property")
+#    def setLogScale(self, logscale):
+#        self.LogScale = logscale
+#
+#    def boundingBox(self):
+#        """Calculate the bounding box of the data"""
+#        if len(self.data) == 0:
+#            # no data to draw
+#            # defaults to (-1,-1) and (1,1) but axis can be set in Draw
+#            minXY = np.array([-1.0, -1.0])
+#            maxXY = np.array([1.0, 1.0])
+#        else:
+#            minXY = (0, np.minimum.reduce(self.data)[1])
+#            maxXY = (len(data), np.maximum.reduce(self.data)[1])
+#        return minXY, maxXY
+#
+#    def scaleAndShift(self, scale=1, shift=0):
+#        if len(self.data) == 0:
+#            # no data to draw
+#            return
+#        if (scale is not self.currentScale) or (shift is not self.currentShift):
+#            # update point scaling
+#            self.scaled = scale * self.data + shift
+#            self.currentScale = scale
+#            self.currentShift = shift
+#
+#    def getLegend(self):
+#        return self.attributes['legend']
+#
+#    def getClosestPoint(self, pntXY, pointScaled=True):
+#        """
+#        Returns the index of closest point on the curve, pointXY,
+#        scaledXY, distance x, y in user coords.
+#
+#        if pointScaled == True, then based on screen coords
+#        if pointScaled == False, then based on user coords
+#        """
+#        pass
+#        if pointScaled:
+#            # Using screen coords
+#            p = self.scaled
+#            pxy = self.currentScale * np.array(pntXY) + self.currentShift
+#        else:
+#            # Using user coords
+#            p = self.points
+#            pxy = np.array(pntXY)
+#        # determine distance for each point
+#        d = np.sqrt(np.add.reduce((p - pxy) ** 2, 1))  # sqrt(dx^2+dy^2)
+#        pntIndex = np.argmin(d)
+#        dist = d[pntIndex]
+#        return [pntIndex,
+#                self.points[pntIndex],
+#                self.scaled[pntIndex] / self._pointSize,
+#                dist]
+
+
+#class BoxPlot_(Chart):
+#    """
+#    """
+#    _attributes = {'colour': 'black',
+#                   'width': 1,
+#                   'style': wx.PENSTYLE_SOLID,
+#                   'legend': '',
+#                   'drawstyle': 'line',
+#                   }
+#
+#    def __init__(self, data, **attr):
+#        """
+#        """
+#        self.box_width = 0.5
+#        self.xpos = 0
+#        self._bpdata = []   # TODO: pre-assign numpy array
+#
+#        Chart.__init__(self, data, attr)
+#
+#        # Note: need to Log10 the data *before* calculating the box plot
+#        # Since the `data` property takes care of this for us, I don't have
+#        # to do anything.
+#        for dataset in self.data:
+#            self._bpdata.append(self.calcBpData(dataset))
+#
+#    def boundingBox(self):
+#        """
+#        Returns bounding box for the plot.
+#
+#        Override method.
+#        """
+#        minXY = np.array([.75, self._bpdata.min * 0.95])
+#        maxXY = np.array([1.25, self._bpdata.max * 1.05])
+#        return minXY, maxXY
+#
+#
+#    def calcBpData(self, data=None):
+#        """
+#        Box plot points:
+#
+#        Median (50%)
+#        75%
+#        25%
+#        low_whisker = lowest value that's >= (25% - (IQR * 1.5))
+#        high_whisker = highest value that's <= 75% + (IQR * 1.5)
+#
+#        outliers are outside of 1.5 * IQR
+#
+#        Parameters:
+#        -----------
+#        data : array-like
+#            The data to plot
+#
+#        Returns:
+#        --------
+#        bpdata : collections.namedtuple
+#            Descriptive statistics for data:
+#            (min_data, low_whisker, q25, median, q75, high_whisker, max_data)
+#
+#        Notes:
+#        ------
+#        # TODO: Verify how NaN is handled then decide how I want to handle it.
+#
+#        """
+#        if data is None:
+#            data = self.data
+#
+#        min_data = float(np.min(data))
+#        max_data = float(np.max(data))
+#        q25 = float(np.percentile(data, 25))
+#        q75 = float(np.percentile(data, 75))
+#
+#        iqr = q75 - q25
+#
+#        low_whisker = float(data[data >= q25 - 1.5 * iqr].min())
+#        high_whisker = float(data[data <= q75 + 1.5 * iqr].max())
+#
+#        median = float(np.median(data))
+#
+#        BPData = namedtuple("bpdata", ("min", "low_whisker", "q25", "median",
+#                                       "q75", "high_whisker", "max"))
+#
+#        bpdata = BPData(min_data, low_whisker, q25, median,
+#                        q75, high_whisker, max_data)
+#
+#        return bpdata
+#
+#    def draw(self, dc, printerScale, coord=None):
+#        """
+#        Draws a box plot on the DC.
+#
+#        Notes:
+#        ------
+#        The following draw order is required:
+#
+#        1. First the whisker line
+#        2. Then the IQR box
+#        3. Lasly the median line.
+#
+#        This is because
+#
+#        + The whiskers are drawn as single line rather than two lines
+#        + The median line must be visable over the box if the box has a fill.
+#
+#        Other than that, the draw order can be changed.
+#        """
+#        self._draw_whisker(dc, printerScale, coord)
+#        self._draw_iqr_box(dc, printerScale, coord)
+#        self._draw_median(dc, printerScale, coord)     # median after box
+#        self._draw_whisker_ends(dc, printerScale, coord)
+#        self._draw_outliers(dc, printerScale, coord)
+#
+#    def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
+#        """same as override method, but retuns a value."""
+#        scaled = scale * data + shift
+#        return scaled
+#
+#    def _draw_whisker(self, dc, printerScale, coord=None):
+#        """Draws the whiskers as a single line"""
+#        xpos = 1
+#
+#        # We draw it as one line and then hide the middle part with
+#        # the IQR rectangle
+#        whisker_line = np.array([[xpos, self._bpdata.low_whisker],
+#                                 [xpos, self._bpdata.high_whisker]])
+#
+#        whisker_line = self._scaleAndShift(whisker_line,
+#                                           self.currentScale,
+#                                           self.currentShift)
+#
+#        whisker_pen = wx.Pen(wx.BLACK, 2, wx.PENSTYLE_DOT)
+#        dc.SetPen(whisker_pen)
+#        dc.DrawLines(whisker_line)
+#
+#    def _draw_iqr_box(self, dc, printerScale, coord=None):
+#        """Draws the Inner Quartile Range box"""
+#        xpos = 1
+#        box_w = self.box_width
+#
+#        iqr_box = [[xpos - box_w / 2, self._bpdata.q75],  # left, top
+#                   [xpos + box_w / 2, self._bpdata.q25]]  # right, bottom
+#
+#        # Scale it to the plot area
+#        iqr_box = self._scaleAndShift(iqr_box,
+#                                      self.currentScale,
+#                                      self.currentShift)
+#
+#        # rectangles are drawn (left, top, width, height) so adjust
+#        iqr_box = [iqr_box[0][0],                   # X (left)
+#                   iqr_box[0][1],                   # Y (top)
+#                   iqr_box[1][0] - iqr_box[0][0],   # Width
+#                   iqr_box[1][1] - iqr_box[0][1]]   # Height
+#
+#        box_pen = wx.Pen(wx.BLACK, 3, wx.PENSTYLE_SOLID)
+#        box_brush = wx.Brush(wx.GREEN, wx.BRUSHSTYLE_SOLID)
+#        dc.SetPen(box_pen)
+#        dc.SetBrush(box_brush)
+#
+#        dc.DrawRectangleList([iqr_box])
+#
+#    def _draw_median(self, dc, printerScale, coord=None):
+#        """Draws the median line"""
+#        xpos = 1
+#
+#        median_line = np.array([[xpos - self.box_width / 2, self._bpdata.median],
+#                                [xpos + self.box_width / 2, self._bpdata.median]])
+#
+#        median_line = self._scaleAndShift(median_line,
+#                                          self.currentScale,
+#                                          self.currentShift)
+#
+#        median_pen = wx.Pen(wx.BLACK, 4, wx.PENSTYLE_SOLID)
+#        dc.SetPen(median_pen)
+#        dc.DrawLines(median_line)
+#
+#    def _draw_whisker_ends(self, dc, printerScale, coord=None):
+#        """Draws the end caps of the whiskers"""
+#        xpos = 1
+#        fence_top = np.array([[xpos - self.box_width * 0.2, self._bpdata.high_whisker],
+#                              [xpos + self.box_width * 0.2, self._bpdata.high_whisker]])
+#
+#        fence_top = self._scaleAndShift(fence_top,
+#                                        self.currentScale,
+#                                        self.currentShift)
+#
+#        fence_bottom = np.array([[xpos - self.box_width * 0.2, self._bpdata.low_whisker],
+#                                 [xpos + self.box_width * 0.2, self._bpdata.low_whisker]])
+#
+#        fence_bottom = self._scaleAndShift(fence_bottom,
+#                                           self.currentScale,
+#                                           self.currentShift)
+#
+#        fence_pen = wx.Pen(wx.BLACK, 2, wx.PENSTYLE_SOLID)
+#        dc.SetPen(fence_pen)
+#        dc.DrawLines(fence_top)
+#        dc.DrawLines(fence_bottom)
+#
+#    def _draw_outliers(self, dc, printerScale, coord=None):
+#        """Draws dots for the outliers"""
+#        # First figure out which points are outliers
+#        outliers = self.points[:, 1]
+#        outlier_bool = np.logical_or(outliers > self._bpdata.high_whisker,
+#                                     outliers < self._bpdata.low_whisker)
+#        outliers = outliers[outlier_bool]
+#
+#        # Then create a jitter.
+#        jitter = 0.05 * np.random.random_sample(len(outliers)) + 1 - 0.025
+#
+#        pt_data = np.array([jitter, outliers]).T
+#        pt_data = self._scaleAndShift(pt_data,
+#                                      self.currentScale,
+#                                      self.currentShift)
+#
+#        outlier_pen = wx.Pen(wx.BLUE, 5, wx.PENSTYLE_SOLID)
+#        dc.SetPen(outlier_pen)
+#
+#        size = 0.5
+#        fact = 2.5 * size
+#        wh = 5.0 * size
+#        rect = np.zeros((len(pt_data), 4), np.float) + [0.0, 0.0, wh, wh]
+#        rect[:, 0:2] = pt_data - [fact, fact]
+#        dc.DrawRectangleList(rect.astype(np.int32))
+#
+#
+#class BarChart(Chart):
+#    pass
+#
+#
+#class ParetoChart(BarChart):
+#    pass
+#
+#
+#class Histogram(Chart):
+#    # this guys is odd because it has a psudo-continuous X axis.
+#    # Should it inherit from Chart, PolyPoints, or something else? Donno yet.
+#    pass
 
 
 class PlotGraphics(object):
@@ -885,6 +1307,27 @@ class PlotGraphics(object):
         self.yLabel = yLabel
         self._pointSize = (1.0, 1.0)
 
+    @property
+    def LogScale(self):
+        # TODO: convert to try..except statement
+#        try:
+#        return [obj.LogScale for obj in self.objects]
+#        except:     # what error would be returned?
+#            return
+        if len(self.objects) == 0:
+            return
+        return [obj.LogScale for obj in self.objects]
+
+    @LogScale.setter
+    def LogScale(self, logscale):
+        if not isinstance(logscale, tuple):
+            raise TypeError("logscale must be a 2-tuple of bools")
+        if len(self.objects) == 0:
+            return
+        for obj in self.objects:
+            obj.LogScale = logscale
+
+    @PendingDeprecation("self.LogScale property")
     def setLogScale(self, logscale):
         if type(logscale) != tuple:
             raise TypeError(
@@ -892,7 +1335,22 @@ class PlotGraphics(object):
         if len(self.objects) == 0:
             return
         for o in self.objects:
-            o.setLogScale(logscale)
+            o.LogScale = logscale
+
+    @property
+    def AbsScale(self):
+        if len(self.objects) == 0:
+            return
+        return [obj.AbsScale for obj in self.objects]
+
+    @AbsScale.setter
+    def AbsScale(self, absscale):
+        if not isinstance(absscale, tuple):
+            raise TypeError("absscale must be a 2-tuple of bools")
+        if len(self.objects) == 0:
+            return
+        for obj in self.objects:
+            obj.AbsScale = absscale
 
     def boundingBox(self):
         p1, p2 = self.objects[0].boundingBox()
@@ -1088,6 +1546,7 @@ class PlotCanvas(wx.Panel):
         self._screenCoordinates = np.array([0.0, 0.0])
 
         self._logscale = (False, False)
+        self._absScale = (False, False)
 
         # Zooming variables
         self._zoomInFactor = 0.5
@@ -1103,7 +1562,7 @@ class PlotCanvas(wx.Panel):
         self._pointShift = 0
         self._xSpec = 'auto'
         self._ySpec = 'auto'
-        self._gridEnabled = False
+        self._gridEnabled = True
         self._legendEnabled = False
         self._titleEnabled = True
         self._xAxisLabelEnabled = True
@@ -1518,11 +1977,27 @@ class PlotCanvas(wx.Panel):
                 'logscale must be a tuple of bools, e.g. (False, False)')
         if self.last_draw is not None:
             graphics, xAxis, yAxis = self.last_draw
-            graphics.setLogScale(logscale)
+            graphics.LogScale = logscale
             self.last_draw = (graphics, None, None)
         self.XSpec = 'min'
         self.YSpec = 'min'
         self._logscale = logscale
+
+    @property
+    def AbsScale(self):
+        return self._absScale
+
+    @AbsScale.setter
+    def AbsScale(self, absscale):
+        if not isinstance(absscale, tuple):
+            raise TypeError("absscale must be tuple of bools.")
+        if self.last_draw is not None:
+            graphics, xAxis, yAxis = self.last_draw
+            graphics.AbsScale = absscale
+            self.last_draw = (graphics, None, None)
+        self.XSpec = 'min'
+        self.YSpec = 'min'
+        self._absScale = absscale
 
     @PendingDeprecation("self.FontSizeAxis property")
     def SetFontSizeAxis(self, point=10):
@@ -1552,7 +2027,13 @@ class PlotCanvas(wx.Panel):
         """Get current Title font size in points"""
         return self._fontSizeTitle
 
-    FontSizeTitle = property(GetFontSizeTitle, SetFontSizeTitle)
+    @property
+    def FontSizeTitle(self):
+        return self._fontSizeTitle
+
+    @FontSizeTitle.setter
+    def FontSizeTitle(self, pointsize):
+        self._fontSizeTitle = pointsize
 
     @PendingDeprecation("self.FontSizeLegend property")
     def SetFontSizeLegend(self, point=7):
@@ -2136,7 +2617,7 @@ class PlotCanvas(wx.Panel):
     def Draw(self, graphics, xAxis=None, yAxis=None, dc=None):
         """Wrapper around _Draw, which handles log axes"""
 
-        graphics.setLogScale(self.LogScale)
+        graphics.LogScale = self.LogScale
 
         # check Axis is either tuple or none
         if type(xAxis) not in [type(None), tuple]:
@@ -2619,7 +3100,7 @@ class PlotCanvas(wx.Panel):
         for i in range(len(graphics)):
             o = graphics[i]
             s = i * lineHeight
-            if isinstance(o, PolyMarker):
+            if isinstance(o, PolyMarker) or isinstance(o, BoxPlot):
                 # draw marker with legend
                 pnt = (trhc[0] + legendLHS + legendSymExt[0] / 2.,
                        trhc[1] + s + lineHeight / 2.)
@@ -3244,9 +3725,10 @@ Hand = PyEmbeddedImage(
 
 
 def _draw1Objects():
+    """Sin, Cos, and Points"""
     # 100 points sin function, plotted as green circles
-    data1 = 2. * np.pi * np.arange(200) / 200.
-    data1.shape = (100, 2)
+    data1 = 2. * np.pi * np.arange(-200, 200) / 200.
+    data1.shape = (200, 2)
     data1[:, 1] = np.sin(data1[:, 0])
     markers1 = PolyMarker(data1,
                           legend='Green Markers',
@@ -3256,8 +3738,8 @@ def _draw1Objects():
                           )
 
     # 50 points cos function, plotted as red line
-    data1 = 2. * np.pi * np.arange(100) / 100.
-    data1.shape = (50, 2)
+    data1 = 2. * np.pi * np.arange(-100, 100) / 100.
+    data1.shape = (100, 2)
     data1[:, 1] = np.cos(data1[:, 0])
     lines = PolySpline(data1, legend='Red Line', colour='red')
 
@@ -3277,6 +3759,7 @@ def _draw1Objects():
 
 
 def _draw2Objects():
+    """Sin, Cos, Points, and lines between points"""
     # 100 points sin function, plotted as green dots
     data1 = 2. * np.pi * np.arange(200) / 200.
     data1.shape = (100, 2)
@@ -3320,6 +3803,7 @@ def _draw2Objects():
 
 
 def _draw3Objects():
+    """Various Marker Types"""
     markerList = ['circle', 'dot', 'square', 'triangle', 'triangle_down',
                   'cross', 'plus', 'circle']
     m = []
@@ -3333,19 +3817,22 @@ def _draw3Objects():
 
 
 def _draw4Objects():
+    """25,000 point line and markers"""
     # 25,000 point line
     data1 = np.arange(5e5, 1e6, 10)
     data1.shape = (25000, 2)
-    line1 = PolyLine(data1, legend='Wide Line', colour='green', width=5)
-
-    # A few more points...
-    markers2 = PolyMarker(data1, legend='Square', colour='blue',
+    # Points
+    markers2 = PolyMarker(data1, legend='Square Points', colour='blue',
                           marker='square')
-    return PlotGraphics([line1, markers2], "25,000 Points", "Value X", "")
+
+    # Line
+    line1 = PolyLine(data1, legend='Wide Line', colour='green', width=4)
+
+    return PlotGraphics([markers2, line1], "25,000 Points", "Value X", "")
 
 
 def _draw5Objects():
-    # Empty graph with axis defined but no points/lines
+    """Empty graph with axes but no points"""
     points = []
     line1 = PolyLine(points, legend='Wide Line', colour='green', width=5)
     return PlotGraphics([line1],
@@ -3355,7 +3842,7 @@ def _draw5Objects():
 
 
 def _draw6Objects():
-    # Bar graph
+    """Faking a Bar graph"""
     points1 = [(1, 0), (1, 10)]
     line1 = PolyLine(points1, colour='green', legend='Feb.', width=10)
     points1g = [(2, 0), (2, 4)]
@@ -3377,8 +3864,8 @@ def _draw6Objects():
 
 
 def _draw7Objects():
-    # Empty graph with axis defined but no points/lines
-    x = np.arange(1, 1000, 1)
+    """Log10 on both axes"""
+    x = np.arange(-1000, 1000, 1)
     y1 = 4.5 * x ** 2
     y2 = 2.2 * x ** 3
     points1 = np.transpose([x, y1])
@@ -3400,8 +3887,9 @@ def _draw8Objects():
                      863, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                      538, 577, 679, 415, 454, 417, 635, 319, 350, 97])
 
-    boxplot = BoxPlot(data)
-    return PlotGraphics([boxplot],
+    boxplot = BoxPlot(data, 1, legend="A")
+    boxplot2 = BoxPlot(data, 2, legend="B")
+    return PlotGraphics([boxplot, boxplot2],
                         "Box Plot",
                         "",
                         "Value")
@@ -3416,6 +3904,7 @@ class TestFrame(wx.Frame):
         self.mainmenu = wx.MenuBar()
 
         menu = wx.Menu()
+
         menu.Append(200, 'Page Setup...', 'Setup the printer page')
         self.Bind(wx.EVT_MENU, self.OnFilePageSetup, id=200)
 
@@ -3460,6 +3949,8 @@ class TestFrame(wx.Frame):
                     'Enable Mouse Zoom', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableZoom, id=214)
         menu.Append(215, 'Enable &Grid', 'Turn on Grid', kind=wx.ITEM_CHECK)
+        menu.Check(215, True)
+
         self.Bind(wx.EVT_MENU, self.OnEnableGrid, id=215)
         menu.Append(217, 'Enable &Drag',
                     'Activates dragging mode', kind=wx.ITEM_CHECK)
@@ -3531,8 +4022,27 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableAxesLabels, id=270)
         menu.Check(270, True)
 
+        menu.Append(271, 'Enable Log-Y',
+                    'Changes the Y axis to log10 scale', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnLogY, id=271)
+        menu.Append(272, 'Enable Log-X',
+                    'Changes the X axis to log10 scale', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnLogX, id=272)
+
+        menu.Append(273, 'Enable Abs(X)',
+                    'Applies absolute value transform to X axis',
+                    kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnAbsX, id=273)
+        menu.Append(274, 'Enable Abs(Y)',
+                    'Applies absolute value transform to Y axis',
+                    kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnAbsY, id=274)
+
         self.mainmenu.Append(menu, '&Plot')
 
+        self.plot_options_menu = menu
+
+        # "About" Menu item
         menu = wx.Menu()
         menu.Append(300, '&About', 'About this thing...')
         self.Bind(wx.EVT_MENU, self.OnHelpAbout, id=300)
@@ -3677,6 +4187,8 @@ class TestFrame(wx.Frame):
     def OnPlotDraw7(self, event):
         # log scale example
         self.resetDefaults()
+        self.plot_options_menu.Check(271, True)
+        self.plot_options_menu.Check(272, True)
         self.client.LogScale = (True, True)
         self.client.Draw(_draw7Objects())
 
@@ -3757,6 +4269,22 @@ class TestFrame(wx.Frame):
 
     def OnForegroundBlack(self, event):
         self.client.SetForegroundColour("black")
+        self.client.Redraw()
+
+    def OnLogX(self, event):
+        self.client.LogScale = (event.IsChecked(), self.client.LogScale[1])
+        self.client.Redraw()
+
+    def OnLogY(self, event):
+        self.client.LogScale = (self.client.LogScale[0], event.IsChecked())
+        self.client.Redraw()
+
+    def OnAbsX(self, event):
+        self.client.AbsScale = (event.IsChecked(), self.client.AbsScale[1])
+        self.client.Redraw()
+
+    def OnAbsY(self, event):
+        self.client.AbsScale = (self.client.AbsScale[0], event.IsChecked())
         self.client.Redraw()
 
     def OnScrUp(self, event):
