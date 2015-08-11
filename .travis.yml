@@ -6,7 +6,7 @@ language: python
     
 python: 
     - "2.7"
-    - "3.4"
+    #- "3.4"  # Just do one Python for now.
     
 sudo: false
     
@@ -53,9 +53,5 @@ script:
     - python build.py build_py --jobs=4
     # TODO: Add running of the tests
     
-after_failure:
-    - echo "****** travis after_failure step"
-    - ls -al bin
-    - if [ -e bin/sip-4.16.7-linux ]; then file bin/sip-4.16.7-linux; ldd bin/sip-4.16.7-linux; fi
     
     
