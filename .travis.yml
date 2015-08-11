@@ -10,10 +10,6 @@ python:
     
 sudo: false
     
-notifications:
-  email:
-    - travis-ci@enthought.com
-    
     
 # Available build steps:
 # 1. before_install
