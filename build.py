@@ -28,7 +28,7 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
                                macFixDependencyInstallName, macSetLoaderNames, \
                                getVcsRev, runcmd, textfile_open, getSipFiles, \
-                               getVisCVersion
+                               getVisCVersion, getToolsPlatformName
 
 import buildtools.version as version
 
