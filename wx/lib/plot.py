@@ -273,6 +273,8 @@ class PendingDeprecation(object):
         self.__doc__ = self.func.__doc__
 
 
+Axes = namedtuple("Axes", ["bottom", "left", "top", "right"])
+
 #
 # Plotting classes...
 #
@@ -1572,6 +1574,7 @@ class PlotCanvas(wx.Panel):
         self._diagonalsEnabled = False
         self._ticksEnabled = False
         self._axesEnabled = True
+        self._axesEnabled = Axes(True, True, True, True)    # (B, L, T, R)
         self._axesValuesEnabled = True
 
         # Fonts
@@ -2319,10 +2322,36 @@ class PlotCanvas(wx.Panel):
 
     @EnableAxes.setter
     def EnableAxes(self, value):
-        """Set True to enable axes."""
-        if value not in [True, False]:
-            raise TypeError("Value should be True or False")
-        self._axesEnabled = value
+        """Set True to enable axes.
+
+        Acceptable values:
+        bool
+        2-tuple of bool : (bottom, left)
+        4-tuple of bool : (bottom, left, top, right)
+
+        """
+#        if value not in [True, False]:
+#            raise TypeError("Value should be True or False")
+#        self._axesEnabled = value
+#        self.Redraw()
+
+        err_txt = ("Axis value must be a bool or a 2- or 4-tuple of bool")
+
+#        axes = namedtuple("axes", ["left", "bottom", "top", "right"])
+
+        if isinstance(value, bool):
+            # turns on or off all axes
+            _value = (value, value,  value, value)
+        elif isinstance(value, tuple):
+            if len(value) == 2:
+                _value = (value[0], value[1], False, False)
+            elif len(value) == 4:
+                _value = value
+            else:
+                raise ValueError(err_txt)
+        else:
+            raise ValueError(err_txt)
+        self._axesEnabled = Axes(*_value)
         self.Redraw()
 
     @property
@@ -3351,19 +3380,45 @@ class PlotCanvas(wx.Panel):
         pen.SetWidth(penWidth)
         dc.SetPen(pen)
 
-        if self._xSpec is not 'none':
-            lower, upper = p1[0], p2[0]
-            for y in (p1[1], p2[1]):
-                a1 = scale * np.array([lower, y]) + shift
-                a2 = scale * np.array([upper, y]) + shift
-                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
 
-        if self._ySpec is not 'none':
+#        if self._xSpec is not 'none':
+#            lower, upper = p1[0], p2[0]
+#            for y in (p1[1], p2[1]):
+#                a1 = scale * np.array([lower, y]) + shift
+#                a2 = scale * np.array([upper, y]) + shift
+#                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+#
+#        if self._ySpec is not 'none':
+#            lower, upper = p1[1], p2[1]
+#            for x in (p1[0], p2[0]):
+#                a1 = scale * np.array([x, lower]) + shift
+#                a2 = scale * np.array([x, upper]) + shift
+#                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+
+        axes = self.EnableAxes
+        if axes.bottom:
+            lower, upper = p1[0], p2[0]
+            a1 = scale * np.array([lower, p1[1]]) + shift
+            a2 = scale * np.array([upper, p1[1]]) + shift
+            dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+
+        if axes.left:
             lower, upper = p1[1], p2[1]
-            for x in (p1[0], p2[0]):
-                a1 = scale * np.array([x, lower]) + shift
-                a2 = scale * np.array([x, upper]) + shift
-                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+            a1 = scale * np.array([p1[0], lower]) + shift
+            a2 = scale * np.array([p1[0], upper]) + shift
+            dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+
+        if axes.top:
+            lower, upper = p1[0], p2[0]
+            a1 = scale * np.array([lower, p2[1]]) + shift
+            a2 = scale * np.array([upper, p2[1]]) + shift
+            dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+
+        if axes.right:
+            lower, upper = p1[1], p2[1]
+            a1 = scale * np.array([p2[0], lower]) + shift
+            a2 = scale * np.array([p2[0], upper]) + shift
+            dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
 
     @SavePen
     def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
@@ -3903,24 +3958,25 @@ class TestFrame(wx.Frame):
         # Now Create the menu bar and items
         self.mainmenu = wx.MenuBar()
 
+        # -------------------------------------------------------------------
+        ### "File" Menu Items ###############################################
+        # -------------------------------------------------------------------
         menu = wx.Menu()
-
         menu.Append(200, 'Page Setup...', 'Setup the printer page')
         self.Bind(wx.EVT_MENU, self.OnFilePageSetup, id=200)
-
         menu.Append(201, 'Print Preview...', 'Show the current plot on page')
         self.Bind(wx.EVT_MENU, self.OnFilePrintPreview, id=201)
-
         menu.Append(202, 'Print...', 'Print the current plot')
         self.Bind(wx.EVT_MENU, self.OnFilePrint, id=202)
-
         menu.Append(203, 'Save Plot...', 'Save current plot')
         self.Bind(wx.EVT_MENU, self.OnSaveFile, id=203)
-
         menu.Append(205, 'E&xit', 'Enough of this already!')
         self.Bind(wx.EVT_MENU, self.OnFileExit, id=205)
         self.mainmenu.Append(menu, '&File')
 
+        # -------------------------------------------------------------------
+        ### "Plot" Menu Items ###############################################
+        # -------------------------------------------------------------------
         menu = wx.Menu()
         menu.Append(206, 'Draw1 - sin, cos', 'Draw plots1')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw1, id=206)
@@ -3939,55 +3995,16 @@ class TestFrame(wx.Frame):
         menu.Append(262, 'Draw8 - Box Plots', 'Draw plots8')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw8, id=262)
 
+        menu.AppendSeparator()
+
         menu.Append(211, '&Redraw', 'Redraw plots')
         self.Bind(wx.EVT_MENU, self.OnPlotRedraw, id=211)
         menu.Append(212, '&Clear', 'Clear canvas')
         self.Bind(wx.EVT_MENU, self.OnPlotClear, id=212)
         menu.Append(213, '&Scale', 'Scale canvas')
         self.Bind(wx.EVT_MENU, self.OnPlotScale, id=213)
-        menu.Append(214, 'Enable &Zoom',
-                    'Enable Mouse Zoom', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableZoom, id=214)
-        menu.Append(215, 'Enable &Grid', 'Turn on Grid', kind=wx.ITEM_CHECK)
-        menu.Check(215, True)
 
-        self.Bind(wx.EVT_MENU, self.OnEnableGrid, id=215)
-        menu.Append(217, 'Enable &Drag',
-                    'Activates dragging mode', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableDrag, id=217)
-        menu.Append(220, 'Enable &Legend',
-                    'Turn on Legend', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableLegend, id=220)
-        menu.Append(222, 'Enable &Point Label',
-                    'Show Closest Point', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnablePointLabel, id=222)
-
-        menu.Append(223, 'Enable &Anti-Aliasing',
-                    'Smooth output', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableAntiAliasing, id=223)
-        menu.Append(224, 'Enable &High-Resolution AA',
-                    'Draw in higher resolution', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableHiRes, id=224)
-
-        menu.Append(226, 'Enable Center Lines',
-                    'Draw center lines', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableCenterLines, id=226)
-        menu.Append(227, 'Enable Diagonal Lines',
-                    'Draw diagonal lines', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableDiagonals, id=227)
-
-        menu.Append(231, 'Set Gray Background',
-                    'Change background colour to gray')
-        self.Bind(wx.EVT_MENU, self.OnBackgroundGray, id=231)
-        menu.Append(232, 'Set &White Background',
-                    'Change background colour to white')
-        self.Bind(wx.EVT_MENU, self.OnBackgroundWhite, id=232)
-        menu.Append(233, 'Set Red Label Text',
-                    'Change label text colour to red')
-        self.Bind(wx.EVT_MENU, self.OnForegroundRed, id=233)
-        menu.Append(234, 'Set &Black Label Text',
-                    'Change label text colour to black')
-        self.Bind(wx.EVT_MENU, self.OnForegroundBlack, id=234)
+        menu.AppendSeparator()
 
         menu.Append(225, 'Scroll Up 1', 'Move View Up 1 Unit')
         self.Bind(wx.EVT_MENU, self.OnScrUp, id=225)
@@ -3996,11 +4013,67 @@ class TestFrame(wx.Frame):
         menu.Append(235, '&Plot Reset', 'Reset to original plot')
         self.Bind(wx.EVT_MENU, self.OnReset, id=235)
 
+        self.mainmenu.Append(menu, '&Plot')
+
+        # -------------------------------------------------------------------
+        ### "Options" Menu Items ############################################
+        # -------------------------------------------------------------------
+
+        menu = wx.Menu()
+
+        menu.Append(214, 'Enable &Zoom',
+                    'Enable Mouse Zoom', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableZoom, id=214)
+
+        menu.Append(217, 'Enable &Drag',
+                    'Activates dragging mode', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableDrag, id=217)
+
+        menu.Append(222, 'Enable &Point Label',
+                    'Show Closest Point', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnablePointLabel, id=222)
+
+        menu.Append(223, 'Enable &Anti-Aliasing',
+                    'Smooth output', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableAntiAliasing, id=223)
+
+        menu.Append(224, 'Enable &High-Resolution AA',
+                    'Draw in higher resolution', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableHiRes, id=224)
+
         menu.AppendSeparator()
-        menu.Append(240, 'Enable Axes',
-                    'Enables the display of the Axes', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableAxes, id=240)
-        menu.Check(240, True)
+
+        menu.Append(226, 'Enable Center Lines',
+                    'Draw center lines', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableCenterLines, id=226)
+
+        menu.Append(227, 'Enable Diagonal Lines',
+                    'Draw diagonal lines', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableDiagonals, id=227)
+
+        menu.Append(220, 'Enable &Legend',
+                    'Turn on Legend', kind=wx.ITEM_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnEnableLegend, id=220)
+
+        menu.Append(215, 'Enable &Grid', 'Turn on Grid', kind=wx.ITEM_CHECK)
+        menu.Check(215, True)
+        self.Bind(wx.EVT_MENU, self.OnEnableGrid, id=215)
+
+        ### SubMenu for Axes
+        submenu = wx.Menu()
+        for _i, item in enumerate(("Bottom", "Left", "Top", "Right"), 2401):
+            submenu.AppendCheckItem(_i, item, "Enables {} axis".format(item))
+            submenu.Check(_i, True)
+
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesBottom, id=2401)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesLeft, id=2402)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesTop, id=2403)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesRight, id=2404)
+
+        menu.AppendMenu(240, 'Enable Axes', submenu,
+                    'Enables the display of the Axes')
+#        self.Bind(wx.EVT_MENU, self.OnEnableAxes, id=240)
+#        menu.Check(240, True)
 
         menu.Append(245, 'Enable Axes Values',
                     'Enables the display of the axes values',
@@ -4038,11 +4111,28 @@ class TestFrame(wx.Frame):
                     kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnAbsY, id=274)
 
-        self.mainmenu.Append(menu, '&Plot')
+        menu.AppendSeparator()
+
+        menu.Append(231, 'Set Gray Background',
+                    'Change background colour to gray')
+        self.Bind(wx.EVT_MENU, self.OnBackgroundGray, id=231)
+        menu.Append(232, 'Set &White Background',
+                    'Change background colour to white')
+        self.Bind(wx.EVT_MENU, self.OnBackgroundWhite, id=232)
+        menu.Append(233, 'Set Red Label Text',
+                    'Change label text colour to red')
+        self.Bind(wx.EVT_MENU, self.OnForegroundRed, id=233)
+        menu.Append(234, 'Set &Black Label Text',
+                    'Change label text colour to black')
+        self.Bind(wx.EVT_MENU, self.OnForegroundBlack, id=234)
+
+        self.mainmenu.Append(menu, '&Options')
 
         self.plot_options_menu = menu
 
-        # "About" Menu item
+        # -------------------------------------------------------------------
+        ### "Help" Menu Items ############################################
+        # -------------------------------------------------------------------
         menu = wx.Menu()
         menu.Append(300, '&About', 'About this thing...')
         self.Bind(wx.EVT_MENU, self.OnHelpAbout, id=300)
@@ -4236,6 +4326,22 @@ class TestFrame(wx.Frame):
 
     def OnEnableAxes(self, event):
         self.client.EnableAxes = event.IsChecked()
+
+    def OnEnableAxesBottom(self, event):
+        old = self.client.EnableAxes
+        self.client.EnableAxes = (event.IsChecked(), old[1], old[2], old[3])
+
+    def OnEnableAxesLeft(self, event):
+        old = self.client.EnableAxes
+        self.client.EnableAxes = (old[0], event.IsChecked(), old[2], old[3])
+
+    def OnEnableAxesTop(self, event):
+        old = self.client.EnableAxes
+        self.client.EnableAxes = (old[0], old[1], event.IsChecked(), old[3])
+
+    def OnEnableAxesRight(self, event):
+        old = self.client.EnableAxes
+        self.client.EnableAxes = (old[0], old[1], old[2], event.IsChecked())
 
     def OnEnableTicks(self, event):
         self.client.EnableTicks = event.IsChecked()
