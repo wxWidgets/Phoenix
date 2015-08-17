@@ -273,7 +273,79 @@ class PendingDeprecation(object):
         self.__doc__ = self.func.__doc__
 
 
-Axes = namedtuple("Axes", ["bottom", "left", "top", "right"])
+class _DisplaySide(object):
+    """
+    Generic class for storing booleans describing which sides of a box are
+    displayed. Used for fine-tuning the axis, ticks, and values of a graph.
+
+    This class somewhat mimics a collections.namedtuple factory function in
+    that it is an iterable and can have indiviual elements accessible by name.
+    It differs from a namedtuple in a few ways:
+
+    - it's mutable
+    - it's not a factory function but a full-fledged class
+    - it contains type checking, only allowing boolean values
+    - it contains name checking, only allowing valid_names as attributes
+
+
+
+    """
+    valid_names = ("bottom", "left", "right", "top")
+
+    def __init__(self, bottom, left, top, right):
+        # make sure that everything is boolean
+        if not all([isinstance(x, bool) for x in [bottom, left, top, right]]):
+            raise TypeError("All args must be bools")
+        self.bottom = bottom
+        self.left = left
+        self.top = top
+        self.right = right
+
+    def __str__(self):
+        s = "{}(bottom={}, left={}, top={}, right={})"
+        s = s.format(self.__class__.__name__,
+                     self.bottom,
+                     self.left,
+                     self.top,
+                     self.right,
+                     )
+        return s
+
+    def __repr__(self):
+        # for now, just return the str representation
+        return self.__str__()
+
+    def __setattr__(self, name, value):
+        if name not in self.valid_names:
+            raise NameError("attribute must be one of {}".format(self.valid_names))
+        if not isinstance(value, bool) :
+            raise TypeError("'{}' must be a boolean".format(name))
+        self.__dict__[name] = value
+
+    def __len__(self):
+        return 4
+
+    def __hash__(self):
+        return hash(tuple(self))
+
+    def __getitem__(self, key):
+        return [self.bottom, self.left, self.top, self.right][key]
+
+    def __setitem__(self, key, value):
+        if key == 0:
+            self.bottom = value
+        elif key == 1:
+            self.left = value
+        elif key == 2:
+            self.top = value
+        elif key == 3:
+            self.right = value
+        else:
+            raise IndexError("list index out of range")
+
+    def __iter__(self):
+        return iter([self.bottom, self.left, self.top, self.right])
+
 
 #
 # Plotting classes...
@@ -1572,10 +1644,10 @@ class PlotCanvas(wx.Panel):
         self._axesLabelsEnabled = True
         self._centerLinesEnabled = False
         self._diagonalsEnabled = False
-        self._ticksEnabled = False
+        self._ticksEnabled = _DisplaySide(False, False, False, False)
         self._axesEnabled = True
-        self._axesEnabled = Axes(True, True, True, True)    # (B, L, T, R)
-        self._axesValuesEnabled = True
+        self._axesEnabled = _DisplaySide(True, True, True, True)
+        self._axesValuesEnabled = _DisplaySide(True, True, False, False)
 
         # Fonts
         self._fontCache = {}
@@ -2337,7 +2409,35 @@ class PlotCanvas(wx.Panel):
 
         err_txt = ("Axis value must be a bool or a 2- or 4-tuple of bool")
 
-#        axes = namedtuple("axes", ["left", "bottom", "top", "right"])
+        if isinstance(value, bool):
+            # turns on or off all axes
+            _value = (value, value,  value, value)
+        elif isinstance(value, tuple):
+            if len(value) == 2:
+                _value = (value[0], value[1], False, False)
+            elif len(value) == 4:
+                _value = value
+            else:
+                raise ValueError(err_txt)
+        else:
+            raise ValueError(err_txt)
+        self._axesEnabled = _DisplaySide(*_value)
+        self.Redraw()
+
+    @property
+    def EnableAxesValues(self):
+        """True if axes values are enabled."""
+        return self._axesValuesEnabled
+
+    @EnableAxesValues.setter
+    def EnableAxesValues(self, value):
+        """Set True to enable axes values."""
+#        if value not in [True, False]:
+#            raise TypeError("Value should be True or False")
+#        self._axesValuesEnabled = value
+#        self.Redraw()
+
+        err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
 
         if isinstance(value, bool):
             # turns on or off all axes
@@ -2351,20 +2451,7 @@ class PlotCanvas(wx.Panel):
                 raise ValueError(err_txt)
         else:
             raise ValueError(err_txt)
-        self._axesEnabled = Axes(*_value)
-        self.Redraw()
-
-    @property
-    def EnableAxesValues(self):
-        """True if axes values are enabled."""
-        return self._axesValuesEnabled
-
-    @EnableAxesValues.setter
-    def EnableAxesValues(self, value):
-        """Set True to enable axes values."""
-        if value not in [True, False]:
-            raise TypeError("Value should be True or False")
-        self._axesValuesEnabled = value
+        self._axesValuesEnabled = _DisplaySide(*_value)
         self.Redraw()
 
     @property
@@ -2375,9 +2462,26 @@ class PlotCanvas(wx.Panel):
     @EnableTicks.setter
     def EnableTicks(self, value):
         """Set True to enable tick marks."""
-        if value not in [True, False]:
-            raise TypeError("Value should be True or False")
-        self._ticksEnabled = value
+#        if value not in [True, False]:
+#            raise TypeError("Value should be True or False")
+#        self._ticksEnabled = value
+#        self.Redraw()
+
+        err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
+
+        if isinstance(value, bool):
+            # turns on or off all axes
+            _value = (value, value,  value, value)
+        elif isinstance(value, tuple):
+            if len(value) == 2:
+                _value = (value[0], value[1], False, False)
+            elif len(value) == 4:
+                _value = value
+            else:
+                raise ValueError(err_txt)
+        else:
+            raise ValueError(err_txt)
+        self._ticksEnabled = _DisplaySide(*_value)
         self.Redraw()
 
     @property
@@ -3153,7 +3257,7 @@ class PlotCanvas(wx.Panel):
         """Draws Title and labels and returns width and height for each"""
         # TextExtents for Title and Axis Labels
         dc.SetFont(self._getFont(self._fontSizeTitle))
-        if self._titleEnabled:
+        if self.EnablePlotTitle:
             title = graphics.Title
             titleWH = dc.GetTextExtent(title)
         else:
@@ -3302,6 +3406,7 @@ class PlotCanvas(wx.Panel):
         #       - done via negative ticklength values?
         #           + works but the axes values cut off the ticks.
         # increases thickness for printing only
+        # TODO: changes to XSpec and YSpec api.
         pen = self.TickPen
         penWidth = self.printerScale * pen.GetWidth()
         pen.SetWidth(penWidth)
@@ -3311,16 +3416,27 @@ class PlotCanvas(wx.Panel):
         yTickLength = 3 * self.printerScale * self._tickLength[1]
         xTickLength = 3 * self.printerScale * self._tickLength[0]
 
-        # TODO: This is code duplication
-        if self._xSpec is not 'none':
-            # miny, maxy and tick lengths
-            for y, d in [(p1[1], -xTickLength), (p2[1], xTickLength)]:
+        ticks = self.EnableTicks
+        if self.XSpec != 'none':        # I don't like this :-/
+            if ticks.bottom:
+                y, d = (p1[1], -xTickLength)
+                for x, label in xticks:
+                    pt = scale * np.array([x, y]) + shift
+                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + d)
+            if ticks.top:
+                y, d = (p2[1], xTickLength)
                 for x, label in xticks:
                     pt = scale * np.array([x, y]) + shift
                     dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + d)
 
-        if self._ySpec is not 'none':
-            for x, d in [(p1[0], -yTickLength), (p2[0], yTickLength)]:
+        if self.YSpec != 'none':
+            if ticks.left:
+                x, d = (p1[0], -yTickLength)
+                for y, label in yticks:
+                    pt = scale * np.array([x, y]) + shift
+                    dc.DrawLine(pt[0], pt[1], pt[0] - d, pt[1])
+            if ticks.right:
+                x, d = (p2[0], yTickLength)
                 for y, label in yticks:
                     pt = scale * np.array([x, y]) + shift
                     dc.DrawLine(pt[0], pt[1], pt[0] - d, pt[1])
@@ -3380,79 +3496,70 @@ class PlotCanvas(wx.Panel):
         pen.SetWidth(penWidth)
         dc.SetPen(pen)
 
-
-#        if self._xSpec is not 'none':
-#            lower, upper = p1[0], p2[0]
-#            for y in (p1[1], p2[1]):
-#                a1 = scale * np.array([lower, y]) + shift
-#                a2 = scale * np.array([upper, y]) + shift
-#                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
-#
-#        if self._ySpec is not 'none':
-#            lower, upper = p1[1], p2[1]
-#            for x in (p1[0], p2[0]):
-#                a1 = scale * np.array([x, lower]) + shift
-#                a2 = scale * np.array([x, upper]) + shift
-#                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
-
         axes = self.EnableAxes
-        if axes.bottom:
-            lower, upper = p1[0], p2[0]
-            a1 = scale * np.array([lower, p1[1]]) + shift
-            a2 = scale * np.array([upper, p1[1]]) + shift
-            dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+        if self.XSpec != 'none':
+            if axes.bottom:
+                lower, upper = p1[0], p2[0]
+                a1 = scale * np.array([lower, p1[1]]) + shift
+                a2 = scale * np.array([upper, p1[1]]) + shift
+                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+            if axes.top:
+                lower, upper = p1[0], p2[0]
+                a1 = scale * np.array([lower, p2[1]]) + shift
+                a2 = scale * np.array([upper, p2[1]]) + shift
+                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
 
-        if axes.left:
-            lower, upper = p1[1], p2[1]
-            a1 = scale * np.array([p1[0], lower]) + shift
-            a2 = scale * np.array([p1[0], upper]) + shift
-            dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
-
-        if axes.top:
-            lower, upper = p1[0], p2[0]
-            a1 = scale * np.array([lower, p2[1]]) + shift
-            a2 = scale * np.array([upper, p2[1]]) + shift
-            dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
-
-        if axes.right:
-            lower, upper = p1[1], p2[1]
-            a1 = scale * np.array([p2[0], lower]) + shift
-            a2 = scale * np.array([p2[0], upper]) + shift
-            dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+        if self.YSpec != 'none':
+            if axes.left:
+                lower, upper = p1[1], p2[1]
+                a1 = scale * np.array([p1[0], lower]) + shift
+                a2 = scale * np.array([p1[0], upper]) + shift
+                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
+            if axes.right:
+                lower, upper = p1[1], p2[1]
+                a1 = scale * np.array([p2[0], lower]) + shift
+                a2 = scale * np.array([p2[0], upper]) + shift
+                dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
 
     @SavePen
     def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
         """ Draws the axes values """
-        # TODO: Add option for left and right values
-        # TODO: When drawing right or top values, draw text *outside* of plot.
-        # TODO: negative tick lengths get cut off by the text.
-        #       - transparent text background needed?
-
         # TODO: More code duplication? Same as _drawGrid and _drawTicks?
-        if self._xSpec is not 'none':
-            text = 1
-            # miny, maxy and tick lengths
-            for y in (p1[1], p2[1]):
+        # TODO: replace dc.DrawText with dc.DrawTextList?
+        # TODO: update the bounding boxes when adding right and top values
+        axes = self.EnableAxesValues
+        if self.XSpec != 'none':
+            if axes.bottom:
                 for x, label in xticks:
-                    pt = scale * np.array([x, y]) + shift
-                    # draws tick mark d units
-                    if text:
-                        dc.DrawText(label,
-                                    pt[0],
-                                    pt[1] + 2 * self._pointSize[1])
-                text = 0  # axis values not drawn on top side
-
-        if self._ySpec is not 'none':
-            text = 1
-            h = dc.GetCharHeight()
-            for x in (p1[0], p2[0]):
+                    w = dc.GetTextExtent(label)[0]
+                    pt = scale * np.array([x, p1[1]]) + shift
+                    dc.DrawText(label,
+                                pt[0] - w/2,
+                                pt[1] + 2 * self._pointSize[1])
+            if axes.top:
+                for x, label in xticks:
+                    w, h = dc.GetTextExtent(label)
+                    pt = scale * np.array([x, p2[1]]) + shift
+                    dc.DrawText(label,
+                                pt[0] - w/2,
+                                pt[1] - 2 * self._pointSize[1] - h)
+        if self.YSpec != 'none':
+            if axes.left:
+                h = dc.GetCharHeight()
                 for y, label in yticks:
-                    pt = scale * np.array([x, y]) + shift
-                    if text:
-                        dc.DrawText(label,
-                                    pt[0] - dc.GetTextExtent(label)[0] - 3 * self._pointSize[0],
-                                    pt[1] - 0.75 * h)
-                text = 0    # axis values not drawn on right side
+                    w = dc.GetTextExtent(label)[0]
+                    pt = scale * np.array([p1[0], y]) + shift
+                    dc.DrawText(label,
+                                pt[0] - w - 3 * self._pointSize[0],
+                                pt[1] - 0.5 * h)
+            if axes.right:
+                h = dc.GetCharHeight()
+                for y, label in yticks:
+                    w = dc.GetTextExtent(label)[0]
+                    pt = scale * np.array([p2[0], y]) + shift
+                    dc.DrawText(label,
+                                pt[0] + 3 * self._pointSize[0],
+                                pt[1] - 0.5 * h)
 
     @SavePen
     def _drawPlotAreaItems(self, dc, p1, p2, scale, shift, xticks, yticks):
@@ -3792,11 +3899,17 @@ def _draw1Objects():
                           size=1,
                           )
 
-    # 50 points cos function, plotted as red line
+    # 50 points cos function, plotted as red line and markers
     data1 = 2. * np.pi * np.arange(-100, 100) / 100.
     data1.shape = (100, 2)
     data1[:, 1] = np.cos(data1[:, 0])
     lines = PolySpline(data1, legend='Red Line', colour='red')
+    markers3 = PolyMarker(data1,
+                          legend='Red Dot',
+                          colour='red',
+                          marker='circle',
+                          size=1,
+                          )
 
     # A few more points...
     pi = np.pi
@@ -3807,7 +3920,7 @@ def _draw1Objects():
                           marker='cross',
                           )
 
-    return PlotGraphics([markers1, lines, markers2],
+    return PlotGraphics([markers1, lines, markers3, markers2],
                         "Graph Title",
                         "X Axis",
                         "Y Axis")
@@ -4061,7 +4174,10 @@ class TestFrame(wx.Frame):
 
         ### SubMenu for Axes
         submenu = wx.Menu()
-        for _i, item in enumerate(("Bottom", "Left", "Top", "Right"), 2401):
+        submenu_items = ("Bottom", "Left", "Top", "Right",
+                         "Bottom+Left", "All")
+        self.axesSubMenu = submenu
+        for _i, item in enumerate(submenu_items, 2401):
             submenu.AppendCheckItem(_i, item, "Enables {} axis".format(item))
             submenu.Check(_i, True)
 
@@ -4069,21 +4185,53 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableAxesLeft, id=2402)
         self.Bind(wx.EVT_MENU, self.OnEnableAxesTop, id=2403)
         self.Bind(wx.EVT_MENU, self.OnEnableAxesRight, id=2404)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesBottomLeft, id=2405)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesAll, id=2406)
 
-        menu.AppendMenu(240, 'Enable Axes', submenu,
-                    'Enables the display of the Axes')
-#        self.Bind(wx.EVT_MENU, self.OnEnableAxes, id=240)
-#        menu.Check(240, True)
+        menu.Append(240, 'Enable Axes', submenu,
+                   'Enables the display of the Axes')
 
-        menu.Append(245, 'Enable Axes Values',
-                    'Enables the display of the axes values',
-                    kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableAxesValues, id=245)
-        menu.Check(245, True)
+        submenu = wx.Menu()
+        submenu_items = ("Bottom", "Left", "Top", "Right")
+        help_txt = "Enables {} axis values"
+        self.axesValuesSubMenu = submenu
+        for _i, item in enumerate(submenu_items, 2451):
+            submenu.AppendCheckItem(_i, item, help_txt.format(item))
 
-        menu.Append(250, 'Enable Ticks',
-                    'Enables the display of the ticks', kind=wx.ITEM_CHECK)
-        self.Bind(wx.EVT_MENU, self.OnEnableTicks, id=250)
+        submenu.Check(2451, True)
+        submenu.Check(2452, True)
+        submenu.Check(2453, False)
+        submenu.Check(2454, False)
+
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesValuesBottom, id=2451)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesValuesLeft, id=2452)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesValuesTop, id=2453)
+        self.Bind(wx.EVT_MENU, self.OnEnableAxesValuesRight, id=2454)
+
+        menu.Append(245, 'Enable Axes Values', submenu,
+                    'Enables the display of the axes values')
+
+        submenu = wx.Menu()
+        submenu_items = ("Bottom", "Left", "Top", "Right")
+        help_txt = "Enables {} ticks"
+        self.ticksSubMenu = submenu
+        for _i, item in enumerate(submenu_items, 2501):
+            submenu.AppendCheckItem(_i, item, help_txt.format(item))
+
+        submenu.Check(2501, False)
+        submenu.Check(2502, False)
+        submenu.Check(2503, False)
+        submenu.Check(2504, False)
+
+        self.Bind(wx.EVT_MENU, self.OnEnableTicksBottom, id=2501)
+        self.Bind(wx.EVT_MENU, self.OnEnableTicksLeft, id=2502)
+        self.Bind(wx.EVT_MENU, self.OnEnableTicksTop, id=2503)
+        self.Bind(wx.EVT_MENU, self.OnEnableTicksRight, id=2504)
+
+        menu.Append(250, 'Enable Ticks', submenu,
+                    'Enables the display of the ticks')
+#        self.Bind(wx.EVT_MENU, self.OnEnableTicks
+#                    , id=250)
 
         menu.Append(255, 'Enable Plot Title',
                     'Enables the plot title', kind=wx.ITEM_CHECK)
@@ -4301,16 +4449,16 @@ class TestFrame(wx.Frame):
 
     def OnEnableZoom(self, event):
         self.client.EnableZoom = event.IsChecked()
-        # TODO: fix drag checked/unchecked
-        self.mainmenu.Check(217, not event.IsChecked())
+        if self.mainmenu.IsChecked(217):
+            self.mainmenu.Check(217, False)
 
     def OnEnableGrid(self, event):
         self.client.EnableGrid = event.IsChecked()
 
     def OnEnableDrag(self, event):
         self.client.EnableDrag = event.IsChecked()
-        # TODO: fix zoom checked/unchecked
-        self.mainmenu.Check(214, not event.IsChecked())
+        if self.mainmenu.IsChecked(214):
+            self.mainmenu.Check(214, False)
 
     def OnEnableLegend(self, event):
         self.client.EnableLegend = event.IsChecked()
@@ -4327,27 +4475,101 @@ class TestFrame(wx.Frame):
     def OnEnableAxes(self, event):
         self.client.EnableAxes = event.IsChecked()
 
+    def _checkOtherAxesMenuItems(self):
+        if all(self.client.EnableAxes[:2]):
+            self.axesSubMenu.Check(2405, True)
+        else:
+            self.axesSubMenu.Check(2405, False)
+
+        if all(self.client.EnableAxes):
+            self.axesSubMenu.Check(2406, True)
+        else:
+            self.axesSubMenu.Check(2406, False)
+
     def OnEnableAxesBottom(self, event):
         old = self.client.EnableAxes
         self.client.EnableAxes = (event.IsChecked(), old[1], old[2], old[3])
+        self._checkOtherAxesMenuItems()
 
     def OnEnableAxesLeft(self, event):
         old = self.client.EnableAxes
         self.client.EnableAxes = (old[0], event.IsChecked(), old[2], old[3])
+        self._checkOtherAxesMenuItems()
 
     def OnEnableAxesTop(self, event):
         old = self.client.EnableAxes
         self.client.EnableAxes = (old[0], old[1], event.IsChecked(), old[3])
+        self._checkOtherAxesMenuItems()
 
     def OnEnableAxesRight(self, event):
         old = self.client.EnableAxes
         self.client.EnableAxes = (old[0], old[1], old[2], event.IsChecked())
+        self._checkOtherAxesMenuItems()
+
+    def OnEnableAxesBottomLeft(self, event):
+        checked = event.IsChecked()
+        old = self.client.EnableAxes
+        self.client.EnableAxes = (checked, checked, old[2], old[3])
+        self.axesSubMenu.Check(2401, checked)
+        self.axesSubMenu.Check(2402, checked)
+        self.axesSubMenu.Check(2403, old[2])
+        self.axesSubMenu.Check(2404, old[3])
+        if all(self.client.EnableAxes):
+            self.axesSubMenu.Check(2406, True)
+        else:
+            self.axesSubMenu.Check(2406, False)
+
+    def OnEnableAxesAll(self, event):
+        checked = event.IsChecked()
+        self.client.EnableAxes = (checked, checked, checked, checked)
+        for _i in range(2401, 2406):
+            self.axesSubMenu.Check(_i, checked)
 
     def OnEnableTicks(self, event):
         self.client.EnableTicks = event.IsChecked()
 
+    def OnEnableTicksBottom(self, event):
+        old = self.client.EnableTicks
+        self.client.EnableTicks = (event.IsChecked(), old[1],
+                                   old[2], old[3])
+
+    def OnEnableTicksLeft(self, event):
+        old = self.client.EnableTicks
+        self.client.EnableTicks = (old[0], event.IsChecked(),
+                                   old[2], old[3])
+
+    def OnEnableTicksTop(self, event):
+        old = self.client.EnableTicks
+        self.client.EnableTicks = (old[0], old[1],
+                                   event.IsChecked(), old[3])
+
+    def OnEnableTicksRight(self, event):
+        old = self.client.EnableTicks
+        self.client.EnableTicks = (old[0], old[1],
+                                   old[2], event.IsChecked())
+
     def OnEnableAxesValues(self, event):
         self.client.EnableAxesValues = event.IsChecked()
+
+    def OnEnableAxesValuesBottom(self, event):
+        old = self.client.EnableAxesValues
+        self.client.EnableAxesValues = (event.IsChecked(), old[1],
+                                        old[2], old[3])
+
+    def OnEnableAxesValuesLeft(self, event):
+        old = self.client.EnableAxesValues
+        self.client.EnableAxesValues = (old[0], event.IsChecked(),
+                                        old[2], old[3])
+
+    def OnEnableAxesValuesTop(self, event):
+        old = self.client.EnableAxesValues
+        self.client.EnableAxesValues = (old[0], old[1],
+                                        event.IsChecked(), old[3])
+
+    def OnEnableAxesValuesRight(self, event):
+        old = self.client.EnableAxesValues
+        self.client.EnableAxesValues = (old[0], old[1],
+                                        old[2], event.IsChecked())
 
     def OnEnablePlotTitle(self, event):
         self.client.EnablePlotTitle = event.IsChecked()
