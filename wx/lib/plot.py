@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=E1101, C0330, C0103
+#   E1101: Module X has no Y member
+#   C0330: Wrong continued indentation
+#   C0103: Invalid attribute/variable/method name
+#
 #-----------------------------------------------------------------------------
 # Name:        wx.lib.plot.py
 # Purpose:     Line, Bar and Scatter Graphs
@@ -318,7 +324,7 @@ class _DisplaySide(object):
     def __setattr__(self, name, value):
         if name not in self.valid_names:
             raise NameError("attribute must be one of {}".format(self.valid_names))
-        if not isinstance(value, bool) :
+        if not isinstance(value, bool):
             raise TypeError("'{}' must be a boolean".format(name))
         self.__dict__[name] = value
 
@@ -2411,7 +2417,7 @@ class PlotCanvas(wx.Panel):
 
         if isinstance(value, bool):
             # turns on or off all axes
-            _value = (value, value,  value, value)
+            _value = (value, value, value, value)
         elif isinstance(value, tuple):
             if len(value) == 2:
                 _value = (value[0], value[1], False, False)
@@ -2441,7 +2447,7 @@ class PlotCanvas(wx.Panel):
 
         if isinstance(value, bool):
             # turns on or off all axes
-            _value = (value, value,  value, value)
+            _value = (value, value, value, value)
         elif isinstance(value, tuple):
             if len(value) == 2:
                 _value = (value[0], value[1], False, False)
@@ -2471,7 +2477,7 @@ class PlotCanvas(wx.Panel):
 
         if isinstance(value, bool):
             # turns on or off all axes
-            _value = (value, value,  value, value)
+            _value = (value, value, value, value)
         elif isinstance(value, tuple):
             if len(value) == 2:
                 _value = (value[0], value[1], False, False)
@@ -2814,8 +2820,7 @@ class PlotCanvas(wx.Panel):
             # if wx.GCDC weren't used
             screenppi = map(float, wx.ScreenDC().GetPPI())
             ppi = dc.GetPPI()
-            self._fontScale = (screenppi[
-                               0] / ppi[0] * self._pointSize[0] + screenppi[1] / ppi[1] * self._pointSize[1]) / 2.0
+            self._fontScale = (screenppi[0] / ppi[0] * self._pointSize[0] + screenppi[1] / ppi[1] * self._pointSize[1]) / 2.0
         graphics._pointSize = self._pointSize
 
         dc.SetTextForeground(self.GetForegroundColour())
@@ -3094,8 +3099,10 @@ class PlotCanvas(wx.Panel):
                 maxX, maxY = np.maximum(self._zoomCorner1, self._zoomCorner2)
                 self.last_PointLabel = None  # reset pointLabel
                 if self.last_draw is not None:
-                    self._Draw(
-                        self.last_draw[0], xAxis=(minX, maxX), yAxis = (minY, maxY), dc = None)
+                    self._Draw(self.last_draw[0],
+                               xAxis=(minX, maxX),
+                               yAxis=(minY, maxY),
+                               dc=None)
             # else: # A box has not been drawn, zoom in on a point
             # this interfered with the double click, so I've disables it.
             #    X,Y = self._getXY(event)
