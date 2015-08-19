@@ -155,13 +155,9 @@ except:
     binaries."""
     raise ImportError("NumPy not found.\n" + msg)
 
-
+# XXX: Comment out this line to disable depreciation warnings
 warnings.simplefilter('default')
 
-#
-# Helper Decorator / Contect Manager which sets a pen back to the ogiginal
-#     state after a function.
-#
 class SavePen(object):
     """
     Decorator which saves the dc Pen before calling a function and sets the
@@ -183,6 +179,10 @@ class SavePen(object):
             prevPen = dc.GetPen()
             # edit pen here
             dc.SetPen(prevPen)
+
+    Notes:
+    ------
+    # TODO: Do I also want to save and revert the dc's brush?
 
     """
     def __init__(self, func):
@@ -217,7 +217,7 @@ class SavedPen(object):
 
     ::
 
-        with SavedPen(my_dc):
+        with SavedPen(dc):
             # do stuff
 
     """
@@ -254,7 +254,7 @@ class PendingDeprecation(object):
 
     prints the warning::
 
-        ``old_func`` is pending deprecation. Please use new_func instead.
+        `old_func` is pending deprecation. Please use new_func instead.
 
     """
     _warn_txt = "`{}` is pending deprecation. Please use {} instead."
@@ -275,6 +275,7 @@ class PendingDeprecation(object):
         return wrapper
 
     def _update_docs(self):
+        """ Set the docs to that of the decorated function. """
         self.__name__ = self.func.__name__
         self.__doc__ = self.func.__doc__
 
@@ -293,9 +294,16 @@ class _DisplaySide(object):
     - it contains type checking, only allowing boolean values
     - it contains name checking, only allowing valid_names as attributes
 
-
+    Parameters:
+    -----------
+    bottom, left, top, right : bool
+        Boolean values for a given side's display value.
 
     """
+    # TODO: Do I want to replace with __slots__?
+    #       Not much memory gain because this class is only called a small
+    #       number of times, but it would remove the need for part of
+    #       __setattr__...
     valid_names = ("bottom", "left", "right", "top")
 
     def __init__(self, bottom, left, top, right):
@@ -322,6 +330,10 @@ class _DisplaySide(object):
         return self.__str__()
 
     def __setattr__(self, name, value):
+        """
+        Override __setattr__ to implement some type checking and prevent
+        other attributes from being created.
+        """
         if name not in self.valid_names:
             raise NameError("attribute must be one of {}".format(self.valid_names))
         if not isinstance(value, bool):
@@ -335,7 +347,7 @@ class _DisplaySide(object):
         return hash(tuple(self))
 
     def __getitem__(self, key):
-        return [self.bottom, self.left, self.top, self.right][key]
+        return (self.bottom, self.left, self.top, self.right)[key]
 
     def __setitem__(self, key, value):
         if key == 0:
@@ -431,6 +443,22 @@ class PolyPoints(object):
         return data
 
     def boundingBox(self):
+        """
+        Returns the bouding box for the entire dataset as a tuple with this
+        format::
+
+            ((minX, minY), (maxX, maxY))
+
+        Parameters:
+        -----------
+        None
+
+        Returns:
+        --------
+        minXY, maxXY : numpy arrays of length 2
+            The minimum and maximum X and Y values.
+
+        """
         if len(self.points) == 0:
             # no curves to draw
             # defaults to (-1,-1) and (1,1) but axis can be set in Draw
@@ -442,6 +470,22 @@ class PolyPoints(object):
         return minXY, maxXY
 
     def scaleAndShift(self, scale=(1, 1), shift=(0, 0)):
+        """
+        Scales and shifts the data for plotting.
+
+        Parameters:
+        -----------
+        scale : tuple of floats
+            The (x_scale, y_scale) tuple to scale the data by
+
+        shift : tuple of floats
+            The (x_shift, y_shift) tuple to shift the data by.
+
+        Returns:
+        --------
+        None
+
+        """
         if len(self.points) == 0:
             # no curves to draw
             return
@@ -638,7 +682,6 @@ class PolyMarker(PolyPoints):
 
     All methods except __init__ are private.
     """
-
     _attributes = {'colour': 'black',
                    'width': 1,
                    'size': 2,
@@ -758,6 +801,110 @@ class PolyMarker(PolyPoints):
             dc.DrawLineList(lines.astype(np.int32))
 
 
+class Chart(object):
+    """
+    Base class for all plots where the X axis is discrete:
+    BarChart, ParetoChart, BoxPlot
+
+    Implements the same methods as PolyPoints, but only acts on 1 dimension
+    of data. Makes it so that no funny tricks need to be applied to the data.
+    For example, faking a bar chart by using many PolyLine objets together
+    (see _draw6Objects)
+
+    """
+    def __init__(self, data, attr):
+        self._data = np.array(data, dtype=np.float64)
+        self._logscale = False
+        self._pointSize = 1.0
+        self.currentScale = 1
+        self.currentShift = 0
+        self.scaled = self.data
+        self.attributes = {}
+        self.attributes.update(self._attributes)
+        for name, value in attr.items():
+            if name not in self._attributes.keys():
+                err_txt = "Style attribute incorrect. Should be one of {}"
+                raise KeyError(err_txt.format(self._attributes.keys()))
+            self.attributes[name] = value
+
+    @property
+    def data(self):
+        """Returns the points, adjusting for log scale if LogScale is set"""
+        if self._logscale:
+            return np.log10(self._data)
+        else:
+            return self._data
+
+    @data.setter
+    def data(self, data):
+        self._data = data
+
+    @property
+    def LogScale(self):
+        return self._logscale
+
+    @LogScale.setter
+    def LogScale(self, logscale):
+        if not isinstance(logscale, bool):
+            raise TypeError("logscale must be boolean 'True' or 'False'.")
+        self._logscscale = logscale
+
+    @PendingDeprecation("self.LogScale property")
+    def setLogScale(self, logscale):
+        self.LogScale = logscale
+
+    def boundingBox(self):
+        """Calculate the bounding box of the data"""
+        if len(self.data) == 0:
+            # no data to draw
+            # defaults to (-1,-1) and (1,1) but axis can be set in Draw
+            minXY = np.array([-1.0, -1.0])
+            maxXY = np.array([1.0, 1.0])
+        else:
+            minXY = (0, np.minimum.reduce(self.data)[1])
+            maxXY = (len(self.data), np.maximum.reduce(self.data)[1])
+        return minXY, maxXY
+
+    def scaleAndShift(self, scale=1, shift=0):
+        if len(self.data) == 0:
+            # no data to draw
+            return
+        if (scale is not self.currentScale) or (shift is not self.currentShift):
+            # update point scaling
+            self.scaled = scale * self.data + shift
+            self.currentScale = scale
+            self.currentShift = shift
+
+    def getLegend(self):
+        return self.attributes['legend']
+
+    def getClosestPoint(self, pntXY, pointScaled=True):
+        """
+        Returns the index of closest point on the curve, pointXY,
+        scaledXY, distance x, y in user coords.
+
+        if pointScaled == True, then based on screen coords
+        if pointScaled == False, then based on user coords
+        """
+        pass
+        if pointScaled:
+            # Using screen coords
+            p = self.scaled
+            pxy = self.currentScale * np.array(pntXY) + self.currentShift
+        else:
+            # Using user coords
+            p = self.points
+            pxy = np.array(pntXY)
+        # determine distance for each point
+        d = np.sqrt(np.add.reduce((p - pxy) ** 2, 1))  # sqrt(dx^2+dy^2)
+        pntIndex = np.argmin(d)
+        dist = d[pntIndex]
+        return [pntIndex,
+                self.points[pntIndex],
+                self.scaled[pntIndex] / self._pointSize,
+                dist]
+
+
 class BoxPlot(PolyPoints):
     """
     Class to contain box plots
@@ -773,7 +920,7 @@ class BoxPlot(PolyPoints):
     + [ ] change the X axis to some labels.
     + [x] Add getLegend method
           - Not Needed since we inherit from PolyPoints
-    + [?] Add getClosestPoint method - links to box plot or outliers
+    + [x] Add getClosestPoint method - links to box plot or outliers
           - Current method works and hits every point. Is that good enough?
     + [ ] Add customization
           - [ ] Pens and Fills for elements
@@ -789,21 +936,22 @@ class BoxPlot(PolyPoints):
                    'size': 5,
                    }
 
-    def __init__(self, points, pos=1, **attr):
+    def __init__(self, points, **attr):
         """
         :param data: 1D data to plot.
 
         """
         self.box_width = 0.5
-        self.xpos = pos
 
-        # need to make the data a 2D array for all the override methods
-        # such as boundingBox and scaleAndShift
+        self.xpos = points[0, 0]
+        points = points[:, 1]
+
+        self._bpdata = self.calcBpData(points)
+        self._outliers = self.calcOutliers(points)
+        points = np.concatenate((self._bpdata, self._outliers))
         points = np.array([(self.xpos, x) for x in points])
 
-
         PolyPoints.__init__(self, points, attr)
-        self._bpdata = self.calcBpData()
 
     def boundingBox(self):
         """
@@ -811,8 +959,10 @@ class BoxPlot(PolyPoints):
 
         Override method.
         """
-        minXY = np.array([self.xpos - self.box_width / 2, self._bpdata.min * 0.95])
-        maxXY = np.array([self.xpos + self.box_width / 2, self._bpdata.max * 1.05])
+        xpos = self.xpos
+
+        minXY = np.array([xpos - self.box_width / 2, self._bpdata.min * 0.95])
+        maxXY = np.array([xpos + self.box_width / 2, self._bpdata.max * 1.05])
         return minXY, maxXY
 
     # XXX: Parent method seems works just fine
@@ -820,13 +970,44 @@ class BoxPlot(PolyPoints):
 #        pass
 
     # TODO: create different override method?
-#    def getClosestPoint(self, pntXY, pointScaled=True):
-#        pass
+    def getClosestPoint(self, pntXY, pointScaled=True):
+        """
+        Returns the index of closest point on the curve, pointXY,
+        scaledXY, distance x, y in user coords.
 
-#    def getSymExtent(self, printerScale):
-#        """Width and Height of Marker"""
-#        s = 5 * self.attributes['size'] * printerScale * 1
-#        return (s, s)
+        if pointScaled == True, then based on screen coords
+        if pointScaled == False, then based on user coords
+        """
+
+        xpos = self.xpos
+
+        # combine the outliers with the box plot data
+        data_to_use = np.concatenate((self._bpdata, self._outliers))
+        data_to_use = np.array([(xpos, x) for x in data_to_use])
+
+        if pointScaled:
+            # Use screen coords
+            p = self.scaled
+            pxy =  self.currentScale * np.array(pntXY) + self.currentShift
+        else:
+            # Using user coords
+            p = self._points
+            pxy = np.array(pntXY)
+
+        # determine distnace for each point
+        d = np.sqrt(np.add.reduce((p - pxy) ** 2, 1))  # sqrt(dx^2+dy^2)
+        pntIndex = np.argmin(d)
+        dist = d[pntIndex]
+        return [pntIndex,
+                self.points[pntIndex],
+                self.scaled[pntIndex] / self._pointSize,
+                dist]
+
+    def getSymExtent(self, printerScale):
+        """Width and Height of Marker"""
+        h = self.attributes['width'] * printerScale * self._pointSize[0]
+        w = 5 * h
+        return (w, h)
 
     def calcBpData(self, data=None):
         """
@@ -857,7 +1038,7 @@ class BoxPlot(PolyPoints):
 
         """
         if data is None:
-            data = self.points[:, 1]
+            data = self.points
 
         min_data = float(np.min(data))
         max_data = float(np.max(data))
@@ -878,6 +1059,19 @@ class BoxPlot(PolyPoints):
                         q75, high_whisker, max_data)
 
         return bpdata
+
+    def calcOutliers(self, data=None):
+        """
+        Calculates the outliers. Must be called after calcBpData.
+        """
+        if data is None:
+            data = self.points
+
+        outliers = data
+        outlier_bool = np.logical_or(outliers > self._bpdata.high_whisker,
+                                     outliers < self._bpdata.low_whisker)
+        outliers = outliers[outlier_bool]
+        return outliers
 
     def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
         """same as override method, but retuns a value."""
@@ -904,14 +1098,14 @@ class BoxPlot(PolyPoints):
 
         Other than that, the draw order can be changed.
         """
-        self._draw_whisker(dc, printerScale, coord)
-        self._draw_iqr_box(dc, printerScale, coord)
-        self._draw_median(dc, printerScale, coord)     # median after box
-        self._draw_whisker_ends(dc, printerScale, coord)
-        self._draw_outliers(dc, printerScale, coord)
+        self._draw_whisker(dc, printerScale)
+        self._draw_iqr_box(dc, printerScale)
+        self._draw_median(dc, printerScale)     # median after box
+        self._draw_whisker_ends(dc, printerScale)
+        self._draw_outliers(dc, printerScale)
 
     @SavePen
-    def _draw_whisker(self, dc, printerScale, coord=None):
+    def _draw_whisker(self, dc, printerScale):
         """Draws the whiskers as a single line"""
         xpos = self.xpos
 
@@ -929,7 +1123,7 @@ class BoxPlot(PolyPoints):
         dc.DrawLines(whisker_line)
 
     @SavePen
-    def _draw_iqr_box(self, dc, printerScale, coord=None):
+    def _draw_iqr_box(self, dc, printerScale):
         """Draws the Inner Quartile Range box"""
         xpos = self.xpos
         box_w = self.box_width
@@ -972,7 +1166,7 @@ class BoxPlot(PolyPoints):
         dc.DrawLines(median_line)
 
     @SavePen
-    def _draw_whisker_ends(self, dc, printerScale, coord=None):
+    def _draw_whisker_ends(self, dc, printerScale):
         """Draws the end caps of the whiskers"""
         xpos = self.xpos
         fence_top = np.array([[xpos - self.box_width * 0.2, self._bpdata.high_whisker],
@@ -995,136 +1189,33 @@ class BoxPlot(PolyPoints):
         dc.DrawLines(fence_bottom)
 
     @SavePen
-    def _draw_outliers(self, dc, printerScale, coord=None):
+    def _draw_outliers(self, dc, printerScale):
         """Draws dots for the outliers"""
-        # First figure out which points are outliers
-        outliers = self.points[:, 1]
-        outlier_bool = np.logical_or(outliers > self._bpdata.high_whisker,
-                                     outliers < self._bpdata.low_whisker)
-        outliers = outliers[outlier_bool]
+        xpos = self.xpos
 
-        # Then create a jitter.
+        # Set the pen
+        outlier_pen = wx.Pen(wx.BLUE, 5, wx.PENSTYLE_SOLID)
+        dc.SetPen(outlier_pen)
+
+        outliers = self._outliers
+
+        # Create a jitter.
         # TODO: jitter should not be recalculated on each redraw.
-        jitter = 0.05 * np.random.random_sample(len(outliers)) + self.xpos - 0.025
+        jitter = 0.05 * np.random.random_sample(len(outliers)) + xpos - 0.025
 
+        # Scale the data for plotting
         pt_data = np.array([jitter, outliers]).T
         pt_data = self._scaleAndShift(pt_data,
                                       self.currentScale,
                                       self.currentShift)
 
-        outlier_pen = wx.Pen(wx.BLUE, 5, wx.PENSTYLE_SOLID)
-        dc.SetPen(outlier_pen)
-
+        # Draw the outliers
         size = 0.5
         fact = 2.5 * size
         wh = 5.0 * size
         rect = np.zeros((len(pt_data), 4), np.float) + [0.0, 0.0, wh, wh]
         rect[:, 0:2] = pt_data - [fact, fact]
         dc.DrawRectangleList(rect.astype(np.int32))
-
-
-#class Chart(object):
-#    """
-#    Base class for all plots where the X axis is discrete:
-#    BarChart, ParetoChart, BoxPlot
-#
-#    Implements the same methods as PolyPoints, but only acts on 1 dimension
-#    of data. Makes it so that no funny tricks need to be applied to the data.
-#    For example, faking a bar chart by using many PolyLine objets together
-#    (see _draw6Objects)
-#
-#    """
-#    def __init__(self, data, attr):
-#        self._data = np.array(data, dtype=np.float64)
-#        self._logscale = False
-#        self._pointSize = 1.0
-#        self.currentScale = 1
-#        self.currentShift = 0
-#        self.scaled = self.data
-#        self.attributes = {}
-#        self.attributes.update(self._attributes)
-#        for name, value in attr.items():
-#            if name not in self._attributes.keys():
-#                err_txt = "Style attribute incorrect. Should be one of {}"
-#                raise KeyError(err_txt.format(self._attributes.keys()))
-#            self.attributes[name] = value
-#
-#    @property
-#    def data(self):
-#        """Returns the points, adjusting for log scale if LogScale is set"""
-#        if self._logscale:
-#            return np.log10(self._data)
-#        else:
-#            return self._data
-#
-#    @data.setter
-#    def data(self, data):
-#        self._data = data
-#
-#    @property
-#    def LogScale(self):
-#        return self._logscale
-#
-#    @LogScale.setter
-#    def LogScale(self, logscale):
-#        if not isinstance(logscale, bool):
-#            raise TypeError("logscale must be boolean 'True' or 'False'.")
-#        self._logscscale = logscale
-#
-#    @PendingDeprecation("self.LogScale property")
-#    def setLogScale(self, logscale):
-#        self.LogScale = logscale
-#
-#    def boundingBox(self):
-#        """Calculate the bounding box of the data"""
-#        if len(self.data) == 0:
-#            # no data to draw
-#            # defaults to (-1,-1) and (1,1) but axis can be set in Draw
-#            minXY = np.array([-1.0, -1.0])
-#            maxXY = np.array([1.0, 1.0])
-#        else:
-#            minXY = (0, np.minimum.reduce(self.data)[1])
-#            maxXY = (len(data), np.maximum.reduce(self.data)[1])
-#        return minXY, maxXY
-#
-#    def scaleAndShift(self, scale=1, shift=0):
-#        if len(self.data) == 0:
-#            # no data to draw
-#            return
-#        if (scale is not self.currentScale) or (shift is not self.currentShift):
-#            # update point scaling
-#            self.scaled = scale * self.data + shift
-#            self.currentScale = scale
-#            self.currentShift = shift
-#
-#    def getLegend(self):
-#        return self.attributes['legend']
-#
-#    def getClosestPoint(self, pntXY, pointScaled=True):
-#        """
-#        Returns the index of closest point on the curve, pointXY,
-#        scaledXY, distance x, y in user coords.
-#
-#        if pointScaled == True, then based on screen coords
-#        if pointScaled == False, then based on user coords
-#        """
-#        pass
-#        if pointScaled:
-#            # Using screen coords
-#            p = self.scaled
-#            pxy = self.currentScale * np.array(pntXY) + self.currentShift
-#        else:
-#            # Using user coords
-#            p = self.points
-#            pxy = np.array(pntXY)
-#        # determine distance for each point
-#        d = np.sqrt(np.add.reduce((p - pxy) ** 2, 1))  # sqrt(dx^2+dy^2)
-#        pntIndex = np.argmin(d)
-#        dist = d[pntIndex]
-#        return [pntIndex,
-#                self.points[pntIndex],
-#                self.scaled[pntIndex] / self._pointSize,
-#                dist]
 
 
 #class BoxPlot_(Chart):
@@ -2759,12 +2850,13 @@ class PlotCanvas(wx.Panel):
         graphics.LogScale = self.LogScale
 
         # check Axis is either tuple or none
+        err_txt = "xAxis should be None or (minX, maxX). Got type `{}`."
         if type(xAxis) not in [type(None), tuple]:
-            raise TypeError(
-                "xAxis should be None or (minX,maxX)" + str(type(xAxis)))
+            raise TypeError(err_txt .format(type(xAxis)))
+
+        err_txt = "yAxis should be None or (minY, maxY). Got type `{}`."
         if type(yAxis) not in [type(None), tuple]:
-            raise TypeError(
-                "yAxis should be None or (minY,maxY)" + str(type(xAxis)))
+            raise TypeError(err_txt.format(type(yAxis)))
 
         # check case for axis = (a,b) where a==b caused by improper zooms
         if xAxis is not None:
@@ -2812,6 +2904,7 @@ class PlotCanvas(wx.Panel):
         elif self._pointSize != (1.0, 1.0):
             self._pointSize = (1.0, 1.0)
             self._setSize()
+        # TODO: clean up if statement
         if (sys.platform in ("darwin", "win32") or not isinstance(dc, wx.GCDC) or wx.VERSION >= (2, 9)):
             self._fontScale = sum(self._pointSize) / 2.0
         else:
@@ -2820,6 +2913,7 @@ class PlotCanvas(wx.Panel):
             # if wx.GCDC weren't used
             screenppi = map(float, wx.ScreenDC().GetPPI())
             ppi = dc.GetPPI()
+            # TODO: clean up math
             self._fontScale = (screenppi[0] / ppi[0] * self._pointSize[0] + screenppi[1] / ppi[1] * self._pointSize[1]) / 2.0
         graphics._pointSize = self._pointSize
 
@@ -4057,13 +4151,20 @@ def _draw8Objects():
     """
     Box plot
     """
-    data = np.array([912, 337, 607, 583, 512, 531, 558, 381, 621, 574,
+    data1 = np.array([912, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                      538, 577, 679, 415, 454, 417, 635, 319, 350, 183,
                      863, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                      538, 577, 679, 415, 454, 417, 635, 319, 350, 97])
+    data2 = np.array([912, 337, 607, 583, 512, 531, 558, 381, 621, 574,
+                      538, 532, 829, 82, 454, 417, 635, 319, 350, 183,
+                      863, 337, 607, 583, 512, 531, 558, 866, 621, 574,
+                      538, 577, 679, 415, 326, 417, 635, 319, 350, 97])
 
-    boxplot = BoxPlot(data, 1, legend="A")
-    boxplot2 = BoxPlot(data, 2, legend="B")
+    data1 = np.array([(0, x) for x in data1])
+    data2 = np.array([(1, x) for x in data2])
+
+    boxplot = BoxPlot(data1, legend="Weights")
+    boxplot2 = BoxPlot(data2, legend="Heights")
     return PlotGraphics([boxplot, boxplot2],
                         "Box Plot",
                         "",
