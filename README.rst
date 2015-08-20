@@ -33,7 +33,7 @@ provided by the build.py script. There is also a setup.py script available
 for those who are used to the standard distutils or setuptools types of
 builds. The setup.py script assumes that all of the code generation steps
 have already been performed, and so it is suitable for use when building from
-a source snapshot tarball or when using easy_install or pip. The seup.py
+a source snapshot tarball or when using easy_install or pip. The setup.py
 script will delegate to build.py for the actual build, and build.py will
 delegate to setup.py when doing setuptoolsy things like performing an install
 or building an egg.
