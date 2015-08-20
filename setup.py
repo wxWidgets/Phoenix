@@ -47,7 +47,7 @@ PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,awesome"
 
 LONG_DESCRIPTION = """\
-wxPython_Phoenix is a is a new implementation of wxPython focused on
+wxPython_Phoenix is a new implementation of wxPython focused on
 improving speed, maintainability and extensibility. Just like "Classic"
 wxPython it wraps the wxWidgets C++ toolkit and provides access to the user
 interface portions of the wx API, enabling Python applications to have a GUI
