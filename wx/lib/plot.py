@@ -139,6 +139,22 @@ Zooming controls with mouse (when enabled):
     Left mouse drag - Zoom box.
     Left mouse double click - reset zoom.
     Right mouse click - zoom out centred on click location.
+
+
+Major Addtions - Douglas Thor, August 2015 (doug.thor@gmail.com)
+
+- Most items are now allow custom pens (color, width, linestyle)
+- Added 'drawstyle' option to PolyLine that mimics MatPlotLib's
+  Line2dD.drawstyle option.
+- Added properties to replace getters/setters.
+- All getters and setters now have deprecation warnings
+- Fixed python3 FutureWarning for instances of 'x == None' (replaced with
+  'x is None')
+- Documentation updates
+- Added Box Plot
+- Added contect manager and decorator that gets and resets the pen before
+  and after a function call
+- updated demo for new features
 """
 __docformat__ = "restructuredtext en"
 
@@ -405,10 +421,22 @@ class PolyPoints(object):
 
     @LogScale.setter
     def LogScale(self, logscale):
+        """
+        Set to change the axes to plot Log10(values)
+
+        Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
+        """
+        if not isinstance(logscale, tuple) and len(logscale) == 2:
+            raise ValueError("`logscale` must be a 2-tuple of bools")
         self._logscale = logscale
 
     @PendingDeprecation("self.LogScale property")
     def setLogScale(self, logscale):
+        """
+        Set to change the axes to plot Log10(values)
+
+        Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
+        """
         self._logscale = logscale
 
     @property
@@ -416,8 +444,15 @@ class PolyPoints(object):
         return self._absScale
 
     @AbsScale.setter
-    def AbsScale(self, value):
-        self._absScale = value
+    def AbsScale(self, absscale):
+        """
+        Set to change the axes to plot Abs(values)
+
+        Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
+        """
+        if not isinstance(absscale, tuple) and len(absscale) == 2:
+            raise ValueError("`absscale` must be a 2-tuple of bools")
+        self._absScale = absscale
 
     @property
     def points(self):
@@ -446,6 +481,7 @@ class PolyPoints(object):
         self._points = points
 
     def _log10(self, data, index):
+        """ Take the Log10 of the data, dropping any negative values """
         data = np.compress(data[:, index] > 0, data, 0)
         data[:, index] = np.log10(data[:, index])
         return data
@@ -546,6 +582,8 @@ class PolyLine(PolyPoints):
                    'legend': '',
                    'drawstyle': 'line',
                    }
+    _drawstyles = ("line", "steps-pre", "steps-post",
+                   "steps-mid-x", "steps-mid-y")
 
     def __init__(self, points, **attr):
         """
@@ -582,6 +620,7 @@ class PolyLine(PolyPoints):
         PolyPoints.__init__(self, points, attr)
 
     def draw(self, dc, printerScale, coord=None):
+        """ Draw the lines """
         colour = self.attributes['colour']
         width = self.attributes['width'] * printerScale * self._pointSize[0]
         style = self.attributes['style']
@@ -594,11 +633,8 @@ class PolyLine(PolyPoints):
         dc.SetPen(pen)
         if coord is None:
             if len(self.scaled):  # bugfix for Mac OS X
-                if drawstyle != 'line':
-                    for c1, c2 in zip(self.scaled, self.scaled[1:]):
-                        self.path(dc, c1, c2, drawstyle)
-                else:
-                    dc.DrawLines(self.scaled)
+                for c1, c2 in zip(self.scaled, self.scaled[1:]):
+                    self.path(dc, c1, c2, drawstyle)
         else:
             dc.DrawLines(coord)  # draw legend line
 
@@ -608,32 +644,34 @@ class PolyLine(PolyPoints):
         w = 5 * h
         return (w, h)
 
-    # TODO: possibly rename?
     def path(self, dc, coord1, coord2, drawstyle):
         """ calculates the path from coord1 to coord 2 along X and Y """
-
-        if drawstyle == 'steps-pre':
-            # Y first, then X
+        if drawstyle == 'line':
+            # Straight line between points.
+            line = [coord1, coord2]
+        elif drawstyle == 'steps-pre':
+            # Up/down to next Y, then right to next X
             intermediate = [coord1[0], coord2[1]]
             line = [coord1, intermediate, coord2]
         elif drawstyle == 'steps-post':
+            # Right to next X, then up/down to Y
             intermediate = [coord2[0], coord1[1]]
             line = [coord1, intermediate, coord2]
         elif drawstyle == 'steps-mid-x':
-            # need 3 lines between points.
+            # need 3 lines between points: right -> up/down -> right
             mid_x = ((coord2[0] - coord1[0]) / 2) + coord1[0]
             intermediate1 = [mid_x, coord1[1]]
             intermediate2 = [mid_x, coord2[1]]
             line = [coord1, intermediate1, intermediate2, coord2]
         elif drawstyle == 'steps-mid-y':
-            # need 3 lines between points
+            # need 3 lines between points: up/down -> right -> up/down
             mid_y = ((coord2[1] - coord1[1]) / 2) + coord1[1]
             intermediate1 = [coord1[0], mid_y]
             intermediate2 = [coord2[0], mid_y]
             line = [coord1, intermediate1, intermediate2, coord2]
         else:
-            # just draw a line between all the points.
-            raise ValueError("Invalid line spec")
+            err_txt = "Invalid drawstyle '{}'. Must be one of {}."
+            raise ValueError(err_txt.format(drawstyle, self._drawstyles))
 
         dc.DrawLines(line)
 
@@ -669,6 +707,7 @@ class PolySpline(PolyLine):
         PolyLine.__init__(self, points, **attr)
 
     def draw(self, dc, printerScale, coord=None):
+        """ Draw the spline """
         colour = self.attributes['colour']
         width = self.attributes['width'] * printerScale * self._pointSize[0]
         style = self.attributes['style']
@@ -731,6 +770,7 @@ class PolyMarker(PolyPoints):
         PolyPoints.__init__(self, points, attr)
 
     def draw(self, dc, printerScale, coord=None):
+        """ Draw the points """
         colour = self.attributes['colour']
         width = self.attributes['width'] * printerScale * self._pointSize[0]
         size = self.attributes['size'] * printerScale * self._pointSize[0]
@@ -818,7 +858,7 @@ class BoxPlot(PolyPoints):
     TODO:
     -----
     + [x] Separate out each draw into individual methods
-    + [ ] Fix the median line extending outside of the box on the right
+    + [x] Fix the median line extending outside of the box on the right
     + [x] Allow for multiple box plots side-by-side
           - It's a hack, but it works.
     + [ ] change the X axis to some labels.
@@ -830,6 +870,7 @@ class BoxPlot(PolyPoints):
           - [ ] Pens and Fills for elements
           - [ ] outlier shapes(?) and sizes
           - [ ] box width
+    + [ ] Get log-y working
 
     """
     _attributes = {'colour': 'black',
@@ -869,15 +910,12 @@ class BoxPlot(PolyPoints):
         maxXY = np.array([xpos + self.box_width / 2, self._bpdata.max * 1.05])
         return minXY, maxXY
 
-    # XXX: Parent method seems works just fine
-#    def scaleAndShift(self, scale=(1, 1), shift=(0, 0)):
-#        pass
-
-    # TODO: create different override method?
     def getClosestPoint(self, pntXY, pointScaled=True):
         """
         Returns the index of closest point on the curve, pointXY,
         scaledXY, distance x, y in user coords.
+
+        Override method.
 
         if pointScaled == True, then based on screen coords
         if pointScaled == False, then based on user coords
@@ -892,7 +930,7 @@ class BoxPlot(PolyPoints):
         if pointScaled:
             # Use screen coords
             p = self.scaled
-            pxy =  self.currentScale * np.array(pntXY) + self.currentShift
+            pxy = self.currentScale * np.array(pntXY) + self.currentShift
         else:
             # Using user coords
             p = self._points
@@ -909,6 +947,7 @@ class BoxPlot(PolyPoints):
 
     def getSymExtent(self, printerScale):
         """Width and Height of Marker"""
+        # TODO: does this need to be updated?
         h = self.attributes['width'] * printerScale * self._pointSize[0]
         w = 5 * h
         return (w, h)
@@ -1160,7 +1199,7 @@ class PlotGraphics(object):
 
     @LogScale.setter
     def LogScale(self, logscale):
-        if not isinstance(logscale, tuple):
+        if not isinstance(logscale, tuple) and len(logscale) != 2:
             raise TypeError("logscale must be a 2-tuple of bools")
         if len(self.objects) == 0:
             return
@@ -1169,13 +1208,7 @@ class PlotGraphics(object):
 
     @PendingDeprecation("self.LogScale property")
     def setLogScale(self, logscale):
-        if type(logscale) != tuple:
-            raise TypeError(
-                'logscale must be a tuple of bools, e.g. (False, False)')
-        if len(self.objects) == 0:
-            return
-        for o in self.objects:
-            o.LogScale = logscale
+        self.LogScale = logscale
 
     @property
     def AbsScale(self):
@@ -1382,11 +1415,7 @@ class PlotCanvas(wx.Panel):
         self._sb_xunit = 0
         self._sb_yunit = 0
 
-        self._dragEnabled = False
         self._screenCoordinates = np.array([0.0, 0.0])
-
-        self._logscale = (False, False)
-        self._absScale = (False, False)
 
         # Zooming variables
         self._zoomInFactor = 0.5
@@ -1402,7 +1431,12 @@ class PlotCanvas(wx.Panel):
         self._pointShift = 0
         self._xSpec = 'auto'
         self._ySpec = 'auto'
-        self._gridEnabled = True
+
+        # Initial Plot Options
+        self._dragEnabled = False
+        self._logscale = (False, False)
+        self._absScale = (False, False)
+        self._gridEnabled = (True, True)
         self._legendEnabled = False
         self._titleEnabled = True
         self._xAxisLabelEnabled = True
@@ -1411,7 +1445,6 @@ class PlotCanvas(wx.Panel):
         self._centerLinesEnabled = False
         self._diagonalsEnabled = False
         self._ticksEnabled = _DisplaySide(False, False, False, False)
-        self._axesEnabled = True
         self._axesEnabled = _DisplaySide(True, True, True, True)
         self._axesValuesEnabled = _DisplaySide(True, True, False, False)
 
@@ -1446,8 +1479,7 @@ class PlotCanvas(wx.Panel):
         # platforms at initialization, but little harm done.
         self.OnSize(None)  # sets the initial size based on client size
 
-        # default styles and colors
-        self._gridColour = wx.BLACK
+        # Default Pens
         self._gridPen = wx.Pen(wx.Colour(180, 180, 180, 255),
                                self._pointSize[0],
                                wx.PENSTYLE_DOT)
@@ -1459,17 +1491,11 @@ class PlotCanvas(wx.Panel):
         self._axesPen = wx.Pen(wx.BLACK,
                                self._pointSize[0],
                                wx.PENSTYLE_SOLID)
-        # TODO: different name for _axesLocation?
-        # TODO: different API for _axesLocation?
-        self._axesLocation = (1, 1, 1, 1)    # (Bottom, Left, Top, Right)
 
         self._tickPen = wx.Pen(wx.BLACK,
                                self._pointSize[0],
                                wx.PENSTYLE_SOLID)
         self._tickLength = tuple(x * 3 for x in self._pointSize)
-        # TODO: different name for _tickLocation?
-        # TODO: different API for _tickLocation?
-        self._tickLocation = (1, 1, 1, 1)    # (Bottom, Left, Top, Right)
 
         self._diagonalPen = wx.Pen(wx.BLUE,
                                    self._pointSize[0],
@@ -1478,7 +1504,7 @@ class PlotCanvas(wx.Panel):
     def SetCursor(self, cursor):
         self.canvas.SetCursor(cursor)
 
-    ### Plot Attribute Getters/Setters
+    ### Pen Properties
     @property
     def GridPen(self):
         """Gets the grid's wx.Pen"""
@@ -1490,34 +1516,16 @@ class PlotCanvas(wx.Panel):
             raise TypeError("pen must be an instance of wx.Pen")
         self._gridPen = pen
 
-    @PendingDeprecation("self.GridPen property")
-    def GetGridPen(self):
-        return self.GridPen
-
-    @PendingDeprecation("self.GridPen property")
-    def SetGridPen(self, pen):
-        self.GridPen = pen
-
-    @PendingDeprecation("self.GridPen.GetColour()")
-    def GetGridColour(self):
-        """Returns the grid colour."""
-        return self.GridColour
-
-    @PendingDeprecation("self.GridPen.SetColour()")
-    def SetGridColour(self, colour):
-        self.GridColour = colour
-
     @property
-    def GridColour(self):
-        return self._gridColour
+    def DiagonalPen(self):
+        """Gets the diagonal wx.Pen"""
+        return self._diagonalPen
 
-    @GridColour.setter
-    def GridColour(self, colour):
-        """Sets the grid colour. `colour` must be a valid wx.Colour"""
-        if isinstance(colour, wx.Colour):
-            self._gridColour = colour
-        else:
-            self._gridColour = wx.Colour(colour)
+    @DiagonalPen.setter
+    def DiagonalPen(self, pen):
+        if not isinstance(pen, wx.Pen):
+            raise TypeError("pen must be an instance of wx.Pen")
+        self._diagonalPen = pen
 
     @property
     def CenterLinePen(self):
@@ -1542,48 +1550,6 @@ class PlotCanvas(wx.Panel):
         self._axesPen = pen
 
     @property
-    def AxesLocation(self):
-        """
-        Returns the axes locations.
-
-        Returns a 4-tuple of values in the format: (bottom, left, top, right)
-
-        Example:
-        --------
-        >>> self.GetAxesLocation()
-        (1, 1, 0, 0)        # only bottom and left axes are displayed
-        """
-        return self._axesLocation
-
-    @AxesLocation.setter
-    def AxesLocation(self, value):
-        """
-        Sets the axes location.
-
-        `value` must be a 4-tuple of binary (0 or 1) values:
-
-        Tuple has the following format: (bottom, left, top, right)
-
-        Example:
-        --------
-        # turn on bottom and top axes, turn off left and right:
-        >>> self.SetAxesLocation((1, 0, 1, 0))
-
-        # turns on all axes:
-        >>> self.SetAxesLocation((1, 1, 1, 1))
-        """
-        # TODO: come up with better API.
-        #       I don't like this API very much. Perhaps arbitrary length args?
-        #       that way, SAL(1) = bottom, all others unchanged
-        #                 SAL(1, 1) = bottom and left on, others unchanged
-        #                 SAL(0, 1) = bottom off, left on, others unchanged
-        #                 SAL(_, 1, _, 1) = turn on left and right, leave
-        #                                   bottom and top unchanged
-        if len(value) != 4:
-            raise ValueError("Value must be lenght 4")
-        self._axesLocation = value
-
-    @property
     def TickPen(self):
         """Gets the tick mark wx.Pen"""
         return self._tickPen
@@ -1602,67 +1568,9 @@ class PlotCanvas(wx.Panel):
     @TickLength.setter
     def TickLength(self, length):
         """Set the tick legnth. Value must be int or float."""
-        if isinstance(length, (int, float)):
-            self._tickWidth = length
-        else:
+        if not isinstance(length, (int, float)):
             raise TypeError("`length` must be an integer or float")
-
-    @property
-    def TickLocation(self):
-        """
-        Returns the tick locations.
-
-        Returns a 4-tuple of values in the format: (bottom, left, top, right)
-
-        Example:
-        --------
-        >>> self.GetTickLocation()
-        (1, 1, 0, 0)        # only bottom and left ticks are displayed
-
-        """
-        return self._axesLocation
-
-    @TickLocation.setter
-    def TickLocation(self, value):
-        """
-        Sets the tick location.
-
-        `value` must be a 4-tuple of binary (0 or 1) values:
-
-        Tuple has the following format: (bottom, left, top, right)
-
-        Example:
-        --------
-        # turn on bottom and top ticks, turn off left and right:
-        >>> self.SetTickLocation((1, 0, 1, 0))
-
-        # turns on all ticks:
-        >>> self.SetTickLocation((1, 1, 1, 1))
-
-        """
-        # TODO: come up with better API.
-        #       I don't like this API very much. Perhaps arbitrary length args?
-        #       that way, STL(1) = bottom, all others unchanged
-        #                 STL(1, 1) = bottom and left on, others unchanged
-        #                 STL(0, 1) = bottom off, left on, others unchanged
-        #                 STL(_, 1, _, 1) = turn on left and right, leave
-        #                                   bottom and top unchanged
-        if len(value) != 4:
-            raise ValueError("Value must be lenght 4")
-        self._tickLocation = value
-
-    @property
-    def DiagonalPen(self):
-        """Gets the diagonal wx.Pen"""
-        return self._diagonalPen
-
-    @DiagonalPen.setter
-    def DiagonalPen(self, pen):
-        if not isinstance(pen, wx.Pen):
-            raise TypeError("pen must be an instance of wx.Pen")
-        self._diagonalPen = pen
-
-    ### End Plot Attributes
+        self._tickWidth = length
 
     # SaveFile
     def SaveFile(self, fileName=''):
@@ -1852,28 +1760,34 @@ class PlotCanvas(wx.Panel):
 
     @property
     def FontSizeAxis(self):
+        """Get current tick and axis label font size in points"""
         return self._fontSizeAxis
 
     @FontSizeAxis.setter
     def FontSizeAxis(self, value):
+        """Set the tick and axis label font size (default is 10 point)"""
         self._fontSizeAxis = value
 
     @PendingDeprecation("self.FontSizeTitle property")
     def SetFontSizeTitle(self, point=15):
         """Set Title font size (default is 15 point)"""
-        self._fontSizeTitle = point
+#        self._fontSizeTitle = point
+        self.FontSizeTitle = point
 
     @PendingDeprecation("self.FontSizeTitle property")
     def GetFontSizeTitle(self):
         """Get current Title font size in points"""
-        return self._fontSizeTitle
+#        return self._fontSizeTitle
+        return self.FontSizeTitle
 
     @property
     def FontSizeTitle(self):
+        """Get current Title font size in points"""
         return self._fontSizeTitle
 
     @FontSizeTitle.setter
     def FontSizeTitle(self, pointsize):
+        """Set Title font size (default is 15 point)"""
         self._fontSizeTitle = pointsize
 
     @PendingDeprecation("self.FontSizeLegend property")
@@ -1909,9 +1823,10 @@ class PlotCanvas(wx.Panel):
     @ShowScrollbars.setter
     def ShowScrollbars(self, value):
         """Set True to show scrollbars"""
-        if value not in [True, False]:
+        if not isinstance(value, bool):
             raise TypeError("Value should be True or False")
         if value == self.ShowScrollbars:
+            # no change, so don't do anything
             return
         self.sb_vert.Show(value)
         self.sb_hor.Show(value)
@@ -1921,7 +1836,7 @@ class PlotCanvas(wx.Panel):
     def SetUseScientificNotation(self, useScientificNotation):
         self.UseScientificNotation = useScientificNotation
 
-    @PendingDeprecation("self.UseSchientificNotation property")
+    @PendingDeprecation("self.UseScientificNotation property")
     def GetUseScientificNotation(self):
         return self.UseScientificNotation
 
@@ -1984,8 +1899,8 @@ class PlotCanvas(wx.Panel):
     @EnableDrag.setter
     def EnableDrag(self, value):
         """Set True to enable drag."""
-        if value not in [True, False]:
-            raise TypeError("Value should be True or False")
+        if not isinstance(value, bool):
+            raise TypeError("Value must be a bool.")
         if value:
             if self.EnableZoom:
                 self.EnableZoom = False
@@ -2010,8 +1925,8 @@ class PlotCanvas(wx.Panel):
     @EnableZoom.setter
     def EnableZoom(self, value):
         """Set True to enable zooming."""
-        if value not in [True, False]:
-            raise TypeError("Value should be True or False")
+        if not isinstance(value, bool):
+            raise TypeError("Value must be a bool.")
         if value:
             if self.EnableDrag:
                 self.EnableDrag = False
@@ -2035,10 +1950,24 @@ class PlotCanvas(wx.Panel):
 
     @EnableGrid.setter
     def EnableGrid(self, value):
-        """Set True, 'Horizontal' or 'Vertical' to enable grid."""
-        if value not in [True, False, 'Horizontal', 'Vertical']:
-            raise TypeError(
-                "Value should be True, False, Horizontal or Vertical")
+        """
+        Set to enable grid.
+
+        value must be a bool or 2-tuple of bools: (x_grid_bool, y_grid_bool)
+
+        If Value is a bool, then both X and Y grids are turned on/off
+
+        x_grid_bool: Tf True, gridlines in the vertical direction are shown.
+        y_grid_bool: If True, gridlines in the horizontal direction are shown.
+        """
+        if isinstance(value, bool):
+            value = (value, value)
+        elif isinstance(value, tuple) and len(value) == 2:
+            pass
+        else:
+            err_txt = "Value must be a bool or 2-tuple of bool."
+            raise TypeError(err_txt)
+
         self._gridEnabled = value
         self.Redraw()
 
@@ -2048,7 +1977,7 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.EnableCenterLines property")
     def GetEnableCenterLines(self):
-        """True if grid enabled."""
+        """True if Centerlines are enabled."""
         return self.EnableCenterLines
 
     @property
@@ -2070,7 +1999,7 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.EnableDiagonals property")
     def GetEnableDiagonals(self):
-        """True if grid enabled."""
+        """True if Diagonals enabled."""
         return self.EnableDiagonals
 
     @property
@@ -2126,8 +2055,8 @@ class PlotCanvas(wx.Panel):
     @EnableTitle.setter
     def EnableTitle(self, value):
         """Set True to enable title."""
-        if value not in [True, False]:
-            raise TypeError("Value should be True or False")
+        if not isinstance(value, bool):
+            raise TypeError("Value must be a bool.")
         self._titleEnabled = value
         self.Redraw()
 
@@ -2147,8 +2076,8 @@ class PlotCanvas(wx.Panel):
     @EnablePointLabel.setter
     def EnablePointLabel(self, value):
         """Set True to enable pointLabel."""
-        if value not in [True, False]:
-            raise TypeError("Value should be True or False")
+        if not isinstance(value, bool):
+            raise TypeError("Value must be a bool.")
         self._pointLabelEnabled = value
         self.Redraw()  # will erase existing pointLabel if present
         self.last_PointLabel = None
@@ -2163,18 +2092,14 @@ class PlotCanvas(wx.Panel):
         """Set True to enable axes.
 
         Acceptable values:
-        bool
+        bool : all axes
         2-tuple of bool : (bottom, left)
         4-tuple of bool : (bottom, left, top, right)
 
         """
-#        if value not in [True, False]:
-#            raise TypeError("Value should be True or False")
-#        self._axesEnabled = value
-#        self.Redraw()
-
         err_txt = ("Axis value must be a bool or a 2- or 4-tuple of bool")
 
+        # TODO: Refactor - same as EnableAxesValues and EnableTicks
         if isinstance(value, bool):
             # turns on or off all axes
             _value = (value, value, value, value)
@@ -2197,14 +2122,17 @@ class PlotCanvas(wx.Panel):
 
     @EnableAxesValues.setter
     def EnableAxesValues(self, value):
-        """Set True to enable axes values."""
-#        if value not in [True, False]:
-#            raise TypeError("Value should be True or False")
-#        self._axesValuesEnabled = value
-#        self.Redraw()
+        """Set True to enable axes values.
 
+        Acceptable values:
+        bool : all axes values
+        2-tuple of bool : (bottom, left)
+        4-tuple of bool : (bottom, left, top, right)
+
+        """
         err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
 
+        # TODO: Refactor - same as EnableAxes and EnableTicks
         if isinstance(value, bool):
             # turns on or off all axes
             _value = (value, value, value, value)
@@ -2227,14 +2155,17 @@ class PlotCanvas(wx.Panel):
 
     @EnableTicks.setter
     def EnableTicks(self, value):
-        """Set True to enable tick marks."""
-#        if value not in [True, False]:
-#            raise TypeError("Value should be True or False")
-#        self._ticksEnabled = value
-#        self.Redraw()
+        """Set True to enable tick marks.
 
+        Acceptable values:
+        bool : ticks on all 4 sides
+        2-tuple of bool : (bottom, left)
+        4-tuple of bool : (bottom, left, top, right)
+
+        """
         err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
 
+        # TODO: Refactor - same as EnableAxes and EnableAxesValues
         if isinstance(value, bool):
             # turns on or off all axes
             _value = (value, value, value, value)
@@ -2366,7 +2297,7 @@ class PlotCanvas(wx.Panel):
         return x, y
 
     @PendingDeprecation("self.XSpec property")
-    def SetXSpec(self, type='auto'):
+    def SetXSpec(self, spectype='auto'):
         """
         xSpec- defines x axis type. Can be 'none', 'min' or 'auto'
         where:
@@ -2377,10 +2308,10 @@ class PlotCanvas(wx.Panel):
         * <number> - like 'min', but with <number> tick marks
 
         """
-        self.XSpec = type
+        self.XSpec = spectype
 
     @PendingDeprecation("self.YSpec property")
-    def SetYSpec(self, type='auto'):
+    def SetYSpec(self, spectype='auto'):
         """
         ySpec- defines x axis type. Can be 'none', 'min' or 'auto'
         where:
@@ -2391,7 +2322,7 @@ class PlotCanvas(wx.Panel):
         * <number> - like 'min', but with <number> tick marks
 
         """
-        self.YSpec = type
+        self.YSpec = spectype
 
     @PendingDeprecation("self.XSpec property")
     def GetXSpec(self):
@@ -2821,6 +2752,22 @@ class PlotCanvas(wx.Panel):
         self.last_PointLabel = mDataDict
 
     # event handlers **********************************
+    # TODO: some of these event handlers can be modified
+    #       Meaning: only bind the event if the item is enabled. Disable
+    #       the event when the item is disabled.
+    #
+    #       Example::
+    #
+    #           if self._zoomEnabled:
+    #               self.Bind(stuff)
+    #           else:
+    #               self.UnBind(stuff)   # or equivalent
+    #
+    #           def OnZoom(self, event):
+    #               # process zoom event.
+    #
+    #       What this change would do is remove most of the if statements
+    #       within these event handlers.
     def OnMotion(self, event):
         if self._zoomEnabled and event.LeftIsDown():
             if self._hasDragged:
@@ -3136,38 +3083,53 @@ class PlotCanvas(wx.Panel):
 
     @SavePen
     def _drawGrid(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """Draws the gridlines"""
+        """
+        Draws the gridlines
+
+        Parameters:
+        -----------
+        dc :
+            The Device Contect to draw on
+
+        p1 : np array of length 2
+            The lower-left hand corner of the plot, in plot coords.
+            So, if the plot ranges from x=-10 to 10, and y=-5 to 5, then
+            p1 = (-10, -5)
+
+        p2 : np array of length 2
+            The upper-right hand corner of the plot, in plot coords.
+            So, if the plot ranges from x=-10 to 10, and y=-5 to 5, then
+            p1 = (10, 5)
+
+        scale : np array of length 2
+            The [X, Y] scaling factor to convert plot coords to DC coords
+
+        shift : np array of length 2
+            The [X, Y] shift values to convert plot coords to DC coords.
+
+        xticks, yticks :
+            the x and y tick definitions
+
+        """
         # increases thickness for printing only
         pen = self.GridPen
         penWidth = self.printerScale * pen.GetWidth()
         pen.SetWidth(penWidth)
         dc.SetPen(pen)
 
-        # TODO: rename TickLength - these aren't ticks anymore
-        # TODO: figure out if I can remove this calculation stuff.
-        #       replace with something like XMaxRange, YMaxRange
         x, y, width, height = self._point2ClientCoord(p1, p2)
-        if self._gridEnabled == 'Horizontal':
-            yTickLength = (width / 2.0 + 1) * self._pointSize[1]
-        elif self._gridEnabled == 'Vertical':
-            xTickLength = (height / 2.0 + 1) * self._pointSize[0]
-        else:
-            yTickLength = (width / 2.0 + 1) * self._pointSize[1]
-            xTickLength = (height / 2.0 + 1) * self._pointSize[0]
 
-        # TODO: This is code duplication
-        if self._xSpec is not 'none':
-            # miny, maxy and tick lengths
-            for y, d in [(p1[1], -xTickLength), (p2[1], xTickLength)]:
-                for x, label in xticks:
-                    pt = scale * np.array([x, y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + d)
+        if self._xSpec != 'none':
+            if self.EnableGrid[0]:
+                for x, _ in xticks:
+                    pt = scale * np.array([x, p1[1]]) + shift
+                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] - height)
 
-        if self._ySpec is not 'none':
-            for x, d in [(p1[0], -yTickLength), (p2[0], yTickLength)]:
+        if self._ySpec != 'none':
+            if self.EnableGrid[1]:
                 for y, label in yticks:
-                    pt = scale * np.array([x, y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0] - d, pt[1])
+                    pt = scale * np.array([p1[0], y]) + shift
+                    dc.DrawLine(pt[0], pt[1], pt[0] + width, pt[1])
 
     @SavePen
     def _drawTicks(self, dc, p1, p2, scale, shift, xticks, yticks):
@@ -3189,27 +3151,23 @@ class PlotCanvas(wx.Panel):
         ticks = self.EnableTicks
         if self.XSpec != 'none':        # I don't like this :-/
             if ticks.bottom:
-                y, d = (p1[1], -xTickLength)
                 for x, label in xticks:
-                    pt = scale * np.array([x, y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + d)
+                    pt = scale * np.array([x, p1[1]]) + shift
+                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] - xTickLength)
             if ticks.top:
-                y, d = (p2[1], xTickLength)
                 for x, label in xticks:
-                    pt = scale * np.array([x, y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + d)
+                    pt = scale * np.array([x, p2[1]]) + shift
+                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + xTickLength)
 
         if self.YSpec != 'none':
             if ticks.left:
-                x, d = (p1[0], -yTickLength)
                 for y, label in yticks:
-                    pt = scale * np.array([x, y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0] - d, pt[1])
+                    pt = scale * np.array([p1[0], y]) + shift
+                    dc.DrawLine(pt[0], pt[1], pt[0] + yTickLength, pt[1])
             if ticks.right:
-                x, d = (p2[0], yTickLength)
                 for y, label in yticks:
-                    pt = scale * np.array([x, y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0] - d, pt[1])
+                    pt = scale * np.array([p2[0], y]) + shift
+                    dc.DrawLine(pt[0], pt[1], pt[0] - yTickLength, pt[1])
 
     @SavePen
     def _drawCenterLines(self, dc, p1, p2, scale, shift):
@@ -3334,11 +3292,11 @@ class PlotCanvas(wx.Panel):
     @SavePen
     def _drawPlotAreaItems(self, dc, p1, p2, scale, shift, xticks, yticks):
         """Draws each frame element"""
-        if self._ticksEnabled:
-            self._drawTicks(dc, p1, p2, scale, shift, xticks, yticks)
-
         if self._gridEnabled:
             self._drawGrid(dc, p1, p2, scale, shift, xticks, yticks)
+
+        if self._ticksEnabled:
+            self._drawTicks(dc, p1, p2, scale, shift, xticks, yticks)
 
         if self._centerLinesEnabled:
             self._drawCenterLines(dc, p1, p2, scale, shift)
@@ -3376,13 +3334,15 @@ class PlotCanvas(wx.Panel):
                 graphics.YLabel, yLabelPos[0], yLabelPos[1], 90)
 
     @SavePen
-    def _drawPlotAreaLabels(self, dc, graphics, lhsW, rhsW, titleWH, bottomH, topH, xLabelWH, yLabelWH):
+    def _drawPlotAreaLabels(self, dc, graphics, lhsW, rhsW, titleWH,
+                            bottomH, topH, xLabelWH, yLabelWH):
         # TODO: clean up call signature.
         if self._titleEnabled:
             self._drawPlotTitle(dc, graphics, lhsW, rhsW, titleWH)
 
         if self._axesLabelsEnabled:
-            self._drawAxesLabels(dc, graphics, lhsW, rhsW, bottomH, topH, xLabelWH, yLabelWH)
+            self._drawAxesLabels(dc, graphics, lhsW, rhsW,
+                                 bottomH, topH, xLabelWH, yLabelWH)
 
     def _xticks(self, *args):
         if self._logscale[0]:
@@ -3708,15 +3668,24 @@ def _draw2Objects():
                        width=6,
                        style=wx.PENSTYLE_DOT)
 
-    # 50 points cos function, plotted as red dot-dash
-    data1 = 2. * np.pi * np.arange(100) / 100.
-    data1.shape = (50, 2)
+    # 25 points cos function, plotted as red dot-dash with steps.
+    data1 = 2. * np.pi * np.arange(50) / 50.
+    data1.shape = (25, 2)
     data1[:, 1] = np.cos(data1[:, 0])
-    line2 = PolySpline(data1,
-                       legend='Red Line',
+    line2 = PolyLine(data1,
+                     legend='Red Line',
+                     colour='red',
+                     width=2,
+                     style=wx.PENSTYLE_DOT_DASH,
+                     drawstyle='steps-post',
+                     )
+
+    # data points for the 25pt cos function.
+    pts2 = PolyMarker(data1,
+                       legend='Red Points',
                        colour='red',
-                       width=3,
-                       style=wx.PENSTYLE_DOT_DASH)
+                       size=1.5,
+                       )
 
     # A few more points...
     pi = np.pi
@@ -3736,7 +3705,7 @@ def _draw2Objects():
                            width=3,
                            )
 
-    return PlotGraphics([markers1, line1, line2, marker_line],
+    return PlotGraphics([markers1, line1, line2, pts2, marker_line],
                         "Big Markers with Different Line Styles")
 
 
@@ -3756,14 +3725,17 @@ def _draw3Objects():
 
 def _draw4Objects():
     """25,000 point line and markers"""
-    # 25,000 point line
-    data1 = np.arange(5e5, 1e6, 10)
-    data1.shape = (25000, 2)
     # Points
-    markers2 = PolyMarker(data1, legend='Square Points', colour='blue',
-                          marker='square')
+    data1 = np.random.normal(loc=7.5e5, scale=70000, size=50000)
+    data1.shape = (25000, 2)
+    markers2 = PolyMarker(data1, legend='Dots', colour='blue',
+                          marker='square',
+                          size=1,
+                          )
 
     # Line
+    data1 = np.arange(5e5, 1e6, 10)
+    data1.shape = (25000, 2)
     line1 = PolyLine(data1, legend='Wide Line', colour='green', width=4)
 
     return PlotGraphics([markers2, line1], "25,000 Points", "Value X", "")
@@ -3951,9 +3923,23 @@ class TestFrame(wx.Frame):
                     'Turn on Legend', kind=wx.ITEM_CHECK)
         self.Bind(wx.EVT_MENU, self.OnEnableLegend, id=220)
 
-        menu.Append(215, 'Enable &Grid', 'Turn on Grid', kind=wx.ITEM_CHECK)
-        menu.Check(215, True)
-        self.Bind(wx.EVT_MENU, self.OnEnableGrid, id=215)
+        ### SubMenu for Grid
+        submenu = wx.Menu()
+        self.gridSubMenu = submenu
+
+        submenu.AppendCheckItem(2151, "X Gridlines", "Enable X gridlines")
+        submenu.AppendCheckItem(2152, "Y Gridlines", "Enable Y gridlines")
+        submenu.AppendCheckItem(2153, "All Gridlines", "Enable All gridlines")
+        submenu.Check(2151, True)
+        submenu.Check(2152, True)
+        submenu.Check(2153, True)
+
+        self.Bind(wx.EVT_MENU, self.OnEnableGridX, id=2151)
+        self.Bind(wx.EVT_MENU, self.OnEnableGridY, id=2152)
+        self.Bind(wx.EVT_MENU, self.OnEnableGridAll, id=2153)
+
+        menu.Append(215, 'Enable Grid', submenu, 'Turn on Grid')
+#        self.Bind(wx.EVT_MENU, self.OnEnableGrid, id=215)
 
         ### SubMenu for Axes
         submenu = wx.Menu()
@@ -4013,8 +3999,6 @@ class TestFrame(wx.Frame):
 
         menu.Append(250, 'Enable Ticks', submenu,
                     'Enables the display of the ticks')
-#        self.Bind(wx.EVT_MENU, self.OnEnableTicks
-#                    , id=250)
 
         menu.Append(255, 'Enable Plot Title',
                     'Enables the plot title', kind=wx.ITEM_CHECK)
@@ -4216,7 +4200,6 @@ class TestFrame(wx.Frame):
     def OnPlotDraw8(self, event):
         """Box Plot example"""
         self.resetDefaults()
-#        self.client.EnableAxesValues([False, True])
         self.client.Draw(_draw8Objects())
 
     def OnPlotRedraw(self, event):
@@ -4235,8 +4218,29 @@ class TestFrame(wx.Frame):
         if self.mainmenu.IsChecked(217):
             self.mainmenu.Check(217, False)
 
-    def OnEnableGrid(self, event):
+    ### Grid Events ###
+
+    def _checkOtherGridMenuItems(self):
+        """ check or uncheck the submenu items """
+        self.gridSubMenu.Check(2151, self.client.EnableGrid[0])
+        self.gridSubMenu.Check(2152, self.client.EnableGrid[1])
+        self.gridSubMenu.Check(2153, all(self.client.EnableGrid))
+
+    def OnEnableGridX(self, event):
+        old = self.client.EnableGrid
+        self.client.EnableGrid = (event.IsChecked(), old[1])
+        self._checkOtherGridMenuItems()
+
+    def OnEnableGridY(self, event):
+        old = self.client.EnableGrid
+        self.client.EnableGrid = (old[0], event.IsChecked())
+        self._checkOtherGridMenuItems()
+
+    def OnEnableGridAll(self, event):
         self.client.EnableGrid = event.IsChecked()
+        self._checkOtherGridMenuItems()
+        self.gridSubMenu.Check(2151, event.IsChecked())
+        self.gridSubMenu.Check(2152, event.IsChecked())
 
     def OnEnableDrag(self, event):
         self.client.EnableDrag = event.IsChecked()
@@ -4255,19 +4259,16 @@ class TestFrame(wx.Frame):
     def OnEnableHiRes(self, event):
         self.client.EnableHiRes = event.IsChecked()
 
-    def OnEnableAxes(self, event):
-        self.client.EnableAxes = event.IsChecked()
+    ### Axes Events ###
 
     def _checkOtherAxesMenuItems(self):
-        if all(self.client.EnableAxes[:2]):
-            self.axesSubMenu.Check(2405, True)
-        else:
-            self.axesSubMenu.Check(2405, False)
-
-        if all(self.client.EnableAxes):
-            self.axesSubMenu.Check(2406, True)
-        else:
-            self.axesSubMenu.Check(2406, False)
+        """ check or uncheck the submenu items """
+        self.axesSubMenu.Check(2401, self.client.EnableAxes[0])
+        self.axesSubMenu.Check(2402, self.client.EnableAxes[1])
+        self.axesSubMenu.Check(2403, self.client.EnableAxes[2])
+        self.axesSubMenu.Check(2404, self.client.EnableAxes[3])
+        self.axesSubMenu.Check(2405, all(self.client.EnableAxes[:2]))
+        self.axesSubMenu.Check(2406, all(self.client.EnableAxes))
 
     def OnEnableAxesBottom(self, event):
         old = self.client.EnableAxes
@@ -4293,46 +4294,49 @@ class TestFrame(wx.Frame):
         checked = event.IsChecked()
         old = self.client.EnableAxes
         self.client.EnableAxes = (checked, checked, old[2], old[3])
-        self.axesSubMenu.Check(2401, checked)
-        self.axesSubMenu.Check(2402, checked)
-        self.axesSubMenu.Check(2403, old[2])
-        self.axesSubMenu.Check(2404, old[3])
-        if all(self.client.EnableAxes):
-            self.axesSubMenu.Check(2406, True)
-        else:
-            self.axesSubMenu.Check(2406, False)
+        self._checkOtherAxesMenuItems()
 
     def OnEnableAxesAll(self, event):
         checked = event.IsChecked()
         self.client.EnableAxes = (checked, checked, checked, checked)
-        for _i in range(2401, 2406):
-            self.axesSubMenu.Check(_i, checked)
+        self._checkOtherAxesMenuItems()
 
-    def OnEnableTicks(self, event):
-        self.client.EnableTicks = event.IsChecked()
+    ### Ticks Events ###
+
+    def _checkOtherTicksMenuItems(self):
+        """ check or uncheck the submenu items """
+        self.ticksSubMenu.Check(2501, self.client.EnableTicks[0])
+        self.ticksSubMenu.Check(2502, self.client.EnableTicks[1])
+        self.ticksSubMenu.Check(2503, self.client.EnableTicks[2])
+        self.ticksSubMenu.Check(2504, self.client.EnableTicks[3])
+#        self.ticksSubMenu.Check(2505, all(self.client.EnableTicks[:2]))
+#        self.axesSubMenu.Check(2506, all(self.client.EnableTicks))
 
     def OnEnableTicksBottom(self, event):
         old = self.client.EnableTicks
         self.client.EnableTicks = (event.IsChecked(), old[1],
                                    old[2], old[3])
+        self._checkOtherTicksMenuItems()
 
     def OnEnableTicksLeft(self, event):
         old = self.client.EnableTicks
         self.client.EnableTicks = (old[0], event.IsChecked(),
                                    old[2], old[3])
+        self._checkOtherTicksMenuItems()
 
     def OnEnableTicksTop(self, event):
         old = self.client.EnableTicks
         self.client.EnableTicks = (old[0], old[1],
                                    event.IsChecked(), old[3])
+        self._checkOtherTicksMenuItems()
 
     def OnEnableTicksRight(self, event):
         old = self.client.EnableTicks
         self.client.EnableTicks = (old[0], old[1],
                                    old[2], event.IsChecked())
+        self._checkOtherTicksMenuItems()
 
-    def OnEnableAxesValues(self, event):
-        self.client.EnableAxesValues = event.IsChecked()
+    ### AxesValues Events ###
 
     def OnEnableAxesValuesBottom(self, event):
         old = self.client.EnableAxesValues
@@ -4353,6 +4357,8 @@ class TestFrame(wx.Frame):
         old = self.client.EnableAxesValues
         self.client.EnableAxesValues = (old[0], old[1],
                                         old[2], event.IsChecked())
+
+    ### Other Events ###
 
     def OnEnablePlotTitle(self, event):
         self.client.EnablePlotTitle = event.IsChecked()
