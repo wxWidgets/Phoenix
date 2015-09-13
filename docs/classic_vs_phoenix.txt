@@ -59,6 +59,7 @@ ChoicebookEvent                                              :class:`BookCtrlEve
 Clipboard_Get                                                :meth:`Clipboard.Get`
 ClipboardEvent                                               :class:`ClipboardTextEvent`
 ClipboardLocker                                              ``MISSING``
+Colour.SetFromString                                         :meth:`Colour.Set` 
 ColourRGB                                                    :class:`Colour`
 ComboBox_GetClassDefaultAttributes                           :meth:`ComboBox.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 CommandLinkButton                                            :class:`adv.CommandLinkButton`
