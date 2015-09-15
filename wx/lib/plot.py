@@ -403,6 +403,7 @@ class PolyPoints(object):
         self._points = np.array(points).astype(np.float64)
         self._logscale = (False, False)
         self._absScale = (False, False)
+        self._symlogscale = (False, False)
         self._pointSize = (1.0, 1.0)
         self.currentScale = (1, 1)
         self.currentShift = (0, 0)
@@ -426,7 +427,7 @@ class PolyPoints(object):
 
         Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
         """
-        if not isinstance(logscale, tuple) and len(logscale) == 2:
+        if not isinstance(logscale, tuple) or len(logscale) != 2:
             raise ValueError("`logscale` must be a 2-tuple of bools")
         self._logscale = logscale
 
@@ -438,6 +439,33 @@ class PolyPoints(object):
         Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
         """
         self._logscale = logscale
+
+    @property
+    def SymLogScale(self):
+        return self._symlogscale
+
+    # TODO: Implement symmetric log scale
+    @SymLogScale.setter
+    def SymLogScale(self, symlogscale):
+        """
+        # Not implemented yet
+
+
+        Set to change the axes to a symmetric log10 scale.
+
+        Value must be a 2-tuple of booleans (x_axis_bool, y_axis_bool)
+
+        A Symmetric Log scale uses the following properties:
+        if x > 0:
+            x = Log10(x)
+        elif x < 0:
+            x = -Log10(Abs(x))
+        """
+        raise NotImplementedError("Symmetric Log Scale is not implemented yet")
+
+        if not isinstance(symlogscale, tuple) or len(symlogscale) != 2:
+            raise ValueError("`symlogscale` must be a 2-tuple of bools")
+        self._symlogscale = symlogscale
 
     @property
     def AbsScale(self):
@@ -458,6 +486,8 @@ class PolyPoints(object):
     def points(self):
         """Returns the points, adjusting for log scale if LogScale is set"""
         data = np.array(self._points, copy=True)    # need the copy
+                                                    # TODO: get rid of the
+                                                    # need for copy
 
         # TODO: I can make this better... move logic to self._log10
         # work on X:
@@ -467,12 +497,23 @@ class PolyPoints(object):
             data = np.compress(data[:, 0] > 0, data, 0)
             data[:, 0] = np.log10(data[:, 0])
 
+        if self.SymLogScale[0]:
+            # TODO: implement SymLogScale
+            # Should SymLogScale override AbsScale? My vote is no.
+            # Should SymLogScale override LogScale? My vote is yes.
+            #   - SymLogScale could be a parameter passed to LogScale...
+            pass
+
         # work on Y:
         if self.AbsScale[1]:
             data[:, 1] = np.abs(data[:, 1])
         if self.LogScale[1]:
             data = np.compress(data[:, 1] > 0, data, 0)
             data[:, 1] = np.log10(data[:, 1])
+
+        if self.SymLogScale[1]:
+            # TODO: implement SymLogScale
+            pass
 
         return data
 
@@ -886,16 +927,23 @@ class BoxPlot(PolyPoints):
         :param data: 1D data to plot.
 
         """
+        # Set various attributes
         self.box_width = 0.5
 
+        # Determine the X position and create a 1d dataset.
         self.xpos = points[0, 0]
         points = points[:, 1]
 
+        # Calculate the box plot points and the outliers
         self._bpdata = self.calcBpData(points)
         self._outliers = self.calcOutliers(points)
         points = np.concatenate((self._bpdata, self._outliers))
         points = np.array([(self.xpos, x) for x in points])
 
+        # Create a jitter for the outliers
+        self.jitter = 0.05 * np.random.random_sample(len(self._outliers)) + self.xpos - 0.025
+
+        # Init the parent class
         PolyPoints.__init__(self, points, attr)
 
     def boundingBox(self):
@@ -1145,12 +1193,11 @@ class BoxPlot(PolyPoints):
 
         outliers = self._outliers
 
-        # Create a jitter.
-        # TODO: jitter should not be recalculated on each redraw.
-        jitter = 0.05 * np.random.random_sample(len(outliers)) + xpos - 0.025
+
+#        jitter = 0.05 * np.random.random_sample(len(outliers)) + xpos - 0.025
 
         # Scale the data for plotting
-        pt_data = np.array([jitter, outliers]).T
+        pt_data = np.array([self.jitter, outliers]).T
         pt_data = self._scaleAndShift(pt_data,
                                       self.currentScale,
                                       self.currentShift)
@@ -1199,8 +1246,9 @@ class PlotGraphics(object):
 
     @LogScale.setter
     def LogScale(self, logscale):
-        if not isinstance(logscale, tuple) and len(logscale) != 2:
-            raise TypeError("logscale must be a 2-tuple of bools")
+        # XXX: error checking done by PolyPoints class
+#        if not isinstance(logscale, tuple) and len(logscale) != 2:
+#            raise TypeError("logscale must be a 2-tuple of bools")
         if len(self.objects) == 0:
             return
         for obj in self.objects:
@@ -1218,8 +1266,9 @@ class PlotGraphics(object):
 
     @AbsScale.setter
     def AbsScale(self, absscale):
-        if not isinstance(absscale, tuple):
-            raise TypeError("absscale must be a 2-tuple of bools")
+        # XXX: error checking done by PolyPoints class
+#        if not isinstance(absscale, tuple) and len(absscale) != 2:
+#            raise TypeError("absscale must be a 2-tuple of bools")
         if len(self.objects) == 0:
             return
         for obj in self.objects:
