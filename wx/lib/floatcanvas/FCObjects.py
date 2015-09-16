@@ -2869,9 +2869,16 @@ class Group(DrawObject):
         if not self.HitColor:
             if not self._Canvas.HitColorGenerator:
                 self._Canvas.HitColorGenerator = _colorGenerator()
-                self._Canvas.HitColorGenerator.next() # first call to prevent the background color from being used.
+                # first call to prevent the background color from being used.                
+                if six.PY2:
+                    self._Canvas.HitColorGenerator.next()
+                else:
+                    next(self._Canvas.HitColorGenerator)
             # Set all contained objects to the same Hit color:
-            self.HitColor = self._Canvas.HitColorGenerator.next()
+            if six.PY2:
+                self.HitColor = self._Canvas.HitColorGenerator.next()
+            else:
+                self.HitColor = next(self._Canvas.HitColorGenerator)
         self._ChangeChildrenHitColor(self.ObjectList)
         # put the object in the hit dict, indexed by it's color
         if not self._Canvas.HitDict:
