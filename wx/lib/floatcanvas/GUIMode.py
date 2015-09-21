@@ -17,7 +17,7 @@ Module that holds the GUI modes used by FloatCanvas
 
 Note that this can only be imported after a wx.App() has been created.
 
-This approach was inpired by Christian Blouin, who also wrote the initial
+This approach was inspired by Christian Blouin, who also wrote the initial
 version of the code.
 
 """
