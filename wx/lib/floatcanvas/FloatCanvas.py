@@ -351,7 +351,7 @@ class FloatCanvas(wx.Panel):
     def HitTest(self, event, HitEvent):
         """Check if any objects in the dict for this event."""
         if self.HitDict:
-            if self.HitDict[ HitEvent ]:
+            if HitEvent in self.HitDict:
                 xy = event.GetPosition()
                 color = self.GetHitTestColor( xy )
                 if color in self.HitDict[ HitEvent ]:
@@ -718,28 +718,46 @@ class FloatCanvas(wx.Panel):
         if ReDraw:
             self.Draw()
 
-    def Zoom(self, factor, center = None, centerCoords="world"):
-
+    def Zoom(self, factor, center = None, centerCoords="World", keepPointInPlace=False):
         """
         Zoom(factor, center) changes the amount of zoom of the image by factor.
         If factor is greater than one, the image gets larger.
         If factor is less than one, the image gets smaller.
+        :param factor: amount to zoom in or out If factor is greater than one,
+                       the image gets larger. If factor is less than one, the
+                       image gets smaller.
+        :param center: a tuple of (x,y) coordinates of the center of the viewport,
+                       after zooming. If center is not given, the center will stay the same.
 
-        center is a tuple of (x,y) coordinates of the center of the viewport, after zooming.
-        If center is not given, the center will stay the same.
-
-        centerCoords is a flag indicating whether the center given is in pixel or world 
-        coords. Options are: "world" or "pixel"
-        
+        :param centerCoords: flag indicating whether the center given is in pixel or world 
+                             coords. Options are: "world" or "pixel"
+        :param keepPointInPlace: boolean flag. If False, the center point is what's given.
+                                 If True, the image is shifted so that the given center point
+                                 is kept in the same pixel space. This facilitates keeping the 
+                                 same point under the mouse when zooming with the scroll wheel.
         """
+        if center is None:
+            center = self.ViewPortCenter
+            centerCoords = 'World' #override input if they don't give a center point.
+    
+        if centerCoords == "Pixel":
+            oldpoint = self.PixelToWorld( center )
+        else:
+            oldpoint = N.array(center, N.float)
+    
         self.Scale = self.Scale*factor
-        if not center is None:
-            if centerCoords == "pixel":
-                center = self.PixelToWorld( center )
+        if keepPointInPlace:
+            self.SetToNewScale(False)
+    
+            if centerCoords == "Pixel":
+                newpoint = self.PixelToWorld( center )
             else:
-                center = N.array(center,N.float)
-            self.ViewPortCenter = center
-        self.SetToNewScale()
+                newpoint = N.array(center, N.float)
+            delta = (newpoint - oldpoint)
+            self.MoveImage(-delta, 'World')       
+        else:
+            self.ViewPortCenter = oldpoint
+            self.SetToNewScale()         
 
     def ZoomToBB(self, NewBB=None, DrawFlag=True):
 
