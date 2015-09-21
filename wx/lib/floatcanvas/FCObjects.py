@@ -64,7 +64,7 @@ def _cycleidxs(indexcount, maxvalue, step):
         global _testBitmap
         dc = wx.MemoryDC()
         if not _testBitmap:
-            _testBitmap = wx.EmptyBitmap(1, 1)
+            _testBitmap = wx.Bitmap(1, 1)
         dc.SelectObject(_testBitmap)
         dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
