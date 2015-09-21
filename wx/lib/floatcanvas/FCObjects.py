@@ -51,7 +51,7 @@ def ComputeFontScale():
 
 ## fixme: This should probably be re-factored into a class
 _testBitmap = None
-_testDC = None
+
 def _cycleidxs(indexcount, maxvalue, step):
 
     """
@@ -61,24 +61,18 @@ def _cycleidxs(indexcount, maxvalue, step):
         """Return True if the color comes back from the bitmap identically."""
         if len(color) < 3:
             return True
-        global _testBitmap, _testDC
-        B = _testBitmap
-        if not mac:
-            dc = _testDC
-        if not B:
-            B = _testBitmap = wx.Bitmap(1, 1)
-            if not mac:
-                dc = _testDC = wx.MemoryDC()
-        if mac:
-            dc = wx.MemoryDC()
-        dc.SelectObject(B)
+        global _testBitmap
+        dc = wx.MemoryDC()
+        if not _testBitmap:
+            _testBitmap = wx.EmptyBitmap(1, 1)
+        dc.SelectObject(_testBitmap)
         dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
         dc.SetPen(wx.Pen(wx.Colour(*color), 4))
         dc.DrawPoint(0,0)
-        if mac:
-            del dc
-            pdata = wx.AlphaPixelData(B)
+        if mac: # NOTE: can the Mac not just use the DC?
+            del dc # Mac can't work with bitmap when selected into a DC.
+            pdata = wx.AlphaPixelData(_testBitmap)
             pacc = pdata.GetPixels()
             pacc.MoveTo(pdata, 0, 0)
             outcolor = pacc.Get()[:3]
@@ -95,6 +89,7 @@ def _cycleidxs(indexcount, maxvalue, step):
                 if not colormatch(color):
                     continue
                 yield color
+
 
 def _colorGenerator():
 
@@ -2723,9 +2718,32 @@ class Group(DrawObject):
         :param boolean `IsVisible`: keep it visible
         
         """
-        self.ObjectList = list(ObjectList)
+        self.ObjectList = []
         DrawObject.__init__(self, InForeground, IsVisible)
+
+        # this one uses a proprty for _Canvas...
+        self._Actual_Canvas = None
+
+        for obj in ObjectList:
+            self.AddObject(obj)
         self.CalcBoundingBox()
+
+    ## re-define _Canvas property so that the sub-objects get set up right
+    @property
+    def _Canvas(self):
+        """
+        getter for the _Canvas property
+        """
+        return self._Actual_Canvas
+
+    @_Canvas.setter
+    def _Canvas(self, canvas):
+        """
+        setter for Canvas property
+        """
+        self._Actual_Canvas = canvas
+        for obj in self.ObjectList:
+            obj._Canvas = canvas
 
     def AddObject(self, obj):
         """
