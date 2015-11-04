@@ -890,6 +890,219 @@ class PolyMarker(PolyPoints):
             dc.DrawLineList(lines.astype(np.int32))
 
 
+class PolyBars(PolyPoints):
+    """
+    Rectangles!
+    """
+    _attributes = {'edgecolour': 'black',
+                   'edgewidth': 2,
+                   'edgestyle': wx.PENSTYLE_SOLID,
+                   'legend': '',
+                   'fillcolour': 'red',
+                   'fillstyle': wx.BRUSHSTYLE_SOLID,
+                   'barwidth': None
+                   }
+
+    def __init__(self, points, **attr):
+        """
+        Creates PolyRectangle object
+
+        :param `points`: sequence (array, tuple or list) of (x, y) points
+                         that define the bar.
+                         x: the centerline of the bar.
+                         y: the value of the bar (from y=0)
+        :keyword `attr`: keyword attributes, default to:
+
+         =================================  ================================
+         'edgecolour' = 'black'             wx.Pen Colour: any wx.Colour
+         'edgewidth' = 1                    wx.Pen width
+         'edgestyle' = wx.PENSTYLE_SOLID    wx.Pen style
+         'legend' = ''                      Line Legend to display
+         'fillcolour' = 'red'               wx.Brush fill color: any wx.Colour
+         'fillstyle' = wx.BRUSHSTYLE_SOLID  The fill style for the rectangle
+         'barwidth' = None                  The bar width. None means 0 space
+                                            between bars
+         =================================  ================================
+
+        """
+        PolyPoints.__init__(self, points, attr)
+
+    def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
+        """same as override method, but retuns a value."""
+        scaled = scale * data + shift
+        return scaled
+
+    def draw(self, dc, printerScale, coord=None):
+        """ Draw the bars """
+        pencolour = self.attributes['edgecolour']
+        penwidth = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
+        penstyle = self.attributes['edgestyle']
+        fillcolour = self.attributes['fillcolour']
+        fillstyle = self.attributes['fillstyle']
+        barwidth = self.attributes['barwidth']
+        barwidth = 1.
+
+        if not isinstance(pencolour, wx.Colour):
+            pencolour = wx.Colour(pencolour)
+        pen = wx.Pen(pencolour, penwidth, penstyle)
+        pen.SetCap(wx.CAP_BUTT)
+        if not isinstance(fillcolour, wx.Colour):
+            fillcolour = wx.Colour(fillcolour)
+        brush = wx.Brush(fillcolour, fillstyle)
+        dc.SetPen(pen)
+        dc.SetBrush(brush)
+        if coord is None:
+            rects = []
+            if isinstance(barwidth, (int, float)):
+                pts = ((x, y, barwidth) for x, y in self.points)
+            else:
+                pts = ((x, y, w) for (x, y), w in zip(self.points, barwidth))
+
+            for x, y, w in pts:
+                # Change the point to a format that works for _scaleAndShift
+                rect = [[x - w / 2, y],      # left, top
+                        [x + w / 2, 0]]      # right, bottom
+
+                # Scale the points to the plot area
+                rect = self._scaleAndShift(rect,
+                                           self.currentScale,
+                                           self.currentShift)
+
+                # Convert to (left, top, width, height)
+                rect = [rect[0][0],                 # X (left)
+                        rect[0][1],                 # Y (top)
+                        rect[1][0] - rect[0][0],    # Width
+                        rect[1][1] - rect[0][1]]    # Height
+
+                rects.append(rect)
+
+            dc.DrawRectangleList(rects)
+        else:
+            dc.DrawLines(coord)  # draw legend line
+
+    def getSymExtent(self, printerScale):
+        """Width and Height of Marker"""
+        h = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
+        w = 5 * h
+        return (w, h)
+
+
+class PolyHistogram(PolyPoints):
+    """
+    Histogram
+
+    Special PolyBars where the bars span the binspec.
+    """
+
+    _attributes = {'edgecolour': 'black',
+                   'edgewidth': 3,
+                   'edgestyle': wx.PENSTYLE_SOLID,
+                   'legend': '',
+                   'fillcolour': wx.GREEN,
+                   'fillstyle': wx.BRUSHSTYLE_SOLID,
+                   }
+
+    def __init__(self, hist, binspec, **attr):
+        """
+        Creates PolyHistogram object
+
+        :param `hist`: sequence (array, tuple or list) of y values
+                       that define the heights of the bars (same as 1st
+                       returned parameter from ``np.histogram(data)``).
+        :param `binspec`: sequence of x values that define the edges of the
+                          bins (same as 2nd returned parameter from
+                          ``np.histogram(data)``).
+                          len(binspec) must equal len(hist) + 1
+        :keyword `attr`: keyword attributes, default to:
+
+         =================================  ================================
+         'edgecolour' = 'black'             wx.Pen Colour: any wx.Colour
+         'edgewidth' = 3                    wx.Pen width
+         'edgestyle' = wx.PENSTYLE_SOLID    wx.Pen style
+         'legend' = ''                      Line Legend to display
+         'fillcolour' = 'blue'              wx.Brush fill color: any wx.Colour
+         'fillstyle' = wx.BRUSHSTYLE_SOLID  The fill style for the rectangle
+         =================================  ================================
+
+        """
+        if len(binspec) != len(hist) + 1:
+            raise ValueError("Length of binspec must = length of hist + 1")
+
+        self.hist = hist
+        self.binspec = binspec
+
+        # need to create a series of points to be used by PolyPoints
+        import itertools
+        def pairwise(iterable):
+            "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+            a, b = itertools.tee(iterable)
+            next(b, None)
+            return zip(a, b)
+
+        self.bins = list(pairwise(self.binspec))
+        x = []
+        for pair in self.bins:
+            x.append(pair[0] + (pair[1] - pair[0])/2)
+
+        points = list(zip(x, self.hist))
+
+        PolyPoints.__init__(self, points, attr)
+
+    def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
+        """same as override method, but retuns a value."""
+        scaled = scale * data + shift
+        return scaled
+
+    def draw(self, dc, printerScale, coord=None):
+        """ Draw the bars """
+        pencolour = self.attributes['edgecolour']
+        penwidth = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
+        penstyle = self.attributes['edgestyle']
+        fillcolour = self.attributes['fillcolour']
+        fillstyle = self.attributes['fillstyle']
+
+        if not isinstance(pencolour, wx.Colour):
+            pencolour = wx.Colour(pencolour)
+        pen = wx.Pen(pencolour, penwidth, penstyle)
+        pen.SetCap(wx.CAP_BUTT)
+        if not isinstance(fillcolour, wx.Colour):
+            fillcolour = wx.Colour(fillcolour)
+        brush = wx.Brush(fillcolour, fillstyle)
+        dc.SetPen(pen)
+        dc.SetBrush(brush)
+        if coord is None:
+
+            rects = []
+
+            for y, (low, high) in zip(self.hist, self.bins):
+                # Change the point to a format that works for _scaleAndShift
+                rect = [[low, y],      # left, top
+                        [high, 0]]      # right, bottom
+
+                # Scale the points to the plot area
+                rect = self._scaleAndShift(rect,
+                                           self.currentScale,
+                                           self.currentShift)
+
+                # Convert to (left, top, width, height)
+                rect = [rect[0][0],                 # X (left)
+                        rect[0][1],                 # Y (top)
+                        rect[1][0] - rect[0][0],    # Width
+                        rect[1][1] - rect[0][1]]    # Height
+
+                rects.append(rect)
+
+            dc.DrawRectangleList(rects)
+        else:
+            dc.DrawLines(coord)  # draw legend line
+
+    def getSymExtent(self, printerScale):
+        """Width and Height of Marker"""
+        h = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
+        w = 5 * h
+        return (w, h)
+
+
 class BoxPlot(PolyPoints):
     """
     Class to contain box plots
@@ -2397,11 +2610,15 @@ class PlotCanvas(wx.Panel):
         * 'min' - shows min bounding box values
         * 'auto' - rounds axis range to sensible values
         * <number> - like 'min', but with <number> tick marks
+        * list or tuple - a list of (min, max) values. must be length 2
 
         """
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
-            raise TypeError("XSpec must be 'none', 'min', 'auto', or a number")
+            if not isinstance(value, (list, tuple)) and len(value != 2):
+                err_str = ("XSpec must be 'none', 'min', 'auto', "
+                           "a number, or sequence of numbers (length 2)")
+                raise TypeError(err_str)
         self._xSpec = value
 
     @property
@@ -2418,11 +2635,15 @@ class PlotCanvas(wx.Panel):
         * 'min' - shows min bounding box values
         * 'auto' - rounds axis range to sensible values
         * <number> - like 'min', but with <number> tick marks
+        * list or tuple - a list of (min, max) values. must be length 2
 
         """
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
-            raise TypeError("YSpec must be 'none', 'min', 'auto', or a number")
+            if not isinstance(value, (list, tuple)) and len(value != 2):
+                err_str = ("YSpec must be 'none', 'min', 'auto', "
+                           "a number, or sequence of numbers (length 2)")
+                raise TypeError(err_str)
         self._ySpec = value
 
     @PendingDeprecation("self.XMaxRange property")
@@ -3842,9 +4063,9 @@ def _draw8Objects():
     Box plot
     """
     data1 = np.array([912, 337, 607, 583, 512, 531, 558, 381, 621, 574,
-                     538, 577, 679, 415, 454, 417, 635, 319, 350, 183,
-                     863, 337, 607, 583, 512, 531, 558, 381, 621, 574,
-                     538, 577, 679, 415, 454, 417, 635, 319, 350, 97])
+                      538, 577, 679, 415, 454, 417, 635, 319, 350, 183,
+                      863, 337, 607, 583, 512, 531, 558, 381, 621, 574,
+                      538, 577, 679, 415, 454, 417, 635, 319, 350, 97])
     data2 = np.array([912, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                       538, 532, 829, 82, 454, 417, 635, 319, 350, 183,
                       863, 337, 607, 583, 512, 531, 558, 866, 621, 574,
@@ -3866,11 +4087,52 @@ def _draw8Objects():
                         "",
                         "Value")
 
+def _draw9Objects():
+    """
+    Histogram
+
+    The following must be true:
+    len(bspec) = len(hist_data) + 1
+    """
+
+    data = 2.25 * np.random.randn(50) + 3
+    heights, bins = np.histogram(data, bins=10)
+
+    hist_fixed_binsize = PolyHistogram(heights, bins)
+
+    # Bins can also be arbitrary widths:
+    hist_variable_binsize = PolyHistogram(
+        [2, 3, 4, 6, 3],
+        [18, 19, 22, 25, 26, 27],
+        fillcolour=wx.BLUE,
+        edgewidth=2,
+        edgecolour=wx.RED,
+    )
+
+    return PlotGraphics(
+        [hist_fixed_binsize, hist_variable_binsize],
+        "Histogram with fixed binsize (left) and variable binsize (right)",
+        "Value",
+        "Count",
+    )
+
+
+def _draw10Objects():
+    """
+    A real bar graph
+    """
+    bar_height = np.array([1, 5, 8, 16, 12, 15, 18, 23, 4, 7, 9, 6])
+    bar_location = np.array([0, 2, 4, 6, 8, 10, 11, 12, 16, 20, 30])
+    data = list(zip(bar_location, bar_height))
+    bars = [PolyBars(data)]
+
+    return PlotGraphics(bars, "Histogram", "XValue", "Count")
+
 
 class TestFrame(wx.Frame):
     def __init__(self, parent, id, title):
         wx.Frame.__init__(self, parent, id, title,
-                          wx.DefaultPosition, (600, 400))
+                          wx.DefaultPosition, (800, 600))
 
         # Now Create the menu bar and items
         self.mainmenu = wx.MenuBar()
@@ -3895,22 +4157,36 @@ class TestFrame(wx.Frame):
         ### "Plot" Menu Items ###############################################
         # -------------------------------------------------------------------
         menu = wx.Menu()
-        menu.Append(206, 'Draw1 - sin, cos', 'Draw plots1')
+        menu.Append(206, 'Draw1 - sin, cos',
+                    'Draw Sin and Cos curves')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw1, id=206)
-        menu.Append(207, 'Draw2 - sin, cos, large joined markers', 'Draw plots2')
+        menu.Append(207, 'Draw2 - sin, cos, large joined markers',
+                    'Draw Sin and Cos curves with some large joined makers')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw2, id=207)
-        menu.Append(208, 'Draw3 - various markers', 'Draw plots3')
+        menu.Append(208, 'Draw3 - various markers',
+                    'Demo various markers')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw3, id=208)
-        menu.Append(209, 'Draw4 - 25k pts', 'Draw plots4')
+        menu.Append(209, 'Draw4 - 25k pts',
+                    'Example of drawing many points quickly')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw4, id=209)
-        menu.Append(210, 'Draw5 - empty plot', 'Draw plots5')
+        menu.Append(210, 'Draw5 - empty plot',
+                    'An empty plot')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw5, id=210)
-        menu.Append(260, 'Draw6 - bar graph', 'Draw plots6')
+        menu.Append(260, 'Draw6 - fake bar graph via lines',
+                    'Fake a bar graph by using lines.')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw6, id=260)
-        menu.Append(261, 'Draw7 - log-log', 'Draw plots7')
+        menu.Append(261, 'Draw7 - log-log',
+                    'Plot a Log-Log graph')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw7, id=261)
-        menu.Append(262, 'Draw8 - Box Plots', 'Draw plots8')
+        menu.Append(262, 'Draw8 - Box Plots',
+                    'Show off some box plots')
         self.Bind(wx.EVT_MENU, self.OnPlotDraw8, id=262)
+        menu.Append(263, 'Draw9 - Histogram',
+                    'Plot a histogram')
+        self.Bind(wx.EVT_MENU, self.OnPlotDraw9, id=263)
+        menu.Append(264, 'Draw10 - real bar graph',
+                    'Plot a real bar chart (not faked with lines)')
+        self.Bind(wx.EVT_MENU, self.OnPlotDraw10, id=264)
 
         menu.AppendSeparator()
 
@@ -4250,6 +4526,16 @@ class TestFrame(wx.Frame):
         """Box Plot example"""
         self.resetDefaults()
         self.client.Draw(_draw8Objects())
+
+    def OnPlotDraw9(self, event):
+        """Histogram example"""
+        self.resetDefaults()
+        self.client.Draw(_draw9Objects())
+
+    def OnPlotDraw10(self, event):
+        """Bar Chart example"""
+        self.resetDefaults()
+        self.client.Draw(_draw10Objects())
 
     def OnPlotRedraw(self, event):
         self.client.Redraw()
