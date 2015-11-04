@@ -2397,11 +2397,15 @@ class PlotCanvas(wx.Panel):
         * 'min' - shows min bounding box values
         * 'auto' - rounds axis range to sensible values
         * <number> - like 'min', but with <number> tick marks
+        * list or tuple - a list of (min, max) values. must be length 2
 
         """
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
-            raise TypeError("XSpec must be 'none', 'min', 'auto', or a number")
+            if not isinstance(value, (list, tuple)) and len(value != 2):
+                err_str = ("XSpec must be 'none', 'min', 'auto', "
+                           "a number, or sequence of numbers (length 2)")
+                raise TypeError(err_str)
         self._xSpec = value
 
     @property
@@ -2418,11 +2422,15 @@ class PlotCanvas(wx.Panel):
         * 'min' - shows min bounding box values
         * 'auto' - rounds axis range to sensible values
         * <number> - like 'min', but with <number> tick marks
+        * list or tuple - a list of (min, max) values. must be length 2
 
         """
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
-            raise TypeError("YSpec must be 'none', 'min', 'auto', or a number")
+            if not isinstance(value, (list, tuple)) and len(value != 2):
+                err_str = ("YSpec must be 'none', 'min', 'auto', "
+                           "a number, or sequence of numbers (length 2)")
+                raise TypeError(err_str)
         self._ySpec = value
 
     @PendingDeprecation("self.XMaxRange property")
