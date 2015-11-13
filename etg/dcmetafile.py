@@ -34,9 +34,8 @@ def run():
     
     c = module.find('wxMetafileDC')
     c.addPrivateCopyCtor()
-    for item in module.findAll("wxMakeMetafilePlaceable"):
-        item.ignore() 
-    
+    module.find("wxMakeMetafilePlaceable").ignore()
+
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
