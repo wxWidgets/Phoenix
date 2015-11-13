@@ -562,6 +562,15 @@ def build(bld):
     makeExtCopyRule(bld, '_richtext')
 
 
+    if isWindows:
+        etg = loadETG('etg/_msw.py')
+        bld(features = 'c cxx cxxshlib pyext',
+            target   = makeTargetName(bld, '_msw'),
+            source   = getEtgSipCppFiles(etg) + rc,
+            uselib   = 'WX WXPY',
+            )
+        makeExtCopyRule(bld, '_msw')
+
 
     # ** Add code for new modules here
 

@@ -16,6 +16,9 @@ __version__ = wx.__version__.VERSION_STRING
 # package namespace.
 from wx.core import *
 
+if 'wxMSW' in PlatformInfo:
+    from wx._msw import *
+
 
 # Clean up the package namespace
 del core
