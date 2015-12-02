@@ -1733,15 +1733,15 @@ class wxPythonDemo(wx.Frame):
 
         # Create a Notebook
         self.nb = wx.Notebook(pnl, -1, style=wx.CLIP_CHILDREN)
-        imgList = wx.ImageList(16, 16)
-        for png in ["overview", "code", "demo"]:
-            bmp = images.catalog[png].GetBitmap()
-            imgList.Add(bmp)
-        for indx in range(9):
-            bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
-            imgList.Add(bmp)
-
-        self.nb.AssignImageList(imgList)
+        if 'wxMac' not in wx.PlatformInfo:
+            imgList = wx.ImageList(16, 16)
+            for png in ["overview", "code", "demo"]:
+                bmp = images.catalog[png].GetBitmap()
+                imgList.Add(bmp)
+            for indx in range(9):
+                bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
+                imgList.Add(bmp)    
+            self.nb.AssignImageList(imgList)
 
         self.BuildMenuBar()
 
