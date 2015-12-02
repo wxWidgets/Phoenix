@@ -189,3 +189,9 @@ other dev stuff
 
    * Add meaningful __hash__ methods for wx.Colour, wx.Point, etc.?
     
+   * Double-check wx.PyEvent and wx.PyCommandEvent, does the
+     __getattr__ etc. work with properties?
+     https://groups.google.com/d/msg/wxpython-dev/dMrpaKs_d0U/nVMY7lMvAwAJ
+
+
+
