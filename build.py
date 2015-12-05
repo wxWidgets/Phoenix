@@ -18,7 +18,12 @@ import subprocess
 import tarfile
 import tempfile
 import datetime
-if sys.version_info < (3,):
+
+# which version of Python is running this script
+PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
+
+if PY2:
     from urllib2 import urlopen
 else:
     from urllib.request import urlopen
@@ -663,10 +668,18 @@ def checkCompiler(quiet=False):
               "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
               "print(env)"
         env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
-        os.environ['PATH'] = bytes(env['path'])
-        os.environ['INCLUDE'] = bytes(env['include'])
-        os.environ['LIB'] = bytes(env['lib'])
-        os.environ['LIBPATH'] = bytes(env['libpath'])
+        
+        def _b(v):
+            return str(v)
+            #if PY2:
+            #    return bytes(v)
+            #else:
+            #    return bytes(v, 'utf8')
+        
+        os.environ['PATH'] = _b(env['path'])
+        os.environ['INCLUDE'] = _b(env['include'])
+        os.environ['LIB'] = _b(env['lib'])
+        os.environ['LIBPATH'] = _b(env['libpath'])
         
         
 def getWafBuildBase():    
