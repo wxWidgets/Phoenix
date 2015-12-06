@@ -134,6 +134,10 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXRICHTEXT')
         conf.env.LIB_WXRICHTEXT += cfg.makeLibName('richtext')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXMEDIA')
+        conf.env.LIB_WXMEDIA += cfg.makeLibName('media')
+
+
         # ** Add code for new modules here (and below for non-MSW)
 
         # tweak the PYEXT compile and link flags if making a --debug build
@@ -560,6 +564,14 @@ def build(bld):
         uselib   = 'WXHTML WXRICHTEXT WXPY',
         )
     makeExtCopyRule(bld, '_richtext')
+
+    etg = loadETG('etg/_media.py')
+    bld(features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_media'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WX WXPY WXMEDIA',
+        )
+    makeExtCopyRule(bld, '_media')
 
 
 
