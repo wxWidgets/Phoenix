@@ -65,7 +65,7 @@ class Events(unittest.TestCase):
     def test_KeyEvent_GetUnicodeKey(self):
         evt = wx.KeyEvent()
         unikey = evt.GetUnicodeKey()
-        self.assertTrue(isinstance(key, int))
+        self.assertTrue(isinstance(unikey, int))
 
     def test_MaximizeEvent_ctor(self):
         evt = wx.MaximizeEvent()
