@@ -181,8 +181,8 @@ tell build.py where to find it using an environment variable, as described in
 the error message.
 
 
-Example build commands
-^^^^^^^^^^^^^^^^^^^^^^
+Example build command-lines
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To do a complete build from a totally clean git workspace, you will
 need to use several of the commands listed above.  For example::
