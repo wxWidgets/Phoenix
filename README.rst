@@ -33,7 +33,7 @@ provided by the build.py script. There is also a setup.py script available
 for those who are used to the standard distutils or setuptools types of
 builds. The setup.py script assumes that all of the code generation steps
 have already been performed, and so it is suitable for use when building from
-a source snapshot tarball or when using easy_install or pip. The seup.py
+a source snapshot tarball or when using easy_install or pip. The setup.py
 script will delegate to build.py for the actual build, and build.py will
 delegate to setup.py when doing setuptoolsy things like performing an install
 or building an egg.
@@ -179,6 +179,28 @@ will bail out with an error message. To continue with the build you will need
 to acquire copies of the tool that will work on your platform and can then
 tell build.py where to find it using an environment variable, as described in
 the error message.
+
+
+Example build commands
+^^^^^^^^^^^^^^^^^^^^^^
+
+To do a complete build from a totally clean git workspace, you will
+need to use several of the commands listed above.  For example::
+
+    python build.py dox etg --nodoc sip build
+
+Subsequent builds can leave out some of the commands if there were no
+changes which would require those commands to be run again.  For
+example, if you wanted to just rebuild the Phoenix extension modules
+you could do this::
+
+    python build.py build_py
+
+If you've changed one of the etg files and need to regenerate and
+rebuild the source affected by that change, then you can use a command
+like this::
+
+    python build.py etg --nodoc sip build build_py
 
 
 
