@@ -8,10 +8,6 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
-import sys
-sys.path.insert(0, r"C:\Program Files (x86)\Wing IDE 5.1" )
-import wingdbstub
-
 
 import etgtools
 import etgtools.tweaker_tools as tools
