@@ -10,6 +10,7 @@ WAIT=50
 class MouseEventsPanel(wx.Panel):
     def __init__(self, parent, eventBinders):
         wx.Panel.__init__(self, parent, size=parent.GetClientSize())
+        self.SetBackgroundColour('pink')
         self.events = list()
         if not isinstance(eventBinders, (list, tuple)):
             eventBinders = [eventBinders]
@@ -18,10 +19,11 @@ class MouseEventsPanel(wx.Panel):
         
     def onMouseEvent(self, evt):
         self.events.append( (evt.EventType, evt.Position) )
-        #print self.events[-1]
+        #print(self.events)
         evt.Skip()
         
         
+
 class uiaction_MouseTests(wtc.WidgetTestCase):
 
             
@@ -39,10 +41,14 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
             return False
         return True
     
+    def setUp(self):
+        super(uiaction_MouseTests, self).setUp()
+        self.frame.WarpPointer(-10,-10)
+        
             
     def test_uiactionMouseMotion(self):
         p = MouseEventsPanel(self.frame, wx.EVT_MOTION)
-        self.assertTrue(p.Size.Get() > (20,20))
+        self.myYield()
         
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((1,1)));   self.waitFor(WAIT)
@@ -50,12 +56,6 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         uia.MouseMove(p.ClientToScreen((10,10)).x, p.ClientToScreen((10,10)).y)
         self.waitFor(WAIT)
         self.waitFor(WAIT)
-        
-        if sys.platform == 'darwin':
-            # The events do seem to be happening, but I just can't seem to
-            # capture them the same way as in the other tests, so bail out
-            # before the asserts to avoid false negatives.
-            return
         
         self.assertEqual(len(p.events), 3)
         self.assertTrue(self.cmp(p.events[0], wx.wxEVT_MOTION, (1,1)))
@@ -65,6 +65,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         
     def test_uiactionMouseLeftDownUp(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP])
+        self.myYield()
         
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((10,10)));   self.waitFor(WAIT)
@@ -79,6 +80,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         
     def test_uiactionMouseRightDownUp(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_RIGHT_DOWN, wx.EVT_RIGHT_UP])
+        self.myYield()
         
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((10,10)));  self.waitFor(WAIT)
@@ -93,6 +95,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
 
     def test_uiactionMouseLeftClick(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP])
+        self.myYield()
         
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((10,10)));  self.waitFor(WAIT)
@@ -107,13 +110,13 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
 
     def test_uiactionMouseLeftDClick(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP, wx.EVT_LEFT_DCLICK])
+        self.myYield()
         
         uia = wx.UIActionSimulator()
         uia.MouseMove(p.ClientToScreen((10,10)));  self.waitFor(WAIT)
         uia.MouseDblClick();                       self.waitFor(WAIT)
         self.waitFor(WAIT)
 
-        #print p.events
         self.assertTrue(len(p.events) == 4)
         self.assertTrue(self.cmp(p.events[0], wx.wxEVT_LEFT_DOWN, (10,10)))
         self.assertTrue(self.cmp(p.events[1], wx.wxEVT_LEFT_UP, (10,10)))
@@ -133,13 +136,6 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         uia.MouseDragDrop(x1,y1, x2,y2);  self.waitFor(WAIT)
         self.waitFor(WAIT)
 
-        if sys.platform == 'darwin':
-            # The events do seem to be happening, but I just can't seem to
-            # capture them the same way as in the other tests, so bail out
-            # before the asserts to avoid false negatives.
-            return
-
-        #print p.events
         self.assertEqual(len(p.events), 4)        
         self.assertTrue(self.cmp(p.events[0], wx.wxEVT_MOTION, (10,10)))
         self.assertTrue(self.cmp(p.events[1], wx.wxEVT_LEFT_DOWN, (10,10)))
@@ -168,7 +164,7 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
             uia.KeyUp(ord(c));              self.waitFor(WAIT)
             if c.isupper():
                 uia.KeyUp(wx.WXK_SHIFT);    self.waitFor(WAIT)
-        self.waitFor(200)
+        self.waitFor(WAIT*2)
                 
         self.assertEqual(self.tc.GetValue(), "This is a test")
     
@@ -180,7 +176,7 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
             if c.isupper():
                 mod = wx.MOD_SHIFT
             uia.Char(ord(c), mod);  self.waitFor(WAIT)
-        self.waitFor(200)
+        self.waitFor(WAIT*2)
                         
         self.assertEqual(self.tc.GetValue(), "This is a test")
 

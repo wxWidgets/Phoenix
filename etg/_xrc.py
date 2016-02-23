@@ -53,7 +53,10 @@ def run():
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
     module.addImport('_xml')    
-    module.addPyCode('import wx', order=10)    
+    module.addPyCode('''\
+    import wx
+    ID_NONE = wx.ID_NONE  # Needed for some parameter defaults in this module
+    ''', order=10)
     module.addInclude(INCLUDES)
 
     module.addInitializerCode("""\

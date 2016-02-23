@@ -64,11 +64,14 @@ class WidgetTestCase(unittest.TestCase):
 
 
     def waitFor(self, milliseconds):
-        intervals = milliseconds/100
-        while intervals > 0:
-            wx.MilliSleep(100)
+        INTERVAL = 100
+        intervals = milliseconds/INTERVAL
+        while True:
+            wx.MilliSleep(INTERVAL)
             self.myYield()
             if hasattr(self, 'flag') and self.flag:
+                break
+            if intervals <= 0:
                 break
             intervals -= 1
     

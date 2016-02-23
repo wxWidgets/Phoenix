@@ -201,7 +201,7 @@ class Size(unittest.TestCase):
         
     def test_DefaultSize(self):
         ds = wx.DefaultSize
-        self.assertRaises(ds == (-1,-1))
+        self.assertTrue(ds == (-1,-1))
         
     def test_GetSet(self):
         s = wx.Size(100,200)
