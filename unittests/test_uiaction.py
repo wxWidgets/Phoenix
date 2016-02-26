@@ -168,18 +168,28 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
                 
         self.assertEqual(self.tc.GetValue(), "This is a test")
     
-    
+
+    @unittest.skipIf(sys.platform == 'darwin', 'wx.UIActionSimulator.Char needs work...')      
     def test_uiactionKeyboardChar(self):
         uia = wx.UIActionSimulator()
         for c in "This is a test":
             mod = wx.MOD_NONE
             if c.isupper():
                 mod = wx.MOD_SHIFT
-            uia.Char(ord(c), mod);  self.waitFor(WAIT)
+            uia.Char(ord(c), mod);  
+            self.waitFor(WAIT)
         self.waitFor(WAIT*2)
                         
         self.assertEqual(self.tc.GetValue(), "This is a test")
 
+
+    @unittest.skipIf(sys.platform == 'darwin', 'wx.UIActionSimulator.Text needs work...')      
+    def test_uiactionKeyboardText(self):
+        uia = wx.UIActionSimulator()
+        uia.Text("This is a test")
+        self.waitFor(WAIT*2)
+                        
+        self.assertEqual(self.tc.GetValue(), "This is a test")
 
 
 #---------------------------------------------------------------------------
