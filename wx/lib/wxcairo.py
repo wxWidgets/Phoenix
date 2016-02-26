@@ -117,11 +117,18 @@ def ContextFromDC(dc):
 
 
     elif 'wxGTK' in wx.PlatformInfo:
-        # Get the GdkDrawable from the dc
-        drawable = voidp( dc.GetHandle() )
+        if 'gtk3' in wx.PlatformInfo:
+            # With wxGTK3, GetHandle() returns a cairo context directly
+            ctxptr = voidp( dc.GetHandle() )
 
-        # Call a GDK API to create a cairo context
-        ctxptr = gdkLib.gdk_cairo_create(drawable)
+            # pyCairo will try to destroy it so we need to increase ref count
+            cairoLib.cairo_reference(ctxptr)
+        else:
+            # Get the GdkDrawable from the dc
+            drawable = voidp( dc.GetHandle() )
+
+            # Call a GDK API to create a cairo context
+            ctxptr = gdkLib.gdk_cairo_create(drawable)
 
         # Turn it into a pycairo context object
         ctx = pycairoAPI.Context_FromContext(ctxptr, pycairoAPI.Context_Type, None)
@@ -300,7 +307,11 @@ def _findHelper(names, key, msg):
 
 
 def _findGDKLib():
-    return _findHelper(['gdk-x11-2.0'], 'gdk',
+    if 'gtk3' in wx.PlatformInfo:
+        libname = 'gdk-3'
+    else:
+        libname = 'gdk-x11-2.0'
+    return _findHelper([libname], 'gdk',
                        "Unable to find the GDK shared library")
 
 def _findPangoCairoLib():

@@ -171,8 +171,6 @@ other dev stuff
 
    * Check gui_scripts entry points.
 
-   * Add build support for gtk3
-
    * wx.Window.DoEraseBackground?
 
    * The sphinxtools are too agressive at ignoring content beyond a #. If the hash

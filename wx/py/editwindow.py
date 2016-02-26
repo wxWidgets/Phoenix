@@ -27,7 +27,8 @@ if 'wxMSW' in wx.PlatformInfo:
               'calltipfg' : '#404040',
             }
 
-elif 'wxGTK' in wx.PlatformInfo and 'gtk2' in wx.PlatformInfo:
+elif 'wxGTK' in wx.PlatformInfo and ('gtk2' in wx.PlatformInfo or
+                                     'gtk3' in wx.PlatformInfo):
     FACES = { 'times'     : 'Serif',
               'mono'      : 'Monospace',
               'helv'      : 'Sans',
