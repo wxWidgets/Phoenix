@@ -77,7 +77,7 @@ details. However be aware that doing so will require a wxWidgets that is
 unreleased preview snapshots. In other words, the wxWidgets build should use
 code from the wxWidgets source repository within a few days of when the
 Phoenix code was checked out. Currently Phoenix is expecting to be used with
-a wxWidgets built from the ``WX_3_0_BRANCH`` git branch.
+a wxWidgets built from the ``wxPy-3.0-branch`` git branch.
 
 On the other hand, it is probably best to just let Phoenix build and bundle
 wxWidgets. The build tools will by default build wxWidgets in a way that
