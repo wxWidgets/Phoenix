@@ -93,6 +93,11 @@ class textctrl_Tests(wtc.WidgetTestCase):
         ta.URL
 
 
+    def test_textctrlNativeCaret(self):
+        t = wx.TextCtrl(self.frame)
+        t.ShowNativeCaret
+        t.HideNativeCaret
+
 #---------------------------------------------------------------------------
 
 
