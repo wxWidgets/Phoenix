@@ -8,13 +8,14 @@
 import os
 import re
 import sys
-import builder
 import glob
 import optparse
 import platform
 import shutil
 import types
 import subprocess
+
+from buildtools import builder
 
 PY3 = sys.version_info[0] == 3
 
@@ -167,8 +168,7 @@ def getoutput(cmd):
     return output
     
 
-def main(scriptName, args):
-    global scriptDir
+def main(wxDir, args):
     global wxRootDir
     global contribDir
     global options
@@ -176,8 +176,7 @@ def main(scriptName, args):
     global wxBuilder
     global nmakeCommand
     
-    scriptDir = os.path.dirname(os.path.abspath(scriptName))
-    wxRootDir = os.path.abspath(os.path.join(scriptDir, "..", ".."))
+    wxRootDir = wxDir
     
     contribDir = os.path.join("contrib", "src")
     installDir = None
@@ -371,7 +370,7 @@ def main(scriptName, args):
     
     elif toolkit in ["msvc", "msvcProject"]:
         flags = {}
-        buildDir = os.path.abspath(os.path.join(scriptDir, "..", "msw"))
+        buildDir = os.path.abspath(os.path.join(wxRootDir, "build", "msw"))
 
         print("creating wx/msw/setup.h from setup0.h")
         if options.unicode:
