@@ -43,7 +43,7 @@ import  wx
 
 #----------------------------------------------------------------------------
 
-from sys import maxint
+from sys import maxsize as maxint
 MAXINT = maxint     # (constants should be in upper case)
 MININT = -maxint-1
 
