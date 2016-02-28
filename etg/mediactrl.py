@@ -8,10 +8,6 @@
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
-import sys
-sys.path.insert(0, r"C:\Program Files (x86)\Wing IDE 5.1" )
-import wingdbstub
-
 
 import etgtools
 import etgtools.tweaker_tools as tools
@@ -34,7 +30,6 @@ def run():
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
     module.addHeaderCode('#include "wx/mediactrl.h"')
-    #module.addHeaderCode('#include "wx/mediaevent.h"')
     
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
@@ -42,6 +37,9 @@ def run():
 
     c = module.find('wxMediaCtrl')
     c.addPrivateCopyCtor()
+
+    c.find('wxMediaCtrl.id').default = '-1'
+    c.find('Create.id').default = '-1'
 
     # the C++ class has three overloaded Load(...) methods
     # for now we ignore all than the first one for loading a filename
@@ -51,9 +49,6 @@ def run():
             # keep e.g. '(const wxString &fileName)'
             item.ignore()
 
-
-    # this is from old SWIG, do we still need it?
-    #%pythoncode { LoadFromURI = LoadURI }
 
 
     c = module.find('wxMediaEvent')
@@ -67,14 +62,9 @@ def run():
                 EVT_MEDIA_PLAY = wx.PyEventBinder( wxEVT_MEDIA_PLAY )
                 EVT_MEDIA_PAUSE = wx.PyEventBinder( wxEVT_MEDIA_PAUSE )
                 """)
-    # do we need such as well?
-    #    # The same as above but with the ability to specify an identifier
-    #    EVT_GRID_CMD_CELL_LEFT_CLICK =     wx.PyEventBinder( wxEVT_GRID_CELL_LEFT_CLICK,    1 )
 
     
-    # the following is in mediactrl.h:
-    # #define wxMEDIABACKEND_DIRECTSHOW   wxT("wxAMMediaBackend")
-    # not sure whether there would be a better way than just defining these strings here:
+    # See mediactrl.h:
     module.addPyCode("""\
                 MEDIABACKEND_DIRECTSHOW = "wxAMMediaBackend"
                 MEDIABACKEND_MCI        = "wxMCIMediaBackend"

@@ -32,7 +32,6 @@ ITEMS  = [ ]
 # promoted script to be the same as its NAME.
 
 INCLUDES = [  'mediactrl',
-              #'mediaevent'
            ]
 
 
