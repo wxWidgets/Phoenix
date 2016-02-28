@@ -45,8 +45,8 @@ import wx.lib.six as six
 
 #----------------------------------------------------------------------------
 
-MAXSIZE = sys.maxsize     # (constants should be in upper case)
-MINSIXE = -sys.maxsize-1
+MAXSIZE = six.MAXSIZE     # (constants should be in upper case)
+MINSIZE = -six.MAXSIZE-1
 
 if six.PY2:
     LONGTYPE = long
