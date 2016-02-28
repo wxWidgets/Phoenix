@@ -787,9 +787,10 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
 
     output = None
     if getOutput:
+        outputEncoding = 'cp1252' if sys.platform == 'win32' else 'utf-8'
         output = sp.stdout.read()
         if sys.version_info > (3,):
-            output = output.decode('utf-8', 'ignore')  # TODO: is utf-8 okay here?
+            output = output.decode(outputEncoding)
         output = output.rstrip()
         
     rval = sp.wait()
