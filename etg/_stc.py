@@ -120,6 +120,9 @@ def run():
             return rv;
             """)
 
+    # Correct the type for this define as its value is outside the range of int
+    module.find('wxSTC_MASK_FOLDERS').type = 'unsigned long'
+
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)
     
 
