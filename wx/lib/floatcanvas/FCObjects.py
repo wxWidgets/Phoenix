@@ -51,7 +51,7 @@ def ComputeFontScale():
 
 ## fixme: This should probably be re-factored into a class
 _testBitmap = None
-_testDC = None
+
 def _cycleidxs(indexcount, maxvalue, step):
 
     """
@@ -61,24 +61,18 @@ def _cycleidxs(indexcount, maxvalue, step):
         """Return True if the color comes back from the bitmap identically."""
         if len(color) < 3:
             return True
-        global _testBitmap, _testDC
-        B = _testBitmap
-        if not mac:
-            dc = _testDC
-        if not B:
-            B = _testBitmap = wx.Bitmap(1, 1)
-            if not mac:
-                dc = _testDC = wx.MemoryDC()
-        if mac:
-            dc = wx.MemoryDC()
-        dc.SelectObject(B)
+        global _testBitmap
+        dc = wx.MemoryDC()
+        if not _testBitmap:
+            _testBitmap = wx.Bitmap(1, 1)
+        dc.SelectObject(_testBitmap)
         dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
         dc.SetPen(wx.Pen(wx.Colour(*color), 4))
         dc.DrawPoint(0,0)
-        if mac:
-            del dc
-            pdata = wx.AlphaPixelData(B)
+        if mac: # NOTE: can the Mac not just use the DC?
+            del dc # Mac can't work with bitmap when selected into a DC.
+            pdata = wx.AlphaPixelData(_testBitmap)
             pacc = pdata.GetPixels()
             pacc.MoveTo(pdata, 0, 0)
             outcolor = pacc.Get()[:3]
@@ -95,6 +89,7 @@ def _cycleidxs(indexcount, maxvalue, step):
                 if not colormatch(color):
                     continue
                 yield color
+
 
 def _colorGenerator():
 
@@ -2702,3 +2697,221 @@ class PieChart(XYObjectMixin, LineOnlyMixin, DrawObject):
             HTdc.SetPen(self.HitPen)
             HTdc.SetBrush(self.HitBrush)
             HTdc.DrawCircle(CenterXY, radius)
+
+
+class Group(DrawObject): 
+    """
+    A group of other FloatCanvas Objects
+    
+    Not all DrawObject methods may apply here.
+    
+    Note that if an object is in more than one group, it will get drawn more than once.
+    
+    """
+
+    def __init__(self, ObjectList=[], InForeground=False, IsVisible=True):
+        """
+        Default class constructor.
+        
+        :param list `ObjectList`: a list of :class:`DrawObject` to be grouped
+        :param boolean `InForeground`: keep in foreground
+        :param boolean `IsVisible`: keep it visible
+        
+        """
+        self.ObjectList = []
+        DrawObject.__init__(self, InForeground, IsVisible)
+
+        # this one uses a proprty for _Canvas...
+        self._Actual_Canvas = None
+
+        for obj in ObjectList:
+            self.AddObject(obj)
+        self.CalcBoundingBox()
+
+    ## re-define _Canvas property so that the sub-objects get set up right
+    @property
+    def _Canvas(self):
+        """
+        getter for the _Canvas property
+        """
+        return self._Actual_Canvas
+
+    @_Canvas.setter
+    def _Canvas(self, canvas):
+        """
+        setter for Canvas property
+        """
+        self._Actual_Canvas = canvas
+        for obj in self.ObjectList:
+            obj._Canvas = canvas
+
+    def AddObject(self, obj):
+        """
+        Add an object to the group.
+        
+        :param DrawObject `obj`: object to add
+        
+        """
+        self.ObjectList.append(obj)
+        self.BoundingBox.Merge(obj.BoundingBox)
+
+    def AddObjects(self, Objects):
+        """
+        Add objects to the group.
+        
+        :param list `Objects`: a list of :class:`DrawObject` to be grouped
+        
+        """
+        for o in Objects:
+            self.AddObject(o)
+            
+    def CalcBoundingBox(self):
+        """Calculate the bounding box."""
+        if self.ObjectList:
+            BB = BBox.BBox(self.ObjectList[0].BoundingBox).copy()
+            for obj in self.ObjectList[1:]:
+                BB.Merge(obj.BoundingBox)
+        else:
+            BB = BBox.NullBBox()
+        self.BoundingBox = BB
+
+    def SetColor(self, Color):
+        """
+        Set the Color
+        
+        :param `Color`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid values
+         
+        """
+        for o in self.ObjectList:
+            o.SetColor(Color)
+
+    def SetLineColor(self, Color):
+        """
+        Set the LineColor
+        
+        :param `LineColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid values
+         
+        """
+        for o in self.ObjectList:
+            o.SetLineColor(Color)
+
+    def SetLineStyle(self, LineStyle):
+        """
+        Set the LineStyle
+        
+        :param `LineStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineStyle`
+         for valid values
+         
+        """
+        for o in self.ObjectList:
+            o.SetLineStyle(LineStyle)
+
+    def SetLineWidth(self, LineWidth):
+        """
+        Set the LineWidth
+        
+        :param integer `LineWidth`: line width in pixels
+         
+        """
+        for o in self.ObjectList:
+            o.SetLineWidth(LineWidth)
+
+    def SetFillColor(self, Color):
+        """
+        Set the FillColor
+        
+        :param `FillColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
+         for valid values
+         
+        """
+        for o in self.ObjectList:
+            o.SetFillColor(Color)
+
+    def SetFillStyle(self, FillStyle):
+        """
+        Set the FillStyle
+        
+        :param `FillStyle`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetFillStyle`
+         for valid values
+         
+        """
+        for o in self.ObjectList:
+            o.SetFillStyle(FillStyle)
+
+    def Move(self, Delta):
+        """
+        Moves the object by delta, where delta is a (dx, dy) pair.
+        
+        :param `Delta`: is a (dx, dy) pair ideally a `NumPy <http://www.numpy.org/>`_ 
+         array of shape (2, )
+
+        """
+        for obj in self.ObjectList:
+            obj.Move(Delta)
+        self.BoundingBox += Delta
+
+    def Bind(self, Event, CallBackFun):
+        """
+        Bind an event to the Group object
+        
+        :param `Event`: see below for supported event types
+
+         - EVT_FC_LEFT_DOWN
+         - EVT_FC_LEFT_UP
+         - EVT_FC_LEFT_DCLICK
+         - EVT_FC_MIDDLE_DOWN
+         - EVT_FC_MIDDLE_UP
+         - EVT_FC_MIDDLE_DCLICK
+         - EVT_FC_RIGHT_DOWN
+         - EVT_FC_RIGHT_UP
+         - EVT_FC_RIGHT_DCLICK
+         - EVT_FC_ENTER_OBJECT
+         - EVT_FC_LEAVE_OBJECT
+
+        :param `CallBackFun`: the call back function for the event
+
+        
+        """
+        ## slight variation on DrawObject Bind Method:
+        ## fixme: There is a lot of repeated code from the DrawObject method, but
+        ## it all needs a lot of cleaning up anyway.
+        self.CallBackFuncs[Event] = CallBackFun
+        self.HitAble = True
+        self._Canvas.UseHitTest = True
+        if self.InForeground and self._Canvas._ForegroundHTBitmap is None:
+            self._Canvas.MakeNewForegroundHTBitmap()
+        elif self._Canvas._HTBitmap is None:
+            self._Canvas.MakeNewHTBitmap()
+        if not self.HitColor:
+            if not self._Canvas.HitColorGenerator:
+                self._Canvas.HitColorGenerator = _colorGenerator()
+                # first call to prevent the background color from being used.                
+                if six.PY2:
+                    self._Canvas.HitColorGenerator.next()
+                else:
+                    next(self._Canvas.HitColorGenerator)
+            # Set all contained objects to the same Hit color:
+            if six.PY2:
+                self.HitColor = self._Canvas.HitColorGenerator.next()
+            else:
+                self.HitColor = next(self._Canvas.HitColorGenerator)
+        self._ChangeChildrenHitColor(self.ObjectList)
+        # put the object in the hit dict, indexed by it's color
+        if not self._Canvas.HitDict:
+            self._Canvas.MakeHitDict()
+        self._Canvas.HitDict[Event][self.HitColor] = (self)
+
+    def _ChangeChildrenHitColor(self, objlist):
+        for obj in objlist:
+            obj.SetHitPen(self.HitColor, self.HitLineWidth)
+            obj.SetHitBrush(self.HitColor)
+            obj.HitAble = True
+            
+            if isinstance(obj, Group):
+                self._ChangeChildrenHitColor(obj.ObjectList)
+
+    def _Draw(self, dc , WorldToPixel, ScaleWorldToPixel = None, HTdc=None):
+        for obj in self.ObjectList:
+            obj._Draw(dc, WorldToPixel, ScaleWorldToPixel, HTdc)
