@@ -4,7 +4,7 @@
 # Created:      01/16/2003
 # Copyright:   (c) 2003 by Will Sadkin
 # License:     wxWindows license
-# Tags:         phoenix-port
+# Tags:        phoenix-port, py3-port, unittest, documented
 #----------------------------------------------------------------------------
 # NOTE:
 #   This was written to provide a standard integer edit control for wxPython.
@@ -36,16 +36,22 @@
 # o wxIntCtrl -> IntCtrl
 #
 
+import sys
 import  string
 import  types
 
 import  wx
+import wx.lib.six as six
 
 #----------------------------------------------------------------------------
 
-from sys import maxint
-MAXINT = maxint     # (constants should be in upper case)
-MININT = -maxint-1
+MAXSIZE = six.MAXSIZE     # (constants should be in upper case)
+MINSIZE = -six.MAXSIZE-1
+
+if six.PY2:
+    LONGTYPE = long
+else:
+    LONGTYPE = int
 
 #----------------------------------------------------------------------------
 
@@ -66,14 +72,25 @@ WXK_CTRL_X = (ord('X')+1) - ord('A')
 WXK_CTRL_V = (ord('V')+1) - ord('A')
 
 class IntUpdatedEvent(wx.PyCommandEvent):
+    """Event sent from the :class:`~lib.intctrl.IntCtrl` when control is updated."""
+    
     def __init__(self, id, value = 0, object=None):
+        """
+        Default class constructor.
+    
+        :param int `id`: the object id
+        :param int `value`: the value
+        :param `object`: the object of the event
+        
+        """
         wx.PyCommandEvent.__init__(self, wxEVT_COMMAND_INT_UPDATED, id)
 
         self.__value = value
         self.SetEventObject(object)
 
     def GetValue(self):
-        """Retrieve the value of the control at the time
+        """
+        Retrieve the value of the control at the time
         this event was generated."""
         return self.__value
 
@@ -82,14 +99,22 @@ class IntUpdatedEvent(wx.PyCommandEvent):
 
 class IntValidator(wx.Validator):
     """
-    Validator class used with IntCtrl; handles all validation of input
-    prior to changing the value of the underlying wx.TextCtrl.
+    Validator class used with :class:`~lib.intctrl.IntCtrl` handles all validation of
+    input prior to changing the value of the underlying :class:`TextCtrl`.
     """
     def __init__(self):
+        """Standard constructor"""
         wx.Validator.__init__(self)
         self.Bind(wx.EVT_CHAR, self.OnChar)
 
     def Clone (self):
+        """
+        Standard cloner
+        
+        ..note::
+          Every validator must implement the Clone() method.
+          
+        """
         return self.__class__()
 
     def Validate(self, window):     # window here is the *parent* of the ctrl
@@ -333,21 +358,29 @@ class IntValidator(wx.Validator):
 
 
     def TransferToWindow(self):
-     """ Transfer data from validator to window.
-
-         The default implementation returns False, indicating that an error
-         occurred.  We simply return True, as we don't do any data transfer.
-     """
-     return True # Prevent wx.Dialog from complaining.
+        """
+        Transfer data from validator to window.
+   
+        The default implementation returns False, indicating that an error
+        occurred.  We simply return True, to indicate to e.g. :class:`Dialog`
+        that all is well.
+        
+        If data comes e.g. from a database then you need to override this.
+        """
+        return True
 
 
     def TransferFromWindow(self):
-     """ Transfer data from window to validator.
-
-         The default implementation returns False, indicating that an error
-         occurred.  We simply return True, as we don't do any data transfer.
-     """
-     return True # Prevent wx.Dialog from complaining.
+        """
+        Transfer data from window to validator.
+   
+        The default implementation returns False, indicating that an error
+        occurred.  We simply return True, to indicate to e.g. :class:`Dialog`
+        that all is well.
+        
+        If data comes e.g. from a database then you need to override this.
+        """
+        return True
 
 
 #----------------------------------------------------------------------------
@@ -356,69 +389,6 @@ class IntCtrl(wx.TextCtrl):
     """
     This class provides a control that takes and returns integers as
     value, and provides bounds support and optional value limiting.
-
-    IntCtrl(
-         parent, id = -1,
-         value = 0,
-         pos = wxDefaultPosition,
-         size = wxDefaultSize,
-         style = 0,
-         validator = wxDefaultValidator,
-         name = "integer",
-         min = None,
-         max = None,
-         limited = False,
-         allow_none = False,
-         allow_long = False,
-         default_color = wxBLACK,
-         oob_color = wxRED )
-
-    value
-        If no initial value is set, the default will be zero, or
-        the minimum value, if specified.  If an illegal string is specified,
-        a ValueError will result. (You can always later set the initial
-        value with SetValue() after instantiation of the control.)
-    min
-        The minimum value that the control should allow.  This can be
-        adjusted with SetMin().  If the control is not limited, any value
-        below this bound will be colored with the current out-of-bounds color.
-        If min < -sys.maxint-1 and the control is configured to not allow long
-        values, the minimum bound will still be set to the long value, but
-        the implicit bound will be -sys.maxint-1.
-    max
-        The maximum value that the control should allow.  This can be
-        adjusted with SetMax().  If the control is not limited, any value
-        above this bound will be colored with the current out-of-bounds color.
-        if max > sys.maxint and the control is configured to not allow long
-        values, the maximum bound will still be set to the long value, but
-        the implicit bound will be sys.maxint.
-
-    limited
-        Boolean indicating whether the control prevents values from
-        exceeding the currently set minimum and maximum values (bounds).
-        If False and bounds are set, out-of-bounds values will
-        be colored with the current out-of-bounds color.
-
-    allow_none
-        Boolean indicating whether or not the control is allowed to be
-        empty, representing a value of None for the control.
-
-    allow_long
-        Boolean indicating whether or not the control is allowed to hold
-        and return a long as well as an int.
-
-    default_color
-        Color value used for in-bounds values of the control.
-
-    oob_color
-        Color value used for out-of-bounds values of the control
-        when the bounds are set but the control is not limited.
-
-    validator
-        Normally None, IntCtrl uses its own validator to do value
-        validation and input control.  However, a validator derived
-        from IntValidator can be supplied to override the data
-        transfer methods for the IntValidator class.
     """
 
     def __init__ (
@@ -430,7 +400,68 @@ class IntCtrl(wx.TextCtrl):
                 limited = 0, allow_none = 0, allow_long = 0,
                 default_color = wx.BLACK, oob_color = wx.RED,
         ):
+        """
+        Default constructor
 
+        :param `parent`: parent window
+
+        :param int `id`: window identifier. A value of -1 indicates a
+          default value
+ 
+        :param `value`: If no initial value is set, the default will be zero, 
+          or the minimum value, if specified.  If an illegal string is
+          specified, a ValueError will result. (You can always later set the
+          initial value with ChangeValue() after instantiation of the control.)
+          
+        :param tuple `pos`: the control position. A value of (-1, -1) indicates
+          a default position, chosen by either the windowing system or
+          wxPython, depending on platform
+
+        :param Size `size`: the control size. A value of (-1, -1) indicates a
+          default size, chosen by either the windowing system or wxPython,
+          depending on platform
+          
+        :param int `style`: the underlying :class:`TextCtrl` style
+        
+        :param Validator `validator`: Normally None, IntCtrl uses its own
+          validator to do value validation and input control.  However, a
+          validator derived from :class:`~lib.intctrl.IntValidator` can be
+          supplied to override the data transfer methods for the
+          :class:`~lib.intctrl.IntValidator` class.
+
+        :param int `min`: The minimum value that the control should allow.  This
+          can be adjusted with SetMin().  If the control is not limited, any
+          value below this bound will be colored with the current out-of-bounds
+          color. If min < -sys.maxsize-1 and the control is configured to not
+          allow long values, the minimum bound will still be set to the long
+          value, but the implicit bound will be -sys.maxsize-1.
+    
+        :param int `max`: The maximum value that the control should allow.  This
+          can be adjusted with SetMax().  If the control is not limited, any
+          value above this bound will be colored with the current out-of-bounds
+          color.  if max > sys.maxsize and the control is configured to not
+          allow long values, the maximum bound will still be set to the long
+          value, but the implicit bound will be sys.maxsize.
+
+        :param bool `limited`: Boolean indicating whether the control
+          prevents values from exceeding the currently set minimum and maximum
+          values (bounds).  If False and bounds are set, out-of-bounds values
+          will be colored with the current out-of-bounds color.
+
+        :param bool `allow_none`: Boolean indicating whether or not the
+          control is allowed to be empty, representing a value of None for the
+          control.
+
+        :param bool `allow_long`:  Boolean indicating whether or not the
+          control is allowed to hold and return a long as well as an int.
+
+        :param Color `default_color`:  Color value used for in-bounds values
+          of the control.
+
+        :param Color `oob_color`:  Color value used for out-of-bounds values
+          of the control when the bounds are set but the control is not limited.
+
+        """
         # Establish attrs required for any operation on value:
         self.__min = None
         self.__max = None
@@ -438,7 +469,10 @@ class IntCtrl(wx.TextCtrl):
         self.__default_color = wx.BLACK
         self.__oob_color = wx.RED
         self.__allow_none = 0
-        self.__allow_long = 0
+        if six.PY2:
+            self.__allow_long = 0
+        else:
+            self.__allow_long = 1
         self.__oldvalue = None
 
         if validator == wx.DefaultValidator:
@@ -457,7 +491,10 @@ class IntCtrl(wx.TextCtrl):
         self.SetLimited(limited)
         self.SetColors(default_color, oob_color)
         self.SetNoneAllowed(allow_none)
-        self.SetLongAllowed(allow_long)
+        if six.PY2:
+            self.SetLongAllowed(allow_long)
+        else:
+            self.SetLongAllowed(1)
         self.SetValue(value)
         self.__oldvalue = 0
 
@@ -497,13 +534,21 @@ class IntCtrl(wx.TextCtrl):
         or colored if not limited but the value is out-of-bounds.
         A ValueError exception will be raised if an invalid value
         is specified.
+        
+        :param int `value`: The value to be set
+        
         """
         wx.TextCtrl.SetValue( self, self._toGUI(value) )
         self._colorValue()
 
 
     def ChangeValue(self, value):
-        "Change the value without sending an EVT_TEXT event."""
+        """
+        Change the value without sending an EVT_TEXT event.
+
+        :param int `value`: The value to be set
+        
+        """
         wx.TextCtrl.ChangeValue(self, self._toGUI(value))
         self.__oldvalue = self.GetValue() # record for next event
         self._colorValue()
@@ -522,8 +567,11 @@ class IntCtrl(wx.TextCtrl):
         adjusted to the new minimum value; if not limited, the value in the
         control will be colored with the current out-of-bounds color.
 
-        If min > -sys.maxint-1 and the control is configured to not allow longs,
+        If min > -sys.maxsize-1 and the control is configured to not allow longs,
         the function will return 0, and the min will not be set.
+        
+        :param int `min`: The value to be set as minimum
+
         """
         if( self.__max is None
             or min is None
@@ -560,8 +608,10 @@ class IntCtrl(wx.TextCtrl):
         adjusted to this maximum value; if not limited, the value in the
         control will be colored with the current out-of-bounds color.
 
-        If max > sys.maxint and the control is configured to not allow longs,
+        If max > sys.maxsize and the control is configured to not allow longs,
         the function will return 0, and the max will not be set.
+        
+        :param int `max`: The value to be set as maximum
         """
         if( self.__min is None
             or max is None
@@ -591,7 +641,13 @@ class IntCtrl(wx.TextCtrl):
         values at the same time.  The function only applies the maximum bound
         if setting the minimum bound is successful, and returns True
         only if both operations succeed.
-        NOTE: leaving out an argument will remove the corresponding bound.
+        ..note::
+          Leaving out an argument will remove the corresponding bound.
+        
+        :param int `min`: The value to be set as minimum        
+        
+        :param int `max`: The value to be set as maximum
+
         """
         ret = self.SetMin(min)
         return ret and self.SetMax(max)
@@ -616,6 +672,9 @@ class IntCtrl(wx.TextCtrl):
         If called with a value of 0, this function will disable value
         limiting, but coloring of out-of-bounds values will still take
         place if bounds have been set for the control.
+        
+        :param bool `limited`: If True set to control to be limited.
+        
         """
         self.__limited = limited
         if limited:
@@ -643,12 +702,15 @@ class IntCtrl(wx.TextCtrl):
         of the control falls within the current bounds.  This function can
         also be called with a value to see if that value would fall within
         the current bounds of the given control.
+        
+        :param int `value`: value to check or None
+        
         """
         if value is None:
             value = self.GetValue()
 
         if( not (value is None and self.IsNoneAllowed())
-            and type(value) not in (types.IntType, types.LongType) ):
+            and type(value) not in six.integer_types ):
             raise ValueError (
                 'IntCtrl requires integer values, passed %s'% repr(value) )
 
@@ -671,6 +733,9 @@ class IntCtrl(wx.TextCtrl):
         of the control is currently None, and allow_none is 0, the
         value of the control will be set to the minimum value of the
         control, or 0 if no lower bound is set.
+        
+        :param bool `allow_none`: If True a None value is allowed
+        
         """
         self.__allow_none = allow_none
         if not allow_none and self.GetValue() is None:
@@ -680,6 +745,7 @@ class IntCtrl(wx.TextCtrl):
 
 
     def IsNoneAllowed(self):
+        """Is a None value allowed."""
         return self.__allow_none
 
 
@@ -689,19 +755,23 @@ class IntCtrl(wx.TextCtrl):
         to have a long value or not, as appropriate.  If the value
         of the control is currently long, and allow_long is 0, the
         value of the control will be adjusted to fall within the
-        size of an integer type, at either the sys.maxint or -sys.maxint-1,
+        size of an integer type, at either the sys.maxsize or -sys.maxsize-1,
         for positive and negative values, respectively.
+        
+        :param bool `allow_long`: If True allow long values for control
+        
         """
         current_value = self.GetValue()
-        if not allow_long and type(current_value) is types.LongType:
+        if not allow_long and type(current_value) is LONGTYPE:
             if current_value > 0:
-                self.SetValue(MAXINT)
+                self.SetValue(MAXSIZE)
             else:
-                self.SetValue(MININT)
+                self.SetValue(MINSIZE)
         self.__allow_long = allow_long
 
 
     def IsLongAllowed(self):
+        """Is a long value allowed."""
         return self.__allow_long
 
 
@@ -711,6 +781,10 @@ class IntCtrl(wx.TextCtrl):
         Tells the control what colors to use for normal and out-of-bounds
         values.  If the value currently exceeds the bounds, it will be
         recolored accordingly.
+        
+        :param Color `default_color`: default color to be used
+        :param Color `oob_color`: out of bound color to be used
+        
         """
         self.__default_color = default_color
         self.__oob_color = oob_color
@@ -745,10 +819,10 @@ class IntCtrl(wx.TextCtrl):
         """
         if value is None and self.IsNoneAllowed():
             return ''
-        elif type(value) == types.LongType and not self.IsLongAllowed():
+        elif type(value) == LONGTYPE and not self.IsLongAllowed():
             raise ValueError (
                 'IntCtrl requires integer value, passed long' )
-        elif type(value) not in (types.IntType, types.LongType):
+        elif type(value) not in six.integer_types:
             raise ValueError (
                 'IntCtrl requires integer value, passed %s'% repr(value) )
 
@@ -793,7 +867,7 @@ class IntCtrl(wx.TextCtrl):
 
     def Cut( self ):
         """
-        Override the wxTextCtrl's .Cut function, with our own
+        Override the :func:`TextCtrl.Cut` function, with our own
         that does validation.  Will result in a value of 0
         if entire contents of control are removed.
         """
@@ -836,7 +910,7 @@ class IntCtrl(wx.TextCtrl):
 
     def Paste( self ):
         """
-        Override the wxTextCtrl's .Paste function, with our own
+        Override the :func:`TextCtrl.Paste` function, with our own
         that does validation.  Will raise ValueError if not a
         valid integerizable value.
         """
