@@ -66,7 +66,7 @@ class TestPanel(wx.Panel):
         btnSizer.Add(txt, 0, wx.CENTER|wx.ALL, 2)
 
         self.location = wx.ComboBox(
-                            self, -1, "", style=wx.CB_DROPDOWN|wx.PROCESS_ENTER
+                            self, -1, "", style=wx.CB_DROPDOWN|wx.TE_PROCESS_ENTER
                             )
         
         self.Bind(wx.EVT_COMBOBOX, self.OnLocationSelect, self.location)
