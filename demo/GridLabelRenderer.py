@@ -98,7 +98,7 @@ work like the normal cell renderers do.  If desired you can specify a
 different renderer for each row or col label, and even for the little
 corner label in the upper left corner of the grid.  When each of those
 labels needs to be drawn the mixin calls the render's Draw method with
-the dc and rectangle, allowing your renderer class do do just about
+the dc and rectangle, allowing your renderer class to do just about
 anything that it wants.
 
 </body></html>
