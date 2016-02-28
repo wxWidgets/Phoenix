@@ -1135,18 +1135,16 @@ def cmd_build_wx(options, args):
                     
     try:
         # Import and run the wxWidgets build script
-        wxscript = os.path.join(wxDir(), "build/tools/build-wxwidgets.py")
-        sys.path.insert(0, os.path.dirname(wxscript))
-        wxbuild = __import__('build-wxwidgets')
+        from buildtools import build_wxwidgets as wxbuild
 
         print('wxWidgets build options: ' + str(build_options))
-        wxbuild.main(wxscript, build_options)
+        wxbuild.main(wxDir(), build_options)
         
         # build again without the --debug flag?
         if isWindows and options.both:
             build_options.remove('--debug')
             print('wxWidgets build options: ' + str(build_options))
-            wxbuild.main(wxscript, build_options)
+            wxbuild.main(wxDir(), build_options)
             
     except Exception:
         print("ERROR: failed building wxWidgets")
