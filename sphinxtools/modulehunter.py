@@ -12,7 +12,6 @@ import imp
 import traceback
 import pkgutil
 
-import __builtin__
 
 if sys.version_info < (3,):
     import cPickle as pickle
@@ -34,8 +33,9 @@ from .utilities import IsPython3
 from .constants import object_types, EXCLUDED_ATTRS, MODULE_TO_ICON
 from .constants import CONSTANT_RE
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+if sys.version_info < (3,):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 try:
     import wx

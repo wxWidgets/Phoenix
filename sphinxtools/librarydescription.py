@@ -19,8 +19,9 @@ from . import templates
 
 EPYDOC_PATTERN = re.compile(r'\S+{\S+}', re.DOTALL)
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+if sys.version_info < (3,):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 
 def make_class_tree(tree):
