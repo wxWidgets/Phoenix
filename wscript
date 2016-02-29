@@ -68,12 +68,8 @@ def configure(conf):
         # version. We have a chicken-egg problem here. The compiler needs to
         # be selected before the Python stuff can be configured, but we need
         # Python to know what version of the compiler to use.
-        # TODO: Fix this
-        msvc_version = '9.0' #conf.options.msvc_ver
-        if conf.options.python and ('33' in conf.options.python or
-                                    '34' in conf.options.python):
-            msvc_version = '10.0'
-
+        import distutils.msvc9compiler
+        msvc_version = str( distutils.msvc9compiler.get_build_version() )
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
         conf.load('msvc')
@@ -616,7 +612,8 @@ def copyFileToPkg(task):
     from buildtools.config   import opj
     src = task.inputs[0].abspath() 
     tgt = task.outputs[0].abspath() 
-    task.exec_command('touch %s' % tgt)
+    #task.exec_command('touch %s' % tgt)
+    open(tgt, "wb").close() # 'touch'
     tgt = opj(cfg.PKGDIR, os.path.basename(src))
     copy_file(src, tgt, verbose=1)
     return 0
