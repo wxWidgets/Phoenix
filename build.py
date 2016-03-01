@@ -85,6 +85,14 @@ doxygenMD5 = {
 # And the location where they can be downloaded from
 toolsURL = 'http://wxpython.org/Phoenix/tools'
 
+# Cygwin is needed on Windows. This tool assumes it is installed in
+# the default location. Try to at least guess if we are using 32 bit
+# or 64 bit builds.
+if isWindows:
+    cygwin_path_32 = 'c:/cygwin'
+    cygwin_path_64 = 'c:/cygwin64'
+    cygwin_path = cygwin_path_64 if os.path.isdir(cygwin_path_64) else cygwin_path_32
+
 #---------------------------------------------------------------------------
 
 def usage():
@@ -240,7 +248,7 @@ def setPythonVersion(args):
             #            
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
-                TOOLS = runcmd('c:/cygwin/bin/cygpath -w '+TOOLS, True, False)
+                TOOLS = runcmd(cygwin_path+'/bin/cygpath -w '+TOOLS, True, False)
             use64flag = '--x64' in args
             if use64flag:
                 args.remove('--x64')
@@ -718,12 +726,12 @@ def _doDox(arg):
     
     if isWindows:
         doxCmd = doxCmd.replace('\\', '/')
-        doxCmd = runcmd('c:/cygwin/bin/cygpath -u '+doxCmd, True, False)
+        doxCmd = runcmd(cygwin_path+'/bin/cygpath -u '+doxCmd, True, False)
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
-        cmd = 'c:/cygwin/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (d, arg)
+        cmd = '%s/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (cygwin_path, d, arg)
     else:
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
