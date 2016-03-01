@@ -41,7 +41,6 @@ _treeList = [
     # new stuff
     ('Recent Additions/Updates', [
         'FileCtrl',
-        'MouseState',
         'Overlay',
         'RearrangeDialog',
         'RichMessageDialog',
