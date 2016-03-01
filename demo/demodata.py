@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# main_globals.py
+# demodata.py
 
 """
 Globals for the main.py wxPython demo.
@@ -40,33 +40,13 @@ _demoPngs = ["overview", "recent", "frame", "dialog", "moredialog", "core",
 _treeList = [
     # new stuff
     ('Recent Additions/Updates', [
-        'BannerWindow',
-        'ToolTip',
-        'RichToolTip',
-        'NotificationMessage',
-        'RearrangeDialog',
-        'MouseState',
-        'RichMessageDialog',
         'FileCtrl',
+        'MouseState',
         'Overlay',
+        'RearrangeDialog',
+        'RichMessageDialog',
+        'ToolTip',
         'TimePickerCtrl',
-        'PropertyGrid',
-        'SystemSettings',
-        'GridLabelRenderer',
-        'InfoBar',
-        'WrapSizer',
-        'UIActionSimulator',
-        'GraphicsGradient',
-        'PDFViewer',
-        'ItemsPicker',
-        'CommandLinkButton',
-        'DVC_DataViewModel',
-        'DVC_IndexListModel',
-        'DVC_ListCtrl',
-        'DVC_TreeCtrl',
-        'DVC_CustomRenderer',
-        'PenAndBrushStyles',
-        'HTML2_WebView',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -95,6 +75,8 @@ _treeList = [
         'ProgressDialog',
         'SingleChoiceDialog',
         'TextEntryDialog',
+        'RearrangeDialog',
+        'RichMessageDialog',
     ]),
 
     # dialogs from libraries
@@ -165,6 +147,7 @@ _treeList = [
         'ColourSelect',
         'ComboTreeBox',
         'Editor',
+        'FileCtrl',
         'GenericButtons',
         'GenericDirCtrl',
         'ItemsPicker',
@@ -221,6 +204,7 @@ _treeList = [
         'Throbber',
         'Ticker',
         'TimeCtrl',
+        'TimePickerCtrl',
         'TreeMixin',
         'VListBox',
     ]),
@@ -298,6 +282,7 @@ _treeList = [
         'MimeTypesManager',
         'MouseGestures',
         'OGL',
+        'Overlay',
         'PDFViewer',
         'PenAndBrushStyles',
         'PrintFramework',
@@ -307,6 +292,7 @@ _treeList = [
         'Sound',
         'StandardPaths',
         'SystemSettings',
+        'ToolTip',
         'UIActionSimulator',
         'Unicode',
     ]),
