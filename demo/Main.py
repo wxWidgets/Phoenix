@@ -92,7 +92,7 @@ DEFAULT_PERSPECTIVE = "Default Perspective"
 #---------------------------------------------------------------------------
 
 # get images and demo list
-from main_globals import _demoPngs, _treeList
+from demodata import _demoPngs, _treeList
 
 #---------------------------------------------------------------------------
 
