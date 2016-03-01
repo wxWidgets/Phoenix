@@ -15,44 +15,31 @@ class FileCtrl(wx.FileCtrl):
                  # | wx.FC_SAVE
                  # | wx.FC_MULTIPLE
                  # | wx.FC_NOSHOWHIDDEN
-                 pos=wx.DefaultPosition, size=wx.DefaultSize, name="filectrl"):
+                 pos=wx.DefaultPosition, size=wx.DefaultSize, name="filectrl", log=None):
         wx.FileCtrl.__init__(self, parent, id, defaultDirectory, defaultFilename,
                              wildCard, style, pos, size, name)
+        
+        self.BackgroundColour = 'pink'
+        
+        self.log = log
         self.Bind(wx.EVT_FILECTRL_FILEACTIVATED, self.OnFileActivated)
         self.Bind(wx.EVT_FILECTRL_SELECTIONCHANGED, self.OnSelectionChanged)
         self.Bind(wx.EVT_FILECTRL_FOLDERCHANGED, self.OnFolderChanged)
         self.Bind(wx.EVT_FILECTRL_FILTERCHANGED, self.OnFilterChanged)
 
     def OnFileActivated(self, event):
-        self.GetGrandParent().SetStatusText('File Activated: %s' % self.GetFilename())
+        self.log.write('File Activated: %s\n' % self.GetFilename())
 
     def OnSelectionChanged(self, event):
-        self.GetGrandParent().SetStatusText('Selection Changed: %s' % self.GetPath())
+        self.log.write('Selection Changed: %s\n' % self.GetPath())
 
     def OnFolderChanged(self, event):
-        self.GetGrandParent().SetStatusText('Directory Changed: %s' % self.GetDirectory())
+        self.log.write('Directory Changed: %s\n' % self.GetDirectory())
 
     def OnFilterChanged(self, event):
-        self.GetGrandParent().SetStatusText('Filter Changed: %s' % self.GetFilterIndex())
+        self.log.write('Filter Changed: %s\n' % self.GetFilterIndex())
 
 
-class MyFrame(wx.Frame):
-    def __init__(self, parent, id, title, pos=wx.DefaultPosition,
-                 size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE):
-        wx.Frame.__init__(self, parent, id, title, pos, size, style)
-        self.CreateStatusBar()
-        panel = wx.Panel(self)
-
-        fc = FileCtrl(panel)
-
-        vsizer = wx.BoxSizer(wx.VERTICAL)
-        vsizer.Add(fc, 1, wx.EXPAND | wx.ALL, 0)
-        panel.SetSizer(vsizer)
-
-        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
-
-    def OnCloseWindow(self, event):
-        self.Destroy()
 
 #---------------------------------------------------------------------------
 
@@ -62,13 +49,8 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent)
 
-        b = wx.Button(self, -1, "Create and Show a FileCtrl")
-        self.Bind(wx.EVT_BUTTON, self.OnButton, b)
-
-    def OnButton(self, evt):
-        win = MyFrame(self, -1, "This is a wx.FileCtrl",
-                  style=wx.DEFAULT_FRAME_STYLE)
-        win.Show(True)
+        fc = FileCtrl(self, pos=(15,15), size=(480,300), log=log)
+        
 
 
 #---------------------------------------------------------------------------
@@ -87,8 +69,6 @@ This control allows the user to select a file.
 
 Two implementations of this class exist, one for Gtk and another
 generic one for all the other ports.
-
-This class is only available if USE_FILECTRL is set to 1.
 
 ------------------------------------------------------------------
 Window Styles
