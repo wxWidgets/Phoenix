@@ -49,7 +49,7 @@ def load_module(moduleName, searchPath):
     try: 
         module = _import_module(moduleName) 
         
-    except:
+    except Exception:
         import imp
         fp, pathname, description = imp.find_module(moduleName, searchPath)
         try:

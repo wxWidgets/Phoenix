@@ -72,6 +72,6 @@ class PublisherArg1Stage2(Publisher):
 
 if policies.msgProtocolTransStage is not None:
     Publisher = PublisherArg1Stage2
-    #print 'Using protocol', Publisher
+    #print('Using protocol %s' % Publisher)
 
 
