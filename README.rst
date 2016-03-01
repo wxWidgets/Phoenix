@@ -41,17 +41,27 @@ or building an egg.
 Using the build.py script allows for greater control over the build process
 than setup.py does, including commands for performing the various
 code-generation steps. So developers working on Phoenix itself or building
-from a Git checkout, instead of just building it from a source snapshot,
-should be using the build.py script. Build.py provides a fairly simple
+from a Git checkout, instead of a source snapshot tarball, should be using
+the build.py script. The build.py script provides a fairly simple
 command-line interface consisting of commands and options. To see the full
 list run ``python build.py --help``. The most important commands are listed
 below.
+
+**Windows Users NOTE:** If you are building Phoenix on Windows and have a
+non-English language installation of Microsoft Visual Studio then you may
+need to set the code page in your console window in order to avoid Unicode
+decoding errors. For example::
+
+    chcp 1252
+    python build.py <build commands>...
+
 
 If you just want to do a standard setuptools-style build using setup.py and
 are using a full source tarball, then you can stop reading at this point. If
 you want to build from a source repository checkout, or need to make changes
 and/or to regenerate some of the generated source files, then please continue
 reading.
+
 
 Building wxWidgets
 ------------------

@@ -31,7 +31,7 @@ VER_FLAGS        = ""     # wxPython release flags
 #                  if it exists, and is appended to VER_FLAGS
 #
 #   "a1"           for official alpha releases
-#   "b1"           for beta relases
+#   "b1"           for beta releases
 #   "rc1"          for release candidate releases
 #
 #   "-1a1"         For alpha releases of a numbered post release, (betas, etc. 
