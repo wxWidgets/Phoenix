@@ -325,6 +325,17 @@ If you want to build Phoenix with debug info then you will need to first
 build a debug version of Python, and then use that Python (python_d.exe) to
 build Phoenix.
 
+You will also need to:
+
+- Install Cygwin_ into ``C:\cygwin`` and add ``C:\cygwin\bin`` to your
+  ``PATH`` environment variable.
+- Install Graphviz_ and add its ``\bin`` directory
+  (e.g. ``C:\Program Files (x86)\Graphviz2.38\bin``) to your ``PATH``
+  environment variable.
+
+.. _Cygwin: https://www.cygwin.com/
+.. _Graphviz: http://www.graphviz.org/
+
 **Linux**
 
 On Ubuntu the following development packages and their dependencies
