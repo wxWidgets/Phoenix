@@ -22,7 +22,6 @@ class TestPanel(wx.Panel):
         def DING():
             """Add some audacity...erm annoyance"""
             wx.Bell()
-        DING()
 
         event.Skip()
         dlg = wx.RichMessageDialog(self, "Hey You! I'm a rich irritating dialog!")
