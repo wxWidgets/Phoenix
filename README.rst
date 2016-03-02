@@ -55,12 +55,18 @@ decoding errors. For example::
     chcp 1252
     python build.py <build commands>...
 
+In addition, some tasks within the build currently expect to be able to use
+Cygwin on Windows (https://www.cygwin.com/) to do its work. If you have
+Cygwin installed in one of the default locations (c:\cygwin or c:\cygwin64)
+then all is well. If you have it installed somewhere else then you can set
+CYGWIN_BASE in the environment and the build tool will use that for the base
+dir.
 
-If you just want to do a standard setuptools-style build using setup.py and
-are using a full source tarball, then you can stop reading at this point. If
-you want to build from a source repository checkout, or need to make changes
-and/or to regenerate some of the generated source files, then please continue
-reading.
+On the other hand, if you just want to do a standard setuptools-style build
+using setup.py and are using a full source tarball, then you can stop reading
+at this point. If you want to build from a source repository checkout, or
+need to make changes and/or to regenerate some of the generated source files,
+then please continue reading.
 
 
 Building wxWidgets

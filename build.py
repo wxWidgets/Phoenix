@@ -85,6 +85,7 @@ doxygenMD5 = {
 # And the location where they can be downloaded from
 toolsURL = 'http://wxpython.org/Phoenix/tools'
 
+
 #---------------------------------------------------------------------------
 
 def usage():
@@ -240,7 +241,7 @@ def setPythonVersion(args):
             #            
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
-                TOOLS = runcmd('c:/cygwin/bin/cygpath -w '+TOOLS, True, False)
+                TOOLS = runcmd(getCygwinPath()+'/bin/cygpath -w '+TOOLS, True, False)
             use64flag = '--x64' in args
             if use64flag:
                 args.remove('--x64')
@@ -707,6 +708,24 @@ def getWafBuildBase():
     return base
     
         
+def getCygwinPath():
+    """
+    Try to locate the path where cygwin is installed.
+    
+    If CYGWIN_BASE is set in the environment then use that. Otherwise look in
+    default install locations.
+    """
+    if os.environ.get('CYGWIN_BASE'):
+        return os.environ.get('CYGWIN_BASE')
+    
+    for path in ['c:/cygwin', 'c:/cygwin64']:
+        if os.path.isdir(path):
+            return path
+        
+    return None
+
+    
+    
 #---------------------------------------------------------------------------
 # Command functions and helpers
 #---------------------------------------------------------------------------
@@ -717,13 +736,14 @@ def _doDox(arg):
     doxCmd = os.path.abspath(doxCmd)
     
     if isWindows:
+        cygwin_path = getCygwinPath()
         doxCmd = doxCmd.replace('\\', '/')
-        doxCmd = runcmd('c:/cygwin/bin/cygpath -u '+doxCmd, True, False)
+        doxCmd = runcmd(cygwin_path+'/bin/cygpath -u '+doxCmd, True, False)
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
-        cmd = 'c:/cygwin/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (d, arg)
+        cmd = '%s/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (cygwin_path, d, arg)
     else:
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
