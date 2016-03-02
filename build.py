@@ -85,13 +85,6 @@ doxygenMD5 = {
 # And the location where they can be downloaded from
 toolsURL = 'http://wxpython.org/Phoenix/tools'
 
-# Cygwin is needed on Windows. This tool assumes it is installed in
-# the default location. Try to at least guess if we are using 32 bit
-# or 64 bit builds.
-if isWindows:
-    cygwin_path_32 = 'c:/cygwin'
-    cygwin_path_64 = 'c:/cygwin64'
-    cygwin_path = cygwin_path_64 if os.path.isdir(cygwin_path_64) else cygwin_path_32
 
 #---------------------------------------------------------------------------
 
@@ -248,7 +241,7 @@ def setPythonVersion(args):
             #            
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
-                TOOLS = runcmd(cygwin_path+'/bin/cygpath -w '+TOOLS, True, False)
+                TOOLS = runcmd(getCygwinPath()+'/bin/cygpath -w '+TOOLS, True, False)
             use64flag = '--x64' in args
             if use64flag:
                 args.remove('--x64')
@@ -715,6 +708,24 @@ def getWafBuildBase():
     return base
     
         
+def getCygwinPath():
+    """
+    Try to locate the path where cygwin is installed.
+    
+    If CYGWIN_BASE is set in the environment then use that. Otherwise look in
+    default install locations.
+    """
+    if os.environ.get('CYGWIN_BASE'):
+        return os.environ.get('CYGWIN_BASE')
+    
+    for path in ['c:/cygwin', 'c:/cygwin64']:
+        if os.path.isdir(path):
+            return path
+        
+    return None
+
+    
+    
 #---------------------------------------------------------------------------
 # Command functions and helpers
 #---------------------------------------------------------------------------
@@ -725,6 +736,7 @@ def _doDox(arg):
     doxCmd = os.path.abspath(doxCmd)
     
     if isWindows:
+        cygwin_path = getCygwinPath()
         doxCmd = doxCmd.replace('\\', '/')
         doxCmd = runcmd(cygwin_path+'/bin/cygpath -u '+doxCmd, True, False)
         os.environ['DOXYGEN'] = doxCmd
