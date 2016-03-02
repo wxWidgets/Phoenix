@@ -268,6 +268,8 @@ from .%s import *
         # so tell sip that's what it is.
         if '"' in define.value:
             stream.write('const char* %s;\n' % define.name)
+        elif hasattr(define, 'type'):
+            stream.write('const %s %s;\n' % (define.type, define.name))
         else:
             stream.write('const int %s;\n' % define.name)
         
