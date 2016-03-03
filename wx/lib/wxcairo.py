@@ -71,10 +71,7 @@ pycairoAPI = None
 # a convenience function, just to save a bit of typing below
 def voidp(ptr):
     """Convert a SIP void* type to a ctypes c_void_p"""
-    if PY3:
-        return ctypes.c_void_p(int(ptr))
-    else:
-        return ctypes.c_void_p(long(ptr))
+    return ctypes.c_void_p(int(ptr))
 
 #----------------------------------------------------------------------------
 
