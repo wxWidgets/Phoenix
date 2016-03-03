@@ -2,7 +2,6 @@
 #ifdef __WXGTK__
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
-#include <wx/gtk/private/win_gtk.h>
 #endif
 
 #ifdef __WXMAC__

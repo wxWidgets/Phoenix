@@ -371,6 +371,7 @@ def makeOptionParser():
         ("python",         ("",    "The python executable to build for.")),
         ("debug",          (False, "Build wxPython with debug symbols")),
         ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
+        ("gtk3",           (False, "On Linux build for gtk3 (default gtk2)")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac (unsupported)")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
@@ -1305,6 +1306,8 @@ def cmd_build_py(options, args):
         build_options.append('--jobs=%s' % options.jobs)
     if options.relwithdebug:
         build_options.append('--msvc_relwithdebug')
+    if options.gtk3:
+        build_options.append('--gtk3')
         
     build_options.append('--python="%s"' % PYTHON)
     build_options.append('--out=%s' % wafBuildDir) # this needs to be the last option

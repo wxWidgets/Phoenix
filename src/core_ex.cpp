@@ -168,7 +168,9 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
     _AddInfoString("wxOSX-cocoa");
 #endif
 #ifdef __WXGTK__
-#ifdef __WXGTK20__
+#ifdef __WXGTK3__
+    _AddInfoString("gtk3");
+#elif __WXGTK20__
     _AddInfoString("gtk2");
 #else
     _AddInfoString("gtk1");

@@ -6,10 +6,15 @@
 #ifdef __WXGTK__
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
-#include <wx/gtk/private/win_gtk.h>
+#ifdef __WXGTK3__
+#define GetXWindow(wxwin) (wxwin)->m_wxwindow ? \
+                          GDK_WINDOW_XID(gtk_widget_get_window((wxwin)->m_wxwindow)) :	\
+                          GDK_WINDOW_XID(gtk_widget_get_window((wxwin)->m_widget))
+#else
 #define GetXWindow(wxwin) (wxwin)->m_wxwindow ? \
                           GDK_WINDOW_XWINDOW((wxwin)->m_wxwindow->window) : \
                           GDK_WINDOW_XWINDOW((wxwin)->m_widget->window)
+#endif
 #endif
 
 
