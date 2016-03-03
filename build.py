@@ -1096,7 +1096,6 @@ def cmd_build_wx(options, args):
     if not isWindows and options.use_syswx:
         msg("use_syswx option specified, skipping wxWidgets build")
         return 
-    
     checkCompiler()
     
     build_options = ['--wxpython', '--unicode']
@@ -1130,7 +1129,7 @@ def cmd_build_wx(options, args):
             
         if not os.path.exists(BUILD_DIR):
             os.makedirs(BUILD_DIR)
-        if  options.mac_arch: 
+        if  isDarwin and options.mac_arch: 
             build_options.append("--mac_universal_binary=%s" % options.mac_arch)
 
         if options.no_config:
@@ -1169,10 +1168,13 @@ def cmd_build_wx(options, args):
     if options.extra_make:
         build_options.append('--extra_make="%s"' % options.extra_make)
                     
+    if options.gtk3:
+        build_options.append('--gtk3')
+                    
     try:
         # Import and run the wxWidgets build script
         from buildtools import build_wxwidgets as wxbuild
-
+        
         print('wxWidgets build options: ' + str(build_options))
         wxbuild.main(wxDir(), build_options)
         
@@ -1260,7 +1262,6 @@ def cmd_waf_py(options, args):
     cmdTimer = CommandTimer('waf_py')
     cmd_build_py(options, args)
     
-
 
 def cmd_build_py(options, args):
     cmdTimer = CommandTimer('build_py')
