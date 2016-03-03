@@ -124,7 +124,8 @@ class SysColorPanel(SysPanelBase):
         self._box = (50, 15) # Color box dimensions
         self._maxw = 0
         self._vals = [ color for color in dir(wx)
-                       if color.startswith('SYS_COLOUR_') ]
+                       if color.startswith('SYS_COLOUR_') and
+                       color != 'SYS_COLOUR_MAX' ]
 
     def OnPaint(self, evt):
         dc = wx.AutoBufferedPaintDCFactory(self)

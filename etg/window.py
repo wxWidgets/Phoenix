@@ -162,7 +162,7 @@ def run():
 
     
     c.find('SetDoubleBuffered').setCppCode("""\
-    #if defined(__WXGTK20__) || defined(__WXMSW__)
+    #if defined(__WXGTK20__) || defined(__WXGTK3__) || defined(__WXMSW__)
         self->SetDoubleBuffered(on);
     #endif
     """)

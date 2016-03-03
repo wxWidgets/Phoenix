@@ -722,7 +722,7 @@ class PyAUIFrame(wx.Frame):
 
     def CreateHTMLCtrl(self):
         ctrl = wx.html.HtmlWindow(self, -1, wx.DefaultPosition, wx.Size(400, 300))
-        if "gtk2" in wx.PlatformInfo:
+        if "gtk2" in wx.PlatformInfo or "gtk3" in wx.PlatformInfo:
             ctrl.SetStandardFonts()
         ctrl.SetPage(self.GetIntroText())
         return ctrl
