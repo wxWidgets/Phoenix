@@ -39,13 +39,22 @@ def run():
     module.find('wxInt64').type = 'long long'
     module.find('wxUint64').type = 'unsigned long long'
     
-    # NOTE: this is better, but probably still not totally correct...
+    # TODO: Find a way to represent these types such that they work in either
+    # 32bit or 64bit compiles. Switching them here works okay if the Python
+    # running this etg code to generate the wrappers is the same one we are
+    # building for, however we want to be able to provide pregenerated code
+    # that will work on all (supported) platforms and architectures.
+    # Until I can come up with a better idea this will have to do.
+    td = module.find('wxUIntPtr')
     if sys.maxsize > 2**32:
-        module.find('wxIntPtr').type =  'long long'           #'ssize_t'
-        module.find('wxUIntPtr').type = 'unsigned long long'  #'size_t'
+        module.find('wxIntPtr').type =  'long long'          
+        module.find('wxUIntPtr').type = 'unsigned long long' 
+        module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long long', name='size_t'))
     else:
-        module.find('wxIntPtr').type =  'long'                #'ssize_t'
-        module.find('wxUIntPtr').type = 'unsigned long'       #'size_t'
+        module.find('wxIntPtr').type =  'long'               
+        module.find('wxUIntPtr').type = 'unsigned long'      
+        module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long', name='size_t'))
+        
         
     # Correct the types for these as their values are outside the range of int
     module.find('wxUINT32_MAX').type = 'long'
@@ -67,10 +76,8 @@ def run():
     
     # Add some typedefs for basic wx types and others so the backend
     # generator knows what they are
-    td = module.find('wxUIntPtr')
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxUChar'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxChar'))
-    module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long', name='size_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long', name='time_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long long', name='wxFileOffset'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='SIP_SSIZE_T', name='ssize_t'))

@@ -193,3 +193,48 @@ other dev stuff
 
 
 
+   * Come up with a workaround for types like size_t which can be
+     equivalent to long on some platforms, and long long on others. If
+     we tell SIP to treat them as longs but they really are long long
+     then in some situations on a 64bit build we can end up with the
+     upper 32bits of the variable not getting initialized. If we say
+     that they are long longs then on a 32bit build we can get
+     tuncation warnings or perhaps errors for some.
+
+     See etg/defs.py and http://trac.wxwidgets.org/ticket/16561
+
+     Current idea: Replace the instances of size_t (and etc.)  in the
+     API with some custom type, such that passing that type to a
+     parameter expecting size_t will not complain and will work
+     correctly.  For example, if we use unsigned long instead of
+     size_t, then when passing that value to a method expecting size_t
+     the compiler will automatically promote the value and there will
+     be no sizeof issues when fetching the value from Python and
+     initializing the local variable.  This will work for things that
+     don't really need 64bit values, (like the number of pages in a
+     notebook) but will likely fail when those values are being use to
+     hold pointers.
+
+     Probably better idea: Use some SIP magic to deal with the
+     bitness at runtime instead of build time...  Make size_t and
+     others be custom types with conversions from/to Python done with
+     a %MappedType.
+
+     osx-64:
+     **** sizeof(int):       4
+     **** sizeof(long):      8
+     **** sizeof(long long): 8
+     **** sizeof(size_t):    8
+
+     win-32:
+     **** sizeof(int):       4
+     **** sizeof(long):      4
+     **** sizeof(long long): 8
+     **** sizeof(size_t):    4
+
+     win-64
+     **** sizeof(int):        4
+     **** sizeof(long):       4
+     **** sizeof(long long):  8
+     **** sizeof(size_t):     8
+
