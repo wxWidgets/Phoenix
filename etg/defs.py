@@ -49,11 +49,11 @@ def run():
     if sys.maxsize > 2**32:
         module.find('wxIntPtr').type =  'long long'          
         module.find('wxUIntPtr').type = 'unsigned long long' 
-        module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long long', name='size_t'))
+        #module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long long', name='size_t'))
     else:
         module.find('wxIntPtr').type =  'long'               
         module.find('wxUIntPtr').type = 'unsigned long'      
-        module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long', name='size_t'))
+        #module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long', name='size_t'))
         
         
     # Correct the types for these as their values are outside the range of int
