@@ -46,32 +46,35 @@
 };
 
 
-// Used just for testing the MappedType code, it can be removed later
-%ModuleCode
-size_t test_size_t(size_t value)
-{
-    size_t local = value;
-    return local;
-}
+// TODO: Do the same for wxIntPtr and wxUIntPtr?
 
-void printIntSizes()
-{
-    printf("**** sizeof(int):          %d\n", sizeof(int));
-    printf("**** sizeof(long):         %d\n", sizeof(long));
-    printf("**** sizeof(long long):    %d\n", sizeof(long long));
 
-    printf("**** sizeof(size_t):       %d\n", sizeof(size_t));
-    printf("**** sizeof(time_t):       %d\n", sizeof(time_t));
-    
-    printf("**** sizeof(wxIntPtr):     %d\n", sizeof(wxIntPtr));
-    printf("**** sizeof(wxUIntPtr):    %d\n", sizeof(wxUIntPtr));
-    printf("**** sizeof(wxFileOffset): %d\n", sizeof(wxFileOffset));
-    
-}    
-%End
-
-size_t test_size_t(size_t value);
-void printIntSizes();
+// Used just for testing the MappedType code
+//%ModuleCode
+//size_t test_size_t(size_t value)
+//{
+//    size_t local = value;
+//    return local;
+//}
+//
+//void printIntSizes()
+//{
+//    printf("**** sizeof(int):          %d\n", sizeof(int));
+//    printf("**** sizeof(long):         %d\n", sizeof(long));
+//    printf("**** sizeof(long long):    %d\n", sizeof(long long));
+//
+//    printf("**** sizeof(size_t):       %d\n", sizeof(size_t));
+//    printf("**** sizeof(time_t):       %d\n", sizeof(time_t));
+//    
+//    printf("**** sizeof(wxIntPtr):     %d\n", sizeof(wxIntPtr));
+//    printf("**** sizeof(wxUIntPtr):    %d\n", sizeof(wxUIntPtr));
+//    printf("**** sizeof(wxFileOffset): %d\n", sizeof(wxFileOffset));
+//    
+//}    
+//%End
+//
+//size_t test_size_t(size_t value);
+//void printIntSizes();
 
 
 
