@@ -741,6 +741,8 @@ Modules which have moved
 `Classic` Name                                               `Phoenix` Name
 ===========================================================  ===========================================================
 wx.calendar.CalendarCtrl                                     :mod:`adv.CalendarCtrl`
+wx.animate.Animation                                         :mod:`adv.Animation`
+wx.animate.AnimationCtrl                                     :mod:`adv.AnimationCtrl`
 wx.combo.OwnerDrawnComboBox                                  :mod:`adv.OwnerDrawnComboBox`
 wx.gizmos.EditableListBox                                    :mod:`adv.EditableListBox`
 wx.gizmos.TreeListCtrl                                       :mod:`dataview.TreeListCtrl`
