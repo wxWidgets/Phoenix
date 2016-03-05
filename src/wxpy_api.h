@@ -50,6 +50,7 @@ typedef PyGILState_STATE wxPyBlock_t;
 
 typedef unsigned char  byte;
 typedef unsigned char* buffer;
+typedef unsigned long  ulong;
 
 
 // Convert a wxString to a Python string (actually a PyUnicode object).

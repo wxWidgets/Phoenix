@@ -120,7 +120,7 @@ def run():
         body="return self->Prepend(size->x, size->y, proportion, flag, border, userData);")
 
     c.addCppMethod('wxSizerItem*', 'Insert', 
-                   '(size_t index, const wxSize& size, int proportion=0, int flag=0, '
+                   '(ulong index, const wxSize& size, int proportion=0, int flag=0, '
                    'int border=0, wxPyUserData* userData /Transfer/ = NULL)',
         doc="Insert a spacer using a :class:`Size` object.",
         body="return self->Insert(index, size->x, size->y, proportion, flag, border, userData);")
@@ -137,7 +137,7 @@ def run():
         body="return self->Prepend(size->x, size->y, *flags);")
 
     c.addCppMethod('wxSizerItem*', 'Insert', 
-                   '(size_t index, const wxSize& size, const wxSizerFlags& flags)',
+                   '(ulong index, const wxSize& size, const wxSizerFlags& flags)',
         doc="Insert a spacer using a :class:`Size` object.",
         body="return self->Insert(index, size->x, size->y, *flags);")
 
