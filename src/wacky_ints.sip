@@ -20,14 +20,14 @@
     %End
 
     %ConvertToTypeCode
-        // Code to test an incoming PyObject for compatibility
+        // Allow conversions from any number type
         if (!sipIsErr) {
             if (PyNumber_Check(sipPy))
                 return TRUE;
             return FALSE;
         }
 
-        // Code to convert from a compatible PyObject
+        // Do the conversion
         #if wxSIZE_T_IS_ULONG
             *sipCppPtr = new size_t(PyLong_AsUnsignedLong(sipPy));
         #else
@@ -46,35 +46,37 @@
 };
 
 
-// TODO: Do the same for wxIntPtr and wxUIntPtr?
+// TODO: Do the same for wxIntPtr and wxUIntPtr as above?
+
+typedef long long wxIntPtr;
+typedef unsigned long long wxUIntPtr;
 
 
-// Used just for testing the MappedType code
-//%ModuleCode
-//size_t test_size_t(size_t value)
-//{
-//    size_t local = value;
-//    return local;
-//}
-//
-//void printIntSizes()
-//{
-//    printf("**** sizeof(int):          %d\n", sizeof(int));
-//    printf("**** sizeof(long):         %d\n", sizeof(long));
-//    printf("**** sizeof(long long):    %d\n", sizeof(long long));
-//
-//    printf("**** sizeof(size_t):       %d\n", sizeof(size_t));
-//    printf("**** sizeof(time_t):       %d\n", sizeof(time_t));
-//    
-//    printf("**** sizeof(wxIntPtr):     %d\n", sizeof(wxIntPtr));
-//    printf("**** sizeof(wxUIntPtr):    %d\n", sizeof(wxUIntPtr));
-//    printf("**** sizeof(wxFileOffset): %d\n", sizeof(wxFileOffset));
-//    
-//}    
-//%End
-//
-//size_t test_size_t(size_t value);
-//void printIntSizes();
+
+// Used just for testing the MappedTypes
+%ModuleCode
+size_t testSizetTypemap(size_t value)
+{
+    size_t local = value;
+    return local;
+}
+
+wxIntPtr testIntPtrTypemap(wxIntPtr value)
+{
+    wxIntPtr local = value;
+    return local;
+}
+
+wxUIntPtr testUIntPtrTypemap(wxUIntPtr value)
+{
+    wxUIntPtr local = value;
+    return local;
+}
+%End
+
+size_t testSizetTypemap(size_t value);
+wxIntPtr testIntPtrTypemap(wxIntPtr value);
+wxUIntPtr testUIntPtrTypemap(wxUIntPtr value);
 
 
 
