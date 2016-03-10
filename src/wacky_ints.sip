@@ -13,6 +13,10 @@
 //--------------------------------------------------------------------------
 
 
+// size_t will either be equivallent to an unsigned long, or to an 
+// unsigned long long. wxWidgets' configure script has already figured out 
+// which it is, so we can make it conditional on those results.
+
 %MappedType size_t {
 
     %TypeHeaderCode
@@ -46,6 +50,8 @@
 };
 
 
+// This type is a signed integer value that is large enough to hold a 
+// pointer.  Again we'll use the results of wxWidgets configuration.
 %MappedType wxIntPtr {
 
     %TypeHeaderCode
@@ -79,6 +85,8 @@
 };
 
 
+// This type is an unsigned integer value that is large enough to hold a 
+// pointer.  Again we'll use the results of wxWidgets configuration.
 %MappedType wxUIntPtr {
 
     %TypeHeaderCode
