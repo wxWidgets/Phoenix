@@ -31,6 +31,7 @@ ITEMS  = [ ]
 # promoted script to be the same as its NAME.
 
 INCLUDES = [  # base and core stuff
+              'wacky_ints',
               'defs',
               'debug',
               'object',

@@ -39,13 +39,9 @@ def run():
     module.find('wxInt64').type = 'long long'
     module.find('wxUint64').type = 'unsigned long long'
     
-    # NOTE: this is better, but probably still not totally correct...
-    if sys.maxsize > 2**32:
-        module.find('wxIntPtr').type =  'long long'           #'ssize_t'
-        module.find('wxUIntPtr').type = 'unsigned long long'  #'size_t'
-    else:
-        module.find('wxIntPtr').type =  'long'                #'ssize_t'
-        module.find('wxUIntPtr').type = 'unsigned long'       #'size_t'
+    # See src/wacky_ints.sip
+    module.find('wxIntPtr').ignore()
+    module.find('wxUIntPtr').ignore()
         
     # Correct the types for these as their values are outside the range of int
     module.find('wxUINT32_MAX').type = 'long'
@@ -70,11 +66,11 @@ def run():
     td = module.find('wxUIntPtr')
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxUChar'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='wchar_t', name='wxChar'))
-    module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long', name='size_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long', name='time_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='long long', name='wxFileOffset'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='SIP_SSIZE_T', name='ssize_t'))
     module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned char', name='byte', pyInt=True))
+    module.insertItemAfter(td, etgtools.TypedefDef(type='unsigned long', name='ulong'))
     
 
     

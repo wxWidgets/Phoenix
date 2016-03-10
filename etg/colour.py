@@ -79,11 +79,11 @@ def run():
     c.addProperty('alpha Alpha')
     
     c.find('GetPixel').ignore()  # We need to add a typcast
-    c.addCppMethod('wxIntPtr', 'GetPixel', '()', """\
+    c.addCppMethod('wxIntPtr*', 'GetPixel', '()', """\
         #ifdef __WXGTK3__
-            return 0;
+            return new wxIntPtr(0);
         #else
-            return (wxIntPtr)self->GetPixel();
+            return new wxIntPtr((wxIntPtr)self->GetPixel());
         #endif
         """)
         

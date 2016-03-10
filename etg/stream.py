@@ -127,7 +127,7 @@ def run():
 
     c.addCppMethod('PyObject*', 'read', '()', """\
         wxMemoryBuffer buf;
-        const size_t BUFSIZE = 1024;
+        const ulong BUFSIZE = 1024;
 
         // read while bytes are available on the stream
         while ( self->CanRead() ) {
@@ -137,7 +137,7 @@ def run():
         return _makeReadBufObj(self, buf);
         """)
     
-    c.addCppMethod('PyObject*', 'read', '(size_t size)', """\
+    c.addCppMethod('PyObject*', 'read', '(ulong size)', """\
         wxMemoryBuffer buf;
 
         // Read only size number of characters
@@ -158,7 +158,7 @@ def run():
         return _makeReadBufObj(self, buf);
         """)
 
-    c.addCppMethod('PyObject*', 'readline', '(size_t size)', """\
+    c.addCppMethod('PyObject*', 'readline', '(ulong size)', """\
         wxMemoryBuffer buf;
         int i;
         char ch;
@@ -177,7 +177,7 @@ def run():
         
         // This does the real work of the readlines methods
         static PyObject* _readlinesHelper(wxInputStream* self, 
-                                          bool useSizeHint=false, size_t sizehint=0) {
+                                          bool useSizeHint=false, ulong sizehint=0) {
             PyObject* pylist;
     
             // init list
@@ -193,7 +193,7 @@ def run():
             }
     
             // read sizehint bytes or until EOF
-            size_t i;
+            ulong i;
             for (i=0; (self->CanRead()) && (useSizeHint || (i < sizehint));) {
                 PyObject* s = _wxInputStream_readline(self);
                 if (s == NULL) {
@@ -224,7 +224,7 @@ def run():
     c.addCppMethod('PyObject*', 'readlines', '()', """\
         return _readlinesHelper(self);
         """)
-    c.addCppMethod('PyObject*', 'readlines', '(size_t sizehint)', """\
+    c.addCppMethod('PyObject*', 'readlines', '(ulong sizehint)', """\
         return _readlinesHelper(self, true, sizehint);
         """)
     

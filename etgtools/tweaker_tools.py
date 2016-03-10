@@ -831,7 +831,7 @@ public:
         sipRes = sipCpp->size();
     %End
 
-    {ItemClass}* __getitem__(size_t index);
+    {ItemClass}* __getitem__(ulong index);
     %MethodCode
         if (index < sipCpp->size()) {{
             {ListClass}::compatibility_iterator node = sipCpp->Item(index);
@@ -963,7 +963,7 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass}& __getitem__(size_t index);
+    {ItemClass}& __getitem__(ulong index);
     %MethodCode
         if (index < sipCpp->GetCount()) {{
             sipRes = &sipCpp->Item(index);
@@ -1026,7 +1026,7 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass}* __getitem__(size_t index);
+    {ItemClass}* __getitem__(ulong index);
     %MethodCode
         if (index < sipCpp->GetCount()) {{
             sipRes = sipCpp->Item(index);

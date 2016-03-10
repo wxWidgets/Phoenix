@@ -10,14 +10,17 @@ class Colour(wtc.WidgetTestCase):
         c = wx.Colour()
         self.assertTrue(not c.IsOk())
         self.assertTrue(c.Get() == (-1,-1,-1,255))
+
                         
     def test_rgb_ctor(self):
         c = wx.Colour(1,2,3)
         self.assertTrue(c.Get(False) == (1,2,3))
+
         
     def test_rgba_ctor(self):
         c = wx.Colour(1,2,3,4)
         self.assertTrue(c.Get() == (1,2,3,4))
+
         
     def test_copy_ctor(self):
         c1 = wx.Colour(1,2,3,4)
@@ -25,6 +28,11 @@ class Colour(wtc.WidgetTestCase):
         self.assertTrue(c1 == c2)
         self.assertTrue(c1 is not c2)
         self.assertTrue(c1.Get() == c2.Get())
+
+
+    def test_GetPixel(self):
+        c1 = wx.Colour(1,2,3,4)
+        p = c1.GetPixel()
         
         
     if hasattr(wx, 'testColourTypeMap'):

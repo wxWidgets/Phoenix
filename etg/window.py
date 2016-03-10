@@ -99,8 +99,8 @@ def run():
     m.find('descent').out = True
     m.find('externalLeading').out = True
     
-    c.find('GetHandle').type = 'unsigned long'
-    c.find('GetHandle').setCppCode("return wxPyGetWinHandle(self);")
+    c.find('GetHandle').type = 'wxUIntPtr*'
+    c.find('GetHandle').setCppCode("return new wxUIntPtr(wxPyGetWinHandle(self));")
     
     c.addCppMethod('void*', 'GetGtkWidget', '()', """\
     #ifdef __WXGTK__
