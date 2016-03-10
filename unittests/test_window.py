@@ -8,9 +8,8 @@ import wx.lib.six as six
 class WindowTests(wtc.WidgetTestCase):
     
     def test_SimpleWindowCtor(self):
-        w = wx.Window(self.frame, -1, (10,10), (50,50), 
-                      wx.BORDER_SIMPLE|wx.VSCROLL)
-        self.assertTrue(w.GetWindowStyle() == wx.BORDER_SIMPLE|wx.VSCROLL)
+        w = wx.Window(self.frame, -1, (10,10), (50,50), wx.BORDER_NONE)
+        self.assertEqual(w.GetWindowStyleFlag(), wx.BORDER_NONE)
         self.assertTrue(w.Parent is self.frame)
 
     def test_windowHandle(self):
