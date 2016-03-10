@@ -218,6 +218,10 @@ def configure(conf):
                        args='--cxxflags --libs %score,net' % libname + rpath, 
                        uselib_store='WXRICHTEXT', mandatory=True)
 
+        conf.check_cfg(path=conf.options.wx_config, package='',
+                       args='--cxxflags --libs media,core,net' + rpath,
+                       uselib_store='WXMEDIA', mandatory=True)
+
         # ** Add code for new modules here
 
 
