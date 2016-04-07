@@ -22,7 +22,7 @@ class vlbox_Tests(wtc.WidgetTestCase):
         lb = MyVListBox(panel, pos=(10,10), size=(100,150), style=wx.BORDER_THEME)
         lb.data = ['zero', 'one two', 'three four', 'five six', 'seven eight', 'nine ten']
         lb.SetItemCount(len(lb.data))
-        self.waitFor(50)
+        self.waitFor(100)
         
         # check the ItemCount property
         self.assertEqual(len(lb.data), lb.ItemCount)
