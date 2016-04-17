@@ -90,6 +90,16 @@ class WindowTests(wtc.WidgetTestCase):
     
         self.assertEqual(wx.FindWindowById(self.frame.GetId()),  self.frame)
         
+    def test_windowCoordConvFunctions(self):
+        w = wx.Window(self.frame, -1, (10,10), (50,50))
+        a = w.ClientToScreen(0, 0)
+        b = w.ClientToScreen((0, 0))
+        c = w.ScreenToClient(0, 0)
+        d = w.ScreenToClient((0, 0))
+        self.assertEqual(a[0], b.x)
+        self.assertEqual(a[1], b.y)
+        self.assertEqual(c[0], d.x)
+        self.assertEqual(c[1], d.y)
         
 #---------------------------------------------------------------------------
 
