@@ -45,6 +45,7 @@ def parseAndTweakModule():
     c.find('Replace.to').name = 'to_'
     c.find('SetSelection.from').name = 'from_'
     c.find('SetSelection.to').name = 'to_'
+    c.find('AutoComplete').findOverload('wxTextCompleter').find('completer').transfer = True
 
     return module
     
