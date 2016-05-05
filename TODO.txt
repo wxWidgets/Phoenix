@@ -19,7 +19,7 @@ Checklist for all new etg files
       being declared there with what is being generated, and to better
       understand what may need tweaked in the etg script file.
 
-    * Read the coresponding interface file and ensure that all classes
+    * Read the corresponding interface file and ensure that all classes
       declared in it are listed in the ITEMS list in the etg file,
       unless the class should not be wrapped for some reason.  Other
       items from the interface file will be included automatically.
@@ -28,11 +28,11 @@ Checklist for all new etg files
 
     * Check for any extras added to each class in Classic wxPython and
       evaluate whether the same extras should be added to the Phoenix
-      verison.  For example, there may be additional C methods added
+      version.  For example, there may be additional C methods added
       on to the class with %extend or %pythoncode that need to be
       carried over to Phoenix, such as __nonzero__, etc.  Also look
       for methods where Classic indicates that ownership should be
-      transfered, or other special directives.
+      transferred, or other special directives.
 
     * Check for backwards compatibility issues with Classic wxPython
       and document in the MigrationGuide. Compatibility issues
@@ -46,55 +46,30 @@ Checklist for all new etg files
       besides those added in addWindowVirtuals() that should be
       unignored.
 
-    * UNITTESTS!  Create a unit test script in the unitests folder
+    * UNITTESTS!  Create a unit test script in the unittests folder
       using the same base file name.  It should at least check that
       every non-abstract class can be constructed, and should also
       have tests for things that are added or tweaked in the etg
       script.  Other things that needed no tweaks are ok to be left
       untested for the time being, although porting over some of the
-      the old unitest code from Classic would also be a good idea, but
+      the old unittest code from Classic would also be a good idea, but
       priority should be given to testing those things that had to be
       tweaked or added.
 
 
 
 
-
-
-*** Win32 Activation Context ***
---------------------------------
-Port the code from Classic that creates the activation context for the
-process. This is what is needed to make the themed version of the native
-controls be used instead of the old Win2k style controls. There are a
-couple tickets in Trac releated to the activation context, so look at those
-and see if those issues are solveable in the Phoenix verison of the code.
-
-NOTE: Kevin has enabled the activation code that was previoiusly commented
-out, but the Trac tickets should still be looked at to see if there is a
-better way that will work for the general case as well as the problems
-identified by the tickets.
-
-See tickets #12219 and #13275
-
-
-
-Exceptions
-----------
-    * Can we convert C++ exceptions to Python exceptions?
-    * Can we propagate Python exceptions over C++ blocks?
-    * Should we?  (Classic doesn't.)
-
-
-
 WAF Build
 ---------
-    * Add support for using the cygwin and mingw32 compilers.
+Add support for using the cygwin and mingw32 compilers.
 
 
 
 
 
-other dev stuff
+
+
+Other Dev Stuff
 ---------------
 
   * Come up with some way to implement the MustHaveApp check that
@@ -105,7 +80,7 @@ other dev stuff
   * Locate and/or add items for the various functions and things in Classic's
     _functions.i module.
 
-  * Add ETG scripts for these items in _core:
+  * Add ETG scripts for these items in Classic's core:
 
       * PseudoDC
       * msgout
@@ -173,7 +148,7 @@ other dev stuff
 
    * wx.Window.DoEraseBackground?
 
-   * The sphinxtools are too agressive at ignoring content beyond a #. If the hash
+   * The sphinxtools are too aggressive at ignoring content beyond a #. If the hash
      happens to be inside a string then syntax related errors can happen.  For example:
 
           def SetColors(self, pen='black', fill='#A0A0A0', fill2='#E0E0E0'):
@@ -181,7 +156,7 @@ other dev stuff
 
 
    * Add tests and/or demo for DnD in DataViewCtrl. Since the DnD is done
-     internaly and the DataViewEvent is used for passing the data objects
+     internally and the DataViewEvent is used for passing the data objects
      around we may need to do something to help convert the raw data to python
      DataObjects.
 
