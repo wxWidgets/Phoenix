@@ -64,7 +64,22 @@ WAF Build
 Add support for using the cygwin and mingw32 compilers.
 
 
+Stubs for Optional Classes
+--------------------------
 
+In Classic we tend to use empty stubs for classes and etc. that are optional
+and not available in a particular build of wxWidgets.  That allows the
+compilations to succeed without needing to completely eliminate those wrapper
+classes, and when a user tries to use one of those classes they would get a
+NotImplementedError.
+
+The big downside of that approach was that the stubs had to be maintained by
+hand, which is time consuming and error prone.  However for Phoenix we have
+all the info about the API so we should be able to almost completely automate
+the generation of the empty stub code for those classes.  ("Almost" because
+we'll need to specify which classes to do it for, and what #define flag to
+check if the the feature is available in wxWidgets or if the stubs should be
+compiled.)
 
 
 
