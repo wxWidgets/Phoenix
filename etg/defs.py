@@ -44,13 +44,16 @@ def run():
     module.find('wxUIntPtr').ignore()
         
     # Correct the types for these as their values are outside the range of int
-    module.find('wxUINT32_MAX').type = 'long'
+    module.find('wxUINT32_MAX').type = 'unsigned long'
     module.find('wxINT64_MIN').type = 'long long'
     module.find('wxINT64_MAX').type = 'long long'
     module.find('wxUINT64_MAX').type = 'unsigned long long'
-    module.find('wxCANCEL_DEFAULT').type = 'unsigned long'
-    module.find('wxWINDOW_STYLE_MASK').type = 'unsigned long'
-    module.find('wxVSCROLL').type = 'unsigned long'
+
+    # Generate the code for these differently because they need to be
+    # forcibly mashed into an int in the C code
+    module.find('wxCANCEL_DEFAULT').forcedInt = True
+    module.find('wxVSCROLL').forcedInt = True
+    module.find('wxWINDOW_STYLE_MASK').forcedInt = True
 
     module.find('wxInt8').pyInt = True
     module.find('wxUint8').pyInt = True

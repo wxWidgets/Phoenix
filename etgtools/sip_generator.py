@@ -270,6 +270,14 @@ from .%s import *
             stream.write('const char* %s;\n' % define.name)
         elif hasattr(define, 'type'):
             stream.write('const %s %s;\n' % (define.type, define.name))
+        elif getattr(define, 'forcedInt', False):
+            stream.write('%PostInitialisationCode\n')
+            #stream.write('printf("**** %s: %%d\\n", %s);\n' % (define.name, define.name))
+            stream.write(('    PyDict_SetItemString(sipModuleDict, "%s", '
+                          'wxPyInt_FromLong(static_cast<int>(%s)));\n') % 
+                         (define.pyName, define.name))
+            stream.write('%End\n')            
+
         else:
             stream.write('const int %s;\n' % define.name)
         
