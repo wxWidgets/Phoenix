@@ -133,7 +133,6 @@ keyMap = {
     wx.WXK_SPECIAL17 : "WXK_SPECIAL17",
     wx.WXK_SPECIAL18 : "WXK_SPECIAL18",
     wx.WXK_SPECIAL19 : "WXK_SPECIAL19",
-    wx.WXK_SPECIAL2 : "WXK_SPECIAL2",
 }
 
 if 'wxMac' in wx.PlatformInfo:
