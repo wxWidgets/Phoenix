@@ -1023,18 +1023,6 @@ def cmd_sip(options, args):
                     # ...or totally remove them by replacing those lines with ''
                     import re
                     srcTxt = re.sub(r'^#line.*\n', '', srcTxt, flags=re.MULTILINE)
-                # Perform a couple of manual modifications to the generated cpp
-                # to fix C++11 compilation errors.
-                if os.path.basename(src) == 'sip_corecmodule.cpp':
-                    srcTxt = srcTxt.replace('wxCANCEL_DEFAULT},',
-                                            'static_cast<int>(wxCANCEL_DEFAULT)},')
-                    srcTxt = srcTxt.replace('wxVSCROLL},',
-                                            'static_cast<int>(wxVSCROLL)},')
-                    srcTxt = srcTxt.replace('wxWINDOW_STYLE_MASK},',
-                                            'static_cast<int>(wxWINDOW_STYLE_MASK)},')
-                if os.path.basename(src) == 'sip_stccmodule.cpp':
-                    srcTxt = srcTxt.replace('wxSTC_MASK_FOLDERS},',
-                                            'static_cast<int>(wxSTC_MASK_FOLDERS)},')
             return srcTxt
         
         # Check each file in tmpdir to see if it is different than the same file

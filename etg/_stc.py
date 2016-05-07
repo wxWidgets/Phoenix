@@ -123,6 +123,11 @@ def run():
             return rv;
             """)
 
+
+    # Generate the code for this differently because it needs to be
+    # forcibly mashed into an int in the C code
+    module.find('wxSTC_MASK_FOLDERS').forcedInt = True
+
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)
     
 

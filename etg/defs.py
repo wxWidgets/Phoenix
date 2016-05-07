@@ -49,6 +49,12 @@ def run():
     module.find('wxINT64_MAX').type = 'long long'
     module.find('wxUINT64_MAX').type = 'unsigned long long'
 
+    # Generate the code for these differently because they need to be
+    # forcibly mashed into an int in the C code
+    module.find('wxCANCEL_DEFAULT').forcedInt = True
+    module.find('wxVSCROLL').forcedInt = True
+    module.find('wxWINDOW_STYLE_MASK').forcedInt = True
+
     module.find('wxInt8').pyInt = True
     module.find('wxUint8').pyInt = True
     module.find('wxByte').pyInt = True
