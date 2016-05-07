@@ -13,7 +13,7 @@ class StaticText(wx.StaticText):
     updated very frequently otherwise.
     """
     def SetLabel(self, label):
-        if label <> self.GetLabel():
+        if label != self.GetLabel():
             wx.StaticText.SetLabel(self, label)
 
 #----------------------------------------------------------------------
@@ -33,7 +33,7 @@ class TestPanel(wx.Panel):
                 # default for this demo.
                 backend = wx.media.MEDIABACKEND_QUICKTIME
                 
-            self.mc = wx.media.PreMediaCtrl()
+            self.mc = wx.media.MediaCtrl()
             ok = self.mc.Create(self, style=wx.SIMPLE_BORDER,
                                 szBackend=backend)
             if not ok:
