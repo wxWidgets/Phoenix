@@ -13,7 +13,7 @@
 //--------------------------------------------------------------------------
 
 
-// size_t will either be equivallent to an unsigned long, or to an 
+// size_t will either be equivalent to an unsigned long, or to an
 // unsigned long long. wxWidgets' configure script has already figured out 
 // which it is, so we can make it conditional on those results.
 
