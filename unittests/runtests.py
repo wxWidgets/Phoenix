@@ -27,7 +27,7 @@ import sys
 import os
 import glob
 import subprocess
-import imp_unittest, unittest
+import unittest
 
 # make sure the phoenix dir is on the path
 if os.path.dirname(__file__):

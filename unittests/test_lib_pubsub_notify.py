@@ -6,7 +6,7 @@
 
 """
 
-import imp_unittest, unittest
+import unittest
 import wtc
 
 from difflib import ndiff, unified_diff, context_diff

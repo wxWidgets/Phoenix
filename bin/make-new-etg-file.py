@@ -75,7 +75,7 @@ if __name__ == '__main__':
 # TODO: refactor to just use make-new-unittest-file instead of duplicating it here...
 
 unitteststub = """\
-import imp_unittest, unittest
+import unittest
 import wtc
 import wx
 

@@ -1,4 +1,4 @@
-import imp_unittest, unittest
+import unittest
 import wx
 import wx.lib.mixins.inspection as wit
 
