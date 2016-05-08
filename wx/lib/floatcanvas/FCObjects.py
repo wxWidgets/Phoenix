@@ -2724,6 +2724,7 @@ class Group(DrawObject):
         # this one uses a proprty for _Canvas...
         self._Actual_Canvas = None
 
+        self.CalcBoundingBox()
         for obj in ObjectList:
             self.AddObject(obj)
         self.CalcBoundingBox()
