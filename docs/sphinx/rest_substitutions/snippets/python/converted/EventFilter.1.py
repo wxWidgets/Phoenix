@@ -22,15 +22,15 @@
                 # Update the last user activity
                 t = event.GetEventType()
                 
-                if t == wx.EVT_KEY_DOWN or t == wx.EVT_MOTION or \
-                   t == wx.EVT_LEFT_DOWN or t == wx.EVT_RIGHT_DOWN or \
-                   t == wx.EVT_MIDDLE_DOWN:
+                if t == wx.EVT_KEY_DOWN.typeId or t == wx.EVT_MOTION.typeId or \
+                   t == wx.EVT_LEFT_DOWN.typeId or t == wx.EVT_RIGHT_DOWN.typeId or \
+                   t == wx.EVT_MIDDLE_DOWN.typeId:
                 
                     self.last = wx.DateTime.Now()
                 
     
                 # Continue processing the event normally as well.
-                event.Skip()
+                self.Event_Skip
                 
         
             # This function could be called periodically from some timer to

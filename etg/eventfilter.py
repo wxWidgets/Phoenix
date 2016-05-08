@@ -33,7 +33,7 @@ def run():
     
     c = module.find('wxEventFilter')
     assert isinstance(c, etgtools.ClassDef)
-    c.abstract = True
+    c.noDefCtor = True
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
