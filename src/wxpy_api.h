@@ -115,16 +115,24 @@ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) 
     #define wxPyInt_Check       PyLong_Check
     #define wxPyInt_AsLong      PyLong_AsLong
     #define wxPyInt_AS_LONG     PyLong_AS_LONG
+    #define wxPyInt_AsSize_t    PyLong_AsSize_t
     #define wxPyInt_AsSsize_t   PyLong_AsSsize_t
+    #define wxPyInt_AsUnsignedLong PyLong_AsUnsignedLong
     #define wxPyInt_FromLong    PyLong_FromLong
+    #define wxPyInt_FromSize_t  PyLong_FromSize_t
+    #define wxPyInt_FromUnsignedLong PyLong_FromUnsignedLong
     #define wxPyNumber_Int      PyNumber_Long
 #else
     #define wxPyInt_Check       PyInt_Check
     #define wxPyInt_AsLong      PyInt_AsLong
     #define wxPyInt_AS_LONG     PyInt_AS_LONG
     #define wxPyInt_AsLong      PyInt_AsLong
+    #define wxPyInt_AsSize_t(x) static_cast<size_t>(PyInt_AsUnsignedLongLongMask(x))
     #define wxPyInt_AsSsize_t   PyInt_AsSsize_t
+    #define wxPyInt_AsUnsignedLong PyInt_AsUnsignedLongMask
     #define wxPyInt_FromLong    PyInt_FromLong
+    #define wxPyInt_FromSize_t  PyInt_FromSize_t
+    #define wxPyInt_FromUnsignedLong PyInt_FromSize_t
     #define wxPyNumber_Int      PyNumber_Int
 #endif
 

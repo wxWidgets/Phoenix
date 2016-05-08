@@ -20,7 +20,7 @@
 %MappedType size_t {
 
     %TypeHeaderCode
-    #include <wx/setup.h>
+    #include <wxpy_api.h>
     %End
 
     %ConvertToTypeCode
@@ -32,20 +32,12 @@
         }
 
         // Do the conversion
-        #if wxSIZE_T_IS_ULONG
-            *sipCppPtr = new size_t(PyLong_AsUnsignedLong(sipPy));
-        #else
-            *sipCppPtr = new size_t(PyLong_AsUnsignedLongLong(sipPy));
-        #endif
+        *sipCppPtr = new size_t(wxPyInt_AsSize_t(sipPy));
         return sipGetState(sipTransferObj);
     %End
 
     %ConvertFromTypeCode
-        #if wxSIZE_T_IS_ULONG
-            return PyLong_FromUnsignedLong(*sipCpp);
-        #else
-            return PyLong_FromUnsignedLongLong(*sipCpp);
-        #endif
+        return wxPyInt_FromSize_t(*sipCpp);
     %End
 };
 
@@ -56,6 +48,7 @@
 
     %TypeHeaderCode
     #include <wx/setup.h>
+    #include <wxpy_api.h>
     %End
 
     %ConvertToTypeCode
@@ -68,18 +61,18 @@
 
         // Do the conversion
         #if SIZEOF_LONG >= SIZEOF_VOID_P
-            *sipCppPtr = new wxIntPtr(PyLong_AsLong(sipPy));
+            *sipCppPtr = new wxIntPtr(wxPyInt_AsLong(sipPy));
         #else
-            *sipCppPtr = new wxIntPtr(PyLong_AsLongLong(sipPy));
+            *sipCppPtr = new wxIntPtr(wxPyInt_AsSsize_t(sipPy));
         #endif
         return sipGetState(sipTransferObj);
     %End
 
     %ConvertFromTypeCode
         #if SIZEOF_LONG >= SIZEOF_VOID_P
-            return PyLong_FromLong(*sipCpp);
+            return wxPyInt_FromLong(*sipCpp);
         #else
-            return PyLong_FromLongLong(*sipCpp);
+            return wxPyInt_FromSsize_t(*sipCpp);
         #endif
     %End
 };
@@ -91,6 +84,7 @@
 
     %TypeHeaderCode
     #include <wx/setup.h>
+    #include <wxpy_api.h>
     %End
 
     %ConvertToTypeCode
@@ -103,18 +97,18 @@
 
         // Do the conversion
         #if SIZEOF_LONG >= SIZEOF_VOID_P
-            *sipCppPtr = new wxUIntPtr(PyLong_AsUnsignedLong(sipPy));
+            *sipCppPtr = new wxUIntPtr(wxPyInt_AsUnsignedLong(sipPy));
         #else
-            *sipCppPtr = new wxUIntPtr(PyLong_AsUnsignedLongLong(sipPy));
+            *sipCppPtr = new wxUIntPtr(wxPyInt_AsSize_t(sipPy));
         #endif
         return sipGetState(sipTransferObj);
     %End
 
     %ConvertFromTypeCode
         #if SIZEOF_LONG >= SIZEOF_VOID_P
-            return PyLong_FromUnsignedLong(*sipCpp);
+            return wxPyInt_FromUnsignedLong(*sipCpp);
         #else
-            return PyLong_FromUnsignedLongLong(*sipCpp);
+            return wxPyInt_FromSize_t(*sipCpp);
         #endif
     %End
 };
