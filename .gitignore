@@ -55,6 +55,7 @@
 /wx/*.py
 /wx/*.pyc
 /wx/*.pi
+/wx/*.pyi
 /wx/*.so
 /wx/*.pyd
 /wx/*.dylib
