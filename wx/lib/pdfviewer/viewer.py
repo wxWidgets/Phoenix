@@ -29,6 +29,7 @@ import types
 import copy
 import shutil
 
+import wx.lib.six as six
 from wx.lib.six import BytesIO
 
 USE_CAIRO = True
@@ -63,7 +64,7 @@ elif fpypdf == 1:
     from pyPdf.pdf import ContentStream, PageObject
     from pyPdf.filters import ASCII85Decode, FlateDecode
 
-from dcgraphics import dcGraphicsContext
+from .dcgraphics import dcGraphicsContext
 
 import wx
 have_cairo = False
@@ -207,9 +208,9 @@ class pdfViewer(wx.ScrolledWindow):
          a file-like object.
          
         """
-        if isinstance(pdf_file, types.StringTypes):
+        if isinstance(pdf_file, six.string_types):
             # it must be a filename/path string, open it as a file
-            f = file(pdf_file, 'rb')
+            f = open(pdf_file, 'rb')
             self.pdfpathname = pdf_file
         else:
             # assume it is a file-like object
