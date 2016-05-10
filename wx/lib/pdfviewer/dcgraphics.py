@@ -35,7 +35,7 @@ to be separated out if this was ever developed to be more general purpose.
 """
 import copy
 from math import asin, pi
-import bezier
+from . import bezier
 import wx
 
 class dcGraphicsState:
