@@ -12,12 +12,6 @@
 import sys, os
 import glob
 
-try:
-    import setuptools
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-
 from setuptools                     import setup, Extension, find_packages
 from distutils.command.build        import build as orig_build
 from setuptools.command.install     import install as orig_install
@@ -36,7 +30,7 @@ from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 #----------------------------------------------------------------------
 
 NAME             = "wxPython_Phoenix"
-DESCRIPTION      = "Cross platform GUI toolkit for Python"
+DESCRIPTION      = "Cross platform GUI toolkit for Python, Phoenix verison"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
 URL              = "http://wxPython.org/"
@@ -80,7 +74,7 @@ isDarwin = sys.platform == "darwin"
 
 class wx_build(orig_build):
     """
-    Delgate to build.py for doing the actual build, (including wxWidgets)
+    Delegate to build.py for doing the actual build, (including wxWidgets)
     instead of letting distutils do it all.
     """
     user_options = [
@@ -124,7 +118,7 @@ def _cleanup_symlinks(cmd):
     # left in.
     #        
     # TODO: can eggs have post-install scripts that would allow us to 
-    # restore the links?
+    # restore the links? No.
     #
     build_lib = cmd.get_finalized_command('build').build_lib
     build_lib = opj(build_lib, 'wx')
@@ -186,7 +180,7 @@ if haveWheel:
     class wx_bdist_wheel(orig_bdist_wheel):
         def finalize_options(self):
             # Do a bit of monkey-patching to let bdist_wheel know that there
-            # really are extension modules in this build, eventhough they are
+            # really are extension modules in this build, even though they are
             # not built here.
             def _has_ext_modules(self):
                 return True
