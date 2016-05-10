@@ -1,9 +1,17 @@
 #!/usr/bin/python
-#---------------------------------------------------------------------------
-# This script is used to run through the commands used for the various stages
-# of building Phoenix, and can also be a front-end for building wxWidgets and
-# the wxPython distribution files.
-#---------------------------------------------------------------------------
+#----------------------------------------------------------------------
+# Name:        build.py
+# Purpose:     Master build controller script.
+#              This script is used to run through the commands used for the
+#              various stages of building Phoenix, and can also be a front-end
+#              for building wxWidgets and the wxPython distribution files.
+#
+# Author:      Robin Dunn
+#
+# Created:     3-Dec-2010
+# Copyright:   (c) 2010-2016 by Total Control Software
+# License:     wxWindows License
+#----------------------------------------------------------------------
 
 from __future__ import absolute_import
 
