@@ -50,7 +50,7 @@ very little (if any) platform specific code.
 """
 
 CLASSIFIERS      = """\
-Development Status :: 6 - Mature
+Development Status :: 3 - Alpha
 Environment :: MacOS X :: Cocoa
 Environment :: Win32 (MS Windows)
 Environment :: X11 Applications :: GTK
@@ -61,7 +61,10 @@ Operating System :: Microsoft :: Windows :: Windows XP
 Operating System :: Microsoft :: Windows :: Windows Vista
 Operating System :: Microsoft :: Windows :: Windows 7
 Operating System :: POSIX
-Programming Language :: Python
+Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3.3
+Programming Language :: Python :: 3.4
+Programming Language :: Python :: 3.5
 Topic :: Software Development :: User Interfaces
 """
 
