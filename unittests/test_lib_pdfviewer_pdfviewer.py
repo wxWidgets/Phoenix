@@ -15,7 +15,8 @@ samplePdf = os.path.join(dataDir, "sample.pdf")
 
 #---------------------------------------------------------------------------
 
-@unittest.skipIf('wxMac' in wx.PlatformInfo, 'test is crashing on Mac...')
+@unittest.skipIf('wxMac' in wx.PlatformInfo or 'wxGTK' in wx.PlatformInfo,
+                 'test is crashing on Mac and GTK...')
 class lib_pdfviewer_pdfviewer_Tests(wtc.WidgetTestCase):
         
     @unittest.skipIf(not havePyPDF, "pyPdf required")
