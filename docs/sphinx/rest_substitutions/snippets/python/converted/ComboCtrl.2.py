@@ -1,7 +1,7 @@
     
         comboCtrl = wx.ComboCtrl(self, wx.ID_ANY, "")
     
-        popupCtrl = wx.ListViewComboPopup()
+        popupCtrl = ListViewComboPopup()
     
         # It is important to call SetPopupControl() as soon as possible
         comboCtrl.SetPopupControl(popupCtrl)
