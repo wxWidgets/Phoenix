@@ -106,7 +106,7 @@ Usage: ./build.py [command(s)] [options]
                     --python to specify the actual Python executable to use.
                     
       dox           Run Doxygen to produce the XML file used by ETG scripts
-      doxhtml       Run Doxygen to create the HTML documetation for wx
+      doxhtml       Run Doxygen to create the HTML documentation for wx
       touch         'touch' the etg files so they will all get run the next  
                     time the etg command is run.
       etg           Run the ETG scripts that are out of date to update their 
@@ -333,7 +333,8 @@ def setDevModeOptions(args):
 def numCPUs():
     """
     Detects the number of CPUs on a system.
-    This approach is from detectCPUs here: http://www.artima.com/weblogs/viewpost.jsp?thread=230001
+    This approach is from detectCPUs here:
+    http://www.artima.com/weblogs/viewpost.jsp?thread=230001
     """
     # Linux, Unix and MacOS:
     if hasattr(os, "sysconf"):
@@ -348,9 +349,9 @@ def numCPUs():
             
     # Windows:
     if "NUMBER_OF_PROCESSORS" in os.environ:
-            ncpus = int(os.environ["NUMBER_OF_PROCESSORS"]);
-            if ncpus > 0:
-                return ncpus
+        ncpus = int(os.environ["NUMBER_OF_PROCESSORS"])
+        if ncpus > 0:
+            return ncpus
     return 1 # Default
     
 
@@ -637,7 +638,7 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
 
     # NOTE: It is expected that there will be a host entry defined in
     # ~/.ssh/config named wxpython-rbot, with the proper host, user,
-    # idenity file, etc needed for making an SSH connection to the
+    # identity file, etc. needed for making an SSH connection to the
     # snapshots server.
     host = 'wxpython-rbot'
     if options.release_build:
@@ -901,7 +902,7 @@ def cmd_sphinx(options, args):
     runcmd('sphinx-build -b html -d %s/doctrees . %s' % (buildDir, htmlDir))
     del pwd2
     
-    msg('Postprocesing sphinx output...')
+    msg('Postprocessing sphinx output...')
     PostProcess(htmlDir)
 
 
@@ -1429,10 +1430,8 @@ def cmd_bdist_wininst(options, args):
         uploadPackage(filenames[0], options)
 
 
-# bdist_msi requires the version number to be only 3 components, but we're
-# using 4.  TODO: Can we fix this?
-#def cmd_bdist_msi(options, args):
-#    _doSimpleSetupCmd(options, args, 'bdist_msi')
+def cmd_bdist_msi(options, args):
+    _doSimpleSetupCmd(options, args, 'bdist_msi')
 
 
 def cmd_egg_info(options, args, egg_base=None):
@@ -1442,9 +1441,6 @@ def cmd_egg_info(options, args, egg_base=None):
     cmd = '"%s" setup.py egg_info %s %s' % (PYTHON, VERBOSE, BASE)
     runcmd(cmd)
 
-
-
-    
 
 def cmd_clean_wx(options, args):
     cmdTimer = CommandTimer('clean_wx')

@@ -301,7 +301,7 @@ in their MODULE variable.
 
 
 Prerequisites
---------------
+-------------
 
 The following are some tips about what is required to build Phoenix for
 yourself. There are likely some other things that may not have been mentioned
