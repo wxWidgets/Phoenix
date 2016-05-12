@@ -461,6 +461,30 @@ to your classes to give you a way to do it::
 
 
 
+The wxversion module
+--------------------
+
+The ``wxversion`` module is gone, and will not be coming back.  The old way of
+handling muti-version installs and choosing between them was a giant hack in
+my opinion, and I regretted doing it not long after it was implemented.  However
+since there wasn't any other way that made sense at the time, and since some
+people were using it already, it got left in the distribution.  But one of the
+purposes of the Phoenix project is to remove as many of the hacks and cruft
+from Classic as possible, so wxversion is gone.
+
+These days there are **much** better ways to handle the things that the old
+multi-versioning and version selection features provided.  Since wxPython
+Phoenix is built by default to be self-contained and relocatable on all of the
+platforms, then unlike Classic there is no problem with installing it in
+Python virtual environments.  So if you need to have multiple versions of
+wxPython on your system, then create a virtual environment for each project
+and install the version that each needs in their environments.  If you have
+code that requires a specific version or range of versions of wxPython then
+define the dependency in your ``setup.py`` file or a ``requirements.txt`` file
+and let ``pip`` take care of the details.  I'm confident that you'll be much
+happier with this approach.
+
+
 
 .. toctree::
    :maxdepth: 2
