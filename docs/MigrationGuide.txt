@@ -28,19 +28,22 @@ and an additional component to allow for multiple wxPython releases for each
 wxWidgets release. While this version numbering works okay and solves a
 specific need that wxPython had, it does not follow the common version
 numbering pattern that probably 99% of other software packages use and so it
-is non-intuitive for most users, and probably more importantly, it does not
-fit well with the standards set by setuptools or PEP 0386.
+is non-intuitive for most users.
 
-So Pheonix will be moving to a 3 component version number, possibly with an
-added version tag on the end. Once again the 3 componenets of the version
-number will match the wxWidgets version number, and the version tag will be
-used to convey additional information specific to the wxPython Phoenix build,
-including development snapshots, alpha or beta releases, and "numbered post
-release builds". The latter is what will take the place of Classic's 4
-version number component and is what will be used to version any wxPython
-Phoenix builds that may happen in bewtween official wxWidgets releases. See
-buildtools/version.py in the Phoenix build tree for more details.
+So Phoenix will be moving to a 3 component version number, where the first 2
+components match the MAJOR.MINOR version of wxWidgets being used, and the 3rd
+component of the version number is used to indicate the release of wxPython
+Phoenix using that version of wxWidgets.  It is felt that matching the 3rd
+component of the wxWidgets is no longer as important as it was in the past,
+because the wxWidgets source is being included with the Phoenix source, so
+matching exact versions of the two packages by hand is no longer needed.
 
+Additional flags will be appended to the version number in a manner that is
+compliant with Python's PEP-440_. This includes syntax for alpha, beta,
+release candidate releases, post-release builds, development snapshots, etc.
+See `buildtools/version.py` in the Phoenix build tree for more details.
+
+.. _PEP-440: https://www.python.org/dev/peps/pep-0440/
 
 
 Overloaded Functions
