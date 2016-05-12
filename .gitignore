@@ -6,29 +6,26 @@
 .waf-*
 .waf3-*
 .lock-waf*
+wingdbstub.py*
+mydbstub.py*
 
 .idea
 
-# /
-/.hg
-/.hgignore
 /build
-/build_waf
 /tmp
 /dist
 /license
 /*.egg-info
 /REV.txt
 
-# /bin/
 /bin/sip-*
 /bin/waf-*
 /bin/waf3-*
 /bin/doxygen-*
 
-# /docs/sphinx/
 /docs/html
 /docs/sphinx/*.txt
+/docs/sphinx/*.rst
 /docs/sphinx/*.pkl
 /docs/sphinx/*.inc
 /docs/sphinx/*.lst
@@ -38,20 +35,14 @@
 /docs/sphinx/build
 
 
-# /sip/cpp/
 /sip/cpp/sip.signature
 /sip/cpp/*.sbf
 /sip/cpp/*.h
 /sip/cpp/*.cpp
 /sip/cpp-*
-
-# /sip/gen/
 /sip/gen/*.sip
-
-# /sip/siplib/
 /sip/siplib/.update
 
-# /wx/
 /wx/*.py
 /wx/*.pyc
 /wx/*.pi
@@ -61,6 +52,6 @@
 /wx/*.dylib
 /wx/libwx_*
 /wx/locale
+
 /unittests/lib_pubsub_provider_actual.py
-wingdbstub.py*
 

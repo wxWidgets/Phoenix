@@ -169,36 +169,36 @@ Other Dev Stuff
         a[0]
         a[0][0]
 
-   * In a Py3 build strings like wx.TreeCtrlNameStr are being generated as
-     bytes objects, they should probably be string objects. Or not, sip's
-     default might be best... See ModuleDef.addGlobalStr if I change my mind.
+  * In a Py3 build strings like wx.TreeCtrlNameStr are being generated as
+    bytes objects, they should probably be string objects. Or not, sip's
+    default might be best... See ModuleDef.addGlobalStr if I change my mind.
 
-   * If a function or method has overloads but all but one all ignored then the doc
-     generator should not use the "*args, **kw" form of output and just use the
-     args string of the remaining function or method definition like for those
-     that do not have overloads.  For example, see Window.GetClientSize
+  * If a function or method has overloads but all but one all ignored then the doc
+    generator should not use the "*args, **kw" form of output and just use the
+    args string of the remaining function or method definition like for those
+    that do not have overloads.  For example, see Window.GetClientSize
 
-   * Check gui_scripts entry points.
+  * Check gui_scripts entry points.
 
-   * wx.Window.DoEraseBackground?
+  * wx.Window.DoEraseBackground?
 
-   * The sphinxtools are too aggressive at ignoring content beyond a #. If the hash
-     happens to be inside a string then syntax related errors can happen.  For example:
+  * The sphinxtools are too aggressive at ignoring content beyond a #. If the hash
+    happens to be inside a string then syntax related errors can happen.  For example:
 
-          def SetColors(self, pen='black', fill='#A0A0A0', fill2='#E0E0E0'):
-              ...
+        def SetColors(self, pen='black', fill='#A0A0A0', fill2='#E0E0E0'):
+            ...
 
 
-   * Add tests and/or demo for DnD in DataViewCtrl. Since the DnD is done
-     internally and the DataViewEvent is used for passing the data objects
-     around we may need to do something to help convert the raw data to python
-     DataObjects.
+  * Add tests and/or demo for DnD in DataViewCtrl. Since the DnD is done
+    internally and the DataViewEvent is used for passing the data objects
+    around we may need to do something to help convert the raw data to python
+    DataObjects.
 
-   * Add meaningful __hash__ methods for wx.Colour, wx.Point, etc.?
+  * Add meaningful __hash__ methods for wx.Colour, wx.Point, etc.?
     
-   * Double-check wx.PyEvent and wx.PyCommandEvent, does the
-     __getattr__ etc. work with properties?  See:
-     https://groups.google.com/d/msg/wxpython-dev/dMrpaKs_d0U/nVMY7lMvAwAJ
+  * Double-check wx.PyEvent and wx.PyCommandEvent, does the __getattr__,
+    etc. work with properties?  See:
+    https://groups.google.com/d/msg/wxpython-dev/dMrpaKs_d0U/nVMY7lMvAwAJ
 
 
 

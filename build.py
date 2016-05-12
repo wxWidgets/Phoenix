@@ -888,11 +888,12 @@ def cmd_sphinx(options, args):
     SphinxIndexes(sphinxDir)
     GenGallery()
 
-    todo = os.path.join(phoenixDir(), 'TODO.txt')
-    copyIfNewer(todo, sphinxDir)
-    txtFiles = glob.glob(os.path.join(phoenixDir(), 'docs', '*.txt'))
-    for txtFile in txtFiles:
-        copyIfNewer(txtFile, sphinxDir)
+    # Copy the hand-edited top level doc files too
+    rstFiles = [os.path.join(phoenixDir(), 'TODO.rst')] + \
+               glob.glob(os.path.join(phoenixDir(), 'docs', '*.rst'))
+    for rst in rstFiles:
+        txt = os.path.join(sphinxDir, os.path.splitext(os.path.basename(rst))[0] + '.txt')
+        copyIfNewer(rst, txt)
     
     MakeHeadings()
 

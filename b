@@ -2,16 +2,13 @@
 
 ##set -o xtrace
 
-#PYVER=2.7
-#PYVER2=27
-PYVER=3.4
-PYVER2=34
-
 if [ "$OSTYPE" = "cygwin" ]; then
-    $TOOLS/python$PYVER2/python.exe -u build.py "$@"
+    PYTHON=`which python.exe`
+    echo $PYTHON
+    $PYTHON -u build.py "$@"
 else
-    PATH=/usr/local/bin:$PATH
-    PYTHON=`which python$PYVER`
+    PYTHON=`which python`
+    echo $PYTHON
     $PYTHON -u build.py "$@"
 fi
 
