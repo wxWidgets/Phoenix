@@ -225,10 +225,10 @@ def configure(conf):
         # ** Add code for new modules here
 
 
-        # NOTE: This assumes that if the platform is not win32 (from
-        # the test above) and not darwin then we must be using the
-        # GTK2 port of wxWidgets.  If we ever support other ports then
-        # this code will need to be adjusted.
+        # NOTE: This assumes that if the platform is not win32 (from the test
+        # above) and not darwin then we must be using the GTK2 or GTK3 port of
+        # wxWidgets.  If we ever support other ports then this code will need
+        # to be adjusted.
         if not isDarwin:
             if conf.options.gtk3:
                 gtkflags = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
@@ -288,8 +288,9 @@ from waflib.Configure import conf
 @conf
 def my_check_python_headers(conf):
     """
-    Check for headers and libraries necessary to extend or embed python by using the module *distutils*.
-    On success the environment variables xxx_PYEXT and xxx_PYEMBED are added:
+    Check for headers and libraries necessary to extend or embed python by
+    using the module *distutils*. On success the environment variables
+    xxx_PYEXT and xxx_PYEMBED are added:
 
     * PYEXT: for compiling python extensions
     * PYEMBED: for embedding a python interpreter
@@ -403,7 +404,7 @@ def my_check_python_headers(conf):
 
 def build(bld):
     # Ensure that the directory containing this script is on the python
-    # path for spawned commands so the builder and phoenix packages can be
+    # sys.path for spawned commands so the builder and phoenix packages can be
     # found.
     thisdir = os.path.abspath(".")
     sys.path.insert(0, thisdir)
@@ -578,6 +579,15 @@ def build(bld):
         )
     makeExtCopyRule(bld, '_media')
 
+    if isWindows:
+        etg = loadETG('etg/_msw.py')
+        bld(features = 'c cxx cxxshlib pyext',
+            target   = makeTargetName(bld, '_msw'),
+            source   = getEtgSipCppFiles(etg) + rc,
+            uselib   = 'WX WXPY',
+            )
+        makeExtCopyRule(bld, '_msw')
+
 
 
     # ** Add code for new modules here
@@ -621,8 +631,7 @@ def copyFileToPkg(task):
     from buildtools.config   import opj
     src = task.inputs[0].abspath() 
     tgt = task.outputs[0].abspath() 
-    #task.exec_command('touch %s' % tgt)
-    open(tgt, "wb").close() # 'touch'
+    open(tgt, "wb").close() # essentially just a unix 'touch' command
     tgt = opj(cfg.PKGDIR, os.path.basename(src))
     copy_file(src, tgt, verbose=1)
     return 0

@@ -33,7 +33,8 @@ class mediactrl_Tests(wtc.WidgetTestCase):
         
     def test_mediactrl4(self):
         evt = wx.media.MediaEvent()
-        
+
+
     def test_mediactrl5(self):
         wx.media.wxEVT_MEDIA_LOADED
         wx.media.wxEVT_MEDIA_STOP

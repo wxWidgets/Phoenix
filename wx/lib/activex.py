@@ -90,7 +90,7 @@ class ActiveXCtrl(wx.PyAxBaseWindow):
         # create the control
         atl.AtlAxWinInit()
         hInstance = kernel32.GetModuleHandleA(None)
-        hwnd = user32.CreateWindowExA(0, "AtlAxWin", axID,
+        hwnd = user32.CreateWindowExA(0, b"AtlAxWin", axID.encode("ASCII"),
                                       WS_CHILD | WS_VISIBLE 
                                       | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
                                       x,y, w,h, parent.GetHandle(), None, 
@@ -112,10 +112,12 @@ class ActiveXCtrl(wx.PyAxBaseWindow):
         self._evt_connections = []
         self.AddEventSink(self)
         
-        # Turn the window handle into a wx.Window and set this object to be that window
-        win = wx.PyAxBaseWindow_FromHWND(parent, hwnd)
-        self.PostCreate(win)
+        wx.Window.__init__(self, parent, wxid, pos, size, style, name)
         
+        # Turn the window handle into a wx.Window and set this object to be that window
+        #win = wx.PyAxBaseWindow_FromHWND(parent, hwnd)
+        self.AssociateHandle(hwnd)
+
         # Set some wx.Window properties
         if wxid == wx.ID_ANY: 
             wxid = wx.Window.NewControlId()
