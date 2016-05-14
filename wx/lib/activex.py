@@ -63,7 +63,7 @@ class ActiveXCtrl(wx.PyAxBaseWindow):
     the ActiveX control is accessible through the ctrl property of
     this class, and this class is also set as the event sink for COM
     events originating from the ActiveX control.  In other words, to
-    catch the COM events you mearly have to derive from this class and
+    catch the COM events you merely have to derive from this class and
     provide a method with the correct name.  See the comtypes package
     documentation for more details.
     """
@@ -128,14 +128,16 @@ class ActiveXCtrl(wx.PyAxBaseWindow):
         self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyWindow)
-        
+
+
     def AddEventSink(self, sink, interface=None):
         """
         Add a new target to search for method names that match the COM
         Event names.
         """
         self._evt_connections.append(cc.GetEvents(self._ax, sink, interface))
-        
+
+
     def GetCtrl(self):
         """Easy access to the COM interface for the ActiveX Control"""
         return self._ax
