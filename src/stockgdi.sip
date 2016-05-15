@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // Name:        src/stockobj.sip
-// Purpose:     Wraper definition and some Python code for wxStockGDI and 
+// Purpose:     Wrapper definition and some Python code for wxStockGDI and
 //              using it to initialize the stock objects like wx.BLUE_BRUSH, 
 //              etc.  We're putting it here because wxStockGDI is not 
 //              documented, and probably should not be.

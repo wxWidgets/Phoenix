@@ -49,6 +49,14 @@ def run():
             # keep e.g. '(const wxString &fileName)'
             item.ignore()
 
+            # Transplant the docstrings from the ignored Load methods into the
+            # appropriate compatibility method
+            if 'proxy' in item.argsString:
+                m = c.find('LoadURIWithProxy')
+            else:
+                m = c.find('LoadURI')
+            m.briefDoc = item.briefDoc
+            m.detailedDoc = item.detailedDoc
 
 
     c = module.find('wxMediaEvent')

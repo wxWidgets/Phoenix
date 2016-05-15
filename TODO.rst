@@ -128,10 +128,11 @@ Other Dev Stuff
   * Add a _msw module that will contain classes and such that are only
     available in the Windows port:
 
-      * axbase  (ActiveX.)
-      * wxCHMHelpController
-      * metafile
-      * access
+      * [done] axbase
+      * [done] metafile
+      * [] wxCHMHelpController
+      * [] access
+      * [] New activex classes in wx/msw/ole/activex.h ?
       * Any others?
 
   * Add _propdlg module
