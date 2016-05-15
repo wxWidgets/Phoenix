@@ -29,6 +29,7 @@ this:
 """
 
 import wx
+import wx.msw
 
 import ctypes as ct
 import ctypes.wintypes as wt
@@ -57,7 +58,7 @@ WM_DESTROY      = 2
 
 #------------------------------------------------------------------------------
 
-class ActiveXCtrl(wx.PyAxBaseWindow):
+class ActiveXCtrl(wx.msw.PyAxBaseWindow):
     """
     A wx.Window for hosting ActiveX controls.  The COM interface of
     the ActiveX control is accessible through the ctrl property of
@@ -155,7 +156,7 @@ class ActiveXCtrl(wx.PyAxBaseWindow):
         if res == hr.S_OK:
             return True
         else:
-            return wx.PyAxBaseWindow.MSWTranslateMessage(self, msg)
+            return super(ActiveXCtrl, self).MSWTranslateMessage(msg)
 
     
     # TBD: Are the focus handlers needed?

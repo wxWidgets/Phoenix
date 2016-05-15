@@ -28,8 +28,7 @@ ITEMS = []
 # promoted script to be the same as its NAME.
 
 INCLUDES = ['metafile',
-            # 'pyaxbase',
-            # 'activex'
+            'axbase',
             ]
 
 # Separate the list into those that are generated from ETG scripts and the
