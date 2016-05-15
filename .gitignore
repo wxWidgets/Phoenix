@@ -17,6 +17,7 @@ mydbstub.py*
 /license
 /*.egg-info
 /REV.txt
+/.idea
 
 /bin/sip-*
 /bin/waf-*
