@@ -72,11 +72,11 @@ def run():
             MethodDef(
                 name='wxPyAxBaseWindow', isCtor=True, items=[
                     ParamDef(type='wxWindow*', name='parent'),
-                    ParamDef(type='wxWindowID', name='id', isConst=True, default='-1'),
-                    ParamDef(type='wxPoint&', name='pos', isConst=True, default='wxDefaultPosition'),
-                    ParamDef(type='wxSize&', name='size', isConst=True, default='wxDefaultSize'),
+                    ParamDef(type='const wxWindowID', name='id', default='-1'),
+                    ParamDef(type='const wxPoint&', name='pos', default='wxDefaultPosition'),
+                    ParamDef(type='const wxSize&', name='size', default='wxDefaultSize'),
                     ParamDef(type='long', name='style', default='0'),
-                    ParamDef(type='wxString&', name='name', isConst=True, default='wxPanelNameStr'),
+                    ParamDef(type='const wxString&', name='name', default='wxPanelNameStr'),
                 ],
                 overloads=[
                     MethodDef(
