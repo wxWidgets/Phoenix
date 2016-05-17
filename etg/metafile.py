@@ -12,7 +12,7 @@ import etgtools
 import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"
-MODULE    = "_core"
+MODULE    = "_msw"
 NAME      = "metafile"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
