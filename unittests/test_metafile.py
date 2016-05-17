@@ -1,18 +1,18 @@
 import unittest
 import wtc
 import wx
-import wx.msw
 
 
 #---------------------------------------------------------------------------
 
 class MetafileDCTests(wtc.WidgetTestCase):
 
-    @unittest.skipIf('wxMSW' not in wx.PlatformInfo, "Metafile classes only imsplemented on Windows")
+    @unittest.skipIf('wxMSW' not in wx.PlatformInfo, "Metafile classes only implemented on Windows")
     def test_MetafileDC1(self):
-        # Not testing with output file because it is not released soon enough
-        # to be able to delete the file in this test, resulting in permission
-        # errors.
+        import wx.msw
+        # Not testing with output file because the file resource is not released
+        # soon enough to be able to delete the file in this test, resulting in
+        # permission errors.
         dc = wx.msw.MetafileDC()
         dc.DrawLine(0,0, 50,50)
         metafile = dc.Close()
