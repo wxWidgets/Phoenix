@@ -112,11 +112,10 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
         # Use this object as the event sink for the ActiveX events
         self._evt_connections = []
         self.AddEventSink(self)
-        
-        wx.Window.__init__(self, parent, wxid, pos, size, style, name)
+
+        wx.msw.PyAxBaseWindow.__init__(self, parent, wxid, pos, size, style, name)
         
         # Turn the window handle into a wx.Window and set this object to be that window
-        #win = wx.PyAxBaseWindow_FromHWND(parent, hwnd)
         self.AssociateHandle(hwnd)
 
         # Set some wx.Window properties
@@ -152,7 +151,7 @@ class ActiveXCtrl(wx.msw.PyAxBaseWindow):
         # accelerators can be dealt with the way that the AXControl
         # wants them to be done. MSWTranslateMessage is called before
         # wxWidgets handles and eats the navigation keys itself.
-        res = self.ipao.TranslateAccelerator(msg)   
+        res = self.ipao.TranslateAccelerator(msg)
         if res == hr.S_OK:
             return True
         else:
