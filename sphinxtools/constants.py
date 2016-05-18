@@ -69,87 +69,87 @@ REMOVED_LINKS = ['Library:', 'Category:', 'Predefined objects/pointers:']
 # Dictionary mapping the etg module name to the real Phoenix module name
 # This needs to be kept up to date when other stuff comes in (i.e., wx.grid,
 # wx.html and so on)
-MODULENAME_REPLACE = {'_core'    : '',
-                      '_dataview': 'dataview.',
-                      '_adv'     : 'adv.',
-                      '_stc'     : 'stc.',
-                      '_html'    : 'html.',
-                      '_html2'   : 'html2.',
-                      '_glcanvas': 'glcanvas.',
-                      '_xml'     : 'xml.',
-                      '_xrc'     : 'xrc.',
-                      '_grid'    : 'grid.',
-                      '_richtext': 'richtext.',
-                      '_webkit'  : 'webkit.',
-                      '_media'   : 'media.',
-                      '_msw'     : 'msw',
+MODULENAME_REPLACE = {'_core'    : 'wx.',
+                      '_dataview': 'wx.dataview.',
+                      '_adv'     : 'wx.adv.',
+                      '_stc'     : 'wx.stc.',
+                      '_html'    : 'wx.html.',
+                      '_html2'   : 'wx.html2.',
+                      '_glcanvas': 'wx.glcanvas.',
+                      '_xml'     : 'wx.xml.',
+                      '_xrc'     : 'wx.xrc.',
+                      '_grid'    : 'wx.grid.',
+                      '_richtext': 'wx.richtext.',
+                      '_webkit'  : 'wx.webkit.',
+                      '_media'   : 'wx.media.',
+                      '_msw'     : 'wx.msw',
                       }
 
 NO_MODULE = {
              # -- wxAdvanced -- #
              # Widgets
-             'DatePickerCtrlGeneric': 'adv.',
-             'GenericCalendarCtrl'  : 'adv.',
-             'OwnerDrawnComboBox'   : 'adv.',
+             'DatePickerCtrlGeneric': 'wx.adv.',
+             'GenericCalendarCtrl'  : 'wx.adv.',
+             'OwnerDrawnComboBox'   : 'wx.adv.',
              
              # Enums/constants
-             'AnimationType'                  : 'adv.',
-             'CalendarDateBorder'             : 'adv.',
-             'CalendarHitTestResult'          : 'adv.',
-             'LayoutAlignment'                : 'adv.',
-             'LayoutOrientation'              : 'adv.',
-             'OwnerDrawnComboBoxPaintingFlags': 'adv.',
-             'SashDragStatus'                 : 'adv.',
-             'SashEdgePosition'               : 'adv.',
-             'TaskBarIconType'                : 'adv.',
-             'TipKind'                        : 'adv.',
+             'AnimationType'                  : 'wx.adv.',
+             'CalendarDateBorder'             : 'wx.adv.',
+             'CalendarHitTestResult'          : 'wx.adv.',
+             'LayoutAlignment'                : 'wx.adv.',
+             'LayoutOrientation'              : 'wx.adv.',
+             'OwnerDrawnComboBoxPaintingFlags': 'wx.adv.',
+             'SashDragStatus'                 : 'wx.adv.',
+             'SashEdgePosition'               : 'wx.adv.',
+             'TaskBarIconType'                : 'wx.adv.',
+             'TipKind'                        : 'wx.adv.',
 
              # -- wxDataView -- #
              # Widgets
-             'DataViewItemObjectMapper': 'dataview.',
-             'PyDataViewModel'         : 'dataview.',
+             'DataViewItemObjectMapper': 'wx.dataview.',
+             'PyDataViewModel'         : 'wx.dataview.',
              
              # Enums/constants
-             'DataViewCellMode'        : 'dataview.',
-             'DataViewCellRenderState' : 'dataview.',
-             'DataViewColumnFlags'     : 'dataview.',
+             'DataViewCellMode'        : 'wx.dataview.',
+             'DataViewCellRenderState' : 'wx.dataview.',
+             'DataViewColumnFlags'     : 'wx.dataview.',
              
              # -- wxHTML -- #
              # Widgets
-             'HTMLHelpDialog'          : 'html.',
-             'HTMLHelpFrame'           : 'html.',
-             'HTMLHelpWindow'          : 'html.',
+             'HTMLHelpDialog'          : 'wx.html.',
+             'HTMLHelpFrame'           : 'wx.html.',
+             'HTMLHelpWindow'          : 'wx.html.',
              
              # Enums/constants
-             'HTMLCursor'              : 'html.',
-             'HtmlOpeningStatus'       : 'html.',
-             'HtmlScriptMode'          : 'html.',
-             'HtmlSelectionState'      : 'html.',
-             'HtmlURLType'             : 'html.',
+             'HTMLCursor'              : 'wx.html.',
+             'HtmlOpeningStatus'       : 'wx.html.',
+             'HtmlScriptMode'          : 'wx.html.',
+             'HtmlSelectionState'      : 'wx.html.',
+             'HtmlURLType'             : 'wx.html.',
 
              # -- wxHTML2 -- #
              # Widgets
              
              # Enums/constants
-             'WebViewBackend'          : 'html2.',
-             'WebViewNavigationError'  : 'html2.',
-             'WebViewReloadFlags'      : 'html2.',
-             'WebViewZoom'             : 'html2.',
-             'WebViewZoomType'         : 'html2.',
+             'WebViewBackend'          : 'wx.html2.',
+             'WebViewNavigationError'  : 'wx.html2.',
+             'WebViewReloadFlags'      : 'wx.html2.',
+             'WebViewZoom'             : 'wx.html2.',
+             'WebViewZoomType'         : 'wx.html2.',
 
              # -- wxXML -- #
              # Widgets
              
              # Enums/constants
-             'XmlDocumentLoadFlag'     : 'xml.',
-             'XmlNodeType'             : 'xml.',
+             'XmlDocumentLoadFlag'     : 'wx.xml.',
+             'XmlNodeType'             : 'wx.xml.',
              
              # -- wxXRC -- #
              # Widgets
-             'XmlSubclassFactory'      : 'xrc.',
+             'XmlSubclassFactory'      : 'wx.xrc.',
              
              # Enums/constants
-             'XmlResourceFlags'        : 'xrc.',
+             'XmlResourceFlags'        : 'wx.xrc.',
              }
              
 # Other C++ specific things to strip away
