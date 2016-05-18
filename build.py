@@ -1500,6 +1500,7 @@ def cmd_clean_sphinx(options, args):
     sphinxDir = opj(phoenixDir(), 'docs', 'sphinx')
          
     globs = [ opj(sphinxDir, '*.txt'),
+              opj(sphinxDir, '*.rst'),
               opj(sphinxDir, '*.inc'),
               opj(sphinxDir, '*.pkl'),
               opj(sphinxDir, '*.lst'),
