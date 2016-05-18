@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'wxPython (Phoenix)'
-copyright = u'2012-2014, The wxPython Team'
+copyright = u'2012-2016, The wxPython Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
