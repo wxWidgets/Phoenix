@@ -863,6 +863,7 @@ def cmd_etg(options, args):
 
     
 def cmd_sphinx(options, args):
+    from buildtools import mydbstub
     from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
 
     cmdTimer = CommandTimer('sphinx')

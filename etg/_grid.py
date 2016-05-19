@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Dec-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -13,7 +13,11 @@ import etgtools.tweaker_tools as tools
 PACKAGE   = "wx" 
 MODULE    = "_grid"
 NAME      = "_grid"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The Grid and related classes in this module provide functionality similar to a
+spreadsheet, where the application can display rows and columns of data of
+various types, which the user can edit and otherwise interact with.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 

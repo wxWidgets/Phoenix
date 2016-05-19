@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     8-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -14,7 +14,11 @@ from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 PACKAGE   = "wx" 
 MODULE    = "_core"
 NAME      = "_core"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The classes in this module are the most commonly used classes for wxPython,
+which is why they have been made visible in the core ``wx`` namespace.
+Everything you need for building typical GUI applications is here.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
