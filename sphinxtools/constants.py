@@ -82,7 +82,7 @@ MODULENAME_REPLACE = {'_core'    : 'wx.',
                       '_richtext': 'wx.richtext.',
                       '_webkit'  : 'wx.webkit.',
                       '_media'   : 'wx.media.',
-                      '_msw'     : 'wx.msw',
+                      '_msw'     : 'wx.msw.',
                       }
 
 NO_MODULE = {
@@ -189,6 +189,7 @@ WIDGETS_IMAGES_ROOT  = os.path.join(SPHINXROOT,  '_static', 'images', 'widgets',
 # Folder for the icons used for titles, sub-titles and so on for the Sphinx documentation
 SPHINX_IMAGES_ROOT   = os.path.join(SPHINXROOT,  '_static', 'images', 'sphinxdocs')
 
+DOCSTRING_KEY = '__module_docstring'
 
 # The Doxygen root for the XML docstrings
 xmlsrcbase = 'docs/doxygen/out/xml'

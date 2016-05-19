@@ -1311,6 +1311,7 @@ class ModuleDef(BaseDef):
         self.postInitializerCode = []
         self.includes = []
         self.imports = []
+        self.isARealModule = (module == name)
 
 
     def parseCompleted(self):

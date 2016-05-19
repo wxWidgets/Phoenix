@@ -52,12 +52,14 @@ from sphinxtools.utilities import ChopDescription, PythonizeType, Wx2Sphinx
 from sphinxtools.utilities import PickleClassInfo, IsNumeric
 from sphinxtools.utilities import Underscore2Capitals, CountSpaces
 from sphinxtools.utilities import FormatContributedSnippets
+from sphinxtools.utilities import PickleFile
 
 from sphinxtools.constants import VERSION, REMOVED_LINKS, SECTIONS
 from sphinxtools.constants import MAGIC_METHODS, MODULENAME_REPLACE
 from sphinxtools.constants import IGNORE, NO_MODULE
 from sphinxtools.constants import SPHINXROOT, DOXYROOT
 from sphinxtools.constants import SNIPPETROOT, TABLEROOT, OVERVIEW_IMAGES_ROOT
+from sphinxtools.constants import DOCSTRING_KEY
 
 
 # ----------------------------------------------------------------------- #
@@ -2961,7 +2963,12 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             extractors.PyFunctionDef    : self.generatePyFunction,
             extractors.PyClassDef       : self.generatePyClass,
             }
-        
+
+        if module.isARealModule:
+            filename = os.path.join(SPHINXROOT, self.current_module+'1classindex.pkl')
+            with PickleFile(filename) as pf:
+                pf.items[DOCSTRING_KEY] = module.docstring
+
         for item in module:
             if item.ignored:
                 continue
