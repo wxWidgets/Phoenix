@@ -12,7 +12,7 @@ else:
 
 from inspect import getmro, getclasstree, getdoc, getcomments
 
-from .utilities import MakeSummary, ChopDescription, WriteSphinxOutput
+from .utilities import MakeSummary, ChopDescription, WriteSphinxOutput, PickleFile
 from .utilities import FindControlImages, FormatExternalLink, IsPython3
 from .constants import object_types, MODULE_TO_ICON, DOXY_2_REST, SPHINXROOT
 from . import templates
@@ -521,25 +521,14 @@ class Library(ParentBase):
 
 
     def Save(self):
-
         ParentBase.Save(self)
 
         class_dict = {}
         class_dict = self.ClassesToPickle(self, class_dict)
 
         pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
-
-        if os.path.isfile(pickle_file):
-            fid = open(pickle_file, 'rb')
-            items = pickle.load(fid)
-            fid.close()
-        else:
-            items = {}
-
-        items.update(class_dict)
-        fid = open(pickle_file, 'wb')
-        pickle.dump(items, fid)
-        fid.close()
+        with PickleFile(pickle_file) as pf:
+            pf.items.update(class_dict)
 
 
 class Module(ParentBase):

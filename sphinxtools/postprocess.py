@@ -26,7 +26,7 @@ else:
 from buildtools.config import copyIfNewer, writeIfChanged, newer, getVcsRev, textfile_open
 
 from . import templates
-from .utilities import Wx2Sphinx
+from .utilities import Wx2Sphinx, PickleFile
 from .constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from .constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
 
@@ -100,9 +100,8 @@ def BuildEnumsAndMethods(sphinxDir):
     4. Some cleanup.
     """
 
-    fid = open(os.path.join(sphinxDir, 'class_summary.lst'), 'rb')
-    class_summary = pickle.load(fid)
-    fid.close()
+    pf = PickleFile(os.path.join(sphinxDir, 'class_summary.lst'))
+    class_summary = pf.read()
     
     unreferenced_classes = {}
     
@@ -365,10 +364,9 @@ def ReformatFunctions(file):
     if not newer(file, text_file):
         return
     
-    fid = open(file, 'rb')
-    functions = pickle.load(fid)
-    fid.close()
-    
+    pf = PickleFile(file)
+    functions = pf.read()
+
     if local_file.count('.') == 1:
         # Core functions
         label = 'Core'
@@ -420,11 +418,8 @@ def MakeClassIndex(sphinxDir, file):
     if not newer(file, text_file):
         return
     
-    fid = open(file, 'rb')
-    classes = pickle.load(fid)
-    fid.close()
-    
-    if local_file.count('.') == 1:
+    pf = PickleFile(file)
+    classes = pf.read()
         # Core functions
         label = 'Core'
         module = ''

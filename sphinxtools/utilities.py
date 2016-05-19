@@ -578,12 +578,10 @@ def WriteSphinxOutput(stream, filename, append=False):
     text = stream.getvalue()
 
     mode = 'a' if append else 'w'
-    fid = codecs.open(text_file, mode, encoding='utf-8')        
-    if mode == 'w':
-        fid.write('.. include:: headings.inc\n\n')
-
-    fid.write(text)
-    fid.close()
+    with codecs.open(text_file, mode, encoding='utf-8') as fid:
+        if mode == 'w':
+            fid.write('.. include:: headings.inc\n\n')
+        fid.write(text)
 
 
 # ----------------------------------------------------------------------- #
@@ -614,6 +612,35 @@ def ChopDescription(text):
 
 # ----------------------------------------------------------------------- #
 
+class PickleFile(object):
+    """
+    A class to help simplify loading and saving data to pickle files.
+    """
+    def __init__(self, fileName):
+        self.fileName = fileName
+
+    def __enter__(self):
+        self.read()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.write(self.items)
+
+    def read(self):
+        if os.path.isfile(self.fileName):
+            with open(self.fileName, 'rb') as fid:
+                items = pickle.load(fid)
+        else:
+            items = {}
+        self.items = items
+        return items
+
+    def write(self, items):
+        with open(self.fileName, 'wb') as fid:
+            pickle.dump(items, fid)
+
+# ----------------------------------------------------------------------- #
+
 def PickleItem(description, current_module, name, kind):
     """
     This function pickles/unpickles a dictionary containing class names as keys
@@ -635,18 +662,9 @@ def PickleItem(description, current_module, name, kind):
         pickle_file = os.path.join(SPHINXROOT, current_module + 'functions.pkl')
     else:
         pickle_file = os.path.join(SPHINXROOT, current_module + '1classindex.pkl')
-        
-    if os.path.isfile(pickle_file):
-        fid = open(pickle_file, 'rb')
-        items = pickle.load(fid)
-        fid.close()
-    else:
-        items = {}
 
-    items[name] = description
-    fid = open(pickle_file, 'wb')
-    pickle.dump(items, fid)
-    fid.close()
+    with PickleFile(pickle_file) as pf:
+        pf.items[name] = description
 
 
 # ----------------------------------------------------------------------- #
@@ -661,15 +679,6 @@ def PickleClassInfo(class_name, element, short_description):
     :param string `short_description`: the class short description (if any).
     """
 
-    pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
-        
-    if os.path.isfile(pickle_file):
-        fid = open(pickle_file, 'rb')
-        items = pickle.load(fid)
-        fid.close()
-    else:
-        items = {}
-
     method_list, bases = [], []
     for method, description in element.method_list:
         method_list.append(method)
@@ -677,10 +686,9 @@ def PickleClassInfo(class_name, element, short_description):
     for base in element.bases:
         bases.append(Wx2Sphinx(base)[1])
 
-    items[class_name] = (method_list, bases, short_description)
-    fid = open(pickle_file, 'wb')
-    pickle.dump(items, fid)
-    fid.close()
+    pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
+    with PickleFile(pickle_file) as pf:
+        pf.items[class_name] = (method_list, bases, short_description)
 
 
 # ----------------------------------------------------------------------- #
@@ -786,9 +794,8 @@ def FormatContributedSnippets(kind, contrib_snippets):
         text = '\n' + spacer + '|contributed| **Contributed Examples:**\n\n'
     
     for indx, snippet in enumerate(contrib_snippets):
-        fid = open(snippet, 'rt')
-        lines = fid.readlines()
-        fid.close()
+        with open(snippet, 'rt') as fid:
+            lines = fid.readlines()
         user = lines[0].replace('##', '').strip()
         onlyfile = os.path.split(snippet)[1]
 

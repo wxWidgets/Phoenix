@@ -29,7 +29,7 @@ from .librarydescription import Method, Property, Attribute
 
 from . import inheritance
 
-from .utilities import IsPython3
+from .utilities import IsPython3, PickleFile
 from .constants import object_types, EXCLUDED_ATTRS, MODULE_TO_ICON
 from .constants import CONSTANT_RE
 
@@ -582,13 +582,11 @@ def ToRest(import_name):
     sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
     pickle_file = os.path.join(sphinxDir, 'wx%s.pkl'%import_name)
 
-    fid = open(pickle_file, 'rb')
-    library_class = pickle.load(fid)
-    fid.close()
+    pf = PickleFile(pickle_file)
+    library_class = pf.read()
 
-    fid = open(os.path.join(sphinxDir, 'class_summary.lst'), 'rb')
-    class_summary = pickle.load(fid)
-    fid.close()
+    pf = PickleFile(os.path.join(sphinxDir, 'class_summary.lst'))
+    class_summary = pf.read()
 
     library_class.Walk(library_class, class_summary)
 
@@ -601,8 +599,6 @@ def ModuleHunter(init_name, import_name, version):
     if os.path.isfile(pickle_file):
         ToRest(import_name)
         return
-
-    path = list(sys.path)
 
     directory, module_name = os.path.split(init_name)
     path = list(sys.path)
@@ -660,9 +656,8 @@ def ModuleHunter(init_name, import_name, version):
 
     sys.path[:] = path # restore
 
-    fid = open(pickle_file, 'wb')
-    pickle.dump(library_class, fid)
-    fid.close()
+    pf = PickleFile(pickle_file)
+    pf.write(library_class)
 
     ToRest(import_name)
 
