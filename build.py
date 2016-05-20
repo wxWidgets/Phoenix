@@ -1477,7 +1477,7 @@ def cmd_clean_py(options, args):
     cfg = Config()
     deleteIfExists(getWafBuildBase())
     files = list()
-    for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi']:
+    for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi', '*.pyi']:
         files += glob.glob(opj(cfg.PKGDIR, wc))
     if isWindows:
         msw = getMSWSettings(options)
