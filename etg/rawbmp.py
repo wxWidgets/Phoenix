@@ -89,7 +89,7 @@ def addPixelDataBaseClass(module):
             briefDoc="Returns the distance between the start of one row to the start of the next row."),
         ])
     
-    # TODO: Try to remember why I chose to do it this way instead of direclty
+    # TODO: Try to remember why I chose to do it this way instead of directly
     # returning an instance of the Iterator and giving it the methods needed
     # to be a Python iterator...
     
