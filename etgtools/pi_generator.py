@@ -89,15 +89,17 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         destFile_pi = destFile + '.pi'
         destFile_pyi = destFile + '.pyi'
 
-        def _checkAndWriteHeader(destFile, header):
+        def _checkAndWriteHeader(destFile, header, docstring):
             if not os.path.exists(destFile):
                 # create the file and write the header
                 f = textfile_open(destFile, 'wt')
                 f.write(header)
+                if docstring:
+                    f.write('\n"""\n%s"""\n' % docstring)
                 f.close()
 
-        _checkAndWriteHeader(destFile_pi, header_pi)
-        _checkAndWriteHeader(destFile_pyi, header_pyi)
+        _checkAndWriteHeader(destFile_pi, header_pi, module.docstring)
+        _checkAndWriteHeader(destFile_pyi, header_pyi, module.docstring)
 
         self.writeSection(destFile_pi, module.name, stream.getvalue())
         self.writeSection(destFile_pyi, module.name, stream.getvalue())
