@@ -45,7 +45,7 @@ class TestTB(wx.Toolbook):
         first = True
         for colour in colourList:
             win = self.makeColorPanel(colour)
-            self.AddPage(win, colour, imageId=imageIdGenerator.next())
+            self.AddPage(win, colour, imageId=next(imageIdGenerator))
             if first:
                 st = wx.StaticText(win.win, -1,
                           "You can put nearly any type of window here,\n"

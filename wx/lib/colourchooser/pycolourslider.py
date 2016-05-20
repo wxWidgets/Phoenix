@@ -27,9 +27,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
 
 import  wx
-
-import  canvas
 import  colorsys
+
+from . import canvas
 
 class PyColourSlider(canvas.Canvas):
     """A Pure-Python Colour Slider

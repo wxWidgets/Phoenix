@@ -129,7 +129,9 @@ class TestPanel(wx.Panel):
         self.log.WriteText('OnCellMouseHover: %s\n' % (cell))
         if isinstance(cell, html.HtmlWordCell):
             sel = html.HtmlSelection()
-            self.log.WriteText('     %s\n' % cell.ConvertToText(sel))
+            # BUG: ConvertToText() doesn't exist yet.
+            # self.log.WriteText('     %s\n' % cell.ConvertToText(sel))
+            self.log.WriteText('     %s\n' % sel)
         event.Skip()
 
     def OnCellClicked(self, event):
@@ -137,7 +139,9 @@ class TestPanel(wx.Panel):
         self.log.WriteText('OnCellClicked: %s\n' % (cell))
         if isinstance(cell, html.HtmlWordCell):
             sel = html.HtmlSelection()
-            self.log.WriteText('     %s\n' % cell.ConvertToText(sel))
+            # BUG: ConvertToText() doesn't exist yet.
+            # self.log.WriteText('     %s\n' % cell.ConvertToText(sel))
+            self.log.WriteText('     %s\n' % sel)
         event.Skip()
 
 #----------------------------------------------------------------------

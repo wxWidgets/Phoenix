@@ -33,8 +33,8 @@ import  time
 
 import  wx
 
-import  selection
-import  images
+from . import selection
+from . import images
 
 #----------------------------
 
@@ -162,18 +162,18 @@ class Editor(wx.ScrolledWindow):
         self.bw, self.bh = self.GetClientSize()
 
         if wx.Platform == "__WXMSW__":
-            self.sh = self.bh / self.fh
-            self.sw = (self.bw / self.fw) - 1
+            self.sh = self.bh // self.fh
+            self.sw = (self.bw // self.fw) - 1
         else:
-            self.sh = self.bh / self.fh
+            self.sh = self.bh // self.fh
             if self.LinesInFile() >= self.sh:
                 self.bw = self.bw - wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
-                self.sw = (self.bw / self.fw) - 1
+                self.sw = (self.bw // self.fw) - 1
 
-            self.sw = (self.bw / self.fw) - 1
+            self.sw = (self.bw // self.fw) - 1
             if self.CalcMaxLineLen() >= self.sw:
                 self.bh = self.bh - wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y)
-                self.sh = self.bh / self.fh
+                self.sh = self.bh // self.fh
 
 
     def UpdateView(self, dc = None):
@@ -448,7 +448,7 @@ class Editor(wx.ScrolledWindow):
 ##------------------------ mousing functions
 
     def MouseToRow(self, mouseY):
-        row  = self.sy + (mouseY/ self.fh)
+        row  = self.sy + (mouseY // self.fh)
         if self.AboveScreen(row):
             self.HandleAboveScreen(row)
         elif self.BelowScreen(row):
@@ -457,7 +457,7 @@ class Editor(wx.ScrolledWindow):
             self.cy  = min(row, self.LinesInFile() - 1)
 
     def MouseToCol(self, mouseX):
-        col = self.sx + (mouseX / self.fw)
+        col = self.sx + (mouseX // self.fw)
         if self.LeftOfScreen(col):
             self.HandleLeftOfScreen(col)
         elif self.RightOfScreen(col):

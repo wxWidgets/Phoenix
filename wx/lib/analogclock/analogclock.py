@@ -9,9 +9,9 @@
 
 import wx
 
-from styles import *
-from helpers import Dyer, Face, Hand, HandSet, TickSet, Box
-from setup import Setup
+from .styles import *
+from .helpers import Dyer, Face, Hand, HandSet, TickSet, Box
+from .setup import Setup
 
 #----------------------------------------------------------------------
 

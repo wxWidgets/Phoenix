@@ -7,10 +7,10 @@
 
 import wx
 
-import styles
-import lib_setup.colourselect as csel
-import lib_setup.fontselect as fsel
-import lib_setup.buttontreectrlpanel as bt
+from . import styles 
+from .lib_setup import colourselect as csel
+from .lib_setup import fontselect as fsel
+from .lib_setup import buttontreectrlpanel as bt
 
 #----------------------------------------------------------------------
 

@@ -109,7 +109,7 @@ class TestPanel(wx.Panel):
             )
 
         sizer.Add(
-            wx.StaticText(self, -1, 'with custom & manual sequences'),
+            wx.StaticText(self, -1, 'with custom and manual sequences'),
             (row, 1), flag = wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT
             )
 

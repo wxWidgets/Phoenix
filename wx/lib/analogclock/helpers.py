@@ -9,7 +9,7 @@ from time import strftime, localtime
 import math
 import wx
 
-from styles import *
+from .styles import *
 
 #----------------------------------------------------------------------
 
@@ -662,7 +662,7 @@ class TickSet:
             dc.SetFont(self.font)
             maxsize = size
             for tick in self.ticks.values():
-                maxsize = max(*(dc.GetTextExtent(tick.text) + (maxsize,)))
+                maxsize = max(*(tuple(dc.GetTextExtent(tick.text)) + (maxsize,)))
 
         radius = self.radius = min(clocksize.Get()) / 2. - \
                                self.dyer.width / 2. - \
@@ -941,7 +941,7 @@ class Box:
         for i, attr in enumerate(["TicksH", "TicksM"]):
             if _targets[i] & target:
                 tick = getattr(self, attr)
-                tick.SetFont(wx.FontFromNativeInfoString(fs))
+                tick.SetFont(wx.Font(fs))
 
 
     def SetIsRotated(self, rotate):

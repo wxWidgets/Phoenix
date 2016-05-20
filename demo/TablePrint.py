@@ -24,10 +24,8 @@ class TablePanel(wx.Panel):
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add((20, 30))
-        keys = buttonDefs.keys()
-        keys.sort()
 
-        for k in keys:
+        for k in sorted(buttonDefs.keys()):
             text = buttonDefs[k][1]
             btn = wx.Button(self, k, text)
             box.Add(btn, 0, wx.ALIGN_CENTER|wx.ALL, 15)

@@ -441,7 +441,7 @@ class SettingsPanel(wx.Panel):
         s1.Add(wx.StaticText(self, -1, "Pane Border Size:"))
         s1.Add(self._border_size)
         s1.Add((1, 1), 1, wx.EXPAND)
-        s1.SetItemMinSize(1, (180, 20))
+        s1.SetItemMinSize(index=1, size=(180, 20))
 
         s2 = wx.BoxSizer(wx.HORIZONTAL)
         self._sash_size = wx.SpinCtrl(self, ID_SashSize, "%d"%frame.GetDockArt().GetMetric(aui.AUI_DOCKART_SASH_SIZE), wx.DefaultPosition,
@@ -450,7 +450,7 @@ class SettingsPanel(wx.Panel):
         s2.Add(wx.StaticText(self, -1, "Sash Size:"))
         s2.Add(self._sash_size)
         s2.Add((1, 1), 1, wx.EXPAND)
-        s2.SetItemMinSize(1, (180, 20))
+        s2.SetItemMinSize(index=1, size=(180, 20))
 
         s3 = wx.BoxSizer(wx.HORIZONTAL)
         self._caption_size = wx.SpinCtrl(self, ID_CaptionSize, "%d"%frame.GetDockArt().GetMetric(aui.AUI_DOCKART_CAPTION_SIZE),
@@ -459,7 +459,7 @@ class SettingsPanel(wx.Panel):
         s3.Add(wx.StaticText(self, -1, "Caption Size:"))
         s3.Add(self._caption_size)
         s3.Add((1, 1), 1, wx.EXPAND)
-        s3.SetItemMinSize(1, (180, 20))
+        s3.SetItemMinSize(index=1, size=(180, 20))
 
         b = self.CreateColourBitmap(wx.BLACK)
 
@@ -469,7 +469,7 @@ class SettingsPanel(wx.Panel):
         s4.Add(wx.StaticText(self, -1, "Background Colour:"))
         s4.Add(self._background_colour)
         s4.Add((1, 1), 1, wx.EXPAND)
-        s4.SetItemMinSize(1, (180, 20))
+        s4.SetItemMinSize(index=1, size=(180, 20))
 
         s5 = wx.BoxSizer(wx.HORIZONTAL)
         self._sash_colour = wx.BitmapButton(self, ID_SashColour, b, wx.DefaultPosition, wx.Size(50, 25))
@@ -477,7 +477,7 @@ class SettingsPanel(wx.Panel):
         s5.Add(wx.StaticText(self, -1, "Sash Colour:"))
         s5.Add(self._sash_colour)
         s5.Add((1, 1), 1, wx.EXPAND)
-        s5.SetItemMinSize(1, (180, 20))
+        s5.SetItemMinSize(index=1, size=(180, 20))
 
         s6 = wx.BoxSizer(wx.HORIZONTAL)
         self._inactive_caption_colour = wx.BitmapButton(self, ID_InactiveCaptionColour, b, wx.DefaultPosition, wx.Size(50, 25))
@@ -485,7 +485,7 @@ class SettingsPanel(wx.Panel):
         s6.Add(wx.StaticText(self, -1, "Normal Caption:"))
         s6.Add(self._inactive_caption_colour)
         s6.Add((1, 1), 1, wx.EXPAND)
-        s6.SetItemMinSize(1, (180, 20))
+        s6.SetItemMinSize(index=1, size=(180, 20))
 
         s7 = wx.BoxSizer(wx.HORIZONTAL)
         self._inactive_caption_gradient_colour = wx.BitmapButton(self, ID_InactiveCaptionGradientColour, b, wx.DefaultPosition, wx.Size(50, 25))
@@ -493,7 +493,7 @@ class SettingsPanel(wx.Panel):
         s7.Add(wx.StaticText(self, -1, "Normal Caption Gradient:"))
         s7.Add(self._inactive_caption_gradient_colour)
         s7.Add((1, 1), 1, wx.EXPAND)
-        s7.SetItemMinSize(1, (180, 20))
+        s7.SetItemMinSize(index=1, size=(180, 20))
 
         s8 = wx.BoxSizer(wx.HORIZONTAL)
         self._inactive_caption_text_colour = wx.BitmapButton(self, ID_InactiveCaptionTextColour, b, wx.DefaultPosition, wx.Size(50, 25))
@@ -501,7 +501,7 @@ class SettingsPanel(wx.Panel):
         s8.Add(wx.StaticText(self, -1, "Normal Caption Text:"))
         s8.Add(self._inactive_caption_text_colour)
         s8.Add((1, 1), 1, wx.EXPAND)
-        s8.SetItemMinSize(1, (180, 20))
+        s8.SetItemMinSize(index=1, size=(180, 20))
 
         s9 = wx.BoxSizer(wx.HORIZONTAL)
         self._active_caption_colour = wx.BitmapButton(self, ID_ActiveCaptionColour, b, wx.DefaultPosition, wx.Size(50, 25))
@@ -509,7 +509,7 @@ class SettingsPanel(wx.Panel):
         s9.Add(wx.StaticText(self, -1, "Active Caption:"))
         s9.Add(self._active_caption_colour)
         s9.Add((1, 1), 1, wx.EXPAND)
-        s9.SetItemMinSize(1, (180, 20))
+        s9.SetItemMinSize(index=1, size=(180, 20))
 
         s10 = wx.BoxSizer(wx.HORIZONTAL)
         self._active_caption_gradient_colour = wx.BitmapButton(self, ID_ActiveCaptionGradientColour, b, wx.DefaultPosition, wx.Size(50, 25))
@@ -517,7 +517,7 @@ class SettingsPanel(wx.Panel):
         s10.Add(wx.StaticText(self, -1, "Active Caption Gradient:"))
         s10.Add(self._active_caption_gradient_colour)
         s10.Add((1, 1), 1, wx.EXPAND)
-        s10.SetItemMinSize(1, (180, 20))
+        s10.SetItemMinSize(index=1, size=(180, 20))
 
         s11 = wx.BoxSizer(wx.HORIZONTAL)
         self._active_caption_text_colour = wx.BitmapButton(self, ID_ActiveCaptionTextColour, b, wx.DefaultPosition, wx.Size(50, 25))
@@ -525,7 +525,7 @@ class SettingsPanel(wx.Panel):
         s11.Add(wx.StaticText(self, -1, "Active Caption Text:"))
         s11.Add(self._active_caption_text_colour)
         s11.Add((1, 1), 1, wx.EXPAND)
-        s11.SetItemMinSize(1, (180, 20))
+        s11.SetItemMinSize(index=1, size=(180, 20))
 
         s12 = wx.BoxSizer(wx.HORIZONTAL)
         self._border_colour = wx.BitmapButton(self, ID_BorderColour, b, wx.DefaultPosition, wx.Size(50, 25))
@@ -533,7 +533,7 @@ class SettingsPanel(wx.Panel):
         s12.Add(wx.StaticText(self, -1, "Border Colour:"))
         s12.Add(self._border_colour)
         s12.Add((1, 1), 1, wx.EXPAND)
-        s12.SetItemMinSize(1, (180, 20))
+        s12.SetItemMinSize(index=1, size=(180, 20))
 
         s13 = wx.BoxSizer(wx.HORIZONTAL)
         self._gripper_colour = wx.BitmapButton(self, ID_GripperColour, b, wx.DefaultPosition, wx.Size(50,25))
@@ -541,7 +541,7 @@ class SettingsPanel(wx.Panel):
         s13.Add(wx.StaticText(self, -1, "Gripper Colour:"))
         s13.Add(self._gripper_colour)
         s13.Add((1, 1), 1, wx.EXPAND)
-        s13.SetItemMinSize(1, (180, 20))
+        s13.SetItemMinSize(index=1, size=(180, 20))
 
         s14 = wx.BoxSizer(wx.HORIZONTAL)
         self._sash_grip = wx.CheckBox(self, ID_SashGrip, "", wx.DefaultPosition, wx.Size(50,20))
@@ -549,7 +549,7 @@ class SettingsPanel(wx.Panel):
         s14.Add(wx.StaticText(self, -1, "Draw Sash Grip:"))
         s14.Add(self._sash_grip)
         s14.Add((1, 1), 1, wx.EXPAND)
-        s14.SetItemMinSize(1, (180, 20))
+        s14.SetItemMinSize(index=1, size=(180, 20))
 
         s15 = wx.BoxSizer(wx.HORIZONTAL)
         self._hint_colour = wx.BitmapButton(self, ID_HintColour, b, wx.DefaultPosition, wx.Size(50,25))
@@ -557,7 +557,7 @@ class SettingsPanel(wx.Panel):
         s15.Add(wx.StaticText(self, -1, "Hint Window Colour:"))
         s15.Add(self._hint_colour)
         s15.Add((1, 1), 1, wx.EXPAND)
-        s15.SetItemMinSize(1, (180, 20))
+        s15.SetItemMinSize(index=1, size=(180, 20))
 
         grid_sizer = wx.GridSizer(rows=0, cols=2, vgap=5, hgap=5)
         grid_sizer.SetHGap(5)
