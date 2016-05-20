@@ -863,7 +863,7 @@ def cmd_etg(options, args):
 
     
 def cmd_sphinx(options, args):
-    from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
+    from sphinxtools.postprocess import sphinxIndexes, makeHeadings, postProcess, genGallery
 
     cmdTimer = CommandTimer('sphinx')
     pwd = pushDir(phoenixDir())
@@ -885,8 +885,8 @@ def cmd_sphinx(options, args):
         txt = os.path.join(sphinxDir, os.path.splitext(rstName)[0] + '.txt')
         copyIfNewer(rst, txt)
 
-    SphinxIndexes(sphinxDir)
-    GenGallery()
+    sphinxIndexes(sphinxDir)
+    genGallery()
 
     # Copy the hand-edited top level doc files too
     rstFiles = [os.path.join(phoenixDir(), 'TODO.rst')] + \
@@ -895,7 +895,7 @@ def cmd_sphinx(options, args):
         txt = os.path.join(sphinxDir, os.path.splitext(os.path.basename(rst))[0] + '.txt')
         copyIfNewer(rst, txt)
     
-    MakeHeadings()
+    makeHeadings()
 
     pwd2 = pushDir(sphinxDir)
     buildDir = os.path.join(sphinxDir, 'build')
@@ -904,7 +904,7 @@ def cmd_sphinx(options, args):
     del pwd2
     
     msg('Postprocessing sphinx output...')
-    PostProcess(htmlDir)
+    postProcess(htmlDir)
 
 
 def cmd_wxlib(options, args):

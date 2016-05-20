@@ -44,14 +44,14 @@ from sphinxtools.inheritance import InheritanceDiagram
 
 from sphinxtools import templates
 
-from sphinxtools.utilities import odict
-from sphinxtools.utilities import ConvertToPython
-from sphinxtools.utilities import RemoveWxPrefix, WriteSphinxOutput
-from sphinxtools.utilities import FindControlImages, MakeSummary, PickleItem
-from sphinxtools.utilities import ChopDescription, PythonizeType, Wx2Sphinx
-from sphinxtools.utilities import PickleClassInfo, IsNumeric
-from sphinxtools.utilities import Underscore2Capitals, CountSpaces
-from sphinxtools.utilities import FormatContributedSnippets
+from sphinxtools.utilities import ODict
+from sphinxtools.utilities import convertToPython
+from sphinxtools.utilities import removeWxPrefix, writeSphinxOutput
+from sphinxtools.utilities import findControlImages, makeSummary, pickleItem
+from sphinxtools.utilities import chopDescription, pythonizeType, wx2Sphinx
+from sphinxtools.utilities import pickleClassInfo, isNumeric
+from sphinxtools.utilities import underscore2Capitals, countSpaces
+from sphinxtools.utilities import formatContributedSnippets
 from sphinxtools.utilities import PickleFile
 
 from sphinxtools.constants import VERSION, REMOVED_LINKS, SECTIONS
@@ -199,7 +199,7 @@ class Node(object):
         if xml_docs.kind != 'class':
             return ''
 
-        dummy, class_name = Wx2Sphinx(xml_docs.class_name)
+        dummy, class_name = wx2Sphinx(xml_docs.class_name)
         return class_name
     
 
@@ -283,13 +283,13 @@ class Node(object):
             if link in text.strip():
                 return ''
         
-        text = ConvertToPython(text)
+        text = convertToPython(text)
 
         for child in self.children:
             text += child.Join(with_tail)
         
         if with_tail and tail:
-            text += ConvertToPython(tail)
+            text += convertToPython(tail)
 
         if text.strip() and not text.endswith('\n'):
             text += ' '
@@ -325,7 +325,7 @@ class Root(Node):
         self.is_overload = is_overload
         self.share_docstrings = share_docstrings
         
-        self.sections = odict()
+        self.sections = ODict()
 
 
     # -----------------------------------------------------------------------
@@ -523,7 +523,7 @@ class ParameterList(Node):
         self.kind = kind
 
         self.checked = False        
-        self.py_parameters = odict()
+        self.py_parameters = ODict()
         
         for pdef in xml_item.items:
             name = pdef.name    
@@ -582,7 +582,7 @@ class ParameterList(Node):
             return
         
         name = xml_item.name or xml_item.pyName
-        name = RemoveWxPrefix(name)
+        name = removeWxPrefix(name)
 
         parent = self.GetTopLevelParent()
         is_overload = parent.is_overload if parent else False
@@ -646,7 +646,7 @@ class ParameterList(Node):
 
                 class_name = ''
                 if hasattr(xml_item, 'className') and xml_item.className is not None:
-                    class_name = Wx2Sphinx(xml_item.className)[1] + '.'
+                    class_name = wx2Sphinx(xml_item.className)[1] + '.'
 
                 print((message % (class_name + name, arg, signature, py_parameters)))
 
@@ -654,7 +654,7 @@ class ParameterList(Node):
 ##            if param not in theargs:
 ##                class_name = ''
 ##                if hasattr(xml_item, 'className') and xml_item.className is not None:
-##                    class_name = Wx2Sphinx(xml_item.className)[1] + '.'
+##                    class_name = wx2Sphinx(xml_item.className)[1] + '.'
 ##
 ##                print '\n      |||  %s;%s;%s  |||\n'%(class_name[0:-1], signature, param)
 ##                fid = open('mismatched.txt', 'a')
@@ -734,7 +734,7 @@ class Parameter(Node):
         self.pdef = pdef
         self.name = pdef.name
 
-        self.type = PythonizeType(pdef.type, is_param=True)
+        self.type = pythonizeType(pdef.type, is_param=True)
                 
 
 # ----------------------------------------------------------------------- # 
@@ -902,7 +902,7 @@ class List(Node):
 
         if self.element.tail:
             spacer = ('ParameterList' in self.GetHierarchy() and [' '] or [''])[0]
-            text = '%s%s\n'%(spacer, ConvertToPython(self.element.tail.strip()))
+            text = '%s%s\n'%(spacer, convertToPython(self.element.tail.strip()))
             docstrings += text
         
         return docstrings
@@ -1168,7 +1168,7 @@ class Image(Node):
         docstrings += '|\n\n'
 
         if self.element.tail and self.element.tail.strip():
-            docstrings += ConvertToPython(self.element.tail.rstrip())
+            docstrings += convertToPython(self.element.tail.rstrip())
 
         return docstrings
 
@@ -1297,7 +1297,7 @@ class Table(Node):
             table = '\n\n' + spacer + '.. include:: %s\n\n'%os.path.join(rst_folder, rst_file)
 
         if self.element.tail and self.element.tail.strip():
-            rest = ConvertToPython(self.element.tail.rstrip())
+            rest = convertToPython(self.element.tail.rstrip())
             split = rest.splitlines()
             for index, r in enumerate(split):
                 table += spacer + r
@@ -1480,7 +1480,7 @@ class Snippet(Node):
             elif 'List' in hierarchy:
                 spacer = '  '
                 
-            tail = ConvertToPython(self.element.tail.lstrip())
+            tail = convertToPython(self.element.tail.lstrip())
             tail = tail.replace('\n', ' ')
             docstrings += spacer + tail.replace('  ', ' ')
 
@@ -1538,7 +1538,7 @@ class XRef(Node):
         hascomma = '::' in text
 
         original = text        
-        text = RemoveWxPrefix(text)
+        text = removeWxPrefix(text)
         text = text.replace("::", ".")
         
         if "(" in text:
@@ -1547,7 +1547,7 @@ class XRef(Node):
         refid, link = list(element.items())[0]
         remainder = link.split('_')[-1]
 
-        space_before, space_after = CountSpaces(text)
+        space_before, space_after = countSpaces(text)
         stripped = text.strip()
             
         if stripped in IGNORE:
@@ -1559,7 +1559,7 @@ class XRef(Node):
                 if '_1' in link:
                     ref = link.index('_1')
 
-                ref = Underscore2Capitals(link[6:ref])
+                ref = underscore2Capitals(link[6:ref])
                 text = ':ref:`%s <%s>`'%(stripped, ref)
 
             elif 'funcmacro' in link or 'samples' in link or 'debugging' in text.lower() or \
@@ -1588,7 +1588,7 @@ class XRef(Node):
             if not original.strip().startswith('wx') or ' ' in stripped:
                 text = ''
             
-            elif not IsNumeric(text):
+            elif not isNumeric(text):
                 text = '``%s``'%text
                 
         elif 'funcmacro' in link:
@@ -1626,9 +1626,9 @@ class XRef(Node):
                             text =  ':meth:`%s` '%stripped
 
         else:
-            text = ':ref:`%s`'%Wx2Sphinx(stripped)[1]
+            text = ':ref:`%s`' % wx2Sphinx(stripped)[1]
 
-        return space_before + text + space_after + ConvertToPython(tail)
+        return space_before + text + space_after + convertToPython(tail)
     
 
 # ----------------------------------------------------------------------- #
@@ -1676,9 +1676,9 @@ class ComputerOutput(Node):
 
         if text is not None:
             stripped = text.strip()
-            space_before, space_after = CountSpaces(text)
+            space_before, space_after = countSpaces(text)
         
-            text = RemoveWxPrefix(text.strip())
+            text = removeWxPrefix(text.strip())
 
         else:
             text = ''
@@ -1690,9 +1690,9 @@ class ComputerOutput(Node):
             text = "``%s`` "%text
 
         if self.element.tail:
-            text += ConvertToPython(self.element.tail)
+            text += convertToPython(self.element.tail)
 
-        space_before, space_after = CountSpaces(text)
+        space_before, space_after = countSpaces(text)
         if space_before == '':
             space_before = ' '
 
@@ -1768,7 +1768,7 @@ class Emphasis(Node):
                 tail = (tail is not None and [tail] or [''])[0]
 
                 if tail.strip() != ':':
-                    childText = childText.replace(ConvertToPython(tail), '')
+                    childText = childText.replace(convertToPython(tail), '')
                     
                 fullChildText = child.Join()
                 endPos = text.index(childText)
@@ -1788,7 +1788,7 @@ class Emphasis(Node):
                 text = spacing + format % text.strip()
 
         if self.element.tail:
-            text += ConvertToPython(self.element.tail)
+            text += convertToPython(self.element.tail)
 
         return text
 
@@ -1836,11 +1836,11 @@ class Title(Node):
 
         if isinstance(self.parent, Section) and self.parent.section_type == 'par':
             # Sub-title in a @par doxygen tag
-            text = ConvertToPython(self.element.text)
+            text = convertToPython(self.element.text)
             underline = '-'
         else:
             # Normal big title
-            text = '|phoenix_title| ' + ConvertToPython(self.element.text)
+            text = '|phoenix_title| ' + convertToPython(self.element.text)
             underline = '='
 
         lentext = len(text)
@@ -1896,7 +1896,7 @@ class ULink(Node):
         text = '`%s <%s>`_'%(text, link)
 
         if self.element.tail:
-            text += ConvertToPython(self.element.tail)
+            text += convertToPython(self.element.tail)
 
         return text
 
@@ -1955,8 +1955,8 @@ class XMLDocString(object):
             self.kind = 'function'
         elif isinstance(xml_item, (extractors.ClassDef, extractors.PyClassDef, extractors.TypedefDef)):
             self.kind = 'class'
-            self.appearance = FindControlImages(xml_item)
-            self.class_name = RemoveWxPrefix(xml_item.name) or xml_item.pyName
+            self.appearance = findControlImages(xml_item)
+            self.class_name = removeWxPrefix(xml_item.name) or xml_item.pyName
         elif isinstance(xml_item, extractors.EnumDef):
             self.kind = 'enum'
         else:
@@ -2054,7 +2054,7 @@ class XMLDocString(object):
             if sub_item.ignored:
                 continue
             
-            sub_item.name = self.xml_item.pyName or RemoveWxPrefix(self.xml_item.name)
+            sub_item.name = self.xml_item.pyName or removeWxPrefix(self.xml_item.name)
             docstring = XMLDocString(sub_item, is_overload=True, share_docstrings=share_docstrings)
             docstring.class_name = self.class_name
             docstring.current_module = self.current_module
@@ -2171,7 +2171,7 @@ class XMLDocString(object):
             rest_class = Emphasis(element, parent)
 
         elif tag == 'title':
-            text = ConvertToPython(element.text)
+            text = convertToPython(element.text)
             rest_class = Title(element, parent)
 
         elif tag == 'para':
@@ -2216,33 +2216,33 @@ class XMLDocString(object):
 
         if self.kind == 'class':
             klass = self.xml_item
-            name = RemoveWxPrefix(klass.name) or klass.pyName
-            dummy, fullname = Wx2Sphinx(name)
+            name = removeWxPrefix(klass.name) or klass.pyName
+            dummy, fullname = wx2Sphinx(name)
         elif self.kind == 'method':
             method = self.xml_item
             if hasattr(method, 'isCtor') and method.isCtor:
                 method_name = '__init__'
                 
                 if hasattr(method, 'className') and method.className is not None:
-                    klass = RemoveWxPrefix(method.className)
+                    klass = removeWxPrefix(method.className)
                 else:
-                    klass = RemoveWxPrefix(method.klass.name)
+                    klass = removeWxPrefix(method.klass.name)
                     
                 method_name = '%s.%s'%(klass, method_name)
             else:
                 method_name = method.name or method.pyName
                 if hasattr(method, 'className') and method.className is not None:
-                    klass = RemoveWxPrefix(method.className)
+                    klass = removeWxPrefix(method.className)
                     method_name = '%s.%s'%(klass, method_name)
                 elif hasattr(method, 'klass'):
-                    klass = RemoveWxPrefix(method.klass.name)
+                    klass = removeWxPrefix(method.klass.name)
                     method_name = '%s.%s'%(klass, method_name)
                 else:
-                    method_name = RemoveWxPrefix(method_name)
+                    method_name = removeWxPrefix(method_name)
                     method_name = '%s'%method_name
                     klass = None
 
-            dummy, fullname = Wx2Sphinx(method_name)
+            dummy, fullname = wx2Sphinx(method_name)
         elif self.kind == 'function':
             function = self.xml_item
             name = function.pyName or function.name
@@ -2343,7 +2343,7 @@ class XMLDocString(object):
         # class declaration
         klass = self.xml_item
         name = self.class_name
-        dummy, fullname = Wx2Sphinx(name)
+        dummy, fullname = wx2Sphinx(name)
 
         if '.' in fullname:
             parts = fullname.split('.')
@@ -2358,7 +2358,7 @@ class XMLDocString(object):
             klass.nodeBases = ({name: (name, name, [])}, [name])
             
         inheritance_diagram = InheritanceDiagram(klass.nodeBases)
-        png, map = inheritance_diagram.MakeInheritanceDiagram()
+        png, map = inheritance_diagram.makeInheritanceDiagram()
 
         image_desc = templates.TEMPLATE_INHERITANCE % ('class', name, png, name, map)
         stream.write(image_desc)
@@ -2368,7 +2368,7 @@ class XMLDocString(object):
             stream.write(appearance_desc)
 
         if klass.subClasses:
-            subs = [':ref:`%s`'%Wx2Sphinx(cls)[1] for cls in klass.subClasses]
+            subs = [':ref:`%s`' % wx2Sphinx(cls)[1] for cls in klass.subClasses]
             subs = ', '.join(subs)
             subs_desc = templates.TEMPLATE_SUBCLASSES % subs
             stream.write(subs_desc)
@@ -2377,15 +2377,15 @@ class XMLDocString(object):
         
         if possible_py:
             possible_py.sort()
-            snippets = FormatContributedSnippets(self.kind, possible_py)
+            snippets = formatContributedSnippets(self.kind, possible_py)
             stream.write(snippets)
 
         if klass.method_list:
-            summary = MakeSummary(name, klass.method_list, templates.TEMPLATE_METHOD_SUMMARY, 'meth')
+            summary = makeSummary(name, klass.method_list, templates.TEMPLATE_METHOD_SUMMARY, 'meth')
             stream.write(summary)
 
         if klass.property_list:
-            summary = MakeSummary(name, klass.property_list, templates.TEMPLATE_PROPERTY_SUMMARY, 'attr')
+            summary = makeSummary(name, klass.property_list, templates.TEMPLATE_PROPERTY_SUMMARY, 'attr')
             stream.write(summary)
 
         stream.write(templates.TEMPLATE_API)
@@ -2395,7 +2395,7 @@ class XMLDocString(object):
         
         if bases:
             stream.write('(')
-            bases = [RemoveWxPrefix(b) for b in bases]
+            bases = [removeWxPrefix(b) for b in bases]
             stream.write(', '.join(bases))
             stream.write(')')
 
@@ -2416,7 +2416,7 @@ class XMLDocString(object):
                         found = True
                 else:
                     found = False
-                    newlines.append(ConvertToPython(line))
+                    newlines.append(convertToPython(line))
 
                 if found:
                     line = line.replace('wx.EmptyString', '""')
@@ -2430,7 +2430,7 @@ class XMLDocString(object):
         stream.write(newdocs + "\n\n")
         
         if write:
-            WriteSphinxOutput(stream, self.output_file)
+            writeSphinxOutput(stream, self.output_file)
         else:
             return stream.getvalue()
         
@@ -2447,7 +2447,7 @@ class XMLDocString(object):
 
             method = self.xml_item
             name = method.name or method.pyName
-            name = RemoveWxPrefix(name)            
+            name = removeWxPrefix(name)
 
             if method.overloads and not self.is_overload:
                 if not method.isStatic:
@@ -2482,7 +2482,7 @@ class XMLDocString(object):
 
             function = self.xml_item
             name = function.name or function.pyName
-            name = RemoveWxPrefix(name)
+            name = removeWxPrefix(name)
 
             if function.overloads and not self.is_overload:
                 arguments = '(*args, **kw)'
@@ -2558,7 +2558,7 @@ class XMLDocString(object):
                     
         else:
 
-            rtype = PythonizeType(after, is_param=False)
+            rtype = pythonizeType(after, is_param=False)
 
             if not rtype:
                 return
@@ -2592,7 +2592,7 @@ class XMLDocString(object):
         
         method = self.xml_item
         name = method.name or method.pyName
-        name = RemoveWxPrefix(name)
+        name = removeWxPrefix(name)
 
         if self.is_overload:
             definition = '**%s** '%name
@@ -2620,13 +2620,13 @@ class XMLDocString(object):
         
         if possible_py:
             possible_py.sort()
-            snippets = FormatContributedSnippets(self.kind, possible_py)
+            snippets = formatContributedSnippets(self.kind, possible_py)
             stream.write(snippets)
 
         stream.write("\n\n")
 
         if not self.is_overload and write:
-            WriteSphinxOutput(stream, self.output_file, append=True)
+            writeSphinxOutput(stream, self.output_file, append=True)
 
         return stream.getvalue()
 
@@ -2672,11 +2672,11 @@ class XMLDocString(object):
         
         if possible_py:
             possible_py.sort()
-            snippets = FormatContributedSnippets(self.kind, possible_py)
+            snippets = formatContributedSnippets(self.kind, possible_py)
             stream.write(snippets)
 
         if not self.is_overload and write:        
-            PickleItem(stream.getvalue(), self.current_module, name, 'function')
+            pickleItem(stream.getvalue(), self.current_module, name, 'function')
 
         return stream.getvalue()
 
@@ -2693,7 +2693,7 @@ class XMLDocString(object):
         :rtype: `string`
         """
 
-        enum_name, fullname = Wx2Sphinx(self.xml_item.name)
+        enum_name, fullname = wx2Sphinx(self.xml_item.name)
 
         if '@' in enum_name:
             return
@@ -2718,7 +2718,7 @@ class XMLDocString(object):
                 continue
 
             docstrings = v.briefDoc
-            name = ConvertToPython(RemoveWxPrefix(v.name))
+            name = convertToPython(removeWxPrefix(v.name))
             stream.write('%-80s'%name)
             
             if not isinstance(docstrings, string_base):
@@ -2741,7 +2741,7 @@ class XMLDocString(object):
         #    print message % duplicated
 
         if count > 0 and write:
-            WriteSphinxOutput(stream, self.output_file)
+            writeSphinxOutput(stream, self.output_file)
 
         return stream.getvalue()
     
@@ -2868,10 +2868,10 @@ class XMLDocString(object):
                 docstrings = self.Indent(class_name, self.docstrings, spacer, '')
             
             if self.kind == 'class':
-                desc = ChopDescription(docstrings)
+                desc = chopDescription(docstrings)
                 self.short_description = desc
                 class_name = self.class_name.lower()
-                PickleItem(desc, self.current_module, self.class_name, 'class')
+                pickleItem(desc, self.current_module, self.class_name, 'class')
                         
         if self.overloads:
 
@@ -3072,7 +3072,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         docstring.Dump()
 
-        PickleClassInfo(self.current_module + class_name, self.current_class, docstring.short_description)
+        pickleClassInfo(self.current_module + class_name, self.current_class, docstring.short_description)
 
         # these are the only kinds of items allowed to be items in a PyClass
         dispatch = [(extractors.PyFunctionDef, self.generateMethod),
@@ -3091,7 +3091,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
     def generatePyProperty(self, prop):
 
-        name = RemoveWxPrefix(self.current_class.name) or self.current_class.pyName
+        name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
         getter_setter = self.createPropertyLinks(name, prop)
 
         stream = StringIO()
@@ -3100,7 +3100,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         filename = self.current_module + "%s.txt"%name
 
-        WriteSphinxOutput(stream, filename, append=True)
+        writeSphinxOutput(stream, filename, append=True)
     
     # -----------------------------------------------------------------------
         
@@ -3115,7 +3115,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         for item in klass.innerclasses:
             self.generateClass(item)
 
-        name = RemoveWxPrefix(klass.name) or klass.pyName
+        name = removeWxPrefix(klass.name) or klass.pyName
 
 ##        # Hack for App/PyApp...
 ##        if name == 'PyApp':
@@ -3180,7 +3180,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         docstring.Dump()
 
-        PickleClassInfo(self.current_module + name, self.current_class, docstring.short_description)
+        pickleClassInfo(self.current_module + name, self.current_class, docstring.short_description)
         
         for item in ctors: 
             if item.isCtor:
@@ -3204,7 +3204,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         if isinstance(method, extractors.PyFunctionDef):
             self.UnIndent(method)
             
-        class_name = RemoveWxPrefix(self.current_class.name) or self.current_class.pyName
+        class_name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
             
         # docstring
         method.name = name
@@ -3212,7 +3212,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         docstring = XMLDocString(method)
         docstring.kind = 'method'
 
-        name = RemoveWxPrefix(self.current_class.name) or self.current_class.pyName
+        name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
         filename = self.current_module + "%s.txt"%class_name
 
         docstring.output_file = filename
@@ -3259,7 +3259,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             else:
                 docstrings += line + '\n'
                 
-        docstrings = ConvertToPython(docstrings)
+        docstrings = convertToPython(docstrings)
 
         newdocs = ''
         spacer = ' '*6
@@ -3276,10 +3276,10 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, pm.deprecated.replace('\n', ' '))
             stream.write(text)
 
-        name = RemoveWxPrefix(self.current_class.name) or self.current_class.pyName
+        name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
         filename = self.current_module + "%s.txt"%name
 
-        WriteSphinxOutput(stream, filename, append=True)
+        writeSphinxOutput(stream, filename, append=True)
            
     # -----------------------------------------------------------------------
 
@@ -3295,7 +3295,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         if prop.ignored:
             return
 
-        name = RemoveWxPrefix(self.current_class.name) or self.current_class.pyName
+        name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
 
         getter_setter = self.createPropertyLinks(name, prop)
 
@@ -3305,7 +3305,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         filename = self.current_module + "%s.txt"%name
 
-        WriteSphinxOutput(stream, filename, append=True)
+        writeSphinxOutput(stream, filename, append=True)
 
 
     def createPropertyLinks(self, name, prop):
@@ -3343,7 +3343,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         elif guessTypeStr(globalVar):
             valTyp = '""'
         else:
-            valTyp = RemoveWxPrefix(globalVar.type) + '()'
+            valTyp = removeWxPrefix(globalVar.type) + '()'
 
     # -----------------------------------------------------------------------
     def generateDefine(self, define):
@@ -3357,7 +3357,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         if typedef.ignored or not typedef.docAsClass:
             return
 
-        name = RemoveWxPrefix(typedef.name) or typedef.pyName        
+        name = removeWxPrefix(typedef.name) or typedef.pyName
         typedef.module = self.current_module
 
         all_classes = {}
@@ -3388,7 +3388,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         docstring.Dump()
 
-        PickleClassInfo(self.current_module + name, self.current_class, docstring.short_description)
+        pickleClassInfo(self.current_module + name, self.current_class, docstring.short_description)
 
 
     # -----------------------------------------------------------------------
@@ -3414,7 +3414,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         simple_docs = ''
         
         if isinstance(method, extractors.PyMethodDef):
-            simple_docs = ConvertToPython(method.pyDocstring)
+            simple_docs = convertToPython(method.pyDocstring)
         else:
             brief = method.briefDoc
             if not isinstance(brief, string_base):
@@ -3423,9 +3423,9 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 docstring.current_module = self.current_module
                 simple_docs = docstring.GetBrief()
             elif brief is not None:
-                simple_docs = ConvertToPython(brief)
+                simple_docs = convertToPython(brief)
 
-        simple_docs = ChopDescription(simple_docs)
+        simple_docs = chopDescription(simple_docs)
 
         return method_name, simple_docs
 
@@ -3459,7 +3459,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             
         else:
 
-            rtype = PythonizeType(after, is_param=False)
+            rtype = pythonizeType(after, is_param=False)
 
             if not rtype:
                 return ''

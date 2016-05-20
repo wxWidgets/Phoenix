@@ -18,7 +18,7 @@ from subprocess import Popen, PIPE
 
 # Phoenix-specific imports
 
-from .utilities import Wx2Sphinx, FormatExternalLink
+from .utilities import wx2Sphinx, formatExternalLink
 from .constants import INHERITANCEROOT
 
 ENOENT = getattr(errno, 'ENOENT', 0)
@@ -176,7 +176,7 @@ class InheritanceDiagram(object):
                 this_node_attrs['style'] = 'bold'
 
             if self.main_class is None:
-                newname, fullname = Wx2Sphinx(name)
+                newname, fullname = wx2Sphinx(name)
             else:
                 newname = name
 
@@ -190,7 +190,7 @@ class InheritanceDiagram(object):
                 if fullname in class_summary:
                     this_node_attrs['URL'] = '"%s.html"'%fullname
                 else:
-                    full_page = FormatExternalLink(fullname, inheritance=True)
+                    full_page = formatExternalLink(fullname, inheritance=True)
                     if full_page:
                         this_node_attrs['URL'] = full_page
                     
@@ -205,7 +205,7 @@ class InheritanceDiagram(object):
                     this_edge_attrs['color'] = 'red'
 
                 if self.main_class is None:
-                    base_name, dummy = Wx2Sphinx(base_name)
+                    base_name, dummy = wx2Sphinx(base_name)
 
                 res.append('  "%s" -> "%s" [%s];\n' %
                            (base_name, newname,
@@ -216,7 +216,7 @@ class InheritanceDiagram(object):
 
     # ----------------------------------------------------------------------- #
 
-    def MakeInheritanceDiagram(self, class_summary=None):
+    def makeInheritanceDiagram(self, class_summary=None):
         """
         Actually generates the inheritance diagram as a PNG file plus the corresponding
         MAP file for mouse navigation over the inheritance boxes.
@@ -242,7 +242,7 @@ class InheritanceDiagram(object):
         if self.main_class is not None:
             filename = self.main_class.name
         else:                        
-            dummy, filename = Wx2Sphinx(self.specials[0])
+            dummy, filename = wx2Sphinx(self.specials[0])
 
         outfn = os.path.join(static_root, filename + '_inheritance.png')
         mapfile = outfn + '.map'

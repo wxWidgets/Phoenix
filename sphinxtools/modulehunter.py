@@ -29,7 +29,7 @@ from .librarydescription import Method, Property, Attribute
 
 from . import inheritance
 
-from .utilities import IsPython3, PickleFile
+from .utilities import isPython3, PickleFile
 from .constants import object_types, EXCLUDED_ATTRS, MODULE_TO_ICON
 from .constants import CONSTANT_RE
 
@@ -156,7 +156,7 @@ def analyze_params(obj, signature):
             pvalue = pvalue.strip()
             if pname in pevals:
                 try:
-                    if IsPython3():
+                    if isPython3():
                         peval = str(pevals[pname])
                     else:
                         peval = unicode(pevals[pname])
@@ -224,7 +224,7 @@ def inspect_source(method_class, obj, source):
 def is_classmethod(instancemethod):
     """ Determine if an instancemethod is a classmethod. """
 
-    attribute = (IsPython3() and ['__self__'] or ['im_self'] )[0]
+    attribute = (isPython3() and ['__self__'] or ['im_self'])[0]
 
     if hasattr(instancemethod, attribute):
         return getattr(instancemethod, attribute) is not None
@@ -284,17 +284,17 @@ def describe_func(obj, parent_class, module_name):
 
     try:
         if method in [object_types.METHOD, object_types.METHOD_DESCRIPTOR, object_types.INSTANCE_METHOD]:
-            if IsPython3():
+            if isPython3():
                 code = obj.__func__.__code__
             else:
                 code = obj.im_func.func_code
         elif method == object_types.STATIC_METHOD:
-            if IsPython3():
+            if isPython3():
                 code = obj.__func__.__code__
             else:
                 code = obj.im_func.func_code
         else:
-            if IsPython3():
+            if isPython3():
                 obj.__code__
             else:
                 code = obj.func_code

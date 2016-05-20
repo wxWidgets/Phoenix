@@ -20,7 +20,7 @@ import xml.etree.ElementTree as et
 from .tweaker_tools import FixWxPrefix, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
                            textfile_open
-from sphinxtools.utilities import FindDescendants
+from sphinxtools.utilities import findDescendants
 
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
@@ -662,7 +662,7 @@ class ClassDef(BaseDef):
             
             fname = os.path.join(XMLSRC, refid+'.xml')
             root = et.parse(fname).getroot()
-            compounds = FindDescendants(root, 'basecompoundref')
+            compounds = findDescendants(root, 'basecompoundref')
         else:
             compounds = element.findall('basecompoundref')        
 

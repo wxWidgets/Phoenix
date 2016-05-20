@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 #---------------------------------------------------------------------------
 # Name:        sphinxtools/postprocess.py
 # Author:      Andrea Gavana
@@ -20,7 +19,7 @@ import random
 from buildtools.config import copyIfNewer, writeIfChanged, newer, getVcsRev, textfile_open
 
 from . import templates
-from .utilities import Wx2Sphinx, PickleFile
+from .utilities import wx2Sphinx, PickleFile
 from .constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from .constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
 from .constants import DOCSTRING_KEY
@@ -28,7 +27,7 @@ from .constants import DOCSTRING_KEY
 # ----------------------------------------------------------------------- #
 
 
-def MakeHeadings():
+def makeHeadings():
     """
     Generates the "headings.inc" file containing the substitution reference
     for the small icons used in the Sphinx titles, sub-titles and so on.
@@ -60,7 +59,7 @@ def MakeHeadings():
 
 # ----------------------------------------------------------------------- #
 
-def SphinxIndexes(sphinxDir):
+def sphinxIndexes(sphinxDir):
     """
     This is the main function called after the `etg` process has finished.
 
@@ -73,16 +72,16 @@ def SphinxIndexes(sphinxDir):
     
     for file in pklfiles:
         if file.endswith('functions.pkl'):
-            ReformatFunctions(file)
+            reformatFunctions(file)
         elif 'classindex' in file:
-            MakeClassIndex(sphinxDir, file)
+            makeClassIndex(sphinxDir, file)
 
-    BuildEnumsAndMethods(sphinxDir)
+    buildEnumsAndMethods(sphinxDir)
 
 
 # ----------------------------------------------------------------------- #
 
-def BuildEnumsAndMethods(sphinxDir):
+def buildEnumsAndMethods(sphinxDir):
     """
     This function does some clean-up/refactoring of the generated ReST files by:
 
@@ -140,8 +139,8 @@ def BuildEnumsAndMethods(sphinxDir):
 
         text = newtext
     
-        text = FindInherited(input, class_summary, enum_base, text)
-        text, unreferenced_classes = RemoveUnreferenced(input, class_summary, enum_base, unreferenced_classes, text)
+        text = findInherited(input, class_summary, enum_base, text)
+        text, unreferenced_classes = removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, text)
         
         text = text.replace('wx``', '``')
         text = text.replace('wx.``', '``')
@@ -178,8 +177,8 @@ def BuildEnumsAndMethods(sphinxDir):
         # Remove lines with "Event macros" in them...
         text = text.replace('Event macros:', '')
 
-        text = TooltipsOnInheritance(text, class_summary)
-        text = AddSpacesToLinks(text)
+        text = tooltipsOnInheritance(text, class_summary)
+        text = addSpacesToLinks(text)
 
         if text != orig_text:
             fid = textfile_open(input, 'wt')  
@@ -218,7 +217,7 @@ def BuildEnumsAndMethods(sphinxDir):
 
 # ----------------------------------------------------------------------- #
 
-def FindInherited(input, class_summary, enum_base, text):
+def findInherited(input, class_summary, enum_base, text):
 
     # Malformed inter-links
     regex = re.findall(r'\S:meth:\S+', text)
@@ -307,7 +306,7 @@ def FindInherited(input, class_summary, enum_base, text):
 
 # ----------------------------------------------------------------------- #
 
-def RemoveUnreferenced(input, class_summary, enum_base, unreferenced_classes, text):
+def removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, text):
 
     regex = re.findall(':ref:`(.*?)`', text)
     
@@ -342,7 +341,7 @@ def RemoveUnreferenced(input, class_summary, enum_base, unreferenced_classes, te
 
 # ----------------------------------------------------------------------- #
 
-def AddSpacesToLinks(text):
+def addSpacesToLinks(text):
 
     regex = re.findall('\w:ref:`(.*?)`', text)
 
@@ -353,7 +352,7 @@ def AddSpacesToLinks(text):
 
 # ----------------------------------------------------------------------- #
 
-def ReformatFunctions(file):
+def reformatFunctions(file):
 
     text_file = os.path.splitext(file)[0] + '.txt'
     local_file = os.path.split(file)[1]
@@ -407,7 +406,7 @@ def ReformatFunctions(file):
 
 # ----------------------------------------------------------------------- #
 
-def MakeClassIndex(sphinxDir, file):
+def makeClassIndex(sphinxDir, file):
 
     text_file = os.path.splitext(file)[0] + '.txt'
     local_file = os.path.split(file)[1]
@@ -456,13 +455,13 @@ def MakeClassIndex(sphinxDir, file):
         out = classes[cls]
         if '=====' in out:
             out = ''
-        text += '%-80s %s\n' % (':ref:`%s`' % Wx2Sphinx(cls)[1], out)
+        text += '%-80s %s\n' % (':ref:`%s`' % wx2Sphinx(cls)[1], out)
 
     text += 80*'=' + ' ' + 80*'=' + '\n\n'
 
     contents = []
     for cls in names:
-        contents.append(Wx2Sphinx(cls)[1])
+        contents.append(wx2Sphinx(cls)[1])
 
     for enum in enum_base:
         if enum.count('.') == enumDots:
@@ -481,7 +480,7 @@ def MakeClassIndex(sphinxDir, file):
 
 # ----------------------------------------------------------------------- #
 
-def GenGallery():
+def genGallery():
 
     link = '<div class="gallery_class">'
 
@@ -545,7 +544,7 @@ def GenGallery():
 
 # ----------------------------------------------------------------------- #
 
-def AddPrettyTable(text):
+def addPrettyTable(text):
     """ Unused at the moment. """
 
     newtext = """<br>
@@ -566,7 +565,7 @@ def AddPrettyTable(text):
 
 # ----------------------------------------------------------------------- #
 
-def ClassToFile(line):
+def classToFile(line):
 
     if '&#8211' not in line:
         return line
@@ -592,7 +591,7 @@ def ClassToFile(line):
 
 # ----------------------------------------------------------------------- #
 
-def AddJavaScript(text):
+def addJavaScript(text):
 
     jsCode = """\
         <script>
@@ -622,7 +621,7 @@ def AddJavaScript(text):
     
 # ----------------------------------------------------------------------- #
 
-def PostProcess(folder):
+def postProcess(folder):
 
     fileNames = glob.glob(folder + "/*.html")
 
@@ -654,7 +653,7 @@ def PostProcess(folder):
         split = os.path.split(files)[1]
 
         if split in ['index.html', 'main.html']:
-            text = ChangeSVNRevision(text)
+            text = changeSVNRevision(text)
         else:
             text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
         
@@ -699,7 +698,7 @@ def PostProcess(folder):
         for old, new in list(enum_dict.items()):
             newtext = newtext.replace(old, new)
 
-        newtext = AddJavaScript(newtext)            
+        newtext = addJavaScript(newtext)
 
         if orig_text != newtext:
             fid = open(files, "wt")
@@ -709,14 +708,14 @@ def PostProcess(folder):
 
 # ----------------------------------------------------------------------- #
 
-def ChangeSVNRevision(text):
+def changeSVNRevision(text):
     REVISION = getVcsRev()
     text = text.replace('|TODAY|', TODAY)
     text = text.replace('|VCSREV|', REVISION)
     return text
 
 
-def TooltipsOnInheritance(text, class_summary):
+def tooltipsOnInheritance(text, class_summary):
 
     graphviz = re.findall(r'<p class="graphviz">(.*?)</p>', text, re.DOTALL)
 

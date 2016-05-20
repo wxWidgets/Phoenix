@@ -39,7 +39,8 @@ from .constants import DOXYROOT, SPHINXROOT, WIDGETS_IMAGES_ROOT
 
 
 # ----------------------------------------------------------------------- #
-class odict(UserDict):
+
+class ODict(UserDict):
     """
     An ordered dict (odict). This is a dict which maintains an order to its items;
     the order is rather like that of a list, in that new items are, by default,
@@ -105,7 +106,7 @@ class odict(UserDict):
 
 # ----------------------------------------------------------------------- #
 
-def RemoveWxPrefix(name):
+def removeWxPrefix(name):
     """
     Removes the `wx` prefix from a string.
 
@@ -129,7 +130,7 @@ def RemoveWxPrefix(name):
 
 # ----------------------------------------------------------------------- #
 
-def IsNumeric(input_string):
+def isNumeric(input_string):
     """
     Checks if the string `input_string` actually represents a number.
 
@@ -150,7 +151,7 @@ def IsNumeric(input_string):
 
 # ----------------------------------------------------------------------- #
 
-def CountSpaces(text):
+def countSpaces(text):
     """
     Counts the number of spaces before and after a string.
 
@@ -169,7 +170,7 @@ def CountSpaces(text):
 
 # ----------------------------------------------------------------------- #
 
-def Underscore2Capitals(string):
+def underscore2Capitals(string):
     """
     Replaces the underscore letter in a string with the following letter capitalized.
 
@@ -189,7 +190,7 @@ def Underscore2Capitals(string):
 
 # ----------------------------------------------------------------------- #
 
-def ReplaceCppItems(line):
+def replaceCppItems(line):
     """
     Replaces various C++ specific stuff with more Pythonized version of them.
 
@@ -233,7 +234,7 @@ def ReplaceCppItems(line):
 
 # ----------------------------------------------------------------------- #
 
-def PythonizeType(ptype, is_param):
+def pythonizeType(ptype, is_param):
     """
     Replaces various C++ specific stuff with more Pythonized version of them,
     for parameter lists and return types (i.e., the `:param:` and `:rtype:`
@@ -251,7 +252,7 @@ def PythonizeType(ptype, is_param):
     elif 'wx.' in ptype:
         ptype = ptype[3:]
     else:
-        ptype = Wx2Sphinx(ReplaceCppItems(ptype))[1]
+        ptype = wx2Sphinx(replaceCppItems(ptype))[1]
         
     ptype = ptype.replace('::', '.').replace('*&', '')
     ptype = ptype.replace('int const', 'int')
@@ -263,7 +264,7 @@ def PythonizeType(ptype, is_param):
         ptype = ptype.replace(item, 'int')
     
     ptype = ptype.strip()        
-    ptype = RemoveWxPrefix(ptype)
+    ptype = removeWxPrefix(ptype)
 
     if '. wx' in ptype:
         ptype = ptype.replace('. wx', '.')
@@ -312,7 +313,7 @@ def PythonizeType(ptype, is_param):
 
 # ----------------------------------------------------------------------- #
 
-def ConvertToPython(text):
+def convertToPython(text):
     """
     Converts the input `text` into a more ReSTified version of it.
 
@@ -344,7 +345,7 @@ def ConvertToPython(text):
 
         spacer = ' '*(len(line) - len(line.lstrip()))
 
-        line = ReplaceCppItems(line)
+        line = replaceCppItems(line)
         
         for word in RE_KEEP_SPACES.split(line):
 
@@ -362,8 +363,8 @@ def ConvertToPython(text):
                 continue
                 
             if newword not in IGNORE and not newword.startswith('wx.'):
-                word = RemoveWxPrefix(word)
-                newword = RemoveWxPrefix(newword)
+                word = removeWxPrefix(word)
+                newword = removeWxPrefix(newword)
 
             if "::" in word and not word.endswith("::"):
                 # Bloody SetCursorEvent...
@@ -375,7 +376,7 @@ def ConvertToPython(text):
                 
             if newword.upper() == newword and newword not in PUNCTUATION and \
                newword not in IGNORE and len(newword.strip()) > 1 and \
-               not IsNumeric(newword) and newword not in ['DC', 'GCDC']:
+               not isNumeric(newword) and newword not in ['DC', 'GCDC']:
 
                 if '``' not in newword and '()' not in word and '**' not in word:
                     word = word.replace(newword, "``%s``"%newword)
@@ -396,7 +397,7 @@ def ConvertToPython(text):
 
 # ----------------------------------------------------------------------- #
 
-def FindDescendants(element, tag, descendants=None):
+def findDescendants(element, tag, descendants=None):
     """
     Finds and returns all descendants of a specific `xml.etree.ElementTree.Element`
     whose tag matches the input `tag`.
@@ -420,14 +421,14 @@ def FindDescendants(element, tag, descendants=None):
         if childElement.tag == tag:
             descendants.append(childElement)
 
-        descendants = FindDescendants(childElement, tag, descendants)
+        descendants = findDescendants(childElement, tag, descendants)
 
     return descendants
     
 
 # ----------------------------------------------------------------------- #
 
-def FindControlImages(elementOrString):
+def findControlImages(elementOrString):
     """
     Given the input `element` (an instance of `xml.etree.ElementTree.Element`
     or a plain string)
@@ -457,15 +458,15 @@ def FindControlImages(elementOrString):
         class_name = py_class_name = elementOrString.lower()
     else:
         element = elementOrString
-        class_name = RemoveWxPrefix(element.name) or element.pyName
-        py_class_name = Wx2Sphinx(class_name)[1]
+        class_name = removeWxPrefix(element.name) or element.pyName
+        py_class_name = wx2Sphinx(class_name)[1]
 
         class_name = class_name.lower()
         py_class_name = py_class_name.lower()
 
     image_folder = os.path.join(DOXYROOT, 'images')
 
-    appearance = odict()
+    appearance = ODict()
 
     for sub_folder in ['wxmsw', 'wxmac', 'wxgtk']:
 
@@ -504,7 +505,7 @@ def FindControlImages(elementOrString):
 
 # ----------------------------------------------------------------------- #
 
-def MakeSummary(class_name, item_list, template, kind, add_tilde=True):
+def makeSummary(class_name, item_list, template, kind, add_tilde=True):
     """
     This function generates a table containing a method/property name
     and a shortened version of its docstrings.
@@ -564,7 +565,7 @@ def MakeSummary(class_name, item_list, template, kind, add_tilde=True):
 
 # ----------------------------------------------------------------------- #
 
-def WriteSphinxOutput(stream, filename, append=False):
+def writeSphinxOutput(stream, filename, append=False):
     """
     Writes the text contained in the `stream` to the `filename` output file.
 
@@ -586,7 +587,7 @@ def WriteSphinxOutput(stream, filename, append=False):
 
 # ----------------------------------------------------------------------- #
 
-def ChopDescription(text):
+def chopDescription(text):
     """
     Given the (possibly multiline) input text, this function will get the
     first non-blank line up to the next newline character.
@@ -641,7 +642,7 @@ class PickleFile(object):
 
 # ----------------------------------------------------------------------- #
 
-def PickleItem(description, current_module, name, kind):
+def pickleItem(description, current_module, name, kind):
     """
     This function pickles/unpickles a dictionary containing class names as keys
     and class brief description (chopped docstrings) as values to build the
@@ -669,7 +670,7 @@ def PickleItem(description, current_module, name, kind):
 
 # ----------------------------------------------------------------------- #
 
-def PickleClassInfo(class_name, element, short_description):
+def pickleClassInfo(class_name, element, short_description):
     """
     Saves some information about a class in a pickle-compatible file., i.e. the
     list of methods in that class and its super-classes.
@@ -684,7 +685,7 @@ def PickleClassInfo(class_name, element, short_description):
         method_list.append(method)
 
     for base in element.bases:
-        bases.append(Wx2Sphinx(base)[1])
+        bases.append(wx2Sphinx(base)[1])
 
     pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
     with PickleFile(pickle_file) as pf:
@@ -698,10 +699,9 @@ def PickleClassInfo(class_name, element, short_description):
 # many items added on the fly to try and keep track of them separately.  We
 # can add the module name to the saved data while in the etg/generator stage.
 
-global ALL_ITEMS
 ALL_ITEMS = {}
 
-def Class2Module():
+def class2Module():
 
     global ALL_ITEMS
     
@@ -719,7 +719,7 @@ def Class2Module():
 
         for item in module.ITEMS:
             
-            item = RemoveWxPrefix(item)
+            item = removeWxPrefix(item)
             ALL_ITEMS[item] = current_module
 
     ALL_ITEMS.update(NO_MODULE)
@@ -727,7 +727,7 @@ def Class2Module():
     return ALL_ITEMS            
     
     
-def Wx2Sphinx(name):
+def wx2Sphinx(name):
     """
     Converts a wxWidgets specific string into a Phoenix-ReST-ready string.
 
@@ -738,7 +738,7 @@ def Wx2Sphinx(name):
         name = name[0:name.index('<')]
 
     name = name.strip()    
-    newname = fullname = RemoveWxPrefix(name)
+    newname = fullname = removeWxPrefix(name)
 
     if '.' in newname and len(newname) > 3:
         lookup, remainder = newname.split('.')
@@ -747,7 +747,7 @@ def Wx2Sphinx(name):
         lookup = newname
         remainder = ''
 
-    all_items = Class2Module()
+    all_items = class2Module()
     if lookup in all_items:
         fullname = all_items[lookup] + lookup + remainder
         
@@ -772,7 +772,7 @@ RAW_2 = """
 
 """
 
-def FormatContributedSnippets(kind, contrib_snippets):
+def formatContributedSnippets(kind, contrib_snippets):
     """
     This method will include and properly ReST-ify contributed snippets
     of wxPython code (at the moment only 2 snippets are available), by
@@ -821,7 +821,7 @@ def FormatContributedSnippets(kind, contrib_snippets):
     return text
 
 
-def FormatExternalLink(fullname, inheritance=False):
+def formatExternalLink(fullname, inheritance=False):
     """
     Analyzes the input `fullname` string to check whether a class description
     is actually coming from an external documentation tool
@@ -872,7 +872,7 @@ def FormatExternalLink(fullname, inheritance=False):
     return full_page
 
 
-def IsPython3():
+def isPython3():
     """ Returns ``True`` if we are using Python 3.x. """
 
     return sys.version_info >= (3, )    
