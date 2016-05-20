@@ -863,7 +863,6 @@ def cmd_etg(options, args):
 
     
 def cmd_sphinx(options, args):
-    from buildtools import mydbstub
     from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
 
     cmdTimer = CommandTimer('sphinx')
@@ -1491,7 +1490,6 @@ def cmd_clean_py(options, args):
         options.both = False
         cmd_clean_py(options, args)
         options.both = True
-
 
     
 def cmd_clean_sphinx(options, args):
