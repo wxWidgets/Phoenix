@@ -86,6 +86,33 @@ MODULENAME_REPLACE = {'_core'    : 'wx.',
                       }
 
 NO_MODULE = {
+            # -- core -- #
+            'AlphaPixelData'            : 'wx.',
+            'AlphaPixelData_Accessor'   : 'wx.',
+            'ButtonLabel'               : 'wx.',
+            'CallLater'                 : 'wx.',
+            'ChildrenRepositioningGuard': 'wx.',
+            'GenericDragImage'          : 'wx.',
+            'GenericMessageDialog'      : 'wx.',
+            'HSVValue'                  : 'wx.',
+            'MessageParameters'         : 'wx.',
+            'NativePixelData'           : 'wx.',
+            'NativePixelData_Accessor'  : 'wx.',
+            'PixelDataBase'             : 'wx.',
+            'PyApp'                     : 'wx.',
+            'PyCommandEvent'            : 'wx.',
+            'PyEvent'                   : 'wx.',
+            'PyEventBinder'             : 'wx.',
+            'PyOnDemandOutputWindow'    : 'wx.',
+            'PySimpleApp'               : 'wx.',
+            'PySingleChoiceDialog'      : 'wx.',
+            'RGBValue'                  : 'wx.',
+            'ScrolledCanvas'            : 'wx.',
+            'ScrolledWindow'            : 'wx.',
+            'TimeZone'                  : 'wx.',
+            'Tm'                        : 'wx.',
+            'WindowBase'                : 'wx.',
+
              # -- wxAdvanced -- #
              # Widgets
              'DatePickerCtrlGeneric': 'wx.adv.',
@@ -150,6 +177,9 @@ NO_MODULE = {
              
              # Enums/constants
              'XmlResourceFlags'        : 'wx.xrc.',
+
+             # -- wx.msw -- #
+             'PyAxBaseWindow'          : 'wx.msw',
              }
              
 # Other C++ specific things to strip away

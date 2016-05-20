@@ -171,14 +171,10 @@ TEMPLATE_CLASS_INDEX = '''
 **%s** Classes
 =========================================================================
 
-This is an alphabetical listing of all the classes defined in the **%s** module, together with a brief description of them (if available).
-
-You can look up a class using the alphabetical listing of them.
-
+%s
 
 Class Summary
 =============
-
 
 '''
 

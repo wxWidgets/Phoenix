@@ -16,7 +16,7 @@ MODULE    = "_core"
 NAME      = "_core"   # Base name of the file to generate to for this script
 DOCSTRING = """\
 The classes in this module are the most commonly used classes for wxPython,
-which is why they have been made visible in the core ``wx`` namespace.
+which is why they have been made visible in the core `wx` namespace.
 Everything you need for building typical GUI applications is here.
 """
 

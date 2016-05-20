@@ -693,6 +693,11 @@ def PickleClassInfo(class_name, element, short_description):
 
 # ----------------------------------------------------------------------- #
 
+# TODO: It would be nice to handle tracking the modules in a better way that
+# doesn't need to import and use the ITEMS list in etg files.  There are too
+# many items added on the fly to try and keep track of them separately.  We
+# can add the module name to the saved data while in the etg/generator stage.
+
 global ALL_ITEMS
 ALL_ITEMS = {}
 

@@ -15,12 +15,6 @@ import sys
 import re
 import glob
 import random
-import subprocess
-
-if sys.version_info < (3,):
-    import cPickle as pickle
-else:
-    import pickle
 
 # Phoenix-specific imports
 from buildtools.config import copyIfNewer, writeIfChanged, newer, getVcsRev, textfile_open
@@ -29,6 +23,9 @@ from . import templates
 from .utilities import Wx2Sphinx, PickleFile
 from .constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from .constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
+from .constants import DOCSTRING_KEY
+
+# ----------------------------------------------------------------------- #
 
 
 def MakeHeadings():
@@ -367,11 +364,11 @@ def ReformatFunctions(file):
     pf = PickleFile(file)
     functions = pf.read()
 
-    if local_file.count('.') == 1:
+    if local_file.count('.') == 2:
         # Core functions
-        label = 'Core'
+        label = 'wx Core'
     else:
-        label = local_file.split('.')[0:-2][0]
+        label = '.'.join(local_file.split('.')[0:2])
 
     names = list(functions.keys())
     names = [name.lower() for name in names]
@@ -420,16 +417,26 @@ def MakeClassIndex(sphinxDir, file):
     
     pf = PickleFile(file)
     classes = pf.read()
-        # Core functions
-        label = 'Core'
-        module = ''
-        enumDots = 1
-    else:
-        label = local_file.split('.')[0:-2][0]
-        module = label
-        enumDots = 2
+    module_docstring = classes.get(DOCSTRING_KEY)
+    if module_docstring is not None:
+        del classes[DOCSTRING_KEY]
 
-    enum_files = glob.glob(sphinxDir + '/%s*.enumeration.txt'%module)
+    if local_file.startswith('wx.1'):
+        # Core functions
+        label = 'wx Core'
+        module = 'wx'
+        enumDots = 2
+        # Take care to get only files starting with "wx.UpperName", not
+        # "wx.lower.UpperName". This is so we don't put all the enums in the
+        # submodules in the core wx module too.
+        # TODO: This may not work on case-insensitive file systems, check it.
+        enum_files = glob.glob(sphinxDir + '/wx.[A-Z]*.enumeration.txt')
+    else:
+        label = '.'.join(local_file.split('.')[0:2])
+        module = label
+        enumDots = 3
+        enum_files = glob.glob(sphinxDir + '/%s*.enumeration.txt' % module)
+
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
 
     names = list(classes.keys())
@@ -437,19 +444,19 @@ def MakeClassIndex(sphinxDir, file):
 
     text = ''
     if module:
-        text += '\n\n.. module:: %s\n\n'%module
+        text += '\n\n.. module:: %s\n\n' % module
         
-    text += templates.TEMPLATE_CLASS_INDEX % (label, label)
+    text += templates.TEMPLATE_CLASS_INDEX % (label, module_docstring)
 
     text += 80*'=' + ' ' + 80*'=' + '\n'
-    text += '%-80s **Short Description**\n'%'**Class**'
+    text += '%-80s **Short Description**\n' % '**Class**'
     text += 80*'=' + ' ' + 80*'=' + '\n'
 
     for cls in names:
         out = classes[cls]
         if '=====' in out:
             out = ''
-        text += '%-80s %s\n'%(':ref:`%s`'%Wx2Sphinx(cls)[1], out)
+        text += '%-80s %s\n' % (':ref:`%s`' % Wx2Sphinx(cls)[1], out)
 
     text += 80*'=' + ' ' + 80*'=' + '\n\n'
 
