@@ -585,7 +585,7 @@ def ToRest(import_name):
     pf = PickleFile(pickle_file)
     library_class = pf.read()
 
-    pf = PickleFile(os.path.join(sphinxDir, 'class_summary.lst'))
+    pf = PickleFile(os.path.join(sphinxDir, 'class_summary.pkl'))
     class_summary = pf.read()
 
     library_class.Walk(library_class, class_summary)

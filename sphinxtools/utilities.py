@@ -687,7 +687,7 @@ def pickleClassInfo(class_name, element, short_description):
     for base in element.bases:
         bases.append(wx2Sphinx(base)[1])
 
-    pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
+    pickle_file = os.path.join(SPHINXROOT, 'class_summary.pkl')
     with PickleFile(pickle_file) as pf:
         pf.items[class_name] = (method_list, bases, short_description)
 

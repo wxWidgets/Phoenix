@@ -96,7 +96,7 @@ def buildEnumsAndMethods(sphinxDir):
     4. Some cleanup.
     """
 
-    pf = PickleFile(os.path.join(sphinxDir, 'class_summary.lst'))
+    pf = PickleFile(os.path.join(sphinxDir, 'class_summary.pkl'))
     class_summary = pf.read()
     
     unreferenced_classes = {}

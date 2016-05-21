@@ -526,7 +526,7 @@ class Library(ParentBase):
         class_dict = {}
         class_dict = self.ClassesToPickle(self, class_dict)
 
-        pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
+        pickle_file = os.path.join(SPHINXROOT, 'class_summary.pkl')
         with PickleFile(pickle_file) as pf:
             pf.items.update(class_dict)
 
