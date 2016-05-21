@@ -2905,7 +2905,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
     # -----------------------------------------------------------------------
 
-    def RemoveDuplicated(self, class_name, class_items):
+    def removeDuplicated(self, class_name, class_items):
 
         duplicated_indexes = []
         done = []
@@ -2984,7 +2984,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         function.overloads = []
         function.pyArgsString = function.argsString
 
-        self.UnIndent(function)
+        self.unIndent(function)
         
         # docstring
         docstring = XMLDocString(function)
@@ -3006,7 +3006,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         docstring.Dump()
                         
 
-    def UnIndent(self, item):
+    def unIndent(self, item):
 
         if not item.briefDoc:
             return
@@ -3041,7 +3041,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         class_items = [i for i in klass if not i.ignored]
         class_items = sorted(class_items, key=operator.attrgetter('name'))
 
-        class_items = self.RemoveDuplicated(class_name, class_items)
+        class_items = self.removeDuplicated(class_name, class_items)
 
         init_position = -1
         
@@ -3061,7 +3061,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             init_method = class_items.pop(init_position)
             class_items.insert(0, init_method)
 
-        self.UnIndent(klass)
+        self.unIndent(klass)
 
         docstring = XMLDocString(klass)
         docstring.kind = 'class'
@@ -3157,7 +3157,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             item.sort_order = dispatch[item.__class__][1]
 
         class_items = sorted(class_items, key=operator.attrgetter('sort_order', 'name'))
-        class_items = self.RemoveDuplicated(name, class_items)
+        class_items = self.removeDuplicated(name, class_items)
 
         for item in class_items:
             if isinstance(item, methods) and not self.IsFullyDeprecated(item):
@@ -3202,7 +3202,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 ##            return
 
         if isinstance(method, extractors.PyFunctionDef):
-            self.UnIndent(method)
+            self.unIndent(method)
             
         class_name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
             
@@ -3255,7 +3255,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         for line in pm.pyDocstring.splitlines():
             if '->' in line:
                 arguments, after = line.strip().split("->")
-                return_type = self.ReturnSection(after)
+                return_type = self.returnSection(after)
             else:
                 docstrings += line + '\n'
                 
@@ -3370,7 +3370,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         for base in baselist:
             all_classes[base] = (base, base, [])
 
-        self.UnIndent(typedef)
+        self.unIndent(typedef)
 
         typedef.nodeBases = all_classes, specials
         typedef.subClasses = []
@@ -3430,7 +3430,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         return method_name, simple_docs
 
     # ---------------------------------------------------------------------------
-    def ReturnSection(self, after):
+    def returnSection(self, after):
 
         if '(' in after:
 
