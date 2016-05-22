@@ -42,7 +42,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         scrolled.ScrolledPanel.__init__(self, parent)
 
         self.log = log
-        
+
         mainSz = wx.BoxSizer(wx.VERTICAL)
 
         horSz0 = wx.BoxSizer(wx.HORIZONTAL)
@@ -53,14 +53,14 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         rb = wx.RadioBox(self, -1, "ToasterBox Style", wx.DefaultPosition,
                          wx.DefaultSize, sampleList, 2, wx.RA_SPECIFY_COLS)
 
-        horSz0.Add(rb, 1, 0, 5)        
+        horSz0.Add(rb, 1, 0, 5)
         rb.SetToolTip(wx.ToolTip("Choose the ToasterBox style"))
 
         self.radiochoice = rb
-                
+
         horSz1 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz1, 1, wx.EXPAND | wx.ALL, 5)
-        
+
         statTxt1 = wx.StaticText(self, -1, "Popup position x/y")
         horSz1.Add(statTxt1, 3)
         txtCtrl1 = wx.TextCtrl(self, -1, "500")
@@ -73,7 +73,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
         horSz2 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz2, 1, wx.EXPAND | wx.ALL, 5)
-        
+
         statTxt2 = wx.StaticText(self, -1, "Popup size x/y")
         horSz2.Add(statTxt2, 3)
         txtCtrl2 = wx.TextCtrl(self, -1, "210")
@@ -83,10 +83,10 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
         self.sizex = txtCtrl2
         self.sizey = txtCtrl3
-        
+
         horSz3 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz3, 1, wx.EXPAND | wx.ALL, 5)
-        
+
         statTxt3 = wx.StaticText(self, -1, "Popup linger")
         horSz3.Add(statTxt3, 3)
         txtCtrl4 = wx.TextCtrl(self, -1, "4000")
@@ -108,7 +108,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         self.scrollspeed = txtCtrl4b
 
         horSz3c = wx.BoxSizer(wx.HORIZONTAL)
-        mainSz.Add(horSz3c, 1, wx.EXPAND | wx.ALL, 5)  
+        mainSz.Add(horSz3c, 1, wx.EXPAND | wx.ALL, 5)
         statTxt3c = wx.StaticText(self, -1, "Popup background picture")
         horSz3c.Add(statTxt3c, 3)
         txtCtrl4c = wx.FilePickerCtrl(self, -1, style=wx.FLP_USE_TEXTCTRL|wx.FLP_OPEN)
@@ -120,7 +120,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
                      "written by Andrea Gavana @ 8 September 2005."
         popupText2 = "I don't know what to write in this message. If you like this " \
                      "class, please let me know!."
-        
+
         horSz4 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz4, 1, wx.EXPAND | wx.ALL, 5)
         statTxt4 = wx.StaticText(self, -1, "Popup text")
@@ -166,7 +166,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         horSz8.Add(self.radiotime, 1, 0, 5)
         self.radioclick = wx.RadioButton(self, -1, "Hide by click")
         horSz8.Add(self.radioclick, 1, 0, 5)
-        
+
         horSz9 = wx.BoxSizer(wx.HORIZONTAL)
         mainSz.Add(horSz9, 1, wx.EXPAND | wx.ALL, 5)
         goButton = wx.Button(self, -1, "Show ToasterBox!")
@@ -182,9 +182,9 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         goButton.Bind(wx.EVT_BUTTON, self.ButtonDown)
         fontbutton.Bind(wx.EVT_BUTTON, self.OnSelectFont)
         rb.Bind(wx.EVT_RADIOBOX, self.OnRadioBox)
-        
+
         self.curFont = self.GetFont()
-        
+
         self.SetAutoLayout(True)
         self.SetSizer(mainSz)
         self.Fit()
@@ -192,21 +192,21 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
 
     def SetColours(self, event):
-        
+
         cd = wx.ColourDialog(self)
         cd.ShowModal()
         colBg = cd.GetColourData().GetColour()
         colButton1 = event.GetEventObject()
-        colButton1.SetBackgroundColour(colBg)  
+        colButton1.SetBackgroundColour(colBg)
 
 
     def SetColours2(self, event):
-        
+
         cd = wx.ColourDialog(self)
         cd.ShowModal()
         colFg = cd.GetColourData().GetColour()
         colButton2 = event.GetEventObject()
-        colButton2.SetBackgroundColour(colFg)  
+        colButton2.SetBackgroundColour(colFg)
 
 
     def OnSelectFont(self, event):
@@ -217,9 +217,9 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         data.EnableEffects(True)
         data.SetColour(curClr)
         data.SetInitialFont(curFont)
-        
+
         dlg = wx.FontDialog(self, data)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetFontData()
             font = data.GetChosenFont()
@@ -228,22 +228,22 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
             self.curFont = font
             self.curClr = colour
 
-        dlg.Destroy()        
-    
+        dlg.Destroy()
+
 
     def OnRadioBox(self, event):
 
         mainsizer = self.GetSizer()
-        
+
         if event.GetInt() == 0:
             self.linger.SetValue("4000")
             self.scrollspeed.SetValue("8")
-            
-            for ii in xrange(5, 10):
+
+            for ii in range(5, 10):
                 mainsizer.Show(ii, True)
-                        
+
         else:
-            for ii in xrange(5, 10):
+            for ii in range(5, 10):
                 mainsizer.Show(ii, False)
 
             self.linger.SetValue("10000")
@@ -251,9 +251,9 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
         mainsizer.Layout()
         self.Refresh()
-        
+
         event.Skip()
-        
+
 
     def OnCheckCaption(self, event):
 
@@ -268,7 +268,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
         self.sizex.Refresh()
         self.sizey.Refresh()
-        
+
 
     def ButtonDown(self, event):
 
@@ -279,7 +279,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
             windowstyle = TB.TB_CAPTION
         else:
             windowstyle = TB.TB_DEFAULT_STYLE
-        
+
         if demochoice == 1:
             tbstyle = TB.TB_COMPLEX
         else:
@@ -289,7 +289,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
             closingstyle = TB.TB_ONCLICK
         else:
             closingstyle = TB.TB_ONTIME
-            
+
         tb = TB.ToasterBox(self, tbstyle, windowstyle, closingstyle,
                            scrollType=TB.TB_SCR_TYPE_FADE
                            )
@@ -304,7 +304,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         posx = int(self.posx.GetValue())
         posy = int(self.posy.GetValue())
         tb.SetPopupPosition((posx, posy))
-        
+
         tb.SetPopupPauseTime(int(self.linger.GetValue()))
         tb.SetPopupScrollSpeed(int(self.scrollspeed.GetValue()))
 
@@ -314,8 +314,8 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
         else:
 
-            self.RunComplexDemo(tb)            
-        
+            self.RunComplexDemo(tb)
+
         tb.Play()
 
 
@@ -325,7 +325,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         tb.SetPopupTextColour(self.colButton2.GetBackgroundColour())
         bmp = self.backimage.GetPath()
         dummybmp = wx.NullBitmap
-        
+
         if os.path.isfile(bmp):
             dummybmp = wx.Bitmap(bmp)
 
@@ -342,17 +342,17 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         else:
             if txtshown in [self.popupText1, self.popupText2]:
                 self.counter = 0
-                txtshown = self.popupText2             
-             
+                txtshown = self.popupText2
+
         tb.SetPopupText(txtshown)
         tb.SetPopupTextFont(self.curFont)
-            
+
 
     def RunComplexDemo(self, tb):
 
         # This Is The New Call Style: The Call To GetToasterBoxWindow()
         # Is Mandatory, In Order To Create A Custom Parent On ToasterBox.
-        
+
         tbpanel = tb.GetToasterBoxWindow()
         panel = wx.Panel(tbpanel, -1)
 
@@ -371,7 +371,7 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
         hl = hyperlink.HyperLinkCtrl(panel, -1, "My Home Page",
                                      URL="http://xoomer.alice.it/infinity77/")
 
-        sizer.Add((0,5))        
+        sizer.Add((0,5))
         sizer.Add(horsizer1, 0, wx.EXPAND)
 
         horsizer2 = wx.BoxSizer(wx.HORIZONTAL)
@@ -381,18 +381,18 @@ class ToasterBoxDemo(scrolled.ScrolledPanel):
 
         tk = Ticker(panel)
         tk.SetText("Hello From wxPython!")
-        
+
         horsizer3 = wx.BoxSizer(wx.HORIZONTAL)
         horsizer3.Add((5, 0))
         horsizer3.Add(tk, 1, wx.EXPAND | wx.TOP, 10)
         horsizer3.Add((5,0))
         sizer.Add(horsizer3, 0, wx.EXPAND)
-        
+
         panel.SetSizer(sizer)
         panel.Layout()
-        
+
         tb.AddPanel(panel)
-        
+
 
 #----------------------------------------------------------------------
 

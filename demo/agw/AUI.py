@@ -2670,7 +2670,7 @@ class AuiFrame(wx.Frame):
         # Add the main windows and toolbars, in two separate columns
         # We'll use the item 'id' to store the notebook selection, or -1 if not a page
 
-        for k in xrange(2):
+        for k in range(2):
             if k == 0:
                 items.AddGroup(_("Main Windows"), "mainwindows")
             else:
@@ -2694,7 +2694,7 @@ class AuiFrame(wx.Frame):
         for pane in self._mgr.GetAllPanes():
             nb = pane.window
             if isinstance(nb, aui.AuiNotebook):
-                for j in xrange(nb.GetPageCount()):
+                for j in range(nb.GetPageCount()):
 
                     name = nb.GetPageText(j)
                     win = nb.GetPage(j)
