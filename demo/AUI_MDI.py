@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 
 import wx
-import wx.aui
+try:
+    from agw import aui
+except ImportError: # if it's not there locally, try the wxPython lib.
+    import wx.lib.agw.aui as aui
+
 
 #----------------------------------------------------------------------
 
 
-class ParentFrame(wx.aui.AuiMDIParentFrame):
+class ParentFrame(aui.AuiMDIParentFrame):
     def __init__(self, parent):
-        wx.aui.AuiMDIParentFrame.__init__(self, parent, -1,
+        aui.AuiMDIParentFrame.__init__(self, parent, -1,
                                           title="AuiMDIParentFrame",
                                           size=(640,480),
                                           style=wx.DEFAULT_FRAME_STYLE)
@@ -17,7 +21,7 @@ class ParentFrame(wx.aui.AuiMDIParentFrame):
         self.SetMenuBar(mb)
         self.CreateStatusBar()
         self.Bind(wx.EVT_CLOSE, self.OnDoClose)
-        
+
     def MakeMenuBar(self):
         mb = wx.MenuBar()
         menu = wx.Menu()
@@ -27,7 +31,7 @@ class ParentFrame(wx.aui.AuiMDIParentFrame):
         self.Bind(wx.EVT_MENU, self.OnDoClose, item)
         mb.Append(menu, "&File")
         return mb
-        
+
     def OnNewChild(self, evt):
         self.count += 1
         child = ChildFrame(self, self.count)
@@ -36,25 +40,25 @@ class ParentFrame(wx.aui.AuiMDIParentFrame):
     def OnDoClose(self, evt):
         # Close all ChildFrames first else Python crashes
         for m in self.GetChildren():
-            if isinstance(m, wx.aui.AuiMDIClientWindow):
+            if isinstance(m, aui.AuiMDIClientWindow):
                 for k in m.GetChildren():
                     if isinstance(k, ChildFrame):
-                        k.Close()  
+                        k.Close()
         evt.Skip()
-        
+
 
 #----------------------------------------------------------------------
 
-class ChildFrame(wx.aui.AuiMDIChildFrame):
+class ChildFrame(aui.AuiMDIChildFrame):
     def __init__(self, parent, count):
-        wx.aui.AuiMDIChildFrame.__init__(self, parent, -1,
+        aui.AuiMDIChildFrame.__init__(self, parent, -1,
                                          title="Child: %d" % count)
         mb = parent.MakeMenuBar()
         menu = wx.Menu()
         item = menu.Append(-1, "This is child %d's menu" % count)
         mb.Append(menu, "&Child")
         self.SetMenuBar(mb)
-        
+
         p = wx.Panel(self)
         wx.StaticText(p, -1, "This is child %d" % count, (10,10))
         p.SetBackgroundColour('light blue')
@@ -62,7 +66,7 @@ class ChildFrame(wx.aui.AuiMDIChildFrame):
         sizer = wx.BoxSizer()
         sizer.Add(p, 1, wx.EXPAND)
         self.SetSizer(sizer)
-        
+
         wx.CallAfter(self.Layout)
 
 #----------------------------------------------------------------------
@@ -79,8 +83,8 @@ class TestPanel(wx.Panel):
     def OnButton(self, evt):
         pf = ParentFrame(self)
         pf.Show()
-        
-        
+
+
 
 #----------------------------------------------------------------------
 
@@ -93,11 +97,11 @@ def runTest(frame, nb, log):
 
 
 overview = """<html><body>
-<h2><center>wx.aui.AuiMDI</center></h2>
+<h2><center>aui.AuiMDI</center></h2>
 
-The wx.aui.AuiMDIParentFrame and wx.aui.AuiMDIChildFrame classes
+The aui.AuiMDIParentFrame and aui.AuiMDIChildFrame classes
 implement the same API as wx.MDIParentFrame and wx.MDIChildFrame, but
-implement the multiple document interface with a wx.aui.AuiNotebook.
+implement the multiple document interface with a aui.AuiNotebook.
 
 
 </body></html>
