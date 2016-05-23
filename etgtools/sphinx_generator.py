@@ -2338,11 +2338,10 @@ class XMLDocString(object):
         dummy, fullname = wx2Sphinx(name)
 
         if '.' in fullname:
-            parts = fullname.split('.')
-            module = '.'.join(parts[0:-1])
-            stream.write('\n\n.. currentmodule:: %s\n\n'%module)
+            module = self.current_module[:-1]
+            stream.write('\n\n.. currentmodule:: %s\n\n' % module)
         
-        stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, name))
+        stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, fullname))
 
         self.Reformat(stream)
 
@@ -2381,7 +2380,7 @@ class XMLDocString(object):
             stream.write(summary)
 
         stream.write(templates.TEMPLATE_API)
-        stream.write("\n.. class:: %s"%name)
+        stream.write("\n.. class:: %s" % fullname)
 
         bases = klass.bases or ['object']
         
@@ -2692,13 +2691,14 @@ class XMLDocString(object):
             return
         
         stream = StringIO()
-        self.output_file = self.current_module + "%s.enumeration.txt"%enum_name
+        self.output_file = "%s.enumeration.txt" % fullname
 
         if self.current_module.strip():
-            stream.write('\n\n.. currentmodule:: %s\n\n'%self.current_module[0:-1])
+            module = self.current_module.strip()[:-1]
+            stream.write('\n\n.. currentmodule:: %s\n\n' % module)
         
-        stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, enum_name))
-        stream.write('\n\nThe `%s` enumeration provides the following values:\n\n'%enum_name)
+        stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, fullname))
+        stream.write('\n\nThe `%s` enumeration provides the following values:\n\n' % enum_name)
         
         stream.write('\n\n' + '='*80 + ' ' + '='*80 + '\n')
         stream.write('%-80s **Value**\n'%'**Description**')
@@ -3165,7 +3165,6 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 
         docstring = XMLDocString(klass)
 
-        #filename = self.current_module + "%s.txt"%name
         filename = "%s.txt" % imm.get_fullname(name)
         docstring.output_file = filename
         docstring.current_module = self.current_module
@@ -3196,16 +3195,18 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         if isinstance(method, extractors.PyFunctionDef):
             self.unIndent(method)
 
+        imm = ItemModuleMap()
         c = self.current_class
         class_name = c.pyName if c.pyName else removeWxPrefix(c.name)
-            
+        fullname = imm.get_fullname(class_name)
+
         # docstring
         method.name = name
         method.pyArgsString = method.pyArgsString.replace('(self)', ' ').replace('(self, ', ' ')
         docstring = XMLDocString(method)
         docstring.kind = 'method'
 
-        filename = self.current_module + "%s.txt" % class_name
+        filename = "%s.txt" % fullname
 
         docstring.output_file = filename
         docstring.class_name = class_name
@@ -3270,7 +3271,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         c = self.current_class
         name = c.pyName if c.pyName else removeWxPrefix(c.name)
-        filename = self.current_module + "%s.txt"%name
+        imm = ItemModuleMap()
+        filename = "%s.txt" % imm.get_fullname(name)
 
         writeSphinxOutput(stream, filename, append=True)
            
@@ -3297,7 +3299,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         stream.write('\n   .. attribute:: %s\n\n' % prop.name)
         stream.write('      %s\n\n'%getter_setter)
 
-        filename = self.current_module + "%s.txt"%name
+        imm = ItemModuleMap()
+        filename = "%s.txt" % imm.get_fullname(name)
 
         writeSphinxOutput(stream, filename, append=True)
 
