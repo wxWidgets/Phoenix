@@ -40,7 +40,7 @@ def removeWxPrefixes(node):
     """
     Rename items with a 'wx' prefix to not have the prefix. If the back-end
     generator supports auto-renaming then it can ignore the pyName value for
-    those that are changed here. We'll still change them all incase the
+    those that are changed here. We'll still change them all in case the
     pyNames are needed elsewhere.
     """
     for item in node.allItems():
@@ -57,6 +57,9 @@ def removeWxPrefixes(node):
             
 
 def removeWxPrefix(name):
+    """
+    Remove the "wx" prefix from a name, except for those which should keep it.
+    """
     if name.startswith('wx.') or name.startswith('``wx.'):
         return name
     
@@ -67,7 +70,6 @@ def removeWxPrefix(name):
         name = name[0:2] + name[4:]
         
     return name
-
 
 
 
@@ -568,7 +570,11 @@ def runGenerators(module):
     # Toss in the PI generator too
     from etgtools import pi_generator
     generators.append(pi_generator.PiWrapperGenerator())    
-    
+
+    # Now the item map generator
+    from etgtools import map_generator
+    generators.append((map_generator.ItemMapGenerator()))
+
     # And finally add the documentation generator
     generators.append(getDocsGenerator())
 

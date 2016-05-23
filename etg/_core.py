@@ -313,7 +313,7 @@ def run():
             A convenience class for :class:`Timer`, that calls the given callable
             object once after the given amount of milliseconds, passing any
             positional or keyword args.  The return value of the callable is
-            availbale after it has been run with the :meth:`~CallLater.GetResult` method.
+            available after it has been run with the :meth:`~CallLater.GetResult` method.
             
             If you don't need to get the return value or restart the timer
             then there is no need to hold a reference to this object.  It will

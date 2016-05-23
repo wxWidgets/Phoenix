@@ -334,7 +334,7 @@ def removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, te
         if split not in unreferenced_classes[reg]:
             unreferenced_classes[reg].append(split)
                 
-        text = text.replace(':ref:`%s`'%reg, '`%s`'%reg, 1)
+        text = text.replace(':ref:`%s`'%reg, '`%s`     '%reg, 1)
 
     return text, unreferenced_classes        
 

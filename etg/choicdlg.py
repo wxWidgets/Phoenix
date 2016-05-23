@@ -35,13 +35,12 @@ def run():
     c = module.find('wxMultiChoiceDialog')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
-    
-    
+
     
     c = module.find('wxSingleChoiceDialog')
     tools.fixTopLevelWindowClass(c)
     
-    # Make a new class so we can ignore the clientData parameter in the 
+    # Make a new class so we can ignore the clientData parameter in the ctor
     c.addHeaderCode("""\
     class wxPySingleChoiceDialog : public wxSingleChoiceDialog {
     public:
@@ -59,7 +58,7 @@ def run():
     for item in c.allItems():  
         if item.name == 'wxSingleChoiceDialog':
             item.name = 'wxPySingleChoiceDialog' 
-    c.pyName = 'SingleChoiceDialog'
+    c.renameClass('SingleChoiceDialog')
 
     # ignore this ctor
     c.find('wxPySingleChoiceDialog').findOverload('int n').ignore()

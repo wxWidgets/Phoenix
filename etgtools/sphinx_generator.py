@@ -21,15 +21,11 @@ import operator
 import sys
 import shutil
 import textwrap
-import glob
 
 if sys.version_info < (3, ):
-
     from StringIO import StringIO
     string_base = basestring
-
 else:
-    
     from io import StringIO
     string_base = str
     
@@ -38,15 +34,16 @@ import xml.etree.ElementTree as et
 # Phoenix-specific stuff
 import etgtools.extractors as extractors
 import etgtools.generators as generators
+from etgtools.item_module_map import ItemModuleMap
+from etgtools.tweaker_tools import removeWxPrefix
 
 # Sphinx-Phoenix specific stuff
 from sphinxtools.inheritance import InheritanceDiagram
-
 from sphinxtools import templates
 
 from sphinxtools.utilities import ODict
 from sphinxtools.utilities import convertToPython
-from sphinxtools.utilities import removeWxPrefix, writeSphinxOutput
+from sphinxtools.utilities import writeSphinxOutput
 from sphinxtools.utilities import findControlImages, makeSummary, pickleItem
 from sphinxtools.utilities import chopDescription, pythonizeType, wx2Sphinx
 from sphinxtools.utilities import pickleClassInfo, isNumeric
@@ -56,7 +53,7 @@ from sphinxtools.utilities import PickleFile
 
 from sphinxtools.constants import VERSION, REMOVED_LINKS, SECTIONS
 from sphinxtools.constants import MAGIC_METHODS, MODULENAME_REPLACE
-from sphinxtools.constants import IGNORE, NO_MODULE
+from sphinxtools.constants import IGNORE
 from sphinxtools.constants import SPHINXROOT, DOXYROOT
 from sphinxtools.constants import SNIPPETROOT, TABLEROOT, OVERVIEW_IMAGES_ROOT
 from sphinxtools.constants import DOCSTRING_KEY
@@ -581,8 +578,7 @@ class ParameterList(Node):
         if isinstance(xml_item, (extractors.PyFunctionDef, extractors.CppMethodDef)):
             return
         
-        name = xml_item.name or xml_item.pyName
-        name = removeWxPrefix(name)
+        name = xml_item.pyName if xml_item.pyName else removeWxPrefix(xml_item.name)
 
         parent = self.GetTopLevelParent()
         is_overload = parent.is_overload if parent else False
@@ -1613,17 +1609,20 @@ class XRef(Node):
                     if '(' in stripped:
                         stripped = stripped[0:stripped.index('(')].strip()
 
-                    if stripped in NO_MODULE:
-                        text = ':ref:`%s`'%(NO_MODULE[stripped] + stripped)
+                    imm = ItemModuleMap()
+                    if stripped in imm:
+                        text = ':ref:`%s`' % (imm.get_fullname(stripped))
                     else:                    
                         if '.' not in stripped:
                             klass = self.IsClassDescription()
                             if klass:
-                                text = ':meth:`~%s.%s`'%(klass, stripped)
+                                text = ':meth:`~%s.%s`' % (klass, stripped)
                             else:
-                                text =  ':meth:`%s` '%stripped
+                                text =  ':meth:`%s` ' % stripped
                         else:
-                            text =  ':meth:`%s` '%stripped
+                            scope, item_name = stripped.split('.', 1)
+                            scope = wx2Sphinx(scope)[1]
+                            text =  ':meth:`%s.%s` ' % (scope, item_name)
 
         else:
             text = ':ref:`%s`' % wx2Sphinx(stripped)[1]
@@ -1956,7 +1955,8 @@ class XMLDocString(object):
         elif isinstance(xml_item, (extractors.ClassDef, extractors.PyClassDef, extractors.TypedefDef)):
             self.kind = 'class'
             self.appearance = findControlImages(xml_item)
-            self.class_name = removeWxPrefix(xml_item.name) or xml_item.pyName
+            self.class_name = xml_item.pyName if xml_item.pyName else removeWxPrefix(xml_item.name)
+            self.isInner = getattr(xml_item, 'isInner', False)
         elif isinstance(xml_item, extractors.EnumDef):
             self.kind = 'enum'
         else:
@@ -2214,38 +2214,30 @@ class XMLDocString(object):
         :rtype: `string`
         """
 
+        imm = ItemModuleMap()
+
         if self.kind == 'class':
             klass = self.xml_item
-            name = removeWxPrefix(klass.name) or klass.pyName
-            dummy, fullname = wx2Sphinx(name)
+            name = klass.pyName if klass.pyName else removeWxPrefix(klass.name)
+            fullname = imm.get_fullname(name)
+
         elif self.kind == 'method':
             method = self.xml_item
             if hasattr(method, 'isCtor') and method.isCtor:
                 method_name = '__init__'
-                
-                if hasattr(method, 'className') and method.className is not None:
-                    klass = removeWxPrefix(method.className)
-                else:
-                    klass = removeWxPrefix(method.klass.name)
-                    
-                method_name = '%s.%s'%(klass, method_name)
             else:
-                method_name = method.name or method.pyName
-                if hasattr(method, 'className') and method.className is not None:
-                    klass = removeWxPrefix(method.className)
-                    method_name = '%s.%s'%(klass, method_name)
-                elif hasattr(method, 'klass'):
-                    klass = removeWxPrefix(method.klass.name)
-                    method_name = '%s.%s'%(klass, method_name)
-                else:
-                    method_name = removeWxPrefix(method_name)
-                    method_name = '%s'%method_name
-                    klass = None
+                method_name = method.pyName if method.pyName else method.name
 
-            dummy, fullname = wx2Sphinx(method_name)
+            if hasattr(method, 'className') and method.className is not None:
+                klass = removeWxPrefix(method.className)
+            else:
+                klass = method.klass.pyName if method.klass.pyName else removeWxPrefix(method.klass.name)
+
+            fullname = '%s.%s' % (imm.get_fullname(klass), method_name)
+
         elif self.kind == 'function':
             function = self.xml_item
-            name = function.pyName or function.name
+            name = function.pyName if function.pyName else function.name
             fullname = self.current_module + 'functions.%s'%name
 
         if not fullname.strip():
@@ -2481,7 +2473,7 @@ class XMLDocString(object):
         elif self.kind == 'function':
 
             function = self.xml_item
-            name = function.name or function.pyName
+            name = function.pyName if function.pyName else function.name
             name = removeWxPrefix(name)
 
             if function.overloads and not self.is_overload:
@@ -2541,14 +2533,15 @@ class XMLDocString(object):
             
             for ret in return_section:
                 stripped = ret.strip()
-                if stripped in NO_MODULE:
-                    ret = NO_MODULE[stripped] + stripped
-                    new_section.append(':ref:`%s`'%ret)
+                imm = ItemModuleMap()
+                if stripped in imm:
+                    ret = imm[stripped] + stripped
+                    new_section.append(':ref:`%s`' % ret)
                 else:
                     if ret[0].isupper():
-                        new_section.append(':ref:`%s`'%stripped)
+                        new_section.append(':ref:`%s`' % stripped)
                     else:
-                        new_section.append('`%s`'%stripped)
+                        new_section.append('`%s`' % stripped)
 
             element = et.Element('return', kind='return')
             element.text = '( %s )'%(', '.join(new_section))
@@ -2591,7 +2584,7 @@ class XMLDocString(object):
         stream = StringIO()
         
         method = self.xml_item
-        name = method.name or method.pyName
+        name = method.pyName if method.pyName else method.name
         name = removeWxPrefix(name)
 
         if self.is_overload:
@@ -2870,7 +2863,6 @@ class XMLDocString(object):
             if self.kind == 'class':
                 desc = chopDescription(docstrings)
                 self.short_description = desc
-                class_name = self.class_name.lower()
                 pickleItem(desc, self.current_module, self.class_name, 'class')
                         
         if self.overloads:
@@ -2896,7 +2888,6 @@ class XMLDocString(object):
 class SphinxGenerator(generators.DocsGeneratorBase):
         
     def generate(self, module):
-
         self.current_module = MODULENAME_REPLACE[module.module]
         self.module_name = module.name
         self.current_class = None
@@ -3091,7 +3082,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
     def generatePyProperty(self, prop):
 
-        name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
+        c = self.current_class
+        name = c.pyName if c.pyName else removeWxPrefix(c.name)
         getter_setter = self.createPropertyLinks(name, prop)
 
         stream = StringIO()
@@ -3111,15 +3103,14 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         if klass.ignored:
             return
 
+        imm = ItemModuleMap()
+
         # generate nested classes
         for item in klass.innerclasses:
             self.generateClass(item)
 
-        name = removeWxPrefix(klass.name) or klass.pyName
-
-##        # Hack for App/PyApp...
-##        if name == 'PyApp':
-##            klass.name = name = 'App'
+        name = klass.pyName if klass.pyName else removeWxPrefix(klass.name)
+        fullname = imm.get_fullname(name)
 
         klass.module = self.current_module
         self.current_class = klass
@@ -3174,13 +3165,14 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 
         docstring = XMLDocString(klass)
 
-        filename = self.current_module + "%s.txt"%name
+        #filename = self.current_module + "%s.txt"%name
+        filename = "%s.txt" % imm.get_fullname(name)
         docstring.output_file = filename
         docstring.current_module = self.current_module
 
         docstring.Dump()
 
-        pickleClassInfo(self.current_module + name, self.current_class, docstring.short_description)
+        pickleClassInfo(fullname, self.current_class, docstring.short_description)
         
         for item in ctors: 
             if item.isCtor:
@@ -3203,8 +3195,9 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         if isinstance(method, extractors.PyFunctionDef):
             self.unIndent(method)
-            
-        class_name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
+
+        c = self.current_class
+        class_name = c.pyName if c.pyName else removeWxPrefix(c.name)
             
         # docstring
         method.name = name
@@ -3212,8 +3205,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         docstring = XMLDocString(method)
         docstring.kind = 'method'
 
-        name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
-        filename = self.current_module + "%s.txt"%class_name
+        filename = self.current_module + "%s.txt" % class_name
 
         docstring.output_file = filename
         docstring.class_name = class_name
@@ -3276,7 +3268,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             text = '%s %s\n%s%s\n\n'%('      .. deprecated::', VERSION, ' '*9, pm.deprecated.replace('\n', ' '))
             stream.write(text)
 
-        name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
+        c = self.current_class
+        name = c.pyName if c.pyName else removeWxPrefix(c.name)
         filename = self.current_module + "%s.txt"%name
 
         writeSphinxOutput(stream, filename, append=True)
@@ -3295,7 +3288,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         if prop.ignored:
             return
 
-        name = removeWxPrefix(self.current_class.name) or self.current_class.pyName
+        c = self.current_class
+        name = c.pyName if c.pyName else removeWxPrefix(c.name)
 
         getter_setter = self.createPropertyLinks(name, prop)
 
@@ -3357,7 +3351,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         if typedef.ignored or not typedef.docAsClass:
             return
 
-        name = removeWxPrefix(typedef.name) or typedef.pyName
+        name = typedef.pyName if typedef.pyName else removeWxPrefix(typedef.name)
         typedef.module = self.current_module
 
         all_classes = {}
@@ -3442,8 +3436,9 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             
             for ret in return_section:
                 stripped = ret.strip()
-                if stripped in NO_MODULE:
-                    ret = NO_MODULE[stripped] + stripped
+                imm = ItemModuleMap()
+                if stripped in imm:
+                    ret = imm[stripped] + stripped
                     new_section.append(':ref:`%s`'%ret)
                 else:
                     if ret[0].isupper():

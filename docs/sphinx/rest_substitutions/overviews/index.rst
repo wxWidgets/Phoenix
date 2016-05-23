@@ -139,8 +139,8 @@ The new wxPython API documentation is available `here <main.html>`_.
    MigrationGuide
    TODO
    DocstringsGuidelines
-   functions
-   1classindex
+   wx.functions
+   wx.1classindex
    app_overview
    bitmap_overview
    bookctrl_overview
@@ -178,24 +178,26 @@ The new wxPython API documentation is available `here <main.html>`_.
    window_ids_overview
    window_sizing_overview
    window_styles_overview
-   adv.1classindex
-   adv.functions
-   dataview.1classindex
-   glcanvas.1classindex
-   grid.1classindex
-   html.1classindex
-   html.functions
-   html2.1classindex
-   richtext.1classindex
-   richtext.functions
-   stc.1classindex
-   webkit.1classindex
-   xml.1classindex
-   xrc.1classindex
-   xrc.functions
-   lib
-   py
-   tools
+   wx.adv.1classindex
+   wx.adv.functions
+   wx.dataview.1classindex
+   wx.glcanvas.1classindex
+   wx.grid.1classindex
+   wx.html.1classindex
+   wx.html.functions
+   wx.html2.1classindex
+   wx.richtext.1classindex
+   wx.richtext.functions
+   wx.stc.1classindex
+   wx.webkit.1classindex
+   wx.xml.1classindex
+   wx.xrc.1classindex
+   wx.xrc.functions
+   wx.media.1classindex
+   wx.msw.1classindex
+   wx.lib
+   wx.py
+   wx.tools
 
 
 Indices and tables

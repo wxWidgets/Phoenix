@@ -14,8 +14,6 @@ import sys
 import os
 import codecs
 import shutil
-import glob
-import imp
 import re
 
 if sys.version_info < (3,):
@@ -28,12 +26,10 @@ else:
     string_base = str
 
 # Phoenix-specific imports
-from buildtools.config import phoenixDir
 
 from .templates import TEMPLATE_CONTRIB
-
 from .constants import IGNORE, PUNCTUATION, MODULENAME_REPLACE
-from .constants import CPP_ITEMS, VERSION, VALUE_MAP, NO_MODULE
+from .constants import CPP_ITEMS, VERSION, VALUE_MAP
 from .constants import RE_KEEP_SPACES, EXTERN_INHERITANCE
 from .constants import DOXYROOT, SPHINXROOT, WIDGETS_IMAGES_ROOT
 
@@ -102,30 +98,6 @@ class ODict(UserDict):
 
     def values(self):
         return list(map(self.get, self._keys))
-
-
-# ----------------------------------------------------------------------- #
-
-def removeWxPrefix(name):
-    """
-    Removes the `wx` prefix from a string.
-
-    :param string `name`: a string, possibly starting with "wx" or "``wx".
-
-    :rtype: `string`
-
-    .. note:: This function is similar to the one already present in `tweaker_tools`
-       but I had to extend it a bit to suite the ReSTification of the XML docs.
-
-    """       
-
-    if name.startswith('wx') and not name.startswith('wxEVT_') and not name.startswith('wx.'):
-        name = name[2:]
-
-    if name.startswith('``wx') and not name.startswith('``wxEVT_') and not name.startswith('``wx.'):
-        name = name[0:2] + name[4:]
-        
-    return name
 
 
 # ----------------------------------------------------------------------- #
@@ -246,6 +218,7 @@ def pythonizeType(ptype, is_param):
 
     :rtype: `string`
     """
+    from etgtools.tweaker_tools import removeWxPrefix
 
     if 'size_t' in ptype:
         ptype = 'int'
@@ -330,6 +303,7 @@ def convertToPython(text):
 
     :rtype: `string`
     """
+    from etgtools.tweaker_tools import removeWxPrefix
 
     newlines = []
     unwanted = ['Include file', '#include']
@@ -452,13 +426,14 @@ def findControlImages(elementOrString):
        exists for others, the missing images will be replaced by the "no_appearance.png"
        file (you can find it inside the ``WIDGETS_IMAGES_ROOT`` folder.
 
-    """       
+    """
+    from etgtools.tweaker_tools import removeWxPrefix
 
     if isinstance(elementOrString, string_base):
         class_name = py_class_name = elementOrString.lower()
     else:
         element = elementOrString
-        class_name = removeWxPrefix(element.name) or element.pyName
+        class_name = element.pyName if element.pyName else removeWxPrefix(element.name)
         py_class_name = wx2Sphinx(class_name)[1]
 
         class_name = class_name.lower()
@@ -694,50 +669,19 @@ def pickleClassInfo(class_name, element, short_description):
 
 # ----------------------------------------------------------------------- #
 
-# TODO: It would be nice to handle tracking the modules in a better way that
-# doesn't need to import and use the ITEMS list in etg files.  There are too
-# many items added on the fly to try and keep track of them separately.  We
-# can add the module name to the saved data while in the etg/generator stage.
 
-ALL_ITEMS = {}
-
-def class2Module():
-
-    global ALL_ITEMS
-    
-    if ALL_ITEMS:
-        return ALL_ITEMS
-
-    etg_files = glob.glob(os.path.join(phoenixDir(), 'etg') + '/*.py')
-    etg_files = [files for files in etg_files if not files.startswith('_')]
-
-    for files in etg_files:
-        split = os.path.split(os.path.splitext(files)[0])[1]
-        module = imp.load_source(split, files)
-
-        current_module = MODULENAME_REPLACE.get(module.MODULE, '')
-
-        for item in module.ITEMS:
-            
-            item = removeWxPrefix(item)
-            ALL_ITEMS[item] = current_module
-
-    ALL_ITEMS.update(NO_MODULE)
-
-    return ALL_ITEMS            
-    
-    
 def wx2Sphinx(name):
     """
     Converts a wxWidgets specific string into a Phoenix-ReST-ready string.
 
     :param string `name`: any string.
     """
+    from etgtools.tweaker_tools import removeWxPrefix
 
     if '<' in name:
         name = name[0:name.index('<')]
 
-    name = name.strip()    
+    name = name.strip()
     newname = fullname = removeWxPrefix(name)
 
     if '.' in newname and len(newname) > 3:
@@ -747,9 +691,10 @@ def wx2Sphinx(name):
         lookup = newname
         remainder = ''
 
-    all_items = class2Module()
-    if lookup in all_items:
-        fullname = all_items[lookup] + lookup + remainder
+    from etgtools.item_module_map import ItemModuleMap
+    imm = ItemModuleMap()
+    if lookup in imm:
+        fullname = imm[lookup] + lookup + remainder
         
     return newname, fullname
 

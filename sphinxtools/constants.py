@@ -85,107 +85,11 @@ MODULENAME_REPLACE = {'_core'    : 'wx.',
                       '_msw'     : 'wx.msw.',
                       }
 
-NO_MODULE = {
-            # -- core -- #
-            'AlphaPixelData'            : 'wx.',
-            'AlphaPixelData_Accessor'   : 'wx.',
-            'ButtonLabel'               : 'wx.',
-            'CallLater'                 : 'wx.',
-            'ChildrenRepositioningGuard': 'wx.',
-            'GenericDragImage'          : 'wx.',
-            'GenericMessageDialog'      : 'wx.',
-            'HSVValue'                  : 'wx.',
-            'MessageParameters'         : 'wx.',
-            'NativePixelData'           : 'wx.',
-            'NativePixelData_Accessor'  : 'wx.',
-            'PixelDataBase'             : 'wx.',
-            'PyApp'                     : 'wx.',
-            'PyCommandEvent'            : 'wx.',
-            'PyEvent'                   : 'wx.',
-            'PyEventBinder'             : 'wx.',
-            'PyOnDemandOutputWindow'    : 'wx.',
-            'PySimpleApp'               : 'wx.',
-            'PySingleChoiceDialog'      : 'wx.',
-            'RGBValue'                  : 'wx.',
-            'ScrolledCanvas'            : 'wx.',
-            'ScrolledWindow'            : 'wx.',
-            'TimeZone'                  : 'wx.',
-            'Tm'                        : 'wx.',
-            'WindowBase'                : 'wx.',
 
-             # -- wxAdvanced -- #
-             # Widgets
-             'DatePickerCtrlGeneric': 'wx.adv.',
-             'GenericCalendarCtrl'  : 'wx.adv.',
-             'OwnerDrawnComboBox'   : 'wx.adv.',
-             
-             # Enums/constants
-             'AnimationType'                  : 'wx.adv.',
-             'CalendarDateBorder'             : 'wx.adv.',
-             'CalendarHitTestResult'          : 'wx.adv.',
-             'LayoutAlignment'                : 'wx.adv.',
-             'LayoutOrientation'              : 'wx.adv.',
-             'OwnerDrawnComboBoxPaintingFlags': 'wx.adv.',
-             'SashDragStatus'                 : 'wx.adv.',
-             'SashEdgePosition'               : 'wx.adv.',
-             'TaskBarIconType'                : 'wx.adv.',
-             'TipKind'                        : 'wx.adv.',
-
-             # -- wxDataView -- #
-             # Widgets
-             'DataViewItemObjectMapper': 'wx.dataview.',
-             'PyDataViewModel'         : 'wx.dataview.',
-             
-             # Enums/constants
-             'DataViewCellMode'        : 'wx.dataview.',
-             'DataViewCellRenderState' : 'wx.dataview.',
-             'DataViewColumnFlags'     : 'wx.dataview.',
-             
-             # -- wxHTML -- #
-             # Widgets
-             'HTMLHelpDialog'          : 'wx.html.',
-             'HTMLHelpFrame'           : 'wx.html.',
-             'HTMLHelpWindow'          : 'wx.html.',
-             
-             # Enums/constants
-             'HTMLCursor'              : 'wx.html.',
-             'HtmlOpeningStatus'       : 'wx.html.',
-             'HtmlScriptMode'          : 'wx.html.',
-             'HtmlSelectionState'      : 'wx.html.',
-             'HtmlURLType'             : 'wx.html.',
-
-             # -- wxHTML2 -- #
-             # Widgets
-             
-             # Enums/constants
-             'WebViewBackend'          : 'wx.html2.',
-             'WebViewNavigationError'  : 'wx.html2.',
-             'WebViewReloadFlags'      : 'wx.html2.',
-             'WebViewZoom'             : 'wx.html2.',
-             'WebViewZoomType'         : 'wx.html2.',
-
-             # -- wxXML -- #
-             # Widgets
-             
-             # Enums/constants
-             'XmlDocumentLoadFlag'     : 'wx.xml.',
-             'XmlNodeType'             : 'wx.xml.',
-             
-             # -- wxXRC -- #
-             # Widgets
-             'XmlSubclassFactory'      : 'wx.xrc.',
-             
-             # Enums/constants
-             'XmlResourceFlags'        : 'wx.xrc.',
-
-             # -- wx.msw -- #
-             'PyAxBaseWindow'          : 'wx.msw',
-             }
-             
 # Other C++ specific things to strip away
 CPP_ITEMS = ['*', '&', 'const', 'unsigned', '(size_t)', 'size_t', 'void']
 
-# Serie of paths containing the input data for Sphinx and for the scripts
+# Series of paths containing the input data for Sphinx and for the scripts
 # building the ReST docs:
 
 # The location of the Phoenix main folder

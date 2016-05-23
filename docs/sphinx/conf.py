@@ -12,6 +12,7 @@
 # serve to show the default.
 
 import sys, os
+from datetime import datetime
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -46,8 +47,8 @@ availability_all_availabilities = True
 master_doc = 'index'
 
 # General information about the project.
-project = u'wxPython (Phoenix)'
-copyright = u'2012-2016, The wxPython Team'
+project = u'wxPython Phoenix'
+copyright = u'2012-{}, The wxPython Team'.format(datetime.now().year)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
