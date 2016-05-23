@@ -10,13 +10,13 @@
 
 # Standard library imports
 import os
-import sys
 import re
 import glob
 import random
 
 # Phoenix-specific imports
 from buildtools.config import copyIfNewer, writeIfChanged, newer, getVcsRev, textfile_open
+from etgtools.item_module_map import ItemModuleMap
 
 from . import templates
 from .utilities import wx2Sphinx, PickleFile
@@ -438,8 +438,9 @@ def makeClassIndex(sphinxDir, file):
 
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
 
+    imm = ItemModuleMap()
     names = list(classes.keys())
-    names.sort()
+    names.sort(key=lambda n: imm.get_fullname(n))
 
     text = ''
     if module:
