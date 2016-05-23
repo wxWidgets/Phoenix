@@ -288,7 +288,7 @@ def run():
             :param kw: keywords to be passed to the callable object
             
             .. seealso::
-                :class:`CallLater`
+                :class:`wx.CallLater`
             
             """,
         body="""\
@@ -323,7 +323,7 @@ def run():
             object.
                         
             .. seealso::
-                :func:`CallAfter`
+                :func:`wx.CallAfter`
                 
             """,
         items = [
