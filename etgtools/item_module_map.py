@@ -68,6 +68,8 @@ class ItemModuleMap(object):
 
 
     def flush(self):
+        if not self._haveReadData and not self._items:
+            return
         with textfile_open(self.fileName, 'wt') as fid:
             # Dump the data to a file in json, using a format that minimizes
             # excess whitespace.
@@ -86,7 +88,6 @@ class ItemModuleMap(object):
     def get_fullname(self, name):
         module = self.items.get(name)
         if not module:
-            import mydbstub
             return name
         return module + name
 
