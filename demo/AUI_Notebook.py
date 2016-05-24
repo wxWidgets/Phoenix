@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
 import wx
-import wx.aui
+try:
+    from agw import aui
+except ImportError: # if it's not there locally, try the wxPython lib.
+    import wx.lib.agw.aui as aui
 
 
 text = """\
 Hello!
 
-Welcome to this little demo of draggable tabs using the wx.aui module.
+Welcome to this little demo of draggable tabs using the aui module.
 
 To try it out, drag a tab from the top of the window all the way to the bottom.  After releasing the mouse, the tab will dock at the hinted position.  Then try it again with the remaining tabs in various other positions.  Finally, try dragging a tab to an existing tab ctrl.  You'll soon see that very complex tab layouts may be achieved.
 """
@@ -19,7 +22,7 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
-        self.nb = wx.aui.AuiNotebook(self)
+        self.nb = aui.AuiNotebook(self)
         page = wx.TextCtrl(self.nb, -1, text, style=wx.TE_MULTILINE)
         self.nb.AddPage(page, "Welcome")
 
@@ -27,12 +30,12 @@ class TestPanel(wx.Panel):
             page = wx.TextCtrl(self.nb, -1, "This is page %d" % num ,
                                style=wx.TE_MULTILINE)
             self.nb.AddPage(page, "Tab Number %d" % num)
-            
+
         sizer = wx.BoxSizer()
         sizer.Add(self.nb, 1, wx.EXPAND)
         self.SetSizer(sizer)
         wx.CallAfter(self.nb.SendSizeEvent)
-        
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):
