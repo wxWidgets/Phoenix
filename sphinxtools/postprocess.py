@@ -59,7 +59,7 @@ def makeHeadings():
 
 # ----------------------------------------------------------------------- #
 
-def sphinxIndexes(sphinxDir):
+def genIndexes(sphinxDir):
     """
     This is the main function called after the `etg` process has finished.
 
@@ -73,8 +73,8 @@ def sphinxIndexes(sphinxDir):
     for file in pklfiles:
         if file.endswith('functions.pkl'):
             reformatFunctions(file)
-        elif 'classindex' in file:
-            makeClassIndex(sphinxDir, file)
+        elif 'moduleindex' in file:
+            makeModuleIndex(sphinxDir, file)
 
     buildEnumsAndMethods(sphinxDir)
 
@@ -365,7 +365,7 @@ def reformatFunctions(file):
 
     if local_file.count('.') == 2:
         # Core functions
-        label = 'wx Core'
+        label = 'wx'
     else:
         label = '.'.join(local_file.split('.')[0:2])
 
@@ -386,6 +386,7 @@ def reformatFunctions(file):
 
     names = list(functions.keys())
     names = sorted(names, key=str.lower)
+    imm = ItemModuleMap()
 
     for letter in letters:
         text += '.. _%s %s:\n\n%s\n^\n\n'%(label, letter, letter)
@@ -393,7 +394,7 @@ def reformatFunctions(file):
             if fun[0].upper() != letter:
                 continue
 
-            text += '* :func:`%s`\n'%fun
+            text += '* :func:`%s`\n' % imm.get_fullname(fun)
 
         text += '\n\n'
 
@@ -406,14 +407,14 @@ def reformatFunctions(file):
 
 # ----------------------------------------------------------------------- #
 
-def makeClassIndex(sphinxDir, file):
+def makeModuleIndex(sphinxDir, file):
 
     text_file = os.path.splitext(file)[0] + '.txt'
     local_file = os.path.split(file)[1]
 
     if not newer(file, text_file):
         return
-    
+
     pf = PickleFile(file)
     classes = pf.read()
     module_docstring = classes.get(DOCSTRING_KEY)
@@ -422,7 +423,7 @@ def makeClassIndex(sphinxDir, file):
 
     if local_file.startswith('wx.1'):
         # Core functions
-        label = 'wx Core'
+        label = 'wx'
         module = 'wx'
         enumDots = 2
         # Take care to get only files starting with "wx.UpperName", not
@@ -469,12 +470,35 @@ def makeClassIndex(sphinxDir, file):
             contents.append(enum)
 
     contents.sort()
-    
+
+    # Are there functions for this module too?
+    functionsFile = os.path.join(sphinxDir, module + '.functions.pkl')
+    if os.path.exists(functionsFile):
+        pf = PickleFile(functionsFile)
+        functions = list(pf.read().keys())
+        functions.sort(key=lambda n: imm.get_fullname(n))
+
+        pf = PickleFile(os.path.join(SPHINXROOT, 'function_summary.pkl'))
+        function_summaries = pf.read()
+
+        text += templates.TEMPLATE_MODULE_FUNCTION_SUMMARY
+        text += 80*'=' + ' ' + 80*'=' + '\n'
+        text += '%-80s **Short Description**\n' % '**Function**'
+        text += 80*'=' + ' ' + 80*'=' + '\n'
+
+        for func_name in functions:
+            fullname = imm.get_fullname(func_name)
+            doc = function_summaries.get(fullname, '')
+            text += '%-80s %s\n' % (':func:`%s`' % fullname, doc)
+
+        text += 80 * '=' + ' ' + 80 * '=' + '\n\n'
+        contents.append(module + '.functions')
+
     toctree = ''
     for item in contents:
-        toctree += '   %s\n'%item
+        toctree += '   %s\n' % item
 
-    text += templates.TEMPLATE_TOCTREE%toctree
+    text += templates.TEMPLATE_TOCTREE % toctree
         
     writeIfChanged(text_file, text)
 

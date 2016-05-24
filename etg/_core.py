@@ -323,7 +323,7 @@ def run():
             object.
                         
             .. seealso::
-                :func:`CallAfter`
+                :func:`wx.CallAfter`
                 
             """,
         items = [

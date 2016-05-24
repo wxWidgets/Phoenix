@@ -46,7 +46,7 @@ from sphinxtools.utilities import convertToPython
 from sphinxtools.utilities import writeSphinxOutput
 from sphinxtools.utilities import findControlImages, makeSummary, pickleItem
 from sphinxtools.utilities import chopDescription, pythonizeType, wx2Sphinx
-from sphinxtools.utilities import pickleClassInfo, isNumeric
+from sphinxtools.utilities import pickleClassInfo, pickleFunctionInfo, isNumeric
 from sphinxtools.utilities import underscore2Capitals, countSpaces
 from sphinxtools.utilities import formatContributedSnippets
 from sphinxtools.utilities import PickleFile
@@ -2639,13 +2639,15 @@ class XMLDocString(object):
         
         function = self.xml_item
         name = function.pyName or function.name
+        imm = ItemModuleMap()
+        fullname = imm.get_fullname(name)
 
         if self.is_overload:
-            definition = '**%s** '%name
+            definition = '**%s** ' % name
         else:
-            definition = '.. function:: ' + name
+            definition = '.. function:: ' + fullname
 
-        stream.write('\n%s'%definition)
+        stream.write('\n%s' % definition)
                     
         stream.write(self.arguments.strip())
         stream.write('\n\n')                    
@@ -2956,7 +2958,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             }
 
         if module.isARealModule:
-            filename = os.path.join(SPHINXROOT, self.current_module+'1classindex.pkl')
+            filename = os.path.join(SPHINXROOT, self.current_module+'1moduleindex.pkl')
             with PickleFile(filename) as pf:
                 pf.items[DOCSTRING_KEY] = module.docstring
 
@@ -2971,6 +2973,9 @@ class SphinxGenerator(generators.DocsGeneratorBase):
     # -----------------------------------------------------------------------
             
     def generatePyFunction(self, function):
+        name = function.pyName if function.pyName else removeWxPrefix(function.name)
+        imm = ItemModuleMap()
+        fullname = imm.get_fullname(name)
 
         function.overloads = []
         function.pyArgsString = function.argsString
@@ -2981,21 +2986,30 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         docstring = XMLDocString(function)
         docstring.kind = 'function'
         docstring.current_module = self.current_module
-
         docstring.Dump()
 
-        
+        desc = chopDescription(docstring.docstrings)
+        pickleFunctionInfo(fullname, desc)
+
     # -----------------------------------------------------------------------
         
     def generateFunction(self, function):
-        
+        name = function.pyName if function.pyName else removeWxPrefix(function.name)
+        if name.startswith('operator'):
+            return
+
+        imm = ItemModuleMap()
+        fullname = imm.get_fullname(name)
+
         # docstring
         docstring = XMLDocString(function)
         docstring.kind = 'function'
         docstring.current_module = self.current_module
-
         docstring.Dump()
-                        
+
+        desc = chopDescription(docstring.docstrings)
+        pickleFunctionInfo(fullname, desc)
+
 
     def unIndent(self, item):
 

@@ -178,6 +178,13 @@ Class Summary
 
 '''
 
+# Template for the functions header in the module index
+TEMPLATE_MODULE_FUNCTION_SUMMARY = '''
+Functions Summary
+=================
+
+'''
+
 
 # Template for the class window styles, with the class name as input
 TEMPLATE_WINDOW_STYLES = '''

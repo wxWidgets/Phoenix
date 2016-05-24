@@ -863,7 +863,7 @@ def cmd_etg(options, args):
 
     
 def cmd_sphinx(options, args):
-    from sphinxtools.postprocess import sphinxIndexes, makeHeadings, postProcess, genGallery
+    from sphinxtools.postprocess import genIndexes, makeHeadings, postProcess, genGallery
 
     cmdTimer = CommandTimer('sphinx')
     pwd = pushDir(phoenixDir())
@@ -885,7 +885,7 @@ def cmd_sphinx(options, args):
         txt = os.path.join(sphinxDir, os.path.splitext(rstName)[0] + '.txt')
         copyIfNewer(rst, txt)
 
-    sphinxIndexes(sphinxDir)
+    genIndexes(sphinxDir)
     genGallery()
 
     # Copy the hand-edited top level doc files too

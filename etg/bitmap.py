@@ -198,7 +198,7 @@ def run():
             'premultiplied' by the alpha values.  (The other platforms do 
             the multiplication themselves.)
         
-            Unlike :func:`ImageFromBuffer` the bitmap created with this function
+            Unlike :func:`wx.ImageFromBuffer` the bitmap created with this function
             does not share the memory block with the buffer object.  This is
             because the native pixel buffer format varies on different
             platforms, and so instead an efficient as possible copy of the
@@ -245,7 +245,7 @@ def run():
             as a string, bytearray, etc.  The data object is expected to contain 
             a series of RGB bytes and be at least width*height*3 bytes long.
             
-            Unlike :func:`ImageFromBuffer` the bitmap created with this function
+            Unlike :func:`wx.ImageFromBuffer` the bitmap created with this function
             does not share the memory block with the buffer object.  This is
             because the native pixel buffer format varies on different
             platforms, and so instead an efficient as possible copy of the
@@ -287,7 +287,7 @@ def run():
             On Windows and Mac the RGB values will be 'premultiplied' by the 
             alpha values.  (The other platforms do the multiplication themselves.)
             
-            Unlike :func:`ImageFromBuffer` the bitmap created with this function
+            Unlike :func:`wx.ImageFromBuffer` the bitmap created with this function
             does not share the memory block with the buffer object.  This is
             because the native pixel buffer format varies on different
             platforms, and so instead an efficient as possible copy of the

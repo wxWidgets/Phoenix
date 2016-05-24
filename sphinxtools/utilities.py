@@ -637,7 +637,7 @@ def pickleItem(description, current_module, name, kind):
     if kind == 'function':
         pickle_file = os.path.join(SPHINXROOT, current_module + 'functions.pkl')
     else:
-        pickle_file = os.path.join(SPHINXROOT, current_module + '1classindex.pkl')
+        pickle_file = os.path.join(SPHINXROOT, current_module + '1moduleindex.pkl')
 
     with PickleFile(pickle_file) as pf:
         pf.items[name] = description
@@ -665,6 +665,18 @@ def pickleClassInfo(class_name, element, short_description):
     pickle_file = os.path.join(SPHINXROOT, 'class_summary.pkl')
     with PickleFile(pickle_file) as pf:
         pf.items[class_name] = (method_list, bases, short_description)
+
+
+# ----------------------------------------------------------------------- #
+
+def pickleFunctionInfo(fullname, short_description):
+    """
+    Saves the short description for each function, used for generating the
+    summary pages later.
+    """
+    pickle_file = os.path.join(SPHINXROOT, 'function_summary.pkl')
+    with PickleFile(pickle_file) as pf:
+        pf.items[fullname] = short_description
 
 
 # ----------------------------------------------------------------------- #
