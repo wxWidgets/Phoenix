@@ -101,6 +101,42 @@ extension modules in wx, and also wx.lib.
 The intra-document anchor links should also have the leading "wx."
 added to them for consistency.
 
+The above docs changes are mostly done, it's been a bit of a 3 steps forward,
+2 steps back kind of journey. Here are some dangling strings that still need
+to be untangled:
+
+  * Nested enums are still being generated in files without the leading
+    package names, needs to be switched to fullname.
+
+  * The `chopDescription()` function is not very smart. See if it can be made a
+    little smarter and pull out the first sentence from the docstring instead
+    of ust the first line.
+
+  * Should we generate property-like docs for MemberVar elements?
+
+  * Should we turn off the Show Source option?  It is nice when debugging the
+    docs, but IMO is a bit annoying in other situations.  Maybe just make it a
+    smaller font, or move it somewhere less noticeable?
+
+  * Update the docs processing for wx.lib, and combine it with wx.py.  I don't
+    think we need separate build steps for those. wx.tools can probably just
+    go away.
+
+  * find and fix any :ref:, :class:, etc. in the overview docs and elsewhere
+    that need to be fixed to use the fullname.
+
+  * Find where the the leading wx is removed from the content of the
+    docstring (like the style flags in wx.CheckBox, etc.) and switch it to
+    just changing it to "wx."
+
+  * There is an extra modulename "wx.", "wx.adv." etc. being added to things
+    like named anchors, etc.  Is that because of the "currentmodule"
+    directive? Or maybe because of using the fullname in the doc title.
+    Figure it out and fix it.
+
+   * Something happened to the link color.  I didn't particularly like the old
+     one, but it changing for no reason is a little worrisome.
+
 
 
 Other Dev Stuff
