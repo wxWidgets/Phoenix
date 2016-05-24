@@ -134,7 +134,7 @@ to be untangled:
     directive? Or maybe because of using the fullname in the doc title.
     Figure it out and fix it.
 
-   * Something happened to the link color.  I didn't particularly like the old
+   * [fixed] Something happened to the link color.  I didn't particularly like the old
      one, but it changing for no reason is a little worrisome.
 
 

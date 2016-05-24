@@ -89,6 +89,7 @@ div.body h4 {
 
 body { 
   background-color: rgb(230,230,230);
+  font-size: 0.95em;
 }
 
 div.headerimage {
@@ -126,7 +127,7 @@ div.related {
     background-image: url('../images/sphinxdocs/navigation.png');
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
-    font-size: 1em;
+    font-size: 90%;
     position: fixed;
     line-height: normal;
     position: fixed;
@@ -167,12 +168,15 @@ div.related ul li#searchbox.right {
     float: right;
     margin-right: 5px;
     margin-top:  7px;
+    font-size: 90%;
 }
+
 div.related ul li a {
     margin: 0;
     padding: 0 5px 0 5px;
     line-height: normal;
     color: #EE9816;
+    font-size: 90%;
 }
 
 div.related ul li.reltitle {
@@ -201,6 +205,18 @@ div.sphinxsidebar p {
 
 div.sphinxsidebar a {
   color: #355f7c;
+}
+
+div.section a {
+    color:  #ca7900;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 0.95em;
+    letter-spacing: 0.01em;
+}
+
+div.section a:hover {
+    color: #2491cf;
 }
 
 div.sphinxsidebar ul.want-points {
