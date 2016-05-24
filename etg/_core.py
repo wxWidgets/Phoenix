@@ -310,17 +310,18 @@ def run():
 
     module.addPyClass('CallLater', ['object'], 
         doc="""\
-            A convenience class for :class:`Timer`, that calls the given callable
+            A convenience class for :class:`wx.Timer`, that calls the given callable
             object once after the given amount of milliseconds, passing any
             positional or keyword args.  The return value of the callable is
-            available after it has been run with the :meth:`~CallLater.GetResult` method.
+            available after it has been run with the :meth:`~wx.CallLater.GetResult`
+            method.
             
             If you don't need to get the return value or restart the timer
             then there is no need to hold a reference to this object.  It will
             hold a reference to itself while the timer is running (the timer
-            has a reference to :meth:`~CallLater.Notify`) but the cycle will be broken when
-            the timer completes, automatically cleaning up the :class:`CallLater`
-            object.
+            has a reference to :meth:`~wx.CallLater.Notify`) but the cycle will be
+            broken when the timer completes, automatically cleaning up the
+            :class:`wx.CallLater` object.
                         
             .. seealso::
                 :func:`wx.CallAfter`
@@ -329,12 +330,9 @@ def run():
         items = [
             PyFunctionDef('__init__', '(self, millis, callableObj, *args, **kwargs)',
                 doc="""\
-                    A convenience class for :class:`Timer`, that calls the given callable
-                    object once after the given amount of milliseconds, passing any
-                    positional or keyword args.  The return value of the callable is
-                    available after it has been run with the :meth:`~CallLater.GetResult` method.
+                    Constructs a new :class:`wx.CallLater` object.
 
-                    :param int millis: number of milli seconds
+                    :param int millis: number of milliseconds to delay until calling the callable object
                     :param PyObject callableObj: the callable object
                     :param args: arguments to be passed to the callable object
                     :param kw: keywords to be passed to the callable object
@@ -394,9 +392,9 @@ def run():
             PyFunctionDef('SetArgs', '(self, *args, **kwargs)', 
                 doc="""\
                     (Re)set the args passed to the callable object.  This is
-                    useful in conjunction with :meth:`Restart` if you want to schedule a
-                    new call to the same callable object but with different
-                    parameters.
+                    useful in conjunction with :meth:`Start` if
+                    you want to schedule a new call to the same callable
+                    object but with different parameters.
 
                     :param args: arguments to be passed to the callable object
                     :param kw: keywords to be passed to the callable object

@@ -3162,24 +3162,24 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             item.sort_order = dispatch[item.__class__][1]
 
         class_items = sorted(class_items, key=operator.attrgetter('sort_order', 'name'))
-        class_items = self.removeDuplicated(name, class_items)
+        class_items = self.removeDuplicated(fullname, class_items)
 
         for item in class_items:
             if isinstance(item, methods) and not self.IsFullyDeprecated(item):
                 method_name, simple_docs = self.getName(item)
-                self.current_class.method_list.append(('%s.%s'%(name, method_name), simple_docs))
+                self.current_class.method_list.append(('%s.%s'%(fullname, method_name), simple_docs))
             elif isinstance(item, properties):
-                simple_docs = self.createPropertyLinks(name, item)
-                self.current_class.property_list.append(('%s.%s'%(name, item.name), simple_docs))
+                simple_docs = self.createPropertyLinks(fullname, item)
+                self.current_class.property_list.append(('%s.%s'%(fullname, item.name), simple_docs))
 
         for item in ctors: 
             if item.isCtor:
                 method_name, simple_docs = self.getName(item)
-                self.current_class.method_list.insert(0, ('%s.__init__'%name, simple_docs))
+                self.current_class.method_list.insert(0, ('%s.__init__'%fullname, simple_docs))
                 
         docstring = XMLDocString(klass)
 
-        filename = "%s.txt" % imm.get_fullname(name)
+        filename = "%s.txt" % fullname
         docstring.output_file = filename
         docstring.current_module = self.current_module
 
