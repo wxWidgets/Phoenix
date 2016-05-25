@@ -105,9 +105,6 @@ The above docs changes are mostly done, it's been a bit of a 3 steps forward,
 2 steps back kind of journey. Here are some dangling strings that still need
 to be untangled:
 
-  * Nested enums are still being generated in files without the leading
-    package names, needs to be switched to fullname.
-
   * The `chopDescription()` function is not very smart. See if it can be made a
     little smarter and pull out the first sentence from the docstring instead
     of ust the first line.
@@ -134,8 +131,6 @@ to be untangled:
     directive? Or maybe because of using the fullname in the doc title.
     Figure it out and fix it.
 
-   * [fixed] Something happened to the link color.  I didn't particularly like the old
-     one, but it changing for no reason is a little worrisome.
 
 
 

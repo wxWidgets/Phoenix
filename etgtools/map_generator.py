@@ -39,11 +39,17 @@ class ItemMapGenerator(generators.DocsGeneratorBase):
                 continue
 
             if isinstance(item, extractors.ClassDef):
+                # are there nested classes?
                 for inner in item.innerclasses:
                     self.generateInnerClass(inner, imm,
                                             '{}{}.'.format(realModuleName, name))
-            # TODO: Maybe nested enums too?
 
+                # Check for nested enums too
+                for classItem in item.items:
+                    if isinstance(classItem, extractors.EnumDef):
+                        enumName = self._getName(classItem)
+                        if not enumName.startswith('@'):
+                            imm[enumName] = '{}{}.'.format(realModuleName, name)
 
             # save the module that the name belongs to
             imm[name] = realModuleName
