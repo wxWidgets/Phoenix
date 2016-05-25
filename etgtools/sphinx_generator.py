@@ -2339,7 +2339,7 @@ class XMLDocString(object):
 
         if '.' in fullname:
             module = self.current_module[:-1]
-            stream.write('\n\n.. currentmodule:: %s\n\n' % module)
+            #stream.write('\n\n.. currentmodule:: %s\n\n' % module)
         
         stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, fullname))
 
@@ -2697,7 +2697,7 @@ class XMLDocString(object):
 
         if self.current_module.strip():
             module = self.current_module.strip()[:-1]
-            stream.write('\n\n.. currentmodule:: %s\n\n' % module)
+            #stream.write('\n\n.. currentmodule:: %s\n\n' % module)
         
         stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, fullname))
         stream.write('\n\nThe `%s` enumeration provides the following values:\n\n' % enum_name)

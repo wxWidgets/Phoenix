@@ -129,7 +129,7 @@ to be untangled:
     docstring (like the style flags in wx.CheckBox, etc.) and switch it to
     just changing it to "wx."
 
-  * There is an extra modulename "wx.", "wx.adv." etc. being added to things
+  * [done] There is an extra modulename "wx.", "wx.adv." etc. being added to things
     like named anchors, etc.  Is that because of the "currentmodule"
     directive? Or maybe because of using the fullname in the doc title.
     Figure it out and fix it.

@@ -567,7 +567,7 @@ class Module(ParentBase):
             label = 'Package'
 
         stream.write('.. module:: %s\n\n'%self.name)
-        stream.write('.. currentmodule:: %s\n\n'%self.name)
+        #stream.write('.. currentmodule:: %s\n\n'%self.name)
         stream.write('.. highlight:: python\n\n')
             
         header = templates.TEMPLATE_DESCRIPTION%(self.name, '%s'%self.GetShortName())
@@ -704,7 +704,7 @@ class Class(ParentBase):
         parts = self.name.split('.')
         current_module = '.'.join(parts[0:-1])
 
-        stream.write('.. currentmodule:: %s\n\n'%current_module)
+        #stream.write('.. currentmodule:: %s\n\n'%current_module)
         stream.write('.. highlight:: python\n\n')
 
         class_docs = replaceWxDot(self.docs)
