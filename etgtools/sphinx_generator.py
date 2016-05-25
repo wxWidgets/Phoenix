@@ -3040,13 +3040,14 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         self.current_class = klass
 
         class_name = klass.name
+        class_fullname = ItemModuleMap().get_fullname(class_name)
         self.current_class.method_list = []
         self.current_class.property_list = []
 
         class_items = [i for i in klass if not i.ignored]
         class_items = sorted(class_items, key=operator.attrgetter('name'))
 
-        class_items = self.removeDuplicated(class_name, class_items)
+        class_items = self.removeDuplicated(class_fullname, class_items)
 
         init_position = -1
         
@@ -3055,12 +3056,12 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 method_name, simple_docs = self.getName(item)
                 if method_name == '__init__':
                     init_position = index
-                    self.current_class.method_list.insert(0, ('%s.%s'%(class_name, method_name), simple_docs))
+                    self.current_class.method_list.insert(0, ('%s.%s'%(class_fullname, method_name), simple_docs))
                 else:
-                    self.current_class.method_list.append(('%s.%s'%(class_name, method_name), simple_docs))
+                    self.current_class.method_list.append(('%s.%s'%(class_fullname, method_name), simple_docs))
             elif isinstance(item, extractors.PyPropertyDef):
-                simple_docs = self.createPropertyLinks(class_name, item)
-                self.current_class.property_list.append(('%s.%s'%(class_name, item.name), simple_docs))
+                simple_docs = self.createPropertyLinks(class_fullname, item)
+                self.current_class.property_list.append(('%s.%s'%(class_fullname, item.name), simple_docs))
 
         if init_position >= 0:
             init_method = class_items.pop(init_position)
@@ -3071,13 +3072,13 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         docstring = XMLDocString(klass)
         docstring.kind = 'class'
 
-        filename = self.current_module + "%s.txt"%class_name
+        filename = "%s.txt" % class_fullname
         docstring.output_file = filename
         docstring.current_module = self.current_module
 
         docstring.Dump()
 
-        pickleClassInfo(self.current_module + class_name, self.current_class, docstring.short_description)
+        pickleClassInfo(class_fullname, self.current_class, docstring.short_description)
 
         # these are the only kinds of items allowed to be items in a PyClass
         dispatch = [(extractors.PyFunctionDef, self.generateMethod),
@@ -3098,13 +3099,14 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         c = self.current_class
         name = c.pyName if c.pyName else removeWxPrefix(c.name)
-        getter_setter = self.createPropertyLinks(name, prop)
+        fullname = ItemModuleMap().get_fullname(name)
+        getter_setter = self.createPropertyLinks(fullname, prop)
 
         stream = StringIO()
         stream.write('\n   .. attribute:: %s\n\n' % prop.name)
         stream.write('      %s\n\n'%getter_setter)
 
-        filename = self.current_module + "%s.txt"%name
+        filename = "%s.txt" % fullname
 
         writeSphinxOutput(stream, filename, append=True)
     
@@ -3194,7 +3196,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         for item in class_items:
             f = dispatch[item.__class__][0]
             f(item)
-        
+
+
     # -----------------------------------------------------------------------
         
     def generateMethod(self, method, name=None, docstring=None):
@@ -3306,26 +3309,25 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         c = self.current_class
         name = c.pyName if c.pyName else removeWxPrefix(c.name)
+        fullname = ItemModuleMap().get_fullname(name)
 
-        getter_setter = self.createPropertyLinks(name, prop)
+        getter_setter = self.createPropertyLinks(fullname, prop)
 
         stream = StringIO()
         stream.write('\n   .. attribute:: %s\n\n' % prop.name)
         stream.write('      %s\n\n'%getter_setter)
 
-        imm = ItemModuleMap()
-        filename = "%s.txt" % imm.get_fullname(name)
-
+        filename = "%s.txt" % fullname
         writeSphinxOutput(stream, filename, append=True)
 
 
     def createPropertyLinks(self, name, prop):
 
         if prop.getter and prop.setter:
-            return 'See :meth:`~%s.%s` and :meth:`~%s.%s`'%(name, prop.getter, name, prop.setter)
+            return 'See :meth:`~%s.%s` and :meth:`~%s.%s`' % (name, prop.getter, name, prop.setter)
         else:
             method = (prop.getter and [prop.getter] or [prop.setter])[0]            
-            return 'See :meth:`~%s.%s`'%(name, method)
+            return 'See :meth:`~%s.%s`' % (name, method)
             
 
     # -----------------------------------------------------------------------
