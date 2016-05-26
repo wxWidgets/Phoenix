@@ -2,7 +2,6 @@
 *.pyc
 *.pyd
 *.pdb
-*.dll
 .waf-*
 .waf3-*
 .lock-waf*
@@ -53,6 +52,7 @@ mydbstub.py*
 /wx/*.dylib
 /wx/libwx_*
 /wx/locale
+/wx/*.dll
 
 /unittests/lib_pubsub_provider_actual.py
 
