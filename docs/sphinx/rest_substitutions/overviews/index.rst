@@ -101,9 +101,9 @@ Meanwhile, here are some important links:
     out.
 
   * Source code and issue tracking are available at the
-    `wxWidgets/Phoenix <https://github.com/wxWidgets/Phoenix>`_ GitHub
-    repository. Be sure to read the README.rst there to learn how to build
-    wxWidgets and Phoenix for yourself.
+    `Phoenix GitHub <https://github.com/wxWidgets/Phoenix>`_ repository. Be
+    sure to read the README.rst file there to learn how to build wxWidgets and
+    Phoenix for yourself.
 
 
 
