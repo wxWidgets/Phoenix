@@ -78,6 +78,14 @@
 #   - Added contect manager and decorator that gets and resets the pen before
 #     and after a function call
 #   - updated demo for new features
+#
+# May 27, 2016  Douglas Thor (doug.thor@gmail.com)
+#   - Added PolyBars and PolyHistogram classes
+#   - General Cleanup
+#   - Added demos for PolyBars and PolyHistogram
+#   - updated plotNN menu items status-bar text to be descriptive.
+#   - increased default size of demo
+#   - updated XSpec and YSpec to accept a list or tuple of (min, max) values.
 
 """
 This is a simple light weight plotting module that can be used with
