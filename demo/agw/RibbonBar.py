@@ -827,7 +827,7 @@ class RibbonFrame(wx.Frame):
 
             # Try to find colour in gallery
             item = None
-            for i in xrange(gallery.GetCount()):
+            for i in range(gallery.GetCount()):
                 item = gallery.GetItem(i)
                 if self.GetGalleryColour(gallery, item, None)[0] == clr:
                     break

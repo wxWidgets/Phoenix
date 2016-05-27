@@ -45,7 +45,7 @@ class TestTB(wx.Treebook):
         first = True
         for colour in colourList:
             win = self.makeColorPanel(colour)
-            self.AddPage(win, colour, imageId=imageIdGenerator.next())
+            self.AddPage(win, colour, imageId=next(imageIdGenerator))
             if first:
                 st = wx.StaticText(win.win, -1,
                           "You can put nearly any type of window here,\n"
@@ -56,7 +56,7 @@ class TestTB(wx.Treebook):
 
             win = self.makeColorPanel(colour)
             st = wx.StaticText(win.win, -1, "this is a sub-page", (10,10))
-            self.AddSubPage(win, 'a sub-page', imageId=imageIdGenerator.next())
+            self.AddSubPage(win, 'a sub-page', imageId=next(imageIdGenerator))
 
         self.Bind(wx.EVT_TREEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(wx.EVT_TREEBOOK_PAGE_CHANGING, self.OnPageChanging)

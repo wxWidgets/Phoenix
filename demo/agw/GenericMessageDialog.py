@@ -34,7 +34,7 @@ for d in dir(wx):
     if d.startswith('ART_'):
         if not eval('wx.%s'%d).endswith(b'_C'):
             ART_ICONS.append(eval('wx.%s'%d))
-            
+
 
 class GenericMessageDialogDemo(wx.Panel):
 
@@ -43,7 +43,7 @@ class GenericMessageDialogDemo(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         self.log = log
-        
+
         self.mainPanel = wx.Panel(self)
         self.buttonSizer_staticbox = wx.StaticBox(self.mainPanel, -1, "Buttons Styles")
         self.ok = wx.CheckBox(self.mainPanel, -1, "wx.OK")
@@ -65,7 +65,7 @@ class GenericMessageDialogDemo(wx.Panel):
 
         self.useExtended = wx.CheckBox(self.mainPanel, -1, "Add extended message")
         self.customIcons = wx.CheckBox(self.mainPanel, -1, "Use custom icons")
-        
+
         self.showDialog = wx.Button(self.mainPanel, -1, "Show GenericMessageDialog")
 
         self.SetProperties()
@@ -76,7 +76,7 @@ class GenericMessageDialogDemo(wx.Panel):
 
 
     def SetProperties(self):
-        
+
         self.ok.SetValue(1)
         self.dialogStyles.SetSelection(0)
         self.showDialog.SetDefault()
@@ -88,7 +88,7 @@ class GenericMessageDialogDemo(wx.Panel):
         panelSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer = wx.BoxSizer(wx.HORIZONTAL)
         buttonSizer = wx.StaticBoxSizer(self.buttonSizer_staticbox, wx.VERTICAL)
-        
+
         buttonSizer.Add(self.ok, 0, wx.LEFT|wx.RIGHT|wx.TOP, 5)
         buttonSizer.Add((0, 2), 0, 0, 0)
         buttonSizer.Add(self.yes_no, 0, wx.LEFT|wx.RIGHT, 5)
@@ -113,13 +113,13 @@ class GenericMessageDialogDemo(wx.Panel):
         panelSizer.Add(self.useExtended, 0, wx.ALL, 15)
         panelSizer.Add(self.customIcons, 0, wx.LEFT|wx.RIGHT, 15)
         panelSizer.Add((0, 0), 1, wx.ALL, 10)
-        
+
         self.mainPanel.SetSizer(panelSizer)
 
         frameSizer.Add(self.mainPanel, 1, wx.EXPAND)
         self.SetSizer(frameSizer)
         frameSizer.Layout()
-        
+
 
     def OnCheckBox(self, event):
 
@@ -128,17 +128,17 @@ class GenericMessageDialogDemo(wx.Panel):
         if obj in [self.useExtended, self.customIcons]:
             event.Skip()
             return
-        
+
         widgets = [self.yes, self.yes_no, self.no, self.no_default]
         if not event.IsChecked():
             return
-        
+
         if obj == self.ok:
             for checks in widgets:
                 checks.SetValue(0)
         elif obj in widgets:
             self.ok.SetValue(0)
-            
+
 
     def OnShowDialog(self, event):
 
@@ -164,26 +164,26 @@ class GenericMessageDialogDemo(wx.Panel):
         else:
             extended = ""
             message = _msg
-            
+
         dlg = GMD.GenericMessageDialog(self, message,
                                        "A Nice Message Box",
                                        btnStyle | dlgStyle)
 
         if self.customIcons.GetValue():
-            b1, b2, b3 = [random.randint(0, len(ART_ICONS)-1) for i in xrange(3)]
-            b4, b5 = [random.randint(0, len(ART_ICONS)-1) for i in xrange(2)]
+            b1, b2, b3 = [random.randint(0, len(ART_ICONS)-1) for i in range(3)]
+            b4, b5 = [random.randint(0, len(ART_ICONS)-1) for i in range(2)]
 
             yes    = wx.ArtProvider.GetBitmap(ART_ICONS[b1], wx.ART_OTHER, (16, 16))
             no     = wx.ArtProvider.GetBitmap(ART_ICONS[b2], wx.ART_OTHER, (16, 16))
             cancel = wx.ArtProvider.GetBitmap(ART_ICONS[b3], wx.ART_OTHER, (16, 16))
-            ok     = wx.ArtProvider.GetBitmap(ART_ICONS[b4], wx.ART_OTHER, (16, 16))  
+            ok     = wx.ArtProvider.GetBitmap(ART_ICONS[b4], wx.ART_OTHER, (16, 16))
             help   = wx.ArtProvider.GetBitmap(ART_ICONS[b5], wx.ART_OTHER, (16, 16))
 
             dlg.SetYesNoCancelBitmaps(yes, no, cancel)
             dlg.SetOKBitmap(ok)
             dlg.SetHelpBitmap(help)
 
-        dlg.SetExtendedMessage(extended)        
+        dlg.SetExtendedMessage(extended)
         dlg.SetIcon(images.Mondrian.GetIcon())
         dlg.ShowModal()
         dlg.Destroy()

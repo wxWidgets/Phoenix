@@ -24,7 +24,7 @@ class MyValidator(wx.Validator):
 
         if self.flag == ALPHA_ONLY:
             for x in val:
-                if x not in string.letters:
+                if x not in string.ascii_letters:
                     return False
 
         elif self.flag == DIGIT_ONLY:
@@ -41,7 +41,7 @@ class MyValidator(wx.Validator):
             event.Skip()
             return
 
-        if self.flag == ALPHA_ONLY and chr(key) in string.letters:
+        if self.flag == ALPHA_ONLY and chr(key) in string.ascii_letters:
             event.Skip()
             return
 

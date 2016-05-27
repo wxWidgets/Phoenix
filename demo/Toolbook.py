@@ -19,8 +19,8 @@ def getNextImageID(count):
         imID += 1
         if imID == count:
             imID = 0
-    
-    
+
+
 class TestTB(wx.Toolbook):
     def __init__(self, parent, id, log):
         wx.Toolbook.__init__(self, parent, id, style=
@@ -40,12 +40,12 @@ class TestTB(wx.Toolbook):
             il.Add(bmp)
         self.AssignImageList(il)
         imageIdGenerator = getNextImageID(il.GetImageCount())
-        
+
         # Now make a bunch of panels for the list book
         first = True
         for colour in colourList:
             win = self.makeColorPanel(colour)
-            self.AddPage(win, colour, imageId=imageIdGenerator.next())
+            self.AddPage(win, colour, imageId=next(imageIdGenerator))
             if first:
                 st = wx.StaticText(win.win, -1,
                           "You can put nearly any type of window here,\n"

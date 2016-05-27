@@ -1218,7 +1218,7 @@ def copyWxDlls(options):
         return 
     
     if isWindows:
-        # Copy the wxWidgets DLLs to the wxPython pacakge folder
+        # Copy the wxWidgets DLLs to the wxPython package folder
         msw = getMSWSettings(options)
         cfg = Config()
 
@@ -1235,6 +1235,14 @@ def copyWxDlls(options):
         # Also copy the cairo DLLs if needed
         if options.cairo:
             dlls += glob.glob(os.path.join(os.environ['CAIRO_ROOT'], 'bin', '*.dll'))
+
+        # For Python 3.5 builds we also need to copy some VC14 redist DLLs
+        if PYVER == '3.5':
+            arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
+            redist_dir = os.path.join(
+                phoenixDir(), 'packaging', 'Py3.5', 'vcredist',
+                arch, 'Microsoft.VC140.CRT', '*.dll')
+            dlls += glob.glob(redist_dir)
 
         for dll in dlls:
             copyIfNewer(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)), verbose=True)
