@@ -1189,14 +1189,19 @@ class Table(Node):
          ``*.rst`` file name for the custom table.
 
         .. note:: 
-
-                  There are 4 customized versions of 4 XML tables up to now, for various reasons:
+           There are 4 customized versions of 4 XML tables up to now, for various
+           reasons:
         
-                  1. The `wx.Sizer` flags table is a flexible grid table, very difficult to ReSTify automatically
-                  2. The `wx.ColourDatabase` table of colour comes up all messy when ReSTified from XML
-                  3. The "wxWidgets 2.8 Compatibility Functions" table for `wx.VScrolledWindow`
-                  4. The `wx.ArtProvider` IDs table
-         
+           1. The `wx.Sizer` flags table is a flexible grid table, very difficult
+              to ReSTify automatically due to embedded newlines messing up the col
+              width calculations.
+           2. The `wx.ColourDatabase` table of colour comes up all messy when
+              ReSTified from XML
+           3. The "wxWidgets 2.8 Compatibility Functions" table for `wx.VScrolledWindow`
+           4. The `wx.ArtProvider` IDs table
+
+           The customized versions of those tables are located in
+           ``docs/sphinx/rest_substitutions/tables``
         """
 
         Node.__init__(self, element, parent)
