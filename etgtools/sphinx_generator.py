@@ -1772,10 +1772,17 @@ class Emphasis(Node):
                 fullChildText = child.Join()
                 endPos = text.index(childText)
 
-                newText += ' ' + emphasys + text[startPos:endPos].strip() + emphasys + ' '
+                if text[startPos:endPos].strip():
+                    newText += ' ' + emphasys + text[startPos:endPos].strip() + emphasys + ' '
+                else:
+                    newText += ' ' + emphasys + ' '
+
                 newText += childText + ' '
                 remaining = fullChildText.replace(childText, '')
-                newText += emphasys + remaining.strip() + emphasys + ' '
+                if remaining.strip():
+                    newText += emphasys + remaining.strip() + emphasys + ' '
+                else:
+                    newText += emphasys + ' '
                 
                 startPos = endPos
 
@@ -2337,9 +2344,9 @@ class XMLDocString(object):
         name = self.class_name
         dummy, fullname = wx2Sphinx(name)
 
-        if '.' in fullname:
-            module = self.current_module[:-1]
-            #stream.write('\n\n.. currentmodule:: %s\n\n' % module)
+        # if '.' in fullname:
+        #     module = self.current_module[:-1]
+        #     stream.write('\n\n.. currentmodule:: %s\n\n' % module)
         
         stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, fullname))
 
@@ -2411,7 +2418,7 @@ class XMLDocString(object):
 
                 if found:
                     line = line.replace('wx.EmptyString', '""')
-                    line = line.replace('wx.', '')
+                    line = line.replace('wx.', '')  # ***
                     newlines = self.CodeIndent(line, newlines)
 
         newdocs = ''
@@ -2691,13 +2698,16 @@ class XMLDocString(object):
 
         if '@' in enum_name:
             return
-        
+
+        if self.current_class:
+            self.current_class.enum_list.append(fullname)
+
         stream = StringIO()
         self.output_file = "%s.enumeration.txt" % fullname
 
-        if self.current_module.strip():
-            module = self.current_module.strip()[:-1]
-            #stream.write('\n\n.. currentmodule:: %s\n\n' % module)
+        # if self.current_module.strip():
+        #     module = self.current_module.strip()[:-1]
+        #     stream.write('\n\n.. currentmodule:: %s\n\n' % module)
         
         stream.write(templates.TEMPLATE_DESCRIPTION % (fullname, fullname))
         stream.write('\n\nThe `%s` enumeration provides the following values:\n\n' % enum_name)
@@ -3131,9 +3141,9 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         klass.module = self.current_module
         self.current_class = klass
 
-        self.current_class.method_list = []
-        self.current_class.property_list = []
-        enum_list = []
+        klass.method_list = []
+        klass.property_list = []
+        klass.enum_list = []
 
         #   Inspected class               Method to call           Sort order
         dispatch = {
@@ -3170,17 +3180,17 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         for item in class_items:
             if isinstance(item, methods) and not self.IsFullyDeprecated(item):
                 method_name, simple_docs = self.getName(item)
-                self.current_class.method_list.append(('%s.%s'%(fullname, method_name), simple_docs))
+                klass.method_list.append(('%s.%s'%(fullname, method_name), simple_docs))
             elif isinstance(item, properties):
                 simple_docs = self.createPropertyLinks(fullname, item)
-                self.current_class.property_list.append(('%s.%s'%(fullname, item.name), simple_docs))
-            elif isinstance(item, extractors.EnumDef):
-                enum_list.append('%s.%s'%(fullname, item.name))
+                klass.property_list.append(('%s.%s'%(fullname, item.name), simple_docs))
+            #elif isinstance(item, extractors.EnumDef) and '@' not in item.name:
+            #    klass.enum_list.append(imm.get_fullname(item.name))
 
         for item in ctors: 
             if item.isCtor:
                 method_name, simple_docs = self.getName(item)
-                self.current_class.method_list.insert(0, ('%s.__init__'%fullname, simple_docs))
+                klass.method_list.insert(0, ('%s.__init__'%fullname, simple_docs))
                 
         docstring = XMLDocString(klass)
 
@@ -3200,11 +3210,11 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             f = dispatch[item.__class__][0]
             f(item)
 
-        if enum_list:
+        if klass.enum_list:
             stream = StringIO()
             stream.write("\n.. toctree::\n   :maxdepth: 1\n   :hidden:\n\n")
-            for enum_name in enum_list:
-                stream.write("   {}\n".format(enum_name))
+            for enum_name in klass.enum_list:
+                stream.write("   {}.enumeration\n".format(enum_name))
             writeSphinxOutput(stream, filename, True)
 
 
@@ -3349,6 +3359,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         docstring = XMLDocString(enum)
         docstring.current_module = self.current_module
+        docstring.current_class = self.current_class if hasattr(self, 'current_class') else None
 
         docstring.Dump()
 

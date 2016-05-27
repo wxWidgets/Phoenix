@@ -239,7 +239,7 @@ def pythonizeType(ptype, is_param):
     ptype = ptype.strip()        
     ptype = removeWxPrefix(ptype)
 
-    if '. wx' in ptype:
+    if '. wx' in ptype: #***
         ptype = ptype.replace('. wx', '.')
 
     plower = ptype.lower()
@@ -297,7 +297,7 @@ def convertToPython(text):
     2. Lines starting with "Include file" or "#include" are ignored.
     3. Uppercase constants (i.e., like ID_ANY, HORIZONTAL and so on) are converted
        into inline literals (i.e., ``ID_ANY``, ``HORIZONTAL``).
-    4. The "wx" prefix is removed from all the words in the input `text`.
+    4. The "wx" prefix is removed from all the words in the input `text`.  #***
     
     :param string `text`: any string.
 
