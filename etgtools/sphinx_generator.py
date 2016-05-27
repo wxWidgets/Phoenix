@@ -2419,7 +2419,7 @@ class XMLDocString(object):
             newdocs += ' '*3 + line + "\n"
 
         stream.write(newdocs + "\n\n")
-        
+
         if write:
             writeSphinxOutput(stream, self.output_file)
         else:
@@ -3133,7 +3133,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         self.current_class.method_list = []
         self.current_class.property_list = []
-        
+        enum_list = []
+
         #   Inspected class               Method to call           Sort order
         dispatch = {
             extractors.MethodDef        : (self.generateMethod,     1),
@@ -3173,6 +3174,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             elif isinstance(item, properties):
                 simple_docs = self.createPropertyLinks(fullname, item)
                 self.current_class.property_list.append(('%s.%s'%(fullname, item.name), simple_docs))
+            elif isinstance(item, extractors.EnumDef):
+                enum_list.append('%s.%s'%(fullname, item.name))
 
         for item in ctors: 
             if item.isCtor:
@@ -3196,6 +3199,13 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         for item in class_items:
             f = dispatch[item.__class__][0]
             f(item)
+
+        if enum_list:
+            stream = StringIO()
+            stream.write("\n.. toctree::\n   :maxdepth: 1\n   :hidden:\n\n")
+            for enum_name in enum_list:
+                stream.write("   {}\n".format(enum_name))
+            writeSphinxOutput(stream, filename, True)
 
 
     # -----------------------------------------------------------------------
