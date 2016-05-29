@@ -8,9 +8,10 @@
 =================================================
 
 
-The following screenshot shows the appearance of a splitter window with a horizontal split.
+The following screenshot shows the appearance of a splitter window
+with a horizontal split.
 
-The style ``SP_3D`` has been used to show a 3D border and 3D sash.
+The style ``wx.SP_3D`` has been used to show a 3D border and 3D sash.
 
 .. figure:: _static/images/overviews/overview_splitter_3d.png
    :align: center
@@ -20,7 +21,8 @@ The style ``SP_3D`` has been used to show a 3D border and 3D sash.
 Example
 -------
 
-The following fragment shows how to create a splitter window, creating two subwindows and hiding one of them::
+The following fragment shows how to create a splitter window, creating
+two subwindows and hiding one of them::
 
 	splitter = wx.SplitterWindow(self, -1, wx.Point(0, 0),
 				     wx.Size(400, 400), wx.SP_3D)
@@ -38,7 +40,8 @@ The following fragment shows how to create a splitter window, creating two subwi
 	# splitter.SetMinimumPaneSize(20)
 
 
-The next fragment shows how the splitter window can be manipulated after creation::
+The next fragment shows how the splitter window can be manipulated
+after creation::
 
 	def OnSplitVertical(self, event):
 
