@@ -1546,8 +1546,9 @@ class XRef(Node):
         if "(" in text:
             text = text[0:text.index("(")]
 
-        refid, link = list(element.items())[0]
-        remainder = link.split('_')[-1]
+        refid = element.get('refid', '')
+        remainder = refid.split('_')[-1]
+        values = [v for k,v in element.items()]
 
         space_before, space_after = countSpaces(text)
         stripped = text.strip()
@@ -1555,18 +1556,18 @@ class XRef(Node):
         if stripped in IGNORE:
             return space_before + text + space_after + tail
         
-        if ' ' in stripped or 'overview' in link:
-            if 'classwx_' in link:
+        if ' ' in stripped or 'overview' in values:
+            if 'classwx_' in refid:
                 ref = 1000
-                if '_1' in link:
-                    ref = link.index('_1')
+                if '_1' in refid:
+                    ref = refid.index('_1')
 
-                ref = underscore2Capitals(link[6:ref])
+                ref = underscore2Capitals(refid[6:ref])
                 ref = imm.get_fullname(ref)
                 text = ':ref:`%s <%s>`'%(stripped, ref)
 
-            elif 'funcmacro' in link or 'samples' in link or 'debugging' in text.lower() or \
-                 'unix' in text.lower() or 'page_libs' in link:
+            elif 'funcmacro' in values or 'samples' in values or 'debugging' in text.lower() or \
+                 'unix' in text.lower() or 'page_libs' in values:
                 text = space_before + space_after
             elif 'library list' in stripped.lower():
                 text = space_before + text + space_after
@@ -1574,7 +1575,7 @@ class XRef(Node):
                 backlink = stripped.lower()
                 if 'device context' in backlink:
                     backlink = 'device contexts'
-                elif 'reference count' in backlink or 'refcount' in link:
+                elif 'reference count' in backlink or 'refcount' in values:
                     backlink = 'reference counting'
                 elif 'this list' in backlink:
                     backlink = 'stock items'
@@ -1594,7 +1595,7 @@ class XRef(Node):
             elif not isNumeric(text):
                 text = '``%s``'%text
                 
-        elif 'funcmacro' in link:
+        elif 'funcmacro' in values:
             if '(' in stripped:
                 stripped = stripped[0:stripped.index('(')].strip()
                 
