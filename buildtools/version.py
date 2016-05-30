@@ -6,38 +6,44 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2016 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
 
-VER_MAJOR        = 3      # The first three must match wxWidgets
-VER_MINOR        = 0
-VER_RELEASE      = 3
+VER_MAJOR        = 3      # Matches wxWidgets MAJOR version number
+VER_MINOR        = 0      # Matches wxWidgets MINOR version number
+VER_RELEASE      = 3      # wxPython RELEASE number for the given wxWidgets
+                          # MAJOR.MINOR version.
+
 VER_FLAGS        = ""     # wxPython release flags
 
-# Set the VER_FLAGS component according to the following patterns. These
-# should help us to better conform to the setuptools and/or PEP-0386 notions
-# of version numbers.  
+# The VER_FLAGS value is appended to the version number constructed from first
+# 3 components and should be set according to the following patterns. These
+# should help us to better follow the PEP-0440 notions of version numbers,
+# where public version identifiers are supposed to conform to the following
+# scheme:
+#
+#      [N!]N(.N)*[{a|b|rc}N][.postN][.devN]
+#
 #
 #   ""             for final release builds
 #
-#   "-1"           for numbered post releases, such as when there are 
-#                  additional wxPython releases for the same wxWidgets 
-#                  release.  TBD: use - or .post or ? 
+#   "aN"           for official alpha releases
+#   "bN"           for official beta releases
+#   "rcN"          for release candidate releases
+#
+#   ".postN"       for numbered post releases, such as when there are
+#                  minor packaging or documentation issues that can be fixed
+#                  with no code changes.
+#
+#   ".postNaN"     for an alpha (or beta or rc) build of a numbered post
+#                  release
 #
 #   ".dev12345"    for daily snapshot builds, by default this is automatically
 #                  pulled from the REV.txt file made by the setrev command,
 #                  if it exists, and is appended to VER_FLAGS
 #
-#   "a1"           for official alpha releases
-#   "b1"           for beta relases
-#   "rc1"          for release candidate releases
-#
-#   "-1a1"         For alpha releases of a numbered post release, (betas, etc. 
-#                  of numbered post releases can be done the same way)
 #
 # See also:
-#
-#   http://pythonhosted.org/setuptools/setuptools.html
-#   http://www.python.org/dev/peps/pep-0386/
+#   http://www.python.org/dev/peps/pep-0440/

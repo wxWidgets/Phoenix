@@ -269,9 +269,18 @@ class InheritanceDiagram(object):
         dot_args.extend(['-Tpng', '-o' + outfn])
         dot_args.extend(['-Tcmapx', '-o' + mapfile])
 
+        popen_args = {
+            'stdout': PIPE,
+            'stdin': PIPE,
+            'stderr': PIPE
+        }
+        
+        if sys.platform == 'win32':
+            popen_args['shell'] = True
+
         try:
 
-            p = Popen(dot_args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
+            p = Popen(dot_args, **popen_args)
 
         except OSError as err:
 

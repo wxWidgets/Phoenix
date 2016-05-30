@@ -76,6 +76,26 @@ def parseAndTweakModule():
             #endif
             """)
     
+    c.addCppMethod('bool', 'ShowNativeCaret', '(bool show = true)',
+        doc="""\
+            Turn on the widget's native caret on Windows.
+            Ignored on other platforms.
+            """,
+        body="""\
+            #ifdef __WXMSW__
+                return self->ShowNativeCaret(show);
+            #endif
+            """)
+    c.addCppMethod('bool', 'HideNativeCaret', '()',
+        doc="""\
+            Turn off the widget's native caret on Windows.
+            Ignored on other platforms.
+            """,
+        body="""\
+            #ifdef __WXMSW__
+                return self->HideNativeCaret();
+            #endif
+            """)
     
     c = module.find('wxTextUrlEvent')
     tools.fixEventClass(c)

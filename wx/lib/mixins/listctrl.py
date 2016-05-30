@@ -261,7 +261,7 @@ class ListCtrlAutoWidthMixin:
 
             We automatically resize the last column in the list.
         """
-        if 'gtk2' in wx.PlatformInfo:
+        if 'gtk2' in wx.PlatformInfo or 'gtk3' in wx.PlatformInfo:
             self._doResize()
         else:
             wx.CallAfter(self._doResize)

@@ -1,4 +1,4 @@
-import imp_unittest, unittest
+import unittest
 import wtc
 import wx
 
@@ -505,7 +505,6 @@ class testInfBBox(wtc.WidgetTestCase):
         self.failUnless( (self.B1 == self.B2) == True )
     
     def testNotEquals(self):
-        print((self.B1 == self.B3) == False)
         self.failUnless ( (self.B1 == self.B3) == False,
                           "NotEquals failed for\n%s,\n %s:%s"%(self.B1, self.B3, (self.B1 == self.B3)) )    
 

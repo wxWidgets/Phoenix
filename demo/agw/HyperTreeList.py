@@ -1407,7 +1407,7 @@ class HyperTreeListDemo(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             data = dlg.GetFontData()
             font = data.GetChosenFont()
-            for i in xrange(0, self.tree.GetMainWindow().GetColumnCount()):
+            for i in range(0, self.tree.GetMainWindow().GetColumnCount()):
                 self.tree.SetColumnFont(i, font)
 
         dlg.Destroy()
@@ -1417,7 +1417,7 @@ class HyperTreeListDemo(wx.Frame):
     def OnColumnColour(self, event):
 
         col1 = event.GetValue()
-        for i in xrange(0, self.tree.GetMainWindow().GetColumnCount()):
+        for i in range(0, self.tree.GetMainWindow().GetColumnCount()):
             self.tree.SetColumnColour(i, col1)
 
         event.Skip()
@@ -1433,7 +1433,7 @@ class HyperTreeListDemo(wx.Frame):
         else:
             alignment = wx.ALIGN_RIGHT
 
-        for i in xrange(1, self.tree.GetMainWindow().GetColumnCount()):
+        for i in range(1, self.tree.GetMainWindow().GetColumnCount()):
             self.tree.SetColumnAlignment(i, alignment)
 
         event.Skip()
@@ -1441,7 +1441,7 @@ class HyperTreeListDemo(wx.Frame):
 
     def OnColumnImages(self, event):
 
-        for i in xrange(self.tree.GetMainWindow().GetColumnCount()):
+        for i in range(self.tree.GetMainWindow().GetColumnCount()):
             randimage = random.randint(1, len(ArtIDs))
             img = (event.IsChecked() and [randimage] or [-1])[0]
             self.tree.SetColumnImage(i, img)
@@ -1473,7 +1473,7 @@ class HyperTreeListDemo(wx.Frame):
         else:
             choice = wx.LIST_AUTOSIZE
 
-        for i in xrange(self.tree.GetMainWindow().GetColumnCount()):
+        for i in range(self.tree.GetMainWindow().GetColumnCount()):
             self.tree.SetColumnWidth(i, choice)
 
         event.Skip()

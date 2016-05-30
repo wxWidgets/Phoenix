@@ -1,9 +1,17 @@
 #!/usr/bin/python
-#---------------------------------------------------------------------------
-# This script is used to run through the commands used for the various stages
-# of building Phoenix, and can also be a front-end for building wxWidgets and
-# the wxPython distribution files.
-#---------------------------------------------------------------------------
+#----------------------------------------------------------------------
+# Name:        build.py
+# Purpose:     Master build controller script.
+#              This script is used to run through the commands used for the
+#              various stages of building Phoenix, and can also be a front-end
+#              for building wxWidgets and the wxPython distribution files.
+#
+# Author:      Robin Dunn
+#
+# Created:     3-Dec-2010
+# Copyright:   (c) 2010-2016 by Total Control Software
+# License:     wxWindows License
+#----------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -18,7 +26,12 @@ import subprocess
 import tarfile
 import tempfile
 import datetime
-if sys.version_info < (3,):
+
+# which version of Python is running this script
+PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
+
+if PY2:
     from urllib2 import urlopen
 else:
     from urllib.request import urlopen
@@ -80,6 +93,7 @@ doxygenMD5 = {
 # And the location where they can be downloaded from
 toolsURL = 'http://wxpython.org/Phoenix/tools'
 
+
 #---------------------------------------------------------------------------
 
 def usage():
@@ -92,7 +106,7 @@ Usage: ./build.py [command(s)] [options]
                     --python to specify the actual Python executable to use.
                     
       dox           Run Doxygen to produce the XML file used by ETG scripts
-      doxhtml       Run Doxygen to create the HTML documetation for wx
+      doxhtml       Run Doxygen to create the HTML documentation for wx
       touch         'touch' the etg files so they will all get run the next  
                     time the etg command is run.
       etg           Run the ETG scripts that are out of date to update their 
@@ -142,9 +156,6 @@ def main(args):
     os.environ['PYTHONPATH'] = phoenixDir()
     os.environ['PYTHONUNBUFFERED'] = 'yes'
     os.environ['WXWIN'] = wxDir()
-    cfg = Config(noWxConfig=True)
-    msg('cfg.VERSION: %s' % cfg.VERSION)
-    msg('')
 
     wxpydir = os.path.join(phoenixDir(), "wx")
     if not os.path.exists(wxpydir):
@@ -156,6 +167,10 @@ def main(args):
     
     options, commands = parseArgs(args)
     
+    cfg = Config(noWxConfig=True)
+    msg('cfg.VERSION: %s' % cfg.VERSION)
+    msg('')
+
     while commands:
         # ensure that each command starts with the CWD being the phoenix dir.
         os.chdir(phoenixDir())
@@ -234,7 +249,7 @@ def setPythonVersion(args):
             #            
             TOOLS = os.environ.get('TOOLS')
             if 'cygdrive' in TOOLS:
-                TOOLS = runcmd('c:/cygwin/bin/cygpath -w '+TOOLS, True, False)
+                TOOLS = runcmd(getCygwinPath()+'/bin/cygpath -w '+TOOLS, True, False)
             use64flag = '--x64' in args
             if use64flag:
                 args.remove('--x64')
@@ -318,7 +333,8 @@ def setDevModeOptions(args):
 def numCPUs():
     """
     Detects the number of CPUs on a system.
-    This approach is from detectCPUs here: http://www.artima.com/weblogs/viewpost.jsp?thread=230001
+    This approach is from detectCPUs here:
+    http://www.artima.com/weblogs/viewpost.jsp?thread=230001
     """
     # Linux, Unix and MacOS:
     if hasattr(os, "sysconf"):
@@ -333,9 +349,9 @@ def numCPUs():
             
     # Windows:
     if "NUMBER_OF_PROCESSORS" in os.environ:
-            ncpus = int(os.environ["NUMBER_OF_PROCESSORS"]);
-            if ncpus > 0:
-                return ncpus
+        ncpus = int(os.environ["NUMBER_OF_PROCESSORS"])
+        if ncpus > 0:
+            return ncpus
     return 1 # Default
     
 
@@ -364,6 +380,7 @@ def makeOptionParser():
         ("python",         ("",    "The python executable to build for.")),
         ("debug",          (False, "Build wxPython with debug symbols")),
         ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
+        ("gtk3",           (False, "On Linux build for gtk3 (default gtk2)")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
         ("osx_carbon",     (False, "Build the OSX Carbon port on Mac (unsupported)")),
         ("mac_framework",  (False, "Build wxWidgets as a Mac framework.")),
@@ -403,6 +420,7 @@ def makeOptionParser():
         ("x64",            (False, "Use and build for the 64bit version of Python on Windows")),
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
         ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
+        ("release_build",  (False, "Turn off some development options for a release build.")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -413,19 +431,29 @@ def makeOptionParser():
             action = 'store_true'
         parser.add_option('--'+opt, default=default, action=action,
                           dest=opt, help=txt)
-         
     return parser
 
         
 def parseArgs(args):
     parser = makeOptionParser()
     options, args = parser.parse_args(args)
+    
     if isWindows:
         # We always use magic on Windows
         options.no_magic = False
         options.use_syswx = False
     elif options.use_syswx:
+        # Turn off magic if using the system wx
         options.no_magic = True
+        
+    # Some options don't make sense for release builds
+    if options.release_build:
+        options.debug = False
+        options.both = False
+        options.relwithdebug = False
+        if os.path.exists('REV.txt'):
+            os.unlink('REV.txt')
+        
     return options, args
 
 
@@ -598,7 +626,7 @@ class CommandTimer(object):
         msg('Finished command: %s (%s)' % (self.name, time))            
 
 
-def uploadPackage(fileName, mask=defaultMask, keep=50):
+def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     """
     Upload the given filename to the configured package server location. Only
     the `keep` most recent files matching `mask` will be kept so the server
@@ -610,32 +638,35 @@ def uploadPackage(fileName, mask=defaultMask, keep=50):
 
     # NOTE: It is expected that there will be a host entry defined in
     # ~/.ssh/config named wxpython-rbot, with the proper host, user,
-    # idenity file, etc needed for making an SSH connection to the
+    # identity file, etc. needed for making an SSH connection to the
     # snapshots server.
     host = 'wxpython-rbot'
-    snapshotDir = 'snapshot-builds'
+    if options.release_build:
+        uploadDir = 'release-builds'
+    else:
+        uploadDir = 'snapshot-builds'
     
     # copy the new file to the server
-    cmd = 'scp {} {}:{}'.format(fileName, host, snapshotDir)
-    msg(cmd)
+    cmd = 'scp {} {}:{}'.format(fileName, host, uploadDir)
+    #msg(cmd)
     runcmd(cmd)
 
     # Make sure it is readable by all
-    cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, snapshotDir, os.path.basename(fileName))
+    cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, uploadDir, os.path.basename(fileName))
     runcmd(cmd)
     
     # get the list of all snapshot files on the server
-    cmd = 'ssh {} "cd {}; ls {}"'.format(host, snapshotDir, mask)
+    cmd = 'ssh {} "cd {}; ls {}"'.format(host, uploadDir, mask)
     allFiles = runcmd(cmd, getOutput=True)
     allFiles = allFiles.strip().split('\n')
     allFiles.sort()  
 
-    # Leave the last keep builds, including this new one, on the server.
+    # Leave the last keep number of builds, including this new one, on the server.
     # Delete the rest.
     rmFiles = allFiles[:-keep] 
     if rmFiles:
         msg("Deleting %s" % ", ".join(rmFiles))
-        cmd = 'ssh {} "cd {}; rm {}"'.format(host, snapshotDir, " ".join(rmFiles))
+        cmd = 'ssh {} "cd {}; rm {}"'.format(host, uploadDir, " ".join(rmFiles))
         runcmd(cmd)
     
     msg("Upload complete!")
@@ -663,10 +694,18 @@ def checkCompiler(quiet=False):
               "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
               "print(env)"
         env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
-        os.environ['PATH'] = bytes(env['path'])
-        os.environ['INCLUDE'] = bytes(env['include'])
-        os.environ['LIB'] = bytes(env['lib'])
-        os.environ['LIBPATH'] = bytes(env['libpath'])
+        
+        def _b(v):
+            return str(v)
+            #if PY2:
+            #    return bytes(v)
+            #else:
+            #    return bytes(v, 'utf8')
+        
+        os.environ['PATH'] = _b(env['path'])
+        os.environ['INCLUDE'] = _b(env['include'])
+        os.environ['LIB'] = _b(env['lib'])
+        os.environ['LIBPATH'] = _b(env['libpath'])
         
         
 def getWafBuildBase():    
@@ -679,6 +718,24 @@ def getWafBuildBase():
     return base
     
         
+def getCygwinPath():
+    """
+    Try to locate the path where cygwin is installed.
+    
+    If CYGWIN_BASE is set in the environment then use that. Otherwise look in
+    default install locations.
+    """
+    if os.environ.get('CYGWIN_BASE'):
+        return os.environ.get('CYGWIN_BASE')
+    
+    for path in ['c:/cygwin', 'c:/cygwin64']:
+        if os.path.isdir(path):
+            return path
+        
+    return None
+
+    
+    
 #---------------------------------------------------------------------------
 # Command functions and helpers
 #---------------------------------------------------------------------------
@@ -689,13 +746,14 @@ def _doDox(arg):
     doxCmd = os.path.abspath(doxCmd)
     
     if isWindows:
+        cygwin_path = getCygwinPath()
         doxCmd = doxCmd.replace('\\', '/')
-        doxCmd = runcmd('c:/cygwin/bin/cygpath -u '+doxCmd, True, False)
+        doxCmd = runcmd(cygwin_path+'/bin/cygpath -u '+doxCmd, True, False)
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
         d = posixjoin(wxDir(), 'docs/doxygen')
         d = d.replace('\\', '/')
-        cmd = 'c:/cygwin/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (d, arg)
+        cmd = '%s/bin/bash.exe -l -c "cd %s && ./regen.sh %s"' % (cygwin_path, d, arg)
     else:
         os.environ['DOXYGEN'] = doxCmd
         os.environ['WX_SKIP_DOXYGEN_VERSION_CHECK'] = '1'
@@ -830,11 +888,12 @@ def cmd_sphinx(options, args):
     SphinxIndexes(sphinxDir)
     GenGallery()
 
-    todo = os.path.join(phoenixDir(), 'TODO.txt')
-    copyIfNewer(todo, sphinxDir)
-    txtFiles = glob.glob(os.path.join(phoenixDir(), 'docs', '*.txt'))
-    for txtFile in txtFiles:
-        copyIfNewer(txtFile, sphinxDir)
+    # Copy the hand-edited top level doc files too
+    rstFiles = [os.path.join(phoenixDir(), 'TODO.rst')] + \
+               glob.glob(os.path.join(phoenixDir(), 'docs', '*.rst'))
+    for rst in rstFiles:
+        txt = os.path.join(sphinxDir, os.path.splitext(os.path.basename(rst))[0] + '.txt')
+        copyIfNewer(rst, txt)
     
     MakeHeadings()
 
@@ -844,7 +903,7 @@ def cmd_sphinx(options, args):
     runcmd('sphinx-build -b html -d %s/doctrees . %s' % (buildDir, htmlDir))
     del pwd2
     
-    msg('Postprocesing sphinx output...')
+    msg('Postprocessing sphinx output...')
     PostProcess(htmlDir)
 
 
@@ -923,7 +982,7 @@ def cmd_docs_bdist(options, args):
     tarball.close()
     
     if options.upload:
-        uploadPackage(tarfilename, keep=5, 
+        uploadPackage(tarfilename, options, keep=5, 
                       mask='%s-docs-%s*' % (baseName, cfg.VER_MAJOR))
     
     msg('Documentation tarball built at %s' % tarfilename)
@@ -1047,7 +1106,6 @@ def cmd_build_wx(options, args):
     if not isWindows and options.use_syswx:
         msg("use_syswx option specified, skipping wxWidgets build")
         return 
-    
     checkCompiler()
     
     build_options = ['--wxpython', '--unicode']
@@ -1081,7 +1139,7 @@ def cmd_build_wx(options, args):
             
         if not os.path.exists(BUILD_DIR):
             os.makedirs(BUILD_DIR)
-        if  options.mac_arch: 
+        if  isDarwin and options.mac_arch: 
             build_options.append("--mac_universal_binary=%s" % options.mac_arch)
 
         if options.no_config:
@@ -1120,20 +1178,21 @@ def cmd_build_wx(options, args):
     if options.extra_make:
         build_options.append('--extra_make="%s"' % options.extra_make)
                     
+    if options.gtk3:
+        build_options.append('--gtk3')
+                    
     try:
         # Import and run the wxWidgets build script
-        wxscript = os.path.join(wxDir(), "build/tools/build-wxwidgets.py")
-        sys.path.insert(0, os.path.dirname(wxscript))
-        wxbuild = __import__('build-wxwidgets')
-
+        from buildtools import build_wxwidgets as wxbuild
+        
         print('wxWidgets build options: ' + str(build_options))
-        wxbuild.main(wxscript, build_options)
+        wxbuild.main(wxDir(), build_options)
         
         # build again without the --debug flag?
         if isWindows and options.both:
             build_options.remove('--debug')
             print('wxWidgets build options: ' + str(build_options))
-            wxbuild.main(wxscript, build_options)
+            wxbuild.main(wxDir(), build_options)
             
     except Exception:
         print("ERROR: failed building wxWidgets")
@@ -1159,7 +1218,7 @@ def copyWxDlls(options):
         return 
     
     if isWindows:
-        # Copy the wxWidgets DLLs to the wxPython pacakge folder
+        # Copy the wxWidgets DLLs to the wxPython package folder
         msw = getMSWSettings(options)
         cfg = Config()
 
@@ -1176,6 +1235,14 @@ def copyWxDlls(options):
         # Also copy the cairo DLLs if needed
         if options.cairo:
             dlls += glob.glob(os.path.join(os.environ['CAIRO_ROOT'], 'bin', '*.dll'))
+
+        # For Python 3.5 builds we also need to copy some VC14 redist DLLs
+        if PYVER == '3.5':
+            arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
+            redist_dir = os.path.join(
+                phoenixDir(), 'packaging', 'Py3.5', 'vcredist',
+                arch, 'Microsoft.VC140.CRT', '*.dll')
+            dlls += glob.glob(redist_dir)
 
         for dll in dlls:
             copyIfNewer(dll, posixjoin(phoenixDir(), cfg.PKGDIR, os.path.basename(dll)), verbose=True)
@@ -1213,7 +1280,6 @@ def cmd_waf_py(options, args):
     cmdTimer = CommandTimer('waf_py')
     cmd_build_py(options, args)
     
-
 
 def cmd_build_py(options, args):
     cmdTimer = CommandTimer('build_py')
@@ -1259,6 +1325,8 @@ def cmd_build_py(options, args):
         build_options.append('--jobs=%s' % options.jobs)
     if options.relwithdebug:
         build_options.append('--msvc_relwithdebug')
+    if options.gtk3:
+        build_options.append('--gtk3')
         
     build_options.append('--python="%s"' % PYTHON)
     build_options.append('--out=%s' % wafBuildDir) # this needs to be the last option
@@ -1348,7 +1416,7 @@ def cmd_bdist_egg(options, args):
         filemask = "dist/%s-%s-*.egg" % (baseName, cfg.VERSION.replace('-', '_'))
         filenames = glob.glob(filemask)
         assert len(filenames) == 1
-        uploadPackage(filenames[0])
+        uploadPackage(filenames[0], options)
         
 
 def cmd_bdist_wheel(options, args):
@@ -1358,7 +1426,7 @@ def cmd_bdist_wheel(options, args):
         filemask = "dist/%s-%s-*.whl" % (baseName, cfg.VERSION.replace('-', '_'))
         filenames = glob.glob(filemask)
         assert len(filenames) == 1
-        uploadPackage(filenames[0])
+        uploadPackage(filenames[0], options)
         
         
 def cmd_bdist_wininst(options, args):
@@ -1368,13 +1436,11 @@ def cmd_bdist_wininst(options, args):
         filemask = "dist/%s-%s-*.exe" % (baseName, cfg.VERSION.replace('-', '_'))
         filenames = glob.glob(filemask)
         assert len(filenames) == 1
-        uploadPackage(filenames[0])
+        uploadPackage(filenames[0], options)
 
 
-# bdist_msi requires the version number to be only 3 components, but we're
-# using 4.  TODO: Can we fix this?
-#def cmd_bdist_msi(options, args):
-#    _doSimpleSetupCmd(options, args, 'bdist_msi')
+def cmd_bdist_msi(options, args):
+    _doSimpleSetupCmd(options, args, 'bdist_msi')
 
 
 def cmd_egg_info(options, args, egg_base=None):
@@ -1384,9 +1450,6 @@ def cmd_egg_info(options, args, egg_base=None):
     cmd = '"%s" setup.py egg_info %s %s' % (PYTHON, VERBOSE, BASE)
     runcmd(cmd)
 
-
-
-    
 
 def cmd_clean_wx(options, args):
     cmdTimer = CommandTimer('clean_wx')
@@ -1517,8 +1580,6 @@ def cmd_sdist(options, args):
     WDEST = posixjoin(PDEST, 'ext/wxWidgets')
     if not os.path.exists(PDEST):
         os.makedirs(PDEST)
-    #if not os.path.exists(WDEST):
-    #    os.makedirs(WDEST)
     
     # and a place to put the final tarball
     if not os.path.exists('dist'):
@@ -1550,8 +1611,6 @@ def cmd_sdist(options, args):
         copyFile('REV.txt', PDEST)
 
     # Add some extra stuff to the root folder
-    #copyFile('packaging/setup.py', ADEST)
-    #copyFile('packaging/README-sdist.txt', opj(ADEST, 'README.txt'))
     cmd_egg_info(options, args, egg_base=PDEST)
     copyFile(opj(PDEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
              opj(PDEST, 'PKG-INFO'))
@@ -1572,7 +1631,7 @@ def cmd_sdist(options, args):
     shutil.rmtree(PDEST)
 
     if options.upload:
-        uploadPackage(tarfilename)
+        uploadPackage(tarfilename, options)
     
     msg("Source release built at %s" % tarfilename)
 
@@ -1623,7 +1682,7 @@ def cmd_bdist(options, args):
     tarball.close()
 
     if options.upload:
-        uploadPackage(tarfilename)
+        uploadPackage(tarfilename, options)
                 
     msg("Binary release built at %s" % tarfilename)
 
@@ -1636,14 +1695,21 @@ def cmd_setrev(options, args):
     cmdTimer = CommandTimer('setrev')
     assert os.getcwd() == phoenixDir()
 
-    svnrev = getVcsRev()
-    f = open('REV.txt', 'w')
-    svnrev = '.dev'+svnrev
-    f.write(svnrev)
-    f.close()
+    if options.release_build:
+        # Ignore this command for release builds, they are not supposed to
+        # include current VCS revision info in the version number.    
+        msg('This is a release build, setting REV.txt skipped')
+    
+    else:
+        svnrev = getVcsRev()
+        f = open('REV.txt', 'w')
+        svnrev = '.dev'+svnrev
+        f.write(svnrev)
+        f.close()
+        msg('REV.txt set to "%s"' % svnrev)    
+
     cfg = Config()
     cfg.resetVersion()
-    msg('REV.txt set to "%s"' % svnrev)    
     msg('cfg.VERSION: %s' % cfg.VERSION)
         
     

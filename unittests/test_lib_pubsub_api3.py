@@ -8,7 +8,7 @@ disabled, as it is more rigorous for testing purposes.
 
 """
 
-import imp_unittest, unittest
+import unittest
 import wtc
 
 from wx.lib.pubsub.core import getListenerID

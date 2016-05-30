@@ -46,6 +46,8 @@ def options(opt):
                    help='One or more comma separated architecture names to be used for '
                    'the Mac builds. Should be at least a subset of the architectures '
                    'used by wxWidgets and Python')
+    opt.add_option('--gtk3', dest='gtk3', action='store_true', default=False,
+                   help='On Linux build for gtk3 (default gtk2)')
     opt.add_option('--msvc_arch', dest='msvc_arch', default='x86', action='store',
                    help='The architecture to target for MSVC builds. Supported values '
                    'are: "x86" or "x64"')
@@ -68,12 +70,8 @@ def configure(conf):
         # version. We have a chicken-egg problem here. The compiler needs to
         # be selected before the Python stuff can be configured, but we need
         # Python to know what version of the compiler to use.
-        # TODO: Fix this
-        msvc_version = '9.0' #conf.options.msvc_ver
-        if conf.options.python and ('33' in conf.options.python or
-                                    '34' in conf.options.python):
-            msvc_version = '10.0'
-
+        import distutils.msvc9compiler
+        msvc_version = str( distutils.msvc9compiler.get_build_version() )
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
         conf.load('msvc')
@@ -133,6 +131,10 @@ def configure(conf):
 
         _copyEnvGroup(conf.env, '_WX', '_WXRICHTEXT')
         conf.env.LIB_WXRICHTEXT += cfg.makeLibName('richtext')
+
+        _copyEnvGroup(conf.env, '_WX', '_WXMEDIA')
+        conf.env.LIB_WXMEDIA += cfg.makeLibName('media')
+
 
         # ** Add code for new modules here (and below for non-MSW)
 
@@ -216,15 +218,22 @@ def configure(conf):
                        args='--cxxflags --libs %score,net' % libname + rpath, 
                        uselib_store='WXRICHTEXT', mandatory=True)
 
+        conf.check_cfg(path=conf.options.wx_config, package='',
+                       args='--cxxflags --libs media,core,net' + rpath,
+                       uselib_store='WXMEDIA', mandatory=True)
+
         # ** Add code for new modules here
 
 
-        # NOTE: This assumes that if the platform is not win32 (from
-        # the test above) and not darwin then we must be using the
-        # GTK2 port of wxWidgets.  If we ever support other ports then
-        # this code will need to be adjusted.
+        # NOTE: This assumes that if the platform is not win32 (from the test
+        # above) and not darwin then we must be using the GTK2 or GTK3 port of
+        # wxWidgets.  If we ever support other ports then this code will need
+        # to be adjusted.
         if not isDarwin:
-            gtkflags = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
+            if conf.options.gtk3:
+                gtkflags = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
+            else:
+                gtkflags = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
             conf.env.CFLAGS_WX   += gtkflags.split()
             conf.env.CXXFLAGS_WX += gtkflags.split()
 
@@ -279,8 +288,9 @@ from waflib.Configure import conf
 @conf
 def my_check_python_headers(conf):
     """
-    Check for headers and libraries necessary to extend or embed python by using the module *distutils*.
-    On success the environment variables xxx_PYEXT and xxx_PYEMBED are added:
+    Check for headers and libraries necessary to extend or embed python by
+    using the module *distutils*. On success the environment variables
+    xxx_PYEXT and xxx_PYEMBED are added:
 
     * PYEXT: for compiling python extensions
     * PYEMBED: for embedding a python interpreter
@@ -394,7 +404,7 @@ def my_check_python_headers(conf):
 
 def build(bld):
     # Ensure that the directory containing this script is on the python
-    # path for spawned commands so the builder and phoenix packages can be
+    # sys.path for spawned commands so the builder and phoenix packages can be
     # found.
     thisdir = os.path.abspath(".")
     sys.path.insert(0, thisdir)
@@ -561,6 +571,23 @@ def build(bld):
         )
     makeExtCopyRule(bld, '_richtext')
 
+    etg = loadETG('etg/_media.py')
+    bld(features = 'c cxx cxxshlib pyext',
+        target   = makeTargetName(bld, '_media'),
+        source   = getEtgSipCppFiles(etg) + rc,
+        uselib   = 'WX WXPY WXMEDIA',
+        )
+    makeExtCopyRule(bld, '_media')
+
+    if isWindows:
+        etg = loadETG('etg/_msw.py')
+        bld(features = 'c cxx cxxshlib pyext',
+            target   = makeTargetName(bld, '_msw'),
+            source   = getEtgSipCppFiles(etg) + rc,
+            uselib   = 'WX WXPY',
+            )
+        makeExtCopyRule(bld, '_msw')
+
 
 
     # ** Add code for new modules here
@@ -604,7 +631,7 @@ def copyFileToPkg(task):
     from buildtools.config   import opj
     src = task.inputs[0].abspath() 
     tgt = task.outputs[0].abspath() 
-    task.exec_command('touch %s' % tgt)
+    open(tgt, "wb").close() # essentially just a unix 'touch' command
     tgt = opj(cfg.PKGDIR, os.path.basename(src))
     copy_file(src, tgt, verbose=1)
     return 0

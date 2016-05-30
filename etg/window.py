@@ -66,10 +66,13 @@ def run():
     c.find('GetChildren').noCopy = True
     for name in ['GetVirtualSize',
                  'GetPosition',
-                 'GetScreenPosition',
-                 'ClientToScreen',
-                 'ScreenToClient', ]:
+                 'GetScreenPosition']:
         c.find(name).findOverload('int *').ignore()
+
+    # Fix ClientToScreen/ScreenToClient int * overloads
+    for name in ['ClientToScreen', 'ScreenToClient']:
+        c.find(name).findOverload('int *').find('x').inOut = True
+        c.find(name).findOverload('int *').find('y').inOut = True
 
     # Like the above, but these also need to transplant the docs from the
     # ignored item to the non-ignored overload.
@@ -99,8 +102,8 @@ def run():
     m.find('descent').out = True
     m.find('externalLeading').out = True
     
-    c.find('GetHandle').type = 'unsigned long'
-    c.find('GetHandle').setCppCode("return wxPyGetWinHandle(self);")
+    c.find('GetHandle').type = 'wxUIntPtr*'
+    c.find('GetHandle').setCppCode("return new wxUIntPtr(wxPyGetWinHandle(self));")
     
     c.addCppMethod('void*', 'GetGtkWidget', '()', """\
     #ifdef __WXGTK__
@@ -162,7 +165,7 @@ def run():
 
     
     c.find('SetDoubleBuffered').setCppCode("""\
-    #if defined(__WXGTK20__) || defined(__WXMSW__)
+    #if defined(__WXGTK20__) || defined(__WXGTK3__) || defined(__WXMSW__)
         self->SetDoubleBuffered(on);
     #endif
     """)

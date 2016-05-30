@@ -1,4 +1,4 @@
-import imp_unittest, unittest
+import unittest
 import wtc
 import wx
 
@@ -92,6 +92,11 @@ class textctrl_Tests(wtc.WidgetTestCase):
         ta.TextEffects
         ta.URL
 
+
+    def test_textctrlNativeCaret(self):
+        t = wx.TextCtrl(self.frame)
+        t.ShowNativeCaret
+        t.HideNativeCaret
 
 #---------------------------------------------------------------------------
 

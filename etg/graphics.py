@@ -212,7 +212,7 @@ def run():
     #---------------------------------------------
     c = module.find('wxGraphicsGradientStops')
     c.addCppMethod('SIP_SSIZE_T', '__len__', '()', body="return (SIP_SSIZE_T)self->GetCount();")
-    c.addCppMethod('wxGraphicsGradientStop*', '__getitem__', '(size_t n)',
+    c.addCppMethod('wxGraphicsGradientStop*', '__getitem__', '(ulong n)',
                    pyArgsString='(n)',
                    body="return new wxGraphicsGradientStop(self->Item(n));",
                    factory=True)

@@ -56,8 +56,8 @@ class Configuration(object):
     WXPORT = 'gtk2'
     # On Linux/Unix there are several ports of wxWidgets available.
     # Setting this value lets you select which will be used for the
-    # wxPython build.  Possibilites are 'gtk', 'gtk2' and 'x11'.
-    # Currently only gtk and gtk2 works.
+    # wxPython build.  Possibilities are 'gtk', 'gtk2', 'gtk3' and 'x11'.
+    # Currently only gtk, gtk2 and gtk3 work.
 
     BUILD_BASE = "build"
     # Directory to use for temporary build files.
@@ -280,6 +280,9 @@ class Configuration(object):
                 elif self.WXPORT == 'gtk2':
                     self.WXPLAT = '__WXGTK__'
                     portcfg = os.popen('pkg-config gtk+-2.0 --cflags', 'r').read()[:-1]
+                elif self.WXPORT == 'gtk3':
+                    self.WXPLAT = '__WXGTK__'
+                    portcfg = os.popen('pkg-config gtk+-3.0 --cflags', 'r').read()[:-1]
                 elif self.WXPORT == 'x11':
                     msg("WARNING: The wxX11 port is no supported")
                     self.WXPLAT = '__WXX11__'
@@ -348,6 +351,9 @@ class Configuration(object):
     
     def parseCmdLine(self):
         self.debug = '--debug' in sys.argv or '-g' in sys.argv
+
+        if '--gtk3' in sys.argv:
+            self.WXPORT = 'gtk3'
 
         # the values of the items in the class namespace that start
         # with an upper case letter can be overridden on the command
@@ -787,9 +793,10 @@ def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
 
     output = None
     if getOutput:
+        outputEncoding = 'cp1252' if sys.platform == 'win32' else 'utf-8'
         output = sp.stdout.read()
         if sys.version_info > (3,):
-            output = output.decode('utf-8')  # TODO: is utf-8 okay here?
+            output = output.decode(outputEncoding)
         output = output.rstrip()
         
     rval = sp.wait()
@@ -850,6 +857,8 @@ def getVisCVersion():
         return '90'
     if 'Version 16' in text:
         return '100'
+    if 'Version 19' in text:
+        return '140'
     # TODO: Add more tests to get the other versions...
     else:
         return 'FIXME'

@@ -46,8 +46,8 @@ class TestPanel(wx.Panel):
         self.list.InsertColumn(1, "Title", wx.LIST_FORMAT_RIGHT)
         self.list.InsertColumn(2, "Genre")
 
-        for key, data in musicdata.iteritems():
-            index = self.list.InsertStringItem(sys.maxint, data[0])
+        for key, data in musicdata.items():
+            index = self.list.InsertStringItem(sys.maxsize, data[0])
             self.list.SetItem(index, 1, data[1])
             self.list.SetItem(index, 2, data[2])
             self.list.SetItemData(index, key)

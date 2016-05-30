@@ -31,6 +31,7 @@ ITEMS  = [ ]
 # promoted script to be the same as its NAME.
 
 INCLUDES = [  # base and core stuff
+              'wacky_ints',
               'defs',
               'debug',
               'object',
@@ -264,6 +265,8 @@ def run():
                 port = 'gtk'
                 if 'gtk2' in wx.PlatformInfo:
                     port = 'gtk2'
+                elif 'gtk3' in wx.PlatformInfo:
+                    port = 'gtk3'
             else:
                 port = '???'
             return "%s %s (phoenix)" % (wx.VERSION_STRING, port)

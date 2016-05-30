@@ -18,7 +18,7 @@ which can be used together with the :class:`~lib.pdfviewer.viewer.pdfViewer`.
 """
 import sys, os, time
 
-import images
+from . import images
 import wx
 import wx.lib.agw.buttonpanel as bp
 

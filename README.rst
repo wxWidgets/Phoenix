@@ -33,7 +33,7 @@ provided by the build.py script. There is also a setup.py script available
 for those who are used to the standard distutils or setuptools types of
 builds. The setup.py script assumes that all of the code generation steps
 have already been performed, and so it is suitable for use when building from
-a source snapshot tarball or when using easy_install or pip. The seup.py
+a source snapshot tarball or when using easy_install or pip. The setup.py
 script will delegate to build.py for the actual build, and build.py will
 delegate to setup.py when doing setuptoolsy things like performing an install
 or building an egg.
@@ -41,17 +41,33 @@ or building an egg.
 Using the build.py script allows for greater control over the build process
 than setup.py does, including commands for performing the various
 code-generation steps. So developers working on Phoenix itself or building
-from a Git checkout, instead of just building it from a source snapshot,
-should be using the build.py script. Build.py provides a fairly simple
+from a Git checkout, instead of a source snapshot tarball, should be using
+the build.py script. The build.py script provides a fairly simple
 command-line interface consisting of commands and options. To see the full
 list run ``python build.py --help``. The most important commands are listed
 below.
 
-If you just want to do a standard setuptools-style build using setup.py and
-are using a full source tarball, then you can stop reading at this point. If
-you want to build from a source repository checkout, or need to make changes
-and/or to regenerate some of the generated source files, then please continue
-reading.
+**Windows Users NOTE:** If you are building Phoenix on Windows and have a
+non-English language installation of Microsoft Visual Studio then you may
+need to set the code page in your console window in order to avoid Unicode
+decoding errors. For example::
+
+    chcp 1252
+    python build.py <build commands>...
+
+In addition, some tasks within the build currently expect to be able to use
+Cygwin on Windows (https://www.cygwin.com/) to do its work. If you have
+Cygwin installed in one of the default locations (c:\cygwin or c:\cygwin64)
+then all is well. If you have it installed somewhere else then you can set
+CYGWIN_BASE in the environment and the build tool will use that for the base
+dir.
+
+On the other hand, if you just want to do a standard setuptools-style build
+using setup.py and are using a full source tarball, then you can stop reading
+at this point. If you want to build from a source repository checkout, or
+need to make changes and/or to regenerate some of the generated source files,
+then please continue reading.
+
 
 Building wxWidgets
 ------------------
@@ -77,7 +93,7 @@ details. However be aware that doing so will require a wxWidgets that is
 unreleased preview snapshots. In other words, the wxWidgets build should use
 code from the wxWidgets source repository within a few days of when the
 Phoenix code was checked out. Currently Phoenix is expecting to be used with
-a wxWidgets built from the ``WX_3_0_BRANCH`` git branch.
+a wxWidgets built from the ``wxPy-3.0-branch`` git branch.
 
 On the other hand, it is probably best to just let Phoenix build and bundle
 wxWidgets. The build tools will by default build wxWidgets in a way that
@@ -181,6 +197,28 @@ tell build.py where to find it using an environment variable, as described in
 the error message.
 
 
+Example build command-lines
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To do a complete build from a totally clean git workspace, you will
+need to use several of the commands listed above.  For example::
+
+    python build.py dox etg --nodoc sip build
+
+Subsequent builds can leave out some of the commands if there were no
+changes which would require those commands to be run again.  For
+example, if you wanted to just rebuild the Phoenix extension modules
+you could do this::
+
+    python build.py build_py
+
+If you've changed one of the etg files and need to regenerate and
+rebuild the source affected by that change, then you can use a command
+like this::
+
+    python build.py etg --nodoc sip build build_py
+
+
 
 Project directory structure
 ----------------------------
@@ -263,7 +301,7 @@ in their MODULE variable.
 
 
 Prerequisites
---------------
+-------------
 
 The following are some tips about what is required to build Phoenix for
 yourself. There are likely some other things that may not have been mentioned

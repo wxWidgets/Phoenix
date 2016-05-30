@@ -1,4 +1,4 @@
-import imp_unittest, unittest
+import unittest
 import wtc
 import wx.lib.CDate as cdate
 import wx.lib.six as six

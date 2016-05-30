@@ -5,7 +5,7 @@
 
 """
 
-import imp_unittest, unittest
+import unittest
 import wtc
 
 from wx.lib.pubsub.core.weakmethod import WeakMethod

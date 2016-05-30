@@ -1,4 +1,4 @@
-import imp_unittest, unittest
+import unittest
 import wtc
 import wx
 import os
@@ -15,7 +15,8 @@ samplePdf = os.path.join(dataDir, "sample.pdf")
 
 #---------------------------------------------------------------------------
 
-@unittest.skip('crashing on OSX...')  # problem with a nested yield in GenericProgressDialog?
+@unittest.skipIf('wxMac' in wx.PlatformInfo or 'wxGTK' in wx.PlatformInfo,
+                 'test is crashing on Mac and GTK...')
 class lib_pdfviewer_pdfviewer_Tests(wtc.WidgetTestCase):
         
     @unittest.skipIf(not havePyPDF, "pyPdf required")

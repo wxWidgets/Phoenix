@@ -69,14 +69,18 @@ def run():
             PyObject* func = (PyObject*)funcPtr;
             wxPyThreadBlocker blocker;
 
-            PyObject* args = Py_BuildValue("(ii)", item1, item2);
+        #if SIZEOF_LONG >= SIZEOF_VOID_P
+            PyObject* args = Py_BuildValue("(ll)", item1, item2);
+        #else
+            PyObject* args = Py_BuildValue("(LL)", item1, item2);
+        #endif
+            
             PyObject* result = PyEval_CallObject(func, args);
             Py_DECREF(args);
             if (result) {
                 retval = wxPyInt_AsLong(result);
                 Py_DECREF(result);
             }
-  
             return retval;
         }
         """)

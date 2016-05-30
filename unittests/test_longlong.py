@@ -1,5 +1,5 @@
 
-import imp_unittest, unittest
+import unittest
 import wx
 
 #---------------------------------------------------------------------------

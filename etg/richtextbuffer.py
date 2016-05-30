@@ -394,7 +394,10 @@ def run():
             m.ignore()
     
 
-    
+
+    # Correct the type for this define as it is a float
+    module.find('wxSCRIPT_MUL_FACTOR').type = 'float'
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

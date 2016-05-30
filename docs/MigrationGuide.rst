@@ -15,7 +15,7 @@ This document will describe some of the incompatibilities that
 programmers will run into when migrating code from Classic wxPython to
 the Phoenix.  For some types of changes there won't be any attempt to
 document the nitty gritty details of the differences, but rather the
-general patterns of the changes will be documented.  Most proggrammers
+general patterns of the changes will be documented.  Most programmers
 should then be able to work out the details for themselves.
 
 
@@ -28,19 +28,22 @@ and an additional component to allow for multiple wxPython releases for each
 wxWidgets release. While this version numbering works okay and solves a
 specific need that wxPython had, it does not follow the common version
 numbering pattern that probably 99% of other software packages use and so it
-is non-intuitive for most users, and probably more importantly, it does not
-fit well with the standards set by setuptools or PEP 0386.
+is non-intuitive for most users.
 
-So Pheonix will be moving to a 3 component version number, possibly with an
-added version tag on the end. Once again the 3 componenets of the version
-number will match the wxWidgets version number, and the version tag will be
-used to convey additional information specific to the wxPython Phoenix build,
-including development snapshots, alpha or beta releases, and "numbered post
-release builds". The latter is what will take the place of Classic's 4
-version number component and is what will be used to version any wxPython
-Phoenix builds that may happen in bewtween official wxWidgets releases. See
-buildtools/version.py in the Phoenix build tree for more details.
+So Phoenix will be moving to a 3 component version number, where the first 2
+components match the MAJOR.MINOR version of wxWidgets being used, and the 3rd
+component of the version number is used to indicate the release of wxPython
+Phoenix using that version of wxWidgets.  It is felt that matching the 3rd
+component of the wxWidgets is no longer as important as it was in the past,
+because the wxWidgets source is being included with the Phoenix source, so
+matching exact versions of the two packages by hand is no longer needed.
 
+Additional flags will be appended to the version number in a manner that is
+compliant with Python's PEP-440_. This includes syntax for alpha, beta,
+release candidate releases, post-release builds, development snapshots, etc.
+See `buildtools/version.py` in the Phoenix build tree for more details.
+
+.. _PEP-440: https://www.python.org/dev/peps/pep-0440/
 
 
 Overloaded Functions
@@ -50,22 +53,22 @@ In order to support more than one of the versions of an overloaded C++
 function or class method in Classic wxPython, we had to rename all but
 one of them.  For example, for the wxWindow::SetSize method we have
 SetSize, SetDimensions, SetRect and SetSizeWH.  One of the features of
-the new tools used for Project Pheonix is that we no longer need to do
+the new tools used for Project Phoenix is that we no longer need to do
 that and instead we can have just one function or method in the Python
-API and the propper version of the C++ function or method is chosen at
-runtime based on the types of parameters passed to the function.  So
-in most cases the renamed versions of the overloaded functions have
-been removed and you can call the function with the same name as the
-C++ API.
+API and the proper version of the C++ function or method is chosen at
+runtime based on the number and types of parameters passed to the
+function. So in most cases the renamed versions of the overloaded
+functions have been removed and you can call the function with the same
+name as the C++ API.
 
 This also includes the default constructor for all widget classes,
 used for the 2-phase create. Previously they were renamed to be the
 class name with "Pre" prepended to it.  For example, wx.PreWindow(),
 wx.PreFrame(), etc.  Now in the Phoenix build of wxPython that is no
-longer neccessary and you can just call the class with no parameters
+longer necessary and you can just call the class with no parameters
 like normal.
 
-For those renamed items that are more commonly used in the old
+For those renamed items that are more commonly used in the old Classic
 wxPython I'll add some aliases that will issue a DeprecationWarning for
 the first release or two after we switch over to the Phoenix version
 of the code, and then remove them in a later release.
@@ -135,12 +138,15 @@ you'll need to deal with them one way or another, either change the
 encoding of your source file to utf-8, or convert the literals from
 your encoding to Unicode before passing the text to the wx API.
 
+In Python 3.x, where strings are already Unicode objects, most of the above
+confusion goes away, however if you have bytes objects then the same rules of
+auto-converting only from utf-8 will still apply.
 
 
 Font, Pen, and Brush Styles
 ---------------------------
 
-The following aliases are currently added for backwards compatiblity,
+The following aliases are currently added for backwards compatibility,
 but will be removed in a future release.  You should migrate any code
 that is using the old names to use the new ones instead::
 
@@ -237,25 +243,25 @@ the :ref:`Classic vs. Phoenix <classic vs phoenix>` document for details.
 wx.ListCtrl
 -----------
 
-* In wx.ListItem and wx.ListEvent the ``"m_"`` properties are no longer
-  public. Instead use the associated getter/setter methods or the
-  auto-generated properties that are using them.
+In wx.ListItem and wx.ListEvent the ``"m_"`` properties are no longer
+public. Instead use the associated getter/setter methods or the
+auto-generated properties that are using them.
 
 
 
 wx.TreeCtrl
 -----------
 
-* The GetItemData and SetItemData now behave just like GetItemPyData
-  and SetItemPyData did in Classic wxPython.  In other words, instead
-  of needing to create and use instances of wx.TreeItemData to
-  associate Python data objects with tree items, you just use the
-  Python objects directly.  It will also work when passing the data
-  objects directly to the AppendItem, InsertItem, etc. methods.  (If
-  anybody was actually using the wx.TreeItemData objects directly
-  before and are unable to adapt then please let Robin know.)  The 
-  [G|S]etItemPyData members still exist, but are now deprecated
-  aliases for [G|S]etItemData.
+The GetItemData and SetItemData now behave just like GetItemPyData
+and SetItemPyData did in Classic wxPython.  In other words, instead
+of needing to create and use instances of wx.TreeItemData to
+associate Python data objects with tree items, you just use the
+Python objects directly.  It will also work when passing the data
+objects directly to the AppendItem, InsertItem, etc. methods.  (If
+anybody was actually using the wx.TreeItemData objects directly
+before and are unable to adapt then please let Robin know.)  The
+[G|S]etItemPyData members still exist, but are now deprecated
+aliases for [G|S]etItemData.
 
 
 
@@ -408,10 +414,10 @@ relationship.  See samples/combo/combo1.py for an example.
 
 
 XRC
--------
+---
 
 The "LoadOnFoo" methods of the XmlResource class were renamed overloads of
-the coresponding "LoadFoo" methods. Since we no longer need to rename
+the corresponding "LoadFoo" methods. Since we no longer need to rename
 overloaded methods the "LoadOn" version has been removed and you should just
 use the "LoadFoo" version instead. These methods are used to load some XRC
 content onto an existing window, such as a Frame, instead of creating a new
@@ -422,7 +428,7 @@ Frame for the content.
 wx.PyEvent and wx.PyCommandEvent
 --------------------------------
 
-Unlike most other wx.Py classes these two still exist in Phoenix, and are
+Unlike most other ``wx.Py`` classes these two still exist in Phoenix, and are
 still the base classes that you should use when creating your own custom
 event classes. For the most part they work just like they did in Classic, and
 they take care of ensuring that any Python attributes that you assign to
@@ -449,7 +455,7 @@ MakeModal
 Since it is usually not a good idea to make arbitrary top-level windows be
 modal, (you should just use a wx.Dialog instead,) the MakeModal method has
 been removed. The recommended alternative is to use the wx.WindowDisabler
-class instead, but if you prefer the semenatics of having a method to call to
+class instead, but if you prefer the semantics of having a method to call to
 turn on or off the modalness of a window then you can add a method like this
 to your classes to give you a way to do it::
 
@@ -459,6 +465,30 @@ to your classes to give you a way to do it::
         if not modal and hasattr(self, '_disabler'):
             del self._disabler
 
+
+
+The wxversion module
+--------------------
+
+The ``wxversion`` module is gone, and will not be coming back.  The old way of
+handling muti-version installs and choosing between them was a giant hack in
+my opinion, and I regretted doing it not long after it was implemented.  However
+since there wasn't any other way that made sense at the time, and since some
+people were using it already, it got left in the distribution.  But one of the
+purposes of the Phoenix project is to remove as many of the hacks and cruft
+from Classic as possible, so wxversion is gone.
+
+These days there are **much** better ways to handle the things that the old
+multi-versioning and version selection features provided.  Since wxPython
+Phoenix is built by default to be self-contained and relocatable on all of the
+platforms, then unlike Classic there is no problem with installing it in
+Python virtual environments.  So if you need to have multiple versions of
+wxPython on your system, then create a virtual environment for each project
+and install the version that each needs in their environments.  If you have
+code that requires a specific version or range of versions of wxPython then
+define the dependency in your ``setup.py`` file or a ``requirements.txt`` file
+and let ``pip`` take care of the details.  I'm confident that you'll be much
+happier with this approach.
 
 
 

@@ -1,4 +1,4 @@
-import imp_unittest, unittest
+import unittest
 import wtc
 import wx
 import wx.lib.langlistctrl as lc

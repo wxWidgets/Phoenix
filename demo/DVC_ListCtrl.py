@@ -7,8 +7,8 @@ import wx.dataview as dv
 
 # Reuse the music data in the ListCtrl sample
 import ListCtrl
-musicdata = ListCtrl.musicdata.items()
-musicdata.sort()
+musicdata = sorted(ListCtrl.musicdata.items())
+#musicdata.sort()
 musicdata = [[str(k)] + list(v) for k,v in musicdata]
 
 

@@ -50,7 +50,7 @@ A Gauge is a horizontal or vertical bar which shows a quantity in a graphical
 fashion. It is often used to indicate progress through lengthy tasks, such as
 file copying or data analysis.
 
-When the Gauge is initialized, it's "complete" value is usually set; at any rate,
+When the Gauge is initialized, its "complete" value is usually set; at any rate,
 before using the Gauge, the maximum value of the control must be set. As the task
 progresses, the Gauge is updated by the program via the <code>SetValue</code> method.
 

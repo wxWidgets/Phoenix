@@ -121,5 +121,5 @@ See ./bitmaps/ReadMe.txt for further details
 
 """
 
-from viewer import pdfViewer
-from buttonpanel import pdfButtonPanel
+from .viewer import pdfViewer
+from .buttonpanel import pdfButtonPanel

@@ -1,4 +1,4 @@
-import imp_unittest, unittest
+import unittest
 import wtc
 import wx
 import sys, os
@@ -18,14 +18,16 @@ class process_Tests(wtc.WidgetTestCase):
 
 
     def test_process2(self):        
-        flag = False
+        self.flag = False
         def onEndProcess(evt):
-            flag = True
+            self.flag = True
             
         if 'wxMac' not in wx.PlatformInfo:
             p = wx.Process(self.frame)
             self.frame.Bind(wx.EVT_END_PROCESS, onEndProcess)            
             wx.Execute('%s %s' % (sys.executable, testscript), callback=p)
+            self.waitFor(1000)
+            self.assertTrue(self.flag)
             
     # TODO: When the stream classes are wrapped add tests for writing to and
     # reading from the process

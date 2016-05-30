@@ -56,6 +56,8 @@ import re
 import shutil
 from threading import Thread
 
+from distutils.version import LooseVersion
+
 import wx
 import wx.adv
 import wx.lib.agw.aui as aui
@@ -89,279 +91,8 @@ DEFAULT_PERSPECTIVE = "Default Perspective"
 
 #---------------------------------------------------------------------------
 
-_demoPngs = ["overview", "recent", "frame", "dialog", "moredialog", "core",
-             "book", "customcontrol", "morecontrols", "layout", "process",
-             "clipboard", "images", "miscellaneous"]
-
-_treeList = [
-    # new stuff
-    ('Recent Additions/Updates', [
-        'BannerWindow',
-        'RichToolTip',
-        'NotificationMessage',
-        'PropertyGrid',
-        'SystemSettings',
-        'GridLabelRenderer',
-        'InfoBar',
-        'WrapSizer',
-        'UIActionSimulator',
-        'GraphicsGradient',
-        'PDFViewer',
-        'ItemsPicker',
-        'CommandLinkButton',
-        'DVC_DataViewModel',
-        'DVC_IndexListModel',
-        'DVC_ListCtrl',
-        'DVC_TreeCtrl',
-        'DVC_CustomRenderer',
-        'PenAndBrushStyles',
-        'HTML2_WebView',
-        ]),
-
-    # managed windows == things with a (optional) caption you can close
-    ('Frames and Dialogs', [
-        'AUI_DockingWindowMgr',
-        'AUI_MDI',
-        'Dialog',
-        'Frame',
-        'MDIWindows',
-        'MiniFrame',
-        'Wizard',
-        ]),
-
-    # the common dialogs
-    ('Common Dialogs', [
-        'AboutBox',
-        'ColourDialog',
-        'DirDialog',
-        'FileDialog',
-        'FindReplaceDialog',
-        'FontDialog',
-        'MessageDialog',
-        'MultiChoiceDialog',
-        'PageSetupDialog',
-        'PrintDialog',
-        'ProgressDialog',
-        'SingleChoiceDialog',
-        'TextEntryDialog',
-        ]),
-
-    # dialogs from libraries
-    ('More Dialogs', [
-        'ImageBrowser',
-        'ScrolledMessageDialog',
-        ]),
-
-    # core controls
-    ('Core Windows/Controls', [
-        'BitmapButton',
-        'Button',
-        'CheckBox',
-        'CheckListBox',
-        'Choice',
-        'ComboBox',
-        'CommandLinkButton',
-        'DVC_CustomRenderer',
-        'DVC_DataViewModel',
-        'DVC_IndexListModel',
-        'DVC_ListCtrl',
-        'DVC_TreeCtrl',
-        'Gauge',
-        'Grid',
-        'Grid_MegaExample',
-        'GridLabelRenderer',
-        'ListBox',
-        'ListCtrl',
-        'ListCtrl_virtual',
-        'ListCtrl_edit',
-        'Menu',
-        'PopupMenu',
-        'PopupWindow',
-        'RadioBox',
-        'RadioButton',
-        'SashWindow',
-        'ScrolledWindow',
-        'SearchCtrl',
-        'Slider',
-        'SpinButton',
-        'SpinCtrl',
-        'SpinCtrlDouble',
-        'SplitterWindow',
-        'StaticBitmap',
-        'StaticBox',
-        'StaticText',
-        'StatusBar',
-        'StockButtons',
-        'TextCtrl',
-        'ToggleButton',
-        'ToolBar',
-        'TreeCtrl',
-        'Validator',
-        ]),
-
-    ('"Book" Controls', [
-        'AUI_Notebook',
-        'Choicebook',
-        'FlatNotebook',
-        'Listbook',
-        'Notebook',
-        'Toolbook',
-        'Treebook',
-        ]),
-
-    ('Custom Controls', [
-        'AnalogClock',
-        'ColourSelect',
-        'ComboTreeBox',
-        'Editor',
-        'GenericButtons',
-        'GenericDirCtrl',
-        'ItemsPicker',
-        'LEDNumberCtrl',
-        'MultiSash',
-        'PlateButton',
-        'PopupControl',
-        'PyColourChooser',
-        'TreeListCtrl',
-    ]),
-
-    # controls coming from other libraries
-    ('More Windows/Controls', [
-        'ActiveX_FlashWindow',
-        'ActiveX_IEHtmlWindow',
-        'ActiveX_PDFWindow',
-        'BitmapComboBox',
-        'Calendar',
-        'CalendarCtrl',
-        'CheckListCtrlMixin',
-        'CollapsiblePane',
-        'ComboCtrl',
-        'ContextHelp',
-        'DatePickerCtrl',
-        'DynamicSashWindow',
-        'EditableListBox',
-        'ExpandoTextCtrl',
-        'FancyText',
-        'FileBrowseButton',
-        'FloatBar',
-        'FloatCanvas',
-        'HtmlWindow',
-        'HTML2_WebView',
-        'InfoBar',
-        'IntCtrl',
-        'MVCTree',
-        'MaskedEditControls',
-        'MaskedNumCtrl',
-        'MediaCtrl',
-        'MultiSplitterWindow',
-        'OwnerDrawnComboBox',
-        'Pickers',
-        'PropertyGrid',
-        'PyCrust',
-        'PyPlot',
-        'PyShell',
-        'ResizeWidget',
-        'RichTextCtrl',
-        'ScrolledPanel',
-        'SplitTree',
-        'StyledTextCtrl_1',
-        'StyledTextCtrl_2',
-        'TablePrint',
-        'Throbber',
-        'Ticker',
-        'TimeCtrl',
-        'TreeMixin',
-        'VListBox',
-        ]),
-
-    # How to lay out the controls in a frame/dialog
-    ('Window Layout', [
-        'GridBagSizer',
-        'LayoutAnchors',
-        'LayoutConstraints',
-        'Layoutf',
-        'RowColSizer',
-        'ScrolledPanel',
-        'SizedControls',
-        'Sizers',
-        'WrapSizer',
-        'XmlResource',
-        'XmlResourceHandler',
-        'XmlResourceSubclass',
-        ]),
-
-    # ditto
-    ('Process and Events', [
-        'DelayedResult',
-        'EventManager',
-        'KeyEvents',
-        'Process',
-        'PythonEvents',
-        'Threads',
-        'Timer',
-        ##'infoframe',    # needs better explanation and some fixing
-        ]),
-
-    # Clipboard and DnD
-    ('Clipboard and DnD', [
-        'CustomDragAndDrop',
-        'DragAndDrop',
-        'URLDragAndDrop',
-        ]),
-
-    # Images
-    ('Using Images', [
-        'AdjustChannels',
-        'AlphaDrawing',
-        'AnimateCtrl',
-        'ArtProvider',
-        'BitmapFromBuffer',
-        'Cursor',
-        'DragImage',
-        'Image',
-        'ImageAlpha',
-        'ImageFromStream',
-        'Img2PyArtProvider',
-        'Mask',
-        'RawBitmapAccess',
-        'Throbber',
-        ]),
-
-    # Other stuff
-    ('Miscellaneous', [
-        'AlphaDrawing',
-        'Cairo',
-        'Cairo_Snippets',
-        'ColourDB',
-        ##'DialogUnits',   # needs more explanations
-        'DragScroller',
-        'DrawXXXList',
-        'FileHistory',
-        'FontEnumerator',
-        'GraphicsContext',
-        'GraphicsGradient',
-        'GLCanvas',
-        'I18N',
-        'Joystick',
-        'MimeTypesManager',
-        'MouseGestures',
-        'OGL',
-        'PDFViewer',
-        'PenAndBrushStyles',
-        'PrintFramework',
-        'PseudoDC',
-        'RendererNative',
-        'ShapedWindow',
-        'Sound',
-        'StandardPaths',
-        'SystemSettings',
-        'UIActionSimulator',
-        'Unicode',
-        ]),
-
-    ('Check out the samples dir too', [] ),
-
-]
+# get images and demo list
+from demodata import _demoPngs, _treeList
 
 #---------------------------------------------------------------------------
 
@@ -1733,15 +1464,15 @@ class wxPythonDemo(wx.Frame):
 
         # Create a Notebook
         self.nb = wx.Notebook(pnl, -1, style=wx.CLIP_CHILDREN)
-        imgList = wx.ImageList(16, 16)
-        for png in ["overview", "code", "demo"]:
-            bmp = images.catalog[png].GetBitmap()
-            imgList.Add(bmp)
-        for indx in range(9):
-            bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
-            imgList.Add(bmp)
-
-        self.nb.AssignImageList(imgList)
+        if 'wxMac' not in wx.PlatformInfo:
+            imgList = wx.ImageList(16, 16)
+            for png in ["overview", "code", "demo"]:
+                bmp = images.catalog[png].GetBitmap()
+                imgList.Add(bmp)
+            for indx in range(9):
+                bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
+                imgList.Add(bmp)    
+            self.nb.AssignImageList(imgList)
 
         self.BuildMenuBar()
 
@@ -1795,7 +1526,7 @@ class wxPythonDemo(wx.Frame):
             panel.Bind(wx.EVT_SIZE, OnOvrSize)
             panel.Bind(wx.EVT_ERASE_BACKGROUND, EmptyHandler)
 
-        if "gtk2" in wx.PlatformInfo:
+        if "gtk2" in wx.PlatformInfo or "gtk3" in wx.PlatformInfo:
             self.ovr.SetStandardFonts()
         self.SetOverview(self.overviewText, mainOverview)
 
@@ -2879,7 +2610,7 @@ class MySplashScreen(SplashScreen):
 
 from wx.lib.mixins.treemixin import ExpansionState
 if USE_CUSTOMTREECTRL:
-    import wx.lib.customtreectrl as CT
+    import wx.lib.agw.customtreectrl as CT
     TreeBaseClass = CT.CustomTreeCtrl
 else:
     TreeBaseClass = wx.TreeCtrl
@@ -2925,7 +2656,7 @@ class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
     def OnInit(self):
 
         # Check runtime version
-        if version.VERSION_STRING != wx.VERSION_STRING:
+        if LooseVersion(version.VERSION_STRING) != LooseVersion(wx.VERSION_STRING):
             wx.MessageBox(caption="Warning",
                           message="You're using version %s of wxPython, but this copy of the demo was written for version %s.\n"
                           "There may be some version incompatibilities..."

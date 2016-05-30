@@ -25,5 +25,5 @@
                     
         # Later on...
         text = wx.TextCtrl(parent, wx.ID_ANY, 'My Text')
-        text.AutoComplete(MyTextCompleter)
+        text.AutoComplete(MyTextCompleter())
 

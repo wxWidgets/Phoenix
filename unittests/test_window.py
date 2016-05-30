@@ -1,4 +1,4 @@
-import imp_unittest, unittest
+import unittest
 import wtc
 import wx
 import wx.lib.six as six
@@ -8,9 +8,8 @@ import wx.lib.six as six
 class WindowTests(wtc.WidgetTestCase):
     
     def test_SimpleWindowCtor(self):
-        w = wx.Window(self.frame, -1, (10,10), (50,50), 
-                      wx.BORDER_SIMPLE|wx.VSCROLL)
-        self.assertTrue(w.GetWindowStyle() == wx.BORDER_SIMPLE|wx.VSCROLL)
+        w = wx.Window(self.frame, -1, (10,10), (50,50), wx.BORDER_NONE)
+        self.assertEqual(w.GetWindowStyleFlag(), wx.BORDER_NONE)
         self.assertTrue(w.Parent is self.frame)
 
     def test_windowHandle(self):
@@ -91,6 +90,16 @@ class WindowTests(wtc.WidgetTestCase):
     
         self.assertEqual(wx.FindWindowById(self.frame.GetId()),  self.frame)
         
+    def test_windowCoordConvFunctions(self):
+        w = wx.Window(self.frame, -1, (10,10), (50,50))
+        a = w.ClientToScreen(0, 0)
+        b = w.ClientToScreen((0, 0))
+        c = w.ScreenToClient(0, 0)
+        d = w.ScreenToClient((0, 0))
+        self.assertEqual(a[0], b.x)
+        self.assertEqual(a[1], b.y)
+        self.assertEqual(c[0], d.x)
+        self.assertEqual(c[1], d.y)
         
 #---------------------------------------------------------------------------
 

@@ -545,8 +545,9 @@ class ThumbnailCtrlDemo(wx.Frame):
     def OnPopupTen(self, event):
 
         items = self.TC.GetItemCount()
+        self.log.write("Items", items, type(items))
 
-        for ii in xrange(items):
+        for ii in range(items):
             self.TC.SetSelection(ii)
 
         self.log.write("OnGlobalPopupMenu: all thumbs selected\n")

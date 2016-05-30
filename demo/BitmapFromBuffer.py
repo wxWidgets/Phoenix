@@ -34,8 +34,8 @@ class TestPanel(wx.Panel):
         bpp = 3  # bytes per pixel
         bytes = array.array('B', [0] * width*height*bpp)
 
-        for y in xrange(height):
-            for x in xrange(width):
+        for y in range(height):
+            for x in range(width):
                 offset = y*width*bpp + x*bpp
                 r,g,b = self.GetRGB(x, y, bpp)
                 bytes[offset + 0] = r
@@ -49,8 +49,8 @@ class TestPanel(wx.Panel):
         bpp = 4  # bytes per pixel
         bytes = array.array('B', [0] * width*height*bpp)
 
-        for y in xrange(height):
-            for x in xrange(width):
+        for y in range(height):
+            for x in range(width):
                 offset = y*width*bpp + x*bpp
                 r,g,b,a = self.GetRGB(x, y, bpp)
                 bytes[offset + 0] = r
@@ -66,8 +66,8 @@ class TestPanel(wx.Panel):
         bpp = 3  # bytes per pixel
         bytes = array.array('B', [0] * width*height*bpp)
 
-        for y in xrange(height):
-            for x in xrange(width):
+        for y in range(height):
+            for x in range(width):
                 offset = y*width*bpp + x*bpp
                 r,g,b = self.GetRGB(x, y, bpp)
                 bytes[offset + 0] = r

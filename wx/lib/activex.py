@@ -29,6 +29,7 @@ this:
 """
 
 import wx
+import wx.msw
 
 import ctypes as ct
 import ctypes.wintypes as wt
@@ -57,13 +58,13 @@ WM_DESTROY      = 2
 
 #------------------------------------------------------------------------------
 
-class ActiveXCtrl(wx.PyAxBaseWindow):
+class ActiveXCtrl(wx.msw.PyAxBaseWindow):
     """
     A wx.Window for hosting ActiveX controls.  The COM interface of
     the ActiveX control is accessible through the ctrl property of
     this class, and this class is also set as the event sink for COM
     events originating from the ActiveX control.  In other words, to
-    catch the COM events you mearly have to derive from this class and
+    catch the COM events you merely have to derive from this class and
     provide a method with the correct name.  See the comtypes package
     documentation for more details.
     """
@@ -90,7 +91,7 @@ class ActiveXCtrl(wx.PyAxBaseWindow):
         # create the control
         atl.AtlAxWinInit()
         hInstance = kernel32.GetModuleHandleA(None)
-        hwnd = user32.CreateWindowExA(0, "AtlAxWin", axID,
+        hwnd = user32.CreateWindowExA(0, b"AtlAxWin", axID.encode("ASCII"),
                                       WS_CHILD | WS_VISIBLE 
                                       | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
                                       x,y, w,h, parent.GetHandle(), None, 
@@ -111,11 +112,12 @@ class ActiveXCtrl(wx.PyAxBaseWindow):
         # Use this object as the event sink for the ActiveX events
         self._evt_connections = []
         self.AddEventSink(self)
+
+        wx.msw.PyAxBaseWindow.__init__(self, parent, wxid, pos, size, style, name)
         
         # Turn the window handle into a wx.Window and set this object to be that window
-        win = wx.PyAxBaseWindow_FromHWND(parent, hwnd)
-        self.PostCreate(win)
-        
+        self.AssociateHandle(hwnd)
+
         # Set some wx.Window properties
         if wxid == wx.ID_ANY: 
             wxid = wx.Window.NewControlId()
@@ -126,14 +128,16 @@ class ActiveXCtrl(wx.PyAxBaseWindow):
         self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyWindow)
-        
+
+
     def AddEventSink(self, sink, interface=None):
         """
         Add a new target to search for method names that match the COM
         Event names.
         """
         self._evt_connections.append(cc.GetEvents(self._ax, sink, interface))
-        
+
+
     def GetCtrl(self):
         """Easy access to the COM interface for the ActiveX Control"""
         return self._ax
@@ -147,11 +151,11 @@ class ActiveXCtrl(wx.PyAxBaseWindow):
         # accelerators can be dealt with the way that the AXControl
         # wants them to be done. MSWTranslateMessage is called before
         # wxWidgets handles and eats the navigation keys itself.
-        res = self.ipao.TranslateAccelerator(msg)   
+        res = self.ipao.TranslateAccelerator(msg)
         if res == hr.S_OK:
             return True
         else:
-            return wx.PyAxBaseWindow.MSWTranslateMessage(self, msg)
+            return super(ActiveXCtrl, self).MSWTranslateMessage(msg)
 
     
     # TBD: Are the focus handlers needed?

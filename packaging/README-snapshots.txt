@@ -58,6 +58,7 @@ software wheels like what is available here, with a command like
 this:
 
     pip install -U --pre \
+        --trusted-host wxpython.org \
         -f http://wxpython.org/Phoenix/snapshot-builds/ \
         wxPython_Phoenix
 
@@ -71,6 +72,7 @@ To install a specific binary from this site you can append the version
 number to the command, like this:
 
     pip install -U --pre \
+        --trusted-host wxpython.org \
         -f http://wxpython.org/Phoenix/snapshot-builds/ \
         wxPython_Phoenix==3.0.3.dev1641+76cf834
 

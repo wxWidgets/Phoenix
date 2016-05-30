@@ -59,6 +59,7 @@ ChoicebookEvent                                              :class:`BookCtrlEve
 Clipboard_Get                                                :meth:`Clipboard.Get`
 ClipboardEvent                                               :class:`ClipboardTextEvent`
 ClipboardLocker                                              ``MISSING``
+Colour.SetFromString                                         :meth:`Colour.Set` 
 ColourRGB                                                    :class:`Colour`
 ComboBox_GetClassDefaultAttributes                           :meth:`ComboBox.GetClassDefaultAttributes <Window.GetClassDefaultAttributes>`
 CommandLinkButton                                            :class:`adv.CommandLinkButton`
@@ -741,6 +742,8 @@ Modules which have moved
 `Classic` Name                                               `Phoenix` Name
 ===========================================================  ===========================================================
 wx.calendar.CalendarCtrl                                     :mod:`adv.CalendarCtrl`
+wx.animate.Animation                                         :mod:`adv.Animation`
+wx.animate.AnimationCtrl                                     :mod:`adv.AnimationCtrl`
 wx.combo.OwnerDrawnComboBox                                  :mod:`adv.OwnerDrawnComboBox`
 wx.gizmos.EditableListBox                                    :mod:`adv.EditableListBox`
 wx.gizmos.TreeListCtrl                                       :mod:`dataview.TreeListCtrl`

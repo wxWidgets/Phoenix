@@ -5,18 +5,12 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2016 by Total Control Software
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
 import sys, os
 import glob
-
-try:
-    import setuptools
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
 
 from setuptools                     import setup, Extension, find_packages
 from distutils.command.build        import build as orig_build
@@ -36,7 +30,7 @@ from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 #----------------------------------------------------------------------
 
 NAME             = "wxPython_Phoenix"
-DESCRIPTION      = "Cross platform GUI toolkit for Python"
+DESCRIPTION      = "Cross platform GUI toolkit for Python, Phoenix verison"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
 URL              = "http://wxPython.org/"
@@ -47,7 +41,7 @@ PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,awesome"
 
 LONG_DESCRIPTION = """\
-wxPython_Phoenix is a is a new implementation of wxPython focused on
+wxPython_Phoenix is a new implementation of wxPython focused on
 improving speed, maintainability and extensibility. Just like "Classic"
 wxPython it wraps the wxWidgets C++ toolkit and provides access to the user
 interface portions of the wx API, enabling Python applications to have a GUI
@@ -56,7 +50,7 @@ very little (if any) platform specific code.
 """
 
 CLASSIFIERS      = """\
-Development Status :: 6 - Mature
+Development Status :: 3 - Alpha
 Environment :: MacOS X :: Cocoa
 Environment :: Win32 (MS Windows)
 Environment :: X11 Applications :: GTK
@@ -67,7 +61,10 @@ Operating System :: Microsoft :: Windows :: Windows XP
 Operating System :: Microsoft :: Windows :: Windows Vista
 Operating System :: Microsoft :: Windows :: Windows 7
 Operating System :: POSIX
-Programming Language :: Python
+Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3.3
+Programming Language :: Python :: 3.4
+Programming Language :: Python :: 3.5
 Topic :: Software Development :: User Interfaces
 """
 
@@ -80,7 +77,7 @@ isDarwin = sys.platform == "darwin"
 
 class wx_build(orig_build):
     """
-    Delgate to build.py for doing the actual build, (including wxWidgets)
+    Delegate to build.py for doing the actual build, (including wxWidgets)
     instead of letting distutils do it all.
     """
     user_options = [
@@ -124,7 +121,7 @@ def _cleanup_symlinks(cmd):
     # left in.
     #        
     # TODO: can eggs have post-install scripts that would allow us to 
-    # restore the links?
+    # restore the links? No.
     #
     build_lib = cmd.get_finalized_command('build').build_lib
     build_lib = opj(build_lib, 'wx')
@@ -186,7 +183,7 @@ if haveWheel:
     class wx_bdist_wheel(orig_bdist_wheel):
         def finalize_options(self):
             # Do a bit of monkey-patching to let bdist_wheel know that there
-            # really are extension modules in this build, eventhough they are
+            # really are extension modules in this build, even though they are
             # not built here.
             def _has_ext_modules(self):
                 return True

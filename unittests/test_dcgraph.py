@@ -1,4 +1,4 @@
-import imp_unittest, unittest
+import unittest
 import wtc
 import wx
 import sys
@@ -17,7 +17,8 @@ class dcgraph_tests(wtc.WidgetTestCase):
         dc = wx.MemoryDC(bmp)
         gdc = wx.GCDC(dc)
         
-        
+
+    @unittest.skipIf('wxGTK' in wx.PlatformInfo, 'PrinterDC not supported on wxGTK')
     def test_GCDC3(self):
         dc = wx.PrinterDC(wx.PrintData())
         gdc = wx.GCDC(dc)

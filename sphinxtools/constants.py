@@ -81,6 +81,8 @@ MODULENAME_REPLACE = {'_core'    : '',
                       '_grid'    : 'grid.',
                       '_richtext': 'richtext.',
                       '_webkit'  : 'webkit.',
+                      '_media'   : 'media.',
+                      '_msw'     : 'msw',
                       }
 
 NO_MODULE = {

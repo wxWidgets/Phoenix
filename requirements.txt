@@ -1,0 +1,6 @@
+pip
+setuptools
+six 
+wheel 
+Sphinx 
+docutils

@@ -1,4 +1,4 @@
 [submodule "ext/wxWidgets"]
 	path = ext/wxWidgets
 	url = https://github.com/wxWidgets/wxWidgets.git
-	branch = WX_3_0_BRANCH
+	branch = wxPy-3.0-branch
