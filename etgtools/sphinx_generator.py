@@ -1529,6 +1529,7 @@ class XRef(Node):
            :class:`ComputerOutput`) the `with_tail` parameter should be set to ``False`` in order
            to avoid wrong ReST output.
         """
+        imm = ItemModuleMap()
 
         element = self.element
         text = element.text
@@ -1539,7 +1540,7 @@ class XRef(Node):
         hascomma = '::' in text
 
         original = text        
-        text = removeWxPrefix(text)
+        text = removeWxPrefix(text)  # ***
         text = text.replace("::", ".")
         
         if "(" in text:
@@ -1561,6 +1562,7 @@ class XRef(Node):
                     ref = link.index('_1')
 
                 ref = underscore2Capitals(link[6:ref])
+                ref = imm.get_fullname(ref)
                 text = ':ref:`%s <%s>`'%(stripped, ref)
 
             elif 'funcmacro' in link or 'samples' in link or 'debugging' in text.lower() or \
@@ -1581,7 +1583,7 @@ class XRef(Node):
                 elif 'programming with wxboxsizer' in backlink:
                     stripped = 'Programming with BoxSizer'
                     backlink = 'programming with boxsizer'
-                    
+
                 text = ':ref:`%s <%s>`'%(stripped, backlink)
         
         elif (text.upper() == text and len(stripped) > 4):
@@ -1614,7 +1616,6 @@ class XRef(Node):
                     if '(' in stripped:
                         stripped = stripped[0:stripped.index('(')].strip()
 
-                    imm = ItemModuleMap()
                     if stripped in imm:
                         text = ':ref:`%s`' % (imm.get_fullname(stripped))
                     else:                    
