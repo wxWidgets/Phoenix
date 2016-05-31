@@ -2730,7 +2730,7 @@ class XMLDocString(object):
                 continue
 
             docstrings = v.briefDoc
-            name = convertToPython(removeWxPrefix(v.name))
+            name = convertToPython(removeWxPrefix(v.name))  # ***
             stream.write('%-80s'%name)
             
             if not isinstance(docstrings, string_base):

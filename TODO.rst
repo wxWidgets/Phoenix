@@ -82,27 +82,10 @@ check if the the feature is available in wxWidgets or if the stubs should be
 compiled.)
 
 
-Reorganize Sphinx output
-------------------------
+Sphinx tweaks
+-------------
 
-To make it easier for 3rd party tools to find the docs for specific
-classes and methods it would be good to change how the file names for
-the class pages are generated.  Currently it looks like just the
-leading "wx." is missing from the file names.  So that means that
-classes in "core" do not have any package prefix in the filename at
-all.  For example, .../html/Bitmap.html instead of
-.../html/wx.Bitmap.html.  The same holds true for classes in the other
-extension modules in wx, and also wx.lib.
-
-    .../html/adv.AnimationCtrl.html
-    .../html/lib.buttons.GenButton.html	
-    etc.
-
-The intra-document anchor links should also have the leading "wx."
-added to them for consistency.
-
-The above docs changes are mostly done, it's been a bit of a 3 steps forward,
-2 steps back kind of journey. Here are some dangling strings that still need
+The big changes are done, but here are some dangling strings that still need
 to be untangled:
 
   * The `chopDescription()` function is not very smart. See if it can be made a
