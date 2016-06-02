@@ -4,6 +4,7 @@ import random
 import time
 
 import wx
+import wx.lib.six as six
 
 #----------------------------------------------------------------------
 
@@ -106,7 +107,7 @@ def makeRandomPens(num, cache):
         c = random.choice(colours)
         t = random.randint(1, 4)
 
-        if not cache.has_key( (c, t) ):
+        if not (c, t) in cache.keys():
             cache[(c, t)] = wx.Pen(c, t)
 
         pens.append( cache[(c, t)] )
@@ -120,7 +121,7 @@ def makeRandomBrushes(num, cache):
     for i in range(num):
         c = random.choice(colours)
 
-        if not cache.has_key(c):
+        if not c in cache.keys():
             cache[c] = wx.Brush(c)
 
         brushes.append( cache[c] )
