@@ -77,15 +77,15 @@ An example::
         <param name="id" value="ID_OK">
     </wxp>
 
-Both the begining and ending WXP tags are required.
+Both the beginning and ending WXP tags are required.
 
 In the future support will be added for another tag that can be
-embedded between the two begining and ending WXP tags and will
+embedded between the two beginning and ending WXP tags and will
 facilitate calling methods of the widget to help initialize it.
 Additionally, support may be added to fetch the module from a web
 server as is done with java applets.
-
 '''
+
 #----------------------------------------------------------------------
 
 import  types
