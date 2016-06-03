@@ -87,6 +87,12 @@ def run():
     c.piBases = ['wx.Object']
     c.find('GetEncoding').ignore()
     c.find('SetEncoding').ignore()
+
+    c.find('AppendToProlog.node').transfer = True
+    c.find('DetachDocumentNode').transferBack = True
+    c.find('DetachRoot').transferBack = True
+    c.find('SetDocumentNode.node').transfer = True
+    c.find('SetRoot.node').transfer = True
     
     
     #-----------------------------------------------------------------
