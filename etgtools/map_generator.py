@@ -32,47 +32,59 @@ class ItemMapGenerator(generators.DocsGeneratorBase):
         assert isinstance(module, extractors.ModuleDef)
         realModuleName = MODULENAME_REPLACE[module.module]
 
+        dispatchMap = {
+            extractors.ClassDef : self.generateClass,
+            extractors.EnumDef: self.generateEnum,
+        }
+
         imm = ItemModuleMap()
         for item in module.items:
-            name = self._getName(item)
-            if not name or name.startswith('@'):
-                continue
-
-            if isinstance(item, extractors.ClassDef):
-                # are there nested classes?
-                for inner in item.innerclasses:
-                    self.generateInnerClass(inner, imm,
-                                            '{}{}.'.format(realModuleName, name))
-
-                # Check for nested enums too
-                for classItem in item.items:
-                    if isinstance(classItem, extractors.EnumDef):
-                        enumName = self._getName(classItem)
-                        if not enumName.startswith('@'):
-                            imm[enumName] = '{}{}.'.format(realModuleName, name)
-
-            # save the module that the name belongs to
-            imm[name] = realModuleName
-
-            # We don't need it currently, but this is how to also store the
-            # reverse relationships in the same mapping.
-            #mod_list = imm.get(realModuleName)
-            #if mod_list is None:
-            #    mod_list = imm[realModuleName] = list()
-            #if name not in mod_list:
-            #    mod_list.append(name)
-            #    mod_list.sort()
+            func = dispatchMap.get(item.__class__, self.generateDefault)
+            func(item, imm, realModuleName)
 
         imm.flush()
 
 
-    def generateInnerClass(self, klass, imm, scopeName):
-        # Recursively handle any inner classes that may be defined, adding the
-        # enclosing scope as we go to the module name
-        name = self._getName(klass)
-        imm[name] = scopeName
-        for inner in klass.innerclasses:
-            self.generateInnerClass(inner, imm, '{}{}.'.format(scopeName, name))
+    def generateClass(self, item, imm, scope):
+        # Map names for classes, nested classes and nested enums
+        name = self._getName(item)
+        if not name or name.startswith('@'):
+            return
+
+        imm[name] = scope
+
+        # are there nested classes?
+        for inner in item.innerclasses:
+            self.generateClass(inner, imm, '{}{}.'.format(scope, name))
+
+        # Check for nested enums too
+        for classItem in item.items:
+            if isinstance(classItem, extractors.EnumDef):
+                self.generateEnum(
+                    classItem, imm, '{}{}.'.format(scope, name), False)
+
+
+    def generateEnum(self, item, imm, scope, topLevel=True):
+        # map names of enum types and enum elements
+        name = self._getName(item)
+        if name and not name.startswith('@'):
+            imm[name] = scope
+
+        # TODO: Investigate if there are cases where nested enum elements
+        # should be tracked too.
+        if topLevel:
+            # Also add an entry for the elements of the enum, as they are also
+            # names accessible from the top-level namespace.
+            for enum in item:
+                self.generateDefault(enum, imm, scope)
+
+
+    def generateDefault(self, item, imm, scope):
+        # this handles all types that don't need special attention
+        name = self._getName(item)
+        if not name or name.startswith('@'):
+            return
+        imm[name] = scope
 
 
     def _getName(self, item):

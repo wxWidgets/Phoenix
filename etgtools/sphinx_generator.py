@@ -3191,8 +3191,6 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             elif isinstance(item, properties):
                 simple_docs = self.createPropertyLinks(fullname, item)
                 klass.property_list.append(('%s.%s'%(fullname, item.name), simple_docs))
-            #elif isinstance(item, extractors.EnumDef) and '@' not in item.name:
-            #    klass.enum_list.append(imm.get_fullname(item.name))
 
         for item in ctors: 
             if item.isCtor:
