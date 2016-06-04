@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         GUI.py
 # Purpose:      Contains GUI related utilities for FloatCanvas

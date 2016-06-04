@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         FCObjects.py
 # Purpose:      Contains all the drawing objects FloatCanvas supports
