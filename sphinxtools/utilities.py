@@ -26,7 +26,7 @@ else:
     string_base = str
 
 # Phoenix-specific imports
-
+from etgtools.item_module_map import ItemModuleMap
 from .templates import TEMPLATE_CONTRIB
 from .constants import IGNORE, PUNCTUATION, MODULENAME_REPLACE
 from .constants import CPP_ITEMS, VERSION, VALUE_MAP
@@ -342,18 +342,19 @@ def convertToPython(text):
 
             if "::" in word and not word.endswith("::"):
                 # Bloody SetCursorEvent...
-                word = word.replace("::wx", ".")
+                word = word.replace("::wx", ".") # ***
                 word = word.replace("::", ".")
-                word = "`%s`"%word
+                word = "`%s`" % word
                 newline.append(word)
                 continue
                 
-            if newword.upper() == newword and newword not in PUNCTUATION and \
-               newword not in IGNORE and len(newword.strip()) > 1 and \
-               not isNumeric(newword) and newword not in ['DC', 'GCDC']:
+            if (newword.upper() == newword and newword not in PUNCTUATION and
+                newword not in IGNORE and len(newword.strip()) > 1 and
+                not isNumeric(newword) and newword not in ['DC', 'GCDC']):
 
                 if '``' not in newword and '()' not in word and '**' not in word:
-                    word = word.replace(newword, "``%s``"%newword)
+                    word = word.replace(newword, "``%s``" %
+                                        ItemModuleMap().get_fullname(newword))
 
             word = word.replace('->', '.')
             newline.append(word)

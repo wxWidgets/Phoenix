@@ -1540,7 +1540,7 @@ class XRef(Node):
         hascomma = '::' in text
 
         original = text        
-        text = removeWxPrefix(text)  # ***
+        text = removeWxPrefix(text)
         text = text.replace("::", ".")
         
         if "(" in text:
@@ -2400,7 +2400,7 @@ class XMLDocString(object):
         
         if bases:
             stream.write('(')
-            bases = [removeWxPrefix(b) for b in bases]
+            bases = [removeWxPrefix(b) for b in bases]  # ***
             stream.write(', '.join(bases))
             stream.write(')')
 
@@ -2653,8 +2653,7 @@ class XMLDocString(object):
         
         function = self.xml_item
         name = function.pyName or function.name
-        imm = ItemModuleMap()
-        fullname = imm.get_fullname(name)
+        fullname = ItemModuleMap().get_fullname(name)
 
         if self.is_overload:
             definition = '**%s** ' % name
@@ -2730,8 +2729,10 @@ class XMLDocString(object):
                 continue
 
             docstrings = v.briefDoc
-            name = convertToPython(removeWxPrefix(v.name))  # ***
-            stream.write('%-80s'%name)
+            name = v.pyName if v.pyName else removeWxPrefix(v.name)
+            name = ItemModuleMap().get_fullname(name)
+            name = convertToPython(name)  # ***
+            stream.write('%-80s' % name)
             
             if not isinstance(docstrings, string_base):
                 rest_class = self.RecurseXML(docstrings, self.root)
@@ -2743,14 +2744,6 @@ class XMLDocString(object):
         stream.write('='*80 + ' ' + '='*80 + '\n\n|\n\n')
 
         text_file = os.path.join(SPHINXROOT, self.output_file)
-
-        #if os.path.isfile(text_file):
-        #    message = '\nWARNING: Duplicated description for `%s` enumeration.\n\n' \
-        #              'The duplicated instance will still be written to its output ReST file but\n' \
-        #              'Sphinx/Docutils will issue a warning when building the HTML docs.\n\n'
-        #
-        #    duplicated = self.output_file.replace('.enumeration.txt', '')
-        #    print message % duplicated
 
         if count > 0 and write:
             writeSphinxOutput(stream, self.output_file)
