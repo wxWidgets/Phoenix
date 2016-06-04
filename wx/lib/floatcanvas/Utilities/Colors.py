@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         Colors.py
 # Purpose:      Contains color lists used in FloatCanvas
@@ -136,4 +135,3 @@ if __name__ == "__main__":
     A = wx.App(False)
     F = TestFrame(None)
     A.MainLoop()
-    
