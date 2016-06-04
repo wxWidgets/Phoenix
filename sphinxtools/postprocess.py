@@ -142,12 +142,9 @@ def buildEnumsAndMethods(sphinxDir):
         text = findInherited(input, class_summary, enum_base, text)
         text, unreferenced_classes = removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, text)
         
-        text = text.replace('wx``', '``')
-        text = text.replace('wx.``', '``')
         text = text.replace('non-NULL', 'not ``None``')
         text = text.replace(',,', ',').replace(', ,', ',')
-        text = text.replace('|wx', '|')
-        
+
         # Replacements for ScrolledWindow and ScrolledCanvas...
         text = text.replace('<wxWindow>', 'Window')
         text = text.replace('<wxPanel>', 'Panel')

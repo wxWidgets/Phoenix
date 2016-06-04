@@ -2730,8 +2730,7 @@ class XMLDocString(object):
 
             docstrings = v.briefDoc
             name = v.pyName if v.pyName else removeWxPrefix(v.name)
-            name = ItemModuleMap().get_fullname(name)
-            name = convertToPython(name)  # ***
+            name = convertToPython(name)
             stream.write('%-80s' % name)
             
             if not isinstance(docstrings, string_base):
