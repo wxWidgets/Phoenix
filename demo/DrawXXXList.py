@@ -4,7 +4,6 @@ import random
 import time
 
 import wx
-import wx.lib.six as six
 
 #----------------------------------------------------------------------
 

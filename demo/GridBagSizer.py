@@ -116,9 +116,9 @@ assert when compiled in debug mode.""",
         pt = evt.GetPosition()
         item = self.gbs.FindItemAtPoint(pt)
         if item is None:
-            print("no item at", pt)
+            print("no item at", repr(pt))
         else:
-            print("item found: ", item.GetPos(), "--", item.GetSpan())
+            print("item found: ", repr(item.GetPos()), "--", repr(item.GetSpan()))
 
 
 #---------------------------------------------------------------------------
