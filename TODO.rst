@@ -102,9 +102,6 @@ to be untangled:
     think we need separate build steps for those. wx.tools can probably just
     go away.
 
-  * Find where the the leading wx is removed from the content of the
-    docstring (like the style flags in wx.CheckBox, etc.) and switch it to
-    just changing it to "wx."
 
 
 
