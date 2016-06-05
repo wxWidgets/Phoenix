@@ -149,7 +149,9 @@ def run():
             func.find('userData').type = 'wxPyUserData*'
         if func.findItem('item'):
             func.find('item').transfer = True
-    
+
+    c.addPyCode(
+        "GridBagSizer.CheckForIntersectionPos = wx.deprecated(GridBagSizer.CheckForIntersection, 'Use CheckForIntersection instead.')")
     
     # TODO: In Classic we had GetChildren return a list of wxGBSizerItems (in
     # a faked out way). Figure out how to do that here too....
