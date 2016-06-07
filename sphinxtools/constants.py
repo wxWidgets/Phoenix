@@ -221,7 +221,8 @@ class Enumeration(object):
 CONSTANT_RE = re.compile('^([\w\s,]+)=', re.M)
 
 EXCLUDED_ATTRS = ['__builtins__', '__doc__', '__name__', '__file__', '__path__',
-                  '__module__', '__all__']
+                  '__module__', '__all__', '__cached__', '__loader__', '__package__',
+                  '__spec__', ]
 
 TYPE_DESCRIPTION = ['library',
                     'package',
