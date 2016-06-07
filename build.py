@@ -913,52 +913,25 @@ def cmd_wxlib(options, args):
     cmdTimer = CommandTimer('wx.lib')
     pwd = pushDir(phoenixDir())
 
-    libDir = os.path.join(phoenixDir(), 'wx', 'lib')
+    for wx_pkg in ['lib', 'py', 'tools']:
+        libDir = os.path.join(phoenixDir(), 'wx', wx_pkg)
 
-    if not os.path.isdir(libDir):
-        raise Exception('Missing wx.lib folder in the distribution')
+        if not os.path.isdir(libDir):
+            raise Exception('Missing wx.{} folder in the distribution'.format(wx_pkg))
 
-    init_name = os.path.join(libDir, '__init__.py')
-    import_name = 'lib'
-    version = version3
+        init_name = os.path.join(libDir, '__init__.py')
+        import_name = 'wx.{}'.format(wx_pkg)
 
-    ModuleHunter(init_name, import_name, version)
-    
+        ModuleHunter(init_name, import_name, version3)
+
+
 
 def cmd_wxpy(options, args):
-    from sphinxtools.modulehunter import ModuleHunter
-
-    cmdTimer = CommandTimer('wx.py')
-    pwd = pushDir(phoenixDir())
-
-    libDir = os.path.join(phoenixDir(), 'wx', 'py')
-
-    if not os.path.isdir(libDir):
-        raise Exception('Missing wx.py folder in the distribution')
-
-    init_name = os.path.join(libDir, '__init__.py')
-    import_name = 'py'
-    version = version3
-
-    ModuleHunter(init_name, import_name, version)
+    msg('Command wxpy has been folded into command wxlib.')
 
 
 def cmd_wxtools(options, args):
-    from sphinxtools.modulehunter import ModuleHunter
-
-    cmdTimer = CommandTimer('wx.tools')
-    pwd = pushDir(phoenixDir())
-
-    libDir = os.path.join(phoenixDir(), 'wx', 'tools')
-
-    if not os.path.isdir(libDir):
-        raise Exception('Missing wx.tools folder in the distribution')
-
-    init_name = os.path.join(libDir, '__init__.py')
-    import_name = 'tools'
-    version = version3
-
-    ModuleHunter(init_name, import_name, version)
+    msg('Command wxtools has been folded into command wxlib.')
 
 
 def cmd_docs_bdist(options, args):
