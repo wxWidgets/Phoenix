@@ -60,23 +60,24 @@ class InheritanceDiagram(object):
         specials = []
 
         def recurse(cls):
-            nodename, fullname = self.class_name(cls)
-            if cls in [object] or nodename.startswith('sip.'):
+            fullname = self.class_name(cls)
+            if cls in [object] or fullname.startswith('sip.'):
                 return
             
             baselist = []
-            all_classes[cls] = (nodename, fullname, baselist)
+            all_classes[cls] = (fullname, baselist)
 
             for base in cls.__bases__:
-                if base in [object] or self.class_name(base)[0].startswith('sip.'):
+                name = self.class_name(base)
+                if base in [object] or name.startswith('sip.'):
                     continue
-                baselist.append(self.class_name(base)[0])
+                baselist.append(name)
                 if base not in all_classes:
                     recurse(base)
 
         for cls in classes:
             recurse(cls)
-            specials.append(self.class_name(cls)[1])
+            specials.append(self.class_name(cls))
 
         return list(all_classes.values()), specials
 
@@ -95,16 +96,12 @@ class InheritanceDiagram(object):
         else:
             fullname = '%s.%s' % (module, cls.__name__)
 
-        name_parts = fullname.split('.')
-        if 'wx._' in fullname:
-            nodename = fullname = name_parts[-1]
-        else:
-            # Just the last 2 parts
-            nodename = '.'.join(name_parts[-2:])
-            if fullname.startswith('wx.'):
-                fullname = fullname[3:]
-                
-        return nodename, fullname
+        if fullname.startswith('wx._'):
+            parts = fullname.split('.')
+            del parts[1]
+            fullname = '.'.join(parts)
+
+        return fullname
 
 
     # These are the default attrs for graphviz
@@ -166,7 +163,7 @@ class InheritanceDiagram(object):
         res.append('digraph %s {\n' % name)
         res.append(self._format_graph_attrs(g_attrs))
 
-        for name, fullname, bases in self.class_info:
+        for fullname, bases in self.class_info:
             # Write the node
             this_node_attrs = n_attrs.copy()
 
@@ -175,40 +172,31 @@ class InheritanceDiagram(object):
                 this_node_attrs['color'] = 'blue'
                 this_node_attrs['style'] = 'bold'
 
-            if self.main_class is None:
-                newname, fullname = wx2Sphinx(name)
-            else:
-                newname = name
-
             if class_summary is None:
                 # Phoenix base classes, assume there is always a link
-                this_node_attrs['URL'] = '"%s.html"'%fullname
+                this_node_attrs['URL'] = '"%s.html"' % fullname
             else:
-                if 'wx.' in fullname:
-                    fullname = fullname[3:]
-                
                 if fullname in class_summary:
-                    this_node_attrs['URL'] = '"%s.html"'%fullname
+                    this_node_attrs['URL'] = '"%s.html"' % fullname
                 else:
                     full_page = formatExternalLink(fullname, inheritance=True)
                     if full_page:
                         this_node_attrs['URL'] = full_page
                     
             res.append('  "%s" [%s];\n' %
-                       (newname, self._format_node_attrs(this_node_attrs)))
+                       (fullname, self._format_node_attrs(this_node_attrs)))
 
             # Write the edges
             for base_name in bases:
-
                 this_edge_attrs = e_attrs.copy()
                 if fullname in self.specials:
                     this_edge_attrs['color'] = 'red'
 
                 if self.main_class is None:
-                    base_name, dummy = wx2Sphinx(base_name)
+                    base_name, dummy = wx2Sphinx(base_name)  # ***
 
                 res.append('  "%s" -> "%s" [%s];\n' %
-                           (base_name, newname,
+                           (base_name, fullname,
                             self._format_node_attrs(this_edge_attrs)))
         res.append('}\n')
         return ''.join(res)
@@ -242,7 +230,7 @@ class InheritanceDiagram(object):
         if self.main_class is not None:
             filename = self.main_class.name
         else:                        
-            dummy, filename = wx2Sphinx(self.specials[0])
+            dummy, filename = wx2Sphinx(self.specials[0]) # ***
 
         outfn = os.path.join(static_root, filename + '_inheritance.png')
         mapfile = outfn + '.map'
