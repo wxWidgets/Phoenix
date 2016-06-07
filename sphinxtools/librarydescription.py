@@ -1,13 +1,10 @@
 import sys
 import os
-import operator
 import re
 
 if sys.version_info < (3,):
-    import cPickle as pickle
     from StringIO import StringIO
 else:
-    import pickle
     from io import StringIO
 
 from inspect import getmro, getclasstree, getdoc, getcomments
@@ -56,7 +53,7 @@ def generic_summary(libraryItem, stream):
 
         templ = [templates.TEMPLATE_STD_FUNCTION_SUMMARY, templates.TEMPLATE_STD_CLASS_SUMMARY]
         refs = ['func', 'ref']
-        add_tilde = [True, False]
+        add_tilde = [True, True]
 
     elif libraryItem.kind == object_types.KLASS:
         write_toc = False
@@ -98,16 +95,10 @@ def generic_summary(libraryItem, stream):
 
 def makeSphinxFile(name):
 
-    return os.path.join(os.getcwd(), 'docs', 'sphinx', '%s.txt'%name)
+    return os.path.join(os.getcwd(), 'docs', 'sphinx', '%s.txt' % name)
 
 
 def replaceWxDot(text):
-
-    # Double ticks with 'wx.' in them
-    text = re.sub(r'``wx\.(.*?)``', r'``\1``   ', text)
-    
-    # Signle ticks with 'wx.' in them... try and referencing them
-    text = re.sub(r'`wx\.(.*?)`', r'`\1`   ', text)
 
     # Masked is funny...
     text = text.replace('</LI>', '')
@@ -121,7 +112,7 @@ def replaceWxDot(text):
         if new in [':keyword', ':param']:
             if not space_added:
                 space_added = True
-                new_with_newline = '\n%s'%new
+                new_with_newline = '\n%s' % new
                 text = text.replace(old, new_with_newline, 1)
 
         text = text.replace(old, new)
@@ -235,16 +226,14 @@ def killEpydoc(klass, newtext):
             newlink = regex[start+1:end]
 
             if 'wx.' in regex or 'wx' in regex:
-                newlink = newlink.replace('wx.', '')
-                newlink = newlink.replace('wx', '')
-                newlink = ':class:`%s`'%newlink.strip()
+                newlink = ':class:`%s`' % newlink.strip()
             else:
-                newlink = '`%s`'%newlink
+                newlink = '`%s`' % newlink
 
         elif 'I{' in regex:
             # It's an inclined text
             newlink = regex[start+1:end]
-            newlink = ' `%s` '%newlink
+            newlink = ' `%s` ' % newlink
 
         elif 'L{' in regex:
             # Some kind of link, but we can't figure it out
@@ -253,7 +242,7 @@ def killEpydoc(klass, newtext):
 
             if newlink.upper() == newlink:
                 # Use double backticks
-                newlink = '``%s``'%newlink
+                newlink = '``%s``' % newlink
             else:
                 # Try and reference it
                 bestlink = findBestLink(klass, newlink)
@@ -483,7 +472,7 @@ class Library(ParentBase):
 
     def ToRest(self, class_summary):
 
-        print(('\n\nReST-ifying %s...\n\n'%self.base_name))
+        print('\n\nReST-ifying %s...\n\n' % self.base_name)
         stream = StringIO()
 
         header = templates.TEMPLATE_DESCRIPTION%(self.base_name, self.base_name)
@@ -559,18 +548,18 @@ class Module(ParentBase):
 
         if self.is_redundant:
             return
-        
+
         stream = StringIO()
 
         label = 'Module'
         if self.kind == object_types.PACKAGE:
             label = 'Package'
 
-        stream.write('.. module:: %s\n\n'%self.name)
-        #stream.write('.. currentmodule:: %s\n\n'%self.name)
+        stream.write('.. module:: %s\n\n' % self.name)
+        stream.write('.. currentmodule:: %s\n\n' % self.name)
         stream.write('.. highlight:: python\n\n')
             
-        header = templates.TEMPLATE_DESCRIPTION%(self.name, '%s'%self.GetShortName())
+        header = templates.TEMPLATE_DESCRIPTION % (self.name, self.name)
         
         stream.write(header)
         
@@ -594,7 +583,7 @@ class Module(ParentBase):
                 image_desc = templates.TEMPLATE_INHERITANCE % ('module', short_name, png, short_name, map)
                 stream.write(image_desc)
         else:
-            print(('%s - %s (package)'%(spacer, self.name)))
+            print('%s - %s (package)' % (spacer, self.name))
 
         generic_summary(self, stream)
 
@@ -649,11 +638,7 @@ class Class(ParentBase):
             if ' at ' in sup:
                 sup = sup[0:sup.index(' at ')].strip()
 
-            if 'wx._' in sup:
-                name_parts = sup.split('.')
-                sup = name_parts[-1]
-
-            sortedSupClasses.append(sup.replace('wx.', ''))
+            sortedSupClasses.append(sup)
 
         sortedSupClasses.sort()    
            
@@ -667,11 +652,7 @@ class Class(ParentBase):
             else:
                 cls = s
 
-            if 'wx._' in cls:
-                name_parts = cls.split('.')
-                cls = name_parts[-1]
-
-            sortedSubClasses.append(cls.replace('wx.', ''))
+            sortedSubClasses.append(cls)
 
         sortedSubClasses.sort()
 
@@ -704,13 +685,13 @@ class Class(ParentBase):
         parts = self.name.split('.')
         current_module = '.'.join(parts[0:-1])
 
-        #stream.write('.. currentmodule:: %s\n\n'%current_module)
+        stream.write('.. currentmodule:: %s\n\n' % current_module)
         stream.write('.. highlight:: python\n\n')
 
         class_docs = replaceWxDot(self.docs)
         class_docs = killEpydoc(self, class_docs)
         
-        header = templates.TEMPLATE_DESCRIPTION%(self.name, self.GetShortName())
+        header = templates.TEMPLATE_DESCRIPTION % (self.name, self.name)
         stream.write(header)
         stream.write(class_docs + '\n\n')
 
@@ -776,7 +757,7 @@ class Class(ParentBase):
             init = self.children.pop(pop)
             self.children.insert(0, init)
 
-        self.signature = self.signature.replace('wx.', '')
+        #self.signature = self.signature.replace('wx.', '')
         self.signature = self.signature.rstrip(':').lstrip('class ')
 
         if ' def __init__' in self.signature:
@@ -892,8 +873,6 @@ class Method(ChildrenBase):
                 newargs.append((name, repr_val, eval_val))
 
         self.arguments = newargs
-
-        self.signature = self.signature.replace('wx.', '')
         self.signature = self.signature.rstrip(':').lstrip()
         
         if self.signature.startswith('def '):

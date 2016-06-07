@@ -6,17 +6,11 @@
 
 import os
 import sys
-import glob
 import types
-import imp
+import importlib
 import traceback
 import pkgutil
 
-
-if sys.version_info < (3,):
-    import cPickle as pickle
-else:
-    import pickle
 
 from buildtools.config import phoenixDir
 
@@ -127,7 +121,8 @@ def analyze_params(obj, signature):
 
     try:
         arginfo = getargspec(obj)
-    except TypeError:
+        # TODO: Switch to getfullargspec
+    except (TypeError, ValueError):
         arginfo = None
 
     pevals = {}
@@ -254,7 +249,11 @@ def describe_func(obj, parent_class, module_name):
     comments = getcomments(obj)
     
     if isfunction(obj):
-        method = object_types.FUNCTION
+        # in Py3 unbound methods have same type as functions.
+        if isinstance(parent_class, Class):
+            method = object_types.METHOD
+        else:
+            method = object_types.FUNCTION
     elif ismethod(obj):
         method = object_types.METHOD
     elif ismethoddescriptor(obj):
@@ -277,12 +276,13 @@ def describe_func(obj, parent_class, module_name):
 
     if source_code:
         inspect_source(klass, obj, source_code)
-        klass.number_lines = '%d'%len(source_code.split('\n'))
+        klass.number_lines = '%d' % len(source_code.split('\n'))
         
     if isinstance(obj, staticmethod):
         klass.method = method = object_types.STATIC_METHOD
 
     try:
+        code = None
         if method in [object_types.METHOD, object_types.METHOD_DESCRIPTOR, object_types.INSTANCE_METHOD]:
             if isPython3():
                 code = obj.__func__.__code__
@@ -295,14 +295,14 @@ def describe_func(obj, parent_class, module_name):
                 code = obj.im_func.func_code
         else:
             if isPython3():
-                obj.__code__
+                code = obj.__code__
             else:
                 code = obj.func_code
     except AttributeError:
         code = None
 
     if code is not None:
-        klass.firstlineno = '%d'%code.co_firstlineno
+        klass.firstlineno = '%d' % code.co_firstlineno
     
     parent_class.Add(klass)
                         
@@ -317,6 +317,9 @@ def describe_class(obj, module_class, module_name, constants):
 
     if class_name == 'object':
         return
+
+    if 'GenBitmapButton' in class_name:
+        print('GenBitmapButton')
 
     class_name = module_class.name + '.' + class_name
     
@@ -404,7 +407,7 @@ def describe_class(obj, module_class, module_name, constants):
             description = description[0:description.index(':')]
             
         klass.signature = description.strip()
-        klass.number_lines = '%d'%len(source_code.split('\n'))
+        klass.number_lines = '%d' % len(source_code.split('\n'))
 
 
 def describe_module(module, kind, constants=[]):
@@ -477,26 +480,17 @@ def Import(init_name, import_name, full_process=True):
         path = list(sys.path)    
         sys.path.insert(0, dirname)
 
-    f = None
-
     try:
-
-        f, filename, description = imp.find_module(import_name, [dirname])
-        mainmod = imp.load_module(import_name, f, filename, description) 
-        
+        mainmod = importlib.import_module(import_name)
     except (ImportError, NameError):
-
         message = format_traceback()
-        print(('Error: %s'%message))
+        print('Error: %s' % message)
 
         if not full_process:
             sys.path = path[:]
             
         return
     
-    if f:
-        f.close()
-
     if not full_process:
         sys.path = path[:]
         try:
@@ -536,7 +530,7 @@ def FindModuleType(filename):
 def SubImport(import_string, module, parent_class, ispkg):
     
     try:
-        submod = __import__(import_string, fromlist=[module])            
+        submod = importlib.import_module(import_string)
     except:
         # pubsub and Editra can be funny sometimes...
         message = "Unable to import module/package '%s.%s'.\n         Exception was: %s"%(import_string, module, format_traceback())
@@ -550,7 +544,7 @@ def SubImport(import_string, module, parent_class, ispkg):
 
     subpath = os.path.dirname(filename)
     if subpath not in sys.path:
-        sys.path.append(subpath)
+        sys.path.append(subpath)   # *** WHY?
     
     if ispkg:
         kind = object_types.PACKAGE
@@ -561,8 +555,9 @@ def SubImport(import_string, module, parent_class, ispkg):
 
     if kind in [object_types.PY_MODULE, object_types.PACKAGE]:
 
-        contents = open(filename, 'rt').read()
-        consts = CONSTANT_RE.findall(contents)
+        with open(filename, 'rt') as f:
+            contents = f.read()
+            consts = CONSTANT_RE.findall(contents)
 
         for c in consts:
             if ',' in c:
@@ -580,7 +575,7 @@ def SubImport(import_string, module, parent_class, ispkg):
 def ToRest(import_name):
 
     sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
-    pickle_file = os.path.join(sphinxDir, 'wx%s.pkl'%import_name)
+    pickle_file = os.path.join(sphinxDir, '%s.pkl' % import_name)
 
     pf = PickleFile(pickle_file)
     library_class = pf.read()
@@ -594,8 +589,11 @@ def ToRest(import_name):
 def ModuleHunter(init_name, import_name, version):
 
     sphinxDir = os.path.join(phoenixDir(), 'docs', 'sphinx')
-    pickle_file = os.path.join(sphinxDir, 'wx%s.pkl'%import_name)
-    
+    pickle_file = os.path.join(sphinxDir, '%s.pkl' % import_name)
+
+    # TODO: instead of just skipping to generating the ReST files, do some
+    # dependency checking and rescan those files that are newer than the
+    # pickle file.
     if os.path.isfile(pickle_file):
         ToRest(import_name)
         return
@@ -608,8 +606,8 @@ def ModuleHunter(init_name, import_name, version):
     if mainmod is None:
         return
     
-    message = "Importing main library '%s'..."%import_name
-    print(('Message: %s'%message))
+    message = "Importing main library '%s'..." % import_name
+    print('Message: %s' % message)
 
     module_name = os.path.splitext(getfile(mainmod))[0] + '.py'
     contents = open(module_name, 'rt').read()
@@ -618,11 +616,11 @@ def ModuleHunter(init_name, import_name, version):
     library_class, count = describe_module(mainmod, kind=object_types.LIBRARY, constants=constants)
     library_class.name = '%s-%s'%(import_name, version)
 
-    message = "Main library '%s' imported..."%library_class.name
-    print(('Message: %s'%message))
+    message = "Main library '%s' imported..." % library_class.name
+    print('Message: %s' % message)
     
     message = "Importing sub-modules and sub-packages...\n"    
-    print(('Message: %s'%message))
+    print('Message: %s' % message)
 
     looped_names = []
     ancestors_dict = {import_name: library_class}
@@ -630,7 +628,6 @@ def ModuleHunter(init_name, import_name, version):
     for importer, module_name, ispkg in pkgutil.walk_packages(path=[directory],
                                                               prefix=import_name+'.',
                                                               onerror=lambda x: None):
-
         import_string = module_name
         splitted = module_name.split('.')
 

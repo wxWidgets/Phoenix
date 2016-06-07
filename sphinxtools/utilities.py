@@ -26,7 +26,6 @@ else:
     string_base = str
 
 # Phoenix-specific imports
-from etgtools.item_module_map import ItemModuleMap
 from .templates import TEMPLATE_CONTRIB
 from .constants import IGNORE, PUNCTUATION, MODULENAME_REPLACE
 from .constants import CPP_ITEMS, VERSION, VALUE_MAP
@@ -304,6 +303,7 @@ def convertToPython(text):
     :rtype: `string`
     """
     from etgtools.tweaker_tools import removeWxPrefix
+    from etgtools.item_module_map import ItemModuleMap
 
     newlines = []
     unwanted = ['Include file', '#include']
@@ -699,7 +699,7 @@ def wx2Sphinx(name):
 
     if '.' in newname and len(newname) > 3:
         lookup, remainder = newname.split('.')
-        remainder = '.%s'%remainder
+        remainder = '.%s' % remainder
     else:
         lookup = newname
         remainder = ''

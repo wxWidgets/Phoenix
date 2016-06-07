@@ -98,7 +98,6 @@ to be untangled:
     docs, but IMO is a bit annoying in other situations.  Maybe just make it a
     smaller font, or move it somewhere less noticeable?
 
-  * Use fullnames on the inheritance hierarchy diagrams
 
 
 
