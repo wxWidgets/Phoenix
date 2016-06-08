@@ -41,7 +41,6 @@ class InheritanceDiagram(object):
 
         if main_class is None:
             self.class_info, self.specials = classes
-            self.class_info = list(self.class_info.values())
         else:
             self.class_info, self.specials = self._class_info(classes)
             
@@ -65,7 +64,7 @@ class InheritanceDiagram(object):
                 return
             
             baselist = []
-            all_classes[cls] = (fullname, fullname, baselist)
+            all_classes[cls] = (fullname, baselist)
 
             for base in cls.__bases__:
                 name = self.class_name(base)
@@ -163,7 +162,7 @@ class InheritanceDiagram(object):
         res.append('digraph %s {\n' % name)
         res.append(self._format_graph_attrs(g_attrs))
 
-        for _, fullname, bases in self.class_info:
+        for fullname, bases in self.class_info:
             # Write the node
             this_node_attrs = n_attrs.copy()
 
@@ -191,9 +190,6 @@ class InheritanceDiagram(object):
                 this_edge_attrs = e_attrs.copy()
                 if fullname in self.specials:
                     this_edge_attrs['color'] = 'red'
-
-                if self.main_class is None:
-                    _, base_name = wx2Sphinx(base_name)
 
                 res.append('  "%s" -> "%s" [%s];\n' %
                            (base_name, fullname,
@@ -230,7 +226,7 @@ class InheritanceDiagram(object):
         if self.main_class is not None:
             filename = self.main_class.name
         else:                        
-            _, filename = wx2Sphinx(self.specials[0])
+            filename = self.specials[0]
 
         outfn = os.path.join(static_root, filename + '_inheritance.png')
         mapfile = outfn + '.map'

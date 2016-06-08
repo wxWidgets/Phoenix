@@ -2359,9 +2359,6 @@ class XMLDocString(object):
 
         self.Reformat(stream)
 
-        if not klass.nodeBases:
-            klass.nodeBases = ({name: (name, name, [])}, [name])
-            
         inheritance_diagram = InheritanceDiagram(klass.nodeBases)
         png, map = inheritance_diagram.makeInheritanceDiagram()
 
@@ -3045,6 +3042,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         
     def generatePyClass(self, klass):
 
+        self.fixNodeBaseNames(klass, ItemModuleMap())
+
         klass.module = self.current_module
         self.current_class = klass
 
@@ -3120,7 +3119,6 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         writeSphinxOutput(stream, filename, append=True)
     
     # -----------------------------------------------------------------------
-        
     def generateClass(self, klass):
 
         assert isinstance(klass, extractors.ClassDef)
@@ -3129,6 +3127,8 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             return
 
         imm = ItemModuleMap()
+
+        self.fixNodeBaseNames(klass, imm)
 
         # generate nested classes
         for item in klass.innerclasses:
@@ -3216,7 +3216,29 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
 
     # -----------------------------------------------------------------------
-        
+
+    def fixNodeBaseNames(self, klass, imm):
+        # convert the names in nodeBases to fullnames
+        def _fix(name):
+            return imm.get_fullname(removeWxPrefix(name))
+
+        if not klass.nodeBases:
+            name = klass.pyName if klass.pyName else klass.name
+            name = _fix(name)
+            klass.nodeBases = ([(name, [])], [name])
+            return
+
+        bases, specials = klass.nodeBases
+        bases = list(bases.values())
+        specials = [_fix(s) for s in specials]
+        for idx, (name, baselist) in enumerate(bases):
+            name = _fix(name)
+            baselist = [_fix(b) for b in baselist]
+            bases[idx] = (name, baselist)
+        klass.nodeBases = (bases, specials)
+
+    # -----------------------------------------------------------------------
+
     def generateMethod(self, method, name=None, docstring=None):
 
         if method.ignored:
@@ -3392,18 +3414,19 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         typedef.module = self.current_module
 
         all_classes = {}
-        nodename = fullname = name
-        specials = [nodename]
+        fullname = name
+        specials = [fullname]
 
         baselist = [base for base in typedef.bases if base != 'object']
-        all_classes[nodename] = (nodename, fullname, baselist)
+        all_classes[fullname] = (fullname, baselist)
 
         for base in baselist:
-            all_classes[base] = (base, base, [])
+            all_classes[base] = (base, [])
 
         self.unIndent(typedef)
 
         typedef.nodeBases = all_classes, specials
+        self.fixNodeBaseNames(typedef, ItemModuleMap())
         typedef.subClasses = []
         typedef.method_list = typedef.property_list = []
         typedef.pyDocstring = typedef.briefDoc

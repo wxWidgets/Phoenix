@@ -657,10 +657,10 @@ class ClassDef(BaseDef):
         from etgtools import XMLSRC
         
         if not read:
-            nodename = fullname = self.name
-            specials = [nodename]
+            fullname = self.name
+            specials = [fullname]
         else:
-            nodename = fullname = element.text
+            fullname = element.text
 
         baselist = []
 
@@ -678,7 +678,7 @@ class ClassDef(BaseDef):
         for c in compounds:
             baselist.append(c.text)
 
-        all_classes[nodename] = (nodename, fullname, baselist)
+        all_classes[fullname] = (fullname, baselist)
 
         for c in compounds:
             all_classes, specials = self.findHierarchy(c, all_classes, specials, True)
@@ -1276,14 +1276,14 @@ class PyClassDef(BaseDef):
     def findHierarchy(self):
 
         all_classes = {}
-        nodename = fullname = self.name
-        specials = [nodename]
+        fullname = self.name
+        specials = [fullname]
 
         baselist = [base for base in self.bases if base != 'object']
-        all_classes[nodename] = (nodename, fullname, baselist)
+        all_classes[fullname] = (fullname, baselist)
 
         for base in baselist:
-            all_classes[base] = (base, base, [])
+            all_classes[base] = (base, [])
 
         return all_classes, specials
         
