@@ -535,8 +535,7 @@ def genGallery():
 
     for text in txt_files:
         simple = os.path.split(os.path.splitext(text)[0])[1]
-        possible = simple.split('.')[-1]
-        possible = possible.lower()
+        possible = simple.lower()
         html_files[possible + '.png'] = simple + '.html'
 
     keys = list(html_files.keys())
