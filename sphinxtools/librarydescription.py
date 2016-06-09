@@ -632,11 +632,21 @@ class Class(ParentBase):
 
         for item in sups:
             item = repr(item)
-            
+
             sup = item.replace('<class ', '').replace('>', '').replace('<type ', '')
             sup = sup.strip().replace('"', '').replace("'", '')
             if ' at ' in sup:
                 sup = sup[0:sup.index(' at ')].strip()
+
+            if sup.startswith('wx._'):
+                # take out the '_core' in things like 'wx._core.Control'
+                parts = sup.split('.')
+                if parts[1] == '_core':
+                    del parts[1]
+                else:
+                    # or just the '_' otherwise
+                    parts[1] = parts[1][1:]
+                sup = '.'.join(parts)
 
             sortedSupClasses.append(sup)
 
