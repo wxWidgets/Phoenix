@@ -507,7 +507,7 @@ def genGallery():
     link = '<div class="gallery_class">'
 
     link_template = """\
-    <table><caption align="bottom"><a href="%s"<b>%s</b></a</caption>
+    <table><caption align="bottom"><a href="%s"><b>%s</b></a></caption>
     <tr>
     <td><a href="%s"><img src="_static/images/widgets/fullsize/%s/%s" border="20" alt="%s"/></a>
     </td>
@@ -555,7 +555,7 @@ def genGallery():
             plat_images = image_files[platform]
 
             if possible_png in plat_images:
-                text += link_template%(html, os.path.splitext(html)[0], html, platform, possible_png, os.path.splitext(html)[0])
+                text += link_template % (html, os.path.splitext(html)[0], html, platform, possible_png, os.path.splitext(html)[0])
                 text += '\n'
                 break
 
