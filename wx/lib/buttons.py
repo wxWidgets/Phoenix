@@ -508,7 +508,7 @@ class GenButton(wx.Control):
         """
         Returns the current :class:`wx.Brush` to be used to draw the button background.
 
-        :param DC `dc`: the device context used to draw the button background.
+        :param wx.DC `dc`: the device context used to draw the button background.
         """
         
         if self.up:
@@ -665,9 +665,9 @@ class GenBitmapButton(GenButton):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param Bitmap `bitmap`: the button bitmap;
+        :param wx.Bitmap `bitmap`: the button bitmap;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
         :type `pos`: tuple or :class:`wx.Point`
@@ -675,7 +675,7 @@ class GenBitmapButton(GenButton):
          chosen by either the windowing system or wxPython, depending on platform;
         :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the button style;
-        :param Validator `validator`: the validator associated to the button;
+        :param wx.Validator `validator`: the validator associated to the button;
         :param string `name`: the button name.
 
         .. seealso:: :class:`wx.Button` for a list of valid window styles.
@@ -740,7 +740,7 @@ class GenBitmapButton(GenButton):
         """
         Sets the bitmap for the disabled button appearance.
 
-        :param Bitmap `bitmap`: the bitmap for the disabled button appearance.
+        :param wx.Bitmap `bitmap`: the bitmap for the disabled button appearance.
 
         .. seealso::
 
@@ -756,7 +756,7 @@ class GenBitmapButton(GenButton):
         """
         Sets the bitmap for the focused button appearance.
 
-        :param Bitmap `bitmap`: the bitmap for the focused button appearance.
+        :param wx.Bitmap `bitmap`: the bitmap for the focused button appearance.
 
         .. seealso::
 
@@ -773,7 +773,7 @@ class GenBitmapButton(GenButton):
         """
         Sets the bitmap for the selected (depressed) button appearance.
 
-        :param Bitmap `bitmap`: the bitmap for the selected (depressed) button appearance.
+        :param wx.Bitmap `bitmap`: the bitmap for the selected (depressed) button appearance.
 
         .. seealso::
 
@@ -793,7 +793,7 @@ class GenBitmapButton(GenButton):
         If `createOthers` is ``True``, then the other bitmaps will be generated
         on the fly.  Currently, only the disabled bitmap is generated.
 
-        :param Bitmap `bitmap`: the bitmap for the normal button appearance.
+        :param wx.Bitmap `bitmap`: the bitmap for the normal button appearance.
 
         .. note:: This is the bitmap used for the unselected state, and for all other
            states if no other bitmaps are provided.
@@ -843,9 +843,9 @@ class GenBitmapTextButton(GenBitmapButton):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param Bitmap `bitmap`: the button bitmap;
+        :param wx.Bitmap `bitmap`: the button bitmap;
         :param string `label`: the button text label;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
@@ -854,7 +854,7 @@ class GenBitmapTextButton(GenBitmapButton):
          chosen by either the windowing system or wxPython, depending on platform;
         :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the button style;
-        :param Validator `validator`: the validator associated to the button;
+        :param wx.Validator `validator`: the validator associated to the button;
         :param string `name`: the button name.
 
         .. seealso:: :class:`wx.Button` for a list of valid window styles.
