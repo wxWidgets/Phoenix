@@ -86,6 +86,9 @@
 #   - updated plotNN menu items status-bar text to be descriptive.
 #   - increased default size of demo
 #   - updated XSpec and YSpec to accept a list or tuple of (min, max) values.
+#
+# Jun 14, 2016 (Start)  Douglas Thor (doug.thor@gmail.com)
+#   -
 
 """
 This is a simple light weight plotting module that can be used with
@@ -190,6 +193,7 @@ except:
 # XXX: Comment out this line to disable depreciation warnings
 warnings.simplefilter('default')
 
+
 class SavePen(object):
     """
     Decorator which saves the dc Pen before calling a function and sets the
@@ -212,9 +216,9 @@ class SavePen(object):
             # edit pen here
             dc.SetPen(prevPen)
 
-    Notes:
-    ------
-    # TODO: Do I also want to save and revert the dc's brush?
+    See Also:
+    ---------
+    SaveBrush : Decorator to save a wx.Brush before calling a function.
 
     """
     def __init__(self, func):
@@ -265,9 +269,86 @@ class SavedPen(object):
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """ Set the pen back, even if the function errored """
         self.dc.SetPen(self.prevPen)
+        return False            # return True means execptions are suppressed
 
-#    def __repr__(self):
-#        return "{}".format(self.__class__.__name__)
+
+class SaveBrush(object):
+    """
+    Decorator which saves the dc Brush before calling a function and sets the
+    Brush back after the funcion, even if the function raises an exception.
+
+    The DC to paint on **must** be the first argument of the function.
+
+    Usage:
+    -------
+    ::
+
+        @SaveBrush
+        def func(dc, a, b, c):
+            # edit Brush here
+
+    is the same as::
+
+        def func(dc, a, b, c):
+            prevBrush = dc.GetBrush()
+            # edit Brush here
+            dc.SetBrush(prevBrush)
+
+    See Also:
+    ---------
+    SavePen : Decorator to save a wx.Pen before calling a function.
+
+    """
+    def __init__(self, func):
+        self.func = func
+
+    def __call__(self, *args, **kwargs):
+        """
+        This provides support for functions
+        """
+        dc = args[0]
+        with SavedBrush(dc):
+            return self.func(*args, **kwargs)
+
+    def __get__(self, obj, objtype):
+        """
+        And this provides support for instance methods
+        """
+        @functools.wraps(self.func)
+        def wrapper(*args, **kwargs):
+            dc = args[0]
+            with SavedBrush(dc):
+                return self.func(obj, *args, **kwargs)
+        return wrapper
+
+
+class SavedBrush(object):
+    """
+    Context Manager for saving the previous wx.Pen and resetting it after.
+
+    Usage:
+    ------
+
+    ::
+
+        with SavedBrush(dc):
+            # do stuff
+
+    """
+    def __init__(self, dc):
+        self.dc = dc
+        self.prevBrush = None
+
+    def __enter__(self):
+        """ Save the Brush """
+        self.prevBrush = self.dc.GetBrush()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """ Set the Brush back, even if the function errored """
+        self.dc.SetBrush(self.prevBrush)
+        return False            # return True means execptions are suppressed
+
 
 
 class PendingDeprecation(object):
@@ -995,6 +1076,7 @@ class PolyBars(PolyPoints):
         return (w, h)
 
 
+# TODO: Refactor duplicate code fom PolyBars
 class PolyHistogram(PolyPoints):
     """
     Histogram
@@ -4788,6 +4870,7 @@ def __test():
 
     app = MyApp(0)
     app.MainLoop()
+
 
 if __name__ == '__main__':
     __test()
