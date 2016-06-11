@@ -1033,6 +1033,12 @@ def cmd_sip(options, args):
                     # ...or totally remove them by replacing those lines with ''
                     import re
                     srcTxt = re.sub(r'^#line.*\n', '', srcTxt, flags=re.MULTILINE)
+                if os.path.basename(src) == 'sip_corewxHVScrolledWindow.cpp' or \
+                   os.path.basename(src) == 'sip_corewxVarHVScrollHelper.cpp':
+                    import re
+                    srcTxt = re.sub(r'if \(targetType == sipType_wxVarScrollHelperBase\)'
+                                    '\s+return static_cast<wxVarScrollHelperBase \*>\(sipCpp\);',
+                                    '', srcTxt)
             return srcTxt
         
         # Check each file in tmpdir to see if it is different than the same file
