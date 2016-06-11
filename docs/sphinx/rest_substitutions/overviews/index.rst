@@ -1,4 +1,4 @@
-.. wxPython Phoenix documentation master file,
+.. wxPython Phoenix documentation
    Created:   9-Dec-2011
    Copyright: (c) 2011-2016 by Total Control Software
    License:   wxWindows License

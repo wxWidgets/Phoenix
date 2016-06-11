@@ -88,8 +88,8 @@ div.body h4 {
  */
 
 body { 
-  background-color: rgb(230,230,230);
-  font-size: 0.95em;
+    background-color: rgb(230,230,230);
+    font-size: 0.95em;
 }
 
 div.headerimage {
@@ -105,7 +105,7 @@ div.document {
   position: relative;
   margin-left: 240px;
   z-index: 0;
-  top: 50px;
+  top: 30px;
 }
 
 div.sphinxsidebar {
@@ -119,8 +119,19 @@ div.sphinxsidebar {
     height: auto;
     z-index: 1;
     left: 0;
-    top: 50px;
-    bottom: 0;  
+    top: 30px;
+    bottom: 0;    
+}
+
+div#searchbox {
+    margin-top: 30px;
+}
+
+div#sourcelink {
+    position: absolute; 
+    bottom: 0;
+    font-style: italic;
+    font-size: small;
 }
 
 div.related {
@@ -161,7 +172,6 @@ div.related ul li.right {
     font-size: small;
     float: right;
     margin-right: 5px;
-    margin-top: 0;
 }
 
 div.related ul li#searchbox.right {

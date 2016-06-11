@@ -94,14 +94,13 @@ to be untangled:
 
   * Should we generate property-like docs for MemberVar elements?
 
-  * Should we turn off the Show Source option?  It is nice when debugging the
-    docs, but IMO is a bit annoying in other situations.  Maybe just make it a
-    smaller font, or move it somewhere less noticeable?
+  * Convert the main.html page to a ReST file? It would probably make it a
+    little easier to maintain.
 
+  * Turn off full justification of text?
 
-
-
-
+  * Set max width of body sections?  I think it looks nice, but we'll need to
+    fix the floating and alignment of the sidebar to do it...
 
 
 Other Dev Stuff
