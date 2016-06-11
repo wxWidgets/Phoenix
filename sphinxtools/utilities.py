@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -14,8 +14,6 @@ import sys
 import os
 import codecs
 import shutil
-import glob
-import imp
 import re
 
 if sys.version_info < (3,):
@@ -28,18 +26,16 @@ else:
     string_base = str
 
 # Phoenix-specific imports
-from buildtools.config import phoenixDir
-
 from .templates import TEMPLATE_CONTRIB
-
 from .constants import IGNORE, PUNCTUATION, MODULENAME_REPLACE
-from .constants import CPP_ITEMS, VERSION, VALUE_MAP, NO_MODULE
+from .constants import CPP_ITEMS, VERSION, VALUE_MAP
 from .constants import RE_KEEP_SPACES, EXTERN_INHERITANCE
 from .constants import DOXYROOT, SPHINXROOT, WIDGETS_IMAGES_ROOT
 
 
 # ----------------------------------------------------------------------- #
-class odict(UserDict):
+
+class ODict(UserDict):
     """
     An ordered dict (odict). This is a dict which maintains an order to its items;
     the order is rather like that of a list, in that new items are, by default,
@@ -105,31 +101,7 @@ class odict(UserDict):
 
 # ----------------------------------------------------------------------- #
 
-def RemoveWxPrefix(name):
-    """
-    Removes the `wx` prefix from a string.
-
-    :param string `name`: a string, possibly starting with "wx" or "``wx".
-
-    :rtype: `string`
-
-    .. note:: This function is similar to the one already present in `tweaker_tools`
-       but I had to extend it a bit to suite the ReSTification of the XML docs.
-
-    """       
-
-    if name.startswith('wx') and not name.startswith('wxEVT_') and not name.startswith('wx.'):
-        name = name[2:]
-
-    if name.startswith('``wx') and not name.startswith('``wxEVT_') and not name.startswith('``wx.'):
-        name = name[0:2] + name[4:]
-        
-    return name
-
-
-# ----------------------------------------------------------------------- #
-
-def IsNumeric(input_string):
+def isNumeric(input_string):
     """
     Checks if the string `input_string` actually represents a number.
 
@@ -150,7 +122,7 @@ def IsNumeric(input_string):
 
 # ----------------------------------------------------------------------- #
 
-def CountSpaces(text):
+def countSpaces(text):
     """
     Counts the number of spaces before and after a string.
 
@@ -169,7 +141,7 @@ def CountSpaces(text):
 
 # ----------------------------------------------------------------------- #
 
-def Underscore2Capitals(string):
+def underscore2Capitals(string):
     """
     Replaces the underscore letter in a string with the following letter capitalized.
 
@@ -189,7 +161,7 @@ def Underscore2Capitals(string):
 
 # ----------------------------------------------------------------------- #
 
-def ReplaceCppItems(line):
+def replaceCppItems(line):
     """
     Replaces various C++ specific stuff with more Pythonized version of them.
 
@@ -233,7 +205,7 @@ def ReplaceCppItems(line):
 
 # ----------------------------------------------------------------------- #
 
-def PythonizeType(ptype, is_param):
+def pythonizeType(ptype, is_param):
     """
     Replaces various C++ specific stuff with more Pythonized version of them,
     for parameter lists and return types (i.e., the `:param:` and `:rtype:`
@@ -245,13 +217,14 @@ def PythonizeType(ptype, is_param):
 
     :rtype: `string`
     """
+    from etgtools.tweaker_tools import removeWxPrefix
 
     if 'size_t' in ptype:
         ptype = 'int'
     elif 'wx.' in ptype:
         ptype = ptype[3:]
     else:
-        ptype = Wx2Sphinx(ReplaceCppItems(ptype))[1]
+        ptype = wx2Sphinx(replaceCppItems(ptype))[1]
         
     ptype = ptype.replace('::', '.').replace('*&', '')
     ptype = ptype.replace('int const', 'int')
@@ -263,9 +236,9 @@ def PythonizeType(ptype, is_param):
         ptype = ptype.replace(item, 'int')
     
     ptype = ptype.strip()        
-    ptype = RemoveWxPrefix(ptype)
+    ptype = removeWxPrefix(ptype)
 
-    if '. wx' in ptype:
+    if '. wx' in ptype: #***
         ptype = ptype.replace('. wx', '.')
 
     plower = ptype.lower()
@@ -312,7 +285,7 @@ def PythonizeType(ptype, is_param):
 
 # ----------------------------------------------------------------------- #
 
-def ConvertToPython(text):
+def convertToPython(text):
     """
     Converts the input `text` into a more ReSTified version of it.
 
@@ -323,12 +296,14 @@ def ConvertToPython(text):
     2. Lines starting with "Include file" or "#include" are ignored.
     3. Uppercase constants (i.e., like ID_ANY, HORIZONTAL and so on) are converted
        into inline literals (i.e., ``ID_ANY``, ``HORIZONTAL``).
-    4. The "wx" prefix is removed from all the words in the input `text`.
+    4. The "wx" prefix is removed from all the words in the input `text`.  #***
     
     :param string `text`: any string.
 
     :rtype: `string`
     """
+    from etgtools.tweaker_tools import removeWxPrefix
+    from etgtools.item_module_map import ItemModuleMap
 
     newlines = []
     unwanted = ['Include file', '#include']
@@ -344,7 +319,7 @@ def ConvertToPython(text):
 
         spacer = ' '*(len(line) - len(line.lstrip()))
 
-        line = ReplaceCppItems(line)
+        line = replaceCppItems(line)
         
         for word in RE_KEEP_SPACES.split(line):
 
@@ -362,23 +337,24 @@ def ConvertToPython(text):
                 continue
                 
             if newword not in IGNORE and not newword.startswith('wx.'):
-                word = RemoveWxPrefix(word)
-                newword = RemoveWxPrefix(newword)
+                word = removeWxPrefix(word)
+                newword = removeWxPrefix(newword)
 
             if "::" in word and not word.endswith("::"):
                 # Bloody SetCursorEvent...
-                word = word.replace("::wx", ".")
+                word = word.replace("::wx", ".") # ***
                 word = word.replace("::", ".")
-                word = "`%s`"%word
+                word = "`%s`" % word
                 newline.append(word)
                 continue
                 
-            if newword.upper() == newword and newword not in PUNCTUATION and \
-               newword not in IGNORE and len(newword.strip()) > 1 and \
-               not IsNumeric(newword) and newword not in ['DC', 'GCDC']:
+            if (newword.upper() == newword and newword not in PUNCTUATION and
+                newword not in IGNORE and len(newword.strip()) > 1 and
+                not isNumeric(newword) and newword not in ['DC', 'GCDC']):
 
                 if '``' not in newword and '()' not in word and '**' not in word:
-                    word = word.replace(newword, "``%s``"%newword)
+                    word = word.replace(newword, "``%s``" %
+                                        ItemModuleMap().get_fullname(newword))
 
             word = word.replace('->', '.')
             newline.append(word)
@@ -396,7 +372,7 @@ def ConvertToPython(text):
 
 # ----------------------------------------------------------------------- #
 
-def FindDescendants(element, tag, descendants=None):
+def findDescendants(element, tag, descendants=None):
     """
     Finds and returns all descendants of a specific `xml.etree.ElementTree.Element`
     whose tag matches the input `tag`.
@@ -420,14 +396,14 @@ def FindDescendants(element, tag, descendants=None):
         if childElement.tag == tag:
             descendants.append(childElement)
 
-        descendants = FindDescendants(childElement, tag, descendants)
+        descendants = findDescendants(childElement, tag, descendants)
 
     return descendants
     
 
 # ----------------------------------------------------------------------- #
 
-def FindControlImages(elementOrString):
+def findControlImages(elementOrString):
     """
     Given the input `element` (an instance of `xml.etree.ElementTree.Element`
     or a plain string)
@@ -451,21 +427,22 @@ def FindControlImages(elementOrString):
        exists for others, the missing images will be replaced by the "no_appearance.png"
        file (you can find it inside the ``WIDGETS_IMAGES_ROOT`` folder.
 
-    """       
+    """
+    from etgtools.tweaker_tools import removeWxPrefix
 
     if isinstance(elementOrString, string_base):
         class_name = py_class_name = elementOrString.lower()
     else:
         element = elementOrString
-        class_name = RemoveWxPrefix(element.name) or element.pyName
-        py_class_name = Wx2Sphinx(class_name)[1]
+        class_name = element.pyName if element.pyName else removeWxPrefix(element.name)
+        py_class_name = wx2Sphinx(class_name)[1]
 
         class_name = class_name.lower()
         py_class_name = py_class_name.lower()
 
     image_folder = os.path.join(DOXYROOT, 'images')
 
-    appearance = odict()
+    appearance = ODict()
 
     for sub_folder in ['wxmsw', 'wxmac', 'wxgtk']:
 
@@ -504,7 +481,7 @@ def FindControlImages(elementOrString):
 
 # ----------------------------------------------------------------------- #
 
-def MakeSummary(class_name, item_list, template, kind, add_tilde=True):
+def makeSummary(class_name, item_list, template, kind, add_tilde=True):
     """
     This function generates a table containing a method/property name
     and a shortened version of its docstrings.
@@ -564,7 +541,18 @@ def MakeSummary(class_name, item_list, template, kind, add_tilde=True):
 
 # ----------------------------------------------------------------------- #
 
-def WriteSphinxOutput(stream, filename, append=False):
+header = """\
+.. wxPython Phoenix documentation
+
+   This file was generated by Phoenix's sphinx generator and associated
+   tools, do not edit by hand.
+
+   Copyright: (c) 2011-2016 by Total Control Software
+   License:   wxWindows License
+
+"""
+
+def writeSphinxOutput(stream, filename, append=False):
     """
     Writes the text contained in the `stream` to the `filename` output file.
 
@@ -578,17 +566,16 @@ def WriteSphinxOutput(stream, filename, append=False):
     text = stream.getvalue()
 
     mode = 'a' if append else 'w'
-    fid = codecs.open(text_file, mode, encoding='utf-8')        
-    if mode == 'w':
-        fid.write('.. include:: headings.inc\n\n')
-
-    fid.write(text)
-    fid.close()
+    with codecs.open(text_file, mode, encoding='utf-8') as fid:
+        if mode == 'w':
+            fid.write(header)
+            fid.write('.. include:: headings.inc\n\n')
+        fid.write(text)
 
 
 # ----------------------------------------------------------------------- #
 
-def ChopDescription(text):
+def chopDescription(text):
     """
     Given the (possibly multiline) input text, this function will get the
     first non-blank line up to the next newline character.
@@ -614,7 +601,36 @@ def ChopDescription(text):
 
 # ----------------------------------------------------------------------- #
 
-def PickleItem(description, current_module, name, kind):
+class PickleFile(object):
+    """
+    A class to help simplify loading and saving data to pickle files.
+    """
+    def __init__(self, fileName):
+        self.fileName = fileName
+
+    def __enter__(self):
+        self.read()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.write(self.items)
+
+    def read(self):
+        if os.path.isfile(self.fileName):
+            with open(self.fileName, 'rb') as fid:
+                items = pickle.load(fid)
+        else:
+            items = {}
+        self.items = items
+        return items
+
+    def write(self, items):
+        with open(self.fileName, 'wb') as fid:
+            pickle.dump(items, fid)
+
+# ----------------------------------------------------------------------- #
+
+def pickleItem(description, current_module, name, kind):
     """
     This function pickles/unpickles a dictionary containing class names as keys
     and class brief description (chopped docstrings) as values to build the
@@ -634,24 +650,15 @@ def PickleItem(description, current_module, name, kind):
     if kind == 'function':
         pickle_file = os.path.join(SPHINXROOT, current_module + 'functions.pkl')
     else:
-        pickle_file = os.path.join(SPHINXROOT, current_module + '1classindex.pkl')
-        
-    if os.path.isfile(pickle_file):
-        fid = open(pickle_file, 'rb')
-        items = pickle.load(fid)
-        fid.close()
-    else:
-        items = {}
+        pickle_file = os.path.join(SPHINXROOT, current_module + '1moduleindex.pkl')
 
-    items[name] = description
-    fid = open(pickle_file, 'wb')
-    pickle.dump(items, fid)
-    fid.close()
+    with PickleFile(pickle_file) as pf:
+        pf.items[name] = description
 
 
 # ----------------------------------------------------------------------- #
 
-def PickleClassInfo(class_name, element, short_description):
+def pickleClassInfo(class_name, element, short_description):
     """
     Saves some information about a class in a pickle-compatible file., i.e. the
     list of methods in that class and its super-classes.
@@ -661,82 +668,58 @@ def PickleClassInfo(class_name, element, short_description):
     :param string `short_description`: the class short description (if any).
     """
 
-    pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
-        
-    if os.path.isfile(pickle_file):
-        fid = open(pickle_file, 'rb')
-        items = pickle.load(fid)
-        fid.close()
-    else:
-        items = {}
-
     method_list, bases = [], []
     for method, description in element.method_list:
         method_list.append(method)
 
     for base in element.bases:
-        bases.append(Wx2Sphinx(base)[1])
+        bases.append(wx2Sphinx(base)[1])
 
-    items[class_name] = (method_list, bases, short_description)
-    fid = open(pickle_file, 'wb')
-    pickle.dump(items, fid)
-    fid.close()
+    pickle_file = os.path.join(SPHINXROOT, 'class_summary.pkl')
+    with PickleFile(pickle_file) as pf:
+        pf.items[class_name] = (method_list, bases, short_description)
 
 
 # ----------------------------------------------------------------------- #
 
-global ALL_ITEMS
-ALL_ITEMS = {}
+def pickleFunctionInfo(fullname, short_description):
+    """
+    Saves the short description for each function, used for generating the
+    summary pages later.
+    """
+    pickle_file = os.path.join(SPHINXROOT, 'function_summary.pkl')
+    with PickleFile(pickle_file) as pf:
+        pf.items[fullname] = short_description
 
-def Class2Module():
 
-    global ALL_ITEMS
-    
-    if ALL_ITEMS:
-        return ALL_ITEMS
+# ----------------------------------------------------------------------- #
 
-    etg_files = glob.glob(os.path.join(phoenixDir(), 'etg') + '/*.py')
-    etg_files = [files for files in etg_files if not files.startswith('_')]
 
-    for files in etg_files:
-        split = os.path.split(os.path.splitext(files)[0])[1]
-        module = imp.load_source(split, files)
-
-        current_module = MODULENAME_REPLACE.get(module.MODULE, '')
-
-        for item in module.ITEMS:
-            
-            item = RemoveWxPrefix(item)
-            ALL_ITEMS[item] = current_module
-
-    ALL_ITEMS.update(NO_MODULE)
-
-    return ALL_ITEMS            
-    
-    
-def Wx2Sphinx(name):
+def wx2Sphinx(name):
     """
     Converts a wxWidgets specific string into a Phoenix-ReST-ready string.
 
     :param string `name`: any string.
     """
+    from etgtools.tweaker_tools import removeWxPrefix
 
     if '<' in name:
         name = name[0:name.index('<')]
 
-    name = name.strip()    
-    newname = fullname = RemoveWxPrefix(name)
+    name = name.strip()
+    newname = fullname = removeWxPrefix(name)
 
     if '.' in newname and len(newname) > 3:
         lookup, remainder = newname.split('.')
-        remainder = '.%s'%remainder
+        remainder = '.%s' % remainder
     else:
         lookup = newname
         remainder = ''
 
-    all_items = Class2Module()
-    if lookup in all_items:
-        fullname = all_items[lookup] + lookup + remainder
+    from etgtools.item_module_map import ItemModuleMap
+    imm = ItemModuleMap()
+    if lookup in imm:
+        fullname = imm[lookup] + lookup + remainder
         
     return newname, fullname
 
@@ -759,7 +742,7 @@ RAW_2 = """
 
 """
 
-def FormatContributedSnippets(kind, contrib_snippets):
+def formatContributedSnippets(kind, contrib_snippets):
     """
     This method will include and properly ReST-ify contributed snippets
     of wxPython code (at the moment only 2 snippets are available), by
@@ -786,9 +769,8 @@ def FormatContributedSnippets(kind, contrib_snippets):
         text = '\n' + spacer + '|contributed| **Contributed Examples:**\n\n'
     
     for indx, snippet in enumerate(contrib_snippets):
-        fid = open(snippet, 'rt')
-        lines = fid.readlines()
-        fid.close()
+        with open(snippet, 'rt') as fid:
+            lines = fid.readlines()
         user = lines[0].replace('##', '').strip()
         onlyfile = os.path.split(snippet)[1]
 
@@ -809,7 +791,7 @@ def FormatContributedSnippets(kind, contrib_snippets):
     return text
 
 
-def FormatExternalLink(fullname, inheritance=False):
+def formatExternalLink(fullname, inheritance=False):
     """
     Analyzes the input `fullname` string to check whether a class description
     is actually coming from an external documentation tool
@@ -860,7 +842,7 @@ def FormatExternalLink(fullname, inheritance=False):
     return full_page
 
 
-def IsPython3():
+def isPython3():
     """ Returns ``True`` if we are using Python 3.x. """
 
     return sys.version_info >= (3, )    

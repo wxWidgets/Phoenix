@@ -1,37 +1,33 @@
 # -*- coding: utf-8 -*-
-
 #---------------------------------------------------------------------------
 # Name:        sphinxtools/postprocess.py
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 # Standard library imports
 import os
-import sys
 import re
 import glob
 import random
-import subprocess
-
-if sys.version_info < (3,):
-    import cPickle as pickle
-else:
-    import pickle
 
 # Phoenix-specific imports
 from buildtools.config import copyIfNewer, writeIfChanged, newer, getVcsRev, textfile_open
+from etgtools.item_module_map import ItemModuleMap
 
 from . import templates
-from .utilities import Wx2Sphinx
+from .utilities import wx2Sphinx, PickleFile
 from .constants import HTML_REPLACE, TODAY, SPHINXROOT, SECTIONS_EXCLUDE
 from .constants import CONSTANT_INSTANCES, WIDGETS_IMAGES_ROOT, SPHINX_IMAGES_ROOT
+from .constants import DOCSTRING_KEY
+
+# ----------------------------------------------------------------------- #
 
 
-def MakeHeadings():
+def makeHeadings():
     """
     Generates the "headings.inc" file containing the substitution reference
     for the small icons used in the Sphinx titles, sub-titles and so on.
@@ -63,7 +59,7 @@ def MakeHeadings():
 
 # ----------------------------------------------------------------------- #
 
-def SphinxIndexes(sphinxDir):
+def genIndexes(sphinxDir):
     """
     This is the main function called after the `etg` process has finished.
 
@@ -76,16 +72,16 @@ def SphinxIndexes(sphinxDir):
     
     for file in pklfiles:
         if file.endswith('functions.pkl'):
-            ReformatFunctions(file)
-        elif 'classindex' in file:
-            MakeClassIndex(sphinxDir, file)
+            reformatFunctions(file)
+        elif 'moduleindex' in file:
+            makeModuleIndex(sphinxDir, file)
 
-    BuildEnumsAndMethods(sphinxDir)
+    buildEnumsAndMethods(sphinxDir)
 
 
 # ----------------------------------------------------------------------- #
 
-def BuildEnumsAndMethods(sphinxDir):
+def buildEnumsAndMethods(sphinxDir):
     """
     This function does some clean-up/refactoring of the generated ReST files by:
 
@@ -100,9 +96,8 @@ def BuildEnumsAndMethods(sphinxDir):
     4. Some cleanup.
     """
 
-    fid = open(os.path.join(sphinxDir, 'class_summary.lst'), 'rb')
-    class_summary = pickle.load(fid)
-    fid.close()
+    pf = PickleFile(os.path.join(sphinxDir, 'class_summary.pkl'))
+    class_summary = pf.read()
     
     unreferenced_classes = {}
     
@@ -144,15 +139,12 @@ def BuildEnumsAndMethods(sphinxDir):
 
         text = newtext
     
-        text = FindInherited(input, class_summary, enum_base, text)
-        text, unreferenced_classes = RemoveUnreferenced(input, class_summary, enum_base, unreferenced_classes, text)
+        text = findInherited(input, class_summary, enum_base, text)
+        text, unreferenced_classes = removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, text)
         
-        text = text.replace('wx``', '``')
-        text = text.replace('wx.``', '``')
         text = text.replace('non-NULL', 'not ``None``')
         text = text.replace(',,', ',').replace(', ,', ',')
-        text = text.replace('|wx', '|')
-        
+
         # Replacements for ScrolledWindow and ScrolledCanvas...
         text = text.replace('<wxWindow>', 'Window')
         text = text.replace('<wxPanel>', 'Panel')
@@ -182,8 +174,8 @@ def BuildEnumsAndMethods(sphinxDir):
         # Remove lines with "Event macros" in them...
         text = text.replace('Event macros:', '')
 
-        text = TooltipsOnInheritance(text, class_summary)
-        text = AddSpacesToLinks(text)
+        text = tooltipsOnInheritance(text, class_summary)
+        text = addSpacesToLinks(text)
 
         if text != orig_text:
             fid = textfile_open(input, 'wt')  
@@ -222,7 +214,7 @@ def BuildEnumsAndMethods(sphinxDir):
 
 # ----------------------------------------------------------------------- #
 
-def FindInherited(input, class_summary, enum_base, text):
+def findInherited(input, class_summary, enum_base, text):
 
     # Malformed inter-links
     regex = re.findall(r'\S:meth:\S+', text)
@@ -311,7 +303,7 @@ def FindInherited(input, class_summary, enum_base, text):
 
 # ----------------------------------------------------------------------- #
 
-def RemoveUnreferenced(input, class_summary, enum_base, unreferenced_classes, text):
+def removeUnreferenced(input, class_summary, enum_base, unreferenced_classes, text):
 
     regex = re.findall(':ref:`(.*?)`', text)
     
@@ -339,14 +331,14 @@ def RemoveUnreferenced(input, class_summary, enum_base, unreferenced_classes, te
         if split not in unreferenced_classes[reg]:
             unreferenced_classes[reg].append(split)
                 
-        text = text.replace(':ref:`%s`'%reg, '`%s`'%reg, 1)
+        text = text.replace(':ref:`%s`'%reg, '`%s`     '%reg, 1)
 
     return text, unreferenced_classes        
 
 
 # ----------------------------------------------------------------------- #
 
-def AddSpacesToLinks(text):
+def addSpacesToLinks(text):
 
     regex = re.findall('\w:ref:`(.*?)`', text)
 
@@ -357,7 +349,7 @@ def AddSpacesToLinks(text):
 
 # ----------------------------------------------------------------------- #
 
-def ReformatFunctions(file):
+def reformatFunctions(file):
 
     text_file = os.path.splitext(file)[0] + '.txt'
     local_file = os.path.split(file)[1]
@@ -365,15 +357,14 @@ def ReformatFunctions(file):
     if not newer(file, text_file):
         return
     
-    fid = open(file, 'rb')
-    functions = pickle.load(fid)
-    fid.close()
-    
-    if local_file.count('.') == 1:
+    pf = PickleFile(file)
+    functions = pf.read()
+
+    if local_file.count('.') == 2:
         # Core functions
-        label = 'Core'
+        label = 'wx'
     else:
-        label = local_file.split('.')[0:-2][0]
+        label = '.'.join(local_file.split('.')[0:2])
 
     names = list(functions.keys())
     names = [name.lower() for name in names]
@@ -392,6 +383,7 @@ def ReformatFunctions(file):
 
     names = list(functions.keys())
     names = sorted(names, key=str.lower)
+    imm = ItemModuleMap()
 
     for letter in letters:
         text += '.. _%s %s:\n\n%s\n^\n\n'%(label, letter, letter)
@@ -399,7 +391,7 @@ def ReformatFunctions(file):
             if fun[0].upper() != letter:
                 continue
 
-            text += '* :func:`%s`\n'%fun
+            text += '* :func:`%s`\n' % imm.get_fullname(fun)
 
         text += '\n\n'
 
@@ -412,79 +404,110 @@ def ReformatFunctions(file):
 
 # ----------------------------------------------------------------------- #
 
-def MakeClassIndex(sphinxDir, file):
+def makeModuleIndex(sphinxDir, file):
 
     text_file = os.path.splitext(file)[0] + '.txt'
     local_file = os.path.split(file)[1]
 
     if not newer(file, text_file):
         return
-    
-    fid = open(file, 'rb')
-    classes = pickle.load(fid)
-    fid.close()
-    
-    if local_file.count('.') == 1:
-        # Core functions
-        label = 'Core'
-        module = ''
-        enumDots = 1
-    else:
-        label = local_file.split('.')[0:-2][0]
-        module = label
-        enumDots = 2
 
-    enum_files = glob.glob(sphinxDir + '/%s*.enumeration.txt'%module)
+    pf = PickleFile(file)
+    classes = pf.read()
+    module_docstring = classes.get(DOCSTRING_KEY)
+    if module_docstring is not None:
+        del classes[DOCSTRING_KEY]
+
+    if local_file.startswith('wx.1'):
+        # Core functions
+        label = 'wx'
+        module = 'wx'
+        enumDots = 2
+        # Take care to get only files starting with "wx.UpperName", not
+        # "wx.lower.UpperName". This is so we don't put all the enums in the
+        # submodules in the core wx module too.
+        # TODO: This may not work on case-insensitive file systems, check it.
+        enum_files = glob.glob(sphinxDir + '/wx.[A-Z]*.enumeration.txt')
+    else:
+        label = '.'.join(local_file.split('.')[0:2])
+        module = label
+        enumDots = 3
+        enum_files = glob.glob(sphinxDir + '/%s*.enumeration.txt' % module)
+
     enum_base = [os.path.split(os.path.splitext(enum)[0])[1] for enum in enum_files]
 
+    imm = ItemModuleMap()
     names = list(classes.keys())
-    names.sort()
+    names.sort(key=lambda n: imm.get_fullname(n))
 
     text = ''
     if module:
-        text += '\n\n.. module:: %s\n\n'%module
+        text += '\n\n.. module:: %s\n\n' % module
         
-    text += templates.TEMPLATE_CLASS_INDEX % (label, label)
+    text += templates.TEMPLATE_CLASS_INDEX % (label, module_docstring)
 
     text += 80*'=' + ' ' + 80*'=' + '\n'
-    text += '%-80s **Short Description**\n'%'**Class**'
+    text += '%-80s **Short Description**\n' % '**Class**'
     text += 80*'=' + ' ' + 80*'=' + '\n'
 
     for cls in names:
         out = classes[cls]
         if '=====' in out:
             out = ''
-        text += '%-80s %s\n'%(':ref:`%s`'%Wx2Sphinx(cls)[1], out)
+        text += '%-80s %s\n' % (':ref:`%s`' % wx2Sphinx(cls)[1], out)
 
     text += 80*'=' + ' ' + 80*'=' + '\n\n'
 
     contents = []
     for cls in names:
-        contents.append(Wx2Sphinx(cls)[1])
+        contents.append(wx2Sphinx(cls)[1])
 
     for enum in enum_base:
         if enum.count('.') == enumDots:
             contents.append(enum)
 
     contents.sort()
-    
+
+    # Are there functions for this module too?
+    functionsFile = os.path.join(sphinxDir, module + '.functions.pkl')
+    if os.path.exists(functionsFile):
+        pf = PickleFile(functionsFile)
+        functions = list(pf.read().keys())
+        functions.sort(key=lambda n: imm.get_fullname(n))
+
+        pf = PickleFile(os.path.join(SPHINXROOT, 'function_summary.pkl'))
+        function_summaries = pf.read()
+
+        text += templates.TEMPLATE_MODULE_FUNCTION_SUMMARY
+        text += 80*'=' + ' ' + 80*'=' + '\n'
+        text += '%-80s **Short Description**\n' % '**Function**'
+        text += 80*'=' + ' ' + 80*'=' + '\n'
+
+        for func_name in functions:
+            fullname = imm.get_fullname(func_name)
+            doc = function_summaries.get(fullname, '')
+            text += '%-80s %s\n' % (':func:`%s`' % fullname, doc)
+
+        text += 80 * '=' + ' ' + 80 * '=' + '\n\n'
+        contents.append(module + '.functions')
+
     toctree = ''
     for item in contents:
-        toctree += '   %s\n'%item
+        toctree += '   %s\n' % item
 
-    text += templates.TEMPLATE_TOCTREE%toctree
+    text += templates.TEMPLATE_TOCTREE % toctree
         
     writeIfChanged(text_file, text)
 
 
 # ----------------------------------------------------------------------- #
 
-def GenGallery():
+def genGallery():
 
     link = '<div class="gallery_class">'
 
     link_template = """\
-    <table><caption align="bottom"><a href="%s"<b>%s</b></a</caption>
+    <table><caption align="bottom"><a href="%s"><b>%s</b></a></caption>
     <tr>
     <td><a href="%s"><img src="_static/images/widgets/fullsize/%s/%s" border="20" alt="%s"/></a>
     </td>
@@ -512,8 +535,7 @@ def GenGallery():
 
     for text in txt_files:
         simple = os.path.split(os.path.splitext(text)[0])[1]
-        possible = simple.split('.')[-1]
-        possible = possible.lower()
+        possible = simple.lower()
         html_files[possible + '.png'] = simple + '.html'
 
     keys = list(html_files.keys())
@@ -533,7 +555,7 @@ def GenGallery():
             plat_images = image_files[platform]
 
             if possible_png in plat_images:
-                text += link_template%(html, os.path.splitext(html)[0], html, platform, possible_png, os.path.splitext(html)[0])
+                text += link_template % (html, os.path.splitext(html)[0], html, platform, possible_png, os.path.splitext(html)[0])
                 text += '\n'
                 break
 
@@ -543,7 +565,7 @@ def GenGallery():
 
 # ----------------------------------------------------------------------- #
 
-def AddPrettyTable(text):
+def addPrettyTable(text):
     """ Unused at the moment. """
 
     newtext = """<br>
@@ -564,7 +586,7 @@ def AddPrettyTable(text):
 
 # ----------------------------------------------------------------------- #
 
-def ClassToFile(line):
+def classToFile(line):
 
     if '&#8211' not in line:
         return line
@@ -590,7 +612,7 @@ def ClassToFile(line):
 
 # ----------------------------------------------------------------------- #
 
-def AddJavaScript(text):
+def addJavaScript(text):
 
     jsCode = """\
         <script>
@@ -620,7 +642,7 @@ def AddJavaScript(text):
     
 # ----------------------------------------------------------------------- #
 
-def PostProcess(folder):
+def postProcess(folder):
 
     fileNames = glob.glob(folder + "/*.html")
 
@@ -652,7 +674,7 @@ def PostProcess(folder):
         split = os.path.split(files)[1]
 
         if split in ['index.html', 'main.html']:
-            text = ChangeSVNRevision(text)
+            text = changeSVNRevision(text)
         else:
             text = text.replace('class="headerimage"', 'class="headerimage-noshow"')
         
@@ -697,7 +719,7 @@ def PostProcess(folder):
         for old, new in list(enum_dict.items()):
             newtext = newtext.replace(old, new)
 
-        newtext = AddJavaScript(newtext)            
+        newtext = addJavaScript(newtext)
 
         if orig_text != newtext:
             fid = open(files, "wt")
@@ -707,14 +729,14 @@ def PostProcess(folder):
 
 # ----------------------------------------------------------------------- #
 
-def ChangeSVNRevision(text):
+def changeSVNRevision(text):
     REVISION = getVcsRev()
     text = text.replace('|TODAY|', TODAY)
     text = text.replace('|VCSREV|', REVISION)
     return text
 
 
-def TooltipsOnInheritance(text, class_summary):
+def tooltipsOnInheritance(text, class_summary):
 
     graphviz = re.findall(r'<p class="graphviz">(.*?)</p>', text, re.DOTALL)
 

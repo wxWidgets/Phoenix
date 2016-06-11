@@ -20,7 +20,7 @@ Description
 
 This module loads additional colour names/values into the :class:`ColourDatabase`.
 
-The :mod:`colourdb` will update the wxPython :class:`ColourDatabase` using a pre-defined
+The :mod:`colourdb` will update the wxPython :class:`wx.ColourDatabase` using a pre-defined
 set of colour names/colour tuples, hard-coded in this module source code.
 
 
@@ -722,7 +722,9 @@ def getColourInfoList():
 _haveUpdated = False
 
 def updateColourDB():
-    """ Updates the :class:`ColourDatabase` by adding new colour names and RGB values. """
+    """
+    Updates the :class:`wx.ColourDatabase` by adding new colour names and RGB values.
+    """
 
     global _haveUpdated
     if not _haveUpdated:

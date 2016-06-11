@@ -23,7 +23,7 @@ import  wx
 
 class LayoutAnchors(wx.LayoutConstraints):
     """
-    A class that implements Delphi's Anchors with wx.LayoutConstraints.
+    A class that implements Delphi's Anchors with :class:`wx.LayoutConstraints`.
 
     Anchored sides maintain the distance from the edge of the control
     to the same edge of the parent.  When neither side is selected,

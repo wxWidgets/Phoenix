@@ -13,6 +13,8 @@ Just some base classes and stubs for the various generators
 
 import sys
 
+#---------------------------------------------------------------------------
+
 class WrapperGeneratorBase(object):
     def __init__(self):
         pass    
@@ -120,3 +122,4 @@ def textfile_open(filename, mode='rt'):
     
     
 #---------------------------------------------------------------------------
+

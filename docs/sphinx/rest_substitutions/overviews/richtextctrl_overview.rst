@@ -11,12 +11,12 @@
 Introduction
 ------------
 
-:class:`~richtext.RichTextCtrl` provides a generic implementation of a rich text
-editor that can handle different character styles, paragraph
+:class:`~wx.richtext.RichTextCtrl` provides a generic implementation of a
+rich text editor that can handle different character styles, paragraph
 formatting, and images.
 
 It's aimed at editing 'natural' language text - if you need an editor
-that supports code editing, :class:`~stc.StyledTextCtrl` is a better choice.
+that supports code editing, :class:`wx.stc.StyledTextCtrl` is a better choice.
 
 Despite its name, it cannot currently read or write RTF (rich text
 format) files. Instead, it uses its own XML format, and can also read
@@ -25,62 +25,74 @@ OpenDocument file capabilities. Custom file formats can be supported
 by creating additional file handlers and registering them with the
 control.
 
-:class:`~richtext.RichTextCtrl` is largely compatible with the :class:`TextCtrl` API,
-but extends it where necessary. The control can be used where the
-native rich text capabilities of :class:`TextCtrl` are not adequate (this
-is particularly true on Windows) and where more direct access to the
-content representation is required. It is difficult and inefficient to
-read the style information in a :class:`TextCtrl`, whereas this
-information is readily available in :class:`~richtext.RichTextCtrl`. Since it's
-written in pure wxWidgets, any customizations you make to
-:class:`~richtext.RichTextCtrl` will be reflected on all platforms.
+:class:`~wx.richtext.RichTextCtrl` is largely compatible with the
+:class:`wx.TextCtrl` API, but extends it where necessary. The control can
+be used where the native rich text capabilities of :class:`wx.TextCtrl`
+are not adequate (this is particularly true on Windows) and where more
+direct access to the content representation is required. It is
+difficult and inefficient to read the style information in a
+:class:`wx.TextCtrl`, whereas this information is readily available in
+:class:`~wx.richtext.RichTextCtrl`. Since it's written in pure wxWidgets,
+any customizations you make to :class:`~wx.richtext.RichTextCtrl` will be
+reflected on all platforms.
 
-:class:`~richtext.RichTextCtrl` supports basic printing via the easy-to-use
-:class:`~richtext.RichTextPrinting` class. Creating applications with simple word
-processing features is simplified with the inclusion of
-:class:`~richtext.RichTextFormattingDialog`, a tabbed dialog allowing interactive
-tailoring of paragraph and character styling. Also provided is the
-multi-purpose dialog :class:`~richtext.RichTextStyleOrganiserDialog` that can be
-used for managing style definitions, browsing styles and applying
-them, or selecting list styles with a renumber option.
+:class:`~wx.richtext.RichTextCtrl` supports basic printing via the
+easy-to-use :class:`~wx.richtext.RichTextPrinting` class. Creating
+applications with simple word processing features is simplified with
+the inclusion of :class:`~wx.richtext.RichTextFormattingDialog`, a tabbed
+dialog allowing interactive tailoring of paragraph and character
+styling. Also provided is the multi-purpose dialog
+:class:`~wx.richtext.RichTextStyleOrganiserDialog` that can be used for
+managing style definitions, browsing styles and applying them, or
+selecting list styles with a renumber option.
 
-There are a few disadvantages to using :class:`~richtext.RichTextCtrl`. It is not
-native, so does not behave exactly as a native :class:`TextCtrl`, although
-common editing conventions are followed. Users may miss the built-in
-spelling correction on Mac OS X, or any special character input that
-may be provided by the native control. It would also be a poor choice
-if intended users rely on screen readers that would be not work well
-with non-native text input implementation. You might mitigate this by
-providing the choice between :class:`TextCtrl` and :class:`~richtext.RichTextCtrl`, with
-fewer features in the former case.
+There are a few disadvantages to using
+:class:`~wx.richtext.RichTextCtrl`. It is not native, so does not behave
+exactly as a native :class:`wx.TextCtrl`, although common editing
+conventions are followed. Users may miss the built-in spelling
+correction on Mac OS X, or any special character input that may be
+provided by the native control. It would also be a poor choice if
+intended users rely on screen readers that would be not work well with
+non-native text input implementation. You might mitigate this by
+providing the choice between :class:`wx.TextCtrl` and
+:class:`~wx.richtext.RichTextCtrl`, with fewer features in the former
+case.
 
-A good way to understand :class:`~richtext.RichTextCtrl`'s capabilities is to
-run the sample in the wxPython demo, and browse the code.
+A good way to understand :class:`~wx.richtext.RichTextCtrl`\ 's
+capabilities is to run the sample in the wxPython demo, and browse the
+code.
 
 
 Related Classes
 ===============
 
-**Major classes:** :class:`~richtext.RichTextCtrl`, :class:`~richtext.RichTextBuffer`,
-:class:`~richtext.RichTextEvent`
+**Major classes:** :class:`~wx.richtext.RichTextCtrl`,
+:class:`~wx.richtext.RichTextBuffer`, :class:`~wx.richtext.RichTextEvent`
 
-**Helper classes:** :class:`~richtext.TextAttr`, :class:`~richtext.RichTextRange`
+**Helper classes:** :class:`wx.TextAttr`,
+  :class:`~wx.richtext.RichTextRange`
 
-**File handler classes:** :class:`~richtext.RichTextFileHandler`,
-:class:`~richtext.RichTextHTMLHandler`, :class:`~richtext.RichTextXMLHandler`
+**File handler classes:** :class:`~wx.richtext.RichTextFileHandler`,
+:class:`~wx.richtext.RichTextHTMLHandler`,
+:class:`~wx.richtext.RichTextXMLHandler`
 
-**Style classes:** :class:`~richtext.RichTextCharacterStyleDefinition`,
-:class:`~richtext.RichTextParagraphStyleDefinition`,
-:class:`~richtext.RichTextListStyleDefinition`, :class:`~richtext.RichTextStyleSheet`
+**Style classes:**
+:class:`~wx.richtext.RichTextCharacterStyleDefinition`,
+:class:`~wx.richtext.RichTextParagraphStyleDefinition`,
+:class:`~wx.richtext.RichTextListStyleDefinition`,
+:class:`~wx.richtext.RichTextStyleSheet`
 
-**Additional controls:** :class:`~richtext.RichTextStyleComboCtrl`,
-:class:`~richtext.RichTextStyleListBox`, :class:`~richtext.RichTextStyleListCtrl`
+**Additional controls:** :class:`~wx.richtext.RichTextStyleComboCtrl`,
+:class:`~wx.richtext.RichTextStyleListBox`,
+:class:`~wx.richtext.RichTextStyleListCtrl`
 
-**Printing classes:** :class:`~richtext.RichTextPrinting`, :class:`~richtext.RichTextPrintout`,
-:class:`~richtext.RichTextHeaderFooterData`
+**Printing classes:** :class:`~wx.richtext.RichTextPrinting`,
+:class:`~wx.richtext.RichTextPrintout`,
+:class:`~wx.richtext.RichTextHeaderFooterData`
 
-**Dialog classes:** :class:`~richtext.RichTextStyleOrganiserDialog`,
-:class:`~richtext.RichTextFormattingDialog`, :class:`~richtext.SymbolPickerDialog`
+**Dialog classes:** :class:`~wx.richtext.RichTextStyleOrganiserDialog`,
+:class:`~wx.richtext.RichTextFormattingDialog`,
+:class:`~wx.richtext.SymbolPickerDialog`
 
 
 Code Example
@@ -791,16 +803,16 @@ This is taken from the wxPython demo::
 Text Styles
 ===========
 
-Styling attributes are represented by :class:`TextAttr`, or for more
+Styling attributes are represented by :class:`wx.TextAttr`, or for more
 control over attributes such as margins and size, the derived class
-:class:`~richtext.RichTextAttr`.
+:class:`~wx.richtext.RichTextAttr`.
 
 When setting a style, the flags of the attribute object determine
 which attributes are applied. When querying a style, the passed flags
 are ignored except (optionally) to determine whether attributes should
 be retrieved from character content or from the paragraph object.
 
-:class:`~richtext.RichTextCtrl` takes a layered approach to styles, so that
+:class:`~wx.richtext.RichTextCtrl` takes a layered approach to styles, so that
 different parts of the content may be responsible for contributing
 different attributes to the final style you see on the screen.
 
@@ -808,26 +820,32 @@ There are four main notions of style within a control:
 
 
 + **Basic style**: The fundamental style of a control, onto which any
-  other styles are layered. It provides default attributes, and changing
-  the basic style may immediately change the look of the content
-  depending on what other styles the content uses. Calling
-  :meth:`~richtext.RichTextCtrl.SetFont` changes the font for the basic style. The
-  basic style is set with :meth:`~richtext.RichTextCtrl.SetBasicStyle`.
+  other styles are layered. It provides default attributes, and
+  changing the basic style may immediately change the look of the
+  content depending on what other styles the content uses. Calling
+  :meth:`~wx.richtext.RichTextCtrl.SetFont` changes the font for the
+  basic style. The basic style is set with
+  :meth:`~wx.richtext.RichTextCtrl.SetBasicStyle`.
+  
 + **Paragraph style**: Each paragraph has attributes that are set
-  independently from other paragraphs and independently from the content
-  within the paragraph. Normally, these attributes are paragraph-
-  related, such as alignment and indentation, but it is possible to set
-  character attributes too. The paragraph style can be set independently
-  of its content by passing ``RICHTEXT_SETSTYLE_PARAGRAPHS_ONLY`` to
-  :meth:`~richtext.RichTextCtrl.SetStyleEx`.
+  independently from other paragraphs and independently from the
+  content within the paragraph. Normally, these attributes are
+  paragraph- related, such as alignment and indentation, but it is
+  possible to set character attributes too. The paragraph style can be
+  set independently of its content by passing
+  ``RICHTEXT_SETSTYLE_PARAGRAPHS_ONLY`` to
+  :meth:`~wx.richtext.RichTextCtrl.SetStyleEx`.
+
 + **Character style**: Characters within each paragraph can have
   attributes. A single character, or a run of characters, can have a
   particular set of attributes. The character style can be with
-  :meth:`~richtext.RichTextCtrl.SetStyle` or :meth:`~richtext.RichTextCtrl.SetStyleEx`.
+  :meth:`~wx.richtext.RichTextCtrl.SetStyle` or
+  :meth:`~wx.richtext.RichTextCtrl.SetStyleEx`.
+
 + **Default style**: This is the 'current' style that determines the
   style of content that is subsequently typed, pasted or
   programmatically inserted. The default style is set with
-  :meth:`~richtext.RichTextCtrl.SetDefaultStyle`.
+  :meth:`~wx.richtext.RichTextCtrl.SetDefaultStyle`.
 
 
 What you see on the screen is the dynamically *combined* style, found
@@ -842,9 +860,12 @@ set these different styles:
 + You might set the *basic style* to have a Times Roman font in 12
   point, left-aligned, with two millimetres of spacing after each
   paragraph.
+
 + You might set the *paragraph style* (for one particular paragraph)
   to be centred.
+
 + You might set the *character style* of one particular word to bold.
+
 + You might set the *default style* to be underlined, for subsequent
   inserted text.
 
@@ -852,17 +873,17 @@ set these different styles:
 Naturally you can do any of these things either using your own UI, or
 programmatically.
 
-The basic :class:`TextCtrl` doesn't make the same distinctions as
-:class:`~richtext.RichTextCtrl` regarding attribute storage. So we need finer
+The basic :class:`wx.TextCtrl` doesn't make the same distinctions as
+:class:`~wx.richtext.RichTextCtrl` regarding attribute storage. So we need finer
 control when setting and retrieving attributes.
-:meth:`~richtext.RichTextCtrl.SetStyleEx` takes a *flags* parameter:
+:meth:`~wx.richtext.RichTextCtrl.SetStyleEx` takes a *flags* parameter:
 
 
 + ``RICHTEXT_SETSTYLE_OPTIMIZE`` specifies that the style should be
   changed only if the combined attributes are different from the
   attributes for the current object. This is important when applying
   styling that has been edited by the user, because he has just edited
-  the *combined* (visible) style, and :class:`~richtext.RichTextCtrl` wants to leave
+  the *combined* (visible) style, and :class:`~wx.richtext.RichTextCtrl` wants to leave
   unchanged attributes associated with their original objects instead of
   applying them to both paragraph and content objects.
 + ``RICHTEXT_SETSTYLE_PARAGRAPHS_ONLY`` specifies that only paragraph
@@ -875,83 +896,89 @@ control when setting and retrieving attributes.
 
 
 It's great to be able to change arbitrary attributes in a
-:class:`~richtext.RichTextCtrl`, but it can be unwieldy for the user or programmer
-to set attributes separately. Word processors have collections of
-styles that you can tailor or use as-is, and this means that you can
-set a heading with one click instead of marking text in bold,
-specifying a large font size, and applying a certain paragraph spacing
-and alignment for every such heading. Similarly, wxPython provides a
-class called :class:`~richtext.RichTextStyleSheet` which manages style definitions
-(:class:`~richtext.RichTextParagraphStyleDefinition`,
-:class:`~richtext.RichTextListStyleDefinition` and
-:class:`~richtext.RichTextCharacterStyleDefinition`). Once you have added
-definitions to a style sheet and associated it with a
-:class:`~richtext.RichTextCtrl`, you can apply a named definition to a range of
-text. The classes :class:`~richtext.RichTextStyleComboCtrl` and
-:class:`~richtext.RichTextStyleListBox` can be used to present the user with a list
-of styles in a sheet, and apply them to the selected text.
+:class:`~wx.richtext.RichTextCtrl`, but it can be unwieldy for the
+user or programmer to set attributes separately. Word processors have
+collections of styles that you can tailor or use as-is, and this means
+that you can set a heading with one click instead of marking text in
+bold, specifying a large font size, and applying a certain paragraph
+spacing and alignment for every such heading. Similarly, wxPython
+provides a class called :class:`~wx.richtext.RichTextStyleSheet` which
+manages style definitions
+(:class:`~wx.richtext.RichTextParagraphStyleDefinition`,
+:class:`~wx.richtext.RichTextListStyleDefinition` and
+:class:`~wx.richtext.RichTextCharacterStyleDefinition`). Once you have
+added definitions to a style sheet and associated it with a
+:class:`~wx.richtext.RichTextCtrl`, you can apply a named definition
+to a range of text. The classes
+:class:`~wx.richtext.RichTextStyleComboCtrl` and
+:class:`~wx.richtext.RichTextStyleListBox` can be used to present the
+user with a list of styles in a sheet, and apply them to the selected
+text.
 
 You can reapply a style sheet to the contents of the control, by
-calling :meth:`~richtext.RichTextCtrl.ApplyStyleSheet`. This is useful if the
-style definitions have changed, and you want the content to reflect
-this. It relies on the fact that when you apply a named style, the
-style definition name is recorded in the content. So ApplyStyleSheet
-works by finding the paragraph attributes with style names and re-
-applying the definition's attributes to the paragraph. Currently, this
-works with paragraph and list style definitions only.
+calling :meth:`~wx.richtext.RichTextCtrl.ApplyStyleSheet`. This is
+useful if the style definitions have changed, and you want the content
+to reflect this. It relies on the fact that when you apply a named
+style, the style definition name is recorded in the content. So
+ApplyStyleSheet works by finding the paragraph attributes with style
+names and re- applying the definition's attributes to the
+paragraph. Currently, this works with paragraph and list style
+definitions only.
 
 
 Included Dialogs
 ================
 
-:class:`~richtext.RichTextCtrl` comes with standard dialogs to make it easier to
-implement text editing functionality.
+:class:`~wx.richtext.RichTextCtrl` comes with standard dialogs to make
+it easier to implement text editing functionality.
 
-:class:`~richtext.RichTextFormattingDialog` can be used for character or paragraph
-formatting, or a combination of both. It's a `PropertySheetDialog`
-with the following available tabs: Font, Indents & Spacing, Tabs,
-Bullets, Style, Borders, Margins, Background, Size, and List Style.
-You can select which pages will be shown by supplying flags to the
-dialog constructor. In a character formatting dialog, typically only
-the Font page will be shown. In a paragraph formatting dialog, you'll
-show the Indents & Spacing, Tabs and Bullets pages. The Style tab is
-useful when editing a style definition.
+:class:`~wx.richtext.RichTextFormattingDialog` can be used for
+character or paragraph formatting, or a combination of both. It's a
+`PropertySheetDialog` with the following available tabs: Font, Indents
+& Spacing, Tabs, Bullets, Style, Borders, Margins, Background, Size,
+and List Style.  You can select which pages will be shown by supplying
+flags to the dialog constructor. In a character formatting dialog,
+typically only the Font page will be shown. In a paragraph formatting
+dialog, you'll show the Indents & Spacing, Tabs and Bullets pages. The
+Style tab is useful when editing a style definition.
 
 You can customize this dialog by providing your own
-:class:`~richtext.RichTextFormattingDialogFactory` object, which tells the
-formatting dialog how many pages are supported, what their identifiers
-are, and how to creates the pages.
+:class:`~wx.richtext.RichTextFormattingDialogFactory` object, which
+tells the formatting dialog how many pages are supported, what their
+identifiers are, and how to creates the pages.
 
-:class:`~richtext.RichTextStyleOrganiserDialog` is a multi-purpose dialog that can
-be used for managing style definitions, browsing styles and applying
-them, or selecting list styles with a renumber option. See the sample
-for usage - it is used for the "Manage Styles" and "Bullets and
-Numbering" menu commands.
+:class:`~wx.richtext.RichTextStyleOrganiserDialog` is a multi-purpose
+dialog that can be used for managing style definitions, browsing
+styles and applying them, or selecting list styles with a renumber
+option. See the sample for usage - it is used for the "Manage Styles"
+and "Bullets and Numbering" menu commands.
 
-:class:`~richtext.SymbolPickerDialog` lets the user insert a symbol from a specified
-font. It has no :class:`~richtext.RichTextCtrl` dependencies besides being included
-in the rich text library.
+:class:`~wx.richtext.SymbolPickerDialog` lets the user insert a symbol
+from a specified font. It has no :class:`~wx.richtext.RichTextCtrl`
+dependencies besides being included in the rich text library.
 
 
 How RichTextCtrl is Implemented
 ===============================
 
-Data representation is handled by :class:`~richtext.RichTextBuffer`, and a
-:class:`~richtext.RichTextCtrl` always has one such buffer.
+Data representation is handled by
+:class:`~wx.richtext.RichTextBuffer`, and a
+:class:`~wx.richtext.RichTextCtrl` always has one such buffer.
 
 The content is represented by a hierarchy of objects, all derived from
-:class:`~richtext.RichTextObject`. An object might be an image, a fragment of text,
-a paragraph, or a further composite object. Objects store a
-:class:`~richtext.RichTextAttr` containing style information; a paragraph object can
-contain both paragraph and character information, but content objects
-such as text can only store character information. The final style
-displayed in the control or in a printout is a combination of base
-style, paragraph style and content (character) style.
+:class:`~wx.richtext.RichTextObject`. An object might be an image, a
+fragment of text, a paragraph, or a further composite object. Objects
+store a :class:`~wx.richtext.RichTextAttr` containing style
+information; a paragraph object can contain both paragraph and
+character information, but content objects such as text can only store
+character information. The final style displayed in the control or in
+a printout is a combination of base style, paragraph style and content
+(character) style.
 
 The top of the hierarchy is the buffer, a kind of
-:class:`~richtext.RichTextParagraphLayoutBox`, containing further
-:class:`~richtext.RichTextParagraph` objects, each of which can include text, images
-and potentially other types of object.
+:class:`~wx.richtext.RichTextParagraphLayoutBox`, containing further
+:class:`~wx.richtext.RichTextParagraph` objects, each of which can
+include text, images and potentially other types of object.
 
 Each object maintains a range (start and end position) measured from
 the start of the main parent object.
@@ -968,61 +995,66 @@ requiring layout), so that only the minimum amount of layout is
 performed.
 
 A paragraph of pure text with the same style contains just one further
-object, a :class:`~richtext.RichTextPlainText` object. When styling is applied to
-part of this object, the object is decomposed into separate objects,
-one object for each different character style. So each object within a
-paragraph always has just one :class:`TextAttr` object to denote its
-character style. Of course, this can lead to fragmentation after a lot
-of edit operations, potentially leading to several objects with the
-same style where just one would do. So a Defragment function is called
-when updating the control's display, to ensure that the minimum number
-of objects is used.
+object, a :class:`~wx.richtext.RichTextPlainText` object. When styling
+is applied to part of this object, the object is decomposed into
+separate objects, one object for each different character style. So
+each object within a paragraph always has just one :class:`wx.TextAttr`
+object to denote its character style. Of course, this can lead to
+fragmentation after a lot of edit operations, potentially leading to
+several objects with the same style where just one would do. So a
+Defragment function is called when updating the control's display, to
+ensure that the minimum number of objects is used.
 
 
 Nested Objects
 ==============
 
-:class:`~richtext.RichTextCtrl` supports nested objects such as text boxes and
-tables. To achieve compatibility with the existing API, there is the
-concept of *object* *focus*. When the user clicks on a nested text
-box, the object focus is set to that container object so all keyboard
-input and API functions apply to that container. The application can
-change the focus using :meth:`~richtext.RichTextCtrl.SetObjectFocus`. Call this
-function with a ``None`` parameter to set the focus back to the top-level object.
+:class:`~wx.richtext.RichTextCtrl` supports nested objects such as
+text boxes and tables. To achieve compatibility with the existing API,
+there is the concept of *object* *focus*. When the user clicks on a
+nested text box, the object focus is set to that container object so
+all keyboard input and API functions apply to that container. The
+application can change the focus using
+:meth:`~wx.richtext.RichTextCtrl.SetObjectFocus`. Call this function
+with a ``None`` parameter to set the focus back to the top-level
+object.
 
 An event will be sent to the control when the focus changes.
 
-When the user clicks on the control, :class:`~richtext.RichTextCtrl` determines
-which container to set as the current object focus by calling the
-found container's overrided :meth:`~richtext.RichTextObject.AcceptsFocus`
-function. For example, although a table is a container, it must not
-itself be the object focus because there is no text editing at the
-table level. Instead, a cell within the table must accept the focus.
+When the user clicks on the control,
+:class:`~wx.richtext.RichTextCtrl` determines which container to set
+as the current object focus by calling the found container's overrided
+:meth:`~wx.richtext.RichTextObject.AcceptsFocus` function. For
+example, although a table is a container, it must not itself be the
+object focus because there is no text editing at the table
+level. Instead, a cell within the table must accept the focus.
 
 Since with nested objects it is not possible to represent a section
 with merely a start position and an end position, the class
-:class:`~richtext.RichTextSelection` is provided which stores multiple ranges (for
-non-contiguous selections such as table cells) and a pointer to the
-container object in question. You can pass :class:`~richtext.RichTextSelection` to
-:meth:`~richtext.RichTextCtrl.SetSelection` or get an instance of it from
-:meth:`~richtext.RichTextCtrl.GetSelection`.
+:class:`~wx.richtext.RichTextSelection` is provided which stores
+multiple ranges (for non-contiguous selections such as table cells)
+and a pointer to the container object in question. You can pass
+:class:`~wx.richtext.RichTextSelection` to
+:meth:`~wx.richtext.RichTextCtrl.SetSelection` or get an instance of
+it from :meth:`~wx.richtext.RichTextCtrl.GetSelection`.
 
 When selecting multiple objects, such as cell tables, the
-:class:`~richtext.RichTextCtrl` dragging handler code calls the function
-:meth:`~richtext.RichTextObject.HandlesChildSelections` to determine whether the
-children can be individual selections. Currently only table cells can
-be multiply-selected in this way.
+:class:`~wx.richtext.RichTextCtrl` dragging handler code calls the
+function :meth:`~wx.richtext.RichTextObject.HandlesChildSelections` to
+determine whether the children can be individual selections. Currently
+only table cells can be multiply-selected in this way.
 
 
 Context Menus and Property Dialogs
 ==================================
 
 There are three ways you can make use of context menus: you can let
-:class:`~richtext.RichTextCtrl` handle everything and provide a basic menu; you can
-set your own context menu using :meth:`~richtext.RichTextCtrl.SetContextMenu` but
-let :class:`~richtext.RichTextCtrl` handle showing it and adding property items; or
-you can override the default context menu behaviour by adding a
-context menu event handler to your class in the normal way.
+:class:`~wx.richtext.RichTextCtrl` handle everything and provide a basic
+menu; you can set your own context menu using
+:meth:`~wx.richtext.RichTextCtrl.SetContextMenu` but let
+:class:`~wx.richtext.RichTextCtrl` handle showing it and adding property
+items; or you can override the default context menu behaviour by
+adding a context menu event handler to your class in the normal way.
 
 If you right-click over a text box in cell in a table, you may want to
 edit the properties of one of these objects - but which properties
@@ -1032,12 +1064,13 @@ Well, the default behaviour allows up to three property-editing menu
 items simultaneously - for the object clicked on, the container of
 that object, and the container's parent (depending on whether any of
 these objects return true from their
-:meth:`~richtext.RichTextObject.CanEditProperties` functions). If you supply a
-context menu, add a property command item using the
-``ID_RICHTEXT_PROPERTIES1`` identifier, so that :class:`~richtext.RichTextCtrl` can
-find the position to add command items. The object should tell the
-control what label to use by returning a string from
-:meth:`~richtext.RichTextObject.GetPropertiesMenuLabel`.
+:meth:`~wx.richtext.RichTextObject.CanEditProperties` functions). If
+you supply a context menu, add a property command item using the
+``ID_RICHTEXT_PROPERTIES1`` identifier, so that
+:class:`~wx.richtext.RichTextCtrl` can find the position to add
+command items. The object should tell the control what label to use by
+returning a string from
+:meth:`~wx.richtext.RichTextObject.GetPropertiesMenuLabel`.
 
 Since there may be several property-editing commands showing, it is
 recommended that you don't include the word Properties - just the name
@@ -1059,7 +1092,7 @@ This is an incomplete list of bugs.
 + As the selection is expanded, the text jumps slightly due to kerning
   differences between drawing a single text string versus drawing
   several fragments separately. This could be improved by using
-  :meth:`DC.GetPartialTextExtents` to calculate exactly where the separate
+  :meth:`wx.DC.GetPartialTextExtents` to calculate exactly where the separate
   fragments should be drawn. Note that this problem also applies to
   separation of text fragments due to difference in their attributes.
 
@@ -1074,17 +1107,26 @@ implemented. Help with them will be appreciated.
 
 + Support for composite objects in some functions where it's not yet
   implemented, for example ApplyStyleSheet
+
 + Table API enhancements and dialogs; improved table layout especially
   row spans and fitting
+
 + Conversion from HTML, and a rewrite of the HTML output handler that
   includes CSS, tables, text boxes, and floating images, in addition to
   a simplified-HTML mode for wxHTML compatibility
+
 + Open Office input and output
+
 + RTF input and output
+
 + A ruler control
+
 + Standard editing toolbars
+
 + Bitmap bullets
+
 + Justified text, in print/preview at least
+
 + Scaling: either everything scaled, or rendering using a custom
   reference point size and an optional dimension scale
 
@@ -1092,7 +1134,7 @@ implemented. Help with them will be appreciated.
 There are also things that could be done to take advantage of the
 underlying text capabilities of the platform; higher-level text
 formatting APIs are available on some platforms, such as Mac OS X, and
-some of translation from high level to low level :class:`DC` API is
+some of translation from high level to low level :class:`wx.DC` API is
 unnecessary. However this would require additions to the wxPython API.
 
 

@@ -3,18 +3,21 @@
 # Author:      Robin Dunn
 #
 # Created:     24-Oct-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
 PACKAGE   = "wx" 
 MODULE    = "_stc"
 NAME      = "_stc"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The :ref:`wx.stc.StyledTextCrtl` class provided by this module is a text widget
+primarily intended for use as a syntax highlighting source code editor.  It is
+based on the popular Scintilla widget.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 

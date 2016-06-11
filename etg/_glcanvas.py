@@ -3,18 +3,19 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
 PACKAGE   = "wx" 
 MODULE    = "_glcanvas"
 NAME      = "_glcanvas"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+These classes enable viewing and interacting with an OpenGL context in a wx.Window.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 

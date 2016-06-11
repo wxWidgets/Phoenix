@@ -3,18 +3,23 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Oct-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
 PACKAGE   = "wx" 
 MODULE    = "_html"
 NAME      = "_html"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+This module contains a widget class and supporting classes for a generic HTML
+renderer.  It supports only a subset of the HTML standards, and no Javascript
+or CSS, but it is relatively lightweight and has no platform dependencies.  It
+is suitable for displaying simple HTML documents, such as the application's
+documentation or built-in help pages.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 

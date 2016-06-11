@@ -3,18 +3,22 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Mar-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
 PACKAGE   = "wx" 
 MODULE    = "_adv"
 NAME      = "_adv"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The ``wx.adv`` module contains classes which are more advanced and/or less
+commonly used than those in the core namespace. They are provided in a
+separate module to help reduce overhead and dependencies for those
+applications which do not need any of these classes.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 

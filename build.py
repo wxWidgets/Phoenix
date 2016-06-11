@@ -863,7 +863,7 @@ def cmd_etg(options, args):
 
     
 def cmd_sphinx(options, args):
-    from sphinxtools.postprocess import SphinxIndexes, MakeHeadings, PostProcess, GenGallery
+    from sphinxtools.postprocess import genIndexes, makeHeadings, postProcess, genGallery
 
     cmdTimer = CommandTimer('sphinx')
     pwd = pushDir(phoenixDir())
@@ -885,8 +885,8 @@ def cmd_sphinx(options, args):
         txt = os.path.join(sphinxDir, os.path.splitext(rstName)[0] + '.txt')
         copyIfNewer(rst, txt)
 
-    SphinxIndexes(sphinxDir)
-    GenGallery()
+    genIndexes(sphinxDir)
+    genGallery()
 
     # Copy the hand-edited top level doc files too
     rstFiles = [os.path.join(phoenixDir(), 'TODO.rst')] + \
@@ -895,7 +895,7 @@ def cmd_sphinx(options, args):
         txt = os.path.join(sphinxDir, os.path.splitext(os.path.basename(rst))[0] + '.txt')
         copyIfNewer(rst, txt)
     
-    MakeHeadings()
+    makeHeadings()
 
     pwd2 = pushDir(sphinxDir)
     buildDir = os.path.join(sphinxDir, 'build')
@@ -904,7 +904,7 @@ def cmd_sphinx(options, args):
     del pwd2
     
     msg('Postprocessing sphinx output...')
-    PostProcess(htmlDir)
+    postProcess(htmlDir)
 
 
 def cmd_wxlib(options, args):
@@ -913,52 +913,25 @@ def cmd_wxlib(options, args):
     cmdTimer = CommandTimer('wx.lib')
     pwd = pushDir(phoenixDir())
 
-    libDir = os.path.join(phoenixDir(), 'wx', 'lib')
+    for wx_pkg in ['lib', 'py', 'tools']:
+        libDir = os.path.join(phoenixDir(), 'wx', wx_pkg)
 
-    if not os.path.isdir(libDir):
-        raise Exception('Missing wx.lib folder in the distribution')
+        if not os.path.isdir(libDir):
+            raise Exception('Missing wx.{} folder in the distribution'.format(wx_pkg))
 
-    init_name = os.path.join(libDir, '__init__.py')
-    import_name = 'lib'
-    version = version3
+        init_name = os.path.join(libDir, '__init__.py')
+        import_name = 'wx.{}'.format(wx_pkg)
 
-    ModuleHunter(init_name, import_name, version)
-    
+        ModuleHunter(init_name, import_name, version3)
+
+
 
 def cmd_wxpy(options, args):
-    from sphinxtools.modulehunter import ModuleHunter
-
-    cmdTimer = CommandTimer('wx.py')
-    pwd = pushDir(phoenixDir())
-
-    libDir = os.path.join(phoenixDir(), 'wx', 'py')
-
-    if not os.path.isdir(libDir):
-        raise Exception('Missing wx.py folder in the distribution')
-
-    init_name = os.path.join(libDir, '__init__.py')
-    import_name = 'py'
-    version = version3
-
-    ModuleHunter(init_name, import_name, version)
+    msg('Command wxpy has been folded into command wxlib.')
 
 
 def cmd_wxtools(options, args):
-    from sphinxtools.modulehunter import ModuleHunter
-
-    cmdTimer = CommandTimer('wx.tools')
-    pwd = pushDir(phoenixDir())
-
-    libDir = os.path.join(phoenixDir(), 'wx', 'tools')
-
-    if not os.path.isdir(libDir):
-        raise Exception('Missing wx.tools folder in the distribution')
-
-    init_name = os.path.join(libDir, '__init__.py')
-    import_name = 'tools'
-    version = version3
-
-    ModuleHunter(init_name, import_name, version)
+    msg('Command wxtools has been folded into command wxlib.')
 
 
 def cmd_docs_bdist(options, args):
@@ -1484,7 +1457,7 @@ def cmd_clean_py(options, args):
     cfg = Config()
     deleteIfExists(getWafBuildBase())
     files = list()
-    for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi']:
+    for wc in ['*.py', '*.pyc', '*.so', '*.dylib', '*.pyd', '*.pdb', '*.pi', '*.pyi']:
         files += glob.glob(opj(cfg.PKGDIR, wc))
     if isWindows:
         msw = getMSWSettings(options)
@@ -1499,7 +1472,6 @@ def cmd_clean_py(options, args):
         cmd_clean_py(options, args)
         options.both = True
 
-
     
 def cmd_clean_sphinx(options, args):
     cmdTimer = CommandTimer('clean_sphinx')
@@ -1508,6 +1480,7 @@ def cmd_clean_sphinx(options, args):
     sphinxDir = opj(phoenixDir(), 'docs', 'sphinx')
          
     globs = [ opj(sphinxDir, '*.txt'),
+              opj(sphinxDir, '*.rst'),
               opj(sphinxDir, '*.inc'),
               opj(sphinxDir, '*.pkl'),
               opj(sphinxDir, '*.lst'),
