@@ -158,6 +158,7 @@ def run():
     c.find('EmulateKeyPress').ignore()
     c.find('IsMultiLine').ignore()
     c.find('IsSingleLine').ignore()
+    c.find('MacCheckSpelling').ignore()
 
 
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)
