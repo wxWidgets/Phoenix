@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -o errexit
-#set -o xtrace 
+#set -o xtrace
 
 PYVER=2.7
 PYTHON=`which python$PYVER`
@@ -13,29 +13,34 @@ fi
 
 MYBINDIR=$(dirname $(readlink -f $0))
 
-cd $PROJECTS/sip/sip
-SIPVER=`$PYTHON configure.py --version | grep -v "This is SIP"`
 PLATFORM=`$PYTHON -c "import buildtools.config as bc; print(bc.getToolsPlatformName(True))"`
 echo $PLATFORM
+cd $PROJECTS/sip/sip
+SIPVER=`$PYTHON configure.py --version | grep -v "This is SIP"`
 
 if [ "$PLATFORM" = "darwin" ]; then
-    # try to ensure compatiblity back to 10.5 if we can
+    # try to ensure compatibility back to 10.6 if we can
     xcode=$(xcode-select -print-path)
-    if [ -d $xcode/SDKs/MacOSX10.5.sdk ]; then
-        SDK=$xcode/SDKs/MacOSX10.5.sdk
-    elif [ -d $xcode/SDKs/MacOSX10.6.sdk ]; then
-        SDK=$xcode/SDKs/MacOSX10.6.sdk
-    elif [ -d $xcode/SDKs/MacOSX10.7.sdk ]; then
-        SDK=$xcode/SDKs/MacOSX10.7.sdk
-    fi
+    for v in 6 7 8 9 10 11 12; do
+        if [ -d $xcode/SDKs/MacOSX10.$v.sdk ]; then
+            SDK=$xcode/SDKs/MacOSX10.$v.sdk
+            break
+        elif [ -d $xcode/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.$v.sdk ]; then
+            SDK=$xcode/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.$v.sdk
+            break
+        fi
+    done
+
     $PYTHON configure.py \
-	--deployment-target=10.5 \
+	--deployment-target=10.6 \
 	--sdk=$SDK \
 	--arch=i386 \
+	--universal \
 	--sip-module wx.siplib \
 	$*
 
     make -C sipgen clean all
+
 else
     $PYTHON configure.py \
 	--sip-module wx.siplib \

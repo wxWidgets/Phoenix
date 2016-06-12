@@ -72,9 +72,9 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.16.7'
+sipCurrentVersion = '4.18.1.dev1606100655'
 sipMD5 = {
-    'darwin'   : '29874bb82327e556554e3ca8ddf8fa16',
+    'darwin'   : '48f7370706c63036fac66da6439559e8',
     'win32'    : 'd19030b397034742694a6d229f056ad0', 
     'linux32'  : '6f70956abd8f837b1d55dc5cfa9f6201', 
     'linux64'  : '6ac7653c331462516abbc38c5b93e0ac', 
