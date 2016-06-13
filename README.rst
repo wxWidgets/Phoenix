@@ -67,7 +67,7 @@ decoding errors. For example::
 
 In addition, some tasks within the build currently expect to be able to use
 Cygwin on Windows (https://www.cygwin.com/) to do its work. If you have
-Cygwin installed in one of the default locations (c:\cygwin or c:\cygwin64)
+Cygwin installed in one of the default locations (c:\\cygwin or c:\\cygwin64)
 then all is well. If you have it installed somewhere else then you can set
 CYGWIN_BASE in the environment and the build tool will use that for the base
 dir.
