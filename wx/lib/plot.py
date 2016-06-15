@@ -194,6 +194,133 @@ except:
 warnings.simplefilter('default')
 
 
+# TODO: New name: RevertStyle? SavedStyle? Something else?
+class TempStyle(object):
+    """
+    Combination Decorator and Context Manager to revert pen or brush changes
+    after a method call or block finish.
+
+    **Note: Can only be used on class methods.**
+
+    Parameters:
+    -----------
+    which : {'both', 'pen', 'brush'}
+        The item to save and revert after execution.
+    dc : wx.DC object
+        The DC to pull brush/pen information from.
+
+    Usage:
+    ------
+    As a method decorator::
+
+        @TempStyle()                        # same as @TempStyle('both')
+        def func(self, dc, a, b, c):        # dc must be 1st arg (beside self)
+            # edit pen and brush here
+
+    As a context manager::
+
+        with TempStyle('both', dc):
+            # do stuff
+
+    Notes:
+    ------
+    As of 2016-06-15, this can only be used as a decorator for **class
+    methods**, not standard functions. There is a plan to try and remove
+    this restriction, but I don't know when that will happen...
+
+    Combination Decorator and Context Manager! Also makes Julienne fries!
+    Will not break! Will not... It broke!
+    """
+    _valid_types = {'both', 'pen', 'brush'}
+    _err_str = (
+        "No DC provided and unable to determine DC from context for function "
+        "`{func_name}`. When `{cls_name}` is used as a decorator, the "
+        "decorated function must have a wx.DC as a keyword arg 'dc=' or "
+        "as the first arg."
+    )
+
+    def __init__(self, which='both', dc=None):
+        if which not in self._valid_types:
+            raise ValueError(
+                "`which` must be one of {}".format(self._valid_types)
+            )
+        self.which = which
+        self.dc = dc
+        self.prevPen = None
+        self.prevBrush = None
+
+    def __call__(self, func):
+
+        @functools.wraps(func)
+        def wrapper(instance, dc, *args, **kwargs):
+            # fake the 'with' block. This solves:
+            # 1.  plots only being shown on 2nd menu selection in demo
+            # 2.  self.dc compalaining about not having a super called when
+            #     trying to get or set the pen/brush values in __enter__ and
+            #     __exit__:
+            #         RuntimeError: super-class __init__() of type
+            #         BufferedDC was never called
+            self._save_items(dc)
+            func(instance, dc, *args, **kwargs)
+            self._revert_items(dc)
+
+            #import copy                    # copy solves issue #1 above, but
+            #self.dc = copy.copy(dc)        # possibly causes issue #2.
+
+            #with self:
+            #    print('in with')
+            #    func(instance, dc, *args, **kwargs)
+
+        return wrapper
+
+    def __enter__(self):
+        self._save_items(self.dc)
+        return self
+
+    def __exit__(self, *exc):
+        self._revert_items(self.dc)
+        return False    # True means exceptions *are* suppressed.
+
+    def _save_items(self, dc):
+        if self.which == 'both':
+            self._save_pen(dc)
+            self._save_brush(dc)
+        elif self.which == 'pen':
+            self._save_pen(dc)
+        elif self.which == 'brush':
+            self._save_brush(dc)
+        else:
+            err_str = ("How did you even get here?? This class forces "
+                       "correct values for `which` at instancing..."
+                       )
+            raise ValueError(err_str)
+
+    def _revert_items(self, dc):
+        if self.which == 'both':
+            self._revert_pen(dc)
+            self._revert_brush(dc)
+        elif self.which == 'pen':
+            self._revert_pen(dc)
+        elif self.which == 'brush':
+            self._revert_brush(dc)
+        else:
+            err_str = ("How did you even get here?? This class forces "
+                       "correct values for `which` at instancing...")
+            raise ValueError(err_str)
+
+    def _save_pen(self, dc):
+        self.prevPen = dc.GetPen()
+
+    def _save_brush(self, dc):
+        self.prevBrush = dc.GetBrush()
+
+    def _revert_pen(self, dc):
+        dc.SetPen(self.prevPen)
+
+    def _revert_brush(self, dc):
+        dc.SetBrush(self.prevBrush)
+
+
 class SavePen(object):
     """
     Decorator which saves the dc Pen before calling a function and sets the
@@ -1372,7 +1499,7 @@ class BoxPlot(PolyPoints):
         scaled = scale * data + shift
         return scaled
 
-    @SavePen
+    @TempStyle('pen')
     def draw(self, dc, printerScale, coord=None):
         """
         Draws a box plot on the DC.
@@ -1398,7 +1525,7 @@ class BoxPlot(PolyPoints):
         self._draw_whisker_ends(dc, printerScale)
         self._draw_outliers(dc, printerScale)
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_whisker(self, dc, printerScale):
         """Draws the whiskers as a single line"""
         xpos = self.xpos
@@ -1417,7 +1544,7 @@ class BoxPlot(PolyPoints):
         dc.SetPen(whisker_pen)
         dc.DrawLines(whisker_line)
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_iqr_box(self, dc, printerScale):
         """Draws the Inner Quartile Range box"""
         xpos = self.xpos
@@ -1444,7 +1571,7 @@ class BoxPlot(PolyPoints):
 
         dc.DrawRectangleList([iqr_box])
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_median(self, dc, printerScale, coord=None):
         """Draws the median line"""
         xpos = self.xpos
@@ -1461,7 +1588,7 @@ class BoxPlot(PolyPoints):
         dc.SetPen(median_pen)
         dc.DrawLines(median_line)
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_whisker_ends(self, dc, printerScale):
         """Draws the end caps of the whiskers"""
         xpos = self.xpos
@@ -1485,7 +1612,7 @@ class BoxPlot(PolyPoints):
         dc.DrawLines(fence_top)
         dc.DrawLines(fence_bottom)
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_outliers(self, dc, printerScale):
         """Draws dots for the outliers"""
         xpos = self.xpos
@@ -3441,7 +3568,7 @@ class PlotCanvas(wx.Panel):
         else:
             raise ValueError(str(spec) + ': illegal axis specification')
 
-    @SavePen
+    @TempStyle('pen')
     def _drawGrid(self, dc, p1, p2, scale, shift, xticks, yticks):
         """
         Draws the gridlines
@@ -3491,7 +3618,7 @@ class PlotCanvas(wx.Panel):
                     pt = scale * np.array([p1[0], y]) + shift
                     dc.DrawLine(pt[0], pt[1], pt[0] + width, pt[1])
 
-    @SavePen
+    @TempStyle('pen')
     def _drawTicks(self, dc, p1, p2, scale, shift, xticks, yticks):
         """Draw the tick marks"""
         # TODO: add option for ticks to extend outside of graph
@@ -3529,7 +3656,7 @@ class PlotCanvas(wx.Panel):
                     pt = scale * np.array([p2[0], y]) + shift
                     dc.DrawLine(pt[0], pt[1], pt[0] - yTickLength, pt[1])
 
-    @SavePen
+    @TempStyle('pen')
     def _drawCenterLines(self, dc, p1, p2, scale, shift):
         """Draws the center lines"""
         # increases thickness for printing only
@@ -3555,7 +3682,7 @@ class PlotCanvas(wx.Panel):
                         x,
                         scale[1] * p2[1] + shift[1])
 
-    @SavePen
+    @TempStyle('pen')
     def _drawDiagonals(self, dc, p1, p2, scale, shift):
         """Draws the diagonal lines"""
         pen = self.DiagonalPen
@@ -3574,7 +3701,7 @@ class PlotCanvas(wx.Panel):
                         scale[0] * p2[0] + shift[0],
                         scale[1] * p1[1] + shift[1])
 
-    @SavePen
+    @TempStyle('pen')
     def _drawAxes(self, dc, p1, p2, scale, shift):
         """Draw the frame lines"""
         # TODO: add option to not draw certain axes
@@ -3609,7 +3736,7 @@ class PlotCanvas(wx.Panel):
                 a2 = scale * np.array([p2[0], upper]) + shift
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
 
-    @SavePen
+    @TempStyle('pen')
     def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
         """ Draws the axes values """
         # TODO: More code duplication? Same as _drawGrid and _drawTicks?
@@ -3649,7 +3776,7 @@ class PlotCanvas(wx.Panel):
                                 pt[0] + 3 * self._pointSize[0],
                                 pt[1] - 0.5 * h)
 
-    @SavePen
+    @TempStyle('pen')
     def _drawPlotAreaItems(self, dc, p1, p2, scale, shift, xticks, yticks):
         """Draws each frame element"""
         if self._gridEnabled:
@@ -3670,7 +3797,7 @@ class PlotCanvas(wx.Panel):
         if self._axesValuesEnabled:
             self._drawAxesValues(dc, p1, p2, scale, shift, xticks, yticks)
 
-    @SavePen
+    @TempStyle('pen')
     def _drawPlotTitle(self, dc, graphics, lhsW, rhsW, titleWH):
         """Draws the plot title"""
         # TODO: Clean up math
@@ -3693,7 +3820,7 @@ class PlotCanvas(wx.Panel):
             dc.DrawRotatedText(
                 graphics.YLabel, yLabelPos[0], yLabelPos[1], 90)
 
-    @SavePen
+    @TempStyle('pen')
     def _drawPlotAreaLabels(self, dc, graphics, lhsW, rhsW, titleWH,
                             bottomH, topH, xLabelWH, yLabelWH):
         # TODO: clean up call signature.
