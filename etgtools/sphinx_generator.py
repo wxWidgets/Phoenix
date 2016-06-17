@@ -2386,8 +2386,9 @@ class XMLDocString(object):
             summary = makeSummary(name, klass.method_list, templates.TEMPLATE_METHOD_SUMMARY, 'meth')
             stream.write(summary)
 
-        if klass.property_list:
-            summary = makeSummary(name, klass.property_list, templates.TEMPLATE_PROPERTY_SUMMARY, 'attr')
+        if klass.property_list or klass.memberVar_list:
+            allAttrs = klass.property_list + klass.memberVar_list
+            summary = makeSummary(name, allAttrs, templates.TEMPLATE_PROPERTY_SUMMARY, 'attr')
             stream.write(summary)
 
         stream.write(templates.TEMPLATE_API)
@@ -3051,6 +3052,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         class_fullname = ItemModuleMap().get_fullname(class_name)
         self.current_class.method_list = []
         self.current_class.property_list = []
+        self.current_class.memberVar_list = []
 
         class_items = [i for i in klass if not i.ignored]
         class_items = sorted(class_items, key=operator.attrgetter('name'))
@@ -3142,6 +3144,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         klass.method_list = []
         klass.property_list = []
+        klass.memberVar_list = []
         klass.enum_list = []
 
         #   Inspected class               Method to call           Sort order
@@ -3179,10 +3182,13 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         for item in class_items:
             if isinstance(item, methods) and not self.IsFullyDeprecated(item):
                 method_name, simple_docs = self.getName(item)
-                klass.method_list.append(('%s.%s'%(fullname, method_name), simple_docs))
+                klass.method_list.append(('%s.%s' % (fullname, method_name), simple_docs))
             elif isinstance(item, properties):
                 simple_docs = self.createPropertyLinks(fullname, item)
-                klass.property_list.append(('%s.%s'%(fullname, item.name), simple_docs))
+                klass.property_list.append(('%s.%s' % (fullname, item.name), simple_docs))
+            elif isinstance(item, extractors.MemberVarDef):
+                description = self.createMemberVarDescription(item)
+                klass.memberVar_list.append(('%s.%s' % (fullname, item.name), description))
 
         for item in ctors: 
             if item.isCtor:
@@ -3336,8 +3342,31 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
     def generateMemberVar(self, memberVar):
         assert isinstance(memberVar, extractors.MemberVarDef)
-        if memberVar.ignored:
+        if memberVar.ignored or memberVar.protection != 'public':
             return
+
+        c = self.current_class
+        name = c.pyName if c.pyName else removeWxPrefix(c.name)
+        fullname = ItemModuleMap().get_fullname(name)
+
+        description = self.createMemberVarDescription(memberVar)
+
+        stream = StringIO()
+        stream.write('\n   .. attribute:: %s\n\n' % memberVar.name)
+        stream.write('      %s\n\n' % description)
+
+        filename = "%s.txt" % fullname
+        writeSphinxOutput(stream, filename, append=True)
+
+
+    def createMemberVarDescription(self, memberVar):
+        varType = pythonizeType(memberVar.type, False)
+        if varType.startswith('wx.'):
+            varType = ':ref:`~%s`' % varType
+        else:
+            varType = '``%s``' % varType
+        return 'A public C++ attribute of type %s' % varType
+
 
     # -----------------------------------------------------------------------
 
@@ -3354,7 +3383,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         stream = StringIO()
         stream.write('\n   .. attribute:: %s\n\n' % prop.name)
-        stream.write('      %s\n\n'%getter_setter)
+        stream.write('      %s\n\n' % getter_setter)
 
         filename = "%s.txt" % fullname
         writeSphinxOutput(stream, filename, append=True)
@@ -3428,7 +3457,9 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         typedef.nodeBases = all_classes, specials
         self.fixNodeBaseNames(typedef, ItemModuleMap())
         typedef.subClasses = []
-        typedef.method_list = typedef.property_list = []
+        typedef.method_list = []
+        typedef.property_list = []
+        typedef.memberVar_list = []
         typedef.pyDocstring = typedef.briefDoc
 
         self.current_class = typedef

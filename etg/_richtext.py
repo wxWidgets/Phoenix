@@ -14,8 +14,10 @@ PACKAGE   = "wx"
 MODULE    = "_richtext"
 NAME      = "_richtext"   # Base name of the file to generate to for this script
 DOCSTRING = """\
-The ``RichTextCtrl`` is a generic, ground-up implementation of a rich text
-control capable of showing multiple text styles and images.
+The :class:`RichTextCtrl` is a generic, ground-up implementation of a rich
+text control capable of showing multiple text styles and images.  This module
+contains the control and many supporting classes needed for using the features
+of the :class:`RichTextCtrl`.
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
