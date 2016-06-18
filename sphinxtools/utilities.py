@@ -222,7 +222,7 @@ def pythonizeType(ptype, is_param):
     if 'size_t' in ptype:
         ptype = 'int'
     elif 'wx.' in ptype:
-        ptype = ptype[3:]
+        ptype = ptype[3:]    # ***
     else:
         ptype = wx2Sphinx(replaceCppItems(ptype))[1]
         

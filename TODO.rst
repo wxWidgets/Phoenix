@@ -92,8 +92,6 @@ to be untangled:
     little smarter and pull out the first sentence from the docstring instead
     of ust the first line.
 
-  * Should we generate property-like docs for MemberVar elements?
-
   * Convert the main.html page to a ReST file? It would probably make it a
     little easier to maintain.
 

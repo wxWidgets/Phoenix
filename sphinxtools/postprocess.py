@@ -454,7 +454,7 @@ def makeModuleIndex(sphinxDir, file):
         out = classes[cls]
         if '=====' in out:
             out = ''
-        text += '%-80s %s\n' % (':ref:`%s`' % wx2Sphinx(cls)[1], out)
+        text += '%-80s %s\n' % (':ref:`~%s`' % wx2Sphinx(cls)[1], out)
 
     text += 80*'=' + ' ' + 80*'=' + '\n\n'
 
@@ -486,7 +486,7 @@ def makeModuleIndex(sphinxDir, file):
         for func_name in functions:
             fullname = imm.get_fullname(func_name)
             doc = function_summaries.get(fullname, '')
-            text += '%-80s %s\n' % (':func:`%s`' % fullname, doc)
+            text += '%-80s %s\n' % (':func:`~%s`' % fullname, doc)
 
         text += 80 * '=' + ' ' + 80 * '=' + '\n\n'
         contents.append(module + '.functions')
