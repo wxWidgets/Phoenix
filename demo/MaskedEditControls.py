@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import string
 import sys
 import traceback
 
@@ -362,7 +361,7 @@ with auto-select:""")
 
 
         numerators = [ str(i) for i in range(1, 4) ]
-        denominators = [ string.ljust(str(i), 2) for i in [2,3,4,5,8,16,32,64] ]
+        denominators = [ str(i).ljust(2) for i in [2,3,4,5,8,16,32,64] ]
         fieldsDict = {0: masked.Field(choices=numerators, choiceRequired=False),
                       1: masked.Field(choices=denominators, choiceRequired=True)}
         choices = []
@@ -632,7 +631,7 @@ def RunStandalone():
     win = TestMaskedTextCtrls(frame, -1, sys.stdout)
     frame.Show(True)
     app.MainLoop()
-    
+
 #----------------------------------------------------------------------------
 import wx.lib.masked.maskededit as maskededit
 # strip out module header used for pydoc:
