@@ -17,8 +17,9 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ '',
-
+ITEMS  = [ 'wxRibbonBarEvent',
+           'wxRibbonPageTabInfo',
+           'wxRibbonBar',
            ]    
     
 #---------------------------------------------------------------------------
@@ -31,11 +32,37 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    #c = module.find('')
-    #assert isinstance(c, etgtools.ClassDef)
-    
-    
+
+    module.addHeaderCode('#include <wx/ribbon/bar.h>')
+
+    c = module.find('wxRibbonBar')
+    assert isinstance(c, etgtools.ClassDef)
+    tools.fixWindowClass(c)
+
+
+    c = module.find('wxRibbonBarEvent')
+    tools.fixEventClass(c)
+
+    c.addPyCode("""\
+        EVT_RIBBONBAR_PAGE_CHANGED    = PyEventBinder(wxEVT_RIBBONBAR_PAGE_CHANGED, 1)
+        EVT_RIBBONBAR_PAGE_CHANGING   = PyEventBinder(wxEVT_RIBBONBAR_PAGE_CHANGING,1)
+        EVT_RIBBONBAR_TAB_MIDDLE_DOWN = PyEventBinder(wxEVT_RIBBONBAR_TAB_MIDDLE_DOWN, 1)
+        EVT_RIBBONBAR_TAB_MIDDLE_UP   = PyEventBinder(wxEVT_RIBBONBAR_TAB_MIDDLE_UP, 1)
+        EVT_RIBBONBAR_TAB_RIGHT_DOWN  = PyEventBinder(wxEVT_RIBBONBAR_TAB_RIGHT_DOWN, 1)
+        EVT_RIBBONBAR_TAB_RIGHT_UP    = PyEventBinder(wxEVT_RIBBONBAR_TAB_RIGHT_UP, 1)
+        EVT_RIBBONBAR_TAB_LEFT_DCLICK = PyEventBinder(wxEVT_RIBBONBAR_TAB_LEFT_DCLICK, 1)
+        EVT_RIBBONBAR_TOGGLED         = PyEventBinder(wxEVT_RIBBONBAR_TOGGLED, 1)
+        EVT_RIBBONBAR_HELP_CLICK      = PyEventBinder(wxEVT_RIBBONBAR_HELP_CLICK, 1)
+        """)
+
+
+    #c = module.find('wxRibbonPageTabInfo')
+    module.addItem(
+        tools.wxArrayWrapperTemplate('wxRibbonPageTabInfoArray',
+                                     'wxRibbonPageTabInfo',
+                                     module))
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

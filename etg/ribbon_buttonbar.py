@@ -17,8 +17,8 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ '',
-
+ITEMS  = [ 'wxRibbonButtonBar',
+           'wxRibbonButtonBarEvent',
            ]    
     
 #---------------------------------------------------------------------------
@@ -31,10 +31,25 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    #c = module.find('')
-    #assert isinstance(c, etgtools.ClassDef)
-    
+
+    module.addHeaderCode('#include <wx/ribbon/buttonbar.h>')
+    module.insertItem(0, etgtools.WigCode("""\
+        // forward declarations
+        class wxRibbonButtonBarButtonBase;
+        """))
+
+    c = module.find('wxRibbonButtonBar')
+    assert isinstance(c, etgtools.ClassDef)
+    tools.fixWindowClass(c)
+
+
+    c = module.find('wxRibbonButtonBarEvent')
+    tools.fixEventClass(c)
+
+    c.addPyCode("""\
+        EVT_RIBBONBUTTONBAR_CLICKED = PyEventBinder( wxEVT_RIBBONBUTTONBAR_CLICKED, 1 )
+        EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED = PyEventBinder( wxEVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED, 1 )
+        """)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

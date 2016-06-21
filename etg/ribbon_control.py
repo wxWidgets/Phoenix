@@ -33,16 +33,8 @@ def run():
 
     module.addHeaderCode('#include <wx/ribbon/control.h>')
 
-    module.insertItem(0, etgtools.WigCode("""\
-        // forward declarations
-        class wxRibbonBar;
-        class wxRibbonArtProvider;
-        class wxRibbonPageTabInfo;
-        class wxRibbonGallery;
-        class wxRibbonGalleryItem;
-        """))
-
-    # Not sure why these are showing up in this module...
+    # Not sure why these are showing up in this module as they are in core, so
+    # let's just turn them off here...
     module.find('wxEllipsizeFlags').ignore()
     module.find('wxEllipsizeMode').ignore()
 

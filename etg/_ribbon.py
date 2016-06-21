@@ -31,12 +31,11 @@ ITEMS  = [ ]
 INCLUDES = [ 'ribbon_control',
              'ribbon_page',
              'ribbon_panel',
-             #'ribbon_bar',
-             #'ribbon_art',
-             #'ribbon_buttonbar',
-             #'ribbon_toolbar',
-             #'ribbon_gallery',
-
+             'ribbon_bar',
+             'ribbon_art',
+             'ribbon_buttonbar',
+             'ribbon_gallery',
+             'ribbon_toolbar',
              ]
 
 
