@@ -47,6 +47,8 @@ class ItemMapGenerator(generators.DocsGeneratorBase):
 
     def generateClass(self, item, imm, scope):
         # Map names for classes, nested classes and nested enums
+        if item.ignored:
+            return
         name = self._getName(item)
         if not name or name.startswith('@'):
             return
@@ -66,6 +68,8 @@ class ItemMapGenerator(generators.DocsGeneratorBase):
 
     def generateEnum(self, item, imm, scope, topLevel=True):
         # map names of enum types and enum elements
+        if item.ignored:
+            return
         name = self._getName(item)
         if name and not name.startswith('@'):
             imm[name] = scope
@@ -81,6 +85,8 @@ class ItemMapGenerator(generators.DocsGeneratorBase):
 
     def generateDefault(self, item, imm, scope):
         # this handles all types that don't need special attention
+        if item.ignored:
+            return
         name = self._getName(item)
         if not name or name.startswith('@'):
             return
