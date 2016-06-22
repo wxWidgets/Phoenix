@@ -212,6 +212,8 @@ def fixEventClass(klass, ignoreProtected=True):
         # it won't think that they are abstract classes too.
         if not klass.findItem('Clone'):
             klass.addPublic('virtual wxEvent* Clone() const /Factory/;')
+        else:
+            klass.findItem('Clone').factory = True
 
     # Add a private assignment operator so the back-end (if it's watching out
     # for this) won't try to make copies by assignment.

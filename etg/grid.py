@@ -260,6 +260,7 @@ def run():
     c = module.find('wxGridCellAttr')
     c.addPrivateCopyCtor()
     c.find('~wxGridCellAttr').ignore(False)
+    c.find('Clone').factory = True
 
     c.find('GetAlignment.hAlign').out = True
     c.find('GetAlignment.vAlign').out = True
