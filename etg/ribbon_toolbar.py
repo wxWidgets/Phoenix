@@ -19,6 +19,7 @@ DOCSTRING = ""
 # this script. 
 ITEMS  = [ 'wxRibbonToolBar',
            'wxRibbonToolBarEvent',
+           'interface_2wx_2ribbon_2toolbar_8h.xml',
            ]    
     
 #---------------------------------------------------------------------------
@@ -48,8 +49,8 @@ def run():
     tools.fixEventClass(c)
 
     c.addPyCode("""\
-        EVT_RIBBONTOOLBAR_CLICKED = PyEventBinder( wxEVT_RIBBONTOOLBAR_CLICKED, 1 )
-        EVT_RIBBONTOOLBAR_DROPDOWN_CLICKED = PyEventBinder( wxEVT_RIBBONTOOLBAR_DROPDOWN_CLICKED, 1 )
+        EVT_RIBBONTOOLBAR_CLICKED = wx.PyEventBinder( wxEVT_RIBBONTOOLBAR_CLICKED, 1 )
+        EVT_RIBBONTOOLBAR_DROPDOWN_CLICKED = wx.PyEventBinder( wxEVT_RIBBONTOOLBAR_DROPDOWN_CLICKED, 1 )
         """)
     
     #-----------------------------------------------------------------
