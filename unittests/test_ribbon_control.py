@@ -1,15 +1,27 @@
 import unittest
 import wtc
-import wx
+import wx.ribbon
+
 
 #---------------------------------------------------------------------------
 
 class ribbon_control_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
     def test_ribbon_control1(self):
-        self.fail("Unit tests for ribbon_control not implemented yet.")
-        
+        ctrl = wx.ribbon.RibbonControl()
+        ctrl.Create(self.frame)
+
+
+
+    def test_ribbon_control2(self):
+        ctrl = wx.ribbon.RibbonControl(self.frame)
+
+        ctrl.GetArtProvider()
+        ctrl.IsSizingContinuous()
+        ctrl.GetNextSmallerSize(wx.VERTICAL)
+        ctrl.GetNextLargerSize(wx.HORIZONTAL)
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
