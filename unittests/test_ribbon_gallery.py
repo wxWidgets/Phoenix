@@ -1,15 +1,18 @@
 import unittest
 import wtc
-import wx
+import wx.ribbon
 
 #---------------------------------------------------------------------------
 
 class ribbon_gallery_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
     def test_ribbon_gallery1(self):
-        self.fail("Unit tests for ribbon_gallery not implemented yet.")
-        
+        wx.ribbon.RIBBON_GALLERY_BUTTON_NORMAL
+        wx.ribbon.RIBBON_GALLERY_BUTTON_HOVERED
+        wx.ribbon.RIBBON_GALLERY_BUTTON_ACTIVE
+        wx.ribbon.RIBBON_GALLERY_BUTTON_DISABLED
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
