@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ from subprocess import Popen, PIPE
 
 # Phoenix-specific imports
 
-from .utilities import Wx2Sphinx, FormatExternalLink
+from .utilities import wx2Sphinx, formatExternalLink
 from .constants import INHERITANCEROOT
 
 ENOENT = getattr(errno, 'ENOENT', 0)
@@ -41,7 +41,6 @@ class InheritanceDiagram(object):
 
         if main_class is None:
             self.class_info, self.specials = classes
-            self.class_info = list(self.class_info.values())
         else:
             self.class_info, self.specials = self._class_info(classes)
             
@@ -60,23 +59,24 @@ class InheritanceDiagram(object):
         specials = []
 
         def recurse(cls):
-            nodename, fullname = self.class_name(cls)
-            if cls in [object] or nodename.startswith('sip.'):
+            fullname = self.class_name(cls)
+            if cls in [object] or fullname.startswith('sip.'):
                 return
             
             baselist = []
-            all_classes[cls] = (nodename, fullname, baselist)
+            all_classes[cls] = (fullname, baselist)
 
             for base in cls.__bases__:
-                if base in [object] or self.class_name(base)[0].startswith('sip.'):
+                name = self.class_name(base)
+                if base in [object] or name.startswith('sip.'):
                     continue
-                baselist.append(self.class_name(base)[0])
+                baselist.append(name)
                 if base not in all_classes:
                     recurse(base)
 
         for cls in classes:
             recurse(cls)
-            specials.append(self.class_name(cls)[1])
+            specials.append(self.class_name(cls))
 
         return list(all_classes.values()), specials
 
@@ -95,16 +95,12 @@ class InheritanceDiagram(object):
         else:
             fullname = '%s.%s' % (module, cls.__name__)
 
-        name_parts = fullname.split('.')
-        if 'wx._' in fullname:
-            nodename = fullname = name_parts[-1]
-        else:
-            # Just the last 2 parts
-            nodename = '.'.join(name_parts[-2:])
-            if fullname.startswith('wx.'):
-                fullname = fullname[3:]
-                
-        return nodename, fullname
+        if fullname.startswith('wx._'):
+            parts = fullname.split('.')
+            del parts[1]
+            fullname = '.'.join(parts)
+
+        return fullname
 
 
     # These are the default attrs for graphviz
@@ -166,7 +162,7 @@ class InheritanceDiagram(object):
         res.append('digraph %s {\n' % name)
         res.append(self._format_graph_attrs(g_attrs))
 
-        for name, fullname, bases in self.class_info:
+        for fullname, bases in self.class_info:
             # Write the node
             this_node_attrs = n_attrs.copy()
 
@@ -175,40 +171,28 @@ class InheritanceDiagram(object):
                 this_node_attrs['color'] = 'blue'
                 this_node_attrs['style'] = 'bold'
 
-            if self.main_class is None:
-                newname, fullname = Wx2Sphinx(name)
-            else:
-                newname = name
-
             if class_summary is None:
                 # Phoenix base classes, assume there is always a link
-                this_node_attrs['URL'] = '"%s.html"'%fullname
+                this_node_attrs['URL'] = '"%s.html"' % fullname
             else:
-                if 'wx.' in fullname:
-                    fullname = fullname[3:]
-                
                 if fullname in class_summary:
-                    this_node_attrs['URL'] = '"%s.html"'%fullname
+                    this_node_attrs['URL'] = '"%s.html"' % fullname
                 else:
-                    full_page = FormatExternalLink(fullname, inheritance=True)
+                    full_page = formatExternalLink(fullname, inheritance=True)
                     if full_page:
                         this_node_attrs['URL'] = full_page
                     
             res.append('  "%s" [%s];\n' %
-                       (newname, self._format_node_attrs(this_node_attrs)))
+                       (fullname, self._format_node_attrs(this_node_attrs)))
 
             # Write the edges
             for base_name in bases:
-
                 this_edge_attrs = e_attrs.copy()
                 if fullname in self.specials:
                     this_edge_attrs['color'] = 'red'
 
-                if self.main_class is None:
-                    base_name, dummy = Wx2Sphinx(base_name)
-
                 res.append('  "%s" -> "%s" [%s];\n' %
-                           (base_name, newname,
+                           (base_name, fullname,
                             self._format_node_attrs(this_edge_attrs)))
         res.append('}\n')
         return ''.join(res)
@@ -216,7 +200,7 @@ class InheritanceDiagram(object):
 
     # ----------------------------------------------------------------------- #
 
-    def MakeInheritanceDiagram(self, class_summary=None):
+    def makeInheritanceDiagram(self, class_summary=None):
         """
         Actually generates the inheritance diagram as a PNG file plus the corresponding
         MAP file for mouse navigation over the inheritance boxes.
@@ -242,7 +226,7 @@ class InheritanceDiagram(object):
         if self.main_class is not None:
             filename = self.main_class.name
         else:                        
-            dummy, filename = Wx2Sphinx(self.specials[0])
+            filename = self.specials[0]
 
         outfn = os.path.join(static_root, filename + '_inheritance.png')
         mapfile = outfn + '.map'

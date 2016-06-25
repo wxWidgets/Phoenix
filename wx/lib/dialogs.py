@@ -349,7 +349,7 @@ except AttributeError:
 
 class MultiMessageDialog(wx.Dialog):
     """
-    A dialog like wx.MessageDialog, but with an optional 2nd message string
+    A dialog like :class:`wx.MessageDialog`, but with an optional 2nd message string
     that is shown in a scrolled window, and also allows passing in the icon to
     be shown instead of the stock error, question, etc. icons. The btnLabels
     can be used if you'd like to change the stock labels on the buttons, it's
@@ -475,7 +475,7 @@ class MultiMessageDialog(wx.Dialog):
 def MultiMessageBox(message, caption, msg2="", style=wx.OK, parent=None, 
                     icon=None, btnLabels=None):
     """
-    A function like wx.MessageBox which uses MultiMessageDialog.
+    A function like :class:`wx.MessageBox` which uses :class:`MultiMessageDialog`.
     """
     #if not style & wx.ICON_NONE and not style & wx.ICON_MASK:
     if not style & wx.ICON_MASK:

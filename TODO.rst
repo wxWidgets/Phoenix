@@ -82,25 +82,33 @@ check if the the feature is available in wxWidgets or if the stubs should be
 compiled.)
 
 
-Reorganize Sphinx output
-------------------------
+Sphinx tweaks
+-------------
 
-To make it easier for 3rd party tools to find the docs for specific
-classes and methods it would be good to change how the file names for
-the class pages are generated.  Currently it looks like just the
-leading "wx." is missing from the file names.  So that means that
-classes in "core" do not have any package prefix in the filename at
-all.  For example, .../html/Bitmap.html instead of
-.../html/wx.Bitmap.html.  The same holds true for classes in the other
-extension modules in wx, and also wx.lib.
+The big changes are done, but here are some dangling strings that still need
+to be untangled:
 
-    .../html/adv.AnimationCtrl.html
-    .../html/lib.buttons.GenButton.html	
-    etc.
+  * The `chopDescription()` function is not very smart. See if it can be made a
+    little smarter and pull out the first sentence from the docstring instead
+    of ust the first line.
 
-The intra-document anchor links should also have the leading "wx."
-added to them for consistency.
+  * Convert the main.html page to a ReST file? It would probably make it a
+    little easier to maintain.
 
+  * Turn off full justification of text?
+
+  * Set max width of body sections?  I think it looks a little nicer that way,
+    but we'll need to fix the floating and alignment of the sidebar to do
+    it...
+
+  * Change the column widths of the ReST simple tables, to be about 30/70 instead
+    of 50/50.  This can be done by changing how many '=' are generated for the top
+    and bottom lines of the tables.
+
+  * Move the building of the docs to the Windows build slave so the Windows
+    specific modules will be present for the wxlib build command, so those
+    modules can be documented.
+    
 
 
 Other Dev Stuff
@@ -174,10 +182,10 @@ Other Dev Stuff
     bytes objects, they should probably be string objects. Or not, sip's
     default might be best... See ModuleDef.addGlobalStr if I change my mind.
 
-  * If a function or method has overloads but all but one all ignored then the doc
-    generator should not use the "*args, **kw" form of output and just use the
-    args string of the remaining function or method definition like for those
-    that do not have overloads.  For example, see Window.GetClientSize
+  * If a function or method has overloads but all but one all ignored then the
+    doc generator should not use the "\*args, \*\*kw" form of output and just use
+    the args string of the remaining function or method definition like for
+    those that do not have overloads.  For example, see Window.GetClientSize
 
   * Check gui_scripts entry points.
 

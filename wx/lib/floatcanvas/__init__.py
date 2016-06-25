@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         __init__.py
 # Purpose:		The FloatCanvas package

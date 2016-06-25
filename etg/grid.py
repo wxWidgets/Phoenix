@@ -134,7 +134,7 @@ def run():
         tools.addAutoProperties(klass)
         
         methods = [
-            ('Clone',       "virtual wxGridCellRenderer* Clone() const;"),
+            ('Clone',       "virtual wxGridCellRenderer* Clone() const /Factory/;"),
             ('Draw',        "virtual void Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, "
                             "    const wxRect& rect, int row, int col, bool isSelected);"),
             ('GetBestSize', "virtual wxSize GetBestSize(wxGrid& grid, wxGridCellAttr& attr, "
@@ -148,6 +148,7 @@ def run():
     c = module.find('wxGridCellRenderer')
     c.addPrivateCopyCtor()
     c.find('~wxGridCellRenderer').ignore(False)
+    c.find('Clone').factory = True
     
     for name in ITEMS:
         if 'Cell' in name and 'Renderer' in name:
@@ -164,7 +165,7 @@ def run():
 
         methods = [
             ('BeginEdit',  "virtual void BeginEdit(int row, int col, wxGrid* grid);"),
-            ('Clone',      "virtual wxGridCellEditor* Clone() const;"),
+            ('Clone',      "virtual wxGridCellEditor* Clone() const /Factory/;"),
             ('Create',     "virtual void Create(wxWindow* parent, wxWindowID id, wxEvtHandler* evtHandler);"),
             #('EndEdit',    "virtual bool EndEdit(int row, int col, const wxGrid* grid, const wxString& oldval, wxString* newval);"),
             ('ApplyEdit',  "virtual void ApplyEdit(int row, int col, wxGrid* grid);"),
@@ -244,6 +245,7 @@ def run():
     c = module.find('wxGridCellEditor')
     c.addPrivateCopyCtor()
     c.find('~wxGridCellEditor').ignore(False)
+    c.find('Clone').factory = True
 
     c = module.find('wxGridCellChoiceEditor')
     c.find('wxGridCellChoiceEditor').findOverload('count').ignore()
@@ -258,6 +260,7 @@ def run():
     c = module.find('wxGridCellAttr')
     c.addPrivateCopyCtor()
     c.find('~wxGridCellAttr').ignore(False)
+    c.find('Clone').factory = True
 
     c.find('GetAlignment.hAlign').out = True
     c.find('GetAlignment.vAlign').out = True

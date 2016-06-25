@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         FCEvents.py
 # Purpose:      A convenient place to put all event types and binders for 

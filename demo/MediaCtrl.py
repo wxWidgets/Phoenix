@@ -26,13 +26,9 @@ class TestPanel(wx.Panel):
 
         # Create some controls
         try:
-            backend = ""
-            if 'wxMSW' in wx.PlatformInfo:
-                # the default backend doesn't always send the EVT_MEDIA_LOADED
-                # event which we depend upon, so use a different backend by
-                # default for this demo.
-                backend = wx.media.MEDIABACKEND_QUICKTIME
-                
+            backend = "" # let MediaCtrl choose default backend
+            #backend=wx.media.MEDIABACKEND_DIRECTSHOW
+            #backend=wx.media.MEDIABACKEND_WMP10
             self.mc = wx.media.MediaCtrl()
             ok = self.mc.Create(self, style=wx.SIMPLE_BORDER,
                                 szBackend=backend)
@@ -42,6 +38,9 @@ class TestPanel(wx.Panel):
             self.Destroy()
             raise
 
+        # the following event is not sent with the Windows default backend
+        # MEDIABACKEND_DIRECTSHOW
+        # choose above e.g. MEDIABACKEND_WMP10 if this is a problem for you
         self.Bind(wx.media.EVT_MEDIA_LOADED, self.OnMediaLoaded)
 
         btn1 = wx.Button(self, -1, "Load File")
@@ -100,15 +99,17 @@ class TestPanel(wx.Panel):
 
 
     def DoLoadFile(self, path):
-        self.playBtn.Disable()
+        
         if not self.mc.Load(path):
             wx.MessageBox("Unable to load %s: Unsupported format?" % path,
                           "ERROR",
                           wx.ICON_ERROR | wx.OK)
+            self.playBtn.Disable()
         else:
             self.mc.SetInitialSize()
             self.GetSizer().Layout()
             self.slider.SetRange(0, self.mc.Length())
+            self.playBtn.Enable()
 
     def OnMediaLoaded(self, evt):
         self.playBtn.Enable()

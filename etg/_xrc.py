@@ -3,19 +3,20 @@
 # Author:      Robin Dunn
 #
 # Created:     28-Nov-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef,\
-                     ClassDef, MethodDef, ParamDef
+from etgtools import ClassDef, MethodDef, ParamDef
 
 PACKAGE   = "wx" 
 MODULE    = "_xrc"
 NAME      = "_xrc"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The classes in this module enable loading widgets and layout from XML.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 

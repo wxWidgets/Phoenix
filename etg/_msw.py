@@ -13,7 +13,9 @@ import etgtools.tweaker_tools as tools
 PACKAGE   = "wx"
 MODULE    = "_msw"
 NAME      = "_msw"  # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+This module contains a few classes that are only available on Windows.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.

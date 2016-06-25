@@ -31,10 +31,8 @@ Usage: python pywxrc.py -h
   -o, --output   output filename, or - for stdout
 """
 
-import sys, os, getopt, glob, re, cPickle
+import sys, os, getopt, glob, re
 import xml.dom.minidom as minidom
-import wx
-import wx.xrc
 from wx.lib.six import print_
 
 #----------------------------------------------------------------------

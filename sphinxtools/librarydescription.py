@@ -1,19 +1,16 @@
 import sys
 import os
-import operator
 import re
 
 if sys.version_info < (3,):
-    import cPickle as pickle
     from StringIO import StringIO
 else:
-    import pickle
     from io import StringIO
 
 from inspect import getmro, getclasstree, getdoc, getcomments
 
-from .utilities import MakeSummary, ChopDescription, WriteSphinxOutput
-from .utilities import FindControlImages, FormatExternalLink, IsPython3
+from .utilities import makeSummary, chopDescription, writeSphinxOutput, PickleFile
+from .utilities import findControlImages, formatExternalLink, isPython3
 from .constants import object_types, MODULE_TO_ICON, DOXY_2_REST, SPHINXROOT
 from . import templates
 
@@ -56,7 +53,7 @@ def generic_summary(libraryItem, stream):
 
         templ = [templates.TEMPLATE_STD_FUNCTION_SUMMARY, templates.TEMPLATE_STD_CLASS_SUMMARY]
         refs = ['func', 'ref']
-        add_tilde = [True, False]
+        add_tilde = [True, True]
 
     elif libraryItem.kind == object_types.KLASS:
         write_toc = False
@@ -79,16 +76,16 @@ def generic_summary(libraryItem, stream):
             if item.is_redundant:
                 continue
 
-            item_docs = ReplaceWxDot(item.docs)
-            item_docs = KillEpydoc(item, item_docs)
-            docs = ChopDescription(item_docs)
+            item_docs = replaceWxDot(item.docs)
+            item_docs = killEpydoc(item, item_docs)
+            docs = chopDescription(item_docs)
             table.append((item.name, docs))
 
             if item.kind != object_types.FUNCTION:
                 toctree += '   %s\n'%item.name
 
         if table:
-            summary = MakeSummary(libraryItem.name, table, templ[index], refs[index], add_tilde[index])
+            summary = makeSummary(libraryItem.name, table, templ[index], refs[index], add_tilde[index])
             stream.write(summary)
             
     if toctree and write_toc:
@@ -96,18 +93,12 @@ def generic_summary(libraryItem, stream):
         stream.write('\n\n')
 
 
-def MakeSphinxFile(name):
+def makeSphinxFile(name):
 
-    return os.path.join(os.getcwd(), 'docs', 'sphinx', '%s.txt'%name)
+    return os.path.join(os.getcwd(), 'docs', 'sphinx', '%s.txt' % name)
 
 
-def ReplaceWxDot(text):
-
-    # Double ticks with 'wx.' in them
-    text = re.sub(r'``wx\.(.*?)``', r'``\1``   ', text)
-    
-    # Signle ticks with 'wx.' in them... try and referencing them
-    text = re.sub(r'`wx\.(.*?)`', r'`\1`   ', text)
+def replaceWxDot(text):
 
     # Masked is funny...
     text = text.replace('</LI>', '')
@@ -121,7 +112,7 @@ def ReplaceWxDot(text):
         if new in [':keyword', ':param']:
             if not space_added:
                 space_added = True
-                new_with_newline = '\n%s'%new
+                new_with_newline = '\n%s' % new
                 text = text.replace(old, new_with_newline, 1)
 
         text = text.replace(old, new)
@@ -167,13 +158,13 @@ def GetTopLevelParent(klass):
     return parents[-2]
 
 
-def FindInHierarchy(klass, newlink):
+def findInHierarchy(klass, newlink):
 
     library = GetTopLevelParent(klass)
     return library.FindItem(newlink)
 
 
-def FindBestLink(klass, newlink):
+def findBestLink(klass, newlink):
 
     parent_class = klass.parent
     
@@ -195,7 +186,7 @@ def FindBestLink(klass, newlink):
                 else:
                     return ':attr:`~%s`'%child.name
 
-    full_loop = FindInHierarchy(klass, newlink)
+    full_loop = findInHierarchy(klass, newlink)
 
     if full_loop:
         return full_loop
@@ -203,7 +194,7 @@ def FindBestLink(klass, newlink):
     return ':ref:`%s`'%newlink
 
 
-def KillEpydoc(klass, newtext):
+def killEpydoc(klass, newtext):
 
     epydocs = re.findall(EPYDOC_PATTERN, newtext)
 
@@ -235,16 +226,14 @@ def KillEpydoc(klass, newtext):
             newlink = regex[start+1:end]
 
             if 'wx.' in regex or 'wx' in regex:
-                newlink = newlink.replace('wx.', '')
-                newlink = newlink.replace('wx', '')
-                newlink = ':class:`%s`'%newlink.strip()
+                newlink = ':class:`%s`' % newlink.strip()
             else:
-                newlink = '`%s`'%newlink
+                newlink = '`%s`' % newlink
 
         elif 'I{' in regex:
             # It's an inclined text
             newlink = regex[start+1:end]
-            newlink = ' `%s` '%newlink
+            newlink = ' `%s` ' % newlink
 
         elif 'L{' in regex:
             # Some kind of link, but we can't figure it out
@@ -253,10 +242,10 @@ def KillEpydoc(klass, newtext):
 
             if newlink.upper() == newlink:
                 # Use double backticks
-                newlink = '``%s``'%newlink
+                newlink = '``%s``' % newlink
             else:
                 # Try and reference it
-                bestlink = FindBestLink(klass, newlink)
+                bestlink = findBestLink(klass, newlink)
                 if bestlink:
                     newlink = bestlink
                 
@@ -406,7 +395,7 @@ class Library(ParentBase):
         self.obj_type = 'Library'
         self.python_version = ''
 
-        self.sphinx_file = MakeSphinxFile(name)
+        self.sphinx_file = makeSphinxFile(name)
         self.base_name = name
 
 
@@ -483,19 +472,19 @@ class Library(ParentBase):
 
     def ToRest(self, class_summary):
 
-        print(('\n\nReST-ifying %s...\n\n'%self.base_name))
+        print('\n\nReST-ifying %s...\n\n' % self.base_name)
         stream = StringIO()
 
         header = templates.TEMPLATE_DESCRIPTION%(self.base_name, self.base_name)
         stream.write(header)
 
-        newtext = ReplaceWxDot(self.docs)
-        newtext = KillEpydoc(self, newtext)
+        newtext = replaceWxDot(self.docs)
+        newtext = killEpydoc(self, newtext)
 
         stream.write(newtext + '\n\n')
 
         generic_summary(self, stream)
-        WriteSphinxOutput(stream, self.sphinx_file)
+        writeSphinxOutput(stream, self.sphinx_file)
 
 
     def ClassesToPickle(self, obj, class_dict):
@@ -512,7 +501,7 @@ class Library(ParentBase):
                 if child.is_redundant:
                     continue
                 
-                class_dict[child.name] = (child.method_list, child.bases, ChopDescription(child.docs))
+                class_dict[child.name] = (child.method_list, child.bases, chopDescription(child.docs))
 
             # recursively scan other folders, appending results
             class_dict = self.ClassesToPickle(child, class_dict)
@@ -521,25 +510,14 @@ class Library(ParentBase):
 
 
     def Save(self):
-
         ParentBase.Save(self)
 
         class_dict = {}
         class_dict = self.ClassesToPickle(self, class_dict)
 
-        pickle_file = os.path.join(SPHINXROOT, 'class_summary.lst')
-
-        if os.path.isfile(pickle_file):
-            fid = open(pickle_file, 'rb')
-            items = pickle.load(fid)
-            fid.close()
-        else:
-            items = {}
-
-        items.update(class_dict)
-        fid = open(pickle_file, 'wb')
-        pickle.dump(items, fid)
-        fid.close()
+        pickle_file = os.path.join(SPHINXROOT, 'class_summary.pkl')
+        with PickleFile(pickle_file) as pf:
+            pf.items.update(class_dict)
 
 
 class Module(ParentBase):
@@ -549,7 +527,7 @@ class Module(ParentBase):
         ParentBase.__init__(self, name, kind)
         
         self.filename = ''
-        self.sphinx_file = MakeSphinxFile(name)
+        self.sphinx_file = makeSphinxFile(name)
 
         if kind == object_types.PACKAGE:
             self.obj_type = 'Package'
@@ -570,23 +548,23 @@ class Module(ParentBase):
 
         if self.is_redundant:
             return
-        
+
         stream = StringIO()
 
         label = 'Module'
         if self.kind == object_types.PACKAGE:
             label = 'Package'
 
-        stream.write('.. module:: %s\n\n'%self.name)
-        stream.write('.. currentmodule:: %s\n\n'%self.name)
+        stream.write('.. module:: %s\n\n' % self.name)
+        stream.write('.. currentmodule:: %s\n\n' % self.name)
         stream.write('.. highlight:: python\n\n')
             
-        header = templates.TEMPLATE_DESCRIPTION%(self.name, '%s'%self.GetShortName())
+        header = templates.TEMPLATE_DESCRIPTION % (self.name, self.name)
         
         stream.write(header)
         
-        newtext = ReplaceWxDot(self.docs)
-        newtext = KillEpydoc(self, newtext)
+        newtext = replaceWxDot(self.docs)
+        newtext = killEpydoc(self, newtext)
 
         stream.write(newtext + '\n\n')
 
@@ -600,12 +578,12 @@ class Module(ParentBase):
         if self.kind != object_types.PACKAGE:
             print(('%s - %s (module)'%(spacer, self.name)))
             if self.inheritance_diagram:
-                png, map = self.inheritance_diagram.MakeInheritanceDiagram(class_summary)
+                png, map = self.inheritance_diagram.makeInheritanceDiagram(class_summary)
                 short_name = self.GetShortName()
                 image_desc = templates.TEMPLATE_INHERITANCE % ('module', short_name, png, short_name, map)
                 stream.write(image_desc)
         else:
-            print(('%s - %s (package)'%(spacer, self.name)))
+            print('%s - %s (package)' % (spacer, self.name))
 
         generic_summary(self, stream)
 
@@ -625,7 +603,7 @@ class Module(ParentBase):
                 continue
             fun.Write(stream)
 
-        WriteSphinxOutput(stream, self.sphinx_file)
+        writeSphinxOutput(stream, self.sphinx_file)
 
 
     def Save(self):
@@ -654,17 +632,23 @@ class Class(ParentBase):
 
         for item in sups:
             item = repr(item)
-            
+
             sup = item.replace('<class ', '').replace('>', '').replace('<type ', '')
             sup = sup.strip().replace('"', '').replace("'", '')
             if ' at ' in sup:
                 sup = sup[0:sup.index(' at ')].strip()
 
-            if 'wx._' in sup:
-                name_parts = sup.split('.')
-                sup = name_parts[-1]
+            if sup.startswith('wx._'):
+                # take out the '_core' in things like 'wx._core.Control'
+                parts = sup.split('.')
+                if parts[1] == '_core':
+                    del parts[1]
+                else:
+                    # or just the '_' otherwise
+                    parts[1] = parts[1][1:]
+                sup = '.'.join(parts)
 
-            sortedSupClasses.append(sup.replace('wx.', ''))
+            sortedSupClasses.append(sup)
 
         sortedSupClasses.sort()    
            
@@ -678,11 +662,7 @@ class Class(ParentBase):
             else:
                 cls = s
 
-            if 'wx._' in cls:
-                name_parts = cls.split('.')
-                cls = name_parts[-1]
-
-            sortedSubClasses.append(cls.replace('wx.', ''))
+            sortedSubClasses.append(cls)
 
         sortedSubClasses.sort()
 
@@ -702,7 +682,7 @@ class Class(ParentBase):
         
         self.order = 3
         self.obj_type = 'Class'
-        self.sphinx_file = MakeSphinxFile(name)
+        self.sphinx_file = makeSphinxFile(name)
 
 
     def ToRest(self, class_summary):
@@ -715,35 +695,35 @@ class Class(ParentBase):
         parts = self.name.split('.')
         current_module = '.'.join(parts[0:-1])
 
-        stream.write('.. currentmodule:: %s\n\n'%current_module)
+        stream.write('.. currentmodule:: %s\n\n' % current_module)
         stream.write('.. highlight:: python\n\n')
 
-        class_docs = ReplaceWxDot(self.docs)
-        class_docs = KillEpydoc(self, class_docs)
+        class_docs = replaceWxDot(self.docs)
+        class_docs = killEpydoc(self, class_docs)
         
-        header = templates.TEMPLATE_DESCRIPTION%(self.name, self.GetShortName())
+        header = templates.TEMPLATE_DESCRIPTION % (self.name, self.name)
         stream.write(header)
         stream.write(class_docs + '\n\n')
 
         if self.inheritance_diagram:
-            png, map = self.inheritance_diagram.MakeInheritanceDiagram(class_summary)
+            png, map = self.inheritance_diagram.makeInheritanceDiagram(class_summary)
             short_name = self.GetShortName()
             image_desc = templates.TEMPLATE_INHERITANCE % ('class', short_name, png, short_name, map)
             stream.write(image_desc)
 
-        appearance = FindControlImages(self.name.lower())
+        appearance = findControlImages(self.name.lower())
         if appearance:
             appearance_desc = templates.TEMPLATE_APPEARANCE % tuple(appearance)
             stream.write(appearance_desc + '\n\n')
 
         if self.subClasses:
-            subs = [FormatExternalLink(cls) for cls in self.subClasses]
+            subs = [formatExternalLink(cls) for cls in self.subClasses]
             subs = ', '.join(subs)
             subs_desc = templates.TEMPLATE_SUBCLASSES % subs
             stream.write(subs_desc)
 
         if self.superClasses:
-            sups = [FormatExternalLink(cls) for cls in self.superClasses]
+            sups = [formatExternalLink(cls) for cls in self.superClasses]
             sups = ', '.join(sups)
             sups_desc = templates.TEMPLATE_SUPERCLASSES % sups
             stream.write(sups_desc)
@@ -768,7 +748,7 @@ class Class(ParentBase):
         for prop in properties:
             prop.Write(stream, short_name)
             
-        WriteSphinxOutput(stream, self.sphinx_file)
+        writeSphinxOutput(stream, self.sphinx_file)
         self.bases = self.superClasses
         
 
@@ -787,7 +767,7 @@ class Class(ParentBase):
             init = self.children.pop(pop)
             self.children.insert(0, init)
 
-        self.signature = self.signature.replace('wx.', '')
+        #self.signature = self.signature.replace('wx.', '')
         self.signature = self.signature.rstrip(':').lstrip('class ')
 
         if ' def __init__' in self.signature:
@@ -903,8 +883,6 @@ class Method(ChildrenBase):
                 newargs.append((name, repr_val, eval_val))
 
         self.arguments = newargs
-
-        self.signature = self.signature.replace('wx.', '')
         self.signature = self.signature.rstrip(':').lstrip()
         
         if self.signature.startswith('def '):
@@ -948,12 +926,12 @@ class Method(ChildrenBase):
             return
             
         text = ''
-        newdocs = ReplaceWxDot(self.docs)
+        newdocs = replaceWxDot(self.docs)
         
         for line in newdocs.splitlines(True):
             text += indent + line
 
-        text = KillEpydoc(self, text)
+        text = killEpydoc(self, text)
         text += '\n\n\n'
         stream.write(text)
 
@@ -1013,7 +991,7 @@ class Attribute(ChildrenBase):
 
     def __init__(self, name, specs, value):
 
-        if IsPython3():
+        if isPython3():
             specs = str(specs)
         else:
             specs = unicode(specs)

@@ -37,7 +37,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     
     # to avoid conflicts with wxPython's wx.PlatformInfo
-    c.pyName = 'PlatformInformation'        
+    c.renameClass('PlatformInformation')
     
     c.find('GetEndianness').findOverload('end').ignore()
     c.find('GetArchName').findOverload('arch').ignore()

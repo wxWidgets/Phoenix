@@ -411,8 +411,7 @@ def build(bld):
 
     from distutils.file_util import copy_file
     from distutils.dir_util  import mkpath
-    from distutils.dep_util  import newer, newer_group
-    from buildtools.config   import opj, loadETG, getEtgSipCppFiles
+    from buildtools.config   import opj
 
     cfg.finishSetup(bld.env.wx_config)
 
@@ -463,132 +462,24 @@ def build(bld):
     )  
     makeExtCopyRule(bld, 'siplib')
 
-
-    etg = loadETG('etg/_core.py')
-    rc = ['src/wxc.rc'] if isWindows else []
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_core'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WX WXPY',
-        )
-    makeExtCopyRule(bld, '_core')
-
-
-    etg = loadETG('etg/_adv.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_adv'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXADV WXPY',
-        )
-    makeExtCopyRule(bld, '_adv')
-
-
-    etg = loadETG('etg/_dataview.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_dataview'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXADV WXPY',    # dataview classes are also in the adv library
-        )
-    makeExtCopyRule(bld, '_dataview')
-
-
-    etg = loadETG('etg/_grid.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_grid'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXADV WXPY',    # grid classes are also in the adv library
-        )
-    makeExtCopyRule(bld, '_grid')
-
-
-    etg = loadETG('etg/_stc.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_stc'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXSTC WXPY',
-        )
-    makeExtCopyRule(bld, '_stc')
-
-
-    etg = loadETG('etg/_html.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_html'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXHTML WXPY',
-        )
-    makeExtCopyRule(bld, '_html')
-
-
-    etg = loadETG('etg/_glcanvas.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_glcanvas'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXGL WXPY',
-        )
-    makeExtCopyRule(bld, '_glcanvas')
-
-
-    etg = loadETG('etg/_html2.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_html2'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXWEBVIEW WXPY',
-        )
-    makeExtCopyRule(bld, '_html2')
+    # Add build rules for each of our ETG generated extension modules
+    makeETGRule(bld, 'etg/_core.py',       '_core',      'WX')
+    makeETGRule(bld, 'etg/_adv.py',        '_adv',       'WXADV')
+    makeETGRule(bld, 'etg/_dataview.py',   '_dataview',  'WXADV')
+    makeETGRule(bld, 'etg/_grid.py',       '_grid',      'WXADV')
+    makeETGRule(bld, 'etg/_stc.py',        '_stc',       'WXSTC')
+    makeETGRule(bld, 'etg/_html.py',       '_html',      'WXHTML')
+    makeETGRule(bld, 'etg/_glcanvas.py',   '_glcanvas',  'WXGL')
+    makeETGRule(bld, 'etg/_html2.py',      '_html2',     'WXWEBVIEW')
+    makeETGRule(bld, 'etg/_xml.py',        '_xml',       'WXXML')
+    makeETGRule(bld, 'etg/_xrc.py',        '_xrc',       'WXXRC')
+    makeETGRule(bld, 'etg/_richtext.py',   '_richtext',  'WXHTML WXRICHTEXT')
+    makeETGRule(bld, 'etg/_media.py',      '_media',     'WXMEDIA')
 
     if isDarwin:
-        etg = loadETG('etg/_webkit.py')
-        bld(features = 'c cxx cxxshlib pyext',
-            target   = makeTargetName(bld, '_webkit'),
-            source   = getEtgSipCppFiles(etg) + rc,
-            uselib   = 'WXWEBKIT WXPY',
-            )
-        makeExtCopyRule(bld, '_webkit')
-
-    etg = loadETG('etg/_xml.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_xml'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXXML WXPY',
-        )
-    makeExtCopyRule(bld, '_xml')
-
-
-    etg = loadETG('etg/_xrc.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_xrc'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXXRC WXPY',
-        )
-    makeExtCopyRule(bld, '_xrc')
-
-
-    etg = loadETG('etg/_richtext.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_richtext'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WXHTML WXRICHTEXT WXPY',
-        )
-    makeExtCopyRule(bld, '_richtext')
-
-    etg = loadETG('etg/_media.py')
-    bld(features = 'c cxx cxxshlib pyext',
-        target   = makeTargetName(bld, '_media'),
-        source   = getEtgSipCppFiles(etg) + rc,
-        uselib   = 'WX WXPY WXMEDIA',
-        )
-    makeExtCopyRule(bld, '_media')
-
+        makeETGRule(bld, 'etg/_webkit.py', '_webkit',    'WXWEBKIT')
     if isWindows:
-        etg = loadETG('etg/_msw.py')
-        bld(features = 'c cxx cxxshlib pyext',
-            target   = makeTargetName(bld, '_msw'),
-            source   = getEtgSipCppFiles(etg) + rc,
-            uselib   = 'WX WXPY',
-            )
-        makeExtCopyRule(bld, '_msw')
-
-
+        makeETGRule(bld, 'etg/_msw.py',    '_msw',       'WX')
 
     # ** Add code for new modules here
 
@@ -645,5 +536,17 @@ def _copyEnvGroup(env, srcPostfix, destPostfix):
         if key.endswith(srcPostfix):
             newKey = key[:-len(srcPostfix)] + destPostfix
             env[newKey] = copy.copy(env[key])
+
+# Make extension module build rules using info gleaned from an ETG script
+def makeETGRule(bld, etgScript, moduleName, libFlags):
+    from buildtools.config   import loadETG, getEtgSipCppFiles
+    rc = ['src/wxc.rc'] if isWindows else []
+    etg = loadETG(etgScript)
+    bld(features='c cxx cxxshlib pyext',
+        target=makeTargetName(bld, moduleName),
+        source=getEtgSipCppFiles(etg) + rc,
+        uselib='{} WXPY'.format(libFlags),
+        )
+    makeExtCopyRule(bld, moduleName)
 
 #-----------------------------------------------------------------------------

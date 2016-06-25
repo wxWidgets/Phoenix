@@ -57,7 +57,12 @@ def run():
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
         
     tools.fixTopLevelWindowClass(c)
-    
+
+
+    c = module.find('wxWindowModalDialogEvent')
+    tools.fixEventClass(c)
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

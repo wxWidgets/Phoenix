@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #----------------------------------------------------------------------------
 # Name:         NavCanvas.py
 # Purpose:      Combines FloatCanvas with Navigation controls

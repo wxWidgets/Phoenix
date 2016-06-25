@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -69,93 +69,27 @@ REMOVED_LINKS = ['Library:', 'Category:', 'Predefined objects/pointers:']
 # Dictionary mapping the etg module name to the real Phoenix module name
 # This needs to be kept up to date when other stuff comes in (i.e., wx.grid,
 # wx.html and so on)
-MODULENAME_REPLACE = {'_core'    : '',
-                      '_dataview': 'dataview.',
-                      '_adv'     : 'adv.',
-                      '_stc'     : 'stc.',
-                      '_html'    : 'html.',
-                      '_html2'   : 'html2.',
-                      '_glcanvas': 'glcanvas.',
-                      '_xml'     : 'xml.',
-                      '_xrc'     : 'xrc.',
-                      '_grid'    : 'grid.',
-                      '_richtext': 'richtext.',
-                      '_webkit'  : 'webkit.',
-                      '_media'   : 'media.',
-                      '_msw'     : 'msw',
+MODULENAME_REPLACE = {'_core'    : 'wx.',
+                      '_dataview': 'wx.dataview.',
+                      '_adv'     : 'wx.adv.',
+                      '_stc'     : 'wx.stc.',
+                      '_html'    : 'wx.html.',
+                      '_html2'   : 'wx.html2.',
+                      '_glcanvas': 'wx.glcanvas.',
+                      '_xml'     : 'wx.xml.',
+                      '_xrc'     : 'wx.xrc.',
+                      '_grid'    : 'wx.grid.',
+                      '_richtext': 'wx.richtext.',
+                      '_webkit'  : 'wx.webkit.',
+                      '_media'   : 'wx.media.',
+                      '_msw'     : 'wx.msw.',
                       }
 
-NO_MODULE = {
-             # -- wxAdvanced -- #
-             # Widgets
-             'DatePickerCtrlGeneric': 'adv.',
-             'GenericCalendarCtrl'  : 'adv.',
-             'OwnerDrawnComboBox'   : 'adv.',
-             
-             # Enums/constants
-             'AnimationType'                  : 'adv.',
-             'CalendarDateBorder'             : 'adv.',
-             'CalendarHitTestResult'          : 'adv.',
-             'LayoutAlignment'                : 'adv.',
-             'LayoutOrientation'              : 'adv.',
-             'OwnerDrawnComboBoxPaintingFlags': 'adv.',
-             'SashDragStatus'                 : 'adv.',
-             'SashEdgePosition'               : 'adv.',
-             'TaskBarIconType'                : 'adv.',
-             'TipKind'                        : 'adv.',
 
-             # -- wxDataView -- #
-             # Widgets
-             'DataViewItemObjectMapper': 'dataview.',
-             'PyDataViewModel'         : 'dataview.',
-             
-             # Enums/constants
-             'DataViewCellMode'        : 'dataview.',
-             'DataViewCellRenderState' : 'dataview.',
-             'DataViewColumnFlags'     : 'dataview.',
-             
-             # -- wxHTML -- #
-             # Widgets
-             'HTMLHelpDialog'          : 'html.',
-             'HTMLHelpFrame'           : 'html.',
-             'HTMLHelpWindow'          : 'html.',
-             
-             # Enums/constants
-             'HTMLCursor'              : 'html.',
-             'HtmlOpeningStatus'       : 'html.',
-             'HtmlScriptMode'          : 'html.',
-             'HtmlSelectionState'      : 'html.',
-             'HtmlURLType'             : 'html.',
-
-             # -- wxHTML2 -- #
-             # Widgets
-             
-             # Enums/constants
-             'WebViewBackend'          : 'html2.',
-             'WebViewNavigationError'  : 'html2.',
-             'WebViewReloadFlags'      : 'html2.',
-             'WebViewZoom'             : 'html2.',
-             'WebViewZoomType'         : 'html2.',
-
-             # -- wxXML -- #
-             # Widgets
-             
-             # Enums/constants
-             'XmlDocumentLoadFlag'     : 'xml.',
-             'XmlNodeType'             : 'xml.',
-             
-             # -- wxXRC -- #
-             # Widgets
-             'XmlSubclassFactory'      : 'xrc.',
-             
-             # Enums/constants
-             'XmlResourceFlags'        : 'xrc.',
-             }
-             
 # Other C++ specific things to strip away
 CPP_ITEMS = ['*', '&', 'const', 'unsigned', '(size_t)', 'size_t', 'void']
 
-# Serie of paths containing the input data for Sphinx and for the scripts
+# Series of paths containing the input data for Sphinx and for the scripts
 # building the ReST docs:
 
 # The location of the Phoenix main folder
@@ -189,6 +123,7 @@ WIDGETS_IMAGES_ROOT  = os.path.join(SPHINXROOT,  '_static', 'images', 'widgets',
 # Folder for the icons used for titles, sub-titles and so on for the Sphinx documentation
 SPHINX_IMAGES_ROOT   = os.path.join(SPHINXROOT,  '_static', 'images', 'sphinxdocs')
 
+DOCSTRING_KEY = '__module_docstring'
 
 # The Doxygen root for the XML docstrings
 xmlsrcbase = 'docs/doxygen/out/xml'
@@ -286,7 +221,8 @@ class Enumeration(object):
 CONSTANT_RE = re.compile('^([\w\s,]+)=', re.M)
 
 EXCLUDED_ATTRS = ['__builtins__', '__doc__', '__name__', '__file__', '__path__',
-                  '__module__', '__all__']
+                  '__module__', '__all__', '__cached__', '__loader__', '__package__',
+                  '__spec__', ]
 
 TYPE_DESCRIPTION = ['library',
                     'package',
