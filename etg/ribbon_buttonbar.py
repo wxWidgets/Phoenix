@@ -47,8 +47,8 @@ def run():
     tools.fixEventClass(c)
 
     c.addPyCode("""\
-        EVT_RIBBONBUTTONBAR_CLICKED = PyEventBinder( wxEVT_RIBBONBUTTONBAR_CLICKED, 1 )
-        EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED = PyEventBinder( wxEVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED, 1 )
+        EVT_RIBBONBUTTONBAR_CLICKED = wx.PyEventBinder( wxEVT_RIBBONBUTTONBAR_CLICKED, 1 )
+        EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED = wx.PyEventBinder( wxEVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED, 1 )
         """)
     
     #-----------------------------------------------------------------
