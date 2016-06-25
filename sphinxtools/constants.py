@@ -83,7 +83,7 @@ MODULENAME_REPLACE = {'_core'    : 'wx.',
                       '_webkit'  : 'wx.webkit.',
                       '_media'   : 'wx.media.',
                       '_msw'     : 'wx.msw.',
-                      '_ribbon'  : 'wx.ribbon',
+                      '_ribbon'  : 'wx.ribbon.',
                       }
 
 
