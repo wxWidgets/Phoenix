@@ -271,7 +271,7 @@ def run():
 
     
     #----------------------------------------------------------------- 
-    # The insanceCode attribute is code that is used to make a default
+    # The instanceCode attribute is code that is used to make a default
     # instance of the class. We can't create them using the same class in
     # this case because they are abstract.
 
