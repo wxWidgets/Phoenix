@@ -190,7 +190,7 @@ except:
     binaries."""
     raise ImportError("NumPy not found.\n" + msg)
 
-# XXX: Comment out this line to disable depreciation warnings
+# XXX: Comment out this line to disable deprecation warnings
 warnings.simplefilter('default')
 
 
@@ -4118,13 +4118,10 @@ Hand = PyEmbeddedImage(
     "FmWQp/JJDXeRh2TXcJa91zAH2uN2mvXFsrIrsjS8rnftWmWfAiLIStuD9m9h9belvzgS/1fP"
     "X7075IwDENteAAAAAElFTkSuQmCC")
 
-#---------------------------------------------------------------------------
-# if running standalone...
-#
-#     ...a sample implementation using the above
-#
 
-
+### -------------------------------------------------------------------------
+### Examples and Demo Frame
+### -------------------------------------------------------------------------
 def _draw1Objects():
     """Sin, Cos, and Points"""
     # 100 points sin function, plotted as green circles
@@ -4158,8 +4155,9 @@ def _draw1Objects():
                           colour='blue',
                           marker='cross',
                           )
+    line2 = PolyLine(pts, drawstyle='steps-post')
 
-    return PlotGraphics([markers1, lines, markers3, markers2],
+    return PlotGraphics([markers1, lines, markers3, markers2, line2],
                         "Graph Title",
                         "X Axis",
                         "Y Axis")
