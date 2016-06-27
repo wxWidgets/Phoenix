@@ -497,7 +497,7 @@ class PendingDeprecation(object):
         `old_func` is pending deprecation. Please use new_func instead.
 
     """
-    _warn_txt = "`{}` is pending deprecation. Please use {} instead."
+    _warn_txt = "`{}` is pending deprecation. Please use `{}` instead."
 
     def __init__(self, new_func):
         self.new_func = new_func
@@ -706,13 +706,11 @@ class PolyPoints(object):
                                                     # TODO: get rid of the
                                                     # need for copy
 
-        # TODO: I can make this better... move logic to self._log10
         # work on X:
         if self.AbsScale[0]:
-            data[:, 0] = np.abs(data[:, 0])
+            data = self._abs(data, 0)
         if self.LogScale[0]:
-            data = np.compress(data[:, 0] > 0, data, 0)
-            data[:, 0] = np.log10(data[:, 0])
+            data = self._log10(data, 0)
 
         if self.SymLogScale[0]:
             # TODO: implement SymLogScale
@@ -723,10 +721,9 @@ class PolyPoints(object):
 
         # work on Y:
         if self.AbsScale[1]:
-            data[:, 1] = np.abs(data[:, 1])
+            data = self._abs(data, 1)
         if self.LogScale[1]:
-            data = np.compress(data[:, 1] > 0, data, 0)
-            data[:, 1] = np.log10(data[:, 1])
+            data = self._log10(data, 1)
 
         if self.SymLogScale[1]:
             # TODO: implement SymLogScale
@@ -742,6 +739,11 @@ class PolyPoints(object):
         """ Take the Log10 of the data, dropping any negative values """
         data = np.compress(data[:, index] > 0, data, 0)
         data[:, index] = np.log10(data[:, index])
+        return data
+
+    def _abs(self, data, index):
+        """ Take the Abs of the data """
+        data[:, index] = np.abs(data[:, index])
         return data
 
     def boundingBox(self):
@@ -2178,7 +2180,7 @@ class PlotCanvas(wx.Panel):
         frame.Centre(wx.BOTH)
         frame.Show(True)
 
-    @PendingDeprecation("self.LogScale")
+    @PendingDeprecation("self.LogScale property")
     def setLogScale(self, logscale):
         self.LogScale = logscale
 
