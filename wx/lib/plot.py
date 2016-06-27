@@ -1106,9 +1106,8 @@ class PolyMarker(PolyPoints):
             dc.DrawLineList(lines.astype(np.int32))
 
 
-class PolyBars(PolyPoints):
+class PolyBarsBase(PolyPoints):
     """
-    Rectangles!
     """
     _attributes = {'edgecolour': 'black',
                    'edgewidth': 2,
@@ -1116,12 +1115,69 @@ class PolyBars(PolyPoints):
                    'legend': '',
                    'fillcolour': 'red',
                    'fillstyle': wx.BRUSHSTYLE_SOLID,
-                   'barwidth': None
+                   'barwidth': 1.0
                    }
 
+    def __init__(self, points, attr):
+        """
+        """
+        PolyPoints.__init__(self, points, attr)
+
+    def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
+        """same as override method, but retuns a value."""
+        scaled = scale * data + shift
+        return scaled
+
+    def getSymExtent(self, printerScale):
+        """Width and Height of Marker"""
+        h = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
+        w = 5 * h
+        return (w, h)
+
+    def set_pen_and_brush(self, dc, printerScale):
+        pencolour = self.attributes['edgecolour']
+        penwidth = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
+        penstyle = self.attributes['edgestyle']
+        fillcolour = self.attributes['fillcolour']
+        fillstyle = self.attributes['fillstyle']
+
+        if not isinstance(pencolour, wx.Colour):
+            pencolour = wx.Colour(pencolour)
+        pen = wx.Pen(pencolour, penwidth, penstyle)
+        pen.SetCap(wx.CAP_BUTT)
+
+        if not isinstance(fillcolour, wx.Colour):
+            fillcolour = wx.Colour(fillcolour)
+        brush = wx.Brush(fillcolour, fillstyle)
+
+        dc.SetPen(pen)
+        dc.SetBrush(brush)
+
+    def scale_rect(self, rect):
+        # Scale the points to the plot area
+        scaled_rect = self._scaleAndShift(rect,
+                                          self.currentScale,
+                                          self.currentShift)
+
+        # Convert to (left, top, width, height) for drawing
+        wx_rect = [scaled_rect[0][0],                       # X (left)
+                   scaled_rect[0][1],                       # Y (top)
+                   scaled_rect[1][0] - scaled_rect[0][0],   # Width
+                   scaled_rect[1][1] - scaled_rect[0][1]]   # Height
+
+        return wx_rect
+
+    def draw(self, dc, printerScale, coord=None):
+        pass
+
+
+class PolyBars(PolyBarsBase):
+    """
+    Bar Chart.
+    """
     def __init__(self, points, **attr):
         """
-        Creates PolyRectangle object
+        Creates PolyBars object
 
         :param `points`: sequence (array, tuple or list) of (x, y) points
                          that define the bar.
@@ -1136,89 +1192,53 @@ class PolyBars(PolyPoints):
          'legend' = ''                      Line Legend to display
          'fillcolour' = 'red'               wx.Brush fill color: any wx.Colour
          'fillstyle' = wx.BRUSHSTYLE_SOLID  The fill style for the rectangle
-         'barwidth' = None                  The bar width. None means 0 space
-                                            between bars
+         'barwidth' = 1.0                   The bar width. If a list of
+                                            values, len(barwidth) must
+                                            equal len(points).
          =================================  ================================
-
         """
-        PolyPoints.__init__(self, points, attr)
+        PolyBarsBase.__init__(self, points, attr)
 
-    def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
-        """same as override method, but retuns a value."""
-        scaled = scale * data + shift
-        return scaled
+    def calc_rect(self, x, y, w):
+        """ Calculate the rectangle for plotting. """
+        return self.scale_rect([[x - w / 2, y],      # left, top
+                                [x + w / 2, 0]])     # right, bottom
 
     def draw(self, dc, printerScale, coord=None):
         """ Draw the bars """
-        pencolour = self.attributes['edgecolour']
-        penwidth = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
-        penstyle = self.attributes['edgestyle']
-        fillcolour = self.attributes['fillcolour']
-        fillstyle = self.attributes['fillstyle']
+        self.set_pen_and_brush(dc, printerScale)
         barwidth = self.attributes['barwidth']
-        barwidth = 1.
 
-        if not isinstance(pencolour, wx.Colour):
-            pencolour = wx.Colour(pencolour)
-        pen = wx.Pen(pencolour, penwidth, penstyle)
-        pen.SetCap(wx.CAP_BUTT)
-        if not isinstance(fillcolour, wx.Colour):
-            fillcolour = wx.Colour(fillcolour)
-        brush = wx.Brush(fillcolour, fillstyle)
-        dc.SetPen(pen)
-        dc.SetBrush(brush)
         if coord is None:
-            rects = []
             if isinstance(barwidth, (int, float)):
+                # use a single width for all bars
                 pts = ((x, y, barwidth) for x, y in self.points)
-            else:
+            elif isinstance(barwidth, (list, tuple)):
+                # use a separate width for each bar
+                if len(barwidth) != len(self.points):
+                    err_str = ("Barwidth ({} items) and Points ({} items) do "
+                               "not have the same length!")
+                    err_str = err_str.format(len(barwidth), len(self.points))
+                    raise ValueError(err_str)
                 pts = ((x, y, w) for (x, y), w in zip(self.points, barwidth))
+            else:
+                # invalid attribute type
+                err_str = ("Invalid type for 'barwidth'. Expected float, "
+                           "int, or list or tuple of (int or float). Got {}.")
+                raise TypeError(err_str.format(type(barwidth)))
 
-            for x, y, w in pts:
-                # Change the point to a format that works for _scaleAndShift
-                rect = [[x - w / 2, y],      # left, top
-                        [x + w / 2, 0]]      # right, bottom
-
-                # Scale the points to the plot area
-                rect = self._scaleAndShift(rect,
-                                           self.currentScale,
-                                           self.currentShift)
-
-                # Convert to (left, top, width, height)
-                rect = [rect[0][0],                 # X (left)
-                        rect[0][1],                 # Y (top)
-                        rect[1][0] - rect[0][0],    # Width
-                        rect[1][1] - rect[0][1]]    # Height
-
-                rects.append(rect)
-
+            rects = [self.calc_rect(x, y, w) for x, y, w in pts]
             dc.DrawRectangleList(rects)
         else:
             dc.DrawLines(coord)  # draw legend line
 
-    def getSymExtent(self, printerScale):
-        """Width and Height of Marker"""
-        h = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
-        w = 5 * h
-        return (w, h)
 
-
-# TODO: Refactor duplicate code fom PolyBars
-class PolyHistogram(PolyPoints):
+class PolyHistogram(PolyBarsBase):
     """
     Histogram
 
-    Special PolyBars where the bars span the binspec.
+    Special PolyBarsBase where the bars span the binspec.
     """
-
-    _attributes = {'edgecolour': 'black',
-                   'edgewidth': 3,
-                   'edgestyle': wx.PENSTYLE_SOLID,
-                   'legend': '',
-                   'fillcolour': wx.GREEN,
-                   'fillstyle': wx.BRUSHSTYLE_SOLID,
-                   }
-
     def __init__(self, hist, binspec, **attr):
         """
         Creates PolyHistogram object
@@ -1243,7 +1263,7 @@ class PolyHistogram(PolyPoints):
 
         """
         if len(binspec) != len(hist) + 1:
-            raise ValueError("Length of binspec must = length of hist + 1")
+            raise ValueError("Len(binspec) must equal len(hist) + 1")
 
         self.hist = hist
         self.binspec = binspec
@@ -1256,68 +1276,30 @@ class PolyHistogram(PolyPoints):
             next(b, None)
             return zip(a, b)
 
+        # define the bins and center x locations
         self.bins = list(pairwise(self.binspec))
-        x = []
-        for pair in self.bins:
-            x.append(pair[0] + (pair[1] - pair[0])/2)
+        bar_center_x = (pair[0] + (pair[1] - pair[0])/2 for pair in self.bins)
 
-        points = list(zip(x, self.hist))
+        points = list(zip(bar_center_x, self.hist))
+        PolyBarsBase.__init__(self, points, attr)
 
-        PolyPoints.__init__(self, points, attr)
-
-    def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
-        """same as override method, but retuns a value."""
-        scaled = scale * data + shift
-        return scaled
+    def calc_rect(self, y, low, high):
+        """ Calculate the rectangle for plotting. """
+        return self.scale_rect([[low, y],       # left, top
+                                [high, 0]])     # right, bottom
 
     def draw(self, dc, printerScale, coord=None):
         """ Draw the bars """
-        pencolour = self.attributes['edgecolour']
-        penwidth = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
-        penstyle = self.attributes['edgestyle']
-        fillcolour = self.attributes['fillcolour']
-        fillstyle = self.attributes['fillstyle']
+        self.set_pen_and_brush(dc, printerScale)
 
-        if not isinstance(pencolour, wx.Colour):
-            pencolour = wx.Colour(pencolour)
-        pen = wx.Pen(pencolour, penwidth, penstyle)
-        pen.SetCap(wx.CAP_BUTT)
-        if not isinstance(fillcolour, wx.Colour):
-            fillcolour = wx.Colour(fillcolour)
-        brush = wx.Brush(fillcolour, fillstyle)
-        dc.SetPen(pen)
-        dc.SetBrush(brush)
         if coord is None:
-
-            rects = []
-
-            for y, (low, high) in zip(self.hist, self.bins):
-                # Change the point to a format that works for _scaleAndShift
-                rect = [[low, y],      # left, top
-                        [high, 0]]      # right, bottom
-
-                # Scale the points to the plot area
-                rect = self._scaleAndShift(rect,
-                                           self.currentScale,
-                                           self.currentShift)
-
-                # Convert to (left, top, width, height)
-                rect = [rect[0][0],                 # X (left)
-                        rect[0][1],                 # Y (top)
-                        rect[1][0] - rect[0][0],    # Width
-                        rect[1][1] - rect[0][1]]    # Height
-
-                rects.append(rect)
+            rects = [self.calc_rect(y, low, high)
+                     for y, (low, high)
+                     in zip(self.hist, self.bins)]
 
             dc.DrawRectangleList(rects)
         else:
             dc.DrawLines(coord)  # draw legend line
-
-    def getSymExtent(self, printerScale):
-        """Width and Height of Marker"""
-        h = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
-        w = 5 * h
-        return (w, h)
 
 
 class BoxPlot(PolyPoints):
