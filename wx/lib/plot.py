@@ -126,23 +126,21 @@ improvement though. Lines are much faster than markers, especially
 filled markers.  Stay away from circles and triangles unless you
 only have a few thousand points.
 
-+-----------------------------------+
-| Times for 25,000 points           |
-+===================================+
-| Line                    | 0.078 s |
-+-------------------------+---------+
-| Markers                           |
-+-------------------------+---------+
-| Square                  | 0.22 s  |
-+-------------------------+---------+
-| dot                     | 0.10    |
-+-------------------------+---------+
-| circle                  | 0.87    |
-+-------------------------+---------+
-| cross, plus             | 0.28    |
-+-------------------------+---------+
-| triangle, triangle_down | 0.90    |
-+-------------------------+---------+
++--------------------------------------------+
+| Times for 25,000 points                    |
++============================================+
+| Line                             | 0.078 s |
++----------------------------------+---------+
+| Markers: Square                  | 0.22 s  |
++----------------------------------+---------+
+| Markers: dot                     | 0.10    |
++----------------------------------+---------+
+| Markers: circle                  | 0.87    |
++----------------------------------+---------+
+| Markers: cross, plus             | 0.28    |
++----------------------------------+---------+
+| Markers: triangle, triangle_down | 0.90    |
++----------------------------------+---------+
 
 Thanks to Chris Barker for getting this version working on Linux.
 
@@ -1243,6 +1241,8 @@ class PolyHistogram(PolyBarsBase):
     Histogram
 
     Special PolyBarsBase where the bars span the binspec.
+
+
     """
     def __init__(self, hist, binspec, **attr):
         """
@@ -3653,23 +3653,31 @@ class PlotCanvas(wx.Panel):
         ticks = self.EnableTicks
         if self.XSpec != 'none':        # I don't like this :-/
             if ticks.bottom:
+                lines = []
                 for x, label in xticks:
                     pt = scale * np.array([x, p1[1]]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] - xTickLength)
+                    lines.append((pt[0], pt[1], pt[0], pt[1] - xTickLength))
+                dc.DrawLineList(lines)
             if ticks.top:
+                lines = []
                 for x, label in xticks:
                     pt = scale * np.array([x, p2[1]]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + xTickLength)
+                    lines.appned((pt[0], pt[1], pt[0], pt[1] + xTickLength))
+                dc.DrawLineList(lines)
 
         if self.YSpec != 'none':
             if ticks.left:
+                lines = []
                 for y, label in yticks:
                     pt = scale * np.array([p1[0], y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0] + yTickLength, pt[1])
+                    lines.append((pt[0], pt[1], pt[0] + yTickLength, pt[1]))
+                dc.DrawLineList(lines)
             if ticks.right:
+                lines = []
                 for y, label in yticks:
                     pt = scale * np.array([p2[0], y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0] - yTickLength, pt[1])
+                    lines.append((pt[0], pt[1], pt[0] - yTickLength, pt[1]))
+                dc.DrawLineList(lines)
 
     @TempStyle('pen')
     def _drawCenterLines(self, dc, p1, p2, scale, shift):
@@ -3754,41 +3762,55 @@ class PlotCanvas(wx.Panel):
     def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
         """ Draws the axes values """
         # TODO: More code duplication? Same as _drawGrid and _drawTicks?
-        # TODO: replace dc.DrawText with dc.DrawTextList?
         # TODO: update the bounding boxes when adding right and top values
         axes = self.EnableAxesValues
         if self.XSpec != 'none':
             if axes.bottom:
+                labels = [tick[1] for tick in xticks]
+                coords = []
                 for x, label in xticks:
                     w = dc.GetTextExtent(label)[0]
                     pt = scale * np.array([x, p1[1]]) + shift
-                    dc.DrawText(label,
-                                pt[0] - w/2,
-                                pt[1] + 2 * self._pointSize[1])
+                    coords.append(
+                        (pt[0] - w/2, pt[1] + 2 * self._pointSize[1])
+                    )
+                dc.DrawTextList(labels, coords)
+
             if axes.top:
+                labels = [tick[1] for tick in xticks]
+                coords = []
                 for x, label in xticks:
                     w, h = dc.GetTextExtent(label)
                     pt = scale * np.array([x, p2[1]]) + shift
-                    dc.DrawText(label,
-                                pt[0] - w/2,
-                                pt[1] - 2 * self._pointSize[1] - h)
+                    coords.append(
+                        (pt[0] - w/2, pt[1] - 2 * self._pointSize[1] - h)
+                    )
+                dc.DrawTextList(labels, coords)
+
         if self.YSpec != 'none':
             if axes.left:
                 h = dc.GetCharHeight()
+                labels = [tick[1] for tick in yticks]
+                coords = []
                 for y, label in yticks:
                     w = dc.GetTextExtent(label)[0]
                     pt = scale * np.array([p1[0], y]) + shift
-                    dc.DrawText(label,
-                                pt[0] - w - 3 * self._pointSize[0],
-                                pt[1] - 0.5 * h)
+                    coords.append(
+                        (pt[0] - w - 3 * self._pointSize[0], pt[1] - 0.5 * h)
+                    )
+                dc.DrawTextList(labels, coords)
+
             if axes.right:
                 h = dc.GetCharHeight()
+                labels = [tick[1] for tick in yticks]
+                coords = []
                 for y, label in yticks:
                     w = dc.GetTextExtent(label)[0]
                     pt = scale * np.array([p2[0], y]) + shift
-                    dc.DrawText(label,
-                                pt[0] + 3 * self._pointSize[0],
-                                pt[1] - 0.5 * h)
+                    coords.append(
+                        (pt[0] + 3 * self._pointSize[0], pt[1] - 0.5 * h)
+                    )
+                dc.DrawTextList(labels, coords)
 
     @TempStyle('pen')
     def _drawPlotAreaItems(self, dc, p1, p2, scale, shift, xticks, yticks):
