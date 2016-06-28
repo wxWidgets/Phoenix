@@ -214,7 +214,13 @@ def run():
     
         if c.findItem('CalculateRange'):
             c.find('CalculateRange.end').out = True  # TODO: should it be an inOut?
-    
+
+        if c.findItem('Clone'):
+            c.find('Clone').factory = True
+        else:
+            c.addItem(etgtools.WigCode("""\
+            virtual wxRichTextObject* Clone() const /Factory/;
+            """))
     
         # These are the pure virtuals in the base class. SIP needs to see that
         # all the derived classes have an implementation, otherwise it will
@@ -270,6 +276,10 @@ def run():
     _fixDrawObject(c)
 
     #-------------------------------------------------------
+    c = module.find('wxRichTextCell')
+    _fixDrawObject(c)
+
+    #-------------------------------------------------------
     c = module.find('wxRichTextField')
     _fixDrawObject(c)
 
@@ -279,7 +289,7 @@ def run():
     tools.ignoreConstOverloads(c)
     c.find('SetRange.from').name = 'from_'
     c.find('SetRange.to').name = 'to_'
-
+    c.find('Clone').factory = True
 
     #-------------------------------------------------------
     c = module.find('wxRichTextParagraph')
