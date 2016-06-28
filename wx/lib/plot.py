@@ -503,7 +503,7 @@ class PendingDeprecation(object):
     def __call__(self, func):
         """Support for functions"""
         self.func = func
-        self._update_docs()
+#        self._update_docs()
 
         @functools.wraps(self.func)
         def wrapper(*args, **kwargs):
@@ -1999,7 +1999,16 @@ class PlotCanvas(wx.Panel):
     ### Pen Properties
     @property
     def GridPen(self):
-        """Gets the grid's wx.Pen"""
+        """
+        The :class:`wx.Pen` used to draw the grid lines on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the grid
+                 lines.
+        :setter: Sets the :class:`wx.Pen` use for drawging the grid lines.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._gridPen
 
     @GridPen.setter
@@ -2010,7 +2019,16 @@ class PlotCanvas(wx.Panel):
 
     @property
     def DiagonalPen(self):
-        """Gets the diagonal wx.Pen"""
+        """
+        The :class:`wx.Pen` used to draw the diagonal lines on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the diagonal
+                 lines.
+        :setter: Sets the :class:`wx.Pen` use for drawging the diagonal lines.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._diagonalPen
 
     @DiagonalPen.setter
@@ -2021,7 +2039,16 @@ class PlotCanvas(wx.Panel):
 
     @property
     def CenterLinePen(self):
-        """Gets the CenterLine wx.Pen"""
+        """
+        The :class:`wx.Pen` used to draw the center lines on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the center
+                 lines.
+        :setter: Sets the :class:`wx.Pen` use for drawging the center lines.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._centerLinePen
 
     @CenterLinePen.setter
@@ -2032,7 +2059,16 @@ class PlotCanvas(wx.Panel):
 
     @property
     def AxesPen(self):
-        """Gets the axes wx.Pen"""
+        """
+        The :class:`wx.Pen` used to draw the axes lines on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the axes
+                 lines.
+        :setter: Sets the :class:`wx.Pen` use for drawging the axes lines.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._axesPen
 
     @AxesPen.setter
@@ -2043,7 +2079,15 @@ class PlotCanvas(wx.Panel):
 
     @property
     def TickPen(self):
-        """Gets the tick mark wx.Pen"""
+        """
+        The :class:`wx.Pen` used to draw the tick marks on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the tick marks.
+        :setter: Sets the :class:`wx.Pen` use for drawging the tick marks.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._tickPen
 
     @TickPen.setter
@@ -2054,12 +2098,18 @@ class PlotCanvas(wx.Panel):
 
     @property
     def TickLength(self):
-        """Returns the tick length."""
+        """
+        The length of the tick marks on an axis.
+
+        :getter: Returns the length of the tick marks.
+        :setter: Sets the length of the tick marks.
+        :type:   int or float
+        :raise:  `TypeError` when setting a value that is not an int or float.
+        """
         return self._tickLength
 
     @TickLength.setter
     def TickLength(self, length):
-        """Set the tick legnth. Value must be int or float."""
         if not isinstance(length, (int, float)):
             raise TypeError("`length` must be an integer or float")
         self._tickWidth = length
@@ -2201,21 +2251,45 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.LogScale property")
     def setLogScale(self, logscale):
+        """
+        Set the log scale boolean value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.LogScale property instead.
+        """
         self.LogScale = logscale
 
     @PendingDeprecation("self.LogScale property")
     def getLogScale(self):
+        """
+        Set the log scale boolean value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.LogScale property instead.
+        """
         return self.LogScale
 
     @property
     def LogScale(self):
+        """
+        The LogScale value as a 2-tuple of bools:
+        ``(x_axis_is_log_scale, y_axis_is_log_scale)``.
+
+        :getter: Returns the value of LogScale.
+        :setter: Sets the value of LogScale.
+        :type:   tuple of bools, length 2
+        :raise:  `TypeError` when setting an invalid value.
+        """
         return self._logscale
 
     @LogScale.setter
     def LogScale(self, logscale):
         if type(logscale) != tuple:
             raise TypeError(
-                'logscale must be a tuple of bools, e.g. (False, False)')
+                'logscale must be a tuple of bools, e.g. (False, False)'
+            )
         if self.last_draw is not None:
             graphics, xAxis, yAxis = self.last_draw
             graphics.LogScale = logscale
@@ -2226,12 +2300,23 @@ class PlotCanvas(wx.Panel):
 
     @property
     def AbsScale(self):
+        """
+        The AbsScale value as a 2-tuple of bools:
+        ``(x_axis_is_abs_scale, y_axis_is_abs_scale)``.
+
+        :getter: Returns the value of AbsScale.
+        :setter: Sets the value of AbsScale.
+        :type:   tuple of bools, length 2
+        :raise:  `TypeError` when setting an invalid value.
+        """
         return self._absScale
 
     @AbsScale.setter
     def AbsScale(self, absscale):
         if not isinstance(absscale, tuple):
-            raise TypeError("absscale must be tuple of bools.")
+            raise TypeError(
+                "absscale must be tuple of bools, e.g. (False, False)"
+            )
         if self.last_draw is not None:
             graphics, xAxis, yAxis = self.last_draw
             graphics.AbsScale = absscale
@@ -2242,57 +2327,114 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.FontSizeAxis property")
     def SetFontSizeAxis(self, point=10):
-        """Set the tick and axis label font size (default is 10 point)"""
+        """
+        Set the tick and axis label font size (default is 10 point)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.FontSizeAxis property instead.
+        """
         self.FontSizeAxis = point
 
     @PendingDeprecation("self.FontSizeAxis property")
     def GetFontSizeAxis(self):
-        """Get current tick and axis label font size in points"""
+        """
+        Get current tick and axis label font size in points
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.FontSizeAxis property instead.
+        """
         return self.FontSizeAxis
 
     @property
     def FontSizeAxis(self):
-        """Get current tick and axis label font size in points"""
+        """
+        The current tick and axis label font size in points.
+
+        Default is 10pt font.
+
+        :getter: Returns the value of FontSizeAxis.
+        :setter: Sets the value of FontSizeAxis.
+        :type:   int or float
+        """
         return self._fontSizeAxis
 
     @FontSizeAxis.setter
     def FontSizeAxis(self, value):
-        """Set the tick and axis label font size (default is 10 point)"""
         self._fontSizeAxis = value
 
     @PendingDeprecation("self.FontSizeTitle property")
     def SetFontSizeTitle(self, point=15):
-        """Set Title font size (default is 15 point)"""
-#        self._fontSizeTitle = point
+        """
+        Set Title font size (default is 15 point)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.FontSizeTitle property instead.
+        """
         self.FontSizeTitle = point
 
     @PendingDeprecation("self.FontSizeTitle property")
     def GetFontSizeTitle(self):
-        """Get current Title font size in points"""
-#        return self._fontSizeTitle
+        """
+        Get Title font size (default is 15 point)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.FontSizeTitle property instead.
+        """
         return self.FontSizeTitle
 
     @property
     def FontSizeTitle(self):
-        """Get current Title font size in points"""
+        """
+        The current Title font size in points.
+
+        Default is 15pt font.
+
+        :getter: Returns the value of FontSizeAxis.
+        :setter: Sets the value of FontSizeAxis.
+        :type:   int or float
+        """
         return self._fontSizeTitle
 
     @FontSizeTitle.setter
     def FontSizeTitle(self, pointsize):
-        """Set Title font size (default is 15 point)"""
         self._fontSizeTitle = pointsize
 
     @PendingDeprecation("self.FontSizeLegend property")
     def SetFontSizeLegend(self, point=7):
-        """Set Legend font size (default is 7 point)"""
+        """
+        Set legend font size (default is 7 point)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.FontSizeLegend property instead.
+        """
         self.FontSizeLegend = point
 
     def GetFontSizeLegend(self):
-        """Get current Legend font size in points"""
+        """
+        Get legend font size (default is 7 point)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.FontSizeLegend property instead.
+        """
         return self.FontSizeLegend
 
     @property
     def FontSizeLegend(self):
+        """
+        The current Legned font size in points.
+
+        Default is 7pt font.
+
+        :getter: Returns the value of FontSizeLegend.
+        :setter: Sets the value of FontSizeLegend.
+        :type:   int or float
+        """
         return self._fontSizeLegend
 
     @FontSizeLegend.setter
@@ -2301,20 +2443,41 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.ShowScrollbars property")
     def SetShowScrollbars(self, value):
+        """
+        Set the ShowScrollbars value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.ShowScrollbars property instead.
+        """
         self.ShowScrollbars = value
 
     @PendingDeprecation("self.ShowScrollbars property")
     def GetShowScrollbars(self):
-        """Set True to show scrollbars"""
+        """
+        Get the ShowScrollbars value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.ShowScrollbars property instead.
+        """
         return self.ShowScrollbars
 
     @property
     def ShowScrollbars(self):
+        """
+        The current ShowScrollbars value.
+
+        :getter: Returns the value of ShowScrollbars.
+        :setter: Sets the value of ShowScrollbars.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
+        # XXX: should have sb_hor.IsShown() as well.
         return self.sb_vert.IsShown()
 
     @ShowScrollbars.setter
     def ShowScrollbars(self, value):
-        """Set True to show scrollbars"""
         if not isinstance(value, bool):
             raise TypeError("Value should be True or False")
         if value == self.ShowScrollbars:
@@ -2326,73 +2489,170 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.UseScientificNotation property")
     def SetUseScientificNotation(self, useScientificNotation):
+        """
+        Set the UseScientificNotation value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.UseScientificNotation property instead.
+        """
         self.UseScientificNotation = useScientificNotation
 
     @PendingDeprecation("self.UseScientificNotation property")
     def GetUseScientificNotation(self):
+        """
+        Get the UseScientificNotation value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.UseScientificNotation property instead.
+        """
         return self.UseScientificNotation
 
     @property
     def UseScientificNotation(self):
+        """
+        The current UseScientificNotation value.
+
+        :getter: Returns the value of UseScientificNotation.
+        :setter: Sets the value of UseScientificNotation.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._useScientificNotation
 
     @UseScientificNotation.setter
     def UseScientificNotation(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("Value should be True or False")
         self._useScientificNotation = value
 
     @PendingDeprecation("self.EnableAntiAliasing property")
     def SetEnableAntiAliasing(self, enableAntiAliasing):
+        """
+        Set the EnableAntiAliasing value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableAntiAliasing property instead.
+        """
         self.EnableAntiAliasing = enableAntiAliasing
 
     @PendingDeprecation("self.EnableAntiAliasing property")
     def GetEnableAntiAliasing(self):
+        """
+        Get the EnableAntiAliasing value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableAntiAliasing property instead.
+        """
         return self.EnableAntiAliasing
 
     @property
     def EnableAntiAliasing(self):
+        """
+        The current EnableAntiAliasing value.
+
+        :getter: Returns the value of EnableAntiAliasing.
+        :setter: Sets the value of EnableAntiAliasing.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._antiAliasingEnabled
 
     @EnableAntiAliasing.setter
     def EnableAntiAliasing(self, value):
-        """Set True to enable anti-aliasing."""
+        if not isinstance(value, bool):
+            raise TypeError("Value should be True or False")
         self._antiAliasingEnabled = value
         self.Redraw()
 
     @PendingDeprecation("self.EnableHiRes property")
     def SetEnableHiRes(self, enableHiRes):
+        """
+        Set the EnableHiRes value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableHiRes property instead.
+        """
         self.EnableHiRes = enableHiRes
 
     @PendingDeprecation("self.EnableHiRes property")
     def GetEnableHiRes(self):
+        """
+        Get the EnableHiRes value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableHiRes property instead.
+        """
         return self._hiResEnabled
 
     @property
     def EnableHiRes(self):
+        """
+        The current EnableHiRes value.
+
+        :getter: Returns the value of EnableHiRes.
+        :setter: Sets the value of EnableHiRes.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._hiResEnabled
 
     @EnableHiRes.setter
     def EnableHiRes(self, value):
-        """
-        Set True to enable high-resolution mode when using anti-aliasing.
-        """
+        if not isinstance(value, bool):
+            raise TypeError("Value should be True or False")
         self._hiResEnabled = value
         self.Redraw()
 
     @PendingDeprecation("self.EnableDrag property")
     def SetEnableDrag(self, value):
+        """
+        Set the EnableDrag value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableDrag property instead.
+        """
         self.EnableDrag = value
 
     @PendingDeprecation("self.EnableDrag property")
     def GetEnableDrag(self):
+        """
+        Get the EnableDrag value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableDrag property instead.
+        """
         return self.EnableDrag
 
     @property
     def EnableDrag(self):
+        """
+        The current EnableDrag value.
+
+        :getter: Returns the value of EnableDrag.
+        :setter: Sets the value of EnableDrag.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+
+        .. note::
+           This is mutually exclusive with
+           :attr:`~wx.lib.plot.PlotCanvas.EnableZoom`. Setting one will
+           disable the other.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.EnableZoom`
+        """
         return self._dragEnabled
 
     @EnableDrag.setter
     def EnableDrag(self, value):
-        """Set True to enable drag."""
         if not isinstance(value, bool):
             raise TypeError("Value must be a bool.")
         if value:
@@ -2405,20 +2665,48 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.EnableZoom property")
     def SetEnableZoom(self, value):
+        """
+        Set the EnableZoom value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableZoom property instead.
+        """
         self.EnableZoom = value
 
     @PendingDeprecation("self.EnableZoom property")
     def GetEnableZoom(self):
-        """True if zooming enabled."""
+        """
+        Get the EnableZoom value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableZoom property instead.
+        """
         return self.EnableZoom
 
     @property
     def EnableZoom(self):
+        """
+        The current EnableZoom value.
+
+        :getter: Returns the value of EnableZoom.
+        :setter: Sets the value of EnableZoom.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+
+        .. note::
+           This is mutually exclusive with
+           :attr:`~wx.lib.plot.PlotCanvas.EnableDrag`. Setting one will
+           disable the other.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.EnableDrag`
+        """
         return self._zoomEnabled
 
     @EnableZoom.setter
     def EnableZoom(self, value):
-        """Set True to enable zooming."""
         if not isinstance(value, bool):
             raise TypeError("Value must be a bool.")
         if value:
@@ -2431,29 +2719,46 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.EnableGrid property")
     def SetEnableGrid(self, value):
+        """
+        Set the EnableGrid value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableGrid property instead.
+        """
         self.EnableGrid = value
 
     @PendingDeprecation("self.EnableGrid property")
     def GetEnableGrid(self):
-        """True if grid enabled."""
+        """
+        Get the EnableGrid value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableGrid property instead.
+        """
         return self.EnableGrid
 
     @property
     def EnableGrid(self):
+        """
+        The current EnableGrid value.
+
+        :getter: Returns the value of EnableGrid.
+        :setter: Sets the value of EnableGrid.
+        :type:   bool or 2-tuple of bools
+        :raises: `TypeError` if setting an invalid value.
+
+        If set to a single boolean value, then both X and y grids will be
+        enabled (``EnableGrid = True``) or disabled (``EnableGrid = False``).
+
+        If a 2-tuple of bools, the 1st value is the X (vertical) grid and
+        the 2nd value is the Y (horizontal) grid.
+        """
         return self._gridEnabled
 
     @EnableGrid.setter
     def EnableGrid(self, value):
-        """
-        Set to enable grid.
-
-        value must be a bool or 2-tuple of bools: (x_grid_bool, y_grid_bool)
-
-        If Value is a bool, then both X and Y grids are turned on/off
-
-        x_grid_bool: Tf True, gridlines in the vertical direction are shown.
-        y_grid_bool: If True, gridlines in the horizontal direction are shown.
-        """
         if isinstance(value, bool):
             value = (value, value)
         elif isinstance(value, tuple) and len(value) == 2:
@@ -2467,69 +2772,141 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.EnableCenterLines property")
     def SetEnableCenterLines(self, value):
+        """
+        Set the EnableCenterLines value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableCenterLines property instead.
+        """
         self.EnableCenterLines = value
 
     @PendingDeprecation("self.EnableCenterLines property")
     def GetEnableCenterLines(self):
-        """True if Centerlines are enabled."""
+        """
+        Get the EnableCenterLines value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableCenterLines property instead.
+        """
         return self.EnableCenterLines
 
     @property
     def EnableCenterLines(self):
+        """
+        The current EnableCenterLines value.
+
+        :getter: Returns the value of EnableCenterLines.
+        :setter: Sets the value of EnableCenterLines.
+        :type:   bool or str
+        :raises: `TypeError` if setting an invalid value.
+
+        If set to a single boolean value, then both horizontal and vertical
+        lines will be enabled or disabled.
+
+        If a string, must be one of ``('Horizontal', 'Vertical')``.
+        """
         return self._centerLinesEnabled
 
     @EnableCenterLines.setter
     def EnableCenterLines(self, value):
-        """Set True, 'Horizontal' or 'Vertical' to enable center line(s)."""
         if value not in [True, False, 'Horizontal', 'Vertical']:
             raise TypeError(
-                "Value should be True, False, Horizontal or Vertical")
+                "Value should be True, False, 'Horizontal' or 'Vertical'")
         self._centerLinesEnabled = value
         self.Redraw()
 
     @PendingDeprecation("self.EnableDiagonals property")
     def SetEnableDiagonals(self, value):
+        """
+        Set the EnableDiagonals value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableDiagonals property instead.
+        """
         self.EnableDiagonals = value
 
     @PendingDeprecation("self.EnableDiagonals property")
     def GetEnableDiagonals(self):
-        """True if Diagonals enabled."""
+        """
+        Get the EnableDiagonals value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableDiagonals property instead.
+        """
         return self.EnableDiagonals
 
     @property
     def EnableDiagonals(self):
+        """
+        The current EnableDiagonals value.
+
+        :getter: Returns the value of EnableDiagonals.
+        :setter: Sets the value of EnableDiagonals.
+        :type:   bool or str
+        :raises: `TypeError` if setting an invalid value.
+
+        If set to a single boolean value, then both diagonal lines will
+        be enabled or disabled.
+
+        If a string, must be one of ``('Bottomleft-Topright',
+        'Bottomright-Topleft')``.
+        """
         return self._diagonalsEnabled
 
     @EnableDiagonals.setter
     def EnableDiagonals(self, value):
-        """Set True, 'Bottomleft-Topright' or 'Bottomright-Topleft' to enable
-        center line(s)."""
         # TODO: Rename Bottomleft-TopRight, Bottomright-Topleft
         if value not in [True, False,
                          'Bottomleft-Topright', 'Bottomright-Topleft']:
             raise TypeError(
-                "Value should be True, False, Bottomleft-Topright or "
-                "Bottomright-Topleft"
+                "Value should be True, False, 'Bottomleft-Topright' or "
+                "'Bottomright-Topleft'"
             )
         self._diagonalsEnabled = value
         self.Redraw()
 
     @PendingDeprecation("self.EnableLegend property")
     def SetEnableLegend(self, value):
+        """
+        Set the EnableLegend value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableLegend property instead.
+        """
         self.EnableLegend = value
 
     @PendingDeprecation("self.EnableLegend property")
     def GetEnableLegend(self):
-        """True if Legend enabled."""
+        """
+        Get the EnableLegend value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableLegend property instead.
+        """
         return self.EnableLegend
 
     @property
     def EnableLegend(self):
+        """
+        The current EnableLegend value.
+
+        :getter: Returns the value of EnableLegend.
+        :setter: Sets the value of EnableLegend.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._legendEnabled
 
     @EnableLegend.setter
     def EnableLegend(self, value):
         """Set True to enable legend."""
+        # XXX: why not `if not isinstance(value, bool):`?
         if value not in [True, False]:
             raise TypeError("Value should be True or False")
         self._legendEnabled = value
@@ -2537,20 +2914,40 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.EnableTitle property")
     def SetEnableTitle(self, value):
+        """
+        Set the EnableTitle value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableTitle property instead.
+        """
         self.EnableTitle = value
 
     @PendingDeprecation("self.EnableTitle property")
     def GetEnableTitle(self):
-        """True if title enabled."""
+        """
+        Get the EnableTitle value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnableTitle property instead.
+        """
         return self.EnableTitle
 
     @property
     def EnableTitle(self):
+        """
+        The current EnableTitle value.
+
+        :getter: Returns the value of EnableTitle.
+        :setter: Sets the value of EnableTitle.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._titleEnabled
 
     @EnableTitle.setter
     def EnableTitle(self, value):
-        """Set True to enable title."""
         if not isinstance(value, bool):
             raise TypeError("Value must be a bool.")
         self._titleEnabled = value
@@ -2558,20 +2955,40 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.EnablePointLabel property")
     def SetEnablePointLabel(self, value):
+        """
+        Set the EnablePointLabel value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnablePointLabel property instead.
+        """
         self.EnablePointLabel = value
 
     @PendingDeprecation("self.EnablePointLabel property")
     def GetEnablePointLabel(self):
-        """True if pointLabel enabled."""
+        """
+        Set the EnablePointLabel value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnablePointLabel property instead.
+        """
         return self.EnablePointLabel
 
     @property
     def EnablePointLabel(self):
+        """
+        The current EnablePointLabel value.
+
+        :getter: Returns the value of EnablePointLabel.
+        :setter: Sets the value of EnablePointLabel.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._pointLabelEnabled
 
     @EnablePointLabel.setter
     def EnablePointLabel(self, value):
-        """Set True to enable pointLabel."""
         if not isinstance(value, bool):
             raise TypeError("Value must be a bool.")
         self._pointLabelEnabled = value
@@ -2580,19 +2997,27 @@ class PlotCanvas(wx.Panel):
 
     @property
     def EnableAxes(self):
-        """True if axes enabled."""
+        """
+        The current EnableAxes value.
+
+        :getter: Returns the value of EnableAxes.
+        :setter: Sets the value of EnableAxes.
+        :type:   bool, 2-tuple of bool, or 4-tuple of bool
+        :raises: `TypeError` if setting an invalid value.
+        :raises: `ValueError` if the tuple has incorrect length.
+
+        If bool, enable or disable all axis
+
+        If 2-tuple, enable or disable the bottom or left axes: ``(bottom,
+        left)``
+
+        If 4-tuple, enable or disable each axis individually: ``(bottom,
+        left, top, right)``
+        """
         return self._axesEnabled
 
     @EnableAxes.setter
     def EnableAxes(self, value):
-        """Set True to enable axes.
-
-        Acceptable values:
-        bool : all axes
-        2-tuple of bool : (bottom, left)
-        4-tuple of bool : (bottom, left, top, right)
-
-        """
         err_txt = ("Axis value must be a bool or a 2- or 4-tuple of bool")
 
         # TODO: Refactor - same as EnableAxesValues and EnableTicks
@@ -2607,25 +3032,33 @@ class PlotCanvas(wx.Panel):
             else:
                 raise ValueError(err_txt)
         else:
-            raise ValueError(err_txt)
+            raise TypeError(err_txt)
         self._axesEnabled = _DisplaySide(*_value)
         self.Redraw()
 
     @property
     def EnableAxesValues(self):
-        """True if axes values are enabled."""
+        """
+        The current EnableAxesValues value.
+
+        :getter: Returns the value of EnableAxesValues.
+        :setter: Sets the value of EnableAxesValues.
+        :type:   bool, 2-tuple of bool, or 4-tuple of bool
+        :raises: `TypeError` if setting an invalid value.
+        :raises: `ValueError` if the tuple has incorrect length.
+
+        If bool, enable or disable all axis values
+
+        If 2-tuple, enable or disable the bottom or left axes values:
+        ``(bottom, left)``
+
+        If 4-tuple, enable or disable each axis value individually:
+        ``(bottom, left, top, right)``
+        """
         return self._axesValuesEnabled
 
     @EnableAxesValues.setter
     def EnableAxesValues(self, value):
-        """Set True to enable axes values.
-
-        Acceptable values:
-        bool : all axes values
-        2-tuple of bool : (bottom, left)
-        4-tuple of bool : (bottom, left, top, right)
-
-        """
         err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
 
         # TODO: Refactor - same as EnableAxes and EnableTicks
@@ -2640,25 +3073,33 @@ class PlotCanvas(wx.Panel):
             else:
                 raise ValueError(err_txt)
         else:
-            raise ValueError(err_txt)
+            raise TypeError(err_txt)
         self._axesValuesEnabled = _DisplaySide(*_value)
         self.Redraw()
 
     @property
     def EnableTicks(self):
-        """True if tick marks are enabled."""
+        """
+        The current EnableTicks value.
+
+        :getter: Returns the value of EnableTicks.
+        :setter: Sets the value of EnableTicks.
+        :type:   bool, 2-tuple of bool, or 4-tuple of bool
+        :raises: `TypeError` if setting an invalid value.
+        :raises: `ValueError` if the tuple has incorrect length.
+
+        If bool, enable or disable all ticks
+
+        If 2-tuple, enable or disable the bottom or left ticks:
+        ``(bottom, left)``
+
+        If 4-tuple, enable or disable each tick side individually:
+        ``(bottom, left, top, right)``
+        """
         return self._ticksEnabled
 
     @EnableTicks.setter
     def EnableTicks(self, value):
-        """Set True to enable tick marks.
-
-        Acceptable values:
-        bool : ticks on all 4 sides
-        2-tuple of bool : (bottom, left)
-        4-tuple of bool : (bottom, left, top, right)
-
-        """
         err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
 
         # TODO: Refactor - same as EnableAxes and EnableAxesValues
@@ -2673,12 +3114,20 @@ class PlotCanvas(wx.Panel):
             else:
                 raise ValueError(err_txt)
         else:
-            raise ValueError(err_txt)
+            raise TypeError(err_txt)
         self._ticksEnabled = _DisplaySide(*_value)
         self.Redraw()
 
     @property
     def EnablePlotTitle(self):
+        """
+        The current EnablePlotTitle value.
+
+        :getter: Returns the value of EnablePlotTitle.
+        :setter: Sets the value of EnablePlotTitle.
+        :type:   bool
+        :raises: `TypeError` if setting an invalid value.
+        """
         return self._titleEnabled
 
     @EnablePlotTitle.setter
@@ -2690,6 +3139,14 @@ class PlotCanvas(wx.Panel):
 
     @property
     def EnableXAxisLabel(self):
+        """
+        The current EnableXAxisLabel value.
+
+        :getter: Returns the value of EnableXAxisLabel.
+        :setter: Sets the value of EnableXAxisLabel.
+        :type:   bool
+        :raises: `TypeError` if setting an invalid value.
+        """
         return self._xAxisLabelEnabled
 
     @EnableXAxisLabel.setter
@@ -2701,6 +3158,14 @@ class PlotCanvas(wx.Panel):
 
     @property
     def EnableYAxisLabel(self):
+        """
+        The current EnableYAxisLabel value.
+
+        :getter: Returns the value of EnableYAxisLabel.
+        :setter: Sets the value of EnableYAxisLabel.
+        :type:   bool
+        :raises: `TypeError` if setting an invalid value.
+        """
         return self._yAxisLabelEnabled
 
     @EnableYAxisLabel.setter
@@ -2710,8 +3175,17 @@ class PlotCanvas(wx.Panel):
         self._yAxisLabelEnabled = value
         self.Redraw()
 
+    # TODO: this conflicts with EnableXAxisLabel and EnableYAxisLabel
     @property
     def EnableAxesLabels(self):
+        """
+        The current EnableAxesLabels value.
+
+        :getter: Returns the value of EnableAxesLabels.
+        :setter: Sets the value of EnableAxesLabels.
+        :type:   bool
+        :raises: `TypeError` if setting an invalid value.
+        """
         return self._axesLabelsEnabled
 
     @EnableAxesLabels.setter
@@ -2723,25 +3197,42 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.PointLabelFunc property")
     def SetPointLabelFunc(self, func):
-        """Sets the function with custom code for pointLabel drawing
-            ******** more info needed ***************
+        """
+        Set the EnablePointLabel value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnablePointLabel property instead.
         """
         self.PointLabelFunc = func
 
     @PendingDeprecation("self.PointLabelFunc property")
     def GetPointLabelFunc(self):
-        """Returns pointLabel Drawing Function"""
+        """
+        Get the EnablePointLabel value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.EnablePointLabel property instead.
+        """
         return self.PointLabelFunc
 
     @property
     def PointLabelFunc(self):
+        """
+        The current PointLabelFunc value.
+
+        :getter: Returns the value of PointLabelFunc.
+        :setter: Sets the value of PointLabelFunc.
+        :type:   function
+
+        TODO: More information is needed.
+        Sets the function with custom code for pointLabel drawing
+        """
         return self._pointLabelFunc
 
     @PointLabelFunc.setter
     def PointLabelFunc(self, func):
-        """Sets the function with custom code for pointLabel drawing
-            ******** more info needed ***************
-        """
         self._pointLabelFunc = func
 
     def Reset(self):
@@ -2795,58 +3286,75 @@ class PlotCanvas(wx.Panel):
     @PendingDeprecation("self.XSpec property")
     def SetXSpec(self, spectype='auto'):
         """
-        xSpec- defines x axis type. Can be 'none', 'min' or 'auto'
-        where:
+        Set the XSpec value.
 
-        * 'none' - shows no axis or tick mark values
-        * 'min' - shows min bounding box values
-        * 'auto' - rounds axis range to sensible values
-        * <number> - like 'min', but with <number> tick marks
+        .. deprecated:: Feb 27, 2016
 
+           Use the self.XSpec property instead.
         """
         self.XSpec = spectype
 
     @PendingDeprecation("self.YSpec property")
     def SetYSpec(self, spectype='auto'):
         """
-        ySpec- defines x axis type. Can be 'none', 'min' or 'auto'
-        where:
+        Set the YSpec value.
 
-        * 'none' - shows no axis or tick mark values
-        * 'min' - shows min bounding box values
-        * 'auto' - rounds axis range to sensible values
-        * <number> - like 'min', but with <number> tick marks
+        .. deprecated:: Feb 27, 2016
 
+           Use the self.YSpec property instead.
         """
         self.YSpec = spectype
 
     @PendingDeprecation("self.XSpec property")
     def GetXSpec(self):
-        """Returns current XSpec for axis"""
+        """
+        Get the XSpec value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.XSpec property instead.
+        """
         return self.XSpec
 
     @PendingDeprecation("self.YSpec property")
     def GetYSpec(self):
-        """Returns current YSpec for axis"""
+        """
+        Get the YSpec value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the self.YSpec property instead.
+        """
         return self.YSpec
 
     @property
     def XSpec(self):
+        """
+        Defines the X axis type.
+
+        Default is 'auto'.
+
+        :getter: Returns the value of XSpec.
+        :setter: Sets the value of XSpec.
+        :type:   str, int, or length-2 sequence of floats
+        :raises: `TypeError` if setting an invalid value.
+
+        Valid strings:
+        + 'none' - shows no axis or tick mark values
+        + 'min' - shows min bounding box values
+        + 'auto' - rounds axis range to sensible values
+
+        Other valid values:
+        + <number> - like 'min', but with <number> tick marks
+        + list or tuple: a list of (min, max) values. Must be length 2.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.YSpec`
+        """
         return self._xSpec
 
     @XSpec.setter
     def XSpec(self, value):
-        """
-        xSpec- defines x axis type. Can be 'none', 'min' or 'auto'
-        where:
-
-        * 'none' - shows no axis or tick mark values
-        * 'min' - shows min bounding box values
-        * 'auto' - rounds axis range to sensible values
-        * <number> - like 'min', but with <number> tick marks
-        * list or tuple - a list of (min, max) values. must be length 2
-
-        """
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
             if not isinstance(value, (list, tuple)) and len(value != 2):
@@ -2857,21 +3365,32 @@ class PlotCanvas(wx.Panel):
 
     @property
     def YSpec(self):
+        """
+        Defines the Y axis type.
+
+        Default is 'auto'.
+
+        :getter: Returns the value of XSpec.
+        :setter: Sets the value of XSpec.
+        :type:   str, int, or length-2 sequence of floats
+        :raises: `TypeError` if setting an invalid value.
+
+        Valid strings:
+        + 'none' - shows no axis or tick mark values
+        + 'min' - shows min bounding box values
+        + 'auto' - rounds axis range to sensible values
+
+        Other valid values:
+        + <number> - like 'min', but with <number> tick marks
+        + list or tuple: a list of (min, max) values. Must be length 2.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.XSpec`
+        """
         return self._ySpec
 
     @YSpec.setter
     def YSpec(self, value):
-        """
-        ySpec- defines x axis type. Can be 'none', 'min' or 'auto'
-        where:
-
-        * 'none' - shows no axis or tick mark values
-        * 'min' - shows min bounding box values
-        * 'auto' - rounds axis range to sensible values
-        * <number> - like 'min', but with <number> tick marks
-        * list or tuple - a list of (min, max) values. must be length 2
-
-        """
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
             if not isinstance(value, (list, tuple)) and len(value != 2):
@@ -2882,10 +3401,25 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.XMaxRange property")
     def GetXMaxRange(self):
+        """
+        Get the XMaxRange value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.XMaxRange` property instead.
+        """
         return self.XMaxRange
 
     @property
     def XMaxRange(self):
+        """
+        The plots' maximum X range as a tuple of ``(min, max)``.
+
+        :getter: Returns the value of XMaxRange.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.YMaxRange`
+        """
         xAxis = self._getXMaxRange()
         if self.LogScale[0]:
             xAxis = np.power(10, xAxis)
@@ -2900,10 +3434,25 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.YMaxRange property")
     def GetYMaxRange(self):
+        """
+        Get the YMaxRange value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.YMaxRange` property instead.
+        """
         return self.YMaxRange
 
     @property
     def YMaxRange(self):
+        """
+        The plots' maximum Y range as a tuple of ``(min, max)``.
+
+        :getter: Returns the value of YMaxRange.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.XMaxRange`
+        """
         yAxis = self._getYMaxRange()
         if self.LogScale[1]:
             yAxis = np.power(10, yAxis)
@@ -2918,10 +3467,27 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.XCurrentRange property")
     def GetXCurrentRange(self):
+        """
+        Get the XCurrentRange value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.XCurrentRange` property
+           instead.
+        """
         return self.XCurrentRange
 
     @property
     def XCurrentRange(self):
+        """
+        The plots' X range of the currently displayed portion as
+        a tuple of ``(min, max)``
+
+        :getter: Returns the value of XCurrentRange.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.YCurrentRange`
+        """
         xAxis = self._getXCurrentRange()
         if self.LogScale[0]:
             xAxis = np.power(10, xAxis)
@@ -2934,10 +3500,27 @@ class PlotCanvas(wx.Panel):
 
     @PendingDeprecation("self.YCurrentRange property")
     def GetYCurrentRange(self):
+        """
+        Get the YCurrentRange value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.YCurrentRange` property
+           instead.
+        """
         return self.YCurrentRange
 
     @property
     def YCurrentRange(self):
+        """
+        The plots' Y range of the currently displayed portion as
+        a tuple of ``(min, max)``
+
+        :getter: Returns the value of YCurrentRange.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.XCurrentRange`
+        """
         yAxis = self._getYCurrentRange()
         if self.LogScale[1]:
             yAxis = np.power(10, yAxis)
@@ -3607,30 +4190,26 @@ class PlotCanvas(wx.Panel):
         """
         Draws the gridlines
 
-        Parameters:
-        -----------
-        dc :
-            The Device Contect to draw on
-
-        p1 : np array of length 2
-            The lower-left hand corner of the plot, in plot coords.
-            So, if the plot ranges from x=-10 to 10, and y=-5 to 5, then
-            p1 = (-10, -5)
-
-        p2 : np array of length 2
-            The upper-right hand corner of the plot, in plot coords.
-            So, if the plot ranges from x=-10 to 10, and y=-5 to 5, then
-            p1 = (10, 5)
-
-        scale : np array of length 2
-            The [X, Y] scaling factor to convert plot coords to DC coords
-
-        shift : np array of length 2
-            The [X, Y] shift values to convert plot coords to DC coords.
-
-        xticks, yticks :
-            the x and y tick definitions
-
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        :param xticks: The X tick definition
+        :type xticks: list of length-2 lists
+        :param yticks: The Y tick definition
+        :type yticks: list of length-2 lists
         """
         # increases thickness for printing only
         pen = self.GridPen
@@ -3654,7 +4233,29 @@ class PlotCanvas(wx.Panel):
 
     @TempStyle('pen')
     def _drawTicks(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """Draw the tick marks"""
+        """Draw the tick marks
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        :param xticks: The X tick definition
+        :type xticks: list of length-2 lists
+        :param yticks: The Y tick definition
+        :type yticks: list of length-2 lists
+        """
         # TODO: add option for ticks to extend outside of graph
         #       - done via negative ticklength values?
         #           + works but the axes values cut off the ticks.
@@ -3699,7 +4300,25 @@ class PlotCanvas(wx.Panel):
 
     @TempStyle('pen')
     def _drawCenterLines(self, dc, p1, p2, scale, shift):
-        """Draws the center lines"""
+        """Draws the center lines
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        """
         # increases thickness for printing only
         pen = self.CenterLinePen
         penWidth = self.printerScale * pen.GetWidth()
@@ -3725,7 +4344,26 @@ class PlotCanvas(wx.Panel):
 
     @TempStyle('pen')
     def _drawDiagonals(self, dc, p1, p2, scale, shift):
-        """Draws the diagonal lines"""
+        """
+        Draws the diagonal lines.
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        """
         pen = self.DiagonalPen
         penWidth = self.printerScale * pen.GetWidth()
         pen.SetWidth(penWidth)
@@ -3744,7 +4382,26 @@ class PlotCanvas(wx.Panel):
 
     @TempStyle('pen')
     def _drawAxes(self, dc, p1, p2, scale, shift):
-        """Draw the frame lines"""
+        """
+        Draw the frame lines.
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        """
         # increases thickness for printing only
         pen = self.AxesPen
         penWidth = self.printerScale * pen.GetWidth()
@@ -3778,7 +4435,30 @@ class PlotCanvas(wx.Panel):
 
     @TempStyle('pen')
     def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """ Draws the axes values """
+        """
+        Draws the axes values
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        :param xticks: The X tick definition
+        :type xticks: list of length-2 lists
+        :param yticks: The Y tick definition
+        :type yticks: list of length-2 lists
+        """
         # TODO: More code duplication? Same as _drawGrid and _drawTicks?
         # TODO: update the bounding boxes when adding right and top values
         axes = self.EnableAxesValues
@@ -3832,7 +4512,30 @@ class PlotCanvas(wx.Panel):
 
     @TempStyle('pen')
     def _drawPlotAreaItems(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """Draws each frame element"""
+        """
+        Draws each frame element
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        :param xticks: The X tick definition
+        :type xticks: list of length-2 lists
+        :param yticks: The Y tick definition
+        :type yticks: list of length-2 lists
+        """
         if self._gridEnabled:
             self._drawGrid(dc, p1, p2, scale, shift, xticks, yticks)
 
@@ -3853,7 +4556,9 @@ class PlotCanvas(wx.Panel):
 
     @TempStyle('pen')
     def _drawPlotTitle(self, dc, graphics, lhsW, rhsW, titleWH):
-        """Draws the plot title"""
+        """
+        Draws the plot title
+        """
         dc.SetFont(self._getFont(self._fontSizeTitle))
         titlePos = (
             self.plotbox_origin[0] + lhsW
@@ -3864,7 +4569,9 @@ class PlotCanvas(wx.Panel):
 
     def _drawAxesLabels(self, dc, graphics, lhsW, rhsW, bottomH, topH,
                         xLabelWH, yLabelWH):
-        """Draws the axes labels"""
+        """
+        Draws the axes labels
+        """
         # TODO: axes values get big when this is turned off
         dc.SetFont(self._getFont(self._fontSizeAxis))
         xLabelPos = (
@@ -3885,6 +4592,9 @@ class PlotCanvas(wx.Panel):
     @TempStyle('pen')
     def _drawPlotAreaLabels(self, dc, graphics, lhsW, rhsW, titleWH,
                             bottomH, topH, xLabelWH, yLabelWH):
+        """
+        Draw the plot area labels.
+        """
         if self._titleEnabled:
             self._drawPlotTitle(dc, graphics, lhsW, rhsW, titleWH)
 
