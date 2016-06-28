@@ -149,7 +149,7 @@ def main(argv):
         raise SystemExit
 
     # ensure the CWD is the demo folder
-    demoFolder = os.path.dirname(__file__)
+    demoFolder = os.path.realpath(os.path.dirname(__file__))
     os.chdir(demoFolder)
 
     name, ext  = os.path.splitext(argv[1])
