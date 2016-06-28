@@ -27,15 +27,6 @@ import tarfile
 import tempfile
 import datetime
 
-# which version of Python is running this script
-PY2 = sys.version_info[0] == 2
-PY3 = sys.version_info[0] == 3
-
-if PY2:
-    from urllib2 import urlopen
-else:
-    from urllib.request import urlopen
-
 from distutils.dep_util import newer, newer_group
 from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, findCmd, \
                                phoenixDir, wxDir, copyIfNewer, copyFile, \
@@ -44,6 +35,11 @@ from buildtools.config  import Config, msg, opj, posixjoin, loadETG, etg2sip, fi
                                getVisCVersion, getToolsPlatformName
 
 import buildtools.version as version
+
+
+# which version of Python is running this script
+PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
 
 
 # defaults
@@ -91,7 +87,7 @@ doxygenMD5 = {
 }
 
 # And the location where they can be downloaded from
-toolsURL = 'http://wxpython.org/Phoenix/tools'
+toolsURL = 'https://wxpython.org/Phoenix/tools'
 
 
 #---------------------------------------------------------------------------
@@ -560,9 +556,11 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
         msg('Not found.  Attempting to download...')
         url = '%s/%s.bz2' % (toolsURL, os.path.basename(cmd))
         try:
-            connection = urlopen(url)
+            import requests
+            resp = requests.get(url)
+            resp.raise_for_status()
             msg('Connection successful...')
-            data = connection.read()
+            data = resp.content
             msg('Data downloaded...')
         except Exception:
             _error_msg('Unable to download ' + url)

@@ -12,3 +12,5 @@ sphinx == 1.4.1
 docutils == 0.12
 Jinja2 == 2.8
 MarkupSafe == 0.23
+requests == 2.10.0
+
