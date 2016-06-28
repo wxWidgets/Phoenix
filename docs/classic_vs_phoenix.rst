@@ -320,9 +320,9 @@ MenuBar_MacSetCommonMenuBar                                  :meth:`MenuBar.MacS
 MenuBar_SetAutoWindowMenu                                    ``MISSING``
 MenuItem_GetDefaultMarginWidth                               ``MISSING``
 MenuItem_GetLabelText                                        :meth:`MenuItem.GetLabelText`
-MetaFile                                                     ``MISSING``
+MetaFile                                                     :class:`msw.MemoryDC`
 MetafileDataObject                                           ``MISSING``
-MetaFileDC                                                   ``MISSING``
+MetaFileDC                                                   :class:`msw.MetafileDC`
 MimeTypesManager_IsOfType                                    :meth:`MimeTypesManager.IsOfType`
 ModalEventLoop                                               ``MISSING``
 MutexGuiEnter                                                ``MISSING``
