@@ -1812,6 +1812,25 @@ class PlotGraphics(object):
         return self.objects[item]
 
 
+def scale_and_shift_point(x, y, scale=1, shift=0):
+    """
+    Creates a scaled and shifted 2x1 numpy array of [x, y] values.
+
+    :param float `x`:        The x value of the unscaled, unshifted point
+    :param float `y`:        The y valye of the unscaled, unshifted point
+    :param np.array `scale`: The scale factor to use ``[x_sacle, y_scale]``
+    :param np.array `shift`: The offset to apply ``[x_shift, y_shift]``.
+                             Must be in scaled units
+
+    :returns np.array: a numpy array of 2 elements
+
+    .. note::
+       :math:`new = (scale * old) + shift`
+    """
+    point = scale * np.array([x, y]) + shift
+    return point
+
+
 #-------------------------------------------------------------------------
 # Main window that you will want to import into your application.
 
@@ -3624,13 +3643,13 @@ class PlotCanvas(wx.Panel):
         if self._xSpec != 'none':
             if self.EnableGrid[0]:
                 for x, _ in xticks:
-                    pt = scale * np.array([x, p1[1]]) + shift
+                    pt = scale_and_shift_point(x, p1[1], scale, shift)
                     dc.DrawLine(pt[0], pt[1], pt[0], pt[1] - height)
 
         if self._ySpec != 'none':
             if self.EnableGrid[1]:
                 for y, label in yticks:
-                    pt = scale * np.array([p1[0], y]) + shift
+                    pt = scale_and_shift_point(p1[0], y, scale, shift)
                     dc.DrawLine(pt[0], pt[1], pt[0] + width, pt[1])
 
     @TempStyle('pen')
@@ -3640,7 +3659,6 @@ class PlotCanvas(wx.Panel):
         #       - done via negative ticklength values?
         #           + works but the axes values cut off the ticks.
         # increases thickness for printing only
-        # TODO: changes to XSpec and YSpec api.
         pen = self.TickPen
         penWidth = self.printerScale * pen.GetWidth()
         pen.SetWidth(penWidth)
@@ -3655,13 +3673,13 @@ class PlotCanvas(wx.Panel):
             if ticks.bottom:
                 lines = []
                 for x, label in xticks:
-                    pt = scale * np.array([x, p1[1]]) + shift
+                    pt = scale_and_shift_point(x, p1[1], scale, shift)
                     lines.append((pt[0], pt[1], pt[0], pt[1] - xTickLength))
                 dc.DrawLineList(lines)
             if ticks.top:
                 lines = []
                 for x, label in xticks:
-                    pt = scale * np.array([x, p2[1]]) + shift
+                    pt = scale_and_shift_point(x, p2[1], scale, shift)
                     lines.appned((pt[0], pt[1], pt[0], pt[1] + xTickLength))
                 dc.DrawLineList(lines)
 
@@ -3669,13 +3687,13 @@ class PlotCanvas(wx.Panel):
             if ticks.left:
                 lines = []
                 for y, label in yticks:
-                    pt = scale * np.array([p1[0], y]) + shift
+                    pt = scale_and_shift_point(p1[0], y, scale, shift)
                     lines.append((pt[0], pt[1], pt[0] + yTickLength, pt[1]))
                 dc.DrawLineList(lines)
             if ticks.right:
                 lines = []
                 for y, label in yticks:
-                    pt = scale * np.array([p2[0], y]) + shift
+                    pt = scale_and_shift_point(p2[0], y, scale, shift)
                     lines.append((pt[0], pt[1], pt[0] - yTickLength, pt[1]))
                 dc.DrawLineList(lines)
 
@@ -3737,25 +3755,25 @@ class PlotCanvas(wx.Panel):
         if self.XSpec != 'none':
             if axes.bottom:
                 lower, upper = p1[0], p2[0]
-                a1 = scale * np.array([lower, p1[1]]) + shift
-                a2 = scale * np.array([upper, p1[1]]) + shift
+                a1 = scale_and_shift_point(lower, p1[1], scale, shift)
+                a2 = scale_and_shift_point(upper, p1[1], scale, shift)
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
             if axes.top:
                 lower, upper = p1[0], p2[0]
-                a1 = scale * np.array([lower, p2[1]]) + shift
-                a2 = scale * np.array([upper, p2[1]]) + shift
+                a1 = scale_and_shift_point(lower, p2[1], scale, shift)
+                a2 = scale_and_shift_point(upper, p2[1], scale, shift)
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
 
         if self.YSpec != 'none':
             if axes.left:
                 lower, upper = p1[1], p2[1]
-                a1 = scale * np.array([p1[0], lower]) + shift
-                a2 = scale * np.array([p1[0], upper]) + shift
+                a1 = scale_and_shift_point(p1[0], lower, scale, shift)
+                a2 = scale_and_shift_point(p1[0], upper, scale, shift)
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
             if axes.right:
                 lower, upper = p1[1], p2[1]
-                a1 = scale * np.array([p2[0], lower]) + shift
-                a2 = scale * np.array([p2[0], upper]) + shift
+                a1 = scale_and_shift_point(p2[0], lower, scale, shift)
+                a2 = scale_and_shift_point(p2[0], upper, scale, shift)
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
 
     @TempStyle('pen')
@@ -3770,7 +3788,7 @@ class PlotCanvas(wx.Panel):
                 coords = []
                 for x, label in xticks:
                     w = dc.GetTextExtent(label)[0]
-                    pt = scale * np.array([x, p1[1]]) + shift
+                    pt = scale_and_shift_point(x, p1[1], scale, shift)
                     coords.append(
                         (pt[0] - w/2, pt[1] + 2 * self._pointSize[1])
                     )
@@ -3781,7 +3799,7 @@ class PlotCanvas(wx.Panel):
                 coords = []
                 for x, label in xticks:
                     w, h = dc.GetTextExtent(label)
-                    pt = scale * np.array([x, p2[1]]) + shift
+                    pt = scale_and_shift_point(x, p2[1], scale, shift)
                     coords.append(
                         (pt[0] - w/2, pt[1] - 2 * self._pointSize[1] - h)
                     )
@@ -3794,7 +3812,7 @@ class PlotCanvas(wx.Panel):
                 coords = []
                 for y, label in yticks:
                     w = dc.GetTextExtent(label)[0]
-                    pt = scale * np.array([p1[0], y]) + shift
+                    pt = scale_and_shift_point(p1[0], y, scale, shift)
                     coords.append(
                         (pt[0] - w - 3 * self._pointSize[0], pt[1] - 0.5 * h)
                     )
@@ -3806,7 +3824,7 @@ class PlotCanvas(wx.Panel):
                 coords = []
                 for y, label in yticks:
                     w = dc.GetTextExtent(label)[0]
-                    pt = scale * np.array([p2[0], y]) + shift
+                    pt = scale_and_shift_point(p2[0], y, scale, shift)
                     coords.append(
                         (pt[0] + 3 * self._pointSize[0], pt[1] - 0.5 * h)
                     )
