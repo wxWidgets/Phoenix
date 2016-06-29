@@ -18,6 +18,8 @@ DOCSTRING = ""
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
 ITEMS  = [ 'wxRibbonArtProvider',
+           'wxRibbonMSWArtProvider',
+           'wxRibbonAUIArtProvider',
            ]
     
 #---------------------------------------------------------------------------
@@ -36,6 +38,20 @@ def run():
     c.find('Clone').factory = True
 
 
+    c = module.find('wxRibbonMSWArtProvider')
+    c.find('Clone').factory = True
+
+
+    c = module.find('wxRibbonAUIArtProvider')
+    c.find('Clone').factory = True
+
+
+    module.addPyCode("""\
+        if 'wxMSW' in wx.PlatformInfo:
+            RibbonDefaultArtProvider = RibbonMSWArtProvider
+        else:
+            RibbonDefaultArtProvider = RibbonAUIArtProvider
+        """)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

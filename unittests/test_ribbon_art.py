@@ -150,17 +150,25 @@ class ribbon_art_Tests(wtc.WidgetTestCase):
         
     
     def test_ribbon_art3(self):
-        pass
+        art = wx.ribbon.RibbonMSWArtProvider()
 
 
     def test_ribbon_art4(self):
-        pass
+        art = wx.ribbon.RibbonAUIArtProvider()
 
 
     def test_ribbon_art5(self):
-        pass
+        art = wx.ribbon.RibbonAUIArtProvider()
+        clone = art.Clone()
+        art.Flags
+        art.GetFlags()
+        art.GetFlags()
 
 
+    def test_ribbon_art6(self):
+        self.assertTrue(
+            wx.ribbon.RibbonDefaultArtProvider in [wx.ribbon.RibbonMSWArtProvider,
+                                                   wx.ribbon.RibbonAUIArtProvider])
 
 #---------------------------------------------------------------------------
 
