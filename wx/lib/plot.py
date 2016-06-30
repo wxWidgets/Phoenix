@@ -923,38 +923,50 @@ class PolyLine(PolyPoints):
         """
         Creates PolyLine object
 
-        :param `points`: sequence (array, tuple or list) of (x,y) points
-                         making up line
-        :keyword `attr`: keyword attributes, default to:
+        :param points: The points that make up the line
+        :type points: list of ``[x, y]`` values
+        :param **attr: keyword attributes
 
-         ==========================  ================================
-         'colour'= 'black'           wx.Pen Colour any wx.Colour
-         'width'= 1                  Pen width
-         'style'= wx.PENSTYLE_SOLID  wx.Pen style
-         'legend'= ''                Line Legend to display
-         'drawstyle'= 'line'         How points are joined.
-         ==========================  ================================
+        ===========================  =============  ====================
+        Keyword and Default          Description    Type
+        ===========================  =============  ====================
+        ``colour='black'``           Line color     :class:`wx.Colour`
+        ``width=1``                  Line width     float
+        ``style=wx.PENSTYLE_SOLID``  Line style     :class:`wx.PenStyle`
+        ``legend=''``                Legend string  str
+        ``drawstyle='line'``         see below      str
+        ===========================  =============  ====================
 
-        Valid 'drawstyle' values are:
-
-            'line'          Draws an straight line between consecutive points
-            'steps-pre'     Draws a line down from point A and then right to
+        ==================  ==================================================
+        Draw style          Description
+        ==================  ==================================================
+        ``'line'``          Draws an straight line between consecutive points
+        ``'steps-pre'``     Draws a line down from point A and then right to
                             point B
-            'steps-post'    Draws a line right from point A and then down
+        ``'steps-post'``    Draws a line right from point A and then down
                             to point B
-            'steps-mid-x'   Draws a line right to half way between A and B,
-                            then draws a line vertically, then again right
-                            to point B.
-            'steps-mid-y'   Draws a line vertically to half way between A
+        ``'steps-mid-x'``   Draws a line horizontally to half way between A
+                            and B, then draws a line vertically, then again
+                            horizontally to point B.
+        ``'steps-mid-y'``   Draws a line vertically to half way between A
                             and B, then draws a line horizonatally, then
                             again vertically to point B.
                             *Note: This typically does not look very good*
-
+        ==================  ==================================================
         """
         PolyPoints.__init__(self, points, attr)
 
     def draw(self, dc, printerScale, coord=None):
-        """ Draw the lines """
+        """
+        Draw the lines.
+
+        :param dc: The DC to draw on.
+        :type dc: :class:`wx.DC`
+        :param printerScale:
+        :type printerScale: float
+        :param coord: The legend coordinate?
+        :type coord: ???
+        """
         colour = self.attributes['colour']
         width = self.attributes['width'] * printerScale * self._pointSize[0]
         style = self.attributes['style']
@@ -968,18 +980,34 @@ class PolyLine(PolyPoints):
         if coord is None:
             if len(self.scaled):  # bugfix for Mac OS X
                 for c1, c2 in zip(self.scaled, self.scaled[1:]):
-                    self.path(dc, c1, c2, drawstyle)
+                    self._path(dc, c1, c2, drawstyle)
         else:
             dc.DrawLines(coord)  # draw legend line
 
     def getSymExtent(self, printerScale):
-        """Width and Height of Marker"""
+        """
+        Get the Width and Height of the symbol.
+
+        :param printerScale:
+        :type printerScale: float
+        """
         h = self.attributes['width'] * printerScale * self._pointSize[0]
         w = 5 * h
         return (w, h)
 
-    def path(self, dc, coord1, coord2, drawstyle):
-        """ calculates the path from coord1 to coord 2 along X and Y """
+    def _path(self, dc, coord1, coord2, drawstyle):
+        """
+        Calculates the path from coord1 to coord 2 along X and Y
+
+        :param dc: The DC to draw on.
+        :type dc: :class:`wx.DC`
+        :param coord1: The first coordinate in the coord pair
+        :type coord1: list, length 2: ``[x, y]``
+        :param coord2: The second coordinate in the coord pair
+        :type coord2: list, length 2: ``[x, y]``
+        :param drawstyle: The type of connector to use
+        :type drawstyle: str
+        """
         if drawstyle == 'line':
             # Straight line between points.
             line = [coord1, coord2]
