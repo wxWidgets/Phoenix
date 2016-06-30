@@ -95,20 +95,26 @@ class TestPanel(wx.Panel):
             odc = wx.DCOverlay(self.overlay, dc)
             odc.Clear()
 
+            # Mac's DC is already the same as a GCDC, and it causes
+            # problems with the overlay if we try to use an actual
+            # wx.GCDC so don't try it.  If you do not need to use a
+            # semi-transparent background then you can leave this out.
+            if 'wxMac' not in wx.PlatformInfo:
+                dc = wx.GCDC(dc)
+
+            # Set the pen, for the box's border
             dc.SetPen(wx.Pen(colour=self.overlayPenColor.GetColour(),
                              width=self.overlayPenWidth.GetValue(),
                              style=self.wxPenStylesDict[self.penstylesCombo.GetString(self.penstylesCombo.GetSelection())]))
-            if 'wxMac' in wx.PlatformInfo:
-                dc.SetBrush(wx.Brush(wx.Colour(0xC0, 0xC0, 0xC0, 0x80)))
-            else:
-                dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
+            # Create a brush (for the box's interior) with the same colour,
+            # but 50% transparency.
+            bc = self.overlayPenColor.GetColour()
+            bc = wx.Colour(bc.red, bc.green, bc.blue, 0x80)
+            dc.SetBrush(wx.Brush(bc))
+
+            # Draw the rectangle
             dc.DrawRectangle(rect)
-
-            #Draw Pos Text
-            ## text = u'%s'%evtPos
-            ## width, height = dc.GetTextExtent(text)
-            ## dc.DrawText(text, x=evtPos[0]+2, y=evtPos[1]-height)
 
             if evtPos[0] < self.startPos[0]:  # draw on left side of rect, not inside it
                 dc.DrawBitmap(self.cropbitmap,
@@ -157,7 +163,7 @@ class TestPanel(wx.Panel):
 
         del dc
         self.Refresh()
-        self.Update()
+        #self.Update()
 
     def OnPaint(self, event):
         dc = wx.BufferedPaintDC(self, self.buffer)
