@@ -324,26 +324,23 @@ class SavePen(object):
     Decorator which saves the dc Pen before calling a function and sets the
     pen back after the funcion, even if the function raises an exception.
 
-    The DC to paint on **must** be the first argument of the function.
+    The DC to paint on **must** be the first argument of the decorated
+    function.
 
-    Usage:
-    -------
     ::
 
         @SavePen
         def func(dc, a, b, c):
             # edit pen here
 
-    is the same as::
-
+        # is the same as:
         def func(dc, a, b, c):
             prevPen = dc.GetPen()
             # edit pen here
             dc.SetPen(prevPen)
 
-    See Also:
-    ---------
-    SaveBrush : Decorator to save a wx.Brush before calling a function.
+    .. seealso::
+       :func:`~wx.lib.plot.SaveBrush`
 
     """
     def __init__(self, func):
@@ -371,10 +368,11 @@ class SavePen(object):
 
 class SavedPen(object):
     """
-    Context Manager for saving the previous wx.Pen and resetting it after.
+    Context Manager for saving the previous :class:`wx.Pen` and resetting
+    it after.
 
-    Usage:
-    ------
+    :param dc: The DC to get pen information from.
+    :type dc: :class:`wx.DC`
 
     ::
 
@@ -404,24 +402,20 @@ class SaveBrush(object):
 
     The DC to paint on **must** be the first argument of the function.
 
-    Usage:
-    -------
     ::
 
         @SaveBrush
         def func(dc, a, b, c):
             # edit Brush here
 
-    is the same as::
-
+        # is the same as:
         def func(dc, a, b, c):
             prevBrush = dc.GetBrush()
             # edit Brush here
             dc.SetBrush(prevBrush)
 
-    See Also:
-    ---------
-    SavePen : Decorator to save a wx.Pen before calling a function.
+    .. seealso::
+        :func:`~wx.lib.plot.SavePen`
 
     """
     def __init__(self, func):
@@ -449,10 +443,11 @@ class SaveBrush(object):
 
 class SavedBrush(object):
     """
-    Context Manager for saving the previous wx.Pen and resetting it after.
+    Context Manager for saving the previous :class:`wx.Pen` and resetting
+    it after.
 
-    Usage:
-    ------
+    :param dc: The DC to get brush info from.
+    :type dc: :class:`wx.DC`
 
     ::
 
@@ -481,8 +476,8 @@ class PendingDeprecation(object):
     Decorator which warns the developer about methods that are
     pending deprecation.
 
-    Usage:
-    ------
+    :param new_func: The new class, method, or function that should be used.
+    :type new_func: str
 
     ::
 
@@ -490,9 +485,8 @@ class PendingDeprecation(object):
         def old_func():
             pass
 
-    prints the warning::
-
-        `old_func` is pending deprecation. Please use new_func instead.
+        # prints the warning:
+        # `old_func` is pending deprecation. Please use `new_func` instead.
 
     """
     _warn_txt = "`{}` is pending deprecation. Please use `{}` instead."
@@ -532,11 +526,14 @@ class _DisplaySide(object):
     - it contains type checking, only allowing boolean values
     - it contains name checking, only allowing valid_names as attributes
 
-    Parameters:
-    -----------
-    bottom, left, top, right : bool
-        Boolean values for a given side's display value.
-
+    :param bottom: Display the bottom side?
+    :type bottom: bool
+    :param left: Display the left side?
+    :type left: bool
+    :param top: Display the top side?
+    :type top: bool
+    :param right: Display the right side?
+    :type right: bool
     """
     # TODO: Do I want to replace with __slots__?
     #       Not much memory gain because this class is only called a small
@@ -612,6 +609,11 @@ class PolyPoints(object):
     Base Class for lines and markers.
 
     All methods are private.
+
+    :param points: The points to plot
+    :type points: list of ``(x, y)`` pairs
+    :param attr: Additional attributes
+    :type attr: dict
     """
 
     def __init__(self, points, attr):
@@ -633,15 +635,19 @@ class PolyPoints(object):
 
     @property
     def LogScale(self):
+        """
+        A tuple of ``(x_axis_is_log10, y_axis_is_log10)`` booleans. If a value
+        is ``True``, then that axis is plotted on a logarithmic base 10 scale.
+
+        :getter: Returns the current value of LogScale
+        :setter: Sets the value of LogScale
+        :type: tuple of bool, length 2
+        :raises ValueError: when setting an invalid value
+        """
         return self._logscale
 
     @LogScale.setter
     def LogScale(self, logscale):
-        """
-        Set to change the axes to plot Log10(values)
-
-        Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
-        """
         if not isinstance(logscale, tuple) or len(logscale) != 2:
             raise ValueError("`logscale` must be a 2-tuple of bools")
         self._logscale = logscale
@@ -657,25 +663,90 @@ class PolyPoints(object):
 
     @property
     def SymLogScale(self):
+        """
+        .. warning::
+
+           Not yet implemented.
+
+        A tuple of ``(x_axis_is_SymLog10, y_axis_is_SymLog10)`` booleans.
+        If a value is ``True``, then that axis is plotted on a symmetric
+        logarithmic base 10 scale.
+
+        A Symmetric Log10 scale means that values can be positive and
+        negative. Any values less than
+        :attr:`~wx.lig.plot.PolyPoints.SymLogThresh` will be plotted on
+        a linear scale to avoid the plot going to infinity near 0.
+
+        :getter: Returns the current value of SymLogScale
+        :setter: Sets the value of SymLogScale
+        :type: tuple of bool, length 2
+        :raises ValueError: when setting an invalid value
+
+        .. notes::
+
+           This is a simplified example of how SymLog works::
+
+             if x >= thresh:
+                 x = Log10(x)
+             elif x =< thresh:
+                 x = -Log10(Abs(x))
+             else:
+                 x = x
+
+        .. seealso::
+
+           + :attr:`~wx.lib.plot.PolyPoints.SymLogThresh`
+           + See http://matplotlib.org/examples/pylab_examples/symlog_demo.html
+             for an example.
+        """
         return self._symlogscale
 
     # TODO: Implement symmetric log scale
     @SymLogScale.setter
-    def SymLogScale(self, symlogscale):
+    def SymLogScale(self, symlogscale, thresh):
+        raise NotImplementedError("Symmetric Log Scale not yet implemented")
+
+        if not isinstance(symlogscale, tuple) or len(symlogscale) != 2:
+            raise ValueError("`symlogscale` must be a 2-tuple of bools")
+        self._symlogscale = symlogscale
+
+    @property
+    def SymLogThresh(self):
         """
-        # Not implemented yet
+        .. warning::
 
+           Not yet implemented.
 
-        Set to change the axes to a symmetric log10 scale.
+        A tuple of ``(x_thresh, y_thresh)`` floats that define where the plot
+        changes to linear scale when using a symmetric log scale.
 
-        Value must be a 2-tuple of booleans (x_axis_bool, y_axis_bool)
+        :getter: Returns the current value of SymLogThresh
+        :setter: Sets the value of SymLogThresh
+        :type: tuple of float, length 2
+        :raises ValueError: when setting an invalid value
 
-        A Symmetric Log scale uses the following properties:
-        if x > 0:
-            x = Log10(x)
-        elif x < 0:
-            x = -Log10(Abs(x))
+        .. notes::
+
+           This is a simplified example of how SymLog works::
+
+             if x >= thresh:
+                 x = Log10(x)
+             elif x =< thresh:
+                 x = -Log10(Abs(x))
+             else:
+                 x = x
+
+        .. seealso::
+
+           + :attr:`~wx.lib.plot.PolyPoints.SymLogScale`
+           + See http://matplotlib.org/examples/pylab_examples/symlog_demo.html
+             for an example.
         """
+        return self._symlogscale
+
+    # TODO: Implement symmetric log scale threshold
+    @SymLogThresh.setter
+    def SymLogThresh(self, symlogscale, thresh):
         raise NotImplementedError("Symmetric Log Scale not yet implemented")
 
         if not isinstance(symlogscale, tuple) or len(symlogscale) != 2:
@@ -684,22 +755,39 @@ class PolyPoints(object):
 
     @property
     def AbsScale(self):
+        """
+        A tuple of ``(x_axis_is_abs, y_axis_is_abs)`` booleans. If a value
+        is ``True``, then that axis is plotted on an absolute value scale.
+
+        :getter: Returns the current value of AbsScale
+        :setter: Sets the value of AbsScale
+        :type: tuple of bool, length 2
+        :raises ValueError: when setting an invalid value
+        """
         return self._absScale
 
     @AbsScale.setter
     def AbsScale(self, absscale):
-        """
-        Set to change the axes to plot Abs(values)
 
-        Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
-        """
         if not isinstance(absscale, tuple) and len(absscale) == 2:
             raise ValueError("`absscale` must be a 2-tuple of bools")
         self._absScale = absscale
 
     @property
     def points(self):
-        """Returns the points, adjusting for log scale if LogScale is set"""
+        """
+        Get or set the plotted points.
+
+        :getter: Returns the current value of points, adjusting for the
+                 various scale options such as Log, Abs, or SymLog.
+        :setter: Sets the value of points.
+        :type: list of `(x, y)` pairs
+
+        .. Note::
+
+           Only set unscaled points - do not perform the log, abs, or symlog
+           adjustments yourself.
+        """
         data = np.array(self._points, copy=True)    # need the copy
                                                     # TODO: get rid of the
                                                     # need for copy
@@ -751,15 +839,8 @@ class PolyPoints(object):
 
             ((minX, minY), (maxX, maxY))
 
-        Parameters:
-        -----------
-        None
-
-        Returns:
-        --------
-        minXY, maxXY : numpy arrays of length 2
-            The minimum and maximum X and Y values.
-
+        :returns: boundingbox
+        :rtype: numpy array of ``[[minX, minY], [maxX, maxY]]``
         """
         if len(self.points) == 0:
             # no curves to draw
@@ -775,18 +856,12 @@ class PolyPoints(object):
         """
         Scales and shifts the data for plotting.
 
-        Parameters:
-        -----------
-        scale : tuple of floats
-            The (x_scale, y_scale) tuple to scale the data by
-
-        shift : tuple of floats
-            The (x_shift, y_shift) tuple to shift the data by.
-
-        Returns:
-        --------
-        None
-
+        :param scale: The values to scale the data by.
+        :type scale: tuple of floats: ``(x_scale, y_scale)``
+        :param shift: The value to shift the data by. This should be in scaled
+                      units
+        :type shift: tuple of floats: ``(x_shift, y_shift)``
+        :returns: None
         """
         if len(self.points) == 0:
             # no curves to draw
