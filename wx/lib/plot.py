@@ -198,36 +198,36 @@ class TempStyle(object):
     Combination Decorator and Context Manager to revert pen or brush changes
     after a method call or block finish.
 
-    **Note: Can only be used on class methods.**
+    :param which: The item to save and revert after execution. Can be
+                  one of ``{'both', 'pen', 'brush'}``.
+    :type which: str
+    :param dc: The DC to get brush/pen info from.
+    :type dc: :class:`wx.DC`
 
-    Parameters:
-    -----------
-    which : {'both', 'pen', 'brush'}
-        The item to save and revert after execution.
-    dc : wx.DC object
-        The DC to pull brush/pen information from.
+    ::
 
-    Usage:
-    ------
-    As a method decorator::
-
+        # Using as a method decorator:
         @TempStyle()                        # same as @TempStyle('both')
         def func(self, dc, a, b, c):        # dc must be 1st arg (beside self)
             # edit pen and brush here
 
-    As a context manager::
-
+        # Or as a context manager:
         with TempStyle('both', dc):
             # do stuff
 
-    Notes:
-    ------
-    As of 2016-06-15, this can only be used as a decorator for **class
-    methods**, not standard functions. There is a plan to try and remove
-    this restriction, but I don't know when that will happen...
+    .. Note::
 
-    Combination Decorator and Context Manager! Also makes Julienne fries!
-    Will not break! Will not... It broke!
+       As of 2016-06-15, this can only be used as a decorator for **class
+       methods**, not standard functions. There is a plan to try and remove
+       this restriction, but I don't know when that will happen...
+
+
+    .. epigraph::
+
+       *Combination Decorator and Context Manager! Also makes Julienne fries!
+       Will not break! Will not... It broke!*
+
+       -- The Genie
     """
     _valid_types = {'both', 'pen', 'brush'}
     _err_str = (
