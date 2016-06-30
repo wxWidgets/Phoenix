@@ -333,9 +333,19 @@ def my_check_python_headers(conf):
     if isWindows:
         libname = 'python' + conf.env['PYTHON_VERSION'].replace('.', '')
         
-        # TODO: libpath will be incorrect in virtualenv's.  Fix this...
-        libpath = [os.path.join(dct['prefix'], "libs")]       
-        
+        libpath = [os.path.join(dct['prefix'], "libs")]
+
+        # If we're running in a Py3 style venv then the libpath above is not
+        # correct, it needs to come from sys.base_prefix instead.
+        base_prefix = conf.get_python_variables(
+            ["base_prefix"],
+            ["import sys",
+             "base_prefix = getattr(sys, 'base_prefix')"])[0]
+        if base_prefix is not None:
+            libpath = [os.path.join(base_prefix, "libs")]
+
+        # TODO: handle old-style virtualenv too
+
         conf.env['LIBPATH_PYEMBED'] = libpath
         conf.env.append_value('LIB_PYEMBED', [libname])
         conf.env['LIBPATH_PYEXT'] = conf.env['LIBPATH_PYEMBED']
