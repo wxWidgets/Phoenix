@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import pickle
 
 from wx.lib.pdfviewer.vec2d import vec2d

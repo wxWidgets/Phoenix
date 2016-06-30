@@ -1,6 +1,6 @@
 import unittest
 import wx
-import wtc
+from unittests import wtc
 
 #---------------------------------------------------------------------------
 

@@ -7,7 +7,7 @@
 """
 
 import unittest
-import wtc
+from unittests import wtc
 
 from difflib import ndiff, unified_diff, context_diff
 

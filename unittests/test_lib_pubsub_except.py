@@ -7,7 +7,7 @@
 """
 
 import unittest
-import wtc
+from unittests import wtc
 
 
 def throws():

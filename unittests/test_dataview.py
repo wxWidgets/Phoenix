@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 from wx.lib import six
 import wx.dataview as dv

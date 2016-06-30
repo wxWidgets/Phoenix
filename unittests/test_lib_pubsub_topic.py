@@ -7,7 +7,7 @@
 """
 
 import unittest
-import wtc
+from unittests import wtc
 
 from wx.lib.pubsub.core.topicobj     import Topic
 from wx.lib.pubsub.core.treeconfig   import TreeConfig

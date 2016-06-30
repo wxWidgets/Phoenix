@@ -1,6 +1,6 @@
 import unittest
 import sys
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.agw.customtreectrl as CT
