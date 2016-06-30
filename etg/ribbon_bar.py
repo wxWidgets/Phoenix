@@ -56,7 +56,6 @@ def run():
         """)
 
 
-    #c = module.find('wxRibbonPageTabInfo')
     module.addItem(
         tools.wxArrayWrapperTemplate('wxRibbonPageTabInfoArray',
                                      'wxRibbonPageTabInfo',
