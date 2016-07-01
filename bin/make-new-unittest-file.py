@@ -17,7 +17,7 @@ root_dir = os.path.abspath(os.path.join(script_dir, ".."))
 usage = "usage: %prog [options] name module"
 unitteststub = """\
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------

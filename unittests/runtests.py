@@ -44,7 +44,7 @@ print("wx.version: " + wx.version())
 print("pid: " + str(os.getpid()))
 #print("executable: " + sys.executable); raw_input("Press Enter...")
 
-import wtc
+from unittests import wtc
 
 #---------------------------------------------------------------------------
 

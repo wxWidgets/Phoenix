@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx.lib.CDate as cdate
 import wx.lib.six as six
 

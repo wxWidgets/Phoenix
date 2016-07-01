@@ -9,7 +9,7 @@ disabled, as it is more rigorous for testing purposes.
 """
 
 import unittest
-import wtc
+from unittests import wtc
 
 from wx.lib.pubsub.core import getListenerID
 

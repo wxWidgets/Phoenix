@@ -6,7 +6,7 @@
 """
 
 import unittest
-import wtc
+from unittests import wtc
 
 from wx.lib.pubsub.core.weakmethod import WeakMethod
 from wx.lib.pubsub.core import listener

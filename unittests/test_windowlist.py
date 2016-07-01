@@ -1,7 +1,7 @@
 import sys
 import unittest
 import wx
-import wtc
+from unittests import wtc
 ##import os; print 'PID:', os.getpid(); raw_input('Ready to start, press enter...')
 
 #---------------------------------------------------------------------------

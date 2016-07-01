@@ -7,7 +7,7 @@
 """
 
 import unittest
-import wtc
+from unittests import wtc
 
 from wx.lib.pubsub.pub import (
      ALL_TOPICS,
