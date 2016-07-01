@@ -1457,7 +1457,7 @@ class BoxPlot(PolyPoints):
          (current method is a hack).
        + [ ] change the X axis to some labels.
        + [ ] Change getClosestPoint to only grab box plot items and outlers?
-             Currently grabs every data point.
+         Currently grabs every data point.
        + [ ] Add more customization such as Pens/Brushes, outlier shapes/size,
          and box width.
        + [ ] Figure out how I want to handle log-y: log data then calcBP? Or
