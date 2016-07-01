@@ -7,7 +7,7 @@ import os
 import os.path
 
 import wx
-from wx.lib.six import exec_
+from six import exec_
 _ = wx.GetTranslation
 import wx.propgrid as wxpg
 

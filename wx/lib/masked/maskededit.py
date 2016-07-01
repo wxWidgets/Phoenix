@@ -813,7 +813,7 @@ import  string
 import  sys
 
 import  wx
-import  wx.lib.six as six
+import  six
 
 # jmg 12/9/03 - when we cut ties with Py 2.2 and earlier, this would
 # be a good place to implement the 2.3 logger class

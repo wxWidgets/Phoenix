@@ -102,7 +102,7 @@ import wx.lib.sized_controls as sc
 import time
 import warnings
 
-import wx.lib.six as six
+import six
 
 from . import auibar
 from . import auibook

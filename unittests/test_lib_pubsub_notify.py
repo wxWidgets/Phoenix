@@ -22,7 +22,7 @@ class lib_pubsub_Notify(wtc.PubsubTestCase):
         from wx.lib.pubsub.utils.notification import useNotifyByWriteFile
 
         def captureStdout():
-            from wx.lib.six import StringIO
+            from six import StringIO
             capture = StringIO()
             useNotifyByWriteFile( fileObj = capture )
             return capture

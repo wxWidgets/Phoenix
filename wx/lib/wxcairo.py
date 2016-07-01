@@ -52,7 +52,7 @@ installer for the pycairo pacakge here:
 
 
 import wx
-from wx.lib.six import PY3
+from six import PY3
 
 import cairo
 import ctypes

@@ -46,7 +46,7 @@ Event Name                               Description
 
 import wx
 
-import wx.lib.six as six
+import six
 
 from .control import RibbonControl
 from .art import *

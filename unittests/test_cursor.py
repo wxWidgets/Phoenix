@@ -1,7 +1,7 @@
 import unittest
 from unittests import wtc
 import wx
-import wx.lib.six as six
+import six
 import os
 
 pngFile = os.path.join(os.path.dirname(__file__), 'pointy.png')

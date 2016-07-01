@@ -237,7 +237,7 @@ import math
 import bisect
 import zlib
 
-import wx.lib.six as six
+import six
 
 from wx.lib.expando import ExpandoTextCtrl
 

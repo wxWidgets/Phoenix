@@ -312,7 +312,7 @@ import wx
 from wx.lib.expando import ExpandoTextCtrl
 
 # Python 2/3 compatibility helper
-import wx.lib.six as six
+import six
 
 # ----------------------------------------------------------------------------
 # Constants

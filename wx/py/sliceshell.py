@@ -15,7 +15,7 @@ __author__ += "Patrick K. O'Brien <pobrien@orbtech.com>"
 
 import wx
 from wx import stc
-from wx.lib.six import PY3
+from six import PY3
 
 import keyword
 import os
@@ -964,7 +964,7 @@ class SlicesShell(editwindow.EditWindow):
 
         This sets "close", "exit" and "quit" to a helpful string.
         """
-        from wx.lib.six import PY3
+        from six import PY3
         if PY3:
             import builtins
         else:

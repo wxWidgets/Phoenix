@@ -37,7 +37,7 @@
 # independence, override defaults, ignore features, etc.
 
 from math import sin, cos, pi
-from wx.lib.six import print_
+from six import print_
 
 # Rose class knows about:
 # > Generating points and vectors (returning data as a list of points)

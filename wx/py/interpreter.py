@@ -10,7 +10,7 @@ from code import InteractiveInterpreter, compile_command
 from . import dispatcher
 from . import introspect
 import wx
-import wx.lib.six
+import six
 
 class Interpreter(InteractiveInterpreter):
     """Interpreter based on code.InteractiveInterpreter."""
@@ -25,7 +25,7 @@ class Interpreter(InteractiveInterpreter):
         self.stdout = stdout
         self.stderr = stderr
         if rawin:
-            from wx.lib.six.moves import builtins
+            from six.moves import builtins
             builtins.raw_input = rawin
             del builtins
         if showInterpIntro:
@@ -57,7 +57,7 @@ class Interpreter(InteractiveInterpreter):
         delete that last list."""
         
         # In case the command is unicode try encoding it
-        if not wx.lib.six.PY3:
+        if not six.PY3:
             if type(command) == unicode:
                 try:
                     command = command.encode('utf-8')

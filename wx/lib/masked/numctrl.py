@@ -401,7 +401,7 @@ GetAutoSize()
 import  copy
 
 import  wx
-import  wx.lib.six as six
+import  six
 
 from sys import maxsize
 MAXINT = maxsize     # (constants should be in upper case)

@@ -12,7 +12,7 @@
 # Tags:         phoenix-port, py3-port
 #----------------------------------------------------------------------------
 
-import wx.lib.six as six
+import six
 import wx
 import wx.lib.mixins.listctrl as listmix
 

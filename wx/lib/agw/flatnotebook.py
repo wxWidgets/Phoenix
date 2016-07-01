@@ -192,7 +192,7 @@ import math
 import weakref
 import pickle
 
-import wx.lib.six as six
+import six
 
 # Used on OSX to get access to carbon api constants
 if wx.Platform == '__WXMAC__':

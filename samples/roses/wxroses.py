@@ -71,7 +71,7 @@
 import wx
 import clroses
 import wx.lib.colourselect as cs
-from wx.lib.six import print_
+from six import print_
 
 # Class SpinPanel creates a control that includes both a StaticText widget
 # which holds the the name of a parameter and a SpinCtrl widget which
