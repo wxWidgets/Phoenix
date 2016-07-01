@@ -1162,7 +1162,7 @@ class PolyMarker(PolyPoints):
         return (s, s)
 
     def _drawmarkers(self, dc, coords, marker, size=1):
-        f = eval('self._' + marker)     # XXX: look into changing this
+        f = getattr(self, "_{}".format(marker))
         f(dc, coords, size)
 
     def _circle(self, dc, coords, size=1):
@@ -1925,7 +1925,8 @@ def scale_and_shift_point(x, y, scale=1, shift=0):
     :param np.array `shift`: The offset to apply ``[x_shift, y_shift]``.
                              Must be in scaled units
 
-    :returns np.array: a numpy array of 2 elements
+    :returns: a numpy array of 2 elements
+    :rtype: np.array
 
     .. note::
        :math:`new = (scale * old) + shift`
