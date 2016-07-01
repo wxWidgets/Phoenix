@@ -1055,13 +1055,15 @@ def cmd_test(options, args, tests=None):
     cmdTimer = CommandTimer('test')
     pwd = pushDir(phoenixDir())
 
-    # --boxed runs each test in a new process
+    # --boxed runs each test in a new process (only for posix *&##$#@$^!!)
     # -n is the number of processes to run in parallel
     # --timeout will kill the test process if it gets stuck
     jobs = '-n{}'.format(options.pytest_jobs) if options.pytest_jobs else ''
-    cmd = '"{}" -m pytest {} --boxed {} --timeout={} {} '.format(
+    boxed = '--boxed' if not isWindows else ''
+    cmd = '"{}" -m pytest {} {} {} --timeout={} {} '.format(
         PYTHON,
         '-v' if options.verbose else '',
+        boxed,
         jobs,
         options.pytest_timeout,
         options.extra_pytest)
