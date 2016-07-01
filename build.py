@@ -422,7 +422,7 @@ def makeOptionParser():
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
         ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
         ("release_build",  (False, "Turn off some development options for a release build.")),
-        ("pytest_timeout", ("10",  "Timeout, in seconds, for stopping stuck test cases")),
+        ("pytest_timeout", ("20",  "Timeout, in seconds, for stopping stuck test cases")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
         ]
 
