@@ -50,7 +50,7 @@ mac = sys.platform.startswith("darwin")
 import numpy as N
 from time import clock
 import wx
-from wx.lib import six
+import six
 
 from .FCObjects import *
 
