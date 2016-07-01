@@ -33,7 +33,7 @@ Usage: python pywxrc.py -h
 
 import sys, os, getopt, glob, re
 import xml.dom.minidom as minidom
-from wx.lib.six import print_
+from six import print_
 
 #----------------------------------------------------------------------
 

@@ -33,7 +33,7 @@
 
 import  locale
 import  wx
-import wx.lib.six as six
+import six
 
 if six.PY3:
     # python 3 lacks cmp:

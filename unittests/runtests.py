@@ -39,7 +39,7 @@ else:  # run as main?
 sys.path.insert(0, phoenixDir)
 
 import wx
-import wx.lib.six as six
+import six
 print("wx.version: " + wx.version())
 print("pid: " + str(os.getpid()))
 #print("executable: " + sys.executable); raw_input("Press Enter...")

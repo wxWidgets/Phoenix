@@ -133,7 +133,7 @@ Version 0.1
 import wx
 import sys
 
-import wx.lib.six as six
+import six
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 

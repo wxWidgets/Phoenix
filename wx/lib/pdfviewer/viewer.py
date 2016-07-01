@@ -29,8 +29,8 @@ import types
 import copy
 import shutil
 
-import wx.lib.six as six
-from wx.lib.six import BytesIO
+import six
+from six import BytesIO
 
 USE_CAIRO = True
 FONTSCALE = 1.0

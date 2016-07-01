@@ -33,7 +33,7 @@ encouraged to switch.
 import  operator
 import  wx
 
-import wx.lib.six as six
+import six
 if six.PY3:
     from functools import reduce as reduce
 

@@ -30,7 +30,7 @@ import wx
 import sys
 import os
 import atexit
-import wx.lib.six as six
+import six
 
 if six.PY3:
     from urllib.request import urlopen

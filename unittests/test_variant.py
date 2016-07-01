@@ -2,7 +2,7 @@ import unittest
 import wtc
 import wx
 
-import wx.lib.six as six
+import six
 
 #---------------------------------------------------------------------------
 

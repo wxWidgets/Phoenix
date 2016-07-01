@@ -28,7 +28,7 @@ import wx.py
 import wx.stc
 #import wx.aui as aui
 import wx.lib.agw.aui as aui
-import wx.lib.six as six
+import six
 import wx.lib.utils as utils
 import sys
 import inspect

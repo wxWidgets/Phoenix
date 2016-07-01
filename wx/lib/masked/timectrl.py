@@ -277,7 +277,7 @@ IsLimited()
 import  copy
 
 import  wx
-import  wx.lib.six as six
+import  six
 
 from wx.tools.dbg import Logger
 from wx.lib.masked import Field, BaseMaskedTextCtrl

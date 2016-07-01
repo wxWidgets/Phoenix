@@ -9,7 +9,7 @@ try:
 except ImportError: # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.aui as aui
 
-from wx.lib.six import BytesIO
+from six import BytesIO
 
 ID_CreateTree = wx.NewId()
 ID_CreateGrid = wx.NewId()

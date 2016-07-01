@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from wx.lib.six import BytesIO
+from six import BytesIO
 
 import wx
 import wx.richtext as rt

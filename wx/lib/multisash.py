@@ -21,7 +21,7 @@
 
 import wx
 
-import wx.lib.six as six
+import six
 MV_HOR = 0
 MV_VER = not MV_HOR
 

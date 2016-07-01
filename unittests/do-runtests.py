@@ -17,7 +17,7 @@ and also for the code that calls this script via subprocess.
 import sys
 import os
 import unittest
-import wx.lib.six as six
+import six
 import pickle
     
 g_testResult = None

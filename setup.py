@@ -12,11 +12,10 @@
 import sys, os
 import glob
 
-from setuptools                     import setup, Extension, find_packages
+from setuptools                     import setup, find_packages
 from distutils.command.build        import build as orig_build
 from setuptools.command.install     import install as orig_install
 from setuptools.command.bdist_egg   import bdist_egg as orig_bdist_egg
-from setuptools.command.build_py    import build_py as orig_build_py
 from setuptools.command.sdist       import sdist as orig_sdist
 try:
     from wheel.bdist_wheel import bdist_wheel as orig_bdist_wheel
@@ -68,6 +67,8 @@ Programming Language :: Python :: 3.5
 Topic :: Software Development :: User Interfaces
 """
 
+DEPENDENCIES = [ 'six',
+                 ]
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
@@ -333,6 +334,7 @@ if __name__ == '__main__':
           platforms        = PLATFORMS,
           classifiers      = [c for c in CLASSIFIERS.split("\n") if c],
           keywords         = KEYWORDS,
+          install_requires = DEPENDENCIES,
           zip_safe         = False,
           use_2to3         = False,
           include_package_data = True,

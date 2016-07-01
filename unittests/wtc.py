@@ -1,7 +1,7 @@
 import unittest
 import wx
 import sys, os
-import wx.lib.six as six
+import six
 
 #---------------------------------------------------------------------------
 

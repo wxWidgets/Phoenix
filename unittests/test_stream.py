@@ -1,8 +1,8 @@
 import unittest
 import wtc
 import wx
-import wx.lib.six as six
-from wx.lib.six import BytesIO as FileLikeObject
+import six
+from six import BytesIO as FileLikeObject
 import os
 
 

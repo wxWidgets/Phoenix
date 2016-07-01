@@ -30,7 +30,7 @@ import wx
 from .aui_utilities import BitmapFromBits, StepColour, GetLabelSize
 from .aui_utilities import GetBaseColour, MakeDisabledBitmap
 
-import wx.lib.six as six
+import six
 
 from .aui_constants import *
 

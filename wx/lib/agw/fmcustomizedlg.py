@@ -16,7 +16,7 @@ This module contains a custom dialog class used to personalize the appearance of
 """
 
 import wx
-import wx.lib.six as six
+import six
 
 if six.PY2:
     from UserDict import UserDict

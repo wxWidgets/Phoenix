@@ -253,7 +253,7 @@ def run():
     
     
     c.addPyMethod('__repr__', '(self)', """\
-        from wx.lib.six import PY2
+        from six import PY2
         if self.IsValid():
             f = self.Format()
             if PY2: f = f.encode('utf-8')
@@ -263,7 +263,7 @@ def run():
         """)
     
     c.addPyMethod('__str__', '(self)', """\
-        from wx.lib.six import PY2
+        from six import PY2
         if self.IsValid():
             f = self.Format()
             if PY2: f = f.encode('utf-8')

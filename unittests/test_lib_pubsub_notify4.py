@@ -9,7 +9,7 @@
 import unittest
 import wtc
 
-import wx.lib.six as six
+import six
 from difflib import ndiff, unified_diff, context_diff
 
 

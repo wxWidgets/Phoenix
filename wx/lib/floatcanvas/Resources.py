@@ -4,7 +4,7 @@
 from wx import Image as ImageFromStream
 from wx import Bitmap as BitmapFromImage
 
-from wx.lib.six import BytesIO
+from six import BytesIO
 import zlib
 
 

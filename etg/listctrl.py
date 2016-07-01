@@ -302,7 +302,7 @@ def run():
         sequence with an item for each column''',
         body="""\
         if len(entry):
-            from wx.lib.six import text_type
+            from six import text_type
             pos = self.GetItemCount()
             self.InsertItem(pos, text_type(entry[0]))
             for i in range(1, len(entry)):
