@@ -429,7 +429,7 @@ class MultiMessageDialog(wx.Dialog):
             # with good maximums
             dc = wx.ClientDC(t)
             dc.SetFont(t.GetFont())
-            w,h = dc.GetFullMultiLineTextExtent(msg2)
+            w,h,_ = dc.GetFullMultiLineTextExtent(msg2)
             w = min(self.CONTENT_MAX_W, 10 + w + wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X))
             h = min(self.CONTENT_MAX_H, 10 + h)
             t.SetMinSize((w,h))
