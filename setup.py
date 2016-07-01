@@ -105,7 +105,7 @@ class wx_build(orig_build):
                 'message and the wxWidgets and Phoenix build steps in the future.\n')       
         
             # Use the same Python that is running this script.
-            cmd = [sys.executable, '-u', 'build.py', 'build']
+            cmd = ['"{}"'.format(sys.executable), '-u', 'build.py', 'build']
             cmd = ' '.join(cmd)
             runcmd(cmd)
         
@@ -219,7 +219,7 @@ class wx_install(orig_install):
 class wx_sdist(orig_sdist):
     def run(self):
         # Use build.py to perform the sdist
-        cmd = [sys.executable, '-u', 'build.py', 'sdist']
+        cmd = ['"{}"'.format(sys.executable), '-u', 'build.py', 'sdist']
         cmd = ' '.join(cmd)
         runcmd(cmd)
         
