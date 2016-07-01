@@ -167,6 +167,10 @@ def main(args):
     msg('cfg.VERSION: %s' % cfg.VERSION)
     msg('')
 
+    # For collecting test names or files, to be run after all have been pulled
+    # off the command line
+    test_names = []
+
     while commands:
         # ensure that each command starts with the CWD being the phoenix dir.
         os.chdir(phoenixDir())
@@ -174,21 +178,21 @@ def main(args):
         if not cmd:
             continue # ignore empty command-line args (possible with the buildbot)
         elif cmd.startswith('test_'):
-            testOne(cmd, options, args)
+            test_names.append('unittests/%s.py' % cmd)
         elif cmd.startswith('unittests/test_'):
-            testOne(os.path.basename(cmd), options, args)            
+            test_names.append(cmd)
         elif 'cmd_'+cmd in globals():
             function = globals()['cmd_'+cmd]  
             function(options, args)
-            if cmd == 'test':
-                # Any additional cmd-line args are assumed to be tests, which
-                # will have already been taken care of, so bail out of the
-                # loop.
-                break  
         else:
             print('*** Unknown command: ' + cmd)
             usage()
             sys.exit(1)
+
+    # Now run the collected tests names, if any
+    if test_names:
+        cmd_test(options, args, test_names)
+
     msg("Done!")
     
     
@@ -402,9 +406,10 @@ def makeOptionParser():
         ("prefix",         ("",    "Prefix value to pass to the wx build.")), 
         ("destdir",        ("",    "Installation root for wxWidgets, files will go to {destdir}/{prefix}")),
         
-        ("extra_setup",    ("", "Extra args to pass on setup.py's command line.")),
-        ("extra_make",     ("", "Extra args to pass on [n]make's command line.")),
-        ("extra_waf",      ("", "Extra args to pass on waf's command line.")),   
+        ("extra_setup",    ("",    "Extra args to pass on setup.py's command line.")),
+        ("extra_make",     ("",    "Extra args to pass on [n]make's command line.")),
+        ("extra_waf",      ("",    "Extra args to pass on waf's command line.")),
+        ("extra_pytest",   ("",    "Extra args to pass on py.test's command line.")),
         
         ("jobs",           ("",    "Number of parallel compile jobs to do, if supported.")), 
         ("both",           (False, "Build both a debug and release version. (Only used on Windows)")),
@@ -417,6 +422,8 @@ def makeOptionParser():
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
         ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
         ("release_build",  (False, "Turn off some development options for a release build.")),
+        ("pytest_timeout", ("10",  "Timeout, in seconds, for stopping stuck test cases")),
+        ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -1043,27 +1050,32 @@ def cmd_touch(options, args):
 
     
 
-def cmd_test(options, args):
+def cmd_test(options, args, tests=None):
+    # Run all tests
     cmdTimer = CommandTimer('test')
     pwd = pushDir(phoenixDir())
-    cmd = '"%s" unittests/runtests.py %s ' % (PYTHON, '-v' if options.verbose else '')
-    if len(args) > 1:
-        if options.verbose:
-            args.remove('--verbose')
-        cmd += ' '.join(args[1:])
+
+    # --boxed runs each test in a new process
+    # -n is the number of processes to run in parallel
+    # --timeout will kill the test process if it gets stuck
+    jobs = '-n{}'.format(options.pytest_jobs) if options.pytest_jobs else ''
+    cmd = '"{}" -m pytest {} --boxed {} --timeout={} {} '.format(
+        PYTHON,
+        '-v' if options.verbose else '',
+        jobs,
+        options.pytest_timeout,
+        options.extra_pytest)
+
+    if not tests:
+        # let pytest find all tests in the unittest folder
+        cmd += 'unittests'
+    else:
+        # otherwise, run only the test modules given
+        cmd += ' '.join(tests)
+
     runcmd(cmd, fatal=False)
 
-    
-    
-def testOne(name, options, args):
-    cmdTimer = CommandTimer('test %s:' % name)
-    pwd = pushDir(phoenixDir())
-    if name.endswith('.py') or name.endswith('.pyc'):
-        i = name.rfind('.')
-        name = name[:i]
-    runcmd('"%s" unittests/%s.py %s' % (PYTHON, name, '-v' if options.verbose else ''), fatal=True)
 
-    
     
 def cmd_build(options, args):
     cmdTimer = CommandTimer('build')

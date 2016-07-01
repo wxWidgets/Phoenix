@@ -1,16 +1,10 @@
-# Phoenix build requirements
-setuptools == 20.2.2
-six == 1.10.0
-wheel == 0.29.0
-twine==1.6.5
-Pygments == 2.1.3
-alabaster == 0.7.8
-babel == 2.3.4
-imagesize == 0.7.1
-pytz == 2016.4
-sphinx == 1.4.1
-docutils == 0.12
-Jinja2 == 2.8
-MarkupSafe == 0.23
-requests == 2.10.0
-
+# Phoenix build and test requirements
+setuptools
+six
+wheel
+twine
+sphinx
+requests
+pytest
+pytest-xdist
+pytest-timeout
