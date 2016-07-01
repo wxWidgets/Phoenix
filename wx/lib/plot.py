@@ -1447,30 +1447,21 @@ class BoxPlot(PolyPoints):
     ``legend=''``                      legend string  str
     =================================  =============  =======================
 
+    .. note::
+
+       ``np.NaN`` and ``np.inf`` values are ignored.
+
     .. admonition:: TODO
 
-       + [x] Separate out each draw into individual methods
-       + [x] Fix the median line extending outside of the box on the right
-       + [x] Allow for multiple box plots side-by-side
-
-         - It's a hack, but it works.
-
+       + [ ] Figure out a better way to get multiple box plots side-by-side
+         (current method is a hack).
        + [ ] change the X axis to some labels.
-       + [x] Add getLegend method
-
-         - Not Needed since we inherit from PolyPoints
-
-       + [x] Add getClosestPoint method - links to box plot or outliers
-
-         - Current method works and hits every point. Is that good enough?
-
-       + [ ] Add customization
-
-         - [ ] Pens and Fills for elements
-         - [ ] outlier shapes(?) and sizes
-         - [ ] box width
-
-       + [ ] Get log-y working
+       + [ ] Change getClosestPoint to only grab box plot items and outlers?
+             Currently grabs every data point.
+       + [ ] Add more customization such as Pens/Brushes, outlier shapes/size,
+         and box width.
+       + [ ] Figure out how I want to handle log-y: log data then calcBP? Or
+         should I calc the BP first then the plot it on a log scale?
     """
     _attributes = {'colour': 'black',
                    'width': 1,
@@ -1498,6 +1489,19 @@ class BoxPlot(PolyPoints):
 
         # Init the parent class
         PolyPoints.__init__(self, points, attr)
+
+    def _clean_data(self, data=None):
+        """
+        Removes NaN and Inf from the data.
+        """
+        if data is None:
+            data = self.points
+
+        # clean out NaN and infinity values.
+        data = data[~np.isnan(data)]
+        data = data[~np.isinf(data)]
+
+        return data
 
     def boundingBox(self):
         """
@@ -1576,13 +1580,8 @@ class BoxPlot(PolyPoints):
             Descriptive statistics for data:
             (min_data, low_whisker, q25, median, q75, high_whisker, max_data)
 
-        Notes:
-        ------
-        # TODO: Verify how NaN is handled then decide how I want to handle it.
-
         """
-        if data is None:
-            data = self.points
+        data = self._clean_data(data)
 
         min_data = float(np.min(data))
         max_data = float(np.max(data))
@@ -1608,8 +1607,7 @@ class BoxPlot(PolyPoints):
         """
         Calculates the outliers. Must be called after calcBpData.
         """
-        if data is None:
-            data = self.points
+        data = self._clean_data(data)
 
         outliers = data
         outlier_bool = np.logical_or(outliers > self._bpdata.high_whisker,
@@ -1744,16 +1742,11 @@ class BoxPlot(PolyPoints):
     @TempStyle('pen')
     def _draw_outliers(self, dc, printerScale):
         """Draws dots for the outliers"""
-        xpos = self.xpos
-
         # Set the pen
         outlier_pen = wx.Pen(wx.BLUE, 5, wx.PENSTYLE_SOLID)
         dc.SetPen(outlier_pen)
 
         outliers = self._outliers
-
-
-#        jitter = 0.05 * np.random.random_sample(len(outliers)) + xpos - 0.025
 
         # Scale the data for plotting
         pt_data = np.array([self.jitter, outliers]).T
@@ -5273,7 +5266,7 @@ def _draw8Objects():
     """
     Box plot
     """
-    data1 = np.array([912, 337, 607, 583, 512, 531, 558, 381, 621, 574,
+    data1 = np.array([np.NaN, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                       538, 577, 679, 415, 454, 417, 635, 319, 350, 183,
                       863, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                       538, 577, 679, 415, 454, 417, 635, 319, 350, 97])
