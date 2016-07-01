@@ -1935,6 +1935,43 @@ def scale_and_shift_point(x, y, scale=1, shift=0):
     return point
 
 
+def _set_displayside(value):
+    """
+    Wrapper around :class:`~wx.lib.plot._DisplaySide` that allowing for
+    "overloaded" calls.
+
+    If ``value`` is a boolean: all 4 sides are set to ``value``
+
+    If ``value`` is a 2-tuple: the bottom and left sides are set to ``value``
+    and the other sides are set to False.
+
+    If ``value`` is a 4-tuple, then each item is set individually: ``(bottom,
+    left, top, right)``
+
+    :param value: Which sides to display.
+    :type value:   bool, 2-tuple of bool, or 4-tuple of bool
+    :raises: `TypeError` if setting an invalid value.
+    :raises: `ValueError` if the tuple has incorrect length.
+    :rtype: :class:`~wx.lib.plot._DisplaySide`
+    """
+    err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
+
+    # TODO: for 2-tuple, do not change other sides? rather than set to False.
+    if isinstance(value, bool):
+        # turns on or off all axes
+        _value = (value, value, value, value)
+    elif isinstance(value, tuple):
+        if len(value) == 2:
+            _value = (value[0], value[1], False, False)
+        elif len(value) == 4:
+            _value = value
+        else:
+            raise ValueError(err_txt)
+    else:
+        raise TypeError(err_txt)
+    return _DisplaySide(*_value)
+
+
 #-------------------------------------------------------------------------
 # Main window that you will want to import into your application.
 
@@ -3122,22 +3159,7 @@ class PlotCanvas(wx.Panel):
 
     @EnableAxes.setter
     def EnableAxes(self, value):
-        err_txt = ("Axis value must be a bool or a 2- or 4-tuple of bool")
-
-        # TODO: Refactor - same as EnableAxesValues and EnableTicks
-        if isinstance(value, bool):
-            # turns on or off all axes
-            _value = (value, value, value, value)
-        elif isinstance(value, tuple):
-            if len(value) == 2:
-                _value = (value[0], value[1], False, False)
-            elif len(value) == 4:
-                _value = value
-            else:
-                raise ValueError(err_txt)
-        else:
-            raise TypeError(err_txt)
-        self._axesEnabled = _DisplaySide(*_value)
+        self._axesEnabled = _set_displayside(value)
         self.Redraw()
 
     @property
@@ -3163,22 +3185,7 @@ class PlotCanvas(wx.Panel):
 
     @EnableAxesValues.setter
     def EnableAxesValues(self, value):
-        err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
-
-        # TODO: Refactor - same as EnableAxes and EnableTicks
-        if isinstance(value, bool):
-            # turns on or off all axes
-            _value = (value, value, value, value)
-        elif isinstance(value, tuple):
-            if len(value) == 2:
-                _value = (value[0], value[1], False, False)
-            elif len(value) == 4:
-                _value = value
-            else:
-                raise ValueError(err_txt)
-        else:
-            raise TypeError(err_txt)
-        self._axesValuesEnabled = _DisplaySide(*_value)
+        self._axesValuesEnabled = _set_displayside(value)
         self.Redraw()
 
     @property
@@ -3204,22 +3211,7 @@ class PlotCanvas(wx.Panel):
 
     @EnableTicks.setter
     def EnableTicks(self, value):
-        err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
-
-        # TODO: Refactor - same as EnableAxes and EnableAxesValues
-        if isinstance(value, bool):
-            # turns on or off all axes
-            _value = (value, value, value, value)
-        elif isinstance(value, tuple):
-            if len(value) == 2:
-                _value = (value[0], value[1], False, False)
-            elif len(value) == 4:
-                _value = value
-            else:
-                raise ValueError(err_txt)
-        else:
-            raise TypeError(err_txt)
-        self._ticksEnabled = _DisplaySide(*_value)
+        self._ticksEnabled = _set_displayside(value)
         self.Redraw()
 
     @property
