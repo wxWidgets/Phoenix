@@ -542,7 +542,6 @@ class _DisplaySide(object):
     valid_names = ("bottom", "left", "right", "top")
 
     def __init__(self, bottom, left, top, right):
-        # make sure that everything is boolean
         if not all([isinstance(x, bool) for x in [bottom, left, top, right]]):
             raise TypeError("All args must be bools")
         self.bottom = bottom
@@ -608,12 +607,13 @@ class PolyPoints(object):
     """
     Base Class for lines and markers.
 
-    All methods are private.
-
     :param points: The points to plot
     :type points: list of ``(x, y)`` pairs
     :param attr: Additional attributes
     :type attr: dict
+
+    .. warning::
+       All methods are private.
     """
 
     def __init__(self, points, attr):
@@ -905,9 +905,42 @@ class PolyPoints(object):
 
 class PolyLine(PolyPoints):
     """
-    Class to define line type and style
+    Creates PolyLine object
 
-    All methods except ``__init__`` are private.
+    :param points: The points that make up the line
+    :type points: list of ``[x, y]`` values
+    :param **attr: keyword attributes
+
+    ===========================  =============  ====================
+    Keyword and Default          Description    Type
+    ===========================  =============  ====================
+    ``colour='black'``           Line color     :class:`wx.Colour`
+    ``width=1``                  Line width     float
+    ``style=wx.PENSTYLE_SOLID``  Line style     :class:`wx.PenStyle`
+    ``legend=''``                Legend string  str
+    ``drawstyle='line'``         see below      str
+    ===========================  =============  ====================
+
+    ==================  ==================================================
+    Draw style          Description
+    ==================  ==================================================
+    ``'line'``          Draws an straight line between consecutive points
+    ``'steps-pre'``     Draws a line down from point A and then right to
+                        point B
+    ``'steps-post'``    Draws a line right from point A and then down
+                        to point B
+    ``'steps-mid-x'``   Draws a line horizontally to half way between A
+                        and B, then draws a line vertically, then again
+                        horizontally to point B.
+    ``'steps-mid-y'``   Draws a line vertically to half way between A
+                        and B, then draws a line horizonatally, then
+                        again vertically to point B.
+                        *Note: This typically does not look very good*
+    ==================  ==================================================
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
 
     _attributes = {'colour': 'black',
@@ -920,40 +953,6 @@ class PolyLine(PolyPoints):
                    "steps-mid-x", "steps-mid-y")
 
     def __init__(self, points, **attr):
-        """
-        Creates PolyLine object
-
-        :param points: The points that make up the line
-        :type points: list of ``[x, y]`` values
-        :param **attr: keyword attributes
-
-        ===========================  =============  ====================
-        Keyword and Default          Description    Type
-        ===========================  =============  ====================
-        ``colour='black'``           Line color     :class:`wx.Colour`
-        ``width=1``                  Line width     float
-        ``style=wx.PENSTYLE_SOLID``  Line style     :class:`wx.PenStyle`
-        ``legend=''``                Legend string  str
-        ``drawstyle='line'``         see below      str
-        ===========================  =============  ====================
-
-        ==================  ==================================================
-        Draw style          Description
-        ==================  ==================================================
-        ``'line'``          Draws an straight line between consecutive points
-        ``'steps-pre'``     Draws a line down from point A and then right to
-                            point B
-        ``'steps-post'``    Draws a line right from point A and then down
-                            to point B
-        ``'steps-mid-x'``   Draws a line horizontally to half way between A
-                            and B, then draws a line vertically, then again
-                            horizontally to point B.
-        ``'steps-mid-y'``   Draws a line vertically to half way between A
-                            and B, then draws a line horizonatally, then
-                            again vertically to point B.
-                            *Note: This typically does not look very good*
-        ==================  ==================================================
-        """
         PolyPoints.__init__(self, points, attr)
 
     def draw(self, dc, printerScale, coord=None):
@@ -1040,9 +1039,24 @@ class PolyLine(PolyPoints):
 
 class PolySpline(PolyLine):
     """
-    Class to define line type and style.
+    Creates PolySpline object
 
-    All methods except ``__init__`` are private.
+    :param points: The points that make up the spline
+    :type points: list of ``[x, y]`` values
+    :param **attr: keyword attributes
+
+    ===========================  =============  ====================
+    Keyword and Default          Description    Type
+    ===========================  =============  ====================
+    ``colour='black'``           Line color     :class:`wx.Colour`
+    ``width=1``                  Line width     float
+    ``style=wx.PENSTYLE_SOLID``  Line style     :class:`wx.PenStyle`
+    ``legend=''``                Legend string  str
+    ===========================  =============  ====================
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
 
     _attributes = {'colour': 'black',
@@ -1051,21 +1065,6 @@ class PolySpline(PolyLine):
                    'legend': ''}
 
     def __init__(self, points, **attr):
-        """
-        Creates PolyLine object
-
-        :param `points`: sequence (array, tuple or list) of (x,y) points
-                         making up spline
-        :keyword `attr`: keyword attributes, default to:
-
-         ==========================  ================================
-         'colour'= 'black'           wx.Pen Colour any wx.Colour
-         'width'= 1                  Pen width
-         'style'= wx.PENSTYLE_SOLID  wx.Pen style
-         'legend'= ''                Line Legend to display
-         ==========================  ================================
-
-        """
         PolyLine.__init__(self, points, **attr)
 
     def draw(self, dc, printerScale, coord=None):
@@ -1087,9 +1086,40 @@ class PolySpline(PolyLine):
 
 class PolyMarker(PolyPoints):
     """
-    Class to define marker type and style
+    Creates a PolyMarker object.
 
-    All methods except __init__ are private.
+    :param points: The marker coordinates.
+    :type points: list of ``[x, y]`` values
+    :param **attr: keyword attributes
+
+    =================================  =============  ====================
+    Keyword and Default                Description    Type
+    =================================  =============  ====================
+    ``marker='circle'``                see below      str
+    ``size=2``                         Marker size    float
+    ``colour='black'``                 Outline color  :class:`wx.Colour`
+    ``width=1``                        Outline width  float
+    ``style=wx.PENSTYLE_SOLID``        Outline style  :class:`wx.PenStyle`
+    ``fillcolour=colour``              fill color     :class:`wx.Colour`
+    ``fillstyle=wx.BRUSHSTYLE_SOLID``  fill style     :class:`wx.BrushStyle`
+    ``legend=''``                      Legend string  str
+    =================================  =============  ====================
+
+    ===================  ==================================
+    Marker               Description
+    ===================  ==================================
+    ``'circle'``         A circle of diameter ``size``
+    ``'dot'``            A dot. Does not have a size.
+    ``'square'``         A square with side length ``size``
+    ``'triangle'``       An upward-pointed triangle
+    ``'triangle_down'``  A downward-pointed triangle
+    ``'cross'``          An "X" shape
+    ``'plus'``           A "+" shape
+    ===================  ==================================
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
     _attributes = {'colour': 'black',
                    'width': 1,
@@ -1100,34 +1130,7 @@ class PolyMarker(PolyPoints):
                    'legend': ''}
 
     def __init__(self, points, **attr):
-        """
-        Creates PolyMarker object
 
-        :param `points`: sequence (array, tuple or list) of (x,y) points
-        :keyword `attr`: keyword attributes, default to:
-
-         ================================ ================================
-         'colour'= 'black'                wx.Pen Colour any wx.Colour
-         'width'= 1                       Pen width
-         'size'= 2                        Marker size
-         'fillcolour'= same as colour     wx.Brush Colour any wx.Colour
-         'fillstyle'= wx.BRUSHSTYLE_SOLID wx.Brush fill style (use
-                                          wx.BRUSHSTYLE_TRANSPARENT for
-                                          no fill)
-         'style'= wx.FONTFAMILY_SOLID     wx.Pen style
-         'marker'= 'circle'               Marker shape
-         'legend'= ''                     Line Legend to display
-         ================================ ================================
-
-         Marker Shapes:
-         - 'circle'
-         - 'dot'
-         - 'square'
-         - 'triangle'
-         - 'triangle_down'
-         - 'cross'
-         - 'plus'
-        """
 
         PolyPoints.__init__(self, points, attr)
 
@@ -1213,6 +1216,11 @@ class PolyMarker(PolyPoints):
 
 class PolyBarsBase(PolyPoints):
     """
+    Base class for PolyBars and PolyHistogram.
+
+    .. warning::
+
+       All methods are private.
     """
     _attributes = {'edgecolour': 'black',
                    'edgewidth': 2,
@@ -1279,30 +1287,36 @@ class PolyBarsBase(PolyPoints):
 
 class PolyBars(PolyBarsBase):
     """
-    Bar Chart.
+    Creates a PolyBars object.
+
+    :param points: The data to plot.
+    :type points: sequence of ``(center, height)`` points
+    :param **attr: keyword attributes
+
+    =================================  =============  =======================
+    Keyword and Default                Description    Type
+    =================================  =============  =======================
+    ``barwidth=1.0``                   bar width      float or list of floats
+    ``edgecolour='black'``             edge color     :class:`wx.Colour`
+    ``edgewidth=1``                    edge width     float
+    ``edgestyle=wx.PENSTYLE_SOLID``    edge style     :class:`wx.PenStyle`
+    ``fillcolour='red'``               fill color     :class:`wx.Colour`
+    ``fillstyle=wx.BRUSHSTYLE_SOLID``  fill style     :class:`wx.BrushStyle`
+    ``legend=''``                      legend string  str
+    =================================  =============  =======================
+
+    .. important::
+
+       If ``barwidth`` is a list of floats:
+
+       + each bar will have a separate width
+       + ``len(barwidth)`` must equal ``len(points)``.
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
     def __init__(self, points, **attr):
-        """
-        Creates PolyBars object
-
-        :param `points`: sequence (array, tuple or list) of (x, y) points
-                         that define the bar.
-                         x: the centerline of the bar.
-                         y: the value of the bar (from y=0)
-        :keyword `attr`: keyword attributes, default to:
-
-         =================================  ================================
-         'edgecolour' = 'black'             wx.Pen Colour: any wx.Colour
-         'edgewidth' = 1                    wx.Pen width
-         'edgestyle' = wx.PENSTYLE_SOLID    wx.Pen style
-         'legend' = ''                      Line Legend to display
-         'fillcolour' = 'red'               wx.Brush fill color: any wx.Colour
-         'fillstyle' = wx.BRUSHSTYLE_SOLID  The fill style for the rectangle
-         'barwidth' = 1.0                   The bar width. If a list of
-                                            values, len(barwidth) must
-                                            equal len(points).
-         =================================  ================================
-        """
         PolyBarsBase.__init__(self, points, attr)
 
     def calc_rect(self, x, y, w):
@@ -1341,35 +1355,41 @@ class PolyBars(PolyBarsBase):
 
 class PolyHistogram(PolyBarsBase):
     """
-    Histogram
+    Creates a PolyHistogram object.
 
-    Special PolyBarsBase where the bars span the binspec.
+    :param hist: The histogram data.
+    :type hist: sequence of ``y`` values that define the heights of the bars
+    :param binspec: The bin specification.
+    :type binspec: sequence of ``x`` values that define the edges of the bins
+    :param **attr: keyword attributes
 
+    =================================  =============  =======================
+    Keyword and Default                Description    Type
+    =================================  =============  =======================
+    ``edgecolour='black'``             edge color     :class:`wx.Colour`
+    ``edgewidth=3``                    edge width     float
+    ``edgestyle=wx.PENSTYLE_SOLID``    edge style     :class:`wx.PenStyle`
+    ``fillcolour='blue'``              fill color     :class:`wx.Colour`
+    ``fillstyle=wx.BRUSHSTYLE_SOLID``  fill style     :class:`wx.BrushStyle`
+    ``legend=''``                      legend string  str
+    =================================  =============  =======================
 
+    .. tip::
+
+       Use ``np.histogram()`` to easily create your histogram parameters::
+
+         hist_data, binspec = np.histogram(data)
+         hist_plot = PolyHistogram(hist_data, binspec)
+
+    .. important::
+
+       ``len(binspec)`` must equal ``len(hist) + 1``.
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
     def __init__(self, hist, binspec, **attr):
-        """
-        Creates PolyHistogram object
-
-        :param `hist`: sequence (array, tuple or list) of y values
-                       that define the heights of the bars (same as 1st
-                       returned parameter from ``np.histogram(data)``).
-        :param `binspec`: sequence of x values that define the edges of the
-                          bins (same as 2nd returned parameter from
-                          ``np.histogram(data)``).
-                          len(binspec) must equal len(hist) + 1
-        :keyword `attr`: keyword attributes, default to:
-
-         =================================  ================================
-         'edgecolour' = 'black'             wx.Pen Colour: any wx.Colour
-         'edgewidth' = 3                    wx.Pen width
-         'edgestyle' = wx.PENSTYLE_SOLID    wx.Pen style
-         'legend' = ''                      Line Legend to display
-         'fillcolour' = 'blue'              wx.Brush fill color: any wx.Colour
-         'fillstyle' = wx.BRUSHSTYLE_SOLID  The fill style for the rectangle
-         =================================  ================================
-
-        """
         if len(binspec) != len(hist) + 1:
             raise ValueError("Len(binspec) must equal len(hist) + 1")
 
@@ -1412,41 +1432,53 @@ class PolyHistogram(PolyBarsBase):
 
 class BoxPlot(PolyPoints):
     """
-    Class to contain box plots
+    Creates a BoxPlot object.
 
-    This class takes care of calculating the box plots.
+    :param data: Raw data to create a box plot from.
+    :type data: sequence of int or float
+    :param **attr: keyword attributes
 
-    TODO:
-    -----
-    + [x] Separate out each draw into individual methods
-    + [x] Fix the median line extending outside of the box on the right
-    + [x] Allow for multiple box plots side-by-side
-          - It's a hack, but it works.
-    + [ ] change the X axis to some labels.
-    + [x] Add getLegend method
-          - Not Needed since we inherit from PolyPoints
-    + [x] Add getClosestPoint method - links to box plot or outliers
-          - Current method works and hits every point. Is that good enough?
-    + [ ] Add customization
-          - [ ] Pens and Fills for elements
-          - [ ] outlier shapes(?) and sizes
-          - [ ] box width
-    + [ ] Get log-y working
+    =================================  =============  =======================
+    Keyword and Default                Description    Type
+    =================================  =============  =======================
+    ``colour='black'``                 edge color     :class:`wx.Colour`
+    ``width=1``                        edge width     float
+    ``style=wx.PENSTYLE_SOLID``        edge style     :class:`wx.PenStyle`
+    ``legend=''``                      legend string  str
+    =================================  =============  =======================
 
+    .. admonition:: TODO
+
+       + [x] Separate out each draw into individual methods
+       + [x] Fix the median line extending outside of the box on the right
+       + [x] Allow for multiple box plots side-by-side
+
+         - It's a hack, but it works.
+
+       + [ ] change the X axis to some labels.
+       + [x] Add getLegend method
+
+         - Not Needed since we inherit from PolyPoints
+
+       + [x] Add getClosestPoint method - links to box plot or outliers
+
+         - Current method works and hits every point. Is that good enough?
+
+       + [ ] Add customization
+
+         - [ ] Pens and Fills for elements
+         - [ ] outlier shapes(?) and sizes
+         - [ ] box width
+
+       + [ ] Get log-y working
     """
     _attributes = {'colour': 'black',
                    'width': 1,
                    'style': wx.PENSTYLE_SOLID,
                    'legend': '',
-                   'drawstyle': 'line',
-                   'size': 5,
                    }
 
     def __init__(self, points, **attr):
-        """
-        :param data: 1D data to plot.
-
-        """
         # Set various attributes
         self.box_width = 0.5
 
@@ -1740,18 +1772,22 @@ class BoxPlot(PolyPoints):
 
 class PlotGraphics(object):
     """
-    Container to hold PolyXXX objects and graph labels
+    Creates a PlotGraphics object.
 
-    All methods except __init__ are private.
+    :param objects: The Poly objects to plot.
+    :type objects: list of :class:`~wx.lib.plot.PolyPoints` objects
+    :param title: The title shown at the top of the graph.
+    :type title: str
+    :param xLabel: The x-axis label.
+    :type xLabel: str
+    :param yLabel: The y-axis label.
+    :type yLabel: str
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
-
     def __init__(self, objects, title='', xLabel='', yLabel=''):
-        """Creates PlotGraphics object
-        objects - list of PolyXXX objects to make graph
-        title - title shown at top of graph
-        xLabel - label shown on x-axis
-        yLabel - label shown on y-axis
-        """
         if type(objects) not in [list, tuple]:
             raise TypeError("objects argument should be list or tuple")
         self.objects = objects
@@ -1783,6 +1819,14 @@ class PlotGraphics(object):
 
     @PendingDeprecation("self.LogScale property")
     def setLogScale(self, logscale):
+        """
+        Set the log scale boolean value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.LogScale` property
+           instead.
+        """
         self.LogScale = logscale
 
     @property
@@ -1815,37 +1859,86 @@ class PlotGraphics(object):
 
     @PendingDeprecation("self.PrinterScale property")
     def setPrinterScale(self, scale):
-        """Thickens up lines and markers only for printing"""
+        """
+        Thickens up lines and markers only for printing
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.PrinterScale` property
+           instead.
+        """
         self.PrinterScale = scale
 
     @PendingDeprecation("self.XLabel property")
     def setXLabel(self, xLabel=''):
-        """Set the X axis label on the graph"""
+        """
+        Set the X axis label on the graph
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.XLabel` property
+           instead.
+       """
         self.XLabel = xLabel
 
     @PendingDeprecation("self.YLabel property")
     def setYLabel(self, yLabel=''):
-        """Set the Y axis label on the graph"""
+        """
+        Set the Y axis label on the graph
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.YLabel` property
+           instead.
+       """
         self.YLabel = yLabel
 
     @PendingDeprecation("self.Title property")
     def setTitle(self, title=''):
-        """Set the title at the top of graph"""
+        """
+        Set the title at the top of graph
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.Title` property
+           instead.
+        """
         self.Title = title
 
     @PendingDeprecation("self.XLabel property")
     def getXLabel(self):
-        """Get x axis label string"""
+        """
+        Get X axis label string
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.XLabel` property
+           instead.
+        """
         return self.XLabel
 
     @PendingDeprecation("self.YLabel property")
     def getYLabel(self):
-        """Get y axis label string"""
+        """
+        Get Y axis label string
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.YLabel` property
+           instead.
+        """
         return self.YLabel
 
     @PendingDeprecation("self.Title property")
     def getTitle(self, title=''):
-        """Get the title at the top of graph"""
+        """
+        Get the title at the top of graph
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.Title` property
+           instead.
+        """
         return self.Title
 
     @property
@@ -1977,17 +2070,20 @@ def _set_displayside(value):
 
 class PlotCanvas(wx.Panel):
     """
+    Creates a PlotCanvas object.
+
     Subclass of a wx.Panel which holds two scrollbars and the actual
     plotting canvas (self.canvas). It allows for simple general plotting
     of data with zoom, labels, and automatic axis scaling.
 
+    This is the main window that you will want to import into your
+    application.
+
+    Parameters for ``__init__`` are the same as any :class:`wx.Panel`.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=0, name="plotCanvas"):
-        """Constructs a panel, which can be a child of a frame or
-        any other non-control window"""
-
         wx.Panel.__init__(self, parent, id, pos, size, style, name)
 
         sizer = wx.FlexGridSizer(2, 2, 0, 0)
@@ -2397,7 +2493,7 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.LogScale property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.LogScale` property instead.
         """
         self.LogScale = logscale
 
@@ -2408,7 +2504,7 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.LogScale property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.LogScale` property instead.
         """
         return self.LogScale
 
@@ -2473,7 +2569,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.FontSizeAxis property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.FontSizeAxis` property
+           instead.
         """
         self.FontSizeAxis = point
 
@@ -2484,7 +2581,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.FontSizeAxis property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.FontSizeAxis` property
+           instead.
         """
         return self.FontSizeAxis
 
@@ -2512,7 +2610,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.FontSizeTitle property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.FontSizeTitle` property
+           instead.
         """
         self.FontSizeTitle = point
 
@@ -2523,7 +2622,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.FontSizeTitle property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.FontSizeTitle` property
+           instead.
         """
         return self.FontSizeTitle
 
@@ -2551,7 +2651,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.FontSizeLegend property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.FontSizeLegend' property
+           instead.
         """
         self.FontSizeLegend = point
 
@@ -2561,7 +2662,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.FontSizeLegend property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.FontSizeLegend' property
+           instead.
         """
         return self.FontSizeLegend
 
@@ -2589,7 +2691,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.ShowScrollbars property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.ShowScrollbars` property
+           instead.
         """
         self.ShowScrollbars = value
 
@@ -2600,7 +2703,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.ShowScrollbars property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.ShowScrollbars` property
+           instead.
         """
         return self.ShowScrollbars
 
@@ -2635,7 +2739,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.UseScientificNotation property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.UseScientificNotation`
+           property instead.
         """
         self.UseScientificNotation = useScientificNotation
 
@@ -2646,7 +2751,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.UseScientificNotation property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.UseScientificNotation`
+           property instead.
         """
         return self.UseScientificNotation
 
@@ -2675,7 +2781,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableAntiAliasing property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableAntiAliasing`
+           property instead.
         """
         self.EnableAntiAliasing = enableAntiAliasing
 
@@ -2686,7 +2793,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableAntiAliasing property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableAntiAliasing`
+           property instead.
         """
         return self.EnableAntiAliasing
 
@@ -2716,7 +2824,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableHiRes property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableHiRes` property
+           instead.
         """
         self.EnableHiRes = enableHiRes
 
@@ -2727,7 +2836,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableHiRes property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableHiRes` property
+           instead.
         """
         return self._hiResEnabled
 
@@ -2757,7 +2867,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableDrag property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableDrag` property
+           instead.
         """
         self.EnableDrag = value
 
@@ -2768,7 +2879,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableDrag property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableDrag` property
+           instead.
         """
         return self.EnableDrag
 
@@ -2811,7 +2923,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableZoom property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableZoom` property
+           instead.
         """
         self.EnableZoom = value
 
@@ -2822,7 +2935,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableZoom property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableZoom` property
+           instead.
         """
         return self.EnableZoom
 
@@ -2865,7 +2979,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableGrid property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableGrid` property
+           instead.
         """
         self.EnableGrid = value
 
@@ -2876,7 +2991,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableGrid property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableGrid` property
+           instead.
         """
         return self.EnableGrid
 
@@ -2918,7 +3034,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableCenterLines property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableCenterLines`
+           property instead.
         """
         self.EnableCenterLines = value
 
@@ -2929,7 +3046,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableCenterLines property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableCenterLines`
+           property instead.
         """
         return self.EnableCenterLines
 
@@ -2965,7 +3083,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableDiagonals property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableDiagonals`
+           property instead.
         """
         self.EnableDiagonals = value
 
@@ -2976,7 +3095,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableDiagonals property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableDiagonals`
+           property instead.
         """
         return self.EnableDiagonals
 
@@ -3017,7 +3137,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableLegend property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableLegend`
+           property instead.
         """
         self.EnableLegend = value
 
@@ -3028,7 +3149,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableLegend property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableLegend`
+           property instead.
         """
         return self.EnableLegend
 
@@ -3060,7 +3182,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableTitle property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableTitle` property
+           instead.
         """
         self.EnableTitle = value
 
@@ -3071,7 +3194,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnableTitle property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnableTitle` property
+           instead.
         """
         return self.EnableTitle
 
@@ -3101,7 +3225,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnablePointLabel property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnablePointLabel`
+           property instead.
         """
         self.EnablePointLabel = value
 
@@ -3112,7 +3237,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnablePointLabel property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnablePointLabel`
+           property instead.
         """
         return self.EnablePointLabel
 
@@ -3298,7 +3424,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnablePointLabel property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnablePointLabel`
+           property instead.
         """
         self.PointLabelFunc = func
 
@@ -3309,7 +3436,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.EnablePointLabel property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.EnablePointLabel`
+           property instead.
         """
         return self.PointLabelFunc
 
@@ -3386,7 +3514,7 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.XSpec property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.XSpec` property instead.
         """
         self.XSpec = spectype
 
@@ -3397,7 +3525,7 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.YSpec property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.YSpec` property instead.
         """
         self.YSpec = spectype
 
@@ -3408,7 +3536,7 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.XSpec property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.XSpec` property instead.
         """
         return self.XSpec
 
@@ -3419,7 +3547,7 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the self.YSpec property instead.
+           Use the :attr:`~wx.lib.plot.PlotCanvas.YSpec` property instead.
         """
         return self.YSpec
 
