@@ -5,7 +5,7 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 # Tags: py3-port
 
 import wx
-import wx.lib.six as six
+import six
 
 from . import dispatcher
 from . import editwindow

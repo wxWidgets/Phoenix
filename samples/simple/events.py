@@ -1,6 +1,6 @@
 
 import wx
-from wx.lib.six import print_
+from six import print_
 
 print_(wx.version())
 #import os; print_('PID:', os.getpid()); raw_input('Ready to start, press enter...')

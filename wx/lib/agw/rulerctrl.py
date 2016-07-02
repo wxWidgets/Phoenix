@@ -167,7 +167,7 @@ except:
     pass
 
 # Python 2/3 compatibility helper
-import wx.lib.six as six
+import six
 
 # Built-in formats
 IntFormat = 1

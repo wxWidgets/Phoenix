@@ -23,7 +23,7 @@ user hits '.' when typing.
 """
 
 import  wx
-import  wx.lib.six as six
+import  six
 from wx.lib.masked import BaseMaskedTextCtrl
 
 # jmg 12/9/03 - when we cut ties with Py 2.2 and earlier, this would

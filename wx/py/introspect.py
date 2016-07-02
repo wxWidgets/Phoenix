@@ -8,7 +8,7 @@ import inspect
 import tokenize
 import types
 import wx
-from wx.lib.six import BytesIO, PY3, string_types
+from six import BytesIO, PY3, string_types
 
 def getAutoCompleteList(command='', locals=None, includeMagic=1, 
                         includeSingle=1, includeDouble=1):

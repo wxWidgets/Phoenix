@@ -6,7 +6,7 @@ import wx.adv
 import os
 import sys
 
-from wx.lib.six import BytesIO
+from six import BytesIO
 
 try:
     dirName = os.path.dirname(os.path.abspath(__file__))

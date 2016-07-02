@@ -200,7 +200,7 @@ import math
 
 import wx.lib.colourutils as colourutils
 
-import wx.lib.six as six
+import six
 
 from .fmcustomizedlg import FMCustomizeDlg
 from .artmanager import ArtManager, DCSaver

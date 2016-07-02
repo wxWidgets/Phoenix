@@ -338,10 +338,13 @@ def my_check_python_headers(conf):
 
     if isWindows:
         libname = 'python' + conf.env['PYTHON_VERSION'].replace('.', '')
-        
-        # TODO: libpath will be incorrect in virtualenv's.  Fix this...
-        libpath = [os.path.join(dct['prefix'], "libs")]       
-        
+
+        if dct['LIBDIR'] and os.path.isdir(dct['LIBDIR']):
+            libpath = [dct['LIBDIR']]
+        else:
+            base_prefix = get_windows_base_prefix(conf, dct['prefix'])
+            libpath = [os.path.join(base_prefix, "libs")]
+
         conf.env['LIBPATH_PYEMBED'] = libpath
         conf.env.append_value('LIB_PYEMBED', [libname])
         conf.env['LIBPATH_PYEXT'] = conf.env['LIBPATH_PYEMBED']
@@ -403,6 +406,40 @@ def my_check_python_headers(conf):
         env.append_value('CXXFLAGS_PYEXT', dist_compiler.compile_options)
         env.append_value('LINKFLAGS_PYEXT', dist_compiler.ldflags_shared)
 
+
+def get_windows_base_prefix(conf, default):
+    # If the python being used for the build in running from a virtual
+    # environment then sys.prefix will not be the correct path to find
+    # the Python libs folder.
+    import waflib.Errors
+
+    # If we're running in a Py3 style venv then there is a
+    # sys.base_prefix we can use instead.
+    try:
+        base_prefix = conf.get_python_variables(
+            ["base_prefix"],
+            ["import sys",
+             "base_prefix = getattr(sys, 'base_prefix')"])[0]
+        return base_prefix
+    except waflib.Errors.WafError:
+        pass
+
+    # Otherwise try importing a python library module that should
+    # always be in the Lib folder (at least for the versions of Python
+    # we're interested in) and use it's location to figure out the
+    # real prefix;
+    # TODO: There has got to be a better way to do this!
+    try:
+        base_prefix = conf.get_python_variables(
+            ["base_prefix"],
+            ["import os.path as op",
+             "import base64",
+             "base_prefix = op.dirname(op.dirname(base64.__file__))"])[0]
+        return base_prefix
+    except waflib.Errors.WafError:
+        pass
+
+    return default
 
 
 #-----------------------------------------------------------------------------

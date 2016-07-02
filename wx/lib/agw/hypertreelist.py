@@ -278,7 +278,7 @@ from wx.lib.agw.customtreectrl import TreeEditTimer as TreeListEditTimer
 from wx.lib.agw.customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED, EVT_TREE_ITEM_HYPERLINK
 
 # Python 2/3 compatibility helper
-import wx.lib.six as six
+import six
 
 # Version Info
 __version__ = "1.4"

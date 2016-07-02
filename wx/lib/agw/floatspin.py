@@ -178,7 +178,7 @@ import locale
 from math import ceil, floor
 
 # Python 2/3 compatibility helper
-import wx.lib.six as six
+import six
 if six.PY3:
     long = int
     

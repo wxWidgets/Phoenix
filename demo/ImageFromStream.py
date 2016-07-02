@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #	Tags: phoenix-port, py3-port
 
-from wx.lib.six import BytesIO
+from six import BytesIO
 
 import wx
 

@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 from wx.lib.floatcanvas.Utilities.BBox import *

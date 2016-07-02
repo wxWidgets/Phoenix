@@ -67,10 +67,10 @@ from wx.adv import TaskBarIcon as TaskBarIcon
 from wx.adv import SplashScreen as SplashScreen
 import wx.lib.mixins.inspection
 
-import wx.lib.six as six
-from wx.lib.six import exec_, BytesIO
-from wx.lib.six.moves import cPickle
-from wx.lib.six.moves import urllib
+import six
+from six import exec_, BytesIO
+from six.moves import cPickle
+from six.moves import urllib
 
 import version
 

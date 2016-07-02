@@ -58,7 +58,7 @@ import math
 import sys
 
 import wx
-import wx.lib.six as six
+import six
 
 import xml.parsers.expat
 
@@ -234,7 +234,7 @@ class Renderer:
     def renderCharacterData(self, data, x, y):
         raise NotImplementedError()
 
-from wx.lib.six import PY3
+from six import PY3
 
 def _addGreek():
     alpha = 0xE1

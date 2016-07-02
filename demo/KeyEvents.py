@@ -2,7 +2,7 @@
 
 import wx
 import wx.lib.mixins.listctrl as listmix
-from wx.lib.six import unichr
+from six import unichr
 
 #----------------------------------------------------------------------
 

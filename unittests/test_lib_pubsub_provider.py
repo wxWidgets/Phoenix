@@ -7,7 +7,7 @@
 """
 import os
 import unittest
-import wtc
+from unittests import wtc
 
 from textwrap import dedent
 

@@ -250,7 +250,7 @@ import string
 
 import wx.grid as gridlib
 
-import wx.lib.six as six
+import six
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 from wx.lib.wordwrap import wordwrap

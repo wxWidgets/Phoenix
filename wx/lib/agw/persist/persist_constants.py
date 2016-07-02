@@ -12,7 +12,7 @@ This module contains all the constants used by the persistent objects.
 
 import wx
 import wx.dataview as dv
-import wx.lib.six as six
+import six
 
 # ----------------------------------------------------------------------------------- #
 # PersistenceManager styles

@@ -1,8 +1,8 @@
 import unittest
-import wtc
+from unittests import wtc
 import wx
 import os
-import wx.lib.six as six
+import six
 
 pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 

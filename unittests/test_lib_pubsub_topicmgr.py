@@ -7,7 +7,7 @@
 """
 
 import unittest
-import wtc
+from unittests import wtc
 
 from wx.lib.pubsub.pub import (
      ALL_TOPICS,
@@ -359,7 +359,7 @@ class lib_pubsub_TopicMgr3_TreeTraverser(wtc.PubsubTestCase):
         topicMgr.getOrCreateTopic('a2.b.a')
         topicMgr.getOrCreateTopic('a2.b.b')
 
-        from wx.lib.six import StringIO
+        from six import StringIO
         buffer = StringIO()
         printTreeDocs(rootTopic=root, width=70, fileObj=buffer)
         self.assertEqual( buffer.getvalue(), self.expectedOutput )

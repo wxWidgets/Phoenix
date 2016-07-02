@@ -1,5 +1,5 @@
 import wx
-from wx.lib.six import print_
+from six import print_
 import os
 
 FONTSIZE = 10

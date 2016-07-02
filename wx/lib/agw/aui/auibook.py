@@ -32,7 +32,7 @@ import wx
 import datetime
 
 from wx.lib.expando import ExpandoTextCtrl
-import wx.lib.six as six
+import six
 
 from . import tabart as TA
 

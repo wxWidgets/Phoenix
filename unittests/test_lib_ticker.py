@@ -1,5 +1,5 @@
 import unittest
-import wtc
+from unittests import wtc
 from wx.lib.ticker import Ticker
 
 #---------------------------------------------------------------------------

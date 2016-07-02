@@ -166,7 +166,7 @@ import os
 import time
 import zlib
 
-import wx.lib.six as six
+import six
 from math import pi
 
 from wx.lib.embeddedimage import PyEmbeddedImage
