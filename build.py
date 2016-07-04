@@ -411,10 +411,10 @@ def makeOptionParser():
         ("extra_waf",      ("",    "Extra args to pass on waf's command line.")),
         ("extra_pytest",   ("",    "Extra args to pass on py.test's command line.")),
         
-        ("jobs",           ("",    "Number of parallel compile jobs to do, if supported.")), 
+        (("j","jobs"),     ("",    "Number of parallel compile jobs to do, if supported.")),
         ("both",           (False, "Build both a debug and release version. (Only used on Windows)")),
         ("unicode",        (True,  "Build wxPython with unicode support (always on for wx2.9+)")),
-        ("verbose",        (False, "Print out more information.")),
+        (("v", "verbose"), (False, "Print out more information during the build.")),
         ("nodoc",          (False, "Do not run the default docs generator")),
         ("upload",         (False, "Upload bdist and/or sdist packages to snapshot server.")),
         ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
@@ -432,8 +432,14 @@ def makeOptionParser():
         action = 'store'
         if type(default) == bool:
             action = 'store_true'
-        parser.add_option('--'+opt, default=default, action=action,
-                          dest=opt, help=txt)
+        if isinstance(opt, str):
+            opts = ('--'+opt, )
+            dest = opt
+        else:
+            opts = ('-'+opt[0], '--'+opt[1])
+            dest = opt[1]
+        parser.add_option(*opts, default=default, action=action,
+                          dest=dest, help=txt)
     return parser
 
         
