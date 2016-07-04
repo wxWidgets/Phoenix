@@ -10,14 +10,17 @@ import wx.lib.agw.persist as PM
 
 class lib_agw_persist_persistencemanager_Tests(wtc.WidgetTestCase):
 
-    def test_lib_agw_persist_persistencemanagerCtor(self):
+    def setUp(self):
+        super(lib_agw_persist_persistencemanager_Tests, self).setUp()
+        dirName = os.path.dirname(os.path.abspath(__file__))
+        self._configFile1 = os.path.join(dirName, "PersistTest1")
+
+
+    def test_persistencemanagerCtor(self):
 
         self._persistMgr = PM.PersistenceManager.Get()
         self._persistMgr.SetManagerStyle(PM.PM_SAVE_RESTORE_AUI_PERSPECTIVES)
-        
-        dirName, fileName = os.path.split(os.path.abspath(__file__))
-        _configFile1 = os.path.join(dirName, "PersistTest1")
-        self._persistMgr.SetPersistenceFile(_configFile1)
+        self._persistMgr.SetPersistenceFile(self._configFile1)
         
         # give the frame a Name for below
         self.frame.SetName('PersistTestFrame')
@@ -30,13 +33,10 @@ class lib_agw_persist_persistencemanager_Tests(wtc.WidgetTestCase):
         self._persistMgr.SaveAndUnregister()
         
 
-    def test_lib_agw_persist_persistencemanagerRestore(self):
+    def test_persistencemanagerRestore(self):
 
         self._persistMgr = PM.PersistenceManager.Get()
-        
-        dirName, fileName = os.path.split(os.path.abspath(__file__))
-        _configFile1 = os.path.join(dirName, "PersistTest1")
-        self._persistMgr.SetPersistenceFile(_configFile1)
+        self._persistMgr.SetPersistenceFile(self._configFile1)
         
         # give the frame a Name for below
         self.frame.SetName('PersistTestFrame')
@@ -45,14 +45,12 @@ class lib_agw_persist_persistencemanager_Tests(wtc.WidgetTestCase):
                 
         self.assertEqual(self._persistMgr.HasRestored(), True, "Persistence should be there, as it was created in CTOR test.")
 
-    def test_lib_agw_persist_persistencemanagerPersistValue(self):
+
+    def test_persistencemanagerPersistValue(self):
 
         self._persistMgr = PM.PersistenceManager.Get()
         self._persistMgr.SetManagerStyle(PM.PM_SAVE_RESTORE_AUI_PERSPECTIVES)        
-        
-        dirName, fileName = os.path.split(os.path.abspath(__file__))
-        _configFile1 = os.path.join(dirName, "PersistTest1")
-        self._persistMgr.SetPersistenceFile(_configFile1)
+        self._persistMgr.SetPersistenceFile(self._configFile1)
         
         # give the frame a Name for below
         self.frame.SetName('PersistTestFrame')
@@ -65,7 +63,14 @@ class lib_agw_persist_persistencemanager_Tests(wtc.WidgetTestCase):
         self.assertEqual(cb.GetValue(), False, "Should be False as set in CTOR test")
         
 
-    def test_lib_agw_persist_persistencemanagerConstantsExist(self):
+    def test_persistencemanagerZZZZCleanup(self):
+        # Just clean up the test file used by the other tests...
+        # TODO: Fix these tests to be self-contained and to clean up after themselves
+        if os.path.exists(self._configFile1):
+            os.unlink(self._configFile1)
+
+
+    def test_persistencemanagerConstantsExist(self):
         # PersistenceManager styles
         PM.PM_SAVE_RESTORE_AUI_PERSPECTIVES
         PM.PM_SAVE_RESTORE_TREE_LIST_SELECTIONS
