@@ -422,7 +422,7 @@ def makeOptionParser():
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
         ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
         ("release_build",  (False, "Turn off some development options for a release build.")),
-        ("pytest_timeout", ("20",  "Timeout, in seconds, for stopping stuck test cases")),
+        ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
         ]
 
@@ -1060,12 +1060,14 @@ def cmd_test(options, args, tests=None):
     # --timeout will kill the test process if it gets stuck
     jobs = '-n{}'.format(options.pytest_jobs) if options.pytest_jobs else ''
     boxed = '--boxed' if not isWindows else ''
-    cmd = '"{}" -m pytest {} {} {} --timeout={} {} '.format(
+    sec = options.pytest_timeout
+    timeout = '--timeout={}'.format(sec) if sec and sec != "0" else ''
+    cmd = '"{}" -m pytest {} {} {} {} {} '.format(
         PYTHON,
         '-v' if options.verbose else '',
         boxed,
         jobs,
-        options.pytest_timeout,
+        timeout,
         options.extra_pytest)
 
     if not tests:
