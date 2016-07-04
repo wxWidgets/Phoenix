@@ -27,8 +27,6 @@ class xrc_Tests(wtc.WidgetTestCase):
         self.assertTrue(isinstance(ctrl, wx.StaticText))
         
         
-        
-
     def test_xrc1(self):
         xmlres = xrc.XmlResource(xrcFile)
         self.checkXmlRes(xmlres)
@@ -236,7 +234,7 @@ class xrc_Tests(wtc.WidgetTestCase):
         resource = b'''<?xml version="1.0"?>
             <resource>
                 <!-- Notice that the class IS a standard wx class and that a subclass is specified -->        
-                <object class="wxPanel" name="MyPanel" subclass="xrcfactorytest.MyCustomPanel">
+                <object class="wxPanel" name="MyPanel" subclass="unittests.xrcfactorytest.MyCustomPanel">
                     <size>200,100</size>
                     <object class="wxStaticText" name="label1">
                         <label>This panel is a custom class derived from wx.Panel,\nand is loaded by the Python SubclassFactory.</label>
@@ -255,7 +253,7 @@ class xrc_Tests(wtc.WidgetTestCase):
         self.myYield()
 
         self.assertNotEqual(panel, None) 
-        import xrcfactorytest
+        from unittests import xrcfactorytest
         self.assertTrue(isinstance(panel, xrcfactorytest.MyCustomPanel))
         
         

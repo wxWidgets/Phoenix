@@ -17,7 +17,7 @@ This is where FloatCanvas defines its drawings objects.
 import sys
 
 import wx
-from wx.lib import six
+import six
 
 import numpy as N
 

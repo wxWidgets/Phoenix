@@ -1,7 +1,5 @@
 import unittest
 import wx
-from unittests import wtc
-import sys
 import six
 
 #---------------------------------------------------------------------------
