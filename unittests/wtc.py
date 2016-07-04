@@ -16,6 +16,8 @@ class WidgetTestCase(unittest.TestCase):
         self.app = wx.App()
         wx.Log.SetActiveTarget(wx.LogStderr())
         self.frame = wx.Frame(None, title='WTC: '+self.__class__.__name__)
+        self.frame.Show()
+        self.frame.PostSizeEvent()
 
     def tearDown(self):
         def _cleanup():
@@ -30,7 +32,6 @@ class WidgetTestCase(unittest.TestCase):
 
         timer = wx.PyTimer(_cleanup)
         timer.Start(100)
-        self.frame.Show()
         self.app.MainLoop()
         del self.app
 
