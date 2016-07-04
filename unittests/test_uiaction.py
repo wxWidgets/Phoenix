@@ -19,7 +19,7 @@ class MouseEventsPanel(wx.Panel):
         
     def onMouseEvent(self, evt):
         self.events.append( (evt.EventType, evt.Position) )
-        #print(self.events)
+        print( (evt.EventType, evt.Position) )
         evt.Skip()
         
         
@@ -56,7 +56,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         uia.MouseMove(p.ClientToScreen((10,10)).x, p.ClientToScreen((10,10)).y)
         self.waitFor(WAIT)
         self.waitFor(WAIT)
-        
+
         self.assertEqual(len(p.events), 3)
         self.assertTrue(self.cmp(p.events[0], wx.wxEVT_MOTION, (1,1)))
         self.assertTrue(self.cmp(p.events[1], wx.wxEVT_MOTION, (5,5)))
@@ -105,7 +105,6 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         self.assertTrue(len(p.events) == 2)
         self.assertTrue(self.cmp(p.events[0], wx.wxEVT_LEFT_DOWN, (10,10)))
         self.assertTrue(self.cmp(p.events[1], wx.wxEVT_LEFT_UP, (10,10)))
-        
 
 
     def test_uiactionMouseLeftDClick(self):
@@ -123,8 +122,7 @@ class uiaction_MouseTests(wtc.WidgetTestCase):
         self.assertTrue(self.cmp(p.events[2], (wx.wxEVT_LEFT_DOWN, wx.wxEVT_LEFT_DCLICK), (10,10)))
         self.assertTrue(self.cmp(p.events[3], wx.wxEVT_LEFT_UP, (10,10)))
 
-        
-        
+
     def test_uiactionMouseDD(self):
         p = MouseEventsPanel(self.frame, [wx.EVT_MOTION, wx.EVT_LEFT_DOWN, wx.EVT_LEFT_UP])
         
@@ -150,10 +148,12 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
     
     def setUp(self):
         super(uiaction_KeyboardTests, self).setUp()
-        self.tc = wx.TextCtrl(self.frame)
+        pnl = wx.Panel(self.frame)
+        pnl.SetBackgroundColour('pink')
+        self.tc = wx.TextCtrl(pnl)
         self.tc.SetFocus()
         self.waitFor(WAIT)
-            
+
     
     def test_uiactionKeyboardKeyDownUp(self):
         uia = wx.UIActionSimulator()
@@ -169,7 +169,7 @@ class uiaction_KeyboardTests(wtc.WidgetTestCase):
         self.assertEqual(self.tc.GetValue(), "This is a test")
     
 
-    @unittest.skipIf(sys.platform == 'darwin', 'wx.UIActionSimulator.Char needs work...')      
+    @unittest.skipIf(sys.platform == 'darwin', 'wx.UIActionSimulator.Char needs work...')
     def test_uiactionKeyboardChar(self):
         uia = wx.UIActionSimulator()
         for c in "This is a test":
