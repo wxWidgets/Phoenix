@@ -44,6 +44,16 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
 
+    # Use wxPyUserData for the clientData values instead of a plain wxObject
+    for item in c.allItems():
+        if isinstance(item, etgtools.ParamDef) and item.name == 'clientData':
+            item.type = 'wxPyUserData*'
+            item.transfer = True
+    meth = c.find('GetToolClientData')
+    meth.type = 'wxPyUserData*'
+    meth.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetToolClientData(tool_id));')
+
+
 
     c = module.find('wxRibbonToolBarEvent')
     tools.fixEventClass(c)

@@ -48,7 +48,6 @@ class ribbon_gallery_Tests(wtc.WidgetTestCase):
             g.GetItemClientData
 
 
-    @unittest.skip('because')
     def test_ribbon_gallery6(self):
         ribbon = wx.ribbon.RibbonBar(self.frame)
         g = wx.ribbon.RibbonGallery(ribbon)
@@ -57,11 +56,27 @@ class ribbon_gallery_Tests(wtc.WidgetTestCase):
             def __init__(self, **kw):
                 self.__dict__.update(kw)
 
-        data_in = _Data(a=1, b=2, c=3)
-        item = g.Append(wx.Bitmap(16,16), 102, data_in)
-        #data_out = g.GetItemClientObject(item)
-        #self.assertTrue(data_out is data_in)
+        data = _Data(a=1, b=2, c=3)
+        item = g.Append(wx.Bitmap(16,16), 102)
+        g.SetItemClientObject(item, data)
+        data_out = g.GetItemClientObject(item)
+        self.assertEqual(data.a, data_out.a)
+        self.assertTrue(data_out is data)
 
+
+    def test_ribbon_gallery7(self):
+        ribbon = wx.ribbon.RibbonBar(self.frame)
+        g = wx.ribbon.RibbonGallery(ribbon)
+
+        class _Data(object):
+            def __init__(self, **kw):
+                self.__dict__.update(kw)
+
+        data = _Data(a=1, b=2, c=3)
+        item = g.Append(wx.Bitmap(16,16), 102, data)
+        data_out = g.GetItemClientObject(item)
+        self.assertEqual(data.a, data_out.a)
+        self.assertTrue(data_out is data)
 
 
 

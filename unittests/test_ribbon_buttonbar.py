@@ -36,6 +36,23 @@ class ribbon_buttonbar_Tests(wtc.WidgetTestCase):
     def test_ribbon_buttonbar4(self):
         evt = wx.ribbon.RibbonButtonBarEvent()
 
+
+    def test_ribbon_buttonbar5(self):
+        ribbon = wx.ribbon.RibbonBar(self.frame)
+        bb = wx.ribbon.RibbonButtonBar(ribbon)
+        bmp = wx.Bitmap(16,16)
+        btn = bb.AddButton(100, "label", bmp, "help string")
+
+        class _Data(object):
+            def __init__(self, **kw):
+                self.__dict__.update(kw)
+
+        data = _Data(a=1, b=2, c=3)
+        bb.SetItemClientObject(btn, data)
+        data_out = bb.GetItemClientObject(btn)
+        self.assertEqual(data.a, data_out.a)
+        self.assertTrue(data_out is data)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

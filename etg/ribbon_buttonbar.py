@@ -48,6 +48,9 @@ def run():
     c.find('SetItemClientData').ignore()
     c.find('GetItemClientData').ignore()
 
+    # Methods assigning wxClientData objects need to transfer ownership
+    c.find('SetItemClientObject.data').transfer = True
+
 
     c = module.find('wxRibbonButtonBarEvent')
     tools.fixEventClass(c)
