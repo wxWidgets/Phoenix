@@ -26,6 +26,12 @@ class ribbon_buttonbar_Tests(wtc.WidgetTestCase):
         bmp = wx.Bitmap(16,16)
         b = bb.AddButton(100, "label", bmp, "help string")
 
+        with self.assertRaises(AttributeError):
+            bb.SetItemClientData
+
+        with self.assertRaises(AttributeError):
+            bb.GetItemClientData
+
 
     def test_ribbon_buttonbar4(self):
         evt = wx.ribbon.RibbonButtonBarEvent()

@@ -24,12 +24,14 @@ class ribbon_panel_Tests(wtc.WidgetTestCase):
 
 
     def test_ribbon_panel3(self):
+        bar = wx.ribbon.RibbonBar(self.frame)
         p = wx.ribbon.RibbonPanel()
-        p.Create(self.frame)
+        p.Create(bar)
 
 
     def test_ribbon_panel4(self):
-        p = wx.ribbon.RibbonPanel(self.frame)
+        bar = wx.ribbon.RibbonBar(self.frame)
+        p = wx.ribbon.RibbonPanel(bar)
 
         p.GetMinimisedIcon()
         p.HasExtButton()
