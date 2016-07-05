@@ -1,6 +1,6 @@
 import unittest
-import wtc
-import wx
+from unittests import wtc
+import wx.ribbon
 
 #---------------------------------------------------------------------------
 
