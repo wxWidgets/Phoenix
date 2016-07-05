@@ -95,18 +95,19 @@ class TestFrame(wx.Frame):
             self.gbs.SetItemPosition(btn, self.lastPos)
             btn.SetLabel("Move this to (3,6)")
         else:
-            if self.gbs.CheckForIntersectionPos( (3,6), (1,1) ):
+            if self.gbs.CheckForIntersection( (3,6), (1,1) ):
                 wx.MessageBox("""\
-wx.GridBagSizer will not allow items to be in the same cell as
-another item, so this operation will fail.  You will also get an
-assert when compiled in debug mode.""",
+wx.GridBagSizer will not allow items to be in the
+same cell as another item, so this operation will
+fail.  You will also get an assert when compiled
+in debug mode.""",
                               "Warning", wx.OK | wx.ICON_INFORMATION)
 
             try:
                 if self.gbs.SetItemPosition(btn, (3,6)):
                     self.lastPos = curPos
                     btn.SetLabel("Move it back")
-            except wx.PyAssertionError:
+            except wx.wxAssertionError:
                 pass
 
         self.gbs.Layout()
@@ -116,9 +117,9 @@ assert when compiled in debug mode.""",
         pt = evt.GetPosition()
         item = self.gbs.FindItemAtPoint(pt)
         if item is None:
-            print("no item at", `pt`)
+            print("no item at", repr(pt))
         else:
-            print("item found: ", `item.GetPos()`, "--", `item.GetSpan()`)
+            print("item found: ", repr(item.GetPos()), "--", repr(item.GetSpan()))
 
 
 #---------------------------------------------------------------------------

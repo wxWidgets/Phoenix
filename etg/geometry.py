@@ -32,8 +32,7 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    
+
     module.addHeaderCode('#include <wx/wx.h>')
     
     
@@ -41,7 +40,7 @@ def run():
     # wxPoint2D and wxRect2D tweaks
     
     c = module.find('wxPoint2DDouble')
-    c.pyName = 'Point2D'
+    c.renameClass('Point2D')
     c.find('wxPoint2DDouble').findOverload('wxPoint2DInt').ignore()
     
     c.find('m_x').pyName = 'x'
@@ -95,7 +94,7 @@ def run():
         
             
     c = module.find('wxRect2DDouble')
-    c.pyName = 'Rect2D'
+    c.renameClass('Rect2D')
     c.find('m_x').pyName = 'x'
     c.find('m_y').pyName = 'y'
     c.find('m_width').pyName = 'width'

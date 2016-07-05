@@ -20,7 +20,7 @@ import xml.etree.ElementTree as et
 from .tweaker_tools import FixWxPrefix, magicMethods, \
                            guessTypeInt, guessTypeFloat, guessTypeStr, \
                            textfile_open
-from sphinxtools.utilities import FindDescendants
+from sphinxtools.utilities import findDescendants
 
 #---------------------------------------------------------------------------
 # These classes simply hold various bits of information about the classes,
@@ -629,7 +629,8 @@ class ClassDef(BaseDef):
         self.allowNone = False      # Allow the convertFrom code to handle None too.
         self.instanceCode = None    # Code to be used to create new instances of this class
         self.innerclasses = []
-        self.isInner = False
+        self.isInner = False        # Is this a nested class?
+        self.klass = None           # if so, then this is the outer class
         
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
@@ -643,15 +644,23 @@ class ClassDef(BaseDef):
             self.extract(element)
 
 
-    def findHierarchy(self, element, all_classes, specials, read):
+    def renameClass(self, newName):
+        self.pyName = newName
+        for item in self.items:
+            if hasattr(item, 'className'):
+                item.className = newName
+                for overload in item.overloads:
+                    overload.className = newName
 
+
+    def findHierarchy(self, element, all_classes, specials, read):
         from etgtools import XMLSRC
         
         if not read:
-            nodename = fullname = self.name
-            specials = [nodename]
+            fullname = self.name
+            specials = [fullname]
         else:
-            nodename = fullname = element.text
+            fullname = element.text
 
         baselist = []
 
@@ -662,14 +671,14 @@ class ClassDef(BaseDef):
             
             fname = os.path.join(XMLSRC, refid+'.xml')
             root = et.parse(fname).getroot()
-            compounds = FindDescendants(root, 'basecompoundref')
+            compounds = findDescendants(root, 'basecompoundref')
         else:
             compounds = element.findall('basecompoundref')        
 
         for c in compounds:
             baselist.append(c.text)
 
-        all_classes[nodename] = (nodename, fullname, baselist)
+        all_classes[fullname] = (fullname, baselist)
 
         for c in compounds:
             all_classes, specials = self.findHierarchy(c, all_classes, specials, True)
@@ -706,6 +715,7 @@ class ClassDef(BaseDef):
             item = ClassDef(innerclass, kind)
             item.protection = node.get('prot')
             item.isInner = True
+            item.klass = self      # This makes a reference cycle but it's okay
             self.innerclasses.append(item)
         
         
@@ -1266,14 +1276,14 @@ class PyClassDef(BaseDef):
     def findHierarchy(self):
 
         all_classes = {}
-        nodename = fullname = self.name
-        specials = [nodename]
+        fullname = self.name
+        specials = [fullname]
 
         baselist = [base for base in self.bases if base != 'object']
-        all_classes[nodename] = (nodename, fullname, baselist)
+        all_classes[fullname] = (fullname, baselist)
 
         for base in baselist:
-            all_classes[base] = (base, base, [])
+            all_classes[base] = (base, [])
 
         return all_classes, specials
         
@@ -1311,6 +1321,7 @@ class ModuleDef(BaseDef):
         self.postInitializerCode = []
         self.includes = []
         self.imports = []
+        self.isARealModule = (module == name)
 
 
     def parseCompleted(self):

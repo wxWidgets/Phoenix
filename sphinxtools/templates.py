@@ -5,7 +5,7 @@
 # Author:      Andrea Gavana
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -168,17 +168,20 @@ TEMPLATE_CLASS_INDEX = '''
 .. include:: headings.inc
 
 =========================================================================
-**%s** Classes
+**%s**
 =========================================================================
 
-This is an alphabetical listing of all the classes defined in the **%s** module, together with a brief description of them (if available).
-
-You can look up a class using the alphabetical listing of them.
-
+%s
 
 Class Summary
 =============
 
+'''
+
+# Template for the functions header in the module index
+TEMPLATE_MODULE_FUNCTION_SUMMARY = '''
+Functions Summary
+=================
 
 '''
 

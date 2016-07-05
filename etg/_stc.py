@@ -3,18 +3,21 @@
 # Author:      Robin Dunn
 #
 # Created:     24-Oct-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
 PACKAGE   = "wx" 
 MODULE    = "_stc"
 NAME      = "_stc"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The :ref:`wx.stc.StyledTextCrtl` class provided by this module is a text widget
+primarily intended for use as a syntax highlighting source code editor.  It is
+based on the popular Scintilla widget.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
@@ -65,6 +68,7 @@ def run():
     
     c = module.find('wxStyledTextCtrl')
     assert isinstance(c, etgtools.ClassDef)
+    c.bases = ['wxControl']  # wxTextCtrlIface is also a base...
     c.piBases = ['wx.Control', 'wx.TextEntry']
     tools.fixWindowClass(c, False)
     module.addGlobalStr('wxSTCNameStr', c)
@@ -127,6 +131,37 @@ def run():
     # Generate the code for this differently because it needs to be
     # forcibly mashed into an int in the C code
     module.find('wxSTC_MASK_FOLDERS').forcedInt = True
+
+
+    # Make sure that all the methods from wxTextEntry and wxTextCtrl are
+    # included. This is needed because we are pretending that this class only
+    # derives from wxControl but the real C++ class also derives from
+    # wxTextCtrlIface which derives from wxTextEntryBase.
+    import textentry
+    mod = textentry.parseAndTweakModule()
+    klass = mod.find('wxTextEntry')
+    items = [item for item in klass.items if isinstance(item, etgtools.MethodDef) and
+                                             not item.isCtor and
+                                             not item.isDtor and
+                                             not c.findItem(item.name)]
+    c.items.extend(items)
+
+    import textctrl
+    mod = textctrl.parseAndTweakModule()
+    klass = mod.find('wxTextCtrl')
+    items = [item for item in klass.items if isinstance(item, etgtools.MethodDef) and
+                                             not item.isCtor and
+                                             not item.isDtor and
+                                             not c.findItem(item.name)]
+    c.items.extend(items)
+
+    c.find('EmulateKeyPress').ignore()
+    c.find('IsMultiLine').ignore()
+    c.find('IsSingleLine').ignore()
+    c.find('MacCheckSpelling').ignore()
+    c.find('ShowNativeCaret').ignore()
+    c.find('HideNativeCaret').ignore()
+
 
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)
     

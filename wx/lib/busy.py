@@ -9,7 +9,7 @@
 #---------------------------------------------------------------------------
 
 """
-A class like :class:`BusyInfo` but which doesn't take up so much space by default
+A class like :class:`wx.BusyInfo` but which doesn't take up so much space by default
 and which has a nicer look.
 """
 
@@ -21,12 +21,12 @@ from wx.lib.stattext import GenStaticText as StaticText
 
 class BusyInfo(object):
     """
-    This class is just like :class:`BusyInfo`, except that its default
+    This class is just like :class:`wx.BusyInfo`, except that its default
     size is smaller, (unless the size of the message requires a larger window
     size) and the background and foreground colors of the message box can be
     set.
 
-    Creating an instace of the class witll create an show a window with the
+    Creating an instace of the class will create and show a window with the
     given message, and when the instance is deleted then that window will be
     closed. This class also implements the context manager magic methods, so
     it can be used with Python's `with` statement, like this::
@@ -41,12 +41,12 @@ class BusyInfo(object):
         Create a new :class:`BusyInfo`.
 
         :param string `msg`:     a string to be displayed in the BusyInfo window.
-        :param Window `parent`:  an optional window to be used as the parent of
-            the `:class:`BusyInfo`.  If given then the BusyInfo will be centered
+        :param wx.Window `parent`:  an optional window to be used as the parent of
+            the `:class:`BusyInfo`.  If given then the ``BusyInfo`` will be centered
             over that window, otherwise it will be centered on the screen.
-        :param Colour `bgColour`: colour to be used for the background
+        :param wx.Colour `bgColour`: colour to be used for the background
             of the :class:`BusyInfo`
-        :param Colour `fgColour`: colour to be used for the foreground (text)
+        :param wx.Colour `fgColour`: colour to be used for the foreground (text)
             of the :class:`BusyInfo`
         """
         self.frame = _InfoFrame(parent, msg, bgColour, fgColour)

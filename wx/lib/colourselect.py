@@ -34,7 +34,7 @@
 #
 
 """
-Provides a :class:`~lib.colourselect.ColourSelect` button that, when clicked, will display a
+Provides a :class:`ColourSelect` button that, when clicked, will display a
 colour selection dialog.
 
 
@@ -87,8 +87,8 @@ wxEVT_COMMAND_COLOURSELECT = wx.NewEventType()
 
 class ColourSelectEvent(wx.PyCommandEvent):
     """
-    :class:`ColourSelectEvent` is a special subclassing of :class:`CommandEvent` and it
-    provides for a custom event sent every time the user chooses a colour.
+    :class:`ColourSelectEvent` is a special subclassing of :class:`wx.CommandEvent`
+    and it provides for a custom event sent every time the user chooses a colour.
     """
 
     def __init__(self, id, value):
@@ -96,7 +96,7 @@ class ColourSelectEvent(wx.PyCommandEvent):
         Default class constructor.
 
         :param integer `id`: the event identifier;
-        :param Colour `value`: the colour currently selected.
+        :param wx.Colour `value`: the colour currently selected.
         """
 
         wx.PyCommandEvent.__init__(self, id = id)
@@ -120,8 +120,8 @@ EVT_COLOURSELECT = wx.PyEventBinder(wxEVT_COMMAND_COLOURSELECT, 1)
 
 class ColourSelect(wx.BitmapButton):
     """
-    A subclass of :class:`BitmapButton` that, when clicked, will display a colour
-    selection dialog.
+    A subclass of :class:`wx.BitmapButton` that, when clicked, will
+    display a colour selection dialog.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, label="", colour=wx.BLACK,
@@ -130,18 +130,18 @@ class ColourSelect(wx.BitmapButton):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param string `label`: the button text label;
-        :param colour: a valid :class:`Colour` instance, which will be the default initial
+        :param colour: a valid :class:`wx.Colour` instance, which will be the default initial
          colour for this button;
-        :type `colour`: :class:`Colour` or tuple
+        :type `colour`: :class:`wx.Colour` or tuple
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param PyObject `callback`: a callable method/function that will be called every time
          the user chooses a new colour;
         :param integer `style`: the button style.
@@ -176,7 +176,7 @@ class ColourSelect(wx.BitmapButton):
         """
         Returns the current colour set for the :class:`ColourSelect`.
 
-        :rtype: :class:`Colour`
+        :rtype: :class:`wx.Colour`
         """
         
         return self.colour
@@ -186,7 +186,7 @@ class ColourSelect(wx.BitmapButton):
         """
         Returns the current colour set for the :class:`ColourSelect`.
 
-        :rtype: :class:`Colour`
+        :rtype: :class:`wx.Colour`
         """
 
         return self.colour
@@ -197,7 +197,7 @@ class ColourSelect(wx.BitmapButton):
         Sets the current colour for :class:`ColourSelect`.
 
         :param `colour`: the new colour for :class:`ColourSelect`.
-        :type `colour`: tuple or string or :class:`Colour`
+        :type `colour`: tuple or string or :class:`wx.Colour`
         """
         
         self.SetColour(colour)
@@ -208,7 +208,7 @@ class ColourSelect(wx.BitmapButton):
         Sets the current colour for :class:`ColourSelect`.
 
         :param `colour`: the new colour for :class:`ColourSelect`.
-        :type `colour`: tuple or string or :class:`Colour`
+        :type `colour`: tuple or string or :class:`wx.Colour`
         """
 
         self.colour = wx.Colour(colour)  # use the typmap or copy an existing colour object
@@ -271,7 +271,7 @@ class ColourSelect(wx.BitmapButton):
         """
         Sets the bitmap representation of the current selected colour to the button.
 
-        :param Bitmap `bmp`: the new bitmap.
+        :param wx.Bitmap `bmp`: the new bitmap.
         """
 
         self.SetBitmapLabel(bmp)
@@ -292,7 +292,7 @@ class ColourSelect(wx.BitmapButton):
         """
         Handles the ``wx.EVT_BUTTON`` event for :class:`ColourSelect`.
 
-        :param `event`: a :class:`CommandEvent` event to be processed.
+        :param `event`: a :class:`wx.CommandEvent` event to be processed.
         """
 
         data = wx.ColourData()

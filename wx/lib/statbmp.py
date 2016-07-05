@@ -11,21 +11,23 @@
 #----------------------------------------------------------------------
 
 """
-:class:`~lib.statbmp.GenStaticBitmap` is a generic implementation of :class:`StaticBitmap`.
+:class:`GenStaticBitmap` is a generic implementation of :class:`wx.StaticBitmap`.
 
 
 Description
 ===========
 
-:class:`GenStaticBitmap` is a generic implementation of :class:`StaticBitmap`.
+:class:`GenStaticBitmap` is a generic implementation of
+:class:`wx.StaticBitmap`.
 
-Some of the platforms supported by wxPython (most notably GTK), do not consider
-:class:`StaticBitmap` as a separate widget; instead, the bitmap is just drawn on its
-parent window. This essentially bars the use of almost all mouse events (such as
-detection of mouse motions, mouse clicks and so on).
+Some of the platforms supported by wxPython (most notably GTK), do not
+consider :class:`wx.StaticBitmap` as a separate widget; instead, the bitmap is
+just drawn on its parent window. This essentially bars the use of almost all
+mouse events (such as detection of mouse motions, mouse clicks and so on) on
+the widget.
 
-Using :class:`GenStaticBitmap` will overcome all the problems described above, as it
-is a generic widget and a real window on its own.
+Using :class:`GenStaticBitmap` will overcome the problems described above, as
+it is a generic widget and a real window on its own.
 
 
 Usage
@@ -58,7 +60,7 @@ import wx
 #----------------------------------------------------------------------
 
 class GenStaticBitmap(wx.Control):
-    """ :class:`GenStaticBitmap` is a generic implementation of :class:`StaticBitmap`. """
+    """ :class:`GenStaticBitmap` is a generic implementation of :class:`wx.StaticBitmap`. """
     
     labelDelta = 1
 
@@ -71,17 +73,17 @@ class GenStaticBitmap(wx.Control):
 
         :param `parent`: parent window, must not be ``None``;
         :param integer `ID`: window identifier. A value of -1 indicates a default value;
-        :param Bitmap `bitmap`: the static bitmap used in the control;
+        :param wx.Bitmap `bitmap`: the static bitmap used in the control;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param integer `style`: the underlying :class:`Control` style;
+        :param integer `style`: the underlying :class:`wx.Control` style;
         :param string `name`: the widget name.
 
-        :type parent: :class:`Window`
-        :type pos: tuple or :class:`Point`
-        :type size: tuple or :class:`Size`
+        :type parent: :class:`wx.Window`
+        :type pos: tuple or :class:`wx.Point`
+        :type size: tuple or :class:`wx.Size`
         """
 
         if not style & wx.BORDER_MASK:
@@ -101,7 +103,7 @@ class GenStaticBitmap(wx.Control):
         """
         Sets the bitmap label.
 
-        :param Bitmap `bitmap`: the new bitmap.
+        :param wx.Bitmap `bitmap`: the new bitmap.
         
         .. seealso:: :meth:`GetBitmap`
         """
@@ -115,7 +117,7 @@ class GenStaticBitmap(wx.Control):
         """
         Returns the bitmap currently used in the control.
 
-        :rtype: Bitmap
+        :rtype: wx.Bitmap
         
         .. seealso:: :meth:`SetBitmap`
         """
@@ -128,7 +130,7 @@ class GenStaticBitmap(wx.Control):
         Overridden base class virtual.  Determines the best size of
         the control based on the label size and the current font.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         return wx.Size(self._bitmap.GetWidth(), self._bitmap.GetHeight())
@@ -138,7 +140,7 @@ class GenStaticBitmap(wx.Control):
         """
         Can this window be given focus by mouse click?
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         return False
@@ -149,7 +151,7 @@ class GenStaticBitmap(wx.Control):
         Overridden base class virtual.  By default we should use
         the same font/colour attributes as the native :class:`StaticBitmap`.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         return wx.StaticBitmap.GetClassDefaultAttributes()
@@ -160,7 +162,7 @@ class GenStaticBitmap(wx.Control):
         Overridden base class virtual.  If the parent has non-default
         colours then we want this control to inherit them.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         return True
@@ -170,7 +172,7 @@ class GenStaticBitmap(wx.Control):
         """
         Handles the ``wx.EVT_PAINT`` for :class:`GenStaticBitmap`.
 
-        :param `event`: a :class:`PaintEvent` event to be processed.
+        :param `event`: a :class:`wx.PaintEvent` event to be processed.
         """
 
         dc = wx.PaintDC(self)
@@ -182,7 +184,7 @@ class GenStaticBitmap(wx.Control):
         """
         Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`GenStaticBitmap`.
 
-        :param `event`: a :class:`EraseEvent` event to be processed.
+        :param `event`: a :class:`wx.EraseEvent` event to be processed.
 
         .. note:: This is intentionally empty to reduce flicker.
         """

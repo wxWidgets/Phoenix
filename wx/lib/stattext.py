@@ -18,24 +18,25 @@
 #
 
 """
-:class:`~lib.stattext.GenStaticText` is a generic implementation of :class:`StaticText`.
+:class:`GenStaticText` is a generic implementation of :class:`wx.StaticText`.
 
 
 Description
 ===========
 
-:class:`GenStaticText` is a generic implementation of :class:`StaticText`.
+:class:`GenStaticText` is a generic implementation of :class:`wx.StaticText`.
 
-Some of the platforms supported by wxPython (most notably GTK), do not consider
-:class:`StaticText` as a separate widget; instead, the label is just drawn on its
-parent window. This essentially bars the use of almost all mouse events (such as
-detection of mouse motions, mouse clicks and so on).
+Some of the platforms supported by wxPython (most notably GTK), do not
+consider :class:`wx.StaticText` as a separate widget; instead, the label is
+just drawn directly on its parent window. This essentially bars the use of
+almost all mouse events (such as detection of mouse motions, mouse clicks and
+so on) on that widget.
 
-Moreover, these platforms do not allow the developer to change the widget's background
-colour.
+Moreover, these platforms do not allow the developer to change the widget's
+background colour.
 
-Using :class:`GenStaticText` will overcome all the problems described above, as it
-is a generic widget and a real window on its own.
+Using :class:`GenStaticText` will overcome all the problems described above,
+as it is a generic widget and a real window on its own.
 
 
 Usage
@@ -79,7 +80,9 @@ if wx.Platform == "__WXMAC__":
 #----------------------------------------------------------------------
 
 class GenStaticText(wx.Control):
-    """ :class:`GenStaticText` is a generic implementation of :class:`StaticText`. """
+    """
+    :class:`GenStaticText` is a generic implementation of :class:`wx.StaticText`.
+    """
     labelDelta = 1
 
     def __init__(self, parent, ID=-1, label="",
@@ -96,12 +99,12 @@ class GenStaticText(wx.Control):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param integer `style`: the underlying :class:`Control` style;
+        :param integer `style`: the underlying :class:`wx.Control` style;
         :param string `name`: the widget name.
 
-        :type parent: :class:`Window`
-        :type pos: tuple or :class:`Point`
-        :type size: tuple or :class:`Size`
+        :type parent: :class:`wx.Window`
+        :type pos: tuple or :class:`wx.Point`
+        :type size: tuple or :class:`wx.Size`
         """
 
         wx.Control.__init__(self, parent, ID, pos, size, style|wx.NO_BORDER,
@@ -123,7 +126,7 @@ class GenStaticText(wx.Control):
     def SetLabel(self, label):
         """
         Sets the static text label and updates the control's size to exactly
-        fit the label unless the control has wx.ST_NO_AUTORESIZE flag.
+        fit the label unless the control has ``wx.ST_NO_AUTORESIZE`` flag.
 
         :param string `label`: the static text label (i.e., its text label).
         """
@@ -139,9 +142,9 @@ class GenStaticText(wx.Control):
     def SetFont(self, font):
         """
         Sets the static text font and updates the control's size to exactly
-        fit the label unless the control has wx.ST_NO_AUTORESIZE flag.
+        fit the label unless the control has ``wx.ST_NO_AUTORESIZE`` flag.
 
-        :param Font `font`: a valid font instance, which will be the new font used
+        :param wx.Font `font`: a valid font instance, which will be the new font used
          to display the text.
         """
         
@@ -158,7 +161,7 @@ class GenStaticText(wx.Control):
         Overridden base class virtual.  Determines the best size of
         the control based on the label size and the current font.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
         
         label = self.GetLabel()
@@ -185,15 +188,18 @@ class GenStaticText(wx.Control):
         """
         Enable or disable the widget for user input. 
 
-        :param bool `enable`: If ``True``, enables the window for input. If ``False``, disables the window.
+        :param bool `enable`: If ``True``, enables the window for input. If
+          ``False``, disables the window.
 
-        :returns: ``True`` if the window has been enabled or disabled, ``False`` if nothing was
-         done, i.e. if the window had already been in the specified state.
+        :returns: ``True`` if the window has been enabled or disabled,
+          ``False`` if nothing was done, i.e. if the window had already been
+          in the specified state.
 
-        .. note:: Note that when a parent window is disabled, all of its children are disabled as
-           well and they are reenabled again when the parent is.
+        .. note:: Note that when a parent window is disabled, all of its
+           children are disabled as well and they are reenabled again when
+           the parent is.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         retVal = wx.Control.Enable(self, enable)
@@ -209,9 +215,10 @@ class GenStaticText(wx.Control):
         :returns: ``True`` if the window has been disabled, ``False`` if it had been
          already disabled before the call to this function.
          
-        .. note:: This is functionally equivalent of calling :meth:`~Control.Enable` with a ``False`` flag.
+        .. note:: This is functionally equivalent of calling :meth:`~wx.Control.Enable`
+           with a ``False`` flag.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         retVal = wx.Control.Disable(self)
@@ -224,7 +231,7 @@ class GenStaticText(wx.Control):
         """
         Can this window be given focus by mouse click?
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         return False
@@ -233,9 +240,9 @@ class GenStaticText(wx.Control):
     def GetDefaultAttributes(self):
         """
         Overridden base class virtual.  By default we should use
-        the same font/colour attributes as the native :class:`StaticText`.
+        the same font/colour attributes as the native :class:`wx.StaticText`.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
         
         return wx.StaticText.GetClassDefaultAttributes()
@@ -246,7 +253,7 @@ class GenStaticText(wx.Control):
         Overridden base class virtual.  If the parent has non-default
         colours then we want this control to inherit them.
 
-        .. note:: Overridden from :class:`Control`.
+        .. note:: Overridden from :class:`wx.Control`.
         """
 
         return True
@@ -256,7 +263,7 @@ class GenStaticText(wx.Control):
         """
         Handles the ``wx.EVT_PAINT`` for :class:`GenStaticText`.
 
-        :param `event`: a :class:`PaintEvent` event to be processed.
+        :param `event`: a :class:`wx.PaintEvent` event to be processed.
         """
         
         if BUFFERED:
@@ -304,11 +311,10 @@ class GenStaticText(wx.Control):
         """
         Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`GenStaticText`.
 
-        :param `event`: a :class:`EraseEvent` event to be processed.
+        :param `event`: a :class:`wx.EraseEvent` event to be processed.
 
         .. note:: This is intentionally empty to reduce flicker.
         """
-
         pass
 
 

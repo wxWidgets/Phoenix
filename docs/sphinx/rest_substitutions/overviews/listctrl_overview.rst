@@ -4,7 +4,7 @@
 .. _listctrl overview:
 
 ===============================================
-|phoenix_title|  **ListCtrl Overview**
+|phoenix_title|  **wx.ListCtrl Overview**
 ===============================================
 
 .. todo:: Write this section.

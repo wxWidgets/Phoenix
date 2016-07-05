@@ -58,7 +58,7 @@ def run():
     c.find('IsKindOf').ignore()
     
     # EXPERIMENTAL: By turning off the virtualness of the wxObject dtor, and
-    # since there are no other virutals that we are exposing here, then all
+    # since there are no other virtuals that we are exposing here, then all
     # classes that derive from wxObject that do not have any virtuals of
     # their own (or have the virtual flags turned off by the tweaker code)
     # can have simpler wrappers generated for them with no extra derived

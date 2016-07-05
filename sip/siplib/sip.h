@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041007
-#define SIP_VERSION_STR     "4.16.7"
+#define SIP_VERSION         0x041201
+#define SIP_VERSION_STR     "4.18.1.dev1606100655"
 
 
 /*
@@ -67,6 +67,11 @@ extern "C" {
  * to 0.
  *
  * History:
+ *
+ * 11.3 Added sip_api_get_interpreter() to the public API.
+ *
+ * 11.1 Added sip_api_invoke_slot_ex().
+ * 11.2 Added sip_api_get_reference() to the private API.
  *
  * 11.1 Added sip_api_invoke_slot_ex().
  *
@@ -212,7 +217,7 @@ extern "C" {
  * 0.0  Original version.
  */
 #define SIP_API_MAJOR_NR    11
-#define SIP_API_MINOR_NR    1
+#define SIP_API_MINOR_NR    3
 
 
 /* The name of the sip module. */
@@ -590,7 +595,8 @@ typedef enum {
 
 
 /*
- * The different Python slot types.
+ * The different Python slot types.  New slots must be added to the end,
+ * otherwise the major version of the internal ABI must be changed.
  */
 typedef enum {
     str_slot,           /* __str__ */
@@ -655,6 +661,11 @@ typedef enum {
     iter_slot,          /* __iter__ */
     next_slot,          /* __next__ */
     setattr_slot,       /* __setattr__, __delattr__ */
+    matmul_slot,        /* __matmul__ (for Python v3.5 and later) */
+    imatmul_slot,       /* __imatmul__ (for Python v3.5 and later) */
+    await_slot,         /* __await__ (for Python v3.5 and later) */
+    aiter_slot,         /* __aiter__ (for Python v3.5 and later) */
+    anext_slot,         /* __anext__ (for Python v3.5 and later) */
 } sipPySlotType;
 
 
@@ -1522,6 +1533,16 @@ typedef struct _sipAPIDef {
      */
     PyObject *(*api_invoke_slot_ex)(const sipSlot *slot, PyObject *sigargs,
             int check_receiver);
+
+    /*
+     * The following is not part of the public API.
+     */
+    PyObject *(*api_get_reference)(PyObject *self, int key);
+
+    /*
+     * The following is part of the public API.
+     */
+    PyInterpreterState *(*api_get_interpreter)();
 } sipAPIDef;
 
 

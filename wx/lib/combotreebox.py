@@ -13,12 +13,12 @@
 """ 
 ComboTreeBox provides a ComboBox that pops up a tree instead of a list. 
 
-ComboTreeBox tries to provide the same interface as :class:`ComboBox` as much as
+ComboTreeBox tries to provide the same interface as :class:`wx.ComboBox` as much as
 possible. However, whereas the ComboBox widget uses indices to access 
 items in the list of choices, ComboTreeBox uses TreeItemId's instead. If
 you add an item to the ComboTreeBox (using Append or Insert), the 
-:class:`TreeItemId` associated with the added item is returned. You can then use
-that `TreeItemId` to add items as children of that first item. For
+:class:`wx.TreeItemId` associated with the added item is returned. You can then use
+that `wx.TreeItemId` to add items as children of that first item. For
 example::
 
     from wx.lib.combotreebox import ComboTreeBox
@@ -46,7 +46,7 @@ To get the client data of the currently selected item (if any)::
         somePythonObject = combo.GetClientData(currentItem)
 
 
-Supported styles are the same as for :class:`ComboBox`, i.e. ``wx.CB_READONLY`` and
+Supported styles are the same as for :class:`wx.ComboBox`, i.e. ``wx.CB_READONLY`` and
 ``wx.CB_SORT``. Provide them as usual::
 
     combo = ComboTreeBox(parent, style=wx.CB_READONLY|wx.CB_SORT)

@@ -222,6 +222,27 @@ class stc_Tests(wtc.WidgetTestCase):
         stc.EVT_STC_INDICATOR_RELEASE
         stc.EVT_STC_AUTOCOMP_CANCELLED
         stc.EVT_STC_AUTOCOMP_CHAR_DELETED
+
+
+    def test_stcHasTextCtrlMethods(self):
+        # Just ensure that the common TextCtrl methods are present. This is
+        # done because the C++ class either derives from wxTextEntryBase
+        # or from wxTextCtrlIface, but these classes are not part of the API
+        # (and thus are not wrapped), so we have to kludge things.
+        # See etg/_stc.py for details.
+
+        t = stc.StyledTextCtrl(self.frame)
+        t.Cut
+        t.CanCut
+        t.DiscardEdits
+        t.GetDefaultStyle
+        t.GetNumberOfLines
+        t.GetStyle
+        t.IsModified
+        t.HitTest
+        t.AppendText
+        t.WriteText
+        t.ChangeValue
         
         
         

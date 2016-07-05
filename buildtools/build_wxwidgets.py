@@ -285,7 +285,8 @@ def main(wxDir, args):
                             ]
 
         if sys.platform.startswith("darwin"):
-            wxpy_configure_opts.append("--enable-monolithic")
+            #wxpy_configure_opts.append("--enable-monolithic")
+            pass
         else:
             wxpy_configure_opts.append("--with-sdl")
 

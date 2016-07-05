@@ -3,18 +3,22 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Aug-2013
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2013-2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
 PACKAGE   = "wx" 
 MODULE    = "_webkit"
 NAME      = "_webkit"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+The :ref:`wx.webkit.wxWebKitCtrl` and related classes are provided mainly for
+backwards compatibility only. New code would be more future-proof by using the
+``wx.html2`` module.  The classes in this module are light wrappers around
+the OSX WebKit control and is not implemented on any other platform.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
