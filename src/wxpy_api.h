@@ -337,5 +337,29 @@ private:
     PyObject* m_obj;
 };
 
+
+
+// A wxClientData that holds a reference to a Python object
+class wxPyClientData : public wxPyUserDataHelper<wxClientData>
+{
+public:
+    wxPyClientData(PyObject* obj = NULL)
+        : wxPyUserDataHelper<wxClientData>(obj)
+    { }
+};
+
+
+
+
+// A wxObject object that holds a reference to a Python object
+class wxPyUserData : public wxPyUserDataHelper<wxObject>
+{
+public:
+    wxPyUserData(PyObject* obj = NULL)
+        : wxPyUserDataHelper<wxObject>(obj)
+    { }
+};
+
+
 //--------------------------------------------------------------------------  
 #endif
