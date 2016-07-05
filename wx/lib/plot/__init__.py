@@ -9,12 +9,31 @@ This is a simple plotting library for the wxPython Phoenix project.
 __version__ = "0.0.1"
 __updated__ = "2016-07-05"
 
+# For those who still use ``from pakcage import *`` for some reason
+__all__ = [
+    'PolyLine',
+    'PolySpline',
+    'PolyMarker',
+    'PolyBars',
+    'PolyHistogram',
+    'BoxPlot',
+    'PlotGraphics',
+    'PlotCanvas',
+    'PlotPrintout',
+]
 
-# Expose items to the old API
+# Expose items so that the old API can still be used.
 # Old: import wx.lib.plot as wxplot
 # New: from wx.lib.plot import plot as wxplot
-
-
-
-
-__all__ = []
+from .plot import (
+    PolyPoints,
+    PolyLine,
+    PolySpline,
+    PolyMarker,
+    PolyBars,
+    PolyHistogram,
+    BoxPlot,
+    PlotGraphics,
+    PlotCanvas,
+    PlotPrintout,
+)
