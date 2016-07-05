@@ -42,6 +42,12 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
 
+    # Ignore the methods setting and fetching client data as a void*.  We have
+    # a mapped type for the wxClientData alternatives that work well and are
+    # hack free.
+    c.find('SetItemClientData').ignore()
+    c.find('GetItemClientData').ignore()
+
 
     c = module.find('wxRibbonButtonBarEvent')
     tools.fixEventClass(c)
