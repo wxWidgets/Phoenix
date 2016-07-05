@@ -319,158 +319,6 @@ class TempStyle(object):
         dc.SetBrush(self.prevBrush)
 
 
-class SavePen(object):
-    """
-    Decorator which saves the dc Pen before calling a function and sets the
-    pen back after the funcion, even if the function raises an exception.
-
-    The DC to paint on **must** be the first argument of the decorated
-    function.
-
-    ::
-
-        @SavePen
-        def func(dc, a, b, c):
-            # edit pen here
-
-        # is the same as:
-        def func(dc, a, b, c):
-            prevPen = dc.GetPen()
-            # edit pen here
-            dc.SetPen(prevPen)
-
-    .. seealso::
-       :func:`~wx.lib.plot.SaveBrush`
-
-    """
-    def __init__(self, func):
-        self.func = func
-
-    def __call__(self, *args, **kwargs):
-        """
-        This provides support for functions
-        """
-        dc = args[0]
-        with SavedPen(dc):
-            return self.func(*args, **kwargs)
-
-    def __get__(self, obj, objtype):
-        """
-        And this provides support for instance methods
-        """
-        @functools.wraps(self.func)
-        def wrapper(*args, **kwargs):
-            dc = args[0]
-            with SavedPen(dc):
-                return self.func(obj, *args, **kwargs)
-        return wrapper
-
-
-class SavedPen(object):
-    """
-    Context Manager for saving the previous :class:`wx.Pen` and resetting
-    it after.
-
-    :param dc: The DC to get pen information from.
-    :type dc: :class:`wx.DC`
-
-    ::
-
-        with SavedPen(dc):
-            # do stuff
-
-    """
-    def __init__(self, dc):
-        self.dc = dc
-        self.prevPen = None
-
-    def __enter__(self):
-        """ Save the pen """
-        self.prevPen = self.dc.GetPen()
-        return self
-
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        """ Set the pen back, even if the function errored """
-        self.dc.SetPen(self.prevPen)
-        return False            # return True means execptions are suppressed
-
-
-class SaveBrush(object):
-    """
-    Decorator which saves the dc Brush before calling a function and sets the
-    Brush back after the funcion, even if the function raises an exception.
-
-    The DC to paint on **must** be the first argument of the function.
-
-    ::
-
-        @SaveBrush
-        def func(dc, a, b, c):
-            # edit Brush here
-
-        # is the same as:
-        def func(dc, a, b, c):
-            prevBrush = dc.GetBrush()
-            # edit Brush here
-            dc.SetBrush(prevBrush)
-
-    .. seealso::
-        :func:`~wx.lib.plot.SavePen`
-
-    """
-    def __init__(self, func):
-        self.func = func
-
-    def __call__(self, *args, **kwargs):
-        """
-        This provides support for functions
-        """
-        dc = args[0]
-        with SavedBrush(dc):
-            return self.func(*args, **kwargs)
-
-    def __get__(self, obj, objtype):
-        """
-        And this provides support for instance methods
-        """
-        @functools.wraps(self.func)
-        def wrapper(*args, **kwargs):
-            dc = args[0]
-            with SavedBrush(dc):
-                return self.func(obj, *args, **kwargs)
-        return wrapper
-
-
-class SavedBrush(object):
-    """
-    Context Manager for saving the previous :class:`wx.Pen` and resetting
-    it after.
-
-    :param dc: The DC to get brush info from.
-    :type dc: :class:`wx.DC`
-
-    ::
-
-        with SavedBrush(dc):
-            # do stuff
-
-    """
-    def __init__(self, dc):
-        self.dc = dc
-        self.prevBrush = None
-
-    def __enter__(self):
-        """ Save the Brush """
-        self.prevBrush = self.dc.GetBrush()
-        return self
-
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        """ Set the Brush back, even if the function errored """
-        self.dc.SetBrush(self.prevBrush)
-        return False            # return True means execptions are suppressed
-
-
-
 class PendingDeprecation(object):
     """
     Decorator which warns the developer about methods that are
@@ -857,17 +705,23 @@ class PolyPoints(object):
         Scales and shifts the data for plotting.
 
         :param scale: The values to scale the data by.
-        :type scale: tuple of floats: ``(x_scale, y_scale)``
+        :type scale: list of floats: ``[x_scale, y_scale]``
         :param shift: The value to shift the data by. This should be in scaled
                       units
-        :type shift: tuple of floats: ``(x_shift, y_shift)``
+        :type shift: list of floats: ``[x_shift, y_shift]``
         :returns: None
         """
         if len(self.points) == 0:
             # no curves to draw
             return
-        if scale is not self.currentScale or shift is not self.currentShift:
-            # XXX: why "is not" and not "!="?
+
+        # TODO: Can we remove the if statement alltogether? Does
+        #       scaleAndShift ever get called when the current value equals
+        #       the new value?
+
+        # cast everything to list: some might be np.ndarray objects
+        if (list(scale) != list(self.currentScale)
+                or list(shift) != list(self.currentShift)):
             # update point scaling
             self.scaled = scale * self.points + shift
             self.currentScale = scale
