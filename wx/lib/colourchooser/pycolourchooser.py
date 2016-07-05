@@ -12,6 +12,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 """
 
+from __future__ import absolute_import
+
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o 2.5 compatability update.
@@ -27,13 +29,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 import  wx
 
-import  pycolourbox
-import  pypalette
-import  pycolourslider
+from . import  pycolourbox
+from . import  pypalette
+from . import  pycolourslider
 import  colorsys
-import  intl
+from . import  intl
 
-from intl import _ # _
+from .intl import _ # _
 
 class PyColourChooser(wx.Panel):
     """A Pure-Python implementation of the colour chooser dialog.
