@@ -14,6 +14,8 @@ on 2016-07-05 and finished on [insert date here].
 ## 2016-07-05 (Start) - Douglas Thor (doug.thor@gmail.com) (PR #)
 + Converted module to package.
 + Separated out changelog and readme to separate files.
++ Changed cursors to use the built-ins rather than PyEmbeddedImage.
++ Moved demo to standalone module within the package.
 
 
 ## 2016-06-14 (Start) - Douglas Thor (doug.thor@gmail.com) (PR #98)
