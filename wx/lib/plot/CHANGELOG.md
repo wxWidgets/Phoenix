@@ -15,7 +15,11 @@ on 2016-07-05 and finished on [insert date here].
 + Converted module to package.
 + Separated out changelog and readme to separate files.
 + Changed cursors to use the built-ins rather than PyEmbeddedImage.
-+ Moved demo to standalone module within the package.
++ Moved PlotCanvas class to separate plotcanvas.py module
++ Moved demo to examples/demo; added simple_example.py
++ package now callable via `python -m wx.lib.plot`: runs demo.
++ Moved PendingDeprecation, TempSytle to utils.py
++ Renamed `BoxPlot` to `PolyBoxPlot`.
 
 
 ## 2016-06-14 (Start) - Douglas Thor (doug.thor@gmail.com) (PR #98)

@@ -966,9 +966,9 @@ class PolyHistogram(PolyBarsBase):
             dc.DrawLines(coord)  # draw legend line
 
 
-class BoxPlot(PolyPoints):
+class PolyBoxPlot(PolyPoints):
     """
-    Creates a BoxPlot object.
+    Creates a PolyBoxPlot object.
 
     :param data: Raw data to create a box plot from.
     :type data: sequence of int or float

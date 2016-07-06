@@ -32,7 +32,7 @@ from .plot import (
     PolyMarker,
     PolyBars,
     PolyHistogram,
-    BoxPlot,
+    PolyBoxPlot,
     PlotGraphics,
     PlotPrintout,
 )
@@ -41,3 +41,6 @@ from .utils import (
     TempStyle,
     PendingDeprecation,
 )
+
+# For backwards compat.
+BoxPlot = PolyBoxPlot

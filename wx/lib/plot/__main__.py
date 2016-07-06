@@ -2,4 +2,4 @@
 
 from .examples import demo
 
-demo.__test()
+demo._test()
