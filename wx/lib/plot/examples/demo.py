@@ -630,14 +630,17 @@ class MainFrame(wx.Frame):
     ### PlotDraw Events
     # -----------------------------------------------------------------------
     def OnPlotDraw1(self, event):
+        """ Sin, Cos, and Points """
         self.resetDefaults()
         self.client.Draw(_draw1Objects())
 
     def OnPlotDraw2(self, event):
+        """ Sin, Cos, Points, and lines between points """
         self.resetDefaults()
         self.client.Draw(_draw2Objects())
 
     def OnPlotDraw3(self, event):
+        """ Various Marker Types """
         self.resetDefaults()
         self.client.SetFont(wx.Font(10,
                                     wx.FONTFAMILY_SCRIPT,
@@ -651,6 +654,7 @@ class MainFrame(wx.Frame):
         self.client.Draw(_draw3Objects())
 
     def OnPlotDraw4(self, event):
+        """ 25,000 point line and markers """
         self.resetDefaults()
         drawObj = _draw4Objects()
         self.client.Draw(drawObj)
@@ -662,7 +666,7 @@ class MainFrame(wx.Frame):
 # profile end
 
     def OnPlotDraw5(self, event):
-        # Empty plot with just axes
+        """ Empty plot with just axes """
         self.resetDefaults()
         drawObj = _draw5Objects()
         # make the axis X= (0,5), Y=(0,10)
@@ -670,7 +674,7 @@ class MainFrame(wx.Frame):
         self.client.Draw(drawObj, xAxis=(0, 5), yAxis=(0, 10))
 
     def OnPlotDraw6(self, event):
-        # Bar Graph Example
+        """ Bar Graph Example """
         self.resetDefaults()
         # self.client.SetEnableLegend(True)   #turn on Legend
         # self.client.SetEnableGrid(True)     #turn on Grid
@@ -679,7 +683,7 @@ class MainFrame(wx.Frame):
         self.client.Draw(_draw6Objects(), xAxis=(0, 7))
 
     def OnPlotDraw7(self, event):
-        # log scale example
+        """ log scale example """
         self.resetDefaults()
         self.plot_options_menu.Check(271, True)
         self.plot_options_menu.Check(272, True)
@@ -687,17 +691,17 @@ class MainFrame(wx.Frame):
         self.client.Draw(_draw7Objects())
 
     def OnPlotDraw8(self, event):
-        """Box Plot example"""
+        """ Box Plot example """
         self.resetDefaults()
         self.client.Draw(_draw8Objects())
 
     def OnPlotDraw9(self, event):
-        """Histogram example"""
+        """ Histogram example """
         self.resetDefaults()
         self.client.Draw(_draw9Objects())
 
     def OnPlotDraw10(self, event):
-        """Bar Chart example"""
+        """ Bar Chart example """
         self.resetDefaults()
         self.client.Draw(_draw10Objects())
 
