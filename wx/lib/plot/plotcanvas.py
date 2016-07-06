@@ -12,13 +12,11 @@ import wx
 import numpy as np
 
 # Package
-from .plot import (
-    _DisplaySide,
-    scale_and_shift_point,
-    _set_displayside,
-)
+from .utils import DisplaySide
+from .utils import set_displayside
 from .utils import PendingDeprecation
 from .utils import TempStyle
+from .utils import scale_and_shift_point
 
 
 class PlotCanvas(wx.Panel):
@@ -127,9 +125,9 @@ class PlotCanvas(wx.Panel):
         self._axesLabelsEnabled = True
         self._centerLinesEnabled = False
         self._diagonalsEnabled = False
-        self._ticksEnabled = _DisplaySide(False, False, False, False)
-        self._axesEnabled = _DisplaySide(True, True, True, True)
-        self._axesValuesEnabled = _DisplaySide(True, True, False, False)
+        self._ticksEnabled = DisplaySide(False, False, False, False)
+        self._axesEnabled = DisplaySide(True, True, True, True)
+        self._axesValuesEnabled = DisplaySide(True, True, False, False)
 
         # Fonts
         self._fontCache = {}
@@ -1239,7 +1237,7 @@ class PlotCanvas(wx.Panel):
 
     @enableAxes.setter
     def enableAxes(self, value):
-        self._axesEnabled = _set_displayside(value)
+        self._axesEnabled = set_displayside(value)
         self.Redraw()
 
     @property
@@ -1265,7 +1263,7 @@ class PlotCanvas(wx.Panel):
 
     @enableAxesValues.setter
     def enableAxesValues(self, value):
-        self._axesValuesEnabled = _set_displayside(value)
+        self._axesValuesEnabled = set_displayside(value)
         self.Redraw()
 
     @property
@@ -1291,7 +1289,7 @@ class PlotCanvas(wx.Panel):
 
     @enableTicks.setter
     def enableTicks(self, value):
-        self._ticksEnabled = _set_displayside(value)
+        self._ticksEnabled = set_displayside(value)
         self.Redraw()
 
     @property

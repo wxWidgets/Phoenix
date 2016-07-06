@@ -14,6 +14,98 @@ This is a collection of utilities used by the wx.lib.plot package.
 import functools
 from warnings import warn as _warn
 
+
+import numpy as np
+
+
+class DisplaySide(object):
+    """
+    Generic class for storing booleans describing which sides of a box are
+    displayed. Used for fine-tuning the axis, ticks, and values of a graph.
+
+    This class somewhat mimics a collections.namedtuple factory function in
+    that it is an iterable and can have indiviual elements accessible by name.
+    It differs from a namedtuple in a few ways:
+
+    - it's mutable
+    - it's not a factory function but a full-fledged class
+    - it contains type checking, only allowing boolean values
+    - it contains name checking, only allowing valid_names as attributes
+
+    :param bottom: Display the bottom side?
+    :type bottom: bool
+    :param left: Display the left side?
+    :type left: bool
+    :param top: Display the top side?
+    :type top: bool
+    :param right: Display the right side?
+    :type right: bool
+    """
+    # TODO: Do I want to replace with __slots__?
+    #       Not much memory gain because this class is only called a small
+    #       number of times, but it would remove the need for part of
+    #       __setattr__...
+    valid_names = ("bottom", "left", "right", "top")
+
+    def __init__(self, bottom, left, top, right):
+        if not all([isinstance(x, bool) for x in [bottom, left, top, right]]):
+            raise TypeError("All args must be bools")
+        self.bottom = bottom
+        self.left = left
+        self.top = top
+        self.right = right
+
+    def __str__(self):
+        s = "{}(bottom={}, left={}, top={}, right={})"
+        s = s.format(self.__class__.__name__,
+                     self.bottom,
+                     self.left,
+                     self.top,
+                     self.right,
+                     )
+        return s
+
+    def __repr__(self):
+        # for now, just return the str representation
+        return self.__str__()
+
+    def __setattr__(self, name, value):
+        """
+        Override __setattr__ to implement some type checking and prevent
+        other attributes from being created.
+        """
+        if name not in self.valid_names:
+            err_str = "attribute must be one of {}"
+            raise NameError(err_str.format(self.valid_names))
+        if not isinstance(value, bool):
+            raise TypeError("'{}' must be a boolean".format(name))
+        self.__dict__[name] = value
+
+    def __len__(self):
+        return 4
+
+    def __hash__(self):
+        return hash(tuple(self))
+
+    def __getitem__(self, key):
+        return (self.bottom, self.left, self.top, self.right)[key]
+
+    def __setitem__(self, key, value):
+        if key == 0:
+            self.bottom = value
+        elif key == 1:
+            self.left = value
+        elif key == 2:
+            self.top = value
+        elif key == 3:
+            self.right = value
+        else:
+            raise IndexError("list index out of range")
+
+    def __iter__(self):
+        return iter([self.bottom, self.left, self.top, self.right])
+
+
 # TODO: New name: RevertStyle? SavedStyle? Something else?
 class TempStyle(object):
     """
@@ -182,6 +274,61 @@ class PendingDeprecation(object):
         self.__doc__ = self.func.__doc__
 
 
+def scale_and_shift_point(x, y, scale=1, shift=0):
+    """
+    Creates a scaled and shifted 2x1 numpy array of [x, y] values.
+
+    :param float `x`:        The x value of the unscaled, unshifted point
+    :param float `y`:        The y valye of the unscaled, unshifted point
+    :param np.array `scale`: The scale factor to use ``[x_sacle, y_scale]``
+    :param np.array `shift`: The offset to apply ``[x_shift, y_shift]``.
+                             Must be in scaled units
+
+    :returns: a numpy array of 2 elements
+    :rtype: np.array
+
+    .. note::
+       :math:`new = (scale * old) + shift`
+    """
+    point = scale * np.array([x, y]) + shift
+    return point
+
+
+def set_displayside(value):
+    """
+    Wrapper around :class:`~wx.lib.plot._DisplaySide` that allowing for
+    "overloaded" calls.
+
+    If ``value`` is a boolean: all 4 sides are set to ``value``
+
+    If ``value`` is a 2-tuple: the bottom and left sides are set to ``value``
+    and the other sides are set to False.
+
+    If ``value`` is a 4-tuple, then each item is set individually: ``(bottom,
+    left, top, right)``
+
+    :param value: Which sides to display.
+    :type value:   bool, 2-tuple of bool, or 4-tuple of bool
+    :raises: `TypeError` if setting an invalid value.
+    :raises: `ValueError` if the tuple has incorrect length.
+    :rtype: :class:`~wx.lib.plot._DisplaySide`
+    """
+    err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
+
+    # TODO: for 2-tuple, do not change other sides? rather than set to False.
+    if isinstance(value, bool):
+        # turns on or off all axes
+        _value = (value, value, value, value)
+    elif isinstance(value, tuple):
+        if len(value) == 2:
+            _value = (value[0], value[1], False, False)
+        elif len(value) == 4:
+            _value = value
+        else:
+            raise ValueError(err_txt)
+    else:
+        raise TypeError(err_txt)
+    return DisplaySide(*_value)
 
 
 if __name__ == "__main__":

@@ -17,6 +17,7 @@ __all__ = [
     'PolyBars',
     'PolyHistogram',
     'BoxPlot',
+    'PolyBoxPlot',
     'PlotGraphics',
     'PlotCanvas',
     'PlotPrintout',
@@ -25,22 +26,20 @@ __all__ = [
 # Expose items so that the old API can still be used.
 # Old: import wx.lib.plot as wxplot
 # New: from wx.lib import plot as wxplot
-from .plot import (
-    PolyPoints,
-    PolyLine,
-    PolySpline,
-    PolyMarker,
-    PolyBars,
-    PolyHistogram,
-    PolyBoxPlot,
-    PlotGraphics,
-    PlotPrintout,
-)
 from .plotcanvas import PlotCanvas
-from .utils import (
-    TempStyle,
-    PendingDeprecation,
-)
+
+from .polyobjects import PolyPoints
+from .polyobjects import PolyLine
+from .polyobjects import PolySpline
+from .polyobjects import PolyMarker
+from .polyobjects import PolyBars
+from .polyobjects import PolyHistogram
+from .polyobjects import PolyBoxPlot
+from .polyobjects import PlotGraphics
+from .polyobjects import PlotPrintout
+
+from .utils import TempStyle
+from .utils import PendingDeprecation
 
 # For backwards compat.
 BoxPlot = PolyBoxPlot

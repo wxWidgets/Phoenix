@@ -22,7 +22,7 @@ from wx.lib import plot as wxplot
 # Needs NumPy
 try:
     import numpy as np
-except:
+except ImportError:
     msg = """
     This module requires the NumPy module, which could not be
     imported.  It probably is not installed (it's not part of the
