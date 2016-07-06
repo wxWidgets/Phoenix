@@ -3,12 +3,11 @@
 #   E1101: Module X has no Y member
 #   C0330: Wrong continued indentation
 #   C0103: Invalid attribute/variable/method name
-#
 """
 polyobjects.py
 ==============
 
-This contains all of the PolyXXX objects used by wx.lib.plot.
+This contains all of the PolyXXX objects used by :mod:`wx.lib.plot`.
 
 """
 __docformat__ = "restructuredtext en"

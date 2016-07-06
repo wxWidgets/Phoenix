@@ -7,11 +7,13 @@ It is intended to be run as a standalone script via::
   user@host:.../site-packages/wx/lib/plot$ python examples/simple_example.py
 
 """
+__docformat__ = "restructuredtext en"
+
+# Third Party
 import wx
 from wx.lib import plot as wxplot
 
 class PlotExample(wx.Frame):
-
     def __init__(self):
         wx.Frame.__init__(self, None, title="Example of wx.lib.plot")
 

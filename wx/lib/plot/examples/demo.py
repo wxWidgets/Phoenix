@@ -3,12 +3,11 @@
 #   E1101: Module X has no Y member
 #   C0330: Wrong continued indentation
 #   C0103: Invalid attribute/variable/method name
-#
 """
 demo.py
 =======
 
-This is a demo showing some of the capabilities of the ``wx.lib.plot``
+This is a demo showing some of the capabilities of the :mod:`wx.lib.plot`
 package. It is intended to be run as a standalone script via::
 
   user@host:.../site-packages/wx/lib/plot$ python examples/demo.py
@@ -16,6 +15,7 @@ package. It is intended to be run as a standalone script via::
 """
 __docformat__ = "restructuredtext en"
 
+# Third Party
 import wx
 from wx.lib import plot as wxplot
 
@@ -298,8 +298,8 @@ def _draw10Objects():
 
 
 class TestFrame(wx.Frame):
-    def __init__(self, parent, id, title):
-        wx.Frame.__init__(self, parent, id, title,
+    def __init__(self, parent, wxid, title):
+        wx.Frame.__init__(self, parent, wxid, title,
                           wx.DefaultPosition, (800, 600))
 
         # Now Create the menu bar and items
@@ -593,7 +593,7 @@ class TestFrame(wx.Frame):
         # -----------
 
     def OnMouseLeftDown(self, event):
-        s = "Left Mouse Down at Point: (%.4f, %.4f)" % self.client._getXY(
+        s = "Left Mouse Down at Point: (%.4f, %.4f)" % self.client.GetXY(
             event)
         self.SetStatusText(s)
         event.Skip()  # allows plotCanvas OnMouseLeftDown to be called
@@ -604,7 +604,9 @@ class TestFrame(wx.Frame):
             # make up dict with info for the pointLabel
             # I've decided to mark the closest point on the closest curve
             dlst = self.client.GetClosestPoint(
-                self.client._getXY(event), pointScaled=True)
+                self.client.GetXY(event),
+                pointScaled=True,
+            )
             if dlst != []:  # returns [] if none
                 curveNum, legend, pIndex, pointXY, scaledXY, distance = dlst
                 # make up dictionary to pass to my user function (see

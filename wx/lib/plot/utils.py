@@ -3,18 +3,20 @@
 #   E1101: Module X has no Y member
 #   C0330: Wrong continued indentation
 #   C0103: Invalid attribute/variable/method name
-#
 """
 utils.py
 =========
 
-This is a collection of utilities used by the wx.lib.plot package.
+This is a collection of utilities used by the :mod:`wx.lib.plot` package.
 
 """
+__docformat__ = "restructuredtext en"
+
+# Standard Library
 import functools
 from warnings import warn as _warn
 
-
+# Third Party
 import numpy as np
 
 

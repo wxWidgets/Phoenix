@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=E1101, C0330, C0103
+#   E1101: Module X has no Y member
+#   C0330: Wrong continued indentation
+#   C0103: Invalid attribute/variable/method name
 """
 plotcanvas.py
 =============
@@ -6,8 +10,12 @@ plotcanvas.py
 This is the main window that you will want to import into your application.
 
 """
+__docformat__ = "restructuredtext en"
+
+# Standard Library
 import sys
 
+# Third-Party
 import wx
 import numpy as np
 
