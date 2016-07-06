@@ -136,7 +136,7 @@ def configure(conf):
         conf.env.LIB_WXMEDIA += cfg.makeLibName('media')
 
         _copyEnvGroup(conf.env, '_WX', '_WXRIBBON')
-        conf.env.LIB_WXMEDIA += cfg.makeLibName('ribbon')
+        conf.env.LIB_WXRIBBON += cfg.makeLibName('ribbon')
 
         # ** Add code for new modules here (and below for non-MSW)
 
