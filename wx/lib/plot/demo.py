@@ -240,9 +240,9 @@ def _draw8Objects():
     data3 = np.random.gamma(2, 2, 500) * 30 + 100
     data3 = np.array([(2, x) for x in data3])
 
-    boxplot = BoxPlot(data1, legend="Weights")
-    boxplot2 = BoxPlot(data2, legend="Heights")
-    boxplot3 = BoxPlot(data3, legend="GammaDistribution")
+    boxplot = BoxPlot(data1, legend="0.0: Weights")
+    boxplot2 = BoxPlot(data2, legend="1.0: Heights")
+    boxplot3 = BoxPlot(data3, legend="2.0: GammaDistribution")
     return PlotGraphics([boxplot, boxplot2, boxplot3],
                         "Box Plot",
                         "",
