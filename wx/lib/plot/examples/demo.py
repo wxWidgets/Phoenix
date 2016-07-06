@@ -11,7 +11,7 @@ demo.py
 This is a demo showing some of the capabilities of the ``wx.lib.plot``
 package. It is intended to be run as a standalone script via::
 
-  user@host:.../site-packages/wx/lib/plot$ python demo.py
+  user@host:.../site-packages/wx/lib/plot$ python examples/demo.py
 
 """
 __docformat__ = "restructuredtext en"
