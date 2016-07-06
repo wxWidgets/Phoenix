@@ -32,9 +32,9 @@ except ImportError:
     raise ImportError("NumPy not found.\n" + msg)
 
 
-### -------------------------------------------------------------------------
-### Examples and Demo Frame
-### -------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+### Drawing Functions
+# ---------------------------------------------------------------------------
 def _draw1Objects():
     """Sin, Cos, and Points"""
     # 100 points sin function, plotted as green circles
@@ -297,7 +297,21 @@ def _draw10Objects():
     return wxplot.PlotGraphics(bars, "Histogram", "XValue", "Count")
 
 
-class TestFrame(wx.Frame):
+# ---------------------------------------------------------------------------
+### Demo Application
+# ---------------------------------------------------------------------------
+class DemoApp(object):
+    def __init__(self):
+        self.app = wx.App()
+        self.frame = MainFrame(None, -1, "PlotCanvas")
+        self.frame.Show(True)
+        self.app.MainLoop()
+
+
+class MainFrame(wx.Frame):
+    # -----------------------------------------------------------------------
+    ### UI Initialization
+    # -----------------------------------------------------------------------
     def __init__(self, parent, wxid, title):
         wx.Frame.__init__(self, parent, wxid, title,
                           wx.DefaultPosition, (800, 600))
@@ -305,9 +319,30 @@ class TestFrame(wx.Frame):
         # Now Create the menu bar and items
         self.mainmenu = wx.MenuBar()
 
-        # -------------------------------------------------------------------
-        ### "File" Menu Items ###############################################
-        # -------------------------------------------------------------------
+        self._init_file_menu()
+        self._init_plot_menu()
+        self._init_options_menu()
+        self._init_help_menu()
+
+        self.SetMenuBar(self.mainmenu)
+
+        # A status bar to tell people what's happening
+        self.CreateStatusBar(1)
+
+        self.client = wxplot.PlotCanvas(self)
+        # define the function for drawing pointLabels
+#        self.client.SetPointLabelFunc(self.DrawPointLabel)
+        self.client.pointLabelFunc = self.DrawPointLabel
+        # Create mouse event for showing cursor coords in status bar
+        self.client.canvas.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
+        # Show closest point when enabled
+        self.client.canvas.Bind(wx.EVT_MOTION, self.OnMotion)
+
+        self.Show(True)
+
+
+    def _init_file_menu(self):
+        """ Create the "File" menu items. """
         menu = wx.Menu()
         menu.Append(200, 'Page Setup...', 'Setup the printer page')
         self.Bind(wx.EVT_MENU, self.OnFilePageSetup, id=200)
@@ -321,9 +356,8 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnFileExit, id=205)
         self.mainmenu.Append(menu, '&File')
 
-        # -------------------------------------------------------------------
-        ### "Plot" Menu Items ###############################################
-        # -------------------------------------------------------------------
+    def _init_plot_menu(self):
+        """ Create the "Plot" menu items. """
         menu = wx.Menu()
         menu.Append(206, 'Draw1 - sin, cos',
                     'Draw Sin and Cos curves')
@@ -376,10 +410,9 @@ class TestFrame(wx.Frame):
 
         self.mainmenu.Append(menu, '&Plot')
 
-        # -------------------------------------------------------------------
-        ### "Options" Menu Items ############################################
-        # -------------------------------------------------------------------
 
+    def _init_options_menu(self):
+        """ Create the "Options" menu items. """
         menu = wx.Menu()
 
         menu.Append(214, 'Enable &Zoom',
@@ -432,7 +465,6 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableGridAll, id=2153)
 
         menu.Append(215, 'Enable Grid', submenu, 'Turn on Grid')
-#        self.Bind(wx.EVT_MENU, self.OnEnableGrid, id=215)
 
         ### SubMenu for Axes
         submenu = wx.Menu()
@@ -538,59 +570,17 @@ class TestFrame(wx.Frame):
 
         self.plot_options_menu = menu
 
-        # -------------------------------------------------------------------
-        ### "Help" Menu Items ############################################
-        # -------------------------------------------------------------------
+    def _init_help_menu(self):
+        """ Create the "Help" menu items. """
         menu = wx.Menu()
         menu.Append(300, '&About', 'About this thing...')
         self.Bind(wx.EVT_MENU, self.OnHelpAbout, id=300)
         self.mainmenu.Append(menu, '&Help')
 
-        self.SetMenuBar(self.mainmenu)
+    # -----------------------------------------------------------------------
+    ### Event Handling
+    # -----------------------------------------------------------------------
 
-        # A status bar to tell people what's happening
-        self.CreateStatusBar(1)
-
-        self.client = wxplot.PlotCanvas(self)
-        # define the function for drawing pointLabels
-#        self.client.SetPointLabelFunc(self.DrawPointLabel)
-        self.client.pointLabelFunc = self.DrawPointLabel
-        # Create mouse event for showing cursor coords in status bar
-        self.client.canvas.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
-        # Show closest point when enabled
-        self.client.canvas.Bind(wx.EVT_MOTION, self.OnMotion)
-
-        self.Show(True)
-
-    def DrawPointLabel(self, dc, mDataDict):
-        """
-        This is the fuction that defines how the pointLabels are plotted
-
-        :param dc: DC that will be passed
-        :param mDataDict: Dictionary of data that you want to use
-                          for the pointLabel
-
-        As an example I have decided I want a box at the curve point
-        with some text information about the curve plotted below.
-        Any wxDC method can be used.
-
-        """
-        # ----------
-        dc.SetPen(wx.Pen(wx.BLACK))
-        dc.SetBrush(wx.Brush(wx.BLACK, wx.BRUSHSTYLE_SOLID))
-
-        sx, sy = mDataDict["scaledXY"]  # scaled x,y of closest point
-        # 10by10 square centered on point
-        dc.DrawRectangle(sx - 5, sy - 5, 10, 10)
-        px, py = mDataDict["pointXY"]
-        cNum = mDataDict["curveNum"]
-        pntIn = mDataDict["pIndex"]
-        legend = mDataDict["legend"]
-        # make a string to display
-        s = "Crv# %i, '%s', Pt. (%.2f,%.2f), PtInd %i" % (
-            cNum, legend, px, py, pntIn)
-        dc.DrawText(s, sx, sy + 1)
-        # -----------
 
     def OnMouseLeftDown(self, event):
         s = "Left Mouse Down at Point: (%.4f, %.4f)" % self.client.GetXY(
@@ -635,6 +625,10 @@ class TestFrame(wx.Frame):
     def OnFileExit(self, event):
         self.Close()
 
+
+    # -----------------------------------------------------------------------
+    ### PlotDraw Events
+    # -----------------------------------------------------------------------
     def OnPlotDraw1(self, event):
         self.resetDefaults()
         self.client.Draw(_draw1Objects())
@@ -718,13 +712,42 @@ class TestFrame(wx.Frame):
             graphics, xAxis, yAxis = self.client.last_draw
             self.client.Draw(graphics, (1, 3.05), (0, 1))
 
-    def OnEnableZoom(self, event):
-        self.client.enableZoom = event.IsChecked()
-        if self.mainmenu.IsChecked(217):
-            self.mainmenu.Check(217, False)
+    # -----------------------------------------------------------------------
+    ### Other Events
+    # -----------------------------------------------------------------------
+    def OnScrUp(self, event):
+        self.client.ScrollUp(1)
 
-    ### Grid Events ###
+    def OnScrRt(self, event):
+        self.client.ScrollRight(2)
 
+    def OnReset(self, event):
+        self.client.Reset()
+
+    def OnHelpAbout(self, event):
+        from wx.lib.dialogs import ScrolledMessageDialog
+        about = ScrolledMessageDialog(self, __doc__, "About...")
+        about.ShowModal()
+
+    def OnBackgroundGray(self, event):
+        self.client.SetBackgroundColour("#CCCCCC")
+        self.client.Redraw()
+
+    def OnBackgroundWhite(self, event):
+        self.client.SetBackgroundColour("white")
+        self.client.Redraw()
+
+    def OnForegroundRed(self, event):
+        self.client.SetForegroundColour("red")
+        self.client.Redraw()
+
+    def OnForegroundBlack(self, event):
+        self.client.SetForegroundColour("black")
+        self.client.Redraw()
+
+    # -----------------------------------------------------------------------
+    ### Enable Grid Events
+    # -----------------------------------------------------------------------
     def _checkOtherGridMenuItems(self):
         """ check or uncheck the submenu items """
         self.gridSubMenu.Check(2151, self.client.enableGrid[0])
@@ -747,25 +770,9 @@ class TestFrame(wx.Frame):
         self.gridSubMenu.Check(2151, event.IsChecked())
         self.gridSubMenu.Check(2152, event.IsChecked())
 
-    def OnEnableDrag(self, event):
-        self.client.enableDrag = event.IsChecked()
-        if self.mainmenu.IsChecked(214):
-            self.mainmenu.Check(214, False)
-
-    def OnEnableLegend(self, event):
-        self.client.enableLegend = event.IsChecked()
-
-    def OnEnablePointLabel(self, event):
-        self.client.enablePointLabel = event.IsChecked()
-
-    def OnEnableAntiAliasing(self, event):
-        self.client.enableAntiAliasing = event.IsChecked()
-
-    def OnEnableHiRes(self, event):
-        self.client.enableHiRes = event.IsChecked()
-
-    ### Axes Events ###
-
+    # -----------------------------------------------------------------------
+    ### Enable Axes Events
+    # -----------------------------------------------------------------------
     def _checkOtherAxesMenuItems(self):
         """ check or uncheck the submenu items """
         self.axesSubMenu.Check(2401, self.client.enableAxes[0])
@@ -806,8 +813,9 @@ class TestFrame(wx.Frame):
         self.client.enableAxes = (checked, checked, checked, checked)
         self._checkOtherAxesMenuItems()
 
-    ### Ticks Events ###
-
+    # -----------------------------------------------------------------------
+    ### Enable Ticks Events
+    # -----------------------------------------------------------------------
     def _checkOtherTicksMenuItems(self):
         """ check or uncheck the submenu items """
         self.ticksSubMenu.Check(2501, self.client.enableTicks[0])
@@ -841,8 +849,9 @@ class TestFrame(wx.Frame):
                                    old[2], event.IsChecked())
         self._checkOtherTicksMenuItems()
 
-    ### AxesValues Events ###
-
+    # -----------------------------------------------------------------------
+    ### Enable AxesValues Events
+    # -----------------------------------------------------------------------
     def OnEnableAxesValuesBottom(self, event):
         old = self.client.enableAxesValues
         self.client.enableAxesValues = (event.IsChecked(), old[1],
@@ -863,7 +872,30 @@ class TestFrame(wx.Frame):
         self.client.enableAxesValues = (old[0], old[1],
                                         old[2], event.IsChecked())
 
-    ### Other Events ###
+    # -----------------------------------------------------------------------
+    ### Other Enable Events
+    # -----------------------------------------------------------------------
+    def OnEnableZoom(self, event):
+        self.client.enableZoom = event.IsChecked()
+        if self.mainmenu.IsChecked(217):
+            self.mainmenu.Check(217, False)
+
+    def OnEnableDrag(self, event):
+        self.client.enableDrag = event.IsChecked()
+        if self.mainmenu.IsChecked(214):
+            self.mainmenu.Check(214, False)
+
+    def OnEnableLegend(self, event):
+        self.client.enableLegend = event.IsChecked()
+
+    def OnEnablePointLabel(self, event):
+        self.client.enablePointLabel = event.IsChecked()
+
+    def OnEnableAntiAliasing(self, event):
+        self.client.enableAntiAliasing = event.IsChecked()
+
+    def OnEnableHiRes(self, event):
+        self.client.enableHiRes = event.IsChecked()
 
     def OnEnablePlotTitle(self, event):
         self.client.enablePlotTitle = event.IsChecked()
@@ -876,22 +908,6 @@ class TestFrame(wx.Frame):
 
     def OnEnableDiagonals(self, event):
         self.client.enableDiagonals = event.IsChecked()
-
-    def OnBackgroundGray(self, event):
-        self.client.SetBackgroundColour("#CCCCCC")
-        self.client.Redraw()
-
-    def OnBackgroundWhite(self, event):
-        self.client.SetBackgroundColour("white")
-        self.client.Redraw()
-
-    def OnForegroundRed(self, event):
-        self.client.SetForegroundColour("red")
-        self.client.Redraw()
-
-    def OnForegroundBlack(self, event):
-        self.client.SetForegroundColour("black")
-        self.client.Redraw()
 
     def OnLogX(self, event):
         self.client.logScale = (event.IsChecked(), self.client.logScale[1])
@@ -909,20 +925,6 @@ class TestFrame(wx.Frame):
         self.client.absScale = (self.client.absScale[0], event.IsChecked())
         self.client.Redraw()
 
-    def OnScrUp(self, event):
-        self.client.ScrollUp(1)
-
-    def OnScrRt(self, event):
-        self.client.ScrollRight(2)
-
-    def OnReset(self, event):
-        self.client.Reset()
-
-    def OnHelpAbout(self, event):
-        from wx.lib.dialogs import ScrolledMessageDialog
-        about = ScrolledMessageDialog(self, __doc__, "About...")
-        about.ShowModal()
-
     def resetDefaults(self):
         """Just to reset the fonts back to the PlotCanvas defaults"""
         self.client.SetFont(wx.Font(10,
@@ -936,21 +938,41 @@ class TestFrame(wx.Frame):
         self.client.xSpec = 'auto'
         self.client.ySpec = 'auto'
 
+    def DrawPointLabel(self, dc, mDataDict):
+        """
+        This is the fuction that defines how the pointLabels are plotted
 
-def _test():
+        :param dc: DC that will be passed
+        :param mDataDict: Dictionary of data that you want to use
+                          for the pointLabel
 
-    class MyApp(wx.App):
+        As an example I have decided I want a box at the curve point
+        with some text information about the curve plotted below.
+        Any wxDC method can be used.
 
-        def OnInit(self):
-            wx.InitAllImageHandlers()
-            frame = TestFrame(None, -1, "PlotCanvas")
-            # frame.Show(True)
-            self.SetTopWindow(frame)
-            return True
+        """
+        dc.SetPen(wx.Pen(wx.BLACK))
+        dc.SetBrush(wx.Brush(wx.BLACK, wx.BRUSHSTYLE_SOLID))
 
-    app = MyApp(0)
-    app.MainLoop()
+        sx, sy = mDataDict["scaledXY"]  # scaled x,y of closest point
+        # 10by10 square centered on point
+        dc.DrawRectangle(sx - 5, sy - 5, 10, 10)
+        px, py = mDataDict["pointXY"]
+        cNum = mDataDict["curveNum"]
+        pntIn = mDataDict["pIndex"]
+        legend = mDataDict["legend"]
+        # make a string to display
+        s = "Crv# %i, '%s', Pt. (%.2f,%.2f), PtInd %i" % (
+            cNum, legend, px, py, pntIn)
+        dc.DrawText(s, sx, sy + 1)
+
+
+def run_demo():
+    """
+    Run the :mod:`wx.lib.plot` demo application.
+    """
+    DemoApp()
 
 
 if __name__ == '__main__':
-    _test()
+    run_demo()
