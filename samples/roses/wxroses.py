@@ -453,7 +453,7 @@ class MyFrame(wx.Frame, clroses.rose):
     # Command buttons change their names based on the whether we're in auto
     # or manual mode.
     def AppCmdLabels(self, labels):
-        for name, label in map(None, ('Go', 'Redraw', 'Backward', 'Forward'), labels):
+        for name, label in zip(('Go', 'Redraw', 'Backward', 'Forward'), labels):
             ctrl_buttons[name].SetLabel(label)
             ctrl_buttons[name].SetForegroundColour(self.labelColours[label])
 
