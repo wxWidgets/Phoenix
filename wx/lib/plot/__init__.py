@@ -24,7 +24,7 @@ __all__ = [
 
 # Expose items so that the old API can still be used.
 # Old: import wx.lib.plot as wxplot
-# New: from wx.lib.plot import plot as wxplot
+# New: from wx.lib import plot as wxplot
 from .plot import (
     PolyPoints,
     PolyLine,
@@ -34,6 +34,10 @@ from .plot import (
     PolyHistogram,
     BoxPlot,
     PlotGraphics,
-    PlotCanvas,
     PlotPrintout,
+)
+from .plotcanvas import PlotCanvas
+from .utils import (
+    TempStyle,
+    PendingDeprecation,
 )

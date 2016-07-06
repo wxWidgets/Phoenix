@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 A simple example showing how to use lib.plot from wxPython.
+
+It is intended to be run as a standalone script via::
+
+  user@host:.../site-packages/wx/lib/plot$ python simple_example.py
+
 """
 import wx
-import plot as wxplot
+from wx.lib import plot as wxplot
 
 class PlotExample(wx.Frame):
 

@@ -8,27 +8,16 @@
 demo.py
 =======
 
-This is a demo showing off some of the cababilities of the ``wx.lib.plot``
-package. It is intended to be run as a standalone module via::
+This is a demo showing some of the capabilities of the ``wx.lib.plot``
+package. It is intended to be run as a standalone script via::
 
-  python wx\lib\plot\demo.py
+  user@host:.../site-packages/wx/lib/plot$ python demo.py
 
 """
 __docformat__ = "restructuredtext en"
 
 import wx
-from plot import (
-    PolyPoints,
-    PolyLine,
-    PolySpline,
-    PolyMarker,
-    PolyBars,
-    PolyHistogram,
-    BoxPlot,
-    PlotGraphics,
-    PlotCanvas,
-    PlotPrintout,
-)
+from wx.lib import plot as wxplot
 
 # Needs NumPy
 try:
@@ -52,7 +41,7 @@ def _draw1Objects():
     data1 = 2. * np.pi * np.arange(-200, 200) / 200.
     data1.shape = (200, 2)
     data1[:, 1] = np.sin(data1[:, 0])
-    markers1 = PolyMarker(data1,
+    markers1 = wxplot.PolyMarker(data1,
                           legend='Green Markers',
                           colour='green',
                           marker='circle',
@@ -63,8 +52,8 @@ def _draw1Objects():
     data1 = 2. * np.pi * np.arange(-100, 100) / 100.
     data1.shape = (100, 2)
     data1[:, 1] = np.cos(data1[:, 0])
-    lines = PolySpline(data1, legend='Red Line', colour='red')
-    markers3 = PolyMarker(data1,
+    lines = wxplot.PolySpline(data1, legend='Red Line', colour='red')
+    markers3 = wxplot.PolyMarker(data1,
                           legend='Red Dot',
                           colour='red',
                           marker='circle',
@@ -74,14 +63,14 @@ def _draw1Objects():
     # A few more points...
     pi = np.pi
     pts = [(0., 0.), (pi / 4., 1.), (pi / 2, 0.), (3. * pi / 4., -1)]
-    markers2 = PolyMarker(pts,
+    markers2 = wxplot.PolyMarker(pts,
                           legend='Cross Legend',
                           colour='blue',
                           marker='cross',
                           )
-    line2 = PolyLine(pts, drawstyle='steps-post')
+    line2 = wxplot.PolyLine(pts, drawstyle='steps-post')
 
-    return PlotGraphics([markers1, lines, markers3, markers2, line2],
+    return wxplot.PlotGraphics([markers1, lines, markers3, markers2, line2],
                         "Graph Title",
                         "X Axis",
                         "Y Axis")
@@ -93,7 +82,7 @@ def _draw2Objects():
     data1 = 2. * np.pi * np.arange(200) / 200.
     data1.shape = (100, 2)
     data1[:, 1] = np.sin(data1[:, 0])
-    line1 = PolySpline(data1,
+    line1 = wxplot.PolySpline(data1,
                        legend='Green Line',
                        colour='green',
                        width=6,
@@ -103,7 +92,7 @@ def _draw2Objects():
     data1 = 2. * np.pi * np.arange(50) / 50.
     data1.shape = (25, 2)
     data1[:, 1] = np.cos(data1[:, 0])
-    line2 = PolyLine(data1,
+    line2 = wxplot.PolyLine(data1,
                      legend='Red Line',
                      colour='red',
                      width=2,
@@ -112,7 +101,7 @@ def _draw2Objects():
                      )
 
     # data points for the 25pt cos function.
-    pts2 = PolyMarker(data1,
+    pts2 = wxplot.PolyMarker(data1,
                       legend='Red Points',
                       colour='red',
                       size=1.5,
@@ -121,7 +110,7 @@ def _draw2Objects():
     # A few more points...
     pi = np.pi
     pts = [(0., 0.), (pi / 4., 1.), (pi / 2, 0.), (3. * pi / 4., -1)]
-    markers1 = PolyMarker(pts,
+    markers1 = wxplot.PolyMarker(pts,
                           legend='Cross Hatch Square',
                           colour='blue',
                           width=3,
@@ -130,13 +119,13 @@ def _draw2Objects():
                           fillstyle=wx.CROSSDIAG_HATCH,
                           marker='square',
                           )
-    marker_line = PolyLine(pts,
+    marker_line = wxplot.PolyLine(pts,
                            legend='Cross Hatch Square',
                            colour='blue',
                            width=3,
                            )
 
-    return PlotGraphics([markers1, line1, line2, pts2, marker_line],
+    return wxplot.PlotGraphics([markers1, line1, line2, pts2, marker_line],
                         "Big Markers with Different Line Styles")
 
 
@@ -146,12 +135,12 @@ def _draw3Objects():
                   'cross', 'plus', 'circle']
     m = []
     for i in range(len(markerList)):
-        m.append(PolyMarker([(2 * i + .5, i + .5)],
+        m.append(wxplot.PolyMarker([(2 * i + .5, i + .5)],
                             legend=markerList[i],
                             colour='blue',
                             marker=markerList[i])
                  )
-    return PlotGraphics(m, "Selection of Markers", "Minimal Axis", "No Axis")
+    return wxplot.PlotGraphics(m, "Selection of Markers", "Minimal Axis", "No Axis")
 
 
 def _draw4Objects():
@@ -159,7 +148,7 @@ def _draw4Objects():
     # Points
     data1 = np.random.normal(loc=7.5e5, scale=70000, size=50000)
     data1.shape = (25000, 2)
-    markers2 = PolyMarker(data1, legend='Dots', colour='blue',
+    markers2 = wxplot.PolyMarker(data1, legend='Dots', colour='blue',
                           marker='square',
                           size=1,
                           )
@@ -169,14 +158,14 @@ def _draw4Objects():
     data1.shape = (25000, 2)
     line1 = PolyLine(data1, legend='Wide Line', colour='green', width=4)
 
-    return PlotGraphics([markers2, line1], "25,000 Points", "Value X", "")
+    return wxplot.PlotGraphics([markers2, line1], "25,000 Points", "Value X", "")
 
 
 def _draw5Objects():
     """Empty graph with axes but no points"""
     points = []
-    line1 = PolyLine(points, legend='Wide Line', colour='green', width=5)
-    return PlotGraphics([line1],
+    line1 = wxplot.PolyLine(points, legend='Wide Line', colour='green', width=5)
+    return wxplot.PlotGraphics([line1],
                         "Empty Plot With Just Axes",
                         "Value X",
                         "Value Y")
@@ -185,20 +174,20 @@ def _draw5Objects():
 def _draw6Objects():
     """Faking a Bar graph"""
     points1 = [(1, 0), (1, 10)]
-    line1 = PolyLine(points1, colour='green', legend='Feb.', width=10)
+    line1 = wxplot.PolyLine(points1, colour='green', legend='Feb.', width=10)
     points1g = [(2, 0), (2, 4)]
-    line1g = PolyLine(points1g, colour='red', legend='Mar.', width=10)
+    line1g = wxplot.PolyLine(points1g, colour='red', legend='Mar.', width=10)
     points1b = [(3, 0), (3, 6)]
-    line1b = PolyLine(points1b, colour='blue', legend='Apr.', width=10)
+    line1b = wxplot.PolyLine(points1b, colour='blue', legend='Apr.', width=10)
 
     points2 = [(4, 0), (4, 12)]
-    line2 = PolyLine(points2, colour='Yellow', legend='May', width=10)
+    line2 = wxplot.PolyLine(points2, colour='Yellow', legend='May', width=10)
     points2g = [(5, 0), (5, 8)]
-    line2g = PolyLine(points2g, colour='orange', legend='June', width=10)
+    line2g = wxplot.PolyLine(points2g, colour='orange', legend='June', width=10)
     points2b = [(6, 0), (6, 4)]
-    line2b = PolyLine(points2b, colour='brown', legend='July', width=10)
+    line2b = wxplot.PolyLine(points2b, colour='brown', legend='July', width=10)
 
-    return PlotGraphics([line1, line1g, line1b, line2, line2g, line2b],
+    return wxplot.PlotGraphics([line1, line1g, line1b, line2, line2g, line2b],
                         "Bar Graph - (Turn on Grid, Legend)",
                         "Months",
                         "Number of Students")
@@ -211,9 +200,9 @@ def _draw7Objects():
     y2 = 2.2 * x ** 3
     points1 = np.transpose([x, y1])
     points2 = np.transpose([x, y2])
-    line1 = PolyLine(points1, legend='quadratic', colour='blue', width=1)
-    line2 = PolyLine(points2, legend='cubic', colour='red', width=1)
-    return PlotGraphics([line1, line2],
+    line1 = wxplot.PolyLine(points1, legend='quadratic', colour='blue', width=1)
+    line2 = wxplot.PolyLine(points2, legend='cubic', colour='red', width=1)
+    return wxplot.PlotGraphics([line1, line2],
                         "double log plot",
                         "Value X",
                         "Value Y")
@@ -240,9 +229,9 @@ def _draw8Objects():
     data3 = np.random.gamma(2, 2, 500) * 30 + 100
     data3 = np.array([(2, x) for x in data3])
 
-    boxplot = BoxPlot(data1, legend="0.0: Weights")
-    boxplot2 = BoxPlot(data2, legend="1.0: Heights")
-    boxplot3 = BoxPlot(data3, legend="2.0: GammaDistribution")
+    boxplot = wxplot.BoxPlot(data1, legend="0.0: Weights")
+    boxplot2 = wxplot.BoxPlot(data2, legend="1.0: Heights")
+    boxplot3 = wxplot.BoxPlot(data3, legend="2.0: GammaDistribution")
     return PlotGraphics([boxplot, boxplot2, boxplot3],
                         "Box Plot",
                         "",
@@ -259,10 +248,10 @@ def _draw9Objects():
     data = 2.25 * np.random.randn(50) + 3
     heights, bins = np.histogram(data, bins=10)
 
-    hist_fixed_binsize = PolyHistogram(heights, bins)
+    hist_fixed_binsize = wxplot.PolyHistogram(heights, bins)
 
     # Bins can also be arbitrary widths:
-    hist_variable_binsize = PolyHistogram(
+    hist_variable_binsize = wxplot.PolyHistogram(
         [2, 3, 4, 6, 3],
         [18, 19, 22, 25, 26, 27],
         fillcolour=wx.BLUE,
@@ -270,7 +259,7 @@ def _draw9Objects():
         edgecolour=wx.RED,
     )
 
-    return PlotGraphics(
+    return wxplot.PlotGraphics(
         [hist_fixed_binsize, hist_variable_binsize],
         "Histogram with fixed binsize (left) and variable binsize (right)",
         "Value",
@@ -285,9 +274,9 @@ def _draw10Objects():
     bar_height = np.array([1, 5, 8, 16, 12, 15, 18, 23, 4, 7, 9, 6])
     bar_location = np.array([0, 2, 4, 6, 8, 10, 11, 12, 16, 20, 30])
     data = list(zip(bar_location, bar_height))
-    bars = [PolyBars(data)]
+    bars = [wxplot.PolyBars(data)]
 
-    return PlotGraphics(bars, "Histogram", "XValue", "Count")
+    return wxplot.PlotGraphics(bars, "Histogram", "XValue", "Count")
 
 
 class TestFrame(wx.Frame):
@@ -544,7 +533,7 @@ class TestFrame(wx.Frame):
         # A status bar to tell people what's happening
         self.CreateStatusBar(1)
 
-        self.client = PlotCanvas(self)
+        self.client = wxplot.PlotCanvas(self)
         # define the function for drawing pointLabels
 #        self.client.SetPointLabelFunc(self.DrawPointLabel)
         self.client.pointLabelFunc = self.DrawPointLabel
