@@ -107,7 +107,7 @@ class rose:
         if stop >= self.endpt:
             stop = self.endpt
             keep_running = False
-        for i in range (self.nextpt, stop + 1):
+        for i in range (self.nextpt, int(stop + 1)):
             theta = (self.style * i) % self.nvec
             r = self.cos_table[(self.petals * theta) % self.nvec]
             line.append((r * self.cos_table[theta], r * self.sin_table[theta]))
@@ -159,7 +159,7 @@ class rose:
 
         new_state = self.INT_DRAW
         self.takesvec = self.nvec / self.gcd(self.nvec, self.style)
-        if not self.takesvec & 1 and self.petals & 1:
+        if not int(self.takesvec) & 1 and int(self.petals) & 1:
             self.takesvec /= 2
         if self.cmd_state == self.CMD_GO:
             if self.minvec > self.takesvec or self.maxvec < self.takesvec:
