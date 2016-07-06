@@ -147,11 +147,7 @@ Other Dev Stuff
 
   * Add _aui module ??  (or go with only agw aui?)
 
-  * Add _ribbon module
-
   * Add _propgrid (in progress)
-
-  * Add _media module
 
   * Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py) to StyledTextCtrl
 
