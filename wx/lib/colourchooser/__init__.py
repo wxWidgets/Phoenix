@@ -12,6 +12,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 """
 
+from __future__ import absolute_import
+
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o 2.5 compatability update.
@@ -22,7 +24,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # o wxPyColourChooser -> PyColourChooser
 #
 
-from pycolourchooser import *
+from .pycolourchooser import *
 
 # For the American in you
 PyColorChooser = PyColourChooser
