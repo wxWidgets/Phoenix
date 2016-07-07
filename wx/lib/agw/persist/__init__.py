@@ -165,7 +165,7 @@ TODOs
   to `PersistenceManager` as :class:`grid.Grid` sets up arrays to store individual row and column
   sizes when non-default sizes are used. The memory requirements for this could become prohibitive
   if the grid is very large);
-* Find a way to properly save and restore dialog data (:class:`wx.ColourDialog`, :class:`FontDialog` etc...);
+* Find a way to properly save and restore dialog data (:class:`wx.ColourDialog`, :class:`wx.FontDialog` etc...);
 * Add handlers for the remaining widgets not yet wrapped (mostly in :mod:`lib`).
 
 

@@ -198,7 +198,7 @@ class PyInfoFrame(wx.Frame):
         """
         Sets :class:`PyInfoFrame` shape using the region created from the bitmap.
 
-        :param `event`: a :class:`WindowCreateEvent` event (GTK only, as GTK supports setting
+        :param `event`: a :class:`wx.WindowCreateEvent` event (GTK only, as GTK supports setting
          the window shape only during window creation).
         """
 

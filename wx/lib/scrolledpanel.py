@@ -97,14 +97,14 @@ class ScrolledPanel(wx.ScrolledWindow):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the underlying :class:`wx.ScrolledWindow` style;
         :param string `name`: the scrolled panel name.
         """
@@ -177,7 +177,7 @@ class ScrolledPanel(wx.ScrolledWindow):
         """
         Scroll the panel so that the specified child window is in view.
 
-        :param Window `child`: any :class:`Window` - derived control.
+        :param wx.Window `child`: any :class:`wx.Window` - derived control.
         
         .. note:: This method looks redundant if `evt.Skip()` is
            called as well - the base :class:`ScrolledWindow` widget now seems

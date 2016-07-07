@@ -40,8 +40,8 @@ def BlendColour(fg, bg, alpha):
     Blends the two colour component `fg` and `bg` into one colour component, adding
     an optional alpha channel.
 
-    :param Colour `fg`: the first colour component;
-    :param Colour `bg`: the second colour component;
+    :param wx.Colour `fg`: the first colour component;
+    :param wx.Colour `bg`: the second colour component;
     :param integer `alpha`: an optional transparency value.
     """
     
@@ -59,7 +59,7 @@ def StepColour(c, ialpha):
     """
     Darken/lighten the input colour `c`.
 
-    :param Colour `c`: a colour to darken/lighten;
+    :param wx.Colour `c`: a colour to darken/lighten;
     :param integer `ialpha`: a transparency value.
     """
     
@@ -98,7 +98,7 @@ def LightContrastColour(c):
     """
     Creates a new, lighter colour based on the input colour `c`.
 
-    :param Colour `c`: the input colour to analyze.
+    :param wx.Colour `c`: the input colour to analyze.
     """
 
     amount = 120
@@ -116,7 +116,7 @@ def ChopText(dc, text, max_size):
     Chops the input `text` if its size does not fit in `max_size`, by cutting the
     text and adding ellipsis at the end.
 
-    :param `dc`: a :class:`DC` device context;
+    :param `dc`: a :class:`wx.DC` device context;
     :param string `text`: the text to chop;
     :param integer `max_size`: the maximum size in which the text should fit.
     """
@@ -151,7 +151,7 @@ def BitmapFromBits(bits, w, h, colour):
     :param string `bits`: the raw bits of the bitmap;
     :param integer `w`: the bitmap width;
     :param integer `h`: the bitmap height;
-    :param Colour `colour`: the colour which will replace all white pixels in the
+    :param wx.Colour `colour`: the colour which will replace all white pixels in the
      raw bitmap.
     """
 
@@ -166,7 +166,7 @@ def IndentPressedBitmap(rect, button_state):
     """
     Indents the input rectangle `rect` based on the value of `button_state`.
 
-    :param Rect `rect`: the button bitmap rectangle;
+    :param wx.Rect `rect`: the button bitmap rectangle;
     :param integer `button_state`: the button state.
     """
 
@@ -211,7 +211,7 @@ def MakeDisabledBitmap(bitmap):
     """
     Convert the given image (in place) to a grayed-out version, appropriate for a 'disabled' appearance.
 
-    :param Bitmap `bitmap`: the bitmap to gray-out.
+    :param wx.Bitmap `bitmap`: the bitmap to gray-out.
     """
 
     return bitmap.ConvertToDisabled()
@@ -233,7 +233,7 @@ def LightColour(colour, percent):
     """
     Brighten input `colour` by `percent`.
 
-    :param Colour `colour`: the colour to be brightened;
+    :param wx.Colour `colour`: the colour to be brightened;
     :param integer `percent`: brightening percentage.
     """
     
@@ -276,8 +276,8 @@ def DrawMACCloseButton(colour, backColour=None):
     """
     Draws the wxMAC tab close button using :class:`GraphicsContext`.
 
-    :param Colour `colour`: the colour to use to draw the circle;
-    :param Colour `backColour`: the optional background colour for the circle.
+    :param wx.Colour `colour`: the colour to use to draw the circle;
+    :param wx.Colour `backColour`: the optional background colour for the circle.
     """
 
     bmp = wx.Bitmap.FromRGBA(16, 16)
@@ -315,9 +315,9 @@ def DarkenBitmap(bmp, caption_colour, new_colour):
     """
     Darkens the input bitmap on wxMAC using the input colour.
     
-    :param Bitmap `bmp`: the bitmap to be manipulated;
-    :param Colour `caption_colour`: the colour of the pane caption;
-    :param Colour `new_colour`: the colour used to darken the bitmap.
+    :param wx.Bitmap `bmp`: the bitmap to be manipulated;
+    :param wx.Colour `caption_colour`: the colour of the pane caption;
+    :param wx.Colour `new_colour`: the colour used to darken the bitmap.
     """
 
     image = bmp.ConvertToImage()
@@ -332,10 +332,10 @@ def DrawGradientRectangle(dc, rect, start_colour, end_colour, direction, offset=
     """
     Draws a gradient-shaded rectangle.
 
-    :param `dc`: a :class:`DC` device context;
-    :param Rect `rect`: the rectangle in which to draw the gradient;
-    :param Colour `start_colour`: the first colour of the gradient;
-    :param Colour `end_colour`: the second colour of the gradient;
+    :param `dc`: a :class:`wx.DC` device context;
+    :param wx.Rect `rect`: the rectangle in which to draw the gradient;
+    :param wx.Colour `start_colour`: the first colour of the gradient;
+    :param wx.Colour `end_colour`: the second colour of the gradient;
     :param integer `direction`: the gradient direction (horizontal or vertical).
     """
     
@@ -350,7 +350,7 @@ def FindFocusDescendant(ancestor):
     Find a window with the focus, that is also a descendant of the given window.
     This is used to determine the window to initially send commands to.
 
-    :param Window `ancestor`: the window to check for ancestry.    
+    :param wx.Window `ancestor`: the window to check for ancestry.
     """
 
     # Process events starting with the window with the focus, if any.
@@ -521,7 +521,7 @@ def TakeScreenShot(rect):
     """
     Takes a screenshot of the screen at given position and size (`rect`).
 
-    :param Rect `rect`: the screen rectangle for which we want to take a screenshot.
+    :param wx.Rect `rect`: the screen rectangle for which we want to take a screenshot.
     """
 
     # Create a DC for the whole screen area
@@ -561,7 +561,7 @@ def RescaleScreenShot(bmp, thumbnail_size=200):
     """
     Rescales a bitmap to be `thumbnail_size` pixels wide (or tall) at maximum.
 
-    :param Bitmap `bmp`: the bitmap to rescale;
+    :param wx.Bitmap `bmp`: the bitmap to rescale;
     :param integer `thumbnail_size`: the maximum size of every page thumbnail.
     """
 
@@ -611,8 +611,8 @@ def GetSlidingPoints(rect, size, direction):
     """
     Returns the point at which the sliding in and out of a minimized pane begins.
 
-    :param Rect `rect`: the :class:`~lib.agw.aui.auibar.AuiToolBar` tool screen rectangle;
-    :param Size `size`: the pane window size;
+    :param wx.Rect `rect`: the :class:`~lib.agw.aui.auibar.AuiToolBar` tool screen rectangle;
+    :param wx.Size `size`: the pane window size;
     :param integer `direction`: the pane docking direction.
     """
 

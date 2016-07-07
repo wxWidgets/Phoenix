@@ -151,13 +151,13 @@ class ExpandoTextCtrl(wx.TextCtrl):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param integer `style`: the underlying :class:`Control` style;
-        :param Validator `validator`: the window validator;
+        :param integer `style`: the underlying :class:`wx.Control` style;
+        :param wx.Validator `validator`: the window validator;
         :param string `name`: the widget name.
 
-        :type parent: :class:`Window`
-        :type pos: tuple or :class:`Point`
-        :type size: tuple or :class:`Size`
+        :type parent: :class:`wx.Window`
+        :type pos: tuple or :class:`wx.Point`
+        :type size: tuple or :class:`wx.Size`
         """
 
         # find the default height of a single line control
@@ -209,7 +209,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
         """
         Sets the font for the :class:`ExpandoTextCtrl`.
 
-        :param Font font: font to associate with the :class:`ExpandoTextCtrl`, pass
+        :param wx.Font font: font to associate with the :class:`ExpandoTextCtrl`, pass
          ``NullFont`` to reset to the default font.
 
         :rtype: bool
@@ -280,7 +280,7 @@ class ExpandoTextCtrl(wx.TextCtrl):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ExpandoTextCtrl`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         # The number of lines needed can change when the ctrl is resized too.

@@ -503,7 +503,7 @@ class CalDraw:
         """
         Draw the week days.
 
-        :param `DC`: the :class:`DC` to use.
+        :param `DC`: the :class:`wx.DC` to use.
 
         """
         # increase by 1 to include all gridlines

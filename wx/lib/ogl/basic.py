@@ -787,7 +787,7 @@ class Shape(ShapeEvtHandler):
         """
         Set the font for the specified text region.
         
-        :param `the_font`: an instance of :class:`Font` ???
+        :param `the_font`: an instance of :class:`wx.Font` ???
         :param `regionId`: the region identifier
         
         """
@@ -2725,7 +2725,7 @@ class Shape(ShapeEvtHandler):
             
 class RectangleShape(Shape):
     """
-    The :class:`RectangleShape` class has rounded or square corners.
+    The :class:`wx.RectangleShape` class has rounded or square corners.
     """
     def __init__(self, w = 0.0, h = 0.0):
         """
@@ -2864,7 +2864,7 @@ class PolygonShape(Shape):
 
     def Create(self, the_points = None):
         """
-        Takes a list of :class:`Points` or tuples; each point is an offset
+        Takes a list of :class:`wx.Points` or tuples; each point is an offset
         from the centre.
         """
         self.ClearPoints()
@@ -3550,7 +3550,7 @@ class CircleShape(EllipseShape):
 
 class TextShape(RectangleShape):
     """
-    The :class:`TextShape` class like :class:`RectangleShape` but only the
+    The :class:`TextShape` class like :class:`wx.RectangleShape` but only the
     text is displayed.
     """
     def __init__(self, width, height):
@@ -3632,7 +3632,7 @@ class ShapeRegion(object):
         """
         Set the font.
         
-        :param `f`: an instance of :class:`Font`
+        :param `f`: an instance of :class:`wx.Font`
         """
         self._font = f
 
@@ -3829,7 +3829,7 @@ class ShapeRegion(object):
 
 
 class ControlPoint(RectangleShape):
-    """The :class:`ControlPoint` class."""
+    """The :class:`wx.ControlPoint` class."""
     def __init__(self, theCanvas, object, size, the_xoffset, the_yoffset, the_type):
         """
         Default class constructor

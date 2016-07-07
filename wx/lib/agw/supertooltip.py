@@ -460,7 +460,7 @@ class ToolTipWindowBase(object):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`SuperToolTip`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Refresh()
@@ -1274,7 +1274,7 @@ class SuperToolTip(object):
         """
         Sets the font for the main body message.
 
-        :param `font`: the font to use for the main body message, a valid :class:`Font`
+        :param `font`: the font to use for the main body message, a valid :class:`wx.Font`
          object.
         """
 
@@ -1287,7 +1287,7 @@ class SuperToolTip(object):
         """
         Sets the font for the header text.
 
-        :param `font`: the font to use for the header text, a valid :class:`Font`
+        :param `font`: the font to use for the header text, a valid :class:`wx.Font`
          object.
         """
 
@@ -1300,7 +1300,7 @@ class SuperToolTip(object):
         """
         Sets the font for the footer text.
 
-        :param `font`: the font to use for the footer text, a valid :class:`Font`
+        :param `font`: the font to use for the footer text, a valid :class:`wx.Font`
          object.
         """
 
@@ -1313,7 +1313,7 @@ class SuperToolTip(object):
         """
         Sets the font for the hyperlink text.
 
-        :param `font`: the font to use for the hyperlink text, a valid :class:`Font`
+        :param `font`: the font to use for the hyperlink text, a valid :class:`wx.Font`
          object.
         """
 

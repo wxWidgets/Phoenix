@@ -161,18 +161,18 @@ class AquaButton(wx.Control):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param Bitmap `bitmap`: the button bitmap (if any);
+        :param wx.Bitmap `bitmap`: the button bitmap (if any);
         :param string `label`: the button text label;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the button style (unused);
-        :param Validator `validator`: the validator associated to the button;
+        :param wx.Validator `validator`: the validator associated to the button;
         :param string `name`: the button name.
         """
 
@@ -380,7 +380,7 @@ class AquaButton(wx.Control):
         Returns a rounded :class:`GraphicsPath` rectangle.
 
         :param `gc`: an instance of :class:`GraphicsContext`;
-        :param Rect `rc`: a client rectangle;
+        :param wx.Rect `rc`: a client rectangle;
         :param float `r`: the radius of the rounded part of the rectangle.
 
         :return: A rounded rectangle, an instance of :class:`GraphicsPath`.        
@@ -397,7 +397,7 @@ class AquaButton(wx.Control):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`AquaButton`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Invalidate()
@@ -565,7 +565,7 @@ class AquaButton(wx.Control):
         Given the current font and bezel width settings, calculate
         and set a good size.
 
-        :param `size`: an instance of :class:`Size` or ``None``, in which case the wxWidgets
+        :param `size`: an instance of :class:`wx.Size` or ``None``, in which case the wxWidgets
          :class:`DefaultSize` is used instead.
         """
 
@@ -653,7 +653,7 @@ class AquaButton(wx.Control):
         Overridden base class virtual. Determines the best size of the
         button based on the label and bezel size.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         
         :note: Overridden from :class:`wx.Control`.
         """
@@ -878,7 +878,7 @@ class AquaButton(wx.Control):
 
         :note: Under Windows, only dialog box buttons respond to this function. As normal
          under Windows and Motif, pressing return causes the default button to be depressed
-         when the return key is pressed. See also :meth:`Window.SetFocus` which sets the
+         when the return key is pressed. See also :meth:`wx.Window.SetFocus` which sets the
          keyboard focus for windows and text panel items, and :meth:`TopLevelWindow.SetDefaultItem`.
 
         :note: Note that under Motif, calling this function immediately after creation of a button

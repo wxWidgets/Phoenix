@@ -27,7 +27,7 @@ an asterisk were already present in :mod:`lib` before:
 - CustomTreeCtrl (*): mimics the behaviour of :class:`TreeCtrl`, with almost the
   same base functionalities plus a bunch of enhancements and goodies;
 - FlatMenu: as the name implies, it is a generic menu implementation,
-  offering the same :class:`MenuBar` / :class:`Menu` / :class:`ToolBar` capabilities and much more;
+  offering the same :class:`wx.MenuBar` / :class:`wx.Menu` / :class:`ToolBar` capabilities and much more;
 - FlatNotebook (*): a full implementation of the :class:`Notebook`, and designed
   to be a drop-in replacement for :class:`Notebook` with enhanced capabilities;
 - FloatSpin: this class implements a floating point spinctrl, cabable (in

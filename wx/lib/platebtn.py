@@ -125,7 +125,7 @@ class PlateButton(wx.Control):
         """Create a PlateButton
         
         :keyword string `label`: Buttons label text
-        :keyword Bitmap `bmp`: Buttons bitmap
+        :keyword wx.Bitmap `bmp`: Buttons bitmap
         :keyword `style`: Button style
 
         """
@@ -403,7 +403,7 @@ class PlateButton(wx.Control):
     def DoGetBestSize(self):
         """Calculate the best size of the button
         
-        :return: :class:`Size`
+        :return: :class:`wx.Size`
 
         """
         width = 4
@@ -666,8 +666,8 @@ class PlateButton(wx.Control):
         prevent this automatic color choices from happening either specify
         a color or None for the other params.
 
-        :param Colour `normal`: Label color for normal state (:class:`wx.Colour`)
-        :keyword Colour `hlight`: Color for when mouse is hovering over
+        :param wx.Colour `normal`: Label color for normal state (:class:`wx.Colour`)
+        :keyword wx.Colour `hlight`: Color for when mouse is hovering over
 
         """
         assert isinstance(normal, wx.Colour), "Must supply a colour object"
@@ -689,7 +689,7 @@ class PlateButton(wx.Control):
         """Set the menu that can be shown when clicking on the
         drop arrow of the button.
 
-        :param Menu `menu`: :class:`Menu` to use as a PopupMenu
+        :param wx.Menu `menu`: :class:`wx.Menu` to use as a PopupMenu
         
         ..note::
             Arrow is not drawn unless a menu is set
@@ -705,7 +705,7 @@ class PlateButton(wx.Control):
     def SetPressColor(self, color):
         """Set the color used for highlighting the pressed state
 
-        :param Colour `color`: :class:`wx.Colour`
+        :param wx.Colour `color`: :class:`wx.Colour`
         
         ..note::
             also resets all text colours as necessary

@@ -232,7 +232,7 @@ class RibbonPanel(RibbonControl):
         """
         Query if the panel would be minimised at a given size.
 
-        :param `at_size`: an instance of :class:`Size`, giving the size at which the
+        :param `at_size`: an instance of :class:`wx.Size`, giving the size at which the
          panel should be tested for minimisation.
         """
         
@@ -372,7 +372,7 @@ class RibbonPanel(RibbonControl):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`RibbonPanel`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         if self.GetAutoLayout():
@@ -435,7 +435,7 @@ class RibbonPanel(RibbonControl):
         """
         Query if the panel would be minimised at a given size.
 
-        :param `at_size`: an instance of :class:`Size`, giving the size at which the
+        :param `at_size`: an instance of :class:`wx.Size`, giving the size at which the
          panel should be tested for minimisation.
         """
 
@@ -752,9 +752,9 @@ class RibbonPanel(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         # Ask sizer if present

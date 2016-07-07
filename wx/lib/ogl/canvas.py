@@ -61,12 +61,12 @@ class ShapeCanvas(wx.ScrolledWindow):
          chosen by either the windowing system or wxPython, depending on platform
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform
-        :param integer `style`: the underlying :class:`Window` style
+        :param integer `style`: the underlying :class:`wx.Window` style
         :param str `name`: the window name
         
-        :type parent: :class:`Window`
-        :type pos: tuple or :class:`Point`
-        :type size: tuple or :class:`Size`
+        :type parent: :class:`wx.Window`
+        :type pos: tuple or :class:`wx.Point`
+        :type size: tuple or :class:`wx.Size`
         
         """
         wx.ScrolledWindow.__init__(self, parent, id, pos, size, style, name)

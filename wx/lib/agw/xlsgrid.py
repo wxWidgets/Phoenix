@@ -521,7 +521,7 @@ def FontFromFont(font):
     """
     Creates a copy of the input `font`.
 
-    :param `font`: an instance of :class:`Font`.
+    :param `font`: an instance of :class:`wx.Font`.
     """
 
     new_font = wx.Font(font.GetPointSize(), font.GetFamily(), font.GetStyle(),
@@ -904,8 +904,8 @@ class XLSText(object):
         """
         Actually draws the text value on a grid cell.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the cell rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle.
         """
 
         new_rect = wx.Rect(*rect)
@@ -1061,7 +1061,7 @@ class XLSRichText(XLSText):
         Convenience method to measure the maximum height and total width of all
         the chunks of text composing our rich text string.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         maxH = -1
@@ -1079,8 +1079,8 @@ class XLSRichText(XLSText):
         """
         Actually draws all the chunks of text on a grid cell, one by one.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the cell rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle.
         """
 
         new_rect = wx.Rect(*rect)
@@ -1210,8 +1210,8 @@ class XLSBackground(object):
         """
         Actually draws the cell background and pattern hatching on a grid cell.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the cell rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle.
         """
 
         dc.SetClippingRegion(rect)
@@ -1294,8 +1294,8 @@ class XLSBorder(object):
         """
         Actually draws the cell border.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the cell rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle.
         """
 
         dc.SetBackgroundMode(wx.TRANSPARENT)        
@@ -1311,8 +1311,8 @@ class XLSBorder(object):
         """
         Actually draws the cell diagonal border.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the cell rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle.
         """
 
         diag_up, diag_down = self.diagonals
@@ -1343,8 +1343,8 @@ class XLSBorder(object):
         """
         Actually draws the cell border (one of left, right, bottom, top).
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the cell rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle.
         """
 
         pen_width = self.pen.GetWidth()
@@ -1435,8 +1435,8 @@ class XLSBorderFactory(object):
         """
         Actually draws all the cell borders based on their drawing priority.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the cell rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle.
 
         :note: The drawing priority is assigned depending on if the border is a
          custom one or not. Customized borders are drawn last.
@@ -1470,8 +1470,8 @@ class XLSComment(object):
         Actually draws a small red triangle in the top-right corder of the cell
         to indicate that a comment is present.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the cell rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle.
         """
 
         right = rect.GetTopRight()
@@ -1687,8 +1687,8 @@ class XLSRenderer(gridlib.GridCellRenderer):
 
         :param `grid`: an instance of :class:`grid.Grid`;
         :param `attr`: an instance of :class:`grid.GridCellAttr`;
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the cell rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle;
         :param `row`: the row in which this cell lives;
         :param `col`: the column in which this cell lives;
         :param `isSelected`: ``True`` if the cell is selected, ``False`` otherwise.

@@ -1459,7 +1459,7 @@ class GenericMessageDialog(wx.Dialog):
         :param `message`: the original input message;
         :param `wrap`: wraps the string in `message` so that every line is at most
          `wrap` pixels long;
-        :param `font`: if not ``None``, it should be an instance of :class:`Font` to be
+        :param `font`: if not ``None``, it should be an instance of :class:`wx.Font` to be
          used to measure and then wrap the input `message`.
 
         :return: a new message wrapped at maximum `wrap` pixels wide.

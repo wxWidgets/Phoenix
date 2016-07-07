@@ -46,16 +46,16 @@ class Ticker(wx.Control):
         """
         Default class constructor.
 
-        :param Window `parent`: the parent
+        :param wx.Window `parent`: the parent
         :param integer `id`: an identifier for the control: a value of -1 is taken to mean a default
         :param string `text`: text in the ticker
-        :param Colour `fgcolor`: text/foreground color
-        :param Colour `bgcolor`: background color
+        :param wx.Colour `fgcolor`: text/foreground color
+        :param wx.Colour `bgcolor`: background color
         :param boolean `start`: if True, the ticker starts immediately
         :param int `ppf`: pixels per frame
         :param int `fps`: frames per second
         :param `direction`: direction of ticking, 'rtl' or 'ltr'
-        :param Point `pos`: the control position. A value of (-1, -1) indicates a default position,
+        :param wx.Point `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform
         :param `name`: the control name
             
@@ -133,7 +133,7 @@ class Ticker(wx.Control):
         """
         Set the font for the control.
         
-        :param Font `font`: the font to be used.
+        :param wx.Font `font`: the font to be used.
         
         """
         self._extent = (-1, -1)
@@ -184,7 +184,7 @@ class Ticker(wx.Control):
         """
         Updates the cached text extent if needed.
         
-        :param DC `dc`: the dc to use.
+        :param wx.DC `dc`: the dc to use.
         
         """
         if not self._text:
@@ -198,7 +198,7 @@ class Ticker(wx.Control):
         """
         Draws the ticker text at the current offset using the provided DC.
         
-        :param DC `dc`: the dc to use.
+        :param wx.DC `dc`: the dc to use.
         
         """
         dc.SetTextForeground(self.GetForegroundColour())

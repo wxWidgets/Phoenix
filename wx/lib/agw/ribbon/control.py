@@ -43,19 +43,19 @@ class RibbonControl(wx.Control):
         """
         Default class constructor.
 
-        :param Window `parent`: pointer to a parent window;
+        :param wx.Window `parent`: pointer to a parent window;
         :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
          should generate a default position for the window;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
-        :type `size`: tuple or :class:`Point`
+        :type `size`: tuple or :class:`wx.Point`
         :param integer `style`: the window style;
-        :param Validator `validator`: window validator;
+        :param wx.Validator `validator`: window validator;
         :param string `name`: window name.
         """
 
@@ -111,7 +111,7 @@ class RibbonControl(wx.Control):
         rather than :meth:`~RibbonControl.GetNextSmallerSize`.
 
         :param integer `direction`: the direction(s) in which the size should increase;
-        :param Size `size`: the size for which a larger size should be found.
+        :param wx.Size `size`: the size for which a larger size should be found.
         """
 
         # Dummy implementation for code which doesn't check for IsSizingContinuous() == true
@@ -133,7 +133,7 @@ class RibbonControl(wx.Control):
         rather than :meth:`~RibbonControl.GetNextLargerSize`.
 
         :param integer `direction`: the direction(s) in which the size should increase;
-        :param Size `size`: the size for which a larger size should be found.
+        :param wx.Size `size`: the size for which a larger size should be found.
         """
 
         # Dummy implementation for code which doesn't check for IsSizingContinuous() == true
@@ -151,7 +151,7 @@ class RibbonControl(wx.Control):
         is smaller than the given size.
 
         :param integer `direction`: The direction(s) in which the size should reduce;
-        :param Size `relative_to`: The size for which a smaller size should be found.
+        :param wx.Size `relative_to`: The size for which a smaller size should be found.
 
         :returns: if there is no smaller size, otherwise a suitable size which is smaller
          in the given direction(s), and the same as in the other direction (if any).
@@ -171,7 +171,7 @@ class RibbonControl(wx.Control):
         is larger then the given size.
 
         :param integer `direction`: The direction(s) in which the size should reduce;
-        :param Size `relative_to`: The size for which a smaller size should be found.
+        :param wx.Size `relative_to`: The size for which a smaller size should be found.
 
         :returns: if there is no larger size, otherwise a suitable size which is larger
          in the given direction(s), and the same as in the other direction (if any).

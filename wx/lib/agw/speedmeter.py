@@ -48,7 +48,7 @@ by creating an "angular" control (actually, circular). I remember to have seen
 it somewhere, and i decided to implement it in wxPython.
 
 :class:`SpeedMeter` starts its construction from an empty bitmap, and it uses some
-functions of the :class:`DC` class to create the rounded effects. everything is
+functions of the :class:`wx.DC` class to create the rounded effects. everything is
 processed in the `Draw()` method of :class:`SpeedMeter` class.
 
 This implementation allows you to use either directly the :class:`PaintDC`, or the
@@ -344,7 +344,7 @@ class BufferedWindow(wx.Window):
         """
         This method should be overridden when sub-classed.
 
-        :param `dc`: an instance of :class:`DC`.        
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pass
@@ -368,7 +368,7 @@ class BufferedWindow(wx.Window):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`BufferedWindow`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
         
         self.Width, self.Height = self.GetClientSize()
@@ -534,7 +534,7 @@ class SpeedMeter(BufferedWindow):
         Draws everything on the empty bitmap.
         Here all the chosen styles are applied.
 
-        :param `dc`: an instance of :class:`DC`.        
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         size  = self.GetClientSize()
@@ -1286,7 +1286,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the ticks font.
 
-        :param `font`: a valid :class:`Font` object. If defaulted to ``None``, some standard
+        :param `font`: a valid :class:`wx.Font` object. If defaulted to ``None``, some standard
          font will be chosen automatically.
         """
 
@@ -1497,7 +1497,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the font for the text in the middle.
 
-        :param `font`: a valid :class:`Font` object. If defaulted to ``None``, some
+        :param `font`: a valid :class:`wx.Font` object. If defaulted to ``None``, some
          standard font will be generated.
         """
 

@@ -532,7 +532,7 @@ class BPArt(object):
          ``BP_BUTTONTEXT_FONT``              11 Text font for the buttons with text
          ============================== ======= =====================================
 
-        :return: An instance of :class:`Font` for the input `id`.
+        :return: An instance of :class:`wx.Font` for the input `id`.
 
         :raise: `Exception` if the `id` is not recognized.         
         """
@@ -550,7 +550,7 @@ class BPArt(object):
         Sets the option value for the specified font `id`.
 
         :param integer `id`: the identification bit for the font value;
-        :param `colour`: the new value for the font (a valid :class:`Font` instance).
+        :param `colour`: the new value for the font (a valid :class:`wx.Font` instance).
 
         :raise: `Exception` if the `id` is not recognized.
 
@@ -598,8 +598,8 @@ class BPArt(object):
         """
         Draws a separator in :class:`ButtonPanel`.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the separator client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the separator client rectangle;
         :param bool `isVertical`: ``True`` if :class:`ButtonPanel` is in vertical orientation,
          ``False`` otherwise.
         """
@@ -622,8 +622,8 @@ class BPArt(object):
         """
         Draws the main caption text in :class:`ButtonPanel`.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the main caption text rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the main caption text rectangle;
         :param string `captionText`: the caption text string.
         """
 
@@ -642,9 +642,9 @@ class BPArt(object):
         """
         Draws a button in :class:`ButtonPanel`, together with its text (if any).
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button client rectangle;
-        :param Bitmap `buttonBitmap`: the bitmap associated with the button;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button client rectangle;
+        :param wx.Bitmap `buttonBitmap`: the bitmap associated with the button;
         :param bool `isVertical`: ``True`` if :class:`ButtonPanel` is in vertical orientation,
          ``False`` otherwise;
         :param string `buttonStatus`: one of "Normal", "Toggled", "Pressed", "Disabled" or "Hover";
@@ -733,7 +733,7 @@ class BPArt(object):
         """
         Draws the label for a button.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param string `text`: the button label;
         :param bool `isEnabled`: ``True`` if the button is enabled, ``False`` otherwise;
         :param integer `xpos`: the text `x` position inside the button;
@@ -752,8 +752,8 @@ class BPArt(object):
         """
         Paint the :class:`ButtonPanel`'s background.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the :class:`ButtonPanel` client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the :class:`ButtonPanel` client rectangle;
         :param integer `style`: the :class:`ButtonPanel` window style.
         """
 
@@ -774,8 +774,8 @@ class BPArt(object):
         """
         Gradient fill from colour 1 to colour 2 with top to bottom or left to right.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the :class:`ButtonPanel` client rectangle.        
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the :class:`ButtonPanel` client rectangle.
         """
 
         if rect.height < 1 or rect.width < 1: 
@@ -841,10 +841,10 @@ class Control(wx.EvtHandler):
         """
         Default class constructor.
         
-        :param Window `parent`: the control parent object. Must not be ``None``;
+        :param wx.Window `parent`: the control parent object. Must not be ``None``;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `id`: window identifier. A value of -1 indicates a default value.
         """
 
@@ -910,7 +910,7 @@ class Control(wx.EvtHandler):
         the size returned by this function will be the same as the size the window would
         have had after calling `Fit()`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         return self._size
@@ -982,7 +982,7 @@ class Control(wx.EvtHandler):
         """
         Handles the drawing of the control.
 
-        :param Rect `rect`: the control client rectangle.
+        :param wx.Rect `rect`: the control client rectangle.
         """
         
         pass
@@ -990,8 +990,8 @@ class Control(wx.EvtHandler):
 
 class Sizer(object):
     """
-    This is a mix-in class to add pseudo support to :class:`Sizer`. Just create
-    a new class that derives from this class and :class:`Sizer` and intercepts
+    This is a mix-in class to add pseudo support to :class:`wx.Sizer`. Just create
+    a new class that derives from this class and :class:`wx.Sizer` and intercepts
     any methods that add to the wx sizer.
     """
     
@@ -1019,7 +1019,7 @@ class Sizer(object):
         """
         This functions returns the best acceptable minimal size for the sizer object.
 
-        :return: An instance of :class:`Size`.        
+        :return: An instance of :class:`wx.Size`.
         """
 
         # this should be handled by the wx.Sizer based class
@@ -1050,8 +1050,8 @@ class BoxSizer(Sizer, wx.BoxSizer):
         """
         Appends a child item to the sizer.
 
-        :param `item`: the item to be added to :class:`BoxSizer`. Can be an instance of :class:`Window`,
-         :class:`Sizer` or a spacer;
+        :param `item`: the item to be added to :class:`BoxSizer`. Can be an instance of :class:`wx.Window`,
+         :class:`wx.Sizer` or a spacer;
         :param integer `proportion`: this parameter is used in :class:`BoxSizer` to indicate if a child of
          a sizer can change its size in the main orientation of the :class:`BoxSizer` - where 0
          stands for not changeable and a value of more than zero is interpreted relative
@@ -1083,8 +1083,8 @@ class BoxSizer(Sizer, wx.BoxSizer):
          | ``wx.SHAPED``                                                       | The item will be expanded as much as possible while also                    |
          |                                                                     | maintaining its aspect ratio                                                |
          +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.FIXED_MINSIZE``                                                | Normally :class:`Sizer` will use                                            |
-         |                                                                     | :meth:`Window.GetEffectiveMinSize` to                                       |
+         | ``wx.FIXED_MINSIZE``                                                | Normally :class:`wx.Sizer` will use                                            |
+         |                                                                     | :meth:`wx.Window.GetEffectiveMinSize` to                                       |
          |                                                                     | determine what the minimal size of window items should be, and will use that| 
          |                                                                     | size to calculate the layout. This allows layouts to adjust when an item    |
          |                                                                     | changes and its best size becomes different. If you would rather have a     |
@@ -1254,7 +1254,7 @@ class Separator(Control):
         """
         Returns the separator best size.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         # 10 is completely arbitrary, but it works anyhow
@@ -1268,8 +1268,8 @@ class Separator(Control):
         """
         Draws the separator. Actually the drawing is done in :class:`BPArt`.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the separator client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the separator client rectangle.
         """
 
         if not self.IsShown():
@@ -1323,7 +1323,7 @@ class ButtonPanelText(Control):
 
 
     def CreateDC(self):
-        """ Convenience function to create a :class:`DC`. """
+        """ Convenience function to create a :class:`wx.DC`. """
 
         dc = wx.ClientDC(self._parent)
         textFont = self._parent._art.GetFont(BP_TEXT_FONT)
@@ -1336,7 +1336,7 @@ class ButtonPanelText(Control):
         """
         Returns the best size for the main caption in :class:`ButtonPanel`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         if self._text == "":
@@ -1356,8 +1356,8 @@ class ButtonPanelText(Control):
         """
         Draws the main caption. Actually the drawing is done in :class:`BPArt`.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the main caption text client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the main caption text client rectangle.
         """
 
         if not self.IsShown():
@@ -1386,7 +1386,7 @@ class ButtonInfo(Control):
 
         :param `parent`: the parent window (:class:`ButtonPanel`);
         :param integer `id`: the button id;
-        :param Bitmap `bmp`: the associated bitmap;
+        :param wx.Bitmap `bmp`: the associated bitmap;
         :param string `status`: button status ("Pressed", "Hover", "Normal", "Toggled", "Disabled");
         :param string `text`: text to be displayed either below of to the right of the button;
         :param integer `kind`: button kind, may be ``wx.ITEM_NORMAL`` for standard buttons or
@@ -1423,7 +1423,7 @@ class ButtonInfo(Control):
         """
         Returns the best size for the button.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         xsize = self.GetBitmap().GetWidth()
@@ -1460,8 +1460,8 @@ class ButtonInfo(Control):
         """
         Draws the button on :class:`ButtonPanel`. Actually the drawing is done in :class:`BPArt`.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the main caption text client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the main caption text client rectangle.
         """
 
         if not self.IsShown():
@@ -1534,7 +1534,7 @@ class ButtonInfo(Control):
         """
         Returns the :class:`ButtonInfo` client rectangle.
 
-        :return: An instance of :class:`Rect`.
+        :return: An instance of :class:`wx.Rect`.
         """
 
         return self._rect
@@ -1565,7 +1565,7 @@ class ButtonInfo(Control):
         """
         Sets the :class:`ButtonInfo` client rectangle.
 
-        :param `rect`: an instance of :class:`Rect`.
+        :param `rect`: an instance of :class:`wx.Rect`.
         """
 
         self._rect = rect
@@ -1658,7 +1658,7 @@ class ButtonInfo(Control):
         - Toggled.
 
         :param string `name`: the new status name;
-        :param Bitmap `bmp`: the bitmap associated with the new status.
+        :param wx.Bitmap `bmp`: the bitmap associated with the new status.
         """
 
         self._bitmaps.update({name: bmp})
@@ -1796,7 +1796,7 @@ class ButtonPanel(wx.Panel):
         """
         Default class constructor.
 
-        :param Window `parent`: the parent window. Must not be ``None``;
+        :param wx.Window `parent`: the parent window. Must not be ``None``;
         :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create an identifier;
         :param string `text`: the main caption text for :class:`ButtonPanel`;
         :param integer `agwStyle`: the AGW-specific window style (one of ``BP_DEFAULT_STYLE``, ``BP_USE_GRADIENT``);
@@ -1964,7 +1964,7 @@ class ButtonPanel(wx.Panel):
         """
         Adds a wxPython control to :class:`ButtonPanel`.
 
-        :param `control`: an instance of :class:`Window`;
+        :param `control`: an instance of :class:`wx.Window`;
         :param integer `proportion`: the control proportion (0 for fixed-size, 1 or more for a
          stretchable one);
         :param integer `flag`: one of the :class:`BoxSizer` flags;
@@ -2191,7 +2191,7 @@ class ButtonPanel(wx.Panel):
         the minimal size which doesn't truncate the control, for a panel - the
         same size as it would have after a call to `Fit()`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
 
         :note: Overridden from :class:`Panel`.        
         """
@@ -2278,7 +2278,7 @@ class ButtonPanel(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ButtonPanel`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
 
         .. todo::
 
@@ -2345,7 +2345,7 @@ class ButtonPanel(wx.Panel):
         :param bool `isVertical`: ``True`` if :class:`ButtonPanel` is in vertical orientation,
          ``False`` otherwise.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
         
         if item.GetUserData():
@@ -2702,7 +2702,7 @@ class ButtonPanel(wx.Panel):
         """
         HitTest method for :class:`ButtonPanel`.
 
-        :param `pt`: the mouse position, an instance of :class:`Point`.
+        :param `pt`: the mouse position, an instance of :class:`wx.Point`.
         
         :returns: an instance of :class:`ButtonInfo` and the hit flag ``BP_HT_BUTTON`` if a button
          client rectangle contains the input point `pt`, or ``wx.NOT_FOUND`` and ``BP_HT_NONE``.

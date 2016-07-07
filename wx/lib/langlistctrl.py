@@ -383,14 +383,14 @@ class LanguageListCtrl(wx.ListCtrl):
         Default class constructor.
 
         :param `parent`: Parent window. Must not be ``None``.   
-        :type `parent`: Window
+        :type `parent`: wx.Window
         :param `id`: Window identifier. The value ``ID_ANY`` indicates a default value.   
         :type `id`: int
         :param `pos`: Window position. If ``DefaultPosition`` is specified then a default position is chosen.   
-        :type `pos`: Point
+        :type `pos`: wx.Point
         :param `size`: Window size. If ``DefaultSize``   is specified then the window is sized appropriately.   
-        :type `size`: Size
-        :param `style`: Window style. See :ref:`ListCtrl`.
+        :type `size`: wx.Size
+        :param `style`: Window style. See :ref:`wx.ListCtrl`.
         :type `style`: long
         :param `filter`: Filter the list of languages (LC_AVAILABLE, LC_ALL or LC_ONLY)
         :param `only`: a tuple of language ids

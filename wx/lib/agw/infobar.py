@@ -245,7 +245,7 @@ class AutoWrapStaticText(StaticText):
         """
         Defsult class constructor.
 
-        :param Window parent: a subclass of :class:`Window`, must not be ``None``;
+        :param wx.Window parent: a subclass of :class:`wx.Window`, must not be ``None``;
         :param string `label`: the :class:`AutoWrapStaticText` text label.
         """
 
@@ -264,7 +264,7 @@ class AutoWrapStaticText(StaticText):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`AutoWrapStaticText`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         event.Skip()
@@ -311,7 +311,7 @@ class AutoWrapStaticText(StaticText):
         :param bool `wrapped`: ``True`` if this method was called by the developer using :meth:`~AutoWrapStaticText.SetLabel`,
          ``False`` if it comes from the :meth:`~AutoWrapStaticText.OnSize` event handler.
          
-        :note: Reimplemented from :class:`Control`.
+        :note: Reimplemented from :class:`wx.Control`.
         """
 
         if not wrapped:
@@ -341,10 +341,10 @@ class InfoBar(wx.Control):
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the :class:`InfoBar` style (unused at present);
         :param string `name`: the control name.
         """
@@ -422,9 +422,9 @@ class InfoBar(wx.Control):
         :class:`InfoBar` overrides this method to use the font passed to it for its text
         message part. By default a larger and bold version of the standard font is used.
 
-        :param `font`: a valid instance of :class:`Font`.
+        :param `font`: a valid instance of :class:`wx.Font`.
         
-        :note: Reimplemented from :class:`Window`.
+        :note: Reimplemented from :class:`wx.Window`.
         """
         
         if not wx.Control.SetFont(self, font):

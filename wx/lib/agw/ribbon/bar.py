@@ -225,17 +225,17 @@ class RibbonBar(RibbonControl):
         Default constructor.
 
         :param `parent`: pointer to a parent window, must not be ``None``;
-        :type `parent`: :class:`Window`
+        :type `parent`: :class:`wx.Window`
         :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
          should generate a default position for the window;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param `agwStyle`: the AGW-specific window style. This can be a combination of the
          following bits:
 
@@ -254,7 +254,7 @@ class RibbonBar(RibbonControl):
          ========================================== =========== ==========================================
 
         :param `validator`: the window validator;
-        :type `validator`: :class:`Validator`
+        :type `validator`: :class:`wx.Validator`
         :param string `name`: the window name.
 
         """
@@ -954,7 +954,7 @@ class RibbonBar(RibbonControl):
         """
         Does the initial painting of stuff from the :meth:`~RibbonBar.OnPaint` event.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         tabs = wx.Rect(0, 0, *self.GetSize())
@@ -966,7 +966,7 @@ class RibbonBar(RibbonControl):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`RibbonBar`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.RecalculateTabSizes()
@@ -988,7 +988,7 @@ class RibbonBar(RibbonControl):
         Hit test method for :class:`RibbonBar`, testing where the given (in client coordinates)
         point lies.
 
-        :param `position`: an instance of :class:`Point` in client coordinates.
+        :param `position`: an instance of :class:`wx.Point` in client coordinates.
 
         :return: a tuple containing the tab index and the :class:`~lib.agw.ribbon.page.RibbonPage` if the :meth:`~RibbonBar.HitTestTabs`
          successfully found such combination, or a tuple `(-1, None)` if no tab has been hit.
@@ -1219,9 +1219,9 @@ class RibbonBar(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         best = wx.Size(0, 0)

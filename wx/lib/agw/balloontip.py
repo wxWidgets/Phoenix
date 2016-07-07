@@ -336,7 +336,7 @@ class BalloonFrame(wx.Frame):
         """
         Sets the balloon shape.
 
-        :param `event`: on wxGTK, a :class:`WindowCreateEvent` event to process.
+        :param `event`: on wxGTK, a :class:`wx.WindowCreateEvent` event to process.
         """
 
         size = self.GetSize()
@@ -572,7 +572,7 @@ class BalloonTip(object):
         """
         Sets the target control/window for the :class:`BalloonTip`.
 
-        :param `widget`: any subclass of :class:`Window`.
+        :param `widget`: any subclass of :class:`wx.Window`.
         """
 
         self._widget = widget
@@ -592,7 +592,7 @@ class BalloonTip(object):
         """
         Returns the target window for the :class:`BalloonTip`.
 
-        :return: An instance of :class:`Window`.
+        :return: An instance of :class:`wx.Window`.
 
         :raise: `Exception` if the :meth:`~BalloonTip.SetTarget` method has not previously called.        
         """
@@ -980,7 +980,7 @@ class BalloonTip(object):
         """
         Sets the font for the top title.
 
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
         """
 
         if font is None:
@@ -993,7 +993,7 @@ class BalloonTip(object):
         """
         Returns the font for the top title.
 
-        :return: An instance of :class:`Font`.
+        :return: An instance of :class:`wx.Font`.
         """
 
         return self._balloontitlefont
@@ -1003,7 +1003,7 @@ class BalloonTip(object):
         """
         Sets the font for the tip message.
 
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
         """
 
         if font is None:
@@ -1016,7 +1016,7 @@ class BalloonTip(object):
         """
         Returns the font for the tip message.
 
-        :return: An instance of :class:`Font`.
+        :return: An instance of :class:`wx.Font`.
         """
 
         return self._balloonmsgfont
@@ -1073,7 +1073,7 @@ class BalloonTip(object):
         Handles the target destruction, specifically handling the ``wx.EVT_WINDOW_DESTROY``
         event.
 
-        :param `event`: a :class:`WindowDestroyEvent` event to be processed.        
+        :param `event`: a :class:`wx.WindowDestroyEvent` event to be processed.
         """
         
         if hasattr(self, "BalloonFrame"):

@@ -133,7 +133,7 @@ class ColourSelect(wx.BitmapButton):
         :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param string `label`: the button text label;
-        :param colour: a valid :class:`wx.Colour` instance, which will be the default initial
+        :param wx.Colour: a valid :class:`wx.Colour` instance, which will be the default initial
          colour for this button;
         :type `colour`: :class:`wx.Colour` or tuple
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,

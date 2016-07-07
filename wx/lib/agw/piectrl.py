@@ -216,7 +216,7 @@ class PieCtrlLegend(wx.Window):
         """
         Recreates the legend background.
 
-        :param `parentdc`: an instance of :class:`DC`.
+        :param `parentdc`: an instance of :class:`wx.DC`.
         """
 
         w, h = self.GetSize()
@@ -291,7 +291,7 @@ class PieCtrlLegend(wx.Window):
         """
         Sets the legend label font.
 
-        :param `font`: a valid :class:`Font` object.
+        :param `font`: a valid :class:`wx.Font` object.
         """
 
         self._labelfont = font
@@ -513,7 +513,7 @@ class PieCtrl(wx.Window):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`PieCtrl`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.RecreateCanvas()
@@ -653,7 +653,7 @@ class PieCtrl(wx.Window):
         """
         Draws the :class:`PieCtrl` external edges.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `cx`: the part `x` coordinate;
         :param `cy`: the part `y` coordinate;
         :param `w`: the control's width;
@@ -695,7 +695,7 @@ class PieCtrl(wx.Window):
         """
         Draws all the sectors of :class:`PieCtrl`.
 
-        :param `dc`: an instance of :class:`DC`.        
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         w, h = self.GetSize()

@@ -182,7 +182,7 @@ class HyperLinkEvent(wx.CommandEvent):
         """
         Sets the event position.
 
-        :param `pos`: an instance of :class:`Point`.        
+        :param `pos`: an instance of :class:`wx.Point`.
         """
         
         self._pos = pos
@@ -384,7 +384,7 @@ class HyperLinkCtrl(StaticText):
         """
         Handles the ``wx.EVT_MENU`` event for :class:`HyperLinkCtrl`.
 
-        :param `event`: a :class:`MenuEvent` event to be processed.
+        :param `event`: a :class:`wx.MenuEvent` event to be processed.
         
         :note: This method copies the data from the :class:`HyperLinkCtrl` to the clipboard.
         """

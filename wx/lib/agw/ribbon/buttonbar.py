@@ -207,7 +207,7 @@ class RibbonButtonBarEvent(wx.PyCommandEvent):
         """
         Display a popup menu as a result of this (dropdown clicked) event.
 
-        :param `menu`: an instance of :class:`Menu`.
+        :param `menu`: an instance of :class:`wx.Menu`.
         """
 
         pos = wx.Point()
@@ -231,17 +231,17 @@ class RibbonButtonBar(RibbonControl):
         Default class constructor.
 
         :param `parent`: pointer to a parent window, typically a :class:`~lib.agw.ribbon.panel.RibbonPanel`;
-        :type `parent`: :class:`Window`
+        :type `parent`: :class:`wx.Window`
         :param integer `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
          should generate a default position for the window;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: window size. ``wx.DefaultSize`` indicates that wxPython should
          generate a default size for the window. If no suitable size can be found, the
          window will be sized to 20x20 pixels so that the window is visible but obviously
          not correctly sized;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `agwStyle`: the AGW-specific window style, currently unused.
         """
 
@@ -554,7 +554,7 @@ class RibbonButtonBar(RibbonControl):
         Resize and scale the `original` bitmap to the dimensions specified in `size`.
 
         :param `original`: the original bitmap, an instance of :class:`wx.Bitmap`;
-        :param `size`: the size to which the input bitmap must be rescaled, an instance of :class:`Size`.
+        :param `size`: the size to which the input bitmap must be rescaled, an instance of :class:`wx.Size`.
 
         :return: A scaled representation of the input bitmap.
         """
@@ -760,7 +760,7 @@ class RibbonButtonBar(RibbonControl):
         Controls which have non-continuous sizing must override this virtual function
         rather than :meth:`RibbonControl.GetNextSmallerSize() <lib.agw.ribbon.control.RibbonControl.GetNextSmallerSize>`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         result = wx.Size(*_result)
@@ -793,7 +793,7 @@ class RibbonButtonBar(RibbonControl):
         Controls which have non-continuous sizing must override this virtual function
         rather than :meth:`RibbonControl.GetNextLargerSize() <lib.agw.ribbon.control.RibbonControl.GetNextLargerSize>`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         nlayouts = i = len(self._layouts)
@@ -866,7 +866,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`RibbonButtonBar`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         new_size = event.GetSize()
@@ -891,7 +891,7 @@ class RibbonButtonBar(RibbonControl):
         This function sends one or more :class:`UpdateUIEvent` to the window.
 
         The particular implementation depends on the window; for example a :class:`ToolBar` will
-        send an update UI event for each toolbar button, and a :class:`Frame` will send an
+        send an update UI event for each toolbar button, and a :class:`wx.Frame` will send an
         update UI event for each menubar menu item.
 
         You can call this function from your application to ensure that your UI is up-to-date
@@ -978,7 +978,7 @@ class RibbonButtonBar(RibbonControl):
         This method normally just returns the value set by `SetMinSize`, but it can be
         overridden to do the calculation on demand.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         """
 
         return wx.Size(*self._layouts[-1].overall_size)
@@ -990,9 +990,9 @@ class RibbonButtonBar(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return wx.Size(*self._layouts[0].overall_size)

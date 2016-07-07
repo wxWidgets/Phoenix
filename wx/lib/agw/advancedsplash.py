@@ -183,7 +183,7 @@ class AdvancedSplash(wx.Frame):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param integer `style`: the underlying :class:`Frame` style;
+        :param integer `style`: the underlying :class:`wx.Frame` style;
         :param `bitmap`: this must be a valid bitmap, that you may construct using
          whatever image file format supported by wxPython. If the file you load
          already supports mask/transparency (like png), the transparent areas
@@ -211,9 +211,9 @@ class AdvancedSplash(wx.Frame):
          ``AS_SHADOW_BITMAP``, here you can specify the colour that will be masked on
          your input bitmap. This has to be a valid wxPython colour.
 
-        :type parent: :class:`Window`
-        :type pos: tuple or :class:`Point`
-        :type size: tuple or :class:`Size`
+        :type parent: :class:`wx.Window`
+        :type pos: tuple or :class:`wx.Point`
+        :type size: tuple or :class:`wx.Size`
         :type bitmap: :class:`wx.Bitmap`
         :type shadowcolour: :class:`wx.Colour`
 
@@ -295,7 +295,7 @@ class AdvancedSplash(wx.Frame):
         """
         Sets :class:`AdvancedSplash` shape using the region created from the bitmap.
 
-        :param `event`: a :class:`WindowCreateEvent` event (GTK only, as GTK supports setting
+        :param `event`: a :class:`wx.WindowCreateEvent` event (GTK only, as GTK supports setting
          the window shape only during window creation).
         """
 
@@ -433,7 +433,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `font`: the font to use while drawing the text on top of our bitmap. If `font`
          is ``None``, a simple generic font is generated.
-        :type font: :class:`Font` or ``None``         
+        :type font: :class:`wx.Font` or ``None``
         """
 
         if font is None:
@@ -453,7 +453,7 @@ class AdvancedSplash(wx.Frame):
         """
         Gets the font for the text in :class:`AdvancedSplash`.
 
-        :return: An instance of :class:`Font` to draw the text and a :class:`Size` object containing
+        :return: An instance of :class:`wx.Font` to draw the text and a :class:`wx.Size` object containing
          the text width an height, in pixels.
         """
 

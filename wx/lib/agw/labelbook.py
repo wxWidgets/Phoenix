@@ -350,7 +350,7 @@ class ImageInfo(object):
 
         :param `strCaption`: the tab caption;
         :param `imageIndex`: the tab image index based on the assigned (set)
-         :class:`ImageList` (if any);
+         :class:`wx.ImageList` (if any);
         :param `enabled`: sets the tab as enabled or disabled.
         """
         
@@ -382,7 +382,7 @@ class ImageInfo(object):
         """
         Sets the tab position.
 
-        :param `value`: the new tab position, an instance of :class:`Point`.
+        :param `value`: the new tab position, an instance of :class:`wx.Point`.
         """
 
         self._pos = value
@@ -398,7 +398,7 @@ class ImageInfo(object):
         """
         Sets the tab size.
 
-        :param `value`:  the new tab size, an instance of :class:`Size`.
+        :param `value`:  the new tab size, an instance of :class:`wx.Size`.
         """
 
         self._size = value
@@ -430,7 +430,7 @@ class ImageInfo(object):
         """
         Sets the client rectangle available for the tab text.
 
-        :param `rect`: the tab text client rectangle, an instance of :class:`Rect`.
+        :param `rect`: the tab text client rectangle, an instance of :class:`wx.Rect`.
         """
 
         self._captionRect = rect
@@ -566,9 +566,9 @@ class ImageContainerBase(wx.Panel):
 
     def AssignImageList(self, imglist):
         """
-        Assigns an image list to the :class:`ImageContainerBase`.
+        Assigns an image list to the :class:`wx.ImageContainerBase`.
 
-        :param `imglist`: an instance of :class:`ImageList`.
+        :param `imglist`: an instance of :class:`wx.ImageList`.
         """
   
         if imglist and imglist.GetImageCount() != 0:
@@ -581,13 +581,13 @@ class ImageContainerBase(wx.Panel):
         
 
     def GetImageList(self):
-        """ Return the image list for :class:`ImageContainerBase`. """
+        """ Return the image list for :class:`wx.ImageContainerBase`. """
 
         return self._ImageList
 
 
     def GetImageSize(self):
-        """ Returns the image size inside the :class:`ImageContainerBase` image list. """
+        """ Returns the image size inside the :class:`wx.ImageContainerBase` image list. """
 
         return self._nImgSize
 
@@ -598,7 +598,7 @@ class ImageContainerBase(wx.Panel):
         `maxWidth` value this function truncates it and appends two dots at
         the end. ("Long Long Long Text" might become "Long Long...").
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `text`: the text to fix/truncate;
         :param `maxWidth`: the maximum allowed width for the text, in pixels.
         """
@@ -765,9 +765,9 @@ class ImageContainerBase(wx.Panel):
             
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`ImageContainerBase`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`wx.ImageContainerBase`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Refresh() # Call on paint
@@ -776,7 +776,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`ImageContainerBase`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`wx.ImageContainerBase`.
 
         :param `event`: a :class:`EraseEvent` event to be processed.
 
@@ -791,7 +791,7 @@ class ImageContainerBase(wx.Panel):
         Returns the index of the tab at the specified position or ``wx.NOT_FOUND``
         if ``None``, plus the flag style of :meth:`~ImageContainerBase.HitTest`.
 
-        :param `pt`: an instance of :class:`Point`, to test for hits.
+        :param `pt`: an instance of :class:`wx.Point`, to test for hits.
 
         :return: The index of the tab at the specified position plus the hit test
          flag, which can be one of the following bits:
@@ -837,7 +837,7 @@ class ImageContainerBase(wx.Panel):
         """
         Tests whether pt is located on the sash.
 
-        :param `pt`: an instance of :class:`Point`, to test for hits.
+        :param `pt`: an instance of :class:`wx.Point`, to test for hits.
         """
 
         # Check if we are on a the sash border
@@ -856,7 +856,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnMouseLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`ImageContainerBase`.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`wx.ImageContainerBase`.
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
@@ -893,7 +893,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnMouseLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`ImageContainerBase`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`wx.ImageContainerBase`.
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
@@ -920,7 +920,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnMouseLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for :class:`ImageContainerBase`.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`wx.ImageContainerBase`.
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
@@ -973,7 +973,7 @@ class ImageContainerBase(wx.Panel):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`ImageContainerBase`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`wx.ImageContainerBase`.
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
@@ -1015,7 +1015,7 @@ class ImageContainerBase(wx.Panel):
         """
         Draw a pin button, that allows collapsing of the image panel.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the pin button client rectangle;
         :param `downPin`: ``True`` if the pin button is facing downwards, ``False``
          if it is facing leftwards.
@@ -1122,9 +1122,9 @@ class ImageContainer(ImageContainerBase):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` event for :class:`ImageContainer`.
+        Handles the ``wx.EVT_SIZE`` event for :class:`wx.ImageContainer`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         ImageContainerBase.OnSize(self, event)
@@ -1133,7 +1133,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnMouseLeftDown(self, event):
         """
-        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`ImageContainer`.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`wx.ImageContainer`.
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
@@ -1144,7 +1144,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnMouseLeftUp(self, event):
         """
-        Handles the ``wx.EVT_LEFT_UP`` event for :class:`ImageContainer`.
+        Handles the ``wx.EVT_LEFT_UP`` event for :class:`wx.ImageContainer`.
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
@@ -1155,7 +1155,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`ImageContainer`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`wx.ImageContainer`.
 
         :param `event`: a :class:`EraseEvent` event to be processed.
         """
@@ -1165,7 +1165,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnMouseMove(self, event):
         """
-        Handles the ``wx.EVT_MOTION`` event for :class:`ImageContainer`.
+        Handles the ``wx.EVT_MOTION`` event for :class:`wx.ImageContainer`.
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
@@ -1176,7 +1176,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnMouseLeaveWindow(self, event):
         """
-        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`ImageContainer`.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`wx.ImageContainer`.
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
@@ -1196,7 +1196,7 @@ class ImageContainer(ImageContainerBase):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` event for :class:`ImageContainer`.
+        Handles the ``wx.EVT_PAINT`` event for :class:`wx.ImageContainer`.
 
         :param `event`: a :class:`PaintEvent` event to be processed.
         """
@@ -1504,7 +1504,7 @@ class LabelContainer(ImageContainerBase):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`LabelContainer`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         ImageContainerBase.OnSize(self, event)
@@ -1687,7 +1687,7 @@ class LabelContainer(ImageContainerBase):
         """
         Draws a bitmap as the background of the control.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         clientRect = self.GetClientRect()
@@ -1762,7 +1762,7 @@ class LabelContainer(ImageContainerBase):
         """
         Actually resizes the tab area.
 
-        :param `event`: an instance of :class:`SizeEvent`.
+        :param `event`: an instance of :class:`wx.SizeEvent`.
         """
 
         # Resize our size
@@ -1901,7 +1901,7 @@ class LabelContainer(ImageContainerBase):
         """
         Draws a rounded rectangle around the current tab.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the current tab client rectangle.
         """
         
@@ -1945,7 +1945,7 @@ class LabelContainer(ImageContainerBase):
         """
         Draws a web style hover effect (cursor set to hand & text is underlined).
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `caption`: the tab caption text;
         :param `xCoord`: the x position of the tab caption;
         :param `yCoord`: the y position of the tab caption;
@@ -2022,11 +2022,11 @@ class LabelContainer(ImageContainerBase):
         """
         Draws a label using the specified dc.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the text client rectangle;
         :param `text`: the actual text string;
         :param `bmp`: a bitmap to be drawn next to the text;
-        :param `imgInfo`: an instance of :class:`ImageInfo`;
+        :param `imgInfo`: an instance of :class:`wx.ImageInfo`;
         :param `orientationLeft`: ``True`` if the book has the ``INB_RIGHT`` or ``INB_LEFT``
          style set;
         :param `imgIdx`: the tab image index;
@@ -2587,7 +2587,7 @@ class FlatBookBase(wx.Panel):
         """
         Assigns an image list to the control.
 
-        :param `imglist`: an instance of :class:`ImageList`.
+        :param `imglist`: an instance of :class:`wx.ImageList`.
         """
 
         self._pages.AssignImageList(imglist)
@@ -2609,7 +2609,7 @@ class FlatBookBase(wx.Panel):
         """
         Select the window by the provided pointer.
 
-        :param `window`: an instance of :class:`Window`.
+        :param `window`: an instance of :class:`wx.Window`.
         """
 
         curSel = self.GetSelection()
@@ -3019,7 +3019,7 @@ class LabelBook(FlatBookBase):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`LabelBook`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self._pages.Refresh()

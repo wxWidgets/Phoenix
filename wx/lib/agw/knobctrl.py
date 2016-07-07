@@ -270,7 +270,7 @@ class BufferedWindow(wx.Window):
         """
         This method should be overridden when sub-classed.
 
-        :param `dc`: an instance of :class:`DC`.        
+        :param `dc`: an instance of :class:`wx.DC`.
         """
         
         pass
@@ -295,7 +295,7 @@ class BufferedWindow(wx.Window):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`BufferedWindow`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         # The Buffer init is done here, to make sure the buffer is always
@@ -579,7 +579,7 @@ class KnobCtrl(BufferedWindow):
         Draws everything on the empty bitmap.
         Here all the chosen styles are applied.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
         
         size  = self.GetClientSize()
@@ -601,7 +601,7 @@ class KnobCtrl(BufferedWindow):
         """
         Draws the tags.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `size`: the control size.
         """
 
@@ -653,7 +653,7 @@ class KnobCtrl(BufferedWindow):
         """
         Draw a shading of diagonal gradient to :class:`KnobCtrl`.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `size`: the control size.
         """
 
@@ -746,7 +746,7 @@ class KnobCtrl(BufferedWindow):
         """
         Draws the small knob.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `pencolour`: the colour to use for drawing the inset circle.
         """
 
@@ -772,7 +772,7 @@ class KnobCtrl(BufferedWindow):
         """
         Draws the :class:`KnobCtrl` bounding circle.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `size`: the control size.
         """
 

@@ -30,7 +30,7 @@
 
 """
 :class:`~lib.agw.shortcuteditor.ShortcutEditor` is a widget that allows the user to customize and change keyboard
-shortcuts via a dialog. It can be used to edit :class:`MenuItem` shortcuts or accelerators
+shortcuts via a dialog. It can be used to edit :class:`wx.MenuItem` shortcuts or accelerators
 defined in a :class:`AcceleratorTable`.
 
 .. note::
@@ -45,7 +45,7 @@ Description
 ===========
 
 :class:`ShortcutEditor` is a widget that allows the user to customize and change keyboard
-shortcuts via a dialog. It can be used to edit :class:`MenuItem` shortcuts or accelerators
+shortcuts via a dialog. It can be used to edit :class:`wx.MenuItem` shortcuts or accelerators
 defined in a :class:`AcceleratorTable`.
 
 The interface itself is very much inpired by the GIMP shortcut editor:
@@ -58,12 +58,12 @@ although the behaviour should be pretty much equivalent.
 Various features:
 
 * Shortcuts are listed in a tree-like structure, pretty much reflecting a menu
-  hierarchy (as most of the time :class:`ShortcutEditor` is used to edit :class:`MenuItem`
+  hierarchy (as most of the time :class:`ShortcutEditor` is used to edit :class:`wx.MenuItem`
   shortcuts);
 * Accelerators defined via :class:`AcceleratorTable` are handled in a similar way;
 * Support for I18N;
 * Ability to restore default shortcuts/accelerators via a UI button;
-* Possibility to send back the new/updated shortcuts to the original :class:`MenuBar` or
+* Possibility to send back the new/updated shortcuts to the original :class:`wx.MenuBar` or
   the original :class:`AcceleratorTable`;
 * Filters on the shortcuts label (case-insensitive);
 * Basic help window with instructions (customizable via :meth:`~ShortcutEditor.SetHTMLHelpFile`), via
@@ -141,7 +141,7 @@ There are basically three ways to populate the :class:`ShortcutEditor` dialog, d
 your needs. These approaches can be combined if needed.
 
 1) Use the :meth:`~ShortcutEditor.FromMenuBar` method: if you need to give your user the ability to edit
-   the various :class:`MenuItem` shortcuts in your application, you can create :class:`ShortcutEditor`
+   the various :class:`wx.MenuItem` shortcuts in your application, you can create :class:`ShortcutEditor`
    in this way::
 
         # Build your wx.MenuBar first!!!
@@ -911,7 +911,7 @@ def FontFromFont(font):
     """
     Creates a copy of the input `font`.
 
-    :param `font`: an instance of :class:`Font`.
+    :param `font`: an instance of :class:`wx.Font`.
     """
 
     new_font = wx.Font(font.GetPointSize(), font.GetFamily(), font.GetStyle(),
@@ -927,7 +927,7 @@ def FontFromFont(font):
 
 class HTMLHelpWindow(wx.Frame):
     """
-    A simple :class:`Frame` container for the basic help provided to :class:`ShortcutEditor`.
+    A simple :class:`wx.Frame` container for the basic help provided to :class:`ShortcutEditor`.
     The help page is actually straightly derived from:
 
     http://graphicssoft.about.com/od/gimptutorials/tp/keyboard-shortcut-editor.htm
@@ -1177,7 +1177,7 @@ class Shortcut(object):
         :param `bitmap`: an instance of :class:`wx.Bitmap`, to display along the shortcut `label`
          in the interface tree;
         :param string `help`: the help string for this shortcut, to display in the interface tree;
-        :param `menuItem`: if this :class:`Shortcut` is derived from a :class:`MenuItem`, the :class:`MenuItem`
+        :param `menuItem`: if this :class:`Shortcut` is derived from a :class:`wx.MenuItem`, the :class:`wx.MenuItem`
          to which it should be associated;
         :param integer `accelId`: if this :class:`Shortcut` is derived from an accelerator in a :class:`AcceleratorTable`
          or from a custom, developer-defined shortcut, it represents the ID it is associated with.
@@ -1276,8 +1276,8 @@ class Shortcut(object):
 
     def IsTop(self):
         """
-        Returns ``True`` if this :class:`Shortcut` is associated with a top-level :class:`Menu`,
-        (i.e., in the top :class:`MenuBar` level), ``False`` otherwise.
+        Returns ``True`` if this :class:`Shortcut` is associated with a top-level :class:`wx.Menu`,
+        (i.e., in the top :class:`wx.MenuBar` level), ``False`` otherwise.
         """
         
         return self.topMenu        
@@ -1324,7 +1324,7 @@ class Shortcut(object):
     
 
     def GetImageIndex(self):
-        """ Returns an integer index to be used in the :class:`ListShortcut` own :class:`ImageList`. """
+        """ Returns an integer index to be used in the :class:`ListShortcut` own :class:`wx.ImageList`. """
 
         return self.imageIndex
 
@@ -1515,7 +1515,7 @@ class Shortcut(object):
             
     def FromMenuItem(self):
         """
-        Constructs this :class:`Shortcut` starting from a :class:`Menu` or :class:`MenuItem`.
+        Constructs this :class:`Shortcut` starting from a :class:`wx.Menu` or :class:`wx.MenuItem`.
 
         The attributes needed to properly construct a :class:`Shortcut` are the label,
         the accelerator string, the help string (optional) and the bitmap associated
@@ -1554,12 +1554,12 @@ class Shortcut(object):
 
     def ToMenuItem(self, menuBar):
         """
-        Dumps this :class:`Shortcut` into a :class:`Menu` or :class:`MenuItem`.
+        Dumps this :class:`Shortcut` into a :class:`wx.Menu` or :class:`wx.MenuItem`.
 
-        The attributes needed to properly dump a :class:`Shortcut` into a :class:`Menu` or :class:`MenuBar`
+        The attributes needed to properly dump a :class:`Shortcut` into a :class:`wx.Menu` or :class:`wx.MenuBar`
         are the label and the accelerator string.
 
-        :param `menuBar`: an instance of :class:`MenuBar`.        
+        :param `menuBar`: an instance of :class:`wx.MenuBar`.
         """
 
         if self.menuItem is None or not self.changed:
@@ -1803,7 +1803,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         :param `shortcut`: an instance of :class:`Shortcut`. If ``None``, it is defaulted to
          `self.manager` to make this function reentrant (i.e. allow more than one
          enumeration on one and the same object simultaneously);
-        :param integer `index`: the current image index inside the :class:`ListShortcut` own :class:`ImageList`.
+        :param integer `index`: the current image index inside the :class:`ListShortcut` own :class:`wx.ImageList`.
         """
 
         if shortcut is None:
@@ -2166,14 +2166,14 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
 
     def HasFlag(self, flag):
         """
-        Overridden from :class:`Window` as a workaround on the conflicts between `treemixin` and
+        Overridden from :class:`wx.Window` as a workaround on the conflicts between `treemixin` and
         :class:`~lib.agw.hypertreelist.HyperTreeList` with the ``wx.TR_HIDE_ROOT`` `agwStyle` set.
 
         :param integer `flag`: an integer bit flag specifying the `agwStyle` style.
 
         :return: ``True`` if the :class:`ListShortcut` has the input `flag` set, ``False`` otherwise.        
 
-        :note: Overridden from :class:`Window`.
+        :note: Overridden from :class:`wx.Window`.
         """
 
         return self.HasAGWFlag(flag)
@@ -2187,7 +2187,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
 class ShortcutEditor(wx.Dialog):
     """
     :class:`ShortcutEditor` is a widget that allows the user to customize and change keyboard
-    shortcuts via a dialog. It can be used to edit :class:`MenuItem` shortcuts or accelerators
+    shortcuts via a dialog. It can be used to edit :class:`wx.MenuItem` shortcuts or accelerators
     defined in a :class:`AcceleratorTable`.
 
     The interface itself is very much inpired by the GIMP shortcut editor:
@@ -2202,7 +2202,7 @@ class ShortcutEditor(wx.Dialog):
         """
         Default class constructor.
 
-        :param `parent`: an instance of :class:`Window`, it can also be ``None``.
+        :param `parent`: an instance of :class:`wx.Window`, it can also be ``None``.
         """
         
         wx.Dialog.__init__(self, parent, title=_('Configure Keyboard Shortcuts'),
@@ -2331,9 +2331,9 @@ class ShortcutEditor(wx.Dialog):
 
     def FromMenuBar(self, topWindow):
         """
-        Builds the entire shortcut hierarchy starting from a :class:`MenuBar`.
+        Builds the entire shortcut hierarchy starting from a :class:`wx.MenuBar`.
 
-        :param `topWindow`: an instance of :class:`TopLevelWindow`, containing the :class:`MenuBar`
+        :param `topWindow`: an instance of :class:`TopLevelWindow`, containing the :class:`wx.MenuBar`
          we wish to scan.
         """
         
@@ -2372,11 +2372,11 @@ class ShortcutEditor(wx.Dialog):
 
     def ToMenuBar(self, topWindow):
         """
-        Dumps the entire shortcut hierarchy (for shortcuts associated with a :class:`MenuItem`), into
-        a :class:`MenuBar`, changing only the :class:`Menu` / :class:`MenuItem` labels (it does **not** rebuild
-        the :class:`MenuBar`).
+        Dumps the entire shortcut hierarchy (for shortcuts associated with a :class:`wx.MenuItem`), into
+        a :class:`wx.MenuBar`, changing only the :class:`wx.Menu` / :class:`wx.MenuItem` labels (it does **not** rebuild
+        the :class:`wx.MenuBar`).
 
-        :param `topWindow`: an instance of :class:`TopLevelWindow`, containing the :class:`MenuBar`
+        :param `topWindow`: an instance of :class:`TopLevelWindow`, containing the :class:`wx.MenuBar`
          we wish to repopulate.
         """
 
@@ -2441,7 +2441,7 @@ class ShortcutEditor(wx.Dialog):
         a :class:`AcceleratorTable`. This method **does** rebuild the :class:`AcceleratorTable` and sets it back
         to the input `window`.
 
-        :param `window`: an instance of :class:`Window`, to which the new :class:`AcceleratorTable` should be set.
+        :param `window`: an instance of :class:`wx.Window`, to which the new :class:`AcceleratorTable` should be set.
         """
 
         def AccelItemSet(shortcut, table):
@@ -2625,7 +2625,7 @@ class ShortcutEditor(wx.Dialog):
          otherwise the box is hidden. If ``False`` and the dialog is modal, control is
          returned to the calling program.
          
-        :note: Reimplemented from :class:`Window`.
+        :note: Reimplemented from :class:`wx.Window`.
         """
         
         self.PreShow()

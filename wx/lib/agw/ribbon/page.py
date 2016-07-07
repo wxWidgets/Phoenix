@@ -271,7 +271,7 @@ class RibbonPage(RibbonControl):
         :returns: ``True`` if the page scrolled at least one pixel in the given direction,
          ``False`` if it did not scroll.
 
-        :note: Reimplemented from :class:`Window`.
+        :note: Reimplemented from :class:`wx.Window`.
 
         :see: :meth:`~RibbonPage.GetMajorAxis`, :meth:`~RibbonPage.ScrollPixels`
         """
@@ -445,7 +445,7 @@ class RibbonPage(RibbonControl):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`RibbonPage`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         new_size = event.GetSize()
@@ -892,9 +892,9 @@ class RibbonPage(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         best = wx.Size(0, 0)

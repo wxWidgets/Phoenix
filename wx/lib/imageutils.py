@@ -56,9 +56,9 @@ def grayOut(anImage):
     Convert the given image (in place) to a grayed-out
     version, appropriate for a 'disabled' appearance.
 
-    :param Image `anImage`: the image we want to convert to gray-scale.
+    :param wx.Image `anImage`: the image we want to convert to gray-scale.
 
-    :rtype: :class:`Image`
+    :rtype: :class:`wx.Image`
     :returns: The modified (greyed out) image.
     
     .. note:: the image is converted in place, i.e. the input image will
@@ -117,7 +117,7 @@ def stepColour(c, step):
     completely black and a step of 200 is totally white, and 100
     results in the same color as was passed in.
 
-    :param Colour `c`: the input colour to be modified (darkened or lightened);
+    :param wx.Colour `c`: the input colour to be modified (darkened or lightened);
     :param integer `step`: the step value.
 
     :rtype: :class:`wx.Colour`

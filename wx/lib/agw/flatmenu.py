@@ -601,8 +601,8 @@ class FMRenderer(object):
         Draws the menu left margin.
 
         :param `item`: an instance of :class:`FlatMenuItem`;
-        :param `dc`: an instance of :class:`DC`;
-        :param `menuRect`: an instance of :class:`Rect`, representing the menu client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `menuRect`: an instance of :class:`wx.Rect`, representing the menu client rectangle.
         """
 
         raise Exception("This style doesn't support Drawing a Left Margin")
@@ -612,8 +612,8 @@ class FMRenderer(object):
         """
         Draws a separator inside the toolbar in :class:`FlatMenuBar`.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the bitmap client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the bitmap client rectangle.
         """
         
         # Place a separator bitmap
@@ -646,8 +646,8 @@ class FMRenderer(object):
         """
         Draws a shadow using background bitmap.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the bitmap client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the bitmap client rectangle;
         :param integer `where`: where to draw the shadow. This can be any combination of the
          following bits:
 
@@ -705,8 +705,8 @@ class FMRenderer(object):
         """
         Draws the toolbar background
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the toolbar client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the toolbar client rectangle.
         """
 
         if not self.raiseToolbar:
@@ -728,7 +728,7 @@ class FMRenderer(object):
         """
         Draws a separator inside a :class:`FlatMenu`.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param integer `xCoord`: the current x position where to draw the separator;
         :param integer `yCoord`: the current y position where to draw the separator;
         :param integer `textX`: the menu item label x position;
@@ -752,7 +752,7 @@ class FMRenderer(object):
         Draws the menu item.
 
         :param `item`: a :class:`FlatMenuItem` instance;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param integer `xCoord`: the current x position where to draw the menu;
         :param integer `yCoord`: the current y position where to draw the menu;
         :param integer `imageMarginX`: the spacing between the image and the menu border;
@@ -939,8 +939,8 @@ class FMRenderer(object):
         """
         Draws the highlight on a :class:`FlatMenuBar`.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -962,8 +962,8 @@ class FMRenderer(object):
         """
         Draws the highlight on a FlatMenu
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -985,8 +985,8 @@ class FMRenderer(object):
         """
         Draws the scroll button
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -1041,8 +1041,8 @@ class FMRenderer(object):
         """
         Draws a button.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
         :param `colour`: if not ``None``, an instance of :class:`wx.Colour` to be used to draw
          the :class:`FlatMenuItem` background.
@@ -1082,8 +1082,8 @@ class FMRenderer(object):
         """
         Draws the menu bar background colour according to the menubar.GetBackgroundColour
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the menubar client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the menubar client rectangle.
         """
 
         dcsaver = DCSaver(dc)
@@ -1101,7 +1101,7 @@ class FMRenderer(object):
         Draws everything for :class:`FlatMenuBar`.
 
         :param `menubar`: an instance of :class:`FlatMenuBar`.
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         #artMgr = ArtManager.Get()
@@ -1297,7 +1297,7 @@ class FMRenderer(object):
         Draws the menu.
 
         :param `flatmenu`: the :class:`FlatMenu` instance we need to paint;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
         
         menuRect = flatmenu.GetClientRect()
@@ -1420,8 +1420,8 @@ class FMRendererMSOffice2007(FMRenderer):
         Draws the menu left margin.
 
         :param `item`: the :class:`FlatMenuItem` to paint;
-        :param `dc`: an instance of :class:`DC`;
-        :param `menuRect`: an instance of :class:`Rect`, representing the menu client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `menuRect`: an instance of :class:`wx.Rect`, representing the menu client rectangle.
         """
 
         # Construct the margin rectangle
@@ -1449,8 +1449,8 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws the highlight on a :class:`FlatMenu`.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -1461,8 +1461,8 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws the highlight on a :class:`FlatMenuBar`.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the button client rectangle;
         :param integer `state`: the button state.
         """
         
@@ -1473,8 +1473,8 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws a button using the Office 2007 theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
         :param `colour`: if not ``None``, an instance of :class:`wx.Colour` to be used to draw
          the :class:`FlatMenuItem` background.
@@ -1489,8 +1489,8 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws a button using the Office 2007 theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
         :param `colour`: a valid :class:`wx.Colour` instance.
         """
@@ -1540,8 +1540,8 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws the menu bar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the menubar client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the menubar client rectangle.
         """
 
         # Keep old pen and brush
@@ -1610,8 +1610,8 @@ class FMRendererMSOffice2007(FMRenderer):
         """
         Draws the toolbar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the toolbar client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the toolbar client rectangle.
         """
 
         artMgr = ArtManager.Get()
@@ -1707,8 +1707,8 @@ class FMRendererVista(FMRendererMSOffice2007):
         """
         Draws a button using the Vista theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: the an instance of :class:`Rect`, representing the button client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: the an instance of :class:`wx.Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
         :param `colour`: a valid :class:`wx.Colour` instance.
         """
@@ -1779,8 +1779,8 @@ class FMRendererXP(FMRenderer):
         Draws the menu left margin.
 
         :param `item`: the :class:`FlatMenuItem` to paint;
-        :param `dc`: an instance of :class:`DC`;
-        :param `menuRect`: an instance of :class:`Rect`, representing the menu client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `menuRect`: an instance of :class:`wx.Rect`, representing the menu client rectangle.
         """
 
         # Construct the margin rectangle
@@ -1799,8 +1799,8 @@ class FMRendererXP(FMRenderer):
         """
         Draws the menu bar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the menubar client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the menubar client rectangle.
         """
 
         # For office style, we simple draw a rectangle with a gradient colouring
@@ -1829,8 +1829,8 @@ class FMRendererXP(FMRenderer):
         """
         Draws the toolbar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: an instance of :class:`Rect`, representing the toolbar client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: an instance of :class:`wx.Rect`, representing the toolbar client rectangle.
         """
 
         artMgr = ArtManager.Get()
@@ -2209,7 +2209,7 @@ class MenuEntryInfo(object):
         Used internally. Do not call it in your code!
 
         :param `titleOrMenu`: if it is a string, it represents the new menu label,
-         otherwise it is another instance of :class:`MenuEntryInfo` from which the attributes
+         otherwise it is another instance of :class:`wx.MenuEntryInfo` from which the attributes
          are copied;
         :param `menu`: the associated :class:`FlatMenu` object;
         :param integer `state`: the menu item state. This can be one of the following:
@@ -2266,7 +2266,7 @@ class MenuEntryInfo(object):
         """
         Sets the associated menu client rectangle.
 
-        :param `rect`: an instance of :class:`Rect`, representing the menu client rectangle.
+        :param `rect`: an instance of :class:`wx.Rect`, representing the menu client rectangle.
         """
 
         self._rect = rect
@@ -2650,8 +2650,8 @@ class FlatMenuBar(wx.Panel):
         """
         Draws the toolbar (if present).
 
-        :param `dc`: an instance of :class:`DC`;
-        :param `rect`: the toolbar client rectangle, an instance of :class:`Rect`.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `rect`: the toolbar client rectangle, an instance of :class:`wx.Rect`.
         """
 
         highlight_width = self._tbIconSize + self._toolbarSpacer
@@ -2783,7 +2783,7 @@ class FlatMenuBar(wx.Panel):
 
 
     def GetMoreMenuButtonRect(self):
-        """ Returns a rectangle region, as an instance of :class:`Rect`, surrounding the menu button. """
+        """ Returns a rectangle region, as an instance of :class:`wx.Rect`, surrounding the menu button. """
 
         clientRect = self.GetClientRect()
         rect = wx.Rect(*clientRect)
@@ -2799,10 +2799,10 @@ class FlatMenuBar(wx.Panel):
         """
         Draws 'more' button to the right side of the menu bar.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param integer `state`: the 'more' button state.
 
-        :see: :meth:`MenuEntryInfo.SetState() <MenuEntryInfo.SetState>` for a list of valid menu states.
+        :see: :meth:`wx.MenuEntryInfo.SetState() <MenuEntryInfo.SetState>` for a list of valid menu states.
         """
 
         if (not self._showCustomize) and self.GetInvisibleMenuItemCount() < 1 and  self.GetInvisibleToolbarItemCount() < 1:
@@ -2838,7 +2838,7 @@ class FlatMenuBar(wx.Panel):
         """
         HitTest method for :class:`FlatMenuBar`.
 
-        :param `pt`: an instance of :class:`Point`, specifying the hit test position.
+        :param `pt`: an instance of :class:`wx.Point`, specifying the hit test position.
 
         :return: A tuple representing one of the following combinations:
 
@@ -2896,7 +2896,7 @@ class FlatMenuBar(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`FlatMenuBar`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.ClearBitmaps(0)
@@ -2989,7 +2989,7 @@ class FlatMenuBar(wx.Panel):
         This function is called from child menus, this allow a child menu to
         pass the mouse movement event to the menu bar.
 
-        :param `pt`: an instance of :class:`Point`.
+        :param `pt`: an instance of :class:`wx.Point`.
         """
 
         idx, where = self.HitTest(pt)
@@ -3001,7 +3001,7 @@ class FlatMenuBar(wx.Panel):
         """
         Handles mouse move event.
 
-        :param `pt`: an instance of :class:`Point`;
+        :param `pt`: an instance of :class:`wx.Point`;
         :param bool `leftIsDown`: ``True`` is the left mouse button is down, ``False`` otherwise.
         """
         
@@ -3252,11 +3252,11 @@ class FlatMenuBar(wx.Panel):
         """
         Draws a toolbar item button.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param integer `idx`: the tool index in the toolbar;
         :param integer `state`: the button state.
 
-        :see: :meth:`MenuEntryInfo.SetState() <MenuEntryInfo.SetState>` for a list of valid menu states.        
+        :see: :meth:`wx.MenuEntryInfo.SetState() <MenuEntryInfo.SetState>` for a list of valid menu states.
         """
 
         if idx >= len(self._tbButtons) or idx < 0:
@@ -3290,7 +3290,7 @@ class FlatMenuBar(wx.Panel):
         """
         Activates a menu.
 
-        :param `menuInfo`: an instance of :class:`MenuEntryInfo`.                
+        :param `menuInfo`: an instance of :class:`wx.MenuEntryInfo`.
         """
 
         # first make sure all other menus are not popedup
@@ -3712,7 +3712,7 @@ class FlatMenuBar(wx.Panel):
         """
         Adds any control to the toolbar, typically e.g. a combobox.
         
-        :param `control`: the control to be added, a subclass of :class:`Window` (but no :class:`TopLevelWindow`).
+        :param `control`: the control to be added, a subclass of :class:`wx.Window` (but no :class:`TopLevelWindow`).
         """
         
         self._tbButtons.append(ToolBarItem(FlatToolbarItem(control), wx.Rect(), ControlNormal))
@@ -3993,7 +3993,7 @@ class FlatMenuButton(object):
         """
         Draws self at rect using dc.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         rect = wx.Rect(self._pos, self._size)
@@ -4008,7 +4008,7 @@ class FlatMenuButton(object):
         """
         Handles left down mouse events.
 
-        :param `pt`: an instance of :class:`Point` where the left mouse button was pressed.
+        :param `pt`: an instance of :class:`wx.Point` where the left mouse button was pressed.
         """
 
         if not self.Contains(pt):
@@ -4030,7 +4030,7 @@ class FlatMenuButton(object):
         """
         Handles left up mouse events.
 
-        :param `pt`: an instance of :class:`Point` where the left mouse button was released.
+        :param `pt`: an instance of :class:`wx.Point` where the left mouse button was released.
         """
 
         # always stop the timer
@@ -4050,7 +4050,7 @@ class FlatMenuButton(object):
         Handles mouse motion events. This is called any time the mouse moves in the parent menu, 
         so we must check to see if the mouse is over the button.
 
-        :param `pt`: an instance of :class:`Point` where the mouse pointer was moved.
+        :param `pt`: an instance of :class:`wx.Point` where the mouse pointer was moved.
         """
 
         if not self.Contains(pt):
@@ -4091,7 +4091,7 @@ class FlatMenuButton(object):
         """
         Moves :class:`FlatMenuButton` to the specified position.
 
-        :param `input1`: if it is an instance of :class:`Point`, it represents the :class:`FlatMenuButton`
+        :param `input1`: if it is an instance of :class:`wx.Point`, it represents the :class:`FlatMenuButton`
          position and the `input2` parameter is not used. Otherwise it is an integer representing
          the button `x` position;
         :param `input2`: if not ``None``, it is an integer representing the button `y` position.
@@ -4107,7 +4107,7 @@ class FlatMenuButton(object):
         """
         Sets the size for :class:`FlatMenuButton`.
 
-        :param `input1`: if it is an instance of :class:`Size`, it represents the :class:`FlatMenuButton`
+        :param `input1`: if it is an instance of :class:`wx.Size`, it represents the :class:`FlatMenuButton`
          size and the `input2` parameter is not used. Otherwise it is an integer representing
          the button width;
         :param `input2`: if not ``None``, it is an integer representing the button height.
@@ -4269,10 +4269,10 @@ class FlatMenuBase(ShadowPopupWindow):
         """
         Popups menu at the specified point.
 
-        :param `pt`: an instance of :class:`Point`, assumed to be in screen coordinates. However,
+        :param `pt`: an instance of :class:`wx.Point`, assumed to be in screen coordinates. However,
          if `parent` is not ``None``, `pt` is translated into the screen coordinates using
          `parent.ClientToScreen()`;
-        :param `parent`: if not ``None``, an instance of :class:`Window`.
+        :param `parent`: if not ``None``, an instance of :class:`wx.Window`.
         """
 
         # some controls update themselves from OnIdle() call - let them do it
@@ -4344,7 +4344,7 @@ class FlatMenuBase(ShadowPopupWindow):
         """
         Adjusts position so the menu will be fully visible on screen.
 
-        :param `pos`: an instance of :class:`Point` specifying the menu position.
+        :param `pos`: an instance of :class:`wx.Point` specifying the menu position.
         """
 
         # Check that the menu can fully appear in the screen
@@ -4518,10 +4518,10 @@ class ToolBarItem(object):
         Default class constructor.
 
         :param `tbItem`: an instance of :class:`FlatToolbarItem`;
-        :param `rect`: the client rectangle for the toolbar item, an instance of :class:`Rect`;
+        :param `rect`: the client rectangle for the toolbar item, an instance of :class:`wx.Rect`;
         :param integer `state`: the toolbar item state.
 
-        :see: :meth:`MenuEntryInfo.SetState() <MenuEntryInfo.SetState>` for a list of valid item states.        
+        :see: :meth:`wx.MenuEntryInfo.SetState() <MenuEntryInfo.SetState>` for a list of valid item states.
         """
 
         self._tbItem = tbItem
@@ -4545,7 +4545,7 @@ class FlatToolbarItem(object):
         Default class constructor.
 
         :param `controlType`: can be ``None`` for a toolbar separator, an instance
-         of :class:`Window` for a control or an instance of :class:`wx.Bitmap` for a standard
+         of :class:`wx.Window` for a control or an instance of :class:`wx.Bitmap` for a standard
          toolbar tool;
         :param integer `id`: the toolbar tool id. If set to ``wx.ID_ANY``, a new id is
          automatically assigned;
@@ -5102,7 +5102,7 @@ class FlatMenuItem(object):
         """
         Sets the menu item client rectangle.
 
-        :param `rect`: the menu item client rectangle, an instance of :class:`Rect`.
+        :param `rect`: the menu item client rectangle, an instance of :class:`wx.Rect`.
         """
 
         self._rect = rect 
@@ -5261,7 +5261,7 @@ class FlatMenuItem(object):
         """
         Sets the :class:`FlatMenuItem` font.
 
-        :param `font`: an instance of a valid :class:`Font`.
+        :param `font`: an instance of a valid :class:`wx.Font`.
         """
 
         self._font = font
@@ -5397,7 +5397,7 @@ class FlatMenu(FlatMenuBase):
         Pops up the menu.
 
         :param `pt`: the point at which the menu should be popped up (an instance
-         of :class:`Point`);
+         of :class:`wx.Point`);
         :param `owner`: the owner of the menu. The owner does not necessarly mean the
          menu parent, it can also be the window that popped up it;
         :param `parent`: the menu parent window.
@@ -5493,7 +5493,7 @@ class FlatMenu(FlatMenuBase):
         """
         Adds a pull-right submenu to the end of the menu.
         
-        This function is added to duplicate the API of :class:`Menu`.
+        This function is added to duplicate the API of :class:`wx.Menu`.
 
         :see: :meth:`~FlatMenu.AppendMenu` for an explanation of the input parameters.        
         """
@@ -5822,7 +5822,7 @@ class FlatMenu(FlatMenuBase):
         """
         Redraws the menu.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param integer `oldSelection`: if non-negative, the index representing the previous selected
          menu item.
         """
@@ -6059,7 +6059,7 @@ class FlatMenu(FlatMenuBase):
         """
         HitTest method for :class:`FlatMenu`.
 
-        :param `pos`: an instance of :class:`Point`, a point to test for hits.
+        :param `pos`: an instance of :class:`wx.Point`, a point to test for hits.
 
         :return: A tuple representing one of the following combinations:
 
@@ -6205,7 +6205,7 @@ class FlatMenu(FlatMenuBase):
         Processes mouse right clicks.
 
         :param `pos`: the position at which the mouse right button was pressed,
-         an instance of :class:`Point`.
+         an instance of :class:`wx.Point`.
         """
 
         rect = self.GetClientRect()
@@ -6274,7 +6274,7 @@ class FlatMenu(FlatMenuBase):
         Processes mouse left clicks.
 
         :param `pos`: the position at which the mouse left button was pressed,
-         an instance of :class:`Point`.
+         an instance of :class:`wx.Point`.
         """
         
         rect = self.GetClientRect()
@@ -6311,7 +6311,7 @@ class FlatMenu(FlatMenuBase):
         Processes mouse left clicks.
 
         :param `pos`: the position at which the mouse left button was pressed,
-         an instance of :class:`Point`.
+         an instance of :class:`wx.Point`.
         """
 
         self.ProcessMouseLClick(pos)
@@ -6338,7 +6338,7 @@ class FlatMenu(FlatMenuBase):
         """
         Processes mouse movements.
 
-        :param `pos`: the position at which the mouse was moved, an instance of :class:`Point`.
+        :param `pos`: the position at which the mouse was moved, an instance of :class:`wx.Point`.
         """
 
         rect = self.GetClientRect()
@@ -6838,7 +6838,7 @@ class FlatMenu(FlatMenuBase):
         Sets the :class:`FlatMenuItem` font.
 
         :param integer `itemId`: the menu item identifier;
-        :param `font`: an instance of a valid :class:`Font`.
+        :param `font`: an instance of a valid :class:`wx.Font`.
         """
         
         item = self.FindItem(itemId)

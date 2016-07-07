@@ -831,7 +831,7 @@ def PaintStraightGradientBox(dc, rect, startColour, endColour, vertical=True):
     """
     Draws a gradient coloured box from `startColour` to `endColour`.
 
-    :param `dc`: an instance of :class:`DC`;
+    :param `dc`: an instance of :class:`wx.DC`;
     :param `rect`: the rectangle to fill with the gradient shading;
     :param `startColour`: the first colour in the gradient shading;
     :param `endColour`: the last colour in the gradient shading;
@@ -913,7 +913,7 @@ def DrawButton(dc, rect, focus, upperTabs):
     """
     Draws a :class:`FlatNotebook` tab.
 
-    :param `dc`: an instance of :class:`DC`;
+    :param `dc`: an instance of :class:`wx.DC`;
     :param `rect`: the tab's client rectangle;
     :param `focus`: ``True`` if the tab has focus, ``False`` otherwise;
     :param `upperTabs`: ``True`` if the tabs are at the top, ``False`` if they are
@@ -1116,7 +1116,7 @@ class PageInfo(object):
 
         :param `caption`: the tab caption;
         :param `imageindex`: the tab image index based on the assigned (set)
-         :class:`ImageList` (if any);
+         :class:`wx.ImageList` (if any);
         :param `tabangle`: the tab angle (only on standard tabs, from 0 to 15
          degrees);
         :param `enabled`: sets the tab as enabled or disabled.
@@ -1155,7 +1155,7 @@ class PageInfo(object):
         """
         Sets the tab position.
 
-        :param `value`: an instance of :class:`Point`.
+        :param `value`: an instance of :class:`wx.Point`.
         """
 
         self._pos = value
@@ -1171,7 +1171,7 @@ class PageInfo(object):
         """
         Sets the tab size.
 
-        :param `value`: an instance of :class:`Size`.
+        :param `value`: an instance of :class:`wx.Size`.
         """
 
         self._size = value
@@ -1261,7 +1261,7 @@ class PageInfo(object):
         """
         Sets the tab region.
 
-        :param `points`: a Python list of :class:`Point`
+        :param `points`: a Python list of :class:`wx.Point`
         """
 
         self._region = wx.Region(points)
@@ -1277,7 +1277,7 @@ class PageInfo(object):
         """
         Sets the button 'X' area rect.
 
-        :param `xrect`: an instance of :class:`Rect`, specifying the client rectangle
+        :param `xrect`: an instance of :class:`wx.Rect`, specifying the client rectangle
          of the 'X' button.
         """
 
@@ -1835,7 +1835,7 @@ class FNBRenderer(object):
         """
         Draws the left and right scrolling arrows.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `pc`: an instance of :class:`FlatNotebook`;
         :param `rect`: the client rectangle containing the scrolling arrows.
         """
@@ -1849,7 +1849,7 @@ class FNBRenderer(object):
         Draws the left navigation arrow.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -1893,7 +1893,7 @@ class FNBRenderer(object):
         Draws the right navigation arrow.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -1938,7 +1938,7 @@ class FNBRenderer(object):
         Draws the drop-down arrow in the navigation area.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -1974,7 +1974,7 @@ class FNBRenderer(object):
         Draw the 'X' navigation button in the navigation area.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -2011,7 +2011,7 @@ class FNBRenderer(object):
         Draws the 'X' in the selected tab.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the current tab client rectangle;
         :param `tabIdx`: the index of the current tab;
         :param `btnStatus`: the status of the 'X' button in the current tab.
@@ -2050,7 +2050,7 @@ class FNBRenderer(object):
         Draws a line over the tabs.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `selTabX1`: first x coordinate of the tab line;
         :param `selTabX2`: second x coordinate of the tab line.
         """
@@ -2225,7 +2225,7 @@ class FNBRenderer(object):
         Actually draws the tabs in :class:`FlatNotebook`.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -2396,7 +2396,7 @@ class FNBRenderer(object):
         """
         Draws a focus rectangle like the native :class:`Notebook`.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
         :param `page`: an instance of :class:`PageInfo`, representing a page in the notebook.
         """
@@ -2558,7 +2558,7 @@ class FNBRendererDefault(FNBRenderer):
         Draws a tab using the `Standard` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -2693,7 +2693,7 @@ class FNBRendererFirefox2(FNBRenderer):
         Draws a tab using the `Firefox 2` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -2807,7 +2807,7 @@ class FNBRendererVC71(FNBRenderer):
         Draws a tab using the `VC71` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -2932,7 +2932,7 @@ class FNBRendererFancy(FNBRenderer):
         Draws a tab using the `Fancy` style, similar to the `VC71` one but with gradients.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -3050,7 +3050,7 @@ class FNBRendererVC8(FNBRenderer):
         Draws all the tabs using `VC8` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -3203,7 +3203,7 @@ class FNBRendererVC8(FNBRenderer):
         Draws a tab using the `VC8` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -3350,8 +3350,8 @@ class FNBRendererVC8(FNBRenderer):
         Fills a tab with a gradient shading.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
-        :param `tabPoints`: a Python list of :class:`Point` representing the tab outline;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param `tabPoints`: a Python list of :class:`wx.Point` representing the tab outline;
         :param `bSelectedTab`: ``True`` if the tab is selected, ``False`` otherwise;
         :param `tabIdx`: the index of the tab;
         """
@@ -3442,7 +3442,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Returns the `x` start position of a tab.
 
-        :param `tabPoints`: a Python list of :class:`Point` representing the tab outline;
+        :param `tabPoints`: a Python list of :class:`wx.Point` representing the tab outline;
         :param `y`: the y start position of the tab;
         :param `style`: can be ``FNB_BOTTOM`` or the default (tabs at top).
         """
@@ -3507,7 +3507,7 @@ class FNBRendererVC8(FNBRenderer):
         """
         Returns the `x` end position of a tab.
 
-        :param `tabPoints`: a Python list of :class:`Point` representing the tab outline;
+        :param `tabPoints`: a Python list of :class:`wx.Point` representing the tab outline;
         :param `y`: the y end position of the tab;
         :param `style`: can be ``FNB_BOTTOM`` or the default (tabs at top).
         """
@@ -3681,7 +3681,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         Draws a tab using the `Ribbon Tabs` style.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `posx`: the x position of the tab;
         :param `tabIdx`: the index of the tab;
         :param `tabWidth`: the tab's width;
@@ -3761,7 +3761,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         Actually draws the tabs in :class:`FlatNotebook`.
 
         :param `pageContainer`: an instance of :class:`FlatNotebook`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pc = pageContainer
@@ -4092,7 +4092,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets a custom panel to show when there are no pages left in :class:`FlatNotebook`.
 
-        :param `panel`: any subclass of :class:`Window` will do, as long as it is suitable
+        :param `panel`: any subclass of :class:`wx.Window` will do, as long as it is suitable
          to be used as a notebook page. Examples include :class:`Panel`, :class:`ScrolledWindow`,
          and so on.
         """
@@ -4270,7 +4270,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the image list for the page control.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self._pages.SetImageList(imageList)
@@ -4280,7 +4280,7 @@ class FlatNotebook(wx.Panel):
         """
         Assigns the image list for the page control.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self._pages.AssignImageList(imageList)
@@ -4534,7 +4534,7 @@ class FlatNotebook(wx.Panel):
         """
         Returns the index at which the window is found.
 
-        :param `win`: an instance of :class:`Window`.
+        :param `win`: an instance of :class:`wx.Window`.
         """
 
         try:
@@ -4853,7 +4853,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the popup menu associated to a right click on a tab.
 
-        :param `menu`: an instance of :class:`Menu`.
+        :param `menu`: an instance of :class:`wx.Menu`.
         """
 
         self._pages._pRightClickMenu = menu
@@ -5260,7 +5260,7 @@ class PageContainer(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`PageContainer`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         # When resizing the control, try to fit to screen as many tabs as we can
@@ -5507,7 +5507,7 @@ class PageContainer(wx.Panel):
         """
         HitTest method for :class:`PageContainer`.
 
-        :param `pt`: an instance of :class:`Point`, to test for hits.
+        :param `pt`: an instance of :class:`wx.Point`, to test for hits.
 
         :return: The hit test flag (if any) and the hit page index (if any). The return
          value can be one of the following bits:
@@ -6466,7 +6466,7 @@ class PageContainer(wx.Panel):
         """
         Handles the ``wx.EVT_MENU`` event for :class:`PageContainer`.
 
-        :param `event`: a :class:`MenuEvent` event to be processed.
+        :param `event`: a :class:`wx.MenuEvent` event to be processed.
         """
 
         selection = event.GetId() - 1
@@ -6510,7 +6510,7 @@ class PageContainer(wx.Panel):
         """
         Sets the image list for the :class:`PageContainer`.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self._ImageList = imglist
@@ -6520,7 +6520,7 @@ class PageContainer(wx.Panel):
         """
         Assigns the image list for the :class:`PageContainer`.
 
-        :param `imageList`: an instance of :class:`ImageList`.
+        :param `imageList`: an instance of :class:`wx.ImageList`.
         """
 
         self._ImageList = imglist

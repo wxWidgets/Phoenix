@@ -46,7 +46,7 @@ class DCSaver(object):
         """
         Default class constructor.
 
-        :param `pdc`: an instance of :class:`DC`.        
+        :param `pdc`: an instance of :class:`wx.DC`.
         """
 
         self._pdc = pdc
@@ -79,8 +79,8 @@ class RendererBase(object):
         """
         Draws borders for buttons.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button's client rectangle;
         :param `penColour`: a valid :class:`wx.Colour` for the pen border;
         :param `brushColour`: a valid :class:`wx.Colour` for the brush.
         """
@@ -96,9 +96,9 @@ class RendererBase(object):
         """
         Draws the area below a bitmap and the bitmap itself using a gradient shading.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param string `xpm_name`: a name of a XPM bitmap;
-        :param Rect `rect`: the bitmap client rectangle;
+        :param wx.Rect `rect`: the bitmap client rectangle;
         :param `baseColour`: a valid :class:`wx.Colour` for the bitmap background;
         :param bool `flipSide`: ``True`` to flip the gradient direction, ``False`` otherwise.
         """
@@ -122,8 +122,8 @@ class RendererBase(object):
         """
         Draws borders for a bitmap.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button's client rectangle;
         :param `penColour`: a valid :class:`wx.Colour` for the pen border;
         :param `bitmapBorderUpperLeftPen`: a valid :class:`wx.Colour` for the pen upper
          left border.
@@ -177,7 +177,7 @@ class RendererBase(object):
         """
         Returns the font used for text.
 
-        :return: An instance of :class:`Font`.
+        :return: An instance of :class:`wx.Font`.
         """
 
         return wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -200,8 +200,8 @@ class RendererXP(RendererBase):
         """
         Draws a button using the XP theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button's client rectangle;
         :param integer `state`: the button state;
         :param `input`: a flag used to call the right method.
         """
@@ -216,8 +216,8 @@ class RendererXP(RendererBase):
         """
         Draws a button using the XP theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button's client rectangle;
         :param integer `state`: the button state;
         :param bool `useLightColours`: ``True`` to use light colours, ``False`` otherwise.
         """
@@ -241,8 +241,8 @@ class RendererXP(RendererBase):
         """
         Draws a button using the XP theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button's client rectangle;
         :param integer `state`: the button state;
         :param `colour`: a valid :class:`wx.Colour` instance.
         """
@@ -266,8 +266,8 @@ class RendererXP(RendererBase):
         """
         Draws the menu bar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the menu bar's client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the menu bar's client rectangle.
         """
 
         # For office style, we simple draw a rectangle with a gradient colouring
@@ -296,8 +296,8 @@ class RendererXP(RendererBase):
         """
         Draws the toolbar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the toolbar's client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the toolbar's client rectangle.
         """
 
         artMgr = ArtManager.Get()
@@ -404,8 +404,8 @@ class RendererMSOffice2007(RendererBase):
         """
         Draws a button using the MS Office 2007 theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button's client rectangle;
         :param integer `state`: the button state;
         :param bool `useLightColours`: ``True`` to use light colours, ``False`` otherwise.
         """
@@ -417,8 +417,8 @@ class RendererMSOffice2007(RendererBase):
         """
         Draws a button using the MS Office 2007 theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button's client rectangle;
         :param integer `state`: the button state;
         :param `colour`: a valid :class:`wx.Colour` instance.
         """
@@ -468,8 +468,8 @@ class RendererMSOffice2007(RendererBase):
         """
         Draws the menu bar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the menu bar's client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the menu bar's client rectangle.
         """
 
         # Keep old pen and brush
@@ -538,8 +538,8 @@ class RendererMSOffice2007(RendererBase):
         """
         Draws the toolbar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the toolbar's client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the toolbar's client rectangle.
         """
 
         artMgr = ArtManager.Get()
@@ -857,10 +857,10 @@ class ArtManager(wx.EvtHandler):
         Paint the rectangle with gradient colouring; the gradient lines are either
         horizontal or vertical.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the rectangle to be filled with gradient shading;
-        :param Colour `startColour`: the first colour of the gradient shading;
-        :param Colour `endColour`: the second colour of the gradient shading;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the rectangle to be filled with gradient shading;
+        :param wx.Colour `startColour`: the first colour of the gradient shading;
+        :param wx.Colour `endColour`: the second colour of the gradient shading;
         :param bool `vertical`: ``True`` for gradient colouring in the vertical direction,
          ``False`` for horizontal shading.
         """
@@ -884,11 +884,11 @@ class ArtManager(wx.EvtHandler):
         """
         Paint a region with gradient colouring.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `region`: a region to be filled with gradient shading (an instance of
          :class:`Region`);
-        :param Colour `startColour`: the first colour of the gradient shading;
-        :param Colour `endColour`: the second colour of the gradient shading;
+        :param wx.Colour `startColour`: the first colour of the gradient shading;
+        :param wx.Colour `endColour`: the second colour of the gradient shading;
         :param bool `vertical`: ``True`` for gradient colouring in the vertical direction,
          ``False`` for horizontal shading.
  
@@ -934,10 +934,10 @@ class ArtManager(wx.EvtHandler):
         Paint rectangle with gradient colouring; the gradient lines are diagonal
         and may start from the upper left corner or from the upper right corner.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the rectangle to be filled with gradient shading;
-        :param Colour `startColour`: the first colour of the gradient shading;
-        :param Colour `endColour`: the second colour of the gradient shading;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the rectangle to be filled with gradient shading;
+        :param wx.Colour `startColour`: the first colour of the gradient shading;
+        :param wx.Colour `endColour`: the second colour of the gradient shading;
         :param bool `startAtUpperLeft`: ``True`` to start the gradient lines at the upper
          left corner of the rectangle, ``False`` to start at the upper right corner;
         :param bool `trimToSquare`: ``True`` to trim the gradient lines in a square.
@@ -1076,10 +1076,10 @@ class ArtManager(wx.EvtHandler):
         Paint a region with gradient colouring. The gradient is in crescent shape
         which fits the 2007 style.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the rectangle to be filled with gradient shading;
-        :param Colour `startColour`: the first colour of the gradient shading;
-        :param Colour `endColour`: the second colour of the gradient shading;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the rectangle to be filled with gradient shading;
+        :param wx.Colour `startColour`: the first colour of the gradient shading;
+        :param wx.Colour `endColour`: the second colour of the gradient shading;
         :param bool `concave`: ``True`` for a concave effect, ``False`` for a convex one.
         """
 
@@ -1189,7 +1189,7 @@ class ArtManager(wx.EvtHandler):
         into the given width it is truncated to fit. The format of the fixed text
         is ``truncate text ...``.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param string `text`: the text to be (eventually) truncated;
         :param integer `maxWidth`: the maximum width allowed for the text.
 
@@ -1228,8 +1228,8 @@ class ArtManager(wx.EvtHandler):
         """
         Colour rectangle according to the theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the rectangle to be filled with gradient shading;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the rectangle to be filled with gradient shading;
         :param string `theme`: the theme to use to draw the button;
         :param integer `state`: the button state;
         :param `input`: a flag used to call the right method.
@@ -1245,8 +1245,8 @@ class ArtManager(wx.EvtHandler):
         """
         Draws a button using the appropriate theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button's client rectangle;
         :param string `theme`: the theme to use to draw the button;
         :param integer `state`: the button state;
         :param bool  `useLightColours`: ``True`` to use light colours, ``False`` otherwise.
@@ -1262,8 +1262,8 @@ class ArtManager(wx.EvtHandler):
         """
         Draws a button using the appropriate theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the button's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the button's client rectangle;
         :param string `theme`: the theme to use to draw the button;
         :param integer `state`: the button state;
         :param `colour`: a valid :class:`wx.Colour` instance.
@@ -1347,8 +1347,8 @@ class ArtManager(wx.EvtHandler):
         """
         Draws a shadow using background bitmap.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the bitmap's client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the bitmap's client rectangle;
         :param integer `where`: where to draw the shadow. This can be any combination of the
          following bits:
 
@@ -1448,9 +1448,9 @@ class ArtManager(wx.EvtHandler):
         """
         Returns the top left `x` and `y` cordinates of the bitmap drawing.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the bitmap's client rectangle;
-        :param Bitmap `bitmap`: the bitmap associated with the button;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the bitmap's client rectangle;
+        :param wx.Bitmap `bitmap`: the bitmap associated with the button;
         :param string `text`: the button label;
         :param integer `style`: the button style. This can be one of the following bits:
 
@@ -1538,9 +1538,9 @@ class ArtManager(wx.EvtHandler):
         In case the text is too long, the text is being fixed (the text is cut and
         a '...' mark is added in the end).
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the text's client rectangle;
-        :param Bitmap `bitmap`: the bitmap associated with the button;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the text's client rectangle;
+        :param wx.Bitmap `bitmap`: the bitmap associated with the button;
         :param string `text`: the button label;
         :param integer `style`: the button style. 
 
@@ -1602,11 +1602,11 @@ class ArtManager(wx.EvtHandler):
         """
         Draws the text & bitmap on the input dc.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the text and bitmap client rectangle;
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the text and bitmap client rectangle;
         :param string `text`: the button label;
         :param bool `enable`: ``True`` if the button is enabled, ``False`` otherwise;
-        :param `font`: the font to use to draw the text, an instance of :class:`Font`;
+        :param `font`: the font to use to draw the text, an instance of :class:`wx.Font`;
         :param `fontColour`: the colour to use to draw the text, an instance of
          :class:`wx.Colour`;
         :param `bitmap`: the bitmap associated with the button, an instance of :class:`wx.Bitmap`;
@@ -1698,7 +1698,7 @@ class ArtManager(wx.EvtHandler):
         :param string `label`: the button label;
         :param `bmp`: the bitmap associated with the button, an instance of :class:`wx.Bitmap`.
 
-        :return: An instance of :class:`Size`, representing the best fit size for the supplied label & bitmap.        
+        :return: An instance of :class:`wx.Size`, representing the best fit size for the supplied label & bitmap.
         """
 
         if "__WXMSW__" in wx.Platform:
@@ -1768,7 +1768,7 @@ class ArtManager(wx.EvtHandler):
         """
         Returns the font used by this theme.
 
-        :return: An instance of :class:`Font`.
+        :return: An instance of :class:`wx.Font`.
         """
 
         renderer = self._renderers[self.GetMenuTheme()]
@@ -1934,7 +1934,7 @@ class ArtManager(wx.EvtHandler):
         """
         Draws resize sash.
 
-        :param Rect `rect`: the sash client rectangle.
+        :param wx.Rect `rect`: the sash client rectangle.
         """
   
         dc = wx.ScreenDC()
@@ -1953,8 +1953,8 @@ class ArtManager(wx.EvtHandler):
         """
         Takes a screenshot of the screen at given position & size (rect).
 
-        :param Rect `rect`: the screen rectangle we wish to capture;
-        :param Bitmap `bmp`: currently unused.
+        :param wx.Rect `rect`: the screen rectangle we wish to capture;
+        :param wx.Bitmap `bmp`: currently unused.
         """
 
         # Create a DC for the whole screen area
@@ -1992,8 +1992,8 @@ class ArtManager(wx.EvtHandler):
         """
         Draws the toolbar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the toolbar's client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the toolbar's client rectangle.
         """
 
         renderer = self._renderers[self.GetMenuTheme()]
@@ -2006,8 +2006,8 @@ class ArtManager(wx.EvtHandler):
         """
         Draws the menu bar background according to the active theme.
 
-        :param `dc`: an instance of :class:`DC`;
-        :param Rect `rect`: the menubar's client rectangle.
+        :param `dc`: an instance of :class:`wx.DC`;
+        :param wx.Rect `rect`: the menubar's client rectangle.
         """
 
         renderer = self._renderers[self.GetMenuTheme()]

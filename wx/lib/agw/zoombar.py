@@ -582,7 +582,7 @@ class ImageBar(object):
         Default class constructor.
 
         :param `bitmap`: if not ``None``, the bitmap to use as a background button
-         bar on which the buttons float. It should be an instance of :class:`Image`.
+         bar on which the buttons float. It should be an instance of :class:`wx.Image`.
         """
 
         if bitmap and bitmap.IsOk():
@@ -599,13 +599,13 @@ class ImageBar(object):
 
 
     def GetPosition(self):
-        """ Returns the position of :class:`ImageBar`, as a :class:`Point`. """
+        """ Returns the position of :class:`wx.ImageBar`, as a :class:`wx.Point`. """
 
         return wx.Point(self._left, self._top)
 
 
     def GetSize(self):
-        """ Returns the size of :class:`ImageBar`, as a :class:`Size`. """
+        """ Returns the size of :class:`wx.ImageBar`, as a :class:`wx.Size`. """
 
         return wx.Size(self._bitmap.GetWidth(), self._bitmap.GetHeight())
     
@@ -619,7 +619,7 @@ class ImageBar(object):
 
     def SetPosition(self, xpos, ypos):
         """
-        Sets the position of :class:`ImageBar`.
+        Sets the position of :class:`wx.ImageBar`.
 
         :param `xpos`: the `x` position of the bar;
         :param `ypos`: the `y` position of the bar.
@@ -631,7 +631,7 @@ class ImageBar(object):
 
     def SetSize(self, xSize, ySize):
         """
-        Sets the size of :class:`ImageBar`.
+        Sets the size of :class:`wx.ImageBar`.
 
         :param `xSize`: the width of the bar, in pixels;
         :param `ySize`: the height of the bar, in pixels.
@@ -645,8 +645,8 @@ class ImageBar(object):
         Sets the background button bar colour.
 
         :param `colour`: an instance of :class:`wx.Colour`;
-        :param `xSize`: if not ``None``, the new :class:`ImageBar` width;
-        :param `ySize`: if not ``None``, the new :class:`ImageBar` height.
+        :param `xSize`: if not ``None``, the new :class:`wx.ImageBar` width;
+        :param `ySize`: if not ``None``, the new :class:`wx.ImageBar` height.
         """        
 
         if not isinstance(colour, wx.Colour):
@@ -793,7 +793,7 @@ class ZoomBar(wx.Control):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         xSize = self._buttonSize*len(self._buttons) + len(self._buttons) + self._buttonSize
@@ -1139,7 +1139,7 @@ class ZoomBar(wx.Control):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ZoomBar`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.SnapToBottom(event.GetSize())
@@ -1192,7 +1192,7 @@ class ZoomBar(wx.Control):
         """
         Draws all the main button bitmaps on the :class:`ZoomBar` client window.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
         
         for button in self._buttons:
@@ -1206,7 +1206,7 @@ class ZoomBar(wx.Control):
         """
         Draws all the reflection button bitmaps on the :class:`ZoomBar` client window.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         if self._showReflections:
@@ -1221,7 +1221,7 @@ class ZoomBar(wx.Control):
         """
         Draws all the button labels on the :class:`ZoomBar` client window.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         if not self._showLabels:

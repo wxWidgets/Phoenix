@@ -223,7 +223,7 @@ def GetIndicatorBitmap():
 
 
 def GetIndicatorImage():
-    """ Returns the image indicator as a :class:`Image`. """
+    """ Returns the image indicator as a :class:`wx.Image`. """
     
     stream = six.BytesIO(GetIndicatorData())
     return wx.Image(stream)
@@ -247,9 +247,9 @@ def MakePalette(tr, tg, tb):
 
 def ConvertWXToPIL(bmp):
     """
-    Converts a :class:`Image` into a PIL image.
+    Converts a :class:`wx.Image` into a PIL image.
 
-    :param `bmp`: an instance of :class:`Image`.
+    :param `bmp`: an instance of :class:`wx.Image`.
 
     :note: Requires PIL (Python Imaging Library), which can be downloaded from
      http://www.pythonware.com/products/pil/
@@ -264,7 +264,7 @@ def ConvertWXToPIL(bmp):
 
 def ConvertPILToWX(pil, alpha=True):
     """
-    Converts a PIL image into a :class:`Image`.
+    Converts a PIL image into a :class:`wx.Image`.
 
     :param `pil`: a PIL image;
     :param `alpha`: ``True`` if the image contains alpha transparency, ``False``
@@ -499,7 +499,7 @@ class Indicator(object):
         """
         Actually draws the indicator.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         xpos, ypos = self.GetPosition()
@@ -691,7 +691,7 @@ class RulerCtrl(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`RulerCtrl`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.        
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         width, height = event.GetSize()
@@ -778,7 +778,7 @@ class RulerCtrl(wx.Panel):
         """
         Returns the indicator located at the mouse position `mousePos` (if any).
 
-        :param `mousePos`: the mouse position, an instance of :class:`Point`.
+        :param `mousePos`: the mouse position, an instance of :class:`wx.Point`.
         """
 
         for indicator in self._indicators:
@@ -1088,8 +1088,8 @@ class RulerCtrl(wx.Panel):
         """
         Sets the fonts for minor and major tick labels.
 
-        :param `minorFont`: the font used to draw minor ticks, a valid :class:`Font` object;
-        :param `majorFont`: the font used to draw major ticks, a valid :class:`Font` object.        
+        :param `minorFont`: the font used to draw minor ticks, a valid :class:`wx.Font` object;
+        :param `majorFont`: the font used to draw major ticks, a valid :class:`wx.Font` object.
         """
 
         self._minorfont = minorFont
@@ -1472,7 +1472,7 @@ class RulerCtrl(wx.Panel):
         """
         Ticks a particular position.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `pos`: the label position;
         :param `d`: the current label value;
         :param `major`: ``True`` if it is a major ticks, ``False`` if it is a minor one.
@@ -1578,7 +1578,7 @@ class RulerCtrl(wx.Panel):
         """
         Updates all the ticks calculations.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         # This gets called when something has been changed
@@ -1701,7 +1701,7 @@ class RulerCtrl(wx.Panel):
         """
         Actually draws the whole :class:`RulerCtrl`.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         if not self._valid:
@@ -1781,7 +1781,7 @@ class RulerCtrl(wx.Panel):
         """
         Sets the window to which :class:`RulerCtrl` draws a thin line over.
 
-        :param `dparent`: an instance of :class:`Window`, representing the window to
+        :param `dparent`: an instance of :class:`wx.Window`, representing the window to
          which :class:`RulerCtrl` draws a thin line over.
         """
 

@@ -402,7 +402,7 @@ class FourWaySplitter(wx.Panel):
         Add a new window to the splitter at the right side or bottom
         of the window stack.
 
-        :param `window`: an instance of :class:`Window`.
+        :param `window`: an instance of :class:`wx.Window`.
         """
         
         self.InsertWindow(len(self._windows), window)
@@ -413,7 +413,7 @@ class FourWaySplitter(wx.Panel):
         Insert a new window into the splitter at the position given in `idx`.
 
         :param `idx`: the index at which the window will be inserted;
-        :param `window`: an instance of :class:`Window`;
+        :param `window`: an instance of :class:`wx.Window`;
         :param `sashPos`: the sash position after the window insertion.
         """
         
@@ -429,7 +429,7 @@ class FourWaySplitter(wx.Panel):
         Removes the window from the stack of windows managed by the splitter. The
         window will still exist so you should `Hide` or `Destroy` it as needed.
 
-        :param `window`: an instance of :class:`Window`.        
+        :param `window`: an instance of :class:`wx.Window`.
         """
         
         assert window in self._windows, "Unknown window!"
@@ -446,8 +446,8 @@ class FourWaySplitter(wx.Panel):
         splitter) with `newWindow`.  The `oldWindow` window will still
         exist so you should `Hide` or `Destroy` it as needed.
 
-        :param `oldWindow`: an instance of :class:`Window`;
-        :param `newWindow`: another instance of :class:`Window`.
+        :param `oldWindow`: an instance of :class:`wx.Window`;
+        :param `newWindow`: another instance of :class:`wx.Window`.
         """
 
         assert oldWindow in self._windows, "Unknown window!"
@@ -462,8 +462,8 @@ class FourWaySplitter(wx.Panel):
         """
         Trade the positions in the splitter of the two windows.
 
-        :param `window1`: an instance of :class:`Window`;
-        :param `window2`: another instance of :class:`Window`.        
+        :param `window1`: an instance of :class:`wx.Window`;
+        :param `window2`: another instance of :class:`wx.Window`.
         """
         
         assert window1 in self._windows, "Unknown window!"
@@ -612,7 +612,7 @@ class FourWaySplitter(wx.Panel):
         Determines the split mode for :class:`FourWaySplitter`.
 
         :param `pt`: the point at which the mouse has been clicked, an instance of
-         :class:`Point`.
+         :class:`wx.Point`.
 
         :return: One of the following 3 split modes:
 
@@ -859,7 +859,7 @@ class FourWaySplitter(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`FourWaySplitter`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         parent = wx.GetTopLevelParent(self)
@@ -916,7 +916,7 @@ class FourWaySplitter(wx.Panel):
         """
         Actually draws the sashes.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         backColour = self.GetBackgroundColour()        
