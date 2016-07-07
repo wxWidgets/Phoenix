@@ -58,8 +58,8 @@
 #     SetBackgroundColour/SetForegroundColour on a PlotCanvas instance)
 #   - Changed PlotCanvas printing initialization from occuring in __init__ to
 #     occur on access. This will postpone any IPP and / or CUPS warnings
-#     which appear on stderr on some Linux systems until printing functionality
-#     is actually used.
+#     which appear on stderr on some Linux systems until printing
+#     functionality is actually used.
 #
 # Aug 20, 2015  Douglas Thor (doug.thor@gmail.com)
 #   - Implemented a drawstyle option to PolyLine that mimics matplotlib's
@@ -85,7 +85,10 @@
 #   - Added demos for PolyBars and PolyHistogram
 #   - updated plotNN menu items status-bar text to be descriptive.
 #   - increased default size of demo
-#   - updated XSpec and YSpec to accept a list or tuple of (min, max) values.
+#   - updated xSpec and ySpec to accept a list or tuple of (min, max) values.
+#
+# Jun 14, 2016 (Start)  Douglas Thor (doug.thor@gmail.com)
+#   -
 
 """
 This is a simple light weight plotting module that can be used with
@@ -123,23 +126,21 @@ improvement though. Lines are much faster than markers, especially
 filled markers.  Stay away from circles and triangles unless you
 only have a few thousand points.
 
-+-----------------------------------+
-| Times for 25,000 points           |
-+===================================+
-| Line                    | 0.078 s |
-+-------------------------+---------+
-| Markers                           |
-+-------------------------+---------+
-| Square                  | 0.22 s  |
-+-------------------------+---------+
-| dot                     | 0.10    |
-+-------------------------+---------+
-| circle                  | 0.87    |
-+-------------------------+---------+
-| cross, plus             | 0.28    |
-+-------------------------+---------+
-| triangle, triangle_down | 0.90    |
-+-------------------------+---------+
++--------------------------------------------+
+| Times for 25,000 points                    |
++============================================+
+| Line                             | 0.078 s |
++----------------------------------+---------+
+| Markers: Square                  | 0.22 s  |
++----------------------------------+---------+
+| Markers: dot                     | 0.10    |
++----------------------------------+---------+
+| Markers: circle                  | 0.87    |
++----------------------------------+---------+
+| Markers: cross, plus             | 0.28    |
++----------------------------------+---------+
+| Markers: triangle, triangle_down | 0.90    |
++----------------------------------+---------+
 
 Thanks to Chris Barker for getting this version working on Linux.
 
@@ -187,87 +188,135 @@ except:
     binaries."""
     raise ImportError("NumPy not found.\n" + msg)
 
-# XXX: Comment out this line to disable depreciation warnings
+# XXX: Comment out this line to disable deprecation warnings
 warnings.simplefilter('default')
 
-class SavePen(object):
+
+# TODO: New name: RevertStyle? SavedStyle? Something else?
+class TempStyle(object):
     """
-    Decorator which saves the dc Pen before calling a function and sets the
-    pen back after the funcion, even if the function raises an exception.
+    Combination Decorator and Context Manager to revert pen or brush changes
+    after a method call or block finish.
 
-    The DC to paint on **must** be the first argument of the function.
-
-    Usage:
-    -------
-    ::
-
-        @SavePen
-        def func(dc, a, b, c):
-            # edit pen here
-
-    is the same as::
-
-        def func(dc, a, b, c):
-            prevPen = dc.GetPen()
-            # edit pen here
-            dc.SetPen(prevPen)
-
-    Notes:
-    ------
-    # TODO: Do I also want to save and revert the dc's brush?
-
-    """
-    def __init__(self, func):
-        self.func = func
-
-    def __call__(self, *args, **kwargs):
-        """
-        This provides support for functions
-        """
-        dc = args[0]
-        with SavedPen(dc):
-            return self.func(*args, **kwargs)
-
-    def __get__(self, obj, objtype):
-        """
-        And this provides support for instance methods
-        """
-        @functools.wraps(self.func)
-        def wrapper(*args, **kwargs):
-            dc = args[0]
-            with SavedPen(dc):
-                return self.func(obj, *args, **kwargs)
-        return wrapper
-
-
-class SavedPen(object):
-    """
-    Context Manager for saving the previous wx.Pen and resetting it after.
-
-    Usage:
-    ------
+    :param which: The item to save and revert after execution. Can be
+                  one of ``{'both', 'pen', 'brush'}``.
+    :type which: str
+    :param dc: The DC to get brush/pen info from.
+    :type dc: :class:`wx.DC`
 
     ::
 
-        with SavedPen(dc):
+        # Using as a method decorator:
+        @TempStyle()                        # same as @TempStyle('both')
+        def func(self, dc, a, b, c):        # dc must be 1st arg (beside self)
+            # edit pen and brush here
+
+        # Or as a context manager:
+        with TempStyle('both', dc):
             # do stuff
 
+    .. Note::
+
+       As of 2016-06-15, this can only be used as a decorator for **class
+       methods**, not standard functions. There is a plan to try and remove
+       this restriction, but I don't know when that will happen...
+
+
+    .. epigraph::
+
+       *Combination Decorator and Context Manager! Also makes Julienne fries!
+       Will not break! Will not... It broke!*
+
+       -- The Genie
     """
-    def __init__(self, dc):
+    _valid_types = {'both', 'pen', 'brush'}
+    _err_str = (
+        "No DC provided and unable to determine DC from context for function "
+        "`{func_name}`. When `{cls_name}` is used as a decorator, the "
+        "decorated function must have a wx.DC as a keyword arg 'dc=' or "
+        "as the first arg."
+    )
+
+    def __init__(self, which='both', dc=None):
+        if which not in self._valid_types:
+            raise ValueError(
+                "`which` must be one of {}".format(self._valid_types)
+            )
+        self.which = which
         self.dc = dc
         self.prevPen = None
+        self.prevBrush = None
+
+    def __call__(self, func):
+
+        @functools.wraps(func)
+        def wrapper(instance, dc, *args, **kwargs):
+            # fake the 'with' block. This solves:
+            # 1.  plots only being shown on 2nd menu selection in demo
+            # 2.  self.dc compalaining about not having a super called when
+            #     trying to get or set the pen/brush values in __enter__ and
+            #     __exit__:
+            #         RuntimeError: super-class __init__() of type
+            #         BufferedDC was never called
+            self._save_items(dc)
+            func(instance, dc, *args, **kwargs)
+            self._revert_items(dc)
+
+            #import copy                    # copy solves issue #1 above, but
+            #self.dc = copy.copy(dc)        # possibly causes issue #2.
+
+            #with self:
+            #    print('in with')
+            #    func(instance, dc, *args, **kwargs)
+
+        return wrapper
 
     def __enter__(self):
-        """ Save the pen """
-        self.prevPen = self.dc.GetPen()
+        self._save_items(self.dc)
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        """ Set the pen back, even if the function errored """
-        self.dc.SetPen(self.prevPen)
+    def __exit__(self, *exc):
+        self._revert_items(self.dc)
+        return False    # True means exceptions *are* suppressed.
 
-#    def __repr__(self):
-#        return "{}".format(self.__class__.__name__)
+    def _save_items(self, dc):
+        if self.which == 'both':
+            self._save_pen(dc)
+            self._save_brush(dc)
+        elif self.which == 'pen':
+            self._save_pen(dc)
+        elif self.which == 'brush':
+            self._save_brush(dc)
+        else:
+            err_str = ("How did you even get here?? This class forces "
+                       "correct values for `which` at instancing..."
+                       )
+            raise ValueError(err_str)
+
+    def _revert_items(self, dc):
+        if self.which == 'both':
+            self._revert_pen(dc)
+            self._revert_brush(dc)
+        elif self.which == 'pen':
+            self._revert_pen(dc)
+        elif self.which == 'brush':
+            self._revert_brush(dc)
+        else:
+            err_str = ("How did you even get here?? This class forces "
+                       "correct values for `which` at instancing...")
+            raise ValueError(err_str)
+
+    def _save_pen(self, dc):
+        self.prevPen = dc.GetPen()
+
+    def _save_brush(self, dc):
+        self.prevBrush = dc.GetBrush()
+
+    def _revert_pen(self, dc):
+        dc.SetPen(self.prevPen)
+
+    def _revert_brush(self, dc):
+        dc.SetBrush(self.prevBrush)
 
 
 class PendingDeprecation(object):
@@ -275,8 +324,8 @@ class PendingDeprecation(object):
     Decorator which warns the developer about methods that are
     pending deprecation.
 
-    Usage:
-    ------
+    :param new_func: The new class, method, or function that should be used.
+    :type new_func: str
 
     ::
 
@@ -284,12 +333,11 @@ class PendingDeprecation(object):
         def old_func():
             pass
 
-    prints the warning::
-
-        `old_func` is pending deprecation. Please use new_func instead.
+        # prints the warning:
+        # `old_func` is pending deprecation. Please use `new_func` instead.
 
     """
-    _warn_txt = "`{}` is pending deprecation. Please use {} instead."
+    _warn_txt = "`{}` is pending deprecation. Please use `{}` instead."
 
     def __init__(self, new_func):
         self.new_func = new_func
@@ -297,7 +345,7 @@ class PendingDeprecation(object):
     def __call__(self, func):
         """Support for functions"""
         self.func = func
-        self._update_docs()
+#        self._update_docs()
 
         @functools.wraps(self.func)
         def wrapper(*args, **kwargs):
@@ -326,11 +374,14 @@ class _DisplaySide(object):
     - it contains type checking, only allowing boolean values
     - it contains name checking, only allowing valid_names as attributes
 
-    Parameters:
-    -----------
-    bottom, left, top, right : bool
-        Boolean values for a given side's display value.
-
+    :param bottom: Display the bottom side?
+    :type bottom: bool
+    :param left: Display the left side?
+    :type left: bool
+    :param top: Display the top side?
+    :type top: bool
+    :param right: Display the right side?
+    :type right: bool
     """
     # TODO: Do I want to replace with __slots__?
     #       Not much memory gain because this class is only called a small
@@ -339,7 +390,6 @@ class _DisplaySide(object):
     valid_names = ("bottom", "left", "right", "top")
 
     def __init__(self, bottom, left, top, right):
-        # make sure that everything is boolean
         if not all([isinstance(x, bool) for x in [bottom, left, top, right]]):
             raise TypeError("All args must be bools")
         self.bottom = bottom
@@ -367,7 +417,8 @@ class _DisplaySide(object):
         other attributes from being created.
         """
         if name not in self.valid_names:
-            raise NameError("attribute must be one of {}".format(self.valid_names))
+            err_str = "attribute must be one of {}"
+            raise NameError(err_str.format(self.valid_names))
         if not isinstance(value, bool):
             raise TypeError("'{}' must be a boolean".format(name))
         self.__dict__[name] = value
@@ -404,7 +455,13 @@ class PolyPoints(object):
     """
     Base Class for lines and markers.
 
-    All methods are private.
+    :param points: The points to plot
+    :type points: list of ``(x, y)`` pairs
+    :param attr: Additional attributes
+    :type attr: dict
+
+    .. warning::
+       All methods are private.
     """
 
     def __init__(self, points, attr):
@@ -425,21 +482,25 @@ class PolyPoints(object):
             self.attributes[name] = value
 
     @property
-    def LogScale(self):
+    def logScale(self):
+        """
+        A tuple of ``(x_axis_is_log10, y_axis_is_log10)`` booleans. If a value
+        is ``True``, then that axis is plotted on a logarithmic base 10 scale.
+
+        :getter: Returns the current value of logScale
+        :setter: Sets the value of logScale
+        :type: tuple of bool, length 2
+        :raises ValueError: when setting an invalid value
+        """
         return self._logscale
 
-    @LogScale.setter
-    def LogScale(self, logscale):
-        """
-        Set to change the axes to plot Log10(values)
-
-        Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
-        """
+    @logScale.setter
+    def logScale(self, logscale):
         if not isinstance(logscale, tuple) or len(logscale) != 2:
             raise ValueError("`logscale` must be a 2-tuple of bools")
         self._logscale = logscale
 
-    @PendingDeprecation("self.LogScale property")
+    @PendingDeprecation("self.logScale property")
     def setLogScale(self, logscale):
         """
         Set to change the axes to plot Log10(values)
@@ -449,78 +510,157 @@ class PolyPoints(object):
         self._logscale = logscale
 
     @property
-    def SymLogScale(self):
+    def symLogScale(self):
+        """
+        .. warning::
+
+           Not yet implemented.
+
+        A tuple of ``(x_axis_is_SymLog10, y_axis_is_SymLog10)`` booleans.
+        If a value is ``True``, then that axis is plotted on a symmetric
+        logarithmic base 10 scale.
+
+        A Symmetric Log10 scale means that values can be positive and
+        negative. Any values less than
+        :attr:`~wx.lig.plot.PolyPoints.symLogThresh` will be plotted on
+        a linear scale to avoid the plot going to infinity near 0.
+
+        :getter: Returns the current value of symLogScale
+        :setter: Sets the value of symLogScale
+        :type: tuple of bool, length 2
+        :raises ValueError: when setting an invalid value
+
+        .. notes::
+
+           This is a simplified example of how SymLog works::
+
+             if x >= thresh:
+                 x = Log10(x)
+             elif x =< thresh:
+                 x = -Log10(Abs(x))
+             else:
+                 x = x
+
+        .. seealso::
+
+           + :attr:`~wx.lib.plot.PolyPoints.symLogThresh`
+           + See http://matplotlib.org/examples/pylab_examples/symlog_demo.html
+             for an example.
+        """
         return self._symlogscale
 
     # TODO: Implement symmetric log scale
-    @SymLogScale.setter
-    def SymLogScale(self, symlogscale):
-        """
-        # Not implemented yet
-
-
-        Set to change the axes to a symmetric log10 scale.
-
-        Value must be a 2-tuple of booleans (x_axis_bool, y_axis_bool)
-
-        A Symmetric Log scale uses the following properties:
-        if x > 0:
-            x = Log10(x)
-        elif x < 0:
-            x = -Log10(Abs(x))
-        """
-        raise NotImplementedError("Symmetric Log Scale is not implemented yet")
+    @symLogScale.setter
+    def symLogScale(self, symlogscale, thresh):
+        raise NotImplementedError("Symmetric Log Scale not yet implemented")
 
         if not isinstance(symlogscale, tuple) or len(symlogscale) != 2:
             raise ValueError("`symlogscale` must be a 2-tuple of bools")
         self._symlogscale = symlogscale
 
     @property
-    def AbsScale(self):
+    def symLogThresh(self):
+        """
+        .. warning::
+
+           Not yet implemented.
+
+        A tuple of ``(x_thresh, y_thresh)`` floats that define where the plot
+        changes to linear scale when using a symmetric log scale.
+
+        :getter: Returns the current value of symLogThresh
+        :setter: Sets the value of symLogThresh
+        :type: tuple of float, length 2
+        :raises ValueError: when setting an invalid value
+
+        .. notes::
+
+           This is a simplified example of how SymLog works::
+
+             if x >= thresh:
+                 x = Log10(x)
+             elif x =< thresh:
+                 x = -Log10(Abs(x))
+             else:
+                 x = x
+
+        .. seealso::
+
+           + :attr:`~wx.lib.plot.PolyPoints.symLogScale`
+           + See http://matplotlib.org/examples/pylab_examples/symlog_demo.html
+             for an example.
+        """
+        return self._symlogscale
+
+    # TODO: Implement symmetric log scale threshold
+    @symLogThresh.setter
+    def symLogThresh(self, symlogscale, thresh):
+        raise NotImplementedError("Symmetric Log Scale not yet implemented")
+
+        if not isinstance(symlogscale, tuple) or len(symlogscale) != 2:
+            raise ValueError("`symlogscale` must be a 2-tuple of bools")
+        self._symlogscale = symlogscale
+
+    @property
+    def absScale(self):
+        """
+        A tuple of ``(x_axis_is_abs, y_axis_is_abs)`` booleans. If a value
+        is ``True``, then that axis is plotted on an absolute value scale.
+
+        :getter: Returns the current value of absScale
+        :setter: Sets the value of absScale
+        :type: tuple of bool, length 2
+        :raises ValueError: when setting an invalid value
+        """
         return self._absScale
 
-    @AbsScale.setter
-    def AbsScale(self, absscale):
-        """
-        Set to change the axes to plot Abs(values)
+    @absScale.setter
+    def absScale(self, absscale):
 
-        Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
-        """
         if not isinstance(absscale, tuple) and len(absscale) == 2:
             raise ValueError("`absscale` must be a 2-tuple of bools")
         self._absScale = absscale
 
     @property
     def points(self):
-        """Returns the points, adjusting for log scale if LogScale is set"""
+        """
+        Get or set the plotted points.
+
+        :getter: Returns the current value of points, adjusting for the
+                 various scale options such as Log, Abs, or SymLog.
+        :setter: Sets the value of points.
+        :type: list of `(x, y)` pairs
+
+        .. Note::
+
+           Only set unscaled points - do not perform the log, abs, or symlog
+           adjustments yourself.
+        """
         data = np.array(self._points, copy=True)    # need the copy
                                                     # TODO: get rid of the
                                                     # need for copy
 
-        # TODO: I can make this better... move logic to self._log10
         # work on X:
-        if self.AbsScale[0]:
-            data[:, 0] = np.abs(data[:, 0])
-        if self.LogScale[0]:
-            data = np.compress(data[:, 0] > 0, data, 0)
-            data[:, 0] = np.log10(data[:, 0])
+        if self.absScale[0]:
+            data = self._abs(data, 0)
+        if self.logScale[0]:
+            data = self._log10(data, 0)
 
-        if self.SymLogScale[0]:
-            # TODO: implement SymLogScale
-            # Should SymLogScale override AbsScale? My vote is no.
-            # Should SymLogScale override LogScale? My vote is yes.
-            #   - SymLogScale could be a parameter passed to LogScale...
+        if self.symLogScale[0]:
+            # TODO: implement symLogScale
+            # Should symLogScale override absScale? My vote is no.
+            # Should symLogScale override logScale? My vote is yes.
+            #   - symLogScale could be a parameter passed to logScale...
             pass
 
         # work on Y:
-        if self.AbsScale[1]:
-            data[:, 1] = np.abs(data[:, 1])
-        if self.LogScale[1]:
-            data = np.compress(data[:, 1] > 0, data, 0)
-            data[:, 1] = np.log10(data[:, 1])
+        if self.absScale[1]:
+            data = self._abs(data, 1)
+        if self.logScale[1]:
+            data = self._log10(data, 1)
 
-        if self.SymLogScale[1]:
-            # TODO: implement SymLogScale
+        if self.symLogScale[1]:
+            # TODO: implement symLogScale
             pass
 
         return data
@@ -535,6 +675,11 @@ class PolyPoints(object):
         data[:, index] = np.log10(data[:, index])
         return data
 
+    def _abs(self, data, index):
+        """ Take the Abs of the data """
+        data[:, index] = np.abs(data[:, index])
+        return data
+
     def boundingBox(self):
         """
         Returns the bouding box for the entire dataset as a tuple with this
@@ -542,15 +687,8 @@ class PolyPoints(object):
 
             ((minX, minY), (maxX, maxY))
 
-        Parameters:
-        -----------
-        None
-
-        Returns:
-        --------
-        minXY, maxXY : numpy arrays of length 2
-            The minimum and maximum X and Y values.
-
+        :returns: boundingbox
+        :rtype: numpy array of ``[[minX, minY], [maxX, maxY]]``
         """
         if len(self.points) == 0:
             # no curves to draw
@@ -566,23 +704,24 @@ class PolyPoints(object):
         """
         Scales and shifts the data for plotting.
 
-        Parameters:
-        -----------
-        scale : tuple of floats
-            The (x_scale, y_scale) tuple to scale the data by
-
-        shift : tuple of floats
-            The (x_shift, y_shift) tuple to shift the data by.
-
-        Returns:
-        --------
-        None
-
+        :param scale: The values to scale the data by.
+        :type scale: list of floats: ``[x_scale, y_scale]``
+        :param shift: The value to shift the data by. This should be in scaled
+                      units
+        :type shift: list of floats: ``[x_shift, y_shift]``
+        :returns: None
         """
         if len(self.points) == 0:
             # no curves to draw
             return
-        if (scale is not self.currentScale) or (shift is not self.currentShift):
+
+        # TODO: Can we remove the if statement alltogether? Does
+        #       scaleAndShift ever get called when the current value equals
+        #       the new value?
+
+        # cast everything to list: some might be np.ndarray objects
+        if (list(scale) != list(self.currentScale)
+                or list(shift) != list(self.currentShift)):
             # update point scaling
             self.scaled = scale * self.points + shift
             self.currentScale = scale
@@ -620,9 +759,42 @@ class PolyPoints(object):
 
 class PolyLine(PolyPoints):
     """
-    Class to define line type and style
+    Creates PolyLine object
 
-    All methods except ``__init__`` are private.
+    :param points: The points that make up the line
+    :type points: list of ``[x, y]`` values
+    :param **attr: keyword attributes
+
+    ===========================  =============  ====================
+    Keyword and Default          Description    Type
+    ===========================  =============  ====================
+    ``colour='black'``           Line color     :class:`wx.Colour`
+    ``width=1``                  Line width     float
+    ``style=wx.PENSTYLE_SOLID``  Line style     :class:`wx.PenStyle`
+    ``legend=''``                Legend string  str
+    ``drawstyle='line'``         see below      str
+    ===========================  =============  ====================
+
+    ==================  ==================================================
+    Draw style          Description
+    ==================  ==================================================
+    ``'line'``          Draws an straight line between consecutive points
+    ``'steps-pre'``     Draws a line down from point A and then right to
+                        point B
+    ``'steps-post'``    Draws a line right from point A and then down
+                        to point B
+    ``'steps-mid-x'``   Draws a line horizontally to half way between A
+                        and B, then draws a line vertically, then again
+                        horizontally to point B.
+    ``'steps-mid-y'``   Draws a line vertically to half way between A
+                        and B, then draws a line horizonatally, then
+                        again vertically to point B.
+                        *Note: This typically does not look very good*
+    ==================  ==================================================
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
 
     _attributes = {'colour': 'black',
@@ -635,41 +807,19 @@ class PolyLine(PolyPoints):
                    "steps-mid-x", "steps-mid-y")
 
     def __init__(self, points, **attr):
-        """
-        Creates PolyLine object
-
-        :param `points`: sequence (array, tuple or list) of (x,y) points
-                         making up line
-        :keyword `attr`: keyword attributes, default to:
-
-         ==========================  ================================
-         'colour'= 'black'           wx.Pen Colour any wx.Colour
-         'width'= 1                  Pen width
-         'style'= wx.PENSTYLE_SOLID  wx.Pen style
-         'legend'= ''                Line Legend to display
-         'drawstyle'= 'line'         How points are joined.
-         ==========================  ================================
-
-        Valid 'drawstyle' values are:
-
-            'line'          Draws an straight line between consecutive points
-            'steps-pre'     Draws a line down from point A and then right to
-                            point B
-            'steps-post'    Draws a line right from point A and then down
-                            to point B
-            'steps-mid-x'   Draws a line right to half way between A and B,
-                            then draws a line vertically, then again right
-                            to point B.
-            'steps-mid-y'   Draws a line vertically to half way between A
-                            and B, then draws a line horizonatally, then
-                            again vertically to point B.
-                            *Note: This typically does not look very good*
-
-        """
         PolyPoints.__init__(self, points, attr)
 
     def draw(self, dc, printerScale, coord=None):
-        """ Draw the lines """
+        """
+        Draw the lines.
+
+        :param dc: The DC to draw on.
+        :type dc: :class:`wx.DC`
+        :param printerScale:
+        :type printerScale: float
+        :param coord: The legend coordinate?
+        :type coord: ???
+        """
         colour = self.attributes['colour']
         width = self.attributes['width'] * printerScale * self._pointSize[0]
         style = self.attributes['style']
@@ -683,18 +833,34 @@ class PolyLine(PolyPoints):
         if coord is None:
             if len(self.scaled):  # bugfix for Mac OS X
                 for c1, c2 in zip(self.scaled, self.scaled[1:]):
-                    self.path(dc, c1, c2, drawstyle)
+                    self._path(dc, c1, c2, drawstyle)
         else:
             dc.DrawLines(coord)  # draw legend line
 
     def getSymExtent(self, printerScale):
-        """Width and Height of Marker"""
+        """
+        Get the Width and Height of the symbol.
+
+        :param printerScale:
+        :type printerScale: float
+        """
         h = self.attributes['width'] * printerScale * self._pointSize[0]
         w = 5 * h
         return (w, h)
 
-    def path(self, dc, coord1, coord2, drawstyle):
-        """ calculates the path from coord1 to coord 2 along X and Y """
+    def _path(self, dc, coord1, coord2, drawstyle):
+        """
+        Calculates the path from coord1 to coord 2 along X and Y
+
+        :param dc: The DC to draw on.
+        :type dc: :class:`wx.DC`
+        :param coord1: The first coordinate in the coord pair
+        :type coord1: list, length 2: ``[x, y]``
+        :param coord2: The second coordinate in the coord pair
+        :type coord2: list, length 2: ``[x, y]``
+        :param drawstyle: The type of connector to use
+        :type drawstyle: str
+        """
         if drawstyle == 'line':
             # Straight line between points.
             line = [coord1, coord2]
@@ -727,9 +893,24 @@ class PolyLine(PolyPoints):
 
 class PolySpline(PolyLine):
     """
-    Class to define line type and style.
+    Creates PolySpline object
 
-    All methods except ``__init__`` are private.
+    :param points: The points that make up the spline
+    :type points: list of ``[x, y]`` values
+    :param **attr: keyword attributes
+
+    ===========================  =============  ====================
+    Keyword and Default          Description    Type
+    ===========================  =============  ====================
+    ``colour='black'``           Line color     :class:`wx.Colour`
+    ``width=1``                  Line width     float
+    ``style=wx.PENSTYLE_SOLID``  Line style     :class:`wx.PenStyle`
+    ``legend=''``                Legend string  str
+    ===========================  =============  ====================
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
 
     _attributes = {'colour': 'black',
@@ -738,21 +919,6 @@ class PolySpline(PolyLine):
                    'legend': ''}
 
     def __init__(self, points, **attr):
-        """
-        Creates PolyLine object
-
-        :param `points`: sequence (array, tuple or list) of (x,y) points
-                         making up spline
-        :keyword `attr`: keyword attributes, default to:
-
-         ==========================  ================================
-         'colour'= 'black'           wx.Pen Colour any wx.Colour
-         'width'= 1                  Pen width
-         'style'= wx.PENSTYLE_SOLID  wx.Pen style
-         'legend'= ''                Line Legend to display
-         ==========================  ================================
-
-        """
         PolyLine.__init__(self, points, **attr)
 
     def draw(self, dc, printerScale, coord=None):
@@ -774,9 +940,40 @@ class PolySpline(PolyLine):
 
 class PolyMarker(PolyPoints):
     """
-    Class to define marker type and style
+    Creates a PolyMarker object.
 
-    All methods except __init__ are private.
+    :param points: The marker coordinates.
+    :type points: list of ``[x, y]`` values
+    :param **attr: keyword attributes
+
+    =================================  =============  ====================
+    Keyword and Default                Description    Type
+    =================================  =============  ====================
+    ``marker='circle'``                see below      str
+    ``size=2``                         Marker size    float
+    ``colour='black'``                 Outline color  :class:`wx.Colour`
+    ``width=1``                        Outline width  float
+    ``style=wx.PENSTYLE_SOLID``        Outline style  :class:`wx.PenStyle`
+    ``fillcolour=colour``              fill color     :class:`wx.Colour`
+    ``fillstyle=wx.BRUSHSTYLE_SOLID``  fill style     :class:`wx.BrushStyle`
+    ``legend=''``                      Legend string  str
+    =================================  =============  ====================
+
+    ===================  ==================================
+    Marker               Description
+    ===================  ==================================
+    ``'circle'``         A circle of diameter ``size``
+    ``'dot'``            A dot. Does not have a size.
+    ``'square'``         A square with side length ``size``
+    ``'triangle'``       An upward-pointed triangle
+    ``'triangle_down'``  A downward-pointed triangle
+    ``'cross'``          An "X" shape
+    ``'plus'``           A "+" shape
+    ===================  ==================================
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
     _attributes = {'colour': 'black',
                    'width': 1,
@@ -787,34 +984,7 @@ class PolyMarker(PolyPoints):
                    'legend': ''}
 
     def __init__(self, points, **attr):
-        """
-        Creates PolyMarker object
 
-        :param `points`: sequence (array, tuple or list) of (x,y) points
-        :keyword `attr`: keyword attributes, default to:
-
-         ================================ ================================
-         'colour'= 'black'                wx.Pen Colour any wx.Colour
-         'width'= 1                       Pen width
-         'size'= 2                        Marker size
-         'fillcolour'= same as colour     wx.Brush Colour any wx.Colour
-         'fillstyle'= wx.BRUSHSTYLE_SOLID wx.Brush fill style (use
-                                          wx.BRUSHSTYLE_TRANSPARENT for
-                                          no fill)
-         'style'= wx.FONTFAMILY_SOLID     wx.Pen style
-         'marker'= 'circle'               Marker shape
-         'legend'= ''                     Line Legend to display
-         ================================ ================================
-
-         Marker Shapes:
-         - 'circle'
-         - 'dot'
-         - 'square'
-         - 'triangle'
-         - 'triangle_down'
-         - 'cross'
-         - 'plus'
-        """
 
         PolyPoints.__init__(self, points, attr)
 
@@ -849,7 +1019,7 @@ class PolyMarker(PolyPoints):
         return (s, s)
 
     def _drawmarkers(self, dc, coords, marker, size=1):
-        f = eval('self._' + marker)     # XXX: look into changing this
+        f = getattr(self, "_{}".format(marker))
         f(dc, coords, size)
 
     def _circle(self, dc, coords, size=1):
@@ -898,9 +1068,13 @@ class PolyMarker(PolyPoints):
             dc.DrawLineList(lines.astype(np.int32))
 
 
-class PolyBars(PolyPoints):
+class PolyBarsBase(PolyPoints):
     """
-    Rectangles!
+    Base class for PolyBars and PolyHistogram.
+
+    .. warning::
+
+       All methods are private.
     """
     _attributes = {'edgecolour': 'black',
                    'edgewidth': 2,
@@ -908,30 +1082,11 @@ class PolyBars(PolyPoints):
                    'legend': '',
                    'fillcolour': 'red',
                    'fillstyle': wx.BRUSHSTYLE_SOLID,
-                   'barwidth': None
+                   'barwidth': 1.0
                    }
 
-    def __init__(self, points, **attr):
+    def __init__(self, points, attr):
         """
-        Creates PolyRectangle object
-
-        :param `points`: sequence (array, tuple or list) of (x, y) points
-                         that define the bar.
-                         x: the centerline of the bar.
-                         y: the value of the bar (from y=0)
-        :keyword `attr`: keyword attributes, default to:
-
-         =================================  ================================
-         'edgecolour' = 'black'             wx.Pen Colour: any wx.Colour
-         'edgewidth' = 1                    wx.Pen width
-         'edgestyle' = wx.PENSTYLE_SOLID    wx.Pen style
-         'legend' = ''                      Line Legend to display
-         'fillcolour' = 'red'               wx.Brush fill color: any wx.Colour
-         'fillstyle' = wx.BRUSHSTYLE_SOLID  The fill style for the rectangle
-         'barwidth' = None                  The bar width. None means 0 space
-                                            between bars
-         =================================  ================================
-
         """
         PolyPoints.__init__(self, points, attr)
 
@@ -940,101 +1095,157 @@ class PolyBars(PolyPoints):
         scaled = scale * data + shift
         return scaled
 
-    def draw(self, dc, printerScale, coord=None):
-        """ Draw the bars """
-        pencolour = self.attributes['edgecolour']
-        penwidth = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
-        penstyle = self.attributes['edgestyle']
-        fillcolour = self.attributes['fillcolour']
-        fillstyle = self.attributes['fillstyle']
-        barwidth = self.attributes['barwidth']
-        barwidth = 1.
-
-        if not isinstance(pencolour, wx.Colour):
-            pencolour = wx.Colour(pencolour)
-        pen = wx.Pen(pencolour, penwidth, penstyle)
-        pen.SetCap(wx.CAP_BUTT)
-        if not isinstance(fillcolour, wx.Colour):
-            fillcolour = wx.Colour(fillcolour)
-        brush = wx.Brush(fillcolour, fillstyle)
-        dc.SetPen(pen)
-        dc.SetBrush(brush)
-        if coord is None:
-            rects = []
-            if isinstance(barwidth, (int, float)):
-                pts = ((x, y, barwidth) for x, y in self.points)
-            else:
-                pts = ((x, y, w) for (x, y), w in zip(self.points, barwidth))
-
-            for x, y, w in pts:
-                # Change the point to a format that works for _scaleAndShift
-                rect = [[x - w / 2, y],      # left, top
-                        [x + w / 2, 0]]      # right, bottom
-
-                # Scale the points to the plot area
-                rect = self._scaleAndShift(rect,
-                                           self.currentScale,
-                                           self.currentShift)
-
-                # Convert to (left, top, width, height)
-                rect = [rect[0][0],                 # X (left)
-                        rect[0][1],                 # Y (top)
-                        rect[1][0] - rect[0][0],    # Width
-                        rect[1][1] - rect[0][1]]    # Height
-
-                rects.append(rect)
-
-            dc.DrawRectangleList(rects)
-        else:
-            dc.DrawLines(coord)  # draw legend line
-
     def getSymExtent(self, printerScale):
         """Width and Height of Marker"""
         h = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
         w = 5 * h
         return (w, h)
 
+    def set_pen_and_brush(self, dc, printerScale):
+        pencolour = self.attributes['edgecolour']
+        penwidth = (self.attributes['edgewidth']
+                    * printerScale * self._pointSize[0])
+        penstyle = self.attributes['edgestyle']
+        fillcolour = self.attributes['fillcolour']
+        fillstyle = self.attributes['fillstyle']
 
-class PolyHistogram(PolyPoints):
+        if not isinstance(pencolour, wx.Colour):
+            pencolour = wx.Colour(pencolour)
+        pen = wx.Pen(pencolour, penwidth, penstyle)
+        pen.SetCap(wx.CAP_BUTT)
+
+        if not isinstance(fillcolour, wx.Colour):
+            fillcolour = wx.Colour(fillcolour)
+        brush = wx.Brush(fillcolour, fillstyle)
+
+        dc.SetPen(pen)
+        dc.SetBrush(brush)
+
+    def scale_rect(self, rect):
+        # Scale the points to the plot area
+        scaled_rect = self._scaleAndShift(rect,
+                                          self.currentScale,
+                                          self.currentShift)
+
+        # Convert to (left, top, width, height) for drawing
+        wx_rect = [scaled_rect[0][0],                       # X (left)
+                   scaled_rect[0][1],                       # Y (top)
+                   scaled_rect[1][0] - scaled_rect[0][0],   # Width
+                   scaled_rect[1][1] - scaled_rect[0][1]]   # Height
+
+        return wx_rect
+
+    def draw(self, dc, printerScale, coord=None):
+        pass
+
+
+class PolyBars(PolyBarsBase):
     """
-    Histogram
+    Creates a PolyBars object.
 
-    Special PolyBars where the bars span the binspec.
+    :param points: The data to plot.
+    :type points: sequence of ``(center, height)`` points
+    :param **attr: keyword attributes
+
+    =================================  =============  =======================
+    Keyword and Default                Description    Type
+    =================================  =============  =======================
+    ``barwidth=1.0``                   bar width      float or list of floats
+    ``edgecolour='black'``             edge color     :class:`wx.Colour`
+    ``edgewidth=1``                    edge width     float
+    ``edgestyle=wx.PENSTYLE_SOLID``    edge style     :class:`wx.PenStyle`
+    ``fillcolour='red'``               fill color     :class:`wx.Colour`
+    ``fillstyle=wx.BRUSHSTYLE_SOLID``  fill style     :class:`wx.BrushStyle`
+    ``legend=''``                      legend string  str
+    =================================  =============  =======================
+
+    .. important::
+
+       If ``barwidth`` is a list of floats:
+
+       + each bar will have a separate width
+       + ``len(barwidth)`` must equal ``len(points)``.
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
+    def __init__(self, points, **attr):
+        PolyBarsBase.__init__(self, points, attr)
 
-    _attributes = {'edgecolour': 'black',
-                   'edgewidth': 3,
-                   'edgestyle': wx.PENSTYLE_SOLID,
-                   'legend': '',
-                   'fillcolour': wx.GREEN,
-                   'fillstyle': wx.BRUSHSTYLE_SOLID,
-                   }
+    def calc_rect(self, x, y, w):
+        """ Calculate the rectangle for plotting. """
+        return self.scale_rect([[x - w / 2, y],      # left, top
+                                [x + w / 2, 0]])     # right, bottom
 
+    def draw(self, dc, printerScale, coord=None):
+        """ Draw the bars """
+        self.set_pen_and_brush(dc, printerScale)
+        barwidth = self.attributes['barwidth']
+
+        if coord is None:
+            if isinstance(barwidth, (int, float)):
+                # use a single width for all bars
+                pts = ((x, y, barwidth) for x, y in self.points)
+            elif isinstance(barwidth, (list, tuple)):
+                # use a separate width for each bar
+                if len(barwidth) != len(self.points):
+                    err_str = ("Barwidth ({} items) and Points ({} items) do "
+                               "not have the same length!")
+                    err_str = err_str.format(len(barwidth), len(self.points))
+                    raise ValueError(err_str)
+                pts = ((x, y, w) for (x, y), w in zip(self.points, barwidth))
+            else:
+                # invalid attribute type
+                err_str = ("Invalid type for 'barwidth'. Expected float, "
+                           "int, or list or tuple of (int or float). Got {}.")
+                raise TypeError(err_str.format(type(barwidth)))
+
+            rects = [self.calc_rect(x, y, w) for x, y, w in pts]
+            dc.DrawRectangleList(rects)
+        else:
+            dc.DrawLines(coord)  # draw legend line
+
+
+class PolyHistogram(PolyBarsBase):
+    """
+    Creates a PolyHistogram object.
+
+    :param hist: The histogram data.
+    :type hist: sequence of ``y`` values that define the heights of the bars
+    :param binspec: The bin specification.
+    :type binspec: sequence of ``x`` values that define the edges of the bins
+    :param **attr: keyword attributes
+
+    =================================  =============  =======================
+    Keyword and Default                Description    Type
+    =================================  =============  =======================
+    ``edgecolour='black'``             edge color     :class:`wx.Colour`
+    ``edgewidth=3``                    edge width     float
+    ``edgestyle=wx.PENSTYLE_SOLID``    edge style     :class:`wx.PenStyle`
+    ``fillcolour='blue'``              fill color     :class:`wx.Colour`
+    ``fillstyle=wx.BRUSHSTYLE_SOLID``  fill style     :class:`wx.BrushStyle`
+    ``legend=''``                      legend string  str
+    =================================  =============  =======================
+
+    .. tip::
+
+       Use ``np.histogram()`` to easily create your histogram parameters::
+
+         hist_data, binspec = np.histogram(data)
+         hist_plot = PolyHistogram(hist_data, binspec)
+
+    .. important::
+
+       ``len(binspec)`` must equal ``len(hist) + 1``.
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
+    """
     def __init__(self, hist, binspec, **attr):
-        """
-        Creates PolyHistogram object
-
-        :param `hist`: sequence (array, tuple or list) of y values
-                       that define the heights of the bars (same as 1st
-                       returned parameter from ``np.histogram(data)``).
-        :param `binspec`: sequence of x values that define the edges of the
-                          bins (same as 2nd returned parameter from
-                          ``np.histogram(data)``).
-                          len(binspec) must equal len(hist) + 1
-        :keyword `attr`: keyword attributes, default to:
-
-         =================================  ================================
-         'edgecolour' = 'black'             wx.Pen Colour: any wx.Colour
-         'edgewidth' = 3                    wx.Pen width
-         'edgestyle' = wx.PENSTYLE_SOLID    wx.Pen style
-         'legend' = ''                      Line Legend to display
-         'fillcolour' = 'blue'              wx.Brush fill color: any wx.Colour
-         'fillstyle' = wx.BRUSHSTYLE_SOLID  The fill style for the rectangle
-         =================================  ================================
-
-        """
         if len(binspec) != len(hist) + 1:
-            raise ValueError("Length of binspec must = length of hist + 1")
+            raise ValueError("Len(binspec) must equal len(hist) + 1")
 
         self.hist = hist
         self.binspec = binspec
@@ -1047,107 +1258,72 @@ class PolyHistogram(PolyPoints):
             next(b, None)
             return zip(a, b)
 
+        # define the bins and center x locations
         self.bins = list(pairwise(self.binspec))
-        x = []
-        for pair in self.bins:
-            x.append(pair[0] + (pair[1] - pair[0])/2)
+        bar_center_x = (pair[0] + (pair[1] - pair[0])/2 for pair in self.bins)
 
-        points = list(zip(x, self.hist))
+        points = list(zip(bar_center_x, self.hist))
+        PolyBarsBase.__init__(self, points, attr)
 
-        PolyPoints.__init__(self, points, attr)
-
-    def _scaleAndShift(self, data, scale=(1, 1), shift=(0, 0)):
-        """same as override method, but retuns a value."""
-        scaled = scale * data + shift
-        return scaled
+    def calc_rect(self, y, low, high):
+        """ Calculate the rectangle for plotting. """
+        return self.scale_rect([[low, y],       # left, top
+                                [high, 0]])     # right, bottom
 
     def draw(self, dc, printerScale, coord=None):
         """ Draw the bars """
-        pencolour = self.attributes['edgecolour']
-        penwidth = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
-        penstyle = self.attributes['edgestyle']
-        fillcolour = self.attributes['fillcolour']
-        fillstyle = self.attributes['fillstyle']
+        self.set_pen_and_brush(dc, printerScale)
 
-        if not isinstance(pencolour, wx.Colour):
-            pencolour = wx.Colour(pencolour)
-        pen = wx.Pen(pencolour, penwidth, penstyle)
-        pen.SetCap(wx.CAP_BUTT)
-        if not isinstance(fillcolour, wx.Colour):
-            fillcolour = wx.Colour(fillcolour)
-        brush = wx.Brush(fillcolour, fillstyle)
-        dc.SetPen(pen)
-        dc.SetBrush(brush)
         if coord is None:
-
-            rects = []
-
-            for y, (low, high) in zip(self.hist, self.bins):
-                # Change the point to a format that works for _scaleAndShift
-                rect = [[low, y],      # left, top
-                        [high, 0]]      # right, bottom
-
-                # Scale the points to the plot area
-                rect = self._scaleAndShift(rect,
-                                           self.currentScale,
-                                           self.currentShift)
-
-                # Convert to (left, top, width, height)
-                rect = [rect[0][0],                 # X (left)
-                        rect[0][1],                 # Y (top)
-                        rect[1][0] - rect[0][0],    # Width
-                        rect[1][1] - rect[0][1]]    # Height
-
-                rects.append(rect)
+            rects = [self.calc_rect(y, low, high)
+                     for y, (low, high)
+                     in zip(self.hist, self.bins)]
 
             dc.DrawRectangleList(rects)
         else:
             dc.DrawLines(coord)  # draw legend line
 
-    def getSymExtent(self, printerScale):
-        """Width and Height of Marker"""
-        h = self.attributes['edgewidth'] * printerScale * self._pointSize[0]
-        w = 5 * h
-        return (w, h)
-
 
 class BoxPlot(PolyPoints):
     """
-    Class to contain box plots
+    Creates a BoxPlot object.
 
-    This class takes care of calculating the box plots.
+    :param data: Raw data to create a box plot from.
+    :type data: sequence of int or float
+    :param **attr: keyword attributes
 
-    TODO:
-    -----
-    + [x] Separate out each draw into individual methods
-    + [x] Fix the median line extending outside of the box on the right
-    + [x] Allow for multiple box plots side-by-side
-          - It's a hack, but it works.
-    + [ ] change the X axis to some labels.
-    + [x] Add getLegend method
-          - Not Needed since we inherit from PolyPoints
-    + [x] Add getClosestPoint method - links to box plot or outliers
-          - Current method works and hits every point. Is that good enough?
-    + [ ] Add customization
-          - [ ] Pens and Fills for elements
-          - [ ] outlier shapes(?) and sizes
-          - [ ] box width
-    + [ ] Get log-y working
+    =================================  =============  =======================
+    Keyword and Default                Description    Type
+    =================================  =============  =======================
+    ``colour='black'``                 edge color     :class:`wx.Colour`
+    ``width=1``                        edge width     float
+    ``style=wx.PENSTYLE_SOLID``        edge style     :class:`wx.PenStyle`
+    ``legend=''``                      legend string  str
+    =================================  =============  =======================
 
+    .. note::
+
+       ``np.NaN`` and ``np.inf`` values are ignored.
+
+    .. admonition:: TODO
+
+       + [ ] Figure out a better way to get multiple box plots side-by-side
+         (current method is a hack).
+       + [ ] change the X axis to some labels.
+       + [ ] Change getClosestPoint to only grab box plot items and outlers?
+         Currently grabs every data point.
+       + [ ] Add more customization such as Pens/Brushes, outlier shapes/size,
+         and box width.
+       + [ ] Figure out how I want to handle log-y: log data then calcBP? Or
+         should I calc the BP first then the plot it on a log scale?
     """
     _attributes = {'colour': 'black',
                    'width': 1,
                    'style': wx.PENSTYLE_SOLID,
                    'legend': '',
-                   'drawstyle': 'line',
-                   'size': 5,
                    }
 
     def __init__(self, points, **attr):
-        """
-        :param data: 1D data to plot.
-
-        """
         # Set various attributes
         self.box_width = 0.5
 
@@ -1162,10 +1338,24 @@ class BoxPlot(PolyPoints):
         points = np.array([(self.xpos, x) for x in points])
 
         # Create a jitter for the outliers
-        self.jitter = 0.05 * np.random.random_sample(len(self._outliers)) + self.xpos - 0.025
+        self.jitter = (0.05 * np.random.random_sample(len(self._outliers))
+                       + self.xpos - 0.025)
 
         # Init the parent class
         PolyPoints.__init__(self, points, attr)
+
+    def _clean_data(self, data=None):
+        """
+        Removes NaN and Inf from the data.
+        """
+        if data is None:
+            data = self.points
+
+        # clean out NaN and infinity values.
+        data = data[~np.isnan(data)]
+        data = data[~np.isinf(data)]
+
+        return data
 
     def boundingBox(self):
         """
@@ -1244,13 +1434,8 @@ class BoxPlot(PolyPoints):
             Descriptive statistics for data:
             (min_data, low_whisker, q25, median, q75, high_whisker, max_data)
 
-        Notes:
-        ------
-        # TODO: Verify how NaN is handled then decide how I want to handle it.
-
         """
-        if data is None:
-            data = self.points
+        data = self._clean_data(data)
 
         min_data = float(np.min(data))
         max_data = float(np.max(data))
@@ -1276,8 +1461,7 @@ class BoxPlot(PolyPoints):
         """
         Calculates the outliers. Must be called after calcBpData.
         """
-        if data is None:
-            data = self.points
+        data = self._clean_data(data)
 
         outliers = data
         outlier_bool = np.logical_or(outliers > self._bpdata.high_whisker,
@@ -1290,7 +1474,7 @@ class BoxPlot(PolyPoints):
         scaled = scale * data + shift
         return scaled
 
-    @SavePen
+    @TempStyle('pen')
     def draw(self, dc, printerScale, coord=None):
         """
         Draws a box plot on the DC.
@@ -1316,7 +1500,7 @@ class BoxPlot(PolyPoints):
         self._draw_whisker_ends(dc, printerScale)
         self._draw_outliers(dc, printerScale)
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_whisker(self, dc, printerScale):
         """Draws the whiskers as a single line"""
         xpos = self.xpos
@@ -1335,7 +1519,7 @@ class BoxPlot(PolyPoints):
         dc.SetPen(whisker_pen)
         dc.DrawLines(whisker_line)
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_iqr_box(self, dc, printerScale):
         """Draws the Inner Quartile Range box"""
         xpos = self.xpos
@@ -1362,13 +1546,15 @@ class BoxPlot(PolyPoints):
 
         dc.DrawRectangleList([iqr_box])
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_median(self, dc, printerScale, coord=None):
         """Draws the median line"""
         xpos = self.xpos
 
-        median_line = np.array([[xpos - self.box_width / 2, self._bpdata.median],
-                                [xpos + self.box_width / 2, self._bpdata.median]])
+        median_line = np.array(
+            [[xpos - self.box_width / 2, self._bpdata.median],
+             [xpos + self.box_width / 2, self._bpdata.median]]
+        )
 
         median_line = self._scaleAndShift(median_line,
                                           self.currentScale,
@@ -1379,19 +1565,23 @@ class BoxPlot(PolyPoints):
         dc.SetPen(median_pen)
         dc.DrawLines(median_line)
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_whisker_ends(self, dc, printerScale):
         """Draws the end caps of the whiskers"""
         xpos = self.xpos
-        fence_top = np.array([[xpos - self.box_width * 0.2, self._bpdata.high_whisker],
-                              [xpos + self.box_width * 0.2, self._bpdata.high_whisker]])
+        fence_top = np.array(
+            [[xpos - self.box_width * 0.2, self._bpdata.high_whisker],
+             [xpos + self.box_width * 0.2, self._bpdata.high_whisker]]
+        )
 
         fence_top = self._scaleAndShift(fence_top,
                                         self.currentScale,
                                         self.currentShift)
 
-        fence_bottom = np.array([[xpos - self.box_width * 0.2, self._bpdata.low_whisker],
-                                 [xpos + self.box_width * 0.2, self._bpdata.low_whisker]])
+        fence_bottom = np.array(
+            [[xpos - self.box_width * 0.2, self._bpdata.low_whisker],
+             [xpos + self.box_width * 0.2, self._bpdata.low_whisker]]
+        )
 
         fence_bottom = self._scaleAndShift(fence_bottom,
                                            self.currentScale,
@@ -1403,19 +1593,14 @@ class BoxPlot(PolyPoints):
         dc.DrawLines(fence_top)
         dc.DrawLines(fence_bottom)
 
-    @SavePen
+    @TempStyle('pen')
     def _draw_outliers(self, dc, printerScale):
         """Draws dots for the outliers"""
-        xpos = self.xpos
-
         # Set the pen
         outlier_pen = wx.Pen(wx.BLUE, 5, wx.PENSTYLE_SOLID)
         dc.SetPen(outlier_pen)
 
         outliers = self._outliers
-
-
-#        jitter = 0.05 * np.random.random_sample(len(outliers)) + xpos - 0.025
 
         # Scale the data for plotting
         pt_data = np.array([self.jitter, outliers]).T
@@ -1434,66 +1619,78 @@ class BoxPlot(PolyPoints):
 
 class PlotGraphics(object):
     """
-    Container to hold PolyXXX objects and graph labels
+    Creates a PlotGraphics object.
 
-    All methods except __init__ are private.
+    :param objects: The Poly objects to plot.
+    :type objects: list of :class:`~wx.lib.plot.PolyPoints` objects
+    :param title: The title shown at the top of the graph.
+    :type title: str
+    :param xLabel: The x-axis label.
+    :type xLabel: str
+    :param yLabel: The y-axis label.
+    :type yLabel: str
+
+    .. warning::
+
+       All methods except ``__init__`` are private.
     """
-
     def __init__(self, objects, title='', xLabel='', yLabel=''):
-        """Creates PlotGraphics object
-        objects - list of PolyXXX objects to make graph
-        title - title shown at top of graph
-        xLabel - label shown on x-axis
-        yLabel - label shown on y-axis
-        """
         if type(objects) not in [list, tuple]:
             raise TypeError("objects argument should be list or tuple")
         self.objects = objects
-        self.title = title
-        self.xLabel = xLabel
-        self.yLabel = yLabel
+        self._title = title
+        self._xLabel = xLabel
+        self._yLabel = yLabel
         self._pointSize = (1.0, 1.0)
 
     @property
-    def LogScale(self):
+    def logScale(self):
         # TODO: convert to try..except statement
 #        try:
-#        return [obj.LogScale for obj in self.objects]
+#        return [obj.logScale for obj in self.objects]
 #        except:     # what error would be returned?
 #            return
         if len(self.objects) == 0:
             return
-        return [obj.LogScale for obj in self.objects]
+        return [obj.logScale for obj in self.objects]
 
-    @LogScale.setter
-    def LogScale(self, logscale):
+    @logScale.setter
+    def logScale(self, logscale):
         # XXX: error checking done by PolyPoints class
 #        if not isinstance(logscale, tuple) and len(logscale) != 2:
 #            raise TypeError("logscale must be a 2-tuple of bools")
         if len(self.objects) == 0:
             return
         for obj in self.objects:
-            obj.LogScale = logscale
+            obj.logScale = logscale
 
-    @PendingDeprecation("self.LogScale property")
+    @PendingDeprecation("self.logScale property")
     def setLogScale(self, logscale):
-        self.LogScale = logscale
+        """
+        Set the log scale boolean value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.logScale` property
+           instead.
+        """
+        self.logScale = logscale
 
     @property
-    def AbsScale(self):
+    def absScale(self):
         if len(self.objects) == 0:
             return
-        return [obj.AbsScale for obj in self.objects]
+        return [obj.absScale for obj in self.objects]
 
-    @AbsScale.setter
-    def AbsScale(self, absscale):
+    @absScale.setter
+    def absScale(self, absscale):
         # XXX: error checking done by PolyPoints class
 #        if not isinstance(absscale, tuple) and len(absscale) != 2:
 #            raise TypeError("absscale must be a 2-tuple of bools")
         if len(self.objects) == 0:
             return
         for obj in self.objects:
-            obj.AbsScale = absscale
+            obj.absScale = absscale
 
     def boundingBox(self):
         p1, p2 = self.objects[0].boundingBox()
@@ -1507,76 +1704,125 @@ class PlotGraphics(object):
         for o in self.objects:
             o.scaleAndShift(scale, shift)
 
-    @PendingDeprecation("self.PrinterScale property")
+    @PendingDeprecation("self.printerScale property")
     def setPrinterScale(self, scale):
-        """Thickens up lines and markers only for printing"""
-        self.PrinterScale = scale
+        """
+        Thickens up lines and markers only for printing
 
-    @PendingDeprecation("self.XLabel property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.printerScale` property
+           instead.
+        """
+        self.printerScale = scale
+
+    @PendingDeprecation("self.xLabel property")
     def setXLabel(self, xLabel=''):
-        """Set the X axis label on the graph"""
-        self.XLabel = xLabel
+        """
+        Set the X axis label on the graph
 
-    @PendingDeprecation("self.YLabel property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.xLabel` property
+           instead.
+       """
+        self.xLabel = xLabel
+
+    @PendingDeprecation("self.yLabel property")
     def setYLabel(self, yLabel=''):
-        """Set the Y axis label on the graph"""
-        self.YLabel = yLabel
+        """
+        Set the Y axis label on the graph
 
-    @PendingDeprecation("self.Title property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.yLabel` property
+           instead.
+       """
+        self.yLabel = yLabel
+
+    @PendingDeprecation("self.title property")
     def setTitle(self, title=''):
-        """Set the title at the top of graph"""
-        self.Title = title
+        """
+        Set the title at the top of graph
 
-    @PendingDeprecation("self.XLabel property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.title` property
+           instead.
+        """
+        self.title = title
+
+    @PendingDeprecation("self.xLabel property")
     def getXLabel(self):
-        """Get x axis label string"""
-        return self.XLabel
+        """
+        Get X axis label string
 
-    @PendingDeprecation("self.YLabel property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.xLabel` property
+           instead.
+        """
+        return self.xLabel
+
+    @PendingDeprecation("self.yLabel property")
     def getYLabel(self):
-        """Get y axis label string"""
-        return self.YLabel
+        """
+        Get Y axis label string
 
-    @PendingDeprecation("self.Title property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.yLabel` property
+           instead.
+        """
+        return self.yLabel
+
+    @PendingDeprecation("self.title property")
     def getTitle(self, title=''):
-        """Get the title at the top of graph"""
-        return self.Title
+        """
+        Get the title at the top of graph
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotGraphics.title` property
+           instead.
+        """
+        return self.title
 
     @property
-    def PrinterScale(self):
+    def printerScale(self):
         return self._printerScale
 
-    @PrinterScale.setter
-    def PrinterScale(self, scale):
+    @printerScale.setter
+    def printerScale(self, scale):
         """Thickens up lines and markers only for printing"""
         self._printerScale = scale
 
     @property
-    def XLabel(self):
+    def xLabel(self):
         """Get the X axis label on the graph"""
-        return self.xLabel
+        return self._xLabel
 
-    @XLabel.setter
-    def XLabel(self, text):
-        self.xLabel = text
+    @xLabel.setter
+    def xLabel(self, text):
+        self._xLabel = text
 
     @property
-    def YLabel(self):
+    def yLabel(self):
         """Get the Y axis label on the graph"""
-        return self.yLabel
+        return self._yLabel
 
-    @YLabel.setter
-    def YLabel(self, text):
-        self.yLabel = text
+    @yLabel.setter
+    def yLabel(self, text):
+        self._yLabel = text
 
     @property
-    def Title(self):
+    def title(self):
         """Get the title at the top of graph"""
-        return self.title
+        return self._title
 
-    @Title.setter
-    def Title(self, text):
-        self.title = text
+    @title.setter
+    def title(self, text):
+        self._title = text
 
     def draw(self, dc):
         for o in self.objects:
@@ -1609,22 +1855,82 @@ class PlotGraphics(object):
         return self.objects[item]
 
 
+def scale_and_shift_point(x, y, scale=1, shift=0):
+    """
+    Creates a scaled and shifted 2x1 numpy array of [x, y] values.
+
+    :param float `x`:        The x value of the unscaled, unshifted point
+    :param float `y`:        The y valye of the unscaled, unshifted point
+    :param np.array `scale`: The scale factor to use ``[x_sacle, y_scale]``
+    :param np.array `shift`: The offset to apply ``[x_shift, y_shift]``.
+                             Must be in scaled units
+
+    :returns: a numpy array of 2 elements
+    :rtype: np.array
+
+    .. note::
+       :math:`new = (scale * old) + shift`
+    """
+    point = scale * np.array([x, y]) + shift
+    return point
+
+
+def _set_displayside(value):
+    """
+    Wrapper around :class:`~wx.lib.plot._DisplaySide` that allowing for
+    "overloaded" calls.
+
+    If ``value`` is a boolean: all 4 sides are set to ``value``
+
+    If ``value`` is a 2-tuple: the bottom and left sides are set to ``value``
+    and the other sides are set to False.
+
+    If ``value`` is a 4-tuple, then each item is set individually: ``(bottom,
+    left, top, right)``
+
+    :param value: Which sides to display.
+    :type value:   bool, 2-tuple of bool, or 4-tuple of bool
+    :raises: `TypeError` if setting an invalid value.
+    :raises: `ValueError` if the tuple has incorrect length.
+    :rtype: :class:`~wx.lib.plot._DisplaySide`
+    """
+    err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
+
+    # TODO: for 2-tuple, do not change other sides? rather than set to False.
+    if isinstance(value, bool):
+        # turns on or off all axes
+        _value = (value, value, value, value)
+    elif isinstance(value, tuple):
+        if len(value) == 2:
+            _value = (value[0], value[1], False, False)
+        elif len(value) == 4:
+            _value = value
+        else:
+            raise ValueError(err_txt)
+    else:
+        raise TypeError(err_txt)
+    return _DisplaySide(*_value)
+
+
 #-------------------------------------------------------------------------
 # Main window that you will want to import into your application.
 
 class PlotCanvas(wx.Panel):
     """
+    Creates a PlotCanvas object.
+
     Subclass of a wx.Panel which holds two scrollbars and the actual
     plotting canvas (self.canvas). It allows for simple general plotting
     of data with zoom, labels, and automatic axis scaling.
 
+    This is the main window that you will want to import into your
+    application.
+
+    Parameters for ``__init__`` are the same as any :class:`wx.Panel`.
     """
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=0, name="plotCanvas"):
-        """Constructs a panel, which can be a child of a frame or
-        any other non-control window"""
-
         wx.Panel.__init__(self, parent, id, pos, size, style, name)
 
         sizer = wx.FlexGridSizer(2, 2, 0, 0)
@@ -1776,68 +2082,118 @@ class PlotCanvas(wx.Panel):
 
     ### Pen Properties
     @property
-    def GridPen(self):
-        """Gets the grid's wx.Pen"""
+    def gridPen(self):
+        """
+        The :class:`wx.Pen` used to draw the grid lines on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the grid
+                 lines.
+        :setter: Sets the :class:`wx.Pen` use for drawging the grid lines.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._gridPen
 
-    @GridPen.setter
-    def GridPen(self, pen):
+    @gridPen.setter
+    def gridPen(self, pen):
         if not isinstance(pen, wx.Pen):
             raise TypeError("pen must be an instance of wx.Pen")
         self._gridPen = pen
 
     @property
-    def DiagonalPen(self):
-        """Gets the diagonal wx.Pen"""
+    def diagonalPen(self):
+        """
+        The :class:`wx.Pen` used to draw the diagonal lines on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the diagonal
+                 lines.
+        :setter: Sets the :class:`wx.Pen` use for drawging the diagonal lines.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._diagonalPen
 
-    @DiagonalPen.setter
-    def DiagonalPen(self, pen):
+    @diagonalPen.setter
+    def diagonalPen(self, pen):
         if not isinstance(pen, wx.Pen):
             raise TypeError("pen must be an instance of wx.Pen")
         self._diagonalPen = pen
 
     @property
-    def CenterLinePen(self):
-        """Gets the CenterLine wx.Pen"""
+    def centerLinePen(self):
+        """
+        The :class:`wx.Pen` used to draw the center lines on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the center
+                 lines.
+        :setter: Sets the :class:`wx.Pen` use for drawging the center lines.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._centerLinePen
 
-    @CenterLinePen.setter
-    def CenterLinePen(self, pen):
+    @centerLinePen.setter
+    def centerLinePen(self, pen):
         if not isinstance(pen, wx.Pen):
             raise TypeError("pen must be an instance of wx.Pen")
         self._centerLinePen = pen
 
     @property
-    def AxesPen(self):
-        """Gets the axes wx.Pen"""
+    def axesPen(self):
+        """
+        The :class:`wx.Pen` used to draw the axes lines on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the axes
+                 lines.
+        :setter: Sets the :class:`wx.Pen` use for drawging the axes lines.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._axesPen
 
-    @AxesPen.setter
-    def AxesPen(self, pen):
+    @axesPen.setter
+    def axesPen(self, pen):
         if not isinstance(pen, wx.Pen):
             raise TypeError("pen must be an instance of wx.Pen")
         self._axesPen = pen
 
     @property
-    def TickPen(self):
-        """Gets the tick mark wx.Pen"""
+    def tickPen(self):
+        """
+        The :class:`wx.Pen` used to draw the tick marks on the plot.
+
+        :getter: Returns the :class:`wx.Pen` used for drawing the tick marks.
+        :setter: Sets the :class:`wx.Pen` use for drawging the tick marks.
+        :type:   :class:`wx.Pen`
+        :raise:  `TypeError` when setting a value that is not a
+                 :class:`wx.Pen`.
+        """
         return self._tickPen
 
-    @TickPen.setter
-    def TickPen(self, pen):
+    @tickPen.setter
+    def tickPen(self, pen):
         if not isinstance(pen, wx.Pen):
             raise TypeError("pen must be an instance of wx.Pen")
         self._tickPen = pen
 
     @property
-    def TickLength(self):
-        """Returns the tick length."""
+    def tickLength(self):
+        """
+        The length of the tick marks on an axis.
+
+        :getter: Returns the length of the tick marks.
+        :setter: Sets the length of the tick marks.
+        :type:   int or float
+        :raise:  `TypeError` when setting a value that is not an int or float.
+        """
         return self._tickLength
 
-    @TickLength.setter
-    def TickLength(self, length):
-        """Set the tick legnth. Value must be int or float."""
+    @tickLength.setter
+    def tickLength(self, length):
         if not isinstance(length, (int, float)):
             raise TypeError("`length` must be an integer or float")
         self._tickWidth = length
@@ -1846,8 +2202,8 @@ class PlotCanvas(wx.Panel):
     def SaveFile(self, fileName=''):
         """
         Saves the file to the type specified in the extension. If no file
-        name is specified a dialog box is provided.  Returns True if sucessful,
-        otherwise False.
+        name is specified a dialog box is provided.  Returns True if
+        sucessful, otherwise False.
 
         .bmp  Save a Windows bitmap file.
         .xbm  Save an X bitmap file.
@@ -1871,7 +2227,7 @@ class PlotCanvas(wx.Panel):
             msg_txt = ('File name extension\n'  # implicit str concat
                        'must be one of\nbmp, xbm, xpm, png, or jpg')
 
-            if dlg1:                   # FileDialog exists: Check for extension
+            if dlg1:               # FileDialog exists: Check for extension
                 dlg2 = wx.MessageDialog(self, msg_txt, 'File Name Error',
                                         wx.OK | wx.ICON_ERROR)
                 try:
@@ -1932,7 +2288,7 @@ class PlotCanvas(wx.Panel):
         dlg = wx.PageSetupDialog(self.parent, data)
         try:
             if dlg.ShowModal() == wx.ID_OK:
-                data = dlg.GetPageSetupData()  # returns wx.PageSetupDialogData
+                data = dlg.GetPageSetupData()
                 # updates page parameters from dialog
                 self.pageSetupData.SetMarginBottomRight(
                     data.GetMarginBottomRight())
@@ -1977,259 +2333,536 @@ class PlotCanvas(wx.Panel):
         frame.Centre(wx.BOTH)
         frame.Show(True)
 
-    @PendingDeprecation("self.LogScale")
+    @PendingDeprecation("self.logScale property")
     def setLogScale(self, logscale):
-        self.LogScale = logscale
+        """
+        Set the log scale boolean value.
 
-    @PendingDeprecation("self.LogScale property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.logScale` property instead.
+        """
+        self.logScale = logscale
+
+    @PendingDeprecation("self.logScale property")
     def getLogScale(self):
-        return self.LogScale
+        """
+        Set the log scale boolean value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.logScale` property instead.
+        """
+        return self.logScale
 
     @property
-    def LogScale(self):
+    def logScale(self):
+        """
+        The logScale value as a 2-tuple of bools:
+        ``(x_axis_is_log_scale, y_axis_is_log_scale)``.
+
+        :getter: Returns the value of logScale.
+        :setter: Sets the value of logScale.
+        :type:   tuple of bools, length 2
+        :raise:  `TypeError` when setting an invalid value.
+        """
         return self._logscale
 
-    @LogScale.setter
-    def LogScale(self, logscale):
+    @logScale.setter
+    def logScale(self, logscale):
         if type(logscale) != tuple:
             raise TypeError(
-                'logscale must be a tuple of bools, e.g. (False, False)')
+                'logscale must be a tuple of bools, e.g. (False, False)'
+            )
         if self.last_draw is not None:
             graphics, xAxis, yAxis = self.last_draw
-            graphics.LogScale = logscale
+            graphics.logScale = logscale
             self.last_draw = (graphics, None, None)
-        self.XSpec = 'min'
-        self.YSpec = 'min'
+        self.xSpec = 'min'
+        self.ySpec = 'min'
         self._logscale = logscale
 
     @property
-    def AbsScale(self):
+    def absScale(self):
+        """
+        The absScale value as a 2-tuple of bools:
+        ``(x_axis_is_abs_scale, y_axis_is_abs_scale)``.
+
+        :getter: Returns the value of absScale.
+        :setter: Sets the value of absScale.
+        :type:   tuple of bools, length 2
+        :raise:  `TypeError` when setting an invalid value.
+        """
         return self._absScale
 
-    @AbsScale.setter
-    def AbsScale(self, absscale):
+    @absScale.setter
+    def absScale(self, absscale):
         if not isinstance(absscale, tuple):
-            raise TypeError("absscale must be tuple of bools.")
+            raise TypeError(
+                "absscale must be tuple of bools, e.g. (False, False)"
+            )
         if self.last_draw is not None:
             graphics, xAxis, yAxis = self.last_draw
-            graphics.AbsScale = absscale
+            graphics.absScale = absscale
             self.last_draw = (graphics, None, None)
-        self.XSpec = 'min'
-        self.YSpec = 'min'
+        self.xSpec = 'min'
+        self.ySpec = 'min'
         self._absScale = absscale
 
-    @PendingDeprecation("self.FontSizeAxis property")
+    @PendingDeprecation("self.fontSizeAxis property")
     def SetFontSizeAxis(self, point=10):
-        """Set the tick and axis label font size (default is 10 point)"""
-        self.FontSizeAxis = point
+        """
+        Set the tick and axis label font size (default is 10 point)
 
-    @PendingDeprecation("self.FontSizeAxis property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeAxis` property
+           instead.
+        """
+        self.fontSizeAxis = point
+
+    @PendingDeprecation("self.fontSizeAxis property")
     def GetFontSizeAxis(self):
-        """Get current tick and axis label font size in points"""
-        return self.FontSizeAxis
+        """
+        Get current tick and axis label font size in points
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeAxis` property
+           instead.
+        """
+        return self.fontSizeAxis
 
     @property
-    def FontSizeAxis(self):
-        """Get current tick and axis label font size in points"""
+    def fontSizeAxis(self):
+        """
+        The current tick and axis label font size in points.
+
+        Default is 10pt font.
+
+        :getter: Returns the value of fontSizeAxis.
+        :setter: Sets the value of fontSizeAxis.
+        :type:   int or float
+        """
         return self._fontSizeAxis
 
-    @FontSizeAxis.setter
-    def FontSizeAxis(self, value):
-        """Set the tick and axis label font size (default is 10 point)"""
+    @fontSizeAxis.setter
+    def fontSizeAxis(self, value):
         self._fontSizeAxis = value
 
-    @PendingDeprecation("self.FontSizeTitle property")
+    @PendingDeprecation("self.fontSizeTitle property")
     def SetFontSizeTitle(self, point=15):
-        """Set Title font size (default is 15 point)"""
-#        self._fontSizeTitle = point
-        self.FontSizeTitle = point
+        """
+        Set Title font size (default is 15 point)
 
-    @PendingDeprecation("self.FontSizeTitle property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeTitle` property
+           instead.
+        """
+        self.fontSizeTitle = point
+
+    @PendingDeprecation("self.fontSizeTitle property")
     def GetFontSizeTitle(self):
-        """Get current Title font size in points"""
-#        return self._fontSizeTitle
-        return self.FontSizeTitle
+        """
+        Get Title font size (default is 15 point)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeTitle` property
+           instead.
+        """
+        return self.fontSizeTitle
 
     @property
-    def FontSizeTitle(self):
-        """Get current Title font size in points"""
+    def fontSizeTitle(self):
+        """
+        The current Title font size in points.
+
+        Default is 15pt font.
+
+        :getter: Returns the value of fontSizeTitle.
+        :setter: Sets the value of fontSizeTitle.
+        :type:   int or float
+        """
         return self._fontSizeTitle
 
-    @FontSizeTitle.setter
-    def FontSizeTitle(self, pointsize):
-        """Set Title font size (default is 15 point)"""
+    @fontSizeTitle.setter
+    def fontSizeTitle(self, pointsize):
         self._fontSizeTitle = pointsize
 
-    @PendingDeprecation("self.FontSizeLegend property")
+    @PendingDeprecation("self.fontSizeLegend property")
     def SetFontSizeLegend(self, point=7):
-        """Set Legend font size (default is 7 point)"""
-        self.FontSizeLegend = point
+        """
+        Set legend font size (default is 7 point)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeLegend' property
+           instead.
+        """
+        self.fontSizeLegend = point
 
     def GetFontSizeLegend(self):
-        """Get current Legend font size in points"""
-        return self.FontSizeLegend
+        """
+        Get legend font size (default is 7 point)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeLegend' property
+           instead.
+        """
+        return self.fontSizeLegend
 
     @property
-    def FontSizeLegend(self):
+    def fontSizeLegend(self):
+        """
+        The current Legned font size in points.
+
+        Default is 7pt font.
+
+        :getter: Returns the value of fontSizeLegend.
+        :setter: Sets the value of fontSizeLegend.
+        :type:   int or float
+        """
         return self._fontSizeLegend
 
-    @FontSizeLegend.setter
-    def FontSizeLegend(self, point):
+    @fontSizeLegend.setter
+    def fontSizeLegend(self, point):
         self._fontSizeLegend = point
 
-    @PendingDeprecation("self.ShowScrollbars property")
+    @PendingDeprecation("self.showScrollbars property")
     def SetShowScrollbars(self, value):
-        self.ShowScrollbars = value
+        """
+        Set the showScrollbars value.
 
-    @PendingDeprecation("self.ShowScrollbars property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.showScrollbars` property
+           instead.
+        """
+        self.showScrollbars = value
+
+    @PendingDeprecation("self.showScrollbars property")
     def GetShowScrollbars(self):
-        """Set True to show scrollbars"""
-        return self.ShowScrollbars
+        """
+        Get the showScrollbars value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.showScrollbars` property
+           instead.
+        """
+        return self.showScrollbars
 
     @property
-    def ShowScrollbars(self):
+    def showScrollbars(self):
+        """
+        The current showScrollbars value.
+
+        :getter: Returns the value of showScrollbars.
+        :setter: Sets the value of showScrollbars.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
+        # XXX: should have sb_hor.IsShown() as well.
         return self.sb_vert.IsShown()
 
-    @ShowScrollbars.setter
-    def ShowScrollbars(self, value):
-        """Set True to show scrollbars"""
+    @showScrollbars.setter
+    def showScrollbars(self, value):
         if not isinstance(value, bool):
             raise TypeError("Value should be True or False")
-        if value == self.ShowScrollbars:
+        if value == self.showScrollbars:
             # no change, so don't do anything
             return
         self.sb_vert.Show(value)
         self.sb_hor.Show(value)
         wx.CallAfter(self.Layout)
 
-    @PendingDeprecation("self.UseScientificNotation property")
+    @PendingDeprecation("self.useScientificNotation property")
     def SetUseScientificNotation(self, useScientificNotation):
-        self.UseScientificNotation = useScientificNotation
+        """
+        Set the useScientificNotation value.
 
-    @PendingDeprecation("self.UseScientificNotation property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.useScientificNotation`
+           property instead.
+        """
+        self.useScientificNotation = useScientificNotation
+
+    @PendingDeprecation("self.useScientificNotation property")
     def GetUseScientificNotation(self):
-        return self.UseScientificNotation
+        """
+        Get the useScientificNotation value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.useScientificNotation`
+           property instead.
+        """
+        return self.useScientificNotation
 
     @property
-    def UseScientificNotation(self):
+    def useScientificNotation(self):
+        """
+        The current useScientificNotation value.
+
+        :getter: Returns the value of useScientificNotation.
+        :setter: Sets the value of useScientificNotation.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._useScientificNotation
 
-    @UseScientificNotation.setter
-    def UseScientificNotation(self, value):
+    @useScientificNotation.setter
+    def useScientificNotation(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("Value should be True or False")
         self._useScientificNotation = value
 
-    @PendingDeprecation("self.EnableAntiAliasing property")
+    @PendingDeprecation("self.enableAntiAliasing property")
     def SetEnableAntiAliasing(self, enableAntiAliasing):
-        self.EnableAntiAliasing = enableAntiAliasing
+        """
+        Set the enableAntiAliasing value.
 
-    @PendingDeprecation("self.EnableAntiAliasing property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableAntiAliasing`
+           property instead.
+        """
+        self.enableAntiAliasing = enableAntiAliasing
+
+    @PendingDeprecation("self.enableAntiAliasing property")
     def GetEnableAntiAliasing(self):
-        return self.EnableAntiAliasing
+        """
+        Get the enableAntiAliasing value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableAntiAliasing`
+           property instead.
+        """
+        return self.enableAntiAliasing
 
     @property
-    def EnableAntiAliasing(self):
+    def enableAntiAliasing(self):
+        """
+        The current enableAntiAliasing value.
+
+        :getter: Returns the value of enableAntiAliasing.
+        :setter: Sets the value of enableAntiAliasing.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._antiAliasingEnabled
 
-    @EnableAntiAliasing.setter
-    def EnableAntiAliasing(self, value):
-        """Set True to enable anti-aliasing."""
+    @enableAntiAliasing.setter
+    def enableAntiAliasing(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("Value should be True or False")
         self._antiAliasingEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.EnableHiRes property")
+    @PendingDeprecation("self.enableHiRes property")
     def SetEnableHiRes(self, enableHiRes):
-        self.EnableHiRes = enableHiRes
+        """
+        Set the enableHiRes value.
 
-    @PendingDeprecation("self.EnableHiRes property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableHiRes` property
+           instead.
+        """
+        self.enableHiRes = enableHiRes
+
+    @PendingDeprecation("self.enableHiRes property")
     def GetEnableHiRes(self):
+        """
+        Get the enableHiRes value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableHiRes` property
+           instead.
+        """
         return self._hiResEnabled
 
     @property
-    def EnableHiRes(self):
+    def enableHiRes(self):
+        """
+        The current enableHiRes value.
+
+        :getter: Returns the value of enableHiRes.
+        :setter: Sets the value of enableHiRes.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._hiResEnabled
 
-    @EnableHiRes.setter
-    def EnableHiRes(self, value):
-        """Set True to enable high-resolution mode when using anti-aliasing."""
+    @enableHiRes.setter
+    def enableHiRes(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("Value should be True or False")
         self._hiResEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.EnableDrag property")
+    @PendingDeprecation("self.enableDrag property")
     def SetEnableDrag(self, value):
-        self.EnableDrag = value
+        """
+        Set the enableDrag value.
 
-    @PendingDeprecation("self.EnableDrag property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDrag` property
+           instead.
+        """
+        self.enableDrag = value
+
+    @PendingDeprecation("self.enableDrag property")
     def GetEnableDrag(self):
-        return self.EnableDrag
+        """
+        Get the enableDrag value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDrag` property
+           instead.
+        """
+        return self.enableDrag
 
     @property
-    def EnableDrag(self):
+    def enableDrag(self):
+        """
+        The current enableDrag value.
+
+        :getter: Returns the value of enableDrag.
+        :setter: Sets the value of enableDrag.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+
+        .. note::
+           This is mutually exclusive with
+           :attr:`~wx.lib.plot.PlotCanvas.enableZoom`. Setting one will
+           disable the other.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.enableZoom`
+        """
         return self._dragEnabled
 
-    @EnableDrag.setter
-    def EnableDrag(self, value):
-        """Set True to enable drag."""
+    @enableDrag.setter
+    def enableDrag(self, value):
         if not isinstance(value, bool):
             raise TypeError("Value must be a bool.")
         if value:
-            if self.EnableZoom:
-                self.EnableZoom = False
+            if self.enableZoom:
+                self.enableZoom = False
             self.SetCursor(self.HandCursor)
         else:
             self.SetCursor(wx.CROSS_CURSOR)
         self._dragEnabled = value
 
-    @PendingDeprecation("self.EnableZoom property")
+    @PendingDeprecation("self.enableZoom property")
     def SetEnableZoom(self, value):
-        self.EnableZoom = value
+        """
+        Set the enableZoom value.
 
-    @PendingDeprecation("self.EnableZoom property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableZoom` property
+           instead.
+        """
+        self.enableZoom = value
+
+    @PendingDeprecation("self.enableZoom property")
     def GetEnableZoom(self):
-        """True if zooming enabled."""
-        return self.EnableZoom
+        """
+        Get the enableZoom value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableZoom` property
+           instead.
+        """
+        return self.enableZoom
 
     @property
-    def EnableZoom(self):
+    def enableZoom(self):
+        """
+        The current enableZoom value.
+
+        :getter: Returns the value of enableZoom.
+        :setter: Sets the value of enableZoom.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+
+        .. note::
+           This is mutually exclusive with
+           :attr:`~wx.lib.plot.PlotCanvas.enableDrag`. Setting one will
+           disable the other.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.enableDrag`
+        """
         return self._zoomEnabled
 
-    @EnableZoom.setter
-    def EnableZoom(self, value):
-        """Set True to enable zooming."""
+    @enableZoom.setter
+    def enableZoom(self, value):
         if not isinstance(value, bool):
             raise TypeError("Value must be a bool.")
         if value:
-            if self.EnableDrag:
-                self.EnableDrag = False
+            if self.enableDrag:
+                self.enableDrag = False
             self.SetCursor(self.MagCursor)
         else:
             self.SetCursor(wx.CROSS_CURSOR)
         self._zoomEnabled = value
 
-    @PendingDeprecation("self.EnableGrid property")
+    @PendingDeprecation("self.enableGrid property")
     def SetEnableGrid(self, value):
-        self.EnableGrid = value
+        """
+        Set the enableGrid value.
 
-    @PendingDeprecation("self.EnableGrid property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableGrid` property
+           instead.
+        """
+        self.enableGrid = value
+
+    @PendingDeprecation("self.enableGrid property")
     def GetEnableGrid(self):
-        """True if grid enabled."""
-        return self.EnableGrid
+        """
+        Get the enableGrid value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableGrid` property
+           instead.
+        """
+        return self.enableGrid
 
     @property
-    def EnableGrid(self):
+    def enableGrid(self):
+        """
+        The current enableGrid value.
+
+        :getter: Returns the value of enableGrid.
+        :setter: Sets the value of enableGrid.
+        :type:   bool or 2-tuple of bools
+        :raises: `TypeError` if setting an invalid value.
+
+        If set to a single boolean value, then both X and y grids will be
+        enabled (``enableGrid = True``) or disabled (``enableGrid = False``).
+
+        If a 2-tuple of bools, the 1st value is the X (vertical) grid and
+        the 2nd value is the Y (horizontal) grid.
+        """
         return self._gridEnabled
 
-    @EnableGrid.setter
-    def EnableGrid(self, value):
-        """
-        Set to enable grid.
-
-        value must be a bool or 2-tuple of bools: (x_grid_bool, y_grid_bool)
-
-        If Value is a bool, then both X and Y grids are turned on/off
-
-        x_grid_bool: Tf True, gridlines in the vertical direction are shown.
-        y_grid_bool: If True, gridlines in the horizontal direction are shown.
-        """
+    @enableGrid.setter
+    def enableGrid(self, value):
         if isinstance(value, bool):
             value = (value, value)
         elif isinstance(value, tuple) and len(value) == 2:
@@ -2241,111 +2874,235 @@ class PlotCanvas(wx.Panel):
         self._gridEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.EnableCenterLines property")
+    @PendingDeprecation("self.enableCenterLines property")
     def SetEnableCenterLines(self, value):
-        self.EnableCenterLines = value
+        """
+        Set the enableCenterLines value.
 
-    @PendingDeprecation("self.EnableCenterLines property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableCenterLines`
+           property instead.
+        """
+        self.enableCenterLines = value
+
+    @PendingDeprecation("self.enableCenterLines property")
     def GetEnableCenterLines(self):
-        """True if Centerlines are enabled."""
-        return self.EnableCenterLines
+        """
+        Get the enableCenterLines value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableCenterLines`
+           property instead.
+        """
+        return self.enableCenterLines
 
     @property
-    def EnableCenterLines(self):
+    def enableCenterLines(self):
+        """
+        The current enableCenterLines value.
+
+        :getter: Returns the value of enableCenterLines.
+        :setter: Sets the value of enableCenterLines.
+        :type:   bool or str
+        :raises: `TypeError` if setting an invalid value.
+
+        If set to a single boolean value, then both horizontal and vertical
+        lines will be enabled or disabled.
+
+        If a string, must be one of ``('Horizontal', 'Vertical')``.
+        """
         return self._centerLinesEnabled
 
-    @EnableCenterLines.setter
-    def EnableCenterLines(self, value):
-        """Set True, 'Horizontal' or 'Vertical' to enable center line(s)."""
+    @enableCenterLines.setter
+    def enableCenterLines(self, value):
         if value not in [True, False, 'Horizontal', 'Vertical']:
             raise TypeError(
-                "Value should be True, False, Horizontal or Vertical")
+                "Value should be True, False, 'Horizontal' or 'Vertical'")
         self._centerLinesEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.EnableDiagonals property")
+    @PendingDeprecation("self.enableDiagonals property")
     def SetEnableDiagonals(self, value):
-        self.EnableDiagonals = value
+        """
+        Set the enableDiagonals value.
 
-    @PendingDeprecation("self.EnableDiagonals property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDiagonals`
+           property instead.
+        """
+        self.enableDiagonals = value
+
+    @PendingDeprecation("self.enableDiagonals property")
     def GetEnableDiagonals(self):
-        """True if Diagonals enabled."""
-        return self.EnableDiagonals
+        """
+        Get the enableDiagonals value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDiagonals`
+           property instead.
+        """
+        return self.enableDiagonals
 
     @property
-    def EnableDiagonals(self):
+    def enableDiagonals(self):
+        """
+        The current enableDiagonals value.
+
+        :getter: Returns the value of enableDiagonals.
+        :setter: Sets the value of enableDiagonals.
+        :type:   bool or str
+        :raises: `TypeError` if setting an invalid value.
+
+        If set to a single boolean value, then both diagonal lines will
+        be enabled or disabled.
+
+        If a string, must be one of ``('Bottomleft-Topright',
+        'Bottomright-Topleft')``.
+        """
         return self._diagonalsEnabled
 
-    @EnableDiagonals.setter
-    def EnableDiagonals(self, value):
-        """Set True, 'Bottomleft-Topright' or 'Bottomright-Topleft' to enable
-        center line(s)."""
+    @enableDiagonals.setter
+    def enableDiagonals(self, value):
         # TODO: Rename Bottomleft-TopRight, Bottomright-Topleft
         if value not in [True, False,
                          'Bottomleft-Topright', 'Bottomright-Topleft']:
             raise TypeError(
-                "Value should be True, False, Bottomleft-Topright or Bottomright-Topleft")
+                "Value should be True, False, 'Bottomleft-Topright' or "
+                "'Bottomright-Topleft'"
+            )
         self._diagonalsEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.EnableLegend property")
+    @PendingDeprecation("self.enableLegend property")
     def SetEnableLegend(self, value):
-        self.EnableLegend = value
+        """
+        Set the enableLegend value.
 
-    @PendingDeprecation("self.EnableLegend property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableLegend`
+           property instead.
+        """
+        self.enableLegend = value
+
+    @PendingDeprecation("self.enableLegend property")
     def GetEnableLegend(self):
-        """True if Legend enabled."""
-        return self.EnableLegend
+        """
+        Get the enableLegend value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableLegend`
+           property instead.
+        """
+        return self.enableLegend
 
     @property
-    def EnableLegend(self):
+    def enableLegend(self):
+        """
+        The current enableLegend value.
+
+        :getter: Returns the value of enableLegend.
+        :setter: Sets the value of enableLegend.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._legendEnabled
 
-    @EnableLegend.setter
-    def EnableLegend(self, value):
+    @enableLegend.setter
+    def enableLegend(self, value):
         """Set True to enable legend."""
+        # XXX: why not `if not isinstance(value, bool):`?
         if value not in [True, False]:
             raise TypeError("Value should be True or False")
         self._legendEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.EnableTitle property")
+    @PendingDeprecation("self.enableTitle property")
     def SetEnableTitle(self, value):
-        self.EnableTitle = value
+        """
+        Set the enableTitle value.
 
-    @PendingDeprecation("self.EnableTitle property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableTitle` property
+           instead.
+        """
+        self.enableTitle = value
+
+    @PendingDeprecation("self.enableTitle property")
     def GetEnableTitle(self):
-        """True if title enabled."""
-        return self.EnableTitle
+        """
+        Get the enableTitle value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enableTitle` property
+           instead.
+        """
+        return self.enableTitle
 
     @property
-    def EnableTitle(self):
+    def enableTitle(self):
+        """
+        The current enableTitle value.
+
+        :getter: Returns the value of enableTitle.
+        :setter: Sets the value of enableTitle.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._titleEnabled
 
-    @EnableTitle.setter
-    def EnableTitle(self, value):
-        """Set True to enable title."""
+    @enableTitle.setter
+    def enableTitle(self, value):
         if not isinstance(value, bool):
             raise TypeError("Value must be a bool.")
         self._titleEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.EnablePointLabel property")
+    @PendingDeprecation("self.enablePointLabel property")
     def SetEnablePointLabel(self, value):
-        self.EnablePointLabel = value
+        """
+        Set the enablePointLabel value.
 
-    @PendingDeprecation("self.EnablePointLabel property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           property instead.
+        """
+        self.enablePointLabel = value
+
+    @PendingDeprecation("self.enablePointLabel property")
     def GetEnablePointLabel(self):
-        """True if pointLabel enabled."""
-        return self.EnablePointLabel
+        """
+        Set the enablePointLabel value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           property instead.
+        """
+        return self.enablePointLabel
 
     @property
-    def EnablePointLabel(self):
+    def enablePointLabel(self):
+        """
+        The current enablePointLabel value.
+
+        :getter: Returns the value of enablePointLabel.
+        :setter: Sets the value of enablePointLabel.
+        :type:   bool
+        :raises: `TypeError` if setting a non-boolean value.
+        """
         return self._pointLabelEnabled
 
-    @EnablePointLabel.setter
-    def EnablePointLabel(self, value):
-        """Set True to enable pointLabel."""
+    @enablePointLabel.setter
+    def enablePointLabel(self, value):
         if not isinstance(value, bool):
             raise TypeError("Value must be a bool.")
         self._pointLabelEnabled = value
@@ -2353,169 +3110,200 @@ class PlotCanvas(wx.Panel):
         self.last_PointLabel = None
 
     @property
-    def EnableAxes(self):
-        """True if axes enabled."""
+    def enableAxes(self):
+        """
+        The current enableAxes value.
+
+        :getter: Returns the value of enableAxes.
+        :setter: Sets the value of enableAxes.
+        :type:   bool, 2-tuple of bool, or 4-tuple of bool
+        :raises: `TypeError` if setting an invalid value.
+        :raises: `ValueError` if the tuple has incorrect length.
+
+        If bool, enable or disable all axis
+
+        If 2-tuple, enable or disable the bottom or left axes: ``(bottom,
+        left)``
+
+        If 4-tuple, enable or disable each axis individually: ``(bottom,
+        left, top, right)``
+        """
         return self._axesEnabled
 
-    @EnableAxes.setter
-    def EnableAxes(self, value):
-        """Set True to enable axes.
-
-        Acceptable values:
-        bool : all axes
-        2-tuple of bool : (bottom, left)
-        4-tuple of bool : (bottom, left, top, right)
-
-        """
-        err_txt = ("Axis value must be a bool or a 2- or 4-tuple of bool")
-
-        # TODO: Refactor - same as EnableAxesValues and EnableTicks
-        if isinstance(value, bool):
-            # turns on or off all axes
-            _value = (value, value, value, value)
-        elif isinstance(value, tuple):
-            if len(value) == 2:
-                _value = (value[0], value[1], False, False)
-            elif len(value) == 4:
-                _value = value
-            else:
-                raise ValueError(err_txt)
-        else:
-            raise ValueError(err_txt)
-        self._axesEnabled = _DisplaySide(*_value)
+    @enableAxes.setter
+    def enableAxes(self, value):
+        self._axesEnabled = _set_displayside(value)
         self.Redraw()
 
     @property
-    def EnableAxesValues(self):
-        """True if axes values are enabled."""
+    def enableAxesValues(self):
+        """
+        The current enableAxesValues value.
+
+        :getter: Returns the value of enableAxesValues.
+        :setter: Sets the value of enableAxesValues.
+        :type:   bool, 2-tuple of bool, or 4-tuple of bool
+        :raises: `TypeError` if setting an invalid value.
+        :raises: `ValueError` if the tuple has incorrect length.
+
+        If bool, enable or disable all axis values
+
+        If 2-tuple, enable or disable the bottom or left axes values:
+        ``(bottom, left)``
+
+        If 4-tuple, enable or disable each axis value individually:
+        ``(bottom, left, top, right)``
+        """
         return self._axesValuesEnabled
 
-    @EnableAxesValues.setter
-    def EnableAxesValues(self, value):
-        """Set True to enable axes values.
-
-        Acceptable values:
-        bool : all axes values
-        2-tuple of bool : (bottom, left)
-        4-tuple of bool : (bottom, left, top, right)
-
-        """
-        err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
-
-        # TODO: Refactor - same as EnableAxes and EnableTicks
-        if isinstance(value, bool):
-            # turns on or off all axes
-            _value = (value, value, value, value)
-        elif isinstance(value, tuple):
-            if len(value) == 2:
-                _value = (value[0], value[1], False, False)
-            elif len(value) == 4:
-                _value = value
-            else:
-                raise ValueError(err_txt)
-        else:
-            raise ValueError(err_txt)
-        self._axesValuesEnabled = _DisplaySide(*_value)
+    @enableAxesValues.setter
+    def enableAxesValues(self, value):
+        self._axesValuesEnabled = _set_displayside(value)
         self.Redraw()
 
     @property
-    def EnableTicks(self):
-        """True if tick marks are enabled."""
+    def enableTicks(self):
+        """
+        The current enableTicks value.
+
+        :getter: Returns the value of enableTicks.
+        :setter: Sets the value of enableTicks.
+        :type:   bool, 2-tuple of bool, or 4-tuple of bool
+        :raises: `TypeError` if setting an invalid value.
+        :raises: `ValueError` if the tuple has incorrect length.
+
+        If bool, enable or disable all ticks
+
+        If 2-tuple, enable or disable the bottom or left ticks:
+        ``(bottom, left)``
+
+        If 4-tuple, enable or disable each tick side individually:
+        ``(bottom, left, top, right)``
+        """
         return self._ticksEnabled
 
-    @EnableTicks.setter
-    def EnableTicks(self, value):
-        """Set True to enable tick marks.
-
-        Acceptable values:
-        bool : ticks on all 4 sides
-        2-tuple of bool : (bottom, left)
-        4-tuple of bool : (bottom, left, top, right)
-
-        """
-        err_txt = ("value must be a bool or a 2- or 4-tuple of bool")
-
-        # TODO: Refactor - same as EnableAxes and EnableAxesValues
-        if isinstance(value, bool):
-            # turns on or off all axes
-            _value = (value, value, value, value)
-        elif isinstance(value, tuple):
-            if len(value) == 2:
-                _value = (value[0], value[1], False, False)
-            elif len(value) == 4:
-                _value = value
-            else:
-                raise ValueError(err_txt)
-        else:
-            raise ValueError(err_txt)
-        self._ticksEnabled = _DisplaySide(*_value)
+    @enableTicks.setter
+    def enableTicks(self, value):
+        self._ticksEnabled = _set_displayside(value)
         self.Redraw()
 
     @property
-    def EnablePlotTitle(self):
+    def enablePlotTitle(self):
+        """
+        The current enablePlotTitle value.
+
+        :getter: Returns the value of enablePlotTitle.
+        :setter: Sets the value of enablePlotTitle.
+        :type:   bool
+        :raises: `TypeError` if setting an invalid value.
+        """
         return self._titleEnabled
 
-    @EnablePlotTitle.setter
-    def EnablePlotTitle(self, value):
+    @enablePlotTitle.setter
+    def enablePlotTitle(self, value):
         if not isinstance(value, bool):
             raise TypeError("`value` must be boolean True or False")
         self._titleEnabled = value
         self.Redraw()
 
     @property
-    def EnableXAxisLabel(self):
+    def enableXAxisLabel(self):
+        """
+        The current enableXAxisLabel value.
+
+        :getter: Returns the value of enableXAxisLabel.
+        :setter: Sets the value of enableXAxisLabel.
+        :type:   bool
+        :raises: `TypeError` if setting an invalid value.
+        """
         return self._xAxisLabelEnabled
 
-    @EnableXAxisLabel.setter
-    def EnableXAxisLabel(self, value):
+    @enableXAxisLabel.setter
+    def enableXAxisLabel(self, value):
         if not isinstance(value, bool):
             raise TypeError("`value` must be boolean True or False")
         self._xAxisLabelEnabled = value
         self.Redraw()
 
     @property
-    def EnableYAxisLabel(self):
+    def enableYAxisLabel(self):
+        """
+        The current enableYAxisLabel value.
+
+        :getter: Returns the value of enableYAxisLabel.
+        :setter: Sets the value of enableYAxisLabel.
+        :type:   bool
+        :raises: `TypeError` if setting an invalid value.
+        """
         return self._yAxisLabelEnabled
 
-    @EnableYAxisLabel.setter
-    def EnableYAxisLabel(self, value):
+    @enableYAxisLabel.setter
+    def enableYAxisLabel(self, value):
         if not isinstance(value, bool):
             raise TypeError("`value` must be boolean True or False")
         self._yAxisLabelEnabled = value
         self.Redraw()
 
+    # TODO: this conflicts with enableXAxisLabel and enableYAxisLabel
     @property
-    def EnableAxesLabels(self):
+    def enableAxesLabels(self):
+        """
+        The current enableAxesLabels value.
+
+        :getter: Returns the value of enableAxesLabels.
+        :setter: Sets the value of enableAxesLabels.
+        :type:   bool
+        :raises: `TypeError` if setting an invalid value.
+        """
         return self._axesLabelsEnabled
 
-    @EnableAxesLabels.setter
-    def EnableAxesLabels(self, value):
+    @enableAxesLabels.setter
+    def enableAxesLabels(self, value):
         if not isinstance(value, bool):
             raise TypeError("`value` must be boolean True or False")
         self._axesLabelsEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.PointLabelFunc property")
+    @PendingDeprecation("self.pointLabelFunc property")
     def SetPointLabelFunc(self, func):
-        """Sets the function with custom code for pointLabel drawing
-            ******** more info needed ***************
         """
-        self.PointLabelFunc = func
+        Set the enablePointLabel value.
 
-    @PendingDeprecation("self.PointLabelFunc property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           property instead.
+        """
+        self.pointLabelFunc = func
+
+    @PendingDeprecation("self.pointLabelFunc property")
     def GetPointLabelFunc(self):
-        """Returns pointLabel Drawing Function"""
-        return self.PointLabelFunc
+        """
+        Get the enablePointLabel value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           property instead.
+        """
+        return self.pointLabelFunc
 
     @property
-    def PointLabelFunc(self):
+    def pointLabelFunc(self):
+        """
+        The current pointLabelFunc value.
+
+        :getter: Returns the value of pointLabelFunc.
+        :setter: Sets the value of pointLabelFunc.
+        :type:   function
+
+        TODO: More information is needed.
+        Sets the function with custom code for pointLabel drawing
+        """
         return self._pointLabelFunc
 
-    @PointLabelFunc.setter
-    def PointLabelFunc(self, func):
-        """Sets the function with custom code for pointLabel drawing
-            ******** more info needed ***************
-        """
+    @pointLabelFunc.setter
+    def pointLabelFunc(self, func):
         self._pointLabelFunc = func
 
     def Reset(self):
@@ -2543,9 +3331,9 @@ class PlotCanvas(wx.Panel):
     def GetXY(self, event):
         """Wrapper around _getXY, which handles log scales"""
         x, y = self._getXY(event)
-        if self.LogScale[0]:
+        if self.logScale[0]:
             x = np.power(10, x)
-        if self.LogScale[1]:
+        if self.logScale[1]:
             y = np.power(10, y)
         return x, y
 
@@ -2566,102 +3354,145 @@ class PlotCanvas(wx.Panel):
         x, y = (screenPos - self._pointShift) / self._pointScale
         return x, y
 
-    @PendingDeprecation("self.XSpec property")
+    @PendingDeprecation("self.xSpec property")
     def SetXSpec(self, spectype='auto'):
         """
-        xSpec- defines x axis type. Can be 'none', 'min' or 'auto'
-        where:
+        Set the xSpec value.
 
-        * 'none' - shows no axis or tick mark values
-        * 'min' - shows min bounding box values
-        * 'auto' - rounds axis range to sensible values
-        * <number> - like 'min', but with <number> tick marks
+        .. deprecated:: Feb 27, 2016
 
+           Use the :attr:`~wx.lib.plot.PlotCanvas.xSpec` property instead.
         """
-        self.XSpec = spectype
+        self.xSpec = spectype
 
-    @PendingDeprecation("self.YSpec property")
+    @PendingDeprecation("self.ySpec property")
     def SetYSpec(self, spectype='auto'):
         """
-        ySpec- defines x axis type. Can be 'none', 'min' or 'auto'
-        where:
+        Set the ySpec value.
 
-        * 'none' - shows no axis or tick mark values
-        * 'min' - shows min bounding box values
-        * 'auto' - rounds axis range to sensible values
-        * <number> - like 'min', but with <number> tick marks
+        .. deprecated:: Feb 27, 2016
 
+           Use the :attr:`~wx.lib.plot.PlotCanvas.ySpec` property instead.
         """
-        self.YSpec = spectype
+        self.ySpec = spectype
 
-    @PendingDeprecation("self.XSpec property")
+    @PendingDeprecation("self.xSpec property")
     def GetXSpec(self):
-        """Returns current XSpec for axis"""
-        return self.XSpec
+        """
+        Get the xSpec value.
 
-    @PendingDeprecation("self.YSpec property")
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.xSpec` property instead.
+        """
+        return self.xSpec
+
+    @PendingDeprecation("self.ySpec property")
     def GetYSpec(self):
-        """Returns current YSpec for axis"""
-        return self.YSpec
+        """
+        Get the ySpec value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.ySpec` property instead.
+        """
+        return self.ySpec
 
     @property
-    def XSpec(self):
+    def xSpec(self):
+        """
+        Defines the X axis type.
+
+        Default is 'auto'.
+
+        :getter: Returns the value of xSpec.
+        :setter: Sets the value of xSpec.
+        :type:   str, int, or length-2 sequence of floats
+        :raises: `TypeError` if setting an invalid value.
+
+        Valid strings:
+        + 'none' - shows no axis or tick mark values
+        + 'min' - shows min bounding box values
+        + 'auto' - rounds axis range to sensible values
+
+        Other valid values:
+        + <number> - like 'min', but with <number> tick marks
+        + list or tuple: a list of (min, max) values. Must be length 2.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.ySpec`
+        """
         return self._xSpec
 
-    @XSpec.setter
-    def XSpec(self, value):
-        """
-        xSpec- defines x axis type. Can be 'none', 'min' or 'auto'
-        where:
-
-        * 'none' - shows no axis or tick mark values
-        * 'min' - shows min bounding box values
-        * 'auto' - rounds axis range to sensible values
-        * <number> - like 'min', but with <number> tick marks
-        * list or tuple - a list of (min, max) values. must be length 2
-
-        """
+    @xSpec.setter
+    def xSpec(self, value):
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
             if not isinstance(value, (list, tuple)) and len(value != 2):
-                err_str = ("XSpec must be 'none', 'min', 'auto', "
+                err_str = ("xSpec must be 'none', 'min', 'auto', "
                            "a number, or sequence of numbers (length 2)")
                 raise TypeError(err_str)
         self._xSpec = value
 
     @property
-    def YSpec(self):
+    def ySpec(self):
+        """
+        Defines the Y axis type.
+
+        Default is 'auto'.
+
+        :getter: Returns the value of xSpec.
+        :setter: Sets the value of xSpec.
+        :type:   str, int, or length-2 sequence of floats
+        :raises: `TypeError` if setting an invalid value.
+
+        Valid strings:
+        + 'none' - shows no axis or tick mark values
+        + 'min' - shows min bounding box values
+        + 'auto' - rounds axis range to sensible values
+
+        Other valid values:
+        + <number> - like 'min', but with <number> tick marks
+        + list or tuple: a list of (min, max) values. Must be length 2.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.xSpec`
+        """
         return self._ySpec
 
-    @YSpec.setter
-    def YSpec(self, value):
-        """
-        ySpec- defines x axis type. Can be 'none', 'min' or 'auto'
-        where:
-
-        * 'none' - shows no axis or tick mark values
-        * 'min' - shows min bounding box values
-        * 'auto' - rounds axis range to sensible values
-        * <number> - like 'min', but with <number> tick marks
-        * list or tuple - a list of (min, max) values. must be length 2
-
-        """
+    @ySpec.setter
+    def ySpec(self, value):
         ok_values = ('none', 'min', 'auto')
         if value not in ok_values and not isinstance(value, (int, float)):
             if not isinstance(value, (list, tuple)) and len(value != 2):
-                err_str = ("YSpec must be 'none', 'min', 'auto', "
+                err_str = ("ySpec must be 'none', 'min', 'auto', "
                            "a number, or sequence of numbers (length 2)")
                 raise TypeError(err_str)
         self._ySpec = value
 
-    @PendingDeprecation("self.XMaxRange property")
+    @PendingDeprecation("self.xMaxRange property")
     def GetXMaxRange(self):
-        return self.XMaxRange
+        """
+        Get the xMaxRange value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.xMaxRange` property instead.
+        """
+        return self.xMaxRange
 
     @property
-    def XMaxRange(self):
+    def xMaxRange(self):
+        """
+        The plots' maximum X range as a tuple of ``(min, max)``.
+
+        :getter: Returns the value of xMaxRange.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.yMaxRange`
+        """
         xAxis = self._getXMaxRange()
-        if self.LogScale[0]:
+        if self.logScale[0]:
             xAxis = np.power(10, xAxis)
         return xAxis
 
@@ -2672,14 +3503,29 @@ class PlotCanvas(wx.Panel):
         xAxis = self._axisInterval(self._xSpec, p1[0], p2[0])  # in user units
         return xAxis
 
-    @PendingDeprecation("self.YMaxRange property")
+    @PendingDeprecation("self.yMaxRange property")
     def GetYMaxRange(self):
-        return self.YMaxRange
+        """
+        Get the yMaxRange value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.yMaxRange` property instead.
+        """
+        return self.yMaxRange
 
     @property
-    def YMaxRange(self):
+    def yMaxRange(self):
+        """
+        The plots' maximum Y range as a tuple of ``(min, max)``.
+
+        :getter: Returns the value of yMaxRange.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.xMaxRange`
+        """
         yAxis = self._getYMaxRange()
-        if self.LogScale[1]:
+        if self.logScale[1]:
             yAxis = np.power(10, yAxis)
         return yAxis
 
@@ -2690,14 +3536,31 @@ class PlotCanvas(wx.Panel):
         yAxis = self._axisInterval(self._ySpec, p1[1], p2[1])
         return yAxis
 
-    @PendingDeprecation("self.XCurrentRange property")
+    @PendingDeprecation("self.xCurrentRange property")
     def GetXCurrentRange(self):
-        return self.XCurrentRange
+        """
+        Get the xCurrentRange value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.xCurrentRange` property
+           instead.
+        """
+        return self.xCurrentRange
 
     @property
-    def XCurrentRange(self):
+    def xCurrentRange(self):
+        """
+        The plots' X range of the currently displayed portion as
+        a tuple of ``(min, max)``
+
+        :getter: Returns the value of xCurrentRange.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.yCurrentRange`
+        """
         xAxis = self._getXCurrentRange()
-        if self.LogScale[0]:
+        if self.logScale[0]:
             xAxis = np.power(10, xAxis)
         return xAxis
 
@@ -2706,14 +3569,31 @@ class PlotCanvas(wx.Panel):
         portion of graph"""
         return self.last_draw[1]
 
-    @PendingDeprecation("self.YCurrentRange property")
+    @PendingDeprecation("self.yCurrentRange property")
     def GetYCurrentRange(self):
-        return self.YCurrentRange
+        """
+        Get the yCurrentRange value.
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.PlotCanvas.yCurrentRange` property
+           instead.
+        """
+        return self.yCurrentRange
 
     @property
-    def YCurrentRange(self):
+    def yCurrentRange(self):
+        """
+        The plots' Y range of the currently displayed portion as
+        a tuple of ``(min, max)``
+
+        :getter: Returns the value of yCurrentRange.
+
+        .. seealso::
+           :attr:`~wx.lib.plot.PlotCanvas.xCurrentRange`
+        """
         yAxis = self._getYCurrentRange()
-        if self.LogScale[1]:
+        if self.logScale[1]:
             yAxis = np.power(10, yAxis)
         return yAxis
 
@@ -2725,7 +3605,7 @@ class PlotCanvas(wx.Panel):
     def Draw(self, graphics, xAxis=None, yAxis=None, dc=None):
         """Wrapper around _Draw, which handles log axes"""
 
-        graphics.LogScale = self.LogScale
+        graphics.logScale = self.logScale
 
         # check Axis is either tuple or none
         err_txt = "xAxis should be None or (minX, maxX). Got type `{}`."
@@ -2740,12 +3620,12 @@ class PlotCanvas(wx.Panel):
         if xAxis is not None:
             if xAxis[0] == xAxis[1]:
                 return
-            if self.LogScale[0]:
+            if self.logScale[0]:
                 xAxis = np.log10(xAxis)
         if yAxis is not None:
             if yAxis[0] == yAxis[1]:
                 return
-            if self.LogScale[1]:
+            if self.logScale[1]:
                 yAxis = np.log10(yAxis)
         self._Draw(graphics, xAxis, yAxis, dc)
 
@@ -2774,7 +3654,7 @@ class PlotCanvas(wx.Panel):
                     pass
                 else:
                     if self._hiResEnabled:
-                        # high precision - each logical unit is 1/20 of a point
+                        # high precision: each logical unit is 1/20 of a point
                         dc.SetMapMode(wx.MM_TWIPS)
                     self._pointSize = tuple(
                         1.0 / lscale for lscale in dc.GetLogicalScale())
@@ -2782,8 +3662,10 @@ class PlotCanvas(wx.Panel):
         elif self._pointSize != (1.0, 1.0):
             self._pointSize = (1.0, 1.0)
             self._setSize()
-        # TODO: clean up if statement
-        if (sys.platform in ("darwin", "win32") or not isinstance(dc, wx.GCDC) or wx.VERSION >= (2, 9)):
+
+        if (sys.platform in ("darwin", "win32")
+                or not isinstance(dc, wx.GCDC)
+                or wx.VERSION >= (2, 9)):
             self._fontScale = sum(self._pointSize) / 2.0
         else:
             # on Linux, we need to correct the font size by a certain
@@ -2791,8 +3673,12 @@ class PlotCanvas(wx.Panel):
             # if wx.GCDC weren't used
             screenppi = map(float, wx.ScreenDC().GetPPI())
             ppi = dc.GetPPI()
-            # TODO: clean up math
-            self._fontScale = (screenppi[0] / ppi[0] * self._pointSize[0] + screenppi[1] / ppi[1] * self._pointSize[1]) / 2.0
+            self._fontScale = (
+                (screenppi[0] / ppi[0] * self._pointSize[0]
+                 + screenppi[1] / ppi[1] * self._pointSize[1])
+                / 2.0
+            )
+
         graphics._pointSize = self._pointSize
 
         dc.SetTextForeground(self.GetForegroundColour())
@@ -2803,8 +3689,8 @@ class PlotCanvas(wx.Panel):
         # set font size for every thing but title and legend
         dc.SetFont(self._getFont(self._fontSizeAxis))
 
-        # sizes axis to axis type, create lower left and upper right corners of
-        # plot
+        # sizes axis to axis type, create lower left and upper right
+        # corners of plot
         if xAxis is None or yAxis is None:
             # One or both axis not specified in Draw
             p1, p2 = graphics.boundingBox()     # min, max points of graphics
@@ -2843,7 +3729,7 @@ class PlotCanvas(wx.Panel):
         else:
             yticks = None
         if yticks:
-            if self.LogScale[1]:
+            if self.logScale[1]:
                 yTextExtent = dc.GetTextExtent('-2e-2')
             else:
                 yTextExtentBottom = dc.GetTextExtent(yticks[0][1])
@@ -2858,13 +3744,17 @@ class PlotCanvas(wx.Panel):
         titleWH, xLabelWH, yLabelWH = self._titleLablesWH(dc, graphics)
 
         # TextExtents for Legend
-        legendBoxWH, legendSymExt, legendTextExt = self._legendWH(dc, graphics)
+        legendBoxWH, legendSymExt, legendTextExt = self._legendWH(
+            dc,
+            graphics
+        )
 
         # room around graph area
         # use larger of number width or legend width
         rhsW = max(xTextExtent[0], legendBoxWH[0]) + 5 * self._pointSize[0]
         lhsW = yTextExtent[0] + yLabelWH[1] + 3 * self._pointSize[0]
-        bottomH = max(xTextExtent[1], yTextExtent[1] / 2.) + xLabelWH[1] + 2 * self._pointSize[1]
+        bottomH = (max(xTextExtent[1], yTextExtent[1] / 2.)
+                   + xLabelWH[1] + 2 * self._pointSize[1])
         topH = yTextExtent[1] / 2. + titleWH[1]
         # make plot area smaller by text size
         textSize_scale = np.array([rhsW + lhsW, bottomH + topH])
@@ -2897,11 +3787,11 @@ class PlotCanvas(wx.Panel):
 
         graphics.scaleAndShift(scale, shift)
         # thicken up lines and markers if printing
-        graphics.PrinterScale = self.printerScale
+        graphics.printerScale = self.printerScale
 
         # set clipping area so drawing does not occur outside axis box
         ptx, pty, rectWidth, rectHeight = self._point2ClientCoord(p1, p2)
-        # allow graph to overlap axis lines by adding units to width and height
+        # allow graph to overlap axis lines by adding units to w and h
         dc.SetClippingRegion(ptx * self._pointSize[0],
                              pty * self._pointSize[1],
                              rectWidth * self._pointSize[0] + 2,
@@ -2909,7 +3799,8 @@ class PlotCanvas(wx.Panel):
         # Draw the lines and markers
 #        start = _time.perf_counter()
         graphics.draw(dc)
-#        print("entire graphics drawing took: %f second"%(_time.perf_counter() - start))
+#        time_str = "entire graphics drawing took: {} seconds"
+#        print(time_str.format(_time.perf_counter() - start))
         # remove the clipping region
         dc.DestroyClippingRegion()
 
@@ -2993,8 +3884,7 @@ class PlotCanvas(wx.Panel):
         if pointScaled == True based on screen coords
         if pointScaled == False based on user coords
         """
-        # closest points on screen based on screen scaling (pointScaled= True)
-        # list [curveNumber, index, pointXY, scaledXY, distance] for each curve
+        # closest points on screen based on screen scaling (pointScaled=True)
         closestPts = self.GetClosestPoints(pntXY, pointScaled)
         if closestPts == []:
             return []  # no graph present
@@ -3019,7 +3909,8 @@ class PlotCanvas(wx.Panel):
         """
         if self.last_PointLabel is not None:
             # compare pointXY
-            if np.sometrue(mDataDict["pointXY"] != self.last_PointLabel["pointXY"]):
+            if np.sometrue(
+                    mDataDict["pointXY"] != self.last_PointLabel["pointXY"]):
                 # closest changed
                 self._drawPointLabel(self.last_PointLabel)  # erase old
                 self._drawPointLabel(mDataDict)  # plot new
@@ -3058,8 +3949,12 @@ class PlotCanvas(wx.Panel):
                 self._zoomCorner1, self._zoomCorner2)  # add new
         elif self._dragEnabled and event.LeftIsDown():
             coordinates = event.GetPosition()
-            newpos, oldpos = map(np.array, map(
-                self.PositionScreenToUser, [coordinates, self._screenCoordinates]))
+            newpos, oldpos = map(
+                np.array,
+                map(self.PositionScreenToUser,
+                    [coordinates, self._screenCoordinates]
+                )
+            )
             dist = newpos - oldpos
             self._screenCoordinates = coordinates
 
@@ -3206,7 +4101,7 @@ class PlotCanvas(wx.Panel):
         else:
             tmp_Buffer = self._Buffer.GetSubBitmap((0, 0, width, height))
             dcs = wx.MemoryDC(self._Buffer)
-        self._pointLabelFunc(dcs, mDataDict)  # custom user pointLabel function
+        self._pointLabelFunc(dcs, mDataDict)  # custom user pointLabel func
 
         dc = wx.ClientDC(self.canvas)
         dc = wx.BufferedDC(dc, self._Buffer)
@@ -3215,7 +4110,8 @@ class PlotCanvas(wx.Panel):
         if sys.platform == "darwin":
             self._Buffer = tmp_Buffer
 
-    def _drawLegend(self, dc, graphics, rhsW, topH, legendBoxWH, legendSymExt, legendTextExt):
+    def _drawLegend(self, dc, graphics, rhsW, topH, legendBoxWH,
+                    legendSymExt, legendTextExt):
         """Draws legend symbols and text"""
         # top right hand corner of graph box is ref corner
         trhc = self.plotbox_origin + \
@@ -3243,7 +4139,8 @@ class PlotCanvas(wx.Panel):
                 raise TypeError(
                     "object is neither PolyMarker or PolyLine instance")
             # draw legend txt
-            pnt = (trhc[0] + legendLHS + legendSymExt[0] + 5 * self._pointSize[0],
+            pnt = ((trhc[0] + legendLHS + legendSymExt[0]
+                    + 5 * self._pointSize[0]),
                    trhc[1] + s + lineHeight / 2. - legendTextExt[1] / 2)
             dc.DrawText(o.getLegend(), pnt[0], pnt[1])
         dc.SetFont(self._getFont(self._fontSizeAxis))  # reset
@@ -3252,13 +4149,13 @@ class PlotCanvas(wx.Panel):
         """Draws Title and labels and returns width and height for each"""
         # TextExtents for Title and Axis Labels
         dc.SetFont(self._getFont(self._fontSizeTitle))
-        if self.EnablePlotTitle:
-            title = graphics.Title
+        if self.enablePlotTitle:
+            title = graphics.title
             titleWH = dc.GetTextExtent(title)
         else:
             titleWH = (0, 0)
         dc.SetFont(self._getFont(self._fontSizeAxis))
-        xLabel, yLabel = graphics.XLabel, graphics.YLabel
+        xLabel, yLabel = graphics.xLabel, graphics.yLabel
         xLabelWH = dc.GetTextExtent(xLabel)
         yLabelWH = dc.GetTextExtent(yLabel)
         return titleWH, xLabelWH, yLabelWH
@@ -3359,38 +4256,34 @@ class PlotCanvas(wx.Panel):
         else:
             raise ValueError(str(spec) + ': illegal axis specification')
 
-    @SavePen
+    @TempStyle('pen')
     def _drawGrid(self, dc, p1, p2, scale, shift, xticks, yticks):
         """
         Draws the gridlines
 
-        Parameters:
-        -----------
-        dc :
-            The Device Contect to draw on
-
-        p1 : np array of length 2
-            The lower-left hand corner of the plot, in plot coords.
-            So, if the plot ranges from x=-10 to 10, and y=-5 to 5, then
-            p1 = (-10, -5)
-
-        p2 : np array of length 2
-            The upper-right hand corner of the plot, in plot coords.
-            So, if the plot ranges from x=-10 to 10, and y=-5 to 5, then
-            p1 = (10, 5)
-
-        scale : np array of length 2
-            The [X, Y] scaling factor to convert plot coords to DC coords
-
-        shift : np array of length 2
-            The [X, Y] shift values to convert plot coords to DC coords.
-
-        xticks, yticks :
-            the x and y tick definitions
-
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        :param xticks: The X tick definition
+        :type xticks: list of length-2 lists
+        :param yticks: The Y tick definition
+        :type yticks: list of length-2 lists
         """
         # increases thickness for printing only
-        pen = self.GridPen
+        pen = self.gridPen
         penWidth = self.printerScale * pen.GetWidth()
         pen.SetWidth(penWidth)
         dc.SetPen(pen)
@@ -3398,26 +4291,47 @@ class PlotCanvas(wx.Panel):
         x, y, width, height = self._point2ClientCoord(p1, p2)
 
         if self._xSpec != 'none':
-            if self.EnableGrid[0]:
+            if self.enableGrid[0]:
                 for x, _ in xticks:
-                    pt = scale * np.array([x, p1[1]]) + shift
+                    pt = scale_and_shift_point(x, p1[1], scale, shift)
                     dc.DrawLine(pt[0], pt[1], pt[0], pt[1] - height)
 
         if self._ySpec != 'none':
-            if self.EnableGrid[1]:
+            if self.enableGrid[1]:
                 for y, label in yticks:
-                    pt = scale * np.array([p1[0], y]) + shift
+                    pt = scale_and_shift_point(p1[0], y, scale, shift)
                     dc.DrawLine(pt[0], pt[1], pt[0] + width, pt[1])
 
-    @SavePen
+    @TempStyle('pen')
     def _drawTicks(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """Draw the tick marks"""
+        """Draw the tick marks
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        :param xticks: The X tick definition
+        :type xticks: list of length-2 lists
+        :param yticks: The Y tick definition
+        :type yticks: list of length-2 lists
+        """
         # TODO: add option for ticks to extend outside of graph
         #       - done via negative ticklength values?
         #           + works but the axes values cut off the ticks.
         # increases thickness for printing only
-        # TODO: changes to XSpec and YSpec api.
-        pen = self.TickPen
+        pen = self.tickPen
         penWidth = self.printerScale * pen.GetWidth()
         pen.SetWidth(penWidth)
         dc.SetPen(pen)
@@ -3426,32 +4340,58 @@ class PlotCanvas(wx.Panel):
         yTickLength = 3 * self.printerScale * self._tickLength[1]
         xTickLength = 3 * self.printerScale * self._tickLength[0]
 
-        ticks = self.EnableTicks
-        if self.XSpec != 'none':        # I don't like this :-/
+        ticks = self.enableTicks
+        if self.xSpec != 'none':        # I don't like this :-/
             if ticks.bottom:
+                lines = []
                 for x, label in xticks:
-                    pt = scale * np.array([x, p1[1]]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] - xTickLength)
+                    pt = scale_and_shift_point(x, p1[1], scale, shift)
+                    lines.append((pt[0], pt[1], pt[0], pt[1] - xTickLength))
+                dc.DrawLineList(lines)
             if ticks.top:
+                lines = []
                 for x, label in xticks:
-                    pt = scale * np.array([x, p2[1]]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0], pt[1] + xTickLength)
+                    pt = scale_and_shift_point(x, p2[1], scale, shift)
+                    lines.appned((pt[0], pt[1], pt[0], pt[1] + xTickLength))
+                dc.DrawLineList(lines)
 
-        if self.YSpec != 'none':
+        if self.ySpec != 'none':
             if ticks.left:
+                lines = []
                 for y, label in yticks:
-                    pt = scale * np.array([p1[0], y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0] + yTickLength, pt[1])
+                    pt = scale_and_shift_point(p1[0], y, scale, shift)
+                    lines.append((pt[0], pt[1], pt[0] + yTickLength, pt[1]))
+                dc.DrawLineList(lines)
             if ticks.right:
+                lines = []
                 for y, label in yticks:
-                    pt = scale * np.array([p2[0], y]) + shift
-                    dc.DrawLine(pt[0], pt[1], pt[0] - yTickLength, pt[1])
+                    pt = scale_and_shift_point(p2[0], y, scale, shift)
+                    lines.append((pt[0], pt[1], pt[0] - yTickLength, pt[1]))
+                dc.DrawLineList(lines)
 
-    @SavePen
+    @TempStyle('pen')
     def _drawCenterLines(self, dc, p1, p2, scale, shift):
-        """Draws the center lines"""
+        """Draws the center lines
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        """
         # increases thickness for printing only
-        pen = self.CenterLinePen
+        pen = self.centerLinePen
         penWidth = self.printerScale * pen.GetWidth()
         pen.SetWidth(penWidth)
         dc.SetPen(pen)
@@ -3473,10 +4413,29 @@ class PlotCanvas(wx.Panel):
                         x,
                         scale[1] * p2[1] + shift[1])
 
-    @SavePen
+    @TempStyle('pen')
     def _drawDiagonals(self, dc, p1, p2, scale, shift):
-        """Draws the diagonal lines"""
-        pen = self.DiagonalPen
+        """
+        Draws the diagonal lines.
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        """
+        pen = self.diagonalPen
         penWidth = self.printerScale * pen.GetWidth()
         pen.SetWidth(penWidth)
         dc.SetPen(pen)
@@ -3492,84 +4451,162 @@ class PlotCanvas(wx.Panel):
                         scale[0] * p2[0] + shift[0],
                         scale[1] * p1[1] + shift[1])
 
-    @SavePen
+    @TempStyle('pen')
     def _drawAxes(self, dc, p1, p2, scale, shift):
-        """Draw the frame lines"""
-        # TODO: add option to not draw certain axes
+        """
+        Draw the frame lines.
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        """
         # increases thickness for printing only
-        pen = self.AxesPen
+        pen = self.axesPen
         penWidth = self.printerScale * pen.GetWidth()
         pen.SetWidth(penWidth)
         dc.SetPen(pen)
 
-        axes = self.EnableAxes
-        if self.XSpec != 'none':
+        axes = self.enableAxes
+        if self.xSpec != 'none':
             if axes.bottom:
                 lower, upper = p1[0], p2[0]
-                a1 = scale * np.array([lower, p1[1]]) + shift
-                a2 = scale * np.array([upper, p1[1]]) + shift
+                a1 = scale_and_shift_point(lower, p1[1], scale, shift)
+                a2 = scale_and_shift_point(upper, p1[1], scale, shift)
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
             if axes.top:
                 lower, upper = p1[0], p2[0]
-                a1 = scale * np.array([lower, p2[1]]) + shift
-                a2 = scale * np.array([upper, p2[1]]) + shift
+                a1 = scale_and_shift_point(lower, p2[1], scale, shift)
+                a2 = scale_and_shift_point(upper, p2[1], scale, shift)
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
 
-        if self.YSpec != 'none':
+        if self.ySpec != 'none':
             if axes.left:
                 lower, upper = p1[1], p2[1]
-                a1 = scale * np.array([p1[0], lower]) + shift
-                a2 = scale * np.array([p1[0], upper]) + shift
+                a1 = scale_and_shift_point(p1[0], lower, scale, shift)
+                a2 = scale_and_shift_point(p1[0], upper, scale, shift)
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
             if axes.right:
                 lower, upper = p1[1], p2[1]
-                a1 = scale * np.array([p2[0], lower]) + shift
-                a2 = scale * np.array([p2[0], upper]) + shift
+                a1 = scale_and_shift_point(p2[0], lower, scale, shift)
+                a2 = scale_and_shift_point(p2[0], upper, scale, shift)
                 dc.DrawLine(a1[0], a1[1], a2[0], a2[1])
 
-    @SavePen
+    @TempStyle('pen')
     def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """ Draws the axes values """
+        """
+        Draws the axes values
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        :param xticks: The X tick definition
+        :type xticks: list of length-2 lists
+        :param yticks: The Y tick definition
+        :type yticks: list of length-2 lists
+        """
         # TODO: More code duplication? Same as _drawGrid and _drawTicks?
-        # TODO: replace dc.DrawText with dc.DrawTextList?
         # TODO: update the bounding boxes when adding right and top values
-        axes = self.EnableAxesValues
-        if self.XSpec != 'none':
+        axes = self.enableAxesValues
+        if self.xSpec != 'none':
             if axes.bottom:
+                labels = [tick[1] for tick in xticks]
+                coords = []
                 for x, label in xticks:
                     w = dc.GetTextExtent(label)[0]
-                    pt = scale * np.array([x, p1[1]]) + shift
-                    dc.DrawText(label,
-                                pt[0] - w/2,
-                                pt[1] + 2 * self._pointSize[1])
+                    pt = scale_and_shift_point(x, p1[1], scale, shift)
+                    coords.append(
+                        (pt[0] - w/2, pt[1] + 2 * self._pointSize[1])
+                    )
+                dc.DrawTextList(labels, coords)
+
             if axes.top:
+                labels = [tick[1] for tick in xticks]
+                coords = []
                 for x, label in xticks:
                     w, h = dc.GetTextExtent(label)
-                    pt = scale * np.array([x, p2[1]]) + shift
-                    dc.DrawText(label,
-                                pt[0] - w/2,
-                                pt[1] - 2 * self._pointSize[1] - h)
-        if self.YSpec != 'none':
+                    pt = scale_and_shift_point(x, p2[1], scale, shift)
+                    coords.append(
+                        (pt[0] - w/2, pt[1] - 2 * self._pointSize[1] - h)
+                    )
+                dc.DrawTextList(labels, coords)
+
+        if self.ySpec != 'none':
             if axes.left:
                 h = dc.GetCharHeight()
+                labels = [tick[1] for tick in yticks]
+                coords = []
                 for y, label in yticks:
                     w = dc.GetTextExtent(label)[0]
-                    pt = scale * np.array([p1[0], y]) + shift
-                    dc.DrawText(label,
-                                pt[0] - w - 3 * self._pointSize[0],
-                                pt[1] - 0.5 * h)
+                    pt = scale_and_shift_point(p1[0], y, scale, shift)
+                    coords.append(
+                        (pt[0] - w - 3 * self._pointSize[0], pt[1] - 0.5 * h)
+                    )
+                dc.DrawTextList(labels, coords)
+
             if axes.right:
                 h = dc.GetCharHeight()
+                labels = [tick[1] for tick in yticks]
+                coords = []
                 for y, label in yticks:
                     w = dc.GetTextExtent(label)[0]
-                    pt = scale * np.array([p2[0], y]) + shift
-                    dc.DrawText(label,
-                                pt[0] + 3 * self._pointSize[0],
-                                pt[1] - 0.5 * h)
+                    pt = scale_and_shift_point(p2[0], y, scale, shift)
+                    coords.append(
+                        (pt[0] + 3 * self._pointSize[0], pt[1] - 0.5 * h)
+                    )
+                dc.DrawTextList(labels, coords)
 
-    @SavePen
+    @TempStyle('pen')
     def _drawPlotAreaItems(self, dc, p1, p2, scale, shift, xticks, yticks):
-        """Draws each frame element"""
+        """
+        Draws each frame element
+
+        :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
+        :type `dc`: :class:`wx.DC`
+        :param p1: The lower-left hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p1 = (-10, -5)
+        :type p1: :class:`np.array`, length 2
+        :param p2: The upper-right hand corner of the plot in plot coords. So,
+                   if the plot ranges from x=-10 to 10 and y=-5 to 5, then
+                   p2 = (10, 5)
+        :type p2: :class:`np.array`, length 2
+        :param scale: The [X, Y] scaling factor to convert plot coords to
+                      DC coords
+        :type scale: :class:`np.array`, length 2
+        :param shift: The [X, Y] shift values to convert plot coords to
+                      DC coords. Must be in plot units, not DC units.
+        :type shift: :class:`np.array`, length 2
+        :param xticks: The X tick definition
+        :type xticks: list of length-2 lists
+        :param yticks: The Y tick definition
+        :type yticks: list of length-2 lists
+        """
         if self._gridEnabled:
             self._drawGrid(dc, p1, p2, scale, shift, xticks, yticks)
 
@@ -3588,33 +4625,47 @@ class PlotCanvas(wx.Panel):
         if self._axesValuesEnabled:
             self._drawAxesValues(dc, p1, p2, scale, shift, xticks, yticks)
 
-    @SavePen
+    @TempStyle('pen')
     def _drawPlotTitle(self, dc, graphics, lhsW, rhsW, titleWH):
-        """Draws the plot title"""
-        # TODO: Clean up math
+        """
+        Draws the plot title
+        """
         dc.SetFont(self._getFont(self._fontSizeTitle))
-        titlePos = (self.plotbox_origin[0] + lhsW + (self.plotbox_size[0] - lhsW - rhsW) / 2. - titleWH[0] / 2.,
-                    self.plotbox_origin[1] - self.plotbox_size[1])
-        dc.DrawText(graphics.Title, titlePos[0], titlePos[1])
+        titlePos = (
+            self.plotbox_origin[0] + lhsW
+            + (self.plotbox_size[0] - lhsW - rhsW) / 2. - titleWH[0] / 2.,
+            self.plotbox_origin[1] - self.plotbox_size[1]
+        )
+        dc.DrawText(graphics.title, titlePos[0], titlePos[1])
 
-    def _drawAxesLabels(self, dc, graphics, lhsW, rhsW, bottomH, topH, xLabelWH, yLabelWH):
-        """Draws the axes labels"""
+    def _drawAxesLabels(self, dc, graphics, lhsW, rhsW, bottomH, topH,
+                        xLabelWH, yLabelWH):
+        """
+        Draws the axes labels
+        """
         # TODO: axes values get big when this is turned off
-        # TODO: clean up math
         dc.SetFont(self._getFont(self._fontSizeAxis))
-        xLabelPos = (self.plotbox_origin[0] + lhsW + (self.plotbox_size[0] - lhsW - rhsW) / 2. - xLabelWH[0] / 2.,
-                     self.plotbox_origin[1] - xLabelWH[1])
-        dc.DrawText(graphics.XLabel, xLabelPos[0], xLabelPos[1])
-        yLabelPos = (self.plotbox_origin[0] - 3 * self._pointSize[0],
-                     self.plotbox_origin[1] - bottomH - (self.plotbox_size[1] - bottomH - topH) / 2. + yLabelWH[0] / 2.)
-        if graphics.YLabel:  # bug fix for Linux
+        xLabelPos = (
+            self.plotbox_origin[0] + lhsW
+            + (self.plotbox_size[0] - lhsW - rhsW) / 2. - xLabelWH[0] / 2.,
+            self.plotbox_origin[1] - xLabelWH[1]
+        )
+        dc.DrawText(graphics.xLabel, xLabelPos[0], xLabelPos[1])
+        yLabelPos = (
+            self.plotbox_origin[0] - 3 * self._pointSize[0],
+            self.plotbox_origin[1] - bottomH
+            - (self.plotbox_size[1] - bottomH - topH) / 2. + yLabelWH[0] / 2.
+        )
+        if graphics.yLabel:  # bug fix for Linux
             dc.DrawRotatedText(
-                graphics.YLabel, yLabelPos[0], yLabelPos[1], 90)
+                graphics.yLabel, yLabelPos[0], yLabelPos[1], 90)
 
-    @SavePen
+    @TempStyle('pen')
     def _drawPlotAreaLabels(self, dc, graphics, lhsW, rhsW, titleWH,
                             bottomH, topH, xLabelWH, yLabelWH):
-        # TODO: clean up call signature.
+        """
+        Draw the plot area labels.
+        """
         if self._titleEnabled:
             self._drawPlotTitle(dc, graphics, lhsW, rhsW, titleWH)
 
@@ -3712,7 +4763,7 @@ class PlotCanvas(wx.Panel):
             self._sb_ignore = False
             return
 
-        if not self.ShowScrollbars:
+        if not self.showScrollbars:
             return
 
         self._adjustingSB = True
@@ -3812,8 +4863,9 @@ class PlotPrintout(wx.Printout):
         clientDcSize = self.graph.GetClientSize()
 
         # find what the margins are (mm)
-        margLeftSize, margTopSize = self.graph.pageSetupData.GetMarginTopLeft()
-        margRightSize, margBottomSize = self.graph.pageSetupData.GetMarginBottomRight()
+        pgSetupData = self.graph.pageSetupData
+        margLeftSize, margTopSize = pgSetupData.GetMarginTopLeft()
+        margRightSize, margBottomSize = pgSetupData.GetMarginBottomRight()
 
         # calculate offset and scale for dc
         pixLeft = margLeftSize * PPIPrinter[0] / 25.4  # mm*(dots/in)/(mm/in)
@@ -3887,13 +4939,10 @@ Hand = PyEmbeddedImage(
     "FmWQp/JJDXeRh2TXcJa91zAH2uN2mvXFsrIrsjS8rnftWmWfAiLIStuD9m9h9belvzgS/1fP"
     "X7075IwDENteAAAAAElFTkSuQmCC")
 
-#---------------------------------------------------------------------------
-# if running standalone...
-#
-#     ...a sample implementation using the above
-#
 
-
+### -------------------------------------------------------------------------
+### Examples and Demo Frame
+### -------------------------------------------------------------------------
 def _draw1Objects():
     """Sin, Cos, and Points"""
     # 100 points sin function, plotted as green circles
@@ -3927,8 +4976,9 @@ def _draw1Objects():
                           colour='blue',
                           marker='cross',
                           )
+    line2 = PolyLine(pts, drawstyle='steps-post')
 
-    return PlotGraphics([markers1, lines, markers3, markers2],
+    return PlotGraphics([markers1, lines, markers3, markers2, line2],
                         "Graph Title",
                         "X Axis",
                         "Y Axis")
@@ -3960,10 +5010,10 @@ def _draw2Objects():
 
     # data points for the 25pt cos function.
     pts2 = PolyMarker(data1,
-                       legend='Red Points',
-                       colour='red',
-                       size=1.5,
-                       )
+                      legend='Red Points',
+                      colour='red',
+                      size=1.5,
+                      )
 
     # A few more points...
     pi = np.pi
@@ -4070,7 +5120,7 @@ def _draw8Objects():
     """
     Box plot
     """
-    data1 = np.array([912, 337, 607, 583, 512, 531, 558, 381, 621, 574,
+    data1 = np.array([np.NaN, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                       538, 577, 679, 415, 454, 417, 635, 319, 350, 183,
                       863, 337, 607, 583, 512, 531, 558, 381, 621, 574,
                       538, 577, 679, 415, 454, 417, 635, 319, 350, 97])
@@ -4291,7 +5341,7 @@ class TestFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnEnableAxesAll, id=2406)
 
         menu.Append(240, 'Enable Axes', submenu,
-                   'Enables the display of the Axes')
+                    'Enables the display of the Axes')
 
         submenu = wx.Menu()
         submenu_items = ("Bottom", "Left", "Top", "Right")
@@ -4394,7 +5444,7 @@ class TestFrame(wx.Frame):
         self.client = PlotCanvas(self)
         # define the function for drawing pointLabels
 #        self.client.SetPointLabelFunc(self.DrawPointLabel)
-        self.client.PointLabelFunc = self.DrawPointLabel
+        self.client.pointLabelFunc = self.DrawPointLabel
         # Create mouse event for showing cursor coords in status bar
         self.client.canvas.Bind(wx.EVT_LEFT_DOWN, self.OnMouseLeftDown)
         # Show closest point when enabled
@@ -4440,7 +5490,7 @@ class TestFrame(wx.Frame):
 
     def OnMotion(self, event):
         # show closest point (when enbled)
-        if self.client.EnablePointLabel:
+        if self.client.enablePointLabel:
             # make up dict with info for the pointLabel
             # I've decided to mark the closest point on the closest curve
             dlst = self.client.GetClosestPoint(
@@ -4488,10 +5538,10 @@ class TestFrame(wx.Frame):
                                     wx.FONTSTYLE_NORMAL,
                                     wx.FONTWEIGHT_NORMAL)
                             )
-        self.client.FontSizeAxis = 20
-        self.client.FontSizeLegend = 12
-        self.client.XSpec = 'min'
-        self.client.YSpec = 'none'
+        self.client.fontSizeAxis = 20
+        self.client.fontSizeLegend = 12
+        self.client.xSpec = 'min'
+        self.client.ySpec = 'none'
         self.client.Draw(_draw3Objects())
 
     def OnPlotDraw4(self, event):
@@ -4502,7 +5552,7 @@ class TestFrame(wx.Frame):
 #        start = _time.perf_counter()
 # for x in range(10):
 # self.client.Draw(drawObj)
-##        print("10 plots of Draw4 took: %f sec."%(_time.perf_counter() - start))
+##        print("10x of Draw4 took: %f sec."%(_time.perf_counter() - start))
 # profile end
 
     def OnPlotDraw5(self, event):
@@ -4518,8 +5568,8 @@ class TestFrame(wx.Frame):
         self.resetDefaults()
         # self.client.SetEnableLegend(True)   #turn on Legend
         # self.client.SetEnableGrid(True)     #turn on Grid
-        self.client.XSpec = 'none'
-        self.client.YSpec = 'auto'
+        self.client.xSpec = 'none'
+        self.client.ySpec = 'auto'
         self.client.Draw(_draw6Objects(), xAxis=(0, 7))
 
     def OnPlotDraw7(self, event):
@@ -4527,7 +5577,7 @@ class TestFrame(wx.Frame):
         self.resetDefaults()
         self.plot_options_menu.Check(271, True)
         self.plot_options_menu.Check(272, True)
-        self.client.LogScale = (True, True)
+        self.client.logScale = (True, True)
         self.client.Draw(_draw7Objects())
 
     def OnPlotDraw8(self, event):
@@ -4557,7 +5607,7 @@ class TestFrame(wx.Frame):
             self.client.Draw(graphics, (1, 3.05), (0, 1))
 
     def OnEnableZoom(self, event):
-        self.client.EnableZoom = event.IsChecked()
+        self.client.enableZoom = event.IsChecked()
         if self.mainmenu.IsChecked(217):
             self.mainmenu.Check(217, False)
 
@@ -4565,155 +5615,155 @@ class TestFrame(wx.Frame):
 
     def _checkOtherGridMenuItems(self):
         """ check or uncheck the submenu items """
-        self.gridSubMenu.Check(2151, self.client.EnableGrid[0])
-        self.gridSubMenu.Check(2152, self.client.EnableGrid[1])
-        self.gridSubMenu.Check(2153, all(self.client.EnableGrid))
+        self.gridSubMenu.Check(2151, self.client.enableGrid[0])
+        self.gridSubMenu.Check(2152, self.client.enableGrid[1])
+        self.gridSubMenu.Check(2153, all(self.client.enableGrid))
 
     def OnEnableGridX(self, event):
-        old = self.client.EnableGrid
-        self.client.EnableGrid = (event.IsChecked(), old[1])
+        old = self.client.enableGrid
+        self.client.enableGrid = (event.IsChecked(), old[1])
         self._checkOtherGridMenuItems()
 
     def OnEnableGridY(self, event):
-        old = self.client.EnableGrid
-        self.client.EnableGrid = (old[0], event.IsChecked())
+        old = self.client.enableGrid
+        self.client.enableGrid = (old[0], event.IsChecked())
         self._checkOtherGridMenuItems()
 
     def OnEnableGridAll(self, event):
-        self.client.EnableGrid = event.IsChecked()
+        self.client.enableGrid = event.IsChecked()
         self._checkOtherGridMenuItems()
         self.gridSubMenu.Check(2151, event.IsChecked())
         self.gridSubMenu.Check(2152, event.IsChecked())
 
     def OnEnableDrag(self, event):
-        self.client.EnableDrag = event.IsChecked()
+        self.client.enableDrag = event.IsChecked()
         if self.mainmenu.IsChecked(214):
             self.mainmenu.Check(214, False)
 
     def OnEnableLegend(self, event):
-        self.client.EnableLegend = event.IsChecked()
+        self.client.enableLegend = event.IsChecked()
 
     def OnEnablePointLabel(self, event):
-        self.client.EnablePointLabel = event.IsChecked()
+        self.client.enablePointLabel = event.IsChecked()
 
     def OnEnableAntiAliasing(self, event):
-        self.client.EnableAntiAliasing = event.IsChecked()
+        self.client.enableAntiAliasing = event.IsChecked()
 
     def OnEnableHiRes(self, event):
-        self.client.EnableHiRes = event.IsChecked()
+        self.client.enableHiRes = event.IsChecked()
 
     ### Axes Events ###
 
     def _checkOtherAxesMenuItems(self):
         """ check or uncheck the submenu items """
-        self.axesSubMenu.Check(2401, self.client.EnableAxes[0])
-        self.axesSubMenu.Check(2402, self.client.EnableAxes[1])
-        self.axesSubMenu.Check(2403, self.client.EnableAxes[2])
-        self.axesSubMenu.Check(2404, self.client.EnableAxes[3])
-        self.axesSubMenu.Check(2405, all(self.client.EnableAxes[:2]))
-        self.axesSubMenu.Check(2406, all(self.client.EnableAxes))
+        self.axesSubMenu.Check(2401, self.client.enableAxes[0])
+        self.axesSubMenu.Check(2402, self.client.enableAxes[1])
+        self.axesSubMenu.Check(2403, self.client.enableAxes[2])
+        self.axesSubMenu.Check(2404, self.client.enableAxes[3])
+        self.axesSubMenu.Check(2405, all(self.client.enableAxes[:2]))
+        self.axesSubMenu.Check(2406, all(self.client.enableAxes))
 
     def OnEnableAxesBottom(self, event):
-        old = self.client.EnableAxes
-        self.client.EnableAxes = (event.IsChecked(), old[1], old[2], old[3])
+        old = self.client.enableAxes
+        self.client.enableAxes = (event.IsChecked(), old[1], old[2], old[3])
         self._checkOtherAxesMenuItems()
 
     def OnEnableAxesLeft(self, event):
-        old = self.client.EnableAxes
-        self.client.EnableAxes = (old[0], event.IsChecked(), old[2], old[3])
+        old = self.client.enableAxes
+        self.client.enableAxes = (old[0], event.IsChecked(), old[2], old[3])
         self._checkOtherAxesMenuItems()
 
     def OnEnableAxesTop(self, event):
-        old = self.client.EnableAxes
-        self.client.EnableAxes = (old[0], old[1], event.IsChecked(), old[3])
+        old = self.client.enableAxes
+        self.client.enableAxes = (old[0], old[1], event.IsChecked(), old[3])
         self._checkOtherAxesMenuItems()
 
     def OnEnableAxesRight(self, event):
-        old = self.client.EnableAxes
-        self.client.EnableAxes = (old[0], old[1], old[2], event.IsChecked())
+        old = self.client.enableAxes
+        self.client.enableAxes = (old[0], old[1], old[2], event.IsChecked())
         self._checkOtherAxesMenuItems()
 
     def OnEnableAxesBottomLeft(self, event):
         checked = event.IsChecked()
-        old = self.client.EnableAxes
-        self.client.EnableAxes = (checked, checked, old[2], old[3])
+        old = self.client.enableAxes
+        self.client.enableAxes = (checked, checked, old[2], old[3])
         self._checkOtherAxesMenuItems()
 
     def OnEnableAxesAll(self, event):
         checked = event.IsChecked()
-        self.client.EnableAxes = (checked, checked, checked, checked)
+        self.client.enableAxes = (checked, checked, checked, checked)
         self._checkOtherAxesMenuItems()
 
     ### Ticks Events ###
 
     def _checkOtherTicksMenuItems(self):
         """ check or uncheck the submenu items """
-        self.ticksSubMenu.Check(2501, self.client.EnableTicks[0])
-        self.ticksSubMenu.Check(2502, self.client.EnableTicks[1])
-        self.ticksSubMenu.Check(2503, self.client.EnableTicks[2])
-        self.ticksSubMenu.Check(2504, self.client.EnableTicks[3])
-#        self.ticksSubMenu.Check(2505, all(self.client.EnableTicks[:2]))
-#        self.axesSubMenu.Check(2506, all(self.client.EnableTicks))
+        self.ticksSubMenu.Check(2501, self.client.enableTicks[0])
+        self.ticksSubMenu.Check(2502, self.client.enableTicks[1])
+        self.ticksSubMenu.Check(2503, self.client.enableTicks[2])
+        self.ticksSubMenu.Check(2504, self.client.enableTicks[3])
+#        self.ticksSubMenu.Check(2505, all(self.client.enableTicks[:2]))
+#        self.axesSubMenu.Check(2506, all(self.client.enableTicks))
 
     def OnEnableTicksBottom(self, event):
-        old = self.client.EnableTicks
-        self.client.EnableTicks = (event.IsChecked(), old[1],
+        old = self.client.enableTicks
+        self.client.enableTicks = (event.IsChecked(), old[1],
                                    old[2], old[3])
         self._checkOtherTicksMenuItems()
 
     def OnEnableTicksLeft(self, event):
-        old = self.client.EnableTicks
-        self.client.EnableTicks = (old[0], event.IsChecked(),
+        old = self.client.enableTicks
+        self.client.enableTicks = (old[0], event.IsChecked(),
                                    old[2], old[3])
         self._checkOtherTicksMenuItems()
 
     def OnEnableTicksTop(self, event):
-        old = self.client.EnableTicks
-        self.client.EnableTicks = (old[0], old[1],
+        old = self.client.enableTicks
+        self.client.enableTicks = (old[0], old[1],
                                    event.IsChecked(), old[3])
         self._checkOtherTicksMenuItems()
 
     def OnEnableTicksRight(self, event):
-        old = self.client.EnableTicks
-        self.client.EnableTicks = (old[0], old[1],
+        old = self.client.enableTicks
+        self.client.enableTicks = (old[0], old[1],
                                    old[2], event.IsChecked())
         self._checkOtherTicksMenuItems()
 
     ### AxesValues Events ###
 
     def OnEnableAxesValuesBottom(self, event):
-        old = self.client.EnableAxesValues
-        self.client.EnableAxesValues = (event.IsChecked(), old[1],
+        old = self.client.enableAxesValues
+        self.client.enableAxesValues = (event.IsChecked(), old[1],
                                         old[2], old[3])
 
     def OnEnableAxesValuesLeft(self, event):
-        old = self.client.EnableAxesValues
-        self.client.EnableAxesValues = (old[0], event.IsChecked(),
+        old = self.client.enableAxesValues
+        self.client.enableAxesValues = (old[0], event.IsChecked(),
                                         old[2], old[3])
 
     def OnEnableAxesValuesTop(self, event):
-        old = self.client.EnableAxesValues
-        self.client.EnableAxesValues = (old[0], old[1],
+        old = self.client.enableAxesValues
+        self.client.enableAxesValues = (old[0], old[1],
                                         event.IsChecked(), old[3])
 
     def OnEnableAxesValuesRight(self, event):
-        old = self.client.EnableAxesValues
-        self.client.EnableAxesValues = (old[0], old[1],
+        old = self.client.enableAxesValues
+        self.client.enableAxesValues = (old[0], old[1],
                                         old[2], event.IsChecked())
 
     ### Other Events ###
 
     def OnEnablePlotTitle(self, event):
-        self.client.EnablePlotTitle = event.IsChecked()
+        self.client.enablePlotTitle = event.IsChecked()
 
     def OnEnableAxesLabels(self, event):
-        self.client.EnableAxesLabels = event.IsChecked()
+        self.client.enableAxesLabels = event.IsChecked()
 
     def OnEnableCenterLines(self, event):
-        self.client.EnableCenterLines = event.IsChecked()
+        self.client.enableCenterLines = event.IsChecked()
 
     def OnEnableDiagonals(self, event):
-        self.client.EnableDiagonals = event.IsChecked()
+        self.client.enableDiagonals = event.IsChecked()
 
     def OnBackgroundGray(self, event):
         self.client.SetBackgroundColour("#CCCCCC")
@@ -4732,19 +5782,19 @@ class TestFrame(wx.Frame):
         self.client.Redraw()
 
     def OnLogX(self, event):
-        self.client.LogScale = (event.IsChecked(), self.client.LogScale[1])
+        self.client.logScale = (event.IsChecked(), self.client.logScale[1])
         self.client.Redraw()
 
     def OnLogY(self, event):
-        self.client.LogScale = (self.client.LogScale[0], event.IsChecked())
+        self.client.logScale = (self.client.logScale[0], event.IsChecked())
         self.client.Redraw()
 
     def OnAbsX(self, event):
-        self.client.AbsScale = (event.IsChecked(), self.client.AbsScale[1])
+        self.client.absScale = (event.IsChecked(), self.client.absScale[1])
         self.client.Redraw()
 
     def OnAbsY(self, event):
-        self.client.AbsScale = (self.client.AbsScale[0], event.IsChecked())
+        self.client.absScale = (self.client.absScale[0], event.IsChecked())
         self.client.Redraw()
 
     def OnScrUp(self, event):
@@ -4768,11 +5818,11 @@ class TestFrame(wx.Frame):
                                     wx.FONTSTYLE_NORMAL,
                                     wx.FONTWEIGHT_NORMAL)
                             )
-        self.client.FontSizeAxis = 10
-        self.client.FontSizeLegend = 7
-        self.client.LogScale = (False, False)
-        self.client.XSpec = 'auto'
-        self.client.YSpec = 'auto'
+        self.client.fontSizeAxis = 10
+        self.client.fontSizeLegend = 7
+        self.client.logScale = (False, False)
+        self.client.xSpec = 'auto'
+        self.client.ySpec = 'auto'
 
 
 def __test():
@@ -4788,6 +5838,7 @@ def __test():
 
     app = MyApp(0)
     app.MainLoop()
+
 
 if __name__ == '__main__':
     __test()
