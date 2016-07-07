@@ -31,7 +31,7 @@ def AdjustRectToScreen(rect, adjust=(0,0)):
     the rectangle is at least that much smaller than the display's client
     area.
 
-    :param Rect `rect`: the rectangle to be repositioned;
+    :param wx.Rect `rect`: the rectangle to be repositioned;
     :param tuple `adjust`: if given, it will be used to ensure that
      the rectangle is at least that much smaller than the display's client
      area.

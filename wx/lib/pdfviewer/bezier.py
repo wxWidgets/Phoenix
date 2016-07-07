@@ -58,7 +58,7 @@ def compute_points(controlpoints, nsteps=30):
     """
     Input 4 control points as :class:`RealPoint` and convert to vec2d instances.
     compute the nsteps points on the resulting curve and return them
-    as a list of :class:`Point`
+    as a list of :class:`wx.Point`
     """
     controlvectors = []
     for p in controlpoints:

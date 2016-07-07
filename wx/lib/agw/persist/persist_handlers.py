@@ -86,11 +86,11 @@ def wxDate2PyDate(date):
 
 def CreateFont(font):
     """
-    Creates a tuple of 7 :class:`Font` attributes from the `font` input parameter.
+    Creates a tuple of 7 :class:`wx.Font` attributes from the `font` input parameter.
 
-    :param `font`: a :class:`Font` instance.
+    :param `font`: a :class:`wx.Font` instance.
 
-    :returns: A tuple of 7 :class:`Font` attributes from the `font` input parameter.
+    :returns: A tuple of 7 :class:`wx.Font` attributes from the `font` input parameter.
     """
     
     return font.GetPointSize(), font.GetFamily(), font.GetStyle(), font.GetWeight(), \
@@ -365,7 +365,7 @@ class TLWHandler(AUIHandler):
 
     This class handles the following wxPython widgets:
     
-    - All :class:`Frame` derived classes;
+    - All :class:`wx.Frame` derived classes;
     - All :class:`Dialog` derived classes.
 
     |
@@ -1849,11 +1849,11 @@ class MediaCtrlHandler(AbstractHandler):
 
 class ColourPickerHandler(AbstractHandler):
     """
-    Supports saving/restoring a :class:`ColourPickerCtrl` / :class:`lib.colourselect.ColourSelect` colour.
+    Supports saving/restoring a :class:`wx.ColourPickerCtrl` / :class:`lib.colourselect.ColourSelect` colour.
 
     This class handles the following wxPython widgets:
 
-    - :class:`ColourPickerCtrl`;
+    - :class:`wx.ColourPickerCtrl`;
     - :class:`lib.colourselect.ColourSelect`.
     
     """
@@ -1943,11 +1943,11 @@ class FileDirPickerHandler(AbstractHandler):
 
 class FontPickerHandler(AbstractHandler):
     """
-    Supports saving/restoring a :class:`FontPickerCtrl` font.
+    Supports saving/restoring a :class:`wx.FontPickerCtrl` font.
 
     This class handles the following wxPython widgets:
 
-    - :class:`FontPickerCtrl`.
+    - :class:`wx.FontPickerCtrl`.
     
     """
     
@@ -2041,11 +2041,11 @@ class FileHistoryHandler(AbstractHandler):
 
 class MenuBarHandler(AbstractHandler):
     """
-    Supports saving/restoring the :class:`MenuBar` and :class:`lib.agw.flatmenu.FlatMenuBar` items state.
+    Supports saving/restoring the :class:`wx.MenuBar` and :class:`lib.agw.flatmenu.FlatMenuBar` items state.
 
     This class handles the following wxPython widgets:
 
-    - :class:`MenuBar`;
+    - :class:`wx.MenuBar`;
     - :class:`lib.agw.flatmenu.FlatMenuBar`.
     
     """
@@ -2233,7 +2233,7 @@ class FindReplaceHandler(TLWHandler):
 
     - :class:`FindReplaceDialog`.
 
-    .. todo:: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
+    .. todo:: Find a way to properly save and restore dialog data (:class:`wx.ColourDialog`, :class:`wx.FontDialog` etc...).
 
     """
     
@@ -2284,13 +2284,13 @@ class FindReplaceHandler(TLWHandler):
 
 class FontDialogHandler(TLWHandler):
     """
-    Supports saving/restoring a :class:`FontDialog` data (effects, symbols, colour, font, help).
+    Supports saving/restoring a :class:`wx.FontDialog` data (effects, symbols, colour, font, help).
 
     This class handles the following wxPython widgets:
 
-    - :class:`FontDialog`.
+    - :class:`wx.FontDialog`.
     
-    .. todo:: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
+    .. todo:: Find a way to properly save and restore dialog data (:class:`wx.ColourDialog`, :class:`wx.FontDialog` etc...).
 
     """
     
@@ -2348,15 +2348,15 @@ class FontDialogHandler(TLWHandler):
 
 class ColourDialogHandler(TLWHandler):
     """
-    Supports saving/restoring a :class:`ColourDialog` data (colour, custom colours and full
+    Supports saving/restoring a :class:`wx.ColourDialog` data (colour, custom colours and full
     choice in the dialog).
 
     This class handles the following wxPython widgets:
 
-    - :class:`ColourDialog`;
+    - :class:`wx.ColourDialog`;
     - :class:`lib.agw.cubecolourdialog.CubeColourDialog`.
 
-    .. todo:: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
+    .. todo:: Find a way to properly save and restore dialog data (:class:`wx.ColourDialog`, :class:`wx.FontDialog` etc...).
 
     """
     

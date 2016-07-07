@@ -256,7 +256,7 @@ class ResizeWidget(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ResizeWidget`.
     
-        :param `evt`: a :class:`SizeEvent` event to be processed.
+        :param `evt`: a :class:`wx.SizeEvent` event to be processed.
     
         """
         if not self._managedChild:

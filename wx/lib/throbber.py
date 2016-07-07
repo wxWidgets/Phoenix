@@ -70,7 +70,7 @@ class Throbber(wx.Panel):
 
         :param `parent`: parent window, must not be ``None``
         :param integer `id`: window identifier. A value of -1 indicates a default value
-        :param `bitmap`: a :class:`Bitmap` to be used
+        :param `bitmap`: a :class:`wx.Bitmap` to be used
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
@@ -79,9 +79,9 @@ class Throbber(wx.Panel):
         :param `frames`: number of frames (only necessary for composite image)
         :param `frameWidth`: width of each frame (only necessary for composite image)
         :param string `label`: optional text to be displayed
-        :param `overlay`: optional :class:`Bitmap` to overlay on animation
+        :param `overlay`: optional :class:`wx.Bitmap` to overlay on animation
         :param boolean `reverse`: reverse direction at end of animation
-        :param integer `style`: the underlying :class:`Control` style
+        :param integer `style`: the underlying :class:`wx.Control` style
         :param string `name`: the widget name.
         :param `rest`: the rest frame
         :param `current`: the current frame
@@ -184,7 +184,7 @@ class Throbber(wx.Panel):
         """
         Handles the ``wx.EVT_WINDOW_DESTROY`` event for :class:`Throbber`.
     
-        :param `event`: a :class:`WindowDestroyEvent` event to be processed.
+        :param `event`: a :class:`wx.WindowDestroyEvent` event to be processed.
     
         """
         self.Stop()
@@ -195,7 +195,7 @@ class Throbber(wx.Panel):
         """
         Draw the widget.
         
-        :param `dc`: the :class:`DC` to draw on
+        :param `dc`: the :class:`wx.DC` to draw on
         
         """
         dc.DrawBitmap(self.submaps[self.sequence[self.current]], 0, 0, True)
@@ -250,7 +250,7 @@ class Throbber(wx.Panel):
         """
         Set the font for the label.
         
-        :param `font`: the :class:`Font` to use
+        :param `font`: the :class:`wx.Font` to use
         
         """
         wx.Panel.SetFont(self, font)

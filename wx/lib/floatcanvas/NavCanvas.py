@@ -63,9 +63,9 @@ class NavCanvas(wx.Panel):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param `size`: a tuple or :class:`Size`
+        :param `size`: a tuple or :class:`wx.Size`
         :param `**kwargs`: will be passed on to :class:`~lib.floatcanvas.FloatCanvas.FloatCanvas`
         """
         wx.Panel.__init__(self, parent, id, size=size)

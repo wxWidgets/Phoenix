@@ -20,7 +20,7 @@ Description
 This module contains a collection of functions for simple image manipulations.
 The 2 functions defined here (:func:`grayOut`, :func:`makeGray` and :func:`stepColour`)
 can be used to convert a given image into a grey-scale representation and to
-darken/lighten a specific wxPython :class:`Colour`.
+darken/lighten a specific wxPython :class:`wx.Colour`.
 
 
 Usage
@@ -56,9 +56,9 @@ def grayOut(anImage):
     Convert the given image (in place) to a grayed-out
     version, appropriate for a 'disabled' appearance.
 
-    :param Image `anImage`: the image we want to convert to gray-scale.
+    :param wx.Image `anImage`: the image we want to convert to gray-scale.
 
-    :rtype: :class:`Image`
+    :rtype: :class:`wx.Image`
     :returns: The modified (greyed out) image.
     
     .. note:: the image is converted in place, i.e. the input image will
@@ -93,11 +93,11 @@ def makeGray(rgb, factor, maskColor):
     Make a pixel grayed-out. If the pixel matches the maskColor, it won't be
     changed.
 
-    :param tuple `rgb`: a tuple of red, green, blue integers, defining the pixel :class:`Colour`;
+    :param tuple `rgb`: a tuple of red, green, blue integers, defining the pixel :class:`wx.Colour`;
     :param float `factor`: the amount for which we want to grey out a pixel colour;
     :param `maskColor`: the mask colour.
 
-    :type `maskColor`: tuple or :class:`Colour`.
+    :type `maskColor`: tuple or :class:`wx.Colour`.
     
     :rtype: tuple
     :returns: An RGB tuple with the greyed out pixel colour.
@@ -117,10 +117,10 @@ def stepColour(c, step):
     completely black and a step of 200 is totally white, and 100
     results in the same color as was passed in.
 
-    :param Colour `c`: the input colour to be modified (darkened or lightened);
+    :param wx.Colour `c`: the input colour to be modified (darkened or lightened);
     :param integer `step`: the step value.
 
-    :rtype: :class:`Colour`
+    :rtype: :class:`wx.Colour`
     :returns: A new colour, darkened or lightened depending on the input `step` value.
     """
     

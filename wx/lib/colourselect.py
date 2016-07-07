@@ -34,14 +34,14 @@
 #
 
 """
-Provides a :class:`ColourSelect` button that, when clicked, will display a
+Provides a :class:`wx.ColourSelect` button that, when clicked, will display a
 colour selection dialog.
 
 
 Description
 ===========
 
-This module provides a :class:`ColourSelect` button that, when clicked, will display a
+This module provides a :class:`wx.ColourSelect` button that, when clicked, will display a
 colour selection dialog. The selected colour is displayed on the button itself.
 
 
@@ -87,7 +87,7 @@ wxEVT_COMMAND_COLOURSELECT = wx.NewEventType()
 
 class ColourSelectEvent(wx.PyCommandEvent):
     """
-    :class:`ColourSelectEvent` is a special subclassing of :class:`wx.CommandEvent`
+    :class:`wx.ColourSelectEvent` is a special subclassing of :class:`wx.CommandEvent`
     and it provides for a custom event sent every time the user chooses a colour.
     """
 
@@ -108,7 +108,7 @@ class ColourSelectEvent(wx.PyCommandEvent):
         """
         Returns the currently selected colour.
 
-        :rtype: :class:`Colour`
+        :rtype: :class:`wx.Colour`
         """
         
         return self.value
@@ -133,7 +133,7 @@ class ColourSelect(wx.BitmapButton):
         :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param string `label`: the button text label;
-        :param colour: a valid :class:`wx.Colour` instance, which will be the default initial
+        :param wx.Colour: a valid :class:`wx.Colour` instance, which will be the default initial
          colour for this button;
         :type `colour`: :class:`wx.Colour` or tuple
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
@@ -174,7 +174,7 @@ class ColourSelect(wx.BitmapButton):
 
     def GetColour(self):
         """
-        Returns the current colour set for the :class:`ColourSelect`.
+        Returns the current colour set for the :class:`wx.ColourSelect`.
 
         :rtype: :class:`wx.Colour`
         """
@@ -184,7 +184,7 @@ class ColourSelect(wx.BitmapButton):
 
     def GetValue(self):
         """
-        Returns the current colour set for the :class:`ColourSelect`.
+        Returns the current colour set for the :class:`wx.ColourSelect`.
 
         :rtype: :class:`wx.Colour`
         """
@@ -194,9 +194,9 @@ class ColourSelect(wx.BitmapButton):
 
     def SetValue(self, colour):
         """
-        Sets the current colour for :class:`ColourSelect`.
+        Sets the current colour for :class:`wx.ColourSelect`.
 
-        :param `colour`: the new colour for :class:`ColourSelect`.
+        :param `colour`: the new colour for :class:`wx.ColourSelect`.
         :type `colour`: tuple or string or :class:`wx.Colour`
         """
         
@@ -205,9 +205,9 @@ class ColourSelect(wx.BitmapButton):
 
     def SetColour(self, colour):
         """
-        Sets the current colour for :class:`ColourSelect`.
+        Sets the current colour for :class:`wx.ColourSelect`.
 
-        :param `colour`: the new colour for :class:`ColourSelect`.
+        :param `colour`: the new colour for :class:`wx.ColourSelect`.
         :type `colour`: tuple or string or :class:`wx.Colour`
         """
 
@@ -218,9 +218,9 @@ class ColourSelect(wx.BitmapButton):
 
     def SetLabel(self, label):
         """
-        Sets the new text label for :class:`ColourSelect`.
+        Sets the new text label for :class:`wx.ColourSelect`.
 
-        :param string `label`: the new text label for :class:`ColourSelect`.
+        :param string `label`: the new text label for :class:`wx.ColourSelect`.
         """
 
         self.label = label
@@ -228,7 +228,7 @@ class ColourSelect(wx.BitmapButton):
 
     def GetLabel(self):
         """
-        Returns the current text label for the :class:`ColourSelect`.
+        Returns the current text label for the :class:`wx.ColourSelect`.
 
         :rtype: string
         """
@@ -290,7 +290,7 @@ class ColourSelect(wx.BitmapButton):
 
     def OnClick(self, event):
         """
-        Handles the ``wx.EVT_BUTTON`` event for :class:`ColourSelect`.
+        Handles the ``wx.EVT_BUTTON`` event for :class:`wx.ColourSelect`.
 
         :param `event`: a :class:`wx.CommandEvent` event to be processed.
         """

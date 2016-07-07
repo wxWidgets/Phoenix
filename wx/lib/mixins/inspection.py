@@ -24,7 +24,7 @@ Description
 ===========
 
 The Widget Inspection Tool (WIT) is very useful debugging tool provided with
-wxPython, especially useful to debug layout issues when using :class:`Sizer`.
+wxPython, especially useful to debug layout issues when using :class:`wx.Sizer`.
 
 The :class:`InspectableApp` is a "pre-mixed" :class:`App` and the
 :class:`InspectionMixin` allows you to mix it with your custom :class:`App`

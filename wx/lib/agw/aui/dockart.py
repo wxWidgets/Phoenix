@@ -214,7 +214,7 @@ class AuiDefaultDockArt(object):
         """
         Sets the default colours, which are calculated from the given base colour.
 
-        :param `base_colour`: an instance of :class:`Colour`. If defaulted to ``None``, a colour
+        :param `base_colour`: an instance of :class:`wx.Colour`. If defaulted to ``None``, a colour
          is generated accordingly to the platform and theme.
         """
 
@@ -336,7 +336,7 @@ class AuiDefaultDockArt(object):
 
         :param integer `id`: can be one of the colour values in `Metric Ordinals`;
         :param `colour`: the new value of the setting.
-        :type `colour`: :class:`Colour` or tuple or integer
+        :type `colour`: :class:`wx.Colour` or tuple or integer
         """
 
         colour = wx.Colour(colour)
@@ -389,7 +389,7 @@ class AuiDefaultDockArt(object):
         Sets a font setting.
 
         :param integer `id`: must be ``AUI_DOCKART_CAPTION_FONT``;
-        :param `font`: an instance of :class:`Font`.
+        :param `font`: an instance of :class:`wx.Font`.
         """
 
         if id == AUI_DOCKART_CAPTION_FONT:
@@ -413,10 +413,10 @@ class AuiDefaultDockArt(object):
         """
         Draws a sash between two windows.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
         :param integer `orient`: the sash orientation;
-        :param Rect `rect`: the sash rectangle.
+        :param wx.Rect `rect`: the sash rectangle.
         """
 
         # AG: How do we make this work?!?
@@ -438,10 +438,10 @@ class AuiDefaultDockArt(object):
         """
         Draws a background.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
         :param integer `orient`: the gradient (if any) orientation;
-        :param Rect `rect`: the background rectangle.
+        :param wx.Rect `rect`: the background rectangle.
         """
 
         dc.SetPen(wx.TRANSPARENT_PEN)
@@ -460,9 +460,9 @@ class AuiDefaultDockArt(object):
         """
         Draws the pane border.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
-        :param Rect `rect`: the border rectangle;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
+        :param wx.Rect `rect`: the border rectangle;
         :param `pane`: the pane for which the border is drawn.
         """
 
@@ -499,8 +499,8 @@ class AuiDefaultDockArt(object):
         """
         Draws the text caption background in the pane.
 
-        :param `dc`: a :class:`DC` device context;
-        :param Rect `rect`: the text caption rectangle;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param wx.Rect `rect`: the text caption rectangle;
         :param `pane`: the pane for which the text background is drawn.
         """
 
@@ -546,8 +546,8 @@ class AuiDefaultDockArt(object):
         """
         Draws the icon in the pane caption area.
 
-        :param `dc`: a :class:`DC` device context;
-        :param Rect `rect`: the pane caption rectangle;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param wx.Rect `rect`: the pane caption rectangle;
         :param `pane`: the pane for which the icon is drawn.
         """
 
@@ -564,10 +564,10 @@ class AuiDefaultDockArt(object):
         """
         Draws the text in the pane caption.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
         :param string `text`: the text to be displayed;
-        :param Rect `rect`: the pane caption rectangle;
+        :param wx.Rect `rect`: the pane caption rectangle;
         :param `pane`: the pane for which the text is drawn.
         """
 
@@ -615,10 +615,10 @@ class AuiDefaultDockArt(object):
         """
         Requests the user attention by intermittently highlighting the pane caption.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
         :param string `text`: the text to be displayed;
-        :param Rect `rect`: the pane caption rectangle;
+        :param wx.Rect `rect`: the pane caption rectangle;
         :param `pane`: the pane for which we want to attract the user attention.
         """
 
@@ -644,9 +644,9 @@ class AuiDefaultDockArt(object):
         """
         Draws a gripper on the pane.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
-        :param Rect `rect`: the pane caption rectangle;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
+        :param wx.Rect `rect`: the pane caption rectangle;
         :param `pane`: the pane for which the gripper is drawn.
         """
 
@@ -691,11 +691,11 @@ class AuiDefaultDockArt(object):
         """
         Draws a pane button in the pane caption area.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
         :param integer `button`: the button to be drawn;
         :param integer `button_state`: the pane button state;
-        :param Rect `_rect`: the pane caption rectangle;
+        :param wx.Rect `_rect`: the pane caption rectangle;
         :param `pane`: the pane for which the button is drawn.
         """
 
@@ -779,9 +779,9 @@ class AuiDefaultDockArt(object):
         """
         Draws a sash gripper on a sash between two windows.
 
-        :param `dc`: a :class:`DC` device context;
+        :param `dc`: a :class:`wx.DC` device context;
         :param integer `orient`: the sash orientation;
-        :param Rect `rect`: the sash rectangle.
+        :param wx.Rect `rect`: the sash rectangle.
         """
 
         dc.SetBrush(self._gripper_brush)
@@ -864,7 +864,7 @@ class AuiDefaultDockArt(object):
         """
         Sets a custom button bitmap for the pane button.
 
-        :param Bitmap `bmp`: the actual bitmap to set;
+        :param wx.Bitmap `bmp`: the actual bitmap to set;
         :param integer `button`: the button identifier;
         :param bool `active`: whether it is the bitmap for the active button or not;
         :param bool `maximize`: used to distinguish between the maximize and restore bitmaps.
@@ -913,7 +913,7 @@ if _ctypes:
         _fields_ = [('left', ctypes.c_ulong),('top', ctypes.c_ulong),('right', ctypes.c_ulong),('bottom', ctypes.c_ulong)]
 
         def dump(self):
-            """ Dumps `self` as a :class:`Rect`. """
+            """ Dumps `self` as a :class:`wx.Rect`. """
             return list(map(int, (self.left, self.top, self.right, self.bottom)))
 
 
@@ -937,7 +937,7 @@ class ModernDockArt(AuiDefaultDockArt):
         """
         Default class constructor.
 
-        :param Window `win`: the window managed by :class:`~lib.agw.aui.framemanager.AuiManager`.
+        :param wx.Window `win`: the window managed by :class:`~lib.agw.aui.framemanager.AuiManager`.
         """
 
         AuiDefaultDockArt.__init__(self)
@@ -982,10 +982,10 @@ class ModernDockArt(AuiDefaultDockArt):
         """
         Draws the text in the pane caption.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
         :param string `text`: the text to be displayed;
-        :param Rect `rect`: the pane caption rectangle;
+        :param wx.Rect `rect`: the pane caption rectangle;
         :param `pane`: the pane for which the text is drawn.
         """
 
@@ -1040,8 +1040,8 @@ class ModernDockArt(AuiDefaultDockArt):
         """
         Draws the text caption background in the pane.
 
-        :param `dc`: a :class:`DC` device context;
-        :param Rect `rect`: the text caption rectangle;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param wx.Rect `rect`: the text caption rectangle;
         :param `pane`: the pane for which we are drawing the caption background.
         """
 
@@ -1080,10 +1080,10 @@ class ModernDockArt(AuiDefaultDockArt):
         """
         Requests the user attention by intermittently highlighting the pane caption.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
         :param string `text`: the text to be displayed;
-        :param Rect `rect`: the pane caption rectangle;
+        :param wx.Rect `rect`: the pane caption rectangle;
         :param `pane`: the pane for which the text is drawn.
         """
 
@@ -1109,11 +1109,11 @@ class ModernDockArt(AuiDefaultDockArt):
         """
         Draws a pane button in the pane caption area.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `window`: an instance of :class:`Window`;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `window`: an instance of :class:`wx.Window`;
         :param integer `button`: the button to be drawn;
         :param integer `button_state`: the pane button state;
-        :param Rect `rect`: the pane caption rectangle;
+        :param wx.Rect `rect`: the pane caption rectangle;
         :param `pane`: the pane for which the button is drawn.
         """
 

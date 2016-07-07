@@ -216,7 +216,7 @@ class PieCtrlLegend(wx.Window):
         """
         Recreates the legend background.
 
-        :param `parentdc`: an instance of :class:`DC`.
+        :param `parentdc`: an instance of :class:`wx.DC`.
         """
 
         w, h = self.GetSize()
@@ -274,7 +274,7 @@ class PieCtrlLegend(wx.Window):
         """
         Sets the legend label colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._labelcolour = colour
@@ -291,7 +291,7 @@ class PieCtrlLegend(wx.Window):
         """
         Sets the legend label font.
 
-        :param `font`: a valid :class:`Font` object.
+        :param `font`: a valid :class:`wx.Font` object.
         """
 
         self._labelfont = font
@@ -308,7 +308,7 @@ class PieCtrlLegend(wx.Window):
         """
         Sets the legend background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._backcolour = colour
@@ -418,7 +418,7 @@ class PiePart(object):
         """
         Sets the segment colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._colour = colour
@@ -496,7 +496,7 @@ class PieCtrl(wx.Window):
         """
         Sets the :class:`PieCtrl` background image.
 
-        :param `bmp`: a valid :class:`Bitmap` object.
+        :param `bmp`: a valid :class:`wx.Bitmap` object.
         """
 
         self._background = bmp
@@ -513,7 +513,7 @@ class PieCtrl(wx.Window):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`PieCtrl`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.RecreateCanvas()
@@ -614,7 +614,7 @@ class PieCtrl(wx.Window):
         """
         Sets the :class:`PieCtrl` background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._backcolour = colour
@@ -653,7 +653,7 @@ class PieCtrl(wx.Window):
         """
         Draws the :class:`PieCtrl` external edges.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `cx`: the part `x` coordinate;
         :param `cy`: the part `y` coordinate;
         :param `w`: the control's width;
@@ -695,7 +695,7 @@ class PieCtrl(wx.Window):
         """
         Draws all the sectors of :class:`PieCtrl`.
 
-        :param `dc`: an instance of :class:`DC`.        
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         w, h = self.GetSize()
@@ -954,7 +954,7 @@ class ProgressPie(PieCtrl):
         """
         Sets the colour that progressively fills the :class:`ProgressPie` .
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._filledcolour = colour
@@ -966,7 +966,7 @@ class ProgressPie(PieCtrl):
         """
         Sets the colour that is filled.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._unfilledcolour= colour

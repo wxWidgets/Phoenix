@@ -16,7 +16,7 @@
 #----------------------------------------------------------------------------
 """
 This module implements an API similar to :class:`GraphicsContext` and the
-related classes. The implementation is done using :class:`DC`
+related classes. The implementation is done using :class:`wx.DC`
 
 Why do this?  Neither :class:`GraphicsContext` nor the Cairo-based
 GraphicsContext API provided by wx.lib.graphics can be written
@@ -148,7 +148,7 @@ class dcGraphicsContext(object):
         The incoming co-ordinates have a bottom left origin with increasing
         y downwards (so y values are all negative). The DC origin is top left
         also with increasing y down.
-        :class:`DC` and :class:`GraphicsContext` fonts are too big in the ratio
+        :class:`wx.DC` and :class:`GraphicsContext` fonts are too big in the ratio
         of pixels per inch to points per inch. If screen rendering used Cairo,
         printed fonts need to be scaled but if :class:`GCDC` was used, they are
         already scaled.
@@ -249,10 +249,10 @@ class dcGraphicsContext(object):
 
     def SetFont(self, font, colour=None):
         """
-        Sets the :class:`Font` to be used for drawing text.
+        Sets the :class:`wx.Font` to be used for drawing text.
         Don't set the dc font yet as it may need to be scaled
         
-        :param `font`: the :class:`Font` for drawing text
+        :param `font`: the :class:`wx.Font` for drawing text
         :param `colour`: the colour to be used
         
         """

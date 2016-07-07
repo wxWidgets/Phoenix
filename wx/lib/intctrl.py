@@ -417,13 +417,13 @@ class IntCtrl(wx.TextCtrl):
           a default position, chosen by either the windowing system or
           wxPython, depending on platform
 
-        :param Size `size`: the control size. A value of (-1, -1) indicates a
+        :param wx.Size `size`: the control size. A value of (-1, -1) indicates a
           default size, chosen by either the windowing system or wxPython,
           depending on platform
           
         :param int `style`: the underlying :class:`TextCtrl` style
         
-        :param Validator `validator`: Normally None, IntCtrl uses its own
+        :param wx.Validator `validator`: Normally None, IntCtrl uses its own
           validator to do value validation and input control.  However, a
           validator derived from :class:`~lib.intctrl.IntValidator` can be
           supplied to override the data transfer methods for the

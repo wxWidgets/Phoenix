@@ -17,7 +17,7 @@ from .basic import RectangleShape
 
 
 class BitmapShape(RectangleShape):
-    """The :class:`BitmapShape` class draws a bitmap (non-resizable)."""
+    """The :class:`wx.BitmapShape` class draws a bitmap (non-resizable)."""
     def __init__(self):
         """
         Default class constructor.

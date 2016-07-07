@@ -103,9 +103,9 @@ class RibbonToolBarEvent(wx.PyCommandEvent):
         If a menu item is selected, the corresponding menu event is generated and will
         be processed as usual. 
 
-        :param `menu`: the menu to pop up, an instance of :class:`Menu`.
+        :param `menu`: the menu to pop up, an instance of :class:`wx.Menu`.
 
-        :note: Just before the menu is popped up, :meth:`Menu.UpdateUI` is called to ensure
+        :note: Just before the menu is popped up, :meth:`wx.Menu.UpdateUI` is called to ensure
          that the menu items are in the correct state. The menu does not get deleted by
          the window.
         """
@@ -773,7 +773,7 @@ class RibbonToolBar(RibbonControl):
         Sets the bitmap to be used by the tool with the given ID when the tool is in a disabled state.
 
         :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
-        :param `bitmap`: an instance of :class:`Bitmap`.
+        :param `bitmap`: an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.5
         """
@@ -807,7 +807,7 @@ class RibbonToolBar(RibbonControl):
         Sets the bitmap to be used by the tool with the given ID when the tool is enabled.
 
         :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
-        :param `bitmap`: an instance of :class:`Bitmap`.
+        :param `bitmap`: an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.5
         """
@@ -1120,7 +1120,7 @@ class RibbonToolBar(RibbonControl):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`RibbonToolBar`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         if self._art == None:
@@ -1222,9 +1222,9 @@ class RibbonToolBar(RibbonControl):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :return: An instance of :class:`Size`.
+        :return: An instance of :class:`wx.Size`.
         
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return self.GetMinSize()
@@ -1417,7 +1417,7 @@ class RibbonToolBar(RibbonControl):
         This function sends one or more :class:`UpdateUIEvent` to the window.
 
         The particular implementation depends on the window; for example a :class:`ToolBar` will
-        send an update UI event for each toolbar button, and a :class:`Frame` will send an
+        send an update UI event for each toolbar button, and a :class:`wx.Frame` will send an
         update UI event for each menubar menu item.
 
         You can call this function from your application to ensure that your UI is up-to-date

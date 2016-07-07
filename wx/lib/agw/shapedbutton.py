@@ -58,7 +58,7 @@ classes (`GenButton`, `GenBitmapButton`, `GenBitmapTextButton`, `GenToggleButton
 classes (with "Gen" replaced by "S"), with the same event handling, but they
 are rounded/elliptical buttons.
 
-`ShapedButton` is based on a :class:`Window`, in which 2 images are drawn depending
+`ShapedButton` is based on a :class:`wx.Window`, in which 2 images are drawn depending
 on the button state (pressed or not pressed). The 2 images have been stolen
 from Audacity (written with wxWidgets) and rearranged/reshaped/restyled
 using adobe PhotoShop.
@@ -330,7 +330,7 @@ class SButton(wx.Window):
         """
         Sets the button colour, for all button states.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         
         :note: The original button images are greyscale with a lot of pixels with
          different colours. Changing smoothly the button colour in order to
@@ -359,7 +359,7 @@ class SButton(wx.Window):
         """
         Sets the button label colour.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         if colour is None:
@@ -397,7 +397,7 @@ class SButton(wx.Window):
         """
         Given the current font settings, calculate and set a good size.
 
-        :param `size`: if not ``None``, an instance of :class:`Size` to pass to
+        :param `size`: if not ``None``, an instance of :class:`wx.Size` to pass to
          `SetInitialSize`.
         """
 
@@ -412,7 +412,7 @@ class SButton(wx.Window):
         Overridden base class virtual. Determines the best size of the button
         based on the label size.
 
-        :note: Overridden from :class:`Window`.
+        :note: Overridden from :class:`wx.Window`.
         """
 
         w, h, usemin = self._GetLabelSize()
@@ -434,7 +434,7 @@ class SButton(wx.Window):
         """
         Can this window be given focus by mouse click?
 
-        :note: Overridden from :class:`Window`.
+        :note: Overridden from :class:`wx.Window`.
         """
 
         return self.IsShown() and self.IsEnabled()
@@ -455,7 +455,7 @@ class SButton(wx.Window):
 
         :param `enable`: ``True`` to enable the button, ``False`` to disable it.
         
-        :note: Overridden from :class:`Window`.
+        :note: Overridden from :class:`wx.Window`.
         """
 
         self._enabled = enable
@@ -532,7 +532,7 @@ class SButton(wx.Window):
         """
         Draws the main button, in whichever state it is.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `width`: the button width;
         :param `height`: the button height.
         """
@@ -612,7 +612,7 @@ class SButton(wx.Window):
         """
         Draws the label on the button.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `width`: the button width;
         :param `height`: the button height;
         :param `dw`: width differential, to show a 3D effect;
@@ -655,7 +655,7 @@ class SButton(wx.Window):
         drawn with a dotted-style pen, to let the user know which button has
         the focus.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `width`: the button width;
         :param `height`: the button height.        
         """
@@ -685,7 +685,7 @@ class SButton(wx.Window):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`SButton`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Refresh()
@@ -902,9 +902,9 @@ class SButton(wx.Window):
 
     def ConvertWXToPIL(self, bmp):
         """
-        Converts a :class:`Image` into a PIL image.
+        Converts a :class:`wx.Image` into a PIL image.
 
-        :param `bmp`: an instance of :class:`Image`.    
+        :param `bmp`: an instance of :class:`wx.Image`.
         """
 
         width = bmp.GetWidth()
@@ -916,7 +916,7 @@ class SButton(wx.Window):
 
     def ConvertPILToWX(self, pil, alpha=True):
         """
-        Converts a PIL image into a :class:`Image`.
+        Converts a PIL image into a :class:`wx.Image`.
 
         :param `pil`: a PIL image;
         :param `alpha`: ``True`` if the image contains alpha transparency, ``False``
@@ -991,7 +991,7 @@ class SButton(wx.Window):
 class SBitmapButton(SButton):
     """
     Subclass of :class:`SButton` which displays a bitmap, acting like a
-    :class:`BitmapButton`.
+    :class:`wx.BitmapButton`.
     """
 
     def __init__(self, parent, id, bitmap, pos=wx.DefaultPosition, size=wx.DefaultSize):
@@ -1044,7 +1044,7 @@ class SBitmapButton(SButton):
         """
         Sets the bitmap to display when the button is disabled.
 
-        :param `bitmap`: a valid :class:`Bitmap` object.
+        :param `bitmap`: a valid :class:`wx.Bitmap` object.
         """
 
         self._bmpdisabled = bitmap
@@ -1054,7 +1054,7 @@ class SBitmapButton(SButton):
         """
         Sets the bitmap to display when the button has the focus.
 
-        :param `bitmap`: a valid :class:`Bitmap` object.
+        :param `bitmap`: a valid :class:`wx.Bitmap` object.
         """
 
         self._bmpfocus = bitmap
@@ -1065,7 +1065,7 @@ class SBitmapButton(SButton):
         """
         Sets the bitmap to display when the button is selected (pressed).
 
-        :param `bitmap`: a valid :class:`Bitmap` object.
+        :param `bitmap`: a valid :class:`wx.Bitmap` object.
         """
 
         self._bmpselected = bitmap
@@ -1076,7 +1076,7 @@ class SBitmapButton(SButton):
         Sets the bitmap to display normally. This is the only one that is
         required.
 
-        :param `bitmap`: a valid :class:`Bitmap` object;
+        :param `bitmap`: a valid :class:`wx.Bitmap` object;
         :param `createothers`: if set to ``True``, then the other bitmaps will be
          generated on the fly. Currently, only the disabled bitmap is generated.
         """
@@ -1101,7 +1101,7 @@ class SBitmapButton(SButton):
         """
         Draws the bitmap in the middle of the button.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `width`: the button width;
         :param `height`: the button height;
         :param `dw`: width differential, to show a 3D effect;
@@ -1184,7 +1184,7 @@ class SBitmapTextButton(SBitmapButton):
         """
         Draws the bitmap and the text label.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `width`: the button width;
         :param `height`: the button height;
         :param `dw`: width differential, to show a 3D effect;

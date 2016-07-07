@@ -32,7 +32,7 @@ Description
 ===========
 
 :class:`FloatSpin` implements a floating point :class:`SpinCtrl`. It is built using a custom
-:class:`Control`, composed by a :class:`TextCtrl` and a :class:`SpinButton`. In order to
+:class:`wx.Control`, composed by a :class:`TextCtrl` and a :class:`SpinButton`. In order to
 correctly handle floating points numbers without rounding errors or non-exact
 floating point representations, :class:`FloatSpin` uses the great :class:`FixedPoint` class
 from Tim Peters.
@@ -284,7 +284,7 @@ class FloatTextCtrl(wx.TextCtrl):
         """
         Handles the ``wx.EVT_WINDOW_DESTROY`` event for :class:`FloatTextCtrl`.
 
-        :param `event`: a :class:`WindowDestroyEvent` event to be processed.
+        :param `event`: a :class:`wx.WindowDestroyEvent` event to be processed.
 
         :note: This method tries to correctly handle the control destruction under MSW.
         """
@@ -329,7 +329,7 @@ class FloatTextCtrl(wx.TextCtrl):
 class FloatSpin(wx.Control):
     """
     :class:`FloatSpin` implements a floating point :class:`SpinCtrl`. It is built using a custom
-    :class:`Control`, composed by a :class:`TextCtrl` and a :class:`SpinButton`. In order to
+    :class:`wx.Control`, composed by a :class:`TextCtrl` and a :class:`SpinButton`. In order to
     correctly handle floating points numbers without rounding errors or non-exact
     floating point representations, :class:`FloatSpin` uses the great :class:`FixedPoint` class
     from Tim Peters.
@@ -506,7 +506,7 @@ class FloatSpin(wx.Control):
         """
         Handles the ``wx.EVT_WINDOW_DESTROY`` event for :class:`FloatSpin`.
 
-        :param `event`: a :class:`WindowDestroyEvent` event to be processed.
+        :param `event`: a :class:`wx.WindowDestroyEvent` event to be processed.
 
         :note: This method tries to correctly handle the control destruction under MSW.
         """
@@ -527,7 +527,7 @@ class FloatSpin(wx.Control):
         minimal size which doesn't truncate the control, for a panel - the same
         size as it would have after a call to `Fit()`.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         if self._spinctrl_bestsize.x == -999:
@@ -743,7 +743,7 @@ class FloatSpin(wx.Control):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`FloatSpin`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
 
         :note: This method resizes the text control and reposition the spin button when
          resized.
@@ -1118,7 +1118,7 @@ class FloatSpin(wx.Control):
         """
         Sets the underlying :class:`TextCtrl` font.
 
-        :param `font`: a valid instance of :class:`Font`.
+        :param `font`: a valid instance of :class:`wx.Font`.
         """
 
         if font is None:

@@ -182,7 +182,7 @@ class HyperLinkEvent(wx.CommandEvent):
         """
         Sets the event position.
 
-        :param `pos`: an instance of :class:`Point`.        
+        :param `pos`: an instance of :class:`wx.Point`.
         """
         
         self._pos = pos
@@ -384,7 +384,7 @@ class HyperLinkCtrl(StaticText):
         """
         Handles the ``wx.EVT_MENU`` event for :class:`HyperLinkCtrl`.
 
-        :param `event`: a :class:`MenuEvent` event to be processed.
+        :param `event`: a :class:`wx.MenuEvent` event to be processed.
         
         :note: This method copies the data from the :class:`HyperLinkCtrl` to the clipboard.
         """
@@ -451,11 +451,11 @@ class HyperLinkCtrl(StaticText):
         - Visited link: VIOLET
         - Rollover: BLUE
 
-        :param `link`: a valid :class:`Colour` to use as text foreground for new links
+        :param `link`: a valid :class:`wx.Colour` to use as text foreground for new links
          (default=RED);
-        :param `visited`: a valid :class:`Colour` to use as text foreground for visited
+        :param `visited`: a valid :class:`wx.Colour` to use as text foreground for visited
          links (default=VIOLET);
-        :param `rollover`: a valid :class:`Colour` to use as text foreground for links
+        :param `rollover`: a valid :class:`wx.Colour` to use as text foreground for links
          rollovers (default=BLUE).
         """
         

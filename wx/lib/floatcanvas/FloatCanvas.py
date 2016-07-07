@@ -120,9 +120,9 @@ class FloatCanvas(wx.Panel):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `id`: window identifier. A value of -1 indicates a default value;
-        :param `size`: a tuple or :class:`Size`
+        :param `size`: a tuple or :class:`wx.Size`
         :param `ProjectionFun`: This allows you to change the transform from
          world to pixel coordinates. We can point to :meth:`~lib.floatcanvas.FloatCanvas.FloatCanvas.FlatEarthProjection` 
          for an example -- though that should really be a class method, or even
@@ -989,8 +989,8 @@ class FloatCanvas(wx.Panel):
         Saves the current image as an image file.
         
         :param string `filename`: the name of the image file
-        :param `ImageType`: format to use, see :ref:`BitmapType` and the note in
-         :meth:`Bitmap.SaveFile`
+        :param `ImageType`: format to use, see :ref:`wx.BitmapType` and the note in
+         :meth:`wx.Bitmap.SaveFile`
 
         """
 

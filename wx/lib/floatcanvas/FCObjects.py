@@ -332,7 +332,7 @@ class DrawObject:
         Set the Color - this method is overridden in the subclasses
         
         :param `Color`: use one of the following values any valid entry from
-         :class:`ColourDatabase`
+         :class:`wx.ColourDatabase`
         
          - ``Green``
          - ``White``
@@ -1480,14 +1480,14 @@ class Text(TextObjectMixin, DrawObject):
         :param `Size`: the font size
         :param `Color`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
         :param `BackgroundColor`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetColor`
-        :param FontFamily `Family`: a valid :ref:`FontFamily` 
-        :param FontStyle `Style`: a valid :ref:`FontStyle`
-        :param FontWeight `Weight`: a valid :ref:`FontWeight`
+        :param wx.FontFamily `Family`: a valid :ref:`wx.FontFamily`
+        :param wx.FontStyle `Style`: a valid :ref:`wx.FontStyle`
+        :param wx.FontWeight `Weight`: a valid :ref:`wx.FontWeight`
         :param boolean `Underlined`: underline the text
         :param string `Position`: a two character string indicating where in
          relation to the coordinates the box should be oriented
         :param boolean `InForeground`: should object be in foreground
-        :param Font `Font`: alternatively you can define :ref:`Font` and the
+        :param wx.Font `Font`: alternatively you can define :ref:`wx.Font` and the
          above will be ignored.
          
          ============== ==========================
@@ -1506,7 +1506,7 @@ class Text(TextObjectMixin, DrawObject):
          ``r``          right
          ============== ==========================
 
-        :param Font `Font`: a valid :class:`Font`
+        :param wx.Font `Font`: a valid :class:`wx.Font`
         :param boolean `InForeground`: should object be in foreground
         
         """
@@ -1778,9 +1778,9 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
          the given width.
         :param `PadSize`: padding in world units or ``None``, if specified it
          will creating a space (margin) around the text
-        :param FontFamily `Family`: a valid :ref:`FontFamily` 
-        :param FontStyle `Style`: a valid :ref:`FontStyle`
-        :param FontWeight `Weight`: a valid :ref:`FontWeight`
+        :param wx.FontFamily `Family`: a valid :ref:`wx.FontFamily`
+        :param wx.FontStyle `Style`: a valid :ref:`wx.FontStyle`
+        :param wx.FontWeight `Weight`: a valid :ref:`wx.FontWeight`
         :param boolean `Underlined`: underline the text
         :param string `Position`: a two character string indicating where in
          relation to the coordinates the box should be oriented
@@ -1802,7 +1802,7 @@ class ScaledTextBox(TextObjectMixin, DrawObject):
          ============== ==========================
 
         :param `Alignment`: see :meth:`~lib.floatcanvas.FloatCanvas.DrawObject.SetLineWidth`
-        :param Font `Font`: alternatively a valid :class:`Font` can be defined
+        :param wx.Font `Font`: alternatively a valid :class:`wx.Font` can be defined
          in which case the above will be ignored
         :param float `LineSpacing`: the line space to be used
         :param boolean `InForeground`: should object be in foreground
@@ -2035,7 +2035,7 @@ class Bitmap(TextObjectMixin, DrawObject):
         """
         Default class constructor.
         
-        :param Bitmap `Bitmap`: the bitmap to be drawn
+        :param wx.Bitmap `Bitmap`: the bitmap to be drawn
         :param `XY`: the (x, y) coordinate of the corner of the bitmap, or a 2-tuple,
          or a (2,) `NumPy <http://www.numpy.org/>`_ array
         :param string `Position`: a two character string indicating where in relation to the coordinates

@@ -60,11 +60,11 @@ class MultiSplitterWindow(wx.Panel):
         """
         Default class constructor.
 
-        :param Window `parent`: the parent window
+        :param wx.Window `parent`: the parent window
         :param integer `id`: an identifier for the control: a value of -1 is taken to mean a default
-        :param Point `pos`: the control position. A value of (-1, -1) indicates a default position,
+        :param wx.Point `pos`: the control position. A value of (-1, -1) indicates a default position,
           chosen by either the windowing system or wxPython, depending on platform
-        :param Size `size`: the control size. A value of (-1, -1) indicates a default size,
+        :param wx.Size `size`: the control size. A value of (-1, -1) indicates a default size,
           chosen by either the windowing system or wxPython, depending on platform
         :param integer `style`: the control window style
         :param string `name`: the control name
@@ -129,7 +129,7 @@ class MultiSplitterWindow(wx.Panel):
         """
         Sets the back ground colour.
         
-        :param Colour `color`: the colour to use.
+        :param wx.Colour `color`: the colour to use.
         
         """
         wx.Panel.SetBackgroundColour(self,color)

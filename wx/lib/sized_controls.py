@@ -18,10 +18,10 @@ a simple interface for customizing those sizers.
 
 The following sized controls exists:
 
-:class:`SizedFrame`
-:class:`SizedDialog`
-:class:`SizedPanel`
-:class:`SizedScrolledPanel`
+:class:`wx.SizedFrame`
+:class:`wx.SizedDialog`
+:class:`wx.SizedPanel`
+:class:`wx.SizedScrolledPanel`
 
 Description
 ===========
@@ -145,7 +145,7 @@ class TableSizer(wx.Sizer):
         """
         Calculate the minimum size.
         
-        :rtype: :ref:`Size`
+        :rtype: :ref:`wx.Size`
         
         """
         numrows, numcols = self.CalcNumRowsCols() 
@@ -602,7 +602,7 @@ class SizedParent:
         Add a child to sizer
         
         :param `child`: child (window or another sizer) to be added to sizer.
-        :type `child`: :class:`Window` or :class:`Sizer`
+        :type `child`: :class:`wx.Window` or :class:`wx.Sizer`
         """
         
         # Note: The wx.LogNull is used here to suppress a log message
@@ -697,7 +697,7 @@ class SizedParent:
         """
         Detach children from sizer.
         
-        :param Sizer `sizer`: sizer to detach children from
+        :param wx.Sizer `sizer`: sizer to detach children from
         """
         
         props = {}
@@ -738,7 +738,7 @@ class SizedPanel(wx.Panel, SizedParent):
     """
     def __init__(self, *args, **kwargs):
         """
-        `self` in the following sample is a :class:`SizedPanel` instance.
+        `self` in the following sample is a :class:`wx.SizedPanel` instance.
 
         Sample usage::
         
@@ -780,7 +780,7 @@ class SizedScrolledPanel(sp.ScrolledPanel, SizedParent):
     """
     def __init__(self, *args, **kwargs):
         """
-        `self` in the following sample is a :class:`SizedScrolledPanel` instance.
+        `self` in the following sample is a :class:`wx.SizedScrolledPanel` instance.
 
         Sample usage::
         
@@ -825,7 +825,7 @@ class SizedDialog(wx.Dialog):
     """
     def __init__(self, *args, **kwargs):    
         """
-        `self` in the following sample is a :class:`SizedDialog` instance.
+        `self` in the following sample is a :class:`wx.SizedDialog` instance.
 
         Sample usage::
         
@@ -879,7 +879,7 @@ class SizedFrame(wx.Frame):
     
     def __init__(self, *args, **kwargs):    
         """
-        `self` in the following sample is a :class:`SizedFrame` instance
+        `self` in the following sample is a :class:`wx.SizedFrame` instance
 
         Sample usage::
         

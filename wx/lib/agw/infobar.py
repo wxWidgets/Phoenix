@@ -212,7 +212,7 @@ def GetCloseButtonBitmap(win, size, colBg, flags=0):
     :param `win`: the window in which we wish to draw the close button (an instance of
      :class:`InfoBar`);
     :param tuple `size`: the close button size, a tuple of `(width, height)` dimensions in pixels;
-    :param `colBg`: the background colour of the parent window, an instance of :class:`Colour`;
+    :param `colBg`: the background colour of the parent window, an instance of :class:`wx.Colour`;
     :param integer `flags`: may have the ``wx.CONTROL_PRESSED``, ``wx.CONTROL_CURRENT`` or
      ``wx.CONTROL_ISDEFAULT`` bit set.
     """
@@ -245,7 +245,7 @@ class AutoWrapStaticText(StaticText):
         """
         Defsult class constructor.
 
-        :param Window parent: a subclass of :class:`Window`, must not be ``None``;
+        :param wx.Window parent: a subclass of :class:`wx.Window`, must not be ``None``;
         :param string `label`: the :class:`AutoWrapStaticText` text label.
         """
 
@@ -264,7 +264,7 @@ class AutoWrapStaticText(StaticText):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`AutoWrapStaticText`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         event.Skip()
@@ -311,7 +311,7 @@ class AutoWrapStaticText(StaticText):
         :param bool `wrapped`: ``True`` if this method was called by the developer using :meth:`~AutoWrapStaticText.SetLabel`,
          ``False`` if it comes from the :meth:`~AutoWrapStaticText.OnSize` event handler.
          
-        :note: Reimplemented from :class:`Control`.
+        :note: Reimplemented from :class:`wx.Control`.
         """
 
         if not wrapped:
@@ -341,10 +341,10 @@ class InfoBar(wx.Control):
         :param integer `id`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the :class:`InfoBar` style (unused at present);
         :param string `name`: the control name.
         """
@@ -422,9 +422,9 @@ class InfoBar(wx.Control):
         :class:`InfoBar` overrides this method to use the font passed to it for its text
         message part. By default a larger and bold version of the standard font is used.
 
-        :param `font`: a valid instance of :class:`Font`.
+        :param `font`: a valid instance of :class:`wx.Font`.
         
-        :note: Reimplemented from :class:`Window`.
+        :note: Reimplemented from :class:`wx.Window`.
         """
         
         if not wx.Control.SetFont(self, font):
@@ -689,7 +689,7 @@ class InfoBar(wx.Control):
          this button will generate;
         :param string `label`: the label of the button. It may only be empty if `btnid` is one of
          the stock ids in which case the corresponding stock label will be used;
-        :param `bitmap`: if not equal to :class:`NullBitmap`, a valid :class:`Bitmap` image to show beside
+        :param `bitmap`: if not equal to :class:`NullBitmap`, a valid :class:`wx.Bitmap` image to show beside
          the button text.
 
         :note:

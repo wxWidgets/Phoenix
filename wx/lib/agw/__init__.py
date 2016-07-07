@@ -22,12 +22,12 @@ an asterisk were already present in :mod:`lib` before:
 - ButtonPanel (*): a panel with gradient background shading with the
   possibility to add buttons and controls still respecting the gradient
   background;
-- CubeColourDialog: an alternative implementation of :class:`ColourDialog`, it
+- CubeColourDialog: an alternative implementation of :class:`wx.ColourDialog`, it
   offers different functionalities like colour wheel and RGB cube;
 - CustomTreeCtrl (*): mimics the behaviour of :class:`TreeCtrl`, with almost the
   same base functionalities plus a bunch of enhancements and goodies;
 - FlatMenu: as the name implies, it is a generic menu implementation,
-  offering the same :class:`MenuBar` / :class:`Menu` / :class:`ToolBar` capabilities and much more;
+  offering the same :class:`wx.MenuBar` / :class:`wx.Menu` / :class:`ToolBar` capabilities and much more;
 - FlatNotebook (*): a full implementation of the :class:`Notebook`, and designed
   to be a drop-in replacement for :class:`Notebook` with enhanced capabilities;
 - FloatSpin: this class implements a floating point spinctrl, cabable (in
