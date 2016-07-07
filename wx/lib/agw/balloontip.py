@@ -336,7 +336,7 @@ class BalloonFrame(wx.Frame):
         """
         Sets the balloon shape.
 
-        :param `event`: on wxGTK, a :class:`WindowCreateEvent` event to process.
+        :param `event`: on wxGTK, a :class:`wx.WindowCreateEvent` event to process.
         """
 
         size = self.GetSize()
@@ -501,7 +501,7 @@ class BalloonTip(object):
 
         :param `topicon`: an icon that will be displayed on the top-left part of the
          :class:`BalloonTip` frame. If set to ``None``, no icon will be displayed;
-        :type `topicon`: :class:`Bitmap` or ``None``
+        :type `topicon`: :class:`wx.Bitmap` or ``None``
         :param string `toptitle`: a title that will be displayed on the top part of the
          :class:`BalloonTip` frame. If set to an empty string, no title will be displayed;
         :param string `message`: the tip message that will be displayed. It can not be set to
@@ -572,7 +572,7 @@ class BalloonTip(object):
         """
         Sets the target control/window for the :class:`BalloonTip`.
 
-        :param `widget`: any subclass of :class:`Window`.
+        :param `widget`: any subclass of :class:`wx.Window`.
         """
 
         self._widget = widget
@@ -592,7 +592,7 @@ class BalloonTip(object):
         """
         Returns the target window for the :class:`BalloonTip`.
 
-        :return: An instance of :class:`Window`.
+        :return: An instance of :class:`wx.Window`.
 
         :raise: `Exception` if the :meth:`~BalloonTip.SetTarget` method has not previously called.        
         """
@@ -848,9 +848,9 @@ class BalloonTip(object):
         """
         Sets the :class:`BalloonTip` top-left icon.
 
-        :param `icon`: an instance of :class:`Bitmap`.
+        :param `icon`: an instance of :class:`wx.Bitmap`.
 
-        :raise: `Exception` if the `icon` bitmap is not a valid :class:`Bitmap`.
+        :raise: `Exception` if the `icon` bitmap is not a valid :class:`wx.Bitmap`.
         """
 
         if icon.IsOk():
@@ -863,7 +863,7 @@ class BalloonTip(object):
         """
         Returns the :class:`BalloonTip` top-left icon.
 
-        :return: An instance of :class:`Bitmap`.
+        :return: An instance of :class:`wx.Bitmap`.
         """
 
         return self._topicon
@@ -957,7 +957,7 @@ class BalloonTip(object):
         """
         Sets the :class:`BalloonTip` background colour.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         if colour is None:
@@ -970,7 +970,7 @@ class BalloonTip(object):
         """
         Returns the :class:`BalloonTip` background colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._ballooncolour
@@ -980,7 +980,7 @@ class BalloonTip(object):
         """
         Sets the font for the top title.
 
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
         """
 
         if font is None:
@@ -993,7 +993,7 @@ class BalloonTip(object):
         """
         Returns the font for the top title.
 
-        :return: An instance of :class:`Font`.
+        :return: An instance of :class:`wx.Font`.
         """
 
         return self._balloontitlefont
@@ -1003,7 +1003,7 @@ class BalloonTip(object):
         """
         Sets the font for the tip message.
 
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
         """
 
         if font is None:
@@ -1016,7 +1016,7 @@ class BalloonTip(object):
         """
         Returns the font for the tip message.
 
-        :return: An instance of :class:`Font`.
+        :return: An instance of :class:`wx.Font`.
         """
 
         return self._balloonmsgfont
@@ -1026,7 +1026,7 @@ class BalloonTip(object):
         """
         Sets the colour for the top title.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         if colour is None:
@@ -1039,7 +1039,7 @@ class BalloonTip(object):
         """
         Returns the colour for the top title.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._balloontitlecolour
@@ -1049,7 +1049,7 @@ class BalloonTip(object):
         """
         Sets the colour for the tip message.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         if colour is None:
@@ -1062,7 +1062,7 @@ class BalloonTip(object):
         """
         Returns the colour for the tip message.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._balloonmsgcolour
@@ -1073,7 +1073,7 @@ class BalloonTip(object):
         Handles the target destruction, specifically handling the ``wx.EVT_WINDOW_DESTROY``
         event.
 
-        :param `event`: a :class:`WindowDestroyEvent` event to be processed.        
+        :param `event`: a :class:`wx.WindowDestroyEvent` event to be processed.
         """
         
         if hasattr(self, "BalloonFrame"):

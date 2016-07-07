@@ -50,7 +50,7 @@ Appearance
 
 * Multiple images for items/subitems;
 * Images can be of any size and not limited to a single specific pair of `width`, `height`
-  as it is the case of :class:`ImageList`. Simply use :class:`PyImageList` instead of :class:`ImageList`
+  as it is the case of :class:`wx.ImageList`. Simply use :class:`PyImageList` instead of :class:`wx.ImageList`
   to add your images.
 * Font, colour, background, custom renderers and formatting for items and subitems;
 * Ability to add persistent data to an item using :meth:`~UltimateListCtrl.SetItemPyData` and :meth:`~UltimateListCtrl.GetItemPyData`:
@@ -615,7 +615,7 @@ def MakeDisabledBitmap(original):
     """
     Creates a disabled-looking bitmap starting from the input one.
 
-    :param `original`: an instance of :class:`Bitmap` to be greyed-out.
+    :param `original`: an instance of :class:`wx.Bitmap` to be greyed-out.
     """
 
     img = original.ConvertToImage()
@@ -647,13 +647,13 @@ D\x90\x1d\xef19_\xf5\xde5y\xb6+\xa7\xdeZ\xfbA\x9bu\x9f`\xffD\xafYn\xf6\x9eW\
 
 
 def GetdragcursorBitmap():
-    """ Returns the drag and drop cursor image as a :class:`Bitmap`. """
+    """ Returns the drag and drop cursor image as a :class:`wx.Bitmap`. """
 
     return wx.Bitmap(GetdragcursorImage())
 
 
 def GetdragcursorImage():
-    """ Returns the drag and drop cursor image as a :class:`Image`. """
+    """ Returns the drag and drop cursor image as a :class:`wx.Image`. """
 
     stream = six.BytesIO(GetdragcursorData())
     return wx.Image(stream)
@@ -719,7 +719,7 @@ class PyImageList(object):
         """
         Adds a new image or images using a bitmap.
 
-        :param `bitmap`: a valid :class:`Bitmap` object.
+        :param `bitmap`: a valid :class:`wx.Bitmap` object.
 
         :return: The new zero-based image index.
 
@@ -778,8 +778,8 @@ class PyImageList(object):
         """
         Adds a new image or images using a bitmap and a colour mask.
 
-        :param `bitmap`: a valid :class:`Bitmap` object;
-        :param `colour`: an instance of :class:`Colour`, a colour indicating which parts
+        :param `bitmap`: a valid :class:`wx.Bitmap` object;
+        :param `colour`: an instance of :class:`wx.Colour`, a colour indicating which parts
          of the image are transparent.
 
         :return: The new zero-based image index.
@@ -831,7 +831,7 @@ class PyImageList(object):
 
         :param `index`: the index at which the image should be replaced;
         :param `bitmap`: the new bitmap to add to the image list, an instance of
-         :class:`Bitmap`.
+         :class:`wx.Bitmap`.
         """
 
         if index >= len(self._images):
@@ -896,7 +896,7 @@ class PyImageList(object):
         Draws a specified image onto a device context.
 
         :param `index`: the image index, starting from zero;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `x`: x position on the device context;
         :param `y`: y position on the device context;
         :param `flags`: how to draw the image. A bitlist of a selection of the following:
@@ -1183,7 +1183,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new text colour.
 
-        :param `colText`: an instance of :class:`Colour`.
+        :param `colText`: an instance of :class:`wx.Colour`.
         """
 
         self._colText = colText
@@ -1193,7 +1193,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new background colour.
 
-        :param `colBack`: an instance of :class:`Colour`.
+        :param `colBack`: an instance of :class:`wx.Colour`.
         """
 
         self._colBack = colBack
@@ -1203,7 +1203,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new font for the item.
 
-        :param `font`: an instance of :class:`Font`.
+        :param `font`: an instance of :class:`wx.Font`.
         """
 
         self._font = font
@@ -1223,7 +1223,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new footer item text colour.
 
-        :param `colText`: an instance of :class:`Colour`.
+        :param `colText`: an instance of :class:`wx.Colour`.
         """
 
         self._footerColText = colText
@@ -1233,7 +1233,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new footer item background colour.
 
-        :param `colBack`: an instance of :class:`Colour`.
+        :param `colBack`: an instance of :class:`wx.Colour`.
         """
 
         self._footerColBack = colBack
@@ -1243,7 +1243,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new font for the footer item.
 
-        :param `font`: an instance of :class:`Font`.
+        :param `font`: an instance of :class:`wx.Font`.
         """
 
         self._footerFont = font
@@ -1618,7 +1618,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the text colour for the item.
 
-        :param `colText`: a valid :class:`Colour` object.
+        :param `colText`: a valid :class:`wx.Colour` object.
         """
 
         self.Attributes().SetTextColour(colText)
@@ -1628,7 +1628,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the background colour for the item.
 
-        :param `colBack`: a valid :class:`Colour` object.
+        :param `colBack`: a valid :class:`wx.Colour` object.
         """
 
         self.Attributes().SetBackgroundColour(colBack)
@@ -1638,7 +1638,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the font for the item.
 
-        :param `font`: a valid :class:`Font` object.
+        :param `font`: a valid :class:`wx.Font` object.
         """
 
         self.Attributes().SetFont(font)
@@ -1648,7 +1648,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the text colour for the footer item.
 
-        :param `colText`: a valid :class:`Colour` object.
+        :param `colText`: a valid :class:`wx.Colour` object.
         """
 
         self.Attributes().SetFooterTextColour(colText)
@@ -1658,7 +1658,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the background colour for the footer item.
 
-        :param `colBack`: a valid :class:`Colour` object.
+        :param `colBack`: a valid :class:`wx.Colour` object.
         """
 
         self.Attributes().SetFooterBackgroundColour(colBack)
@@ -1668,7 +1668,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the font for the footer item.
 
-        :param `font`: a valid :class:`Font` object.
+        :param `font`: a valid :class:`wx.Font` object.
         """
 
         self.Attributes().SetFooterFont(font)
@@ -2638,7 +2638,7 @@ class UltimateListItemData(object):
         """
         Sets the text colour for the item.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         if colour == wx.NullColour or colour == None:
@@ -2655,7 +2655,7 @@ class UltimateListItemData(object):
         """
         Sets the text font for the item.
 
-        :param `font`: an instance of :class:`Font`.
+        :param `font`: an instance of :class:`wx.Font`.
         """
 
         if font == wx.NullFont:
@@ -2671,7 +2671,7 @@ class UltimateListItemData(object):
         """
         Sets the background colour for the item.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         if colour == wx.NullColour:
@@ -3546,7 +3546,7 @@ class UltimateListHeaderData(object):
         """
         Sets a new font for the header item.
 
-        :param `font`: an instance of :class:`Font`.
+        :param `font`: an instance of :class:`wx.Font`.
         """
 
         self._font = font
@@ -3556,7 +3556,7 @@ class UltimateListHeaderData(object):
         """
         Sets a new font for the footer item.
 
-        :param `font`: an instance of :class:`Font`.
+        :param `font`: an instance of :class:`wx.Font`.
         """
 
         self._footerFont = font
@@ -3902,7 +3902,7 @@ class UltimateListLineData(object):
         """
         Calculates the line size and item positions.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `spacing`: the spacing between the items, in pixels.
         """
 
@@ -4247,7 +4247,7 @@ class UltimateListLineData(object):
         Sets the text colour for the item.
 
         :param `index`: the index of the item;
-        :param `c`: an instance of :class:`Colour`.
+        :param `c`: an instance of :class:`wx.Colour`.
         """
 
         item = self._items[index]
@@ -4279,7 +4279,7 @@ class UltimateListLineData(object):
         """
         Sets various attributes to the input device context.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `attr`: an instance of :class:`UltimateListItemAttr`;
         :param `highlighted`: ``True`` if the item is highlighted, ``False`` otherwise.
         """
@@ -4341,7 +4341,7 @@ class UltimateListLineData(object):
         Draws the line on the specified device context.
 
         :param `line`: an instance of :class:`UltimateListLineData`;
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         item = self._items[0]
@@ -4439,7 +4439,7 @@ class UltimateListLineData(object):
         Draws the line on the specified device context when the parent :class:`UltimateListCtrl`
         is in report mode.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `line`: an instance of :class:`UltimateListLineData`;
         :param `rect`: the item client rectangle;
         :param `rectHL`: the item client rectangle when the item is highlighted;
@@ -4668,7 +4668,7 @@ class UltimateListLineData(object):
         """
         Draws the item text, correctly formatted.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `text`: the item text;
         :param `row`: the line number to which this item belongs to;
         :param `col`: the column number to which this item belongs to;
@@ -4747,7 +4747,7 @@ class UltimateListLineData(object):
         """
         Gradient fill from colour 1 to colour 2 from top to bottom.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the rectangle to be filled with the gradient shading;
         :param `hasfocus`: ``True`` if the main :class:`UltimateListCtrl` has focus, ``False``
          otherwise.
@@ -4794,7 +4794,7 @@ class UltimateListLineData(object):
         """
         Gradient fill from colour 1 to colour 2 from left to right.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the rectangle to be filled with the gradient shading;
         :param `hasfocus`: ``True`` if the main :class:`UltimateListCtrl` has focus, ``False``
          otherwise.
@@ -4842,7 +4842,7 @@ class UltimateListLineData(object):
         """
         Draws the selected item(s) with the Windows Vista style.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the rectangle to be filled with the gradient shading;
         :param `hasfocus`: ``True`` if the main :class:`UltimateListCtrl` has focus, ``False``
          otherwise.
@@ -5084,10 +5084,10 @@ class UltimateListHeaderWindow(wx.Control):
     # scrollbar: this allows us to always use logical coords
     def AdjustDC(self, dc):
         """
-        Shifts the :class:`DC` origin to match the position of the main window horizontal
+        Shifts the :class:`wx.DC` origin to match the position of the main window horizontal
         scrollbar: this allows us to always use logical coordinates.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         xpix, dummy = self._owner.GetScrollPixelsPerUnit()
@@ -5301,7 +5301,7 @@ class UltimateListHeaderWindow(wx.Control):
         """
         Draws the item text, correctly formatted.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `text`: the item text;
         :param `rect`: the item client rectangle.
         """
@@ -5359,7 +5359,7 @@ class UltimateListHeaderWindow(wx.Control):
         application defining an `OnIdle` handler in a derived class.
 
         This method may be used to do delayed painting, for example, and most
-        implementations call :meth:`Window.UpdateWindowUI` in order to send update events
+        implementations call :meth:`wx.Window.UpdateWindowUI` in order to send update events
         to the window in idle time.
         """
 
@@ -5709,7 +5709,7 @@ class UltimateListHeaderWindow(wx.Control):
         Sends a :class:`UltimateListEvent` for the parent window.
 
         :param `eventType`: the event type;
-        :param `pos`: an instance of :class:`Point`.
+        :param `pos`: an instance of :class:`wx.Point`.
         """
 
         parent = self.GetParent()
@@ -6374,7 +6374,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Overridden base class virtual to reset the line height when the font changes.
 
-        :param `font`: a valid :class:`Font` object.
+        :param `font`: a valid :class:`wx.Font` object.
 
         :note: Overridden from :class:`ScrolledWindow`.
         """
@@ -7199,7 +7199,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Tiles the background image to fill all the available area.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
 
         .. todo:: Support background images also in stretch and centered modes.
         """
@@ -7233,7 +7233,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Draws a watermark at the bottom right of :class:`UltimateListCtrl`.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
 
         .. todo:: Better support for this is needed.
         """
@@ -7301,7 +7301,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         :param `line`: an instance of :class:`UltimateListLineData`;
         :param `command`: the event type to send;
-        :param `point`: an instance of :class:`Point`.
+        :param `point`: an instance of :class:`wx.Point`.
         """
 
         bRet = True
@@ -8280,7 +8280,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         Draws one of the item images.
 
         :param `index`: the index of the image inside the image list;
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `x`: the x position where to draw the image;
         :param `y`: the y position where to draw the image;
         :param `enabled`: ``True`` if the item is enabled, ``False`` if it is disabled.
@@ -8307,7 +8307,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Draws the item checkbox/radiobutton image.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `x`: the x position where to draw the image;
         :param `y`: the y position where to draw the image;
         :param `kind`: may be one of the following integers:
@@ -8401,7 +8401,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the image list associated with the control.
 
-        :param `imageList`: an instance of :class:`ImageList` or an instance of :class:`PyImageList`;
+        :param `imageList`: an instance of :class:`wx.ImageList` or an instance of :class:`PyImageList`;
         :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
          ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
 
@@ -8465,7 +8465,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
         :param `sizex`: the width of the bitmaps in the `imglist`;
         :param `sizey`: the height of the bitmaps in the `imglist`;
-        :param `imglist`: an instance of :class:`ImageList`.
+        :param `imglist`: an instance of :class:`wx.ImageList`.
         """
 
         # Image list to hold disabled versions of each control
@@ -9214,7 +9214,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the font used to render hypertext items.
 
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
         """
 
         self._hypertextfont = font
@@ -9225,7 +9225,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the colour used to render a non-visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._hypertextnewcolour = colour
@@ -9242,7 +9242,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the colour used to render a visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._hypertextvisitedcolour = colour
@@ -10157,7 +10157,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Find an item nearest this position.
 
-        :param `pt`: an instance of :class:`Point`.
+        :param `pt`: an instance of :class:`wx.Point`.
         """
 
         topItem, dummy = self.GetVisibleLinesRange()
@@ -10588,7 +10588,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the first gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour is taken from the system value ``wx.SYS_COLOUR_HIGHLIGHT``.
         """
 
@@ -10604,7 +10604,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the second gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour generated is a slightly darker version of the :class:`UltimateListCtrl`
          background colour.
         """
@@ -10697,7 +10697,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the :class:`UltimateListCtrl` background image.
 
-        :param `image`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `image`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         :note: At present, the background image can only be used in "tile" mode.
 
@@ -10725,7 +10725,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         Sets the :class:`UltimateListCtrl` watermark image to be displayed in the bottom
         right part of the window.
 
-        :param `watermark`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `watermark`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         .. todo:: Better support for this is needed.
         """
@@ -10749,7 +10749,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the items disabled colour.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         # Disabled items colour
@@ -10818,7 +10818,7 @@ class UltimateListCtrl(wx.Control):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`Control` window style;
+        :param `style`: the underlying :class:`wx.Control` window style;
         :param `agwStyle`: the AGW-specific window style; can be almost any combination of the following
          bits:
 
@@ -11622,7 +11622,7 @@ class UltimateListCtrl(wx.Control):
         Sets the item text colour.
 
         :param `item`: the index of the item;
-        :param `col`: a valid :class:`Colour` object.
+        :param `col`: a valid :class:`wx.Colour` object.
         """
 
         info = UltimateListItem()
@@ -11651,7 +11651,7 @@ class UltimateListCtrl(wx.Control):
         Sets the item background colour.
 
         :param `item`: the index of the item;
-        :param `col`: a valid :class:`Colour` object.
+        :param `col`: a valid :class:`wx.Colour` object.
         """
 
         info = UltimateListItem()
@@ -11679,7 +11679,7 @@ class UltimateListCtrl(wx.Control):
         Sets the item font.
 
         :param `item`: the index of the item;
-        :param `f`: a valid :class:`Font` object.
+        :param `f`: a valid :class:`wx.Font` object.
         """
 
         info = UltimateListItem()
@@ -11719,7 +11719,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the :class:`UltimateListCtrl` foreground colour.
 
-        :param `col`: a valid :class:`Colour` object.
+        :param `col`: a valid :class:`wx.Colour` object.
         """
 
         self.SetForegroundColour(col)
@@ -11801,7 +11801,7 @@ class UltimateListCtrl(wx.Control):
 
         :note:
 
-         As :class:`UltimateListCtrl` allows you to use a standard :class:`ImageList` or
+         As :class:`UltimateListCtrl` allows you to use a standard :class:`wx.ImageList` or
          :class:`PyImageList`, the returned object depends on which kind of image list you
          chose.
         """
@@ -11822,7 +11822,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the image list associated with the control.
 
-        :param `imageList`: an instance of :class:`ImageList` or an instance of :class:`PyImageList`;
+        :param `imageList`: an instance of :class:`wx.ImageList` or an instance of :class:`PyImageList`;
         :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
          ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
 
@@ -11857,7 +11857,7 @@ class UltimateListCtrl(wx.Control):
         """
         Assigns the image list associated with the control.
 
-        :param `imageList`: an instance of :class:`ImageList` or an instance of :class:`PyImageList`;
+        :param `imageList`: an instance of :class:`wx.ImageList` or an instance of :class:`PyImageList`;
         :param `which`: one of ``wx.IMAGE_LIST_NORMAL``, ``wx.IMAGE_LIST_SMALL``,
          ``wx.IMAGE_LIST_STATE`` (the last is unimplemented).
 
@@ -12005,7 +12005,7 @@ class UltimateListCtrl(wx.Control):
         """
         Find an item nearest this position.
 
-        :param `pt`: an instance of :class:`Point`.
+        :param `pt`: an instance of :class:`wx.Point`.
         """
 
         return self._mainWin.FindItemAtPos(pt)
@@ -12015,7 +12015,7 @@ class UltimateListCtrl(wx.Control):
         """
         HitTest method for a :class:`UltimateListCtrl`.
 
-        :param `pointOrTuple`: an instance of :class:`Point` or a tuple representing
+        :param `pointOrTuple`: an instance of :class:`wx.Point` or a tuple representing
          the mouse `x`, `y` position.
 
         :see: :meth:`UltimateListMainWindow.HitTestLine() <UltimateListMainWindow.HitTestLine>` for a list of return flags.
@@ -12257,7 +12257,7 @@ class UltimateListCtrl(wx.Control):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`UltimateListCtrl`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         if not self.IsShownOnScreen():
@@ -12299,7 +12299,7 @@ class UltimateListCtrl(wx.Control):
         application defining an `OnIdle` handler in a derived class.
 
         This method may be used to do delayed painting, for example, and most
-        implementations call :meth:`Window.UpdateWindowUI` in order to send update events
+        implementations call :meth:`wx.Window.UpdateWindowUI` in order to send update events
         to the window in idle time.
         """
 
@@ -12326,10 +12326,10 @@ class UltimateListCtrl(wx.Control):
          event handler function under Windows and automatically under GTK.
 
         :note: Setting the background colour does not cause an immediate refresh, so
-         you may wish to call :meth:`Window.ClearBackground` or :meth:`Window.Refresh` after
+         you may wish to call :meth:`wx.Window.ClearBackground` or :meth:`wx.Window.Refresh` after
          calling this function.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         if self._mainWin:
@@ -12346,7 +12346,7 @@ class UltimateListCtrl(wx.Control):
         :param `colour`: the colour to be used as the foreground colour, pass
          :class:`NullColour` to reset to the default colour.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         if not wx.Control.SetForegroundColour(self, colour):
@@ -12366,9 +12366,9 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the :class:`UltimateListCtrl` font.
 
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         if not wx.Control.SetFont(self, font):
@@ -12405,7 +12405,7 @@ class UltimateListCtrl(wx.Control):
          colour, if the field doesn't make sense as is the case for `colBg` for the
          controls with themed background.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         attr = wx.VisualAttributes()
@@ -12432,7 +12432,7 @@ class UltimateListCtrl(wx.Control):
 
         :param `dropTarget`: an instance of :class:`DropTarget`.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         self._mainWin.SetDropTarget(dropTarget)
@@ -12442,7 +12442,7 @@ class UltimateListCtrl(wx.Control):
         """
         Returns the associated drop target, which may be ``None``.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return self._mainWin.GetDropTarget()
@@ -12458,7 +12458,7 @@ class UltimateListCtrl(wx.Control):
 
         :note: The window cursor also sets it for the children of the window implicitly.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return (self._mainWin and [self._mainWin.SetCursor(cursor)] or [False])[0]
@@ -12468,7 +12468,7 @@ class UltimateListCtrl(wx.Control):
         """
         Returns the background colour of the window.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return (self._mainWin and [self._mainWin.GetBackgroundColour()] or [wx.NullColour])[0]
@@ -12478,7 +12478,7 @@ class UltimateListCtrl(wx.Control):
         """
         Returns the foreground colour of the window.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return (self._mainWin and [self._mainWin.GetForegroundColour()] or [wx.NullColour])[0]
@@ -12492,10 +12492,10 @@ class UltimateListCtrl(wx.Control):
         usual. If the coordinates are not specified, the current mouse cursor position
         is used.
 
-        :param `menu`: an instance of :class:`Menu` to pop up;
+        :param `menu`: an instance of :class:`wx.Menu` to pop up;
         :param `pos`: the position where the menu will appear.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return self._mainWin.PopupMenu(menu, pos)
@@ -12505,12 +12505,12 @@ class UltimateListCtrl(wx.Control):
         """
         Converts to screen coordinates from coordinates relative to this window.
 
-        :param `pointOrTuple`: an instance of :class:`Point` or a tuple representing the
+        :param `pointOrTuple`: an instance of :class:`wx.Point` or a tuple representing the
          `x`, `y` coordinates for this point.
 
         :return: the coordinates relative to the screen.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return self._mainWin.ClientToScreen(*pointOrTuple)
@@ -12525,7 +12525,7 @@ class UltimateListCtrl(wx.Control):
 
         :return: the coordinates relative to the screen.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return self._mainWin.ClientToScreen(x, y)
@@ -12535,12 +12535,12 @@ class UltimateListCtrl(wx.Control):
         """
         Converts from screen to client window coordinates.
 
-        :param `pointOrTuple`: an instance of :class:`Point` or a tuple representing the
+        :param `pointOrTuple`: an instance of :class:`wx.Point` or a tuple representing the
          `x`, `y` coordinates for this point.
 
         :return: the coordinates relative to this window.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return self._mainWin.ScreenToClient(*pointOrTuple)
@@ -12555,7 +12555,7 @@ class UltimateListCtrl(wx.Control):
 
         :return: the coordinates relative to this window.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return self._mainWin.ScreenToClient(x, y)
@@ -12605,7 +12605,7 @@ class UltimateListCtrl(wx.Control):
     def OnGetItemTextColour(self, item, col):
         """
         This function **must** be overloaded in the derived class for a control with
-        ``ULC_VIRTUAL`` style. It should return a :class:`Colour` object or ``None`` for
+        ``ULC_VIRTUAL`` style. It should return a :class:`wx.Colour` object or ``None`` for
         the default color.
 
         :param `item`: an integer specifying the item index;
@@ -12824,7 +12824,7 @@ class UltimateListCtrl(wx.Control):
          event loop iteration, if you need to update the window immediately you should
          use :meth:`~UltimateListCtrl.Update` instead.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         if not rect:
@@ -12869,7 +12869,7 @@ class UltimateListCtrl(wx.Control):
          happens if nothing has been invalidated (i.e. marked as requiring a redraw).
          Use :meth:`~UltimateListCtrl.Refresh` first if you want to immediately redraw the window unconditionally.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         self._mainWin.ResetVisibleLinesRange(True)
@@ -13126,7 +13126,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the first gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour is taken from the system value ``wx.SYS_COLOUR_HIGHLIGHT``.
         """
 
@@ -13137,7 +13137,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the second gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour generated is a slightly darker version of the :class:`UltimateListCtrl`
          background colour.
         """
@@ -13211,7 +13211,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the :class:`UltimateListCtrl` background image.
 
-        :param `image`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `image`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         :note: At present, the background image can only be used in "tile" mode.
 
@@ -13238,7 +13238,7 @@ class UltimateListCtrl(wx.Control):
         Sets the :class:`UltimateListCtrl` watermark image to be displayed in the bottom
         right part of the window.
 
-        :param `watermark`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `watermark`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         .. todo:: Better support for this is needed.
         """
@@ -13261,7 +13261,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the items disabled colour.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         self._mainWin.SetDisabledTextColour(colour)
@@ -13283,7 +13283,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the font used to render hypertext items.
 
-        :param `font`: a valid :class:`Font` instance.
+        :param `font`: a valid :class:`wx.Font` instance.
         """
 
         self._mainWin.SetHyperTextFont(font)
@@ -13293,7 +13293,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the colour used to render a non-visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._mainWin.SetHyperTextNewColour(colour)
@@ -13309,7 +13309,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the colour used to render a visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._mainWin.SetHyperTextVisitedColour(colour)

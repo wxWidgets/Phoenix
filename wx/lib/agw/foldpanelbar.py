@@ -72,7 +72,7 @@ The :class:`FoldPanelBar` is a control that contains multiple panels (of type
 the :class:`FoldPanelBar` can be customized by setting it to a horizontal gradient
 style, vertical gradient style, a single colour, a rectangle or filled
 rectangle. The `FoldPanel` items can be collapsed in place or to the
-bottom of the control. :class:`Window` derived controls can be added
+bottom of the control. :class:`wx.Window` derived controls can be added
 dynamically, and separated by separator lines.
  
    
@@ -280,7 +280,7 @@ FPB_VERTICAL = 0x0010
 FPB_ALIGN_LEFT = 0
 """ Aligns left instead of fitting the width of the child window to be added. Use either this one or ``FPB_ALIGN_WIDTH``. """
 FPB_ALIGN_WIDTH = 1
-""" The :class:`Window` to be added will be aligned to fit the width of the FoldPanel when it is resized. Very handy for sizer items, buttons and text boxes. """
+""" The :class:`wx.Window` to be added will be aligned to fit the width of the FoldPanel when it is resized. Very handy for sizer items, buttons and text boxes. """
 
 FPB_DEFAULT_LEFTSPACING = 5
 FPB_DEFAULT_RIGHTSPACING = 10
@@ -330,7 +330,7 @@ class CaptionBarStyle(object):
         """
         Sets font for the caption bar.
 
-        :param `font`: a valid :class:`Font` object.
+        :param `font`: a valid :class:`wx.Font` object.
         
         :note: If this is not set, the font property is undefined and will not be used.
          Use :meth:`~CaptionBarStyle.CaptionFontUsed` to check if this style is used.
@@ -365,7 +365,7 @@ class CaptionBarStyle(object):
         """
         Sets first colour for the caption bar.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         
         :note: If this is not set, the colour property is undefined and will not be used.
          Use :meth:`~CaptionBarStyle.FirstColourUsed` to check if this style is used.
@@ -400,7 +400,7 @@ class CaptionBarStyle(object):
         """
         Sets second colour for the caption bar.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
         :note: If this is not set, the colour property is undefined and will not be used.
          Use :meth:`~CaptionBarStyle.SecondColourUsed` to check if this style is used.
@@ -435,7 +435,7 @@ class CaptionBarStyle(object):
         """
         Sets caption colour for the caption bar.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
         :note: If this is not set, the colour property is undefined and will not be used.
          Use :meth:`~CaptionBarStyle.CaptionColourUsed` to check if this style is used.
@@ -614,7 +614,7 @@ class CaptionBar(wx.Window):
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
         :param `caption`: the string to be displayed in :class:`CaptionBar`;
-        :param `foldIcons`: an instance of :class:`ImageList` containing the icons to display
+        :param `foldIcons`: an instance of :class:`wx.ImageList` containing the icons to display
          next to the caption text;
         :param `cbstyle`: the :class:`CaptionBar` window style. Must be an instance of
          :class:`CaptionBarStyle`;
@@ -860,7 +860,7 @@ class CaptionBar(wx.Window):
         Fills the background of the caption with either a gradient or
         a solid colour.
 
-        :param `dc`: an instance of :class:`DC`.        
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         style = self._style.GetCaptionStyle()
@@ -966,7 +966,7 @@ class CaptionBar(wx.Window):
         Returns the best size for this panel, based upon the font
         assigned to this window, and the caption string.
 
-        :note: Overridden from :class:`Window`.        
+        :note: Overridden from :class:`wx.Window`.
         """
         
         if self.IsVertical():
@@ -989,7 +989,7 @@ class CaptionBar(wx.Window):
         """
         Gradient fill from colour 1 to colour 2 from top to bottom.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the :class:`CaptionBar` client rectangle.
         """
 
@@ -1027,7 +1027,7 @@ class CaptionBar(wx.Window):
         """
         Gradient fill from colour 1 to colour 2 from left to right.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the :class:`CaptionBar` client rectangle.
         """
 
@@ -1065,7 +1065,7 @@ class CaptionBar(wx.Window):
         """
         Single colour fill for :class:`CaptionBar`.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the :class:`CaptionBar` client rectangle.        
         """
 
@@ -1083,7 +1083,7 @@ class CaptionBar(wx.Window):
         """
         Single rectangle for :class:`CaptionBar`.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the :class:`CaptionBar` client rectangle.        
         """
         
@@ -1116,7 +1116,7 @@ class CaptionBar(wx.Window):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`CaptionBar`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         if not self._controlCreated:
@@ -1191,7 +1191,7 @@ class FoldPanelBar(wx.Panel):
     panel or sash window, and populate panels with
     :meth:`FoldPanelBar.AddFoldPanel() <FoldPanelBar.AddFoldPanel>`. Then use the
     :meth:`FoldPanelBar.AddFoldPanelWindow() <FoldPanelBar.AddFoldPanelWindow>` to add
-    :class:`Window` derived controls to the current fold panel. Use
+    :class:`wx.Window` derived controls to the current fold panel. Use
     :meth:`FoldPanelBar.AddFoldPanelSeparator() <FoldPanelBar.AddFoldPanelSeparator>` to put separators between the groups of
     controls that need a visual separator to group them
     together. After all is constructed, the user can fold the panels
@@ -1261,7 +1261,7 @@ class FoldPanelBar(wx.Panel):
 
         :param `caption`: the caption to be displayed in the associated :class:`CaptionBar`;
         :param `collapsed`: if set to ``True``, the panel is collapsed initially;
-        :param `foldIcons`: an instance of :class:`ImageList` containing the icons to display
+        :param `foldIcons`: an instance of :class:`wx.ImageList` containing the icons to display
          next to the caption text;
         :param `cbstyle`: an instance of :class:`CaptionBarStyle`.
 
@@ -1270,7 +1270,7 @@ class FoldPanelBar(wx.Panel):
          from the list. Use this foldpanel to add windows to it.
          
         :see: :meth:`~FoldPanelBar.AddFoldPanelWindow` and :meth:`~FoldPanelBar.AddFoldPanelSeparator` to see how to add
-         items derived from :class:`Window` to the panels.
+         items derived from :class:`wx.Window` to the panels.
         """
 
         if cbstyle is None:
@@ -1307,30 +1307,30 @@ class FoldPanelBar(wx.Panel):
                            leftSpacing=FPB_DEFAULT_LEFTLINESPACING,
                            rightSpacing=FPB_DEFAULT_RIGHTLINESPACING):
         """
-        Adds a :class:`Window` derived instance to the referenced fold panel.
+        Adds a :class:`wx.Window` derived instance to the referenced fold panel.
 
         :param `panel`: an instance of :class:`FoldPanelItem`;
         :param `window`: the window we wish to add to the fold panel, an instance
-         of :class:`Window`;
+         of :class:`wx.Window`;
         :param `flags`: can be one of the following bits:
 
          ====================== ======= ====================================
          Align Flag              Value  Description
          ====================== ======= ====================================
-         ``FPB_ALIGN_WIDTH``          1 The :class:`Window` to be added will be aligned to fit the width of the FoldPanel when it is resized. Very handy for sizer items, buttons and text boxes.
+         ``FPB_ALIGN_WIDTH``          1 The :class:`wx.Window` to be added will be aligned to fit the width of the FoldPanel when it is resized. Very handy for sizer items, buttons and text boxes.
          ``FPB_ALIGN_LEFT``           0 Aligns left instead of fitting the width of the child window to be added. Use either this one or ``FPB_ALIGN_WIDTH``.
          ====================== ======= ====================================
 
-        :param `spacing`: the :class:`Window` to be added can be slightly indented from
+        :param `spacing`: the :class:`wx.Window` to be added can be slightly indented from
          left and right so it is more visibly placed in the fold panel. Use `spacing` > 0
-         to give the control an y offset from the previous :class:`Window` added;
-        :param `leftSpacing`: give the :class:`Window` added a slight indent from the left;
-        :param `rightSpacing`: give the :class:`Window` added a slight indent from the right;
+         to give the control an y offset from the previous :class:`wx.Window` added;
+        :param `leftSpacing`: give the :class:`wx.Window` added a slight indent from the left;
+        :param `rightSpacing`: give the :class:`wx.Window` added a slight indent from the right;
         
         :note: Make the window be a child of the fold panel!
         
          The following example adds a FoldPanel to the :class:`FoldPanelBar` and
-         adds two :class:`Window` derived controls to the FoldPanel::
+         adds two :class:`wx.Window` derived controls to the FoldPanel::
 
                # Create the FoldPanelBar
                m_pnl = FoldPanelBar(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, agwStyle=0x2)
@@ -1379,10 +1379,10 @@ class FoldPanelBar(wx.Panel):
         component. It can be used to separate groups of controls
         which belong to each other.
 
-        :param `colour`: the separator colour, an instance of :class:`Colour`;
+        :param `colour`: the separator colour, an instance of :class:`wx.Colour`;
         :param `spacing`: the separator to be added can be slightly indented from
          left and right so it is more visibly placed in the fold panel. Use `spacing` > 0
-         to give the control an y offset from the previous :class:`Window` added;
+         to give the control an y offset from the previous :class:`wx.Window` added;
         :param `leftSpacing`: give the added separator a slight indent from the left;
         :param `rightSpacing`: give the added separator a slight indent from the right.
         """
@@ -1400,7 +1400,7 @@ class FoldPanelBar(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`FoldPanelBar`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         # skip all stuff when we are not initialised yet
@@ -1726,7 +1726,7 @@ class FoldPanelItem(wx.Panel):
         :param `parent`: the :class:`FoldPanelItem` parent window;
         :param `id`: an identifier for the control: a value of -1 is taken to mean a default;
         :param `caption`: the string to be displayed in :class:`CaptionBar`;
-        :param `foldIcons`: an instance of :class:`ImageList` containing the icons to display
+        :param `foldIcons`: an instance of :class:`wx.ImageList` containing the icons to display
          next to the caption text;
         :param `collapsed`: ``True`` if the :class:`CaptionBar` should start in the collapsed state,
          ``False`` otherwise;
@@ -1786,13 +1786,13 @@ class FoldPanelItem(wx.Panel):
         """
         Adds a window item to the list of items on this panel.
 
-        :param `window`: an instance of :class:`Window`;
+        :param `window`: an instance of :class:`wx.Window`;
         :param `flags`: can be one of the following bits:
 
          ====================== ======= ====================================
          Align Flag              Value  Description
          ====================== ======= ====================================
-         ``FPB_ALIGN_WIDTH``          1 The :class:`Window` to be added will be aligned to fit the width of the FoldPanel when it is resized. Very handy for sizer items, buttons and text boxes.
+         ``FPB_ALIGN_WIDTH``          1 The :class:`wx.Window` to be added will be aligned to fit the width of the FoldPanel when it is resized. Very handy for sizer items, buttons and text boxes.
          ``FPB_ALIGN_LEFT``           0 Aligns left instead of fitting the width of the child window to be added. Use either this one or ``FPB_ALIGN_WIDTH``.
          ====================== ======= ====================================
 
@@ -1828,10 +1828,10 @@ class FoldPanelItem(wx.Panel):
         """
         Adds a separator item to the list of items on this panel.
 
-        :param `colour`: the separator colour, an instance of :class:`Colour`;
+        :param `colour`: the separator colour, an instance of :class:`wx.Colour`;
         :param `spacing`: the separator to be added can be slightly indented from
          left and right so it is more visibly placed in the fold panel. Use `spacing` > 0
-         to give the control an y offset from the previous :class:`Window` added;
+         to give the control an y offset from the previous :class:`wx.Window` added;
         :param `leftSpacing`: give the added separator a slight indent from the left;
         :param `rightSpacing`: give the added separator a slight indent from the right.        
         """
@@ -2066,8 +2066,8 @@ class FoldPanelItem(wx.Panel):
 class FoldWindowItem(object):
     """
     This class is a child sibling of the :class:`FoldPanelItem` class. It
-    will contain :class:`Window` that can be either a separator (a coloured
-    line simulated by a :class:`Window`) or a wxPython controls (such as a
+    will contain :class:`wx.Window` that can be either a separator (a coloured
+    line simulated by a :class:`wx.Window`) or a wxPython controls (such as a
     :class:`Button`, a :class:`ListCtrl` etc...).
     """
     

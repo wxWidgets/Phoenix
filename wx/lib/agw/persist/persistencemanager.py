@@ -64,7 +64,7 @@ class PersistentObject(object):
         """
         Default class constructor.
 
-        :param `window`: an instance of :class:`Window`;
+        :param `window`: an instance of :class:`wx.Window`;
         :param `persistenceHandler`: if not ``None``, this should a custom handler derived
          from :class:`~lib.agw.persist.persist_handlers.AbstractHandler`.
         """
@@ -439,7 +439,7 @@ class PersistenceManager(object):
         Checks if the object is registered and return the associated :class:`PersistentObject`
         if it is or ``None`` otherwise.
 
-        :param `window`: an instance of :class:`Window`.
+        :param `window`: an instance of :class:`wx.Window`.
         """
 
         if window:
@@ -452,7 +452,7 @@ class PersistenceManager(object):
         """
         Register an object with the manager.
 
-        :param `window`: an instance of :class:`Window`;
+        :param `window`: an instance of :class:`wx.Window`;
         :param `persistenceHandler`: if not ``None``, this should a custom handler derived
          from :class:`~lib.agw.persist.persist_handlers.AbstractHandler`.
 
@@ -484,7 +484,7 @@ class PersistenceManager(object):
         Unregister the object, this is called by :class:`PersistenceManager` itself so there is
         usually no need to do it explicitly.
 
-        :param `window`: an instance of :class:`Window`, which must have been previously
+        :param `window`: an instance of :class:`wx.Window`, which must have been previously
          registered with :meth:`~PersistenceManager.Register`.
 
         :note: For the persistent windows this is done automatically (via :meth:`~PersistenceManager.SaveAndUnregister`)
@@ -508,7 +508,7 @@ class PersistenceManager(object):
         """
         Saves the state of an object.
 
-        :param `window`: an instance of :class:`Window`.
+        :param `window`: an instance of :class:`wx.Window`.
 
         :note: This methods does nothing if :meth:`~PersistenceManager.DisableSaving` was called.
         """
@@ -529,7 +529,7 @@ class PersistenceManager(object):
         """
         Restores the state of an object.
 
-        :param `window`: an instance of :class:`Window`.
+        :param `window`: an instance of :class:`wx.Window`.
 
         :returns: ``True`` if the object properties were restored or ``False`` if nothing
          was found to restore or the saved settings were invalid.
@@ -599,7 +599,7 @@ class PersistenceManager(object):
         """
         Combines both :meth:`~PersistenceManager.Save` and :meth:`~PersistenceManager.Unregister` calls.
 
-        :param `window`: an instance of :class:`Window`. If it is ``None``, all the
+        :param `window`: an instance of :class:`wx.Window`. If it is ``None``, all the
          windows previously registered are saved and then unregistered.
         """
 
@@ -617,7 +617,7 @@ class PersistenceManager(object):
         """
         Combines both :meth:`~PersistenceManager.Register` and :meth:`~PersistenceManager.Restore` calls.
 
-        :param `window`: an instance of :class:`Window`.
+        :param `window`: an instance of :class:`wx.Window`.
         """
 
         return self.Register(window) and self.Restore(window)
@@ -628,7 +628,7 @@ class PersistenceManager(object):
         Recursively registers and restore the state of the input `window` and of
         all of its children.
 
-        :param `window`: an instance of :class:`Window`;
+        :param `window`: an instance of :class:`wx.Window`;
         :param `children`: list of children of the input `window`, on first call it is equal to ``None``.
         """
 
@@ -657,7 +657,7 @@ class PersistenceManager(object):
         Recursively restore the state of the input `window` and of
         all of its children.
 
-        :param `window`: an instance of :class:`Window`;
+        :param `window`: an instance of :class:`wx.Window`;
         :param `children`: list of children of the input `window`, on first call it is equal to ``None``.
         """
 

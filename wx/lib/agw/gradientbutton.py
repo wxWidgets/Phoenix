@@ -209,7 +209,7 @@ class GradientButton(wx.Control):
         """
         Sets the bitmap label for the button.
 
-        :param `bitmap`: the bitmap label to set, an instance of :class:`Bitmap`.
+        :param `bitmap`: the bitmap label to set, an instance of :class:`wx.Bitmap`.
         """
         
         self._bitmap = bitmap
@@ -263,7 +263,7 @@ class GradientButton(wx.Control):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`GradientButton`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
         
         event.Skip()
@@ -506,7 +506,7 @@ class GradientButton(wx.Control):
         Given the current font and bezel width settings, calculate
         and set a good size.
 
-        :param `size`: an instance of :class:`Size`.        
+        :param `size`: an instance of :class:`wx.Size`.
         """
         
         if size is None:
@@ -520,7 +520,7 @@ class GradientButton(wx.Control):
         """
         Can this window be given focus by mouse click?
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
         
         return self.IsShown() and self.IsEnabled()
@@ -540,7 +540,7 @@ class GradientButton(wx.Control):
         Overridden base class virtual. Buttons usually don't inherit
         the parent's colours.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
         
         return False
@@ -552,7 +552,7 @@ class GradientButton(wx.Control):
 
         :param `enable`: ``True`` to enable the button, ``False`` to disable it.
         
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
         
         wx.Control.Enable(self, enable)
@@ -563,7 +563,7 @@ class GradientButton(wx.Control):
         """
         Sets the top start colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._topStartColour = colour
@@ -580,7 +580,7 @@ class GradientButton(wx.Control):
         """
         Sets the top end colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._topEndColour = colour
@@ -597,7 +597,7 @@ class GradientButton(wx.Control):
         """
         Sets the top bottom colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._bottomStartColour = colour
@@ -614,7 +614,7 @@ class GradientButton(wx.Control):
         """
         Sets the bottom end colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._bottomEndColour = colour
@@ -631,7 +631,7 @@ class GradientButton(wx.Control):
         """
         Sets the pressed top start colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._pressedTopColour = colour
@@ -648,7 +648,7 @@ class GradientButton(wx.Control):
         """
         Sets the pressed bottom start colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._pressedBottomColour = colour
@@ -665,9 +665,9 @@ class GradientButton(wx.Control):
         """
         Sets the :class:`GradientButton` foreground (text) colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
-        :note: Overridden from :class:`Control`.        
+        :note: Overridden from :class:`wx.Control`.
         """
 
         wx.Control.SetForegroundColour(self, colour)
@@ -679,7 +679,7 @@ class GradientButton(wx.Control):
         Overridden base class virtual. Determines the best size of the
         button based on the label and bezel size.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         label = self.GetLabel()

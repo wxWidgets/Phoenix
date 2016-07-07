@@ -350,7 +350,7 @@ def run():
     c.addPyMethod('ConvertToBitmap', '(self, depth=-1)', 
         doc="""\
         ConvertToBitmap(depth=-1) -> Bitmap\n
-        Convert the image to a :class:`Bitmap`.""",
+        Convert the image to a :class:`wx.Bitmap`.""",
         body="""\
         bmp = wx.Bitmap(self, depth)
         return bmp
@@ -359,7 +359,7 @@ def run():
     c.addPyMethod('ConvertToMonoBitmap', '(self, red, green, blue)', 
         doc="""\
         ConvertToMonoBitmap(red, green, blue) -> Bitmap\n
-        Creates a monochrome version of the image and returns it as a :class:`Bitmap`.""",
+        Creates a monochrome version of the image and returns it as a :class:`wx.Bitmap`.""",
         body="""\
         mono = self.ConvertToMono( red, green, blue )
         bmp = wx.Bitmap( mono, 1 )
@@ -490,7 +490,7 @@ def run():
     
     module.addPyFunction('ImageFromBitmap', '(bitmap)',
                          deprecated="Use bitmap.ConvertToImage instead.",
-                         doc='Create a :class:`Image` from a :class:`Bitmap`',
+                         doc='Create a :class:`Image` from a :class:`wx.Bitmap`',
                          body='return bitmap.ConvertToImage()')
 
     module.addPyFunction('ImageFromStream', '(stream, type=BITMAP_TYPE_ANY, index=-1)',

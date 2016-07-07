@@ -183,7 +183,7 @@ class AdvancedSplash(wx.Frame):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param integer `style`: the underlying :class:`Frame` style;
+        :param integer `style`: the underlying :class:`wx.Frame` style;
         :param `bitmap`: this must be a valid bitmap, that you may construct using
          whatever image file format supported by wxPython. If the file you load
          already supports mask/transparency (like png), the transparent areas
@@ -191,7 +191,7 @@ class AdvancedSplash(wx.Frame):
          the shape defined only by *non-transparent* pixels.
          If you use other file formats that does not supports transparency, you
          can obtain the same effect as above by masking a specific colour in
-         your :class:`Bitmap`.
+         your :class:`wx.Bitmap`.
         :param integer `timeout`: if you construct :class:`AdvancedSplash` using the style ``AS_TIMEOUT``,
          :class:`AdvancedSplash` will be destroyed after `timeout` milliseconds;
         :param integer `agwStyle`: this value specifies the :class:`AdvancedSplash` styles:
@@ -211,17 +211,17 @@ class AdvancedSplash(wx.Frame):
          ``AS_SHADOW_BITMAP``, here you can specify the colour that will be masked on
          your input bitmap. This has to be a valid wxPython colour.
 
-        :type parent: :class:`Window`
-        :type pos: tuple or :class:`Point`
-        :type size: tuple or :class:`Size`
-        :type bitmap: :class:`Bitmap`
-        :type shadowcolour: :class:`Colour`
+        :type parent: :class:`wx.Window`
+        :type pos: tuple or :class:`wx.Point`
+        :type size: tuple or :class:`wx.Size`
+        :type bitmap: :class:`wx.Bitmap`
+        :type shadowcolour: :class:`wx.Colour`
 
         :raise: `Exception` in the following cases:
 
          - The ``AS_TIMEOUT`` style is set but `timeout` is not a positive integer;
          - The ``AS_SHADOW_BITMAP`` style is set but `shadowcolour` is not a valid wxPython colour;
-         - The :class:`AdvancedSplash` bitmap is an invalid :class:`Bitmap`.
+         - The :class:`AdvancedSplash` bitmap is an invalid :class:`wx.Bitmap`.
          
         """
 
@@ -295,7 +295,7 @@ class AdvancedSplash(wx.Frame):
         """
         Sets :class:`AdvancedSplash` shape using the region created from the bitmap.
 
-        :param `event`: a :class:`WindowCreateEvent` event (GTK only, as GTK supports setting
+        :param `event`: a :class:`wx.WindowCreateEvent` event (GTK only, as GTK supports setting
          the window shape only during window creation).
         """
 
@@ -311,10 +311,10 @@ class AdvancedSplash(wx.Frame):
 
         :param `bmp`: the bitmap to which we want to apply the mask colour `shadowcolour`;
         :param `shadowcolour`: the mask colour for our bitmap.
-        :type bmp: :class:`Bitmap`
-        :type shadowcolour: :class:`Colour`
+        :type bmp: :class:`wx.Bitmap`
+        :type shadowcolour: :class:`wx.Colour`
 
-        :return: A masked version of the input bitmap, an instance of :class:`Bitmap`.        
+        :return: A masked version of the input bitmap, an instance of :class:`wx.Bitmap`.
         """
 
         mask = wx.Mask(bmp, shadowcolour)
@@ -433,7 +433,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `font`: the font to use while drawing the text on top of our bitmap. If `font`
          is ``None``, a simple generic font is generated.
-        :type font: :class:`Font` or ``None``         
+        :type font: :class:`wx.Font` or ``None``
         """
 
         if font is None:
@@ -453,7 +453,7 @@ class AdvancedSplash(wx.Frame):
         """
         Gets the font for the text in :class:`AdvancedSplash`.
 
-        :return: An instance of :class:`Font` to draw the text and a :class:`Size` object containing
+        :return: An instance of :class:`wx.Font` to draw the text and a :class:`wx.Size` object containing
          the text width an height, in pixels.
         """
 
@@ -466,7 +466,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `colour`: the text colour to use while drawing the text on top of our
          bitmap. If `colour` is ``None``, then ``wx.BLACK`` is used.
-        :type colour: :class:`Colour` or ``None``
+        :type colour: :class:`wx.Colour` or ``None``
         """
 
         if colour is None:
@@ -481,7 +481,7 @@ class AdvancedSplash(wx.Frame):
         """
         Gets the colour for the text in :class:`AdvancedSplash`.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._textcolour

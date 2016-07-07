@@ -204,7 +204,7 @@ class ProgressGauge(wx.Window):
         """
         Sets the first gradient colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._firstGradient = colour
@@ -221,7 +221,7 @@ class ProgressGauge(wx.Window):
         """
         Sets the second gradient colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._secondGradient = colour
@@ -238,7 +238,7 @@ class ProgressGauge(wx.Window):
         """
         Sets the gauge background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._background = wx.Brush(colour) 
@@ -339,7 +339,7 @@ class ProgressGauge(wx.Window):
         """
         Actually draws the sliding bar.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `xsize`: the width of the whole progress bar;
         :param `ysize`: the height of the whole progress bar;
         :param `increment`: a positive value if we are spinning from left to right,
@@ -636,7 +636,7 @@ class PyProgress(wx.Dialog):
         """
         Sets the gauge first gradient colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._gauge.SetFirstGradientColour(colour)
@@ -652,7 +652,7 @@ class PyProgress(wx.Dialog):
         """
         Sets the gauge second gradient colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._gauge.SetSecondGradientColour(colour)
@@ -668,7 +668,7 @@ class PyProgress(wx.Dialog):
         """
         Sets the gauge background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._gauge.SetGaugeBackground(colour)
@@ -782,7 +782,7 @@ class PyProgress(wx.Dialog):
         """
         Handles the ``wx.EVT_WINDOW_DESTROY`` event for :class:`PyProgress`.
 
-        :param `event`: a :class:`WindowDestroyEvent` event to be processed.
+        :param `event`: a :class:`wx.WindowDestroyEvent` event to be processed.
         """
         if self.evtloop:
             wx.EventLoopBase.SetActive(None)
@@ -818,7 +818,7 @@ class PyProgress(wx.Dialog):
     
 
     def ReenableOtherWindows(self):
-        """ Re-enables the other windows if using :class:`WindowDisabler`. """
+        """ Re-enables the other windows if using :class:`wx.WindowDisabler`. """
 
         if self._agwStyle & wx.PD_APP_MODAL:
             if hasattr(self, "_winDisabler"):

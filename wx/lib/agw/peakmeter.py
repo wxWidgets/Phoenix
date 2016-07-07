@@ -202,7 +202,7 @@ def LightenColour(crColour, byIncreaseVal):
     """
     Lightens a colour.
 
-    :param `crColour`: a valid :class:`Colour` object;
+    :param `crColour`: a valid :class:`wx.Colour` object;
     :param `byIncreaseVal`: an integer specifying the amount for which the input
      colour should be brightened.
     """
@@ -222,7 +222,7 @@ def DarkenColour(crColour, byReduceVal):
     """
     Darkens a colour.
 
-    :param `crColour`: a valid :class:`Colour` object;
+    :param `crColour`: a valid :class:`wx.Colour` object;
     :param `byReduceVal`: an integer specifying the amount for which the input
      colour should be darkened.
     """
@@ -300,7 +300,7 @@ class PeakMeterCtrl(wx.Control):
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :param `style`: the underlying :class:`Control` window style;
+        :param `style`: the underlying :class:`wx.Control` window style;
         :param `agwStyle`: the AGW-specific window style, which can be one of the following bits:
 
          ======================== =========== ========================================================
@@ -405,10 +405,10 @@ class PeakMeterCtrl(wx.Control):
          event handler function under Windows and automatically under GTK.
 
         :note: Setting the background colour does not cause an immediate refresh, so
-         you may wish to call :meth:`Window.ClearBackground` or :meth:`Window.Refresh` after
+         you may wish to call :meth:`wx.Window.ClearBackground` or :meth:`wx.Window.Refresh` after
          calling this function.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         wx.Control.SetBackgroundColour(self, colourBgnd)
@@ -420,11 +420,11 @@ class PeakMeterCtrl(wx.Control):
         """
         Set bands colour for :class:`PeakMeterCtrl`.
 
-        :param `colourNormal`: the colour for normal (low) bands, a valid :class:`Colour`
+        :param `colourNormal`: the colour for normal (low) bands, a valid :class:`wx.Colour`
          object;
-        :param `colourMedium`: the colour for medium bands, a valid :class:`Colour`
+        :param `colourMedium`: the colour for medium bands, a valid :class:`wx.Colour`
          object;
-        :param `colourHigh`: the colour for high bands, a valid :class:`Colour`
+        :param `colourHigh`: the colour for high bands, a valid :class:`wx.Colour`
          object.
         """
 
@@ -650,7 +650,7 @@ class PeakMeterCtrl(wx.Control):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         # something is better than nothing...
@@ -698,7 +698,7 @@ class PeakMeterCtrl(wx.Control):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`PeakMeterCtrl`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Refresh()
@@ -719,7 +719,7 @@ class PeakMeterCtrl(wx.Control):
         """
         Draws horizontal bands.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the horizontal bands client rectangle.
 
         .. todo:: Implement falloff effect for horizontal bands.        
@@ -799,7 +799,7 @@ class PeakMeterCtrl(wx.Control):
         """
         Draws vertical bands.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the vertical bands client rectangle.
         """
 
@@ -879,7 +879,7 @@ class PeakMeterCtrl(wx.Control):
         """
         Draws vertical bands inverted.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `rect`: the vertical bands client rectangle.
         """
 

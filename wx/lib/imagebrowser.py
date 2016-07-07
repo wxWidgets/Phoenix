@@ -51,7 +51,7 @@ an image.
 Description
 ===========
 
-The :class:`ImageDialog` allows the user to view images and select one.
+The :class:`wx.ImageDialog` allows the user to view images and select one.
 
 Usage
 =====
@@ -98,7 +98,7 @@ def ConvertBMP(file_nm):
 
     :param string `file_nm`: path to file
 
-    :return: :class:`Image` or BAD_IMAGE
+    :return: :class:`wx.Image` or BAD_IMAGE
     """
     if file_nm is None:
         return None
@@ -128,7 +128,7 @@ def GetCheckeredBitmap(blocksize=8, ntiles=4, rgb0='\xFF', rgb1='\xCC'):
     :param `rbg0`: the first color, as 3-byte strings.
     :param `rgb1`: the second color, as 3-byte strings. If only 1 byte is provided, it is treated as a grey value.
     
-    :return: :class:`BitmapFromBuffer`
+    :return: :class:`wx.BitmapFromBuffer`
 
     """
     size = blocksize*ntiles*2
@@ -426,14 +426,14 @@ class ImagePanel(wx.Panel):
 
 class ImageDialog(wx.Dialog):
     """
-    :class:`ImageDialog` derived from :class:`Dialog` allows the user
+    :class:`wx.ImageDialog` derived from :class:`Dialog` allows the user
     to display images and to select an image.
     """
     def __init__(self, parent, set_dir = None):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window.
+        :param wx.Window `parent`: parent window.
         :param string `set_dir`: path to set as working directory
 
         """

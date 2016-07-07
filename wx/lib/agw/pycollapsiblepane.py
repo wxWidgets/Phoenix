@@ -36,7 +36,7 @@ itself!).
 
 :note: Note that because of its nature of control which can dynamically (and drastically)
  change its size at run-time under user-input, when putting :class:`PyCollapsiblePane`
- inside a :class:`Sizer` you should be careful to add it with a proportion value of zero;
+ inside a :class:`wx.Sizer` you should be careful to add it with a proportion value of zero;
  this is because otherwise all other windows with non-null proportion values would
  automatically get resized each time the user expands or collapse the pane window
  resulting usually in a weird, flickering effect.
@@ -232,7 +232,7 @@ class GTKExpander(wx.Control):
         """
         Draws the :class:`GTKExpander` triangle.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         size = self.GetSize()
@@ -262,7 +262,7 @@ class GTKExpander(wx.Control):
         """
         Draws the :class:`GTKExpander` text label.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         size = self.GetSize()
@@ -281,7 +281,7 @@ class GTKExpander(wx.Control):
         minimal size which doesn't truncate the control, for a panel - the same size
         as it would have after a call to `Fit()`.
 
-        :note: Overridden from :class:`Control`.
+        :note: Overridden from :class:`wx.Control`.
         """
 
         triangleWidth, triangleHeight = self._parent.GetExpanderDimensions()
@@ -299,7 +299,7 @@ class GTKExpander(wx.Control):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`GTKExpander`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Refresh()
@@ -478,7 +478,7 @@ class PyCollapsiblePane(wx.Panel):
         """
         Handles the status changes (collapsing/expanding).
 
-        :param `sz`: an instance of :class:`Size`.
+        :param `sz`: an instance of :class:`wx.Size`.
         """
 
         self.SetSize(sz)
@@ -583,7 +583,7 @@ class PyCollapsiblePane(wx.Panel):
 
     def GetPane(self):
         """
-        Returns a reference to the pane window. Use the returned :class:`Window` as
+        Returns a reference to the pane window. Use the returned :class:`wx.Window` as
         the parent of widgets to make them part of the collapsible area.
         """
 
@@ -622,7 +622,7 @@ class PyCollapsiblePane(wx.Panel):
         """
         Sets the button font.
 
-        :param `font`: a valid :class:`Font` object.
+        :param `font`: a valid :class:`wx.Font` object.
         """
         
         self._pButton.SetFont(font)
@@ -818,7 +818,7 @@ class PyCollapsiblePane(wx.Panel):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`PyCollapsiblePane`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Layout()
@@ -845,7 +845,7 @@ class PyCollapsiblePane(wx.Panel):
         """
         Overridable method to draw the GTK-style expander.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         self._pButton.OnDrawGTKExpander(dc)
@@ -855,7 +855,7 @@ class PyCollapsiblePane(wx.Panel):
         """
         Overridable method to draw the :class:`PyCollapsiblePane` text in the expander.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         self._pButton.OnDrawGTKText(dc)

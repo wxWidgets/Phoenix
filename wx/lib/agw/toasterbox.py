@@ -268,7 +268,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` position on screen.
 
-        :param `pos`: the widget position, an instance of :class:`Point`.        
+        :param `pos`: the widget position, an instance of :class:`wx.Point`.
         """
 
         self._popupposition = pos
@@ -382,7 +382,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` background colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          the background colour will be white.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -400,7 +400,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` foreground colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          the background colour will be black.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -417,7 +417,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` text font.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          a simple generic font will be generated.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -433,7 +433,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` size.
 
-        :param `size`: the new control size, an instance of :class:`Size`.        
+        :param `size`: the new control size, an instance of :class:`wx.Size`.
         """
 
         self._popupsize = size
@@ -453,7 +453,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` background image.
 
-        :param `bitmap`: a valid :class:`Bitmap` object or filename. If defaulted
+        :param `bitmap`: a valid :class:`wx.Bitmap` object or filename. If defaulted
          to ``None``, then no background bitmap is used.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -492,7 +492,7 @@ class ToasterBox(wx.Timer):
         """
         Adds a panel to the :class:`ToasterBox`.
 
-        :param `panel`: an instance of :class:`Window`.
+        :param `panel`: an instance of :class:`wx.Window`.
         
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_COMPLEX`` style.
         """
@@ -816,7 +816,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` background image.
 
-        :param `bitmap`: a valid :class:`Bitmap` object. If defaulted to ``None``, then
+        :param `bitmap`: a valid :class:`wx.Bitmap` object. If defaulted to ``None``, then
          no background bitmap is used.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -835,7 +835,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` size.
 
-        :param `size`: the new control size, an instance of :class:`Size`.        
+        :param `size`: the new control size, an instance of :class:`wx.Size`.
         """
 
         self.SetSize(self._bottomright.x, self._bottomright.y, size[0], size[1])
@@ -845,7 +845,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` position on screen.
 
-        :param `pos`: the widget position, an instance of :class:`Point`.        
+        :param `pos`: the widget position, an instance of :class:`wx.Point`.
         """
 
         self._bottomright = wx.Point(pos[0] + self.GetSize().GetWidth(),
@@ -918,7 +918,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Adds a panel to the :class:`ToasterBox`.
 
-        :param `panel`: an instance of :class:`Window`.
+        :param `panel`: an instance of :class:`wx.Window`.
         
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_COMPLEX`` style.
         """
@@ -950,7 +950,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` text font.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          a simple generic font will be generated.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -1009,7 +1009,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` background colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          the background colour will be white.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -1023,7 +1023,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` foreground colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          the background colour will be black.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -1039,7 +1039,7 @@ class ToasterBoxWindow(wx.Frame):
 
         :param `focus`: ``True`` to set the focus on :class:`ToasterBoxWindow`, ``False`` to
          return it to the original owner;
-        :param `originalfocus`: an instance of :class:`Window`, representing a pointer to
+        :param `originalfocus`: an instance of :class:`wx.Window`, representing a pointer to
          the window which originally had the focus
         """
 
@@ -1208,7 +1208,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Draws the text label for a :class:`ToasterBox` with ``TB_SIMPLE`` style set.
 
-        :param `dc`: an instance of :class:`DC`. If defaulted to ``None``, a :class:`ClientDC`
+        :param `dc`: an instance of :class:`wx.DC`. If defaulted to ``None``, a :class:`ClientDC`
          will be created on the fly.
         """
       
@@ -1281,7 +1281,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Draw the user specified text.
 
-        :param `dc`: an instance of :class:`DC`.
+        :param `dc`: an instance of :class:`wx.DC`.
 
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.        
         """

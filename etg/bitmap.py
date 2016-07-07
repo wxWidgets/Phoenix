@@ -188,7 +188,7 @@ def run():
         isStatic=True,
         factory=True,
         doc="""\
-            Creates a :class:`Bitmap` from in-memory data.  The data and alpha 
+            Creates a :class:`wx.Bitmap` from in-memory data.  The data and alpha
             parameters must be a Python object that implements the buffer 
             interface, such as a string, bytearray, etc.  The data object 
             is expected to contain a series of RGB bytes and be at least 
@@ -240,7 +240,7 @@ def run():
         isStatic=True,
         factory=True,
         doc="""\
-            Creates a :class:`Bitmap` from in-memory data.  The data parameter 
+            Creates a :class:`wx.Bitmap` from in-memory data.  The data parameter
             must be a Python object that implements the buffer interface, such 
             as a string, bytearray, etc.  The data object is expected to contain 
             a series of RGB bytes and be at least width*height*3 bytes long.
@@ -264,8 +264,8 @@ def run():
             """)
 
     module.addPyFunction('BitmapFromBuffer', '(width, height, dataBuffer, alphaBuffer=None)',
-        deprecated="Use :meth:`Bitmap.FromBuffer` or :meth:`Bitmap.FromBufferAndAlpha` instead.",
-        doc='A compatibility wrapper for :meth:`Bitmap.FromBuffer` and :meth:`Bitmap.FromBufferAndAlpha`',
+        deprecated="Use :meth:`wx.Bitmap.FromBuffer` or :meth:`wx.Bitmap.FromBufferAndAlpha` instead.",
+        doc='A compatibility wrapper for :meth:`wx.Bitmap.FromBuffer` and :meth:`wx.Bitmap.FromBufferAndAlpha`',
         body="""\
             if alphaBuffer is not None:
                 return Bitmap.FromBufferAndAlpha(width, height, dataBuffer, alphaBuffer)
@@ -280,7 +280,7 @@ def run():
         isStatic=True,
         factory=True,
         doc="""\
-            Creates a :class:`Bitmap` from in-memory data.  The data parameter 
+            Creates a :class:`wx.Bitmap` from in-memory data.  The data parameter
             must be a Python object that implements the buffer interface, such 
             as a string, bytearray, etc.  The data object is expected to contain 
             a series of RGBA bytes and be at least width*height*4 bytes long.
@@ -306,8 +306,8 @@ def run():
             """)
 
     module.addPyFunction('BitmapFromBufferRGBA', '(width, height, dataBuffer)',
-        deprecated="Use :meth:`Bitmap.FromBufferRGBA` instead.",
-        doc='A compatibility wrapper for :meth:`Bitmap.FromBufferRGBA`',
+        deprecated="Use :meth:`wx.Bitmap.FromBufferRGBA` instead.",
+        doc='A compatibility wrapper for :meth:`wx.Bitmap.FromBufferRGBA`',
         body='return Bitmap.FromBufferRGBA(width, height, dataBuffer)')
 
 
@@ -318,7 +318,7 @@ def run():
         isStatic=True,
         factory=True,
         doc="""\
-            Creates a new empty 32-bit :class:`Bitmap` where every pixel has been
+            Creates a new empty 32-bit :class:`wx.Bitmap` where every pixel has been
             initialized with the given RGBA values.
             """,
         body="""\
@@ -351,20 +351,20 @@ def run():
             """)
 
     module.addPyFunction('EmptyBitmapRGBA', '(width, height, red=0, green=0, blue=0, alpha=0)',
-        deprecated="Use :meth:`Bitmap.FromRGBA` instead.",
-        doc='A compatibility wrapper for :meth:`Bitmap.FromRGBA`',
+        deprecated="Use :meth:`wx.Bitmap.FromRGBA` instead.",
+        doc='A compatibility wrapper for :meth:`wx.Bitmap.FromRGBA`',
         body='return Bitmap.FromRGBA(width, height, red, green, blue, alpha)')
 
     #-----------------------------------------------------------------------
 
     # For compatibility:
     module.addPyFunction('EmptyBitmap', '(width, height, depth=BITMAP_SCREEN_DEPTH)',
-                         deprecated="Use :class:`Bitmap` instead",
+                         deprecated="Use :class:`wx.Bitmap` instead",
                          doc='A compatibility wrapper for the wx.Bitmap(width, height, depth) constructor',
                          body='return Bitmap(width, height, depth)')
 
     module.addPyFunction('BitmapFromImage', '(image)',
-                         deprecated="Use :class:`Bitmap` instead",
+                         deprecated="Use :class:`wx.Bitmap` instead",
                          doc='A compatibility wrapper for the wx.Bitmap(wx.Image) constructor',
                          body='return Bitmap(image)')
 

@@ -460,7 +460,7 @@ class ToolTipWindowBase(object):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`SuperToolTip`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
 
         self.Refresh()
@@ -1033,7 +1033,7 @@ class SuperToolTip(object):
         """
         Sets the header bitmap for :class:`SuperToolTip`.
 
-        :param `bmp`: the header bitmap, a valid :class:`Bitmap` object.
+        :param `bmp`: the header bitmap, a valid :class:`wx.Bitmap` object.
         """
 
         self._headerBmp = bmp
@@ -1088,7 +1088,7 @@ class SuperToolTip(object):
         """
         Sets the main body bitmap for :class:`SuperToolTip`.
 
-        :param `bmp`: the body bitmap, a valid :class:`Bitmap` object.
+        :param `bmp`: the body bitmap, a valid :class:`wx.Bitmap` object.
         """
 
         self._embeddedImage = bmp
@@ -1125,7 +1125,7 @@ class SuperToolTip(object):
         """
         Sets the footer bitmap for :class:`SuperToolTip`.
 
-        :param `bmp`: the footer bitmap, a valid :class:`Bitmap` object.
+        :param `bmp`: the footer bitmap, a valid :class:`wx.Bitmap` object.
         """
 
         self._footerBmp = bmp
@@ -1179,7 +1179,7 @@ class SuperToolTip(object):
         """
         Sets the top gradient colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as top colour, a valid :class:`Colour` object.
+        :param `colour`: the colour to use as top colour, a valid :class:`wx.Colour` object.
         """
 
         self._topColour = colour
@@ -1191,7 +1191,7 @@ class SuperToolTip(object):
         """
         Sets the middle gradient colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as middle colour, a valid :class:`Colour` object.
+        :param `colour`: the colour to use as middle colour, a valid :class:`wx.Colour` object.
         """
 
         self._middleColour = colour
@@ -1203,7 +1203,7 @@ class SuperToolTip(object):
         """
         Sets the bottom gradient colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as bottom colour, a valid :class:`Colour` object.
+        :param `colour`: the colour to use as bottom colour, a valid :class:`wx.Colour` object.
         """
 
         self._bottomColour = colour
@@ -1215,7 +1215,7 @@ class SuperToolTip(object):
         """
         Sets the text colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as text colour, a valid :class:`Colour` object.
+        :param `colour`: the colour to use as text colour, a valid :class:`wx.Colour` object.
         """
 
         self._textColour = colour
@@ -1274,7 +1274,7 @@ class SuperToolTip(object):
         """
         Sets the font for the main body message.
 
-        :param `font`: the font to use for the main body message, a valid :class:`Font`
+        :param `font`: the font to use for the main body message, a valid :class:`wx.Font`
          object.
         """
 
@@ -1287,7 +1287,7 @@ class SuperToolTip(object):
         """
         Sets the font for the header text.
 
-        :param `font`: the font to use for the header text, a valid :class:`Font`
+        :param `font`: the font to use for the header text, a valid :class:`wx.Font`
          object.
         """
 
@@ -1300,7 +1300,7 @@ class SuperToolTip(object):
         """
         Sets the font for the footer text.
 
-        :param `font`: the font to use for the footer text, a valid :class:`Font`
+        :param `font`: the font to use for the footer text, a valid :class:`wx.Font`
          object.
         """
 
@@ -1313,7 +1313,7 @@ class SuperToolTip(object):
         """
         Sets the font for the hyperlink text.
 
-        :param `font`: the font to use for the hyperlink text, a valid :class:`Font`
+        :param `font`: the font to use for the hyperlink text, a valid :class:`wx.Font`
          object.
         """
 

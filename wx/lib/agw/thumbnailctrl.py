@@ -193,13 +193,13 @@ o\xda\x84pB2\x1f\x81Fa\x8c\x9c\x08\x04Z{\xcf\xa72\xbcv\xfa\xc5\x08 \x80r\x80\
 
 
 def GetMondrianBitmap():
-    """ Returns a default image placeholder as a :class:`Bitmap`. """
+    """ Returns a default image placeholder as a :class:`wx.Bitmap`. """
 
     return wx.Bitmap(GetMondrianImage())
 
 
 def GetMondrianImage():
-    """ Returns a default image placeholder as a :class:`Image`. """
+    """ Returns a default image placeholder as a :class:`wx.Image`. """
 
     stream = six.StringIO(GetMondrianData())
     return wx.Image(stream)
@@ -498,7 +498,7 @@ class PILImageHandler(object):
         """
         Adjust overall image brightness to highlight.
 
-        :param `img`: an instance of :class:`Image`;
+        :param `img`: an instance of :class:`wx.Image`;
         :param `factor`: unused in :class:`PILImageHandler`.
         """
 
@@ -550,7 +550,7 @@ class NativeImageHandler(object):
         """
         Adjust overall image brightness to highlight.
 
-        :param `img`: an instance of :class:`Image`;
+        :param `img`: an instance of :class:`wx.Image`;
         :param `factor`: a floating point number representing the highlight factor.
         """
 
@@ -639,7 +639,7 @@ class Thumb(object):
         """
         Sets the thumbnail image.
 
-        :param `image`: a :class:`Image` object.
+        :param `image`: a :class:`wx.Image` object.
         """
         
         self._image = image        
@@ -649,7 +649,7 @@ class Thumb(object):
         """
         Sets the thumbnail bitmap.
 
-        :param `bmp`: a :class:`Bitmap` object.
+        :param `bmp`: a :class:`wx.Bitmap` object.
         """
         
         self._bitmap = bmp
@@ -692,7 +692,7 @@ class Thumb(object):
         """
         Sets the image as rotated (fast).
 
-        :param `image`: the rotated image, an instance of :class:`Image`.        
+        :param `image`: the rotated image, an instance of :class:`wx.Image`.
         """
         
         self._rotatedimage = image
@@ -1339,7 +1339,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Sets the thumbnails popup menu when at least one thumbnail is selected.
 
-        :param `menu`: an instance of :class:`Menu`.
+        :param `menu`: an instance of :class:`wx.Menu`.
         """
         
         self._pmenu = menu
@@ -1355,7 +1355,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Sets the global thumbnails popup menu (no need of thumbnail selection).
 
-        :param `gpmenu`: an instance of :class:`Menu`.
+        :param `gpmenu`: an instance of :class:`wx.Menu`.
         """
         
         self._gpmenu = gpmenu
@@ -1377,7 +1377,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Sets the colour used to indicate a selected thumbnail.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, it
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, it
          will be taken from the system settings.
         """
         
@@ -1747,7 +1747,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Sets the font for all the thumbnail captions.
 
-        :param `font`: a valid :class:`Font` object. If defaulted to ``None``, a standard
+        :param `font`: a valid :class:`wx.Font` object. If defaulted to ``None``, a standard
          font will be generated.
         """
         
@@ -1971,7 +1971,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Calculates the best caption string to show based on the actual zoom factor.
 
-        :param `dc`: an instance of :class:`DC`;
+        :param `dc`: an instance of :class:`wx.DC`;
         :param `caption`: the original caption string;
         :param `sw`: the maximum width allowed for the caption string, in pixels;
         :param `width`: the caption string width, in pixels.
@@ -2175,7 +2175,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ThumbnailCtrl`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
         
         self.UpdateProp()

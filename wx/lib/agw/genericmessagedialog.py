@@ -1308,7 +1308,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomOKBitmap(self):
         """
         If a custom icon has been used for the ``OK`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultOKBitmap`) is returned.
 
         .. versionadded:: 0.9.3
@@ -1320,7 +1320,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomYesBitmap(self):
         """
         If a custom icon has been used for the ``Yes`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultYesBitmap`) is returned.
 
         .. versionadded:: 0.9.3
@@ -1332,7 +1332,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomNoBitmap(self):
         """
         If a custom icon has been used for the ``No`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultNoBitmap`) is returned.
 
         .. versionadded:: 0.9.3
@@ -1344,7 +1344,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomCancelBitmap(self):
         """
         If a custom icon been used for the ``Cancel`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultCancelBitmap`) is returned.
 
         .. versionadded:: 0.9.3
@@ -1356,7 +1356,7 @@ class GenericMessageDialog(wx.Dialog):
     def GetCustomHelpBitmap(self):
         """
         If a custom icon has been used for the ``Help`` button, this method will return
-        it as an instance of :class:`Bitmap`. Otherwise, the default one (as defined in
+        it as an instance of :class:`wx.Bitmap`. Otherwise, the default one (as defined in
         :meth:`~GenericMessageDialog.GetDefaultHelpBitmap`) is returned.
 
         .. versionadded:: 0.9.3
@@ -1370,8 +1370,8 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icons of the ``Yes`` and ``No`` buttons.
 
-        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`Bitmap`;
-        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`Bitmap`.
+        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`wx.Bitmap`;
+        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.3
         """
@@ -1384,9 +1384,9 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icons of the ``Yes`` and ``No`` buttons.
 
-        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`Bitmap`;
-        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`Bitmap`;
-        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`Bitmap`.
+        :param `yesBitmap`: the new icon for the ``Yes`` button, an instance of :class:`wx.Bitmap`;
+        :param `noBitmap`: the new icon for the ``No`` button, an instance of :class:`wx.Bitmap`;
+        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.3
         """
@@ -1399,7 +1399,7 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icon of the ``OK`` button.
 
-        :param `yesBitmap`: the new icon for the ``OK`` button, an instance of :class:`Bitmap`;
+        :param `yesBitmap`: the new icon for the ``OK`` button, an instance of :class:`wx.Bitmap`;
 
         .. versionadded:: 0.9.3
         """
@@ -1412,8 +1412,8 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icons of the ``OK`` and ``Cancel`` buttons.
 
-        :param `okBitmap`: the new icon for the ``OK`` button, an instance of :class:`Bitmap`;
-        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`Bitmap`.
+        :param `okBitmap`: the new icon for the ``OK`` button, an instance of :class:`wx.Bitmap`;
+        :param `cancelBitmap`: the new icon for the ``Cancel`` button, an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.3
         """
@@ -1426,7 +1426,7 @@ class GenericMessageDialog(wx.Dialog):
         """
         Overrides the default icon of the ``Help`` button.
 
-        :param `helpBitmap`: the new icon for the ``Help`` button, an instance of :class:`Bitmap`.
+        :param `helpBitmap`: the new icon for the ``Help`` button, an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.3
         """
@@ -1459,7 +1459,7 @@ class GenericMessageDialog(wx.Dialog):
         :param `message`: the original input message;
         :param `wrap`: wraps the string in `message` so that every line is at most
          `wrap` pixels long;
-        :param `font`: if not ``None``, it should be an instance of :class:`Font` to be
+        :param `font`: if not ``None``, it should be an instance of :class:`wx.Font` to be
          used to measure and then wrap the input `message`.
 
         :return: a new message wrapped at maximum `wrap` pixels wide.

@@ -48,7 +48,7 @@ by creating an "angular" control (actually, circular). I remember to have seen
 it somewhere, and i decided to implement it in wxPython.
 
 :class:`SpeedMeter` starts its construction from an empty bitmap, and it uses some
-functions of the :class:`DC` class to create the rounded effects. everything is
+functions of the :class:`wx.DC` class to create the rounded effects. everything is
 processed in the `Draw()` method of :class:`SpeedMeter` class.
 
 This implementation allows you to use either directly the :class:`PaintDC`, or the
@@ -344,7 +344,7 @@ class BufferedWindow(wx.Window):
         """
         This method should be overridden when sub-classed.
 
-        :param `dc`: an instance of :class:`DC`.        
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         pass
@@ -368,7 +368,7 @@ class BufferedWindow(wx.Window):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`BufferedWindow`.
 
-        :param `event`: a :class:`SizeEvent` event to be processed.
+        :param `event`: a :class:`wx.SizeEvent` event to be processed.
         """
         
         self.Width, self.Height = self.GetClientSize()
@@ -534,7 +534,7 @@ class SpeedMeter(BufferedWindow):
         Draws everything on the empty bitmap.
         Here all the chosen styles are applied.
 
-        :param `dc`: an instance of :class:`DC`.        
+        :param `dc`: an instance of :class:`wx.DC`.
         """
 
         size  = self.GetClientSize()
@@ -1286,7 +1286,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the ticks font.
 
-        :param `font`: a valid :class:`Font` object. If defaulted to ``None``, some standard
+        :param `font`: a valid :class:`wx.Font` object. If defaulted to ``None``, some standard
          font will be chosen automatically.
         """
 
@@ -1308,7 +1308,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the ticks colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the
          ticks colour will be set as blue.
         """
 
@@ -1328,7 +1328,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the background colour outside the :class:`SpeedMeter` control.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the
          :class:`SpeedMeter` background will be taken from the system default.
         """
 
@@ -1348,7 +1348,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the hand (arrow indicator) colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the arrow
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the arrow
          indicator will be red.
         """
 
@@ -1368,7 +1368,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the external arc colour (thicker line).
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the arc
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the arc
          colour will be black.
         """
 
@@ -1388,7 +1388,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the hand's shadow colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the shadow
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the shadow
          colour will be light grey.
         """
 
@@ -1411,7 +1411,7 @@ class SpeedMeter(BufferedWindow):
         A circle corona near the ticks will be filled with this colour, from
         the starting value to the current value of :class:`SpeedMeter`.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         if colour is None:
@@ -1497,7 +1497,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the font for the text in the middle.
 
-        :param `font`: a valid :class:`Font` object. If defaulted to ``None``, some
+        :param `font`: a valid :class:`wx.Font` object. If defaulted to ``None``, some
          standard font will be generated.
         """
 
@@ -1521,7 +1521,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the colour for the text in the middle.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the text
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the text
          in the middle will be painted in blue.
         """
 
@@ -1541,7 +1541,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the icon to be drawn near the center of :class:`SpeedMeter`.
 
-        :param `icon`: a valid :class:`Bitmap` object.
+        :param `icon`: a valid :class:`wx.Bitmap` object.
         """
 
         if icon.IsOk():
@@ -1603,7 +1603,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the first gradient colour (near the ticks).
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         if colour is None:
@@ -1622,7 +1622,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the second gradient colour (near the center).
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         if colour is None:

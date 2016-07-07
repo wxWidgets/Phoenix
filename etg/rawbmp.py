@@ -44,7 +44,7 @@ def run():
     
     addPixelDataClass(module, 'wxNativePixelData', 'wxBitmap', bpp=24,
         doc="""\
-        A class providing direct access to a :class:`Bitmap`'s
+        A class providing direct access to a :class:`wx.Bitmap`'s
         internal data without alpha channel (RGB). 
         """)
     addPixelDataClass(module, 'wxAlphaPixelData', 'wxBitmap', bpp=32,

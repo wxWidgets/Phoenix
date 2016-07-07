@@ -87,14 +87,14 @@ class AuiCommandCapture(wx.EvtHandler):
 
          1. If the object is disabled (via a call to :meth:`EvtHandler.SetEvtHandlerEnabled`) the function
             skips to step (6).
-         2. If the object is a :class:`Window`, :meth:`ProcessEvent` is recursively called on the window's 
-            :class:`Validator`. If this returns ``True``, the function exits.
+         2. If the object is a :class:`wx.Window`, :meth:`ProcessEvent` is recursively called on the window's
+            :class:`wx.Validator`. If this returns ``True``, the function exits.
          3. wxWidgets `SearchEventTable` is called for this event handler. If this fails, the
             base class table is tried, and so on until no more tables exist or an appropriate
             function was found, in which case the function exits.
          4. The search is applied down the entire chain of event handlers (usually the chain
             has a length of one). If this succeeds, the function exits.
-         5. If the object is a :class:`Window` and the event is a :class:`CommandEvent`, :meth:`ProcessEvent` is
+         5. If the object is a :class:`wx.Window` and the event is a :class:`CommandEvent`, :meth:`ProcessEvent` is
             recursively applied to the parent window's event handler. If this returns ``True``,
             the function exits.
          6. Finally, :meth:`ProcessEvent` is called on the :class:`App` object.
@@ -178,7 +178,7 @@ class AuiDefaultTabArt(object):
         """
         Sets a new base colour.
 
-        :param `base_colour`: an instance of :class:`Colour`.
+        :param `base_colour`: an instance of :class:`wx.Colour`.
         """
         
         self._base_colour = base_colour
@@ -190,7 +190,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the default colours, which are calculated from the given base colour.
 
-        :param `base_colour`: an instance of :class:`Colour`. If defaulted to ``None``, a colour
+        :param `base_colour`: an instance of :class:`wx.Colour`. If defaulted to ``None``, a colour
          is generated accordingly to the platform and theme.
         """
 
@@ -281,7 +281,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the tab sizing information.
         
-        :param Size `tab_ctrl_size`: the size of the tab control area;
+        :param wx.Size `tab_ctrl_size`: the size of the tab control area;
         :param integer `tab_count`: the number of tabs;
         :param tuple `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
          to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
@@ -322,9 +322,9 @@ class AuiDefaultTabArt(object):
         """
         Draws the tab area background.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
-        :param Rect `rect`: the tab control rectangle.
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
+        :param wx.Rect `rect`: the tab control rectangle.
         """
 
         self._buttonRect = wx.Rect()
@@ -363,10 +363,10 @@ class AuiDefaultTabArt(object):
         """
         Draws a single tab.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param wx.Rect `in_rect`: rectangle the tab should be confined to;
         :param integer `close_button_state`: the state of the close button on the tab;
         :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
@@ -632,7 +632,7 @@ class AuiDefaultTabArt(object):
         
         :param integer `bitmap_id`: the button identifier;
         :param integer `button_state`: the button state;
-        :param Bitmap `bmp`: the custom bitmap to use for the button.
+        :param wx.Bitmap `bmp`: the custom bitmap to use for the button.
         """
 
         if bitmap_id == AUI_BUTTON_CLOSE:
@@ -678,13 +678,13 @@ class AuiDefaultTabArt(object):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param string `caption`: the tab text caption;
-        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param wx.Bitmap `bitmap`: the bitmap displayed on the tab;
         :param bool `active`: whether the tab is selected or not;
         :param integer `close_button_state`: the state of the close button on the tab;
-        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param wx.Window `control`: a :class:`wx.Window` instance inside a tab (or ``None``).
         """
 
         dc.SetFont(self._measuring_font)
@@ -724,9 +724,9 @@ class AuiDefaultTabArt(object):
         """
         Draws a button on the tab or on the tab area, depending on the button identifier. 
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
-        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
+        :param wx.Rect `in_rect`: rectangle the tab should be confined to;
         :param `button`: an instance of the button class;
         :param integer `orientation`: the tab orientation.
         """
@@ -800,9 +800,9 @@ class AuiDefaultTabArt(object):
         """
         Draws the focus rectangle on a tab.
 
-        :param `dc`: a :class:`DC` device context;
+        :param `dc`: a :class:`wx.DC` device context;
         :param `page`: the page associated with the tab;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param string `draw_text`: the text that has been drawn on the tab;
         :param integer `text_offset`: the text offset on the tab;
         :param integer `bitmap_offset`: the bitmap offset on the tab;
@@ -842,9 +842,9 @@ class AuiDefaultTabArt(object):
         """
         Returns the best tab control size.
 
-        :param `wnd`: a :class:`Window` instance object;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param list `pages`: the pages associated with the tabs;
-        :param Size `required_bmp_size`: the size of the bitmap on the tabs.
+        :param wx.Size `required_bmp_size`: the size of the bitmap on the tabs.
         """
 
         dc = wx.ClientDC(wnd)
@@ -886,7 +886,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the normal font for drawing tab labels.
 
-        :param Font `font`: the new font to use to draw tab labels in their normal, un-selected state.
+        :param wx.Font `font`: the new font to use to draw tab labels in their normal, un-selected state.
         """
 
         self._normal_font = font
@@ -896,7 +896,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the selected tab font for drawing tab labels.
 
-        :param Font `font`: the new font to use to draw tab labels in their selected state.
+        :param wx.Font `font`: the new font to use to draw tab labels in their selected state.
         """
 
         self._selected_font = font
@@ -906,7 +906,7 @@ class AuiDefaultTabArt(object):
         """
         Sets the font for calculating text measurements.
 
-        :param Font `font`: the new font to use to measure tab labels text extents.
+        :param wx.Font `font`: the new font to use to measure tab labels text extents.
         """
 
         self._measuring_font = font
@@ -934,7 +934,7 @@ class AuiDefaultTabArt(object):
         """
         Shows the drop-down window menu on the tab area.
 
-        :param `wnd`: a :class:`Window` derived window instance;
+        :param `wnd`: a :class:`wx.Window` derived window instance;
         :param list `pages`: the pages associated with the tabs;
         :param integer `active_idx`: the active tab index.
         """
@@ -1109,7 +1109,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the tab sizing information.
         
-        :param Size `tab_ctrl_size`: the size of the tab control area;
+        :param wx.Size `tab_ctrl_size`: the size of the tab control area;
         :param integer `tab_count`: the number of tabs;
         :param tuple `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
          to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
@@ -1149,9 +1149,9 @@ class AuiSimpleTabArt(object):
         """
         Draws the tab area background.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
-        :param Rect `rect`: the tab control rectangle.
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
+        :param wx.Rect `rect`: the tab control rectangle.
         """
         
         # draw background
@@ -1168,10 +1168,10 @@ class AuiSimpleTabArt(object):
         """
         Draws a single tab.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param wx.Rect `in_rect`: rectangle the tab should be confined to;
         :param integer `close_button_state`: the state of the close button on the tab;
         :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
@@ -1346,10 +1346,10 @@ class AuiSimpleTabArt(object):
         """
         Convenience method to draw tab buttons.
 
-        :param `dc`: a :class:`DC` device context;
-        :param Rect `_rect`: the tab rectangle;
-        :param Bitmap `bmp`: the tab bitmap;
-        :param Colour `bkcolour`: the tab background colour;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param wx.Rect `_rect`: the tab rectangle;
+        :param wx.Bitmap `bmp`: the tab bitmap;
+        :param wx.Colour `bkcolour`: the tab background colour;
         :param integer `button_state`: the state of the tab button.
         """
 
@@ -1380,13 +1380,13 @@ class AuiSimpleTabArt(object):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param string `caption`: the tab text caption;
-        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param wx.Bitmap `bitmap`: the bitmap displayed on the tab;
         :param bool `active`: whether the tab is selected or not;
         :param integer `close_button_state`: the state of the close button on the tab;
-        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param wx.Window `control`: a :class:`wx.Window` instance inside a tab (or ``None``).
         """
         
         dc.SetFont(self._measuring_font)
@@ -1414,9 +1414,9 @@ class AuiSimpleTabArt(object):
         """
         Draws a button on the tab or on the tab area, depending on the button identifier. 
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
-        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
+        :param wx.Rect `in_rect`: rectangle the tab should be confined to;
         :param `button`: an instance of the button class;
         :param integer `orientation`: the tab orientation.
         """
@@ -1481,7 +1481,7 @@ class AuiSimpleTabArt(object):
         """
         Shows the drop-down window menu on the tab area.
 
-        :param `wnd`: a :class:`Window` derived window instance;
+        :param `wnd`: a :class:`wx.Window` derived window instance;
         :param list `pages`: the pages associated with the tabs;
         :param integer `active_idx`: the active tab index.
         """
@@ -1538,9 +1538,9 @@ class AuiSimpleTabArt(object):
         """
         Returns the best tab control size.
 
-        :param `wnd`: a :class:`Window` instance object;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param list `pages`: the pages associated with the tabs;
-        :param Size `required_bmp_size`: the size of the bitmap on the tabs.
+        :param wx.Size `required_bmp_size`: the size of the bitmap on the tabs.
         """
         
         dc = wx.ClientDC(wnd)
@@ -1565,7 +1565,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the normal font for drawing tab labels.
 
-        :param Font `font`: the new font to use to draw tab labels in their normal, un-selected state.
+        :param wx.Font `font`: the new font to use to draw tab labels in their normal, un-selected state.
         """
         
         self._normal_font = font
@@ -1575,7 +1575,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the selected tab font for drawing tab labels.
 
-        :param Font `font`: the new font to use to draw tab labels in their selected state.
+        :param wx.Font `font`: the new font to use to draw tab labels in their selected state.
         """
         
         self._selected_font = font
@@ -1585,7 +1585,7 @@ class AuiSimpleTabArt(object):
         """
         Sets the font for calculating text measurements.
 
-        :param Font `font`: the new font to use to measure tab labels text extents.
+        :param wx.Font `font`: the new font to use to measure tab labels text extents.
         """
         
         self._measuring_font = font
@@ -1615,7 +1615,7 @@ class AuiSimpleTabArt(object):
         
         :param integer `bitmap_id`: the button identifier;
         :param integer `button_state`: the button state;
-        :param Bitmap `bmp`: the custom bitmap to use for the button.
+        :param wx.Bitmap `bmp`: the custom bitmap to use for the button.
         """
         
         if bitmap_id == AUI_BUTTON_CLOSE:
@@ -1676,10 +1676,10 @@ class VC71TabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param wx.Rect `in_rect`: rectangle the tab should be confined to;
         :param integer `close_button_state`: the state of the close button on the tab;
         :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
@@ -1896,13 +1896,13 @@ class FF2TabArt(AuiDefaultTabArt):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param string `caption`: the tab text caption;
-        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param wx.Bitmap `bitmap`: the bitmap displayed on the tab;
         :param bool `active`: whether the tab is selected or not;
         :param integer `close_button_state`: the state of the close button on the tab;
-        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param wx.Window `control`: a :class:`wx.Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -1920,10 +1920,10 @@ class FF2TabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param wx.Rect `in_rect`: rectangle the tab should be confined to;
         :param integer `close_button_state`: the state of the close button on the tab;
         :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
@@ -2112,8 +2112,8 @@ class FF2TabArt(AuiDefaultTabArt):
         Draws the tab background for the Firefox 2 style.
         This is more consistent with :class:`~lib.agw.flatnotebook.FlatNotebook` than before.
 
-        :param `dc`: a :class:`DC` device context;
-        :param Rect `rect`: rectangle the tab should be confined to;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param wx.Rect `rect`: rectangle the tab should be confined to;
         :param bool `focus`: whether the tab has focus or not;
         :param bool `upperTabs`: whether the style is ``AUI_NB_TOP`` or ``AUI_NB_BOTTOM``.
         """
@@ -2191,7 +2191,7 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Sets the tab sizing information.
         
-        :param Size `tab_ctrl_size`: the size of the tab control area;
+        :param wx.Size `tab_ctrl_size`: the size of the tab control area;
         :param integer `tab_count`: the number of tabs;
         :param tuple `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
          to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
@@ -2212,13 +2212,13 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param string `caption`: the tab text caption;
-        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param wx.Bitmap `bitmap`: the bitmap displayed on the tab;
         :param bool `active`: whether the tab is selected or not;
         :param integer `close_button_state`: the state of the close button on the tab;
-        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param wx.Window `control`: a :class:`wx.Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -2241,10 +2241,10 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param wx.Rect `in_rect`: rectangle the tab should be confined to;
         :param integer `close_button_state`: the state of the close button on the tab;
         :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
@@ -2451,8 +2451,8 @@ class VC8TabArt(AuiDefaultTabArt):
         """
         Fills the tab with the Visual Studio 2005 gradient background.
 
-        :param `dc`: a :class:`DC` device context;
-        :param list `tabPoints`: a list of :class:`Point` objects describing the tab shape;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param list `tabPoints`: a list of :class:`wx.Point` objects describing the tab shape;
         :param bool `active`: whether the tab is selected or not.
         """
 
@@ -2591,7 +2591,7 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Sets the tab sizing information.
         
-        :param Size `tab_ctrl_size`: the size of the tab control area;
+        :param wx.Size `tab_ctrl_size`: the size of the tab control area;
         :param integer `tab_count`: the number of tabs;
         :param tuple `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
          to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
@@ -2612,13 +2612,13 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Returns the tab size for the given caption, bitmap and button state.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param string `caption`: the tab text caption;
-        :param Bitmap `bitmap`: the bitmap displayed on the tab;
+        :param wx.Bitmap `bitmap`: the bitmap displayed on the tab;
         :param bool `active`: whether the tab is selected or not;
         :param integer `close_button_state`: the state of the close button on the tab;
-        :param Window `control`: a :class:`Window` instance inside a tab (or ``None``).
+        :param wx.Window `control`: a :class:`wx.Window` instance inside a tab (or ``None``).
         """
         
         tab_size, x_extent = AuiDefaultTabArt.GetTabSize(self, dc, wnd, caption, bitmap,
@@ -2639,10 +2639,10 @@ class ChromeTabArt(AuiDefaultTabArt):
         """
         Draws a single tab.
 
-        :param `dc`: a :class:`DC` device context;
-        :param `wnd`: a :class:`Window` instance object;
+        :param `dc`: a :class:`wx.DC` device context;
+        :param `wnd`: a :class:`wx.Window` instance object;
         :param `page`: the tab control page associated with the tab;
-        :param Rect `in_rect`: rectangle the tab should be confined to;
+        :param wx.Rect `in_rect`: rectangle the tab should be confined to;
         :param integer `close_button_state`: the state of the close button on the tab;
         :param bool `paint_control`: whether to draw the control inside a tab (if any) on a :class:`MemoryDC`.
         """
