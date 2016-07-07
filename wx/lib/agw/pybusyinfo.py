@@ -147,7 +147,7 @@ class PyInfoFrame(wx.Frame):
         :param `parent`: the frame parent;
         :param `message`: the message to display in the :class:`PyBusyInfo`;
         :param `title`: the main :class:`PyBusyInfo` title;
-        :param `icon`: an icon to draw as the frame icon, an instance of :class:`Bitmap`.
+        :param `icon`: an icon to draw as the frame icon, an instance of :class:`wx.Bitmap`.
         """
         
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, wx.DefaultPosition,
@@ -288,7 +288,7 @@ class PyBusyInfo(object):
         :param `parent`: the :class:`PyBusyInfo` parent;
         :param `message`: the message to display in the :class:`PyBusyInfo`;
         :param `title`: the main :class:`PyBusyInfo` title;
-        :param `icon`: an icon to draw as the frame icon, an instance of :class:`Bitmap`.
+        :param `icon`: an icon to draw as the frame icon, an instance of :class:`wx.Bitmap`.
 
         :note: If `parent` is not ``None`` you must ensure that it is not closed
          while the busy info is shown.

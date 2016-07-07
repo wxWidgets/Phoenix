@@ -330,7 +330,7 @@ def MakeDisabledBitmap(original):
     """
     Creates a disabled-looking bitmap starting from the input one.
 
-    :param `original`: an instance of :class:`Bitmap` to be greyed-out.
+    :param `original`: an instance of :class:`wx.Bitmap` to be greyed-out.
     """
     
     img = original.ConvertToImage()
@@ -349,7 +349,7 @@ class ZoomBarImage(object):
         Default class constructor.
 
         :param `parent`: the main :class:`ZoomBar` window;
-        :param `bitmap`: the button bitmap, an instance of :class:`Bitmap`;
+        :param `bitmap`: the button bitmap, an instance of :class:`wx.Bitmap`;
         :param `disabledBmp`: the button bitmap when the button is in a disabled
          state;
         :param `label`: the button label.
@@ -851,14 +851,14 @@ class ZoomBar(wx.Control):
         """
         Adds a button to :class:`ZoomBar`.
 
-        :param `normalBmp`: the button main bitmap, an instance of :class:`Bitmap`;
+        :param `normalBmp`: the button main bitmap, an instance of :class:`wx.Bitmap`;
         :param `reflectionBmp`: a bitmap representing a reflection of the main bitmap,
-         an instance of :class:`Bitmap`;
+         an instance of :class:`wx.Bitmap`;
         :param `label`: the button label;
         :param `disabledBmp`: the button main bitmap when the button is in a disabled
-         state, an instance of :class:`Bitmap`;
+         state, an instance of :class:`wx.Bitmap`;
         :param `disabledReflectionBmp`: a bitmap representing a reflection of the main bitmap,
-         when the button is in a disabled state, an instance of :class:`Bitmap`.
+         when the button is in a disabled state, an instance of :class:`wx.Bitmap`.
         """
 
         button = ZoomBarImage(self, normalBmp, disabledBmp, label)
@@ -884,9 +884,9 @@ class ZoomBar(wx.Control):
         """
         Adds a separator to :class:`ZoomBar`.
 
-        :param `normalBmp`: the separator main bitmap, an instance of :class:`Bitmap`;
+        :param `normalBmp`: the separator main bitmap, an instance of :class:`wx.Bitmap`;
         :param `reflectionBmp`: a bitmap representing a reflection of the main bitmap,
-         an instance of :class:`Bitmap`.
+         an instance of :class:`wx.Bitmap`.
         """
 
         button = self.AddButton(normalBmp, reflectionBmp)

@@ -773,7 +773,7 @@ class RibbonToolBar(RibbonControl):
         Sets the bitmap to be used by the tool with the given ID when the tool is in a disabled state.
 
         :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
-        :param `bitmap`: an instance of :class:`Bitmap`.
+        :param `bitmap`: an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.5
         """
@@ -807,7 +807,7 @@ class RibbonToolBar(RibbonControl):
         Sets the bitmap to be used by the tool with the given ID when the tool is enabled.
 
         :param `tool_id`: id of the tool in question, as passed to :meth:`~RibbonToolBar.AddTool`;
-        :param `bitmap`: an instance of :class:`Bitmap`.
+        :param `bitmap`: an instance of :class:`wx.Bitmap`.
 
         .. versionadded:: 0.9.5
         """

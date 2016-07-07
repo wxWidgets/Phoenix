@@ -1174,7 +1174,7 @@ class Shortcut(object):
 
         :param string `label`: the shortcut label string;
         :param string `accelerator`: the shortcut accelerator string;
-        :param `bitmap`: an instance of :class:`Bitmap`, to display along the shortcut `label`
+        :param `bitmap`: an instance of :class:`wx.Bitmap`, to display along the shortcut `label`
          in the interface tree;
         :param string `help`: the help string for this shortcut, to display in the interface tree;
         :param `menuItem`: if this :class:`Shortcut` is derived from a :class:`MenuItem`, the :class:`MenuItem`
@@ -1262,7 +1262,7 @@ class Shortcut(object):
         """
         Sets the bitmap associated with this :class:`Shortcut`.
 
-        :param `bitmap`: an instance of :class:`Bitmap` (can be invalid, i.e., :class:`NullBitmap`).        
+        :param `bitmap`: an instance of :class:`wx.Bitmap` (can be invalid, i.e., :class:`NullBitmap`).
         """
         
         self.bitmap = bitmap

@@ -989,8 +989,8 @@ class FloatCanvas(wx.Panel):
         Saves the current image as an image file.
         
         :param string `filename`: the name of the image file
-        :param `ImageType`: format to use, see :ref:`BitmapType` and the note in
-         :meth:`Bitmap.SaveFile`
+        :param `ImageType`: format to use, see :ref:`wx.BitmapType` and the note in
+         :meth:`wx.Bitmap.SaveFile`
 
         """
 

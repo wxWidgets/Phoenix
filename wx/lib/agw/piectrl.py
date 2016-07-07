@@ -496,7 +496,7 @@ class PieCtrl(wx.Window):
         """
         Sets the :class:`PieCtrl` background image.
 
-        :param `bmp`: a valid :class:`Bitmap` object.
+        :param `bmp`: a valid :class:`wx.Bitmap` object.
         """
 
         self._background = bmp

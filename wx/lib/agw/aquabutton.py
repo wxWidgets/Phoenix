@@ -234,7 +234,7 @@ class AquaButton(wx.Control):
         """
         Sets the bitmap label for the button.
 
-        :param `bitmap`: the bitmap label to set, an instance of :class:`Bitmap`.
+        :param `bitmap`: the bitmap label to set, an instance of :class:`wx.Bitmap`.
         """
         
         self._bitmap = bitmap

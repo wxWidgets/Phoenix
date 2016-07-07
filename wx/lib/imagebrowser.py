@@ -128,7 +128,7 @@ def GetCheckeredBitmap(blocksize=8, ntiles=4, rgb0='\xFF', rgb1='\xCC'):
     :param `rbg0`: the first color, as 3-byte strings.
     :param `rgb1`: the second color, as 3-byte strings. If only 1 byte is provided, it is treated as a grey value.
     
-    :return: :class:`BitmapFromBuffer`
+    :return: :class:`wx.BitmapFromBuffer`
 
     """
     size = blocksize*ntiles*2

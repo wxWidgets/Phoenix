@@ -615,7 +615,7 @@ def MakeDisabledBitmap(original):
     """
     Creates a disabled-looking bitmap starting from the input one.
 
-    :param `original`: an instance of :class:`Bitmap` to be greyed-out.
+    :param `original`: an instance of :class:`wx.Bitmap` to be greyed-out.
     """
 
     img = original.ConvertToImage()
@@ -647,7 +647,7 @@ D\x90\x1d\xef19_\xf5\xde5y\xb6+\xa7\xdeZ\xfbA\x9bu\x9f`\xffD\xafYn\xf6\x9eW\
 
 
 def GetdragcursorBitmap():
-    """ Returns the drag and drop cursor image as a :class:`Bitmap`. """
+    """ Returns the drag and drop cursor image as a :class:`wx.Bitmap`. """
 
     return wx.Bitmap(GetdragcursorImage())
 
@@ -719,7 +719,7 @@ class PyImageList(object):
         """
         Adds a new image or images using a bitmap.
 
-        :param `bitmap`: a valid :class:`Bitmap` object.
+        :param `bitmap`: a valid :class:`wx.Bitmap` object.
 
         :return: The new zero-based image index.
 
@@ -778,7 +778,7 @@ class PyImageList(object):
         """
         Adds a new image or images using a bitmap and a colour mask.
 
-        :param `bitmap`: a valid :class:`Bitmap` object;
+        :param `bitmap`: a valid :class:`wx.Bitmap` object;
         :param `colour`: an instance of :class:`wx.Colour`, a colour indicating which parts
          of the image are transparent.
 
@@ -831,7 +831,7 @@ class PyImageList(object):
 
         :param `index`: the index at which the image should be replaced;
         :param `bitmap`: the new bitmap to add to the image list, an instance of
-         :class:`Bitmap`.
+         :class:`wx.Bitmap`.
         """
 
         if index >= len(self._images):
@@ -10697,7 +10697,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the :class:`UltimateListCtrl` background image.
 
-        :param `image`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `image`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         :note: At present, the background image can only be used in "tile" mode.
 
@@ -10725,7 +10725,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         Sets the :class:`UltimateListCtrl` watermark image to be displayed in the bottom
         right part of the window.
 
-        :param `watermark`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `watermark`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         .. todo:: Better support for this is needed.
         """
@@ -13211,7 +13211,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the :class:`UltimateListCtrl` background image.
 
-        :param `image`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `image`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         :note: At present, the background image can only be used in "tile" mode.
 
@@ -13238,7 +13238,7 @@ class UltimateListCtrl(wx.Control):
         Sets the :class:`UltimateListCtrl` watermark image to be displayed in the bottom
         right part of the window.
 
-        :param `watermark`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `watermark`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         .. todo:: Better support for this is needed.
         """

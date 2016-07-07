@@ -1480,7 +1480,7 @@ class TabNavigatorWindow(wx.Dialog):
         Used internally.
 
         :param `parent`: the :class:`TabNavigatorWindow` parent window;
-        :param `icon`: a valid :class:`Bitmap` object representing the icon to be displayed
+        :param `icon`: a valid :class:`wx.Bitmap` object representing the icon to be displayed
          in the :class:`TabNavigatorWindow`.
         """
 
@@ -4572,7 +4572,7 @@ class FlatNotebook(wx.Panel):
         """
         Set the icon used by the :class:`TabNavigatorWindow`.
 
-        :param `bmp`: a valid :class:`Bitmap` object.
+        :param `bmp`: a valid :class:`wx.Bitmap` object.
         """
 
         if isinstance(bmp, wx.Bitmap) and bmp.IsOk():

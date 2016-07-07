@@ -305,9 +305,9 @@ def MakeDisabledBitmap(original):
     """
     Creates a disabled-looking bitmap starting from the input one.
 
-    :param `original`: an instance of :class:`Bitmap` to be greyed-out.
+    :param `original`: an instance of :class:`wx.Bitmap` to be greyed-out.
 
-    :return: A greyed-out representation of the input bitmap, an instance of :class:`Bitmap`.
+    :return: A greyed-out representation of the input bitmap, an instance of :class:`wx.Bitmap`.
     """
     
     img = original.ConvertToImage()
@@ -1496,7 +1496,7 @@ class ButtonInfo(Control):
         """
         Sets the bitmap associated with this instance of :class:`ButtonInfo`.
 
-        :param `bmp`: a valid :class:`Bitmap` object;
+        :param `bmp`: a valid :class:`wx.Bitmap` object;
         :param string `status`: the :class:`ButtonInfo` status ("Pressed", "Hover", "Normal",
          "Toggled", "Disabled").
         """
@@ -1512,7 +1512,7 @@ class ButtonInfo(Control):
         :param string `status`: the :class:`ButtonInfo` status ("Pressed", "Hover", "Normal",
          "Toggled", "Disabled").
 
-        :return: An instance of :class:`Bitmap`.         
+        :return: An instance of :class:`wx.Bitmap`.
         """
 
         if status is None:

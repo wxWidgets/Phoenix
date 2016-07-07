@@ -587,7 +587,7 @@ class TabNavigatorProps(object):
     # Accessors
     Icon = property(lambda self: self._icon,
                     lambda self, icon: setattr(self, '_icon', icon),
-                    doc='Sets/Gets the icon for the L{TabNavigatorWindow}, an instance of :class:`Bitmap`.')
+                    doc='Sets/Gets the icon for the L{TabNavigatorWindow}, an instance of :class:`wx.Bitmap`.')
     Font = property(lambda self: self._font,
                     lambda self, font: setattr(self, '_font', font),
                     doc='Sets/Gets the font for the L{TabNavigatorWindow}, an instance of :class:`Font`.')

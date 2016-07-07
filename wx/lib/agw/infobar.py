@@ -689,7 +689,7 @@ class InfoBar(wx.Control):
          this button will generate;
         :param string `label`: the label of the button. It may only be empty if `btnid` is one of
          the stock ids in which case the corresponding stock label will be used;
-        :param `bitmap`: if not equal to :class:`NullBitmap`, a valid :class:`Bitmap` image to show beside
+        :param `bitmap`: if not equal to :class:`NullBitmap`, a valid :class:`wx.Bitmap` image to show beside
          the button text.
 
         :note:

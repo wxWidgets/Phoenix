@@ -1033,7 +1033,7 @@ class SuperToolTip(object):
         """
         Sets the header bitmap for :class:`SuperToolTip`.
 
-        :param `bmp`: the header bitmap, a valid :class:`Bitmap` object.
+        :param `bmp`: the header bitmap, a valid :class:`wx.Bitmap` object.
         """
 
         self._headerBmp = bmp
@@ -1088,7 +1088,7 @@ class SuperToolTip(object):
         """
         Sets the main body bitmap for :class:`SuperToolTip`.
 
-        :param `bmp`: the body bitmap, a valid :class:`Bitmap` object.
+        :param `bmp`: the body bitmap, a valid :class:`wx.Bitmap` object.
         """
 
         self._embeddedImage = bmp
@@ -1125,7 +1125,7 @@ class SuperToolTip(object):
         """
         Sets the footer bitmap for :class:`SuperToolTip`.
 
-        :param `bmp`: the footer bitmap, a valid :class:`Bitmap` object.
+        :param `bmp`: the footer bitmap, a valid :class:`wx.Bitmap` object.
         """
 
         self._footerBmp = bmp

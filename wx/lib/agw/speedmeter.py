@@ -1541,7 +1541,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the icon to be drawn near the center of :class:`SpeedMeter`.
 
-        :param `icon`: a valid :class:`Bitmap` object.
+        :param `icon`: a valid :class:`wx.Bitmap` object.
         """
 
         if icon.IsOk():

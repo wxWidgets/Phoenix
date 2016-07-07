@@ -191,7 +191,7 @@ class AdvancedSplash(wx.Frame):
          the shape defined only by *non-transparent* pixels.
          If you use other file formats that does not supports transparency, you
          can obtain the same effect as above by masking a specific colour in
-         your :class:`Bitmap`.
+         your :class:`wx.Bitmap`.
         :param integer `timeout`: if you construct :class:`AdvancedSplash` using the style ``AS_TIMEOUT``,
          :class:`AdvancedSplash` will be destroyed after `timeout` milliseconds;
         :param integer `agwStyle`: this value specifies the :class:`AdvancedSplash` styles:
@@ -214,14 +214,14 @@ class AdvancedSplash(wx.Frame):
         :type parent: :class:`Window`
         :type pos: tuple or :class:`Point`
         :type size: tuple or :class:`Size`
-        :type bitmap: :class:`Bitmap`
+        :type bitmap: :class:`wx.Bitmap`
         :type shadowcolour: :class:`wx.Colour`
 
         :raise: `Exception` in the following cases:
 
          - The ``AS_TIMEOUT`` style is set but `timeout` is not a positive integer;
          - The ``AS_SHADOW_BITMAP`` style is set but `shadowcolour` is not a valid wxPython colour;
-         - The :class:`AdvancedSplash` bitmap is an invalid :class:`Bitmap`.
+         - The :class:`AdvancedSplash` bitmap is an invalid :class:`wx.Bitmap`.
          
         """
 
@@ -311,10 +311,10 @@ class AdvancedSplash(wx.Frame):
 
         :param `bmp`: the bitmap to which we want to apply the mask colour `shadowcolour`;
         :param `shadowcolour`: the mask colour for our bitmap.
-        :type bmp: :class:`Bitmap`
+        :type bmp: :class:`wx.Bitmap`
         :type shadowcolour: :class:`wx.Colour`
 
-        :return: A masked version of the input bitmap, an instance of :class:`Bitmap`.        
+        :return: A masked version of the input bitmap, an instance of :class:`wx.Bitmap`.
         """
 
         mask = wx.Mask(bmp, shadowcolour)

@@ -217,7 +217,7 @@ b'x\xda\x01x\x01\x87\xfe\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\n\x00\
 
 
 def GetIndicatorBitmap():
-    """ Returns the image indicator as a :class:`Bitmap`. """
+    """ Returns the image indicator as a :class:`wx.Bitmap`. """
 
     return wx.Bitmap(GetIndicatorImage())
 

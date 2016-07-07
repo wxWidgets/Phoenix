@@ -70,7 +70,7 @@ class Throbber(wx.Panel):
 
         :param `parent`: parent window, must not be ``None``
         :param integer `id`: window identifier. A value of -1 indicates a default value
-        :param `bitmap`: a :class:`Bitmap` to be used
+        :param `bitmap`: a :class:`wx.Bitmap` to be used
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
@@ -79,7 +79,7 @@ class Throbber(wx.Panel):
         :param `frames`: number of frames (only necessary for composite image)
         :param `frameWidth`: width of each frame (only necessary for composite image)
         :param string `label`: optional text to be displayed
-        :param `overlay`: optional :class:`Bitmap` to overlay on animation
+        :param `overlay`: optional :class:`wx.Bitmap` to overlay on animation
         :param boolean `reverse`: reverse direction at end of animation
         :param integer `style`: the underlying :class:`Control` style
         :param string `name`: the widget name.

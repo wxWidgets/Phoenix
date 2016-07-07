@@ -501,7 +501,7 @@ class BalloonTip(object):
 
         :param `topicon`: an icon that will be displayed on the top-left part of the
          :class:`BalloonTip` frame. If set to ``None``, no icon will be displayed;
-        :type `topicon`: :class:`Bitmap` or ``None``
+        :type `topicon`: :class:`wx.Bitmap` or ``None``
         :param string `toptitle`: a title that will be displayed on the top part of the
          :class:`BalloonTip` frame. If set to an empty string, no title will be displayed;
         :param string `message`: the tip message that will be displayed. It can not be set to
@@ -848,9 +848,9 @@ class BalloonTip(object):
         """
         Sets the :class:`BalloonTip` top-left icon.
 
-        :param `icon`: an instance of :class:`Bitmap`.
+        :param `icon`: an instance of :class:`wx.Bitmap`.
 
-        :raise: `Exception` if the `icon` bitmap is not a valid :class:`Bitmap`.
+        :raise: `Exception` if the `icon` bitmap is not a valid :class:`wx.Bitmap`.
         """
 
         if icon.IsOk():
@@ -863,7 +863,7 @@ class BalloonTip(object):
         """
         Returns the :class:`BalloonTip` top-left icon.
 
-        :return: An instance of :class:`Bitmap`.
+        :return: An instance of :class:`wx.Bitmap`.
         """
 
         return self._topicon

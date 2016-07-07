@@ -267,14 +267,14 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
-        :param `bitmap_small`: small bitmap of the new button, an instance of :class:`Bitmap`. If left as :class:`NullBitmap`,
+        :param `bitmap_small`: small bitmap of the new button, an instance of :class:`wx.Bitmap`. If left as :class:`NullBitmap`,
          then a small bitmap will be automatically generated. Must be the same size
          as all other small bitmaps used on the button bar;
-        :param `bitmap_disabled`: large bitmap of the new button when it is disabled, an instance of :class:`Bitmap`.
+        :param `bitmap_disabled`: large bitmap of the new button when it is disabled, an instance of :class:`wx.Bitmap`.
          If left as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
-        :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled, an instance of :class:`Bitmap`.
+        :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled, an instance of :class:`wx.Bitmap`.
          If left as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap_small`;
         :param integer `kind`: the kind of button to add, one of the following values:
 
@@ -306,7 +306,7 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button;
         :param integer `kind`: the kind of button to add.
@@ -329,14 +329,14 @@ class RibbonButtonBar(RibbonControl):
         :param integer `pos`: the position at which the new button must be inserted (zero-based);
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
-        :param `bitmap_small`: small bitmap of the new button, an instance of :class:`Bitmap`. If left as :class:`NullBitmap`,
+        :param `bitmap_small`: small bitmap of the new button, an instance of :class:`wx.Bitmap`. If left as :class:`NullBitmap`,
          then a small bitmap will be automatically generated. Must be the same size
          as all other small bitmaps used on the button bar;
-        :param `bitmap_disabled`: large bitmap of the new button when it is disabled, an instance of :class:`Bitmap`.
+        :param `bitmap_disabled`: large bitmap of the new button when it is disabled, an instance of :class:`wx.Bitmap`.
          If left as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap`;
-        :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled, an instance of :class:`Bitmap`.
+        :param `bitmap_small_disabled`: small bitmap of the new button when it is disabled, an instance of :class:`wx.Bitmap`.
          If left as :class:`NullBitmap`, then a bitmap will be automatically generated from `bitmap_small`;
         :param integer `kind`: the kind of button to add;
         :param string `help_string`: the UI help string to associate with the new button;
@@ -424,7 +424,7 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -443,7 +443,7 @@ class RibbonButtonBar(RibbonControl):
         :param integer `pos`: the position at which the new button must be inserted (zero-based);
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -463,7 +463,7 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -482,7 +482,7 @@ class RibbonButtonBar(RibbonControl):
         :param integer `pos`: the position at which the new button must be inserted (zero-based);
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -502,7 +502,7 @@ class RibbonButtonBar(RibbonControl):
 
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -521,7 +521,7 @@ class RibbonButtonBar(RibbonControl):
         :param integer `pos`: the position at which the new button must be inserted (zero-based);
         :param integer `button_id`: id of the new button (used for event callbacks);
         :param string `label`: label of the new button;
-        :param `bitmap`: large bitmap of the new button, an instance of :class:`Bitmap`. Must be the same size as
+        :param `bitmap`: large bitmap of the new button, an instance of :class:`wx.Bitmap`. Must be the same size as
          all other large bitmaps used on the button bar;
         :param string `help_string`: the UI help string to associate with the new button.
 
@@ -553,7 +553,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Resize and scale the `original` bitmap to the dimensions specified in `size`.
 
-        :param `original`: the original bitmap, an instance of :class:`Bitmap`;
+        :param `original`: the original bitmap, an instance of :class:`wx.Bitmap`;
         :param `size`: the size to which the input bitmap must be rescaled, an instance of :class:`Size`.
 
         :return: A scaled representation of the input bitmap.
@@ -568,7 +568,7 @@ class RibbonButtonBar(RibbonControl):
         """
         Converts the `original` bitmap into a visually-looking disabled one.
 
-        :param `original`: the original bitmap, an instance of :class:`Bitmap`.
+        :param `original`: the original bitmap, an instance of :class:`wx.Bitmap`.
 
         :return: A visually-looking disabled representation of the input bitmap.
         """

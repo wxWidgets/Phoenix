@@ -694,7 +694,7 @@ class ArtManager(wx.EvtHandler):
         :param `alpha`: a list of alpha values, the same size as the xpm bitmap.
         :type `alpha`: list of integers
 
-        :return: An instance of :class:`Bitmap`.        
+        :return: An instance of :class:`wx.Bitmap`.
         """
 
         if alpha is not None:
@@ -1609,9 +1609,9 @@ class ArtManager(wx.EvtHandler):
         :param `font`: the font to use to draw the text, an instance of :class:`Font`;
         :param `fontColour`: the colour to use to draw the text, an instance of
          :class:`wx.Colour`;
-        :param `bitmap`: the bitmap associated with the button, an instance of :class:`Bitmap`;
+        :param `bitmap`: the bitmap associated with the button, an instance of :class:`wx.Bitmap`;
         :param `grayBitmap`: a greyed-out version of the input `bitmap` representing
-         a disabled bitmap, an instance of :class:`Bitmap`;
+         a disabled bitmap, an instance of :class:`wx.Bitmap`;
         :param integer `style`: the button style. 
 
         :see: :meth:`~ArtManager.GetBitmapStartLocation` for a list of valid button styles.
@@ -1696,7 +1696,7 @@ class ArtManager(wx.EvtHandler):
         Returns the best fit size for the supplied label & bitmap.
 
         :param string `label`: the button label;
-        :param `bmp`: the bitmap associated with the button, an instance of :class:`Bitmap`.
+        :param `bmp`: the bitmap associated with the button, an instance of :class:`wx.Bitmap`.
 
         :return: An instance of :class:`Size`, representing the best fit size for the supplied label & bitmap.        
         """
@@ -2082,9 +2082,9 @@ class ArtManager(wx.EvtHandler):
         """
         Creates a grey bitmap image from the input bitmap.
 
-        :param `bmp`: a valid :class:`Bitmap` object to be greyed out.
+        :param `bmp`: a valid :class:`wx.Bitmap` object to be greyed out.
 
-        :return: A greyed-out representation of the input bitmap, an instance of :class:`Bitmap`.
+        :return: A greyed-out representation of the input bitmap, an instance of :class:`wx.Bitmap`.
         """
 
         img = bmp.ConvertToImage()

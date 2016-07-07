@@ -546,9 +546,9 @@ def MakeDisabledBitmap(original):
     """
     Creates a disabled-looking bitmap starting from the input one.
 
-    :param `original`: an instance of :class:`Bitmap` to be greyed-out.
+    :param `original`: an instance of :class:`wx.Bitmap` to be greyed-out.
 
-    :return: An instance of :class:`Bitmap`, containing a disabled-looking
+    :return: An instance of :class:`wx.Bitmap`, containing a disabled-looking
      representation of the original item image.
     """
 
@@ -2905,7 +2905,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         :param integer `x`: the width of the bitmap;
         :param integer `y`: the height of the bitmap.
 
-        :return: An instance of :class:`Bitmap`, representing a native looking checkbox or radiobutton.
+        :return: An instance of :class:`wx.Bitmap`, representing a native looking checkbox or radiobutton.
         """
 
         bmp = wx.Bitmap(x, y)
@@ -4201,7 +4201,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the :class:`CustomTreeCtrl` background image.
 
-        :param `image`: if not ``None``, an instance of :class:`Bitmap`.
+        :param `image`: if not ``None``, an instance of :class:`wx.Bitmap`.
 
         :note: At present, the background image can only be used in "tile" mode.
 
@@ -4216,7 +4216,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the :class:`CustomTreeCtrl` background image (if any).
 
-        :return: An instance of :class:`Bitmap` if a background image is present, ``None`` otherwise.
+        :return: An instance of :class:`wx.Bitmap` if a background image is present, ``None`` otherwise.
 
         :note: At present, the background image can only be used in "tile" mode.
 

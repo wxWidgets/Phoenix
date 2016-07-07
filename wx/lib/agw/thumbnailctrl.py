@@ -193,7 +193,7 @@ o\xda\x84pB2\x1f\x81Fa\x8c\x9c\x08\x04Z{\xcf\xa72\xbcv\xfa\xc5\x08 \x80r\x80\
 
 
 def GetMondrianBitmap():
-    """ Returns a default image placeholder as a :class:`Bitmap`. """
+    """ Returns a default image placeholder as a :class:`wx.Bitmap`. """
 
     return wx.Bitmap(GetMondrianImage())
 
@@ -649,7 +649,7 @@ class Thumb(object):
         """
         Sets the thumbnail bitmap.
 
-        :param `bmp`: a :class:`Bitmap` object.
+        :param `bmp`: a :class:`wx.Bitmap` object.
         """
         
         self._bitmap = bmp

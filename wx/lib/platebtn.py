@@ -464,7 +464,7 @@ class PlateButton(wx.Control):
     def GetBitmapDisabled(self):
         """Get the bitmap of the disable state
 
-        :return: :class:`Bitmap` or None
+        :return: :class:`wx.Bitmap` or None
 
         """
         return self.BitmapDisabled
@@ -472,7 +472,7 @@ class PlateButton(wx.Control):
     def GetBitmapLabel(self):
         """Get the label bitmap
         
-        :return: :class:`Bitmap` or None
+        :return: :class:`wx.Bitmap` or None
 
         """
         return self.BitmapLabel
@@ -613,7 +613,7 @@ class PlateButton(wx.Control):
     def SetBitmap(self, bmp):
         """Set the bitmap displayed in the button
         
-        :param `bmp`: :class:`Bitmap`
+        :param `bmp`: :class:`wx.Bitmap`
 
         """
         self._bmp['enable'] = bmp
@@ -625,7 +625,7 @@ class PlateButton(wx.Control):
     def SetBitmapDisabled(self, bmp):
         """Set the bitmap for the disabled state
 
-        :param `bmp`: :class:`Bitmap`
+        :param `bmp`: :class:`wx.Bitmap`
 
         """
         self._bmp['disable'] = bmp

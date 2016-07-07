@@ -991,7 +991,7 @@ class SButton(wx.Window):
 class SBitmapButton(SButton):
     """
     Subclass of :class:`SButton` which displays a bitmap, acting like a
-    :class:`BitmapButton`.
+    :class:`wx.BitmapButton`.
     """
 
     def __init__(self, parent, id, bitmap, pos=wx.DefaultPosition, size=wx.DefaultSize):
@@ -1044,7 +1044,7 @@ class SBitmapButton(SButton):
         """
         Sets the bitmap to display when the button is disabled.
 
-        :param `bitmap`: a valid :class:`Bitmap` object.
+        :param `bitmap`: a valid :class:`wx.Bitmap` object.
         """
 
         self._bmpdisabled = bitmap
@@ -1054,7 +1054,7 @@ class SBitmapButton(SButton):
         """
         Sets the bitmap to display when the button has the focus.
 
-        :param `bitmap`: a valid :class:`Bitmap` object.
+        :param `bitmap`: a valid :class:`wx.Bitmap` object.
         """
 
         self._bmpfocus = bitmap
@@ -1065,7 +1065,7 @@ class SBitmapButton(SButton):
         """
         Sets the bitmap to display when the button is selected (pressed).
 
-        :param `bitmap`: a valid :class:`Bitmap` object.
+        :param `bitmap`: a valid :class:`wx.Bitmap` object.
         """
 
         self._bmpselected = bitmap
@@ -1076,7 +1076,7 @@ class SBitmapButton(SButton):
         Sets the bitmap to display normally. This is the only one that is
         required.
 
-        :param `bitmap`: a valid :class:`Bitmap` object;
+        :param `bitmap`: a valid :class:`wx.Bitmap` object;
         :param `createothers`: if set to ``True``, then the other bitmaps will be
          generated on the fly. Currently, only the disabled bitmap is generated.
         """

@@ -1550,7 +1550,7 @@ class LabelContainer(ImageContainerBase):
         """
         Sets the background bitmap for the control.
 
-        :param `bmp`: a valid :class:`Bitmap` object.
+        :param `bmp`: a valid :class:`wx.Bitmap` object.
         """
 
         self._skin = bmp

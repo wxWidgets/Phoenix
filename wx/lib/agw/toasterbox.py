@@ -453,7 +453,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` background image.
 
-        :param `bitmap`: a valid :class:`Bitmap` object or filename. If defaulted
+        :param `bitmap`: a valid :class:`wx.Bitmap` object or filename. If defaulted
          to ``None``, then no background bitmap is used.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -816,7 +816,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` background image.
 
-        :param `bitmap`: a valid :class:`Bitmap` object. If defaulted to ``None``, then
+        :param `bitmap`: a valid :class:`wx.Bitmap` object. If defaulted to ``None``, then
          no background bitmap is used.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
