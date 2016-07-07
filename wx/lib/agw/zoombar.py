@@ -644,7 +644,7 @@ class ImageBar(object):
         """
         Sets the background button bar colour.
 
-        :param `colour`: an instance of :class:`Colour`;
+        :param `colour`: an instance of :class:`wx.Colour`;
         :param `xSize`: if not ``None``, the new :class:`ImageBar` width;
         :param `ySize`: if not ``None``, the new :class:`ImageBar` height.
         """        
@@ -976,7 +976,7 @@ class ZoomBar(wx.Control):
         """
         Sets the background button bar colour.
 
-        :param `colour`: an instance of :class:`Colour`;
+        :param `colour`: an instance of :class:`wx.Colour`;
         """        
 
         self._imgBar.SetBarColour(colour)

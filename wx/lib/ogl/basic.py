@@ -842,7 +842,7 @@ class Shape(ShapeEvtHandler):
         Set the colour for the specified text region.
         
         :param str `the_colour`: a valid colour name,
-         see :class:`ColourDatabase`
+         see :class:`wx.ColourDatabase`
         :param `regionId`: the region identifier
         
         """
@@ -3702,14 +3702,14 @@ class ShapeRegion(object):
         Set the colour.
         
         :param str `col`: a valid colour name,
-         see :class:`ColourDatabase`
+         see :class:`wx.ColourDatabase`
         
         """
         self._textColour = col
         self._actualColourObject = col
 
     def GetActualColourObject(self):
-        """Get the actual colour object from the :class:`ColourDatabase`."""
+        """Get the actual colour object from the :class:`wx.ColourDatabase`."""
         self._actualColourObject = wx.TheColourDatabase.Find(self.GetColour())
         return self._actualColourObject
 
@@ -3718,7 +3718,7 @@ class ShapeRegion(object):
         Set the pen colour.
         
         :param str `col`: a valid colour name,
-         see :class:`ColourDatabase`
+         see :class:`wx.ColourDatabase`
         
         """
         self._penColour = col

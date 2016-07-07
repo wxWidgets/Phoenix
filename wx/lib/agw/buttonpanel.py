@@ -272,10 +272,10 @@ def BrightenColour(colour, factor):
     """
     Brighten the input colour by a factor.
 
-    :param `colour`: a valid :class:`Colour` instance;
+    :param `colour`: a valid :class:`wx.Colour` instance;
     :param integer `factor`: the factor by which the input colour should be brightened.
 
-    :return: An instance of :class:`Colour`, a brightened version of the input `colour`.    
+    :return: An instance of :class:`wx.Colour`, a brightened version of the input `colour`.
     """
 
     val = colour.Red()*factor
@@ -449,7 +449,7 @@ class BPArt(object):
          ``BP_SEPARATOR_COLOUR``                  9 Pen colour used to paint the separators
          ================================== ======= =====================================
 
-        :return: An instance of :class:`Colour` for the input `id`.
+        :return: An instance of :class:`wx.Colour` for the input `id`.
 
         :raise: `Exception` if the `id` is not recognized.
         """
@@ -483,7 +483,7 @@ class BPArt(object):
         Sets the option value for the specified colour `id`.
 
         :param integer `id`: the identification bit for the colour value;
-        :param `colour`: the new value for the colour (a valid :class:`Colour` instance).
+        :param `colour`: the new value for the colour (a valid :class:`wx.Colour` instance).
 
         :raise: `Exception` if the `id` is not recognized.
 

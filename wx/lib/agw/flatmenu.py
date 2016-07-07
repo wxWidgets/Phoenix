@@ -493,7 +493,7 @@ class FMRenderer(object):
         """
         Set the colour to highlight focus on the menu bar.
 
-        :param `colour`: a valid instance of :class:`Colour`.
+        :param `colour`: a valid instance of :class:`wx.Colour`.
         """
         
         self.menuBarFocusFaceColour    = colour
@@ -506,7 +506,7 @@ class FMRenderer(object):
         """
         Set the colour to highlight focus on the menu.
 
-        :param `colour`: a valid instance of :class:`Colour`.
+        :param `colour`: a valid instance of :class:`wx.Colour`.
         """
         
         self.menuFocusFaceColour    = colour
@@ -517,7 +517,7 @@ class FMRenderer(object):
         
     def GetColoursAccordingToState(self, state):
         """
-        Returns a :class:`Colour` according to the menu item state.
+        Returns a :class:`wx.Colour` according to the menu item state.
 
         :param integer `state`: one of the following bits:
 
@@ -1044,7 +1044,7 @@ class FMRenderer(object):
         :param `dc`: an instance of :class:`DC`;
         :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
-        :param `colour`: if not ``None``, an instance of :class:`Colour` to be used to draw
+        :param `colour`: if not ``None``, an instance of :class:`wx.Colour` to be used to draw
          the :class:`FlatMenuItem` background.
         """
         
@@ -1476,7 +1476,7 @@ class FMRendererMSOffice2007(FMRenderer):
         :param `dc`: an instance of :class:`DC`;
         :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
-        :param `colour`: if not ``None``, an instance of :class:`Colour` to be used to draw
+        :param `colour`: if not ``None``, an instance of :class:`wx.Colour` to be used to draw
          the :class:`FlatMenuItem` background.
         """
 
@@ -1492,7 +1492,7 @@ class FMRendererMSOffice2007(FMRenderer):
         :param `dc`: an instance of :class:`DC`;
         :param `rect`: an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         artMgr = ArtManager.Get()
@@ -1710,7 +1710,7 @@ class FMRendererVista(FMRendererMSOffice2007):
         :param `dc`: an instance of :class:`DC`;
         :param `rect`: the an instance of :class:`Rect`, representing the button client rectangle;
         :param integer `state`: the button state;
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         artMgr = ArtManager.Get()
@@ -3131,7 +3131,7 @@ class FlatMenuBar(wx.Panel):
         """
         Sets the menu bar background colour.
 
-        :param `colour`: a valid :class:`Colour`.
+        :param `colour`: a valid :class:`wx.Colour`.
         """
         
         self.GetRenderer().menuBarFaceColour = colour
@@ -5280,7 +5280,7 @@ class FlatMenuItem(object):
         """
         Sets the :class:`FlatMenuItem` foreground colour for the menu label.
 
-        :param `colour`: an instance of a valid :class:`Colour`.
+        :param `colour`: an instance of a valid :class:`wx.Colour`.
         """
 
         self._textColour = colour
@@ -6861,7 +6861,7 @@ class FlatMenu(FlatMenuBase):
         Sets the :class:`FlatMenuItem` foreground text colour.
 
         :param integer `itemId`: the menu item identifier;
-        :param `colour`: an instance of a valid :class:`Colour`.
+        :param `colour`: an instance of a valid :class:`wx.Colour`.
         """
         
         item = self.FindItem(itemId)

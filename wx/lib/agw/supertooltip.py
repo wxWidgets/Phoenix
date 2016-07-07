@@ -1179,7 +1179,7 @@ class SuperToolTip(object):
         """
         Sets the top gradient colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as top colour, a valid :class:`Colour` object.
+        :param `colour`: the colour to use as top colour, a valid :class:`wx.Colour` object.
         """
 
         self._topColour = colour
@@ -1191,7 +1191,7 @@ class SuperToolTip(object):
         """
         Sets the middle gradient colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as middle colour, a valid :class:`Colour` object.
+        :param `colour`: the colour to use as middle colour, a valid :class:`wx.Colour` object.
         """
 
         self._middleColour = colour
@@ -1203,7 +1203,7 @@ class SuperToolTip(object):
         """
         Sets the bottom gradient colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as bottom colour, a valid :class:`Colour` object.
+        :param `colour`: the colour to use as bottom colour, a valid :class:`wx.Colour` object.
         """
 
         self._bottomColour = colour
@@ -1215,7 +1215,7 @@ class SuperToolTip(object):
         """
         Sets the text colour for :class:`SuperToolTip`.
 
-        :param `colour`: the colour to use as text colour, a valid :class:`Colour` object.
+        :param `colour`: the colour to use as text colour, a valid :class:`wx.Colour` object.
         """
 
         self._textColour = colour

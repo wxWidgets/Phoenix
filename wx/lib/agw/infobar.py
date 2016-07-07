@@ -212,7 +212,7 @@ def GetCloseButtonBitmap(win, size, colBg, flags=0):
     :param `win`: the window in which we wish to draw the close button (an instance of
      :class:`InfoBar`);
     :param tuple `size`: the close button size, a tuple of `(width, height)` dimensions in pixels;
-    :param `colBg`: the background colour of the parent window, an instance of :class:`Colour`;
+    :param `colBg`: the background colour of the parent window, an instance of :class:`wx.Colour`;
     :param integer `flags`: may have the ``wx.CONTROL_PRESSED``, ``wx.CONTROL_CURRENT`` or
      ``wx.CONTROL_ISDEFAULT`` bit set.
     """

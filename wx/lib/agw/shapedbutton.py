@@ -330,7 +330,7 @@ class SButton(wx.Window):
         """
         Sets the button colour, for all button states.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         
         :note: The original button images are greyscale with a lot of pixels with
          different colours. Changing smoothly the button colour in order to
@@ -359,7 +359,7 @@ class SButton(wx.Window):
         """
         Sets the button label colour.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         if colour is None:

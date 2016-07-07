@@ -1377,7 +1377,7 @@ class ScrolledThumbnail(wx.ScrolledWindow):
         """
         Sets the colour used to indicate a selected thumbnail.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, it
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, it
          will be taken from the system settings.
         """
         

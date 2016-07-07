@@ -215,7 +215,7 @@ class AdvancedSplash(wx.Frame):
         :type pos: tuple or :class:`Point`
         :type size: tuple or :class:`Size`
         :type bitmap: :class:`Bitmap`
-        :type shadowcolour: :class:`Colour`
+        :type shadowcolour: :class:`wx.Colour`
 
         :raise: `Exception` in the following cases:
 
@@ -312,7 +312,7 @@ class AdvancedSplash(wx.Frame):
         :param `bmp`: the bitmap to which we want to apply the mask colour `shadowcolour`;
         :param `shadowcolour`: the mask colour for our bitmap.
         :type bmp: :class:`Bitmap`
-        :type shadowcolour: :class:`Colour`
+        :type shadowcolour: :class:`wx.Colour`
 
         :return: A masked version of the input bitmap, an instance of :class:`Bitmap`.        
         """
@@ -466,7 +466,7 @@ class AdvancedSplash(wx.Frame):
 
         :param `colour`: the text colour to use while drawing the text on top of our
          bitmap. If `colour` is ``None``, then ``wx.BLACK`` is used.
-        :type colour: :class:`Colour` or ``None``
+        :type colour: :class:`wx.Colour` or ``None``
         """
 
         if colour is None:
@@ -481,7 +481,7 @@ class AdvancedSplash(wx.Frame):
         """
         Gets the colour for the text in :class:`AdvancedSplash`.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._textcolour

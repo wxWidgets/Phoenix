@@ -382,7 +382,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` background colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          the background colour will be white.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -400,7 +400,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` foreground colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          the background colour will be black.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -417,7 +417,7 @@ class ToasterBox(wx.Timer):
         """
         Sets the :class:`ToasterBox` text font.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          a simple generic font will be generated.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -950,7 +950,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` text font.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          a simple generic font will be generated.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -1009,7 +1009,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` background colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          the background colour will be white.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.
@@ -1023,7 +1023,7 @@ class ToasterBoxWindow(wx.Frame):
         """
         Sets the :class:`ToasterBox` foreground colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, then
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, then
          the background colour will be black.
          
         :note: Use this method only for a :class:`ToasterBox` created with the ``TB_SIMPLE`` style.

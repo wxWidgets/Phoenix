@@ -332,7 +332,7 @@ class DrawObject:
         Set the Color - this method is overridden in the subclasses
         
         :param `Color`: use one of the following values any valid entry from
-         :class:`ColourDatabase`
+         :class:`wx.ColourDatabase`
         
          - ``Green``
          - ``White``

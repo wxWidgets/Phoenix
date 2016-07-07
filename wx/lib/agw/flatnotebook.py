@@ -779,7 +779,7 @@ def LightColour(colour, percent):
     """
     Brighten the input colour by a percentage.
 
-    :param `colour`: a valid :class:`Colour` instance;
+    :param `colour`: a valid :class:`wx.Colour` instance;
     :param `percent`: the percentage by which the input colour should be brightened.
     """
 
@@ -801,13 +801,13 @@ def LightColour(colour, percent):
 
 def FormatColour(colour):
     """
-    Convert the input `colour` into a valid :class:`Colour` instance, using whatever typemap
+    Convert the input `colour` into a valid :class:`wx.Colour` instance, using whatever typemap
     accepted by wxWidgets/wxPython.
     
-    :param `colour`: can be an instance of :class:`Colour`, a 3 or 4 integer tuple, a hex
+    :param `colour`: can be an instance of :class:`wx.Colour`, a 3 or 4 integer tuple, a hex
      string, a string representing the colour name or ``None``.
 
-    :returns: a valid instance of :class:`Colour` or ``None`` if the input `colour` was ``None``
+    :returns: a valid instance of :class:`wx.Colour` or ``None`` if the input `colour` was ``None``
      in the first place.
     """
 
@@ -878,7 +878,7 @@ def AdjustColour(colour, percent, alpha=wx.ALPHA_OPAQUE):
     """
     Brighten/darken input colour by `percent` and adjust `alpha` channel if needed.
 
-    :param `colour`: colour object to adjust, an instance of :class:`Colour`;
+    :param `colour`: colour object to adjust, an instance of :class:`wx.Colour`;
     :param `percent`: percent to adjust ``+`` (brighten) or ``-`` (darken);
     :param `alpha`: amount to adjust the alpha channel.
 
@@ -1229,7 +1229,7 @@ class PageInfo(object):
         """
         Sets the tab text colour for this tab.
 
-        :param `colour`: an instance of :class:`Colour`. You can pass ``None`` or
+        :param `colour`: an instance of :class:`wx.Colour`. You can pass ``None`` or
          :class:`NullColour` to return to the default page text colour.
         """
 
@@ -1300,7 +1300,7 @@ class PageInfo(object):
         """
         Sets the tab colour.
 
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -4149,7 +4149,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the text colour for the active tab.
 
-        :param `textColour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `textColour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -4873,9 +4873,9 @@ class FlatNotebook(wx.Panel):
         """
         Sets the gradient colours for the tab.
 
-        :param `fr`: the first gradient colour, an instance of :class:`Colour`;
-        :param `to`: the second gradient colour, an instance of :class:`Colour`;
-        :param `border`: the border colour, an instance of :class:`Colour`.
+        :param `fr`: the first gradient colour, an instance of :class:`wx.Colour`;
+        :param `to`: the second gradient colour, an instance of :class:`wx.Colour`;
+        :param `border`: the border colour, an instance of :class:`wx.Colour`.
         """
 
         self._pages._colourFrom = fr
@@ -4887,7 +4887,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the starting colour for the gradient.
 
-        :param `fr`: the first gradient colour, an instance of :class:`Colour`.
+        :param `fr`: the first gradient colour, an instance of :class:`wx.Colour`.
         """
 
         self._pages._colourFrom = fr
@@ -4897,7 +4897,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the ending colour for the gradient.
 
-        :param `to`: the second gradient colour, an instance of :class:`Colour`;
+        :param `to`: the second gradient colour, an instance of :class:`wx.Colour`;
         """
 
         self._pages._colourTo = to
@@ -4907,7 +4907,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the tab border colour.
 
-        :param `border`: the border colour, an instance of :class:`Colour`.
+        :param `border`: the border colour, an instance of :class:`wx.Colour`.
         """
 
         self._pages._colourBorder = border
@@ -4999,7 +4999,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the non active tabs text colour.
 
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -5021,7 +5021,7 @@ class FlatNotebook(wx.Panel):
         Sets the tab text colour individually.
 
         :param `page`: an integer specifying the page index;
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple). You can
          pass ``None`` or :class:`NullColour` to return to the default page text colour.
         """
@@ -5033,7 +5033,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the area behind the tabs colour.
 
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -5050,7 +5050,7 @@ class FlatNotebook(wx.Panel):
         """
         Sets the active tab colour.
 
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple).
         """
 
@@ -6064,7 +6064,7 @@ class PageContainer(wx.Panel):
         Sets the tab text colour individually.
 
         :param `page`: an integer specifying the page index;
-        :param `colour`: a valid :class:`Colour` object or any typemap supported by wxWidgets/wxPython
+        :param `colour`: a valid :class:`wx.Colour` object or any typemap supported by wxWidgets/wxPython
          to generate a colour (i.e., a hex string, a colour name, a 3 or 4 integer tuple). You can
          pass ``None`` or :class:`NullColour` to return to the default page text colour.
         """

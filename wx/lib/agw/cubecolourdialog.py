@@ -29,15 +29,15 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.cubecolourdialog.CubeColourDialog` is an alternative implementation of :class:`ColourDialog`.
+:class:`~lib.agw.cubecolourdialog.CubeColourDialog` is an alternative implementation of :class:`wx.ColourDialog`.
 
 
 Description
 ===========
 
-The :class:`CubeColourDialog` is an alternative implementation of :class:`ColourDialog`, and it
+The :class:`CubeColourDialog` is an alternative implementation of :class:`wx.ColourDialog`, and it
 offers different functionalities with respect to the default wxPython one. It
-can be used as a replacement of :class:`ColourDialog` with exactly the same syntax and
+can be used as a replacement of :class:`wx.ColourDialog` with exactly the same syntax and
 methods.
 
 Some features:
@@ -1468,7 +1468,7 @@ def DrawCheckerBoard(dc, rect, checkColour, box=5):
 
 class Colour(wx.Colour):
     """
-    This is a subclass of :class:`Colour`, which adds Hue, Saturation and Brightness
+    This is a subclass of :class:`wx.Colour`, which adds Hue, Saturation and Brightness
     capability to the base class. It contains also methods to convert RGB triplets
     into HSB triplets and vice-versa.
     """
@@ -1477,7 +1477,7 @@ class Colour(wx.Colour):
         """
         Default class constructor.
 
-        :param `colour`: a standard :class:`Colour`.
+        :param `colour`: a standard :class:`wx.Colour`.
         """
 
         wx.Colour.__init__(self)
@@ -1592,7 +1592,7 @@ class Colour(wx.Colour):
 
 
     def GetPyColour(self):
-        """ Returns the wxPython :class:`Colour` associated with this instance. """
+        """ Returns the wxPython :class:`wx.Colour` associated with this instance. """
 
         return wx.Colour(self.r, self.g, self.b, self._alpha)
 
@@ -2515,7 +2515,7 @@ class ColourPanel(wx.Panel):
         Used internally. Do not call it in your code!
 
         :param `parent`: the control parent window;
-        :param `style`: the :class:`ColourPanel` window style.
+        :param `style`: the :class:`wx.ColourPanel` window style.
         """
 
         wx.Panel.__init__(self, parent, style=style)
@@ -2530,7 +2530,7 @@ class ColourPanel(wx.Panel):
 
     def OnPaint(self, event):
         """
-        Handles the ``wx.EVT_PAINT`` for :class:`ColourPanel`.
+        Handles the ``wx.EVT_PAINT`` for :class:`wx.ColourPanel`.
 
         :param `event`: a :class:`PaintEvent` event to be processed.
         """
@@ -2564,7 +2564,7 @@ class ColourPanel(wx.Panel):
 
     def OnEraseBackground(self, event):
         """
-        Handles the ``wx.EVT_ERASE_BACKGROUND`` for :class:`ColourPanel`.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` for :class:`wx.ColourPanel`.
 
         :param `event`: a :class:`EraseEvent` event to be processed.
 
@@ -2576,7 +2576,7 @@ class ColourPanel(wx.Panel):
 
     def OnSize(self, event):
         """
-        Handles the ``wx.EVT_SIZE`` for :class:`ColourPanel`.
+        Handles the ``wx.EVT_SIZE`` for :class:`wx.ColourPanel`.
 
         :param `event`: a :class:`SizeEvent` event to be processed.
         """
@@ -2588,7 +2588,7 @@ class ColourPanel(wx.Panel):
         """
         Refresh the panel after a colour/alpha change.
 
-        :param `colour`: the new background colour of :class:`ColourPanel`.
+        :param `colour`: the new background colour of :class:`wx.ColourPanel`.
         """
 
         self._colour = colour
@@ -2626,7 +2626,7 @@ class ColourPanel(wx.Panel):
 class CustomPanel(wx.Control):
     """
     This panel displays a series of custom colours (chosen by the user) just like
-    the standard :class:`ColourDialog`.
+    the standard :class:`wx.ColourDialog`.
     """
 
     def __init__(self, parent, colourData):
@@ -2635,7 +2635,7 @@ class CustomPanel(wx.Control):
         Used internally. Do not call it in your code!
 
         :param `parent`: the control parent window;
-        :param `colourData`: an instance of :class:`ColourData`.
+        :param `colourData`: an instance of :class:`wx.ColourData`.
         """
         
         wx.Control.__init__(self, parent, style=wx.NO_BORDER)
@@ -2827,7 +2827,7 @@ class CustomPanel(wx.Control):
         """
         Adds a user-chosen colour to the list of custom colours.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         self._colourSelection += 1
@@ -2849,7 +2849,7 @@ class CubeColourDialog(wx.Dialog):
         """
         Default class constructor.
 
-        :param `colourData`: a standard :class:`ColourData` (as used in :class:`ColourDialog`);
+        :param `colourData`: a standard :class:`wx.ColourData` (as used in :class:`wx.ColourDialog`);
         :param `agwStyle`: can be either ``None`` or ``CCD_SHOW_ALPHA``, depending if you want
          to hide the alpha channel control or not.
         """
@@ -3474,7 +3474,7 @@ class CubeColourDialog(wx.Dialog):
 
 
     def GetColourData(self):
-        """ Returns a wxPython compatible :class:`ColourData`. """
+        """ Returns a wxPython compatible :class:`wx.ColourData`. """
 
         self._colourData.SetColour(self._colour.GetPyColour())
         return self._colourData

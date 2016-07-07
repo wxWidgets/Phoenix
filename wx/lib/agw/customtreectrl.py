@@ -838,9 +838,9 @@ class TreeItemAttr(object):
         Default class constructor.
         For internal use: do not call it in your code!
 
-        :param `colText`: the text colour, an instance of :class:`Colour`;
-        :param `colBack`: the tree item background colour, an instance of :class:`Colour`;
-        :param `colBorder`: the tree item border colour, an instance of :class:`Colour`;
+        :param `colText`: the text colour, an instance of :class:`wx.Colour`;
+        :param `colBack`: the tree item background colour, an instance of :class:`wx.Colour`;
+        :param `colBorder`: the tree item border colour, an instance of :class:`wx.Colour`;
         :param `font`: the tree item font, an instance of :class:`Font`.
         """
 
@@ -854,7 +854,7 @@ class TreeItemAttr(object):
         """
         Sets the text colour attribute.
 
-        :param `colText`: an instance of :class:`Colour`.
+        :param `colText`: an instance of :class:`wx.Colour`.
         """
 
         self._colText = colText
@@ -864,7 +864,7 @@ class TreeItemAttr(object):
         """
         Sets the item background colour attribute.
 
-        :param `colBack`: an instance of :class:`Colour`.
+        :param `colBack`: an instance of :class:`wx.Colour`.
         """
 
         self._colBack = colBack
@@ -874,7 +874,7 @@ class TreeItemAttr(object):
         """
         Sets the item border colour attribute.
 
-        :param `colBack`: an instance of :class:`Colour`.
+        :param `colBack`: an instance of :class:`wx.Colour`.
 
         .. versionadded:: 0.9.6
         """
@@ -940,7 +940,7 @@ class TreeItemAttr(object):
         """
         Returns the attribute text colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._colText
@@ -950,7 +950,7 @@ class TreeItemAttr(object):
         """
         Returns the attribute background colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._colBack
@@ -960,7 +960,7 @@ class TreeItemAttr(object):
         """
         Returns the attribute border colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         .. versionadded:: 0.9.6
         """
@@ -3070,7 +3070,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour for items in a disabled state.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._disabledColour = colour
@@ -3081,7 +3081,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour for items in a disabled state.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._disabledColour
@@ -3625,7 +3625,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         :param `item`: an instance of :class:`GenericTreeItem`.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return item.Attr().GetTextColour()
@@ -3637,7 +3637,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
 
         :param `item`: an instance of :class:`GenericTreeItem`.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return item.Attr().GetBackgroundColour()
@@ -3802,7 +3802,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Sets the item text colour or separator horizontal line colour.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         item.Attr().SetTextColour(colour)
@@ -3814,7 +3814,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         Sets the item background colour.
 
         :param `item`: an instance of :class:`GenericTreeItem`;
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         item.Attr().SetBackgroundColour(colour)
@@ -3906,7 +3906,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour used to render a non-visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3919,7 +3919,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour used to render a non-visited hypertext item.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3931,7 +3931,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour used to render a visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3944,7 +3944,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour used to render a visited hypertext item.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         :note: This method is meaningful only for hypertext-like items.
         """
@@ -3984,7 +3984,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour used to highlight focused selected items.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
 
         :note: This is applied only if gradient and Windows Vista selection
          styles are disabled.
@@ -3998,7 +3998,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the colour used to highlight unfocused selected items.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
 
         :note: This is applied only if gradient and Windows Vista selection
          styles are disabled.
@@ -4012,7 +4012,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour used to highlight focused selected items.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         :note: This is used only if gradient and Windows Vista selection
          styles are disabled.
@@ -4025,7 +4025,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the colour used to highlight unfocused selected items.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
 
         :note: This is used only if gradient and Windows Vista selection
          styles are disabled.
@@ -4038,7 +4038,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the first gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour is taken from the system value ``wx.SYS_COLOUR_HIGHLIGHT``.
         """
 
@@ -4054,7 +4054,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the second gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour generated is a slightly darker version of the :class:`CustomTreeCtrl`
          background colour.
         """
@@ -4077,7 +4077,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the first gradient colour for gradient-style selections.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._firstcolour
@@ -4087,7 +4087,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the second gradient colour for gradient-style selections.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._secondcolour
@@ -4230,7 +4230,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the pen colour for separator-type items.
 
-        :param `colour`: a valid instance of :class:`Colour`.
+        :param `colour`: a valid instance of :class:`wx.Colour`.
         """
 
         self._separatorPen = wx.Pen(colour, 1)
@@ -4241,7 +4241,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the pen colour for separator-type items.
 
-        :return: An instance of :class:`Colour` representing the separator pen colour.
+        :return: An instance of :class:`wx.Colour` representing the separator pen colour.
         """
 
         return self._separatorPen.GetColour()

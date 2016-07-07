@@ -204,7 +204,7 @@ class ProgressGauge(wx.Window):
         """
         Sets the first gradient colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._firstGradient = colour
@@ -221,7 +221,7 @@ class ProgressGauge(wx.Window):
         """
         Sets the second gradient colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._secondGradient = colour
@@ -238,7 +238,7 @@ class ProgressGauge(wx.Window):
         """
         Sets the gauge background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._background = wx.Brush(colour) 
@@ -636,7 +636,7 @@ class PyProgress(wx.Dialog):
         """
         Sets the gauge first gradient colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._gauge.SetFirstGradientColour(colour)
@@ -652,7 +652,7 @@ class PyProgress(wx.Dialog):
         """
         Sets the gauge second gradient colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._gauge.SetSecondGradientColour(colour)
@@ -668,7 +668,7 @@ class PyProgress(wx.Dialog):
         """
         Sets the gauge background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._gauge.SetGaugeBackground(colour)

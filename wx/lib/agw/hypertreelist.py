@@ -413,7 +413,7 @@ class TreeListColumnInfo(object):
         :param `image`: an index within the normal image list assigned to
          :class:`HyperTreeList` specifying the image to use for the column;
         :param `shown`: ``True`` to show the column, ``False`` to hide it;
-        :param `colour`: a valid :class:`Colour`, representing the text foreground colour
+        :param `colour`: a valid :class:`wx.Colour`, representing the text foreground colour
          for the column;
         :param `edit`: ``True`` to set the column as editable, ``False`` otherwise.
         """
@@ -508,7 +508,7 @@ class TreeListColumnInfo(object):
         """
         Sets the column text colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._colour = colour
@@ -774,7 +774,7 @@ class TreeListHeaderWindow(wx.Window):
         Sets the column text colour.
 
         :param `column`: an integer specifying the column index;
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         if column < 0 or column >= self.GetColumnCount():
@@ -1158,7 +1158,7 @@ class TreeListHeaderWindow(wx.Window):
         :param `image`: an index within the normal image list assigned to
          :class:`HyperTreeList` specifying the image to use for the column;
         :param `shown`: ``True`` to show the column, ``False`` to hide it;
-        :param `colour`: a valid :class:`Colour`, representing the text foreground colour
+        :param `colour`: a valid :class:`wx.Colour`, representing the text foreground colour
          for the column;
         :param `edit`: ``True`` to set the column as editable, ``False`` otherwise.
         """
@@ -1218,7 +1218,7 @@ class TreeListHeaderWindow(wx.Window):
         :param `image`: an index within the normal image list assigned to
          :class:`HyperTreeList` specifying the image to use for the column;
         :param `shown`: ``True`` to show the column, ``False`` to hide it;
-        :param `colour`: a valid :class:`Colour`, representing the text foreground colour
+        :param `colour`: a valid :class:`wx.Colour`, representing the text foreground colour
          for the column;
         :param `edit`: ``True`` to set the column as editable, ``False`` otherwise.
         """
@@ -4471,7 +4471,7 @@ class HyperTreeList(wx.Control):
         :param `image`: an index within the normal image list assigned to
          :class:`HyperTreeList` specifying the image to use for the column;
         :param `shown`: ``True`` to show the column, ``False`` to hide it;
-        :param `colour`: a valid :class:`Colour`, representing the text foreground colour
+        :param `colour`: a valid :class:`wx.Colour`, representing the text foreground colour
          for the column;
         :param `edit`: ``True`` to set the column as editable, ``False`` otherwise.
         """
@@ -4519,7 +4519,7 @@ class HyperTreeList(wx.Control):
         :param `image`: an index within the normal image list assigned to
          :class:`HyperTreeList` specifying the image to use for the column;
         :param `shown`: ``True`` to show the column, ``False`` to hide it;
-        :param `colour`: a valid :class:`Colour`, representing the text foreground colour
+        :param `colour`: a valid :class:`wx.Colour`, representing the text foreground colour
          for the column;
         :param `edit`: ``True`` to set the column as editable, ``False`` otherwise.
         """
@@ -4659,7 +4659,7 @@ class HyperTreeList(wx.Control):
         Sets the column text colour.
 
         :param `column`: an integer specifying the column index;
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._header_win.SetColumn(column, self.GetColumn(column).SetColour(colour))

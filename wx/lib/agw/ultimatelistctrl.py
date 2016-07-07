@@ -779,7 +779,7 @@ class PyImageList(object):
         Adds a new image or images using a bitmap and a colour mask.
 
         :param `bitmap`: a valid :class:`Bitmap` object;
-        :param `colour`: an instance of :class:`Colour`, a colour indicating which parts
+        :param `colour`: an instance of :class:`wx.Colour`, a colour indicating which parts
          of the image are transparent.
 
         :return: The new zero-based image index.
@@ -1183,7 +1183,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new text colour.
 
-        :param `colText`: an instance of :class:`Colour`.
+        :param `colText`: an instance of :class:`wx.Colour`.
         """
 
         self._colText = colText
@@ -1193,7 +1193,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new background colour.
 
-        :param `colBack`: an instance of :class:`Colour`.
+        :param `colBack`: an instance of :class:`wx.Colour`.
         """
 
         self._colBack = colBack
@@ -1223,7 +1223,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new footer item text colour.
 
-        :param `colText`: an instance of :class:`Colour`.
+        :param `colText`: an instance of :class:`wx.Colour`.
         """
 
         self._footerColText = colText
@@ -1233,7 +1233,7 @@ class UltimateListItemAttr(object):
         """
         Sets a new footer item background colour.
 
-        :param `colBack`: an instance of :class:`Colour`.
+        :param `colBack`: an instance of :class:`wx.Colour`.
         """
 
         self._footerColBack = colBack
@@ -1618,7 +1618,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the text colour for the item.
 
-        :param `colText`: a valid :class:`Colour` object.
+        :param `colText`: a valid :class:`wx.Colour` object.
         """
 
         self.Attributes().SetTextColour(colText)
@@ -1628,7 +1628,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the background colour for the item.
 
-        :param `colBack`: a valid :class:`Colour` object.
+        :param `colBack`: a valid :class:`wx.Colour` object.
         """
 
         self.Attributes().SetBackgroundColour(colBack)
@@ -1648,7 +1648,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the text colour for the footer item.
 
-        :param `colText`: a valid :class:`Colour` object.
+        :param `colText`: a valid :class:`wx.Colour` object.
         """
 
         self.Attributes().SetFooterTextColour(colText)
@@ -1658,7 +1658,7 @@ class UltimateListItem(wx.Object):
         """
         Sets the background colour for the footer item.
 
-        :param `colBack`: a valid :class:`Colour` object.
+        :param `colBack`: a valid :class:`wx.Colour` object.
         """
 
         self.Attributes().SetFooterBackgroundColour(colBack)
@@ -2638,7 +2638,7 @@ class UltimateListItemData(object):
         """
         Sets the text colour for the item.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         if colour == wx.NullColour or colour == None:
@@ -2671,7 +2671,7 @@ class UltimateListItemData(object):
         """
         Sets the background colour for the item.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         if colour == wx.NullColour:
@@ -4247,7 +4247,7 @@ class UltimateListLineData(object):
         Sets the text colour for the item.
 
         :param `index`: the index of the item;
-        :param `c`: an instance of :class:`Colour`.
+        :param `c`: an instance of :class:`wx.Colour`.
         """
 
         item = self._items[index]
@@ -9225,7 +9225,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the colour used to render a non-visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._hypertextnewcolour = colour
@@ -9242,7 +9242,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the colour used to render a visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._hypertextvisitedcolour = colour
@@ -10588,7 +10588,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the first gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour is taken from the system value ``wx.SYS_COLOUR_HIGHLIGHT``.
         """
 
@@ -10604,7 +10604,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the second gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour generated is a slightly darker version of the :class:`UltimateListCtrl`
          background colour.
         """
@@ -10749,7 +10749,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         """
         Sets the items disabled colour.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         # Disabled items colour
@@ -11622,7 +11622,7 @@ class UltimateListCtrl(wx.Control):
         Sets the item text colour.
 
         :param `item`: the index of the item;
-        :param `col`: a valid :class:`Colour` object.
+        :param `col`: a valid :class:`wx.Colour` object.
         """
 
         info = UltimateListItem()
@@ -11651,7 +11651,7 @@ class UltimateListCtrl(wx.Control):
         Sets the item background colour.
 
         :param `item`: the index of the item;
-        :param `col`: a valid :class:`Colour` object.
+        :param `col`: a valid :class:`wx.Colour` object.
         """
 
         info = UltimateListItem()
@@ -11719,7 +11719,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the :class:`UltimateListCtrl` foreground colour.
 
-        :param `col`: a valid :class:`Colour` object.
+        :param `col`: a valid :class:`wx.Colour` object.
         """
 
         self.SetForegroundColour(col)
@@ -12605,7 +12605,7 @@ class UltimateListCtrl(wx.Control):
     def OnGetItemTextColour(self, item, col):
         """
         This function **must** be overloaded in the derived class for a control with
-        ``ULC_VIRTUAL`` style. It should return a :class:`Colour` object or ``None`` for
+        ``ULC_VIRTUAL`` style. It should return a :class:`wx.Colour` object or ``None`` for
         the default color.
 
         :param `item`: an integer specifying the item index;
@@ -13126,7 +13126,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the first gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour is taken from the system value ``wx.SYS_COLOUR_HIGHLIGHT``.
         """
 
@@ -13137,7 +13137,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the second gradient colour for gradient-style selections.
 
-        :param `colour`: if not ``None``, a valid :class:`Colour` instance. Otherwise,
+        :param `colour`: if not ``None``, a valid :class:`wx.Colour` instance. Otherwise,
          the colour generated is a slightly darker version of the :class:`UltimateListCtrl`
          background colour.
         """
@@ -13261,7 +13261,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the items disabled colour.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         self._mainWin.SetDisabledTextColour(colour)
@@ -13293,7 +13293,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the colour used to render a non-visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._mainWin.SetHyperTextNewColour(colour)
@@ -13309,7 +13309,7 @@ class UltimateListCtrl(wx.Control):
         """
         Sets the colour used to render a visited hypertext item.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         self._mainWin.SetHyperTextVisitedColour(colour)

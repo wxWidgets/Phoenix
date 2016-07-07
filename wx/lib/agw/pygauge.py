@@ -182,7 +182,7 @@ class PyGauge(wx.Window):
         """
         Sets the :class:`PyGauge` border colour.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
         
         self._border_colour = colour
@@ -201,7 +201,7 @@ class PyGauge(wx.Window):
         """
         Sets the :class:`PyGauge` main bar colour.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
         """
 
         if type(colour) != type([]):

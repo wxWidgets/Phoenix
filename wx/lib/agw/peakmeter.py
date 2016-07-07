@@ -202,7 +202,7 @@ def LightenColour(crColour, byIncreaseVal):
     """
     Lightens a colour.
 
-    :param `crColour`: a valid :class:`Colour` object;
+    :param `crColour`: a valid :class:`wx.Colour` object;
     :param `byIncreaseVal`: an integer specifying the amount for which the input
      colour should be brightened.
     """
@@ -222,7 +222,7 @@ def DarkenColour(crColour, byReduceVal):
     """
     Darkens a colour.
 
-    :param `crColour`: a valid :class:`Colour` object;
+    :param `crColour`: a valid :class:`wx.Colour` object;
     :param `byReduceVal`: an integer specifying the amount for which the input
      colour should be darkened.
     """
@@ -420,11 +420,11 @@ class PeakMeterCtrl(wx.Control):
         """
         Set bands colour for :class:`PeakMeterCtrl`.
 
-        :param `colourNormal`: the colour for normal (low) bands, a valid :class:`Colour`
+        :param `colourNormal`: the colour for normal (low) bands, a valid :class:`wx.Colour`
          object;
-        :param `colourMedium`: the colour for medium bands, a valid :class:`Colour`
+        :param `colourMedium`: the colour for medium bands, a valid :class:`wx.Colour`
          object;
-        :param `colourHigh`: the colour for high bands, a valid :class:`Colour`
+        :param `colourHigh`: the colour for high bands, a valid :class:`wx.Colour`
          object.
         """
 

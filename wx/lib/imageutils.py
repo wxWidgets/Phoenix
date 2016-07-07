@@ -20,7 +20,7 @@ Description
 This module contains a collection of functions for simple image manipulations.
 The 2 functions defined here (:func:`grayOut`, :func:`makeGray` and :func:`stepColour`)
 can be used to convert a given image into a grey-scale representation and to
-darken/lighten a specific wxPython :class:`Colour`.
+darken/lighten a specific wxPython :class:`wx.Colour`.
 
 
 Usage
@@ -93,11 +93,11 @@ def makeGray(rgb, factor, maskColor):
     Make a pixel grayed-out. If the pixel matches the maskColor, it won't be
     changed.
 
-    :param tuple `rgb`: a tuple of red, green, blue integers, defining the pixel :class:`Colour`;
+    :param tuple `rgb`: a tuple of red, green, blue integers, defining the pixel :class:`wx.Colour`;
     :param float `factor`: the amount for which we want to grey out a pixel colour;
     :param `maskColor`: the mask colour.
 
-    :type `maskColor`: tuple or :class:`Colour`.
+    :type `maskColor`: tuple or :class:`wx.Colour`.
     
     :rtype: tuple
     :returns: An RGB tuple with the greyed out pixel colour.
@@ -120,7 +120,7 @@ def stepColour(c, step):
     :param Colour `c`: the input colour to be modified (darkened or lightened);
     :param integer `step`: the step value.
 
-    :rtype: :class:`Colour`
+    :rtype: :class:`wx.Colour`
     :returns: A new colour, darkened or lightened depending on the input `step` value.
     """
     

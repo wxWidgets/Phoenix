@@ -451,11 +451,11 @@ class HyperLinkCtrl(StaticText):
         - Visited link: VIOLET
         - Rollover: BLUE
 
-        :param `link`: a valid :class:`Colour` to use as text foreground for new links
+        :param `link`: a valid :class:`wx.Colour` to use as text foreground for new links
          (default=RED);
-        :param `visited`: a valid :class:`Colour` to use as text foreground for visited
+        :param `visited`: a valid :class:`wx.Colour` to use as text foreground for visited
          links (default=VIOLET);
-        :param `rollover`: a valid :class:`Colour` to use as text foreground for links
+        :param `rollover`: a valid :class:`wx.Colour` to use as text foreground for links
          rollovers (default=BLUE).
         """
         

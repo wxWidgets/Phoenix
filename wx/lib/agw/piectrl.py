@@ -274,7 +274,7 @@ class PieCtrlLegend(wx.Window):
         """
         Sets the legend label colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._labelcolour = colour
@@ -308,7 +308,7 @@ class PieCtrlLegend(wx.Window):
         """
         Sets the legend background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._backcolour = colour
@@ -418,7 +418,7 @@ class PiePart(object):
         """
         Sets the segment colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._colour = colour
@@ -614,7 +614,7 @@ class PieCtrl(wx.Window):
         """
         Sets the :class:`PieCtrl` background colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._backcolour = colour
@@ -954,7 +954,7 @@ class ProgressPie(PieCtrl):
         """
         Sets the colour that progressively fills the :class:`ProgressPie` .
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._filledcolour = colour
@@ -966,7 +966,7 @@ class ProgressPie(PieCtrl):
         """
         Sets the colour that is filled.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._unfilledcolour= colour

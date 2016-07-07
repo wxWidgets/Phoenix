@@ -22,7 +22,7 @@ an asterisk were already present in :mod:`lib` before:
 - ButtonPanel (*): a panel with gradient background shading with the
   possibility to add buttons and controls still respecting the gradient
   background;
-- CubeColourDialog: an alternative implementation of :class:`ColourDialog`, it
+- CubeColourDialog: an alternative implementation of :class:`wx.ColourDialog`, it
   offers different functionalities like colour wheel and RGB cube;
 - CustomTreeCtrl (*): mimics the behaviour of :class:`TreeCtrl`, with almost the
   same base functionalities plus a bunch of enhancements and goodies;

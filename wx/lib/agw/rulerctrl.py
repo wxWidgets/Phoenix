@@ -518,7 +518,7 @@ class Indicator(object):
         """
         Sets the indicator colour.
 
-        :param `colour`: the new indicator colour, an instance of :class:`Colour`.
+        :param `colour`: the new indicator colour, an instance of :class:`wx.Colour`.
         
         :note: Requires PIL (Python Imaging Library), which can be downloaded from
          http://www.pythonware.com/products/pil/
@@ -988,7 +988,7 @@ class RulerCtrl(wx.Panel):
         """
         Sets the :class:`RulerCtrl` background colour.
 
-        :param `colour`: an instance of :class:`Colour`.
+        :param `colour`: an instance of :class:`wx.Colour`.
 
         :note: Overridden from :class:`Panel`.        
         """
@@ -1102,7 +1102,7 @@ class RulerCtrl(wx.Panel):
         """
         Sets the pen colour to draw the ticks.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._tickpen = wx.Pen(colour)
@@ -1113,7 +1113,7 @@ class RulerCtrl(wx.Panel):
         """
         Sets the labels colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._textcolour = colour
@@ -1191,7 +1191,7 @@ class RulerCtrl(wx.Panel):
         Sets the indicator colour.
 
         :param `id`: the indicator identifier;
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         
         :note: This method requires PIL to change the image palette.
         """

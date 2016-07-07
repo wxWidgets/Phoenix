@@ -777,7 +777,7 @@ class AuiDefaultToolBarArt(object):
         """
         Sets the default colours, which are calculated from the given base colour.
 
-        :param `base_colour`: an instance of :class:`Colour`. If defaulted to ``None``, a colour
+        :param `base_colour`: an instance of :class:`wx.Colour`. If defaulted to ``None``, a colour
          is generated accordingly to the platform and theme.
         """
 

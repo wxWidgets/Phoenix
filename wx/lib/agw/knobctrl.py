@@ -488,7 +488,7 @@ class KnobCtrl(BufferedWindow):
         """
         Sets the tags colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._tagscolour = colour
@@ -505,7 +505,7 @@ class KnobCtrl(BufferedWindow):
         """
         Sets the bounding circle colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._boundingcolour = colour
@@ -522,7 +522,7 @@ class KnobCtrl(BufferedWindow):
         """
         Sets the first gradient colour for shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._startcolour = colour
@@ -539,7 +539,7 @@ class KnobCtrl(BufferedWindow):
         """
         Sets the second gradient colour for shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._endcolour = colour
@@ -695,7 +695,7 @@ class KnobCtrl(BufferedWindow):
         """
         Changes the input colour by the `offset` value. Used internally.
 
-        :param `colour`: a valid :class:`Colour` object;
+        :param `colour`: a valid :class:`wx.Colour` object;
         :param `offset`: an integer value for offsetting the input colour.
         """
 

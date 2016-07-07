@@ -1308,7 +1308,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the ticks colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the
          ticks colour will be set as blue.
         """
 
@@ -1328,7 +1328,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the background colour outside the :class:`SpeedMeter` control.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the
          :class:`SpeedMeter` background will be taken from the system default.
         """
 
@@ -1348,7 +1348,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the hand (arrow indicator) colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the arrow
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the arrow
          indicator will be red.
         """
 
@@ -1368,7 +1368,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the external arc colour (thicker line).
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the arc
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the arc
          colour will be black.
         """
 
@@ -1388,7 +1388,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the hand's shadow colour.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the shadow
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the shadow
          colour will be light grey.
         """
 
@@ -1411,7 +1411,7 @@ class SpeedMeter(BufferedWindow):
         A circle corona near the ticks will be filled with this colour, from
         the starting value to the current value of :class:`SpeedMeter`.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         if colour is None:
@@ -1521,7 +1521,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the colour for the text in the middle.
 
-        :param `colour`: a valid :class:`Colour` object. If defaulted to ``None``, the text
+        :param `colour`: a valid :class:`wx.Colour` object. If defaulted to ``None``, the text
          in the middle will be painted in blue.
         """
 
@@ -1603,7 +1603,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the first gradient colour (near the ticks).
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         if colour is None:
@@ -1622,7 +1622,7 @@ class SpeedMeter(BufferedWindow):
         """
         Sets the second gradient colour (near the center).
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         if colour is None:

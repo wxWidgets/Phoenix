@@ -957,7 +957,7 @@ class BalloonTip(object):
         """
         Sets the :class:`BalloonTip` background colour.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         if colour is None:
@@ -970,7 +970,7 @@ class BalloonTip(object):
         """
         Returns the :class:`BalloonTip` background colour.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._ballooncolour
@@ -1026,7 +1026,7 @@ class BalloonTip(object):
         """
         Sets the colour for the top title.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         if colour is None:
@@ -1039,7 +1039,7 @@ class BalloonTip(object):
         """
         Returns the colour for the top title.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._balloontitlecolour
@@ -1049,7 +1049,7 @@ class BalloonTip(object):
         """
         Sets the colour for the tip message.
 
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
         """
 
         if colour is None:
@@ -1062,7 +1062,7 @@ class BalloonTip(object):
         """
         Returns the colour for the tip message.
 
-        :return: An instance of :class:`Colour`.
+        :return: An instance of :class:`wx.Colour`.
         """
 
         return self._balloonmsgcolour

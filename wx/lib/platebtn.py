@@ -666,7 +666,7 @@ class PlateButton(wx.Control):
         prevent this automatic color choices from happening either specify
         a color or None for the other params.
 
-        :param Colour `normal`: Label color for normal state (:class:`Colour`)
+        :param Colour `normal`: Label color for normal state (:class:`wx.Colour`)
         :keyword Colour `hlight`: Color for when mouse is hovering over
 
         """
@@ -705,7 +705,7 @@ class PlateButton(wx.Control):
     def SetPressColor(self, color):
         """Set the color used for highlighting the pressed state
 
-        :param Colour `color`: :class:`Colour`
+        :param Colour `color`: :class:`wx.Colour`
         
         ..note::
             also resets all text colours as necessary

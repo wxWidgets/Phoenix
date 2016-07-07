@@ -365,7 +365,7 @@ class CaptionBarStyle(object):
         """
         Sets first colour for the caption bar.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         
         :note: If this is not set, the colour property is undefined and will not be used.
          Use :meth:`~CaptionBarStyle.FirstColourUsed` to check if this style is used.
@@ -400,7 +400,7 @@ class CaptionBarStyle(object):
         """
         Sets second colour for the caption bar.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
         :note: If this is not set, the colour property is undefined and will not be used.
          Use :meth:`~CaptionBarStyle.SecondColourUsed` to check if this style is used.
@@ -435,7 +435,7 @@ class CaptionBarStyle(object):
         """
         Sets caption colour for the caption bar.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
         :note: If this is not set, the colour property is undefined and will not be used.
          Use :meth:`~CaptionBarStyle.CaptionColourUsed` to check if this style is used.
@@ -1379,7 +1379,7 @@ class FoldPanelBar(wx.Panel):
         component. It can be used to separate groups of controls
         which belong to each other.
 
-        :param `colour`: the separator colour, an instance of :class:`Colour`;
+        :param `colour`: the separator colour, an instance of :class:`wx.Colour`;
         :param `spacing`: the separator to be added can be slightly indented from
          left and right so it is more visibly placed in the fold panel. Use `spacing` > 0
          to give the control an y offset from the previous :class:`Window` added;
@@ -1828,7 +1828,7 @@ class FoldPanelItem(wx.Panel):
         """
         Adds a separator item to the list of items on this panel.
 
-        :param `colour`: the separator colour, an instance of :class:`Colour`;
+        :param `colour`: the separator colour, an instance of :class:`wx.Colour`;
         :param `spacing`: the separator to be added can be slightly indented from
          left and right so it is more visibly placed in the fold panel. Use `spacing` > 0
          to give the control an y offset from the previous :class:`Window` added;

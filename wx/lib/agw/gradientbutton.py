@@ -563,7 +563,7 @@ class GradientButton(wx.Control):
         """
         Sets the top start colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._topStartColour = colour
@@ -580,7 +580,7 @@ class GradientButton(wx.Control):
         """
         Sets the top end colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._topEndColour = colour
@@ -597,7 +597,7 @@ class GradientButton(wx.Control):
         """
         Sets the top bottom colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._bottomStartColour = colour
@@ -614,7 +614,7 @@ class GradientButton(wx.Control):
         """
         Sets the bottom end colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._bottomEndColour = colour
@@ -631,7 +631,7 @@ class GradientButton(wx.Control):
         """
         Sets the pressed top start colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._pressedTopColour = colour
@@ -648,7 +648,7 @@ class GradientButton(wx.Control):
         """
         Sets the pressed bottom start colour for the gradient shading.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._pressedBottomColour = colour
@@ -665,7 +665,7 @@ class GradientButton(wx.Control):
         """
         Sets the :class:`GradientButton` foreground (text) colour.
 
-        :param `colour`: a valid :class:`Colour` object.
+        :param `colour`: a valid :class:`wx.Colour` object.
 
         :note: Overridden from :class:`Control`.        
         """

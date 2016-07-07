@@ -1982,7 +1982,7 @@ class LabelContainer(ImageContainerBase):
          ``INB_HILITE_TAB_COLOUR``              105 The tab caption highlight text colour
          ================================== ======= ==================================         
 
-        :param `colour`: a valid :class:`Colour` object.        
+        :param `colour`: a valid :class:`wx.Colour` object.
         """
 
         self._coloursMap[which] = colour
@@ -2995,7 +2995,7 @@ class LabelBook(FlatBookBase):
         Sets the colour for the specified parameter.
 
         :param `which`: the colour key;
-        :param `colour`: a valid :class:`Colour` instance.
+        :param `colour`: a valid :class:`wx.Colour` instance.
 
         :see: :meth:`LabelContainer.SetColour() <LabelContainer.SetColour>` for a list of valid colour keys.
         """

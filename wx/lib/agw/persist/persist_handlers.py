@@ -1849,11 +1849,11 @@ class MediaCtrlHandler(AbstractHandler):
 
 class ColourPickerHandler(AbstractHandler):
     """
-    Supports saving/restoring a :class:`ColourPickerCtrl` / :class:`lib.colourselect.ColourSelect` colour.
+    Supports saving/restoring a :class:`wx.ColourPickerCtrl` / :class:`lib.colourselect.ColourSelect` colour.
 
     This class handles the following wxPython widgets:
 
-    - :class:`ColourPickerCtrl`;
+    - :class:`wx.ColourPickerCtrl`;
     - :class:`lib.colourselect.ColourSelect`.
     
     """
@@ -2233,7 +2233,7 @@ class FindReplaceHandler(TLWHandler):
 
     - :class:`FindReplaceDialog`.
 
-    .. todo:: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
+    .. todo:: Find a way to properly save and restore dialog data (:class:`wx.ColourDialog`, :class:`FontDialog` etc...).
 
     """
     
@@ -2290,7 +2290,7 @@ class FontDialogHandler(TLWHandler):
 
     - :class:`FontDialog`.
     
-    .. todo:: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
+    .. todo:: Find a way to properly save and restore dialog data (:class:`wx.ColourDialog`, :class:`FontDialog` etc...).
 
     """
     
@@ -2348,15 +2348,15 @@ class FontDialogHandler(TLWHandler):
 
 class ColourDialogHandler(TLWHandler):
     """
-    Supports saving/restoring a :class:`ColourDialog` data (colour, custom colours and full
+    Supports saving/restoring a :class:`wx.ColourDialog` data (colour, custom colours and full
     choice in the dialog).
 
     This class handles the following wxPython widgets:
 
-    - :class:`ColourDialog`;
+    - :class:`wx.ColourDialog`;
     - :class:`lib.agw.cubecolourdialog.CubeColourDialog`.
 
-    .. todo:: Find a way to properly save and restore dialog data (:class:`ColourDialog`, :class:`FontDialog` etc...).
+    .. todo:: Find a way to properly save and restore dialog data (:class:`wx.ColourDialog`, :class:`FontDialog` etc...).
 
     """
     
