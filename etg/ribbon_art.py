@@ -37,6 +37,24 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.find('Clone').factory = True
 
+    m = c.find('GetColourScheme')
+    etgtools.appendText(m.detailedDoc, ".. seealso:: :meth:`PyGetColourScheme`")
+
+    c.addPyMethod('PyGetColourScheme', '(self)',
+        doc="""\
+            A more Python friendly version of :meth:`GetColourScheme`.\n
+            This method returns a tuple of the 3 colours instead of requiring
+            that you provide three :class:`wx.Colour` objects to be filled in
+            by the API.
+            """,
+        body="""\
+            primary = wx.Colour()
+            secondary = wx.Colour()
+            tertiary = wx.Colour()
+            self.GetColourScheme(primary, secondary, tertiary)
+            return (primary, secondary, tertiary)
+            """)
+
 
     c = module.find('wxRibbonMSWArtProvider')
     c.find('Clone').factory = True
