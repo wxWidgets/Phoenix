@@ -3813,7 +3813,7 @@ class ShapeRegion(object):
         """
         Set the pen style.
         
-        :param `style`: the style, see :class:`Pen`
+        :param `style`: the style, see :class:`wx.Pen`
         
         """
         self._penStyle = style
