@@ -236,7 +236,7 @@ def run():
         return end - begin;
         """)
 
-    # Fiddle with the docstrings for ParseFormat to make them refect the new
+    # Fiddle with the docstrings for ParseFormat to make them reflect the new
     # reality. The other Parse*() docs refer the reader to this one, so we
     # don't have to change all of them.
     
