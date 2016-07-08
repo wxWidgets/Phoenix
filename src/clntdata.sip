@@ -10,19 +10,6 @@
 //--------------------------------------------------------------------------
 
 
-%ModuleHeaderCode
-// A wxClientData that holds a reference to a Python object
-class wxPyClientData : public wxPyUserDataHelper<wxClientData>
-{
-public:
-    wxPyClientData(PyObject* obj = NULL)
-        : wxPyUserDataHelper<wxClientData>(obj)
-    { }
-};
-
-%End
-
-
 // We'll use the wxPyClientData defined above wherever a wxClientData parameter or 
 // return value is specified in the API.  This MappedType code will convert to/from a
 // PyObject so it will be totally transparent to the programmer and from their 

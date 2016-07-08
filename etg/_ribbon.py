@@ -1,42 +1,41 @@
 #---------------------------------------------------------------------------
-# Name:        etg/_richtext.py
+# Name:        etg/_ribbon.py
 # Author:      Robin Dunn
 #
-# Created:     27-Oct-2012
-# Copyright:   (c) 2012-2016 by Total Control Software
+# Created:     20-Jun-2016
+# Copyright:   (c) 2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx" 
-MODULE    = "_richtext"
-NAME      = "_richtext"   # Base name of the file to generate to for this script
+PACKAGE   = "wx"   
+MODULE    = "_ribbon"
+NAME      = "_ribbon"   # Base name of the file to generate to for this script
 DOCSTRING = """\
-The :class:`RichTextCtrl` is a generic, ground-up implementation of a rich
-text control capable of showing multiple text styles and images.  This module
-contains the control and many supporting classes needed for using the features
-of the :class:`RichTextCtrl`.
+The `wx.ribbon` module contains a set of classes for writing a ribbon-based user interface.
+
+At the most generic level, this is a combination of a tab control with a
+toolbar. At a more functional level, it is similar to the user interface
+present in recent versions of Microsoft Office and in Windows 10.
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ ]    
-    
+ITEMS  = [ ]
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
-# the wxWidgets "richtext" library in a multi-lib build.
-INCLUDES = [ 'richtextbuffer',
-             'richtextctrl',
-             'richtexthtml',
-             'richtextxml',
-             'richtextprint',
-             'richtextstyles',
-             'richtextstyledlg',
-             'richtextsymboldlg',
-             #'richtextformatdlg',             TODO: Needs wxPropertySheetDialog
+# the wxWidgets "ribbon" library in a multi-lib build.
+INCLUDES = [ 'ribbon_control',
+             'ribbon_page',
+             'ribbon_panel',
+             'ribbon_bar',
+             'ribbon_art',
+             'ribbon_buttonbar',
+             'ribbon_gallery',
+             'ribbon_toolbar',
              ]
 
 
@@ -49,34 +48,30 @@ OTHERDEPS = [  ]
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING,
                                 check4unittest = False)
     etgtools.parseDoxyXML(module, ITEMS)
-
+    
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
-    module.addImport('_xml')
-    module.addPyCode("import wx.xml", order=10)
-    module.addImport('_html')
-    module.addPyCode("import wx.html", order=10)
-    
+
+
     module.addInclude(INCLUDES)
-          
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
     
-
     
 #---------------------------------------------------------------------------
-
 if __name__ == '__main__':
     run()
+

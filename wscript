@@ -135,6 +135,8 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXMEDIA')
         conf.env.LIB_WXMEDIA += cfg.makeLibName('media')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXRIBBON')
+        conf.env.LIB_WXRIBBON += cfg.makeLibName('ribbon')
 
         # ** Add code for new modules here (and below for non-MSW)
 
@@ -221,6 +223,10 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs media,core,net' + rpath,
                        uselib_store='WXMEDIA', mandatory=True)
+
+        conf.check_cfg(path=conf.options.wx_config, package='',
+                       args='--cxxflags --libs ribbon,core,net' + rpath,
+                       uselib_store='WXRIBBON', mandatory=True)
 
         # ** Add code for new modules here
 
@@ -512,6 +518,7 @@ def build(bld):
     makeETGRule(bld, 'etg/_xrc.py',        '_xrc',       'WXXRC')
     makeETGRule(bld, 'etg/_richtext.py',   '_richtext',  'WXHTML WXRICHTEXT')
     makeETGRule(bld, 'etg/_media.py',      '_media',     'WXMEDIA')
+    makeETGRule(bld, 'etg/_ribbon.py',     '_ribbon',    'WXRIBBON')
 
     if isDarwin:
         makeETGRule(bld, 'etg/_webkit.py', '_webkit',    'WXWEBKIT')

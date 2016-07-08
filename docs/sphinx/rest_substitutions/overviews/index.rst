@@ -172,6 +172,7 @@ Meanwhile, here are some important links:
    wx.xrc.functions
    wx.media.1moduleindex
    wx.msw.1moduleindex
+   wx.ribbon.1moduleindex
    wx.lib
    wx.py
    wx.tools
