@@ -4446,9 +4446,9 @@ class UltimateListLineData(object):
         :param `highlighted`: ``True`` if the item is highlighted, ``False`` otherwise;
         :param `current`: ``True`` if the item is the current item;
         :param `enabled`: ``True`` if the item is enabled, ``False`` otherwise;
-        :param `oldPN`: an instance of :class:`Pen`, to save and restore at the end of
+        :param `oldPN`: an instance of :class:`wx.Pen`, to save and restore at the end of
          the drawing;
-        :param `oldBR`: an instance of :class:`Brush`, to save and restore at the end of
+        :param `oldBR`: an instance of :class:`wx.Brush`, to save and restore at the end of
          the drawing.
         """
 

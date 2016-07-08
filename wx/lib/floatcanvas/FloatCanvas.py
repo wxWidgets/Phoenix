@@ -131,7 +131,7 @@ class FloatCanvas(wx.Panel):
 
          (Note: this really should get re-factored to allow more generic
          projections...)
-        :param string `BackgroundColor`: any value accepted by :class:`Brush` 
+        :param string `BackgroundColor`: any value accepted by :class:`wx.Brush`
         :param `Debug`: activate debug, currently it prints some debugging 
          information, could be improved.
 

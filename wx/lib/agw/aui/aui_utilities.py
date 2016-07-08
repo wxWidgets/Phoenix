@@ -255,7 +255,7 @@ def LightColour(colour, percent):
 
 def PaneCreateStippleBitmap():
     """
-    Creates a stipple bitmap to be used in a :class:`Brush`.
+    Creates a stipple bitmap to be used in a :class:`wx.Brush`.
     
     This is used to draw sash resize hints.
     """

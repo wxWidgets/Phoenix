@@ -1427,8 +1427,8 @@ def RestoreOldDC(dc, oldPen, oldBrush, oldMode):
     Restores the old settings for a :class:`wx.DC`.
 
     :param `dc`: an instance of :class:`wx.DC`;
-    :param `oldPen`: an instance of :class:`Pen`;
-    :param `oldBrush`: an instance of :class:`Brush`;
+    :param `oldPen`: an instance of :class:`wx.Pen`;
+    :param `oldBrush`: an instance of :class:`wx.Brush`;
     :param `oldMode`: the :class:`wx.DC` drawing mode bit.
     """
 

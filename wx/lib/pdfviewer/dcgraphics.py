@@ -150,7 +150,7 @@ class dcGraphicsContext(object):
         also with increasing y down.
         :class:`wx.DC` and :class:`GraphicsContext` fonts are too big in the ratio
         of pixels per inch to points per inch. If screen rendering used Cairo,
-        printed fonts need to be scaled but if :class:`GCDC` was used, they are
+        printed fonts need to be scaled but if :class:`wx.GCDC` was used, they are
         already scaled.
         
         :param `context`: **TBW** (?)
@@ -229,20 +229,20 @@ class dcGraphicsContext(object):
 
     def SetPen(self, pen):
         """
-        Set the :class:`Pen` to be used for stroking lines in future drawing
+        Set the :class:`wx.Pen` to be used for stroking lines in future drawing
         operations.
         
-        :param `pen`: the :class:`Pen` to be used from now on.
+        :param `pen`: the :class:`wx.Pen` to be used from now on.
         
         """
         self._context.SetPen(pen)
 
     def SetBrush(self, brush):
         """
-        Set the :class:`Brush` to be used for filling shapes in future drawing
+        Set the :class:`wx.Brush` to be used for filling shapes in future drawing
         operations.  
 
-        :param `brush`: the :class:`Brush` to be used from now on.
+        :param `brush`: the :class:`wx.Brush` to be used from now on.
 
         """
         self._context.SetBrush(brush)
