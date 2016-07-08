@@ -172,10 +172,11 @@ class PlateButton(wx.Control):
         self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
         self.Bind(wx.EVT_CONTEXT_MENU, lambda evt: self.ShowMenu())
 
+
     def __DrawBitmap(self, gc):
         """Draw the bitmap if one has been set
 
-        :param GCDC `gc`: :class:`GCDC` to draw with
+        :param wx.GCDC `gc`: :class:`wx.GCDC` to draw with
         :return: x cordinate to draw text at
 
         """
@@ -192,10 +193,11 @@ class PlateButton(wx.Control):
         else:
             return 6
 
+
     def __DrawDropArrow(self, gc, xpos, ypos):
         """Draw a drop arrow if needed and restore pen/brush after finished
 
-        :param GCDC `gc`: :class:`GCDC` to draw with
+        :param wx.GCDC `gc`: :class:`wx.GCDC` to draw with
         :param int `xpos`: x cord to start at
         :param int `ypos`: y cord to start at
 
@@ -215,10 +217,11 @@ class PlateButton(wx.Control):
         else:
             pass
 
+
     def __DrawHighlight(self, gc, width, height):
         """Draw the main highlight/pressed state
 
-        :param GCDC `gc`: :class:`GCDC` to draw with
+        :param wx.GCDC `gc`: :class:`wx.GCDC` to draw with
         :param int `width`: width of highlight
         :param int `height`: height of highlight
 
@@ -244,6 +247,7 @@ class PlateButton(wx.Control):
 
         gc.DrawRoundedRectangle(1, 1, width - 2, height - 2, rad)
 
+
     def __PostEvent(self):
         """Post a button event to parent of this control"""
         if self._style & PB_STYLE_TOGGLE:
@@ -254,6 +258,7 @@ class PlateButton(wx.Control):
         bevt.SetEventObject(self)
         bevt.SetString(self.GetLabel())
         self.GetEventHandler().ProcessEvent(bevt)
+
 
     def __DrawButton(self):
         """Draw the button"""
@@ -325,6 +330,7 @@ class PlateButton(wx.Control):
                 gc.DrawText(self.Label, txt_x + 2, txt_y)
             self.__DrawDropArrow(gc, width - 10, (height // 2) - 2)
 
+
     def __InitColors(self):
         """Initialize the default colors"""
         color = GetHighlightColour()
@@ -335,6 +341,7 @@ class PlateButton(wx.Control):
                       htxt=BestLabelColour(self.GetForegroundColour()))
         return colors
 
+
     def __LeaveWindow(self):
         """Handle updating the buttons state when the mouse cursor leaves"""
         if (self._style & PB_STYLE_TOGGLE) and self._pressed:
@@ -343,15 +350,16 @@ class PlateButton(wx.Control):
             self._SetState(PLATE_NORMAL)
             self._pressed = False
 
+
     def _SetState(self, state):
         """Manually set the state of the button
 
         :param `state`: one of the PLATE_* values
 
-        ..note::
+        .. note::
             the state may be altered by mouse actions
             
-        ..note::
+        .. note::
             Internal use only!
 
         """
@@ -361,6 +369,7 @@ class PlateButton(wx.Control):
             self.Parent.RefreshRect(self.Rect, False)
         else:
             self.Refresh()
+
 
     def _ToggleState(self):
         """Toggle button state
@@ -391,14 +400,17 @@ class PlateButton(wx.Control):
     LabelText = property(lambda self: self.GetLabel(),
                          lambda self, lbl: self.SetLabel(lbl))
 
+
     def AcceptsFocus(self):
         """Can this window have the focus?"""
         return self.IsEnabled()
+
 
     def Disable(self):
         """Disable the control"""
         super(PlateButton, self).Disable()
         self.Refresh()
+
 
     def DoGetBestSize(self):
         """Calculate the best size of the button
@@ -433,15 +445,17 @@ class PlateButton(wx.Control):
         self.CacheBestSize(best)
         return best
 
+
     def Enable(self, enable=True):
         """Enable/Disable the control"""
         super(PlateButton, self).Enable(enable)
         self.Refresh()
 
+
     def GetBackgroundBrush(self, dc):
         """Get the brush for drawing the background of the button
         
-        :return: :class:`Brush`
+        :return: :class:`wx.Brush`
         
         ..note::
             used internally when on gtk
@@ -461,6 +475,7 @@ class PlateButton(wx.Control):
             brush = wx.Brush(bkgrd, wx.BRUSHSTYLE_SOLID)
         return brush
 
+
     def GetBitmapDisabled(self):
         """Get the bitmap of the disable state
 
@@ -468,6 +483,7 @@ class PlateButton(wx.Control):
 
         """
         return self.BitmapDisabled
+
 
     def GetBitmapLabel(self):
         """Get the label bitmap
@@ -484,6 +500,7 @@ class PlateButton(wx.Control):
     # Alias for GetLabel
     GetLabelText = wx.Control.GetLabel
 
+
     def GetMenu(self):
         """Return the menu associated with this button or None if no
         menu is associated with it.
@@ -491,20 +508,23 @@ class PlateButton(wx.Control):
         """
         return self._menu
 
+
     def GetState(self):
         """Get the current state of the button
         
         :return: int
         
-        ..seeAlso:: 
+        .. seeAlso::
             PLATE_NORMAL, PLATE_HIGHLIGHT, PLATE_PRESSED
 
         """
         return self._state['cur']
 
+
     def HasTransparentBackground(self):
         """Override setting of background fill"""
         return True
+
 
     def IsPressed(self):
         """Return if button is pressed (PB_STYLE_TOGGLE)
@@ -513,6 +533,7 @@ class PlateButton(wx.Control):
 
         """
         return self._pressed
+
 
     #---- Event Handlers ----#
 
@@ -525,10 +546,12 @@ class PlateButton(wx.Control):
         """
         pass
 
+
     def OnFocus(self, evt):
         """Set the visual focus state if need be"""
         if self._state['cur'] == PLATE_NORMAL:
             self._SetState(PLATE_HIGHLIGHT)
+
 
     def OnKeyUp(self, evt):
         """Execute a single button press action when the Return key is pressed
@@ -544,6 +567,7 @@ class PlateButton(wx.Control):
         else:
             evt.Skip()
 
+
     def OnKillFocus(self, evt):
         """Set the visual state back to normal when focus is lost
         unless the control is currently in a pressed state.
@@ -554,6 +578,7 @@ class PlateButton(wx.Control):
         #       quickly changing focus and activating buttons
         if self._state['cur'] != PLATE_PRESSED:
             self._SetState(PLATE_NORMAL)
+
 
     def OnLeftDown(self, evt):
         """Sets the pressed state and depending on the click position will
@@ -576,11 +601,12 @@ class PlateButton(wx.Control):
         
         self.SetFocus()
 
+
     def OnLeftUp(self, evt):
         """Post a button event if the control was previously in a
         pressed state.
 
-        :param `evt`: :class:`MouseEvent`
+        :param `evt`: :class:`wx.MouseEvent`
 
         """
         if self._state['cur'] == PLATE_PRESSED:
@@ -593,6 +619,7 @@ class PlateButton(wx.Control):
             self._SetState(PLATE_PRESSED)
         else:
             self._SetState(PLATE_HIGHLIGHT)
+
 
     def OnMenuClose(self, evt):
         """Refresh the control to a proper state after the menu has been
@@ -610,6 +637,7 @@ class PlateButton(wx.Control):
 
     #---- End Event Handlers ----#
 
+
     def SetBitmap(self, bmp):
         """Set the bitmap displayed in the button
         
@@ -621,6 +649,7 @@ class PlateButton(wx.Control):
         img = img.ConvertToGreyscale(.795, .073, .026) #(.634, .224, .143)
         self._bmp['disable'] = img.ConvertToBitmap()
         self.InvalidateBestSize()
+
 
     def SetBitmapDisabled(self, bmp):
         """Set the bitmap for the disabled state
@@ -636,25 +665,29 @@ class PlateButton(wx.Control):
     SetBitmapLabel = SetBitmap
     SetBitmapSelected = SetBitmap
 
+
     def SetFocus(self):
         """Set this control to have the focus"""
         if self._state['cur'] != PLATE_PRESSED:
             self._SetState(PLATE_HIGHLIGHT)
         super(PlateButton, self).SetFocus()
 
+
     def SetFont(self, font):
         """Adjust size of control when font changes"""
         super(PlateButton, self).SetFont(font)
         self.InvalidateBestSize()
 
+
     def SetLabel(self, label):
         """Set the label of the button
 
-        :param string `label`: lable string
+        :param string `label`: label string
 
         """
         super(PlateButton, self).SetLabel(label)
         self.InvalidateBestSize()
+
 
     def SetLabelColor(self, normal, hlight=wx.NullColour):
         """Set the color of the label. The optimal label color is usually
@@ -685,13 +718,14 @@ class PlateButton(wx.Control):
         else:
             self.Refresh()
 
+
     def SetMenu(self, menu):
         """Set the menu that can be shown when clicking on the
         drop arrow of the button.
 
         :param wx.Menu `menu`: :class:`wx.Menu` to use as a PopupMenu
         
-        ..note::
+        .. note::
             Arrow is not drawn unless a menu is set
 
         """
@@ -702,12 +736,13 @@ class PlateButton(wx.Control):
         self.Bind(wx.EVT_MENU_CLOSE, self.OnMenuClose)
         self.InvalidateBestSize()
 
+
     def SetPressColor(self, color):
         """Set the color used for highlighting the pressed state
 
         :param wx.Colour `color`: :class:`wx.Colour`
         
-        ..note::
+        .. note::
             also resets all text colours as necessary
 
         """
@@ -720,6 +755,7 @@ class PlateButton(wx.Control):
         self._color['htxt'] = BestLabelColour(self._color['hlight'])
         self.Refresh()
 
+
     def SetWindowStyle(self, style):
         """Sets the window style bytes, the updates take place
         immediately no need to call refresh afterwards.
@@ -730,10 +766,12 @@ class PlateButton(wx.Control):
         self._style = style
         self.Refresh()
 
+
     def SetWindowVariant(self, variant):
         """Set the variant/font size of this control"""
         super(PlateButton, self).SetWindowVariant(variant)
         self.InvalidateBestSize()
+
 
     def ShouldInheritColours(self):
         """Overridden base class virtual. If the parent has non-default
@@ -741,6 +779,7 @@ class PlateButton(wx.Control):
 
         """
         return True
+
 
     def ShowMenu(self):
         """Show the dropdown menu if one is associated with this control"""

@@ -81,7 +81,7 @@ to the standard :class:`TreeCtrl` behaviour this class supports:
 * Customized drag and drop images built on the fly;
 * Setting the :class:`CustomTreeCtrl` item buttons to a personalized imagelist;
 * Setting the :class:`CustomTreeCtrl` check/radio item icons to a personalized imagelist;
-* Changing the style of the lines that connect the items (in terms of :class:`Pen` styles);
+* Changing the style of the lines that connect the items (in terms of :class:`wx.Pen` styles);
 * Using an image as a :class:`CustomTreeCtrl` background (currently only in "tile" mode);
 * Adding images to any item in the leftmost area of the :class:`CustomTreeCtrl` client window.
 * Separator-type items which are simply visual indicators that are meant to set apart
@@ -4155,7 +4155,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the pen used to draw the selected item border.
 
-        :param `pen`: an instance of :class:`Pen`.
+        :param `pen`: an instance of :class:`wx.Pen`.
 
         :note: The border pen is not used if the Windows Vista selection style is applied.
         """
@@ -4168,7 +4168,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the pen used to draw the selected item border.
 
-        :return: An instance of :class:`Pen`.
+        :return: An instance of :class:`wx.Pen`.
 
         :note: The border pen is not used if the Windows Vista selection style is applied.
         """
@@ -4180,7 +4180,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Sets the pen used to draw the connecting lines between items.
 
-        :param `pen`: an instance of :class:`Pen`.
+        :param `pen`: an instance of :class:`wx.Pen`.
         """
 
         self._dottedPen = pen
@@ -4191,7 +4191,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
         """
         Returns the pen used to draw the connecting lines between items.
 
-        :return: An instance of :class:`Pen`.
+        :return: An instance of :class:`wx.Pen`.
         """
 
         return self._dottedPen

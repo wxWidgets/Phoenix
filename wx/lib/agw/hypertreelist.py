@@ -82,7 +82,7 @@ In addition to the standard :class:`adv.TreeListCtrl` behaviour this class suppo
 * Customized drag and drop images built on the fly;
 * Setting the :class:`HyperTreeList` item buttons to a personalized imagelist;
 * Setting the :class:`HyperTreeList` check/radio item icons to a personalized imagelist;
-* Changing the style of the lines that connect the items (in terms of :class:`Pen` styles);
+* Changing the style of the lines that connect the items (in terms of :class:`wx.Pen` styles);
 * Using an image as a :class:`HyperTreeList` background (currently only in "tile" mode);
 * Ellipsization of long items when the horizontal space is low, via the ``TR_ELLIPSIZE_LONG_ITEMS``
   style (`New in version 0.9.3`).
