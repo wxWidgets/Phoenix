@@ -32,36 +32,22 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    c = module.find('wxRibbonArtProvider')
-    assert isinstance(c, etgtools.ClassDef)
-    c.find('Clone').factory = True
 
-    m = c.find('GetColourScheme')
-    etgtools.appendText(m.detailedDoc, ".. seealso:: :meth:`PyGetColourScheme`")
+    for klass in ['wxRibbonArtProvider',
+                  'wxRibbonMSWArtProvider',
+                  'wxRibbonAUIArtProvider']:
+        c = module.find(klass)
+        assert isinstance(c, etgtools.ClassDef)
+        c.find('Clone').factory = True
 
-    c.addPyMethod('PyGetColourScheme', '(self)',
-        doc="""\
-            A more Python friendly version of :meth:`GetColourScheme`.\n
-            This method returns a tuple of the 3 colours instead of requiring
-            that you provide three :class:`wx.Colour` objects to be filled in
-            by the API.
-            """,
-        body="""\
-            primary = wx.Colour()
-            secondary = wx.Colour()
-            tertiary = wx.Colour()
-            self.GetColourScheme(primary, secondary, tertiary)
-            return (primary, secondary, tertiary)
-            """)
-
-
-    c = module.find('wxRibbonMSWArtProvider')
-    c.find('Clone').factory = True
-
-
-    c = module.find('wxRibbonAUIArtProvider')
-    c.find('Clone').factory = True
+        m = c.findItem('GetColourScheme')
+        if m:
+            m.find('primary').out = True
+            m.find('secondary').out = True
+            m.find('tertiary').out = True
+            etgtools.appendText(m.detailedDoc,
+                ".. note:: The Python version of this method returns the three"
+                "   scheme colours as a tuple of :class:`wx.Colour` objects.")
 
 
     module.addPyCode("""\

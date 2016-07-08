@@ -173,7 +173,7 @@ class ribbon_art_Tests(wtc.WidgetTestCase):
     def test_ribbon_art7(self):
         bar = wx.ribbon.RibbonBar(self.frame)
         art = bar.GetArtProvider()
-        p, s, t = art.PyGetColourScheme()
+        p, s, t = art.GetColourScheme()
 
         assert isinstance(p, wx.Colour)
         assert isinstance(s, wx.Colour)
