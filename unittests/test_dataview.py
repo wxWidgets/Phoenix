@@ -1,7 +1,7 @@
 import unittest
 from unittests import wtc
 import wx
-from wx.lib import six
+import six
 import wx.dataview as dv
 import os
 

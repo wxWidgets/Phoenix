@@ -17,15 +17,21 @@ class WidgetTestCase(unittest.TestCase):
         wx.Log.SetActiveTarget(wx.LogStderr())
         self.frame = wx.Frame(None, title='WTC: '+self.__class__.__name__)
         self.frame.Show()
+        self.frame.PostSizeEvent()
 
     def tearDown(self):
         def _cleanup():
             for tlw in wx.GetTopLevelWindows():
                 if tlw:
-                    tlw.Destroy()
+                    if isinstance(tlw, wx.Dialog) and tlw.IsModal():
+                        tlw.EndModal(0)
+                        wx.CallAfter(tlw.Destroy)
+                    else:
+                        tlw.Close(force=True)
             wx.WakeUpIdle()
-            #self.app.ExitMainLoop()   
-        wx.CallLater(50, _cleanup)
+
+        timer = wx.PyTimer(_cleanup)
+        timer.Start(100)
         self.app.MainLoop()
         del self.app
 

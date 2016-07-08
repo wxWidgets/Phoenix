@@ -1,4 +1,5 @@
-import unittest, wtc
+import unittest
+from unittests import wtc
 import wx
 
 

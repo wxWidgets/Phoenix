@@ -9,6 +9,7 @@ wingdbstub.py*
 mydbstub.py*
 
 .idea
+.cache
 
 /build
 /tmp
