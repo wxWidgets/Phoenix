@@ -53,6 +53,11 @@ def run():
     c.find('SetItemClientObject.data').transfer = True
     c.find('Append').findOverload('wxClientData').find('clientData').transfer = True
 
+    # And let's change the names of the "Object" version of the methods
+    c.find('SetItemClientObject').pyName = 'SetItemClientData'
+    c.find('GetItemClientObject').pyName = 'GetItemClientData'
+
+
     c = module.find('wxRibbonGalleryEvent')
     tools.fixEventClass(c)
 

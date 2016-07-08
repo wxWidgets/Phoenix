@@ -41,11 +41,12 @@ class ribbon_gallery_Tests(wtc.WidgetTestCase):
     def test_ribbon_gallery5(self):
         ribbon = wx.ribbon.RibbonBar(self.frame)
         g = wx.ribbon.RibbonGallery(ribbon)
-        with self.assertRaises(AttributeError):
-            g.SetItemClientData
 
         with self.assertRaises(AttributeError):
-            g.GetItemClientData
+            g.SetItemClientObject
+
+        with self.assertRaises(AttributeError):
+            g.GetItemClientObject
 
 
     def test_ribbon_gallery6(self):
@@ -58,8 +59,8 @@ class ribbon_gallery_Tests(wtc.WidgetTestCase):
 
         data = _Data(a=1, b=2, c=3)
         item = g.Append(wx.Bitmap(16,16), 102)
-        g.SetItemClientObject(item, data)
-        data_out = g.GetItemClientObject(item)
+        g.SetItemClientData(item, data)
+        data_out = g.GetItemClientData(item)
         self.assertEqual(data.a, data_out.a)
         self.assertTrue(data_out is data)
 
@@ -74,7 +75,7 @@ class ribbon_gallery_Tests(wtc.WidgetTestCase):
 
         data = _Data(a=1, b=2, c=3)
         item = g.Append(wx.Bitmap(16,16), 102, data)
-        data_out = g.GetItemClientObject(item)
+        data_out = g.GetItemClientData(item)
         self.assertEqual(data.a, data_out.a)
         self.assertTrue(data_out is data)
 

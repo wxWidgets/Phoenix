@@ -27,10 +27,10 @@ class ribbon_buttonbar_Tests(wtc.WidgetTestCase):
         b = bb.AddButton(100, "label", bmp, "help string")
 
         with self.assertRaises(AttributeError):
-            bb.SetItemClientData
+            bb.SetItemClientObject
 
         with self.assertRaises(AttributeError):
-            bb.GetItemClientData
+            bb.GetItemClientObject
 
 
     def test_ribbon_buttonbar4(self):
@@ -48,8 +48,8 @@ class ribbon_buttonbar_Tests(wtc.WidgetTestCase):
                 self.__dict__.update(kw)
 
         data = _Data(a=1, b=2, c=3)
-        bb.SetItemClientObject(btn, data)
-        data_out = bb.GetItemClientObject(btn)
+        bb.SetItemClientData(btn, data)
+        data_out = bb.GetItemClientData(btn)
         self.assertEqual(data.a, data_out.a)
         self.assertTrue(data_out is data)
 
