@@ -849,7 +849,7 @@ class ListRowHighlighter:
             color = self._color
         local_defaultb = self._defaultb
         local_mode = self._mode
-        for row in xrange(self.GetItemCount()):
+        for row in range(self.GetItemCount()):
             if local_mode & HIGHLIGHT_EVEN:
                 dohlight = not row % 2
             else:
