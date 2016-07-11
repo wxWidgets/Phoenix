@@ -22,8 +22,9 @@ import numpy as np
 
 class DisplaySide(object):
     """
-    Generic class for storing booleans describing which sides of a box are
-    displayed. Used for fine-tuning the axis, ticks, and values of a graph.
+    Generic class for describing which sides of a box are displayed.
+
+    Used for fine-tuning the axis, ticks, and values of a graph.
 
     This class somewhat mimics a collections.namedtuple factory function in
     that it is an iterable and can have indiviual elements accessible by name.
@@ -34,13 +35,13 @@ class DisplaySide(object):
     - it contains type checking, only allowing boolean values
     - it contains name checking, only allowing valid_names as attributes
 
-    :param bottom: Display the bottom side?
+    :param bottom: Display the bottom side
     :type bottom: bool
-    :param left: Display the left side?
+    :param left: Display the left side
     :type left: bool
-    :param top: Display the top side?
+    :param top: Display the top side
     :type top: bool
-    :param right: Display the right side?
+    :param right: Display the right side
     :type right: bool
     """
     # TODO: Do I want to replace with __slots__?
@@ -108,11 +109,14 @@ class DisplaySide(object):
         return iter([self.bottom, self.left, self.top, self.right])
 
 
-# TODO: New name: RevertStyle? SavedStyle? Something else?
+# TODO: replace with wx.DCPenChanger/wx.DCBrushChanger, etc.
+#       Alternatively, replace those with this function...
 class TempStyle(object):
     """
-    Combination Decorator and Context Manager to revert pen or brush changes
-    after a method call or block finish.
+    Decorator / Context Manager to revert pen or brush changes.
+
+    Will revert pen, brush, or both to their previous values after a method
+    call or block finish.
 
     :param which: The item to save and revert after execution. Can be
                   one of ``{'both', 'pen', 'brush'}``.
@@ -136,7 +140,6 @@ class TempStyle(object):
        As of 2016-06-15, this can only be used as a decorator for **class
        methods**, not standard functions. There is a plan to try and remove
        this restriction, but I don't know when that will happen...
-
 
     .. epigraph::
 
@@ -237,8 +240,7 @@ class TempStyle(object):
 
 class PendingDeprecation(object):
     """
-    Decorator which warns the developer about methods that are
-    pending deprecation.
+    Decorator which raises warnings for methods that are pending deprecation.
 
     :param new_func: The new class, method, or function that should be used.
     :type new_func: str
@@ -280,6 +282,8 @@ def scale_and_shift_point(x, y, scale=1, shift=0):
     """
     Creates a scaled and shifted 2x1 numpy array of [x, y] values.
 
+    The shift value must be in the scaled units.
+
     :param float `x`:        The x value of the unscaled, unshifted point
     :param float `y`:        The y valye of the unscaled, unshifted point
     :param np.array `scale`: The scale factor to use ``[x_sacle, y_scale]``
@@ -290,6 +294,7 @@ def scale_and_shift_point(x, y, scale=1, shift=0):
     :rtype: np.array
 
     .. note::
+
        :math:`new = (scale * old) + shift`
     """
     point = scale * np.array([x, y]) + shift
@@ -298,8 +303,7 @@ def scale_and_shift_point(x, y, scale=1, shift=0):
 
 def set_displayside(value):
     """
-    Wrapper around :class:`~wx.lib.plot._DisplaySide` that allowing for
-    "overloaded" calls.
+    Wrapper around :class:`~wx.lib.plot._DisplaySide` that allows for "overloaded" calls.
 
     If ``value`` is a boolean: all 4 sides are set to ``value``
 
