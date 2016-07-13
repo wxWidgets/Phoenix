@@ -19,6 +19,10 @@ renderer.  It supports only a subset of the HTML standards, and no Javascript
 or CSS, but it is relatively lightweight and has no platform dependencies.  It
 is suitable for displaying simple HTML documents, such as the application's
 documentation or built-in help pages.
+
+.. note:: Due to some internal dynamic initialization in wxWidgets, this
+          module should be imported **before** the :class:`wx.App` object is
+          created.
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by

@@ -18,6 +18,10 @@ The :class:`RichTextCtrl` is a generic, ground-up implementation of a rich
 text control capable of showing multiple text styles and images.  This module
 contains the control and many supporting classes needed for using the features
 of the :class:`RichTextCtrl`.
+
+.. note:: Due to some internal dynamic initialization in wxWidgets, this
+          module should be imported **before** the :class:`wx.App` object is
+          created.
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
