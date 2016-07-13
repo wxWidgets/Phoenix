@@ -63,10 +63,11 @@ class TestHtmlPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1, style=wx.NO_FULL_REPAINT_ON_RESIZE)
         self.log = log
         self.frame = frame
-        self.cwd = os.path.split(sys.argv[0])[0]
+        self.cwd = os.path.dirname(__file__)
 
         if not self.cwd:
             self.cwd = os.getcwd()
+        os.chdir(self.cwd)
         if frame:
             self.titleBase = frame.GetTitle()
 
@@ -136,8 +137,10 @@ class TestHtmlPanel(wx.Panel):
         dlg = wx.FileDialog(self, style=wx.FD_OPEN,
                             wildcard='HTML Files|*.htm;*.html', )
 
-        if dlg.ShowModal() == wx.OK:
+        print('before shomaodal')
+        if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
+            print(path)
             self.html.LoadPage(path)
 
         dlg.Destroy()
@@ -146,7 +149,7 @@ class TestHtmlPanel(wx.Panel):
     def OnLoadURL(self, event):
         dlg = wx.TextEntryDialog(self, "Enter a URL")
 
-        if dlg.ShowModal() == wx.OK:
+        if dlg.ShowModal() == wx.ID_OK:
             url = dlg.GetValue()
             self.html.LoadPage(url)
 
@@ -154,7 +157,6 @@ class TestHtmlPanel(wx.Panel):
 
 
     def OnWithWidgets(self, event):
-        os.chdir(self.cwd)
         name = os.path.join(self.cwd, opj('data/widgetTest.htm'))
         self.html.LoadPage(name)
 
