@@ -32,7 +32,18 @@ def run():
     # customizing the generated code and docstrings.
     
     module.addHeaderCode('#include <wx/generic/aboutdlgg.h>')
-    
+
+    c = module.find('wxAboutDialogInfo')
+    assert isinstance(c, etgtools.ClassDef)
+
+    # Add some aliases for the non-UK spelling
+    c.addPyCode("""\
+        AboutDialogInfo.HasLicense = AboutDialogInfo.HasLicence
+        AboutDialogInfo.GetLicense = AboutDialogInfo.GetLicence
+        AboutDialogInfo.License = AboutDialogInfo.Licence
+        """)
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
