@@ -11,6 +11,8 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
+from textwrap import dedent
+
 PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "dc"   # Base name of the file to generate to for this script
@@ -46,18 +48,14 @@ def run():
     c.addPrivateCopyCtor()
     c.addPublic()
     tools.removeVirtuals(c)
-    
-    # rename the more complex overload for these two, like in classic wxPython
-    c.find('GetTextExtent').findOverload('wxCoord *').pyName = 'GetFullTextExtent'
-    c.find('GetMultiLineTextExtent').findOverload('wxCoord *').pyName = 'GetFullMultiLineTextExtent'                   
-    
+
     # Keep only the wxSize overloads of these
     c.find('GetSize').findOverload('wxCoord').ignore()
     c.find('GetSizeMM').findOverload('wxCoord').ignore()
     
     # TODO: needs wxAffineMatrix2D support.
-    c.find('GetTransformMatrix').ignore()
-    c.find('SetTransformMatrix').ignore()
+    #c.find('GetTransformMatrix').ignore()
+    #c.find('SetTransformMatrix').ignore()
 
     # remove wxPoint* overloads, we use the wxPointList ones
     c.find('DrawLines').findOverload('wxPoint points').ignore()
@@ -67,7 +65,6 @@ def run():
     # TODO: we'll need a custom method implementation for this since there
     # are multiple array parameters involved...
     c.find('DrawPolyPolygon').ignore()
-
 
     
     # Add output param annotations so the generated docstrings will be correct
@@ -81,15 +78,6 @@ def run():
     c.find('GetLogicalOrigin.x').out = True
     c.find('GetLogicalOrigin.y').out = True
     
-    c.find('GetTextExtent.w').out = True
-    c.find('GetTextExtent.h').out = True
-    c.find('GetTextExtent.descent').out = True
-    c.find('GetTextExtent.externalLeading').out = True
-
-    c.find('GetMultiLineTextExtent.w').out = True
-    c.find('GetMultiLineTextExtent.h').out = True
-    c.find('GetMultiLineTextExtent.heightLine').out = True
-    
     c.find('GetClippingBox.x').out = True
     c.find('GetClippingBox.y').out = True
     c.find('GetClippingBox.width').out = True
@@ -98,17 +86,115 @@ def run():
         doc="Gets the rectangle surrounding the current clipping region",
         body="return wx.Rect(*self.GetClippingBox())")
 
-    
-    # Add some alternate implementations for DC methods, in order to avoid
-    # using parameters as return values, etc. as well as Classic
+
+    # Deal with the text-extent methods. In Classic we renamed one overloaded
+    # method with a "Full" name, and the simpler one was left with the
+    # original name.  I think a simpler approach here will be to remove the
+    # simple version, rename the Full version as before, and then add a
+    # CppMethod to reimplement the simple version.
+
+    for name in ['GetTextExtent', 'GetMultiLineTextExtent']:
+        m = c.find(name)
+        # if these fail then double-check order of parsed methods, etc.
+        assert len(m.overloads) == 1
+        assert 'wxCoord' not in m.overloads[0].argsString
+        m.overloads = []
+
+    c.find('GetTextExtent').pyName = 'GetFullTextExtent'
+    c.find('GetMultiLineTextExtent').pyName = 'GetFullMultiLineTextExtent'
+
+    # Set output parameters
+    c.find('GetTextExtent.w').out = True
+    c.find('GetTextExtent.h').out = True
+    c.find('GetTextExtent.descent').out = True
+    c.find('GetTextExtent.externalLeading').out = True
+
+    c.find('GetMultiLineTextExtent.w').out = True
+    c.find('GetMultiLineTextExtent.h').out = True
+    c.find('GetMultiLineTextExtent.heightLine').out = True
+
+
+    # Update the docs to remove references to overloading, pointer values, etc.
+    m = c.find('GetTextExtent')
+    m.briefDoc = "Gets the dimensions of the string as it would be drawn."
+    m.detailedDoc = [dedent("""\
+        The ``string`` parameter is the string to measure.  The return value
+        is a tuple of integer values consisting of ``widget``, ``height``,
+        ``decent`` and ``externalLeading``. The ``descent`` is the dimension
+        from the baseline of the font to the bottom of the descender, and
+        ``externalLeading`` is any extra vertical space added to the font by the
+        font designer (usually is zero).
+
+        If the optional parameter ``font`` is specified and valid, then it is
+        used for the text extent calculation. Otherwise the currently selected
+        font is.
+
+        .. seealso:: :class:`wx.Font`, :meth:`~wx.DC.SetFont`,
+           :meth:`~wx.DC.GetPartialTextExtents, :meth:`~wx.DC.GetMultiLineTextExtent`
+        """)]
+
+    m = c.find('GetMultiLineTextExtent')
+    m.briefDoc = "Gets the dimensions of the string as it would be drawn."
+    m.detailedDoc = [dedent("""\
+        The ``string`` parameter is the string to measure.  The return value
+        is a tuple of integer values consisting of ``widget``, ``height`` and
+        ``heightLine``.  The ``heightLine`` is the the height of a single line.
+
+        If the optional parameter ``font`` is specified and valid, then it is
+        used for the text extent calculation. Otherwise the currently selected
+        font is.
+
+        .. note:: This function works with both single-line and multi-line strings.
+
+        .. seealso:: :class:`wx.Font`, :meth:`~wx.DC.SetFont`,
+           :meth:`~wx.DC.GetPartialTextExtents, :meth:`~wx.DC.GetTextExtent`
+        """)]
+
+    # Now add the simpler versions of the extent methods
+    c.addCppMethod('wxSize*', 'GetTextExtent', '(const wxString& st)', isConst=True,
+        doc=dedent("""\
+            Return the dimensions of the given string's text extent using the
+            currently selected font.
+
+            :param st: The string to be measured
+
+            .. seealso:: :meth:`~wx.DC.GetFullTextExtent`
+            """),
+        body="""\
+            return new wxSize(self->GetTextExtent(*st));
+            """,
+        overloadOkay=False, factory=True)
+
+    c.addCppMethod('wxSize*', 'GetMultiLineTextExtent', '(const wxString& st)', isConst=True,
+        doc=dedent("""\
+            Return the dimensions of the given string's text extent using the
+            currently selected font, taking into account multiple lines if
+            present in the string.
+
+            :param st: The string to be measured
+
+            .. seealso:: :meth:`~wx.DC.GetFullMultiLineTextExtent`
+            """),
+        body="""\
+            return new wxSize(self->GetMultiLineTextExtent(*st));
+            """,
+        overloadOkay=False, factory=True)
+
+
+
+
+    # Add some alternate implementations for other DC methods, in order to
+    # avoid using parameters as return values, etc. as well as Classic
     # compatibility.
     c.find('GetPixel').ignore()
     c.addCppMethod('wxColour*', 'GetPixel', '(wxCoord x, wxCoord y)', 
-        doc="Gets the colour at the specified location on the DC.", body="""\
-        wxColour* col = new wxColour;
-        self->GetPixel(x, y, col);
-        return col;
-        """, factory=True)
+        doc="Gets the colour at the specified location on the DC.",
+        body="""\
+            wxColour* col = new wxColour;
+            self->GetPixel(x, y, col);
+            return col;
+            """,
+        factory=True)
 
     # Return the rect instead of using an output parameter
     m = c.find('DrawLabel').findOverload('rectBounding')

@@ -916,15 +916,15 @@ class ClassDef(BaseDef):
 
     #------------------------------------------------------------------
  
-    def _addMethod(self, md):
+    def _addMethod(self, md, overloadOkay=True):
         md.klass = self
-        if self.findItem(md.name):
+        if overloadOkay and self.findItem(md.name):
             self.findItem(md.name).overloads.append(md)
         else:
             self.items.append(md)
         
     def addCppMethod(self, type, name, argsString, body, doc=None, isConst=False, 
-                     cppSignature=None, **kw):
+                     cppSignature=None, overloadOkay=True, **kw):
         """
         Add a new C++ method to a class. This method doesn't have to actually
         exist in the real C++ class. Instead it will be grafted on by the
@@ -933,7 +933,7 @@ class ClassDef(BaseDef):
         """
         md = CppMethodDef(type, name, argsString, body, doc, isConst, klass=self, 
                           cppSignature=cppSignature, **kw)
-        self._addMethod(md)
+        self._addMethod(md, overloadOkay)
         return md
 
     

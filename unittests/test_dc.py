@@ -130,8 +130,34 @@ class dc_Tests(wtc.WidgetTestCase):
                     h = dc.GetCGContext()
                 except NotImplementedError:
                     pass
-                
-            
+
+
+    def test_dcTextExtents(self):
+        dc = wx.ClientDC(self.frame)
+
+        size = dc.GetTextExtent('Test String')
+        assert isinstance(size, wx.Size)
+        assert size.Get() > (0,0)
+
+        mlsize = dc.GetMultiLineTextExtent('Test String\n2nd line')
+        assert isinstance(mlsize, wx.Size)
+        assert mlsize.Get() > (0,0)
+        assert mlsize.Get() > size.Get()
+
+
+    def test_dcFullTextExtents(self):
+        dc = wx.ClientDC(self.frame)
+
+        size = dc.GetFullTextExtent('Test String')
+        assert isinstance(size, tuple)
+        assert len(size) == 4
+
+        mlsize = dc.GetFullMultiLineTextExtent('Test String\n2nd line')
+        assert isinstance(mlsize, tuple)
+        assert len(mlsize) == 3
+
+
+
     def test_trickyStuff(self):
         # execute some tricky tweaks to make sure they work are as they are supposed to.
         dc = wx.ClientDC(self.frame)
