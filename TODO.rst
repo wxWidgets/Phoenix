@@ -88,14 +88,12 @@ Sphinx tweaks
 The big changes are done, but here are some dangling strings that still need
 to be untangled:
 
-  * The `chopDescription()` function is not very smart. See if it can be made a
+  * The ``chopDescription()`` function is not very smart. See if it can be made a
     little smarter and pull out the first sentence from the docstring instead
-    of ust the first line.
+    of just the first line.
 
   * Convert the main.html page to a ReST file? It would probably make it a
     little easier to maintain.
-
-  * Turn off full justification of text?
 
   * Set max width of body sections?  I think it looks a little nicer that way,
     but we'll need to fix the floating and alignment of the sidebar to do
@@ -108,6 +106,9 @@ to be untangled:
   * Move the building of the docs to the Windows build slave so the Windows
     specific modules will be present for the wxlib build command, so those
     modules can be documented.
+
+  * If a method is renamed it is still in the sorted list of methods at the
+    position that the original name would have sorted to.
     
 
 
@@ -154,7 +155,6 @@ Other Dev Stuff
   * Reimplement the classes in the valgen, valnum and valtext headers as
     Python code, and make them visible in the core wx namespace?
 
-
   * Should the demo/version.py file be maintained in the source repository?
     Or just let it always be generated like wx/__version__.py?
 
@@ -178,7 +178,7 @@ Other Dev Stuff
     bytes objects, they should probably be string objects. Or not, sip's
     default might be best... See ModuleDef.addGlobalStr if I change my mind.
 
-  * If a function or method has overloads but all but one all ignored then the
+  * If a function or method has overloads but all but one are ignored then the
     doc generator should not use the "\*args, \*\*kw" form of output and just use
     the args string of the remaining function or method definition like for
     those that do not have overloads.  For example, see Window.GetClientSize
