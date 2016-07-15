@@ -2062,7 +2062,8 @@ class XMLDocString(object):
                 break
         
         self.share_docstrings = share_docstrings
-        
+
+        snippet_count = 0
         for sub_item in [self.xml_item] + self.xml_item.overloads:
 
             if sub_item.ignored:
@@ -2072,10 +2073,11 @@ class XMLDocString(object):
             docstring = XMLDocString(sub_item, is_overload=True, share_docstrings=share_docstrings)
             docstring.class_name = self.class_name
             docstring.current_module = self.current_module
+            docstring.snippet_count = snippet_count
 
             docs = docstring.Dump()
             self.overloads.append(docs)
-        
+            snippet_count = docstring.snippet_count
 
     # -----------------------------------------------------------------------
 

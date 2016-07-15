@@ -1,2 +1,2 @@
-    
-    font = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True)
+    # Create a font using wx.FontInfo
+    font = wx.Font( wx.FontInfo(10).Bold().Underline() )
