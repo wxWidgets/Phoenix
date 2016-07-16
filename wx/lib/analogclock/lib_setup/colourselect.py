@@ -57,8 +57,9 @@ class ColourSelect(GenBitmapButton):
         data = wx.ColourData()
         data.SetChooseFull(True)
         data.SetColour(self.value)
-        [data.SetCustomColour(colour_index, win.customcolours[colour_index])
-         for colour_index in range(0, 16)]
+        for idx, clr in enumerate(win.customcolours):
+            if clr:
+                data.SetCustomColour(idx, clr)
 
         dlg = wx.ColourDialog(win, data)
         dlg.SetTitle("Select Colour")
