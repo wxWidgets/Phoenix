@@ -305,6 +305,10 @@ class DemoApp(object):
         self.app = wx.App()
         self.frame = MainFrame(None, -1, "PlotCanvas")
         self.frame.Show(True)
+        wx.CallAfter(wx.MessageBox,
+                     "Various plot types can be shown using the Plot menu. " +
+                     "Check out the Options menu too.",
+                     "wx.lib.plot Demo")
         self.app.MainLoop()
 
 
