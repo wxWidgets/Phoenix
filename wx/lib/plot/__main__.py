@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from .examples import demo
-
-demo.run_demo()
+if __name__ == '__main__':
+    from .examples import demo
+    demo.run_demo()
