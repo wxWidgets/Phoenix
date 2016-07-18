@@ -44,10 +44,10 @@ def runTest(frame, nb, log):
 
 
 overview = """<html><body>
-<h2><center>wx.animate.AnimationCtrl</center></h2>
+<h2><center>wx.adv.AnimationCtrl</center></h2>
 
-wx.animate.AnimationCtrl is like a wx.StaticBitmap but is able to
-display an animation by extracing frames from a multi-image GIF file.
+wx.adv.AnimationCtrl is like a wx.StaticBitmap but is able to
+display an animation by extracting frames from a multi-image GIF file.
 
 </body></html>
 """
