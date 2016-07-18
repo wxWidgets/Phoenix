@@ -78,7 +78,8 @@ Sample usage::
 
 #----------------------------------------------------------------------------
 
-import  wx
+import wx
+import wx.lib.buttons
 import functools
 
 #----------------------------------------------------------------------------
@@ -116,9 +117,37 @@ class ColourSelectEvent(wx.PyCommandEvent):
 
 EVT_COLOURSELECT = wx.PyEventBinder(wxEVT_COMMAND_COLOURSELECT, 1)
 
+
 #----------------------------------------------------------------------------
 
-class ColourSelect(wx.BitmapButton):
+class CustomColourData(object):
+    """
+    A simple container for tracking custom colours to be shown in the colour
+    dialog, and which facilitates reuse of this collection across multiple
+    instances or multiple invocations of the :class:`ColourSelect` button.
+    """
+    COUNT = 16
+
+    def __init__(self):
+        self._customColours = [None] * self.COUNT
+
+
+    @property
+    def Colours(self):
+        return self._customColours
+
+    @Colours.setter
+    def Colours(self, value):
+        # slice it into the current list to keep the same list instance
+        if isinstance(value, CustomColourData):
+            value = value.Colours
+        self._customColours[:] = value
+
+
+#----------------------------------------------------------------------------
+
+
+class ColourSelect(wx.lib.buttons.GenBitmapButton):
     """
     A subclass of :class:`wx.BitmapButton` that, when clicked, will
     display a colour selection dialog.
@@ -158,8 +187,9 @@ class ColourSelect(wx.BitmapButton):
             
         size.width = size.width if size.width != -1 else w
         size.height = size.height if size.height != -1 else h
-        wx.BitmapButton.__init__(self, parent, id, wx.Bitmap(w,h),
-                                 pos=pos, size=size, style=style|wx.BU_AUTODRAW)
+        super(ColourSelect, self).__init__(parent, id, wx.Bitmap(w,h),
+                                 pos=pos, size=size, style=style,
+                                 name='ColourSelect')
 
         if type(colour) == type( () ):
             colour = wx.Colour(*colour)
@@ -169,22 +199,24 @@ class ColourSelect(wx.BitmapButton):
         self.callback = callback
         bmp = self.MakeBitmap()
         self.SetBitmap(bmp)
+        self.customColours = None
         parent.Bind(wx.EVT_BUTTON, self.OnClick, self)
 
 
     def GetColour(self):
         """
-        Returns the current colour set for the :class:`wx.ColourSelect`.
+        Returns the current colour set for the :class:`ColourSelect`.
 
         :rtype: :class:`wx.Colour`
         """
-        
+
         return self.colour
 
 
     def GetValue(self):
         """
-        Returns the current colour set for the :class:`wx.ColourSelect`.
+        Returns the current colour set for the :class:`ColourSelect`.
+        Same as :meth:`~ColourSelect.GetColour`.
 
         :rtype: :class:`wx.Colour`
         """
@@ -194,20 +226,21 @@ class ColourSelect(wx.BitmapButton):
 
     def SetValue(self, colour):
         """
-        Sets the current colour for :class:`wx.ColourSelect`.
+        Sets the current colour for :class:`ColourSelect`.  Same as
+        :meth:`~ColourSelect.SetColour`.
 
-        :param `colour`: the new colour for :class:`wx.ColourSelect`.
+        :param `colour`: the new colour for :class:`ColourSelect`.
         :type `colour`: tuple or string or :class:`wx.Colour`
         """
-        
+
         self.SetColour(colour)
         
 
     def SetColour(self, colour):
         """
-        Sets the current colour for :class:`wx.ColourSelect`.
+        Sets the current colour for :class:`ColourSelect`.
 
-        :param `colour`: the new colour for :class:`wx.ColourSelect`.
+        :param `colour`: the new colour for :class:`ColourSelect`.
         :type `colour`: tuple or string or :class:`wx.Colour`
         """
 
@@ -220,7 +253,7 @@ class ColourSelect(wx.BitmapButton):
         """
         Sets the new text label for :class:`wx.ColourSelect`.
 
-        :param string `label`: the new text label for :class:`wx.ColourSelect`.
+        :param string `label`: the new text label for :class:`ColourSelect`.
         """
 
         self.label = label
@@ -228,12 +261,43 @@ class ColourSelect(wx.BitmapButton):
 
     def GetLabel(self):
         """
-        Returns the current text label for the :class:`wx.ColourSelect`.
+        Returns the current text label for the :class:`ColourSelect`.
 
         :rtype: string
         """
 
         return self.label
+
+
+    def GetCustomColours(self):
+        """
+        Returns the current set of custom colour values to be shown in the
+        colour dialog, if supported.
+
+        :rtype: :class:`CustomColourData`
+        """
+        return self.customColours
+
+
+    def SetCustomColours(self, colours):
+        """
+        Sets the list of custom colour values to be shown in colour dialog, if
+        supported.
+
+        :param `colours`: An instance of :class:`CustomColourData` or a 16
+        element list of ``None`` or :class:`wx.Colour` values.
+        """
+        if isinstance(colours, CustomColourData):
+            colours = colours.Colours
+        if self.customColours is None:
+            self.customColours = CustomColourData()
+        self.customColours.Colours = colours
+
+
+    Colour = property(GetColour, SetColour)
+    Value = property(GetValue, SetValue)
+    Label = property(GetLabel, SetLabel)
+    CustomColours = property(GetCustomColours, SetCustomColours)
 
 
     def MakeBitmap(self):
@@ -279,7 +343,7 @@ class ColourSelect(wx.BitmapButton):
         
 
     def OnChange(self):
-        """ Fires the ```EVT_COLOURSELECT`` event, as the user has changed the current colour. """
+        """ Fires the ``EVT_COLOURSELECT`` event, as the user has changed the current colour. """
         
         evt = ColourSelectEvent(self.GetId(), self.GetValue())
         evt.SetEventObject(self)
@@ -290,7 +354,7 @@ class ColourSelect(wx.BitmapButton):
 
     def OnClick(self, event):
         """
-        Handles the ``wx.EVT_BUTTON`` event for :class:`wx.ColourSelect`.
+        Handles the ``wx.EVT_BUTTON`` event for :class:`ColourSelect`.
 
         :param `event`: a :class:`wx.CommandEvent` event to be processed.
         """
@@ -298,12 +362,21 @@ class ColourSelect(wx.BitmapButton):
         data = wx.ColourData()
         data.SetChooseFull(True)
         data.SetColour(self.colour)
+        if self.customColours:
+            for idx, clr in enumerate(self.customColours.Colours):
+                if clr is not None:
+                    data.SetCustomColour(idx, clr)
+
         dlg = wx.ColourDialog(wx.GetTopLevelParent(self), data)
         changed = dlg.ShowModal() == wx.ID_OK
 
         if changed:
             data = dlg.GetColourData()
             self.SetColour(data.GetColour())
+            if self.customColours:
+                self.customColours.Colours = \
+                    [data.GetCustomColour(idx) for idx in range(0, 16)]
+
         dlg.Destroy()
 
         # moved after dlg.Destroy, since who knows what the callback will do...
