@@ -8,9 +8,9 @@
 import functools
 
 import wx
+import wx.lib.colourselect as csel
 
 from . import styles
-from .lib_setup import colourselect as csel
 from .lib_setup import fontselect as fsel
 from .lib_setup import buttontreectrlpanel as bt
 
@@ -38,13 +38,25 @@ class _GroupBase(wx.Panel):
         self.Bind(wx.EVT_TEXT_ENTER, self.OnSpin)
         self.Bind(wx.EVT_CHOICE, self.OnChoice)
 
+        # Acquire a reference to the shared custom colours up in the dialog
+        customcolours = None
+        win = self
+        while win is not None:
+            if hasattr(win, 'customcolours'):
+                customcolours = win.customcolours
+                break
+            win = win.GetParent()
+        self.customcolours = customcolours
+
 
     def OnSelectFont(self, evt):
         self.clock.SetTickFont(evt.val, self.target)
 
 
     def OnSelectColour(self, evt):
-        obj = evt.obj; val = evt.val
+        obj = evt.GetEventObject(); val = evt.GetValue()
+
+        self.customcolours.Colours = obj.GetCustomColours()
 
         if hasattr(self, "fc") and obj == self.fc:
             if self.group == "Hands":
@@ -164,6 +176,7 @@ class _Group_1(_GroupBase):
         sizer.Add(p, pos=(0, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         p = self.bc = csel.ColourSelect(self)
+        p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(0, 1), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         p = self.bw = wx.SpinCtrl(self, size=(75, 21),
@@ -174,6 +187,7 @@ class _Group_1(_GroupBase):
         sizer.Add(p, pos=(1, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         p = self.fc = csel.ColourSelect(self)
+        p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(1, 1), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         p = self.ls = wx.StaticText(self, label="Size:")
@@ -227,6 +241,7 @@ class _Group_3(_Group_1):
         sizer.Add(p, pos=(2, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         p = self.sw = csel.ColourSelect(self)
+        p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(2, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         self.GetSizer().Layout()
@@ -245,12 +260,14 @@ class _Group_4(_GroupBase):
         sizer.Add(p, pos=(0, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         p = self.fg = csel.ColourSelect(self)
+        p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(0, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         p = wx.StaticText(self, label="Background:")
         sizer.Add(p, pos=(1, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         p = self.bg = csel.ColourSelect(self)
+        p.SetCustomColours(self.customcolours)
         sizer.Add(p, pos=(1, 1), span=(1, 3), flag=wx.ALIGN_CENTRE_VERTICAL)
 
         p = wx.StaticText(self, label="Style:")
@@ -389,9 +406,12 @@ class Setup(wx.Dialog):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
+        self.customcolours = csel.CustomColourData()
+
         nb = self.nb = wx.Notebook(self)
         for s in ["Styles", "Hands", "Ticks", "Misc"]:
-            page = eval(s + "Panel(nb)"); page.Fit()
+            page = eval(s + "Panel(nb)")
+            page.Fit()
             nb.AddPage(page, s)
         nb.Fit()
         sizer.Add(nb, 1, flag = wx.EXPAND|wx.ALL, border=6)
@@ -405,8 +425,6 @@ class Setup(wx.Dialog):
 
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.OnButton)
-
-        self.customcolours = [None] * 16
 
         self.SetSizerAndFit(sizer)
         wx.CallAfter(self.UpdateControls)
