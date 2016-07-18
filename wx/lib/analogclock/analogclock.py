@@ -65,8 +65,8 @@ class AnalogClock(wx.Window):
         # HandSet is the set of hands; there's always one HandSet defined
         # regardless whether hands are being shown or not.
         #
-        # A 'lenfac = 0.95', e.g., means that the lenght of that hand will
-        # be 95% of the maximum allowed hand lenght ('nice' maximum lenght).
+        # A 'lenfac = 0.95', e.g., means that the length of that hand will
+        # be 95% of the maximum allowed hand length ('nice' maximum length).
         handH = Hand(size=7, lenfac=0.7)
         handM = Hand(size=5, lenfac=0.95)
         handS = Hand(size=1, lenfac=0.95)
