@@ -64,7 +64,7 @@ def deprecated(item, msg='', useName=False):
     elif callable(item):
         # wrap a new function around the callable
         def deprecated_func(*args, **kw):
-            warnings.warn("Call to deprecated item%s. %s" % (name, msg),
+            warnings.warn("Call to deprecated item %s. %s" % (name, msg),
                           wxPyDeprecationWarning, stacklevel=2)
             if not kw:
                 return item(*args)
@@ -78,7 +78,7 @@ def deprecated(item, msg='', useName=False):
     elif hasattr(item, '__get__'):
         # it should be a property if there is a getter
         class DepGetProp(object):
-            def __init__(self,item, msg):
+            def __init__(self, item, msg):
                 self.item = item
                 self.msg = msg
             def __get__(self, inst, klass):
