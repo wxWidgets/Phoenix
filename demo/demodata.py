@@ -50,8 +50,8 @@ _treeList = [
 
     # managed windows == things with a (optional) caption you can close
     ('Frames and Dialogs', [
-        'AUI_DockingWindowMgr',
-        'AUI_MDI',
+        #'AUI_DockingWindowMgr',  wx.aui is not in Phoenix yet, so show just the AGW demo
+        #'AUI_MDI',
         'Dialog',
         'Frame',
         'MDIWindows',
@@ -132,7 +132,7 @@ _treeList = [
     ]),
 
     ('"Book" Controls', [
-        'AUI_Notebook',
+        #'AUI_Notebook',  (See above)
         'Choicebook',
         'FlatNotebook',
         'Listbook',
