@@ -20,6 +20,7 @@ import wx
 import numpy as np
 
 # Package
+from .polyobjects import PlotPrintout
 from .utils import DisplaySide
 from .utils import set_displayside
 from .utils import PendingDeprecation
