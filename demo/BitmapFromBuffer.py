@@ -114,7 +114,7 @@ overview = """<html><body>
 
 Two new wx.Bitmap factory functions allow you to create a wx.Bitmap
 directly from a data buffer.  The the buffer can be any Python object
-that implements the buffer interface, or is convertable to a buffer,
+that implements the buffer interface, or is convertible to a buffer,
 such as a string or an array.  The new functions are: <ul>
 
 <li><b>wx.BitmapFromBuffer</b>(width, height, dataBuffer, alphaBuffer=None):
