@@ -13,9 +13,7 @@ This contains all of the PolyXXX objects used by :mod:`wx.lib.plot`.
 __docformat__ = "restructuredtext en"
 
 # Standard Library
-import string as _string
 import time as _time
-import sys
 import wx
 import warnings
 from collections import namedtuple
@@ -33,7 +31,7 @@ except:
     raise ImportError("NumPy not found.\n" + msg)
 
 # Package
-from .utils import PendingDeprecation
+from .utils import pendingDeprecation
 from .utils import TempStyle
 
 
@@ -90,13 +88,18 @@ class PolyPoints(object):
             raise ValueError("`logscale` must be a 2-tuple of bools")
         self._logscale = logscale
 
-    @PendingDeprecation("self.logScale property")
     def setLogScale(self, logscale):
         """
         Set to change the axes to plot Log10(values)
 
         Value must be a tuple of booleans (x_axis_bool, y_axis_bool)
+
+        .. deprecated:: Feb 27, 2016
+
+           Use the :attr:`~wx.lib.plot.polyobjects.PolyPoints.logScale`
+           property instead.
         """
+        pendingDeprecation("self.logScale property")
         self._logscale = logscale
 
     @property
@@ -1013,13 +1016,13 @@ class PolyBoxPlot(PolyPoints):
 
         outliers are outside of 1.5 * IQR
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         data : array-like
             The data to plot
 
-        Returns:
-        --------
+        Returns
+        -------
         bpdata : collections.namedtuple
             Descriptive statistics for data:
             (min_data, low_whisker, q25, median, q75, high_whisker, max_data)
@@ -1069,8 +1072,8 @@ class PolyBoxPlot(PolyPoints):
         """
         Draws a box plot on the DC.
 
-        Notes:
-        ------
+        Notes
+        -----
         The following draw order is required:
 
         1. First the whisker line
@@ -1254,16 +1257,16 @@ class PlotGraphics(object):
         for obj in self.objects:
             obj.logScale = logscale
 
-    @PendingDeprecation("self.logScale property")
     def setLogScale(self, logscale):
         """
         Set the log scale boolean value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.logScale` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.logScale`
+           property instead.
         """
+        pendingDeprecation("self.logScale property")
         self.logScale = logscale
 
     @property
@@ -1294,88 +1297,88 @@ class PlotGraphics(object):
         for o in self.objects:
             o.scaleAndShift(scale, shift)
 
-    @PendingDeprecation("self.printerScale property")
     def setPrinterScale(self, scale):
         """
         Thickens up lines and markers only for printing
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.printerScale` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.printerScale`
+           property instead.
         """
+        pendingDeprecation("self.printerScale property")
         self.printerScale = scale
 
-    @PendingDeprecation("self.xLabel property")
     def setXLabel(self, xLabel=''):
         """
         Set the X axis label on the graph
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.xLabel` property
-           instead.
-       """
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.xLabel`
+           property instead.
+        """
+        pendingDeprecation("self.xLabel property")
         self.xLabel = xLabel
 
-    @PendingDeprecation("self.yLabel property")
     def setYLabel(self, yLabel=''):
         """
         Set the Y axis label on the graph
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.yLabel` property
-           instead.
-       """
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.yLabel`
+           property instead.
+        """
+        pendingDeprecation("self.yLabel property")
         self.yLabel = yLabel
 
-    @PendingDeprecation("self.title property")
     def setTitle(self, title=''):
         """
         Set the title at the top of graph
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.title` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.title`
+           property instead.
         """
+        pendingDeprecation("self.title property")
         self.title = title
 
-    @PendingDeprecation("self.xLabel property")
     def getXLabel(self):
         """
         Get X axis label string
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.xLabel` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.xLabel`
+           property instead.
         """
+        pendingDeprecation("self.xLabel property")
         return self.xLabel
 
-    @PendingDeprecation("self.yLabel property")
     def getYLabel(self):
         """
         Get Y axis label string
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.yLabel` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.yLabel`
+           property instead.
         """
+        pendingDeprecation("self.yLabel property")
         return self.yLabel
 
-    @PendingDeprecation("self.title property")
     def getTitle(self, title=''):
         """
         Get the title at the top of graph
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotGraphics.title` property
-           instead.
+           Use the :attr:`~wx.lib.plot.polyobjects.PlotGraphics.title`
+           property instead.
         """
+        pendingDeprecation("self.title property")
         return self.title
 
     @property

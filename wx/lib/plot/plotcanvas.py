@@ -14,6 +14,8 @@ __docformat__ = "restructuredtext en"
 
 # Standard Library
 import sys
+import string as _string
+import time as _time
 
 # Third-Party
 import wx
@@ -21,9 +23,10 @@ import numpy as np
 
 # Package
 from .polyobjects import PlotPrintout
+from .polyobjects import PolyMarker, PolyLine, PolyBoxPlot
 from .utils import DisplaySide
 from .utils import set_displayside
-from .utils import PendingDeprecation
+from .utils import pendingDeprecation
 from .utils import TempStyle
 from .utils import scale_and_shift_point
 
@@ -447,26 +450,28 @@ class PlotCanvas(wx.Panel):
         frame.Centre(wx.BOTH)
         frame.Show(True)
 
-    @PendingDeprecation("self.logScale property")
     def setLogScale(self, logscale):
         """
         Set the log scale boolean value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.logScale` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.logScale`
+           property instead.
         """
+        pendingDeprecation("self.logScale property")
         self.logScale = logscale
 
-    @PendingDeprecation("self.logScale property")
     def getLogScale(self):
         """
         Set the log scale boolean value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.logScale` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.logScale`
+           property instead.
         """
+        pendingDeprecation("self.logScale property")
         return self.logScale
 
     @property
@@ -523,28 +528,30 @@ class PlotCanvas(wx.Panel):
         self.ySpec = 'min'
         self._absScale = absscale
 
-    @PendingDeprecation("self.fontSizeAxis property")
     def SetFontSizeAxis(self, point=10):
         """
         Set the tick and axis label font size (default is 10 point)
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeAxis` property
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeAxis`
+           property
            instead.
         """
+        pendingDeprecation("self.fontSizeAxis property")
         self.fontSizeAxis = point
 
-    @PendingDeprecation("self.fontSizeAxis property")
     def GetFontSizeAxis(self):
         """
         Get current tick and axis label font size in points
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeAxis` property
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeAxis`
+           property
            instead.
         """
+        pendingDeprecation("self.fontSizeAxis property")
         return self.fontSizeAxis
 
     @property
@@ -564,28 +571,28 @@ class PlotCanvas(wx.Panel):
     def fontSizeAxis(self, value):
         self._fontSizeAxis = value
 
-    @PendingDeprecation("self.fontSizeTitle property")
     def SetFontSizeTitle(self, point=15):
         """
         Set Title font size (default is 15 point)
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeTitle` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeTitle`
+           property instead.
         """
+        pendingDeprecation("self.fontSizeTitle property")
         self.fontSizeTitle = point
 
-    @PendingDeprecation("self.fontSizeTitle property")
     def GetFontSizeTitle(self):
         """
         Get Title font size (default is 15 point)
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeTitle` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeTitle`
+           property instead.
         """
+        pendingDeprecation("self.fontSizeTitle property")
         return self.fontSizeTitle
 
     @property
@@ -605,16 +612,16 @@ class PlotCanvas(wx.Panel):
     def fontSizeTitle(self, pointsize):
         self._fontSizeTitle = pointsize
 
-    @PendingDeprecation("self.fontSizeLegend property")
     def SetFontSizeLegend(self, point=7):
         """
         Set legend font size (default is 7 point)
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeLegend' property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeLegend'
+           property instead.
         """
+        pendingDeprecation("self.fontSizeLegend property")
         self.fontSizeLegend = point
 
     def GetFontSizeLegend(self):
@@ -623,8 +630,8 @@ class PlotCanvas(wx.Panel):
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.fontSizeLegend' property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.fontSizeLegend'
+           property instead.
         """
         return self.fontSizeLegend
 
@@ -645,28 +652,28 @@ class PlotCanvas(wx.Panel):
     def fontSizeLegend(self, point):
         self._fontSizeLegend = point
 
-    @PendingDeprecation("self.showScrollbars property")
     def SetShowScrollbars(self, value):
         """
         Set the showScrollbars value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.showScrollbars` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.showScrollbars`
+           property instead.
         """
+        pendingDeprecation("self.showScrollbars property")
         self.showScrollbars = value
 
-    @PendingDeprecation("self.showScrollbars property")
     def GetShowScrollbars(self):
         """
         Get the showScrollbars value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.showScrollbars` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.showScrollbars`
+           property instead.
         """
+        pendingDeprecation("self.showScrollbars property")
         return self.showScrollbars
 
     @property
@@ -693,28 +700,30 @@ class PlotCanvas(wx.Panel):
         self.sb_hor.Show(value)
         wx.CallAfter(self.Layout)
 
-    @PendingDeprecation("self.useScientificNotation property")
     def SetUseScientificNotation(self, useScientificNotation):
         """
         Set the useScientificNotation value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.useScientificNotation`
+           Use the
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.useScientificNotation`
            property instead.
         """
+        pendingDeprecation("self.useScientificNotation property")
         self.useScientificNotation = useScientificNotation
 
-    @PendingDeprecation("self.useScientificNotation property")
     def GetUseScientificNotation(self):
         """
         Get the useScientificNotation value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.useScientificNotation`
+           Use the
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.useScientificNotation`
            property instead.
         """
+        pendingDeprecation("self.useScientificNotation property")
         return self.useScientificNotation
 
     @property
@@ -735,28 +744,30 @@ class PlotCanvas(wx.Panel):
             raise TypeError("Value should be True or False")
         self._useScientificNotation = value
 
-    @PendingDeprecation("self.enableAntiAliasing property")
     def SetEnableAntiAliasing(self, enableAntiAliasing):
         """
         Set the enableAntiAliasing value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableAntiAliasing`
+           Use the
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableAntiAliasing`
            property instead.
         """
+        pendingDeprecation("self.enableAntiAliasing property")
         self.enableAntiAliasing = enableAntiAliasing
 
-    @PendingDeprecation("self.enableAntiAliasing property")
     def GetEnableAntiAliasing(self):
         """
         Get the enableAntiAliasing value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableAntiAliasing`
+           Use the
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableAntiAliasing`
            property instead.
         """
+        pendingDeprecation("self.enableAntiAliasing property")
         return self.enableAntiAliasing
 
     @property
@@ -778,28 +789,28 @@ class PlotCanvas(wx.Panel):
         self._antiAliasingEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableHiRes property")
     def SetEnableHiRes(self, enableHiRes):
         """
         Set the enableHiRes value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableHiRes` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableHiRes`
+           property instead.
         """
+        pendingDeprecation("self.enableHiRes property")
         self.enableHiRes = enableHiRes
 
-    @PendingDeprecation("self.enableHiRes property")
     def GetEnableHiRes(self):
         """
         Get the enableHiRes value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableHiRes` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableHiRes`
+           property instead.
         """
+        pendingDeprecation("self.enableHiRes property")
         return self._hiResEnabled
 
     @property
@@ -821,28 +832,28 @@ class PlotCanvas(wx.Panel):
         self._hiResEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableDrag property")
     def SetEnableDrag(self, value):
         """
         Set the enableDrag value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDrag` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDrag`
+           property instead.
         """
+        pendingDeprecation("self.enableDrag property")
         self.enableDrag = value
 
-    @PendingDeprecation("self.enableDrag property")
     def GetEnableDrag(self):
         """
         Get the enableDrag value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDrag` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDrag`
+           property instead.
         """
+        pendingDeprecation("self.enableDrag property")
         return self.enableDrag
 
     @property
@@ -857,11 +868,11 @@ class PlotCanvas(wx.Panel):
 
         .. note::
            This is mutually exclusive with
-           :attr:`~wx.lib.plot.PlotCanvas.enableZoom`. Setting one will
-           disable the other.
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableZoom`. Setting
+           one will disable the other.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.enableZoom`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableZoom`
         """
         return self._dragEnabled
 
@@ -877,28 +888,28 @@ class PlotCanvas(wx.Panel):
             self.SetCursor(self.defaultCursor)
         self._dragEnabled = value
 
-    @PendingDeprecation("self.enableZoom property")
     def SetEnableZoom(self, value):
         """
         Set the enableZoom value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableZoom` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableZoom`
+           property instead.
         """
+        pendingDeprecation("self.enableZoom property")
         self.enableZoom = value
 
-    @PendingDeprecation("self.enableZoom property")
     def GetEnableZoom(self):
         """
         Get the enableZoom value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableZoom` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableZoom`
+           property instead.
         """
+        pendingDeprecation("self.enableZoom property")
         return self.enableZoom
 
     @property
@@ -913,11 +924,11 @@ class PlotCanvas(wx.Panel):
 
         .. note::
            This is mutually exclusive with
-           :attr:`~wx.lib.plot.PlotCanvas.enableDrag`. Setting one will
-           disable the other.
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDrag`. Setting
+           one will disable the other.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.enableDrag`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDrag`
         """
         return self._zoomEnabled
 
@@ -933,28 +944,28 @@ class PlotCanvas(wx.Panel):
             self.SetCursor(self.defaultCursor)
         self._zoomEnabled = value
 
-    @PendingDeprecation("self.enableGrid property")
     def SetEnableGrid(self, value):
         """
         Set the enableGrid value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableGrid` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableGrid`
+           property instead.
         """
+        pendingDeprecation("self.enableGrid property")
         self.enableGrid = value
 
-    @PendingDeprecation("self.enableGrid property")
     def GetEnableGrid(self):
         """
         Get the enableGrid value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableGrid` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableGrid`
+           property instead.
         """
+        pendingDeprecation("self.enableGrid property")
         return self.enableGrid
 
     @property
@@ -988,28 +999,28 @@ class PlotCanvas(wx.Panel):
         self._gridEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableCenterLines property")
     def SetEnableCenterLines(self, value):
         """
         Set the enableCenterLines value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableCenterLines`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableCenterLines`
            property instead.
         """
+        pendingDeprecation("self.enableCenterLines property")
         self.enableCenterLines = value
 
-    @PendingDeprecation("self.enableCenterLines property")
     def GetEnableCenterLines(self):
         """
         Get the enableCenterLines value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableCenterLines`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableCenterLines`
            property instead.
         """
+        pendingDeprecation("self.enableCenterLines property")
         return self.enableCenterLines
 
     @property
@@ -1037,28 +1048,28 @@ class PlotCanvas(wx.Panel):
         self._centerLinesEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableDiagonals property")
     def SetEnableDiagonals(self, value):
         """
         Set the enableDiagonals value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDiagonals`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDiagonals`
            property instead.
         """
+        pendingDeprecation("self.enableDiagonals property")
         self.enableDiagonals = value
 
-    @PendingDeprecation("self.enableDiagonals property")
     def GetEnableDiagonals(self):
         """
         Get the enableDiagonals value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableDiagonals`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableDiagonals`
            property instead.
         """
+        pendingDeprecation("self.enableDiagonals property")
         return self.enableDiagonals
 
     @property
@@ -1091,28 +1102,28 @@ class PlotCanvas(wx.Panel):
         self._diagonalsEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableLegend property")
     def SetEnableLegend(self, value):
         """
         Set the enableLegend value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableLegend`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableLegend`
            property instead.
         """
+        pendingDeprecation("self.enableLegend property")
         self.enableLegend = value
 
-    @PendingDeprecation("self.enableLegend property")
     def GetEnableLegend(self):
         """
         Get the enableLegend value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableLegend`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableLegend`
            property instead.
         """
+        pendingDeprecation("self.enableLegend property")
         return self.enableLegend
 
     @property
@@ -1136,28 +1147,28 @@ class PlotCanvas(wx.Panel):
         self._legendEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enableTitle property")
     def SetEnableTitle(self, value):
         """
         Set the enableTitle value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableTitle` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableTitle`
+           property instead.
         """
+        pendingDeprecation("self.enableTitle property")
         self.enableTitle = value
 
-    @PendingDeprecation("self.enableTitle property")
     def GetEnableTitle(self):
         """
         Get the enableTitle value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enableTitle` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enableTitle`
+           property instead.
         """
+        pendingDeprecation("self.enableTitle property")
         return self.enableTitle
 
     @property
@@ -1179,28 +1190,28 @@ class PlotCanvas(wx.Panel):
         self._titleEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.enablePointLabel property")
     def SetEnablePointLabel(self, value):
         """
         Set the enablePointLabel value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enablePointLabel`
            property instead.
         """
+        pendingDeprecation("self.enablePointLabel property")
         self.enablePointLabel = value
 
-    @PendingDeprecation("self.enablePointLabel property")
     def GetEnablePointLabel(self):
         """
         Set the enablePointLabel value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enablePointLabel`
            property instead.
         """
+        pendingDeprecation("self.enablePointLabel property")
         return self.enablePointLabel
 
     @property
@@ -1378,28 +1389,28 @@ class PlotCanvas(wx.Panel):
         self._axesLabelsEnabled = value
         self.Redraw()
 
-    @PendingDeprecation("self.pointLabelFunc property")
     def SetPointLabelFunc(self, func):
         """
         Set the enablePointLabel value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enablePointLabel`
            property instead.
         """
+        pendingDeprecation("self.pointLabelFunc property")
         self.pointLabelFunc = func
 
-    @PendingDeprecation("self.pointLabelFunc property")
     def GetPointLabelFunc(self):
         """
         Get the enablePointLabel value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.enablePointLabel`
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.enablePointLabel`
            property instead.
         """
+        pendingDeprecation("self.pointLabelFunc property")
         return self.pointLabelFunc
 
     @property
@@ -1468,48 +1479,52 @@ class PlotCanvas(wx.Panel):
         x, y = (screenPos - self._pointShift) / self._pointScale
         return x, y
 
-    @PendingDeprecation("self.xSpec property")
     def SetXSpec(self, spectype='auto'):
         """
         Set the xSpec value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.xSpec` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xSpec`
+           property instead.
         """
+        pendingDeprecation("self.xSpec property")
         self.xSpec = spectype
 
-    @PendingDeprecation("self.ySpec property")
     def SetYSpec(self, spectype='auto'):
         """
         Set the ySpec value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.ySpec` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.ySpec`
+           property instead.
         """
+        pendingDeprecation("self.ySpec property")
         self.ySpec = spectype
 
-    @PendingDeprecation("self.xSpec property")
     def GetXSpec(self):
         """
         Get the xSpec value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.xSpec` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xSpec`
+           property instead.
         """
+        pendingDeprecation("self.xSpec property")
         return self.xSpec
 
-    @PendingDeprecation("self.ySpec property")
     def GetYSpec(self):
         """
         Get the ySpec value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.ySpec` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.ySpec`
+           property instead.
         """
+        pendingDeprecation("self.ySpec property")
         return self.ySpec
 
     @property
@@ -1534,7 +1549,7 @@ class PlotCanvas(wx.Panel):
         + list or tuple: a list of (min, max) values. Must be length 2.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.ySpec`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.ySpec`
         """
         return self._xSpec
 
@@ -1570,7 +1585,7 @@ class PlotCanvas(wx.Panel):
         + list or tuple: a list of (min, max) values. Must be length 2.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.xSpec`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xSpec`
         """
         return self._ySpec
 
@@ -1584,15 +1599,16 @@ class PlotCanvas(wx.Panel):
                 raise TypeError(err_str)
         self._ySpec = value
 
-    @PendingDeprecation("self.xMaxRange property")
     def GetXMaxRange(self):
         """
         Get the xMaxRange value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.xMaxRange` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xMaxRange`
+           property instead.
         """
+        pendingDeprecation("self.xMaxRange property")
         return self.xMaxRange
 
     @property
@@ -1603,7 +1619,7 @@ class PlotCanvas(wx.Panel):
         :getter: Returns the value of xMaxRange.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.yMaxRange`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.yMaxRange`
         """
         xAxis = self._getXMaxRange()
         if self.logScale[0]:
@@ -1617,15 +1633,16 @@ class PlotCanvas(wx.Panel):
         xAxis = self._axisInterval(self._xSpec, p1[0], p2[0])  # in user units
         return xAxis
 
-    @PendingDeprecation("self.yMaxRange property")
     def GetYMaxRange(self):
         """
         Get the yMaxRange value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.yMaxRange` property instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.yMaxRange`
+           property instead.
         """
+        pendingDeprecation("self.yMaxRange property")
         return self.yMaxRange
 
     @property
@@ -1636,7 +1653,7 @@ class PlotCanvas(wx.Panel):
         :getter: Returns the value of yMaxRange.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.xMaxRange`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xMaxRange`
         """
         yAxis = self._getYMaxRange()
         if self.logScale[1]:
@@ -1650,16 +1667,16 @@ class PlotCanvas(wx.Panel):
         yAxis = self._axisInterval(self._ySpec, p1[1], p2[1])
         return yAxis
 
-    @PendingDeprecation("self.xCurrentRange property")
     def GetXCurrentRange(self):
         """
         Get the xCurrentRange value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.xCurrentRange` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xCurrentRange`
+           property instead.
         """
+        pendingDeprecation("self.xCurrentRange property")
         return self.xCurrentRange
 
     @property
@@ -1671,7 +1688,7 @@ class PlotCanvas(wx.Panel):
         :getter: Returns the value of xCurrentRange.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.yCurrentRange`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.yCurrentRange`
         """
         xAxis = self._getXCurrentRange()
         if self.logScale[0]:
@@ -1683,16 +1700,16 @@ class PlotCanvas(wx.Panel):
         portion of graph"""
         return self.last_draw[1]
 
-    @PendingDeprecation("self.yCurrentRange property")
     def GetYCurrentRange(self):
         """
         Get the yCurrentRange value.
 
         .. deprecated:: Feb 27, 2016
 
-           Use the :attr:`~wx.lib.plot.PlotCanvas.yCurrentRange` property
-           instead.
+           Use the :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.yCurrentRange`
+           property instead.
         """
+        pendingDeprecation("self.yCurrentRange property")
         return self.yCurrentRange
 
     @property
@@ -1704,7 +1721,7 @@ class PlotCanvas(wx.Panel):
         :getter: Returns the value of yCurrentRange.
 
         .. seealso::
-           :attr:`~wx.lib.plot.PlotCanvas.xCurrentRange`
+           :attr:`~wx.lib.plot.plotcanvas.PlotCanvas.xCurrentRange`
         """
         yAxis = self._getYCurrentRange()
         if self.logScale[1]:
@@ -2238,7 +2255,7 @@ class PlotCanvas(wx.Panel):
         for i in range(len(graphics)):
             o = graphics[i]
             s = i * lineHeight
-            if isinstance(o, PolyMarker) or isinstance(o, BoxPlot):
+            if isinstance(o, PolyMarker) or isinstance(o, PolyBoxPlot):
                 # draw marker with legend
                 pnt = (trhc[0] + legendLHS + legendSymExt[0] / 2.,
                        trhc[1] + s + lineHeight / 2.)

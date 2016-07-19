@@ -14,6 +14,7 @@ __docformat__ = "restructuredtext en"
 
 # Standard Library
 import functools
+import inspect
 from warnings import warn as _warn
 
 # Third Party
@@ -238,44 +239,19 @@ class TempStyle(object):
         dc.SetBrush(self.prevBrush)
 
 
-class PendingDeprecation(object):
+def pendingDeprecation(new_func):
     """
-    Decorator which raises warnings for methods that are pending deprecation.
+    Raise `PendingDeprecationWarning` and display a message.
 
-    :param new_func: The new class, method, or function that should be used.
-    :type new_func: str
+    Uses inspect.stack() to determine the name of the item that this
+    is called from.
 
-    ::
-
-        @PendingDeprecation("new_func")
-        def old_func():
-            pass
-
-        # prints the warning:
-        # `old_func` is pending deprecation. Please use `new_func` instead.
-
+    :param new_func: The name of the function that should be used instead.
+    :type new_func: string.
     """
-    _warn_txt = "`{}` is pending deprecation. Please use `{}` instead."
-
-    def __init__(self, new_func):
-        self.new_func = new_func
-
-    def __call__(self, func):
-        """Support for functions"""
-        self.func = func
-#        self._update_docs()
-
-        @functools.wraps(self.func)
-        def wrapper(*args, **kwargs):
-            _warn(self._warn_txt.format(self.func.__name__, self.new_func),
-                  PendingDeprecationWarning)
-            return self.func(*args, **kwargs)
-        return wrapper
-
-    def _update_docs(self):
-        """ Set the docs to that of the decorated function. """
-        self.__name__ = self.func.__name__
-        self.__doc__ = self.func.__doc__
+    warn_txt = "`{}` is pending deprecation. Please use `{}` instead."
+    _warn(warn_txt.format(inspect.stack()[1][3], new_func),
+          PendingDeprecationWarning)
 
 
 def scale_and_shift_point(x, y, scale=1, shift=0):
