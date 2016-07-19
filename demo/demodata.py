@@ -46,6 +46,7 @@ _treeList = [
         'RichMessageDialog',
         'ToolTip',
         'TimePickerCtrl',
+        'BannerWindow',
     ]),
 
     # managed windows == things with a (optional) caption you can close
@@ -264,6 +265,7 @@ _treeList = [
     # Other stuff
     ('Miscellaneous', [
         'AlphaDrawing',
+        'BannerWindow',
         'Cairo',
         'Cairo_Snippets',
         'ColourDB',
