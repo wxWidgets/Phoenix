@@ -66,7 +66,6 @@ def _ContextFromDC(dc):
         # The context keeps its own reference to the surface
         cairoLib.cairo_surface_destroy(surfaceptr)
 
-
     elif 'wxMSW' in wx.PlatformInfo:
         # This one is easy, just fetch the HDC and use PyCairo to make
         # the surface and context.
@@ -75,7 +74,6 @@ def _ContextFromDC(dc):
         hdc = ctypes.c_long(hdc)
         surface = cairo.Win32Surface(hdc.value)
         ctx = cairo.Context(surface)
-
 
     elif 'wxGTK' in wx.PlatformInfo:
         if 'gtk3' in wx.PlatformInfo:
@@ -112,12 +110,10 @@ def _FontFaceFromFont(font):
         fontfaceptr = font_face_create(voidp(font.OSXGetCGFont()))
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
 
-
     elif 'wxMSW' in wx.PlatformInfo:
         fontfaceptr = voidp( cairoLib.cairo_win32_font_face_create_for_hfont(
             ctypes.c_ulong(font.GetHFONT())) )
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
-
 
     elif 'wxGTK' in wx.PlatformInfo:
         # wow, this is a hell of a lot of steps...
@@ -413,4 +409,5 @@ elif 'wxGTK' in wx.PlatformInfo:
     pcLib.pango_font_map_load_font.restype = ctypes.c_void_p
     pcLib.pango_cairo_font_get_scaled_font.restype = ctypes.c_void_p
     cairoLib.cairo_scaled_font_get_font_face.restype = ctypes.c_void_p
+
 #----------------------------------------------------------------------------

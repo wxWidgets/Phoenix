@@ -53,7 +53,6 @@ def _ContextFromDC(dc):
         # Now create a cairo context for that surface
         ctx = cairocffi.Context(surface)
 
-
     elif 'wxMSW' in wx.PlatformInfo:
         # Similarly, get the HDC and create a surface from it
         hdc = voidp(dc.GetHandle())
@@ -62,7 +61,6 @@ def _ContextFromDC(dc):
 
         # Now create a cairo context for that surface
         ctx = cairocffi.Context(surface)
-
 
     elif 'wxGTK' in wx.PlatformInfo:
         if 'gtk3' in wx.PlatformInfo:
