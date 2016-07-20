@@ -56,7 +56,7 @@ def _ContextFromDC(dc):
 
     elif 'wxMSW' in wx.PlatformInfo:
         # Similarly, get the HDC and create a surface from it
-        hdc = dc.GetHandle()
+        hdc = voidp(dc.GetHandle())
         surfaceptr = cairo_c.cairo_win32_surface_create(hdc)
         surface = cairocffi.Surface._from_pointer(surfaceptr, False)
 
