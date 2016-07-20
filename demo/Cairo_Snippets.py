@@ -77,9 +77,10 @@ class TestPanel(wx.Panel):
 if not haveCairo:
     from wx.lib.msgpanel import MessagePanel
     def runTest(frame, nb, log):
-        win = MessagePanel(nb, 'This demo requires the Pycairo package,\n'
-                           'or there is some other unmet dependency.',
-                           'Sorry', wx.ICON_WARNING)
+        win = MessagePanel(
+            nb, 'This demo requires either the PyCairo package or the,\n'
+                'cairocffi package, or there is some other unmet dependency.',
+                'Sorry', wx.ICON_WARNING)
         return win
 else:
 
