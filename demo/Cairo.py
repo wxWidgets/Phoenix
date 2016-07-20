@@ -4,7 +4,7 @@ import wx
 import math
 
 try:
-    import wx.lib.wxcairo
+    import wx.lib.wxcairo as wxcairo
     import cairo
     haveCairo = True
 except ImportError:
@@ -45,7 +45,7 @@ class TestPanel(wx.Panel):
             dc.DrawLine(x, 0, 0, y)
 
         # now draw something with cairo
-        ctx = wx.lib.wxcairo.ContextFromDC(dc)
+        ctx = wxcairo.ContextFromDC(dc)
         ctx.set_line_width(15)
         ctx.move_to(125, 25)
         ctx.line_to(225, 225)
@@ -71,7 +71,7 @@ class TestPanel(wx.Panel):
         ctx.fill()
 
         # Draw some text
-        face = wx.lib.wxcairo.FontFaceFromFont(
+        face = wxcairo.FontFaceFromFont(
             wx.FFont(10, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
         ctx.set_font_face(face)
         ctx.set_font_size(60)
@@ -113,13 +113,13 @@ class TestPanel(wx.Panel):
         # the expected result.  The other platforms are okay.
         bmp = wx.Bitmap(opj('bitmaps/toucan.png'))
         #bmp = wx.Bitmap(opj('bitmaps/splash.png'))
-        img = wx.lib.wxcairo.ImageSurfaceFromBitmap(bmp)
+        img = wxcairo.ImageSurfaceFromBitmap(bmp)
 
         ctx.set_source_surface(img, 70, 230)
         ctx.paint()
 
         # this is how to convert an image surface to a wx.Bitmap
-        bmp2 = wx.lib.wxcairo.BitmapFromImageSurface(img)
+        bmp2 = wxcairo.BitmapFromImageSurface(img)
         dc.DrawBitmap(bmp2, 280, 300)
 
 
@@ -155,7 +155,7 @@ class TestPanel(wx.Panel):
 if not haveCairo:
     from wx.lib.msgpanel import MessagePanel
     def runTest(frame, nb, log):
-        win = MessagePanel(nb, 'This demo requires the Pycairo package,\n'
+        win = MessagePanel(nb, 'This demo requires the PyCairo package,\n'
                            'or there is some other unmet dependency.',
                        'Sorry', wx.ICON_WARNING)
         return win
@@ -169,17 +169,16 @@ else:
 
 if haveCairo:
     extra = "\n<h3>wx.lib.wxcairo</h3>\n%s" % (
-        wx.lib.wxcairo.__doc__.replace('\n\n', '\n<p>'))
+        wxcairo.__doc__.replace('\n\n', '\n<p>'))
 else:
     extra = '\n<p>See the docstring in the wx.lib.wxcairo module for details about installing dependencies.'
-
 
 
 overview = """<html><body>
 <h2><center>Cairo Integration</center></h2>
 
 This sample shows how to draw on a DC using the cairo 2D graphics
-library and the pycairo Python extension module that wraps the cairo
+library and either the PyCairo or cairocffi package which wrap the cairo
 API.  For more information about cairo please see
 http://cairographics.org/.
 
