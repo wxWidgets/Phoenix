@@ -49,7 +49,7 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent)
 
-        fc = FileCtrl(self, pos=(15,15), size=(480,300), log=log)
+        fc = FileCtrl(self, pos=(15,15), log=log)
         
 
 
