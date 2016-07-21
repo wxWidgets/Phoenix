@@ -28,10 +28,17 @@ cairocffi.install_as_pycairo()
 
 #----------------------------------------------------------------------------
 
-# a convenience function, just to save a bit of typing below
+# convenience functions, just to save a bit of typing below
 def voidp(ptr):
     """Convert a SIP void* type to a ffi cdata"""
+    if isinstance(ptr, ffi.CData):
+        return ptr
     return ffi.cast('void *', int(ptr))
+
+def ct_voidp(ptr):
+    """Convert a SIP void* type to a ctypes c_void_p"""
+    import ctypes
+    return ctypes.c_void_p(int(ptr))
 
 #----------------------------------------------------------------------------
 
@@ -66,18 +73,17 @@ def _ContextFromDC(dc):
         if 'gtk3' in wx.PlatformInfo:
             # With wxGTK3, GetHandle() returns a cairo context directly
             ctxptr = voidp( dc.GetHandle() )
+            ctx = cairocffi.Context._from_pointer(ctxptr, True)
 
-            # pyCairo will try to destroy it so we need to increase ref count
-            cairoLib.cairo_reference(ctxptr)
         else:
             # Get the GdkDrawable from the dc
-            drawable = voidp( dc.GetHandle() )
+            drawable = ct_voidp( dc.GetHandle() )
 
             # Call a GDK API to create a cairo context
             ctxptr = gdkLib.gdk_cairo_create(drawable)
 
-        # Turn it into a pycairo context object
-        ctx = pycairoAPI.Context_FromContext(ctxptr, pycairoAPI.Context_Type, None)
+            # Turn it into a Cairo context object
+            ctx = cairocffi.Context._from_pointer(ctxptr, False)
 
     else:
         raise NotImplementedError("Help  me, I'm lost...")
@@ -100,20 +106,18 @@ def _FontFaceFromFont(font):
 
     elif 'wxGTK' in wx.PlatformInfo:
         # wow, this is a hell of a lot of steps...
-        desc = voidp( font.GetPangoFontDescription() )
+        desc = ct_voidp( font.GetPangoFontDescription() )
 
-        pcfm = voidp(pcLib.pango_cairo_font_map_get_default())
+        pcfm = ct_voidp(pcLib.pango_cairo_font_map_get_default())
 
-        pctx = voidp(gdkLib.gdk_pango_context_get())
+        pctx = ct_voidp(gdkLib.gdk_pango_context_get())
 
-        pfnt = voidp( pcLib.pango_font_map_load_font(pcfm, pctx, desc) )
+        pfnt = ct_voidp( pcLib.pango_font_map_load_font(pcfm, pctx, desc) )
 
-        scaledfontptr = voidp( pcLib.pango_cairo_font_get_scaled_font(pfnt) )
+        scaledfontptr = ct_voidp( pcLib.pango_cairo_font_get_scaled_font(pfnt) )
 
-        fontfaceptr = voidp(cairoLib.cairo_scaled_font_get_font_face(scaledfontptr))
-        cairoLib.cairo_font_face_reference(fontfaceptr)
-
-        fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
+        fontfaceptr = cairo_c.cairo_scaled_font_get_font_face(voidp(scaledfontptr.value))
+        fontface = cairocffi.FontFace._from_pointer(fontfaceptr, True)
 
         gdkLib.g_object_unref(pctx)
 
@@ -124,4 +128,86 @@ def _FontFaceFromFont(font):
 
 
 #----------------------------------------------------------------------------
+# GTK platforms we need to load some other shared libraries to help us get
+# from wx objects to cairo objects.  This is using ctypes mainly because it
+# was already working this way in wx_pycairo.py and so it required fewer brain
+# cells to be sacrificed to port it to this module.
+#
+# TODO: consider moving this code to use cffi instead, for consistency.
 
+if 'wxGTK' in wx.PlatformInfo:
+    import ctypes
+    _dlls = dict()
+
+    def _findHelper(names, key, msg):
+        dll = _dlls.get(key, None)
+        if dll is not None:
+            return dll
+        location = None
+        for name in names:
+            location = ctypes.util.find_library(name)
+            if location:
+                break
+        if not location:
+            raise RuntimeError(msg)
+        dll = ctypes.CDLL(location)
+        _dlls[key] = dll
+        return dll
+
+
+    def _findGDKLib():
+        if 'gtk3' in wx.PlatformInfo:
+            libname = 'gdk-3'
+        else:
+            libname = 'gdk-x11-2.0'
+        return _findHelper([libname], 'gdk',
+                           "Unable to find the GDK shared library")
+
+    def _findPangoCairoLib():
+        return _findHelper(['pangocairo-1.0'], 'pangocairo',
+                           "Unable to find the pangocairo shared library")
+
+
+    gdkLib = _findGDKLib()
+    pcLib = _findPangoCairoLib()
+
+    gdkLib.gdk_cairo_create.restype = ctypes.c_void_p
+    gdkLib.gdk_pango_context_get.restype = ctypes.c_void_p
+
+    pcLib.pango_cairo_font_map_get_default.restype = ctypes.c_void_p
+    pcLib.pango_font_map_load_font.restype = ctypes.c_void_p
+    pcLib.pango_cairo_font_get_scaled_font.restype = ctypes.c_void_p
+
+
+#----------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------
+
+_dlls = dict()
+
+def _findHelper(names, key, msg):
+    import ctypes
+    dll = _dlls.get(key, None)
+    if dll is not None:
+        return dll
+    location = None
+    for name in names:
+        location = ctypes.util.find_library(name)
+        if location:
+            break
+    if not location:
+        raise RuntimeError(msg)
+    dll = ctypes.CDLL(location)
+    _dlls[key] = dll
+    return dll
+
+
+def _findGDKLib():
+    if 'gtk3' in wx.PlatformInfo:
+        libname = 'gdk-3'
+    else:
+        libname = 'gdk-x11-2.0'
+    return _findHelper([libname], 'gdk',
+                       "Unable to find or load the GDK shared library")
+
+#----------------------------------------------------------------------------
