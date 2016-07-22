@@ -232,8 +232,7 @@ def setPythonVersion(args):
                 PYTHON = args[idx+1]
                 del args[idx:idx+2]
             PYVER = runcmd([PYTHON, '-c', 'import sys; print(sys.version[:3])'],
-                           getOutput=True, echoCmd=True)
-            msg("PYVER: {!r}".format(PYVER))
+                           getOutput=True, echoCmd=False)
             PYSHORTVER = PYVER[0] + PYVER[2]
             break
         
@@ -283,7 +282,7 @@ def setPythonVersion(args):
         PYSHORTVER = PYVER[0] + PYVER[2]
         
     PYTHON = os.path.abspath(PYTHON)
-    msg('Build using: "%s"' % PYTHON)
+    msg('Will build using: "%s"' % PYTHON)
         
     msg(runcmd([PYTHON, '-c', 'import sys; print(sys.version)'], True, False))
     PYTHON_ARCH = runcmd(
