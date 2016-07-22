@@ -231,7 +231,7 @@ def setPythonVersion(args):
             else:
                 PYTHON = args[idx+1]
                 del args[idx:idx+2]
-            PYVER = runcmd('"%s" -c "import sys; print(sys.version[:3])"' % PYTHON,
+            PYVER = runcmd("'%s' -c 'import sys; print(sys.version[:3])'" % PYTHON,
                            getOutput=True, echoCmd=False)
             PYSHORTVER = PYVER[0] + PYVER[2]
             break
@@ -284,8 +284,8 @@ def setPythonVersion(args):
     PYTHON = os.path.abspath(PYTHON)
     msg('Build using: "%s"' % PYTHON)
         
-    msg(runcmd('"%s" -c "import sys; print(sys.version)"' % PYTHON, True, False))
-    PYTHON_ARCH = runcmd('"%s" -c "import platform; print(platform.architecture()[0])"'
+    msg(runcmd("'%s' -c 'import sys; print(sys.version)'" % PYTHON, True, False))
+    PYTHON_ARCH = runcmd("'%s' -c 'import platform; print(platform.architecture()[0])'"
                          % PYTHON, True, False)
     msg('Python\'s architecture is %s' % PYTHON_ARCH)
     os.environ['PYTHON'] = PYTHON
