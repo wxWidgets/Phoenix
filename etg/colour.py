@@ -118,8 +118,8 @@ def run():
     # reality they are macros that evaluate to a function call that returns a
     # Colour pointer, and that is only valid *after* the wx.App object has
     # been created. That messes up the code that SIP generates for them. So
-    # instead we will just create uninitialized colour in a block of Python
-    # code, that will then be intialized later when the wx.App is created.
+    # instead we will just create uninitialized colours in a block of Python
+    # code, that will then be initialized later when the wx.App is created.
     c.addCppMethod('void', '_copyFrom', '(const wxColour* other)', 
                    "*self = *other;",
                    briefDoc="For internal use only.")  # ??
