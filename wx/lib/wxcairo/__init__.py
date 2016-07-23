@@ -15,21 +15,22 @@
 
 """
 This package provides some glue code that allows the Cairo library to draw
-directly on :class:`wx.DC` objectss, convert to/from :class:`wx.Bitmap`
+directly on :class:`wx.DC` objects, convert to/from :class:`wx.Bitmap`
 objects, etc. using either the PyCairo or the newer cairocffi Cairo wrappers.
 In Cairo terms, the DC is the drawing surface.  The ``CairoContextFromDC``
 function in this module will return an instance of the Cairo Context class
 that is ready for drawing, using the native cairo surface type for the current
 platform.
 
-Be sure to import ``wx.lib.wxcairo`` before importing the cairo module.
+.. note:: Be sure to import ``wx.lib.wxcairo`` before importing the ``cairo``
+   module.
 
 To use Cairo with wxPython you will need to have a few dependencies
 installed.  On Linux and other unix-like systems you may already have
 them, or can easily get them with your system's package manager.  Just
-check if libcairo and either cairocffi or pycairo are installed.
+check if libcairo and either cairocffi or pycairo packages are installed.
 
-On Mac you can get Cairo from MacPorts or similar services.  Make sure that
+On Mac you can get Cairo from MacPorts or similar tools.  Make sure that
 the quartz option is turned on so those Mac-specific APIs will be included in
 the Cairo library when it is built.  You can then use ``pip install cairocffi``
 to get the Python wrappers.
@@ -71,7 +72,7 @@ except ImportError:
 
 def ContextFromDC(dc):
     """
-    Creates and returns a ``cairo.Context` object using the :class:`wx.DC` as
+    Creates and returns a ``cairo.Context`` object using the :class:`wx.DC` as
     the surface.  (Only window, client, paint and memory DC's are allowed at
     this time.)
     """
@@ -90,7 +91,7 @@ def FontFaceFromFont(font):
 
 def BitmapFromImageSurface(surface):
     """
-    Create a wx.Bitmap from a Cairo ImageSurface.
+    Create a :class:`wx.Bitmap` from a Cairo ``ImageSurface``.
     """
     format = surface.get_format()
     if format not in [cairo.FORMAT_ARGB32, cairo.FORMAT_RGB24]:
@@ -112,7 +113,7 @@ def BitmapFromImageSurface(surface):
 
 def ImageSurfaceFromBitmap(bitmap):
     """
-    Create a Cairo ImageSurface from a wx.Bitmap
+    Create a Cairo ``ImageSurface`` from a :class:`wx.Bitmap`
     """
     width, height = bitmap.GetSize()
     if bitmap.ConvertToImage().HasAlpha():
