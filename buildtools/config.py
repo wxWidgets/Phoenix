@@ -781,6 +781,22 @@ def getVcsRev():
 
 
 def runcmd(cmd, getOutput=False, echoCmd=True, fatal=True):
+    """
+    Runs a give command-line command, optionally returning the output.
+    """
+    if isinstance(cmd, list):
+        # add quotes to elements of the command that need it
+        cmd = cmd[:]
+        for idx, item in enumerate(cmd):
+            if ' ' in item or '\t' in item or ';' in item:
+                if item[0] not in ['"', "'"]:
+                    if '"' in item:
+                        item = item.replace('"', '\\"')
+                    item = '"{}"'.format(item)
+                    cmd[idx] = item
+        # convert the resulting command to a string
+        cmd = ' '.join(cmd)
+
     if echoCmd:
         msg(cmd)
 

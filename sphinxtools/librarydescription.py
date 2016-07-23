@@ -941,7 +941,7 @@ class Property(ChildrenBase):
     def __init__(self, name, item):
 
         ChildrenBase.__init__(self, name, object_types.PROPERTY)
-        
+
         self.getter = self.setter = self.deleter = ''
 
         try:
@@ -972,19 +972,22 @@ class Property(ChildrenBase):
         if self.is_redundant:
             return
 
-        docs = ''
-        for item in [self.setter, self.getter, self.deleter]:
-            if item and 'lambda' not in item and not item.startswith('_'):
-                if docs:
-                    docs += ', :meth:`~%s.%s` '%(class_name, item)
-                else:
-                    docs += ':meth:`~%s.%s` '%(class_name, item)
-                
+        docs = self.docs
+        if not docs:
+            for item in [self.setter, self.getter, self.deleter]:
+                if item and 'lambda' not in item and not item.startswith('_'):
+                    if docs:
+                        docs += ', :meth:`~%s.%s` ' % (class_name, item)
+                    else:
+                        docs += ':meth:`~%s.%s` ' % (class_name, item)
+
+            if docs:
+                docs = 'See %s' % docs
+
         if docs:
-            docs = 'See %s'%docs
-            
-            stream.write('   .. attribute:: %s\n\n'%self.GetShortName())
-            stream.write('      %s\n\n\n'%docs)
+            stream.write('   .. attribute:: %s\n\n' % self.GetShortName())
+            docs = '\n      '.join(docs.splitlines())
+            stream.write('      %s\n\n\n' % docs)
 
 
 class Attribute(ChildrenBase):

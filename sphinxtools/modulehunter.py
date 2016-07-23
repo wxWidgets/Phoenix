@@ -318,9 +318,6 @@ def describe_class(obj, module_class, module_name, constants):
     if class_name == 'object':
         return
 
-    if 'GenBitmapButton' in class_name:
-        print('GenBitmapButton')
-
     class_name = module_class.name + '.' + class_name
     
     docs = getdoc(obj)

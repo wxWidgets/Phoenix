@@ -231,16 +231,16 @@ def setPythonVersion(args):
             else:
                 PYTHON = args[idx+1]
                 del args[idx:idx+2]
-            PYVER = runcmd('"%s" -c "import sys; print(sys.version[:3])"' % PYTHON,
+            PYVER = runcmd([PYTHON, '-c', 'import sys; print(sys.version[:3])'],
                            getOutput=True, echoCmd=False)
             PYSHORTVER = PYVER[0] + PYVER[2]
             break
         
     if havePyVer:
         if isWindows and os.environ.get('TOOLS'):
-            # Use $TOOLS to find the correct Python. It should be the install
-            # root of all Python's on the system, with the 64-bit ones in an
-            # amd64 subfolder, like this:
+            # Use $TOOLS to find the correct Python. If set then it should be
+            # the install root of all Python's on the system, with the 64-bit
+            # ones in an amd64 subfolder, like this:
             #
             # $TOOLS\Python27\python.exe
             # $TOOLS\Python33\python.exe
@@ -282,11 +282,13 @@ def setPythonVersion(args):
         PYSHORTVER = PYVER[0] + PYVER[2]
         
     PYTHON = os.path.abspath(PYTHON)
-    msg('Build using: "%s"' % PYTHON)
+    msg('Will build using: "%s"' % PYTHON)
         
-    msg(runcmd('"%s" -c "import sys; print(sys.version)"' % PYTHON, True, False))
-    PYTHON_ARCH = runcmd('"%s" -c "import platform; print(platform.architecture()[0])"'
-                         % PYTHON, True, False)
+    msg(runcmd([PYTHON, '-c', 'import sys; print(sys.version)'], True, False))
+    PYTHON_ARCH = runcmd(
+        [PYTHON, '-c', 'import platform; print(platform.architecture()[0])'],
+        True, False)
+
     msg('Python\'s architecture is %s' % PYTHON_ARCH)
     os.environ['PYTHON'] = PYTHON
 
