@@ -1,40 +1,48 @@
 #----------------------------------------------------------------------
 # Name:        wx.lib.graphics
-# Purpose:     A wx.GraphicsContext-like API implemented using wx.lib.wxcairo
+# Purpose:     A wx.GraphicsContext-like API implemented using cairo
+#              and wx.lib.wxcairo.
 #
 # Author:      Robin Dunn
 #
 # Created:     15-Sept-2008
-# Copyright:   (c) 2008 by Total Control Software
+# Copyright:   (c) 2008-2016 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port
 #----------------------------------------------------------------------
 
 """
-This module implements an API similar to wx.GraphicsContext and the
-related classes.  In this case the implementation for all platforms is
-done using Cairo, via the wx.lib.wxcairo glue module.
+This module implements an API similar to :class:`wx.GraphicsContext` and its
+related classes.  In this case the implementation for all platforms is done
+using Cairo, via the :mod:`wx.lib.wxcairo` glue module.
 
-Why do this?  Why not just use wx.GraphicsContext everywhere?  Using
-Cairo on every platform enables us to more easily be totally
-consistent on all platforms.  Implementing it in Python means that it
-is easy to fill in the gaps in functionality with features of Cairo
-that GraphicsContext may not provide, like converting text to a path,
-using compositing operators, or being able to provide an
-implementation for things like context.Clear().
+Why do this?  Why not just use ``wx.GraphicsContext`` everywhere?  Using Cairo
+on every platform enables us to more easily be totally consistent on all
+platforms.  Implementing it in Python means that it is easy to fill in the
+gaps in functionality with features of Cairo that ``wx.GraphicsContext`` may
+not provide, like converting text to a path, using compositing operators, or
+being able to provide an implementation for things like context.Clear().
 
-Why not just use Cairo directly?  There may be times when you do want
-to use wx.GrpahicsContext, so being able to share code between that
-and this implementation is nice.  Also, I like the class hierarchy and
-API exposed by the wx.GraphicsContext classes a little better than
-Cairo's.
+Why not just use Cairo directly?  There may be times when you do want to use
+``wx.GrpahicsContext``, so being able to share code between that and this
+implementation is nice.  Also, I like the class hierarchy and API exposed by
+the ``wx.GraphicsContext`` classes a little better than Cairo's.
+
+.. note:: It is possible to write code using this module that is **not**
+   compatible with :class:`wx.GraphicsContext` code, because, you know, this
+   is Python and it is lots more flexible and powerful.  However the intent
+   is that the reverse will not be true, that code compatible with
+   ``wx.GraphicsContext`` will (mostly) work when using these classes instead.
+   Care should be taken when modifying this module so that the compatibility
+   is maintained.
 """
 
-import cairo
 import math
+import six
 
 import wx
-import wx.lib.wxcairo
+import wx.lib.wxcairo as wxcairo
+import cairo
 
 
 
@@ -127,6 +135,7 @@ def Property( function ):
 
 #---------------------------------------------------------------------------
 
+# We'll just use None instead of "Null (invalid) objects"
 NullGraphicsPen = None
 NullGraphicsBrush = None
 NullGraphicsFont = None
@@ -134,10 +143,17 @@ NullGraphicsMatrix = None
 NullGraphicsPath = None
 
 
+# This class probably isn't needed at all anymore since we'll just use None
+# instead of the Null objects, but we'll keep it anyway in case it's needed to
+# help write compatible code.
 class GraphicsObject(object):
-    # This probably isn't needed at all anymore since we'll just use
-    # None insead of the Null objects, but we'll keep it anyway in
-    # case it's needed to help write compatible code.
+    """
+    Base class for the other ``Graphics*`` classes.
+
+    There should be no need to use this directly, it is just here for
+    compatibility with :class:`wx.GraphicsObject`.
+    """
+
     def IsNull(self):
         return False
 
@@ -146,7 +162,11 @@ class GraphicsObject(object):
 
 class GraphicsPen(GraphicsObject):
     """
-    A Pen is used to define the properties of how a stroke is drawn.
+    A ``GraphicsPen`` is used to define the properties of how a stroke is drawn.
+
+    The properties and features of this class are similar to :class:`wx.Pen`,
+    and a :class:`wx.Pen` can be used to initialize a ``GraphicsPen`` using the
+    :meth:`GraphicsPen.CreateFromPen` staticmethod.
     """
     _capMap = { wx.CAP_BUTT       : cairo.LINE_CAP_BUTT,
                 wx.CAP_ROUND      : cairo.LINE_CAP_ROUND,
@@ -158,6 +178,9 @@ class GraphicsPen(GraphicsObject):
         
     
     def __init__(self, colour=wx.BLACK, width=1, style=wx.SOLID):
+        """
+        Create a new ``GraphicsPen``
+        """
         GraphicsObject.__init__(self)
         self._colour = _makeColour(colour)
         self._width = width
@@ -171,7 +194,7 @@ class GraphicsPen(GraphicsObject):
 
     @staticmethod
     def CreateFromPen(pen):
-        """Convert a wx.Pen to a GraphicsPen"""
+        """Convert a :class:`wx.Pen` to a ``GraphicsPen``"""
         assert isinstance(pen, wx.Pen)
         p = GraphicsPen(pen.Colour, pen.Width, pen.Style)
         p._cap = pen.Cap
@@ -183,8 +206,8 @@ class GraphicsPen(GraphicsObject):
     @staticmethod
     def CreateFromPattern(pattern, width=1):
         """
-        Create a Pen directly from a Cairo Pattern object.  This is
-        similar to using a stipple bitmap, but saves a step, and
+        Create a ``GraphicsPen`` directly from a Cairo Pattern object.
+        This is similar to using a stipple bitmap, but saves a step, and
         patterns can include gradients, etc.
         """
         p = GraphicsPen(wx.BLACK, width, wx.STIPPLE)
@@ -260,6 +283,9 @@ class GraphicsPen(GraphicsObject):
 
     
     def Apply(self, ctx):
+        """
+        Apply this pen's properties to the given :class:`GraphicsContext`.
+        """
         # set up the context with this pen's parameters
         ctx = ctx.GetNativeContext()
         ctx.set_line_width(self._width)
@@ -273,7 +299,7 @@ class GraphicsPen(GraphicsObject):
         elif self._style == wx.STIPPLE:
             if not self._pattern and self._stipple:
                 # make a pattern from the stipple bitmap
-                img = wx.lib.wxcairo.ImageSurfaceFromBitmap(self._stipple)
+                img = wxcairo.ImageSurfaceFromBitmap(self._stipple)
                 self._pattern = cairo.SurfacePattern(img)
                 self._pattern.set_extend(cairo.EXTEND_REPEAT)
             ctx.set_source(self._pattern)
@@ -375,7 +401,7 @@ class GraphicsBrush(GraphicsObject):
         elif self._style == wx.STIPPLE:
             if not self._pattern and self._stipple:
                 # make a pattern from the stipple bitmap
-                img = wx.lib.wxcairo.ImageSurfaceFromBitmap(self._stipple)
+                img = wxcairo.ImageSurfaceFromBitmap(self._stipple)
                 self._pattern = cairo.SurfacePattern(img)
                 self._pattern.set_extend(cairo.EXTEND_REPEAT)
             ctx.set_source(self._pattern)
@@ -409,7 +435,7 @@ class GraphicsFont(GraphicsObject):
         f._font = font
         f._colour = _makeColour(colour)
         f._pointSize = font.GetPointSize()
-        f._fontface = wx.lib.wxcairo.FontFaceFromFont(font)
+        f._fontface = wxcairo.FontFaceFromFont(font)
         return f
 
 
@@ -472,7 +498,7 @@ class GraphicsBitmap(GraphicsObject):
     def CreateFromBitmap(bitmap):
         """Create a GraphicsBitmap from a wx.Bitmap"""
         b = GraphicsBitmap()
-        b._surface = wx.lib.wxcairo.ImageSurfaceFromBitmap(bitmap)
+        b._surface = wxcairo.ImageSurfaceFromBitmap(bitmap)
         return b
 
 
@@ -554,7 +580,15 @@ class GraphicsBitmap(GraphicsObject):
             return self._surface
         return locals()
 
-    
+
+    def ConvertToImage(self):
+        """
+        Return the contents of this ``GraphicsBitmap`` as a :class:`wx.Image`.
+        """
+        # TODO: implement this
+        return None
+
+
 #---------------------------------------------------------------------------
 
 class GraphicsMatrix(GraphicsObject):
@@ -644,7 +678,7 @@ class GraphicsMatrix(GraphicsObject):
 
 class GraphicsPath(GraphicsObject):
     """
-    A GraphicsPath is a representaion of a geometric path, essentially
+    A GraphicsPath is a representation of a geometric path, essentially
     a collection of lines and curves.  Paths can be used to define
     areas to be stroked and filled on a GraphicsContext.
     """
@@ -894,7 +928,7 @@ class GraphicsPath(GraphicsObject):
 class GraphicsGradientStop(object):
     """
     This class represents a single color-stop in a gradient brush. The
-    position is a floating poitn value between zero and 1.0 which represents
+    position is a floating point value between zero and 1.0 which represents
     the distance between the gradient's starting point and ending point.
     """
     def __init__(self, colour=wx.TransparentColour, pos=0.0):
@@ -1000,15 +1034,20 @@ class GraphicsContext(GraphicsObject):
 
     
     @staticmethod
-    def Create(dc):
+    def Create(dc=None):
         # TODO:  Support creating directly from a wx.Window too.
+        if dc is None:
+            return GraphicsContext.CreateMeasuringContext()
+
         assert isinstance(dc, wx.DC)
-        ctx = wx.lib.wxcairo.ContextFromDC(dc)
+        ctx = wxcairo.ContextFromDC(dc)
         return GraphicsContext(ctx, dc.GetSize())
+
 
     @staticmethod
     def CreateFromNative(cairoContext):
         return GraphicsContext(cairoContext)
+
 
     @staticmethod
     def CreateMeasuringContext():
@@ -1022,6 +1061,7 @@ class GraphicsContext(GraphicsObject):
         return GraphicsContext(ctx, 
                                (surface.get_width(), surface.get_height()))
 
+
     @staticmethod
     def CreateFromSurface(surface):
         """
@@ -1032,6 +1072,19 @@ class GraphicsContext(GraphicsObject):
         return GraphicsContext(cairo.Context(surface),
                                (surface.get_width(), surface.get_height()))
 
+    @staticmethod
+    def CreateFromImage(image):
+        """
+        Create a GraphicsContext associated with a :class:`wx.Image`.
+
+        The image specifies the size of the context as well as whether alpha is
+        supported (if :meth:`wx.Image.HasAlpha()`) or not and the initial contents of
+        the context. The image object must have a life time greater than
+        that of the new context as the context copies its contents back to the
+        image when it is destroyed.
+        """
+        # TODO: implement this
+        raise NotImplementedError
 
     @Property
     def Context():
@@ -1040,7 +1093,7 @@ class GraphicsContext(GraphicsObject):
         return locals()
 
 
-    # Our implementation is able to create these things direclty, but
+    # Our implementation is able to create these things directly, but
     # we'll keep them here too for compatibility with wx.GraphicsContext.
     
     def CreateBrush(self, brush):
@@ -1064,7 +1117,7 @@ class GraphicsContext(GraphicsObject):
         The `*args` can be either a GraphicsGradientStops or just two colours to
         be used as the starting and ending gradient colours.
         """
-        if len(args) ==1:
+        if len(args) == 1:
             stops = args[0]
         elif len(args) == 2:
             c1 = _makeColour(c1)
@@ -1184,11 +1237,12 @@ class GraphicsContext(GraphicsObject):
 
     # Since DC logical functions are conceptually different than
     # compositing operators don't pretend they are the same thing, or
-    # try ot implement them using the compositing operators.
+    # try to implement them using the compositing operators.
     def GetLogicalFunction(self):
         raise NotImplementedError("See GetCompositingOperator")
     def SetLogicalFunction(self, function):
         raise NotImplementedError("See SetCompositingOperator")
+    LogicalFunction = property(GetLogicalFunction, SetLogicalFunction)
 
 
     def Translate(self, dx, dy):
@@ -1276,7 +1330,7 @@ class GraphicsContext(GraphicsObject):
     def SetFont(self, font, colour=None):
         """
         Sets the font to be used for drawing text.  Either a wx.Font
-        or a GrpahicsFont may be used.
+        or a GraphicsFont may be used.
         """
         if isinstance(font, wx.Font):
             font = GraphicsFont.CreateFromFont(font, colour)
@@ -1561,7 +1615,7 @@ class GraphicsContext(GraphicsObject):
 
     def SetCompositingOperator(self, op):
         """
-        Sets the compositin operator to be used for all drawing
+        Sets the compositing operator to be used for all drawing
         operations.  The default operator is OPERATOR_OVER.
         """
         return self._context.set_operator(op)
@@ -1584,7 +1638,7 @@ class GraphicsContext(GraphicsObject):
 
     def BeginLayer(self, opacity):
         """
-        Redirects future rendering to a temorary context.  See `EndLayer`.
+        Redirects future rendering to a temporary context.  See `EndLayer`.
         """
         self._layerOpacities.append(opacity)
         self._context.push_group()
@@ -1655,7 +1709,7 @@ class GraphicsContext(GraphicsObject):
 def _makeColour(colour):
     # make a wx.Colour from any of the allowed typemaps (string, tuple,
     # etc.)
-    if isinstance(colour, (basestring, tuple)):
+    if isinstance(colour, (six.string_types, tuple)):
         return wx.NamedColour(colour)
     else:
         return colour
