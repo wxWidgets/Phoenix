@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 
 import wx
+g = wx
+
 import colorsys
 from math import cos, sin, radians
 
 from Main import opj
+
+# To help test compatibility of the generic GraphicsContext classes uncomment
+# this line:
+#import wx.lib.graphics as g
 
 #----------------------------------------------------------------------
 
@@ -70,13 +76,13 @@ class TestPanel(wx.Panel):
                 gcr = wx.GraphicsRenderer.GetCairoRenderer
                 gc = gcr() and gcr().CreateContext(dc)
                 if gc is None:
-                    wx.MessageBox("Unable to create Cairo Context.", "Oops")
-                    gc = wx.GraphicsContext.Create(dc)
+                    wx.MessageBox("Unable to create Cairo Context this way.", "Oops")
+                    gc = g.GraphicsContext.Create(dc)
             else:
                 # Otherwise, creating it this way will use the native
                 # backend, (GDI+ on Windows, CoreGraphics on Mac, or
                 # Cairo on GTK).
-                gc = wx.GraphicsContext.Create(dc)
+                gc = g.GraphicsContext.Create(dc)
 
         except NotImplementedError:
             dc.DrawText("This build of wxPython does not support the wx.GraphicsContext "
@@ -201,7 +207,7 @@ The new advanced 2D drawing API is implemented via the
 wx.GraphicsContext and wx.GraphicsPath classes.  They wrap GDI+ on
 Windows, Cairo on wxGTK and CoreGraphics on OS X.  They allow
 path-based drawing with alpha-blending and anti-aliasing, and use a
-floating point cooridnate system.
+floating point coordinate system.
 
 <p>When viewing this sample pay attention to how the rounded edges are
 smoothed with anti-aliased drawing, and how the shapes on the lower
