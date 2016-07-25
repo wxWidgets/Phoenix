@@ -155,6 +155,9 @@ class GraphicsObject(object):
     """
 
     def IsNull(self):
+        """
+        Returns whether the object is valid.
+        """
         return False
 
 
@@ -213,11 +216,16 @@ class GraphicsPen(GraphicsObject):
         p = GraphicsPen(wx.BLACK, width, wx.STIPPLE)
         p._pattern = pattern
         return p
-    
-        
+
+
     @Property
     def Colour():
         def fget(self):
+            """
+            The color associated with this pen, to be used when drawing the line.
+
+            :type: :class:`wx.Colour`
+            """
             return self._colour
         def fset(self, value):
             self._colour = value
@@ -226,6 +234,11 @@ class GraphicsPen(GraphicsObject):
     @Property
     def Width():
         def fget(self):
+            """
+            The width of the line to be drawn with this pen.
+
+            :type: int or float
+            """
             return self._width
         def fset(self, value):
             self._width = value
@@ -234,6 +247,11 @@ class GraphicsPen(GraphicsObject):
     @Property
     def Style():
         def fget(self):
+            """
+            Defines the type of pen, including things like solid, dashed, stipple, etc.
+
+            :type: :ref:`wx.PenStyle`
+            """
             return self._style
         def fset(self, value):
             self._style = value
@@ -242,6 +260,11 @@ class GraphicsPen(GraphicsObject):
     @Property
     def Cap():
         def fget(self):
+            """
+            The style of the end cap used when drawing with the pen.
+
+            :type: :ref:`wx.PenCap`
+            """
             return self._cap
         def fset(self, value):
             self._cap = value
@@ -250,6 +273,10 @@ class GraphicsPen(GraphicsObject):
     @Property
     def Dashes():
         def fget(self):
+            """
+            Dashes is a sequence of values defining the size of line segments and blanks
+            to use when drawing a line.
+            """
             return self._dashes
         def fset(self, value):
             self._dashes = value
@@ -258,6 +285,13 @@ class GraphicsPen(GraphicsObject):
     @Property
     def Join():
         def fget(self):
+            """
+            The pen's join style, used when drawing connected lines.
+
+            The default is ``wx.JOIN_ROUND``.
+
+            :type: :ref:`wx.PenJoin`
+            """
             return self._join
         def fset(self, value):
             self._join = value
@@ -266,6 +300,14 @@ class GraphicsPen(GraphicsObject):
     @Property
     def Stipple():
         def fget(self):
+            """
+            Stipple is a bitmap to use as a pattern when drawing a line with the pen.
+
+            This will be converted to a Cairo ``Pattern`` when applied to
+            a :class:`GraphicsContext`.
+
+            :type: :class:`wx.Bitmap`
+            """
             return self._stipple
         def fset(self, value):
             self._stipple = value
@@ -275,17 +317,23 @@ class GraphicsPen(GraphicsObject):
     @Property
     def Pattern():
         def fget(self):
+            """
+            A pattern to be used when drawing a line with the pen.
+
+            :type: Cairo ``Pattern``
+            """
             return self._pattern
         def fset(self, value):
             self._pattern = value
         return locals()
 
-
     
     def Apply(self, ctx):
         """
-        Apply this pen's properties to the given :class:`GraphicsContext`.
+        Apply this pen's properties to the given context.
+        Called by :class:`GraphicsContext` as needed.
         """
+
         # set up the context with this pen's parameters
         ctx = ctx.GetNativeContext()
         ctx.set_line_width(self._width)
@@ -321,12 +369,16 @@ class GraphicsPen(GraphicsObject):
 
 class GraphicsBrush(GraphicsObject):
     """
-    A Brush is used to define how fills are painted.  They can have
-    either a solid fill (colors with or without alpha), a stipple
-    created from a wx.Bitmap, or a cairo Pattern object.
+    A ``GraphicsBrush`` is used to define how fills are painted.
+    They can have either a solid fill (colors with or without alpha), a
+    stipple created from a :class:`wx.Bitmap`, or a Cairo ``Pattern``
+    object.
     """
     
-    def __init__(self, colour=wx.BLACK, style=wx.SOLID):
+    def __init__(self, colour=wx.BLACK, style=wx.BRUSHSTYLE_SOLID):
+        """
+        Create a new ``GraphicsBrush``.
+        """
         self._colour = _makeColour(colour)
         self._style = style
         self._stipple = None
@@ -335,10 +387,12 @@ class GraphicsBrush(GraphicsObject):
 
     @staticmethod
     def CreateFromBrush(brush):
-        """Converts a wx.Brush to a GraphicsBrush"""
+        """
+        Converts a :class:`wx.Brush` to a ``GraphicsBrush``.
+        """
         assert isinstance(brush, wx.Brush)
         b = GraphicsBrush(brush.Colour, brush.Style)
-        if brush.Style == wx.STIPPLE:
+        if brush.Style == wx.BRUSHSTYLE_STIPPLE:
             b._stipple = brush.Stipple
         else:
             b._stipple = None
@@ -348,11 +402,11 @@ class GraphicsBrush(GraphicsObject):
     @staticmethod
     def CreateFromPattern(pattern):
         """
-        Create a Brush directly from a Cairo Pattern object.  This is
-        similar to using a stipple bitmap, but saves a step, and
+        Create a ``GraphicsBrush`` directly from a Cairo ``Pattern`` object.
+        This is similar to using a stipple bitmap, but saves a step, and
         patterns can include gradients, etc.
         """
-        b = GraphicsBrush(style=wx.STIPPLE)
+        b = GraphicsBrush(style=wx.BRUSHSTYLE_STIPPLE)
         b._pattern = pattern
         return b
 
@@ -360,6 +414,11 @@ class GraphicsBrush(GraphicsObject):
     @Property
     def Colour():
         def fget(self):
+            """
+            The color to use when filling with the brush.
+
+            :type: :class:`wx.Colour`
+            """
             return self._colour
         def fset(self, value):
             self._colour = value
@@ -368,6 +427,13 @@ class GraphicsBrush(GraphicsObject):
     @Property
     def Style():
         def fget(self):
+            """
+            The style of the brush to be used when filling.
+            Currently, ``wx.BRUSHSTYLE_SOLID`` and ``wx.BRUSHSTYLE_STIPPLE``
+            are supported.
+
+            :type: :ref:`wx.BrushStyle`
+            """
             return self._style
         def fset(self, value):
             self._style = value
@@ -376,6 +442,14 @@ class GraphicsBrush(GraphicsObject):
     @Property
     def Stipple():
         def fget(self):
+            """
+            The Stipple is a bitmap to be used as a pattern when filling with this brush.
+
+            This will be converted to a Cairo ``Pattern`` when applied to
+            a :class:`GraphicsContext`.
+
+            :type: :class:`wx.Bitmap`
+            """
             return self._stipple
         def fset(self, value):
             self._stipple = value
@@ -386,6 +460,11 @@ class GraphicsBrush(GraphicsObject):
     @Property
     def Pattern():
         def fget(self):
+            """
+            A pattern to be used when filling with this brush.
+
+            :type: Cairo ``Pattern``
+            """
             return self._pattern
         def fset(self, value):
             self._pattern = value
@@ -393,9 +472,13 @@ class GraphicsBrush(GraphicsObject):
 
 
     def Apply(self, ctx):
+        """
+        Apply this brush's properties to the given context.
+        Called by :class:`GraphicsContext` as needed.
+        """
         ctx = ctx.GetNativeContext()
         
-        if self._style == wx.SOLID:
+        if self._style == wx.BRUSHSTYLE_SOLID:
             ctx.set_source_rgba( *_colourToValues(self._colour) )
 
         elif self._style == wx.STIPPLE:
@@ -410,9 +493,18 @@ class GraphicsBrush(GraphicsObject):
 
 class GraphicsFont(GraphicsObject):
     """
+    A ``GraphicsFont`` is an adapter to allow using :class:`wx.Font` with a
+    :class:`GraphicsContext` when drawing text.
     """
     def __init__(self):
-        # TODO: Should we be able to create a GrpahicsFont from other
+        """
+        Constructs a new ``GraphicsFont``.
+
+        .. note:: Currently user code should be using
+           :meth:`CreateFromFont` instead of creating new ``GraphicsFont``
+           instances themselves.
+        """
+        # TODO: Should we be able to create a GraphicsFont from other
         # properties, or will it always be via a wx.Font?  What about
         # creating from a cairo.FontFace or cairo.ScaledFont?
         self._font = None
@@ -431,6 +523,14 @@ class GraphicsFont(GraphicsObject):
 
     @staticmethod
     def CreateFromFont(font, colour=None):
+        """
+        Create a ``GraphicsFont from a :class:`wx.Font`.
+        Currently this is the only way to construct a ``GraphicsFont``.
+
+        :param wx.Font `font`: A ``wx.Font`` to use as a source of properties
+            to be used when creating the Cairo font.
+        :param wx.Colour `colour`: An optional colour to associate with the font.
+        """
         f = GraphicsFont()
         f._font = font
         f._colour = _makeColour(colour)
@@ -442,22 +542,41 @@ class GraphicsFont(GraphicsObject):
     @Property
     def Colour():
         def fget(self):
+            """
+            The color to be associated with this font.  It will be used as the
+            fill when drawing text with this font.
+
+            :type: :class:`wx.Colour`
+            """
             return self._colour
         def fset(self, value):
             self._colour = value
         return locals()
 
+
     @Property
     def PointSize():
         def fget(self):
+            """
+            The size in points of the font.
+
+            :type: int or float
+            """
             return self._pointSize
         def fset(self, value):
             self._pointSize = value
         return locals()
 
+
     @Property
     def Brush():
         def fget(self):
+            """
+            A ``GraphicsBrush`` to use for filling the text when using this
+            font.  An alternative to using a plain colour.
+
+            :type: :class:`GraphicsBrush`
+            """
             return self._brush
         def fset(self, value):
             self._brush = value
@@ -465,6 +584,10 @@ class GraphicsFont(GraphicsObject):
 
 
     def Apply(self, ctx, colour):
+        """
+        Apply this font's properties to the given context.
+        Called by :class:`GraphicsContext` as needed.
+        """
         nctx = ctx.GetNativeContext()
         if self._brush is not None:
             self._brush.Apply(ctx)
@@ -546,18 +669,23 @@ class GraphicsBitmap(GraphicsObject):
     @Property
     def Width():
         def fget(self):
+            """The width of the bitmap and surface"""
             return self._surface.get_width()
         return locals()
+
 
     @Property
     def Height():
         def fget(self):
+            """The height of the bitmap and surface"""
             return self._surface.get_height()
         return locals()
+
 
     @Property
     def Size():
         def fget(self):
+            """A tuple consisting of the Width and Height"""
             return (self.Width, self.Height)
         return locals()
 
@@ -565,18 +693,30 @@ class GraphicsBitmap(GraphicsObject):
     @Property
     def Format():
         def fget(self):
+            """
+            The type or format of the Cairo ``Surface``.
+            Typically ``FORMAT_ARGB32`` or ``FORMAT_RGB24``
+            """
             return self._surface.get_format()
         return locals()
+
 
     @Property
     def Stride():
         def fget(self):
+            """
+            The "stride" of the Cairo ``Surface``, in bytes.
+            The stride is the distance in bytes from the beginning of one row
+            of the image data to the beginning of the next row.
+            """
             return self._surface.get_stride()
         return locals()
+
 
     @Property
     def Surface():
         def fget(self):
+            """A reference to the Cairo ``Surface`` used for this bitmap."""
             return self._surface
         return locals()
 
@@ -584,6 +724,8 @@ class GraphicsBitmap(GraphicsObject):
     def ConvertToImage(self):
         """
         Return the contents of this ``GraphicsBitmap`` as a :class:`wx.Image`.
+
+        Currently not implemented...
         """
         # TODO: implement this
         return None
@@ -595,14 +737,14 @@ class GraphicsMatrix(GraphicsObject):
     """
     A matrix holds an affine transformations, such as a scale,
     rotation, shear, or a combination of these, and is used to convert
-    between different coordinante spaces.
+    between different coordinate spaces.
     """
     def __init__(self):
         self._matrix = cairo.Matrix()
 
 
     def Set(self, a=1.0, b=0.0, c=0.0, d=1.0, tx=0.0, ty=0.0):
-        """Set the componenets of the matrix by value, default values
+        """Set the components of the matrix by value, default values
         are the identity matrix."""
         self._matrix = cairo.Matrix(a, b, c, d, tx, ty)
 
@@ -629,11 +771,11 @@ class GraphicsMatrix(GraphicsObject):
     
 
     def IsEqual(self, matrix):
-        """Returns True if the elements of the transformation matricies are equal."""
+        """Returns True if the elements of the transformation matrices are equal."""
         return self._matrix == matrix._matrix
     
 
-    def IsIdentity():
+    def IsIdentity(self):
         """Returns True if this is the identity matrix."""
         return self._matrix == cairo.Matrix()
 
@@ -651,7 +793,7 @@ class GraphicsMatrix(GraphicsObject):
 
 
     def Translate(self, dx, dy):
-        """Translate the metrix.  This shifts the origin."""
+        """Translate the matrix.  This shifts the origin."""
         self._matrix.translate(dx, dy)
         return self
 
@@ -765,7 +907,7 @@ class GraphicsPath(GraphicsObject):
 
     def AddEllipse(self, x, y, w, h):
         """
-        Appends an elipse fitting into the given rectangle as a closed sub-path.
+        Appends an ellipse fitting into the given rectangle as a closed sub-path.
         """
         rw = w / 2.0
         rh = h / 2.0
@@ -799,7 +941,7 @@ class GraphicsPath(GraphicsObject):
 
     def AddQuadCurveToPoint(self, cx, cy, x, y):
         """
-        Adds a quadratic Bexier curve from the current point, using a
+        Adds a quadratic Bezier curve from the current point, using a
         control point and an end point.
         """
         # calculate using degree elevation to a cubic bezier
@@ -815,7 +957,7 @@ class GraphicsPath(GraphicsObject):
 
     def AddRectangle(self, x, y, w, h):
         """
-        Adds a new rectanlge as a closed sub-path.
+        Adds a new rectangle as a closed sub-path.
         """
         self._pathContext.rectangle(x, y, w, h)
         return self
@@ -823,7 +965,7 @@ class GraphicsPath(GraphicsObject):
 
     def AddRoundedRectangle(self, x, y, w, h, radius):
         """
-        Adds a new rounded rectanlge as a closed sub-path.
+        Adds a new rounded rectangle as a closed sub-path.
         """
         if radius == 0:
             self.AddRectangle(x,y,w,h)
@@ -867,7 +1009,7 @@ class GraphicsPath(GraphicsObject):
 
     def GetNativePath(self):
         """
-        Returns the path as a cairo.Path object.
+        Returns the path as a ``cairo.Path`` object.
         """
         return self._pathContext.copy_path()
 
@@ -882,7 +1024,7 @@ class GraphicsPath(GraphicsObject):
 
     def Transform(self, matrix):
         """
-        Transforms each point in this path by the matirx
+        Transforms each point in this path by the matrix
         """
         # as we don't have a true path object, we have to apply the
         # inverse matrix to the context
@@ -955,8 +1097,9 @@ class GraphicsGradientStop(object):
     
 class GraphicsGradientStops(object):
     """
-    An ordered collection of gradient color stops for a gradient brush. There
-    is always at least the starting stop and the ending stop in the collection.
+    An ordered collection of gradient color stops
+    (i.e. a :class:`GraphicsGradientStop`) for a gradient brush. There is
+    always at least the starting stop and the ending stop in the collection.
     """
     def __init__(self, startColour=wx.TransparentColour,
                  endColour=wx.TransparentColour):
@@ -967,7 +1110,7 @@ class GraphicsGradientStops(object):
         
     def Add(self, *args):
         """
-        Add a new color to the collection. args may be either a gradient stop,
+        Add a new color to the collection. ``args`` may be either a gradient stop,
         or a colour and position.
         """
         if len(args) == 2:
@@ -1017,6 +1160,10 @@ class GraphicsContext(GraphicsObject):
     The GraphicsContext is the object which facilitates drawing to a surface.
     """
     def __init__(self, context=None, size=None):
+        """
+        Create a new Context.
+        Normally you should use one of the ``"Create"`` static methods.
+        """
         self._context = context
         self._pen = None
         self._brush = None
@@ -1035,6 +1182,12 @@ class GraphicsContext(GraphicsObject):
     
     @staticmethod
     def Create(dc=None):
+        """
+        Create a new ``GraphicsContext``.
+        Passing ``None`` will create a context suitable for measuring.
+
+        :param dc: ``None`` or a compatible :class:`wx.DC`
+        """
         # TODO:  Support creating directly from a wx.Window too.
         if dc is None:
             return GraphicsContext.CreateMeasuringContext()
@@ -1046,6 +1199,7 @@ class GraphicsContext(GraphicsObject):
 
     @staticmethod
     def CreateFromNative(cairoContext):
+        """Create a context from an existing cairo Context"""
         return GraphicsContext(cairoContext)
 
 
@@ -1065,9 +1219,9 @@ class GraphicsContext(GraphicsObject):
     @staticmethod
     def CreateFromSurface(surface):
         """
-        Wrap a context around the given cairo Surface.  Note that a
-        GraphicsBitmap contains a cairo ImageSurface which is
-        accessible via the Surface property.        
+        Wrap a context around the given cairo Surface.
+        Note that a :class:`GraphicsBitmap` contains a cairo ``ImageSurface``
+        which is accessible via the ``Surface`` property.
         """
         return GraphicsContext(cairo.Context(surface),
                                (surface.get_width(), surface.get_height()))
@@ -1082,6 +1236,8 @@ class GraphicsContext(GraphicsObject):
         the context. The image object must have a life time greater than
         that of the new context as the context copies its contents back to the
         image when it is destroyed.
+
+        Not implemented yet...
         """
         # TODO: implement this
         raise NotImplementedError
@@ -1089,6 +1245,7 @@ class GraphicsContext(GraphicsObject):
     @Property
     def Context():
         def fget(self):
+            """A reference to the Cairo Context"""
             return self._context
         return locals()
 
@@ -1098,13 +1255,13 @@ class GraphicsContext(GraphicsObject):
     
     def CreateBrush(self, brush):
         """
-        Create a brush from a wx.Brush.
+        Create a brush from a :class:`wx.Brush`.
         """
         return GraphicsBrush.CreateFromBrush(brush)
 
     def CreateFont(self, font, colour=None):
         """
-        Create a font from a wx.Font
+        Create a font from a :class:`wx.Font`
         """
         return GraphicsFont.CreateFromFont(font, colour)
 
@@ -1114,8 +1271,8 @@ class GraphicsContext(GraphicsObject):
         Creates a native brush having a linear gradient, starting at (x1,y1)
         to (x2,y2) with the given boundary colors or the specified stops.
 
-        The `*args` can be either a GraphicsGradientStops or just two colours to
-        be used as the starting and ending gradient colours.
+        The `*args` can be either a :class:`GraphicsGradientStops` or just
+        two colours to be used as the starting and ending gradient colours.
         """
         if len(args) == 1:
             stops = args[0]
@@ -1139,8 +1296,8 @@ class GraphicsContext(GraphicsObject):
         the colours may be specified by just the two extremes or the full
         array of gradient stops.
         
-        The `*args` can be either a GraphicsGradientStops or just two colours to
-        be used as the starting and ending gradient colours.
+        The `*args` can be either a :class:`GraphicsGradientStops` or just two
+        colours to be used as the starting and ending gradient colours.
         """
         if len(args) ==1:
             stops = args[0]
@@ -1178,14 +1335,12 @@ class GraphicsContext(GraphicsObject):
         return GraphicsPen.CreateFromPen(pen)
 
 
-
-
     def PushState(self):
         """
         Makes a copy of the current state of the context (ie the
-        transformation matrix) and saves it on an internal stack of
-        saved states.  The saved state will be restored when PopState
-        is called.
+        transformation matrix) and saves it on an internal stack of saved
+        states.  The saved state will be restored when meth:`PopState` is
+        called.
         """
         self._context.save()
 
@@ -1193,7 +1348,7 @@ class GraphicsContext(GraphicsObject):
     def PopState(self):
         """
         Restore the most recently saved state which was saved with
-        PushState.
+        :meth:`PushState`.
         """
         self._context.restore()
             
@@ -1212,7 +1367,7 @@ class GraphicsContext(GraphicsObject):
 
     def ClipRegion(self, region):
         """
-        Adds the wx.Region to the current clipping region.
+        Adds the :class:`wx.Region` to the current clipping region.
         """
         p = GraphicsPath()
         ri = wx.RegionIterator(region)
@@ -1235,12 +1390,16 @@ class GraphicsContext(GraphicsObject):
         return self._context
 
 
-    # Since DC logical functions are conceptually different than
-    # compositing operators don't pretend they are the same thing, or
-    # try to implement them using the compositing operators.
     def GetLogicalFunction(self):
+        """
+        Not implemented.
+        Since DC logical functions are conceptually different than compositing
+        operators don't pretend they are the same thing, or try to implement
+        them using the compositing operators.
+        """
         raise NotImplementedError("See GetCompositingOperator")
     def SetLogicalFunction(self, function):
+        """Not implemented."""
         raise NotImplementedError("See SetCompositingOperator")
     LogicalFunction = property(GetLogicalFunction, SetLogicalFunction)
 
@@ -1291,13 +1450,14 @@ class GraphicsContext(GraphicsObject):
         gm = GraphicsMatrix()
         gm.Set( *tuple(self._context.get_matrix()) )
         return gm
+    Transform = property(GetTransform, SetTransform)
 
 
     def SetPen(self, pen):
         """
         Set the pen to be used for stroking lines in future drawing
-        operations.  Either a wx.Pen or a GraphicsPen object may be
-        used.
+        operations.  Either a :class:`wx.Pen` or a :class:`GraphicsPen`
+        object may be used.
         """
         if isinstance(pen, wx.Pen):
             if not pen.IsOk() or pen.Style == wx.TRANSPARENT:
@@ -1306,15 +1466,17 @@ class GraphicsContext(GraphicsObject):
                 pen = GraphicsPen.CreateFromPen(pen)
         self._pen = pen
 
-    def GetPen(self): return self._pen
+    def GetPen(self):
+        """Returns the current pen."""
+        return self._pen
     Pen = property(GetPen, SetPen)
 
 
     def SetBrush(self, brush):
         """
         Set the brush to be used for filling shapes in future drawing
-        operations.  Either a wx.Brush or a GraphicsBrush object may
-        be used.
+        operations.  Either a :class:`wx.Brush` or a :class:`GraphicsBrush`
+        object may be used.
         """
         if isinstance(brush, wx.Brush):
             if not brush.IsOk() or brush.Style == wx.TRANSPARENT:
@@ -1323,14 +1485,16 @@ class GraphicsContext(GraphicsObject):
                 brush = GraphicsBrush.CreateFromBrush(brush)
         self._brush = brush
 
-    def GetBrush(self): return self._brush
+    def GetBrush(self):
+        """Returns the current brush"""
+        return self._brush
     Brush = property(GetBrush, SetBrush)
     
 
     def SetFont(self, font, colour=None):
         """
-        Sets the font to be used for drawing text.  Either a wx.Font
-        or a GraphicsFont may be used.
+        Sets the font to be used for drawing text.  Either a :class:`wx.Font`
+        or a :class:`GraphicsFont` may be used.
         """
         if isinstance(font, wx.Font):
             font = GraphicsFont.CreateFromFont(font, colour)
@@ -1405,7 +1569,7 @@ class GraphicsContext(GraphicsObject):
             
             
     def _DrawText(self, text, x, y, angle=None):
-        # helper used by DrawText and DrawRotatedText
+        """helper used by DrawText and DrawRotatedText"""
         if angle is not None:
             self.PushState()
             self.Translate(x, y)
@@ -1490,7 +1654,7 @@ class GraphicsContext(GraphicsObject):
         """
         Draw the bitmap at (x,y).  If the width and height parameters
         are passed then the bitmap is scaled to fit that size.  Either
-        a wx.Bitmap or a GraphicsBitmap may be used.
+        a :class:`wx.Bitmap` or a :class:`GraphicsBitmap` may be used.
         """
         if isinstance(bmp, wx.Bitmap):
             bmp = GraphicsBitmap.CreateFromBitmap(bmp)
@@ -1536,7 +1700,7 @@ class GraphicsContext(GraphicsObject):
 
     def StrokeLines(self, points):
         """
-        Stroke a series of conencted lines using the current pen.
+        Stroke a series of connected lines using the current pen.
         Points is a sequence of points or 2-tuples, and lines are
         drawn from point to point through the end of the sequence.
         """
@@ -1613,12 +1777,15 @@ class GraphicsContext(GraphicsObject):
         """
         return self._context.get_operator()
 
+
     def SetCompositingOperator(self, op):
         """
         Sets the compositing operator to be used for all drawing
         operations.  The default operator is OPERATOR_OVER.
         """
         return self._context.set_operator(op)
+
+    CompositingOperator = property(GetCompositingOperator, SetCompositingOperator)
 
 
     def GetAntialiasMode(self):
@@ -1635,10 +1802,12 @@ class GraphicsContext(GraphicsObject):
         """
         self._context.set_antialias(mode)
 
+    AntialiasMode = property(GetAntialiasMode, GetAntialiasMode)
+
 
     def BeginLayer(self, opacity):
         """
-        Redirects future rendering to a temporary context.  See `EndLayer`.
+        Redirects future rendering to a temporary context.  See :meth:`EndLayer`.
         """
         self._layerOpacities.append(opacity)
         self._context.push_group()
@@ -1647,7 +1816,7 @@ class GraphicsContext(GraphicsObject):
     def EndLayer(self):
         """
         Composites the drawing done on the temporary context created
-        in `BeginLayer` back into the main context, using the opacity
+        in :meth:`BeginLayer` back into the main context, using the opacity
         specified for the layer.
         """
         opacity = self._layerOpacities.pop()
@@ -1707,8 +1876,10 @@ class GraphicsContext(GraphicsObject):
 # Utility functions
 
 def _makeColour(colour):
-    # make a wx.Colour from any of the allowed typemaps (string, tuple,
-    # etc.)
+    """
+    Helper which makes a wx.Colour from any of the allowed typemaps (string,
+    tuple, etc.)
+    """
     if isinstance(colour, (six.string_types, tuple)):
         return wx.NamedColour(colour)
     else:
@@ -1716,12 +1887,14 @@ def _makeColour(colour):
 
     
 def _colourToValues(c):    
-    # Convert wx.Colour components to a set of values between 0 and 1
+    """
+    Helper which converts wx.Colour components to a set of values between 0 and 1
+    """
     return tuple( [x/255.0 for x in c.Get(True)] )
     
 
-
 class _OffsetHelper(object):
+    """A helper used by the context class."""
     def __init__(self, ctx):
         self.ctx = ctx
         self.offset = 0
@@ -1738,8 +1911,10 @@ class _OffsetHelper(object):
             self.ctx.Translate(-0.5, -0.5)
 
 
-            
 def _stdDashes(style, width):
+    """
+    Helper which defines the dash patterns for the standard dash styles.
+    """
     if width < 1.0:
         width = 1.0
         
@@ -1756,5 +1931,3 @@ def _stdDashes(style, width):
 
         
 #---------------------------------------------------------------------------
-
-
