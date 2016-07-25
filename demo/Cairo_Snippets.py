@@ -66,7 +66,8 @@ class TestPanel(wx.Panel):
 
     def OnListBoxSelect(self, evt):
         snippet_file = opj('snippets/%s.py' % evt.GetString())
-        text = file(snippet_file).read()
+        with open(snippet_file) as f:
+            text = f.read()
         self.canvas.SetSnippet(text)
         self.editor.SetValue(text)
 
@@ -76,9 +77,10 @@ class TestPanel(wx.Panel):
 if not haveCairo:
     from wx.lib.msgpanel import MessagePanel
     def runTest(frame, nb, log):
-        win = MessagePanel(nb, 'This demo requires the Pycairo package,\n'
-                           'or there is some other unmet dependency.',
-                           'Sorry', wx.ICON_WARNING)
+        win = MessagePanel(
+            nb, 'This demo requires either the PyCairo package or the\n'
+                'cairocffi package, or there is some other unmet dependency.',
+                'Sorry', wx.ICON_WARNING)
         return win
 else:
 
@@ -99,10 +101,10 @@ overview = """<html><body>
 <h2><center>Cairo Integration</center></h2>
 
 The wx.lib.wxcairo module provides a bit of glue that will allow you to
-use the Pycairo package drawing directly on wx.DC's.
+use the PyCairo or cairocffi packages to do Cairo drawing directly on wx.DC's.
 
 <p> This sample draws the standard 'snippet' examples that come with
-the Pycairo pacakge, and a few others.  The C version of the samples
+the PyCairo package, and a few others.  The C version of the samples
 can be seen at http://cairographics.org/samples/
 
 <p> In most snippets you'll see a call to a snippet_normalize()

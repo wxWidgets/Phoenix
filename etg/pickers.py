@@ -150,19 +150,16 @@ def run():
     # picker using a wx.BitmapButton instead.
     module.addPyCode("""\
     if 'wxMac' in wx.PlatformInfo:
-        # ColourData object to be shared by all colour pickers
-        _colourData = None
-        
         class ColourPickerCtrl(PickerBase):
             '''
             This control allows the user to select a colour. The
             implementation varies by platform but is usually a button which
             brings up a `wx.ColourDialog` when clicked.
-        
-        
+
+
             Window Styles
             -------------
-        
+
                 ======================  ============================================
                 wx.CLRP_DEFAULT         Default style.
                 wx.CLRP_USE_TEXTCTRL    Creates a text control to the left of the
@@ -175,10 +172,10 @@ def run():
                 wx.CLRP_SHOW_LABEL      Shows the colour in HTML form (AABBCC) as the
                                         colour button label (instead of no label at all).
                 ======================  ============================================
-        
+
             Events
             ------
-        
+
                 ========================  ==========================================
                 EVT_COLOURPICKER_CHANGED  The user changed the colour selected in the
                                           control either using the button or using the
@@ -187,6 +184,11 @@ def run():
                                           the user's input is valid, i.e. recognizable).
                 ========================  ==========================================
             '''
+
+            # ColourData object to be shared by all colour pickers, so they can
+            # share the custom colours
+            _colourData = None
+
             #--------------------------------------------------
             class ColourPickerButton(BitmapButton):
                 def __init__(self, parent, id=-1, colour=wx.BLACK,
@@ -194,44 +196,43 @@ def run():
                              style = CLRP_DEFAULT_STYLE,
                              validator = wx.DefaultValidator,
                              name = "colourpickerwidget"):
-                    
-                    wx.BitmapButton.__init__(self, parent, id, wx.Bitmap(1,1), 
+
+                    wx.BitmapButton.__init__(self, parent, id, wx.Bitmap(1,1),
                                              pos, size, style, validator, name)
                     self.SetColour(colour)
                     self.InvalidateBestSize()
                     self.SetInitialSize(size)
                     self.Bind(wx.EVT_BUTTON, self.OnButtonClick)
-                    
-                    global _colourData
-                    if _colourData is None:
-                        _colourData = wx.ColourData()
-                        _colourData.SetChooseFull(True)
+
+                    if ColourPickerCtrl._colourData is None:
+                        ColourPickerCtrl._colourData = wx.ColourData()
+                        ColourPickerCtrl._colourData.SetChooseFull(True)
                         grey = 0
                         for i in range(16):
                             c = wx.Colour(grey, grey, grey)
-                            _colourData.SetCustomColour(i, c)
-                            grey += 16                                            
-                                
+                            ColourPickerCtrl._colourData.SetCustomColour(i, c)
+                            grey += 16
+
                 def SetColour(self, colour):
-                    self.colour = colour
+                    # force a copy, in case the _colorData is shared
+                    self.colour = wx.Colour(colour)
                     bmp = self._makeBitmap()
                     self.SetBitmapLabel(bmp)
-                
+
                 def GetColour(self):
                     return self.colour
-                
+
                 def OnButtonClick(self, evt):
-                    global _colourData
-                    _colourData.SetColour(self.colour)
-                    dlg = wx.ColourDialog(self, _colourData)
+                    ColourPickerCtrl._colourData.SetColour(self.colour)
+                    dlg = wx.ColourDialog(self, ColourPickerCtrl._colourData)
                     if dlg.ShowModal() == wx.ID_OK:
-                        _colourData = dlg.GetColourData()
-                        self.SetColour(_colourData.GetColour())
+                        ColourPickerCtrl._colourData = dlg.GetColourData()
+                        self.SetColour(ColourPickerCtrl._colourData.GetColour())
                         evt = wx.ColourPickerEvent(self, self.GetId(), self.GetColour())
                         self.GetEventHandler().ProcessEvent(evt)
-                                    
+
                 def _makeBitmap(self):
-                    width = height = 22
+                    width = height = 24
                     bg = self.GetColour()
                     if self.HasFlag(CLRP_SHOW_LABEL):
                         w, h = self.GetTextExtent(bg.GetAsString(wx.C2S_HTML_SYNTAX))
@@ -247,9 +248,9 @@ def run():
                         dc.DrawText(bg.GetAsString(wx.C2S_HTML_SYNTAX),
                                     (width - w)/2, (height - h)/2)
                     return bmp
-            
+
             #--------------------------------------------------
-        
+
             def __init__(self, parent, id=-1, colour=wx.BLACK,
                          pos=wx.DefaultPosition, size=wx.DefaultSize,
                          style = CLRP_DEFAULT_STYLE,
@@ -265,40 +266,40 @@ def run():
                 self.SetPickerCtrl(widget)
                 widget.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnColourChange)
                 self.PostCreation()
-                
-                
+
+
             def GetColour(self):
                 '''Set the displayed colour.'''
                 return self.GetPickerCtrl().GetColour()
-        
-        
+
             def SetColour(self, colour):
                 '''Returns the currently selected colour.'''
                 self.GetPickerCtrl().SetColour(colour)
                 self.UpdateTextCtrlFromPicker()
-        
-                
+            Colour = property(GetColour, SetColour)
+
+
             def UpdatePickerFromTextCtrl(self):
                 col = wx.Colour(self.GetTextCtrl().GetValue())
-                if not col.Ok():
+                if not col.IsOk():
                     return
                 if self.GetColour() != col:
                     self.GetPickerCtrl().SetColour(col)
                     evt = wx.ColourPickerEvent(self, self.GetId(), self.GetColour())
                     self.GetEventHandler().ProcessEvent(evt)
-            
+
             def UpdateTextCtrlFromPicker(self):
                 if not self.GetTextCtrl():
                     return
                 self.GetTextCtrl().SetValue(self.GetColour().GetAsString())
-                
+
             def GetPickerStyle(self, style):
                 return style & CLRP_SHOW_LABEL
-        
+
             def OnColourChange(self, evt):
                 self.UpdateTextCtrlFromPicker()
                 evt = wx.ColourPickerEvent(self, self.GetId(), self.GetColour())
-                self.GetEventHandler().ProcessEvent(evt)        
+                self.GetEventHandler().ProcessEvent(evt)
         """)
 
 

@@ -1,55 +1,19 @@
 #----------------------------------------------------------------------
-# Name:        wx.lib.wxcairo
-# Purpose:     Glue code to allow the pycairo package to be used
-#              with a wx.DC as the cairo surface.
+# Name:        wx_pycairo
+# Purpose:     wx.lib.wxcairo implementation functions for PyCairo
 #
 # Author:      Robin Dunn
 #
 # Created:     3-Sept-2008
-# Copyright:   (c) 2008 by Total Control Software
+# Copyright:   (c) 2008-2016 by Total Control Software
 # Licence:     wxWindows license
 #
 # Tags:        phoenix-port, py3-port
 #----------------------------------------------------------------------
 
 """
-This module provides some glue code that allows the pycairo package to
-be used for drawing direclty on wx.DCs.  In cairo terms, the DC is the
-drawing surface.  The `CairoContextFromDC` function in this module
-will return an instance of the pycairo Context class that is ready for
-drawing, using the native cairo surface type for the current platform.
-
-This module requires the pycairo package, and makes use of ctypes for
-fetching the pycairo C API and also for digging into the cairo library
-itself.
-
-To use Cairo with wxPython you will need to have a few dependencies
-installed.  On Linux and other unix-like systems you may already have
-them, or can easily get them with your system's package manager.  Just
-check if libcairo and pycairo are installed.
-
-On Mac you can get Cairo from MacPorts or Fink.  If you are also using
-MacPorts or Fink for your Python installation then you should be able
-to get pycairo the same way.  Otherwise it's real easy to build and
-install pycairo for the Python framework installation.  Just get the
-source tarball from http://pypi.python.org/pypi/pycairo and do the
-normal 'python setup.py install' dance.
-
-On Windows you can get a Cairo DLL from here:
-
-    http://www.gtk.org/download/win32.php
-
-You'll also want to get the zlib and libpng binaries from the same
-page.  Once you get those files extract the DLLs from each of the zip
-files and copy them to some place on your PATH.  Finally, there is an
-installer for the pycairo pacakge here:
-
-    http://wxpython.org/cairo/
-
+wx.lib.wxcairo implementation functions using PyCairo.
 """
-
-# TODO:  Support printer surfaces?
-
 
 import wx
 from six import PY3
@@ -75,7 +39,7 @@ def voidp(ptr):
 
 #----------------------------------------------------------------------------
 
-def ContextFromDC(dc):
+def _ContextFromDC(dc):
     """
     Creates and returns a Cairo context object using the wxDC as the
     surface.  (Only window, client, paint and memory DC's are allowed
@@ -102,7 +66,6 @@ def ContextFromDC(dc):
         # The context keeps its own reference to the surface
         cairoLib.cairo_surface_destroy(surfaceptr)
 
-
     elif 'wxMSW' in wx.PlatformInfo:
         # This one is easy, just fetch the HDC and use PyCairo to make
         # the surface and context.
@@ -111,7 +74,6 @@ def ContextFromDC(dc):
         hdc = ctypes.c_long(hdc)
         surface = cairo.Win32Surface(hdc.value)
         ctx = cairo.Context(surface)
-
 
     elif 'wxGTK' in wx.PlatformInfo:
         if 'gtk3' in wx.PlatformInfo:
@@ -138,7 +100,7 @@ def ContextFromDC(dc):
 
 #----------------------------------------------------------------------------
 
-def FontFaceFromFont(font):
+def _FontFaceFromFont(font):
     """
     Creates and returns a cairo.FontFace object from the native
     information in a wx.Font.
@@ -148,12 +110,10 @@ def FontFaceFromFont(font):
         fontfaceptr = font_face_create(voidp(font.OSXGetCGFont()))
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
 
-
     elif 'wxMSW' in wx.PlatformInfo:
         fontfaceptr = voidp( cairoLib.cairo_win32_font_face_create_for_hfont(
             ctypes.c_ulong(font.GetHFONT())) )
         fontface = pycairoAPI.FontFace_FromFontFace(fontfaceptr)
-
 
     elif 'wxGTK' in wx.PlatformInfo:
         # wow, this is a hell of a lot of steps...
@@ -178,54 +138,6 @@ def FontFaceFromFont(font):
         raise NotImplementedError("Help  me, I'm lost...")
 
     return fontface
-
-
-#----------------------------------------------------------------------------
-# wxBitmap <--> ImageSurface
-
-def BitmapFromImageSurface(surface):
-    """
-    Create a wx.Bitmap from a Cairo ImageSurface.
-    """
-    format = surface.get_format()
-    if format not in [cairo.FORMAT_ARGB32, cairo.FORMAT_RGB24]:
-        raise TypeError("Unsupported format")
-
-    width  = surface.get_width()
-    height = surface.get_height()
-    stride = surface.get_stride()
-    data   = surface.get_data()
-    if format == cairo.FORMAT_ARGB32:
-        fmt = wx.BitmapBufferFormat_ARGB32
-    else:
-        fmt = wx.BitmapBufferFormat_RGB32
-
-    bmp = wx.Bitmap(width, height, 32)
-    bmp.CopyFromBuffer(data, fmt, stride)
-    return bmp
-
-
-def ImageSurfaceFromBitmap(bitmap):
-    """
-    Create an ImageSurface from a wx.Bitmap
-    """
-    width, height = bitmap.GetSize()
-    if bitmap.ConvertToImage().HasAlpha():
-        format = cairo.FORMAT_ARGB32
-        fmt = wx.BitmapBufferFormat_ARGB32
-    else:
-        format = cairo.FORMAT_RGB24
-        fmt = wx.BitmapBufferFormat_RGB32
-
-    try:
-        stride = cairo.ImageSurface.format_stride_for_width(format, width)
-    except AttributeError:
-        stride = width * 4
-
-    surface = cairo.ImageSurface(format, width, height)
-    bitmap.CopyToBuffer(surface.get_data(), fmt, stride)
-    surface.mark_dirty()
-    return surface
 
 
 #----------------------------------------------------------------------------
@@ -321,7 +233,7 @@ def _findAppSvcLib():
 
 #----------------------------------------------------------------------------
 
-# Pycairo exports a C API in a structure via a PyCObject.  Using
+# PyCairo exports a C API in a structure via a PyCObject.  Using
 # ctypes will let us use that API from Python too.  We'll use it to
 # convert a C pointer value to pycairo objects.  The information about
 # this API structure is gleaned from pycairo.h.
@@ -497,4 +409,5 @@ elif 'wxGTK' in wx.PlatformInfo:
     pcLib.pango_font_map_load_font.restype = ctypes.c_void_p
     pcLib.pango_cairo_font_get_scaled_font.restype = ctypes.c_void_p
     cairoLib.cairo_scaled_font_get_font_face.restype = ctypes.c_void_p
+
 #----------------------------------------------------------------------------

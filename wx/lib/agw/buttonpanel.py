@@ -1064,52 +1064,42 @@ class BoxSizer(Sizer, wx.BoxSizer):
          width whereas the flags given here determine which side(s) of the item that the border will be added. The other flags determine 
          how the sizer item behaves when the space allotted to the sizer changes, and is somewhat dependent on the specific kind of sizer used:
 
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | Sizer Flag                                                          | Description                                                                 |
-         +=====================================================================+=============================================================================+
-         | ``wx.TOP``                                                          | These flags are used to specify which side(s) of the sizer                  |
-         +---------------------------------------------------------------------+ item the border width will apply to.                                        | 
-         | ``wx.BOTTOM``                                                       |                                                                             |
-         +---------------------------------------------------------------------+                                                                             |
-         | ``wx.LEFT``                                                         |                                                                             |
-         +---------------------------------------------------------------------+                                                                             |
-         | ``wx.RIGHT``                                                        |                                                                             |
-         +---------------------------------------------------------------------+                                                                             |
-         | ``wx.ALL``                                                          |                                                                             |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.EXPAND``                                                       | The item will be expanded to fill the space assigned to                     |
-         |                                                                     | the item.                                                                   |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.SHAPED``                                                       | The item will be expanded as much as possible while also                    |
-         |                                                                     | maintaining its aspect ratio                                                |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.FIXED_MINSIZE``                                                | Normally :class:`wx.Sizer` will use                                            |
-         |                                                                     | :meth:`wx.Window.GetEffectiveMinSize` to                                       |
-         |                                                                     | determine what the minimal size of window items should be, and will use that| 
-         |                                                                     | size to calculate the layout. This allows layouts to adjust when an item    |
-         |                                                                     | changes and its best size becomes different. If you would rather have a     |
-         |                                                                     | window item stay the size it started with then use ``wx.FIXED_MINSIZE``.    |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.RESERVE_SPACE_EVEN_IF_HIDDEN``                                 | Normally `Sizers` don't allocate space for hidden windows or other items.   | 
-         |                                                                     | This flag overrides this behavior so that sufficient space is allocated for |
-         |                                                                     | the window even if it isn't visible. This makes it possible to dynamically  |
-         |                                                                     | show and hide controls without resizing parent dialog, for example. This    |
-         |                                                                     | function is new since wxWidgets version 2.8.8                               |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
-         | ``wx.ALIGN_CENTER`` **or** ``wx.ALIGN_CENTRE``                      | The ``wx.ALIGN*`` flags allow you to specify the alignment of the item      |
-         +---------------------------------------------------------------------+ within the space allotted to it by the sizer, adjusted for the border if    |
-         | ``wx.ALIGN_LEFT``                                                   | any.                                                                        |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_RIGHT``                                                  |                                                                             |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_TOP``                                                    |                                                                             |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_BOTTOM``                                                 |                                                                             |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_CENTER_VERTICAL`` **or** ``wx.ALIGN_CENTRE_VERTICAL``    |                                                                             |
-         +---------------------------------------------------------------------+                                                                             | 
-         | ``wx.ALIGN_CENTER_HORIZONTAL`` **or** ``wx.ALIGN_CENTRE_HORIZONTAL``|                                                                             |
-         +---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | Sizer Flag                                                            | Description                                                                  |
+         +=======================================================================+==============================================================================+
+         | | ``wx.TOP``                                                          | These flags are used to specify which side(s) of the sizer                   |
+         | | ``wx.BOTTOM``                                                       | item the border width will apply to.                                         |
+         | | ``wx.LEFT``                                                         |                                                                              |
+         | | ``wx.RIGHT``                                                        |                                                                              |
+         | | ``wx.ALL``                                                          |                                                                              |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | ``wx.EXPAND``                                                         | The item will be expanded to fill the space assigned to                      |
+         |                                                                       | the item.                                                                    |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | ``wx.SHAPED``                                                         | The item will be expanded as much as possible while also                     |
+         |                                                                       | maintaining its aspect ratio                                                 |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | ``wx.FIXED_MINSIZE``                                                  | Normally :class:`wx.Sizer` will use                                          |
+         |                                                                       | :meth:`wx.Window.GetEffectiveMinSize` to                                     |
+         |                                                                       | determine what the minimal size of window items should be, and will use that |
+         |                                                                       | size to calculate the layout. This allows layouts to adjust when an item     |
+         |                                                                       | changes and its best size becomes different. If you would rather have a      |
+         |                                                                       | window item stay the size it started with then use ``wx.FIXED_MINSIZE``.     |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | ``wx.RESERVE_SPACE_EVEN_IF_HIDDEN``                                   | Normally `Sizers` don't allocate space for hidden windows or other items.    |
+         |                                                                       | This flag overrides this behavior so that sufficient space is allocated for  |
+         |                                                                       | the window even if it isn't visible. This makes it possible to dynamically   |
+         |                                                                       | show and hide controls without resizing parent dialog, for example. This     |
+         |                                                                       | function is new since wxWidgets version 2.8.8                                |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
+         | | ``wx.ALIGN_CENTER`` **or** ``wx.ALIGN_CENTRE``                      | The ``wx.ALIGN*`` flags allow you to specify the alignment of the item       |
+         | | ``wx.ALIGN_LEFT``                                                   | within the space allotted to it by the sizer, adjusted for the border if     |
+         | | ``wx.ALIGN_RIGHT``                                                  | any.                                                                         |
+         | | ``wx.ALIGN_TOP``                                                    |                                                                              |
+         | | ``wx.ALIGN_BOTTOM``                                                 |                                                                              |
+         | | ``wx.ALIGN_CENTER_VERTICAL`` **or** ``wx.ALIGN_CENTRE_VERTICAL``    |                                                                              |
+         | | ``wx.ALIGN_CENTER_HORIZONTAL`` **or** ``wx.ALIGN_CENTRE_HORIZONTAL``|                                                                              |
+         +-----------------------------------------------------------------------+------------------------------------------------------------------------------+
 
         :param integer `border`: determines the border width, if the flag parameter is set
          to include any border flag.

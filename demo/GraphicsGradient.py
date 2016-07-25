@@ -31,6 +31,7 @@ class GradientPanel(wx.Panel):
         self.brush = brush
         self.Refresh()
 
+
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
         gc = g.GraphicsContext.Create(dc)
@@ -38,6 +39,7 @@ class GradientPanel(wx.Panel):
         gc.SetPen(wx.Pen('black', 1))
         w, h = gc.GetSize()
         gc.DrawRectangle(0,0,w,h)
+
 
 
 class GradientStopPanel(wx.Panel):
@@ -54,21 +56,30 @@ class GradientStopPanel(wx.Panel):
         self.pos.SetToolTip(
             "A value between 0 and 1 representing the distance between (x1,y1) "
             "and (x2,y2) for this gradient stop.")
-        self.colour = wx.ColourPickerCtrl(self, colour=colour)
-        self.colour.SetToolTip("The colour for this gradient stop")
+        self.clrPicker = wx.ColourPickerCtrl(self, colour=colour)
+        self.clrPicker.SetToolTip("The colour for this gradient stop")
         self.minusBtn = wx.Button(self, -1, " - ", style=wx.BU_EXACTFIT)
         self.minusBtn.SetToolTip("Remove this gradient stop")
 
         # put them in a sizer
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(self.pos, 0, wx.ALIGN_CENTER_VERTICAL)
-        sizer.Add(self.colour, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 10)
+        sizer.Add(self.clrPicker, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 10)
         sizer.Add(self.minusBtn, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 25)
         border = wx.BoxSizer()
         border.Add(sizer, 1, wx.EXPAND|wx.ALL, 4)
         self.SetSizer(border)
 
         self.Bind(wx.EVT_BUTTON, self.OnMinusButton, self.minusBtn)
+
+
+    @property
+    def colour(self):
+        return self.clrPicker.GetColour()
+
+    @property
+    def position(self):
+        return self.pos.GetValue()
 
 
     def OnMinusButton(self, evt):
@@ -181,6 +192,7 @@ class TestPanel(scrolled.ScrolledPanel):
         # called when any of the color pickers are updated
         self.UpdateBrush()
 
+
     def OnGeometryChanged(self, evt):
         # called for changes to x1,y1 or x2,y2
         self.UpdateBrush()
@@ -203,8 +215,8 @@ class TestPanel(scrolled.ScrolledPanel):
             next = self.stops[idx+1]
             stop = self.stops[idx]
 
-            stop.pos.SetMin(prev.pos.GetValue())
-            stop.pos.SetMax(next.pos.GetValue())
+            stop.pos.SetMin(prev.position)
+            stop.pos.SetMax(next.position)
             stop.pos.Enable()
             stop.minusBtn.Enable()
 
@@ -228,11 +240,10 @@ class TestPanel(scrolled.ScrolledPanel):
         y2 = floatOrZero(self.y2.Value)
 
         gstops = g.GraphicsGradientStops()
-        gstops.SetStartColour(self.stops[0].colour.GetColour())
-        gstops.SetEndColour(self.stops[-1].colour.GetColour())
+        gstops.SetStartColour(self.stops[0].colour)
+        gstops.SetEndColour(self.stops[-1].colour)
         for s in self.stops[1:-1]:
-            gs = g.GraphicsGradientStop(
-                s.colour.GetColour(), s.pos.GetValue())
+            gs = g.GraphicsGradientStop(s.colour, s.position)
             gstops.Add(gs)
 
         ctx = g.GraphicsContext.Create()
