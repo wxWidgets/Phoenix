@@ -12,10 +12,7 @@
 // For compilers that support precompilation, includes "wx.h".
 //include "wx/wxprec.h"
 
-#undef DEBUG
-#include <Python.h>
-#include "wx/wxPython/wxPython.h"
-#include "wx/wxPython/pseudodc.h"
+//#undef DEBUG
 
 // wxList based class definitions
 #include <wx/listimpl.cpp>
@@ -110,7 +107,7 @@ wxBitmap &GetGreyBitmap(wxBitmap &bmp)
 // ============================================================================
 
 // ----------------------------------------------------------------------------
-// pdcDrawPolyPolygonOp constructor
+// pdcDrawPolyPolygonOp
 // ----------------------------------------------------------------------------
 pdcDrawPolyPolygonOp::pdcDrawPolyPolygonOp(int n, int count[], wxPoint points[],
                  wxCoord xoffset, wxCoord yoffset, wxPolygonFillMode fillStyle) 
@@ -141,9 +138,7 @@ pdcDrawPolyPolygonOp::pdcDrawPolyPolygonOp(int n, int count[], wxPoint points[],
     m_totaln = total_n;
 }
 
-// ----------------------------------------------------------------------------
-// pdcDrawPolyPolygonOp destructor
-// ----------------------------------------------------------------------------
+
 pdcDrawPolyPolygonOp::~pdcDrawPolyPolygonOp()
 {
     if (m_points) delete m_points;
@@ -153,84 +148,121 @@ pdcDrawPolyPolygonOp::~pdcDrawPolyPolygonOp()
 }
         
 // ----------------------------------------------------------------------------
-// pdcDrawLinesOp constructor
+// pdcDrawLinesOp
 // ----------------------------------------------------------------------------
-pdcDrawLinesOp::pdcDrawLinesOp(int n, wxPoint points[],
-             wxCoord xoffset, wxCoord yoffset)
+pdcDrawLinesOp::pdcDrawLinesOp(const wxPointList* points,
+                               wxCoord xoffset,
+                               wxCoord yoffset)
 {
-    m_n=n; m_xoffset=xoffset; m_yoffset=yoffset;
-    if (n)
+    m_xoffset = xoffset;
+    m_yoffset = yoffset;
+
+    m_points = new wxPointList;
+    wxPointList::const_iterator iter;
+    for (iter = points->begin(); iter != points->end(); iter++)
     {
-        m_points = new wxPoint[n];
-        for (int i=0; i<n; i++)
-            m_points[i] = points[i];
+        // The first * gives us a wxPoint ptr, second * dereferences that ptr
+        m_points->push_back(new wxPoint(**iter));
     }
-    else m_points=NULL;
 }
 
-// ----------------------------------------------------------------------------
-// pdcDrawLinesOp destructor
-// ----------------------------------------------------------------------------
+
 pdcDrawLinesOp::~pdcDrawLinesOp()
 {
-    if (m_points) delete m_points;
-    m_points=NULL;
+    m_points->clear();
+    delete m_points;
+    m_points = NULL;
 }
-        
-// ----------------------------------------------------------------------------
-// pdcDrawPolygonOp constructor
-// ----------------------------------------------------------------------------
-pdcDrawPolygonOp::pdcDrawPolygonOp(int n, wxPoint points[],
-             wxCoord xoffset, wxCoord yoffset, wxPolygonFillMode fillStyle)
+
+
+void pdcDrawLinesOp::Translate(wxCoord dx, wxCoord dy)
 {
-    m_n=n; m_xoffset=xoffset; m_yoffset=yoffset; m_fillStyle=fillStyle;
-    if (n)
+    wxPointList::const_iterator iter;
+    for (iter = m_points->begin(); iter != m_points->end(); iter++)
     {
-        m_points = new wxPoint[n];
-        for (int i=0; i<n; i++)
-            m_points[i] = points[i];
+        (*iter)->x += dx;
+        (*iter)->y += dy;
     }
-    else m_points=NULL;
 }
 
 // ----------------------------------------------------------------------------
-// pdcDrawPolygonOp destructor
+// pdcDrawPolygonOp
 // ----------------------------------------------------------------------------
+pdcDrawPolygonOp::pdcDrawPolygonOp(const wxPointList* points,
+                                   wxCoord xoffset,
+                                   wxCoord yoffset,
+                                   wxPolygonFillMode fillStyle)
+{
+    m_xoffset = xoffset;
+    m_yoffset = yoffset;
+    m_fillStyle = fillStyle;
+
+    m_points = new wxPointList;
+    wxPointList::const_iterator iter;
+    for (iter = points->begin(); iter != points->end(); ++iter)
+    {
+        // The first * gives us a wxPoint ptr, second * dereferences that ptr
+        m_points->push_back(new wxPoint(**iter));
+    }
+}
+
+
 pdcDrawPolygonOp::~pdcDrawPolygonOp()
 {
-    if (m_points) delete m_points;
-    m_points=NULL;
+    m_points->clear();
+    delete m_points;
+}
+
+
+void pdcDrawPolygonOp::Translate(wxCoord dx, wxCoord dy)
+{
+    wxPointList::const_iterator iter;
+    for (iter = m_points->begin(); iter != m_points->end(); iter++)
+    {
+        (*iter)->x += dx;
+        (*iter)->y += dy;
+    }
 }
 
 #if wxUSE_SPLINES
 // ----------------------------------------------------------------------------
-// pdcDrawSplineOp constructor
+// pdcDrawSplineOp
 // ----------------------------------------------------------------------------
-pdcDrawSplineOp::pdcDrawSplineOp(int n, wxPoint points[])
+pdcDrawSplineOp::pdcDrawSplineOp(const wxPointList* points)
 {
-    m_n=n;
-    if (n)
+    m_points = new wxPointList;
+    wxPointList::const_iterator iter;
+    for (iter = points->begin(); iter != points->end(); iter++)
     {
-        m_points = new wxPoint[n];
-        for(int i=0; i<n; i++)
-            m_points[i] = points[i];
+        // The first * gives us a wxPoint ptr, second * dereferences that ptr
+        m_points->push_back(new wxPoint(**iter));
     }
-    else m_points=NULL;
 }
 
-// ----------------------------------------------------------------------------
-// pdcDrawSplineOp destructor
-// ----------------------------------------------------------------------------
+
 pdcDrawSplineOp::~pdcDrawSplineOp()
 {
-    if (m_points) delete m_points;
-    m_points=NULL;
+    m_points->clear();
+    delete m_points;
 }
+
+
+void pdcDrawSplineOp::Translate(wxCoord dx, wxCoord dy)
+{
+    wxPointList::const_iterator iter;
+    for (iter = m_points->begin(); iter != m_points->end(); iter++)
+    {
+        (*iter)->x += dx;
+        (*iter)->y += dy;
+    }
+}
+
 #endif // wxUSE_SPLINES
 
 // ============================================================================
 // pdcObject implementation
 // ============================================================================
+
 // ----------------------------------------------------------------------------
 // DrawToDC - play back the op list to the DC 
 // ----------------------------------------------------------------------------
@@ -395,13 +427,16 @@ void wxPseudoDC::SetIdBounds(int id, wxRect& rect)
 // ----------------------------------------------------------------------------
 // GetIdBounds - Get the bounding rect for a given id
 // ----------------------------------------------------------------------------
-void wxPseudoDC::GetIdBounds(int id, wxRect& rect)
+wxRect wxPseudoDC::GetIdBounds(int id)
 {
+    wxRect rect;
+
     pdcObject *obj = FindObject(id);
     if (obj && obj->IsBounded())
         rect = obj->GetBounds();
     else
         rect.x = rect.y = rect.width = rect.height = 0;
+    return rect;
 }
 
 // ----------------------------------------------------------------------------
@@ -459,7 +494,7 @@ PyObject *wxPseudoDC::FindObjectsByBBox(wxCoord x, wxCoord y)
         r = obj->GetBounds();
         if (obj->IsBounded() && r.Contains(x,y))
         {
-            PyObject* pyObj = PyInt_FromLong((long)obj->GetId());
+            PyObject* pyObj = wxPyInt_FromLong((long)obj->GetId());
             PyList_Insert(pyList, 0, pyObj);
             Py_DECREF(pyObj);
         }
@@ -509,7 +544,7 @@ PyObject *wxPseudoDC::FindObjects(wxCoord x, wxCoord y,
                 // clear and update rgn2
                 if (pix != bg)
                 {
-                    PyObject* pyObj = PyInt_FromLong((long)obj->GetId());
+                    PyObject* pyObj = wxPyInt_FromLong((long)obj->GetId());
                     PyList_Insert(pyList, 0, pyObj);
                     Py_DECREF(pyObj);
                 }
@@ -565,7 +600,7 @@ PyObject *wxPseudoDC::FindObjects(wxCoord x, wxCoord y,
                 memdc.SelectObject(bmp);
                 if (!rgn2.IsEmpty())
                 {
-                    PyObject* pyObj = PyInt_FromLong((long)obj->GetId());
+                    PyObject* pyObj = wxPyInt_FromLong((long)obj->GetId());
                     PyList_Insert(pyList, 0, pyObj);
                     Py_DECREF(pyObj);
                 }

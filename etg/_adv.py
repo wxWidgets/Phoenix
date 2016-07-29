@@ -52,6 +52,7 @@ INCLUDES = [
              'richtooltip',
              'timectrl',
              'wizard',
+             'pseudodc',
              ]
 
 

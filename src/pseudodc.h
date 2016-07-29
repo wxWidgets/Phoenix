@@ -334,47 +334,40 @@ class pdcDrawIconOp : public pdcOp
 class pdcDrawLinesOp : public pdcOp
 {
     public:
-        pdcDrawLinesOp(int n, wxPoint points[],
-               wxCoord xoffset = 0, wxCoord yoffset = 0);
+        pdcDrawLinesOp(const wxPointList* points,
+                       wxCoord xoffset = 0,
+                       wxCoord yoffset = 0);
         virtual ~pdcDrawLinesOp();
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
-            {dc->DrawLines(m_n,m_points,m_xoffset,m_yoffset);}
-        virtual void Translate(wxCoord dx, wxCoord dy)
-        { 
-            for(int i=0; i<m_n; i++)
-            {
-                m_points[i].x+=dx; 
-                m_points[i].y+=dy;
-            }
-        }
+
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
+            { dc->DrawLines(m_points, m_xoffset, m_yoffset); }
+
+        virtual void Translate(wxCoord dx, wxCoord dy);
+
     protected:
-        int m_n;
-        wxPoint *m_points;
-        wxCoord m_xoffset,m_yoffset;
+        wxPointList* m_points;
+        wxCoord m_xoffset;
+        wxCoord m_yoffset;
 };
 
 class pdcDrawPolygonOp : public pdcOp
 {
     public:
-        pdcDrawPolygonOp(int n, wxPoint points[],
-                     wxCoord xoffset = 0, wxCoord yoffset = 0,
-                     wxPolygonFillMode fillStyle = wxODDEVEN_RULE);
+        pdcDrawPolygonOp(const wxPointList* points,
+                         wxCoord xoffset = 0,
+                         wxCoord yoffset = 0,
+                         wxPolygonFillMode fillStyle = wxODDEVEN_RULE);
         virtual ~pdcDrawPolygonOp();
+
         virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
-            {dc->DrawPolygon(m_n,m_points,m_xoffset,m_yoffset,m_fillStyle);}
+            { dc->DrawPolygon(m_points, m_xoffset, m_yoffset, m_fillStyle); }
         
-        virtual void Translate(wxCoord dx, wxCoord dy)
-        { 
-            for(int i=0; i<m_n; i++)
-            {
-                m_points[i].x+=dx; 
-                m_points[i].y+=dy;
-            }
-        }
+        virtual void Translate(wxCoord dx, wxCoord dy);
+
     protected:
-        int m_n;
-        wxPoint *m_points;
-        wxCoord m_xoffset,m_yoffset;
+        wxPointList* m_points;
+        wxCoord m_xoffset;
+        wxCoord m_yoffset;
         wxPolygonFillMode m_fillStyle;
 };
 
@@ -467,21 +460,15 @@ class pdcDrawLabelOp : public pdcOp
 class pdcDrawSplineOp : public pdcOp
 {
     public:
-        pdcDrawSplineOp(int n, wxPoint points[]);
+        pdcDrawSplineOp(const wxPointList* points);
         virtual ~pdcDrawSplineOp();
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) {dc->DrawSpline(m_n,m_points);}
-        virtual void Translate(wxCoord dx, wxCoord dy)
-        {
-            int i;
-            for(i=0; i<m_n; i++)
-            {
-                m_points[i].x += dx;
-                m_points[i].y += dy;
-            }
-        }
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
+            { dc->DrawSpline(m_points); }
+
+        virtual void Translate(wxCoord dx, wxCoord dy);
+
     protected:
-        wxPoint *m_points;
-        int m_n;
+        wxPointList* m_points;
 };
 #endif // wxUSE_SPLINES
 
@@ -582,7 +569,7 @@ public:
         {m_currId=-1; m_lastObject=NULL; m_objectlist.DeleteContents(true);m_objectIndex.clear();}
     ~wxPseudoDC();
     // ------------------------------------------------------------------------
-    // List managment methods
+    // List management methods
     // 
     void RemoveAll();
     int GetLen();
@@ -599,7 +586,7 @@ public:
     // Set the bounding rect of a given object
     // This will create an object node if one doesn't exist
     void SetIdBounds(int id, wxRect& rect);
-    void GetIdBounds(int id, wxRect& rect);
+    wxRect GetIdBounds(int id);
     // Translate all the operations for this id
     void TranslateId(int id, wxCoord dx, wxCoord dy);
     // Grey-out an object
@@ -681,10 +668,11 @@ public:
     void DrawPoint(const wxPoint& pt)
         { DrawPoint(pt.x, pt.y); }
 
-    void DrawPolygon(int n, wxPoint points[],
-                     wxCoord xoffset = 0, wxCoord yoffset = 0,
+    void DrawPolygon(const wxPointList* points,
+                     wxCoord xoffset = 0,
+                     wxCoord yoffset = 0,
                      wxPolygonFillMode fillStyle = wxODDEVEN_RULE)
-        {AddToList(new pdcDrawPolygonOp(n,points,xoffset,yoffset,fillStyle));}
+        {AddToList(new pdcDrawPolygonOp(points, xoffset, yoffset, fillStyle));}
 
     void DrawPolyPolygon(int n, int count[], wxPoint points[],
                          wxCoord xoffset = 0, wxCoord yoffset = 0,
@@ -724,9 +712,9 @@ public:
     void DrawIcon(const wxIcon& icon, const wxPoint& pt)
         { DrawIcon(icon, pt.x, pt.y); }
 
-    void DrawLines(int n, wxPoint points[],
-               wxCoord xoffset = 0, wxCoord yoffset = 0)
-        {AddToList(new pdcDrawLinesOp(n,points,xoffset,yoffset));}
+    void DrawLines(const wxPointList* points,
+                   wxCoord xoffset = 0, wxCoord yoffset = 0)
+        { AddToList(new pdcDrawLinesOp(points, xoffset, yoffset)); }
 
     void DrawBitmap(const wxBitmap &bmp, wxCoord x, wxCoord y,
                     bool useMask = false)
@@ -776,8 +764,8 @@ public:
 ??????*/
 
 #if wxUSE_SPLINES
-    void DrawSpline(int n, wxPoint points[])
-        {AddToList(new pdcDrawSplineOp(n,points));}
+    void DrawSpline(const wxPointList* points)
+        { AddToList(new pdcDrawSplineOp(points)); }
 #endif // wxUSE_SPLINES
 
 #if wxUSE_PALETTE
