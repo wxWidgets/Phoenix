@@ -24,6 +24,8 @@ class pseudodc_Tests(wtc.WidgetTestCase):
     def _paintIt(self, evt):
         # Paint event handler for the panel
         dc = wx.PaintDC(self.pnl)
+        if 'wxMac' not in wx.PlatformInfo:
+            dc = wx.GCDC(dc)
         self.pdc.DrawToDC(dc)
 
     def _showIt(self):
