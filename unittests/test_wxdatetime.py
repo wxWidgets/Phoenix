@@ -192,9 +192,12 @@ class datetime_Tests(wtc.WidgetTestCase):
 
     def test_datetimeParseRfc822Date(self):        
         d = wx.DateTime()
-        val = d.ParseRfc822Date('Wed, 25 Feb 2015 13:34:45 -0800')
+        rfc822str = 'Wed, 25 Feb 2015 13:34:45 -0800'
+        import email.utils as eu
+        st = time.localtime(eu.mktime_tz(eu.parsedate_tz(rfc822str)))
+        val = d.ParseRfc822Date(rfc822str)
         self.assertEqual(val, 31)
-        self.assertEqual(d.hour, 13)
+        self.assertEqual(d.hour, st.tm_hour)
         self.assertEqual(d.minute, 34)
 
 
