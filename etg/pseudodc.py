@@ -171,22 +171,6 @@ def run():
             #----------------------------------------------
             # Methods which mirror the wxDC API
 
-            MethodDef(type='void', name='BeginDrawing', items=[],
-                briefDoc="""\
-                    Allows for optimization of drawing code on platforms that
-                    need it.  On other platforms this is just an empty
-                    function and is harmless.  To take advantage of this
-                    potential optimization simply enclose each group of calls
-                    to the drawing primitives within calls to :meth:`BeginDrawing`
-                    and :meth:`EndDrawing`."""),
-
-
-            MethodDef(type='void', name='EndDrawing', items=[],
-                briefDoc="""\
-                    Ends the group of drawing primitives started with
-                    :meth:`BeginDrawing`, and invokes whatever optimization is
-                    available for this DC type on the current platform."""),
-
 
             MethodDef(type='void', name='FloodFill',
                 items=[ ParamDef(type='wxCoord', name='x'),
@@ -642,6 +626,8 @@ def run():
 
     # add deprecation warnings for the old method names
     cls.addPyCode("""\
+        PseudoDC.BeginDrawing = wx.deprecated(lambda *args: None, 'BeginDrawing has been removed.')
+        PseudoDC.EndDrawing = wx.deprecated(lambda *args: None, 'EndDrawing has been removed.')
         PseudoDC.FloodFillPoint = wx.deprecated(PseudoDC.FloodFill, 'Use FloodFill instead.')
         PseudoDC.DrawLinePoint = wx.deprecated(PseudoDC.DrawLine, 'Use DrawLine instead.')
         PseudoDC.CrossHairPoint = wx.deprecated(PseudoDC.CrossHair, 'Use CrossHair instead.')
