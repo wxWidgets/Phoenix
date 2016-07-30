@@ -313,7 +313,7 @@ def run():
                     the given size. The current pen is used for the outline
                     and the current brush for filling the shape.
                     """,
-                opverloads=[
+                overloads=[
                     MethodDef(type='void', name='DrawRectangle',
                         items=[ ParamDef(type='const wxRect &', name='rect') ]),
                     MethodDef(type='void', name='DrawRectangle',
@@ -335,7 +335,7 @@ def run():
                     the given size. The current pen is used for the outline
                     and the current brush for filling the shape.
                     """,
-                opverloads=[
+                overloads=[
                     MethodDef(type='void', name='DrawRoundedRectangle',
                         items=[ ParamDef(type='const wxRect &', name='rect'),
                                 ParamDef(type='double', name='radius') ]),
