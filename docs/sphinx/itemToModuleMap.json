@@ -2514,6 +2514,7 @@
 "ProgressDialog":"wx.",
 "PropagateOnce":"wx.",
 "PropagationDisabler":"wx.",
+"PseudoDC":"wx.adv.",
 "PyApp":"wx.",
 "PyAxBaseWindow":"wx.msw.",
 "PyCommandEvent":"wx.",

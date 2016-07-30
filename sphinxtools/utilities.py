@@ -180,6 +180,8 @@ def replaceCppItems(line):
 
         if 'wxString' in item:
             item = 'string'
+        elif 'wxCoord' == item:
+            item = 'int'
         elif item == 'char':
             item = 'int'
         elif item == 'double':
