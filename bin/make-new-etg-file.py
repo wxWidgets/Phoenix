@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
 unitteststub = """\
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 #---------------------------------------------------------------------------
