@@ -47,11 +47,16 @@ def run():
 
     cls = ClassDef(name='wxPseudoDC', bases=['wxObject'],
         briefDoc="""\
-            A PseudoDC is an object that can be used as if it were a real :class:`wx.DC`.
-            All commands issued to the PseudoDC are stored in a list.  You can
-            then play these commands back to a real DC object using the
-            DrawToDC method.  Commands in the command list are tagged by ID.
-            You can use this to clear the operations associated with a single
+            A PseudoDC is an object that can be used much like real
+            :class:`wx.DC`, however it provides some additional features for
+            object recording and manipulation beyond what a ``wx.DC`` can
+            provide.
+
+            All commands issued to the ``PseudoDC`` are stored in a list.  You
+            can then play these commands back to a real DC object as often as
+            needed, using the :meth:`DrawToDC` method or one of the similar
+            methods.  Commands in the command list can be tagged by an ID. You
+            can use this ID to clear the operations associated with a single
             ID, redraw the objects associated with that ID, grey them, adjust
             their position, etc.
             """,
@@ -110,7 +115,7 @@ def run():
                 items=[ ParamDef(type='wxCoord', name='x'),
                         ParamDef(type='wxCoord', name='y'),
                         ParamDef(type='wxCoord', name='radius', default='1'),
-                        ParamDef(type='const wxColour&', name='bg', default='*wxWHITE'),
+                        ParamDef(type='const wxColour &', name='bg', default='*wxWHITE'),
                         ],
                 briefDoc="""\
                     Returns a list of all the id's that draw a pixel with
@@ -130,13 +135,13 @@ def run():
 
             MethodDef(type='void', name='DrawIdToDC',
                 items=[ ParamDef(type='int', name='id'),
-                        ParamDef(type='wxDC*', name='dc')],
+                        ParamDef(type='wxDC *', name='dc')],
                 briefDoc="Draw recorded operations tagged with id to dc."),
 
 
             MethodDef(type='void', name='SetIdBounds',
                 items=[ ParamDef(type='int', name='id'),
-                        ParamDef(type='wxRect&', name='rect')],
+                        ParamDef(type='wxRect &', name='rect')],
                 briefDoc="""\
                     Set the bounding rect of a given object.
                     This will create an object node if one doesn't exist."""),
@@ -150,21 +155,21 @@ def run():
 
 
             MethodDef(type='void', name='DrawToDCClipped',
-                items=[ ParamDef(type='wxDC*', name='dc'),
-                        ParamDef(type='const wxRect&', name='rect')],
+                items=[ ParamDef(type='wxDC *', name='dc'),
+                        ParamDef(type='const wxRect &', name='rect')],
                 briefDoc="""\
                     Draws the recorded operations to dc,
                     unless the operation is known to be outside of rect."""),
 
             MethodDef(type='void', name='DrawToDCClippedRgn',
-                      items=[ParamDef(type='wxDC*', name='dc'),
-                             ParamDef(type='const wxRegion&', name='region')],
+                      items=[ParamDef(type='wxDC *', name='dc'),
+                             ParamDef(type='const wxRegion &', name='region')],
                       briefDoc="""\
                     Draws the recorded operations to dc,
                     unless the operation is known to be outside the given region."""),
 
             MethodDef(type='void', name='DrawToDC',
-                      items=[ParamDef(type='wxDC*', name='dc')],
+                      items=[ParamDef(type='wxDC *', name='dc')],
                       briefDoc="Draws the recorded operations to dc."),
 
 
@@ -175,7 +180,7 @@ def run():
             MethodDef(type='void', name='FloodFill',
                 items=[ ParamDef(type='wxCoord', name='x'),
                         ParamDef(type='wxCoord', name='y'),
-                        ParamDef(type='const wxColour&', name='col'),
+                        ParamDef(type='const wxColour &', name='col'),
                         ParamDef(type='wxFloodFillStyle', name='style', default='wxFLOOD_SURFACE')],
                 briefDoc="""\
                     Flood fills the device context starting from the given point,
@@ -187,8 +192,8 @@ def run():
                     """,
                 overloads=[
                     MethodDef(type='void', name='FloodFill',
-                        items=[ ParamDef(type='const wxPoint&', name='pt'),
-                                ParamDef(type='const wxColour&', name='col'),
+                        items=[ ParamDef(type='const wxPoint &', name='pt'),
+                                ParamDef(type='const wxColour &', name='col'),
                                 ParamDef(type='wxFloodFillStyle', name='style', default='wxFLOOD_SURFACE')]),
                 ]),
 
@@ -207,8 +212,8 @@ def run():
                     """,
                 overloads=[
                     MethodDef(type='void', name='DrawLine',
-                        items=[ ParamDef(type='const wxPoint&', name='pt1'),
-                                ParamDef(type='const wxPoint&', name='pt2')])
+                        items=[ ParamDef(type='const wxPoint &', name='pt1'),
+                                ParamDef(type='const wxPoint &', name='pt2')])
                 ]),
 
             MethodDef(type='void', name='CrossHair',
@@ -220,7 +225,7 @@ def run():
                     window, centred on the given point.""",
                 overloads=[
                     MethodDef(type='void', name='CrossHair',
-                        items=[ ParamDef(type='const wxPoint&', name='pt') ])
+                        items=[ ParamDef(type='const wxPoint &', name='pt') ])
                 ]),
 
 
@@ -256,7 +261,7 @@ def run():
                 briefDoc="Draws a check mark inside the given rectangle",
                 overloads=[
                     MethodDef(type='void', name='DrawCheckMark',
-                        items=[ ParamDef(type='const wxRect&', name='rect') ])
+                        items=[ ParamDef(type='const wxRect &', name='rect') ])
                     ]),
 
 
@@ -281,8 +286,8 @@ def run():
                     complete ellipse will be drawn.""",
                 overloads=[
                     MethodDef(type='void', name='DrawEllipticArc',
-                        items=[ ParamDef(type='const wxPoint&', name='pt'),
-                                ParamDef(type='const wxSize&', name='sz'),
+                        items=[ ParamDef(type='const wxPoint &', name='pt'),
+                                ParamDef(type='const wxSize &', name='sz'),
                                 ParamDef(type='double', name='start'),
                                 ParamDef(type='double', name='end')])
                     ]),
@@ -294,7 +299,7 @@ def run():
                 briefDoc="Draws a point using the current pen.",
                 overloads=[
                     MethodDef(type='void', name='DrawPoint',
-                        items=[ParamDef(type='const wxPoint&', name='pt') ])
+                        items=[ParamDef(type='const wxPoint &', name='pt') ])
                 ]),
 
 
@@ -310,10 +315,10 @@ def run():
                     """,
                 opverloads=[
                     MethodDef(type='void', name='DrawRectangle',
-                        items=[ ParamDef(type='const wxRect&', name='rect') ]),
+                        items=[ ParamDef(type='const wxRect &', name='rect') ]),
                     MethodDef(type='void', name='DrawRectangle',
-                        items=[ ParamDef(type='const wxPoint&', name='pt'),
-                                ParamDef(type='const wxSize&', name='sz') ])
+                        items=[ ParamDef(type='const wxPoint &', name='pt'),
+                                ParamDef(type='const wxSize &', name='sz') ])
                 ]),
 
 
@@ -332,11 +337,11 @@ def run():
                     """,
                 opverloads=[
                     MethodDef(type='void', name='DrawRoundedRectangle',
-                        items=[ ParamDef(type='const wxRect&', name='rect'),
+                        items=[ ParamDef(type='const wxRect &', name='rect'),
                                 ParamDef(type='double', name='radius') ]),
                     MethodDef(type='void', name='DrawRoundedRectangle',
-                        items=[ ParamDef(type='const wxPoint&', name='pt'),
-                                ParamDef(type='const wxSize&', name='sz'),
+                        items=[ ParamDef(type='const wxPoint &', name='pt'),
+                                ParamDef(type='const wxSize &', name='sz'),
                                 ParamDef(type='double', name='radius') ])
                 ]),
 
@@ -354,7 +359,7 @@ def run():
                     """,
                 overloads=[
                     MethodDef(type='void', name='DrawCircle',
-                        items=[ ParamDef(type='const wxPoint&', name='pt'),
+                        items=[ ParamDef(type='const wxPoint &', name='pt'),
                                 ParamDef(type='wxCoord', name='radius') ]),
                     ]),
 
@@ -372,28 +377,28 @@ def run():
                     """,
                 overloads=[
                     MethodDef(type='void', name='DrawEllipse',
-                        items=[ ParamDef(type='const wxRect&', name='rect') ]),
+                        items=[ ParamDef(type='const wxRect &', name='rect') ]),
                     MethodDef(type='void', name='DrawEllipse',
-                        items=[ ParamDef(type='const wxPoint&', name='pt'),
-                                ParamDef(type='const wxSize&', name='sz') ])
+                        items=[ ParamDef(type='const wxPoint &', name='pt'),
+                                ParamDef(type='const wxSize &', name='sz') ])
                 ]),
 
 
             MethodDef(type='void', name='DrawIcon',
-                items=[ ParamDef(type='const wxIcon&', name='icon'),
+                items=[ ParamDef(type='const wxIcon &', name='icon'),
                         ParamDef(type='wxCoord', name='x'),
                         ParamDef(type='wxCoord', name='y')
                         ],
                 briefDoc="Draw an icon on the display at the given position.",
                 overloads=[
                     MethodDef(type='void', name='DrawIcon',
-                              items=[ ParamDef(type='const wxIcon&', name='icon'),
-                                      ParamDef(type='const wxPoint&', name='pt') ])
+                              items=[ ParamDef(type='const wxIcon &', name='icon'),
+                                      ParamDef(type='const wxPoint &', name='pt') ])
                                      ]),
 
 
             MethodDef(type='void', name='DrawBitmap',
-                items=[ ParamDef(type='const wxBitmap&', name='bmp'),
+                items=[ ParamDef(type='const wxBitmap &', name='bmp'),
                         ParamDef(type='wxCoord', name='x'),
                         ParamDef(type='wxCoord', name='y'),
                         ParamDef(type='bool', name='useMask', default='false') ],
@@ -412,14 +417,14 @@ def run():
                     """,
                 overloads=[
                     MethodDef(type='void', name='DrawBitmap',
-                        items=[ ParamDef(type='const wxBitmap&', name='bmp'),
-                                ParamDef(type='const wxPoint&', name='pt'),
+                        items=[ ParamDef(type='const wxBitmap &', name='bmp'),
+                                ParamDef(type='const wxPoint &', name='pt'),
                                 ParamDef(type='bool', name='useMask', default='false') ])
                     ]),
 
 
             MethodDef(type='void', name='DrawText',
-                items=[ ParamDef(type='const wxString&', name='text'),
+                items=[ ParamDef(type='const wxString &', name='text'),
                         ParamDef(type='wxCoord', name='x'),
                         ParamDef(type='wxCoord', name='y') ],
                 briefDoc="""\
@@ -443,28 +448,28 @@ def run():
                     """,
                 overloads=[
                     MethodDef(type='void', name='DrawText',
-                        items=[ ParamDef(type='const wxString&', name='text'),
-                                ParamDef(type='const wxPoint&', name='pt') ])
+                        items=[ ParamDef(type='const wxString &', name='text'),
+                                ParamDef(type='const wxPoint &', name='pt') ])
                     ]),
 
 
             MethodDef(type='void', name='DrawRotatedText',
-                items=[ ParamDef(type='const wxString&', name='text'),
+                items=[ ParamDef(type='const wxString &', name='text'),
                         ParamDef(type='wxCoord', name='x'),
                         ParamDef(type='wxCoord', name='y'),
                         ParamDef(type='double', name='angle') ],
                 briefDoc="Draws the text rotated by *angle* degrees, if supported by the platform.",
                 overloads=[
                     MethodDef(type='void', name='DrawRotatedText',
-                        items=[ ParamDef(type='const wxString&', name='text'),
-                                ParamDef(type='const wxPoint&', name='pt'),
+                        items=[ ParamDef(type='const wxString &', name='text'),
+                                ParamDef(type='const wxPoint &', name='pt'),
                                 ParamDef(type='double', name='angle') ])
                     ]),
 
 
             MethodDef(type='void', name='DrawLabel',
-                items=[ ParamDef(type='const wxString&', name='text'),
-                        ParamDef(type='const wxRect&', name='rect'),
+                items=[ ParamDef(type='const wxString &', name='text'),
+                        ParamDef(type='const wxRect &', name='rect'),
                         ParamDef(type='int', name='alignment', default='wxALIGN_LEFT|wxALIGN_TOP'),
                         ParamDef(type='int', name='indexAccel', default='-1'),
                         ],
@@ -475,9 +480,9 @@ def run():
                     """,
                 overloads=[
                     MethodDef(type='void', name='DrawLabel',
-                    items=[ ParamDef(type='const wxString&', name='text'),
-                            ParamDef(type='const wxBitmap&', name='image'),
-                            ParamDef(type='const wxRect&', name='rect'),
+                    items=[ ParamDef(type='const wxString &', name='text'),
+                            ParamDef(type='const wxBitmap &', name='image'),
+                            ParamDef(type='const wxRect &', name='rect'),
                             ParamDef(type='int', name='alignment', default='wxALIGN_LEFT|wxALIGN_TOP'),
                             ParamDef(type='int', name='indexAccel', default='-1'),
                             ],
@@ -498,7 +503,7 @@ def run():
 
 
             MethodDef(type='void', name='SetFont',
-                items=[ ParamDef(type='const wxFont&', name='font') ],
+                items=[ ParamDef(type='const wxFont &', name='font') ],
                 briefDoc="""\
                     Sets the current font for the DC. It must be a valid font, in
                     particular you should not pass ``wx.NullFont`` to this method.
@@ -508,7 +513,7 @@ def run():
                 overloads=[]),
 
             MethodDef(type='void', name='SetPen',
-                items=[ParamDef(type='const wxPen&', name='pen')],
+                items=[ParamDef(type='const wxPen &', name='pen')],
                 briefDoc="""\
                     Sets the current pen for the DC.
 
@@ -521,7 +526,7 @@ def run():
 
 
             MethodDef(type='void', name='SetBrush',
-                items=[ParamDef(type='const wxBrush&', name='brush')],
+                items=[ParamDef(type='const wxBrush &', name='brush')],
                 briefDoc="""\
                     Sets the current brush for the DC.
 
@@ -535,7 +540,7 @@ def run():
 
 
             MethodDef(type='void', name='SetBackground',
-                items=[ ParamDef(type='const wxBrush&', name='brush') ],
+                items=[ ParamDef(type='const wxBrush &', name='brush') ],
                 briefDoc="Sets the current background brush for the DC.",
                 overloads=[]),
 
@@ -551,7 +556,7 @@ def run():
 
 
             MethodDef(type='void', name='SetTextForeground',
-                items=[ ParamDef(type='const wxColour&', name='colour') ],
+                items=[ ParamDef(type='const wxColour &', name='colour') ],
                 briefDoc="Sets the current text foreground colour for the DC.",
                 overloads=[]),
 
@@ -583,7 +588,7 @@ def run():
 
 
             MethodDef(type='void', name='DrawLines',
-                items=[ ParamDef(type='const wxPointList*', name='points'),
+                items=[ ParamDef(type='const wxPointList *', name='points'),
                         ParamDef(type='wxCoord', name='xoffset', default='0'),
                         ParamDef(type='wxCoord', name='yoffset', default='0')],
                 briefDoc="""\
@@ -595,7 +600,7 @@ def run():
 
 
             MethodDef(type='void', name='DrawPolygon',
-                items=[ ParamDef(type='const wxPointList*', name='points'),
+                items=[ ParamDef(type='const wxPointList *', name='points'),
                         ParamDef(type='wxCoord', name='xoffset', default='0'),
                         ParamDef(type='wxCoord', name='yoffset', default='0'),
                         ParamDef(type='wxPolygonFillMode', name='fillStyle', default='wxODDEVEN_RULE'),
@@ -614,7 +619,7 @@ def run():
 
 
             MethodDef(type='void', name='DrawSpline',
-                items=[ ParamDef(type='const wxPointList*', name='points') ],
+                items=[ ParamDef(type='const wxPointList *', name='points') ],
                 briefDoc="""\
                     Draws a spline between all given control points, (a list of `wx.Point`
                     objects) using the current pen. The spline is drawn using a series of
