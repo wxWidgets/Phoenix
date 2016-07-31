@@ -112,7 +112,7 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
-        comboCtrl = wx.ComboCtrl(self, wx.ID_ANY, "")
+        comboCtrl = wx.ComboCtrl(self, wx.ID_ANY, "", (20,20))
 
         popupCtrl = ListCtrlComboPopup()
 
