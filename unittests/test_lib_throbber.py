@@ -4,7 +4,7 @@ import wx
 import wx.lib.throbber as th
 
 
-import throbImages
+from unittests import throbImages
 
 #---------------------------------------------------------------------------
 
