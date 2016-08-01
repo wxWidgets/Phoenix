@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-import wtc
+from unittests import wtc
 import wx
 
 import wx.lib.plot as wxplot
