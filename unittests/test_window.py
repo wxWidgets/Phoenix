@@ -100,7 +100,32 @@ class WindowTests(wtc.WidgetTestCase):
         self.assertEqual(a[1], b.y)
         self.assertEqual(c[0], d.x)
         self.assertEqual(c[1], d.y)
-        
+
+
+    def test_DLG_UNIT(self):
+        def _check(val):
+            a, b = val
+            assert isinstance(a, int)
+            assert isinstance(b, int)
+
+        val = wx.DLG_UNIT(self.frame, wx.Point(10,10))
+        _check(val)
+        val = wx.DLG_UNIT(self.frame, wx.Size(10,10))
+        _check(val)
+        val = wx.DLG_UNIT(self.frame, (10,10))
+        _check(val)
+
+        val = self.frame.DLG_UNIT(wx.Point(10, 10))
+        _check(val)
+        val = self.frame.DLG_UNIT(wx.Size(10, 10))
+        _check(val)
+        val = self.frame.DLG_UNIT((10, 10))
+        _check(val)
+
+        wx.DLG_SZE
+        wx.DLG_PNT
+
+
 #---------------------------------------------------------------------------
 
 
