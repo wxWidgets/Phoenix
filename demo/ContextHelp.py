@@ -25,7 +25,6 @@ class TestPanel(wx.Panel):
         # Init the context help button.
         # And even include help text about the help button :-)
         cBtn = wx.ContextHelpButton(self)
-        cBtn.Bind(wx.EVT_BUTTON, self.OnCtxHelpButton)
         cBtn.SetHelpText("wx.ContextHelpButton")
 
         cBtnText = wx.StaticText(self, -1,
@@ -70,12 +69,6 @@ class TestPanel(wx.Panel):
         self.SetAutoLayout(True)
         self.SetSizer(border)
         self.Layout()
-
-
-    def OnCtxHelpButton(self, evt):
-        # This starts a nested event loop which exits when an item has been
-        # clicked on, its help message shown and dismissed.
-        cshelp = wx.ContextHelp(self)
 
 
     # On the second text control above, we intercept the help event. This is where

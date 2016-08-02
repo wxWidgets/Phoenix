@@ -94,7 +94,7 @@ class TestPanel(wx.Panel):
             image.SetOption(wx.IMAGE_OPTION_CUR_HOTSPOT_Y, 1)
 
             # make the image into a cursor
-            cursor = wx.CursorFromImage(image)
+            cursor = wx.Cursor(image)
 
         else:
             # create one of the stock (built-in) cursors

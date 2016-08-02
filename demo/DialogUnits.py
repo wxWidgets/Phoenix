@@ -32,25 +32,26 @@ class MyFrame(wx.Frame):
         panel = wx.Panel(self, -1)
 
         wx.StaticText(panel, -1, "Size:", 
-            wx.DLG_PNT(panel, (4, 4)),  wx.DefaultSize
+            panel.DLG_UNIT((4, 4)),  wx.DefaultSize
             )
 
         wx.StaticText(panel, -1, "Pos:", 
-            wx.DLG_PNT(panel, (4, 16)), wx.DefaultSize
+            panel.DLG_UNIT((4, 20)), wx.DefaultSize
             )
 
         self.sizeCtrl = wx.TextCtrl(panel, -1, "", 
-                            wx.DLG_PNT(panel, (24, 4)),
-                            wx.DLG_SZE(panel, (36, -1)),
+                            panel.DLG_UNIT((24, 4)),
+                            panel.DLG_UNIT((36, -1)),
                             wx.TE_READONLY)
 
         self.posCtrl = wx.TextCtrl(panel, -1, "", 
-                            wx.DLG_PNT(panel, (24, 16)),
-                            wx.DLG_SZE(panel, (36, -1)),
+                            panel.DLG_UNIT((24, 20)),
+                            panel.DLG_UNIT((36, -1)),
                             wx.TE_READONLY)
 
-        #print(wx.DLG_PNT(panel, (24, 4)), wx.DLG_SZE(panel, (36, -1)))
-        #print(wx.DLG_PNT(panel, (24, 16)),wx.DLG_SZE(panel, (36, -1)))
+        #print(wx.DLG_UNIT(panel, (24, 4)), wx.DLG_UNIT(panel, (36, -1)))
+        #print(panel.DLG_UNIT((24, 16)), panel.DLG_UNIT((36, -1)))
+
 
     # This method is called automatically when the CLOSE event is
     # sent to this window
