@@ -194,8 +194,16 @@ def run():
             self.Hide()
             wx.GetApp().ScheduleForDestruction(self)
             """)
-    
-    
+
+    c.addPyMethod('DLG_UNIT', '(self, dlg_unit)',
+        doc="""\
+            A convenience wrapper for :meth:`ConvertDialogToPixels`.
+            """,
+        body="""\
+            return self.ConvertDialogToPixels(dlg_unit)
+            """)
+
+
     # MSW only.  Do we want them wrapped?
     c.find('GetAccessible').ignore()
     c.find('SetAccessible').ignore()
@@ -333,6 +341,20 @@ def run():
         def __exit__(self, exc_type, exc_val, exc_tb):
             self._win.Thaw()
     ''')
+
+    module.addPyCode('''\
+        def DLG_UNIT(win, dlg_unit, val2=None):
+            """
+            Convenience function for converting a wx.Point, wx.Size or
+            (x,y) in dialog units to pixels.
+            """
+            if val2 is not None:
+                dlg_unit = (dlg_unit, val2)
+            return win.ConvertDialogToPixels(dlg_unit)
+
+        DLG_PNT = wx.deprecated(DLG_UNIT, "Use DLG_UNIT instead.")
+        DLG_SZE = wx.deprecated(DLG_UNIT, "Use DLG_UNIT instead.")
+        ''')
     
     
     # Add a wrapper for wxWindowList and a new iterator class for it that
