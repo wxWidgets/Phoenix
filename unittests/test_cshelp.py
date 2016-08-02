@@ -13,7 +13,10 @@ class cshelp_Tests(wtc.WidgetTestCase):
         pnl = wx.Panel(self.frame)
         pnl.SetHelpText("HelpMe!")
         cBtn = wx.ContextHelpButton(pnl)
-        
+
+        # Make sure we haven't borked the magic ID
+        assert cBtn.GetId() == wx.ID_CONTEXT_HELP
+
         
     def test_cshelp2(self):
         wx.wxEVT_HELP

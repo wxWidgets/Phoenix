@@ -239,7 +239,7 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
                 parent.transferThis = True
             # if there is an id param give it a default
             id = func.findItem('id') or func.findItem('winid')
-            if id:
+            if id and not id.default:
                 id.default = 'wxID_ANY'
 
             # if there is a pos or size parameter without a default then give it one.
