@@ -134,9 +134,9 @@ class MyFileDropTarget(wx.FileDropTarget):
         self.window.SetInsertionPointEnd()
         self.window.WriteText("\n%d file(s) dropped at %d,%d:\n" %
                               (len(filenames), x, y))
-
         for file in filenames:
             self.window.WriteText(file + '\n')
+        return True
 
 
 class MyTextDropTarget(wx.TextDropTarget):
@@ -147,6 +147,7 @@ class MyTextDropTarget(wx.TextDropTarget):
 
     def OnDropText(self, x, y, text):
         self.window.WriteText("(%d, %d)\n%s\n" % (x, y, text))
+        return True
 
     def OnDragOver(self, x, y, d):
         return wx.DragCopy
