@@ -172,7 +172,7 @@ _treeList = [
         'ComboCtrl',
         'ContextHelp',
         'DatePickerCtrl',
-        'DynamicSashWindow',
+        #'DynamicSashWindow',  # TODO
         'EditableListBox',
         'ExpandoTextCtrl',
         'FancyText',
