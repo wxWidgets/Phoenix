@@ -18,9 +18,7 @@ class FileCtrl(wx.FileCtrl):
                  pos=wx.DefaultPosition, size=wx.DefaultSize, name="filectrl", log=None):
         wx.FileCtrl.__init__(self, parent, id, defaultDirectory, defaultFilename,
                              wildCard, style, pos, size, name)
-        
-        self.BackgroundColour = 'pink'
-        
+
         self.log = log
         self.Bind(wx.EVT_FILECTRL_FILEACTIVATED, self.OnFileActivated)
         self.Bind(wx.EVT_FILECTRL_SELECTIONCHANGED, self.OnSelectionChanged)
@@ -49,8 +47,12 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent)
 
-        fc = FileCtrl(self, pos=(15,15), log=log)
-        
+        wx.StaticText(self, -1,
+                      "This is a generic control with features like a file dialog",
+                      pos=(10,10))
+        fc = FileCtrl(self, pos=(10,35), log=log)
+        fc.SetSize((500,350))
+        fc.BackgroundColour = 'sky blue'
 
 
 #---------------------------------------------------------------------------
