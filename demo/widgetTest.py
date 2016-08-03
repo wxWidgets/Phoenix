@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# This file is used for the wx.HtmlWindow demo.
+# This file is used for the HtmlWindow demo.
 
 import  sys
 
