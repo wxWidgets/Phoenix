@@ -115,7 +115,8 @@ def run():
             """)
     
 
-    c.find('GetOpenCommand').findOverload('command').ignore()
+    for m in c.find('GetOpenCommand').all():
+        m.ignore()
     c.addCppMethod('wxString', 'GetOpenCommand', '(const wxFileType::MessageParameters& params)',
         doc="""\
             Returns the command which must be executed (see wx.Execute()) in order 
@@ -126,6 +127,16 @@ def run():
             self->GetOpenCommand(&rv, *params);
             return new wxString(rv);
             """)
+    c.addCppMethod('wxString', 'GetOpenCommand', '(const wxString& filename)',
+        doc="""\
+            Returns the command which should be used to open the given
+            filename. An empty string is returned to indicate that an error
+            occurred (typically meaning that there is no standard way to open
+            this kind of files).""",
+        body="""\
+            return new wxString( self->GetOpenCommand(*filename) );
+            """)
+
 
     c.find('GetPrintCommand').ignore()
     c.addCppMethod('wxString', 'GetPrintCommand', '(const wxFileType::MessageParameters& params)',
@@ -139,8 +150,15 @@ def run():
             return new wxString(rv);
             """)
 
-    c.find('GetAllCommands.verbs').out = True
-    c.find('GetAllCommands.commands').out = True
+    m = c.find('GetAllCommands')
+    m.find('verbs').out = True
+    m.find('commands').out = True
+    m.type = 'void'
+    m.briefDoc = \
+        "Returns a tuple containing the `verbs` and `commands` arrays, " \
+        "corresponding for the registered information for this mime type."
+
+
 
     c.addCppMethod('PyObject*', 'GetIconInfo', '()',
         doc="""\
