@@ -16,7 +16,7 @@
 #----------------------------------------------------------------------------
 """
 This module implements an API similar to :class:`GraphicsContext` and the
-related classes. The implementation is done using :class:`wx.DC`
+related classes. The implementation is done using :class:`DC`
 
 Why do this?  Neither :class:`GraphicsContext` nor the Cairo-based
 GraphicsContext API provided by wx.lib.graphics can be written
@@ -148,9 +148,9 @@ class dcGraphicsContext(object):
         The incoming co-ordinates have a bottom left origin with increasing
         y downwards (so y values are all negative). The DC origin is top left
         also with increasing y down.
-        :class:`wx.DC` and :class:`GraphicsContext` fonts are too big in the ratio
+        :class:`DC` and :class:`GraphicsContext` fonts are too big in the ratio
         of pixels per inch to points per inch. If screen rendering used Cairo,
-        printed fonts need to be scaled but if :class:`wx.GCDC` was used, they are
+        printed fonts need to be scaled but if :class:`GCDC` was used, they are
         already scaled.
         
         :param `context`: **TBW** (?)
@@ -229,30 +229,30 @@ class dcGraphicsContext(object):
 
     def SetPen(self, pen):
         """
-        Set the :class:`wx.Pen` to be used for stroking lines in future drawing
+        Set the :class:`Pen` to be used for stroking lines in future drawing
         operations.
         
-        :param `pen`: the :class:`wx.Pen` to be used from now on.
+        :param `pen`: the :class:`Pen` to be used from now on.
         
         """
         self._context.SetPen(pen)
 
     def SetBrush(self, brush):
         """
-        Set the :class:`wx.Brush` to be used for filling shapes in future drawing
+        Set the :class:`Brush` to be used for filling shapes in future drawing
         operations.  
 
-        :param `brush`: the :class:`wx.Brush` to be used from now on.
+        :param `brush`: the :class:`Brush` to be used from now on.
 
         """
         self._context.SetBrush(brush)
 
     def SetFont(self, font, colour=None):
         """
-        Sets the :class:`wx.Font` to be used for drawing text.
+        Sets the :class:`Font` to be used for drawing text.
         Don't set the dc font yet as it may need to be scaled
         
-        :param `font`: the :class:`wx.Font` for drawing text
+        :param `font`: the :class:`Font` for drawing text
         :param `colour`: the colour to be used
         
         """
