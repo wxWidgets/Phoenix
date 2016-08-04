@@ -54,6 +54,8 @@ class BaseDef(object):
     def __iter__(self):
         return iter(self.items)
 
+    def __repr__(self):
+        return "{}: '{}', '{}'".format(self.__class__.__name__, self.name, self.pyName)
 
     def extract(self, element):
         # Pull info from the ElementTree element that is pertinent to this
@@ -391,11 +393,19 @@ class FunctionDef(BaseDef, FixWxPrefix):
         return item
     
     
-    def ignore(self,  val=True):
-        # If the item being ignored has overloads then try to reorder the
-        # items so the primary item is not an ignored one.
+    def ignore(self, val=True):
+        # In addition to ignoring this item, reorder any overloads to ensure
+        # the primary overload is not ignored, if possible.
         super(FunctionDef, self).ignore(val)        
         if val and self.overloads:
+            self.reorderOverloads()
+        return self
+
+
+    def reorderOverloads(self):
+        # Reorder a set of overloaded functions such that the primary
+        # FunctionDef is one that is not ignored.
+        if self.overloads and self.ignored:
             all = [self] + self.overloads
             all.sort(key=lambda item: item.ignored)
             first = all[0]
@@ -408,8 +418,7 @@ class FunctionDef(BaseDef, FixWxPrefix):
                 first.overloads = all[1:]
                 idx = parent.items.index(self)
                 parent.items[idx] = first
-        return self
-    
+
         
     def _findItems(self):
         items = list(self.items)
@@ -919,10 +928,13 @@ class ClassDef(BaseDef):
     def _addMethod(self, md, overloadOkay=True):
         md.klass = self
         if overloadOkay and self.findItem(md.name):
-            self.findItem(md.name).overloads.append(md)
+            item = self.findItem(md.name)
+            item.overloads.append(md)
+            item.reorderOverloads()
         else:
             self.items.append(md)
-        
+
+
     def addCppMethod(self, type, name, argsString, body, doc=None, isConst=False, 
                      cppSignature=None, overloadOkay=True, **kw):
         """
@@ -1180,7 +1192,7 @@ class CppMethodDef(MethodDef):
         so it can be used to write the code for a new wrapper function.
 
         TODO: It might be better to just refactor the code in the generator
-        so it can be shared more easily intstead of using a hack like this...
+        so it can be shared more easily instead of using a hack like this...
         """
         m = CppMethodDef('', '', '', '')
         m.__dict__.update(method.__dict__)
