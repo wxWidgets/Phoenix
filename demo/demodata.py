@@ -183,7 +183,6 @@ _treeList = [
         'HTML2_WebView',
         'InfoBar',
         'IntCtrl',
-        'MVCTree',
         'MaskedEditControls',
         'MaskedNumCtrl',
         'MediaCtrl',
