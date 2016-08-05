@@ -34,7 +34,8 @@ from six import BytesIO, string_types
 
 import wx
 
-CACHE_LATE_PAGES = True
+CACHE_LATE_PAGES = False    # TODO Cacheing of page bitmaps does not currently
+                            #      work when using cairocffi and Python 3.4 (MSW)
 LATE_THRESHOLD = 200        # Time to render (ttr), milliseconds
 VERBOSE = False
 
@@ -113,14 +114,14 @@ class pdfViewer(wx.ScrolledWindow):
         """
         Default class constructor.
 
-        :param Window `parent`: parent window. Must not be ``None``;
+        :param wx.Window `parent`: parent window. Must not be ``None``;
         :param integer `nid`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `pos`: tuple or :class:`Point`
+        :type `pos`: tuple or :class:`wx.Point`
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
          chosen by either the windowing system or wxPython, depending on platform;
-        :type `size`: tuple or :class:`Size`
+        :type `size`: tuple or :class:`wx.Size`
         :param integer `style`: the button style (unused);
 
         """
@@ -247,8 +248,8 @@ class pdfViewer(wx.ScrolledWindow):
          immediately. Default: True.
         :param string `printer_name`: the name of the printer that is to
          receive the printout. Default: as set by the O/S.
-        :param `orientation`: select the orientation (wx.PORTRAIT or
-         wx.LANDSCAPE) for the printout. Default: as set by the O/S.
+        :param `orientation`: select the orientation (:class:`wx.PORTRAIT` or
+         :class:`wx.LANDSCAPE`) for the printout. Default: as set by the O/S.
         """
         pdd = wx.PrintDialogData()
         pdd.SetMinPage(1)

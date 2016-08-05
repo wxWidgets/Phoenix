@@ -13,13 +13,13 @@
 #
 #----------------------------------------------------------------------------
 """
-:class:`~lib.pdfviewer.viewer.pdfViewer` class is derived from :class:`ScrolledWindow` class
+:class:`~lib.pdfviewer.viewer.pdfViewer` class is derived from :class:`wx.ScrolledWindow` class
 and can display and print PDF files.
 
 Description
 ===========
 
-The  :class:`~lib.pdfviewer.viewer.pdfViewer` class is derived from :class:`ScrolledWindow`
+The  :class:`~lib.pdfviewer.viewer.pdfViewer` class is derived from :class:`wx.ScrolledWindow`
 and can display and print PDF files. The whole file can be scrolled from
 end to end at whatever magnification (zoom-level) is specified.
 
@@ -103,8 +103,8 @@ Externally callable methods are:
 :meth:`~lib.pdfviewer.viewer.pdfViewer.GoPage`
   
 The viewer renders the pdf file content using Cairo if installed,
-otherwise :class:`GraphicsContext` is used. Printing is achieved by writing
-directly to a :class:`PrinterDC` and using :class:`Printer`.
+otherwise :class:`wx.GraphicsContext` is used. Printing is achieved by writing
+directly to a :class:`wx.PrinterDC` and using :class:`wx.Printer`.
 
 The icons used in :class:`~lib.pdfviewer.buttonpanel.pdfButtonPanel` are Free Icons
 by Axialis Software: http://www.axialis.com. You can freely use them in any project,
