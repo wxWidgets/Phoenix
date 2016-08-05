@@ -824,7 +824,9 @@ from .%s import *
         stream.write('%s%%MethodCode\n' % indent)
         stream.write(indent+' '*4)
         if method.isCtor:
-            stream.write('sipCpp = %s(%s);\n' % (fname, pnames))
+            # _THREAD macros are intentionally not used in this case
+            stream.write('PyErr_Clear();\n')
+            stream.write('%ssipCpp = %s(%s);\n' % (indent+' '*4, fname, pnames))
         
         elif method.isDtor:
             stream.write('PyErr_Clear();\n')
