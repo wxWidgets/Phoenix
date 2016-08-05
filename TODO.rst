@@ -131,7 +131,6 @@ Other Dev Stuff
       * dialup  ??
       * docmdi  ??
       * docview ??
-      * palette ??
       * persist ??
 
   * Add a _msw module that will contain classes and such that are only
