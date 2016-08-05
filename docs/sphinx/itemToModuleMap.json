@@ -661,7 +661,7 @@
 "DirPickerWidgetNameStr":"wx.",
 "DirSelector":"wx.",
 "DirSelectorPromptStr":"wx.",
-"Direction":"wx.",
+"Direction":"wx.DataObject.",
 "DisableAsserts":"wx.",
 "Display":"wx.",
 "DisplayChangedEvent":"wx.",
