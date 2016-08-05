@@ -84,7 +84,6 @@ def run():
     # TODO: Add these classes for real :-)
     module.insertItem(0, etgtools.WigCode("""\
         // forward declarations
-        class wxPalette;
         class wxExecuteEnv;
         """))
     
