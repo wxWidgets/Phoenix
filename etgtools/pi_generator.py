@@ -337,7 +337,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if not function.pyName:
             return
         stream.write('\ndef %s' % function.pyName)
-        if function.overloads:
+        if function.hasOverloads():
             stream.write('(*args, **kw)')
         else:
             argsString = function.pyArgsString
@@ -503,7 +503,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if method.isStatic:
             stream.write('\n%s@staticmethod' % indent)
         stream.write('\n%sdef %s' % (indent, name))
-        if method.overloads:
+        if method.hasOverloads():
             if not method.isStatic:
                 stream.write('(self, *args, **kw)')
             else:
