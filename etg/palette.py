@@ -31,6 +31,7 @@ def run():
     # customizing the generated code and docstrings.
     c = module.find('wxPalette')
 
+
     c.find('GetPixel.red').pyInt = True
     c.find('GetPixel.green').pyInt = True
     c.find('GetPixel.blue').pyInt = True
@@ -56,53 +57,47 @@ def run():
 
     c.find('Create').ignore()
     c.addCppMethod('PyObject*', 'Create', '(PyObject* red, PyObject* green, PyObject* blue)',
-        doc="Creates a palette from tuples of integers, one for each red, blue or green component.",
+        doc="Creates a palette from 3 sequences of integers, one for each red, blue or green component.",
         body="""\
             wxPyThreadBlocker blocker;
+            PyObject* rval;
 
-            char* errMsg = "Expected a tuple of integer objects";
-            if (!PyTuple_Check(red)) {
-                PyErr_SetString(PyExc_TypeError, errMsg);
-                return NULL;
-            }
-            if (!PyTuple_Check(green)) {
-                PyErr_SetString(PyExc_TypeError, errMsg);
-                return NULL;
-            }
-            if (!PyTuple_Check(blue)) {
+            char* errMsg = "Expected a sequence of integer objects";
+            if (!PySequence_Check(red) || !PySequence_Check(green) || !PySequence_Check(blue)) {
                 PyErr_SetString(PyExc_TypeError, errMsg);
                 return NULL;
             }
 
-            int count = PyTuple_Size(red);
-            if (PyTuple_Size(green) != count || PyTuple_Size(blue) != count) {
-                PyErr_SetString(PyExc_ValueError, "Tuple sizes must be equal");
+            Py_ssize_t count = PySequence_Size(red);
+            if (PySequence_Size(green) != count || PySequence_Size(blue) != count) {
+                PyErr_SetString(PyExc_ValueError, "Sequence lengths must be equal");
                 return NULL;
             }
 
             unsigned char* redArray = new unsigned char[count];
             unsigned char* greenArray = new unsigned char[count];
             unsigned char* blueArray = new unsigned char[count];
-            for (int i = 0; i < count; i++) {
-                PyObject* redItem = PyTuple_GET_ITEM(red, i);
-                PyObject* greenItem = PyTuple_GET_ITEM(green, i);
-                PyObject* blueItem = PyTuple_GET_ITEM(blue, i);
+
+            for (Py_ssize_t i = 0; i < count; i++) {
+                PyObject* redItem = PySequence_ITEM(red, i);
+                PyObject* greenItem = PySequence_ITEM(green, i);
+                PyObject* blueItem = PySequence_ITEM(blue, i);
                 if (!wxPyInt_Check(redItem) || !wxPyInt_Check(greenItem) || !wxPyInt_Check(blueItem)) {
-                    delete[] redArray;
-                    delete[] greenArray;
-                    delete[] blueArray;
                     PyErr_SetString(PyExc_TypeError, errMsg);
-                    return NULL;
+                    rval = NULL;
+                    goto exit;
                 }
+
                 long redLong = wxPyInt_AsLong(redItem);
                 long greenLong = wxPyInt_AsLong(greenItem);
                 long blueLong = wxPyInt_AsLong(blueItem);
-                if (redLong < 0 || redLong > 256 || greenLong < 0 || greenLong > 256 || blueLong < 0 || blueLong > 256) {
-                    delete[] redArray;
-                    delete[] greenArray;
-                    delete[] blueArray;
-                    PyErr_SetString(PyExc_ValueError, "Tuple values must be > 0 and < 256");
-                    return NULL;
+                Py_DECREF(redItem);
+                Py_DECREF(greenItem);
+                Py_DECREF(blueItem);
+                if (redLong < 0 || redLong > 255 || greenLong < 0 || greenLong > 255 || blueLong < 0 || blueLong > 255) {
+                    PyErr_SetString(PyExc_ValueError, "Sequence values must be >= 0 and < 256");
+                    rval = NULL;
+                    goto exit;
                 }
                 redArray[i] = redLong;
                 greenArray[i] = greenLong;
@@ -110,10 +105,18 @@ def run():
             }
 
             if (self->Create(count, redArray, greenArray, blueArray)) {
-                Py_RETURN_TRUE;
+                rval = Py_True;
+                Py_INCREF(rval);
             } else {
-                Py_RETURN_FALSE;
+                rval = Py_False;
+                Py_INCREF(rval);
             }
+
+            exit:
+                delete[] redArray;
+                delete[] greenArray;
+                delete[] blueArray;
+                return rval;
             """)
 
 
