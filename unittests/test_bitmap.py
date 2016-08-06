@@ -91,11 +91,21 @@ class BitmapTests(wtc.WidgetTestCase):
         img = img.ConvertToMono(0,0,0)
         bmp = wx.Bitmap(img, 1)
         m = wx.Mask()
-        m = wx.Mask(bmp, 4)
         m = wx.Mask(bmp)
         m = wx.Mask(bmp, wx.Colour(1,2,3))
                     
         
+    @unittest.skipIf('wxGTK' in wx.PlatformInfo, 'wxMask constructor using palette index not supported on wxGTK')
+    def test_BitmapMaskWithPalette(self):
+        img = wx.Image(pngFile)
+        img = img.ConvertToMono(0,0,0)
+        bmp = wx.Bitmap(img, 1)
+        rgb = bytearray(range(256))
+        pal = wx.Palette(256, rgb, rgb, rgb)
+        bmp.SetPalette(pal)
+        m = wx.Mask(bmp, 4)
+
+
     def test_bitmapFormatConstants(self):
         wx.BitmapBufferFormat_RGB
         wx.BitmapBufferFormat_RGBA
