@@ -101,7 +101,7 @@ class BitmapTests(wtc.WidgetTestCase):
         img = img.ConvertToMono(0,0,0)
         bmp = wx.Bitmap(img, 1)
         rgb = bytearray(range(256))
-        pal = wx.Palette(256, rgb, rgb, rgb)
+        pal = wx.Palette(rgb, rgb, rgb)
         bmp.SetPalette(pal)
         m = wx.Mask(bmp, 4)
 
