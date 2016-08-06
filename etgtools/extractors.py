@@ -1248,6 +1248,15 @@ class PyFunctionDef(BaseDef):
         self.overloads = []
         self.__dict__.update(kw)
 
+
+    def hasOverloads(self):
+        """
+        Returns True if there are any overloads that are not ignored.
+        """
+        return bool([x for x in self.overloads if not x.ignored])
+
+
+
 #---------------------------------------------------------------------------
 
 class PyClassDef(BaseDef):
