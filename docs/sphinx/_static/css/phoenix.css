@@ -530,6 +530,9 @@ cite, code, tt {
     letter-spacing: 0.01em;
 }
 
+code.descname, code.descclassname  {
+    font-weight: bold;
+}
 a.headerlink {
     color: #c60f0f;
     font-size: 0.8em;

@@ -583,7 +583,7 @@ class ParameterList(Node):
         parent = self.GetTopLevelParent()
         is_overload = parent.is_overload if parent else False
         
-        if xml_item.overloads and not is_overload:
+        if xml_item.hasOverloads() and not is_overload:
             return
 
         arguments = xml_item.pyArgsString
@@ -2454,7 +2454,7 @@ class XMLDocString(object):
             name = method.name or method.pyName
             name = removeWxPrefix(name)
 
-            if method.overloads and not self.is_overload:
+            if method.hasOverloads() and not self.is_overload:
                 if not method.isStatic:
                     arguments = '(self, *args, **kw)'
                 else:
@@ -2489,7 +2489,7 @@ class XMLDocString(object):
             name = function.pyName if function.pyName else function.name
             name = removeWxPrefix(name)
 
-            if function.overloads and not self.is_overload:
+            if function.hasOverloads() and not self.is_overload:
                 arguments = '(*args, **kw)'
             else:
                 if "->" in function.pyArgsString:
@@ -2521,7 +2521,7 @@ class XMLDocString(object):
             self.parameter_list.CheckSignature()
             return
 
-        if not self.xml_item.overloads or self.is_overload:
+        if not self.xml_item.hasOverloads() or self.is_overload:
             self.parameter_list = ParameterList('', None, self.xml_item, self.kind)            
             self.root.Insert(self.parameter_list, before=Section)
             self.parameter_list.CheckSignature()
@@ -2878,7 +2878,7 @@ class XMLDocString(object):
                         
         if self.overloads:
 
-            docstrings += '\n\n%s|overload| **Overloaded Implementations**:\n\n'%spacer
+            docstrings += '\n\n%s|overload| Overloaded Implementations:\n\n'%spacer
             docstrings += '%s**~~~**\n\n'%spacer
 
             for index, over in enumerate(self.overloads):

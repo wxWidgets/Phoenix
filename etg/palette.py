@@ -9,6 +9,7 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
+from textwrap import dedent
 
 PACKAGE   = "wx"
 MODULE    = "_core"
@@ -99,9 +100,16 @@ def run():
     # understands any Python sequence.
     c.find('wxPalette').findOverload('red').ignore()
     c.addCppCtor('(PyObject* red, PyObject* green, PyObject* blue)',
-        doc="""\
-            Creates a palette from a set of sequences of integers,
-            one for each red, green and blue color components.""",
+        doc=dedent("""\
+        Creates a palette from a set of sequences of integers,
+        one for each red, green and blue color components.
+
+        :param red: A sequence of integer values in the range 0..255 inclusive.
+        :param green: A sequence of integer values in the range 0..255 inclusive.
+        :param blue: A sequence of integer values in the range 0..255 inclusive.
+
+        .. note:: All sequences must be the same length.
+        """),
         body="""\
             wxPalette* pal = new wxPalette;
             _paletteCreateHelper(pal, red, green, blue);
@@ -118,6 +126,7 @@ def run():
 
     c.find('GetRGB').ignore()
     c.addCppMethod('PyObject*', 'GetRGB', '(int pixel)',
+        pyArgsString="(pixel) -> (red, green, blue)",
         doc="Returns RGB values for a given palette index.",
         body="""\
             unsigned char red;
@@ -138,7 +147,16 @@ def run():
     # Replace the Create method with one that understands any kind of Python sequence
     c.find('Create').ignore()
     c.addCppMethod('PyObject*', 'Create', '(PyObject* red, PyObject* green, PyObject* blue)',
-        doc="Creates a palette from 3 sequences of integers, one for each red, blue or green component.",
+        pyArgsString="(red, green, blue) -> bool",
+        doc=dedent("""\
+        Creates a palette from 3 sequences of integers, one for each red, blue or green component.
+
+        :param red: A sequence of integer values in the range 0..255 inclusive.
+        :param green: A sequence of integer values in the range 0..255 inclusive.
+        :param blue: A sequence of integer values in the range 0..255 inclusive.
+
+        .. note:: All sequences must be the same length.
+        """),
         body="""\
             bool rval = _paletteCreateHelper(self, red, green, blue);
             wxPyThreadBlocker blocker;
