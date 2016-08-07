@@ -45,6 +45,7 @@ class Events(unittest.TestCase):
         evt = wx.FocusEvent()
 
     def test_HelpEvent_ctor(self):
+        app = wx.App()
         evt = wx.HelpEvent()
 
     def test_IconizeEvent_ctor(self):
