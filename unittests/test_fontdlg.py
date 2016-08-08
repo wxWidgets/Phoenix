@@ -9,8 +9,10 @@ class fontdlg_Tests(wtc.WidgetTestCase):
     def test_fontdlg1(self):
         data = wx.FontData()
         # on Windows wx.FONTFAMILY_TELETYPE will actually use wx.FONTFAMILY_MODERN
+        # but on GTK wx.FONTFAMILY_MODERN uses wx.FONTFAMILY_TELETYPE
         data.SetInitialFont(wx.FFont(15, wx.FONTFAMILY_MODERN))
-        self.assertEqual(data.InitialFont.Family, wx.FONTFAMILY_MODERN)
+        self.assertTrue(data.InitialFont.Family == wx.FONTFAMILY_MODERN or
+                        data.InitialFont.Family == wx.FONTFAMILY_TELETYPE)
         
         data.SetInitialFont(wx.FFont(15, wx.FONTFAMILY_SWISS))
         self.assertEqual(data.InitialFont.Family, wx.FONTFAMILY_SWISS)
