@@ -28,12 +28,12 @@ class pdfButtonPanel(bp.ButtonPanel):
     from wx.lib.agw.buttonpanel and provides buttons to manipulate the viewed
     PDF, e.g. zoom, save, print etc.
     """
-    def __init__(self, parent, id, pos, size, style):
+    def __init__(self, parent, nid, pos, size, style):
         """
         Default class constructor.
 
         :param wx.Window `parent`: parent window. Must not be ``None``;
-        :param integer `id`: window identifier. A value of -1 indicates a default value;
+        :param integer `nid`: window identifier. A value of -1 indicates a default value;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
         :type `pos`: tuple or :class:`wx.Point`
@@ -45,7 +45,7 @@ class pdfButtonPanel(bp.ButtonPanel):
         """
         self.viewer = None          # reference to viewer is set by their common parent
         self.numpages = None         
-        bp.ButtonPanel.__init__(self, parent, id, "",
+        bp.ButtonPanel.__init__(self, parent, nid, "",
                                 agwStyle=bp.BP_USE_GRADIENT, alignment=bp.BP_ALIGN_LEFT)
         self.SetProperties()
         self.CreateButtons()
@@ -92,7 +92,7 @@ class pdfButtonPanel(bp.ButtonPanel):
         self.Freeze()
         for item in panelitems:
             if item[0].lower() == 'btn':
-                type, image, kind, popup, handler = item
+                x_type, image, kind, popup, handler = item
                 btn = bp.ButtonInfo(self, wx.NewId(),image, kind=kind,
                                     shortHelp=popup, longHelp='')
                 self.AddButton(btn)
@@ -219,7 +219,7 @@ class pdfButtonPanel(bp.ButtonPanel):
       
     def OnZoomSet(self, event):
         """
-        The zoom set handler, either a list selection of a value entered.
+        The zoom set handler, either a list selection or a value entered.
         """
         MINZ = 0
         MAXZ = 1000

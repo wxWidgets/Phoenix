@@ -13,28 +13,32 @@
 #
 #----------------------------------------------------------------------------
 """
-:class:`~lib.pdfviewer.viewer.pdfViewer` class is derived from :class:`ScrolledWindow` class
+:class:`~lib.pdfviewer.viewer.pdfViewer` class is derived from :class:`wx.ScrolledWindow` class
 and can display and print PDF files.
 
 Description
 ===========
 
-The  :class:`~lib.pdfviewer.viewer.pdfViewer` class is derived from :class:`ScrolledWindow`
+The  :class:`~lib.pdfviewer.viewer.pdfViewer` class is derived from :class:`wx.ScrolledWindow`
 and can display and print PDF files. The whole file can be scrolled from
 end to end at whatever magnification (zoom-level) is specified.
 
-The viewer uses pyPDF2 or pyPdf, if neither of them are installed an 
-import error exception will be thrown.
+The viewer uses PyMuPDF (version 1.9.2 or later) or PyPDF2.
+If neither of them are installed an import error exception will be raised.
 
-Additional details on pyPdf can be found:
+PyMuPDF contains the Python bindings for the underlying MuPDF library, a cross platform,
+complete PDF rendering library that is GPL licenced.
 
-- home page: http://pybrary.net/pyPdf/
-- download: https://pypi.python.org/pypi/pyPdf
+Further details on PyMuPDF can be found via http://pythonhosted.org/PyMuPDF
 
-Additional details on pyPDF2 can be found:
+PyPDF2 provides a PdfFileReader class that is used to read the content stream of a PDF
+file which is subsequently rendered by :class:`~lib.pdfviewer.viewer.pdfViewer` itself.
+Please note that this is not a complete implementation of the pdf specification and 
+will probably fail to display any random file you supply. However it does seem to
+satisfactorily render files typically produced by ReportLab using Western languages.
+The main limitation is that it doesn't currently support embedded fonts.
 
-- home page: http://knowah.github.com/PyPDF2/
-- download: https://github.com/knowah/PyPDF2/
+Additional details on PyPDF2 can be found via http://pythonhosted.org/PyPDF2
 
 There is an optional :class:`~lib.pdfviewer.buttonpanel.pdfButtonPanel` class, derived from 
 :class:`~lib.agw.buttonpanel`, that can be placed, for example, at the top of the
@@ -99,25 +103,13 @@ Externally callable methods are:
 :meth:`~lib.pdfviewer.viewer.pdfViewer.GoPage`
   
 The viewer renders the pdf file content using Cairo if installed,
-otherwise :class:`GraphicsContext` is used. Printing is achieved by writing
-directly to a :class:`PrinterDC` and using :class:`Printer`.
-
-Please note that :class:`~lib.pdfviewer.viewer.pdfViewer` is a far from complete
-implementation of the pdf specification and will probably fail to display any
-random file you supply. However it does seem to be OK with the sort of files
-produced by ReportLab that use Western languages. The biggest limitation is
-probably that it doesn't (yet?) support embedded fonts and will substitute one
-of the standard fonts instead.
+otherwise :class:`wx.GraphicsContext` is used. Printing is achieved by writing
+directly to a :class:`wx.PrinterDC` and using :class:`wx.Printer`.
 
 The icons used in :class:`~lib.pdfviewer.buttonpanel.pdfButtonPanel` are Free Icons
-by Axialis Software: http://www.axialis.com 
-
-You can freely use them in any project or website, commercially or not. 
-
-TERMS OF USE:
-
-You must keep the credits of the authors: "Axialis Team", even if you modify them. 
-See ./bitmaps/ReadMe.txt for further details
+by Axialis Software: http://www.axialis.com. You can freely use them in any project,
+commercially or not, but you must keep the credits of the authors: 
+"Axialis Team", even if you modify them. See ./bitmaps/ReadMe.txt for further details.
 
 """
 
