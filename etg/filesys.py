@@ -58,27 +58,48 @@ def run():
 
 
     c = module.find('wxArchiveFSHandler')
-    c.addPrivateCopyCtor();
+    c.addPrivateCopyCtor()
     module.addPyCode('ZipFSHandler = wx.deprecated(ArchiveFSHandler, "Use ArchiveFSHandler instead.")')
     _fixHandlerClass(c)
     
     c = module.find('wxFSFile')
-    c.addPrivateCopyCtor();
+    c.addPrivateCopyCtor()
     _fixHandlerClass(c)
     
     c = module.find('wxFilterFSHandler')
-    c.addPrivateCopyCtor();
+    c.addPrivateCopyCtor()
     _fixHandlerClass(c)
     
     c = module.find('wxInternetFSHandler')
-    c.addPrivateCopyCtor();
-    _fixHandlerClass(c)
-    
-    c = module.find('wxMemoryFSHandler')
-    c.addPrivateCopyCtor();
+    c.addPrivateCopyCtor()
     _fixHandlerClass(c)
 
-    
+
+    c = module.find('wxMemoryFSHandler')
+    c.addPrivateCopyCtor()
+    _fixHandlerClass(c)
+
+    # Make some more python-friendly versions of the AddFile methods accepting raw data
+    c.find('AddFile').findOverload('binarydata').ignore()
+    c.find('AddFileWithMimeType').findOverload('binarydata').ignore()
+
+    c.addCppMethod('void', 'AddFile', '(const wxString& filename, wxPyBuffer* binarydata)',
+        isStatic=True,
+        doc="Add a file from raw data in a python buffer compatible object.",
+        body="""\
+            wxMemoryFSHandler::AddFile(*filename, binarydata->m_ptr, binarydata->m_len);
+            """)
+
+    c.addCppMethod('void', 'AddFileWithMimeType',
+                   '(const wxString& filename, wxPyBuffer* binarydata, const wxString& mimetype)',
+        isStatic=True,
+        doc="Add a file from raw data in a python buffer compatible object.",
+        body="""\
+            wxMemoryFSHandler::AddFileWithMimeType(
+                    *filename, binarydata->m_ptr, binarydata->m_len, *mimetype);
+            """)
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

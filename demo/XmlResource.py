@@ -18,8 +18,10 @@ class TestPanel(wx.Panel):
         label = wx.StaticText(self, -1, "The lower panel was built from this XML:")
         label.SetFont(wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
 
-        resourceText = open(RESFILE).read()
-        text = wx.TextCtrl(self, -1, resourceText,
+        with open(RESFILE, 'rb') as f:
+            resourceBytes = f.read()
+
+        text = wx.TextCtrl(self, -1, resourceBytes,
                           style=wx.TE_READONLY|wx.TE_MULTILINE)
         text.SetInsertionPoint(0)
 
@@ -33,13 +35,14 @@ class TestPanel(wx.Panel):
         elif 1:
             # or from a Virtual FileSystem:
             wx.FileSystem.AddHandler(wx.MemoryFSHandler())
-            wx.MemoryFSHandler().AddFile("XRC_Resources/data_file", resourceText)
-            res = xrc.XmlResource("memory:XRC_Resources/data_file")
+            wx.MemoryFSHandler.AddFile("my_XRC_data", resourceBytes)
+            # notice the matching filename
+            res = xrc.XmlResource("memory:my_XRC_data")
 
         else:
-            # or from a string, like this:
-            res = xrc.EmptyXmlResource()
-            res.LoadFromString(resourceText)
+            # or from a buffer compatible object, like this:
+            res = xrc.XmlResource()
+            res.LoadFromBuffer(resourceBytes)
 
 
         # Now create a panel from the resource data

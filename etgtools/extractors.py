@@ -585,7 +585,7 @@ class ParamDef(BaseDef):
         self.arraySize = False        # the param is the size of the array
         self.transfer = False         # transfer ownership of arg to C++?
         self.transferBack = False     # transfer ownership of arg from C++ to Python?
-        self.transferThis = False     # ownership of 'this' pointer transfered to this arg 
+        self.transferThis = False     # ownership of 'this' pointer transferred to this arg
         self.keepReference = False    # an extra reference to the arg is held
         self.__dict__.update(kw)
         if element is not None:
