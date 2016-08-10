@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # demodata.py
 
 """
@@ -156,7 +154,7 @@ _treeList = [
         'PlateButton',
         'PopupControl',
         'PyColourChooser',
-        'TreeListCtrl',
+        #'TreeListCtrl',  # TODO or toss it?
     ]),
 
     # controls coming from other libraries
@@ -196,7 +194,7 @@ _treeList = [
         'ResizeWidget',
         'RichTextCtrl',
         'ScrolledPanel',
-        'SplitTree',
+        #'SplitTree',         # TODO or toss it?
         'StyledTextCtrl_1',
         'StyledTextCtrl_2',
         'TablePrint',
@@ -214,7 +212,6 @@ _treeList = [
         'LayoutAnchors',
         'LayoutConstraints',
         'Layoutf',
-        'RowColSizer',
         'ScrolledPanel',
         'SizedControls',
         'Sizers',
