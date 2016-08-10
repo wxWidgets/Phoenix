@@ -300,19 +300,15 @@ def _draw10Objects():
 # ---------------------------------------------------------------------------
 ### Demo Application
 # ---------------------------------------------------------------------------
-class DemoApp(object):
+class PlotDemoApp(object):
     def __init__(self):
         self.app = wx.App()
-        self.frame = MainFrame(None, -1, "PlotCanvas")
+        self.frame = PlotDemoMainFrame(None, -1, "PlotCanvas")
         self.frame.Show(True)
-        wx.CallAfter(wx.MessageBox,
-                     "Various plot types can be shown using the Plot menu. " +
-                     "Check out the Options menu too.",
-                     "wx.lib.plot Demo")
         self.app.MainLoop()
 
 
-class MainFrame(wx.Frame):
+class PlotDemoMainFrame(wx.Frame):
     # -----------------------------------------------------------------------
     ### UI Initialization
     # -----------------------------------------------------------------------
@@ -342,7 +338,10 @@ class MainFrame(wx.Frame):
         # Show closest point when enabled
         self.client.canvas.Bind(wx.EVT_MOTION, self.OnMotion)
 
-        self.Show(True)
+        wx.CallAfter(wx.MessageBox,
+                     "Various plot types can be shown using the Plot menu. " +
+                     "Check out the Options menu too.",
+                     "wx.lib.plot Demo")
 
 
     def _init_file_menu(self):
@@ -979,7 +978,7 @@ def run_demo():
     """
     Run the :mod:`wx.lib.plot` demo application.
     """
-    DemoApp()
+    PlotDemoApp()
 
 
 if __name__ == '__main__':
