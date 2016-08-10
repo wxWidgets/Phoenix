@@ -19,7 +19,7 @@ class filedlg_Tests(wtc.WidgetTestCase):
     def test_filedlg(self):
         # a typical use case
         dlg = wx.FileDialog(self.frame, 'message', os.getcwd(), "",
-                            wildcard="Python source (*.py)|*.py|")
+                            wildcard="Python source (*.py)|*.py")
         dlg.Destroy()
         
     def test_filedlgProperties(self):

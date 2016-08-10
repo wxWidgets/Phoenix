@@ -15,17 +15,17 @@
 #
 #----------------------------------------------------------------------------
 """
-This module implements an API similar to :class:`GraphicsContext` and the
+This module implements an API similar to :class:`wx.GraphicsContext` and the
 related classes. The implementation is done using :class:`wx.DC`
 
-Why do this?  Neither :class:`GraphicsContext` nor the Cairo-based
+Why do this?  Neither :class:`wx.GraphicsContext` nor the Cairo-based
 GraphicsContext API provided by wx.lib.graphics can be written
-directly to a :class:`PrinterDC`. It can be done via an intermediate bitmap in
-a :class:`MemoryDC` but transferring this to a :class:`PrinterDC` is an order of
+directly to a :class:`wx.PrinterDC`. It can be done via an intermediate bitmap in
+a :class:`wx.MemoryDC` but transferring this to a :class:`wx.PrinterDC` is an order of
 magnitude slower than writing directly.
 
-Why not just use :class:`PrinterDC` directly?  There may be times when you do want
-to use :class:`GraphicsContext` for its displayed appearance and for its
+Why not just use :class:`wx.PrinterDC` directly?  There may be times when you do want
+to use :class:`wx.GraphicsContext` for its displayed appearance and for its
 clean(er) API, so being able to use the same code for printing as well is nice.
 
 It started out with the intention of being a full implementation of the 
@@ -148,7 +148,7 @@ class dcGraphicsContext(object):
         The incoming co-ordinates have a bottom left origin with increasing
         y downwards (so y values are all negative). The DC origin is top left
         also with increasing y down.
-        :class:`wx.DC` and :class:`GraphicsContext` fonts are too big in the ratio
+        :class:`wx.DC` and :class:`wx.GraphicsContext` fonts are too big in the ratio
         of pixels per inch to points per inch. If screen rendering used Cairo,
         printed fonts need to be scaled but if :class:`wx.GCDC` was used, they are
         already scaled.
@@ -170,7 +170,7 @@ class dcGraphicsContext(object):
     @staticmethod
     def Create(dc, yoffset, have_cairo):
         """
-        The created pGraphicsContext instance uses the dc itself.
+        The created dcGraphicsContext instance uses the dc itself.
         """
         assert isinstance(dc, wx.DC)
         return dcGraphicsContext(dc, yoffset, have_cairo)
