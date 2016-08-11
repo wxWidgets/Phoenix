@@ -63,7 +63,7 @@ class CustomDataTable(gridlib.GridTableBase):
 
     def GetValue(self, row, col):
         id = self.identifiers[col]
-        return self.data[row][id]
+        return str(self.data[row][id])
 
     def SetValue(self, row, col, value):
         id = self.identifiers[col]

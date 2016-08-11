@@ -551,23 +551,20 @@ class TestSelectionPanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
-        self.list = wx.ListBox(self, -1,
-                              (-1, -1), (-1, -1),
-                              [])
-        self.list.Fit()
+        self.list = wx.ListBox(self, size=(300,150))
         self.Bind(wx.EVT_LISTBOX, self.OnSelect, self.list)
         self.Bind(wx.EVT_LISTBOX_DCLICK, self.OnDClick, self.list)
 
         btn = wx.Button(self, -1, "Try it!", (120, 10))
         btn.Bind(wx.EVT_BUTTON, self.OnDClick)
 
-        self.text = wx.TextCtrl(self, -1, "",
-                               (10, 115),
-                               (200, 50),
-                               wx.TE_MULTILINE | wx.TE_READONLY)
+        self.text = wx.TextCtrl(self, style = wx.TE_MULTILINE | wx.TE_READONLY)
 
         for item in theTests:
             self.list.Append(item[0])
+
+        self.list.SetSelection(0)
+        wx.CallAfter(self.list.EnsureVisible, 0)
 
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.Add(self.list, 1, wx.ALL, 8)
@@ -575,12 +572,13 @@ class TestSelectionPanel(wx.Panel):
         vsizer = wx.BoxSizer(wx.VERTICAL)
         vsizer.Add(hsizer)
         vsizer.Add(self.text, 1, wx.EXPAND | wx.ALL, 8)
-        self.SetSizerAndFit(vsizer)
+        self.SetSizer(vsizer)
 
 
     def OnSelect(self, event):
         pos = self.list.GetSelection()
         self.text.SetValue(theTests[pos][2])
+
 
     def OnDClick(self, event):
         pos = self.list.GetSelection()

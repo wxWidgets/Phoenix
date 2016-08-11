@@ -27,7 +27,7 @@ class TestPanel(wx.Panel):
             self.log.write("before Play...\n")
             sound.Play(wx.adv.SOUND_SYNC)
             self.log.write("...after Play\n")
-        except NotImplementedError, v:
+        except NotImplementedError as v:
             wx.MessageBox(str(v), "Exception Message")
 
 
@@ -45,7 +45,7 @@ class TestPanel(wx.Panel):
             self.sound = sound  # save a reference (This shoudln't be needed, but there seems to be a bug...)
             # wx.YieldIfNeeded()
             self.log.write("...after Play\n")
-        except NotImplementedError, v:
+        except NotImplementedError as v:
             wx.MessageBox(str(v), "Exception Message")
 
 
@@ -62,7 +62,7 @@ class TestPanel(wx.Panel):
                 # another way to do it.
                 wx.adv.Sound.PlaySound(dlg.GetPath(), wx.adv.SOUND_SYNC)
                 
-            except NotImplementedError, v:
+            except NotImplementedError as v:
                 wx.MessageBox(str(v), "Exception Message")
         dlg.Destroy()
 

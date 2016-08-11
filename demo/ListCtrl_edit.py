@@ -40,6 +40,7 @@ class TestListCtrl(wx.ListCtrl,
         self.Populate()
         listmix.TextEditMixin.__init__(self)
 
+
     def Populate(self):
         # for normal, simple columns, you can add them like this:
         self.InsertColumn(0, "Column 1")
@@ -61,6 +62,7 @@ class TestListCtrl(wx.ListCtrl,
         self.SetColumnWidth(2, 100)
 
         self.currentItem = 0
+
 
     def SetStringItem(self, index, col, data):
         if col in range(3):
@@ -100,6 +102,7 @@ class TestListCtrlPanel(wx.Panel):
                                  style=wx.LC_REPORT
                                  | wx.BORDER_NONE
                                  | wx.LC_SORT_ASCENDING
+                                 | wx.LC_HRULES | wx.LC_VRULES
                                  )
 
         sizer.Add(self.list, 1, wx.EXPAND)

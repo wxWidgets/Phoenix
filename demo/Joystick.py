@@ -888,7 +888,7 @@ class JoystickDemoPanel(wx.Panel):
             # Calibrate our controls
             wx.CallAfter(self.Calibrate)
             wx.CallAfter(self.OnJoystick)
-        except NotImplementedError, v:
+        except NotImplementedError as v:
             wx.MessageBox(str(v), "Exception Message")
             self.stick = None
 

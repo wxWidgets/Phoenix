@@ -15,8 +15,6 @@ class ClipTextPanel(wx.Panel):
         wx.Panel.__init__(self, parent, -1)
         self.log = log
 
-        #self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False))
-
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(
             wx.StaticText(
@@ -42,7 +40,6 @@ class ClipTextPanel(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnPaste, id=ID_PasteBtn)
         self.Bind(wx.EVT_BUTTON, self.OnCopyBitmap, id=ID_BitmapBtn)
 
-        self.SetAutoLayout(True)
         self.SetSizer(sizer)
 
 
@@ -70,6 +67,7 @@ class ClipTextPanel(wx.Panel):
                 "There is no data in the clipboard in the required format",
                 "Error"
                 )
+
 
     def OnCopyBitmap(self, evt):
         dlg = wx.FileDialog(self, "Choose a bitmap to copy", wildcard="*.bmp")
@@ -120,7 +118,7 @@ class OtherDropTarget(wx.DropTarget):
     def OnData(self, x, y, d):
         self.log.WriteText("OnData: %d, %d, %d\n" % (x, y, d))
         self.GetData()
-        self.log.WriteText("%s\n" % self.do.GetFilenames())
+        self.log.SetLabel("%s\n" % self.do.GetFilenames())
         return d
 
 
@@ -131,12 +129,10 @@ class MyFileDropTarget(wx.FileDropTarget):
         self.log = log
 
     def OnDropFiles(self, x, y, filenames):
-        self.window.SetInsertionPointEnd()
-        self.window.WriteText("\n%d file(s) dropped at %d,%d:\n" %
-                              (len(filenames), x, y))
-
-        for file in filenames:
-            self.window.WriteText(file + '\n')
+        txt = "\n%d file(s) dropped at %d,%d:\n" % (len(filenames), x, y)
+        txt += '\n'.join(filenames)
+        self.window.SetLabel(txt)
+        return True
 
 
 class MyTextDropTarget(wx.TextDropTarget):
@@ -146,7 +142,8 @@ class MyTextDropTarget(wx.TextDropTarget):
         self.log = log
 
     def OnDropText(self, x, y, text):
-        self.window.WriteText("(%d, %d)\n%s\n" % (x, y, text))
+        self.window.SetLabel("(%d, %d)\n%s\n" % (x, y, text))
+        return True
 
     def OnDragOver(self, x, y, d):
         return wx.DragCopy
@@ -164,38 +161,32 @@ class FileDropPanel(wx.Panel):
             0, wx.EXPAND|wx.ALL, 2
             )
 
-        self.text = wx.TextCtrl(
-                        self, -1, "",
-                        style = wx.TE_MULTILINE|wx.HSCROLL|wx.TE_READONLY
-                        )
+        self.text = wx.StaticText(self, -1, "", style=wx.ST_NO_AUTORESIZE|wx.BORDER_SIMPLE)
+        self.text.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)
 
         dt = MyFileDropTarget(self, log)
         self.text.SetDropTarget(dt)
-        sizer.Add(self.text, 1, wx.EXPAND)
+        sizer.Add(self.text, 1, wx.EXPAND|wx.ALL, 5)
 
         sizer.Add(
             wx.StaticText(self, -1, " \nDrag some text here:"),
             0, wx.EXPAND|wx.ALL, 2
             )
 
-        self.text2 = wx.TextCtrl(
-                        self, -1, "",
-                        style = wx.TE_MULTILINE|wx.HSCROLL|wx.TE_READONLY
-                        )
+        self.text2 = wx.StaticText(self, -1, "", style=wx.ST_NO_AUTORESIZE|wx.BORDER_SIMPLE)
+        self.text2.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)
 
         dt = MyTextDropTarget(self.text2, log)
         self.text2.SetDropTarget(dt)
-        sizer.Add(self.text2, 1, wx.EXPAND)
+        sizer.Add(self.text2, 1, wx.EXPAND|wx.ALL, 5)
 
         self.SetAutoLayout(True)
         self.SetSizer(sizer)
 
 
-    def WriteText(self, text):
-        self.text.WriteText(text)
+    def SetLabel(self, text):
+        self.text.SetLabel(text)
 
-    def SetInsertionPointEnd(self):
-        self.text.SetInsertionPointEnd()
 
 
 #----------------------------------------------------------------------

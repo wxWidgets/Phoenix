@@ -69,7 +69,7 @@ class TestPopup(wx.PopupWindow):
 
     def OnRightUp(self, evt):
         self.Show(False)
-        self.Destroy()
+        wx.CallAfter(self.Destroy)
 
 
 

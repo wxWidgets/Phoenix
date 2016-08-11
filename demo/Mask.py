@@ -23,11 +23,10 @@ logicList = [
     ('wx.XOR', wx.XOR),
 ]
 
-if 'mac-cg' in wx.PlatformInfo:
+if 'wxMac' in wx.PlatformInfo:
     # that's all, folks!
     logicList = [
         ('wx.COPY', wx.COPY),
-        ('wx.INVERT', wx.INVERT),
         ('wx.XOR', wx.XOR),
     ]
 

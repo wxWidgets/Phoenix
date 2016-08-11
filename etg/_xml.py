@@ -15,6 +15,9 @@ MODULE    = "_xml"
 NAME      = "_xml"   # Base name of the file to generate to for this script
 DOCSTRING = """\
 Some simple XML classes for use with XRC.
+
+For more advanced XML needs it would be better to use one of the XML packages
+provided by Python.
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by

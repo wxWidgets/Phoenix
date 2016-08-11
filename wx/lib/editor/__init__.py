@@ -1,11 +1,11 @@
 #----------------------------------------------------------------------
 # Name:        wx.lib.editor
-# Purpose:     A package containing a colourizable text editror
+# Purpose:     A package containing a colourizable text editor
 #
 # Author:      Robin Dunn
 #
 # Created:     30-Dec-1999
-# Copyright:   (c) 1999 by Total Control Software
+# Copyright:   (c) 1999-2016 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
@@ -21,4 +21,4 @@
 
 
 # import the main classes into the package namespace.
-from editor    import Editor
+from .editor    import Editor

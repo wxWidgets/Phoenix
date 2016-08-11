@@ -2,6 +2,7 @@
 
 import wx
 import wx.adv
+from textwrap import dedent
 
 #----------------------------------------------------------------------
 
@@ -10,14 +11,14 @@ class TestPanel(wx.Panel):
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
-        cmd = wx.adv.CommandLinkButton(self, -1,
-                                   "wx.CommandLinkButton",
-                                   """\
-This type of button includes both a main label and a 'note' that is meant to
-contain a description of what the button does or what it is used for.  On
-Windows 7 it is a new native widget type, on the other platforms it is
-implemented generically.""",
-                                   pos=(25,25))
+        cmd = wx.adv.CommandLinkButton(self, -1, "wx.CommandLinkButton",
+            dedent("""\
+            This type of button includes both a main label and a 'note' that
+            is meant to contain a description of what the button does or
+            what is used for.  On Windows 7 it is a new native widget type,
+            on the other platforms it is implemented generically.
+            """),
+            pos=(25,25), size=(500,-1))
 
 #----------------------------------------------------------------------
 

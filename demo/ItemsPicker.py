@@ -53,20 +53,29 @@ class ItemsPickerDialog(wx.Dialog):
                           'Stuff:', 'Selected stuff:',ipStyle = style)
         self.ip.Bind(EVT_IP_SELECTION_CHANGED, self.OnSelectionChange)
         self.ip._source.SetMinSize((-1,150))
-        self.ip.bAdd.SetBitmap(_bp_btn2.GetBitmap(), dir=wx.RIGHT)
-        self.ip.bAdd.SetLabel('Add')
-        self.ip.bRemove.SetBitmap(_bp_btn1.GetBitmap(), dir=wx.LEFT)
-        self.ip.bRemove.SetLabel('Remove')
+
+        # Customize the buttons for this example.
+        if 'wxMac' not in wx.PlatformInfo:
+            # NOTE: wx.Button on OSX does not modify the button size when adding a
+            # bitmap after the fact like this, and these bitmaps are a little too
+            # large and look funny in OSX, so we won't do this customization there.
+            self.ip.bAdd.SetBitmap(_bp_btn2.GetBitmap(), dir=wx.RIGHT)
+            self.ip.bAdd.SetLabel('Add')
+            self.ip.bRemove.SetBitmap(_bp_btn1.GetBitmap(), dir=wx.LEFT)
+            self.ip.bRemove.SetLabel('Remove')
+
         sizer.Add(self.ip, 0, wx.ALL, 10)
         self.SetSizer(sizer)
         self.itemCount = 3
         self.Fit()
+
 
     def OnAdd(self,e):
         items = self.ip.GetItems()
         self.itemCount += 1
         newItem = "item%d" % self.itemCount
         self.ip.SetItems(items + [newItem])
+
 
     def OnSelectionChange(self, e):
         self.log.write("EVT_IP_SELECTION_CHANGED %s\n" % \
