@@ -15,6 +15,7 @@ class helpdlg_Tests(wtc.WidgetTestCase):
         data.AddBook(os.path.join(helpPath, 'testing.hhp'))
         data.AddBook(os.path.join(helpPath, 'another.hhp'))
         dlg = wx.html.HtmlHelpDialog(data)
+        dlg.Create(self.frame)
         
         self.myYield()
         dlg.Destroy()
