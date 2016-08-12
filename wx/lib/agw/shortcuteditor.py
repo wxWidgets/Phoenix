@@ -29,15 +29,15 @@
 
 
 """
-:class:`~lib.agw.shortcuteditor.ShortcutEditor` is a widget that allows the user to customize and change keyboard
+:class:`~wx.lib.agw.shortcuteditor.ShortcutEditor` is a widget that allows the user to customize and change keyboard
 shortcuts via a dialog. It can be used to edit :class:`wx.MenuItem` shortcuts or accelerators
 defined in a :class:`AcceleratorTable`.
 
 .. note::
 
     :class:`ShortcutEditor` **requires** the minimum AGW version 0.9.3 or the current
-    SVN, for the various enhancements made to the :class:`~lib.agw.hypertreelist.HyperTreeList`
-    and :class:`~lib.agw.genericmessagedialog.GenericMessageDialog`
+    SVN, for the various enhancements made to the :class:`~wx.lib.agw.hypertreelist.HyperTreeList`
+    and :class:`~wx.lib.agw.genericmessagedialog.GenericMessageDialog`
     widgets.
 
  
@@ -1674,7 +1674,7 @@ class ConflictDialog(GMD.GenericMessageDialog):
     
 class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
     """
-    :class:`ListShortcut` is a subclass of :class:`~lib.agw.hypertreelist.HyperTreeList`, 
+    :class:`ListShortcut` is a subclass of :class:`~wx.lib.agw.hypertreelist.HyperTreeList`,
     customized to look like the GIMP main shortcut list. This class is used to display the
     shortcut label (with an optional bitmap next to it), its accelerator and
     the help string associated with it (if present).
@@ -1747,7 +1747,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         """
         Recursively populates the :class:`ListShortcut` with information from the :class:`Shortcut` tree.
 
-        :param `item`: an instance of :class:`~lib.agw.customtreectrl.GenericTreeItem`. If ``None``, it is defaulted to
+        :param `item`: an instance of :class:`~wx.lib.agw.customtreectrl.GenericTreeItem`. If ``None``, it is defaulted to
          the :class:`ListShortcut` root item to make this function reentrant (i.e. allow more than one
          enumeration on one and the same object simultaneously);
         :param `shortcut`: an instance of :class:`Shortcut`. If ``None``, it is defaulted to
@@ -1831,7 +1831,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
 
         In this implementation this returns the item label.
 
-        :param `item`: an instance of :class:`~lib.agw.customtreectrl.GenericTreeItem`.        
+        :param `item`: an instance of :class:`~wx.lib.agw.customtreectrl.GenericTreeItem`.
         """
 
         return self.GetItemText(item)
@@ -2048,7 +2048,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         the conflicting shortcut (by putting a "Disabled" string as its accelerator).
 
         :param `conflict`: an instance of :class:`Shortcut` to reset;
-        :param `item`: an instance of :class:`~lib.agw.customtreectrl.GenericTreeItem`. If defaulted to ``None``, it is set
+        :param `item`: an instance of :class:`~wx.lib.agw.customtreectrl.GenericTreeItem`. If defaulted to ``None``, it is set
          to the :class:`ListShortcut` root item and used only to make this function reentrant
          (i.e. allow more than one enumeration on one and the same object simultaneously).
         """
@@ -2167,7 +2167,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
     def HasFlag(self, flag):
         """
         Overridden from :class:`wx.Window` as a workaround on the conflicts between `treemixin` and
-        :class:`~lib.agw.hypertreelist.HyperTreeList` with the ``wx.TR_HIDE_ROOT`` `agwStyle` set.
+        :class:`~wx.lib.agw.hypertreelist.HyperTreeList` with the ``wx.TR_HIDE_ROOT`` `agwStyle` set.
 
         :param integer `flag`: an integer bit flag specifying the `agwStyle` style.
 

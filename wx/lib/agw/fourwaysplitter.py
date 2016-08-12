@@ -23,7 +23,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.fourwaysplitter.FourWaySplitter` is a layout manager which manages 4 children like 4 panes in a
+:class:`~wx.lib.agw.fourwaysplitter.FourWaySplitter` is a layout manager which manages 4 children like 4 panes in a
 window.
 
 

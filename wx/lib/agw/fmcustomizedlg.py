@@ -12,7 +12,7 @@
 #----------------------------------------------------------------------------
 """
 This module contains a custom dialog class used to personalize the appearance of a
-:class:`~lib.agw.flatmenu.FlatMenu` on the fly, allowing also the user of your application to do the same.
+:class:`~wx.lib.agw.flatmenu.FlatMenu` on the fly, allowing also the user of your application to do the same.
 """
 
 import wx
@@ -167,8 +167,8 @@ class FMTitlePanel(wx.Panel):
 
 class FMCustomizeDlg(wx.Dialog):
     """
-    Class used to customize the appearance of :class:`~lib.agw.flatmenu.FlatMenu` 
-    and :class:`~lib.agw.flatmenu.FlatMenuBar`.
+    Class used to customize the appearance of :class:`~wx.lib.agw.flatmenu.FlatMenu`
+    and :class:`~wx.lib.agw.flatmenu.FlatMenuBar`.
     """
 
     def __init__(self, parent=None):
@@ -225,7 +225,7 @@ class FMCustomizeDlg(wx.Dialog):
 
 
     def Initialise(self):
-        """ Initialzes the :class:`~lib.agw.labelbook.LabelBook` pages. """
+        """ Initialzes the :class:`~wx.lib.agw.labelbook.LabelBook` pages. """
     
         self._book.DeleteAllPages()
         self._book.AddPage(self.CreateMenusPage(), _("Menus"), True)
@@ -245,7 +245,7 @@ class FMCustomizeDlg(wx.Dialog):
     
     
     def CreateMenusPage(self):
-        """ Creates the :class:`~lib.agw.labelbook.LabelBook` pages with :class:`~lib.agw.flatmenu.FlatMenu` information. """
+        """ Creates the :class:`~wx.lib.agw.labelbook.LabelBook` pages with :class:`~wx.lib.agw.flatmenu.FlatMenu` information. """
     
         menus = wx.Panel(self._book, wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 300))
         sz = wx.BoxSizer(wx.VERTICAL)
@@ -307,7 +307,7 @@ class FMCustomizeDlg(wx.Dialog):
     
 
     def CreateShortcutsPage(self):
-        """ Creates the :class:`~lib.agw.labelbook.LabelBook` shorcuts page. """
+        """ Creates the :class:`~wx.lib.agw.labelbook.LabelBook` shorcuts page. """
     
         shorcuts = wx.Panel(self._book, wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 300))
         return shorcuts
@@ -315,8 +315,8 @@ class FMCustomizeDlg(wx.Dialog):
 
     def CreateOptionsPage(self):
         """ 
-        Creates the :class:`~lib.agw.labelbook.LabelBook` option page which holds the 
-        :class:`~lib.agw.flatmenu.FlatMenu` styles. 
+        Creates the :class:`~wx.lib.agw.labelbook.LabelBook` option page which holds the
+        :class:`~wx.lib.agw.flatmenu.FlatMenu` styles.
         """
     
         options = wx.Panel(self._book, wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 300))
@@ -424,7 +424,7 @@ class FMCustomizeDlg(wx.Dialog):
 
         :param `event`: a :class:`CommandEvent` event to be processed.
 
-        :note: This method handles the :class:`~lib.agw.flatmenu.FlatMenu` menus visibility.
+        :note: This method handles the :class:`~wx.lib.agw.flatmenu.FlatMenu` menus visibility.
         """
     
         id = event.GetInt()
@@ -484,7 +484,7 @@ class FMCustomizeDlg(wx.Dialog):
 
         :param `event`: a :class:`CommandEvent` event to be processed.
 
-        :note: This method handles the :class:`~lib.agw.flatmenu.FlatMenu` styles.        
+        :note: This method handles the :class:`~wx.lib.agw.flatmenu.FlatMenu` styles.
         """
 
         mb = self.GetParent()

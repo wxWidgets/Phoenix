@@ -53,7 +53,7 @@ Have created the dialog, you call :meth:`~Dialog.ShowModal`, and if the return v
 ``wx.ID_OK``, retrieve the selection from the dialog and activate the pane.
 
 The sample code below shows a generic method of finding panes and notebook
-tabs within the current :class:`~lib.agw.aui.framemanager.AuiManager`, and using the pane name or notebook
+tabs within the current :class:`~wx.lib.agw.aui.framemanager.AuiManager`, and using the pane name or notebook
 tab position to display the pane.
 
 The only other code to add is a menu item with the desired accelerator,

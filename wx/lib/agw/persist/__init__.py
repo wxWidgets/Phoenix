@@ -159,7 +159,7 @@ can be only done automatically for windows.
 TODOs
 =====
 
-* Find a way to handle :class:`ToolBar` UI settings as it has been done for :class:`~lib.agw.aui.auibar.AuiToolBar`:
+* Find a way to handle :class:`ToolBar` UI settings as it has been done for :class:`~wx.lib.agw.aui.auibar.AuiToolBar`:
   current :class:`ToolBar` doesn't seem to have easy access to the underlying toolbar tools;
 * Implement handler(s) for :class:`grid.Grid` for row/columns sizes (possibly adding another style
   to `PersistenceManager` as :class:`grid.Grid` sets up arrays to store individual row and column

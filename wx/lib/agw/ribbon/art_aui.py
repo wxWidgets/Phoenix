@@ -23,11 +23,11 @@ This allows a ribbon bar to have a pluggable look-and-feel, while retaining the 
 underlying behaviour. As a single art provider is used for all ribbon components, a
 ribbon bar usually has a consistent (though unique) appearance.
 
-By default, a :class:`~lib.agw.ribbon.bar.RibbonBar` uses an instance of a class called
-:class:`~lib.agw.ribbon.art_default.RibbonDefaultArtProvider`,
-which resolves to :class:`~lib.agw.ribbon.art_aui.RibbonAUIArtProvider`,
-:class:`~lib.agw.ribbon.art_msw.RibbonMSWArtProvider`, or
-:class:`~lib.agw.ribbon.art_osx.RibbonOSXArtProvider` - whichever is most appropriate
+By default, a :class:`~wx.lib.agw.ribbon.bar.RibbonBar` uses an instance of a class called
+:class:`~wx.lib.agw.ribbon.art_default.RibbonDefaultArtProvider`,
+which resolves to :class:`~wx.lib.agw.ribbon.art_aui.RibbonAUIArtProvider`,
+:class:`~wx.lib.agw.ribbon.art_msw.RibbonMSWArtProvider`, or
+:class:`~wx.lib.agw.ribbon.art_osx.RibbonOSXArtProvider` - whichever is most appropriate
 to the current platform. These art providers are all
 slightly configurable with regard to colours and fonts, but for larger modifications,
 you can derive from one of these classes, or write a completely new art provider class.
@@ -38,7 +38,7 @@ Call :meth:`RibbonBar.SetArtProvider() <lib.agw.ribbon.bar.RibbonBar.SetArtProvi
 See Also
 ========
 
-:class:`~lib.agw.ribbon.bar.RibbonBar`
+:class:`~wx.lib.agw.ribbon.bar.RibbonBar`
 """
 
 import wx
@@ -364,7 +364,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
         Draw a single tab in the tab region of a ribbon bar.
 
         :param `dc`: The device context to draw onto;
-        :param `wnd`: The window which is being drawn onto (not the :class:`~lib.agw.ribbon.page.RibbonPage`
+        :param `wnd`: The window which is being drawn onto (not the :class:`~wx.lib.agw.ribbon.page.RibbonPage`
          associated with the tab being drawn);
         :param `tab`: The rectangle within which to draw, and also the tab label,
          icon, and state (active and/or hovered). The drawing rectangle will be
@@ -544,7 +544,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto (which is commonly the
-         :class:`~lib.agw.ribbon.page.RibbonPage` whose background is being drawn, but doesn't have to be);
+         :class:`~wx.lib.agw.ribbon.page.RibbonPage` whose background is being drawn, but doesn't have to be);
         :param `rect`: The rectangle within which to draw.
 
         :see: :meth:`RibbonMSWArtProvider.GetPageBackgroundRedrawArea() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetPageBackgroundRedrawArea>`
@@ -952,7 +952,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
     
     def DrawGalleryBackground(self, dc, wnd, rect):
         """
-        Draw the background and chrome for a :class:`~lib.agw.ribbon.gallery.RibbonGallery` control.
+        Draw the background and chrome for a :class:`~wx.lib.agw.ribbon.gallery.RibbonGallery` control.
 
         This should draw the border, brackground, scroll buttons, extension button, and
         any other UI elements which are not attached to a specific gallery item.
@@ -1029,7 +1029,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawGalleryItemBackground(self, dc, wnd, rect, item):
         """
-        Draw the background of a single item in a :class:`~lib.agw.ribbon.gallery.RibbonGallery` control.
+        Draw the background of a single item in a :class:`~wx.lib.agw.ribbon.gallery.RibbonGallery` control.
 
         This is painted on top of a gallery background, and behind the items bitmap.
         Unlike :meth:`~RibbonAUIArtProvider.DrawButtonBarButton` and :meth:`~RibbonAUIArtProvider.DrawTool`, it is not expected to draw the
@@ -1068,7 +1068,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawButtonBarBackground(self, dc, wnd, rect):
         """
-        Draw the background for a :class:`~lib.agw.ribbon.buttonbar.RibbonButtonBar` control.
+        Draw the background for a :class:`~wx.lib.agw.ribbon.buttonbar.RibbonButtonBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto (which will typically
@@ -1082,7 +1082,7 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawButtonBarButton(self, dc, wnd, rect, kind, state, label, bitmap_large, bitmap_small):
         """
-        Draw a single button for a :class:`~lib.agw.ribbon.buttonbar.RibbonButtonBar` control.
+        Draw a single button for a :class:`~wx.lib.agw.ribbon.buttonbar.RibbonButtonBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto;
@@ -1158,11 +1158,11 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawToolBarBackground(self, dc, wnd, rect):
         """
-        Draw the background for a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar` control.
+        Draw the background for a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The which is being drawn onto. In most cases this will be
-         a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
+         a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. Some of this rectangle
          will later be drawn over using :meth:`~RibbonAUIArtProvider.DrawToolGroupBackground` and :meth:`~RibbonAUIArtProvider.DrawTool`,
          but not all of it will (unless there is only a single group of tools).
@@ -1174,11 +1174,11 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawToolGroupBackground(self, dc, wnd, rect):
         """
-        Draw the background for a group of tools on a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar` control.
+        Draw the background for a group of tools on a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar` control.
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto. In most cases this will
-         be a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
+         be a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. This rectangle is a union
          of the individual tools' rectangles. As there are no gaps between tools, this
          rectangle will be painted over exactly once by calls to :meth:`~RibbonAUIArtProvider.DrawTool`. The
@@ -1199,11 +1199,11 @@ class RibbonAUIArtProvider(RibbonMSWArtProvider):
 
     def DrawTool(self, dc, wnd, rect, bitmap, kind, state):
         """
-        Draw a single tool (for a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar` control).
+        Draw a single tool (for a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar` control).
 
         :param `dc`: The device context to draw onto;
         :param `wnd`: The window which is being drawn onto. In most cases this will
-         be a :class:`~lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
+         be a :class:`~wx.lib.agw.ribbon.toolbar.RibbonToolBar`, but it doesn't have to be;
         :param `rect`: The rectangle within which to draw. The size of this rectangle
          will at least the size returned by :meth:`RibbonMSWArtProvider.GetToolSize() <lib.agw.ribbon.art_msw.RibbonMSWArtProvider.GetToolSize>`, 
          and the height of it will

@@ -14,7 +14,7 @@
 """
 This module contains some common functions used by :mod:`lib.agw.aui` to
 manipulate colours, bitmaps, text, gradient shadings and custom dragging images
-for :class:`~lib.agw.aui.auibook.AuiNotebook` tabs.
+for :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tabs.
 """
 
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
@@ -373,7 +373,7 @@ def FindFocusDescendant(ancestor):
 
 def GetLabelSize(dc, label, vertical):
     """
-    Returns the :class:`~lib.agw.aui.auibar.AuiToolBar` item label size.
+    Returns the :class:`~wx.lib.agw.aui.auibar.AuiToolBar` item label size.
 
     :param string `label`: the toolbar tool label;
     :param bool `vertical`: whether the toolbar tool orientation is vertical or not.
@@ -412,10 +412,10 @@ class TabDragImage(wx.DragImage):
         
         For internal use: do not call it in your code!
 
-        :param `notebook`: an instance of :class:`~lib.agw.aui.auibook.AuiNotebook`;
-        :param `page`: the dragged :class:`~lib.agw.aui.auibook.AuiNotebookPage` page;
+        :param `notebook`: an instance of :class:`~wx.lib.agw.aui.auibook.AuiNotebook`;
+        :param `page`: the dragged :class:`~wx.lib.agw.aui.auibook.AuiNotebookPage` page;
         :param integer `button_state`: the state of the close button on the tab;
-        :param `tabArt`: an instance of :class:`~lib.agw.aui.tabart.AuiDefaultTabArt` or one of its derivations.
+        :param `tabArt`: an instance of :class:`~wx.lib.agw.aui.tabart.AuiDefaultTabArt` or one of its derivations.
         """
 
         self._backgroundColour = wx.Colour("pink")        
@@ -427,10 +427,10 @@ class TabDragImage(wx.DragImage):
         """
         Actually creates the drag and drop bitmap.
 
-        :param `notebook`: an instance of :class:`~lib.agw.aui.auibook.AuiNotebook`;
-        :param `page`: the dragged :class:`~lib.agw.aui.auibook.AuiNotebookPage` page;
+        :param `notebook`: an instance of :class:`~wx.lib.agw.aui.auibook.AuiNotebook`;
+        :param `page`: the dragged :class:`~wx.lib.agw.aui.auibook.AuiNotebookPage` page;
         :param integer `button_state`: the state of the close button on the tab;
-        :param `tabArt`: an instance of :class:`~lib.agw.aui.tabart.AuiDefaultTabArt` or one of its derivations.
+        :param `tabArt`: an instance of :class:`~wx.lib.agw.aui.tabart.AuiDefaultTabArt` or one of its derivations.
         """
 
         control = page.control
@@ -484,7 +484,7 @@ def GetDockingImage(direction, useAero, center):
     """
     Returns the correct name of the docking bitmap depending on the input parameters.
 
-    :param bool `useAero`: whether :class:`~lib.agw.aui.framemanager.AuiManager` is using
+    :param bool `useAero`: whether :class:`~wx.lib.agw.aui.framemanager.AuiManager` is using
      Aero-style or Whidbey-style docking images or not;
     :param bool `center`: whether we are looking for the center diamond-shaped bitmap or not. 
     """
@@ -611,7 +611,7 @@ def GetSlidingPoints(rect, size, direction):
     """
     Returns the point at which the sliding in and out of a minimized pane begins.
 
-    :param wx.Rect `rect`: the :class:`~lib.agw.aui.auibar.AuiToolBar` tool screen rectangle;
+    :param wx.Rect `rect`: the :class:`~wx.lib.agw.aui.auibar.AuiToolBar` tool screen rectangle;
     :param wx.Size `size`: the pane window size;
     :param integer `direction`: the pane docking direction.
     """
@@ -641,8 +641,8 @@ def CopyAttributes(newArt, oldArt):
     """
     Copies pens, brushes, colours and fonts from the old tab art to the new one.
 
-    :param `newArt`: the new instance of :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`;
-    :param `oldArt`: the old instance of :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`.
+    :param `newArt`: the new instance of :class:`~wx.lib.agw.aui.tabart.AuiDefaultTabArt`;
+    :param `oldArt`: the old instance of :class:`~wx.lib.agw.aui.tabart.AuiDefaultTabArt`.
     """    
     
     attrs = dir(oldArt)

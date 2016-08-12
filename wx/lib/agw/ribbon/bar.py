@@ -35,15 +35,15 @@ Top-level control in a ribbon user interface.
 Description
 ===========
 
-Serves as a tabbed container for :class:`~lib.agw.ribbon.page.RibbonPage` - a ribbon user interface typically
+Serves as a tabbed container for :class:`~wx.lib.agw.ribbon.page.RibbonPage` - a ribbon user interface typically
 has a ribbon bar, which contains one or more RibbonPages, which in turn each contains
 one or more RibbonPanels, which in turn contain controls. While a :class:`RibbonBar` has
 tabs similar to a :class:`Notebook`, it does not follow the same API for adding pages.
 Containers like :class:`Notebook` can contain any type of window as a page, hence the
 normal procedure is to create the sub-window and then call :meth:`BookCtrlBase.AddPage` ().
 
-As :class:`RibbonBar` can only have :class:`~lib.agw.ribbon.page.RibbonPage` as children
-(and a :class:`~lib.agw.ribbon.page.RibbonPage` can only have a :class:`RibbonBar` as parent),
+As :class:`RibbonBar` can only have :class:`~wx.lib.agw.ribbon.page.RibbonPage` as children
+(and a :class:`~wx.lib.agw.ribbon.page.RibbonPage` can only have a :class:`RibbonBar` as parent),
 when a page is created, it is automatically added to the bar - there is no `AddPage` equivalent to call.
 
 After all pages have been created, and all controls and panels placed on those pages,
@@ -91,7 +91,7 @@ Event Name                        Description
 See Also
 ========
 
-:class:`~lib.agw.ribbon.page.RibbonPage`, :class:`~lib.agw.ribbon.panel.RibbonPanel`
+:class:`~wx.lib.agw.ribbon.page.RibbonPage`, :class:`~wx.lib.agw.ribbon.panel.RibbonPanel`
 """
 
 
@@ -155,7 +155,7 @@ class RibbonBarEvent(wx.NotifyEvent):
 
         :param integer `command_type`: the event type;
         :param integer `win_id`: the event identifier;
-        :param `page`: an instance of :class:`~lib.agw.ribbon.page.RibbonPage`.
+        :param `page`: an instance of :class:`~wx.lib.agw.ribbon.page.RibbonPage`.
         """
 
         wx.NotifyEvent.__init__(self, command_type, win_id)
@@ -168,7 +168,7 @@ class RibbonBarEvent(wx.NotifyEvent):
         """
         Returns the page being changed to, or being clicked on.
 
-        :returns: An instance of :class:`~lib.agw.ribbon.page.RibbonPage`.
+        :returns: An instance of :class:`~wx.lib.agw.ribbon.page.RibbonPage`.
         """
 
         return self._page
@@ -178,7 +178,7 @@ class RibbonBarEvent(wx.NotifyEvent):
         """
         Sets the page relating to this event.
 
-        :param `page`: an instance of :class:`~lib.agw.ribbon.page.RibbonPage`.
+        :param `page`: an instance of :class:`~wx.lib.agw.ribbon.page.RibbonPage`.
         """
 
         self._page = page
@@ -296,7 +296,7 @@ class RibbonBar(RibbonControl):
         """
         Adds a page to the :class:`RibbonBar`.
 
-        :param `page`: an instance of :class:`~lib.agw.ribbon.page.RibbonPage`.
+        :param `page`: an instance of :class:`~wx.lib.agw.ribbon.page.RibbonPage`.
         """
         
         info = RibbonPageTabInfo()
@@ -414,7 +414,7 @@ class RibbonBar(RibbonControl):
         sized correctly. Also calls :meth:`RibbonPage.Realize() <lib.agw.ribbon.page.RibbonPage.Realize>`
         on each child page.
         
-        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
         status = True
@@ -589,7 +589,7 @@ class RibbonBar(RibbonControl):
         """
         Set the active page, without triggering any events.
 
-        :param `page`: the page to activate, an instance of :class:`~lib.agw.ribbon.page.RibbonPage`.
+        :param `page`: the page to activate, an instance of :class:`~wx.lib.agw.ribbon.page.RibbonPage`.
 
         :returns: ``True`` if the specified page is now active, ``False`` if it could
          not be activated (for example because the given page is not a child of the
@@ -842,8 +842,8 @@ class RibbonBar(RibbonControl):
         """
         Set the art provider to be used be the ribbon bar.
 
-        Also sets the art provider on all current :class:`~lib.agw.ribbon.page.RibbonPage` children, and any
-        :class:`~lib.agw.ribbon.page.RibbonPage` children added in the future.
+        Also sets the art provider on all current :class:`~wx.lib.agw.ribbon.page.RibbonPage` children, and any
+        :class:`~wx.lib.agw.ribbon.page.RibbonPage` children added in the future.
 
         Note that unlike most other ribbon controls, the ribbon bar creates a default
         art provider when initialised, so an explicit call to :meth:`~RibbonBar.SetArtProvider` is
@@ -856,7 +856,7 @@ class RibbonBar(RibbonControl):
 
         :param `art`: an art provider.
 
-        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
         self._art = art
@@ -990,7 +990,7 @@ class RibbonBar(RibbonControl):
 
         :param `position`: an instance of :class:`wx.Point` in client coordinates.
 
-        :return: a tuple containing the tab index and the :class:`~lib.agw.ribbon.page.RibbonPage` if the :meth:`~RibbonBar.HitTestTabs`
+        :return: a tuple containing the tab index and the :class:`~wx.lib.agw.ribbon.page.RibbonPage` if the :meth:`~RibbonBar.HitTestTabs`
          successfully found such combination, or a tuple `(-1, None)` if no tab has been hit.
         """
 

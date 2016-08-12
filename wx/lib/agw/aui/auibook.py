@@ -20,7 +20,7 @@ customize the control's look and feel.
 
 An effort has been made to try to maintain an API as similar to that of :class:`Notebook`.
 
-The default theme that is used is :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
+The default theme that is used is :class:`~wx.lib.agw.aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
 look and feel. The theme can be changed by calling :meth:`AuiNotebook.SetArtProvider() <AuiNotebook.SetArtProvider>`.
 """
 
@@ -921,7 +921,7 @@ class AuiTabContainer(object):
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
          ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~wx.lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -2840,7 +2840,7 @@ class AuiNotebook(wx.Panel):
 
     An effort has been made to try to maintain an API as similar to that of :class:`Notebook`.
 
-    The default theme that is used is :class:`~lib.agw.aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
+    The default theme that is used is :class:`~wx.lib.agw.aui.tabart.AuiDefaultTabArt`, which provides a modern, glossy
     look and feel. The theme can be changed by calling :meth:`AuiNotebook.SetArtProvider`.
     """
 
@@ -2875,7 +2875,7 @@ class AuiNotebook(wx.Panel):
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
          ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~wx.lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -2930,7 +2930,7 @@ class AuiNotebook(wx.Panel):
         .. note::
 
            This method has been added to safely un-initialize the underlying
-           :class:`~lib.agw.aui.framemanager.AuiManager` which manages the :class:`AuiNotebook`
+           :class:`~wx.lib.agw.aui.framemanager.AuiManager` which manages the :class:`AuiNotebook`
            layout (i.e., tab split, re-ordering, tab floating etc...).
          
         """
@@ -3283,7 +3283,7 @@ class AuiNotebook(wx.Panel):
 
 
     def UpdateHintWindowSize(self):
-        """ Updates the :class:`~lib.agw.aui.framemanager.AuiManager` hint window size. """
+        """ Updates the :class:`~wx.lib.agw.aui.framemanager.AuiManager` hint window size. """
 
         size = self.CalculateNewSplitSize()
 
@@ -3369,7 +3369,7 @@ class AuiNotebook(wx.Panel):
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
          ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~wx.lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -4324,7 +4324,7 @@ class AuiNotebook(wx.Panel):
 
 
     def GetAuiManager(self):
-        """ Returns the associated :class:`~lib.agw.aui.framemanager.AuiManager`. """
+        """ Returns the associated :class:`~wx.lib.agw.aui.framemanager.AuiManager`. """
 
         return self._mgr
 
@@ -5252,7 +5252,7 @@ class AuiNotebook(wx.Panel):
         """
         Re-docks a floating :class:`AuiNotebook` tab in the original position, when possible.
 
-        :param `pane`: an instance of :class:`~lib.agw.aui.framemanager.AuiPaneInfo`.
+        :param `pane`: an instance of :class:`~wx.lib.agw.aui.framemanager.AuiPaneInfo`.
         """
         from . import framemanager
 

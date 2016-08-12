@@ -25,8 +25,8 @@
 # --------------------------------------------------------------------------- #
 
 """
-This module contains the definitions of :class:`~lib.agw.persist.persitencemanager.PersistentObject`
-and :class:`~lib.agw.persist.persitencemanager.PersistenceManager` objects.
+This module contains the definitions of :class:`~wx.lib.agw.persist.persitencemanager.PersistentObject`
+and :class:`~wx.lib.agw.persist.persitencemanager.PersistenceManager` objects.
 """
 
 import os
@@ -66,7 +66,7 @@ class PersistentObject(object):
 
         :param `window`: an instance of :class:`wx.Window`;
         :param `persistenceHandler`: if not ``None``, this should a custom handler derived
-         from :class:`~lib.agw.persist.persist_handlers.AbstractHandler`.
+         from :class:`~wx.lib.agw.persist.persist_handlers.AbstractHandler`.
         """
 
         self._name = window.GetName()
@@ -454,7 +454,7 @@ class PersistenceManager(object):
 
         :param `window`: an instance of :class:`wx.Window`;
         :param `persistenceHandler`: if not ``None``, this should a custom handler derived
-         from :class:`~lib.agw.persist.persist_handlers.AbstractHandler`.
+         from :class:`~wx.lib.agw.persist.persist_handlers.AbstractHandler`.
 
         .. note::
 

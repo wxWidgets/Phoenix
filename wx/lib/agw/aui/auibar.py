@@ -12,7 +12,7 @@
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
 """
-`auibar.py` contains an implementation of :class:`~lib.agw.aui.auibar.AuiToolBar`, which is a completely owner-drawn
+`auibar.py` contains an implementation of :class:`~wx.lib.agw.aui.auibar.AuiToolBar`, which is a completely owner-drawn
 toolbar perfectly integrated with the AUI layout system. This allows drag and drop of
 toolbars, docking/floating behaviour and the possibility to define "overflow" items
 in the toolbar itself.
@@ -1757,7 +1757,7 @@ class AuiToolBar(wx.Control):
          ``ITEM_RADIO``            The item in the :class:`AuiToolBar` is a toolbar radio item
          ========================  =============================
 
-        :param `target`: a custom string indicating that an instance of :class:`~lib.agw.aui.framemanager.AuiPaneInfo`
+        :param `target`: a custom string indicating that an instance of :class:`~wx.lib.agw.aui.framemanager.AuiPaneInfo`
          has been minimized into this toolbar.
         """
         
@@ -1809,7 +1809,7 @@ class AuiToolBar(wx.Control):
         :param string `long_help_string`: this string is shown in the statusbar (if any) of the parent
          frame when the mouse pointer is inside the tool.
         :param PyObject `client_data`: whatever Python object to associate with the toolbar item.
-        :param `target`: a custom string indicating that an instance of :class:`~lib.agw.aui.framemanager.AuiPaneInfo`
+        :param `target`: a custom string indicating that an instance of :class:`~wx.lib.agw.aui.framemanager.AuiPaneInfo`
          has been minimized into this toolbar.
         """
         
@@ -2441,7 +2441,7 @@ class AuiToolBar(wx.Control):
 
         :param integer `orientation`: either ``wx.VERTICAL`` or ``wx.HORIZONTAL``.
 
-        :note: This can be temporarily overridden by :class:`~lib.agw.aui.framemanager.AuiManager` when floating and
+        :note: This can be temporarily overridden by :class:`~wx.lib.agw.aui.framemanager.AuiManager` when floating and
          docking a :class:`AuiToolBar`.
         """
 
@@ -3240,7 +3240,7 @@ class AuiToolBar(wx.Control):
 
 
     def GetAuiManager(self):
-        """ Returns the :class:`~lib.agw.aui.framemanager.AuiManager` which manages the toolbar. """
+        """ Returns the :class:`~wx.lib.agw.aui.framemanager.AuiManager` which manages the toolbar. """
 
         try:
             return self._auiManager
@@ -3249,7 +3249,7 @@ class AuiToolBar(wx.Control):
 
 
     def SetAuiManager(self, auiManager):
-        """ Sets the :class:`~lib.agw.aui.framemanager.AuiManager` which manages the toolbar. """
+        """ Sets the :class:`~wx.lib.agw.aui.framemanager.AuiManager` which manages the toolbar. """
         
         self._auiManager = auiManager        
 
@@ -3986,7 +3986,7 @@ class AuiToolBar(wx.Control):
     
         
     def StartPreviewTimer(self):
-        """ Starts a timer in :class:`~lib.agw.aui.framemanager.AuiManager` to slide-in/slide-out the minimized pane. """
+        """ Starts a timer in :class:`~wx.lib.agw.aui.framemanager.AuiManager` to slide-in/slide-out the minimized pane. """
 
         self_name = self.IsPaneMinimized()
         if not self_name:
@@ -3997,7 +3997,7 @@ class AuiToolBar(wx.Control):
 
 
     def StopPreviewTimer(self):
-        """ Stops a timer in :class:`~lib.agw.aui.framemanager.AuiManager` to slide-in/slide-out the minimized pane. """
+        """ Stops a timer in :class:`~wx.lib.agw.aui.framemanager.AuiManager` to slide-in/slide-out the minimized pane. """
 
         self_name = self.IsPaneMinimized()
         if not self_name:

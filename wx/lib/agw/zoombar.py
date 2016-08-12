@@ -18,7 +18,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.zoombar.ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
+:class:`~wx.lib.agw.zoombar.ZoomBar` is a class that *appoximatively* mimics the behaviour of the Mac Dock,
 inside a :class:`Panel`.
 
 

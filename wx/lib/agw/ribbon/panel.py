@@ -54,7 +54,7 @@ Event Name                              Description
 See Also
 ========
 
-:class:`~lib.agw.ribbon.page.RibbonPage`
+:class:`~wx.lib.agw.ribbon.page.RibbonPage`
 
 """
 
@@ -123,7 +123,7 @@ class RibbonPanel(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window, typically a :class:`~lib.agw.ribbon.page.RibbonPage`, though
+        :param `parent`: pointer to a parent window, typically a :class:`~wx.lib.agw.ribbon.page.RibbonPage`, though
          it can be any window;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
@@ -182,11 +182,11 @@ class RibbonPanel(RibbonControl):
         """
         Set the art provider to be used.
 
-        Normally called automatically by :class:`~lib.agw.ribbon.page.RibbonPage` when the panel is created, or the
+        Normally called automatically by :class:`~wx.lib.agw.ribbon.page.RibbonPage` when the panel is created, or the
         art provider changed on the page. The new art provider will be propagated to the
         children of the panel.
 
-        Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
 
         :param `art`: an art provider.
 
@@ -775,7 +775,7 @@ class RibbonPanel(RibbonControl):
         """
         Realize all children of the panel.
 
-        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
         status = True

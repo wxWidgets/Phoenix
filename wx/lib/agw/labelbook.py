@@ -34,7 +34,7 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.labelbook.LabelBook` and :class:`~lib.agw.labelbook.FlatImageBook` are a quasi-full generic and owner-drawn
+:class:`~wx.lib.agw.labelbook.LabelBook` and :class:`~wx.lib.agw.labelbook.FlatImageBook` are a quasi-full generic and owner-drawn
 implementations of :class:`Notebook`.
 
 

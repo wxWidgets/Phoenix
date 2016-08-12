@@ -23,7 +23,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.flatmenu.FlatMenu` is a generic menu implementation.
+:class:`~wx.lib.agw.flatmenu.FlatMenu` is a generic menu implementation.
 
 
 Description
@@ -267,7 +267,7 @@ CPP_AUI = True
 try:
     import wx.aui as AUI
     AuiPaneInfo = AUI.AuiPaneInfo
-    """ Default AuiPaneInfo as in :class:`~lib.agw.aui.AuiPaneInfo`. """
+    """ Default AuiPaneInfo as in :class:`~wx.lib.agw.aui.AuiPaneInfo`. """
 except ImportError:
     CPP_AUI = False
 
@@ -3768,7 +3768,7 @@ class FlatMenuBar(wx.Panel):
         """
         Positions the control inside a wxAUI / PyAUI frame manager.
 
-        :param `mgr`: an instance of :class:`~lib.agw.aui.framemanager.AuiManager` or :class:`framemanager`;
+        :param `mgr`: an instance of :class:`~wx.lib.agw.aui.framemanager.AuiManager` or :class:`framemanager`;
         :param bool `fixToolbar`: ``True`` if :class:`FlatMenuBar` can not be floated.
         """
 

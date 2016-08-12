@@ -173,7 +173,7 @@ class RibbonGallery(RibbonControl):
         """
         Default class constructor.
 
-        :param `parent`: pointer to a parent window, typically a :class:`~lib.agw.ribbon.panel.RibbonPanel`;
+        :param `parent`: pointer to a parent window, typically a :class:`~wx.lib.agw.ribbon.panel.RibbonPanel`;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create an
          identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython

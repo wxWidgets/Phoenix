@@ -173,7 +173,7 @@ class RibbonToolBar(RibbonControl):
         """
         Default class constructor.
         
-        :param `parent`: pointer to a parent window, typically a :class:`~lib.agw.ribbon.panel.RibbonPanel`;
+        :param `parent`: pointer to a parent window, typically a :class:`~wx.lib.agw.ribbon.panel.RibbonPanel`;
         :param `id`: window identifier. If ``wx.ID_ANY``, will automatically create
          an identifier;
         :param `pos`: window position. ``wx.DefaultPosition`` indicates that wxPython
@@ -1001,7 +1001,7 @@ class RibbonToolBar(RibbonControl):
         Must be called after tools are added to the tool bar, as otherwise the newly
         added tools will not be displayed.
 
-        :note: Reimplemented from :class:`~lib.agw.ribbon.control.RibbonControl`.
+        :note: Reimplemented from :class:`~wx.lib.agw.ribbon.control.RibbonControl`.
         """
 
         if self._art == None:

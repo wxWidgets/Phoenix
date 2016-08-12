@@ -13,10 +13,10 @@
 #----------------------------------------------------------------------------
 """
 Tab art provider code - a tab provider provides all drawing functionality to
-the :class:`~lib.agw.aui.auibook.AuiNotebook`. This allows the
-:class:`~lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
+the :class:`~wx.lib.agw.aui.auibook.AuiNotebook`. This allows the
+:class:`~wx.lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
 
-By default, a :class:`~lib.agw.aui.auibook.AuiNotebook` uses an instance of this class
+By default, a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` uses an instance of this class
 called :class:`AuiDefaultTabArt` which provides bitmap art and a colour scheme that is
 adapted to the major platforms' look. You can either derive from that class to alter its
 behaviour or write a completely new tab art class.
@@ -112,10 +112,10 @@ class AuiCommandCapture(wx.EvtHandler):
 
 class AuiDefaultTabArt(object):
     """
-    Tab art provider code - a tab provider provides all drawing functionality to the :class:`~lib.agw.aui.auibook.AuiNotebook`.
-    This allows the :class:`~lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
+    Tab art provider code - a tab provider provides all drawing functionality to the :class:`~wx.lib.agw.aui.auibook.AuiNotebook`.
+    This allows the :class:`~wx.lib.agw.aui.auibook.AuiNotebook` to have a plugable look-and-feel.
 
-    By default, a :class:`~lib.agw.aui.auibook.AuiNotebook` uses an instance of this class called
+    By default, a :class:`~wx.lib.agw.aui.auibook.AuiNotebook` uses an instance of this class called
     :class:`AuiDefaultTabArt` which provides bitmap art and a colour scheme that is adapted to the major platforms'
     look. You can either derive from that class to alter its behaviour or write a
     completely new tab art class. Call :meth:`AuiNotebook.SetArtProvider() <lib.agw.aui.auibook.AuiNotebook.SetArtProvider>` to make use this
@@ -249,8 +249,8 @@ class AuiDefaultTabArt(object):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~wx.lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -1077,8 +1077,8 @@ class AuiSimpleTabArt(object):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~wx.lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -2110,7 +2110,7 @@ class FF2TabArt(AuiDefaultTabArt):
     def DrawTabBackground(self, dc, rect, focus, upperTabs):
         """
         Draws the tab background for the Firefox 2 style.
-        This is more consistent with :class:`~lib.agw.flatnotebook.FlatNotebook` than before.
+        This is more consistent with :class:`~wx.lib.agw.flatnotebook.FlatNotebook` than before.
 
         :param `dc`: a :class:`wx.DC` device context;
         :param wx.Rect `rect`: rectangle the tab should be confined to;
@@ -2526,8 +2526,8 @@ class ChromeTabArt(AuiDefaultTabArt):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by :class:`~wx.lib.agw.aui.framemanager.AuiManager` to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
