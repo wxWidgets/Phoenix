@@ -20,7 +20,7 @@
 
 """
 
-This module provides the :class:`~lib.pdfviewer.viewer.pdfViewer` to view PDF
+This module provides the :class:`~wx.lib.pdfviewer.viewer.pdfViewer` to view PDF
 files.
 """
 
@@ -778,7 +778,7 @@ class pypdfProcessor(object):
 
     def SetFont(self, pdfont, size):
         """
-        Returns :class:`Font` instance from supplied pdf font information.
+        Returns :class:`wx.Font` instance from supplied pdf font information.
         """
         self.knownfont = True
         pdfont = pdfont.lower()
@@ -1085,7 +1085,7 @@ class pdfPrintout(wx.Printout):
     def PrintDirect(self, page):
         """
         Provide the data for page by rendering the drawing commands
-        to the printer DC using :class:`~lib.pdfviewer.dcgraphics.dcGraphicsContext`.
+        to the printer DC using :class:`~wx.lib.pdfviewer.dcgraphics.dcGraphicsContext`.
         """
         pageno = page - 1       # zero based
         width = self.view.pagewidth
