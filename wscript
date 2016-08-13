@@ -526,7 +526,7 @@ def build(bld):
     makeETGRule(bld, 'etg/_richtext.py',   '_richtext',  'WXHTML WXRICHTEXT')
     makeETGRule(bld, 'etg/_media.py',      '_media',     'WXMEDIA')
     makeETGRule(bld, 'etg/_ribbon.py',     '_ribbon',    'WXRIBBON')
-    makeETGRule(bld, 'etg/_ribbon.py',     '_propgrid',  'WXPROPGRID')
+    makeETGRule(bld, 'etg/_propgrid.py',   '_propgrid',  'WXPROPGRID')
 
     if isDarwin:
         makeETGRule(bld, 'etg/_webkit.py', '_webkit',    'WXWEBKIT')
