@@ -38,6 +38,7 @@ def run():
 
 
     c = module.find('wxPropertyGridInterface')
+    c.abstract = True
     for m in c.findAll('GetIterator'):
         if m.type == 'wxPropertyGridConstIterator':
             m.ignore()
