@@ -12,7 +12,7 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"   
 MODULE    = "_propgrid"
-NAME      = "property"   # Base name of the file to generate to for this script
+NAME      = "propgridproperty"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
