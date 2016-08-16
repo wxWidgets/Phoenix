@@ -952,8 +952,8 @@ class ModernDockArt(AuiDefaultDockArt):
             self.hTheme1 = winxptheme.OpenThemeData(hwnd, "Window")
             self.usingTheme = True
 
-        if not self.hTheme1:
-            self.usingTheme = False
+            if not self.hTheme1:
+                self.usingTheme = False
 
         self._button_size = 13
 
