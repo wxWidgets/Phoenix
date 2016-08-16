@@ -12,6 +12,7 @@ class lib_agw_pyprogress_Tests(wtc.WidgetTestCase):
         dlg = PP.PyProgress(self.frame, -1, 'PyProgress Example',
                             'An Informative Message',
                             agwStyle=wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
+        dlg.Destroy()
                                  
     def test_lib_agw_pyprogressMethods(self):
         dlg = PP.PyProgress(self.frame, -1, 'PyProgress Example',
@@ -29,6 +30,7 @@ class lib_agw_pyprogress_Tests(wtc.WidgetTestCase):
         self.assertEqual(dlg.GetFirstGradientColour(), wx.Colour('white'))
         self.assertEqual(dlg.GetSecondGradientColour(), wx.Colour('blue'))
         self.assertTrue(dlg.GetAGWWindowStyleFlag() & wx.PD_REMAINING_TIME == 0)
+        dlg.Destroy()
 
     def test_lib_agw_pyprogressConstantsExists(self):
         PP.LAYOUT_MARGIN
