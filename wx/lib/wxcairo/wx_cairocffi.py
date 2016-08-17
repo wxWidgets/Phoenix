@@ -180,34 +180,3 @@ if 'wxGTK' in wx.PlatformInfo:
 
 
 #----------------------------------------------------------------------------
-
-#----------------------------------------------------------------------------
-
-_dlls = dict()
-
-def _findHelper(names, key, msg):
-    import ctypes
-    dll = _dlls.get(key, None)
-    if dll is not None:
-        return dll
-    location = None
-    for name in names:
-        location = ctypes.util.find_library(name)
-        if location:
-            break
-    if not location:
-        raise RuntimeError(msg)
-    dll = ctypes.CDLL(location)
-    _dlls[key] = dll
-    return dll
-
-
-def _findGDKLib():
-    if 'gtk3' in wx.PlatformInfo:
-        libname = 'gdk-3'
-    else:
-        libname = 'gdk-x11-2.0'
-    return _findHelper([libname], 'gdk',
-                       "Unable to find or load the GDK shared library")
-
-#----------------------------------------------------------------------------
