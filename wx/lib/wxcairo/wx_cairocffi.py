@@ -15,7 +15,21 @@
 wx.lib.wxcairo implementation functions using cairocffi.
 """
 
+import os
+import os.path as op
 import wx
+
+# On Windows try to get cairocffi to import the Cairo DLLs included with
+# wxPython instead of the first ones found on the system's PATH. Otherwise, if
+# CAIRO is set in the environment then use that one instead.  This hack is
+# accomplished by temporarily altering the PATH and then restoring it after
+# cairocffi has initialized.
+if os.name == 'nt':
+    _save_path = os.environ.get('PATH')
+    _cairo_path = os.environ.get('CAIRO')
+    if not _cairo_path:
+        _cairo_path = op.abspath(op.dirname(wx.__file__))
+        os.environ['PATH'] = _cairo_path + os.pathsep + _save_path
 
 import cairocffi
 from cairocffi import cairo as cairo_c
@@ -24,6 +38,10 @@ from cairocffi import ffi
 # Make it so subsequent `import cairo` statements still work as if it
 # was really PyCairo
 cairocffi.install_as_pycairo()
+
+# Now restore the original PATH
+if os.name == 'nt':
+    os.environ['PATH'] = _save_path
 
 
 #----------------------------------------------------------------------------
