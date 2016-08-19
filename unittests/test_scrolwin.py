@@ -61,7 +61,7 @@ class scrolwin_Tests(wtc.WidgetTestCase):
         self.commonBits(w)
         w.Refresh()
         self.myUpdate(w)
-        self.myYield()
+        self.waitFor(100)
         self.assertTrue(w.flag) # True if OnDraw was called
                 
 #---------------------------------------------------------------------------
