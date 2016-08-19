@@ -54,10 +54,14 @@ class msgdlg_Tests(wtc.WidgetTestCase):
 
     def test_gmsgdlg1(self):
         dlg = wx.GenericMessageDialog(None, 'Message', 'Caption')
+        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        dlg.ShowModal()
         dlg.Destroy()
         
     def test_gmsgdlg2(self):
         dlg = wx.GenericMessageDialog(self.frame, 'Message', 'Caption')
+        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        dlg.ShowModal()
         dlg.Destroy()
         
     def test_gmsgdlg3(self):
@@ -69,6 +73,8 @@ class msgdlg_Tests(wtc.WidgetTestCase):
         self.assertEqual(dlg.GetMessage(), 'message')
         self.assertEqual(dlg.GetOKLabel(), 'okidoky')
         self.assertEqual(dlg.GetCancelLabel(), 'bye-bye')
+        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        dlg.ShowModal()
         dlg.Destroy()
         
 #---------------------------------------------------------------------------
