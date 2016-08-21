@@ -38,6 +38,7 @@ def run():
     c = module.find('wxRibbonBar')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
+    c.find('SetArtProvider.art').transfer = True
 
 
     c = module.find('wxRibbonBarEvent')
