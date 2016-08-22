@@ -15,11 +15,14 @@ class radiobut_Tests(wtc.WidgetTestCase):
         b.Create(self.frame, label="radiobutton")
         
     def test_radiobutValue(self):
-        b = wx.RadioButton(self.frame, label='radiobutton')
+        b = wx.RadioButton(self.frame, label='radiobutton', style=wx.RB_GROUP)
+        b1 = wx.RadioButton(self.frame, label='radiobutton1')
+        b1.Value = True
+        self.assertTrue(b.GetValue() == False)
+        self.assertTrue(b1.GetValue() == True)
         b.Value = True
         self.assertTrue(b.GetValue() == True)
-        b.Value = False
-        self.assertTrue(b.GetValue() == False)
+        self.assertTrue(b1.GetValue() == False)
         
             
 #---------------------------------------------------------------------------
