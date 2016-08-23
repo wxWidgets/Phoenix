@@ -335,7 +335,6 @@ class RibbonFrame(wx.Frame):
 
         if event.GetGalleryItem() != None:
             if provider == self._ribbon.GetArtProvider():
-                provider = provider.Clone()
                 gallery.SetArtProvider(provider)
 
             provider.SetColour(RB.RIBBON_ART_GALLERY_HOVER_BACKGROUND_COLOUR,
