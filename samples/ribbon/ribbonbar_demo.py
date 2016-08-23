@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 
-import os
-import sys
+"""
+This module implements a demo application that shows many of the features of
+the RibbonBar and related classes found in the wx.ribbon module.  It is very
+similar to the pure-python implementation found in the wx.lib.agw.ribbon
+package.  In fact, this demo was ported from the AGW version of the demo with
+just a few relatively minor edits.
+"""
 
 import wx
 import wx.ribbon as RB
 
 import images
-
 
 
 # --------------------------------------------------- #
@@ -615,7 +619,7 @@ class RibbonFrame(wx.Frame):
             gallery.SetSelection(item)
 
             # Send an event to respond to the selection change
-            dummy = RB.RibbonGalleryEvent(RB.wxEVT_COMMAND_RIBBONGALLERY_SELECTED,
+            dummy = RB.RibbonGalleryEvent(RB.wxEVT_RIBBONGALLERY_SELECTED,
                                           gallery.GetId())
             dummy.SetEventObject(gallery)
             dummy.SetGallery(gallery)
