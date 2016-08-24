@@ -32,6 +32,8 @@ class GridFileDropTarget(wx.FileDropTarget):
             self.grid.AutoSizeColumn(col)
             self.grid.Refresh()
 
+        return True
+
 
 
 class FooTable(gridlib.GridTableBase):

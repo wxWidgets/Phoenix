@@ -24,6 +24,7 @@ class graphics_Tests(wtc.WidgetTestCase):
         self.assertTrue(gc.IsOk())
         
     def test_gcCreateBitmap(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         self.assertTrue(gc.IsOk())
         bmp = wx.Bitmap(100,100)
@@ -34,19 +35,23 @@ class graphics_Tests(wtc.WidgetTestCase):
         img = wx.Image(100,100)
         gb = gc.CreateBitmapFromImage(img)
         self.assertTrue(gb.IsOk())
-        gb = gc.CreateSubBitmap(gb, 5, 5, 25, 25)
-        self.assertTrue(gb.IsOk())
+        # CreateSubBitmap is not implemented for wxCairoRenderer
+        if 'wxGTK' not in wx.PlatformInfo:
+            gb = gc.CreateSubBitmap(gb, 5, 5, 25, 25)
+            self.assertTrue(gb.IsOk())
         
         img = gb.ConvertToImage()
         self.assertTrue(img.IsOk())
 
     def test_gcCreateBrush(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         gb = gc.CreateBrush(wx.Brush('blue'))
         self.assertTrue(gb.IsOk())
         self.assertTrue(isinstance(gb, wx.GraphicsBrush))
 
     def test_gcCreateFont(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         gf = gc.CreateFont(wx.NORMAL_FONT)
         self.assertTrue(gf.IsOk())
@@ -56,6 +61,7 @@ class graphics_Tests(wtc.WidgetTestCase):
         self.assertTrue(gf.IsOk())
 
     def test_gcCreatePen(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         gp = gc.CreatePen(wx.RED_PEN)
         self.assertTrue(gp.IsOk())
@@ -63,12 +69,14 @@ class graphics_Tests(wtc.WidgetTestCase):
 
 
     def test_gcCreatePath(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         p = gc.CreatePath()
         self.assertTrue(p.IsOk())
         self.assertTrue(isinstance(p, wx.GraphicsPath))
         
     def test_gcCreateMatrix(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         m = gc.CreateMatrix()
         self.assertTrue(m.IsOk())
@@ -82,6 +90,7 @@ class graphics_Tests(wtc.WidgetTestCase):
         
         
     def test_gcTextExtents(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         gf = gc.CreateFont(wx.NORMAL_FONT)
         gc.SetFont(gf)
@@ -95,6 +104,7 @@ class graphics_Tests(wtc.WidgetTestCase):
         
         
     def test_gcStrokeLines1(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         gc.SetPen(wx.Pen('blue', 2))
         
@@ -106,12 +116,14 @@ class graphics_Tests(wtc.WidgetTestCase):
         gc.StrokeLines(points)
 
     def test_gcStrokeLines2(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         gc.SetPen(wx.Pen('blue', 2))
         points = [ (5,5), (50,5), wx.Point2D(50,50), (5,5) ]        
         gc.StrokeLines(points)
         
     def test_gcStrokeLines3(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         gc.SetPen(wx.Pen('blue', 2))
         
@@ -120,6 +132,7 @@ class graphics_Tests(wtc.WidgetTestCase):
             gc.StrokeLines(points)
 
     def test_gcDrawLines(self):
+        self.waitFor(50)
         gc = wx.GraphicsContext.Create(self.frame)
         gc.SetPen(wx.Pen('blue', 2))
         points = [ (5,5), (50,5), wx.Point2D(50,50), (5,5) ]        
@@ -127,6 +140,7 @@ class graphics_Tests(wtc.WidgetTestCase):
         
         
     def test_gcGradientStops(self):
+        self.waitFor(50)
         gs1 = wx.GraphicsGradientStop('red', 0.25)
         gs2 = wx.GraphicsGradientStop('green', 0.50)
         gs3 = wx.GraphicsGradientStop('blue', 0.90)

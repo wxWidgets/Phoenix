@@ -38,7 +38,7 @@ def run():
     c = module.find('wxContextHelpButton')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixWindowClass(c)
-    
+
     
     c = module.find('wxHelpProvider')
     c.abstract = True

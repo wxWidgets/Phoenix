@@ -1,6 +1,6 @@
 """
 This module contains drawing routines and customizations for the AGW widgets
-:class:`~lib.agw.labelbook.LabelBook` and :class:`~lib.agw.flatmenu.FlatMenu`.
+:class:`~wx.lib.agw.labelbook.LabelBook` and :class:`~wx.lib.agw.flatmenu.FlatMenu`.
 """
 
 import wx

@@ -15,8 +15,8 @@ an asterisk were already present in :mod:`lib` before:
   advanced features like custom shapes and text animations;
 - AquaButton: this is another custom-drawn button class which
   *approximatively* mimics the behaviour of Aqua buttons on the Mac;
-- AUI: a pure-Python implementation of :mod:`~lib.agw.aui`, with many bug fixes and
-  new features like HUD docking and :class:`~lib.agw.aui.auibook.AuiNotebook` tab arts;
+- AUI: a pure-Python implementation of :mod:`~wx.lib.agw.aui`, with many bug fixes and
+  new features like HUD docking and :class:`~wx.lib.agw.aui.auibook.AuiNotebook` tab arts;
 - BalloonTip: allows you to display tooltips in a balloon style window
   (actually a frame), similarly to the Windows XP balloon help;
 - ButtonPanel (*): a panel with gradient background shading with the

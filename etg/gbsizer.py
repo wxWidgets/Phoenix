@@ -150,6 +150,14 @@ def run():
         if func.findItem('item'):
             func.find('item').transfer = True
 
+    c.addCppMethod('wxSizerItem*', 'Add',
+                   '(const wxSize& size, const wxGBPosition& pos, '
+                     'const wxGBSpan& span = wxDefaultSpan, int flag = 0, '
+                     'int border = 0, wxObject* userData /Transfer/ = NULL)',
+        doc="Add a spacer using a :class:`Size` object.",
+        body="return self->Add(size->x, size->y, *pos, *span, flag, border, userData);")
+
+
     c.addPyCode(
         "GridBagSizer.CheckForIntersectionPos = wx.deprecated(GridBagSizer.CheckForIntersection, 'Use CheckForIntersection instead.')")
     

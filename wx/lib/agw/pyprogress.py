@@ -26,7 +26,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.pyprogress.PyProgress` is similar to :class:`ProgressDialog` in indeterminated mode, but with a
+:class:`~wx.lib.agw.pyprogress.PyProgress` is similar to :class:`ProgressDialog` in indeterminated mode, but with a
 different gauge appearance and a different spinning behavior.
 
 

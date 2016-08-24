@@ -21,7 +21,7 @@ Description
 ===========
 
 Despite what the name may imply, it is not the top-level control for creating a
-ribbon interface - that is :class:`~lib.agw.ribbon.bar.RibbonBar`. Ribbon controls often have a region which
+ribbon interface - that is :class:`~wx.lib.agw.ribbon.bar.RibbonBar`. Ribbon controls often have a region which
 is "transparent", and shows the contents of the ribbon page or panel behind it.
 
 If implementing a new ribbon control, then it may be useful to realise that this

@@ -180,10 +180,10 @@ class ColourSelect(wx.lib.buttons.GenBitmapButton):
         if label:
             mdc = wx.MemoryDC(wx.Bitmap(1,1))
             w, h = mdc.GetTextExtent(label)
-            w += 6
-            h += 6
+            w += 8
+            h += 8
         else:
-            w, h = 20, 20
+            w, h = 22, 22
             
         size.width = size.width if size.width != -1 else w
         size.height = size.height if size.height != -1 else h

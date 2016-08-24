@@ -5,7 +5,7 @@ import  wx.xrc  as  xrc
 
 #----------------------------------------------------------------------
 
-resourceText = r'''<?xml version="1.0"?>
+resourceText = br'''<?xml version="1.0"?>
 <resource>
 
 <!-- Notice that the class is NOT a standard wx class -->
@@ -48,8 +48,7 @@ class MyCustomPanel(wx.Panel):
 # the different requirements are.
 class PreMyCustomPanel(wx.Panel):
     def __init__(self):
-        p = wx.PrePanel()
-        self.PostCreate(p)
+        wx.Panel.__init__(self)
 
     def Create(self, parent, id, pos, size, style, name):
         wx.Panel.Create(self, parent, id, pos, size, style, name)
@@ -84,12 +83,10 @@ class MyCustomPanelXmlHandler(xrc.XmlResourceHandler):
     def DoCreateResource(self):
         # NOTE: wxWindows can be created in either a single-phase or
         # in a two-phase way.  Single phase is what you normally do,
-        # and two-phase creates the instnace first, and then later
+        # and two-phase creates the instance first, and then later
         # creates the actual window when the Create method is called.
-        # (In wxPython the first phase is done using the wxPre*
-        # function, for example, wxPreFrame, wxPrePanel, etc.)
         #
-        # wxXmlResource supports either method, a premade instance can
+        # wxXmlResource supports either method, a pre-made instance can
         # be created and populated by xrc using the appropriate
         # LoadOn* method (such as LoadOnPanel) or xrc can create the
         # instance too, using the Load* method.  However this makes
@@ -98,7 +95,7 @@ class MyCustomPanelXmlHandler(xrc.XmlResourceHandler):
         # instance, then you can make the handle much simpler.  I'll
         # show both methods below.
 
-        if 1:
+        if 0:
             # The simple method assumes that there is no existing
             # instance.  Be sure of that with an assert.
             assert self.GetInstance() is None
@@ -156,9 +153,9 @@ class TestPanel(wx.Panel):
         line = wx.StaticLine(self, -1)
 
         # Load the resource
-        res = xrc.EmptyXmlResource()
+        res = xrc.XmlResource()
         res.InsertHandler(MyCustomPanelXmlHandler())
-        res.LoadFromString(resourceText)
+        res.LoadFromBuffer(resourceText)
 
         # Now create a panel from the resource data
         panel = res.LoadObject(self, "MyPanel", "MyCustomPanel")
@@ -171,7 +168,6 @@ class TestPanel(wx.Panel):
         sizer.Add(panel, 1, wx.EXPAND|wx.ALL, 5)
 
         self.SetSizer(sizer)
-        self.SetAutoLayout(True)
 
 
 #----------------------------------------------------------------------

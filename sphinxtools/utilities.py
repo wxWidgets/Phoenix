@@ -182,6 +182,8 @@ def replaceCppItems(line):
             item = 'string'
         elif 'wxCoord' == item:
             item = 'int'
+        elif 'time_t' == item:
+            item = 'int'
         elif item == 'char':
             item = 'int'
         elif item == 'double':

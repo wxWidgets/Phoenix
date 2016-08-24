@@ -87,7 +87,8 @@ class TestPanel(wx.Panel):
         text = self.inp.GetValue()
         self.inp.SetValue('')
         self.log.write('OnSendText: "%s"\n' % text)
-        self.process.GetOutputStream().write(text + '\n')
+        text += '\n'
+        self.process.GetOutputStream().write(text.encode('utf-8'))
         self.inp.SetFocus()
 
 

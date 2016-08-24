@@ -41,7 +41,7 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.balloontip.BalloonTip` is a class that allows you to display tooltips in a balloon style
+:class:`~wx.lib.agw.balloontip.BalloonTip` is a class that allows you to display tooltips in a balloon style
 window.
 
 

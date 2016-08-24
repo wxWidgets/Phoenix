@@ -56,7 +56,7 @@ def calculate_bezier(p, steps = 30):
 
 def compute_points(controlpoints, nsteps=30):
     """
-    Input 4 control points as :class:`RealPoint` and convert to vec2d instances.
+    Input 4 control points as :class:`wx.RealPoint` and convert to vec2d instances.
     compute the nsteps points on the resulting curve and return them
     as a list of :class:`wx.Point`
     """

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # demodata.py
 
 """
@@ -151,12 +149,12 @@ _treeList = [
         'GenericButtons',
         'GenericDirCtrl',
         'ItemsPicker',
-        'LEDNumberCtrl',
+        #'LEDNumberCtrl',  # TODO
         'MultiSash',
         'PlateButton',
         'PopupControl',
         'PyColourChooser',
-        'TreeListCtrl',
+        #'TreeListCtrl',  # TODO or toss it?
     ]),
 
     # controls coming from other libraries
@@ -172,7 +170,7 @@ _treeList = [
         'ComboCtrl',
         'ContextHelp',
         'DatePickerCtrl',
-        'DynamicSashWindow',
+        #'DynamicSashWindow',  # TODO
         'EditableListBox',
         'ExpandoTextCtrl',
         'FancyText',
@@ -183,7 +181,6 @@ _treeList = [
         'HTML2_WebView',
         'InfoBar',
         'IntCtrl',
-        'MVCTree',
         'MaskedEditControls',
         'MaskedNumCtrl',
         'MediaCtrl',
@@ -197,7 +194,7 @@ _treeList = [
         'ResizeWidget',
         'RichTextCtrl',
         'ScrolledPanel',
-        'SplitTree',
+        #'SplitTree',         # TODO or toss it?
         'StyledTextCtrl_1',
         'StyledTextCtrl_2',
         'TablePrint',
@@ -215,7 +212,6 @@ _treeList = [
         'LayoutAnchors',
         'LayoutConstraints',
         'Layoutf',
-        'RowColSizer',
         'ScrolledPanel',
         'SizedControls',
         'Sizers',

@@ -36,6 +36,8 @@ def run():
     
     c.addProperty("x GetX SetX")
     c.addProperty("y GetY SetY")
+    c.addProperty("X GetX SetX")
+    c.addProperty("Y GetY SetY")
     c.addProperty("leftIsDown LeftIsDown SetLeftDown")
     c.addProperty("middleIsDown MiddleIsDown SetMiddleDown")
     c.addProperty("rightIsDown RightIsDown SetRightDown")

@@ -27,7 +27,7 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.pybusyinfo.PyBusyInfo` constructs a busy info window and displays a message in it.
+:class:`~wx.lib.agw.pybusyinfo.PyBusyInfo` constructs a busy info window and displays a message in it.
 
 
 Description

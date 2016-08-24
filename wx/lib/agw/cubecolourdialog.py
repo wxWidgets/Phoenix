@@ -29,7 +29,7 @@
 # --------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.cubecolourdialog.CubeColourDialog` is an alternative implementation of :class:`wx.ColourDialog`.
+:class:`~wx.lib.agw.cubecolourdialog.CubeColourDialog` is an alternative implementation of :class:`wx.ColourDialog`.
 
 
 Description

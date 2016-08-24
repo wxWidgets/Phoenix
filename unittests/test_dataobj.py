@@ -117,6 +117,7 @@ class DataObjTests(wtc.WidgetTestCase):
         
         
     def test_DataObject2(self):
+        # More-or-less a duplicate of the above, but with a custom data format
         class MyDataObject(wx.DataObject):
             def __init__(self, value=''):
                 wx.DataObject.__init__(self)
@@ -211,6 +212,7 @@ class DataObjTests(wtc.WidgetTestCase):
             
         
     def test_DataObjectSimple3(self):
+        # More-or-less a duplicate of the above, but with a custom data format
         class MyDataObject(wx.DataObjectSimple):
             def __init__(self, value=''):
                 wx.DataObjectSimple.__init__(self)

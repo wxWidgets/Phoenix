@@ -41,8 +41,8 @@ replacement for the standard :class:`MessageDialog`, with these extra functional
 * Custom icons for the ``OK``, ``Yes``, ``No``, ``Cancel`` and ``Help`` buttons;
 * Possibility to set an icon to the dialog;
 * More visibility to the button getting the focus;
-* Support for Aqua buttons or Gradient buttons instead of themed ones (see :class:`~lib.agw.aquabutton.AquaButton`
-  and :class:`~lib.agw.gradientbutton.GradientButton`);
+* Support for Aqua buttons or Gradient buttons instead of themed ones (see :class:`~wx.lib.agw.aquabutton.AquaButton`
+  and :class:`~wx.lib.agw.gradientbutton.GradientButton`);
 * Possibility to automatically wrap long lines of text;
 * Good old Python code :-D .
 
@@ -621,8 +621,8 @@ class GenericMessageDialog(wx.Dialog):
          Window Styles               Hex Value   Description
          =========================== =========== ==================================================
          ``GMD_DEFAULT``                       0 Uses normal generic buttons
-         ``GMD_USE_AQUABUTTONS``            0x20 Uses :class:`~lib.agw.aquabutton.AquaButton` buttons instead of generic buttons.
-         ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses :class:`~lib.agw.gradientbutton.GradientButton` buttons instead of generic buttons.
+         ``GMD_USE_AQUABUTTONS``            0x20 Uses :class:`~wx.lib.agw.aquabutton.AquaButton` buttons instead of generic buttons.
+         ``GMD_USE_GRADIENTBUTTONS``        0x40 Uses :class:`~wx.lib.agw.gradientbutton.GradientButton` buttons instead of generic buttons.
          =========================== =========== ==================================================
 
          The styles above are mutually exclusive. The style chosen above can be combined with a

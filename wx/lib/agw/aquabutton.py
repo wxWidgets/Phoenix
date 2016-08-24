@@ -24,7 +24,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.aquabutton.AquaButton` is another custom-drawn button class which *approximatively* mimics
+:class:`~wx.lib.agw.aquabutton.AquaButton` is another custom-drawn button class which *approximatively* mimics
 the behaviour of Aqua buttons on the Mac.
 
 

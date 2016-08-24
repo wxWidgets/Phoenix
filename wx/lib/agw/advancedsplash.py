@@ -36,7 +36,7 @@
 
 
 """
-:class:`~lib.agw.advancedsplash.AdvancedSplash` tries to reproduce the behavior of :class:`~adv.SplashScreen`, with
+:class:`~wx.lib.agw.advancedsplash.AdvancedSplash` tries to reproduce the behavior of :class:`~adv.SplashScreen`, with
 some enhancements.
 
 

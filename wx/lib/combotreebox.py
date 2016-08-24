@@ -213,7 +213,7 @@ class BasePopupFrame(wx.Frame):
     def _layoutInterior(self):
         frameSizer = wx.BoxSizer(wx.HORIZONTAL)
         frameSizer.Add(self._tree, flag=wx.EXPAND, proportion=1)
-        self.SetSizerAndFit(frameSizer)
+        self.SetSizerAndFit(frameSizer) #****
 
     def _bindEventHandlers(self):
         self._tree.Bind(wx.EVT_CHAR, self.OnChar)
@@ -870,21 +870,6 @@ class MSWComboTreeBox(NativeComboTreeBox):
         super(MSWComboTreeBox, self).NotifyNoItemSelected(*args, **kwargs)
 
 
-class MACComboTreeBox(NativeComboTreeBox):
-    def _createPopupFrame(self):
-        return MACPopupFrame(self)
-
-    def _createButton(self):
-        return self.GetChildren()[0] # The choice button
-
-    def _keyShouldNavigate(self, keyEvent):
-        return False # No navigation with up and down on wxMac
-
-    def _keyShouldPopUpTree(self, keyEvent):
-        return super(MACComboTreeBox, self)._keyShouldPopUpTree(keyEvent) or \
-            keyEvent.GetKeyCode() == wx.WXK_DOWN
-
-
 class GTKComboTreeBox(BaseComboTreeBox, wx.Panel):
     """
     The ComboTreeBox widget for wxGTK. This is actually a work
@@ -915,6 +900,26 @@ class GTKComboTreeBox(BaseComboTreeBox, wx.Panel):
         panelSizer.Add(self._text, flag=wx.EXPAND, proportion=1)
         panelSizer.Add(self._button)
         self.SetSizerAndFit(panelSizer)
+
+
+# class MACComboTreeBox(NativeComboTreeBox):
+#     def _createPopupFrame(self):
+#         return MACPopupFrame(self)
+#
+#     def _createButton(self):
+#         return self.GetChildren()[0] # The choice button
+#
+#     def _keyShouldNavigate(self, keyEvent):
+#         return False # No navigation with up and down on wxMac
+#
+#     def _keyShouldPopUpTree(self, keyEvent):
+#         return super(MACComboTreeBox, self)._keyShouldPopUpTree(keyEvent) or \
+#             keyEvent.GetKeyCode() == wx.WXK_DOWN
+
+
+# The MAC implementation based on the NativeComboTreeBox is no longer working,
+# so let's use the GTKComboTreeBox instead.
+MACComboTreeBox = GTKComboTreeBox
 
 
 # ---------------------------------------------------------------------------

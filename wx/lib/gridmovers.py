@@ -121,7 +121,7 @@ class ColDragWindow(wx.Window):
         if x == pos:
             self.Refresh()              # Need to display insertion point
         else:
-            self.MoveXY(pos,y)
+            self.Move(pos,y)
 
     def GetMoveColumn(self):
         return self.moveColumn
@@ -184,7 +184,7 @@ class RowDragWindow(wx.Window):
         if y == pos:
             self.Refresh()              # Need to display insertion point
         else:
-            self.MoveXY(x,pos)
+            self.Move(x,pos)
 
     def GetMoveRow(self):
         return self.moveRow
@@ -248,6 +248,13 @@ class GridColMover(wx.EvtHandler):
         self.Bind(wx.EVT_MOTION, self.OnMouseMove)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnPress)
         self.Bind(wx.EVT_LEFT_UP, self.OnRelease)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+
+
+    def OnDestroy(self, evt):
+        assert self.lwin.GetEventHandler() is self
+        self.lwin.PopEventHandler(True)
+
 
     def OnMouseMove(self,evt):
         if not self.isDragging:
@@ -373,6 +380,13 @@ class GridRowMover(wx.EvtHandler):
         self.Bind(wx.EVT_MOTION, self.OnMouseMove)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnPress)
         self.Bind(wx.EVT_LEFT_UP, self.OnRelease)
+        self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+
+
+    def OnDestroy(self, evt):
+        assert self.lwin.GetEventHandler() is self
+        self.lwin.PopEventHandler(True)
+
 
     def OnMouseMove(self,evt):
         if not self.isDragging:

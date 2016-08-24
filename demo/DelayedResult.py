@@ -25,20 +25,19 @@ class FrameSimpleDelayedBase(wx.Frame):
     def __init__(self, *args, **kwds):
         wx.Frame.__init__(self, *args, **kwds)
         pnl = wx.Panel(self)
-        self.checkboxUseDelayed = wx.CheckBox(pnl, -1, "Using delayedresult")
+        self.textUseDelayed = wx.StaticText(pnl, -1, "NOT using delayedresult")
         self.buttonGet = wx.Button(pnl, -1, "Get")
         self.buttonAbort = wx.Button(pnl, -1, "Abort")
         self.slider = wx.Slider(pnl, -1, 0, 0, 10, size=(100,-1),
                                 style=wx.SL_HORIZONTAL|wx.SL_AUTOTICKS)
         self.textCtrlResult = wx.TextCtrl(pnl, -1, "", style=wx.TE_READONLY)
 
-        self.checkboxUseDelayed.SetValue(1)
-        self.checkboxUseDelayed.Enable(False)
         self.buttonAbort.Enable(False)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
+        vsizer = wx.BoxSizer(wx.VERTICAL)
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
-        vsizer.Add(self.checkboxUseDelayed, 0, wx.ALL, 10)
+        vsizer.Add(self.textUseDelayed, 0, wx.ALL, 10)
         hsizer.Add(self.buttonGet, 0, wx.ALL, 5)
         hsizer.Add(self.buttonAbort, 0, wx.ALL, 5)
         hsizer.Add(self.slider, 0, wx.ALL, 5)
@@ -52,7 +51,6 @@ class FrameSimpleDelayedBase(wx.Frame):
 
 
 
-
 class FrameSimpleDelayed(FrameSimpleDelayedBase):
     """This demos simplistic use of delayedresult module."""
     
@@ -61,14 +59,19 @@ class FrameSimpleDelayed(FrameSimpleDelayedBase):
         self.jobID = 0
         self.abortEvent = delayedresult.AbortEvent()
         self.Bind(wx.EVT_CLOSE, self.handleClose)
+        self.textUseDelayed.SetLabel("USING delayedresult")
+
 
     def setLog(self, log):
         self.log = log
 
+
     def handleClose(self, event):
-        """Only needed because in demo, closing the window does not kill the 
+        """
+        Only needed because in demo, closing the window does not kill the
         app, so worker thread continues and sends result to dead frame; normally
-        your app would exit so this would not happen."""
+        your app would exit so this would not happen.
+        """
         if self.buttonAbort.IsEnabled():
             self.log( "Exiting: Aborting job %s" % self.jobID )
             self.abortEvent.set()
@@ -88,9 +91,11 @@ class FrameSimpleDelayed(FrameSimpleDelayedBase):
 
                         
     def _resultProducer(self, jobID, abortEvent):
-        """Pretend to be a complex worker function or something that takes 
+        """
+        Pretend to be a complex worker function or something that takes
         long time to run due to network access etc. GUI will freeze if this 
-        method is not called in separate thread."""
+        method is not called in separate thread.
+        """
         import time
         count = 0
         while not abortEvent() and count < 50:
@@ -112,7 +117,7 @@ class FrameSimpleDelayed(FrameSimpleDelayedBase):
         assert jobID == self.jobID
         try:
             result = delayedResult.get()
-        except Exception, exc:
+        except Exception as exc:
             self.log( "Result for job %s raised exception: %s" % (jobID, exc) )
             return
         
@@ -125,6 +130,7 @@ class FrameSimpleDelayed(FrameSimpleDelayedBase):
         self.buttonAbort.Enable(False)
 
 
+
 class FrameSimpleDirect(FrameSimpleDelayedBase):
     """This does not use delayedresult so the GUI will freeze while
     the GET is taking place."""
@@ -132,15 +138,17 @@ class FrameSimpleDirect(FrameSimpleDelayedBase):
     def __init__(self, *args, **kwargs):
         self.jobID = 1
         FrameSimpleDelayedBase.__init__(self, *args, **kwargs)
-        self.checkboxUseDelayed.SetValue(False)
-                
+
+
     def setLog(self, log):
         self.log = log
-        
+
+
     def handleGet(self, event): 
-        """Use delayedresult, this will compute result in separate
-        thread, and will affect GUI response because a thread is not
-        used."""
+        """
+        Not using delayedresult, this will compute result in the same thread,
+        and will affect GUI response because a thread is not used.
+        """
         self.buttonGet.Enable(False)
         self.buttonAbort.Enable(True)
 
@@ -148,18 +156,23 @@ class FrameSimpleDirect(FrameSimpleDelayedBase):
         result = self._resultProducer(self.jobID)
         self._resultConsumer( result )
 
+
     def _resultProducer(self, jobID):
-        """Pretend to be a complex worker function or something that takes 
+        """
+        Pretend to be a complex worker function or something that takes
         long time to run due to network access etc. GUI will freeze if this 
-        method is not called in separate thread."""
+        method is not called in separate thread.
+        """
         import time
         time.sleep(5)
         return jobID
 
+
     def handleAbort(self, event):
         """can never be called"""
         pass
-        
+
+
     def _resultConsumer(self, result):
         # output result
         self.log( "Got result for job %s: %s" % (self.jobID, result) )

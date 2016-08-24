@@ -98,8 +98,8 @@ def run():
         
 
     c.addPublic()
-    c.addCppMethod('bool', 'LoadFromString', '(wxPyBuffer* data)',
-        doc="Load the resource from a string or other data buffer compatible object.",
+    c.addCppMethod('bool', 'LoadFromBuffer', '(wxPyBuffer* data)',
+        doc="Load the resource from a bytes string or other data buffer compatible object.",
         #protection='public', 
         body="""\
             static int s_memFileIdx = 0;
@@ -125,6 +125,7 @@ def run():
             bool retval = self->Load(wxT("memory:") + filename );
             return retval;
             """)
+    c.addPyCode("XmlResource.LoadFromString = wx.deprecated(XmlResource.LoadFromBuffer, 'Use LoadFromBuffer instead')")
     
     c.find('AddHandler.handler').transfer = True
     c.find('InsertHandler.handler').transfer = True

@@ -36,7 +36,7 @@
 
 
 """
-:class:`~lib.agw.speedmeter.SpeedMeter` tries to reproduce the behavior of some car controls (but not only),
+:class:`~wx.lib.agw.speedmeter.SpeedMeter` tries to reproduce the behavior of some car controls (but not only),
 by creating an "angular" control (actually, circular).
 
 

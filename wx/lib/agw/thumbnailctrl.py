@@ -33,7 +33,7 @@
 
 
 """
-:class:`~lib.agw.thumbnailctrl.ThumbnailCtrl` is a widget that can be used to display a series of images in
+:class:`~wx.lib.agw.thumbnailctrl.ThumbnailCtrl` is a widget that can be used to display a series of images in
 a "thumbnail" format.
 
 

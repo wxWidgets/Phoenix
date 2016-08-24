@@ -2,7 +2,7 @@
 
 import wx
 import wx.adv
-from wx.adv import CalendarCtrl
+from wx.adv import CalendarCtrl, GenericCalendarCtrl, CalendarDateAttr
 
 #----------------------------------------------------------------------
 
@@ -28,13 +28,13 @@ class TestPanel(wx.Panel):
         txt = wx.StaticText(self, -1, description)
         txt.Wrap(300)
 
-        # cal = self.cal = GenericCalendarCtrl(self, -1, wx.DateTime().Today(),
-                             # style = wx.adv.CAL_SHOW_HOLIDAYS
-                             # | wx.adv.CAL_SUNDAY_FIRST
-                             # | wx.adv.CAL_SEQUENTIAL_MONTH_SELECTION
-                             # )
+        cal = GenericCalendarCtrl(self, -1, wx.DateTime().Today(),
+                                  style = wx.adv.CAL_SHOW_HOLIDAYS
+                                        | wx.adv.CAL_SUNDAY_FIRST
+                                        | wx.adv.CAL_SEQUENTIAL_MONTH_SELECTION
+                                )
 
-        # cal2 = wxcal.GenericCalendarCtrl(self, -1, wx.DateTime().Today())
+        cal2 = GenericCalendarCtrl(self, -1, wx.DateTime().Today())
 
 
         # Track a few holidays
@@ -43,9 +43,9 @@ class TestPanel(wx.Panel):
 
 
         # bind some event handlers to each calendar
-        for c in [native]:#, cal, cal2
+        for c in [native, cal, cal2]:
             c.Bind(wx.adv.EVT_CALENDAR,                 self.OnCalSelected)
-            ## c.Bind(wx.adv.EVT_CALENDAR_MONTH,           self.OnChangeMonth)
+            c.Bind(wx.adv.EVT_CALENDAR_MONTH,           self.OnChangeMonth)
             c.Bind(wx.adv.EVT_CALENDAR_SEL_CHANGED,     self.OnCalSelChanged)
             c.Bind(wx.adv.EVT_CALENDAR_WEEKDAY_CLICKED, self.OnCalWeekdayClicked)
 
@@ -53,15 +53,17 @@ class TestPanel(wx.Panel):
         fgs = wx.FlexGridSizer(cols=2, hgap=50, vgap=50)
         fgs.Add(native)
         fgs.Add(txt)
-        # fgs.Add(cal)
-        # fgs.Add(cal2)
+        fgs.Add(cal)
+        fgs.Add(cal2)
         box = wx.BoxSizer()
         box.Add(fgs, 1, wx.EXPAND|wx.ALL, 25)
         self.SetSizer(box)
 
 
     def OnCalSelected(self, evt):
-        self.log.write('OnCalSelected: %s\n' % evt.GetDate())
+        self.log.write('OnCalSelected: %s\n' % evt.Date)
+        if evt.Date.month == wx.DateTime.Aug and evt.Date.day == 14:
+            self.log.write("HAPPY BIRTHDAY!")
 
     def OnCalWeekdayClicked(self, evt):
         self.log.write('OnCalWeekdayClicked: %s\n' % evt.GetWeekDay())
@@ -86,7 +88,7 @@ class TestPanel(wx.Panel):
 
         # August 14th is a special day, mark it with a blue square...
         if cur_month == 8:
-            attr = wxcal.CalendarDateAttr(border=wx.adv.CAL_BORDER_SQUARE,
+            attr = CalendarDateAttr(border=wx.adv.CAL_BORDER_SQUARE,
                                           colBorder="blue")
             cal.SetAttr(14, attr)
         else:

@@ -24,7 +24,7 @@ class TablePanel(wx.Panel):
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add((20, 30))
-        keys = buttonDefs.keys()
+        keys = list(buttonDefs.keys())
         keys.sort()
 
         for k in keys:
@@ -38,8 +38,8 @@ class TablePanel(wx.Panel):
 
     def OnButton(self, evt):
         funct = buttonDefs[evt.GetId()][0]
-        code = 'self.' + funct + '()'
-        eval(code)
+        funct = getattr(self, funct)
+        funct()
 
     def ReadData(self):
         test_file = "./data/testtable.txt"

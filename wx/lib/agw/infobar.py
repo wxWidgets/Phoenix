@@ -53,7 +53,7 @@ user to react to the information presented. It always has a close button at the 
 the user to dismiss it so it isn't necessary to provide a button just to close it.
 
 :class:`InfoBar` calls its parent `Layout()` method (if its parent is **not** managed by :class:`~aui.framemanager`
-or :class:`~lib.agw.aui.framemanager.AuiManager`) and assumes that it will change the parent layout appropriately depending
+or :class:`~wx.lib.agw.aui.framemanager.AuiManager`) and assumes that it will change the parent layout appropriately depending
 on whether the info bar itself is shown or hidden. Usually this is achieved by simply using a
 sizer for the parent window layout and adding wxInfoBar to this sizer as one of the items.
 Considering the usual placement of the info bars, normally this sizer should be a vertical
@@ -547,7 +547,7 @@ class InfoBar(wx.Control):
     def UpdateParent(self):
         """
         Updates the parent layout appearance, but only if this :class:`InfoBar` parent is **not** managed
-        by :class:`framemanager` or :class:`~lib.agw.aui.framemanager.AuiManager`.
+        by :class:`framemanager` or :class:`~wx.lib.agw.aui.framemanager.AuiManager`.
         """
         
         parent = self.GetParent()
@@ -662,7 +662,7 @@ class InfoBar(wx.Control):
 
         This method hides the window and lays out the parent window to account for
         its disappearance (unlike a simple `Hide()`), but only if this :class:`InfoBar`
-        parent is **not** managed by :class:`framemanager` or :class:`~lib.agw.aui.framemanager.AuiManager`.
+        parent is **not** managed by :class:`framemanager` or :class:`~wx.lib.agw.aui.framemanager.AuiManager`.
         """
         
         self.DoHide()

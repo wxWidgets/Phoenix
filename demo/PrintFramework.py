@@ -34,7 +34,7 @@ class MyPrintout(wx.Printout):
 
     def HasPage(self, page):
         self.log.WriteText("MyPrintout.HasPage: %d\n" % page)
-        if page <= 2:
+        if page <= 2: # we only have 2 pages in this document
             return True
         else:
             return False
@@ -80,7 +80,6 @@ class MyPrintout(wx.Printout):
         dc.SetDeviceOrigin(int(posX), int(posY))
 
         #-------------------------------------------
-
         self.canvas.DoDrawing(dc, True)
         dc.DrawText("Page: %d" % page, marginX/2, maxY-marginY)
 

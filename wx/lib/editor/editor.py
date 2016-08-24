@@ -16,7 +16,7 @@
 #
 #
 # Created:     15-Dec-1999
-# Copyright:   (c) 1999 by Dirk Holtwick, 1999
+# Copyright:   (c) 1999-2016 by Dirk Holtwick, 1999
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
@@ -33,8 +33,8 @@ import  time
 
 import  wx
 
-import  selection
-import  images
+from . import selection
+from . import images
 
 #----------------------------
 
@@ -133,8 +133,6 @@ class Editor(wx.ScrolledWindow):
             font = wx.Font(10, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         else:
             font = wx.Font(12, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
-        if wx.Platform == "__WXMAC__":
-            font.SetNoAntiAliasing()
         return font
 
     def UnixKeyHack(self, key):
@@ -162,18 +160,18 @@ class Editor(wx.ScrolledWindow):
         self.bw, self.bh = self.GetClientSize()
 
         if wx.Platform == "__WXMSW__":
-            self.sh = self.bh / self.fh
-            self.sw = (self.bw / self.fw) - 1
+            self.sh = int(self.bh / self.fh)
+            self.sw = int(self.bw / self.fw) - 1
         else:
-            self.sh = self.bh / self.fh
+            self.sh = int(self.bh / self.fh)
             if self.LinesInFile() >= self.sh:
                 self.bw = self.bw - wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
-                self.sw = (self.bw / self.fw) - 1
+                self.sw = int(self.bw / self.fw) - 1
 
-            self.sw = (self.bw / self.fw) - 1
+            self.sw = int(self.bw / self.fw) - 1
             if self.CalcMaxLineLen() >= self.sw:
                 self.bh = self.bh - wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y)
-                self.sh = self.bh / self.fh
+                self.sh = int(self.bh / self.fh)
 
 
     def UpdateView(self, dc = None):
@@ -246,6 +244,7 @@ class Editor(wx.ScrolledWindow):
             dc.SetBackgroundMode(wx.SOLID)
             dc.SetTextBackground(self.bgColor)
             dc.SetTextForeground(self.fgColor)
+            dc.SetBackground(wx.Brush(self.bgColor))
             dc.Clear()
             for line in range(self.sy, self.sy + self.sh):
                 self.DrawLine(line, dc)
@@ -291,7 +290,7 @@ class Editor(wx.ScrolledWindow):
         szy = self.fh
         x = xp * szx
         y = yp * szy
-        dc.Blit(x,y, szx,szy, dc, x,y, wx.SRC_INVERT)
+        dc.Blit(x,y, szx,szy, dc, x,y, wx.XOR)
         self.sco_x = xp
         self.sco_y = yp
 
@@ -448,7 +447,7 @@ class Editor(wx.ScrolledWindow):
 ##------------------------ mousing functions
 
     def MouseToRow(self, mouseY):
-        row  = self.sy + (mouseY/ self.fh)
+        row  = self.sy + int(mouseY / self.fh)
         if self.AboveScreen(row):
             self.HandleAboveScreen(row)
         elif self.BelowScreen(row):
@@ -457,7 +456,7 @@ class Editor(wx.ScrolledWindow):
             self.cy  = min(row, self.LinesInFile() - 1)
 
     def MouseToCol(self, mouseX):
-        col = self.sx + (mouseX / self.fw)
+        col = self.sx + int(mouseX / self.fw)
         if self.LeftOfScreen(col):
             self.HandleLeftOfScreen(col)
         elif self.RightOfScreen(col):

@@ -13,8 +13,8 @@
 #
 #----------------------------------------------------------------------------
 """
-This module provides the :class:`~lib.pdfviewer.buttonpanel.pdfButtonPanel`
-which can be used together with the :class:`~lib.pdfviewer.viewer.pdfViewer`.
+This module provides the :class:`~wx.lib.pdfviewer.buttonpanel.pdfButtonPanel`
+which can be used together with the :class:`~wx.lib.pdfviewer.viewer.pdfViewer`.
 """
 import sys, os, time
 
@@ -24,7 +24,7 @@ import wx.lib.agw.buttonpanel as bp
 
 class pdfButtonPanel(bp.ButtonPanel):
     """
-    :class:`~lib.pdfviewer.buttonpanel.pdfButtonPanel` is derived 
+    :class:`~wx.lib.pdfviewer.buttonpanel.pdfButtonPanel` is derived
     from wx.lib.agw.buttonpanel and provides buttons to manipulate the viewed
     PDF, e.g. zoom, save, print etc.
     """

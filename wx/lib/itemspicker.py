@@ -10,7 +10,7 @@
 # Licence:      wxPython license
 # Tags:         phoenix-port
 #----------------------------------------------------------------------------
-'''
+"""
 Created on Oct 3, 2010
 
 @authors: Daphna Rosenbom,Gitty Zinger,Moshe Cohavi and Yoav Glazner
@@ -22,7 +22,8 @@ items_picker.ItemsPicker:
   - De-Selection is done by the Remove button or Double Click,</LI>
 
   Derived from wxPanel
-'''
+"""
+
 import wx
 __version__ = 0.1
 
@@ -48,18 +49,18 @@ class IpSelectionChanged(wx.PyCommandEvent):
 
 
 class ItemsPicker(wx.Panel):
-    '''
+    """
     ItemsPicker is a widget that allows the user to form a set of picked
     items out of a given list
-    '''
+    """
     def __init__(self, parent, id=wx.ID_ANY, choices = [],
                  label = '', selectedLabel = '',
                  ipStyle = IP_DEFAULT_STYLE,
                  *args, **kw):
-        '''
+        """
         ItemsPicker(parent, choices = [], label = '', selectedLabel = '',
                     ipStyle = IP_DEFAULT_STYLE)
-        '''
+        """
         wx.Panel.__init__(self, parent, id, *args, **kw)
         self._ipStyle = ipStyle
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -72,14 +73,14 @@ class ItemsPicker(wx.Panel):
         
         
     def SetItems(self, items):
-        '''SetItems(self, items)=> None
-        items - Sequence of strings that the user can pick from''' 
+        """SetItems(self, items)=> None
+        items - Sequence of strings that the user can pick from"""
         return self._source.SetItems(items)    
     
     
     def GetItems(self): 
-        '''GetItems(self)=> items
-        returns list of strings that the user can pick from''' 
+        """GetItems(self)=> items
+        returns list of strings that the user can pick from"""
         return self._source.GetItems()
     
     
@@ -89,16 +90,16 @@ class ItemsPicker(wx.Panel):
     
      
     def GetSelections(self):
-        '''GetSelections(self)=>items
+        """GetSelections(self)=>items
         returns list of strings that were selected
-        ''' 
+        """
         return self._dest.GetItems()
     
     
     def SetSelections(self, items): 
-        '''SetSelections(self, items)=>None
+        """SetSelections(self, items)=>None
         items - Sequence of strings to be selected
-        The items are displayed in the selection part of the widget'''
+        The items are displayed in the selection part of the widget"""
         assert len(items)==len(set(items)),"duplicate items are not allowed"
         if items != self._dest.GetItems():
             self._dest.SetItems(items)

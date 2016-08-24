@@ -23,11 +23,11 @@ This allows a ribbon bar to have a pluggable look-and-feel, while retaining the 
 underlying behaviour. As a single art provider is used for all ribbon components, a
 ribbon bar usually has a consistent (though unique) appearance.
 
-By default, a :class:`~lib.agw.ribbon.bar.RibbonBar` uses an instance of a class called
-:class:`~lib.agw.ribbon.art_default.RibbonDefaultArtProvider`,
-which resolves to :class:`~lib.agw.ribbon.art_aui.RibbonAUIArtProvider`,
-:class:`~lib.agw.ribbon.art_msw.RibbonMSWArtProvider`, or
-:class:`~lib.agw.ribbon.art_osx.RibbonOSXArtProvider` - whichever is most appropriate
+By default, a :class:`~wx.lib.agw.ribbon.bar.RibbonBar` uses an instance of a class called
+:class:`~wx.lib.agw.ribbon.art_default.RibbonDefaultArtProvider`,
+which resolves to :class:`~wx.lib.agw.ribbon.art_aui.RibbonAUIArtProvider`,
+:class:`~wx.lib.agw.ribbon.art_msw.RibbonMSWArtProvider`, or
+:class:`~wx.lib.agw.ribbon.art_osx.RibbonOSXArtProvider` - whichever is most appropriate
 to the current platform. These art providers are all
 slightly configurable with regard to colours and fonts, but for larger modifications,
 you can derive from one of these classes, or write a completely new art provider class.
@@ -38,7 +38,7 @@ Call :meth:`RibbonBar.SetArtProvider() <lib.agw.ribbon.bar.RibbonBar.SetArtProvi
 See Also
 ========
 
-:class:`~lib.agw.ribbon.bar.RibbonBar`
+:class:`~wx.lib.agw.ribbon.bar.RibbonBar`
 """
 
 import wx

@@ -25,7 +25,7 @@
 
 
 """
-:class:`~lib.agw.floatspin.FloatSpin` implements a floating point :class:`SpinCtrl`.
+:class:`~wx.lib.agw.floatspin.FloatSpin` implements a floating point :class:`SpinCtrl`.
 
 
 Description

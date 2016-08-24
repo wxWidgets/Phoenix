@@ -179,17 +179,16 @@ def run():
         static PyObject* _readlinesHelper(wxInputStream* self, 
                                           bool useSizeHint=false, ulong sizehint=0) {
             PyObject* pylist;
-    
+
             // init list
-            wxPyBlock_t blocked = wxPyBeginBlockThreads();
-            pylist = PyList_New(0);
-            wxPyEndBlockThreads(blocked);
-    
-            if (!pylist) {
-                wxPyBlock_t blocked = wxPyBeginBlockThreads();
-                PyErr_NoMemory();
-                wxPyEndBlockThreads(blocked);
-                return NULL;
+            {
+                wxPyThreadBlocker blocker;
+                pylist = PyList_New(0);
+
+                if (!pylist) {
+                    PyErr_NoMemory();
+                    return NULL;
+                }
             }
     
             // read sizehint bytes or until EOF
@@ -197,24 +196,21 @@ def run():
             for (i=0; (self->CanRead()) && (useSizeHint || (i < sizehint));) {
                 PyObject* s = _wxInputStream_readline(self);
                 if (s == NULL) {
-                    wxPyBlock_t blocked = wxPyBeginBlockThreads();
+                    wxPyThreadBlocker blocker;
                     Py_DECREF(pylist);
-                    wxPyEndBlockThreads(blocked);
                     return NULL;
                 }
-                wxPyBlock_t blocked = wxPyBeginBlockThreads();
+                wxPyThreadBlocker blocker;
                 PyList_Append(pylist, s);
                 i += PyBytes_Size(s);
-                wxPyEndBlockThreads(blocked);
             }
     
             // error check
             wxStreamError err = self->GetLastError();
             if (err != wxSTREAM_NO_ERROR && err != wxSTREAM_EOF) {
-                wxPyBlock_t blocked = wxPyBeginBlockThreads();
+                wxPyThreadBlocker blocker;
                 Py_DECREF(pylist);
                 PyErr_SetString(PyExc_IOError,"IOError in wxInputStream");
-                wxPyEndBlockThreads(blocked);
                 return NULL;
             }    
             return pylist;        
@@ -271,15 +267,15 @@ def run():
         return false; //self->Eof();
         """)
 
-    c.addCppMethod('void', 'write', '(PyObject* data)', """\
-        // We use only strings for the streams, not unicode
-        PyObject* str = PyObject_Bytes(data);
-        if (! str) {
-            PyErr_SetString(PyExc_TypeError, "Unable to convert to string");
-            return;
+    c.addCppMethod('PyObject*', 'write', '(PyObject* data)', """\
+        // We use only bytes objects (strings in 2.7) for the streams, never unicode
+        wxPyThreadBlocker blocker;
+        if (!PyBytes_Check(data)) {
+            PyErr_SetString(PyExc_TypeError, "Bytes object expected");
+            return NULL;
         }
-        self->Write(PyBytes_AS_STRING(str), PyBytes_GET_SIZE(str));
-        Py_DECREF(str);
+        self->Write(PyBytes_AS_STRING(data), PyBytes_GET_SIZE(data));
+        RETURN_NONE();
         """)
     
     # TODO: Add a writelines(sequence) method

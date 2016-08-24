@@ -38,12 +38,8 @@ class Diagram(object):
     def Redraw(self, dc):
         """Redraw the shapes in the diagram on the specified device context."""
         if self._shapeList:
-            if self.GetCanvas():
-                self.GetCanvas().SetCursor(wx.HOURGLASS_CURSOR)
             for object in self._shapeList:
                 object.Draw(dc)
-            if self.GetCanvas():
-                self.GetCanvas().SetCursor(wx.STANDARD_CURSOR)
 
     def Clear(self, dc):
         """Clear the specified device context."""

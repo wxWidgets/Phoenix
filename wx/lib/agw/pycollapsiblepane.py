@@ -20,7 +20,7 @@
 # --------------------------------------------------------------------------------- #
 
 """
-:class:`~lib.agw.pycollapsiblepane.PyCollapsiblePane` is a container with an embedded button-like control which
+:class:`~wx.lib.agw.pycollapsiblepane.PyCollapsiblePane` is a container with an embedded button-like control which
 can be used by the user to collapse or expand the pane's contents.
 
 
