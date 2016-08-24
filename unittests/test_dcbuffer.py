@@ -67,7 +67,7 @@ class BufferedDCTests(wtc.WidgetTestCase):
         self.frame.SendSizeEvent()
         panel.Refresh()
         self.myUpdate(panel)
-        self.myYield() 
+        self.waitFor(200)
         self.assertTrue(panel.onPaintCalled == True)
 
         
@@ -88,7 +88,7 @@ class BufferedDCTests(wtc.WidgetTestCase):
         self.frame.SendSizeEvent()
         panel.Refresh()
         self.myUpdate(panel)
-        self.myYield() 
+        self.waitFor(200)
         self.assertTrue(panel.onPaintCalled == True)
 
         
