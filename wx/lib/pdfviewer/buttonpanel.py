@@ -54,12 +54,17 @@ class pdfButtonPanel(bp.ButtonPanel):
         """
         Add the buttons and other controls to the panel.
         """
+        self.disabled_controls = []
         self.pagelabel = wx.StaticText(self, -1, 'Page')
         self.page = wx.TextCtrl(self, -1, size=(30, -1), style=wx.TE_CENTRE|wx.TE_PROCESS_ENTER)
+        self.page.Enable(False)
+        self.disabled_controls.append(self.page)
         self.page.Bind(wx.EVT_KILL_FOCUS, self.OnPage)
         self.Bind(wx.EVT_TEXT_ENTER, self.OnPage, self.page)    
         self.maxlabel = wx.StaticText(self, -1, '          ')
         self.zoom = wx.ComboBox(self, -1, style=wx.CB_DROPDOWN|wx.TE_PROCESS_ENTER)
+        self.zoom.Enable(False)
+        self.disabled_controls.append(self.zoom)
         self.comboval = (('Actual size', 1.0), ('Fit width', -1), ('Fit page', -2),
                           ('25%', 0.25), ('50%', 0.5), ('75%', 0.75), ('100%', 1.0),
                             ('125%', 1.25), ('150%', 1.5), ('200%', 2.0), ('400%', 4.0),
@@ -68,7 +73,6 @@ class pdfButtonPanel(bp.ButtonPanel):
             self.zoom.Append(item[0], item[1])      # string value and client data
         self.Bind(wx.EVT_COMBOBOX, self.OnZoomSet, self.zoom)    
         self.Bind(wx.EVT_TEXT_ENTER, self.OnZoomSet, self.zoom)    
-        self.zoom.Bind(wx.EVT_KILL_FOCUS, self.OnZoomSet)
         panelitems = [
           ('btn', images.PrintIt.GetBitmap(), wx.ITEM_NORMAL, "Print", self.OnPrint),
           ('sep',),
@@ -96,6 +100,8 @@ class pdfButtonPanel(bp.ButtonPanel):
                 btn = bp.ButtonInfo(self, wx.NewId(),image, kind=kind,
                                     shortHelp=popup, longHelp='')
                 self.AddButton(btn)
+                btn.Enable(False)
+                self.disabled_controls.append(btn)
                 self.Bind(wx.EVT_BUTTON, handler, id=btn.GetId())
             elif item[0].lower() == 'sep':
                 self.AddSeparator()
@@ -136,8 +142,14 @@ class pdfButtonPanel(bp.ButtonPanel):
             is from 1 to numpages.
 
         """
+        if self.disabled_controls:
+            for item in self.disabled_controls:
+                item.Enable(True)
+            self.disabled_controls = []
+            self.Refresh()
+                   
         self.pageno = pagenum + 1
-        self.page.SetValue('%d' % self.pageno)
+        self.page.ChangeValue('%d' % self.pageno)
         if numpages != self.numpages:
             self.maxlabel.SetLabel('of %d' % numpages)
             self.numpages = numpages
@@ -202,10 +214,7 @@ class pdfButtonPanel(bp.ButtonPanel):
                     self.ChangePage()
         except ValueError:
             pass
-        if hasattr(self, 'pageno'):
-            self.page.SetValue('%d' % self.pageno)
-        else:
-            self.page.SetValue('')
+        event.Skip()
 
     def OnZoomOut(self, event):
         "Decrease page magnification"
@@ -264,8 +273,7 @@ class pdfButtonPanel(bp.ButtonPanel):
 
     def ChangePage(self):
         """
-        Update viewer and self.page control with new page number.
+        Update viewer with new page number.
         """
-        self.page.SetValue('%d' % self.pageno)
         self.viewer.GoPage(self.pageno - 1)
 
