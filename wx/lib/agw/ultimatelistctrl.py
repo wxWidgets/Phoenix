@@ -8019,46 +8019,6 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         self.MoveToFocus()
 
 
-    def SetEventAttrs(self, oldEvent, newEvent):
-        """
-        Copies (almost) all of the ``m_*`` attributes from the original :class:`KeyEvent` event
-        to the copy (`newEvent`). Successfully passes the key codes to the application
-        as expected.
-
-        :param `oldEvent`: the original :class:`KeyEvent` event to be processed;
-        :param `newEvent`: the new :class:`KeyEvent` event to be processed.
-
-        .. todo::
-
-           Find out why getting `m_rawFlags` returns a Python ``long`` but the setter
-           expects to receive an ``unsigned int``.
-
-
-        .. versionadded:: 0.9.5
-        """
-
-        if _VERSION_STRING < '2.9':
-
-            attributes = ['m_altDown', 'm_controlDown', 'm_keyCode',
-                          'm_metaDown', 'm_rawCode', 'm_scanCode',
-                          'm_shiftDown', 'm_x', 'm_y']
-
-            for attr in attributes:
-                setattr(newEvent, attr, getattr(oldEvent, attr))
-
-        else:
-            # 2.9.something
-            methods = ['AltDown', 'ControlDown', 'MetaDown', 'ShiftDown']
-
-            for meth in methods:
-                eval('newEvent.Set%s(oldEvent.%s())'%(meth, meth))
-
-            attributes = ['m_keyCode', 'm_rawCode', 'm_x', 'm_y']
-
-            for attr in attributes:
-                setattr(newEvent, attr, getattr(oldEvent, attr))
-
-
     def OnKeyDown(self, event):
         """
         Handles the ``wx.EVT_KEY_DOWN`` event for :class:`UltimateListMainWindow`.
@@ -8069,8 +8029,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         parent = self.GetParent()
 
         # we propagate the key event upwards
-        ke = wx.KeyEvent(event.GetEventType())
-        self.SetEventAttrs(event, ke)
+        ke = event.Clone()
 
         ke.SetEventObject(parent)
         if parent.GetEventHandler().ProcessEvent(ke):
@@ -8090,8 +8049,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         parent = self.GetParent()
 
         # we propagate the key event upwards
-        ke = wx.KeyEvent(event.GetEventType())
-        self.SetEventAttrs(event, ke)
+        ke = event.Clone()
 
         ke.SetEventObject(parent)
         if parent.GetEventHandler().ProcessEvent(ke):
@@ -8127,8 +8085,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                             wx.WXK_PAGEUP, wx.WXK_PAGEDOWN, wx.WXK_END, wx.WXK_HOME]:
 
             # propagate the char event upwards
-            ke = wx.KeyEvent(event.GetEventType())
-            self.SetEventAttrs(event, ke)
+            ke = event.Clone()
             ke.SetEventObject(parent)
             if parent.GetEventHandler().ProcessEvent(ke):
                 return
