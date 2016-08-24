@@ -1,5 +1,6 @@
 import unittest
 import sys, os, subprocess
+import wx
 
 #---------------------------------------------------------------------------
 
@@ -16,7 +17,7 @@ class PIImportTest(unittest.TestCase):
 
     def runPI(self, filename):
         cwd = os.getcwd()
-        dirname = os.path.join(os.path.dirname(__file__), '../wx')
+        dirname = os.path.dirname(wx.__file__)
         os.chdir(dirname)
 
         sp = subprocess.Popen('%s %s' % (sys.executable, filename), 

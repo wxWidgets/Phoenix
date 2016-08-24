@@ -62,6 +62,7 @@ class lib_agw_flatmenu_Tests(wtc.WidgetTestCase):
         
         fPt = self.frame.GetPosition()
         popMenu.Popup(wx.Point(fPt.x, fPt.y), self.frame)
+        popMenu.Dismiss(True, True)
     
         # Clear the capture since the test won't do a normal shudown of the flatmenu
         cap = wx.Window.GetCapture()

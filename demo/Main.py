@@ -2459,13 +2459,10 @@ class wxPythonDemo(wx.Frame):
 
 
     def OnOpenWidgetInspector(self, evt):
-        # Activate the widget inspection tool
+        # Activate the widget inspection tool, giving it a widget to preselect
+        # in the tree.  Use either the one under the cursor, if any, or this
+        # frame.
         from wx.lib.inspection import InspectionTool
-        if not InspectionTool().initialized:
-            InspectionTool().Init()
-
-        # Find a widget to be selected in the tree.  Use either the
-        # one under the cursor, if any, or this frame.
         wnd = wx.FindWindowAtPointer()
         if not wnd:
             wnd = self

@@ -55,6 +55,8 @@ class TopicTreeTraverser:
 
         def extendQueue(subtopics):
             topics.append(visitor._startChildren)
+            # put subtopics in list in alphabetical order
+            subtopics.sort(key=topicObj.__class__.getName)
             topics.extend(subtopics)
             topics.append(visitor._endChildren)
 

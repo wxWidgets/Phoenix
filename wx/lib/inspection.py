@@ -18,8 +18,8 @@
 # to provide Hot-Key access to the inspection tool.
 
 """
-This modules provides the :class:`~lib.inspection.InspectionTool` and everything else needed to
-provide the Widget Inspection Tool (WIT).
+This modules provides the :class:`~wx.lib.inspection.InspectionTool` and
+everything else needed to provide the Widget Inspection Tool (WIT).
 """
 
 
@@ -45,11 +45,17 @@ class InspectionTool:
     # instances of this class are actually using the same set of
     # instance data.  See
     # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/66531
-    __shared_state = {}
+    __shared_state = None
+
     def __init__(self):
-        self.__dict__ = self.__shared_state
+        if not InspectionTool.__shared_state:
+            InspectionTool.__shared_state = self.__dict__
+        else:
+            self.__dict__ = InspectionTool.__shared_state
+
         if not hasattr(self, 'initialized'):
             self.initialized = False
+
 
     def Init(self, pos=wx.DefaultPosition, size=wx.Size(850,700),
              config=None, locals=None, app=None):
