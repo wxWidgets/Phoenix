@@ -344,11 +344,15 @@ class pdfViewer(wx.ScrolledWindow):
         self.topage = 0
         self.clientdc = dc = wx.ClientDC(self)      # dc for device scaling
         self.device_scale = dc.GetPPI()[0]/72.0     # pixels per inch / points per inch
-        self.font_scale = 1.0
-        # for Windows only wx.GraphicsContext fonts are too big
+        self.font_scale_metrics =  1.0
+        self.font_scale_size = 1.0
+        # for Windows only with wx.GraphicsContext the rendered font size is too big
         # in the ratio of screen pixels per inch to points per inch
-        if wx.PlatformInfo[1] == 'wxMSW' and not have_cairo:
-            self.font_scale = 1.0 / self.device_scale
+        # and font metrics are too big in the same ratio for both for Cairo and wx.GC
+        if wx.PlatformInfo[1] == 'wxMSW':
+            self.font_scale_metrics = 1.0 / self.device_scale
+            if not have_cairo:
+                self.font_scale_size = 1.0 / self.device_scale
 
         self.winwidth, self.winheight = self.GetClientSize()
         if self.winheight < 100:
@@ -820,14 +824,15 @@ class pypdfProcessor(object):
         """
         dlist = []
         g = self.gstate
-        f  = self.SetFont(g.font, g.fontSize*self.parent.font_scale)
-        dlist.append(['SetFont', (f, g.fillRGB), {}])
+        f0  = self.SetFont(g.font, g.fontSize*self.parent.font_scale_metrics)
+        f1  = self.SetFont(g.font, g.fontSize*self.parent.font_scale_size)
+        dlist.append(['SetFont', (f1, g.fillRGB), {}])
         if g.wordSpacing > 0:
             textlist = text.split(' ')
         else:
             textlist = [text,]
         for item in textlist:
-            dlist.append(self.DrawTextItem(item, f))
+            dlist.append(self.DrawTextItem(item, f0))
         return dlist
 
     def DrawTextItem(self, textitem, f):
