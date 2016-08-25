@@ -7,10 +7,26 @@ import wx.propgrid as pg
 
 class propgridpagestate_Tests(wtc.WidgetTestCase):
 
-    # TODO: Remove this test and add real ones.
-    def test_propgridpagestate1(self):
-        self.fail("Unit tests for propgridpagestate not implemented yet.")
-        
+
+    def test_propgridpagestate01(self):
+        r = pg.PropertyGridHitTestResult()
+
+
+    def test_propgridpagestate02(self):
+        ib = pg.PropertyGridIteratorBase()
+        ii = pg.PropertyGridIterator()
+
+
+    def test_propgridpagestate03(self):
+        i = pg.PGVIterator()
+
+
+    def test_propgridpagestate04(self):
+        s = pg.PropertyGridPageState()
+
+
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
