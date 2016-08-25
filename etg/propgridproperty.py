@@ -69,7 +69,7 @@ def run():
     tools.ignoreConstOverloads(c)
 
     # Ignore some string constants (#defines) coming from dox, and add them
-    # back in Python code. They are wchar_t* values and this seened the
+    # back in Python code. They are wchar_t* values and this seemed the
     # simplest way to deal with them.
     for name in [ 'wxPG_ATTR_DEFAULT_VALUE',
                   'wxPG_ATTR_MIN',
