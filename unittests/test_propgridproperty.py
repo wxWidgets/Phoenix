@@ -1,6 +1,7 @@
-import imp_unittest, unittest
-import wtc
-import wx
+import unittest
+from unittests import wtc
+
+import wx.propgrid as pg
 
 #---------------------------------------------------------------------------
 
