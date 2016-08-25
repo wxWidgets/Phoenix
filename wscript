@@ -232,7 +232,7 @@ def configure(conf):
                        uselib_store='WXRIBBON', mandatory=True)
 
         conf.check_cfg(path=conf.options.wx_config, package='',
-                       args='--cxxflags --libs core' + rpath,
+                       args='--cxxflags --libs propgrid,core' + rpath,
                        uselib_store='WXPROPGRID', mandatory=True)
 
         # ** Add code for new modules here
