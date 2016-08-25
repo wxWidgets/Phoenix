@@ -2407,6 +2407,7 @@
 "PGCell":"wx.propgrid.",
 "PGCellData":"wx.propgrid.",
 "PGCellRenderer":"wx.propgrid.",
+"PGCheckBoxEditor":"wx.propgrid.",
 "PGChoiceAndButtonEditor":"wx.propgrid.",
 "PGChoiceEditor":"wx.propgrid.",
 "PGChoiceEntry":"wx.propgrid.",

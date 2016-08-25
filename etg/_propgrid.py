@@ -50,13 +50,15 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
-    
+
+    module.addHeaderCode('#include <wx/propgrid/propgrid.h>')
+
     module.addInclude(INCLUDES)
-          
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
