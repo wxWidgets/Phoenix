@@ -227,6 +227,7 @@ INCLUDES = [  # base and core stuff
               'fswatcher',
               'preferences',
               'modalhook',
+              'unichar',
               ]
 
 

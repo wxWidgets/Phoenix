@@ -1,9 +1,9 @@
 #---------------------------------------------------------------------------
-# Name:        etg/propgrid.py
+# Name:        etg/propgridadvprops.py
 # Author:      Robin Dunn
 #
-# Created:     23-Feb-2015
-# Copyright:   (c) 2015 by Total Control Software
+# Created:     25-Aug-2016
+# Copyright:   (c) 2016 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -12,14 +12,21 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"
 MODULE    = "_propgrid"
-NAME      = "propgrid"   # Base name of the file to generate to for this script
+NAME      = "propgridadvprops"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'interface_2wx_2propgrid_2propgrid_8h.xml',
-           'wxPGValidationInfo',
-           'wxPropertyGrid',
+ITEMS  = [ 'wxColourPropertyValue',
+           'wxFontProperty',
+           'wxSystemColourProperty',
+           'wxColourProperty',
+           'wxCursorProperty',
+           'wxImageFileProperty',
+           'wxMultiChoiceProperty',
+           'wxDateProperty',
+           'wxPGSpinCtrlEditor',
+
            ]
 
 #---------------------------------------------------------------------------
@@ -33,27 +40,8 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-
-    c = module.find('wxPGValidationInfo')
-    assert isinstance(c, etgtools.ClassDef)
-
-
-    c = module.find('wxPropertyGrid')
-    assert isinstance(c, etgtools.ClassDef)
-    c.bases.remove('wxScrollHelper')
-    tools.fixWindowClass(c)
-
-    # TODO: provide a way to use a Python callable as a sort function
-    c.find('GetSortFunction').ignore()
-    c.find('SetSortFunction').ignore()
-    module.find('wxPGSortCallback').ignore()
-
-
-    # See note in propgridiface.py
-    for item in module.allItems():
-        if hasattr(item, 'type') and item.type == 'wxPGPropArg':
-            item.type = 'const wxPGPropArgCls &'
-
+    #c = module.find('')
+    #assert isinstance(c, etgtools.ClassDef)
 
 
     #-----------------------------------------------------------------

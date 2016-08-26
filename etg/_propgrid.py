@@ -28,6 +28,8 @@ INCLUDES = [ 'propgridproperty',
              'propgridpagestate',
              'propgridiface',
              'propgrid',
+             'propgridprops',
+             'propgridadvprops',
              ]
 
 
