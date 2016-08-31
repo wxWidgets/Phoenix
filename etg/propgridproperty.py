@@ -57,6 +57,8 @@ def run():
     c = module.find('wxPGProperty')
     tools.ignoreConstOverloads(c)
 
+    # TODO: Some of the wxPGProperty methods should probably be pythonized a bit...
+
 
     c = module.find('wxPGChoicesData')
     tools.ignoreConstOverloads(c)
