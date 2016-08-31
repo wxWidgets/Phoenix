@@ -30,6 +30,7 @@ INCLUDES = [ 'propgridproperty',
              'propgrid',
              'propgridprops',
              'propgridadvprops',
+             'propgridmanager',
              ]
 
 
