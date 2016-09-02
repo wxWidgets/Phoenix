@@ -20,8 +20,9 @@ class TestDialog(wx.Dialog):
         # so we can set an extra style that must be set before
         # creation, and then we create the GUI object using the Create
         # method.
-        wx.Dialog.__init__(self, parent, id, title, pos, size, style, name)
+        wx.Dialog.__init__(self)
         self.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
+        self.Create(parent, id, title, pos, size, style, name)
 
         # Now continue with the normal construction of the dialog
         # contents
