@@ -303,9 +303,10 @@ class Filling(wx.SplitterWindow):
         #event.Skip()
         pass
 
-
     def LoadSettings(self, config):
         pos = config.ReadInt('Sash/FillingPos', 200)
+        if not self.IsSplit():
+            self.SplitVertically(self.tree, self.text)
         wx.CallLater(250, self.SetSashPosition, pos)
         zoom = config.ReadInt('View/Zoom/Filling', -99)
         if zoom != -99:
