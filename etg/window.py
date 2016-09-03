@@ -287,6 +287,7 @@ def run():
 
     # for compatibility with Classic
     c.addPyMethod('GetPositionTuple', '(self)', 'return self.GetPosition()', deprecated='Use GetPosition instead')
+    c.addPyMethod('GetSizeTuple', '(self)', 'return self.GetSize()', deprecated='Use GetSize instead')
     c.addPyMethod('MoveXY',  '(self, x, y)', 'return self.Move(x, y)', deprecated='Use Move instead.')
     c.addPyMethod('SetSizeWH', '(self, w, h)', 'return self.SetSize(w,h)', deprecated='Use SetSize instead.')
     c.addPyMethod('SetVirtualSizeWH', '(self, w, h)', 'return self.SetVirtualSize(w,h)', deprecated='Use SetVirtualSize instead.')

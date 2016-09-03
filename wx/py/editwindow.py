@@ -81,6 +81,11 @@ class EditWindow(stc.StyledTextCtrl):
 
     def _fontsizer(self, signal):
         """Receiver for Font* signals."""
+        if not self:
+            dispatcher.disconnect(receiver=self._fontsizer, signal='FontIncrease')
+            dispatcher.disconnect(receiver=self._fontsizer, signal='FontDecrease')
+            dispatcher.disconnect(receiver=self._fontsizer, signal='FontDefault')
+            return
         size = self.GetZoom()
         if signal == 'FontIncrease':
             size += 1

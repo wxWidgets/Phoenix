@@ -266,6 +266,8 @@ def run():
     c.find('GetAlignment.vAlign').out = True
     c.find('GetNonDefaultAlignment.hAlign').out = True
     c.find('GetNonDefaultAlignment.vAlign').out = True
+    c.find('GetSize.num_rows').out = True
+    c.find('GetSize.num_cols').out = True
 
     c.find('SetEditor.editor').transfer = True
     c.find('SetRenderer.renderer').transfer = True

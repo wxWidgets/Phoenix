@@ -66,6 +66,9 @@ class FillingTree(wx.TreeCtrl):
 
     def push(self, command, more):
         """Receiver for Interpreter.push signal."""
+        if not self:
+            dispatcher.disconnect(receiver=self.push, signal='Interpreter.push')
+            return
         self.display()
 
     def OnItemExpanding(self, event):
@@ -258,6 +261,9 @@ class FillingText(editwindow.EditWindow):
 
     def push(self, command, more):
         """Receiver for Interpreter.push signal."""
+        if not self:
+            dispatcher.disconnect(receiver=self.push, signal='Interpreter.push')
+            return
         self.Refresh()
 
     def SetText(self, *args, **kwds):
@@ -303,9 +309,10 @@ class Filling(wx.SplitterWindow):
         #event.Skip()
         pass
 
-
     def LoadSettings(self, config):
         pos = config.ReadInt('Sash/FillingPos', 200)
+        if not self.IsSplit():
+            self.SplitVertically(self.tree, self.text)
         wx.CallLater(250, self.SetSashPosition, pos)
         zoom = config.ReadInt('View/Zoom/Filling', -99)
         if zoom != -99:
