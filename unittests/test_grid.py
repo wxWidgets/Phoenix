@@ -100,13 +100,37 @@ class grid_Tests(wtc.WidgetTestCase):
     def test_grid18(self):
         a = wx.grid.GridCellAttr()
         a.DecRef()
+
+    def test_grid18a(self):
+        # test that some GCA methods which were missing are now present
+        a = wx.grid.GridCellAttr()
+        b = wx.grid.GridCellAttr()
+        a.MergeWith(b)
+
+        a.SetFont(wx.NORMAL_FONT)
+        a.SetOverflow(True)
+        a.SetSize(3,4)
+        a.SetKind(wx.grid.GridCellAttr.Cell)
+
+        a.HasReadWriteMode()
+        a.HasOverflowMode()
+        a.HasSize()
+
+        a.GetSize()
+        a.GetOverflow()
+        a.GetKind()
         
+        a.DecRef()
+
+
     def test_grid19(self):
         wx.grid.GridCellAttr.Any
         wx.grid.GridCellAttr.Cell
         wx.grid.GridCellAttr.Row
         wx.grid.GridCellAttr.Col
-        
+        wx.grid.GridCellAttr.Default
+        wx.grid.GridCellAttr.Merged
+
 
     def test_grid20(self): 
         class MyRenderer(wx.grid.GridCornerHeaderRenderer):
