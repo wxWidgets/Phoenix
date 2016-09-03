@@ -35,14 +35,15 @@ the quartz option is turned on so those Mac-specific APIs will be included in
 the Cairo library when it is built.  You can then use ``pip install cairocffi``
 to get the Python wrappers.
 
-On Windows you can get a Cairo DLL from here:
+On Windows a copy of the Cairo and related DLLs are included with wxPython
+inside the wx package folder.  These files were extracted from the GTK runtime
+installers found at the following URLs. You can replace those DLLs with others
+if you choose, or you can cause the wx_cairocffi module to use DLLs from some
+other location by setting the CAIRO environment variable.
 
-    http://www.gtk.org/download/windows.php
+    32bit: http://gtk-win.sourceforge.net/home/index.php/Main/Downloads
+    64bit: https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer
 
-You'll also want to get the zlib and libpng binaries from the same place. Once
-you get those files extract the DLLs from each of the zip files and copy them
-to some place on your PATH.  Finally, install the cairocffi package with pip
-to get the Python wrappers for the Cairo library.
 """
 
 #----------------------------------------------------------------------------

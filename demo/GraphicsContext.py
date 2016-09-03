@@ -3,6 +3,7 @@
 import wx
 g = wx
 
+import os
 import colorsys
 from math import cos, sin, radians
 
@@ -68,13 +69,22 @@ class TestPanel(wx.Panel):
     def MakeGC(self, dc):
         try:
             if False:
-                # If you want to force the use of Cairo instead of the
-                # native GraphicsContext backend then create the
-                # context like this.  It works on Windows so far, (on
-                # wxGTK the Cairo context is already being used as the
-                # native default.)
+                # If you want to force the use of Cairo instead of the native
+                # GraphicsContext backend then create the context like this.
+                # It works on Windows so far, (on wxGTK the Cairo context is
+                # already being used as the native default.)
+                #
+                # On Windows we also need to ensure that the cairo DLLs are
+                # found on the PATH, so let's add the wx package dir to the
+                # PATH here.  In a real application you will probably want to
+                # be smarter about this.
+                wxdir = os.path.dirname(wx.__file__) + os.pathsep
+                if not wxdir in os.environ.get('PATH', ""):
+                    os.environ['PATH'] = wxdir + os.environ.get('PATH', "")
+
                 gcr = wx.GraphicsRenderer.GetCairoRenderer
                 gc = gcr() and gcr().CreateContext(dc)
+
                 if gc is None:
                     wx.MessageBox("Unable to create Cairo Context this way.", "Oops")
                     gc = g.GraphicsContext.Create(dc)
