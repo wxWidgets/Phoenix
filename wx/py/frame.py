@@ -845,7 +845,7 @@ class ShellFrameMixin:
         if self.dataDir:
             try:
                 name = os.path.join(self.dataDir, 'history')
-                f = file(name, 'w')
+                f = open(name, 'w')
                 hist = []
                 enc = 'utf-8'
                 for h in self.shell.history:
@@ -867,7 +867,7 @@ class ShellFrameMixin:
             name = os.path.join(self.dataDir, 'history')
             if os.path.exists(name):
                 try:
-                    f = file(name, 'U')
+                    f = open(name, 'U')
                     hist = f.read()
                     f.close()
                     self.shell.history = hist.split('\x00\n')
@@ -921,7 +921,7 @@ class ShellFrameMixin:
 
     def EditStartupScript(self):
         if os.path.exists(self.startupScript):
-            text = file(self.startupScript, 'U').read()
+            text = open(self.startupScript, 'U').read()
         else:
             text = ''
 
@@ -929,7 +929,7 @@ class ShellFrameMixin:
         if dlg.ShowModal() == wx.ID_OK:
             text = dlg.GetText()
             try:
-                f = file(self.startupScript, 'w')
+                f = open(self.startupScript, 'w')
                 f.write(text)
                 f.close()
             except:

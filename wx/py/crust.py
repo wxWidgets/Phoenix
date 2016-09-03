@@ -169,6 +169,9 @@ class Display(editwindow.EditWindow):
 
     def push(self, command, more):
         """Receiver for Interpreter.push signal."""
+        if not self:
+            dispatcher.disconnect(receiver=self.push, signal='Interpreter.push')
+            return
         self.Refresh()
 
     def Refresh(self):
@@ -205,7 +208,11 @@ class Calltip(wx.TextCtrl):
         self.SetFont(font)
 
     def display(self, calltip):
-        """Receiver for """+self.ShellClassName+""".calltip signal."""
+        """Receiver for this.calltip signal."""
+        if not self:
+            dispatcher.disconnect(receiver=self.display, signal=self.ShellClassName+'.calltip')
+            return
+
         ## self.SetValue(calltip)  # Caused refresh problem on Windows.
         self.Clear()
         self.AppendText(calltip)
@@ -220,30 +227,50 @@ class SessionListing(wx.TextCtrl):
         style = (wx.TE_MULTILINE | wx.TE_READONLY |
                  wx.TE_RICH2 | wx.TE_DONTWRAP)
         wx.TextCtrl.__init__(self, parent, id, style=style)
+        self.ShellClassName = ShellClassName
         dispatcher.connect(receiver=self.addHistory,
-                           signal=ShellClassName+".addHistory")
+                           signal=self.ShellClassName+".addHistory")
         dispatcher.connect(receiver=self.clearHistory,
-                           signal=ShellClassName+".clearHistory")
+                           signal=self.ShellClassName+".clearHistory")
         dispatcher.connect(receiver=self.loadHistory,
-                           signal=ShellClassName+".loadHistory")
+                           signal=self.ShellClassName+".loadHistory")
 
         df = self.GetFont()
         font = wx.Font(df.GetPointSize(), wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self.SetFont(font)
 
+
+    def _disconnect(self):
+        dispatcher.disconnect(receiver=self.addHistory,
+                           signal=self.ShellClassName+".addHistory")
+        dispatcher.disconnect(receiver=self.clearHistory,
+                           signal=self.ShellClassName+".clearHistory")
+        dispatcher.disconnect(receiver=self.loadHistory,
+                           signal=self.ShellClassName+".loadHistory")
+
+
     def loadHistory(self, history):
         # preload the existing history, if any
+        if not self:
+            self._disconnect()
+            return
         hist = history[:]
         hist.reverse()
         self.SetValue('\n'.join(hist) + '\n')
         self.SetInsertionPointEnd()
 
     def addHistory(self, command):
+        if not self:
+            self._disconnect()
+            return
         if command:
             self.SetInsertionPointEnd()
             self.AppendText(command + '\n')
 
     def clearHistory(self):
+        if not self:
+            self._disconnect()
+            return
         self.SetValue("")
 
 
@@ -262,6 +289,9 @@ class DispatcherListing(wx.TextCtrl):
 
     def spy(self, signal, sender):
         """Receiver for Any signal from Any sender."""
+        if not self:
+            dispatcher.disconnect(receiver=self.spy)
+            return
         text = '%r from %s' % (signal, sender)
         self.SetInsertionPointEnd()
         start, end = self.GetSelection()

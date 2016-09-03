@@ -66,6 +66,9 @@ class FillingTree(wx.TreeCtrl):
 
     def push(self, command, more):
         """Receiver for Interpreter.push signal."""
+        if not self:
+            dispatcher.disconnect(receiver=self.push, signal='Interpreter.push')
+            return
         self.display()
 
     def OnItemExpanding(self, event):
@@ -258,6 +261,9 @@ class FillingText(editwindow.EditWindow):
 
     def push(self, command, more):
         """Receiver for Interpreter.push signal."""
+        if not self:
+            dispatcher.disconnect(receiver=self.push, signal='Interpreter.push')
+            return
         self.Refresh()
 
     def SetText(self, *args, **kwds):

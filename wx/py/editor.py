@@ -292,6 +292,10 @@ class EditorNotebookFrame(EditorFrame):
 
     def _editorChange(self, editor):
         """Editor change signal receiver."""
+        if not self:
+            dispatcher.disconnect(receiver=self._editorChange,
+                                  signal='EditorChange', sender=self.notebook)
+            return
         self.setEditor(editor)
 
     def OnAbout(self, event):
