@@ -845,14 +845,13 @@ class ShellFrameMixin:
         if self.dataDir:
             try:
                 name = os.path.join(self.dataDir, 'history')
-                f = open(name, 'w')
+                f = open(name, 'wb')
                 hist = []
                 enc = 'utf-8'
                 for h in self.shell.history:
-                    if isinstance(h, unicode):
-                        h = h.encode(enc)
+                    h = h.encode(enc)
                     hist.append(h)
-                hist = '\x00\n'.join(hist)
+                hist = b'\x00\n'.join(hist)
                 f.write(hist)
                 f.close()
             except:
@@ -867,13 +866,18 @@ class ShellFrameMixin:
             name = os.path.join(self.dataDir, 'history')
             if os.path.exists(name):
                 try:
-                    f = open(name, 'U')
+                    f = open(name, 'rb')
                     hist = f.read()
                     f.close()
-                    self.shell.history = hist.split('\x00\n')
+                    enc = 'utf-8'
+                    hist = [h.decode(enc) for h in hist.split(b'\x00\n')]
+                    self.shell.history = hist
                     dispatcher.send(signal="Shell.loadHistory",
                                     history=self.shell.history)
                 except:
+                    import traceback
+                    traceback.print_exc()
+
                     d = wx.MessageDialog(self, "Error loading history file.",
                                          "Error", wx.ICON_EXCLAMATION|wx.OK)
                     d.ShowModal()
