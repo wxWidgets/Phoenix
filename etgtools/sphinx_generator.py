@@ -1973,6 +1973,8 @@ class XMLDocString(object):
             self.isInner = getattr(xml_item, 'isInner', False)
         elif isinstance(xml_item, extractors.EnumDef):
             self.kind = 'enum'
+        elif isinstance(xml_item, extractors.MemberVarDef):
+            self.kind = 'memberVar'
         else:
             raise Exception('Unhandled docstring kind for %s'%xml_item.__class__.__name__)
 
@@ -3367,7 +3369,22 @@ class SphinxGenerator(generators.DocsGeneratorBase):
             varType = ':ref:`~%s`' % varType
         else:
             varType = '``%s``' % varType
-        return 'A public C++ attribute of type %s' % varType
+
+        description = 'A public C++ attribute of type %s.' % varType
+
+        brief = memberVar.briefDoc
+        briefDoc = None
+        if not isinstance(brief, string_base):
+            docstring = XMLDocString(memberVar)
+            #docstring.current_module = self.current_module
+            briefDoc = docstring.GetBrief()
+        elif brief is not None:
+            briefDoc = convertToPython(brief)
+
+        if briefDoc:
+            description += ' ' + briefDoc
+
+        return description
 
 
     # -----------------------------------------------------------------------
