@@ -178,7 +178,7 @@ def replaceCppItems(line):
         if item in CPP_ITEMS:
             continue
 
-        if 'wxString' in item:
+        if 'wxString' == item:
             item = 'string'
         elif 'wxCoord' == item:
             item = 'int'
