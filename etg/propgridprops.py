@@ -72,6 +72,12 @@ def run():
     c.find('wxFlagsProperty').findOverload('wxChar').ignore()
 
 
+    c = module.find('wxIntProperty')
+    # clear the parts of the docstrings that are not really applicable to Python
+    c.briefDoc = "Basic property with integer value."
+    c.detailedDoc = []
+
+
     c = module.find('wxPGArrayEditorDialog')
     tools.fixWindowClass(c, hideVirtuals=False, ignoreProtected=False)
 
