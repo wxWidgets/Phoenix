@@ -207,13 +207,13 @@ class richtextbuffer_Tests(wtc.WidgetTestCase):
         c = wx.richtext.RichTextDrawingContext(None)
         
 
-    @unittest.expectedFailure    
     def test_richtextbuffer17(self):
-        o1 = wx.richtext.RichTextObject()  # It's an ABC
+        with self.assertRaises(TypeError):
+            o1 = wx.richtext.RichTextObject()  # It's an ABC
         
-    @unittest.expectedFailure            
     def test_richtextbuffer18(self):
-        o1 = wx.richtext.RichTextCompositeObject()  # It's an ABC
+        with self.assertRaises(TypeError):
+            o1 = wx.richtext.RichTextCompositeObject()  # It's an ABC
         
     def test_richtextbuffer19(self):
         o1 = wx.richtext.RichTextParagraphLayoutBox()
@@ -224,9 +224,9 @@ class richtextbuffer_Tests(wtc.WidgetTestCase):
     def test_richtextbuffer21(self):
         o1 = wx.richtext.RichTextField()
 
-    @unittest.expectedFailure            
     def test_richtextbuffer22(self):
-        o1 = wx.richtext.RichTextFieldType('foo')  # It's an ABC
+        with self.assertRaises(TypeError):
+            o1 = wx.richtext.RichTextFieldType('foo')  # It's an ABC
 
     def test_richtextbuffer23(self):
         o1 = wx.richtext.RichTextFieldTypeStandard()
