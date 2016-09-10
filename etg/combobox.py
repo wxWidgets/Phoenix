@@ -69,6 +69,7 @@ def run():
     c.addPyCode("ComboBox.SetMark = wx.deprecated(ComboBox.SetTextSelection, 'Use SetTextSelection instead.')")
     c.addPyCode("ComboBox.GetMark = wx.deprecated(ComboBox.GetTextSelection, 'Use GetTextSelection instead.')")
 
+    module.addGlobalStr('wxComboBoxNameStr', c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

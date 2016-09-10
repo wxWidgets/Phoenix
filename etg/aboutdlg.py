@@ -36,16 +36,17 @@ def run():
     c = module.find('wxAboutDialogInfo')
     assert isinstance(c, etgtools.ClassDef)
 
+
+
+    #-----------------------------------------------------------------
+    tools.doCommonTweaks(module)
     # Add some aliases for the non-UK spelling
+    # Do this after doCommonTweaks so that the .License property exists first
     c.addPyCode("""\
         AboutDialogInfo.HasLicense = AboutDialogInfo.HasLicence
         AboutDialogInfo.GetLicense = AboutDialogInfo.GetLicence
         AboutDialogInfo.License = AboutDialogInfo.Licence
         """)
-
-
-    #-----------------------------------------------------------------
-    tools.doCommonTweaks(module)
     tools.runGenerators(module)
     
     
