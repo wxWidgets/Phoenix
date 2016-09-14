@@ -16,9 +16,9 @@ class richtextstyles_Tests(wtc.WidgetTestCase):
         ctrl.Create(self.frame)
 
 
-    @unittest.expectedFailure   # RichTextStyleDefinition is abstract
     def test_richtextstyles03(self):
-        sdef = wx.richtext.RichTextStyleDefinition()
+        with self.assertRaises(TypeError):
+            sdef = wx.richtext.RichTextStyleDefinition()
         
 
     def test_richtextstyles04(self):
