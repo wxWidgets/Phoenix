@@ -75,6 +75,7 @@ def run():
         virtual wxString OnGetItem(size_t n) const;
         """))
     
+    module.addGlobalStr('wxSimpleHtmlListBoxNameStr', c)
     
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

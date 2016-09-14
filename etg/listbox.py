@@ -56,6 +56,8 @@ def run():
     
     tools.fixWindowClass(c)
     
+    module.addGlobalStr('wxListBoxNameStr', c)
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
