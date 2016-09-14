@@ -69,6 +69,9 @@ class lib_pubsub_Except(wtc.PubsubTestCase):
                 assert msg.endswith("name 'RuntimeError2' is not defined\n")
 
         from wx.lib.pubsub.utils.exchandling import ExcPublisher
+        if not self.pub.getDefaultTopicMgr().hasTopicDefinition(ExcPublisher.topicUncaughtExc):
+            excPublisher = ExcPublisher(self.pub.getDefaultTopicMgr() )
+            self.pub.setListenerExcHandler(excPublisher)
         topic = self.pub.getDefaultTopicMgr().getTopic(ExcPublisher.topicUncaughtExc)
         assert not topic.hasListeners()
         handler = UncaughtExcListener()
