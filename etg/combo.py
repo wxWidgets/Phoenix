@@ -40,8 +40,6 @@ def run():
     c = module.find('wxComboCtrl')
     tools.fixWindowClass(c)
 
-    module.addGlobalStr('wxComboBoxNameStr', c)
-    
     # These are protected methods that need to be unignored and also add back
     # their virtual flags
     for name in ['AnimateShow', 'DoSetPopupControl', 'DoShowPopup']:

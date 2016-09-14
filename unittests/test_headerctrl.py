@@ -40,9 +40,9 @@ class headerctrl_Tests(wtc.WidgetTestCase):
         wx.EVT_HEADER_DRAGGING_CANCELLED
         
         
-    @unittest.expectedFailure  # it's an abstract class
     def test_headerctrl2(self):
-        hc = wx.HeaderCtrl(self.frame)
+        with self.assertRaises(TypeError):
+            hc = wx.HeaderCtrl(self.frame)
         
     def test_headerctrl3(self):
         hc = wx.HeaderCtrlSimple()

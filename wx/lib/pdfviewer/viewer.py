@@ -34,10 +34,7 @@ from six import BytesIO, string_types
 
 import wx
 
-CACHE_LATE_PAGES = False    # TODO Cacheing of page bitmaps does not currently
-                            #      work when using cairocffi and Python 3.4 (MSW)
-LATE_THRESHOLD = 200        # Time to render (ttr), milliseconds
-VERBOSE = False
+VERBOSE = True
 
 try:
     # see http://pythonhosted.org/PyMuPDF - documentation & installation
@@ -59,7 +56,7 @@ except ImportError:
 
 GraphicsContext = wx.GraphicsContext
 have_cairo = False
-if not mupdf:    
+if not mupdf:
     try:
         import wx.lib.wxcairo as wxcairo
         import cairo
@@ -68,8 +65,6 @@ if not mupdf:
         if VERBOSE: print('pdfviewer using Cairo')
     except ImportError:
         if VERBOSE: print('pdfviewer using wx.GraphicsContext')
-
-    from .dcgraphics import dcGraphicsContext
 
     # New PageObject method added by Forestfield Software
     def extractOperators(self):
@@ -130,7 +125,6 @@ class pdfViewer(wx.ScrolledWindow):
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)     # recommended in wxWidgets docs
         self.buttonpanel = None     # reference to panel is set by their common parent
         self._showLoadProgress = (not mupdf)
-        self._usePrintDirect = (not mupdf)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnResize)
@@ -143,6 +137,7 @@ class pdfViewer(wx.ScrolledWindow):
         self.nom_page_gap = 20  # nominal inter-page gap (points)
         self.scrollrate = 20    # pixels per scrollbar increment
         self.page_buffer_valid = False
+        self.page_after_zoom_change = None
         self.ClearBackground()
 
     def OnIdle(self, event):
@@ -159,8 +154,6 @@ class pdfViewer(wx.ScrolledWindow):
         Buffer size change due to client area resize.
         """
         self.resizing = True
-        if hasattr(self, 'cachedpages'):
-            self.cachedpages = {}
         event.Skip()
 
     def OnScroll(self, event):
@@ -185,8 +178,8 @@ class pdfViewer(wx.ScrolledWindow):
 
     # This section defines the externally callable methods:
     # LoadFile, Save, Print, SetZoom, and GoPage
-    # also the getters and setters for ShowLoadProgress and UsePrintDirect
-    # that are only applicable if using PyPDF2
+    # also the getter and setter for ShowLoadProgress
+    # that is only applicable if using PyPDF2
 
     def LoadFile(self, pdf_file):
         """
@@ -211,10 +204,9 @@ class pdfViewer(wx.ScrolledWindow):
             # remove comment from next line to test using a file-like object
             # pdf_file = create_fileobject(pdf_file)
         if mupdf:
-            self.pdfdoc = mupdfProcessor(self, pdf_file) 
+            self.pdfdoc = mupdfProcessor(self, pdf_file)
         else:
             self.pdfdoc = pypdfProcessor(self, pdf_file, self.ShowLoadProgress)
-            self.cachedpages = {}
 
         self.numpages = self.pdfdoc.numpages
         self.pagewidth = self.pdfdoc.pagewidth
@@ -288,9 +280,11 @@ class pdfViewer(wx.ScrolledWindow):
         """
         pagenow = self.frompage
         self.zoomscale = zoomscale
-        if hasattr(self, 'cachedpages'):
-            self.cachedpages = {}
         self.page_buffer_valid = False
+        # calling GoPage now will trigger rendering at the new size but the page location
+        # will be calculated based on the old zoom scale - so save the required page number
+        # and call GoPage again *after* rendering at the new size
+        self.page_after_zoom_change = pagenow
         self.GoPage(pagenow)
 
     def GoPage(self, pagenum):
@@ -317,19 +311,6 @@ class pdfViewer(wx.ScrolledWindow):
         """Setter for showLoadProgress."""
         self._showLoadProgress = flag
 
-    @property
-    def UsePrintDirect(self):
-        """
-        Property to control whether prining is done via a page buffer or
-        directly using dcGraphicsContext (PyPDF2 only)
-        """
-        return self._usePrintDirect
-
-    @UsePrintDirect.setter
-    def UsePrintDirect(self, flag):
-        """Setter for usePrintDirect."""
-        self._usePrintDirect = flag
-
 #----------------------------------------------------------------------------
 
     # This section is concerned with rendering a sub-set of drawing commands on demand
@@ -342,24 +323,23 @@ class pdfViewer(wx.ScrolledWindow):
         """
         self.frompage = 0
         self.topage = 0
-        self.clientdc = dc = wx.ClientDC(self)      # dc for device scaling
-        self.device_scale = dc.GetPPI()[0]/72.0     # pixels per inch / points per inch
+        device_scale = wx.ClientDC(self).GetPPI()[0]/72.0   # pixels per inch/points per inch
         self.font_scale_metrics =  1.0
         self.font_scale_size = 1.0
         # for Windows only with wx.GraphicsContext the rendered font size is too big
         # in the ratio of screen pixels per inch to points per inch
         # and font metrics are too big in the same ratio for both for Cairo and wx.GC
         if wx.PlatformInfo[1] == 'wxMSW':
-            self.font_scale_metrics = 1.0 / self.device_scale
+            self.font_scale_metrics = 1.0 / device_scale
             if not have_cairo:
-                self.font_scale_size = 1.0 / self.device_scale
+                self.font_scale_size = 1.0 / device_scale
 
         self.winwidth, self.winheight = self.GetClientSize()
         if self.winheight < 100:
             return
         self.Ypage = self.pageheight + self.nom_page_gap
         if self.zoomscale > 0.0:
-            self.scale = self.zoomscale * self.device_scale
+            self.scale = self.zoomscale * device_scale
         else:
             if int(self.zoomscale) == -1:   # fit width
                 self.scale = self.winwidth / self.pagewidth
@@ -395,7 +375,7 @@ class pdfViewer(wx.ScrolledWindow):
         # Inform buttonpanel controls of any changes
         if self.buttonpanel:
             self.buttonpanel.Update(self.frompage, self.numpages,
-                                      self.scale/self.device_scale)
+                                      self.scale/device_scale)
 
         self.page_y0 = self.frompage * self.Ypagepixels
         self.page_x0 = 0
@@ -428,7 +408,9 @@ class pdfViewer(wx.ScrolledWindow):
             # Initialize the buffer bitmap.
             self.pagebuffer = wx.Bitmap(self.pagebufferwidth, self.pagebufferheight)
             self.pdc = wx.MemoryDC(self.pagebuffer)     # must persist
+
             gc = GraphicsContext.Create(self.pdc)       # Cairo/wx.GraphicsContext API
+
             # white background
             path = gc.CreatePath()
             path.AddRectangle(0, 0,
@@ -439,34 +421,25 @@ class pdfViewer(wx.ScrolledWindow):
             for pageno in range(self.frompage, self.topage+1):
                 self.xpageoffset = 0 - self.x0
                 self.ypageoffset = pageno*self.Ypagepixels - self.page_y0
-                if not mupdf and pageno in self.cachedpages:
-                    self.pdc.Blit(self.xpageoffset, self.ypageoffset,
-                                     self.Xpagepixels, self.Ypagepixels,
-                                       self.cachedpages[pageno], 0, 0)
+                gc.PushState()
+                if mupdf:
+                    gc.Translate(self.xpageoffset, self.ypageoffset)
+                    # scaling is done inside RenderPage
                 else:
-                    t1 = time.time()
-                    gc.PushState()
-                    if mupdf:
-                        gc.Translate(self.xpageoffset, self.ypageoffset)
-                        # scaling is done inside RenderPage
-                    else:
 
-                        gc.Translate(self.xpageoffset, self.ypageoffset +
-                                        self.pageheight*self.scale)
-                        gc.Scale(self.scale, self.scale)
-                    self.pdfdoc.RenderPage(gc, pageno, self.scale)
-                    # Show inter-page gap
-                    gc.SetBrush(wx.Brush(wx.Colour(180, 180, 180)))        #mid grey
-                    gc.SetPen(wx.TRANSPARENT_PEN)
-                    if mupdf:
-                        gc.DrawRectangle(0, self.pageheight*self.scale,
-                                     self.pagewidth*self.scale, self.page_gap*self.scale)
-                    else:
-                        gc.DrawRectangle(0, 0, self.pagewidth, self.page_gap)
-                    gc.PopState()
-                    ttr = time.time()-t1
-                    if not mupdf and CACHE_LATE_PAGES and ttr * 1000 > LATE_THRESHOLD:
-                        self.CachePage(pageno)      # save page out of buffer
+                    gc.Translate(self.xpageoffset, self.ypageoffset +
+                                    self.pageheight*self.scale)
+                    gc.Scale(self.scale, self.scale)
+                self.pdfdoc.RenderPage(gc, pageno, scale=self.scale)
+                # Show inter-page gap
+                gc.SetBrush(wx.Brush(wx.Colour(180, 180, 180)))        #mid grey
+                gc.SetPen(wx.TRANSPARENT_PEN)
+                if mupdf:
+                    gc.DrawRectangle(0, self.pageheight*self.scale,
+                                 self.pagewidth*self.scale, self.page_gap*self.scale)
+                else:
+                    gc.DrawRectangle(0, 0, self.pagewidth, self.page_gap)
+                gc.PopState()
             gc.PushState()
             gc.Translate(0-self.x0, 0-self.page_y0)
             self.RenderPageBoundaries(gc)
@@ -474,6 +447,11 @@ class pdfViewer(wx.ScrolledWindow):
 
         self.page_buffer_valid = True
         self.Refresh(0) # Blit appropriate area of new or existing page buffer to screen
+
+        # ensure we stay on the same page after zoom scale is changed
+        if self.page_after_zoom_change:
+            self.GoPage(self.page_after_zoom_change)
+            self.page_after_zoom_change = None
 
     def RenderPageBoundaries(self, gc):
         """
@@ -488,17 +466,6 @@ class pdfViewer(wx.ScrolledWindow):
         extraheight = self.winheight - (self.numpages*self.Ypagepixels - self.y0)
         if extraheight > 0:
             gc.DrawRectangle(0, self.winheight-extraheight, self.maxwidth, extraheight)
-
-    def CachePage(self, pageno):
-        """
-        When page takes a 'long' time to render, save its contents out of
-        self.pdc and re-use it to minimise jerky scrolling
-        """
-        cachebuffer = wx.Bitmap(self.Xpagepixels, self.Ypagepixels)
-        cdc = wx.MemoryDC(cachebuffer)
-        cdc.Blit(0, 0, self.Xpagepixels, self.Ypagepixels,
-                      self.pdc, self.xpageoffset, self.ypageoffset)
-        self.cachedpages[pageno] = cdc
 
 #============================================================================
 
@@ -641,6 +608,9 @@ class pypdfProcessor(object):
                     'CreatePath': gc.CreatePath,
                     'DrawPath': gc.DrawPath }
         for drawcmd, args, kwargs in self.pagedrawings[pageno]:
+            # scale font if requested by printer DC
+            if drawcmd == 'SetFont' and hasattr(gc, 'font_scale'):
+                args[0].Scale(gc.font_scale)
             if drawcmd == 'ConcatTransform':
                 cm = gc.CreateMatrix(*args, **kwargs)
                 args = (cm,)
@@ -651,6 +621,9 @@ class pypdfProcessor(object):
                 args = (gp, args[1])
             if drawcmd in drawdict:
                 drawdict[drawcmd](*args, **kwargs)
+                # reset font scaling in case RenderPage call is repeated
+                if drawcmd == 'SetFont' and hasattr(gc, 'font_scale'):
+                    args[0].Scale(1.0/gc.font_scale)
             else:
                 pathdict = {'MoveToPoint': gp.MoveToPoint,
                             'AddLineToPoint': gp.AddLineToPoint,
@@ -824,8 +797,10 @@ class pypdfProcessor(object):
         """
         dlist = []
         g = self.gstate
-        f0  = self.SetFont(g.font, g.fontSize*self.parent.font_scale_metrics)
-        f1  = self.SetFont(g.font, g.fontSize*self.parent.font_scale_size)
+        f0  = self.SetFont(g.font, g.fontSize)
+        f0.Scale(self.parent.font_scale_metrics)
+        f1  = self.SetFont(g.font, g.fontSize)
+        f1.Scale(self.parent.font_scale_size)
         dlist.append(['SetFont', (f1, g.fillRGB), {}])
         if g.wordSpacing > 0:
             textlist = text.split(' ')
@@ -1078,54 +1053,25 @@ class pdfPrintout(wx.Printout):
     def OnPrintPage(self, page):
         """
         Provide the data for page by rendering the drawing commands
-        to the printer DC either via a page buffer or directly using a
-        dcGraphicsContext depending on self.view.usePrintDirect
+        to the printer DC, MuPDF returns the page content from an internally
+        generated bitmap and sfac sets it to a high enough resolution that
+        reduces anti-aliasing blur but keeps it small to minimise printing time
         """
-        if not mupdf and self.view.UsePrintDirect:
-            self.PrintDirect(page)
-        else:
-            self.PrintViaBuffer(page)
-        return True
-
-    def PrintDirect(self, page):
-        """
-        Provide the data for page by rendering the drawing commands
-        to the printer DC using :class:`~wx.lib.pdfviewer.dcgraphics.dcGraphicsContext`.
-        """
+        sfac = 1.0
+        if mupdf:
+            sfac = 4.0
         pageno = page - 1       # zero based
         width = self.view.pagewidth
         height = self.view.pageheight
-        self.FitThisSizeToPage(wx.Size(width, height))
+        self.FitThisSizeToPage(wx.Size(width*sfac, height*sfac))
         dc = self.GetDC()
-        gc = dcGraphicsContext.Create(dc, height, have_cairo)
-        self.view.pdfdoc.RenderPage(gc, pageno)
-
-    def PrintViaBuffer(self, page):
-        """
-        Provide the data for page by drawing it as a bitmap to the printer DC
-        sfac needs to provide a high enough resolution bitmap for printing that
-        reduces anti-aliasing blur but be kept small to minimise printing time
-        """
-        sfac = 4.0
-        pageno = page - 1       # zero based
-        dc = self.GetDC()
-        width = self.view.pagewidth*sfac
-        height = self.view.pageheight*sfac
-        self.FitThisSizeToPage(wx.Size(width, height))
-        # Initialize the buffer bitmap.
-        abuffer = wx.Bitmap(width, height)
-        mdc = wx.MemoryDC(abuffer)
-        gc = GraphicsContext.Create(mdc)
-        # white background
-        path = gc.CreatePath()
-        path.AddRectangle(0, 0, width, height)
-        gc.SetBrush(wx.WHITE_BRUSH)
-        gc.FillPath(path)
-        if mupdf:
-            self.view.pdfdoc.RenderPage(gc, pageno, sfac)
-        else:
+        gc = wx.GraphicsContext.Create(dc)
+        if not mupdf:
             gc.Translate(0, height)
-            gc.Scale(sfac, sfac)
-            self.view.pdfdoc.RenderPage(gc, pageno)
-        dc.DrawBitmap(abuffer, 0, 0)
+        if wx.PlatformInfo[1] == 'wxMSW' and have_cairo:
+            device_scale = wx.ClientDC(self.view).GetPPI()[0]/72.0   # pixels per inch/ppi
+            gc.font_scale = 1.0 / device_scale
+
+        self.view.pdfdoc.RenderPage(gc, pageno, sfac)
+        return True
 

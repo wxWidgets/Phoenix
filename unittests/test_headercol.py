@@ -45,13 +45,13 @@ class headercol_Tests(wtc.WidgetTestCase):
         wx.COL_HIDDEN      
         wx.COL_DEFAULT_FLAGS
         
-    @unittest.expectedFailure
     def test_headercolAbsClass1(self):
-        hc = wx.HeaderColumn()
+        with self.assertRaises(TypeError):
+            hc = wx.HeaderColumn()
         
-    @unittest.expectedFailure
     def test_headercolAbsClass2(self):
-        hc = wx.SettableHeaderColumn()
+        with self.assertRaises(TypeError):
+            hc = wx.SettableHeaderColumn()
         
 #---------------------------------------------------------------------------
 
