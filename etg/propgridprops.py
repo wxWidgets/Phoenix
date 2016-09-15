@@ -77,6 +77,12 @@ def run():
     c.briefDoc = "Basic property with integer value."
     c.detailedDoc = []
 
+    c = module.find('wxLongStringProperty')
+    c.find('OnButtonClick.value').inOut = True
+    c.find('DisplayEditorDialog.value').inOut = True
+
+    c = module.find('wxDirProperty')
+    c.find('OnButtonClick.value').inOut = True
 
     c = module.find('wxPGArrayEditorDialog')
     tools.fixWindowClass(c, hideVirtuals=False, ignoreProtected=False)
