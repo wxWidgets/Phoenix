@@ -2446,6 +2446,8 @@
 "PGEditor_Choice":"wx.propgrid.",
 "PGEditor_ChoiceAndButton":"wx.propgrid.",
 "PGEditor_ComboBox":"wx.propgrid.",
+"PGEditor_DatePickerCtrl":"wx.propgrid.",
+"PGEditor_SpinCtrl":"wx.propgrid.",
 "PGEditor_TextCtrl":"wx.propgrid.",
 "PGEditor_TextCtrlAndButton":"wx.propgrid.",
 "PGFileDialogAdapter":"wx.propgrid.",
