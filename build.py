@@ -508,7 +508,7 @@ def getTool(cmdName, version, MD5, envVar, platformBinary, linuxBits=False):
     # it's not there then attempt to download it. Validity of the binary is
     # checked with an MD5 hash.
     if os.environ.get(envVar):
-        # Setting a a value in the environment overrides other options
+        # Setting a value in the environment overrides other options
         return os.environ.get(envVar)
     else:
         # setup
