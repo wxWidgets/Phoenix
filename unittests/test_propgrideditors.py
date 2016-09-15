@@ -74,6 +74,17 @@ class propgrideditors_Tests(wtc.WidgetTestCase):
         mb = pg.PGMultiButton(pgrid, (100,25))
 
 
+    def test_propgrideditors11(self):
+        # Just make sure these exist
+        pg.PGEditor_TextCtrl
+        pg.PGEditor_Choice
+        pg.PGEditor_ComboBox
+        pg.PGEditor_TextCtrlAndButton
+        pg.PGEditor_CheckBox
+        pg.PGEditor_ChoiceAndButton
+        pg.PGEditor_SpinCtrl
+        pg.PGEditor_DatePickerCtrl
+
 
 
 #---------------------------------------------------------------------------
