@@ -15,7 +15,7 @@ class listctrl_Tests(wtc.WidgetTestCase):
         lc.Create(self.frame, style=wx.LC_REPORT)
 
 
-    def test_listctrlEvents(self):
+    def test_listctrlEventTypes(self):
         wx.wxEVT_COMMAND_LIST_BEGIN_DRAG
         wx.wxEVT_COMMAND_LIST_BEGIN_RDRAG
         wx.wxEVT_COMMAND_LIST_BEGIN_LABEL_EDIT
@@ -57,7 +57,34 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.EVT_LIST_COL_DRAGGING      
         wx.EVT_LIST_COL_END_DRAG      
         wx.EVT_LIST_ITEM_FOCUSED      
-        
+
+
+    def test_listctrlEvent(self):
+        # check creating a ListEvent, and if the properties are working
+        evt = wx.ListEvent(wx.wxEVT_COMMAND_LIST_ITEM_SELECTED, 123)
+
+        evt.KeyCode = 111
+        assert evt.GetKeyCode() == 111
+
+        evt.Index = 222
+        assert evt.GetIndex() == 222
+
+        evt.Column = 3
+        assert evt.GetColumn() == 3
+
+        evt.Point = (44, 55)
+        assert evt.GetPoint() == (44, 55)
+
+        i = wx.ListItem()
+        i.SetId(66)
+        evt.Item = i
+        assert evt.GetItem().GetId() == 66
+
+        evt.CacheFrom = 77
+        assert evt.GetCacheFrom() == 77
+
+        evt.CacheTo = 88
+        assert evt.GetCacheTo() == 88
 
 
     def test_listctrlConstants(self):
