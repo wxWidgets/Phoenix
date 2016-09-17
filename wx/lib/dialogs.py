@@ -375,7 +375,8 @@ class MultiMessageDialog(wx.Dialog):
         # was an icon passed to us?
         if icon is not None:
             if isinstance(icon, wx.Icon):
-                bitmap = wx.BitmapFromIcon(icon)
+                bitmap = wx.Bitmap()
+                bitmap.CopyFromIcon(icon)
             elif isinstance(icon, wx.Image):
                 bitmap = wx.Bitmap(icon)
             else:
