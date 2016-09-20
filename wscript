@@ -138,6 +138,9 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXRIBBON')
         conf.env.LIB_WXRIBBON += cfg.makeLibName('ribbon')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXPROPGRID')
+        conf.env.LIB_WXPROPGRID += cfg.makeLibName('propgrid')
+
         # ** Add code for new modules here (and below for non-MSW)
 
         # tweak the PYEXT compile and link flags if making a --debug build
@@ -227,6 +230,10 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs ribbon,core,net' + rpath,
                        uselib_store='WXRIBBON', mandatory=True)
+
+        conf.check_cfg(path=conf.options.wx_config, package='',
+                       args='--cxxflags --libs propgrid,core' + rpath,
+                       uselib_store='WXPROPGRID', mandatory=True)
 
         # ** Add code for new modules here
 
@@ -519,6 +526,7 @@ def build(bld):
     makeETGRule(bld, 'etg/_richtext.py',   '_richtext',  'WXHTML WXRICHTEXT')
     makeETGRule(bld, 'etg/_media.py',      '_media',     'WXMEDIA')
     makeETGRule(bld, 'etg/_ribbon.py',     '_ribbon',    'WXRIBBON')
+    makeETGRule(bld, 'etg/_propgrid.py',   '_propgrid',  'WXPROPGRID')
 
     if isDarwin:
         makeETGRule(bld, 'etg/_webkit.py', '_webkit',    'WXWEBKIT')

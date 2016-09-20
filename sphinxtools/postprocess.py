@@ -168,8 +168,13 @@ def buildEnumsAndMethods(sphinxDir):
             text = text.replace(item, '""')
         
         # Replace ArrayXXX stuff...
-        for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()', 'ArrayString']:
+        for cpp in ['ArrayString()', 'ArrayInt()', 'ArrayDouble()']:
             text = text.replace(cpp, '[]')
+
+        for cpp, py in [('`ArrayString`', 'list of strings'),
+                        ('`ArrayInt`', 'list of integers'),
+                        ('`ArrayDouble`', 'list of floats')]:
+           text = text.replace(cpp, py)
 
         # Remove lines with "Event macros" in them...
         text = text.replace('Event macros:', '')
