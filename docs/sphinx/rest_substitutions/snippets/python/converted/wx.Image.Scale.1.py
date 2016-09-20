@@ -6,9 +6,9 @@
             if bmp.GetWidth() != 32 or bmp.GetHeight() != 32:
             
                 image = bmp.ConvertToImage()
-                bmp = wx.BitmapFromImage(image.Scale(32, 32))
+                bmp = wx.Bitmap(image.Scale(32, 32))
     
                 # another possibility:
                 image.Rescale(32, 32)
-                bmp = wx.BitmapFromImage(image)
+                bmp = wx.Bitmap(image)
             
