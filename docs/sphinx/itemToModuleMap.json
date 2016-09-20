@@ -1215,6 +1215,8 @@
 "HF_PRINT":"wx.html.",
 "HF_SEARCH":"wx.html.",
 "HF_TOOLBAR":"wx.html.",
+"HLB_DEFAULT_STYLE":"wx.html.",
+"HLB_MULTIPLE":"wx.html.",
 "HL_ALIGN_CENTRE":"wx.adv.",
 "HL_ALIGN_LEFT":"wx.adv.",
 "HL_ALIGN_RIGHT":"wx.adv.",
