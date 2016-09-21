@@ -52,7 +52,7 @@ class TestListCtrl(wx.ListCtrl,
 
         items = listctrldata.items()
         for key, data in items:
-            index = self.InsertItem(sys.maxsize, data[0])
+            index = self.InsertItem(self.GetItemCount(), data[0])
             self.SetItem(index, 1, data[1])
             self.SetItem(index, 2, data[2])
             self.SetItemData(index, key)
@@ -101,8 +101,8 @@ class TestListCtrlPanel(wx.Panel):
         self.list = TestListCtrl(self, tID,
                                  style=wx.LC_REPORT
                                  | wx.BORDER_NONE
-                                 | wx.LC_SORT_ASCENDING
-                                 | wx.LC_HRULES | wx.LC_VRULES
+                                 #| wx.LC_SORT_ASCENDING            # Content of list as instructions is
+                                 | wx.LC_HRULES | wx.LC_VRULES      # nonsense with auto-sort enabled
                                  )
 
         sizer.Add(self.list, 1, wx.EXPAND)
