@@ -33,19 +33,23 @@ class MyTimer(wx.Timer):
 
         wx.Timer.__init__(self)
         self._parent = parent
-        
+
 
     def Notify(self):
-        
+
         if self._parent._progresspie.GetValue() <= 0:
             self._parent._incr = 1
 
         if self._parent._progresspie.GetValue() >= self._parent._progresspie.GetMaxValue():
             self._parent._incr = -1
 
-        self._parent._progresspie.SetValue(self._parent._progresspie.GetValue() + self._parent._incr)
-        self._parent._progresspie.Refresh()
-
+        try:
+            self._parent._progresspie.SetValue(self._parent._progresspie.GetValue() +
+                                                                       self._parent._incr)
+            self._parent._progresspie.Refresh()
+        except RuntimeError:
+            pass    # catch error on exit if the ProgressPie control
+                    # is deleted and the timer is still active
 
 #----------------------------------------------------------------------
 # Beginning Of PIECTRL Demo wxPython Code
@@ -59,16 +63,16 @@ class PieCtrlDemo(wx.Panel):
 
         self.log = log
         # Create Some Maquillage For The Demo: Icon, StatusBar, MenuBar...
-        
+
         panel = wx.Panel(self, -1)
         self._incr = 1
         self._hiddenlegend = False
-        
+
         panel.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE))
 
         # Create A Simple PieCtrl With 3 Sectors
         self._pie = PieCtrl(panel, -1, wx.DefaultPosition, wx.Size(180,270))
-        
+
         self._pie.GetLegend().SetTransparent(True)
         self._pie.GetLegend().SetHorizontalBorder(10)
         self._pie.GetLegend().SetWindowStyle(wx.STATIC_BORDER)
@@ -76,18 +80,18 @@ class PieCtrlDemo(wx.Panel):
                                                    wx.FONTSTYLE_NORMAL,
                                                    wx.FONTWEIGHT_NORMAL,
                                                    False, "Courier New"))
-        self._pie.GetLegend().SetLabelColour(wx.Colour(0, 0, 127))      
+        self._pie.GetLegend().SetLabelColour(wx.Colour(0, 0, 127))
 
         self._pie.SetHeight(30)
 
         part = PiePart()
-        
+
         part.SetLabel("SeriesLabel_1")
         part.SetValue(300)
         part.SetColour(wx.Colour(200, 50, 50))
         self._pie._series.append(part)
 
-        part = PiePart()        
+        part = PiePart()
         part.SetLabel("Series Label 2")
         part.SetValue(200)
         part.SetColour(wx.Colour(50, 200, 50))
@@ -107,14 +111,14 @@ class PieCtrlDemo(wx.Panel):
         self._progresspie.SetFilledColour(wx.Colour(255, 0, 0))
         self._progresspie.SetUnfilledColour(wx.WHITE)
         self._progresspie.SetHeight(20)
-        
+
         self._slider = wx.Slider(panel, -1, 25, 0, 90, wx.DefaultPosition, wx.DefaultSize, wx.SL_VERTICAL | wx.SL_LABELS)
         self._angleslider = wx.Slider(panel, -1, 200, 0, 360, wx.DefaultPosition, wx.DefaultSize, wx.SL_LABELS | wx.SL_TOP)
         sizer = wx.BoxSizer(wx.VERTICAL)
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         btnsizer = wx.BoxSizer(wx.HORIZONTAL)
         panel.SetSizer(sizer)
-        
+
         hsizer.Add(self._progresspie, 1, wx.EXPAND | wx.ALL, 5)
         hsizer.Add(self._pie, 1, wx.EXPAND | wx.ALL, 5)
         hsizer.Add(self._slider, 0, wx.GROW | wx.ALL, 5)
@@ -128,12 +132,12 @@ class PieCtrlDemo(wx.Panel):
 
         sizer.Add(hsizer, 1, wx.EXPAND | wx.ALL, 5)
         sizer.Add(self._angleslider, 0, wx.GROW | wx.ALL, 5)
-        sizer.Add(btnsizer, 0, wx.ALIGN_RIGHT | wx.BOTTOM | wx.LEFT | wx.RIGHT, 5)      
+        sizer.Add(btnsizer, 0, wx.ALIGN_RIGHT | wx.BOTTOM | wx.LEFT | wx.RIGHT, 5)
 
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(panel, 1, wx.EXPAND)
         self.SetSizer(mainSizer)
-        mainSizer.Layout()        
+        mainSizer.Layout()
 
         self._timer = MyTimer(self)
         self._timer.Start(50)
@@ -163,15 +167,15 @@ class PieCtrlDemo(wx.Panel):
     def OnToggleLegend(self, event):
 
         self._hiddenlegend = not self._hiddenlegend
-        
+
         if self._hiddenlegend:
             self._pie.GetLegend().Hide()
         else:
             self._pie.GetLegend().Show()
 
         self._pie.Refresh()
-        
-        
+
+
     def OnSlider(self, event):
 
         self._pie.SetAngle(float(self._slider.GetValue())/180.0*pi)
