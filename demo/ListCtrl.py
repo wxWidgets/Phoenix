@@ -113,8 +113,8 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
                                  #| wx.BORDER_SUNKEN
                                  | wx.BORDER_NONE
                                  | wx.LC_EDIT_LABELS
-                                 | wx.LC_SORT_ASCENDING
-                                 #| wx.LC_NO_HEADER
+                                 #| wx.LC_SORT_ASCENDING    # disabling initial auto sort gives a
+                                 #| wx.LC_NO_HEADER         # better illustration of col-click sorting
                                  #| wx.LC_VRULES
                                  #| wx.LC_HRULES
                                  #| wx.LC_SINGLE_SEL
@@ -183,7 +183,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
 
         items = musicdata.items()
         for key, data in items:
-            index = self.list.InsertItem(sys.maxsize, data[0], self.idx1)
+            index = self.list.InsertItem(self.list.GetItemCount(), data[0], self.idx1)
             self.list.SetItem(index, 1, data[1])
             self.list.SetItem(index, 2, data[2])
             self.list.SetItemData(index, key)
