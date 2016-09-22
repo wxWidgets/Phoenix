@@ -23,7 +23,7 @@ try:
 except ImportError:
     haveWheel = False
 
-from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName 
+from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 
 
 #----------------------------------------------------------------------
@@ -85,30 +85,30 @@ class wx_build(orig_build):
         ('skip-build', None, 'skip building the C/C++ code (assumes it has already been done)'),
         ]
     boolean_options = ['skip-build']
-    
-    
+
+
     def initialize_options(self):
         orig_build.initialize_options(self)
         self.skip_build = '--skip-build' in sys.argv
-    
+
     def finalize_options(self):
         orig_build.finalize_options(self)
         self.build_lib = self.build_platlib
-        
-    def run(self):        
+
+    def run(self):
         if not self.skip_build:
             # Run build.py to do the actual building of the extension modules
             msg('WARNING: Building this way assumes that all generated files have been \n'
                 'generated already.  If that is not the case then use build.py directly \n'
                 'to generate the source and perform the build stage.  You can use \n'
                 '--skip-build with the bdist_* or install commands to avoid this \n'
-                'message and the wxWidgets and Phoenix build steps in the future.\n')       
-        
+                'message and the wxWidgets and Phoenix build steps in the future.\n')
+
             # Use the same Python that is running this script.
             cmd = ['"{}"'.format(sys.executable), '-u', 'build.py', 'build']
             cmd = ' '.join(cmd)
             runcmd(cmd)
-        
+
         # Let distutils handle building up the package folder under the
         # build/lib folder like normal.
         orig_build.run(self)
@@ -120,20 +120,20 @@ def _cleanup_symlinks(cmd):
     # The links are not really needed since the extensions link to the
     # specific soname, and they could bloat the egg too much if they were
     # left in.
-    #        
-    # TODO: can eggs have post-install scripts that would allow us to 
+    #
+    # TODO: can eggs have post-install scripts that would allow us to
     # restore the links? No.
     #
     build_lib = cmd.get_finalized_command('build').build_lib
     build_lib = opj(build_lib, 'wx')
     for libname in glob.glob(opj(build_lib, 'libwx*')):
-        
+
         if os.path.islink(libname):
             if isDarwin:
                 # On Mac the name used by the extension module is the real
                 # file, so we can just get rid of all the links.
                 os.unlink(libname)
-                
+
             elif canGetSOName():
                 # On linux the soname used in the extension modules may
                 # be (probably is) one of the symlinks, so we have to be
@@ -151,12 +151,12 @@ def _cleanup_symlinks(cmd):
                 # Otherwise just leave the symlink there since we don't
                 # know what to do with it.
                 pass
-    
-    
+
+
 class wx_bdist_egg(orig_bdist_egg):
     def finalize_options(self):
         orig_bdist_egg.finalize_options(self)
-        
+
         # Redo the calculation of the egg's filename since we always have
         # extension modules, but they are not built by setuptools so it
         # doesn't know about them.
@@ -169,16 +169,16 @@ class wx_bdist_egg(orig_bdist_egg):
         ).egg_name()
         self.egg_output = os.path.join(self.dist_dir, basename+'.egg')
 
-        
+
     def run(self):
         # Ensure that there is a basic library build for bdist_egg to pull from.
         self.run_command("build")
-        
+
         _cleanup_symlinks(self)
-        
+
         # Run the default bdist_egg command
         orig_bdist_egg.run(self)
-    
+
 
 if haveWheel:
     class wx_bdist_wheel(orig_bdist_wheel):
@@ -191,25 +191,25 @@ if haveWheel:
             from setuptools.dist import Distribution
             #Distribution.is_pure = _is_pure
             Distribution.has_ext_modules = _has_ext_modules
-            
+
             orig_bdist_wheel.finalize_options(self)
 
 
         def run(self):
             # Ensure that there is a basic library build for bdist_egg to pull from.
             self.run_command("build")
-            
+
             _cleanup_symlinks(self)
-            
+
             # Run the default bdist_wheel command
             orig_bdist_wheel.run(self)
 
-    
+
 class wx_install(orig_install):
     def finalize_options(self):
         orig_install.finalize_options(self)
         self.install_lib = self.install_platlib
-        
+
     def run(self):
         self.run_command("build")
         orig_install.run(self)
@@ -222,7 +222,7 @@ class wx_sdist(orig_sdist):
         cmd = ['"{}"'.format(sys.executable), '-u', 'build.py', 'sdist']
         cmd = ' '.join(cmd)
         runcmd(cmd)
-        
+
         # Put the filename in dist_files in case the upload command is used.
         # On the other hand, PyPI's upload size limit is waaaaaaaaay too
         # small so it probably doesn't matter too much...
@@ -230,7 +230,7 @@ class wx_sdist(orig_sdist):
         self.distribution.dist_files.append(('sdist', '', sdist_file))
 
 
-   
+
 
 # Map these new classes to the appropriate distutils command names.
 CMDCLASS = {
@@ -272,8 +272,8 @@ def wx_copy_file(src, dst, preserve_mode=1, preserve_times=1, update=0,
 import distutils.file_util
 orig_copy_file = distutils.file_util.copy_file
 distutils.file_util.copy_file = wx_copy_file
-        
-        
+
+
 
 def wx_copy_tree(src, dst, preserve_mode=1, preserve_times=1,
                  preserve_symlinks=0, update=0, verbose=1, dry_run=0):
@@ -294,18 +294,18 @@ cfg = Config(noWxConfig=True)
 WX_PKGLIST = [cfg.PKGDIR] + [cfg.PKGDIR + '.' + pkg for pkg in find_packages('wx')]
 
 ENTRY_POINTS = {
-    'console_scripts' : [ 
+    'console_scripts' : [
         "img2png = wx.tools.img2png:main",
         "img2py = wx.tools.img2py:main",
         "img2xpm = wx.tools.img2xpm:main",
         "pywxrc = wx.tools.pywxrc:main",
 #        ],
-#    'gui_scripts' : [ 
+#    'gui_scripts' : [
         "helpviewer = wx.tools.helpviewer:main",
         "pycrust = wx.py.PyCrust:main",
         "pyshell = wx.py.PyShell:main",
         "pyslices = wx.py.PySlices:main",
-        "pyslicesshell = wx.py.PySlicesShell:main",        
+        "pyslicesshell = wx.py.PySlicesShell:main",
         ],
     }
 
@@ -317,12 +317,12 @@ BUILD_OPTIONS = { } #'build_base' : cfg.BUILD_BASE }
 #if cfg.WXPORT == 'msw':
 #    BUILD_OPTIONS[ 'compiler' ] = cfg.COMPILER
 
-    
+
 #----------------------------------------------------------------------
-    
+
 
 if __name__ == '__main__':
-    setup(name             = NAME, 
+    setup(name             = NAME,
           version          = cfg.VERSION,
           description      = DESCRIPTION,
           long_description = LONG_DESCRIPTION,
@@ -338,7 +338,7 @@ if __name__ == '__main__':
           zip_safe         = False,
           use_2to3         = False,
           include_package_data = True,
-          
+
           packages         = WX_PKGLIST,
           ext_package      = cfg.PKGDIR,
 
