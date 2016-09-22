@@ -270,9 +270,21 @@ static void add_object(sipObjectMap *om, void *addr, sipSimpleWrapper *val)
                 }
                 else
                 {
-                    /* We are removing it from the map here. */
-                    sipSetNotInMap(sw);
+                    /*
+                     * We are removing it from the map here.  However, note
+                     * that we first have to call the destructor before marking
+                     * it as not being in the map, as the destructor itself
+                     * might end up trying to remove the wrapper and its
+                     * aliases from the map.  In that case, if the wrapper is
+                     * already marked as not in the map, the removal will just
+                     * return early, leaving any potential aliases as stale
+                     * entries in the map.  If we later try to wrap a different
+                     * object at the same address, we end up retrieving the
+                     * stale alias entry from the object map, triggering a
+                     * use-after-free when accessing its C++ object.
+                     */
                     sip_api_common_dtor(sw);
+                    sipSetNotInMap(sw);
                 }
 
                 sw = next;
