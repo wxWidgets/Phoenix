@@ -71,7 +71,7 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 sipCurrentVersion = '4.18.1'
 sipMD5 = {
     'darwin'   : 'd2e022a1dbdca3a95116ad160b3622a0',
-    'win32'    : 'd4a46b908d362d19f3fab979bf23eab8',
+    'win32'    : '3913456f9ae75d3191dfdadf10407531',
     'linux32'  : '8f6e43ced87c9ee86afb707e4cfa5fed',
     'linux64'  : 'e77e4b8810217a981a67c33bcba4d729',
 }
