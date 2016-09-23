@@ -296,6 +296,10 @@ def run():
     c.addPyMethod('ConvertDialogPointToPixels', '(self, point)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
     c.addPyMethod('ConvertDialogSizeToPixels', '(self, size)', 'return self.ConvertDialogToPixels(point)', deprecated='Use ConvertDialogToPixels instead.')
 
+    c.addPyMethod('SetSizeHintsSz', '(self, minSize, maxSize=wx.DefaultSize, incSize=wx.DefaultSize)',
+                  'return self.SetSizeHints(minSize, maxSize, incSize)',
+                  deprecated='Use SetSizeHints instead.')
+
 
     # TODO: the C++ DoEraseBackground is protected in wxMSW. We need a way to
     # unprotect it, like adding a shim in the sip class...    
