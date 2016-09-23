@@ -1573,7 +1573,8 @@ def cmd_sdist(options, args):
 
     # make a tree for building up the archive files
     PDEST = 'build/sdist'
-    WDEST = posixjoin(PDEST, 'ext/wxWidgets')
+    WSRC  = 'ext/wxWidgets'
+    WDEST = posixjoin(PDEST, WSRC)
     if not os.path.exists(PDEST):
         os.makedirs(PDEST)
 
@@ -1586,7 +1587,7 @@ def cmd_sdist(options, args):
         msg('Exporting Phoenix...')
         runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
         msg('Exporting wxWidgets...')
-        runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (wxDir(), WDEST), echoCmd=False)
+        runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (WSRC, WDEST), echoCmd=False)
 
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
@@ -1594,7 +1595,7 @@ def cmd_sdist(options, args):
         destdir = posixjoin(PDEST, 'sip', srcdir)
         for name in glob.glob(posixjoin('sip', srcdir, '*')):
             copyFile(name, destdir)
-    for wc in ['*.py', '*.pi']:
+    for wc in ['*.py', '*.pi', '*.pyi']:
         destdir = posixjoin(PDEST, 'wx')
         for name in glob.glob(posixjoin('wx', wc)):
             copyFile(name, destdir)
