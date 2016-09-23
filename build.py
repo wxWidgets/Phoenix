@@ -127,7 +127,7 @@ Usage: ./build.py [command(s)] [options]
 
       sdist         Build a tarball containing all source files
       bdist         Create a binary tarball release of wxPython Phoenix
-      docs_bdist    Build a tarball containing the documentation
+      bdist_docs    Build a tarball containing the documentation
       bdist_egg     Build a Python egg.  Requires magic.
       bdist_wheel   Build a Python wheel.  Requires magic.
 
@@ -948,6 +948,10 @@ def cmd_wxtools(options, args):
 
 
 def cmd_docs_bdist(options, args):
+    # TODO: get rid of this function after a while
+    cmd_bdist_docs(options, args)
+
+def cmd_bdist_docs(options, args):
     cmdTimer = CommandTimer('docs_bdist')
     pwd = pushDir(phoenixDir())
 
