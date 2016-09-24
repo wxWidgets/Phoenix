@@ -99,16 +99,9 @@ to be untangled:
     but we'll need to fix the floating and alignment of the sidebar to do
     it...
 
-  * Change the column widths of the ReST simple tables, to be about 30/70 instead
-    of 50/50.  This can be done by changing how many '=' are generated for the top
-    and bottom lines of the tables.
-
-  * Move the building of the docs to the Windows build slave so the Windows
-    specific modules will be present for the wxlib build command, so those
-    modules can be documented.
-
   * If a method is renamed it is still in the sorted list of methods at the
-    position that the original name would have sorted to.
+    position that the original name would have sorted to.  Change things to
+    sort on the pyName.
     
 
 
