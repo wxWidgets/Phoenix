@@ -364,6 +364,9 @@ def _loadPycairoAPI():
     if pycairoAPI is not None:
         return
 
+    if not hasattr(cairo, 'CAPI'):
+        return
+
     if PY3:
         PyCapsule_GetPointer = ctypes.pythonapi.PyCapsule_GetPointer
         PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
