@@ -40,7 +40,7 @@ INCLUDES = [ 'richtextbuffer',
              'richtextstyles',
              'richtextstyledlg',
              'richtextsymboldlg',
-             #'richtextformatdlg',             TODO: Needs wxPropertySheetDialog
+             'richtextformatdlg',
              ]
 
 
@@ -71,7 +71,9 @@ def run():
     module.addPyCode("import wx.xml", order=10)
     module.addImport('_html')
     module.addPyCode("import wx.html", order=10)
-    
+    module.addImport('_adv')
+    module.addPyCode("import wx.adv", order=10)
+
     module.addInclude(INCLUDES)
           
     #-----------------------------------------------------------------
