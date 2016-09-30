@@ -270,7 +270,7 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     Tweaks for TLWs 
     """
     # TLW tweaks are a little different. We use the function annotation for
-    # TransferThis instead of the argument anotation.
+    # TransferThis instead of the argument annotation.
     klass.find(klass.name).findOverload('parent').transfer = True
     item = klass.findItem('Create')
     if item:
