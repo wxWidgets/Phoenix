@@ -136,11 +136,7 @@ Other Dev Stuff
       * [] New activex classes in wx/msw/ole/activex.h ?
       * Any others?
 
-  * Add _propdlg module
-
   * Add _aui module ??  (or go with only agw aui?)
-
-  * Add _propgrid (in progress)
 
   * Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py) to StyledTextCtrl
 

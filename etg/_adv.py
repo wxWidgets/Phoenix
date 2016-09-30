@@ -53,6 +53,7 @@ INCLUDES = [
              'timectrl',
              'wizard',
              'pseudodc',
+             'propdlg',
              ]
 
 
