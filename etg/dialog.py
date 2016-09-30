@@ -37,7 +37,8 @@ def run():
     c = module.find('wxDialog')
     assert isinstance(c, etgtools.ClassDef)
     module.addGlobalStr('wxDialogNameStr', c)
-    
+    tools.fixTopLevelWindowClass(c)
+
     c.find('wxDialog.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'
     
@@ -55,8 +56,8 @@ def run():
     # context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'self.Destroy()')
-        
-    tools.fixTopLevelWindowClass(c)
+
+    c.find('GetContentWindow').isVirtual = True
 
 
     c = module.find('wxWindowModalDialogEvent')
