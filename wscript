@@ -131,6 +131,7 @@ def configure(conf):
 
         _copyEnvGroup(conf.env, '_WX', '_WXRICHTEXT')
         conf.env.LIB_WXRICHTEXT += cfg.makeLibName('richtext')
+        conf.env.LIB_WXRICHTEXT += cfg.makeLibName('adv')
 
         _copyEnvGroup(conf.env, '_WX', '_WXMEDIA')
         conf.env.LIB_WXMEDIA += cfg.makeLibName('media')
