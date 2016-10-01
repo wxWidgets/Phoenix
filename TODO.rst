@@ -102,7 +102,15 @@ to be untangled:
   * If a method is renamed it is still in the sorted list of methods at the
     position that the original name would have sorted to.  Change things to
     sort on the pyName.
-    
+
+  * The sphinxtools are too aggressive at ignoring content beyond a #. If the
+    hash happens to be inside a string then syntax related errors can happen.
+    For example:
+
+        def SetColors(self, pen='black', fill='#A0A0A0', fill2='#E0E0E0'):
+            ...
+
+
 
 
 Other Dev Stuff
@@ -118,7 +126,6 @@ Other Dev Stuff
 
   * Add ETG scripts for these items in Classic's core:
 
-      * PseudoDC
       * msgout
       * quantize
       * dialup  ??
@@ -169,12 +176,6 @@ Other Dev Stuff
   * Check gui_scripts entry points.
 
   * wx.Window.DoEraseBackground?
-
-  * The sphinxtools are too aggressive at ignoring content beyond a #. If the hash
-    happens to be inside a string then syntax related errors can happen.  For example:
-
-        def SetColors(self, pen='black', fill='#A0A0A0', fill2='#E0E0E0'):
-            ...
 
 
   * Add tests and/or demo for DnD in DataViewCtrl. Since the DnD is done
