@@ -427,10 +427,11 @@ class InspectionFrame(wx.Frame):
             px, py = self.GetPosition()
             config.WriteInt('Window/PosX', px)
             config.WriteInt('Window/PosY', py)
-
-        perspective = self.mgr.SavePerspective()
-        config.Write('perspective', perspective)
-        config.WriteBool('includeSizers', self.includeSizers)
+        
+        if hasattr(self, "mgr"):
+            perspective = self.mgr.SavePerspective()
+            config.Write('perspective', perspective)
+            config.WriteBool('includeSizers', self.includeSizers)
 
 #---------------------------------------------------------------------------
 
