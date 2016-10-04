@@ -264,8 +264,9 @@ class AquaButton(wx.Control):
         r = colour.Red() + ((i*rd*100)/high)/100
         g = colour.Green() + ((i*gd*100)/high)/100
         b = colour.Blue() + ((i*bd*100)/high)/100
+        a = colour.Alpha()
 
-        return wx.Colour(r, g, b)
+        return wx.Colour(int(r), int(g), int(b), int(a))
 
 
     def OnPaint(self, event):
