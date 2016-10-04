@@ -640,7 +640,7 @@ class TabNavigatorWindow(wx.Dialog):
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(wx.Bitmap(1, 1))
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         mem_dc.SetFont(font)
 
         panelHeight = mem_dc.GetCharHeight()
@@ -809,7 +809,7 @@ class TabNavigatorWindow(wx.Dialog):
 
         # get the text position, and draw it
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         mem_dc.SetFont(font)
         fontHeight = mem_dc.GetCharHeight()
 
@@ -2989,7 +2989,7 @@ class AuiNotebook(wx.Panel):
 
         self._normal_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._selected_font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._selected_font.SetWeight(wx.BOLD)
+        self._selected_font.SetWeight(wx.FONTWEIGHT_BOLD)
 
         self.SetArtProvider(TA.AuiDefaultTabArt())
 
@@ -5734,7 +5734,7 @@ class AuiNotebook(wx.Panel):
         wx.Panel.SetFont(self, font)
 
         selectedFont = wx.Font(font.GetPointSize(), font.GetFamily(),
-                               font.GetStyle(), wx.BOLD, font.GetUnderlined(),
+                               font.GetStyle(), wx.FONTWEIGHT_BOLD, font.GetUnderlined(),
                                font.GetFaceName(), font.GetEncoding())
 
         self.SetNormalFont(font)
@@ -5955,6 +5955,7 @@ class AuiNotebook(wx.Panel):
                 continue
 
             self.SetSelectionToPage(page)
+            self.Update()
             pageText.append(page.caption)
 
             rect = page.window.GetScreenRect()
@@ -5977,7 +5978,7 @@ class AuiNotebook(wx.Panel):
 
         # create some items for the list
         for indx, text in enumerate(pageText):
-            listCtrl.InsertImageStringItem(10000, text, indx)
+            listCtrl.InsertItem(10000, text, indx)
 
         self.AddPage(listCtrl, "AuiNotebook Preview", True, bitmap=auinotebook_preview.GetBitmap(), disabled_bitmap=wx.NullBitmap)
         return True
