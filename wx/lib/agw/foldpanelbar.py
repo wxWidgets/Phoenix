@@ -785,13 +785,13 @@ class CaptionBar(wx.Window):
     def SetBoldFont(self):
         """ Sets the :class:`CaptionBar` font weight to bold."""
         
-        self.GetFont().SetWeight(wx.BOLD)
+        self.GetFont().SetWeight(wx.FONTWEIGHT_BOLD)
 
 
     def SetNormalFont(self):
         """ Sets the :class:`CaptionBar` font weight to normal."""
         
-        self.GetFont().SetWeight(wx.NORMAL)
+        self.GetFont().SetWeight(wx.FONTWEIGHT_NORMAL)
 
 
     def IsVertical(self):
@@ -1954,7 +1954,7 @@ class FoldPanelItem(wx.Panel):
         for item in self._items:
             
             if item.GetType() == "SEPARATOR":
-                pen = wx.Pen(item.GetLineColour(), 1, wx.SOLID)
+                pen = wx.Pen(item.GetLineColour(), 1, wx.PENSTYLE_SOLID)
                 dc.SetPen(pen)
                 a = item.GetLeftSpacing()
                 b = item.GetLineY() + item.GetSpacing()
