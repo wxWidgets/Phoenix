@@ -910,7 +910,7 @@ class TreeListHeaderWindow(wx.Window):
 
         dc = wx.ScreenDC()
         dc.SetLogicalFunction(wx.INVERT)
-        dc.SetPen(wx.Pen(wx.BLACK, 2, wx.SOLID))
+        dc.SetPen(wx.Pen(wx.BLACK, 2, wx.PENSTYLE_SOLID))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
 
         self.AdjustDC(dc)
@@ -2961,7 +2961,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                     dc.SetTextForeground(colText)
 
             if self.HasAGWFlag(TR_COLUMN_LINES):  # vertical lines between columns
-                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.SOLID)
+                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.PENSTYLE_SOLID)
                 dc.SetPen((self.GetBackgroundColour() == wx.WHITE and [pen] or [wx.WHITE_PEN])[0])
                 dc.DrawLine(x_colstart+col_w-1, item.GetY(), x_colstart+col_w-1, item.GetY()+total_h)
 
@@ -3100,7 +3100,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 total_width = self._owner.GetHeaderWindow().GetWidth()
                 # if the background colour is white, choose a
                 # contrasting colour for the lines
-                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.SOLID)
+                pen = wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DLIGHT), 1, wx.PENSTYLE_SOLID)
                 dc.SetPen((self.GetBackgroundColour() == wx.WHITE and [pen] or [wx.WHITE_PEN])[0])
                 dc.DrawLine(0, y_top, total_width, y_top)
                 dc.DrawLine(0, y_top+h, total_width, y_top+h)
