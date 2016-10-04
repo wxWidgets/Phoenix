@@ -4327,7 +4327,7 @@ class UltimateListLineData(object):
             if highlighted:
                 dc.SetBrush(self._owner.GetHighlightBrush())
             else:
-                dc.SetBrush(wx.Brush(attr.GetBackgroundColour(), wx.SOLID))
+                dc.SetBrush(wx.Brush(attr.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
 
             dc.SetPen(wx.TRANSPARENT_PEN)
 
@@ -4523,7 +4523,7 @@ class UltimateListLineData(object):
         y = rect.y
         height = rect.height
         boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont.SetWeight(wx.BOLD)
+        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         for col, item in enumerate(self._items):
 
@@ -4778,7 +4778,7 @@ class UltimateListLineData(object):
 
         for y in range(rect.y, rect.y + rect.height):
             currCol = (r1 + rf, g1 + gf, b1 + bf)
-            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(rect.x, y, rect.width, 1)
             rf = rf + rstep
             gf = gf + gstep
@@ -4826,7 +4826,7 @@ class UltimateListLineData(object):
 
         for x in range(rect.x, rect.x + rect.width):
             currCol = (int(r1 + rf), int(g1 + gf), int(b1 + bf))
-            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(x, rect.y, 1, rect.height)
             rf = rf + rstep
             gf = gf + gstep
@@ -4885,7 +4885,7 @@ class UltimateListLineData(object):
 
         for y in range(filRect.y, filRect.y + filRect.height):
             currCol = (r1 + rf, g1 + gf, b1 + bf)
-            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.DrawRectangle(filRect.x, y, filRect.width, 1)
             rf = rf + rstep
             gf = gf + gstep
@@ -5628,7 +5628,7 @@ class UltimateListHeaderWindow(wx.Control):
 
                 evt = (self._isFooter and [wxEVT_COMMAND_LIST_FOOTER_CHECKED] or [wxEVT_COMMAND_LIST_COL_CHECKED])[0]
                 self.SendListEvent(evt, pos)
-                
+
                 return True
 
         return False
@@ -6029,10 +6029,10 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         self._parent = parent
         self.Init()
 
-        self._highlightBrush = wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT), wx.SOLID)
+        self._highlightBrush = wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT), wx.BRUSHSTYLE_SOLID)
 
         btnshadow = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNSHADOW)
-        self._highlightUnfocusedBrush = wx.Brush(btnshadow, wx.SOLID)
+        self._highlightUnfocusedBrush = wx.Brush(btnshadow, wx.BRUSHSTYLE_SOLID)
         r, g, b = btnshadow.Red(), btnshadow.Green(), btnshadow.Blue()
         backcolour = (max((r >> 1) - 20, 0),
                       max((g >> 1) - 20, 0),
@@ -6122,7 +6122,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         # Hyperlinks things
         normalFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._hypertextfont = wx.Font(normalFont.GetPointSize(), normalFont.GetFamily(),
-                                      normalFont.GetStyle(), wx.NORMAL, True,
+                                      normalFont.GetStyle(), wx.FONTSTYLE_NORMAL, True,
                                       normalFont.GetFaceName(), normalFont.GetEncoding())
         self._hypertextnewcolour = wx.BLUE
         self._hypertextvisitedcolour = wx.Colour(200, 47, 200)
@@ -7124,7 +7124,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
                                          line==self._current, enabled, oldPN, oldBR)
 
             if self.HasAGWFlag(ULC_HRULES):
-                pen = wx.Pen(self.GetRuleColour(), 1, wx.SOLID)
+                pen = wx.Pen(self.GetRuleColour(), 1, wx.PENSTYLE_SOLID)
                 clientSize = self.GetClientSize()
 
                 # Don't draw the first one
@@ -7145,7 +7145,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
 
             # Draw vertical rules if required
             if self.HasAGWFlag(ULC_VRULES) and not self.IsEmpty():
-                pen = wx.Pen(self.GetRuleColour(), 1, wx.SOLID)
+                pen = wx.Pen(self.GetRuleColour(), 1, wx.PENSTYLE_SOLID)
 
                 firstItemRect = self.GetItemRect(visibleFrom)
                 lastItemRect = self.GetItemRect(visibleTo)
