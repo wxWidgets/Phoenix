@@ -558,7 +558,7 @@ class SwitcherItems(object):
         selectionOutlineColour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOWTEXT)
         standardFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         groupFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        groupFont.SetWeight(wx.BOLD)
+        groupFont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         if self.GetBackgroundColour().IsOk():
             backgroundColour = self.GetBackgroundColour()
@@ -576,7 +576,7 @@ class SwitcherItems(object):
         
             standardFont = self.GetItemFont()   
             groupFont = wx.Font(standardFont.GetPointSize(), standardFont.GetFamily(), standardFont.GetStyle(),
-                                wx.BOLD, standardFont.GetUnderlined(), standardFont.GetFaceName())
+                                wx.FONTWEIGHT_BOLD, standardFont.GetUnderlined(), standardFont.GetFaceName())
         
         textMarginX = SWITCHER_TEXT_MARGIN_X
 
@@ -637,7 +637,7 @@ class SwitcherItems(object):
         sz = wx.Size(150, 16)
         standardFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         groupFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        groupFont.SetWeight(wx.BOLD)
+        groupFont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         textMarginX = SWITCHER_TEXT_MARGIN_X
         textMarginY = SWITCHER_TEXT_MARGIN_Y
