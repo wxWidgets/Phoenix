@@ -798,7 +798,7 @@ class BPArt(object):
         for coord in range(start, start + size):
          
             currCol = wx.Colour(col1.Red() + int(rf), col1.Green() + int(gf), col1.Blue() + int(bf))
-            dc.SetBrush(wx.Brush(currCol, wx.SOLID)) 
+            dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID)) 
             dc.SetPen(wx.Pen(currCol))
             if isVertical:
                 dc.DrawLine(rect.x, coord, rect.x + rect.width, coord) 
