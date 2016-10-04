@@ -303,17 +303,17 @@ THIN_DASH_DOT_DOTTED = 0xB
 MEDIUM_DASH_DOT_DOTTED = 0xC
 SLANTED_MEDIUM_DASH_DOTTED = 0xD
 
-XF_PEN_STYLES = {NO_LINE: (0, None), THIN: (1, wx.SOLID), MEDIUM: (2, wx.SOLID),
-                 DASHED: (1, wx.SHORT_DASH), DOTTED: (1, wx.DOT),
-                 THICK: (3, wx.SOLID), DOUBLE: (1, wx.SOLID), HAIR: (1, wx.DOT),
-                 MEDIUM_DASHED: (2, wx.LONG_DASH), THIN_DASH_DOTTED: (1, wx.DOT_DASH),
-                 MEDIUM_DASH_DOTTED: (2, wx.DOT_DASH), THIN_DASH_DOT_DOTTED: (1, wx.DOT_DASH),
-                 MEDIUM_DASH_DOT_DOTTED: (2, wx.DOT_DASH),
-                 SLANTED_MEDIUM_DASH_DOTTED: (2, wx.DOT_DASH)
+XF_PEN_STYLES = {NO_LINE: (0, None), THIN: (1, wx.PENSTYLE_SOLID), MEDIUM: (2, wx.PENSTYLE_SOLID),
+                 DASHED: (1, wx.PENSTYLE_SHORT_DASH), DOTTED: (1, wx.PENSTYLE_DOT),
+                 THICK: (3, wx.PENSTYLE_SOLID), DOUBLE: (1, wx.PENSTYLE_SOLID), HAIR: (1, wx.PENSTYLE_DOT),
+                 MEDIUM_DASHED: (2, wx.PENSTYLE_LONG_DASH), THIN_DASH_DOTTED: (1, wx.PENSTYLE_DOT_DASH),
+                 MEDIUM_DASH_DOTTED: (2, wx.PENSTYLE_DOT_DASH), THIN_DASH_DOT_DOTTED: (1, wx.PENSTYLE_DOT_DASH),
+                 MEDIUM_DASH_DOT_DOTTED: (2, wx.PENSTYLE_DOT_DASH),
+                 SLANTED_MEDIUM_DASH_DOTTED: (2, wx.PENSTYLE_DOT_DASH)
                  }
 
-XF_FONT_FAMILY = {0: wx.SWISS, 1: wx.ROMAN, 2: wx.SWISS,
-                  3: wx.MODERN, 4: wx.SCRIPT, 5: wx.DECORATIVE}
+XF_FONT_FAMILY = {0: wx.FONTFAMILY_SWISS, 1: wx.FONTFAMILY_ROMAN, 2: wx.FONTFAMILY_SWISS,
+                  3: wx.FONTFAMILY_MODERN, 4: wx.FONTFAMILY_SCRIPT, 5: wx.FONTFAMILY_DECORATIVE}
 
 # Unicode ordinals for Hebrew, Arabic and Syriac
 # I don't know if there are other RTL languages
@@ -659,13 +659,13 @@ class XLSText(object):
          (http://trac.wxwidgets.org/ticket/9907).
         """
 
-        style, bold, underline = wx.FONTSTYLE_NORMAL, wx.NORMAL, False
+        style, bold, underline = wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False
         if font.italic:
             style = wx.FONTSTYLE_ITALIC
         if font.underline_type > 0:
             underline = True
         if font.weight > 600:
-            bold = wx.BOLD
+            bold = wx.FONTWEIGHT_BOLD
 
         family = XF_FONT_FAMILY[font.family]
         name = font.name
@@ -1262,7 +1262,7 @@ class XLSBorder(object):
                 self.draw_priority = 1
                 border_colour = wx.BLACK
                 
-            self.pen = wx.Pen(border_colour, 1, wx.SOLID)
+            self.pen = wx.Pen(border_colour, 1, wx.PENSTYLE_SOLID)
             pen_style = THIN
 
         else:
@@ -2046,14 +2046,14 @@ class XLSGrid(gridlib.Grid):
         """
 
         font = book.font_list[0]
-        style, bold, underline = wx.FONTSTYLE_NORMAL, wx.NORMAL, False
+        style, bold, underline = wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False
 
         if font.italic:
             style = wx.FONTSTYLE_ITALIC
         if font.underline_type > 0:
             underline = True
         if font.weight > 600:
-            bold = wx.BOLD
+            bold = wx.FONTWEIGHT_BOLD
 
         family = XF_FONT_FAMILY[font.family]
         name = font.name
