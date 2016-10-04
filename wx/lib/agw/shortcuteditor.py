@@ -1738,7 +1738,7 @@ class ListShortcut(HTL.HyperTreeList, treemixin.ExpansionState):
         self.offset = text
 
         boldFont = FontFromFont(self.GetFont())
-        boldFont.SetWeight(wx.BOLD)
+        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
 
         self.boldFont = boldFont        
             
@@ -2249,7 +2249,7 @@ class ShortcutEditor(wx.Dialog):
                     'and type a new accelerator, or press backspace to clear.')
 
         italicFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        italicFont.SetStyle(wx.ITALIC)
+        italicFont.SetStyle(wx.FONTSTYLE_ITALIC)
         
         self.infoStatic = wx.StaticText(self, -1, message)
         self.infoStatic.SetFont(italicFont)
