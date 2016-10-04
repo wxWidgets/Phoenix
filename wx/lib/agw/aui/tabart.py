@@ -167,9 +167,9 @@ class AuiDefaultTabArt(object):
                 brush = wx.Brush(wx.BLACK)
                 brush.MacSetTheme(k)
                 c = brush.GetColour()
-            self._focusPen = wx.Pen(c, 2, wx.SOLID)
+            self._focusPen = wx.Pen(c, 2, wx.PENSTYLE_SOLID)
         else:
-            self._focusPen = wx.Pen(wx.BLACK, 1, wx.USER_DASH)
+            self._focusPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_USER_DASH)
             self._focusPen.SetDashes([1, 1])
             self._focusPen.SetCap(wx.CAP_BUTT)
             
