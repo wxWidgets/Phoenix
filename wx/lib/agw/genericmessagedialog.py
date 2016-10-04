@@ -879,7 +879,7 @@ class GenericMessageDialog(wx.Dialog):
 
         current = wx.Window.FindFocus()
         font = self.GetFont()
-        boldFont = wx.Font(font.GetPointSize(), font.GetFamily(), font.GetStyle(), wx.BOLD,
+        boldFont = wx.Font(font.GetPointSize(), font.GetFamily(), font.GetStyle(), wx.FONTWEIGHT_BOLD,
                            font.GetUnderlined(), font.GetFaceName())
         
         for child in self.GetChildren():
