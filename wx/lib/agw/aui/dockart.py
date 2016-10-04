@@ -554,10 +554,10 @@ class AuiDefaultDockArt(object):
         # Draw the icon centered vertically
         if pane.icon.IsOk():
             if pane.HasCaptionLeft():
-                bmp = wx.ImageFromBitmap(pane.icon).Rotate90(clockwise=False)
-                dc.DrawBitmap(bmp.ConvertToBitmap(), rect.x+(rect.width-pane.icon.GetWidth())/2, rect.y+rect.height-2-pane.icon.GetHeight(), True)
+                bmp = wx.Bitmap(pane.icon).ConvertToImage().Rotate90(clockwise=False)
+                dc.DrawBitmap(bmp.ConvertToBitmap(), rect.x+(rect.width-pane.icon.GetWidth())//2, rect.y+rect.height-2-pane.icon.GetHeight(), True)
             else:
-                dc.DrawBitmap(pane.icon, rect.x+2, rect.y+(rect.height-pane.icon.GetHeight())/2, True)
+                dc.DrawBitmap(pane.icon, rect.x+2, rect.y+(rect.height-pane.icon.GetHeight())//2, True)
 
 
     def DrawCaption(self, dc, window, text, rect, pane):
@@ -608,7 +608,7 @@ class AuiDefaultDockArt(object):
         if captionLeft:
             dc.DrawRotatedText(draw_text, rect.x+(rect.width/2)-(h/2)-1, rect.y+rect.height-3-caption_offset, 90)
         else:
-            dc.DrawText(draw_text, rect.x+3+caption_offset, rect.y+(rect.height/2)-(h/2)-1)
+            dc.DrawText(draw_text, rect.x+3+caption_offset, rect.y+(rect.height//2)-(h//2)-1)
 
 
     def RequestUserAttention(self, dc, window, text, rect, pane):
@@ -738,11 +738,11 @@ class AuiDefaultDockArt(object):
 
         if isVertical:
             old_x = rect.x
-            rect.x = rect.x + (rect.width/2) - (bmp.GetWidth()/2)
+            rect.x = rect.x + (rect.width//2) - (bmp.GetWidth()//2)
             rect.width = old_x + rect.width - rect.x - 1
         else:
             old_y = rect.y
-            rect.y = rect.y + (rect.height/2) - (bmp.GetHeight()/2)
+            rect.y = rect.y + (rect.height//2) - (bmp.GetHeight()//2)
             rect.height = old_y + rect.height - rect.y - 1
 
         if button_state == AUI_BUTTON_STATE_PRESSED:
@@ -769,7 +769,7 @@ class AuiDefaultDockArt(object):
                 bmp = DarkenBitmap(bmp, self._active_caption_colour, StepColour(self._active_caption_colour, 110))
 
         if isVertical:
-            bmp = wx.ImageFromBitmap(bmp).Rotate90(clockwise=False).ConvertToBitmap()
+             bmp = wx.Bitmap(bmp).ConvertToImage().Rotate90(clockwise=False).ConvertToBitmap()
 
         # draw the button itself
         dc.DrawBitmap(bmp, rect.x, rect.y, True)
@@ -790,7 +790,7 @@ class AuiDefaultDockArt(object):
 
             x = rect.x + int((1.0/4.0)*rect.width)
             xend = rect.x + int((3.0/4.0)*rect.width)
-            y = rect.y + (rect.height/2) - 1
+            y = rect.y + (rect.height//2) - 1
 
             while 1:
                 dc.SetPen(self._gripper_pen3)
@@ -806,7 +806,7 @@ class AuiDefaultDockArt(object):
 
             y = rect.y + int((1.0/4.0)*rect.height)
             yend = rect.y + int((3.0/4.0)*rect.height)
-            x = rect.x + (rect.width/2) - 1
+            x = rect.x + (rect.width//2) - 1
 
             while 1:
                 dc.SetPen(self._gripper_pen3)
