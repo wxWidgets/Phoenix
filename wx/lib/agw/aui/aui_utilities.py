@@ -66,7 +66,7 @@ def StepColour(c, ialpha):
     if ialpha == 100:
         return c
         
-    r, g, b = c.Red(), c.Green(), c.Blue()
+    r, g, b, a = c.Red(), c.Green(), c.Blue(), c.Alpha()
 
     # ialpha is 0..200 where 0 is completely black
     # and 200 is completely white and 100 is the same
@@ -91,7 +91,7 @@ def StepColour(c, ialpha):
     g = BlendColour(g, bg, alpha)
     b = BlendColour(b, bg, alpha)
 
-    return wx.Colour(int(r), int(g), int(b))
+    return wx.Colour(int(r), int(g), int(b), int(a))
 
 
 def LightContrastColour(c):
@@ -250,7 +250,8 @@ def LightColour(colour, percent):
     r = colour.Red() + ((i*rd*100)/high)/100
     g = colour.Green() + ((i*gd*100)/high)/100
     b = colour.Blue() + ((i*bd*100)/high)/100
-    return wx.Colour(int(r), int(g), int(b))
+    a = colour.Alpha()
+    return wx.Colour(int(r), int(g), int(b), int(a))
 
 
 def PaneCreateStippleBitmap():
