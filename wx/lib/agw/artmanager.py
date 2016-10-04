@@ -822,8 +822,9 @@ class ArtManager(wx.EvtHandler):
         r = colour.Red() + ((i*rd*100)/high)/100
         g = colour.Green() + ((i*gd*100)/high)/100
         b = colour.Blue() + ((i*bd*100)/high)/100
+        a = colour.Alpha()
 
-        return wx.Colour(int(r), int(g), int(b))
+        return wx.Colour(int(r), int(g), int(b), int(a))
 
 
     def DarkColour(self, colour, percent):
@@ -997,7 +998,7 @@ class ArtManager(wx.EvtHandler):
         for i in range(size):
         
             currCol = wx.Colour(col1.Red() + rf, col1.Green() + gf, col1.Blue() + bf)
-            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.SetPen(wx.Pen(currCol))
             
             if startAtUpperLeft:
@@ -1033,7 +1034,7 @@ class ArtManager(wx.EvtHandler):
         for i in range(size):
 
             currCol = wx.Colour(col1.Red() + rf, col1.Green() + gf, col1.Blue() + bf)        
-            dc.SetBrush(wx.Brush(currCol, wx.SOLID))
+            dc.SetBrush(wx.Brush(currCol, wx.BRUSHSTYLE_SOLID))
             dc.SetPen(wx.Pen(currCol))
             
             if startAtUpperLeft:
