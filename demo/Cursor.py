@@ -222,12 +222,14 @@ class TestPanel(wx.Panel):
         # Create the controls.
         self.cb = wx.ComboBox(self, -1, "wx.CURSOR_DEFAULT", choices=choices,
                               style=wx.CB_READONLY)
-        self.tx = wx.StaticText(self, -1,
-             "This sample allows you to see all the stock cursors available to wxPython,\n"
-             "and also custom cursors loaded from images, .cur, or .ani files.\n"
-             "Simply select a name from the wx.Choice and then move the mouse into the window \n"
-             "below to see the cursor.\n"
-             "NOTE: not all stock cursors have a specific representaion on all platforms.")
+        self.tx = wx.StaticText(self, -1, """\
+This sample allows you to see all the stock cursors available to wxPython,
+and also custom cursors loaded from images, .cur, or .ani files. Simply
+select a name from the wx.Choice and then move the mouse into the window
+or the widgets below to see the cursor.
+
+NOTE: not all stock cursors have a specific representation on all platforms.
+""")
 
         self.testPanel = CursorTestPanel(self, log)
 
