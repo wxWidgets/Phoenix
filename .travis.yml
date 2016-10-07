@@ -41,7 +41,7 @@ addons:
 # So install them in this step instead.
 install:
     - echo "****** travis install step"
-    #- pip install sphinx  # Add this if building of the docs is added in the next section
+    - pip install -r requirements.txt
 
 
 script:
