@@ -6547,7 +6547,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             if wx.Platform == "__WXMAC__":
                 if not self._hasFocus:
                     dc.SetBrush(wx.TRANSPARENT_BRUSH)
-                    dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT), 1, wx.SOLID))
+                    dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT), 1, wx.PENSTYLE_SOLID))
                 else:
                     dc.SetBrush(self._hilightBrush)
             else:

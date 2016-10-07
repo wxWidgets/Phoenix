@@ -3451,7 +3451,7 @@ def DrawResizeHint(dc, rect):
     if wx.Platform == "__WXMSW__" and wx.App.GetComCtl32Version() >= 600:
         if wx.GetOsVersion()[1] > 5:
             # Windows Vista
-            dc.SetPen(wx.Pen("black", 2, wx.SOLID))
+            dc.SetPen(wx.Pen("black", 2, wx.PENSTYLE_SOLID))
             dc.SetBrush(wx.TRANSPARENT_BRUSH)
         else:
             # Draw the nice XP style splitter

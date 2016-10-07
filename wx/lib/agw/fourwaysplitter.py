@@ -352,7 +352,7 @@ class FourWaySplitter(wx.Panel):
         self._flags = 0
         self._isHot = False
 
-        self._sashTrackerPen = wx.Pen(wx.BLACK, 2, wx.SOLID)
+        self._sashTrackerPen = wx.Pen(wx.BLACK, 2, wx.PENSTYLE_SOLID)
         
         self._sashCursorWE = wx.Cursor(wx.CURSOR_SIZEWE)
         self._sashCursorNS = wx.Cursor(wx.CURSOR_SIZENS)

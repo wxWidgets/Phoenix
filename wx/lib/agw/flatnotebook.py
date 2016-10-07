@@ -796,7 +796,8 @@ def LightColour(colour, percent):
     r = colour.Red() + ((i*rd*100)/high)/100
     g = colour.Green() + ((i*gd*100)/high)/100
     b = colour.Blue() + ((i*bd*100)/high)/100
-    return wx.Colour(r, g, b)
+    a = colour.Alpha()
+    return wx.Colour(int(r), int(g), int(b), int(a))
 
 
 def FormatColour(colour):
@@ -899,10 +900,8 @@ def AdjustColour(colour, percent, alpha=wx.ALPHA_OPAQUE):
     return wx.Colour(red, green, blue, alpha)
 
 
-if wx.VERSION_STRING < "2.8.9.2":
-    adjust_colour = AdjustColour
-else:
-    from wx.lib.colourutils import AdjustColour as adjust_colour
+
+from wx.lib.colourutils import AdjustColour as adjust_colour
 
 
 # -----------------------------------------------------------------------------
@@ -1501,7 +1500,7 @@ class TabNavigatorWindow(wx.Dialog):
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(wx.Bitmap(1,1))
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         mem_dc.SetFont(font)
 
         panelHeight = mem_dc.GetCharHeight()
@@ -1675,7 +1674,7 @@ class TabNavigatorWindow(wx.Dialog):
 
         # get the text position, and draw it
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         mem_dc.SetFont(font)
         fontHeight = mem_dc.GetCharHeight()
 
@@ -1726,9 +1725,9 @@ class FNBRenderer(object):
                 brush = wx.Brush(wx.BLACK)
                 brush.MacSetTheme(k)
                 c = brush.GetColour()
-            self._focusPen = wx.Pen(c, 2, wx.SOLID)
+            self._focusPen = wx.Pen(c, 2, wx.PENSTYLE_SOLID)
         else:
-            self._focusPen = wx.Pen(wx.BLACK, 1, wx.USER_DASH)
+            self._focusPen = wx.Pen(wx.BLACK, 1, wx.PENSTYLE_USER_DASH)
             self._focusPen.SetDashes([1, 1])
             self._focusPen.SetCap(wx.CAP_BUTT)
 
@@ -5136,7 +5135,7 @@ class PageContainer(wx.Panel):
 
         if "__WXGTK__" in wx.PlatformInfo:
             boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
-            boldFont.SetWeight(wx.BOLD)
+            boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
             memDc.SetFont(boldFont)
 
         height = memDc.GetCharHeight()

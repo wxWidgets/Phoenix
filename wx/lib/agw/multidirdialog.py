@@ -418,7 +418,7 @@ class MultiDirDialog(wx.Dialog):
         
         staticText = wx.StaticText(self, -1, message)
         f = staticText.GetFont()
-        f.SetWeight(wx.BOLD)
+        f.SetWeight(wx.FONTWEIGHT_BOLD)
         staticText.SetFont(f)
 
         # Add the main wx.GenericDirCtrl        

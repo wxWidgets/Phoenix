@@ -59,7 +59,7 @@ Usage example::
             panel = wx.Panel(self)
             
             title = wx.StaticText(panel, label="PyCollapsiblePane")
-            title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
+            title.SetFont(wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
             title.SetForegroundColour("blue")
 
             self.cp = cp = PCP.PyCollapsiblePane(panel, label="Some Data",
@@ -874,7 +874,7 @@ if __name__ == '__main__':
             panel = wx.Panel(self)
             
             title = wx.StaticText(panel, label="PyCollapsiblePane")
-            title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
+            title.SetFont(wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
             title.SetForegroundColour("blue")
 
             self.cp = cp = PyCollapsiblePane(panel, label='Some Data', style=wx.CP_DEFAULT_STYLE|wx.CP_NO_TLW_RESIZE)

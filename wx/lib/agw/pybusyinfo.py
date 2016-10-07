@@ -237,7 +237,7 @@ class PyInfoFrame(wx.Frame):
         dc.DrawLabel(self._message, rect2, alignment=wx.ALIGN_CENTER|wx.ALIGN_CENTER)
 
         # Draw the top title
-        font.SetWeight(wx.BOLD)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
         dc.SetFont(font)
         dc.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT)))
         dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_CAPTIONTEXT))
