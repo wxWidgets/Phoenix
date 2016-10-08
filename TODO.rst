@@ -201,3 +201,5 @@ Other Dev Stuff
 
   * The Masked controls modules and demos need some help with Py3 compatibility.
 
+  * Move Travis-ci github integration from RobinD42/Phoenix to wxWidgets/Phoenix
+    project.
