@@ -38,10 +38,11 @@ addons:
     - libnotify-dev
 
 
-# So install them in this step instead.
 install:
     - echo "****** travis install step"
+    - pip install -U pip
     - pip install -U -r requirements.txt
+    - pip list
 
 
 script:
