@@ -74,7 +74,7 @@ class ImagePanel(scrolled.ScrolledPanel):
             (ico, 'ico\n*.ico'),
             (tif, 'tif\n*.tif;*.tiff'),
             ])
-        for bmpType, tooltip in list(dict.items()):
+        for bmpType, tip in list(dict.items()):
             statBmp = wx.StaticBitmap(self, wx.ID_ANY, bmpType.ConvertToBitmap())
             type = bmpType.GetType()
             if type in supportedBitmapTypes:
@@ -172,11 +172,12 @@ class ImagePanel(scrolled.ScrolledPanel):
             (self.rotatehue  , 'img.RotateHue(0.5)'),
             ])
 
-        for imgModification, tooltip in list(dict.items()):
+        for imgModification, tip in list(dict.items()):
             statBmp = wx.StaticBitmap(self, wx.ID_ANY,
                                       imgModification.ConvertToBitmap())
             self.allModdedStatBmps.append(statBmp)
-            statText = wx.StaticText(self, -1, tooltip)
+            tip = tip.replace('\t', ' '*8)
+            statText = wx.StaticText(self, -1, tip)
             fgsizer2.Add(statText) #, 0, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 5)
             fgsizer2.Add(statBmp)#, 0, wx.ALL, 5)
 
