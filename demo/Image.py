@@ -25,35 +25,41 @@ supportedBitmapTypes = OrderedDict([
 (wx.BITMAP_TYPE_XPM  , 'BITMAP_TYPE_XPM:  Load a XPM bitmap file.'),
 (wx.BITMAP_TYPE_ANY  , 'BITMAP_TYPE_ANY:  Will try to autodetect the format.'),
 ])
+
+description = """\
+This sample demonstrates some of the capabilities of the wx.Image class, both the
+variety of source image formats, and some of the operations that can be performed
+on an image object.
+"""
+
 #----------------------------------------------------------------------
 
 class ImagePanel(scrolled.ScrolledPanel):
+    defBackgroundColour = '#FFBB66'
+
     def __init__(self, parent, id=wx.ID_ANY):
         scrolled.ScrolledPanel.__init__(self, parent, id)
         # self.log = log
         # self.SetDoubleBuffered(True)
 
-        defFont = wx.Font(18, wx.FONTFAMILY_DEFAULT,
+        hdrFont = wx.Font(18, wx.FONTFAMILY_DEFAULT,
                               wx.FONTSTYLE_NORMAL,
-                              wx.FONTWEIGHT_BOLD, True)
+                              wx.FONTWEIGHT_BOLD)
 
-        StatText1 = wx.StaticText(self, wx.ID_ANY,
-                                  ' wx.Image() ', style=wx.BORDER)
-        StatText1.SetBackgroundColour(wx.WHITE)
-        StatText1.SetForegroundColour(wx.BLACK)
-        StatText1.SetFont(defFont)
+        StatText1 = wx.StaticText(self, wx.ID_ANY, 'wx.Image',)
+        StatText1.SetFont(wx.Font(wx.FontInfo(24).Bold()))
 
-        StatText2 = wx.StaticText(self, wx.ID_ANY,
-                                  ' Bitmap Types ', style=wx.BORDER)
-        StatText2.SetBackgroundColour(wx.WHITE)
-        StatText2.SetForegroundColour(wx.BLACK)
-        StatText2.SetFont(defFont)
+        StatText2 = wx.StaticText(self, wx.ID_ANY, 'Supported Bitmap Types')
+        StatText2.SetFont(hdrFont)
 
         vsizer0 = wx.BoxSizer(wx.VERTICAL)
-        vsizer0.Add(StatText1, 0, wx.ALL | wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 10)
-        vsizer0.Add(StatText2, 0, wx.ALL | wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 10)
+        vsizer0.Add(StatText1, 0, wx.ALL|wx.ALIGN_CENTER, 10)
+        vsizer0.Add(wx.StaticText(self, wx.ID_ANY, description),
+                    0, wx.LEFT|wx.BOTTOM, 10)
+        vsizer0.Add(StatText2, 0, wx.ALL, 10)
 
-        fgsizer1 = wx.FlexGridSizer(6, 2, 2, 2)  # rows, cols, vgap, hgap
+        fgsizer1 = wx.FlexGridSizer(cols=2, vgap=10, hgap=10)
+        fgsizer1.AddGrowableCol(0)
         bmp = wx.Image(opj('bitmaps/image.bmp'), wx.BITMAP_TYPE_BMP)
         gif = wx.Image(opj('bitmaps/image.gif'), wx.BITMAP_TYPE_GIF)
         png = wx.Image(opj('bitmaps/image.png'), wx.BITMAP_TYPE_PNG)
@@ -74,30 +80,34 @@ class ImagePanel(scrolled.ScrolledPanel):
             if type in supportedBitmapTypes:
                 typeStr = 'wx.' + supportedBitmapTypes[type][:supportedBitmapTypes[type].find(':')]
             statText = wx.StaticText(self, -1, typeStr)
-            fgsizer1.Add(statText, 0, wx.ALL | wx.ALIGN_CENTER, 10)
-            fgsizer1.Add(statBmp, 0, wx.ALL, 10)
+            fgsizer1.Add(statText)
+            fgsizer1.Add(statBmp)
 
-        vsizer0.Add(fgsizer1, 0, wx.ALL | wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
+        vsizer0.Add(fgsizer1, 0, wx.LEFT, 25)
+        vsizer0.AddSpacer(35)
 
-        StatText3 = wx.StaticText(self, wx.ID_ANY,
-                                  ' Modifications ', style=wx.BORDER)
-        StatText3.SetBackgroundColour(wx.WHITE)
-        StatText3.SetForegroundColour(wx.BLACK)
-        StatText3.SetFont(defFont)
-        vsizer0.Add(StatText3, 0, wx.ALL | wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 10)
+        StatText3 = wx.StaticText(self, wx.ID_ANY, 'Image Manipulation Operations')
+        StatText3.SetFont(hdrFont)
+        vsizer0.Add(StatText3, 0, wx.LEFT|wx.BOTTOM, 10)
 
 
         self.imgPath = 'bitmaps/image.png'
         self.imgType = wx.BITMAP_TYPE_ANY
-        self.fgsizer2 = fgsizer2 = wx.FlexGridSizer(21, 2, 2, 2)  # rows, cols, vgap, hgap
-        vsizer1 = wx.BoxSizer(wx.VERTICAL)
+        self.fgsizer2 = fgsizer2 = wx.FlexGridSizer(cols=2, vgap=10, hgap=10)
+        fgsizer2.AddGrowableCol(0)
+
         self.colorbutton = wx.ColourPickerCtrl(self, wx.ID_ANY,
+                                               size=(175, -1),
                                                style=wx.CLRP_USE_TEXTCTRL)
         self.colorbutton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.ChangePanelColor)
-        vsizer1.Add(self.colorbutton, 0, wx.ALL | wx.ALIGN_CENTER, 4)
+        vsizer1 = wx.BoxSizer(wx.VERTICAL)
+        vsizer1.Add(wx.StaticText(self, -1, "Panel colour:"))
+        vsizer1.Add(self.colorbutton, 0, wx.LEFT, 15)
+        fgsizer2.Add(vsizer1)
 
-        self.SetBackgroundColour('#FFBB66')
-        self.colorbutton.SetColour('#FFBB66')
+
+        self.SetBackgroundColour(self.defBackgroundColour)
+        self.colorbutton.SetColour(self.defBackgroundColour)
         self.colorbutton.SetToolTip('Change Panel Color')
 
         self.filebutton = wx.FilePickerCtrl(self, wx.ID_ANY,
@@ -109,12 +119,16 @@ class ImagePanel(scrolled.ScrolledPanel):
                                                 | wx.FLP_USE_TEXTCTRL
                                                 | wx.FLP_CHANGE_DIR
                                                 # | wx.FLP_SMALL
-                                                  )
+                                                )
         self.filebutton.SetToolTip('Browse for a image to preview modifications')
         self.filebutton.Bind(wx.EVT_FILEPICKER_CHANGED, self.ChangeModdedImages)
-        vsizer1.Add(self.filebutton, 0, wx.ALL | wx.ALIGN_CENTER, 4)
-        fgsizer2.Add(vsizer1, 1, wx.ALL | wx.ALIGN_CENTER)
+        vsizer2 = wx.BoxSizer(wx.VERTICAL)
+        vsizer2.Add(wx.StaticText(self, -1, "Load test image:"))
+        vsizer2.Add(self.filebutton, 0, wx.EXPAND|wx.LEFT, 15)
+        fgsizer2.Add(vsizer2, 0, wx.EXPAND)
 
+        fgsizer2.AddSpacer(10)
+        fgsizer2.AddSpacer(10)
 
         def getImg():
             # Start with a fresh copy of the image to mod.
@@ -129,52 +143,55 @@ class ImagePanel(scrolled.ScrolledPanel):
         self.imgCenterPt = wx.Point(self.imgWidth//2, self.imgHeight//2)
 
         imgBmp = wx.StaticBitmap(self, wx.ID_ANY, self.img.ConvertToBitmap())
+        fgsizer2.Add(wx.StaticText(self, -1, "Original test image:"))
         fgsizer2.Add(imgBmp)
         self.allModdedStatBmps.append(imgBmp)
 
         self.DoImageMods()
 
         dict = OrderedDict([
-            (self.greyscale  , 'Image().ConvertToGreyscale()'),
-            (self.disabled   , 'Image().ConvertToDisabled()'),
-            (self.mono       , 'Image().ConvertToMono(r=255, g=255, b=255)'),
-            (self.mask       , 'Image.SetMaskColour(red=255, green=255, blue=255)'),
-            (self.blur       , 'Image().Blur(blurRadius=3)'),
-            (self.blurH      , 'Image().BlurHorizontal(blurRadius=3)'),
-            (self.blurV      , 'Image().BlurVertical(blurRadius=3)'),
-            (self.mirrorH    , 'Image().Mirror(horizontally=True)'),
-            (self.mirrorV    , 'Image().Mirror(horizontally=False)'),
-            (self.mirrorBoth , 'Image().Mirror(horizontally=True).Mirror(horizontally=False)'),
-            (self.adjustChan , 'Image().AdjustChannels(factor_red=2.0, factor_green=1.0, factor_blue=1.0, factor_alpha=1.0)'),
-            (self.rotate     , 'Image().Rotate(angle=45.0, rotationCentre=imgCenterPt, interpolating=True, offsetAfterRotation=None)'),
-            (self.rotate90   , 'Image().Rotate90(clockwise=True)'),
-            (self.rotate180  , 'Image().Rotate180()'),
-            (self.replace    , 'Image.Replace(r1=0, g1=0, b1=0, r2=0, g2=255, b2=0)'),
-            (self.scale      , 'Image().Scale(width=128, height=32, quality=wx.IMAGE_QUALITY_NORMAL)'),
-            (self.rescale    , 'Image().Rescale(width=128, height=32, quality=wx.IMAGE_QUALITY_NORMAL)'),
-            (self.resize     , 'Image().Resize(size=(256 + 16, 64 + 8), pos=(0+8, 0+4), red=0, green=0, blue=255)'),
-            (self.paste      , 'Image.Paste(image=getImg(), x=16, y=16)'),
-            (self.rotatehue  , 'Image.RotateHue(0.5)'),
+            (self.greyscale  , 'img.ConvertToGreyscale()'),
+            (self.disabled   , 'img.ConvertToDisabled()'),
+            (self.mono       , 'img.ConvertToMono(r=255, g=255, b=255)'),
+            (self.mask       , 'img.SetMaskColour(\n\tred=255, green=255, blue=255)'),
+            (self.blur       , 'img.Blur(blurRadius=3)'),
+            (self.blurH      , 'img.BlurHorizontal(blurRadius=3)'),
+            (self.blurV      , 'img.BlurVertical(blurRadius=3)'),
+            (self.mirrorH    , 'img.Mirror(horizontally=True)'),
+            (self.mirrorV    , 'img.Mirror(horizontally=False)'),
+            (self.mirrorBoth , 'img.Mirror(horizontally=True).\n\tMirror(horizontally=False)'),
+            (self.adjustChan , 'img.AdjustChannels(factor_red=2.0,\n\tfactor_green=1.0,\n\tfactor_blue=1.0,\n\tfactor_alpha=1.0)'),
+            (self.rotate     , 'img.Rotate(angle=45.0,\n\trotationCentre=imgCenterPt,\n\tinterpolating=True,\n\toffsetAfterRotation=None)'),
+            (self.rotate90   , 'img.Rotate90(clockwise=True)'),
+            (self.rotate180  , 'img.Rotate180()'),
+            (self.replace    , 'img.Replace(r1=0, g1=0, b1=0,\n\tr2=0, g2=255, b2=0)'),
+            (self.scale      , 'img.Scale(width=128, height=32,\n\tquality=wx.IMAGE_QUALITY_NORMAL)'),
+            (self.rescale    , 'img.Rescale(width=128, height=32,\n\tquality=wx.IMAGE_QUALITY_NORMAL)'),
+            (self.resize     , 'img.Resize(size=(256 + 16, 64 + 8),\n\tpos=(0+8, 0+4),\n\tred=0, green=0, blue=255)'),
+            (self.paste      , 'img.Paste(image=getImg(), x=16, y=16)'),
+            (self.rotatehue  , 'img.RotateHue(0.5)'),
             ])
 
         for imgModification, tooltip in list(dict.items()):
             statBmp = wx.StaticBitmap(self, wx.ID_ANY,
                                       imgModification.ConvertToBitmap())
             self.allModdedStatBmps.append(statBmp)
-            statText = wx.TextCtrl(self, -1, tooltip)
-            fgsizer2.Add(statText, 1, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 5)
-            fgsizer2.Add(statBmp, 0, wx.ALL, 5)
+            statText = wx.StaticText(self, -1, tooltip)
+            fgsizer2.Add(statText) #, 0, wx.ALL | wx.EXPAND | wx.ALIGN_CENTER, 5)
+            fgsizer2.Add(statBmp)#, 0, wx.ALL, 5)
 
-        vsizer0.Add(fgsizer2, 0, wx.ALL | wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
+        vsizer0.Add(fgsizer2, 0, wx.LEFT, 25)
         self.SetSizer(vsizer0)
         self.SetupScrolling()
-        
+
+
     def getImg(self):
         # Start with a fresh copy of the image to mod.
         path = opj(self.filebutton.GetPath())
         type = self.imgType
         return wx.Image(path, type)
-            
+
+
     def DoImageMods(self):
         getImg = self.getImg  # local opt
         self.greyscale = getImg().ConvertToGreyscale()
