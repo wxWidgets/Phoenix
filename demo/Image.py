@@ -86,7 +86,7 @@ class ImagePanel(scrolled.ScrolledPanel):
         vsizer0.Add(fgsizer1, 0, wx.LEFT, 25)
         vsizer0.AddSpacer(35)
 
-        StatText3 = wx.StaticText(self, wx.ID_ANY, 'Image Manipulation Operations')
+        StatText3 = wx.StaticText(self, wx.ID_ANY, 'Basic Image Manipulation Operations')
         StatText3.SetFont(hdrFont)
         vsizer0.Add(StatText3, 0, wx.LEFT|wx.BOTTOM, 10)
 
