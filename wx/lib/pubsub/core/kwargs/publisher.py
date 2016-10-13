@@ -37,7 +37,7 @@ class PublisherArg1Stage2(Publisher):
     """
 
     _base = Publisher
-    
+
     class SenderTooManyKwargs(RuntimeError):
         def __init__(self, kwargs, commonArgName):
             extra = kwargs.copy()

@@ -71,4 +71,3 @@ if __name__ == "__main__":
     print_('---- Starting main event loop ----')
     app.MainLoop()
     print_('---- Exited main event loop ----')
-    

@@ -1,11 +1,11 @@
 """
-Uses topic definition provider for arg1 messaging protocol. Compare with 
-main_kwargs.py which shows example using kwargs messaging protocol: 
-kwargs protocol provides for message data self-documentation and more 
-robustness (pubsub can determine if message data missing or unknown due 
+Uses topic definition provider for arg1 messaging protocol. Compare with
+main_kwargs.py which shows example using kwargs messaging protocol:
+kwargs protocol provides for message data self-documentation and more
+robustness (pubsub can determine if message data missing or unknown due
 to type, etc).
 
-Experiment by changing arg1_topics.py and looking at the output tree 
+Experiment by changing arg1_topics.py and looking at the output tree
 in arg1_topics_out.py.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.

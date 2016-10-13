@@ -14,7 +14,7 @@ class TopicNameError(ValueError):
 
 class TopicDefnError(RuntimeError):
     """
-    Raised when an operation requires a topic have an MDS, but it doesn't. 
+    Raised when an operation requires a topic have an MDS, but it doesn't.
     See also pub.setTopicUnspecifiedFatal().
     """
     def __init__(self, topicNameTuple):
@@ -49,7 +49,7 @@ class ExcHandlerError(RuntimeError):
         """The badExcListenerID is the name of the listener that raised
         the original exception that handler was attempting to handle.
         The topicObj is the Topic object for the topic of the
-        sendMessage that had an exception raised. 
+        sendMessage that had an exception raised.
         The origExc is currently not used. """
         self.badExcListenerID = badExcListenerID
         import traceback
@@ -61,12 +61,12 @@ class ExcHandlerError(RuntimeError):
         RuntimeError.__init__(self, msg)
 
 
-class UnrecognizedSourceFormatError(ValueError): 
+class UnrecognizedSourceFormatError(ValueError):
     """
-    Raised when a topic definition provider doesn't recognize the format 
-    of source input it was given. 
+    Raised when a topic definition provider doesn't recognize the format
+    of source input it was given.
     """
-    def __init__(self): 
+    def __init__(self):
         ValueError.__init__(self, 'Source format not recognized')
-        
-        
+
+
