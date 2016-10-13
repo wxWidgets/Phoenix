@@ -24,8 +24,8 @@ def wordwrap(text, width, dc, breakLongWords=True, margin=0):
     wrapped_lines = []
     text = text.split('\n')
     for line in text:
-        pte = dc.GetPartialTextExtents(line)        
-        wid = ( width - (2*margin+1)*dc.GetTextExtent(' ')[0] 
+        pte = dc.GetPartialTextExtents(line)
+        wid = ( width - (2*margin+1)*dc.GetTextExtent(' ')[0]
               - max([0] + [pte[i]-pte[i-1] for i in range(1,len(pte))]) )
         idx = 0
         start = 0
@@ -62,12 +62,12 @@ if __name__ == '__main__':
             self.tc = wx.TextCtrl(self, -1, "", (20,20), (150,150), wx.TE_MULTILINE)
             self.Bind(wx.EVT_TEXT, self.OnDoUpdate, self.tc)
             self.Bind(wx.EVT_SIZE, self.OnSize)
-            
+
 
         def OnSize(self, evt):
             wx.CallAfter(self.OnDoUpdate, None)
-            
-            
+
+
         def OnDoUpdate(self, evt):
             WIDTH = self.GetSize().width - 220
             HEIGHT = 200

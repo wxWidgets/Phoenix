@@ -94,7 +94,7 @@ Sample usage::
 
         def on_cmd2(self, e):
             self.show("goo = %s" % e.goo, "Got Goo (cmd2)")
-            
+
 
     app = wx.App(0)
     f = Frame()
@@ -114,13 +114,13 @@ def NewEvent():
     Generates a new `(event, binder)` tuple.
 
     ::
-    
+
         MooEvent, EVT_MOO = NewEvent()
-        
+
     """
 
     evttype = wx.NewEventType()
-    
+
     class _Event(wx.PyEvent):
         def __init__(self, **kw):
             wx.PyEvent.__init__(self)
@@ -135,9 +135,9 @@ def NewCommandEvent():
     Generates a new `(command_event, binder)` tuple.
 
     ::
-    
+
         MooCmdEvent, EVT_MOO = NewCommandEvent()
-        
+
     """
 
     evttype = wx.NewEventType()
@@ -146,7 +146,7 @@ def NewCommandEvent():
         def __init__(self, id, **kw):
             wx.PyCommandEvent.__init__(self, evttype, id)
             self._getAttrDict().update(kw)
-    
+
     return _Event, wx.PyEventBinder(evttype, 1)
 
 
@@ -218,7 +218,7 @@ def _test():
 
         def on_cmd2(self, e):
             self.show("goo = %s" % e.goo, "Got Goo (cmd2)")
-            
+
 
     app = wx.App(0)
     f = Frame()

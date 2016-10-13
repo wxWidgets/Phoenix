@@ -42,7 +42,7 @@ warningmsg = r"""\
 """
 
 warnings.warn(warningmsg, DeprecationWarning, stacklevel=2)
-    
+
 if wx.Platform == '__WXGTK__':
     #
     # For wxGTK all we have to do is set the wxTB_DOCKABLE flag

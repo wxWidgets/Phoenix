@@ -31,7 +31,7 @@ class FlashWindow(wx.lib.activex.ActiveXCtrl):
                  size=wx.DefaultSize, style=0, name='FlashWindow'):
         wx.lib.activex.ActiveXCtrl.__init__(self, parent, progID,
                                             id, pos, size, style, name)
-        
+
     def SetZoomRect(self, left, top, right, bottom):
         return self.ctrl.SetZoomRect(left, top, right, bottom)
 

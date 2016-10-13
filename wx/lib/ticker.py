@@ -58,7 +58,7 @@ class Ticker(wx.Control):
         :param wx.Point `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform
         :param `name`: the control name
-            
+
         """
         wx.Control.__init__(self, parent, id=id, pos=pos, size=size, style=style, name=name)
         self.timer = wx.Timer(owner=self)
@@ -97,9 +97,9 @@ class Ticker(wx.Control):
     def SetFPS(self, fps):
         """
         Adjust the update speed of the ticker.
-        
+
         :param int `fps`: frames per second.
-        
+
         """
         self._fps = fps
         self.Stop()
@@ -117,9 +117,9 @@ class Ticker(wx.Control):
         """
         Set the number of pixels per frame the ticker moves - ie,
         how "jumpy" it is.
-        
+
         :param int `ppf`: the pixels per frame setting.
-        
+
         """
         self._ppf = ppf
 
@@ -132,9 +132,9 @@ class Ticker(wx.Control):
     def SetFont(self, font):
         """
         Set the font for the control.
-        
+
         :param wx.Font `font`: the font to be used.
-        
+
         """
         self._extent = (-1, -1)
         wx.Control.SetFont(self, font)
@@ -144,9 +144,9 @@ class Ticker(wx.Control):
         """
         Sets the direction of the ticker: right to left (rtl) or
         left to right (ltr).
-        
+
         :param `dir`: the direction 'rtl' or 'ltr'
-        
+
         """
         if dir == "ltr" or dir == "rtl":
             if self._offset != 0:
@@ -165,9 +165,9 @@ class Ticker(wx.Control):
     def SetText(self, text):
         """
         Set the ticker text.
-        
+
         :param string `text`: the ticker text
-        
+
         """
         self._text = text
         self._extent = (-1, -1)
@@ -183,9 +183,9 @@ class Ticker(wx.Control):
     def UpdateExtent(self, dc):
         """
         Updates the cached text extent if needed.
-        
+
         :param wx.DC `dc`: the dc to use.
-        
+
         """
         if not self._text:
             self._extent = (-1, -1)
@@ -197,9 +197,9 @@ class Ticker(wx.Control):
     def DrawText(self, dc):
         """
         Draws the ticker text at the current offset using the provided DC.
-        
+
         :param wx.DC `dc`: the dc to use.
-        
+
         """
         dc.SetTextForeground(self.GetForegroundColour())
         dc.SetFont(self.GetFont())
@@ -215,7 +215,7 @@ class Ticker(wx.Control):
     def OnTick(self, evt):
         """
         Handles the ``wx.EVT_TIMER`` event for :class:`Ticker`.
-      
+
         :param `evt`: a :class:`TimerEvent` event to be processed.
 
         """
@@ -230,9 +230,9 @@ class Ticker(wx.Control):
     def OnPaint(self, evt):
         """
         Handles the ``wx.EVT_PAINT`` event for :class:`Ticker`.
-    
+
         :param `evt`: a :class:`PaintEvent` event to be processed.
-    
+
         """
         dc = wx.BufferedPaintDC(self)
         brush = wx.Brush(self.GetBackgroundColour())
@@ -244,11 +244,11 @@ class Ticker(wx.Control):
     def OnErase(self, evt):
         """
         Noop because of double buffering
-        
+
         Handles the ``wx.EVT_ERASE_BACKGROUND`` event for :class:`Ticker`.
-    
+
         :param `evt`: a :class:`EraseEvent` event to be processed.
-    
+
         """
         pass
 

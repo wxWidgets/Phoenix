@@ -27,7 +27,7 @@ import  wx.grid
 
 #----------------------------------------------------------------------------
 # event class and macros
-# 
+#
 # New style 12/7/03
 #
 
@@ -263,7 +263,7 @@ class GridColMover(wx.EvtHandler):
             _rlSize = self.grid.GetRowLabelSize()
             if abs(self.startX - evt.X) >= 3 \
                    and abs(evt.X - self.lastX) >= 3:
-                self.lastX = evt.X 
+                self.lastX = evt.X
                 self.didMove = True
                 sx,y = self.grid.GetViewStart()
                 w,h = self.lwin.GetClientSize()
@@ -406,9 +406,9 @@ class GridRowMover(wx.EvtHandler):
                 elif evt.Y > h:
                     y += evt.Y - h
 
-                if y < 1: 
+                if y < 1:
                     y = 0
-                else: 
+                else:
                     y /= self.uy
 
                 if y != sy:
@@ -425,7 +425,7 @@ class GridRowMover(wx.EvtHandler):
 
                 py = y - self.cellY
 
-                if py < 0 + _clSize: 
+                if py < 0 + _clSize:
                     py = 0 + _clSize
 
                 if py > h - self.rowWin.GetSize()[1] + _clSize:
@@ -448,14 +448,14 @@ class GridRowMover(wx.EvtHandler):
             return
 
         row = self.grid.YToRow(py + sy)
-                
+
         if row == wx.NOT_FOUND:
             evt.Skip()
             return
-     
+
         self.isDragging = True
         self.didMove = False
-                        
+
         rect = self.grid.RowToRect(row)
         self.cellY = py + sy - rect.y
         size = self.lwin.GetSize()

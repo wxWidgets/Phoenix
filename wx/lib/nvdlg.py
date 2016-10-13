@@ -26,8 +26,8 @@ import wx
 
 MARGIN = 4
 
-    
-    
+
+
 class SimpleNameValueDialog(wx.Dialog):
     def __init__(self, parent, id=-1, title="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE,
@@ -39,7 +39,7 @@ class SimpleNameValueDialog(wx.Dialog):
         self.Sizer = wx.BoxSizer(wx.VERTICAL)
         self._contentSizer = wx.FlexGridSizer(cols=2, hgap=MARGIN, vgap=MARGIN)
         self._contentSizer.AddGrowableCol(1)
-        
+
         if captionTitle:
             titleTxt = wx.StaticText(self, -1, captionTitle)
             titleTxt.SetFont(wx.FFont(18, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
@@ -49,13 +49,13 @@ class SimpleNameValueDialog(wx.Dialog):
             self.Sizer.Add(descTxt, 0, wx.LEFT|wx.RIGHT|wx.BOTTOM, MARGIN)
         if captionTitle or captionDescr:
             self.Sizer.Add(wx.StaticLine(self), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, MARGIN)
-                
+
         self.createFields(fields)
         self.loadValues(initialValues)
-        
+
         self.Sizer.Add(self._contentSizer, 1, wx.EXPAND|wx.ALL, MARGIN)
         self.Sizer.Add(wx.StaticLine(self), 0, wx.EXPAND|wx.TOP|wx.BOTTOM, MARGIN)
-        
+
         # TODO: add ability to specify which stock or custom buttons are used
         btnSizer = wx.StdDialogButtonSizer()
         btnSizer.AddButton(wx.Button(self, wx.ID_OK))
@@ -65,8 +65,8 @@ class SimpleNameValueDialog(wx.Dialog):
         self.FindWindowById(wx.ID_OK).SetDefault()
 
         self.Fit()
-                
-        
+
+
     def createFields(self, fields):
         self.destroyFields()
         for name, label, args in fields:
@@ -75,33 +75,33 @@ class SimpleNameValueDialog(wx.Dialog):
                 kwargs.update(args)
             stxt = wx.StaticText(self, -1, label)
             txt = wx.TextCtrl(self, **kwargs)
-            
+
             self._contentSizer.Add(stxt, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT)
             self._contentSizer.Add(txt, 0, wx.EXPAND)
-            
+
             self.__dict__[name] = ""
             self._fields[name] = (stxt, txt)
-            
-        
+
+
     def destroyFields(self):
         for name, widgets in self._fields.iteritems():
             for w in widgets:
                 w.Destroy()
             del self.__dict__[name]
-            
-    
+
+
     def loadValues(self, values):
         self.clearValues()
         for name, value in values.iteritems():
             if name in self._fields.keys():
                 setattr(self, name, value)
-    
+
     def clearValues(self):
         for name in self._fields.keys():
             setattr(self, name, "")
 
-    
-    
+
+
 class _TransferValidator(wx.PyValidator):
     """
     This validator is used to transfer values to/from the widgets and
@@ -113,17 +113,17 @@ class _TransferValidator(wx.PyValidator):
 
     def Clone(self):
         return _TransferValidator(self.name)
-    
-        
+
+
     def Validate(self, win):
         return True
-    
+
     def TransferFromWindow(self):
         dlg = self.Window.Parent
         value = dlg._fields[self.name][1].GetValue()
         setattr(dlg, self.name, value)
         return True
-    
+
     def TransferToWindow(self):
         dlg = self.Window.Parent
         value = getattr(dlg, self.name)
@@ -131,19 +131,19 @@ class _TransferValidator(wx.PyValidator):
         return True
 
 
-        
-        
+
+
 if __name__ == '__main__':
     from wx.lib.mixins.inspection import InspectableApp
     app = InspectableApp(redirect=False)
     #app = wx.App(redirect=False)
-    
+
     fields = [ ('username', 'Login ID:', None),
                ('passwd',   'Password:', dict(size=(150,-1), style=wx.TE_PASSWORD)),
                ]
-    
-    dlg = SimpleNameValueDialog(None, title="This is the title", 
-                                fields=fields, 
+
+    dlg = SimpleNameValueDialog(None, title="This is the title",
+                                fields=fields,
                                 initialValues=dict(username='rdunn'),
                                 captionTitle="Login",
                                 captionDescr="Enter your testing credentials")
@@ -151,5 +151,5 @@ if __name__ == '__main__':
         print(dlg.username, dlg.passwd)
     dlg.Destroy()
     app.MainLoop()
-    
-    
+
+

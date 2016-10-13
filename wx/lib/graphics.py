@@ -64,46 +64,46 @@ FORMAT_A1     = cairo.FORMAT_A1
 # Compositing operators.  See http://cairographics.org/operators
 
 # clear destination layer (bounded)
-OPERATOR_CLEAR = cairo.OPERATOR_CLEAR         
+OPERATOR_CLEAR = cairo.OPERATOR_CLEAR
 
 # replace destination layer (bounded)
-OPERATOR_SOURCE = cairo.OPERATOR_SOURCE       
+OPERATOR_SOURCE = cairo.OPERATOR_SOURCE
 
 # draw source layer on top of destination layer (bounded)
-OPERATOR_OVER = cairo.OPERATOR_OVER           
+OPERATOR_OVER = cairo.OPERATOR_OVER
 
 # draw source where there was destination content (unbounded)
-OPERATOR_IN = cairo.OPERATOR_IN               
+OPERATOR_IN = cairo.OPERATOR_IN
 
 # draw source where there was no destination content (unbounded)
-OPERATOR_OUT = cairo.OPERATOR_OUT             
+OPERATOR_OUT = cairo.OPERATOR_OUT
 
 # draw source on top of destination content and only there
-OPERATOR_ATOP = cairo.OPERATOR_ATOP           
+OPERATOR_ATOP = cairo.OPERATOR_ATOP
 
 # ignore the source
-OPERATOR_DEST = cairo.OPERATOR_DEST           
+OPERATOR_DEST = cairo.OPERATOR_DEST
 
 # draw destination on top of source
-OPERATOR_DEST_OVER = cairo.OPERATOR_DEST_OVER 
+OPERATOR_DEST_OVER = cairo.OPERATOR_DEST_OVER
 
 # leave destination only where there was source content (unbounded)
-OPERATOR_DEST_IN = cairo.OPERATOR_DEST_IN     
+OPERATOR_DEST_IN = cairo.OPERATOR_DEST_IN
 
 # leave destination only where there was no source content
-OPERATOR_DEST_OUT = cairo.OPERATOR_DEST_OUT   
+OPERATOR_DEST_OUT = cairo.OPERATOR_DEST_OUT
 
 # leave destination on top of source content and only there (unbounded)
-OPERATOR_DEST_ATOP = cairo.OPERATOR_DEST_ATOP 
+OPERATOR_DEST_ATOP = cairo.OPERATOR_DEST_ATOP
 
 # source and destination are shown where there is only one of them
-OPERATOR_XOR = cairo.OPERATOR_XOR             
+OPERATOR_XOR = cairo.OPERATOR_XOR
 
 # source and destination layers are accumulated
-OPERATOR_ADD = cairo.OPERATOR_ADD             
+OPERATOR_ADD = cairo.OPERATOR_ADD
 
 # like over, but assuming source and dest are disjoint geometries
-OPERATOR_SATURATE = cairo.OPERATOR_SATURATE   
+OPERATOR_SATURATE = cairo.OPERATOR_SATURATE
 
 
 
@@ -112,18 +112,18 @@ OPERATOR_SATURATE = cairo.OPERATOR_SATURATE
 # current backends support the the SUBPIXEL mode.
 
 # Use the default antialiasing for the subsystem and target device
-ANTIALIAS_DEFAULT = cairo.ANTIALIAS_DEFAULT  
+ANTIALIAS_DEFAULT = cairo.ANTIALIAS_DEFAULT
 
 # Use a bilevel alpha mask
-ANTIALIAS_NONE = cairo.ANTIALIAS_NONE  
+ANTIALIAS_NONE = cairo.ANTIALIAS_NONE
 
 # Perform single-color antialiasing (using shades of gray for black
 # text on a white background, for example).
-ANTIALIAS_GRAY = cairo.ANTIALIAS_GRAY  
+ANTIALIAS_GRAY = cairo.ANTIALIAS_GRAY
 
 # Perform antialiasing by taking advantage of the order of subpixel
 # elements on devices such as LCD panels
-ANTIALIAS_SUBPIXEL = cairo.ANTIALIAS_SUBPIXEL  
+ANTIALIAS_SUBPIXEL = cairo.ANTIALIAS_SUBPIXEL
 
 
 
@@ -174,12 +174,12 @@ class GraphicsPen(GraphicsObject):
     _capMap = { wx.CAP_BUTT       : cairo.LINE_CAP_BUTT,
                 wx.CAP_ROUND      : cairo.LINE_CAP_ROUND,
                 wx.CAP_PROJECTING : cairo.LINE_CAP_SQUARE }
-    
+
     _joinMap = { wx.JOIN_BEVEL : cairo.LINE_JOIN_BEVEL,
                  wx.JOIN_MITER : cairo.LINE_JOIN_MITER,
                  wx.JOIN_ROUND : cairo.LINE_JOIN_ROUND }
-        
-    
+
+
     def __init__(self, colour=wx.BLACK, width=1, style=wx.SOLID):
         """
         Create a new ``GraphicsPen``
@@ -193,7 +193,7 @@ class GraphicsPen(GraphicsObject):
         self._join = wx.JOIN_ROUND
         self._stipple = None
         self._pattern = None
-        
+
 
     @staticmethod
     def CreateFromPen(pen):
@@ -327,7 +327,7 @@ class GraphicsPen(GraphicsObject):
             self._pattern = value
         return locals()
 
-    
+
     def Apply(self, ctx):
         """
         Apply this pen's properties to the given context.
@@ -340,10 +340,10 @@ class GraphicsPen(GraphicsObject):
         ctx.set_line_cap(self._capMap[self._cap])
         ctx.set_line_join(self._joinMap[self._join])
         ctx.set_dash([])
-        
+
         if self._style == wx.SOLID:
             ctx.set_source_rgba( *_colourToValues(self._colour) )
-            
+
         elif self._style == wx.STIPPLE:
             if not self._pattern and self._stipple:
                 # make a pattern from the stipple bitmap
@@ -351,20 +351,20 @@ class GraphicsPen(GraphicsObject):
                 self._pattern = cairo.SurfacePattern(img)
                 self._pattern.set_extend(cairo.EXTEND_REPEAT)
             ctx.set_source(self._pattern)
-        
+
         elif self._style == wx.USER_DASH:
             ctx.set_source_rgba( *_colourToValues(self._colour) )
             ctx.set_dash(self._dashes)
-            
+
         elif self._style in [wx.DOT, wx.DOT_DASH, wx.LONG_DASH, wx.SHORT_DASH]:
             ctx.set_source_rgba( *_colourToValues(self._colour) )
             ctx.set_dash( _stdDashes(self._style, self._width) )
-        
+
         elif self._style in [wx.BDIAGONAL_HATCH, wx.CROSSDIAG_HATCH, wx.FDIAGONAL_HATCH,
                              wx.CROSS_HATCH, wx.HORIZONTAL_HATCH, wx.VERTICAL_HATCH]:
             pass  # TODO  make a stock pattern...
-        
-    
+
+
 #---------------------------------------------------------------------------
 
 class GraphicsBrush(GraphicsObject):
@@ -374,7 +374,7 @@ class GraphicsBrush(GraphicsObject):
     stipple created from a :class:`wx.Bitmap`, or a Cairo ``Pattern``
     object.
     """
-    
+
     def __init__(self, colour=wx.BLACK, style=wx.BRUSHSTYLE_SOLID):
         """
         Create a new ``GraphicsBrush``.
@@ -383,7 +383,7 @@ class GraphicsBrush(GraphicsObject):
         self._style = style
         self._stipple = None
         self._pattern = None
-        
+
 
     @staticmethod
     def CreateFromBrush(brush):
@@ -477,7 +477,7 @@ class GraphicsBrush(GraphicsObject):
         Called by :class:`GraphicsContext` as needed.
         """
         ctx = ctx.GetNativeContext()
-        
+
         if self._style == wx.BRUSHSTYLE_SOLID:
             ctx.set_source_rgba( *_colourToValues(self._colour) )
 
@@ -488,7 +488,7 @@ class GraphicsBrush(GraphicsObject):
                 self._pattern = cairo.SurfacePattern(img)
                 self._pattern.set_extend(cairo.EXTEND_REPEAT)
             ctx.set_source(self._pattern)
-            
+
 #---------------------------------------------------------------------------
 
 class GraphicsFont(GraphicsObject):
@@ -519,7 +519,7 @@ class GraphicsFont(GraphicsObject):
 
     def IsNull(self):
         return self._font is None
-    
+
 
     @staticmethod
     def CreateFromFont(font, colour=None):
@@ -597,7 +597,7 @@ class GraphicsFont(GraphicsObject):
         nctx.set_font_face(self._fontface)
         nctx.set_font_size(self._pointSize)
 
-        
+
 #---------------------------------------------------------------------------
 
 class GraphicsBitmap(GraphicsObject):
@@ -616,7 +616,7 @@ class GraphicsBitmap(GraphicsObject):
     def IsNull(self):
         return self._surface is None
 
-    
+
     @staticmethod
     def CreateFromBitmap(bitmap):
         """Create a GraphicsBitmap from a wx.Bitmap"""
@@ -664,7 +664,7 @@ class GraphicsBitmap(GraphicsObject):
         # long as this object does
         b._buffer = buffer
         return b
-        
+
 
     @Property
     def Width():
@@ -768,12 +768,12 @@ class GraphicsMatrix(GraphicsObject):
         """Inverts the matrix."""
         self._matrix.invert()
         return self
-    
+
 
     def IsEqual(self, matrix):
         """Returns True if the elements of the transformation matrices are equal."""
         return self._matrix == matrix._matrix
-    
+
 
     def IsIdentity(self):
         """Returns True if this is the identity matrix."""
@@ -815,7 +815,7 @@ class GraphicsMatrix(GraphicsObject):
         m = GraphicsMatrix()
         m.Set(*self.Get())
         return m
-    
+
 #---------------------------------------------------------------------------
 
 class GraphicsPath(GraphicsObject):
@@ -839,7 +839,7 @@ class GraphicsPath(GraphicsObject):
         Adds an arc of a circle centering at (x,y) with radius, from
         startAngle to endAngle.
         """
-        # clockwise means positive in our system (y pointing downwards) 
+        # clockwise means positive in our system (y pointing downwards)
         if clockwise or endAngle-startAngle >= 2*math.pi:
             self._pathContext.arc(x, y, radius, startAngle, endAngle)
         else:
@@ -868,7 +868,7 @@ class GraphicsPath(GraphicsObject):
         alpha = math.radians(alpha)
 
         dist = radius / math.sin(alpha/2) * math.cos(alpha/2)
-        
+
         # calculate tangential points
         t1 = (v1 * dist) + p1
         t2 = (v2 * dist) + p1
@@ -884,7 +884,7 @@ class GraphicsPath(GraphicsObject):
         self.AddArc(c.x, c.y, radius, math.radians(a1), math.radians(a2), True)
         self.AddLineToPoint(p2.x, p2.y)
         return self
-        
+
 
     def AddCircle(self, x, y, radius):
         """
@@ -921,7 +921,7 @@ class GraphicsPath(GraphicsObject):
         p.Transform(m)
         self.AddPath(p)
         return self
-        
+
 
     def AddLineToPoint(self, x, y):
         """
@@ -953,7 +953,7 @@ class GraphicsPath(GraphicsObject):
         c2 = c * (2/3.0) + end * (1/3.0)
         self.AddCurveToPoint(c1.x, c1.y, c2.x, c2.y, x, y);
         return self
-        
+
 
     def AddRectangle(self, x, y, w, h):
         """
@@ -977,7 +977,7 @@ class GraphicsPath(GraphicsObject):
             self.AddArcToPoint(x + w, y, x + w, y + h / 2.0, radius)
             self.CloseSubpath()
         return self
-            
+
 
     def CloseSubpath(self):
         """
@@ -997,7 +997,7 @@ class GraphicsPath(GraphicsObject):
         rule = d[fillStyle]
         self._pathContext.set_fill_rule(rule)
         return self._pathContext.in_stroke(x,y) or self._pathContext.in_fill(x,y)
-        
+
 
     def GetCurrentPoint(self):
         """
@@ -1064,7 +1064,7 @@ class GraphicsPath(GraphicsObject):
             h = y2 - y1
         return (x, y, w, h)
 
-    
+
 #---------------------------------------------------------------------------
 
 class GraphicsGradientStop(object):
@@ -1076,7 +1076,7 @@ class GraphicsGradientStop(object):
     def __init__(self, colour=wx.TransparentColour, pos=0.0):
         self.SetColour(colour)
         self.SetPosition(pos)
-        
+
     def GetColour(self):
         return self._colour
     def SetColour(self, value):
@@ -1084,17 +1084,17 @@ class GraphicsGradientStop(object):
         assert isinstance(value, wx.Colour)
         self._colour = value
     Colour = property(GetColour, SetColour)
-    
-    
+
+
     def GetPosition(self):
         return self._pos
     def SetPosition(self, value):
         assert value >= 0.0 and value <= 1.0
         self._pos = value
     Position = property(GetPosition, SetPosition)
-    
-    
-    
+
+
+
 class GraphicsGradientStops(object):
     """
     An ordered collection of gradient color stops
@@ -1107,7 +1107,7 @@ class GraphicsGradientStops(object):
         self.Add(startColour, 0.0)
         self.Add(endColour, 1.0)
 
-        
+
     def Add(self, *args):
         """
         Add a new color to the collection. ``args`` may be either a gradient stop,
@@ -1121,38 +1121,38 @@ class GraphicsGradientStops(object):
         else:
             raise ValueError("Invalid parameters passed to Add")
         assert isinstance(stop, GraphicsGradientStop)
-        
+
         self._stops.append(stop)
         self._stops.sort(key=lambda x: x.Position)
 
-        
+
     def GetCount(self):
         return len(self._stops)
     Count = property(GetCount)
     def __len__(self):
         return self.GetCount()
 
-    
+
     def Item(self, n):
         return self._stops[n]
     def __getitem__(self, n):
         return self._stops[n]
 
-    
+
     def GetStartColour(self):
         return self._stops[0].Colour
     def SetStartColour(self, col):
         self._stops[0].Colour = col
     StartColour = property(GetStartColour, SetStartColour)
 
-    
+
     def GetEndColour(self):
         return self._stops[-1].Colour
     def SetEndColour(self, col):
         self._stops[-1].Colour = col
     EndColour = property(GetEndColour, SetEndColour)
-    
-    
+
+
 #---------------------------------------------------------------------------
 
 class GraphicsContext(GraphicsObject):
@@ -1174,12 +1174,12 @@ class GraphicsContext(GraphicsObject):
         self._height = 10000.0
         if size is not None:
             self._width, self._height = size
-            
+
 
     def IsNull(self):
         return self._context is None
 
-    
+
     @staticmethod
     def Create(dc=None):
         """
@@ -1212,7 +1212,7 @@ class GraphicsContext(GraphicsObject):
         """
         surface = cairo.ImageSurface(FORMAT_ARGB32, 1, 1)
         ctx = cairo.Context(surface)
-        return GraphicsContext(ctx, 
+        return GraphicsContext(ctx,
                                (surface.get_width(), surface.get_height()))
 
 
@@ -1252,7 +1252,7 @@ class GraphicsContext(GraphicsObject):
 
     # Our implementation is able to create these things directly, but
     # we'll keep them here too for compatibility with wx.GraphicsContext.
-    
+
     def CreateBrush(self, brush):
         """
         Create a brush from a :class:`wx.Brush`.
@@ -1282,20 +1282,20 @@ class GraphicsContext(GraphicsObject):
             stops = GraphicsGradientStops(c1, c2)
         else:
             raise ValueError("Invalid args passed to CreateLinearGradientBrush")
-        
+
         pattern = cairo.LinearGradient(x1, y1, x2, y2)
         for stop in stops:
             pattern.add_color_stop_rgba(stop.Position, *_colourToValues(stop.Colour))
         return GraphicsBrush.CreateFromPattern(pattern)
 
-    
+
     def CreateRadialGradientBrush(self, xo, yo, xc, yc, radius, *args):
         """
         Creates a native brush, having a radial gradient originating at point
         (xo,yo) and ending on a circle around (xc,yc) with the given radius;
         the colours may be specified by just the two extremes or the full
         array of gradient stops.
-        
+
         The `*args` can be either a :class:`GraphicsGradientStops` or just two
         colours to be used as the starting and ending gradient colours.
         """
@@ -1307,13 +1307,13 @@ class GraphicsContext(GraphicsObject):
             stops = GraphicsGradientStops(oColour, cColour)
         else:
             raise ValueError("Invalid args passed to CreateLinearGradientBrush")
-        
+
         pattern = cairo.RadialGradient(xo, yo, 0.0, xc, yc, radius)
         for stop in stops:
             pattern.add_color_stop_rgba(stop.Position, *_colourToValues(stop.Colour))
         return GraphicsBrush.CreateFromPattern(pattern)
 
-      
+
     def CreateMatrix(self, a=1.0, b=0, c=0, d=1.0, tx=0, ty=0):
         """
         Create a new matrix object.
@@ -1321,7 +1321,7 @@ class GraphicsContext(GraphicsObject):
         m = GraphicsMatrix()
         m.Set(a, b, c, d, tx, ty)
         return m
-    
+
     def CreatePath(self):
         """
         Create a new path obejct.
@@ -1351,7 +1351,7 @@ class GraphicsContext(GraphicsObject):
         :meth:`PushState`.
         """
         self._context.restore()
-            
+
 
     def Clip(self, x, y, w, h):
         """
@@ -1363,7 +1363,7 @@ class GraphicsContext(GraphicsObject):
         p.AddRectangle(x, y, w, h)
         self._context.append_path(p.GetNativePath())
         self._context.clip()
-        
+
 
     def ClipRegion(self, region):
         """
@@ -1377,14 +1377,14 @@ class GraphicsContext(GraphicsObject):
             ri.Next()
         self._context.append_path(p.GetNativePath())
         self._context.clip()
-        
+
 
     def ResetClip(self):
         """
         Resets the clipping region to the original shape of the context.
         """
         self._context.reset_clip()
-        
+
 
     def GetNativeContext(self):
         return self._context
@@ -1410,7 +1410,7 @@ class GraphicsContext(GraphicsObject):
         user-space origin by (dx, dy).
         """
         self._context.translate(dx, dy)
-        
+
 
     def Scale(self, xScale, yScale):
         """
@@ -1418,7 +1418,7 @@ class GraphicsContext(GraphicsObject):
         user-space axes by xScale and yScale.
         """
         self._context.scale(xScale, yScale)
-        
+
 
     def Rotate(self, angle):
         """
@@ -1434,14 +1434,14 @@ class GraphicsContext(GraphicsObject):
         as an additional transformation.
         """
         self._context.transform(matrix.GetNativeMatrix())
-        
+
 
     def SetTransform(self, matrix):
         """
         Set the context's current transformation matrix to matrix.
         """
         self._context.set_matrix(matrix.GetNativeMatrix())
-        
+
 
     def GetTransform(self):
         """
@@ -1489,7 +1489,7 @@ class GraphicsContext(GraphicsObject):
         """Returns the current brush"""
         return self._brush
     Brush = property(GetBrush, SetBrush)
-    
+
 
     def SetFont(self, font, colour=None):
         """
@@ -1507,7 +1507,7 @@ class GraphicsContext(GraphicsObject):
     def GetFont(self): return (self._font, self._fontColour)
     def _SetFont(self, *both): self.SetFont(*both)
     Font = property(GetFont, _SetFont)
-    
+
 
     def StrokePath(self, path):
         """
@@ -1518,8 +1518,8 @@ class GraphicsContext(GraphicsObject):
             self._context.append_path(path.GetNativePath())
             self._pen.Apply(self)
             self._context.stroke()
-            
-                                      
+
+
     def FillPath(self, path, fillStyle=wx.ODDEVEN_RULE):
         """
         Fills the path using the current brush.
@@ -1533,7 +1533,7 @@ class GraphicsContext(GraphicsObject):
             rule = d[fillStyle]
             self._context.set_fill_rule(rule)
             self._context.fill()
-            
+
 
     def DrawPath(self, path, fillStyle=wx.ODDEVEN_RULE):
         """
@@ -1543,7 +1543,7 @@ class GraphicsContext(GraphicsObject):
         # code here and only loading the path once.
         self.FillPath(path, fillStyle)
         self.StrokePath(path)
-        
+
 
     def DrawText(self, text, x, y, backgroundBrush=None):
         """
@@ -1566,8 +1566,8 @@ class GraphicsContext(GraphicsObject):
 
         else:
             self._DrawText(text, x, y)
-            
-            
+
+
     def _DrawText(self, text, x, y, angle=None):
         """helper used by DrawText and DrawRotatedText"""
         if angle is not None:
@@ -1575,7 +1575,7 @@ class GraphicsContext(GraphicsObject):
             self.Translate(x, y)
             self.Rotate(-angle)
             x = y = 0
-            
+
         self._font.Apply(self, self._fontColour)
         # Cairo's x,y for drawing text is at the baseline, so we need to adjust
         # the position we move to by the ascent.
@@ -1586,7 +1586,7 @@ class GraphicsContext(GraphicsObject):
 
         if angle is not None:
             self.PopState()
-            
+
 
     def DrawRotatedText(self, text, x, y, angle, backgroundBrush=None):
         """
@@ -1613,7 +1613,7 @@ class GraphicsContext(GraphicsObject):
 
         else:
             self._DrawText(text, x, y, angle)
-            
+
 
     def GetFullTextExtent(self, text):
         """
@@ -1635,7 +1635,7 @@ class GraphicsContext(GraphicsObject):
         externalLeading = max(0, height - (ascent + descent))
 
         return (width, height, descent, externalLeading)
-        
+
 
     def GetTextExtent(self, text):
         """
@@ -1645,10 +1645,10 @@ class GraphicsContext(GraphicsObject):
         (width, height, descent, externalLeading) = self.GetFullTextExtent(text)
         return (width, height)
 
-    
+
     def GetPartialTextExtents(self, text):
         raise NotImplementedError("TODO")
-    
+
 
     def DrawBitmap(self, bmp, x, y, w=-1, h=-1):
         """
@@ -1680,10 +1680,10 @@ class GraphicsContext(GraphicsObject):
         self._context.rectangle(0, 0, bw, bh)
         # fill the rectangle with the pattern
         self._context.fill()
-        
+
         self.PopState()
 
-        
+
     def DrawIcon(self, icon, x, y, w=-1, h=-1):
         raise NotImplementedError("TODO")
 
@@ -1696,7 +1696,7 @@ class GraphicsContext(GraphicsObject):
         path.MoveToPoint(x1, y1)
         path.AddLineToPoint(x2, y2)
         self.StrokePath(path)
-        
+
 
     def StrokeLines(self, points):
         """
@@ -1711,7 +1711,7 @@ class GraphicsContext(GraphicsObject):
             x, y = point
             path.AddLineToPoint(x, y)
         self.StrokePath(path)
-        
+
 
     def StrokeLineSegments(self, beginPoints, endPoints):
         """
@@ -1724,7 +1724,7 @@ class GraphicsContext(GraphicsObject):
             path.MoveToPoint(begin[0], begin[1])
             path.AddLineToPoint(end[0], end[1])
         self.StrokePath(path)
-        
+
 
     def DrawLines(self, points, fillStyle=wx.ODDEVEN_RULE):
         """
@@ -1759,7 +1759,7 @@ class GraphicsContext(GraphicsObject):
         path.AddEllipse(x, y, w, h)
         self.DrawPath(path)
 
-    
+
     def DrawRoundedRectangle(self, x, y, w, h, radius):
         """
         Stroke and fill a rounded rectangle using the current pen and
@@ -1768,7 +1768,7 @@ class GraphicsContext(GraphicsObject):
         path = GraphicsPath()
         path.AddRoundedRectangle(x, y, w, h, radius)
         self.DrawPath(path)
-        
+
 
 
     def GetCompositingOperator(self):
@@ -1811,7 +1811,7 @@ class GraphicsContext(GraphicsObject):
         """
         self._layerOpacities.append(opacity)
         self._context.push_group()
-        
+
 
     def EndLayer(self):
         """
@@ -1823,12 +1823,12 @@ class GraphicsContext(GraphicsObject):
         self._context.pop_group_to_source()
         self._context.paint_with_alpha(opacity)
 
-        
+
     def GetSize(self):
         return (self._width, self._height)
     Size = property(GetSize)
-    
-        
+
+
     # Some things not in wx.GraphicsContext (yet)
 
     def DrawCircle(self, x, y, radius):
@@ -1839,7 +1839,7 @@ class GraphicsContext(GraphicsObject):
         path = GraphicsPath()
         path.AddCircle(x, y, radius)
         self.DrawPath(path)
-        
+
 
     def ClipPath(self, path):
         """
@@ -1848,7 +1848,7 @@ class GraphicsContext(GraphicsObject):
         self._context.append_path(path.GetNativePath())
         self._context.clip()
 
-    
+
     def Clear(self, colour=None):
         """
         Clear the context using the given color or the currently set brush.
@@ -1867,7 +1867,7 @@ class GraphicsContext(GraphicsObject):
 
         brush.Apply(self)
         self._context.paint()
-        
+
         self._context.set_operator(op)
         self.PopState()
 
@@ -1885,13 +1885,13 @@ def _makeColour(colour):
     else:
         return colour
 
-    
-def _colourToValues(c):    
+
+def _colourToValues(c):
     """
     Helper which converts wx.Colour components to a set of values between 0 and 1
     """
     return tuple( [x/255.0 for x in c.Get(True)] )
-    
+
 
 class _OffsetHelper(object):
     """A helper used by the context class."""
@@ -1917,7 +1917,7 @@ def _stdDashes(style, width):
     """
     if width < 1.0:
         width = 1.0
-        
+
     if style == wx.DOT:
         dashes = [ width, width + 2.0]
     elif style == wx.DOT_DASH:
@@ -1929,5 +1929,5 @@ def _stdDashes(style, width):
 
     return dashes
 
-        
+
 #---------------------------------------------------------------------------

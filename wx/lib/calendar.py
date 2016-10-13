@@ -124,7 +124,7 @@ def GetMonthList():
 
     rtype: `list`
     """
-    
+
     monthlist = []
     for i in range(13):
         name = Month[i]

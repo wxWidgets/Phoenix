@@ -57,7 +57,7 @@ class IEHtmlWindow(wx.lib.activex.ActiveXCtrl):
 
         self._canGoBack = False
         self._canGoForward = False
-        
+
 
     def LoadString(self, html):
         """Load the html document from a string"""
@@ -78,7 +78,7 @@ class IEHtmlWindow(wx.lib.activex.ActiveXCtrl):
         for line in stream:
             doc.write(line)
         doc.close()
-        
+
 
     def LoadUrl(self, URL, Flags=0):
         """Load the document from url."""
@@ -101,8 +101,8 @@ class IEHtmlWindow(wx.lib.activex.ActiveXCtrl):
             return range.htmlText
         else:
             return range.text
-        
-    
+
+
     def GetText(self, asHTML=True):
         """
         Returns the contents of the the html document as either html or plain text.
@@ -115,7 +115,7 @@ class IEHtmlWindow(wx.lib.activex.ActiveXCtrl):
         if not asHTML:
             # if just fetching the text then get it from the body property
             return doc.body.innerText
-        
+
         # otherwise look in the all property
         for idx in range(doc.all.length):
             # the first item with content should be the <html> tag and all its
@@ -138,9 +138,9 @@ class IEHtmlWindow(wx.lib.activex.ActiveXCtrl):
     def PrintPreview(self):
         self.ctrl.ExecWB( SHDocVw.OLECMDID_PRINTPREVIEW,
                           SHDocVw.OLECMDEXECOPT_DODEFAULT)
-        
 
-        
+
+
     def GoBack(self):
         if self.CanGoBack():
             return self.ctrl.GoBack()
@@ -182,7 +182,7 @@ class IEHtmlWindow(wx.lib.activex.ActiveXCtrl):
             self._canGoForward = enable
         if command == SHDocVw.CSC_NAVIGATEBACK:
             self._canGoBack = enable
-            
+
 
     # Getters, Setters and properties
     def _get_Busy(self):
@@ -238,12 +238,12 @@ class IEHtmlWindow(wx.lib.activex.ActiveXCtrl):
 if __name__ == '__main__':
     app = wx.App(False)
     frm = wx.Frame(None, title="AX Test Window")
-    
+
     ie = IEHtmlWindow(frm)
-    
+
     frm.Show()
     import wx.lib.inspection
     wx.lib.inspection.InspectionTool().Show()
     app.MainLoop()
-                                 
+
 

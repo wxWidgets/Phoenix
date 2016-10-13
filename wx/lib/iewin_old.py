@@ -114,7 +114,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
         # in case the old 'ID' param is used as a keyword
         if ID != -1:
             id = ID
-            
+
         wx.activex.IEHtmlWindowBase.__init__(self, parent,
             wx.activex.CLSID('{8856F961-340A-11D0-A96B-00C04FD705A2}'),
             id, pos, size, style, name)
@@ -153,13 +153,13 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
         Returns the contents of the the html document as either html or plain text.
         """
         return wx.activex.IEHtmlWindowBase.GetText(self, asHTML)
-        
-   
+
+
     def SetCharset(self, charset):
         """"""
         return wx.activex.IEHtmlWindowBase.SetCharset(self, charset)
 
-        
+
     # Methods exported by the ActiveX object
     def QueryInterface(self, riid):
         return self.CallAXMethod('QueryInterface', riid)
@@ -398,100 +398,100 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #  --------------------
 #  application
 #      type:VT_DISPATCH  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  parent
 #      type:VT_DISPATCH  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  container
 #      type:VT_DISPATCH  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  document
 #      type:VT_DISPATCH  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  toplevelcontainer
 #      type:bool  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  type
 #      type:string  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  left
 #      type:int  arg:int  canGet:True  canSet:True
-#  
+#
 #  top
 #      type:int  arg:int  canGet:True  canSet:True
-#  
+#
 #  width
 #      type:int  arg:int  canGet:True  canSet:True
-#  
+#
 #  height
 #      type:int  arg:int  canGet:True  canSet:True
-#  
+#
 #  locationname
 #      type:string  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  locationurl
 #      type:string  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  busy
 #      type:bool  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  name
 #      type:string  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  hwnd
 #      type:int  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  fullname
 #      type:string  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  path
 #      type:string  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  visible
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  statusbar
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  statustext
 #      type:string  arg:string  canGet:True  canSet:True
-#  
+#
 #  toolbar
 #      type:int  arg:int  canGet:True  canSet:True
-#  
+#
 #  menubar
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  fullscreen
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  readystate
 #      type:unsupported type 29  arg:VT_EMPTY  canGet:True  canSet:False
-#  
+#
 #  offline
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  silent
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  registerasbrowser
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  registerasdroptarget
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  theatermode
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  addressbar
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
+#
 #  resizable
 #      type:bool  arg:bool  canGet:True  canSet:True
-#  
-#  
-#  
-#  
+#
+#
+#
+#
 #  METHODS
 #  --------------------
 #  QueryInterface
@@ -501,19 +501,19 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:unsupported type 29
 #          ppvObj
 #              in:False  out:True  optional:False  type:unsupported type 26
-#  
+#
 #  AddRef
 #      retType:  int
-#  
+#
 #  Release
 #      retType:  int
-#  
+#
 #  GetTypeInfoCount
 #      retType:  VT_VOID
 #      params:
 #          pctinfo
 #              in:False  out:True  optional:False  type:int
-#  
+#
 #  GetTypeInfo
 #      retType:  VT_VOID
 #      params:
@@ -523,7 +523,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:int
 #          pptinfo
 #              in:False  out:True  optional:False  type:unsupported type 26
-#  
+#
 #  GetIDsOfNames
 #      retType:  VT_VOID
 #      params:
@@ -537,7 +537,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:int
 #          rgdispid
 #              in:False  out:True  optional:False  type:int
-#  
+#
 #  Invoke
 #      retType:  VT_VOID
 #      params:
@@ -557,19 +557,19 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:False  out:True  optional:False  type:unsupported type 29
 #          puArgErr
 #              in:False  out:True  optional:False  type:int
-#  
+#
 #  GoBack
 #      retType:  VT_VOID
-#  
+#
 #  GoForward
 #      retType:  VT_VOID
-#  
+#
 #  GoHome
 #      retType:  VT_VOID
-#  
+#
 #  GoSearch
 #      retType:  VT_VOID
-#  
+#
 #  Navigate
 #      retType:  VT_VOID
 #      params:
@@ -583,22 +583,22 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:True  type:VT_VARIANT
 #          Headers
 #              in:True  out:False  optional:True  type:VT_VARIANT
-#  
+#
 #  Refresh
 #      retType:  VT_VOID
-#  
+#
 #  Refresh2
 #      retType:  VT_VOID
 #      params:
 #          Level
 #              in:True  out:False  optional:False  type:VT_VARIANT
-#  
+#
 #  Stop
 #      retType:  VT_VOID
-#  
+#
 #  Quit
 #      retType:  VT_VOID
-#  
+#
 #  ClientToWindow
 #      retType:  VT_VOID
 #      params:
@@ -606,7 +606,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:True  optional:False  type:int
 #          pcy
 #              in:True  out:True  optional:False  type:int
-#  
+#
 #  PutProperty
 #      retType:  VT_VOID
 #      params:
@@ -614,13 +614,13 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:string
 #          vtValue
 #              in:True  out:False  optional:False  type:VT_VARIANT
-#  
+#
 #  GetProperty
 #      retType:  VT_VARIANT
 #      params:
 #          Property
 #              in:True  out:False  optional:False  type:string
-#  
+#
 #  Navigate2
 #      retType:  VT_VOID
 #      params:
@@ -634,13 +634,13 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:True  type:VT_VARIANT
 #          Headers
 #              in:True  out:False  optional:True  type:VT_VARIANT
-#  
+#
 #  QueryStatusWB
 #      retType:  unsupported type 29
 #      params:
 #          cmdID
 #              in:True  out:False  optional:False  type:unsupported type 29
-#  
+#
 #  ExecWB
 #      retType:  VT_VOID
 #      params:
@@ -652,7 +652,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:VT_VARIANT
 #          pvaOut
 #              in:True  out:True  optional:True  type:VT_VARIANT
-#  
+#
 #  ShowBrowserBar
 #      retType:  VT_VOID
 #      params:
@@ -662,10 +662,10 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:VT_VARIANT
 #          pvarSize
 #              in:True  out:False  optional:True  type:VT_VARIANT
-#  
-#  
-#  
-#  
+#
+#
+#
+#
 #  EVENTS
 #  --------------------
 #  StatusTextChange
@@ -673,7 +673,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #      params:
 #          Text
 #              in:True  out:False  optional:False  type:string
-#  
+#
 #  ProgressChange
 #      retType:  VT_VOID
 #      params:
@@ -681,7 +681,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:int
 #          ProgressMax
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  CommandStateChange
 #      retType:  VT_VOID
 #      params:
@@ -689,25 +689,25 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:int
 #          Enable
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  DownloadBegin
 #      retType:  VT_VOID
-#  
+#
 #  DownloadComplete
 #      retType:  VT_VOID
-#  
+#
 #  TitleChange
 #      retType:  VT_VOID
 #      params:
 #          Text
 #              in:True  out:False  optional:False  type:string
-#  
+#
 #  PropertyChange
 #      retType:  VT_VOID
 #      params:
 #          szProperty
 #              in:True  out:False  optional:False  type:string
-#  
+#
 #  BeforeNavigate2
 #      retType:  VT_VOID
 #      params:
@@ -725,7 +725,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:VT_VARIANT
 #          Cancel
 #              in:True  out:True  optional:False  type:bool
-#  
+#
 #  NewWindow2
 #      retType:  VT_VOID
 #      params:
@@ -733,7 +733,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:True  optional:False  type:VT_DISPATCH
 #          Cancel
 #              in:True  out:True  optional:False  type:bool
-#  
+#
 #  NavigateComplete2
 #      retType:  VT_VOID
 #      params:
@@ -741,7 +741,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:VT_DISPATCH
 #          URL
 #              in:True  out:False  optional:False  type:VT_VARIANT
-#  
+#
 #  DocumentComplete
 #      retType:  VT_VOID
 #      params:
@@ -749,76 +749,76 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:VT_DISPATCH
 #          URL
 #              in:True  out:False  optional:False  type:VT_VARIANT
-#  
+#
 #  Quit
 #      retType:  VT_VOID
-#  
+#
 #  Visible
 #      retType:  VT_VOID
 #      params:
 #          Visible
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  ToolBar
 #      retType:  VT_VOID
 #      params:
 #          ToolBar
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  MenuBar
 #      retType:  VT_VOID
 #      params:
 #          MenuBar
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  StatusBar
 #      retType:  VT_VOID
 #      params:
 #          StatusBar
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  FullScreen
 #      retType:  VT_VOID
 #      params:
 #          FullScreen
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  TheaterMode
 #      retType:  VT_VOID
 #      params:
 #          TheaterMode
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  WindowSetResizable
 #      retType:  VT_VOID
 #      params:
 #          Resizable
 #              in:True  out:False  optional:False  type:bool
-#  
+#
 #  WindowSetLeft
 #      retType:  VT_VOID
 #      params:
 #          Left
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  WindowSetTop
 #      retType:  VT_VOID
 #      params:
 #          Top
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  WindowSetWidth
 #      retType:  VT_VOID
 #      params:
 #          Width
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  WindowSetHeight
 #      retType:  VT_VOID
 #      params:
 #          Height
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  WindowClosing
 #      retType:  VT_VOID
 #      params:
@@ -826,7 +826,7 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:bool
 #          Cancel
 #              in:True  out:True  optional:False  type:bool
-#  
+#
 #  ClientToHostWindow
 #      retType:  VT_VOID
 #      params:
@@ -834,19 +834,19 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:True  optional:False  type:int
 #          CY
 #              in:True  out:True  optional:False  type:int
-#  
+#
 #  SetSecureLockIcon
 #      retType:  VT_VOID
 #      params:
 #          SecureLockIcon
 #              in:True  out:False  optional:False  type:int
-#  
+#
 #  FileDownload
 #      retType:  VT_VOID
 #      params:
 #          Cancel
 #              in:True  out:True  optional:False  type:bool
-#  
+#
 #  NavigateError
 #      retType:  VT_VOID
 #      params:
@@ -860,19 +860,19 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:VT_VARIANT
 #          Cancel
 #              in:True  out:True  optional:False  type:bool
-#  
+#
 #  PrintTemplateInstantiation
 #      retType:  VT_VOID
 #      params:
 #          pDisp
 #              in:True  out:False  optional:False  type:VT_DISPATCH
-#  
+#
 #  PrintTemplateTeardown
 #      retType:  VT_VOID
 #      params:
 #          pDisp
 #              in:True  out:False  optional:False  type:VT_DISPATCH
-#  
+#
 #  UpdatePageStatus
 #      retType:  VT_VOID
 #      params:
@@ -882,13 +882,13 @@ class IEHtmlWindow(wx.activex.IEHtmlWindowBase):
 #              in:True  out:False  optional:False  type:VT_VARIANT
 #          fDone
 #              in:True  out:False  optional:False  type:VT_VARIANT
-#  
+#
 #  PrivacyImpactedStateChange
 #      retType:  VT_VOID
 #      params:
 #          bImpacted
 #              in:True  out:False  optional:False  type:bool
-#  
-#  
-#  
-#  
+#
+#
+#
+#
