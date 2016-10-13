@@ -30,7 +30,7 @@ def makeOtherFrame(helpctrl):
     import wx
     parent = helpctrl.GetFrame()
     otherFrame = wx.Frame(parent)
-    
+
 
 def main(args=sys.argv):
     if len(args) < 2:
@@ -75,7 +75,7 @@ def main(args=sys.argv):
     # The frame used by the HtmlHelpController is set to not prevent
     # app exit, so in the case of a standalone helpviewer like this
     # when the Print dialog is closed the help frame will be the only
-    # one left and the app will close unexpectedly. [Strangely, this 
+    # one left and the app will close unexpectedly. [Strangely, this
     # doesn't happen when the Options dialog is closed].
     # To work around this we'll create another frame that is never shown,
     # but which will be closed when the helpviewer frame is closed.

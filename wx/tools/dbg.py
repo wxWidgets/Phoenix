@@ -9,7 +9,7 @@
 #----------------------------------------------------------------------------
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o V2.5 compatability update 
+# o V2.5 compatability update
 #
 
 """
@@ -229,7 +229,7 @@ class Logger:
 if __name__ == "__main__":
     import  sys
     import  wx
-    
+
     wx.Log.SetActiveTarget(wx.LogStderr())
     logger = Logger('module')
     dbg = logger.dbg
