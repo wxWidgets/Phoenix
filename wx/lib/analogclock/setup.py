@@ -109,7 +109,7 @@ class _GroupBase(wx.Panel):
     def OnChoice(self, evt):
         self.clock.SetWindowStyle(eval(evt.GetString()))
 
-                              
+
     def UpdateControls(self):
         if hasattr(self, "ft"):
             self.ft.SetValue(self.clock.GetTickFont(self.target)[0])
@@ -236,7 +236,7 @@ class _Group_3(_Group_1):
             sizer.Detach(widget)
             widget.Destroy()
         sizer.Layout()
-        
+
         p = wx.StaticText(self, label="Shadow:")
         sizer.Add(p, pos=(2, 0), flag=wx.ALIGN_CENTRE_VERTICAL)
 
@@ -428,7 +428,7 @@ class Setup(wx.Dialog):
 
         self.SetSizerAndFit(sizer)
         wx.CallAfter(self.UpdateControls)
-        
+
 
     def OnClose(self, evt):
         self.Hide()

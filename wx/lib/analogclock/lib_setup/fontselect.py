@@ -17,13 +17,13 @@ from wx.lib.buttons import GenButton
 
 class FontSelect(GenButton):
     def __init__(self, parent, size=(75, 21), value=None):
-        GenButton.__init__(self, parent, wx.ID_ANY, label="Select...", 
+        GenButton.__init__(self, parent, wx.ID_ANY, label="Select...",
                            size=size)
         self.SetBezelWidth(1)
 
         self.parent = parent
         self.SetValue(value)
-        
+
         self.parent.Bind(wx.EVT_BUTTON, self.OnClick, self)
 
 
