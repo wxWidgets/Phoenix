@@ -131,7 +131,7 @@ In Shell Mode, two returns in a row executes the command, and
     Ctrl-Return and Shift-Return always print newlines.
 
 Saving and opening "sessions" is now supported!  This is a little
-different to other shells where the history is saved.  With PySlices, 
+different to other shells where the history is saved.  With PySlices,
 the whole document is saved in a simple text format!
 
 To disable this Tutorial on startup, uncheck it in the menu at:
@@ -155,10 +155,10 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         """Create SlicesShellFrame instance."""
         frame.Frame.__init__(self, parent, id, title, pos, size, style,shellName='PySlices')
         frame.ShellFrameMixin.__init__(self, config, dataDir)
-        
+
         if size == wx.DefaultSize:
             self.SetSize((750, 525))
-        
+
         intro = 'PySlices %s - The Flakiest Python Shell... Cut Up!' % VERSION
         self.SetStatusText(intro.replace('\n', ', '))
         self.sliceshell = SlicesShell(parent=self, id=-1, introText=intro,
@@ -176,12 +176,12 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
 
         self.sliceshell.SetFocus()
         self.LoadSettings()
-        
+
         self.currentDirectory = os.path.expanduser('~')
-        
+
         if filename!=None:
             self.bufferOpen(filename)
-        
+
         self.Bind(wx.EVT_IDLE, self.OnIdle)
 
 
@@ -208,7 +208,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
                'Platform: %s\n' % sys.platform + \
                'Python Version: %s\n' % sys.version.split()[0] + \
                'wxPython Version: %s\n' % wx.VERSION_STRING + \
-               ('\t(%s)\n' % ", ".join(wx.PlatformInfo[1:])) 
+               ('\t(%s)\n' % ", ".join(wx.PlatformInfo[1:]))
         dialog = wx.MessageDialog(self, text, title,
                                   wx.OK | wx.ICON_INFORMATION)
         dialog.ShowModal()
@@ -237,12 +237,12 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         if self.config is not None:
             self.SaveSettings(force=True)
             self.config.Flush()
-    
+
     def OnEnableShellMode(self,event):
         """Change between Slices Mode and Shell Mode"""
         frame.Frame.OnEnableShellMode(self,event)
         self.sliceshell.ToggleShellMode(self.enableShellMode)
-    
+
     def OnHideFoldingMargin(self,event):
         """Change between Slices Mode and Shell Mode"""
         frame.Frame.OnHideFoldingMargin(self,event)
@@ -256,7 +256,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         """Event handler for idle time."""
         self._updateTitle()
         event.Skip()
-    
+
     def _updateTitle(self):
         """Show current title information."""
         title = self.GetTitle()
@@ -268,7 +268,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         else:
             if title.startswith('* '):
                 self.SetTitle(title[2:])
-    
+
     def hasBuffer(self):
         """Return True if there is a current buffer."""
         if self.buffer:
@@ -287,7 +287,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         self.sliceshell.destroy()
         self.bufferDestroy()
         self.Destroy()
-        
+
         return False
 
     def bufferCreate(self, filename=None):
@@ -295,7 +295,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         self.bufferDestroy()
         buffer = Buffer()
         self.panel = panel = wx.Panel(parent=self, id=-1)
-        panel.Bind (wx.EVT_ERASE_BACKGROUND, lambda x: x)        
+        panel.Bind (wx.EVT_ERASE_BACKGROUND, lambda x: x)
         editor = Editor(parent=panel)
         panel.editor = editor
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -308,7 +308,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         self.setEditor(editor)
         self.editor.setFocus()
         self.SendSizeEvent()
-        
+
 
     def bufferDestroy(self):
         """Destroy the current buffer."""
@@ -346,7 +346,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
             cancel = self.bufferSuggestSave()
             if cancel:
                 return cancel
-        
+
         if file==None:
             file=wx.FileSelector('Open a PySlices File',
                                  wildcard='*.pyslices',
@@ -364,7 +364,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
             self.buffer.modulename = self.buffer.doc.filebase
             self.sliceshell.ScrollToLine(0)
         return
-    
+
 ##     def bufferPrint(self):
 ##         """Print buffer."""
 ##         pass
@@ -372,7 +372,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
 ##     def bufferRevert(self):
 ##         """Revert buffer to version of file on disk."""
 ##         pass
-    
+
     # was self.buffer.save(self): # """Save buffer."""
     def simpleSave(self,confirmed=False):
         filepath = self.buffer.doc.filepath
@@ -393,7 +393,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
             self.sliceshell.SetSavePoint()
             self.SetTitle( os.path.split(filepath)[1] + ' - PySlices')
             self.sliceshell.NeedsCheckForSave=False
-    
+
     def bufferSave(self):
         """Save buffer to its file."""
         if self.buffer.doc.filepath:
@@ -418,7 +418,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         if result.path not in ['',None]:
             if result.path[-9:]!=".pyslices":
                 result.path+=".pyslices"
-            
+
             self.buffer.doc = document.Document(result.path)
             self.buffer.name = self.buffer.doc.filename
             self.buffer.modulename = self.buffer.doc.filebase
@@ -427,7 +427,7 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
         else:
             cancel = True
         return cancel
-    
+
     def bufferSaveACopy(self):
         """Save buffer to a new filename."""
         filedir = ''
@@ -435,11 +435,11 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
             filedir = self.buffer.doc.filedir
         result = editor.saveSingle(title='Save a Copy of PySlices File',directory=filedir,
                                    wildcard='PySlices Files (*.pyslices)|*.pyslices')
-        
+
         if result.path not in ['',None]:
             if result.path[-9:]!=".pyslices":
                 result.path+=".pyslices"
-            
+
             # if not os.path.exists(result.path):
             try: # Allow overwrite...
                 fid = open(result.path, 'wb')
@@ -447,12 +447,12 @@ class SlicesShellFrame(frame.Frame, frame.ShellFrameMixin):
             finally:
                 if fid:
                     fid.close()
-                
+
             cancel = False
         else:
             cancel = True
         return cancel
-    
+
     def bufferSuggestSave(self):
         """Suggest saving changes.  Return True if user selected Cancel."""
         result = editor.messageDialog(parent=None,
@@ -512,7 +512,7 @@ Ctrl-Space        Show Auto Completion.
 Ctrl-Shift-Space  Show Call Tip.
 Ctrl-Shift-H      Complete Text from History.
 
-Ctrl+F            Search 
+Ctrl+F            Search
 Ctrl+G            Search next
 F12               on/off "free-edit" mode
                   For testing only -- This does not preserve markers!
@@ -646,7 +646,7 @@ class SlicesShell(editwindow.EditWindow):
         self.buffer.addEditor(self)
         self.buffer.name='This shell'
         self.NeedsCheckForSave=False
-        
+
         # Find out for which keycodes the interpreter will autocomplete.
         self.autoCompleteKeys = self.interp.getAutoCompleteKeys()
 
@@ -657,13 +657,13 @@ class SlicesShell(editwindow.EditWindow):
 
         # Keep track of multi-line commands.
         self.more = False
-        
+
         # Use Margins to track input / output / slice number
         self.margins = True
-        
+
         # For use with forced updates during long-running scripts
         self.lastUpdate=None
-        
+
         if self.margins:
             # margin 1 is already defined for the line numbers
             #  may eventually change it back to 0 like it ought to be...
@@ -680,29 +680,29 @@ class SlicesShell(editwindow.EditWindow):
             # tabs are bad, use spaces
             self.SetProperty("tab.timmy.whinge.level", "4")
             self.SetMargins(0,0)
-            
-            
+
+
             self.SetMarginMask(2, GROUPING_MASK | 1<<GROUPING_SELECTING )
             # Display Markers -24...
             self.SetMarginMask(3, IO_MASK | 1<<IO_SELECTING | 1<<READLINE_BG | 1<<INPUT_READLINE )
             self.SetMarginMask(4, stc.STC_MASK_FOLDERS)
             # Set the mask for the line markers, too...
             self.SetMarginMask(1, 0)
-            
+
             if hideFoldingMargin:
                 self.SetMarginWidth(4, 0)
             self.hideFoldingMargin=hideFoldingMargin
-            
+
             sel_color="#E0E0E0"
             grouping_color="black"
             input_color="red"
             output_color="blue"
-            
+
             self.MarkerDefine(GROUPING_SELECTING,    stc.STC_MARK_FULLRECT,
                               sel_color, sel_color)
             self.MarkerDefine(IO_SELECTING,          stc.STC_MARK_FULLRECT,
                               sel_color, sel_color)
-            
+
             self.MarkerDefine(GROUPING_START,        stc.STC_MARK_BOXMINUS,
                               "white", grouping_color)
             self.MarkerDefine(GROUPING_START_FOLDED, stc.STC_MARK_BOXPLUS,
@@ -711,17 +711,17 @@ class SlicesShell(editwindow.EditWindow):
                               "white", grouping_color)
             self.MarkerDefine(GROUPING_END,          stc.STC_MARK_LCORNER,
                               "white", grouping_color)
-            
+
             self.MarkerDefine(READLINE_BG, stc.STC_MARK_FULLRECT,
                               wx.Colour(191,191,191), wx.Colour(191,191,191))
             self.MarkerDefine(INPUT_READLINE, stc.STC_MARK_CHARACTER+ord('<'),
                               input_color, wx.Colour(191,191,191))
-            
+
             if enableShellMode:
                 self.mode='ShellMode'
             else:
                 self.mode='SlicesMode'
-            
+
             self.execOnNextReturn=False
             if self.mode=='SlicesMode':
                 self.MarkerDefine(INPUT_START,        stc.STC_MARK_BOXMINUS,
@@ -741,7 +741,7 @@ class SlicesShell(editwindow.EditWindow):
                                   input_color, "white")
                 self.MarkerDefine(INPUT_END,          stc.STC_MARK_DOTDOTDOT,
                                   input_color, "white")
-            
+
             self.MarkerDefine(OUTPUT_START,           stc.STC_MARK_BOXMINUS,
                               "white", output_color)
             self.MarkerDefine(OUTPUT_START_FOLDED,    stc.STC_MARK_BOXPLUS,
@@ -750,10 +750,10 @@ class SlicesShell(editwindow.EditWindow):
                               "white", output_color)
             self.MarkerDefine(OUTPUT_END,             stc.STC_MARK_LCORNER,
                               "white", output_color)
-            
+
             self.MarkerDefine(OUTPUT_BG,             stc.STC_MARK_BACKGROUND,
                               "white", wx.Colour(242,242,255))
-            
+
             # Markers for folding margin...
             self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPEN,    stc.STC_MARK_BOXMINUS,
                               "white", "#808080")
@@ -789,7 +789,7 @@ class SlicesShell(editwindow.EditWindow):
         # Assign handlers for keyboard events.
         self.Bind(wx.EVT_CHAR, self.OnChar)
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-        
+
         self.Bind(wx.stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
         # TODO : Add a general functions to handle mouse clicks in the
         # TODO:  STC window whose sole purpose is to make it so
@@ -798,7 +798,7 @@ class SlicesShell(editwindow.EditWindow):
         # Assign handler for the context menu
         self.Bind(wx.EVT_CONTEXT_MENU, self.OnContextMenu)
         self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUI)
-        
+
         # Assign handlers for edit events
         self.Bind(wx.EVT_MENU, lambda evt: self.Cut(), id=wx.ID_CUT)
         self.Bind(wx.EVT_MENU, lambda evt: self.Copy(), id=wx.ID_COPY)
@@ -809,16 +809,16 @@ class SlicesShell(editwindow.EditWindow):
         self.Bind(wx.EVT_MENU, lambda evt: self.Clear(), id=wx.ID_CLEAR)
         self.Bind(wx.EVT_MENU, lambda evt: self.Undo(), id=wx.ID_UNDO)
         self.Bind(wx.EVT_MENU, lambda evt: self.Redo(), id=wx.ID_REDO)
-        
+
         # Assign handler for idle time.
         self.waiting = False
         self.Bind(wx.EVT_IDLE, self.OnIdle)
 
         # Display the introductory banner information.
         self.showIntro(introText)
-        
+
         outStart,outEnd,inStart,inMiddle,inEnd = [[],[],[],[],[]]
-        
+
         # Make "executed startup script move to the top..."
         if showPySlicesTutorial:
             self.write(tutorialText,'Output')
@@ -829,13 +829,13 @@ class SlicesShell(editwindow.EditWindow):
             inStart=[testStart]
             inMiddle=[testStart+1]
             inEnd=[testStart+2]
-        
+
         # Assign some pseudo keywords to the interpreter's namespace.
         self.setBuiltinKeywords()
 
         # Add 'shell' to the interpreter's local namespace.
         self.setLocalShell()
-        
+
         # Do this last so the user has complete control over their
         # environment.  They can override anything they want.
         if execStartupScript:
@@ -844,7 +844,7 @@ class SlicesShell(editwindow.EditWindow):
             self.execStartupScript(startupScript)
         else:
             self.prompt()
-        
+
         outStart+=[0]
         outEnd+=[self.GetLineCount()-2]
         inStart+=[self.GetLineCount()-1]
@@ -874,18 +874,18 @@ class SlicesShell(editwindow.EditWindow):
                 self.MarkerAdd(i,GROUPING_MIDDLE)
                 self.MarkerAdd(i,OUTPUT_MIDDLE)
                 #self.MarkerAdd(i,OUTPUT_BG)
-        
+
         self.SliceSelection=False
         self.runningSlice=None
-        
+
         ## NOTE:  See note at bottom of this file...
         ## #seb: File drag and drop
         ## self.SetDropTarget( FileDropTarget(self) )
-        
+
         #ADD UNDO
         # Everywhere "ADD UNDO" appears, there is new code to handle markers
         self.EmptyUndoBuffer()
-        
+
         wx.CallAfter(self.ScrollToLine, 0)
 
     def ToggleShellMode(self,enableShellMode=None):
@@ -896,7 +896,7 @@ class SlicesShell(editwindow.EditWindow):
             self.mode='ShellMode'
         else:
             self.mode='SlicesMode'
-        
+
         input_color="red"
         if self.mode=='SlicesMode':
             self.MarkerDefine(INPUT_START,           stc.STC_MARK_BOXMINUS,
@@ -916,13 +916,13 @@ class SlicesShell(editwindow.EditWindow):
                               input_color, "white")
             self.MarkerDefine(INPUT_END,             stc.STC_MARK_DOTDOTDOT,
                               input_color, "white")
-    
+
     def ToggleFoldingMargin(self,hideFoldingMargin=None):
         if hideFoldingMargin==None:
             self.hideFoldingMargin = not self.hideFoldingMargin
         else:
             self.hideFoldingMargin = hideFoldingMargin
-        
+
         if self.hideFoldingMargin:
             self.SetMarginWidth(4, 0)
         else:
@@ -958,7 +958,7 @@ class SlicesShell(editwindow.EditWindow):
                 self.write(self.interp.introText,type='Output')
         except AttributeError:
             pass
-    
+
     def setBuiltinKeywords(self):
         """Create pseudo keywords as part of builtins.
 
@@ -1012,33 +1012,33 @@ class SlicesShell(editwindow.EditWindow):
     def about(self):
         """Display information about Py."""
         text = DISPLAY_TEXT % \
-        (__author__, VERSION, 
+        (__author__, VERSION,
          sys.version.split()[0], wx.VERSION_STRING, str(wx.PlatformInfo),
          sys.platform)
         self.write(text.strip(),type='Output')
-    
+
     def BreakTextIntoCommands(self,text):
         """Turn a text block into multiple multi-line commands."""
-        
+
         #text = text.lstrip() # This should not be done!
         text = self.fixLineEndings(text)
         text = self.lstripPrompt(text)
         text = text.replace(os.linesep, '\n')
         lines = text.split('\n')
-        
+
         continuations = testForContinuations(text)
-        
+
         if len(continuations)==2: # Error case...
             return None,continuations[1]
         elif len(continuations)==4:
             stringContinuationList,indentationBlockList, \
             lineContinuationList,parentheticalContinuationList = continuations
-        
+
         commands = []
         command = ''
         for j,line in enumerate(lines):
             lstrip = line.lstrip()
-            
+
             # Get the first alnum word:
             first_word=[]
             for i in lstrip:
@@ -1047,18 +1047,18 @@ class SlicesShell(editwindow.EditWindow):
                 else:
                     break
             first_word = ''.join(first_word)
-            
+
             # Continue the command if it is blank, has indentation,
             # starts with else, elif,except, or finally
             # or previous line had a line continuation \
-            
+
             if j==0:
                 stringCont = False
                 lineCont=False
             else:
                 stringCont = stringContinuationList[j-1]
                 lineCont = lineContinuationList[j-1]
-            
+
             if line.strip() == '' or lstrip != line or \
                first_word in ['else','elif','except','finally'] or \
                stringCont or lineCont:
@@ -1072,15 +1072,15 @@ class SlicesShell(editwindow.EditWindow):
                     commands.append(command)
                 # Start a new command, which may be multiline.
                 command = line
-        
+
         commands.append(command)
-        
+
         return commands
-    
+
     def MarkerSet(self,line,markerBitsSet):
         """MarkerSet is the Set command for MarkerGet"""
         markerBits=self.MarkerGet(line)
-        
+
         numMarkers=14
         for i in range(numMarkers):
             if (markerBitsSet & (1<<i)) and not (markerBits & (1<<i)):
@@ -1091,16 +1091,16 @@ class SlicesShell(editwindow.EditWindow):
         """Get the start/stop lines for the slice based on any line in the slice"""
         if line_num==None:
             line_num=self.GetCurrentLine()
-        
+
         num_lines=self.GetLineCount()
-        
+
         for i in range(line_num,-1,-1):
             if self.MarkerGet(i) & (1<<GROUPING_START | 1<<GROUPING_START_FOLDED):
                 break
         start_line=i
-        
+
         addition=0
-        
+
         for i in range(line_num,num_lines):
             if self.MarkerGet(i) & 1<<GROUPING_END:
                 break
@@ -1109,23 +1109,23 @@ class SlicesShell(editwindow.EditWindow):
                 addition=-1
                 break # the solo case...
         stop_line=i+addition
-        
+
         return start_line,stop_line
-    
+
     def GetIOSlice(self,line_num=None):
         """Get the start/stop lines for the slice based on any line in the slice"""
         if line_num==None:
             line_num=self.GetCurrentLine()
-        
+
         num_lines=self.GetLineCount()
-        
+
         for i in range(line_num,-1,-1):
             if self.MarkerGet(i) & IO_ANY_START_MASK:
                 break
         start_line=i
-        
+
         addition=0
-        
+
         for i in range(line_num,num_lines):
             if self.MarkerGet(i) & IO_END_MASK:
                 break
@@ -1133,13 +1133,13 @@ class SlicesShell(editwindow.EditWindow):
                 addition=-1
                 break # the solo case...
         stop_line=i+addition
-        
+
         return start_line,stop_line
-    
+
     def FoldGroupingSlice(self,line_num=None):
         if line_num==None:
             line_num=self.GetCurrentLine()
-        
+
         start,end=self.GetGroupingSlice(line_num)
         self.HideLines(start+1,end)
         marker=self.MarkerGet(start)
@@ -1156,7 +1156,7 @@ class SlicesShell(editwindow.EditWindow):
     def FoldIOSlice(self,line_num=None):
         if line_num==None:
             line_num=self.GetCurrentLine()
-        
+
         start,end=self.GetIOSlice(line_num)
         self.HideLines(start+1,end)
         marker=self.MarkerGet(start)
@@ -1176,7 +1176,7 @@ class SlicesShell(editwindow.EditWindow):
     def UnFoldGroupingSlice(self,line_num=None):
         if line_num==None:
             line_num=self.GetCurrentLine()
-        
+
         start,end=self.GetGroupingSlice(line_num)
         self.ShowLines(start+1,end)
         self.clearGroupingMarkers(start)
@@ -1190,11 +1190,11 @@ class SlicesShell(editwindow.EditWindow):
                 self.clearIOMarkers(i)
                 self.MarkerAdd(i,OUTPUT_START)
                 self.MarkerAdd(i,OUTPUT_BG)
-        
+
     def UnFoldIOSlice(self,line_num=None):
         if line_num==None:
             line_num=self.GetCurrentLine()
-        
+
         start,end=self.GetIOSlice(line_num)
         self.ShowLines(start+1,end)
         marker=self.MarkerGet(start)
@@ -1209,36 +1209,36 @@ class SlicesShell(editwindow.EditWindow):
         elif marker & 1<<OUTPUT_START_FOLDED:
             self.MarkerAdd(start,OUTPUT_START)
             self.MarkerAdd(start,OUTPUT_BG)
-    
+
     def DeleteOutputSlicesAfter(self,line_num=None):
         """Delete all outputs after an input"""
         if line_num==None:
             line_num=self.GetCurrentLine()
-        
+
         num_lines=self.GetLineCount()
-        
+
         if self.MarkerGet(line_num) & OUTPUT_MASK:
             #print('You can only run "DeleteOutputSlicesAfter" from an Input slice!')
             return
-        
+
         startIn,endIn=self.GetIOSlice(line_num)
         startGrouping,endGrouping=self.GetGroupingSlice(line_num)
-        
+
         if endIn<endGrouping:
             self.SetSelection(self.PositionFromLine(endIn+1),
                               self.PositionFromLine(endGrouping+1))
             self.ReplaceSelection('',sliceDeletion=True)
-        
+
         new_pos=self.GetLineEndPosition(line_num)
         self.SetCurrentPos(new_pos)
         self.SetSelection(new_pos,new_pos)
-    
+
     def SplitSlice(self,line_num=None):
         if line_num==None:
             line_num=self.GetCurrentLine()
-        
+
         start_num,end_num=self.GetIOSlice(line_num)
-        
+
         if self.MarkerGet(line_num) & INPUT_MASK:
             type='Input'
             start=INPUT_START
@@ -1249,7 +1249,7 @@ class SlicesShell(editwindow.EditWindow):
             start=OUTPUT_START
             end=OUTPUT_END
             splitGrouping=False
-        
+
         if start_num==end_num:
             return # Can't split one line!
         elif start_num==line_num:
@@ -1273,18 +1273,18 @@ class SlicesShell(editwindow.EditWindow):
                 if splitGrouping:
                     self.clearGroupingMarkers(line_num-1)
                     self.MarkerAdd(line_num-1,GROUPING_END)
-    
+
     def BackspaceWMarkers(self,force=False):
         # Warning: This is not good at checking for bad markers!
         c_before=self.GetCharAt(self.GetCurrentPos() - 1)
         c_after=self.GetCharAt(self.GetCurrentPos())
-        
+
         if c_before==0:
             # Disallow deleting the first line or it will destroy the markers...
             return False
         elif c_before in (ord('\n'),ord('\r')):
             line_num=self.GetCurrentLine()
-            
+
             marker=self.MarkerGet(line_num)
             marker_before=self.MarkerGet(line_num-1)
             marker_after=self.MarkerGet(line_num+1)
@@ -1297,7 +1297,7 @@ class SlicesShell(editwindow.EditWindow):
                     self.clearGroupingMarkers(line_num)
                 elif marker & ( 1<<GROUPING_END ) :
                     self.clearGroupingMarkers(line_num-1)
-            
+
             if (marker_before & 1<<INPUT_END) and force:
                 # Special case for use in processLine
                 self.clearIOMarkers(line_num)
@@ -1311,9 +1311,9 @@ class SlicesShell(editwindow.EditWindow):
                     self.clearIOMarkers(line_num)
                 elif marker & ( 1<<INPUT_END | 1<<OUTPUT_END ) :
                     self.clearIOMarkers(line_num-1)
-        
+
         return True # If everything went well, return True and do the delete...
-    
+
     def ForwardDeleteWMarkers(self):
         c_before=self.GetCharAt(self.GetCurrentPos() - 1)
         c_after=self.GetCharAt(self.GetCurrentPos())
@@ -1322,7 +1322,7 @@ class SlicesShell(editwindow.EditWindow):
             return False
         elif c_after in (ord('\n'),ord('\r')):
             line_num=self.GetCurrentLine()
-            
+
             marker=self.MarkerGet(line_num)
             marker_before=self.MarkerGet(line_num-1)
             marker_after=self.MarkerGet(line_num+1)
@@ -1335,7 +1335,7 @@ class SlicesShell(editwindow.EditWindow):
                     self.clearGroupingMarkers(line_num+1)
                 elif marker_after & ( 1<<GROUPING_END ) :
                     self.clearGroupingMarkers(line_num)
-            
+
             if marker & ( 1<<INPUT_END | 1<<OUTPUT_END ) :
                 return False # Disallow deleting lines between slices...
             elif marker_after & ( 1<<INPUT_START | 1<<INPUT_START_FOLDED ) :
@@ -1346,9 +1346,9 @@ class SlicesShell(editwindow.EditWindow):
                     self.clearIOMarkers(line_num+1)
                 elif marker_after & ( 1<<INPUT_END | 1<<OUTPUT_END ) :
                     self.clearIOMarkers(line_num)
-        
+
         return True
-    
+
     def GetIOSelection(self):
         started=False
         start=0
@@ -1375,13 +1375,13 @@ class SlicesShell(editwindow.EditWindow):
             elif started==True:
                 end=i-1
                 break
-        
+
         if started==False:
             #print('No Selection!!')
             self.SliceSelection=False
-        
+
         return start,end
-    
+
     def MergeAdjacentSlices(self):
         """This function merges all adjacent selected slices.\n""" + \
         """Right now, only IO Merging is allowed."""
@@ -1421,7 +1421,7 @@ class SlicesShell(editwindow.EditWindow):
             elif started==True:
                 end=i-1
                 break
-        
+
         if started and end!=start:
             self.clearIOMarkers(end)
             self.clearGroupingMarkers(end)
@@ -1441,13 +1441,13 @@ class SlicesShell(editwindow.EditWindow):
                 self.MarkerAdd(end,OUTPUT_END)
                 self.MarkerAdd(end,OUTPUT_BG)
                 self.MarkerAdd(end,GROUPING_END)
-            
-    
+
+
     def SliceSelectionDelete(self):
         """Deletion of any selected and possibly discontinuous slices."""
         if not self.SliceSelection:
             return
-        
+
         # collect the line numbers to be deleted...
         selectedSlices=[]
         start,end=None,None
@@ -1461,22 +1461,22 @@ class SlicesShell(editwindow.EditWindow):
                 start,end=None,None
         if start!=None:
             selectedSlices.append([start,end])
-        
+
         # Unselect everything
         self.MarginUnselectAll()
         self.SliceSelection=False
-        
+
         # Going in reverse, delete the selections, fixing the markers as we go...
         for i in range(len(selectedSlices)-1,-1,-1):
             self.SetSelection(self.PositionFromLine(selectedSlices[i][0]),
                               self.GetLineEndPosition(selectedSlices[i][1])+1)
-            
+
             markerNext = self.MarkerGet(selectedSlices[i][1]+1)
-            
+
             self.ReplaceSelection('',sliceDeletion=True)
-            
+
             cur_line=self.GetCurrentLine()
-            
+
             # If we've made a mess of the grouping markers, clean it up...
             if ((self.MarkerGet(cur_line-1) & 1<<GROUPING_END) and
                (self.MarkerGet(cur_line) & ( 1<<GROUPING_MIDDLE | 1<<GROUPING_END ) )):
@@ -1487,7 +1487,7 @@ class SlicesShell(editwindow.EditWindow):
                       ( 1<<GROUPING_START | 1<<GROUPING_START_FOLDED ) )):
                 self.clearGroupingMarkers(cur_line-1)
                 self.MarkerAdd(cur_line-1,GROUPING_END)
-            
+
             if markerNext & 1<<OUTPUT_START:
                 self.clearIOMarkers(cur_line)
                 self.MarkerAdd(cur_line,OUTPUT_START)
@@ -1496,15 +1496,15 @@ class SlicesShell(editwindow.EditWindow):
                 self.clearIOMarkers(cur_line)
                 self.MarkerAdd(cur_line,OUTPUT_START_FOLDED)
                 self.MarkerAdd(cur_line,OUTPUT_BG)
-        
+
         return
-    
+
     def OnChar(self, event):
         """Keypress event handler.
 
         Only receives an event if OnKeyDown calls event.Skip() for the
         corresponding event."""
-        
+
         if self.noteMode:
             event.Skip()
             return
@@ -1515,7 +1515,7 @@ class SlicesShell(editwindow.EditWindow):
         key = event.GetKeyCode()
         currpos = self.GetCurrentPos()
         stoppos = self.PositionFromLine(self.GetCurrentLine())
-        
+
         # Return (Enter) needs to be ignored in this handler.
         if key in [wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER]:
             pass
@@ -1526,7 +1526,7 @@ class SlicesShell(editwindow.EditWindow):
             if self.AutoCompActive():
                 self.AutoCompCancel()
             command = self.GetTextRange(stoppos, currpos) + chr(key)
-            
+
             # write with undo wrapper...
             cpos=self.GetCurrentPos()
             s=chr(key)
@@ -1535,7 +1535,7 @@ class SlicesShell(editwindow.EditWindow):
                                          forceNewAction=False)
             self.write(s,type='Input')
             self.UpdateUndoHistoryAfter()
-            
+
             if self.autoComplete:
                 self.autoCompleteShow(command)
         elif key == ord('('):
@@ -1547,7 +1547,7 @@ class SlicesShell(editwindow.EditWindow):
             # the '(' to the end of the command.
             self.ReplaceSelection('')
             command = self.GetTextRange(stoppos, currpos) + '('
-            
+
             # write with undo wrapper...
             cpos=self.GetCurrentPos()
             s='('
@@ -1556,7 +1556,7 @@ class SlicesShell(editwindow.EditWindow):
             self.undoHistory[self.undoIndex]['allowsAppend']=True
             self.write(s,type='Input')
             self.UpdateUndoHistoryAfter()
-            
+
             self.autoCallTipShow(command,
                                  self.GetCurrentPos() == self.GetTextLength())
         else:
@@ -1570,7 +1570,7 @@ class SlicesShell(editwindow.EditWindow):
                 self.UpdateUndoHistoryAfter()
             except:
                 event.Skip()
-    
+
     def AutoCompActiveCallback(self):
         numChars=self.GetTextLength()-self.TotalLengthForAutoCompActiveCallback
         if numChars==0:
@@ -1586,7 +1586,7 @@ class SlicesShell(editwindow.EditWindow):
             self.undoHistory[self.undoIndex]['posEnd'] = cpos + numChars
             self.undoHistory[self.undoIndex]['numLines'] = len(s.split('\n'))
             self.UpdateUndoHistoryAfter()
-    
+
     def OnKeyDown(self, event):
         """Key down event handler."""
 
@@ -1606,7 +1606,7 @@ class SlicesShell(editwindow.EditWindow):
             else:
                 event.Skip()
             return
-        
+
         #DNM
         # Prevent modification of output slices
         controlDown = event.ControlDown()
@@ -1615,10 +1615,10 @@ class SlicesShell(editwindow.EditWindow):
         currpos = self.GetCurrentPos()
         endpos = self.GetTextLength()
         selecting = self.GetSelectionStart() != self.GetSelectionEnd()
-        
+
         if key == wx.WXK_F12: #seb
             if self.noteMode:
-                # self.promptPosStart not used anyway - or ? 
+                # self.promptPosStart not used anyway - or ?
 ##                # We don't need to do this any more!
 ##                self.promptPosEnd = self.PositionFromLine(self.GetLineCount()-1 ) +
 ##                                    len(str(sys.ps1))
@@ -1638,7 +1638,7 @@ class SlicesShell(editwindow.EditWindow):
         if self.noteMode:
             event.Skip()
             return
-        
+
         doLineBreak=False
         doSubmitCommand=False
         doPass=False
@@ -1654,7 +1654,7 @@ class SlicesShell(editwindow.EditWindow):
                 endpos = self.GetLineEndPosition(endLine)
                 command = self.GetTextRange(startpos, endpos)
                 strCont,indentBlock,lineCont,parenCont = testForContinuations(command,ignoreErrors=True)
-                
+
                 lastLine = command.split('\n')[-1]
                 if lastLine.lstrip()=='': # all whitespace...
                     stillIndented=False
@@ -1662,7 +1662,7 @@ class SlicesShell(editwindow.EditWindow):
                     stillIndented=True
                 else:
                     stillIndented=False
-                
+
                 if strCont[-1] or indentBlock[-1] or lineCont[-1] or \
                    parenCont[-1]:
                     doLineBreak=True
@@ -1687,9 +1687,9 @@ class SlicesShell(editwindow.EditWindow):
                 doSubmitCommand=True
             elif self.mode=='ShellMode':
                 doLineBreak=True
-        
+
         #Only relevant in ShellMode...
-        
+
         if doPass:
             pass
         elif doLineBreak or doSubmitCommand:
@@ -1709,11 +1709,11 @@ class SlicesShell(editwindow.EditWindow):
             elif doSubmitCommand:
                 self.DeleteOutputSlicesAfter()
                 self.processLine()
-        
+
         # Let Ctrl-Alt-* get handled normally.
         elif controlDown and altDown:
             event.Skip()
-        
+
         # Clear the current, unexecuted command.
         elif key == wx.WXK_ESCAPE:
             if self.CallTipActive():
@@ -1753,7 +1753,7 @@ class SlicesShell(editwindow.EditWindow):
         elif altDown and not controlDown \
                  and key in (ord('C'), ord('c'), wx.WXK_INSERT):
             self.CopyWithPromptsPrefixed()
-        
+
         # Home needs to be aware of the prompt.
         elif controlDown and key == wx.WXK_HOME:
             # Go to the beginning of the IO Slice
@@ -1779,7 +1779,7 @@ class SlicesShell(editwindow.EditWindow):
             if not selecting and not shiftDown:
                 self.SetAnchor(end)
                 self.EnsureCaretVisible()
-        
+
         elif controlDown and key == wx.WXK_PAGEUP:
             pos=0
             if currpos > pos:
@@ -1787,7 +1787,7 @@ class SlicesShell(editwindow.EditWindow):
                 if not selecting and not shiftDown:
                     self.SetAnchor(pos)
                     self.EnsureCaretVisible()
-        
+
         elif controlDown and key == wx.WXK_PAGEDOWN:
             pos = self.GetLineEndPosition(self.GetLineCount()-1)
             if currpos < pos:
@@ -1795,7 +1795,7 @@ class SlicesShell(editwindow.EditWindow):
                 if not selecting and not shiftDown:
                     self.SetAnchor(pos)
                     self.EnsureCaretVisible()
-        
+
         elif selecting and key not in NAVKEYS and not self.CanEdit():
             pass
 
@@ -1808,40 +1808,40 @@ class SlicesShell(editwindow.EditWindow):
         elif controlDown and shiftDown and \
                              key in (ord('V'), ord('v')) and self.CanEdit():
             self.PasteAndRun()
-            
+
         # Replace with the previous command from the history buffer.
         elif (controlDown and not shiftDown and key == wx.WXK_UP) \
               or (altDown and key in (ord('P'), ord('p'))) and self.CanEdit():
             self.OnHistoryReplace(step=+1)
-            
+
         # Replace with the next command from the history buffer.
         elif (controlDown and not shiftDown and key == wx.WXK_DOWN) \
               or (altDown and key in (ord('N'), ord('n'))) and self.CanEdit():
             self.OnHistoryReplace(step=-1)
-            
+
         # Insert the previous command from the history buffer.
         elif (controlDown and shiftDown and key == wx.WXK_UP) and \
               self.CanEdit():
             self.OnHistoryInsert(step=+1)
-            
+
         # Insert the next command from the history buffer.
         elif (controlDown and shiftDown and key == wx.WXK_DOWN) and \
               self.CanEdit():
             self.OnHistoryInsert(step=-1)
-            
+
         # Ctrl-Space shows Auto Completion
         # Ctrl-Shift-Space shows CallTips
         elif controlDown and key == wx.WXK_SPACE:
             self.OnCallTipAutoCompleteManually(shiftDown)
-        
+
         # Ctrl+Shift+H is used to complete Text (from already typed words)
         elif controlDown and shiftDown and key in [ord('H')]:
             self.OnShowCompHistory()
-        
+
         # Search up the history for the text in front of the cursor.
         elif key == wx.WXK_F8:
             self.OnHistorySearch()
-            
+
         # Don't backspace over the latest non-continuation prompt.
         elif key == wx.WXK_BACK:
             if self.SliceSelection:
@@ -1857,16 +1857,16 @@ class SlicesShell(editwindow.EditWindow):
                    self.GetCurrentPos()==self.PositionFromLine(cur_line):
                     if self.MarkerGet(cur_line-1) & OUTPUT_MASK:
                         doDelete=False
-                
+
                 if doDelete:
                     cpos=self.GetCurrentPos()
                     s=chr(self.GetCharAt(cpos-1))
                     self.UpdateUndoHistoryBefore('delete',s,cpos-1,cpos)
                     if self.BackspaceWMarkers():
                         event.Skip()
-                
+
                 wx.CallAfter(self.RestoreFirstMarker)
-        
+
         elif key == wx.WXK_DELETE:
             if self.SliceSelection:
                 self.SliceSelectionDelete()
@@ -1881,16 +1881,16 @@ class SlicesShell(editwindow.EditWindow):
                    self.GetCurrentPos()==self.GetLineEndPosition(cur_line):
                     if self.MarkerGet(cur_line+1) & OUTPUT_MASK:
                         doDelete=False
-                
+
                 if doDelete:
                     cpos=self.GetCurrentPos()
                     s=chr(self.GetCharAt(cpos))
                     self.UpdateUndoHistoryBefore('delete',s,cpos,cpos+1)
                     if self.ForwardDeleteWMarkers():
                         event.Skip()
-                
+
                 wx.CallAfter(self.RestoreFirstMarker)
-        
+
         # Only allow these keys after the latest prompt.
         elif key == wx.WXK_TAB and self.CanEdit():
             # use the same mechanism as with autocmplete...
@@ -1901,22 +1901,22 @@ class SlicesShell(editwindow.EditWindow):
             self.TotalLengthForAutoCompActiveCallback=self.GetTextLength()
             event.Skip()
             wx.CallAfter(self.AutoCompActiveCallback)
-        
+
         # Don't toggle between insert mode and overwrite mode.
         elif key == wx.WXK_INSERT:
             pass
-        
+
         # Don't allow line deletion.
         #elif controlDown and key in (ord('L'), ord('l')):
             # TODO : Allow line deletion eventually ??
             #event.Skip()
         #    pass
-        
+
         # Don't allow line transposition.
         # Toggle Shell Mode / Slices Mode
         elif controlDown and key in (ord('T'), ord('t')):
             self.ToggleShellMode()
-        
+
         #Open and Save now work when using CrustSlicesFrames
         elif controlDown and key in (ord('L'), ord('l')):
             #print('Load it')
@@ -1925,7 +1925,7 @@ class SlicesShell(editwindow.EditWindow):
                 fid=open(file,'r')
                 self.LoadPyFileAsSlice(fid)
                 fid.close()
-        
+
         elif controlDown and key in (ord('D'), ord('d')):
             #Disallow line duplication in favor of divide slices
             if self.MarkerGet(self.GetCurrentLine()) & INPUT_MASK:
@@ -1940,7 +1940,7 @@ class SlicesShell(editwindow.EditWindow):
                 self.SetSelection(cpos,cpos)
                 self.ReplaceSelection('')
                 self.UpdateUndoHistoryAfter()
-        
+
         elif controlDown and key in (ord('M'), ord('m')):
             #ADD UNDO
             if self.SliceSelection:
@@ -1955,8 +1955,8 @@ class SlicesShell(editwindow.EditWindow):
                 self.SetSelection(cpos,cpos)
                 self.ReplaceSelection('')
                 self.UpdateUndoHistoryAfter()
-            
-        
+
+
         # Change arrow keys to allow margin behaviors...
         elif self.SliceSelection and \
              key in [wx.WXK_UP,wx.WXK_DOWN,wx.WXK_RIGHT,wx.WXK_LEFT]:
@@ -2014,29 +2014,29 @@ class SlicesShell(editwindow.EditWindow):
                 if not controlDown and not altDown and key<256:
                     self.ReplaceSelection('') # This seems to work...
             event.Skip()
-        
+
         if self.SliceSelection:
             if key not in [wx.WXK_UP,wx.WXK_DOWN,wx.WXK_RIGHT,wx.WXK_LEFT,
                            wx.WXK_ALT,wx.WXK_COMMAND,wx.WXK_CONTROL,wx.WXK_SHIFT]:
                 self.MarginUnselectAll()
-    
-    
+
+
     def MarginSelectAll(self):
         num_lines=self.GetLineCount()
         for i in range(num_lines):
             self.MarkerAdd(i,GROUPING_SELECTING)
             self.MarkerDelete(i,IO_SELECTING)
-    
+
     def MarginUnselectAll(self):
         num_lines=self.GetLineCount()
         for i in range(num_lines):
             self.MarkerDelete(i,IO_SELECTING)
             self.MarkerDelete(i,GROUPING_SELECTING)
         self.SliceSelection=False
-    
+
     def DoMarginClick(self, lineClicked, margin, shiftDown, controlDown):
         num_lines=self.GetLineCount()
-        
+
         if margin==1:
             pass # these events are not sent right now...
         if margin==2:
@@ -2055,10 +2055,10 @@ class SlicesShell(editwindow.EditWindow):
                         self.UnFoldGroupingSlice(lineClicked)
             else:
                 toggle=self.MarkerAdd
-            
+
             if not shiftDown:
                 self.MarginUnselectAll()
-            
+
             for i in range(start,end+1):
                 toggle(i,GROUPING_SELECTING)
         elif margin==3:
@@ -2077,15 +2077,15 @@ class SlicesShell(editwindow.EditWindow):
                         self.UnFoldIOSlice(lineClicked)
             else:
                 toggle=self.MarkerAdd
-            
+
             if not shiftDown:
                 self.MarginUnselectAll()
-            
+
             for i in range(start,end+1):
                 toggle(i,IO_SELECTING)
-            
+
             #print(start, end)
-            
+
         elif margin==4:
             # TODO : Folding ??
             if 1:#self.MarkerGet(lineClicked) & ( 1<<7 | 1<<8 ):
@@ -2108,9 +2108,9 @@ class SlicesShell(editwindow.EditWindow):
                 self.SliceSelection=False
             else:
                 self.SliceSelection=True
-    
+
     def OnMarginClick(self, evt):
-        
+
         # fold and unfold as neededNAVKEYS
         lineClicked = self.LineFromPosition(evt.GetPosition())
         self.DoMarginClick(lineClicked,evt.GetMargin(),evt.GetShift(),evt.GetControl())
@@ -2118,33 +2118,33 @@ class SlicesShell(editwindow.EditWindow):
 
     def OnShowCompHistory(self):
         """Show possible autocompletion Words from already typed words."""
-        
+
         #copy from history
         his = self.history[:]
-        
+
         #put together in one string
         joined = " ".join (his)
         import re
 
         #sort out only "good" words
         newlist = re.split("[ \.\[\]=}(\)\,0-9\"]", joined)
-        
+
         #length > 1 (mix out "trash")
         thlist = []
         for i in newlist:
             if len (i) > 1:
                 thlist.append (i)
-        
+
         #unique (no duplicate words
         #oneliner from german python forum => unique list
         unlist = [thlist[i] for i in xrange(len(thlist)) if thlist[i] not in thlist[:i]]
-            
+
         #sort lowercase
         unlist.sort(lambda a, b: cmp(a.lower(), b.lower()))
-        
+
         #this is more convenient, isn't it?
         self.AutoCompSetIgnoreCase(True)
-        
+
         #join again together in a string
         stringlist = " ".join(unlist)
 
@@ -2154,16 +2154,16 @@ class SlicesShell(editwindow.EditWindow):
         cpos = self.GetCurrentPos() - 1
         while chr (self.GetCharAt (cpos)).isalnum():
             cpos -= 1
-            
+
         #the most important part
         self.AutoCompShow(self.GetCurrentPos() - cpos -1, stringlist)
-    
+
     def ReplaceSelection(self,text,sliceDeletion=False,*args,**kwds):
         startIO,endIO=self.GetIOSlice()
         startGrouping,endGrouping=self.GetGroupingSlice()
         startSel = self.LineFromPosition(self.GetSelectionStart())
         endSel = self.LineFromPosition(self.GetSelectionEnd())
-        
+
         #ADD UNDO
         cpos=self.GetSelectionStart()
         s=self.GetSelectedText()
@@ -2173,16 +2173,16 @@ class SlicesShell(editwindow.EditWindow):
         editwindow.EditWindow.ReplaceSelection(self,'',*args,**kwds)
         if s!='' and not sliceDeletion:
             self.UpdateUndoHistoryAfter()
-        
+
         if endSel-startSel>0 and not sliceDeletion:
             if endSel==endIO and startIO!=self.GetCurrentLine():
                 self.clearIOMarkers()
                 self.MarkerAdd(self.GetCurrentLine(),INPUT_END)
-            
+
             if endSel==endGrouping and startGrouping!=self.GetCurrentLine():
                 self.clearGroupingMarkers()
                 self.MarkerAdd(self.GetCurrentLine(),GROUPING_END)
-        
+
         cpos=self.GetSelectionStart()
         s=text
         if s!='':
@@ -2190,11 +2190,11 @@ class SlicesShell(editwindow.EditWindow):
                                          forceNewAction=True)
             self.write(text)
             self.UpdateUndoHistoryAfter()
-        
+
         self.ensureSingleGroupingMarker()
         self.ensureSingleIOMarker()
-        
-    
+
+
     def clearCommand(self):
         """Delete the current, unexecuted command."""
         if not self.CanEdit():
@@ -2209,7 +2209,7 @@ class SlicesShell(editwindow.EditWindow):
     def OnHistoryReplace(self, step):
         """Replace with the previous/next command from the history buffer."""
         if not self.CanEdit():
-            return    
+            return
         self.clearCommand()
         self.replaceFromHistory(step)
 
@@ -2234,7 +2234,7 @@ class SlicesShell(editwindow.EditWindow):
         self.replaceFromHistory(step)
         endpos = self.GetCurrentPos()
         self.SetSelection(endpos, startpos)
-    
+
     # TODO: Fix Me!
     def OnHistorySearch(self):
         """Search up the history buffer for the text in front of the cursor."""
@@ -2282,15 +2282,15 @@ class SlicesShell(editwindow.EditWindow):
         elif self.reader.isreading:
             self.processLine()
             return
-        
-        
+
+
         # write with undo wrapper...
         cpos=self.GetCurrentPos()
         s=os.linesep
         self.UpdateUndoHistoryBefore('insert',s,cpos,cpos+1)
         self.write(s,type='Input')
         self.UpdateUndoHistoryAfter()
-        
+
         self.more = True
         self.prompt()
 
@@ -2307,16 +2307,16 @@ class SlicesShell(editwindow.EditWindow):
             return
         else:
             pass #print('BLANK LINE!!')
-        
+
         startline,endline=self.GetIOSlice(cur_line)
-        
+
         if startline==0:
             startpos=0
         else:
             startpos=self.PositionFromLine(startline)
-        
+
         endpos=self.GetLineEndPosition(endline)
-        
+
         # If they hit ENTER inside the current command, execute the command.
         if self.CanEdit():
             self.SetCurrentPos(endpos)
@@ -2340,11 +2340,11 @@ class SlicesShell(editwindow.EditWindow):
                 #print('command: %s'%command)
                 wx.CallLater(1, self.EnsureCaretVisible)
                 self.runningSlice=None
-        
+
         skip=self.BackspaceWMarkers(force=True)
         if skip:
             self.DeleteBack()
-        
+
         if self.GetCurrentLine()==self.GetLineCount()-1:
             self.write(os.linesep,type='Input')
             cpos=self.GetCurrentLine()
@@ -2356,14 +2356,14 @@ class SlicesShell(editwindow.EditWindow):
             new_pos=self.GetLineEndPosition(cur_line+1)
             self.SetSelection(new_pos,new_pos)
             self.SetCurrentPos(new_pos)
-        
+
         self.EmptyUndoBuffer()
         self.NeedsCheckForSave=True
         if self.hasSyntaxError:
             pos=self.GetLineEndPosition(self.syntaxErrorRealLine)
             self.SetCurrentPos(pos)
             self.SetSelection(pos,pos)
-    
+
     # Not Used!!
     def getMultilineCommand(self, rstrip=True):
         """Extract a multi-line command from the editor.
@@ -2435,7 +2435,7 @@ class SlicesShell(editwindow.EditWindow):
         # TODO : Is there a good reason not to include magic?
         if USE_MAGIC:
             command=magic(command)
-        
+
         # Allows multi-component commands...
         self.hasSyntaxError=False
         if useMultiCommand:
@@ -2449,11 +2449,11 @@ class SlicesShell(editwindow.EditWindow):
                 commands=result
         else:
             commands=[command]
-        
+
         busy = wx.BusyCursor()
         self.waiting = True
         self.lastUpdate=None
-        
+
         for i in commands:
             if self.hasSyntaxError:
                 lineno=syntaxErrorLine
@@ -2466,15 +2466,15 @@ class SlicesShell(editwindow.EditWindow):
             #if useMultiCommand:
             #    self.SplitSlice()
         self.lastUpdate=None
-        
+
         if not silent:
             self.MarkerAdd(self.GetIOSlice()[0],OUTPUT_BG)
-        
+
         self.waiting = False
         del busy
         if not self.more: # could loop-add to history, too, but I don't like it!
             self.addHistory(command.rstrip())
-        
+
         if not silent:
             self.prompt()
 
@@ -2487,7 +2487,7 @@ class SlicesShell(editwindow.EditWindow):
         if command!='' and ( len(self.history)==0 or command!=self.history[0] ):
             self.history.insert(0, command)
             dispatcher.send(signal="SlicesShell.addHistory", command=command)
-    
+
     def clearGroupingMarkers(self,line_num=None):
         if line_num==None:
             line_num=self.GetCurrentLine()
@@ -2527,9 +2527,9 @@ class SlicesShell(editwindow.EditWindow):
         else:
             #print('ERROR! NO GROUPING MARKERS!')
             return 1 # Blank marker
-        
+
         return 0
-    
+
     def ensureSingleIOMarker(self,line_num=None):
         if line_num==None:
             line_num=self.GetCurrentLine()
@@ -2552,7 +2552,7 @@ class SlicesShell(editwindow.EditWindow):
         else:
             #print('ERROR! NO IO MARKERS!')
             return 1 # Blank marker
-        
+
         if marker & 1<<start:
             self.MarkerDelete(line_num,start_folded)
             self.MarkerDelete(line_num,middle)
@@ -2564,21 +2564,21 @@ class SlicesShell(editwindow.EditWindow):
             self.MarkerDelete(line_num,end)
         elif marker & 1<<end:
             pass
-        
+
         return 0
-        
+
     def RestoreFirstMarker(self):
         first_marker=self.MarkerGet(0)
         self.clearGroupingMarkers(0)
         self.clearIOMarkers(0)
-        
+
         if first_marker & 1<<GROUPING_START :
             self.MarkerAdd(0,GROUPING_START)
         elif first_marker & 1<<GROUPING_START_FOLDED :
             self.MarkerAdd(0,GROUPING_START_FOLDED)
         else:
             self.MarkerAdd(0,GROUPING_START)
-        
+
         if first_marker & 1<<INPUT_START :
             self.MarkerAdd(0,INPUT_START)
         elif first_marker & 1<<INPUT_START_FOLDED :
@@ -2591,10 +2591,10 @@ class SlicesShell(editwindow.EditWindow):
             #self.MarkerAdd(0,OUTPUT_BG) # More harm than good??
         else:
             self.MarkerAdd(0,INPUT_START)
-        
+
         if self.doHistUpdate:
             self.UpdateUndoHistoryAfter()
-    
+
     def IsAllowedPair(self,m1,m2):
         """This testing function ensures that two adjacent markers are valid"""
         i_s = 1<<INPUT_START | 1<<INPUT_START_FOLDED
@@ -2602,7 +2602,7 @@ class SlicesShell(editwindow.EditWindow):
         g_s = 1<<GROUPING_START | 1<<GROUPING_START_FOLDED
         i_m,o_m,g_m = 1<<INPUT_MIDDLE, 1<<OUTPUT_MIDDLE, 1<<GROUPING_MIDDLE
         i_e,o_e,g_e = 1<<INPUT_END, 1<<OUTPUT_END, 1<<GROUPING_END
-        
+
         if (m1 & i_s) and (m1 & g_s):     #1
             if   (m2 & i_s) and (m2 & g_s): return True  #1
             elif (m2 & i_m) and (m2 & g_m): return True  #2
@@ -2656,24 +2656,24 @@ class SlicesShell(editwindow.EditWindow):
             else: return False
         else:
             return False
-            
-        
+
+
     def CleanAllMarkers(self):
         self.RestoreFirstMarker()
         first_marker=self.MarkerGet(0)
         last_line_num=self.GetLineCount()-1
-        
+
         for i in range(1,last_line_num):
             self.ensureSingleGroupingMarker(i)
             self.ensureSingleIOMarker(i)
-            
+
             previous_marker=self.MarkerGet(i-1)
             marker=self.MarkerGet(i)
-            
+
             if not self.IsAllowedPair(previous_marker,marker):
                 pass # FIX MARKER!!
             # FIX ME
-    
+
     def write(self, text,type='Input',silent=False):
         """Display text in the slices shell.
 
@@ -2681,7 +2681,7 @@ class SlicesShell(editwindow.EditWindow):
         text = self.fixLineEndings(text)
         split=text.split(os.linesep)
         self.AddText(text)
-        
+
         # This part handles all the marker stuff that accompanies
         # adding or removing new lines of text...
         # Get the total number of lines in the Document == last line number
@@ -2692,20 +2692,20 @@ class SlicesShell(editwindow.EditWindow):
         num_new_lines=text.count(os.linesep)
         # So if num_new_lines==0, start_line_num and end_line_num are the same
         start_line_num=end_line_num-num_new_lines+1
-        
+
         # This is a little unnecessary because there will always
         # be a line before if we just inserted a newline!
         if start_line_num == 0:
             previous_line_num=None
         else:
             previous_line_num=start_line_num-1
-        
+
         #However, this is very important...
         if end_line_num == last_line_num:
             next_line_num=None
         else:
             next_line_num=end_line_num+1
-        
+
         if type=='Input':
             start = INPUT_START
             start_folded = INPUT_START_FOLDED
@@ -2727,22 +2727,22 @@ class SlicesShell(editwindow.EditWindow):
             opposite_start_folded_mask = 1<<INPUT_START_FOLDED
             opposite_middle_mask = 1<<INPUT_MIDDLE # To test for bad writes...
             opposite_end_mask = 1<<INPUT_END # To test for bad writes...
-        
+
         if num_new_lines>0: #Do nothing if typing within a line...
             # Update the Grouping Markers
             # For the previous line and the start_line
             # Test to make sure we can write ... but not here ...
             #    test this before we call write or before we add text...
-            # So we assume it already obeys the rules 
-            
+            # So we assume it already obeys the rules
+
             badMarkers=False
             fixIOEnd=True
-            
+
             if previous_line_num==None:
                 # This is an impossible case, here just for completeness...
                 self.clearGroupingMarkers(start_line_num)
                 self.MarkerAdd(start_line_num,GROUPING_START)
-                
+
                 self.clearIOMarkers(start_line_num)
                 self.MarkerAdd(start_line_num,start)
                 if type in ['Output','Error']: self.MarkerAdd(start_line_num,OUTPUT_BG)
@@ -2750,7 +2750,7 @@ class SlicesShell(editwindow.EditWindow):
                 previous_marker=self.MarkerGet(previous_line_num)
                 if previous_marker & opposite_middle_mask:
                     badMarkers=True
-            
+
             if next_line_num==None:
                 self.MarkerAdd(end_line_num,GROUPING_END)
                 self.MarkerAdd(end_line_num,end)
@@ -2762,7 +2762,7 @@ class SlicesShell(editwindow.EditWindow):
                 fixEndMarkers=True
                 if next_marker & ( opposite_middle_mask | opposite_end_mask ):
                     badMarkers=True
-            
+
             if not badMarkers:
                 # ensure previous_line only has one marker & turn end into middle
                 if previous_line_num!=None:
@@ -2771,11 +2771,11 @@ class SlicesShell(editwindow.EditWindow):
                     blank=False
                     blank=blank or self.ensureSingleGroupingMarker(previous_line_num)
                     blank=blank or self.ensureSingleIOMarker(previous_line_num)
-                    
+
                     if blank:
                         #if type=='Input' and not silent: print('BLANK LINE!' # BAD CASE)
                         pass
-                    
+
                     if previous_marker & 1<<GROUPING_END :
                         # Make GROUPING slice continue unless we hit
                         #  an output end and are starting a new input...
@@ -2785,7 +2785,7 @@ class SlicesShell(editwindow.EditWindow):
                             self.MarkerDelete(previous_line_num,GROUPING_END)
                             # ONLY CHANGING CASE
                             self.MarkerAdd(previous_line_num,GROUPING_MIDDLE)
-                    
+
                     if previous_marker & 1<<end :
                         self.MarkerDelete(previous_line_num,end)
                         self.MarkerAdd(previous_line_num,middle) # ONLY CHANGING CASE
@@ -2795,10 +2795,10 @@ class SlicesShell(editwindow.EditWindow):
                         if type=='Input' and not silent:
                             #print('Should have been a bad marker!')
                             pass
-                    
+
                     # We can only add input to an input slice
                     # And can only add output to an output slice
-                    
+
                     if previous_marker & ( opposite_start_mask |
                                            opposite_start_folded_mask |
                                            opposite_end_mask ):
@@ -2821,38 +2821,38 @@ class SlicesShell(editwindow.EditWindow):
                             self.MarkerAdd(start_line_num,middle)
                             if type in ['Output','Error']: self.MarkerAdd(start_line_num,OUTPUT_BG)
                             # This may be overwritten if start_line_num==end_line_num
-                
+
                 # Take care of all the middle lines...
                 # Does nothing for only one line...
                 for i in range(start_line_num,end_line_num):
                     self.clearGroupingMarkers(i)
                     self.MarkerAdd(i,GROUPING_MIDDLE)
-                    
+
                     self.clearIOMarkers(i)
                     self.MarkerAdd(i,middle)
                     if type in ['Output','Error']: self.MarkerAdd(i,OUTPUT_BG)
-                
+
                 if fixEndMarkers:
                     # Take care of the end_line if we haven't already done so...
                     blank=False
                     blank=blank or self.ensureSingleGroupingMarker(next_line_num)
                     blank=blank or self.ensureSingleIOMarker(next_line_num)
-                    
+
                     if blank:
                         if type=='Input' and not silent:
                             #print('BLANK LINE!' # BAD CASE)
                             pass
-                    
+
                     self.clearGroupingMarkers(end_line_num)
                     if fixIOEnd:
                         self.clearIOMarkers(end_line_num)
-                    
+
                     if next_marker & ( 1<<GROUPING_START | 1<<GROUPING_START_FOLDED ) :
                         self.MarkerAdd(end_line_num,GROUPING_END)
                     elif next_marker & ( 1<<GROUPING_MIDDLE | 1<<GROUPING_END ) :
                         self.MarkerAdd(end_line_num,GROUPING_MIDDLE)
-                    
-                    if fixIOEnd: 
+
+                    if fixIOEnd:
                         if next_marker & ( 1<<start | 1<<start_folded ) :
                             self.MarkerAdd(end_line_num,end)
                             if type in ['Output','Error']: self.MarkerAdd(end_line_num,OUTPUT_BG)
@@ -2873,16 +2873,16 @@ class SlicesShell(editwindow.EditWindow):
                 if type=='Input' and not silent:
                     #print('BAD MARKERS!!!')
                     pass
-        
+
         self.EnsureCaretVisible()
-        
+
         if self.waiting:
             if self.lastUpdate==None:
                 self.lastUpdate=time.time()
             if time.time()-self.lastUpdate > PRINT_UPDATE_MAX_TIME:
                 self.Update()
                 self.lastUpdate=time.time()
-    
+
     def fixLineEndings(self, text):
         """Return text with line endings replaced by OS-specific endings."""
         lines = text.split('\r\n')
@@ -2896,12 +2896,12 @@ class SlicesShell(editwindow.EditWindow):
 
     def prompt(self): # Autoindent added!!!
         """Display proper prompt for the context: ps1, ps2 or ps3.
-        
+
         If this is a continuation line, autoindent as necessary."""
         # TODO : How much of this can I do away with now without prompts??
-        
+
         isreading = self.reader.isreading
-        
+
         skip = True
         if isreading:
             prompt = str(sys.ps3)
@@ -2924,7 +2924,7 @@ class SlicesShell(editwindow.EditWindow):
             # Not needed anymore! # self.promptPosEnd = self.GetCurrentPos()
             # Clear the undo history after running a command.
             self.EmptyUndoBuffer()
-        
+
         #DNM/CP
         # Autoindent magic
         # Match the indent of the line above
@@ -2936,7 +2936,7 @@ class SlicesShell(editwindow.EditWindow):
             previousLine=self.GetLine(line_num-1)
             pstrip=previousLine.strip()
             lstrip=previousLine.lstrip()
-            
+
             if pstrip == '':
                 # because it is all whitespace!
                 indent=previousLine.strip('\n').strip('\r')
@@ -2944,15 +2944,15 @@ class SlicesShell(editwindow.EditWindow):
                 indent=previousLine[:(len(previousLine)-len(lstrip))]
                 if testForContinuations(previousLine,ignoreErrors=True)[1][0]:
                     indent+=' '*4
-            
+
             #ADD UNDO
             cpos=self.GetCurrentPos()
             s=indent
             self.UpdateUndoHistoryBefore('insert',s,cpos,cpos+len(s))
             self.write(s,type='Input')
             self.UpdateUndoHistoryAfter()
-            
-            
+
+
         self.EnsureCaretVisible()
         self.ScrollToColumn(0)
 
@@ -2962,7 +2962,7 @@ class SlicesShell(editwindow.EditWindow):
         reader = self.reader
         reader.isreading = True
         self.prompt()
-        
+
         # Ensure that we get a new line and that it's got an input marker...
         # Also need to temporarily block any other action...
         cLine = self.GetCurrentLine()
@@ -2970,7 +2970,7 @@ class SlicesShell(editwindow.EditWindow):
         self.MarkerAdd(cLine,INPUT_START)
         self.MarkerAdd(cLine,READLINE_BG)
         self.MarkerAdd(cLine,INPUT_READLINE)
-        
+
         try:
             while not reader.input:
                 wx.GetApp().Yield(onlyIfNeeded=True)
@@ -2985,7 +2985,7 @@ class SlicesShell(editwindow.EditWindow):
                 if i == start:    self.MarkerAdd(i,OUTPUT_START)
                 elif i==end:      self.MarkerAdd(i,OUTPUT_END)
                 else:             self.MarkerAdd(i,OUTPUT_MIDDLE)
-                
+
                 if i==end:        self.MarkerAdd(i,GROUPING_END)
                 else:             self.MarkerAdd(i,GROUPING_MIDDLE)
             reader.input = ''
@@ -3088,7 +3088,7 @@ class SlicesShell(editwindow.EditWindow):
             self.UpdateUndoHistoryBefore('insert',s,cpos,cpos+len(s))
             self.write(s,type='Input')
             self.UpdateUndoHistoryAfter()
-            
+
             endpos = self.GetCurrentPos()
             self.SetSelection(startpos, endpos)
         if tip:
@@ -3097,7 +3097,7 @@ class SlicesShell(editwindow.EditWindow):
             # In case there isn't enough room, only go back to the fallback.
             tippos = max(tippos, fallback)
             self.CallTipShow(tippos, tip)
-    
+
     def OnCallTipAutoCompleteManually (self, shiftDown):
         """AutoComplete and Calltips manually."""
         if self.AutoCompActive():
@@ -3140,11 +3140,11 @@ class SlicesShell(editwindow.EditWindow):
                 ctindex = ctips.find ('(')
                 if ctindex != -1 and not self.CallTipActive():
                     #insert calltip, if current pos is '(', otherwise show it only
-                    self.autoCallTipShow( ctips[:ctindex + 1], 
+                    self.autoCallTipShow( ctips[:ctindex + 1],
                           self.GetCharAt(currpos - 1) == ord('(') and
                               self.GetCurrentPos() == self.GetTextLength(),
                           True )
-                
+
 
     def writeOut(self, text):
         """Replacement for stdout."""
@@ -3175,24 +3175,24 @@ class SlicesShell(editwindow.EditWindow):
             sys.stderr = PseudoFileErr(self.writeErr)
         else:
             sys.stderr = self.stderr
-    
+
     # Take a spashot of the WHOLE grouping slice (or slices)
     # The argument s is either what got added or deleted
     def UpdateUndoHistoryBefore(self,actionType,s,posStart,posEnd,
                                 forceNewAction=False):
         uH=self.undoHistory
         uI=self.undoIndex
-        
+
         s=s.replace(os.linesep,'\n')
         startLine=self.LineFromPosition(posStart)
-        
+
         if actionType=='marker':
             numLines = self.LineFromPosition(posEnd) - startLine
         else:
             numLines=s.count('\n')
-        
+
         makeNewAction=forceNewAction
-        
+
         if forceNewAction:
             makeNewAction=True
         elif self.undoIndex==-1:
@@ -3222,15 +3222,15 @@ class SlicesShell(editwindow.EditWindow):
                 uH[uI]['numLines'] = uH[uI]['numLines']+numLines
             else:
                 makeNewAction=True
-            
+
         elif actionType=='marker':
             makeNewAction=True
         else:
             pass #print('Unsupported Action Type!!')
-        
+
         if makeNewAction:
             del(self.undoHistory[uI+1:]) # remove actions after undoIndex
-            
+
             uH.append({
               'actionType' : actionType,    # Action type ('insert','delete','marker')
               'allowsAppend': not forceNewAction, # Can action be joined with others?
@@ -3244,48 +3244,48 @@ class SlicesShell(editwindow.EditWindow):
               'markersBefore' : None, # [markers BEFORE action]
               'markersAfter' : None   # [markers AFTER action]
              })
-            
+
             self.undoIndex+=1
-            
+
             # Only update the before when starting a new action
             start = startLine
             if actionType=='insert':
                 end = start
             else:
                 end = start + numLines
-            
+
             # Update Marker Info
             newStart=self.GetGroupingSlice(start)[0]
             newEnd=self.GetGroupingSlice(end)[1]
             self.undoHistory[self.undoIndex]['markersBefore'] = \
                  [self.MarkerGet(i) for i in range(newStart,newEnd+1)]
             self.undoHistory[self.undoIndex]['mBStart']=newStart
-        
+
         self.doHistUpdate=True
-    
+
     def UpdateUndoHistoryAfter(self): # s is either what got added or deleted
         start = self.undoHistory[self.undoIndex]['startLine']
         if self.undoHistory[self.undoIndex]['actionType']=='delete':
             end = start
         else:
             end = start + self.undoHistory[self.undoIndex]['numLines']
-        
+
         newStart=min(self.GetGroupingSlice(start)[0]-1, 0)
         newEnd=max(self.GetGroupingSlice(end)[1]+1, self.GetLineCount()-1)
         self.undoHistory[self.undoIndex]['markersAfter'] = \
              [self.MarkerGet(i) for i in range(newStart,newEnd+1)]
         self.undoHistory[self.undoIndex]['mAStart']=newStart
-        
+
         self.doHistUpdate=False
-    
+
     def Undo(self):
         #ADD UNDO
         #Skip undo if there are no actions...
         if self.undoIndex==-1:
             return
-        
+
         uHI=self.undoHistory[self.undoIndex]
-        
+
         if uHI['actionType'] in ['insert','delete']:
             # This will perform the opposite of the action given
             editwindow.EditWindow.Undo(self)
@@ -3294,13 +3294,13 @@ class SlicesShell(editwindow.EditWindow):
         else:
             #print('Unsupported actionType in undoHistory!!')
             return
-        
+
         numLines=len(uHI['markersBefore'])
         for i in range(numLines):
             self.MarkerSet( uHI['mBStart']+i , uHI['markersBefore'][i] )
-        
+
         self.undoIndex-=1
-    
+
     def Redo(self):
         #ADD UNDO
         # First check to see if there are any redo operations available
@@ -3309,7 +3309,7 @@ class SlicesShell(editwindow.EditWindow):
             return
         self.undoIndex+=1
         uHI=self.undoHistory[self.undoIndex]
-        
+
         if uHI['actionType'] in ['insert','delete']:
             # This will re-perform the given action
             editwindow.EditWindow.Redo(self)
@@ -3318,21 +3318,21 @@ class SlicesShell(editwindow.EditWindow):
         else:
             #print('Unsupported actionType in undoHistory!!')
             return
-        
+
         numLines=len(uHI['markersAfter'])
         for i in range(numLines):
             self.MarkerSet( uHI['mAStart']+i , uHI['markersAfter'][i] )
-    
+
     def EmptyUndoBuffer(self):
         editwindow.EditWindow.EmptyUndoBuffer(self)
         self.undoIndex=-1
         self.undoHistory=[]
         self.doHistUpdate=False
-    
+
     def CanCut(self):
         return self.CanEdit() and \
                (self.GetSelectionStart() != self.GetSelectionEnd())
-    
+
     def CanPaste(self):
         """Return true if a paste should succeed."""
         if self.CanEdit() and editwindow.EditWindow.CanPaste(self):
@@ -3343,7 +3343,7 @@ class SlicesShell(editwindow.EditWindow):
     def CanEdit(self):
         """Return true if editing should succeed."""
         marker=self.MarkerGet(self.GetCurrentLine())
-        
+
         if marker & OUTPUT_MASK:
             return False
         elif marker & INPUT_MASK:
@@ -3413,7 +3413,7 @@ class SlicesShell(editwindow.EditWindow):
 
     def Paste(self):
         """Replace selection with clipboard contents."""
-        
+
         #ADD UNDO
         if self.CanPaste() and wx.TheClipboard.Open():
             ps2 = str(sys.ps2)
@@ -3430,19 +3430,19 @@ class SlicesShell(editwindow.EditWindow):
                     command = command.replace(os.linesep, '\n')
                     #DNM--Don't use '... '
                     command = command.replace('\n', os.linesep)# + ps2)
-                    
+
                     cpos=self.GetCurrentPos()
                     s=command
                     self.UpdateUndoHistoryBefore('insert', s, cpos,
                                             cpos+len(s), forceNewAction=True)
                     self.write(s,type='Input')
                     self.UpdateUndoHistoryAfter()
-                    
+
                     # Makes paste -> type -> undo consistent with other STC apps
                     self.ReplaceSelection('')
             wx.TheClipboard.Close()
-    
-    
+
+
     def PasteAndRun(self):
         """Replace selection with clipboard contents, run commands."""
         text = ''
@@ -3454,18 +3454,18 @@ class SlicesShell(editwindow.EditWindow):
             wx.TheClipboard.Close()
         if text:
             self.Execute(text)
-            
-    
+
+
     def Execute(self, text):
         """Replace selection with text and run commands."""
         start,end=self.GetIOSlice()
         startpos=self.PositionFromLine(start)
         endpos=self.GetLineEndPosition(end)
-        
+
         self.SetCurrentPos(endpos)
         self.SetSelection(startpos, endpos)
         self.ReplaceSelection('')
-        
+
         hasSyntaxError=False
         result = self.BreakTextIntoCommands(command)
         if result[0] == None:
@@ -3473,7 +3473,7 @@ class SlicesShell(editwindow.EditWindow):
             hasSyntaxError=True
         else:
             commands=result
-        
+
         for command in commands:
             command = command.replace('\n', os.linesep)
             self.write(command)
@@ -3506,7 +3506,7 @@ class SlicesShell(editwindow.EditWindow):
                     config.ReadBool('Options/AutoCallTip', True)
         self.callTipInsert = \
                     config.ReadBool('Options/CallTipInsert', True)
-        
+
         self.SetWrapMode(config.ReadBool('View/WrapMode', True))
 
         self.lineNumbers = \
@@ -3517,7 +3517,7 @@ class SlicesShell(editwindow.EditWindow):
             self.SetZoom(zoom)
 
 
-    
+
     def SaveSettings(self, config):
         config.WriteBool('Options/AutoComplete', self.autoComplete)
         config.WriteBool('Options/AutoCompleteIncludeMagic',
@@ -3541,25 +3541,25 @@ class SlicesShell(editwindow.EditWindow):
         menu = wx.Menu()
         menu.Append(wx.ID_UNDO, "Undo")
         menu.Append(wx.ID_REDO, "Redo")
-        
+
         menu.AppendSeparator()
-        
+
         menu.Append(wx.ID_CUT, "Cut")
         menu.Append(wx.ID_COPY, "Copy")
         menu.Append(frame.ID_COPY_PLUS, "Copy Plus")
         menu.Append(wx.ID_PASTE, "Paste")
         menu.Append(frame.ID_PASTE_PLUS, "Paste Plus")
         menu.Append(wx.ID_CLEAR, "Clear")
-        
+
         menu.AppendSeparator()
-        
+
         menu.Append(wx.ID_SELECTALL, "Select All")
         return menu
-        
+
     def OnContextMenu(self, evt):
         menu = self.GetContextMenu()
         self.PopupMenu(menu)
-        
+
     def OnUpdateUI(self, evt):
         id = evt.Id
         if id in (wx.ID_CUT, wx.ID_CLEAR):
@@ -3580,7 +3580,7 @@ class SlicesShell(editwindow.EditWindow):
         ioStartLines=[0]
         ioStartTypes=[]
         removeComment=False
-        
+
         # Read the initial three (or four) lines that have version and marker information
         line=fid.readline()
         if line == usrBinEnvPythonText:
@@ -3592,9 +3592,9 @@ class SlicesShell(editwindow.EditWindow):
         if line == inputStartText:      ioStartTypes.append('input');removeComment=False
         elif line == outputStartText:   ioStartTypes.append('output');removeComment=True
         else: print(invalidFileString); return
-        
+
         self.ClearAll()
-        
+
         # Write the file's text to the text area
         # Capture Marker information to
         for i in fid:
@@ -3613,14 +3613,14 @@ class SlicesShell(editwindow.EditWindow):
                 else:               w=i.replace(os.linesep,'\n')
                 self.write(w,'Input',silent=True)
                 lineCount+=1
-        
+
         if w[-1]=='\n':
             lineCount+=1
-        
+
         for i in range(lineCount+1):
             self.clearGroupingMarkers(i)
             self.clearIOMarkers(i)
-            
+
             doMiddle=False
             doEnd=False
             if groupingStartLines!=[]:
@@ -3635,19 +3635,19 @@ class SlicesShell(editwindow.EditWindow):
                 doEnd=True
             else:
                 doMiddle=True
-            
+
             if doMiddle:
                 self.MarkerAdd(i,GROUPING_MIDDLE)
             elif doEnd:
                 self.MarkerAdd(i,GROUPING_END)
-            
+
             doMiddle=False
             doEnd=False
             if ioStartLines!=[]:
                 if i == ioStartLines[0]:
                     # Delete the old ioStartTypes (keep the current copy for later use)
                     if i>0: del ioStartTypes[0]
-                    
+
                     if ioStartTypes[0]=='input':
                         self.MarkerAdd(i,INPUT_START)
                     elif ioStartTypes[0]=='output':
@@ -3656,7 +3656,7 @@ class SlicesShell(editwindow.EditWindow):
                     else:
                         #print('Invalid Type!')
                         return
-                    
+
                     # Only delete markers we are totally finished with...
                     # Keep one more "StartTypes" than "StartLines"
                     del ioStartLines[0]
@@ -3668,7 +3668,7 @@ class SlicesShell(editwindow.EditWindow):
                 doEnd=True
             else:
                 doMiddle=True
-            
+
             if doMiddle:
                 if ioStartTypes[0]=='input':
                     self.MarkerAdd(i,INPUT_MIDDLE)
@@ -3687,10 +3687,10 @@ class SlicesShell(editwindow.EditWindow):
                 else:
                     #print('Invalid Type!')
                     return
-                
+
         self.EmptyUndoBuffer() # maybe not?
 
-    
+
     def SavePySlicesFile(self,fid):
         addComment=False
         fid.write(usrBinEnvPythonText.replace('\n',os.linesep))
@@ -3707,32 +3707,32 @@ class SlicesShell(editwindow.EditWindow):
                 addComment=True
             if addComment: fid.write('#')
             fid.write(self.GetLine(i).replace('\n',os.linesep))
-    
+
     # FIX ME!!
     def LoadPyFileAsSlice(self,fid):
         curpos=self.GetCurrentPos()
         start,end = self.GetGroupingSlice()
-        
+
         endpos=self.GetLineEndPosition(end)
         self.SetCurrentPos(endpos)
         self.SetSelection(endpos, endpos)
-        
+
         text='\n'+fid.read()
         self.write(text,'Input')
         newpos=self.GetCurrentPos()
-        
+
         self.SetCurrentPos(curpos)
         self.SetSelection(curpos,curpos)
         self.SplitSlice()
         #self.SetCurrentPos(newpos)
         #self.SetSelection(newpos,newpos)
-    
+
     def hasChanged(self):
         """Return True if contents have changed."""
         return self.GetModify() or self.NeedsCheckForSave
-        
-        
-        
+
+
+
 ## NOTE: The DnD of file names is disabled until we can figure out how
 ## best to still allow DnD of text.
 
@@ -3765,12 +3765,12 @@ class SlicesShell(editwindow.EditWindow):
 ##         self.filedo = wx.FileDataObject()
 ##         self.compdo.Add(self.textdo)
 ##         self.compdo.Add(self.filedo, True)
-        
+
 ##         self.SetDataObject(self.compdo)
-                
+
 ##     def OnDrop(self, x, y):
 ##         return True
-    
+
 ##     def OnData(self, x, y, result):
 ##         self.GetData()
 ##         if self.textdo.GetTextLength() > 1:

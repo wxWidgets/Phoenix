@@ -19,7 +19,7 @@ class App(wx.App):
         import os
         import wx
         from wx import py
-        
+
         self.SetAppName("pycrust")
         confDir = wx.StandardPaths.Get().GetUserDataDir()
         if not os.path.exists(confDir):
@@ -27,13 +27,13 @@ class App(wx.App):
         fileName = os.path.join(confDir, 'config')
         self.config = wx.FileConfig(localFilename=fileName)
         self.config.SetRecordDefaults(True)
-        
+
         self.frame = py.crust.CrustFrame(config=self.config, dataDir=confDir)
         self.frame.Show()
         self.SetTopWindow(self.frame)
         return True
-    
-    
+
+
 '''
 The main() function needs to handle being imported, such as with the
 pycrust script that wxPython installs:

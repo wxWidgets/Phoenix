@@ -98,7 +98,7 @@ class EditWindow(stc.StyledTextCtrl):
 
     def __config(self):
         self.setDisplayLineNumbers(False)
-        
+
         self.SetLexer(stc.STC_LEX_PYTHON)
         self.SetKeyWords(0, ' '.join(keyword.kwlist))
 
@@ -136,7 +136,7 @@ class EditWindow(stc.StyledTextCtrl):
             # Leave a small margin so the feature hidden lines marker can be seen
             self.SetMarginType(1, 0)
             self.SetMarginWidth(1, 10)
-        
+
     def setStyles(self, faces):
         """Configure font size, typeface and color for lexer."""
 
@@ -148,7 +148,7 @@ class EditWindow(stc.StyledTextCtrl):
         self.StyleClearAll()
         self.SetSelForeground(True, wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
         self.SetSelBackground(True, wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
-        
+
         # Built in styles
         self.StyleSetSpec(stc.STC_STYLE_LINENUMBER,
                           "back:#C0C0C0,face:%(mono)s,size:%(lnsize)d" % FACES)

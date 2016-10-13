@@ -31,13 +31,13 @@ _boundMethods = weakref.WeakKeyDictionary()
 def connect(receiver, signal=Any, sender=Any, weak=True):
     """
     Connect receiver to sender for signal.
-    
+
     * If sender is Any, receiver will receive signal from any sender.
     * If signal is Any, receiver will receive any signal from sender.
     * If sender is None, receiver will receive signal from Anonymous.
-    * If signal is Any and sender is None, receiver will receive any 
+    * If signal is Any and sender is None, receiver will receive any
       signal from Anonymous.
-    * If signal is Any and sender is Any, receiver will receive any 
+    * If signal is Any and sender is Any, receiver will receive any
       signal from any sender.
     * If weak is true, weak references will be used.
     """
@@ -75,7 +75,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
 
 def disconnect(receiver, signal=Any, sender=Any, weak=True):
     """Disconnect receiver from sender for signal.
-    
+
     Disconnecting is not required. The use of disconnect is the same as for
     connect, only in reverse. Think of it as undoing a previous connection."""
     if signal is None:
@@ -95,7 +95,7 @@ def disconnect(receiver, signal=Any, sender=Any, weak=True):
 
 def send(signal, sender=Anonymous, **kwds):
     """Send signal from sender to all connected receivers.
-    
+
     Return a list of tuple pairs [(receiver, response), ... ].
     If sender is not specified, signal is sent anonymously."""
     senderkey = id(sender)
@@ -167,7 +167,7 @@ def _call(receiver, **kwds):
     else:
         raise DispatcherError('Unknown receiver %s of type %s' % (receiver, type(receiver)))
     if not (fc.co_flags & 8):
-        # fc does not have a **kwds type parameter, therefore 
+        # fc does not have a **kwds type parameter, therefore
         # remove unacceptable arguments.
         keys = list(kwds.keys())
         for arg in keys:
@@ -236,7 +236,7 @@ def _removeReceiver(receiver):
         except:
             pass
         _cleanupConnections(senderkey, signal)
-            
+
 def _cleanupConnections(senderkey, signal):
     """Delete any empty signals for senderkey. Delete senderkey if empty."""
     receivers = connections[senderkey][signal]
@@ -247,11 +247,11 @@ def _cleanupConnections(senderkey, signal):
         if not signals:
             # No more signal connections. Therefore, remove the sender.
             _removeSender(senderkey)
-            
+
 def _removeSender(senderkey):
     """Remove senderkey from connections."""
     del connections[senderkey]
-    # Senderkey will only be in senders dictionary if sender 
+    # Senderkey will only be in senders dictionary if sender
     # could be weakly referenced.
     try:
         del senders[senderkey]

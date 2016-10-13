@@ -22,7 +22,7 @@ class EditorFrame(frame.Frame):
     """Frame containing one editor."""
 
     def __init__(self, parent=None, id=-1, title='PyAlaCarte',
-                 pos=wx.DefaultPosition, size=(800, 600), 
+                 pos=wx.DefaultPosition, size=(800, 600),
                  style=wx.DEFAULT_FRAME_STYLE | wx.NO_FULL_REPAINT_ON_RESIZE,
                  filename=None):
         """Create EditorFrame instance."""
@@ -117,7 +117,7 @@ class EditorFrame(frame.Frame):
         else:
             if title.startswith('* '):
                 self.SetTitle(title[2:])
-        
+
     def hasBuffer(self):
         """Return True if there is a current buffer."""
         if self.buffer:
@@ -140,7 +140,7 @@ class EditorFrame(frame.Frame):
         self.bufferDestroy()
         buffer = Buffer()
         self.panel = panel = wx.Panel(parent=self, id=-1)
-        panel.Bind (wx.EVT_ERASE_BACKGROUND, lambda x: x)        
+        panel.Bind (wx.EVT_ERASE_BACKGROUND, lambda x: x)
         editor = Editor(parent=panel)
         panel.editor = editor
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -153,7 +153,7 @@ class EditorFrame(frame.Frame):
         self.setEditor(editor)
         self.editor.setFocus()
         self.SendSizeEvent()
-        
+
 
     def bufferDestroy(self):
         """Destroy the current buffer."""
@@ -257,7 +257,7 @@ class EditorNotebookFrame(EditorFrame):
     """Frame containing one or more editors in a notebook."""
 
     def __init__(self, parent=None, id=-1, title='PyAlaMode',
-                 pos=wx.DefaultPosition, size=(800, 600), 
+                 pos=wx.DefaultPosition, size=(800, 600),
                  style=wx.DEFAULT_FRAME_STYLE | wx.NO_FULL_REPAINT_ON_RESIZE,
                  filename=None):
         """Create EditorNotebookFrame instance."""
@@ -319,12 +319,12 @@ class EditorNotebookFrame(EditorFrame):
 ##         else:
 ##             if title.startswith('* '):
 ##                 self.SetTitle(title[2:])
-        
+
     def bufferCreate(self, filename=None):
         """Create new buffer."""
         buffer = Buffer()
         panel = wx.Panel(parent=self.notebook, id=-1)
-        panel.Bind(wx.EVT_ERASE_BACKGROUND, lambda x: x)        
+        panel.Bind(wx.EVT_ERASE_BACKGROUND, lambda x: x)
         editor = Editor(parent=panel)
         panel.editor = editor
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -435,7 +435,7 @@ class EditorShellNotebookFrame(EditorNotebookFrame):
     """Frame containing a notebook containing EditorShellNotebooks."""
 
     def __init__(self, parent=None, id=-1, title='PyAlaModeTest',
-                 pos=wx.DefaultPosition, size=(600, 400), 
+                 pos=wx.DefaultPosition, size=(600, 400),
                  style=wx.DEFAULT_FRAME_STYLE,
                  filename=None, singlefile=False):
         """Create EditorShellNotebookFrame instance."""
@@ -645,25 +645,25 @@ class Editor:
 
     def OnChar(self, event):
         """Keypress event handler.
-        
+
         Only receives an event if OnKeyDown calls event.Skip() for the
         corresponding event."""
 
         key = event.GetKeyCode()
         if key in self.autoCompleteKeys:
             # Usually the dot (period) key activates auto completion.
-            if self.window.AutoCompActive(): 
+            if self.window.AutoCompActive():
                 self.window.AutoCompCancel()
             self.window.ReplaceSelection('')
             self.window.AddText(chr(key))
             text, pos = self.window.GetCurLine()
             text = text[:pos]
-            if self.window.autoComplete: 
+            if self.window.autoComplete:
                 self.autoCompleteShow(text)
         elif key == ord('('):
             # The left paren activates a call tip and cancels an
             # active auto completion.
-            if self.window.AutoCompActive(): 
+            if self.window.AutoCompActive():
                 self.window.AutoCompCancel()
             self.window.ReplaceSelection('')
             self.window.AddText('(')
@@ -702,9 +702,9 @@ class Editor:
 
     def autoCompleteShow(self, command):
         """Display auto-completion popup list."""
-        list = self.buffer.interp.getAutoCompleteList(command, 
-                    includeMagic=self.window.autoCompleteIncludeMagic, 
-                    includeSingle=self.window.autoCompleteIncludeSingle, 
+        list = self.buffer.interp.getAutoCompleteList(command,
+                    includeMagic=self.window.autoCompleteIncludeMagic,
+                    includeSingle=self.window.autoCompleteIncludeSingle,
                     includeDouble=self.window.autoCompleteIncludeDouble)
         if list:
             options = ' '.join(list)
@@ -753,7 +753,7 @@ class DialogResults:
         self.returned = returned
         self.positive = returned in (wx.ID_OK, wx.ID_YES)
         self.text = self._asString()
-        
+
 
     def __repr__(self):
         return str(self.__dict__)

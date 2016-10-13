@@ -10,10 +10,10 @@ import types
 import wx
 from six import BytesIO, PY3, string_types
 
-def getAutoCompleteList(command='', locals=None, includeMagic=1, 
+def getAutoCompleteList(command='', locals=None, includeMagic=1,
                         includeSingle=1, includeDouble=1):
     """Return list of auto-completion options for command.
-    
+
     The list of options will be based on the locals namespace."""
     attributes = []
     # Get the proper chunk of code from the command.
@@ -26,10 +26,10 @@ def getAutoCompleteList(command='', locals=None, includeMagic=1,
     except:
         pass
     else:
-        attributes = getAttributeNames(obj, includeMagic, 
+        attributes = getAttributeNames(obj, includeMagic,
                                        includeSingle, includeDouble)
     return attributes
-    
+
 def getAttributeNames(obj, includeMagic=1, includeSingle=1,
                       includeDouble=1):
     """Return list of unique attributes, including inherited, for obj."""
@@ -71,7 +71,7 @@ def getAttributeNames(obj, includeMagic=1, includeSingle=1,
             else:
                 attributes += [attr for attr in attrlist \
                                if attr not in obj_dir and hasattr(obj, attr)]
-            
+
     # Remove duplicates from the attribute list.
     for item in attributes:
         dict[item] = None
@@ -93,7 +93,7 @@ def hasattrAlwaysReturnsTrue(obj):
 
 def getAllAttributeNames(obj):
     """Return dict of all attributes, including inherited, for an object.
-    
+
     Recursively walk through a class and all base classes.
     """
     attrdict = {}  # (object, technique, count): [list of attributes]
@@ -150,7 +150,7 @@ def getAllAttributeNames(obj):
 
 def getCallTip(command='', locals=None):
     """For a command, return a tuple of object name, argspec, tip text.
-    
+
     The call tip information will be based on the locals namespace."""
     calltip = ('', '', '')  # object name, argspec, tip text.
     # Get the proper chunk of code from the command.
@@ -185,7 +185,7 @@ def getCallTip(command='', locals=None):
             if len(temp) == 1:  # No other arguments.
                 argspec = '()'
             elif temp[0][:2] == '(*': # first param is like *args, not self
-                pass 
+                pass
             else:  # Drop the first argument.
                 argspec = '(' + ','.join(temp[1:]).lstrip()
         tip1 = name + argspec
@@ -216,7 +216,7 @@ def getCallTip(command='', locals=None):
 
 def getRoot(command, terminator=None):
     """Return the rightmost root portion of an arbitrary Python command.
-    
+
     Return only the root portion that can be eval()'d without side
     effects.  The command would normally terminate with a '(' or
     '.'. The terminator and anything after the terminator will be
@@ -244,7 +244,7 @@ def getRoot(command, terminator=None):
     if terminator and command.endswith(terminator):
         size = 0 - len(terminator)
         command = command[:size]
-        
+
     command = command.rstrip()
     tokens = getTokens(command)
     tokens.reverse()
@@ -300,7 +300,7 @@ def getRoot(command, terminator=None):
     if prefix in emptyTypes:
         # Empty types are safe to be eval()'d and introspected.
         root = prefix + root
-    return root    
+    return root
 
 def getTokens(command):
     """Return list of token tuples for command."""
@@ -311,9 +311,9 @@ def getTokens(command):
             command = command.encode('utf-8')
         except UnicodeEncodeError:
             pass # otherwise leave it alone
-                
+
     f = BytesIO(command)
-    # tokens is a list of token tuples, each looking like: 
+    # tokens is a list of token tuples, each looking like:
     # (type, string, (srow, scol), (erow, ecol), line)
     tokens = []
     # Can't use list comprehension:
@@ -330,7 +330,7 @@ def getTokens(command):
         # This is due to a premature EOF, which we expect since we are
         # feeding in fragments of Python code.
         pass
-    return tokens    
+    return tokens
 
 def rtrimTerminus(command, terminator=None):
     """Return command minus anything that follows the final terminator."""

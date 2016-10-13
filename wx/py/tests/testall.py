@@ -8,7 +8,7 @@ import os
 
 
 def suite():
-    """Return a test suite containing all test cases in all test modules. 
+    """Return a test suite containing all test cases in all test modules.
     Searches the current directory for any modules matching test_*.py."""
     suite = unittest.TestSuite()
     for filename in glob.glob('test_*.py'):

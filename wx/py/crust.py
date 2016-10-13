@@ -39,13 +39,13 @@ class Crust(wx.SplitterWindow):
         # navigation key, but the Shell window uses it to insert lines.
         style = self.GetWindowStyle()
         self.SetWindowStyle(style & ~wx.TAB_TRAVERSAL)
-        
+
         self.shell = Shell(parent=self, introText=intro,
                            locals=locals, InterpClass=InterpClass,
                            startupScript=startupScript,
                            execStartupScript=execStartupScript,
                            *args, **kwds)
-        
+
         self.editor = self.shell
         if rootObject is None:
             rootObject = self.shell.interp.locals
@@ -58,23 +58,23 @@ class Crust(wx.SplitterWindow):
         # Add 'filling' to the interpreter's locals.
         self.shell.interp.locals['filling'] = self.filling
         self.notebook.AddPage(page=self.filling, text='Namespace', select=True)
-        
+
         self.display = Display(parent=self.notebook)
         self.notebook.AddPage(page=self.display, text='Display')
         # Add 'pp' (pretty print) to the interpreter's locals.
         self.shell.interp.locals['pp'] = self.display.setItem
         self.display.nbTab = self.notebook.GetPageCount()-1
-        
+
         self.calltip = Calltip(parent=self.notebook)
         self.notebook.AddPage(page=self.calltip, text='Calltip')
-        
+
         self.sessionlisting = SessionListing(parent=self.notebook)
         self.notebook.AddPage(page=self.sessionlisting, text='History')
-        
+
         self.dispatcherlisting = DispatcherListing(parent=self.notebook)
         self.notebook.AddPage(page=self.dispatcherlisting, text='Dispatcher')
 
-        
+
         # Initialize in an unsplit mode, and check later after loading
         # settings if we should split or not.
         self.shell.Hide()
@@ -94,7 +94,7 @@ class Crust(wx.SplitterWindow):
             self.lastsashpos = self.GetSashPosition()
         else:
             self.lastsashpos = -1
-        self.issplit = self.IsSplit()       
+        self.issplit = self.IsSplit()
 
     def ToggleTools(self):
         """Toggle the display of the filling and other tools"""
@@ -151,7 +151,7 @@ class Crust(wx.SplitterWindow):
             config.WriteInt('Sash/CrustPos', self.lastsashpos)
         config.WriteInt('Sash/IsSplit', self.issplit)
         config.WriteInt('View/Zoom/Display', self.display.GetZoom())
-        
+
 class Display(editwindow.EditWindow):
     """STC used to display an object using Pretty Print."""
 
@@ -190,7 +190,7 @@ class Display(editwindow.EditWindow):
             focus = wx.Window.FindFocus()
             self.GetParent().SetSelection(self.nbTab)
             wx.CallAfter(focus.SetFocus)
-            
+
 
 # TODO: Switch this to a editwindow.EditWindow
 class Calltip(wx.TextCtrl):
@@ -318,12 +318,12 @@ class CrustFrame(frame.Frame, frame.ShellFrameMixin):
         frame.Frame.__init__(self, parent, id, title, pos, size, style,
                              shellName='PyCrust')
         frame.ShellFrameMixin.__init__(self, config, dataDir)
-        
+
         if size == wx.DefaultSize:
             self.SetSize((800, 600))
-        
+
         intro = 'PyCrust %s - The Flakiest Python Shell' % VERSION
-        
+
         self.SetStatusText(intro.replace('\n', ', '))
         self.crust = Crust(parent=self, intro=intro,
                            rootObject=rootObject,
@@ -338,10 +338,10 @@ class CrustFrame(frame.Frame, frame.ShellFrameMixin):
 
         # Override the filling so that status messages go to the status bar.
         self.crust.filling.tree.setStatusText = self.SetStatusText
-        
+
         # Override the shell so that status messages go to the status bar.
         self.shell.setStatusText = self.SetStatusText
-        
+
         self.shell.SetFocus()
         self.LoadSettings()
 
@@ -400,4 +400,4 @@ class CrustFrame(frame.Frame, frame.ShellFrameMixin):
         if self.config is not None:
             self.SaveSettings(force=True)
             self.config.Flush()
-    
+
