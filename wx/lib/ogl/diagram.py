@@ -49,10 +49,10 @@ class Diagram(object):
         """
         Add a shape to the diagram. If addAfter is not None, the shape
         will be added after addAfter.
-        
+
         :param `object`: an instance of :class:`~lib.ogl.Shape`
         :param `addAfter`: an instance of :class:`~lib.ogl.Shape`
-        
+
         """
         if not object in self._shapeList:
             if addAfter:
@@ -65,9 +65,9 @@ class Diagram(object):
     def InsertShape(self, object):
         """
         Insert a shape at the front of the shape list.
-        
+
         :param `object`: an instance of :class:`~lib.ogl.Shape`
-        
+
         """
         self._shapeList.insert(0, object)
 
@@ -75,13 +75,13 @@ class Diagram(object):
         """
         Remove the shape from the diagram (non-recursively) but do not
         delete it.
-        
+
         :param `object`: an instance of :class:`~lib.ogl.Shape`
-        
+
         """
         if object in self._shapeList:
             self._shapeList.remove(object)
-            
+
     def RemoveAllShapes(self):
         """Remove all shapes from the diagram but do not delete the shapes."""
         self._shapeList = []
@@ -92,12 +92,12 @@ class Diagram(object):
             if not shape.GetParent():
                 self.RemoveShape(shape)
                 shape.Delete()
-                
+
     def ShowAll(self, show):
         """Call Show for each shape in the diagram.
-        
+
         :param `show`: True or False
-        
+
         """
         for shape in self._shapeList:
             shape.Show(show)
@@ -105,13 +105,13 @@ class Diagram(object):
     def DrawOutline(self, dc, x1, y1, x2, y2):
         """
         Draw an outline rectangle on the current device context.
-        
+
         :param `dc`: the :class:`wx.MemoryDC` device context
         :param `x1`: the x1 position
         :param `y2`: the y2 position
         :param `x1`: the x1 position
         :param `y2`: the y2 position
-        
+
         """
         dc.SetPen(wx.Pen(wx.Colour(0, 0, 0), 1, wx.PENSTYLE_DOT))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -120,7 +120,7 @@ class Diagram(object):
 
     def RecentreAll(self, dc):
         """Recentre all the text that should be centred.
-        
+
         :param `dc`: the :class:`wx.MemoryDC` device context
 
         """
@@ -130,22 +130,22 @@ class Diagram(object):
     def SetCanvas(self, canvas):
         """
         Set the canvas associated with this diagram.
-        
+
         :param `canvas`: an instance of :class:`~lib.ogl.Canvas`
-        
+
         """
         self._diagramCanvas = canvas
 
     def GetCanvas(self):
         """Return the shape canvas associated with this diagram."""
         return self._diagramCanvas
-        
+
     def FindShape(self, id):
         """
         Return the shape for the given identifier.
-        
+
         :param `id`: the shape id to find
-        
+
         """
         for shape in self._shapeList:
             if shape.GetId() == id:
@@ -156,32 +156,32 @@ class Diagram(object):
         """
         'Snaps' the coordinate to the nearest grid position, if
         snap-to-grid is on.
-        
+
         :param `x`: the x position
         :param `y`: the y position
-        
+
         """
         if self._snapToGrid:
             return self._gridSpacing * int(x / self._gridSpacing + 0.5), self._gridSpacing * int(y / self._gridSpacing + 0.5)
         return x, y
 
-    def SetGridSpacing(self, spacing): 
+    def SetGridSpacing(self, spacing):
         """
         Sets grid spacing.
-        
+
         :param `spacing`: the spacing
-        
-        """ 
-        self._gridSpacing = spacing 
- 
-    def SetSnapToGrid(self, snap): 
+
+        """
+        self._gridSpacing = spacing
+
+    def SetSnapToGrid(self, snap):
         """
         Sets snap-to-grid mode.
-        
+
         :param `snap`: `True` to snap to grid or `False` not to snap
-        
-        """ 
-        self._snapToGrid = snap 
+
+        """
+        self._snapToGrid = snap
 
     def GetGridSpacing(self):
         """Return the grid spacing."""
@@ -197,9 +197,9 @@ class Diagram(object):
 
         In this mode, refreshes are minimized, but the diagram may need
         manual refreshing occasionally.
-        
+
         :param `mode`: `True` to quick edit or `False` for normal edit
-        
+
         """
         self._quickEditMode = mode
 
@@ -211,9 +211,9 @@ class Diagram(object):
         """Set the tolerance within which a mouse move is ignored.
 
         The default is 3 pixels.
-        
+
         :param `tolerance`: the tolerance level
-        
+
         """
         self._mouseTolerance = tolerance
 
