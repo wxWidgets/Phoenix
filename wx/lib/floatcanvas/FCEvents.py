@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------------
 # Name:         FCEvents.py
-# Purpose:      A convenient place to put all event types and binders for 
+# Purpose:      A convenient place to put all event types and binders for
 #               FloatCanvas, and to help avoid circular imports.
 #
 # Author:
