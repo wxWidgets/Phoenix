@@ -78,16 +78,16 @@ Usage example::
 
         def __init__(self, parent):
 
-            wx.Frame.__init(self, parent, -1, "FlatNotebook Demo")        
+            wx.Frame.__init(self, parent, -1, "FlatNotebook Demo")
 
             panel = wx.Panel(self)
-            
+
             notebook = fnb.FlatNotebook(panel, -1)
-            
+
             for i in range(3):
                 caption = "Page %d"%(i+1)
                 notebook.AddPage(self.CreatePage(notebook, caption), caption)
-                
+
             sizer = wx.BoxSizer(wx.VERTICAL)
             sizer.Add(notebook, 1, wx.ALL | wx.EXPAND, 5)
             panel.SetSizer(sizer)
@@ -105,8 +105,8 @@ Usage example::
             wx.StaticText(p, -1, caption, (20,20))
             wx.TextCtrl(p, -1, "", (20,40), (150,-1))
             return p
-        
-        
+
+
     # our normal wxApp-derived class, as usual
 
     app = wx.App(0)
@@ -804,7 +804,7 @@ def FormatColour(colour):
     """
     Convert the input `colour` into a valid :class:`wx.Colour` instance, using whatever typemap
     accepted by wxWidgets/wxPython.
-    
+
     :param `colour`: can be an instance of :class:`wx.Colour`, a 3 or 4 integer tuple, a hex
      string, a string representing the colour name or ``None``.
 
@@ -1908,7 +1908,7 @@ class FNBRenderer(object):
         if agwStyle & FNB_NAV_BUTTONS_WHEN_NEEDED:
             if pc._pagesInfoVec[-1].GetPosition() != wx.Point(-1, -1) and pc._nFrom == 0:
                 return
-            
+
         # Set the bitmap according to the button status
         if pc._nRightButtonStatus == FNB_BTN_HOVER:
             arrowBmp = wx.Bitmap(right_arrow_hilite_xpm)

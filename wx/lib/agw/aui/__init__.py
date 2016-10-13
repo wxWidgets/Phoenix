@@ -11,26 +11,26 @@ AUI attempts to encapsulate the following aspects of the user interface:
 
 * **Frame Management**: Frame management provides the means to open, move and hide common
   controls that are needed to interact with the document, and allow these configurations
-  to be saved into different perspectives and loaded at a later time. 
+  to be saved into different perspectives and loaded at a later time.
 
 * **Toolbars**: Toolbars are a specialized subset of the frame management system and should
   behave similarly to other docked components. However, they also require additional
   functionality, such as "spring-loaded" rebar support, "chevron" buttons and end-user
-  customizability. 
+  customizability.
 
 * **Modeless Controls**: Modeless controls expose a tool palette or set of options that
   float above the application content while allowing it to be accessed. Usually accessed
   by the toolbar, these controls disappear when an option is selected, but may also be
-  "torn off" the toolbar into a floating frame of their own. 
+  "torn off" the toolbar into a floating frame of their own.
 
 * **Look and Feel**: Look and feel encompasses the way controls are drawn, both when shown
   statically as well as when they are being moved. This aspect of user interface design
-  incorporates "special effects" such as transparent window dragging as well as frame animation. 
+  incorporates "special effects" such as transparent window dragging as well as frame animation.
 
 AUI adheres to the following principles:
 
 - Use native floating frames to obtain a native look and feel for all platforms;
-- Use existing wxPython code where possible, such as sizer implementation for frame management; 
+- Use existing wxPython code where possible, such as sizer implementation for frame management;
 - Use standard wxPython coding conventions.
 
 
@@ -51,7 +51,7 @@ three text controls in a frame window::
             wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
             self._mgr = aui.AuiManager()
-            
+
             # notify AUI which frame to use
             self._mgr.SetManagedWindow(self)
 
@@ -59,20 +59,20 @@ three text controls in a frame window::
             text1 = wx.TextCtrl(self, -1, "Pane 1 - sample text",
                                 wx.DefaultPosition, wx.Size(200,150),
                                 wx.NO_BORDER | wx.TE_MULTILINE)
-                                               
+
             text2 = wx.TextCtrl(self, -1, "Pane 2 - sample text",
                                 wx.DefaultPosition, wx.Size(200,150),
                                 wx.NO_BORDER | wx.TE_MULTILINE)
-                                               
+
             text3 = wx.TextCtrl(self, -1, "Main content window",
                                 wx.DefaultPosition, wx.Size(200,150),
                                 wx.NO_BORDER | wx.TE_MULTILINE)
-            
+
             # add the panes to the manager
             self._mgr.AddPane(text1, aui.AuiPaneInfo().Left().Caption("Pane Number One"))
             self._mgr.AddPane(text2, aui.AuiPaneInfo().Bottom().Caption("Pane Number Two"))
             self._mgr.AddPane(text3, aui.AuiPaneInfo().CenterPane())
-                                  
+
             # tell the manager to "commit" all the changes just made
             self._mgr.Update()
 
@@ -84,8 +84,8 @@ three text controls in a frame window::
             # deinitialize the frame manager
             self._mgr.UnInit()
 
-            self.Destroy()        
-            event.Skip()        
+            self.Destroy()
+            event.Skip()
 
 
     # our normal wxApp-derived class, as usual
@@ -108,26 +108,26 @@ The wxPython AUI version fixes the following bugs or implement the following
 missing features (the list is not exhaustive):
 
 - Visual Studio 2005 style docking: http://www.kirix.com/forums/viewtopic.php?f=16&t=596
-- Dock and Pane Resizing: http://www.kirix.com/forums/viewtopic.php?f=16&t=582 
-- Patch concerning dock resizing: http://www.kirix.com/forums/viewtopic.php?f=16&t=610 
-- Patch to effect wxAuiToolBar orientation switch: http://www.kirix.com/forums/viewtopic.php?f=16&t=641 
-- AUI: Core dump when loading a perspective in wxGTK (MSW OK): http://www.kirix.com/forums/viewtopic.php?f=15&t=627 
-- wxAuiNotebook reordered AdvanceSelection(): http://www.kirix.com/forums/viewtopic.php?f=16&t=617 
-- Vertical Toolbar Docking Issue: http://www.kirix.com/forums/viewtopic.php?f=16&t=181 
-- Patch to show the resize hint on mouse-down in aui: http://trac.wxwidgets.org/ticket/9612 
-- The Left/Right and Top/Bottom Docks over draw each other: http://trac.wxwidgets.org/ticket/3516 
-- MinSize() not honoured: http://trac.wxwidgets.org/ticket/3562 
-- Layout problem with wxAUI: http://trac.wxwidgets.org/ticket/3597 
-- Resizing children ignores current window size: http://trac.wxwidgets.org/ticket/3908 
-- Resizing panes under Vista does not repaint background: http://trac.wxwidgets.org/ticket/4325 
-- Resize sash resizes in response to click: http://trac.wxwidgets.org/ticket/4547 
-- "Illegal" resizing of the AuiPane? (wxPython): http://trac.wxwidgets.org/ticket/4599 
+- Dock and Pane Resizing: http://www.kirix.com/forums/viewtopic.php?f=16&t=582
+- Patch concerning dock resizing: http://www.kirix.com/forums/viewtopic.php?f=16&t=610
+- Patch to effect wxAuiToolBar orientation switch: http://www.kirix.com/forums/viewtopic.php?f=16&t=641
+- AUI: Core dump when loading a perspective in wxGTK (MSW OK): http://www.kirix.com/forums/viewtopic.php?f=15&t=627
+- wxAuiNotebook reordered AdvanceSelection(): http://www.kirix.com/forums/viewtopic.php?f=16&t=617
+- Vertical Toolbar Docking Issue: http://www.kirix.com/forums/viewtopic.php?f=16&t=181
+- Patch to show the resize hint on mouse-down in aui: http://trac.wxwidgets.org/ticket/9612
+- The Left/Right and Top/Bottom Docks over draw each other: http://trac.wxwidgets.org/ticket/3516
+- MinSize() not honoured: http://trac.wxwidgets.org/ticket/3562
+- Layout problem with wxAUI: http://trac.wxwidgets.org/ticket/3597
+- Resizing children ignores current window size: http://trac.wxwidgets.org/ticket/3908
+- Resizing panes under Vista does not repaint background: http://trac.wxwidgets.org/ticket/4325
+- Resize sash resizes in response to click: http://trac.wxwidgets.org/ticket/4547
+- "Illegal" resizing of the AuiPane? (wxPython): http://trac.wxwidgets.org/ticket/4599
 - Floating wxAUIPane Resize Event doesn't update its position: http://trac.wxwidgets.org/ticket/9773
-- Don't hide floating panels when we maximize some other panel: http://trac.wxwidgets.org/ticket/4066 
-- wxAUINotebook incorrect ALLOW_ACTIVE_PANE handling: http://trac.wxwidgets.org/ticket/4361 
-- Page changing veto doesn't work, (patch supplied): http://trac.wxwidgets.org/ticket/4518 
-- Show and DoShow are mixed around in wxAuiMDIChildFrame: http://trac.wxwidgets.org/ticket/4567 
-- wxAuiManager & wxToolBar - ToolBar Of Size Zero: http://trac.wxwidgets.org/ticket/9724 
+- Don't hide floating panels when we maximize some other panel: http://trac.wxwidgets.org/ticket/4066
+- wxAUINotebook incorrect ALLOW_ACTIVE_PANE handling: http://trac.wxwidgets.org/ticket/4361
+- Page changing veto doesn't work, (patch supplied): http://trac.wxwidgets.org/ticket/4518
+- Show and DoShow are mixed around in wxAuiMDIChildFrame: http://trac.wxwidgets.org/ticket/4567
+- wxAuiManager & wxToolBar - ToolBar Of Size Zero: http://trac.wxwidgets.org/ticket/9724
 - wxAuiNotebook doesn't behave properly like a container as far as...: http://trac.wxwidgets.org/ticket/9911
 - Serious layout bugs in wxAUI: http://trac.wxwidgets.org/ticket/10620
 - wAuiDefaultTabArt::Clone() should just use copy contructor: http://trac.wxwidgets.org/ticket/11388
@@ -176,7 +176,7 @@ Plus the following features:
   (w) A "smooth docking effect" can be obtained by using the ``AUI_MGR_SMOOTH_DOCKING`` style (similar to PyQT docking style);
   (x) Implementation of "Movable" panes, i.e. a pane that is set as `Movable()` but not `Floatable()` can be dragged and docked
       into a new location but will not form a floating window in between.
-  
+
 
 - AuiNotebook:
 
@@ -185,7 +185,7 @@ Plus the following features:
   (c) Implementation of the style ``AUI_NB_USE_IMAGES_DROPDOWN``, which allows to show tab images
       on the tab dropdown menu instead of bare check menu items (a la :mod:`lib.agw.flatnotebook`);
   (d) 6 different tab arts are available, namely:
-  
+
       (1) Default "glossy" theme (as in :class:`~auibook.AuiNotebook`)
       (2) Simple theme (as in :class:`~auibook.AuiNotebook`)
       (3) Firefox 2 theme
@@ -276,11 +276,11 @@ TODOs
 License And Version
 ===================
 
-AUI library is distributed under the wxPython license. 
+AUI library is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 09 Jan 2014, 22.00 GMT
 
-Version 1.3. 
+Version 1.3.
 
 """
 

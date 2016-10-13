@@ -181,7 +181,7 @@ from math import ceil, floor
 import six
 if six.PY3:
     long = int
-    
+
 # Set The Styles For The Underline wx.TextCtrl
 FS_READONLY = 1
 """ Sets :class:`FloatSpin` as read-only control. """

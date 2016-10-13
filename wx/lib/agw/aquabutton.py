@@ -54,19 +54,19 @@ Sample usage::
     app = wx.App(0)
 
     frame = wx.Frame(None, -1, "AquaButton Test")
-    
+
     mainPanel = wx.Panel(frame)
     mainPanel.SetBackgroundColour(wx.WHITE)
-    
+
     # Initialize AquaButton 1 (with image)
     bitmap = wx.Bitmap("my_button_bitmap.png", wx.BITMAP_TYPE_PNG)
     btn1 = AB.AquaButton(mainPanel, -1, bitmap, "AquaButton")
-    
+
     # Initialize AquaButton 2 (no image)
     btn2 = AB.AquaButton(mainPanel, -1, None, "Hello World!")
 
     frame.Show()
-    
+
     app.MainLoop()
 
 
@@ -236,7 +236,7 @@ class AquaButton(wx.Control):
 
         :param `bitmap`: the bitmap label to set, an instance of :class:`wx.Bitmap`.
         """
-        
+
         self._bitmap = bitmap
         self.Refresh()
 
@@ -296,10 +296,10 @@ class AquaButton(wx.Control):
 
         elif self._mouseAction == HOVER:
             clr = self._hoverColour
-            
+
         elif self._hasFocus:
             clr = self._focusColour
-            
+
         elif not self.IsEnabled():
             clr = self._disableColour
 
@@ -384,7 +384,7 @@ class AquaButton(wx.Control):
         :param wx.Rect `rc`: a client rectangle;
         :param float `r`: the radius of the rounded part of the rectangle.
 
-        :return: A rounded rectangle, an instance of :class:`GraphicsPath`.        
+        :return: A rounded rectangle, an instance of :class:`GraphicsPath`.
         """
 
         x, y, w, h = rc
@@ -593,8 +593,8 @@ class AquaButton(wx.Control):
         the same font/colour attributes as the native :class:`Button`.
 
         :return: an instance of :class:`VisualAttributes`.
-        
-        :note: Overridden from :class:`wx.Control`.        
+
+        :note: Overridden from :class:`wx.Control`.
         """
 
         return wx.Button.GetClassDefaultAttributes()
@@ -655,7 +655,7 @@ class AquaButton(wx.Control):
         button based on the label and bezel size.
 
         :return: An instance of :class:`wx.Size`.
-        
+
         :note: Overridden from :class:`wx.Control`.
         """
 
@@ -681,11 +681,11 @@ class AquaButton(wx.Control):
     def DoEnable(self, enable):
         """
         Overridden base class virtual.
-        
-        Need to Refresh otherwise Enable state change done from a 
+
+        Need to Refresh otherwise Enable state change done from a
         `wx.EVT_UPDATE_UI` will not show.
         """
-        self.Refresh() 
+        self.Refresh()
 
 
     def SetBackgroundColour(self, colour):
@@ -707,7 +707,7 @@ class AquaButton(wx.Control):
         Returns the button colour when the mouse is not hovering on the button.
 
         :return: An instance of :class:`wx.Colour`.
-        
+
         :note: Overridden from :class:`wx.Control`.
         """
 
@@ -836,7 +836,7 @@ class AquaButton(wx.Control):
         Returns the text colour for :class:`AquaButton`.
 
         :return: An instance of :class:`wx.Colour`.
-        
+
         :note: Overridden from :class:`wx.Control`.
         """
 
@@ -987,21 +987,21 @@ class __ToggleMixin(object):
 
         if not self.IsEnabled():
             return
-        
+
         if event.LeftIsDown() and self.HasCapture():
             x, y = event.GetPosition()
             w, h = self.GetClientSize()
-            
+
             if x < w and x >= 0 and y < h and y >= 0:
                 self.up = not self.saveUp
                 self.Refresh()
                 return
-            
+
             if x < 0 or y < 0 or x >= w or y >= h:
                 self.up = self.saveUp
                 self.Refresh()
                 return
-            
+
         event.Skip()
 
 

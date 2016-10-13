@@ -4418,7 +4418,7 @@ class HyperTreeList(wx.Control):
             font = self._header_win.GetFont()
             dc = wx.ClientDC(self._header_win)
             width2, dummy, dummy = dc.GetMultiLineTextExtent(self._header_win.GetColumnText(column))
- 
+
             width2 += 2*_EXTRA_WIDTH + _MARGIN
             width = max(width1, width2)
 

@@ -81,7 +81,7 @@ Usage example::
     class MyFrame(wx.Frame):
 
         def __init__(self, parent):
-        
+
             wx.Frame.__init__(self, parent, -1, "ShapedButton Demo")
 
             panel = wx.Panel(self)
@@ -89,12 +89,12 @@ Usage example::
             # Create 2 bitmaps for the button
             upbmp = wx.Bitmap("play.png", wx.BITMAP_TYPE_PNG)
             disbmp = wx.Bitmap("playdisabled.png", wx.BITMAP_TYPE_PNG)
-            
+
             play = SB.SBitmapToggleButton(panel, -1, upbmp, (100, 50))
             play.SetUseFocusIndicator(False)
             play.SetBitmapDisabled(disbmp)
-        
-        
+
+
     # our normal wxApp-derived class, as usual
 
     app = wx.App(0)
@@ -141,7 +141,7 @@ This class processes the following events:
 ================= ==================================================
 Event Name        Description
 ================= ==================================================
-``wx.EVT_BUTTON`` Process a `wxEVT_COMMAND_BUTTON_CLICKED` event, when the button is clicked. 
+``wx.EVT_BUTTON`` Process a `wxEVT_COMMAND_BUTTON_CLICKED` event, when the button is clicked.
 ================= ==================================================
 
 
@@ -227,7 +227,7 @@ class SButtonEvent(wx.CommandEvent):
         wx.CommandEvent.__init__(self, eventType, eventId)
         self.isDown = False
         self.theButton = None
-        
+
 
     def SetIsDown(self, isDown):
         """
@@ -235,15 +235,15 @@ class SButtonEvent(wx.CommandEvent):
 
         :param `isDown`: ``True`` to set the event as "pressed", ``False`` otherwise.
         """
-        
+
         self.isDown = isDown
 
 
     def GetIsDown(self):
         """ Returns ``True`` if the button event is "pressed". """
-        
+
         return self.isDown
-    
+
 
     def SetButtonObj(self, btn):
         """
@@ -270,7 +270,7 @@ class SButtonEvent(wx.CommandEvent):
 
 class SButton(wx.Window):
     """ This is the main implementation of `ShapedButton`. """
-    
+
     _labeldelta = 1
 
     def __init__(self, parent, id=wx.ID_ANY, label="", pos=wx.DefaultPosition,
@@ -331,7 +331,7 @@ class SButton(wx.Window):
         Sets the button colour, for all button states.
 
         :param `colour`: an instance of :class:`wx.Colour`.
-        
+
         :note: The original button images are greyscale with a lot of pixels with
          different colours. Changing smoothly the button colour in order to
          give the same 3D effect can be efficiently done only with PIL.
@@ -346,7 +346,7 @@ class SButton(wx.Window):
 
         self._mainbuttondown = DownButton.GetImage()
         self._mainbuttonup = UpButton.GetImage()
-        
+
 
 
     def GetButtonColour(self):
@@ -454,7 +454,7 @@ class SButton(wx.Window):
         Enables/disables the button.
 
         :param `enable`: ``True`` to enable the button, ``False`` to disable it.
-        
+
         :note: Overridden from :class:`wx.Window`.
         """
 
@@ -616,7 +616,7 @@ class SButton(wx.Window):
         :param `width`: the button width;
         :param `height`: the button height;
         :param `dw`: width differential, to show a 3D effect;
-        :param `dh`: height differential, to show a 3D effect.        
+        :param `dh`: height differential, to show a 3D effect.
         """
 
         dc.SetFont(self.GetFont())
@@ -657,7 +657,7 @@ class SButton(wx.Window):
 
         :param `dc`: an instance of :class:`wx.DC`;
         :param `width`: the button width;
-        :param `height`: the button height.        
+        :param `height`: the button height.
         """
 
         self._focusindpen.SetColour(self._focusclr)
@@ -963,7 +963,7 @@ class SButton(wx.Window):
         :param `main`: a floating point number representing the absolute dimension
          of the main ellipse axis;
         :param `secondary`: a floating point number representing the absolute dimension
-         of the secondary ellipse axis.         
+         of the secondary ellipse axis.
         """
 
         if main is None:
@@ -1018,7 +1018,7 @@ class SBitmapButton(SButton):
 
     def GetBitmapLabel(self):
         """ Returns the bitmap associated with the button in the normal state. """
-        
+
         return self._bmplabel
 
 
@@ -1105,7 +1105,7 @@ class SBitmapButton(SButton):
         :param `width`: the button width;
         :param `height`: the button height;
         :param `dw`: width differential, to show a 3D effect;
-        :param `dh`: height differential, to show a 3D effect.        
+        :param `dh`: height differential, to show a 3D effect.
         """
 
         bmp = self._bmplabel
@@ -1786,18 +1786,18 @@ if __name__ == '__main__':
     class MyFrame(wx.Frame):
 
         def __init__(self, parent):
-        
+
             wx.Frame.__init__(self, parent, -1, "ShapedButton Demo")
 
             panel = wx.Panel(self)
 
             # Create bitmaps for the button
             bmp = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (16, 16))
-                        
+
             play = SBitmapToggleButton(panel, -1, bmp, (100, 50))
             play.SetUseFocusIndicator(False)
-        
-        
+
+
     # our normal wxApp-derived class, as usual
 
     app = wx.App(0)
