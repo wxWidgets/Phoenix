@@ -4,7 +4,7 @@
 #
 # 12/17/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o Removed wx prefix from class name, 
+# o Removed wx prefix from class name,
 #   updated reverse renamer
 #
 

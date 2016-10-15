@@ -7,7 +7,7 @@
 #
 # Created:
 # Version:
-# Date:        
+# Date:
 # Licence:      wxWindows license
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------

@@ -37,11 +37,11 @@ class BitmapShape(RectangleShape):
     def SetSize(self, w, h, recursive = True):
         """
         Set the size.
-        
+
         :param `w`: the width
         :param `h`: the heigth
         :param `recursive`: not used
-        
+
         """
 
         if self._bitmap.IsOk():
@@ -58,10 +58,10 @@ class BitmapShape(RectangleShape):
     def GetBitmap(self):
         """Get the associated bitmap."""
         return self._bitmap
-    
+
     def SetBitmap(self, bitmap):
         """Set the associated bitmap.
-        
+
         :param `bitmap`: a :class:`wx.Bitmap` instance
 
         :note: You can delete the bitmap from the calling application, since
@@ -72,12 +72,12 @@ class BitmapShape(RectangleShape):
         self._bitmap = bitmap
         if self._bitmap.IsOk():
             self.SetSize(self._bitmap.GetWidth(), self._bitmap.GetHeight())
-            
+
     def SetFilename(self, f):
         """Set the bitmap filename.
-        
+
         :param str `f`: the bitmap file name
-        
+
         """
         self._filename = f
 

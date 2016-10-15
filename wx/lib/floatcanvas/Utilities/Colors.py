@@ -22,12 +22,12 @@ http://geography.uoregon.edu/datagraphics/color_scales.htm
 They may have been modified some
 
 CategoricalColor1: A list of colors that are distict.
-BlueToRed11: 11 colors from blue to red 
+BlueToRed11: 11 colors from blue to red
 
 
 """
 
-## Categorical 12-step scheme, after ColorBrewer 11-step Paired Scheme     
+## Categorical 12-step scheme, after ColorBrewer 11-step Paired Scheme
 ## From: http://geography.uoregon.edu/datagraphics/color_scales.htm
 # CategoricalColor1 = [ (255, 191, 127),
 #                       (255, 127,   0),
@@ -58,16 +58,16 @@ CategoricalColor1 = [ (229,  25,  50),
                       ]
 
 RedToBlue11 = [ (165,  0,   33),
-                (216,  38,  50), 
-                (247, 109,  94), 
-                (255, 173, 114), 
-                (255, 224, 153), 
-                (255, 255, 191), 
-                (224, 255, 255), 
-                (170, 247, 255), 
-                (114, 216, 255), 
-                ( 63, 160, 255), 
-                ( 38, 76,  255), 
+                (216,  38,  50),
+                (247, 109,  94),
+                (255, 173, 114),
+                (255, 224, 153),
+                (255, 255, 191),
+                (224, 255, 255),
+                (170, 247, 255),
+                (114, 216, 255),
+                ( 63, 160, 255),
+                ( 38, 76,  255),
                 ]
 
 BlueToDarkRed12 = [( 41,  10, 216),

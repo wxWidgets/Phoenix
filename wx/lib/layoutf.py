@@ -1,12 +1,12 @@
 # 12/09/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o Updated for wx namespace
-# 
+#
 # 12/18/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
 # o wxScrolledMessageDialog -> ScrolledMessageDialog
-# 
-# Tags: 
+#
+# Tags:
 
 import  re
 import  wx
@@ -178,10 +178,10 @@ class Layoutf(wx.LayoutConstraints):
                 attr = getattr(self, self.attr_d[g[0]])
                 func = getattr(attr, self.op_d[g[1]])
                 if g[1] == '!':
-                    print("%s.%s.%s(%s)" % 
+                    print("%s.%s.%s(%s)" %
                      ('self',self.attr_d[g[0]],self.op_d[g[1]],g[2]))
                 else:
-                    print("%s.%s.%s()" % 
+                    print("%s.%s.%s()" %
                      ('self',self.attr_d[g[0]],self.op_d[g[1]]))
                 continue
             m = self.rexp2.match(item)
@@ -191,13 +191,13 @@ class Layoutf(wx.LayoutConstraints):
             else: g[3] = 0;
             g[4] = int(g[4]) - 1
             if g[1] in '<>^_':
-                if g[3]: print("%s.%s.%s(%s,%d)" % 
+                if g[3]: print("%s.%s.%s(%s,%d)" %
                  ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]],
                   g[3]))
                 else: print("%s.%s.%s(%s)" % \
                  ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]]))
             else:
-                if g[3]: print("%s.%s.%s(%s,%s,%d)" % 
+                if g[3]: print("%s.%s.%s(%s,%s,%d)" %
                  ('self',self.attr_d[g[0]],self.op_d[g[1]],winlist[g[4]],
                   self.cmp_d[g[2]],g[3]))
                 else: print("%s.%s.%s(%s,%s)" % \

@@ -104,4 +104,3 @@ if __name__ == "__main__":
     app = wx.App()
     Controller(app)
     app.MainLoop()
-    

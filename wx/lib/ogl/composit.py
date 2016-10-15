@@ -47,7 +47,7 @@ class ConstraintType(object):
     def __init__(self, theType, theName, thePhrase):
         """
         Default class constructor.
-        
+
         :param `theType`: one of the folowing
          ====================================== ================================
          Constraint type                        Description
@@ -137,11 +137,11 @@ class Constraint(object):
     def __init__(self, type, constraining, constrained):
         """
         Default class constructor.
-        
+
         :param `type`: see :class:`ConstraintType` for valid types
         :param `constraining`: the constraining :class:`Shape`
         :param `constrained`: the constrained :class:`Shape`
-        
+
         """
         self._xSpacing = 0.0
         self._ySpacing = 0.0
@@ -160,22 +160,22 @@ class Constraint(object):
     def SetSpacing(self, x, y):
         """
         Sets the horizontal and vertical spacing for the constraint.
-        
+
         :param `x`: the x position
         :param `y`: the y position
-        
+
         """
         self._xSpacing = x
         self._ySpacing = y
-        
+
     def Equals(self, a, b):
         """
         Return `True` if a and b are approximately equal (for the purposes
         of evaluating the constraint).
-        
+
         :param `a`: ???
         :param `b`: ???
-        
+
         """
         marg = 0.5
 
@@ -391,9 +391,9 @@ class Constraint(object):
                     changed = True
                     constrainedObject.Move(dc, constrainedObject.GetX(), y3, False)
             return changed
-        
+
         return False
-    
+
 OGLConstraint = wx.deprecated(Constraint,
                      "The OGLConstraint name is deprecated, use `ogl.Constraint` instead.")
 
@@ -406,16 +406,16 @@ class CompositeShape(RectangleShape):
     def __init__(self):
         """
         Default class constructor.
-        
+
         """
         RectangleShape.__init__(self, 100.0, 100.0)
 
         self._oldX = self._xpos
         self._oldY = self._ypos
 
-        self._constraints = [] 
+        self._constraints = []
         self._divisions = [] # In case it's a container
-        
+
     def OnDraw(self, dc):
         """The draw handler."""
         x1 = self._xpos - self._width / 2.0
@@ -433,7 +433,7 @@ class CompositeShape(RectangleShape):
 
         # For debug purposes /pi
         #dc.DrawRectangle(x1, y1, self._width, self._height)
-        
+
     def OnDrawContents(self, dc):
         """The draw contents handler."""
         for object in self._children:
@@ -508,14 +508,14 @@ class CompositeShape(RectangleShape):
             if self._parent:
                 self._parent.GetEventHandler().OnEndDragLeft(x, y, keys, 0)
             return
-            
+
         # use the DCOverlay stuff, note that drawing is done to the ClientDC
         dc = wx.ClientDC(self.GetCanvas())
         odc = wx.DCOverlay(self.GetCanvas()._Overlay, dc)
         dc.SetLogicalFunction(wx.COPY)
 
         self.Erase(dc)
-        
+
         xx, yy = self._canvas.Snap(x, y)
         offsetX = xx - _objectStartX
         offsetY = yy - _objectStartY
@@ -527,7 +527,7 @@ class CompositeShape(RectangleShape):
 
     def OnRightClick(self, x, y, keys = 0, attachment = 0):
         """The right click handler.
-        
+
         :note: If we get a ctrl-right click, this means send the message to
          the division, so we can invoke a user interface for dealing
          with regions.
@@ -542,11 +542,11 @@ class CompositeShape(RectangleShape):
     def SetSize(self, w, h, recursive = True):
         """
         Set the size.
-        
+
         :param `w`: the width
         :param `h`: the heigth
         :param `recursive`: size the children recursively
-        
+
         """
         self.SetAttachmentSize(w, h)
 
@@ -584,10 +584,10 @@ class CompositeShape(RectangleShape):
         """
         Add a shape to the composite. If addAfter is not None, the shape
         will be added after addAfter.
-        
+
         :param `child`: an instance of :class:`~lib.ogl.Shape`
         :param `addAfter`: an instance of :class:`~lib.ogl.Shape`
-        
+
         """
         self._children.append(child)
         child.SetParent(self)
@@ -601,9 +601,9 @@ class CompositeShape(RectangleShape):
         """
         Removes the child from the composite and any constraint
         relationships, but does not delete the child.
-        
+
         :param `child`: an instance of :class:`~lib.ogl.Shape`
-        
+
         """
         if child in self._children:
             self._children.remove(child)
@@ -621,7 +621,7 @@ class CompositeShape(RectangleShape):
             self.RemoveChild(child)
             child.Delete()
         RectangleShape.Delete(self)
-        self._constraints = [] 
+        self._constraints = []
         self._divisions = []
 
     def DeleteConstraintsInvolvingChild(self, child):
@@ -629,9 +629,9 @@ class CompositeShape(RectangleShape):
         This function deletes constraints which mention the given child.
 
         Used when deleting a child from the composite.
-        
+
         :param `child`: an instance of :class:`~lib.ogl.Shape`
-        
+
         """
         for constraint in self._constraints:
             if constraint._constrainingObject == child or child in constraint._constrainedObjects:
@@ -640,11 +640,11 @@ class CompositeShape(RectangleShape):
     def RemoveChildFromConstraints(self, child):
         """
         Removes the child from the constraints.
-        
+
         :param `child`: an instance of :class:`~lib.ogl.Shape`
-        
+
         """
-        
+
         for constraint in self._constraints:
             if child in constraint._constrainedObjects:
                 constraint._constrainedObjects.remove(child)
@@ -658,7 +658,7 @@ class CompositeShape(RectangleShape):
     def AddConstraint(self, constraint):
         """
         Adds a constraint to the composite.
-        
+
         :param `constraint`: an instance of :class:`~lib.ogl.Shape`
 
         """
@@ -674,7 +674,7 @@ class CompositeShape(RectangleShape):
         :param `type`: see :class:`ConstraintType` for valid types
         :param `constraining`: the constraining :class:`Shape`
         :param `constrained`: the constrained :class:`Shape`
-        
+
         """
         constraint = Constraint(type, constraining, constrained)
         if constraint._constraintId == 0:
@@ -685,13 +685,13 @@ class CompositeShape(RectangleShape):
     def FindConstraint(self, cId):
         """
         Finds the constraint with the given id.
-        
+
         :param `cId`: The constraint id to find.
 
         :returns: None or a tuple of the constraint and the actual composite the
          constraint was in, in case that composite was a descendant of
          this composit.
-        
+
         """
         for constraint in self._constraints:
             if constraint._constraintId == cId:
@@ -709,9 +709,9 @@ class CompositeShape(RectangleShape):
     def DeleteConstraint(self, constraint):
         """
         Deletes constraint from composite.
-        
+
         :param `constraint`: the constraint to delete
-        
+
         """
         self._constraints.remove(constraint)
 
@@ -719,7 +719,7 @@ class CompositeShape(RectangleShape):
         """
         Calculates the size and position of the composite based on
         child sizes and positions.
-        
+
         """
         maxX = -999999.9
         maxY = -999999.9
@@ -752,7 +752,7 @@ class CompositeShape(RectangleShape):
         Recomputes any constraints associated with the object. If `False` is
         returned, the constraints could not be satisfied (there was an
         inconsistency).
-        
+
         """
         noIterations = 0
         changed = True
@@ -765,9 +765,9 @@ class CompositeShape(RectangleShape):
     def Constrain(self):
         """
         Constrain the children.
-        
+
         :returns: True if constained otherwise False
-        
+
         """
         self.CalculateSize()
 
@@ -795,7 +795,7 @@ class CompositeShape(RectangleShape):
 
         dc = wx.MemoryDC()
         dc.SelectObject(self.GetCanvas()._Buffer)
-        
+
         division.Move(dc, self.GetX(), self.GetY())
         self.Recompute()
         division.Show(True)
@@ -808,7 +808,7 @@ class CompositeShape(RectangleShape):
         """
         Finds the image used to visualize a container. This is any child of
         the composite that is not in the divisions list.
-        
+
         """
         for child in self._children:
             if child in self._divisions:
@@ -819,10 +819,10 @@ class CompositeShape(RectangleShape):
     def ContainsDivision(self, division):
         """
         Check if division is descendant.
-        
+
         :param `division`: divison to check
         :returns: `True` if division is a descendant of this container.
-        
+
         """
         if division in self._divisions:
             return True
@@ -943,7 +943,7 @@ DIVISION_MENU_EDIT_TOP_EDGE         =4
 DIVISION_MENU_EDIT_RIGHT_EDGE       =5
 DIVISION_MENU_EDIT_BOTTOM_EDGE      =6
 DIVISION_MENU_DELETE_ALL            =7
-    
+
 
 
 class PopupDivisionMenu(wx.Menu):
@@ -962,7 +962,7 @@ class PopupDivisionMenu(wx.Menu):
 
     def GetClientData(self):
         return self._clientData
-    
+
     def OnMenu(self, event):
         division = self.GetClientData()
         if event.GetId() == DIVISION_MENU_SPLIT_HORIZONTALLY:
@@ -973,7 +973,7 @@ class PopupDivisionMenu(wx.Menu):
             division.EditEdge(DIVISION_SIDE_LEFT)
         elif event.GetId() == DIVISION_MENU_EDIT_TOP_EDGE:
             division.EditEdge(DIVISION_SIDE_TOP)
-            
+
 
 
 class DivisionShape(CompositeShape):
@@ -1018,11 +1018,11 @@ class DivisionShape(CompositeShape):
     def SetTopSide(self, shape):
         """Set the the division on the top side of this division."""
         self._topSide = shape
-        
+
     def SetRightSide(self, shape):
         """Set the the division on the right side of this division."""
         self._rightSide = shape
-        
+
     def SetBottomSide(self, shape):
         """Set the the division on the bottom side of this division."""
         self._bottomSide = shape
@@ -1030,15 +1030,15 @@ class DivisionShape(CompositeShape):
     def GetLeftSide(self):
         """Return the division on the left side of this division."""
         return self._leftSide
-    
+
     def GetTopSide(self):
         """Return the division on the top side of this division."""
         return self._topSide
-    
+
     def GetRightSide(self):
         """Return the division on the right side of this division."""
         return self._rightSide
-    
+
     def GetBottomSide(self):
         """Return the division on the bottom side of this division."""
         return self._bottomSide
@@ -1048,7 +1048,7 @@ class DivisionShape(CompositeShape):
         Sets the side which the handle appears on.
 
         :param `side`: Either DIVISION_SIDE_LEFT or DIVISION_SIDE_TOP.
-        
+
         """
         self._handleSide = side
 
@@ -1059,11 +1059,11 @@ class DivisionShape(CompositeShape):
     def SetLeftSidePen(self, pen):
         """Set the colour for drawing the left side of the division."""
         self._leftSidePen = pen
-        
+
     def SetTopSidePen(self, pen):
         """Set the colour for drawing the top side of the division."""
         self._topSidePen = pen
-        
+
     def GetLeftSidePen(self):
         """Return the pen used for drawing the left side of the division."""
         return self._leftSidePen
@@ -1075,7 +1075,7 @@ class DivisionShape(CompositeShape):
     def GetLeftSideColour(self):
         """Return the colour used for drawing the left side of the division."""
         return self._leftSideColour
-    
+
     def GetTopSideColour(self):
         """Return the colour used for drawing the top side of the division."""
         return self._topSideColour
@@ -1083,15 +1083,15 @@ class DivisionShape(CompositeShape):
     def SetLeftSideColour(self, colour):
         """Set the colour for drawing the left side of the division."""
         self._leftSideColour = colour
-        
+
     def SetTopSideColour(self, colour):
         """Set the colour for drawing the top side of the division."""
         self._topSideColour = colour
-        
+
     def GetLeftSideStyle(self):
         """Return the style used for the left side of the division."""
         return self._leftSideStyle
-    
+
     def GetTopSideStyle(self):
         """Return the style used for the top side of the division."""
         return self._topSideStyle
@@ -1099,21 +1099,21 @@ class DivisionShape(CompositeShape):
     def SetLeftSideStyle(self, style):
         """
         Set the left side style.
-        
+
         :param `style`: valid values ???
-        
+
         """
         self._leftSideStyle = style
-        
+
     def SetTopSideStyle(self, style):
         """
         Set the top side style.
-        
+
         :param `style`: valid values ???
-        
+
         """
         self._lefttopStyle = style
-        
+
     def OnDraw(self, dc):
         """The draw handler."""
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -1140,7 +1140,7 @@ class DivisionShape(CompositeShape):
         # how big the division is.
         #dc.SetBrush(wx.RED_BRUSH)
         #dc.DrawRectangle(x1, y1, self.GetWidth(), self.GetHeight())
-        
+
     def OnDrawContents(self, dc):
         """The draw contens handler."""
         CompositeShape.OnDrawContents(self, dc)
@@ -1175,7 +1175,7 @@ class DivisionShape(CompositeShape):
                 self._parent.GetEventHandler().OnBeginDragLeft(x, y, keys, attachment)
             return
         Shape.OnBeginDragLeft(x, y, keys, attachment)
-            
+
     def OnEndDragLeft(self, x, y, keys = 0, attachment = 0):
         """The end drag left handler."""
         if self._canvas.HasCapture():
@@ -1206,18 +1206,18 @@ class DivisionShape(CompositeShape):
     def SetSize(self, w, h, recursive = True):
         """
         Set the size.
-        
+
         :param `w`: the width
         :param `h`: the heigth
         :param `recursive`: `True` recurse all children
-        
+
         """
         self._width = w
         self._height = h
         RectangleShape.SetSize(self, w, h, recursive)
 
     def CalculateSize(self):
-        """not implemented???"""    
+        """not implemented???"""
         pass
 
     # Experimental
@@ -1234,10 +1234,10 @@ class DivisionShape(CompositeShape):
 
     def Divide(self, direction):
         """Divide this division into two further divisions.
-        
+
         :param `direction`: `wx.HORIZONTAL` for horizontal or `wx.VERTICAL` for
          vertical division.
-        
+
         """
         # Calculate existing top-left, bottom-right
         x1 = self.GetX() - self.GetWidth() / 2.0
@@ -1403,7 +1403,7 @@ class DivisionShape(CompositeShape):
     def AdjustLeft(self, left, test):
         """
         Adjust a side.
-        
+
         :param `left`: desired left position ???
         :param `test`: if `True` just a test
         :returns: `False` if it's not physically possible to adjust it to
@@ -1435,7 +1435,7 @@ class DivisionShape(CompositeShape):
         :param `test`: if `True` just a test
         :returns: `False` if it's not physically possible to adjust it to
          this point.
-        
+
         """
         x1 = self.GetX() - self.GetWidth() / 2.0
 
@@ -1454,7 +1454,7 @@ class DivisionShape(CompositeShape):
 
         self.Move(dc, newX, self.GetY())
         return True
-    
+
     def AdjustTop(self, top, test):
         """
         Adjust a side.
@@ -1484,7 +1484,7 @@ class DivisionShape(CompositeShape):
         return True
 
     # Resize adjoining divisions.
-    
+
     # Behaviour should be as follows:
     # If right edge moves, find all objects whose left edge
     # adjoins this object, and move left edge accordingly.
@@ -1509,7 +1509,7 @@ class DivisionShape(CompositeShape):
         `DIVISION_SIDE_RIGHT`   Right side
         `DIVISION_SIDE_BOTTOM`  Bottom side
         ======================= =======================
-        
+
         :param `newPos`: new position
         :param `test`: if `True`, just see whether it's possible for each
          adjoining region, returning `False` if it's not.
@@ -1538,7 +1538,7 @@ class DivisionShape(CompositeShape):
                     if not success and test:
                         return False
         return True
-    
+
     def EditEdge(self, side):
         print("EditEdge() not implemented.")
 
@@ -1566,4 +1566,4 @@ class DivisionShape(CompositeShape):
 
         self._canvas.PopupMenu(menu, (mouse_x, mouse_y))
 
-        
+

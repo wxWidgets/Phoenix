@@ -707,13 +707,13 @@ class PersistenceManager(object):
 
         return self._hasRestored
 
-    
+
     @HasRestoredProp.setter
     def HasRestoredProp(self, flag):
         """
         This property keeps track if any of the windows managed by
         :class:`PersistenceManager` has had its settings restored.
-        
+
         :param boolean `flag`: True will be remembered
         """
 
@@ -800,7 +800,7 @@ class PersistenceManager(object):
         this method checks the style `PM_PERSIST_CONTROL_VALUE` and if if it is
         not set it will also check the variable `persistValue` of the individual
         window.
- 
+
         :param `obj`: an instance of :class:`PersistentObject`;
         :param `keyName`: a string specifying the key name.
         """

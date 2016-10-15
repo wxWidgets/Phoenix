@@ -127,8 +127,8 @@ class CCellEditor(wx.grid.PyGridCellEditor):
         """
         key = evt.GetKeyCode()              # Get the key code
         ch = None                           # Handle num pad keys
-        if key in [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, 
-                    wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, 
+        if key in [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3,
+                    wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7,
                     wx.WXK_NUMPAD8, wx.WXK_NUMPAD9]:
             ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
 
@@ -154,7 +154,7 @@ class CCellEditor(wx.grid.PyGridCellEditor):
 
     def Destroy(self):
         """ Final cleanup
-        
+
             NOTE: There is no need to everride this if you don't need
             to do something out of the ordinary.
         """

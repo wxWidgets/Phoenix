@@ -5410,7 +5410,7 @@ class CustomTreeCtrl(wx.ScrolledWindow):
             child, cookie = self.GetNextChild(item, cookie)
 
         self._sendEvent = True
-        self._dirty = True        
+        self._dirty = True
 
 
     def ExpandAll(self):

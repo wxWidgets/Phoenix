@@ -1396,7 +1396,7 @@ class AuiTabContainer(object):
                 total_width += size[0]
                 tab_width[i] = size[0]
 
-            if i >= self._tab_offset:            
+            if i >= self._tab_offset:
                 if i+1 < page_count:
                     visible_width += x_extent
                 else:
@@ -1426,7 +1426,7 @@ class AuiTabContainer(object):
             for button in self._buttons:
                 if button.id == AUI_BUTTON_LEFT or \
                    button.id == AUI_BUTTON_RIGHT:
-                    
+
                     button.cur_state |= AUI_BUTTON_STATE_HIDDEN
 
         # Re-calculate the width of visible buttons (may have been hidden/shown)
@@ -2287,7 +2287,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
                     if self.HasCapture():
                         self.ReleaseMouse()
-                        
+
                     if self._agwFlags & AUI_NB_TAB_FLOAT:
                         self._drag_image.BeginDrag(wx.Point(0,0), self, fullScreen=True)
                     else:
@@ -2327,7 +2327,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         :rtype: :class:`wx.Window`.
         """
-        
+
         screen_pt = wx.GetMousePosition()
         client_pt = self.ScreenToClient(screen_pt)
         return self.TabHitTest(client_pt.x, client_pt.y)
@@ -2340,7 +2340,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         :param wx.Window `wnd`: the window pointed by the mouse.
         """
-        
+
         self._tooltip_wnd = wnd
         if (wnd is None and self._hover_button is None) or not wx.GetApp().IsActive():
             self.StopTooltipTimer()
@@ -2352,7 +2352,7 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
     def StopTooltipTimer(self):
         """ Stops the timer keeping track of tooltips and mouse movements on the tab area. """
-        
+
         if self._tooltip_timer:
             self._tooltip_timer.Stop()
             self._tooltip_timer = None
@@ -2364,13 +2364,13 @@ class AuiTabCtrl(wx.Control, AuiTabContainer):
 
         :param `event`: a :class:`MouseEvent` event to be processed.
         """
-        
+
         self.RestartTooltipTimer(self.GetPointedToTab())
 
 
     def ShowTooltip(self):
         """ Shows the tooltip on the tab. """
-        
+
         wnd = self.GetPointedToTab()
         if wnd != self._tooltip_wnd:
             self.RestartTooltipTimer(wnd)
@@ -2932,12 +2932,12 @@ class AuiNotebook(wx.Panel):
            This method has been added to safely un-initialize the underlying
            :class:`~wx.lib.agw.aui.framemanager.AuiManager` which manages the :class:`AuiNotebook`
            layout (i.e., tab split, re-ordering, tab floating etc...).
-         
+
         """
-        
+
         self._mgr.UnInit()
         return wx.Panel.Destroy(self)
-        
+
 
     def __getitem__(self, index):
         """
@@ -2956,7 +2956,7 @@ class AuiNotebook(wx.Panel):
 
 
         """
-        
+
         if index < self.GetPageCount():
             return self.GetPage(index)
         else:
@@ -4424,7 +4424,7 @@ class AuiNotebook(wx.Panel):
             return
 
         selection = self.GetSelection()
-        
+
         # choose a split size
         if self.GetPageCount() > 2:
             split_size = self.CalculateNewSplitSize()
@@ -4493,7 +4493,7 @@ class AuiNotebook(wx.Panel):
                     selection -= 1
 
                 active_page = selection
-            
+
             src_tabs.SetActivePage(active_page)
             src_tabs.DoShowHide()
             src_tabs.Refresh()
@@ -4569,7 +4569,7 @@ class AuiNotebook(wx.Panel):
 
            Due to a bug on MSW, for disabled pages :func:`FindWindowAtPoint`
            returns the wrong window. See http://trac.wxwidgets.org/ticket/2942
-           
+
         """
 
         if not self._sash_dclick_unsplit:
@@ -5148,10 +5148,10 @@ class AuiNotebook(wx.Panel):
 
            When the notebook is more or less full screen, tabs cannot be dragged far
            enough outside of the notebook to become floating pages.
-           
+
         """
         from . import framemanager
-        
+
         root_manager = framemanager.GetManager(self)
         page_title = self.GetPageText(page_index)
         page_contents = self.GetPage(page_index)
@@ -5898,7 +5898,7 @@ class AuiNotebook(wx.Panel):
         Clones the tab area buttons when the :class:`AuiNotebook` is being split.
 
         :see: :meth:`AddTabAreaButton`
-        
+
         :note: Standard buttons for :class:`AuiNotebook` are not cloned, only custom ones.
         """
 

@@ -45,18 +45,18 @@ Usage example::
     import os
     import random
     import glob
-    
+
     import wx
     import wx.lib.agw.zoombar as ZB
 
     class MyFrame(wx.Frame):
 
         def __init__(self, parent):
-        
+
             wx.Frame.__init__(self, parent, -1, "ZoomBar Demo")
 
             panel = wx.Panel(self)
-            
+
             bar = ZB.ZoomBar(panel, -1)
 
             standard = glob.glob(bitmapDir + "/*96.png")
@@ -65,23 +65,23 @@ Usage example::
             separatorImage = bitmapDir + "/separator.gif"
             separatorReflection = bitmapDir + "/separatorFlip.png"
             count = 0
-            
+
             for std, ref in zip(standard, reflections):
                 if random.randint(0, 1) == 1 and count > 0:
                     sep1 = wx.Bitmap(separatorImage, wx.BITMAP_TYPE_GIF)
                     sep2 = wx.Bitmap(separatorReflection, wx.BITMAP_TYPE_PNG)
                     bar.AddSeparator(sep1, sep2)
-                    
+
                 bname = os.path.split(std)[1][0:-6]
                 bar.AddButton(wx.Bitmap(std, wx.BITMAP_TYPE_PNG), wx.Bitmap(ref, wx.BITMAP_TYPE_PNG), bname)
                 count += 1
-                
+
             bar.ResetSize()
 
             sizer = wx.BoxSizer(wx.HORIZONTAL)
             sizer.Add(bar, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 15)
             panel.SetSizer(sizer)
-            
+
 
     # our normal wxApp-derived class, as usual
 
@@ -332,7 +332,7 @@ def MakeDisabledBitmap(original):
 
     :param `original`: an instance of :class:`wx.Bitmap` to be greyed-out.
     """
-    
+
     img = original.ConvertToImage()
     return wx.Bitmap(img.ConvertToGreyscale())
 
@@ -343,7 +343,7 @@ class ZoomBarImage(object):
     This simple class holds information about a :class:`ZoomBar` button, such as normal
     bitmaps, disabled bitmap, button label, etc...
     """
-    
+
     def __init__(self, parent, bitmap, disabledBmp=wx.NullBitmap, label=""):
         """
         Default class constructor.
@@ -363,7 +363,7 @@ class ZoomBarImage(object):
 
         self._disabledBmp = disabledBmp
         self._label = label
-        
+
         self._height = 36
         self._width = 36
 
@@ -378,10 +378,10 @@ class ZoomBarImage(object):
         self._oldInc = -six.MAXSIZE
         self._isSeparator = False
         self._enabled = True
-        
+
         # Larger number gives a greater zoom effect
         self._zoomFactor = 3
-        
+
         # Whether this is a reflection or not
         self._isAReflection = False
 
@@ -406,9 +406,9 @@ class ZoomBarImage(object):
 
         :param `center`: if ``True`` button zooms upwards.
         """
-        
+
         self._centerZoom = center
-        
+
 
     def ZoomImage(self, nxcoord):
         """
@@ -424,12 +424,12 @@ class ZoomBarImage(object):
 
         if self._isSeparator:
             return False
-        
+
         if abs(inc - self._oldInc) < 2:
             return False
 
         self._oldInc = inc
-        
+
         if not self._isAReflection:
             # original button
             inc = inc*self._zoomFactor
@@ -458,19 +458,19 @@ class ZoomBarImage(object):
 
         self._width = width
         self._height = height
-        
+
 
     def GetPosition(self):
         """ Returns the button position. """
 
         return wx.Point(self._left, self._top)
-    
+
 
     def GetSize(self):
         """ Returns the button size. """
 
         return wx.Size(self._width, self._height)
-    
+
 
     def GetBitmap(self):
         """
@@ -484,9 +484,9 @@ class ZoomBarImage(object):
         if self._enabled:
             return self._cachedBitmaps[self._width]
 
-        return self._cachedDisabledBitmaps[self._width]        
-    
-        
+        return self._cachedDisabledBitmaps[self._width]
+
+
     def SetupProps(self, buttonSize):
         """
         Set up the button position and size.
@@ -496,7 +496,7 @@ class ZoomBarImage(object):
 
         self._width = self._oldWidth = buttonSize
         self._height = self._oldHeight = buttonSize
-        
+
         self._oldLeft = self._left
         self._oldTop = self._top
         self._vCenter = self._oldLeft + int(self._oldWidth/2.0)
@@ -507,7 +507,7 @@ class ZoomBarImage(object):
             img = self._bitmap.ConvertToImage()
             img = img.Scale(self._width, self._height, wx.IMAGE_QUALITY_HIGH)
             self._paintBitmap = img.ConvertToBitmap()
-        
+
 
     def GetLabel(self):
         """ Returns the button label (if any). """
@@ -530,7 +530,7 @@ class ZoomBarImage(object):
         """ Returns ``True`` if the button is zoomed, ``False`` otherwise. """
 
         return self._width/float(self._oldWidth) >= 1.25
-    
+
 
     def LoopScales(self, size):
         """
@@ -542,7 +542,7 @@ class ZoomBarImage(object):
 
         if self._isAReflection:
             return
-        
+
         for scale in range(size-10*self._zoomFactor, size+15*self._zoomFactor, self._zoomFactor):
             if scale in self._cachedBitmaps or scale <= 0:
                 continue
@@ -555,7 +555,7 @@ class ZoomBarImage(object):
             img = self._disabledBmp.ConvertToImage()
             img = img.Scale(scale, scale, wx.IMAGE_QUALITY_HIGH)
             bmp = img.ConvertToBitmap()
-            self._cachedDisabledBitmaps[scale] = bmp            
+            self._cachedDisabledBitmaps[scale] = bmp
 
 
     def Enable(self, enable=True):
@@ -565,14 +565,14 @@ class ZoomBarImage(object):
         :param `enable`: ``True`` to enable a button, ``False`` to disable it.
         """
 
-        self._enabled = enable        
+        self._enabled = enable
 
 
     def IsEnabled(self):
         """ Returns ``True`` if the button is enabled, ``False`` otherwise. """
 
         return self._enabled
-    
+
 
 class ImageBar(object):
     """ This class holds the background button bar on which the buttons float. """
@@ -591,7 +591,7 @@ class ImageBar(object):
         else:
             self._bitmap = zoombackgrey.GetImage()
             self._hasBitmap = None
-            
+
         self._left = 23
         self._top = 53
         self._startColour = wx.Colour(97, 97, 97)
@@ -608,7 +608,7 @@ class ImageBar(object):
         """ Returns the size of :class:`wx.ImageBar`, as a :class:`wx.Size`. """
 
         return wx.Size(self._bitmap.GetWidth(), self._bitmap.GetHeight())
-    
+
 
     def GetBitmap(self):
         """ Returns the background button bar on which the buttons float. """
@@ -627,7 +627,7 @@ class ImageBar(object):
 
         self._left = xpos
         self._top = ypos
-        
+
 
     def SetSize(self, xSize, ySize):
         """
@@ -638,7 +638,7 @@ class ImageBar(object):
         """
 
         self.SetBarColour(self._startColour, xSize, ySize)
-        
+
 
     def SetBarColour(self, colour, xSize=None, ySize=None):
         """
@@ -647,7 +647,7 @@ class ImageBar(object):
         :param `colour`: an instance of :class:`wx.Colour`;
         :param `xSize`: if not ``None``, the new :class:`wx.ImageBar` width;
         :param `ySize`: if not ``None``, the new :class:`wx.ImageBar` height.
-        """        
+        """
 
         if not isinstance(colour, wx.Colour):
             colour = wx.Colour(colour)
@@ -656,10 +656,10 @@ class ImageBar(object):
             bitmap = self._hasBitmap
         else:
             bitmap = zoombackgrey.GetImage()
-            
+
         if xSize is not None:
             self._size = wx.Size(xSize, ySize)
-            
+
         bitmap.Rescale(self._size.width, self._size.height/2)
 
         r1, g1, b1 = self._startColour.Red(), self._startColour.Green(), self._startColour.Blue()
@@ -672,13 +672,13 @@ class ImageBar(object):
         bitmap = bitmap.AdjustChannels(fr, fg, fb, 1)
         self._bitmap = bitmap.ConvertToBitmap()
         self._endColour = colour
-        
+
 
     def GetBarColour(self):
         """ Returns the background button bar colour. """
 
         return self._endColour
-    
+
 
 class ZoomBarEvent(wx.PyCommandEvent):
     """ Event sent from the :class:`ZoomBar` when a button is activated. """
@@ -767,7 +767,7 @@ class ZoomBar(wx.Control):
         self._buttons = []
         self._reflectionButtons = []
 
-        self._imgBar = ImageBar()        
+        self._imgBar = ImageBar()
         self._previousHit = -1
         self._currentHit = -1
 
@@ -783,9 +783,9 @@ class ZoomBar(wx.Control):
 
         if wx.Platform == "__WXMSW__":
             self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDown)
-            
+
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-        
+
 
     def DoGetBestSize(self):
         """
@@ -802,9 +802,9 @@ class ZoomBar(wx.Control):
             dc = wx.ClientDC(self)
             dummy, yextent = dc.GetTextExtent("Ajgt")
             ySize += yextent
-        
+
         return wx.Size(xSize+50, ySize+20)
-    
+
 
     # reposition the buttons
     def Reposition(self, toButton):
@@ -817,8 +817,8 @@ class ZoomBar(wx.Control):
         nLeft = toButton._left
         nRight = toButton._left + toButton._width + 1
         nButton = self._buttons.index(toButton)
-        
-        # do any buttons on the right 
+
+        # do any buttons on the right
         for n in range(nButton + 1, len(self._buttons)):
             oButton = self._buttons[n]
             oButton._left = nRight
@@ -846,7 +846,7 @@ class ZoomBar(wx.Control):
 
 
     # method to add required buttons
-    def AddButton(self, normalBmp, reflectionBmp=wx.NullBitmap, label="", disabledBmp=wx.NullBitmap, 
+    def AddButton(self, normalBmp, reflectionBmp=wx.NullBitmap, label="", disabledBmp=wx.NullBitmap,
                   disabledReflectionBmp=wx.NullBitmap):
         """
         Adds a button to :class:`ZoomBar`.
@@ -872,13 +872,13 @@ class ZoomBar(wx.Control):
         if self._showReflections and reflectionBmp.IsOk():
 
             rbutton = ZoomBarImage(self, reflectionBmp, disabledReflectionBmp)
-            rbutton.SetSize(self._buttonSize, self._buttonSize)        
+            rbutton.SetSize(self._buttonSize, self._buttonSize)
             rbutton._centerzoom = False
             rbutton._isAReflection = True
             self._reflectionButtons.append(rbutton)
 
         return button
-    
+
 
     def AddSeparator(self, normalBmp, reflectionBmp=wx.NullBitmap):
         """
@@ -915,7 +915,7 @@ class ZoomBar(wx.Control):
         """ Returns the current zoom factor. """
 
         return self._zoomFactor
-    
+
 
     def SetCenterZoom(self, center=True):
         """
@@ -930,13 +930,13 @@ class ZoomBar(wx.Control):
             button._centerZoom = (self._showReflections and [False] or [self._centerZoom])[0]
 
         self.DoLayout()
-        
+
 
     def GetCenterZoom(self):
         """ Returns ``True`` if buttons zoom upwards. """
 
         return self._centerZoom
-    
+
 
     def SetShowReflections(self, show):
         """
@@ -947,13 +947,13 @@ class ZoomBar(wx.Control):
 
         self._showReflections = show
         self.DoLayout()
-        
+
 
     def GetShowReflections(self):
         """ Returns ``True`` if reflections bitmap are currently shown. """
 
         return self._showReflections
-    
+
 
     def SetShowLabels(self, show):
         """
@@ -964,11 +964,11 @@ class ZoomBar(wx.Control):
 
         self._showLabels = show
         self.DoLayout()
-        
+
 
     def GetShowLabels(self):
         """ Returns ``True`` if button labels are currently shown. """
-        
+
         return self._showLabels
 
 
@@ -977,7 +977,7 @@ class ZoomBar(wx.Control):
         Sets the background button bar colour.
 
         :param `colour`: an instance of :class:`wx.Colour`;
-        """        
+        """
 
         self._imgBar.SetBarColour(colour)
         self.Refresh()
@@ -995,7 +995,7 @@ class ZoomBar(wx.Control):
 
         :param `size`: the new (not-zoomed) button size, in pixels.
         """
-        
+
         self._buttonSize = size
         self.DoLayout()
 
@@ -1021,7 +1021,7 @@ class ZoomBar(wx.Control):
         self.Refresh()
 
         return True
-    
+
 
     def IsButtonEnabled(self, index):
         """
@@ -1034,7 +1034,7 @@ class ZoomBar(wx.Control):
         if index < 0 or index >= len(self._buttons):
             return False
 
-        return self._buttons[index].IsEnabled()                
+        return self._buttons[index].IsEnabled()
 
 
     def DoLayout(self):
@@ -1043,7 +1043,7 @@ class ZoomBar(wx.Control):
         self.ResetSize()
         self.GetContainingSizer().Layout()
         self.Refresh()
-        
+
 
     def ResetSize(self):
         """
@@ -1069,17 +1069,17 @@ class ZoomBar(wx.Control):
         if self._centerZoom:
             ySize += self._buttonSize
 
-        size = wx.Size(xSize+50, ySize)            
+        size = wx.Size(xSize+50, ySize)
         self.SetInitialSize(size)
         self.SnapToBottom(size)
 
-        
+
     # Sets up the initial buttons and sizes them from the center
     def InitialReposition(self):
         """
         Sets up the initial buttons and sizes them from the center.
         """
-        
+
         # repositions the button centrally
         # odd buttons one is central - even, half by half
 
@@ -1106,14 +1106,14 @@ class ZoomBar(wx.Control):
             oButton._top = nTop
             oButton.SetupProps(self._buttonSize)
             nLeft = nLeft + oButton._width+1
-            
+
         # And the reflection if any
         if self._showReflections:
             nLeft = center - nbCenter
             nudge = self._nudgeReflection
             for oButton in self._reflectionButtons:
                 oButton._left = nLeft
-                oButton._top = (nTop + oButton._height - 2) - nudge 
+                oButton._top = (nTop + oButton._height - 2) - nudge
                 oButton.SetupProps(self._buttonSize)
                 nLeft = nLeft + oButton._width + 1
 
@@ -1133,7 +1133,7 @@ class ZoomBar(wx.Control):
 
         self.InitialReposition()
         self.Refresh()
-        
+
 
     def OnSize(self, event):
         """
@@ -1154,14 +1154,14 @@ class ZoomBar(wx.Control):
 
         :param `size`: the current :class:`ZoomBar` size.
         """
-        
+
         backgroundSize = self._imgBar.GetSize()
         xPos = (size.width - backgroundSize.width)/2
         yPos = (size.height - backgroundSize.height)
 
         self._imgBar.SetPosition(xPos, yPos)
         self.InitialReposition()
-        
+
 
     def OnPaint(self, event):
         """
@@ -1178,15 +1178,15 @@ class ZoomBar(wx.Control):
         background = self._imgBar.GetBitmap()
         pos = self._imgBar.GetPosition()
 
-        dc.DrawBitmap(background, pos.x, pos.y, True)        
-        
+        dc.DrawBitmap(background, pos.x, pos.y, True)
+
         if not self._buttons:
             return
 
         self.DrawButtons(dc)
         self.DrawReflections(dc)
         self.DrawLabels(dc)
-        
+
 
     def DrawButtons(self, dc):
         """
@@ -1194,7 +1194,7 @@ class ZoomBar(wx.Control):
 
         :param `dc`: an instance of :class:`wx.DC`.
         """
-        
+
         for button in self._buttons:
             pos = button.GetPosition()
             bitmap = button.GetBitmap()
@@ -1202,7 +1202,7 @@ class ZoomBar(wx.Control):
             dc.DrawBitmap(bitmap, pos.x, pos.y, True)
 
 
-    def DrawReflections(self, dc):            
+    def DrawReflections(self, dc):
         """
         Draws all the reflection button bitmaps on the :class:`ZoomBar` client window.
 
@@ -1226,10 +1226,10 @@ class ZoomBar(wx.Control):
 
         if not self._showLabels:
             return
-        
+
         dc.SetBrush(wx.WHITE_BRUSH)
         dc.SetPen(wx.BLACK_PEN)
-        
+
         for button in self._buttons:
             if not button.IsZoomed():
                 continue
@@ -1243,7 +1243,7 @@ class ZoomBar(wx.Control):
             xpos = buttonPos.x + (buttonSize.width - textWidth)/2
             ypos = buttonPos.y - textHeight - 2
 
-            dc.DrawRectangle(xpos-2, ypos-1, textWidth+4, textHeight+2)            
+            dc.DrawRectangle(xpos-2, ypos-1, textWidth+4, textHeight+2)
             dc.DrawText(label, xpos, ypos)
 
 
@@ -1253,7 +1253,7 @@ class ZoomBar(wx.Control):
 
         :param `event`: a :class:`EraseEvent` event to be processed.
 
-        :note: This method is intentionally empty to avoid flicker.        
+        :note: This method is intentionally empty to avoid flicker.
         """
 
         pass
@@ -1273,13 +1273,13 @@ class ZoomBar(wx.Control):
             button = self._buttons[hit]
             if not button.ZoomImage(pos.x):
                 return
-            
+
             self.Reposition(button)
         else:
 
             if self._previousHit < 0:
                 return
-            
+
             for button in self._buttons:
                 button.SetSize(self._buttonSize, self._buttonSize)
 
@@ -1288,7 +1288,7 @@ class ZoomBar(wx.Control):
         self._previousHit = hit
         self.Refresh()
 
-            
+
     def OnLeftDown(self, event):
         """
         Handles the ``wx.EVT_LEFT_DOWN`` and ``wx.EVT_LEFT_DCLICK`` events for :class:`ZoomBar`.
@@ -1311,7 +1311,7 @@ class ZoomBar(wx.Control):
 
         if not self.IsButtonEnabled(self._currentHit):
             return
-        
+
         eventOut = ZoomBarEvent(wxEVT_ZOOMBAR, self.GetId())
         eventOut.SetSelection(self._currentHit)
         eventOut.SetLabel(self._buttons[self._currentHit].GetLabel())
@@ -1335,4 +1335,4 @@ class ZoomBar(wx.Control):
                 return index
 
         return wx.NOT_FOUND
-    
+

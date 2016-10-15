@@ -48,12 +48,12 @@ class ResizeWidget(wx.Panel):
     """
     Reparents a given widget into a specialized panel that provides a resize
     handle for the widget.
-    
+
     """
     def __init__(self, *args, **kw):
         """
         Default class constructor.
-        
+
         :param `args`: arguments will be passed on to the wx.Panel
         :param `kw`: key words will be passed on to the wx.Panel
 
@@ -85,10 +85,10 @@ class ResizeWidget(wx.Panel):
     def SetDimensions(self, thickness=RW_THICKNESS, length=RW_LENGTH):
         """
         Set the dimensions of handles.
-        
+
         :param `thickness`: the thickness of the handles
         :param `length`: the length of the handles
-        
+
         """
         self.RW_THICKNESS = thickness
         self.RW_LENGTH = length
@@ -96,11 +96,11 @@ class ResizeWidget(wx.Panel):
     def SetColors(self, pen=RW_PEN, fill=RW_FILL, fill2=RW_FILL2):
         """
         Set the colors of handles.
-        
+
         :param `pen`: the pen color
         :param `fill`: the fill color
         :param `fill2`: the secondary fill color
-        
+
         """
         self.RW_PEN   = pen
         self.RW_FILL  = fill
@@ -109,9 +109,9 @@ class ResizeWidget(wx.Panel):
     def SetManagedChild(self, child):
         """
         Set a managed child.
-        
+
         :param `child`: child to manage
-        
+
         """
         self._reparenting = True
         child.Reparent(self)  # This calls AddChild, so do the rest of the init there
@@ -133,9 +133,9 @@ class ResizeWidget(wx.Panel):
     def AdjustToSize(self, size):
         """
         Adjust to given size.
-        
+
         :param `size`: size to adjust to.
-        
+
         """
         size = wx.Size(*size)
         self._bestSize = size + (self.RW_THICKNESS, self.RW_THICKNESS)
@@ -146,9 +146,9 @@ class ResizeWidget(wx.Panel):
     def EnableResize(self, enable=True):
         """
         Enable resizing.
-        
+
         :param boolean `enable`: enable or disable resizing.
-        
+
         """
         self._resizeEnabled = enable
         self.Refresh(False)
@@ -163,9 +163,9 @@ class ResizeWidget(wx.Panel):
     def OnLeftDown(self, evt):
         """
         Handles the ``wx.EVT_LEFT_DOWN`` event for :class:`ResizeWidget`.
-    
+
         :param `evt`: a :class:`MouseEvent` event to be processed.
-        
+
         """
         if self._hitTest(evt.GetPosition()) and self._resizeEnabled:
             self.CaptureMouse()
@@ -175,9 +175,9 @@ class ResizeWidget(wx.Panel):
     def OnLeftUp(self, evt):
         """
         Handles the ``wx.EVT_LEFT_UP`` event for :class:`ResizeWidget`.
-        
+
         :param `evt`: a :class:`MouseEvent` event to be processed.
-        
+
         """
         if self.HasCapture():
             self.ReleaseMouse()
@@ -187,9 +187,9 @@ class ResizeWidget(wx.Panel):
     def OnMouseMove(self, evt):
         """
         Handles the ``wx.EVT_MOTION`` event for :class:`ResizeWidget`.
-    
+
         :param `evt`: a :class:`MouseEvent` event to be processed.
-    
+
         """
         # set or reset the drag cursor
         pos = evt.GetPosition()
@@ -243,9 +243,9 @@ class ResizeWidget(wx.Panel):
     def OnMouseLeave(self, evt):
         """
         Handles the ``wx.EVT_LEAVE_WINDOW`` event for :class:`ResizeWidget`.
-    
+
         :param `evt`: a :class:`MouseEvent` event to be processed.
-    
+
         """
         if self._resizeCursor:
             self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
@@ -255,9 +255,9 @@ class ResizeWidget(wx.Panel):
     def OnSize(self, evt):
         """
         Handles the ``wx.EVT_SIZE`` event for :class:`ResizeWidget`.
-    
+
         :param `evt`: a :class:`wx.SizeEvent` event to be processed.
-    
+
         """
         if not self._managedChild:
             return
@@ -273,9 +273,9 @@ class ResizeWidget(wx.Panel):
     def OnPaint(self, evt):
         """
         Handles the ``wx.EVT_PAINT`` event for :class:`ResizeWidget`.
-    
+
         :param `evt`: a :class:`PaintEvent` event to be processed.
-    
+
         """
         # draw the resize handle
         dc = wx.PaintDC(self)
@@ -313,9 +313,9 @@ class ResizeWidget(wx.Panel):
     def AddChild(self, child):
         """
         Add the child to manage.
-        
+
         :param `child`: the child to manage.
-        
+
         """
         assert self._managedChild is None, "Already managing a child widget, can only do one"
         self._managedChild = child
@@ -341,9 +341,9 @@ class ResizeWidget(wx.Panel):
     def RemoveChild(self, child):
         """
         Remove the managed child.
-        
+
         :param `child`: child to remove.
-        
+
         """
         self._init()
         wx.Panel.RemoveChild(self, child)

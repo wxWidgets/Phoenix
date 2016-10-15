@@ -58,7 +58,7 @@ class BitmapBuffer(wx.MemoryDC):
     # on OS X so this is a workaround for that issue.
     def GetPixelColour(self, x, y):
         """Gets the color value of the pixel at the given
-        cords. 
+        cords.
 
         """
         img = self.GetAsBitmap().ConvertToImage()

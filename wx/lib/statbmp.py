@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------
 # Name:        wx.lib.statbmp
-# Purpose:     A generic StaticBitmap class.  
+# Purpose:     A generic StaticBitmap class.
 #
 # Author:      Robin Dunn
 #
@@ -41,7 +41,7 @@ Sample usage::
     app = wx.App(0)
 
     frame = wx.Frame(None, -1, "wx.lib.statbmp Test")
-    panel = wx.Panel(frame)    
+    panel = wx.Panel(frame)
 
     bmp = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (16, 16))
     st1 = SB.GenStaticBitmap(panel, -1, bmp, (20, 10))
@@ -51,7 +51,7 @@ Sample usage::
 
     frame.Show()
     app.MainLoop()
-    
+
 
 """
 
@@ -61,7 +61,7 @@ import wx
 
 class GenStaticBitmap(wx.Control):
     """ :class:`GenStaticBitmap` is a generic implementation of :class:`wx.StaticBitmap`. """
-    
+
     labelDelta = 1
 
     def __init__(self, parent, ID, bitmap,
@@ -88,7 +88,7 @@ class GenStaticBitmap(wx.Control):
 
         if not style & wx.BORDER_MASK:
             style = style | wx.BORDER_NONE
-            
+
         wx.Control.__init__(self, parent, ID, pos, size, style,
                              wx.DefaultValidator, name)
         self._bitmap = bitmap
@@ -104,10 +104,10 @@ class GenStaticBitmap(wx.Control):
         Sets the bitmap label.
 
         :param wx.Bitmap `bitmap`: the new bitmap.
-        
+
         .. seealso:: :meth:`GetBitmap`
         """
-        
+
         self._bitmap = bitmap
         self.SetInitialSize( (bitmap.GetWidth(), bitmap.GetHeight()) )
         self.Refresh()
@@ -118,12 +118,12 @@ class GenStaticBitmap(wx.Control):
         Returns the bitmap currently used in the control.
 
         :rtype: wx.Bitmap
-        
+
         .. seealso:: :meth:`SetBitmap`
         """
-        
+
         return self._bitmap
-    
+
 
     def DoGetBestSize(self):
         """
@@ -155,7 +155,7 @@ class GenStaticBitmap(wx.Control):
         """
 
         return wx.StaticBitmap.GetClassDefaultAttributes()
-    
+
 
     def ShouldInheritColours(self):
         """
@@ -166,7 +166,7 @@ class GenStaticBitmap(wx.Control):
         """
 
         return True
-    
+
 
     def OnPaint(self, event):
         """
@@ -178,7 +178,7 @@ class GenStaticBitmap(wx.Control):
         dc = wx.PaintDC(self)
         if self._bitmap:
             dc.DrawBitmap(self._bitmap, 0, 0, True)
-        
+
 
     def OnEraseBackground(self, event):
         """

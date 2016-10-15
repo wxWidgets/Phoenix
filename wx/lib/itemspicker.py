@@ -70,33 +70,33 @@ class ItemsPicker(wx.Panel):
         sizer.Add(self._CreateDestList(selectedLabel), 1,
                    wx.EXPAND|wx.ALL, 5)
         self.SetSizer(sizer)
-        
-        
+
+
     def SetItems(self, items):
         """SetItems(self, items)=> None
         items - Sequence of strings that the user can pick from"""
-        return self._source.SetItems(items)    
-    
-    
-    def GetItems(self): 
+        return self._source.SetItems(items)
+
+
+    def GetItems(self):
         """GetItems(self)=> items
         returns list of strings that the user can pick from"""
         return self._source.GetItems()
-    
-    
+
+
     Items = property(fget = GetItems,
                      fset = SetItems,
                      doc = 'See GetItems/SetItems')
-    
-     
+
+
     def GetSelections(self):
         """GetSelections(self)=>items
         returns list of strings that were selected
         """
         return self._dest.GetItems()
-    
-    
-    def SetSelections(self, items): 
+
+
+    def SetSelections(self, items):
         """SetSelections(self, items)=>None
         items - Sequence of strings to be selected
         The items are displayed in the selection part of the widget"""
@@ -104,13 +104,13 @@ class ItemsPicker(wx.Panel):
         if items != self._dest.GetItems():
             self._dest.SetItems(items)
             self._FireIpSelectionChanged()
-    
-        
+
+
     Selections = property(fget = GetSelections,
                      fset = SetSelections,
                      doc = 'See GetSelections/SetSelections')
-    
-    
+
+
     def _CreateButtons(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.bAdd = wx.Button(self, -1, label = 'Add ->')
@@ -120,30 +120,30 @@ class ItemsPicker(wx.Panel):
         sizer.Add(self.bAdd, 0, wx.EXPAND|wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5)
         sizer.Add(self.bRemove, 0, wx.EXPAND|wx.ALL, 5)
         return sizer
-    
-    
+
+
     def _set_add_button_label(self, label=None):
         if label is None:
             return
         self.bAdd.SetLabel(label)
-    
+
     add_button_label = property(fset = _set_add_button_label, fget = lambda x:x)
-    
-    
+
+
     def _set_remove_button_label(self, label=None):
         if label is None:
             return
         self.bRemove.SetLabel(label)
-    
+
     remove_button_label = property(fset = _set_remove_button_label, fget = lambda x:x)
-    
-    
+
+
     def _OnAdd(self, e):
         if self._ipStyle & IP_REMOVE_FROM_CHOICES:
             self._MoveItems(self._source,self._dest)
         else:
             self._AddSelectedItems()
-            
+
     def _MoveItems(self,source,dest):
         selections = source.GetSelections()
         selectedItems = list(map(source.GetString, selections))
@@ -152,30 +152,30 @@ class ItemsPicker(wx.Panel):
         source.SetItems([item for i, item in enumerate(source.GetItems())\
                       if i not in selections])
         self._FireIpSelectionChanged()
-            
+
     def _AddSelectedItems(self):
         newItems = list(map(self._source.GetString, self._source.GetSelections()))
         items = self._dest.GetItems()
         oldItems = set(items)
         for newItem in newItems:
             if newItem not in oldItems:
-                items.append(newItem)    
+                items.append(newItem)
         self.SetSelections(items)
-    
-    
+
+
     def _FireIpSelectionChanged(self):
             self.GetEventHandler().ProcessEvent(
-                        IpSelectionChanged(self.GetId(), 
+                        IpSelectionChanged(self.GetId(),
                                             self._dest.GetItems(),
                                              self ))
-        
-            
+
+
     def _OnRemove(self, e):
         if self._ipStyle & IP_REMOVE_FROM_CHOICES:
             self._MoveItems(self._dest, self._source)
         else:
             self._RemoveSelected()
-    
+
     def _RemoveSelected(self):
         selections = self._dest.GetSelections()
         if selections:
@@ -184,8 +184,8 @@ class ItemsPicker(wx.Panel):
                       if i not in selections]
             self.SetSelections(items)
             self._FireIpSelectionChanged()
-       
-        
+
+
     def _CreateSourceList(self, items, label):
         style = LB_STYLE
         if self._ipStyle & IP_SORT_CHOICES:
@@ -199,8 +199,8 @@ class ItemsPicker(wx.Panel):
         self._source.SetItems(items)
         sizer.Add(self._source, 1, wx.EXPAND|wx.ALL, 5)
         return sizer
-    
-    
+
+
     def _CreateDestList(self, label):
         style = LB_STYLE
         if self._ipStyle & IP_SORT_SELECTED:
@@ -210,11 +210,11 @@ class ItemsPicker(wx.Panel):
             sizer.Add(wx.StaticText(self, label = label), 0,
                        wx.ALIGN_LEFT|wx.ALL, 5)
         self._dest = wx.ListBox(self, -1, style = style)
-        self._dest.Bind(wx.EVT_LISTBOX_DCLICK,  self._OnDClick) 
+        self._dest.Bind(wx.EVT_LISTBOX_DCLICK,  self._OnDClick)
         sizer.Add(self._dest, 1, wx.EXPAND|wx.ALL, 5)
         return sizer
-       
-        
+
+
     def _OnDClick(self, e):
         lb = e.GetEventObject()
         selections = lb.GetSelections()
@@ -223,19 +223,19 @@ class ItemsPicker(wx.Panel):
         if e.GetSelection() != selections[0]:
             #this can happen using ^DCLICK when two items are selected
             return
-        if lb  == self._source: 
+        if lb  == self._source:
             self._OnAdd(e)
         else:
             self._OnRemove(e)
 
 
-        
+
 
 if __name__ == '__main__':
     test = wx.App(0)
     frame = wx.Frame(None, -1)
     d = wx.Dialog(frame, style = wx.RESIZE_BORDER|wx.DEFAULT_DIALOG_STYLE)
-    
+
     d.sizer = wx.BoxSizer(wx.VERTICAL)
     d.sizer.Add(wx.StaticText(d, -1, label = 'Example of the ItemsPicker'),
                  0, wx.ALL, 10)
@@ -252,5 +252,5 @@ if __name__ == '__main__':
     d.ShowModal()
     d.Destroy()
     frame.Close()
-    
-    
+
+

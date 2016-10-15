@@ -25,9 +25,9 @@ aliasDict = {}
 def magicSingle(command):
     if command=='': # Pass if command is blank
         return command
-    
+
     first_space=command.find(' ')
-    
+
     if command[0]==' ': # Pass if command begins with a space
         pass
     elif command[0]=='?': # Do help if starts with ?
@@ -73,13 +73,13 @@ def magicSingle(command):
 
 def magic(command):
     continuations = testForContinuations(command)
-    
+
     if len(continuations)==2: # Error case...
         return command
     elif len(continuations)==4:
         stringContinuationList,indentationBlockList, \
         lineContinuationList,parentheticalContinuationList = continuations
-    
+
     commandList=[]
     firstLine = True
     for i in command.split('\n'):
@@ -92,7 +92,7 @@ def magic(command):
             commandList.append(magicSingle(i)) # unless this is in a larger expression, use magic
         else:
             commandList.append(i)
-        
+
         firstLine=False
-    
+
     return '\n'.join(commandList)

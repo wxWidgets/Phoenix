@@ -67,7 +67,7 @@ What it can do:
 - Possibility to set the delay after which the :class:`BalloonTip` is destroyed;
 - Three different behaviors for the :class:`BalloonTip` window (regardless the delay
   destruction time set):
-  
+
   a) Destroy by leave: the :class:`BalloonTip` is destroyed when the mouse leaves the
      target control/window;
   b) Destroy by click: the :class:`BalloonTip` is destroyed when you click on any area
@@ -90,10 +90,10 @@ Usage example::
 
         def __init__(self, parent):
 
-            wx.Frame.__init__(self, parent, -1, "BalloonTip Demo")        
+            wx.Frame.__init__(self, parent, -1, "BalloonTip Demo")
 
             panel = wx.Panel(self)
-            
+
             # Let's suppose that in your application you have a wx.TextCtrl defined as:
             mytextctrl = wx.TextCtrl(panel, -1, "I am a textctrl", pos=(100, 100))
 
@@ -454,7 +454,7 @@ class BalloonFrame(wx.Frame):
         When the :class:`BalloonTip` is created with the `tipstyle` = ``BT_BUTTON``, this event
         provide some kind of 3D effect when the mouse enters the button area.
 
-        :param `event`: a :class:`MouseEvent` event to be processed.        
+        :param `event`: a :class:`MouseEvent` event to be processed.
         """
 
         button = event.GetEventObject()
@@ -493,7 +493,7 @@ class BalloonTip(object):
     window.
 
     This is the main class implementation.
-    """    
+    """
     def __init__(self, topicon=None, toptitle="",
                  message="", shape=BT_ROUNDED, tipstyle=BT_LEAVE):
         """
@@ -514,7 +514,7 @@ class BalloonTip(object):
          ``BT_ROUNDED``           0x1      :class:`BalloonTip` will have a rounded rectangular shape.
          ``BT_RECTANGLE``         0x2      :class:`BalloonTip` will have a rectangular shape.
          ======================= ========= ====================================
-         
+
         :param integer `tipstyle`: the :class:`BalloonTip` destruction behavior. It can be one of:
 
          ======================= ========= ====================================
@@ -594,7 +594,7 @@ class BalloonTip(object):
 
         :return: An instance of :class:`wx.Window`.
 
-        :raise: `Exception` if the :meth:`~BalloonTip.SetTarget` method has not previously called.        
+        :raise: `Exception` if the :meth:`~BalloonTip.SetTarget` method has not previously called.
         """
 
         if not hasattr(self, "_widget"):
@@ -678,7 +678,7 @@ class BalloonTip(object):
     def OnWidgetLeave(self, event):
         """
         Handles the ``wx.EVT_LEAVE_WINDOW`` for the target control/window.
-        
+
         :param `event`: a :class:`MouseEvent` event to be processed.
 
         :note: If the BalloonTip `tipstyle` is set to ``BT_LEAVE``, the :class:`BalloonTip` is destroyed.
@@ -825,7 +825,7 @@ class BalloonTip(object):
         :param integer `shape`: should be one of ``BT_ROUNDED`` or ``BT_RECTANGLE``.
 
         :raise: `Exception` if the `shape` parameter is not a valid value
-         (i.e., it's not one of ``BT_ROUNDED``, ``BT_RECTANGLE``);        
+         (i.e., it's not one of ``BT_ROUNDED``, ``BT_RECTANGLE``);
         """
 
         if shape not in [BT_ROUNDED, BT_RECTANGLE]:
@@ -891,13 +891,13 @@ class BalloonTip(object):
 
     def SetBalloonMessage(self, message):
         """
-        Sets the :class:`BalloonTip` tip message. 
+        Sets the :class:`BalloonTip` tip message.
 
         :param string `message`: a string identifying the main message body of :class:`BalloonTip`.
 
         :raise: `Exception` if the message is an empty string.
 
-        :note: The :class:`BalloonTip` message should never be empty.        
+        :note: The :class:`BalloonTip` message should never be empty.
         """
 
         if len(message.strip()) < 1:
@@ -946,7 +946,7 @@ class BalloonTip(object):
         Returns the :class:`BalloonTip` `tipstyle` parameter.
 
         :return: An integer representing the style.
-        
+
         :see: :meth:`~BalloonTip.SetBalloonTipStyle`
         """
 
@@ -1075,7 +1075,7 @@ class BalloonTip(object):
 
         :param `event`: a :class:`wx.WindowDestroyEvent` event to be processed.
         """
-        
+
         if hasattr(self, "BalloonFrame"):
             if self.BalloonFrame:
                 try:
@@ -1114,10 +1114,10 @@ if __name__ == '__main__':
 
         def __init__(self, parent):
 
-            wx.Frame.__init__(self, parent, -1, "BalloonTip Demo")        
+            wx.Frame.__init__(self, parent, -1, "BalloonTip Demo")
 
             panel = wx.Panel(self)
-            
+
             # Let's suppose that in your application you have a wx.TextCtrl defined as:
             mytextctrl = wx.TextCtrl(panel, -1, "I am a textctrl", pos=(100, 100))
 

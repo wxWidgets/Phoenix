@@ -138,7 +138,7 @@ the following formatting features already implemented:
   sizes based on the Excel reported values in characters. The calculations are
   based on the default width of the text in 1/256 of the width of the zero
   character, using default Excel font (first FONT record in the Excel file).
-  
+
 
 And a lot more. Check the demo for an almost complete review of the functionalities.
 
@@ -153,11 +153,11 @@ Sample usage::
     import os
 
     import xlsgrid as XG
-    
-    class MyFrame(wx.Frame): 
+
+    class MyFrame(wx.Frame):
 
         def __init__(self):
-        
+
             wx.Frame.__init__(self, parent, -1, "XLSGrid Demo", size=(1000, 800))
 
             filename = os.path.join(os.getcwd(), "Excel", "Example_1.xls")
@@ -167,7 +167,7 @@ Sample usage::
 
             sheet = book.sheet_by_name(sheetname)
             rows, cols = sheet.nrows, sheet.ncols
-            
+
             comments, texts = XG.ReadExcelCOM(filename, sheetname, rows, cols)
 
             xls_grid = XG.XLSGrid(self)
@@ -187,7 +187,7 @@ Sample usage::
 
 :note: Please note that you **have to** pass the keyword `formatting_info` to
  the method `xlrd.open_workbook` to obtain the cell formatting.
- 
+
 
 TODOs
 =====
@@ -225,7 +225,7 @@ Events Processing
 License And Version
 ===================
 
-:class:`XLSGrid` is distributed under the wxPython license. 
+:class:`XLSGrid` is distributed under the wxPython license.
 
 Latest Revision: Andrea Gavana @ 27 Dec 2012, 21.00 GMT
 
@@ -429,29 +429,29 @@ def SplitThousands(s, tSep=',', dSep='.'):
 
     :returns: a string properly formatted with thousands and decimal
      separators in it.
-     
+
     :note: This method is used only if Mark Hammonds' `pywin32` package is
      not available to try and format a number in an intelligent way.
 
     :note: This code has been obtained from the public domain:
 
      http://code.activestate.com/recipes/498181-add-thousands-separator-commas-to-formatted-number/#c14
-     
-    """    
-    
+
+    """
+
     if not isinstance(s, six.string_types):
         s = six.u(s)
 
     cnt = 0
     numChars = dSep + '0123456789'
     ls = len(s)
-    
+
     while cnt < ls and s[cnt] not in numChars:
         cnt += 1
 
     lhs = s[0:cnt]
     s = s[cnt:]
-    
+
     if dSep == '':
         cnt = -1
     else:
@@ -490,7 +490,7 @@ def ReadExcelCOM(filename, sheetname, rows, cols):
     :note: If Mark Hammonds' `pywin32` package is not available, this method
      returns two empty nested lists.
     """
-    
+
     comments = [["" for i in range(cols)] for j in range(rows)]
     texts    = [[None for i in range(cols)] for j in range(rows)]
 
@@ -508,12 +508,12 @@ def ReadExcelCOM(filename, sheetname, rows, cols):
         if comm_range is not None:
             for comm in comm_range:
                 comments[comm.Row-1][comm.Column-1] = comm.Comment.Text()
-                
+
         workbook.Close()
 
     except pywintypes.com_error:
         pass
-    
+
     return comments, texts
 
 
@@ -530,7 +530,7 @@ def FontFromFont(font):
 
     return new_font
 
-    
+
 class Excel(object):
     """
     A simple class that holds a COM interface to Excel.
@@ -546,13 +546,13 @@ class Excel(object):
         :param `filename`: a valid Excel `.xls` filename;
         :param `sheetname`: the worksheet name inside the Excel file (i.e., the label
          on the workbook tab at the bottom of the workbook).
-        """        
+        """
 
         self.xlApp = Dispatch('Excel.Application')
         self.filename = filename
         self.xlBook = self.xlApp.Workbooks.Open(filename)
         self.sheet = self.xlBook.Worksheets(sheetname)
-            
+
         self.xlApp.Visible = 0
 
 
@@ -563,7 +563,7 @@ class Excel(object):
         :param `save`: ``True`` to save the changes you made to the workbook,
          ``False`` otherwise.
         """
-        
+
         self.xlBook.Close(SaveChanges=save)
         del self.xlApp
 
@@ -588,14 +588,14 @@ class Excel(object):
         :param `col`: the column in which the cell lives.
 
         :note: The `row` and `col` parameters are not real Python index, as they
-         use the Excel indexing mode (i.e., first index is 1 and not 0).        
+         use the Excel indexing mode (i.e., first index is 1 and not 0).
         """
 
         cell = self.sheet.Cells(row, col)
-        
+
         if cell:
             return cell.Text
-    
+
 
 class XLSText(object):
     """
@@ -623,7 +623,7 @@ class XLSText(object):
          parameter will always be ``None`` as this feature is available only in
          `xlrd` 0.7.2 (SVN).
         """
-        
+
         XFClass = book.xf_list[xf_index]
 
         font = book.font_list[XFClass.font_index]
@@ -631,7 +631,7 @@ class XLSText(object):
 
         text_colour = book.colour_map[font.colour_index]
         self.text_colour = self.CreateTextColour(text_colour)
-        
+
         if display_text is not None:
             self.value = display_text
         else:
@@ -684,8 +684,8 @@ class XLSText(object):
 #                style += wx.FONTFLAG_UNDERLINED
 #            if font.italic:
 #                style += wx.FONTFLAG_ITALIC
-#                
-#            style += wx.FONTFLAG_STRIKETHROUGH        
+#
+#            style += wx.FONTFLAG_STRIKETHROUGH
 #            self.font = wx.FFont(size, family, style, name.encode())
 #        else:
 
@@ -700,7 +700,7 @@ class XLSText(object):
         :param `text_colour`: a tuple representing the RGB components of the
          colour. If `text_colour` is ``None``, use the default ``wx.SYS_COLOUR_WINDOWTEXT``.
         """
-        
+
         if text_colour is not None:
             text_colour = wx.Colour(*text_colour)
         else:
@@ -717,7 +717,7 @@ class XLSText(object):
         :param `alignment`: an instance of `xlrd.formatting.XFAlignment` class;
         :param `default_width`: this is the default width of the text in 1/256
          of the width of the zero character, using default Excel font (first FONT
-         record in the Excel file).        
+         record in the Excel file).
         """
 
         hor_align, vert_align = alignment.hor_align, alignment.vert_align
@@ -737,14 +737,14 @@ class XLSText(object):
                         text_direction = 2
                         break
 
-        self.text_direction = text_direction            
+        self.text_direction = text_direction
         self.default_width = default_width
 
         if alignment.rotation > 90:
             self.rotation = 90 - alignment.rotation
         else:
             self.rotation = alignment.rotation
-        
+
 
     def CreateFormat(self, format, cell, datemode):
         """
@@ -759,12 +759,12 @@ class XLSText(object):
          not available to try and format the cell text in an intelligent way.
 
         .. warning::
-        
+
            The formatting applied by this method is severely limited; for
            instance, you won't probably get the exact WYSIWYG between the Excel
-           spreadsheet and :class:`XLSGrid`.         
+           spreadsheet and :class:`XLSGrid`.
         """
-        
+
         ctype, value = cell.ctype, cell.value
 
         self.value = "%s"%value
@@ -804,13 +804,13 @@ class XLSText(object):
            The formatting applied by this method is severely limited; for
            instance, you won't probably get the exact WYSIWYG between the Excel
            spreadsheet and :class:`XLSGrid`.
-           
+
         """
-        
+
         if "General" in format_str:
             self.value = "%s"%value
             return
-        
+
         number_format = format_str
         currency = percentage = ""
 
@@ -838,10 +838,10 @@ class XLSText(object):
             except ValueError:
                 # Fall back to string
                 value = six.u(value)
-            
+
             if "#," in number_format:
                 value = SplitThousands(value)
-                
+
             value = currency + value + percentage
 
         else:
@@ -853,7 +853,7 @@ class XLSText(object):
             except (ValueError, TypeError):
                 value = value.strftime("%d.%m.%Y")
 
-        self.value = value                
+        self.value = value
 
 
     def SetupHyperlink(self, hyperlink):
@@ -864,9 +864,9 @@ class XLSText(object):
 
         :note: If you are using version 0.7.1 or lower for `xlrd`, the *hyperlink*
          parameter will always be ``None`` as this feature is available only in
-         `xlrd` 0.7.2 (SVN).        
+         `xlrd` 0.7.2 (SVN).
         """
-        
+
         url = (hyperlink.url_or_path and [hyperlink.url_or_path] or [hyperlink.textmark])[0]
         self.tooltip = url
 
@@ -880,7 +880,7 @@ class XLSText(object):
         """
 
         return self.tooltip is not None
-    
+
 
     def CombineAttr(self, attr):
         """
@@ -927,12 +927,12 @@ class XLSText(object):
 
         if xshift == 0 and self.indent_level:
             new_rect.SetLeft(new_rect.x + indentation)
-        else:            
+        else:
             if self.horizontal_alignment == wx.ALIGN_LEFT:
                 new_rect.SetLeft(new_rect.x + 3)
             elif self.horizontal_alignment == wx.ALIGN_RIGHT:
                 new_rect.SetWidth(new_rect.width - 1)
-            
+
         new_width = rect.width
 
         if xshift > 0:
@@ -941,7 +941,7 @@ class XLSText(object):
         if self.shrink_to_fit:
 
             font = FontFromFont(self.font)
-            point_size = font.GetPointSize()        
+            point_size = font.GetPointSize()
 
             while 1:
                 value = wordwrap(self.value, new_width, dc)
@@ -951,16 +951,16 @@ class XLSText(object):
                 point_size -= 1
                 font.SetPointSize(point_size)
                 dc.SetFont(font)
-            
+
         elif self.text_wrapped:
-                            
+
             value = wordwrap(self.value, new_width, dc)
             text_width, text_height, dummy = dc.GetFullMultiLineTextExtent(value)
 
         if self.rotation:
             if self.shrink_to_fit:
                 text_width, text_height = dc.GetTextExtent(value)
-                
+
             xc, yc = (rect.x+rect.width/2, rect.y+rect.height/2)
             xp = xc - (text_width/2)*xshift - (text_height/2)*yshift
             yp = yc + (text_width/2)*yshift - (text_height/2)*xshift
@@ -1007,9 +1007,9 @@ class XLSRichText(XLSText):
 
         .. warning::
 
-           This class currently supports only single-line non-rotated text, 
+           This class currently supports only single-line non-rotated text,
            and it discards properties like `shrink-to-fit` and `wrapping`.
-           
+
         """
 
         XLSText.__init__(self, book, cell, xf_index, display_text, hyperlink, default_width)
@@ -1030,7 +1030,7 @@ class XLSRichText(XLSText):
 
         XFClass = book.xf_list[xf_index]
         offset, index = rich_text[0]
-        
+
         if offset != 0:
             new_tuple = (0, XFClass.font_index)
             rich_text.insert(0, new_tuple)
@@ -1038,13 +1038,13 @@ class XLSRichText(XLSText):
         value = self.value
         rich_text.append((len(value), rich_text[-1][1]))
         attributes = []
-        
+
         for indx in range(len(rich_text)-1):
             offset_start, index_start = rich_text[indx]
             offset_end, index_end = rich_text[indx+1]
 
             chunk = value[offset_start:offset_end]
-                    
+
             font = book.font_list[index_start]
             ffont = self.CreateFont(font)
             text_colour = book.colour_map[font.colour_index]
@@ -1053,8 +1053,8 @@ class XLSRichText(XLSText):
             ffont.escapement = font.escapement
             attributes.append([chunk, ffont, colour])
 
-        self.attributes = attributes            
-        
+        self.attributes = attributes
+
 
     def Measure(self, dc):
         """
@@ -1073,8 +1073,8 @@ class XLSRichText(XLSText):
             full_width += width
 
         return maxH, full_width
-    
-        
+
+
     def Draw(self, dc, rect):
         """
         Actually draws all the chunks of text on a grid cell, one by one.
@@ -1090,10 +1090,10 @@ class XLSRichText(XLSText):
         indentation = int(256.0*default_width/float(self.default_width))
 
         maxH, full_width = self.Measure(dc)
-        
+
         if self.indent_level:
             new_rect.SetLeft(new_rect.x + indentation)
-        else:            
+        else:
             if self.horizontal_alignment == wx.ALIGN_LEFT:
                 new_rect.SetLeft(new_rect.x + 3)
             elif self.horizontal_alignment == wx.ALIGN_RIGHT:
@@ -1109,10 +1109,10 @@ class XLSRichText(XLSText):
             vspace = (new_rect.height - maxH - 1)
         else:
             vspace = int((new_rect.height - maxH)/2.0)
-            
+
         start = new_rect.x
         y = new_rect.y
-        
+
         for chunk, font, colour in self.attributes:
             dc.SetTextForeground(colour)
             dc.SetFont(font)
@@ -1124,11 +1124,11 @@ class XLSRichText(XLSText):
 
             if font.escapement == 1:
                 ypos = ypos - maxH + height
-                
+
             dc.DrawText(chunk, start, ypos)
             start += width
 
-        
+
 class XLSBackground(object):
     """
     This is a class which holds information about the cell background, in terms
@@ -1143,16 +1143,16 @@ class XLSBackground(object):
         :param `xf_index`: an index into `xlrd.Book.xf_list`, which holds a
          reference to the `xlrd.sheet.Cell` class (the actual cell for `xlrd`).
         """
-        
+
         XFClass = book.xf_list[xf_index]
-        
+
         background = XFClass.background
         background_colour = book.colour_map[background.background_colour_index]
         pattern_colour = book.colour_map[background.pattern_colour_index]
         fill_pattern = background.fill_pattern
-        
+
         self.CreateBackgroundColour(background_colour, pattern_colour, fill_pattern)
-        
+
 
     def CreateBackgroundColour(self, background_colour, pattern_colour, fill_pattern):
         """
@@ -1172,15 +1172,15 @@ class XLSBackground(object):
             background_colour = wx.Colour(*background_colour)
         else:
             background_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW)
-            
+
         if pattern_colour is not None:
             pattern_colour = wx.Colour(*pattern_colour)
 
         self.background_brush = wx.Brush(background_colour)
         self.background_colour = background_colour
-        
+
         self.fill_brush = None
-        
+
         if fill_pattern <= 0:
             return
 
@@ -1226,7 +1226,7 @@ class XLSBackground(object):
             dc.SetBrush(self.fill_brush)
             dc.SetBackgroundMode(wx.TRANSPARENT)
             dc.DrawRectangle(rect)
-            
+
         dc.DestroyClippingRegion()
 
 
@@ -1236,7 +1236,7 @@ class XLSBorder(object):
     of its location (top, left, bottom, right, diagonal), its colour, width and
     shape.
     """
-    
+
     def __init__(self, location, line_style, border_colour, default_colour, diagonals):
         """
         Default class constructor.
@@ -1250,9 +1250,9 @@ class XLSBorder(object):
         :param `diagonals`: a tuple containing whether or not to draw the up and down
          diagonal borders.
         """
-        
+
         self.draw_priority = 2
-        
+
         if line_style == NO_LINE:
 
             if border_colour == (0, 0, 0):
@@ -1261,7 +1261,7 @@ class XLSBorder(object):
             else:
                 self.draw_priority = 1
                 border_colour = wx.BLACK
-                
+
             self.pen = wx.Pen(border_colour, 1, wx.PENSTYLE_SOLID)
             pen_style = THIN
 
@@ -1275,7 +1275,7 @@ class XLSBorder(object):
                 self.draw_priority = 2
             else:
                 border_colour = wx.Colour(*border_colour)
-                
+
             pen_width, pen_style = XF_PEN_STYLES[line_style]
             if pen_width > 2:
                 self.draw_priority = 4
@@ -1283,7 +1283,7 @@ class XLSBorder(object):
                 self.draw_priority = 3
 
             self.pen = wx.Pen(border_colour, pen_width, pen_style)
-            
+
         self.diagonals = diagonals
         self.location = location
         self.pen_style = pen_style
@@ -1298,7 +1298,7 @@ class XLSBorder(object):
         :param `rect`: an instance of :class:`wx.Rect`, representing the cell rectangle.
         """
 
-        dc.SetBackgroundMode(wx.TRANSPARENT)        
+        dc.SetBackgroundMode(wx.TRANSPARENT)
         dc.SetPen(self.pen)
 
         if self.location == DIAGONAL:
@@ -1326,7 +1326,7 @@ class XLSBorder(object):
                 dc.DrawLine(xstart, ystart+2, xend-2, yend)
             else:
                 dc.DrawLine(xstart, ystart, xend, yend)
-                
+
         if diag_up:
 
             xstart, ystart = rect.GetBottomLeft()
@@ -1350,7 +1350,7 @@ class XLSBorder(object):
         pen_width = self.pen.GetWidth()
         location = self.location
         new_rect = wx.Rect(*rect)
-            
+
         x, y, w, h = new_rect
         line_style = self.line_style
 
@@ -1359,7 +1359,7 @@ class XLSBorder(object):
             shift = pen_width - 1
         if pen_width > 2:
             shift = pen_width - 2
-        
+
         if location == BOTTOM:
 
             if self.draw_priority < 2:
@@ -1371,7 +1371,7 @@ class XLSBorder(object):
             else:
                 dc.DrawLine(x+1, y+h,   x+w, y+h)
 
-            
+
         elif location == TOP:
 
             if line_style == DOUBLE:
@@ -1381,7 +1381,7 @@ class XLSBorder(object):
                 dc.DrawLine(x+1, y+shift,   x+w, y+shift)
 
         elif location == LEFT:
-            
+
             if line_style == DOUBLE:
                 dc.DrawLine(x-1, y, x-1, y+h)
                 dc.DrawLine(x+1, y, x+1, y+h)
@@ -1398,8 +1398,8 @@ class XLSBorder(object):
                 dc.DrawLine(x+w+1, y, x+w+1, y+h)
             else:
                 dc.DrawLine(x+w+1, y+1, x+w+1, y+h)
-                
-            
+
+
 class XLSBorderFactory(object):
     """
     This is a factory class which holds information about all the borders in a
@@ -1416,20 +1416,20 @@ class XLSBorderFactory(object):
         :param `default_colour`: the "magic" colour used by Excel to draw non-custom
          border lines.
         """
-        
+
         borders = {}
         diagonals = border.diag_up, border.diag_down
-        
+
         for label, location in list(XF_BORDER_STYLES.items()):
             line_style = getattr(border, "%s_line_style"%label)
             colour_index = getattr(border, "%s_colour_index"%label)
             border_colour = book.colour_map[colour_index]
-            
+
             border_class = XLSBorder(location, line_style, border_colour, default_colour, diagonals)
             borders[location] = border_class
 
         self.draw_priority = sorted(list(borders.values()), key=attrgetter('draw_priority'))
-        
+
 
     def Draw(self, dc, rect):
         """
@@ -1445,7 +1445,7 @@ class XLSBorderFactory(object):
         for border in self.draw_priority:
             border.Draw(dc, rect)
 
-        
+
 class XLSComment(object):
     """
     This is a class which holds information about the content of the "comment
@@ -1482,15 +1482,15 @@ class XLSComment(object):
         dc.SetBrush(wx.RED_BRUSH)
         dc.SetPen(wx.RED_PEN)
         dc.DrawPolygon(points)
-        
-        
+
+
 class XLSCell(object):
     """
     This is a class which holds information about a single cell in :class:`XLSGrid`.
     It stores (via auxiliary classes), all details about cell background, text,
     font, colours and borders.
     """
-    
+
     def __init__(self, book, cell, xf_index, xls_text, xls_comment, hyperlink, rich_text, default_width, default_colour):
         """
         Default class constructor.
@@ -1525,9 +1525,9 @@ class XLSCell(object):
         :note: If Mark Hammonds' `pywin32` package is not available, the `xls_comment`
          parameter will always be ``None``.
         """
-        
+
         self.size = 1, 1
-        
+
         self.comment = None
         self.hyperlink = None
 
@@ -1577,19 +1577,19 @@ class XLSCell(object):
             self.text = XLSRichText(book, cell, xf_index, xls_text, hyperlink, rich_text, default_width)
         else:
             self.text = XLSText(book, cell, xf_index, xls_text, hyperlink, default_width)
-            
+
         self.background = XLSBackground(book, xf_index)
 
-        XFClass = book.xf_list[xf_index]        
+        XFClass = book.xf_list[xf_index]
         border = XFClass.border
- 
+
         self.borders = XLSBorderFactory(book, border, default_colour)
 
         if xls_comment:
             self.comment = XLSComment(xls_comment)
 
         self.attr = None
-        
+
 
     def GetAttr(self):
         """
@@ -1601,7 +1601,7 @@ class XLSCell(object):
         if self.attr is not None:
             self.attr.IncRef()
             return self.attr
-        
+
         attr = gridlib.GridCellAttr()
 
         attr.SetRenderer(XLSRenderer(self))
@@ -1610,7 +1610,7 @@ class XLSCell(object):
         attr.SetOverflow(True)
         self.attr = attr
         self.attr.IncRef()
-        
+
         return self.attr
 
 
@@ -1628,16 +1628,16 @@ class XLSCell(object):
 
         :note: This method is currently unused as everything is handled inside the :class:`XLSText` class.
 
-        :see: :meth:`~xlsgrid.XLSCell.GetValue`         
-        """ 
+        :see: :meth:`~xlsgrid.XLSCell.GetValue`
+        """
 
-        self.value = value        
-        
+        self.value = value
+
 
     def SetCellSize(self, rows, cols):
         """
         Sets the size of the cell.
-        
+
         Specifying a value of more than 1 in `rows` or `cols` will make the cell
         at (`row`, `col`) span the block of the specified size, covering the other
         cells which would be normally shown in it. Passing 1 for both arguments
@@ -1645,7 +1645,7 @@ class XLSCell(object):
 
         :param `rows`: number of rows to be occupied by this cell, must be >= 1;
         :param `cols`: number of columns to be occupied by this cell, must be >= 1.
-        """        
+        """
 
         self.size = (rows, cols)
 
@@ -1661,22 +1661,22 @@ class XLSCell(object):
         """
 
         return self.comment
-    
+
 
 class XLSRenderer(gridlib.GridCellRenderer):
     """
     This class is responsible for actually drawing the cell in the grid.
-    
+
     """
-    
+
     def __init__(self, cell):
         """
         Default class constructor.
 
-        :param `cell`: an instance of :class:`XLSCell`.        
+        :param `cell`: an instance of :class:`XLSCell`.
         """
 
-        gridlib.GridCellRenderer.__init__(self)        
+        gridlib.GridCellRenderer.__init__(self)
         self.cell = cell
 
 
@@ -1693,34 +1693,34 @@ class XLSRenderer(gridlib.GridCellRenderer):
         :param `col`: the column in which this cell lives;
         :param `isSelected`: ``True`` if the cell is selected, ``False`` otherwise.
         """
-        
+
         # clear the background
         dc.SetBackgroundMode(wx.SOLID)
 
         cell = self.cell
-        
+
         cell.background.Draw(dc, rect)
 
         if cell.borders:
             cell.borders.Draw(dc, rect)
 
-        cell.text.Draw(dc, rect)            
+        cell.text.Draw(dc, rect)
 
         if cell.comment:
             cell.comment.Draw(dc, rect)
 
         if isSelected:
-            
+
             gdc = wx.GCDC(dc)
 
             sys_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
             brush_colour = wx.Colour(sys_colour.Red(), sys_colour.Green(), sys_colour.Blue(), 90)
-            
+
             gdc.SetBrush(wx.Brush(brush_colour))
             gdc.SetPen(wx.TRANSPARENT_PEN)
 
             gdc.DrawRectangle(rect)
-            
+
 
 class XLSTable(gridlib.GridTableBase):
     """
@@ -1730,7 +1730,7 @@ class XLSTable(gridlib.GridTableBase):
     cell attributes. The data can be stored in the way most convenient for the
     application but has to be provided in string form to :class:`grid.Grid`.
     """
-    
+
     def __init__(self, grid, cells, rows, cols):
         """
         Default class constructor.
@@ -1739,25 +1739,25 @@ class XLSTable(gridlib.GridTableBase):
         :param `cells`: a Python dictionary. For every key `(row, col)`, the
          corresponding value is an instance of :class:`XLSCell`;
         :param `rows`: the number of rows in the table;
-        :param `cols`: the number of columns in the table.        
+        :param `cols`: the number of columns in the table.
         """
 
         # The base class must be initialized *first*
         gridlib.GridTableBase.__init__(self)
-        
+
         self.cells = cells
         self.dimens = (rows, cols)
-        
+
 
     def GetNumberCols(self):
         """ Returns the number of columns in the table. """
-        
+
         return self.dimens[1]
 
 
     def GetNumberRows(self):
         """ Returns the number of rows in the table. """
-        
+
         return self.dimens[0]
 
 
@@ -1768,7 +1768,7 @@ class XLSTable(gridlib.GridTableBase):
         :param `row`: the row in which this cell lives;
         :param `col`: the column in which this cell lives.
         """
-        
+
         cell = self.cells[(row, col)]
         return cell.GetValue()
 
@@ -1784,7 +1784,7 @@ class XLSTable(gridlib.GridTableBase):
 
         cell = self.cells[(row, col)]
         cell.SetValue(value)
-                
+
 
     def GetAttr(self, row, col, kind):
         """
@@ -1806,7 +1806,7 @@ class XLSTable(gridlib.GridTableBase):
         :param `row`: the row in which this cell lives;
         :param `col`: the column in which this cell lives.
         """
-        
+
         cell = self.cells[(row, col)]
         return cell.raw_value
 
@@ -1838,7 +1838,7 @@ class XLSGrid(gridlib.Grid):
 
         self.tip_window = None
         self.tip_shown = False
-        
+
 
     def DestroyTip(self):
         """
@@ -1851,15 +1851,15 @@ class XLSGrid(gridlib.Grid):
                 self.tip_window.GetTipWindow().Destroy()
             except RuntimeError:
                 pass
-            
+
             del self.tip_window
             self.tip_window = None
 
         if self.tip_shown:
-            self.GetGridWindow().SetToolTip("")            
+            self.GetGridWindow().SetToolTip("")
             self.GetGridWindow().SetCursor(wx.NullCursor)
             self.tip_shown = False
-        
+
 
     def InstallGridHint(self):
         """
@@ -1874,7 +1874,7 @@ class XLSGrid(gridlib.Grid):
 
             :param `event`: a :class:`MouseEvent` event to be processed.
             """
-            
+
             # evt.GetRow() and evt.GetCol() would be nice to have here,
             # but as this is a mouse event, not a grid event, they are not
             # available and we need to compute them by hand.
@@ -1888,7 +1888,7 @@ class XLSGrid(gridlib.Grid):
                 self.prev_rowcol[:] = [row, col]
                 self.DestroyTip()
                 cell = self.cells[(row, col)]
-                rect = self.CellToRect(row, col) 
+                rect = self.CellToRect(row, col)
                 comment = cell.GetComment()
 
                 window = self.GetGridWindow()
@@ -1898,11 +1898,11 @@ class XLSGrid(gridlib.Grid):
                     self.tip_shown = True
                     if not comment:
                         return
-            
+
                 if comment:
                     self.tip_window = TransientPopup(window, comment, wx.GetMousePosition())
                     event.Skip()
-                
+
         self.GetGridWindow().Bind(wx.EVT_MOTION, OnMouseMotion)
 
 
@@ -1921,13 +1921,13 @@ class XLSGrid(gridlib.Grid):
         """
 
         self.BeginBatch()
-    
+
         nrows = sheet.nrows
         ncols = sheet.ncols
 
         default_width, default_height = self.GetDefaultFontData(book)
         default_colour = self.GetGridLineColour()
-        
+
         hyperlinks, rich_text_list = {}, {}
         if hasattr(sheet, "hyperlink_map"):
             # New in xlrd version 0.7.2 from SVN
@@ -1949,15 +1949,15 @@ class XLSGrid(gridlib.Grid):
                     hyperlink = hyperlinks[(i, j)]
                 if (i, j) in rich_text_list:
                     rich_text = rich_text_list[(i, j)]
-                    
+
                 self.FormatCell(book, sheet, i, j, display_texts, comments, hyperlink, rich_text, default_width, default_colour)
 
         self.table = XLSTable(self, self.cells, nrows, ncols)
         self.SetTable(self.table)
 
         row_height = sheet.default_row_height
-        col_width = sheet.defcolwidth 
-        
+        col_width = sheet.defcolwidth
+
         for i in range(nrows):
             if i in sheet.rowinfo_map:
                 current = sheet.rowinfo_map[i].height
@@ -1971,22 +1971,22 @@ class XLSGrid(gridlib.Grid):
             if j in sheet.colinfo_map:
                 current = sheet.colinfo_map[j].width
             else:
-                current = sheet.defcolwidth 
+                current = sheet.defcolwidth
 
-            col_width = int(round(float(default_width)*current/256.0))                
+            col_width = int(round(float(default_width)*current/256.0))
             self.SetColSize(j, col_width)
 
         for merged in sheet.merged_cells:
             rlo, rhi, clo, chi = merged
             if rlo >= 0 and rlo < len(self.cells) and clo >= 0:
                 self.cells[(rlo, clo)].SetCellSize(rhi-rlo, chi-clo)
-            
+
         self.EnableEditing(False)
         self.EnableGridLines(False)
         self.EndBatch()
         self.ForceRefresh()
         self.InstallGridHint()
-        
+
 
     def FormatCell(self, book, sheet, row, col, display_texts, comments, hyperlink, rich_text, default_width, default_colour):
         """
@@ -2031,7 +2031,7 @@ class XLSGrid(gridlib.Grid):
         gridCell = XLSCell(book, cell, xf_index, xls_text, xls_comment, hyperlink, rich_text, default_width, default_colour)
 
         self.cells[(row, col)] = gridCell
-        
+
 
     def GetDefaultFontData(self, book):
         """
@@ -2058,14 +2058,14 @@ class XLSGrid(gridlib.Grid):
         family = XF_FONT_FAMILY[font.family]
         name = font.name
         size = int(font.height/20.0)
-        
+
         dc = wx.ClientDC(self)
         font = wx.Font(size, family, style, bold, underline, name.encode())
         dc.SetFont(font)
         width, height, descent, leading = dc.GetFullTextExtent("0", font)
 
-        return width, height + descent - leading  
-        
+        return width, height + descent - leading
+
 
 class TransientPopup(STT.SuperToolTip):
     """
@@ -2075,7 +2075,7 @@ class TransientPopup(STT.SuperToolTip):
     :note: If Mark Hammonds' `pywin32` package is not available, this class is
      never invoked.
     """
-    
+
     def __init__(self, grid_window, comment, position):
         """
         Default class constructor.
@@ -2097,7 +2097,7 @@ class TransientPopup(STT.SuperToolTip):
 
         dc = wx.ClientDC(grid_window)
         rest = wordwrap(rest, 400, dc)
-        
+
         self.SetHeader(header)
         self.SetMessage(rest)
         self.SetTarget(grid_window)
@@ -2106,7 +2106,7 @@ class TransientPopup(STT.SuperToolTip):
         self.SetStartDelay(100000)
         self.SetEndDelay(100000)
         self.ApplyStyle("Office 2007 Blue")
-        
+
         self.SetDropShadow(True)
         self.DoShowNow()
 

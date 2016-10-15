@@ -21,7 +21,7 @@ try:
     b64decode = base64.b64decode
 except AttributeError:
     b64decode = base64.decodestring
-    
+
 
 class PyEmbeddedImage(object):
     """

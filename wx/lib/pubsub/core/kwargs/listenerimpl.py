@@ -12,20 +12,20 @@ from .callables import ListenerMismatchError
 class Listener(ListenerBase):
     """
     Wraps a callable so it can be stored by weak reference and introspected
-    to verify that it adheres to a topic's MDS. 
-    
-    A Listener instance 
-    has the same hash value as the callable that it wraps. 
+    to verify that it adheres to a topic's MDS.
+
+    A Listener instance
+    has the same hash value as the callable that it wraps.
 
     Callables that have 'argName=pub.AUTO_TOPIC' as a kwarg will
     be given the Topic object for the message sent by sendMessage().
     Such a Listener will have wantsTopicObjOnCall() True.
-    
+
     Callables that have a '\**kargs' argument will receive all message
     data, not just that for the topic they are subscribed to. Such a listener
-    will have wantsAllMessageData() True. 
+    will have wantsAllMessageData() True.
     """
-    
+
     def __call__(self, kwargs, actualTopic, allKwargs=None):
         """Call the listener with **kwargs. Note that it raises RuntimeError
         if listener is dead. Should always return True (False would require
@@ -47,15 +47,15 @@ class Listener(ListenerBase):
 
 class ListenerValidator(ValidatorBase):
     """
-    Do not accept any required args or *args; accept any **kwarg, 
-    and require that the Listener have at least all the kwargs (can 
+    Do not accept any required args or *args; accept any **kwarg,
+    and require that the Listener have at least all the kwargs (can
     have extra) of Topic.
     """
-    
+
     def _validateArgs(self, listener, paramsInfo):
         # accept **kwargs
         # accept *args
-        
+
         # check if listener missing params (only possible if
         # paramsInfo.acceptsAllKwargs is False)
         allTopicMsgArgs = self._topicArgs | self._topicKwargs
@@ -67,10 +67,10 @@ class ListenerValidator(ValidatorBase):
                     % (len(missingParams), ''.join(missingParams))
                 raise ListenerMismatchError(msg, listener, missingParams)
         else:
-            # then can accept that some parameters missing from listener 
+            # then can accept that some parameters missing from listener
             # signature
             pass
-            
+
         # check if there are unknown parameters in listener signature:
         extraArgs = allParams - allTopicMsgArgs
         if extraArgs:

@@ -138,7 +138,7 @@ class PyColourChooser(wx.Panel):
             box = pycolourbox.PyColourBox(self, new_id)
 
             box.GetColourBox().Bind(wx.EVT_LEFT_DOWN, lambda x, b=box: self.onBasicClick(x, b))
-            
+
             self.colour_boxs.append(box)
             colour_grid.Add(box, 0, wx.EXPAND)
 

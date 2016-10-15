@@ -7,7 +7,7 @@
 #
 # Created:
 # Version:
-# Date:         
+# Date:
 # Licence:      wxWindows license
 # Tags:         phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------------
@@ -215,5 +215,5 @@ RIBBON_PANEL_EXT_BUTTON       = 1 << 3
 RIBBON_PANEL_MINIMISE_BUTTON  = 1 << 4
 RIBBON_PANEL_STRETCH          = 1 << 5
 RIBBON_PANEL_FLEXIBLE         = 1 << 6
-    
+
 RIBBON_PANEL_DEFAULT_STYLE    = 0

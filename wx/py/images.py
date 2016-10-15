@@ -18,7 +18,7 @@ def getPyImage(shellName='PyCrust'):
     return wx.Image(stream)
 
 def getPyData(shellName='PyCrust'):
-    if shellName=='PyCrust':     
+    if shellName=='PyCrust':
         return \
 b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00 \x00\x00\x00 \x08\x06\x00\
 \x00\x00szz\xf4\x00\x00\x00\x04sBIT\x08\x08\x08\x08|\x08d\x88\x00\x00\x04\

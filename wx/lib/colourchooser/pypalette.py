@@ -116,12 +116,12 @@ class PyPalette(canvas.Canvas):
     def __init__(self, parent, id):
         """Creates a palette object."""
         # Load the pre-generated palette XPM
-        
+
         # Leaving this in causes warning messages in some cases.
         # It is the responsibility of the app to init the image
         # handlers, IAW RD
         #wx.InitAllImageHandlers()
-        
+
         self.palette = Image.GetBitmap()
         canvas.Canvas.__init__ (self, parent, id, size=(200, 192))
 

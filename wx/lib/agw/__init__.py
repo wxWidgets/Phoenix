@@ -1,14 +1,14 @@
 
 """
-This is the Advanced Generic Widgets package (AGW). It provides many 
-custom-drawn wxPython controls: some of them can be used as a replacement 
-of the platform native controls, others are simply an addition to the 
+This is the Advanced Generic Widgets package (AGW). It provides many
+custom-drawn wxPython controls: some of them can be used as a replacement
+of the platform native controls, others are simply an addition to the
 already rich wxPython widgets set.
 
 
 Description:
 
-AGW contains many different modules, listed below. Items labelled with 
+AGW contains many different modules, listed below. Items labelled with
 an asterisk were already present in :mod:`lib` before:
 
 - AdvancedSplash: reproduces the behaviour of :class:`~adv.SplashScreen`, with more
@@ -75,7 +75,7 @@ an asterisk were already present in :mod:`lib` before:
   you can find in text editors software;
 - ShapedButton: this class tries to fill the lack of "custom shaped" controls
   in wxPython. It can be used to build round buttons or elliptic buttons;
-- ShortcutEditor: a widget that allows the user to customize and change 
+- ShortcutEditor: a widget that allows the user to customize and change
   keyboard shortcuts via a dialog;
 - SpeedMeter: this widget tries to reproduce the behavior of some car
   controls (but not only), by creating an "angular" control;

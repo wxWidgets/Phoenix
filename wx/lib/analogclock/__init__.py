@@ -7,7 +7,7 @@ AnalogClock - an analog clock.
 This control creates an analog clock window. Its features include shadowing,
 the ability to render numbers as well as any arbitrary polygon as tick marks,
 resize marks and hands proportionally as the widget itself is resized, rotate
-marks in a way the get aligned to the watch. It also has a dialog, accessed 
+marks in a way the get aligned to the watch. It also has a dialog, accessed
 via a context menu item, allowing one to change on the fly all of its settings.
 
 
@@ -113,7 +113,7 @@ the wxPython-users list.
 
 AnalogClock is distributed under the wxWidgets license.
 
-This code should meet the wxPython Coding Guidelines 
+This code should meet the wxPython Coding Guidelines
 <http://www.wxpython.org/codeguidelines.php> and the wxPython Style Guide
 <http://wiki.wxpython.org/index.cgi/wxPython_20Style_20Guide>.
 
@@ -127,7 +127,7 @@ For updates please visit <http://j.domaindlx.com/elements28/wxpython/>.
 #
 # Version 0.02:
 #   - Module/namespace rearranges;
-#   - All '-1' occurrences meaning "use any id" were eliminated or replaced 
+#   - All '-1' occurrences meaning "use any id" were eliminated or replaced
 #     to 'wx.ID_ANY'.
 #   - Better names to the methods triggered by the context menu events.
 #   - Included small demo class code in analogclock.py.

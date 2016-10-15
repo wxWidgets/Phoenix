@@ -28,7 +28,7 @@ class MessagePanel(wx.Panel):
         if flags:
             artid = None
             if flags & wx.ICON_EXCLAMATION:
-                artid = wx.ART_WARNING            
+                artid = wx.ART_WARNING
             elif flags & wx.ICON_ERROR:
                 artid = wx.ART_ERROR
             elif flags & wx.ICON_QUESTION:
@@ -55,7 +55,7 @@ class MessagePanel(wx.Panel):
             tbox.Add(caption)
             tbox.Add((10,10))
         tbox.Add(message)
-        
+
         hbox = wx.BoxSizer(wx.HORIZONTAL)
         hbox.Add((10,10), 1)
         hbox.Add(icon)
@@ -71,7 +71,7 @@ class MessagePanel(wx.Panel):
         self.SetSizer(box)
         self.Fit()
 
-        
+
 #----------------------------------------------------------------------
 
 
@@ -92,4 +92,4 @@ This is only a test...""")
     frm.Fit()
     frm.Show()
     app.MainLoop()
-    
+

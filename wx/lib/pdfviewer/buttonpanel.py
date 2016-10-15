@@ -1,4 +1,4 @@
-# Name:         buttonpanel.py 
+# Name:         buttonpanel.py
 # Package:      wx.lib.pdfviewer
 #
 # Purpose:      A button panel class for pdf viewer
@@ -44,12 +44,12 @@ class pdfButtonPanel(bp.ButtonPanel):
 
         """
         self.viewer = None          # reference to viewer is set by their common parent
-        self.numpages = None         
+        self.numpages = None
         bp.ButtonPanel.__init__(self, parent, nid, "",
                                 agwStyle=bp.BP_USE_GRADIENT, alignment=bp.BP_ALIGN_LEFT)
         self.SetProperties()
         self.CreateButtons()
-       
+
     def CreateButtons(self):
         """
         Add the buttons and other controls to the panel.
@@ -60,7 +60,7 @@ class pdfButtonPanel(bp.ButtonPanel):
         self.page.Enable(False)
         self.disabled_controls.append(self.page)
         self.page.Bind(wx.EVT_KILL_FOCUS, self.OnPage)
-        self.Bind(wx.EVT_TEXT_ENTER, self.OnPage, self.page)    
+        self.Bind(wx.EVT_TEXT_ENTER, self.OnPage, self.page)
         self.maxlabel = wx.StaticText(self, -1, '          ')
         self.zoom = wx.ComboBox(self, -1, style=wx.CB_DROPDOWN|wx.TE_PROCESS_ENTER)
         self.zoom.Enable(False)
@@ -71,8 +71,8 @@ class pdfButtonPanel(bp.ButtonPanel):
                             ('800%', 8.0), ('1000%', 10.0))
         for item in self.comboval:
             self.zoom.Append(item[0], item[1])      # string value and client data
-        self.Bind(wx.EVT_COMBOBOX, self.OnZoomSet, self.zoom)    
-        self.Bind(wx.EVT_TEXT_ENTER, self.OnZoomSet, self.zoom)    
+        self.Bind(wx.EVT_COMBOBOX, self.OnZoomSet, self.zoom)
+        self.Bind(wx.EVT_TEXT_ENTER, self.OnZoomSet, self.zoom)
         panelitems = [
           ('btn', images.PrintIt.GetBitmap(), wx.ITEM_NORMAL, "Print", self.OnPrint),
           ('sep',),
@@ -112,13 +112,13 @@ class pdfButtonPanel(bp.ButtonPanel):
         self.Thaw()
         self.DoLayout()
 
- 
+
     def SetProperties(self):
         """
         Setup the buttonpanel colours, borders etc.
         """
         bpArt = self.GetBPArt()
-        bpArt.SetGradientType(bp.BP_GRADIENT_VERTICAL)        
+        bpArt.SetGradientType(bp.BP_GRADIENT_VERTICAL)
         bpArt.SetColor(bp.BP_GRADIENT_COLOUR_FROM, wx.Colour(119, 136, 153)) #light slate
         bpArt.SetColor(bp.BP_GRADIENT_COLOUR_TO, wx.Colour(245, 245, 245))   # white smoke
         bpArt.SetColor(bp.BP_BORDER_COLOUR, wx.Colour(119, 136, 153))
@@ -132,7 +132,7 @@ class pdfButtonPanel(bp.ButtonPanel):
     def Update(self, pagenum, numpages, zoomscale):
         """
         Called from viewer to initialize and update controls.
-                
+
         :param integer `pagenum`: the page to show
         :param integer `numpages`: the total pages
         :param integer `zoomscale`: the zoom factor
@@ -147,7 +147,7 @@ class pdfButtonPanel(bp.ButtonPanel):
                 item.Enable(True)
             self.disabled_controls = []
             self.Refresh()
-                   
+
         self.pageno = pagenum + 1
         self.page.ChangeValue('%d' % self.pageno)
         if numpages != self.numpages:
@@ -162,7 +162,7 @@ class pdfButtonPanel(bp.ButtonPanel):
         The button handler to save the PDF file.
         """
         self.viewer.Save()
-        
+
     def OnPrint(self, event):
         """
         The button handler to print the PDF file.
@@ -200,10 +200,10 @@ class pdfButtonPanel(bp.ButtonPanel):
         if self.pageno < self.numpages:
             self.pageno = self.numpages
             self.ChangePage()
-      
+
     def OnPage(self, event):
         """
-        The handler to go to enter page number of the report, if a 
+        The handler to go to enter page number of the report, if a
         valid number is entered.
         """
         try:
@@ -218,14 +218,14 @@ class pdfButtonPanel(bp.ButtonPanel):
 
     def OnZoomOut(self, event):
         "Decrease page magnification"
-        self.viewer.SetZoom(max(0.1, self.percentzoom*0.5/100.0))  
+        self.viewer.SetZoom(max(0.1, self.percentzoom*0.5/100.0))
 
     def OnZoomIn(self, event):
         """
         The button handler to zoom in.
         """
-        self.viewer.SetZoom(min(self.percentzoom*2/100.0, 10))        
-      
+        self.viewer.SetZoom(min(self.percentzoom*2/100.0, 10))
+
     def OnZoomSet(self, event):
         """
         The zoom set handler, either a list selection or a value entered.
@@ -236,7 +236,7 @@ class pdfButtonPanel(bp.ButtonPanel):
         num =  self.zoom.GetSelection()
         if num >= 0:            # selection from list
             newzoom_scale = self.zoom.GetClientData(num)
-        else:                   # combo text 
+        else:                   # combo text
             astring = self.zoom.GetValue().strip().replace('%','')  # ignore percent sign
             try:
                 numvalue = float(astring)
@@ -252,7 +252,7 @@ class pdfButtonPanel(bp.ButtonPanel):
                     if textvalue.lower() == self.comboval[k][0].lower():
                         newzoom_scale = self.comboval[k][1]
                         break
-                    
+
         if newzoom_scale:
             self.viewer.SetZoom(newzoom_scale)      # will send update to set zoomtext
         else:
@@ -263,13 +263,13 @@ class pdfButtonPanel(bp.ButtonPanel):
         """
         The button handler to fit display to page width.
         """
-        self.viewer.SetZoom(-1) 
-        
+        self.viewer.SetZoom(-1)
+
     def OnHeight(self, event):
         """
         The button handler to fit display to page height.
         """
-        self.viewer.SetZoom(-2) 
+        self.viewer.SetZoom(-2)
 
     def ChangePage(self):
         """
