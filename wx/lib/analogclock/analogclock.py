@@ -124,7 +124,7 @@ class AnalogClock(wx.Window):
 
 
     def _OnPaint(self, evt):
-        dc = wx.BufferedPaintDC(self)
+        dc = wx.GCDC(wx.BufferedPaintDC(self))
         self.DrawHands(dc)
 
 
@@ -188,7 +188,7 @@ class AnalogClock(wx.Window):
 
     def _drawBox(self):
         """Draws clock face and tick marks onto the faceBitmap."""
-        dc = wx.BufferedDC(None, self.faceBitmap)
+        dc = wx.GCDC(wx.BufferedDC(None, self.faceBitmap))
         dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
         dc.Clear()
         self.Box.Draw(dc)
