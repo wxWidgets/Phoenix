@@ -98,7 +98,7 @@ class AnalogClock(wx.Window):
         # Do initial drawing (in case there is not an initial size event)
         self.RecalcCoords(self.GetSize())
         self.DrawBox()
-        
+
         # Initialize the timer that drives the update of the clock face.
         # Update every half second to ensure that there is at least one true
         # update during each realtime second.
@@ -112,7 +112,7 @@ class AnalogClock(wx.Window):
         size = wx.Size(50,50)
         self.CacheBestSize(size)
         return size
-    
+
 
     def _OnSize(self, evt):
         size = self.GetClientSize()
@@ -124,14 +124,14 @@ class AnalogClock(wx.Window):
 
 
     def _OnPaint(self, evt):
-        dc = wx.BufferedPaintDC(self)
+        dc = wx.GCDC(wx.BufferedPaintDC(self))
         self.DrawHands(dc)
 
 
     def _OnTimer(self, evt):
         self.Refresh(False)
         self.Update()
-        
+
 
     def _OnDestroyWindow(self, evt):
         self.timer.Stop()
@@ -188,7 +188,7 @@ class AnalogClock(wx.Window):
 
     def _drawBox(self):
         """Draws clock face and tick marks onto the faceBitmap."""
-        dc = wx.BufferedDC(None, self.faceBitmap)
+        dc = wx.GCDC(wx.BufferedDC(None, self.faceBitmap))
         dc.SetBackground(wx.Brush(self.GetBackgroundColour(), wx.BRUSHSTYLE_SOLID))
         dc.Clear()
         self.Box.Draw(dc)
@@ -336,7 +336,7 @@ class AnalogClock(wx.Window):
         self.RecalcCoords(size)
         self.DrawBox()
         self.Refresh(False)
-        
+
 
     def SetHandSize(self, size, target=ALL):
         """Sets thickness of hands."""
@@ -590,10 +590,10 @@ class AnalogClockWindow(AnalogClock):
 
     def SetMinutesOffset(self, o):
         pass
-    
+
     def SetShadowColour(self, s):
         pass
-    
+
     def SetWatchPenBrush(self, p=None, b=None):
         if p:
             self.SetFaceBorderColour(p.GetColour())
@@ -611,7 +611,7 @@ class AnalogClockWindow(AnalogClock):
         if m:
             self.SetTickStyle(h, MINUTE)
 
-        
+
 # Test stuff ----------------------------------------------------------
 
 if __name__ == "__main__":
