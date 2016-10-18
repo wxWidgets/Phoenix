@@ -6122,7 +6122,7 @@ class UltimateListMainWindow(wx.ScrolledWindow):
         # Hyperlinks things
         normalFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._hypertextfont = wx.Font(normalFont.GetPointSize(), normalFont.GetFamily(),
-                                      normalFont.GetStyle(), wx.FONTSTYLE_NORMAL, True,
+                                      normalFont.GetStyle(), wx.FONTWEIGHT_NORMAL, True,
                                       normalFont.GetFaceName(), normalFont.GetEncoding())
         self._hypertextnewcolour = wx.BLUE
         self._hypertextvisitedcolour = wx.Colour(200, 47, 200)
