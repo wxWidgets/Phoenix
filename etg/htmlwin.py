@@ -41,6 +41,7 @@ def run():
     
     c.find('OnCellClicked').ignore(False)
     c.find('OnCellMouseHover').ignore(False)
+    c.find('AddFilter.filter').transfer = True
 
     tools.fixHtmlSetFonts(c)
     
