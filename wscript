@@ -142,6 +142,9 @@ def configure(conf):
         _copyEnvGroup(conf.env, '_WX', '_WXPROPGRID')
         conf.env.LIB_WXPROPGRID += cfg.makeLibName('propgrid')
 
+        _copyEnvGroup(conf.env, '_WX', '_WXAUI')
+        conf.env.LIB_WXPAUI += cfg.makeLibName('aui')
+
         # ** Add code for new modules here (and below for non-MSW)
 
         # tweak the PYEXT compile and link flags if making a --debug build
@@ -235,6 +238,10 @@ def configure(conf):
         conf.check_cfg(path=conf.options.wx_config, package='',
                        args='--cxxflags --libs propgrid,core' + rpath,
                        uselib_store='WXPROPGRID', mandatory=True)
+
+        conf.check_cfg(path=conf.options.wx_config, package='',
+                       args='--cxxflags --libs aui,core' + rpath,
+                       uselib_store='WXAUI', mandatory=True)
 
         # ** Add code for new modules here
 
@@ -528,7 +535,9 @@ def build(bld):
     makeETGRule(bld, 'etg/_media.py',      '_media',     'WXMEDIA')
     makeETGRule(bld, 'etg/_ribbon.py',     '_ribbon',    'WXRIBBON')
     makeETGRule(bld, 'etg/_propgrid.py',   '_propgrid',  'WXPROPGRID')
+    makeETGRule(bld, 'etg/_aui.py',   '_aui',  'WXAUI')
 
+    # Modules that are platform-specific
     if isDarwin:
         makeETGRule(bld, 'etg/_webkit.py', '_webkit',    'WXWEBKIT')
     if isWindows:
