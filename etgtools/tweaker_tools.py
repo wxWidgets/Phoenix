@@ -954,10 +954,13 @@ del _{ListClass_pyName}___repr__
 
 
 
-def wxArrayWrapperTemplate(ArrayClass, ItemClass, module):
+def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False):
     moduleName = module.module        
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
-    
+    itemRef = '*' if itemIsPtr else '&'
+    itemDeref = '' if itemIsPtr else '*'
+    addrOf = '' if itemIsPtr else '&'
+
     # *** TODO: This can probably be done in a way that is not SIP-specfic.
     # Try creating extractor objects from scratch and attach cppMethods to
     # them as needed, etc..
@@ -971,10 +974,10 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass}& __getitem__(ulong index);
+    {ItemClass}{itemRef} __getitem__(ulong index);
     %MethodCode
         if (index < sipCpp->GetCount()) {{
-            sipRes = &sipCpp->Item(index);
+            sipRes = {addrOf}sipCpp->Item(index);
         }}
         else {{
             wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
@@ -982,21 +985,21 @@ public:
         }}
     %End
 
-    int __contains__(const {ItemClass}& obj);
+    int __contains__({ItemClass}{itemRef} obj);
     %MethodCode
-        int idx = sipCpp->Index(*obj, false);
+        int idx = sipCpp->Index({itemDeref}obj, false);
         sipRes = idx != wxNOT_FOUND;
     %End
 
-    void append(const {ItemClass}& obj);
+    void append({ItemClass}{itemRef} obj);
     %MethodCode
-        sipCpp->Add(*obj);
+        sipCpp->Add({itemDeref}obj);
     %End
 
     // TODO:  add support for index(value, [start, [stop]])
-    int index(const {ItemClass}& obj);
+    int index({ItemClass}{itemRef} obj);
     %MethodCode
-        int idx = sipCpp->Index(*obj, false);
+        int idx = sipCpp->Index({itemDeref}obj, false);
         if (idx == wxNOT_FOUND) {{
             sipError = sipErrorFail;
             wxPyErr_SetString(PyExc_ValueError,
