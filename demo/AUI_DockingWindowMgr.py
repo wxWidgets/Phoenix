@@ -7,11 +7,7 @@
 import wx
 import wx.grid
 import wx.html
-
-try:
-    from agw import aui
-except ImportError: # if it's not there locally, try the wxPython lib.
-    import wx.lib.agw.aui as aui
+import wx.aui as aui
 
 from six import BytesIO
 
@@ -163,69 +159,69 @@ class PyAUIFrame(wx.Frame):
         tb1 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER)
         tb1.SetToolBitmapSize(wx.Size(48,48))
-        tb1.AddLabelTool(101, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
+        tb1.AddTool(101, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
         tb1.AddSeparator()
-        tb1.AddLabelTool(102, "Test", wx.ArtProvider.GetBitmap(wx.ART_QUESTION))
-        tb1.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_INFORMATION))
-        tb1.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_WARNING))
-        tb1.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE))
+        tb1.AddTool(102, "Test", wx.ArtProvider.GetBitmap(wx.ART_QUESTION))
+        tb1.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_INFORMATION))
+        tb1.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_WARNING))
+        tb1.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE))
         tb1.Realize()
 
         tb2 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER)
         tb2.SetToolBitmapSize(wx.Size(16,16))
         tb2_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_QUESTION, wx.ART_OTHER, wx.Size(16, 16))
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
         tb2.AddSeparator()
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
         tb2.AddSeparator()
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
-        tb2.AddLabelTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
+        tb2.AddTool(101, "Test", tb2_bmp1)
         tb2.Realize()
 
         tb3 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER)
         tb3.SetToolBitmapSize(wx.Size(16,16))
         tb3_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, wx.Size(16, 16))
-        tb3.AddLabelTool(101, "Test", tb3_bmp1)
-        tb3.AddLabelTool(101, "Test", tb3_bmp1)
-        tb3.AddLabelTool(101, "Test", tb3_bmp1)
-        tb3.AddLabelTool(101, "Test", tb3_bmp1)
+        tb3.AddTool(101, "Test", tb3_bmp1)
+        tb3.AddTool(101, "Test", tb3_bmp1)
+        tb3.AddTool(101, "Test", tb3_bmp1)
+        tb3.AddTool(101, "Test", tb3_bmp1)
         tb3.AddSeparator()
-        tb3.AddLabelTool(101, "Test", tb3_bmp1)
-        tb3.AddLabelTool(101, "Test", tb3_bmp1)
+        tb3.AddTool(101, "Test", tb3_bmp1)
+        tb3.AddTool(101, "Test", tb3_bmp1)
         tb3.Realize()
 
         tb4 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER | wx.TB_HORZ_TEXT)
         tb4.SetToolBitmapSize(wx.Size(16,16))
         tb4_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
-        tb4.AddLabelTool(101, "Item 1", tb4_bmp1)
-        tb4.AddLabelTool(101, "Item 2", tb4_bmp1)
-        tb4.AddLabelTool(101, "Item 3", tb4_bmp1)
-        tb4.AddLabelTool(101, "Item 4", tb4_bmp1)
+        tb4.AddTool(101, "Item 1", tb4_bmp1)
+        tb4.AddTool(101, "Item 2", tb4_bmp1)
+        tb4.AddTool(101, "Item 3", tb4_bmp1)
+        tb4.AddTool(101, "Item 4", tb4_bmp1)
         tb4.AddSeparator()
-        tb4.AddLabelTool(101, "Item 5", tb4_bmp1)
-        tb4.AddLabelTool(101, "Item 6", tb4_bmp1)
-        tb4.AddLabelTool(101, "Item 7", tb4_bmp1)
-        tb4.AddLabelTool(101, "Item 8", tb4_bmp1)
+        tb4.AddTool(101, "Item 5", tb4_bmp1)
+        tb4.AddTool(101, "Item 6", tb4_bmp1)
+        tb4.AddTool(101, "Item 7", tb4_bmp1)
+        tb4.AddTool(101, "Item 8", tb4_bmp1)
         tb4.Realize()
 
         tb5 = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
                          wx.TB_FLAT | wx.TB_NODIVIDER | wx.TB_VERTICAL)
         tb5.SetToolBitmapSize(wx.Size(48, 48))
-        tb5.AddLabelTool(101, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
+        tb5.AddTool(101, "Test", wx.ArtProvider.GetBitmap(wx.ART_ERROR))
         tb5.AddSeparator()
-        tb5.AddLabelTool(102, "Test", wx.ArtProvider.GetBitmap(wx.ART_QUESTION))
-        tb5.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_INFORMATION))
-        tb5.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_WARNING))
-        tb5.AddLabelTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE))
+        tb5.AddTool(102, "Test", wx.ArtProvider.GetBitmap(wx.ART_QUESTION))
+        tb5.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_INFORMATION))
+        tb5.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_WARNING))
+        tb5.AddTool(103, "Test", wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE))
         tb5.Realize()
 
         # add a bunch of panes
@@ -451,10 +447,10 @@ class PyAUIFrame(wx.Frame):
 
     def OnAbout(self, event):
 
-        msg = "aui Demo\n" + \
+        msg = "wx.aui Demo\n" + \
               "An advanced window management library for wxWidgets\n" + \
               "(c) Copyright 2005-2006, Kirix Corporation"
-        dlg = wx.MessageDialog(self, msg, "About aui Demo",
+        dlg = wx.MessageDialog(self, msg, "About wx.aui Demo",
                                wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
@@ -743,12 +739,12 @@ class PyAUIFrame(wx.Frame):
 # -- wx.SizeReportCtrl --
 # (a utility control that always reports it's client size)
 
-class SizeReportCtrl(wx.PyControl):
+class SizeReportCtrl(wx.Control):
 
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition,
                  size=wx.DefaultSize, mgr=None):
 
-        wx.PyControl.__init__(self, parent, id, pos, size, wx.NO_BORDER)
+        wx.Control.__init__(self, parent, id, pos, size, wx.NO_BORDER)
 
         self._mgr = mgr
 
