@@ -344,7 +344,21 @@ def fixHtmlSetFonts(klass):
         }
         self->SetFonts(*normal_face, *fixed_face, &sizes->Item(0));
         """)
-    
+
+
+def fixSetStatusWidths(m):
+    # We already have a MappedType for wxArrayInt, so just tweak the
+    # interface to use that instead of an array size and a const int pointer.
+    m.find('n').ignore()
+    m.find('widths_field').type = 'const wxArrayInt&'
+    m.find('widths_field').name = 'widths'
+    m.argsString = '(int n, const wxArrayInt& widths)'
+    m.setCppCode("""\
+        const int* ptr = &widths->front();
+        self->SetStatusWidths(widths->size(), ptr);
+        """)
+
+
 
 def removeVirtuals(klass):
     """
@@ -360,7 +374,7 @@ def removeVirtuals(klass):
             
 def addWindowVirtuals(klass):
     """
-    Either turn the virtual flag back on or add a delcaration for the subset of
+    Either turn the virtual flag back on or add a declaration for the subset of
     the C++ virtuals in wxWindow classes that we will be supporting.
     """
     publicWindowVirtuals = [      

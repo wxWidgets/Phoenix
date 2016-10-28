@@ -535,7 +535,7 @@ def build(bld):
     makeETGRule(bld, 'etg/_media.py',      '_media',     'WXMEDIA')
     makeETGRule(bld, 'etg/_ribbon.py',     '_ribbon',    'WXRIBBON')
     makeETGRule(bld, 'etg/_propgrid.py',   '_propgrid',  'WXPROPGRID')
-    makeETGRule(bld, 'etg/_aui.py',   '_aui',  'WXAUI')
+    makeETGRule(bld, 'etg/_aui.py',        '_aui',       'WXAUI')
 
     # Modules that are platform-specific
     if isDarwin:

@@ -20,6 +20,9 @@ DOCSTRING = ""
 ITEMS  = [ 'wxAuiManager',
            'wxAuiPaneInfo',
            'wxAuiManagerEvent',
+           'wxAuiDockInfo',
+           'wxAuiDockUIPart',
+           'wxAuiPaneButton',
            ]
 
 #---------------------------------------------------------------------------
@@ -58,34 +61,20 @@ def run():
         """)
 
 
-    module.insertItem(0, etgtools.WigCode("""\
-        // forward declarations
-        class wxAuiDockUIPart;
-        class wxAuiPaneButton;
-        class wxAuiDockInfo;
-        class wxAuiDockArt;
-        """))
-
-
-    module.addItem(
-        tools.wxArrayWrapperTemplate(
+    module.addItem(tools.wxArrayWrapperTemplate(
             'wxAuiDockInfoArray', 'wxAuiDockInfo', module))
 
-    module.addItem(
-        tools.wxArrayWrapperTemplate(
+    module.addItem(tools.wxArrayWrapperTemplate(
             'wxAuiDockUIPartArray', 'wxAuiDockUIPart', module))
 
-    module.addItem(
-        tools.wxArrayWrapperTemplate(
+    module.addItem(tools.wxArrayWrapperTemplate(
             'wxAuiPaneButtonArray', 'wxAuiPaneButton', module))
 
-    # module.addItem(
-    #     tools.wxArrayWrapperTemplate(
-    #         'wxAuiPaneInfoPtrArray', 'wxAuiPaneInfo*', module))
-    #
-    # module.addItem(
-    #     tools.wxArrayWrapperTemplate(
-    #         'wxAuiDockInfoPtrArray', 'wxAuiDockInfo*', module))
+    module.addItem(tools.wxArrayWrapperTemplate(
+            'wxAuiPaneInfoPtrArray', 'wxAuiPaneInfo', module, itemIsPtr=True))
+
+    module.addItem(tools.wxArrayWrapperTemplate(
+            'wxAuiDockInfoPtrArray', 'wxAuiDockInfo', module, itemIsPtr=True))
 
 
     #-----------------------------------------------------------------
