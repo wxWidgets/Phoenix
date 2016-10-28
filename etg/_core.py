@@ -228,6 +228,7 @@ INCLUDES = [  # base and core stuff
               'preferences',
               'modalhook',
               'unichar',
+              'stockitem',
               ]
 
 
