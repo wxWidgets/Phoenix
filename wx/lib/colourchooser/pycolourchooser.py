@@ -308,18 +308,75 @@ class PyColourChooser(wx.Panel):
         colour slider and set everything to its original position."""
         self.custom_boxs[index].SetColour(true_colour)
         self.custom_colours[index] = (base_colour, slidepos)
+        
+    def setSliderToV(self, v):
+        """Set a new HSV value for the v slider. Does not update displayed colour."""
+        min = self.slider.GetMin()
+        max = self.slider.GetMax()
+        val = (1 - v) * max
+        self.slider.SetValue(val)
+
+    def getVFromSlider(self):
+        """Get the current value of "V" from the v slider."""
+        val = self.slider.GetValue()
+        min = self.slider.GetMin()
+        max = self.slider.GetMax()
+        
+        # Snap to exact min/max values
+        if val == 0:
+            return 1
+        if val == max - 1:
+            return 0
+        
+        return 1 - (val / max)
+    
+    def colourToHSV(self, colour):
+        """Convert wx.Colour to hsv triplet"""
+        return colorsys.rgb_to_hsv(colour.Red() / 255.0, colour.Green() / 255.0, colour.Blue() / 255.0)
+    
+    def hsvToColour(self, hsv):
+        """Convert hsv triplet to wx.Colour"""
+        # Allow values to go full range from 0 to 255
+        r, g, b = colorsys.hsv_to_rgb(hsv[0], hsv[1], hsv[2])
+
+        r *= 255.0
+        g *= 255.0
+        b *= 255.0
+        
+        return wx.Colour(r, g, b)
+    
+    def getColourFromControls(self):
+        """
+        Calculate current colour from HS box position and V slider.
+        return - wx.Colour
+        """
+        # This allows colours to be exactly 0,0,0 or 255, 255, 255
+        baseColour = self.colour_slider.GetBaseColour()
+        h,s,v = self.colourToHSV(baseColour)
+        v = self.getVFromSlider()
+        if s < 0.04:                       # Allow pure white
+            s = 0
+            
+        return self.hsvToColour((h, s, v))
 
     def UpdateColour(self, colour):
-        """Performs necessary updates for when the colour selection has
-        changed."""
-        # Reset the palette to erase any highlighting
-        self.palette.ReDraw()
-
+        """Updates displayed colour and HSV controls with the new colour"""
         # Set the color info
         self.solid.SetColour(colour)
         self.colour_slider.SetBaseColour(colour)
         self.colour_slider.ReDraw()
-        self.slider.SetValue(0)
+        
+        # Update the Vslider and the HS current selection dot
+        h,s,v = self.colourToHSV(colour)
+        self.setSliderToV(v)
+        
+        # Convert RGB to (x,y) == (hue, saturation)
+        
+        width, height = self.palette.GetSize()
+        x = width * h
+        y = height * (1 - s)
+        self.palette.HighlightPoint(x, y)
+        
         self.UpdateEntries(colour)
 
     def UpdateEntries(self, colour):
@@ -344,7 +401,6 @@ class PyColourChooser(wx.Panel):
         """Stores state that the mouse has been pressed and updates
         the selected colour values."""
         self.mouse_down = True
-        self.palette.ReDraw()
         self.doPaletteClick(event.GetX(), event.GetY())
 
     def onPaletteUp(self, event):
@@ -360,25 +416,29 @@ class PyColourChooser(wx.Panel):
     def doPaletteClick(self, m_x, m_y):
         """Updates the colour values based on the mouse location
         over the palette."""
-        # Get the colour value and update
+        # Get the colour value, combine with H slider value, and update
         colour = self.palette.GetValue(m_x, m_y)
-        self.UpdateColour(colour)
-
-        # Highlight a fresh selected area
-        self.palette.ReDraw()
-        self.palette.HighlightPoint(m_x, m_y)
-
-        # Force an onscreen update
-        self.solid.Update()
-        self.colour_slider.Refresh()
-
-    def onScroll(self, event):
-        """Updates the solid colour display to reflect the changing slider."""
-        value = self.slider.GetValue()
-        colour = self.colour_slider.GetValue(value)
-        self.solid.SetColour(colour)
+        
+        # Update colour, but do not move V slider
+        self.colour_slider.SetBaseColour(colour)
+        self.colour_slider.ReDraw()
+        
+        colour = self.getColourFromControls()
+        
+        self.solid.SetColour(colour)   # Update display
         self.UpdateEntries(colour)
 
+        # Highlight a fresh selected area
+        self.palette.HighlightPoint(m_x, m_y)
+
+    def onScroll(self, event):
+        """Updates the display to reflect the new "Value"."""
+        value = self.slider.GetValue()
+        colour = self.colour_slider.GetValue(value)
+        colour = self.getColourFromControls()
+        self.solid.SetColour(colour)
+        self.UpdateEntries(colour)
+        
     def SetValue(self, colour):
         """Updates the colour chooser to reflect the given wxColour."""
         self.UpdateColour(colour)
@@ -389,9 +449,42 @@ class PyColourChooser(wx.Panel):
 
 def main():
     """Simple test display."""
+    
+    class CCTestDialog(wx.Dialog):
+        def __init__(self, parent, initColour):
+            super().__init__(parent, title="Pick A Colo(u)r")
+            
+            sizer = wx.BoxSizer(wx.VERTICAL)
+            self.chooser = PyColourChooser(self, wx.ID_ANY)
+            self.chooser.SetValue(initColour)
+            sizer.Add(self.chooser)
+            
+            self.SetSizer(sizer)
+            sizer.Fit(self)
+        
+    class CCTestFrame(wx.Frame):
+        def __init__(self):
+            super().__init__(None, -1, 'PyColourChooser Test')
+            sizer = wx.BoxSizer(wx.VERTICAL)
+            
+            sizer.Add(wx.StaticText(self, label="CLICK ME"), 0, wx.CENTER)
+
+            self.box = pycolourbox.PyColourBox(self, id=wx.ID_ANY, size=(100,100))
+            sizer.Add(self.box, 0, wx.EXPAND)
+            self.box.SetColour(wx.Colour((0x7f, 0x90, 0x21)))
+            self.box.colour_box.Bind(wx.EVT_LEFT_DOWN, self.onClick) # should be an event. :(
+
+            self.SetSizer(sizer)
+            sizer.Fit(self)
+    
+        def onClick(self, cmdEvt):
+            with CCTestDialog(self, self.box.GetColour()) as dialog:
+                dialog.ShowModal()
+                self.box.SetColour(dialog.chooser.GetValue())
+        
     class App(wx.App):
         def OnInit(self):
-            frame = wx.Frame(None, -1, 'PyColourChooser Test')
+            frame = CCTestFrame()
 
             # Added here because that's where it's supposed to be,
             # not embedded in the library. If it's embedded in the
@@ -399,16 +492,10 @@ def main():
             # handlers.
             wx.InitAllImageHandlers()
 
-            chooser = PyColourChooser(frame, -1)
-            sizer = wx.BoxSizer(wx.VERTICAL)
-            sizer.Add(chooser, 0, 0)
-            frame.SetAutoLayout(True)
-            frame.SetSizer(sizer)
-            sizer.Fit(frame)
-
             frame.Show(True)
             self.SetTopWindow(frame)
             return True
+        
     app = App(False)
     app.MainLoop()
 

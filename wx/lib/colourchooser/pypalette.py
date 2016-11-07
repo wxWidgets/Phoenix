@@ -123,27 +123,42 @@ class PyPalette(canvas.Canvas):
         #wx.InitAllImageHandlers()
 
         self.palette = Image.GetBitmap()
+        self.point = None
         canvas.Canvas.__init__ (self, parent, id, size=(200, 192))
 
     def GetValue(self, x, y):
         """Returns a colour value at a specific x, y coordinate pair. This
         is useful for determining the colour found a specific mouse click
         in an external event handler."""
+        if x < 0:
+            x = 0
+        if y < 0:
+            y = 0
+        if x >= self.buffer.width:
+            x = self.buffer.width - 1
+        if y >= self.buffer.height:
+            y = self.buffer.height - 1
+            
         return self.buffer.GetPixelColour(x, y)
 
     def DrawBuffer(self):
         """Draws the palette XPM into the memory buffer."""
-        #self.GeneratePaletteBMP ("foo.bmp")
         self.buffer.DrawBitmap(self.palette, 0, 0, 0)
+        
+        if self.point:
+            colour = wx.Colour(0, 0, 0)
+            self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
+            self.buffer.SetBrush(wx.Brush(colour, wx.BRUSHSTYLE_TRANSPARENT))
+            self.buffer.DrawCircle(self.point[0], self.point[1], 3)
 
     def HighlightPoint(self, x, y):
         """Highlights an area of the palette with a little circle around
         the coordinate point"""
-        colour = wx.Colour(0, 0, 0)
-        self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
-        self.buffer.SetBrush(wx.Brush(colour, wx.BRUSHSTYLE_TRANSPARENT))
-        self.buffer.DrawCircle(x, y, 3)
-        self.Refresh()
+        self.point = (x, y)
+        self.ReDraw()
+        
+    def ReseetPoint(self):
+        self.point = None
 
     def GeneratePaletteBMP(self, file_name, granularity=1):
         """The actual palette drawing algorithm.
