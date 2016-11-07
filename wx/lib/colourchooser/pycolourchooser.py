@@ -209,6 +209,10 @@ class PyColourChooser(wx.Panel):
             (slabel, 0, wx.ALIGN_CENTER_VERTICAL), (self.sentry, 0, wx.FIXED_MINSIZE),
             (vlabel, 0, wx.ALIGN_CENTER_VERTICAL), (self.ventry, 0, wx.FIXED_MINSIZE),
         ])
+        
+        self.hentry.Bind(wx.EVT_KILL_FOCUS, self.onHSVKillFocus)
+        self.sentry.Bind(wx.EVT_KILL_FOCUS, self.onHSVKillFocus)
+        self.ventry.Bind(wx.EVT_KILL_FOCUS, self.onHSVKillFocus)
 
         rlabel = wx.StaticText(self, -1, _("R:"))
         self.rentry = wx.TextCtrl(self, -1)
@@ -225,6 +229,10 @@ class PyColourChooser(wx.Panel):
             (glabel, 0, wx.ALIGN_CENTER_VERTICAL), (self.gentry, 0, wx.FIXED_MINSIZE),
             (blabel, 0, wx.ALIGN_CENTER_VERTICAL), (self.bentry, 0, wx.FIXED_MINSIZE),
         ])
+
+        self.rentry.Bind(wx.EVT_KILL_FOCUS, self.onRGBKillFocus)
+        self.gentry.Bind(wx.EVT_KILL_FOCUS, self.onRGBKillFocus)
+        self.bentry.Bind(wx.EVT_KILL_FOCUS, self.onRGBKillFocus)
 
         gsizer = wx.GridSizer(rows=2, cols=1, vgap=0, hgap=0)
         gsizer.SetVGap (10)
@@ -438,6 +446,57 @@ class PyColourChooser(wx.Panel):
         colour = self.getColourFromControls()
         self.solid.SetColour(colour)
         self.UpdateEntries(colour)
+        
+    def getValueAsFloat(self, textctrl):
+        """If you type garbage, you get, literally, nothing (0)"""
+        try:
+            return float(textctrl.GetValue())
+        except ValueError:
+            return 0
+        
+    def onHSVKillFocus(self, event):
+        
+        h = self.getValueAsFloat(self.hentry)    
+        s = self.getValueAsFloat(self.sentry)
+        v = self.getValueAsFloat(self.ventry)
+        
+        if h > 0.9999:
+            h = 0.9999
+        if s > 0.9999:
+            s = 0.9999
+        if v > 0.9999:
+            v = 0.9999
+        
+        if h < 0:
+            h = 0
+        if s < 0:
+            s = 0
+        if v < 0:
+            v = 0
+        
+        colour = self.hsvToColour((h, s, v))
+        self.SetValue(colour) # infinite loop?
+    
+    def onRGBKillFocus(self, event):
+        r = self.getValueAsFloat(self.rentry)
+        g = self.getValueAsFloat(self.gentry)
+        b = self.getValueAsFloat(self.bentry)
+        
+        if r > 255:
+            r = 255
+        if g > 255:
+            g = 255
+        if b > 255:
+            b = 255
+        
+        if r < 0:
+            r = 0
+        if g < 0:
+            g = 0
+        if b < 0:
+            b = 0
+        
+        self.SetValue(wx.Colour((r, g, b)))
         
     def SetValue(self, colour):
         """Updates the colour chooser to reflect the given wxColour."""
