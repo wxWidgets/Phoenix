@@ -442,7 +442,6 @@ class PyColourChooser(wx.Panel):
     def onScroll(self, event):
         """Updates the display to reflect the new "Value"."""
         value = self.slider.GetValue()
-        colour = self.colour_slider.GetValue(value)
         colour = self.getColourFromControls()
         self.solid.SetColour(colour)
         self.UpdateEntries(colour)

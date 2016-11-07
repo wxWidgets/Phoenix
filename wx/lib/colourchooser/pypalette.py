@@ -157,7 +157,7 @@ class PyPalette(canvas.Canvas):
         self.point = (x, y)
         self.ReDraw()
         
-    def ReseetPoint(self):
+    def ClearPoint(self):
         self.point = None
 
     def GeneratePaletteBMP(self, file_name, granularity=1):
