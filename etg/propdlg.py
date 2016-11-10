@@ -16,7 +16,7 @@ NAME      = "propdlg"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxPropertySheetDialog',
          ]
 

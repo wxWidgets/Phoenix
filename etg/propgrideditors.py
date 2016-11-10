@@ -10,7 +10,7 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_propgrid"
 NAME      = "propgrideditors"   # Base name of the file to generate to for this script
 DOCSTRING = ""

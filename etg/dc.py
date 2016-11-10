@@ -19,29 +19,29 @@ NAME      = "dc"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxFontMetrics',
-           'wxDC', 
+           'wxDC',
            'wxDCClipper',
            'wxDCBrushChanger',
            'wxDCPenChanger',
            'wxDCTextColourChanger',
            'wxDCFontChanger',
-           ]    
-    
+           ]
+
 OTHERDEPS = [ 'src/dc_ex.cpp', ]
-    
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-            
+
     c = module.find('wxDC')
     assert isinstance(c, etgtools.ClassDef)
 
@@ -52,7 +52,7 @@ def run():
     # Keep only the wxSize overloads of these
     c.find('GetSize').findOverload('wxCoord').ignore()
     c.find('GetSizeMM').findOverload('wxCoord').ignore()
-    
+
     # TODO: needs wxAffineMatrix2D support.
     #c.find('GetTransformMatrix').ignore()
     #c.find('SetTransformMatrix').ignore()
@@ -66,23 +66,23 @@ def run():
     # are multiple array parameters involved...
     c.find('DrawPolyPolygon').ignore()
 
-    
+
     # Add output param annotations so the generated docstrings will be correct
     c.find('GetUserScale.x').out = True
     c.find('GetUserScale.y').out = True
 
     c.find('GetLogicalScale.x').out = True
     c.find('GetLogicalScale.y').out = True
-    
+
     c.find('GetLogicalOrigin').overloads = []
     c.find('GetLogicalOrigin.x').out = True
     c.find('GetLogicalOrigin.y').out = True
-    
+
     c.find('GetClippingBox.x').out = True
     c.find('GetClippingBox.y').out = True
     c.find('GetClippingBox.width').out = True
     c.find('GetClippingBox.height').out = True
-    c.addPyMethod('GetClippingRect', '(self)', 
+    c.addPyMethod('GetClippingRect', '(self)',
         doc="Gets the rectangle surrounding the current clipping region",
         body="return wx.Rect(*self.GetClippingBox())")
 
@@ -187,7 +187,7 @@ def run():
     # avoid using parameters as return values, etc. as well as Classic
     # compatibility.
     c.find('GetPixel').ignore()
-    c.addCppMethod('wxColour*', 'GetPixel', '(wxCoord x, wxCoord y)', 
+    c.addCppMethod('wxColour*', 'GetPixel', '(wxCoord x, wxCoord y)',
         doc="Gets the colour at the specified location on the DC.",
         body="""\
             wxColour* col = new wxColour;
@@ -220,17 +220,17 @@ def run():
         return new wxArrayInt(rval);
         """)
 
-    
+
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
         """)
-   
+
     c.addPyMethod('GetBoundingBox', '(self)', doc="""\
         GetBoundingBox() -> (x1,y1, x2,y2)\n
         Returns the min and max points used in drawing commands so far.""",
         body="return (self.MinX(), self.MinY(), self.MaxX(), self.MaxY())")
-    
-    
+
+
     c.addCppMethod('long', 'GetHDC', '()', """\
         #ifdef __WXMSW__
             return (long)self->GetHandle();
@@ -252,17 +252,17 @@ def run():
             wxPyRaiseNotImplemented();
             return NULL;
         #endif""")
-    
+
     c.addPyCode('DC.GetHDC = wx.deprecated(DC.GetHDC, "Use GetHandle instead.")')
     c.addPyCode('DC.GetCGContext = wx.deprecated(DC.GetCGContext, "Use GetHandle instead.")')
     c.addPyCode('DC.GetGdkDrawable = wx.deprecated(DC.GetGdkDrawable, "Use GetHandle instead.")')
-    
-    
+
+
     # This file contains implementations of functions for quickly drawing
     # lists of items on the DC. They are called from the CppMethods defined
     # below, which in turn are called from the PyMethods below that.
     c.includeCppCode('src/dc_ex.cpp')
-    
+
     c.addCppMethod('PyObject*', '_DrawPointList', '(PyObject* pyCoords, PyObject* pyPens, PyObject* pyBrushes)',
         body="return wxPyDrawXXXList(*self, wxPyDrawXXXPoint, pyCoords, pyPens, pyBrushes);")
 
@@ -278,19 +278,19 @@ def run():
     c.addCppMethod('PyObject*', '_DrawPolygonList', '(PyObject* pyCoords, PyObject* pyPens, PyObject* pyBrushes)',
         body="return wxPyDrawXXXList(*self, wxPyDrawXXXPolygon, pyCoords, pyPens, pyBrushes);")
 
-    c.addCppMethod('PyObject*', '_DrawTextList', 
+    c.addCppMethod('PyObject*', '_DrawTextList',
         '(PyObject* textList, PyObject* pyPoints, PyObject* foregroundList, PyObject* backgroundList)',
         body="return wxPyDrawTextList(*self, textList, pyPoints, foregroundList, backgroundList);")
 
-    
+
     c.addPyMethod('DrawPointList', '(self, points, pens=None)',
         doc="""\
             Draw a list of points as quickly as possible.
-    
-            :param points: A sequence of 2-element sequences representing 
+
+            :param points: A sequence of 2-element sequences representing
                            each point to draw, (x,y).
-            :param pens:   If None, then the current pen is used.  If a single 
-                           pen then it will be used for all points.  If a list of 
+            :param pens:   If None, then the current pen is used.  If a single
+                           pen then it will be used for all points.  If a list of
                            pens then there should be one for each point in points.
             """,
         body="""\
@@ -306,7 +306,7 @@ def run():
     c.addPyMethod('DrawLineList', '(self, lines, pens=None)',
         doc="""\
             Draw a list of lines as quickly as possible.
-    
+
             :param lines: A sequence of 4-element sequences representing
                           each line to draw, (x1,y1, x2,y2).
             :param pens:  If None, then the current pen is used.  If a
@@ -327,12 +327,12 @@ def run():
     c.addPyMethod('DrawRectangleList', '(self, rectangles, pens=None, brushes=None)',
         doc="""\
             Draw a list of rectangles as quickly as possible.
-    
+
             :param rectangles: A sequence of 4-element sequences representing
                                each rectangle to draw, (x,y, w,h).
             :param pens:       If None, then the current pen is used.  If a
                                single pen then it will be used for all rectangles.
-                               If a list of pens then there should be one for each 
+                               If a list of pens then there should be one for each
                                rectangle in rectangles.
             :param brushes:    A brush or brushes to be used to fill the rectagles,
                                with similar semantics as the pens parameter.
@@ -352,16 +352,16 @@ def run():
                 raise ValueError('rectangles and brushes must have same length')
             return self._DrawRectangleList(rectangles, pens, brushes)
             """)
-    
+
     c.addPyMethod('DrawEllipseList', '(self, ellipses, pens=None, brushes=None)',
         doc="""\
             Draw a list of ellipses as quickly as possible.
-    
+
             :param ellipses: A sequence of 4-element sequences representing
                              each ellipse to draw, (x,y, w,h).
             :param pens:     If None, then the current pen is used.  If a
                              single pen then it will be used for all ellipses.
-                             If a list of pens then there should be one for each 
+                             If a list of pens then there should be one for each
                              ellipse in ellipses.
             :param brushes:  A brush or brushes to be used to fill the ellipses,
                              with similar semantics as the pens parameter.
@@ -381,17 +381,17 @@ def run():
                 raise ValueError('ellipses and brushes must have same length')
             return self._DrawEllipseList(ellipses, pens, brushes)
             """)
-    
+
     c.addPyMethod('DrawPolygonList', '(self, polygons, pens=None, brushes=None)',
         doc="""\
             Draw a list of polygons, each of which is a list of points.
-    
+
             :param polygons: A sequence of sequences of sequences.
                              [[(x1,y1),(x2,y2),(x3,y3)...], [(x1,y1),(x2,y2),(x3,y3)...]]
-                                  
+
             :param pens:     If None, then the current pen is used.  If a
                              single pen then it will be used for all polygons.
-                             If a list of pens then there should be one for each 
+                             If a list of pens then there should be one for each
                              polygon.
             :param brushes:  A brush or brushes to be used to fill the polygons,
                              with similar semantics as the pens parameter.
@@ -411,18 +411,18 @@ def run():
                 raise ValueError('polygons and brushes must have same length')
             return self._DrawPolygonList(polygons, pens, brushes)
             """)
-    
+
     c.addPyMethod('DrawTextList', '(self, textList, coords, foregrounds=None, backgrounds=None)',
         doc="""\
             Draw a list of strings using a list of coordinants for positioning each string.
-    
+
             :param textList:    A list of strings
             :param coords:      A list of (x,y) positions
             :param foregrounds: A list of `wx.Colour` objects to use for the
                                 foregrounds of the strings.
             :param backgrounds: A list of `wx.Colour` objects to use for the
                                 backgrounds of the strings.
-    
+
             NOTE: Make sure you set background mode to wx.Solid (DC.SetBackgroundMode)
                   If you want backgrounds to do anything.
             """,
@@ -452,7 +452,7 @@ def run():
     # TODO: Port the PseudoDC from Classic
 
 
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxDCClipper')
     assert isinstance(c, etgtools.ClassDef)
@@ -461,7 +461,7 @@ def run():
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
 
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxDCBrushChanger')
     assert isinstance(c, etgtools.ClassDef)
@@ -470,7 +470,7 @@ def run():
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
 
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxDCPenChanger')
     assert isinstance(c, etgtools.ClassDef)
@@ -479,7 +479,7 @@ def run():
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
 
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxDCTextColourChanger')
     assert isinstance(c, etgtools.ClassDef)
@@ -488,7 +488,7 @@ def run():
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
 
-    
+
     #-----------------------------------------------------------------
     c = module.find('wxDCFontChanger')
     assert isinstance(c, etgtools.ClassDef)
@@ -496,13 +496,13 @@ def run():
     # context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
-    
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

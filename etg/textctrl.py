@@ -17,19 +17,19 @@ NAME      = "textctrl"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxTextAttr', 
-           'wxTextCtrl', 
+# this script.
+ITEMS  = [ 'wxTextAttr',
+           'wxTextCtrl',
            'wxTextUrlEvent',
            ]
-    
+
 #---------------------------------------------------------------------------
 
 def parseAndTweakModule():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
@@ -42,7 +42,7 @@ def parseAndTweakModule():
 
     c = module.find('wxTextCtrl')
     module.addGlobalStr('wxTextCtrlNameStr', c)
-    
+
     # Split the HitTest overloads into separately named methods since once
     # the output parameters are applied they will have the same function
     # signature.
@@ -54,7 +54,7 @@ def parseAndTweakModule():
     ht1.find('pos').out = True
     ht2.find('row').out = True
     ht2.find('col').out = True
-    
+
     c.find('PositionToXY.x').out = True
     c.find('PositionToXY.y').out = True
 
@@ -67,7 +67,7 @@ def parseAndTweakModule():
 
     c.addCppMethod('void', 'MacCheckSpelling', '(bool check)',
         doc="""\
-            Turn on the native spell checking for the text widget on 
+            Turn on the native spell checking for the text widget on
             OSX.  Ignored on other platforms.
             """,
         body="""\
@@ -75,7 +75,7 @@ def parseAndTweakModule():
                 self->MacCheckSpelling(check);
             #endif
             """)
-    
+
     c.addCppMethod('bool', 'ShowNativeCaret', '(bool show = true)',
         doc="""\
             Turn on the widget's native caret on Windows.
@@ -96,11 +96,11 @@ def parseAndTweakModule():
                 return self->HideNativeCaret();
             #endif
             """)
-    
+
     c = module.find('wxTextUrlEvent')
     tools.fixEventClass(c)
-    
-    
+
+
     module.addPyCode("""\
         EVT_TEXT        = wx.PyEventBinder( wxEVT_TEXT, 1)
         EVT_TEXT_ENTER  = wx.PyEventBinder( wxEVT_TEXT_ENTER, 1)
@@ -115,21 +115,21 @@ def parseAndTweakModule():
         wxEVT_COMMAND_TEXT_ENTER     = wxEVT_TEXT_ENTER
         wxEVT_COMMAND_TEXT_URL       = wxEVT_TEXT_URL
         wxEVT_COMMAND_TEXT_MAXLEN    = wxEVT_TEXT_MAXLEN
-        wxEVT_COMMAND_TEXT_CUT       = wxEVT_TEXT_CUT  
+        wxEVT_COMMAND_TEXT_CUT       = wxEVT_TEXT_CUT
         wxEVT_COMMAND_TEXT_COPY      = wxEVT_TEXT_COPY
         wxEVT_COMMAND_TEXT_PASTE     = wxEVT_TEXT_PASTE
         """)
-    
+
     return module
 
 
 #-----------------------------------------------------------------
 def run():
-    module = parseAndTweakModule()    
+    module = parseAndTweakModule()
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

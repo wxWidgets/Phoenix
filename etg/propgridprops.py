@@ -10,13 +10,13 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_propgrid"
 NAME      = "propgridprops"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxPGInDialogValidator',
            'wxStringProperty',
            'wxNumericPropertyValidator',

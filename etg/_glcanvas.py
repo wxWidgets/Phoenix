@@ -10,7 +10,7 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx" 
+PACKAGE   = "wx"
 MODULE    = "_glcanvas"
 NAME      = "_glcanvas"   # Base name of the file to generate to for this script
 DOCSTRING = """\
@@ -18,11 +18,11 @@ These classes enable viewing and interacting with an OpenGL context in a wx.Wind
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxGLContext', 
+# this script.
+ITEMS  = [ 'wxGLContext',
            'wxGLCanvas',
-          ]    
-    
+          ]
+
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
@@ -39,7 +39,7 @@ OTHERDEPS = [  ]
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
@@ -49,23 +49,23 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode('import wx', order=10)
     module.addInclude(INCLUDES)
- 
+
 
     #-----------------------------------------------------------------
-    
+
     module.addHeaderCode('#include <wx/glcanvas.h>')
-    
-    
+
+
     c = module.find('wxGLContext')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
-    
-    
+
+
 
     c = module.find('wxGLCanvas')
     tools.fixWindowClass(c)
@@ -93,8 +93,8 @@ def run():
             """,
         noDerivedCtor=False,
         )
-     
-    
+
+
     m = c.find('IsDisplaySupported')
     m.find('attribList').type = 'wxArrayInt*'
     m.setCppCode_sip("""\
@@ -103,13 +103,13 @@ def run():
             attribPtr = &attribList->front();
         sipRes = wxGLCanvas::IsDisplaySupported(attribPtr);
         """)
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
 
-    
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
