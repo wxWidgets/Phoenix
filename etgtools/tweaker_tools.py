@@ -262,9 +262,9 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
         for item in klass.allItems():
             if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
                 item.ignore(False)
-        
-        
-    
+
+
+
 def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Tweaks for TLWs 
@@ -275,11 +275,13 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     item = klass.findItem('Create')
     if item:
         item.transferThis = True
-        
+
     # give the id param a default value
-    for item in [klass.findItem('%s.id' % klass.name), klass.findItem('Create.id')]:
-        if item:
-            item.default = 'wxID_ANY'
+    for name in ['id', 'winid']:
+        for item in [klass.findItem('%s.%s' % (klass.name, name)),
+                     klass.findItem('Create.%s' % name)]:
+            if item:
+                item.default = 'wxID_ANY'
 
     # give title param a default too if it needs it
     for item in [klass.findItem('%s.title' % klass.name), klass.findItem('Create.title')]:
@@ -289,14 +291,14 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     if hideVirtuals:
         removeVirtuals(klass)
         addWindowVirtuals(klass)
-    
+
     if not ignoreProtected:
         for item in klass.allItems():
             if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
                 item.ignore(False)
-    
-    
-    
+
+
+
 def fixSizerClass(klass):
     """
     Remove all virtuals except for CalcMin and RecalcSizes.
