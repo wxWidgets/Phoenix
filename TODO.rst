@@ -143,8 +143,6 @@ Other Dev Stuff
       * [] New activex classes in wx/msw/ole/activex.h ?
       * Any others?
 
-  * Add _aui module ??  (or go with only agw aui?)
-
   * Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py) to StyledTextCtrl
 
   * Reimplement the classes in the valgen, valnum and valtext headers as

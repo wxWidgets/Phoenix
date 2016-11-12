@@ -13,7 +13,14 @@ import etgtools.tweaker_tools as tools
 PACKAGE   = "wx" 
 MODULE    = "_aui"
 NAME      = "_aui"   # Base name of the file to generate to for this script
-DOCSTRING = ""
+DOCSTRING = """\
+`wx.aui` provides a set of classes for implementing an "Advanced User Interface".
+More specifically, these classes enable to you present some of your application in
+floating or dockable panels, notebooks with floatable tabs, etc.
+
+There is also a pure-python implementation of these classes available in the
+`wx.lib.agw.aui` package.
+"""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
