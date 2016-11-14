@@ -28,6 +28,7 @@ from __future__ import absolute_import
 # Tags:     phoenix-port
 
 import  wx
+import wx.lib.newevent as newevent
 
 from . import  pycolourbox
 from . import  pypalette
@@ -36,6 +37,19 @@ import  colorsys
 from . import  intl
 
 from .intl import _ # _
+
+ColourChangedEventBase, EVT_COLOUR_CHANGED = newevent.NewEvent()
+
+class ColourChangedEvent(ColourChangedEventBase):
+    """Adds GetColour()/GetValue() for compatibility with ColourPickerCtrl and colourselect"""
+    def __init__(self, newColour):
+        super().__init__(newColour = newColour)
+            
+    def GetColour(self):
+        return self.newColour
+
+    def GetValue(self):
+        return self.newColour
 
 class PyColourChooser(wx.Panel):
     """A Pure-Python implementation of the colour chooser dialog.
@@ -169,6 +183,8 @@ class PyColourChooser(wx.Panel):
 
         self.palette = pypalette.PyPalette(self, -1)
         self.colour_slider = pycolourslider.PyColourSlider(self, -1)
+        self.colour_slider.Bind(wx.EVT_LEFT_DOWN, self.onSliderDown)
+        self.colour_slider.Bind(wx.EVT_MOTION, self.onSliderMotion)
         self.slider = wx.Slider(
                         self, self.idSCROLL, 86, 0, self.colour_slider.HEIGHT - 1,
                         style=wx.SL_VERTICAL, size=(15, self.colour_slider.HEIGHT)
@@ -185,7 +201,6 @@ class PyColourChooser(wx.Panel):
         self.palette.Bind(wx.EVT_LEFT_DOWN, self.onPaletteDown)
         self.palette.Bind(wx.EVT_LEFT_UP, self.onPaletteUp)
         self.palette.Bind(wx.EVT_MOTION, self.onPaletteMotion)
-        self.mouse_down = False
 
         self.solid = pycolourbox.PyColourBox(self, -1, size=(75, 50))
         slabel = wx.StaticText(self, -1, _("Solid Colour"))
@@ -366,11 +381,17 @@ class PyColourChooser(wx.Panel):
             s = 0
             
         return self.hsvToColour((h, s, v))
+    
+    def updateDisplayColour(self, colour):
+        """Update the displayed color box (solid) and send the EVT_COLOUR_CHANGED"""
+        self.solid.SetColour(colour)
+        evt = ColourChangedEvent(newColour=colour)
+        wx.PostEvent(self, evt)
 
     def UpdateColour(self, colour):
         """Updates displayed colour and HSV controls with the new colour"""
         # Set the color info
-        self.solid.SetColour(colour)
+        self.updateDisplayColour(colour)
         self.colour_slider.SetBaseColour(colour)
         self.colour_slider.ReDraw()
         
@@ -404,22 +425,55 @@ class PyColourChooser(wx.Panel):
         self.hentry.SetValue("%.2f" % (h))
         self.sentry.SetValue("%.2f" % (s))
         self.ventry.SetValue("%.2f" % (v))
+        
+    def onColourSliderClick(self, y):
+        """Shared helper for onSliderDown()/onSliderMotion()"""
+        v = self.colour_slider.GetVFromClick(y)
+        self.setSliderToV(v)
+        
+        # Now with the slider updated, update all controls
+        colour = self.getColourFromControls()
+        
+        self.updateDisplayColour(colour)   # Update display
+        self.UpdateEntries(colour)
+
+        # We don't move on the palette...
+
+        # width, height = self.palette.GetSize()
+        # x = width * h
+        # y = height * (1 - s)
+        # self.palette.HighlightPoint(x, y)
+        
+    def onSliderDown(self, event):
+        """Handle mouse click on the colour slider palette"""
+        self.onColourSliderClick(event.GetY())
+        
+    def onSliderMotion(self, event):
+        """Handle mouse-down drag on the colour slider palette"""
+        if event.LeftIsDown():
+            self.onColourSliderClick(event.GetY())
 
     def onPaletteDown(self, event):
         """Stores state that the mouse has been pressed and updates
         the selected colour values."""
-        self.mouse_down = True
         self.doPaletteClick(event.GetX(), event.GetY())
+        
+        # Prevent mouse from leaving window, so that we will also get events
+        # when mouse is dragged along the edges of the rectangle.
+        self.palette.CaptureMouse() 
 
     def onPaletteUp(self, event):
         """Stores state that the mouse is no longer depressed."""
-        self.mouse_down = False
+        self.palette.ReleaseMouse() # Must call once for each CaputreMouse()
 
     def onPaletteMotion(self, event):
         """Updates the colour values during mouse motion while the
         mouse button is depressed."""
-        if self.mouse_down:
+        if event.LeftIsDown():
             self.doPaletteClick(event.GetX(), event.GetY())
+            
+    def onPaletteCaptureLost(self, event):
+        pass # I don't think we have to call ReleaseMouse in this event
 
     def doPaletteClick(self, m_x, m_y):
         """Updates the colour values based on the mouse location
@@ -433,7 +487,7 @@ class PyColourChooser(wx.Panel):
         
         colour = self.getColourFromControls()
         
-        self.solid.SetColour(colour)   # Update display
+        self.updateDisplayColour(colour)   # Update display
         self.UpdateEntries(colour)
 
         # Highlight a fresh selected area
@@ -443,7 +497,7 @@ class PyColourChooser(wx.Panel):
         """Updates the display to reflect the new "Value"."""
         value = self.slider.GetValue()
         colour = self.getColourFromControls()
-        self.solid.SetColour(colour)
+        self.updateDisplayColour(colour)
         self.UpdateEntries(colour)
         
     def getValueAsFloat(self, textctrl):
@@ -537,8 +591,12 @@ def main():
     
         def onClick(self, cmdEvt):
             with CCTestDialog(self, self.box.GetColour()) as dialog:
+                dialog.chooser.Bind(EVT_COLOUR_CHANGED, self.onColourChanged)
                 dialog.ShowModal()
                 self.box.SetColour(dialog.chooser.GetValue())
+                
+        def onColourChanged(self, event):
+            self.box.SetColour(event.GetValue())
         
     class App(wx.App):
         def OnInit(self):
