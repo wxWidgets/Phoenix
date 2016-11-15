@@ -184,6 +184,7 @@ class PyColourChooser(wx.Panel):
         self.palette = pypalette.PyPalette(self, -1)
         self.colour_slider = pycolourslider.PyColourSlider(self, -1)
         self.colour_slider.Bind(wx.EVT_LEFT_DOWN, self.onSliderDown)
+        self.colour_slider.Bind(wx.EVT_LEFT_UP, self.onSliderUp)
         self.colour_slider.Bind(wx.EVT_MOTION, self.onSliderMotion)
         self.slider = wx.Slider(
                         self, self.idSCROLL, 86, 0, self.colour_slider.HEIGHT - 1,
@@ -447,6 +448,10 @@ class PyColourChooser(wx.Panel):
     def onSliderDown(self, event):
         """Handle mouse click on the colour slider palette"""
         self.onColourSliderClick(event.GetY())
+        self.colour_slider.CaptureMouse()
+        
+    def onSliderUp(self, event):
+        self.colour_slider.ReleaseMouse()
         
     def onSliderMotion(self, event):
         """Handle mouse-down drag on the colour slider palette"""
