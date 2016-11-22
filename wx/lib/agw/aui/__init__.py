@@ -80,11 +80,8 @@ three text controls in a frame window::
 
 
         def OnClose(self, event):
-
             # deinitialize the frame manager
             self._mgr.UnInit()
-
-            self.Destroy()
             event.Skip()
 
 

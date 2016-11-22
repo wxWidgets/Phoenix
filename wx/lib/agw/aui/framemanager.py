@@ -3100,7 +3100,6 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         :param `event`: a :class:`CloseEvent` to be processed.
         """
-
         if self._owner_mgr:
             self._owner_mgr.OnFloatingPaneClosed(self._pane_window, event)
 
@@ -4553,11 +4552,9 @@ class AuiManager(wx.EvtHandler):
 
     def DestroyGuideWindows(self):
         """ Destroys the VS2005 HUD guide windows. """
-
         for guide in self._guides:
             if guide.host:
                 guide.host.Destroy()
-
         self._guides = []
 
 
@@ -4574,7 +4571,6 @@ class AuiManager(wx.EvtHandler):
         """ Destroys the standard wxAUI hint window. """
 
         if self._hint_window:
-
             self._hint_window.Destroy()
             self._hint_window = None
 
@@ -4603,7 +4599,7 @@ class AuiManager(wx.EvtHandler):
     def OnDestroy(self, event) :
 
         if self._frame == event.GetEventObject():
-            self.UnInit();
+            self.UnInit()
 
 
     def GetArtProvider(self):
@@ -6403,6 +6399,8 @@ class AuiManager(wx.EvtHandler):
 
             if p.frame:
                 p.frame.SetSizer(None)
+                while p.frame.GetEventHandler() is not p.frame:
+                    p.frame.PopEventHandler()
                 p.frame.Destroy()
             p.frame = None
 
