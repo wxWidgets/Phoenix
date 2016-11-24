@@ -37,16 +37,8 @@ def run():
 
     # We already have a MappedType for wxArrayInt, so just tweak the
     # interface to use that instead of an array size and a const int pointer.
-    m = c.find('SetStatusWidths')
-    m.find('n').ignore()
-    m.find('widths_field').type = 'const wxArrayInt&'
-    m.find('widths_field').name = 'widths'
-    m.argsString = '(int n, const wxArrayInt& widths)'
-    m.setCppCode("""\
-        const int* ptr = &widths->front();
-        self->SetStatusWidths(widths->size(), ptr);
-        """)
-    
+    tools.fixSetStatusWidths(c.find('SetStatusWidths'))
+
     # Same thing for SetStatusStyles
     m = c.find('SetStatusStyles')
     m.find('n').ignore()

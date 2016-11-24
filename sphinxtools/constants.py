@@ -85,6 +85,7 @@ MODULENAME_REPLACE = {'_core'    : 'wx.',
                       '_msw'     : 'wx.msw.',
                       '_ribbon'  : 'wx.ribbon.',
                       '_propgrid': 'wx.propgrid.',
+                      '_aui'     : 'wx.aui.',
                       }
 
 

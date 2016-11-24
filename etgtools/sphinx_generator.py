@@ -1150,6 +1150,9 @@ class Image(Node):
         image_path = os.path.normpath(os.path.join(DOXYROOT, 'images', value))
         static_path = os.path.join(OVERVIEW_IMAGES_ROOT, os.path.split(image_path)[1])
 
+        if not os.path.exists(image_path):
+            return ''
+
         if not os.path.isfile(static_path):
             shutil.copyfile(image_path, static_path)
 

@@ -262,9 +262,9 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
         for item in klass.allItems():
             if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
                 item.ignore(False)
-        
-        
-    
+
+
+
 def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Tweaks for TLWs 
@@ -275,11 +275,13 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     item = klass.findItem('Create')
     if item:
         item.transferThis = True
-        
+
     # give the id param a default value
-    for item in [klass.findItem('%s.id' % klass.name), klass.findItem('Create.id')]:
-        if item:
-            item.default = 'wxID_ANY'
+    for name in ['id', 'winid']:
+        for item in [klass.findItem('%s.%s' % (klass.name, name)),
+                     klass.findItem('Create.%s' % name)]:
+            if item:
+                item.default = 'wxID_ANY'
 
     # give title param a default too if it needs it
     for item in [klass.findItem('%s.title' % klass.name), klass.findItem('Create.title')]:
@@ -289,14 +291,14 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     if hideVirtuals:
         removeVirtuals(klass)
         addWindowVirtuals(klass)
-    
+
     if not ignoreProtected:
         for item in klass.allItems():
             if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
                 item.ignore(False)
-    
-    
-    
+
+
+
 def fixSizerClass(klass):
     """
     Remove all virtuals except for CalcMin and RecalcSizes.
@@ -344,7 +346,21 @@ def fixHtmlSetFonts(klass):
         }
         self->SetFonts(*normal_face, *fixed_face, &sizes->Item(0));
         """)
-    
+
+
+def fixSetStatusWidths(m):
+    # We already have a MappedType for wxArrayInt, so just tweak the
+    # interface to use that instead of an array size and a const int pointer.
+    m.find('n').ignore()
+    m.find('widths_field').type = 'const wxArrayInt&'
+    m.find('widths_field').name = 'widths'
+    m.argsString = '(int n, const wxArrayInt& widths)'
+    m.setCppCode("""\
+        const int* ptr = &widths->front();
+        self->SetStatusWidths(widths->size(), ptr);
+        """)
+
+
 
 def removeVirtuals(klass):
     """
@@ -360,7 +376,7 @@ def removeVirtuals(klass):
             
 def addWindowVirtuals(klass):
     """
-    Either turn the virtual flag back on or add a delcaration for the subset of
+    Either turn the virtual flag back on or add a declaration for the subset of
     the C++ virtuals in wxWindow classes that we will be supporting.
     """
     publicWindowVirtuals = [      
@@ -954,10 +970,13 @@ del _{ListClass_pyName}___repr__
 
 
 
-def wxArrayWrapperTemplate(ArrayClass, ItemClass, module):
+def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False):
     moduleName = module.module        
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
-    
+    itemRef = '*' if itemIsPtr else '&'
+    itemDeref = '' if itemIsPtr else '*'
+    addrOf = '' if itemIsPtr else '&'
+
     # *** TODO: This can probably be done in a way that is not SIP-specfic.
     # Try creating extractor objects from scratch and attach cppMethods to
     # them as needed, etc..
@@ -971,10 +990,10 @@ public:
         sipRes = sipCpp->GetCount();
     %End
 
-    {ItemClass}& __getitem__(ulong index);
+    {ItemClass}{itemRef} __getitem__(ulong index);
     %MethodCode
         if (index < sipCpp->GetCount()) {{
-            sipRes = &sipCpp->Item(index);
+            sipRes = {addrOf}sipCpp->Item(index);
         }}
         else {{
             wxPyErr_SetString(PyExc_IndexError, "sequence index out of range");
@@ -982,21 +1001,21 @@ public:
         }}
     %End
 
-    int __contains__(const {ItemClass}& obj);
+    int __contains__({ItemClass}{itemRef} obj);
     %MethodCode
-        int idx = sipCpp->Index(*obj, false);
+        int idx = sipCpp->Index({itemDeref}obj, false);
         sipRes = idx != wxNOT_FOUND;
     %End
 
-    void append(const {ItemClass}& obj);
+    void append({ItemClass}{itemRef} obj);
     %MethodCode
-        sipCpp->Add(*obj);
+        sipCpp->Add({itemDeref}obj);
     %End
 
     // TODO:  add support for index(value, [start, [stop]])
-    int index(const {ItemClass}& obj);
+    int index({ItemClass}{itemRef} obj);
     %MethodCode
-        int idx = sipCpp->Index(*obj, false);
+        int idx = sipCpp->Index({itemDeref}obj, false);
         if (idx == wxNOT_FOUND) {{
             sipError = sipErrorFail;
             wxPyErr_SetString(PyExc_ValueError,
