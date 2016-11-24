@@ -9,62 +9,62 @@
 
 import etgtools
 import etgtools.tweaker_tools as tools
-from etgtools import (ClassDef, MethodDef, ParamDef, TypedefDef, WigCode, 
+from etgtools import (ClassDef, MethodDef, ParamDef, TypedefDef, WigCode,
                       CppMethodDef, PyMethodDef)
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "rawbmp"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ ]    
-    
+# this script.
+ITEMS  = [ ]
+
 # NOTE: It is intentional that there are no items in the ITEMS list. This is
 # because we will not be loading any classes from the doxygen XML files here,
 # but rather will be constructing the extractor objects here in this module
 # instead.
-    
-    
+
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode("#include <wx/rawbmp.h>")
-    
+
     addPixelDataBaseClass(module)
-    
+
     addPixelDataClass(module, 'wxNativePixelData', 'wxBitmap', bpp=24,
         doc="""\
         A class providing direct access to a :class:`wx.Bitmap`'s
-        internal data without alpha channel (RGB). 
+        internal data without alpha channel (RGB).
         """)
     addPixelDataClass(module, 'wxAlphaPixelData', 'wxBitmap', bpp=32,
         doc="""\
         A class providing direct access to a :class:`wx.Bitmap`'s
-        internal data including the alpha channel (RGBA). 
+        internal data including the alpha channel (RGBA).
         """)
     #addPixelDataClass(module, 'wxImagePixelData', 'wxImage', bpp=32,
     #    doc="""\
     #    ImagePixelData: A class providing direct access to a wx.Image's
-    #    internal data usign the same api as the other PixelData classes. 
+    #    internal data usign the same api as the other PixelData classes.
     #    """)
-    
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
 
 
-    
+
 #---------------------------------------------------------------------------
 
 def addPixelDataBaseClass(module):
@@ -76,7 +76,7 @@ def addPixelDataBaseClass(module):
             type='wxPoint', name='GetOrigin',  isConst=True,
             briefDoc="Return the origin of the area this pixel data represents."),
         MethodDef(
-            type='int', name='GetWidth', isConst=True, 
+            type='int', name='GetWidth', isConst=True,
             briefDoc="Return the width of the area this pixel data represents."),
         MethodDef(
             type='int', name='GetHeight', isConst=True,
@@ -88,25 +88,25 @@ def addPixelDataBaseClass(module):
             type='int', name='GetRowStride', isConst=True,
             briefDoc="Returns the distance between the start of one row to the start of the next row."),
         ])
-    
+
     # TODO: Try to remember why I chose to do it this way instead of directly
     # returning an instance of the Iterator and giving it the methods needed
     # to be a Python iterator...
-    
+
     # TODO: Determine how much of a performance difference not using the
     # PixelFacade class would make. Not using the __iter__ makes about 0.02
     # seconds difference per 100x100 bmp in samples/rawbmp/rawbmp1.py...
 
     cls.addPyMethod('__iter__', '(self)',
         doc="""\
-            Create and return an iterator/generator object for traversing 
+            Create and return an iterator/generator object for traversing
             this pixel data object.
-            """,        
+            """,
         body="""\
             width  = self.GetWidth()
             height = self.GetHeight()
             pixels = self.GetPixels() # this is the C++ iterator
-            
+
             # This class is a facade over the pixels object (using the one
             # in the enclosing scope) that only allows Get() and Set() to
             # be called.
@@ -121,25 +121,25 @@ def addPixelDataBaseClass(module):
                     return 'pixel(%d,%d): %s' % (x,y,self.Get())
                 X = property(lambda self: x)
                 Y = property(lambda self: y)
-    
+
             import sys
             rangeFunc = range if sys.version_info >= (3,) else xrange
-    
-            pf = PixelFacade()        
+
+            pf = PixelFacade()
             for y in rangeFunc(height):
                 pixels.MoveTo(self, 0, y)
                 for x in rangeFunc(width):
                     # We always generate the same pf instance, but it
                     # accesses the pixels object which we use to iterate
                     # over the pixel buffer.
-                    yield pf    
+                    yield pf
                     pixels.nextPixel()
             """)
-    
+
     module.addItem(cls)
-    
-    
-    
+
+
+
 def addPixelDataClass(module, pd, img, bpp, doc=""):
     # This function creates a ClassDef for a PixelData class defined in C++.
     # The C++ versions are template instantiations, so this allows us to
@@ -147,40 +147,40 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
     # name and the pixel data class name.
 
     #itrName = 'Iterator'
-    
+
     itrName = pd + '_Accessor'
     module.addHeaderCode('typedef %s::Iterator %s;' % (pd, itrName))
-    
+
 
     # First generate the class and methods for the PixelData class
     cls = ClassDef(name=pd, bases=['wxPixelDataBase'], briefDoc=doc, items=[
         MethodDef(name=pd, isCtor=True, items=[
             ParamDef(type=img+'&', name='bmp')],
-            overloads=[        
+            overloads=[
                 MethodDef(name=pd, isCtor=True, items=[
                     ParamDef(type=img+'&',         name='bmp'),
                     ParamDef(type='const wxRect&', name='rect')]),
-                
+
                 MethodDef(name=pd, isCtor=True, items=[
                     ParamDef(type=img+'&',          name='bmp'),
                     ParamDef(type='const wxPoint&', name='pt' ),
                     ParamDef(type='const wxSize&',  name='sz' )]),
                 ]),
-        
+
         MethodDef(name='~'+pd, isDtor=True),
-        
+
         MethodDef(type=itrName, name='GetPixels', isConst=True),
-        
-        CppMethodDef('int', '__nonzero__', '()', 
+
+        CppMethodDef('int', '__nonzero__', '()',
             body="""\
                 return (int)self->operator bool();
                 """),
         ])
-    
+
     # add this class to the module
     module.addItem(cls)
-    
-    
+
+
     # Now do the class and methods for its C++ Iterator class
     icls = ClassDef(name=itrName, items=[
         # Constructors
@@ -191,16 +191,16 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
                     ParamDef(name='bmp', type=img+'&'),
                     ParamDef(name='data', type=pd+'&')]),
                 MethodDef(name=itrName, isCtor=True)]),
-        
+
         MethodDef(name='~'+itrName, isDtor=True),
 
         # Methods
         MethodDef(type='void', name='Reset', items=[
             ParamDef(type='const %s&' % pd, name='data')]),
-        
+
         MethodDef(type='bool', name='IsOk', isConst=True),
 
-        CppMethodDef('int', '__nonzero__', '()', 
+        CppMethodDef('int', '__nonzero__', '()',
             body="""\
                 return (int)self->IsOk();
                 """),
@@ -209,23 +209,23 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
             ParamDef(type='const %s&' % pd, name='data'),
             ParamDef(type='int', name='x'),
             ParamDef(type='int', name='y')]),
-        
+
         MethodDef(type='void', name='OffsetX', items=[
             ParamDef(type='const %s&' % pd, name='data'),
             ParamDef(type='int', name='x')]),
-        
+
         MethodDef(type='void', name='OffsetY', items=[
             ParamDef(type='const %s&' % pd, name='data'),
             ParamDef(type='int', name='y')]),
-        
+
         MethodDef(type='void', name='MoveTo', items=[
             ParamDef(type='const %s&' % pd, name='data'),
             ParamDef(type='int', name='x'),
             ParamDef(type='int', name='y')]),
-    
-        # should this return the iterator?    
+
+        # should this return the iterator?
         CppMethodDef('void', 'nextPixel', '()', body="++(*self);"),
-        
+
         # NOTE: For now I'm not wrapping the Red, Green, Blue and Alpha
         # functions because I can't hide the premultiplying needed on wxMSW
         # if only the individual components are wrapped, plus it would mean 3
@@ -233,9 +233,9 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
         # Instead I'll add the Set and Get functions below and put the
         # premultiplying in there.
         ])
-    
+
     assert bpp in [24, 32]
-    
+
     if bpp == 24:
         icls.addCppMethod('void', 'Set', '(byte red, byte green, byte blue)',
             body="""\
@@ -243,7 +243,7 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
                 self->Green() = green;
                 self->Blue()  = blue;
                 """)
-        
+
         icls.addCppMethod('PyObject*', 'Get', '()',
             body="""\
                 wxPyThreadBlocker blocker;
@@ -251,9 +251,9 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
                 PyTuple_SetItem(rv, 0, wxPyInt_FromLong(self->Red()));
                 PyTuple_SetItem(rv, 1, wxPyInt_FromLong(self->Green()));
                 PyTuple_SetItem(rv, 2, wxPyInt_FromLong(self->Blue()));
-                return rv;            
+                return rv;
                 """)
-    
+
     elif bpp == 32:
         icls.addCppMethod('void', 'Set', '(byte red, byte green, byte blue, byte alpha)',
             body="""\
@@ -262,7 +262,7 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
                 self->Blue()  = wxPy_premultiply(blue,  alpha);
                 self->Alpha() = alpha;
                 """)
-        
+
         icls.addCppMethod('PyObject*', 'Get', '()',
             body="""\
                 wxPyThreadBlocker blocker;
@@ -271,24 +271,24 @@ def addPixelDataClass(module, pd, img, bpp, doc=""):
                 int green = self->Green();
                 int blue  = self->Blue();
                 int alpha = self->Alpha();
-                
+
                 PyTuple_SetItem(rv, 0, wxPyInt_FromLong( wxPy_unpremultiply(red,   alpha) ));
                 PyTuple_SetItem(rv, 1, wxPyInt_FromLong( wxPy_unpremultiply(green, alpha) ));
                 PyTuple_SetItem(rv, 2, wxPyInt_FromLong( wxPy_unpremultiply(blue,  alpha) ));
                 PyTuple_SetItem(rv, 3, wxPyInt_FromLong( alpha ));
                 return rv;
                 """)
-    
-        
-    
+
+
+
     # add it to the main pixel data class as a nested class
     #cls.insertItem(0, icls)
-    
+
     # It's really a nested class, but we're pretending that it isn't (see the
     # typedef above) so add it at the module level instead.
     module.addItem(icls)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

@@ -10,29 +10,29 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "region"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxRegionIterator',
            'wxRegion'
-           ]    
-    
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    
+
+
     c = module.find('wxRegion')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
@@ -55,11 +55,11 @@ def run():
         if (PyErr_Occurred()) sipIsErr = 1;
         """)
 
-    
+
     c.find('GetBox').findOverload('wxCoord').ignore()
-    
-    
-    
+
+
+
     # Iterator stuff
     c.addPyMethod('__iter__', '(self)', 'return PyRegionIterator(self)',
                   """\
@@ -80,7 +80,7 @@ def run():
                 return rect
             __next__ = next  # for Python 3
         """)
-    
+
 
 
     c = module.find('wxRegionIterator')
@@ -91,19 +91,19 @@ def run():
     c.find('operator bool').ignore()
     c.addCppMethod('int', '__nonzero__', '()', 'return (int)self->operator bool();',
                    'Returns true while there are still rectangles available in the iteration.')
-    
+
     c.addCppMethod('void', 'Next', '()', 'self->operator++();',
                    'Move the iterator to the next rectangle in the region.')
-    
-    
+
+
     # This is defined in the docs, but not in any of the real headers!
     module.find('wxNullRegion').ignore()
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

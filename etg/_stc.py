@@ -10,7 +10,7 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx" 
+PACKAGE   = "wx"
 MODULE    = "_stc"
 NAME      = "_stc"   # Base name of the file to generate to for this script
 DOCSTRING = """\
@@ -20,11 +20,11 @@ based on the popular Scintilla widget.
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxStyledTextCtrl', 
+# this script.
+ITEMS  = [ 'wxStyledTextCtrl',
            'wxStyledTextEvent',
-          ]    
-    
+          ]
+
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
@@ -41,7 +41,7 @@ OTHERDEPS = [  ]
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
@@ -51,7 +51,7 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode('''\
@@ -59,20 +59,20 @@ def run():
     ID_ANY = wx.ID_ANY  # Needed for some parameter defaults in this module
     ''', order=10)
     module.addInclude(INCLUDES)
- 
+
 
     #-----------------------------------------------------------------
-    
+
     module.addHeaderCode('#include <wx/stc/stc.h>')
-    
-    
+
+
     c = module.find('wxStyledTextCtrl')
     assert isinstance(c, etgtools.ClassDef)
     c.bases = ['wxControl']  # wxTextCtrlIface is also a base...
     c.piBases = ['wx.Control', 'wx.TextEntry']
     tools.fixWindowClass(c, False)
     module.addGlobalStr('wxSTCNameStr', c)
-    
+
 
     c.find('GetCurLine.linePos').out = True
     c.find('GetCurLineRaw.linePos').out = True
@@ -80,12 +80,12 @@ def run():
         m = c.find(name)
         m.find('from').name = 'from_'
         m.find('to').name = 'to_'
-        
+
     c.find('GetSelection.from_').out = True
     c.find('GetSelection.to_').out = True
     c.find('PositionToXY.x').out = True
     c.find('PositionToXY.y').out = True
-    
+
     # Split the HitTest overloads into separately named methods since once
     # the output parameters are applied they will have the same function
     # signature.
@@ -98,12 +98,12 @@ def run():
     ht2.find('row').out = True
     ht2.find('col').out = True
 
-    
+
     # Replace the *Pointer methods with ones that return a memoryview object instead.
     c.find('GetCharacterPointer').ignore()
     c.addCppMethod('PyObject*', 'GetCharacterPointer', '()',
         doc="""\
-            Compact the document buffer and return a read-only memoryview 
+            Compact the document buffer and return a read-only memoryview
             object of the characters in the document.""",
         body="""
             const char* ptr = self->GetCharacterPointer();
@@ -112,12 +112,12 @@ def run():
             wxPyBLOCK_THREADS( rv = wxPyMakeBuffer((void*)ptr, len, true) );
             return rv;
             """)
-    
+
     c.find('GetRangePointer').ignore()
     c.addCppMethod('PyObject*', 'GetRangePointer', '(int position, int rangeLength)',
         doc="""\
-            Return a read-only pointer to a range of characters in the 
-            document. May move the gap so that the range is contiguous, 
+            Return a read-only pointer to a range of characters in the
+            document. May move the gap so that the range is contiguous,
             but will only move up to rangeLength bytes.""",
         body="""
             const char* ptr = self->GetRangePointer(position, rangeLength);
@@ -164,12 +164,12 @@ def run():
 
 
     # TODO:  Add the UTF8 PyMethods from classic (see _stc_utf8_methods.py)
-    
+
 
     #-----------------------------------------------------------------
     c = module.find('wxStyledTextEvent')
     tools.fixEventClass(c)
-    
+
     c.addPyCode("""\
         EVT_STC_CHANGE = wx.PyEventBinder( wxEVT_STC_CHANGE, 1 )
         EVT_STC_STYLENEEDED = wx.PyEventBinder( wxEVT_STC_STYLENEEDED, 1 )
@@ -201,18 +201,18 @@ def run():
         EVT_STC_INDICATOR_CLICK = wx.PyEventBinder( wxEVT_STC_INDICATOR_CLICK, 1 )
         EVT_STC_INDICATOR_RELEASE = wx.PyEventBinder( wxEVT_STC_INDICATOR_RELEASE, 1 )
         EVT_STC_AUTOCOMP_CANCELLED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_CANCELLED, 1 )
-        EVT_STC_AUTOCOMP_CHAR_DELETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_CHAR_DELETED, 1 )    
+        EVT_STC_AUTOCOMP_CHAR_DELETED = wx.PyEventBinder( wxEVT_STC_AUTOCOMP_CHAR_DELETED, 1 )
         """)
-    
+
     #-----------------------------------------------------------------
-       
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
 
-    
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

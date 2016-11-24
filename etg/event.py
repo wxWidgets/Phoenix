@@ -11,14 +11,14 @@ import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import PyFunctionDef, PyCodeDef, PyPropertyDef
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "event"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 
+# this script.
+ITEMS  = [
     'wxEvtHandler',
     'wxEventBlocker',
     'wxPropagationDisabler',
@@ -62,14 +62,14 @@ ITEMS  = [
     'wxUpdateUIEvent',
     'wxWindowCreateEvent',
     'wxWindowDestroyEvent',
-    
-    #'wxThreadEvent',
-    
-]    
-    
 
-OTHERDEPS = [ 'src/event_ex.py',  
-              'src/event_ex.cpp', 
+    #'wxThreadEvent',
+
+]
+
+
+OTHERDEPS = [ 'src/event_ex.py',
+              'src/event_ex.cpp',
               ]
 
 #---------------------------------------------------------------------------
@@ -78,17 +78,17 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addCppCode("""
     #if !wxUSE_HOTKEY
     #define wxEVT_HOTKEY 0
     #endif
     """)
-    
+
     # C macros that need to be ignored
     module.find('wx__DECLARE_EVT0').ignore()
     module.find('wx__DECLARE_EVT1').ignore()
@@ -97,7 +97,7 @@ def run():
     module.find('wxDECLARE_EXPORTED_EVENT').ignore()
     module.find('wxDECLARE_EVENT').ignore()
     module.find('wxDEFINE_EVENT').ignore()
-    
+
 
     module.addPyClass('PyEventBinder', ['object'],
         doc="""\
@@ -109,20 +109,20 @@ def run():
                     if expectedIDs not in [0, 1, 2]:
                         raise ValueError("Invalid number of expectedIDs")
                     self.expectedIDs = expectedIDs
-            
+
                     if isinstance(evtType, (list, tuple)):
                         self.evtType = list(evtType)
                     else:
                         self.evtType = [evtType]
                     """),
-            
+
             PyFunctionDef('Bind', '(self, target, id1, id2, function)',
                 doc="""Bind this set of event types to target using its Connect() method.""",
                 body="""\
                     for et in self.evtType:
                         target.Connect(id1, id2, et, function)
                     """),
-            
+
             PyFunctionDef('Unbind', '(self, target, id1, id2, handler=None)',
                 doc="""Remove an event binding.""",
                 body="""\
@@ -131,16 +131,16 @@ def run():
                         success += target.Disconnect(id1, id2, et, handler)
                     return success != 0
                     """),
-            
+
             PyFunctionDef('_getEvtType', '(self)',
                 doc="""\
                     Make it easy to get to the default wxEventType typeID for this
                     event binder.
                     """,
                 body="""return self.evtType[0]"""),
-            
+
             PyPropertyDef('typeId', '_getEvtType'),
-            
+
             PyFunctionDef('__call__', '(self, *args)',
                 deprecated="Use :meth:`EvtHandler.Bind` instead.",
                 doc="""\
@@ -165,14 +165,14 @@ def run():
                         func = args[3]
                     else:
                         raise ValueError("Unexpected number of IDs")
-            
+
                     self.Bind(target, id1, id2, func)
                     """)
             ])
-    
+
 
     module.includePyCode('src/event_ex.py')
-    
+
     #---------------------------------------
     # wxEvtHandler
     c = module.find('wxEvtHandler')
@@ -180,13 +180,13 @@ def run():
     c.addPublic()
 
     c.includeCppCode('src/event_ex.cpp')
-    
-    # Ignore the Connect/Disconnect and Bind/Unbind methods (and all overloads) for now. 
+
+    # Ignore the Connect/Disconnect and Bind/Unbind methods (and all overloads) for now.
     for item in c.allItems():
         if item.name in ['Connect', 'Disconnect', 'Bind', 'Unbind']:
             item.ignore()
-    
-    
+
+
     # Connect and Disconnect methods for wxPython. Hold a reference to the
     # event handler function in the event table, so we can fetch it later when
     # it is time to handle the event.
@@ -214,7 +214,7 @@ def run():
     c.addCppMethod(
         'bool', 'Disconnect', '(int id, int lastId=-1, '
                                'wxEventType eventType=wxEVT_NULL, '
-                               'PyObject* func=NULL)', 
+                               'PyObject* func=NULL)',
         doc="Remove an event binding by removing its entry in the dynamic event table.",
         body="""\
             if (func && func != Py_None) {
@@ -239,7 +239,7 @@ def run():
                             self->GetDynamicEventTable()->Erase(node);
                             delete entry;
                             return true;
-                        }                        
+                        }
                     }
                     node = node->GetNext();
                 }
@@ -252,20 +252,20 @@ def run():
             }
         """)
 
-    
-    # Ignore the C++ version of CallAfter. We have our own. 
+
+    # Ignore the C++ version of CallAfter. We have our own.
     # TODO: If we want to support this we'll need concrete implementations of
     # the template, probably using PyObject* args.
     for m in c.find('CallAfter').all():
         m.ignore()
-    
+
     # wxEventTable is not documented so we have to ignore SearchEventTable.
     # TODO: Should wxEventTable be available to language bindings?
     c.find('SearchEventTable').ignore()
 
     c.find('QueueEvent.event').transfer = True
     module.find('wxQueueEvent.event').transfer = True
-    
+
     # TODO: If we don't need to use the wxEvtHandler's client data for our own
     # tracking then enable these....
     c.find('GetClientObject').ignore()
@@ -292,14 +292,14 @@ def run():
     c.addPyMethod('Bind', '(self, event, handler, source=None, id=wx.ID_ANY, id2=wx.ID_ANY)',
         doc="""\
             Bind an event to an event handler.
-    
+
             :param event: One of the ``EVT_*`` event binder objects that
                           specifies the type of event to bind.
-        
+
             :param handler: A callable object to be invoked when the
                             event is delivered to self.  Pass ``None`` to
                             disconnect an event handler.
-        
+
             :param source: Sometimes the event originates from a
                            different window than self, but you still
                            want to catch it in self.  (For example, a
@@ -308,10 +308,10 @@ def run():
                            handling system is able to differentiate
                            between the same event type from different
                            controls.
-        
+
             :param id: Used to spcify the event source by ID instead
                        of instance.
-        
+
             :param id2: Used when it is desirable to bind a handler
                         to a range of IDs, such as with EVT_MENU_RANGE.
             """,
@@ -321,10 +321,10 @@ def run():
             assert source is None or hasattr(source, 'GetId')
             if source is not None:
                 id  = source.GetId()
-            event.Bind(self, id, id2, handler)            
+            event.Bind(self, id, id2, handler)
             """)
-    
-    
+
+
     c.addPyMethod('Unbind', '(self, event, source=None, id=wx.ID_ANY, id2=wx.ID_ANY, handler=None)',
         doc="""\
             Disconnects the event handler binding for event from `self`.
@@ -333,7 +333,7 @@ def run():
         body="""\
             if source is not None:
                 id  = source.GetId()
-            return event.Unbind(self, id, id2, handler)              
+            return event.Unbind(self, id, id2, handler)
             """)
 
     module.addPyCode('PyEvtHandler = wx.deprecated(EvtHandler, "Use :class:`EvtHandler` instead.")')
@@ -345,40 +345,40 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
     c.find('Clone').factory = True
-    
+
     c.addProperty('EventObject GetEventObject SetEventObject')
     c.addProperty('EventType GetEventType SetEventType')
     c.addProperty('Id GetId SetId')
     c.addProperty('Skipped GetSkipped')
     c.addProperty('Timestamp GetTimestamp SetTimestamp')
-    
-    
+
+
     #---------------------------------------
     # wxCommandEvent
     c = module.find('wxCommandEvent')
-    
+
     c.find('GetClientData').ignore()
     c.find('SetClientData').ignore()
 
     c.addPyCode("""\
         CommandEvent.GetClientData = CommandEvent.GetClientObject
         CommandEvent.SetClientData = CommandEvent.SetClientObject""")
-            
+
     c.addProperty('ClientObject GetClientObject SetClientObject')
     c.addPyCode('CommandEvent.ClientData = CommandEvent.ClientObject')
     c.addProperty('ExtraLong GetExtraLong SetExtraLong')
     c.addProperty('Int GetInt SetInt')
     c.addProperty('Selection GetSelection')
     c.addProperty('String GetString SetString')
-        
-    
+
+
     #---------------------------------------
     # wxKeyEvent
     c = module.find('wxKeyEvent')
-    
+
     c.find('GetPosition').findOverload('wxCoord').ignore()
     c.find('GetUnicodeKey').type = 'int'
-    
+
     c.addProperty('X GetX')
     c.addProperty('Y GetY')
     c.addProperty('KeyCode GetKeyCode')
@@ -386,19 +386,19 @@ def run():
     c.addProperty('RawKeyCode GetRawKeyCode')
     c.addProperty('RawKeyFlags GetRawKeyFlags')
     c.addProperty('UnicodeKey GetUnicodeKey')
-    
+
     #---------------------------------------
     # wxScrollEvent
     c = module.find('wxScrollEvent')
     c.addProperty('Orientation GetOrientation SetOrientation')
     c.addProperty('Position GetPosition SetPosition')
-    
+
     #---------------------------------------
     # wxScrollWinEvent
     c = module.find('wxScrollWinEvent')
     c.addProperty('Orientation GetOrientation SetOrientation')
     c.addProperty('Position GetPosition SetPosition')
-    
+
     #---------------------------------------
     # wxMouseEvent
     c = module.find('wxMouseEvent')
@@ -406,59 +406,59 @@ def run():
     c.addProperty('LogicalPosition GetLogicalPosition')
     c.addProperty('WheelDelta GetWheelDelta')
     c.addProperty('WheelRotation GetWheelRotation')
-    
+
     #---------------------------------------
     # wxSetCursorEvent
     c = module.find('wxSetCursorEvent')
     c.addProperty('Cursor GetCursor SetCursor')
     c.addProperty('X GetX')
     c.addProperty('Y GetY')
-    
+
     #---------------------------------------
     # wxSizeEvent
     c = module.find('wxSizeEvent')
     c.addProperty('Rect GetRect SetRect')
     c.addProperty('Size GetSize SetSize')
-    
+
     #---------------------------------------
     # wxMoveEvent
     c = module.find('wxMoveEvent')
     c.addProperty('Rect GetRect SetRect')
     c.addProperty('Position GetPosition SetPosition')
-    
+
     #---------------------------------------
     # wxEraseEvent
     c = module.find('wxEraseEvent')
     c.addProperty('DC GetDC')
-    
+
     #---------------------------------------
     # wxFocusEvent
     c = module.find('wxFocusEvent')
     c.addProperty('Window GetWindow SetWindow')
-    
+
     #---------------------------------------
     # wxChildFocusEvent
     c = module.find('wxChildFocusEvent')
     c.addProperty('Window GetWindow')
-    
-    
+
+
     #---------------------------------------
     # wxActivateEvent
     c = module.find('wxActivateEvent')
     c.addProperty('Active GetActive')
-    
+
     #---------------------------------------
     # wxMenuEvent
     c = module.find('wxMenuEvent')
     c.addProperty('Menu GetMenu')
     c.addProperty('MenuId GetMenuId')
-    
+
     #---------------------------------------
     # wxShowEvent
     c = module.find('wxShowEvent')
     c.find('GetShow').ignore()  # deprecated
     c.addProperty('Show IsShown SetShow')
-    
+
     #---------------------------------------
     # wxDropFilesEvent
     c = module.find('wxDropFilesEvent')
@@ -472,25 +472,25 @@ def run():
     # one to the API, and also assign a Python reference to it to the event
     # object, so it will get garbage collected later.
     c.find('wxDropFilesEvent.files').array = True
-    c.find('wxDropFilesEvent.files').transfer = True    
+    c.find('wxDropFilesEvent.files').transfer = True
     c.find('wxDropFilesEvent.noFiles').arraySize = True
     c.addHeaderCode('#include "arrayholder.h"')
     c.find('wxDropFilesEvent').setCppCode_sip("""\
         if (files) {
             wxStringCArrayHolder* holder = new wxStringCArrayHolder;
-            holder->m_array = files;   
+            holder->m_array = files;
             // Make a PyObject for the holder, and transfer its ownership to self.
             PyObject* pyHolder = sipConvertFromNewType(
                     (void*)holder, sipType_wxStringCArrayHolder, (PyObject*)sipSelf);
             Py_DECREF(pyHolder);
-            sipCpp = new sipwxDropFilesEvent(id,(int)noFiles, holder->m_array);            
+            sipCpp = new sipwxDropFilesEvent(id,(int)noFiles, holder->m_array);
         }
         else
             sipCpp = new sipwxDropFilesEvent(id);
         """)
-    
-  
-        
+
+
+
     c.find('GetFiles').type = 'PyObject*'
     c.find('GetFiles').setCppCode("""\
         int         count   = self->GetNumberOfFiles();
@@ -505,13 +505,13 @@ def run():
             PyObject* s = wx2PyString(files[i]);
             PyList_SET_ITEM(list, i, s);
         }
-        return list;    
+        return list;
         """)
-    
+
     c.addProperty('Files GetFiles')
     c.addProperty('NumberOfFiles GetNumberOfFiles')
     c.addProperty('Position GetPosition')
-    
+
     #---------------------------------------
     # wxUpdateUIEvent
     c = module.find('wxUpdateUIEvent')
@@ -519,49 +519,49 @@ def run():
     c.addProperty('Enabled GetEnabled Enable')
     c.addProperty('Shown GetShown Show')
     c.addProperty('Text GetText SetText')
-    
+
     #---------------------------------------
     # wxMouseCaptureChangedEvent
     c = module.find('wxMouseCaptureChangedEvent')
     c.addProperty('CapturedWindow GetCapturedWindow')
-    
+
     #---------------------------------------
     # wxPaletteChangedEvent
     c = module.find('wxPaletteChangedEvent')
     c.addProperty('ChangedWindow GetChangedWindow SetChangedWindow')
-    
+
     #---------------------------------------
     # wxQueryNewPaletteEvent
     c = module.find('wxQueryNewPaletteEvent')
     c.addProperty('PaletteRealized GetPaletteRealized SetPaletteRealized')
-    
+
     #---------------------------------------
     # wxNavigationKeyEvent
     c = module.find('wxNavigationKeyEvent')
     c.addProperty('CurrentFocus GetCurrentFocus SetCurrentFocus')
     c.addProperty('Direction GetDirection SetDirection')
-    
+
     #---------------------------------------
     # wxWindowCreateEvent
     c = module.find('wxWindowCreateEvent')
     c.addProperty('Window GetWindow')
-    
+
     #---------------------------------------
     # wxWindowDestroyEvent
     c = module.find('wxWindowDestroyEvent')
     c.addProperty('Window GetWindow')
-    
+
     #---------------------------------------
     # wxContextMenuEvent
     c = module.find('wxContextMenuEvent')
     c.addProperty('Position GetPosition SetPosition')
-    
-    
+
+
     #---------------------------------------
     # wxIconizeEvent
     module.find('wxIconizeEvent.Iconized').deprecated = True
-    
-    
+
+
     # Apply common fixups for all the event classes
     for name in [n for n in ITEMS if n.endswith('Event')]:
         c = module.find(name)
@@ -586,13 +586,13 @@ def run():
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'return False')
     c.addPrivateCopyCtor()
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
-    
+
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

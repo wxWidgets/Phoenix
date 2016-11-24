@@ -10,18 +10,18 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "treectrl"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxTreeItemId",
            ##"wxTreeItemData",  We're using a MappedType instead
            "wxTreeCtrl",
-           "wxTreeEvent",           
-           ]    
+           "wxTreeEvent",
+           ]
 
 #---------------------------------------------------------------------------
 
@@ -29,12 +29,12 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    
+
+
     #-------------------------------------------------------
     c = module.find('wxTreeItemId')
     assert isinstance(c, etgtools.ClassDef)
@@ -51,13 +51,13 @@ def run():
             return data
         TreeItemData = deprecated(TreeItemData, "The TreeItemData class no longer exists, just pass your object directly to the tree instead.")
         """)
-    
+
     #-------------------------------------------------------
     c = module.find('wxTreeCtrl')
     tools.fixWindowClass(c)
     module.addGlobalStr('wxTreeCtrlNameStr', before=c)
-    
-    
+
+
     # Set all wxTreeItemData parameters to transfer ownership.  Is this still needed with MappedTypes?
     for item in c.allItems():
         if hasattr(item, 'type') and item.type == 'wxTreeItemData *' and \
@@ -71,10 +71,10 @@ def run():
         TreeCtrl.SetPyData = wx.deprecated(TreeCtrl.SetItemData, 'Use SetItemData instead.')
         """)
 
-    
+
     # We can't use wxClassInfo
     c.find('EditLabel.textCtrlClass').ignore()
-    
+
     # Replace GetSelections with a method that returns a Python list
     # size_t GetSelections(wxArrayTreeItemIds& selection) const;
     c.find('GetSelections').ignore()
@@ -95,16 +95,16 @@ def run():
         }
         return rval;
         """)
-    
+
     # Change GetBoundingRect to return the rectangle instead of modifying the parameter.
-    #bool GetBoundingRect(const wxTreeItemId& item, wxRect& rect, bool textOnly = false) const;    
+    #bool GetBoundingRect(const wxTreeItemId& item, wxRect& rect, bool textOnly = false) const;
     c.find('GetBoundingRect').ignore()
     c.addCppMethod('PyObject*', 'GetBoundingRect', '(const wxTreeItemId& item, bool textOnly=false)',
         doc="""\
         Returns the rectangle bounding the item. If textOnly is true,
         only the rectangle around the item's label will be returned, otherwise
-        the item's image is also taken into account. The return value may be None 
-        if the rectangle was not successfully retrieved, such as if the item is 
+        the item's image is also taken into account. The return value may be None
+        if the rectangle was not successfully retrieved, such as if the item is
         currently not visible.
         """,
         isFactory=True,
@@ -119,18 +119,18 @@ def run():
         else
             RETURN_NONE();
         """)
-    
-    
+
+
     # switch the virtualness back on for those methods that need to have it.
     c.find('OnCompareItems').isVirtual = True
-    
-    
+
+
     # transfer imagelist ownership
     c.find('AssignImageList.imageList').transfer = True
     c.find('AssignStateImageList.imageList').transfer = True
     c.find('AssignButtonsImageList.imageList').transfer = True
-    
-    
+
+
     # Make the cookie values be returned, instead of setting it through the parameter
     c.find('GetFirstChild.cookie').out = True
     c.find('GetNextChild.cookie').inOut = True
@@ -142,11 +142,11 @@ def run():
     c.find('GetButtonsImageList').ignore()
     c.find('SetButtonsImageList').ignore()
 
-    
+
     #-------------------------------------------------------
     c = module.find('wxTreeEvent')
     tools.fixEventClass(c)
-    
+
     c.addPyCode("""\
         EVT_TREE_BEGIN_DRAG        = PyEventBinder(wxEVT_TREE_BEGIN_DRAG       , 1)
         EVT_TREE_BEGIN_RDRAG       = PyEventBinder(wxEVT_TREE_BEGIN_RDRAG      , 1)
@@ -169,7 +169,7 @@ def run():
         EVT_TREE_STATE_IMAGE_CLICK = PyEventBinder(wxEVT_TREE_STATE_IMAGE_CLICK, 1)
         EVT_TREE_ITEM_GETTOOLTIP   = PyEventBinder(wxEVT_TREE_ITEM_GETTOOLTIP,   1)
         EVT_TREE_ITEM_MENU         = PyEventBinder(wxEVT_TREE_ITEM_MENU,         1)
-        
+
         # deprecated wxEVT aliases
         wxEVT_COMMAND_TREE_BEGIN_DRAG         = wxEVT_TREE_BEGIN_DRAG
         wxEVT_COMMAND_TREE_BEGIN_RDRAG        = wxEVT_TREE_BEGIN_RDRAG
@@ -191,14 +191,14 @@ def run():
         wxEVT_COMMAND_TREE_END_DRAG           = wxEVT_TREE_END_DRAG
         wxEVT_COMMAND_TREE_STATE_IMAGE_CLICK  = wxEVT_TREE_STATE_IMAGE_CLICK
         wxEVT_COMMAND_TREE_ITEM_GETTOOLTIP    = wxEVT_TREE_ITEM_GETTOOLTIP
-        wxEVT_COMMAND_TREE_ITEM_MENU          = wxEVT_TREE_ITEM_MENU        
+        wxEVT_COMMAND_TREE_ITEM_MENU          = wxEVT_TREE_ITEM_MENU
         """)
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

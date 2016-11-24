@@ -11,22 +11,22 @@ import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import (ClassDef, MethodDef, ParamDef, TypedefDef)
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_msw"
 NAME      = "axbase"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ ]
-    
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # The wxPyAxBaseWindow class does not come from the parsed Doxygen xml,
     # instead it is manufactured entirely in this ETG script.  We're doing it
@@ -93,8 +93,8 @@ def run():
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

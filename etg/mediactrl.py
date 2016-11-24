@@ -18,7 +18,7 @@ NAME      = "mediactrl"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxMediaCtrl',
            'wxMediaEvent']
 
@@ -30,7 +30,7 @@ def run():
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
     module.addHeaderCode('#include "wx/mediactrl.h"')
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
@@ -71,7 +71,7 @@ def run():
                 EVT_MEDIA_PAUSE = wx.PyEventBinder( wxEVT_MEDIA_PAUSE )
                 """)
 
-    
+
     # See mediactrl.h:
     module.addPyCode("""\
                 MEDIABACKEND_DIRECTSHOW = "wxAMMediaBackend"

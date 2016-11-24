@@ -10,7 +10,7 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx" 
+PACKAGE   = "wx"
 MODULE    = "_dataview"
 NAME      = "_dataview"   # Base name of the file to generate to for this script
 DOCSTRING = """\
@@ -20,9 +20,9 @@ such as :ref:`wx.ListCtrl`, :ref:`wx.TreeCtrl`, etc.
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ ]    
-    
+# this script.
+ITEMS  = [ ]
+
 
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These items are in their own etg scripts
@@ -46,7 +46,7 @@ OTHERDEPS = []
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING, check4unittest=False)
@@ -55,20 +55,20 @@ def run():
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     module.addHeaderCode('#include <wxpy_api.h>')
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
-    
+
     module.addInclude(INCLUDES)
-    
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
 
-    
+
+
 #---------------------------------------------------------------------------
 
 

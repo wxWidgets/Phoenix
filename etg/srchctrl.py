@@ -17,16 +17,16 @@ NAME      = "srchctrl"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ 'wxSearchCtrl' ]
-    
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
@@ -36,7 +36,7 @@ def run():
     c = module.find('wxSearchCtrl')
     assert isinstance(c, etgtools.ClassDef)
     module.addGlobalStr('wxSearchCtrlNameStr', c)
-    
+
     c.find('SetMenu.menu').transfer = True
 
     c.addCppMethod('void', 'SetSearchBitmap', '(const wxBitmap* bmp)',
@@ -62,7 +62,7 @@ def run():
             """)
 
     searchCtrl = c
-    
+
 
     # The safest way to reconcile the differences in the class hierachy
     # between the native wxSearchCtrl on Mac and the generic one on the other
@@ -95,36 +95,36 @@ def run():
                                              not item.isDtor and
                                              item.name != 'Create']
     searchCtrl.items.extend(items)
-    
+
 
     searchCtrl.find('LoadFile').ignore()
     searchCtrl.find('SaveFile').ignore()
     searchCtrl.find('MacCheckSpelling').ignore()
     searchCtrl.find('ShowNativeCaret').ignore()
     searchCtrl.find('HideNativeCaret').ignore()
-    
-    
+
+
     # Add some properties that autoProperties would not see because they are
     # not using 'Get' and 'Set'
     searchCtrl.addProperty('SearchButtonVisible IsSearchButtonVisible ShowSearchButton')
     searchCtrl.addProperty('CancelButtonVisible IsCancelButtonVisible ShowCancelButton')
-    searchCtrl.addAutoProperties()    
+    searchCtrl.addAutoProperties()
     tools.fixWindowClass(searchCtrl)
-        
+
     module.addPyCode("""\
         EVT_SEARCHCTRL_CANCEL_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_CANCEL_BTN, 1)
         EVT_SEARCHCTRL_SEARCH_BTN = wx.PyEventBinder( wxEVT_SEARCHCTRL_SEARCH_BTN, 1)
-        
+
         # deprecated wxEVT aliases
         wxEVT_COMMAND_SEARCHCTRL_CANCEL_BTN  = wxEVT_SEARCHCTRL_CANCEL_BTN
         wxEVT_COMMAND_SEARCHCTRL_SEARCH_BTN  = wxEVT_SEARCHCTRL_SEARCH_BTN
         """)
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()
