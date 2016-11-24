@@ -11,13 +11,13 @@ import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools import WigCode
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "vscroll"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxVarScrollHelperBase",
            "wxVarVScrollHelper",
            "wxVarHScrollHelper",
@@ -25,7 +25,7 @@ ITEMS  = [ "wxVarScrollHelperBase",
            "wxVScrolledWindow",
            "wxHScrolledWindow",
            "wxHVScrolledWindow",
-           ]    
+           ]
 
 
 #---------------------------------------------------------------------------
@@ -34,25 +34,25 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    
+
     c = module.find('wxVarScrollHelperBase')
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
-    
+
     c.find('OnGetUnitsSizeHint').ignore(False)
     c.find('EstimateTotalSize').ignore(False)
     c.find('OnGetUnitSize').ignore(False)
-    
+
     c.find('GetTargetWindow').isVirtual = False
     c.find('SetTargetWindow').isVirtual = False
     c.find('RefreshAll').isVirtual = False
     c.find('UpdateScrollbar').isVirtual = False
-    
+
     # Ensure that SIP knows that there are implementations of these base
     # class virtual methods in each of the two helper classes below.
     baseVirtuals = """\
@@ -92,19 +92,19 @@ def run():
 
     c = module.find('wxVScrolledWindow')
     tools.fixWindowClass(c)
-   
+
     c = module.find('wxHScrolledWindow')
     tools.fixWindowClass(c)
-   
+
     c = module.find('wxHVScrolledWindow')
     tools.fixWindowClass(c)
-        
-    
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

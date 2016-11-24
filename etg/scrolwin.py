@@ -18,27 +18,27 @@ NAME      = "scrolwin"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxScrolled' ]    
-    
+# this script.
+ITEMS  = [ 'wxScrolled' ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     scrolled = module.find('wxScrolled')
     assert isinstance(scrolled, etgtools.ClassDef)
 
     scrolled.find('GetViewStart').findOverload('()').ignore()
     scrolled.find('GetViewStart.x').out = True
     scrolled.find('GetViewStart.y').out = True
-    
+
     m = scrolled.find('CalcScrolledPosition').findOverload('xx')
     m.find('xx').out = True
     m.find('yy').out = True
@@ -49,21 +49,21 @@ def run():
 
     scrolled.find('GetScrollPixelsPerUnit.xUnit').out = True
     scrolled.find('GetScrollPixelsPerUnit.yUnit').out = True
-    
+
     scrolled.find('GetVirtualSize.x').out = True
     scrolled.find('GetVirtualSize.y').out = True
 
-        
+
     if True:
         # Now that SIP has the ability to support template classes where the
         # base class is the template parameter, then we can use this instead
         # of the trickery in the other branch below.
-        
+
         # Doxygen doesn't declare the base class (the template parameter in
         # this case) so we can just add it here.
         # FIXED in Dox 1.8.x
         #scrolled.bases.append('T')
-        
+
         scrolled.addPrivateCopyCtor()
         scrolled.addPrivateAssignOp()
         tools.fixWindowClass(scrolled)
@@ -73,7 +73,7 @@ def run():
         scrolled.find('GetSizeAvailableForScrollTarget').isVirtual = True
         scrolled.find('GetSizeAvailableForScrollTarget').ignore(False)
         scrolled.find('SendAutoScrollEvents').isVirtual = True
-        
+
         # The wxScrolledWindow and wxScrolledCanvas typedefs will be output
         # normally and SIP will treat them like classes that have a
         # wxScrolled mix-in as one of their base classes. Let's add some more
@@ -89,8 +89,8 @@ def run():
         assert isinstance(item, etgtools.TypedefDef)
         item.docAsClass = True
         item.bases = ['wxPanel', 'wxScrolled']
-        item.briefDoc = docBase.format(name='ScrolledWindow', base='Panel')        
-        
+        item.briefDoc = docBase.format(name='ScrolledWindow', base='Panel')
+
         item = module.find('wxScrolledCanvas')
         item.docAsClass = True
         item.bases = ['wxWindow', 'wxScrolled']
@@ -98,8 +98,8 @@ def run():
         item.detailedDoc[0] = "This scrolled window is not intended to have children "\
                               "so it doesn't have special handling for TAB traversal "\
                               "or focus management."
-        
-        
+
+
     else:
         # NOTE: We do a tricky tweak here because wxScrolled requires using
         # a template parameter as the base class, which SIP doesn't handle
@@ -117,7 +117,7 @@ def run():
                 "wxScrolledCanvas instead."
         scDoc = " This scrolled window is not intended to have children so it doesn't "\
                 "have special handling for TAB traversal or focus management."
-        
+
         # Make the copies and add them to the module
         for name, base, doc in [ ('wxScrolledCanvas', 'wxWindow', scDoc),
                                  ('wxScrolledWindow', 'wxPanel', swDoc), ]:
@@ -142,20 +142,20 @@ def run():
             node.find('GetSizeAvailableForScrollTarget').isVirtual = True
             node.find('GetSizeAvailableForScrollTarget').ignore(False)
             node.find('SendAutoScrollEvents').isVirtual = True
-            
+
             module.insertItemAfter(scrolled, node)
-            
+
         # Ignore the wxScrolled template class
         scrolled.ignore()
-        
-    
+
+
     module.addPyCode("PyScrolledWindow = wx.deprecated(ScrolledWindow, 'Use ScrolledWindow instead.')")
-    
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

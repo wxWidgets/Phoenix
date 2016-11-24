@@ -10,36 +10,36 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "choicdlg"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxMultiChoiceDialog",
            "wxSingleChoiceDialog",
-           ]    
-    
+           ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
     c = module.find('wxMultiChoiceDialog')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
 
-    
+
     c = module.find('wxSingleChoiceDialog')
     tools.fixTopLevelWindowClass(c)
-    
+
     # Make a new class so we can ignore the clientData parameter in the ctor
     c.addHeaderCode("""\
     class wxPySingleChoiceDialog : public wxSingleChoiceDialog {
@@ -54,10 +54,10 @@ def run():
             {}
     };
     """)
-    
-    for item in c.allItems():  
+
+    for item in c.allItems():
         if item.name == 'wxSingleChoiceDialog':
-            item.name = 'wxPySingleChoiceDialog' 
+            item.name = 'wxPySingleChoiceDialog'
     c.renameClass('SingleChoiceDialog')
 
     # ignore this ctor
@@ -68,7 +68,7 @@ def run():
     ctor.find('clientData').ignore()
 
     c.find('GetSelectionData').ignore()
-    
+
 
     # ignore a bunch of the standalone functions
     for f in module.find('wxGetSingleChoiceIndex').all():
@@ -77,21 +77,21 @@ def run():
         f.ignore()
     for f in module.find('wxGetSelectedChoices').all():  # TODO, it might be nice to keep this one
         f.ignore()
-        
+
     # keep just the overloads of this function that use wxArrayString, and
     # ignore the ones that have "int n"
     for func in module.find('wxGetSingleChoice').all():
         for p in func:
             if p.type == 'int' and p.name == 'n':
                 func.ignore()
-                
-            
-    
+
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

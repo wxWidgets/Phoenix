@@ -10,28 +10,28 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "toolbar"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ "wxToolBarToolBase",
            "wxToolBar",
            ]
-    
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
+
 
     # Use wxPyUserData for the clientData values instead of a plain wxObject
     def _fixClientData(c):
@@ -39,9 +39,9 @@ def run():
             if isinstance(item, etgtools.ParamDef) and item.name == 'clientData':
                 item.type = 'wxPyUserData*'
                 item.transfer = True
-                      
-                                           
-    #---------------------------------------------                
+
+
+    #---------------------------------------------
     c = module.find('wxToolBarToolBase')
     assert isinstance(c, etgtools.ClassDef)
     c.abstract = True
@@ -52,7 +52,7 @@ def run():
     for item in c.allItems():
         if isinstance(item, etgtools.ParamDef) and item.name == 'tbar':
             item.type = 'wxToolBar*'
-    
+
     c.find('GetToolBar').ignore()
     c.addCppMethod('wxToolBar*', 'GetToolBar', '()',
         doc="Return the toolbar this tool is a member of.",
@@ -64,9 +64,9 @@ def run():
     gcd.type = 'wxPyUserData*'
     gcd.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetClientData());')
 
-    
-   
-    #---------------------------------------------                
+
+
+    #---------------------------------------------
     c = module.find('wxToolBar')
     tools.fixWindowClass(c)
     _fixClientData(c)
@@ -97,7 +97,7 @@ def run():
             return self.AddTool(toolId, '', bitmap, wx.NullBitmap, kind,
                                 shortHelpString, longHelpString)
             """)
-    c.addPyMethod('AddLabelTool', 
+    c.addPyMethod('AddLabelTool',
                   '(self, id, label, bitmap, bmpDisabled=wx.NullBitmap, kind=wx.ITEM_NORMAL,'
                   ' shortHelp="", longHelp="", clientData=None)',
         doc='Old style method to add a tool in the toolbar.',
@@ -116,7 +116,7 @@ def run():
             return self.InsertTool(pos, toolId, '', bitmap, wx.NullBitmap, kind,
                                    shortHelpString, longHelpString)
             """)
-    c.addPyMethod('InsertLabelTool', 
+    c.addPyMethod('InsertLabelTool',
                   '(self, pos, id, label, bitmap, bmpDisabled=wx.NullBitmap, kind=wx.ITEM_NORMAL,'
                   ' shortHelp="", longHelp="", clientData=None)',
         doc='Old style method to insert a tool in the toolbar.',
@@ -132,8 +132,8 @@ def run():
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

@@ -17,9 +17,9 @@ NAME      = "sizer"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 
-            'wxSizerItem', 
+# this script.
+ITEMS  = [
+            'wxSizerItem',
             'wxSizerFlags',
 
             'wxSizer',
@@ -28,8 +28,8 @@ ITEMS  = [
             'wxGridSizer',
             'wxFlexGridSizer',
             'wxStdDialogButtonSizer',
-        ]    
-    
+        ]
+
 #---------------------------------------------------------------------------
 
 def run():
@@ -45,21 +45,21 @@ def run():
     c = module.find('wxSizerItem')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
-    
+
     # ctors taking a sizer transfer ownership
     for m in c.find('wxSizerItem').all():
         if m.findItem('sizer'):
             m.find('sizer').transfer = True
 
     c.find('AssignSizer.sizer').transfer = True
-    
+
     # userData args transfer ownership too, and we'll use wxPyUserData
     # instead of any wxObject
     for m in c.allItems():
         if isinstance(m, etgtools.MethodDef) and m.findItem('userData'):
             m.find('userData').transfer = True
             m.find('userData').type = 'wxPyUserData*'
-            
+
     gud = c.find('GetUserData')
     gud.type = 'wxPyUserData*'
     gud.setCppCode('return dynamic_cast<wxPyUserData*>(self->GetUserData());')
@@ -77,7 +77,7 @@ def run():
     tools.fixSizerClass(c)
     c.addPrivateCopyCtor()
     c.addPrivateAssignOp()
-    
+
     for func in c.findAll('Add') + c.findAll('Insert') + c.findAll('Prepend'):
         if func.findItem('sizer'):
             func.find('sizer').transfer = True
@@ -86,20 +86,20 @@ def run():
             func.find('userData').type = 'wxPyUserData*'
         if func.findItem('item'):
             func.find('item').transfer = True
-            
+
     c.find('GetChildren').overloads = []
     c.find('GetChildren').noCopy = True
-    
+
     # Needs wxWin 2.6 compatibility
     c.find('Remove').findOverload('(wxWindow *window)').ignore()
 
-    c.addPyMethod('AddMany', '(self, items)', 
+    c.addPyMethod('AddMany', '(self, items)',
         doc="""\
         :meth:`AddMany` is a convenience method for adding several items to a sizer
         at one time. Simply pass it a list of tuples, where each tuple
         consists of the parameters that you would normally pass to the :meth:`Add`
         method.
-        """,        
+        """,
         body="""\
         for item in items:
             if not isinstance(item, (tuple, list)):
@@ -107,36 +107,36 @@ def run():
             self.Add(*item)
         """)
 
-    c.addCppMethod('wxSizerItem*', 'Add', 
+    c.addCppMethod('wxSizerItem*', 'Add',
                    '(const wxSize& size, int proportion=0, int flag=0, '
                    'int border=0, wxPyUserData* userData /Transfer/ = NULL)',
         doc="Add a spacer using a :class:`Size` object.",
         body="return self->Add(size->x, size->y, proportion, flag, border, userData);")
 
-    c.addCppMethod('wxSizerItem*', 'Prepend', 
+    c.addCppMethod('wxSizerItem*', 'Prepend',
                    '(const wxSize& size, int proportion=0, int flag=0, '
                    'int border=0, wxPyUserData* userData /Transfer/ = NULL)',
         doc="Prepend a spacer using a :class:`Size` object.",
         body="return self->Prepend(size->x, size->y, proportion, flag, border, userData);")
 
-    c.addCppMethod('wxSizerItem*', 'Insert', 
+    c.addCppMethod('wxSizerItem*', 'Insert',
                    '(ulong index, const wxSize& size, int proportion=0, int flag=0, '
                    'int border=0, wxPyUserData* userData /Transfer/ = NULL)',
         doc="Insert a spacer using a :class:`Size` object.",
         body="return self->Insert(index, size->x, size->y, proportion, flag, border, userData);")
 
 
-    c.addCppMethod('wxSizerItem*', 'Add', 
+    c.addCppMethod('wxSizerItem*', 'Add',
                    '(const wxSize& size, const wxSizerFlags& flags)',
         doc="Add a spacer using a :class:`Size` object.",
         body="return self->Add(size->x, size->y, *flags);")
 
-    c.addCppMethod('wxSizerItem*', 'Prepend', 
+    c.addCppMethod('wxSizerItem*', 'Prepend',
                    '(const wxSize& size, const wxSizerFlags& flags)',
         doc="Prepend a spacer using a :class:`Size` object.",
         body="return self->Prepend(size->x, size->y, *flags);")
 
-    c.addCppMethod('wxSizerItem*', 'Insert', 
+    c.addCppMethod('wxSizerItem*', 'Insert',
                    '(ulong index, const wxSize& size, const wxSizerFlags& flags)',
         doc="Insert a spacer using a :class:`Size` object.",
         body="return self->Insert(index, size->x, size->y, *flags);")
@@ -153,7 +153,7 @@ def run():
     c.addPyCode('Sizer.__bool__ = Sizer.__nonzero__') # For Python 3
 
 
-    
+
     #---------------------------------------------
     c = module.find('wxBoxSizer')
     tools.fixSizerClass(c)
@@ -189,28 +189,28 @@ def run():
             cols = (nitems + rows - 1) / rows
         return (rows, cols)
         """)
-    
+
     #---------------------------------------------
     c = module.find('wxFlexGridSizer')
     tools.fixSizerClass(c)
 
-    
+
     #---------------------------------------------
     c = module.find('wxStdDialogButtonSizer')
     tools.fixSizerClass(c)
 
 
-    
+
     module.addPyCode("PySizer = wx.deprecated(Sizer, 'Use Sizer instead.')")
-        
+
     module.addItem(tools.wxListWrapperTemplate('wxSizerItemList', 'wxSizerItem', module))
-    
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()

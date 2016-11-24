@@ -10,27 +10,27 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx"   
+PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "menuitem"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
-ITEMS  = [ 'wxMenuItem' ]    
-    
+# this script.
+ITEMS  = [ 'wxMenuItem' ]
+
 #---------------------------------------------------------------------------
 
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-    
-    
+
+
     c = module.find('wxMenuItem')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
@@ -47,13 +47,13 @@ def run():
             return &wxNullColour;
         #endif
         """)
-    
+
     c.find('SetBackgroundColour').setCppCode("""\
         #ifdef __WXMSW__
             self->SetBackgroundColour(*colour);
         #endif
         """)
-    
+
     c.find('GetFont').type = 'wxFont*'
     c.find('GetFont').setCppCode("""\
         #ifdef __WXMSW__
@@ -62,7 +62,7 @@ def run():
             return &wxNullFont;
         #endif
         """)
-    
+
     c.find('SetFont').setCppCode("""\
         #ifdef __WXMSW__
             self->SetFont(*font);
@@ -91,7 +91,7 @@ def run():
             return &wxNullColour;
         #endif
         """)
-    
+
     c.find('SetTextColour').setCppCode("""\
         #ifdef __WXMSW__
             self->SetTextColour(*colour);
@@ -107,7 +107,7 @@ def run():
             return &self->GetBitmap();
         #endif
         """)
-    
+
     c.find('SetBitmap').setCppCode("""\
         #ifdef __WXMSW__
             self->SetBitmap(*bmp, checked);
@@ -133,26 +133,26 @@ def run():
             return &wxNullBitmap;
         #endif
         """)
-    
+
     c.find('SetDisabledBitmap').setCppCode("""\
         #ifdef __WXMSW__
             self->SetDisabledBitmap(*disabled);
         #endif
         """)
 
-    
+
     c.find('GetAccel').factory = True
     c.find('GetAccelFromString').ignore()  # Not implemented anywere?
-    
-    module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem', module))
-    
 
-    
+    module.addItem(tools.wxListWrapperTemplate('wxMenuItemList', 'wxMenuItem', module))
+
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
-    
-    
+
+
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()
