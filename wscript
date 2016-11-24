@@ -143,7 +143,7 @@ def configure(conf):
         conf.env.LIB_WXPROPGRID += cfg.makeLibName('propgrid')
 
         _copyEnvGroup(conf.env, '_WX', '_WXAUI')
-        conf.env.LIB_WXPAUI += cfg.makeLibName('aui')
+        conf.env.LIB_WXAUI += cfg.makeLibName('aui')
 
         # ** Add code for new modules here (and below for non-MSW)
 
