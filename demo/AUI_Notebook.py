@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 
-# NOTE: The wx.aui library is not currently wrapped in Phoenix, so this sample
-# is not shown in the demo to help reduce confusion.
-
-
 import wx
 try:
     from agw import aui

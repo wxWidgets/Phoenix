@@ -13,8 +13,10 @@ When all done, this checklist.txt can be discarded.
 
 Frames and Dialogs Demos
 ========================
-[ ] AUI_DockingWindowMgr
-[ ] AUI_MDI
+[X] AUI_DockingWindowMgr
+[X] AUI_MDI
+        TODO
+        Not working properly
 [X] Dialog
 [X] Frame
 [X] MDIWindows
@@ -51,19 +53,15 @@ Core Windows/Controls Demos
 [X] Choice
 [X] ComboBox
 [X] CommandLinkButton
-[ ] DVC_CustomRenderer
-        TODO
-        TypeError: invalid result type from MyCustomRenderer.Render()
-[ ] DVC_DataViewModel
+[X] DVC_CustomRenderer
+[X] DVC_DataViewModel
 [X] DVC_IndexListModel
 [X] DVC_ListCtrl
 [X] DVC_TreeCtrl
 [X] Gauge
 [X] Grid
-        TODO
-        button that launch No.3,4,7,8
-[ ] Grid_MegaExample
-[ ] GridLabelRenderer
+[X] Grid_MegaExample
+[X] GridLabelRenderer
 [X] ListBox
 [X] ListCtrl
 [X] ListCtrl_virtual
@@ -87,10 +85,6 @@ Core Windows/Controls Demos
 [X] StatusBar
 [X] StockButtons
 [X] TextCtrl
-        TODO
-        Text Positions Ctrl is Giving an
-        IndexError: string out of range
-        when clicking at the end of text
 [X] ToggleButton
 [X] ToolBar
 [X] TreeCtrl
@@ -98,42 +92,24 @@ Core Windows/Controls Demos
 
 "Book" Controls Demos
 =====================
-[ ] AUI_Notebook
+[X] AUI_Notebook
+        TODO
+        Not working properly
 [X] Choicebook
 [X] FlatNotebook
 [X] Listbook
 [X] Notebook
 [X] Toolbook
 [X] Treebook
-        TODO
-        Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\core.py", line 1948, i
-        n Notify
-            self.notify()
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\core.py", line 3017, i
-        n Notify
-            self.result = self.callable(*self.args, **self.kwargs)
-          File "Treebook.py", line 68, in AdjustSize
-            self.GetTreeCtrl().InvalidateBestSize()
-        AttributeError: 'TestTB' object has no attribute 'GetTreeCtrl'
 
 Custom Controls Demos
 =====================
-[ ] AnalogClock
+[X] AnalogClock
 [X] ColourSelect
-        TODO
-        Crashing on second colour select
 [X] ComboTreeBox
-        TODO
-        C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\combotreebox.py:532: wxPyD
-        eprecationWarning: Call to deprecated item. The TreeItemData class no longer exi
-        sts, just pass your object directly to the tree instead.
-          data=wx.TreeItemData(clientData))
 [X] Editor
 [X] GenericButtons
 [X] GenericDirCtrl
-        NOTE
-        Slow
 [X] ItemsPicker
 [ ] LEDNumberCtrl
 [X] MultiSash
@@ -164,97 +140,40 @@ AGW Demos
 [X] GradientButton
 [X] HyperLinkCtrl
 [X] HyperTreeList
-        TODO
-        still needs more work
 [X] AGWInfoBar
 [X] KnobCtrl
 [X] LabelBook
 [X] MultiDirDialog
 [X] PeakMeter
 [X] PersistentControls
-        TODO
-        Example2 still needs more work
 [X] PieCtrl
-        TODO
-        Traceback (most recent call last):
-          File "agw\PieCtrl.py", line 44, in Notify
-            self._parent._progresspie.SetValue(self._parent._progresspie.GetValue() + se
-        lf._parent._incr)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\agw\piectrl.py", l
-        ine 924, in SetValue
-            self.Refresh()
-        RuntimeError: wrapped C/C++ object of type ProgressPie has been deleted
 [X] PyBusyInfo
 [X] PyCollapsiblePane
 [X] PyGauge
 [X] PyProgress
         TODO
-        Crashes if color is changed before starting
         Also cancel button doesn't work
-[ ] RibbonBar
-        TODO
-        Traceback (most recent call last):
-          File "agw\RibbonBar.py", line 902, in OnButton1
-            size=(800, 600), log=self.log)
-          File "agw\RibbonBar.py", line 357, in __init__
-            self._primary_gallery = self.PopulateColoursPanel(primary_panel, self._defau
-        lt_primary, ID_PRIMARY_COLOUR)
-          File "agw\RibbonBar.py", line 473, in PopulateColoursPanel
-            self.AddColourToGallery(gallery, "BLUE", dc)
-          File "agw\RibbonBar.py", line 803, in AddColourToGallery
-            item = gallery.Append(bitmap, wx.ID_ANY)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\agw\ribbon\gallery
-        .py", line 628, in Append
-            raise Exception("exception")
-        Exception: exception
+[X] RibbonBar
 [X] RulerCtrl
 [X] ShapedButton
 [X] ShortcutEditor
 [X] SpeedMeter
         TODO
         Traceback (most recent call last):
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\agw\speedmeter.py"
-        , line 380, in OnSize
-            self.UpdateDrawing()
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\agw\speedmeter.py"
-        , line 394, in UpdateDrawing
-            self.Draw(dc)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\agw\speedmeter.py"
-        , line 900, in Draw
-            width, height, dummy = fancytext.GetFullExtent(strings, dc)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\fancytext.py", lin
-        e 348, in GetFullExtent
-            RenderToRenderer(str, renderer, enclose)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\fancytext.py", lin
-        e 331, in RenderToRenderer
-            p.Parse(str, 1)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\fancytext.py", lin
-        e 123, in startElement
-            getattr(self, method)(attrs)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\fancytext.py", lin
-        e 232, in start
-            self.characterData(code)
-          File "C:\Python27\lib\site-packages\wx-2.9.5-phoenix\wx\lib\fancytext.py", lin
-        e 141, in characterData
-            width, height, descent, extl = self.dc.GetFullTextExtent(chunk)
-        UnicodeDecodeError: 'utf8' codec can't decode byte 0xf0 in position 0: unexpecte
-        d end of data
 [X] SuperToolTip
 [X] ThumbnailCtrl
 [X] ToasterBox
         TODO
         is crashing on/after toasty
 [X] UltimateListCtrl
-        TODO
-        Windows7ExplorerContents
-[ ] XLSGrid
+[X] XLSGrid
 [X] ZoomBar
 
 More Windows/Controls Demos
 ===========================
-[ ] ActiveX_FlashWindow
-[ ] ActiveX_IEHtmlWindow
-[ ] ActiveX_PDFWindow
+[X] ActiveX_FlashWindow
+[X] ActiveX_IEHtmlWindow
+[X] ActiveX_PDFWindow
 [X] BitmapComboBox
 [X] Calendar
 [X] CalendarCtrl
@@ -291,7 +210,7 @@ More Windows/Controls Demos
 [X] MVCTree
 [X] MaskedEditControls
 [X] MaskedNumCtrl
-[ ] MediaCtrl
+[X] MediaCtrl
 [X] MultiSplitterWindow
 [X] OwnerDrawnComboBox
 [X] Pickers
@@ -300,7 +219,7 @@ More Windows/Controls Demos
 [X] PyPlot
 [X] PyShell
 [X] ResizeWidget
-[ ] RichTextCtrl
+[X] RichTextCtrl
 [X] ScrolledPanel
 [ ] SplitTree
 [X] StyledTextCtrl_1
@@ -311,11 +230,6 @@ More Windows/Controls Demos
 [X] TimeCtrl
 [X] TreeMixin
 [X] VListBox
-        TODO
-        Traceback (most recent call last):
-          File "VListBox.py", line 131, in OnCellMouseHover
-            self.log.WriteText('     %s\n' % cell.ConvertToText(sel))
-        AttributeError: 'HtmlWordCell' object has no attribute 'ConvertToText'
 
 Window Layout Demos
 ===================
@@ -328,9 +242,9 @@ Window Layout Demos
 [X] SizedControls
 [X] Sizers
 [X] WrapSizer
-[ ] XmlResource
-[ ] XmlResourceHandler
-[ ] XmlResourceSubclass
+[X] XmlResource
+[X] XmlResourceHandler
+[X] XmlResourceSubclass
 
 Process and Events Demos
 [X] DelayedResult
@@ -368,12 +282,12 @@ Using Images Demos
 [X] Mask
 [X] RawBitmapAccess
 [X] Throbber
-        
+
 Miscellaneous Demos
 ===================
 [X] AlphaDrawing
-[ ] Cairo
-[ ] Cairo_Snippets
+[X] Cairo
+[X] Cairo_Snippets
 [X] ColourDB
 [ ] #'DialogUnits   # needs more explanations
 [X] DragScroller
@@ -382,18 +296,20 @@ Miscellaneous Demos
 [X] FontEnumerator
 [X] GraphicsContext
 [X] GraphicsGradient
-[ ] GLCanvas
+[X] GLCanvas
+        TODO
+        Cone not working
 [X] I18N
 [X] Joystick
         TODO
         Needs more work and tested with a joystick. I dont have one.
-[ ] MimeTypesManager
+[X] MimeTypesManager
 [X] MouseGestures
-[ ] OGL
-[ ] PDFViewer
+[X] OGL
+[X] PDFViewer
 [X] PenAndBrushStyles
 [X] PrintFramework
-[ ] PseudoDC
+[X] PseudoDC
 [X] RendererNative
 [X] ShapedWindow
 [X] Sound
