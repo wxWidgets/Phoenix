@@ -45,14 +45,14 @@ def runTest(frame, nb, log):
 
 
 overview = """\
-A wx.SpinButton has two small up and down (or left and right) arrow buttons. 
-It is often used next to a text control for increment and decrementing a value. 
-Portable programs should try to use wx.SpinCtrl instead as wx.SpinButton is not 
+A wx.SpinButton has two small up and down (or left and right) arrow buttons.
+It is often used next to a text control for increment and decrementing a value.
+Portable programs should try to use wx.SpinCtrl instead as wx.SpinButton is not
 implemented for all platforms (Win32 and GTK only currently).
 
-NB: the range supported by this control (and wx.SpinCtrl) depends on the platform 
-but is at least -0x8000 to 0x7fff. Under GTK and Win32 with sufficiently new version 
-of comctrl32.dll (at least 4.71 is required, 5.80 is recommended) the full 32 bit 
+NB: the range supported by this control (and wx.SpinCtrl) depends on the platform
+but is at least -0x8000 to 0x7fff. Under GTK and Win32 with sufficiently new version
+of comctrl32.dll (at least 4.71 is required, 5.80 is recommended) the full 32 bit
 range is supported.
 
 """

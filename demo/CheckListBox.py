@@ -22,7 +22,7 @@ class TestPanel(wx.Panel):
         self.lb = lb
 
         lb.Bind(wx.EVT_RIGHT_DOWN, self.OnDoHitTest)
-        
+
         pos = lb.GetPosition().x + lb.GetSize().width + 25
         btn = wx.Button(self, -1, "Test SetString", (pos, 50))
         self.Bind(wx.EVT_BUTTON, self.OnTestButton, btn)
@@ -38,7 +38,7 @@ class TestPanel(wx.Panel):
             status = ''
         self.log.WriteText('Box %s is %schecked \n' % (label, status))
         self.lb.SetSelection(index)    # so that (un)checking also selects (moves the highlight)
-        
+
 
     def OnTestButton(self, evt):
         self.lb.SetString(4, "FUBAR")
@@ -59,9 +59,9 @@ def runTest(frame, nb, log):
 overview = """\
 A checklistbox is like a Listbox, but allows items to be checked or unchecked rather
 than relying on extended selection (e.g. shift-select) to select multiple items in
-the list. 
+the list.
 
-This class is currently implemented under Windows and GTK. 
+This class is currently implemented under Windows and GTK.
 
 This demo shows the basic CheckListBox and how to use the SetString method to change
 labels dynamically.

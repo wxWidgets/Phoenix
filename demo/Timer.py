@@ -77,7 +77,7 @@ class TestPanel(sp.ScrolledPanel):
         # Bind all EVT_TIMER events to self.OnTest1Timer
         self.Bind(wx.EVT_TIMER, self.OnTest1Timer)
 
-        
+
         t2b1 = wx.Button(self, -1, "wx.CallLater")
         t2b2 = wx.Button(self, -1, "stop timer")
         t2st = wx.StaticText(self, -1, doc2)
@@ -121,16 +121,16 @@ class TestPanel(sp.ScrolledPanel):
         fgs.Add(t4b1)
         fgs.Add(t4b2)
         fgs.Add(t4st)
-        
+
         outsideSizer.Add(fgs, 0, wx.ALIGN_CENTER|wx.ALL, 10)
         self.SetSizer(outsideSizer)
         self.SetupScrolling()
-        
+
 
     # Test 1 shows how to use a timer to generate EVT_TIMER
     # events, by passing self to the wx.Timer constructor.  The
     # event is bound above to the OnTest1Timer method.
-    
+
     def OnTest1Start(self, evt):
         self.t1 = wx.Timer(self)
         self.t1.Start(1000)
@@ -145,11 +145,11 @@ class TestPanel(sp.ScrolledPanel):
 
     def OnTest1Timer(self, evt):
         self.log.write("got EVT_TIMER event\n")
-    
+
 
 
     # Test 2 shows how to use the wx.CallLater class.
-    
+
     def OnTest2Start(self, evt):
         # Call OnTest2Timer one second in the future, passing some
         # optional arbitrary args.  There is no need to hold a
@@ -159,14 +159,14 @@ class TestPanel(sp.ScrolledPanel):
                                 'a', 'b', 'c', one=1, two=2)
         self.log.write("CallLater scheduled\n")
         self.t2b2.Enable()
-        
+
     def OnTest2Stop(self, evt):
         self.t2.Stop()
         self.log.write("CallLater stopped, last return value was: %s\n" %
                        repr(self.t2.GetResult()))
         del self.t2
         self.t2b2.Disable()
-           
+
     def OnTest2Timer(self, *args, **kw):
         self.log.write("CallLater called with args=%s, kwargs=%s\n" % (args, kw))
 
@@ -183,7 +183,7 @@ class TestPanel(sp.ScrolledPanel):
 
     # Test 3 shows how to use a class derived from wx.Timer.  See
     # also the NotifyTimer class below.
-    
+
     def OnTest3Start(self, evt):
         self.t3 = NotifyTimer(self.log)
         self.t3.Start(1000)
@@ -217,7 +217,7 @@ class TestPanel(sp.ScrolledPanel):
 
     def OnTest4Timer(self):
         self.log.write("got wx.PyTimer event\n")
-    
+
 
 
 #----------------------------------------------------------------------
@@ -229,7 +229,7 @@ class NotifyTimer(wx.Timer):
     def __init__(self, log):
         wx.Timer.__init__(self)
         self.log = log
-        
+
     def Notify(self):
         self.log.write("got NotifyTimer event\n")
 

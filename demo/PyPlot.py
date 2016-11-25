@@ -7,7 +7,7 @@ try:
     import wx.lib.plot
 except ImportError:
     hadImportError = True
-    
+
 
 #############################################################################
 # Where's the code???
@@ -48,7 +48,7 @@ This demo requires the numpy module, which could not be imported.
 It probably is not installed (it's not part of the standard Python
 distribution). See https://pypi.python.org/pypi/numpy for information
 about the numpy package.""", 'Sorry', wx.ICON_WARNING)
-    
+
     return win
 
 

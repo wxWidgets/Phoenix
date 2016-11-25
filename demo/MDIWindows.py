@@ -38,7 +38,7 @@ class TestPanel(wx.Panel):
 
     def GetPyExecutable(self):
         return sys.executable, os.spawnl
-        
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

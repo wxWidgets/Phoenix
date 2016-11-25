@@ -65,7 +65,7 @@ class TestFrame(wx.Frame):
         frameSizer = wx.BoxSizer()
         frameSizer.Add(p, 1, wx.EXPAND)
         self.SetSizer(frameSizer)
-        
+
         self.Fit()
 
 
@@ -85,21 +85,21 @@ class TestFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             self.eom.SetMaxHeight(dlg.GetValue())
         dlg.Destroy()
-        
-        
+
+
     def OnSetFont(self, evt):
         dlg = wx.FontDialog(self, wx.FontData())
         dlg.GetFontData().SetInitialFont(self.eom.GetFont())
         if dlg.ShowModal() == wx.ID_OK:
             self.eom.SetFont(dlg.GetFontData().GetChosenFont())
         dlg.Destroy()
-        
-        
+
+
     def OnWriteText(self, evt):
         self.eom.WriteText("\nThis is a test...  Only a test.  If this had "
                            "been a real emergency you would have seen the "
                            "quick brown fox jump over the lazy dog.\n")
-    
+
     def OnAppendText(self, evt):
         self.eom.AppendText("\nAppended text.")
 
@@ -114,7 +114,7 @@ class TestFrame(wx.Frame):
         #print(self.eom.numLines)
         self.eom._adjustCtrl()
         #print(self.eom.numLines)
-        
+
 #----------------------------------------------------------------------
 
 class TestPanel(wx.Panel):
@@ -130,7 +130,7 @@ class TestPanel(wx.Panel):
         self.win = TestFrame(self, self.log)
         self.win.Show(True)
 
-  
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

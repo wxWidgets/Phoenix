@@ -26,7 +26,7 @@ class TestPanel(wx.Panel):
         b.SetBitmap(images.Mondrian.Bitmap)
         b.SetInitialSize() # adjust default size for the bitmap
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnToggle, b)
-    
+
     def OnToggle(self, evt):
         self.log.write("Button %d toggled\n" % evt.GetId())
 
@@ -35,14 +35,14 @@ class TestPanel(wx.Panel):
 def runTest(frame, nb, log):
     win = TestPanel(nb, log)
     return win
-    
+
 
 #----------------------------------------------------------------------
 
 
 overview = """\
-wx.ToggleButton is a button that stays pressed when clicked by the user. 
-In other words, it is similar to wxCheckBox in functionality but looks like a 
+wx.ToggleButton is a button that stays pressed when clicked by the user.
+In other words, it is similar to wxCheckBox in functionality but looks like a
 wxButton.
 """
 

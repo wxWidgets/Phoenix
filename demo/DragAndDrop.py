@@ -20,7 +20,7 @@ class ClipTextPanel(wx.Panel):
             wx.StaticText(
                 self, -1, "Copy/Paste text to/from\n"
                 "this window and other apps"
-                ), 
+                ),
             0, wx.EXPAND|wx.ALL, 2
             )
 
@@ -32,7 +32,7 @@ class ClipTextPanel(wx.Panel):
         hsz.Add(wx.Button(self, ID_PasteBtn, " Paste "), 1, wx.EXPAND|wx.ALL, 2)
         sizer.Add(hsz, 0, wx.EXPAND)
         sizer.Add(
-            wx.Button(self, ID_BitmapBtn, " Copy Bitmap "), 
+            wx.Button(self, ID_BitmapBtn, " Copy Bitmap "),
             0, wx.EXPAND|wx.ALL, 2
             )
 

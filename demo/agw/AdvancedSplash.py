@@ -34,7 +34,7 @@ class TestPanel(wx.Panel):
         pn = os.path.normpath(os.path.join(bitmapDir, "advancedsplash.png"))
         bitmap = wx.Bitmap(pn, wx.BITMAP_TYPE_PNG)
         shadow = wx.WHITE
-        
+
         frame = AS.AdvancedSplash(self, bitmap=bitmap, timeout=5000,
                                   agwStyle=AS.AS_TIMEOUT |
                                   AS.AS_CENTER_ON_PARENT |

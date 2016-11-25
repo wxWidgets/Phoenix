@@ -65,7 +65,7 @@ command_lines = [
     "-a -F -n Carrot bmp_source/carrot.png images.py",
     "-a -F -n Pointy bmp_source/pointy.png images.py",
     "-a -F -n Pencil bmp_source/pencil.png images.py",
-    
+
     "-a -F -i -n WXPdemo bmp_source/wxpdemo.ico images.py",
 
     "-a -F -n _rt_alignleft bmp_source/rt_alignleft.xpm images.py",
@@ -125,9 +125,9 @@ command_lines = [
     "-a -F -c bmp_source/recent.png            images.py",
     "-a -F -c bmp_source/saveperspective.png   images.py",
     "-a -F -c bmp_source/customcontrol.png     images.py",
-    
+
     "-a -F -c bmp_source/deletedocs.png     images.py",
-    
+
     "-a -F -c -n spinning_nb0 bmp_source/FRM_0.png images.py",
     "-a -F -c -n spinning_nb1 bmp_source/FRM_1.png images.py",
     "-a -F -c -n spinning_nb2 bmp_source/FRM_2.png images.py",
@@ -137,7 +137,7 @@ command_lines = [
     "-a -F -c -n spinning_nb6 bmp_source/FRM_6.png images.py",
     "-a -F -c -n spinning_nb7 bmp_source/FRM_7.png images.py",
     "-a -F -c -n spinning_nb8 bmp_source/FRM_8.png images.py",
-    
+
     "   -F -c bmp_source/001.png throbImages.py",
     "-a -F -c bmp_source/002.png throbImages.py",
     "-a -F -c bmp_source/003.png throbImages.py",

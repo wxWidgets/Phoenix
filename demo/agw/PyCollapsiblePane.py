@@ -23,15 +23,15 @@ import images
 btnlbl1 = "call Expand(True)"
 btnlbl2 = "call Expand(False)"
 
-choices = ["wx.Button", 
-           "GenButton", 
-           "GenBitmapButton", 
-           "GenBitmapTextButton", 
+choices = ["wx.Button",
+           "GenButton",
+           "GenBitmapButton",
+           "GenBitmapTextButton",
            "ThemedGenButton",
-           "ThemedGenBitmapTextButton"] 
+           "ThemedGenBitmapTextButton"]
 
-gtkChoices = ["3, 6", 
-              "4, 8", 
+gtkChoices = ["3, 6",
+              "4, 8",
               "5, 10"]
 
 styles = ["CP_NO_TLW_RESIZE",
@@ -47,7 +47,7 @@ class PyCollapsiblePaneDemo(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         self.log = log
-        
+
         self.label1 = "Click here to show pane"
         self.label2 = "Click here to hide pane"
 
@@ -61,7 +61,7 @@ class PyCollapsiblePaneDemo(wx.Panel):
         self.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.OnPaneChanged, cp)
         self.MakePaneContent(cp.GetPane())
 
-        self.btnRB = radioBox = wx.RadioBox(self, -1, "Button Types", 
+        self.btnRB = radioBox = wx.RadioBox(self, -1, "Button Types",
                                             choices=choices, style=wx.RA_SPECIFY_ROWS)
         self.static1 = wx.StaticText(self, -1, "Collapsed Button Text:")
         self.static2 = wx.StaticText(self, -1, "Expanded Button Text:")
@@ -81,14 +81,14 @@ class PyCollapsiblePaneDemo(wx.Panel):
             cb.Bind(wx.EVT_CHECKBOX, self.OnStyleChoice)
             self.styleCBs.append(cb)
             sboxsizer.Add(cb, 0, wx.ALL, 4)
-        
+
         self.gtkText = wx.StaticText(self, -1, "Expander Size")
         self.gtkChoice = wx.ComboBox(self, -1, choices=gtkChoices)
         self.gtkChoice.SetSelection(0)
-        
+
         self.gtkText.Enable(False)
         self.gtkChoice.Enable(False)
-        
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         radioSizer = wx.BoxSizer(wx.HORIZONTAL)
         dummySizer = wx.BoxSizer(wx.VERTICAL)
@@ -114,9 +114,9 @@ class PyCollapsiblePaneDemo(wx.Panel):
         subSizer.Add(self.static2, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5)
         subSizer.Add(self.buttonText2, 0, wx.EXPAND)
         subSizer.Add(self.updateButton, 0, wx.LEFT|wx.RIGHT, 10)
-        
+
         subSizer.AddGrowableCol(1)
-        
+
         sizer.Add(subSizer, 0, wx.EXPAND|wx.LEFT, 20)
         sizer.Add((0, 15))
         sizer.Add(cp, 0, wx.RIGHT|wx.LEFT|wx.EXPAND, 20)
@@ -128,10 +128,10 @@ class PyCollapsiblePaneDemo(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.OnUpdate, self.updateButton)
         self.Bind(wx.EVT_RADIOBOX, self.OnButtonChoice)
         self.Bind(wx.EVT_COMBOBOX, self.OnUserChoice, self.gtkChoice)
-        
-        
+
+
     def OnToggle(self, event):
-        
+
         self.cp.Collapse(self.cp.IsExpanded())
         self.OnPaneChanged()
 
@@ -143,32 +143,32 @@ class PyCollapsiblePaneDemo(wx.Panel):
 
         self.OnPaneChanged(None)
 
-        
+
     def OnStyleChoice(self, evt):
         style = 0
         for cb in self.styleCBs:
             if cb.IsChecked():
                 style |= getattr(wx, cb.GetLabel(), 0)
-                
+
         self.cpStyle = style
         self.Rebuild()
-        
+
 
     def OnButtonChoice(self, event):
 
         #self.gtkText.Enable(selection == 4)
         #self.gtkChoice.Enable(selection == 4)
-        
+
         self.Rebuild()
-        
-        
+
+
     def MakeButton(self):
-        
+
         if self.cpStyle & wx.CP_GTK_EXPANDER:
             return None
-        
+
         selection = self.btnRB.GetSelection()
-        
+
         if selection == 0:     # standard wx.Button
             btn = wx.Button(self.cp, -1, self.label1)
         elif selection == 1:   # buttons.GenButton
@@ -184,12 +184,12 @@ class PyCollapsiblePaneDemo(wx.Panel):
         elif selection == 5:   # buttons.ThemedGenBitmapTextButton
             bmp = images.Mondrian.GetBitmap()
             btn = buttons.ThemedGenBitmapTextButton(self.cp, -1, bmp, self.label1)
-            
+
         return btn
-    
-        
+
+
     def Rebuild(self):
-        
+
         isExpanded = self.cp.IsExpanded()
         self.Freeze()
         cp = PCP.PyCollapsiblePane(self, label=self.label1, agwStyle=self.cpStyle)
@@ -206,11 +206,11 @@ class PyCollapsiblePaneDemo(wx.Panel):
         self.gtkText.Enable(btn is None)
         self.gtkChoice.Enable(btn is None)
         self.btnRB.Enable(btn is not None)
-        
+
         if isExpanded:
             self.cp.Expand()
         self.Thaw()
-        
+
         self.OnPaneChanged(None)
         self.Layout()
 
@@ -222,7 +222,7 @@ class PyCollapsiblePaneDemo(wx.Panel):
 
         # redo the layout
         self.Layout()
-        
+
         # and also change the labels
         if self.cp.IsExpanded():
             self.cp.SetLabel(self.label2)
@@ -230,7 +230,7 @@ class PyCollapsiblePaneDemo(wx.Panel):
         else:
             self.cp.SetLabel(self.label1)
             self.btn.SetLabel(btnlbl1)
-            
+
         self.btn.SetInitialSize()
 
 
@@ -248,7 +248,7 @@ class PyCollapsiblePaneDemo(wx.Panel):
         width, height = choice.split(",")
 
         return int(width), int(height)
-            
+
 
     def MakePaneContent(self, pane):
         '''Just make a few controls to put on the collapsible pane'''
@@ -264,16 +264,16 @@ class PyCollapsiblePaneDemo(wx.Panel):
         city  = wx.TextCtrl(pane, -1, "", size=(150,-1));
         state = wx.TextCtrl(pane, -1, "", size=(50,-1));
         zip   = wx.TextCtrl(pane, -1, "", size=(70,-1));
-        
+
         addrSizer = wx.FlexGridSizer(cols=2, hgap=5, vgap=5)
         addrSizer.AddGrowableCol(1)
-        addrSizer.Add(nameLbl, 0, 
+        addrSizer.Add(nameLbl, 0,
                 wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL)
         addrSizer.Add(name, 0, wx.EXPAND)
         addrSizer.Add(addrLbl, 0,
                 wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL)
         addrSizer.Add(addr1, 0, wx.EXPAND)
-        addrSizer.Add((5,5)) 
+        addrSizer.Add((5,5))
         addrSizer.Add(addr2, 0, wx.EXPAND)
 
         addrSizer.Add(cstLbl, 0,

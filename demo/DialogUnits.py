@@ -31,20 +31,20 @@ class MyFrame(wx.Frame):
         # Add a panel and some controls to display the size and position
         panel = wx.Panel(self, -1)
 
-        wx.StaticText(panel, -1, "Size:", 
+        wx.StaticText(panel, -1, "Size:",
             panel.DLG_UNIT((4, 4)),  wx.DefaultSize
             )
 
-        wx.StaticText(panel, -1, "Pos:", 
+        wx.StaticText(panel, -1, "Pos:",
             panel.DLG_UNIT((4, 20)), wx.DefaultSize
             )
 
-        self.sizeCtrl = wx.TextCtrl(panel, -1, "", 
+        self.sizeCtrl = wx.TextCtrl(panel, -1, "",
                             panel.DLG_UNIT((24, 4)),
                             panel.DLG_UNIT((36, -1)),
                             wx.TE_READONLY)
 
-        self.posCtrl = wx.TextCtrl(panel, -1, "", 
+        self.posCtrl = wx.TextCtrl(panel, -1, "",
                             panel.DLG_UNIT((24, 20)),
                             panel.DLG_UNIT((36, -1)),
                             wx.TE_READONLY)

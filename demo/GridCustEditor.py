@@ -220,7 +220,7 @@ class GridEditorTest(gridlib.Grid):
         self.SetCellValue(1, 2, "or any in this column")
         self.SetCellValue(2, 2, "and watch the log.")
         self.SetCellValue(4, 0, "(The log shows if the custom cell editor is being used.)")
-        
+
 
         self.SetColSize(0, 150)
         self.SetColSize(1, 150)

@@ -56,7 +56,7 @@ class TestPanel(wx.Panel):
         if dlg.ShowModal() == wx.ID_OK:
             wx.BeginBusyCursor()
             # setting the movie property works too
-            self.flash.movie = dlg.GetValue() 
+            self.flash.movie = dlg.GetValue()
             wx.EndBusyCursor()
 
         dlg.Destroy()

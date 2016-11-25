@@ -27,7 +27,7 @@ class MyCustomPanel(wx.Panel):
         wx.Panel.__init__(self, parent, id, pos, size, style, name)
 
         # This is the little bit of customization that we do for this
-        # silly example.  
+        # silly example.
         self.Bind(wx.EVT_SIZE, self.OnSize)
         t = wx.StaticText(self, -1, "MyCustomPanel")
         f = t.GetFont()

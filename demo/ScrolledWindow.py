@@ -117,8 +117,8 @@ class MyCanvas(wx.ScrolledWindow):
             # it does...
             y = 20
 
-            for style in [wx.PENSTYLE_DOT, wx.PENSTYLE_LONG_DASH, 
-                          wx.PENSTYLE_SHORT_DASH, wx.PENSTYLE_DOT_DASH, 
+            for style in [wx.PENSTYLE_DOT, wx.PENSTYLE_LONG_DASH,
+                          wx.PENSTYLE_SHORT_DASH, wx.PENSTYLE_DOT_DASH,
                           wx.PENSTYLE_USER_DASH]:
                 pen = wx.Pen("DARK ORCHID", 1, style)
                 if style == wx.PENSTYLE_USER_DASH:

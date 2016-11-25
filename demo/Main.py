@@ -1172,7 +1172,7 @@ class DemoError(object):
             self.exception_type = excType.__name__
         else:
             self.exception_type = excType
-        
+
         # If it's a syntax error, extra information needs
         # to be added to the traceback
         if excType is SyntaxError:
@@ -1471,7 +1471,7 @@ class wxPythonDemo(wx.Frame):
                 imgList.Add(bmp)
             for indx in range(9):
                 bmp = images.catalog["spinning_nb%d"%indx].GetBitmap()
-                imgList.Add(bmp)    
+                imgList.Add(bmp)
             self.nb.AssignImageList(imgList)
 
         self.BuildMenuBar()

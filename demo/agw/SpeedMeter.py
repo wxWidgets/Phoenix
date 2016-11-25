@@ -517,7 +517,7 @@ class SpeedMeterDemo(wx.Panel):
         mainSizer.Layout()
 
         self.SendSizeEvent()
-        
+
         self.timer.Start(1000)
         self.timer3.Start(500)
 

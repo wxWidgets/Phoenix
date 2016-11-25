@@ -33,7 +33,7 @@ class ButtonPanel(wx.Panel):
 
         self.SetSizer(box)
         box.Fit(self)
-        
+
 
     def OnButton(self, evt):
         modName = buttonDefs[evt.GetId()][0]
@@ -56,7 +56,7 @@ overview = """\
 <html><body>
 <h2>wx.grid.Grid</h2>
 
-This demo shows various ways of using the wx.grid.Grid class. 
+This demo shows various ways of using the wx.grid.Grid class.
 <p>
 You can look at the sources for these samples to learn a lot about how
 the new classes work.

@@ -13,7 +13,7 @@ except ImportError:
             "You can get info about it at:\n"
             "http://numpy.scipy.org/\n\n"
             )
-      
+
 #---------------------------------------------------------------------------
 
 
@@ -114,7 +114,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
             self.CreateStatusBar()
 
-            
+
             # Add the Canvas
             NC = NavCanvas.NavCanvas(self,
                                      Debug = 0,
@@ -128,7 +128,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                                   wx.TE_READONLY |
                                                   wx.SUNKEN_BORDER)
                                          )
-            
+
             ##Create a sizer to manage the Canvas and message window
             MainSizer = wx.BoxSizer(wx.VERTICAL)
             MainSizer.Add(NC, 4, wx.EXPAND)
@@ -137,8 +137,8 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.SetSizer(MainSizer)
             self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-            self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
-            self.Canvas.Bind(FloatCanvas.EVT_MOUSEWHEEL, self.OnWheel) 
+            self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
+            self.Canvas.Bind(FloatCanvas.EVT_MOUSEWHEEL, self.OnWheel)
 
             self.EventsAreBound = False
 
@@ -153,22 +153,22 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.MsgWindow.AppendText(text)
             if not text[-1] == "\n":
                 self.MsgWindow.AppendText("\n")
-            
+
 
         def BindAllMouseEvents(self):
             if not self.EventsAreBound:
                 ## Here is how you catch FloatCanvas mouse events
-                self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown) 
+                self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
                 self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp)
-                self.Canvas.Bind(FloatCanvas.EVT_LEFT_DCLICK, self.OnLeftDouble) 
+                self.Canvas.Bind(FloatCanvas.EVT_LEFT_DCLICK, self.OnLeftDouble)
 
-                self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DOWN, self.OnMiddleDown) 
-                self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_UP, self.OnMiddleUp) 
-                self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DCLICK, self.OnMiddleDouble) 
+                self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DOWN, self.OnMiddleDown)
+                self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_UP, self.OnMiddleUp)
+                self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DCLICK, self.OnMiddleDouble)
 
-                self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DOWN, self.OnRightDown) 
-                self.Canvas.Bind(FloatCanvas.EVT_RIGHT_UP, self.OnRightUp) 
-                self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DCLICK, self.OnRightDouble) 
+                self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DOWN, self.OnRightDown)
+                self.Canvas.Bind(FloatCanvas.EVT_RIGHT_UP, self.OnRightUp)
+                self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DCLICK, self.OnRightDouble)
 
             self.EventsAreBound = True
 
@@ -197,7 +197,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
         def OnSavePNG(self, event=None):
             import os
             dlg = wx.FileDialog(
-                self, message="Save file as ...", defaultDir=os.getcwd(), 
+                self, message="Save file as ...", defaultDir=os.getcwd(),
                 defaultFile="", wildcard="*.png", style=wx.FD_SAVE
                 )
             if dlg.ShowModal() == wx.ID_OK:
@@ -206,7 +206,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                     path = path+".png"
                 self.Canvas.SaveAsImage(path)
 
-                    
+
         def OnLeftDown(self, event):
             self.Log("LeftDown")
             self.PrintCoords(event)
@@ -252,7 +252,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                 self.Canvas.MoveImage( (Rot, 0), "Panel" )
             else: # move up-down
                 self.Canvas.MoveImage( (0, Rot), "Panel" )
-                
+
         def OnMove(self, event):
             """
             Updates the status bar with the world coordinates
@@ -288,7 +288,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             This demo draws a few of everything
 
             """
-            
+
             wx.GetApp().Yield(True)
 
             Range = (-10,10)
@@ -298,11 +298,11 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas = self.Canvas
 
             Canvas.InitAll()
-            #            
+            #
             ## these set the limits for how much you can zoom in and out
             Canvas.MinScale = 14
             Canvas.MaxScale = 500
-            
+
 
             ############# Random tests of everything ##############
 
@@ -873,9 +873,9 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.BindAllMouseEvents()
             Canvas = self.Canvas
             Canvas.InitAll()
-            
 
-            DefaultSize = 12           
+
+            DefaultSize = 12
             Point  = (3, 0)
 
             ## Add a non-visible rectangle, just to get a Bounding Box
@@ -1231,7 +1231,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas
             Canvas.InitAll()
-            
+
             Canvas.AddRectangle((10, 20),
                                 (400, 100),
                                 LineWidth = 3,
@@ -1241,7 +1241,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             bmp = Resources.getMagPlusBitmap()
 
             Canvas.AddText("These are Unscaled Bitmaps:", (140, 90))
-          
+
             Point = (150, 50)
             BitMap = Canvas.AddBitmap(bmp, Point, Position = "cc" )
             Canvas.AddPoint(Point, Diameter=4, Color="Green")
@@ -1292,7 +1292,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
         def DrawMap(self,event = None):
             wx.GetApp().Yield(True)
             import os, time
-            
+
             self.Canvas.InitAll()
             self.Canvas.SetProjectionFun("FlatEarth")
             self.BindAllMouseEvents()
@@ -1378,7 +1378,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas = self.Canvas
 
             Canvas.InitAll()
-            
+
             # Pointset
             coords = []
             for i in range(1000):
@@ -1401,7 +1401,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas = self.Canvas
 
             Canvas.InitAll()
-            
+
             self.ColorObjectsAll = []
             self.ColorObjectsLine = []
             self.ColorObjectsColor = []
@@ -1423,7 +1423,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.Ellipse = Canvas.AddEllipse(Point, wh, LineWidth = lw, FillColor = colors[cf])
             self.ColorObjectsAll.append(self.Ellipse)
 
-            # Point 
+            # Point
             xy = (random.uniform(Range[0],Range[1]),random.uniform(Range[0],Range[1]))
             D = random.randint(1,50)
             lw = random.randint(1,5)
@@ -1460,7 +1460,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             cf = random.randint(0,len(colors)-1)
             cl = random.randint(0,len(colors)-1)
             self.ColorObjectsAll.append(Canvas.AddPolygon(points,
-                                                       LineWidth = lw, 
+                                                       LineWidth = lw,
                                                        LineColor = colors[cl],
                                                        FillColor = colors[cf],
                                                        FillStyle = 'Solid'))
@@ -1541,7 +1541,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             Canvas.InitAll()
             Canvas.MinScale = 15
             Canvas.MaxScale = 30
-            
+
             # put in a rectangle to get a bounding box
             Canvas.AddRectangle((0,0), (20,20), LineColor = None)
 
@@ -1587,7 +1587,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas
             Canvas.InitAll()
-            
+
             Range = (-10,10)
 
             # Create a couple random Polygons
@@ -1622,7 +1622,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                                                       )
             HideButton.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.HidePoly)
             HideButton.HidePoly = Poly
-            
+
             HideButton2 = Canvas.AddScaledTextBox("Click To Hide\nForeground Polygon",
                                                       (-10, 5),
                                                       .5,
@@ -1634,7 +1634,7 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
             # Put a reference to the Polygon in the Button object
             HideButton2.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.HidePoly)
             HideButton2.HidePoly = Poly2
-            
+
 
             Canvas.ZoomToBB()
 
@@ -1652,20 +1652,20 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
 
         def TempTest(self, event= None):
             """
-            
+
             This is the start of a poly editor test, but it's not complete
             so you can only run it through a command line flag:
-            
+
             python FloatCanvasDemo.py --temp
-            
+
             """
-            
+
             wx.GetApp().Yield(True)
 
             self.UnBindAllMouseEvents()
             Canvas = self.Canvas
             Canvas.InitAll()
-            
+
             Range = (-10,10)
 
             # Create a random Polygon
@@ -1754,10 +1754,10 @@ def BuildDrawFrame(): # this gets called when needed, rather than on import
                 return Lines
             else:
                 return Shorelines
-    return DrawFrame 
+    return DrawFrame
 
 #---------------------------------------------------------------------------
-      
+
 if __name__ == "__main__":
 
     # running stand alone, Use wxversion:
@@ -1765,8 +1765,8 @@ if __name__ == "__main__":
 #    wxversion.select("2.6")
 #    wxversion.select("2.8")
     import wx
-   
-    
+
+
     # check options:
     import sys, getopt
     optlist, args = getopt.getopt(sys.argv[1:],'l',["all",
@@ -1802,7 +1802,7 @@ if __name__ == "__main__":
         objects, of each kind supported.
 
         *Draw Map: will draw a map of the world. Be patient, it is a big map,
-        with a lot of data, and will take a while to load and draw (about 10 sec 
+        with a lot of data, and will take a while to load and draw (about 10 sec
         on my 450Mhz PIII). Redraws take about 2 sec. This demonstrates how the
         performance is not very good for large drawings.
 
@@ -1810,7 +1810,7 @@ if __name__ == "__main__":
 
         Once you have a picture drawn, you can zoom in and out and move about
         the picture. There is a tool bar with three tools that can be
-        selected. 
+        selected.
 
         The magnifying glass with the plus is the zoom in tool. Once selected,
         if you click the image, it will zoom in, centered on where you

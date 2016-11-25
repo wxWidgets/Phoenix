@@ -23,7 +23,7 @@ except ImportError: # if it's not there locally, try the wxPython lib.
 
 class TestPanel(wx.Panel):
     def __init__(self, parent, log):
-        
+
         self.log = log
         wx.Panel.__init__(self, parent, -1)
 
@@ -32,20 +32,20 @@ class TestPanel(wx.Panel):
 
 
     def OnButton(self, evt):
-        
+
         evt.Skip()
         message = "Please wait 5 seconds, working..."
         busy = PBI.PyBusyInfo(message, parent=None, title="Really Busy",
                               icon=images.Smiles.GetBitmap())
 
         wx.Yield()
-        
+
         for indx in range(5):
             wx.MilliSleep(1000)
 
         del busy
-        
-        
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

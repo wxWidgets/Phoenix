@@ -50,7 +50,7 @@ class TestPanel(scrolled.ScrolledPanel):
         self.__LayoutPanel(p3, "Solid Background:")
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.AddMany([(p1, 0, wx.EXPAND), (p2, 0, wx.EXPAND), 
+        sizer.AddMany([(p1, 0, wx.EXPAND), (p2, 0, wx.EXPAND),
                        (p3, 0, wx.EXPAND)])
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.Add(sizer, 1, wx.EXPAND)
@@ -169,9 +169,9 @@ class TestPanel(scrolled.ScrolledPanel):
             # Set a custom colour?
             if btn[5] is not None:
                 tbtn.SetPressColor(btn[5])
-                
+
             if btn[2] == droparrow:
-                
+
                 tbtn.Bind(platebtn.EVT_PLATEBTN_DROPARROW_PRESSED, self.OnDropArrowPressed)
 
             # Enable/Disable button state
@@ -183,12 +183,12 @@ class TestPanel(scrolled.ScrolledPanel):
         txt_sz.AddMany([((5, 5)), (wx.StaticText(panel, label=label), 0, wx.ALIGN_LEFT)])
         vsizer.AddMany([((10, 10)),
                         (txt_sz, 0, wx.ALIGN_LEFT),
-                        ((10, 10)), (hsizer1, 0, wx.EXPAND), ((10, 10)), 
-                        (hsizer2, 0, wx.EXPAND), ((10, 10)), 
+                        ((10, 10)), (hsizer1, 0, wx.EXPAND), ((10, 10)),
+                        (hsizer2, 0, wx.EXPAND), ((10, 10)),
                         (hsizer3, 0, wx.EXPAND), ((10, 10)),
                         (hsizer4, 0, wx.EXPAND), ((10, 10))])
         panel.SetSizer(vsizer)
-        
+
     def OnDropArrowPressed(self, evt):
         self.log.write("DROPARROW PRESSED")
 

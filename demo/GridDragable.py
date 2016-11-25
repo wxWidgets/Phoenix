@@ -107,9 +107,9 @@ class CustomDataTable(gridlib.GridTableBase):
             msg = gridlib.GridTableMessage(
                     self, gridlib.GRIDTABLE_NOTIFY_COLS_DELETED, frm, 1
                     )
-                    
+
             grid.ProcessTableMessage(msg)
-            
+
             msg = gridlib.GridTableMessage(
                     self, gridlib.GRIDTABLE_NOTIFY_COLS_INSERTED, to, 1
                     )

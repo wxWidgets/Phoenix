@@ -18,7 +18,7 @@ class TestPanel(wx.Panel):
                 'blueberry', 'raspberry', 'blackberry', 'snozzleberry',
                 'etc', 'etc..', 'etc...' ]
 
-        dlg = wx.MultiChoiceDialog( self, 
+        dlg = wx.MultiChoiceDialog( self,
                                    "Pick some fruit from\nthis list",
                                    "wx.MultiChoiceDialog", lst)
 

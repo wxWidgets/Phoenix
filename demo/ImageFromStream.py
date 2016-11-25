@@ -19,7 +19,7 @@ class TestPanel(wx.Panel):
         bmp = wx.Bitmap(wx.Image(stream))
 
         wx.StaticText(
-            self, -1, "This image was loaded from a Python file-like object:", 
+            self, -1, "This image was loaded from a Python file-like object:",
             (15, 15)
             )
 

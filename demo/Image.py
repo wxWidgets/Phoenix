@@ -230,7 +230,7 @@ class ImagePanel(scrolled.ScrolledPanel):
         self.rotatehueIMG = getImg()
         self.rotatehueIMG.RotateHue(0.5)
         self.rotatehue = self.rotatehueIMG
-        
+
     def ChangePanelColor(self, event):
         color = event.GetColour()
         self.SetBackgroundColour(color)
