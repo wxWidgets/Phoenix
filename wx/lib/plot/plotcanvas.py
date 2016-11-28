@@ -1781,7 +1781,7 @@ class PlotCanvas(wx.Panel):
             if not isinstance(dc, wx.GCDC):
                 try:
                     dc = wx.GCDC(dc)
-                except Exception:
+                except Exception:               # XXX: Yucky.
                     pass
                 else:
                     if self._hiResEnabled:
@@ -1842,34 +1842,27 @@ class PlotCanvas(wx.Panel):
             # upper right corner user scale (xmax,ymax)
             p2 = np.array([xAxis[1], yAxis[1]])
 
-        # saves most recient values
+        # saves most recent values
         self.last_draw = (graphics, np.array(xAxis), np.array(yAxis))
 
         # Get ticks and textExtents for axis if required
+        xticks = yticks = None
+        xTextExtent = yTextExtent = (0, 0)  # No text for ticks
         if self._xSpec is not 'none':
             xticks = self._xticks(xAxis[0], xAxis[1])
-        else:
-            xticks = None
-        if xticks:
             # w h of x axis text last number on axis
             xTextExtent = dc.GetTextExtent(xticks[-1][1])
-        else:
-            xTextExtent = (0, 0)  # No text for ticks
+
         if self._ySpec is not 'none':
             yticks = self._yticks(yAxis[0], yAxis[1])
-        else:
-            yticks = None
-        if yticks:
             if self.logScale[1]:
+                # make sure we have enough room to display SI notation.
                 yTextExtent = dc.GetTextExtent('-2e-2')
             else:
                 yTextExtentBottom = dc.GetTextExtent(yticks[0][1])
                 yTextExtentTop = dc.GetTextExtent(yticks[-1][1])
                 yTextExtent = (max(yTextExtentBottom[0], yTextExtentTop[0]),
                                max(yTextExtentBottom[1], yTextExtentTop[1]))
-        else:
-            yticks = None
-            yTextExtent = (0, 0)  # No text for ticks
 
         # TextExtents for Title and Axis Labels
         titleWH, xLabelWH, yLabelWH = self._titleLablesWH(dc, graphics)
@@ -1907,10 +1900,10 @@ class PlotCanvas(wx.Panel):
                              legendTextExt)
 
         # allow for scaling and shifting plotted points
-        scale = (self.plotbox_size - textSize_scale) / \
-            (p2 - p1) * np.array((1, -1))
-        shift = -p1 * scale + self.plotbox_origin + \
-            textSize_shift * np.array((1, -1))
+        scale = ((self.plotbox_size - textSize_scale) / (p2 - p1)
+                 * np.array((1, -1)))
+        shift = (-p1 * scale + self.plotbox_origin
+                 + textSize_shift * np.array((1, -1)))
         # make available for mouse events
         self._pointScale = scale / self._pointSize
         self._pointShift = shift / self._pointSize
@@ -1998,8 +1991,8 @@ class PlotCanvas(wx.Panel):
             if len(obj.points) == 0:
                 continue  # go to next obj
             #[curveNum, legend, closest pt index, pointXY, scaledXY, dist]
-            cn = [curveNum] + \
-                [obj.getLegend()] + obj.getClosestPoint(pntXY, pointScaled)
+            cn = ([curveNum] +
+                  [obj.getLegend()] + obj.getClosestPoint(pntXY, pointScaled))
             l.append(cn)
         return l
 
@@ -2186,13 +2179,13 @@ class PlotCanvas(wx.Panel):
                 fullrange, pagesize = self.sb_vert.GetRange(
                 ), self.sb_vert.GetPageSize()
                 sbpos = fullrange - pagesize - sbpos
-                dist = sbpos * self._sb_xunit - \
-                    (self._getXCurrentRange()[0] - self._sb_xfullrange)
+                dist = (sbpos * self._sb_xunit -
+                        (self._getXCurrentRange()[0] - self._sb_xfullrange))
                 self.ScrollUp(dist)
 
             if evt.GetOrientation() == wx.HORIZONTAL:
-                dist = sbpos * self._sb_xunit - \
-                    (self._getXCurrentRange()[0] - self._sb_xfullrange[0])
+                dist = (sbpos * self._sb_xunit -
+                        (self._getXCurrentRange()[0] - self._sb_xfullrange[0]))
                 self.ScrollRight(dist)
 
     # Private Methods **************************************************
@@ -2245,8 +2238,8 @@ class PlotCanvas(wx.Panel):
                     legendSymExt, legendTextExt):
         """Draws legend symbols and text"""
         # top right hand corner of graph box is ref corner
-        trhc = self.plotbox_origin + \
-            (self.plotbox_size - [rhsW, topH]) * [1, -1]
+        trhc = (self.plotbox_origin +
+                (self.plotbox_size - [rhsW, topH]) * [1, -1])
         # border space between legend sym and graph box
         legendLHS = .091 * legendBoxWH[0]
         # 1.1 used as space between lines
@@ -2483,7 +2476,7 @@ class PlotCanvas(wx.Panel):
                 lines = []
                 for x, label in xticks:
                     pt = scale_and_shift_point(x, p2[1], scale, shift)
-                    lines.appned((pt[0], pt[1], pt[0], pt[1] + xTickLength))
+                    lines.append((pt[0], pt[1], pt[0], pt[1] + xTickLength))
                 dc.DrawLineList(lines)
 
         if self.ySpec != 'none':
