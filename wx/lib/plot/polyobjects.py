@@ -33,6 +33,7 @@ except:
 # Package
 from .utils import pendingDeprecation
 from .utils import TempStyle
+from .utils import pairwise
 
 
 # XXX: Comment out this line to disable deprecation warnings
@@ -577,8 +578,6 @@ class PolyMarker(PolyPoints):
                    'legend': ''}
 
     def __init__(self, points, **attr):
-
-
         PolyPoints.__init__(self, points, attr)
 
     def draw(self, dc, printerScale, coord=None):
@@ -842,14 +841,6 @@ class PolyHistogram(PolyBarsBase):
 
         self.hist = hist
         self.binspec = binspec
-
-        # need to create a series of points to be used by PolyPoints
-        import itertools
-        def pairwise(iterable):
-            "s -> (s0,s1), (s1,s2), (s2, s3), ..."
-            a, b = itertools.tee(iterable)
-            next(b, None)
-            return zip(a, b)
 
         # define the bins and center x locations
         self.bins = list(pairwise(self.binspec))
@@ -1238,11 +1229,6 @@ class PlotGraphics(object):
 
     @property
     def logScale(self):
-        # TODO: convert to try..except statement
-#        try:
-#        return [obj.logScale for obj in self.objects]
-#        except:     # what error would be returned?
-#            return
         if len(self.objects) == 0:
             return
         return [obj.logScale for obj in self.objects]
@@ -1448,9 +1434,7 @@ class PlotGraphics(object):
         return self.objects[item]
 
 
-
-
-#-------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 # Used to layout the printer page
 
 

@@ -15,6 +15,7 @@ __docformat__ = "restructuredtext en"
 # Standard Library
 import functools
 import inspect
+import itertools
 from warnings import warn as _warn
 
 # Third Party
@@ -312,6 +313,12 @@ def set_displayside(value):
         raise TypeError(err_txt)
     return DisplaySide(*_value)
 
+
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = itertools.tee(iterable)
+    next(b, None)
+    return zip(a, b)
 
 if __name__ == "__main__":
     raise RuntimeError("This module is not intended to be run by itself.")

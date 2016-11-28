@@ -2084,7 +2084,7 @@ class PlotCanvas(wx.Panel):
                 np.array,
                 map(self.PositionScreenToUser,
                     [coordinates, self._screenCoordinates]
-                )
+                    )
             )
             dist = newpos - oldpos
             self._screenCoordinates = coordinates
