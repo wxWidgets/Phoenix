@@ -188,7 +188,7 @@ class PlotCanvas(wx.Panel):
         self._tickPen = wx.Pen(wx.BLACK,
                                self._pointSize[0],
                                wx.PENSTYLE_SOLID)
-        self._tickLength = tuple(x * 3 for x in self._pointSize)
+        self._tickLength = tuple(-x * 2 for x in self._pointSize)
 
         self._diagonalPen = wx.Pen(wx.BLUE,
                                    self._pointSize[0],
@@ -304,16 +304,21 @@ class PlotCanvas(wx.Panel):
 
         :getter: Returns the length of the tick marks.
         :setter: Sets the length of the tick marks.
-        :type:   int or float
+        :type:   tuple of (xlength, ylength): int or float
         :raise:  `TypeError` when setting a value that is not an int or float.
         """
         return self._tickLength
 
     @tickLength.setter
     def tickLength(self, length):
-        if not isinstance(length, (int, float)):
-            raise TypeError("`length` must be an integer or float")
-        self._tickWidth = length
+        if not isinstance(length, (tuple, list)):
+            raise TypeError("`length` must be a 2-tuple of ints or floats")
+        self._tickLength = length
+
+    @property
+    def tickLengthPrinterScale(self):
+        return (3 * self.printerScale * self._tickLength[0],
+                3 * self.printerScale * self._tickLength[1])
 
     # SaveFile
     def SaveFile(self, fileName=''):
@@ -2461,8 +2466,8 @@ class PlotCanvas(wx.Panel):
         dc.SetPen(pen)
 
         # lengthen lines for printing
-        yTickLength = 3 * self.printerScale * self._tickLength[1]
-        xTickLength = 3 * self.printerScale * self._tickLength[0]
+        xTickLength = self.tickLengthPrinterScale[0]
+        yTickLength = self.tickLengthPrinterScale[1]
 
         ticks = self.enableTicks
         if self.xSpec != 'none':        # I don't like this :-/
@@ -2631,7 +2636,7 @@ class PlotCanvas(wx.Panel):
     @TempStyle('pen')
     def _drawAxesValues(self, dc, p1, p2, scale, shift, xticks, yticks):
         """
-        Draws the axes values
+        Draws the axes values: numbers representing each major grid or tick.
 
         :param :class:`wx.DC` `dc`: The :class:`wx.DC` to draw on.
         :type `dc`: :class:`wx.DC`
@@ -2654,6 +2659,13 @@ class PlotCanvas(wx.Panel):
         :param yticks: The Y tick definition
         :type yticks: list of length-2 lists
         """
+        # get the tick lengths so that labels don't overlap
+        xTickLength = self.tickLengthPrinterScale[0]
+        yTickLength = self.tickLengthPrinterScale[1]
+        # only care about negative (out of plot area) tick lengths.
+        xTickLength = xTickLength if xTickLength < 0 else 0
+        yTickLength = yTickLength if yTickLength < 0 else 0
+
         # TODO: More code duplication? Same as _drawGrid and _drawTicks?
         # TODO: update the bounding boxes when adding right and top values
         axes = self.enableAxesValues
@@ -2665,7 +2677,8 @@ class PlotCanvas(wx.Panel):
                     w = dc.GetTextExtent(label)[0]
                     pt = scale_and_shift_point(x, p1[1], scale, shift)
                     coords.append(
-                        (pt[0] - w/2, pt[1] + 2 * self._pointSize[1])
+                        (pt[0] - w/2,
+                         pt[1] + 2 * self._pointSize[1] - xTickLength)
                     )
                 dc.DrawTextList(labels, coords)
 
@@ -2676,7 +2689,8 @@ class PlotCanvas(wx.Panel):
                     w, h = dc.GetTextExtent(label)
                     pt = scale_and_shift_point(x, p2[1], scale, shift)
                     coords.append(
-                        (pt[0] - w/2, pt[1] - 2 * self._pointSize[1] - h)
+                        (pt[0] - w/2,
+                         pt[1] - 2 * self._pointSize[1] - h - xTickLength)
                     )
                 dc.DrawTextList(labels, coords)
 
@@ -2689,7 +2703,8 @@ class PlotCanvas(wx.Panel):
                     w = dc.GetTextExtent(label)[0]
                     pt = scale_and_shift_point(p1[0], y, scale, shift)
                     coords.append(
-                        (pt[0] - w - 3 * self._pointSize[0], pt[1] - 0.5 * h)
+                        (pt[0] - w - 3 * self._pointSize[0] + yTickLength,
+                         pt[1] - 0.5 * h)
                     )
                 dc.DrawTextList(labels, coords)
 
@@ -2701,7 +2716,8 @@ class PlotCanvas(wx.Panel):
                     w = dc.GetTextExtent(label)[0]
                     pt = scale_and_shift_point(p2[0], y, scale, shift)
                     coords.append(
-                        (pt[0] + 3 * self._pointSize[0], pt[1] - 0.5 * h)
+                        (pt[0] + 3 * self._pointSize[0] + yTickLength,
+                         pt[1] - 0.5 * h)
                     )
                 dc.DrawTextList(labels, coords)
 
@@ -2767,16 +2783,23 @@ class PlotCanvas(wx.Panel):
         """
         Draws the axes labels
         """
+        # get the tick lengths so that labels don't overlap
+        xTickLength = self.tickLengthPrinterScale[0]
+        yTickLength = self.tickLengthPrinterScale[1]
+        # only care about negative (out of plot area) tick lengths.
+        xTickLength = xTickLength if xTickLength < 0 else 0
+        yTickLength = yTickLength if yTickLength < 0 else 0
+
         # TODO: axes values get big when this is turned off
         dc.SetFont(self._getFont(self._fontSizeAxis))
         xLabelPos = (
             self.plotbox_origin[0] + lhsW
             + (self.plotbox_size[0] - lhsW - rhsW) / 2. - xLabelWH[0] / 2.,
-            self.plotbox_origin[1] - xLabelWH[1]
+            self.plotbox_origin[1] - xLabelWH[1] - yTickLength
         )
         dc.DrawText(graphics.xLabel, xLabelPos[0], xLabelPos[1])
         yLabelPos = (
-            self.plotbox_origin[0] - 3 * self._pointSize[0],
+            self.plotbox_origin[0] - 3 * self._pointSize[0] + xTickLength,
             self.plotbox_origin[1] - bottomH
             - (self.plotbox_size[1] - bottomH - topH) / 2. + yLabelWH[0] / 2.
         )
