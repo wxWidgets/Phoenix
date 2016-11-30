@@ -10,6 +10,7 @@ mydbstub.py*
 
 .idea
 .cache
+.vagrant
 
 /build
 /tmp
