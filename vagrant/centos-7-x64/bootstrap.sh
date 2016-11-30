@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Set up and update package repos
+yum -y install yum-utils
+yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+yum -y update
+
+
+# Install necessary development and other packages
+yum -y group install development
+
+yum -y install gtk2 gtk2-devel gtk3 gtk3-devel \
+    webkitgtk webkitgtk-devel webkitgtk3 webkitgtk3-devel \
+    libjpeg-turbo-devel libpng-devel libtiff-devel \
+    SDL SDL-devel gstreamer gstreamer-devel gstreamer-plugins-base-devel \
+    freeglut freeglut-devel libnotify libnotify-devel
+
+
+# Install all available Python packages and their dev packages
+yum -y install python python-tools python-devel python-virtualenv
+yum -y install python34u python34u-tools python34u-devel
+yum -y install python35u python35u-tools python35u-devel
+
+
+# Set up virtual environments for each Python where the Phoenix builds will be done
+virtualenv --python=python2.7 Py27
+pyvenv-3.4 Py34
+pyvenv-3.5 Py35
+
+
