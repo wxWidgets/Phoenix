@@ -10,15 +10,15 @@ Vagrant.configure("2") do |config|
 
   # Additional parameters for the VM
   config.vm.provider "virtualbox" do |vb|
-      vb.memory = 2048
-      vb.cpus = 2
+      vb.memory = 4096
+      vb.cpus = 4
   end
 
   # Share the Phoenix/dist folder so the VM can get the source tarball and has
   # a place to put the build results.
-  config.vm.synced_folder "../../dist", "/home/vagrant/dist"
+  config.vm.synced_folder "../../dist", "/home/ubuntu/dist"
 
   # And share a folder with the build script
-  config.vm.synced_folder "../scripts", "/home/vagrant/scripts"
+  config.vm.synced_folder "../scripts", "/home/ubuntu/scripts"
 
 end
