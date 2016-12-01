@@ -16,7 +16,7 @@ dnf -y install gtk2 gtk2-devel gtk3 gtk3-devel \
 
 
 # Install all available Python packages and their dev packages
-dnf -y install python python-tools python-devel python-virtualenv
+dnf -y install python python-tools python-devel python2-virtualenv
 #dnf -y install python34 python34-tools python34-devel
 dnf -y install python3 python3-tools python3-devel
 

@@ -6,6 +6,7 @@
 # be used to distinguish this build from the other linux builds.
 #--------------------------------------------------------------------------
 
+set -o errexit
 
 NAME=$1
 if [ "$NAME" == "" ]; then
@@ -13,46 +14,84 @@ if [ "$NAME" == "" ]; then
     exit 1
 fi
 
+PYVER=$2
+if [ "$PYVER" == "" ]; then
+    PYVER=all
+fi
+
+PORT=$3
+if [ "$PORT" == "" ]; then
+    PORT=all
+fi
+
+
 TARBALL=$(ls ~/dist/wxPython_Phoenix-*.tar.gz)
 if [ "$TARBALL" == "" ]; then
     echo "ERROR: Source tarball not found."
     exit 1
 fi
 
+
+
+# This function is called to do each build.
+# It is given the virtual environment to be used, a tag (gtk2 or gtk3) to be
+# used to help name the target folder, and an optional flag (--gtk3) to be
+# passed on the build.py command line.
+function do_build {
+    VENV=$1
+    TAG=$2
+    FLAG=$3
+
+    # setup
+    echo "**** do_build ****"
+    echo "Using Python from VENV $VENV"
+    ORIG_PATH=$PATH
+    export PATH=$VENV/bin:$PATH
+    echo PYTHON: $(which python)
+    echo $(python -c "import sys; print(sys.version)")
+
+    # move into the source tree
+    cd ~/wxPython_Phoenix-*
+
+    # update packages
+    echo pip install -U pip
+    echo pip install -U -r requirements.txt
+
+    # Build wxWidgets, Phoenix and a Wheel
+    # Since we're using a source tarball we don't need to do all the code
+    # generation parts, all files should already be present
+    echo python build.py $FLAG build_wx build_py bdist_wheel
+
+    # copy the results back to the host shared dist folder
+    echo mkdir -p ~/dist/$NAME/$TAG
+    echo mv dist/*.whl ~/dist/$NAME/$TAG
+
+    # clean up
+    echo python build.py clean
+    echo rm -rf dist build
+    export PATH=$ORIG_PATH
+}
+
+
+# Get things started...
 echo "Unpacking source archive..."
 tar xzf $TARBALL
+
 
 # Do a build for each Python virtual environment in ~/venvs
 for VENV in ~/venvs/*; do
 
-    # setup
-    echo "Activating $VENV"
-    source $VENV/bin/activate
+    if [ $PYVER = all -o $PYVER = $(basename $VENV) ]; then
+        # build a package for GTK2?
+        if [ $PORT = all -o $PORT = gtk2 ]; then
+            do_build $VENV gtk2
+        fi
 
-    pushd ~/wxPython_Phoenix-*
-
-    # update packages
-    pip install -U pip
-    pip install -U -r requirements.txt
-
-    # build with gtk2
-    rm -rf dist
-    python build.py build
-    python build.py bdist_wheel
-    mkdir -p ~/dist/$NAME
-    mv dist/*.whl ~/dist/$NAME
-    python build.py clean
-
-    # Now do the same for a gtk3 build
-    rm -rf dist
-    python build.py build --gtk3
-    python build.py bdist_wheel
-    mkdir -p ~/dist/$NAME-gtk3
-    mv dist/*.whl ~/dist/$NAME-gtk3
-    python build.py clean
-
-    deactivate
-    popd
+        # build a package for GTK3?
+        if [ $PORT = all -o $PORT = gtk3 ]; then
+            do_build $VENV gtk3 --gtk3
+        fi
+    fi
 done
 
 rm -r ~/wxPython_Phoenix-*
