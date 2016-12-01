@@ -20,10 +20,10 @@ dnf -y install python python-tools python-devel python-virtualenv
 #dnf -y install python34 python34-tools python34-devel
 dnf -y install python3 python3-tools python3-devel
 
-
-# Set up virtual environments for each Python where the Phoenix builds will be done
-virtualenv --python=python2.7 Py27
-#pyvenv-3.4 Py34
-pyvenv-3.5 Py35
-
-
+# Set up virtual environments for each Python where the Phoenix builds will be
+# done. set them to the vagrant user so the venv's can be updated by pip later.
+mkdir venvs
+virtualenv --python=python2.7 venvs/Py27
+#pyvenv-3.4 venvs/Py34
+pyvenv-3.5 venvs/Py35
+chown -R vagrant:vagrant venvs
