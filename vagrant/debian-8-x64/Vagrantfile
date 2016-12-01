@@ -18,4 +18,7 @@ Vagrant.configure("2") do |config|
   # a place to put the build results.
   config.vm.synced_folder "../../dist", "/home/vagrant/dist"
 
+  # And share a folder with the build script
+  config.vm.synced_folder "../scripts", "/home/vagrant/scripts"
+
 end
