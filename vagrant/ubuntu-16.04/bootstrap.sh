@@ -8,9 +8,11 @@ apt-get update
 apt-get install -y build-essential dpkg-dev
 apt-get install -y libgtk2.0-dev libgtk-3-dev
 
-apt-get install -y libwebkitgtk-dev libjpeg-dev libtiff-dev \
+apt-get install -y libjpeg-dev libtiff-dev \
 	libsdl1.2-dev libgstreamer-plugins-base0.10-dev \
-	libnotify-dev freeglut3 freeglut3-dev
+	libnotify-dev freeglut3 freeglut3-dev \
+	libwebkitgtk-dev libwebkitgtk-3.0-dev
+
 
 # Install all available Python packages and their dev packages
 apt-get install -y python2.7 python2.7-dev libpython2.7-dev python-virtualenv
