@@ -23,4 +23,7 @@ mkdir venvs
 virtualenv --python=python2.7 venvs/Py27
 #pyvenv-3.4 venvs/Py34
 pyvenv-3.5 venvs/Py35
-chown -R vagrant:vagrant venvs
+#chown -R vagrant:vagrant venvs
+# This box provides a user named "ubuntu" instead
+chown -R ubuntu:ubuntu venvs
+
