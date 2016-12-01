@@ -54,21 +54,21 @@ function do_build {
     cd ~/wxPython_Phoenix-*
 
     # update packages
-    echo pip install -U pip
-    echo pip install -U -r requirements.txt
+    pip install -U pip
+    pip install -U -r requirements.txt
 
     # Build wxWidgets, Phoenix and a Wheel
     # Since we're using a source tarball we don't need to do all the code
     # generation parts, all files should already be present
-    echo python build.py $FLAG build_wx build_py bdist_wheel
+    python build.py $FLAG build_wx build_py bdist_wheel
 
     # copy the results back to the host shared dist folder
-    echo mkdir -p ~/dist/$NAME/$TAG
-    echo mv dist/*.whl ~/dist/$NAME/$TAG
+    mkdir -p ~/dist/$NAME/$TAG
+    mv dist/*.whl ~/dist/$NAME/$TAG
 
     # clean up
-    echo python build.py clean
-    echo rm -rf dist build
+    python build.py clean
+    rm -rf dist build
     export PATH=$ORIG_PATH
 }
 
