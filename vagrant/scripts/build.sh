@@ -42,6 +42,8 @@ function do_build {
     TAG=$2
     FLAG=$3
 
+    rm -rf ~/wxPython_Phoenix-*
+
     # setup
     echo "**** do_build $TAG $FLAG ****"
     echo "Using Python from VENV $VENV"
@@ -49,6 +51,9 @@ function do_build {
     export PATH=$VENV/bin:$PATH
     echo PYTHON: $(which python)
     echo $(python -c "import sys; print(sys.version)")
+
+    echo "Unpacking source archive..."
+    tar xzf $TARBALL
 
     # move into the source tree
     cd ~/wxPython_Phoenix-*
@@ -62,21 +67,18 @@ function do_build {
     # generation parts, all files should already be present
     python build.py $FLAG build_wx build_py bdist_wheel
 
-    # copy the results back to the host shared dist folder
-    mkdir -p ~/dist/$NAME/$TAG
-    mv dist/*.whl ~/dist/$NAME/$TAG
+    # copy the results back to the host's shared dist folder
+    WXPYVER=$(python -c "import buildtools; buildtools.printVersion()")
+    DEST=~/dist/linux/$WXPYVER/$NAME/$TAG
+    mkdir -p $DEST
+    mv dist/*.whl $DEST
 
     # clean up
-    python build.py clean
-    rm -rf dist build
+    cd ~
+    rm -rf ~/wxPython_Phoenix-*
     export PATH=$ORIG_PATH
 }
 
-
-# Get things started...
-rm -rf ~/wxPython_Phoenix-*
-echo "Unpacking source archive..."
-tar xzf $TARBALL
 
 
 # Do a build for each Python virtual environment in ~/venvs
@@ -95,4 +97,3 @@ for VENV in ~/venvs/*; do
     fi
 done
 
-rm -rf ~/wxPython_Phoenix-*
