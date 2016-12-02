@@ -43,7 +43,7 @@ function do_build {
     FLAG=$3
 
     # setup
-    echo "**** do_build ****"
+    echo "**** do_build $TAG $FLAG ****"
     echo "Using Python from VENV $VENV"
     ORIG_PATH=$PATH
     export PATH=$VENV/bin:$PATH
@@ -74,6 +74,7 @@ function do_build {
 
 
 # Get things started...
+rm -rf ~/wxPython_Phoenix-*
 echo "Unpacking source archive..."
 tar xzf $TARBALL
 
@@ -94,4 +95,4 @@ for VENV in ~/venvs/*; do
     fi
 done
 
-rm -r ~/wxPython_Phoenix-*
+rm -rf ~/wxPython_Phoenix-*
