@@ -6,14 +6,14 @@ yum -y install https://centos7.iuscommunity.org/ius-release.rpm
 yum -y update
 
 
-# Install necessary development and other packages
+# Install necessary development tools, libs, etc.
 yum -y group install development
 
 yum -y install gtk2 gtk2-devel gtk3 gtk3-devel \
     webkitgtk webkitgtk-devel webkitgtk3 webkitgtk3-devel \
     libjpeg-turbo-devel libpng-devel libtiff-devel \
     SDL SDL-devel gstreamer gstreamer-devel gstreamer-plugins-base-devel \
-    freeglut freeglut-devel libnotify libnotify-devel
+    freeglut freeglut-devel libnotify libnotify-devel libSM-devel
 
 
 # Install all available Python packages and their dev packages
