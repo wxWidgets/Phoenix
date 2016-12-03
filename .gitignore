@@ -10,6 +10,7 @@ mydbstub.py*
 
 .idea
 .cache
+.vagrant
 
 /build
 /tmp
@@ -57,3 +58,4 @@ mydbstub.py*
 
 /unittests/lib_pubsub_provider_actual.py
 
+ubuntu-xenial-16.04-cloudimg-console.log
