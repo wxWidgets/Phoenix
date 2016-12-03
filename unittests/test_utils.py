@@ -29,7 +29,10 @@ class utils_Tests(wtc.WidgetTestCase):
         self.assertTrue(   wx.IsBusy())
         wx.EndBusyCursor()
         self.assertTrue(not wx.IsBusy())
-        
+
+    def test_utilsBusyCursor3(self):
+        with wx.BusyCursor():
+            self.myYield()
         
     def test_utilsSomeOtherStuff(self):
         wx.GetBatteryState()

@@ -70,6 +70,12 @@ def run():
     module.find('wxGetOsVersion.major').out = True
     module.find('wxGetOsVersion.minor').out = True
 
+    c = module.find('wxBusyCursor')
+    # add context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
