@@ -80,13 +80,16 @@ class Canvas(wx.Window):
     """
     def __init__(self, parent, id,
                  pos=wx.DefaultPosition,
-                 size=wx.DefaultSize,
-                 style=wx.SIMPLE_BORDER):
+                 style=wx.SIMPLE_BORDER,
+                 forceClientSize=None):
         """Creates a canvas instance and initializes the off-screen
         buffer. Also sets the handler for rendering the canvas
         automatically via size and paint calls from the windowing
         system."""
-        wx.Window.__init__(self, parent, id, pos, size, style)
+        wx.Window.__init__(self, parent, id, pos, style=style)
+        if forceClientSize:
+            self.SetMaxClientSize(forceClientSize)
+            self.SetMinClientSize(forceClientSize)
 
         # Perform an intial sizing
         self.ReDraw()
@@ -96,7 +99,7 @@ class Canvas(wx.Window):
         self.Bind(wx.EVT_PAINT, self.onPaint)
 
     def MakeNewBuffer(self):
-        size = self.GetSize()
+        size = self.GetClientSize()
         self.buffer = BitmapBuffer(size[0], size[1],
                                    self.GetBackgroundColour())
 
