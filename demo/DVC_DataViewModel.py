@@ -224,7 +224,7 @@ class MyTreeListModel(dv.PyDataViewModel):
             elif col == 5:
                 node.like = value
         return True
-    
+
 
 #----------------------------------------------------------------------
 

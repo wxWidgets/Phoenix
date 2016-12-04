@@ -16,7 +16,7 @@ class TestPanel(wx.Panel):
         hsizer = wx.BoxSizer( wx.HORIZONTAL )
         vsizer = wx.BoxSizer( wx.VERTICAL )
         self.buttonpanel = pdfButtonPanel(self, wx.NewId(),
-                                wx.DefaultPosition, wx.DefaultSize, 0)  
+                                wx.DefaultPosition, wx.DefaultSize, 0)
         vsizer.Add(self.buttonpanel, 0,
                                 wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5)
         self.viewer = pdfViewer( self, wx.NewId(), wx.DefaultPosition,
@@ -25,7 +25,7 @@ class TestPanel(wx.Panel):
         loadbutton = wx.Button(self, wx.NewId(), "Load PDF file",
                                 wx.DefaultPosition, wx.DefaultSize, 0 )
         vsizer.Add(loadbutton, 0, wx.ALIGN_CENTER|wx.ALL, 5)
-        hsizer.Add(vsizer, 1, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5) 
+        hsizer.Add(vsizer, 1, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5)
         self.SetSizer(hsizer)
         self.SetAutoLayout(True)
 
@@ -34,7 +34,7 @@ class TestPanel(wx.Panel):
         self.viewer.buttonpanel = self.buttonpanel
 
         self.Bind(wx.EVT_BUTTON, self.OnLoadButton, loadbutton)
-        
+
     def OnLoadButton(self, event):
         dlg = wx.FileDialog(self, wildcard="*.pdf")
         if dlg.ShowModal() == wx.ID_OK:
@@ -51,9 +51,9 @@ def runTest(frame, nb, log):
         return win
     else:
         from wx.lib.msgpanel import MessagePanel
-        win = MessagePanel(nb, 
+        win = MessagePanel(nb,
                            'This demo requires either the\n'
-                           'PyMuPDF see http://pythonhosted.org/PyMuPDF\n'  
+                           'PyMuPDF see http://pythonhosted.org/PyMuPDF\n'
                            'or\n'
                            'PyPDF2 see http://pythonhosted.org/PyPDF2\n'
                            'package installed.\n',
@@ -78,7 +78,7 @@ complete PDF rendering library that is GPL licenced. PyMuPDF version 1.9.2 or la
 
 <p>PyPDF2 provides a PdfFileReader class that is used to read the content stream of a PDF
 file which is subsequently rendered by the viewer itself.
-Please note that this is not a complete implementation of the pdf specification and 
+Please note that this is not a complete implementation of the pdf specification and
 will probably fail to render any random PDF file you supply. However it does seem to
 behave correctly with files that have been produced by ReportLab using Western languages.
 The main limitation is that it doesn't currently support embedded fonts.

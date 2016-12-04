@@ -35,7 +35,7 @@ class TestPanel(wx.Panel):
         self.g2.Pulse()
         if 'wxMac' not in wx.PlaformInfo:
             self.g3.Pulse()
-    
+
 
 #----------------------------------------------------------------------
 

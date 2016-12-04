@@ -12,7 +12,7 @@ wx.HelpProvider.Set(provider)
 
 class TestDialog(wx.Dialog):
     def __init__(
-            self, parent, id, title, size=wx.DefaultSize, pos=wx.DefaultPosition, 
+            self, parent, id, title, size=wx.DefaultSize, pos=wx.DefaultPosition,
             style=wx.DEFAULT_DIALOG_STYLE, name='dialog'
             ):
 
@@ -60,11 +60,11 @@ class TestDialog(wx.Dialog):
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5)
 
         btnsizer = wx.StdDialogButtonSizer()
-        
+
         if wx.Platform != "__WXMSW__":
             btn = wx.ContextHelpButton(self)
             btnsizer.AddButton(btn)
-        
+
         btn = wx.Button(self, wx.ID_OK)
         btn.SetHelpText("The OK button completes the dialog")
         btn.SetDefault()
@@ -93,7 +93,7 @@ class TestPanel(wx.Panel):
         b = wx.Button(self, -1, "Show dialog with ShowWindowModal", (50, 140))
         self.Bind(wx.EVT_BUTTON, self.OnShowWindowModal, b)
         self.Bind(wx.EVT_WINDOW_MODAL_DIALOG_CLOSED, self.OnWindowModalDialogClosed)
-        
+
 
     def OnButton(self, evt):
         dlg = TestDialog(self, -1, "Sample Dialog", size=(350, 200),
@@ -103,14 +103,14 @@ class TestPanel(wx.Panel):
 
         # this does not return until the dialog is closed.
         val = dlg.ShowModal()
-    
+
         if val == wx.ID_OK:
             self.log.WriteText("You pressed OK\n")
         else:
             self.log.WriteText("You pressed Cancel\n")
 
         dlg.Destroy()
-        
+
 
     def OnShowWindowModal(self, evt):
         dlg = TestDialog(self, -1, "Sample Dialog", size=(350, 200),
@@ -126,7 +126,7 @@ class TestPanel(wx.Panel):
                        wx.ID_CANCEL: "Cancel" }[val]
         except KeyError:
             btnTxt = '<unknown>'
-            
+
         wx.MessageBox("You closed the window-modal dialog with the %s button" % btnTxt)
 
         dialog.Destroy()

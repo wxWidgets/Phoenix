@@ -91,7 +91,7 @@ class TestFrame(wx.Frame):
         il = wx.ImageList(16, 16, True)
         imgs = list(catalog.keys())
         imgs.sort()
-        
+
         for img in imgs:
             bmp = catalog[img].GetBitmap()
             il_max = il.Add(bmp)
@@ -113,7 +113,7 @@ class TestFrame(wx.Frame):
             self.list.InsertImageStringItem(x, "This is item %02d" % x, img, it_kind=it_kind)
 
         self.SetIcon(images.Mondrian.GetIcon())
-        self.Show()            
+        self.Show()
 
 #---------------------------------------------------------------------------
 
@@ -123,4 +123,3 @@ if __name__ == '__main__':
     frame = TestFrame(None, sys.stdout)
     frame.Show(True)
     app.MainLoop()
-    

@@ -42,7 +42,7 @@ class TestPanel(wx.Panel):
 
         if dlg.ShowModal() == wx.ID_OK:
             # show the selected file
-            self.log.WriteText("You Selected File: " + dlg.GetFile())        
+            self.log.WriteText("You Selected File: " + dlg.GetFile())
         else:
             self.log.WriteText("You pressed Cancel\n")
 
@@ -56,7 +56,7 @@ def runTest(frame, nb, log):
     win = TestPanel(nb, log)
     return win
 
-    
+
 #---------------------------------------------------------------------------
 
 

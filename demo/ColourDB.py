@@ -115,7 +115,7 @@ class TestWindow(wx.ScrolledWindow):
         else:
             start = 0
             stop = numColours
-            
+
         for line in range(max(0,start), min(stop,numColours)):
             clr = colours[line][0]
             y = (line+1) * self.lineHeight + 2

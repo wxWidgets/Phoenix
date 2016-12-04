@@ -14,14 +14,14 @@ class TestPanel(wx.Panel):
         self.frame = frame
         if frame:
             self.titleBase = frame.GetTitle()
-        
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.wv = webview.WebView.New(self)
         self.Bind(webview.EVT_WEBVIEW_NAVIGATING, self.OnWebViewNavigating, self.wv)
         self.Bind(webview.EVT_WEBVIEW_LOADED, self.OnWebViewLoaded, self.wv)
-        
-                  
+
+
         btn = wx.Button(self, -1, "Open", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnOpenButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
@@ -60,7 +60,7 @@ class TestPanel(wx.Panel):
         sizer.Add(btnSizer, 0, wx.EXPAND)
         sizer.Add(self.wv, 1, wx.EXPAND)
         self.SetSizer(sizer)
-        
+
         self.wv.LoadURL(self.current)
 
 
@@ -83,7 +83,7 @@ class TestPanel(wx.Panel):
         # The full document has loaded
         self.current = evt.GetURL()
         self.location.SetValue(self.current)
-        
+
 
     # Control bar events
     def OnLocationSelect(self, evt):
@@ -117,7 +117,7 @@ class TestPanel(wx.Panel):
 
     def OnCheckCanGoBack(self, event):
         event.Enable(self.wv.CanGoBack())
-        
+
     def OnCheckCanGoForward(self, event):
         event.Enable(self.wv.CanGoForward())
 
@@ -126,8 +126,8 @@ class TestPanel(wx.Panel):
 
     def OnRefreshPageButton(self, evt):
         self.wv.Reload()
-        
-        
+
+
 #----------------------------------------------------------------------
 
 def runTest(frame, nb, log):

@@ -49,8 +49,8 @@ _treeList = [
 
     # managed windows == things with a (optional) caption you can close
     ('Frames and Dialogs', [
-        #'AUI_DockingWindowMgr',  wx.aui is not in Phoenix yet, so show just the AGW demo
-        #'AUI_MDI',
+        'AUI_DockingWindowMgr',
+        'AUI_MDI',
         'Dialog',
         'Frame',
         'MDIWindows',
@@ -131,7 +131,7 @@ _treeList = [
     ]),
 
     ('"Book" Controls', [
-        #'AUI_Notebook',  (See above)
+        'AUI_Notebook',
         'Choicebook',
         'FlatNotebook',
         'Listbook',
@@ -154,7 +154,7 @@ _treeList = [
         'PlateButton',
         'PopupControl',
         'PyColourChooser',
-        #'TreeListCtrl',  # TODO or toss it?
+        'TreeListCtrl',  # TODO or toss it?
     ]),
 
     # controls coming from other libraries

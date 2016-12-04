@@ -274,7 +274,7 @@ class KeyLog(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
         UniChr = ''
         if "unicode" in wx.PlatformInfo:
             UniChr = "\"" + unichr(evt.GetUnicodeKey()) + "\""
-            
+
         modifiers = ""
         for mod, ch in [(evt.ControlDown(),    'C'),
                         (evt.AltDown(),        'A'),

@@ -48,7 +48,7 @@ class TestPopup(wx.PopupWindow):
         st.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
 
         wx.CallAfter(self.Refresh)
-        
+
 
     def OnMouseLeftDown(self, evt):
         self.Refresh()
@@ -80,7 +80,7 @@ class TestTransientPopup(wx.PopupTransientWindow):
         self.log = log
         panel = wx.Panel(self)
         panel.SetBackgroundColour("#FFB6C1")
-        
+
         st = wx.StaticText(panel, -1,
                           "wx.PopupTransientWindow is a\n"
                           "wx.PopupWindow which disappears\n"
@@ -101,8 +101,8 @@ class TestTransientPopup(wx.PopupTransientWindow):
         sizer.Fit(panel)
         sizer.Fit(self)
         self.Layout()
-        
-        
+
+
     def ProcessLeftDown(self, evt):
         self.log.write("ProcessLeftDown: %s\n" % evt.GetPosition())
         return wx.PopupTransientWindow.ProcessLeftDown(self, evt)
@@ -132,7 +132,7 @@ class TestPanel(wx.Panel):
 
         # This isn't working so well, not sure why. Commented out for
         # now.
-        
+
 #        b = wx.Button(self, -1, "Show wx.PopupWindow with listbox", (25, 140))
 #        self.Bind(wx.EVT_BUTTON, self.OnShowPopupListbox, b)
 
@@ -183,7 +183,7 @@ class TestPanel(wx.Panel):
 # This class is currently not implemented in the demo. It does not
 # behave the way it should, so for the time being it's only here
 # for show. If you figure out how to make it work, please send
-# a corrected file to Robin! 
+# a corrected file to Robin!
 class TestPopupWithListbox(wx.PopupWindow):
     def __init__(self, parent, style, log):
         wx.PopupWindow.__init__(self, parent, style)

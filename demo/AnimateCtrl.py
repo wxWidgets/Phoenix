@@ -6,7 +6,7 @@ from Main import opj
 
 GIFNames = [
     'bitmaps/AG00178_.gif',
-    'bitmaps/BD13656_.gif',  
+    'bitmaps/BD13656_.gif',
     'bitmaps/AG00185_.gif',
     'bitmaps/AG00039_.gif',
     'bitmaps/AG00183_.gif',
@@ -31,7 +31,7 @@ class TestPanel(wx.Panel):
         border = wx.BoxSizer()
         border.Add(sizer, 1, wx.EXPAND | wx.ALL, 20)
         self.SetSizer(border)
-        
+
 
 #----------------------------------------------------------------------
 

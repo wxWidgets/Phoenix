@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 """
-This demonstrates a simple use of delayedresult: get/compute 
+This demonstrates a simple use of delayedresult: get/compute
 something that takes a long time, without hanging the GUI while this
-is taking place. 
+is taking place.
 
 The top button runs a small GUI that uses wx.lib.delayedresult.startWorker
 to wrap a long-running function into a separate thread. Just click
@@ -45,7 +45,7 @@ class FrameSimpleDelayedBase(wx.Frame):
         vsizer.Add(hsizer, 0, wx.ALL, 5)
         pnl.SetSizer(vsizer)
         vsizer.SetSizeHints(self)
-        
+
         self.Bind(wx.EVT_BUTTON, self.handleGet, self.buttonGet)
         self.Bind(wx.EVT_BUTTON, self.handleAbort, self.buttonAbort)
 
@@ -53,7 +53,7 @@ class FrameSimpleDelayedBase(wx.Frame):
 
 class FrameSimpleDelayed(FrameSimpleDelayedBase):
     """This demos simplistic use of delayedresult module."""
-    
+
     def __init__(self, *args, **kwargs):
         FrameSimpleDelayedBase.__init__(self, *args, **kwargs)
         self.jobID = 0
@@ -76,24 +76,24 @@ class FrameSimpleDelayed(FrameSimpleDelayedBase):
             self.log( "Exiting: Aborting job %s" % self.jobID )
             self.abortEvent.set()
         self.Destroy()
-            
-    def handleGet(self, event): 
+
+    def handleGet(self, event):
         """Compute result in separate thread, doesn't affect GUI response."""
         self.buttonGet.Enable(False)
         self.buttonAbort.Enable(True)
         self.abortEvent.clear()
         self.jobID += 1
-        
+
         self.log( "Starting job %s in producer thread: GUI remains responsive"
                   % self.jobID )
-        delayedresult.startWorker(self._resultConsumer, self._resultProducer, 
+        delayedresult.startWorker(self._resultConsumer, self._resultProducer,
                                   wargs=(self.jobID,self.abortEvent), jobID=self.jobID)
 
-                        
+
     def _resultProducer(self, jobID, abortEvent):
         """
         Pretend to be a complex worker function or something that takes
-        long time to run due to network access etc. GUI will freeze if this 
+        long time to run due to network access etc. GUI will freeze if this
         method is not called in separate thread.
         """
         import time
@@ -104,14 +104,14 @@ class FrameSimpleDelayed(FrameSimpleDelayedBase):
         return jobID
 
 
-    def handleAbort(self, event): 
+    def handleAbort(self, event):
         """Abort the result computation."""
         self.log( "Aborting result for job %s" % self.jobID )
         self.buttonGet.Enable(True)
         self.buttonAbort.Enable(False)
         self.abortEvent.set()
 
-        
+
     def _resultConsumer(self, delayedResult):
         jobID = delayedResult.getJobID()
         assert jobID == self.jobID
@@ -120,11 +120,11 @@ class FrameSimpleDelayed(FrameSimpleDelayedBase):
         except Exception as exc:
             self.log( "Result for job %s raised exception: %s" % (jobID, exc) )
             return
-        
+
         # output result
         self.log( "Got result for job %s: %s" % (jobID, result) )
         self.textCtrlResult.SetValue(str(result))
-        
+
         # get ready for next job:
         self.buttonGet.Enable(True)
         self.buttonAbort.Enable(False)
@@ -134,7 +134,7 @@ class FrameSimpleDelayed(FrameSimpleDelayedBase):
 class FrameSimpleDirect(FrameSimpleDelayedBase):
     """This does not use delayedresult so the GUI will freeze while
     the GET is taking place."""
-    
+
     def __init__(self, *args, **kwargs):
         self.jobID = 1
         FrameSimpleDelayedBase.__init__(self, *args, **kwargs)
@@ -144,7 +144,7 @@ class FrameSimpleDirect(FrameSimpleDelayedBase):
         self.log = log
 
 
-    def handleGet(self, event): 
+    def handleGet(self, event):
         """
         Not using delayedresult, this will compute result in the same thread,
         and will affect GUI response because a thread is not used.
@@ -160,7 +160,7 @@ class FrameSimpleDirect(FrameSimpleDelayedBase):
     def _resultProducer(self, jobID):
         """
         Pretend to be a complex worker function or something that takes
-        long time to run due to network access etc. GUI will freeze if this 
+        long time to run due to network access etc. GUI will freeze if this
         method is not called in separate thread.
         """
         import time
@@ -177,7 +177,7 @@ class FrameSimpleDirect(FrameSimpleDelayedBase):
         # output result
         self.log( "Got result for job %s: %s" % (self.jobID, result) )
         self.textCtrlResult.SetValue(str(result))
-        
+
         # get ready for next job:
         self.buttonGet.Enable(True)
         self.buttonAbort.Enable(False)
@@ -215,7 +215,7 @@ class TestPanel(wx.Panel):
         frame = FrameSimpleDirect(self, title="Long-running function in GUI thread")
         frame.setLog(self.log.WriteText)
         frame.Show()
-    
+
 
 #---------------------------------------------------------------------------
 

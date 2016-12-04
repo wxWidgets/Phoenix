@@ -25,9 +25,9 @@ class PyProgressDemo(wx.Panel):
 
         wx.Panel.__init__(self, parent)
 
-        self.panel = wx.Panel(self, -1)        
+        self.panel = wx.Panel(self, -1)
         self.log = log
-        
+
         self.LayoutItems()
 
 
@@ -40,16 +40,16 @@ class PyProgressDemo(wx.Panel):
 
         self.elapsedchoice = wx.CheckBox(self.panel, -1, "Show Elapsed Time")
         self.elapsedchoice.SetValue(1)
-        
+
         self.cancelchoice = wx.CheckBox(self.panel, -1, "Enable Cancel Button")
         self.cancelchoice.SetValue(1)
-        
+
         static1 = wx.StaticText(self.panel, -1, "Gauge Proportion (%): ")
         self.slider1 = wx.Slider(self.panel, -1, 20, 1, 99, style=wx.SL_HORIZONTAL|
                                  wx.SL_AUTOTICKS|wx.SL_LABELS)
         self.slider1.SetTickFreq(10)
         self.slider1.SetValue(20)
-        
+
         static2 = wx.StaticText(self.panel, -1, "Gauge Steps: ")
         self.slider2 = wx.Slider(self.panel, -1, 50, 2, 100, style=wx.SL_HORIZONTAL|
                                  wx.SL_AUTOTICKS|wx.SL_LABELS)
@@ -58,10 +58,10 @@ class PyProgressDemo(wx.Panel):
 
         static3 = wx.StaticText(self.panel, -1, "Gauge Background Colour: ")
         self.csel3 = csel.ColourSelect(self.panel, -1, "Choose...", wx.WHITE)
-        
+
         static4 = wx.StaticText(self.panel, -1, "Gauge First Gradient Colour: ")
         self.csel4 = csel.ColourSelect(self.panel, -1, "Choose...", wx.WHITE)
-        
+
         static5 = wx.StaticText(self.panel, -1, "Gauge Second Gradient Colour: ")
         self.csel5 = csel.ColourSelect(self.panel, -1, "Choose...", wx.BLUE)
 
@@ -79,7 +79,7 @@ class PyProgressDemo(wx.Panel):
         rightsizer.Add(self.csel4, 0)
         rightsizer.Add(static5, 0, wx.ALIGN_CENTER_VERTICAL)
         rightsizer.Add(self.csel5, 0)
-        
+
         mainsizer.Add(startbutton, 0, wx.ALL, 20)
         mainsizer.Add(rightsizer, 1, wx.EXPAND|wx.ALL, 10)
 
@@ -92,12 +92,12 @@ class PyProgressDemo(wx.Panel):
         framesizer.Layout()
 
         startbutton.Bind(wx.EVT_BUTTON, self.OnStartProgress)
-        
-        
+
+
     def OnStartProgress(self, event):
 
         event.Skip()
-                
+
         style = wx.PD_APP_MODAL
         if self.elapsedchoice.GetValue():
             style |= wx.PD_ELAPSED_TIME
@@ -105,12 +105,12 @@ class PyProgressDemo(wx.Panel):
             style |= wx.PD_CAN_ABORT
 
         dlg = PP.PyProgress(None, -1, "PyProgress Example",
-                            "An Informative Message",                            
+                            "An Informative Message",
                             agwStyle=style)
 
         proportion = self.slider1.GetValue()
         steps = self.slider2.GetValue()
-        
+
         backcol = self.csel3.GetColour()
         firstcol = self.csel4.GetColour()
         secondcol = self.csel5.GetColour()
@@ -120,7 +120,7 @@ class PyProgressDemo(wx.Panel):
         dlg.SetGaugeBackground(backcol)
         dlg.SetFirstGradientColour(firstcol)
         dlg.SetSecondGradientColour(secondcol)
-        
+
         max = 400
         keepGoing = True
         count = 0

@@ -48,7 +48,7 @@ overview = """\
 This is a Python implementation of a dialog that is not yet implemented in wxWindows
 proper, so don't let the wxWindows documentation mislead you.
 
-<p><code><b>MultipleChoiceDialog</b>(self, parent, msg, title, lst, 
+<p><code><b>MultipleChoiceDialog</b>(self, parent, msg, title, lst,
 pos = wx.wxDefaultPosition, size = (200,200), style = wx.DEFAULT_DIALOG_STYLE)
 </code>
 
