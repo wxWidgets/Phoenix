@@ -7,7 +7,7 @@ PYVER=2.7
 PYTHON=`which python$PYVER`
 
 if [ ! -x $PYTHON ]; then
-    echo Something is wrong with the Python at $PYTHON	
+    echo Something is wrong with the Python at $PYTHON
     exit 1
 fi
 
