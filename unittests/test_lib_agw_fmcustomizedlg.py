@@ -15,13 +15,13 @@ class lib_agw_fmcustomizedlg_Tests(wtc.WidgetTestCase):
 
         fileMenu  = FM.FlatMenu()
         styleMenu = FM.FlatMenu()
-        
+
         self._mtb.Append(fileMenu, "&File")
         self._mtb.Append(styleMenu, "&Style")
-        
+
         # above is to excersize OrderedDict
-        self._dlg = FDLG.FMCustomizeDlg(self._mtb)        
-      
+        self._dlg = FDLG.FMCustomizeDlg(self._mtb)
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

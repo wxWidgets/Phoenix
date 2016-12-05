@@ -8,8 +8,8 @@ import os
 class frame_Tests(wtc.WidgetTestCase):
 
     def test_frameStyles(self):
-        wx.FRAME_NO_TASKBAR     
-        wx.FRAME_TOOL_WINDOW    
+        wx.FRAME_NO_TASKBAR
+        wx.FRAME_TOOL_WINDOW
         wx.FRAME_FLOAT_ON_PARENT
         wx.FRAME_SHAPED
 

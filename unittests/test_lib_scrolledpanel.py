@@ -18,15 +18,15 @@ class lib_scrolledpanel_Tests(wtc.WidgetTestCase):
 
         pnl.SetSizer(vbox)
 
-        pnl.SetupScrolling(scroll_x=True, scroll_y=False)        
+        pnl.SetupScrolling(scroll_x=True, scroll_y=False)
         self.assertEqual(pnl.GetScrollPixelsPerUnit(), (20, 0))
-        
-        pnl.SetupScrolling(scroll_x=False, scroll_y=True)        
+
+        pnl.SetupScrolling(scroll_x=False, scroll_y=True)
         self.assertEqual(pnl.GetScrollPixelsPerUnit(), (0, 20))
 
-        pnl.SetupScrolling(scroll_x=True, scroll_y=True, rate_x=10, rate_y=50)  
+        pnl.SetupScrolling(scroll_x=True, scroll_y=True, rate_x=10, rate_y=50)
         self.assertEqual(pnl.GetScrollPixelsPerUnit(), (10, 50))
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

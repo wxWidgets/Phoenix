@@ -6,8 +6,8 @@ import wx.grid
 
 #---------------------------------------------------------------------------
 
-        
-           
+
+
 class grid_Tests(wtc.WidgetTestCase):
 
     # NOTE: Most of these tests simply check that the class exists and can be
@@ -19,56 +19,56 @@ class grid_Tests(wtc.WidgetTestCase):
     def test_grid01(self):
         c1 = wx.grid.GridCellCoords()
         c2 = wx.grid.GridCellCoords(5,10)
-        
-        
+
+
     def test_grid02(self):
         r = wx.grid.GridCellAutoWrapStringRenderer()
-        
+
     def test_grid03(self):
         r = wx.grid.GridCellBoolRenderer()
-        
+
     def test_grid04(self):
         r = wx.grid.GridCellDateTimeRenderer()
 
     def test_grid05(self):
         r = wx.grid.GridCellEnumRenderer()
-        
+
     def test_grid06(self):
         r = wx.grid.GridCellFloatRenderer()
-        
+
     def test_grid07(self):
         r = wx.grid.GridCellNumberRenderer()
-        
+
     def test_grid08(self):
         r = wx.grid.GridCellStringRenderer()
-        
+
     def test_grid09(self):
         class MyRenderer(wx.grid.GridCellRenderer):
             def Clone(self):
                 return MyRenderer()
-            
+
             def Draw(self, grid, attr, dc, rect, row, col, isSelected):
                 pass
 
             def GetBestSize(self, grid, attr, dc, row, col):
                 return (80,20)
-            
+
         r = MyRenderer()
-        
-        
-        
+
+
+
     def test_grid10(self):
         e = wx.grid.GridCellAutoWrapStringEditor()
-        
+
     def test_grid11(self):
         e = wx.grid.GridCellBoolEditor()
-        
+
     def test_grid12(self):
         e = wx.grid.GridCellChoiceEditor('one two three'.split())
-        
+
     def test_grid13(self):
         e = wx.grid.GridCellEnumEditor()
-    
+
     def test_grid14(self):
         e = wx.grid.GridCellTextEditor()
 
@@ -77,26 +77,26 @@ class grid_Tests(wtc.WidgetTestCase):
 
     def test_grid16(self):
         e = wx.grid.GridCellNumberEditor()
-        
+
     def test_grid17(self):
         class MyEditor(wx.grid.GridCellEditor):
             def Clone(self): return MyEditor()
-            def BeginEdit(self, row, col, grid): pass            
-            def Create(self, parent, id, evtHandler): pass            
-            def EndEdit(self, row, col, grid, oldval): return None            
-            def ApplyEdit(self, row, col, grid): pass            
-            def Reset(self): pass             
+            def BeginEdit(self, row, col, grid): pass
+            def Create(self, parent, id, evtHandler): pass
+            def EndEdit(self, row, col, grid, oldval): return None
+            def ApplyEdit(self, row, col, grid): pass
+            def Reset(self): pass
             def GetValue(self): return ""
-            
+
         e = MyEditor()
         return e
-    
+
     def test_grid17a(self):
         e = self.test_grid17()
         e.GetControl
         e.SetControl
-            
-            
+
+
     def test_grid18(self):
         a = wx.grid.GridCellAttr()
         a.DecRef()
@@ -119,7 +119,7 @@ class grid_Tests(wtc.WidgetTestCase):
         a.GetSize()
         a.GetOverflow()
         a.GetKind()
-        
+
         a.DecRef()
 
 
@@ -132,12 +132,12 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.GridCellAttr.Merged
 
 
-    def test_grid20(self): 
+    def test_grid20(self):
         class MyRenderer(wx.grid.GridCornerHeaderRenderer):
             def DrawBorder(self, grid, dc, rect):
                 pass
         r = MyRenderer()
-                
+
     def test_grid21(self):
         class MyRenderer(wx.grid.GridHeaderLabelsRenderer):
             def DrawBorder(self, grid, dc, rect):
@@ -146,62 +146,62 @@ class grid_Tests(wtc.WidgetTestCase):
                 pass
         r = MyRenderer()
 
-    def test_grid22(self): 
+    def test_grid22(self):
         class MyRenderer(wx.grid.GridRowHeaderRenderer):
             def DrawBorder(self, grid, dc, rect):
                 pass
             def DrawLabel(self, grid, dc, value, rect, horizAlign, vertAlign, textOrientation):
                 pass
         r = MyRenderer()
-        
-    def test_grid23(self): 
+
+    def test_grid23(self):
         class MyRenderer(wx.grid.GridColumnHeaderRenderer):
             def DrawBorder(self, grid, dc, rect):
                 pass
             def DrawLabel(self, grid, dc, value, rect, horizAlign, vertAlign, textOrientation):
                 pass
         r = MyRenderer()
-         
-    def test_grid24(self): 
+
+    def test_grid24(self):
         r = wx.grid.GridRowHeaderRendererDefault()
-        
-    def test_grid25(self): 
+
+    def test_grid25(self):
         r = wx.grid.GridColumnHeaderRendererDefault()
-        
-    def test_grid26(self): 
+
+    def test_grid26(self):
         r = wx.grid.GridCornerHeaderRendererDefault()
-        
-        
-        
+
+
+
     def test_grid27(self):
         p = wx.grid.GridCellAttrProvider()
-        
-    def test_grid28(self): 
+
+    def test_grid28(self):
         class MyTable(wx.grid.GridTableBase):
             def GetNumberRows(self): return 1
             def GetNumberCols(self): return 1
             def GetValue(self, row, col): return ""
             def SetValue(self, row, col, value): pass
         t = MyTable()
-        
-        
-    def test_grid29(self): 
+
+
+    def test_grid29(self):
         t = wx.grid.GridStringTable()
-        
+
     def test_grid30(self):
         m = wx.grid.GridTableMessage()
-        
-    def test_grid31(self): 
+
+    def test_grid31(self):
         m = wx.grid.GridSizesInfo()
 
 
-        
-    def test_grid32(self): 
+
+    def test_grid32(self):
         g = wx.grid.Grid(self.frame)
         g.CreateGrid(10,5)
 
 
-        
+
     def test_grid33(self):
         g = wx.grid.Grid(self.frame)
         g.CreateGrid(10,5)
@@ -209,18 +209,18 @@ class grid_Tests(wtc.WidgetTestCase):
         g.SetCellValue(1,2, 'hello')
         g.SetCellValue((2,2), 'world')
         del ul
-        
-    def test_grid34(self): 
+
+    def test_grid34(self):
         g = wx.grid.Grid(self.frame)
         g.CreateGrid(10,5)
         with wx.grid.GridUpdateLocker(g):
             g.SetCellValue(1,2, 'hello')
             g.SetCellValue((2,2), 'world')
-        
-        
+
+
     def test_grid35(self):
         e = wx.grid.GridEvent()
-        
+
     def test_grid36(self):
         e = wx.grid.GridSizeEvent()
 
@@ -252,7 +252,7 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.wxEVT_GRID_COL_MOVE
         wx.grid.wxEVT_GRID_COL_SORT
         wx.grid.wxEVT_GRID_TABBING
-        
+
     def test_grid40(self):
         wx.grid.EVT_GRID_CELL_LEFT_CLICK
         wx.grid.EVT_GRID_CELL_RIGHT_CLICK
@@ -275,7 +275,7 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.EVT_GRID_COL_MOVE
         wx.grid.EVT_GRID_COL_SORT
         wx.grid.EVT_GRID_TABBING
-    
+
         wx.grid.EVT_GRID_CMD_CELL_LEFT_CLICK
         wx.grid.EVT_GRID_CMD_CELL_RIGHT_CLICK
         wx.grid.EVT_GRID_CMD_CELL_LEFT_DCLICK
@@ -297,12 +297,12 @@ class grid_Tests(wtc.WidgetTestCase):
         wx.grid.EVT_GRID_CMD_COL_MOVE
         wx.grid.EVT_GRID_CMD_COL_SORT
         wx.grid.EVT_GRID_CMD_TABBING
- 
+
 
     def test_grid41(self):
         wx.grid.Grid.SetCellHighlightPenWidth  # Does it exist
-        
-                        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

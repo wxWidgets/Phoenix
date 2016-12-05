@@ -21,27 +21,27 @@ class dnd_Tests(wtc.WidgetTestCase):
         wx.DragMove
         wx.DragLink
         wx.DragCancel
-        
+
 
     def test_dndDropTarget(self):
         class MyTarget(wx.DropTarget):
             def OnData(self, x, y, defResult):
                 self.GetData()
                 return defResult
-        
+
         dt = MyTarget()
         dt.DefaultAction
         self.frame.SetDropTarget(dt)
-        
-        
+
+
     def test_dndDropSource(self):
         ds = wx.DropSource(self.frame)
         if 'wxGTK' in wx.PlatformInfo:
             ds.SetIcon(wx.DragCopy, wx.Icon(icoFile))
         else:
             ds.SetCursor(wx.DragCopy, wx.Cursor(curFile, wx.BITMAP_TYPE_CUR))
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -8,7 +8,7 @@ pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 #---------------------------------------------------------------------------
 
 class ButtonTests(wtc.WidgetTestCase):
-    
+
     def test_ButtonCtors(self):
         btn = wx.Button(self.frame, label='label')
         btn = wx.Button(self.frame, -1, 'label', (10,10), (100,-1), wx.BU_LEFT)
@@ -17,7 +17,7 @@ class ButtonTests(wtc.WidgetTestCase):
 
     def test_ButtonProperties(self):
         btn = wx.Button(self.frame, label='label')
-        
+
         # do the properties exist?
         btn.AuthNeeded
         btn.Bitmap
@@ -28,14 +28,14 @@ class ButtonTests(wtc.WidgetTestCase):
         btn.BitmapMargins
         btn.BitmapPressed
         btn.Label
-        
-        
+
+
     def test_ButtonDefaultCtor(self):
         btn = wx.Button()
         btn.Create(self.frame, -1, 'button label')
-        
-        
-        
+
+
+
 #---------------------------------------------------------------------------
 
 

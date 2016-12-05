@@ -16,7 +16,7 @@ from six import StringIO
 
 
 class lib_pubsub_DefaultLog(wtc.PubsubTestCase):
-    
+
     def testNotifications(self):
         capture = StringIO()
         logger = notification.useNotifyByWriteFile(capture)
@@ -25,11 +25,10 @@ class lib_pubsub_DefaultLog(wtc.PubsubTestCase):
             self.pub.subscribe(listener, 'testNotifications')
         block()
 
-    
+
 #---------------------------------------------------------------------------
 
 
 if __name__ == '__main__':
     unittest.main()
-    
-    
+

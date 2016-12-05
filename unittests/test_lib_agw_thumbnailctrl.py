@@ -7,7 +7,7 @@ import wx.lib.agw.thumbnailctrl as TNC
 #---------------------------------------------------------------------------
 
 class lib_agw_thumbnailctrl_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_thumbnailctrlCtor(self):
         tnc = TNC.ThumbnailCtrl(self.frame, -1, imagehandler=TNC.NativeImageHandler)
 

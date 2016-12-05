@@ -5,11 +5,11 @@ import wx
 #---------------------------------------------------------------------------
 
 class timer_Tests(wtc.WidgetTestCase):
-            
+
     def onTimerEvt(self, *evt):
         self.flag = True
 
-   
+
     def test_timerOwner1(self):
         t = wx.Timer(self.frame)
         self.flag = False
@@ -25,18 +25,18 @@ class timer_Tests(wtc.WidgetTestCase):
         self.frame.Bind(wx.EVT_TIMER, self.onTimerEvt, t)
         t.Start(1000, wx.TIMER_ONE_SHOT)
         # timer will not have expired yet by this time, so flag shouldn't be set
-        self.waitFor(500) 
+        self.waitFor(500)
         self.assertFalse(self.flag)
-        
-        
+
+
     def test_timerPyTimer(self):
         t = wx.PyTimer(self.onTimerEvt)
         self.flag = False
         t.Start(250, wx.TIMER_ONE_SHOT)
         self.waitFor(500)
         self.assertTrue(self.flag)
-        
-        
+
+
     def test_timerDerivedClass(self):
         class MyTimer(wx.Timer):
             def __init__(self):
@@ -49,12 +49,12 @@ class timer_Tests(wtc.WidgetTestCase):
         t.Start(250, wx.TIMER_ONE_SHOT)
         self.waitFor(500)
         self.assertTrue(t.flag)
-                    
-                        
+
+
     def onCallLater(self):
         self.flag = True
         return 1234
-    
+
     def test_timerCallLater1(self):
         # simple CallLater usage
         wx.CallLater(150, self.onCallLater)
@@ -73,9 +73,9 @@ class timer_Tests(wtc.WidgetTestCase):
         cl.Restart()
         self.waitFor(500)
         self.assertTrue(self.flag)
-        
 
-        
+
+
 #---------------------------------------------------------------------------
 
 

@@ -13,8 +13,8 @@ class variant_Tests(wtc.WidgetTestCase):
         n = wx.testVariantTypemap(123)
         self.assertTrue(isinstance(n, six.integer_types))
         self.assertEqual(n, 123)
-        
-        
+
+
     @unittest.skipIf(not hasattr(wx, 'testVariantTypemap'), '')
     def test_variant2(self):
         s = wx.testVariantTypemap("Hello")
@@ -27,7 +27,7 @@ class variant_Tests(wtc.WidgetTestCase):
         d2 = wx.testVariantTypemap(d1)
         self.assertEqual(d1, d2)
 
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

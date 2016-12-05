@@ -7,7 +7,7 @@ import wx.lib.agw.knobctrl as KC
 #---------------------------------------------------------------------------
 
 class lib_agw_knobctrl_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_knobctrlCtor(self):
         knobctrl = KC.KnobCtrl(self.frame, size=(100, 100))
 
@@ -29,7 +29,7 @@ class lib_agw_knobctrl_Tests(wtc.WidgetTestCase):
 
         self.assertEqual(knobctrl.GetMinValue(), 0)
         self.assertEqual(knobctrl.GetMaxValue(), 150)
-        
+
     def test_lib_agw_knobctrlConstantsExist(self):
         KC.KC_BUFFERED_DC
 

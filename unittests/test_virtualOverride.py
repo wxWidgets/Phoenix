@@ -19,7 +19,7 @@ class MyTestPanel(wx.Panel):
     def __init__(self, *args, **kw):
         wx.Panel.__init__(self, *args, **kw)
         self.methodCalled = False
-        
+
     def AddChild(self, child):
         self.methodCalled = True
         if 1:
@@ -36,9 +36,9 @@ class virtualOverride_Tests(wtc.WidgetTestCase):
         b = wx.Button(p, -1, "Hello, I am a button")
         self.assertTrue(p.methodCalled)
         self.assertTrue(len(p.Children) == count+1)
-        
 
-        
+
+
 #---------------------------------------------------------------------------
 
 

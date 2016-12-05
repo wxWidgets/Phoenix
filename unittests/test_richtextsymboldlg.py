@@ -11,7 +11,7 @@ class richtextsymboldlg_Tests(wtc.WidgetTestCase):
         dlg = wx.richtext.SymbolPickerDialog('', '', '', self.frame)
         dlg.Show()
         dlg.Destroy()
-        
+
 
     def test_richtextsymboldlg2(self):
         dlg = wx.richtext.SymbolPickerDialog()

@@ -10,13 +10,13 @@ class scrolbar_Tests(wtc.WidgetTestCase):
         w = wx.ScrollBar(self.frame)
         w = wx.ScrollBar(self.frame, style=wx.SB_VERTICAL)
         self.assertTrue(w.IsVertical())
-        
+
 
     def test_scrolbarDefaultCtor(self):
         w = wx.ScrollBar()
         w.Create(self.frame)
-        
-        
+
+
     def test_scrolbarProperties(self):
         w = wx.ScrollBar(self.frame)
         w.PageSize
@@ -46,7 +46,7 @@ class scrolbar_Tests(wtc.WidgetTestCase):
         wx.EVT_COMMAND_SCROLL_THUMBTRACK
         wx.EVT_COMMAND_SCROLL_THUMBRELEASE
         wx.EVT_COMMAND_SCROLL_CHANGED
-        
+
 #---------------------------------------------------------------------------
 
 

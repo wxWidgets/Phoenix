@@ -19,14 +19,14 @@ class splash_Tests(wtc.WidgetTestCase):
         wx.adv.SPLASH_CENTER_ON_PARENT
         wx.adv.SPLASH_CENTER_ON_SCREEN
         wx.adv.SPLASH_NO_CENTER
-        
-        
+
+
     def test_splash2(self):
-        splash = wx.adv.SplashScreen(wx.Bitmap(pngFile), 
+        splash = wx.adv.SplashScreen(wx.Bitmap(pngFile),
                                      wx.adv.SPLASH_TIMEOUT|wx.adv.SPLASH_CENTRE_ON_SCREEN,
                                      250, self.frame)
         self.waitFor(300)
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

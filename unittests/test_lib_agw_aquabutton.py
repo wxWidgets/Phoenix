@@ -10,7 +10,7 @@ pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 #---------------------------------------------------------------------------
 
 class lib_agw_aquabutton_Tests(wtc.WidgetTestCase):
-    
+
     def test_lib_agw_aquabuttonCtor(self):
 
         # Initialize AquaButton 1 (with image)
@@ -20,7 +20,7 @@ class lib_agw_aquabutton_Tests(wtc.WidgetTestCase):
         btn2 = AB.AquaButton(self.frame, -1, None, "Hello World!")
 
         btn3 = AB.AquaToggleButton(self.frame, -1, None, 'Toggle')
-        
+
 
     def test_lib_agw_aquabuttonMethods(self):
         # Initialize AquaButton 2 (no image)
@@ -40,7 +40,7 @@ class lib_agw_aquabutton_Tests(wtc.WidgetTestCase):
         btn3 = AB.AquaToggleButton(self.frame, -1, None, 'Toggle')
         btn3.SetToggle(True)
         self.assertTrue(btn3.GetToggle())
-        
+
 
 #---------------------------------------------------------------------------
 

@@ -36,27 +36,27 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.wxEVT_COMMAND_LIST_COL_DRAGGING
         wx.wxEVT_COMMAND_LIST_COL_END_DRAG
         wx.wxEVT_COMMAND_LIST_ITEM_FOCUSED
-        
-        wx.EVT_LIST_BEGIN_DRAG        
-        wx.EVT_LIST_BEGIN_RDRAG       
-        wx.EVT_LIST_BEGIN_LABEL_EDIT  
-        wx.EVT_LIST_END_LABEL_EDIT    
-        wx.EVT_LIST_DELETE_ITEM       
-        wx.EVT_LIST_DELETE_ALL_ITEMS  
-        wx.EVT_LIST_ITEM_SELECTED     
-        wx.EVT_LIST_ITEM_DESELECTED   
-        wx.EVT_LIST_KEY_DOWN          
-        wx.EVT_LIST_INSERT_ITEM       
-        wx.EVT_LIST_COL_CLICK         
-        wx.EVT_LIST_ITEM_RIGHT_CLICK  
-        wx.EVT_LIST_ITEM_MIDDLE_CLICK 
-        wx.EVT_LIST_ITEM_ACTIVATED    
-        wx.EVT_LIST_CACHE_HINT        
-        wx.EVT_LIST_COL_RIGHT_CLICK   
-        wx.EVT_LIST_COL_BEGIN_DRAG    
-        wx.EVT_LIST_COL_DRAGGING      
-        wx.EVT_LIST_COL_END_DRAG      
-        wx.EVT_LIST_ITEM_FOCUSED      
+
+        wx.EVT_LIST_BEGIN_DRAG
+        wx.EVT_LIST_BEGIN_RDRAG
+        wx.EVT_LIST_BEGIN_LABEL_EDIT
+        wx.EVT_LIST_END_LABEL_EDIT
+        wx.EVT_LIST_DELETE_ITEM
+        wx.EVT_LIST_DELETE_ALL_ITEMS
+        wx.EVT_LIST_ITEM_SELECTED
+        wx.EVT_LIST_ITEM_DESELECTED
+        wx.EVT_LIST_KEY_DOWN
+        wx.EVT_LIST_INSERT_ITEM
+        wx.EVT_LIST_COL_CLICK
+        wx.EVT_LIST_ITEM_RIGHT_CLICK
+        wx.EVT_LIST_ITEM_MIDDLE_CLICK
+        wx.EVT_LIST_ITEM_ACTIVATED
+        wx.EVT_LIST_CACHE_HINT
+        wx.EVT_LIST_COL_RIGHT_CLICK
+        wx.EVT_LIST_COL_BEGIN_DRAG
+        wx.EVT_LIST_COL_DRAGGING
+        wx.EVT_LIST_COL_END_DRAG
+        wx.EVT_LIST_ITEM_FOCUSED
 
 
     def test_listctrlEvent(self):
@@ -90,12 +90,12 @@ class listctrl_Tests(wtc.WidgetTestCase):
     def test_listctrlConstants(self):
         wx.LC_VRULES
         wx.LC_HRULES
-    
+
         wx.LC_ICON
         wx.LC_SMALL_ICON
         wx.LC_LIST
         wx.LC_REPORT
-    
+
         wx.LC_ALIGN_TOP
         wx.LC_ALIGN_LEFT
         wx.LC_AUTOARRANGE
@@ -106,7 +106,7 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.LC_SINGLE_SEL
         wx.LC_SORT_ASCENDING
         wx.LC_SORT_DESCENDING
-    
+
         wx.LC_MASK_TYPE
         wx.LC_MASK_ALIGN
         wx.LC_MASK_SORT
@@ -118,7 +118,7 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.LIST_SET_ITEM
         wx.LIST_MASK_WIDTH
         wx.LIST_MASK_FORMAT
-    
+
         wx.LIST_STATE_DONTCARE
         wx.LIST_STATE_DROPHILITED
         wx.LIST_STATE_FOCUSED
@@ -129,7 +129,7 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.LIST_STATE_INUSE
         wx.LIST_STATE_PICKED
         wx.LIST_STATE_SOURCE
-    
+
         wx.LIST_HITTEST_ABOVE
         wx.LIST_HITTEST_BELOW
         wx.LIST_HITTEST_NOWHERE
@@ -140,14 +140,14 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.LIST_HITTEST_TOLEFT
         wx.LIST_HITTEST_TORIGHT
         wx.LIST_HITTEST_ONITEM
-    
+
         wx.LIST_GETSUBITEMRECT_WHOLEITEM
 
-        wx.LIST_NEXT_ABOVE  
-        wx.LIST_NEXT_ALL   
-        wx.LIST_NEXT_BELOW 
-        wx.LIST_NEXT_LEFT  
-        wx.LIST_NEXT_RIGHT 
+        wx.LIST_NEXT_ABOVE
+        wx.LIST_NEXT_ALL
+        wx.LIST_NEXT_BELOW
+        wx.LIST_NEXT_LEFT
+        wx.LIST_NEXT_RIGHT
 
         wx.LIST_ALIGN_DEFAULT
         wx.LIST_ALIGN_LEFT
@@ -157,7 +157,7 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.LIST_FORMAT_LEFT
         wx.LIST_FORMAT_RIGHT
         wx.LIST_FORMAT_CENTRE
-        wx.LIST_FORMAT_CENTER 
+        wx.LIST_FORMAT_CENTER
 
         wx.LIST_AUTOSIZE
         wx.LIST_AUTOSIZE_USEHEADER
@@ -170,11 +170,11 @@ class listctrl_Tests(wtc.WidgetTestCase):
         wx.LIST_FIND_DOWN
         wx.LIST_FIND_LEFT
         wx.LIST_FIND_RIGHT
-    
 
-        
 
-        
+
+
+
 #---------------------------------------------------------------------------
 
 

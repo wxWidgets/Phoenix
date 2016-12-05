@@ -17,13 +17,13 @@ def makeBuf(w, h, bpp=1, init=0):
 
 
 class image_Tests(wtc.WidgetTestCase):
-    
+
     def test_imageCtor1(self):
         img = wx.Image()
         self.assertTrue(not img.IsOk())
         img.Create(100,100)
         self.assertTrue(img.IsOk())
-        
+
     def test_imageCtor2(self):
         img = wx.Image(100,100)
         self.assertTrue(img.IsOk())
@@ -59,7 +59,7 @@ class image_Tests(wtc.WidgetTestCase):
         buf = makeBuf(w,h,3)
         with self.assertRaises(ValueError):
             # should be an exception here because the buffer is the wrong size
-            img = wx.Image((w, h+1), buf)  
+            img = wx.Image((w, h+1), buf)
 
     def test_imageCtor5b(self):
         w = h = 10
@@ -99,7 +99,7 @@ class image_Tests(wtc.WidgetTestCase):
         img.SetData(buf)
         self.assertTrue(img.IsOk())
         self.assertTrue(img.GetRed(1,1) == 2)
-        
+
     def test_imageSetData2(self):
         w = h = 10
         img = wx.Image(1,1)
@@ -114,7 +114,7 @@ class image_Tests(wtc.WidgetTestCase):
         buf = makeBuf(w,h, init=2)
         img.SetAlpha(buf)
         self.assertTrue(img.IsOk())
-        self.assertTrue(img.GetRed(1,1) == 0)        
+        self.assertTrue(img.GetRed(1,1) == 0)
         self.assertTrue(img.GetAlpha(1,1) == 2)
 
     def test_imageGetData(self):
@@ -142,7 +142,7 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertEqual(1, img.GetRed(0,0))
         self.assertEqual(2, img.GetGreen(0,0))
         self.assertEqual(3, img.GetBlue(0,0))
-                                   
+
     def test_imageGetAlphaDataBuffer(self):
         w = h = 10
         img = wx.Image(w, h)
@@ -156,8 +156,8 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertEqual(1, img.GetAlpha(0,0))
         self.assertEqual(2, img.GetAlpha(1,0))
         self.assertEqual(3, img.GetAlpha(2,0))
-        
-        
+
+
     def test_imageSetDataBuffer1(self):
         w = h = 10
         img = wx.Image(w,h)
@@ -169,7 +169,7 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertEqual(1, img.GetRed(0,0))
         self.assertEqual(2, img.GetGreen(0,0))
         self.assertEqual(3, img.GetBlue(0,0))
-        
+
     def test_imageSetDataBuffer2(self):
         w = h = 10
         img = wx.Image(1,1)
@@ -194,7 +194,7 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertEqual(2, img.GetAlpha(1,0))
         self.assertEqual(3, img.GetAlpha(2,0))
 
-        
+
     def test_imageNestedClasses(self):
         rgb = wx.Image.RGBValue(1,2,3)
         self.assertEqual(rgb.red, 1)
@@ -203,7 +203,7 @@ class image_Tests(wtc.WidgetTestCase):
         rgb.red = 4
         rgb.green = 5
         rgb.blue = 6
-        
+
         hsv = wx.Image.HSVValue(1.1, 1.2, 1.3)
         self.assertEqual(hsv.hue, 1.1)
         self.assertEqual(hsv.saturation, 1.2)
@@ -220,8 +220,8 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertEqual(rgb.red, 1)
         self.assertEqual(rgb.green, 2)
         self.assertEqual(rgb.blue, 3)
-        
-        
+
+
     def test_imageProperties(self):
         img = wx.Image(pngFile)
         self.assertTrue(img.IsOk())
@@ -243,7 +243,7 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
         r, g, b = img.FindFirstUnusedColour()
         r, g, b = img.GetOrFindMaskColour()
-        
+
 #---------------------------------------------------------------------------
 
 

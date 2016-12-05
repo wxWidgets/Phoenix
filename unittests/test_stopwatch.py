@@ -11,8 +11,8 @@ class stopwatch_Tests(wtc.WidgetTestCase):
         self.waitFor(1000)
         t = sw.Time()
         self.assertTrue(t > 900)
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

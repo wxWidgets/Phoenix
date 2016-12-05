@@ -7,12 +7,12 @@ import wx.lib.agw.toasterbox as TB
 #---------------------------------------------------------------------------
 
 class lib_agw_toasterbox_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_toasterboxCtor(self):
         windowstyle = TB.TB_CAPTION
         tbstyle = TB.TB_COMPLEX
         closingstyle = TB.TB_ONCLICK
-        
+
         tb = TB.ToasterBox(self.frame, tbstyle, windowstyle, closingstyle,
                            scrollType=TB.TB_SCR_TYPE_FADE)
         tb.Play()
@@ -28,8 +28,8 @@ class lib_agw_toasterbox_Tests(wtc.WidgetTestCase):
         TB.TB_SCR_TYPE_UD
         TB.TB_SCR_TYPE_DU
         TB.TB_SCR_TYPE_FADE
-        
-        
+
+
 
 #---------------------------------------------------------------------------
 

@@ -9,7 +9,7 @@ class htmlwinpars_Tests(wtc.WidgetTestCase):
 
     def test_htmlwinpars1(self):
         obj = wx.html.HtmlWinParser()
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

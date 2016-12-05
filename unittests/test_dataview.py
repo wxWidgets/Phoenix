@@ -15,11 +15,11 @@ class dataview_Tests(wtc.WidgetTestCase):
     def test_dataviewItem1(self):
         dvi = dv.DataViewItem()
         self.assertFalse(dvi)
-                
+
     def test_dataviewItem2(self):
         dvi = dv.DataViewItem(12345)
         self.assertTrue(dvi)
-        
+
     def test_dataviewItem3(self):
         dvi1 = dv.DataViewItem(111)
         dvi2 = dv.DataViewItem(222)
@@ -31,7 +31,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         dvi2 = dv.DataViewItem(111)
         self.assertTrue(dvi1 == dvi2)
         self.assertFalse(dvi1 != dvi2)
-                
+
     def test_dataviewItem5(self):
         self.assertFalse(dv.NullDataViewItem)
 
@@ -43,7 +43,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.assertTrue(int(dvi2.ID) == 222)
 
     def test_dataviewItem7(self):
-        # max integer size on platforms where long is 64-bit 
+        # max integer size on platforms where long is 64-bit
         n = 2**63 - 1
         if six.PY3:
             assert type(n) is int
@@ -54,7 +54,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.assertTrue(int(dvi.GetID()) == n)
 
 
-        
+
     #-------------------------------------------------------
     def test_dataviewItemAttr1(self):
         a = dv.DataViewItemAttr()
@@ -62,8 +62,8 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.assertFalse(a.HasColour())
         self.assertFalse(a.HasFont())
         self.assertFalse(a.HasBackgroundColour())
-        
-        
+
+
     def test_dataviewItemAttr2(self):
         a = dv.DataViewItemAttr()
         a.Colour = wx.BLACK
@@ -75,8 +75,8 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.assertTrue(a.HasBackgroundColour())
         self.assertTrue(a.GetBold())
         self.assertTrue(a.GetItalic())
-        
-        
+
+
     #-------------------------------------------------------
     def test_dataviewIconText1(self):
         dit = dv.DataViewIconText()
@@ -90,54 +90,54 @@ class dataview_Tests(wtc.WidgetTestCase):
         dit = dv.DataViewIconText('Smile!', icon)
         dit.Icon
         dit.Text
-    
-    
+
+
     #-------------------------------------------------------
     def test_dataviewModelNotifier1(self):
         with self.assertRaises(TypeError):
             n = dv.DataViewModelNotifier()
-    
-    
+
+
     def test_dataviewModelNotifier2(self):
         class MyNotifier(dv.DataViewModelNotifier):
             def Cleared(self): return True
-    
+
             def ItemAdded(self, parent, item): return True
             def ItemChanged(self, item): return True
             def ItemDeleted(self, parent, item): return True
             def ItemsAdded(self, parent, items): return True
             def ItemsChanged(self, items): return True
             def ItemsDeleted(self, parent, items): return True
-            
+
             def Resort(self): pass
             def ValueChanged(self, item, col): return True
-            
+
         n = MyNotifier()
-            
-    
+
+
     #-------------------------------------------------------
     def test_dataviewRenderer01(self):
         with self.assertRaises(TypeError):
             r = dv.DataViewRenderer()
-            
-        
+
+
     def test_dataviewRenderer02(self):
-        # This one can't be subclassed (that's what dv.DataViewCustomRenderer 
+        # This one can't be subclassed (that's what dv.DataViewCustomRenderer
         # is for) so make sure it raises an exception too.
-        with self.assertRaises(TypeError):        
+        with self.assertRaises(TypeError):
             class MyRenderer(dv.DataViewRenderer):
                 def GetValue(self):  return "value"
                 def SetValue(self, value): return True
-                
+
             r = MyRenderer()
-             
-                
+
+
     def test_dataviewRenderer03(self):
         r = dv.DataViewTextRenderer()
-        
+
     def test_dataviewRenderer04(self):
         r = dv.DataViewIconTextRenderer()
-        
+
     def test_dataviewRenderer05(self):
         r = dv.DataViewProgressRenderer()
 
@@ -152,28 +152,28 @@ class dataview_Tests(wtc.WidgetTestCase):
 
     def test_dataviewRenderer09(self):
         r = dv.DataViewBitmapRenderer()
-        
+
 
     def test_dataviewRenderer10(self):
         with self.assertRaises(TypeError):
             r = dv.DataViewCustomRenderer()
-            
+
     def test_dataviewRenderer11(self):
         class MyCustomRenderer(dv.DataViewCustomRenderer):
             def GetValue(self):  return "value"
             def SetValue(self, value): return True
             def GetSize(self): return wx.Size(100, 25)
             def Render(self, cell, dc, state): return True
-            
+
         r = MyCustomRenderer()
-        
+
     def test_dataviewRenderer12(self):
         r = dv.DataViewChoiceRenderer("one two three".split())
-    
-    
+
+
     #-------------------------------------------------------
     def test_dataviewColumn(self):
-        r = dv.DataViewIconTextRenderer()        
+        r = dv.DataViewIconTextRenderer()
         # create
         c = dv.DataViewColumn('title', r, 0)
         # test that properties exist
@@ -184,15 +184,15 @@ class dataview_Tests(wtc.WidgetTestCase):
         c.Alignment
         c.Flags
         c.SortOrder
-        
+
         self.myYield()
-    
+
     #-------------------------------------------------------
     def test_dataviewModel1(self):
         with self.assertRaises(TypeError):
             m = dv.DataViewModel()
-    
-    
+
+
     def test_dataviewModel2(self):
         class MyModel(dv.DataViewModel):
             def GetChildren(self, item, children): return 0
@@ -202,65 +202,65 @@ class dataview_Tests(wtc.WidgetTestCase):
             def GetValue(self, item, col): return 'value'
             def IsContainer(self, item) : return False
             def SetValue(self, value, item, col): return True
-            
+
         m = MyModel()
-    
+
     #-------------------------------------------------------
     def test_dataviewIndexListModel1(self):
         with self.assertRaises(TypeError):
             m = dv.DataViewIndexListModel()
-        
+
     def test_dataviewIndexListModel2(self):
         class MyModel(dv.DataViewIndexListModel):
             def GetCount(self): return 0
             def GetRow(self, item): return 0
             def GetValueByRow(self, row, col): return 'value'
             def SetValueByRow(self, value, row, col): return True
-            
+
         m = MyModel()
-            
+
 
     def test_dataviewVirtualListModel1(self):
         with self.assertRaises(TypeError):
             m = dv.DataViewVirtualListModel()
-    
+
     def test_dataviewVirtualModel2(self):
         class MyModel(dv.DataViewVirtualListModel):
             def GetCount(self): return 0
             def GetRow(self, item): return 0
             def GetValueByRow(self, row, col): return 'value'
             def SetValueByRow(self, value, row, col): return True
-            
+
         m = MyModel()
-        
-    
+
+
     #-------------------------------------------------------
     def test_dataviewCtrl1(self):
-        
+
         class MyModel(dv.DataViewIndexListModel):
-            def GetCount(self): 
+            def GetCount(self):
                 return 50
-            
+
             def GetColumnCount(self):
                 return 10
-            
-            def GetValueByRow(self, row, col): 
+
+            def GetValueByRow(self, row, col):
                 return 'value(%d, %d)' (row, col)
-            
-            def SetValueByRow(self, value, row, col): 
+
+            def SetValueByRow(self, value, row, col):
                 return True
-            
+
             def GetColumnType(self, col):
                 return 'string'
-            
-        
+
+
 
         dvc = dv.DataViewCtrl(self.frame, style=dv.DV_ROW_LINES|dv.DV_VERT_RULES|dv.DV_MULTIPLE)
         model = MyModel()
         count1 = model.GetRefCount()
         dvc.AssociateModel(model)
         count2 = model.GetRefCount()
-        
+
         # The reference count should still be 1 because the model was
         # DecRef'ed when it's ownership transfered to C++ in the
         # AssociateModel call
@@ -275,7 +275,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         # Destroying the 2nd view should drop the refcount again
         dvc2.Destroy()
         self.assertEqual(model.GetRefCount(), 1)
-        
+
         # And since ownership has been transferred, deleting this reference
         # to the model should not cause any problems.
         del model
@@ -285,20 +285,20 @@ class dataview_Tests(wtc.WidgetTestCase):
         dvc.AppendTextColumn("three", 3, width=80, mode=dv.DATAVIEW_CELL_EDITABLE)
         dvc.AppendTextColumn("four",  4, width=80, mode=dv.DATAVIEW_CELL_EDITABLE)
         dvc.AppendTextColumn("five",  5, width=80, mode=dv.DATAVIEW_CELL_EDITABLE)
-        
+
         self.frame.SendSizeEvent()
         dvc.Refresh()
         self.myYield()
 
 
-        
+
     #-------------------------------------------------------
     def test_dataviewListCtrl1(self):
         dlc = dv.DataViewListCtrl()
         dlc.Create(self.frame)
         self.doListCtrlTest(dlc)
-        
-            
+
+
     def test_dataviewListCtrl2(self):
         dlc = dv.DataViewListCtrl(self.frame)
         self.doListCtrlTest(dlc)
@@ -309,13 +309,13 @@ class dataview_Tests(wtc.WidgetTestCase):
             dlc.AppendTextColumn(label)
         col = dv.DataViewColumn('five', dv.DataViewBitmapRenderer(), 4)
         dlc.AppendColumn(col)
-        
+
         bmp = wx.Bitmap(pngFile)
         for n in range(50):
             rowdata = ['%s-%02d' % (s, n) for s in "one two three four".split()]
             rowdata.append(bmp)
             dlc.AppendItem(rowdata)
-            
+
         self.frame.SendSizeEvent()
         dlc.Refresh()
         self.myYield()
@@ -327,21 +327,21 @@ class dataview_Tests(wtc.WidgetTestCase):
         item, col = dlc.HitTest((10,50))
         self.assertTrue(isinstance(item, dv.DataViewItem))
         self.assertTrue(isinstance(col, dv.DataViewColumn) or col is None)
-            
+
     #-------------------------------------------------------
     # DataViewTreeCtrl
-    
-    
+
+
     def test_dataviewTreeCtrl1(self):
         dtc = dv.DataViewTreeCtrl()
         dtc.Create(self.frame)
         self.doTreeCtrlTest(dtc)
-        
-            
+
+
     def test_dataviewTreeCtrl2(self):
         dtc = dv.DataViewTreeCtrl(self.frame)
         self.doTreeCtrlTest(dtc)
-        
+
 
     def doTreeCtrlTest(self, dvtc):
         isz = (16,16)
@@ -366,7 +366,7 @@ class dataview_Tests(wtc.WidgetTestCase):
                         last, "item %d-%s-%d" % (x, chr(ord("a")+y), z),
                         fileidx)
                     dvtc.ExpandAncestors(item)
-        
+
         self.frame.SendSizeEvent()
         dvtc.Refresh()
         self.myYield()
@@ -377,22 +377,22 @@ class dataview_Tests(wtc.WidgetTestCase):
         dv.DVC_DEFAULT_RENDERER_SIZE
         dv.DVC_DEFAULT_WIDTH
         dv.DVC_TOGGLE_DEFAULT_WIDTH
-        dv.DVC_DEFAULT_MINWIDTH 
+        dv.DVC_DEFAULT_MINWIDTH
         dv.DVR_DEFAULT_ALIGNMENT
 
         dv.DATAVIEW_CELL_INERT
         dv.DATAVIEW_CELL_ACTIVATABLE
         dv.DATAVIEW_CELL_EDITABLE
         dv.DATAVIEW_CELL_SELECTED
-        dv.DATAVIEW_CELL_PRELIT  
+        dv.DATAVIEW_CELL_PRELIT
         dv.DATAVIEW_CELL_INSENSITIVE
-        dv.DATAVIEW_CELL_FOCUSED    
+        dv.DATAVIEW_CELL_FOCUSED
 
         dv.DATAVIEW_COL_RESIZABLE
         dv.DATAVIEW_COL_SORTABLE
         dv.DATAVIEW_COL_REORDERABLE
-        dv.DATAVIEW_COL_HIDDEN 
-    
+        dv.DATAVIEW_COL_HIDDEN
+
         dv.DV_SINGLE
         dv.DV_MULTIPLE
         dv.DV_NO_HEADER
@@ -400,11 +400,11 @@ class dataview_Tests(wtc.WidgetTestCase):
         dv.DV_VERT_RULES
         dv.DV_ROW_LINES
         dv.DV_VARIABLE_LINE_HEIGHT
-        
+
 
     def test_dataviewEvt1(self):
         evt = dv.DataViewEvent()
-        
+
         evt.GetItem
         evt.SetItem
         evt.GetColumn
@@ -434,7 +434,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         evt.GetDragFlags
         evt.SetDropEffect
         evt.GetDropEffect
-        
+
 
     def test_dataviewEvt2(self):
         dv.wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED;
@@ -454,32 +454,32 @@ class dataview_Tests(wtc.WidgetTestCase):
         dv.wxEVT_COMMAND_DATAVIEW_COLUMN_REORDERED;
         dv.wxEVT_COMMAND_DATAVIEW_ITEM_BEGIN_DRAG;
         dv.wxEVT_COMMAND_DATAVIEW_ITEM_DROP_POSSIBLE;
-        dv.wxEVT_COMMAND_DATAVIEW_ITEM_DROP;           
+        dv.wxEVT_COMMAND_DATAVIEW_ITEM_DROP;
         dv.wxEVT_COMMAND_DATAVIEW_CACHE_HINT;
-    
-        dv.EVT_DATAVIEW_SELECTION_CHANGED        
-        dv.EVT_DATAVIEW_ITEM_ACTIVATED           
-        dv.EVT_DATAVIEW_ITEM_COLLAPSED           
-        dv.EVT_DATAVIEW_ITEM_EXPANDED            
-        dv.EVT_DATAVIEW_ITEM_COLLAPSING          
-        dv.EVT_DATAVIEW_ITEM_EXPANDING           
-        dv.EVT_DATAVIEW_ITEM_START_EDITING       
-        dv.EVT_DATAVIEW_ITEM_EDITING_STARTED     
-        dv.EVT_DATAVIEW_ITEM_EDITING_DONE        
-        dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED       
-        dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU        
-        dv.EVT_DATAVIEW_COLUMN_HEADER_CLICK      
+
+        dv.EVT_DATAVIEW_SELECTION_CHANGED
+        dv.EVT_DATAVIEW_ITEM_ACTIVATED
+        dv.EVT_DATAVIEW_ITEM_COLLAPSED
+        dv.EVT_DATAVIEW_ITEM_EXPANDED
+        dv.EVT_DATAVIEW_ITEM_COLLAPSING
+        dv.EVT_DATAVIEW_ITEM_EXPANDING
+        dv.EVT_DATAVIEW_ITEM_START_EDITING
+        dv.EVT_DATAVIEW_ITEM_EDITING_STARTED
+        dv.EVT_DATAVIEW_ITEM_EDITING_DONE
+        dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED
+        dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU
+        dv.EVT_DATAVIEW_COLUMN_HEADER_CLICK
         dv.EVT_DATAVIEW_COLUMN_HEADER_RIGHT_CLICK
-        dv.EVT_DATAVIEW_COLUMN_SORTED            
-        dv.EVT_DATAVIEW_COLUMN_REORDERED         
-        dv.EVT_DATAVIEW_ITEM_BEGIN_DRAG          
-        dv.EVT_DATAVIEW_ITEM_DROP_POSSIBLE       
-        dv.EVT_DATAVIEW_ITEM_DROP                
-        dv.EVT_DATAVIEW_CACHE_HINT               
-    
-    
-        
-    
+        dv.EVT_DATAVIEW_COLUMN_SORTED
+        dv.EVT_DATAVIEW_COLUMN_REORDERED
+        dv.EVT_DATAVIEW_ITEM_BEGIN_DRAG
+        dv.EVT_DATAVIEW_ITEM_DROP_POSSIBLE
+        dv.EVT_DATAVIEW_ITEM_DROP
+        dv.EVT_DATAVIEW_CACHE_HINT
+
+
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

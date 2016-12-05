@@ -25,7 +25,7 @@ class animate_Tests(wtc.WidgetTestCase):
         anictrl = wx.adv.AnimationCtrl(self.frame, anim=ani)
         anictrl.Play()
         self.waitFor(500)
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

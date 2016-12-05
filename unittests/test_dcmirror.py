@@ -6,7 +6,7 @@ import sys
 #---------------------------------------------------------------------------
 
 class MirrorDCTests(wtc.WidgetTestCase):
-            
+
     def test_MirrorDC1(self):
         cdc = wx.ClientDC(self.frame)
         dc = wx.MirrorDC(cdc, True)
