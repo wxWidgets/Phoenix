@@ -54,7 +54,7 @@ def removeWxPrefixes(node):
         if item.name.startswith('wxEVT_') and 'CATEGORY' not in item.name:
             # give these their actual name so the auto-renamer won't touch them
             item.pyName = item.name
-            
+
 
 def removeWxPrefix(name):
     """
@@ -62,13 +62,13 @@ def removeWxPrefix(name):
     """
     if name.startswith('wx.') or name.startswith('``wx.'):
         return name
-    
+
     if name.startswith('wx') and not name.startswith('wxEVT_'):
         name = name[2:]
-    
+
     if name.startswith('``wx') and not name.startswith('``wxEVT_'):
         name = name[0:2] + name[4:]
-        
+
     return name
 
 
@@ -78,25 +78,25 @@ class FixWxPrefix(object):
     A mixin class that can help with removing the wx prefix, or changing it
     in to a "wx.Name" depending on where it is being used from.
     """
-    
+
     _coreTopLevelNames = None
-    
+
     def fixWxPrefix(self, name, checkIsCore=False):
         # By default remove the wx prefix like normal
         name = removeWxPrefix(name)
         if not checkIsCore or self.isCore:
             return name
-        
+
         # Otherwise, if we're not processing the core module currently then check
         # if the name is local or if it resides in core. If it does then return
         # the name as 'wx.Name'
         if FixWxPrefix._coreTopLevelNames is None:
             self._getCoreTopLevelNames()
-            
+
         testName = name
         if '(' in name:
             testName = name[:name.find('(')]
-            
+
         if testName in FixWxPrefix._coreTopLevelNames:
             return 'wx.'+name
         else:
@@ -119,7 +119,7 @@ class FixWxPrefix(object):
                 names.append(item.name)
             elif isinstance(item, ast.FunctionDef):
                 names.append(item.name)
-        
+
         names = list()
         filename = 'wx/core.pi'
         if PY3:
@@ -133,8 +133,8 @@ class FixWxPrefix(object):
             _processItem(item, names)
 
         FixWxPrefix._coreTopLevelNames = names
-        
-    
+
+
 
 
 def ignoreAssignmentOperators(node):
@@ -145,7 +145,7 @@ def ignoreAssignmentOperators(node):
         if isinstance(item, extractors.MethodDef) and item.name == 'operator=':
             item.ignore()
 
-            
+
 def ignoreAllOperators(node):
     """
     Set the ignored flag for all class methods that are any kind of operator
@@ -170,7 +170,7 @@ def ignoreConstOverloads(node):
                 item2 = overloads[j]
                 if item1.ignored or item2.ignored:
                     continue
-                if (item1.argsString.replace(' const', '').strip() == 
+                if (item1.argsString.replace(' const', '').strip() ==
                     item2.argsString.replace(' const', '').strip()):
                     if item1.isConst:
                         item1.ignore()
@@ -178,13 +178,13 @@ def ignoreConstOverloads(node):
                     elif item2.isConst:
                         item2.ignore()
                         return
-        
+
     for item in node.items:
         if isinstance(item, extractors.MethodDef) and item.overloads:
             _checkOverloads(item)
-            
-            
-            
+
+
+
 def addAutoProperties(node):
     """
     Call klass.addAutoProperties for all classes in node with
@@ -199,7 +199,7 @@ def addAutoProperties(node):
                 continue
             item.addAutoProperties()
 
-            
+
 def fixEventClass(klass, ignoreProtected=True):
     """
     Add the extra stuff that an event class needs that are lacking from the
@@ -223,9 +223,9 @@ def fixEventClass(klass, ignoreProtected=True):
         for item in klass.allItems():
             if isinstance(item, extractors.MethodDef) and item.protection == 'protected':
                 item.ignore(False)
-        
 
-    
+
+
 def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Do common tweaks for a window class.
@@ -267,7 +267,7 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
 
 def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
-    Tweaks for TLWs 
+    Tweaks for TLWs
     """
     # TLW tweaks are a little different. We use the function annotation for
     # TransferThis instead of the argument annotation.
@@ -306,17 +306,17 @@ def fixSizerClass(klass):
     removeVirtuals(klass)
     klass.find('CalcMin').isVirtual = True
     klass.find('RecalcSizes').isVirtual = True
-    
+
     # in the wxSizer class they are pure-virtual
     if klass.name == 'wxSizer':
         klass.find('CalcMin').isPureVirtual = True
         klass.find('RecalcSizes').isPureVirtual = True
-    
-    
+
+
 def fixBookctrlClass(klass, treeBook=False):
     """
     Add declarations of the pure virtual methods from the base class.
-    """    
+    """
     klass.addItem(extractors.WigCode("""\
         virtual int GetPageImage(size_t nPage) const;
         virtual bool SetPageImage(size_t page, int image);
@@ -332,7 +332,7 @@ def fixBookctrlClass(klass, treeBook=False):
                                 bool select = false, int imageId = NO_IMAGE);
         """))
 
-    
+
 def fixHtmlSetFonts(klass):
     # Use wxArrayInt instead of a C array of ints.
     m = klass.find('SetFonts')
@@ -373,13 +373,13 @@ def removeVirtuals(klass):
         if isinstance(item, extractors.MethodDef):
             item.isVirtual = item.isPureVirtual = False
 
-            
+
 def addWindowVirtuals(klass):
     """
     Either turn the virtual flag back on or add a declaration for the subset of
     the C++ virtuals in wxWindow classes that we will be supporting.
     """
-    publicWindowVirtuals = [      
+    publicWindowVirtuals = [
         ('GetClientAreaOrigin',      'wxPoint GetClientAreaOrigin() const'),
         ('Validate',                 'bool Validate()'),
         ('TransferDataToWindow',     'bool TransferDataToWindow()'),
@@ -393,19 +393,19 @@ def addWindowVirtuals(klass):
         ('InheritAttributes',        'void InheritAttributes()'),
         ('ShouldInheritColours',     'bool ShouldInheritColours() const'),
         ('OnInternalIdle',           'void OnInternalIdle()'),
-        ('GetMainWindowOfCompositeControl', 
+        ('GetMainWindowOfCompositeControl',
                                      'wxWindow *GetMainWindowOfCompositeControl()'),
         ('InformFirstDirection',     'bool InformFirstDirection(int direction, int size, int availableOtherDir)'),
         ('SetCanFocus',              'void SetCanFocus(bool canFocus)'),
         ('Destroy',                  'bool Destroy()'),
 
         ## What about these?
-        #bool HasMultiplePages() const 
+        #bool HasMultiplePages() const
         #void UpdateWindowUI(long flags = wxUPDATE_UI_NONE);
         #void DoUpdateWindowUI(wxUpdateUIEvent& event) ;
     ]
-    
-    protectedWindowVirtuals = [    
+
+    protectedWindowVirtuals = [
         ('ProcessEvent',              'bool ProcessEvent(wxEvent & event)'),
         ('DoEnable',                  'void DoEnable(bool enable)'),
         ('DoGetPosition',             'void DoGetPosition(int *x, int *y) const'),
@@ -432,7 +432,7 @@ def addWindowVirtuals(klass):
         #('DoSetVirtualSize',    'void DoSetVirtualSize( int x, int y )'),
         #('DoGetVirtualSize',    'wxSize DoGetVirtualSize() const'),
     ]
-    
+
     def _processItems(klass, prot, virtuals):
         txt = ''
         for name, decl in virtuals:
@@ -445,14 +445,14 @@ def addWindowVirtuals(klass):
         if txt:
             txt = prot + txt
         return txt
-    
+
     txt = _processItems(klass, 'public:\n', publicWindowVirtuals)
     klass.addItem(extractors.WigCode(txt))
     txt = _processItems(klass, 'protected:\n', protectedWindowVirtuals)
     klass.addItem(extractors.WigCode(txt))
     klass.addPublic()
-                  
-                  
+
+
 def addSipConvertToSubClassCode(klass):
     """
     Teach SIP how to convert to specific subclass types
@@ -467,14 +467,14 @@ def addSipConvertToSubClassCode(klass):
             name = info->GetClassName();
             exists = sipFindType(name) != NULL;
         }
-        if (info) 
+        if (info)
             sipType = sipFindType(name);
         else
             sipType = NULL;
     %End
     """))
-    
-    
+
+
 def getEtgFiles(names):
     """
     Create a list of the files from the basenames in the names list that
@@ -490,7 +490,7 @@ def getNonEtgFiles(names, template='src/%s.sip'):
     """
     return getMatchingFiles(names, template)
 
-    
+
 def getMatchingFiles(names, template):
     """
     Create a list of files from the basenames in names that match the template
@@ -502,9 +502,9 @@ def getMatchingFiles(names, template):
         if os.path.exists(name):
             files.append(name)
     return files
-            
 
-            
+
+
 def doCommonTweaks(module):
     """
     A collection of tweaks that should probably be done to all modules.
@@ -512,8 +512,8 @@ def doCommonTweaks(module):
     ignoreAssignmentOperators(module)
     removeWxPrefixes(module)
     addAutoProperties(module)
-    
-    
+
+
 def changeTypeNames(module, oldName, newName, skipTypedef=False):
     """
     Changes the matching type names for functions and parameters to a new
@@ -559,13 +559,13 @@ def getWrapperGenerator():
     else:
         # The default is sip
         from etgtools import sip_generator
-        gClass = sip_generator.SipWrapperGenerator    
+        gClass = sip_generator.SipWrapperGenerator
     return gClass()
 
 
 def getDocsGenerator():
     if '--nodoc' in sys.argv:
-        from etgtools import generators    
+        from etgtools import generators
         return generators.StubbedDocsGenerator()
     elif '--sphinx' in sys.argv:
         from etgtools import sphinx_generator
@@ -574,20 +574,20 @@ def getDocsGenerator():
         # the current default is sphinx
         from etgtools import sphinx_generator
         return sphinx_generator.SphinxGenerator()
-        
+
 
 
 def runGenerators(module):
     checkForUnitTestModule(module)
 
     generators = list()
-    
+
     # Create the code generator selected from command line args
     generators.append(getWrapperGenerator())
-    
+
     # Toss in the PI generator too
     from etgtools import pi_generator
-    generators.append(pi_generator.PiWrapperGenerator())    
+    generators.append(pi_generator.PiWrapperGenerator())
 
     # Now the item map generator
     from etgtools import map_generator
@@ -599,7 +599,7 @@ def runGenerators(module):
     # run the generators
     for g in generators:
         g.generate(module)
-        
+
 
 
 def checkForUnitTestModule(module):
@@ -625,15 +625,15 @@ def convertTwoIntegersTemplate(CLASS):
            int rval = 1;
            PyObject* o1 = PySequence_ITEM(sipPy, 0);
            PyObject* o2 = PySequence_ITEM(sipPy, 1);
-           if (!PyNumber_Check(o1) || !PyNumber_Check(o2)) 
+           if (!PyNumber_Check(o1) || !PyNumber_Check(o2))
                rval = 0;
            Py_DECREF(o1);
            Py_DECREF(o2);
            return rval;
        }}
        return 0;
-   }}   
-   
+   }}
+
     // otherwise do the conversion
     if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS)) {{
         // Just fetch the existing instance
@@ -641,7 +641,7 @@ def convertTwoIntegersTemplate(CLASS):
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
         return 0;  // not a new instance
     }}
-    
+
     // or create a new instance
     PyObject* o1 = PySequence_ITEM(sipPy, 0);
     PyObject* o2 = PySequence_ITEM(sipPy, 1);
@@ -660,14 +660,14 @@ def convertFourIntegersTemplate(CLASS):
         // is it already an instance of {CLASS}?
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
- 
+
         if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
             int rval = 1;
             PyObject* o1 = PySequence_ITEM(sipPy, 0);
             PyObject* o2 = PySequence_ITEM(sipPy, 1);
             PyObject* o3 = PySequence_ITEM(sipPy, 2);
             PyObject* o4 = PySequence_ITEM(sipPy, 3);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4)) 
+            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4))
                 rval = 0;
             Py_DECREF(o1);
             Py_DECREF(o2);
@@ -676,8 +676,8 @@ def convertFourIntegersTemplate(CLASS):
             return rval;
         }}
         return 0;
-    }}   
-   
+    }}
+
     // otherwise do the conversion
     if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS)) {{
         // Just fetch the existing instance
@@ -689,7 +689,7 @@ def convertFourIntegersTemplate(CLASS):
     PyObject* o1 = PySequence_ITEM(sipPy, 0);
     PyObject* o2 = PySequence_ITEM(sipPy, 1);
     PyObject* o3 = PySequence_ITEM(sipPy, 2);
-    PyObject* o4 = PySequence_ITEM(sipPy, 3);       
+    PyObject* o4 = PySequence_ITEM(sipPy, 3);
     *sipCppPtr = new {CLASS}(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2),
                              wxPyInt_AsLong(o3), wxPyInt_AsLong(o4));
     Py_DECREF(o1);
@@ -707,20 +707,20 @@ def convertTwoDoublesTemplate(CLASS):
         // is it already an instance of {CLASS}?
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
- 
+
         if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
             int rval = 1;
             PyObject* o1 = PySequence_ITEM(sipPy, 0);
             PyObject* o2 = PySequence_ITEM(sipPy, 1);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2)) 
+            if (!PyNumber_Check(o1) || !PyNumber_Check(o2))
                 rval = 0;
             Py_DECREF(o1);
             Py_DECREF(o2);
             return rval;
         }}
         return 0;
-    }}   
-   
+    }}
+
     // otherwise do the conversion
     if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS)) {{
         // Just fetch the existing instance
@@ -728,7 +728,7 @@ def convertTwoDoublesTemplate(CLASS):
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
         return 0; // not a new instance
     }}
-   
+
     // or create a new instance
     PyObject* o1 = PySequence_ITEM(sipPy, 0);
     PyObject* o2 = PySequence_ITEM(sipPy, 1);
@@ -747,14 +747,14 @@ def convertFourDoublesTemplate(CLASS):
         // is it already an instance of {CLASS}?
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
- 
+
         if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
             int rval = 1;
             PyObject* o1 = PySequence_ITEM(sipPy, 0);
             PyObject* o2 = PySequence_ITEM(sipPy, 1);
             PyObject* o3 = PySequence_ITEM(sipPy, 2);
             PyObject* o4 = PySequence_ITEM(sipPy, 3);
-            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4)) 
+            if (!PyNumber_Check(o1) || !PyNumber_Check(o2) || !PyNumber_Check(o3) || !PyNumber_Check(o4))
                 rval = 0;
             Py_DECREF(o1);
             Py_DECREF(o2);
@@ -763,8 +763,8 @@ def convertFourDoublesTemplate(CLASS):
             return rval;
         }}
         return 0;
-    }}   
-    
+    }}
+
     // otherwise do the conversion
     if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS)) {{
         // Just fetch the existing instance
@@ -772,12 +772,12 @@ def convertFourDoublesTemplate(CLASS):
                 sipPy, sipType_{CLASS}, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
         return 0; // not a new instance
     }}
-    
+
     // or create a new instance
     PyObject* o1 = PySequence_ITEM(sipPy, 0);
     PyObject* o2 = PySequence_ITEM(sipPy, 1);
     PyObject* o3 = PySequence_ITEM(sipPy, 2);
-    PyObject* o4 = PySequence_ITEM(sipPy, 3);       
+    PyObject* o4 = PySequence_ITEM(sipPy, 3);
     *sipCppPtr = new {CLASS}(PyFloat_AsDouble(o1), PyFloat_AsDouble(o2),
     PyFloat_AsDouble(o3), PyFloat_AsDouble(o4));
     Py_DECREF(o1);
@@ -791,26 +791,26 @@ def convertFourDoublesTemplate(CLASS):
 # Templates for creating wrappers for type-specific wxList and wxArray classes
 
 
-def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None, 
+def wxListWrapperTemplate(ListClass, ItemClass, module, RealItemClass=None,
                           includeConvertToType=False, fakeListClassName=None):
     if RealItemClass is None:
-        RealItemClass = ItemClass    
+        RealItemClass = ItemClass
 
     if fakeListClassName:
         TypeDef = "typedef %s %s;" % (ListClass, fakeListClassName)
         ListClass = fakeListClassName
     else:
         TypeDef = ""
-        
-    moduleName = module.module        
+
+    moduleName = module.module
     ListClass_pyName = removeWxPrefix(ListClass)
-    
+
     # *** TODO: This can probably be done in a way that is not SIP-specfic.
     # Try creating extractor objects from scratch and attach cppMethods to
     # them as needed, etc..
-        
+
     klassCode = '''\
-class {ListClass}_iterator /Abstract/ 
+class {ListClass}_iterator /Abstract/
 {{
     // the C++ implementation of this class
     %TypeHeaderCode
@@ -819,7 +819,7 @@ class {ListClass}_iterator /Abstract/
         public:
             {ListClass}_iterator({ListClass}::compatibility_iterator start)
                 : m_node(start) {{}}
-            
+
             {ItemClass}* __next__() {{
                 {RealItemClass}* obj = NULL;
                 if (m_node) {{
@@ -842,13 +842,13 @@ public:
         if (PyErr_Occurred())
             return NULL;
     %End
-}};       
+}};
 
-class {ListClass} 
+class {ListClass}
 {{
     %TypeHeaderCode
         {TypeDef}
-    %End        
+    %End
 public:
     SIP_SSIZE_T __len__();
     %MethodCode
@@ -859,7 +859,7 @@ public:
     %MethodCode
         if (index < sipCpp->size()) {{
             {ListClass}::compatibility_iterator node = sipCpp->Item(index);
-            if (node) 
+            if (node)
                 sipRes = ({ItemClass}*)node->GetData();
         }}
         else {{
@@ -891,7 +891,7 @@ public:
         }}
         sipRes = idx;
     %End
-    
+
     @ConvertToTypeCode@
 }};
 
@@ -912,7 +912,7 @@ del _{ListClass_pyName}___repr__
         if (sipCanConvertToType(sipPy, sipType_{ListClass}, SIP_NO_CONVERTORS))
             return success;
         // otherwise ensure that it is a sequence
-        if (! PySequence_Check(sipPy)) 
+        if (! PySequence_Check(sipPy))
             success = FALSE;
         // ensure it is not a string or unicode object (they are sequences too)
         else if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
@@ -928,9 +928,9 @@ del _{ListClass_pyName}___repr__
                     break;
                 }}
                 Py_DECREF(item);
-            }}    
+            }}
         }}
-        if (!success)            
+        if (!success)
             PyErr_SetString(PyExc_TypeError, "Sequence of {ItemClass} compatible objects expected.");
         return success;
     }}
@@ -938,11 +938,11 @@ del _{ListClass_pyName}___repr__
     // Is it already a {ListClass}? Return the exiting instance if so
     if (sipCanConvertToType(sipPy, sipType_{ListClass}, SIP_NO_CONVERTORS)) {{
         *sipCppPtr = reinterpret_cast<{ListClass}*>(
-                     sipConvertToType(sipPy, sipType_{ListClass}, NULL, 
+                     sipConvertToType(sipPy, sipType_{ListClass}, NULL,
                                       SIP_NO_CONVERTORS, 0, sipIsErr));
         return 0;
     }}
-    
+
     // Create a new {ListClass} and convert compatible PyObjects from the sequence
     {ListClass} *list = new {ListClass};
     list->DeleteContents(true); // tell the list to take ownership of the items
@@ -951,7 +951,7 @@ del _{ListClass_pyName}___repr__
         int state;
         PyObject* pyItem = PySequence_ITEM(sipPy, i);
         {ItemClass}* cItem = reinterpret_cast<{ItemClass}*>(
-                             sipConvertToType(pyItem, sipType_{ItemClass}, 
+                             sipConvertToType(pyItem, sipType_{ItemClass},
                              NULL, 0, &state, sipIsErr));
         if (!state)  // a temporary was not created for us, make one now
             cItem = new {ItemClass}(*cItem);
@@ -971,7 +971,7 @@ del _{ListClass_pyName}___repr__
 
 
 def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False):
-    moduleName = module.module        
+    moduleName = module.module
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
     itemRef = '*' if itemIsPtr else '&'
     itemDeref = '' if itemIsPtr else '*'
@@ -980,9 +980,9 @@ def wxArrayWrapperTemplate(ArrayClass, ItemClass, module, itemIsPtr=False):
     # *** TODO: This can probably be done in a way that is not SIP-specfic.
     # Try creating extractor objects from scratch and attach cppMethods to
     # them as needed, etc..
-        
+
     return extractors.WigCode('''\
-class {ArrayClass} 
+class {ArrayClass}
 {{
 public:
     SIP_SSIZE_T __len__();
@@ -1037,15 +1037,15 @@ del _{ArrayClass_pyName}___repr__
 
 # Same as the above, but for use with  WX_DEFINE_ARRAY_PTR
 def wxArrayPtrWrapperTemplate(ArrayClass, ItemClass, module):
-    moduleName = module.module        
+    moduleName = module.module
     ArrayClass_pyName = removeWxPrefix(ArrayClass)
-    
+
     # *** TODO: This can probably be done in a way that is not SIP-specfic.
     # Try creating extractor objects from scratch and attach cppMethods to
     # them as needed, etc..
-        
+
     return extractors.WigCode('''\
-class {ArrayClass} 
+class {ArrayClass}
 {{
 public:
     SIP_SSIZE_T __len__();
@@ -1104,8 +1104,8 @@ def ObjArrayHelperTemplate(objType, sipType, errmsg):
     Generates a helper function that can convert from a Python sequence of
     objects (or items that can be converted to the target type) into a C
     array of values. Copies are made of the items so the object types should
-    support implicit or explicit copies and the copy should be cheap.  
-    
+    support implicit or explicit copies and the copy should be cheap.
+
     This kind of helper is useful for situations where the C/C++ API takes a
     simple pointer and a count, and there is no higher level container object
     (like a wxList or wxArray) being used. If there is an overloaded method
@@ -1113,9 +1113,9 @@ def ObjArrayHelperTemplate(objType, sipType, errmsg):
     ignored. But for those cases where the C array is the only option then this
     helper can be used to make the array from a sequence.
     """
-    
+
     cppCode = """\
-// Convert a Python sequence of {objType} objects, or items that can be converted 
+// Convert a Python sequence of {objType} objects, or items that can be converted
 // to {objType} into a C array of {objType} instances.
 static
 {objType}* {objType}_array_helper(PyObject* source, size_t *count)
@@ -1123,9 +1123,9 @@ static
     {objType}* array;
     Py_ssize_t idx, len;
     wxPyThreadBlocker blocker;
-    
+
     // ensure that it is a sequence
-    if (! PySequence_Check(source)) 
+    if (! PySequence_Check(source))
         goto error0;
     // ensure it is not a string or unicode object (they are sequences too)
     else if (PyBytes_Check(source) || PyUnicode_Check(source))
@@ -1142,7 +1142,7 @@ static
             Py_DECREF(item);
         }}
     }}
-    
+
     // The length of the sequence is returned in count.
     *count = len;
     array = new {objType}[*count];
