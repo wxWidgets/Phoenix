@@ -16,7 +16,7 @@ from wx.lib.floatcanvas import NavCanvas, FloatCanvas
 #from floatcanvas import NavCanvas, FloatCanvas
 
 import numpy as N
-    
+
 class DrawFrame(wx.Frame):
 
     """
@@ -28,16 +28,16 @@ class DrawFrame(wx.Frame):
         wx.Frame.__init__(self,parent, id,title,position, size)
 
         # Add the Canvas
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
         Canvas = NavCanvas.NavCanvas(self,-1,(500,500),
                                           ProjectionFun = None,
                                           Debug = 0,
                                           BackgroundColor = "DARK SLATE BLUE",
                                           ).Canvas
-        
+
         self.Canvas = Canvas
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
-        
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
+
         Point = (45,40)
         Box = Canvas.AddScaledTextBox("A Two Line\nString",
                                       Point,
@@ -265,7 +265,7 @@ class DrawFrame(wx.Frame):
                                       LineSpacing = 0.8,
                                       Alignment = 'center',
                                       )
-        
+
 
         self.Show(True)
         self.Canvas.ZoomToBB()
@@ -287,10 +287,10 @@ class DrawFrame(wx.Frame):
 app = wx.App()
 DrawFrame(None, -1, "FloatCanvas Demo App", wx.DefaultPosition, (700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

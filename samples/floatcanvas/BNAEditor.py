@@ -40,7 +40,7 @@ class BNAData:
         self.Types = None
         if Filename is not None:
             self.Load(Filename)
-  
+
     def __getitem__(self,index):
         return (self.PointsData[index], self.Names[index])
 
@@ -121,7 +121,7 @@ class DrawFrame(wx.Frame):
 
         self.SetMenuBar(MenuBar)
 
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
         # Add the Canvas
         self.Canvas = NavCanvas.NavCanvas(self,-1,(500,500),
                                           Debug = 0,
@@ -130,8 +130,8 @@ class DrawFrame(wx.Frame):
 
         wx.EVT_CLOSE(self, self.OnCloseWindow)
 
-        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove ) 
-        FloatCanvas.EVT_LEFT_UP(self.Canvas, self.OnLeftUp ) 
+        FloatCanvas.EVT_MOTION(self.Canvas, self.OnMove )
+        FloatCanvas.EVT_LEFT_UP(self.Canvas, self.OnLeftUp )
         FloatCanvas.EVT_LEFT_DOWN(self.Canvas, self.OnLeftDown)
 
         try:
@@ -153,7 +153,7 @@ class DrawFrame(wx.Frame):
         if self.SelectedPoly:
             self.DeSelectPoly()
             self.Canvas.Draw()
-        
+
     def OnAbout(self, event):
         dlg = wx.MessageDialog(self, "This is a small program to demonstrate\n"
                                                   "the use of the FloatCanvas\n",
@@ -244,7 +244,7 @@ class DrawFrame(wx.Frame):
         Canvas.RemoveObject(self.SelectedPoly)
         Canvas.RemoveObject(self.SelectedPoints)
         self.ResetSelections()
-    
+
     def SelectPoly(self, Object):
         Canvas = self.Canvas
         if Object is self.SelectedPolyOrig:
@@ -306,7 +306,7 @@ class BNAEditor(wx.App):
     """
     Once you have a picture drawn, you can zoom in and out and move about
     the picture. There is a tool bar with three tools that can be
-    selected. 
+    selected.
     """
 
     def __init__(self, *args, **kwargs):
@@ -329,10 +329,10 @@ class BNAEditor(wx.App):
 app = BNAEditor(False)# put in True if you want output to go to it's own window.
 app.MainLoop()
 
-    
-    
-    
-    
+
+
+
+
 
 
 

@@ -5,10 +5,10 @@ A simple demo to show how to "Overlays": i.e. drawing something
 on top of eveything else on the Canvas, relative to window coords,
 rather than screen coords.
 
-This method uses the "GridOver" object in the FloatCanvas 
+This method uses the "GridOver" object in the FloatCanvas
   - it was orginally dsigend for girds, graticule,s etc. that
     are always drawn regardless of zoom, pan, etc, but it works
-    for overlays too. 
+    for overlays too.
 
 """
 
@@ -28,7 +28,7 @@ class TextOverlay(FloatCanvas.Text):
     An example of an Overlay object:
 
     all it needs is a new _Draw method.
-    
+
     NOTE: you may want to get fancier with this,
           deriving from ScaledTextBox
 
@@ -94,8 +94,8 @@ class DrawFrame(wx.Frame):
                                      Debug = 0,
                                      BackgroundColor = "DARK SLATE BLUE",
                                      ).Canvas
-        
-        
+
+
         Point = (45,40)
         Box = Canvas.AddCircle(Point,
                                Diameter = 10,
@@ -110,7 +110,7 @@ class DrawFrame(wx.Frame):
                                       BackgroundColor = 'Pink',
                                       )
 
-        Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove) 
+        Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove)
 
         self.Show()
         Canvas.ZoomToBB()
@@ -127,10 +127,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False) # true to get its own output window.
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

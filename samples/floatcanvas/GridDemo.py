@@ -35,8 +35,8 @@ class DrawFrame(wx.Frame):
                                      Debug = 0,
                                      BackgroundColor = "DARK SLATE BLUE",
                                      ).Canvas
-        
-        
+
+
         Point = (45,40)
         Box = Canvas.AddCircle(Point,
                                Diameter = 10,
@@ -52,7 +52,7 @@ class DrawFrame(wx.Frame):
         Canvas.GridUnder = Grid
         #Canvas.GridOver = Grid
 
-        Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
+        Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
 
         self.Show()
         Canvas.ZoomToBB()
@@ -69,10 +69,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False) # true to get its own output window.
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

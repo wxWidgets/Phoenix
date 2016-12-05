@@ -32,7 +32,7 @@ FC = FloatCanvas
 class MovingObjectMixin: # Borrowed from MovingElements.py
     """
     Methods required for a Moving object
-    
+
     """
 
     def GetOutlinePoints(self):
@@ -57,22 +57,22 @@ class Ball(MovingObjectMixin, FloatCanvas.Circle):
 class DrawFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
-        
+
         ## Set up the MenuBar
-        
+
         MenuBar = wx.MenuBar()
-        
+
         file_menu = wx.Menu()
         item = file_menu.Append(wx.ID_EXIT, "","Terminate the program")
         self.Bind(wx.EVT_MENU, self.OnQuit, item)
         MenuBar.Append(file_menu, "&File")
-        
-       
+
+
         self.SetMenuBar(MenuBar)
-                
+
         self.CreateStatusBar()
         self.SetStatusText("")
-        
+
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         # Add the  buttons
@@ -81,7 +81,7 @@ class DrawFrame(wx.Frame):
 
         StartButton = wx.Button(self, label="Start")
         StartButton.Bind(wx.EVT_BUTTON, self.OnStart)
-       
+
         StopButton = wx.Button(self, label="Stop")
         StopButton.Bind(wx.EVT_BUTTON, self.OnStop)
 
@@ -93,7 +93,7 @@ class DrawFrame(wx.Frame):
         NC = NavCanvas.NavCanvas(self, -1, (500,500),
                                       Debug = False,
                                       BackgroundColor = "BLUE")
-        
+
         self.Canvas = NC.Canvas
         self.Initialize(None)
 
@@ -107,30 +107,30 @@ class DrawFrame(wx.Frame):
         self.Bind(wx.EVT_TIMER, self.MoveBall, self.timer)
 
         self.Show(True)
-        
+
     def OnQuit(self,event):
         self.timer.Stop()
         self.Close(True)
-        
+
     def OnCloseWindow(self, event):
         self.Destroy()
-        
+
     def Initialize(self, event=None):
-        Canvas = self.Canvas   
-        
+        Canvas = self.Canvas
+
         #Add the floor
         Canvas.AddLine(( (0, 0), (100, 0) ), LineWidth=4, LineColor="Black")
         # add the wall:
         Canvas.AddRectangle( (0,0), (10,50), FillColor='green')
 
         # add the ball:
-        self.Ball = Ball( (5, 52), (2, 0), InForeground=True ) 
+        self.Ball = Ball( (5, 52), (2, 0), InForeground=True )
         Canvas.AddObject( self.Ball )
         # to capture the mouse to move the ball
         self.Ball.Bind(FC.EVT_FC_LEFT_DOWN, self.BallHit)
-        Canvas.Bind(FC.EVT_MOTION, self.OnMove ) 
-        Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp ) 
-        
+        Canvas.Bind(FC.EVT_MOTION, self.OnMove )
+        Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp )
+
         wx.CallAfter(Canvas.ZoomToBB)
 
     def BallHit(self, object):
@@ -150,12 +150,12 @@ class DrawFrame(wx.Frame):
 
     def OnLeftUp(self, event):
         self.Ball.Moving = False
-        
+
     def OnReset(self, event=None):
         self.Ball.SetPoint( (5, 52) )
         self.Ball.Velocity = np.array((1.5, 0.0))
         self.Canvas.Draw(True)
-        
+
     def OnStart(self, event=None):
         self.timer.Start(20)
 
@@ -171,7 +171,7 @@ class DrawFrame(wx.Frame):
         A = np.pi*(ball.Radius/100)**2 # radius in cm
         Cd = 0.47
         rho = 1.3
-        
+
         if not ball.Moving: # don't do this if the user is moving it
             vel = ball.Velocity
             pos = ball.XY
@@ -179,9 +179,9 @@ class DrawFrame(wx.Frame):
             # apply drag
             vel -= np.sign(vel) * ((0.5 * Cd * rho * A * vel**2) / m * dt)
             # apply gravity
-            vel[1] -= g * dt 
+            vel[1] -= g * dt
             # move the ball
-            pos += dt * vel 
+            pos += dt * vel
             # check if it's on the wall
             if pos[1] <= 52. and pos[0] <= 10.:
                 #reverse velocity
@@ -193,10 +193,10 @@ class DrawFrame(wx.Frame):
                 vel[1] *= -1.0
                 pos[1] = ball.Radius
 
-            self.Ball.SetPoint( pos ) 
+            self.Ball.SetPoint( pos )
             self.Canvas.Draw(True)
             wx.GetApp().Yield(onlyIfNeeded=True)
-        
+
 class DemoApp(wx.App):
     def OnInit(self):
         frame = DrawFrame(None, -1, "Simple Drawing Window",wx.DefaultPosition, (700,700) )
@@ -204,10 +204,10 @@ class DemoApp(wx.App):
         self.SetTopWindow(frame)
 
         return True
-  
+
 if __name__ == "__main__":
 
     app = DemoApp(0)
     app.MainLoop()
- 
- 
+
+

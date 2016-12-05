@@ -48,7 +48,7 @@ class MyFrame(wx.Frame):
                                       Position = 'br',
                                       Alignment = "left",
                                       InForeground = False)
-        
+
         wx.CallAfter(Canvas.ZoomToBB)
 
         # set up the Splitter
@@ -56,7 +56,7 @@ class MyFrame(wx.Frame):
         splitter.SplitVertically(panel1, panel2, sash_Position)
         min_Pan_size = 40
         splitter.SetMinimumPaneSize(min_Pan_size)
-        
+
         self.Fit()
 
 
