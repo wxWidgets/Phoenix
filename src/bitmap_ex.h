@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // Name:        src/bitmap_ex.h
-// Purpose:     Helper functions and etc. for copying bitmap data to/from 
+// Purpose:     Helper functions and etc. for copying bitmap data to/from
 //              buffer objects.
 //
 // Author:      Robin Dunn
@@ -28,15 +28,15 @@ enum wxBitmapBufferFormat {
 // other platforms don't.  These macros help keep the code clean.
 #if defined(__WXMSW__) || defined(__WXMAC__)
 #define wxPy_premultiply(p, a)   ((p) * (a) / 0xff)
-#define wxPy_unpremultiply(p, a) ((a) ? ((p) * 0xff / (a)) : (p))    
+#define wxPy_unpremultiply(p, a) ((a) ? ((p) * 0xff / (a)) : (p))
 #else
 #define wxPy_premultiply(p, a)   (p)
-#define wxPy_unpremultiply(p, a) (p)    
+#define wxPy_unpremultiply(p, a) (p)
 #endif
 
 
 void wxPyCopyBitmapFromBuffer(wxBitmap* bmp,
-                              buffer data, Py_ssize_t DATASIZE, 
+                              buffer data, Py_ssize_t DATASIZE,
                               wxBitmapBufferFormat format, int stride=-1);
 
 void wxPyCopyBitmapToBuffer(wxBitmap* bmp,

@@ -27,11 +27,11 @@
         return sipGetState(sipTransferObj);
     %End
 
-         
+
     %ConvertFromTypeCode
         // Convert a wxString to a Python Unicode object.  See wxpy_api.sip
         return wx2PyString(sipCpp->GetFullPath());
-    %End    
+    %End
 };
 
 

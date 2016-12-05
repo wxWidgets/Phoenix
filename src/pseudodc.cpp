@@ -67,7 +67,7 @@ void GreyOutImage(wxImage &img)
     for (i=0;i<len;i+=3)
     {
         r=data[i]; g=data[i+1]; b=data[i+2];
-        if (!img.HasMask() || 
+        if (!img.HasMask() ||
             r!=mr || g!=mg || b!=mb)
         {
             if (!tst)
@@ -110,14 +110,14 @@ wxBitmap &GetGreyBitmap(wxBitmap &bmp)
 // pdcDrawPolyPolygonOp
 // ----------------------------------------------------------------------------
 pdcDrawPolyPolygonOp::pdcDrawPolyPolygonOp(int n, int count[], wxPoint points[],
-                 wxCoord xoffset, wxCoord yoffset, wxPolygonFillMode fillStyle) 
+                 wxCoord xoffset, wxCoord yoffset, wxPolygonFillMode fillStyle)
 {
     m_n=n; m_xoffset=xoffset; m_yoffset=yoffset; m_fillStyle=fillStyle;
     int total_n=0;
     if (n)
     {
         m_count = new int[n];
-        for(int i=0; i<n; i++) 
+        for(int i=0; i<n; i++)
         {
             total_n+=count[i];
             m_count[i]=count[i];
@@ -146,7 +146,7 @@ pdcDrawPolyPolygonOp::~pdcDrawPolyPolygonOp()
     m_points=NULL;
     m_count=NULL;
 }
-        
+
 // ----------------------------------------------------------------------------
 // pdcDrawLinesOp
 // ----------------------------------------------------------------------------
@@ -264,11 +264,11 @@ void pdcDrawSplineOp::Translate(wxCoord dx, wxCoord dy)
 // ============================================================================
 
 // ----------------------------------------------------------------------------
-// DrawToDC - play back the op list to the DC 
+// DrawToDC - play back the op list to the DC
 // ----------------------------------------------------------------------------
 void pdcObject::DrawToDC(wxDC *dc)
 {
-    pdcOpList::compatibility_iterator node = m_oplist.GetFirst(); 
+    pdcOpList::compatibility_iterator node = m_oplist.GetFirst();
     while(node)
     {
         node->GetData()->DrawToDC(dc, m_greyedout);
@@ -281,13 +281,13 @@ void pdcObject::DrawToDC(wxDC *dc)
 // ----------------------------------------------------------------------------
 void pdcObject::Translate(wxCoord dx, wxCoord dy)
 {
-    pdcOpList::compatibility_iterator node = m_oplist.GetFirst(); 
+    pdcOpList::compatibility_iterator node = m_oplist.GetFirst();
     while(node)
     {
         node->GetData()->Translate(dx,dy);
         node = node->GetNext();
     }
-    if (m_bounded) 
+    if (m_bounded)
     {
         m_bounds.x += dx;
         m_bounds.y += dy;
@@ -298,12 +298,12 @@ void pdcObject::Translate(wxCoord dx, wxCoord dy)
 // SetGreyedOut - set the greyout member and cache grey versions of everything
 // if greyout is true
 // ----------------------------------------------------------------------------
-void pdcObject::SetGreyedOut(bool greyout) 
+void pdcObject::SetGreyedOut(bool greyout)
 {
     m_greyedout=greyout;
     if (greyout)
     {
-        pdcOpList::compatibility_iterator node = m_oplist.GetFirst(); 
+        pdcOpList::compatibility_iterator node = m_oplist.GetFirst();
         pdcOp *obj;
         while(node)
         {
@@ -325,7 +325,7 @@ wxPseudoDC::~wxPseudoDC()
 {
     // delete all the nodes in the list
     RemoveAll();
-    
+
 }
 
 // ----------------------------------------------------------------------------
@@ -337,7 +337,7 @@ void wxPseudoDC::RemoveAll(void)
     m_objectIndex.clear();
     m_currId = -1;
     m_lastObject = NULL;
-    
+
 }
 
 // ----------------------------------------------------------------------------
@@ -347,7 +347,7 @@ int wxPseudoDC::GetLen(void)
 {
     pdcObjectList::compatibility_iterator pt = m_objectlist.GetFirst();
     int len=0;
-    while (pt) 
+    while (pt)
     {
         len += pt->GetData()->GetLen();
         pt = pt->GetNext();
@@ -365,7 +365,7 @@ pdcObject *wxPseudoDC::FindObject(int id, bool create)
     // see if last operation was for same id
     //~ if (m_lastObject && m_lastObject->GetId() == id)
         //~ return m_lastObject;
-    // if not then search for it    
+    // if not then search for it
     pdcObjectHash::iterator lookup = m_objectIndex.find(id);
     if (lookup == m_objectIndex.end()) {//not found
         if (create) {
@@ -406,7 +406,7 @@ void wxPseudoDC::ClearId(int id)
 void wxPseudoDC::RemoveId(int id)
 {
     pdcObject *obj = FindObject(id);
-    if (obj) 
+    if (obj)
     {
         if (m_lastObject == obj)
             m_lastObject = obj;
@@ -488,7 +488,7 @@ PyObject *wxPseudoDC::FindObjectsByBBox(wxCoord x, wxCoord y)
     PyObject* pyList = NULL;
     pyList = PyList_New(0);
     wxRect r;
-    while (pt) 
+    while (pt)
     {
         obj = pt->GetData();
         r = obj->GetBounds();
@@ -507,7 +507,7 @@ PyObject *wxPseudoDC::FindObjectsByBBox(wxCoord x, wxCoord y)
 // ----------------------------------------------------------------------------
 // FindObjects - Return a list of all the ids that draw to (x,y)
 // ----------------------------------------------------------------------------
-PyObject *wxPseudoDC::FindObjects(wxCoord x, wxCoord y, 
+PyObject *wxPseudoDC::FindObjects(wxCoord x, wxCoord y,
                                   wxCoord radius, const wxColor& bg)
 {
     //wxPyBlock_t blocked = wxPyBeginBlockThreads();
@@ -529,7 +529,7 @@ PyObject *wxPseudoDC::FindObjects(wxCoord x, wxCoord y,
         memdc.SetBackground(bgbrush);
         memdc.Clear();
         memdc.SetDeviceOrigin(2-x,2-y);
-        while (pt) 
+        while (pt)
         {
             obj = pt->GetData();
             if (obj->IsBounded() && obj->GetBounds().Contains(x,y))
@@ -573,7 +573,7 @@ PyObject *wxPseudoDC::FindObjects(wxCoord x, wxCoord y,
         memdc.SetDeviceOrigin(radius-x,radius-y);
         // a region will be used to see if the result is empty
         wxRegion rgn2;
-        while (pt) 
+        while (pt)
         {
             obj = pt->GetData();
             if (obj->IsBounded() && viewrect.Intersects(obj->GetBounds()))
@@ -616,15 +616,15 @@ PyObject *wxPseudoDC::FindObjects(wxCoord x, wxCoord y,
 
 // ----------------------------------------------------------------------------
 // DrawToDCClipped - play back the op list to the DC but clip any objects
-//                   known to be not in rect.  This is a coarse level of 
-//                   clipping to speed things up when lots of objects are off 
+//                   known to be not in rect.  This is a coarse level of
+//                   clipping to speed things up when lots of objects are off
 //                   screen and doesn't affect the dc level clipping
 // ----------------------------------------------------------------------------
 void wxPseudoDC::DrawToDCClipped(wxDC *dc, const wxRect& rect)
 {
     pdcObjectList::compatibility_iterator pt = m_objectlist.GetFirst();
     pdcObject *obj;
-    while (pt) 
+    while (pt)
     {
         obj = pt->GetData();
         if (!obj->IsBounded() || rect.Intersects(obj->GetBounds()))
@@ -636,10 +636,10 @@ void wxPseudoDC::DrawToDCClippedRgn(wxDC *dc, const wxRegion& region)
 {
     pdcObjectList::compatibility_iterator pt = m_objectlist.GetFirst();
     pdcObject *obj;
-    while (pt) 
+    while (pt)
     {
         obj = pt->GetData();
-        if (!obj->IsBounded() || 
+        if (!obj->IsBounded() ||
             (region.Contains(obj->GetBounds()) != wxOutRegion))
             obj->DrawToDC(dc);
         pt = pt->GetNext();
@@ -647,15 +647,15 @@ void wxPseudoDC::DrawToDCClippedRgn(wxDC *dc, const wxRegion& region)
 }
 
 // ----------------------------------------------------------------------------
-// DrawToDC - play back the op list to the DC 
+// DrawToDC - play back the op list to the DC
 // ----------------------------------------------------------------------------
 void wxPseudoDC::DrawToDC(wxDC *dc)
 {
     pdcObjectList::compatibility_iterator pt = m_objectlist.GetFirst();
-    while (pt) 
+    while (pt)
     {
         pt->GetData()->DrawToDC(dc);
         pt = pt->GetNext();
     }
 }
-        
+

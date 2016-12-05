@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // Name:        userdata.sip
-// Purpose:     
+// Purpose:
 //
 // Author:      Kevin Ollivier
 //
@@ -12,7 +12,7 @@
 
 // We'll use the wxPyUserData defined above wherever a wxObject parameter or
 // return value is specified in the API.  This MappedType code will convert to/from a
-// PyObject so it will be totally transparent to the programmer and from their 
+// PyObject so it will be totally transparent to the programmer and from their
 // perspective any python object is being stored as the client data.
 %MappedType wxPyUserData
 {
@@ -21,14 +21,14 @@
         if (!sipIsErr) {
             return TRUE; // any python object is valid
         }
-        
+
         // Code to create a new wxPyUserData from the PyObject
         wxPyUserData* data =  new wxPyUserData(sipPy);
         *sipCppPtr = data;
         return sipGetState(sipTransferObj);
     %End
 
-         
+
     %ConvertFromTypeCode
         // Code to convert a wxPyUserData back to the PyObject.
         PyObject* obj;

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // Name:        wxpy_api.sip
-// Purpose:     The implementation of the API functions that are exported 
+// Purpose:     The implementation of the API functions that are exported
 //              from the core extension module.
 //
 // Author:      Robin Dunn
@@ -25,8 +25,8 @@
 //--------------------------------------------------------------------------
 // wxString conversion
 
-// See also the wxString MappedType.  This code is similar, but doesn't 
-// allocate a new wxString instance on the heap, is able to convert 
+// See also the wxString MappedType.  This code is similar, but doesn't
+// allocate a new wxString instance on the heap, is able to convert
 // non-string/unicode objects to unicode, and won't raise exceptions
 static wxString i_Py2wxString(PyObject* source)
 {
@@ -41,12 +41,12 @@ static wxString i_Py2wxString(PyObject* source)
             PyErr_Clear();
             return wxEmptyString;
         }
-    }            
+    }
     else if (!PyUnicode_Check(source)) {
 #if PY_MAJOR_VERSION >= 3
         uni = PyObject_Str(source);
 #else
-        uni = PyObject_Unicode(source); 
+        uni = PyObject_Unicode(source);
 #endif
         if (PyErr_Occurred()) {
             PyErr_Clear();
@@ -63,8 +63,8 @@ static wxString i_Py2wxString(PyObject* source)
     return target;
 }
 
-    
-// TODO:  This might be a good way to share the string conversion code here and in string.sip...    
+
+// TODO:  This might be a good way to share the string conversion code here and in string.sip...
 // A function to convert a Python string or unicode object to a wxString
 // NOTE that it is inline so it should go in the header section
 //inline wxString Py2wxString(PyObject* obj, bool setException=false, int& isErr=0) {
@@ -92,7 +92,7 @@ static wxString i_Py2wxString(PyObject* source)
 //        Py_DECREF(uni) // release the temporary Unicode object we may have created
 //    return str;
 //}
-    
+
 //--------------------------------------------------------------------------
 // Wrapped object checks and converters
 
@@ -105,13 +105,13 @@ static PyObject* i_wxPyConstructObject(void* ptr,
     wxString nsDelimiter = "::";
     int pos = name.Find(nsDelimiter);
     if (pos != wxNOT_FOUND)
-        name = name.Mid(pos + nsDelimiter.Len());    
+        name = name.Mid(pos + nsDelimiter.Len());
 
     const sipTypeDef* td = sipFindType(name);
     if (!td)
         return NULL;
     PyObject* transferObj = setThisOwn ? Py_None : NULL;
-    return sipConvertFromType(ptr, td, transferObj);     
+    return sipConvertFromType(ptr, td, transferObj);
 }
 
 
@@ -148,7 +148,7 @@ static bool i_wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& c
 
 // Calls from wxWindows back to Python code, or even any PyObject
 // manipulations, PyDECREF's and etc. should be wrapped in calls to these functions:
-static wxPyBlock_t i_wxPyBeginBlockThreads() 
+static wxPyBlock_t i_wxPyBeginBlockThreads()
 {
     if (! Py_IsInitialized()) {
         return (wxPyBlock_t)0;
@@ -157,11 +157,11 @@ static wxPyBlock_t i_wxPyBeginBlockThreads()
     return state;
 }
 
-static void i_wxPyEndBlockThreads(wxPyBlock_t blocked) 
+static void i_wxPyEndBlockThreads(wxPyBlock_t blocked)
 {
     if (! Py_IsInitialized()) {
         return;
-    }            
+    }
     PyGILState_Release(blocked);
 }
 
@@ -197,7 +197,7 @@ static bool i_wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
 }
 
 // A helper for converting a 4 element sequence to a set of integers
-static bool i_wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4) 
+static bool i_wxPy4int_seq_helper(PyObject* source, int* i1, int* i2, int* i3, int* i4)
 {
     bool isFast = PyList_Check(source) || PyTuple_Check(source);
     PyObject *o1, *o2, *o3, *o4;
@@ -243,9 +243,9 @@ class wxVariantDataPyObject : public wxPyUserDataHelper<wxVariantData>
 public:
     explicit wxVariantDataPyObject(PyObject* obj = 0)
         : wxPyUserDataHelper<wxVariantData>(obj) {}
-    
+
     virtual bool Eq(wxVariantData& data) const;
-    
+
     virtual wxString GetType() const { return wxT("PyObject"); }
     wxVariantData* Clone() const { return new wxVariantDataPyObject(BorrowData()); }
 };
@@ -275,8 +275,8 @@ bool wxVariantDataPyObject::Eq(wxVariantData& data) const
 wxVariant i_wxVariant_in_helper(PyObject* obj)
 {
     wxVariant value;
-    
-    if (PyBytes_Check(obj) || PyUnicode_Check(obj)) 
+
+    if (PyBytes_Check(obj) || PyUnicode_Check(obj))
         value = Py2wxString(obj);
     else if (PyBool_Check(obj))
         value = (obj == Py_True);
@@ -303,7 +303,7 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
     }
     else
         value = new wxVariantDataPyObject(obj);
-        
+
     return value;
 }
 
@@ -312,7 +312,7 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
 PyObject* i_wxVariant_out_helper(const wxVariant& value)
 {
     PyObject* obj;
-        
+
     if (value.IsType("string"))
         obj = wx2PyString(value.GetString());
     else if (value.IsType("bool"))
@@ -348,7 +348,7 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
         wxString msg = "Unexpected type (\"" + value.GetType() + "\") in wxVariant.";
         wxPyErr_SetString(PyExc_TypeError, msg.mb_str());
         obj = NULL;
-    }       
+    }
     return obj;
 }
 
