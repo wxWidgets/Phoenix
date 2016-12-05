@@ -75,7 +75,7 @@ class PyColourSlider(canvas.Canvas):
             return 1             # Snap to max
         if pos >= height - 1:
             return 0             # Snap to 0
-            
+
         return 1 - (pos / self.HEIGHT)
 
     def DrawBuffer(self):
