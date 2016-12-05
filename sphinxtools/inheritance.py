@@ -26,7 +26,7 @@ EPIPE  = getattr(errno, 'EPIPE', 0)
 
 if sys.version_info < (3, ):
     string_base = basestring
-else:    
+else:
     string_base = str
 
 
@@ -43,7 +43,7 @@ class InheritanceDiagram(object):
             self.class_info, self.specials = classes
         else:
             self.class_info, self.specials = self._class_info(classes)
-            
+
         self.main_class = main_class
 
 
@@ -62,7 +62,7 @@ class InheritanceDiagram(object):
             fullname = self.class_name(cls)
             if cls in [object] or fullname.startswith('sip.'):
                 return
-            
+
             baselist = []
             all_classes[cls] = (fullname, baselist)
 
@@ -144,8 +144,8 @@ class InheritanceDiagram(object):
                                   'Arial, Helvetica, sans"', 'style': '"setlinewidth(0.5)"',
                                   'labelloc': 'c', 'fontcolor': 'grey45'}
 
-        inheritance_edge_attrs = {'arrowsize': 0.5, 
-                                  'style': '"setlinewidth(0.5)"', 
+        inheritance_edge_attrs = {'arrowsize': 0.5,
+                                  'style': '"setlinewidth(0.5)"',
                                   'color': '"#23238E"',
                                   'dir': 'back',
                                   'arrowtail': 'open',
@@ -181,7 +181,7 @@ class InheritanceDiagram(object):
                     full_page = formatExternalLink(fullname, inheritance=True)
                     if full_page:
                         this_node_attrs['URL'] = full_page
-                    
+
             res.append('  "%s" [%s];\n' %
                        (fullname, self._format_node_attrs(this_node_attrs)))
 
@@ -225,7 +225,7 @@ class InheritanceDiagram(object):
 
         if self.main_class is not None:
             filename = self.main_class.name
-        else:                        
+        else:
             filename = self.specials[0]
 
         outfn = os.path.join(static_root, filename + '_inheritance.png')
@@ -258,7 +258,7 @@ class InheritanceDiagram(object):
             'stdin': PIPE,
             'stderr': PIPE
         }
-        
+
         if sys.platform == 'win32':
             popen_args['shell'] = True
 

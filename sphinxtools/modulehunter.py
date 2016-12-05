@@ -37,7 +37,7 @@ except ImportError:
 
     wxPath = ''
     basePath = ''
-    
+
     for path in sys.path:
         if 'wx-' in path:
             dummy, newPath = os.path.split(path)
@@ -47,9 +47,9 @@ except ImportError:
 
     if not wxPath:
         raise Exception('Unable to find the wx package')
-    
+
     sys.path.insert(0, os.path.join(basePath, wxPath))
-    
+
 import wx
 
 print(('\nUSING VERSION: %s\n'%wx.VERSION_STRING))
@@ -73,7 +73,7 @@ else:
         rel_list = [os.path.pardir] * (len(start_list)-i) + path_list[i:]
         if not rel_list:
             return os.path.curdir
-        
+
         return os.path.join(*rel_list)
 
 
@@ -103,7 +103,7 @@ def format_method(method):
         params = params.rstrip()
     else:
         params = signature
-        
+
     return name, params
 
 
@@ -163,7 +163,7 @@ def analyze_params(obj, signature):
             pname = p
 
         param_tuple.append((pname, pvalue, peval))
-            
+
     return signature, param_tuple
 
 
@@ -171,12 +171,12 @@ def get_constructor(source):
 
     description = ''
     hasComma = False
-    
+
     for line in source.split('\n'):
 
         if '#' in line:
             line = line[0:line.index('#')].strip()
-            
+
         if ':' in line:
             hasComma = True
             commaPos = line.index(':')
@@ -188,23 +188,23 @@ def get_constructor(source):
             defPos = line.index(' def ')
             if defPos > commaPos:
                 break
-        
+
         description += ' ' + line.strip()
-        
+
         if '):' in line or ') :' in line or ')  :' in line:
             break
 
     return description
 
-    
+
 def inspect_source(method_class, obj, source):
 
-    description = get_constructor(source)        
+    description = get_constructor(source)
     name, params = format_method(description)
 
     if name is None:
         return
-    
+
     signature, param_tuple = analyze_params(obj, params)
 
     method_class.arguments = param_tuple
@@ -214,7 +214,7 @@ def inspect_source(method_class, obj, source):
         method_class.kind = object_types.CLASS_METHOD
     elif 'staticmethod ' in description:
         method_class.kind = object_types.STATIC_METHOD
-        
+
 
 def is_classmethod(instancemethod):
     """ Determine if an instancemethod is a classmethod. """
@@ -226,7 +226,7 @@ def is_classmethod(instancemethod):
 
     return False
 
-   
+
 def describe_func(obj, parent_class, module_name):
     """
     Describe the function object passed as argument.
@@ -239,15 +239,15 @@ def describe_func(obj, parent_class, module_name):
     except AttributeError:
         # Funny comtypes...
         return
-        
+
     if name.startswith('_') and '__init__' not in name:
         return
 
     name = parent_class.name + '.' + name
-    
+
     docs = getdoc(obj)
     comments = getcomments(obj)
-    
+
     if isfunction(obj):
         # in Py3 unbound methods have same type as functions.
         if isinstance(parent_class, Class):
@@ -277,7 +277,7 @@ def describe_func(obj, parent_class, module_name):
     if source_code:
         inspect_source(klass, obj, source_code)
         klass.number_lines = '%d' % len(source_code.split('\n'))
-        
+
     if isinstance(obj, staticmethod):
         klass.method = method = object_types.STATIC_METHOD
 
@@ -303,9 +303,9 @@ def describe_func(obj, parent_class, module_name):
 
     if code is not None:
         klass.firstlineno = '%d' % code.co_firstlineno
-    
+
     parent_class.Add(klass)
-                        
+
 
 def describe_class(obj, module_class, module_name, constants):
     """
@@ -319,16 +319,16 @@ def describe_class(obj, module_class, module_name, constants):
         return
 
     class_name = module_class.name + '.' + class_name
-    
+
     docs = getdoc(obj)
     comments = getcomments(obj)
-    
+
     obj_dict = obj.__dict__
-    
+
     klass = Class(class_name, obj)
 
     count = 0
-   
+
     for name in obj_dict:
 
         if name.startswith('_') and '__init__' not in name:
@@ -336,7 +336,7 @@ def describe_class(obj, module_class, module_name, constants):
 
         if name in EXCLUDED_ATTRS:
             continue
-                
+
         try:
             item = getattr(obj, name)
         except AttributeError:
@@ -347,13 +347,13 @@ def describe_class(obj, module_class, module_name, constants):
             message = "ImportError from '%s.%s'.\n         Exception was: %s"%(obj, name, format_traceback())
             print(('\nWARNING: %s\n' % message))
             continue
-            
+
         if ismodule(item):
             continue
 
         if ismemberdescriptor(item) or isgetsetdescriptor(item):
             continue
-    
+
         if isbuiltin(item):
             count += 1
         elif ismethod(item) or isfunction(item) or ismethoddescriptor(item) or \
@@ -376,7 +376,7 @@ def describe_class(obj, module_class, module_name, constants):
             else:
                 item_class = Attribute(name, type(item), item)
                 klass.Add(item_class)
-                
+
                 if constants:
                     item_class.is_redundant = name not in constants
 
@@ -390,19 +390,19 @@ def describe_class(obj, module_class, module_name, constants):
         klass.is_redundant = True
     else:
         klass.inheritance_diagram = inheritance.InheritanceDiagram([obj], klass)
-    
+
     module_class.Add(klass)
 
     try:
         source_code = getsource(obj)
     except (IOError, TypeError):
         source_code = ''
-        
+
     if source_code:
         description = get_constructor(source_code)
         if '(' not in description and ':' in description:
             description = description[0:description.index(':')]
-            
+
         klass.signature = description.strip()
         klass.number_lines = '%d' % len(source_code.split('\n'))
 
@@ -419,20 +419,20 @@ def describe_module(module, kind, constants=[]):
         klass = Library(module_name)
     else:
         klass = Module(module_name, kind)
-        
+
     klass.docs = getdoc(module)
     klass.comments = getcomments(module)
-    
+
     klass.filename = module.__file__
     inheritance_diagram = []
-    
+
     count = 0
-   
+
     for name in dir(module):
-        
+
         if name in EXCLUDED_ATTRS:
             continue
-        
+
         obj = getattr(module, name)
 
         if ismodule(obj):
@@ -440,14 +440,14 @@ def describe_module(module, kind, constants=[]):
 
         if ismemberdescriptor(obj) or isgetsetdescriptor(obj):
             continue
-        
+
         if isclass(obj):
             count += 1
             describe_class(obj, klass, module_name, constants)
 
             if obj.__module__ == module.__name__:
                 inheritance_diagram.append(obj)
-            
+
         elif isbuiltin(obj):
             count += 1
         elif ismethod(obj) or isfunction(obj) or ismethoddescriptor(obj) or \
@@ -469,12 +469,12 @@ def describe_module(module, kind, constants=[]):
 
 
 def Import(init_name, import_name, full_process=True):
-    
+
     directory, module_name = os.path.split(init_name)
     dirname = os.path.dirname(directory)
-    
+
     if not full_process:
-        path = list(sys.path)    
+        path = list(sys.path)
         sys.path.insert(0, dirname)
 
     try:
@@ -485,9 +485,9 @@ def Import(init_name, import_name, full_process=True):
 
         if not full_process:
             sys.path = path[:]
-            
+
         return
-    
+
     if not full_process:
         sys.path = path[:]
         try:
@@ -502,7 +502,7 @@ def Import(init_name, import_name, full_process=True):
         print(version)
 
     return mainmod
-        
+
 
 def PrintProgress(name, looped_names):
 
@@ -525,7 +525,7 @@ def FindModuleType(filename):
 
 
 def SubImport(import_string, module, parent_class, ispkg):
-    
+
     try:
         submod = importlib.import_module(import_string)
     except:
@@ -542,7 +542,7 @@ def SubImport(import_string, module, parent_class, ispkg):
     subpath = os.path.dirname(filename)
     if subpath not in sys.path:
         sys.path.append(subpath)   # *** WHY?
-    
+
     if ispkg:
         kind = object_types.PACKAGE
     else:
@@ -562,12 +562,12 @@ def SubImport(import_string, module, parent_class, ispkg):
                 constants.extend([v.strip() for v in c])
             else:
                 constants.append(c.strip())
-    
-    module_class, count = describe_module(submod, kind=kind, constants=constants) 
+
+    module_class, count = describe_module(submod, kind=kind, constants=constants)
     parent_class.Add(module_class)
 
     return module_class, count
-    
+
 
 def ToRest(import_name):
 
@@ -597,12 +597,12 @@ def ModuleHunter(init_name, import_name, version):
 
     directory, module_name = os.path.split(init_name)
     path = list(sys.path)
-    
+
     mainmod = Import(init_name, import_name)
 
     if mainmod is None:
         return
-    
+
     message = "Importing main library '%s'..." % import_name
     print('Message: %s' % message)
 
@@ -615,13 +615,13 @@ def ModuleHunter(init_name, import_name, version):
 
     message = "Main library '%s' imported..." % library_class.name
     print('Message: %s' % message)
-    
-    message = "Importing sub-modules and sub-packages...\n"    
+
+    message = "Importing sub-modules and sub-packages...\n"
     print('Message: %s' % message)
 
     looped_names = []
     ancestors_dict = {import_name: library_class}
-    
+
     for importer, module_name, ispkg in pkgutil.walk_packages(path=[directory],
                                                               prefix=import_name+'.',
                                                               onerror=lambda x: None):
@@ -630,15 +630,15 @@ def ModuleHunter(init_name, import_name, version):
 
         fromlist = splitted[-1]
         parent_name = '.'.join(splitted[0:-1])
-        
+
         parent_class = ancestors_dict[parent_name]
         module_class, count = SubImport(import_string, fromlist, parent_class, ispkg)
 
         if module_class is None:
             continue
-        
+
         looped_names = PrintProgress(module_name, looped_names)
-        
+
         if module_name not in ancestors_dict:
             ancestors_dict[module_name] = module_class
 
@@ -659,7 +659,7 @@ def ModuleHunter(init_name, import_name, version):
 if __name__ == '__main__':
 
     argv = sys.argv[1:]
-    
+
     if len(argv) == 2:
         init_name, import_name = argv
         Import(init_name, import_name, full_process=False)
@@ -667,6 +667,6 @@ if __name__ == '__main__':
         init_name, import_name, version, save_dir = argv
         ModuleHunter(init_name, import_name, version, save_dir)
 
-    
-    
-    
+
+
+
