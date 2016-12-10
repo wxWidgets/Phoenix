@@ -685,6 +685,47 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     msg("Upload complete!")
 
 
+def uploadTree(srcPath, destPath, options, keep=5):
+    """
+    Similar to the above but uploads a tree of files.
+    """
+    msg("Uploading tree at {}...".format(srcPath))
+
+    host = 'wxpython-rbot'
+    if options.release_build:
+        uploadDir = opj('release-builds', destPath)
+    else:
+        uploadDir = opj('snapshot-builds', destPath)
+
+    # Ensure the destination exists
+    cmd = 'ssh {0} "if [ ! -d {1} ]; then mkdir {1}; fi"'.format(host, uploadDir)
+    runcmd(cmd)
+
+    # Upload the tree
+    cmd = 'scp -r {} {}:{}'.format(srcPath, host, uploadDir)
+    runcmd(cmd)
+
+    # Make sure it is readable by all
+    cmd = 'ssh {} "chmod -R a+r {}"'.format(host, uploadDir)
+    runcmd(cmd)
+
+    # get the list of all siblings of the tree just uploaded
+    cmd = 'ssh {} "cd {}; ls"'.format(host, uploadDir)
+    allDirs = runcmd(cmd, getOutput=True)
+    allDirs = allDirs.strip().split('\n')
+    allDirs.sort()
+
+    # Leave the last keep number of builds, including this new one, on the server.
+    # Delete the rest.
+    rmDirs = allDirs[:-keep]
+    for rmDir in rmDirs:
+        rmDir = opj(uploadDir, rmDir)
+        msg("Cleaning old build {}".format(rmDir))
+        cmd = 'ssh {} "rm -r {}"'.format(host, rmDir)
+        runcmd(cmd)
+
+    msg("Upload complete!")
+
 
 def checkCompiler(quiet=False):
     if isWindows:
@@ -1274,7 +1315,6 @@ def copyWxDlls(options):
         # for the wxlib's in $ORIGIN, so there is nothing else to do here
 
 
-
 # just an alias for build_py now
 def cmd_waf_py(options, args):
     cmdTimer = CommandTimer('waf_py')
@@ -1362,6 +1402,33 @@ def cmd_build_py(options, args):
     if not isWindows:
         print(" - You may also need to set your (DY)LD_LIBRARY_PATH to %s/lib,\n   or wherever the wxWidgets libs have been installed." % BUILD_DIR)
     print("")
+
+
+def cmd_build_vagrant(options, args):
+    # Does a build and bdist_wheel for each of the Vagrant based VMs defined
+    # in {phoenixDir}/vagrant. Requires Vagrant and VirtualBox to be installed
+    # and ready for use.  Also requires a source tarball to be present in
+    # {phoenixDir}/dist, such as what is produced with cmd_sdist.
+    cmdTimer = CommandTimer('bdist_vagrant')
+    cfg = Config(noWxConfig=True)
+    VMs = [ #'centos-7',
+            #'debian-8',
+            #'fedora-24',
+            #'ubuntu-14.04',
+            #'ubuntu-16.04',
+            ]
+    for vmName in VMs:
+        vmDir = opj(phoenixDir(), 'vagrant', vmName)
+        pwd = pushDir(vmDir)
+        msg('Starting Vagrant VM in {}'.format(vmDir))
+        runcmd('vagrant up')
+        runcmd('vagrant ssh -c "scripts/build.sh %s"' % vmName)
+        runcmd('vagrant halt')
+
+    if options.upload:
+        src = opj(phoenixDir(), 'dist', 'linux', cfg.VERSION)
+        assert os.path.isdir(src)
+        uploadTree(src, 'linux', options)
 
 
 
@@ -1533,6 +1600,15 @@ def cmd_clean(options, args):
     cmd_clean_py(options, args)
 
 
+def cmd_clean_vagrant(options, args):
+    cmdTimer = CommandTimer('clean_vagrant')
+    assert os.getcwd() == phoenixDir()
+
+    d = opj(phoenixDir(), 'dist', 'linux')
+    if os.path.exists(d):
+        shutil.rmtree(d)
+
+
 def cmd_cleanall(options, args):
     # These take care of all the object, lib, shared lib files created by the
     # compilation part of build
@@ -1550,6 +1626,8 @@ def cmd_cleanall(options, args):
     for wc in ['sip/cpp/*.h', 'sip/cpp/*.cpp', 'sip/cpp/*.sbf', 'sip/gen/*.sip']:
         files += glob.glob(wc)
     delFiles(files)
+
+    cmd_clean_vagrant(options, args)
 
 
 def cmd_buildall(options, args):
