@@ -54,30 +54,31 @@ def run():
         klass.addItem(etgtools.WigCode("""\
             virtual bool CanOpen(const wxString& location);
             virtual wxFSFile* OpenFile(wxFileSystem& fs, const wxString& location);
+            virtual wxString FindFirst(const wxString& spec, int flags = 0);
+            virtual wxString FindNext();
             """))
 
 
     c = module.find('wxArchiveFSHandler')
+    _fixHandlerClass(c)
     c.addPrivateCopyCtor()
     module.addPyCode('ZipFSHandler = wx.deprecated(ArchiveFSHandler, "Use ArchiveFSHandler instead.")')
-    _fixHandlerClass(c)
 
     c = module.find('wxFSFile')
     c.addPrivateCopyCtor()
-    _fixHandlerClass(c)
 
     c = module.find('wxFilterFSHandler')
-    c.addPrivateCopyCtor()
     _fixHandlerClass(c)
+    c.addPrivateCopyCtor()
 
     c = module.find('wxInternetFSHandler')
-    c.addPrivateCopyCtor()
     _fixHandlerClass(c)
+    c.addPrivateCopyCtor()
 
 
     c = module.find('wxMemoryFSHandler')
-    c.addPrivateCopyCtor()
     _fixHandlerClass(c)
+    c.addPrivateCopyCtor()
 
     # Make some more python-friendly versions of the AddFile methods accepting raw data
     c.find('AddFile').findOverload('binarydata').ignore()
