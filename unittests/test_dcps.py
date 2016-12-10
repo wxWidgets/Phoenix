@@ -9,7 +9,7 @@ fileName = os.path.join(os.path.dirname(__file__), 'dcpstest.svg')
 #---------------------------------------------------------------------------
 
 class dcps_tests(wtc.WidgetTestCase):
-            
+
     def test_PostscriptDC1(self):
         pd = wx.PrintData()
         pd.SetPrintMode(wx.PRINT_MODE_FILE)
@@ -25,7 +25,7 @@ class dcps_tests(wtc.WidgetTestCase):
         del dc
 
         os.remove(fileName)
-        
+
 
 #---------------------------------------------------------------------------
 

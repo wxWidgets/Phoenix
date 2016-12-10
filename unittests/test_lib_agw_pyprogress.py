@@ -7,13 +7,13 @@ import wx.lib.agw.pyprogress as PP
 #---------------------------------------------------------------------------
 
 class lib_agw_pyprogress_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_pyprogressCtor(self):
         dlg = PP.PyProgress(self.frame, -1, 'PyProgress Example',
                             'An Informative Message',
                             agwStyle=wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME)
         dlg.Destroy()
-                                 
+
     def test_lib_agw_pyprogressMethods(self):
         dlg = PP.PyProgress(self.frame, -1, 'PyProgress Example',
                             'An Informative Message',
@@ -43,4 +43,4 @@ class lib_agw_pyprogress_Tests(wtc.WidgetTestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
+

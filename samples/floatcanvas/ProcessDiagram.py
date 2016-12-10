@@ -33,16 +33,16 @@ import numpy as N
 class MovingObjectMixin:
     """
     Methods required for a Moving object
-    
+
     """
     def GetOutlinePoints(self):
         """
-        Returns a set of points with which to draw the outline when moving the 
+        Returns a set of points with which to draw the outline when moving the
         object.
-        
+
         Points are a NX2 array of (x,y) points in World coordinates.
-        
-        
+
+
         """
         BB = self.BoundingBox
         OutlinePoints = N.array( ( (BB[0,0], BB[0,1]),
@@ -57,15 +57,15 @@ class MovingObjectMixin:
 class ConnectorObjectMixin:
     """
     Mixin class for DrawObjects that can be connected with lines
-    
+
     Note that this version only works for Objects that have an "XY" attribute:
       that is, one that is derived from XHObjectMixin.
-    
+
     """
-    
+
     def GetConnectPoint(self):
         return self.XY
-        
+
 class MovingBitmap(FC.ScaledBitmap, MovingObjectMixin, ConnectorObjectMixin):
     """
     ScaledBitmap Object that can be moved
@@ -73,7 +73,7 @@ class MovingBitmap(FC.ScaledBitmap, MovingObjectMixin, ConnectorObjectMixin):
     ## All we need to do is is inherit from:
     ##  ScaledBitmap, MovingObjectMixin and ConnectorObjectMixin
     pass
-    
+
 class MovingCircle(FC.Circle, MovingObjectMixin, ConnectorObjectMixin):
     """
     ScaledBitmap Object that can be moved
@@ -84,10 +84,10 @@ class MovingCircle(FC.Circle, MovingObjectMixin, ConnectorObjectMixin):
 
 
 class MovingGroup(FC.Group, MovingObjectMixin, ConnectorObjectMixin):
-    
+
     def GetConnectPoint(self):
         return self.BoundingBox.Center
-        
+
 class NodeObject(FC.Group, MovingObjectMixin, ConnectorObjectMixin):
     """
     A version of the moving group for nodes -- an ellipse with text on it.
@@ -117,7 +117,7 @@ class NodeObject(FC.Group, MovingObjectMixin, ConnectorObjectMixin):
 
     def GetConnectPoint(self):
         return self.BoundingBox.Center
-        
+
 
 class MovingText(FC.ScaledText, MovingObjectMixin, ConnectorObjectMixin):
     """
@@ -134,7 +134,7 @@ class MovingTextBox(FC.ScaledTextBox, MovingObjectMixin, ConnectorObjectMixin):
     ## All we need to do is is inherit from:
     ##  ScaledBitmap, MovingObjectMixin and ConnectorObjectMixin
     pass
-    
+
 class ConnectorLine(FC.LineOnlyMixin, FC.DrawObject,):
     """
 
@@ -152,8 +152,8 @@ class ConnectorLine(FC.LineOnlyMixin, FC.DrawObject,):
                  InForeground = False):
         FC.DrawObject.__init__(self, InForeground)
 
-        self.Object1 =  Object1       
-        self.Object2 =  Object2       
+        self.Object1 =  Object1
+        self.Object2 =  Object2
         self.LineColor = LineColor
         self.LineStyle = LineStyle
         self.LineWidth = LineWidth
@@ -179,8 +179,8 @@ class ConnectorLine(FC.LineOnlyMixin, FC.DrawObject,):
         if HTdc and self.HitAble:
             HTdc.SetPen(self.HitPen)
             HTdc.DrawLines(Points)
-    
-    
+
+
 class TriangleShape1(FC.Polygon, MovingObjectMixin):
 
     def __init__(self, XY, L):
@@ -205,9 +205,9 @@ class TriangleShape1(FC.Polygon, MovingObjectMixin):
     ## Override the default OutlinePoints
     def GetOutlinePoints(self):
         return self.Points
-        
+
     def CompPoints(self, XY, L):
-        c = L/ N.sqrt(3) 
+        c = L/ N.sqrt(3)
 
         Points = N.array(((0, c),
                           ( L/2.0, -c/2.0),
@@ -232,7 +232,7 @@ class TreeNode:
     def __str__(self):
         return "TreeNode: %s"%self.Name
     __repr__ = __str__
-    
+
 
 ## Build Tree:
 leaves = [TreeNode(name) for name in ["Assistant VP 1","Assistant VP 2","Assistant VP 3"] ]
@@ -246,12 +246,12 @@ elements = TreeNode("Root", [CEO, Father])
 def LayoutTree(root, x, y, level):
     NumNodes = len(root.Children)
     root.Point = (x,y)
-    x += root.dx 
+    x += root.dx
     y += (root.dy * level * (NumNodes-1) / 2.0)
     for node in root.Children:
         LayoutTree(node, x, y, level-1)
         y -= root.dy * level
-          
+
 def TraverseTree(root, func):
     func(root)
     for child in (root.Children):
@@ -267,25 +267,25 @@ class DrawFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
 
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
         # Add the Canvas
         Canvas = NavCanvas.NavCanvas(self,-1,(500,500),
                                           ProjectionFun = None,
                                           Debug = 0,
                                           BackgroundColor = "White",
                                           ).Canvas
-        
+
         self.Canvas = Canvas
 
 
-        Canvas.Bind(FC.EVT_MOTION, self.OnMove ) 
-        Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp ) 
+        Canvas.Bind(FC.EVT_MOTION, self.OnMove )
+        Canvas.Bind(FC.EVT_LEFT_UP, self.OnLeftUp )
 
         self.elements = elements
         LayoutTree(self.elements, 0, 0, 3)
         self.AddTree(self.elements)
-        
-        
+
+
         self.Show(True)
         self.Canvas.ZoomToBB()
 
@@ -319,7 +319,7 @@ class DrawFrame(wx.Frame):
             node.DrawObject = object
             Nodes.append(object)
         def AddConnectors(node):
-            for child in node.Children: 
+            for child in node.Children:
                 Connector = ConnectorLine(node.DrawObject, child.DrawObject, LineWidth=3, LineColor="Red")
                 Connectors.append(Connector)
         ## create the Objects
@@ -327,14 +327,14 @@ class DrawFrame(wx.Frame):
         ## create the Connectors
         TraverseTree(root, AddConnectors)
         ## Add the conenctos to the Canvas first, so they are undernieth the nodes
-        self.Canvas.AddObjects(Connectors) 
+        self.Canvas.AddObjects(Connectors)
         ## now add the nodes
-        self.Canvas.AddObjects(Nodes) 
+        self.Canvas.AddObjects(Nodes)
         # Now bind the Nodes -- DrawObjects must be Added to a Canvas before they can be bound.
         for node in Nodes:
             #pass
             node.Bind(FC.EVT_FC_LEFT_DOWN, self.ObjectHit)
- 
+
 
 
     def ObjectHit(self, object):
@@ -371,7 +371,7 @@ class DrawFrame(wx.Frame):
             if self.MoveObject is not None:
                 dxy = event.GetPosition() - self.StartPoint
                 dxy = self.Canvas.ScalePixelToWorld(dxy)
-                self.MovingObject.Move(dxy) 
+                self.MovingObject.Move(dxy)
             self.Canvas.Draw(True)
 
 app = wx.App(0)

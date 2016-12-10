@@ -8,23 +8,23 @@ import os
 class font_Tests(wtc.WidgetTestCase):
 
     def test_fontFlags(self):
-        wx.FONTFAMILY_DEFAULT 
-        wx.FONTFAMILY_DECORATIVE 
-        wx.FONTFAMILY_ROMAN 
-        wx.FONTFAMILY_SCRIPT 
-        wx.FONTFAMILY_SWISS 
+        wx.FONTFAMILY_DEFAULT
+        wx.FONTFAMILY_DECORATIVE
+        wx.FONTFAMILY_ROMAN
+        wx.FONTFAMILY_SCRIPT
+        wx.FONTFAMILY_SWISS
         wx.FONTFAMILY_MODERN
         wx.FONTFAMILY_TELETYPE
-        wx.FONTFAMILY_UNKNOWN 
-        
-        wx.FONTSTYLE_NORMAL 
+        wx.FONTFAMILY_UNKNOWN
+
+        wx.FONTSTYLE_NORMAL
         wx.FONTSTYLE_ITALIC
         wx.FONTSTYLE_SLANT
 
         wx.FONTWEIGHT_NORMAL
         wx.FONTWEIGHT_LIGHT
         wx.FONTWEIGHT_BOLD
-        
+
         wx.FONTSIZE_XX_SMALL
         wx.FONTSIZE_X_SMALL
         wx.FONTSIZE_SMALL
@@ -32,17 +32,17 @@ class font_Tests(wtc.WidgetTestCase):
         wx.FONTSIZE_LARGE
         wx.FONTSIZE_X_LARGE
         wx.FONTSIZE_XX_LARGE
-        
-        wx.FONTFLAG_DEFAULT 
-        wx.FONTFLAG_ITALIC  
-        wx.FONTFLAG_SLANT   
-        wx.FONTFLAG_LIGHT   
-        wx.FONTFLAG_BOLD    
-        wx.FONTFLAG_ANTIALIASED 
-        wx.FONTFLAG_NOT_ANTIALIASED 
-        wx.FONTFLAG_UNDERLINED      
-        wx.FONTFLAG_STRIKETHROUGH   
-        
+
+        wx.FONTFLAG_DEFAULT
+        wx.FONTFLAG_ITALIC
+        wx.FONTFLAG_SLANT
+        wx.FONTFLAG_LIGHT
+        wx.FONTFLAG_BOLD
+        wx.FONTFLAG_ANTIALIASED
+        wx.FONTFLAG_NOT_ANTIALIASED
+        wx.FONTFLAG_UNDERLINED
+        wx.FONTFLAG_STRIKETHROUGH
+
         wx.FONTENCODING_SYSTEM
         wx.FONTENCODING_DEFAULT
         wx.FONTENCODING_ISO8859_1
@@ -142,22 +142,22 @@ class font_Tests(wtc.WidgetTestCase):
         wx.FONTENCODING_BIG5
         wx.FONTENCODING_SHIFT_JIS
         wx.FONTENCODING_EUC_KR
-        
-    
+
+
     def test_fontFlagsOld(self):
-        wx.DEFAULT    
-        wx.DECORATIVE 
-        wx.ROMAN      
-        wx.SCRIPT     
-        wx.SWISS      
-        wx.MODERN     
-        wx.TELETYPE   
-        wx.NORMAL 
-        wx.LIGHT  
-        wx.BOLD   
-        wx.NORMAL 
-        wx.ITALIC 
-        wx.SLANT  
+        wx.DEFAULT
+        wx.DECORATIVE
+        wx.ROMAN
+        wx.SCRIPT
+        wx.SWISS
+        wx.MODERN
+        wx.TELETYPE
+        wx.NORMAL
+        wx.LIGHT
+        wx.BOLD
+        wx.NORMAL
+        wx.ITALIC
+        wx.SLANT
 
 
     def test_font(self):
@@ -170,17 +170,17 @@ class font_Tests(wtc.WidgetTestCase):
         # this ctor was removed
         #f7 = wx.Font(18, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD|wx.FONTFLAG_ITALIC)
 
-        
+
     def test_fontFontinfo1(self):
         fi1 = wx.FontInfo().Family(wx.FONTFAMILY_ROMAN).Bold().Italic().Underlined().Strikethrough()
         fi2 = wx.FontInfo(12).FaceName('Ariel').Light().Encoding(wx.FONTENCODING_ISO8859_1)
         fi3 = wx.FontInfo((8,12)).AllFlags(wx.FONTFLAG_BOLD|wx.FONTFLAG_ITALIC)
-        
-        
+
+
     def test_fontFontinfo2(self):
         f1 = wx.Font(wx.FontInfo(12).Family(wx.FONTFAMILY_SWISS).Italic())
-        
-        
+
+
     def test_fontOk(self):
         f1 = wx.Font()
         f2 = wx.FFont(18, wx.FONTFAMILY_ROMAN)
@@ -198,8 +198,8 @@ class font_Tests(wtc.WidgetTestCase):
         f3 = wx.Font(wx.Size(12,12), wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False)
         self.assertTrue(f1 == f2)
         self.assertTrue(f1 != f3)
-        
-        
+
+
     def test_fontProperties(self):
         f = wx.FFont(18, wx.FONTFAMILY_SWISS)
         f.Encoding
@@ -229,8 +229,8 @@ class font_Tests(wtc.WidgetTestCase):
     def test_fontOldStyleNames(self):
         f = wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL)
 
-    
-    
+
+
 #---------------------------------------------------------------------------
 
 

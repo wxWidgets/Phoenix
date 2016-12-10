@@ -9,8 +9,8 @@ pnl.BackgroundColour = 'sky blue'
 st = wx.StaticText(pnl, -1, 'Hello World!', (15,10))
 st.SetFont(wx.FFont(14, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
 
-st = wx.StaticText(pnl, pos=(15,40), 
-        label='This is wxPython %s\nrunning on Python %s %s' % 
+st = wx.StaticText(pnl, pos=(15,40),
+        label='This is wxPython %s\nrunning on Python %s %s' %
         (wx.version(), sys.version.split(' ')[0], platform.architecture()[0]))
 st.SetFont(wx.FFont(10, wx.FONTFAMILY_SWISS, wx.FONTFLAG_BOLD))
 
@@ -20,4 +20,4 @@ sb = wx.StaticBitmap(pnl, label=bmp, pos=(15,85))
 frm.Show()
 app.MainLoop()
 
-    
+

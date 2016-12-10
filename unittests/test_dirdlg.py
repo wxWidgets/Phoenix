@@ -6,11 +6,11 @@ import wx
 
 class dirdlg_Tests(wtc.WidgetTestCase):
 
-    
+
     def test_dirdlg(self):
         dlg = wx.DirDialog(self.frame, 'message')
         dlg.Destroy()
-        
+
 #---------------------------------------------------------------------------
 
 

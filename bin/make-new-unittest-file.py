@@ -27,7 +27,7 @@ class %(name)s_Tests(wtc.WidgetTestCase):
     # TODO: Remove this test and add real ones.
     def test_%(name)s1(self):
         self.fail("Unit tests for %(name)s not implemented yet.")
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':
@@ -41,7 +41,7 @@ def main(args):
     if not args:
         print("usage: %s names" % __file__)
         return
-    
+
     for name in args:
         writeFile(
             os.path.join(root_dir, "unittests", "test_%s.py" % name),

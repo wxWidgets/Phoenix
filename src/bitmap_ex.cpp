@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------
 // Name:        src/bitmap_ex.h
-// Purpose:     Helper functions and etc. for copying bitmap data to/from 
-//              buffer objects.  This file is included in etg/bitmap.py and 
+// Purpose:     Helper functions and etc. for copying bitmap data to/from
+//              buffer objects.  This file is included in etg/bitmap.py and
 //              used in the wxBitmap wrapper.
 //
 // Author:      Robin Dunn
@@ -17,7 +17,7 @@
 // TODO: Switch these APIs to use the new wxPyBuffer class
 
 void wxPyCopyBitmapFromBuffer(wxBitmap* bmp,
-                              buffer data, Py_ssize_t DATASIZE, 
+                              buffer data, Py_ssize_t DATASIZE,
                               wxBitmapBufferFormat format, int stride)
 {
     int height = bmp->GetHeight();
@@ -52,7 +52,7 @@ void wxPyCopyBitmapFromBuffer(wxBitmap* bmp,
             }
             break;
         }
-            
+
         // A simple sequence of RGBA bytes
         case wxBitmapBufferFormat_RGBA:
         {
@@ -82,7 +82,7 @@ void wxPyCopyBitmapFromBuffer(wxBitmap* bmp,
             }
             break;
         }
-            
+
         // A sequence of 32-bit values in native endian order,
         // where the alpha is in the upper 8 bits, then red, then
         // green, then blue.  The stride is the distance in bytes
@@ -94,7 +94,7 @@ void wxPyCopyBitmapFromBuffer(wxBitmap* bmp,
         // NOTE: This is normally used with Cairo, which seems to
         // already have the values premultiplied.  Should we have
         // a way to optionally do it anyway?
-            
+
         case wxBitmapBufferFormat_RGB32:
         case wxBitmapBufferFormat_ARGB32:
         {
@@ -102,10 +102,10 @@ void wxPyCopyBitmapFromBuffer(wxBitmap* bmp,
             byte* rowStart = data;
             wxUint32* bufptr;
             wxUint32  value;
-    
+
             if (stride == -1)
                 stride = width * 4;
-            
+
             if (DATASIZE < stride * height) {
                 wxPyErr_SetString(PyExc_ValueError, "Invalid data buffer size.");
                 return;
@@ -115,7 +115,7 @@ void wxPyCopyBitmapFromBuffer(wxBitmap* bmp,
             if (! pixData) {
                 wxPyErr_SetString(PyExc_RuntimeError,
                                   "Failed to gain raw access to bitmap data.");
-                return;    
+                return;
             }
 
             wxAlphaPixelData::Iterator pix(pixData);
@@ -165,13 +165,13 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
     int depth = bmp->GetDepth();
 
     // images loaded from a file may not have set the depth, at least on Mac...
-    if (depth == -1) { 
+    if (depth == -1) {
         if (bmp->HasAlpha())
             depth = 32;
         else
             depth = 24;
     }
-    
+
     switch (format) {
         // A simple sequence of RGB bytes
         case wxBitmapBufferFormat_RGB:
@@ -179,7 +179,7 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
             CHECK_BUFFERSIZE(width * height * 3);
             if (depth == 24) {
                 MAKE_PIXDATA(wxNativePixelData);
-                
+
                 for (int y=0; y<height; y++) {
                     rowStart = p;
                     for (int x=0; x<width; x++) {
@@ -196,7 +196,7 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
                 // Source has alpha, but we won't be using it because the
                 // destination buffer doesn't
                 MAKE_PIXDATA(wxAlphaPixelData);
-                
+
                 for (int y=0; y<height; y++) {
                     rowStart = p;
                     for (int x=0; x<width; x++) {
@@ -211,7 +211,7 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
             }
             break;
         }
-        
+
         // A simple sequence of RGBA bytes
         case wxBitmapBufferFormat_RGBA:
         {
@@ -250,7 +250,7 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
             }
             break;
         }
-            
+
         // A sequence of 32-bit values in native endian order,
         // where the alpha is in the upper 8 bits, then red, then
         // green, then blue.  The stride is the distance in bytes
@@ -262,7 +262,7 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
         // NOTE: This is normally used with Cairo, which seems to
         // already have the values premultiplied.  Should we have
         // a way to optionally do it anyway?
-            
+
         case wxBitmapBufferFormat_RGB32:
         case wxBitmapBufferFormat_ARGB32:
         {
@@ -270,12 +270,12 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
             byte* dataRow = data;
             wxUint32* bufptr;
             wxUint32  value;
-    
+
             if (stride == -1)
                 stride = width * 4;
-            
+
             CHECK_BUFFERSIZE(stride * height);
-            
+
             if (useAlpha && depth == 32) {
                 MAKE_PIXDATA(wxAlphaPixelData);
                 for (int y=0; y<height; y++) {
@@ -288,7 +288,7 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
                             (p.Green() << 8) |
                             (p.Blue());
                         *bufptr = value;
-                        ++p;    
+                        ++p;
                         ++bufptr;
                     }
                     dataRow += stride;
@@ -307,7 +307,7 @@ void wxPyCopyBitmapToBuffer(wxBitmap* bmp,
                             (p.Green() << 8) |
                             (p.Blue());
                         *bufptr = value;
-                        ++p;    
+                        ++p;
                         ++bufptr;
                     }
                     dataRow += stride;

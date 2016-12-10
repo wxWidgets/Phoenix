@@ -6,15 +6,15 @@ import wx
 
 class msgdlg_Tests(wtc.WidgetTestCase):
 
-    
+
     def test_msgdlg1(self):
         dlg = wx.MessageDialog(None, 'Message', 'Caption')
         dlg.Destroy()
-        
+
     def test_msgdlg2(self):
         dlg = wx.MessageDialog(self.frame, 'Message', 'Caption')
         dlg.Destroy()
-        
+
     def test_msgdlg3(self):
         dlg = wx.MessageDialog(None, 'Message', 'Caption')
         dlg.SetExtendedMessage('extended')
@@ -28,7 +28,7 @@ class msgdlg_Tests(wtc.WidgetTestCase):
 
     def test_msgdlg3(self):
         wx.MessageBox
-        
+
     def test_msgdlgProperties(self):
         dlg = wx.MessageDialog(None, 'Message', 'Caption')
         dlg.CancelLabel
@@ -42,7 +42,7 @@ class msgdlg_Tests(wtc.WidgetTestCase):
         dlg.OKLabel
         dlg.YesLabel
         dlg.Destroy()
-        
+
     def test_msgdlgIconConstants(self):
         wx.ICON_EXCLAMATION
         wx.ICON_HAND
@@ -57,13 +57,13 @@ class msgdlg_Tests(wtc.WidgetTestCase):
         wx.CallLater(250, dlg.EndModal, wx.ID_OK)
         dlg.ShowModal()
         dlg.Destroy()
-        
+
     def test_gmsgdlg2(self):
         dlg = wx.GenericMessageDialog(self.frame, 'Message', 'Caption')
         wx.CallLater(250, dlg.EndModal, wx.ID_OK)
         dlg.ShowModal()
         dlg.Destroy()
-        
+
     def test_gmsgdlg3(self):
         dlg = wx.GenericMessageDialog(None, 'Message', 'Caption')
         dlg.SetExtendedMessage('extended')
@@ -76,7 +76,7 @@ class msgdlg_Tests(wtc.WidgetTestCase):
         wx.CallLater(250, dlg.EndModal, wx.ID_OK)
         dlg.ShowModal()
         dlg.Destroy()
-        
+
 #---------------------------------------------------------------------------
 
 

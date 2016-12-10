@@ -69,7 +69,7 @@ class DrawFrame(wx.Frame):
                                           BackgroundColor = "DARK SLATE BLUE",
                                           ).Canvas
 
-        
+
         self.Show(True)
 
 
@@ -286,25 +286,25 @@ class DrawFrame(wx.Frame):
             elif Dir == "down": Y -= 10
             Object.SetPoint((X,Y))
         self.Canvas.Draw(True)
-                
+
     def UnBindAllMouseEvents(self):
         ## Here is how you catch FloatCanvas mouse events
-        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.dummyHandler) 
-        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.dummyHandler) 
-        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DCLICK, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.dummyHandler)
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.dummyHandler)
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DCLICK, self.dummyHandler)
 
-        self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DOWN, self.dummyHandler) 
-        self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_UP, self.dummyHandler) 
-        self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DCLICK, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DOWN, self.dummyHandler)
+        self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_UP, self.dummyHandler)
+        self.Canvas.Bind(FloatCanvas.EVT_MIDDLE_DCLICK, self.dummyHandler)
 
-        self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DOWN, self.dummyHandler) 
-        self.Canvas.Bind(FloatCanvas.EVT_RIGHT_UP, self.dummyHandler) 
-        self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DCLICK, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DOWN, self.dummyHandler)
+        self.Canvas.Bind(FloatCanvas.EVT_RIGHT_UP, self.dummyHandler)
+        self.Canvas.Bind(FloatCanvas.EVT_RIGHT_DCLICK, self.dummyHandler)
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOUSEWHEEL, self.dummyHandler) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOUSEWHEEL, self.dummyHandler)
 
         self.EventsAreBound = False
-        
+
     def dummyHandler(self, evt):
         evt.Skip()
 
@@ -318,7 +318,7 @@ class DemoApp(wx.App):
     objects, of each kind supported.
 
     *Draw Map: will draw a map of the world. Be patient, it is a big map,
-    with a lot of data, and will take a while to load and draw (about 10 sec 
+    with a lot of data, and will take a while to load and draw (about 10 sec
     on my 450Mhz PIII). Redraws take about 2 sec. This demonstrates how the
     performance is not very good for large drawings.
 
@@ -326,7 +326,7 @@ class DemoApp(wx.App):
 
     Once you have a picture drawn, you can zoom in and out and move about
     the picture. There is a tool bar with three tools that can be
-    selected. 
+    selected.
 
     The magnifying glass with the plus is the zoom in tool. Once selected,
     if you click the image, it will zoom in, centered on where you
@@ -369,10 +369,10 @@ class DemoApp(wx.App):
 
 app =  DemoApp(False)
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

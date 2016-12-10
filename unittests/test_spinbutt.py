@@ -8,7 +8,7 @@ class spinbutt_Tests(wtc.WidgetTestCase):
 
     def test_spinbuttCtor(self):
         sb = wx.SpinButton(self.frame)
-        
+
     def test_spinbuttDefaultCtor(self):
         sb = wx.SpinButton()
         sb.Create(self.frame)
@@ -19,7 +19,7 @@ class spinbutt_Tests(wtc.WidgetTestCase):
         sb.Min
         sb.Value
         sb.Range
-        
+
     def test_spinctrlPropertiesInAction(self):
         sb = wx.SpinButton(self.frame)
         sb.Max = 75
@@ -29,11 +29,11 @@ class spinbutt_Tests(wtc.WidgetTestCase):
         self.assertTrue(sb.GetRange() == (25, 75))
         self.assertTrue(sb.Range == (25, 75))
         self.assertTrue(sb.GetValue() == 50)
-        
-               
+
+
     def test_spinbuttOther(self):
         wx.SpinEvent
-        
+
         wx.EVT_SPIN_UP
         wx.EVT_SPIN_DOWN
         wx.EVT_SPIN
@@ -45,8 +45,8 @@ class spinbutt_Tests(wtc.WidgetTestCase):
         wx.SP_VERTICAL
         wx.SP_ARROW_KEYS
         wx.SP_WRAP
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

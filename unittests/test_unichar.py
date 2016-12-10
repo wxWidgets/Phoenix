@@ -9,7 +9,7 @@ class unichar_Tests(wtc.WidgetTestCase):
     # TODO: Remove this test and add real ones.
     def test_unichar1(self):
         self.fail("Unit tests for unichar not implemented yet.")
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

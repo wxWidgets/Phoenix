@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // Name:        arrayholder.sip
-// Purpose:     
+// Purpose:
 //
 // Author:      Robin Dunn
 //
@@ -22,13 +22,13 @@ class wxCArrayHolder
 %TypeHeaderCode
 #include "arrayholder.h"
 %End
-    
+
 public:
     wxCArrayHolder();
     ~wxCArrayHolder();
-    
+
 private:
-    wxCArrayHolder(const wxCArrayHolder<Type>&);  // no copies    
+    wxCArrayHolder(const wxCArrayHolder<Type>&);  // no copies
     wxCArrayHolder& operator=(wxCArrayHolder<Type>); // no assignment
 };
 

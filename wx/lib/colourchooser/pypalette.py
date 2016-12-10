@@ -115,7 +115,7 @@ class PyPalette(canvas.Canvas):
 
     HORIZONTAL_STEP = 2
     VERTICAL_STEP   = 4
-    
+
     def __init__(self, parent, id):
         """Creates a palette object."""
         # Load the pre-generated palette XPM
@@ -127,13 +127,13 @@ class PyPalette(canvas.Canvas):
 
         self.palette = Image.GetBitmap()
         self.point = None
-        
+
         canvas.Canvas.__init__ (self, parent, id, forceClientSize=IMAGE_SIZE)
-        
+
     def DoGetBestClientSize(self):
         """Overridden to create a client window that exactly fits our bitmap"""
         return self.palette.GetSize()
-        
+
     def xInBounds(self, x):
         """Limit x to [0,width)"""
         if x < 0:
@@ -161,7 +161,7 @@ class PyPalette(canvas.Canvas):
     def DrawBuffer(self):
         """Draws the palette XPM into the memory buffer."""
         self.buffer.DrawBitmap(self.palette, 0, 0, 0)
-        
+
         if self.point:
             colour = wx.Colour(0, 0, 0)
             self.buffer.SetPen(wx.Pen(colour, 1, wx.PENSTYLE_SOLID))
@@ -173,7 +173,7 @@ class PyPalette(canvas.Canvas):
         the coordinate point"""
         self.point = (self.xInBounds(x), self.yInBounds(y))
         self.ReDraw()
-        
+
     def ClearPoint(self):
         self.point = None
 

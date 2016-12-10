@@ -13,7 +13,7 @@
 // We don't want the Python user to ever need to deal directly with wxString
 // at all, so it will be mapped to and from Python Unicode objects using the
 // code snippets below.
-// NOTE: Currently we assume that string objects are encoded in utf-8.  
+// NOTE: Currently we assume that string objects are encoded in utf-8.
 
 %MappedType wxString
 {
@@ -21,12 +21,12 @@
     // TODO: It is still possible to have a wx build that uses utf-8 inside
     // wxString, so we should probably be checking wxUSE_UNICODE_WCHAR or
     // wxUSE_UNICODE_UTF8 for this conversion.
-    
+
     %ConvertToTypeCode
         #if wxUSE_UNICODE_WCHAR == 0
         #error wxString converison can only handle WCHAR wxStrings currently
         #endif
-    
+
         // Code to test a PyObject for compatibility with wxString
         if (!sipIsErr) {
             if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
@@ -43,7 +43,7 @@
                 *sipIsErr = 1;
                 return 0;
             }
-        }            
+        }
         *sipCppPtr = new wxString();
         size_t len = PyUnicode_GET_SIZE(uni);
         if (len) {
@@ -54,11 +54,11 @@
         return sipGetState(sipTransferObj);
     %End
 
-         
+
     %ConvertFromTypeCode
         // Convert a wxString to a Python Unicode object.  See wxpy_api.sip
         return wx2PyString(*sipCpp);
-    %End    
+    %End
 };
 
 

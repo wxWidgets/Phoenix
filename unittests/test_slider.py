@@ -13,17 +13,17 @@ class slider_Tests(wtc.WidgetTestCase):
     def test_sliderDefaultCtor(self):
         s = wx.Slider()
         s.Create(self.frame)
-        
+
     def test_sliderRange(self):
-        s = wx.Slider(self.frame)        
+        s = wx.Slider(self.frame)
         s.SetRange(25, 75)
         self.assertTrue(s.GetRange() == (25, 75))
         self.assertTrue(s.GetMin() == 25)
         self.assertTrue(s.GetMax() == 75)
         self.assertTrue(s.Range == (25, 75))
-        
+
     def test_sliderRange2(self):
-        s = wx.Slider(self.frame)        
+        s = wx.Slider(self.frame)
         s.SetMin(25)
         s.SetMax(75)
         self.assertTrue(s.GetRange() == (25, 75))
@@ -31,7 +31,7 @@ class slider_Tests(wtc.WidgetTestCase):
         self.assertTrue(s.GetMax() == 75)
         self.assertTrue(s.Range == (25, 75))
 
-        
+
     def test_sliderFlags(self):
         wx.SL_HORIZONTAL
         wx.SL_VERTICAL
@@ -49,7 +49,7 @@ class slider_Tests(wtc.WidgetTestCase):
         wx.SL_LABELS
 
     def test_sliderProperties(self):
-        s = wx.Slider(self.frame)        
+        s = wx.Slider(self.frame)
         s.LineSize
         s.Max
         s.Min
@@ -60,7 +60,7 @@ class slider_Tests(wtc.WidgetTestCase):
         s.TickFreq
         s.Value
         s.Range
-        
+
 #---------------------------------------------------------------------------
 
 

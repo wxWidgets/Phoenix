@@ -5,18 +5,18 @@ import wx
 #---------------------------------------------------------------------------
 
 class AppTraitsTests(wtc.WidgetTestCase):
-    
+
     def test_AppTraits(self):
         t = self.app.GetTraits()
         self.assertTrue(t is not None)
-        
+
         v = t.GetToolkitVersion()
         self.assertTrue( len(v) == 3)
-        
+
         t.HasStderr()
         t.IsUsingUniversalWidgets()
-        
-    
+
+
 #---------------------------------------------------------------------------
 
 

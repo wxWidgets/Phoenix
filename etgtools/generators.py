@@ -17,18 +17,18 @@ import sys
 
 class WrapperGeneratorBase(object):
     def __init__(self):
-        pass    
+        pass
     def generate(self, module, destFile=None):
         raise NotImplementedError
-        
-    
+
+
 class DocsGeneratorBase(object):
     def __init__(self):
-        pass        
+        pass
     def generate(self, module):
         raise NotImplementedError
-    
-    
+
+
 class StubbedDocsGenerator(DocsGeneratorBase):
     def generate(self, module):
         pass
@@ -44,7 +44,7 @@ class SphinxGenerator(DocsGeneratorBase):
 def nci(text, numSpaces=0, stripLeading=True):
     """
     Normalize Code Indents
-    
+
     First use the count of leading spaces on the first line and remove that
     many spaces from the front of all lines, and then indent each line by
     adding numSpaces spaces. This is used so we can convert the arbitrary
@@ -59,20 +59,20 @@ def nci(text, numSpaces=0, stripLeading=True):
                 break
             count += 1
         return count
-    
+
     def _allSpaces(text):
         for c in text:
             if c != ' ':
                 return False
         return True
 
-    
+
     lines = text.rstrip().split('\n')
     if stripLeading:
         numStrip = _getLeadingSpaceCount(lines[0])
     else:
         numStrip = 0
-    
+
     for idx, line in enumerate(lines):
         assert _allSpaces(line[:numStrip]), "Indentation inconsistent with first line"
         lines[idx] = ' '*numSpaces + line[numStrip:]
@@ -102,8 +102,8 @@ class Utf8EncodingStream(io.StringIO):
             if isinstance(text, str):
                 text = text.decode('utf-8')
             return io.StringIO.write(self, text)
-    
-    
+
+
 
 
 def textfile_open(filename, mode='rt'):
@@ -119,7 +119,7 @@ def textfile_open(filename, mode='rt'):
         return codecs.open(filename, mode, encoding='utf-8')
     else:
         return open(filename, mode, encoding='utf-8')
-    
-    
+
+
 #---------------------------------------------------------------------------
 

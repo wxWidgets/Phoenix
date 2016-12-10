@@ -21,8 +21,8 @@ class helpwnd_Tests(wtc.WidgetTestCase):
 
         self.frame.SendSizeEvent()
         self.waitFor(50)
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

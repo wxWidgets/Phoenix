@@ -25,8 +25,8 @@ class stdpaths_Tests(wtc.WidgetTestCase):
         sp.GetUserLocalDataDir()
         sp.SetInstallPrefix('/opt/foo')
         sp.GetLocalizedResourcesDir('fr')
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 

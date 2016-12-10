@@ -10,7 +10,7 @@ class debug_Tests(wtc.WidgetTestCase):
         wx.Abort
         wx.Trap
         wx.DisableAsserts
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -23,23 +23,23 @@ class rearrangectrl_Tests(wtc.WidgetTestCase):
 
     def test_rearrangectrl3(self):
         rc = wx.RearrangeCtrl(self.frame, order=[0,1,2], items=['one', 'two', 'three'])
-        
+
     def test_rearrangectrl4(self):
         rc = wx.RearrangeCtrl()
         rc.Create(self.frame, order=[1,2,0], items=['one', 'two', 'three'])
 
 
     def test_rearrangectrl5(self):
-        rd = wx.RearrangeDialog(self.frame, 'message', 'title', 
+        rd = wx.RearrangeDialog(self.frame, 'message', 'title',
                                   order=[0,1,2], items=['one', 'two', 'three'])
         rd.Destroy()
-        
+
     def test_rearrangectrl6(self):
         rd = wx.RearrangeDialog()
-        rd.Create(self.frame, 'message', 'title', 
+        rd.Create(self.frame, 'message', 'title',
                   order=[0,1,2], items=['one', 'two', 'three'])
         rd.Destroy()
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

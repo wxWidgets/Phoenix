@@ -15,7 +15,7 @@ def makeBuf(w, h, bpp=1, init=0):
 
 
 class BitmapTests(wtc.WidgetTestCase):
-    
+
     def test_BitmapCtor1(self):
         b1 = wx.Bitmap()
         self.assertTrue( not b1.IsOk() )
@@ -46,13 +46,13 @@ class BitmapTests(wtc.WidgetTestCase):
         # wx.EmptyBitmap is supposed to be deprecated, make sure it is.
         import warnings
         with warnings.catch_warnings():
-            warnings.simplefilter("error")        
+            warnings.simplefilter("error")
             with self.assertRaises(wx.wxPyDeprecationWarning):
                 b7 = wx.EmptyBitmap(5,10, 32)
                 self.assertTrue( b7.IsOk() )
-        
-        
-        
+
+
+
     def test_Bitmap__nonzero__(self):
         b1 = wx.Bitmap()
         self.assertTrue( not b1.IsOk() )
@@ -73,19 +73,19 @@ class BitmapTests(wtc.WidgetTestCase):
             nzcheck = True
         self.assertTrue(nzcheck)
 
-        
+
     def test_BitmapNullBitmap(self):
         # just make sure this one exists
         wx.NullBitmap
         self.assertTrue(not wx.NullBitmap.IsOk())
 
-        
+
     def test_BitmapSetMaskColour(self):
         b5 = wx.Bitmap(pngFile)
         b5.SetMaskColour(wx.Colour(1,2,3))
         b5.SetMaskColour('black')
-        
-        
+
+
     def test_BitmapMask(self):
         img = wx.Image(pngFile)
         img = img.ConvertToMono(0,0,0)
@@ -93,8 +93,8 @@ class BitmapTests(wtc.WidgetTestCase):
         m = wx.Mask()
         m = wx.Mask(bmp)
         m = wx.Mask(bmp, wx.Colour(1,2,3))
-                    
-        
+
+
     @unittest.skipIf('wxGTK' in wx.PlatformInfo, 'wxMask constructor using palette index not supported on wxGTK')
     def test_BitmapMaskWithPalette(self):
         img = wx.Image(pngFile)
@@ -111,7 +111,7 @@ class BitmapTests(wtc.WidgetTestCase):
         wx.BitmapBufferFormat_RGBA
         wx.BitmapBufferFormat_RGB32
         wx.BitmapBufferFormat_ARGB32
-        
+
     def test_bitmapSetSize(self):
         b1 = wx.Bitmap(1,1)
         b1.SetSize((20,30))
@@ -119,57 +119,57 @@ class BitmapTests(wtc.WidgetTestCase):
         self.assertTrue(b1.Size == (20,30))
         b1.Size = (25,35)
         self.assertTrue(b1.GetSize() == (25,35))
-        
+
     def test_bitmapHandle(self):
         b1 = wx.Bitmap(1,1)
         b1.Handle
         b1.GetHandle()
-        
-        
+
+
     def test_bitmapCopyFromBuffer1(self):
         w = h = 10
         buf = makeBuf(w,h,3)
         bmp = wx.Bitmap(w,h,24)
         bmp.CopyFromBuffer(buf, wx.BitmapBufferFormat_RGB)
-        
+
     def test_bitmapCopyFromBuffer2(self):
         w = h = 10
         buf = makeBuf(w,h,4)
         bmp = wx.Bitmap(w,h,32)
         bmp.CopyFromBuffer(buf, wx.BitmapBufferFormat_RGBA)
-        
+
     def test_bitmapCopyFromBuffer3(self):
         w = h = 10
         buf = makeBuf(w,h,4)
         bmp = wx.Bitmap(w,h,32)
         bmp.CopyFromBuffer(buf, wx.BitmapBufferFormat_ARGB32)
-        
-        
+
+
     def test_bitmapCopyToBuffer1(self):
         w = h = 10
         buf = makeBuf(w,h,3)
         bmp = wx.Bitmap(w,h,24)
         bmp.CopyToBuffer(buf, wx.BitmapBufferFormat_RGB)
-        
+
     def test_bitmapCopyToBuffer2(self):
         w = h = 10
         buf = makeBuf(w,h,4)
         bmp = wx.Bitmap(w,h,32)
         bmp.CopyToBuffer(buf, wx.BitmapBufferFormat_RGBA)
-        
+
     def test_bitmapCopyToBuffer3(self):
         w = h = 10
         buf = makeBuf(w,h,4)
         bmp = wx.Bitmap(w,h,32)
         bmp.CopyToBuffer(buf, wx.BitmapBufferFormat_ARGB32)
-        
-        
+
+
     def test_bitmapBufferFactory1(self):
         w = h = 10
         buf = makeBuf(w,h,3, 111)
         bmp = wx.Bitmap.FromBuffer(w, h, buf)
         self.assertTrue(bmp.IsOk())
-        
+
     def test_bitmapBufferFactory2(self):
         w = h = 10
         buf = makeBuf(w,h,3, 111)
@@ -205,7 +205,7 @@ class BitmapTests(wtc.WidgetTestCase):
         bmp = wx.Bitmap.FromBuffer(w, h, buf)
         self.assertTrue(bmp.IsOk())
         img = bmp.ConvertToImage()
-        self.assertEqual( (img.GetRed(1,2), img.GetGreen(1,2), img.GetBlue(1,2)), 
+        self.assertEqual( (img.GetRed(1,2), img.GetGreen(1,2), img.GetBlue(1,2)),
                           (10,20,30) )
 
 
@@ -220,7 +220,7 @@ class BitmapTests(wtc.WidgetTestCase):
         self.assertTrue(bmp.IsOk())
 
 
-        
+
 #---------------------------------------------------------------------------
 
 

@@ -16,18 +16,18 @@ class toolbook_Tests(wtc.WidgetTestCase):
     def test_toolbook1(self):
         wx.TBK_BUTTONBAR
         wx.TBK_HORZ_LAYOUT
-        
+
         wx.wxEVT_COMMAND_TOOLBOOK_PAGE_CHANGED
         wx.wxEVT_COMMAND_TOOLBOOK_PAGE_CHANGING
         wx.EVT_TOOLBOOK_PAGE_CHANGED
         wx.EVT_TOOLBOOK_PAGE_CHANGING
-        
+
 
     def test_toolbook2(self):
         book = wx.Toolbook()
         book.Create(self.frame)
-        
-        
+
+
     def test_toolbook3(self):
         book = wx.Toolbook(self.frame)
 
@@ -45,7 +45,7 @@ class toolbook_Tests(wtc.WidgetTestCase):
 
         self.myYield()
 
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@ class TestPanel(wx.Panel):
         self.current = "http://wxPython.org"
         self.frame = self.GetTopLevelParent()
         self.titleBase = self.frame.GetTitle()
-        
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.wv = webview.WebView.New(self)
@@ -19,7 +19,7 @@ class TestPanel(wx.Panel):
         self.Bind(webview.EVT_WEBVIEW_NAVIGATED, self.OnWebViewNavigated, self.wv)
         self.Bind(webview.EVT_WEBVIEW_LOADED, self.OnWebViewLoaded, self.wv)
         self.Bind(webview.EVT_WEBVIEW_TITLE_CHANGED, self.OnWebViewTitleChanged, self.wv)
-                  
+
         btn = wx.Button(self, -1, "Open", style=wx.BU_EXACTFIT)
         self.Bind(wx.EVT_BUTTON, self.OnOpenButton, btn)
         btnSizer.Add(btn, 0, wx.EXPAND|wx.ALL, 2)
@@ -50,13 +50,13 @@ class TestPanel(wx.Panel):
         self.location.AppendItems(['http://wxPython.org',
                                    'http://wxwidgets.org',
                                    'http://google.com'])
-        
+
         #for url in ['http://wxPython.org',
         #            'http://wxwidgets.org',
         #            'http://google.com']:
         #    item = webview.WebViewHistoryItem(url, url)
         #    self.wv.LoadHistoryItem(item)
-            
+
         self.Bind(wx.EVT_COMBOBOX, self.OnLocationSelect, self.location)
         self.location.Bind(wx.EVT_TEXT_ENTER, self.OnLocationEnter)
         btnSizer.Add(self.location, 1, wx.EXPAND|wx.ALL, 2)
@@ -65,7 +65,7 @@ class TestPanel(wx.Panel):
         sizer.Add(btnSizer, 0, wx.EXPAND)
         sizer.Add(self.wv, 1, wx.EXPAND)
         self.SetSizer(sizer)
-        
+
         self.wv.LoadURL(self.current)
 
 
@@ -82,7 +82,7 @@ class TestPanel(wx.Panel):
 
     def OnWebViewNavigated(self, evt):
         self.frame.SetStatusText("Loading %s..." % evt.GetURL())
-        
+
 
     def OnWebViewLoaded(self, evt):
         # The full document has loaded
@@ -90,11 +90,11 @@ class TestPanel(wx.Panel):
         self.location.SetValue(self.current)
         self.frame.SetStatusText("Loaded")
 
-        
+
     def OnWebViewTitleChanged(self, evt):
         # Set the frame's title to include the document's title
         self.frame.SetTitle("%s -- %s" % (self.titleBase, evt.GetString()))
-        
+
 
     # Control bar events
     def OnLocationSelect(self, evt):
@@ -132,7 +132,7 @@ class TestPanel(wx.Panel):
 
     def OnCheckCanGoBack(self, event):
         event.Enable(self.wv.CanGoBack())
-        
+
     def OnCheckCanGoForward(self, event):
         event.Enable(self.wv.CanGoForward())
 
@@ -141,8 +141,8 @@ class TestPanel(wx.Panel):
 
     def OnRefreshPageButton(self, evt):
         self.wv.Reload()
-        
-        
+
+
 #----------------------------------------------------------------------
 
 
@@ -153,7 +153,7 @@ def main():
     pnl = TestPanel(frm)
     frm.Show()
     app.MainLoop()
-    
+
 
 #----------------------------------------------------------------------
 

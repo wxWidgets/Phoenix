@@ -10,7 +10,7 @@ class headerctrl_Tests(wtc.WidgetTestCase):
         wx.HD_ALLOW_REORDER
         wx.HD_ALLOW_HIDE
         wx.HD_DEFAULT_STYLE
-        
+
         wx.wxEVT_COMMAND_HEADER_CLICK
         wx.wxEVT_COMMAND_HEADER_RIGHT_CLICK
         wx.wxEVT_COMMAND_HEADER_MIDDLE_CLICK
@@ -24,7 +24,7 @@ class headerctrl_Tests(wtc.WidgetTestCase):
         wx.wxEVT_COMMAND_HEADER_BEGIN_REORDER
         wx.wxEVT_COMMAND_HEADER_END_REORDER
         wx.wxEVT_COMMAND_HEADER_DRAGGING_CANCELLED
-        
+
         wx.EVT_HEADER_CLICK
         wx.EVT_HEADER_RIGHT_CLICK
         wx.EVT_HEADER_MIDDLE_CLICK
@@ -38,22 +38,22 @@ class headerctrl_Tests(wtc.WidgetTestCase):
         wx.EVT_HEADER_BEGIN_REORDER
         wx.EVT_HEADER_END_REORDER
         wx.EVT_HEADER_DRAGGING_CANCELLED
-        
-        
+
+
     def test_headerctrl2(self):
         with self.assertRaises(TypeError):
             hc = wx.HeaderCtrl(self.frame)
-        
+
     def test_headerctrl3(self):
         hc = wx.HeaderCtrlSimple()
         hc.Create(self.frame)
-    
+
     def test_headerctrl4(self):
         hc = wx.HeaderCtrlSimple(self.frame)
-    
+
         col = wx.HeaderColumnSimple("Hello")
         hc.AppendColumn(col)
-    
+
         col = wx.HeaderColumnSimple("World")
         hc.AppendColumn(col)
 

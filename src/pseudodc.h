@@ -50,7 +50,7 @@ wxBitmap &GetGreyBitmap(wxBitmap &bmp);
 class pdcSetFontOp : public pdcOp
 {
     public:
-        pdcSetFontOp(const wxFont& font) 
+        pdcSetFontOp(const wxFont& font)
             {m_font=font;}
         virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) {dc->SetFont(m_font);}
     protected:
@@ -60,9 +60,9 @@ class pdcSetFontOp : public pdcOp
 class pdcSetBrushOp : public pdcOp
 {
     public:
-        pdcSetBrushOp(const wxBrush& brush) 
-            {m_greybrush=m_brush=brush;} 
-        virtual void DrawToDC(wxDC *dc, bool grey=false) 
+        pdcSetBrushOp(const wxBrush& brush)
+            {m_greybrush=m_brush=brush;}
+        virtual void DrawToDC(wxDC *dc, bool grey=false)
         {
             if (!grey) dc->SetBrush(m_brush);
             else dc->SetBrush(m_greybrush);
@@ -76,8 +76,8 @@ class pdcSetBrushOp : public pdcOp
 class pdcSetBackgroundOp : public pdcOp
 {
     public:
-        pdcSetBackgroundOp(const wxBrush& brush) 
-            {m_greybrush=m_brush=brush;} 
+        pdcSetBackgroundOp(const wxBrush& brush)
+            {m_greybrush=m_brush=brush;}
         virtual void DrawToDC(wxDC *dc, bool grey=false)
         {
             if (!grey) dc->SetBackground(m_brush);
@@ -92,7 +92,7 @@ class pdcSetBackgroundOp : public pdcOp
 class pdcSetPenOp : public pdcOp
 {
     public:
-        pdcSetPenOp(const wxPen& pen) 
+        pdcSetPenOp(const wxPen& pen)
             {m_greypen=m_pen=pen;}
         virtual void DrawToDC(wxDC *dc, bool grey=false)
         {
@@ -108,9 +108,9 @@ class pdcSetPenOp : public pdcOp
 class pdcSetTextBackgroundOp : public pdcOp
 {
     public:
-        pdcSetTextBackgroundOp(const wxColour& colour) 
+        pdcSetTextBackgroundOp(const wxColour& colour)
             {m_colour=colour;}
-        virtual void DrawToDC(wxDC *dc, bool grey=false) 
+        virtual void DrawToDC(wxDC *dc, bool grey=false)
         {
             if (!grey) dc->SetTextBackground(m_colour);
             else dc->SetTextBackground(MakeColourGrey(m_colour));
@@ -122,7 +122,7 @@ class pdcSetTextBackgroundOp : public pdcOp
 class pdcSetTextForegroundOp : public pdcOp
 {
     public:
-        pdcSetTextForegroundOp(const wxColour& colour) 
+        pdcSetTextForegroundOp(const wxColour& colour)
             {m_colour=colour;}
         virtual void DrawToDC(wxDC *dc, bool grey=false)
         {
@@ -139,7 +139,7 @@ class pdcDrawRectangleOp : public pdcOp
         pdcDrawRectangleOp(wxCoord x, wxCoord y, wxCoord w, wxCoord h)
             {m_x=x; m_y=y; m_w=w; m_h=h;}
         virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) {dc->DrawRectangle(m_x,m_y,m_w,m_h);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx;m_y+=dy;}
     protected:
         wxCoord m_x,m_y,m_w,m_h;
@@ -151,7 +151,7 @@ class pdcDrawLineOp : public pdcOp
         pdcDrawLineOp(wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2)
             {m_x1=x1; m_y1=y1; m_x2=x2; m_y2=y2;}
         virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) {dc->DrawLine(m_x1,m_y1,m_x2,m_y2);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x1+=dx; m_y1+=dy; m_x2+=dx; m_y2+=dy;}
     protected:
         wxCoord m_x1,m_y1,m_x2,m_y2;
@@ -172,7 +172,7 @@ class pdcDrawTextOp : public pdcOp
         pdcDrawTextOp(const wxString& text, wxCoord x, wxCoord y)
             {m_text=text; m_x=x; m_y=y;}
         virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) {dc->DrawText(m_text, m_x, m_y);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxString m_text;
@@ -205,12 +205,12 @@ class pdcFloodFillOp : public pdcOp
     public:
         pdcFloodFillOp(wxCoord x, wxCoord y, const wxColour& col,
                    wxFloodFillStyle style) {m_x=x; m_y=y; m_col=col; m_style=style;}
-        virtual void DrawToDC(wxDC *dc, bool grey=false) 
+        virtual void DrawToDC(wxDC *dc, bool grey=false)
         {
             if (!grey) dc->FloodFill(m_x,m_y,m_col,m_style);
             else dc->FloodFill(m_x,m_y,MakeColourGrey(m_col),m_style);
         }
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxCoord m_x,m_y;
@@ -223,7 +223,7 @@ class pdcCrossHairOp : public pdcOp
     public:
         pdcCrossHairOp(wxCoord x, wxCoord y) {m_x=x; m_y=y;}
         virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) {dc->CrossHair(m_x,m_y);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxCoord m_x,m_y;
@@ -233,11 +233,11 @@ class pdcDrawArcOp : public pdcOp
 {
     public:
         pdcDrawArcOp(wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2,
-                         wxCoord xc, wxCoord yc) 
+                         wxCoord xc, wxCoord yc)
             {m_x1=x1; m_y1=y1; m_x2=x2; m_y2=y2; m_xc=xc; m_yc=yc;}
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
             {dc->DrawArc(m_x1,m_y1,m_x2,m_y2,m_xc,m_yc);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x1+=dx; m_x2+=dx; m_y1+=dy; m_y2+=dy;}
     protected:
         wxCoord m_x1,m_x2,m_xc;
@@ -248,11 +248,11 @@ class pdcDrawCheckMarkOp : public pdcOp
 {
     public:
         pdcDrawCheckMarkOp(wxCoord x, wxCoord y,
-                       wxCoord width, wxCoord height) 
+                       wxCoord width, wxCoord height)
             {m_x=x; m_y=y; m_w=width; m_h=height;}
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
             {dc->DrawCheckMark(m_x,m_y,m_w,m_h);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxCoord m_x,m_y,m_w,m_h;
@@ -262,11 +262,11 @@ class pdcDrawEllipticArcOp : public pdcOp
 {
     public:
         pdcDrawEllipticArcOp(wxCoord x, wxCoord y, wxCoord w, wxCoord h,
-                         double sa, double ea) 
+                         double sa, double ea)
             {m_x=x; m_y=y; m_w=w; m_h=h; m_sa=sa; m_ea=ea;}
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
             {dc->DrawEllipticArc(m_x,m_y,m_w,m_h,m_sa,m_ea);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxCoord m_x,m_y,m_w,m_h;
@@ -276,10 +276,10 @@ class pdcDrawEllipticArcOp : public pdcOp
 class pdcDrawPointOp : public pdcOp
 {
     public:
-        pdcDrawPointOp(wxCoord x, wxCoord y) 
+        pdcDrawPointOp(wxCoord x, wxCoord y)
             {m_x=x; m_y=y;}
         virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) {dc->DrawPoint(m_x,m_y);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxCoord m_x,m_y;
@@ -288,12 +288,12 @@ class pdcDrawPointOp : public pdcOp
 class pdcDrawRoundedRectangleOp : public pdcOp
 {
     public:
-        pdcDrawRoundedRectangleOp(wxCoord x, wxCoord y, wxCoord width, 
-                                  wxCoord height, double radius) 
+        pdcDrawRoundedRectangleOp(wxCoord x, wxCoord y, wxCoord width,
+                                  wxCoord height, double radius)
             {m_x=x; m_y=y; m_w=width; m_h=height; m_r=radius;}
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
             {dc->DrawRoundedRectangle(m_x,m_y,m_w,m_h,m_r);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxCoord m_x,m_y,m_w,m_h;
@@ -303,10 +303,10 @@ class pdcDrawRoundedRectangleOp : public pdcOp
 class pdcDrawEllipseOp : public pdcOp
 {
     public:
-        pdcDrawEllipseOp(wxCoord x, wxCoord y, wxCoord width, wxCoord height) 
+        pdcDrawEllipseOp(wxCoord x, wxCoord y, wxCoord width, wxCoord height)
             {m_x=x; m_y=y; m_w=width; m_h=height;}
         virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) {dc->DrawEllipse(m_x,m_y,m_w,m_h);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxCoord m_x,m_y,m_w,m_h;
@@ -315,15 +315,15 @@ class pdcDrawEllipseOp : public pdcOp
 class pdcDrawIconOp : public pdcOp
 {
     public:
-        pdcDrawIconOp(const wxIcon& icon, wxCoord x, wxCoord y) 
+        pdcDrawIconOp(const wxIcon& icon, wxCoord x, wxCoord y)
             {m_icon=icon; m_x=x; m_y=y;}
-        virtual void DrawToDC(wxDC *dc, bool grey=false) 
+        virtual void DrawToDC(wxDC *dc, bool grey=false)
         {
             if (grey) dc->DrawIcon(m_greyicon,m_x,m_y);
             else dc->DrawIcon(m_icon,m_x,m_y);
         }
         virtual void CacheGrey() {m_greyicon=GetGreyIcon(m_icon);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxIcon m_icon;
@@ -359,9 +359,9 @@ class pdcDrawPolygonOp : public pdcOp
                          wxPolygonFillMode fillStyle = wxODDEVEN_RULE);
         virtual ~pdcDrawPolygonOp();
 
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
             { dc->DrawPolygon(m_points, m_xoffset, m_yoffset, m_fillStyle); }
-        
+
         virtual void Translate(wxCoord dx, wxCoord dy);
 
     protected:
@@ -378,14 +378,14 @@ class pdcDrawPolyPolygonOp : public pdcOp
                          wxCoord xoffset = 0, wxCoord yoffset = 0,
                          wxPolygonFillMode fillStyle = wxODDEVEN_RULE);
         virtual ~pdcDrawPolyPolygonOp();
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
             {dc->DrawPolyPolygon(m_n,m_count,m_points,
                     m_xoffset,m_yoffset,m_fillStyle);}
         virtual void Translate(wxCoord dx, wxCoord dy)
-        { 
+        {
             for(int i=0; i<m_totaln; i++)
             {
-                m_points[i].x += dx; 
+                m_points[i].x += dx;
                 m_points[i].y += dy;
             }
         }
@@ -401,11 +401,11 @@ class pdcDrawPolyPolygonOp : public pdcOp
 class pdcDrawRotatedTextOp : public pdcOp
 {
     public:
-        pdcDrawRotatedTextOp(const wxString& text, wxCoord x, wxCoord y, double angle) 
+        pdcDrawRotatedTextOp(const wxString& text, wxCoord x, wxCoord y, double angle)
             {m_text=text; m_x=x; m_y=y; m_angle=angle;}
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
             {dc->DrawRotatedText(m_text,m_x,m_y,m_angle);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxString m_text;
@@ -417,15 +417,15 @@ class pdcDrawBitmapOp : public pdcOp
 {
     public:
         pdcDrawBitmapOp(const wxBitmap &bmp, wxCoord x, wxCoord y,
-                        bool useMask = false) 
+                        bool useMask = false)
             {m_bmp=bmp; m_x=x; m_y=y; m_useMask=useMask;}
-        virtual void DrawToDC(wxDC *dc, bool grey=false) 
+        virtual void DrawToDC(wxDC *dc, bool grey=false)
         {
             if (grey) dc->DrawBitmap(m_greybmp,m_x,m_y,m_useMask);
             else dc->DrawBitmap(m_bmp,m_x,m_y,m_useMask);
         }
         virtual void CacheGrey() {m_greybmp=GetGreyBitmap(m_bmp);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_x+=dx; m_y+=dy;}
     protected:
         wxBitmap m_bmp;
@@ -442,11 +442,11 @@ class pdcDrawLabelOp : public pdcOp
                            const wxRect& rect,
                            int alignment = wxALIGN_LEFT | wxALIGN_TOP,
                            int indexAccel = -1)
-            {m_text=text; m_image=image; m_rect=rect; 
+            {m_text=text; m_image=image; m_rect=rect;
              m_align=alignment; m_iAccel=indexAccel;}
-        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false) 
+        virtual void DrawToDC(wxDC *dc, bool WXUNUSED(grey)=false)
             {dc->DrawLabel(m_text,m_image,m_rect,m_align,m_iAccel);}
-        virtual void Translate(wxCoord dx, wxCoord dy) 
+        virtual void Translate(wxCoord dx, wxCoord dy)
             {m_rect.x+=dx; m_rect.y+=dy;}
     protected:
         wxString m_text;
@@ -498,12 +498,12 @@ class pdcSetLogicalFunctionOp : public pdcOp
 class pdcObject
 {
     public:
-        pdcObject(int id) 
+        pdcObject(int id)
             {m_id=id; m_bounded=false; m_oplist.DeleteContents(true);
              m_greyedout=false;}
 
         virtual ~pdcObject() {m_oplist.Clear();}
-        
+
         // Protected Member Access
         void SetId(int id) {m_id=id;}
         int  GetId() {return m_id;}
@@ -513,17 +513,17 @@ class pdcObject
         bool IsBounded() {return m_bounded;}
         void SetGreyedOut(bool greyout=true);
         bool GetGreyedOut() {return m_greyedout;}
-    
+
         // Op List Management Methods
         void Clear() {m_oplist.Clear();}
-        void AddOp(pdcOp *op) 
+        void AddOp(pdcOp *op)
         {
             m_oplist.Append(op);
             if (m_greyedout) op->CacheGrey();
         }
         int  GetLen() {return m_oplist.GetCount();}
         virtual void Translate(wxCoord dx, wxCoord dy);
-        
+
         // Drawing Method
         virtual void DrawToDC(wxDC *dc);
     protected:
@@ -559,24 +559,24 @@ WX_DECLARE_HASH_MAP(
 // This is the actual PseudoDC class
 // This class stores a list of recorded dc operations in m_list
 // and plays them back to a real dc using DrawToDC or DrawToDCClipped.
-// Drawing methods are mirrored from wxDC but add nodes to m_list 
+// Drawing methods are mirrored from wxDC but add nodes to m_list
 // instead of doing any real drawing.
 // ----------------------------------------------------------------------------
 class wxPseudoDC : public wxObject
 {
 public:
-    wxPseudoDC() 
+    wxPseudoDC()
         {m_currId=-1; m_lastObject=NULL; m_objectlist.DeleteContents(true);m_objectIndex.clear();}
     ~wxPseudoDC();
     // ------------------------------------------------------------------------
     // List management methods
-    // 
+    //
     void RemoveAll();
     int GetLen();
-    
+
     // ------------------------------------------------------------------------
     // methods for managing operations by ID
-    // 
+    //
     // Set the Id for all subsequent operations (until SetId is called again)
     void SetId(int id) {m_currId = id;}
     // Remove all the operations associated with an id so it can be redrawn
@@ -595,7 +595,7 @@ public:
     // Find Objects at a point.  Returns Python list of id's
     // sorted in reverse drawing order (result[0] is top object)
     // This version looks at drawn pixels
-    PyObject *FindObjects(wxCoord x, wxCoord y, 
+    PyObject *FindObjects(wxCoord x, wxCoord y,
                           wxCoord radius=1, const wxColor& bg=*wxWHITE);
     // This version only looks at bounding boxes
     PyObject *FindObjectsByBBox(wxCoord x, wxCoord y);
@@ -604,8 +604,8 @@ public:
     // Playback Methods
     //
     // draw to dc but skip objects known to be outside of rect
-    // This is a coarse level of clipping to speed things up 
-    // when lots of objects are off screen and doesn't affect the dc level 
+    // This is a coarse level of clipping to speed things up
+    // when lots of objects are off screen and doesn't affect the dc level
     // clipping
     void DrawToDCClipped(wxDC *dc, const wxRect& rect);
         void DrawToDCClippedRgn(wxDC *dc, const wxRegion& region);
@@ -622,8 +622,8 @@ public:
     // PyObject *HitTest(wxCoord x, wxCoord y, double radius)
     // returns list of objects whose bounding boxes include (x,y)
     // PyObject *HitTestBB(wxCoord x, wxCoord y)
-    
-        
+
+
     // ------------------------------------------------------------------------
     // Methods mirrored from wxDC
     //
@@ -735,7 +735,7 @@ public:
 
     // this version puts both optional bitmap and the text into the given
     // rectangle and aligns is as specified by alignment parameter; it also
-    // will emphasize the character with the given index if it is != -1 
+    // will emphasize the character with the given index if it is != -1
     void DrawLabel(const wxString& text,
                            const wxBitmap& image,
                            const wxRect& rect,
@@ -758,7 +758,7 @@ public:
               wxDC *source, const wxPoint& srcPt,
               int rop = wxCOPY, bool useMask = false, const wxPoint& srcPtMask = wxDefaultPosition)
     {
-        Blit(destPt.x, destPt.y, sz.x, sz.y, source, srcPt.x, srcPt.y, 
+        Blit(destPt.x, destPt.y, sz.x, sz.y, source, srcPt.x, srcPt.y,
              rop, useMask, srcPtMask.x, srcPtMask.y);
     }
 ??????*/
@@ -775,7 +775,7 @@ public:
 
     void SetLogicalFunction(wxRasterOperationMode function)
         {AddToList(new pdcSetLogicalFunctionOp(function));}
-    void SetFont(const wxFont& font) 
+    void SetFont(const wxFont& font)
         {AddToList(new pdcSetFontOp(font));}
     void SetPen(const wxPen& pen)
         {AddToList(new pdcSetPenOp(pen));}
@@ -802,15 +802,15 @@ protected:
     // protected helper methods
     void AddToList(pdcOp *newOp);
     pdcObject *FindObject(int id, bool create=false);
-    
+
     // ------------------------------------------------------------------------
     // Data members
-    // 
+    //
     int m_currId; // id to use for operations done on the PseudoDC
     pdcObject *m_lastObject; // used to find last used object quickly
     pdcObjectList m_objectlist; // list of objects
     pdcObjectHash m_objectIndex; //id->object lookup index
-    
+
 };
 
 #endif

@@ -8,7 +8,7 @@ try:
     from wx.lib.pdfviewer import pdfViewer, pdfButtonPanel
     havePyPDF = True
 except ImportError:
-    havePyPDF = False  # Assume neither PyMuPDF nor PyPDF2 found 
+    havePyPDF = False  # Assume neither PyMuPDF nor PyPDF2 found
 
 dataDir = os.path.join(os.path.dirname(__file__), "data")
 samplePdf = os.path.join(dataDir, "sample.pdf")

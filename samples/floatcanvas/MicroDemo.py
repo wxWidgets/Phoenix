@@ -30,10 +30,10 @@ class DrawFrame(wx.Frame):
                                      Debug = 0,
                                      BackgroundColor = "DARK SLATE BLUE",
                                      ).Canvas
-        
+
         self.Canvas = Canvas
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
 
         Point = (45,40)
         Text = Canvas.AddScaledText("A String",
@@ -68,10 +68,10 @@ class DrawFrame(wx.Frame):
 app = wx.App(False)
 F = DrawFrame(None, title="FloatCanvas Demo App", size=(700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

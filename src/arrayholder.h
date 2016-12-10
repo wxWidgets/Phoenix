@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // Name:        src/arrayholder.h
-// Purpose:     A simple template class that can hold and delete a pointer 
+// Purpose:     A simple template class that can hold and delete a pointer
 //              to a C array
 //
 // Author:      Robin Dunn
@@ -25,11 +25,11 @@ class wxCArrayHolder
 {
 public:
     wxCArrayHolder() : m_array(NULL) {}
-    ~wxCArrayHolder() { 
-        delete [] m_array; 
+    ~wxCArrayHolder() {
+        delete [] m_array;
         m_array = NULL;
     }
-    T* m_array;        
+    T* m_array;
 };
 
 typedef wxCArrayHolder<int>      wxIntCArrayHolder;

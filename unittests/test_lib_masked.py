@@ -6,20 +6,20 @@ import wx.lib.masked as m
 #---------------------------------------------------------------------------
 
 class MaskedComboBoxTests(wtc.WidgetTestCase):
-    
+
     def test_ComboBoxCtors(self):
         c = m.ComboBox(self.frame, value='value', choices="one two three four".split())
-        c = m.ComboBox(self.frame, -1, 'value', wx.Point(10,10), wx.Size(80,-1), 
+        c = m.ComboBox(self.frame, -1, 'value', wx.Point(10,10), wx.Size(80,-1),
                       "one two three four".split(), 0)
         c = m.ComboBox(self.frame, -1, "", (10,10), (80,-1), "one two three four".split(), 0)
-        
+
         self.assertTrue(c.GetCount() == 4)
-        
+
     #def test_ComboBoxDefaultCtor(self):
         #c = m.PreMaskedComboBox(self.frame)
         #c.Create(self.frame, value="value", choices="one two three four".split())
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 class MaskedTextCtrlTests(wtc.WidgetTestCase):
@@ -35,11 +35,11 @@ class MaskedTextCtrlTests(wtc.WidgetTestCase):
     #def test_textctrlDefaultCtor(self):
         #t = m.TextCtrl()
         #t.Create(self.frame)
-        
-        
+
+
     def test_textctrlProperties(self):
         t = m.TextCtrl(self.frame)
-        
+
         t.DefaultStyle
         t.NumberOfLines
         t.Hint
@@ -49,7 +49,7 @@ class MaskedTextCtrlTests(wtc.WidgetTestCase):
         t.StringSelection
         t.Value
 
-      
+
 #---------------------------------------------------------------------------
 
 
@@ -65,11 +65,11 @@ class MaskedNumCtrlTests(wtc.WidgetTestCase):
     #def test_numctrlDefaultCtor(self):
         #t = m.TextCtrl()
         #t.Create(self.frame)
-        
-        
+
+
     def test_numctrlProperties(self):
         t = m.NumCtrl(self.frame)
-        
+
         t.DefaultStyle
         t.NumberOfLines
         t.Hint
@@ -79,7 +79,7 @@ class MaskedNumCtrlTests(wtc.WidgetTestCase):
         t.StringSelection
         t.Value
 
-      
+
 #---------------------------------------------------------------------------
 
 
@@ -94,7 +94,7 @@ class MaskedTimeCtrlTests(wtc.WidgetTestCase):
     #def test_numctrlDefaultCtor(self):
         #t = m.TextCtrl()
         #t.Create(self.frame)
-        
+
     def test_timectrlIsValid(self):
         t = m.TimeCtrl(self.frame, -1, "18:25:18")
 
@@ -108,7 +108,7 @@ class MaskedTimeCtrlTests(wtc.WidgetTestCase):
 
     def test_timectrlProperties(self):
         t = m.TimeCtrl(self.frame)
-        
+
         t.DefaultStyle
         t.NumberOfLines
         t.Hint
@@ -118,7 +118,7 @@ class MaskedTimeCtrlTests(wtc.WidgetTestCase):
         t.StringSelection
         t.Value
 
-      
+
 #---------------------------------------------------------------------------
 
 class MaskedIpAddrCtrlTests(wtc.WidgetTestCase):
@@ -132,11 +132,11 @@ class MaskedIpAddrCtrlTests(wtc.WidgetTestCase):
     #def test_ipaddrctrlDefaultCtor(self):
         #t = m.IpAddrCtrl()
         #t.Create(self.frame)
-        
-        
+
+
     def test_ipaddrctrlProperties(self):
         t = m.IpAddrCtrl(self.frame)
-        
+
         t.DefaultStyle
         t.NumberOfLines
         t.Hint
@@ -146,7 +146,7 @@ class MaskedIpAddrCtrlTests(wtc.WidgetTestCase):
         t.StringSelection
         t.Value
 
-      
+
 #---------------------------------------------------------------------------
 
 

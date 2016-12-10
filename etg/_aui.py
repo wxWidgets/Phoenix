@@ -10,7 +10,7 @@
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = "wx" 
+PACKAGE   = "wx"
 MODULE    = "_aui"
 NAME      = "_aui"   # Base name of the file to generate to for this script
 DOCSTRING = """\
@@ -23,7 +23,7 @@ There is also a pure-python implementation of these classes available in the
 """
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
-# this script. 
+# this script.
 ITEMS  = [ ]
 
 
@@ -47,7 +47,7 @@ OTHERDEPS = [  ]
 
 
 #---------------------------------------------------------------------------
- 
+
 def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)

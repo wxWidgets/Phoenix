@@ -37,7 +37,7 @@ This is another paragraph. I am trying to make it long enough to wrap a reasonab
 ##LongString = (
 ##""" This is a not so long string
 ##Another line""")
-    
+
 class DrawFrame(wx.Frame):
 
     """
@@ -48,23 +48,23 @@ class DrawFrame(wx.Frame):
     def __init__(self,parent, id,title,position,size):
         wx.Frame.__init__(self,parent, id,title,position, size)
 
-        self.CreateStatusBar()            
+        self.CreateStatusBar()
         # Add the Canvas
         Canvas = NavCanvas.NavCanvas(self,-1,(500,500),
                                           ProjectionFun = None,
                                           Debug = 0,
                                           BackgroundColor = "DARK SLATE BLUE",
                                           ).Canvas
-        
+
         self.Canvas = Canvas
 
-        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove ) 
-        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp ) 
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.OnMove )
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_UP, self.OnLeftUp )
         self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.OnLeftDown)
 
         Point = N.array((0,0), N.float)
 
-        
+
 
         Canvas.AddCircle(Point,
 
@@ -76,7 +76,7 @@ class DrawFrame(wx.Frame):
 
                          )
 
-        
+
         Width = 300
         self.Box = Canvas.AddScaledTextBox(LongString,
                                       Point,
@@ -93,19 +93,19 @@ class DrawFrame(wx.Frame):
                                       Weight = wx.NORMAL,
                                       Underlined = False,
                                       Position = 'tl',
-                                      LineSpacing = 0.8,     
+                                      LineSpacing = 0.8,
                                       Alignment = "left",
                                       #Alignment = "center",
                                       #Alignment = "right",
                                       InForeground = False)
-        
+
 
         self.Handle1 = Canvas.AddBitmap(Resources.getMoveCursorBitmap(), Point, Position='cc')
         self.Handle2a = Canvas.AddBitmap(Resources.getMoveRLCursorBitmap(), Point, Position='cc')
         self.Handle2b = Canvas.AddBitmap(Resources.getMoveRLCursorBitmap(), Point, Position='cc')
 
         self.SetHandles()
-        
+
         self.Handle1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Handle1Hit)
         self.Handle2a.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Handle2Hit)
         self.Handle2b.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Handle2Hit)
@@ -177,7 +177,7 @@ class DrawFrame(wx.Frame):
 
     def OnLeftDown(self, event):
         pass
-    
+
     def OnLeftUp(self, event):
         if self.Resizing:
             self.Resizing = False
@@ -196,7 +196,7 @@ class DrawFrame(wx.Frame):
                 self.ResizeRect = None
                 # self.Box.SetPoint(Point1)
                 self.SetHandles()
-            
+
         self.Canvas.Draw(True)
 
     def SetHandles(self):
@@ -208,15 +208,15 @@ class DrawFrame(wx.Frame):
         y -= h/3
         self.Handle2b.SetPoint((x,y))
         self.Handle1.SetPoint(self.Box.XY)
-        
+
 
 app = wx.App()
 DrawFrame(None, -1, "FloatCanvas TextBox Test App", wx.DefaultPosition, (700,700) )
 app.MainLoop()
-    
-    
-    
-    
+
+
+
+
 
 
 

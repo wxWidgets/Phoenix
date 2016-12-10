@@ -43,7 +43,7 @@ void wxPyCallback::EventThunker(wxEvent& event) {
     wxPyThreadBlocker blocker;
     wxString className = event.GetClassInfo()->GetClassName();
     arg = wxPyConstructObject((void*)&event, className);
-    
+
     if (!arg) {
         PyErr_Print();
     } else {

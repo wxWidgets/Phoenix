@@ -12,7 +12,7 @@ class wrapsizer_Tests(wtc.WidgetTestCase):
         ws.Add(wx.Panel(self.frame))
         ws.Add(wx.Panel(self.frame))
 
-        
+
 #---------------------------------------------------------------------------
 
 

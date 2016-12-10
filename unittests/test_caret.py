@@ -14,7 +14,7 @@ class caret_Tests(wtc.WidgetTestCase):
         c.Move((50,50))
         c.Show()
         self.waitFor(300)
-        
+
     def test_caret2(self):
         pnl = wx.Window(self.frame)
         c = wx.Caret()
@@ -24,8 +24,8 @@ class caret_Tests(wtc.WidgetTestCase):
         c.Move(50,50)
         c.Show()
         self.waitFor(300)
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

@@ -8,13 +8,13 @@ import wx.lib.agw.aui as aui
 #---------------------------------------------------------------------------
 
 class lib_agw_aui_Tests(wtc.WidgetTestCase):
-                
+
     def test_lib_agw_auiCtor(self):
         self._mgr = aui.AuiManager()
 
         # tell AuiManager to manage this frame
         self._mgr.SetManagedWindow(self.frame)
-        
+
         pane = wx.Panel()
         self._mgr.AddPane(pane, aui.AuiPaneInfo().Name("pane1").Caption("A pane")
                           .CenterPane())
@@ -43,7 +43,7 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         tb.AddSimpleTool(-1, "Check 1", tb_bmp1, "Check 1", aui.ITEM_CHECK)
         tb.AddSimpleTool(-1, "Radio 1", tb_bmp1, "Radio 1", aui.ITEM_RADIO)
         tb.AddSeparator()
-        
+
         # prepare a few custom overflow elements for the toolbars' overflow buttons
 
         prepend_items, append_items = [], []
@@ -97,7 +97,7 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         # -----------
         aui.AuiBaseTabCtrlId
         """ Base window identifier for AuiTabCtrl. """
-        
+
         aui.AUI_NB_TOP
         """ With this style, tabs are drawn along the top of the notebook. """
         aui.AUI_NB_LEFT
@@ -150,14 +150,14 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Tab navigation order by last access time. """
         aui.AUI_NB_NO_TAB_FOCUS
         """ Don't draw tab focus rectangle. """
-        
+
         aui.AUI_NB_DEFAULT_STYLE
         """ Default `AuiNotebook` style. """
-        
+
         # -------------------------- #
         # - FrameManager Constants - #
         # -------------------------- #
-        
+
         # Docking Styles
         aui.AUI_DOCK_NONE
         """ No docking direction. """
@@ -175,7 +175,7 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Centre docking direction. """
         aui.AUI_DOCK_NOTEBOOK_PAGE
         """ Automatic AuiNotebooks docking style. """
-        
+
         # Floating/Dragging Styles
         aui.AUI_MGR_ALLOW_FLOATING
         """ Allow floating of panes. """
@@ -217,11 +217,11 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         aui.AUI_MGR_AUTONB_NO_CAPTION
         """ Panes that merge into an automatic notebook will not have the pane
         caption visible. """
-        
-        
+
+
         aui.AUI_MGR_DEFAULT
         """ Default `AuiManager` style. """
-        
+
         # Panes Customization
         aui.AUI_DOCKART_SASH_SIZE
         """ Customizes the sash size. """
@@ -263,16 +263,16 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Draw a sash grip on the sash. """
         aui.AUI_DOCKART_HINT_WINDOW_COLOUR
         """ Customizes the hint window background colour (currently light blue). """
-        
+
         # Caption Gradient Type
         aui.AUI_GRADIENT_NONE
         """ No gradient on the captions. """
         aui.AUI_GRADIENT_VERTICAL
-        
+
         """ Vertical gradient on the captions. """
         aui.AUI_GRADIENT_HORIZONTAL
         """ Horizontal gradient on the captions. """
-        
+
         # Pane Button State
         aui.AUI_BUTTON_STATE_NORMAL
         """ Normal button state. """
@@ -286,7 +286,7 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Hidden button state. """
         aui.AUI_BUTTON_STATE_CHECKED
         """ Checked button state. """
-        
+
         # Pane minimize mode
         aui.AUI_MINIMIZE_POS_SMART
         """ Minimizes the pane on the closest tool bar. """
@@ -310,7 +310,7 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Displays the caption horizontally. """
         aui.AUI_MINIMIZE_CAPT_MASK
         """ Mask to filter the caption flags. """
-        
+
         # Button kind
         aui.AUI_BUTTON_CLOSE
         """ Shows a close button on the pane. """
@@ -350,7 +350,7 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Shows a custom button on the pane. """
         aui.AUI_BUTTON_CUSTOM9
         """ Shows a custom button on the pane. """
-        
+
         # Pane Insert Level
         aui.AUI_INSERT_PANE
         """ Level for inserting a pane. """
@@ -358,11 +358,11 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Level for inserting a row. """
         aui.AUI_INSERT_DOCK
         """ Level for inserting a dock. """
-        
+
         # ------------------------ #
         # - AuiToolBar Constants - #
         # ------------------------ #
-        
+
         aui.ITEM_CONTROL
         """ The item in the AuiToolBar is a control. """
         aui.ITEM_LABEL
@@ -379,15 +379,15 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ The item in the AuiToolBar is a toolbar radio item. """
         aui.ID_RESTORE_FRAME
         """ Identifier for restoring a minimized pane. """
-        
+
         aui.BUTTON_DROPDOWN_WIDTH
         """ Width of the drop-down button in AuiToolBar. """
-        
+
         aui.DISABLED_TEXT_GREY_HUE
         """ Hue text colour for the disabled text in AuiToolBar. """
         aui.DISABLED_TEXT_COLOUR
         """ Text colour for the disabled text in AuiToolBar. """
-        
+
         aui.AUI_TB_TEXT
         """ Shows the text in the toolbar buttons; by default only icons are shown. """
         aui.AUI_TB_NO_TOOLTIPS
@@ -407,14 +407,14 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Don't draw a gradient background on the toolbar. """
         aui.AUI_TB_CLOCKWISE
         aui.AUI_TB_COUNTERCLOCKWISE
-        
+
         aui.AUI_TB_HORZ_TEXT
         """ Combination of ``AUI_TB_HORZ_LAYOUT`` and ``AUI_TB_TEXT``. """
         aui.AUI_TB_VERT_TEXT
-        
+
         aui.AUI_TB_DEFAULT_STYLE
         """ `AuiToolBar` default style. """
-        
+
         # AuiToolBar settings
         aui.AUI_TBART_SEPARATOR_SIZE
         """ Separator size in AuiToolBar. """
@@ -422,7 +422,7 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Gripper size in AuiToolBar. """
         aui.AUI_TBART_OVERFLOW_SIZE
         """ Overflow button size in AuiToolBar. """
-        
+
         # AuiToolBar text orientation
         aui.AUI_TBTOOL_TEXT_LEFT
         """ Text in AuiToolBar items is aligned left. """
@@ -430,22 +430,22 @@ class lib_agw_aui_additional_Tests(wtc.WidgetTestCase):
         """ Text in AuiToolBar items is aligned right. """
         aui.AUI_TBTOOL_TEXT_TOP
         """ Text in AuiToolBar items is aligned top. """
-        aui.AUI_TBTOOL_TEXT_BOTTOM 
+        aui.AUI_TBTOOL_TEXT_BOTTOM
         """ Text in AuiToolBar items is aligned bottom. """
-        
+
         # AuiToolBar tool orientation
         aui.AUI_TBTOOL_HORIZONTAL
         aui.AUI_TBTOOL_VERT_CLOCKWISE
         aui.AUI_TBTOOL_VERT_COUNTERCLOCKWISE
-        
+
         # ------------------------------- #
         # - AuiSwitcherDialog Constants - #
         # ------------------------------- #
-        
+
         aui.SWITCHER_TEXT_MARGIN_X
         aui.SWITCHER_TEXT_MARGIN_Y
 
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

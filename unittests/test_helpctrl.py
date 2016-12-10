@@ -15,10 +15,10 @@ class helpctrl_Tests(wtc.WidgetTestCase):
         hc.AddBook(os.path.join(helpPath, 'testing.hhp'))
         hc.AddBook(os.path.join(helpPath, 'another.hhp'))
         hc.SetShouldPreventAppExit(False)
-        
+
         hc.DisplayContents()
         self.myYield()
-        
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

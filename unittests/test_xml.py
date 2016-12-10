@@ -15,8 +15,8 @@ class xml_Tests(wtc.WidgetTestCase):
         node.AddChild(root)
         root.AddAttribute('name1', 'value1')
         root.AddAttribute(xml.XmlAttribute('name2', 'value2'))
-        
-        
+
+
     def test_xml2(self):
         xml.XML_ELEMENT_NODE
         xml.XML_ATTRIBUTE_NODE
@@ -31,11 +31,11 @@ class xml_Tests(wtc.WidgetTestCase):
         xml.XML_DOCUMENT_FRAG_NODE
         xml.XML_NOTATION_NODE
         xml.XML_HTML_DOCUMENT_NODE
-        
+
         xml.XML_NO_INDENTATION
         xml.XMLDOC_NONE
         xml.XMLDOC_KEEP_WHITESPACE_NODES
-        
+
 #---------------------------------------------------------------------------
 
 

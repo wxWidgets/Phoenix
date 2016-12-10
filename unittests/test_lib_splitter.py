@@ -9,7 +9,7 @@ class splitter_Tests(wtc.WidgetTestCase):
 
     def test_splitterCtor(self):
         splitter = sp.MultiSplitterWindow(self.frame, style=wx.SP_LIVE_UPDATE)
-        
+
     def test_splitterMulti(self):
         splitter = sp.MultiSplitterWindow(self.frame, style=wx.SP_LIVE_UPDATE)
 
@@ -21,10 +21,10 @@ class splitter_Tests(wtc.WidgetTestCase):
 
         p = wx.Panel(self.frame)
         splitter.AppendWindow(p, 180)
-        
+
         splitter.SetOrientation(wx.VERTICAL)
         self.assertEqual(splitter.GetOrientation(), wx.VERTICAL)
-        
+
         splitter.SetOrientation(wx.HORIZONTAL)
         self.assertEqual(splitter.GetOrientation(), wx.HORIZONTAL)
 

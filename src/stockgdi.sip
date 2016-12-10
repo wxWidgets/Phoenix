@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------
 // Name:        src/stockobj.sip
 // Purpose:     Wrapper definition and some Python code for wxStockGDI and
-//              using it to initialize the stock objects like wx.BLUE_BRUSH, 
-//              etc.  We're putting it here because wxStockGDI is not 
+//              using it to initialize the stock objects like wx.BLUE_BRUSH,
+//              etc.  We're putting it here because wxStockGDI is not
 //              documented, and probably should not be.
 //
 // Author:      Robin Dunn
@@ -69,30 +69,30 @@ public:
     static const wxPen* GetPen(Item item);
 
     const wxFont* GetFont(Item item);
-    
+
     // Add some methods for fetching the various global gdi object lists so
-    // they can be set at app creation time too.   
+    // they can be set at app creation time too.
     static wxFontList* _getTheFontList();
     %MethodCode
         sipRes = wxTheFontList;
     %End
-    
+
     static wxPenList* _getThePenList();
     %MethodCode
         sipRes = wxThePenList;
     %End
-    
+
     static wxBrushList* _getTheBrushList();
     %MethodCode
         sipRes = wxTheBrushList;
     %End
-    
+
     static wxColourDatabase* _getTheColourDatabase();
     %MethodCode
         sipRes = wxTheColourDatabase;
     %End
-    
-    
+
+
 private:
     wxStockGDI(const wxStockGDI&);
     wxStockGDI& operator=(const wxStockGDI&);
@@ -105,7 +105,7 @@ def _initStockObjects():
     wx.SMALL_FONT._copyFrom(        StockGDI.instance().GetFont(StockGDI.FONT_SMALL))
     wx.SWISS_FONT._copyFrom(        StockGDI.instance().GetFont(StockGDI.FONT_SWISS))
     wx.ITALIC_FONT._copyFrom(       StockGDI.instance().GetFont(StockGDI.FONT_ITALIC))
-                                          
+
     wx.BLACK_DASHED_PEN._copyFrom(  StockGDI.GetPen(StockGDI.PEN_BLACKDASHED))
     wx.BLACK_PEN._copyFrom(         StockGDI.GetPen(StockGDI.PEN_BLACK))
     wx.BLUE_PEN._copyFrom(          StockGDI.GetPen(StockGDI.PEN_BLUE))
@@ -148,7 +148,7 @@ def _initStockObjects():
     wx.ThePenList        = StockGDI._getThePenList()
     wx.TheBrushList      = StockGDI._getTheBrushList()
     wx.TheColourDatabase = StockGDI._getTheColourDatabase()
-    
-    
+
+
 StockGDI._initStockObjects = staticmethod(_initStockObjects)
 %End

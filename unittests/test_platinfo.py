@@ -12,8 +12,8 @@ class platinfo_Tests(wtc.WidgetTestCase):
         pi.GetArchitecture()
         pi.GetOperatingSystemId()
         pi.GetPortId()
-        
-           
+
+
 
     def test_platinfoProperties(self):
         pi = wx.PlatformInformation.Get()
@@ -35,7 +35,7 @@ class platinfo_Tests(wtc.WidgetTestCase):
         pi.ToolkitMajorVersion
         pi.ToolkitMinorVersion
 
-   
+
     def test_platinfoFlags(self):
         wx.OS_UNKNOWN
         wx.OS_MAC_OS
@@ -56,7 +56,7 @@ class platinfo_Tests(wtc.WidgetTestCase):
         wx.OS_UNIX
         wx.OS_DOS
         wx.OS_OS2
-       
+
         wx.PORT_UNKNOWN
         wx.PORT_BASE
         wx.PORT_MSW
@@ -68,7 +68,7 @@ class platinfo_Tests(wtc.WidgetTestCase):
         wx.PORT_COCOA
         wx.PORT_WINCE
         wx.PORT_DFB
-       
+
         wx.ARCH_INVALID
         wx.ARCH_32
         wx.ARCH_64
@@ -79,7 +79,7 @@ class platinfo_Tests(wtc.WidgetTestCase):
         wx.ENDIAN_LITTLE
         wx.ENDIAN_PDP
         wx.ENDIAN_MAX
-        
+
 #---------------------------------------------------------------------------
 
 

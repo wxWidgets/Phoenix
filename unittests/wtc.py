@@ -37,7 +37,7 @@ class WidgetTestCase(unittest.TestCase):
 
 
     # helper methods
-    
+
     def myYield(self, eventsToProcess=wx.EVT_CATEGORY_ALL):
         """
         Since the tests are usually run before MainLoop is called then we
@@ -57,8 +57,8 @@ class WidgetTestCase(unittest.TestCase):
         if 'wxOSX' in wx.PlatformInfo:
             wx.MilliSleep(40)  # a little more than 1/30, just in case
         window.Update()
-        
-        
+
+
     def closeDialogs(self):
         """
         Close dialogs by calling their EndModal method
@@ -80,8 +80,8 @@ class WidgetTestCase(unittest.TestCase):
             if intervals <= 0:
                 break
             intervals -= 1
-    
-    
+
+
     def myExecfile(self, filename, ns):
         if not six.PY3:
             execfile(filename, ns)
@@ -89,16 +89,16 @@ class WidgetTestCase(unittest.TestCase):
             with open(filename, 'r') as f:
                 source = f.read()
             exec(source, ns)
-        
-        
+
+
     def execSample(self, name):
         ns = Namespace()
-        samplesDir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../samples'))        
+        samplesDir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../samples'))
         self.myExecfile(os.path.join(samplesDir, name), ns.dict())
         return ns
-    
-    
-    
+
+
+
 #---------------------------------------------------------------------------
 
 class Namespace(object):
@@ -119,15 +119,15 @@ def mybytes(text):
 class PubsubTestCase(unittest.TestCase):
     """
     A testcase specifically to test wx.lib.pubsub, as pub is a singleton
-    the tearDown removes it from sys.modules to force a reinitialization on 
+    the tearDown removes it from sys.modules to force a reinitialization on
     each test.
     """
 
     def setUp(self):
-        from wx.lib.pubsub import pub        
-        
+        from wx.lib.pubsub import pub
+
         self.pub = pub
-        self.assertEqual(pub, self.pub)        
+        self.assertEqual(pub, self.pub)
 
     def tearDown(self):
         self.pub.unsubAll()
@@ -139,9 +139,9 @@ class PubsubTestCase(unittest.TestCase):
             if topicMgr.getTopic('pubsub'):
                 topicMgr.delTopic('pubsub')
         except:
-            pass        
+            pass
         del self.pub
-            
+
         if 'wx.lib.pubsub.pub' in sys.modules.keys():
             del sys.modules['wx.lib.pubsub.pub']
 

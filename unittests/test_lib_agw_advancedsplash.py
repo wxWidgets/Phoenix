@@ -10,9 +10,9 @@ pngFile = os.path.join(os.path.dirname(__file__), 'toucan.png')
 #---------------------------------------------------------------------------
 
 class lib_agw_advancedsplash_Tests(wtc.WidgetTestCase):
-        
+
     def test_lib_agw_advancedsplashCtor(self):
-        splash = AS.AdvancedSplash(self.frame, -1, bitmap=wx.Bitmap(pngFile), 
+        splash = AS.AdvancedSplash(self.frame, -1, bitmap=wx.Bitmap(pngFile),
                                    agwStyle=AS.AS_TIMEOUT|AS.AS_CENTER_ON_SCREEN,
                                    timeout=250)
         self.waitFor(300)
@@ -24,8 +24,8 @@ class lib_agw_advancedsplash_Tests(wtc.WidgetTestCase):
         AS.AS_TIMEOUT
         AS.AS_NOTIMEOUT
         AS.AS_SHADOW_BITMAP
-        
-        
+
+
 #---------------------------------------------------------------------------
 
 if __name__ == '__main__':

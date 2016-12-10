@@ -7,7 +7,7 @@ import wx
 class dialog_Tests(wtc.WidgetTestCase):
 
     def runDialog(self, dlg):
-        # Add some buttons        
+        # Add some buttons
         ok = wx.Button(dlg, wx.ID_OK, pos=(10,10))
         cancel = wx.Button(dlg, wx.ID_CANCEL, pos=(100,10))
 
@@ -19,14 +19,14 @@ class dialog_Tests(wtc.WidgetTestCase):
             val = dlg.ShowModal()
             dlg.Destroy()
             self.assertTrue(val == wx.ID_OK)
-            self.myYield()        
-        
-    
+            self.myYield()
+
+
     def test_dialogDefaultCtor(self):
         dlg = wx.Dialog()
         dlg.Create(None, title='dialog')
         self.runDialog(dlg)
-        
+
     def test_dialog1(self):
         # with parent
         dlg = wx.Dialog(self.frame, title='Hello')
@@ -36,14 +36,14 @@ class dialog_Tests(wtc.WidgetTestCase):
         # without parent
         dlg = wx.Dialog(None, title='World')
         self.runDialog(dlg)
-        
+
     def test_dialogTextSizer(self):
         dlg = wx.Dialog(self.frame, title='Hello')
         s = dlg.CreateTextSizer("This is a test.\nThis is only a test.\nHello World")
         self.assertTrue(isinstance(s, wx.Sizer))
         self.assertTrue(len(s.Children) == 3)
         self.runDialog(dlg)
-        
+
 #---------------------------------------------------------------------------
 
 

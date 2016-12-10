@@ -9,7 +9,7 @@ class scrolwin_Tests(wtc.WidgetTestCase):
     def commonBits(self, w):
         vsize = 750
         rate = 20
-        
+
         w.SetSize(self.frame.GetClientSize())
         w.EnableScrolling(True, True)
         w.ShowScrollbars(wx.SHOW_SB_ALWAYS, wx.SHOW_SB_ALWAYS)
@@ -25,17 +25,17 @@ class scrolwin_Tests(wtc.WidgetTestCase):
         # also test the Point overloads
         self.assertEqual(w.CalcScrolledPosition( (0,0) ),  (-3*rate,-3*rate)) # pixels
         self.assertEqual(w.CalcUnscrolledPosition( (0,0) ),(3*rate,3*rate))   # pixels
-        
+
 
     def test_scrolwinCtor(self):
         w = wx.ScrolledWindow(self.frame)
         self.commonBits(w)
-        
+
     def test_scrolwinDefaultCtor(self):
         w = wx.ScrolledWindow()
         w.Create(self.frame)
         self.commonBits(w)
-        
+
     def test_scrolcvsCtor(self):
         w = wx.ScrolledCanvas(self.frame)
         self.commonBits(w)
@@ -44,9 +44,9 @@ class scrolwin_Tests(wtc.WidgetTestCase):
         w = wx.ScrolledCanvas()
         w.Create(self.frame)
         self.commonBits(w)
-        
+
     def test_scrolwinOnDraw(self):
-        
+
         class MyScrolledWin(wx.ScrolledWindow):
             def __init__(self, *args, **kw):
                 wx.ScrolledWindow.__init__(self, *args, **kw)
@@ -56,14 +56,14 @@ class scrolwin_Tests(wtc.WidgetTestCase):
                 sz = dc.GetSize()
                 dc.SetPen(wx.Pen('blue', 3))
                 dc.DrawLine(0, 0, sz.width, sz.height)
-                
+
         w = MyScrolledWin(self.frame)
         self.commonBits(w)
         w.Refresh()
         self.myUpdate(w)
         self.waitFor(100)
         self.assertTrue(w.flag) # True if OnDraw was called
-                
+
 #---------------------------------------------------------------------------
 
 
