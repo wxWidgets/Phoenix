@@ -1683,6 +1683,7 @@ def cmd_sdist(options, args):
             copyFile(name, destdir)
 
     # Also add the waf executable
+    waf = getWafCmd()
     copyFile('bin/waf-%s' % wafCurrentVersion, os.path.join(PDEST, 'bin'))
 
     # and the REV.txt if there is one
