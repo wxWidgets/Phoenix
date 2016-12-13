@@ -1411,11 +1411,11 @@ def cmd_build_vagrant(options, args):
     # {phoenixDir}/dist, such as what is produced with cmd_sdist.
     cmdTimer = CommandTimer('bdist_vagrant')
     cfg = Config(noWxConfig=True)
-    VMs = [ #'centos-7',
-            #'debian-8',
-            #'fedora-24',
-            #'ubuntu-14.04',
-            #'ubuntu-16.04',
+    VMs = [ 'centos-7',
+            'debian-8',
+            'fedora-24',
+            'ubuntu-14.04',
+            'ubuntu-16.04',
             ]
     for vmName in VMs:
         vmDir = opj(phoenixDir(), 'vagrant', vmName)
