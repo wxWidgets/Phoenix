@@ -1424,6 +1424,7 @@ def cmd_build_vagrant(options, args):
         runcmd('vagrant up')
         runcmd('vagrant ssh -c "scripts/build.sh %s"' % vmName)
         runcmd('vagrant halt')
+        del pwd
 
     if options.upload:
         src = opj(phoenixDir(), 'dist', 'linux', cfg.VERSION)
