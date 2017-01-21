@@ -353,6 +353,19 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
 }
 
 
+//--------------------------------------------------------------------------
+// Check if the app object has been created. Raises an exception if not.
+
+bool i_wxPyCheckForApp() {
+    if (wxTheApp != NULL)
+        return true;
+    else {
+        PyErr_SetString(wxPyNoAppError, "The wx.App object must be created first!");
+        return false;
+    }
+}
+
+
 
 //--------------------------------------------------------------------------
 // An instance of the API structure
@@ -367,7 +380,8 @@ static wxPyAPI  API = {
     i_wxPy4int_seq_helper,
     i_wxPyWrappedPtr_TypeCheck,
     i_wxVariant_in_helper,
-    i_wxVariant_out_helper
+    i_wxVariant_out_helper,
+    i_wxPyCheckForApp
 };
 %End
 
