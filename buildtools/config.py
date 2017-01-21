@@ -118,11 +118,13 @@ class Configuration(object):
 
         self.DOXY_XML_DIR = os.path.join(self.WXDIR, 'docs/doxygen/out/xml')
 
-        self.SIPOPTS  = ' '.join(['-w',    # enable warnings
+        self.SIPOPTS  = ' '.join([
+                         '-w',    # enable warnings
                          '-o',    # turn on auto-docstrings
-                         #'-e',   # turn on exceptions support
+                         '-g',    # turn on acquire/release of GIL for everything
+                         #'-e',    # turn on exceptions support
                          #'-T',    # turn off writing the timestamp to the generated files                         '-g',    # always release and reaquire the GIL
-                         #'-r',   # turn on function call tracing
+                         #'-r',    # turn on function call tracing
                          '-I', os.path.join(phoenixDir(), 'src'),
                          '-I', os.path.join(phoenixDir(), 'sip', 'gen'),
                          ])
