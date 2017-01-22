@@ -34,8 +34,9 @@ def run():
 
     c = module.find('wxArtProvider')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
-    # These are protrected and so they are ignored by default.  Unignore them.
+    # These are protected and so they are ignored by default.  Unignore them.
     c.find('CreateBitmap').ignore(False)
     c.find('CreateIconBundle').ignore(False)
 

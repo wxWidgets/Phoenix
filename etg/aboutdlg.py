@@ -33,9 +33,14 @@ def run():
 
     module.addHeaderCode('#include <wx/generic/aboutdlgg.h>')
 
+    for funcname in ['wxAboutBox',
+                     'wxGenericAboutBox',
+                     ]:
+        c = module.find(funcname)
+        c.mustHaveApp()
+
     c = module.find('wxAboutDialogInfo')
     assert isinstance(c, etgtools.ClassDef)
-
 
 
     #-----------------------------------------------------------------

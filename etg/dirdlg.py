@@ -38,6 +38,9 @@ def run():
 
     module.find('wxDirSelectorPromptStr').ignore()
 
+    c = module.find('wxDirSelector')
+    c.mustHaveApp()
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

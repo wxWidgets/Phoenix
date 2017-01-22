@@ -71,9 +71,21 @@ def run():
     module.find('wxGetOsVersion.minor').out = True
 
     c = module.find('wxBusyCursor')
+    c.mustHaveApp()
     # add context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
+
+
+    for funcname in ['wxBell',
+                     'wxBeginBusyCursor',
+                     'wxEndBusyCursor',
+                     'wxShutdown',
+                     'wxInfoMessageBox',
+                     'wxIsBusy',
+                     ]:
+        c = module.find(funcname)
+        c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

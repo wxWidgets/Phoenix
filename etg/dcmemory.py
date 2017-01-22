@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxMemoryDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

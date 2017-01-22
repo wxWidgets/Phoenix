@@ -34,6 +34,7 @@ def run():
     c = module.find('wxBrush')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+    c.mustHaveApp()
 
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();

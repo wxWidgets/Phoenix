@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxMirrorDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

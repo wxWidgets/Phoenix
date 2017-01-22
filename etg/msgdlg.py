@@ -83,6 +83,10 @@ def run():
 
     module.find('wxMessageBox').releaseGIL()
 
+    c = module.find('wxMessageBox')
+    c.mustHaveApp()
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxScreenDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

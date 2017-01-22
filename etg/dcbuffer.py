@@ -37,6 +37,8 @@ def run():
 
     c = module.find('wxBufferedDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
+
     for m in c.find('wxBufferedDC').all() + c.find('Init').all():
         if m.findItem('dc'):
             m.findItem('dc').keepReference = True
@@ -45,6 +47,8 @@ def run():
 
 
     c = module.find('wxBufferedPaintDC')
+    c.mustHaveApp()
+
     c.addPrivateCopyCtor()
     c.find('wxBufferedPaintDC').findOverload('wxBitmap').find('buffer').keepReference = True
 
@@ -54,6 +58,8 @@ def run():
     # static_cast<> to one of the buffered DCs, so we'll change the base class
     # here to more truly adhere to reality.
     c = module.find('wxAutoBufferedPaintDC')
+    c.mustHaveApp()
+
     c.addPrivateCopyCtor()
     c.bases = ['wxPaintDC']
 

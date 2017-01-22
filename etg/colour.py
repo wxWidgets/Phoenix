@@ -66,6 +66,7 @@ def run():
     c = module.find('wxColour')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+    c.mustHaveApp()
 
     # Hide the string ctor so our typemap will be invoked for the copy ctor instead.
     c.find('wxColour').findOverload('wxString').ignore()

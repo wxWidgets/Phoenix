@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxSVGFileDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

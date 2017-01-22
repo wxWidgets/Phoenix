@@ -34,6 +34,7 @@ def run():
     c = module.find('wxFontEnumerator')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
