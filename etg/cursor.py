@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxCursor')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     c.find('wxCursor').findOverload('bits').ignore()
     c.find('wxCursor').findOverload('cursorName').find('type').default='wxBITMAP_TYPE_ANY'

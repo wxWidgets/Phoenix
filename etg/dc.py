@@ -44,6 +44,7 @@ def run():
 
     c = module.find('wxDC')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     c.addPrivateCopyCtor()
     c.addPublic()
@@ -446,10 +447,6 @@ def run():
             return  self._DrawTextList(textList, coords, foregrounds, backgrounds)
             """)
 
-
-
-
-    # TODO: Port the PseudoDC from Classic
 
 
 

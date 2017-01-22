@@ -36,6 +36,7 @@ def run():
     c = module.find('wxFont')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+    c.mustHaveApp()
 
     # FFont factory function for backwards compatibility
     module.addCppFunction('wxFont*', 'FFont',
@@ -63,7 +64,7 @@ def run():
     c.addProperty('Style GetStyle SetStyle')
     c.addProperty('Weight GetWeight SetWeight')
 
-    # TODO, there is now a Underlined method so we can't have a
+    # TODO, there is now an Underlined method so we can't have a
     # property of the same name.
     #c.addProperty('Underlined GetUnderlined SetUnderlined')
     #c.addProperty('Strikethrough GetStrikethrough SetStrikethrough')

@@ -201,6 +201,7 @@ INCLUDES = [  # base and core stuff
               'rearrangectrl',
               'minifram',
               'textdlg',
+              'numdlg',
 
               # misc
               'power',

@@ -32,6 +32,7 @@ def run():
 
 
     c = module.find('wxGCDC')
+    c.mustHaveApp()
     # FIXME: Do we handle platform-specific classes, and if so, how?
     c.find('wxGCDC').findOverload('wxEnhMetaFileDC').ignore()
     c.addPrivateCopyCtor()

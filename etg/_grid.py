@@ -58,6 +58,9 @@ def run():
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
 
+    # TODO: Remove this when wxScrolledWindow inheritance is fixed
+    module.addHeaderCode('typedef wxScrolled<wxPanel> _ScrolledWindowBase;')
+
     module.addInclude(INCLUDES)
 
 

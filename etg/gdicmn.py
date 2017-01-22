@@ -357,6 +357,20 @@ def run():
             """
         )
 
+
+    for funcname in ['wxColourDisplay',
+                     'wxDisplayDepth',
+                     'wxDisplaySize',
+                     'wxGetDisplaySize',
+                     'wxDisplaySizeMM',
+                     'wxGetDisplaySizeMM',
+                     'wxGetDisplayPPI',
+                     'wxClientDisplayRect',
+                     'wxGetClientDisplayRect',
+                     ]:
+        c = module.find(funcname)
+        c.mustHaveApp()
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

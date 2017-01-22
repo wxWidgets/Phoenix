@@ -2,7 +2,7 @@
  * This module implements a hash table class for mapping C/C++ addresses to the
  * corresponding wrapped Python object.
  *
- * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -20,7 +20,6 @@
 
 #include <string.h>
 
-#include "sip.h"
 #include "sipint.h"
 
 
@@ -163,7 +162,7 @@ void sipOMAddObject(sipObjectMap *om, sipSimpleWrapper *val)
     add_object(om, addr, val);
 
     /* Add any aliases. */
-    base_ctd = (const sipClassTypeDef *)((sipWrapperType *)Py_TYPE(val))->type;
+    base_ctd = (const sipClassTypeDef *)((sipWrapperType *)Py_TYPE(val))->wt_td;
     add_aliases(om, addr, val, base_ctd, base_ctd);
 }
 
@@ -214,7 +213,7 @@ static void add_aliases(sipObjectMap *om, void *addr, sipSimpleWrapper *val,
                      */
                     *alias = *val;
 
-                    alias->flags = (val->flags & SIP_SHARE_MAP) | SIP_ALIAS;
+                    alias->sw_flags = (val->sw_flags & SIP_SHARE_MAP) | SIP_ALIAS;
                     alias->data = val;
                     alias->next = NULL;
 
@@ -254,7 +253,7 @@ static void add_object(sipObjectMap *om, void *addr, sipSimpleWrapper *val)
          * pointers as invalid and reuse the entry.  Otherwise we just add this
          * one to the existing list of objects at this address.
          */
-        if (!(val->flags & SIP_SHARE_MAP))
+        if (!(val->sw_flags & SIP_SHARE_MAP))
         {
             sipSimpleWrapper *sw = he->first;
 
@@ -378,7 +377,7 @@ int sipOMRemoveObject(sipObjectMap *om, sipSimpleWrapper *val)
         return 0;
 
     /* Remove any aliases. */
-    base_ctd = (const sipClassTypeDef *)((sipWrapperType *)Py_TYPE(val))->type;
+    base_ctd = (const sipClassTypeDef *)((sipWrapperType *)Py_TYPE(val))->wt_td;
     remove_aliases(om, addr, val, base_ctd, base_ctd);
 
     /* Remove the object. */

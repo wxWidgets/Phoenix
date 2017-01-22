@@ -264,9 +264,12 @@ class FunctionDef(BaseDef, FixWxPrefix):
         self.transferThis = False     # ownership of 'this' pointer transfered to C++
         self.cppCode = None           # Use this code instead of the default wrapper
         self.noArgParser = False      # set the NoargParser annotation
+        self.mustHaveAppFlag = False
+
         self.__dict__.update(kw)
         if element is not None:
             self.extract(element)
+
 
 
     def extract(self, element):
@@ -523,6 +526,10 @@ class FunctionDef(BaseDef, FixWxPrefix):
             sigs.append(sig)
         return sigs
 
+
+    def mustHaveApp(self, value=True):
+        self.mustHaveAppFlag = value
+
 #---------------------------------------------------------------------------
 
 class MethodDef(FunctionDef):
@@ -640,6 +647,7 @@ class ClassDef(BaseDef):
         self.innerclasses = []
         self.isInner = False        # Is this a nested class?
         self.klass = None           # if so, then this is the outer class
+        self.mustHaveAppFlag = False
 
         # Stuff that needs to be generated after the class instead of within
         # it. Some back-end generators need to put stuff inside the class, and
@@ -1074,6 +1082,9 @@ private:
 {PROT}:
     {CLASS}();""".format(CLASS=self.name, PROT=prot))
         self.addItem(wig)
+
+    def mustHaveApp(self, value=True):
+        self.mustHaveAppFlag = value
 
 
 #---------------------------------------------------------------------------

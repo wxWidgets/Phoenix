@@ -353,6 +353,22 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
 }
 
 
+//--------------------------------------------------------------------------
+// Check if the app object has been created. Raises an exception if not.
+
+// Exception for when the wx.App hasn't been created yet
+// (Initialized in wxPyCoreModuleInject)
+PyObject* wxPyNoAppError = NULL;
+
+bool i_wxPyCheckForApp() {
+    if (wxTheApp != NULL)
+        return true;
+    else {
+        PyErr_SetString(wxPyNoAppError, "The wx.App object must be created first!");
+        return false;
+    }
+}
+
 
 //--------------------------------------------------------------------------
 // An instance of the API structure
@@ -367,7 +383,8 @@ static wxPyAPI  API = {
     i_wxPy4int_seq_helper,
     i_wxPyWrappedPtr_TypeCheck,
     i_wxVariant_in_helper,
-    i_wxVariant_out_helper
+    i_wxVariant_out_helper,
+    i_wxPyCheckForApp
 };
 %End
 
@@ -379,6 +396,7 @@ static wxPyAPI  API = {
     PyObject* wxmodDict = PyModule_GetDict(wxmod);
     PyObject* apiObj = PyCapsule_New(&API, "wx._wxPyAPI", NULL);
     PyDict_SetItemString(wxmodDict, "_wxPyAPI", apiObj);
+
     Py_XDECREF(apiObj);
     Py_DECREF(wxmod);
     wxPyGetAPIPtr();

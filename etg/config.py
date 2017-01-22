@@ -36,6 +36,7 @@ def run():
 
     c = module.find('wxConfigBase')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     c.abstract = True
     ctor = c.find('wxConfigBase')
@@ -161,6 +162,7 @@ def run():
 
     #-----------------------------------------------------------------
     c = module.find('wxFileConfig')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
     c.find('wxFileConfig').findOverload('wxInputStream').find('conv').ignore()
     ctor = c.find('wxFileConfig').findOverload('wxString').find('conv').ignore()

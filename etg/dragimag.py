@@ -34,6 +34,7 @@ def run():
 
     di = module.find('wxDragImage')
     assert isinstance(di, etgtools.ClassDef)
+    di.mustHaveApp()
 
     # make a copy and rename it to 'wxGenericDragImage'
     gdi = tools.copyClassDef(di, 'wxGenericDragImage')

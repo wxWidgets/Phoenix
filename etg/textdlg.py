@@ -53,6 +53,13 @@ def run():
     tools.fixTopLevelWindowClass(c)
 
 
+    c = module.find('wxGetPasswordFromUser')
+    c.mustHaveApp()
+
+    c = module.find('wxGetTextFromUser')
+    c.mustHaveApp()
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

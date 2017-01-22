@@ -116,11 +116,6 @@ to be untangled:
 Other Dev Stuff
 ---------------
 
-  * Come up with some way to implement the MustHaveApp check that
-    Classic does.  It should raise an exception when something is
-    created/used that should not be done before there is an application
-    object.
-
   * Locate and/or add items for the various functions and things in Classic's
     _functions.i module.
 

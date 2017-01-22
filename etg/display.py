@@ -36,12 +36,14 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateAssignOp()
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     c.addProperty('ClientArea GetClientArea')
     c.addProperty('CurrentMode GetCurrentMode')
     c.addProperty('Geometry GetGeometry')
     c.addProperty('Name GetName')
+
 
 
     #-----------------------------------------------------------------

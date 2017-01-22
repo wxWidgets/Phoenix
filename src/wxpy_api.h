@@ -41,6 +41,25 @@
 #include <wx/wx.h>
 
 //--------------------------------------------------------------------------
+// TODO: find a way to not need to do this.
+// It is needed because SIP is putting :: on the front of the type, and when
+// it's a macro the compiler complains about "expected unqualified-id". The
+// risk is that it may be possible for wxLongLong_t to be a type that is not
+// actually fully compatible with "long long", causing problems when passing
+// into, or returning from wx APIs.
+
+// If they are macros then undef them and make some typedefs instead
+#ifdef wxLongLong_t
+#undef wxLongLong_t
+typedef long long wxLongLong_t;
+#endif
+
+#ifdef wxULongLong_t
+#undef wxULongLong_t
+typedef unsigned long long wxULongLong_t;
+#endif
+
+//--------------------------------------------------------------------------
 // The API items that can be inline functions or macros.
 // These are made available simply by #including this header file.
 //--------------------------------------------------------------------------
@@ -110,7 +129,7 @@ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) 
 }
 
 
-// Macros to work around differences in the Python 3 API
+// Macros to work around some differences in the Python 3 API
 #if PY_MAJOR_VERSION >= 3
     #define wxPyInt_Check            PyLong_Check
     #define wxPyInt_AsLong           PyLong_AsLong
@@ -169,6 +188,7 @@ struct wxPyAPI {
     bool          (*p_wxPyWrappedPtr_TypeCheck)(PyObject* obj, const wxString& className);
     wxVariant     (*p_wxVariant_in_helper)(PyObject* obj);
     PyObject*     (*p_wxVariant_out_helper)(const wxVariant& value);
+    bool          (*p_wxPyCheckForApp)();
     // Always add new items here at the end.
 };
 
@@ -246,6 +266,9 @@ inline wxVariant wxVariant_in_helper(PyObject* obj)
 inline PyObject* wxVariant_out_helper(const wxVariant& value)
     { return wxPyGetAPIPtr()->p_wxVariant_out_helper(value); }
 
+
+inline bool wxPyCheckForApp()
+    { return wxPyGetAPIPtr()->p_wxPyCheckForApp(); }
 
 
 //--------------------------------------------------------------------------

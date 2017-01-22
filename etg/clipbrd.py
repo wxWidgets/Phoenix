@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxClipboard')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     c.find('AddData.data').transfer = True
     c.find('SetData.data').transfer = True
