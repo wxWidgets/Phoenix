@@ -78,6 +78,8 @@ def run():
     # customizing the generated code and docstrings.
 
     module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wx/help.h>')
+
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
     module.addInclude(INCLUDES)

@@ -547,7 +547,7 @@ def run():
 
     #-------------------------------------------------------
     c = module.find('wxImageHistogram')
-    c.bases = ['wxObject']
+    c.bases = [] # wxImageHistogramBase doesn't actually exist
     setParamsPyInt('MakeKey')
     c.find('FindFirstUnusedColour').type = 'void'
     c.find('FindFirstUnusedColour.r').pyInt = True
