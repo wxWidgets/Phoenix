@@ -356,6 +356,8 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
 //--------------------------------------------------------------------------
 // Check if the app object has been created. Raises an exception if not.
 
+// Exception for when the wx.App hasn't been created yet
+// (Initialized in wxPyCoreModuleInject)
 PyObject* wxPyNoAppError = NULL;
 
 bool i_wxPyCheckForApp() {
@@ -394,11 +396,6 @@ static wxPyAPI  API = {
     PyObject* wxmodDict = PyModule_GetDict(wxmod);
     PyObject* apiObj = PyCapsule_New(&API, "wx._wxPyAPI", NULL);
     PyDict_SetItemString(wxmodDict, "_wxPyAPI", apiObj);
-
-    // Also create the exception object that may be raised by wxPyCheckForApp
-    wxPyNoAppError = PyErr_NewException("wx.PyNoAppError",
-                                        PyExc_RuntimeError, NULL);
-    PyDict_SetItemString(wxmod, "PyNoAppError", wxPyNoAppError);
 
     Py_XDECREF(apiObj);
     Py_DECREF(wxmod);

@@ -98,7 +98,7 @@ void _wxPyCleanup()
     wxEntryCleanup();
 }
 
-PyObject* wxAssertionError = NULL;        // Exception object raised for wxASSERT failures
+PyObject* wxAssertionError = NULL;      // Exception object raised for wxASSERT failures
 
 void wxPyCoreModuleInject(PyObject* moduleDict)
 {
@@ -111,10 +111,10 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
     PyDict_SetItemString(moduleDict, "PyAssertionError", wxAssertionError);
 
 
-//    // Create an exception object to use when the app object hasn't been created yet
-//    wxPyNoAppError = PyErr_NewException("wx._core.PyNoAppError",
-//                                        PyExc_RuntimeError, NULL);
-//    PyDict_SetItemString(moduleDict, "PyNoAppError", wxPyNoAppError);
+    // Create an exception object to use when the app object hasn't been created yet
+    wxPyNoAppError = PyErr_NewException("wx._core.PyNoAppError",
+                                        PyExc_RuntimeError, NULL);
+    PyDict_SetItemString(moduleDict, "PyNoAppError", wxPyNoAppError);
 
 #ifdef __WXGTK__
 #define wxPort "__WXGTK__"
@@ -131,8 +131,8 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 
     wxInitAllImageHandlers();
 
-    // TODO: Find some blackmagic way to deprecate wx.Platform such that it raises
-    // a wraning when used...  Maybe a class that returns wx.Port for any __getattr__?
+    // TODO: Find some magic way to deprecate wx.Platform such that it raises
+    // a warning when used...  Maybe a class that returns wx.Port for any __getattr__?
     PyDict_SetItemString(moduleDict, "Port", PyUnicode_FromString(wxPort));
     PyDict_SetItemString(moduleDict, "Platform", PyUnicode_FromString(wxPort));
 
