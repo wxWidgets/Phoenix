@@ -428,10 +428,11 @@ from .%s import *
         if klass.ignored:
             return
 
-        # Propagate mustHaveApp setting to the ctors
+        # Propagate mustHaveApp setting to the ctors and static methods
         if klass.mustHaveAppFlag:
             for item in klass.allItems():
-                if isinstance(item, extractors.MethodDef) and item.isCtor:
+                if isinstance(item, extractors.MethodDef) and \
+                        (item.isCtor or item.isStatic):
                     item.mustHaveApp(True)
 
         # write the class header
