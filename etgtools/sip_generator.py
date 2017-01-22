@@ -196,6 +196,11 @@ from .%s import *
                 # SIP appends them all together.
                 _needDocstring = False
 
+            if function.mustHaveAppFlag:
+                stream.write('%PreMethodCode\n')
+                stream.write(nci("if (!wxPyCheckForApp()) return NULL;\n", 4))
+                stream.write('%End\n')
+
             if function.cppCode:
                 code, codeType = function.cppCode
                 if codeType == 'sip':
@@ -422,6 +427,12 @@ from .%s import *
         assert isinstance(klass, extractors.ClassDef)
         if klass.ignored:
             return
+
+        # Propagate mustHaveApp setting to the ctors
+        if klass.mustHaveAppFlag:
+            for item in klass.allItems():
+                if isinstance(item, extractors.MethodDef) and item.isCtor:
+                    item.mustHaveApp(True)
 
         # write the class header
         if klass.templateParams:
@@ -658,6 +669,11 @@ from .%s import *
                 # We only write a docstring for the first overload, otherwise
                 # SIP appends them all together.
                 _needDocstring = False
+
+            if method.mustHaveAppFlag:
+                stream.write('%s%%PreMethodCode\n' % indent)
+                stream.write(nci("if (!wxPyCheckForApp()) return NULL;\n", len(indent)+4))
+                stream.write('%s%%End\n' % indent)
 
             if method.cppCode:
                 #checkOverloads = False   ## SIP now allows overloads to have %MethodCode
