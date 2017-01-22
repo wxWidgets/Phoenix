@@ -134,6 +134,9 @@ Usage: ./build.py [command(s)] [options]
       test          Run the unit test suite
       test_*        Run just the one named test module
 
+      checkdeps     Linux only. Print missing necessary packages
+      instdeps      Linux only. Attempt to install missing necessary packages
+
       clean_wx      Clean the wx parts of the build
       clean_py      Clean the wxPython parts of the build
       clean_sphinx  Clean the sphinx files
@@ -1792,7 +1795,21 @@ def cmd_setrev(options, args):
     cfg.resetVersion()
     msg('cfg.VERSION: %s' % cfg.VERSION)
 
+def cmd_checkdeps(options, args):
+    from buildtools import lnxdeps # not confusing at all... should fix that
 
+    checker = lnxdeps.Checker(options.gtk3)
+    exitcode = checker.CheckPkgs()
+    if exitcode:
+        sys.exit(exitcode)
+
+def cmd_instdeps(options, args):
+    from buildtools import lnxdeps
+
+    checker = lnxdeps.Checker(options.gtk3)
+    exitcode = checker.InstallPkgs()
+    if exitcode:
+        sys.exit(exitcode)
 
 #---------------------------------------------------------------------------
 

@@ -1,0 +1,55 @@
+arch:
+  default:
+    freeglut: freeglut
+    glu: glu
+    gstreamer: gstreamer0.10-base-plugins
+    gtk2: gtk2
+    gtk3: gtk3
+    notify:
+    webkitgtk2: webkitgtk2
+    webkitgtk3: webkitgtk3
+    other:
+    recommended: libpng libtiff libjpeg-turbo
+
+cent:
+  default:
+    freeglut: freeglut freeglut-devel
+    glu: 
+    gstreamer: gstreamer gstreamer-devel gstreamer-plugins-base-devel
+    gtk2: gtk2 gtk2-devel
+    gtk3: gtk3 gtk3-devel
+    notify: libnotify-devel
+    webkitgtk2: webkitgtk webkitgtk-devel
+    webkitgtk3: webkitgtk3 webkitgtk3-devel
+    other: 
+    recommended: libpng-devel libjpeg-turbo-devel libtiff-devel SDL SDL-devel
+
+debian:
+  default:
+    freeglut: freeglut3 freeglut3-dev
+    glu: 
+    gstreamer: libgstreamer-plugins-base0.10-dev
+    gtk2: libgtk2.0-dev
+    gtk3: libgtk-3-dev
+    notify: libnotify-dev
+    webkitgtk2: libwebkitgtk-dev
+    webkitgtk3: libwebkitgtk-3.0-dev
+    other: libsm-dev
+    recommended: libpng-dev libtiff-dev libsdl1.2-dev
+
+ubuntu:
+  default:
+    freeglut: freeglut3 freeglut3-dev
+    glu: 
+    gstreamer: libgstreamer-plugins-base0.10-dev
+    gtk2: libgtk2.0-dev
+    gtk3: libgtk-3-dev
+    notify: libnotify-dev
+    webkitgtk2: libwebkitgtk-dev
+    webkitgtk3: libwebkitgtk-3.0-dev
+    other: libsm-dev
+    recommended: libpng-dev libtiff-dev libsdl1.2-dev
+  "16.10":
+    gstreamer: libgstreamer-plugins-base1.0-dev # No 0.10 available on 16.10, however
+                                                # wx's configure will still fail
+                                                # with this package installed..
