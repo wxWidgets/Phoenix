@@ -49,10 +49,6 @@ def run():
     c.find('SetPropertyValue').findOverload('wxULongLong_t value').ignore()
     c.find('SetPropertyValue').findOverload('wxObject *value').ignore()
 
-    # TODO: Fix these
-    c.find('GetPropertyValueAsLongLong').ignore()
-    c.find('GetPropertyValueAsULongLong').ignore()
-
     module.addItem(
         tools.wxArrayPtrWrapperTemplate('wxArrayPGProperty', 'wxPGProperty', module))
 

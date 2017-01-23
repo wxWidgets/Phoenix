@@ -9,8 +9,8 @@
 // Licence:     wxWindows license
 //--------------------------------------------------------------------------
 
-typedef long long wxLongLong_t;
-typedef unsigned long long wxULongLong_t;
+typedef long long wxLongLong_t /NoTypeName/;
+typedef unsigned long long wxULongLong_t /NoTypeName/;
 
 %MappedType wxLongLong {
 

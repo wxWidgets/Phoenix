@@ -102,7 +102,6 @@ class FixWxPrefix(object):
         else:
             return name
 
-
     def _getCoreTopLevelNames(self):
         # Since the real wx.core module may not exist yet, and since actually
         # executing code at this point is probably a bad idea, try parsing the

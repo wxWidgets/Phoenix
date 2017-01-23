@@ -77,9 +77,6 @@ def run():
     c.briefDoc = "Basic property with integer value."
     c.detailedDoc = []
 
-    c.find('DoValidation.value').type = 'long long'
-
-
     c = module.find('wxLongStringProperty')
     c.find('OnButtonClick.value').inOut = True
     c.find('DisplayEditorDialog.value').inOut = True
