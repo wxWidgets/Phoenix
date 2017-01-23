@@ -55,6 +55,11 @@ def run():
             item.type = 'const wxPGPropArgCls &'
 
 
+    td = module.find('wxPGVFBFlags')
+    assert isinstance(td, etgtools.TypedefDef)
+    td.type = 'unsigned char'
+    td.noTypeName = True
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
