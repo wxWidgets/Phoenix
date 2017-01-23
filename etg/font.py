@@ -36,7 +36,15 @@ def run():
     c = module.find('wxFont')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
-    c.mustHaveApp()
+
+    # Set mustHaveApp on all ctors except the default ctor
+    for ctor in c.find('wxFont').all():
+        if ctor.isCtor and ctor.argsString != '()':
+            ctor.mustHaveApp()
+
+    for func in c.find('New').all():
+        func.mustHaveApp()
+
 
     # FFont factory function for backwards compatibility
     module.addCppFunction('wxFont*', 'FFont',
