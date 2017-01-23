@@ -63,10 +63,9 @@ def run():
     scrolled.find('GetSizeAvailableForScrollTarget').ignore(False)
     scrolled.find('SendAutoScrollEvents').isVirtual = True
 
-    # The wxScrolledWindow and wxScrolledCanvas typedefs will be output
-    # normally and SIP will treat them like classes that have a
-    # wxScrolled mix-in as one of their base classes. Let's add some more
-    # info to them for the doc generators.
+    # The wxScrolledCanvas typedef will be output normally and SIP will treat
+    # it like a class that has a wxScrolled mix-in as one of the base classes.
+    # Let's add some more info to them for the doc generators.
     docBase = """\
     The :ref:`{name}` class is a combination of the :ref:`{base}` and
     :ref:`Scrolled` classes, and manages scrolling for its client area,
@@ -74,12 +73,6 @@ def run():
     and setting the scroll positions, thumb sizes and ranges according to
     the area in view.
     """
-    item = module.find('wxScrolledWindow')
-    assert isinstance(item, etgtools.TypedefDef)
-    item.docAsClass = True
-    item.bases = ['wxPanel', 'wxScrolled']
-    item.briefDoc = docBase.format(name='ScrolledWindow', base='Panel')
-
     item = module.find('wxScrolledCanvas')
     item.docAsClass = True
     item.bases = ['wxWindow', 'wxScrolled']
@@ -87,40 +80,51 @@ def run():
     item.detailedDoc[0] = "This scrolled window is not intended to have children "\
                           "so it doesn't have special handling for TAB traversal "\
                           "or focus management."
-
-
-    module.items.remove(item)
-    # wxScrolledWindow is documented as a typedef but it's actually a class.
-    # So we need to implement it that way here too in order to keep
-    # static_casts happy.
+    # move it ahead of wxScrolledWindow
     sw = module.find('wxScrolledWindow')
-    assert isinstance(sw, TypedefDef)
-    sw.name = '_ScrolledWindowBase'
-
+    module.items.remove(item)
     module.insertItemBefore(sw, item)
 
 
+    # wxScrolledWindow is documented as a typedef but it's actually a class.
+    # So we need to implement it that way here too in order to keep
+    # static_casts and such happy.
+    assert isinstance(sw, TypedefDef)
+
+    # First, let's add a typedef to serve as the base class of
+    # wxScrolledWindow, since SIP doesn't yet understand using template
+    # instantiations as base classes.  Setting noTypeName tells SIP to not use
+    # the typedef name in the actual generated code, but the typedef's type
+    # instead.
+    td = TypedefDef(name='_ScrolledWindowBase',
+                    type='wxScrolled<wxPanel>',
+                    noTypeName=True,
+                    piIgnored=True)
+    module.insertItemAfter(sw, td)
+    module.addHeaderCode('typedef wxScrolled<wxPanel> _ScrolledWindowBase;')
+    sw.ignore()
+
+    # Now implement the class definition
     klass = ClassDef(
         name='wxScrolledWindow',
         bases=['_ScrolledWindowBase'],
-        ##bases=['wxScrolled<wxPanel>'],
+        piBases=['Window', 'Scrolled'],
         briefDoc=sw.briefDoc, detailedDoc=sw.detailedDoc,
         items=[
-            MethodDef(name='wxScrolledWindow', isCtor=True, items=[]),
-            MethodDef(name='wxScrolledWindow', isCtor=True, items=[
-                ParamDef(name='parent', type='wxWindow*'),
-                ParamDef(name='winid', type='wxWindowID', default='wxID_ANY'),
-                ParamDef(name='pos', type='const wxPoint&', default='wxDefaultPosition'),
-                ParamDef(name='size', type='const wxSize&', default='wxDefaultSize'),
-                ParamDef(name='style', type='long', default='wxScrolledWindowStyle'),
-                ParamDef(name='name', type='const wxString&', default='wxPanelNameStr'),
-                ]),
+            MethodDef(name='wxScrolledWindow', isCtor=True, items=[],
+                overloads=[
+                    MethodDef(name='wxScrolledWindow', isCtor=True, items=[
+                        ParamDef(name='parent', type='wxWindow*'),
+                        ParamDef(name='winid', type='wxWindowID', default='wxID_ANY'),
+                        ParamDef(name='pos', type='const wxPoint&', default='wxDefaultPosition'),
+                        ParamDef(name='size', type='const wxSize&', default='wxDefaultSize'),
+                        ParamDef(name='style', type='long', default='wxScrolledWindowStyle'),
+                        ParamDef(name='name', type='const wxString&', default='wxPanelNameStr'),
+                        ]),
+                    ]),
             ],
         )
-
-    module.insertItemAfter(sw, klass)
-    ##sw.ignore()
-    module.addHeaderCode('typedef wxScrolled<wxPanel> _ScrolledWindowBase;')
+    module.insertItemAfter(td, klass)
 
 
     module.addPyCode("PyScrolledWindow = wx.deprecated(ScrolledWindow, 'Use ScrolledWindow instead.')")
