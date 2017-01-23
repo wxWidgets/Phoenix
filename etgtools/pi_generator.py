@@ -71,6 +71,11 @@ header_pyi = """\
 
 #---------------------------------------------------------------------------
 
+def piIgnored(obj):
+    return getattr(obj, 'piIgnored', False)
+
+#---------------------------------------------------------------------------
+
 class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
     def generate(self, module, destFile=None):
@@ -179,7 +184,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             }
 
         for item in module:
-            if item.ignored:
+            if item.ignored or piIgnored(item):
                 continue
             function = methodMap[item.__class__]
             function(item, stream)
@@ -188,10 +193,10 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
     #-----------------------------------------------------------------------
     def generateEnum(self, enum, stream, indent=''):
         assert isinstance(enum, extractors.EnumDef)
-        if enum.ignored:
+        if enum.ignored or piIgnored(enum):
             return
         for v in enum.items:
-            if v.ignored:
+            if v.ignored or piIgnored(v):
                 continue
             name = v.pyName or v.name
             stream.write('%s%s = 0\n' % (indent, name))
@@ -199,7 +204,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
     #-----------------------------------------------------------------------
     def generateGlobalVar(self, globalVar, stream):
         assert isinstance(globalVar, extractors.GlobalVarDef)
-        if globalVar.ignored:
+        if globalVar.ignored or piIgnored(globalVar):
             return
         name = globalVar.pyName or globalVar.name
         if guessTypeInt(globalVar):
@@ -222,7 +227,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
     #-----------------------------------------------------------------------
     def generateDefine(self, define, stream):
         assert isinstance(define, extractors.DefineDef)
-        if define.ignored:
+        if define.ignored or piIgnored(define):
             return
         # we're assuming that all #defines that are not ignored are integer or string values
         if '"' in define.value:
@@ -233,7 +238,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
     #-----------------------------------------------------------------------
     def generateTypedef(self, typedef, stream, indent=''):
         assert isinstance(typedef, extractors.TypedefDef)
-        if typedef.ignored:
+        if typedef.ignored or piIgnored(typedef):
             return
 
         # If it's not a template instantiation, or has not been flagged by
@@ -255,7 +260,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             bases = [self.fixWxPrefix(b, True) for b in bases]
             name = self.fixWxPrefix(typedef.name)
 
-        # Now write the Python equivallent class for the typedef
+        # Now write the Python equivalent class for the typedef
         if not bases:
             bases = ['object']  # this should not happpen, but just in case...
         stream.write('%sclass %s(%s):\n' % (indent, name, ', '.join(bases)))
@@ -362,12 +367,12 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
             if idx == len(parameters)-1:
                 return True
             for i in range(idx+1, len(parameters)):
-                if not parameters[i].ignored:
+                if not (parameters[i].ignored or piIgnored(parameters[i])):
                     return False
             return True
 
         for idx, param in enumerate(parameters):
-            if param.ignored:
+            if param.ignored or piIgnored(param):
                 continue
             stream.write(param.name)
             if param.default:
@@ -379,7 +384,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
     #-----------------------------------------------------------------------
     def generateClass(self, klass, stream, indent=''):
         assert isinstance(klass, extractors.ClassDef)
-        if klass.ignored:
+        if klass.ignored or piIgnored(klass):
             return
 
         # check if there is a pi-customized version of the base class names
@@ -465,21 +470,21 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
     def generateMemberVar(self, memberVar, stream, indent):
         assert isinstance(memberVar, extractors.MemberVarDef)
-        if memberVar.ignored:
+        if memberVar.ignored or piIgnored(memberVar):
             return
         stream.write('%s%s = property(None, None)\n' % (indent, memberVar.name))
 
 
     def generateProperty(self, prop, stream, indent):
         assert isinstance(prop, extractors.PropertyDef)
-        if prop.ignored:
+        if prop.ignored or piIgnored(prop):
             return
         stream.write('%s%s = property(None, None)\n' % (indent, prop.name))
 
 
     def generatePyProperty(self, prop, stream, indent):
         assert isinstance(prop, extractors.PyPropertyDef)
-        if prop.ignored:
+        if prop.ignored or piIgnored(prop):
             return
         stream.write('%s%s = property(None, None)\n' % (indent, prop.name))
 
@@ -487,7 +492,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
     def generateMethod(self, method, stream, indent, name=None, docstring=None):
         assert isinstance(method, extractors.MethodDef)
         for m in method.all():  # use the first not ignored if there are overloads
-            if not m.ignored:
+            if not m.ignored or piIgnored(m):
                 method = m
                 break
         else:
@@ -553,7 +558,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
 
     def generatePyMethod(self, pm, stream, indent):
         assert isinstance(pm, extractors.PyMethodDef)
-        if pm.ignored:
+        if pm.ignored or piIgnored(pm):
             return
         if pm.isStatic:
             stream.write('\n%s@staticmethod' % indent)
