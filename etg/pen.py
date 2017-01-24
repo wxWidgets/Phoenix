@@ -34,6 +34,11 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
 
+    # Set mustHaveApp on all ctors except the default ctor
+    for ctor in c.find('wxPen').all():
+        if ctor.isCtor and ctor.argsString != '()':
+            ctor.mustHaveApp()
+
     # The stipple bitmap ctor is not implemented on wxGTK
     c.find('wxPen').findOverload('wxBitmap').ignore()
 

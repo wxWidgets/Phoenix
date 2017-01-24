@@ -34,6 +34,7 @@ def run():
 
     c = module.find('wxHtmlHelpController')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
     c.find('CreateHelpDialog').ignore(False)

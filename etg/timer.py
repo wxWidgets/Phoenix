@@ -35,8 +35,10 @@ def run():
 
     c = module.find('wxTimer')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     c = module.find('wxTimerRunner')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
     module.addPyCode('EVT_TIMER = wx.PyEventBinder( wxEVT_TIMER )')

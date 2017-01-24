@@ -327,6 +327,7 @@ def run():
 
 
     c = module.find('wxColourDatabase')
+    c.mustHaveApp()
     c.addPyMethod('FindColour', '(self, colour)',    'return self.Find(colour)')
 
     module.find('wxTheColourDatabase').ignore()
@@ -367,6 +368,8 @@ def run():
                      'wxGetDisplayPPI',
                      'wxClientDisplayRect',
                      'wxGetClientDisplayRect',
+                     'wxSetCursor',
+                     #'wxGetXDisplay',
                      ]:
         c = module.find(funcname)
         c.mustHaveApp()

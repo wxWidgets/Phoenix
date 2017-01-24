@@ -31,9 +31,9 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    #c = module.find('')
-    #assert isinstance(c, etgtools.ClassDef)
-
+    c = module.find('wxSystemSettings')
+    assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

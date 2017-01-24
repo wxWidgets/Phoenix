@@ -37,6 +37,7 @@ def run():
 
     c = module.find('wxRendererNative')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
 
@@ -53,6 +54,7 @@ def run():
 
 
     c = module.find('wxDelegateRendererNative')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
 

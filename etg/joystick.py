@@ -92,8 +92,9 @@ def run():
         """)
 
 
-    #c = module.find('')
-    #assert isinstance(c, etgtools.ClassDef)
+    c = module.find('wxJoystick')
+    assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

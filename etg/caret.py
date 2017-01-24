@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxCaret')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
     c.find('GetPosition').findOverload('int *').ignore()

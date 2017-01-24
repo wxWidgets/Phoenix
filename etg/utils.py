@@ -39,6 +39,7 @@ def run():
 
     c = module.find('wxWindowDisabler')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
     module.find('wxQsort').ignore()
@@ -66,6 +67,7 @@ def run():
     # Keep just the first wxExecute overload
     f = module.find('wxExecute')
     f.overloads = []
+    f.mustHaveApp()
 
     module.find('wxGetOsVersion.major').out = True
     module.find('wxGetOsVersion.minor').out = True
@@ -83,6 +85,9 @@ def run():
                      'wxShutdown',
                      'wxInfoMessageBox',
                      'wxIsBusy',
+                     'wxGetMousePosition',
+                     'wxGetKeyState',
+                     'wxGetMouseState',
                      ]:
         c = module.find(funcname)
         c.mustHaveApp()

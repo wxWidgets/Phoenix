@@ -51,6 +51,7 @@ def run():
     c.find('wxImage').findOverload('int width, int height, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
     c.find('wxImage').findOverload('const wxSize &sz, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
 
+
     c.addCppCtor_sip('(int width, int height, wxPyBuffer* data)',
         doc="Creates an image from RGB data in memory.",
         body="""\

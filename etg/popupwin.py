@@ -34,11 +34,13 @@ def run():
 
     c = module.find('wxPopupWindow')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     tools.fixWindowClass(c)
     c.find('Position').isVirtual = True
 
 
     c = module.find('wxPopupTransientWindow')
+    c.mustHaveApp()
     tools.fixWindowClass(c)
     c.find('Dismiss').isVirtual = True
     c.find('ProcessLeftDown').isVirtual = True

@@ -50,6 +50,7 @@ def run():
 
 
     #c = module.find('wxHelpController')
+    #c.mustHaveApp()
     #c.addPrivateCopyCtor()
     ## Add pure virtuals with implemenations here
     #c.addItem(etgtools.WigCode("""\
