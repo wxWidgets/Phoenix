@@ -82,13 +82,13 @@ def run():
             """)
 
     cls.addPyMethod("__setstate__", "(self, state)",
-        doc = """Sets internal state of PyEvent object to allow pickling""",
+        doc = """Sets internal state of PyEvent object. This allows PyEvent to be reconstructed as part of the pickling process""",
         body = """\
             self.__dict__.update(state)
             """)
 
     cls.addPyMethod("__getstate__", "(self)",
-        doc = "Returns internal state. Precense enables pickling",
+        doc = "Returns this object's internal state. This is used as part of the pickling process",
         body = """\
             return self.__dict__
             """)
@@ -151,13 +151,13 @@ def run():
             """)
 
     cls.addPyMethod("__setstate__", "(self, state)",
-        doc = """Sets internal state of PyEvent object to allow pickling""",
+        doc = """Sets internal state of PyEvent object. This allows PyEvent to be reconstructed as part of the pickling process""",
         body = """\
             self.__dict__.update(state)
             """)
 
     cls.addPyMethod("__getstate__", "(self)",
-        doc = "Returns internal state. Precense enables pickling",
+        doc = "Returns this object's internal state. This is used as part of the pickling process",
         body = """\
             return self.__dict__
             """)
