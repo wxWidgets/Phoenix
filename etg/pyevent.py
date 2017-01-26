@@ -81,6 +81,18 @@ def run():
             return clone
             """)
 
+    cls.addPyMethod("__setstate__", "(self, state)",
+        doc = """Sets internal state of PyEvent object. This allows PyEvent to be reconstructed as part of the pickling process""",
+        body = """\
+            self.__dict__.update(state)
+            """)
+
+    cls.addPyMethod("__getstate__", "(self)",
+        doc = "Returns this object's internal state. This is used as part of the pickling process",
+        body = """\
+            return self.__dict__
+            """)
+
     module.addItem(cls)
     cls.addCppCode("IMPLEMENT_DYNAMIC_CLASS(wxPyEvent, wxEvent);")
     cls.addHeaderCode('#include "pyevent.h"')
@@ -138,6 +150,18 @@ def run():
             return clone
             """)
 
+    cls.addPyMethod("__setstate__", "(self, state)",
+        doc = """Sets internal state of PyEvent object. This allows PyEvent to be reconstructed as part of the pickling process""",
+        body = """\
+            self.__dict__.update(state)
+            """)
+
+    cls.addPyMethod("__getstate__", "(self)",
+        doc = "Returns this object's internal state. This is used as part of the pickling process",
+        body = """\
+            return self.__dict__
+            """)
+
     module.addItem(cls)
     cls.addCppCode("IMPLEMENT_DYNAMIC_CLASS(wxPyCommandEvent, wxCommandEvent);")
     cls.addHeaderCode('#include "pyevent.h"')
@@ -162,4 +186,3 @@ def run():
 #---------------------------------------------------------------------------
 if __name__ == '__main__':
     run()
-
