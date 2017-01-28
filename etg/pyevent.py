@@ -64,8 +64,10 @@ def run():
                 ParamDef(type='PyObject*', name='value'),],
                 cppCode=("sipCpp->__setattr__(name, value);", "sip")),
 
-            MethodDef(name='Clone', type='wxEvent*', isVirtual=True, isConst=True, factory=True),
-            MethodDef(name='_getAttrDict', type='PyObject*'),
+            MethodDef(name='Clone', type='wxEvent*', isVirtual=True, isConst=True,
+                factory=True, docsIgnored=True),
+            MethodDef(name='_getAttrDict', type='PyObject*',
+                briefDoc="Gives access to the internal object that is tracking the event's python attributes."),
             ])
 
     cls.addPyMethod('Clone', '(self)',
@@ -122,8 +124,10 @@ def run():
                 ParamDef(type='PyObject*', name='value'),],
                 cppCode=("sipCpp->__setattr__(name, value);", "sip")),
 
-            MethodDef(name='Clone', type='wxEvent*', isVirtual=True, isConst=True, factory=True),
-            MethodDef(name='_getAttrDict', type='PyObject*'),
+            MethodDef(name='Clone', type='wxEvent*', isVirtual=True, isConst=True,
+                factory=True, docsIgnored=True),
+            MethodDef(name='_getAttrDict', type='PyObject*',
+                briefDoc="Gives access to the internal object that is tracking the event's python attributes."),
             ])
 
     cls.addPyMethod('Clone', '(self)',
@@ -154,8 +158,6 @@ def run():
             return evt.Clone();
         }""")
     module.addItem(etgtools.WigCode("wxEvent* testCppClone(wxEvent& evt);"))
-
-
 
 
     #-----------------------------------------------------------------
