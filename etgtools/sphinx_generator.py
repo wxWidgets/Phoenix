@@ -612,7 +612,7 @@ class ParameterList(Node):
         py_parameters = []
         for key, parameter in self.py_parameters.items():
             pdef = parameter.pdef
-            if pdef.out or pdef.ignored:
+            if pdef.out or pdef.ignored or pdef.docsIgnored:
                 continue
 
             py_parameters.append(key)
@@ -682,7 +682,7 @@ class ParameterList(Node):
 
             pdef = parameter.pdef
 
-            if pdef.out or pdef.ignored:
+            if pdef.out or pdef.ignored or pdef.docsIgnored:
                 continue
 
 ##            print name
@@ -2042,7 +2042,7 @@ class XMLDocString(object):
 
         for sub_item in [self.xml_item] + self.xml_item.overloads:
 
-            if sub_item.ignored:
+            if sub_item.ignored or sub_item.docsIgnored:
                 continue
 
             dummy_root = Root(self, False, False)
@@ -2069,7 +2069,7 @@ class XMLDocString(object):
         snippet_count = 0
         for sub_item in [self.xml_item] + self.xml_item.overloads:
 
-            if sub_item.ignored:
+            if sub_item.ignored or sub_item.docsIgnored:
                 continue
 
             sub_item.name = self.xml_item.pyName or removeWxPrefix(self.xml_item.name)
@@ -2728,7 +2728,7 @@ class XMLDocString(object):
         count = 0
 
         for v in self.xml_item.items:
-            if v.ignored:
+            if v.ignored or v.docsIgnored:
                 continue
 
             docstrings = v.briefDoc
@@ -2975,7 +2975,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                 pf.items[DOCSTRING_KEY] = module.docstring
 
         for item in module:
-            if item.ignored:
+            if item.ignored or item.docsIgnored:
                 continue
 
             function = methodMap[item.__class__]
@@ -3059,7 +3059,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
         self.current_class.property_list = []
         self.current_class.memberVar_list = []
 
-        class_items = [i for i in klass if not i.ignored]
+        class_items = [i for i in klass if not (i.ignored or i.docsIgnored)]
         class_items = sorted(class_items, key=operator.attrgetter('name'))
 
         class_items = self.removeDuplicated(class_fullname, class_items)
@@ -3130,7 +3130,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         assert isinstance(klass, extractors.ClassDef)
 
-        if klass.ignored:
+        if klass.ignored or klass.docsIgnored:
             return
 
         imm = ItemModuleMap()
@@ -3176,7 +3176,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
                  isinstance(i, extractors.MethodDef) and
                  i.protection == 'public' and (i.isCtor or i.isDtor)]
 
-        class_items = [i for i in klass if i not in ctors and not i.ignored]
+        class_items = [i for i in klass if i not in ctors and not (i.ignored or i.docsIgnored)]
 
         for item in class_items:
             item.sort_order = dispatch[item.__class__][1]
@@ -3252,7 +3252,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
     def generateMethod(self, method, name=None, docstring=None):
 
-        if method.ignored:
+        if method.ignored or method.docsIgnored:
             return
 
         name = name or self.getName(method)[0]
@@ -3301,7 +3301,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
         assert isinstance(pm, extractors.PyMethodDef)
 
-        if pm.ignored:
+        if pm.ignored or pm.docsIgnored:
             return
 
         if self.IsFullyDeprecated(pm):
@@ -3347,7 +3347,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
     def generateMemberVar(self, memberVar):
         assert isinstance(memberVar, extractors.MemberVarDef)
-        if memberVar.ignored or memberVar.protection != 'public':
+        if memberVar.ignored or memberVar.docsIgnored or memberVar.protection != 'public':
             return
 
         c = self.current_class
@@ -3392,7 +3392,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
 
     def generateProperty(self, prop):
 
-        if prop.ignored:
+        if prop.ignored or prop.docsIgnored:
             return
 
         c = self.current_class
@@ -3422,7 +3422,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
     def generateEnum(self, enum):
 
         assert isinstance(enum, extractors.EnumDef)
-        if enum.ignored:
+        if enum.ignored or enum.docsIgnored:
             return
 
         docstring = XMLDocString(enum)
@@ -3435,7 +3435,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
     # -----------------------------------------------------------------------
     def generateGlobalVar(self, globalVar):
         assert isinstance(globalVar, extractors.GlobalVarDef)
-        if globalVar.ignored:
+        if globalVar.ignored or globalVar.docsIgnored:
             return
         name = globalVar.pyName or globalVar.name
         if guessTypeInt(globalVar):
@@ -3456,7 +3456,7 @@ class SphinxGenerator(generators.DocsGeneratorBase):
     def generateTypedef(self, typedef):
         assert isinstance(typedef, extractors.TypedefDef)
 
-        if typedef.ignored or not typedef.docAsClass:
+        if typedef.ignored or typedef.docsIgnored or not typedef.docAsClass:
             return
 
         name = typedef.pyName if typedef.pyName else removeWxPrefix(typedef.name)

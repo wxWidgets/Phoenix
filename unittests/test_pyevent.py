@@ -60,6 +60,16 @@ class PyEvents(unittest.TestCase):
             self.assertTrue(evt1.attr == evt2.attr)
 
 
+    def test_CppCloneDerived(self):
+        # test what happens when Clone is called from C++
+        if hasattr(wx, 'testCppClone'):
+            evt1 = MyPyEvent()
+            evt1.attr = 'testCppClone'
+            evt2 = wx.testCppClone(evt1)
+            self.assertTrue(evt1.attr == evt2.attr)
+            self.assertTrue(isinstance(evt2, MyPyEvent))
+
+
     @unittest.skip('not testing refcounts for now, needs checking...')
     def test_CppCloneRefCounts(self):
         # Since we're doing some funky stuff under the covers with Clone, make

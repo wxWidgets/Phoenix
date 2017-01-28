@@ -38,14 +38,16 @@ class BaseDef(object):
     """
     nameTag = 'name'
     def __init__(self, element=None):
-        self.name = ''          # name of the item
-        self.pyName = ''        # rename to this name
-        self.ignored = False    # skip this item
-        self.briefDoc = ''      # either a string or a single para Element
-        self.detailedDoc = []   # collection of para Elements
+        self.name = ''           # name of the item
+        self.pyName = ''         # rename to this name
+        self.ignored = False     # skip this item
+        self.docsIgnored = False # skip this item when generating docs
+        self.briefDoc = ''       # either a string or a single para Element
+        self.detailedDoc = []    # collection of para Elements
 
         # The items list is used by some subclasses to collect items that are
-        # part of that item, like methods of a ClassDef, etc.
+        # part of that item, like methods of a ClassDef, parameters in a
+        # MethodDef, etc.
         self.items = []
 
         if element is not None:
