@@ -11,6 +11,8 @@ import etgtools
 import etgtools.tweaker_tools as tools
 from etgtools.extractors import ClassDef, MethodDef, ParamDef
 
+import copy
+
 PACKAGE   = "wx"
 MODULE    = "_core"
 NAME      = "pyevent"   # Base name of the file to generate to for this script
@@ -73,25 +75,14 @@ def run():
             Through the magic of Python this implementation should work for
             this and all derived classes.""",
         body="""\
-            # Create a new instance
-            import copy
-            clone = copy.copy(self)
-            # and then invoke the C++ copy constructor to copy the C++ bits too.
+            # Create a new instance of the same type as this instance and
+            # then invoke the C++ copy constructor to copy the C++ parts and
+            # any custom attributes.
+            clone = wx.PyEvent.__new__(self.__class__)
             wx.PyEvent.__init__(clone, self)
             return clone
             """)
 
-    cls.addPyMethod("__setstate__", "(self, state)",
-        doc = """Sets internal state of PyEvent object. This allows PyEvent to be reconstructed as part of the pickling process""",
-        body = """\
-            self.__dict__.update(state)
-            """)
-
-    cls.addPyMethod("__getstate__", "(self)",
-        doc = "Returns this object's internal state. This is used as part of the pickling process",
-        body = """\
-            return self.__dict__
-            """)
 
     module.addItem(cls)
     cls.addCppCode("IMPLEMENT_DYNAMIC_CLASS(wxPyEvent, wxEvent);")
@@ -142,25 +133,14 @@ def run():
             Through the magic of Python this implementation should work for
             this and all derived classes.""",
         body="""\
-            # Create a new instance
-            import copy
-            clone = copy.copy(self)
-            # and then invoke the C++ copy constructor to copy the C++ bits too.
+            # Create a new instance of the same type as this instance and
+            # then invoke the C++ copy constructor to copy the C++ parts and
+            # any custom attributes.
+            clone = wx.PyCommandEvent.__new__(self.__class__)
             wx.PyCommandEvent.__init__(clone, self)
             return clone
             """)
 
-    cls.addPyMethod("__setstate__", "(self, state)",
-        doc = """Sets internal state of PyEvent object. This allows PyEvent to be reconstructed as part of the pickling process""",
-        body = """\
-            self.__dict__.update(state)
-            """)
-
-    cls.addPyMethod("__getstate__", "(self)",
-        doc = "Returns this object's internal state. This is used as part of the pickling process",
-        body = """\
-            return self.__dict__
-            """)
 
     module.addItem(cls)
     cls.addCppCode("IMPLEMENT_DYNAMIC_CLASS(wxPyCommandEvent, wxCommandEvent);")
