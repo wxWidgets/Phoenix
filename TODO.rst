@@ -194,3 +194,7 @@ Other Dev Stuff
 
   * The Masked controls modules and demos need some help with Py3 compatibility.
 
+  * Migrate from six to python-future? It seems more comprehensive and would
+    require less conditionals in the code, since you mostly just write
+    py3-compatible code and py2 compatibility is handled in python-future.
+
