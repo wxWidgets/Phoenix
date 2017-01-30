@@ -260,6 +260,7 @@ def run():
                   #'wxDataViewChoiceByIndexRenderer',
                   'wxDataViewDateRenderer',
                   'wxDataViewBitmapRenderer',
+                  'wxDataViewCustomRenderer',
                   ]:
         c = module.find(name)
         c.addAutoProperties()
@@ -279,6 +280,7 @@ def run():
     module.addPyCode("""\
         PyDataViewCustomRenderer = wx.deprecated(DataViewCustomRenderer,
                                                  "Use DataViewCustomRenderer instead")""")
+
 
     # The SpinRenderer has a few more pure virtuals that need to be declared
     # since it derives from DataViewCustomRenderer
