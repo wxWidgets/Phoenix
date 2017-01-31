@@ -52,16 +52,17 @@ def run():
     c.addPrivateCopyCtor()
     c.find('wxBufferedPaintDC').findOverload('wxBitmap').find('buffer').keepReference = True
 
-    # wxAutoBufferedPaintDC is documented as a class deriving from
-    # wxBufferedPaintDC, but on some platforms it is just a typedef of
-    # wxPaintDC. This causes compilation errors when the code tries to
-    # static_cast<> to one of the buffered DCs, so we'll change the base class
-    # here to more truly adhere to reality.
-    c = module.find('wxAutoBufferedPaintDC')
-    c.mustHaveApp()
 
+    # wxAutoBufferedPaintDC is documented as a class deriving from
+    # wxBufferedPaintDC, but on some platforms it derived directly from
+    # wxPaintDC. This causes compilation errors when the code tries to
+    # static_cast<> to a possibly incompatible base class, so we'll take a LCD
+    # approach and pretend that it derives directly from wxDC instead, in
+    # order to present a hierarchy that is valid and works on all platforms.
+    c = module.find('wxAutoBufferedPaintDC')
+    c.bases = ['wxDC']
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
-    c.bases = ['wxPaintDC']
 
 
     module.find('wxAutoBufferedPaintDCFactory').factory = True
