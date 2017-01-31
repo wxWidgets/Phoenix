@@ -260,7 +260,6 @@ def run():
                   #'wxDataViewChoiceByIndexRenderer',
                   'wxDataViewDateRenderer',
                   'wxDataViewBitmapRenderer',
-                  'wxDataViewCustomRenderer',
                   ]:
         c = module.find(name)
         c.addAutoProperties()
