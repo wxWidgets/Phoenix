@@ -237,17 +237,29 @@ class image_Tests(wtc.WidgetTestCase):
         img = wx.Image(100,100).Rescale(75,75).Resize((100,100), (0,0), 40,60,80)
         self.assertTrue(img.IsOk())
 
-    def test_imageHandlerDerivation(self):
-        class TestImageHandler(wx.ImageHandler):
-            def __init__(self):
-                wx.ImageHandler.__init__(self)
-        imghndlr = TestImageHandler()
 
     def test_imageOtherStuff(self):
         img = wx.Image(pngFile)
         self.assertTrue(img.IsOk())
         r, g, b = img.FindFirstUnusedColour()
         r, g, b = img.GetOrFindMaskColour()
+
+
+    def test_imageHandlerDerivation(self):
+        class TestImageHandler(wx.ImageHandler):
+            def __init__(self):
+                wx.ImageHandler.__init__(self)
+                self.Name = "Foo File"
+                self.Extension = "foo"
+                self.MimeType = 'image/foo'
+                self.Type = wx.BITMAP_TYPE_JPEG
+
+            def DoCanRead(self, stream):
+                return True
+
+        imghndlr = TestImageHandler()
+        wx.Image.AddHandler(imghndlr)
+
 
 #---------------------------------------------------------------------------
 
