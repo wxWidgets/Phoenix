@@ -2,7 +2,7 @@ arch:
   default:
     freeglut: freeglut
     glu: glu
-    gstreamer: gstreamer0.10-base-plugins
+    gstreamer: gstreamer
     gtk2: gtk2
     gtk3: gtk3
     notify:
