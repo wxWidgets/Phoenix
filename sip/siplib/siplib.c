@@ -433,6 +433,7 @@ static int sip_api_get_buffer_info(PyObject *obj, sipBufferInfoDef *bi);
 static void sip_api_release_buffer_info(sipBufferInfoDef *bi);
 static PyObject *sip_api_get_user_object(const sipSimpleWrapper *sw);
 static void sip_api_set_user_object(sipSimpleWrapper *sw, PyObject *user);
+static int sip_api_enable_gc(int enable);
 
 
 /*
@@ -585,6 +586,10 @@ static const sipAPIDef sip_api = {
     sip_api_find_class,
     sip_api_map_int_to_class,
     sip_api_map_string_to_class,
+    /*
+     * The following are part of the public API.
+     */
+    sip_api_enable_gc,
 };
 
 
@@ -9392,7 +9397,7 @@ static void sip_api_call_hook(const char *hookname)
         return;
  
     /* Call the hook and discard any result. */
-    res = PyObject_CallObject(hook, NULL);
+    res = PyObject_Call(hook, empty_tuple, NULL);
  
     Py_XDECREF(res);
 }
@@ -13457,4 +13462,79 @@ static int importExceptions(sipExportedModuleDef *client,
     }
 
     return 0;
+}
+
+
+/*
+ * Enable or disable the garbage collector.  Return the previous state or -1 if
+ * there was an error.
+ */
+static int sip_api_enable_gc(int enable)
+{
+    static PyObject *enable_func = NULL, *disable_func, *isenabled_func;
+    PyObject *result;
+    int was_enabled;
+
+    /*
+     * This may be -ve in the highly unusual event that a previous call failed.
+     */
+    if (enable < 0)
+        return -1;
+
+    /* Get the functions if we haven't already got them. */
+    if (enable == NULL)
+    {
+        PyObject *gc_module;
+
+        if ((gc_module = PyImport_ImportModule("gc")) == NULL)
+            return -1;
+
+        if ((enable_func = PyObject_GetAttrString(gc_module, "enable")) == NULL)
+        {
+            Py_DECREF(gc_module);
+            return -1;
+        }
+
+        if ((disable_func = PyObject_GetAttrString(gc_module, "disable")) == NULL)
+        {
+            Py_DECREF(enable_func);
+            Py_DECREF(gc_module);
+            return -1;
+        }
+
+        if ((isenabled_func = PyObject_GetAttrString(gc_module, "isenabled")) == NULL)
+        {
+            Py_DECREF(disable_func);
+            Py_DECREF(enable_func);
+            Py_DECREF(gc_module);
+            return -1;
+        }
+
+        Py_DECREF(gc_module);
+    }
+
+    /* Get the current state. */
+    if ((result = PyObject_Call(isenabled_func, empty_tuple, NULL)) == NULL)
+        return -1;
+
+    was_enabled = PyObject_IsTrue(result);
+    Py_DECREF(result);
+
+    if (was_enabled < 0)
+        return -1;
+
+    /* See if the state needs changing. */
+    if (!was_enabled != !enable)
+    {
+        /* Enable or disable as required. */
+        result = PyObject_Call((enable ? enable_func : disable_func),
+                empty_tuple, NULL);
+
+        Py_XDECREF(result);
+
+        if (result != Py_None)
+            return -1;
+    }
+
+    return was_enabled;
 }

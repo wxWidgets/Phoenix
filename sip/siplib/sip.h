@@ -1,7 +1,7 @@
 /*
  * The SIP module interface.
  *
- * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041301
-#define SIP_VERSION_STR     "4.19.1.dev1701292222"
+#define SIP_VERSION         0x04ffff
+#define SIP_VERSION_STR     "4.255.255"
 
 
 /*
@@ -67,6 +67,8 @@ extern "C" {
  * minor number set * to 0.
  *
  * History:
+ *
+ * 12.1 Added sip_api_enable_gc() to the public API.
  *
  * 12.0 Added SIP_TYPE_LIMITED_API to the sipTypeDef flags.
  *      Added sip_api_py_type_dict() and sip_api_py_type_name() to the public
@@ -244,7 +246,7 @@ extern "C" {
  * 0.0  Original version.
  */
 #define SIP_API_MAJOR_NR    12
-#define SIP_API_MINOR_NR    0
+#define SIP_API_MINOR_NR    1
 
 
 /* The name of the sip module. */
@@ -1801,6 +1803,11 @@ typedef struct _sipAPIDef {
             const sipIntTypeClassMap *map, int maplen);
     sipWrapperType *(*api_map_string_to_class)(const char *typeString,
             const sipStringTypeClassMap *map, int maplen);
+
+    /*
+     * The following are part of the public API.
+     */
+    int (*api_enable_gc)(int enable);
 } sipAPIDef;
 
 
