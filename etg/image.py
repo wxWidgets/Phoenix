@@ -564,7 +564,6 @@ def run():
 
     #-------------------------------------------------------
     c = module.find('wxImageHandler')
-    c.abstract = True
     c.addPrivateCopyCtor()
     c.find('GetLibraryVersionInfo').ignore()
 
