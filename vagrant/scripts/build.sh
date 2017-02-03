@@ -45,7 +45,7 @@ function do_build {
     rm -rf ~/wxPython_Phoenix-*
 
     # setup
-    echo "**** do_build $TAG $FLAG ****"
+    echo "**** do_build $VENV $TAG $FLAG ****"
     echo "Using Python from VENV $VENV"
     ORIG_PATH=$PATH
     export PATH=$VENV/bin:$PATH
