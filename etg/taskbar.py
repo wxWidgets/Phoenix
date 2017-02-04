@@ -53,6 +53,7 @@ def run():
 
 
     c = module.find('wxTaskBarIcon')
+    c.mustHaveApp()
     method = c.find('CreatePopupMenu')
     method.ignore(False)
     method.transfer = True

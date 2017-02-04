@@ -34,6 +34,7 @@ def run():
 
     c = module.find('wxPrinterDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

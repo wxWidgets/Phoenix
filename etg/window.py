@@ -376,6 +376,10 @@ def run():
 
     module.find('wxFindWindowAtPointer.pt').out = True
 
+    module.find('wxFindWindowAtPointer').mustHaveApp()
+    module.find('wxGetActiveWindow').mustHaveApp()
+    module.find('wxGetTopLevelParent').mustHaveApp()
+
 
     module.addCppFunction('wxWindow*', 'FindWindowById', '(long id, const wxWindow* parent=NULL)',
         doc="""\

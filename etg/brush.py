@@ -35,6 +35,11 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
 
+    # Set mustHaveApp on all ctors except the default ctor
+    for ctor in c.find('wxBrush').all():
+        if ctor.isCtor and ctor.argsString != '()':
+            ctor.mustHaveApp()
+
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();
         """)

@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxPostScriptDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

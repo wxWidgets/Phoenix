@@ -86,6 +86,19 @@ def run():
                 func.ignore()
 
 
+    for c in module.find('wxGetSingleChoiceIndex').all():
+        c.mustHaveApp()
+
+    for c in module.find('wxGetSingleChoice').all():
+        c.mustHaveApp()
+
+    for c in module.find('wxGetSingleChoiceData').all():
+        c.mustHaveApp()
+
+
+    #c = module.find('wxGetSingleChoiceIndex')
+    #c.mustHaveApp()
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -2,7 +2,7 @@
  * The SIP library code that implements the interface to the optional module
  * supplied Qt support.
  *
- * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -22,7 +22,6 @@
 #include <assert.h>
 #include <string.h>
 
-#include "sip.h"
 #include "sipint.h"
 
 
@@ -110,7 +109,7 @@ PyObject *sip_api_invoke_slot_ex(const sipSlot *slot, PyObject *sigargs,
     /* Keep some compilers quiet. */
     oxtype = oxvalue = oxtb = NULL;
 
-    /* Fan out Qt signals.  (Only PyQt3 will do this.) */
+    /* Fan out Qt signals.  (Only PyQt3 would do this.) */
     if (slot->name != NULL && slot->name[0] != '\0')
     {
         assert(sipQtSupport->qt_emit_signal);
@@ -466,7 +465,7 @@ PyObject *sip_api_connect_rx(PyObject *txObj, const char *sig, PyObject *rxObj,
         return PyBool_FromLong(res);
     }
 
-    /* Handle Python signals.  Only PyQt3 will get this far. */
+    /* Handle Python signals.  Only PyQt3 would get this far. */
     assert(sipQtSupport->qt_connect_py_signal);
 
     if (sipQtSupport->qt_connect_py_signal(txObj, sig, rxObj, slot) < 0)
@@ -519,7 +518,7 @@ PyObject *sip_api_disconnect_rx(PyObject *txObj,const char *sig,
         return PyBool_FromLong(res);
     }
 
-    /* Handle Python signals.  Only PyQt3 will get this far. */
+    /* Handle Python signals.  Only PyQt3 would get this far. */
     assert(sipQtSupport->qt_disconnect_py_signal);
 
     sipQtSupport->qt_disconnect_py_signal(txObj, sig, rxObj, slot);

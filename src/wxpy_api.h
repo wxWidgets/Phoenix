@@ -110,7 +110,7 @@ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) 
 }
 
 
-// Macros to work around differences in the Python 3 API
+// Macros to work around some of the differences in the Python 3 API
 #if PY_MAJOR_VERSION >= 3
     #define wxPyInt_Check            PyLong_Check
     #define wxPyInt_AsLong           PyLong_AsLong
@@ -169,6 +169,7 @@ struct wxPyAPI {
     bool          (*p_wxPyWrappedPtr_TypeCheck)(PyObject* obj, const wxString& className);
     wxVariant     (*p_wxVariant_in_helper)(PyObject* obj);
     PyObject*     (*p_wxVariant_out_helper)(const wxVariant& value);
+    bool          (*p_wxPyCheckForApp)();
     // Always add new items here at the end.
 };
 
@@ -246,6 +247,9 @@ inline wxVariant wxVariant_in_helper(PyObject* obj)
 inline PyObject* wxVariant_out_helper(const wxVariant& value)
     { return wxPyGetAPIPtr()->p_wxVariant_out_helper(value); }
 
+
+inline bool wxPyCheckForApp()
+    { return wxPyGetAPIPtr()->p_wxPyCheckForApp(); }
 
 
 //--------------------------------------------------------------------------

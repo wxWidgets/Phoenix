@@ -37,8 +37,12 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    c = module.find('wxMask')
+    c.mustHaveApp()
+
     c = module.find('wxBitmap')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     tools.removeVirtuals(c)
 

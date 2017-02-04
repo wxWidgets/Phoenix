@@ -535,6 +535,8 @@ def run():
             item.ignore()
 
 
+    module.find('wxWakeUpIdle').mustHaveApp()
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

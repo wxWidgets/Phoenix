@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxToolTip')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     # TODO: This is MSW only
     c.find('SetMaxWidth').setCppCode("""\

@@ -32,7 +32,7 @@ def run():
 
     c = module.find('wxIconBundle')
     assert isinstance(c, etgtools.ClassDef)
-
+    c.mustHaveApp()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

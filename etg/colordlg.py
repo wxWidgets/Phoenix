@@ -39,6 +39,11 @@ def run():
     tools.fixTopLevelWindowClass(c)
 
 
+    c = module.find('wxGetColourFromUser')
+    c.mustHaveApp()
+
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

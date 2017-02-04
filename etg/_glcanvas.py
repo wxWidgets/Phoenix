@@ -63,6 +63,7 @@ def run():
 
     c = module.find('wxGLContext')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
 

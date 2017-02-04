@@ -41,6 +41,11 @@ def run():
     # there are two of these, ignore one of them
     c.find('GetFontData').ignore()
 
+
+    c = module.find('wxGetFontFromUser')
+    c.mustHaveApp()
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

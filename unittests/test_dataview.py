@@ -4,6 +4,7 @@ import wx
 import six
 import wx.dataview as dv
 import os
+import sys
 
 pngFile = os.path.join(os.path.dirname(__file__), 'smile.png')
 
@@ -43,8 +44,7 @@ class dataview_Tests(wtc.WidgetTestCase):
         self.assertTrue(int(dvi2.ID) == 222)
 
     def test_dataviewItem7(self):
-        # max integer size on platforms where long is 64-bit
-        n = 2**63 - 1
+        n = sys.maxsize
         if six.PY3:
             assert type(n) is int
         else:

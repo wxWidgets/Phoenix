@@ -35,6 +35,7 @@ def run():
 
     c = module.find('wxComboPopup')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
 
     c = module.find('wxComboCtrl')

@@ -1,7 +1,7 @@
 /*
  * This file defines the SIP library internal interfaces.
  *
- * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -19,6 +19,11 @@
 
 #ifndef _SIPINT_H
 #define _SIPINT_H
+
+
+#include <Python.h>
+
+#include "sip.h"
 
 
 #ifdef __cplusplus

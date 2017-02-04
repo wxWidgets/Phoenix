@@ -33,6 +33,7 @@ def run():
     
     c = module.find('wxBusyInfo')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
     # context manager methods

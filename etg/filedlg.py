@@ -69,6 +69,16 @@ def run():
 
     tools.fixTopLevelWindowClass(c)
 
+
+    for funcname in ['wxFileSelector',
+                     'wxFileSelectorEx',
+                     'wxLoadFileSelector',
+                     'wxSaveFileSelector',
+                     ]:
+        c = module.find(funcname)
+        c.mustHaveApp()
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

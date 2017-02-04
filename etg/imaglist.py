@@ -36,6 +36,7 @@ def run():
     c.addPrivateCopyCtor()
     c.addPrivateAssignOp()
     tools.removeVirtuals(c)
+    c.mustHaveApp()
 
     c.find('GetSize').type = 'void'
     c.find('GetSize.width').out = True

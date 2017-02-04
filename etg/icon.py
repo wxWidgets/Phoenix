@@ -33,6 +33,7 @@ def run():
     c = module.find('wxIcon')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+    c.mustHaveApp()
 
     c.find('wxIcon').findOverload('*bits').ignore()
     c.find('wxIcon').findOverload('bits[]').ignore()

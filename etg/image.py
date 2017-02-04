@@ -51,6 +51,7 @@ def run():
     c.find('wxImage').findOverload('int width, int height, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
     c.find('wxImage').findOverload('const wxSize &sz, unsigned char *data, unsigned char *alpha, bool static_data').ignore()
 
+
     c.addCppCtor_sip('(int width, int height, wxPyBuffer* data)',
         doc="Creates an image from RGB data in memory.",
         body="""\
@@ -547,7 +548,7 @@ def run():
 
     #-------------------------------------------------------
     c = module.find('wxImageHistogram')
-    c.bases = ['wxObject']
+    c.bases = [] # wxImageHistogramBase doesn't actually exist
     setParamsPyInt('MakeKey')
     c.find('FindFirstUnusedColour').type = 'void'
     c.find('FindFirstUnusedColour.r').pyInt = True

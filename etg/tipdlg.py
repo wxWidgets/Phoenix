@@ -34,6 +34,13 @@ def run():
     module.addHeaderCode('#include <wx/tipdlg.h>')
     module.find('wxCreateFileTipProvider').factory = True
 
+    c = module.find('wxCreateFileTipProvider')
+    c.mustHaveApp()
+
+    c = module.find('wxShowTip')
+    c.mustHaveApp()
+
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)

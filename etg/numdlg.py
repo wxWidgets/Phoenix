@@ -1,9 +1,9 @@
 #---------------------------------------------------------------------------
-# Name:        etg/renderer.py
+# Name:        etg/numdlg.py
 # Author:      Robin Dunn
 #
-# Created:     27-Jun-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Created:     21-Jan-2017
+# Copyright:   (c) 2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -12,16 +12,13 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"
 MODULE    = "_core"
-NAME      = "renderer"   # Base name of the file to generate to for this script
+NAME      = "numdlg"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ "wxSplitterRenderParams",
-           "wxHeaderButtonParams",
-           "wxRendererNative",
-           "wxDelegateRendererNative",
-           "wxRendererVersion",
+ITEMS  = [ 'numdlg_8h.xml',
+
            ]
 
 #---------------------------------------------------------------------------
@@ -35,27 +32,10 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxRendererNative')
-    assert isinstance(c, etgtools.ClassDef)
+    module.addHeaderCode('#include <wx/numdlg.h>')
+
+    c = module.find('wxGetNumberFromUser')
     c.mustHaveApp()
-    c.addPrivateCopyCtor()
-
-
-    #virtual void DrawTitleBarBitmap(wxWindow *win,
-    #                                wxDC& dc,
-    #                                const wxRect& rect,
-    #                                wxTitleBarButton button,
-    #                                int flags = 0) = 0;
-    c.find('DrawTitleBarBitmap').setCppCode("""\
-    #ifdef wxHAS_DRAW_TITLE_BAR_BITMAP
-        self->DrawTitleBarBitmap(win, *dc, *rect, button, flags);
-    #endif
-    """)
-
-
-    c = module.find('wxDelegateRendererNative')
-    c.mustHaveApp()
-    c.addPrivateCopyCtor()
 
 
     #-----------------------------------------------------------------

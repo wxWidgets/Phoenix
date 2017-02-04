@@ -240,13 +240,22 @@ def run():
     c.addAutoProperties()
     c.find('GetView').ignore(False)
 
-
     # Change variant getters to return the value
     for name, sig in [
         ('GetValue',               'bool (wxDVCVariant& value)'),
         ('GetValueFromEditorCtrl', 'bool (wxWindow * editor, wxDVCVariant& value)'),
         ]:
         _fixupBoolGetters(c.find(name), sig)
+
+
+    c = module.find('wxDataViewCustomRenderer')
+    _fixupBoolGetters(c.find('GetValueFromEditorCtrl'),
+                      'bool (wxWindow * editor, wxDVCVariant& value)')
+    c.find('GetTextExtent').ignore(False)
+
+    module.addPyCode("""\
+        PyDataViewCustomRenderer = wx.deprecated(DataViewCustomRenderer,
+                                                 "Use DataViewCustomRenderer instead")""")
 
 
     # Add the pure virtuals since there are undocumented implementations of
@@ -271,16 +280,7 @@ def run():
             """))
 
 
-    c = module.find('wxDataViewCustomRenderer')
-    _fixupBoolGetters(c.find('GetValueFromEditorCtrl'),
-                      'bool (wxWindow * editor, wxDVCVariant& value)')
-    c.find('GetTextExtent').ignore(False)
-
-    module.addPyCode("""\
-        PyDataViewCustomRenderer = wx.deprecated(DataViewCustomRenderer,
-                                                 "Use DataViewCustomRenderer instead")""")
-
-    # The SpinRenderer has a few more pure virtuals that need to be declared
+    # The SpinRenderer has a few additional pure virtuals that need to be declared
     # since it derives from DataViewCustomRenderer
     c = module.find('wxDataViewSpinRenderer')
     c.addItem(etgtools.WigCode("""\

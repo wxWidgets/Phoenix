@@ -36,6 +36,7 @@ def run():
 
     c = module.find('wxSound')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
     c.addPublic()
 

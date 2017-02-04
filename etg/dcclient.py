@@ -36,12 +36,15 @@ def run():
 
     c = module.find('wxPaintDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
     c = module.find('wxClientDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
     c = module.find('wxWindowDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

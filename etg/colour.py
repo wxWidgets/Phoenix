@@ -67,6 +67,10 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
 
+    # Just set mustHaveApp for the copy ctor as it may need to use the colour
+    # database to look up color names.
+    c.find('wxColour').findOverload('const wxColour &').mustHaveApp()
+
     # Hide the string ctor so our typemap will be invoked for the copy ctor instead.
     c.find('wxColour').findOverload('wxString').ignore()
 
