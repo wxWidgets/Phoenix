@@ -110,7 +110,7 @@ inline PyObject* wxPyMakeBuffer(void* ptr, Py_ssize_t len, bool readOnly=false) 
 }
 
 
-// Macros to work around some differences in the Python 3 API
+// Macros to work around some of the differences in the Python 3 API
 #if PY_MAJOR_VERSION >= 3
     #define wxPyInt_Check            PyLong_Check
     #define wxPyInt_AsLong           PyLong_AsLong
