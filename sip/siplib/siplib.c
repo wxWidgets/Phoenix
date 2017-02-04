@@ -9914,10 +9914,10 @@ static int sipWrapperType_init(sipWrapperType *self, PyObject *args,
          */
         if (base != NULL && PyObject_TypeCheck((PyObject *)base, (PyTypeObject *)&sipWrapperType_Type))
         {
-            self->wt_td = ((sipWrapperType *)base)->wt_td;
-
             /* Call any new type handler. */
             sipNewUserTypeFunc new_user_type_handler;
+
+            self->wt_td = ((sipWrapperType *)base)->wt_td;
 
             new_user_type_handler = find_new_user_type_handler(
                     (sipWrapperType *)sipTypeAsPyTypeObject(self->wt_td));
