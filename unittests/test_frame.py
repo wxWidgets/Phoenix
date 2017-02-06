@@ -49,7 +49,7 @@ class frame_Tests(wtc.WidgetTestCase):
 
         f.Close()
 
-
+    @unittest.skip("Omitting test for now, requires full App.")
     def test_frameRestore(self):
         f = wx.Frame(self.frame, title="Title", pos=(50,50), size=(100,100))
         f.Show()
