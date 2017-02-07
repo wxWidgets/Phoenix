@@ -37,10 +37,15 @@ def run():
     module.addHeaderCode('#include <wx/utils.h>')
     module.addHeaderCode('#include <wx/power.h>')
 
+
     c = module.find('wxWindowDisabler')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
     c.addPrivateCopyCtor()
+    # add context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
+
 
     module.find('wxQsort').ignore()
     module.find('wxGetEmailAddress').findOverload('buf').ignore()
