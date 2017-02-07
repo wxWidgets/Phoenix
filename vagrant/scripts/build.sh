@@ -69,7 +69,7 @@ function do_build {
 
     # copy the results back to the host's shared dist folder
     WXPYVER=$(python -c "import buildtools; buildtools.printVersion()")
-    DEST=~/dist/linux/$WXPYVER/$NAME/$TAG
+    DEST=~/dist/linux/$TAG/$NAME
     mkdir -p $DEST
     mv dist/*.whl $DEST
 

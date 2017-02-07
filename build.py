@@ -715,14 +715,17 @@ def uploadTree(srcPath, destPath, options, keep=5):
     allDirs = allDirs.strip().split('\n')
     allDirs.sort()
 
-    # Leave the last keep number of builds, including this new one, on the server.
-    # Delete the rest.
-    rmDirs = allDirs[:-keep]
-    for rmDir in rmDirs:
-        rmDir = opj(uploadDir, rmDir)
-        msg("Cleaning old build {}".format(rmDir))
-        cmd = 'ssh {} "rm -r {}"'.format(host, rmDir)
-        runcmd(cmd)
+    # TODO: Change this to clean out just the leaf folders rather than
+    # removing whole trees.
+
+    # # Leave the last keep number of builds, including this new one, on the server.
+    # # Delete the rest.
+    # rmDirs = allDirs[:-keep]
+    # for rmDir in rmDirs:
+    #     rmDir = opj(uploadDir, rmDir)
+    #     msg("Cleaning old build {}".format(rmDir))
+    #     cmd = 'ssh {} "rm -r {}"'.format(host, rmDir)
+    #     runcmd(cmd)
 
     msg("Upload complete!")
 
