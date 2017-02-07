@@ -1,8 +1,8 @@
 import unittest
-from unittests import wtc
+from unittests import wtc, atc
 import wx
 import os
-
+import sys
 #---------------------------------------------------------------------------
 
 class frame_Tests(wtc.WidgetTestCase):
@@ -60,7 +60,40 @@ class frame_Tests(wtc.WidgetTestCase):
         self.myYield()
         assert not f.IsMaximized()
         f.Close()
+#---------------------------------------------------------------------------
 
+# this is the frame that is used for testing Restore functionality
+class FrameRestoreTester(atc.TestFrame):
+    def __init__(self):
+        atc.TestFrame.__init__(self)
+        self.SetLabel("Frame Restore Test")
+
+        # enforce a strict schedule
+        self.schedule = ("iconize", "restore", "maximize", "restore")
+
+    def test_iconize(self):
+        self.Iconize()
+        wx.CallLater(250, self.Ensure, "Iconized")
+
+    def test_maximize(self):
+        self.Maximize()
+        wx.CallLater(250, self.Ensure, "Maximized")
+
+    def test_restore(self):
+        self.Restore()
+        wx.CallLater(250, self.Ensure, "Restored")
+
+    def Ensure(self, ensurable):
+        if ensurable == "Iconized":
+            self.TestDone(self.IsIconized())
+        elif ensurable == "Maximized":
+            self.TestDone(self.IsMaximized())
+        elif ensurable == "Restored":
+            self.TestDone(not self.IsIconized() and not self.IsMaximized())
+            
+
+tc = atc.ApplicationTestCase
+tc._frame = FrameRestoreTester
 
 #---------------------------------------------------------------------------
 
