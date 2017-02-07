@@ -685,7 +685,7 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     msg("Upload complete!")
 
 
-def uploadTree(srcPath, destPath, options, keep=5):
+def uploadTree(srcPath, destPath, options, keep=30):
     """
     Similar to the above but uploads a tree of files.
     """
@@ -709,25 +709,12 @@ def uploadTree(srcPath, destPath, options, keep=5):
     cmd = 'ssh {} "chmod -R a+r {}"'.format(host, uploadDir)
     runcmd(cmd)
 
-    # get the list of all siblings of the tree just uploaded
-    cmd = 'ssh {} "cd {}; ls"'.format(host, uploadDir)
-    allDirs = runcmd(cmd, getOutput=True)
-    allDirs = allDirs.strip().split('\n')
-    allDirs.sort()
+    # Remove files that were last modified more than `keep` days ago
+    msg("Cleaning up old builds.")
+    cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
+    runcmd(cmd)
 
-    # TODO: Change this to clean out just the leaf folders rather than
-    # removing whole trees.
-
-    # # Leave the last keep number of builds, including this new one, on the server.
-    # # Delete the rest.
-    # rmDirs = allDirs[:-keep]
-    # for rmDir in rmDirs:
-    #     rmDir = opj(uploadDir, rmDir)
-    #     msg("Cleaning old build {}".format(rmDir))
-    #     cmd = 'ssh {} "rm -r {}"'.format(host, rmDir)
-    #     runcmd(cmd)
-
-    msg("Upload complete!")
+    msg("Tree upload and cleanup complete!")
 
 
 def checkCompiler(quiet=False):
