@@ -140,14 +140,6 @@ class TestWidget:
             # close peacefully
             self.Close()
 
-
-
-class TestFrame(wx.Frame, TestWidget):
-    def __init__(self):
-        wx.Frame.__init__(self, None, wx.NewId(), "Phoenix Application Test")
-        TestWidget.__init__(self)
-
-
 def CreateApp(frame):
     class TestApp(wx.App):
         def OnInit(self):
