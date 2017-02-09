@@ -78,6 +78,10 @@ class TestWidget:
         evt = TestEvent()
         wx.PostEvent(self, evt)
 
+    def OnWatchDog(self, evt):
+        # this handler is not used yet.
+        assert 0, "Watchdog failure."
+
     def OnTest(self, evt):
         # find test case and try it
         try:
@@ -156,13 +160,14 @@ def CreateFrame(widget):
 
             sizer = wx.BoxSizer()
             self.widget = widget(self)  # assumes need of parent.
-            sizer.add(self.widget, 1, wx.EXPAND)
+            sizer.Add(self.widget, 1, wx.EXPAND)
 
             self.SetSizer(sizer)
             sizer.Layout()
 
+    return BaseTestFrame
 
-def CreateATC(widget = TestFrame):
+def CreateATC(widget):
     # if widget is not instance of TestFrame, generate a quick frame
     # to house the widget
     assert issubclass(widget, TestWidget), "Testing requires the tested widget to derive from TestWidget for now"
