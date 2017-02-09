@@ -122,8 +122,13 @@ def run():
                         ParamDef(name='name', type='const wxString&', default='wxPanelNameStr'),
                         ]),
                     ]),
+            MethodDef(name='SetFocusIgnoringChildren', type='void', items=[],
+                briefDoc="""\
+                    In contrast to SetFocus() this will set the focus to the panel even if
+                    there are child windows in the panel. This is only rarely needed."""),
             ],
         )
+    tools.fixWindowClass(klass)
     module.insertItemAfter(td, klass)
 
 
