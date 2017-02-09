@@ -63,9 +63,10 @@ class frame_Tests(wtc.WidgetTestCase):
 #---------------------------------------------------------------------------
 
 # this is the frame that is used for testing Restore functionality
-class FrameRestoreTester(atc.TestFrame):
+class FrameRestoreTester(wx.Frame, atc.TestWidget):
     def __init__(self):
-        atc.TestFrame.__init__(self)
+        wx.Frame.__init__(self, None, wx.NewId(), "Frame Rstore Test")
+        atc.TestWidget.__init__(self)
         self.SetLabel("Frame Restore Test")
 
         # enforce a strict schedule
@@ -90,10 +91,9 @@ class FrameRestoreTester(atc.TestFrame):
             self.TestDone(self.IsMaximized())
         elif ensurable == "Restored":
             self.TestDone(not self.IsIconized() and not self.IsMaximized())
-            
 
-tc = atc.ApplicationTestCase
-tc._frame = FrameRestoreTester
+
+tc = atc.CreateATC(widget = FrameRestoreTester)
 
 #---------------------------------------------------------------------------
 

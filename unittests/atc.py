@@ -11,7 +11,7 @@
 # Benefits: Allows unittesting features that suffer from only synthesizing an active event loop.
 
 # TODO:
-#   Create a decorator method to identify methods that are fully self sufficient tests, so TestDone 
+#   Create a decorator method to identify methods that are fully self sufficient tests, so TestDone
 #       can be called implicitly
 #       On The other hand, its only truly useful to know if the test completes as part of the method
 #   A decorator for describing methods that are a part of a test sequence, but not the entire sequence
@@ -34,15 +34,9 @@ TestEvent, EVT_TEST = wx.lib.newevent.NewEvent()
 
 TestEvent.caseiter = 0
 
-class TestApplication(wx.App):
-    def OnInit(self):
-        f = ApplicationTestCase._frame()
-        f.Show(True)
-        return True
-
 """
 class TestWidget:
-    # provides some useful methods for use within test widgets. 
+    # provides some useful methods for use within test widgets.
     # it is recommended to derive test objects from this class in addtion to the
     # relevate wx class
 
@@ -53,9 +47,10 @@ class TestWidget:
     # should this class provide methods for event handling (forcing derivation from wx.EventHandler)?
 """
 
-class TestFrame(wx.Frame):
+class TestWidget:
     def __init__(self):
-        wx.Frame.__init__(self, None, wx.NewId(), "Phoenix Application Test")
+        assert isinstance(self, wx.EvtHandler), "Test widget needs to be an event handler"
+
         self.__timer = wx.Timer(self, wx.NewId())
 
         self.Bind(wx.EVT_TIMER, self.OnCommence, self.__timer)
@@ -63,9 +58,9 @@ class TestFrame(wx.Frame):
 
         self.__timer.StartOnce(500) # Wait for the application mainloop to start and commence testing.
                                     # while 500 milliseconds should be more than plenty, this is still
-                                    # clumsy and I don't like it. 
-                                    # Initially I had an initial TestEvent posted to be processed when 
-                                    # the mainloop was running, but this caused issues on some linux 
+                                    # clumsy and I don't like it.
+                                    # Initially I had an initial TestEvent posted to be processed when
+                                    # the mainloop was running, but this caused issues on some linux
                                     # distributions.
                                     # Ultimately I'd like to minimize as much waiting as feasibly possible
 
@@ -132,25 +127,72 @@ class TestFrame(wx.Frame):
         # in most test-failure scenarios you should use TestDone(False)
         if not expr:
             print(message, file = sys.stderr)
-            sys.exit(1)
+            raise Exception("Test Failure")
 
     def WrapUp(self):
         print("Results: %s" % "".join(self.__results))
-        
+
         if "F" in self.__results:
             print("Test(s) have failed", file = sys.stderr)
             sys.exit(1)
+
         else:
             # close peacefully
             self.Close()
 
-class ApplicationTestCase(unittest.TestCase):
-    _app = TestApplication
-    _frame = TestFrame
 
-    def test_application(self):
-        app = self._app()
-        app.MainLoop()
+
+class TestFrame(wx.Frame, TestWidget):
+    def __init__(self):
+        wx.Frame.__init__(self, None, wx.NewId(), "Phoenix Application Test")
+        TestWidget.__init__(self)
+
+
+def CreateApp(frame):
+    class TestApp(wx.App):
+        def OnInit(self):
+            f = frame()
+            f.Show(True)
+            return True
+    return TestApp
+
+def CreateFrame(widget):
+    # called when the test widget is not a frame.
+    class BaseTestFrame(wx.Frame):
+        def __init__(self):
+            wx.Frame.__init__(self, None, wx.NewId(), "%s Test Frame" % str(type(widget)))
+
+            sizer = wx.BoxSizer()
+            self.widget = widget(self)  # assumes need of parent.
+            sizer.add(self.widget, 1, wx.EXPAND)
+
+            self.SetSizer(sizer)
+            sizer.Layout()
+
+
+def CreateATC(widget = TestFrame):
+    # if widget is not instance of TestFrame, generate a quick frame
+    # to house the widget
+    assert issubclass(widget, TestWidget), "Testing requires the tested widget to derive from TestWidget for now"
+
+    tlw = None
+    if not issubclass(widget, wx.Frame):
+        # need to stick this widget in a frame
+        tlw = CreateFrame(widget)
+
+    else:
+        tlw = widget
+
+    app = CreateApp(tlw)
+    app.targetwidget = widget
+
+    class ApplicationTestCase(unittest.TestCase):
+        # generate test case wrappers?
+        def test_application(self):
+            a = app()
+            a.MainLoop()
+
+    return ApplicationTestCase
 
 def main():
     unittest.main()
