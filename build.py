@@ -426,6 +426,7 @@ def makeOptionParser():
         ("release_build",  (False, "Turn off some development options for a release build.")),
         ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
+        ("vagrant_vms",    ("all", "Comma separated list of VM names to use for the build_vagrant command. Defaults to \"all\"")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -1401,12 +1402,18 @@ def cmd_build_vagrant(options, args):
     # {phoenixDir}/dist, such as what is produced with cmd_sdist.
     cmdTimer = CommandTimer('bdist_vagrant')
     cfg = Config(noWxConfig=True)
-    VMs = [ 'centos-7',
-            'debian-8',
-            'fedora-24',
-            'ubuntu-14.04',
-            'ubuntu-16.04',
-            ]
+    if not options.vagrant_vms or options.vagrant_vms == 'all':
+        VMs = [ 'centos-7',
+                'debian-8',
+                'fedora-24',
+                'ubuntu-14.04',
+                'ubuntu-16.04',
+                ]
+    elif options.vagrant_vms == 'none':
+        VMs = [] # to skip building anything and just upload
+    else:
+        VMs = options.vagrant_vms.split(',')
+
     for vmName in VMs:
         vmDir = opj(phoenixDir(), 'vagrant', vmName)
         pwd = pushDir(vmDir)
