@@ -1424,9 +1424,10 @@ def cmd_build_vagrant(options, args):
         del pwd
 
     if options.upload:
-        src = opj(phoenixDir(), 'dist', 'linux', cfg.VERSION)
-        assert os.path.isdir(src)
-        uploadTree(src, 'linux', options)
+        for tag in ['gtk2', 'gtk3']:
+            src = opj(phoenixDir(), 'dist', 'linux', tag)
+            if os.path.isdir(src):
+                uploadTree(src, 'linux', options)
 
 
 
