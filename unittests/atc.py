@@ -142,7 +142,8 @@ class TestWidget:
 
         else:
             # close peacefully
-            self.Close()
+            for window in wx.GetTopLevelWindows():
+                window.Close()
 
 def CreateApp(frame):
     class TestApp(wx.App):
@@ -190,9 +191,6 @@ def CreateATC(widget):
             a.MainLoop()
 
     return ApplicationTestCase
-
-def main():
-    unittest.main()
 
 if __name__ == "__main__":
     main()
