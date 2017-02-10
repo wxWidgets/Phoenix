@@ -65,7 +65,7 @@ class frame_Tests(wtc.WidgetTestCase):
 # this is the frame that is used for testing Restore functionality
 class FrameRestoreTester(wx.Frame, atc.TestWidget):
     def __init__(self):
-        wx.Frame.__init__(self, None, wx.NewId(), "Frame Rstore Test")
+        wx.Frame.__init__(self, None, wx.NewId(), "Frame Restore Test")
         atc.TestWidget.__init__(self)
         self.SetLabel("Frame Restore Test")
 
