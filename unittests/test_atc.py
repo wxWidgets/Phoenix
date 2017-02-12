@@ -1,9 +1,6 @@
 from unittests import atc
 import wx
 import unittest
-import random
-
-random.seed()
 
 class PanelColorChangeTester(wx.Panel, atc.TestWidget):
     def __init__(self, parent):
@@ -20,8 +17,15 @@ class PanelColorChangeTester(wx.Panel, atc.TestWidget):
         print("Failing test")
         self.TestDone(False)
 
+    @atc.TestDependent
+    def test_abort(self):
+        print("Aborting test case")
+        raise AttributeError("Unbound attribute error")
+
+
 testcase = atc.CreateATC(PanelColorChangeTester)
 
 if __name__ == "__main__":
+    testcase.test_abort(testcase)
     unittest.main()
     

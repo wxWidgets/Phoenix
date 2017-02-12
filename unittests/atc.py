@@ -24,6 +24,7 @@
 
 __version__ = "0.0.1"
 
+import functools
 import os
 import sys
 import unittest
@@ -101,6 +102,16 @@ class TestWidget:
             # wx.GetApp().GetMainLoop().Exit(30)
             sys.exit(1)
 
+def TestDependent(func):
+    @functools.wraps(func)
+    def method(*args, **kwargs):
+        try:
+            func(*args, **kwargs)
+        except Exception as e:
+            print("Unbound exception caught in test procedure:\n%s\n%s" % (e.__class__, str(e)), file = sys.stderr)
+            # give full stack trace
+            args[0].TestDone(False)
+    return method
 
 def CreateApp(frame):
     class TestApp(wx.App):
@@ -164,5 +175,5 @@ def CreateATC(widget):
 
     return ApplicationTestCase
 
-if __name__ == "__main__":
-    pass
+
+
