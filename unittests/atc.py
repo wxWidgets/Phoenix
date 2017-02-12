@@ -63,6 +63,11 @@ class TestWidget:
                                     # the mainloop was running, but this caused issues on some linux
                                     # distributions.
                                     # Ultimately I'd like to minimize as much waiting as feasibly possible
+    
+    # this  only gets invoked if the test arget is a frame object, in which case the app can post events directly
+    # to the test target
+    def GetTestTarget(self):
+        return self
 
     def OnCommence(self, evt):
         assert wx.GetApp().IsMainLoopRunning(), "Timer ended before mainloop started" # see above comment regarding
@@ -76,81 +81,32 @@ class TestWidget:
 
         # start test sequence
         evt = TestEvent()
+        evt.case = wx.GetApp().case
         wx.PostEvent(self, evt)
 
-    def OnWatchDog(self, evt):
-        # this handler is not used yet.
-        assert 0, "Watchdog failure."
 
     def OnTest(self, evt):
-        # find test case and try it
-        try:
-            testname = self.schedule[TestEvent.caseiter]
-            TestEvent.caseiter += 1
-        except IndexError:
-            # well either some one made schedule some funky object
-            # or the end of the schedule has been reached.
-            # for now pretend its a good thing:
-            print("Reached end of schedule")
-            self.WrapUp()
-            return
+        testfunc = getattr(self, evt.case)
 
-        try:
-            testfunc = getattr(self, "test_%s" % testname)
-        except AttributeError:
-            print("Missing test method for: %s" % testname, file = sys.stderr)
-            sys.exit(1)
-
-        try:
-            print("Testing: %s" % testname)
-            testfunc()
-        except Exception as e:
-            import traceback
-            _, _, tb = sys.exc_info()
-            traceback.print_tb(tb)
-            tb_info = traceback.extract_tb(tb)
-
-            filename, line, func, text = tb_info[-1]
-            print("Additional Info:\nFile: %s\nLine: %s\nFunc: %s\nText: %s" % (filename, line, func, text), file = sys.stderr)
-            sys.exit(1)
+        print("Testing: %s" % evt.case)
+        testfunc()
 
     def TestDone(self, passed = True):
         # record test status and invoke next test
         if passed:
-            self.__results.append(".")
-        else:
-            self.__results.append("F")
-
-        evt = TestEvent()
-        wx.PostEvent(self, evt)
-
-
-    def Assert(self, expr, message = "An Assertion occurred"):
-        # well, misnomer. Is a psuedo assert
-        # use this method when ensuring the test can continue
-        # in most test-failure scenarios you should use TestDone(False)
-        if not expr:
-            print(message, file = sys.stderr)
-            raise Exception("Test Failure")
-
-    def WrapUp(self):
-        print("Results: %s" % "".join(self.__results))
-
-        if "F" in self.__results:
-            print("Test(s) have failed", file = sys.stderr)
-            sys.exit(1)
-
-        else:
-            # close peacefully
             for window in wx.GetTopLevelWindows():
                 window.Close()
+        else:
+            wx.GetApp().GetMainLoop().Exit(30)
+
 
 def CreateApp(frame):
     class TestApp(wx.App):
         def OnInit(self):
-            f = frame()
-            f.Show(True)
+            self.frame = frame()
+            self.frame.Show(True)
             return True
+
     return TestApp
 
 def CreateFrame(widget):
@@ -166,7 +122,19 @@ def CreateFrame(widget):
             self.SetSizer(sizer)
             sizer.Layout()
 
+        # this will only be invoked if the test widget is not a frame.
+        def GetTestTarget(self):
+            return self.widget
+
     return BaseTestFrame
+
+def CreateTestMethod(app, case):
+    def test_func(obj):
+        a = app()
+        a.case = case
+        a.MainLoop()
+
+    return test_func
 
 def CreateATC(widget):
     # if widget is not instance of TestFrame, generate a quick frame
@@ -182,15 +150,17 @@ def CreateATC(widget):
         tlw = widget
 
     app = CreateApp(tlw)
-    app.targetwidget = widget
 
     class ApplicationTestCase(unittest.TestCase):
-        # generate test case wrappers?
-        def test_application(self):
-            a = app()
-            a.MainLoop()
+        pass
+
+    methods = [meth for meth in dir(widget) if (meth.startswith("test_") and callable(getattr(widget, meth)))]
+    print(methods)
+    for meth in methods:
+        test_func = CreateTestMethod(app, meth)
+        setattr(ApplicationTestCase, meth, test_func)
 
     return ApplicationTestCase
 
 if __name__ == "__main__":
-    main()
+    pass

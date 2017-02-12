@@ -12,10 +12,16 @@ class PanelColorChangeTester(wx.Panel, atc.TestWidget):
 
         self.SetBackgroundColour(wx.BLUE)
 
-    def test_dummy(self):
-        self.TestDone(True)
+    def test_pass(self):
+        print("Passing test")
+        self.TestDone()
+
+    def test_fail(self):
+        print("Failing test")
+        self.TestDone(False)
 
 testcase = atc.CreateATC(PanelColorChangeTester)
 
 if __name__ == "__main__":
     unittest.main()
+    
