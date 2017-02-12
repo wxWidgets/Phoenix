@@ -97,7 +97,9 @@ class TestWidget:
             for window in wx.GetTopLevelWindows():
                 window.Close()
         else:
-            wx.GetApp().GetMainLoop().Exit(30)
+            # Clean exit pending investigation
+            # wx.GetApp().GetMainLoop().Exit(30)
+            sys.exit(1)
 
 
 def CreateApp(frame):

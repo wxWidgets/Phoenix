@@ -69,9 +69,6 @@ class FrameRestoreTester(wx.Frame, atc.TestWidget):
         atc.TestWidget.__init__(self)
         self.SetLabel("Frame Restore Test")
 
-        # enforce a strict schedule
-        self.schedule = ("iconize", "restore", "maximize", "restore")
-
     def test_iconize_restore(self):
         self.Iconize()
         wx.CallLater(250, self.Ensure, "Iconized")
@@ -95,7 +92,7 @@ class FrameRestoreTester(wx.Frame, atc.TestWidget):
         
 
         elif ensurable == "Restored":
-            self.TestDone(not self.IsIconized() and not self.IsMaximized())
+            self.TestDone(not (self.IsIconized() or self.IsMaximized()))
 
 
 tc = atc.CreateATC(FrameRestoreTester)
