@@ -17,15 +17,14 @@ class PanelColorChangeTester(wx.Panel, atc.TestWidget):
         print("Failing test")
         self.TestDone(False)
 
-    @atc.TestDependent
+    @atc.TestCritical
     def test_abort(self):
         print("Aborting test case")
-        raise AttributeError("Unbound attribute error")
+        assert 0
 
 
 testcase = atc.CreateATC(PanelColorChangeTester)
 
 if __name__ == "__main__":
-    testcase.test_abort(testcase)
     unittest.main()
     

@@ -78,8 +78,6 @@ class TestWidget:
         if not hasattr(self, "schedule"):
             self.schedule = [member[5:] for member in dir(self) if member.startswith("test_")]
 
-        self.__results = []
-
         # start test sequence
         evt = TestEvent()
         evt.case = wx.GetApp().case
@@ -102,7 +100,7 @@ class TestWidget:
             # wx.GetApp().GetMainLoop().Exit(30)
             sys.exit(1)
 
-def TestDependent(func):
+def TestCritical(func):
     @functools.wraps(func)
     def method(*args, **kwargs):
         try:
