@@ -29,7 +29,7 @@ from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
 #----------------------------------------------------------------------
 
 NAME             = "wxPython_Phoenix"
-DESCRIPTION      = "Cross platform GUI toolkit for Python, Phoenix verison"
+DESCRIPTION      = "Cross platform GUI toolkit for Python, Phoenix version"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
 URL              = "http://wxPython.org/"
@@ -46,6 +46,10 @@ wxPython it wraps the wxWidgets C++ toolkit and provides access to the user
 interface portions of the wx API, enabling Python applications to have a GUI
 on Windows, Macs or Unix systems with a native look and feel and requiring
 very little (if any) platform specific code.
+
+For more information please refer to the
+`README.rst <https://github.com/wxWidgets/Phoenix/blob/master/README.rst>`_
+or the `wxPython documentation <https://wxpython.org/Phoenix/docs/html/>`_.
 """
 
 CLASSIFIERS      = """\
@@ -61,9 +65,9 @@ Operating System :: Microsoft :: Windows :: Windows Vista
 Operating System :: Microsoft :: Windows :: Windows 7
 Operating System :: POSIX
 Programming Language :: Python :: 2.7
-Programming Language :: Python :: 3.3
 Programming Language :: Python :: 3.4
 Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
 Topic :: Software Development :: User Interfaces
 """
 
