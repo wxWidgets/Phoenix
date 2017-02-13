@@ -10,55 +10,6 @@ I've decided that they will not be done or no longer apply.
 
 
 
-Checklist for all new etg files
--------------------------------
-    * Use a filename that matches the wxWidgets/interface/wx file name
-      that the classes and other stuff is being loaded from.  This
-      means that there will be lots of very small files in etg, but it
-      will help to find the interface header source to compare what is
-      being declared there with what is being generated, and to better
-      understand what may need tweaked in the etg script file.
-
-    * Read the corresponding interface file and ensure that all classes
-      declared in it are listed in the ITEMS list in the etg file,
-      unless the class should not be wrapped for some reason.  Other
-      items from the interface file will be included automatically.
-
-    * Do not list classes from other interface files in the etg file.
-
-    * Check for any extras added to each class in Classic wxPython and
-      evaluate whether the same extras should be added to the Phoenix
-      version.  For example, there may be additional C methods added
-      on to the class with %extend or %pythoncode that need to be
-      carried over to Phoenix, such as __nonzero__, etc.  Also look
-      for methods where Classic indicates that ownership should be
-      transferred, or other special directives.
-
-    * Check for backwards compatibility issues with Classic wxPython
-      and document in the MigrationGuide. Compatibility issues
-      resulting from not renaming all the overloads can probably be
-      left undocumented, we'll probably be adding some of them back as
-      deprecated methods eventually, and the programmers should be
-      able to figure out the rest once they've started porting some
-      code.
-
-    * For window classes check if there are other virtual methods
-      besides those added in addWindowVirtuals() that should be
-      unignored.
-
-    * UNITTESTS!  Create a unit test script in the unittests folder
-      using the same base file name.  It should at least check that
-      every non-abstract class can be constructed, and should also
-      have tests for things that are added or tweaked in the etg
-      script.  Other things that needed no tweaks are ok to be left
-      untested for the time being, although porting over some of the
-      the old unittest code from Classic would also be a good idea, but
-      priority should be given to testing those things that had to be
-      tweaked or added.
-
-
-
-
 WAF Build
 ---------
 Add support for using the cygwin and mingw32 compilers.
