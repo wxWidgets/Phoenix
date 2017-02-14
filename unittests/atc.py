@@ -33,7 +33,8 @@ import wx.lib.newevent
 
 TestEvent, EVT_TEST = wx.lib.newevent.NewEvent()
 
-TestEvent.caseiter = 0
+class TestError(Exception):
+    pass
 
 class TestWidget:
     def __init__(self):
@@ -78,9 +79,7 @@ class TestWidget:
             for window in wx.GetTopLevelWindows():
                 window.Close()
         else:
-            # Clean exit pending investigation
-            # wx.GetApp().GetMainLoop().Exit(30)
-            sys.exit(1)
+            raise TestError("A test failed.")
 
 def TestCritical(func):
     @functools.wraps(func)
@@ -93,7 +92,7 @@ def TestCritical(func):
             wx.GetApp().exception = e
             for window in wx.GetTopLevelWindows():
                 window.Close()
-                
+
     return method
 
 def CreateApp(frame):
@@ -165,7 +164,7 @@ def CreateATC(widget):
         for attr in dir(basemeth):
             if not hasattr(test_func, attr):
                 setattr(test_func, attr, getattr(basemeth, attr))
-            
+
         setattr(ApplicationTestCase, meth, test_func)
 
     return ApplicationTestCase
