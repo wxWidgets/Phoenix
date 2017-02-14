@@ -77,19 +77,20 @@ class FrameRestoreTester(wx.Frame, atc.TestWidget):
         self.Maximize()
         wx.CallLater(250, self.Ensure, "Maximized")
 
+    @atc.TestCritical
     def Ensure(self, ensurable):
         if ensurable == "Iconized":
             if not self.IsIconized():
                 self.TestDone(False)
             self.Restore()
             wx.CallLater(250, self.Ensure, "Restored")
-        
+
         elif ensurable == "Maximized":
             if not self.IsMaximized():
                 self.TestDone(False)
             self.Restore()
             wx.CallLater(250, self.Ensure, "Restored")
-        
+
 
         elif ensurable == "Restored":
             self.TestDone(not (self.IsIconized() or self.IsMaximized()))
