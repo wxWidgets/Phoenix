@@ -1270,7 +1270,7 @@ def copyWxDlls(options):
             dlls += glob.glob(os.path.join(cairo_root, arch, 'bin', '*.dll'))
 
         # For Python 3.5 builds we also need to copy some VC14 redist DLLs
-        if PYVER == '3.5':
+        if PYVER in ['3.5', '3.6']:
             redist_dir = os.path.join(
                 phoenixDir(), 'packaging', 'Py3.5', 'vcredist',
                 arch, 'Microsoft.VC140.CRT', '*.dll')
