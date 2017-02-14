@@ -35,19 +35,6 @@ TestEvent, EVT_TEST = wx.lib.newevent.NewEvent()
 
 TestEvent.caseiter = 0
 
-"""
-class TestWidget:
-    # provides some useful methods for use within test widgets.
-    # it is recommended to derive test objects from this class in addtion to the
-    # relevate wx class
-
-    # provide methods for: ensuring application closes (with and without an error code)
-    # standardized assertion
-    # etc.
-
-    # should this class provide methods for event handling (forcing derivation from wx.EventHandler)?
-"""
-
 class TestWidget:
     def __init__(self):
         assert isinstance(self, wx.EvtHandler), "Test widget needs to be an event handler"
@@ -73,11 +60,6 @@ class TestWidget:
     def OnCommence(self, evt):
         assert wx.GetApp().IsMainLoopRunning(), "Timer ended before mainloop started" # see above comment regarding
                                                                                     # commencing with the timer.
-
-        # ensure the test schedule is set up, create it if it does not exist
-        if not hasattr(self, "schedule"):
-            self.schedule = [member[5:] for member in dir(self) if member.startswith("test_")]
-
         # start test sequence
         evt = TestEvent()
         evt.case = wx.GetApp().case
@@ -178,6 +160,12 @@ def CreateATC(widget):
     print(methods)
     for meth in methods:
         test_func = CreateTestMethod(app, meth)
+        # ensure any other deocrated data is preserved:
+        basemeth = getattr(widget, meth)
+        for attr in dir(basemeth):
+            if not hasattr(test_func, attr):
+                setattr(test_func, attr, getattr(basemeth, attr))
+            
         setattr(ApplicationTestCase, meth, test_func)
 
     return ApplicationTestCase
