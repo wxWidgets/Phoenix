@@ -1,28 +1,34 @@
 # Samuel Dunn
 # Application Test Case
-# allows testing wx features within the context of an application
+# Allows testing wx features within the context of an application
 
-# Drawbacks: Current revision doesn't play into unittest's framework very well
-#               mimicking it more than anything
-#            Current revision only supports handling test events through a top level Frame
-#               derived from TestFrame, alternatives are being considered
-#            Only one TestCase class per module
+# Benefits: As stated, allows unit testing within a full App mainloop.
+#           Allows developers to quickly construct a test case by developing a
+#               single widget
+#           TestCase class is generated from the widget provided to atc. The
+#               generated TestCase class  mimics the widget to allow pytest
+#               to behave  normally. This allows  unsquashed testing (jamming
+#               plural tests into one runtime)
+#           Generated TestCase class should play nice with all unittest features
+#           Generated TestCase classes are unique, allowing plural per test
+#               module
 
-# Benefits: Allows unittesting features that suffer from only synthesizing an active event loop.
+# Drawbacks: Generated test case class has to be applied to a __main__ module
+#               global scope member. Need to look into unittest.TestDiscorvery
+#               to correct this behavior
+#           Code is currently a bit sloppy, Revisions will be made before a
+#               formal PR to improve documentation and clean up the code.
+#
 
 # TODO:
-#   Create a decorator method to identify methods that are fully self sufficient tests, so TestDone
-#       can be called implicitly
-#       On The other hand, its only truly useful to know if the test completes as part of the method
-#   A decorator for describing methods that are a part of a test sequence, but not the entire sequence
-#       could be useful
-#   Explore TestWidget possibilty
-#   Explore commencing test schedule various ways (depending on OS)
-#   Change ApplicationTestCase to be a TestCase class generator, allowing plural testcase classes per module
-#   explore potential for a meta-class that decorates test related methods to ensure test failure on unhandled
-#       exception (related to first couple TODOs)
+#   Ensure full TestCase API is available within the app
+#   automatically apply TestCritical decorator to test_ methods in widget
+#   Ensure TestCritical decorator plays nice with preserving other decorations
+#       such that decoration order does not matter
+#   Add stack trace printouts upon TestDone(False) or TestCritical exception
 
-__version__ = "0.0.1"
+
+__version__ = "0.0.2"
 
 import functools
 import os
