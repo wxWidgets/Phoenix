@@ -1,10 +1,10 @@
 #---------------------------------------------------------------------------
 # Name:        etg/metafile.py
 # Author:      Robin Dunn
-#             Dietmar Schwertberger
+#              Dietmar Schwertberger
 #
 # Created:     01-Nov-2015
-# Copyright:   (c) 2015 by Wide Open Technologies
+# Copyright:   (c) 2015-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 

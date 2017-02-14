@@ -4,8 +4,8 @@
 // Author:      Paul Lanier
 // Modified by: Robin Dunn
 //
-// Created:     05/25/06
-// Copyright:   (c) 2006-2016 Total Control Software
+// Created:     25-May-2006
+// Copyright:   (c) 2006-2017 Total Control Software
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 

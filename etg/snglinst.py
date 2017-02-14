@@ -3,7 +3,8 @@
 # Author:      Kevin Ollivier
 #
 # Created:     6-Sept-2011
-# Copyright:   (c) 2013 by Wide Open Technologies
+# Copyright:   (c) 2011 by Wide Open Technologies
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
