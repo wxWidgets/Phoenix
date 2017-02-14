@@ -7,7 +7,7 @@
 #
 # Author:      Mike Fletcher
 #
-# Copyright:   (c) 2000 by Total Control Software
+# Copyright:   (c) 2000-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port
 #----------------------------------------------------------------------

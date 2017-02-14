@@ -7,7 +7,7 @@
 # Author:      Robin Dunn
 #
 # Created:     8-July-2002
-# Copyright:   (c) 2002 by Total Control Software
+# Copyright:   (c) 2002-2017 by Total Control Software
 # Licence:     wxWindows license
 # Tags:        phoenix-port, unittest, documented, py3-port
 #----------------------------------------------------------------------
