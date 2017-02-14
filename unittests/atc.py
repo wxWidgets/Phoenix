@@ -64,7 +64,7 @@ class TestWidget:
                                     # the mainloop was running, but this caused issues on some linux
                                     # distributions.
                                     # Ultimately I'd like to minimize as much waiting as feasibly possible
-    
+
     # this  only gets invoked if the test arget is a frame object, in which case the app can post events directly
     # to the test target
     def GetTestTarget(self):
@@ -108,7 +108,10 @@ def TestCritical(func):
         except Exception as e:
             print("Unbound exception caught in test procedure:\n%s\n%s" % (e.__class__, str(e)), file = sys.stderr)
             # give full stack trace
-            args[0].TestDone(False)
+            wx.GetApp().exception = e
+            for window in wx.GetTopLevelWindows():
+                window.Close()
+                
     return method
 
 def CreateApp(frame):
@@ -145,6 +148,12 @@ def CreateTestMethod(app, case):
         a.case = case
         a.MainLoop()
 
+        if hasattr(a, "exception"):
+            raise a.exception
+
+        elif hasattr(a, "errorcode"):
+            sys.exit(a.errorcode)
+
     return test_func
 
 def CreateATC(widget):
@@ -172,6 +181,3 @@ def CreateATC(widget):
         setattr(ApplicationTestCase, meth, test_func)
 
     return ApplicationTestCase
-
-
-
