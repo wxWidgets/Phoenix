@@ -105,7 +105,7 @@ class FixWxPrefix(object):
     def _getCoreTopLevelNames(self):
         # Since the real wx.core module may not exist yet, and since actually
         # executing code at this point is probably a bad idea, try parsing the
-        # core.pi file and pulling the top level names from it.
+        # core.pyi file and pulling the top level names from it.
         import ast
 
         def _processItem(item, names):
@@ -120,7 +120,7 @@ class FixWxPrefix(object):
                 names.append(item.name)
 
         names = list()
-        filename = 'wx/core.pi'
+        filename = 'wx/core.pyi'
         if PY3:
             with open(filename, 'rt', encoding='utf-8') as f:
                 text = f.read()

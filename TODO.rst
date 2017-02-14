@@ -64,8 +64,8 @@ to be untangled:
 
 
 
-Other Dev Stuff
----------------
+Other Assorted Stuff
+--------------------
 
   * Locate and/or add items for the various functions and things in Classic's
     _functions.i module.
@@ -128,7 +128,7 @@ Other Dev Stuff
     DataObjects.
 
   * Add meaningful __hash__ methods for wx.Colour, wx.Point, etc.?
-    
+
   * Double-check wx.PyEvent and wx.PyCommandEvent, does the __getattr__,
     etc. work with properties?  See:
     https://groups.google.com/d/msg/wxpython-dev/dMrpaKs_d0U/nVMY7lMvAwAJ
@@ -148,4 +148,7 @@ Other Dev Stuff
   * Migrate from six to python-future? It seems more comprehensive and would
     require less conditionals in the code, since you mostly just write
     py3-compatible code and py2 compatibility is handled in python-future.
+
+  * Add type hinting to the .pyi stub files, as well as @overload decorators
+    to document the C++ overloaded methods. See https://www.python.org/dev/peps/pep-0484/
 

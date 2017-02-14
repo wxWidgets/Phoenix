@@ -33,31 +33,31 @@ class PIImportTest(unittest.TestCase):
 
 
     def test_core_pi(self):
-        self.runPI('core.pi')
+        self.runPI('core.pyi')
 
     def test_adv_pi(self):
-        self.runPI('adv.pi')
+        self.runPI('adv.pyi')
 
     def test_stc_pi(self):
-        self.runPI('stc.pi')
+        self.runPI('stc.pyi')
 
     def test_html_pi(self):
-        self.runPI('html.pi')
+        self.runPI('html.pyi')
 
     def test_html2_pi(self):
-        self.runPI('html2.pi')
+        self.runPI('html2.pyi')
 
     def test_dataview_pi(self):
-        self.runPI('dataview.pi')
+        self.runPI('dataview.pyi')
 
     def test_xml_pi(self):
-        self.runPI('xml.pi')
+        self.runPI('xml.pyi')
 
     def test_xrc_pi(self):
-        self.runPI('xrc.pi')
+        self.runPI('xrc.pyi')
 
     def test_richtext_pi(self):
-        self.runPI('richtext.pi')
+        self.runPI('richtext.pyi')
 
 
 
