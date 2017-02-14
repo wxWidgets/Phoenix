@@ -4,7 +4,8 @@
 #              Robin Dunn
 #
 # Created:     10-Sept-2011
-# Copyright:   (c) 2013 by Kevin Ollivier
+# Copyright:   (c) 2011 by Kevin Ollivier
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ def run():
 
     c = module.find('wxConfigBase')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     c.abstract = True
     ctor = c.find('wxConfigBase')
@@ -161,6 +163,7 @@ def run():
 
     #-----------------------------------------------------------------
     c = module.find('wxFileConfig')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
     c.find('wxFileConfig').findOverload('wxInputStream').find('conv').ignore()
     ctor = c.find('wxFileConfig').findOverload('wxString').find('conv').ignore()

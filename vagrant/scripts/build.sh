@@ -45,7 +45,7 @@ function do_build {
     rm -rf ~/wxPython_Phoenix-*
 
     # setup
-    echo "**** do_build $TAG $FLAG ****"
+    echo "**** do_build $VENV $TAG $FLAG ****"
     echo "Using Python from VENV $VENV"
     ORIG_PATH=$PATH
     export PATH=$VENV/bin:$PATH
@@ -69,7 +69,7 @@ function do_build {
 
     # copy the results back to the host's shared dist folder
     WXPYVER=$(python -c "import buildtools; buildtools.printVersion()")
-    DEST=~/dist/linux/$WXPYVER/$NAME/$TAG
+    DEST=~/dist/linux/$TAG/$NAME
     mkdir -p $DEST
     mv dist/*.whl $DEST
 

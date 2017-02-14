@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     09-Apr-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -34,6 +34,7 @@ def run():
 
     di = module.find('wxDragImage')
     assert isinstance(di, etgtools.ClassDef)
+    di.mustHaveApp()
 
     # make a copy and rename it to 'wxGenericDragImage'
     gdi = tools.copyClassDef(di, 'wxGenericDragImage')

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -36,12 +36,14 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateAssignOp()
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     c.addProperty('ClientArea GetClientArea')
     c.addProperty('CurrentMode GetCurrentMode')
     c.addProperty('Geometry GetGeometry')
     c.addProperty('Name GetName')
+
 
 
     #-----------------------------------------------------------------

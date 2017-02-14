@@ -6,7 +6,7 @@
 # Author:      Robin Dunn
 #
 # Created:     5-June-2008
-# Copyright:   (c) 2008 by Total Control Software
+# Copyright:   (c) 2008-2017 by Total Control Software
 # Licence:     wxWindows license
 #----------------------------------------------------------------------
 

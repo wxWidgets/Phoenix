@@ -31,19 +31,23 @@ class scrolwin_Tests(wtc.WidgetTestCase):
         w = wx.ScrolledWindow(self.frame)
         self.commonBits(w)
 
+
     def test_scrolwinDefaultCtor(self):
         w = wx.ScrolledWindow()
         w.Create(self.frame)
         self.commonBits(w)
 
+
     def test_scrolcvsCtor(self):
         w = wx.ScrolledCanvas(self.frame)
         self.commonBits(w)
+
 
     def test_scrolcvsDefaultCtor(self):
         w = wx.ScrolledCanvas()
         w.Create(self.frame)
         self.commonBits(w)
+
 
     def test_scrolwinOnDraw(self):
 
@@ -63,6 +67,13 @@ class scrolwin_Tests(wtc.WidgetTestCase):
         self.myUpdate(w)
         self.waitFor(100)
         self.assertTrue(w.flag) # True if OnDraw was called
+
+
+    def test_SetFocusIgnoringChildren(self):
+        sw = wx.ScrolledWindow(self.frame)
+        sw.SetFocusIgnoringChildren()
+
+
 
 #---------------------------------------------------------------------------
 

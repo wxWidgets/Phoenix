@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     23-Feb-2015
-# Copyright:   (c) 2015 by Total Control Software
+# Copyright:   (c) 2015-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -54,6 +54,11 @@ def run():
         if hasattr(item, 'type') and item.type == 'wxPGPropArg':
             item.type = 'const wxPGPropArgCls &'
 
+
+    td = module.find('wxPGVFBFlags')
+    assert isinstance(td, etgtools.TypedefDef)
+    td.type = 'unsigned char'
+    td.noTypeName = True
 
 
     #-----------------------------------------------------------------

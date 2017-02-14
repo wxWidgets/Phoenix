@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Mar-2012
-# Copyright:   (c) 2012-2016 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -78,6 +78,8 @@ def run():
     # customizing the generated code and docstrings.
 
     module.addHeaderCode('#include <wxpy_api.h>')
+    module.addHeaderCode('#include <wx/help.h>')
+
     module.addImport('_core')
     module.addPyCode("import wx", order=10)
     module.addInclude(INCLUDES)

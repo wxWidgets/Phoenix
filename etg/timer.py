@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     21-Sept-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -35,8 +35,10 @@ def run():
 
     c = module.find('wxTimer')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     c = module.find('wxTimerRunner')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
     module.addPyCode('EVT_TIMER = wx.PyEventBinder( wxEVT_TIMER )')

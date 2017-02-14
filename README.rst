@@ -221,7 +221,7 @@ like this::
 
 
 Project directory structure
-----------------------------
+---------------------------
 
 There are a lot of subfolders in this directory, here is a brief
 explanation to help a newbie find their way around.
@@ -350,6 +350,9 @@ Extrapolate accordingly for other linux distributions or other unixes.
 * libnotify-dev
 * freeglut3
 * freeglut3-dev
+
+If your Linux distribution has gstreamer 1.0 available then you can install
+the dev packages for that instead of the 0.10 version.
 
 **Mac OSX**
 

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     15-Dec-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -34,11 +34,13 @@ def run():
 
     c = module.find('wxPopupWindow')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     tools.fixWindowClass(c)
     c.find('Position').isVirtual = True
 
 
     c = module.find('wxPopupTransientWindow')
+    c.mustHaveApp()
     tools.fixWindowClass(c)
     c.find('Dismiss').isVirtual = True
     c.find('ProcessLeftDown').isVirtual = True

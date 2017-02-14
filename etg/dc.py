@@ -4,7 +4,8 @@
 #              Robin Dunn
 #
 # Created:     26-Aug-2011
-# Copyright:   (c) 2013 by Wide Open Technologies
+# Copyright:   (c) 2011 by Wide Open Technologies
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -44,6 +45,7 @@ def run():
 
     c = module.find('wxDC')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     c.addPrivateCopyCtor()
     c.addPublic()
@@ -446,10 +448,6 @@ def run():
             return  self._DrawTextList(textList, coords, foregrounds, backgrounds)
             """)
 
-
-
-
-    # TODO: Port the PseudoDC from Classic
 
 
 

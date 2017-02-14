@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxToolTip')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
     # TODO: This is MSW only
     c.find('SetMaxWidth').setCppCode("""\

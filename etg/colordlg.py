@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Mar-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,6 +37,11 @@ def run():
     c = module.find('wxColourDialog')
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
+
+
+    c = module.find('wxGetColourFromUser')
+    c.mustHaveApp()
+
 
 
     #-----------------------------------------------------------------

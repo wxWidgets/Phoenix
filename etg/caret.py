@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     17-Jun-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,6 +33,7 @@ def run():
 
     c = module.find('wxCaret')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
     c.find('GetPosition').findOverload('int *').ignore()

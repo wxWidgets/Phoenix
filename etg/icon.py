@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     14-Nov-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,6 +33,7 @@ def run():
     c = module.find('wxIcon')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+    c.mustHaveApp()
 
     c.find('wxIcon').findOverload('*bits').ignore()
     c.find('wxIcon').findOverload('bits[]').ignore()

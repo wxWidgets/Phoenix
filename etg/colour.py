@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -66,6 +66,10 @@ def run():
     c = module.find('wxColour')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+
+    # Just set mustHaveApp for the copy ctor as it may need to use the colour
+    # database to look up color names.
+    c.find('wxColour').findOverload('const wxColour &').mustHaveApp()
 
     # Hide the string ctor so our typemap will be invoked for the copy ctor instead.
     c.find('wxColour').findOverload('wxString').ignore()

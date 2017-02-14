@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Dec-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-
+    module.find('wxProcess').mustHaveApp()
 
     module.addPyCode('EVT_END_PROCESS = wx.PyEventBinder( wxEVT_END_PROCESS )')
 

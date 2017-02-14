@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Jun-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -40,6 +40,11 @@ def run():
 
     # there are two of these, ignore one of them
     c.find('GetFontData').ignore()
+
+
+    c = module.find('wxGetFontFromUser')
+    c.mustHaveApp()
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

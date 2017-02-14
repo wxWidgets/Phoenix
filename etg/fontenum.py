@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Jun-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -34,6 +34,7 @@ def run():
     c = module.find('wxFontEnumerator')
     assert isinstance(c, etgtools.ClassDef)
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     4-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -327,6 +327,7 @@ def run():
 
 
     c = module.find('wxColourDatabase')
+    c.mustHaveApp()
     c.addPyMethod('FindColour', '(self, colour)',    'return self.Find(colour)')
 
     module.find('wxTheColourDatabase').ignore()
@@ -356,6 +357,22 @@ def run():
             return Py_None;
             """
         )
+
+
+    for funcname in ['wxColourDisplay',
+                     'wxDisplayDepth',
+                     'wxDisplaySize',
+                     'wxGetDisplaySize',
+                     'wxDisplaySizeMM',
+                     'wxGetDisplaySizeMM',
+                     'wxGetDisplayPPI',
+                     'wxClientDisplayRect',
+                     'wxGetClientDisplayRect',
+                     'wxSetCursor',
+                     #'wxGetXDisplay',
+                     ]:
+        c = module.find(funcname)
+        c.mustHaveApp()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

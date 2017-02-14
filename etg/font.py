@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,6 +37,15 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
 
+    # Set mustHaveApp on all ctors except the default ctor
+    for ctor in c.find('wxFont').all():
+        if ctor.isCtor and ctor.argsString != '()':
+            ctor.mustHaveApp()
+
+    for func in c.find('New').all():
+        func.mustHaveApp()
+
+
     # FFont factory function for backwards compatibility
     module.addCppFunction('wxFont*', 'FFont',
                           """(int pointSize,
@@ -63,7 +72,7 @@ def run():
     c.addProperty('Style GetStyle SetStyle')
     c.addProperty('Weight GetWeight SetWeight')
 
-    # TODO, there is now a Underlined method so we can't have a
+    # TODO, there is now an Underlined method so we can't have a
     # property of the same name.
     #c.addProperty('Underlined GetUnderlined SetUnderlined')
     #c.addProperty('Strikethrough GetStrikethrough SetStrikethrough')

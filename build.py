@@ -68,12 +68,12 @@ wxICON = 'docs/sphinx/_static/images/sphinxdocs/mondrian.png'
 
 # Some tools will be downloaded for the builds. These are the versions and
 # MD5s of the tool binaries currently in use.
-sipCurrentVersion = '4.18.1'
+sipCurrentVersion = '4.19.1.dev1702021705'
 sipMD5 = {
-    'darwin'   : 'd2e022a1dbdca3a95116ad160b3622a0',
-    'win32'    : '3913456f9ae75d3191dfdadf10407531',
-    'linux32'  : '8f6e43ced87c9ee86afb707e4cfa5fed',
-    'linux64'  : 'e77e4b8810217a981a67c33bcba4d729',
+    'darwin'   : '2c54e223f88ef998e770cfe27139c80f',
+    'win32'    : '5d58bc5106185925f5b05fde0c7e87c8',
+    'linux32'  : 'dc0e17e86b56be994567b636aeef740e',
+    'linux64'  : '3699bb2d59692623dc1fa212237da335',
 }
 
 wafCurrentVersion = '1.7.15-p1'
@@ -426,6 +426,7 @@ def makeOptionParser():
         ("release_build",  (False, "Turn off some development options for a release build.")),
         ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
+        ("vagrant_vms",    ("all", "Comma separated list of VM names to use for the build_vagrant command. Defaults to \"all\"")),
         ]
 
     parser = optparse.OptionParser("build options:")
@@ -685,7 +686,7 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     msg("Upload complete!")
 
 
-def uploadTree(srcPath, destPath, options, keep=5):
+def uploadTree(srcPath, destPath, options, keep=30):
     """
     Similar to the above but uploads a tree of files.
     """
@@ -709,22 +710,12 @@ def uploadTree(srcPath, destPath, options, keep=5):
     cmd = 'ssh {} "chmod -R a+r {}"'.format(host, uploadDir)
     runcmd(cmd)
 
-    # get the list of all siblings of the tree just uploaded
-    cmd = 'ssh {} "cd {}; ls"'.format(host, uploadDir)
-    allDirs = runcmd(cmd, getOutput=True)
-    allDirs = allDirs.strip().split('\n')
-    allDirs.sort()
+    # Remove files that were last modified more than `keep` days ago
+    msg("Cleaning up old builds.")
+    cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
+    runcmd(cmd)
 
-    # Leave the last keep number of builds, including this new one, on the server.
-    # Delete the rest.
-    rmDirs = allDirs[:-keep]
-    for rmDir in rmDirs:
-        rmDir = opj(uploadDir, rmDir)
-        msg("Cleaning old build {}".format(rmDir))
-        cmd = 'ssh {} "rm -r {}"'.format(host, rmDir)
-        runcmd(cmd)
-
-    msg("Upload complete!")
+    msg("Tree upload and cleanup complete!")
 
 
 def checkCompiler(quiet=False):
@@ -1411,12 +1402,18 @@ def cmd_build_vagrant(options, args):
     # {phoenixDir}/dist, such as what is produced with cmd_sdist.
     cmdTimer = CommandTimer('bdist_vagrant')
     cfg = Config(noWxConfig=True)
-    VMs = [ 'centos-7',
-            'debian-8',
-            'fedora-24',
-            'ubuntu-14.04',
-            'ubuntu-16.04',
-            ]
+    if not options.vagrant_vms or options.vagrant_vms == 'all':
+        VMs = [ 'centos-7',
+                'debian-8',
+                'fedora-24',
+                'ubuntu-14.04',
+                'ubuntu-16.04',
+                ]
+    elif options.vagrant_vms == 'none':
+        VMs = [] # to skip building anything and just upload
+    else:
+        VMs = options.vagrant_vms.split(',')
+
     for vmName in VMs:
         vmDir = opj(phoenixDir(), 'vagrant', vmName)
         pwd = pushDir(vmDir)
@@ -1427,9 +1424,10 @@ def cmd_build_vagrant(options, args):
         del pwd
 
     if options.upload:
-        src = opj(phoenixDir(), 'dist', 'linux', cfg.VERSION)
-        assert os.path.isdir(src)
-        uploadTree(src, 'linux', options)
+        for tag in ['gtk2', 'gtk3']:
+            src = opj(phoenixDir(), 'dist', 'linux', tag)
+            if os.path.isdir(src):
+                uploadTree(src, 'linux', options)
 
 
 

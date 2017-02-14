@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     3-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -101,7 +101,6 @@ class FixWxPrefix(object):
             return 'wx.'+name
         else:
             return name
-
 
     def _getCoreTopLevelNames(self):
         # Since the real wx.core module may not exist yet, and since actually
@@ -230,6 +229,10 @@ def fixWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Do common tweaks for a window class.
     """
+    # NOTE: it may be okay to just do this for top-level windows
+    # TODO: look into that possibility
+    klass.mustHaveApp()
+
     # The ctor and Create method transfer ownership of the this pointer to the parent
     for func in klass.findAll(klass.name) + klass.findAll('Create'):
         if isinstance(func, extractors.MethodDef):
@@ -269,6 +272,8 @@ def fixTopLevelWindowClass(klass, hideVirtuals=True, ignoreProtected=True):
     """
     Tweaks for TLWs
     """
+    klass.mustHaveApp()
+
     # TLW tweaks are a little different. We use the function annotation for
     # TransferThis instead of the argument annotation.
     klass.find(klass.name).findOverload('parent').transfer = True

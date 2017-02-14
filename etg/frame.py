@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     6-Dec-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -17,7 +17,7 @@ DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script. 
-ITEMS  = [ 'wxFrame' ]    
+ITEMS  = [ 'wxFrame' ]
     
 #---------------------------------------------------------------------------
 
@@ -25,14 +25,14 @@ def run():
     # Parse the XML file(s) building a collection of Extractor objects
     module = etgtools.ModuleDef(PACKAGE, MODULE, NAME, DOCSTRING)
     etgtools.parseDoxyXML(module, ITEMS)
-    
+
     #-----------------------------------------------------------------
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
-        
+
     c = module.find('wxFrame')
     assert isinstance(c, etgtools.ClassDef)
-        
+
     c.find('wxFrame.title').default = 'wxEmptyString'
     c.find('Create.title').default = 'wxEmptyString'    
     

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     06-Apr-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -44,14 +44,20 @@ def run():
     c.abstract = True
     c.find('Set').transferBack = True
     c.find('Set.helpProvider').transfer = True
+    c.mustHaveApp()
 
 
     c = module.find('wxSimpleHelpProvider')
     c.addItem(etgtools.WigCode("virtual wxString GetHelp(const wxWindowBase* window);"))
+    c.mustHaveApp()
 
     c = module.find('wxHelpControllerHelpProvider')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
+
+    c = module.find('wxContextHelp')
+    c.mustHaveApp()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

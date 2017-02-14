@@ -1,23 +1,25 @@
 #---------------------------------------------------------------------------
-# Name:        etg/????
+# Name:        etg/numdlg.py
 # Author:      Robin Dunn
 #
-# Created:
-# Copyright:   (c) 2013 by Total Control Software
+# Created:     21-Jan-2017
+# Copyright:   (c) 2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
 import etgtools
 import etgtools.tweaker_tools as tools
 
-PACKAGE   = ""
-MODULE    = ""
-NAME      = ""   # Base name of the file to generate to for this script
+PACKAGE   = "wx"
+MODULE    = "_core"
+NAME      = "numdlg"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ ]
+ITEMS  = [ 'numdlg_8h.xml',
+
+           ]
 
 #---------------------------------------------------------------------------
 
@@ -30,11 +32,10 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
+    module.addHeaderCode('#include <wx/numdlg.h>')
 
-    c = module.find('wxSomeClassName')
-    assert isinstance(c, etgtools.ClassDef)
-
-
+    c = module.find('wxGetNumberFromUser')
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

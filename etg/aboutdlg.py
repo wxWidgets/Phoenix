@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     22-Mar-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,9 +33,14 @@ def run():
 
     module.addHeaderCode('#include <wx/generic/aboutdlgg.h>')
 
+    for funcname in ['wxAboutBox',
+                     'wxGenericAboutBox',
+                     ]:
+        c = module.find(funcname)
+        c.mustHaveApp()
+
     c = module.find('wxAboutDialogInfo')
     assert isinstance(c, etgtools.ClassDef)
-
 
 
     #-----------------------------------------------------------------

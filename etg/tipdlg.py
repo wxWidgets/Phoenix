@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     12-Apr-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,6 +33,13 @@ def run():
 
     module.addHeaderCode('#include <wx/tipdlg.h>')
     module.find('wxCreateFileTipProvider').factory = True
+
+    c = module.find('wxCreateFileTipProvider')
+    c.mustHaveApp()
+
+    c = module.find('wxShowTip')
+    c.mustHaveApp()
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

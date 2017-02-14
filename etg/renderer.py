@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     27-Jun-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,6 +37,7 @@ def run():
 
     c = module.find('wxRendererNative')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
 
@@ -53,6 +54,7 @@ def run():
 
 
     c = module.find('wxDelegateRendererNative')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
 

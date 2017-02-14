@@ -4,6 +4,7 @@
 #
 # Created:     27-Aug-2011
 # Copyright:   (c) 2013 by Wide Open Technologies
+# Copyright:   (c) 2011-2017 by Wide Open Technologies
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ def run():
     c.addPrivateCopyCtor()
     c.addPrivateAssignOp()
     tools.removeVirtuals(c)
+    c.mustHaveApp()
 
     c.find('GetSize').type = 'void'
     c.find('GetSize.width').out = True

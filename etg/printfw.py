@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     20-Apr-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -66,6 +66,7 @@ def run():
 
 
     c = module.find('wxPrintPreview')
+    c.mustHaveApp()
     for ctor in [c.find('wxPrintPreview').findOverload('wxPrintDialogData'),
                  c.find('wxPrintPreview').findOverload('wxPrintData')]:
         ctor.find('printout').transfer = True
@@ -82,6 +83,7 @@ def run():
 
 
     c = module.find('wxPrintout')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
     c.find('GetPPIPrinter.w').out = True
     c.find('GetPPIPrinter.h').out = True
@@ -100,6 +102,9 @@ def run():
 
     c = module.find('wxPrintAbortDialog')
     tools.fixTopLevelWindowClass(c)
+
+
+    module.find('wxPrinter').mustHaveApp()
 
 
     # deprecated classes

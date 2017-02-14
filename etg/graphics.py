@@ -4,7 +4,8 @@
 #              Robin Dunn
 #
 # Created:     10-Sept-2011
-# Copyright:   (c) 2013 by Kevin Ollivier
+# Copyright:   (c) 2011 by Kevin Ollivier
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -55,6 +56,7 @@ def run():
     #---------------------------------------------
     c = module.find('wxGraphicsObject')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addCppMethod('bool', 'IsOk', '()', 'return !self->IsNull();')
     c.addCppMethod('int', '__nonzero__', '()', "return !self->IsNull();")
 
@@ -65,6 +67,8 @@ def run():
     markFactories(c)
     tools.removeVirtuals(c)
     c.abstract = True
+    c.mustHaveApp()
+
 
     # Ensure that the target DC or image lives as long as the GC does. NOTE:
     # Since the Creates are static methods there is no self to associate the
@@ -170,6 +174,7 @@ def run():
     tools.removeVirtuals(c)
     c.find('GetBox').findOverload('wxDouble *x, wxDouble *y').ignore()
     c.find('GetCurrentPoint').findOverload('wxDouble *x, wxDouble *y').ignore()
+    c.mustHaveApp()
 
 
     #---------------------------------------------
@@ -191,6 +196,7 @@ def run():
     #---------------------------------------------
     c = module.find('wxGraphicsMatrix')
     tools.removeVirtuals(c)
+    c.mustHaveApp()
 
     c.find('Concat').overloads = []
     c.find('IsEqual').overloads = []

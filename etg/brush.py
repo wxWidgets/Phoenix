@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     2-Sept-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -34,6 +34,11 @@ def run():
     c = module.find('wxBrush')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+
+    # Set mustHaveApp on all ctors except the default ctor
+    for ctor in c.find('wxBrush').all():
+        if ctor.isCtor and ctor.argsString != '()':
+            ctor.mustHaveApp()
 
     c.addCppMethod('int', '__nonzero__', '()', """\
         return self->IsOk();

@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     29-Oct-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -35,6 +35,7 @@ def run():
 
     c = module.find('wxHtmlDCRenderer')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
     tools.fixHtmlSetFonts(c)
 
@@ -42,9 +43,11 @@ def run():
     c.find('Render.to').name = 'to_'
 
     c = module.find('wxHtmlEasyPrinting')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
     c = module.find('wxHtmlPrintout')
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
 

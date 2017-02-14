@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     2-Sept-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -36,12 +36,15 @@ def run():
 
     c = module.find('wxPaintDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
     c = module.find('wxClientDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
     c = module.find('wxWindowDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

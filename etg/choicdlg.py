@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Mar-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -85,6 +85,19 @@ def run():
             if p.type == 'int' and p.name == 'n':
                 func.ignore()
 
+
+    for c in module.find('wxGetSingleChoiceIndex').all():
+        c.mustHaveApp()
+
+    for c in module.find('wxGetSingleChoice').all():
+        c.mustHaveApp()
+
+    for c in module.find('wxGetSingleChoiceData').all():
+        c.mustHaveApp()
+
+
+    #c = module.find('wxGetSingleChoiceIndex')
+    #c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

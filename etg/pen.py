@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     31-Aug-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,6 +33,11 @@ def run():
     c = module.find('wxPen')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+
+    # Set mustHaveApp on all ctors except the default ctor
+    for ctor in c.find('wxPen').all():
+        if ctor.isCtor and ctor.argsString != '()':
+            ctor.mustHaveApp()
 
     # The stipple bitmap ctor is not implemented on wxGTK
     c.find('wxPen').findOverload('wxBitmap').ignore()

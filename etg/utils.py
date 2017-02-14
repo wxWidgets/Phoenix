@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-Dec-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,9 +37,15 @@ def run():
     module.addHeaderCode('#include <wx/utils.h>')
     module.addHeaderCode('#include <wx/power.h>')
 
+
     c = module.find('wxWindowDisabler')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
+    # add context manager methods
+    c.addPyMethod('__enter__', '(self)', 'return self')
+    c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
+
 
     module.find('wxQsort').ignore()
     module.find('wxGetEmailAddress').findOverload('buf').ignore()
@@ -66,14 +72,30 @@ def run():
     # Keep just the first wxExecute overload
     f = module.find('wxExecute')
     f.overloads = []
+    f.mustHaveApp()
 
     module.find('wxGetOsVersion.major').out = True
     module.find('wxGetOsVersion.minor').out = True
 
     c = module.find('wxBusyCursor')
+    c.mustHaveApp()
     # add context manager methods
     c.addPyMethod('__enter__', '(self)', 'return self')
     c.addPyMethod('__exit__', '(self, exc_type, exc_val, exc_tb)', 'pass')
+
+
+    for funcname in ['wxBell',
+                     'wxBeginBusyCursor',
+                     'wxEndBusyCursor',
+                     'wxShutdown',
+                     'wxInfoMessageBox',
+                     'wxIsBusy',
+                     'wxGetMousePosition',
+                     'wxGetKeyState',
+                     'wxGetMouseState',
+                     ]:
+        c = module.find(funcname)
+        c.mustHaveApp()
 
 
     #-----------------------------------------------------------------

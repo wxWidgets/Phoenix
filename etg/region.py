@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     30-Nov-2010
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -36,6 +36,7 @@ def run():
     c = module.find('wxRegion')
     assert isinstance(c, etgtools.ClassDef)
     tools.removeVirtuals(c)
+    c.mustHaveApp()
 
     # Replace one of the constructors with one having a more python-friendly API
     c.find('wxRegion').findOverload('points').ignore()
@@ -84,6 +85,7 @@ def run():
 
 
     c = module.find('wxRegionIterator')
+    c.mustHaveApp()
     c.find('operator++').ignore()
 
     # SIP maps operator bool() to __int__, but Classic used __nonzero__. Does

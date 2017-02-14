@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     14-Nov-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2010-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ def run():
 
     c = module.find('wxIconBundle')
     assert isinstance(c, etgtools.ClassDef)
-
+    c.mustHaveApp()
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

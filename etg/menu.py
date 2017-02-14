@@ -4,7 +4,8 @@
 #              Robin Dunn
 #
 # Created:     25-Aug-2011
-# Copyright:   (c) 2013 by Wide Open Technologies
+# Copyright:   (c) 2011 by Wide Open Technologies
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -44,6 +45,7 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxMenu')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     tools.removeVirtuals(c)
     addTransferAnnotations(c, 'menuItem')
     addTransferAnnotations(c, 'subMenu')
@@ -96,6 +98,7 @@ def run():
     #-----------------------------------------------------------------
     c = module.find('wxMenuBar')
     assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
     tools.removeVirtuals(c)
     addTransferAnnotations(c, 'menu')
     c.find('wxMenuBar').findOverload('wxMenu *menus[], const wxString titles[], long style=0)').ignore()

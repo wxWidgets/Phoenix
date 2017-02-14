@@ -5,6 +5,7 @@
 #
 # Created:     06-Sept-2011
 # Copyright:   (c) 2013 by Wide Open Technologies
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -33,6 +34,12 @@ def run():
 
     c = module.find('wxCursor')
     assert isinstance(c, etgtools.ClassDef)
+
+    # Set mustHaveApp on all ctors except the default ctor
+    for ctor in c.find('wxCursor').all():
+        if ctor.isCtor and ctor.argsString != '()':
+            ctor.mustHaveApp()
+
 
     c.find('wxCursor').findOverload('bits').ignore()
     c.find('wxCursor').findOverload('cursorName').find('type').default='wxBITMAP_TYPE_ANY'

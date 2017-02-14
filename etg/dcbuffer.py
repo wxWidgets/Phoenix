@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     2-Sept-2011
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -37,6 +37,8 @@ def run():
 
     c = module.find('wxBufferedDC')
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
+
     for m in c.find('wxBufferedDC').all() + c.find('Init').all():
         if m.findItem('dc'):
             m.findItem('dc').keepReference = True
@@ -45,10 +47,21 @@ def run():
 
 
     c = module.find('wxBufferedPaintDC')
+    c.mustHaveApp()
+
     c.addPrivateCopyCtor()
     c.find('wxBufferedPaintDC').findOverload('wxBitmap').find('buffer').keepReference = True
 
+
+    # wxAutoBufferedPaintDC is documented as a class deriving from
+    # wxBufferedPaintDC, but on some platforms it derived directly from
+    # wxPaintDC. This causes compilation errors when the code tries to
+    # static_cast<> to a possibly incompatible base class, so we'll take a LCD
+    # approach and pretend that it derives directly from wxDC instead, in
+    # order to present a hierarchy that is valid and works on all platforms.
     c = module.find('wxAutoBufferedPaintDC')
+    c.bases = ['wxDC']
+    c.mustHaveApp()
     c.addPrivateCopyCtor()
 
 

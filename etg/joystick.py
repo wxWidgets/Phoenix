@@ -3,7 +3,7 @@
 # Author:      Robin Dunn
 #
 # Created:     19-May-2012
-# Copyright:   (c) 2013 by Total Control Software
+# Copyright:   (c) 2012-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -92,8 +92,9 @@ def run():
         """)
 
 
-    #c = module.find('')
-    #assert isinstance(c, etgtools.ClassDef)
+    c = module.find('wxJoystick')
+    assert isinstance(c, etgtools.ClassDef)
+    c.mustHaveApp()
 
 
     #-----------------------------------------------------------------
