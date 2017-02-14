@@ -1,9 +1,11 @@
 #---------------------------------------------------------------------------
 # Name:        etg/_dataview.py
 # Author:      Kevin Ollivier
+#              Robin Dunn
 #
 # Created:     12-Sept-2011
-# Copyright:   (c) 2011-2016 by Kevin Ollivier
+# Copyright:   (c) 2011 by Kevin Ollivier
+# Copyright:   (c) 2011-2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
