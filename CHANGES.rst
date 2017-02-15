@@ -3,6 +3,46 @@
 Recent Changes for wxPython
 =====================================================================
 
+
+3.0.4a1  "The Phoenix Rises!"
+=============================
+*
+
+This is the first official release of the wxPython Phoenix project! ("And the
+crowd goes wild!") Don't let the fact that it is marked as an "alpha" release
+scare you away. It is an alpha simply because this is the **first** in several
+ways:
+
+  * It's the first real release of Phoenix, which is built on a different
+    foundation than Classic wxPython was.
+
+  * It's the first wxPython release intended to be available from PyPI and
+    buildable/installable by pip.
+
+  * It's the first release for Python 3.
+
+  * And there are still a few things that are not finished or polished yet.
+
+But even with all that, many people have been using the pre-release snapshots
+of Phoenix for quite a while now, and it has been relatively stable and solid
+for them.
+
+Due to some things being cleaned up, reorganized, simplified and dehackified
+wxPython Phoenix is not completely backwards compatible with wxPython Classic.
+This is as intended. In general, however, the API differences tend to be minor
+and some applications can use Phoenix with slight, or even no modifications.
+In some other cases the correct way to do things was also available in Classic
+and it's only the wrong way that has been removed from Phoenix.  For more
+information there is a Migration Guide document available at:
+https://wxpython.org/Phoenix/docs/html/MigrationGuide.html
+
+The new wxPython API reference documentation, including all Python-specific
+additions and customizations, and docs for the wx.lib package, is located at:
+https://wxpython.org/Phoenix/docs/html/main.html
+
+
+
+
 3.0.2.0
 -------
 * 28-Nov-2014
