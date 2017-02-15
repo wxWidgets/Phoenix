@@ -8,9 +8,6 @@ if 'wxEVT_NULL' in dir():
     __version__ = VERSION_STRING
     assert MAJOR_VERSION == wx._core.MAJOR_VERSION, "wxPython/wxWidgets version mismatch"
     assert MINOR_VERSION == wx._core.MINOR_VERSION, "wxPython/wxWidgets version mismatch"
-    if RELEASE_NUMBER != wx._core.RELEASE_NUMBER:
-        import warnings
-        warnings.warn("wxPython/wxWidgets release number mismatch")
 
     # Register a function to be called when Python terminates that will clean
     # up and release all system resources that wxWidgets allocated.

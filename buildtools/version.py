@@ -13,10 +13,10 @@
 
 VER_MAJOR        = 3      # Matches wxWidgets MAJOR version number
 VER_MINOR        = 0      # Matches wxWidgets MINOR version number
-VER_RELEASE      = 3      # wxPython RELEASE number for the given wxWidgets
+VER_RELEASE      = 4      # wxPython RELEASE number for the given wxWidgets
                           # MAJOR.MINOR version.
 
-VER_FLAGS        = ""     # wxPython release flags
+VER_FLAGS        = "a1"     # wxPython release flags
 
 # The VER_FLAGS value is appended to the version number constructed from the
 # first 3 components and should be set according to the following patterns.
