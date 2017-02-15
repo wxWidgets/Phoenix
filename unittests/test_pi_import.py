@@ -59,7 +59,32 @@ class PIImportTest(unittest.TestCase):
     def test_richtext_pi(self):
         self.runPI('richtext.pyi')
 
+    def test_glcanvas_pi(self):
+        self.runPI('glcanvas.pyi')
 
+    def test_grid_pi(self):
+        self.runPI('grid.pyi')
+
+    def test_media_pi(self):
+        self.runPI('media.pyi')
+
+    def test_propgrid_pi(self):
+        self.runPI('propgrid.pyi')
+
+    def test_ribbon_pi(self):
+        self.runPI('ribbon.pyi')
+
+
+    @unittest.skipIf('wxMSW' not in wx.PlatformInfo,
+                     'wx.msw only relevant on Windows')
+    def test_msw_pi(self):
+        self.runPI('msw.pyi')
+
+
+    @unittest.skipIf('wxOSX' not in wx.PlatformInfo,
+                     'wx.webkit only relevant on Macs')
+    def test_webkit_pi(self):
+        self.runPI('webkit.pyi')
 
 
 #---------------------------------------------------------------------------
