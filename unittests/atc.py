@@ -46,25 +46,23 @@ class TestWidget:
     def __init__(self):
         assert isinstance(self, wx.EvtHandler), "Test widget needs to be an event handler"
 
-        self.__timer = wx.Timer(self, wx.NewId())
-
-        self.Bind(wx.EVT_TIMER, self.OnCommence, self.__timer)
         self.Bind(EVT_TEST, self.OnTest)
 
-        self.__timer.StartOnce(500) # Wait for the application mainloop to start and commence testing.
-                                    # while 500 milliseconds should be more than plenty, this is still
-                                    # clumsy and I don't like it.
-                                    # Initially I had an initial TestEvent posted to be processed when
-                                    # the mainloop was running, but this caused issues on some linux
-                                    # distributions.
-                                    # Ultimately I'd like to minimize as much waiting as feasibly possible
+        wx.CallLater(500, self.OnCommence)
+        # Wait for the application mainloop to start and commence testing.
+        # while 500 milliseconds should be more than plenty, this is still
+        # clumsy and I don't like it.
+        # Initially I had an initial TestEvent posted to be processed when
+        # the mainloop was running, but this caused issues on some linux
+        # distributions.
+        # Ultimately I'd like to minimize as much waiting as feasibly possible
 
     # this  only gets invoked if the test arget is a frame object, in which case the app can post events directly
     # to the test target
     def GetTestTarget(self):
         return self
 
-    def OnCommence(self, evt):
+    def OnCommence(self):
         assert wx.GetApp().IsMainLoopRunning(), "Timer ended before mainloop started" # see above comment regarding
                                                                                     # commencing with the timer.
         # start test sequence
@@ -170,7 +168,7 @@ def CreateATC(widget):
         pass
 
     methods = [meth for meth in dir(widget) if (meth.startswith("test_") and callable(getattr(widget, meth)))]
-    print(methods)
+
     for meth in methods:
         test_func = CreateTestMethod(app, meth)
         # ensure any other deocrated data is preserved:
