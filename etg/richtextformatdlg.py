@@ -34,6 +34,7 @@ def run():
 
     c = module.find('wxRichTextFormattingDialog')
     assert isinstance(c, etgtools.ClassDef)
+    c.piBases = ['wx.adv.PropertySheetDialog']
     tools.fixTopLevelWindowClass(c)
     tools.ignoreConstOverloads(c)
 

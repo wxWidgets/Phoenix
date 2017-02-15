@@ -168,7 +168,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
                 continue
             stream.write('import wx.%s\n' % item)
 
-        # Move all PyCode items with an order value to the begining of the
+        # Move all PyCode items with an order value to the beginning of the
         # list as they most likely should appear before everything else.
         pycode = list()
         for item in module:
@@ -573,7 +573,7 @@ class PiWrapperGenerator(generators.WrapperGeneratorBase, FixWxPrefix):
         if pm.isStatic:
             stream.write('\n%s@staticmethod' % indent)
         stream.write('\n%sdef %s' % (indent, pm.name))
-        stream.write(pm.argsString)
+        stream.write(getattr(pm, 'piArgsString', pm.argsString))
         stream.write(':\n')
         indent2 = indent + ' '*4
 

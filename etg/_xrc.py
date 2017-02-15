@@ -78,7 +78,6 @@ def run():
 
     c = module.find('wxXmlResource')
     assert isinstance(c, etgtools.ClassDef)
-    c.piBases = ['wx.Object']
     c.addPrivateCopyCtor()
 
     # Add a bit of code to the ctors to call InitAllHandlers(), for

@@ -20,20 +20,20 @@ DOCSTRING = ""
 ITEMS  = [ 'wxGridCellCoords',
 
            'wxGridCellRenderer',
+           'wxGridCellStringRenderer',
            'wxGridCellAutoWrapStringRenderer',
            'wxGridCellBoolRenderer',
            'wxGridCellDateTimeRenderer',
            'wxGridCellEnumRenderer',
            'wxGridCellFloatRenderer',
            'wxGridCellNumberRenderer',
-           'wxGridCellStringRenderer',
 
            'wxGridCellEditor',
+           'wxGridCellTextEditor',
            'wxGridCellAutoWrapStringEditor',
            'wxGridCellBoolEditor',
            'wxGridCellChoiceEditor',
            'wxGridCellEnumEditor',
-           'wxGridCellTextEditor',
            'wxGridCellFloatEditor',
            'wxGridCellNumberEditor',
 
@@ -355,6 +355,7 @@ def run():
     # ownership of the Python proxy object to match.
     c.find('SetTable').pyName = '_SetTable'
     c.addPyMethod('SetTable', '(self, table, takeOwnership=False, selmode=Grid.GridSelectCells)',
+        piArgsString='(self, table, takeOwnership=False, selmode=GridSelectCells)',
         doc="Set the Grid Table to be used by this grid.",
         body="""\
             val = self._SetTable(table, takeOwnership, selmode)
