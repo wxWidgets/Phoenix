@@ -45,6 +45,10 @@ def run():
     c = module.find('wxPGCellData')
     assert isinstance(c, etgtools.ClassDef)
     c.find('~wxPGCellData').ignore(False)
+    c.bases = ['wxRefCounter']
+
+    c = module.find('wxPGCellRenderer')
+    c.bases = ['wxRefCounter']
 
 
     c = module.find('wxPGAttributeStorage')
@@ -64,13 +68,14 @@ def run():
 
     c = module.find('wxPGChoicesData')
     tools.ignoreConstOverloads(c)
-    #c.addDtor()
+    c.bases = ['wxRefCounter']
     c.find('~wxPGChoicesData').ignore(False)
 
 
     c = module.find('wxPGChoices')
     c.find('wxPGChoices').findOverload('wxChar **').ignore()
     tools.ignoreConstOverloads(c)
+    c.find('operator[]').ignore()
 
     # Ignore some string constants (#defines) coming from dox, and add them
     # back in Python code. They are wchar_t* values and this seemed the
