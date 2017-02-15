@@ -23,7 +23,8 @@ ITEMS  = [ ]
 # The list of other ETG scripts and back-end generator modules that are
 # included as part of this module. These should all be items that are put in
 # the wxWidgets "propgrid" library in a multi-lib build.
-INCLUDES = [ 'propgridproperty',
+INCLUDES = [ 'propgriddefs',
+             'propgridproperty',
              'propgrideditors',
              'propgridpagestate',
              'propgridiface',
@@ -59,6 +60,8 @@ def run():
     module.addPyCode("import wx", order=10)
 
     module.addHeaderCode('#include <wx/propgrid/propgrid.h>')
+
+    #module.addItem(etgtools.DefineDef(name='wxPG_INVALID_VALUE', value='INT_MAX'))
 
     module.addInclude(INCLUDES)
 
