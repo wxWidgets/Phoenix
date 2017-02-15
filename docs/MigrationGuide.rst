@@ -41,7 +41,7 @@ matching exact versions of the two packages by hand is no longer needed.
 Additional flags will be appended to the version number in a manner that is
 compliant with Python's PEP-440_. This includes syntax for alpha, beta,
 release candidate releases, post-release builds, development snapshots, etc.
-See `buildtools/version.py` in the Phoenix build tree for more details.
+See `buildtools/version.py` in the Phoenix source tree for more details.
 
 .. _PEP-440: https://www.python.org/dev/peps/pep-0440/
 
