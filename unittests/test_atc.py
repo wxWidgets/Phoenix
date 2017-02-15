@@ -23,6 +23,11 @@ class ATCPanel(wx.Panel, atc.TestWidget):
         print("Aborting test case")
         assert 0
 
+    @unittest.expectedFailure
+    @atc.TestCritical
+    def test_timeout(self):
+        print("Letting app lo0se")
+
     @unittest.skip("reasons")
     def test_skip(self):
         return

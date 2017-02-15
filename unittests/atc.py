@@ -72,6 +72,14 @@ class TestWidget:
         evt.case = wx.GetApp().case
         wx.PostEvent(self, evt)
 
+        # set a watchdog incase of test error
+        wx.CallLater(300000, self.OnWatchdog) # 5 minutes in millis
+
+    def OnWatchdog(self):
+        print("Test Timeout!!!")
+        wx.GetApp().exception = RuntimeError("Watchdog timed out")
+        for window in wx.GetTopLevelWindows():
+            window.Close()
 
     def OnTest(self, evt):
         testfunc = getattr(self, evt.case)
