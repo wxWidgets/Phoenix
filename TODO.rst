@@ -10,9 +10,12 @@ I've decided that they will not be done or no longer apply.
 
 
 
-WAF Build
----------
-Add support for using the cygwin and mingw32 compilers.
+WAF Tool
+--------
+
+ * Update WAF
+ * Add support for using the cygwin and mingw32 compilers?
+
 
 
 Stubs for Optional Classes
@@ -31,6 +34,7 @@ the generation of the empty stub code for those classes.  ("Almost" because
 we'll need to specify which classes to do it for, and what #define flag to
 check if the the feature is available in wxWidgets or if the stubs should be
 compiled.)
+
 
 
 Sphinx tweaks
@@ -94,13 +98,8 @@ Other Assorted Stuff
   * Reimplement the classes in the valgen, valnum and valtext headers as
     Python code, and make them visible in the core wx namespace?
 
-  * Should the demo/version.py file be maintained in the source repository?
-    Or just let it always be generated like wx/__version__.py?
-
   * Should demo/Main.py ignore anything in the version strings after the '-'
     when comparing?
-
-
 
   * Potential reference count issue with wxGridCellCoordsArray?  Code
     like this::
@@ -120,7 +119,6 @@ Other Assorted Stuff
   * Check gui_scripts entry points.
 
   * wx.Window.DoEraseBackground?
-
 
   * Add tests and/or demo for DnD in DataViewCtrl. Since the DnD is done
     internally and the DataViewEvent is used for passing the data objects
