@@ -43,6 +43,7 @@ class ATCFrame(wx.Frame, atc.TestWidget):
         self.testFailed("Deliberate test failure")
 
 atc_BasicTests = atc.createATC(ATCPanel)
+atc_FrameTests = atc.createATC(ATCFrame)
 
 if __name__ == "__main__":
     unittest.main()
