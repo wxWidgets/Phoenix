@@ -42,6 +42,27 @@ TestEvent, EVT_TEST = wx.lib.newevent.NewEvent()
 class TestError(Exception):
     pass
 
+def testCritical(func):
+    """
+    Wraps the provided function to ensure that uncaught exceptions
+    will end execution.
+    This is done by closing all top level windows and allowing the exception
+    to be re-raised once the main event loop ends.
+    """
+    @functools.wraps(func)
+    def method(*args, **kwargs):
+        try:
+            func(*args, **kwargs)
+        except Exception as e:
+            print("Unbound exception caught in test procedure:\n%s\n%s" % (e.__class__, str(e)), file = sys.stderr)
+            # give full stack trace
+            wx.GetApp().exception = e
+            for window in wx.GetTopLevelWindows():
+                window.Close()
+
+    return method
+
+
 class TestWidget:
     def __init__(self):
         assert isinstance(self, wx.EvtHandler), "Test widget needs to be an event handler"
@@ -56,11 +77,6 @@ class TestWidget:
         # the mainloop was running, but this caused issues on some linux
         # distributions.
         # Ultimately I'd like to minimize as much waiting as feasibly possible
-
-    # this  only gets invoked if the test arget is a frame object, in which case the app can post events directly
-    # to the test target
-    def GetTestTarget(self):
-        return self
 
     def OnCommence(self):
         assert wx.GetApp().IsMainLoopRunning(), "Timer ended before mainloop started" # see above comment regarding
@@ -79,6 +95,7 @@ class TestWidget:
         for window in wx.GetTopLevelWindows():
             window.Close()
 
+    @testCritical   # automatically apply exception blocking to test_ methods.. indirectly
     def OnTest(self, evt):
         testfunc = getattr(self, evt.case)
 
@@ -95,20 +112,6 @@ class TestWidget:
         for window in wx.GetTopLevelWindows():
             window.Close()
         
-def TestCritical(func):
-    @functools.wraps(func)
-    def method(*args, **kwargs):
-        try:
-            func(*args, **kwargs)
-        except Exception as e:
-            print("Unbound exception caught in test procedure:\n%s\n%s" % (e.__class__, str(e)), file = sys.stderr)
-            # give full stack trace
-            wx.GetApp().exception = e
-            for window in wx.GetTopLevelWindows():
-                window.Close()
-
-    return method
-
 def CreateApp(frame):
     class TestApp(wx.App):
         def OnInit(self):

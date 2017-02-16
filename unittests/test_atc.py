@@ -12,13 +12,11 @@ class ATCPanel(wx.Panel, atc.TestWidget):
         self.testPassed()
 
     @unittest.expectedFailure
-    @atc.TestCritical
     def test_fail(self):
         print("Failing test")
         self.testFailed()
 
     @unittest.expectedFailure
-    @atc.TestCritical
     def test_abort(self):
         print("Aborting test case")
         assert 0
