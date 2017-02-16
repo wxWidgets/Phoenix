@@ -84,13 +84,13 @@ class DemoTreeMixin(treemixin.VirtualTree, treemixin.DragAndDrop,
     def OnGetItemTextColour(self, indices):
         # Show how to change the item text colour. In this case second level
         # items are coloured red and third level items are blue. All other
-        # items have the default text colour.
+        # items are black
         if len(indices) % 2 == 0:
             return wx.RED
         elif len(indices) % 3 == 0:
             return wx.BLUE
         else:
-            return super(DemoTreeMixin, self).OnGetItemTextColour(indices)
+            return wx.BLACK
 
     def OnGetItemBackgroundColour(self, indices):
         # Show how to change the item background colour. In this case the
