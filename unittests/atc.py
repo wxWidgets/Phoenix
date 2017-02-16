@@ -158,7 +158,7 @@ def CreateTestMethod(app, case):
 
     return test_func
 
-def CreateATC(widget):
+def createATC(widget):
     # if widget is not instance of TestFrame, generate a quick frame
     # to house the widget
     assert issubclass(widget, TestWidget), "Testing requires the tested widget to derive from TestWidget for now"

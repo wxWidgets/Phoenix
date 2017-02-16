@@ -26,7 +26,7 @@ class ATCPanel(wx.Panel, atc.TestWidget):
         return
 
 
-testcase = atc.CreateATC(ATCPanel)
+testcase = atc.createATC(ATCPanel)
 
 if __name__ == "__main__":
     unittest.main()

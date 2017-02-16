@@ -99,7 +99,7 @@ class FrameRestoreTester(wx.Frame, atc.TestWidget):
                 self.testFailed("Window is not restored.")
 
 
-tc = atc.CreateATC(FrameRestoreTester)
+tc = atc.createATC(FrameRestoreTester)
 
 #---------------------------------------------------------------------------
 
