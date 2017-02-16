@@ -69,14 +69,11 @@ class TestWidget:
 
         self.Bind(EVT_TEST, self.OnTest)
 
-        wx.CallLater(500, self.OnCommence)
-        # Wait for the application mainloop to start and commence testing.
-        # while 500 milliseconds should be more than plenty, this is still
-        # clumsy and I don't like it.
-        # Initially I had an initial TestEvent posted to be processed when
-        # the mainloop was running, but this caused issues on some linux
-        # distributions.
-        # Ultimately I'd like to minimize as much waiting as feasibly possible
+        if "__WXGTK__" in wx.PlatformInfo:
+            self.Bind(wx.EVT_WINDOW_CREATE, self.OnLnxStart)
+
+        else:
+            wx.CallAfter(self.OnCommence)
 
     def OnCommence(self):
         assert wx.GetApp().IsMainLoopRunning(), "Timer ended before mainloop started" # see above comment regarding
@@ -94,6 +91,13 @@ class TestWidget:
         wx.GetApp().exception = RuntimeError("Watchdog timed out")
         for window in wx.GetTopLevelWindows():
             window.Close()
+
+    def OnLnxStart(self, evt):
+        """
+        Invoked on linux systems to signal mainloop readiness
+        """
+        wx.CallAfter(self.OnCommence)
+        evt.Skip()
 
     @testCritical   # automatically apply exception blocking to test_ methods.. indirectly
     def OnTest(self, evt):
