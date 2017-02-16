@@ -85,14 +85,16 @@ class TestWidget:
         print("Testing: %s" % evt.case)
         testfunc()
 
-    def TestDone(self, passed = True):
-        # record test status and invoke next test
-        if passed:
-            for window in wx.GetTopLevelWindows():
-                window.Close()
-        else:
-            raise TestError("A test failed.")
+    def testPassed(self):
+        for window in wx.GetTopLevelWindows():
+            window.Close()
 
+    def testFailed(self, errmsg =  "A test failed."):
+        # do not rely on testCritical being applied to an above method
+        wx.GetApp().exception = TestError(errmsg)
+        for window in wx.GetTopLevelWindows():
+            window.Close()
+        
 def TestCritical(func):
     @functools.wraps(func)
     def method(*args, **kwargs):

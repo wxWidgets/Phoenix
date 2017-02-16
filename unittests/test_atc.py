@@ -9,13 +9,13 @@ class ATCPanel(wx.Panel, atc.TestWidget):
 
     def test_pass(self):
         print("Passing test")
-        self.TestDone()
+        self.testPassed()
 
     @unittest.expectedFailure
     @atc.TestCritical
     def test_fail(self):
         print("Failing test")
-        self.TestDone(False)
+        self.testFailed()
 
     @unittest.expectedFailure
     @atc.TestCritical
