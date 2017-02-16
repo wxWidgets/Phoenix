@@ -9914,11 +9914,11 @@ static int sipWrapperType_init(sipWrapperType *self, PyObject *args,
          */
         if (base != NULL && PyObject_TypeCheck((PyObject *)base, (PyTypeObject *)&sipWrapperType_Type))
         {
-            /* Call any new type handler. */
             sipNewUserTypeFunc new_user_type_handler;
 
             self->wt_td = ((sipWrapperType *)base)->wt_td;
 
+            /* Call any new type handler. */
             new_user_type_handler = find_new_user_type_handler(
                     (sipWrapperType *)sipTypeAsPyTypeObject(self->wt_td));
 
@@ -13482,7 +13482,7 @@ static int sip_api_enable_gc(int enable)
         return -1;
 
     /* Get the functions if we haven't already got them. */
-    if (enable == NULL)
+    if (enable_func == NULL)
     {
         PyObject *gc_module;
 
