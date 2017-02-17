@@ -70,12 +70,23 @@ class FrameRestoreTester(wx.Frame, atc.TestWidget):
         self.SetLabel("Frame Restore Test")
 
     def test_iconize_restore(self):
+        # for some reason, gtk seems to need a bit more time after
+        # launch to successfully iconize.
+        if "__WXGTK__" in wx.PlatformInfo:
+            wx.CallLater(500, self.lnx_iconize_restore)
+            return 
+
         self.Iconize()
         wx.CallLater(250, self.Ensure, "Iconized")
 
     def test_maximize_restore(self):
         self.Maximize()
         wx.CallLater(250, self.Ensure, "Maximized")
+
+    @atc.testCritical
+    def lnx_iconize_restore(self):
+        self.Iconize()
+        wx.CallLater(250, self.Ensure, "Iconized")        
 
     @atc.testCritical
     def Ensure(self, ensurable):
