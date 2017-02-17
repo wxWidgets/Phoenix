@@ -186,6 +186,18 @@ class TestWidget:
         for window in wx.GetTopLevelWindows():
             window.Close()
     
+    def getTestCase(self):
+        """
+        Returns the encompassing TestCase class, which can then be used for its various
+        testing methods.
+
+        Args:
+            None
+        Returns:
+            Encompassing ATC class.
+        """
+        return wx.GetApp().testcase
+
     def __OnCommence(self):
         """
         Invoked to start test procedures. Invokation is handled by atc.
@@ -290,6 +302,7 @@ def __CreateTestMethod(app_cls, case):
     def test_func(obj):
         a = app_cls()
         a.case = case
+        a.testcase = obj
         a.MainLoop()
 
         if hasattr(a, "exception"):

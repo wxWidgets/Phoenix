@@ -30,6 +30,10 @@ class ATCPanel(wx.Panel, atc.TestWidget):
         print("Letting application loose")
         return
 
+    def test_testcase(self):
+        self.getTestCase()
+        self.testPassed()
+
 class ATCFrame(wx.Frame, atc.TestWidget):
     def __init__(self):
         wx.Frame.__init__(self, None, wx.NewId(), "ATC Test Frame")

@@ -94,13 +94,13 @@ class FrameRestoreTester(wx.Frame, atc.TestWidget):
             if not self.IsIconized():
                 self.testFailed("Frame failed to iconize")
             self.Restore()
-            wx.CallLater(500, self.Ensure, "Restored")
+            wx.CallLater(250, self.Ensure, "Restored")
 
         elif ensurable == "Maximized":
             if not self.IsMaximized():
                 self.testFailed("Frame failed to maximize")
             self.Restore()
-            wx.CallLater(500, self.Ensure, "Restored")
+            wx.CallLater(250, self.Ensure, "Restored")
 
 
         elif ensurable == "Restored":
