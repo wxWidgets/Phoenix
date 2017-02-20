@@ -20,6 +20,7 @@ DOCSTRING = ""
 ITEMS  = [ 'interface_2wx_2propgrid_2propgrid_8h.xml',
            'wxPGValidationInfo',
            'wxPropertyGrid',
+           'wxPropertyGridEvent',
            ]
 
 #---------------------------------------------------------------------------
@@ -59,6 +60,27 @@ def run():
     assert isinstance(td, etgtools.TypedefDef)
     td.type = 'unsigned char'
     td.noTypeName = True
+
+
+    c = module.find('wxPropertyGridEvent')
+    tools.fixEventClass(c)
+
+    c.addPyCode("""\
+        EVT_PG_CHANGED = wx.PyEventBinder( wxEVT_PG_CHANGED, 1 )
+        EVT_PG_CHANGING = wx.PyEventBinder( wxEVT_PG_CHANGING, 1 )
+        EVT_PG_SELECTED = wx.PyEventBinder( wxEVT_PG_SELECTED, 1 )
+        EVT_PG_HIGHLIGHTED = wx.PyEventBinder( wxEVT_PG_HIGHLIGHTED, 1 )
+        EVT_PG_RIGHT_CLICK = wx.PyEventBinder( wxEVT_PG_RIGHT_CLICK, 1 )
+        EVT_PG_PAGE_CHANGED = wx.PyEventBinder( wxEVT_PG_PAGE_CHANGED, 1 )
+        EVT_PG_ITEM_COLLAPSED = wx.PyEventBinder( wxEVT_PG_ITEM_COLLAPSED, 1 )
+        EVT_PG_ITEM_EXPANDED = wx.PyEventBinder( wxEVT_PG_ITEM_EXPANDED, 1 )
+        EVT_PG_DOUBLE_CLICK = wx.PyEventBinder( wxEVT_PG_DOUBLE_CLICK, 1 )
+        EVT_PG_LABEL_EDIT_BEGIN = wx.PyEventBinder( wxEVT_PG_LABEL_EDIT_BEGIN, 1 )
+        EVT_PG_LABEL_EDIT_ENDING = wx.PyEventBinder( wxEVT_PG_LABEL_EDIT_ENDING, 1 )
+        EVT_PG_COL_BEGIN_DRAG = wx.PyEventBinder( wxEVT_PG_COL_BEGIN_DRAG, 1 )
+        EVT_PG_COL_DRAGGING = wx.PyEventBinder( wxEVT_PG_COL_DRAGGING, 1 )
+        EVT_PG_COL_END_DRAG = wx.PyEventBinder( wxEVT_PG_COL_END_DRAG, 1 )
+        """)
 
 
     #-----------------------------------------------------------------
