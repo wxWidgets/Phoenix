@@ -46,8 +46,26 @@ class ATCFrame(wx.Frame, atc.TestWidget):
     def test_fail(self):
         self.testFailed("Deliberate test failure")
 
+class ATCDialog(wx.Dialog, atc.TestWidget):
+    def __init__(self, parent):
+        wx.Dialog.__init__(self, parent)
+        atc.TestWidget.__init__(self)
+
+    def test_pass(self):
+        self.testPassed()
+
+    @unittest.expectedFailure
+    def test_faile(self):
+        self.testFailed()
+
+    def test_intlw(self):
+        assert self in wx.GetTopLevelWindows(), "Dialog is not top level window"
+        self.testPassed()
+
 atc_BasicTests = atc.createATC(ATCPanel)
 atc_FrameTests = atc.createATC(ATCFrame)
+atc_DialogTests = atc.createATC(ATCDialog)
+
 
 if __name__ == "__main__":
     unittest.main()

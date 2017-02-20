@@ -102,7 +102,7 @@ def createATC(widget_cls):
     # xfail.
     """
     assert issubclass(widget_cls, TestWidget), "Testing requires the tested widget to derive from TestWidget for now"
-    assert not issubclass(widget_cls, wx.Dialog), "Support for wx.Dialog derivatives suspended."
+    
     tlw = None
     if not issubclass(widget_cls, wx.Frame):
         # need to stick this widget in a frame
@@ -272,12 +272,17 @@ def __CreateFrame(widget_cls):
         def __init__(self):
             wx.Frame.__init__(self, None, wx.NewId(), "Generated Test Frame")
 
-            sizer = wx.BoxSizer()
-            self.widget = widget_cls(self)  # assumes need of parent.
-            sizer.Add(self.widget, 1, wx.EXPAND)
+            if issubclass(widget_cls, wx.Dialog):
+                dlg = widget_cls(self)
+                dlg.Show()  # modeless
 
-            self.SetSizer(sizer)
-            sizer.Layout()
+            else:
+                sizer = wx.BoxSizer()
+                self.widget = widget_cls(self)  # assumes need of parent.
+                sizer.Add(self.widget, 1, wx.EXPAND)
+
+                self.SetSizer(sizer)
+                sizer.Layout()
 
     return BaseTestFrame
 
