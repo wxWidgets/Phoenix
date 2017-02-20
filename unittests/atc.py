@@ -62,7 +62,7 @@ def testCritical(func):
 
     return method
 
-def createATC(widget):
+def createATC(widget_cls):
     """
     Creates and returns a class that derives unittest.TestCase the TestCase is generated from widget
     IMPORTANT NOTE: In order for the returned class to be picked up by the default unittest TestDiscovery process
@@ -101,26 +101,25 @@ def createATC(widget):
     # when run by pytest test_pass will pass and test_fail will
     # xfail.
     """
-    assert issubclass(widget, TestWidget), "Testing requires the tested widget to derive from TestWidget for now"
-
+    assert issubclass(widget_cls, TestWidget), "Testing requires the tested widget to derive from TestWidget for now"
     tlw = None
-    if not issubclass(widget, wx.Frame):
+    if not issubclass(widget_cls, wx.Frame):
         # need to stick this widget in a frame
-        tlw = __CreateFrame(widget)
+        tlw = __CreateFrame(widget_cls)
     else:
-        tlw = widget
+        tlw = widget_cls
 
     app = __CreateApp(tlw)
 
     class ApplicationTestCase(unittest.TestCase):
         pass
 
-    methods = [meth for meth in dir(widget) if (meth.startswith("test_") and callable(getattr(widget, meth)))]
+    methods = [meth for meth in dir(widget_cls) if (meth.startswith("test_") and callable(getattr(widget_cls, meth)))]
 
     for meth in methods:
         test_func = __CreateTestMethod(app, meth)
         # ensure any other deocrated data is preserved:
-        basemeth = getattr(widget, meth)
+        basemeth = getattr(widget_cls, meth)
         for attr in dir(basemeth):
             if not hasattr(test_func, attr):
                 setattr(test_func, attr, getattr(basemeth, attr))
