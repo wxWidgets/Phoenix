@@ -102,6 +102,7 @@ def createATC(widget_cls):
     # xfail.
     """
     assert issubclass(widget_cls, TestWidget), "Testing requires the tested widget to derive from TestWidget for now"
+    assert not issubclass(widget_cls, wx.Dialog), "Support for wx.Dialog derivatives suspended."
     tlw = None
     if not issubclass(widget_cls, wx.Frame):
         # need to stick this widget in a frame
