@@ -36,7 +36,6 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.find('GetPtr').overloads[0].ignore()
 
-
     c = module.find('wxPropertyGridInterface')
     c.abstract = True
     for m in c.findAll('GetIterator'):
@@ -48,6 +47,20 @@ def run():
     c.find('SetPropertyValue').findOverload('wxLongLong_t value').ignore()
     c.find('SetPropertyValue').findOverload('wxULongLong_t value').ignore()
     c.find('SetPropertyValue').findOverload('wxObject *value').ignore()
+
+    c.addPyMethod('RegisterEditor', '(self, editor, editorName=None)',
+        body="""\
+            if not isinstance(editor, PGEditor):
+                editor = editor()
+            if not editorName:
+                editorName = editor.__class__.__name__
+            try:
+                self._editor_instances.append(editor)
+            except:
+                self._editor_instances = [editor]
+            return PropertyGrid.DoRegisterEditorClass(editor, editorName)
+            """
+        )
 
     module.addItem(
         tools.wxArrayPtrWrapperTemplate('wxArrayPGProperty', 'wxPGProperty', module))

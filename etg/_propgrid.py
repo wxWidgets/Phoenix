@@ -61,9 +61,38 @@ def run():
 
     module.addHeaderCode('#include <wx/propgrid/propgrid.h>')
 
-    #module.addItem(etgtools.DefineDef(name='wxPG_INVALID_VALUE', value='INT_MAX'))
-
     module.addInclude(INCLUDES)
+
+
+    # Deprecated aliases for the various helper classes in Classic
+    module.addPyCode("""\
+        PyArrayStringProperty = wx.deprecated(ArrayStringProperty, "Use ArrayStringProperty instead.")
+        PyChoiceEditor = wx.deprecated(PGChoiceEditor, "Use PGChoiceEditor instead.")
+        PyColourProperty = wx.deprecated(ColourProperty, "Use ColourProperty instead.")
+        PyComboBoxEditor = wx.deprecated(PGComboBoxEditor, "Use PGComboBoxEditor instead.")
+        PyEditEnumProperty = wx.deprecated(EditEnumProperty, "Use PGEditEnumProperty instead.")
+        PyEditor = wx.deprecated(PGEditor, "Use PGEditor instead.")
+        PyEditorDialogAdapter = wx.deprecated(PGEditorDialogAdapter, "Use PGEditorDialogAdapter instead.")
+        PyEnumProperty = wx.deprecated(EnumProperty, "Use EnumProperty instead.")
+        PyFileDialogAdapter = wx.deprecated(PGFileDialogAdapter, "Use PGFileDialogAdapter instead.")
+        PyFileProperty = wx.deprecated(FileProperty, "Use FileProperty instead.")
+        PyFlagsProperty = wx.deprecated(FlagsProperty, "Use FlagsProperty instead.")
+        PyFloatProperty = wx.deprecated(FloatProperty, "Use FloatProperty instead.")
+        PyFontProperty = wx.deprecated(FontProperty, "Use FontProperty instead.")
+        PyIntProperty = wx.deprecated(IntProperty, "Use IntProperty instead.")
+        PyLongStringDialogAdapter = wx.deprecated(PGLongStringDialogAdapter, "Use PGLongStringDialogAdapter instead.")
+        PyLongStringProperty = wx.deprecated(LongStringProperty, "Use LongStringProperty instead.")
+        PyProperty = wx.deprecated(PGProperty, "Use PGProperty instead.")
+        PyStringProperty = wx.deprecated(StringProperty, "Use StringProperty instead.")
+        PySystemColourProperty = wx.deprecated(SystemColourProperty, "Use SystemColourProperty instead.")
+        PyTextCtrlEditor = wx.deprecated(PGTextCtrlEditor, "Use PGTextCtrlEditor instead.")
+        PyUIntProperty = wx.deprecated(UIntProperty, "Use UIntProperty instead.")
+        """)
+
+    module.addPyFunction('RegisterEditor', '(editor, editorName)',
+        deprecated='Use PropertyGrid.DoRegisterEditor instead',
+        body='return PropertyGrid.DoRegisterEditorClass(editor, editorName)',
+        )
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
