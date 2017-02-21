@@ -86,6 +86,25 @@ def run():
         body="return self.GetCount()",
         )
 
+    # Enable auto conversion from wxArrayString
+    c.convertFromPyObject = """\
+        // Code to test a PyObject for compatibility
+        if (!sipIsErr) {
+            if (sipCanConvertToType(sipPy, sipType_wxArrayString, 0))
+                return TRUE;
+            return FALSE;
+        }
+
+        // Code to convert a compatible PyObject
+        int state = 0;
+        wxArrayString* arr = reinterpret_cast<wxArrayString*>(
+                sipConvertToType(sipPy, sipType_wxArrayString, sipTransferObj, 0, &state, sipIsErr));
+        *sipCppPtr = new wxPGChoices(arr);
+        sipReleaseType(arr, sipType_wxArrayString, state);
+        return sipGetState(sipTransferObj);
+        """
+
+
     # Ignore some string constants (#defines) coming from dox, and add them
     # back in Python code. They are wchar_t* values and this seemed the
     # simplest way to deal with them.
