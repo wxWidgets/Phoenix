@@ -61,12 +61,12 @@ class ValueObject:
         pass
 
 
-class IntProperty2(wxpg.PyProperty):
+class IntProperty2(wxpg.PGProperty):
     """\
     This is a simple re-implementation of wxIntProperty.
     """
-    def __init__(self, label, name = wxpg.LABEL_AS_NAME, value=0):
-        wxpg.PyProperty.__init__(self, label, name)
+    def __init__(self, label, name = wxpg.PG_LABEL, value=0):
+        wxpg.PGProperty.__init__(self, label, name)
         self.SetValue(value)
 
     def GetClassName(self):
@@ -119,11 +119,11 @@ class IntProperty2(wxpg.PyProperty):
         return (True, value)
 
 
-class SizeProperty(wxpg.PyProperty):
+class SizeProperty(wxpg.PGProperty):
     """ Demonstrates a property with few children.
     """
-    def __init__(self, label, name = wxpg.LABEL_AS_NAME, value=wx.Size(0, 0)):
-        wxpg.PyProperty.__init__(self, label, name)
+    def __init__(self, label, name = wxpg.PG_LABEL, value=wx.Size(0, 0)):
+        wxpg.PGProperty.__init__(self, label, name)
 
         value = self._ConvertValue(value)
 
@@ -168,7 +168,7 @@ class SizeProperty(wxpg.PyProperty):
         return size
 
 
-class DirsProperty(wxpg.PyArrayStringProperty):
+class DirsProperty(wxpg.ArrayStringProperty):
     """ Sample of a custom custom ArrayStringProperty.
 
         Because currently some of the C++ helpers from wxArrayStringProperty
@@ -176,8 +176,8 @@ class DirsProperty(wxpg.PyArrayStringProperty):
         a bit 'manually'. Which is not too bad since Python has excellent
         string and list manipulation facilities.
     """
-    def __init__(self, label, name = wxpg.LABEL_AS_NAME, value=[]):
-        wxpg.PyArrayStringProperty.__init__(self, label, name, value)
+    def __init__(self, label, name = wxpg.PG_LABEL, value=[]):
+        wxpg.ArrayStringProperty.__init__(self, label, name, value)
 
         # Set default delimiter
         self.SetAttribute("Delimiter", ',')
@@ -269,7 +269,7 @@ class PyObjectPropertyValue:
         return ' - '.join(self.ls)
 
 
-class PyObjectProperty(wxpg.PyProperty):
+class PyObjectProperty(wxpg.PGProperty):
     """\
     Another simple example. This time our value is a PyObject.
 
@@ -278,8 +278,8 @@ class PyObjectProperty(wxpg.PyProperty):
           or wxObject based. Dictionary, None, or any user-specified Python
           class is allowed.
     """
-    def __init__(self, label, name = wxpg.LABEL_AS_NAME, value=None):
-        wxpg.PyProperty.__init__(self, label, name)
+    def __init__(self, label, name = wxpg.PG_LABEL, value=None):
+        wxpg.PGProperty.__init__(self, label, name)
         self.SetValue(value)
 
     def GetClassName(self):
@@ -299,9 +299,9 @@ class PyObjectProperty(wxpg.PyProperty):
         return (True, v)
 
 
-class SampleMultiButtonEditor(wxpg.PyTextCtrlEditor):
+class SampleMultiButtonEditor(wxpg.PGTextCtrlEditor):
     def __init__(self):
-        wxpg.PyTextCtrlEditor.__init__(self)
+        wxpg.PGTextCtrlEditor.__init__(self)
 
     def CreateControls(self, propGrid, property, pos, sz):
         # Create and populate buttons-subwindow
@@ -340,25 +340,25 @@ class SampleMultiButtonEditor(wxpg.PyTextCtrlEditor):
 
             if evtId == buttons.GetButtonId(0):
                 # Do something when the first button is pressed
-                wx.LogDebug("First button pressed");
+                wx.LogDebug("First button pressed")
                 return False  # Return false since value did not change
             if evtId == buttons.GetButtonId(1):
                 # Do something when the second button is pressed
-                wx.MessageBox("Second button pressed");
+                wx.MessageBox("Second button pressed")
                 return False  # Return false since value did not change
             if evtId == buttons.GetButtonId(2):
                 # Do something when the third button is pressed
-                wx.MessageBox("Third button pressed");
+                wx.MessageBox("Third button pressed")
                 return False  # Return false since value did not change
 
         return self.CallSuperMethod("OnEvent", propGrid, prop, ctrl, event)
 
 
-class SingleChoiceDialogAdapter(wxpg.PyEditorDialogAdapter):
-    """ This demonstrates use of wxpg.PyEditorDialogAdapter.
+class SingleChoiceDialogAdapter(wxpg.PGEditorDialogAdapter):
+    """ This demonstrates use of wxpg.PGEditorDialogAdapter.
     """
     def __init__(self, choices):
-        wxpg.PyEditorDialogAdapter.__init__(self)
+        wxpg.PGEditorDialogAdapter.__init__(self)
         self.choices = choices
 
     def DoShowDialog(self, propGrid, property):
@@ -371,16 +371,16 @@ class SingleChoiceDialogAdapter(wxpg.PyEditorDialogAdapter):
         return False;
 
 
-class SingleChoiceProperty(wxpg.PyStringProperty):
-    def __init__(self, label, name=wxpg.LABEL_AS_NAME, value=''):
-        wxpg.PyStringProperty.__init__(self, label, name, value)
+class SingleChoiceProperty(wxpg.StringProperty):
+    def __init__(self, label, name=wxpg.PG_LABEL, value=''):
+        wxpg.StringProperty.__init__(self, label, name, value)
 
         # Prepare choices
         dialog_choices = []
-        dialog_choices.append("Cat");
-        dialog_choices.append("Dog");
-        dialog_choices.append("Gibbon");
-        dialog_choices.append("Otter");
+        dialog_choices.append("Cat")
+        dialog_choices.append("Dog")
+        dialog_choices.append("Gibbon")
+        dialog_choices.append("Otter")
 
         self.dialog_choices = dialog_choices
 
@@ -393,14 +393,14 @@ class SingleChoiceProperty(wxpg.PyStringProperty):
         return SingleChoiceDialogAdapter(self.dialog_choices)
 
 
-class TrivialPropertyEditor(wxpg.PyEditor):
+class TrivialPropertyEditor(wxpg.PGEditor):
     """\
     This is a simple re-creation of TextCtrlWithButton. Note that it does
     not take advantage of wx.TextCtrl and wx.Button creation helper functions
     in wx.PropertyGrid.
     """
     def __init__(self):
-        wxpg.PyEditor.__init__(self)
+        wxpg.PGEditor.__init__(self)
 
     def CreateControls(self, propgrid, property, pos, sz):
         """ Create the actual wxPython controls here for editing the
@@ -564,12 +564,12 @@ class LargeImagePickerCtrl(wx.Panel):
         return self.tc.GetLastPosition()
 
 
-class LargeImageEditor(wxpg.PyEditor):
+class LargeImageEditor(wxpg.PGEditor):
     """\
     Double-height text-editor with image in front.
     """
     def __init__(self):
-        wxpg.PyEditor.__init__(self)
+        wxpg.PGEditor.__init__(self)
 
     def CreateControls(self, propgrid, property, pos, sz):
         try:
