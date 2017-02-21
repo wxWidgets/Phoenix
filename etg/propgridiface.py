@@ -34,7 +34,31 @@ def run():
 
     c = module.find('wxPGPropArgCls')
     assert isinstance(c, etgtools.ClassDef)
+    c.find('wxPGPropArgCls').findOverload('deallocPtr').ignore()
     c.find('GetPtr').overloads[0].ignore()
+    c.convertFromPyObject = """\
+        // Code to test a PyObject for compatibility with wxPGPropArgCls
+        if (!sipIsErr) {
+            if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
+                return TRUE;
+            if (sipCanConvertToType(sipPy, sipType_wxPGProperty, SIP_NO_CONVERTORS))
+                return TRUE;
+            return FALSE;
+        }
+
+        // Code to convert a compatible PyObject to a wxPGPropArgCls
+        if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)) {
+            *sipCppPtr = new wxPGPropArgCls(Py2wxString(sipPy));
+            return sipGetState(sipTransferObj);
+        }
+        else {
+            wxPGProperty* prop = reinterpret_cast<wxPGProperty*>(
+                sipConvertToType(sipPy, sipType_wxPGProperty, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
+            *sipCppPtr = new wxPGPropArgCls(prop);
+            return sipGetState(sipTransferObj);
+        }
+        """
+
 
     c = module.find('wxPropertyGridInterface')
     c.abstract = True
