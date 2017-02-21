@@ -48,6 +48,12 @@ def run():
     c.find('SetPropertyValue').findOverload('wxULongLong_t value').ignore()
     c.find('SetPropertyValue').findOverload('wxObject *value').ignore()
 
+    c.find('Append.property').transfer = True
+    c.find('AppendIn.newProperty').transfer = True
+    for m in c.find('Insert').all():
+        m.find('newProperty').transfer = True
+
+
     c.addPyMethod('RegisterEditor', '(self, editor, editorName=None)',
         body="""\
             if not isinstance(editor, PGEditor):
