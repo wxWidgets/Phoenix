@@ -723,8 +723,11 @@ class TestPanel( wx.Panel ):
         pg.Append( wxpg.IntProperty("Int",value=100) )
         pg.Append( wxpg.FloatProperty("Float",value=100.0) )
         pg.Append( wxpg.BoolProperty("Bool",value=True) )
-        pg.Append( wxpg.BoolProperty("Bool_with_Checkbox",value=True) )
-        pg.SetPropertyAttribute("Bool_with_Checkbox", "UseCheckbox", True)
+        boolprop = pg.Append( wxpg.BoolProperty("Bool_with_Checkbox",value=True) )
+        pg.SetPropertyAttribute(
+            "Bool_with_Checkbox",    # You can find the property by name,
+            #boolprop,               # or give the property object itself.
+            "UseCheckbox", True)     # The attribute name and value
 
         pg.Append( wxpg.PropertyCategory("2 - More Properties") )
         pg.Append( wxpg.LongStringProperty("LongString",
@@ -995,7 +998,7 @@ class TestPanel( wx.Panel ):
 
 
 class MemoDialog(wx.Dialog):
-    """\
+    """
     Dialog for multi-line text editing.
     """
     def __init__(self,parent=None,title="",text="",pos=None,size=(500,500)):
