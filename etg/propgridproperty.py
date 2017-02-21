@@ -77,6 +77,15 @@ def run():
     tools.ignoreConstOverloads(c)
     c.find('operator[]').ignore()
 
+    c.addPyMethod('__getitem__', '(self, index)',
+        doc="Returns a reference to a :class:PGChoiceEntry using Python list syntax.",
+        body="return self.Item(index)",
+        )
+    c.addPyMethod('__len__', '(self)',
+        doc="",
+        body="return self.GetCount()",
+        )
+
     # Ignore some string constants (#defines) coming from dox, and add them
     # back in Python code. They are wchar_t* values and this seemed the
     # simplest way to deal with them.
