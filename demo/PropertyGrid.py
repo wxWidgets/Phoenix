@@ -7,9 +7,11 @@ import os
 import os.path
 
 import wx
+import wx.adv
+import wx.propgrid as wxpg
+
 from six import exec_
 _ = wx.GetTranslation
-import wx.propgrid as wxpg
 
 
 ############################################################################
@@ -768,7 +770,7 @@ class TestPanel( wx.Panel ):
         pg.SetPropertyAttribute( "File", wxpg.PG_FILE_INITIAL_PATH,
                                  "C:\\Program Files\\Internet Explorer" )
         pg.SetPropertyAttribute( "Date", wxpg.PG_DATE_PICKER_STYLE,
-                                 wx.DP_DROPDOWN|wx.DP_SHOWCENTURY )
+                                 wx.adv.DP_DROPDOWN|wx.adv.DP_SHOWCENTURY )
 
         pg.Append( wxpg.PropertyCategory("5 - Custom Properties and Editors") )
         pg.Append( IntProperty2("IntProperty2", value=1024) )
