@@ -40,8 +40,16 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    #c = module.find('')
-    #assert isinstance(c, etgtools.ClassDef)
+    c = module.find('wxMultiChoiceProperty')
+    assert isinstance(c, etgtools.ClassDef)
+
+    # Fix up the ctor taking a wxArrayString to be the one with the easier and
+    # expected API
+    m = c.find('wxMultiChoiceProperty').findOverload('strings')
+    m.find('name').default = 'wxPG_LABEL'
+    m.find('strings').default = 'wxArrayString()'
+    m.find('strings').name = 'choices'
+    m.find('value').default = 'wxArrayString()'
 
 
     #-----------------------------------------------------------------
