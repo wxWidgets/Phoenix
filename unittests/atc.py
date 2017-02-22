@@ -250,7 +250,6 @@ def __CreateApp(frame_cls):
         """ a generated App class """
         def OnInit(self):
             self.frame = frame_cls()
-            self.frame.Show(True)
             return True
 
     return TestApp
@@ -274,6 +273,7 @@ def __CreateFrame(widget_cls):
 
             if issubclass(widget_cls, wx.Dialog):
                 dlg = widget_cls(self)
+                self.Show() # show first, so the dialog is on top
                 dlg.Show()  # modeless
 
             else:
@@ -283,6 +283,8 @@ def __CreateFrame(widget_cls):
 
                 self.SetSizer(sizer)
                 sizer.Layout()
+
+                self.Show()
 
     return BaseTestFrame
 

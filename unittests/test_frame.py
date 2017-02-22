@@ -68,6 +68,7 @@ class FrameRestoreTester(wx.Frame, atc.TestWidget):
         wx.Frame.__init__(self, None, wx.NewId(), "Frame Restore Test")
         atc.TestWidget.__init__(self)
         self.SetLabel("Frame Restore Test")
+        self.Show(True)
 
     def test_iconize_restore(self):
         # for some reason, gtk seems to need a bit more time after

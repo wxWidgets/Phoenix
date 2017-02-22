@@ -48,14 +48,14 @@ class ATCFrame(wx.Frame, atc.TestWidget):
 
 class ATCDialog(wx.Dialog, atc.TestWidget):
     def __init__(self, parent):
-        wx.Dialog.__init__(self, parent)
+        wx.Dialog.__init__(self, parent, title = "ATCDialog")
         atc.TestWidget.__init__(self)
 
     def test_pass(self):
         self.testPassed()
 
     @unittest.expectedFailure
-    def test_faile(self):
+    def test_fail(self):
         self.testFailed()
 
     def test_intlw(self):
