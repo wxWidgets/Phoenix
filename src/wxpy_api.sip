@@ -286,6 +286,8 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
         value = (long)PyLong_AsLong(obj);
     else if (PyFloat_Check(obj))
         value = PyFloat_AS_DOUBLE(obj);
+    else if (obj == Py_None)
+        value = new wxVariantDataPyObject(obj);
     else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxDateTime"))) {
         wxDateTime* ptr;
         wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxDateTime"));

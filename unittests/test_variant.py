@@ -27,6 +27,24 @@ class variant_Tests(wtc.WidgetTestCase):
         d2 = wx.testVariantTypemap(d1)
         self.assertEqual(d1, d2)
 
+    @unittest.skipIf(not hasattr(wx, 'testVariantTypemap'), '')
+    def test_variantNone(self):
+        d1 = None
+        d2 = wx.testVariantTypemap(d1)
+        self.assertTrue(d2 is None)
+
+    @unittest.skipIf(not hasattr(wx, 'testVariantTypemap'), '')
+    def test_variantPyObject(self):
+        class Data(object):
+            def __init__(self):
+                self.a = 123
+
+        d1 = Data()
+        d2 = wx.testVariantTypemap(d1)
+        self.assertTrue(isinstance(d2, Data))
+        self.assertEqual(d2.a, 123)
+        self.assertTrue(d1 is d2)
+
 
 #---------------------------------------------------------------------------
 
