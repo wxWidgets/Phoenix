@@ -34,12 +34,40 @@ def run():
 
     c = module.find('wxPGPropArgCls')
     assert isinstance(c, etgtools.ClassDef)
+    c.find('wxPGPropArgCls').findOverload('wxString &').ignore()
+    c.find('wxPGPropArgCls').findOverload('char *').ignore()
+    c.find('wxPGPropArgCls').findOverload('wchar_t *').ignore()
+    c.find('wxPGPropArgCls').findOverload('int').ignore()
     c.find('wxPGPropArgCls').findOverload('deallocPtr').ignore()
+
+    # Make a string ctor that uses the wxPython-specific version of
+    # the C++ class' ctor
+    newCtor = c.addCppCtor('(const wxString& str)',
+        doc="Creates a PGPropArgCls from a string.",
+        body="""\
+            wxString* name = new wxString(*str);
+            return new wxPGPropArgCls(name, true);
+        """
+        )
+
+    # Make it be the first overload instead of the last
+    ctor = c.find('wxPGPropArgCls')
+    overloads = list(ctor.overloads)
+    del overloads[overloads.index(newCtor)]
+    overloads.insert(0, newCtor)
+    ctor.overloads = overloads
+
+
     c.find('GetPtr').overloads[0].ignore()
+
     c.convertFromPyObject = """\
         // Code to test a PyObject for compatibility with wxPGPropArgCls
         if (!sipIsErr) {
+            if (sipCanConvertToType(sipPy, sipType_wxPGPropArgCls, SIP_NO_CONVERTORS))
+                return TRUE;
             if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
+                return TRUE;
+            if (sipPy == Py_None)
                 return TRUE;
             if (sipCanConvertToType(sipPy, sipType_wxPGProperty, SIP_NO_CONVERTORS))
                 return TRUE;
@@ -48,14 +76,28 @@ def run():
 
         // Code to convert a compatible PyObject to a wxPGPropArgCls
         if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy)) {
-            *sipCppPtr = new wxPGPropArgCls(Py2wxString(sipPy));
+            wxString* name = new wxString(Py2wxString(sipPy));
+            *sipCppPtr = new wxPGPropArgCls(name, true);
+            return sipGetState(sipTransferObj);
+        }
+        else if (sipCanConvertToType(sipPy, sipType_wxPGProperty, SIP_NO_CONVERTORS)) {
+            int state = 0;
+            wxPGProperty* prop = reinterpret_cast<wxPGProperty*>(
+                sipConvertToType(sipPy, sipType_wxPGProperty, sipTransferObj, SIP_NO_CONVERTORS, &state, sipIsErr));
+            *sipCppPtr = new wxPGPropArgCls(prop);
+            sipReleaseType(prop, sipType_wxPGProperty, state);
+            return sipGetState(sipTransferObj);
+        }
+        else if (sipPy == Py_None) {
+            *sipCppPtr = new wxPGPropArgCls(reinterpret_cast< wxPGProperty * >(NULL));
             return sipGetState(sipTransferObj);
         }
         else {
-            wxPGProperty* prop = reinterpret_cast<wxPGProperty*>(
-                sipConvertToType(sipPy, sipType_wxPGProperty, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
-            *sipCppPtr = new wxPGPropArgCls(prop);
-            return sipGetState(sipTransferObj);
+            // It's already a wxPGPropArgCls, just fetch the pointer and return
+            *sipCppPtr = reinterpret_cast<wxPGPropArgCls*>(sipConvertToType(
+                sipPy, sipType_wxPGPropArgCls, sipTransferObj,
+                SIP_NO_CONVERTORS, 0, sipIsErr));
+            return 0; // not a new instance
         }
         """
 
