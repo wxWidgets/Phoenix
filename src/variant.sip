@@ -95,5 +95,11 @@ wxVariant testVariantTypemap(const wxVariant& var)
     wxVariant local = var;  // force a copy
     return local;
 }
+
+wxString testVariantTypeName(const wxVariant& var)
+{
+    return var.GetType();
+}
 %End
 wxVariant testVariantTypemap(const wxVariant& var);
+wxString testVariantTypeName(const wxVariant& var);
