@@ -272,7 +272,7 @@ def __CreateFrame(widget_cls):
     class BaseTestFrame(wx.Frame):
         """ A generated Frame class """
         def __init__(self):
-            wx.Frame.__init__(self, None, wx.NewId(), "Generated Test Frame")
+            wx.Frame.__init__(self, None, wx.NewId(), "ATC: " + widget_cls.__name__)
 
             if issubclass(widget_cls, wx.Dialog):
                 dlg = widget_cls(self)
