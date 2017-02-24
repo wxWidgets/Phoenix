@@ -62,7 +62,7 @@ def testCritical(func):
 
     return method
 
-def createATC(widget_cls):
+def createATC(widget_cls, autoshow = True):
     """
     Creates and returns a class that derives unittest.TestCase the TestCase is generated from widget
     IMPORTANT NOTE: In order for the returned class to be picked up by the default unittest TestDiscovery process
@@ -78,7 +78,7 @@ def createATC(widget_cls):
 
     Args:
         widget: A widget *class* that derives from TestWidget.
-
+        autoshow: (True) boolean value that indicates whether or not the top level window should be automatically shown
     Returns:
         unittest.TestCase derivation
 
@@ -110,7 +110,7 @@ def createATC(widget_cls):
     else:
         tlw = widget_cls
 
-    app = __CreateApp(tlw)
+    app = __CreateApp(tlw, autoshow)
 
     class ApplicationTestCase(unittest.TestCase):
         pass
@@ -236,13 +236,14 @@ class TestWidget:
         print("Testing: %s" % evt.case)
         testfunc()
         
-def __CreateApp(frame_cls):
+def __CreateApp(frame_cls, autoshow):
     """
     Generates an app class that will create an instance of frame_cls on launch.
     This method is utilized inside atc and probably should not be used otherwise
 
     Args:
         frame_cls: Class that derives from wx.Frame
+        autoshow: boolean value that indicates whether or not the top level window should be automatically shown
     Returns:
         wx.App derived class
     """
@@ -250,6 +251,8 @@ def __CreateApp(frame_cls):
         """ a generated App class """
         def OnInit(self):
             self.frame = frame_cls()
+            if autoshow:
+                self.frame.Show()
             return True
 
     return TestApp
