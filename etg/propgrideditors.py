@@ -45,6 +45,13 @@ def run():
     tools.fixWindowClass(c)
 
 
+    # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
+    # version of the MappedType will be used for converting to/from Python
+    # objects.
+    for item in module.allItems():
+        if hasattr(item, 'type') and 'wxVariant' in item.type:
+            item.type = item.type.replace('wxVariant', 'wxPGVariant')
+
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)
     tools.runGenerators(module)
