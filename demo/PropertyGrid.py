@@ -193,8 +193,7 @@ class DirsProperty(wxpg.ArrayStringProperty):
         self.GenerateValueAsString()
 
     def DoSetAttribute(self, name, value):
-        # Proper way to call same method from super class
-        retval = self.CallSuperMethod("DoSetAttribute", name, value)
+        retval = super(DirsProperty, self).DoSetAttribute(name, value)
 
         #
         # Must re-generate cached string when delimiter changes
@@ -226,7 +225,7 @@ class DirsProperty(wxpg.ArrayStringProperty):
         delim = self.GetAttribute("Delimiter")
         if delim == '"' or delim == "'":
             # Proper way to call same method from super class
-            return self.CallSuperMethod("StringToValue", text, 0)
+            return super(DirsProperty, self).StringToValue(text, 0)
         v = [a.strip() for a in text.split(delim)]
         return (True, v)
 
@@ -315,7 +314,7 @@ class SampleMultiButtonEditor(wxpg.PGTextCtrlEditor):
         buttons.AddBitmapButton(wx.ArtProvider.GetBitmap(wx.ART_FOLDER))
 
         # Create the 'primary' editor control (textctrl in this case)
-        wnd = self.CallSuperMethod("CreateControls",
+        wnd = super(SampleMultiButtonEditor, self).CreateControls(
                                    propGrid,
                                    property,
                                    pos,
@@ -352,7 +351,7 @@ class SampleMultiButtonEditor(wxpg.PGTextCtrlEditor):
                 wx.MessageBox("Third button pressed")
                 return False  # Return false since value did not change
 
-        return self.CallSuperMethod("OnEvent", propGrid, prop, ctrl, event)
+        return super(SampleMultiButtonEditor, self).OnEvent(propGrid, prop, ctrl, event)
 
 
 class SingleChoiceDialogAdapter(wxpg.PGEditorDialogAdapter):
