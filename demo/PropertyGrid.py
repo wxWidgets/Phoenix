@@ -3,7 +3,6 @@
 import sys
 import time
 import math
-import os
 import os.path
 
 import wx
@@ -733,9 +732,9 @@ class TestPanel( wx.Panel ):
 
         pg.Append( wxpg.PropertyCategory("2 - More Properties") )
         pg.Append( wxpg.LongStringProperty("LongString",
-            value="This is a\\nmulti-line string\\nwith\\ttabs\\nmixed\\tin."))
-        pg.Append( wxpg.DirProperty("Dir",value="C:\\Windows") )
-        pg.Append( wxpg.FileProperty("File",value="C:\\Windows\\system.ini") )
+            value="This is a\nmulti-line string\nwith\ttabs\nmixed\tin."))
+        pg.Append( wxpg.DirProperty("Dir",value=r"C:\Windows") )
+        pg.Append( wxpg.FileProperty("File",value=r"C:\Windows\system.ini") )
         pg.Append( wxpg.ArrayStringProperty("ArrayString",value=['A','B','C']) )
 
         pg.Append( wxpg.EnumProperty("Enum","Enum",
@@ -768,7 +767,7 @@ class TestPanel( wx.Panel ):
 
         pg.SetPropertyAttribute( "File", wxpg.PG_FILE_SHOW_FULL_PATH, 0 )
         pg.SetPropertyAttribute( "File", wxpg.PG_FILE_INITIAL_PATH,
-                                 "C:\\Program Files\\Internet Explorer" )
+                                 r"C:\Program Files\Internet Explorer" )
         pg.SetPropertyAttribute( "Date", wxpg.PG_DATE_PICKER_STYLE,
                                  wx.adv.DP_DROPDOWN|wx.adv.DP_SHOWCENTURY )
 
@@ -784,8 +783,8 @@ class TestPanel( wx.Panel ):
         pg.SetPropertyAttribute("Dirs2", "Delimiter", '"')
 
         # SampleMultiButtonEditor
-        pg.Append( wxpg.LongStringProperty("MultipleButtons") );
-        pg.SetPropertyEditor("MultipleButtons", "SampleMultiButtonEditor");
+        pg.Append( wxpg.LongStringProperty("MultipleButtons") )
+        pg.SetPropertyEditor("MultipleButtons", "SampleMultiButtonEditor")
         pg.Append( SingleChoiceProperty("SingleChoiceProperty") )
 
         # Custom editor samples
