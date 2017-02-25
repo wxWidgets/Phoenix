@@ -74,6 +74,11 @@ class pgvariant_Tests(wtc.WidgetTestCase):
 
 
 
+    @unittest.skipIf(not hasattr(pg, 'testPGVariantTypemap'), '')
+    def test_pgvariant9(self):
+        d1 = None
+        d2 = pg.testPGVariantTypemap(d1)
+        self.assertTrue(d2 is None)
 
 
 #---------------------------------------------------------------------------

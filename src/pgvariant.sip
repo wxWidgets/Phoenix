@@ -26,8 +26,15 @@ PyObject* wxPGVariant_out_helper(const wxVariant& value);
 wxVariant wxPGVariant_in_helper(PyObject* obj)
 {
     wxVariant value;
+    int state = 0;
+    int isErr = 0;
 
-    if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxFont"))) {
+    // Always check for None first so we don't just get NULL pointers for the
+    // other types.
+    if (obj == Py_None)
+        value.MakeNull();
+
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxFont"))) {
         wxFont* ptr;
         wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxFont"));
         value << *ptr;
@@ -47,8 +54,6 @@ wxVariant wxPGVariant_in_helper(PyObject* obj)
 
     else if (sipCanConvertToType(obj, sipType_wxArrayInt, 0)) {
         wxArrayInt* ptr;
-        int state = 0;
-        int isErr = 0;
         ptr = (wxArrayInt*)sipConvertToType(obj, sipType_wxArrayInt, NULL, 0, &state, &isErr);
         value << *ptr;
         sipReleaseType(ptr, sipType_wxArrayInt, state);
@@ -64,7 +69,13 @@ PyObject* wxPGVariant_out_helper(const wxVariant& value)
 {
     PyObject* obj;
 
-    if ( value.IsType("wxFont") ) {
+
+    if (value.IsNull()) {
+        obj = Py_None;
+        Py_INCREF(obj);
+    }
+
+    else if ( value.IsType("wxFont") ) {
         wxFont val;
         val << value;
         obj = wxPyConstructObject(new wxFont(val), "wxFont", true);
