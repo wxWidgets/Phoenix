@@ -17,7 +17,7 @@ can continue unencumbered.
 #
 # 12/12/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 #
 # Tags:        phoenix-port, unittest, py3-port, documented
 

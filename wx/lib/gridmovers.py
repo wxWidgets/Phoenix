@@ -11,7 +11,7 @@
 #----------------------------------------------------------------------------
 # 12/07/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 Compatability changes
+# o 2.5 Compatibility changes
 #
 # 12/18/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
