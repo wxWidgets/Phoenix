@@ -11,7 +11,7 @@
 #---------------------------------------------------------------------------
 # 12/14/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 # o Tested, but there is an anomaly between first use and subsequent uses.
 #   First use is odd, subsequent uses seem to be OK. Init error?
 #   -- No, the first time it uses an aspect ratio, but after the reset it doesn't.

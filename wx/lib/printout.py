@@ -16,7 +16,7 @@
 # add index to data list after parsing total pages for paging
 #----------------------------------------------------------------------------
 # 12/10/2003 - Jeff Grimmett (grimmtooth@softhome.net)
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 #----------------------------------------------------------------------------
 # 11/23/2004 - Vernon Cole (wnvcole@peppermillcas.com)
 # o Generalize for non-2-dimensional sequences and non-text data
