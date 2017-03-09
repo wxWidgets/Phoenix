@@ -32,8 +32,10 @@ __version__ = "0.0.2"
 
 import functools
 import os
+import six
 import sys
 import unittest
+import traceback
 import wx
 import wx.lib.newevent
 
@@ -54,8 +56,12 @@ def testCritical(func):
         try:
             func(*args, **kwargs)
         except Exception as e:
-            print("Unbound exception caught in test procedure:\n%s\n%s" % (e.__class__, str(e)), file = sys.stderr)
-            # give full stack trace
+            six.print_("Unbound exception caught in test procedure:\n%s\n%s" % (e.__class__, str(e)), file = sys.stderr)
+            
+            # print the traceback for this exception
+            traceback.print_tb(sys.exc_info()[-1])
+
+            # close  the app.
             wx.GetApp().exception = e
             for window in wx.GetTopLevelWindows():
                 window.Close()
@@ -182,6 +188,18 @@ class TestWidget:
         """
 
         # do not rely on testCritical being applied to an above method
+        # print the stacktrace here, as  there is no exception raised yet
+        stacktrace = traceback.extract_stack()
+        # find "test_func" or whatever the generated test function is called
+        # within stacktrace and exclude all rows before it.
+        for x in range(len(stacktrace)):
+            if "test_func" in str(stacktrace[x]):
+                stacktrace = stacktrace[x:-1]
+                break
+
+        six.print_("".join(traceback.format_list(stacktrace)), file = sys.stderr)
+        six.print_("TestWidget.testFailed() called.", file = sys.stderr)
+        
         wx.GetApp().exception = TestError(errmsg)
         for window in wx.GetTopLevelWindows():
             window.Close()
@@ -217,7 +235,7 @@ class TestWidget:
         """ 
         Invoked with a test hass taken more than 5 minutes to complete
         """
-        print("Test Timeout!!!")
+        six.print_("Test Timeout!!!")
         wx.GetApp().exception = RuntimeError("Watchdog timed out")
         for window in wx.GetTopLevelWindows():
             window.Close()
@@ -233,7 +251,7 @@ class TestWidget:
     def __OnTest(self, evt):
         testfunc = getattr(self, evt.case)
 
-        print("Testing: %s" % evt.case)
+        six.print_("Testing: %s" % evt.case)
         testfunc()
         
 def __CreateApp(frame_cls, autoshow):
@@ -314,6 +332,9 @@ def __CreateTestMethod(app_cls, case):
         a.case = case
         a.testcase = obj
         a.MainLoop()
+
+        if hasattr(a, "tb"):
+            traceback.print_tb(a.tb)
 
         if hasattr(a, "exception"):
             raise a.exception
