@@ -10,7 +10,7 @@
 #----------------------------------------------------------------------
 # 12/21/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o V2.5 compatability update
+# o V2.5 compatibility update
 #
 
 import  getopt

@@ -11,7 +11,7 @@
 #----------------------------------------------------------------------
 # 12/13/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o Updated for V2.5 compatability
+# o Updated for V2.5 compatibility
 #
 
 '''

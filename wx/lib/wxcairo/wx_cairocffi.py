@@ -101,7 +101,7 @@ def _ContextFromDC(dc):
             ctxptr = gdkLib.gdk_cairo_create(drawable)
 
             # Turn it into a Cairo context object
-            ctx = cairocffi.Context._from_pointer(ctxptr, False)
+            ctx = cairocffi.Context._from_pointer(voidp(ctxptr), False)
 
     else:
         raise NotImplementedError("Help  me, I'm lost...")

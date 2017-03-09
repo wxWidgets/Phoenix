@@ -34,7 +34,7 @@
 #----------------------------------------------------------------------------
 # 12/13/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o Updated for V2.5 compatability
+# o Updated for V2.5 compatibility
 # o wx.SpinCtl has some issues that cause the control to
 #   lock up. Noted in other places using it too, it's not this module
 #   that's at fault.
