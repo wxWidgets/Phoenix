@@ -860,7 +860,7 @@ class TestPanel( wx.Panel ):
             d = self.pg.GetPropertyValues(inc_attributes=True)
 
             ss = []
-            for k,v in d.iteritems():
+            for k,v in d.items():
                 v = repr(v)
                 if not v or v[0] != '<':
                     if k.startswith('@'):
@@ -868,22 +868,22 @@ class TestPanel( wx.Panel ):
                     else:
                         ss.append('obj.%s = %s'%(k,v))
 
-            dlg = MemoDialog(self,
+            with MemoDialog(self,
                     "Enter Content for Object Used in SetPropertyValues",
-                    '\n'.join(ss))  # default_object_content1
+                    '\n'.join(ss)) as dlg:  # default_object_content1
 
-            if dlg.ShowModal() == wx.ID_OK:
-                import datetime
-                sandbox = {'obj':ValueObject(),
-                           'wx':wx,
-                           'datetime':datetime}
-                exec_(dlg.tc.GetValue(), sandbox)
-                t_start = time.time()
-                #print(sandbox['obj'].__dict__)
-                self.pg.SetPropertyValues(sandbox['obj'])
-                t_end = time.time()
-                self.log.write('SetPropertyValues finished in %.0fms\n' %
-                               ((t_end-t_start)*1000.0))
+                if dlg.ShowModal() == wx.ID_OK:
+                    import datetime
+                    sandbox = {'obj':ValueObject(),
+                               'wx':wx,
+                               'datetime':datetime}
+                    exec_(dlg.tc.GetValue(), sandbox)
+                    t_start = time.time()
+                    #print(sandbox['obj'].__dict__)
+                    self.pg.SetPropertyValues(sandbox['obj'])
+                    t_end = time.time()
+                    self.log.write('SetPropertyValues finished in %.0fms\n' %
+                                   ((t_end-t_start)*1000.0))
         except:
             import traceback
             traceback.print_exc()
@@ -895,10 +895,11 @@ class TestPanel( wx.Panel ):
             t_end = time.time()
             self.log.write('GetPropertyValues finished in %.0fms\n' %
                            ((t_end-t_start)*1000.0))
-            ss = ['%s: %s'%(k,repr(v)) for k,v in d.iteritems()]
-            dlg = MemoDialog(self,"GetPropertyValues Result",
-                             'Contents of resulting dictionary:\n\n'+'\n'.join(ss))
-            dlg.ShowModal()
+            ss = ['%s: %s'%(k,repr(v)) for k,v in d.items()]
+            with MemoDialog(self,"GetPropertyValues Result",
+                           'Contents of resulting dictionary:\n\n'+'\n'.join(ss)) as dlg:
+                dlg.ShowModal()
+
         except:
             import traceback
             traceback.print_exc()
@@ -910,25 +911,25 @@ class TestPanel( wx.Panel ):
             t_end = time.time()
             self.log.write('GetPropertyValues(as_strings=True) finished in %.0fms\n' %
                            ((t_end-t_start)*1000.0))
-            ss = ['%s: %s'%(k,repr(v)) for k,v in d.iteritems()]
-            dlg = MemoDialog(self,"GetPropertyValues Result",
-                             'Contents of resulting dictionary:\n\n'+'\n'.join(ss))
-            dlg.ShowModal()
+            ss = ['%s: %s'%(k,repr(v)) for k,v in d.items()]
+            with MemoDialog(self,"GetPropertyValues Result",
+                           'Contents of resulting dictionary:\n\n'+'\n'.join(ss)) as dlg:
+                dlg.ShowModal()
         except:
             import traceback
             traceback.print_exc()
 
     def OnAutoFill(self,event):
         try:
-            dlg = MemoDialog(self,"Enter Content for Object Used for AutoFill",default_object_content1)
-            if dlg.ShowModal() == wx.ID_OK:
-                sandbox = {'object':ValueObject(),'wx':wx}
-                exec_(dlg.tc.GetValue(), sandbox)
-                t_start = time.time()
-                self.pg.AutoFill(sandbox['object'])
-                t_end = time.time()
-                self.log.write('AutoFill finished in %.0fms\n' %
-                               ((t_end-t_start)*1000.0))
+            with MemoDialog(self,"Enter Content for Object Used for AutoFill",default_object_content1) as dlg:
+                if dlg.ShowModal() == wx.ID_OK:
+                    sandbox = {'object':ValueObject(),'wx':wx}
+                    exec_(dlg.tc.GetValue(), sandbox)
+                    t_start = time.time()
+                    self.pg.AutoFill(sandbox['object'])
+                    t_end = time.time()
+                    self.log.write('AutoFill finished in %.0fms\n' %
+                                   ((t_end-t_start)*1000.0))
         except:
             import traceback
             traceback.print_exc()
