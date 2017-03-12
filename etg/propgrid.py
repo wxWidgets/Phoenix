@@ -53,6 +53,20 @@ def run():
     c.find('SetSortFunction').ignore()
     module.find('wxPGSortCallback').ignore()
 
+    # Add some extra Python code to be executed when a wxPropertyGrid is
+    # constructed. In Classic with SWIG we did this with %pythonAppend, is
+    # there any better way to do it with sip than monkey-patching?
+    c.addPyCode("""\
+        _PropertyGrid__init__orig = PropertyGrid.__init__
+        def _PropertyGrid__init__(self, *args, **kw):
+            _PropertyGrid__init__orig(self, *args, **kw)
+            self.DoDefaultTypeMappings()
+            self.edited_objects = {}
+            self.DoDefaultValueTypeMappings()
+            if not hasattr(self.__class__, '_vt2setter'):
+                self.__class__._vt2setter = {}
+        PropertyGrid.__init__ = _PropertyGrid__init__
+        """)
 
     # See note in propgridiface.py
     for item in module.allItems():

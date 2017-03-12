@@ -102,6 +102,8 @@ def run():
         """
 
 
+    #----------------------------------------------------------
+
     c = module.find('wxPropertyGridInterface')
     c.abstract = True
     for m in c.findAll('GetIterator'):
@@ -120,7 +122,245 @@ def run():
         m.find('newProperty').transfer = True
 
 
+
+    # Tons of Python method implementations ported from Classic...
+
+    module.addPyCode("""\
+        _type2property = None
+        _vt2getter = None
+        """)
+
+    c.addPyMethod('MapType', '(self, class_, factory)',
+        doc="""\
+            Registers Python type/class to property mapping.
+
+            :param `factory`: Property builder function/class.
+            """,
+        body="""\
+            global _type2property
+            if _type2property is None:
+                raise AssertionError("call only after a propertygrid or "
+                                     "manager instance constructed")
+            _type2property[class_] = factory
+            """)
+
+
+    c.addPyMethod('DoDefaultTypeMappings', '(self)',
+        doc="Add built-in properties to the map.",
+        body="""\
+            import sys
+            global _type2property
+            if _type2property is not None:
+                return
+            _type2property = dict()
+
+            _type2property[str] = StringProperty
+            if sys.version_info.major < 2:
+                _type2property[unicode] = StringProperty
+            _type2property[int] = IntProperty
+            _type2property[float] = FloatProperty
+            _type2property[bool] = BoolProperty
+            _type2property[list] = ArrayStringProperty
+            _type2property[tuple] = ArrayStringProperty
+            _type2property[wx.Font] = FontProperty
+            _type2property[wx.Colour] = ColourProperty
+            #_type2property[wx.Size] = SizeProperty
+            #_type2property[wx.Point] = PointProperty
+            #_type2property[wx.FontData] = FontDataProperty
+            """)
+
+
+    # TODO: is this still needed?
+    c.addPyMethod('DoDefaultValueTypeMappings', '(self)',
+        doc="Map pg value type ids to getter methods.",
+        body="""\
+            global _vt2getter
+            if _vt2getter is not None:
+                return
+            _vt2getter = dict()
+        """)
+
+
+    c.find('GetPropertyValues').ignore()
+    c.addPyMethod('GetPropertyValues',
+        '(self, dict_=None, as_strings=False, inc_attributes=False)',
+        doc="""\
+            Returns all property values in the grid.\n
+            :param `dict_`: A to fill with the property values. If not given,
+                then a new one is created. The dict_ can be an object as well,
+                in which case it's __dict__ is used.
+            :param `as_strings`: if True, then string representations of values
+                are fetched instead of native types. Useful for config and such.
+            :param `inc_attributes`: if True, then property attributes are added
+                in the form of "@<propname>@<attr>".
+            :returns: A dictionary with values. It is always a dictionary,
+                so if dict_ was and object with __dict__ attribute, then that
+                attribute is returned.
+            """,
+        body="""\
+            if dict_ is None:
+                dict_ = {}
+            elif hasattr(dict_,'__dict__'):
+                dict_ = dict_.__dict__
+
+            getter = self.GetPropertyValue if not as_strings else self.GetPropertyValueAsString
+
+            it = self.GetVIterator(PG_ITERATE_PROPERTIES)
+            while not it.AtEnd():
+                p = it.GetProperty()
+                name = p.GetName()
+                dict_[name] = getter(p)
+
+                if inc_attributes:
+                    attrs = p.GetAttributes()
+                    if attrs and len(attrs):
+                        dict_['@%s@attr'%name] = attrs
+
+                it.Next()
+
+            return dict_
+            """)
+
+
+    for m in c.find('SetPropertyValues').all():
+        m.ignore()
+    c.addPyMethod('SetPropertyValues', '(self, dict_, autofill=False)',
+        doc="""\
+            Sets property values from a dictionary.\n
+            :param `dict_`: the source of the property values to set, which can be
+                either a dictionary or an object with a __dict__ attribute.
+            :param `autofill`: If true, keys with not relevant properties are
+                auto-created. For more info, see :method:`AutoFill`.
+
+            :note:
+              * Keys starting with underscore are ignored.
+              * Attributes can be set with entries named like "@<propname>@<attr>".
+            """,
+        body="""\
+            if dict_ is None:
+                dict_ = {}
+            elif hasattr(dict_,'__dict__'):
+                dict_ = dict_.__dict__
+            attr_dicts = []
+
+            def set_sub_obj(k0, dict_):
+                for k,v in dict_.iteritems():
+                    if k[0] != '_':
+                        if k.endswith('@attr'):
+                            attr_dicts.append((k[1:-5],v))
+                        else:
+                            try:
+                                self.SetPropertyValue(k,v)
+                            except:
+                                try:
+                                    if autofill:
+                                        self._AutoFillOne(k0,k,v)
+                                        continue
+                                except:
+                                    if isinstance(v,dict):
+                                        set_sub_obj(k,v)
+                                    elif hasattr(v,'__dict__'):
+                                        set_sub_obj(k,v.__dict__)
+
+                for k,v in attr_dicts:
+                    p = GetPropertyByName(k)
+                    if not p:
+                        raise AssertionError("No such property: '%s'"%k)
+                    for an,av in v.iteritems():
+                        p.SetAttribute(an, av)
+
+
+            cur_page = False
+            is_manager = isinstance(self, PropertyGridManager)
+
+            try:
+                set_sub_obj(self.GetGrid().GetRoot(), dict_)
+            except:
+                import traceback
+                traceback.print_exc()
+
+            self.Refresh()
+            """)
+
+    # TODO: should these be marked as deprecated?
+    module.addPyCode("""\
+        PropertyGridInterface.GetValues = PropertyGridInterface.GetPropertyValues
+        PropertyGridInterface.SetValues = PropertyGridInterface.SetPropertyValues
+        """)
+
+
+    c.addPyMethod('_AutoFillMany', '(self,cat,dict_)',
+        body="""\
+            for k,v in dict_.iteritems():
+                self._AutoFillOne(cat,k,v)
+            """)
+
+    c.addPyMethod('_AutoFillOne', '(self,cat,k,v)',
+        body="""\
+            global _type2property
+            factory = _type2property.get(v.__class__,None)
+            if factory:
+                self.AppendIn(cat, factory(k,k,v))
+            elif hasattr(v,'__dict__'):
+                cat2 = self.AppendIn(cat, PropertyCategory(k))
+                self._AutoFillMany(cat2, v.__dict__)
+            elif isinstance(v, dict):
+                cat2 = self.AppendIn(cat, PropertyCategory(k))
+                self._AutoFillMany(cat2, v)
+            elif not k.startswith('_'):
+                raise AssertionError("member '%s' is of unregistered type/"
+                                     "class '%s'"%(k,v.__class__))
+            """)
+
+    c.addPyMethod('AutoFill', '(self, obj, parent=None)',
+        doc="""\
+            "Clears properties and re-fills to match members and values of
+            the given object or dictionary obj.
+            """,
+        body="""\
+            self.edited_objects[parent] = obj
+
+            cur_page = False
+            is_manager = isinstance(self, PropertyGridManager)
+
+            if not parent:
+                if is_manager:
+                    page = self.GetCurrentPage()
+                    page.Clear()
+                    parent = page.GetRoot()
+                else:
+                    self.Clear()
+                    parent = self.GetGrid().GetRoot()
+            else:
+                it = self.GetIterator(PG_ITERATE_PROPERTIES, parent)
+                it.Next()  # Skip the parent
+                while not it.AtEnd():
+                    p = it.GetProperty()
+                    if not p.IsSomeParent(parent):
+                        break
+
+                    self.DeleteProperty(p)
+
+                    name = p.GetName()
+                    it.Next()
+
+            if not is_manager or page == self.GetCurrentPage():
+                self.Freeze()
+                cur_page = True
+
+            try:
+                self._AutoFillMany(parent,obj.__dict__)
+            except:
+                import traceback
+                traceback.print_exc()
+
+            if cur_page:
+                self.Thaw()
+            """)
+
+
     c.addPyMethod('RegisterEditor', '(self, editor, editorName=None)',
+        doc="Register a new editor, either an instance or a class.",
         body="""\
             if not isinstance(editor, PGEditor):
                 editor = editor()
@@ -134,13 +374,113 @@ def run():
             """
         )
 
+
+    c.find('GetPropertyClientData').ignore()
+    c.addPyMethod('GetPropertyClientData', '(self, p)',
+        body="""\
+            if isinstance(p, str):
+                p = self.GetPropertyByName(p)
+            return p.GetClientData()
+            """)
+
+    c.find('SetPropertyClientData').ignore()
+    c.addPyMethod('SetPropertyClientData', '(self, p, data)',
+        body="""\
+            if isinstance(p, str):
+                p = self.GetPropertyByName(p)
+            return p.SetClientData(data)
+            """)
+
+
+
+    c.addPyMethod('GetPyIterator', '(self, flags=PG_ITERATE_DEFAULT, firstProperty=None)',
+        doc="""\
+            Returns a pythonic property iterator for a single :ref:`PropertyGrid`
+            or page in :ref:`PropertyGridManager`. Arguments are same as for
+            :ref:`GetIterator`.
+
+            The following example demonstrates iterating absolutely all items in
+            a single grid::
+
+                iterator = propGrid.GetPyIterator(wx.propgrid.PG_ITERATE_ALL)
+                for prop in iterator:
+                    print(prop)
+
+            :see: `wx.propgrid.PropertyGridInterface.Properties`
+                  `wx.propgrid.PropertyGridInterface.Items`
+            """,
+        body="""\
+            it = self.GetIterator(flags, firstProperty)
+            while not it.AtEnd():
+                yield it.GetProperty()
+                it.Next()
+            """)
+
+
+    c.addPyMethod('GetPyVIterator', '(self, flags=PG_ITERATE_DEFAULT)',
+        doc="""\
+            Similar to :ref:`GetVIterator` but returns a pythonic iterator.
+            """,
+        body="""\
+            it = self.GetVIterator(flags)
+            while not it.AtEnd():
+                yield it.GetProperty()
+                it.Next()
+            """)
+
+
+    c.addPyMethod('Properties', '(self)',
+        doc="""\
+            This attribute is a pythonic iterator over all properties in
+            this `PropertyGrid` property container. It will only skip
+            categories and private child properties. Usage is simple::
+
+                for prop in propGrid.Properties:
+                    print(prop)
+
+            :see: `wx.propgrid.PropertyGridInterface.Items`
+                  `wx.propgrid.PropertyGridInterface.GetPyIterator`
+            """,
+        body="""\
+            it = self.GetIterator(PG_ITERATE_NORMAL)
+            while not it.AtEnd():
+                yield it.GetProperty()
+                it.Next()
+            """)
+    c.addPyProperty('Properties', 'Properties')
+
+
+    c.addPyMethod('Items', '(self)',
+        doc="""\
+            This attribute is a pythonic iterator over all items in this
+            `PropertyGrid` property container, excluding only private child
+            properties. Usage is simple::
+
+                for prop in propGrid.Items:
+                    print(prop)
+
+            :see: `wx.propgrid.PropertyGridInterface.Properties`
+                  `wx.propgrid.PropertyGridInterface.GetPyVIterator`
+            """,
+        body="""\
+            it = self.GetVIterator(PG_ITERATE_NORMAL | PG_ITERATE_CATEGORIES)
+            while not it.AtEnd():
+                yield it.GetProperty()
+                it.Next()
+            """)
+    c.addPyProperty('Items', 'Items')
+
+
+    #----------------------------------------------------------
+
     module.addItem(
         tools.wxArrayPtrWrapperTemplate('wxArrayPGProperty', 'wxPGProperty', module))
 
 
+
     # wxPGPropArg is a typedef for "const wxPGPropArgCls&" so having the
     # wrappers treat it as a normal type can be problematic. ("new cannot be
-    # applied to a reference type", etc.) Let's just ignore it an replace it
+    # applied to a reference type", etc.) Let's just ignore it and replace it
     # everywhere for the real type.
     module.find('wxPGPropArg').ignore()
     for item in module.allItems():
