@@ -28,7 +28,7 @@
 #   Add stack trace printouts upon TestDone(False) or TestCritical exception
 
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 import functools
 import os
@@ -188,18 +188,11 @@ class TestWidget:
         """
 
         # do not rely on testCritical being applied to an above method
-        # print the stacktrace here, as  there is no exception raised yet
-        stacktrace = traceback.extract_stack()
-        # find "test_func" or whatever the generated test function is called
-        # within stacktrace and exclude all rows before it.
-        for x in range(len(stacktrace)):
-            if "test_func" in str(stacktrace[x]):
-                stacktrace = stacktrace[x:-1]
-                break
 
-        six.print_("".join(traceback.format_list(stacktrace)), file = sys.stderr)
-        six.print_("TestWidget.testFailed() called.", file = sys.stderr)
-        
+        # print stacktrace info (as no exception was raised at this point
+        # a stacktrace is used, not a traceback.)
+        self.__print_stacktrace()
+
         wx.GetApp().exception = TestError(errmsg)
         for window in wx.GetTopLevelWindows():
             window.Close()
@@ -253,7 +246,24 @@ class TestWidget:
 
         six.print_("Testing: %s" % evt.case)
         testfunc()
+    
+    def __print_stacktrace(self):
+        """
+        Called during testFailed to print stack trace information.
+        """
+        six.print_("Providing most recent stack trace information:\n", file = sys.stderr)
+        stacktrace = traceback.extract_stack()
+        # find "test_func" or whatever the generated test function is called
+        # within stacktrace and exclude all rows before it.
+        for x in range(len(stacktrace)):
+            if "test_func" in str(stacktrace[x]):
+                stacktrace = stacktrace[x:-2]   # cut off call to this method
+                break                           # and call to extract_stack
+
+        six.print_("".join(traceback.format_list(stacktrace)), file = sys.stderr)
+        six.print_("TestWidget.testFailed() called.", file = sys.stderr)
         
+
 def __CreateApp(frame_cls, autoshow):
     """
     Generates an app class that will create an instance of frame_cls on launch.
