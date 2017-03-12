@@ -52,6 +52,12 @@ wxVariant wxPGVariant_in_helper(PyObject* obj)
         value << *ptr;
     }
 
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxColourPropertyValue"))) {
+        wxColourPropertyValue* ptr;
+        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxColourPropertyValue"));
+        value << *ptr;
+    }
+
     else if (sipCanConvertToType(obj, sipType_wxArrayInt, 0)) {
         wxArrayInt* ptr;
         ptr = (wxArrayInt*)sipConvertToType(obj, sipType_wxArrayInt, NULL, 0, &state, &isErr);
@@ -89,6 +95,12 @@ PyObject* wxPGVariant_out_helper(const wxVariant& value)
     else if ( value.IsType("wxSize") ) {
         const wxSize& val = wxSizeRefFromVariant(value);
         obj = wxPyConstructObject(new wxSize(val), "wxSize", true);
+    }
+
+    else if ( value.IsType("wxColourPropertyValue") ) {
+        wxColourPropertyValue val;
+         val << value;
+        obj = wxPyConstructObject(new wxColourPropertyValue(val), "wxColourPropertyValue", true);
     }
 
     else if ( value.IsType("wxArrayInt") ) {
