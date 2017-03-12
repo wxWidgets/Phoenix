@@ -22,7 +22,6 @@ ITEMS  = [ 'wxPGPaintData',
            'wxPGDefaultRenderer',
            'wxPGCellData',
            'wxPGCell',
-           'wxPGAttributeStorage',
 
            'wxPGProperty',
            'wxPropertyCategory',
@@ -49,13 +48,6 @@ def run():
 
     c = module.find('wxPGCellRenderer')
     c.bases = ['wxRefCounter']
-
-
-    c = module.find('wxPGAttributeStorage')
-    # TODO: Add methods to add a Python iterator using these methods
-    c.find('StartIteration').ignore()
-    c.find('GetNext').ignore()
-    c.find('const_iterator').ignore()
 
 
     c = module.find('wxPGProperty')

@@ -24,6 +24,7 @@ ITEMS  = [ ]
 # included as part of this module. These should all be items that are put in
 # the wxWidgets "propgrid" library in a multi-lib build.
 INCLUDES = [ 'pgvariant',
+             'pgattributestorage',
              'propgriddefs',
              'propgridproperty',
              'propgrideditors',
