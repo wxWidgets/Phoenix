@@ -429,7 +429,7 @@ def run():
             """)
 
 
-    c.addPyMethod('Properties', '(self)',
+    c.addPyMethod('_Properties', '(self)',
         doc="""\
             This attribute is a pythonic iterator over all properties in
             this `PropertyGrid` property container. It will only skip
@@ -447,10 +447,10 @@ def run():
                 yield it.GetProperty()
                 it.Next()
             """)
-    c.addPyProperty('Properties', 'Properties')
+    c.addPyProperty('Properties', '_Properties')
 
 
-    c.addPyMethod('Items', '(self)',
+    c.addPyMethod('_Items', '(self)',
         doc="""\
             This attribute is a pythonic iterator over all items in this
             `PropertyGrid` property container, excluding only private child
@@ -468,7 +468,7 @@ def run():
                 yield it.GetProperty()
                 it.Next()
             """)
-    c.addPyProperty('Items', 'Items')
+    c.addPyProperty('Items', '_Items')
 
 
     #----------------------------------------------------------

@@ -20,7 +20,6 @@ DOCSTRING = ""
 ITEMS  = [ 'wxPropertyGridHitTestResult',
            'wxPropertyGridIteratorBase',
            'wxPropertyGridIterator',
-           #'wxPropertyGridConstIterator',  # probably not needed in Python...
            'wxPGVIterator',
            'wxPropertyGridPageState',
            ]
