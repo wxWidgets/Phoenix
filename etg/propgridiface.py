@@ -244,7 +244,7 @@ def run():
             attr_dicts = []
 
             def set_sub_obj(k0, dict_):
-                for k,v in dict_.iteritems():
+                for k,v in dict_.items():
                     if k[0] != '_':
                         if k.endswith('@attr'):
                             attr_dicts.append((k[1:-5],v))
@@ -263,10 +263,10 @@ def run():
                                         set_sub_obj(k,v.__dict__)
 
                 for k,v in attr_dicts:
-                    p = GetPropertyByName(k)
+                    p = self.GetPropertyByName(k)
                     if not p:
                         raise AssertionError("No such property: '%s'"%k)
-                    for an,av in v.iteritems():
+                    for an,av in v.items():
                         p.SetAttribute(an, av)
 
 
@@ -291,7 +291,7 @@ def run():
 
     c.addPyMethod('_AutoFillMany', '(self,cat,dict_)',
         body="""\
-            for k,v in dict_.iteritems():
+            for k,v in dict_.items():
                 self._AutoFillOne(cat,k,v)
             """)
 
