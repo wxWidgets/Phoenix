@@ -55,7 +55,31 @@ def run():
     c.find('StringToValue.variant').out = True
     c.find('IntToValue.variant').out = True
 
-    # TODO: Some other wxPGProperty methods should be pythonized a bit...
+    # SIP needs to be able to make a copy of the wxPGAttributeStorage value
+    # but the C++ class doesn't have a copy ctor and the default will cause it
+    # to lose references to the variants it contains, so let's just override
+    # the use of the MappedType and convert it to a Python dictionary here
+    # instead.
+    m = c.find('GetAttributes')
+    m.type = 'PyObject*'
+    m.setCppCode("""\
+        const wxPGAttributeStorage& attrs = self->GetAttributes();
+        wxPGAttributeStorage::const_iterator it = attrs.StartIteration();
+        wxVariant v;
+        wxPyThreadBlocker blocker;
+
+        PyObject* dict = PyDict_New();
+        if ( !dict ) return NULL;
+
+        while ( attrs.GetNext( it, v ) ) {
+            const wxString& name = v.GetName();
+            PyObject* pyStr = wx2PyString(name);
+            PyObject* pyVal = wxPGVariant_out_helper(v);
+            int res = PyDict_SetItem( dict, pyStr, pyVal );
+        }
+        return dict;
+        """)
+
 
 
     c = module.find('wxPGChoicesData')
