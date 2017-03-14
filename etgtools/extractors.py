@@ -301,8 +301,8 @@ class FunctionDef(BaseDef, FixWxPrefix):
         info we've already received from the source XML such as the argument
         types and names, docstring, etc.
 
-        The code generated for this verison will expect the given code to use
-        SIP specfic variable names, etc. For example::
+        The code generated for this version will expect the given code to use
+        SIP specific variable names, etc. For example::
 
             sipRes = sipCpp->Foo();
         """
