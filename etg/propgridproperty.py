@@ -80,6 +80,15 @@ def run():
         return dict;
         """)
 
+    # SetAttributes uses wxPGAttributeStorage too, but we'll just replace it
+    # with a simple Python method.
+    c.find('SetAttributes').ignore()
+    c.addPyMethod('SetAttributes', '(self, attributes)',
+        doc="Set the property's attributes from a Python dictionary.",
+        body="""\
+            for name,value in attributes.items():
+                self.SetAttribute(name, value)
+            """)
 
 
     c = module.find('wxPGChoicesData')
