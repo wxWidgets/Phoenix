@@ -40,9 +40,24 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    #c = module.find('')
-    #assert isinstance(c, etgtools.ClassDef)
+    c = module.find('wxMultiChoiceProperty')
+    assert isinstance(c, etgtools.ClassDef)
 
+    # Fix up the ctor taking a wxArrayString to be the one with the easier and
+    # expected API
+    m = c.find('wxMultiChoiceProperty').findOverload('strings')
+    m.find('name').default = 'wxPG_LABEL'
+    m.find('strings').default = 'wxArrayString()'
+    m.find('strings').name = 'choices'
+    m.find('value').default = 'wxArrayString()'
+
+
+    # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
+    # version of the MappedType will be used for converting to/from Python
+    # objects.
+    for item in module.allItems():
+        if hasattr(item, 'type') and 'wxVariant' in item.type:
+            item.type = item.type.replace('wxVariant', 'wxPGVariant')
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -3177,6 +3177,7 @@
 "Region":"wx.",
 "RegionContain":"wx.",
 "RegionIterator":"wx.",
+"RegisterEditor":"wx.propgrid.",
 "RegisterId":"wx.",
 "Relationship":"wx.",
 "RendererNative":"wx.",

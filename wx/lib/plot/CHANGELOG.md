@@ -57,7 +57,7 @@ on 2016-07-05 and finished on [insert date here].
   'x is None')
 + Documentation updates
 + Added Box Plot
-+ Added contect manager and decorator that gets and resets the pen before
++ Added context manager and decorator that gets and resets the pen before
   and after a function call
 + updated demo for new features
 + Most items are now allow custom pens (color, width, linestyle)

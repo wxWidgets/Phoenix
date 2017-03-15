@@ -44,11 +44,29 @@ def run():
     tools.fixWindowClass(c)
     module.addGlobalStr('wxPropertyGridNameStr', c)
 
+    for m in c.find('RegisterEditorClass').all():
+        m.find('editor').transfer = True
+
+
     # TODO: provide a way to use a Python callable as a sort function
     c.find('GetSortFunction').ignore()
     c.find('SetSortFunction').ignore()
     module.find('wxPGSortCallback').ignore()
 
+    # Add some extra Python code to be executed when a wxPropertyGrid is
+    # constructed. In Classic with SWIG we did this with %pythonAppend, is
+    # there any better way to do it with sip than monkey-patching?
+    c.addPyCode("""\
+        _PropertyGrid__init__orig = PropertyGrid.__init__
+        def _PropertyGrid__init__(self, *args, **kw):
+            _PropertyGrid__init__orig(self, *args, **kw)
+            self.DoDefaultTypeMappings()
+            self.edited_objects = {}
+            self.DoDefaultValueTypeMappings()
+            if not hasattr(self.__class__, '_vt2setter'):
+                self.__class__._vt2setter = {}
+        PropertyGrid.__init__ = _PropertyGrid__init__
+        """)
 
     # See note in propgridiface.py
     for item in module.allItems():
@@ -82,6 +100,13 @@ def run():
         EVT_PG_COL_END_DRAG = wx.PyEventBinder( wxEVT_PG_COL_END_DRAG, 1 )
         """)
 
+
+    # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
+    # version of the MappedType will be used for converting to/from Python
+    # objects.
+    for item in module.allItems():
+        if hasattr(item, 'type') and 'wxVariant' in item.type:
+            item.type = item.type.replace('wxVariant', 'wxPGVariant')
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

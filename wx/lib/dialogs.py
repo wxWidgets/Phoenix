@@ -12,7 +12,7 @@
 #----------------------------------------------------------------------
 # 12/01/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o Updated for 2.5 compatability.
+# o Updated for 2.5 compatibility.
 #
 # 12/18/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #

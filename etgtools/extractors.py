@@ -301,8 +301,8 @@ class FunctionDef(BaseDef, FixWxPrefix):
         info we've already received from the source XML such as the argument
         types and names, docstring, etc.
 
-        The code generated for this verison will expect the given code to use
-        SIP specfic variable names, etc. For example::
+        The code generated for this version will expect the given code to use
+        SIP specific variable names, etc. For example::
 
             sipRes = sipCpp->Foo();
         """
@@ -918,7 +918,7 @@ class ClassDef(BaseDef):
         monkey-patched into the class. (This property will also be
         jammed in to the class in like manner.)
         """
-        # Read the nice comment in the function above.  Ditto.
+        # Read the nice comment in the method above.  Ditto.
         if len(args) == 1:
             name = getter = setter = ''
             split = args[0].split()
@@ -1525,11 +1525,11 @@ class ModuleDef(BaseDef):
         return md
 
 
-    def addPyCode(self, code, order=None):
+    def addPyCode(self, code, order=None, **kw):
         """
         Add a snippet of Python code to the wrapper module.
         """
-        pc = PyCodeDef(code, order)
+        pc = PyCodeDef(code, order, **kw)
         self.items.append(pc)
         return pc
 

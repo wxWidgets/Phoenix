@@ -95,6 +95,10 @@ static wxString i_Py2wxString(PyObject* source)
 
 //--------------------------------------------------------------------------
 // Wrapped object checks and converters
+//
+// TODO: Add some versions of these helpers that take a sipTypeDef
+// instead of a name? They're accessible everywhere we need them, and
+// it may be enough of an efficiency boost to make it worth it.
 
 // Create a PyObject of the requested type from a void* and a class name.
 static PyObject* i_wxPyConstructObject(void* ptr,
@@ -121,6 +125,7 @@ static bool i_wxPyWrappedPtr_Check(PyObject* obj)
     return PyObject_TypeCheck(obj, sipWrapper_Type);
 }
 
+
 // Check if a PyObject is a specific wrapped class or subclass
 static bool i_wxPyWrappedPtr_TypeCheck(PyObject* obj, const wxString& className)
 {
@@ -129,6 +134,7 @@ static bool i_wxPyWrappedPtr_TypeCheck(PyObject* obj, const wxString& className)
         return false;
     return sipCanConvertToType(obj, td, SIP_NO_CONVERTORS);
 }
+
 
 // Convert a wrapped SIP object to its C++ pointer, ensuring that it is of the expected type
 static bool i_wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& className)
@@ -142,6 +148,7 @@ static bool i_wxPyConvertWrappedPtr(PyObject* obj, void **ptr, const wxString& c
     *ptr = sipConvertToType(obj, td, NULL, SIP_NO_CONVERTORS, 0, &sipIsErr);
     return true;
 }
+
 
 //--------------------------------------------------------------------------
 // Deal with the GIL
@@ -269,7 +276,7 @@ bool wxVariantDataPyObject::Eq(wxVariantData& data) const
 //
 // These functions are here in the API so they can be used by both the
 // wxVariant MappedType and by other classes or types that want to add support
-// for additional kinds of nativly supported types (see dataview for example.)
+// for additional kinds of natively supported types (see dataview for example.)
 
 // PyObject --> wxVariant
 wxVariant i_wxVariant_in_helper(PyObject* obj)
@@ -278,30 +285,66 @@ wxVariant i_wxVariant_in_helper(PyObject* obj)
 
     if (PyBytes_Check(obj) || PyUnicode_Check(obj))
         value = Py2wxString(obj);
+
     else if (PyBool_Check(obj))
         value = (obj == Py_True);
+
     else if (wxPyInt_Check(obj))
         value = (long)wxPyInt_AS_LONG(obj);
+
     else if (PyLong_Check(obj))
         value = (long)PyLong_AsLong(obj);
+
     else if (PyFloat_Check(obj))
         value = PyFloat_AS_DOUBLE(obj);
-    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxDateTime"))) {
+
+    else if (obj == Py_None)
+        value.MakeNull();
+
+    else if (sipCanConvertToType(obj, sipType_wxDateTime, 0)) {
         wxDateTime* ptr;
-        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxDateTime"));
+        int state = 0;
+        int isErr = 0;
+        ptr = (wxDateTime*)sipConvertToType(obj, sipType_wxDateTime, NULL, 0, &state, &isErr);
         value = *ptr;
+        sipReleaseType(ptr, sipType_wxDateTime, state);
     }
+
     else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxBitmap"))) {
         wxBitmap* ptr;
         wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxBitmap"));
         value << *ptr;
     }
+
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxImage"))) {
+        wxImage* ptr;
+        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxImage"));
+        value << *ptr;
+    }
+
     else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxIcon"))) {
         wxIcon* ptr;
         wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxIcon"));
-        value <<*ptr;
+        value << *ptr;
     }
+
+    else if (wxPyWrappedPtr_TypeCheck(obj, wxT("wxColour"))) {
+        wxColour* ptr;
+        wxPyConvertWrappedPtr(obj, (void**)&ptr, wxT("wxColour"));
+        value << *ptr;
+    }
+
+    else if (sipCanConvertToType(obj, sipType_wxArrayString, 0)) {
+        wxArrayString* ptr;
+        int state = 0;
+        int isErr = 0;
+        ptr = (wxArrayString*)sipConvertToType(obj, sipType_wxArrayString, NULL, 0, &state, &isErr);
+        value = *ptr;
+        sipReleaseType(ptr, sipType_wxArrayString, state);
+    }
+
     else
+        // Just use the PyObject itself
         value = new wxVariantDataPyObject(obj);
 
     return value;
@@ -313,42 +356,68 @@ PyObject* i_wxVariant_out_helper(const wxVariant& value)
 {
     PyObject* obj;
 
-    if (value.IsType("string"))
+    if (value.IsNull()) {
+        obj = Py_None;
+        Py_INCREF(obj);
+    }
+
+    else if (value.IsType("string"))
         obj = wx2PyString(value.GetString());
+
     else if (value.IsType("bool"))
         obj = PyBool_FromLong((long)value.GetBool());
+
     else if (value.IsType("long"))
         obj = PyLong_FromLong(value.GetLong());
+
     else if (value.IsType("double"))
         obj = PyFloat_FromDouble(value.GetDouble());
-    else if ( value.IsType("datetime") )
-    {
+
+    else if ( value.IsType("datetime") ) {
         wxDateTime val = value.GetDateTime();
-        obj = wxPyConstructObject(new wxDateTime(val), wxT("wxDateTime"));
+        obj = wxPyConstructObject(new wxDateTime(val), "wxDateTime", true);
     }
-    else if ( value.IsType("wxBitmap") )
-    {
+
+    else if ( value.IsType("wxBitmap") ) {
         wxBitmap val;
         val << value;
-        obj = wxPyConstructObject(new wxBitmap(val), wxT("wxBitmap"));
+        obj = wxPyConstructObject(new wxBitmap(val), "wxBitmap", true);
     }
-    else if ( value.IsType("wxIcon") )
-    {
+
+    else if ( value.IsType("wxImage") ) {
+        wxImage val;
+        val << value;
+        obj = wxPyConstructObject(new wxImage(val), "wxImage", true);
+    }
+
+    else if ( value.IsType("wxIcon") ) {
         wxIcon val;
         val << value;
-        obj = wxPyConstructObject(new wxIcon(val), wxT("wxIcon"));
+        obj = wxPyConstructObject(new wxIcon(val), "wxIcon", true);
     }
-    else if ( value.IsType("PyObject") )
-    {
+
+    else if ( value.IsType("wxColour") ) {
+        wxColour val;
+        val << value;
+        obj = wxPyConstructObject(new wxColour(val), "wxColour", true);
+    }
+
+    else if ( value.IsType("arrstring") ) {
+        wxArrayString arr = value.GetArrayString();
+        obj = sipConvertFromType(&arr, sipType_wxArrayString, NULL);
+    }
+
+    else if ( value.IsType("PyObject") ) {
         wxVariantDataPyObject* data = (wxVariantDataPyObject*)value.GetData();
         obj = data->GetData();
     }
-    else
-    {
+
+    else {
         wxString msg = "Unexpected type (\"" + value.GetType() + "\") in wxVariant.";
         wxPyErr_SetString(PyExc_TypeError, msg.mb_str());
         obj = NULL;
     }
+
     return obj;
 }
 
