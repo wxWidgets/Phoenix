@@ -22,7 +22,6 @@ ITEMS  = [ 'wxPGPaintData',
            'wxPGDefaultRenderer',
            'wxPGCellData',
            'wxPGCell',
-           'wxPGAttributeStorage',
 
            'wxPGProperty',
            'wxPropertyCategory',
@@ -45,13 +44,10 @@ def run():
     c = module.find('wxPGCellData')
     assert isinstance(c, etgtools.ClassDef)
     c.find('~wxPGCellData').ignore(False)
+    c.bases = ['wxRefCounter']
 
-
-    c = module.find('wxPGAttributeStorage')
-    # TODO: Add methods to add a Python iterator using these methods
-    c.find('StartIteration').ignore()
-    c.find('GetNext').ignore()
-    c.find('const_iterator').ignore()
+    c = module.find('wxPGCellRenderer')
+    c.bases = ['wxRefCounter']
 
 
     c = module.find('wxPGProperty')
@@ -59,18 +55,62 @@ def run():
     c.find('StringToValue.variant').out = True
     c.find('IntToValue.variant').out = True
 
-    # TODO: Some other wxPGProperty methods should be pythonized a bit...
+    # SIP needs to be able to make a copy of the wxPGAttributeStorage value
+    # but the C++ class doesn't have a copy ctor and the default will cause it
+    # to lose references to the variants it contains, so let's just override
+    # the use of the MappedType and convert it to a Python dictionary here
+    # instead.
+    m = c.find('GetAttributes')
+    m.type = 'PyObject*'
+    m.setCppCode("""\
+        const wxPGAttributeStorage& attrs = self->GetAttributes();
+        wxPGAttributeStorage::const_iterator it = attrs.StartIteration();
+        wxVariant v;
+        wxPyThreadBlocker blocker;
+
+        PyObject* dict = PyDict_New();
+        if ( !dict ) return NULL;
+
+        while ( attrs.GetNext( it, v ) ) {
+            const wxString& name = v.GetName();
+            PyObject* pyStr = wx2PyString(name);
+            PyObject* pyVal = wxPGVariant_out_helper(v);
+            int res = PyDict_SetItem( dict, pyStr, pyVal );
+        }
+        return dict;
+        """)
+
+    # SetAttributes uses wxPGAttributeStorage too, but we'll just replace it
+    # with a simple Python method.
+    c.find('SetAttributes').ignore()
+    c.addPyMethod('SetAttributes', '(self, attributes)',
+        doc="Set the property's attributes from a Python dictionary.",
+        body="""\
+            for name,value in attributes.items():
+                self.SetAttribute(name, value)
+            """)
 
 
     c = module.find('wxPGChoicesData')
     tools.ignoreConstOverloads(c)
-    #c.addDtor()
+    c.bases = ['wxRefCounter']
     c.find('~wxPGChoicesData').ignore(False)
 
 
     c = module.find('wxPGChoices')
     c.find('wxPGChoices').findOverload('wxChar **').ignore()
     tools.ignoreConstOverloads(c)
+    c.find('operator[]').ignore()
+
+    c.addPyMethod('__getitem__', '(self, index)',
+        doc="Returns a reference to a :class:PGChoiceEntry using Python list syntax.",
+        body="return self.Item(index)",
+        )
+    c.addPyMethod('__len__', '(self)',
+        doc="",
+        body="return self.GetCount()",
+        )
+
 
     # Ignore some string constants (#defines) coming from dox, and add them
     # back in Python code. They are wchar_t* values and this seemed the
@@ -146,6 +186,13 @@ def run():
             PGChoicesEmptyData                = None
             """)
 
+
+    # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
+    # version of the MappedType will be used for converting to/from Python
+    # objects.
+    for item in module.allItems():
+        if hasattr(item, 'type') and 'wxVariant' in item.type:
+            item.type = item.type.replace('wxVariant', 'wxPGVariant')
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

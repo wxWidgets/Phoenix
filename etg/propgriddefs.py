@@ -1,9 +1,9 @@
 #---------------------------------------------------------------------------
-# Name:        etg/propgrideditors.py
+# Name:        etg/propgriddefs.py
 # Author:      Robin Dunn
 #
-# Created:     23-Feb-2015
-# Copyright:   (c) 2015-2017 by Total Control Software
+# Created:     14-Feb-2017
+# Copyright:   (c) 2017 by Total Control Software
 # License:     wxWindows License
 #---------------------------------------------------------------------------
 
@@ -12,21 +12,12 @@ import etgtools.tweaker_tools as tools
 
 PACKAGE   = "wx"
 MODULE    = "_propgrid"
-NAME      = "propgrideditors"   # Base name of the file to generate to for this script
+NAME      = "propgriddefs"   # Base name of the file to generate to for this script
 DOCSTRING = ""
 
 # The classes and/or the basename of the Doxygen XML files to be processed by
 # this script.
-ITEMS  = [ 'wxPGWindowList',
-           'wxPGEditor',
-           'wxPGTextCtrlEditor',
-           'wxPGChoiceEditor',
-           'wxPGComboBoxEditor',
-           'wxPGChoiceAndButtonEditor',
-           'wxPGTextCtrlAndButtonEditor',
-           'wxPGCheckBoxEditor',
-           'wxPGEditorDialogAdapter',
-           'wxPGMultiButton',
+ITEMS  = [ 'propgriddefs_8h.xml',
            ]
 
 #---------------------------------------------------------------------------
@@ -40,17 +31,23 @@ def run():
     # Tweak the parsed meta objects in the module object as needed for
     # customizing the generated code and docstrings.
 
-    c = module.find('wxPGMultiButton')
-    assert isinstance(c, etgtools.ClassDef)
-    tools.fixWindowClass(c)
+    module.find('wxPG_LABEL').ignore()
+    module.find('wxPG_LABEL_STRING').ignore()
+    module.find('wxPG_NULL_BITMAP').ignore()
+    module.find('wxPG_COLOUR_BLACK').ignore()
+    module.find('wxPG_COLOUR').ignore()
+    module.find('wxPG_DEFAULT_IMAGE_SIZE').ignore()
+    module.find('wxPGSortCallback').ignore()
 
-
-    # Switch all wxVariant types to wxPGVariant, so the propgrid-specific
-    # version of the MappedType will be used for converting to/from Python
-    # objects.
-    for item in module.allItems():
-        if hasattr(item, 'type') and 'wxVariant' in item.type:
-            item.type = item.type.replace('wxVariant', 'wxPGVariant')
+    module.addPyCode(
+        code="""\
+        PG_LABEL = "@!"
+        PG_LABEL_STRING = PG_LABEL
+        PG_NULL_BITMAP = wx.NullBitmap
+        PG_COLOUR_BLACK = wx.BLACK
+        PG_DEFAULT_IMAGE_SIZE = wx.Size(-1, -1)
+        """,
+        order=15)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

@@ -3,13 +3,14 @@
 import sys
 import time
 import math
-import os
 import os.path
 
 import wx
+import wx.adv
+import wx.propgrid as wxpg
+
 from six import exec_
 _ = wx.GetTranslation
-import wx.propgrid as wxpg
 
 
 ############################################################################
@@ -61,12 +62,12 @@ class ValueObject:
         pass
 
 
-class IntProperty2(wxpg.PyProperty):
+class IntProperty2(wxpg.PGProperty):
     """\
     This is a simple re-implementation of wxIntProperty.
     """
-    def __init__(self, label, name = wxpg.LABEL_AS_NAME, value=0):
-        wxpg.PyProperty.__init__(self, label, name)
+    def __init__(self, label, name = wxpg.PG_LABEL, value=0):
+        wxpg.PGProperty.__init__(self, label, name)
         self.SetValue(value)
 
     def GetClassName(self):
@@ -119,11 +120,11 @@ class IntProperty2(wxpg.PyProperty):
         return (True, value)
 
 
-class SizeProperty(wxpg.PyProperty):
+class SizeProperty(wxpg.PGProperty):
     """ Demonstrates a property with few children.
     """
-    def __init__(self, label, name = wxpg.LABEL_AS_NAME, value=wx.Size(0, 0)):
-        wxpg.PyProperty.__init__(self, label, name)
+    def __init__(self, label, name = wxpg.PG_LABEL, value=wx.Size(0, 0)):
+        wxpg.PGProperty.__init__(self, label, name)
 
         value = self._ConvertValue(value)
 
@@ -168,7 +169,7 @@ class SizeProperty(wxpg.PyProperty):
         return size
 
 
-class DirsProperty(wxpg.PyArrayStringProperty):
+class DirsProperty(wxpg.ArrayStringProperty):
     """ Sample of a custom custom ArrayStringProperty.
 
         Because currently some of the C++ helpers from wxArrayStringProperty
@@ -176,8 +177,8 @@ class DirsProperty(wxpg.PyArrayStringProperty):
         a bit 'manually'. Which is not too bad since Python has excellent
         string and list manipulation facilities.
     """
-    def __init__(self, label, name = wxpg.LABEL_AS_NAME, value=[]):
-        wxpg.PyArrayStringProperty.__init__(self, label, name, value)
+    def __init__(self, label, name = wxpg.PG_LABEL, value=[]):
+        wxpg.ArrayStringProperty.__init__(self, label, name, value)
 
         # Set default delimiter
         self.SetAttribute("Delimiter", ',')
@@ -192,8 +193,7 @@ class DirsProperty(wxpg.PyArrayStringProperty):
         self.GenerateValueAsString()
 
     def DoSetAttribute(self, name, value):
-        # Proper way to call same method from super class
-        retval = self.CallSuperMethod("DoSetAttribute", name, value)
+        retval = super(DirsProperty, self).DoSetAttribute(name, value)
 
         #
         # Must re-generate cached string when delimiter changes
@@ -225,7 +225,7 @@ class DirsProperty(wxpg.PyArrayStringProperty):
         delim = self.GetAttribute("Delimiter")
         if delim == '"' or delim == "'":
             # Proper way to call same method from super class
-            return self.CallSuperMethod("StringToValue", text, 0)
+            return super(DirsProperty, self).StringToValue(text, 0)
         v = [a.strip() for a in text.split(delim)]
         return (True, v)
 
@@ -269,7 +269,7 @@ class PyObjectPropertyValue:
         return ' - '.join(self.ls)
 
 
-class PyObjectProperty(wxpg.PyProperty):
+class PyObjectProperty(wxpg.PGProperty):
     """\
     Another simple example. This time our value is a PyObject.
 
@@ -278,8 +278,8 @@ class PyObjectProperty(wxpg.PyProperty):
           or wxObject based. Dictionary, None, or any user-specified Python
           class is allowed.
     """
-    def __init__(self, label, name = wxpg.LABEL_AS_NAME, value=None):
-        wxpg.PyProperty.__init__(self, label, name)
+    def __init__(self, label, name = wxpg.PG_LABEL, value=None):
+        wxpg.PGProperty.__init__(self, label, name)
         self.SetValue(value)
 
     def GetClassName(self):
@@ -299,9 +299,9 @@ class PyObjectProperty(wxpg.PyProperty):
         return (True, v)
 
 
-class SampleMultiButtonEditor(wxpg.PyTextCtrlEditor):
+class SampleMultiButtonEditor(wxpg.PGTextCtrlEditor):
     def __init__(self):
-        wxpg.PyTextCtrlEditor.__init__(self)
+        wxpg.PGTextCtrlEditor.__init__(self)
 
     def CreateControls(self, propGrid, property, pos, sz):
         # Create and populate buttons-subwindow
@@ -314,7 +314,7 @@ class SampleMultiButtonEditor(wxpg.PyTextCtrlEditor):
         buttons.AddBitmapButton(wx.ArtProvider.GetBitmap(wx.ART_FOLDER))
 
         # Create the 'primary' editor control (textctrl in this case)
-        wnd = self.CallSuperMethod("CreateControls",
+        wnd = super(SampleMultiButtonEditor, self).CreateControls(
                                    propGrid,
                                    property,
                                    pos,
@@ -340,25 +340,25 @@ class SampleMultiButtonEditor(wxpg.PyTextCtrlEditor):
 
             if evtId == buttons.GetButtonId(0):
                 # Do something when the first button is pressed
-                wx.LogDebug("First button pressed");
+                wx.LogDebug("First button pressed")
                 return False  # Return false since value did not change
             if evtId == buttons.GetButtonId(1):
                 # Do something when the second button is pressed
-                wx.MessageBox("Second button pressed");
+                wx.MessageBox("Second button pressed")
                 return False  # Return false since value did not change
             if evtId == buttons.GetButtonId(2):
                 # Do something when the third button is pressed
-                wx.MessageBox("Third button pressed");
+                wx.MessageBox("Third button pressed")
                 return False  # Return false since value did not change
 
-        return self.CallSuperMethod("OnEvent", propGrid, prop, ctrl, event)
+        return super(SampleMultiButtonEditor, self).OnEvent(propGrid, prop, ctrl, event)
 
 
-class SingleChoiceDialogAdapter(wxpg.PyEditorDialogAdapter):
-    """ This demonstrates use of wxpg.PyEditorDialogAdapter.
+class SingleChoiceDialogAdapter(wxpg.PGEditorDialogAdapter):
+    """ This demonstrates use of wxpg.PGEditorDialogAdapter.
     """
     def __init__(self, choices):
-        wxpg.PyEditorDialogAdapter.__init__(self)
+        wxpg.PGEditorDialogAdapter.__init__(self)
         self.choices = choices
 
     def DoShowDialog(self, propGrid, property):
@@ -371,16 +371,16 @@ class SingleChoiceDialogAdapter(wxpg.PyEditorDialogAdapter):
         return False;
 
 
-class SingleChoiceProperty(wxpg.PyStringProperty):
-    def __init__(self, label, name=wxpg.LABEL_AS_NAME, value=''):
-        wxpg.PyStringProperty.__init__(self, label, name, value)
+class SingleChoiceProperty(wxpg.StringProperty):
+    def __init__(self, label, name=wxpg.PG_LABEL, value=''):
+        wxpg.StringProperty.__init__(self, label, name, value)
 
         # Prepare choices
         dialog_choices = []
-        dialog_choices.append("Cat");
-        dialog_choices.append("Dog");
-        dialog_choices.append("Gibbon");
-        dialog_choices.append("Otter");
+        dialog_choices.append("Cat")
+        dialog_choices.append("Dog")
+        dialog_choices.append("Gibbon")
+        dialog_choices.append("Otter")
 
         self.dialog_choices = dialog_choices
 
@@ -393,14 +393,14 @@ class SingleChoiceProperty(wxpg.PyStringProperty):
         return SingleChoiceDialogAdapter(self.dialog_choices)
 
 
-class TrivialPropertyEditor(wxpg.PyEditor):
+class TrivialPropertyEditor(wxpg.PGEditor):
     """\
     This is a simple re-creation of TextCtrlWithButton. Note that it does
     not take advantage of wx.TextCtrl and wx.Button creation helper functions
     in wx.PropertyGrid.
     """
     def __init__(self):
-        wxpg.PyEditor.__init__(self)
+        wxpg.PGEditor.__init__(self)
 
     def CreateControls(self, propgrid, property, pos, sz):
         """ Create the actual wxPython controls here for editing the
@@ -564,12 +564,12 @@ class LargeImagePickerCtrl(wx.Panel):
         return self.tc.GetLastPosition()
 
 
-class LargeImageEditor(wxpg.PyEditor):
+class LargeImageEditor(wxpg.PGEditor):
     """\
     Double-height text-editor with image in front.
     """
     def __init__(self):
-        wxpg.PyEditor.__init__(self)
+        wxpg.PGEditor.__init__(self)
 
     def CreateControls(self, propgrid, property, pos, sz):
         try:
@@ -723,14 +723,17 @@ class TestPanel( wx.Panel ):
         pg.Append( wxpg.IntProperty("Int",value=100) )
         pg.Append( wxpg.FloatProperty("Float",value=100.0) )
         pg.Append( wxpg.BoolProperty("Bool",value=True) )
-        pg.Append( wxpg.BoolProperty("Bool_with_Checkbox",value=True) )
-        pg.SetPropertyAttribute("Bool_with_Checkbox", "UseCheckbox", True)
+        boolprop = pg.Append( wxpg.BoolProperty("Bool_with_Checkbox",value=True) )
+        pg.SetPropertyAttribute(
+            "Bool_with_Checkbox",    # You can find the property by name,
+            #boolprop,               # or give the property object itself.
+            "UseCheckbox", True)     # The attribute name and value
 
         pg.Append( wxpg.PropertyCategory("2 - More Properties") )
         pg.Append( wxpg.LongStringProperty("LongString",
-            value="This is a\\nmulti-line string\\nwith\\ttabs\\nmixed\\tin."))
-        pg.Append( wxpg.DirProperty("Dir",value="C:\\Windows") )
-        pg.Append( wxpg.FileProperty("File",value="C:\\Windows\\system.ini") )
+            value="This is a\nmulti-line string\nwith\ttabs\nmixed\tin."))
+        pg.Append( wxpg.DirProperty("Dir",value=r"C:\Windows") )
+        pg.Append( wxpg.FileProperty("File",value=r"C:\Windows\system.ini") )
         pg.Append( wxpg.ArrayStringProperty("ArrayString",value=['A','B','C']) )
 
         pg.Append( wxpg.EnumProperty("Enum","Enum",
@@ -763,9 +766,9 @@ class TestPanel( wx.Panel ):
 
         pg.SetPropertyAttribute( "File", wxpg.PG_FILE_SHOW_FULL_PATH, 0 )
         pg.SetPropertyAttribute( "File", wxpg.PG_FILE_INITIAL_PATH,
-                                 "C:\\Program Files\\Internet Explorer" )
+                                 r"C:\Program Files\Internet Explorer" )
         pg.SetPropertyAttribute( "Date", wxpg.PG_DATE_PICKER_STYLE,
-                                 wx.DP_DROPDOWN|wx.DP_SHOWCENTURY )
+                                 wx.adv.DP_DROPDOWN|wx.adv.DP_SHOWCENTURY )
 
         pg.Append( wxpg.PropertyCategory("5 - Custom Properties and Editors") )
         pg.Append( IntProperty2("IntProperty2", value=1024) )
@@ -779,8 +782,8 @@ class TestPanel( wx.Panel ):
         pg.SetPropertyAttribute("Dirs2", "Delimiter", '"')
 
         # SampleMultiButtonEditor
-        pg.Append( wxpg.LongStringProperty("MultipleButtons") );
-        pg.SetPropertyEditor("MultipleButtons", "SampleMultiButtonEditor");
+        pg.Append( wxpg.LongStringProperty("MultipleButtons") )
+        pg.SetPropertyEditor("MultipleButtons", "SampleMultiButtonEditor")
         pg.Append( SingleChoiceProperty("SingleChoiceProperty") )
 
         # Custom editor samples
@@ -857,7 +860,7 @@ class TestPanel( wx.Panel ):
             d = self.pg.GetPropertyValues(inc_attributes=True)
 
             ss = []
-            for k,v in d.iteritems():
+            for k,v in d.items():
                 v = repr(v)
                 if not v or v[0] != '<':
                     if k.startswith('@'):
@@ -865,22 +868,22 @@ class TestPanel( wx.Panel ):
                     else:
                         ss.append('obj.%s = %s'%(k,v))
 
-            dlg = MemoDialog(self,
+            with MemoDialog(self,
                     "Enter Content for Object Used in SetPropertyValues",
-                    '\n'.join(ss))  # default_object_content1
+                    '\n'.join(ss)) as dlg:  # default_object_content1
 
-            if dlg.ShowModal() == wx.ID_OK:
-                import datetime
-                sandbox = {'obj':ValueObject(),
-                           'wx':wx,
-                           'datetime':datetime}
-                exec_(dlg.tc.GetValue(), sandbox)
-                t_start = time.time()
-                #print(sandbox['obj'].__dict__)
-                self.pg.SetPropertyValues(sandbox['obj'])
-                t_end = time.time()
-                self.log.write('SetPropertyValues finished in %.0fms\n' %
-                               ((t_end-t_start)*1000.0))
+                if dlg.ShowModal() == wx.ID_OK:
+                    import datetime
+                    sandbox = {'obj':ValueObject(),
+                               'wx':wx,
+                               'datetime':datetime}
+                    exec_(dlg.tc.GetValue(), sandbox)
+                    t_start = time.time()
+                    #print(sandbox['obj'].__dict__)
+                    self.pg.SetPropertyValues(sandbox['obj'])
+                    t_end = time.time()
+                    self.log.write('SetPropertyValues finished in %.0fms\n' %
+                                   ((t_end-t_start)*1000.0))
         except:
             import traceback
             traceback.print_exc()
@@ -892,10 +895,11 @@ class TestPanel( wx.Panel ):
             t_end = time.time()
             self.log.write('GetPropertyValues finished in %.0fms\n' %
                            ((t_end-t_start)*1000.0))
-            ss = ['%s: %s'%(k,repr(v)) for k,v in d.iteritems()]
-            dlg = MemoDialog(self,"GetPropertyValues Result",
-                             'Contents of resulting dictionary:\n\n'+'\n'.join(ss))
-            dlg.ShowModal()
+            ss = ['%s: %s'%(k,repr(v)) for k,v in d.items()]
+            with MemoDialog(self,"GetPropertyValues Result",
+                           'Contents of resulting dictionary:\n\n'+'\n'.join(ss)) as dlg:
+                dlg.ShowModal()
+
         except:
             import traceback
             traceback.print_exc()
@@ -907,25 +911,25 @@ class TestPanel( wx.Panel ):
             t_end = time.time()
             self.log.write('GetPropertyValues(as_strings=True) finished in %.0fms\n' %
                            ((t_end-t_start)*1000.0))
-            ss = ['%s: %s'%(k,repr(v)) for k,v in d.iteritems()]
-            dlg = MemoDialog(self,"GetPropertyValues Result",
-                             'Contents of resulting dictionary:\n\n'+'\n'.join(ss))
-            dlg.ShowModal()
+            ss = ['%s: %s'%(k,repr(v)) for k,v in d.items()]
+            with MemoDialog(self,"GetPropertyValues Result",
+                           'Contents of resulting dictionary:\n\n'+'\n'.join(ss)) as dlg:
+                dlg.ShowModal()
         except:
             import traceback
             traceback.print_exc()
 
     def OnAutoFill(self,event):
         try:
-            dlg = MemoDialog(self,"Enter Content for Object Used for AutoFill",default_object_content1)
-            if dlg.ShowModal() == wx.ID_OK:
-                sandbox = {'object':ValueObject(),'wx':wx}
-                exec_(dlg.tc.GetValue(), sandbox)
-                t_start = time.time()
-                self.pg.AutoFill(sandbox['object'])
-                t_end = time.time()
-                self.log.write('AutoFill finished in %.0fms\n' %
-                               ((t_end-t_start)*1000.0))
+            with MemoDialog(self,"Enter Content for Object Used for AutoFill",default_object_content1) as dlg:
+                if dlg.ShowModal() == wx.ID_OK:
+                    sandbox = {'object':ValueObject(),'wx':wx}
+                    exec_(dlg.tc.GetValue(), sandbox)
+                    t_start = time.time()
+                    self.pg.AutoFill(sandbox['object'])
+                    t_end = time.time()
+                    self.log.write('AutoFill finished in %.0fms\n' %
+                                   ((t_end-t_start)*1000.0))
         except:
             import traceback
             traceback.print_exc()
@@ -995,7 +999,7 @@ class TestPanel( wx.Panel ):
 
 
 class MemoDialog(wx.Dialog):
-    """\
+    """
     Dialog for multi-line text editing.
     """
     def __init__(self,parent=None,title="",text="",pos=None,size=(500,500)):
