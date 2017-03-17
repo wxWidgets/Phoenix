@@ -4340,6 +4340,7 @@ class FlatMenuBase(ShadowPopupWindow):
         self._is_dismiss = False
 
 
+
     def AdjustPosition(self, pos):
         """
         Adjusts position so the menu will be fully visible on screen.
@@ -5435,7 +5436,8 @@ class FlatMenu(FlatMenuBase):
 
             oldHandler = self._activeWin.GetEventHandler()
             newEvtHandler = MenuKbdRedirector(self, oldHandler)
-            self._activeWin.PushEventHandler(newEvtHandler)
+            if wx.GetApp().GetMainLoop():
+                self._activeWin.PushEventHandler(newEvtHandler)
 
         if "__WXMSW__" in wx.Platform:
             self._focusWin = wx.Window.FindFocus()
@@ -5446,7 +5448,8 @@ class FlatMenu(FlatMenuBase):
 
         if self._focusWin:
             newEvtHandler = FocusHandler(self)
-            self._focusWin.PushEventHandler(newEvtHandler)
+            if wx.GetApp().GetMainLoop():
+                self._focusWin.PushEventHandler(newEvtHandler)
 
 
     def Append(self, id, item, helpString="", kind=wx.ITEM_NORMAL):
@@ -5761,15 +5764,16 @@ class FlatMenu(FlatMenuBase):
         :param bool `resetOwner`: ``True`` to delete the link between this menu and the
          owner menu, ``False`` otherwise.
         """
-
         if self._activeWin:
 
-            self._activeWin.PopEventHandler(True)
+            if wx.GetApp().GetMainLoop():
+                self._activeWin.PopEventHandler(True)
             self._activeWin = None
 
         if self._focusWin:
 
-            self._focusWin.PopEventHandler(True)
+            if wx.GetApp().GetMainLoop():
+                self._focusWin.PopEventHandler(True)
             self._focusWin = None
 
         self._selectedItem = -1
