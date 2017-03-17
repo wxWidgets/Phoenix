@@ -40,7 +40,7 @@ class xrc_Tests(wtc.WidgetTestCase):
         xmlres = xrc.XmlResource()
         with open(xrcFile, 'rb') as f:
             data = f.read()
-        xmlres.LoadFromString(data)
+        xmlres.LoadFromBuffer(data)
         self.checkXmlRes(xmlres)
 
     def test_xrc4(self):
@@ -127,7 +127,7 @@ class xrc_Tests(wtc.WidgetTestCase):
         # now load it
         xmlres = xrc.XmlResource()
         xmlres.InsertHandler( MyCustomPanelXmlHandler() )
-        success = xmlres.LoadFromString(resource)
+        success = xmlres.LoadFromBuffer(resource)
 
         f = xmlres.LoadFrame(self.frame, 'MainFrame')
         self.assertNotEqual(f, None)
@@ -215,7 +215,7 @@ class xrc_Tests(wtc.WidgetTestCase):
         # now load it
         xmlres = xrc.XmlResource()
         xmlres.InsertHandler( MyCustomPanelXmlHandler() )
-        success = xmlres.LoadFromString(resource)
+        success = xmlres.LoadFromBuffer(resource)
 
         f = xmlres.LoadFrame(self.frame, 'MainFrame')
         self.assertNotEqual(f, None)
@@ -246,7 +246,7 @@ class xrc_Tests(wtc.WidgetTestCase):
 
         # now load it
         xmlres = xrc.XmlResource()
-        success = xmlres.LoadFromString(resource)
+        success = xmlres.LoadFromBuffer(resource)
 
         panel = xmlres.LoadPanel(self.frame, "MyPanel")
         self.frame.SendSizeEvent()
