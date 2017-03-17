@@ -10873,7 +10873,10 @@ class UltimateListCtrl(wx.Control):
         self.CreateOrDestroyFooterWindowAsNeeded()
 
         self.SetInitialSize(size)
-        wx.CallAfter(self.Layout)
+        if wx.GetApp().GetMainLoop():
+            wx.CallAfter(self.Layout)
+        else:
+            self.Layout()
 
 
     def CreateOrDestroyHeaderWindowAsNeeded(self):
