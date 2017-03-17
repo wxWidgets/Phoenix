@@ -6,6 +6,9 @@ import wx.lib.agw.toasterbox as TB
 
 #---------------------------------------------------------------------------
 
+@unittest.skip("Skipping for now - sometimes triggers a BEX "
+               "(Buffer Overflow Exception) in subsequent tests "
+               "observed on Windows 7 with Python 2.7")
 class lib_agw_toasterbox_Tests(wtc.WidgetTestCase):
 
     def test_lib_agw_toasterboxCtor(self):
