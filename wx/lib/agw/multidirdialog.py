@@ -536,7 +536,8 @@ class MultiDirDialog(wx.Dialog):
         :param `event`: a :class:`CloseEvent` event to be processed.
         """
 
-        self.EndModal(wx.ID_CANCEL)
+        if self.IsModal():
+            self.EndModal(wx.ID_CANCEL)
 
 
     def OnKeyUp(self, event):
