@@ -6,7 +6,7 @@ try:
     import wx.lib.agw.xlsgrid as XG
     skipIt = False
 except:
-    skipIt = False
+    skipIt = True
 
 #---------------------------------------------------------------------------
 
