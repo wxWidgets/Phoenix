@@ -742,8 +742,10 @@ class RibbonGallery(RibbonControl):
                 item.SetPosition(origin.x + x_cursor, origin.y + y_cursor, self._bitmap_padded_size)
                 x_cursor += self._bitmap_padded_size.x
 
-        for item in self._items[indx:]:
-            item.SetIsVisible(False)
+        # JW: Commented this out to avoid:
+        # UnboundLocalError: local variable 'indx' referenced before assignmentindx could be undefined here:
+        # for item in self._items[indx:]:
+            # item.SetIsVisible(False)
 
         if art_flags & RIBBON_BAR_FLOW_VERTICAL:
             self._scroll_limit = x_cursor
