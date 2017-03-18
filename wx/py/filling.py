@@ -322,6 +322,31 @@ class Filling(wx.SplitterWindow):
         config.WriteInt('Sash/FillingPos', self.GetSashPosition())
         config.WriteInt('View/Zoom/Filling', self.text.GetZoom())
 
+    def SplitVertically(self, window1, window2, sashPosition=0):
+        """
+        SplitVertically(window1, window2, sashPosition=0) -> bool
+
+        Initializes the left and right panes of the splitter window.
+
+        Overridden from wx.SplitterWindow to ensure that self.__nonzero__
+        is not set to False.  Because self.SplitVertically is invoked using
+        wx.CallLater, it's possible that self has been destroyed.
+        """
+        if self:
+            super(Filling, self).SplitVertically(window1, window2, sashPosition)
+
+    def SetSashPosition(self, position, redraw=True):
+        """
+        SetSashPosition(position, redraw=True)
+
+        Sets the sash position.
+
+        Overridden from wx.SplitterWindow to ensure that self.__nonzero__
+        is not set to False.  Because self.SetSashPosition is invoked using
+        wx.CallLater, it's possible that self has been destroyed.
+        """
+        if self:
+            super(Filling, self).SetSashPosition(position, redraw)
 
 
 class FillingFrame(wx.Frame):
