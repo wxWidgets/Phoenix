@@ -10873,10 +10873,7 @@ class UltimateListCtrl(wx.Control):
         self.CreateOrDestroyFooterWindowAsNeeded()
 
         self.SetInitialSize(size)
-        if wx.GetApp().GetMainLoop():
-            wx.CallAfter(self.Layout)
-        else:
-            self.Layout()
+        wx.CallAfter(self.Layout)
 
 
     def CreateOrDestroyHeaderWindowAsNeeded(self):
@@ -13602,6 +13599,19 @@ class UltimateListCtrl(wx.Control):
 
         return self._headerWin.GetWindowHeight()
 
+    def Layout(self):
+        """
+        Layout() -> bool
+
+        Invokes the constraint-based layout algorithm or the sizer-based
+        algorithm for this window.
+
+        Overriden so we can ensure that self.__nonzero__ is not set to False.
+        Because self.Layout is invoked by wx.CallAfter, it's possible that
+        the application is shutting down when this method is called.
+        """
+        if self:
+            super(UltimateListCtrl, self).Layout()
 
     def DoLayout(self):
         """
