@@ -1,0 +1,30 @@
+# Samuel Dunn
+# Modified by James Wettenhall
+# Simple Appveyor configuration file for Phoenix
+version: "{build}"
+configuration: Release
+platform:
+- x64
+environment:
+  matrix:
+    # - py: C:\Python36-x64\python
+    # - py: C:\Python36\python
+    # - py: C:\Python27-x64\python
+    - py: C:\Python27\python
+
+build_script:
+- cmd: >-
+    git submodule init
+
+    git submodule update
+    
+    %py% -m pip install -U pip
+    
+    %py% -m pip install -U -r requirements.txt
+    
+    %py% build.py dox etg --nodoc sip build
+    
+    # %py% build.py install
+
+test_script:
+- cmd: %py% build.py test --extra_pytest="--capture=no"
