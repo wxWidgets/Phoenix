@@ -1,12 +1,20 @@
 import unittest
 from unittests import wtc
 import wx
-
 import wx.lib.agw.ultimatelistctrl as ULC
 
 #---------------------------------------------------------------------------
 
 class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
+
+    def tearDown(self):
+        '''
+        For some reason, we need to destroy the frame's children early
+        here, otherwise WidgetTestCase's tearDown method can encounter
+        a wx.PyNoAppError when running wx.WakeUpIdle().
+        '''
+        self.frame.DestroyChildren()
+        super(lib_agw_ultimatelistctrl_Tests, self).tearDown()
 
     def test_lib_agw_ultimatelistctrlCtorReport(self):
         ulc = ULC.UltimateListCtrl(self.frame, agwStyle=wx.LC_REPORT)
