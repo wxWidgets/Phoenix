@@ -45,4 +45,4 @@ build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
   - "%CMD_IN_ENV% python build.py dox etg --nodoc sip build"
-  - "%CMD_IN_ENV% python build.py test --extra_pytest='--capture=no'"
+  - "%CMD_IN_ENV% python build.py test --extra_pytest=-s"
