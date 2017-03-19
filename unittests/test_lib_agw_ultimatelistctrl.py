@@ -20,8 +20,6 @@ class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
         self.frame.DestroyChildren()
         self.frame.Close(force=True)
 
-        super(lib_agw_ultimatelistctrl_Tests, self).tearDown()
-
     def test_lib_agw_ultimatelistctrlCtorReport(self):
         ulc = ULC.UltimateListCtrl(self.frame, agwStyle=wx.LC_REPORT)
 
