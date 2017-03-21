@@ -651,37 +651,39 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     msg("Uploading %s..." % fileName)
 
     # NOTE: It is expected that there will be a host entry defined in
-    # ~/.ssh/config named wxpython-rbot, with the proper host, user,
-    # identity file, etc. needed for making an SSH connection to the
-    # snapshots server.
-    host = 'wxpython-rbot'
+    # ~/.ssh/config named wxpython-rbot, with the proper host, user, identity
+    # file, etc. needed for making an SSH connection to the snapshots server.
+    # Release builds work similarly with their own host configuration defined
+    # in the ~/.ssh/config file.
     if options.release_build:
+        host = 'wxpython-release'
         uploadDir = 'release-builds'
     else:
+        host = 'wxpython-rbot'
         uploadDir = 'snapshot-builds'
 
     # copy the new file to the server
     cmd = 'scp {} {}:{}'.format(fileName, host, uploadDir)
-    #msg(cmd)
     runcmd(cmd)
 
     # Make sure it is readable by all
     cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, uploadDir, os.path.basename(fileName))
     runcmd(cmd)
 
-    # get the list of all snapshot files on the server
-    cmd = 'ssh {} "cd {}; ls {}"'.format(host, uploadDir, mask)
-    allFiles = runcmd(cmd, getOutput=True)
-    allFiles = allFiles.strip().split('\n')
-    allFiles.sort()
+    if not options.release_build:
+        # get the list of all snapshot files on the server
+        cmd = 'ssh {} "cd {}; ls {}"'.format(host, uploadDir, mask)
+        allFiles = runcmd(cmd, getOutput=True)
+        allFiles = allFiles.strip().split('\n')
+        allFiles.sort()
 
-    # Leave the last keep number of builds, including this new one, on the server.
-    # Delete the rest.
-    rmFiles = allFiles[:-keep]
-    if rmFiles:
-        msg("Deleting %s" % ", ".join(rmFiles))
-        cmd = 'ssh {} "cd {}; rm {}"'.format(host, uploadDir, " ".join(rmFiles))
-        runcmd(cmd)
+        # Leave the last keep number of builds, including this new one, on the server.
+        # Delete the rest.
+        rmFiles = allFiles[:-keep]
+        if rmFiles:
+            msg("Deleting %s" % ", ".join(rmFiles))
+            cmd = 'ssh {} "cd {}; rm {}"'.format(host, uploadDir, " ".join(rmFiles))
+            runcmd(cmd)
 
     msg("Upload complete!")
 
