@@ -46,6 +46,8 @@ def run():
     c.find('Insert.provider').transfer = True
     c.find('Remove.provider').transferBack = True
 
+    c.find('GetBitmap').mustHaveApp()
+    c.find('GetIcon').mustHaveApp()
 
     # Change the types of the art constants from wxString to const char*
     # since that is what they really are.

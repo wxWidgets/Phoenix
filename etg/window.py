@@ -39,6 +39,8 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     module.addGlobalStr('wxPanelNameStr', c)
 
+    c.find('FindFocus').mustHaveApp()
+    c.find('GetCapture').mustHaveApp()
 
     # First we need to let the wrapper generator know about wxWindowBase since
     # AddChild and RemoveChild need to use that type in order to be virtualized.
@@ -390,7 +392,9 @@ def run():
             boxes; if non-None, the search will be limited to the given window
             hierarchy. The search is recursive in both cases.
             """,
-        body="return wxWindow::FindWindowById(id, parent);")
+        body="return wxWindow::FindWindowById(id, parent);",
+        mustHaveAppFlag=True)
+
 
     module.addCppFunction('wxWindow*', 'FindWindowByName', '(const wxString& name, const wxWindow* parent=NULL)',
         doc="""\
@@ -403,7 +407,9 @@ def run():
             cases.
 
             If no window with the name is found, wx.FindWindowByLabel is called.""",
-        body="return wxWindow::FindWindowByName(*name, parent);")
+        body="return wxWindow::FindWindowByName(*name, parent);",
+        mustHaveAppFlag=True)
+
 
     module.addCppFunction('wxWindow*', 'FindWindowByLabel', '(const wxString& label, const wxWindow* parent=NULL)',
         doc="""\
@@ -414,7 +420,8 @@ def run():
             search will start from all top-level frames and dialog boxes; if
             non-None, the search will be limited to the given window
             hierarchy. The search is recursive in both cases.""",
-        body="return wxWindow::FindWindowByLabel(*label, parent);")
+        body="return wxWindow::FindWindowByLabel(*label, parent);",
+        mustHaveAppFlag=True)
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

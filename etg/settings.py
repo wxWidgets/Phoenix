@@ -34,6 +34,12 @@ def run():
     c = module.find('wxSystemSettings')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
+    c.find('GetColour').mustHaveApp()
+    c.find('GetFont').mustHaveApp()
+    c.find('GetMetric').mustHaveApp()
+    c.find('HasFeature').mustHaveApp()
+    c.find('GetScreenType').mustHaveApp()
+
 
     #-----------------------------------------------------------------
     tools.doCommonTweaks(module)

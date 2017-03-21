@@ -34,14 +34,15 @@ def run():
     c = module.find('wxClipboard')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
+    c.find('Get').mustHaveApp()
 
     c.find('AddData.data').transfer = True
     c.find('SetData.data').transfer = True
 
 
-    # TODO: This init wrapper class may be useful elsewhere...
+    # TODO: This delayed initialization wrapper class may also be useful elsewhere...
     module.addPyCode("""\
-        # Since wxTheClipoard is not really a global varaiable (it is a macro
+        # Since wxTheClipboard is not really a global variable (it is a macro
         # that calls the Get static method) we can't declare it as a global
         # variable for the wrapper generator, otherwise it will try to run the
         # function at module import and the wxApp object won't exist yet.  So
