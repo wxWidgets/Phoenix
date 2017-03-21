@@ -33,7 +33,8 @@ def run():
     # customizing the generated code and docstrings.
 
     def addTransferAnnotations(c, arg):
-        for method in c.findAll('Append') + c.findAll('Insert') + c.findAll('Replace'):
+        for method in c.findAll('Append') + c.findAll('Insert') + \
+                      c.findAll('Replace') + c.findAll('Prepend'):
             arg_def = method.findItem(arg)
             if arg_def:
                 arg_def.transfer = True
@@ -47,6 +48,9 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
     tools.removeVirtuals(c)
+    c.find('Prepend.item').name = 'menuItem'
+    c.find('Prepend.submenu').name = 'subMenu'
+
     addTransferAnnotations(c, 'menuItem')
     addTransferAnnotations(c, 'subMenu')
     c.find('AppendSubMenu.submenu').transfer = True
