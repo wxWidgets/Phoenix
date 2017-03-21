@@ -33,6 +33,8 @@ def run():
 
     c = module.find('wxButton')
     tools.fixWindowClass(c)
+    c.find('GetDefaultSize').mustHaveApp()
+
 
     module.addGlobalStr('wxButtonNameStr', c)
 

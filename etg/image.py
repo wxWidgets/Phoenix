@@ -43,6 +43,8 @@ def run():
 
     c.find('GetHandlers').ignore()  # TODO
 
+    c.find('wxImage').findOverload('wxBitmap').mustHaveApp()
+
 
     # Ignore the ctors taking raw data buffers, so we can add in our own
     # versions that are a little smarter (accept any buffer object, check

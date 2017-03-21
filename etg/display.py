@@ -37,6 +37,9 @@ def run():
     c.addPrivateAssignOp()
     c.addPrivateCopyCtor()
     c.mustHaveApp()
+    c.find('GetCount').mustHaveApp()
+    c.find('GetFromPoint').mustHaveApp()
+    c.find('GetFromWindow').mustHaveApp()
 
 
     c.addProperty('ClientArea GetClientArea')

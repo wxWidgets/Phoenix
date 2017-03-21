@@ -45,6 +45,9 @@ def run():
     for func in c.find('New').all():
         func.mustHaveApp()
 
+    c.find('GetDefaultEncoding').mustHaveApp()
+    c.find('SetDefaultEncoding').mustHaveApp()
+
 
     # FFont factory function for backwards compatibility
     module.addCppFunction('wxFont*', 'FFont',
