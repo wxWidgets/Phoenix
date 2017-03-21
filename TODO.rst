@@ -150,3 +150,6 @@ Other Assorted Stuff
   * Add type hinting to the .pyi stub files, as well as @overload decorators
     to document the C++ overloaded methods. See https://www.python.org/dev/peps/pep-0484/
 
+ * Add doc files for the image handler classes, so we can add wrappers for them.
+
+
