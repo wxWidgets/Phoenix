@@ -74,6 +74,7 @@ def configure(conf):
         msvc_version = str( distutils.msvc9compiler.get_build_version() )
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
+        conf.env['NO_MSVC_DETECT'] = 1
         conf.load('msvc')
     else:
         conf.load('compiler_cc compiler_cxx')
@@ -415,6 +416,8 @@ def my_check_python_headers(conf):
 
     if env.CC_NAME == "msvc":
         from distutils.msvccompiler import MSVCCompiler
+        # setuptools is imported to address https://bugs.python.org/issue23246
+        import setuptools
         dist_compiler = MSVCCompiler()
         dist_compiler.initialize()
         env.append_value('CFLAGS_PYEXT', dist_compiler.compile_options)
