@@ -37,8 +37,12 @@ def run():
 
     c = module.find('wxRendererNative')
     assert isinstance(c, etgtools.ClassDef)
-    c.mustHaveApp()
     c.addPrivateCopyCtor()
+    c.mustHaveApp()
+    c.find('Get').mustHaveApp()
+    c.find('GetGeneric').mustHaveApp()
+    c.find('GetDefault').mustHaveApp()
+    c.find('Set').mustHaveApp()
 
 
     #virtual void DrawTitleBarBitmap(wxWindow *win,

@@ -38,6 +38,8 @@ def run():
     c = module.find('wxConfigBase')
     assert isinstance(c, etgtools.ClassDef)
     c.mustHaveApp()
+    c.find('Get').mustHaveApp()
+    c.find('Create').mustHaveApp()
 
     c.abstract = True
     ctor = c.find('wxConfigBase')
