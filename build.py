@@ -694,14 +694,15 @@ def uploadTree(srcPath, destPath, options, keep=30):
     """
     msg("Uploading tree at {}...".format(srcPath))
 
-    host = 'wxpython-rbot'
     if options.release_build:
+        host = 'wxpython-release'
         uploadDir = opj('release-builds', destPath)
     else:
+        host = 'wxpython-rbot'
         uploadDir = opj('snapshot-builds', destPath)
 
     # Ensure the destination exists
-    cmd = 'ssh {0} "if [ ! -d {1} ]; then mkdir {1}; fi"'.format(host, uploadDir)
+    cmd = 'ssh {0} "if [ ! -d {1} ]; then mkdir -p {1}; fi"'.format(host, uploadDir)
     runcmd(cmd)
 
     # Upload the tree
@@ -712,10 +713,11 @@ def uploadTree(srcPath, destPath, options, keep=30):
     cmd = 'ssh {} "chmod -R a+r {}"'.format(host, uploadDir)
     runcmd(cmd)
 
-    # Remove files that were last modified more than `keep` days ago
-    msg("Cleaning up old builds.")
-    cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
-    runcmd(cmd)
+    if not options.release_build:
+        # Remove files that were last modified more than `keep` days ago
+        msg("Cleaning up old builds.")
+        cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
+        runcmd(cmd)
 
     msg("Tree upload and cleanup complete!")
 
