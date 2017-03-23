@@ -381,6 +381,8 @@ def makeOptionParser():
     OPTS = [
         ("python",         ("",    "The python executable to build for.")),
         ("debug",          (False, "Build wxPython with debug symbols")),
+        ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
+        ("release",        (False, "Turn off some development options for a release build.")),
         ("keep_hash_lines",(False, "Don't remove the '#line N' lines from the SIP generated code")),
         ("gtk3",           (False, "On Linux build for gtk3 (default gtk2)")),
         ("osx_cocoa",      (True,  "Build the OSX Cocoa port on Mac (default)")),
@@ -422,8 +424,6 @@ def makeOptionParser():
         ("cairo",          (False, "Allow Cairo use with wxGraphicsContext (Windows only)")),
         ("x64",            (False, "Use and build for the 64bit version of Python on Windows")),
         ("jom",            (False, "Use jom instead of nmake for the wxMSW build")),
-        ("relwithdebug",   (False, "Turn on the generation of debug info for release builds on MSW.")),
-        ("release_build",  (False, "Turn off some development options for a release build.")),
         ("pytest_timeout", ("0",   "Timeout, in seconds, for stopping stuck test cases. (Currently not working as expected, so disabled by default.)")),
         ("pytest_jobs",    ("",    "Number of parallel processes py.test should run")),
         ("vagrant_vms",    ("all", "Comma separated list of VM names to use for the build_vagrant command. Defaults to \"all\"")),
@@ -459,7 +459,7 @@ def parseArgs(args):
         options.no_magic = True
 
     # Some options don't make sense for release builds
-    if options.release_build:
+    if options.release:
         options.debug = False
         options.both = False
         options.relwithdebug = False
@@ -655,7 +655,7 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     # file, etc. needed for making an SSH connection to the snapshots server.
     # Release builds work similarly with their own host configuration defined
     # in the ~/.ssh/config file.
-    if options.release_build:
+    if options.release:
         host = 'wxpython-release'
         uploadDir = 'release-builds'
     else:
@@ -670,7 +670,7 @@ def uploadPackage(fileName, options, mask=defaultMask, keep=50):
     cmd = 'ssh {} "cd {}; chmod a+r {}"'.format(host, uploadDir, os.path.basename(fileName))
     runcmd(cmd)
 
-    if not options.release_build:
+    if not options.release:
         # get the list of all snapshot files on the server
         cmd = 'ssh {} "cd {}; ls {}"'.format(host, uploadDir, mask)
         allFiles = runcmd(cmd, getOutput=True)
@@ -694,7 +694,7 @@ def uploadTree(srcPath, destPath, options, keep=30):
     """
     msg("Uploading tree at {}...".format(srcPath))
 
-    if options.release_build:
+    if options.release:
         host = 'wxpython-release'
         uploadDir = opj('release-builds', destPath)
     else:
@@ -713,7 +713,7 @@ def uploadTree(srcPath, destPath, options, keep=30):
     cmd = 'ssh {} "chmod -R a+r {}"'.format(host, uploadDir)
     runcmd(cmd)
 
-    if not options.release_build:
+    if not options.release:
         # Remove files that were last modified more than `keep` days ago
         msg("Cleaning up old builds.")
         cmd = 'ssh {} "find {} -type f -mtime +{} -delete"'.format(host, uploadDir, keep)
@@ -1782,7 +1782,7 @@ def cmd_setrev(options, args):
     cmdTimer = CommandTimer('setrev')
     assert os.getcwd() == phoenixDir()
 
-    if options.release_build:
+    if options.release:
         # Ignore this command for release builds, they are not supposed to
         # include current VCS revision info in the version number.
         msg('This is a release build, setting REV.txt skipped')
