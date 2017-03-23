@@ -1,12 +1,24 @@
 import unittest
 from unittests import wtc
 import wx
-
 import wx.lib.agw.ultimatelistctrl as ULC
 
 #---------------------------------------------------------------------------
 
 class lib_agw_ultimatelistctrl_Tests(wtc.WidgetTestCase):
+
+    def tearDown(self):
+        '''
+        For some reason, WidgetTestCase's tearDown method can encounter
+        a wx.PyNoAppError after running one or more of these tests, so
+        we override tearDown here.
+
+        We shouldn't need to manually call DestroyChildren, but calling
+        it earlier than it would normally run seems to help tearDown to
+        run more smoothly.
+        '''
+        self.frame.DestroyChildren()
+        self.frame.Close(force=True)
 
     def test_lib_agw_ultimatelistctrlCtorReport(self):
         ulc = ULC.UltimateListCtrl(self.frame, agwStyle=wx.LC_REPORT)

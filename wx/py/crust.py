@@ -77,6 +77,7 @@ class Crust(wx.SplitterWindow):
 
         # Initialize in an unsplit mode, and check later after loading
         # settings if we should split or not.
+        self.issplit = False
         self.shell.Hide()
         self.notebook.Hide()
         self.Initialize(self.shell)
@@ -89,6 +90,12 @@ class Crust(wx.SplitterWindow):
         self.Bind(wx.EVT_SPLITTER_DCLICK, self.OnSashDClick)
 
     def _CheckShouldSplit(self):
+        """
+        This method is invoked by wx.CallAfter, so self.__nonzero__ could be
+        False if the application is shutting down.
+        """
+        if not self:
+            return
         if self._shouldsplit:
             self.SplitHorizontally(self.shell, self.notebook, -self.sashoffset)
             self.lastsashpos = self.GetSashPosition()
@@ -133,6 +140,12 @@ class Crust(wx.SplitterWindow):
         pos = config.ReadInt('Sash/CrustPos', 400)
         wx.CallAfter(self.SetSashPosition, pos)
         def _updateSashPosValue():
+            """
+            Because this method is invoked by wx.CallAfter, we should ensure
+            that self.__nonzero__ hasn't been set to False.
+            """
+            if not self:
+                return
             sz = self.GetSize()
             self.sashoffset = sz.height - self.GetSashPosition()
         wx.CallAfter(_updateSashPosValue)
@@ -147,10 +160,24 @@ class Crust(wx.SplitterWindow):
         self.shell.SaveSettings(config)
         self.filling.SaveSettings(config)
 
-        if self.lastsashpos != -1:
+        if hasattr(self, 'lastsashpos') and self.lastsashpos != -1:
             config.WriteInt('Sash/CrustPos', self.lastsashpos)
         config.WriteInt('Sash/IsSplit', self.issplit)
         config.WriteInt('View/Zoom/Display', self.display.GetZoom())
+
+    def SetSashPosition(self, position, redraw=True):
+        """
+        SetSashPosition(position, redraw=True)
+
+        Sets the sash position.
+
+        Overridden from wx.SplitterWindow to ensure that self.__nonzero__
+        is not set to False.  Because self.SetSashPosition is invoked using
+        wx.CallAfter, it's possible that self has been destroyed.
+        """
+        if self:
+            super(Crust, self).SetSashPosition(position, redraw)
+
 
 class Display(editwindow.EditWindow):
     """STC used to display an object using Pretty Print."""

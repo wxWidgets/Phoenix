@@ -265,6 +265,12 @@ class InspectionFrame(wx.Frame):
 
 
     def _postStartup(self):
+        """
+        Because this method is invoked by wx.CallAfter, it's possible that
+        the application is shutting down, so self.__nonzero__ could be False.
+        """
+        if not self:
+            return
         if self.crust.ToolsShown():
             self.crust.ToggleTools()
         self.UpdateInfo()

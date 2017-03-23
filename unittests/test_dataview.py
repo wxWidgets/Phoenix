@@ -45,10 +45,7 @@ class dataview_Tests(wtc.WidgetTestCase):
 
     def test_dataviewItem7(self):
         n = sys.maxsize
-        if six.PY3:
-            assert type(n) is int
-        else:
-            assert type(n) is long
+        assert type(n) is int
         dvi = dv.DataViewItem(n)
         self.assertTrue(dvi)
         self.assertTrue(int(dvi.GetID()) == n)

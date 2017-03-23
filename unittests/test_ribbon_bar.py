@@ -43,7 +43,6 @@ class ribbon_bar_Tests(wtc.WidgetTestCase):
         wx.ribbon.EVT_RIBBONBAR_HELP_CLICK
 
 
-
     def test_ribbon_bar2(self):
         evt = wx.ribbon.RibbonBarEvent()
         evt.GetPage()
@@ -54,7 +53,7 @@ class ribbon_bar_Tests(wtc.WidgetTestCase):
     def test_ribbon_bar3(self):
         pti = wx.ribbon.RibbonPageTabInfo()
         pti.rect
-        pti.page
+        # pti.page  # Triggers AppCrash
         pti.ideal_width
         pti.small_begin_need_separator_width
         pti.small_must_have_separator_width

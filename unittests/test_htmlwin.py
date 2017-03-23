@@ -4,6 +4,7 @@ import wx
 import wx.html
 
 import os
+import warnings
 helpPath = os.path.join(os.path.dirname(__file__), 'helpfiles')
 
 #---------------------------------------------------------------------------
@@ -25,8 +26,17 @@ class htmlwin_Tests(wtc.WidgetTestCase):
 
 
     def test_htmlwin4(self):
+        """
+        The warning below will be captured by pytest by default,
+        but it can be seen by running:
+
+        python build.py test_htmlwin --extra_pytest="--capture=no"
+        """
         noLog = wx.LogNull()
         obj = wx.html.HtmlWindow(self.frame)
+        warnings.warn(
+            "Remote URL being loaded without timeout. "
+            "Could hang if there is no network connectivity.")
         obj.LoadPage('http://www.google.com/')
         self.frame.SendSizeEvent()
         self.myYield()

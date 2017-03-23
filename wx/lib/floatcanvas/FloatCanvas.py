@@ -174,7 +174,10 @@ class FloatCanvas(wx.Panel):
         self.SetMode(GUIMode.GUIMouse()) # make the default Mouse Mode.
 
         # timer to give a delay when re-sizing so that buffers aren't re-built too many times.
-        self.SizeTimer = wx.PyTimer(self.OnSizeTimer)
+        if wx.GetApp().GetMainLoop():
+            self.SizeTimer = wx.PyTimer(self.OnSizeTimer)
+        else:
+            self.SizeTimer = None
 
 #        self.InitializePanel()
 #        self.MakeNewBuffers()
@@ -542,7 +545,8 @@ class FloatCanvas(wx.Panel):
     def OnSize(self, event=None):
         """On size handler."""
         self.InitializePanel()
-        self.SizeTimer.Start(50, oneShot=True)
+        if self.SizeTimer:
+            self.SizeTimer.Start(50, oneShot=True)
 
     def OnSizeTimer(self, event=None):
         """On size timer handler."""

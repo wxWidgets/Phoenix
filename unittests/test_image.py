@@ -136,9 +136,9 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
         data = img.GetDataBuffer()
         self.assertTrue(isinstance(data, memoryview))
-        data[0] = 1
-        data[1] = 2
-        data[2] = 3
+        data[0] = '\x01'
+        data[1] = '\x02'
+        data[2] = '\x03'
         self.assertEqual(1, img.GetRed(0,0))
         self.assertEqual(2, img.GetGreen(0,0))
         self.assertEqual(3, img.GetBlue(0,0))
@@ -150,9 +150,9 @@ class image_Tests(wtc.WidgetTestCase):
         self.assertTrue(img.IsOk())
         data = img.GetAlphaBuffer()
         self.assertTrue(isinstance(data, memoryview))
-        data[0] = 1
-        data[1] = 2
-        data[2] = 3
+        data[0] = '\x01'
+        data[1] = '\x02'
+        data[2] = '\x03'
         self.assertEqual(1, img.GetAlpha(0,0))
         self.assertEqual(2, img.GetAlpha(1,0))
         self.assertEqual(3, img.GetAlpha(2,0))

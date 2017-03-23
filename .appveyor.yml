@@ -1,0 +1,48 @@
+# Samuel Dunn
+# Modified by James Wettenhall
+# Appveyor configuration file for Phoenix
+
+environment:
+  global:
+    # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
+    # /E:ON and /V:ON options are not enabled in the batch script intepreter
+    # See: http://stackoverflow.com/a/13751649/163740
+    CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\.appveyor\\run_with_env.cmd"
+
+  matrix:
+
+    - PYTHON: "C:\\Python27.13"
+      PYTHON_VERSION: "2.7.13"
+      PYTHON_ARCH: "32"
+
+install:
+  - ECHO "Installed SDKs:"
+  - ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
+
+  # Install Python (from the official .msi of http://python.org) and pip when
+  # not already installed.
+  - ps: if (-not(Test-Path($env:PYTHON))) { & .appveyor\install.ps1 }
+
+  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # done from inside the powershell script as it would require to restart
+  # the parent CMD process).
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
+  # Check that we have the expected version and architecture for Python:
+  - "python --version"
+  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+
+  # Upgrade to the latest version of pip:
+  - "pip install --disable-pip-version-check --user --upgrade pip"
+
+  - "pip install -U -r requirements.txt"
+
+  # Install wxWidgets submodule:
+  - "git submodule init"
+  - "git submodule update"
+
+build: false  # Not a C# project, build stuff at the test step instead.
+
+test_script:
+  - "%CMD_IN_ENV% python build.py dox etg --nodoc sip build"
+  - "%CMD_IN_ENV% python build.py test --extra_pytest=\"-s --cov=wx\""
