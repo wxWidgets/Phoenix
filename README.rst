@@ -6,6 +6,19 @@ wxPython Project Phoenix
    :align: center
 
 
+
+Phoenix Bounty
+--------------
+
+Members of the wxPython community have joined together to make pledges towards
+a bounty reward for the completion of the Phoenix release, with the primary
+goal of jump-starting development, which has been stalled for a while.  If you
+are interested in making a pledge, please contact David Hughes at ``dfh -at-
+forestfield -dot- co -dot- uk``.  No actual money will be requested until the
+release is completed.
+
+
+
 Introduction
 ------------
 
