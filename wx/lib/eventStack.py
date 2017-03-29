@@ -114,7 +114,7 @@ class AppEventHandlerMixin:
             try:
                 if handler:
                     return handler(event)
-            except wx.PyDeadObjectError:
+            except RuntimeError:
                 self.RemoveHandlerForID(e_id)
         else:
             event.Skip()
@@ -128,7 +128,7 @@ class AppEventHandlerMixin:
             try:
                 if handler:
                     return handler(event)
-            except wx.PyDeadObjectError:
+            except RuntimeError:
                 self.RemoveUIHandlerForID(e_id)
         else:
             event.Skip()
