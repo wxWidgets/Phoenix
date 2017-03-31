@@ -6,7 +6,6 @@
 
 recursive-include   wx  **
 
-recursive-exclude   wx  .svn
 recursive-exclude   wx  .git
 recursive-exclude   wx  *.pyc
 recursive-exclude   wx  __pycache__
