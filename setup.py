@@ -34,7 +34,8 @@ AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
 URL              = "http://wxPython.org/"
 #DOWNLOAD_URL     = "http://wxPython.org/download.php"
-DOWNLOAD_URL     = "http://wxpython.org/Phoenix/snapshot-builds/"
+#DOWNLOAD_URL     = "http://wxpython.org/Phoenix/snapshot-builds/"
+DOWNLOAD_URL     = "https://pypi.python.org/pypi/{}".format(NAME)
 LICENSE          = "wxWidgets Library License (LGPL derivative)"
 PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,awesome"
@@ -51,6 +52,7 @@ For more information please refer to the
 `README.rst <https://github.com/wxWidgets/Phoenix/blob/master/README.rst>`_
 or the `wxPython documentation <https://wxpython.org/Phoenix/docs/html/>`_.
 """
+# or maybe LONG_DESCRIPTION=open("README.rst").read() ??
 
 CLASSIFIERS      = """\
 Development Status :: 3 - Alpha
