@@ -36,6 +36,7 @@ def run():
     assert isinstance(c, etgtools.ClassDef)
     tools.fixTopLevelWindowClass(c)
     tools.ignoreConstOverloads(c)
+    c.piBases = ['wx.adv.PropertySheetDialog']
 
 
     #-----------------------------------------------------------------
