@@ -265,7 +265,6 @@ def wx_copy_file(src, dst, preserve_mode=1, preserve_times=1, update=0,
     else:
         # make a new, matching symlink in dst
         if os.path.isdir(dst):
-            dir = dst
             dst = os.path.join(dst, os.path.basename(src))
         linkdst = os.readlink(src)
         if verbose >= 1:

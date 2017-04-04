@@ -1337,7 +1337,7 @@ def cmd_build_py(options, args):
                 WX_CONFIG = 'wx-config' # hope it is on the PATH
 
 
-    wafBuildBase = wafBuildDir  = getWafBuildBase()
+    wafBuildBase = wafBuildDir = getWafBuildBase()
     if isWindows:
         wafBuildDir = posixjoin(wafBuildBase, 'release')
 
@@ -1531,7 +1531,6 @@ def cmd_clean_wx(options, args):
         if options.both:
             options.debug = True
         msw = getMSWSettings(options)
-        cfg = Config()
         deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version2_nodot, msw.dll_type))))
         delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version3_nodot, msw.dll_type))))
@@ -1690,7 +1689,7 @@ def cmd_sdist(options, args):
             copyFile(name, destdir)
 
     # Also add the waf executable
-    waf = getWafCmd()
+    getWafCmd()
     copyFile('bin/waf-%s' % wafCurrentVersion, os.path.join(PDEST, 'bin'))
 
     # and the REV.txt if there is one
