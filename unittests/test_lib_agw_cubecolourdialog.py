@@ -12,6 +12,9 @@ class lib_agw_cubecolourdialog_Tests(wtc.WidgetTestCase):
         colourData = wx.ColourData()
         colourData.SetColour(wx.RED)
         dlg = CCD.CubeColourDialog(self.frame, colourData, agwStyle=0)
+        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def test_lib_agw_cubecolourdialogMethods(self):
         colourData = wx.ColourData()
@@ -28,6 +31,9 @@ class lib_agw_cubecolourdialog_Tests(wtc.WidgetTestCase):
         ccd_colour = CCD.Colour(wx.Colour(colour))
         html = CCD.rgb2html(ccd_colour)
         self.assertTrue(html in CCD.HTMLCodes)
+        wx.CallLater(250, dlg.EndModal, wx.ID_OK)
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def test_lib_agw_cubecolourdialogConstantsExist(self):
         # CubeColourDialog agwStyle
