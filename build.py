@@ -126,6 +126,7 @@ Usage: ./build.py [command(s)] [options]
       install_py    Install wxPython only
 
       sdist         Build a tarball containing all source files
+      sdist_demo    Build a tarball containing just the demo and samples folders 
       bdist         Create a binary tarball release of wxPython Phoenix
       bdist_docs    Build a tarball containing the documentation
       bdist_egg     Build a Python egg.  Requires magic.
@@ -1670,12 +1671,11 @@ def cmd_sdist(options, args):
     if not os.path.exists('dist'):
         os.mkdir('dist')
 
-    if isGit:
-        # pull out an archive copy of the repo files
-        msg('Exporting Phoenix...')
-        runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
-        msg('Exporting wxWidgets...')
-        runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (WSRC, WDEST), echoCmd=False)
+    # pull out an archive copy of the repo files
+    msg('Exporting Phoenix...')
+    runcmd('git archive HEAD | tar -x -C %s' % PDEST, echoCmd=False)
+    msg('Exporting wxWidgets...')
+    runcmd('(cd %s; git archive HEAD) | tar -x -C %s' % (WSRC, WDEST), echoCmd=False)
 
     # copy Phoenix's generated code into the archive tree
     msg('Copying generated files...')
@@ -1720,6 +1720,58 @@ def cmd_sdist(options, args):
         uploadPackage(tarfilename, options)
 
     msg("Source release built at %s" % tarfilename)
+
+
+
+def cmd_sdist_demo(options, args):
+    # Build a tarball containing the demo and samples
+    cmdTimer = CommandTimer('sdist_demo')
+    assert os.getcwd() == phoenixDir()
+
+    cfg = Config()
+
+    isGit = os.path.exists('.git')
+    if not isGit:
+        msg("Sorry, I don't know what to do in this source tree, no git workspace found.")
+        return
+
+    # make a tree for building up the archive files
+    PDEST = 'build/sdist_demo'
+    if not os.path.exists(PDEST):
+        os.makedirs(PDEST)
+
+    # and a place to put the final tarball
+    if not os.path.exists('dist'):
+        os.mkdir('dist')
+
+    # pull out an archive copy of the repo files
+    msg('Exporting Phoenix/demo...')
+    runcmd('git archive HEAD demo | tar -x -C %s' % PDEST, echoCmd=False)
+    msg('Exporting Phoenix/demo/samples...')
+    runcmd('git archive HEAD samples | tar -x -C %s' % PDEST, echoCmd=False)
+
+    # Add in the README file
+    copyFile('packaging/README-sdist_demo.txt', posixjoin(PDEST, 'README.txt'))
+
+    # build the tarball
+    msg('Archiving Phoenix demo and samples...')
+    rootname = "%s-demo-%s" % (baseName, cfg.VERSION)
+    tarfilename = "dist/%s.tar.gz" % rootname
+    if os.path.exists(tarfilename):
+        os.remove(tarfilename)
+    tarball = tarfile.open(name=tarfilename, mode="w:gz")
+    pwd = pushDir(PDEST)
+    for name in glob.glob('*'):
+        tarball.add(name, os.path.join(rootname, name))
+    tarball.close()
+    msg('Cleaning up...')
+    del pwd
+    shutil.rmtree(PDEST)
+
+    if options.upload:
+        uploadPackage(tarfilename, options)
+
+    msg("demo and samples tarball built at %s" % tarfilename)
 
 
 
