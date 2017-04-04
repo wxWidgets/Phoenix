@@ -443,7 +443,7 @@ class PersistenceManager(object):
         """
 
         if window:
-            # protect for PyDeadObjectError
+            # protect for RuntimeError
             if window.GetName() in self._persistentObjects:
                 return window
 
