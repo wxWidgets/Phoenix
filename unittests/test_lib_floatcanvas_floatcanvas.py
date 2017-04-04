@@ -14,9 +14,11 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
 
     def test_lib_floatcanvas_floatcanvasCtor(self):
         fccanvas = fc.FloatCanvas(self.frame)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_navcanvasCtor(self):
         self.navcanvas = nc.NavCanvas(self.frame)
+        self.navcanvas.Destroy()
 
     def test_lib_floatcanvas_fc_arc(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -24,6 +26,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Arc((10, 10), (20, 20), (5, 5))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_arrow(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -31,6 +34,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Arrow((10, 10), 10, 10)
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_arrowline(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -38,6 +42,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.ArrowLine((10, 10))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_bitmap(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -46,6 +51,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Bitmap(bmp, (2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_circle(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -53,6 +59,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Circle((2, 2),  2)
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_line(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -60,6 +67,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Line((2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_point(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -67,6 +75,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Point((2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_pointset(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -74,6 +83,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.PointSet((2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_polygon(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -81,6 +91,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Polygon((2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_rectangle(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -88,6 +99,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Rectangle((2, 2),  (2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_recteclips(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -95,6 +107,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.RectEllipse((2, 2), (2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_scaledbitmap(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -103,6 +116,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.ScaledBitmap(bmp, (2, 2), 100)
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_scaledbitmap2(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -111,6 +125,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.ScaledBitmap2(bmp, (2, 2), 100)
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_scaledtext(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -118,6 +133,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.ScaledText("some text", (2, 2), 100)
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_scaledtextbox(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -125,6 +141,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.ScaledTextBox("some text", (2, 2), 100)
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_spline(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -132,6 +149,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Spline((2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_squarepoint(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -139,6 +157,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.SquarePoint((2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_fc_text(self):
         fccanvas = fc.FloatCanvas(self.frame)
@@ -146,6 +165,7 @@ class lib_floatcanvas_floatcanvas_Tests(wtc.WidgetTestCase):
         obj = fc.Text("some text", (2, 2))
 
         fccanvas.AddObject(obj)
+        fccanvas.Destroy()
 
     def test_lib_floatcanvas_floatcanvasEvents(self):
 

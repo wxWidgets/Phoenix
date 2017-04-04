@@ -37,6 +37,7 @@ def run():
     c.piBases = ['wx.adv.PropertySheetDialog']
     tools.fixTopLevelWindowClass(c)
     tools.ignoreConstOverloads(c)
+    c.piBases = ['wx.adv.PropertySheetDialog']
 
 
     #-----------------------------------------------------------------

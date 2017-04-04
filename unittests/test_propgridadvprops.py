@@ -50,7 +50,7 @@ class propgridadvprops_Tests(wtc.WidgetTestCase):
     def test_propgridadvprops09(self):
         p = pg.MultiChoiceProperty()
         p = pg.MultiChoiceProperty('label', 'name',
-                                   strings=['The', 'Quick', 'Brown', 'Fox'],
+                                   choices=['The', 'Quick', 'Brown', 'Fox'],
                                    value=['Brown', 'Fox'])
 
 

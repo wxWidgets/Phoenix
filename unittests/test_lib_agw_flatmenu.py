@@ -8,6 +8,22 @@ import wx.lib.agw.flatmenu as FM
 
 class lib_agw_flatmenu_Tests(wtc.WidgetTestCase):
 
+    def setUp(self):
+        '''
+        Monkey patch some methods which don't behave well without
+        a MainLoop.  We could restore them in tearDown, but there's
+        no need because self.frame will be destroyed in tearDown.
+        '''
+        super(lib_agw_flatmenu_Tests, self).setUp()
+
+        self.realPushEventHandlerMethod = self.frame.PushEventHandler
+        def MockPushEventHandler(handler): pass
+        self.frame.PushEventHandler = MockPushEventHandler
+
+        self.realPopEventHandlerMethod = self.frame.PopEventHandler
+        def MockPopEventHandler(deleteHandler=False): pass
+        self.frame.PopEventHandler = MockPopEventHandler
+
     def test_lib_agw_flatmenuCtor(self):
         self._popUpMenu = FM.FlatMenu()
 

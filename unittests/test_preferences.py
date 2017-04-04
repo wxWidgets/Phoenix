@@ -32,6 +32,7 @@ class preferences_Tests(wtc.WidgetTestCase):
         page2 = MyPrefsPage()
         prefEd.AddPage(page1)
         prefEd.AddPage(page2)
+        wx.CallLater(250, prefEd.Dismiss)
         prefEd.Show(self.frame)
 
 
