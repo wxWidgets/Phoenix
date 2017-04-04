@@ -6,10 +6,10 @@ import wx
 
 class PIImportTest(unittest.TestCase):
     """
-    The *.pi files generated are used with IDE's like WingIDE to create
-    things like autocomplete lists and call tips. They are essentially just
-    Python code with stubs for all the classes and other things that are in
-    the extension modules and that are not easily introspected.
+    The *.pyi files generated are used with some IDE's to create things like
+    autocomplete lists and call tips. They are essentially just Python code
+    with stubs for all the classes and other things that are in the extension
+    modules and that are not easily introspected.
 
     This test case ensures that the code in the pi files is valid by trying
     to run the file with a new instance of Python.

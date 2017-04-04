@@ -44,6 +44,7 @@ def run():
     c = module.find('wxPGCellData')
     assert isinstance(c, etgtools.ClassDef)
     c.find('~wxPGCellData').ignore(False)
+    c.bases = ['wxRefCounter']
 
     c = module.find('wxPGCellRenderer')
     c.bases = ['wxRefCounter']
