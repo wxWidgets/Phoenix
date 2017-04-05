@@ -12,5 +12,5 @@ from a command line like this::
 
 Each of the folders in the samples folder contains one or more standalone
 applications demonstrating how to use certain features of wxPython.  Examine
-the source code in each sample to see how to run them.
+the source code in each sample folder to see how to run them and what they do.
 

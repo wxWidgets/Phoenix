@@ -42,18 +42,27 @@ PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,awesome"
 
 LONG_DESCRIPTION = """\
-wxPython_Phoenix is a new implementation of wxPython focused on
-improving speed, maintainability and extensibility. Just like "Classic"
-wxPython it wraps the wxWidgets C++ toolkit and provides access to the user
-interface portions of the wx API, enabling Python applications to have a GUI
-on Windows, Macs or Unix systems with a native look and feel and requiring
-very little (if any) platform specific code.
+{name} is the new and improved wxPython! This new implementation (known
+internally as "wxPython Phoenix") is focused on improving speed,
+maintainability and extensibility. Just like "Classic" wxPython it wraps the
+wxWidgets C++ toolkit and provides access to the user interface portions of
+the wxWidgets API, enabling Python applications to have a native GUI on
+Windows, Macs or Unix systems with a native look and feel and requiring very
+little (if any) platform specific code.
 
 For more information please refer to the
-`README.rst <https://github.com/wxWidgets/Phoenix/blob/master/README.rst>`_
-or the `wxPython documentation <https://wxpython.org/Phoenix/docs/html/>`_.
-"""
+`README file <https://github.com/wxWidgets/Phoenix/blob/master/README.rst>`_,
+the `Migration Guide <https://wxpython.org/Phoenix/docs/html/MigrationGuide.html>`_,
+or the `wxPython API documentation <https://wxpython.org/Phoenix/docs/html/main.html>`_.
+""".format(name=NAME)
+
 # or maybe LONG_DESCRIPTION=open("README.rst").read() ??
+
+if version.VER_FLAGS:
+    LONG_DESCRIPTION += """
+:note: To install  pre-release versions don't forget to add the ``--pre`` flag 
+    to the ``pip install`` command.
+"""
 
 CLASSIFIERS      = """\
 Development Status :: 3 - Alpha

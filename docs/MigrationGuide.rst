@@ -106,12 +106,12 @@ versions of wxPython, in order to help you prepare for the transition.
 Unicode and Auto-Converting Strings
 -----------------------------------
 
-Starting with the wxPython 2.9 release series, there are no longer
-separate ansi/Unicode builds of wxPython.  All wxPython builds are now
-essentially the same as the old Unicode builds. This means that all
-string objects passed to wx API functions or methods are converted to
-Unicode before calling the C++ function or method.  By default Classic
-wxPython would use the encoding specified by the locale that was
+Starting with the wxPython 2.9 release series, there are no longer separate
+ansi/Unicode builds of wxPython.  All wxPython builds are now essentially the
+same as the old Unicode builds. This means that all string objects (in Python
+2.7) or bytes objects (Python 3+) passed to wx API functions or methods are
+converted to Unicode before calling the C++ function or method.  By default
+Classic wxPython would use the encoding specified by the locale that was
 current at the time of the import of the wx module.
 
 However using the default locale could sometimes cause issues because
@@ -122,7 +122,7 @@ their code with.
 
 Project Phoenix takes this Unicode simplification one step further by
 stipulating that only the utf-8 encoding will be used for
-auto-converting string objects to the Unicode objects that will be
+auto-converting string/bytes objects to the Unicode objects that will be
 passed on to the wx APIs.  If you need to deal with text using a
 different encoding then you will need to convert it to Unicode
 yourself before passing the text to the wx API.  For the most part this
@@ -428,7 +428,7 @@ Frame for the content.
 wx.PyEvent and wx.PyCommandEvent
 --------------------------------
 
-Unlike most other ``wx.Py`` classes these two still exist in Phoenix, and are
+Unlike most other ``wx.Py*`` classes these two still exist in Phoenix, and are
 still the base classes that you should use when creating your own custom
 event classes. For the most part they work just like they did in Classic, and
 they take care of ensuring that any Python attributes that you assign to
