@@ -1,7 +1,8 @@
 #----------------------------------------------------------------------
 # Name:        buildtools.version
-# Purpose:     wxPython version numbers used in the build.  This can be
-#              considered the master copy of the version digits.
+# Purpose:     wxPython project name and version numbers used in the
+#              build.  This can be considered the master copy of the
+#              version digits.
 #
 # Author:      Robin Dunn
 #
@@ -10,6 +11,7 @@
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
+PROJECT_NAME     = 'wxPython_Phoenix'
 
 VER_MAJOR        = 3      # Matches wxWidgets MAJOR version number
 VER_MINOR        = 0      # Matches wxWidgets MINOR version number
@@ -41,7 +43,7 @@ VER_FLAGS        = "a1"     # wxPython release flags
 #                  release
 #
 #   ".dev12345"    for daily snapshot builds, by default this is automatically
-#                  pulled from the REV.txt file made by the setrev command,
+#                  pulled from the REV.txt file made by the setrev build command,
 #                  if it exists, and is appended to VER_FLAGS
 #
 #

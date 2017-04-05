@@ -24,11 +24,12 @@ except ImportError:
     haveWheel = False
 
 from buildtools.config import Config, msg, opj, runcmd, canGetSOName, getSOName
+import buildtools.version as version
 
 
 #----------------------------------------------------------------------
 
-NAME             = "wxPython_Phoenix"
+NAME             = version.PROJECT_NAME
 DESCRIPTION      = "Cross platform GUI toolkit for Python, Phoenix version"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"

@@ -59,7 +59,7 @@ isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
 devMode = False
 
-baseName = 'wxPython_Phoenix'
+baseName = version.PROJECT_NAME
 eggInfoName = baseName + '.egg-info'
 defaultMask='%s-%s*' % (baseName, version.VER_MAJOR)
 
@@ -1698,7 +1698,7 @@ def cmd_sdist(options, args):
 
     # Add some extra stuff to the root folder
     cmd_egg_info(options, args, egg_base=PDEST)
-    copyFile(opj(PDEST, 'wxPython_Phoenix.egg-info/PKG-INFO'),
+    copyFile(opj(PDEST, '{}.egg-info/PKG-INFO'.format(baseName)),
              opj(PDEST, 'PKG-INFO'))
 
     # build the tarball
