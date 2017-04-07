@@ -30,7 +30,7 @@ import buildtools.version as version
 #----------------------------------------------------------------------
 
 NAME             = version.PROJECT_NAME
-DESCRIPTION      = "Cross platform GUI toolkit for Python, Phoenix version"
+DESCRIPTION      = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
 AUTHOR           = "Robin Dunn"
 AUTHOR_EMAIL     = "Robin Dunn <robin@alldunn.com>"
 URL              = "http://wxPython.org/"
@@ -42,19 +42,20 @@ PLATFORMS        = "WIN32,WIN64,OSX,POSIX"
 KEYWORDS         = "GUI,wx,wxWindows,wxWidgets,cross-platform,awesome"
 
 LONG_DESCRIPTION = """\
-{name} is the new and improved wxPython! This new implementation (known
-internally as "wxPython Phoenix") is focused on improving speed,
-maintainability and extensibility. Just like "Classic" wxPython it wraps the
-wxWidgets C++ toolkit and provides access to the user interface portions of
-the wxWidgets API, enabling Python applications to have a native GUI on
-Windows, Macs or Unix systems with a native look and feel and requiring very
-little (if any) platform specific code.
+Welcome to wxPython's Project Phoenix! Phoenix is the improved next-generation
+wxPython, "better, stronger, faster than he was before." This new
+implementation is focused on improving speed, maintainability and
+extensibility. Just like "Classic" wxPython, Phoenix wraps the wxWidgets C++
+toolkit and provides access to the user interface portions of the wxWidgets
+API, enabling Python applications to have a native GUI on Windows, Macs or
+Unix systems, with a native look and feel and requiring very little (if any)
+platform specific code.
 
 For more information please refer to the
 `README file <https://github.com/wxWidgets/Phoenix/blob/master/README.rst>`_,
 the `Migration Guide <https://wxpython.org/Phoenix/docs/html/MigrationGuide.html>`_,
 or the `wxPython API documentation <https://wxpython.org/Phoenix/docs/html/main.html>`_.
-""".format(name=NAME)
+"""
 
 # or maybe LONG_DESCRIPTION=open("README.rst").read() ??
 
