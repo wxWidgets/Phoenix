@@ -2,7 +2,7 @@
 # Name:        buildtools.version
 # Purpose:     wxPython project name and version numbers used in the
 #              build.  This can be considered the master copy of the
-#              version digits.
+#              version digits and project name.
 #
 # Author:      Robin Dunn
 #
@@ -11,12 +11,20 @@
 # License:     wxWindows License
 #----------------------------------------------------------------------
 
-PROJECT_NAME     = 'wxPython_Phoenix'
+# Master copy of the project name
+PROJECT_NAME     = 'wxPython'
 
-VER_MAJOR        = 3      # Matches wxWidgets MAJOR version number
-VER_MINOR        = 0      # Matches wxWidgets MINOR version number
-VER_RELEASE      = 4      # wxPython RELEASE number for the given wxWidgets
-                          # MAJOR.MINOR version.
+
+# The version numbers for wxPython are no longer kept in sync with the
+# wxWidgets version number. In the past the common version number was used to
+# indicate which version of wxWidgets should be used for the wxPython build.
+# Now wxWidgets is a git submodule, and the linked version is included in the
+# wxPython source tarball. That said, we should still bump up the MAJOR and
+# MINOR numbers each time there is a corresponding bump in the wxWidgets
+# version numbers.
+VER_MAJOR        = 4
+VER_MINOR        = 0
+VER_RELEASE      = 0
 
 VER_FLAGS        = "a1"     # wxPython release flags
 

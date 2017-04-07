@@ -22,21 +22,20 @@ should then be able to work out the details for themselves.
 Version Numbers
 ---------------
 
-Classic wxPython used version numbers with 4 components, in order to be able
-to specify the exact version of wxWidgets used (3 version number components)
-and an additional component to allow for multiple wxPython releases for each
-wxWidgets release. While this version numbering works okay and solves a
-specific need that wxPython had, it does not follow the common version
-numbering pattern that probably 99% of other software packages use and so it
-is non-intuitive for most users.
+The version numbers for wxPython are no longer kept in sync with the wxWidgets
+version number. In the past the common version number was used to indicate
+exactly which version of wxWidgets should be used for the wxPython build. Now
+wxWidgets is a git submodule, and the linked version is included in the
+wxPython source tarball there is no longer any need to use the matching
+version numbers to implicitly specify the version of the wxWidgets source to
+use.
 
-So Phoenix will be moving to a 3 component version number, where the first 2
-components match the MAJOR.MINOR version of wxWidgets being used, and the 3rd
-component of the version number is used to indicate the release of wxPython
-Phoenix using that version of wxWidgets.  It is felt that matching the 3rd
-component of the wxWidgets is no longer as important as it was in the past,
-because the wxWidgets source is being included with the Phoenix source, so
-matching exact versions of the two packages by hand is no longer needed.
+This means that wxPython can go back to a 3-component version number and follow
+the common conventions used by 99% of the other software projects out there.
+The 3 components are commonly called MAJOR, MINOR and RELEASE. Since wxPython
+Phoenix is a major upgrade over wxPython Classic then we will start out with a
+new MAJOR version number to help communicate that this isn't just a little
+update from previous releases.
 
 Additional flags will be appended to the version number in a manner that is
 compliant with Python's PEP-440_. This includes syntax for alpha, beta,

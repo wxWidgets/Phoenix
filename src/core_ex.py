@@ -1,13 +1,10 @@
 import sys as _sys
 
-# Load version numbers from __version__...  Ensure that major and minor
-# versions are the same for both wxPython and wxWidgets.
+# Load version numbers from __version__ and some other initialization tasks...
 if 'wxEVT_NULL' in dir():
     from wx.__version__ import *
     import wx._core
     __version__ = VERSION_STRING
-    assert MAJOR_VERSION == wx._core.MAJOR_VERSION, "wxPython/wxWidgets version mismatch"
-    assert MINOR_VERSION == wx._core.MINOR_VERSION, "wxPython/wxWidgets version mismatch"
 
     # Register a function to be called when Python terminates that will clean
     # up and release all system resources that wxWidgets allocated.
