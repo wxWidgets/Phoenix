@@ -136,6 +136,8 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
     PyDict_SetItemString(moduleDict, "Port", PyUnicode_FromString(wxPort));
     PyDict_SetItemString(moduleDict, "Platform", PyUnicode_FromString(wxPort));
 
+    PyDict_SetItemString(moduleDict, "wxWidgets_version", wx2PyString(wxVERSION_STRING));
+
     // Make a tuple of strings that gives more info about the platform and build.
     PyObject* PlatformInfo = PyList_New(0);
     PyObject* obj;
@@ -183,9 +185,14 @@ void wxPyCoreModuleInject(PyObject* moduleDict)
 #endif
     _AddInfoString("phoenix");
 
+    obj = wx2PyString(wxVERSION_STRING);
+    PyList_Append(PlatformInfo, obj);
+    Py_DECREF(obj);
+
 #undef _AddInfoString
 
     PyObject* PlatformInfoTuple = PyList_AsTuple(PlatformInfo);
     Py_DECREF(PlatformInfo);
     PyDict_SetItemString(moduleDict, "PlatformInfo", PlatformInfoTuple);
+
 }
