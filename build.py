@@ -60,7 +60,7 @@ wxversion3 = "%d.%d.%d" % (version.wxVER_MAJOR, version.wxVER_MINOR, version.wxV
 wxversion2_nodot = wxversion2.replace(".", "")
 wxversion3_nodot = wxversion3.replace(".", "")
 
-unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or even?
+unstable_series = (version.wxVER_MINOR % 2) == 1  # is the minor version odd or even?
 
 isWindows = sys.platform.startswith('win')
 isDarwin = sys.platform == "darwin"
