@@ -57,3 +57,10 @@ VER_FLAGS        = "a1"     # wxPython release flags
 #
 # See also:
 #   http://www.python.org/dev/peps/pep-0440/
+
+
+# The version numbers of wxWidgets to be used in the build
+wxVER_MAJOR        = 3
+wxVER_MINOR        = 0
+wxVER_RELEASE      = 0  # only used when wxVER_MINOR is an odd value
+

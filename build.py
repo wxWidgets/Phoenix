@@ -48,11 +48,18 @@ PYSHORTVER = '27'
 PYTHON = None  # it will be set later
 PYTHON_ARCH = 'UNKNOWN'
 
-# wx version numbers
+# convenience access to the wxPython version digits
 version2 = "%d.%d" % (version.VER_MAJOR, version.VER_MINOR)
 version3 = "%d.%d.%d" % (version.VER_MAJOR, version.VER_MINOR, version.VER_RELEASE)
 version2_nodot = version2.replace(".", "")
 version3_nodot = version3.replace(".", "")
+
+# same for the wxWidgets version
+wxversion2 = "%d.%d" % (version.wxVER_MAJOR, version.wxVER_MINOR)
+wxversion3 = "%d.%d.%d" % (version.wxVER_MAJOR, version.wxVER_MINOR, version.wxVER_RELEASE)
+wxversion2_nodot = wxversion2.replace(".", "")
+wxversion3_nodot = wxversion3.replace(".", "")
+
 unstable_series = (version.VER_MINOR % 2) == 1  # is the minor version odd or even?
 
 isWindows = sys.platform.startswith('win')
@@ -839,7 +846,7 @@ def cmd_docset_wx(options, args):
     # Remove any existing docset in the dist dir and move the new docset in
     srcname = posixjoin(wxDir(), 'docs/doxygen/out/docset',
                         'wxWidgets-%s.docset' % cfg.VERSION[:3])
-    destname = 'dist/wxWidgets-%s.docset' % version3
+    destname = 'dist/wxWidgets-%s.docset' % wxversion3
     if not os.path.isdir(srcname):
         msg('ERROR: %s not found' % srcname)
         sys.exit(1)
@@ -1173,7 +1180,7 @@ def cmd_build_wx(options, args):
         PREFIX = options.prefix
         if options.mac_framework and isDarwin:
             # TODO:  Don't hard-code this path
-            PREFIX = "/Library/Frameworks/wx.framework/Versions/%s" %  version2
+            PREFIX = "/Library/Frameworks/wx.framework/Versions/%s" %  wxversion2
         if PREFIX:
             build_options.append('--prefix=%s' % PREFIX)
 
@@ -1262,7 +1269,7 @@ def copyWxDlls(options):
         msw = getMSWSettings(options)
         cfg = Config()
 
-        ver = version3_nodot if unstable_series else version2_nodot
+        ver = wxversion3_nodot if unstable_series else wxversion2_nodot
         arch = 'x64' if PYTHON_ARCH == '64bit' else 'x86'
         dlls = list()
         if not options.debug or options.both:
@@ -1533,8 +1540,8 @@ def cmd_clean_wx(options, args):
             options.debug = True
         msw = getMSWSettings(options)
         deleteIfExists(opj(msw.dllDir, 'msw'+msw.dll_type))
-        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version2_nodot, msw.dll_type))))
-        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (version3_nodot, msw.dll_type))))
+        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion2_nodot, msw.dll_type))))
+        delFiles(glob.glob(opj(msw.dllDir, 'wx*%s%s*' % (wxversion3_nodot, msw.dll_type))))
         if PYTHON_ARCH == '64bit':
             deleteIfExists(opj(msw.buildDir, 'vc%s_msw%sdll_x64' % (getVisCVersion(), msw.dll_type)))
         else:
@@ -1562,8 +1569,8 @@ def cmd_clean_py(options, args):
         files += glob.glob(opj(cfg.PKGDIR, wc))
     if isWindows:
         msw = getMSWSettings(options)
-        for wc in [ 'wx*' + version2_nodot + msw.dll_type + '*.dll',
-                    'wx*' + version3_nodot + msw.dll_type + '*.dll']:
+        for wc in [ 'wx*' + wxversion2_nodot + msw.dll_type + '*.dll',
+                    'wx*' + wxversion3_nodot + msw.dll_type + '*.dll']:
             files += glob.glob(opj(cfg.PKGDIR, wc))
     delFiles(files)
 
