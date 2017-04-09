@@ -1684,8 +1684,9 @@ def cmd_sdist(options, args):
         for name in glob.glob(posixjoin('wx', wc)):
             copyFile(name, destdir)
 
-    # Also add the waf executable
+    # After ensuring that it is present
     getWafCmd()
+    # Also add the waf executable
     copyFile('bin/waf-%s' % wafCurrentVersion, os.path.join(PDEST, 'bin'))
 
     # and the REV.txt if there is one
