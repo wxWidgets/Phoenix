@@ -156,7 +156,7 @@ def run():
 
     module.addPyFunction('XRCCTRL', '(window, str_id, *ignoreargs)',
         doc='Returns the child window associated with the string ID in an XML resource.',
-        body='return window.FindWindowById(XRCID(str_id))')
+        body='return window.FindWindow(XRCID(str_id))')
 
 
 
