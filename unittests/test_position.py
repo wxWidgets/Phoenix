@@ -19,6 +19,23 @@ class position_Tests(wtc.WidgetTestCase):
         self.assertTrue(p1 is not p2)
         self.assertTrue(p1 == p2)
 
+    def test_position_eq_hash(self):
+        tupl1 = (0, 10)
+        p1 = wx.Position(*tupl1)
+        p12 = wx.Position(*tupl1)
+        p2 = wx.Position(2, 10)
+        # __eq__ and __hash__ must both be defined
+        # eq must assert that elements are of the same class
+        self.assertFalse(p1 == tupl1)
+        self.assertTrue(hash(p1) == hash(tupl1))
+        # then within that class, hash must follow eq
+        self.assertTrue(p1 == p12)
+        self.assertFalse(id(p1) == id(p12))
+        self.assertTrue(hash(p1) == hash(p12))
+
+        self.assertFalse(p1 == p2)
+        self.assertFalse(hash(p1) == hash(p2))
+
     def test_positionProperties1(self):
         p = wx.Position()
         p.Row

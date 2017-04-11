@@ -104,6 +104,8 @@ def run():
         briefDoc="Return the row and col properties as a tuple.")
 
     # Add sequence protocol methods and other goodies
+    c.addPyMethod('__eq__', '(self, other)',       'return isinstance(other, type(self)) and self.Get() == other.Get()')
+    c.addPyMethod('__hash__', '(self)',            'return hash(self.Get())')
     c.addPyMethod('__str__', '(self)',             'return str(self.Get())')
     c.addPyMethod('__repr__', '(self)',            'return "GridCellCoords"+str(self.Get())')
     c.addPyMethod('__len__', '(self)',             'return len(self.Get())')
