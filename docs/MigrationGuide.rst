@@ -77,6 +77,40 @@ which need modification while porting your code from Classic to Phoenix,
 please see the :ref:`Classic vs. Phoenix <classic vs phoenix>` document.
 
 
+FindWindow Methods
+------------------
+
+One instance of undoing the renames for overloading done in classic that may
+be not make as much sense as the others is the ``wx.Window.FindWindow``
+methods.  This is because there are new methods in Phoenix that have the same
+names as some of the renames in Classic, so we can't just leave a deprecated
+alias in place that will direct the programmer to use the overloaded version
+of the method instead of the renamed version.
+
+So we now have the following FindWindow-releated methods and static methods
+available in the ``wx.Window`` class:
+
+These are non-static and do a recursive search in ``self``::
+
+    wx.Window.FindWindow(self, id)
+    wx.Window.FindWindow(self, name)
+
+These are ``staticmethods`` that either search all windows in the application,
+or the subtree rooted at ``parent`` if it is given::
+
+    wx.Window.FindWindowById(id, parent=None)
+    wx.Window.FindWindowByLabel(label, parent=None)
+    wx.Window.FindWindowByName(name, parent=None)
+
+And these module-level helper functions are still available in Phoenix::
+
+    wx.FindWindowById(id, parent=None)
+    wx.FindWindowByLabel(label, parent=None)
+    wx.FindWindowByName(name, parent=None)
+
+
+
+
 Static Methods 
 -------------- 
 

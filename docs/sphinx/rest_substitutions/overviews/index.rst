@@ -173,6 +173,8 @@ Meanwhile, here are some important links:
    wx.media.1moduleindex
    wx.msw.1moduleindex
    wx.ribbon.1moduleindex
+   wx.aui.1moduleindex
+   wx.propgrid.1moduleindex
    wx.lib
    wx.py
    wx.tools
