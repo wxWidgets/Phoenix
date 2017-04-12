@@ -61,7 +61,7 @@ or the `wxPython API documentation <https://wxpython.org/Phoenix/docs/html/main.
 
 if version.VER_FLAGS:
     LONG_DESCRIPTION += """
-:note: To install  pre-release versions don't forget to add the ``--pre`` flag 
+:note: To install pre-release versions don't forget to add the ``--pre`` flag 
     to the ``pip install`` command.
 """
 
@@ -73,14 +73,14 @@ Environment :: X11 Applications :: GTK
 Intended Audience :: Developers
 License :: OSI Approved
 Operating System :: MacOS :: MacOS X
-Operating System :: Microsoft :: Windows :: Windows XP
-Operating System :: Microsoft :: Windows :: Windows Vista
 Operating System :: Microsoft :: Windows :: Windows 7
+Operating System :: Microsoft :: Windows :: Windows 10
 Operating System :: POSIX
 Programming Language :: Python :: 2.7
 Programming Language :: Python :: 3.4
 Programming Language :: Python :: 3.5
 Programming Language :: Python :: 3.6
+Programming Language :: Python :: Implementation :: CPython
 Topic :: Software Development :: User Interfaces
 """
 
@@ -316,7 +316,7 @@ ENTRY_POINTS = {
         "img2xpm = wx.tools.img2xpm:main",
         "pywxrc = wx.tools.pywxrc:main",
 #        ],
-#    'gui_scripts' : [
+#    'gui_scripts' : [  # TODO: Why was this done?
         "helpviewer = wx.tools.helpviewer:main",
         "pycrust = wx.py.PyCrust:main",
         "pyshell = wx.py.PyShell:main",
