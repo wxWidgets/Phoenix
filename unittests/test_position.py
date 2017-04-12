@@ -8,8 +8,8 @@ class position_Tests(wtc.WidgetTestCase):
 
     def test_positionCtors(self):
         p = wx.Position()
-        self.assertTrue(p == (0,0))
-        self.assertTrue(p != (9,9))
+        self.assertTrue(p.Get() == (0,0))
+        self.assertTrue(p.Get() != (9,9))
         p2 = wx.Position(2, 3)
         self.assertTrue(p2.Get() == (2,3))
 
@@ -51,17 +51,17 @@ class position_Tests(wtc.WidgetTestCase):
         p1 = wx.Position(3,4)
         p2 = wx.Position(1,1)
         p1 -= p2
-        self.assertTrue(p1 == (2,3))
+        self.assertTrue(p1.Get() == (2,3))
         p1 += p2
-        self.assertTrue(p1 == (3,4))
+        self.assertTrue(p1.Get() == (3,4))
 
     def test_positionMath2(self):
         p1 = wx.Position(3,4)
         p2 = wx.Position(1,1)
         p3 = p1 + p2
-        self.assertTrue(p3 == (4,5))
+        self.assertTrue(p3.Get() == (4,5))
         p4 = p3 - p2
-        self.assertTrue(p4 == (3,4))
+        self.assertTrue(p4.Get() == (3,4))
         self.assertTrue(p4 == p1)
 
 

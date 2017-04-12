@@ -43,10 +43,9 @@ class gbsizer_Tests(wtc.WidgetTestCase):
 
     def test_gbsizer_pos3(self):
         p1 = wx.GBPosition(3,4)
-        self.assertTrue(p1 == (3,4))
         self.assertTrue(p1.Get() == (3,4))
         p1.Set(5,6)
-        self.assertTrue(p1 == (5,6))
+        self.assertTrue(p1.Get() == (5,6))
 
     def test_gbsizer_pos4(self):
         p1 = wx.GBPosition(3,4)
@@ -66,10 +65,10 @@ class gbsizer_Tests(wtc.WidgetTestCase):
         s4 = wx.GBSpan( (2,1) )
 
     def test_gbspan_eq_hash(self):
-        tupl1 = (0, 10)
+        tupl1 = (3, 4)
         s1 = wx.GBSpan(*tupl1)
         s12 = wx.GBSpan(*tupl1)
-        s2 = wx.GBSpan(2, 10)
+        s2 = wx.GBSpan(3, 5)
         # __eq__ and __hash__ must both be defined
         # eq must assert that elements are of the same class
         self.assertFalse(s1 == tupl1)
@@ -96,10 +95,9 @@ class gbsizer_Tests(wtc.WidgetTestCase):
 
     def test_gbsizer_span3(self):
         s1 = wx.GBSpan(3,4)
-        self.assertTrue(s1 == (3,4))
         self.assertTrue(s1.Get() == (3,4))
         s1.Set(5,6)
-        self.assertTrue(s1 == (5,6))
+        self.assertTrue(s1.Get() == (5,6))
 
     def test_gbsizer_span4(self):
         s1 = wx.GBSpan(3,4)
