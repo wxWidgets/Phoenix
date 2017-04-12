@@ -34,13 +34,12 @@ class Colour(wtc.WidgetTestCase):
         c1 = wx.Colour(1,2,3,4)
         p = c1.GetPixel()
 
+
     def test_converters(self):
-        # Ensure that comparing different types don't accidentally work
-        # because of making the classes look like sequences
-        c = wx.Colour(1,2,3,4)
-        r = wx.Rect(1,2,3,4)
-        self.assertFalse( c == r )
-        self.assertFalse( r == c )
+        # Ensure that other types that are sequence-like can't be
+        # auto-converted, the copy constructor is good-enough for testing this
+        with self.assertRaises(TypeError):
+            p = wx.Colour(wx.Rect(1,2,3,4))
 
 
     if hasattr(wx, 'testColourTypeMap'):

@@ -118,12 +118,10 @@ class Point(unittest.TestCase):
 
 
     def test_converters(self):
-        # Ensure that comparing different types don't accidentally work
-        # because of making the classes look like sequences
-        p = wx.Point(10,20)
-        s = wx.Size(10,20)
-        self.assertFalse( p == s )
-        self.assertFalse( s == p )
+        # Ensure that other types that are sequence-like can't be
+        # auto-converted, the copy constructor is good-enough for testing this
+        with self.assertRaises(TypeError):
+            p = wx.Point(wx.Size(10,20))
 
 
 #---------------------------------------------------------------------------
@@ -243,6 +241,13 @@ class Size(unittest.TestCase):
             s[2]
 
 
+    def test_converters(self):
+        # Ensure that other types that are sequence-like can't be
+        # auto-converted, the copy constructor is good-enough for testing this
+        with self.assertRaises(TypeError):
+            p = wx.Size(wx.Point(10,20))
+
+
 #---------------------------------------------------------------------------
 
 
@@ -306,6 +311,12 @@ class Rect(unittest.TestCase):
         self.assertTrue(r.width == 50 and r.height == 100)
         self.assertTrue(r.x == 0 and r.y == 0)
 
+
+    def test_converters(self):
+        # Ensure that other types that are sequence-like can't be
+        # auto-converted, the copy constructor is good-enough for testing this
+        with self.assertRaises(TypeError):
+            p = wx.Rect(wx.Colour(1,2,3,4))
 
     # TODO: more tests!
 
