@@ -249,6 +249,10 @@ def run():
     module.find('wxYield').releaseGIL()
     module.find('wxSafeYield').releaseGIL()
 
+    module.addPyFunction('YieldIfNeeded', '()',
+        doc="Convenience function for wx.GetApp().Yield(True)",
+        body="return wx.GetApp().Yield(True)")
+
     #-------------------------------------------------------
 
     # Now add extractor objects for the main App class as a Python class,
@@ -524,7 +528,6 @@ def run():
             PyFunctionDef('__init__', '(self, *args, **kw)',
                 body="App.__init__(self, *args, **kw)")
             ])
-
 
 
     module.find('wxInitialize').ignore()

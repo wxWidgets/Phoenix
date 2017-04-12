@@ -6274,6 +6274,7 @@
 "YES_NO":"wx.",
 "Year":"wx.DateTime.",
 "Yield":"wx.",
+"YieldIfNeeded":"wx.",
 "_":"wx.",
 "_ScrolledWindowBase":"wx.",
 "__DECLARE_EVT0":"wx.",
