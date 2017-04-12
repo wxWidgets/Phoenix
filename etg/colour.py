@@ -196,7 +196,7 @@ def run():
                 return 1;
             if (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy))
                 return 1;
-            if (PySequence_Check(sipPy)) {
+            if (PyTuple_Check(sipPy) || PyList_Check(sipPy)) {
                 size_t len = PySequence_Size(sipPy);
                 if (len != 3 && len != 4)
                     return 0;
@@ -212,6 +212,7 @@ def run():
             }
             return 0;
         }
+
         // otherwise do the conversion
         // is it None?
         if (sipPy == Py_None) {

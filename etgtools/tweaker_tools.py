@@ -626,7 +626,7 @@ def convertTwoIntegersTemplate(CLASS):
        if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
            return 1;
 
-       if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
+       if ((PyTuple_Check(sipPy) || PyList_Check(sipPy)) && PySequence_Size(sipPy) == 2) {{
            int rval = 1;
            PyObject* o1 = PySequence_ITEM(sipPy, 0);
            PyObject* o2 = PySequence_ITEM(sipPy, 1);
@@ -666,7 +666,7 @@ def convertFourIntegersTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
+        if ((PyTuple_Check(sipPy) || PyList_Check(sipPy)) && PySequence_Size(sipPy) == 4) {{
             int rval = 1;
             PyObject* o1 = PySequence_ITEM(sipPy, 0);
             PyObject* o2 = PySequence_ITEM(sipPy, 1);
@@ -713,7 +713,7 @@ def convertTwoDoublesTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 2) {{
+        if ((PyTuple_Check(sipPy) || PyList_Check(sipPy)) && PySequence_Size(sipPy) == 2) {{
             int rval = 1;
             PyObject* o1 = PySequence_ITEM(sipPy, 0);
             PyObject* o2 = PySequence_ITEM(sipPy, 1);
@@ -753,7 +753,7 @@ def convertFourDoublesTemplate(CLASS):
         if (sipCanConvertToType(sipPy, sipType_{CLASS}, SIP_NO_CONVERTORS))
             return 1;
 
-        if (PySequence_Check(sipPy) && PySequence_Size(sipPy) == 4) {{
+        if ((PyTuple_Check(sipPy) || PyList_Check(sipPy)) && PySequence_Size(sipPy) == 4) {{
             int rval = 1;
             PyObject* o1 = PySequence_ITEM(sipPy, 0);
             PyObject* o2 = PySequence_ITEM(sipPy, 1);

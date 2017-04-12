@@ -117,6 +117,14 @@ class Point(unittest.TestCase):
         self.assertEqual(p6, (-4,-6))
 
 
+    def test_converters(self):
+        # Ensure that comparing different types don't accidentally work
+        # because of making the classes look like sequences
+        p = wx.Point(10,20)
+        s = wx.Size(10,20)
+        self.assertFalse( p == s )
+        self.assertFalse( s == p )
+
 
 #---------------------------------------------------------------------------
 
