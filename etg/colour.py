@@ -202,9 +202,8 @@ def run():
                     return 0;
                 // ensure all the items in the sequence are numbers
                 for (int idx=0; idx<len; idx+=1) {
-                    PyObject* o = PySequence_ITEM(sipPy, idx);
+                    PyObject* o = PySequence_Fast_GET_ITEM(sipPy, idx);
                     bool isNum = PyNumber_Check(o);
-                    Py_DECREF(o);
                     if (!isNum)
                         return 0;
                 }
@@ -255,23 +254,19 @@ def run():
             }
         }
         // Is it a 3 or 4 element sequence?
-        else if (PySequence_Check(sipPy)) {
-            size_t len = PyObject_Length(sipPy);
+        else if (PyTuple_Check(sipPy) || PyList_Check(sipPy)) {
+            size_t len = PySequence_Size(sipPy);
 
-            PyObject* o1 = PySequence_GetItem(sipPy, 0);
-            PyObject* o2 = PySequence_GetItem(sipPy, 1);
-            PyObject* o3 = PySequence_GetItem(sipPy, 2);
+            PyObject* o1 = PySequence_Fast_GET_ITEM(sipPy, 0);
+            PyObject* o2 = PySequence_Fast_GET_ITEM(sipPy, 1);
+            PyObject* o3 = PySequence_Fast_GET_ITEM(sipPy, 2);
             if (len == 3)
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3));
             else {
-                PyObject* o4 = PySequence_GetItem(sipPy, 3);
+                PyObject* o4 = PySequence_Fast_GET_ITEM(sipPy, 3);
                 *sipCppPtr = new wxColour(wxPyInt_AsLong(o1), wxPyInt_AsLong(o2), wxPyInt_AsLong(o3),
                                           wxPyInt_AsLong(o4));
-                Py_DECREF(o4);
             }
-            Py_DECREF(o1);
-            Py_DECREF(o2);
-            Py_DECREF(o3);
             return sipGetState(sipTransferObj);
         }
 
