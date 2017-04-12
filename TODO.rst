@@ -150,6 +150,9 @@ Other Assorted Stuff
   * Add type hinting to the .pyi stub files, as well as @overload decorators
     to document the C++ overloaded methods. See https://www.python.org/dev/peps/pep-0484/
 
- * Add doc files for the image handler classes, so we can add wrappers for them.
+  * Add doc files for the image handler classes, so we can add wrappers for them.
 
-
+  * Investigate SIP's Mixin annotation for use with wx.ComboPopup class, will
+    it allow it to be combined with a widget class, giving an is-a
+    relationship instead of having to use has-a? Docs say that virtual methods
+    can't be present with the Mixin annotation, so it may not work...
