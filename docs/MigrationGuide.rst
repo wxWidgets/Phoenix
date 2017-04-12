@@ -26,7 +26,7 @@ The version numbers for wxPython are no longer kept in sync with the wxWidgets
 version number. In the past the common version number was used to indicate
 exactly which version of wxWidgets should be used for the wxPython build. Now
 wxWidgets is a git submodule, and the linked version is included in the
-wxPython source tarball there is no longer any need to use the matching
+wxPython source tarball, so there is no longer any need to use the matching
 version numbers to implicitly specify the version of the wxWidgets source to
 use.
 

@@ -16,7 +16,7 @@ ways:
   * It's the first real release of Phoenix, which is built on a different
     foundation than Classic wxPython was.
 
-  * It's the first wxPython release intended to be available from PyPI and
+  * It's the first wxPython release intended to be fully available from PyPI and
     buildable/installable by pip.
 
   * It's the first release for Python 3.
@@ -29,7 +29,7 @@ for them.
 
 Due to some things being cleaned up, reorganized, simplified and dehackified
 wxPython Phoenix is not completely backwards compatible with wxPython Classic.
-This is as intended. In general, however, the API differences tend to be minor
+This is intended. In general, however, the API differences tend to be minor
 and some applications can use Phoenix with slight, or even no modifications.
 In some other cases the correct way to do things was also available in Classic
 and it's only the wrong way that has been removed from Phoenix.  For more
