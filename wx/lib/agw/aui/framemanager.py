@@ -4218,6 +4218,7 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
         self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
         self.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroy)
+        self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
 
         self.Bind(wx.EVT_MOVE, self.OnMove)
         self.Bind(wx.EVT_SYS_COLOUR_CHANGED, self.OnSysColourChanged)
@@ -6339,7 +6340,7 @@ class AuiManager(wx.EvtHandler):
 
     def Update(self):
         if '__WXGTK__' in wx.PlatformInfo:
-            self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
+            wx.CallAfter(self.DoUpdate)
         else:
             self.DoUpdate()
 
