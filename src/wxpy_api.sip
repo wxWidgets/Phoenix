@@ -174,6 +174,7 @@ static void i_wxPyEndBlockThreads(wxPyBlock_t blocked)
 
 //--------------------------------------------------------------------------
 // Commonly used helpers for converting small sequences of numbers
+// TODO: Are these still needed?
 
 // A helper for converting a 2 element sequence to a pair of integers
 static bool i_wxPy2int_seq_helper(PyObject* source, int* i1, int* i2)
