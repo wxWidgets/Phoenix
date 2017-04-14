@@ -91,8 +91,10 @@ def run():
 
     c.addItem(etgtools.WigCode("""\
         wxPoint operator+(const wxPoint& other);
+        wxPoint operator+(const wxSize& other);
         wxPoint operator-();
         wxPoint operator-(const wxPoint& other);
+        wxPoint operator-(const wxSize& other);
         wxPoint operator*(int i);
         wxPoint operator/(int i);
         """))
